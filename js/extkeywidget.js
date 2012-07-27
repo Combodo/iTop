@@ -128,7 +128,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		var okBtn = $('#btn_ok_'+me.id);
 		if ($('#count_'+me.id).val() > 0)
 		{
-			okBtn.attr('disabled', '');
+			okBtn.removeAttr('disabled');
 		}
 		else
 		{
@@ -411,7 +411,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		}
 		else
 		{
-			$('#label_'+me.id).attr('disabled', '');
+			$('#label_'+me.id).removeAttr('disabled');
 			$('#label_'+me.id).css({'background': '#fff url(../images/ac-background.gif) no-repeat right'});
 			$('#mini_add_'+me.id).show();
 			$('#mini_tree_'+me.id).show();
