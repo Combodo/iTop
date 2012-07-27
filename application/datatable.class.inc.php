@@ -102,7 +102,7 @@ class DataTable
 		$sHtml .= "<tr><td>$sPager</td><td class=\"menucontainer\">$sToolkitMenu</td></tr>\n";
 		$sHtml .= "<tr><td class=\"datacontents\" colspan=\"2\">$sDataTable</td></tr>\n";
 		$sHtml .= "</table>\n";
-		$sHtml .= $sConfigDlg;
+		$oPage->add_at_the_end($sConfigDlg);
 		
 		$aOptions = array(
 			'sPersistentId' => '',
@@ -618,8 +618,7 @@ class DataTableSettings implements Serializable
 				if ($aFieldData) $aColumns[$sAlias][$sAttCode] = $aFieldData;
 			}
 		}
-		// TODO retrieve the user default page size or the system wide setting
-		$iDefaultPageSize = MetaModel::GetConfig()->GetMinDisplayLimit();
+		$iDefaultPageSize = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
 		$oSettings->Init($iDefaultPageSize, $aSortOrder, $aColumns);
 		return $oSettings;
 	}

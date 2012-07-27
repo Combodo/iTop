@@ -647,6 +647,8 @@ EOF
 
 		if ($this->GetOutputFormat() == 'html')
 		{
+			$oAppContext = new ApplicationContext();
+			
 			$sUserName = UserRights::GetUser();
 			$sIsAdmin = UserRights::IsAdministrator() ? '(Administrator)' : '';
 			if (UserRights::IsAdministrator())
@@ -659,7 +661,7 @@ EOF
 			}
 			$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><img src=\"../images/onOffBtn.png\"><ul>";
 			$sLogOffMenu .= "<li><span>$sLogonMessage</span></li>\n";
-			$sLogOffMenu .= "<li><a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/preferences.php\">".Dict::S('UI:Preferences')."</a></li>\n";
+			$sLogOffMenu .= "<li><a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/preferences.php?".$oAppContext->GetForLink()."\">".Dict::S('UI:Preferences')."</a></li>\n";
 				
 			if (utils::CanLogOff())
 			{

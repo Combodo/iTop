@@ -761,7 +761,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		
 		if ($bDisplayLimit)
 		{
-			$iDefaultPageSize = MetaModel::GetConfig()->GetMinDisplayLimit(); //TODO use user's prefs instead if any
+			$iDefaultPageSize = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
 			$oSettings->iDefaultPageSize = $iDefaultPageSize;
 		}
 		
@@ -848,9 +848,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 					// Removed from the display list
 					unset($aList[$sAlias][$index]);
 				}
-			}
-		$iDefaultPageSize =  MetaModel::GetConfig()->GetMinDisplayLimit();
-			
+			}						
 		}
 		// Load only the requested columns
 		$aAttToLoad = array(); // attributes to load
@@ -863,8 +861,6 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		}
 		$oSet->OptimizeColumnLoad($aAttToLoad);
 
-		$iDefaultPageSize =  MetaModel::GetConfig()->GetMinDisplayLimit();
-		$iPageSize = MetaModel::GetConfig()->GetMinDisplayLimit();
 		$sSelectMode = 'none';
 				
 		$sClassAlias = $oSet->GetClassAlias();
@@ -875,7 +871,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
 		if ($bDisplayLimit)
 		{
-			$iDefaultPageSize = MetaModel::GetConfig()->GetMinDisplayLimit(); //TODO use user's prefs instead if any
+			$iDefaultPageSize = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
 			$oSettings->iDefaultPageSize = $iDefaultPageSize;
 		}
 		
