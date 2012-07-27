@@ -138,7 +138,27 @@ class EMail
 		if (strlen($sValue) > 0)
 		{
 			$oHeaders = $this->m_oMessage->getHeaders();
-			$oHeaders->addTextHeader($sKey, $sValue);
+			switch(strtolower($sKey))
+			{
+				case 'from':
+				case 'cc':
+				case 'bcc':
+				$aMatches = array();
+				// Header may be in the form: John Doe <jd@company.com>
+				if (preg_match('/^([^<]+) <([^>]+)>$/', $sValue, $aMatches))
+				{
+					$aHeader = array($aMatches[2] => $aMatches[1]);
+				}
+				else
+				{
+					$aHeader = array($sValue);
+				}
+				$oHeaders->addMailboxHeader($sKey, $aHeader);
+				break;
+
+				default:
+				$oHeaders->addTextHeader($sKey, $sValue);
+			}
 		}
 	}
 
