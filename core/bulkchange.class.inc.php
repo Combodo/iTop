@@ -914,7 +914,7 @@ class BulkChange
 			$bLimitExceeded = true;
 			if (!$bShowAll)
 			{
-				$iMaxObjects = MetaModel::GetConfig()->GetMinDisplayLimit();
+				$iMaxObjects = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
 				$oBulkChanges->SetLimit($iMaxObjects);
 			}
 		}
