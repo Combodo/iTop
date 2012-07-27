@@ -36,26 +36,31 @@ function DisplayPreferences($oP)
 {
 	$oAppContext = new ApplicationContext();
 
+	$oP->add('<div class="page_header"><h1><img style="vertical-align:middle" src="../images/preferences.png"/>&nbsp;'.Dict::S('UI:Preferences')."</h1></div>\n");
+	$oP->add('<div id="user_prefs" style="max-width:800px; min-width:400px;">');
+
+	//////////////////////////////////////////////////////////////////////////
+	//
+	// Favorite Organizations
+	//
+	//////////////////////////////////////////////////////////////////////////
+
+	$oP->add('<fieldset><legend>'.Dict::S('UI:FavoriteOrganizations').'</legend>');
+	$oP->p(Dict::S('UI:FavoriteOrganizations+'));
+	$oP->add('<form method="post">');	
 	// Favorite organizations: the organizations listed in the drop-down menu
 	$sOQL = ApplicationMenu::GetFavoriteSiloQuery();
 	$oFilter = DBObjectSearch::FromOQL($sOQL);
 	$oBlock = new DisplayBlock($oFilter, 'list', false);
-
-	$oP->add('<div class="page_header"><h1><img style="vertical-align:middle" src="../images/preferences.png"/>&nbsp;'.Dict::S('UI:Preferences')."</h1></div>\n");
-	$oP->add('<div id="user_prefs" style="max-width:800px; min-width:400px;">');
-	$oP->add('<fieldset><legend>'.Dict::S('UI:FavoriteOrganizations').'</legend>');
-	$oP->p(Dict::S('UI:FavoriteOrganizations+'));
-	$oP->add('<form method="post">');	
-	$oBlock->Display($oP, 1, array('menu' => false, 'selection_mode' => true, 'selection_type' => 'multiple', 'cssCount'=> '.selectedCount'));
+	$oBlock->Display($oP, 1, array('menu' => false, 'selection_mode' => true, 'selection_type' => 'multiple', 'cssCount'=> '.selectedCount', 'table_id' => 'user_prefs'));
 	$oP->add($oAppContext->GetForForm());
 	$oP->add('<input type="hidden" name="operation" value="apply"/>');
-	$oP->add('</fieldset>');
-	$sURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
+	$sURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?'.$oAppContext->GetForLink();
 	$oP->add('<p><input type="button" onClick="window.location.href=\''.$sURL.'\'" value="'.Dict::S('UI:Button:Cancel').'"/>');
 	$oP->add('&nbsp;&nbsp;');
 	$oP->add('<input type="submit" value="'.Dict::S('UI:Button:Apply').'"/></p>');
 	$oP->add('</form>');
-	$oP->add('</div>');
+	$oP->add('</fieldset>');
 
 	$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
 	if ($aFavoriteOrgs == null)
@@ -73,10 +78,11 @@ function DisplayPreferences($oP)
 	}
 	else
 	{
-		CheckAll('#user_prefs .listResults :checkbox:not(:disabled)', true);
+		$('#user_prefs table.listResults').trigger('check_all');
 	}
 EOF
 );
+
 	}
 	else
 	{
@@ -109,7 +115,81 @@ EOF
 	}
 EOF
 );
-	}}
+	}
+	
+	//////////////////////////////////////////////////////////////////////////
+	//
+	// User Language selection
+	//
+	//////////////////////////////////////////////////////////////////////////
+
+	$oP->add('<fieldset><legend>'.Dict::S('UI:FavoriteLanguage').'</legend>');
+	$oP->add('<form method="post">');
+  	$aLanguages = Dict::GetLanguages();
+  	$aSortedlang = array();
+  	foreach($aLanguages as $sCode => $aLang)
+  	{
+  		$aSortedlang[$aLang['description']] = $sCode;
+  	}
+  	ksort($aSortedlang);
+  	$oP->add('<p>'.Dict::S('UI:Favorites:SelectYourLanguage').' <select name="language">');
+  	foreach($aSortedlang as $sCode)
+  	{
+  		$sSelected = ($sCode == Dict::GetUserLanguage()) ? 'selected' : '';
+		$oP->add('<option value="'.$sCode.'" '.$sSelected.'/>'.$aLanguages[$sCode]['description'].' ('.$aLanguages[$sCode]['localized_description'].')</option>');
+  	}
+  	$oP->add('</select></p>');
+  	$oP->add('<input type="hidden" name="operation" value="apply_language"/>');
+	$oP->add($oAppContext->GetForForm());
+	$oP->add('<p><input type="button" onClick="window.location.href=\''.$sURL.'\'" value="'.Dict::S('UI:Button:Cancel').'"/>');
+	$oP->add('&nbsp;&nbsp;');
+	$oP->add('<input type="submit" value="'.Dict::S('UI:Button:Apply').'"/></p>');
+	$oP->add('</form>');
+	$oP->add('</fieldset>');
+
+	//////////////////////////////////////////////////////////////////////////
+	//
+	// Other (miscellaneous) settings
+	//
+	//////////////////////////////////////////////////////////////////////////
+	
+	$oP->add('<fieldset><legend>'.Dict::S('UI:FavoriteOtherSettings').'</legend>');
+	$oP->add('<form method="post" onsubmit="return ValidateOtherSettings()">');
+	$iDefaultPageSize = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
+	$oP->add('<p>'.Dict::Format('UI:Favorites:Default_X_ItemsPerPage', '<input id="default_page_size" name="default_page_size" type="text" size="3" value="'.$iDefaultPageSize.'"/><span id="v_default_page_size"></span>').'</p>');
+	$oP->add('<input type="hidden" name="operation" value="apply_others"/>');
+	$oP->add($oAppContext->GetForForm());
+	$oP->add('<p><input type="button" onClick="window.location.href=\''.$sURL.'\'" value="'.Dict::S('UI:Button:Cancel').'"/>');
+	$oP->add('&nbsp;&nbsp;');
+	$oP->add('<input id="other_submit" type="submit" value="'.Dict::S('UI:Button:Apply').'"/></p>');
+	$oP->add('</form>');
+	$oP->add('</fieldset>');
+	
+	$oP->add_script(
+<<<EOF
+function ValidateOtherSettings()
+{
+	var sPageLength = $('#default_page_size').val();
+	var iPageLength = parseInt(sPageLength , 10);
+	if (/^[0-9]+$/.test(sPageLength) && (iPageLength > 0))
+	{
+		$('#v_default_page_size').html('');
+		$('#other_submit').removeAttr('disabled');
+		return true;
+	}
+	else
+	{
+		$('#v_default_page_size').html('<img src="../images/validation_error.png"/>');
+		$('#other_submit').attr('disabled', 'disabled');
+		return false;
+	}
+}
+EOF
+	);
+	
+	$oP->add('</div>');
+	$oP->add_ready_script("$('#fav_page_length').bind('keyup change', function(){ ValidateOtherSettings(); })");
+}
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -144,6 +224,30 @@ try
 			// Some organizations selected... store them
 			$aSelectOrgs = utils::ReadMultipleSelection($oFilter);
 			appUserPreferences::SetPref('favorite_orgs', $aSelectOrgs);
+		}
+		DisplayPreferences($oPage);
+		break;
+		
+		case 'apply_language':
+		$sLangCode = utils::ReadParam('language', 'EN US');
+		$oUser = UserRights::GetUserObject();
+		$oUser->Set('language', $sLangCode);
+		$oMyChange = MetaModel::NewObject("CMDBChange");
+		$oMyChange->Set("date", time());
+		$sUserString = CMDBChange::GetCurrentUserName();
+		$oMyChange->Set("userinfo", $sUserString);
+		$iChangeId = $oMyChange->DBInsert();
+		$oUser->DBUpdateTracked($oMyChange);
+		// Redirect to force a reload/display of the page with the new language
+		$oAppContext = new ApplicationContext();
+		$sURL = utils::GetAbsoluteUrlAppRoot().'pages/preferences.php?'.$oAppContext->GetForLink();
+		$oPage->add_header('Location: '.$sURL);
+		break;
+		case 'apply_others':
+		$iDefaultPageSize = (int)utils::ReadParam('default_page_size', -1);
+		if ($iDefaultPageSize > 0)
+		{
+			appUserPreferences::SetPref('default_page_size', $iDefaultPageSize);
 		}
 		DisplayPreferences($oPage);
 		break;
