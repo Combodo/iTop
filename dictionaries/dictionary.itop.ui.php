@@ -951,9 +951,13 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Pagination:All' => 'All',
 	'UI:HierarchyOf_Class' => 'Hierarchy of %1$s',
 	'UI:Preferences' => 'Preferences...',
-	'UI:FavoriteOrganizations' => 'My Favorite Organizations',
+	'UI:FavoriteOrganizations' => 'Favorite Organizations',
 	'UI:FavoriteOrganizations+' => 'Check in the list below the organizations that you want to see in the drop-down menu for a quick access. '.
 								   'Note that this is not a security setting, objects from any organization are still visible and can be accessed by selecting "All Organizations" in the drop-down list.',
+	'UI:FavoriteLanguage' => 'Language of the User Interface',
+	'UI:Favorites:SelectYourLanguage' => 'Select your preferred language',
+	'UI:FavoriteOtherSettings' => 'Other Settings',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Default length for lists:  %1$s items per page',
 	'UI:NavigateAwayConfirmationMessage' => 'Any modification will be discarded.',
 	'UI:Create_Class_InState' => 'Create the %1$s in state: ',
 	'UI:OrderByHint_Values' => 'Sort order: %1$s',
@@ -974,5 +978,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ExtField_AsRemoteField' => '%1$s (%2$s)',
 	'UI:Button:MoveUp' => 'Move Up',
 	'UI:Button:MoveDown' => 'Move Down',
+
 ));
 ?>
