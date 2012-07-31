@@ -35,87 +35,10 @@ require_once(APPROOT.'/application/startup.inc.php');
 function DisplayPreferences($oP)
 {
 	$oAppContext = new ApplicationContext();
-
+	$sURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?'.$oAppContext->GetForLink();
+	
 	$oP->add('<div class="page_header"><h1><img style="vertical-align:middle" src="../images/preferences.png"/>&nbsp;'.Dict::S('UI:Preferences')."</h1></div>\n");
 	$oP->add('<div id="user_prefs" style="max-width:800px; min-width:400px;">');
-
-	//////////////////////////////////////////////////////////////////////////
-	//
-	// Favorite Organizations
-	//
-	//////////////////////////////////////////////////////////////////////////
-
-	$oP->add('<fieldset><legend>'.Dict::S('UI:FavoriteOrganizations').'</legend>');
-	$oP->p(Dict::S('UI:FavoriteOrganizations+'));
-	$oP->add('<form method="post">');	
-	// Favorite organizations: the organizations listed in the drop-down menu
-	$sOQL = ApplicationMenu::GetFavoriteSiloQuery();
-	$oFilter = DBObjectSearch::FromOQL($sOQL);
-	$oBlock = new DisplayBlock($oFilter, 'list', false);
-	$oBlock->Display($oP, 1, array('menu' => false, 'selection_mode' => true, 'selection_type' => 'multiple', 'cssCount'=> '.selectedCount', 'table_id' => 'user_prefs'));
-	$oP->add($oAppContext->GetForForm());
-	$oP->add('<input type="hidden" name="operation" value="apply"/>');
-	$sURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?'.$oAppContext->GetForLink();
-	$oP->add('<p><input type="button" onClick="window.location.href=\''.$sURL.'\'" value="'.Dict::S('UI:Button:Cancel').'"/>');
-	$oP->add('&nbsp;&nbsp;');
-	$oP->add('<input type="submit" value="'.Dict::S('UI:Button:Apply').'"/></p>');
-	$oP->add('</form>');
-	$oP->add('</fieldset>');
-
-	$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
-	if ($aFavoriteOrgs == null)
-	{
-		// All checked
-		$oP->add_ready_script(
-<<<EOF
-	if ($('#user_prefs table.pagination').length > 0)
-	{
-		// paginated display, restore the selection
-		var pager = $('#user_prefs form .pager');
-		$(':input[name=selectionMode]', pager).val('negative');
-		$('#user_prefs table.listResults').trigger('load_selection');
-		
-	}
-	else
-	{
-		$('#user_prefs table.listResults').trigger('check_all');
-	}
-EOF
-);
-
-	}
-	else
-	{
-		$sChecked = implode('","', $aFavoriteOrgs);
-		$oP->add_ready_script(
-<<<EOF
-	var aChecked = ["$sChecked"];
-	if ($('#user_prefs table.pagination').length > 0)
-	{
-		// paginated display, restore the selection
-		var pager = $('#user_prefs form .pager');
-		$(':input[name=selectionMode]', pager).val('positive');
-		for (i=0; i<aChecked.length; i++)
-		{
-			pager.append('<input type="hidden" name="storedSelection[]" id="'+aChecked[i]+'" value="'+aChecked[i]+'"/>');
-		}
-		$('#user_prefs table.listResults').trigger('load_selection');
-		
-	}
-	else
-	{
-		$('#user_prefs form :checkbox[name^=selectObject]').each( function()
-			{
-				if ($.inArray($(this).val(), aChecked) > -1)
-				{
-					$(this).attr('checked', true);
-					$(this).trigger('change');
-				}
-			});
-	}
-EOF
-);
-	}
 	
 	//////////////////////////////////////////////////////////////////////////
 	//
@@ -186,6 +109,83 @@ function ValidateOtherSettings()
 }
 EOF
 	);
+
+	//////////////////////////////////////////////////////////////////////////
+	//
+	// Favorite Organizations
+	//
+	//////////////////////////////////////////////////////////////////////////
+
+	$oP->add('<fieldset><legend>'.Dict::S('UI:FavoriteOrganizations').'</legend>');
+	$oP->p(Dict::S('UI:FavoriteOrganizations+'));
+	$oP->add('<form method="post">');	
+	// Favorite organizations: the organizations listed in the drop-down menu
+	$sOQL = ApplicationMenu::GetFavoriteSiloQuery();
+	$oFilter = DBObjectSearch::FromOQL($sOQL);
+	$oBlock = new DisplayBlock($oFilter, 'list', false);
+	$oBlock->Display($oP, 1, array('menu' => false, 'selection_mode' => true, 'selection_type' => 'multiple', 'cssCount'=> '.selectedCount', 'table_id' => 'user_prefs'));
+	$oP->add($oAppContext->GetForForm());
+	$oP->add('<input type="hidden" name="operation" value="apply"/>');
+	$oP->add('<p><input type="button" onClick="window.location.href=\''.$sURL.'\'" value="'.Dict::S('UI:Button:Cancel').'"/>');
+	$oP->add('&nbsp;&nbsp;');
+	$oP->add('<input type="submit" value="'.Dict::S('UI:Button:Apply').'"/></p>');
+	$oP->add('</form>');
+	$oP->add('</fieldset>');
+
+	$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
+	if ($aFavoriteOrgs == null)
+	{
+		// All checked
+		$oP->add_ready_script(
+<<<EOF
+	if ($('#user_prefs table.pagination').length > 0)
+	{
+		// paginated display, restore the selection
+		var pager = $('#user_prefs form .pager');
+		$(':input[name=selectionMode]', pager).val('negative');
+		$('#user_prefs table.listResults').trigger('load_selection');
+		
+	}
+	else
+	{
+		$('#user_prefs table.listResults').trigger('check_all');
+	}
+EOF
+);
+
+	}
+	else
+	{
+		$sChecked = implode('","', $aFavoriteOrgs);
+		$oP->add_ready_script(
+<<<EOF
+	var aChecked = ["$sChecked"];
+	if ($('#user_prefs table.pagination').length > 0)
+	{
+		// paginated display, restore the selection
+		var pager = $('#user_prefs form .pager');
+		$(':input[name=selectionMode]', pager).val('positive');
+		for (i=0; i<aChecked.length; i++)
+		{
+			pager.append('<input type="hidden" name="storedSelection[]" id="'+aChecked[i]+'" value="'+aChecked[i]+'"/>');
+		}
+		$('#user_prefs table.listResults').trigger('load_selection');
+		
+	}
+	else
+	{
+		$('#user_prefs form :checkbox[name^=selectObject]').each( function()
+			{
+				if ($.inArray($(this).val(), aChecked) > -1)
+				{
+					$(this).attr('checked', true);
+					$(this).trigger('change');
+				}
+			});
+	}
+EOF
+);
+	}
 	
 	$oP->add('</div>');
 	$oP->add_ready_script("$('#fav_page_length').bind('keyup change', function(){ ValidateOtherSettings(); })");
