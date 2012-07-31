@@ -1130,8 +1130,13 @@ class HistoryBlock extends DisplayBlock
 	}
 }
 
+/**
+ * Displays the 'Actions' menu for a given (list of) object(s)
+ * The 'style' of the list (see constructor of DisplayBlock) can be either 'list' or 'details'
+ * For backward compatibility 'popup' is equivalent to 'list'...
+ */
 class MenuBlock extends DisplayBlock
-{
+{	
 	/**
 	 * Renders the "Actions" popup menu for the given set of objects
 	 * 
@@ -1143,6 +1148,10 @@ class MenuBlock extends DisplayBlock
 	 */
 	public function GetRenderContent(WebPage $oPage, $aExtraParams = array(), $sId)
 	{
+		if ($this->m_sStyle == 'popup') // popup is a synonym of 'list' for backward compatibility
+		{
+			$this->m_sStyle = 'list';
+		}
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();
 		$sContext = $oAppContext->GetForLink();
@@ -1226,8 +1235,13 @@ class MenuBlock extends DisplayBlock
 				$sUrl = ApplicationContext::MakeObjectUrl($sClass, $id);
 				$aActions['UI:Menu:EMail'] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".urlencode($oObj->GetRawName())."&body=".urlencode($sUrl));
 				$aActions['UI:Menu:CSVExport'] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=search&filter=$sFilter&format=csv{$sContext}");
-				$sOQL = addslashes($sFilterDesc);
-				$aActions['UI:Menu:AddToDashboard'] = array ('label' => Dict::S('UI:Menu:AddToDashboard'), 'url' => "#", 'onclick' => "return DashletCreationDlg('$sOQL')");
+				// The style tells us whether the menu is displayed on a list of one object, or on the details of the given object 
+				if ($this->m_sStyle == 'list')
+				{
+					// Actions specific to the list
+					$sOQL = addslashes($sFilterDesc);
+					$aActions['UI:Menu:AddToDashboard'] = array ('label' => Dict::S('UI:Menu:AddToDashboard'), 'url' => "#", 'onclick' => "return DashletCreationDlg('$sOQL')");
+				}
 			}
 			$this->AddMenuSeparator($aActions);
 			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
@@ -1314,9 +1328,19 @@ class MenuBlock extends DisplayBlock
 			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 			{
 				$oSet->Rewind();
-				foreach($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $sUrl)
+				foreach($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $data)
 				{
-					$aActions[$sLabel] = array ('label' => $sLabel, 'url' => $sUrl);
+					if (is_array($data))
+					{
+						// New plugins can provide javascript handlers via the 'onclick' property
+						//TODO: enable extension of different menus by checking the 'target' property ??
+						$aActions[$sLabel] = array ('label' => $sLabel, 'url' => isset($data['url']) ? $data['url'] : '#', 'url' => isset($data['onclick']) ? $data['onclick'] : '');
+					}
+					else
+					{
+						// Backward compatibility with old plugins
+						$aActions[$sLabel] = array ('label' => $sLabel, 'url' => $data);
+					}
 				}
 			}
 		}

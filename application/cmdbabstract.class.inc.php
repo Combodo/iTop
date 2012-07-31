@@ -99,7 +99,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		// action menu
 		$oSingletonFilter = new DBObjectSearch(get_class($this));
 		$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
-		$oBlock = new MenuBlock($oSingletonFilter, 'popup', false);
+		$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
 		$oBlock->Display($oPage, -1);
 	
 		// Master data sources

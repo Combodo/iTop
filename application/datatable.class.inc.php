@@ -230,7 +230,7 @@ EOF;
 	
 	protected function GetActionsMenu(WebPage $oPage, $aExtraParams)
 	{
-		$oMenuBlock = new MenuBlock($this->oSet->GetFilter());
+		$oMenuBlock = new MenuBlock($this->oSet->GetFilter(), 'list');
 		
 		$sHtml = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $this->iListId);
 		return $sHtml;
