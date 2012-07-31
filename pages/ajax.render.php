@@ -824,7 +824,7 @@ try
 			// navigate to the dashboard page
 			if ($aValues['open_editor'])
 			{
-				$oPage->add_ready_script("window.location.href='".addslashes(utils::GetAbsoluteUrlAppRoot().'pages/UI.php?c[menu]='.$index)."&edit=1';"); // reloads the page, doing a GET even if we arrived via a POST
+				$oPage->add_ready_script("window.location.href='".addslashes(utils::GetAbsoluteUrlAppRoot().'pages/UI.php?c[menu]='.urlencode($sMenuId))."&edit=1';"); // reloads the page, doing a GET even if we arrived via a POST
 			}
 		}
 		break;

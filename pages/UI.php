@@ -2159,7 +2159,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		default: // Menu node rendering (templates)
-		$oMenuNode = ApplicationMenu::GetMenuNode(ApplicationMenu::GetActiveNodeId());
+		$oMenuNode = ApplicationMenu::GetMenuNode(ApplicationMenu::GetMenuIndexById(ApplicationMenu::GetActiveNodeId()));
 		if (is_object($oMenuNode))
 		{
 		
