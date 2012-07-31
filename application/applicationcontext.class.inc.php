@@ -98,7 +98,7 @@ class ApplicationContext
 		if (!isset(self::$aDefaultValues))
 		{
 			self::$aDefaultValues = array();
-			$aContext = utils::ReadParam('c', array());
+			$aContext = utils::ReadParam('c', array(), false, 'context_param');
 			foreach($this->aNames as $sName)
 			{
 				$sValue = isset($aContext[$sName]) ? $aContext[$sName] : '';

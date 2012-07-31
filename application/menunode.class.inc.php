@@ -138,7 +138,7 @@ class ApplicationMenu
 		// Sort the root menu based on the rank
 		usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
 		$iAccordion = 0;
-		$iActiveMenu = ApplicationMenu::GetActiveNodeId();
+		$iActiveMenu = self::GetMenuIndexById(self::GetActiveNodeId());
 		foreach(self::$aRootMenus as $aMenu)
 		{
 			$oMenuNode = self::GetMenuNode($aMenu['index']);
@@ -257,22 +257,21 @@ class ApplicationMenu
 	
 	/**
 	 * Retrieves the currently active menu (if any, otherwise the first menu is the default)
-	 * @return MenuNode or null if there is no menu at all !
+	 * @return string The Id of the currently active menu
 	 */
 	static public function GetActiveNodeId()
 	{
 		$oAppContext = new ApplicationContext();
-		$iMenuIndex = $oAppContext->GetCurrentValue('menu', -1);
-		
-		if ($iMenuIndex  == -1)
+		$sMenuId = $oAppContext->GetCurrentValue('menu', null);		
+		if ($sMenuId  === null)
 		{
 			// Make sure the root menu is sorted on 'rank'
 			usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
 			$oFirstGroup = self::GetMenuNode(self::$aRootMenus[0]['index']);
 			$oMenuNode = self::GetMenuNode(self::$aMenusIndex[$oFirstGroup->GetIndex()]['children'][0]['index']);
-			$iMenuIndex = $oMenuNode->GetIndex();
+			$sMenuId = $oMenuNode->GetMenuId();
 		}
-		return $iMenuIndex;
+		return $sMenuId;
 	}	
 }
 
@@ -388,7 +387,7 @@ abstract class MenuNode
 	
 	public function GetHyperlink($aExtraParams)
 	{
-		$aExtraParams['c[menu]'] = $this->GetIndex();
+		$aExtraParams['c[menu]'] = $this->GetMenuId();
 		return $this->AddParams(utils::GetAbsoluteUrlAppRoot().'pages/UI.php', $aExtraParams);
 	}
 	
@@ -689,7 +688,7 @@ class WebPageMenuNode extends MenuNode
 
 	public function GetHyperlink($aExtraParams)
 	{
-		$aExtraParams['c[menu]'] = $this->GetIndex();
+		$aExtraParams['c[menu]'] = $this->GetMenuId();
 		return $this->AddParams( $this->sHyperlink, $aExtraParams);
 	}
 	
@@ -728,7 +727,7 @@ class NewObjectMenuNode extends MenuNode
 	public function GetHyperlink($aExtraParams)
 	{
 		$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=new&class='.$this->sClass;
-		$aExtraParams['c[menu]'] = $this->GetIndex();
+		$aExtraParams['c[menu]'] = $this->GetMenuId();
 		return $this->AddParams($sHyperlink, $aExtraParams);
 	}
 
