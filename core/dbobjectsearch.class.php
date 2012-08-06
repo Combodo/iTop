@@ -926,7 +926,7 @@ class DBObjectSearch
 		$sSelectedClasses = implode(', ', array_keys($this->m_aSelectedClasses));
 		$sRes = 'SELECT '.$sSelectedClasses.' FROM';
 
-		$sRes .= ' '.$this->GetClass().' AS '.$this->GetClassAlias();
+		$sRes .= ' '.$this->GetFirstJoinedClass().' AS '.$this->GetFirstJoinedClassAlias();
 		$sRes .= $this->ToOQL_Joins();
 		$sRes .= " WHERE ".$this->m_oSearchCondition->Render($aParams, $bRetrofitParams);
 
