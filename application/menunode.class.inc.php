@@ -782,7 +782,7 @@ class DashboardMenuNode extends MenuNode
 	{
 		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
 		$this->sDashboardFile = $sDashboardFile;
-		$this->aReflectionProperties['dashboard_file'] = $sDashboardFile;
+		$this->aReflectionProperties['definition_file'] = $sDashboardFile;
 	}
 	
 	public function GetHyperlink($aExtraParams)
