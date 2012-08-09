@@ -144,7 +144,7 @@ Operators:<br/>
 	'Core:AttributeFriendlyName' => 'Friendly name',
 	'Core:AttributeFriendlyName+' => 'Attribute created automatically ; the friendly name is computed after several attributes',
 
-	'Core:FriendlyName-Label' => 'Name',
+	'Core:FriendlyName-Label' => 'Friendly name',
 	'Core:FriendlyName-Description' => 'Friendly name',
 ));
 
