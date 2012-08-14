@@ -280,6 +280,59 @@ try
 			}
 		}
 
+		// Constant classes (e.g. User profiles)
+		//
+		foreach (MetaModel::GetClasses() as $sClass)
+		{
+			if (method_exists($sClass, 'GetConstantColumns'))
+			{
+				// Temporary... until this get really encapsulated as the default and transparent behavior
+				$oMyChange = MetaModel::NewObject("CMDBChange");
+				$oMyChange->Set("date", time());
+				$sUserString = CMDBChange::GetCurrentUserName();
+				$oMyChange->Set("userinfo", $sUserString);
+				$iChangeId = $oMyChange->DBInsert();
+
+				// Create/Delete/Update objects of this class,
+				// according to the given constant values
+				//
+				$aAttList = call_user_func(array($sClass, 'GetConstantColumns'));
+				$aRefValues = call_user_func(array($sClass, 'GetConstantValues'));
+				$aDBIds = array();
+				$oAll = new DBObjectSet(new DBObjectSearch($sClass));
+				while ($oObj = $oAll->Fetch())
+				{
+					if (array_key_exists($oObj->GetKey(), $aRefValues))
+					{
+						$aObjValues = $aRefValues[$oObj->GetKey()];
+						foreach ($aAttList as $sAttCode)
+						{
+							$oObj->Set($sAttCode, $aObjValues[$sAttCode]);
+						}
+						$oObj->DBUpdateTracked($oMyChange);
+						$aDBIds[$oObj->GetKey()] = true;
+					}
+					else
+					{
+						$oObj->DBDeleteTracked($oMyChange);
+					}
+				}
+				foreach ($aRefValues as $iRefId => $aObjValues)
+				{
+					if (!array_key_exists($iRefId, $aDBIds))
+					{
+						$oNewObj = MetaModel::NewObject($sClass);
+						$oNewObj->SetKey($iRefId);
+						foreach ($aAttList as $sAttCode)
+						{
+							$oNewObj->Set($sAttCode, $aObjValues[$sAttCode]);
+						}
+						$oNewObj->DBInsertTracked($oMyChange);
+					}
+				}
+			}
+		}
+
 		if (!$oProductionEnv->RecordInstallation($oConfig, $aSelectedModules, $sModuleDir))
 		{
 			throw(new Exception("Failed to record the installation information"));

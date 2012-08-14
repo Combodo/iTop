@@ -64,6 +64,7 @@ class ModuleDiscovery
 		}
 
 		$aArgs['root_dir'] = dirname($sFilePath);
+		$aArgs['module_file'] = $sFilePath;
 
 		self::$m_aModules[$sId] = $aArgs;
 

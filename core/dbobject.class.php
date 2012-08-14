@@ -789,6 +789,15 @@ abstract class DBObject
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
 		$iFlags = 0; // By default (if no life cycle) no flag at all
+
+		if (method_exists(get_class($this), 'GetConstantColumns'))
+		{
+			if (in_array($sAttCode, $this->GetConstantColumns()))
+			{
+				return OPT_ATT_READONLY;
+			}
+		}
+
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
 		if (!empty($sStateAttCode))
 		{

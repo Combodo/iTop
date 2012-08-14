@@ -47,28 +47,6 @@ class UserRightsBaseClassGUI extends cmdbAbstractObject
 	}
 }
 
-class UserRightsBaseClass extends DBObject
-{
-	// Whenever something changes, reload the privileges
-	
-	protected function AfterInsert()
-	{
-		UserRights::FlushPrivileges();
-	}
-
-	protected function AfterUpdate()
-	{
-		UserRights::FlushPrivileges();
-	}
-
-	protected function AfterDelete()
-	{
-		UserRights::FlushPrivileges();
-	}
-}
-
-
-
 
 class URP_Profiles extends UserRightsBaseClassGUI
 {
@@ -101,27 +79,9 @@ class URP_Profiles extends UserRightsBaseClassGUI
 		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 
-	protected $m_bCheckReservedNames = true;
-	protected function DisableCheckOnReservedNames()
-	{
-		$this->m_bCheckReservedNames = false;
-	}
-
-	
-	protected static $m_aActions = array(
-		UR_ACTION_READ => 'Read',
-		UR_ACTION_MODIFY => 'Modify',
-		UR_ACTION_DELETE => 'Delete',
-		UR_ACTION_BULK_READ => 'Bulk Read',
-		UR_ACTION_BULK_MODIFY => 'Bulk Modify',
-		UR_ACTION_BULK_DELETE => 'Bulk Delete',
-	);
-
-	protected static $m_aCacheActionGrants = null;
-	protected static $m_aCacheStimulusGrants = null;
 	protected static $m_aCacheProfiles = null;
 	
-	public static function DoCreateProfile($sName, $sDescription, $bReservedName = false)
+	public static function DoCreateProfile($sName, $sDescription)
 	{
 		if (is_null(self::$m_aCacheProfiles))
 		{
@@ -142,118 +102,19 @@ class URP_Profiles extends UserRightsBaseClassGUI
 		$oNewObj = MetaModel::NewObject("URP_Profiles");
 		$oNewObj->Set('name', $sName);
 		$oNewObj->Set('description', $sDescription);
-		if ($bReservedName)
-		{
-			$oNewObj->DisableCheckOnReservedNames();			
-		}
 		$iId = $oNewObj->DBInsertNoReload();
 		self::$m_aCacheProfiles[$sCacheKey] = $iId;	
 		return $iId;
 	}
 	
-	public static function DoCreateActionGrant($iProfile, $iAction, $sClass, $bPermission = true)
-	{
-		$sAction = self::$m_aActions[$iAction];
-	
-		if (is_null(self::$m_aCacheActionGrants))
-		{
-			self::$m_aCacheActionGrants = array();
-			$oFilterAll = new DBObjectSearch('URP_ActionGrant');
-			$oSet = new DBObjectSet($oFilterAll);
-			while ($oGrant = $oSet->Fetch())
-			{
-				self::$m_aCacheActionGrants[$oGrant->Get('profileid').'-'.$oGrant->Get('action').'-'.$oGrant->Get('class')] = $oGrant->GetKey();
-			}
-		}	
-
-		$sCacheKey = "$iProfile-$sAction-$sClass";
-		if (isset(self::$m_aCacheActionGrants[$sCacheKey]))
-		{
-			return self::$m_aCacheActionGrants[$sCacheKey];
-		}
-
-		$oNewObj = MetaModel::NewObject("URP_ActionGrant");
-		$oNewObj->Set('profileid', $iProfile);
-		$oNewObj->Set('permission', $bPermission ? 'yes' : 'no');
-		$oNewObj->Set('class', $sClass);
-		$oNewObj->Set('action', $sAction);
-		$iId = $oNewObj->DBInsertNoReload();
-		self::$m_aCacheActionGrants[$sCacheKey] = $iId;	
-		return $iId;
-	}
-	
-	public static function DoCreateStimulusGrant($iProfile, $sStimulusCode, $sClass)
-	{
-		if (is_null(self::$m_aCacheStimulusGrants))
-		{
-			self::$m_aCacheStimulusGrants = array();
-			$oFilterAll = new DBObjectSearch('URP_StimulusGrant');
-			$oSet = new DBObjectSet($oFilterAll);
-			while ($oGrant = $oSet->Fetch())
-			{
-				self::$m_aCacheStimulusGrants[$oGrant->Get('profileid').'-'.$oGrant->Get('stimulus').'-'.$oGrant->Get('class')] = $oGrant->GetKey();
-			}
-		}	
-
-		$sCacheKey = "$iProfile-$sStimulusCode-$sClass";
-		if (isset(self::$m_aCacheStimulusGrants[$sCacheKey]))
-		{
-			return self::$m_aCacheStimulusGrants[$sCacheKey];
-		}
-		$oNewObj = MetaModel::NewObject("URP_StimulusGrant");
-		$oNewObj->Set('profileid', $iProfile);
-		$oNewObj->Set('permission', 'yes');
-		$oNewObj->Set('class', $sClass);
-		$oNewObj->Set('stimulus', $sStimulusCode);
-		$iId = $oNewObj->DBInsertNoReload();
-		self::$m_aCacheStimulusGrants[$sCacheKey] = $iId;	
-		return $iId;
-	}
-	
-	/*
-	* Create the built-in Administrator profile with its reserved name
-	*/	
-	public static function DoCreateAdminProfile()
-	{
-		self::DoCreateProfile(ADMIN_PROFILE_NAME, 'Has the rights on everything (bypassing any control)', true /* reserved name */);
-	}
-
-	/*
-	* Overload the standard behavior to preserve reserved names
-	*/	
-	public function DoCheckToWrite()
-	{
-		parent::DoCheckToWrite();
-
-		if ($this->m_bCheckReservedNames)
-		{
-			$aChanges = $this->ListChanges();
-			if (array_key_exists('name', $aChanges))
-			{
-				if ($this->GetOriginal('name') == ADMIN_PROFILE_NAME)
-				{
-					$this->m_aCheckIssues[] = "The name of the Administrator profile must not be changed";
-				}
-				elseif ($this->Get('name') == ADMIN_PROFILE_NAME)
-				{
-					$this->m_aCheckIssues[] = ADMIN_PROFILE_NAME." is a reserved to the built-in Administrator profile";
-				}
-				elseif ($this->GetOriginal('name') == PORTAL_PROFILE_NAME)
-				{
-					$this->m_aCheckIssues[] = "The name of the User Portal profile must not be changed";
-				}
-				elseif ($this->Get('name') == PORTAL_PROFILE_NAME)
-				{
-					$this->m_aCheckIssues[] = PORTAL_PROFILE_NAME." is a reserved to the built-in User Portal profile";
-				}
-			}
-		}
-	}
-
 	function GetGrantAsHtml($oUserRights, $sClass, $sAction)
 	{
-		$iGrant = $oUserRights->GetProfileActionGrant($this->GetKey(), $sClass, $sAction);
-		if (!is_null($iGrant))
+		$bGrant = $oUserRights->GetProfileActionGrant($this->GetKey(), $sClass, $sAction);
+		if (is_null($bGrant))
+		{
+			return '<span style="background-color: #ffdddd;">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
+		}
+		elseif ($bGrant)
 		{
 			return '<span style="background-color: #ddffdd;">'.Dict::S('UI:UserManagement:ActionAllowed:Yes').'</span>';
 		}
@@ -284,8 +145,8 @@ class URP_Profiles extends UserRightsBaseClassGUI
 			$aStimuli = array();
 			foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
 			{
-				$oGrant = $oUserRights->GetClassStimulusGrant($this->GetKey(), $sClass, $sStimulusCode);
-				if (is_object($oGrant) && ($oGrant->Get('permission') == 'yes'))
+				$bGrant = $oUserRights->GetClassStimulusGrant($this->GetKey(), $sClass, $sStimulusCode);
+				if ($bGrant === true)
 				{ 
 					$aStimuli[] = '<span title="'.$sStimulusCode.': '.htmlentities($oStimulus->GetDescription(), ENT_QUOTES, 'UTF-8').'">'.htmlentities($oStimulus->GetLabel(), ENT_QUOTES, 'UTF-8').'</span>';
 				}
@@ -294,12 +155,12 @@ class URP_Profiles extends UserRightsBaseClassGUI
 			
 			$aDisplayData[] = array(
 				'class' => MetaModel::GetName($sClass),
-				'read' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Read'),
-				'bulkread' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Bulk Read'),
-				'write' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Modify'),
-				'bulkwrite' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Bulk Modify'),
-				'delete' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Delete'),
-				'bulkdelete' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Bulk Delete'),
+				'read' => $this->GetGrantAsHtml($oUserRights, $sClass, 'r'),
+				'bulkread' => $this->GetGrantAsHtml($oUserRights, $sClass, 'br'),
+				'write' => $this->GetGrantAsHtml($oUserRights, $sClass, 'w'),
+				'bulkwrite' => $this->GetGrantAsHtml($oUserRights, $sClass, 'bw'),
+				'delete' => $this->GetGrantAsHtml($oUserRights, $sClass, 'd'),
+				'bulkdelete' => $this->GetGrantAsHtml($oUserRights, $sClass, 'bd'),
 				'stimuli' => $sStimuli,
 			);
 		}
@@ -323,6 +184,30 @@ class URP_Profiles extends UserRightsBaseClassGUI
 		{
 			$oPage->SetCurrentTab(Dict::S('UI:UserManagement:GrantMatrix'));
 			$this->DoShowGrantSumary($oPage);		
+		}
+	}
+
+	public static function GetConstantColumns()
+	{
+		return array('name', 'description');
+	}
+
+
+	// returns an array of id => array of column => php value(so-called "real value")
+	public static function GetConstantValues()
+	{
+		return ProfilesConfig::GetProfilesValues();
+	}
+
+	// Before deleting a profile,
+	// preserve DB integrity by deleting links to users
+	protected function OnDelete()
+	{
+		// Note: this may break the rule that says: "a user must have at least ONE profile" !
+		$oLnkSet = $this->Get('user_list');
+		while($oLnk = $oLnkSet->Fetch())
+		{
+			$oLnk->DBDelete();
 		}
 	}
 }
@@ -410,123 +295,17 @@ class URP_UserOrg extends UserRightsBaseClassGUI
 }
 
 
-class URP_ActionGrant extends UserRightsBaseClass
-{
-	public static function Init()
-	{
-		$aParams = array
-		(
-			"category" => "addon/userrights",
-			"key_type" => "autoincrement",
-			"name_attcode" => "profileid",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_urp_grant_actions",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
-			"display_template" => "",
-		);
-		MetaModel::Init_Params($aParams);
-		//MetaModel::Init_InheritAttributes();
-
-		// Common to all grant classes (could be factorized by class inheritence, but this has to be benchmarked)
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeClass("class", array("class_category"=>"", "more_values"=>"", "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
-
-		MetaModel::Init_AddAttribute(new AttributeString("action", array("allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-
-		// Display lists
-		MetaModel::Init_SetZListItems('details', array('profileid', 'class', 'permission', 'action')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('class', 'permission', 'action')); // Attributes to be displayed for a list
-		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('profileid', 'class', 'permission', 'action')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('profileid', 'class', 'permission', 'action')); // Criteria of the advanced search form
-	}
-}
-
-
-class URP_StimulusGrant extends UserRightsBaseClass
-{
-	public static function Init()
-	{
-		$aParams = array
-		(
-			"category" => "addon/userrights",
-			"key_type" => "autoincrement",
-			"name_attcode" => "profileid",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_urp_grant_stimulus",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
-			"display_template" => "",
-		);
-		MetaModel::Init_Params($aParams);
-		//MetaModel::Init_InheritAttributes();
-
-		// Common to all grant classes (could be factorized by class inheritence, but this has to be benchmarked)
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeClass("class", array("class_category"=>"", "more_values"=>"", "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
-
-		MetaModel::Init_AddAttribute(new AttributeString("stimulus", array("allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-
-		// Display lists
-		MetaModel::Init_SetZListItems('details', array('profileid', 'class', 'permission', 'stimulus')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('class', 'permission', 'stimulus')); // Attributes to be displayed for a list
-		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('profileid', 'class', 'permission', 'stimulus')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('profileid', 'class', 'permission', 'stimulus')); // Criteria of the advanced search form
-	}
-}
-
-
-class URP_AttributeGrant extends UserRightsBaseClass
-{
-	public static function Init()
-	{
-		$aParams = array
-		(
-			"category" => "addon/userrights",
-			"key_type" => "autoincrement",
-			"name_attcode" => "actiongrantid",
-			"state_attcode" => "",
-			"reconc_keys" => array(),
-			"db_table" => "priv_urp_grant_attributes",
-			"db_key_field" => "id",
-			"db_finalclass_field" => "",
-			"display_template" => "",
-		);
-		MetaModel::Init_Params($aParams);
-		//MetaModel::Init_InheritAttributes();
-
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("actiongrantid", array("targetclass"=>"URP_ActionGrant", "jointype"=> "", "allowed_values"=>null, "sql"=>"actiongrantid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("attcode", array("allowed_values"=>null, "sql"=>"attcode", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-
-		// Display lists
-		MetaModel::Init_SetZListItems('details', array('actiongrantid', 'attcode')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('attcode')); // Attributes to be displayed for a list
-		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('actiongrantid', 'attcode')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('actiongrantid', 'attcode')); // Criteria of the advanced search form
-	}
-}
-
-
 
 
 class UserRightsProfile extends UserRightsAddOnAPI
 {
 	static public $m_aActionCodes = array(
-		UR_ACTION_READ => 'read',
-		UR_ACTION_MODIFY => 'modify',
-		UR_ACTION_DELETE => 'delete',
-		UR_ACTION_BULK_READ => 'bulk read',
-		UR_ACTION_BULK_MODIFY => 'bulk modify',
-		UR_ACTION_BULK_DELETE => 'bulk delete',
+		UR_ACTION_READ => 'r',
+		UR_ACTION_MODIFY => 'w',
+		UR_ACTION_DELETE => 'd',
+		UR_ACTION_BULK_READ => 'br',
+		UR_ACTION_BULK_MODIFY => 'bw',
+		UR_ACTION_BULK_DELETE => 'bd',
 	);
 
 	// Installation: create the very first user
@@ -603,10 +382,6 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	protected $m_aProfiles; // id -> object
 	protected $m_aUserProfiles = array(); // userid,profileid -> object
 	protected $m_aUserOrgs = array(); // userid -> array of orgid
-
-	// Those arrays could be completed on demand (inheriting parent permissions)
-	protected $m_aClassActionGrants = null; // profile, class, action -> actiongrantid (or false if NO, or null/missing if undefined)
-	protected $m_aClassStimulusGrants = array(); // profile, class, stimulus -> permission
 
 	// Built on demand, could be optimized if necessary (doing a query for each attribute that needs to be read)
 	protected $m_aObjectActionGrants = array();
@@ -686,30 +461,8 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$this->m_aAdmins = array();
 		$this->m_aPortalUsers = array();
 
-		// Loaded on demand (time consuming as compared to the others)
-		$this->m_aClassActionGrants = null;
-		$this->m_aClassStimulusGrants = null;
-		
+		// Cache
 		$this->m_aObjectActionGrants = array();
-	}
-
-	// Separate load: this cache is much more time consuming while loading
-	// Thus it is loaded iif required
-	// Could be improved by specifying the profile id
-	public function LoadActionGrantCache()
-	{
-		if (!is_null($this->m_aClassActionGrants)) return;
-
-		$oKPI = new ExecutionKPI();
-
-		$oFilter = DBObjectSearch::FromOQL_AllData("SELECT URP_ActionGrant AS p WHERE p.permission = 'yes'");
-		$aGrants = $oFilter->ToDataArray();
-		foreach($aGrants as $aGrant)
-		{
-			$this->m_aClassActionGrants[$aGrant['profileid']][$aGrant['class']][strtolower($aGrant['action'])] = $aGrant['id'];
-		}
-
-		$oKPI->ComputeAndReport('Load of action grants');
 	}
 
 	public function LoadCache()
@@ -731,14 +484,6 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			$this->m_aProfiles[$oProfile->GetKey()] = $oProfile; 
 		}
 
-		$this->m_aClassStimulusGrants = array();
-		$oStimGrantSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_StimulusGrant"));
-		$this->m_aStimGrants = array();
-		while ($oStimGrant = $oStimGrantSet->Fetch())
-		{
-			$this->m_aClassStimulusGrants[$oStimGrant->Get('profileid')][$oStimGrant->Get('class')][$oStimGrant->Get('stimulus')] = $oStimGrant;
-		}
-
 		$oKPI->ComputeAndReport('Load of user management cache (excepted Action Grants)');
 
 /*
@@ -746,8 +491,6 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		print_r($this->m_aProfiles);
 		print_r($this->m_aUserProfiles);
 		print_r($this->m_aUserOrgs);
-		print_r($this->m_aClassActionGrants);
-		print_r($this->m_aClassStimulusGrants);
 		echo "</pre>\n";
 exit;
 */
@@ -891,29 +634,10 @@ exit;
 	// This verb has been made public to allow the development of an accurate feedback for the current configuration
 	public function GetProfileActionGrant($iProfile, $sClass, $sAction)
 	{
-		$this->LoadActionGrantCache();
-
 		// Note: action is forced lowercase to be more flexible (historical bug)
 		$sAction = strtolower($sAction);
-		if (isset($this->m_aClassActionGrants[$iProfile][$sClass][$sAction]))
-		{
-			return $this->m_aClassActionGrants[$iProfile][$sClass][$sAction];
-		}
 
-		// Recursively look for the grant record in the class hierarchy
-		$sParentClass = MetaModel::GetParentPersistentClass($sClass);
-		if (empty($sParentClass))
-		{
-			$iGrant = null;
-		}
-		else
-		{
-			// Recursively look for the grant record in the class hierarchy
-			$iGrant = $this->GetProfileActionGrant($iProfile, $sParentClass, $sAction);
-		}
-
-		$this->m_aClassActionGrants[$iProfile][$sClass][$sAction] = $iGrant;
-		return $iGrant;
+		return ProfilesConfig::GetProfileActionGrant($iProfile, $sClass, $sAction);
 	}
 
 	protected function GetUserActionGrant($oUser, $sClass, $iActionCode)
@@ -928,39 +652,32 @@ exit;
 
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
-		$iPermission = UR_ALLOWED_NO;
+		$bStatus = null;
 		$aAttributes = array();
 		foreach($this->GetUserProfiles($iUser) as $iProfile => $oProfile)
 		{
-				$iGrant = $this->GetProfileActionGrant($iProfile, $sClass, $sAction);
-				if (is_null($iGrant) || !$iGrant)
+			$bGrant = $this->GetProfileActionGrant($iProfile, $sClass, $sAction);
+			if (!is_null($bGrant))
+			{
+				if ($bGrant)
 				{
-					continue; // loop to the next profile
+					if (is_null($bStatus))
+					{
+						$bStatus = true;
+					}
 				}
 				else
 				{
-					$iPermission = UR_ALLOWED_YES;
-
-					// update the list of attributes with those allowed for this profile
-					//
-					$oSearch = DBObjectSearch::FromOQL_AllData("SELECT URP_AttributeGrant WHERE actiongrantid = :actiongrantid");
-					$oSet = new DBObjectSet($oSearch, array(), array('actiongrantid' => $iGrant));
-					$aProfileAttributes = $oSet->GetColumnAsArray('attcode', false);
-					if (count($aProfileAttributes) == 0)
-					{
-						$aAllAttributes = array_keys(MetaModel::ListAttributeDefs($sClass));
-						$aAttributes = array_merge($aAttributes, $aAllAttributes);
-					}
-					else
-					{
-						$aAttributes = array_merge($aAttributes, $aProfileAttributes);
-					}
+					$bStatus = false;
 				}
 			}
+		}
+
+		$iPermission = $bStatus ? UR_ALLOWED_YES : UR_ALLOWED_NO;
 
 		$aRes = array(
 			'permission' => $iPermission,
-			'attributes' => $aAttributes,
+//			'attributes' => $aAttributes,
 		);
 		$this->m_aObjectActionGrants[$iUser][$sClass][$iActionCode] = $aRes;
 		return $aRes;
@@ -1063,16 +780,7 @@ exit;
 	// This verb has been made public to allow the development of an accurate feedback for the current configuration
 	public function GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode)
 	{
-		$this->LoadCache();
-
-		if (isset($this->m_aClassStimulusGrants[$iProfile][$sClass][$sStimulusCode]))
-		{
-			return $this->m_aClassStimulusGrants[$iProfile][$sClass][$sStimulusCode];
-		}
-		else
-		{
-			return null;
-		}
+		return ProfilesConfig::GetProfileStimulusGrant($iProfile, $sClass, $sStimulusCode);
 	}
 
 	public function IsStimulusAllowed($oUser, $sClass, $sStimulusCode, $oInstanceSet = null)
@@ -1083,16 +791,27 @@ exit;
 
 		// Note: The object set is ignored because it was interesting to optimize for huge data sets
 		//       and acceptable to consider only the root class of the object set
-		$iPermission = UR_ALLOWED_NO;
+		$bStatus = null;
 		foreach($this->GetUserProfiles($iUser) as $iProfile => $oProfile)
 		{
-				$oGrantRecord = $this->GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode);
-				if (!is_null($oGrantRecord))
+			$bGrant = $this->GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode);
+			if (!is_null($bGrant))
+			{
+				if ($bGrant)
 				{
-					// no need to fetch the record, we've requested the records having permission = 'yes'
-					$iPermission = UR_ALLOWED_YES;
+					if (is_null($bStatus))
+					{
+						$bStatus = true;
+					}
+				}
+				else
+				{
+					$bStatus = false;
 				}
 			}
+		}
+
+		$iPermission = $bStatus ? UR_ALLOWED_YES : UR_ALLOWED_NO;
 		return $iPermission;
 	}
 

@@ -41,6 +41,8 @@ define('UR_ACTION_BULK_READ', 4); // Export multiple objects
 define('UR_ACTION_BULK_MODIFY', 5); // Create/modify multiple objects
 define('UR_ACTION_BULK_DELETE', 6); // Delete multiple objects
 
+define('UR_ACTION_CREATE', 7); // Instantiate an object
+
 define('UR_ACTION_APPLICATION_DEFINED', 10000); // Application specific actions (CSV import, View schema...)
 
 /**
@@ -671,9 +673,20 @@ class UserRights
 
 		if (MetaModel::DBIsReadOnly())
 		{
+			if ($iActionCode == UR_ACTION_CREATE) return false;
 			if ($iActionCode == UR_ACTION_MODIFY) return false;
-			if ($iActionCode == UR_ACTION_DELETE) return false;
 			if ($iActionCode == UR_ACTION_BULK_MODIFY) return false;
+			if ($iActionCode == UR_ACTION_DELETE) return false;
+			if ($iActionCode == UR_ACTION_BULK_DELETE) return false;
+		}
+
+		if (method_exists($sClass, 'GetConstantColumns'))
+		{
+			// As opposed to the read-only DB, modifying an object is allowed
+			// (the constant columns will be marked as read-only)
+			//
+			if ($iActionCode == UR_ACTION_CREATE) return false;
+			if ($iActionCode == UR_ACTION_DELETE) return false;
 			if ($iActionCode == UR_ACTION_BULK_DELETE) return false;
 		}
 
@@ -684,6 +697,12 @@ class UserRights
 			if (is_null($oUser))
 			{
 				$oUser = self::$m_oUser;
+			}
+			if ($iActionCode == UR_ACTION_CREATE)
+			{
+				// The addons currently DO NOT handle the case "CREATE"
+				// Therefore it is considered to be equivalent to "MODIFY"
+				$iActionCode = UR_ACTION_MODIFY;
 			}
 			return self::$m_oAddOn->IsActionAllowed($oUser, $sClass, $iActionCode, $oInstanceSet);
 		}

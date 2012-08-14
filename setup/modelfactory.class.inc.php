@@ -314,6 +314,14 @@ class ModelFactory
 					$oNode->SetAttribute('_created_in', $sModuleName);
 				}
 			}
+			$oUserRightsNode = $oXPath->query('/itop_design/user_rights')->item(0);
+			if ($oUserRightsNode)
+			{
+				if ($oUserRightsNode->getAttribute('_created_in') == '')
+				{
+					$oUserRightsNode->SetAttribute('_created_in', $sModuleName);
+				}
+			}
 
 			$oDeltaRoot = $oDocument->childNodes->item(0);
 			$this->LoadDelta($oDocument, $oDeltaRoot, $this->oDOMDocument);

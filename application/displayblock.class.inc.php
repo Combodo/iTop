@@ -1179,7 +1179,7 @@ class MenuBlock extends DisplayBlock
 				$sDefault.= "&default[$sKey]=$sValue";
 			}
 		}
-		$bIsCreationAllowed =  (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES);
+		$bIsCreationAllowed =  (UserRights::IsActionAllowed($sClass, UR_ACTION_CREATE) == UR_ALLOWED_YES);
 		switch($oSet->Count())
 		{
 			case 0:

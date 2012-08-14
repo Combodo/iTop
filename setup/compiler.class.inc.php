@@ -52,6 +52,10 @@ class MFCompiler
 
 	public function Compile($sTargetDir, $oP = null)
 	{
+		$aAllClasses = array(); // flat list of classes
+
+		// Determine the target modules for the MENUS
+		//
 		$aMenuNodes = array();
 		$aMenusByModule = array();
 		foreach ($this->oFactory->ListActiveChildNodes('menus', 'menu') as $oMenuNode)
@@ -63,6 +67,17 @@ class MFCompiler
 			$aMenusByModule[$sModuleMenu][] = $sMenuId;
 		}
 
+		// Determine the target module (exactly one!) for USER RIGHTS
+		//
+		$oUserRightsNode = $this->oFactory->GetNodes('user_rights')->item(0);
+		if (!$oUserRightsNode)
+		{
+			throw new Exception("Missing configuration for user rights");
+		}
+		$sUserRightsModule = $oUserRightsNode->getAttribute('_created_in');
+
+		// List root classes
+		//
 		$this->aRootClasses = array();
 		foreach ($this->oFactory->ListRootClasses() as $oClass)
 		{
@@ -70,6 +85,8 @@ class MFCompiler
 			$this->aRootClasses[$oClass->getAttribute('id')] = $oClass;
 		}
 
+		// Compile, module by module
+		//
 		$aModules = $this->oFactory->GetLoadedModules();
 		foreach($aModules as $foo => $oModule)
 		{
@@ -94,13 +111,14 @@ class MFCompiler
 			{
 				foreach($oClasses as $oClass)
 				{
+					$sClass = $oClass->getAttribute("id");
+					$aAllClasses[] = $sClass;
 					try
 					{
 						$sCompiledCode .= $this->CompileClass($oClass, $sRelativeDir, $oP);
 					}
 					catch (ssDOMFormatException $e)
 					{
-						$sClass = $oClass->getAttribute("id");
 						throw new Exception("Failed to process class '$sClass', from '$sModuleRootDir': ".$e->getMessage());
 					}
 				}
@@ -162,6 +180,13 @@ EOF;
 						throw new Exception("Failed to process menu '$sMenuId', from '$sModuleRootDir': ".$e->getMessage());
 					}
 				}
+			}
+
+			// User rights
+			//
+			if ($sModuleName == $sUserRightsModule)
+			{
+				$sCompiledCode .= $this->CompileUserRights($oUserRightsNode);
 			}
 
 			// Create (overwrite if existing) the compiled file
@@ -968,7 +993,171 @@ EOF;
 		}
 
 		return $sPHP;
+	} // function CompileMenu
+
+	protected function CompileUserRights($oUserRightsNode)
+	{
+		static $aActionsInShort = array(
+			'read' => 'r',
+			'bulk read' => 'br',
+			'write' => 'w',
+			'bulk write' => 'bw',
+			'delete' => 'd',
+			'bulk delete' => 'bd',
+		);
+
+		// Groups
+		//
+		$aGroupClasses = array();
+		$oGroups = $oUserRightsNode->GetUniqueElement('groups');
+		foreach($oGroups->getElementsByTagName('group') as $oGroup)
+		{
+			$sGroupId = $oGroup->getAttribute("id");
+
+			$aClasses = array();
+			$oClasses = $oGroup->GetUniqueElement('classes');
+			foreach($oClasses->getElementsByTagName('class') as $oClass)
+			{
+				
+				$sClass = $oClass->getAttribute("id");
+				$aClasses[] = $sClass;
+
+				//$bSubclasses = $this->GetPropBoolean($oClass, 'subclasses', true);
+				//if ($bSubclasses)...
+			}
+
+			$aGroupClasses[$sGroupId] = $aClasses;
+		}
+
+		// Profiles and grants
+		//
+		$aProfiles = array();
+		// Hardcode the administrator profile
+		$aProfiles[1] = array(
+			'name' => 'Administrator',
+			'description' => 'Has the rights on everything (bypassing any control)'
+		); 
+
+		$aGrants = array();
+		$oProfiles = $oUserRightsNode->GetUniqueElement('profiles');
+		foreach($oProfiles->getElementsByTagName('profile') as $oProfile)
+		{
+			$iProfile = $oProfile->getAttribute("id");
+			$sName = $oProfile->GetChildText('name');
+			$sDescription = $oProfile->GetChildText('description');
+
+			$oGroups = $oProfile->GetUniqueElement('groups');
+			foreach($oGroups->getElementsByTagName('group') as $oGroup)
+			{
+				$sGroupId = $oGroup->getAttribute("id");
+
+				$aActions = array();
+				$oActions = $oGroup->GetUniqueElement('actions');
+				foreach($oActions->getElementsByTagName('action') as $oAction)
+				{
+					$sAction = $oAction->getAttribute("id");
+					$sType = $oAction->getAttribute("xsi:type");
+					$sGrant = $oAction->GetText();
+					$bGrant = ($sGrant == 'allow');
+					
+					if ($sGroupId == '*')
+					{
+						$aGrantClasses = array('*');
+					}
+					else
+					{
+						$aGrantClasses = $aGroupClasses[$sGroupId];
+					}
+					foreach ($aGrantClasses as $sClass)
+					{
+						if ($sType == 'stimulus')
+						{
+							$sGrantKey = $iProfile.'_'.$sClass.'_s_'.$sAction;
+						}
+						else
+						{
+							$sAction = $aActionsInShort[$sType];
+							$sGrantKey = $iProfile.'_'.$sClass.'_'.$sAction;
+						}
+						if (isset($aGrants[$sGrantKey]))
+						{
+							if (!$bGrant)
+							{
+								$aGrants[$sGrantKey] = false;
+							}
+						}
+						else
+						{
+							$aGrants[$sGrantKey] = $bGrant;
+						}
+					}
+				}
+			}
+
+			$aProfiles[$iProfile] = array(
+				'name' => $sName,
+				'description' => $sDescription
+			);
+		}
+
+		$sProfiles = var_export($aProfiles, true);
+		$sGrants = var_export($aGrants, true);
+
+		$sPHP =
+<<<EOF
+
+//
+// List of constant profiles
+// - used by the class URP_Profiles at setup (create/update/delete records)
+// - used by the addon UserRightsProfile to determine user rights
+//
+class ProfilesConfig
+{
+	protected static \$aPROFILES = $sProfiles;
+
+	protected static \$aGRANTS = $sGrants;
+
+	public static function GetProfileActionGrant(\$iProfileId, \$sClass, \$sAction)
+	{
+		\$sGrantKey = \$iProfileId.'_'.\$sClass.'_'.\$sAction;
+		if (isset(self::\$aGRANTS[\$sGrantKey]))
+		{
+			return self::\$aGRANTS[\$sGrantKey];
+		}
+		\$sGrantKey = \$iProfileId.'_*_'.\$sAction;
+		if (isset(self::\$aGRANTS[\$sGrantKey]))
+		{
+			return self::\$aGRANTS[\$sGrantKey];
+		}
+		return null;
+	}	
+
+	public static function GetProfileStimulusGrant(\$iProfileId, \$sClass, \$sStimulus)
+	{
+		\$sGrantKey = \$iProfileId.'_'.\$sClass.'_s_'.\$sStimulus;
+		if (isset(self::\$aGRANTS[\$sGrantKey]))
+		{
+			return self::\$aGRANTS[\$sGrantKey];
+		}
+		\$sGrantKey = \$iProfileId.'_*_s_'.\$sStimulus;
+		if (isset(self::\$aGRANTS[\$sGrantKey]))
+		{
+			return self::\$aGRANTS[\$sGrantKey];
+		}
+		return null;
 	}
+
+	// returns an array of id => array of column => php value(so-called "real value")
+	public static function GetProfilesValues()
+	{
+		return self::\$aPROFILES;
+	}
+}
+
+EOF;
+	return $sPHP;
+	} // function CompileUserRights
+
 }
 
 
