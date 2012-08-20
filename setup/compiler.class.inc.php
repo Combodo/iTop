@@ -1073,12 +1073,15 @@ EOF;
 						if ($sType == 'stimulus')
 						{
 							$sGrantKey = $iProfile.'_'.$sClass.'_s_'.$sAction;
+							$sGrantKeyPlus = $iProfile.'_'.$sClass.'+_s_'.$sAction; // subclasses inherit this grant
 						}
 						else
 						{
 							$sAction = $aActionsInShort[$sType];
 							$sGrantKey = $iProfile.'_'.$sClass.'_'.$sAction;
+							$sGrantKeyPlus = $iProfile.'_'.$sClass.'+_'.$sAction;  // subclasses inherit this grant
 						}
+						// The class itself
 						if (isset($aGrants[$sGrantKey]))
 						{
 							if (!$bGrant)
@@ -1089,6 +1092,18 @@ EOF;
 						else
 						{
 							$aGrants[$sGrantKey] = $bGrant;
+						}
+						// The subclasses
+						if (isset($aGrants[$sGrantKeyPlus]))
+						{
+							if (!$bGrant)
+							{
+								$aGrants[$sGrantKeyPlus] = false;
+							}
+						}
+						else
+						{
+							$aGrants[$sGrantKeyPlus] = $bGrant;
 						}
 					}
 				}
@@ -1123,6 +1138,14 @@ class ProfilesConfig
 		if (isset(self::\$aGRANTS[\$sGrantKey]))
 		{
 			return self::\$aGRANTS[\$sGrantKey];
+		}
+		foreach (MetaModel::EnumParentClasses(\$sClass) as \$sParent)
+		{
+			\$sGrantKey = \$iProfileId.'_'.\$sParent.'+_'.\$sAction;
+			if (isset(self::\$aGRANTS[\$sGrantKey]))
+			{
+				return self::\$aGRANTS[\$sGrantKey];
+			}
 		}
 		\$sGrantKey = \$iProfileId.'_*_'.\$sAction;
 		if (isset(self::\$aGRANTS[\$sGrantKey]))
