@@ -550,7 +550,6 @@
           <group id="Portal user - write">
             <actions>
               <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
             </actions>
           </group>
           <group id="Portal user - delete">
