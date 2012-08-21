@@ -778,6 +778,29 @@ abstract class DBObject
 			return MetaModel::GetStateDescription(get_class($this), $sStateValue);
 		}
 	}
+
+	/**
+	 * Overridable - Define attributes read-only from the end-user perspective
+	 * 	 
+	 * @return array List of attcodes
+	 */	 	  	 	
+	public static function GetReadOnlyAttributes()
+	{
+		return null;
+	}
+
+
+	/**
+	 * Overridable - Get predefined objects (could be hardcoded)
+	 * The predefined objects will be synchronized with the DB at each install/upgrade
+	 * As soon as a class has predefined objects, then nobody can create nor delete objects	 
+	 * @return array An array of id => array of attcode => php value(so-called "real value": integer, string, ormDocument, DBObjectSet, etc.)
+	 */	 	  	 	
+	public static function GetPredefinedObjects()
+	{
+		return null;
+	}
+
 	/**
 	 * Returns the set of flags (OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY...)
 	 * for the given attribute in the current state of the object
@@ -790,9 +813,10 @@ abstract class DBObject
 	{
 		$iFlags = 0; // By default (if no life cycle) no flag at all
 
-		if (method_exists(get_class($this), 'GetConstantColumns'))
+		$aReadOnlyAtts = $this->GetReadOnlyAttributes();
+		if ($aReadOnlyAtts != null)
 		{
-			if (in_array($sAttCode, $this->GetConstantColumns()))
+			if (in_array($sAttCode, $aReadOnlyAtts))
 			{
 				return OPT_ATT_READONLY;
 			}

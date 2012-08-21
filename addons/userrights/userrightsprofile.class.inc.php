@@ -187,14 +187,14 @@ class URP_Profiles extends UserRightsBaseClassGUI
 		}
 	}
 
-	public static function GetConstantColumns()
+	public static function GetReadOnlyAttributes()
 	{
 		return array('name', 'description');
 	}
 
 
 	// returns an array of id => array of column => php value(so-called "real value")
-	public static function GetConstantValues()
+	public static function GetPredefinedObjects()
 	{
 		return ProfilesConfig::GetProfilesValues();
 	}

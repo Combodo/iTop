@@ -284,7 +284,8 @@ try
 		//
 		foreach (MetaModel::GetClasses() as $sClass)
 		{
-			if (method_exists($sClass, 'GetConstantColumns'))
+			$aPredefinedObjects = call_user_func(array($sClass, 'GetPredefinedObjects'));
+			if ($aPredefinedObjects != null)
 			{
 				// Temporary... until this get really encapsulated as the default and transparent behavior
 				$oMyChange = MetaModel::NewObject("CMDBChange");
@@ -296,18 +297,16 @@ try
 				// Create/Delete/Update objects of this class,
 				// according to the given constant values
 				//
-				$aAttList = call_user_func(array($sClass, 'GetConstantColumns'));
-				$aRefValues = call_user_func(array($sClass, 'GetConstantValues'));
 				$aDBIds = array();
 				$oAll = new DBObjectSet(new DBObjectSearch($sClass));
 				while ($oObj = $oAll->Fetch())
 				{
-					if (array_key_exists($oObj->GetKey(), $aRefValues))
+					if (array_key_exists($oObj->GetKey(), $aPredefinedObjects))
 					{
-						$aObjValues = $aRefValues[$oObj->GetKey()];
-						foreach ($aAttList as $sAttCode)
+						$aObjValues = $aPredefinedObjects[$oObj->GetKey()];
+						foreach ($aObjValues as $sAttCode => $value)
 						{
-							$oObj->Set($sAttCode, $aObjValues[$sAttCode]);
+							$oObj->Set($sAttCode, $value);
 						}
 						$oObj->DBUpdateTracked($oMyChange);
 						$aDBIds[$oObj->GetKey()] = true;
@@ -317,15 +316,15 @@ try
 						$oObj->DBDeleteTracked($oMyChange);
 					}
 				}
-				foreach ($aRefValues as $iRefId => $aObjValues)
+				foreach ($aPredefinedObjects as $iRefId => $aObjValues)
 				{
 					if (!array_key_exists($iRefId, $aDBIds))
 					{
 						$oNewObj = MetaModel::NewObject($sClass);
 						$oNewObj->SetKey($iRefId);
-						foreach ($aAttList as $sAttCode)
+						foreach ($aObjValues as $sAttCode => $value)
 						{
-							$oNewObj->Set($sAttCode, $aObjValues[$sAttCode]);
+							$oNewObj->Set($sAttCode, $value);
 						}
 						$oNewObj->DBInsertTracked($oMyChange);
 					}

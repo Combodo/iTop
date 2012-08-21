@@ -680,7 +680,8 @@ class UserRights
 			if ($iActionCode == UR_ACTION_BULK_DELETE) return false;
 		}
 
-		if (method_exists($sClass, 'GetConstantColumns'))
+		$aPredefinedObjects = call_user_func(array($sClass, 'GetPredefinedObjects'));
+		if ($aPredefinedObjects != null)
 		{
 			// As opposed to the read-only DB, modifying an object is allowed
 			// (the constant columns will be marked as read-only)
