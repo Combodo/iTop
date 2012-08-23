@@ -1125,6 +1125,11 @@ class AttributeBoolean extends AttributeInteger
 		if ($value) return 1;
 		return 0;
 	}
+
+	public function GetAsXML($sValue, $oHostObject = null)
+	{
+		return $sValue ? '1' : '0';
+	}
 }
 
 /**
