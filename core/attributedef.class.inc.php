@@ -1724,7 +1724,16 @@ class AttributeCaseLog extends AttributeLongText
 		return $value;
 	}
 	public function GetEditClass() {return "CaseLog";}
-	public function GetEditValue($sValue, $oHostObj = null) { return ''; } // New 'edit' value is always blank since it will be appended to the existing log	
+
+	public function GetEditValue($sValue, $oHostObj = null)
+	{
+		if (!($sValue instanceOf ormCaseLog))
+		{
+			return '';
+		}
+		return $sValue->GetModifiedEntry();
+	}
+	
 	public function GetDefaultValue() {return new ormCaseLog();}
 	public function Equals($val1, $val2) {return ($val1->GetText() == $val2->GetText());}
 	
