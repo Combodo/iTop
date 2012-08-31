@@ -1970,7 +1970,8 @@ abstract class MetaModel
 			{
 				throw new CoreException("Wrong direction in ORDER BY spec, found '$bAscending' and expecting a boolean value");
 			}
-			$sFirstClassAlias = $oFilter->GetFirstJoinedClassAlias();
+			$sFirstClassAlias = $oFilter->GetClassAlias();
+			
 			if (self::IsValidAttCode($oFilter->GetClass(), $sFieldAlias))
 			{
 				$oAttDef = self::GetAttributeDef($oFilter->GetClass(), $sFieldAlias);
