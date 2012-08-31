@@ -312,7 +312,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 					$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription().'<span id="busy_'.$sInputId.'"></span>');
 
 					$sValue = $this->Get($sAttCode);
-					$sDisplayValue = $this->GetEditValue($sAttCode);
+					$sDisplayValue = ''; // not used
 					$aArgs = array('this' => $this);
 					$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
 					$aFieldsMap[$sAttCode] = $sInputId;
