@@ -321,6 +321,37 @@ EOF
 				$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php/?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
 				$oPage->add('<div class="attachment" id="attachment_'.$iAttId.'"><a href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="Delete" onClick="$(\'#attachment_'.$iAttId.'\').remove();"/>&nbsp;</div>');
 			}
+			
+			// Suggested attachments are listed here but treated as temporary
+			$aDefault = utils::ReadParam('default', array(), false, 'raw_data');
+			if (array_key_exists('suggested_attachments', $aDefault))
+			{
+				$sSuggestedAttachements = $aDefault['suggested_attachments'];
+				if (is_array($sSuggestedAttachements))
+				{
+					$sSuggestedAttachements = implode(',', $sSuggestedAttachements);
+				}
+				$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE id IN($sSuggestedAttachements)");
+				$oSet = new DBObjectSet($oSearch, array());
+				if ($oSet->Count() > 0)
+				{
+					while ($oAttachment = $oSet->Fetch())
+					{
+						// Mark the attachments as temporary attachments for the current object/form
+						$oAttachment->Set('temp_id', $sTempId);
+						$oAttachment->DBUpdate();
+						// Display them
+						$iAttId = $oAttachment->GetKey();
+						$oDoc = $oAttachment->Get('contents');
+						$sFileName = $oDoc->GetFileName();
+						$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
+						$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php/?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
+						$oPage->add('<div class="attachment" id="display_attachment_'.$iAttId.'"><a href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="Delete" onClick="RemoveNewAttachment('.$iAttId.');"/>&nbsp;</div>');
+						$oPage->add_ready_script("$('#attachment_plugin').trigger('add_attachment', [$iAttId, '".addslashes($sFileName)."']);");
+					}
+				}
+			}
+			
 			$oPage->add('</span>');			
 			$oPage->add('<div style="clear:both"></div>');			
 			$sMaxUpload = $this->GetMaxUpload();
@@ -496,7 +527,7 @@ EOF
 			break;
 		}
 		
-		return utils::GetAbsoluteUrlModulesRoot()."itop-attachments/icons/$sIcon";
+		return 'env-'.utils::GetCurrentEnvironment()."/itop-attachments/icons/$sIcon";
 	}
 	
 	/////////////////////////////////////////////////////////////////////////
