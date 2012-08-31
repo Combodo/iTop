@@ -206,6 +206,16 @@ function WizardHelper(sClass, sFormPrefix, sState)
 			{ json_obj: this.ToJSON(), operation: 'obj_creation_form', target_state: sTargetState, transaction_id: sTransactionId },
 			function(data)
 			{
+				// Delete any previous instances of CKEditor
+				$('#'+sFormId).find('.htmlEditor').each(function() {
+					var sId = $(this).attr('id');
+					var editorInst = CKEDITOR.instances[sId];
+				    if (editorInst)
+				    {
+				    	editorInst.destroy(true);
+				    }
+				});
+
 				$('#'+sFormId).html(data);
 				onDelayedReady();
 				$('#'+sFormId).unblock();
