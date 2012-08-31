@@ -243,7 +243,7 @@ class SQLQuery
 		// The goal will be to complete the list as we build the Joins
 		$aFrom = array();
 		$aFields = array();
-		$aGroupBy = arry();
+		$aGroupBy = array();
 		$oCondition = null;
 		$aDelTables = array();
 		$aSetValues = array();
