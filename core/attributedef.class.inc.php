@@ -3988,6 +3988,29 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 	{
 		return Str::pure2html((string)$sValue);
 	}
+
+	public function GetBasicFilterLooseOperator()
+	{
+		return "Contains";
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		$sQValue = CMDBSource::Quote($value);
+		switch ($sOpCode)
+		{
+		case '=':
+		case '!=':
+			return $this->GetSQLExpr()." $sOpCode $sQValue";
+		case 'Contains':
+			return $this->GetSQLExpr()." LIKE ".CMDBSource::Quote("%$value%");
+		case 'NotLike':
+			return $this->GetSQLExpr()." NOT LIKE $sQValue";
+		case 'Like':
+		default:
+			return $this->GetSQLExpr()." LIKE $sQValue";
+		}
+	} 
 }
 
 ?>

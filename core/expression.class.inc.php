@@ -458,6 +458,12 @@ class FieldExpression extends UnaryExpression
 			// Add a reference to the field
 			$aUnresolved[$this->m_sName] = $this;
 		}
+		elseif ($sAlias == '')
+		{
+			// An empty alias means "any alias"
+			// In such a case, the results are indexed differently
+			$aUnresolved[$this->m_sParent][$this->m_sName] = $this;
+		}
 	}
 
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
