@@ -387,8 +387,8 @@ return false;
 					$aThresholdData['overrun'] = $iOverrun;
 				}
 				$aThresholdData['passed'] = true;
-				$aThresholdData['deadline'] = null;
 			}
+			$aThresholdData['deadline'] = null;
 		}
 
 		$this->iLastStart = null;
