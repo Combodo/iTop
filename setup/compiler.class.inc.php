@@ -69,12 +69,12 @@ class MFCompiler
 
 		// Determine the target module (exactly one!) for USER RIGHTS
 		//
+		$sUserRightsModule = '';
 		$oUserRightsNode = $this->oFactory->GetNodes('user_rights')->item(0);
-		if (!$oUserRightsNode)
+		if ($oUserRightsNode)
 		{
-			throw new Exception("Missing configuration for user rights");
+			$sUserRightsModule = $oUserRightsNode->getAttribute('_created_in');
 		}
-		$sUserRightsModule = $oUserRightsNode->getAttribute('_created_in');
 
 		// List root classes
 		//
