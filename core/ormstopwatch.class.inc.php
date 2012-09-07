@@ -77,10 +77,16 @@ class ormStopWatch
 
 return false;
 
-		
 		return true;
 	}
 
+	/**
+	 * Necessary for the triggers
+	 */	 	
+	public function __toString()
+	{
+		return (string) $this->iTimeSpent;
+	}
 
 	public function DefineThreshold($iPercent, $tDeadline = null, $bPassed = false, $bTriggered = false, $iOverrun = 0)
 	{
