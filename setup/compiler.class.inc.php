@@ -724,6 +724,11 @@ EOF;
 				}
 				$aParameters['thresholds'] = 'array('.implode(', ', $aThresholds).')';
 			}
+			elseif ($sAttType == 'AttributeSubItem')
+			{
+				$aParameters['target_attcode'] = $this->GetPropString($oField, 'target_attcode');
+				$aParameters['item_code'] = $this->GetPropString($oField, 'item_code');
+			}
 			else
 			{
 				$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"

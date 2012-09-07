@@ -145,6 +145,7 @@ abstract class DBObject
 	{
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{
+			if (!$oAttDef->LoadInObject()) continue;
 			if (!isset($this->m_aLoadedAtt[$sAttCode]) || !$this->m_aLoadedAtt[$sAttCode])
 			{
 				return false;
@@ -247,6 +248,8 @@ abstract class DBObject
 		{
 			// Skip links (could not be loaded by the mean of this query)
 			if ($oAttDef->IsLinkSet()) continue;
+
+			if (!$oAttDef->LoadInObject()) continue;
 
 			// Note: we assume that, for a given attribute, if it can be loaded,
 			// then one column will be found with an empty suffix, the others have a suffix
@@ -411,68 +414,73 @@ abstract class DBObject
 
 	public function GetStrict($sAttCode)
 	{
-		if (!array_key_exists($sAttCode, MetaModel::ListAttributeDefs(get_class($this))))
-		{
-			throw new CoreException("Unknown attribute code '$sAttCode' for the class ".get_class($this));
-		}
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 
-		if (isset($this->m_aLoadedAtt[$sAttCode]))
+		if (!$oAttDef->LoadInObject())
 		{
-			// Standard case... we have the information directly
-		}
-		elseif ($this->m_bIsInDB && !$this->m_bDirty)
-		{
-			// Lazy load (polymorphism): complete by reloading the entire object
-			// #@# non-scalar attributes.... handle that differently?
-			$this->Reload();
-		}
-		elseif ($sAttCode == 'friendlyname')
-		{
-			// The friendly name is not computed and the object is dirty
-			// Todo: implement the computation of the friendly name based on sprintf()
-			// 
-			$this->m_aCurrValues[$sAttCode] = '';
+			$sParentAttCode = $oAttDef->GetParentAttCode();
+			$parentValue = $this->GetStrict($sParentAttCode);
+			$value = $oAttDef->GetValue($parentValue, $this);
 		}
 		else
 		{
-			// Not loaded... is it related to an external key?
-			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-			if ($oAttDef->IsExternalField() || ($oAttDef instanceof AttributeFriendlyName))
+			if (isset($this->m_aLoadedAtt[$sAttCode]))
 			{
-				// Let's get the object and compute all of the corresponding attributes
-				// (i.e not only the requested attribute)
-				//
-				$sExtKeyAttCode = $oAttDef->GetKeyAttCode();
-
-				if ($iRemote = $this->Get($sExtKeyAttCode))
+				// Standard case... we have the information directly
+			}
+			elseif ($this->m_bIsInDB && !$this->m_bDirty)
+			{
+				// Lazy load (polymorphism): complete by reloading the entire object
+				// #@# non-scalar attributes.... handle that differently?
+				$this->Reload();
+			}
+			elseif ($sAttCode == 'friendlyname')
+			{
+				// The friendly name is not computed and the object is dirty
+				// Todo: implement the computation of the friendly name based on sprintf()
+				// 
+				$this->m_aCurrValues[$sAttCode] = '';
+			}
+			else
+			{
+				// Not loaded... is it related to an external key?
+				if ($oAttDef->IsExternalField() || ($oAttDef instanceof AttributeFriendlyName))
 				{
-					$oExtKeyAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyAttCode);
-					$oRemote = MetaModel::GetObject($oExtKeyAttDef->GetTargetClass(), $iRemote);
-				}
-				else
-				{
-					$oRemote = null;
-				}
-
-				foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
-				{
-					if (($oDef->IsExternalField() || ($oDef instanceof AttributeFriendlyName)) && ($oDef->GetKeyAttCode() == $sExtKeyAttCode))
+					// Let's get the object and compute all of the corresponding attributes
+					// (i.e not only the requested attribute)
+					//
+					$sExtKeyAttCode = $oAttDef->GetKeyAttCode();
+	
+					if ($iRemote = $this->Get($sExtKeyAttCode))
 					{
-						if ($oRemote)
+						$oExtKeyAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyAttCode);
+						$oRemote = MetaModel::GetObject($oExtKeyAttDef->GetTargetClass(), $iRemote);
+					}
+					else
+					{
+						$oRemote = null;
+					}
+	
+					foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
+					{
+						if (($oDef->IsExternalField() || ($oDef instanceof AttributeFriendlyName)) && ($oDef->GetKeyAttCode() == $sExtKeyAttCode))
 						{
-							$this->m_aCurrValues[$sCode] = $oRemote->Get($oDef->GetExtAttCode());
+							if ($oRemote)
+							{
+								$this->m_aCurrValues[$sCode] = $oRemote->Get($oDef->GetExtAttCode());
+							}
+							else
+							{
+								$this->m_aCurrValues[$sCode] = $oDef->GetDefaultValue();
+							}
+							$this->m_aLoadedAtt[$sCode] = true;
 						}
-						else
-						{
-							$this->m_aCurrValues[$sCode] = $oDef->GetDefaultValue();
-						}
-						$this->m_aLoadedAtt[$sCode] = true;
 					}
 				}
 			}
+			$value = $this->m_aCurrValues[$sAttCode];
 		}
 
-		$value = $this->m_aCurrValues[$sAttCode];
 		if ($value instanceof DBObjectSet)
 		{
 			$value->Rewind();

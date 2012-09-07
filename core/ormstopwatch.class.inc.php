@@ -54,23 +54,47 @@ class ormStopWatch
 		$this->aThresholds = array();
 	}
 
-	public function DefineThreshold($iPercent, $tDeadline = null, $bPassed = false, $iOverrun = 0)
+	// BUGGY - DOES NOT DETECT A CHANGE IN THE DEADLINE
+	//
+	public function HasSameContents($oStopWatch)
+	{
+		if ($oStopWatch->iTimeSpent != $this->iTimeSpent) return false;
+		if ($oStopWatch->iStarted != $this->iStarted) return false;
+		if ($oStopWatch->iLastStart != $this->iLastStart) return false;
+		if ($oStopWatch->iStopped != $this->iStopped) return false;
+		if ($oStopWatch->aThresholds != $this->aThresholds) return false;
+
+		// Array comparison is not recursive... let's do it by myself
+		foreach ($oStopWatch->aThresholds as $iPercent => $aThresholdData)
+		{
+			// Assumption: the thresholds will not change dynamically (defined at application design time)
+			$aThisThresholdData = $this->aThresholds[$iPercent];
+			if ($aThisThresholdData['deadline'] != $aThresholdData['deadline']) return false;
+			if ($aThisThresholdData['passed'] != $aThresholdData['passed']) return false;
+			if ($aThisThresholdData['triggered'] != $aThresholdData['triggered']) return false;
+			if ($aThisThresholdData['overrun'] != $aThresholdData['overrun']) return false;
+		}
+
+return false;
+
+		
+		return true;
+	}
+
+
+	public function DefineThreshold($iPercent, $tDeadline = null, $bPassed = false, $bTriggered = false, $iOverrun = 0)
 	{
 		$this->aThresholds[$iPercent] = array(
 			'deadline' => $tDeadline, // unix time (seconds)
 			'passed' => $bPassed,
+			'triggered' => $bTriggered,
 			'overrun' => $iOverrun
 		);
 	}
 
-	public function MarkThresholdAsPassed($iPercent)
+	public function MarkThresholdAsTriggered($iPercent)
 	{
-		$this->aThresholds[$iPercent]['passed'] = true;
-	}
-
-	public function __toString()
-	{
-		return (string)$this->iTimeSpent;
+		$this->aThresholds[$iPercent]['triggered'] = true;
 	}
 
 	public function GetTimeSpent()
@@ -127,6 +151,17 @@ class ormStopWatch
 			return false;
 		}
 	}
+	public function IsThresholdTriggered($iPercent)
+	{
+		if (array_key_exists($iPercent, $this->aThresholds))
+		{
+			return $this->aThresholds[$iPercent]['triggered'];
+		}
+		else
+		{
+			return false;
+		}
+	}
 
 	public function GetAsHTML($oAttDef, $oHostObject = null)
 	{
@@ -157,21 +192,20 @@ class ormStopWatch
 
 		foreach ($this->aThresholds as $iPercent => $aThresholdData)
 		{
-			if ($aThresholdData['passed'])
+			$sThresholdDesc = $oAttDef->SecondsToDate($aThresholdData['deadline']);
+			if ($aThresholdData['triggered'])
 			{
 				if ($aThresholdData['overrun'])
 				{
-					$aProperties[$iPercent.'%'] = $oAttDef->SecondsToDate($aThresholdData['deadline'])." <b>PASSED</b> by ".$aThresholdData['overrun']." seconds";
+					$sThresholdDesc .= " <b>TRIGGERED</b>, Overrun:".(int) $aThresholdData['overrun']." seconds";
 				}
 				else
 				{
-					$aProperties[$iPercent.'%'] = $oAttDef->SecondsToDate($aThresholdData['deadline'])." <b>PASSED</b>";
+					// Still active, overrun unknown
+					$sThresholdDesc .= " <b>TRIGGERED</b>";
 				}
 			}
-			else
-			{
-				$aProperties[$iPercent.'%'] = $oAttDef->SecondsToDate($aThresholdData['deadline']);
-			}
+			$aProperties[$iPercent.'%'] = $sThresholdDesc;
 		}
 		$sRes = "<TABLE class=\"listResults\">";
 		$sRes .= "<TBODY>";
@@ -247,6 +281,7 @@ class ormStopWatch
 		foreach ($this->aThresholds as $iPercent => &$aThresholdData)
 		{
 			$aThresholdData['passed'] = false;
+			$aThresholdData['triggered'] = false;
 			$aThresholdData['deadline'] = null;
 			$aThresholdData['overrun'] = null;
 		}
@@ -289,21 +324,31 @@ class ormStopWatch
 		$iDurationGoal = $this->ComputeGoal($oObject, $oAttDef);
 		foreach ($this->aThresholds as $iPercent => &$aThresholdData)
 		{
-			if (!$aThresholdData['passed'])
+			if (is_null($iDurationGoal))
 			{
-				if (is_null($iDurationGoal))
-				{
-					// No limit: leave null thresholds
-					$aThresholdData['deadline'] = null;
-				}
-				else
-				{
-					$iThresholdDuration = round($iPercent * $iDurationGoal / 100);
-					$aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $this->iLastStart, $iThresholdDuration - $this->iTimeSpent);
-					// OR $aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $this->iStarted, $iThresholdDuration);
-				}
+				// No limit: leave null thresholds
+				$aThresholdData['deadline'] = null;
+			}
+			else
+			{
+				$iThresholdDuration = round($iPercent * $iDurationGoal / 100);
+				$aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $this->iLastStart, $iThresholdDuration - $this->iTimeSpent);
+				// OR $aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $this->iStarted, $iThresholdDuration);
+
+			}
+			if (is_null($aThresholdData['deadline']) || ($aThresholdData['deadline'] > time()))
+			{
+				// The threshold is in the future, reset
+				$aThresholdData['passed'] = false;
+				$aThresholdData['triggered'] = false;
+			}
+			else
+			{
+				// The new threshold is in the past
+				$aThresholdData['passed'] = true;
 			}
 		}
+
 		return true;
 	}
 
@@ -323,21 +368,21 @@ class ormStopWatch
 
 		foreach ($this->aThresholds as $iPercent => &$aThresholdData)
 		{
-			if ($aThresholdData['passed'])
+			if (!is_null($aThresholdData['deadline']) && (time() > $aThresholdData['deadline']))
 			{
-				if (is_null($aThresholdData['overrun']))
-				{
-					// First stop after the deadline is passed
-					$iOverrun = $this->ComputeDuration($oObject, $oAttDef, $aThresholdData['deadline'], time());
-					$aThresholdData['overrun'] = $iOverrun;
-				}
-				else
+				$aThresholdData['passed'] = true;
+				if ($aThresholdData['overrun'] > 0)
 				{
 					// Accumulate from last start
 					$aThresholdData['overrun'] += $iElapsed;
 				}
+				else
+				{
+					// First stop after the deadline has been passed
+					$iOverrun = $this->ComputeDuration($oObject, $oAttDef, $aThresholdData['deadline'], time());
+					$aThresholdData['overrun'] = $iOverrun;
+				}
 			}
-			$aThresholdData['deadline'] = null;
 		}
 
 		$this->iLastStart = null;
@@ -372,8 +417,8 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 					{
 						$iPercent = $aThresholdData['percent']; // could be different than the index !
 		
-						$sExpression = "SELECT $sClass WHERE {$sAttCode}_{$iThreshold}_passed = 0 AND {$sAttCode}_{$iThreshold}_deadline < NOW()";
-						echo $sExpression."<br/>\n";
+						$sExpression = "SELECT $sClass WHERE {$sAttCode}_laststart AND {$sAttCode}_{$iThreshold}_triggered = 0 AND {$sAttCode}_{$iThreshold}_deadline < NOW()";
+						//echo $sExpression."<br/>\n";
 						$oFilter = DBObjectSearch::FromOQL($sExpression);
 						$aList = array();
 						$oSet = new DBObjectSet($oFilter);
@@ -382,7 +427,7 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 							$sClass = get_class($oObj);
 
 							$aList[] = $sClass.'::'.$oObj->GetKey().' '.$sAttCode.' '.$iThreshold;
-							echo $sClass.'::'.$oObj->GetKey().' '.$sAttCode.' '.$iThreshold."<br/>\n";
+							//echo $sClass.'::'.$oObj->GetKey().' '.$sAttCode.' '.$iThreshold."\n";
 
 							// Execute planned actions
 							//
@@ -396,10 +441,10 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 								call_user_func_array($aCallSpec, $aParams);
 							}
 
-							// Mark the threshold as "passed"
+							// Mark the threshold as "triggered"
 							//
 							$oSW = $oObj->Get($sAttCode);
-							$oSW->MarkThresholdAsPassed($iThreshold);
+							$oSW->MarkThresholdAsTriggered($iThreshold);
 							$oObj->Set($sAttCode, $oSW);
 		
 							if($oObj->IsModified())
@@ -407,7 +452,7 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 								// Todo - factorize so that only one single change will be instantiated
 								$oMyChange = new CMDBChange();
 								$oMyChange->Set("date", time());
-								$oMyChange->Set("userinfo", "Automatic - threshold passed");
+								$oMyChange->Set("userinfo", "Automatic - threshold triggered");
 								$iChangeId = $oMyChange->DBInsertNoReload();
 		
 								$oObj->DBUpdateTracked($oMyChange, true /*skip security*/);
@@ -432,7 +477,7 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 		}
 
 		$iProcessed = count($aList);
-		return "Encountered $iProcessed passed threshold(s)";
+		return "Triggered $iProcessed threshold(s)";
 	}
 }
 

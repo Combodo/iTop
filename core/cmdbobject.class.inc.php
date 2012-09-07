@@ -133,7 +133,17 @@ abstract class CMDBObject extends DBObject
 		foreach ($aValues as $sAttCode=> $value)
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+			if ($oAttDef->IsExternalField()) continue; // #@# temporary
 			if ($oAttDef->IsLinkSet()) continue; // #@# temporary
+
+			if (array_key_exists($sAttCode, $aOrigValues))
+			{
+				$original = $aOrigValues[$sAttCode];
+			}
+			else
+			{
+				$original = null;
+			}
 
 			if ($oAttDef instanceOf AttributeOneWayPassword)
 			{
@@ -144,11 +154,7 @@ abstract class CMDBObject extends DBObject
 				$oMyChangeOp->Set("objkey", $this->GetKey());
 				$oMyChangeOp->Set("attcode", $sAttCode);
 
-				if (array_key_exists($sAttCode, $aOrigValues))
-				{
-					$original = $aOrigValues[$sAttCode];
-				}
-				else
+				if (is_null($original))
 				{
 					$original = '';
 				}
@@ -164,11 +170,7 @@ abstract class CMDBObject extends DBObject
 				$oMyChangeOp->Set("objkey", $this->GetKey());
 				$oMyChangeOp->Set("attcode", $sAttCode);
 
-				if (array_key_exists($sAttCode, $aOrigValues))
-				{
-					$original = $aOrigValues[$sAttCode];
-				}
-				else
+				if (is_null($original))
 				{
 					$original = '';
 				}
@@ -184,11 +186,7 @@ abstract class CMDBObject extends DBObject
 				$oMyChangeOp->Set("objkey", $this->GetKey());
 				$oMyChangeOp->Set("attcode", $sAttCode);
 
-				if (array_key_exists($sAttCode, $aOrigValues))
-				{
-					$original = $aOrigValues[$sAttCode];
-				}
-				else
+				if (is_null($original))
 				{
 					$original = new ormDocument();
 				}
@@ -197,26 +195,30 @@ abstract class CMDBObject extends DBObject
 			}
 			elseif ($oAttDef instanceOf AttributeStopWatch)
 			{
-				// Stop watches
-				// TEMPORARY IMPLEMENTATION
-				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeScalar");
-				$oMyChangeOp->Set("change", $oChange->GetKey());
-				$oMyChangeOp->Set("objclass", get_class($this));
-				$oMyChangeOp->Set("objkey", $this->GetKey());
-				$oMyChangeOp->Set("attcode", $sAttCode);
+				// Stop watches - record changes for sub items only (they are visible, the rest is not visible)
+				//
+				if (is_null($original))
+				{
+					$original = new OrmStopWatch();
+				}
+				foreach ($oAttDef->ListSubItems() as $sSubItemAttCode => $oSubItemAttDef)
+				{
+					$item_value = $oSubItemAttDef->GetValue($value);
+					$item_original = $oSubItemAttDef->GetValue($original);
 
-				// Temporary - working thanks to ormStopWatch::__toString()
-				if (array_key_exists($sAttCode, $aOrigValues))
-				{
-					$sOriginalValue = $aOrigValues[$sAttCode];
+					if ($item_value != $item_original)
+					{
+						$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeScalar");
+						$oMyChangeOp->Set("change", $oChange->GetKey());
+						$oMyChangeOp->Set("objclass", get_class($this));
+						$oMyChangeOp->Set("objkey", $this->GetKey());
+						$oMyChangeOp->Set("attcode", $sSubItemAttCode);
+		
+						$oMyChangeOp->Set("oldvalue", $item_original);
+						$oMyChangeOp->Set("newvalue", $item_value);
+						$iId = $oMyChangeOp->DBInsertNoReload();
+					}
 				}
-				else
-				{
-					$sOriginalValue = 'undefined';
-				}
-				$oMyChangeOp->Set("oldvalue", $sOriginalValue);
-				$oMyChangeOp->Set("newvalue", $value);
-				$iId = $oMyChangeOp->DBInsertNoReload();
 			}
 			elseif ($oAttDef instanceOf AttributeCaseLog)
 			{
@@ -238,17 +240,9 @@ abstract class CMDBObject extends DBObject
 				$oMyChangeOp->Set("objkey", $this->GetKey());
 				$oMyChangeOp->Set("attcode", $sAttCode);
 
-				if (array_key_exists($sAttCode, $aOrigValues))
+				if (!is_null($original) && ($original instanceof ormCaseLog))
 				{
-					$original = $aOrigValues[$sAttCode];
-					if ($original instanceof ormCaseLog)
-					{
-						$original = $original->GetText();
-					}
-				}
-				else
-				{
-					$original = null;
+					$original = $original->GetText();
 				}
 				$oMyChangeOp->Set("prevdata", $original);
 				$iId = $oMyChangeOp->DBInsertNoReload();
@@ -262,16 +256,11 @@ abstract class CMDBObject extends DBObject
 				$oMyChangeOp->Set("objclass", get_class($this));
 				$oMyChangeOp->Set("objkey", $this->GetKey());
 				$oMyChangeOp->Set("attcode", $sAttCode);
-
-				if (array_key_exists($sAttCode, $aOrigValues))
+				if (is_null($original))
 				{
-					$sOriginalValue = $aOrigValues[$sAttCode];
+					$original = 'undefined';
 				}
-				else
-				{
-					$sOriginalValue = 'undefined';
-				}
-				$oMyChangeOp->Set("oldvalue", $sOriginalValue);
+				$oMyChangeOp->Set("oldvalue", $original);
 				$oMyChangeOp->Set("newvalue", $value);
 				$iId = $oMyChangeOp->DBInsertNoReload();
 			}

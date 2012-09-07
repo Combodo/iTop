@@ -132,6 +132,22 @@ abstract class AttributeDefinition
 		return $this->m_sHostClass;
 	}
 
+	public function ListSubItems()
+	{
+		$aSubItems = array();
+		foreach(MetaModel::ListAttributeDefs($this->m_sHostClass) as $sAttCode => $oAttDef)
+		{
+			if ($oAttDef instanceof AttributeSubItem)
+			{
+				if ($oAttDef->Get('target_attcode') == $this->m_sCode)
+				{
+					$aSubItems[$sAttCode] = $oAttDef;
+				}
+			}
+		}
+		return $aSubItems;
+	}
+
 	// Note: I could factorize this code with the parameter management made for the AttributeDef class
 	// to be overloaded
 	static public function ListExpectedParams()
@@ -174,6 +190,8 @@ abstract class AttributeDefinition
 	public function IsHierarchicalKey() {return false;}
 	public function IsExternalField() {return false;} 
 	public function IsWritable() {return false;} 
+	public function LoadInObject() {return true;}
+	public function GetValue($oHostObject){return null;} // must return the value if LoadInObject returns false
 	public function IsNullAllowed() {return true;} 
 	public function GetCode() {return $this->m_sCode;} 
 
@@ -389,16 +407,25 @@ abstract class AttributeDefinition
 		return (string)$sValue;
 	}
 
+	/**
+	 * Override to display the value in the GUI
+	 */	
 	public function GetAsHTML($sValue, $oHostObject = null)
 	{
 		return Str::pure2html((string)$sValue);
 	}
 
+	/**
+	 * Override to export the value in XML	
+	 */	
 	public function GetAsXML($sValue, $oHostObject = null)
 	{
 		return Str::pure2xml((string)$sValue);
 	}
 
+	/**
+	 * Override to escape the value when read by DBObject::GetAsCSV()	
+	 */	
 	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
 	{
 		return (string)$sValue;
@@ -2432,7 +2459,7 @@ class AttributeDuration extends AttributeInteger
 		return Str::pure2html(self::FormatDuration($value));
 	}
 
-	static function FormatDuration($duration)
+	public static function FormatDuration($duration)
 	{
 		$aDuration = self::SplitDuration($duration);
 		$sResult = '';
@@ -2508,11 +2535,17 @@ class AttributeDeadline extends AttributeDateTime
 {
 	public function GetAsHTML($value, $oHostObject = null)
 	{
+		$sResult = self::FormatDeadline($value);
+		return $sResult;
+	}
+
+	public static function FormatDeadline($value)
+	{
 		$sResult = '';
 		if ($value !== null)
 		{
 			$iValue = AttributeDateTime::GetAsUnixSeconds($value);
-			$sDate = parent::GetAsHTML($value, $oHostObject);
+			$sDate = $value;
 			$difference = $iValue - time();
 	
 			if ($difference >= 0)
@@ -2526,6 +2559,7 @@ class AttributeDeadline extends AttributeDateTime
 			$sFormat = MetaModel::GetConfig()->Get('deadline_format', '$difference$');
 			$sResult = str_replace(array('$date$', '$difference$'), array($sDate, $sDifference), $sFormat);
 		}
+
 		return $sResult;
 	}
 
@@ -3234,7 +3268,11 @@ class AttributeStopWatch extends AttributeDefinition
 	public function IsScalar() {return true;} 
 	public function IsWritable() {return false;} 
 	public function GetDefaultValue() {return $this->NewStopWatch();}
-	//public function IsNullAllowed() {return $this->GetOptional("is_null_allowed", false);}
+
+	public function GetEditValue($value, $oHostObj = null)
+	{
+		return $value->GetTimeSpent();
+	}
 
 	public function GetStates()
 	{
@@ -3264,6 +3302,24 @@ class AttributeStopWatch extends AttributeDefinition
 		return $proposedValue;
 	}
 
+	public function Equals($val1, $val2)
+	{
+		if ($val1 === $val2) return true;
+
+		if (is_object($val1) != is_object($val2))
+		{
+			return false;
+		}
+		if (!is_object($val1))
+		{
+			// string ?
+			return false;
+		}
+
+		// Both values are Object sets
+		return $val1->HasSameContents($val2);
+	}
+
 	public function GetSQLExpressions($sPrefix = '')
 	{
 		if ($sPrefix == '')
@@ -3281,6 +3337,7 @@ class AttributeStopWatch extends AttributeDefinition
 			$sThPrefix = '_'.$iThreshold;
 			$aColumns[$sThPrefix.'_deadline'] = $sPrefix.$sThPrefix.'_deadline';
 			$aColumns[$sThPrefix.'_passed'] = $sPrefix.$sThPrefix.'_passed';
+			$aColumns[$sThPrefix.'_triggered'] = $sPrefix.$sThPrefix.'_triggered';
 			$aColumns[$sThPrefix.'_overrun'] = $sPrefix.$sThPrefix.'_overrun';
 		}
 		return $aColumns;
@@ -3314,6 +3371,7 @@ class AttributeStopWatch extends AttributeDefinition
 			$sThPrefix = '_'.$iThreshold;
 			$aExpectedCols[] = $sPrefix.$sThPrefix.'_deadline';
 			$aExpectedCols[] = $sPrefix.$sThPrefix.'_passed';
+			$aExpectedCols[] = $sPrefix.$sThPrefix.'_triggered';
 			$aExpectedCols[] = $sPrefix.$sThPrefix.'_overrun';
 		}
 		foreach ($aExpectedCols as $sExpectedCol)
@@ -3340,6 +3398,7 @@ class AttributeStopWatch extends AttributeDefinition
 				$iThreshold,
 				self::DateToSeconds($aCols[$sPrefix.$sThPrefix.'_deadline']),
 				(bool)($aCols[$sPrefix.$sThPrefix.'_passed'] == 1),
+				(bool)($aCols[$sPrefix.$sThPrefix.'_triggered'] == 1),
 				$aCols[$sPrefix.$sThPrefix.'_overrun']
 			);
 		}
@@ -3362,6 +3421,7 @@ class AttributeStopWatch extends AttributeDefinition
 				$sPrefix = $this->GetCode().'_'.$iThreshold;
 				$aValues[$sPrefix.'_deadline'] = self::SecondsToDate($value->GetThresholdDate($iThreshold));
 				$aValues[$sPrefix.'_passed'] = $value->IsThresholdPassed($iThreshold) ? '1' : '0';
+				$aValues[$sPrefix.'_triggered'] = $value->IsThresholdTriggered($iThreshold) ? '1' : '0';
 				$aValues[$sPrefix.'_overrun'] = $value->GetOverrun($iThreshold);
 			}
 		}
@@ -3388,6 +3448,7 @@ class AttributeStopWatch extends AttributeDefinition
 			$sPrefix = $this->GetCode().'_'.$iThreshold;
 			$aColumns[$sPrefix.'_deadline'] = 'DATETIME NULL';
 			$aColumns[$sPrefix.'_passed'] = 'TINYINT(1) NULL';
+			$aColumns[$sPrefix.'_triggered'] = 'TINYINT(1) NULL';
 			$aColumns[$sPrefix.'_overrun'] = 'INT(11) UNSIGNED NULL';
 		}
 		return $aColumns;
@@ -3395,8 +3456,6 @@ class AttributeStopWatch extends AttributeDefinition
 
 	public function GetFilterDefinitions()
 	{
-		//return array();
-		// still not working... see later...
 		$aRes = array(
 			$this->GetCode() => new FilterFromAttribute($this),
 			$this->GetCode().'_started' => new FilterFromAttribute($this, '_started'),
@@ -3408,6 +3467,7 @@ class AttributeStopWatch extends AttributeDefinition
 			$sPrefix = $this->GetCode().'_'.$iThreshold;
 			$aRes[$sPrefix.'_deadline'] = new FilterFromAttribute($this, '_deadline');
 			$aRes[$sPrefix.'_passed'] = new FilterFromAttribute($this, '_passed');
+			$aRes[$sPrefix.'_triggered'] = new FilterFromAttribute($this, '_triggered');
 			$aRes[$sPrefix.'_overrun'] = new FilterFromAttribute($this, '_overrun');
 		}
 		return $aRes;
@@ -3449,6 +3509,288 @@ class AttributeStopWatch extends AttributeDefinition
 	{
 		return $this->Get('thresholds');
 	}
+
+	/**
+	 * To expose internal values: Declare an attribute AttributeSubItem
+	 * and implement the GetSubItemXXXX verbs
+	 */	 	
+	public function GetSubItemSQLExpression($sItemCode)
+	{
+		$sPrefix = $this->GetCode();
+		switch($sItemCode)
+		{
+		case 'timespent':
+			return array('' => $sPrefix.'_timespent');
+		case 'started':
+			return array('' => $sPrefix.'_started');
+		case 'laststart':
+			return array('' => $sPrefix.'_laststart');
+		case 'stopped':
+			return array('' => $sPrefix.'_stopped');
+		}
+
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo)
+		{
+			$sThPrefix = $iThreshold.'_';
+			if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
+			{
+				// The current threshold is concerned
+				$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+				switch($sThresholdCode)
+				{
+				case 'deadline':
+					return array('' => $sPrefix.'_'.$iThreshold.'_deadline');
+				case 'passed':
+					return array('' => $sPrefix.'_'.$iThreshold.'_passed');
+				case 'triggered':
+					return array('' => $sPrefix.'_'.$iThreshold.'_triggered');
+				case 'overrun':
+					return array('' => $sPrefix.'_'.$iThreshold.'_overrun');
+				}
+			}
+		}
+		throw new CoreException("Unknown item code '$sItemCode' for attribute ".$this->GetHostClass().'::'.$this->GetCode());
+	}
+
+	public function GetSubItemValue($sItemCode, $value, $oHostObject = null)
+	{
+		$oStopWatch = $value;
+		switch($sItemCode)
+		{
+		case 'timespent':
+			return $oStopWatch->GetTimeSpent();
+		case 'started':
+			return $oStopWatch->GetStartDate();
+		case 'laststart':
+			return $oStopWatch->GetLastStartDate();
+		case 'stopped':
+			return $oStopWatch->GetStopDate();
+		}
+
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo)
+		{
+			$sThPrefix = $iThreshold.'_';
+			if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
+			{
+				// The current threshold is concerned
+				$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+				switch($sThresholdCode)
+				{
+				case 'deadline':
+					return $oStopWatch->GetThresholdDate($iThreshold);
+				case 'passed':
+					return $oStopWatch->IsThresholdPassed($iThreshold);
+				case 'triggered':
+					return $oStopWatch->IsThresholdTriggered($iThreshold);
+				case 'overrun':
+					return $oStopWatch->GetOverrun($iThreshold);
+				}
+			}
+		}
+
+		throw new CoreException("Unknown item code '$sItemCode' for attribute ".$this->GetHostClass().'::'.$this->GetCode());
+	}
+
+	static protected function GetDateFormat($bFull = false)
+	{
+		if ($bFull)
+		{
+			return "Y-m-d H:i:s";
+		}
+		else
+		{
+			return "Y-m-d H:i";
+		}
+	}
+
+	public function GetSubItemAsHTML($sItemCode, $value)
+	{
+		$sHtml = $value;
+
+		switch($sItemCode)
+		{
+		case 'timespent':
+			$sHtml = Str::pure2html(AttributeDuration::FormatDuration($value));
+			break;
+		case 'started':
+		case 'laststart':
+		case 'stopped':
+			if (is_null($value))
+			{
+				$sHtml = ''; // Undefined
+			}
+			else
+			{
+				$sHtml = date(self::GetDateFormat(), $value);
+			}
+			break;
+
+		default:
+			foreach ($this->ListThresholds() as $iThreshold => $aFoo)
+			{
+				$sThPrefix = $iThreshold.'_';
+				if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
+				{
+					// The current threshold is concerned
+					$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+					switch($sThresholdCode)
+					{
+					case 'deadline':
+						if ($value)
+						{
+							$sDate = date(self::GetDateFormat(true /*full*/), $value);
+							$sHtml = Str::pure2html(AttributeDeadline::FormatDeadline($sDate));
+						}
+						else
+						{
+							$sHtml = '';
+						}
+						break;
+					case 'passed':
+						$sHtml = $value ? '1' : '0';
+						break;
+					case 'triggered':
+						$sHtml = $value ? '1' : '0';
+						break;
+					case 'overrun':
+						$sHtml = Str::pure2html(AttributeDuration::FormatDuration($value));
+						break;
+					}
+				}
+			}
+		}
+		return $sHtml;
+	}
+
+	public function GetSubItemAsCSV($sItemCode, $value, $sSeparator = ',', $sTextQualifier = '"')
+	{
+		return $value;
+	}
+
+	public function GetSubItemAsXML($sItemCode, $value)
+	{
+		return Str::pure2xml((string)$value);
+	}
+}
+
+/**
+ * View of a subvalue of another attribute
+ * If an attribute implements the verbs GetSubItem.... then it can expose
+ * internal values, each of them being an attribute and therefore they
+ * can be displayed at different times in the object lifecycle, and used for
+ * reporting (as a condition in OQL, or as an additional column in an export)  
+ * Known usages: Stop Watches can expose threshold statuses    
+ */
+class AttributeSubItem extends AttributeDefinition
+{
+	static public function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array('target_attcode', 'item_code'));
+	}
+
+	public function GetParentAttCode() {return $this->Get("target_attcode");} 
+
+	/**
+	 * Helper : get the attribute definition to which the execution will be forwarded	
+	 */	
+	protected function GetTargetAttDef()
+	{
+		$sClass = $this->GetHostClass();
+		$oParentAttDef = MetaModel::GetAttributeDef($sClass, $this->Get('target_attcode'));
+		return $oParentAttDef;
+	}
+
+	public function GetEditClass() {return "";}
+	
+	public function GetValuesDef() {return null;} 
+	//public function GetPrerequisiteAttributes() {return $this->Get("depends_on");} 
+
+	public function IsDirectField() {return true;} 
+	public function IsScalar() {return true;} 
+	public function IsWritable() {return false;} 
+	public function GetDefaultValue() {return null;}
+//	public function IsNullAllowed() {return false;}
+	public function LoadInObject() {return false;} // if this verb returns true, then GetValue must be implemented
+
+	// 
+//	protected function ScalarToSQL($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
+
+	public function FromSQLToValue($aCols, $sPrefix = '')
+	{
+	}
+
+	public function GetSQLColumns()
+	{
+		return array();
+	}
+
+	public function GetFilterDefinitions()
+	{
+		return array($this->GetCode() => new FilterFromAttribute($this));
+	}
+
+	public function GetBasicFilterOperators()
+	{
+		return array();
+	}
+	public function GetBasicFilterLooseOperator()
+	{
+		return "=";
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		$sQValue = CMDBSource::Quote($value);
+		switch ($sOpCode)
+		{
+		case '!=':
+			return $this->GetSQLExpr()." != $sQValue";
+			break;
+		case '=':
+		default:
+			return $this->GetSQLExpr()." = $sQValue";
+		}
+	} 
+
+	public function GetSQLExpressions($sPrefix = '')
+	{
+		$oParent = $this->GetTargetAttDef();
+		$res = $oParent->GetSubItemSQLExpression($this->Get('item_code'));
+		return $res;
+	}
+
+	/**
+	 * Used by DBOBject::Get()	
+	 */	
+	public function GetValue($parentValue, $oHostObject = null)
+	{
+		$oParent = $this->GetTargetAttDef();
+		$res = $oParent->GetSubItemValue($this->Get('item_code'), $parentValue, $oHostObject);
+		return $res;
+	}
+
+
+	public function GetAsHTML($value, $oHostObject = null)
+	{
+		$oParent = $this->GetTargetAttDef();
+		$res = $oParent->GetSubItemAsHTML($this->Get('item_code'), $value);
+		return $res;
+	}
+
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
+	{
+		$oParent = $this->GetTargetAttDef();
+		$res = $oParent->GetSubItemAsCSV($this->Get('item_code'), $value, $sSeparator = ',', $sTextQualifier = '"');
+		return $res;
+	}
+	
+	public function GetAsXML($value, $oHostObject = null)
+	{
+		$oParent = $this->GetTargetAttDef();
+		$res = $oParent->GetSubItemAsXML($this->Get('item_code'), $value);
+		return $res;
+	}
+
 }
 
 /**

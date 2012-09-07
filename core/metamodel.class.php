@@ -2365,6 +2365,7 @@ abstract class MetaModel
 			foreach ($aAttList as $sAttCode => $oAttDef)
 			{
 				if (!$oAttDef->IsScalar()) continue;
+				// keep because it can be used for sorting - if (!$oAttDef->LoadInObject()) continue;
 				
 				foreach ($oAttDef->GetSQLExpressions() as $sColId => $sSQLExpr)
 				{
