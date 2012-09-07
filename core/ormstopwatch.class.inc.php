@@ -201,15 +201,11 @@ return false;
 			$sThresholdDesc = $oAttDef->SecondsToDate($aThresholdData['deadline']);
 			if ($aThresholdData['triggered'])
 			{
-				if ($aThresholdData['overrun'])
-				{
-					$sThresholdDesc .= " <b>TRIGGERED</b>, Overrun:".(int) $aThresholdData['overrun']." seconds";
-				}
-				else
-				{
-					// Still active, overrun unknown
-					$sThresholdDesc .= " <b>TRIGGERED</b>";
-				}
+				$sThresholdDesc .= " <b>TRIGGERED</b>";
+			}
+			if ($aThresholdData['overrun'])
+			{
+				$sThresholdDesc .= " Overrun:".(int) $aThresholdData['overrun']." sec.";
 			}
 			$aProperties[$iPercent.'%'] = $sThresholdDesc;
 		}
@@ -347,11 +343,14 @@ return false;
 				// The threshold is in the future, reset
 				$aThresholdData['passed'] = false;
 				$aThresholdData['triggered'] = false;
+				$aThresholdData['overrun'] = null;
 			}
 			else
 			{
 				// The new threshold is in the past
 				$aThresholdData['passed'] = true;
+				// Note: the overrun can be wrong, but the correct algorithm to compute
+				// the overrun of a deadline in the past requires that the ormStopWatch keeps track of all its history!!!
 			}
 		}
 
@@ -376,7 +375,6 @@ return false;
 		{
 			if (!is_null($aThresholdData['deadline']) && (time() > $aThresholdData['deadline']))
 			{
-				$aThresholdData['passed'] = true;
 				if ($aThresholdData['overrun'] > 0)
 				{
 					// Accumulate from last start
@@ -388,6 +386,8 @@ return false;
 					$iOverrun = $this->ComputeDuration($oObject, $oAttDef, $aThresholdData['deadline'], time());
 					$aThresholdData['overrun'] = $iOverrun;
 				}
+				$aThresholdData['passed'] = true;
+				$aThresholdData['deadline'] = null;
 			}
 		}
 
