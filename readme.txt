@@ -74,7 +74,7 @@ Deng Lixin for the Chinese translation
 Marialaura Colantoni for the Italian translation
 Schlobinux for the fix of the setup temporary file verification.
 Gabor Kiss for the Hungarian translation
-Tadashi Kaneda for the Japanese translation
+Tadashi Kaneda and Shoji Seki for the Japanese translation
 Antoine Coetsier for the CAS support and tests
 Vincenzo Todisco for his contribution to the enhancement of the webservices
 Tobias Glemser and Sabri Saleh for their consulting about iTop security
