@@ -20,7 +20,6 @@
  * @author      Erwan Taloc <erwan.taloc@combodo.com>
  * @author      Romain Quetiez <romain.quetiez@combodo.com>
  * @author      Denis Flaven <denis.flaven@combodo.com>
- * @author      Hirofumi Kosaka <kosaka@rworks.jp>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
@@ -39,8 +38,8 @@
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array (
-	'Class:UserExternal' => '外部ユーザー',      # 'External user',
-	'Class:UserExternal+' => '外部認証ユーザー', # 'User authentified outside of iTop',
+	'Class:UserExternal' => '外部ユーザー',
+	'Class:UserExternal+' => 'iTopの外で認証されたユーザー',
 ));
 
 

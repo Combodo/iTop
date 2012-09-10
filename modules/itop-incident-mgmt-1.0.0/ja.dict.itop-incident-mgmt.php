@@ -24,23 +24,26 @@
  */
 
 Dict::Add('JA JP', 'Japanese', '日本語', array (
-	'Menu:IncidentManagement' => 'インシデント管理',	# 'Incident Management'
-	'Menu:IncidentManagement+' => 'インシデント管理',	# 'Incident Management'
-	'Menu:Incident:Overview' => '概要',	# 'Overview'
-	'Menu:Incident:Overview+' => '概要',  # 'Overview'
-	'Menu:NewIncident' => '新規インシデント',	  # 'New Incident'
-	'Menu:NewIncident+' => 'インシデントチケット作成',	# 'Create a new Incident ticket'
-	'Menu:SearchIncidents' => 'インシデント検索',	# 'Search for Incidents'
-	'Menu:SearchIncidents+' => 'インシデントチケット検索', # 'Search for Incident tickets'
-	'Menu:Incident:Shortcuts' => 'ショートカット',	# 'Shortcuts'
-	'Menu:Incident:Shortcuts+' => '',		# ''
-	'Menu:Incident:MyIncidents' => '担当しているインシデント',	# 'Incidents assigned to me'
-	'Menu:Incident:MyIncidents+' => '担当しているインシデント(エージェント)',	     # 'Incidents assigned to me (as Agent)'
-	'Menu:Incident:EscalatedIncidents' => 'エスカレーションされたインシデント',  # 'Escalated Incidents'
-	'Menu:Incident:EscalatedIncidents+' => 'エスカレーションされたインシデント', # 'Escalated Incidents'
-	'Menu:Incident:OpenIncidents' => '担当のいないインシデント',	      # 'All Open Incidents'
-	'Menu:Incident:OpenIncidents+' => '担当のいないインシデント',	      # 'All Open Incidents'
+	'Menu:IncidentManagement' => 'インシデント管理',
+	'Menu:IncidentManagement+' => 'インシデント管理',
+	'Menu:Incident:Overview' => '概要',
+	'Menu:Incident:Overview+' => '概要',
+	'Menu:NewIncident' => '新規インシデント',
+	'Menu:NewIncident+' => 'インシデントチケット作成',
+	'Menu:SearchIncidents' => 'インシデント検索',
+	'Menu:SearchIncidents+' => 'インシデントチケット検索',
+	'Menu:Incident:Shortcuts' => 'ショートカット',
+	'Menu:Incident:Shortcuts+' => '', # ''
+	'Menu:Incident:MyIncidents' => '担当しているインシデント',
+	'Menu:Incident:MyIncidents+' => '担当しているインシデント(エージェント)',
+	'Menu:Incident:EscalatedIncidents' => 'エスカレーションされたインシデント',
+	'Menu:Incident:EscalatedIncidents+' => 'エスカレーションされたインシデント',
+	'Menu:Incident:OpenIncidents' => '全オープンインシデント',
+	'Menu:Incident:OpenIncidents+' => '全オープンインシデント',
 ));
+
+
+
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -57,18 +60,22 @@ Dict::Add('JA JP', 'Japanese', '日本語', array (
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array (
-	'Class:Incident' => 'インシデント',	# 'Incident'
-	'Class:Incident+' => '',	# ''
-	'Class:Incident/Stimulus:ev_assign' => '割当',	# 'Assign'
-	'Class:Incident/Stimulus:ev_assign+' => '',		# ''
-	'Class:Incident/Stimulus:ev_reassign' => '再割当',	# 'Reassign'
-	'Class:Incident/Stimulus:ev_reassign+' => '',		# ''
-	'Class:Incident/Stimulus:ev_timeout' => '中断(エスカレーション)',	# 'ev_timeout'
-	'Class:Incident/Stimulus:ev_timeout+' => '',		# ''
-	'Class:Incident/Stimulus:ev_resolve' => '解決済みとする',	# 'Mark as resolved'
-	'Class:Incident/Stimulus:ev_resolve+' => '',  # ''
-	'Class:Incident/Stimulus:ev_close' => '完了',	# 'Close'
-	'Class:Incident/Stimulus:ev_close+' => '',	# ''
+	'Class:Incident' => 'インシデント',
+	'Class:Incident+' => '',
+	'Class:Incident/Stimulus:ev_assign' => '割り当て',
+	'Class:Incident/Stimulus:ev_assign+' => '',
+	'Class:Incident/Stimulus:ev_reassign' => '再割り当て',
+	'Class:Incident/Stimulus:ev_reassign+' => '',
+	'Class:Incident/Stimulus:ev_timeout' => 'EV_タイムアウト',
+	'Class:Incident/Stimulus:ev_timeout+' => '',
+	'Class:Incident/Stimulus:ev_resolve' => '解決',
+	'Class:Incident/Stimulus:ev_resolve+' => '',
+	'Class:Incident/Stimulus:ev_close' => 'クローズ',
+	'Class:Incident/Stimulus:ev_close+' => '',
+	'Class:lnkTicketToIncident' => 'インシデントへのチケット',
+	'Class:lnkTicketToIncident/Attribute:ticket_id' => 'チケット',
+	'Class:lnkTicketToIncident/Attribute:incident_id' => 'インシデント',
+	'Class:lnkTicketToIncident/Attribute:reason' => '理由',
 ));
 
 ?>

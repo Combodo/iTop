@@ -20,7 +20,6 @@
  * @author      Erwan Taloc <erwan.taloc@combodo.com>
  * @author      Romain Quetiez <romain.quetiez@combodo.com>
  * @author      Denis Flaven <denis.flaven@combodo.com>
- * @author      Hirofumi Kosaka <kosaka@rworks.jp>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
@@ -40,7 +39,7 @@
 
 Dict::Add('JA JP', 'Japanese', '日本語', array (
 	'Class:UserLDAP' => 'LDAP ユーザー', # 'LDAP user',
-	'Class:UserLDAP+' => 'LDAP認証ユーザー', # 'User authentified by LDAP',
+	'Class:UserLDAP+' => 'LDAPにて認証されたユーザー', # 'User authentified by LDAP',
 	'Class:UserLDAP/Attribute:password' => 'パスワード',   #  'Password',
 	'Class:UserLDAP/Attribute:password+' => '認証文字列', # 'user authentication string',
 ));
