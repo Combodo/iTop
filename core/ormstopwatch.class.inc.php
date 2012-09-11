@@ -88,7 +88,7 @@ return false;
 		return (string) $this->iTimeSpent;
 	}
 
-	public function DefineThreshold($iPercent, $tDeadline = null, $bPassed = false, $bTriggered = false, $iOverrun = 0)
+	public function DefineThreshold($iPercent, $tDeadline = null, $bPassed = false, $bTriggered = false, $iOverrun = null)
 	{
 		$this->aThresholds[$iPercent] = array(
 			'deadline' => $tDeadline, // unix time (seconds)

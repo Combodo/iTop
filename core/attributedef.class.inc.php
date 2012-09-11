@@ -437,7 +437,69 @@ abstract class AttributeDefinition
 		if (!$oValSetDef) return null;
 		return $oValSetDef->GetValues($aArgs, $sContains);
 	}
-	
+
+	public function GetAsHTMLForHistory($sOldValue, $sNewValue, $sLabel = null)
+	{
+		if (is_null($sLabel))
+		{
+			$sLabel = $this->GetLabel();
+		}
+
+		if($this->IsExternalKey())
+		{
+			$sTargetClass = $this->GetTargetClass();
+			$sOldValue = (int)$sOldValue ? MetaModel::GetHyperLink($sTargetClass, (int)$sOldValue) : null;
+			$sNewValue = (int)$sNewValue ? MetaModel::GetHyperLink($sTargetClass, (int)$sNewValue) : null;
+		}
+		if ( (($this->GetType() == 'String') || ($this->GetType() == 'Text')) &&
+			 (strlen($sNewValue) > strlen($sOldValue)) )
+		{
+			// Check if some text was not appended to the field
+			if (substr($sNewValue,0, strlen($sOldValue)) == $sOldValue) // Text added at the end
+			{
+				$sDelta = substr($sNewValue, strlen($sOldValue));
+				$sResult = Dict::Format('Change:Text_AppendedTo_AttName', $sDelta, $sLabel);
+			}
+			else if (substr($sNewValue, -strlen($sOldValue)) == $sOldValue)   // Text added at the beginning
+			{
+				$sDelta = substr($sNewValue, 0, strlen($sNewValue) - strlen($sOldValue));
+				$sResult = Dict::Format('Change:Text_AppendedTo_AttName', $sDelta, $sLabel);
+			}
+			else
+			{
+				if (strlen($sOldValue) == 0)
+				{
+					$sResult = Dict::Format('Change:AttName_SetTo', $sLabel, $sNewValue);
+				}
+				else
+				{
+					if (is_null($sNewValue))
+					{
+						$sNewValue = Dict::S('UI:UndefinedObject');
+					}
+					$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sLabel, $sNewValue, $sOldValue);
+				}
+			}
+		}
+		else
+		{
+			if (strlen($sOldValue) == 0)
+			{
+				$sResult = Dict::Format('Change:AttName_SetTo', $sLabel, $sNewValue);
+			}
+			else
+			{
+				if (is_null($sNewValue))
+				{
+					$sNewValue = Dict::S('UI:UndefinedObject');
+				}
+				$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sLabel, $sNewValue, $sOldValue);
+			}
+		}
+		return $sResult;
+	}
+
+
 	/**
 	 * Parses a string to find some smart search patterns and build the corresponding search/OQL condition
 	 * Each derived class is reponsible for defining and processing their own smart patterns, the base class
@@ -2155,6 +2217,14 @@ class AttributeEnum extends AttributeString
 		return $this->GetValueLabel($sValue);
 	}
 
+	public function GetAsHTMLForHistory($sOldValue, $sNewValue, $sLabel = null)
+	{
+		$sOldValue = is_null($sOldValue) ? null : $this->GetAsHTML($sOldValue);
+		$sNewValue = is_null($sNewValue) ? null : $this->GetAsHTML($sNewValue);
+		$sResult = parent::GetAsHTMLForHistory($sOldValue, $sNewValue, $sLabel);
+		return $sResult;
+	}
+
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
 		$aRawValues = parent::GetAllowedValues($aArgs, $sContains);
@@ -3591,6 +3661,54 @@ class AttributeStopWatch extends AttributeDefinition
 		throw new CoreException("Unknown item code '$sItemCode' for attribute ".$this->GetHostClass().'::'.$this->GetCode());
 	}
 
+	public function GetSubItemAsHTMLForHistory($sItemCode, $sOldValue, $sNewValue, $sLabel)
+	{
+		switch($sItemCode)
+		{
+		case 'timespent':
+			$sHtmlOld = (int)$sOldValue ? AttributeDuration::FormatDuration($sOldValue) : null;
+			$sHtmlNew = (int)$sNewValue ? AttributeDuration::FormatDuration($sNewValue) : null;
+			break;
+		case 'started':
+		case 'laststart':
+		case 'stopped':
+			$sHtmlOld = (int)$sOldValue ? date(self::GetDateFormat(), (int)$sOldValue) : null;
+			$sHtmlNew = (int)$sNewValue ? date(self::GetDateFormat(), (int)$sNewValue) : null;
+			break;
+
+		default:
+			foreach ($this->ListThresholds() as $iThreshold => $aFoo)
+			{
+				$sThPrefix = $iThreshold.'_';
+				if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
+				{
+					// The current threshold is concerned
+					$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+					switch($sThresholdCode)
+					{
+					case 'deadline':
+						$sHtmlOld = (int)$sOldValue ? date(self::GetDateFormat(true /*full*/), (int)$sOldValue) : null;
+						$sHtmlNew = (int)$sNewValue ? date(self::GetDateFormat(true /*full*/), (int)$sNewValue) : null;
+						break;
+					case 'passed':
+						$sHtmlOld = (int)$sOldValue ? '1' : '0';
+						$sHtmlNew = (int)$sNewValue ? '1' : '0';
+						break;
+					case 'triggered':
+						$sHtmlOld = (int)$sOldValue ? '1' : '0';
+						$sHtmlNew = (int)$sNewValue ? '1' : '0';
+						break;
+					case 'overrun':
+						$sHtmlOld = (int)$sOldValue > 0 ? AttributeDuration::FormatDuration((int)$sOldValue) : '';
+						$sHtmlNew = (int)$sNewValue > 0 ? AttributeDuration::FormatDuration((int)$sNewValue) : '';
+					}
+				}
+			}
+		}
+		$sRes = parent::GetAsHTMLForHistory($sHtmlOld, $sHtmlNew, $sLabel);
+		return $sRes;
+	}
+
 	static protected function GetDateFormat($bFull = false)
 	{
 		if ($bFull)
@@ -3769,7 +3887,6 @@ class AttributeSubItem extends AttributeDefinition
 		return $res;
 	}
 
-
 	public function GetAsHTML($value, $oHostObject = null)
 	{
 		$oParent = $this->GetTargetAttDef();
@@ -3791,6 +3908,14 @@ class AttributeSubItem extends AttributeDefinition
 		return $res;
 	}
 
+	public function GetAsHTMLForHistory($sOldValue, $sNewValue, $sLabel = null)
+	{
+		$sLabel = $this->GetLabel();
+
+		$oParent = $this->GetTargetAttDef();
+		$sValue = $oParent->GetSubItemAsHTMLForHistory($this->Get('item_code'), $sOldValue, $sNewValue, $sLabel);
+		return $sValue;
+	}
 }
 
 /**
@@ -4329,6 +4454,12 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 	public function GetAsHTML($sValue, $oHostObject = null)
 	{
 		return Str::pure2html((string)$sValue);
+	}
+
+	// Do not display friendly names in the history of change
+	public function GetAsHTMLForHistory($sOldValue, $sNewValue, $sLabel = null)
+	{
+		return '';
 	}
 
 	public function GetBasicFilterLooseOperator()

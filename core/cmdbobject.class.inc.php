@@ -256,10 +256,6 @@ abstract class CMDBObject extends DBObject
 				$oMyChangeOp->Set("objclass", get_class($this));
 				$oMyChangeOp->Set("objkey", $this->GetKey());
 				$oMyChangeOp->Set("attcode", $sAttCode);
-				if (is_null($original))
-				{
-					$original = 'undefined';
-				}
 				$oMyChangeOp->Set("oldvalue", $original);
 				$oMyChangeOp->Set("newvalue", $value);
 				$iId = $oMyChangeOp->DBInsertNoReload();

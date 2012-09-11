@@ -200,9 +200,6 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 	 */	 
 	public function GetDescription()
 	{
-		// Temporary, until we change the options of GetDescription() -needs a more global revision
-		$bIsHtml = true;
-		
 		$sResult = '';
 		$oTargetObjectClass = $this->Get('objclass');
 		$oTargetObjectKey = $this->Get('objkey');
@@ -218,76 +215,7 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 			$sAttName = $oAttDef->GetLabel();
 			$sNewValue = $this->Get('newvalue');
 			$sOldValue = $this->Get('oldvalue');
-			if ($oAttDef instanceof AttributeEnum)
-			{
-				// translate the enum values
-				$sOldValue = $oAttDef->GetAsHTML($sOldValue);
-				$sNewValue = $oAttDef->GetAsHTML($sNewValue);
-				if (strlen($sOldValue) == 0)
-				{
-					$sResult = Dict::Format('Change:AttName_SetTo', $sAttName, $sNewValue);
-				}
-				else
-				{
-					$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sAttName, $sNewValue, $sOldValue);
-				}				
-			}
-			elseif ( (($oAttDef->GetType() == 'String') || ($oAttDef->GetType() == 'Text')) &&
-				 (strlen($sNewValue) > strlen($sOldValue)) )
-			{
-				// Check if some text was not appended to the field
-				if (substr($sNewValue,0, strlen($sOldValue)) == $sOldValue) // Text added at the end
-				{
-					$sDelta = substr($sNewValue, strlen($sOldValue));
-					$sResult = Dict::Format('Change:Text_AppendedTo_AttName', $sDelta, $sAttName);
-				}
-				else if (substr($sNewValue, -strlen($sOldValue)) == $sOldValue)   // Text added at the beginning
-				{
-					$sDelta = substr($sNewValue, 0, strlen($sNewValue) - strlen($sOldValue));
-					$sResult = Dict::Format('Change:Text_AppendedTo_AttName', $sDelta, $sAttName);
-				}
-				else
-				{
-					if (strlen($sOldValue) == 0)
-					{
-						$sResult = Dict::Format('Change:AttName_SetTo', $sAttName, $sNewValue);
-					}
-					else
-					{
-						$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sAttName, $sNewValue, $sOldValue);
-					}
-				}
-			}
-			elseif($bIsHtml && $oAttDef->IsExternalKey())
-			{
-				$sTargetClass = $oAttDef->GetTargetClass();
-				$sFrom = MetaModel::GetHyperLink($sTargetClass, $sOldValue);
-				$sTo = MetaModel::GetHyperLink($sTargetClass, $sNewValue);
-				$sResult = "$sAttName set to $sTo (previous: $sFrom)";
-				if (strlen($sFrom) == 0)
-				{
-					$sResult = Dict::Format('Change:AttName_SetTo', $sAttName, $sTo);
-				}
-				else
-				{
-					$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sAttName, $sTo, $sFrom);
-				}
-			}
-			elseif ($oAttDef instanceOf AttributeBlob)
-			{
-				$sResult = "#@# Issue... found an attribute for which other type of tracking should be made";
-			}
-			else
-			{
-				if (strlen($sOldValue) == 0)
-				{
-					$sResult = Dict::Format('Change:AttName_SetTo', $sAttName, $sNewValue);
-				}
-				else
-				{
-					$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sAttName, $sNewValue, $sOldValue);
-				}
-			}
+			$sResult = $oAttDef->GetAsHTMLForHistory($sOldValue, $sNewValue);
 		}
 		return $sResult;
 	}
