@@ -3372,24 +3372,6 @@ class AttributeStopWatch extends AttributeDefinition
 		return $proposedValue;
 	}
 
-	public function Equals($val1, $val2)
-	{
-		if ($val1 === $val2) return true;
-
-		if (is_object($val1) != is_object($val2))
-		{
-			return false;
-		}
-		if (!is_object($val1))
-		{
-			// string ?
-			return false;
-		}
-
-		// Both values are Object sets
-		return $val1->HasSameContents($val2);
-	}
-
 	public function GetSQLExpressions($sPrefix = '')
 	{
 		if ($sPrefix == '')

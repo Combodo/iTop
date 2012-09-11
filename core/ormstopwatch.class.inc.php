@@ -54,32 +54,6 @@ class ormStopWatch
 		$this->aThresholds = array();
 	}
 
-	// BUGGY - DOES NOT DETECT A CHANGE IN THE DEADLINE
-	//
-	public function HasSameContents($oStopWatch)
-	{
-		if ($oStopWatch->iTimeSpent != $this->iTimeSpent) return false;
-		if ($oStopWatch->iStarted != $this->iStarted) return false;
-		if ($oStopWatch->iLastStart != $this->iLastStart) return false;
-		if ($oStopWatch->iStopped != $this->iStopped) return false;
-		if ($oStopWatch->aThresholds != $this->aThresholds) return false;
-
-		// Array comparison is not recursive... let's do it by myself
-		foreach ($oStopWatch->aThresholds as $iPercent => $aThresholdData)
-		{
-			// Assumption: the thresholds will not change dynamically (defined at application design time)
-			$aThisThresholdData = $this->aThresholds[$iPercent];
-			if ($aThisThresholdData['deadline'] != $aThresholdData['deadline']) return false;
-			if ($aThisThresholdData['passed'] != $aThresholdData['passed']) return false;
-			if ($aThisThresholdData['triggered'] != $aThresholdData['triggered']) return false;
-			if ($aThisThresholdData['overrun'] != $aThresholdData['overrun']) return false;
-		}
-
-return false;
-
-		return true;
-	}
-
 	/**
 	 * Necessary for the triggers
 	 */	 	
