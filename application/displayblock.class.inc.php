@@ -654,7 +654,7 @@ class DisplayBlock
 				$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);				
 			}
 			$iCount = $this->m_oSet->Count();
-			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.$this->m_oFilter->serialize();
+			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($this->m_oFilter->serialize());
 			$sHtml .= '<p><a class="actions" href="'.$sHyperlink.'">';
 			$sHtml .= MetaModel::GetClassIcon($sClass, true, 'float;left;margin-right:10px;');
 			$sHtml .= MetaModel::GetName($sClass).': '.$iCount.'</a></p>';
@@ -715,7 +715,7 @@ class DisplayBlock
 					}
 					else
 					{
-						$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.$oFilter->serialize();
+						$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($oFilter->serialize());
 						$aCounts[$sStateValue] = "<a href=\"$sHyperlink\">{$aCounts[$sStateValue]}</a>";
 					}
 				}
@@ -724,7 +724,7 @@ class DisplayBlock
 			$sHtml .= '<tr><td>'.implode('</td><td>', $aCounts).'</td></tr></table></div>';
 			// Title & summary
 			$iCount = $this->m_oSet->Count();
-			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.$this->m_oFilter->serialize();
+			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($this->m_oFilter->serialize());
 			$sHtml .= '<h1>'.Dict::S(str_replace('_', ':', $sTitle)).'</h1>';
 			$sHtml .= '<a class="summary" href="'.$sHyperlink.'">'.Dict::Format(str_replace('_', ':', $sLabel), $iCount).'</a>';
 			break;
@@ -780,11 +780,11 @@ EOF
 			$oPage->add_script("function ofc_resize(left, width, top, height) { /* do nothing special */ }");
 			if (isset($aExtraParams['group_by_label']))
 			{
-				$sUrl = urlencode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&params[currentId]=$sId&id=$sId&filter=".$sFilter);
+				$sUrl = urlencode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&params[currentId]=$sId&id=$sId&filter=".urlencode($sFilter));
 			}
 			else
 			{
-				$sUrl = urlencode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&params[currentId]=$sId&id=$sId&filter=".$sFilter);
+				$sUrl = urlencode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&params[currentId]=$sId&id=$sId&filter=".urlencode($sFilter));
 			}
 
 			$oPage->add_ready_script("swfobject.embedSWF(\"../images/open-flash-chart.swf\", \"my_chart_$sId{$iChartCounter}\", \"100%\", \"300\",\"9.0.0\", \"expressInstall.swf\",
@@ -839,7 +839,7 @@ EOF
 				$sURLList = '';
 				foreach($aURLs as $index => $sURL)
 				{
-					$sURLList .= "\taURLs[$index] = '".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html{$sContext}&filter=".addslashes($sURL)."';\n";
+					$sURLList .= "\taURLs[$index] = '".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html{$sContext}&filter=".urlencode($sURL)."';\n";
 				}
 				$oPage->add_script(
 <<<EOF
@@ -1234,7 +1234,7 @@ class MenuBlock extends DisplayBlock
 				// Static menus: Email this page & CSV Export
 				$sUrl = ApplicationContext::MakeObjectUrl($sClass, $id);
 				$aActions['UI:Menu:EMail'] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".urlencode($oObj->GetRawName())."&body=".urlencode($sUrl));
-				$aActions['UI:Menu:CSVExport'] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=search&filter=$sFilter&format=csv{$sContext}");
+				$aActions['UI:Menu:CSVExport'] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=search&filter=".urlencode($sFilter)."&format=csv{$sContext}");
 				// The style tells us whether the menu is displayed on a list of one object, or on the details of the given object 
 				if ($this->m_sStyle == 'list')
 				{
@@ -1275,8 +1275,8 @@ class MenuBlock extends DisplayBlock
 			{
 				// many objects in the set, possible actions are: new / modify all / delete all
 				if ($bIsCreationAllowed) { $aActions['UI:Menu:New'] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}"); }
-				if ($bIsBulkModifyAllowed) { $aActions['UI:Menu:ModifyAll'] = array ('label' => Dict::S('UI:Menu:ModifyAll'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=select_for_modify_all&class=$sClass&filter=$sFilter{$sContext}"); }
-				if ($bIsBulkDeleteAllowed) { $aActions['UI:Menu:BulkDelete'] = array ('label' => Dict::S('UI:Menu:BulkDelete'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=select_for_deletion&filter=$sFilter{$sContext}"); }
+				if ($bIsBulkModifyAllowed) { $aActions['UI:Menu:ModifyAll'] = array ('label' => Dict::S('UI:Menu:ModifyAll'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=select_for_modify_all&class=$sClass&filter=".urlencode($sFilter)."{$sContext}"); }
+				if ($bIsBulkDeleteAllowed) { $aActions['UI:Menu:BulkDelete'] = array ('label' => Dict::S('UI:Menu:BulkDelete'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=select_for_deletion&filter=".urlencode($sFilter)."{$sContext}"); }
 
 				// Stimuli
 				$aStates = MetaModel::EnumStates($sClass);
@@ -1307,7 +1307,7 @@ class MenuBlock extends DisplayBlock
 								{
 									case UR_ALLOWED_YES:
 									case UR_ALLOWED_DEPENDS:
-									$aActions[$sStimulusCode] = array('label' => $aStimuli[$sStimulusCode]->GetLabel(), 'url' => "{$sRootUrl}pages/UI.php?operation=select_bulk_stimulus&stimulus=$sStimulusCode&state=$sState&class=$sClass&filter=$sFilter{$sContext}");
+									$aActions[$sStimulusCode] = array('label' => $aStimuli[$sStimulusCode]->GetLabel(), 'url' => "{$sRootUrl}pages/UI.php?operation=select_bulk_stimulus&stimulus=$sStimulusCode&state=$sState&class=$sClass&filter=".urlencode($sFilter)."{$sContext}");
 									break;
 									
 									default:
@@ -1319,8 +1319,8 @@ class MenuBlock extends DisplayBlock
 				}
 				$this->AddMenuSeparator($aActions);
 				$sUrl = utils::GetAbsoluteUrlAppRoot();
-				$aActions['UI:Menu:EMail'] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=$sFilterDesc&body=".urlencode("{$sUrl}pages/$sUIPage?operation=search&filter=$sFilter{$sContext}"));
-				$aActions['UI:Menu:CSVExport'] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=search&filter=$sFilter&format=csv{$sContext}");
+				$aActions['UI:Menu:EMail'] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=$sFilterDesc&body=".urlencode("{$sUrl}pages/$sUIPage?operation=search&filter=".urlencode($sFilter)."{$sContext}"));
+				$aActions['UI:Menu:CSVExport'] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=search&filter=".urlencode($sFilter)."&format=csv{$sContext}");
 				$sOQL = addslashes($sFilterDesc);
 				$aActions['UI:Menu:AddToDashboard'] = array ('label' => Dict::S('UI:Menu:AddToDashboard'), 'url' => "#", 'onclick' => "return DashletCreationDlg('$sOQL')");
 			}

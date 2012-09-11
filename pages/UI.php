@@ -962,7 +962,7 @@ try
 			$oDummyObj->DisplayModifyForm($oP, array('fieldsComments' => $aComments, 'noRelations' => true, 'custom_operation' => 'preview_or_modify_all', 'custom_button' => Dict::S('UI:Button:PreviewModifications'), 'selectObj' => $sSelectedObj, 'filter' => $sFilter, 'preview_mode' => true, 'disabled_fields' => '{}'));
 			$oP->add("</div>\n");
 			$oP->add_ready_script($sReadyScript);
-			$sURL = "./UI.php?operation=search&filter=$sFilter&".$oAppContext->GetForLink();
+			$sURL = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
 			$oP->add_ready_script(
 <<<EOF
 $('.wizContainer button.cancel').unbind('click');
@@ -1053,7 +1053,7 @@ EOF
 			}
 		}
 		$oP->Table($aHeaders, $aRows);
-		$sURL = "./UI.php?operation=search&filter=$sFilter&".$oAppContext->GetForLink();
+		$sURL = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
 		if ($bPreview)
 		{
 			// Form to submit:
@@ -1079,7 +1079,7 @@ EOF
 		}
 		else
 		{
-			$sURL = "./UI.php?operation=search&filter=$sFilter&".$oAppContext->GetForLink();
+			$sURL = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
 			$oP->add("<button type=\"button\" onClick=\"window.location.href='$sURL'\" class=\"action\"><span>".Dict::S('UI:Button:Done')."</span></button>\n");
 		}
 		break;
@@ -1610,7 +1610,7 @@ EOF
 			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
 			$oP->add($oAppContext->GetForForm());
 			$oP->add("<input type=\"hidden\" name=\"selectObject\" value=\"".implode(',',$aSelectObject)."\">\n");
-			$sURL = "./UI.php?operation=search&filter=$sFilter&".$oAppContext->GetForLink();
+			$sURL = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
 			$oP->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"window.location.href='$sURL'\">&nbsp;&nbsp;&nbsp;&nbsp;\n");
 			$oP->add("<button type=\"submit\" class=\"action\"><span>$sActionLabel</span></button>\n");
 			$oP->add("</form>\n");
@@ -1776,7 +1776,7 @@ EOF
 			}
 			$oP->Table($aHeaders, $aRows);
 			// Back to the list
-			$sURL = "./UI.php?operation=search&filter=$sFilter&".$oAppContext->GetForLink();
+			$sURL = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
 			$oP->add('<input type="button" onClick="window.location.href=\''.$sURL.'\'" value="'.Dict::S('UI:Button:Done').'">');
 		}
 		break;

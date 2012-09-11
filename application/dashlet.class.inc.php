@@ -726,7 +726,7 @@ class DashletGroupByPie2 extends DashletGroupByPie
 			$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($sValue));
 			$oSubsetSearch->AddConditionExpression($oCondition);
 			// Todo - à finir
-			$aURLs[] = 'http://www.combodo.com/itop'; //utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html{$sContext}&filter=".addslashes($oSubsetSearch->serialize());
+			$aURLs[] = 'http://www.combodo.com/itop'; //utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html{$sContext}&filter=".urlencode($oSubsetSearch->serialize());
 		}
 
 		$sJSValues = json_encode($aGroupBy);
@@ -1328,7 +1328,7 @@ class DashletProto extends Dashlet
 				$sFilter = urlencode($oSubsetSearch->serialize());
 
 				$this->aStats[$sValue1][$sValue2] = array (
-					'href' => utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter",
+					'href' => utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=".urlencode($sFilter),
 					'count' => $iCount,
 				);
 				if (!array_key_exists($sValue1, $this->aValues1))
