@@ -43,29 +43,32 @@ SetupWebPage::AddModule(
 	)
 );
 
-// Module installation handler
-//
-class TicketsInstaller extends ModuleInstallerAPI
+if (!class_exists('TicketsInstaller'))
 {
-	public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
+	// Module installation handler
+	//
+	class TicketsInstaller extends ModuleInstallerAPI
 	{
-		// Delete all Triggers corresponding to a no more valid class
-		$oSearch = new DBObjectSearch('TriggerOnObject');
-		$oSet = new DBObjectSet($oSearch);
-		$oChange = null;
-		while($oTrigger = $oSet->Fetch())
+		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			if (!MetaModel::IsValidClass($oTrigger->Get('target_class')))
+			// Delete all Triggers corresponding to a no more valid class
+			$oSearch = new DBObjectSearch('TriggerOnObject');
+			$oSet = new DBObjectSet($oSearch);
+			$oChange = null;
+			while($oTrigger = $oSet->Fetch())
 			{
-				if ($oChange == null)
+				if (!MetaModel::IsValidClass($oTrigger->Get('target_class')))
 				{
-					// Create the change for its first use
-					$oChange = new CMDBChange;
-					$oChange->Set("date", time());
-					$oChange->Set("userinfo", "Uninstallation");
-					$oChange->DBInsert();
+					if ($oChange == null)
+					{
+						// Create the change for its first use
+						$oChange = new CMDBChange;
+						$oChange->Set("date", time());
+						$oChange->Set("userinfo", "Uninstallation");
+						$oChange->DBInsert();
+					}
+					$oTrigger->DBDeleteTracked($oChange);
 				}
-				$oTrigger->DBDeleteTracked($oChange);
 			}
 		}
 	}
