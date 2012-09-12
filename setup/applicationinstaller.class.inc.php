@@ -40,11 +40,11 @@ class ApplicationInstaller
 	const WARNING = 3;
 	const INFO = 4;
 	
-	protected $sXMLResponseFile;
+	protected $oParams;
 	
-	public function __construct($sXMLResponseFile)
+	public function __construct($oParams)
 	{
-		$this->sXMLResponseFile = $sXMLResponseFile;
+		$this->oParams = $oParams;
 	}
 	
 	/**
@@ -131,11 +131,15 @@ class ApplicationInstaller
 				break;
 				
 				case 'compile':
-				$oParams = new XMLParameters($this->sXMLResponseFile);
-				$aSelectedModules = $oParams->Get('selected_modules');
-				$sSourceDir = $oParams->Get('source_dir', 'datamodel');
-				$sTargetDir = $oParams->Get('target_dir', 'env-setup-test');
-				$sWorkspaceDir = $oParams->Get('workspace_dir', 'workspace');
+				$aSelectedModules = $this->oParams->Get('selected_modules');
+				$sSourceDir = $this->oParams->Get('source_dir', 'datamodel');
+				$sTargetEnvironment = $this->oParams->Get('target_env', '');
+				if ($sTargetEnvironment == '')
+				{
+					$sTargetEnvironment = 'production';
+				}
+				$sTargetDir = 'env-'.$sTargetEnvironment;
+				$sWorkspaceDir = $this->oParams->Get('workspace_dir', 'workspace');
 						
 				self::DoCompile($aSelectedModules, $sSourceDir, $sTargetDir, $sWorkspaceDir);
 				
@@ -149,16 +153,20 @@ class ApplicationInstaller
 				break;
 				
 				case 'db-schema':
-				$oParams = new XMLParameters($this->sXMLResponseFile);
-				$sMode = $oParams->Get('mode');
-				$sTargetDir = $oParams->Get('target_dir', 'env-setup-test');
-				$sDBServer = $oParams->Get('db_server', '');
-				$sDBUser = $oParams->Get('db_user', '');
-				$sDBPwd = $oParams->Get('db_pwd', '');
-				$sDBName = $oParams->Get('db_name', '');
-				$sDBNewName = $oParams->Get('db_new_name', '');
-				$sDBPrefix = $oParams->Get('db_prefix', '');
-				$sTargetEnvironment = $oParams->Get('target_env', '');
+				$sMode = $this->oParams->Get('mode');
+				$sTargetEnvironment = $this->oParams->Get('target_env', '');
+				if ($sTargetEnvironment == '')
+				{
+					$sTargetEnvironment = 'production';
+				}
+				$sTargetDir = 'env-'.$sTargetEnvironment;
+				$aDBParams = $this->oParams->Get('database');
+				$sDBServer = $aDBParams['server'];
+				$sDBUser = $aDBParams['user'];
+				$sDBPwd = $aDBParams['pwd'];
+				$sDBName = $aDBParams['name'];
+				$sDBNewName = $aDBParams['new_name'];
+				$sDBPrefix = $aDBParams['prefix'];
 				
 				self::DoUpdateDBSchema($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBNewName, $sDBPrefix, $sTargetEnvironment);
 				
@@ -172,22 +180,28 @@ class ApplicationInstaller
 				break;
 				
 				case 'after-db-create':
-				$oParams = new XMLParameters($this->sXMLResponseFile);
-				$sMode = $oParams->Get('mode');
-				$sTargetDir = $oParams->Get('target_dir', 'env-setup-test');
-				$sDBServer = $oParams->Get('db_server', '');
-				$sDBUser = $oParams->Get('db_user', '');
-				$sDBPwd = $oParams->Get('db_pwd', '');
-				$sDBName = $oParams->Get('db_name', '');
-				$sDBNewName = $oParams->Get('db_new_name', '');
-				$sDBPrefix = $oParams->Get('db_prefix', '');
-				$sAdminUser = $oParams->Get('admin_user', '');
-				$sAdminPwd = $oParams->Get('admin_pwd', '');
-				$sLanguage = $oParams->Get('language', '');
-				$aSelectedModules = $oParams->Get('selected_modules', array());
-				$sTargetEnvironment = $oParams->Get('target_env', '');
+				$sMode = $this->oParams->Get('mode');
+				$sTargetEnvironment = $this->oParams->Get('target_env', '');
+				if ($sTargetEnvironment == '')
+				{
+					$sTargetEnvironment = 'production';
+				}
+				$sTargetDir = 'env-'.$sTargetEnvironment;
+				$aDBParams = $this->oParams->Get('database');
+				$sDBServer = $aDBParams['server'];
+				$sDBUser = $aDBParams['user'];
+				$sDBPwd = $aDBParams['pwd'];
+				$sDBName = $aDBParams['name'];
+				$sDBNewName = $aDBParams['new_name'];
+				$sDBPrefix = $aDBParams['prefix'];
+				$aAdminParams = $this->oParams->Get('admin_account');
+				$sAdminUser = $aAdminParams['user'];
+				$sAdminPwd = $aAdminParams['pwd'];
+				$sAdminLanguage = $aAdminParams['language'];
+				$sLanguage = $this->oParams->Get('language');
+				$aSelectedModules = $this->oParams->Get('selected_modules', array());
 				
-				self::AfterDBCreate($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBNewName, $sDBPrefix, $sAdminUser, $sAdminPwd, $sLanguage, $aSelectedModules, $sTargetEnvironment);
+				self::AfterDBCreate($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBNewName, $sDBPrefix, $sAdminUser, $sAdminPwd, $sAdminLanguage, $sLanguage, $aSelectedModules, $sTargetEnvironment);
 				
 				$aResult = array(
 					'status' => self::OK,
@@ -199,17 +213,21 @@ class ApplicationInstaller
 				break;
 				
 				case 'sample-data':
-				$oParams = new XMLParameters($this->sXMLResponseFile);
-				$sMode = $oParams->Get('mode');
-				$sTargetDir = $oParams->Get('target_dir', 'env-setup-test');
-				$sDBServer = $oParams->Get('db_server', '');
-				$sDBUser = $oParams->Get('db_user', '');
-				$sDBPwd = $oParams->Get('db_pwd', '');
-				$sDBName = $oParams->Get('db_name', '');
-				$sDBNewName = $oParams->Get('db_new_name', '');
-				$sDBPrefix = $oParams->Get('db_prefix', '');
-				$aFiles = $oParams->Get('files', array());
-				$sTargetEnvironment = $oParams->Get('target_env', '');
+				$sMode = $this->oParams->Get('mode');
+				$sTargetEnvironment = $this->oParams->Get('target_env', '');
+				if ($sTargetEnvironment == '')
+				{
+					$sTargetEnvironment = 'production';
+				}
+				$sTargetDir = 'env-'.$sTargetEnvironment;
+				$aDBParams = $this->oParams->Get('database');
+				$sDBServer = $aDBParams['server'];
+				$sDBUser = $aDBParams['user'];
+				$sDBPwd = $aDBParams['pwd'];
+				$sDBName = $aDBParams['name'];
+				$sDBNewName = $aDBParams['new_name'];
+				$sDBPrefix = $aDBParams['prefix'];
+				$aFiles = $this->oParams->Get('files', array());
 				
 				self::DoLoadFiles($aFiles, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment);
 				
@@ -223,19 +241,23 @@ class ApplicationInstaller
 				break;
 				
 				case 'create-config':
-				$oParams = new XMLParameters($this->sXMLResponseFile);
-				$sMode = $oParams->Get('mode');
-				$sTargetDir = $oParams->Get('target_dir', 'env-setup-test');
-				$sDBServer = $oParams->Get('db_server', '');
-				$sDBUser = $oParams->Get('db_user', '');
-				$sDBPwd = $oParams->Get('db_pwd', '');
-				$sDBName = $oParams->Get('db_name', '');
-				$sDBNewName = $oParams->Get('db_new_name', '');
-				$sDBPrefix = $oParams->Get('db_prefix', '');
-				$sUrl = $oParams->Get('url', '');
-				$sLanguage = $oParams->Get('language', '');
-				$aSelectedModules = $oParams->Get('selected_modules', array());
-				$sTargetEnvironment = $oParams->Get('target_env', '');
+				$sMode = $this->oParams->Get('mode');
+				$sTargetEnvironment = $this->oParams->Get('target_env', '');
+				if ($sTargetEnvironment == '')
+				{
+					$sTargetEnvironment = 'production';
+				}
+				$sTargetDir = 'env-'.$sTargetEnvironment;
+				$aDBParams = $this->oParams->Get('database');
+				$sDBServer = $aDBParams['server'];
+				$sDBUser = $aDBParams['user'];
+				$sDBPwd = $aDBParams['pwd'];
+				$sDBName = $aDBParams['name'];
+				$sDBNewName = $aDBParams['new_name'];
+				$sDBPrefix = $aDBParams['prefix'];
+				$sUrl = $this->oParams->Get('url', '');
+				$sLanguage = $this->oParams->Get('language', '');
+				$aSelectedModules = $this->oParams->Get('selected_modules', array());
 				
 				self::DoCreateConfig($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModules, $sTargetEnvironment);
 				
@@ -364,7 +386,7 @@ class ApplicationInstaller
 		SetupPage::log_info("Database Schema Successfully Updated for environment '$sTargetEnvironment'.");
 	}
 	
-	protected static function AfterDBCreate($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBNewName, $sDBPrefix, $sAdminUser, $sAdminPwd, $sLanguage, $aSelectedModules, $sTargetEnvironment  = '')
+	protected static function AfterDBCreate($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBNewName, $sDBPrefix, $sAdminUser, $sAdminPwd, $sAdminLanguage, $sLanguage, $aSelectedModules, $sTargetEnvironment  = '')
 	{
 
 		SetupPage::log_info('After Database Creation');
@@ -459,7 +481,7 @@ class ApplicationInstaller
 		
 		if($sMode == 'install')
 		{
-			if (!self::CreateAdminAccount(MetaModel::GetConfig(), $sAdminUser, $sAdminPwd, $sLanguage))
+			if (!self::CreateAdminAccount(MetaModel::GetConfig(), $sAdminUser, $sAdminPwd, $sAdminLanguage))
 			{
 				throw(new Exception("Failed to create the administrator account '$sAdminUser'"));
 			}
