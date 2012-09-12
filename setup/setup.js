@@ -336,3 +336,15 @@ function GetSelectedModules()
 	$(':input[name^=module]').each(function() { aModules.push($(this).val()); } );
 	return aModules.join(',');
 }
+
+function WizardAsyncAction(sActionCode, oParams)
+{
+	var sStepClass = $('#_class').val();
+	var sStepState = $('#_state').val();
+	
+	var oMap = { operation: 'async_action', step_class: sStepClass, step_state: sStepState, code: sActionCode, params: oParams };
+	
+	$.post(GetAbsoluteUrlAppRoot()+'setup/ajax.dataloader.php', oMap, function(data) {
+		$('#async_action').html(data);
+	});
+}

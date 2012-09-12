@@ -172,6 +172,11 @@ class ModuleDiscovery
 	{
 		$sLookupDir = realpath($sRootDir.'/'.$sSearchDir);
 
+		if (self::$m_sModulesRoot != $sLookupDir)
+		{
+			self::ResetCache();
+		}
+		
 		if (is_null(self::$m_sModulesRoot))
 		{
 			// First call
@@ -186,16 +191,19 @@ class ModuleDiscovery
 			self::ListModuleFiles($sSearchDir, $sRootDir);
 			return self::GetModules($oP);
 		}
-		elseif (self::$m_sModulesRoot != $sLookupDir)
-		{
-			throw new Exception("Design issue: the discovery of modules cannot be made on two different paths (previous: ".self::$m_sModulesRoot.", new: $sLookupDir)");
-		}
 		else
 		{
 			// Reuse the previous results
 			//
 			return self::GetModules($oP);
 		}
+	}
+	
+	public static function ResetCache()
+	{
+		self::$m_sModulesRoot = null;
+		self::$m_sModulesRoot = null;
+		self::$m_aModules = array();
 	}
 
 	/**

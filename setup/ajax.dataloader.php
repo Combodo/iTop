@@ -120,6 +120,8 @@ require_once(APPROOT.'/core/log.class.inc.php');
 require_once(APPROOT.'/core/kpi.class.inc.php');
 require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 require_once('./xmldataloader.class.inc.php');
+require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
+require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
 
 
 // Never cache this page
@@ -134,6 +136,18 @@ try
 {
 	switch($sOperation)
 	{
+		case 'async_action':
+		$sClass = utils::ReadParam('step_class', '');
+		$sState = utils::ReadParam('step_state', '');
+		$sActionCode = utils::ReadParam('code', '');
+		$aParams = utils::ReadParam('params', array(), false, 'raw_data');
+		$oPage = new ajax_page('');
+		$oDummyController = new WizardController('');
+		$oStep = new $sClass($oDummyController, $sState);
+		$oStep->AsyncAction($oPage, $sActionCode, $aParams);
+		$oPage->output();
+		break;
+
 		//////////////////////////////
 		//
 		case 'compile_data_model':
