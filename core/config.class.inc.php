@@ -708,10 +708,12 @@ class Config
 			$this->Verify();
 		}
 
-      // Application root url: set a default value, then normalize it
-      $sAppRootUrl = trim($this->Get('app_root_url'));
+      	// Application root url: set a default value, then normalize it
+/*
+ * Does not work in CLI/unattended mode
+		$sAppRootUrl = trim($this->Get('app_root_url'));
 		if (strlen($sAppRootUrl) == 0)
-      {
+		{
 			$sAppRootUrl = utils::GetDefaultUrlAppRoot();
 		}
 		if (substr($sAppRootUrl, -1, 1) != '/')
@@ -719,6 +721,7 @@ class Config
 			$sAppRootUrl .= '/';
 		}
 		$this->Set('app_root_url', $sAppRootUrl);
+ */
 	}
 
 	protected function CheckFile($sPurpose, $sFileName)

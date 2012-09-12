@@ -4283,22 +4283,25 @@ abstract class MetaModel
 
 	public static function Startup($config, $bModelOnly = false, $bAllowCache = true, $bTraceSourceFiles = false)
 	{
-		define('MODULESROOT', APPROOT.'env-'.utils::GetCurrentEnvironment().'/');
-
-		self::$m_bTraceSourceFiles = $bTraceSourceFiles;
-
-		// $config can be either a filename, or a Configuration object (volatile!)
-		if ($config instanceof Config)
+		if (!defined('MODULESROOT'))
 		{
-			self::LoadConfig($config, $bAllowCache);
+			define('MODULESROOT', APPROOT.'env-'.utils::GetCurrentEnvironment().'/');
+	
+			self::$m_bTraceSourceFiles = $bTraceSourceFiles;
+	
+			// $config can be either a filename, or a Configuration object (volatile!)
+			if ($config instanceof Config)
+			{
+				self::LoadConfig($config, $bAllowCache);
+			}
+			else
+			{
+				self::LoadConfig(new Config($config), $bAllowCache);
+			}
+	
+			if ($bModelOnly) return;
 		}
-		else
-		{
-			self::LoadConfig(new Config($config), $bAllowCache);
-		}
-
-		if ($bModelOnly) return;
-
+		
 		CMDBSource::SelectDB(self::$m_sDBName);
 
 		foreach(get_declared_classes() as $sPHPClass)
@@ -4949,17 +4952,20 @@ abstract class MetaModel
 		{
 			$sEnvironment = MetaModel::GetEnvironmentId();
 		}
-		$aCacheUserData = apc_cache_info('user');  
-		$sPrefix = 'itop-'.$sEnvironment.'-';
-
 		$aEntries = array();
-		foreach($aCacheUserData['cache_list'] as $i => $aEntry)
-		{
-			$sEntryKey = $aEntry['info'];
-			if (strpos($sEntryKey, $sPrefix) === 0)
+		$aCacheUserData = @apc_cache_info('user');
+		if (is_array($aCacheUserData))
+		{ 
+			$sPrefix = 'itop-'.$sEnvironment.'-';
+	
+			foreach($aCacheUserData['cache_list'] as $i => $aEntry)
 			{
-				$sCleanKey = substr($sEntryKey, strlen($sPrefix));
-				$aEntries[$sCleanKey] = $aEntry;
+				$sEntryKey = $aEntry['info'];
+				if (strpos($sEntryKey, $sPrefix) === 0)
+				{
+					$sCleanKey = substr($sEntryKey, strlen($sPrefix));
+					$aEntries[$sCleanKey] = $aEntry;
+				}
 			}
 		}
 		return $aEntries;
