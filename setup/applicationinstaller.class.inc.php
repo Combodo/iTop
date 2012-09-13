@@ -165,10 +165,9 @@ class ApplicationInstaller
 				$sDBUser = $aDBParams['user'];
 				$sDBPwd = $aDBParams['pwd'];
 				$sDBName = $aDBParams['name'];
-				$sDBNewName = $aDBParams['new_name'];
 				$sDBPrefix = $aDBParams['prefix'];
 				
-				self::DoUpdateDBSchema($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBNewName, $sDBPrefix, $sTargetEnvironment);
+				self::DoUpdateDBSchema($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment);
 				
 				$aResult = array(
 					'status' => self::OK,
@@ -192,7 +191,6 @@ class ApplicationInstaller
 				$sDBUser = $aDBParams['user'];
 				$sDBPwd = $aDBParams['pwd'];
 				$sDBName = $aDBParams['name'];
-				$sDBNewName = $aDBParams['new_name'];
 				$sDBPrefix = $aDBParams['prefix'];
 				$aAdminParams = $this->oParams->Get('admin_account');
 				$sAdminUser = $aAdminParams['user'];
@@ -201,7 +199,7 @@ class ApplicationInstaller
 				$sLanguage = $this->oParams->Get('language');
 				$aSelectedModules = $this->oParams->Get('selected_modules', array());
 				
-				self::AfterDBCreate($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBNewName, $sDBPrefix, $sAdminUser, $sAdminPwd, $sAdminLanguage, $sLanguage, $aSelectedModules, $sTargetEnvironment);
+				self::AfterDBCreate($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sAdminUser, $sAdminPwd, $sAdminLanguage, $sLanguage, $aSelectedModules, $sTargetEnvironment);
 				
 				$aResult = array(
 					'status' => self::OK,
@@ -225,7 +223,6 @@ class ApplicationInstaller
 				$sDBUser = $aDBParams['user'];
 				$sDBPwd = $aDBParams['pwd'];
 				$sDBName = $aDBParams['name'];
-				$sDBNewName = $aDBParams['new_name'];
 				$sDBPrefix = $aDBParams['prefix'];
 				$aFiles = $this->oParams->Get('files', array());
 				
@@ -253,7 +250,6 @@ class ApplicationInstaller
 				$sDBUser = $aDBParams['user'];
 				$sDBPwd = $aDBParams['pwd'];
 				$sDBName = $aDBParams['name'];
-				$sDBNewName = $aDBParams['new_name'];
 				$sDBPrefix = $aDBParams['prefix'];
 				$sUrl = $this->oParams->Get('url', '');
 				$sLanguage = $this->oParams->Get('language', '');
@@ -360,7 +356,7 @@ class ApplicationInstaller
 		}
 	}
 	
-	protected static function DoUpdateDBSchema($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBNewName, $sDBPrefix, $sTargetEnvironment  = '')
+	protected static function DoUpdateDBSchema($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment  = '')
 	{
 		SetupPage::log_info("Update Database Schema for environment '$sTargetEnvironment'.");
 
@@ -371,7 +367,6 @@ class ApplicationInstaller
 			'db_user' => $sDBUser,
 			'db_pwd' => $sDBPwd,
 			'db_name' => $sDBName,
-			'new_db_name' => $sDBNewName,
 			'db_prefix' => $sDBPrefix,
 		);
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
@@ -386,7 +381,7 @@ class ApplicationInstaller
 		SetupPage::log_info("Database Schema Successfully Updated for environment '$sTargetEnvironment'.");
 	}
 	
-	protected static function AfterDBCreate($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBNewName, $sDBPrefix, $sAdminUser, $sAdminPwd, $sAdminLanguage, $sLanguage, $aSelectedModules, $sTargetEnvironment  = '')
+	protected static function AfterDBCreate($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sAdminUser, $sAdminPwd, $sAdminLanguage, $sLanguage, $aSelectedModules, $sTargetEnvironment  = '')
 	{
 
 		SetupPage::log_info('After Database Creation');
@@ -398,7 +393,6 @@ class ApplicationInstaller
 			'db_user' => $sDBUser,
 			'db_pwd' => $sDBPwd,
 			'db_name' => $sDBName,
-			'new_db_name' => $sDBNewName,
 			'db_prefix' => $sDBPrefix,
 		);
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
@@ -517,7 +511,6 @@ class ApplicationInstaller
 			'db_user' => $sDBUser,
 			'db_pwd' => $sDBPwd,
 			'db_name' => $sDBName,
-			'new_db_name' => $sDBName,
 			'db_prefix' => $sDBPrefix,
 		);
 		$oConfig = new Config();
@@ -561,7 +554,6 @@ class ApplicationInstaller
 			'db_user' => $sDBUser,
 			'db_pwd' => $sDBPwd,
 			'db_name' => $sDBName,
-			'new_db_name' => $sDBName,
 			'db_prefix' => $sDBPrefix,
 			'application_path' => $sUrl,
 			'mode' => $sMode,
