@@ -490,7 +490,7 @@ abstract class MetaModel
 		$aFNExpressions = array(); // signature => array('expression' => oExp, 'classes' => array of classes)
 		foreach (self::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sSubClass)
 		{
-			if (self::IsAbstract($sSubClass)) continue;
+			if (($sSubClass != $sClass) && self::IsAbstract($sSubClass)) continue;
 
 			$oSubClassName = self::GetNameExpression($sSubClass);
 			$sSignature = $oSubClassName->Render();
@@ -3843,28 +3843,20 @@ abstract class MetaModel
 			{
 				// Check that the view is complete
 				//
-				$bIsComplete = true;
-				foreach(self::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
-				{
-					foreach($oAttDef->GetSQLExpressions() as $sSuffix => $sTrash)
-					{
-						$sCol = $sAttCode.$sSuffix;
-						if (!CMDBSource::IsField($sView, $sCol))
-						{
-							$bIsComplete = false;
-							$aErrors[$sClass][$sAttCode][] = "field '$sCol' could not be found in view '$sView'";
-							$aSugFix[$sClass][$sAttCode][] = "";
-						}
-					}
-				}
-				if (!$bIsComplete)
+				// Note: checking the list of attributes is not enough because the columns can be stable while the SELECT is not stable
+				//       Example: new way to compute the friendly name
+				//       The correct comparison algorithm is to compare the queries,
+				//       by using "SHOW CREATE VIEW" (MySQL 5.0.1 required) or to look into INFORMATION_SCHEMA/views
+				//       both requiring some privileges
+				// Decision: to simplify, let's consider the views as being wrong anytime
+				if (true)
 				{
 					// Rework the view
 					//
 					$oFilter = new DBObjectSearch($sClass, '');
 					$oFilter->AllowAllData();
 					$sSQL = self::MakeSelectQuery($oFilter);
-					$aErrors[$sClass]['*'][] = "View '$sView' is currently not complete";
+					$aErrors[$sClass]['*'][] = "Redeclare view '$sView' (systematic - to support an eventual change in the friendly name computation)";
 					$aSugFix[$sClass]['*'][] = "ALTER VIEW `$sView` AS $sSQL";
 				}
 			}
