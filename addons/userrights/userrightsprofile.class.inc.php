@@ -766,15 +766,7 @@ exit;
 		// Note: The object set is ignored because it was interesting to optimize for huge data sets
 		//       and acceptable to consider only the root class of the object set
 		$aObjectPermissions = $this->GetUserActionGrant($oUser, $sClass, $iActionCode);
-		$aAttributes = $aObjectPermissions['attributes'];
-		if (in_array($sAttCode, $aAttributes))
-		{
-			return $aObjectPermissions['permission'];
-		}
-		else
-		{
-			return UR_ALLOWED_NO;
-		}
+		return $aObjectPermissions['permission'];
 	}
 
 	// This verb has been made public to allow the development of an accurate feedback for the current configuration
