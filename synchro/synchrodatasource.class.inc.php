@@ -2571,7 +2571,7 @@ class SynchroExecution
 			$sSelectToObsolete  = "SELECT SynchroReplica WHERE id > :curr_pos AND sync_source_id = :source_id AND status IN ('new', 'synchronized', 'modified', 'orphan') AND status_last_seen < :last_import";
 			$oSetScope = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToObsolete), array() /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sLimitDate, 'curr_pos' => $iCurrPos));
 			$iCountScope = $oSetScope->Count();
-			if (($this->m_iCountAllReplicas > 10) && ($this->m_iCountAllReplicas == $iCountScope))
+			if (($this->m_iCountAllReplicas > 10) && ($this->m_iCountAllReplicas == $iCountScope) && MetaModel::GetConfig()->Get('synchro_prevent_delete_all'))
 			{
 				throw new SynchroExceptionNotStarted(Dict::S('Core:SyncTooManyMissingReplicas'));
 			} 

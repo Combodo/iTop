@@ -519,6 +519,15 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'synchro_prevent_delete_all' => array(
+			'type' => 'bool',
+			'description' => 'Stop the synchro if all the replicas of a data source become obsolete at the same time.',
+			// examples... not used
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)
