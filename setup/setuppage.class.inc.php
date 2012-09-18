@@ -27,7 +27,7 @@ require_once(APPROOT."/application/nicewebpage.class.inc.php");
 require_once(APPROOT."setup/modulediscovery.class.inc.php");
 require_once(APPROOT."setup/runtimeenv.class.inc.php");
 
-define('INSTALL_LOG_FILE', APPROOT.'/setup.log');
+define('INSTALL_LOG_FILE', APPROOT.'/log/setup.log');
 
 date_default_timezone_set('Europe/Paris');
 class SetupPage extends NiceWebPage

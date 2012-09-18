@@ -91,6 +91,18 @@ class WizardController
 	}
 	
 	/**
+	 * Stores the value of the page's parameter in a "persistent" parameter in the wizard's context
+	 * @param string $sParamCode The code identifying this parameter
+	 * @param mixed $defaultValue The default value for the parameter
+	 * @param string $sSanitizationFilter A 'sanitization' fitler. Default is 'raw_data', which means no filtering
+	 */
+	public function SaveParameter($sParamCode, $defaultValue, $sSanitizationFilter = 'raw_data')
+	{
+		$value = utils::ReadParam($sParamCode, $defaultValue, false, $sSanitizationFilter);
+		$this->aParameters[$sParamCode] = $value;
+	}
+	
+	/**
 	 * Starts the wizard by displaying it in its initial state
 	 */
 	protected function Start()
@@ -153,7 +165,9 @@ class WizardController
 	{
 		$oPage = new SetupPage($oStep->GetTitle());
 		$oPage->add_linked_script('../setup/setup.js');
-		$oPage->add('<form method="post">');
+		$oPage->add_script("function CanMoveForward()\n{\n".$oStep->JSCanMoveForward()."\n}\n");
+		$oPage->add_script("function CanMoveBackward()\n{\n".$oStep->JSCanMoveBackward()."\n}\n");
+		$oPage->add('<form id="wiz_form" method="post">');
 		$oStep->Display($oPage);
 		
 		// Add the back / next buttons and the hidden form
@@ -166,20 +180,56 @@ class WizardController
 		}
 
 		$oPage->add('<input type="hidden" name="_steps" value="'.htmlentities(json_encode($this->aSteps), ENT_QUOTES, 'UTF-8').'"/>');
-		if (count($this->aSteps) > 0)
+		$oPage->add('<table style="width:100%;"><tr>');
+		if ((count($this->aSteps) > 0) && ($oStep->CanMoveBackward()))
 		{
-			$oPage->add('<input type="submit" name="operation" value="back"/>');
+			$oPage->add('<td style="text-align: left"><button id="btn_back" type="submit" name="operation" value="back"> &lt;&lt; Back </button></td>');
 		}
 		if ($oStep->CanMoveForward())
 		{
-			$oPage->add('<input type="submit" name="operation" value="next"/>');
+			$oPage->add('<td style="text-align:right;"><button id="btn_next" class="default" type="submit" name="operation" value="next">'.htmlentities($oStep->GetNextButtonLabel(), ENT_QUOTES, 'UTF-8').'</button></td>');
 		}
+		$oPage->add('</tr></table>');
 		$oPage->add("</form>");
-		$oPage->add('<div id="async_action" style="display:none"></div>');
+		$oPage->add('<div id="async_action" style="display:none;overflow:auto;max-height:100px;color:#F00;font-size:small;"></div>'); // The div may become visible in case of error
+
+		// Hack to have the "Next >>" button, be the default button, since the first submit button in the form is the default one
+		$oPage->add_ready_script(
+<<<EOF
+
+$('form').each(function () {
+	var thisform = $(this);
+		thisform.prepend(thisform.find('button.default').clone().removeAttr('id').removeAttr('disabled').css({
+		position: 'absolute',
+		left: '-999px',
+		top: '-999px',
+		height: 0,
+		width: 0
+	}));
+});
+$('#btn_back').click(function() { $('#wiz_form').data('back', true); });
+
+$('#wiz_form').submit(function() {
+	if ($(this).data('back'))
+	{
+		return CanMoveBackward();
+	}
+	else
+	{
+		return CanMoveForward();
+	} 
+});
+
+$('#wiz_form').data('back', false);
+WizardUpdateButtons();
+
+EOF
+		);
 		$oPage->output();
 	}
 	/**
-	 * Make the wizard run: Start, Next or Back depending on the page's parameters
+	 * Make the wizard run: Start, Next or Back depending WizardUpdateButtons();
+on the page's parameters
 	 */
 	public function Run()
 	{
@@ -346,6 +396,42 @@ abstract class WizardStep
 		return true;
 	}
 	
+	/**
+	 * Tells whether the "Next" button should be enabled interactively
+	 * @return string A piece of javascript code returning either true or false
+	 */
+	public function JSCanMoveForward()
+	{
+		return 'return true;';
+	}
+	
+	/**
+	 * Returns the label for the " Next >> " button
+	 * @return string The label for the button
+	 */
+	public function GetNextButtonLabel()
+	{
+		return ' Next >> ';
+	}
+	
+	/**
+	 * Tells whether this step/state allows to go back or not
+	 * @return boolean True if the '<< Back' button should be displayed
+	 */
+	public function CanMoveBackward()
+	{
+		return true;
+	}
+	
+	/**
+	 * Tells whether the "Back" button should be enabled interactively
+	 * @return string A piece of javascript code returning either true or false
+	 */
+	public function JSCanMoveBackward()
+	{
+		return 'return true;';
+	}
+
 	/**
 	 * Overload this function to implement asynchronous action(s) (AJAX)
 	 * @param string $sCode The code of the action (if several actions need to be distinguished)

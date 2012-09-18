@@ -57,7 +57,7 @@ class CMDBSource
 		self::$m_sDBUser = $sUser;
 		self::$m_sDBPwd = $sPwd;
 		self::$m_sDBName = $sSource;
-		if (!self::$m_resDBLink = mysqli_connect($sServer, $sUser, $sPwd))
+		if (!self::$m_resDBLink = @mysqli_connect($sServer, $sUser, $sPwd))
 		{
 			throw new MySQLException('Could not connect to the DB server', array('host'=>$sServer, 'user'=>$sUser));
 		}
@@ -174,12 +174,26 @@ class CMDBSource
 
 	public static function GetErrNo()
 	{
-		return mysqli_errno(self::$m_resDBLink);
+		if (self::$m_resDBLink)
+		{
+			return mysqli_errno(self::$m_resDBLink);
+		}
+		else
+		{
+			return mysqli_connect_errno();
+		}
 	}
 
 	public static function GetError()
 	{
-		return mysqli_error(self::$m_resDBLink);
+		if (self::$m_resDBLink)
+		{
+			return mysqli_error(self::$m_resDBLink);
+		}
+		else
+		{
+			return mysqli_connect_error();
+		}
 	}
 
 	public static function DBHost() {return self::$m_sDBHost;}

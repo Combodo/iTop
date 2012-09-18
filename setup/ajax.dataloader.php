@@ -121,7 +121,6 @@ require_once(APPROOT.'/core/kpi.class.inc.php');
 require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 require_once('./xmldataloader.class.inc.php');
 require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
-require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
 
 
 // Never cache this page
@@ -137,6 +136,9 @@ try
 	switch($sOperation)
 	{
 		case 'async_action':
+		require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
+		require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
+		
 		$sClass = utils::ReadParam('step_class', '');
 		$sState = utils::ReadParam('step_state', '');
 		$sActionCode = utils::ReadParam('code', '');

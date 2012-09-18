@@ -42,6 +42,7 @@ class ApplicationInstaller
 	const INFO = 4;
 	
 	protected $oParams;
+	protected static $bMetaModelStarted = false;
 	
 	public function __construct($oParams)
 	{
@@ -260,6 +261,7 @@ class ApplicationInstaller
 				$sDBPwd = $aDBParams['pwd'];
 				$sDBName = $aDBParams['name'];
 				$sDBPrefix = $aDBParams['prefix'];
+				$aFiles = $this->oParams->Get('files', array());
 				
 				self::DoLoadFiles($aSelectedModules, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment);
 				
@@ -466,6 +468,7 @@ class ApplicationInstaller
 
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, false);  // load data model and connect to the database
+		self::$bMetaModelStarted = true; // No need to reload the final MetaModel in case the installer runs synchronously 
 		
 		// Perform here additional DB setup... profiles, etc...
 		//
@@ -578,15 +581,21 @@ class ApplicationInstaller
 			'db_user' => $sDBUser,
 			'db_pwd' => $sDBPwd,
 			'db_name' => $sDBName,
+			'new_db_name' => $sDBName,
 			'db_prefix' => $sDBPrefix,
 		);
 		$oConfig = new Config();
 
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
 
-		//TODO: load the MetaModel if needed (async mode)
-		//$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
-		//$oProductionEnv->InitDataModel($oConfig, false);  // load data model and connect to the database
+		//Load the MetaModel if needed (asynchronous mode)
+		if (!self::$bMetaModelStarted)
+		{
+			$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
+			$oProductionEnv->InitDataModel($oConfig, false);  // load data model and connect to the database
+			self::$bMetaModelStarted = true; // No need to reload the final MetaModel in case the installer runs synchronously
+		} 
+		
 		
 		$oDataLoader = new XMLDataLoader(); 
 		$oChange = MetaModel::NewObject("CMDBChange");
@@ -639,6 +648,7 @@ class ApplicationInstaller
 			'db_user' => $sDBUser,
 			'db_pwd' => $sDBPwd,
 			'db_name' => $sDBName,
+			'new_db_name' => $sDBName,
 			'db_prefix' => $sDBPrefix,
 			'application_path' => $sUrl,
 			'mode' => $sMode,

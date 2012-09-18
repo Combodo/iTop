@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<installation>
+<steps type="array">
+	<step>
+		<title>Configuration Management options</title>
+		<description><![CDATA[<h2>The options below allow you to configure the type of elements that are to be managed inside iTop.</h2>]]></description>
+		<banner>/images/modules.png</banner>
+		<options type="array">
+			<choice>
+				<title>Configuration Management Base</title>
+				<description>This module is always installed, it contains all the base objects that are mandatory in the iTop CMDB: Organizations, Locations, Teams, Persons, etc.</description>
+				<modules type="array">
+					<module>itop-config-mgmt</module>
+					<module>itop-profiles</module>
+					<module>itop-welcome-itil</module>
+				</modules>
+				<mandatory>true</mandatory>
+			</choice>
+			<choice>
+				<title>End-User Devices</title>
+				<description>This optional module manages end-user devices like Phones, Printers, Desktop PCs.</description>
+				<modules type="array">
+					<module>cmdb-end-user</module>
+				</modules>
+			</choice>
+			<choice>
+				<title>Data Center Management</title>
+				<description>This optional modules manages data center devices like Power Supplies, Racks, Enclosures.</description>
+				<default>true</default>
+				<modules type="array">
+					<module>cmdb-datacenter</module>
+				</modules>
+			</choice>
+		</options>
+	</step>
+	<step>
+		<title>Service Management options</title>
+		<description><![CDATA[<h2>Select the choice that best describes the relationships between the services and the IT infrastructure in your IT environment.</h2>]]></description>
+		<banner>./wizard_icons/service.png</banner>
+		<alternatives type="array">
+			<choice>
+				<title>Service Management for Enterprises</title>
+				<description>Select this option if the IT delivers services based on a shared infrastructure. For example if different organizations within your company subscribe to services (like Mail and Print services) delivered by a single shared backend.</description>
+				<modules type="array">
+					<module>itop-service-mgmt-enterprise</module>
+				</modules>
+				<default>true</default>
+			</choice>
+			<choice>
+				<title>Service Management for Service Providers</title>
+				<description>Select this option if the IT manages the infrastructure of independent customers. This is the most flexible model, since the services can be delivered with a mix of shared and customer specific infrastructure devices.</description>
+				<modules type="array">
+					<module>itop-service-mgmt-provider</module>
+				</modules>
+			</choice>
+		</alternatives>
+	</step>
+	<step>
+		<title>Incident Management options</title>
+		<description>Select the type of tickets you want to use in order to respond to user requests and incidents.</description>
+		<banner></banner>
+		<alternatives type="array">
+			<choice>
+				<title>Simple Ticket Management</title>
+				<description>Select this option to use one single type of tickets for all kind of requests.</description>
+				<modules type="array">
+					<module>itop-simple-tickets</module>
+				</modules>
+				<default>true</default>
+			</choice>
+			<choice>
+				<title>ITIL Compliant Tickets Management</title>
+				<description>Select this option to have different types of ticket for managing user requests and incidents.</description>
+				<modules type="array">
+					<module>itop-itil-tickets</module>
+				</modules>
+				<sub_options>
+					<options type="array">
+						<choice>
+							<title>Problem Management</title>
+							<description>Manage problem ticket to solve recurring incidents.</description>
+							<modules type="array">
+								<module>itop-problem-management</module>
+							</modules>
+						</choice>
+						<choice>
+							<title>Known Error Database</title>
+							<description>Manage Known Error tickets to document the possible root causes of incidents.</description>
+							<modules type="array">
+								<module>itop-kedb-management</module>
+							</modules>
+						</choice>
+					</options>
+				</sub_options>
+			</choice>
+			<choice>
+				<title>None</title>
+				<description>Don't manage incidents in iTop</description>
+				<modules type="array">
+				</modules>
+			</choice>
+		</alternatives>
+	</step>
+	<step>
+		<title>Change Management options</title>
+		<description><![CDATA[<h2>Select the type of tickets you want to use in order to manage changes to the IT infrastructure.</h2>]]></description>
+		<banner>./itop-change-mgmt-1.0.0/images/change.png</banner>
+		<alternatives type="array">
+			<choice>
+				<title>ITIL Change Management</title>
+				<description>Select this option to use Normal/Routine/Emergency change tickets.</description>
+				<modules type="array">
+					<module>itop-change-mgmt</module>
+				</modules>
+				<default>true</default>
+			</choice>
+			<choice>
+				<title>None</title>
+				<description>Don't manage changes in iTop</description>
+				<modules type="array">
+				</modules>
+			</choice>
+		</alternatives>
+	</step>
+</steps>
+</installation>

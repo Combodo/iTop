@@ -159,6 +159,7 @@ class RunTimeEnvironment
 	
 		try
 		{
+			require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 			CMDBSource::Init($oConfig->GetDBHost(), $oConfig->GetDBUser(), $oConfig->GetDBPwd(), $oConfig->GetDBName());
 			$aSelectInstall = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->GetDBSubname()."priv_module_install");
 		}

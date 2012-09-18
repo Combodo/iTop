@@ -6,16 +6,11 @@ class InvalidParameterException extends Exception
 abstract class Parameters
 {
 	protected $aData = null;
-	protected $sParametersFile = null;
 	
-	public function __construct($sParametersFile)
+	public function __construct()
 	{
 		$this->aData = null;
-		$this->sParametersFile = $sParametersFile;
-		$this->Load($sParametersFile);
 	}
-
-	abstract public function Load($sParametersFile);
 
 	public function Get($sCode, $default = '')
 	{
@@ -29,7 +24,12 @@ abstract class Parameters
 
 class PHPParameters extends Parameters
 {
-	public function Load($sParametersFile)
+	public function LoadFromHash($aData)
+	{
+		$this->aData = $aData;
+	}
+	
+	public function LoadFromFile($sParametersFile)
 	{
 		if ($this->aData == null)
 		{
@@ -41,14 +41,21 @@ class PHPParameters extends Parameters
 
 class XMLParameters extends Parameters
 {
-	protected $aData = null;
-
-	public function Load($sParametersFile)
+	protected $sParametersFile;
+	
+	public function __construct($sParametersFile)
 	{
+		parent::__construct();
+		$this->LoadFromFile($sParametersFile);
+	}
+	
+	public function LoadFromFile($sParametersFile)
+	{
+		$this->sParametersFile = $sParametersFile;
 		if ($this->aData == null)
 		{
 			libxml_use_internal_errors(true);
-			$oXML = @simplexml_load_file($sParametersFile);
+			$oXML = @simplexml_load_file($this->sParametersFile);
 			if (!$oXML)
 			{
 				$aMessage = array();
@@ -134,5 +141,3 @@ class XMLParameters extends Parameters
 		return $sRet;
 	}
 }
-
-
