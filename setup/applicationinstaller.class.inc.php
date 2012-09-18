@@ -16,6 +16,7 @@
 
 require_once(APPROOT.'setup/parameters.class.inc.php');
 require_once(APPROOT.'setup/xmldataloader.class.inc.php');
+require_once(APPROOT.'setup/backup.class.inc.php');
 
 /**
  * The base class for the installation process.
@@ -121,9 +122,41 @@ class ApplicationInstaller
 				break;
 				
 				case 'copy':
+				$aPreinstall = $this->oParams->Get('preinstall');
+				$aCopies = $aPreinstall['copies'];
+
+				$sReport = self::DoCopy($aCopies);
+
 				$aResult = array(
-					'status' => self::WARNING,
-					'message' => 'Dummy setup - Nothing to copy',
+					'status' => self::OK,
+					'message' => $sReport,
+				);
+				if (isset($aPreinstall['backup']))
+				{
+					$aResult['next-step'] = 'backup';
+					$aResult['next-step-label'] = 'Backuping the database';
+					$aResult['percentage-completed'] = 20;
+				}
+				else
+				{
+					$aResult['next-step'] = 'compile';
+					$aResult['next-step-label'] = 'Compiling the data model';
+					$aResult['percentage-completed'] = 20;
+				}
+				break;
+				
+				case 'backup':
+				$aPreinstall = $this->oParams->Get('preinstall');
+				// __DB__-%Y-%m-%d.zip
+				$sDestination = $aPreinstall['backup']['destination'];
+				$sSourceConfigFile = $aPreinstall['backup']['configuration_file'];
+				$aDBParams = $this->oParams->Get('database');
+
+				self::DoBackup($aDBParams['server'], $aDBParams['user'], $aDBParams['pwd'], $aDBParams['name'], $aDBParams['prefix'], $sDestination, $sSourceConfigFile);
+
+				$aResult = array(
+					'status' => self::OK,
+					'message' => "Created backup",
 					'next-step' => 'compile',
 					'next-step-label' => 'Compiling the data model',
 					'percentage-completed' => 20,
@@ -208,25 +241,27 @@ class ApplicationInstaller
 					'next-step-label' => 'Loading Sample Data',
 					'percentage-completed' => 80,
 				);
+
+				$bLoadData = ($this->oParams->Get('sample_data', 0) == 1);
+				if (!$bLoadData)
+				{
+					$aResult['next-step'] = 'create-config';
+					$aResult['next-step-label'] = 'Creating the Configuration File';
+				}
 				break;
 				
 				case 'sample-data':
-				$sMode = $this->oParams->Get('mode');
+				$aSelectedModules = $this->oParams->Get('selected_modules');
 				$sTargetEnvironment = $this->oParams->Get('target_env', '');
-				if ($sTargetEnvironment == '')
-				{
-					$sTargetEnvironment = 'production';
-				}
-				$sTargetDir = 'env-'.$sTargetEnvironment;
+				$sTargetDir = 'env-'.(($sTargetEnvironment == '') ? 'production' : $sTargetEnvironment);
 				$aDBParams = $this->oParams->Get('database');
 				$sDBServer = $aDBParams['server'];
 				$sDBUser = $aDBParams['user'];
 				$sDBPwd = $aDBParams['pwd'];
 				$sDBName = $aDBParams['name'];
 				$sDBPrefix = $aDBParams['prefix'];
-				$aFiles = $this->oParams->Get('files', array());
 				
-				self::DoLoadFiles($aFiles, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment);
+				self::DoLoadFiles($aSelectedModules, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment);
 				
 				$aResult = array(
 					'status' => self::INFO,
@@ -289,6 +324,38 @@ class ApplicationInstaller
 		}
 		return $aResult;
 	}
+
+	protected static function DoCopy($aCopies)
+	{
+		$aReports = array();
+		foreach ($aCopies as $aCopy)
+		{
+			$sSource = $aCopy['source'];
+			$sDestination = APPROOT.$aCopy['destination'];
+			
+			SetupUtils::builddir($sDestination);
+			SetupUtils::tidydir($sDestination);
+			SetupUtils::copydir($sSource, $sDestination);
+			$aReports[] = "'{$aCopy['source']}' to '{$aCopy['destination']}' (OK)";
+		}
+		if (count($aReports) > 0)
+		{
+			$sReport = "Copies: ".count($aReports).': '.implode('; ', $aReports);
+		}
+		else
+		{
+			$sReport = "No file copy";
+		}
+		return $sReport;
+	}
+
+	protected static function DoBackup($sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sBackupFile, $sSourceConfigFile)
+	{
+		$oBackup = new DBBackup($sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix);
+		$sZipFile = $oBackup->MakeName($sBackupFile);
+		$oBackup->CreateZip($sZipFile, $sSourceConfigFile);
+	}
+
 	
 	protected static function DoCompile($aSelectedModules, $sSourceDir, $sTargetDir, $sWorkspaceDir = '')
 	{
@@ -376,7 +443,7 @@ class ApplicationInstaller
 
 		if(!$oProductionEnv->CreateDatabaseStructure(MetaModel::GetConfig(), $sMode))
 		{
-			throw(new Exception("Failed to create/upgrade the database structure for environment '$sTargetEnvironment'"));		
+			throw new Exception("Failed to create/upgrade the database structure for environment '$sTargetEnvironment'");		
 		}
 		SetupPage::log_info("Database Schema Successfully Updated for environment '$sTargetEnvironment'.");
 	}
@@ -470,7 +537,7 @@ class ApplicationInstaller
 
 		if (!$oProductionEnv->RecordInstallation($oConfig, $aSelectedModules, $sModulesDir))
 		{
-			throw(new Exception("Failed to record the installation information"));
+			throw new Exception("Failed to record the installation information");
 		}
 		
 		if($sMode == 'install')
@@ -504,7 +571,7 @@ class ApplicationInstaller
 		}
 	}
 	
-	protected static function DoLoadFiles($aFiles, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment = '')
+	protected static function DoLoadFiles($aSelectedModules, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment = '')
 	{
 		$aParamValues = array(
 			'db_server' => $sDBServer,
@@ -528,10 +595,28 @@ class ApplicationInstaller
 		$iChangeId = $oChange->DBInsert();
 		SetupPage::log_info("starting data load session");
 		$oDataLoader->StartSession($oChange);
-		
+
+		$aFiles = array();		
+		$oProductionEnv = new RunTimeEnvironment();
+		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $sModulesDir);
+		foreach($aAvailableModules as $sModuleId => $aModule)
+		{
+			if (($sModuleId != ROOT_MODULE))
+			{
+				if (in_array($sModuleId, $aSelectedModules))
+				{
+					$aFiles = array_merge(
+						$aFiles,
+						$aAvailableModules[$sModuleId]['data.struct'],
+						$aAvailableModules[$sModuleId]['data.sample']
+					);
+				}
+			}
+		}
+
 		foreach($aFiles as $sFileRelativePath)
 		{
-			$sFileName = APPROOT.'env-'.(($sTargetEnvironment == '') ? 'production' : $sTargetEnvironment).'/'.$sFileRelativePath;
+			$sFileName = APPROOT.$sFileRelativePath;
 			SetupPage::log_info("Loading file: $sFileName");
 			if (empty($sFileName) || !file_exists($sFileName))
 			{

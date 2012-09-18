@@ -1398,6 +1398,7 @@ class Config
 			$sDBName = $aParamValues['db_name'];
 			if ($sDBName == '')
 			{
+				// Todo - obsolete after the transition to the new setup (2.0) is complete (WARNING: used by the designer)
 				$sDBName = $aParamValues['new_db_name'];
 			}
 			$this->SetDBName($sDBName);

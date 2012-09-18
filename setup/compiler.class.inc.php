@@ -14,6 +14,9 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+
+require_once(APPROOT.'setup/setuputils.class.inc.php');
+
 class DOMFormatException extends Exception
 {
 }
@@ -97,7 +100,7 @@ class MFCompiler
 			$sRelativeDir = substr($sModuleRootDir, strlen($this->sSourceDir) + 1);
 		
 			// Push the other module files
-			$this->CopyDirectory($sModuleRootDir, $sTargetDir.'/'.$sRelativeDir);
+			SetupUtils::copydir($sModuleRootDir, $sTargetDir.'/'.$sRelativeDir);
 
 			$sCompiledCode = '';
 
@@ -257,51 +260,6 @@ EOF;
 		}
 	}
 
-	/**
-	 * Helper to copy the module files to the exploitation environment
-	 * Returns true if successfull 
-	 */ 
-	protected function CopyDirectory($sSource, $sDest)
-	{
-		if (is_dir($sSource))
-		{
-			if (!is_dir($sDest))
-			{
-				mkdir($sDest);
-			}
-			$aFiles = scandir($sSource);
-			if(sizeof($aFiles) > 0 )
-			{
-				foreach($aFiles as $sFile)
-				{
-					if ($sFile == '.' || $sFile == '..' || $sFile == '.svn')
-					{
-						// Skip
-						continue;
-					}
-	
-					if (is_dir($sSource.'/'.$sFile))
-					{
-						$this->CopyDirectory($sSource.'/'.$sFile, $sDest.'/'.$sFile);
-					}
-					else
-					{
-						copy($sSource.'/'.$sFile, $sDest.'/'.$sFile);
-					}
-				}
-			}
-			return true;
-		}
-		elseif (is_file($sSource))
-		{
-			return copy($sSource, $sDest);
-		}
-		else
-		{
-			return false;
-		}
-	}
-	
 	/**
 	 * Helper to format the flags for an attribute, in a given state
 	 * @param object $oAttNode DOM node containing the information to build the flags

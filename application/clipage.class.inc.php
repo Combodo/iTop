@@ -26,7 +26,7 @@
 
 require_once(APPROOT."/application/webpage.class.inc.php");
 
-class CLIPage
+class CLIPage implements Page
 {
     function __construct($s_title)
     {

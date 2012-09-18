@@ -647,7 +647,7 @@ abstract class MetaModel
 		return self::$m_sTablePrefix."view_".$sClass;
 	}
 
-	final static protected function DBEnumTables()
+	final static public function DBEnumTables()
 	{
 		// This API does not rely on our capability to query the DB and retrieve
 		// the list of existing tables

@@ -63,15 +63,14 @@ class SetupUtils
 	 * @param SetupPage $oP The page used only for its 'log' method
 	 * @return array An array of CheckResults objects
 	 */
-	static function CheckPHPVersion(SetupPage $oP)
+	static function CheckPHPVersion()
 	{
 		$aResult = array();
-		$bResult = true;
 		$aErrors = array();
 		$aWarnings = array();
 		$aOk = array();
 		
-		$oP->log('Info - CheckPHPVersion');
+		SetupPage::log('Info - CheckPHPVersion');
 		if (version_compare(phpversion(), self::PHP_MIN_VERSION, '>='))
 		{
 			$aResult[] = new CheckResult(CheckResult::INFO, "The current PHP Version (".phpversion().") is greater than the minimum required version (".self::PHP_MIN_VERSION.")");
@@ -151,7 +150,7 @@ class SetupUtils
 			        }
 			    }
 			}
-			$oP->log("Info - php.ini file(s): '$sPhpIniFile'");
+			SetupPage::log("Info - php.ini file(s): '$sPhpIniFile'");
 		}
 		else
 		{
@@ -165,7 +164,7 @@ class SetupUtils
 		$sUploadTmpDir = self::GetUploadTmpDir();
 		if (empty($sUploadTmpDir))
 		{
-	        $sUploadTmpDir = '/tmp';
+	      $sUploadTmpDir = '/tmp';
 			$aResult[] = new CheckResult(CheckResult::WARNING, "Temporary directory for files upload is not defined (upload_tmp_dir), assuming that $sUploadTmpDir is used.");
 		}
 		// check that the upload directory is indeed writable from PHP
@@ -181,7 +180,7 @@ class SetupUtils
 			}
 			else
 			{
-				$oP->log("Info - Temporary directory for files upload ($sUploadTmpDir) is writable.");
+				SetupPage::log("Info - Temporary directory for files upload ($sUploadTmpDir) is writable.");
 			}
 		}
 		
@@ -206,9 +205,9 @@ class SetupUtils
 		}
 	
 	
-		$oP->log("Info - upload_max_filesize: ".ini_get('upload_max_filesize'));
-		$oP->log("Info - post_max_size: ".ini_get('post_max_size'));
-		$oP->log("Info - max_file_uploads: ".ini_get('max_file_uploads'));
+		SetupPage::log("Info - upload_max_filesize: ".ini_get('upload_max_filesize'));
+		SetupPage::log("Info - post_max_size: ".ini_get('post_max_size'));
+		SetupPage::log("Info - max_file_uploads: ".ini_get('max_file_uploads'));
 	
 		// Check some more ini settings here, needed for file upload
 		if (function_exists('get_magic_quotes_gpc'))
@@ -246,7 +245,7 @@ class SetupUtils
 			}
 			else
 			{
-				$oP->log_info("memory_limit is $iMemoryLimit, ok.");		
+				SetupPage::log("Info - memory_limit is $iMemoryLimit, ok.");		
 			}
 		}
 		
@@ -270,9 +269,78 @@ class SetupUtils
 			}
 			else
 			{
-				$oP->log_info("suhosin.get.max_value_length = $iGetMaxValueLength, ok.");		
+				SetupPage::log("Info - suhosin.get.max_value_length = $iGetMaxValueLength, ok.");		
 			}
 		}
+
+		return $aResult;		
+	}
+
+	/**
+	 * Check that the backup could be executed
+	 * @param Page $oP The page used only for its 'log' method
+	 * @return array An array of CheckResults objects
+	 */
+	static function CheckBackupPrerequisites($sDestDir)
+	{
+		$aResult = array();
+		SetupPage::log('Info - CheckBackupPrerequisites');
+
+		// zip extension
+		//
+		if (!extension_loaded('zip'))
+		{
+			$sMissingExtensionLink = "<a href=\"http://www.php.net/manual/en/book.zip.php\" target=\"_blank\">zip</a>";
+			$aResult[] = new CheckResult(CheckResult::ERROR, "Missing PHP extension: zip", $sMissingExtensionLink);
+		}
+		
+		// availability of exec()
+		//
+		$aDisabled = explode(', ', ini_get('disable_functions'));
+		SetupPage::log('Info - PHP functions disabled: '.implode(', ', $aDisabled));
+		if (in_array('exec', $aDisabled))
+		{
+			$aResult[] = new CheckResult(CheckResult::ERROR, "The PHP exec() function has been disabled on this server");
+		}
+
+		// availability of mysqldump
+		$sMySQLBinDir = utils::ReadParam('mysql_bindir', '', true);
+		if (empty($sMySQLBinDir))
+		{
+			$sMySQLDump = 'mysqldump';
+		}
+		else
+		{
+			SetupPage::log('Info - Found mysql_bindir: '.$sMySQLBinDir);
+			$sMySQLDump = '"'.$sMySQLBinDir.'/mysqldump"';
+		}
+		$sCommand = "$sMySQLDump -V 2>&1";
+
+		$aOutput = array();
+		$iRetCode = 0;
+		exec($sCommand, $aOutput, $iRetCode);
+		if ($iRetCode == 0)
+		{
+			$aResult[] = new CheckResult(CheckResult::INFO, "mysqldump is present: ".$aOutput[0]);
+		}
+		elseif ($iRetCode == 1)
+		{
+			$aResult[] = new CheckResult(CheckResult::ERROR, "mysqldump could not be found: ".implode(' ', $aOutput)." - Please make sure it is installed and in the path.");
+		}
+		else
+		{
+			$aResult[] = new CheckResult(CheckResult::ERROR, "mysqldump could not be executed (retcode=$iRetCode): Please make sure it is installed and in the path");
+		}
+		foreach($aOutput as $sLine)
+		{
+			SetupPage::log('Info - mysqldump -V said: '.$sLine);
+		}
+
+		// check disk space
+		// to do... evaluate how we can correlate the DB size with the size of the dump (and the zip!)
+		// E.g. 2,28 Mb after a full install, giving a zip of 26 Kb (data = 26 Kb)
+		// Example of query (DB without a suffix)
+		//$sDBSize = "SELECT SUM(ROUND(DATA_LENGTH/1024/1024, 2)) AS size_mb FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = `$sDBName`";
 
 		return $aResult;		
 	}
@@ -318,5 +386,104 @@ class SetupUtils
 	        $sPath = self::GetTmpDir();   
 	    }    
 	    return $sPath;
+	}
+
+	/**
+	 * Helper to recursively remove a directory
+	 */	 	
+	public static function rrmdir($dir)
+	{
+		if ((strlen(trim($dir)) == 0) || ($dir == '/') || ($dir == '\\'))
+		{
+			throw new Exception("Attempting to delete directory: '$dir'");
+		}
+		self::tidydir($dir);
+		rmdir($dir);
+	}
+
+	/**
+	 * Helper to recursively cleanup a directory
+	 */	 	
+	public static function tidydir($dir)
+	{
+		if ((strlen(trim($dir)) == 0) || ($dir == '/') || ($dir == '\\'))
+		{
+			throw new Exception("Attempting to delete directory: '$dir'");
+		}
+
+		foreach(glob($dir . '/*') as $file)
+		{
+			if(is_dir($file))
+			{
+				self::tidydir($file);
+				rmdir($file);
+			}
+			else
+			{
+				unlink($file);
+			}
+		}
+	}
+
+	/**
+	 * Helper to build the full path of a new directory
+	 */	 	
+	public static function builddir($dir)
+	{
+		$parent = dirname($dir);
+		if(!is_dir($parent))
+		{
+			self::builddir($parent);
+		}
+		if (!is_dir($dir))
+		{
+			mkdir($dir);
+		}
+	}
+
+	/**
+	 * Helper to copy a directory to a target directory, skipping .SVN files (for developer's comfort!)
+	 * Returns true if successfull
+	 */ 
+	public static function copydir($sSource, $sDest)
+	{
+		if (is_dir($sSource))
+		{
+			if (!is_dir($sDest))
+			{
+				mkdir($sDest);
+			}
+			$aFiles = scandir($sSource);
+			if(sizeof($aFiles) > 0 )
+			{
+				foreach($aFiles as $sFile)
+				{
+					if ($sFile == '.' || $sFile == '..' || $sFile == '.svn')
+					{
+						// Skip
+						continue;
+					}
+	
+					if (is_dir($sSource.'/'.$sFile))
+					{
+						// Recurse
+						self::copydir($sSource.'/'.$sFile, $sDest.'/'.$sFile);
+					}
+					else
+					{
+						copy($sSource.'/'.$sFile, $sDest.'/'.$sFile);
+					}
+				}
+			}
+			return true;
+		}
+		elseif (is_file($sSource))
+		{
+			return copy($sSource, $sDest);
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

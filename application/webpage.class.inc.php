@@ -23,6 +23,22 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
+
+/**
+ * Generic interface common to CLI and Web pages
+ */
+Interface Page
+{
+	public function output();
+	public function add($sText);
+	public function p($sText);
+	public function pre($sText);
+	public function add_comment($sText);
+	public function table($aConfig, $aData, $aParams = array());
+}
+ 
+
+
 /**
  * Simple helper class to ease the production of HTML pages
  *
@@ -34,7 +50,7 @@
  *	$oPage->p("Hello World !");
  *	$oPage->output();
  */
-class WebPage
+class WebPage implements Page
 {
     protected $s_title;
     protected $s_content;
@@ -125,6 +141,13 @@ class WebPage
         $this->add('<pre>'.$s_html.'</pre>');
     }
     
+	/**
+	 * Add a comment
+	 */
+    public function add_comment($sText)
+    {
+        $this->add('<!--'.$sText.'-->');
+    }
 	/**
 	 * Add a paragraph to the body of the page
 	 */
