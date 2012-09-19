@@ -126,7 +126,8 @@ class ApplicationInstaller
 				$aPreinstall = $this->oParams->Get('preinstall');
 				$aCopies = $aPreinstall['copies'];
 
-				$sReport = self::DoCopy($aCopies);
+				// disabled - $sReport = self::DoCopy($aCopies);
+				$sReport = "copy disabled...";
 
 				$aResult = array(
 					'status' => self::OK,

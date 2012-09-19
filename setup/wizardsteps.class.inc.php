@@ -1131,7 +1131,6 @@ EOF
 		$sMode = $this->oWizard->GetParameter('mode', 'install');
 		$sBackupDestination = '';
 		$sConfigurationFile = '';
-		$sSourceEnvironment = 'production';
 		$sDBName = $this->oWizard->GetParameter('db_name');
 		if ($sMode == 'upgrade')
 		{
@@ -1144,7 +1143,6 @@ EOF
 					if ($aPreviousInstance['found'])
 					{
 						$sConfigurationFile = $aPreviousInstance['configuration_file'];
-						$sSourceEnvironment = $aPreviousInstance['source_environment'];
 					}
 				}
 			}
@@ -1168,13 +1166,8 @@ EOF
 //		        'destination' => '',
 //		      ),
 		    ),
-		    'backup' => array (
-		      'destination' => $sBackupDestination,
-		      'configuration_file' => $sConfigurationFile,
-		    ),
 		  ),
 		  'source_dir' => 'datamodel',
-		  'source_env' => $sSourceEnvironment,
 		  'target_env' => 'production',
 		  'workspace_dir' => '',
 		  'database' => array (
@@ -1195,6 +1188,14 @@ EOF
 		  'sample_data' => ($this->oWizard->GetParameter('sample_data', '') == 'yes') ? true : false ,
 		  'options' => json_decode($this->oWizard->GetParameter('misc_options')),
 		);
+
+		if ($sBackupDestination != '')
+		{
+			$aInstallParams['backup'] = array (
+			      'destination' => $sBackupDestination,
+			      'configuration_file' => $sConfigurationFile,
+			);
+		}
 		
 		$sJSONData = json_encode($aInstallParams);
 		$oPage->add('<input type="hidden" id="installer_parameters" value="'.htmlentities($sJSONData, ENT_QUOTES, 'UTF-8').'"/>');
