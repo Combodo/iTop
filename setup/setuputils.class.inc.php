@@ -697,11 +697,9 @@ DoCheckDBConnection(); // Validate the initial values immediately
 $("#db_server").bind("keyup change", function() { CheckDBConnection(); });
 $("#db_user").bind("keyup change", function() { CheckDBConnection(); });
 $("#db_pwd").bind("keyup change", function() { CheckDBConnection(); });
-$("#db_new_name").bind("click", function() { $("#create_db").attr("checked", "checked"); });
-$("#db_new_name").bind("keyup change", function() { WizardUpdateButtons(); });
-$("#db_name").bind("keyup change", function() { WizardUpdateButtons(); });
+$("#db_new_name").bind("click keyup change", function() { $("#create_db").attr("checked", "checked"); WizardUpdateButtons(); });
+$("#db_name").bind("click keyup change", function() {  $("#existing_db").attr("checked", "checked"); WizardUpdateButtons(); });
 $("#db_prefix").bind("keyup change", function() { WizardUpdateButtons(); });
-$("#db_name").bind("click", function() { $("#existing_db").attr("checked", "checked"); WizardUpdateButtons(); });
 $("#existing_db").bind("click change", function() { WizardUpdateButtons(); });
 $("#create_db").bind("click change", function() { WizardUpdateButtons(); });
 EOF
@@ -836,8 +834,7 @@ EOF
 				$sDBNameInput .= '</select>';
 			}
 			$oPage->add_ready_script('$("#db_name_container").html("'.addslashes($sDBNameInput).'");');
-			$oPage->add_ready_script('$("#db_name").bind("click", function() { $("#existing_db").attr("checked", "checked"); WizardUpdateButtons(); });');
-			$oPage->add_ready_script('$("#db_name").bind("keyup change", function() { WizardUpdateButtons(); });');
+			$oPage->add_ready_script('$("#db_name").bind("click keyup change", function() { $("#existing_db").attr("checked", "checked"); WizardUpdateButtons(); });');
 			
 		}
 		$oPage->add_ready_script('WizardUpdateButtons();');

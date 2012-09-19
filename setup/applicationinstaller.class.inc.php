@@ -379,12 +379,19 @@ class ApplicationInstaller
 		{
 			throw new Exception("Failed to find the source directory '$sSourcePath', please check the rights of the web server");
 		}		
-		if (!is_dir($sTargetPath) && !mkdir($sTargetPath))
+		if (!is_dir($sTargetPath))
 		{
-			throw new Exception("Failed to create directory '$sTargetPath', please check the rights of the web server");
-		}		
-		// owner:rwx user/group:rx
-		chmod($sTargetPath, 0755);
+			if (!mkdir($sTargetPath))
+			{
+				throw new Exception("Failed to create directory '$sTargetPath', please check the rights of the web server");
+			}
+			else
+			{
+				// adjust the rights if and only if the directory was just created
+				// owner:rwx user/group:rx
+				chmod($sTargetPath, 0755);
+			}
+		}
 
 		$oFactory = new ModelFactory($sSourcePath);
 		$aModules = $oFactory->FindModules();

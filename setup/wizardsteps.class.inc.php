@@ -607,7 +607,7 @@ class WizStepAdminAccount extends WizardStep
 	
 	public function Display(WebPage $oPage)
 	{
-		$sAdminUser = $this->oWizard->GetParameter('admin_user', '');
+		$sAdminUser = $this->oWizard->GetParameter('admin_user', 'admin');
 		$sAdminPwd = $this->oWizard->GetParameter('admin_pwd', '');
 		$sConfirmPwd = $this->oWizard->GetParameter('confirm_pwd', '');
 		$sAdminLanguage = $this->oWizard->GetParameter('admin_language', 'EN US');
@@ -711,7 +711,7 @@ class WizStepModulesChoice extends WizardStep
 		$aSelectedChoices = json_decode($this->oWizard->GetParameter('selected_components', '{}'), true);
 		$aSelected = utils::ReadParam('choice', array());
 		$aSelectedChoices[$index] = $aSelected;
-		$this->oWizard->SetParameter('selected_components', json_encode($aSelectedChoices, JSON_FORCE_OBJECT));
+		$this->oWizard->SetParameter('selected_components', json_encode($aSelectedChoices));
 		
 		if ($this->GetStepInfo($index) == null)
 		{
@@ -763,7 +763,7 @@ class WizStepModulesChoice extends WizardStep
 				// relative path: i.e. relative to the directory containing the XML file
 				$sFullPath = dirname($this->GetSourceFilePath()).'/'.$sBannerPath;
 				$sRealPath = realpath($sFullPath);
-				$sBannerUrl = utils::GetDefaultUrlAppRoot().str_replace(APPROOT, '', $sRealPath);
+				$sBannerUrl = utils::GetDefaultUrlAppRoot().str_replace(realpath(APPROOT), '', $sRealPath);
 			}
 			$oPage->add('<td><img src="'.$sBannerUrl.'"/><td>');
 		}
@@ -1228,6 +1228,8 @@ EOF
 <<<EOF
 	$("#wiz_form").data("installation_status", "completed");
 	WizardUpdateButtons();
+	$("#btn_next").unbind("click.install");
+	$("#btn_next").click();
 EOF
 			);
 		}
@@ -1249,7 +1251,7 @@ EOF
 	 */
 	public function JSCanMoveForward()
 	{
-		return 'return ($("#wiz_form").data("installation_status") === "not started");';
+		return 'return (($("#wiz_form").data("installation_status") === "not started") || ($("#wiz_form").data("installation_status") === "completed"));';
 	}
 	
 	/**
@@ -1286,6 +1288,7 @@ class WizStepDone extends WizardStep
 	public function Display(WebPage $oPage)
 	{
 		$oPage->p('Installation Completed.');
+		$oPage->add('<img style="border:0" src="http://www.combodo.com/stats/?p='.urlencode(ITOP_APPLICATION).'&v='.urlencode(ITOP_VERSION).'"/>');
 	}
 	
 	public function CanMoveForward()
