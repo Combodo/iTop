@@ -178,10 +178,10 @@ abstract class Dashboard
 	public function RenderProperties($oPage)
 	{
 		// menu to pick a layout and edit other properties of the dashboard
-		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">Dashboard Properties</div>');
+		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">'.Dict::S('UI:DashboardEdit:Properties').'</div>');
 		$sUrl = utils::GetAbsoluteUrlAppRoot();
 		
-		$oPage->add('<div style="text-align:center">Layout:</div>');
+		$oPage->add('<div style="text-align:center">'.Dict::S('UI:DashboardEdit:Layout').'</div>');
 		$oPage->add('<div id="select_layout" style="text-align:center">');
 		foreach( get_declared_classes() as $sLayoutClass)
 		{
@@ -200,7 +200,7 @@ abstract class Dashboard
 		$oPage->add('</div>');
 		
 		$oForm = new DesignerForm();
-		$oField = new DesignerLongTextField('dashboard_title', 'Title', $this->sTitle);
+		$oField = new DesignerLongTextField('dashboard_title', Dict::S('UI:DashboardEdit:DashboardTitle'), $this->sTitle);
 		$oForm->AddField($oField);
 		$this->SetFormParams($oForm);
 		$oForm->RenderAsPropertySheet($oPage);	
@@ -226,7 +226,7 @@ EOF
 	public function RenderDashletsSelection($oPage)
 	{
 		// Toolbox/palette to drag and drop dashlets
-		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">Available Dashlets</div>');
+		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">'.Dict::S('UI:DashboardEdit:Dashlets').'</div>');
 		$sUrl = utils::GetAbsoluteUrlAppRoot();
 
 		$oPage->add('<div id="select_dashlet" style="text-align:center">');
@@ -258,7 +258,7 @@ EOF
 	public function RenderDashletsProperties($oPage)
 	{
 		// Toolbox/palette to edit the properties of each dashlet
-		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">Dashlet Properties</div>');
+		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">'.Dict::S('UI:DashboardEdit:DashletProperties').'</div>');
 
 		$oPage->add('<div id="dashlet_properties" style="text-align:center">');
 		foreach($this->aCells as $aCell)
@@ -284,7 +284,15 @@ EOF
 	
 	protected function GetNewDashletId()
 	{
-		return 999;
+		$iNewId = 0;
+		foreach($this->aCells as $aDashlets)
+		{
+			foreach($aDashlets as $oDashlet)
+			{
+				$iNewId = max($iNewId, (int)$oDashlet->GetID());
+			}
+		}
+		return $iNewId + 1;
 	}
 	
 	abstract protected function SetFormParams($oForm);
@@ -357,10 +365,11 @@ class RuntimeDashboard extends Dashboard
 		if (!$bEditMode)
 		{
 			$sEditMenu = "<td><span id=\"DashboardMenu\"><ul><li><img src=\"../images/edit.png\"><ul>";
-			$sEditMenu .= "<li><a href=\"#\" onclick=\"return EditDashboard('{$this->sId}')\">Edit This Page...</a></li>";
+
+			$sEditMenu .= "<li><a href=\"#\" onclick=\"return EditDashboard('{$this->sId}')\">".Dict::S('UI:Dashboard:Edit')."</a></li>";
 			if ($this->bCustomized)
 			{
-				$sEditMenu .= "<li><a href=\"#\" onclick=\"return RevertDashboard('{$this->sId}')\">Revert To Original Version</a></li>";
+				$sEditMenu .= "<li><a href=\"#\" onclick=\"if (confirm('".addslashes(Dict::S('UI:Dashboard:RevertConfirm'))."')) return RevertDashboard('{$this->sId}'); else return false;\">".Dict::S('UI:Dashboard:Revert')."</a></li>";
 			}
 			$sEditMenu .= "</ul></li></ul></span></td>";
 			$sEditMenu = addslashes($sEditMenu);
@@ -413,8 +422,8 @@ EOF
 		$oPage->add('<div id="event_bus"/>'); // For exchanging messages between the panes, same as in the designer
 		$oPage->add('</div>');
 		
-		$sDialogTitle = 'Dashboard Editor';
-		$sOkButtonLabel = Dict::S('UI:Button:Ok');
+		$sDialogTitle = Dict::S('UI:DashboardEdit:Title');
+		$sOkButtonLabel = Dict::S('UI:Button:Save');
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
 		
 		$sId = addslashes($this->sId);
@@ -472,11 +481,13 @@ $('#event_bus').bind('dashlet-selected', function(event, data){
 
 	});
 	
-dashboard_prop_size = GetUserPreference('dashboard_prop_size', 300);
+dashboard_prop_size = GetUserPreference('dashboard_prop_size', 350);
 $('#dashboard_editor').layout({
 	east: {
-		minSize: 150,
+		minSize: 200,
 		size: dashboard_prop_size,
+		togglerLength_open: 0,
+		togglerLength_closed: 0, 
 		onresize_end: function(name, elt, state, options, layout)
 		{
 			if (state.isSliding == false)
@@ -486,13 +497,12 @@ $('#dashboard_editor').layout({
 		},
 	}
 });
-	
 EOF
 		);
 		$oPage->add_ready_script("");
 	}
 	
-	public static function GetDashletCreationForm($sOQL)
+	public static function GetDashletCreationForm($sOQL = null)
 	{
 		$oForm = new DesignerForm();
 	
@@ -502,15 +512,26 @@ EOF
 		foreach($aAllMenus as $idx => $aMenu)
 		{
 			$oMenu = $aMenu['node'];
+			$sParentId = $aMenu['parent'];
 			if ($oMenu instanceof DashboardMenuNode)
 			{
-				$aAllowedDashboards[$oMenu->GetMenuId()] = Dict::S($oMenu->GetMenuId());
+				$sMenuLabel = $oMenu->GetTitle();
+				$sParentLabel = Dict::S('Menu:'.$sParentId);
+				if ($sParentLabel != $sMenuLabel)
+				{
+					$aAllowedDashboards[$oMenu->GetMenuId()] = $sParentLabel.' - '.$sMenuLabel;
+				}
+				else
+				{
+					$aAllowedDashboards[$oMenu->GetMenuId()] = $sMenuLabel;
+				}
 			}
 		}
+		asort($aAllowedDashboards);
 		
 		$aKeys = array_keys($aAllowedDashboards); // Select the first one by default
 		$sDefaultDashboard = $aKeys[0];
-		$oField = new DesignerComboField('menu_id', 'Dashboard', $sDefaultDashboard);
+		$oField = new DesignerComboField('menu_id', Dict::S('UI:DashletCreation:Dashboard'), $sDefaultDashboard);
 		$oField->SetAllowedValues($aAllowedDashboards);
 		$oField->SetMandatory(true);
 		$oForm->AddField($oField);
@@ -518,7 +539,7 @@ EOF
 		// Get the list of possible dashlets that support a creation from
 		// an OQL
 		$aDashlets = array();
-		foreach( get_declared_classes() as $sDashletClass)
+		foreach(get_declared_classes() as $sDashletClass)
 		{
 			if (is_subclass_of($sDashletClass, 'Dashlet'))
 			{
@@ -537,7 +558,7 @@ EOF
 			}
 		}
 		
-		$oSelectorField = new DesignerFormSelectorField('dashlet_class', 'Dashlet Type', '');
+		$oSelectorField = new DesignerFormSelectorField('dashlet_class', Dict::S('UI:DashletCreation:DashletType'), '');
 		$oForm->AddField($oSelectorField);
 		foreach($aDashlets as $sDashletClass => $aDashletInfo)
 		{
@@ -547,7 +568,7 @@ EOF
 			
 			$oSelectorField->AddSubForm($oSubForm, $aDashletInfo['label'], $aDashletInfo['class']);
 		}
-		$oField = new DesignerBooleanField('open_editor', 'Edit the Dashboard', true);
+		$oField = new DesignerBooleanField('open_editor', Dict::S('UI:DashletCreation:EditNow'), true);
 		$oForm->AddField($oField);
 		
 		return $oForm;
@@ -558,11 +579,11 @@ EOF
 		$oPage->add('<div id="dashlet_creation_dlg">');
 
 		$oForm = self::GetDashletCreationForm($sOQL);
-		
+
 		$oForm->Render($oPage);
 		$oPage->add('</div>');
 		
-		$sDialogTitle = 'Create a new Dashlet';
+		$sDialogTitle = Dict::S('UI:DashletCreation:Title');
 		$sOkButtonLabel = Dict::S('UI:Button:Ok');
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
 		

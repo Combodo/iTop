@@ -60,10 +60,29 @@ require_once(APPROOT."/application/user.dashboard.class.inc.php");
  
 class ApplicationMenu
 {
+	static $bAdditionalMenusLoaded = false;
 	static $aRootMenus = array();
 	static $aMenusIndex = array();
 	static $sFavoriteSiloQuery = 'SELECT Organization';
 	
+	static public function LoadAdditionalMenus()
+	{
+		if (!self::$bAdditionalMenusLoaded)
+		{
+			// Build menus from module handlers
+			//
+			foreach(get_declared_classes() as $sPHPClass)
+			{
+				if (is_subclass_of($sPHPClass, 'ModuleHandlerAPI'))
+				{
+					$aCallSpec = array($sPHPClass, 'OnMenuCreation');
+					call_user_func($aCallSpec);
+				}
+			}
+			self::$bAdditionalMenusLoaded = true;
+		}
+	}
+
 	/**
 	 * Set the query used to limit the list of displayed organizations in the drop-down menu
 	 * @param $sOQL string The OQL query returning a list of Organization objects
@@ -127,6 +146,7 @@ class ApplicationMenu
 	 */
 	static public function ReflectionMenuNodes()
 	{
+		self::LoadAdditionalMenus();
 		return self::$aMenusIndex;
 	}
 	
@@ -135,6 +155,7 @@ class ApplicationMenu
 	 */
 	static public function DisplayMenu(iTopWebPage $oPage, $aExtraParams)
 	{
+		self::LoadAdditionalMenus();
 		// Sort the root menu based on the rank
 		usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
 		$iAccordion = 0;

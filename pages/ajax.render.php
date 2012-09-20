@@ -672,18 +672,7 @@ try
 		
 		case 'dashboard_editor':
 		$sId = utils::ReadParam('id', '', false, 'raw_data');
-		
-		// Before searching for the menus make sure that all of them exist
-		// Build menus from module handlers
-		//
-		foreach(get_declared_classes() as $sPHPClass)
-		{
-			if (is_subclass_of($sPHPClass, 'ModuleHandlerAPI'))
-			{
-				$aCallSpec = array($sPHPClass, 'OnMenuCreation');
-				call_user_func($aCallSpec);
-			}
-		}
+		ApplicationMenu::LoadAdditionalMenus();
 		$idx = ApplicationMenu::GetMenuIndexById($sId);
 		$oMenu = ApplicationMenu::GetMenuNode($idx);
 		$oMenu->RenderEditor($oPage);
@@ -808,7 +797,7 @@ try
 		break;
 		
 		case 'add_dashlet':
-		$oForm = RuntimeDashboard::GetDashletCreationForm('');
+		$oForm = RuntimeDashboard::GetDashletCreationForm();
 		$aValues = $oForm->ReadParams();
 		
 		$sDashletClass = $aValues['dashlet_class'];
@@ -819,6 +808,7 @@ try
 			$oDashlet = new $sDashletClass(0);
 			$oDashlet->FromParams($aValues);
 
+			ApplicationMenu::LoadAdditionalMenus();
 			$index = ApplicationMenu::GetMenuIndexById($sMenuId);
 			$oMenu = ApplicationMenu::GetMenuNode($index);
 			$oMenu->AddDashlet($oDashlet);

@@ -1178,6 +1178,19 @@ table.prop_table {
 td.prop_value {
 	text-align: left;
 }
+tr.itop-property-field-modified td {
+	background: #fbb;
+}
+tr.itop-property-field-modified td.prop_value.hover {
+	background: #fbb;
+}
+td.prop_value textarea, td.prop_value input[type=text]{
+	width: 98%;
+}
+td.prop_icon {
+	width: 20px;
+}
+
 .dashlet {
 	text-align:left;
 }
@@ -1192,6 +1205,15 @@ td.prop_value {
 }
 .dashlet-content .display_block {
 	text-align:left;
+}
+.prop_apply .ui-icon-alert {
+	display: none;
+}
+.prop_apply .ui-state-error .ui-icon-alert {
+	display: block;
+}
+.ui-state-error .ui-icon-circle-check {
+	display: none;
 }
 .summary-details {
     float: right;

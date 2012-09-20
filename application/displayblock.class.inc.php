@@ -656,7 +656,8 @@ class DisplayBlock
 			$iCount = $this->m_oSet->Count();
 			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($this->m_oFilter->serialize());
 			$sHtml .= '<p><a class="actions" href="'.$sHyperlink.'">';
-			$sHtml .= MetaModel::GetClassIcon($sClass, true, 'float;left;margin-right:10px;');
+			// Note: border set to 0 due to various browser interpretations (IE9 adding a 2px border)
+			$sHtml .= MetaModel::GetClassIcon($sClass, true, 'float;left;margin-right:10px;border:0;');
 			$sHtml .= MetaModel::GetName($sClass).': '.$iCount.'</a></p>';
 			$sParams = $oAppContext->GetForLink();
 			$sHtml .= '<p>';

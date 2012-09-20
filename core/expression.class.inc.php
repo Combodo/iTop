@@ -847,15 +847,20 @@ class FunctionExpression extends Expression
 			$oFormatExpr = $this->m_aArgs[1];
 			if ($oFormatExpr->Render() == "'%w'")
 			{
-				static $aWeekDayToString = array(
-					0 => 'Sunday',
-					1 => 'Monday',
-					2 => 'Tuesday',
-					3 => 'Wednesday',
-					4 => 'Thursday',
-					5 => 'Friday',
-					6 => 'Saturday',
-				);
+				static $aWeekDayToString = null;
+				if (is_null($aWeekDayToString))
+				{
+					// Init the correspondance table
+					$aWeekDayToString = array(
+						0 => Dict::S('DayOfWeek-Sunday'),
+						1 => Dict::S('DayOfWeek-Monday'),
+						2 => Dict::S('DayOfWeek-Tuesday'),
+						3 => Dict::S('DayOfWeek-Wednesday'),
+						4 => Dict::S('DayOfWeek-Thursday'),
+						5 => Dict::S('DayOfWeek-Friday'),
+						6 => Dict::S('DayOfWeek-Saturday')
+					);
+				}
 				if (isset($aWeekDayToString[(int)$sValue]))
 				{
 					$sRes = $aWeekDayToString[(int)$sValue];

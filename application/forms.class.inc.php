@@ -92,7 +92,9 @@ class DesignerForm
 				$aRow = $oField->Render($oP, $sFormId);
 				if ($oField->IsVisible())
 				{
-					$aDetails[] = array('label' => $aRow['label'], 'value' => $aRow['value']);
+					$sValidation = '&nbsp;<span class="prop_apply">'.$this->GetValidationArea($oField->GetCode()).'</span>';
+					$sField = $aRow['value'].$sValidation;
+					$aDetails[] = array('label' => $aRow['label'], 'value' => $sField);
 				}
 				else
 				{
@@ -152,7 +154,7 @@ class DesignerForm
 			$sFormId = $this->sFormId;
 			$sReturn = '<form id="'.$sFormId.'" onsubmit="return false;">';
 			$sReturn .= '<table class="prop_table">';
-			$sReturn .= '<thead><tr><th class="prop_header">Property</th><th class="prop_header">Value</th><th colspan="2" class="prop_header">&nbsp;</th></tr></thead><tbody>';
+			$sReturn .= '<thead><tr><th class="prop_header">'.Dict::S('UI:Form:Property').'</th><th class="prop_header">'.Dict::S('UI:Form:Value').'</th><th colspan="2" class="prop_header">&nbsp;</th></tr></thead><tbody>';
 		}
 		else
 		{
@@ -168,13 +170,14 @@ class DesignerForm
 			}
 
 
-			$sValidationFields = '</td><td class="prop_icon prop_apply"><span title="Apply" class="ui-icon ui-icon-circle-check"/></td><td  class="prop_icon prop_cancel"><span title="Revert" class="ui-icon ui-icon-circle-close"/></td></tr>';
 			foreach($aFields as $oField)
 			{
 				$aRow = $oField->Render($oP, $sFormId, 'property');
 				if ($oField->IsVisible())
 				{
 					$sFieldId = $this->GetFieldId($oField->GetCode());
+					$sValidation = $this->GetValidationArea($oField->GetCode(), '<span title="Apply" class="ui-icon ui-icon-circle-check"/>');
+					$sValidationFields = '</td><td class="prop_icon prop_apply">'.$sValidation.'</td><td  class="prop_icon prop_cancel"><span title="Revert" class="ui-icon ui-icon-circle-close"/></td></tr>';
 					$sReturn .= '<tr id="row_'.$sFieldId.'"><td class="prop_label">'.$aRow['label'].'</td><td class="prop_value">'.$aRow['value'];
 					if (!($oField instanceof DesignerFormSelectorField))
 					{
@@ -359,9 +362,9 @@ EOF
 		return 'attr_'.$sCode;
 	}
 	
-	public function GetValidationArea($sCode)
+	public function GetValidationArea($sCode, $sContent = '')
 	{
-		return "<span style=\"display:inline-block;width:20px;\" id=\"v_{$this->sFormPrefix}attr_$sCode\"></span>";
+		return "<span style=\"display:inline-block;width:20px;\" id=\"v_{$this->sFormPrefix}attr_$sCode\"><span class=\"ui-icon ui-icon-alert\"></span>$sContent</span>";
 	}
 	public function GetAsyncActionClass()
 	{
@@ -600,7 +603,6 @@ class DesignerTextField extends DesignerFormField
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
-		$sValidation = $this->oForm->GetValidationArea($this->sCode);
 		$sPattern = addslashes($this->sValidationPattern);
 		$sMandatory = $this->bMandatory ? 'true' :  'false';
 		$sReadOnly = $this->IsReadOnly() ? 'readonly' :  '';
@@ -613,7 +615,7 @@ $('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId'
 }
 EOF
 );
-		return array('label' => $this->sLabel, 'value' => "<input type=\"text\" id=\"$sId\" $sReadOnly name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\">".$sValidation);
+		return array('label' => $this->sLabel, 'value' => "<input type=\"text\" id=\"$sId\" $sReadOnly name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\">");
 	}
 
 	public function ReadParam(&$aValues)
@@ -633,7 +635,6 @@ class DesignerLongTextField extends DesignerTextField
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
-		$sValidation = $this->oForm->GetValidationArea($this->sCode);
 		$sPattern = addslashes($this->sValidationPattern);
 		$sMandatory = $this->bMandatory ? 'true' :  'false';
 		$sReadOnly = $this->IsReadOnly() ? 'readonly' :  '';
@@ -646,7 +647,7 @@ $('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId'
 }
 EOF
 );
-		return array('label' => $this->sLabel, 'value' => "<textarea id=\"$sId\" $sReadOnly name=\"$sName\">".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."</textarea>".$sValidation);
+		return array('label' => $this->sLabel, 'value' => "<textarea id=\"$sId\" $sReadOnly name=\"$sName\">".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."</textarea>");
 	}
 }
 
@@ -688,7 +689,6 @@ class DesignerComboField extends DesignerFormField
 		$sChecked = $this->defaultValue ? 'checked' : '';
 		$sMandatory = $this->bMandatory ? 'true' :  'false';
 		$sReadOnly = $this->IsReadOnly() ? 'disabled="disabled"' :  '';
-		$sValidation = $this->oForm->GetValidationArea($this->sCode);
 		if ($this->bMultipleSelection)
 		{
 			$sHtml = "<select multiple size=\"8\"id=\"$sId\" name=\"$sName\" $sReadOnly>";
@@ -722,7 +722,7 @@ class DesignerComboField extends DesignerFormField
 $('#$sId').bind('change validate', function() { ValidateWithPattern('$sId', $sMandatory, '', '$sFormId'); } );
 EOF
 );
-		return array('label' => $this->sLabel, 'value' => $sHtml.$sValidation);
+		return array('label' => $this->sLabel, 'value' => $sHtml);
 	}
 
 	public function ReadParam(&$aValues)
@@ -746,11 +746,10 @@ class DesignerBooleanField extends DesignerFormField
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
-		$sValidation = $this->oForm->GetValidationArea($this->sCode);
 		$sChecked = $this->defaultValue ? 'checked' : '';
 		$sReadOnly = $this->IsReadOnly() ? 'disabled' :  ''; // readonly does not work as expected on checkboxes:
 															 // readonly prevents the user from changing the input's value not its state (checked/unchecked)
-		return array('label' => $this->sLabel, 'value' => "<input type=\"checkbox\" $sChecked $sReadOnly id=\"$sId\" name=\"$sName\" value=\"true\">".$sValidation);
+		return array('label' => $this->sLabel, 'value' => "<input type=\"checkbox\" $sChecked $sReadOnly id=\"$sId\" name=\"$sName\" value=\"true\">");
 	}
 	
 	public function ReadParam(&$aValues)
@@ -800,7 +799,6 @@ class DesignerHiddenField extends DesignerFormField
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
-		$sValidation = $this->oForm->GetValidationArea($this->sCode);
 		$sChecked = $this->defaultValue ? 'checked' : '';
 		return array('label' =>'', 'value' => "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\">");
 	}
@@ -868,7 +866,6 @@ class DesignerSortableField extends DesignerFormField
 		$bOpen = false;
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
-		$sValidation = $this->oForm->GetValidationArea($this->sCode);
 		$sHtml = "<span class=\"sort_$sId fieldslist\" id=\"sortable_$sId\">";
 		foreach($this->defaultValue as $sValue)
 		{
@@ -893,7 +890,7 @@ class DesignerSortableField extends DesignerFormField
 	$('#sortable_$sId').disableSelection();
 EOF
 		);
-		return array('label' => $this->sLabel, 'value' => $sHtml.$sValidation);
+		return array('label' => $this->sLabel, 'value' => $sHtml);
 	}
 }
 

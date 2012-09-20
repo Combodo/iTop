@@ -145,13 +145,21 @@ abstract class Dashlet
 			if ($bEditMode)
 			{
 				$oPage->add('<div class="dashlet-content">');
-				$oPage->add('<h2>Unknown Class: '.$e->GetWrongWord().', did you mean '.OqlException::FindClosestString($e->GetWrongWord(), $e->GetSuggestions()).'?</h2>'); //TODO localize and 
+				$oPage->add('<h2>'.$e->GetUserFriendlyDescription().'</h2>');
 				$oPage->add('</div>');
 			}
 		}
+		catch(OqlException $e)
+		{
+			$oPage->add('<div class="dashlet-content">');
+			$oPage->p($e->GetUserFriendlyDescription());
+			$oPage->add('</div>');
+		}
 		catch(Exception $e)
 		{
+			$oPage->add('<div class="dashlet-content">');
 			$oPage->p($e->getMessage());
+			$oPage->add('</div>');
 		}
 		
 		if ($bEnclosingDiv)
@@ -248,7 +256,7 @@ EOF
 		return false;
 	}
 	
-	public function GetPropertiesFieldsFromOQL(DesignerForm $oForm, $sOQL)
+	public function GetPropertiesFieldsFromOQL(DesignerForm $oForm, $sOQL = null)
 	{
 		// Default: do nothing since it's not supported
 	}
@@ -285,34 +293,35 @@ class DashletEmptyCell extends Dashlet
 	}
 }
 
-class DashletRichText extends Dashlet
+class DashletPlainText extends Dashlet
 {
 	public function __construct($sId)
 	{
 		parent::__construct($sId);
-		$this->aProperties['text'] = "<h1>Lorem ipsum</h1>\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper.</p><p>Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales hendrerit. Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.</p><p>Integer id felis. Curabitur aliquet pellentesque diam. Integer quis metus vitae elit lobortis egestas. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi vel erat non mauris convallis vehicula. Nulla et sapien. Integer tortor tellus, aliquam faucibus, convallis id, congue eu, quam. Mauris ullamcorper felis vitae erat. Proin feugiat, augue non elementum posuere, metus purus iaculis lectus, et tristique ligula justo vitae magna. Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo placerat imperdiet.</p><p>Aenean suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus, felis magna fermentum augue, et ultricies lacus lorem varius purus. Curabitur eu amet.</p>";
+		$this->aProperties['text'] = Dict::S('UI:DashletPlainText:Prop-Text:Default');
 	}
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$sText = $this->aProperties['text'];
+		$sText = htmlentities($this->aProperties['text'], ENT_QUOTES, 'UTF-8');
 
-		$sId = 'richtext_'.($bEditMode? 'edit_' : '').$this->sId;
+		$sId = 'plaintext_'.($bEditMode? 'edit_' : '').$this->sId;
 		$oPage->add('<div id='.$sId.'" class="dashlet-content">'.$sText.'</div>');
 	}
 
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
-		$oField = new DesignerLongTextField('text', 'Text', $this->aProperties['text']);
+		$oField = new DesignerLongTextField('text', Dict::S('UI:DashletPlainText:Prop-Text'), $this->aProperties['text']);
+		$oField->SetMandatory();
 		$oForm->AddField($oField);
 	}
 	
 	static public function GetInfo()
 	{
 		return array(
-			'label' => 'Rich text',
+			'label' => Dict::S('UI:DashletPlainText:Label'),
 			'icon' => 'images/dashlet-text.png',
-			'description' => 'Text formatted with HTML tags',
+			'description' => Dict::S('UI:DashletPlainText:Description'),
 		);
 	}
 }
@@ -322,8 +331,8 @@ class DashletObjectList extends Dashlet
 	public function __construct($sId)
 	{
 		parent::__construct($sId);
-		$this->aProperties['title'] = 'Hardcoded list of "my requests"';
-		$this->aProperties['query'] = 'SELECT UserRequest AS i WHERE i.caller_id = :current_contact_id AND status NOT IN ("closed", "resolved")';
+		$this->aProperties['title'] = '';
+		$this->aProperties['query'] = 'SELECT Contact';
 		$this->aProperties['menu'] = false;
 	}
 	
@@ -352,22 +361,23 @@ class DashletObjectList extends Dashlet
 
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
-		$oField = new DesignerTextField('title', 'Title', $this->aProperties['title']);
+		$oField = new DesignerTextField('title', Dict::S('UI:DashletObjectList:Prop-Title'), $this->aProperties['title']);
 		$oForm->AddField($oField);
 
-		$oField = new DesignerLongTextField('query', 'Query', $this->aProperties['query']);
+		$oField = new DesignerLongTextField('query', Dict::S('UI:DashletObjectList:Prop-Query'), $this->aProperties['query']);
+		$oField->SetMandatory();
 		$oForm->AddField($oField);
 
-		$oField = new DesignerBooleanField('menu', 'Menu', $this->aProperties['menu']);
+		$oField = new DesignerBooleanField('menu', Dict::S('UI:DashletObjectList:Prop-Menu'), $this->aProperties['menu']);
 		$oForm->AddField($oField);
 	}
 
 	static public function GetInfo()
 	{
 		return array(
-			'label' => 'Object list',
+			'label' => Dict::S('UI:DashletObjectList:Label'),
 			'icon' => 'images/dashlet-list.png',
-			'description' => 'Object list dashlet',
+			'description' => Dict::S('UI:DashletObjectList:Description'),
 		);
 	}
 	
@@ -376,15 +386,16 @@ class DashletObjectList extends Dashlet
 		return true;
 	}
 	
-	public function GetPropertiesFieldsFromOQL(DesignerForm $oForm, $sOQL)
+	public function GetPropertiesFieldsFromOQL(DesignerForm $oForm, $sOQL = null)
 	{
-		$oField = new DesignerTextField('title', 'Title', '');
+		$oField = new DesignerTextField('title', Dict::S('UI:DashletObjectList:Prop-Title'), '');
 		$oForm->AddField($oField);
 
-		$oField = new DesignerHiddenField('query', 'Query', $sOQL);
+		$oField = new DesignerHiddenField('query', Dict::S('UI:DashletObjectList:Prop-Query'), $sOQL);
+		$oField->SetMandatory();
 		$oForm->AddField($oField);
 
-		$oField = new DesignerBooleanField('menu', 'Menu', $this->aProperties['menu']);
+		$oField = new DesignerBooleanField('menu', Dict::S('UI:DashletObjectList:Prop-Menu'), $this->aProperties['menu']);
 		$oForm->AddField($oField);
 	}
 }
@@ -394,9 +405,9 @@ abstract class DashletGroupBy extends Dashlet
 	public function __construct($sId)
 	{
 		parent::__construct($sId);
-		$this->aProperties['title'] = 'Contacts grouped by location';
+		$this->aProperties['title'] = '';
 		$this->aProperties['query'] = 'SELECT Contact';
-		$this->aProperties['group_by'] = 'location_name';
+		$this->aProperties['group_by'] = 'status';
 		$this->aProperties['style'] = 'table';
 	}
 
@@ -407,43 +418,52 @@ abstract class DashletGroupBy extends Dashlet
 		$sGroupBy = $this->aProperties['group_by'];
 		$sStyle = $this->aProperties['style'];
 
-		if ($sQuery == '')
+		// First perform the query - if the OQL is not ok, it will generate an exception : no need to go further 
+		$oFilter = DBObjectSearch::FromOQL($sQuery);
+
+		$sClass = $oFilter->GetClass();
+		$sClassAlias = $oFilter->GetClassAlias();
+
+		// Check groupby... it can be wrong at this stage
+		if (preg_match('/^(.*):(.*)$/', $sGroupBy, $aMatches))
 		{
-			$oPage->add('<p>Please enter a valid OQL query</p>');
-		}
-		elseif ($sGroupBy == '')
-		{
-			$oPage->add('<p>Please select the field on which the objects will be grouped together</p>');
+			$sAttCode = $aMatches[1];
+			$sFunction = $aMatches[2];
 		}
 		else
 		{
-			$oFilter = DBObjectSearch::FromOQL($sQuery);
-			$sClassAlias = $oFilter->GetClassAlias();
-
-			if (preg_match('/^(.*):(.*)$/', $sGroupBy, $aMatches))
+			$sAttCode = $sGroupBy;
+			$sFunction = null;
+		}
+		if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
+		{
+			$oPage->add('<p>'.Dict::S('UI:DashletGroupBy:MissingGroupBy').'</p>');
+		}
+		else
+		{
+			$sAttLabel = MetaModel::GetLabel($sClass, $sAttCode);
+			if (!is_null($sFunction))
 			{
-				$sAttCode = $aMatches[1];
 				$sFunction = $aMatches[2];
-
 				switch($sFunction)
 				{
 				case 'hour':
-					$sGroupByLabel = 'Hour of '.$sAttCode. ' (0-23)';
-					$sGroupByExpr = "DATE_FORMAT($sClassAlias.$sAttCode, '%H')"; // 0 -> 31
+					$sGroupByLabel = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Hour', $sAttLabel);
+					$sGroupByExpr = "DATE_FORMAT($sClassAlias.$sAttCode, '%H')"; // 0 -> 23
 					break;
 
 				case 'month':
-					$sGroupByLabel = 'Month of '.$sAttCode. ' (1 - 12)';
+					$sGroupByLabel = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Month', $sAttLabel);
 					$sGroupByExpr = "DATE_FORMAT($sClassAlias.$sAttCode, '%m')"; // 0 -> 31
 					break;
 
 				case 'day_of_week':
-					$sGroupByLabel = 'Day of week for '.$sAttCode. ' (sunday to saturday)';
+					$sGroupByLabel = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:DayOfWeek', $sAttLabel);
 					$sGroupByExpr = "DATE_FORMAT($sClassAlias.$sAttCode, '%w')";
 					break;
 
 				case 'day_of_month':
-					$sGroupByLabel = 'Day of month for'.$sAttCode;
+					$sGroupByLabel = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:DayOfMonth', $sAttLabel);
 					$sGroupByExpr = "DATE_FORMAT($sClassAlias.$sAttCode, '%e')"; // 0 -> 31
 					break;
 
@@ -454,10 +474,8 @@ abstract class DashletGroupBy extends Dashlet
 			}
 			else
 			{
-				$sAttCode = $sGroupBy;
-
 				$sGroupByExpr = $sClassAlias.'.'.$sAttCode;
-				$sGroupByLabel = MetaModel::GetLabel($oFilter->GetClass(), $sAttCode);
+				$sGroupByLabel = $sAttLabel;
 			}
 
 			switch($sStyle)
@@ -507,57 +525,65 @@ abstract class DashletGroupBy extends Dashlet
 		}
 	}
 
+	protected function GetGroupByOptions($sOql)
+	{
+		$oSearch = DBObjectSearch::FromOQL($sOql);
+		$sClass = $oSearch->GetClass();
+		$aGroupBy = array();
+		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+		{
+			if (!$oAttDef->IsScalar()) continue; // skip link sets
+			if ($oAttDef instanceof AttributeFriendlyName) continue;
+			if ($oAttDef instanceof AttributeExternalField) continue;
+
+			$sLabel = $oAttDef->GetLabel();
+			$aGroupBy[$sAttCode] = $sLabel;
+
+			if ($oAttDef instanceof AttributeDateTime)
+			{
+				$aGroupBy[$sAttCode.':hour'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Hour', $sLabel);
+				$aGroupBy[$sAttCode.':month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Month', $sLabel);
+				$aGroupBy[$sAttCode.':day_of_week'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek', $sLabel);
+				$aGroupBy[$sAttCode.':day_of_month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth', $sLabel);
+			}
+		}
+		asort($aGroupBy);
+		return $aGroupBy;
+	}
+
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
-		$oField = new DesignerTextField('title', 'Title', $this->aProperties['title']);
+		$oField = new DesignerTextField('title', Dict::S('UI:DashletGroupBy:Prop-Title'), $this->aProperties['title']);
 		$oForm->AddField($oField);
 
-		$oField = new DesignerLongTextField('query', 'Query', $this->aProperties['query']);
+		$oField = new DesignerLongTextField('query', Dict::S('UI:DashletGroupBy:Prop-Query'), $this->aProperties['query']);
+		$oField->SetMandatory();
 		$oForm->AddField($oField);
 
 		try
 		{
 			// Group by field: build the list of possible values (attribute codes + ...)
-			$oSearch = DBObjectSearch::FromOQL($this->aProperties['query']);
-			$sClass = $oSearch->GetClass();
-			$aGroupBy = array();
-			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
-				if (!$oAttDef->IsScalar()) continue; // skip link sets
+			$aGroupBy = $this->GetGroupByOptions($this->aProperties['query']);
 	
-				$sLabel = $oAttDef->GetLabel();
-				if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
-				{
-					$sLabel = $oAttDef->GetLabel().' (strict)';
-				}
-	
-				$aGroupBy[$sAttCode] = $sLabel;
-	
-				if ($oAttDef instanceof AttributeDateTime)
-				{
-					$aGroupBy[$sAttCode.':hour'] = $oAttDef->GetLabel().' (hour)';
-					$aGroupBy[$sAttCode.':month'] = $oAttDef->GetLabel().' (month)';
-					$aGroupBy[$sAttCode.':day_of_week'] = $oAttDef->GetLabel().' (day of week)';
-					$aGroupBy[$sAttCode.':day_of_month'] = $oAttDef->GetLabel().' (day of month)';
-				}
-			}
-	
-			$oField = new DesignerComboField('group_by', 'Group by', $this->aProperties['group_by']);
+			$oField = new DesignerComboField('group_by', Dict::S('UI:DashletGroupBy:Prop-GroupBy'), $this->aProperties['group_by']);
+			$oField->SetMandatory();
 			$oField->SetAllowedValues($aGroupBy);
 		}
 		catch(Exception $e)
 		{
-			$oField = new DesignerTextField('group_by', 'Group by', $this->aProperties['group_by']);
+			$oField = new DesignerTextField('group_by', Dict::S('UI:DashletGroupBy:Prop-GroupBy'), $this->aProperties['group_by']);
+			$oField->SetReadOnly();
 		}
 		$oForm->AddField($oField);
 
 		$aStyles = array(
-			'pie' => 'Pie chart',
-			'bars' => 'Bar chart',
-			'table' => 'Table',
+			'pie' => Dict::S('UI:DashletGroupByPie:Label'),
+			'bars' => Dict::S('UI:DashletGroupByBars:Label'),
+			'table' => Dict::S('UI:DashletGroupByTable:Label'),
 		);
 		
-		$oField = new DesignerComboField('style', 'Style', $this->aProperties['style']);
+		$oField = new DesignerComboField('style', Dict::S('UI:DashletGroupBy:Prop-Style'), $this->aProperties['style']);
+		$oField->SetMandatory();
 		$oField->SetAllowedValues($aStyles);
 		$oForm->AddField($oField);
 	}
@@ -616,10 +642,11 @@ abstract class DashletGroupBy extends Dashlet
 
 	static public function GetInfo()
 	{
+		// Note: no need to translate, should never be visible to the end-user!
 		return array(
 			'label' => 'Objects grouped by...',
 			'icon' => 'images/dashlet-object-grouped.png',
-			'description' => 'Grouped objects dashlet',
+			'description' => 'Grouped objects dashlet (abstract)',
 		);
 	}
 	
@@ -628,44 +655,32 @@ abstract class DashletGroupBy extends Dashlet
 		return true;
 	}
 	
-	public function GetPropertiesFieldsFromOQL(DesignerForm $oForm, $sOQL)
+	public function GetPropertiesFieldsFromOQL(DesignerForm $oForm, $sOQL = null)
 	{
-		$oField = new DesignerTextField('title', 'Title', '');
+		$oField = new DesignerTextField('title', Dict::S('UI:DashletGroupBy:Prop-Title'), '');
 		$oForm->AddField($oField);
 
-		$oField = new DesignerHiddenField('query', 'Query', $sOQL);
+		$oField = new DesignerHiddenField('query', Dict::S('UI:DashletGroupBy:Prop-Query'), $sOQL);
+		$oField->SetMandatory();
 		$oForm->AddField($oField);
 		
-		try
+		if (!is_null($sOQL))
 		{
-			// Group by field: build the list of possible values (attribute codes + ...)
-			$oSearch = DBObjectSearch::FromOQL($this->aProperties['query']);
-			$sClass = $oSearch->GetClass();
-			$aGroupBy = array();
-			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
-				if (!$oAttDef->IsScalar()) continue; // skip link sets
-				if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) continue; // skip external keys
-				$aGroupBy[$sAttCode] = $oAttDef->GetLabel();
-	
-				if ($oAttDef instanceof AttributeDateTime)
-				{
-					//date_format(start_date, '%d')
-					$aGroupBy['date_of_'.$sAttCode] = 'Day of '.$oAttDef->GetLabel();
-				}
-	
-			}
-			$oField = new DesignerComboField('group_by', 'Group by', $this->aProperties['group_by']);
+			$oField = new DesignerComboField('group_by', Dict::S('UI:DashletGroupBy:Prop-GroupBy'), null);
+			$aGroupBy = $this->GetGroupByOptions($sOQL);
 			$oField->SetAllowedValues($aGroupBy);
 		}
-		catch(Exception $e)
+		else
 		{
-			$oField = new DesignerTextField('group_by', 'Group by', $this->aProperties['group_by']);
+			// Creating a form for reading parameters!
+			$oField = new DesignerTextField('group_by', Dict::S('UI:DashletGroupBy:Prop-GroupBy'), null);
 		}
+		$oField->SetMandatory();
 
 		$oForm->AddField($oField);
 
 		$oField = new DesignerHiddenField('style', '', $this->aProperties['style']);
+		$oField->SetMandatory();
 		$oForm->AddField($oField);
 	}
 }
@@ -681,69 +696,9 @@ class DashletGroupByPie extends DashletGroupBy
 	static public function GetInfo()
 	{
 		return array(
-			'label' => 'Pie Chart',
+			'label' => Dict::S('UI:DashletGroupByPie:Label'),
 			'icon' => 'images/dashlet-pie-chart.png',
-			'description' => 'Pie Chart',
-		);
-	}
-}
-class DashletGroupByPie2 extends DashletGroupByPie
-{
-	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
-	{
-		$sTitle = addslashes($this->aProperties['title']);
-		
-		$sQuery = $this->aProperties['query'];
-		$sGroupBy = $this->aProperties['group_by'];
-
-		$oSearch = DBObjectSearch::FromOQL($sQuery);
-		$sClassAlias = $oSearch->GetClassAlias();
-		$aQueryParams = array();
-		
-		$aGroupBy = array();
-		$oGroupByExp = Expression::FromOQL($sClassAlias.'.'.$sGroupBy);
-		$aGroupBy['grouped_by_1'] = $oGroupByExp;
-		$sSql = MetaModel::MakeGroupByQuery($oSearch, $aQueryParams, $aGroupBy);
-		$aRes = CMDBSource::QueryToArray($sSql);
-
-		$aGroupBy = array();
-		$aLabels = array();
-		$iTotalCount = 0;
-		foreach ($aRes as $aRow)
-		{
-			$sValue = $aRow['grouped_by_1'];
-			$aLabels[] = ($sValue == '') ? 'Empty (%%.%%)' : $sValue.' (%%.%%)'; //TODO: localize
-			$aGroupBy[] = (int) $aRow['_itop_count_'];
-			$iTotalCount += $aRow['_itop_count_'];
-		}
-
-		$aURLs = array();
-		$sContext = ''; //TODO get the context ??
-		foreach($aGroupBy as $sValue => $iValue)
-		{
-			// Build the search for this subset
-			$oSubsetSearch = clone $oSearch;
-			$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($sValue));
-			$oSubsetSearch->AddConditionExpression($oCondition);
-			// Todo - à finir
-			$aURLs[] = 'http://www.combodo.com/itop'; //utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html{$sContext}&filter=".urlencode($oSubsetSearch->serialize());
-		}
-
-		$sJSValues = json_encode($aGroupBy);
-		$sJSHrefs = json_encode($aURLs);
-		$sJSLabels = json_encode($aLabels);
-		
-		$sId = 'chart_'.($bEditMode? 'edit_' : '').$this->sId;
-		$oPage->add('<div id="chart_'.$sId.'" class="dashlet-content"></div>');
-		$oPage->add_ready_script("$('#chart_{$sId}').pie_chart({chart_label: '$sTitle', values: $sJSValues, labels: $sJSLabels, hrefs: $sJSHrefs });");
-	}
-
-	static public function GetInfo()
-	{
-		return array(
-			'label' => 'Pie (Raphael)',
-			'icon' => 'images/dashlet-pie-chart.png',
-			'description' => 'Pure JS Pie Chart',
+			'description' => Dict::S('UI:DashletGroupByPie:Description'),
 		);
 	}
 }
@@ -760,9 +715,9 @@ class DashletGroupByBars extends DashletGroupBy
 	static public function GetInfo()
 	{
 		return array(
-			'label' => 'Bar Chart',
+			'label' => Dict::S('UI:DashletGroupByBars:Label'),
 			'icon' => 'images/dashlet-bar-chart.png',
-			'description' => 'Bar Chart',
+			'description' => Dict::S('UI:DashletGroupByBars:Description'),
 		);
 	}
 }
@@ -778,9 +733,9 @@ class DashletGroupByTable extends DashletGroupBy
 	static public function GetInfo()
 	{
 		return array(
-			'label' => 'Group By (table)',
+			'label' => Dict::S('UI:DashletGroupByTable:Label'),
+			'description' => Dict::S('UI:DashletGroupByTable:Description'),
 			'icon' => 'images/dashlet-groupby-table.png',
-			'description' => 'List (Grouped by a field)',
 		);
 	}
 }
@@ -791,8 +746,10 @@ class DashletHeaderStatic extends Dashlet
 	public function __construct($sId)
 	{
 		parent::__construct($sId);
-		$this->aProperties['title'] = 'Contacts';
-		$this->aProperties['icon'] = 'itop-config-mgmt-1.0.0/images/contact.png';
+		$this->aProperties['title'] = Dict::S('UI:DashletHeaderStatic:Prop-Title:Default');
+		$sIcon = MetaModel::GetClassIcon('Contact', false);
+		$sIcon = str_replace(utils::GetAbsoluteUrlModulesRoot(), '', $sIcon);
+		$this->aProperties['icon'] = $sIcon;
 	}
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
@@ -814,10 +771,10 @@ class DashletHeaderStatic extends Dashlet
 
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
-		$oField = new DesignerTextField('title', 'Title', $this->aProperties['title']);
+		$oField = new DesignerTextField('title', Dict::S('UI:DashletHeaderStatic:Prop-Title'), $this->aProperties['title']);
 		$oForm->AddField($oField);
 		
-		$oField = new DesignerIconSelectionField('icon', 'Icon', $this->aProperties['icon']);
+		$oField = new DesignerIconSelectionField('icon', Dict::S('UI:DashletHeaderStatic:Prop-Icon'), $this->aProperties['icon']);
 		$aAllIcons = self::FindIcons(APPROOT.'env-'.utils::GetCurrentEnvironment());
 		ksort($aAllIcons);
 		$aValues = array();
@@ -832,9 +789,9 @@ class DashletHeaderStatic extends Dashlet
 	static public function GetInfo()
 	{
 		return array(
-			'label' => 'Header',
+			'label' => Dict::S('UI:DashletHeaderStatic:Label'),
 			'icon' => 'images/dashlet-header.png',
-			'description' => 'Header with stats (grouped by...)',
+			'description' => Dict::S('UI:DashletHeaderStatic:Description'),
 		);
 	}
 	
@@ -869,9 +826,11 @@ class DashletHeaderDynamic extends Dashlet
 	public function __construct($sId)
 	{
 		parent::__construct($sId);
-		$this->aProperties['title'] = 'Contacts';
-		$this->aProperties['icon'] = 'itop-config-mgmt-1.0.0/images/contact.png';
-		$this->aProperties['subtitle'] = 'Contacts';
+		$this->aProperties['title'] = Dict::S('UI:DashletHeaderDynamic:Prop-Title:Default');
+		$sIcon = MetaModel::GetClassIcon('Contact', false);
+		$sIcon = str_replace(utils::GetAbsoluteUrlModulesRoot(), '', $sIcon);
+		$this->aProperties['icon'] = $sIcon;
+		$this->aProperties['subtitle'] = Dict::S('UI:DashletHeaderDynamic:Prop-Subtitle:Default');
 		$this->aProperties['query'] = 'SELECT Contact';
 		$this->aProperties['group_by'] = 'status';
 		$this->aProperties['values'] = array('active', 'inactive');
@@ -939,10 +898,10 @@ class DashletHeaderDynamic extends Dashlet
 
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
-		$oField = new DesignerTextField('title', 'Title', $this->aProperties['title']);
+		$oField = new DesignerTextField('title', Dict::S('UI:DashletHeaderDynamic:Prop-Title'), $this->aProperties['title']);
 		$oForm->AddField($oField);
 
-		$oField = new DesignerIconSelectionField('icon', 'Icon', $this->aProperties['icon']);
+		$oField = new DesignerIconSelectionField('icon', Dict::S('UI:DashletHeaderDynamic:Prop-Icon'), $this->aProperties['icon']);
 		$aAllIcons = DashletHeaderStatic::FindIcons(APPROOT.'env-'.utils::GetCurrentEnvironment());
 		ksort($aAllIcons);
 		$aValues = array();
@@ -953,10 +912,11 @@ class DashletHeaderDynamic extends Dashlet
 		$oField->SetAllowedValues($aValues);
 		$oForm->AddField($oField);
 
-		$oField = new DesignerTextField('subtitle', 'Subtitle', $this->aProperties['subtitle']);
+		$oField = new DesignerTextField('subtitle', Dict::S('UI:DashletHeaderDynamic:Prop-Subtitle'), $this->aProperties['subtitle']);
 		$oForm->AddField($oField);
 
-		$oField = new DesignerTextField('query', 'Query', $this->aProperties['query']);
+		$oField = new DesignerTextField('query', Dict::S('UI:DashletHeaderDynamic:Prop-Query'), $this->aProperties['query']);
+		$oField->SetMandatory();
 		$oForm->AddField($oField);
 
 		try
@@ -971,16 +931,18 @@ class DashletHeaderDynamic extends Dashlet
 				$sLabel = $oAttDef->GetLabel();
 				$aGroupBy[$sAttCode] = $sLabel;
 			}
-			$oField = new DesignerComboField('group_by', 'Group by', $this->aProperties['group_by']);
+			$oField = new DesignerComboField('group_by', Dict::S('UI:DashletHeaderDynamic:Prop-GroupBy'), $this->aProperties['group_by']);
+			$oField->SetMandatory();
 			$oField->SetAllowedValues($aGroupBy);
 		}
 		catch(Exception $e)
 		{
-			$oField = new DesignerTextField('group_by', 'Group by', $this->aProperties['group_by']);
+			$oField = new DesignerTextField('group_by', Dict::S('UI:DashletHeaderDynamic:Prop-GroupBy'), $this->aProperties['group_by']);
+			$oField->SetMandatory();
 		}
 		$oForm->AddField($oField);
 
-		$oField = new DesignerComboField('values', 'Values (CSV list)', $this->aProperties['values']);
+		$oField = new DesignerComboField('values', Dict::S('UI:DashletHeaderDynamic:Prop-Values'), $this->aProperties['values']);
 		$oField->MultipleSelection(true);
 		if (MetaModel::IsValidAttCode($sClass, $this->aProperties['group_by']))
 		{
@@ -1032,9 +994,9 @@ class DashletHeaderDynamic extends Dashlet
 	static public function GetInfo()
 	{
 		return array(
-			'label' => 'Header with statistics',
+			'label' => Dict::S('UI:DashletHeaderDynamic:Label'),
 			'icon' => 'images/dashlet-header-stats.png',
-			'description' => 'Header with stats (grouped by...)',
+			'description' => Dict::S('UI:DashletHeaderDynamic:Description'),
 		);
 	}
 }
@@ -1092,7 +1054,7 @@ class DashletBadge extends Dashlet
 		}
 			
 		
-		$oField = new DesignerIconSelectionField('class', 'Class', $this->aProperties['class']);
+		$oField = new DesignerIconSelectionField('class', Dict::S('UI:DashletBadge:Prop-Class'), $this->aProperties['class']);
 		ksort($aClasses);
 		$aValues = array();
 		foreach($aClasses as $sClass => $sClass)
@@ -1106,7 +1068,7 @@ class DashletBadge extends Dashlet
 					// The icon does not exist, leet's use a transparent one of the same size.
 					$sIconUrl = utils::GetAbsoluteUrlAppRoot().'images/transparent_32_32.png';
 				}
-				$aValues[] = array('value' => $sClass, 'label' => $sClass, 'icon' => $sIconUrl);
+				$aValues[] = array('value' => $sClass, 'label' => MetaModel::GetName($sClass), 'icon' => $sIconUrl);
 			}
 		}
 		$oField->SetAllowedValues($aValues);
@@ -1117,292 +1079,10 @@ class DashletBadge extends Dashlet
 	static public function GetInfo()
 	{
 		return array(
-			'label' => 'Badge',
+			'label' => Dict::S('UI:DashletBadge:Label'),
 			'icon' => 'images/dashlet-badge.png',
-			'description' => 'Object Icon with new/search',
+			'description' => Dict::S('UI:DashletBadge:Description'),
 		);
 	}
 }
-
-
-class DashletProto extends Dashlet
-{
-	public function __construct($sId)
-	{
-		parent::__construct($sId);
-		$this->aProperties['class'] = 'Foo';
-	}
-
-	protected $aValues1;
-	protected $aValues2;
-	protected $aStats;
-	protected $sGroupByLabel1;
-	protected $sGroupByLabel2;
-	protected $iTotalCount;
-
-	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
-	{
-		$this->Compute();
-
-		//$sHtmlTitle = $this->aProperties['title'];
-		$sHtmlTitle = "Group by made on two dimensions";
-
-		// Build the output
-		$oPage->add('<div style="text-align:center" class="dashlet-content">');
-
-		$oPage->add('<h1>'.$sHtmlTitle.'</h1>');
-		$oPage->p(Dict::Format('UI:Pagination:HeaderNoSelection', $this->iTotalCount));
-
-		$oPage->add('<table>');
-		// Header
-		$oPage->add('<tr>');
-		$oPage->add('<td></td>');
-		foreach ($this->aValues2 as $sValue2 => $sDisplayValue2)
-		{
-			$oPage->add('<td><b>'.$sDisplayValue2.'</b></td>');
-		}
-		$oPage->add('</tr>');
-		// Contents		
-		foreach ($this->aValues1 as $sValue1 => $sDisplayValue1)
-		{
-			$oPage->add('<tr>');
-			$oPage->add('<td><b>'.$sDisplayValue1.'</b></td>');
-			foreach ($this->aValues2 as $sValue2 => $sDisplayValue2)
-			{
-				@$aResData = $this->aStats[$sValue1][$sValue2];
-				if (is_array($aResData))
-				{
-					$sRes = '<a href="'.$aResData['href'].'">'.$aResData['count'].'</a>';
-				}
-				else
-				{
-					// Missing result => 0
-					$sRes = '-';
-				}
-				$oPage->add('<td>'.$sRes.'</td>');
-			}
-			$oPage->add('</tr>');
-		}
-		$oPage->add('</table>');
-		$oPage->add('</div>');
-		
-		$sId = 'chart_'.($bEditMode? 'edit_' : '').$this->sId;
-		$oPage->add('<div id="chart_'.$sId.'" class="dashlet-content"></div>');
-		$aAxisX = $this->aValues1;
-		$aAxisY = $this->aValues2;
-		$aData = array();
-		$aHref = array();
-		foreach ($this->aValues1 as $sValue1 => $sDisplayValue1)
-		{
-			foreach ($this->aValues2 as $sValue2 => $sDisplayValue2)
-			{
-				@$aResData = $this->aStats[$sValue1][$sValue2];
-				if (is_array($aResData))
-				{
-					$aData[$sValue1][$sValue2] = $aResData['count'];
-					$aHref[$sValue1][$sValue2] = $aResData['href'];
-				}
-				else
-				{
-					// Missing result => 0
-					$aData[$sValue1][$sValue2] = 0;
-					$aHref[$sValue1][$sValue2] = '';
-				}
-			}
-		}
-		
-		$sJSAxisX = json_encode($aAxisX);
-		$sJSAxisY = json_encode($aAxisY);
-		$sJSData = json_encode($aData);
-		$sJSHref = json_encode($aHref);
-		$sTitle = addslashes($sHtmlTitle);
-		$oPage->add_ready_script("$('#chart_{$sId}').heatmap_chart({chart_label: '$sTitle', values: $sJSData, hrefs: $sJSHref, axis_x: $sJSAxisX, axis_y: $sJSAxisY});");
-		
-	}
-
-	protected function Compute()
-	{
-		// Read and interpret parameters
-		//
-		//$sFoo = $this->aProperties['foo'];
-
-		if (false)
-		{
-			$oFilter = DBObjectSearch::FromOQL('SELECT FunctionalCI');
-			$sGroupBy1 = 'FunctionalCI.status';
-			$this->sGroupByLabel1 = MetaModel::GetLabel('FunctionalCI', 'status');
-			$aFill1 = array(
-				'production',
-				'implementation',
-			);
-			$aFill1 = null;
-			//$sGroupBy2 = 'org_id_friendlyname';
-			$sGroupBy2 = 'FunctionalCI.org_id';
-			$this->sGroupByLabel2 = MetaModel::GetLabel('FunctionalCI', 'org_id');
-			$aFill2 = array(
-				'2',
-				'1',
-			);
-			//$aFill2 = null;
-		}
-		else
-		{
-			$oFilter = DBObjectSearch::FromOQL('SELECT Incident AS i');
-			$sGroupBy1 = "DATE_FORMAT(i.start_date, '%H')";
-			$this->sGroupByLabel1 = 'Hour of '.MetaModel::GetLabel('Incident', 'start_date');
-			$aFill1 = array(9, 10, 11, 12, 13, 14, 15, 16, 17, 18);
-			//$aFill1 = null;
-
-			$sGroupBy2 = "DATE_FORMAT(i.start_date, '%w')";
-			$this->sGroupByLabel2 = 'Week day of '.MetaModel::GetLabel('Incident', 'start_date');
-			$aFill2 = array(1, 2, 3, 4, 5);
-			//$aFill2 = null;
-		}
-
-		// Do compute the statistics
-		//
-		$this->aValues1 = array();
-		$this->aValues2 = array();
-		$this->aStats = array();
-		$this->iTotalCount = 0;
-
-		$sAlias = $oFilter->GetClassAlias();
-
-		//$oGroupByExp1 = new FieldExpression($sGroupBy1, $sAlias);
-		$oGroupByExp1 = Expression::FromOQL($sGroupBy1);
-		
-		//$oGroupByExp2 = new FieldExpression($sGroupBy2, $sAlias);
-		$oGroupByExp2 = Expression::FromOQL($sGroupBy2);
-		
-		$aGroupBy = array();
-		$aGroupBy['grouped_by_1'] = $oGroupByExp1;
-		$aGroupBy['grouped_by_2'] = $oGroupByExp2;
-		$sSql = MetaModel::MakeGroupByQuery($oFilter, array(), $aGroupBy);
-		$aRes = CMDBSource::QueryToArray($sSql);
-
-		// Prepare a blank and ordered grid
-		if (is_array($aFill1))
-		{
-			foreach ($aFill1 as $sValue1)
-			{
-				$sDisplayValue1 = $aGroupBy['grouped_by_1']->MakeValueLabel($oFilter, $sValue1, $sValue1); // default to the raw value
-				$this->aValues1[$sValue1] = $sDisplayValue1;
-			}
-		}
-		if (is_array($aFill2))
-		{
-			foreach ($aFill2 as $sValue2)
-			{
-				$sDisplayValue2 = $aGroupBy['grouped_by_2']->MakeValueLabel($oFilter, $sValue2, $sValue2); // default to the raw value
-				$this->aValues2[$sValue2] = $sDisplayValue2;
-			}
-		}
-
-		$oAppContext = new ApplicationContext();
-		$sParams = $oAppContext->GetForLink();
-		foreach ($aRes as $aRow)
-		{
-			$iCount = $aRow['_itop_count_'];
-			$this->iTotalCount += $iCount;
-
-			$sValue1 = $aRow['grouped_by_1'];
-			$sValue2 = $aRow['grouped_by_2'];
-
-			$bValidResult = true;
-			if (is_array($aFill1) && !in_array($sValue1, $aFill1))
-			{
-				$bValidResult = false;
-			}
-			if (is_array($aFill2) && !in_array($sValue2, $aFill2))
-			{
-				$bValidResult = false;
-			}
-			if ($bValidResult)
-			{
-				// Build the search for this subset
-				$oSubsetSearch = clone $oFilter;
-				$oCondition = new BinaryExpression($oGroupByExp1, '=', new ScalarExpression($sValue1));
-				$oSubsetSearch->AddConditionExpression($oCondition);
-				$oCondition = new BinaryExpression($oGroupByExp2, '=', new ScalarExpression($sValue2));
-				$oSubsetSearch->AddConditionExpression($oCondition);
-				$sFilter = urlencode($oSubsetSearch->serialize());
-
-				$this->aStats[$sValue1][$sValue2] = array (
-					'href' => utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=".urlencode($sFilter),
-					'count' => $iCount,
-				);
-				if (!array_key_exists($sValue1, $this->aValues1))
-				{
-					$sDisplayValue1 = $aGroupBy['grouped_by_1']->MakeValueLabel($oFilter, $sValue1, $sValue1); // default to the raw value
-					$this->aValues1[$sValue1] = $sDisplayValue1;
-				}
-				if (!array_key_exists($sValue2, $this->aValues2))
-				{
-					$sDisplayValue2 = $aGroupBy['grouped_by_2']->MakeValueLabel($oFilter, $sValue2, $sValue2); // default to the raw value
-					$this->aValues2[$sValue2] = $sDisplayValue2;
-				}
-			}
-		}
-	}
-
-	public function GetPropertiesFields(DesignerForm $oForm)
-	{
-		$oField = new DesignerTextField('class', 'Class', $this->aProperties['class']);
-		$oForm->AddField($oField);
-	}
-	
-	static public function GetInfo()
-	{
-		return array(
-			'label' => 'Test3D',
-			'icon' => 'images/dashlet-groupby2-table.png',
-			'description' => 'Group by on two dimensions',
-		);
-	}
-}
-
-class DashletHeatMap extends Dashlet
-{
-	public function __construct($sId)
-	{
-		parent::__construct($sId);
-		$this->aProperties['class'] = 'Contact';
-		$this->aProperties['title'] = 'Test';
-	}
-	
-	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
-	{
-		$sTitle = addslashes($this->aProperties['title']);
-	
-		$sId = 'chart_'.($bEditMode? 'edit_' : '').$this->sId;
-		$oPage->add('<div id="chart_'.$sId.'" class="dashlet-content"></div>');
-		$aAxisX = array(0 => 'Lun', 1 => 'Ma');
-		$aAxisY = array(0 => '12h', 1 => '13h');
-		$aData = array(
-			0 => array(1, 2),
-			1 => array(3, 4),
-		);
-		$sJSAxisX = json_encode($aAxisX);
-		$sJSAxisY = json_encode($aAxisY);
-		$sJSData = json_encode($aData);
-		$oPage->add_ready_script("$('#chart_{$sId}').heatmap_chart({chart_label: '$sTitle', values: $sJSData, axis_x: $sJSAxisX, axis_y: $sJSAxisY});");
-	}
-	
-	public function GetPropertiesFields(DesignerForm $oForm)
-	{
-		$oField = new DesignerTextField('title', 'Title', $this->aProperties['title']);
-		$oForm->AddField($oField);
-		
-		$oField = new DesignerTextField('class', 'Class', $this->aProperties['class']);
-		$oForm->AddField($oField);
-	}
-	
-	static public function GetInfo()
-	{
-		return array(
-			'label' => 'Heatmap (Raphael)',
-			'icon' => 'images/dashlet-heatmap.png',
-			'description' => 'Pure JS Heat Map Chart',
-		);
-	}
-}
+?>

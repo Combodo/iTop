@@ -37,6 +37,21 @@ class UnknownClassOqlException extends OqlNormalizeException
 	{
 		parent::__construct('Unknown class', $sInput, $oName, $aExpecting);
 	}
+
+	public function GetUserFriendlyDescription()
+	{
+		$sWrongClass = $this->GetWrongWord();
+		$sSuggest = self::FindClosestString($sWrongClass, $this->GetSuggestions());
+
+		if ($sSuggest != '')
+		{
+			return Dict::Format('UI:OQL:UnknownClassAndFix', $sWrongClass, $sSuggest);
+		}
+		else
+		{
+			return Dict::Format('UI:OQL:UnknownClassNoFix', $sWrongClass);
+		}
+	}
 }
 
 class OqlInterpreterException extends OQLException

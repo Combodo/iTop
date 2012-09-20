@@ -50,6 +50,12 @@ class OQLException extends CoreException
 		parent::__construct($sMessage, 0);
 	}
 
+	public function GetUserFriendlyDescription()
+	{
+		// Todo - translate all errors!
+		return $this->getMessage();
+	}
+
 	public function getHtmlDesc($sHighlightHtmlBegin = '<span style="font-weight: bolder">', $sHighlightHtmlEnd = '</span>')
 	{
 		$sRet = htmlentities($this->m_MyIssue.", found '".$this->m_sUnexpected."' in: ", ENT_QUOTES, 'UTF-8');

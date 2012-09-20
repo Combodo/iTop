@@ -39,11 +39,15 @@ $(function()
 		{
 			if (this.bModified)
 			{
-				this.element.find(".prop_icon span.ui-icon").css({visibility: ''});
+				this.element.addClass("itop-property-field-modified");
+				this.element.find(".prop_icon span.ui-icon-circle-check").css({visibility: ''});
+				this.element.find(".prop_icon span.ui-icon-circle-close").css({visibility: ''});
 			}
 			else
 			{
-				this.element.find(".prop_icon span.ui-icon").css({visibility: 'hidden'});				
+				this.element.removeClass("itop-property-field-modified");
+				this.element.find(".prop_icon span.ui-icon-circle-check").css({visibility: 'hidden'});
+				this.element.find(".prop_icon span.ui-icon-circle-close").css({visibility: 'hidden'});
 			}
 		},
 	
@@ -52,6 +56,7 @@ $(function()
 		_destroy: function()
 		{
 			this.element.removeClass( "itop-property-field" );
+			this.element.removeClass("itop-property-field-modified");
 		},
 		
 		// _setOptions is called with a hash of all options that are changing
@@ -211,13 +216,13 @@ function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId)
 	}
 	if (!bValid)
 	{
-		$('#v_'+sFieldId).html('<img style="vertical-align:middle;" src="'+GetAbsoluteUrlAppRoot()+'images/validation_error.png">');
+		$('#v_'+sFieldId).addClass('ui-state-error');
 		if (oFormValidation[sFormId] == undefined) oFormValidation[sFormId] = [];
 		oFormValidation[sFormId].push(sFieldId);
 	}
 	else
 	{
-		$('#v_'+sFieldId).html('');
+		$('#v_'+sFieldId).removeClass('ui-state-error');
 	}
 }
 
