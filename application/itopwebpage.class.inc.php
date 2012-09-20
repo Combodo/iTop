@@ -90,7 +90,7 @@ class iTopWebPage extends NiceWebPage
 		paneSize = GetUserPreference('menu_size', 300)
 		myLayout = $('body').layout({
 			west :	{
-						minSize: 200, size: paneSize, spacing_open: 16, spacing_close: 16, slideTrigger_open: "mouseover", hideTogglerOnSlide: true,
+						minSize: 200, size: paneSize, spacing_open: 16, spacing_close: 16, slideTrigger_open: "mouseover", hideTogglerOnSlide: true, enableCursorHotkey: false,
 						onclose_end: function(name, elt, state, options, layout)
 						{
 								if (state.isSliding == false)
@@ -138,7 +138,7 @@ class iTopWebPage extends NiceWebPage
 			myLayout.close('west');
 		}
 		
-		$('#left-pane').layout({ resizable: false, spacing_open: 0, south: { size: 94 }});
+		$('#left-pane').layout({ resizable: false, spacing_open: 0, south: { size: 94 }, enableCursorHotkey: false });
 	
 		// Accordion Menu
 		$("#accordion").accordion({ header: "h3", navigation: true, autoHeight: false, collapsible: false, icons: false }); // collapsible will be enabled once the item will be selected
