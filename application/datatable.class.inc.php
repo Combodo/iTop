@@ -51,15 +51,9 @@ class DataTable
 	public function Display(WebPage $oPage, DataTableSettings $oSettings, $bActionsMenu, $sSelectMode, $bViewLink, $aExtraParams)
 	{
 		$this->oDefaultSettings = $oSettings;
-		if ($this->sTableId != null)
-		{
-			// Identified tables can have their own specific settings
-			$oCustomSettings = DataTableSettings::GetTableSettings($this->aClassAliases, $this->sTableId);
-		}
-		else
-		{
-			$oCustomSettings = null;
-		}
+
+		// Identified tables can have their own specific settings
+		$oCustomSettings = DataTableSettings::GetTableSettings($this->aClassAliases, $this->sTableId);
 		
 		if ($oCustomSettings != null)
 		{
@@ -71,11 +65,11 @@ class DataTable
 			$oCustomSettings = $oSettings;
 		}
 
-		if ($oCustomSettings->iDefaultPageSize != -1)
+		if ($oCustomSettings->iDefaultPageSize > 0)
 		{
 			$this->oSet->SetLimit($oCustomSettings->iDefaultPageSize);
 		}
-		
+		$this->oSet->SetOrderBy($oCustomSettings->GetSortOrder());
 		
 		return $this->GetAsHTML($oPage, $oCustomSettings->iDefaultPageSize, $oCustomSettings->iDefaultPageSize, 0, $oCustomSettings->aColumns, $bActionsMenu, true, $sSelectMode, $bViewLink, $aExtraParams);
 	}
@@ -98,9 +92,9 @@ class DataTable
 		$sConfigDlg = $this->GetTableConfigDlg($oPage, $aColumns, $bViewLink, $iDefaultPageSize);
 		
 		$sHtml = "<table id=\"datatable_{$this->iListId}\" class=\"datatable\">\n";
-		$sHtml .= "<tr><td>$sObjectsCount</td><td class=\"menucontainer\">$sActionsMenu</td></tr>\n";
-		$sHtml .= "<tr><td>$sPager</td><td class=\"menucontainer\">$sToolkitMenu</td></tr>\n";
-		$sHtml .= "<tr><td class=\"datacontents\" colspan=\"2\">$sDataTable</td></tr>\n";
+		$sHtml .= "<tr><td><table style=\"width:100%;\"><tr><td>$sObjectsCount</td><td class=\"menucontainer\">$sActionsMenu</td></tr></table></td></tr>\n";
+		$sHtml .= "<tr><td><table style=\"width:100%\"><tr><td>$sPager</td><td class=\"menucontainer\">$sToolkitMenu</td></tr></table></td></tr>\n";
+		$sHtml .= "<tr><td class=\"datacontents\">$sDataTable</td></tr>\n";
 		$sHtml .= "</table>\n";
 		$oPage->add_at_the_end($sConfigDlg);
 		
@@ -163,7 +157,7 @@ class DataTable
 	protected function GetPager(WebPage $oPage, $iPageSize, $iDefaultPageSize, $iPageIndex)
 	{
 		$sHtml = '';
-		if ($iPageSize == -1) // Display all
+		if ($iPageSize < 1) // Display all
 		{
 			$sPagerStyle = 'style="display:none"'; // no limit: display the full table, so hide the "pager" UI
 		}
@@ -175,18 +169,23 @@ class DataTable
 		$sCombo = '<select class="pagesize">';
 		for($iPage = 1; $iPage < 5; $iPage++)
 		{
-			$sSelected = ($iPage == $iPageSize) ? 'selected="selected"' : '';
 			$iNbItems = $iPage * $iDefaultPageSize;
+			$sSelected = ($iNbItems == $iPageSize) ? 'selected="selected"' : '';
 			$sCombo .= "<option  $sSelected value=\"$iNbItems\">$iNbItems</option>";
 		}
-		$sSelected = (-1 == $iPageSize) ? 'selected="selected"' : '';
+		$sSelected = ($iPageSize < 1) ? 'selected="selected"' : '';
 		$sCombo .= "<option  $sSelected value=\"-1\">".Dict::S('UI:Pagination:All')."</option>";
 		$sCombo .= '</select>';
 		
 		$sPages = Dict::S('UI:Pagination:PagesLabel');
 		$sPageSizeCombo = Dict::Format('UI:Pagination:PageSize', $sCombo);
 		
-		$iNbPages = ($iPageSize == -1) ? 1 : ceil($this->iNbObjects / $iPageSize);
+		$iNbPages = ($iPageSize < 1) ? 1 : ceil($this->iNbObjects / $iPageSize);
+		if ($iNbPages == 1)
+		{
+			// No need to display the pager
+			$sPagerStyle = 'style="display:none"';
+		}
 		$aPagesToDisplay = array();
 		for($idx = 0; $idx <= min(4, $iNbPages-1); $idx++)
 		{
@@ -249,21 +248,22 @@ EOF;
 		$sHtml = "<div id=\"datatable_dlg_{$this->iListId}\" style=\"display: none;\">";
 		$sHtml .= "<form onsubmit=\"return false\">";
 		$sChecked = ($this->bUseCustomSettings) ? '' : 'checked';
-		$sHtml .= "<p><input type=\"radio\" name=\"settings\" $sChecked value=\"defaults\">&nbsp;".Dict::S('UI:UseDefaultSettings').'</p>';
+		$sHtml .= "<p><input id=\"dtbl_dlg_settings_{$this->iListId}\" type=\"radio\" name=\"settings\" $sChecked value=\"defaults\"><label for=\"dtbl_dlg_settings_{$this->iListId}\">&nbsp;".Dict::S('UI:UseDefaultSettings').'</label></p>';
 		$sHtml .= "<fieldset>";
 		$sChecked = ($this->bUseCustomSettings) ? 'checked':  '';
-		$sHtml .= "<legend class=\"transparent\"><input type=\"radio\" class=\"specific_settings\" name=\"settings\" $sChecked value=\"specific\">&nbsp;".Dict::S('UI:UseSpecificSettings')."</legend>";
+		$sHtml .= "<legend class=\"transparent\"><input id=\"dtbl_dlg_specific_{$this->iListId}\" type=\"radio\" class=\"specific_settings\" name=\"settings\" $sChecked value=\"specific\"><label for=\"dtbl_dlg_specific_{$this->iListId}\">&nbsp;".Dict::S('UI:UseSpecificSettings')."</label></legend>";
 		$sHtml .= Dict::S('UI:ColumnsAndSortOrder').'<br/><ul class="sortable_field_list" id="sfl_'.$this->iListId.'"></ul>';
 		
 		$sHtml .= '<p>'.Dict::Format('UI:Display_X_ItemsPerPage', '<input type="text" size="4" name="page_size" value="'.$iDefaultPageSize.'">').'</p>';
 		$sHtml .= "</fieldset>";
 		$sHtml .= "<fieldset>";
 		$sSaveChecked = ($this->sTableId != null) ? 'checked' : '';
+		$sCustomDisabled = ($this->sTableId == null) ? 'disabled="disabled" stay-disabled="true" ' : '';
 		$sCustomChecked = ($this->sTableId != null) ? 'checked' : '';
 		$sGenericChecked = ($this->sTableId == null) ? 'checked' : '';
-		$sHtml .= "<legend class=\"transparent\"><input type=\"checkbox\" $sSaveChecked name=\"save_settings\">&nbsp;".Dict::S('UI:UseSavetheSettings')."</legend>";
-		$sHtml .= '<p><input type="radio" name="scope" '.$sCustomChecked.' value="this_list">&nbsp;'.Dict::S('UI:OnlyForThisList').'&nbsp;&nbsp;&nbsp;&nbsp;';
-		$sHtml .= '<input type="radio" name="scope" '.$sGenericChecked.' value="defaults">&nbsp;'.Dict::S('UI:ForAllLists').'</p>';
+		$sHtml .= "<legend class=\"transparent\"><input id=\"dtbl_dlg_save_{$this->iListId}\" type=\"checkbox\" $sSaveChecked name=\"save_settings\"><label for=\"dtbl_dlg_save_{$this->iListId}\">&nbsp;".Dict::S('UI:UseSavetheSettings')."</label></legend>";
+		$sHtml .= "<p><input id=\"dtbl_dlg_this_list_{$this->iListId}\" type=\"radio\" name=\"scope\" $sCustomChecked $sCustomDisabled value=\"this_list\"><label for=\"dtbl_dlg_this_list_{$this->iListId}\">&nbsp;".Dict::S('UI:OnlyForThisList').'</label>&nbsp;&nbsp;&nbsp;&nbsp;';
+		$sHtml .= "<input id=\"dtbl_dlg_all_{$this->iListId}\" type=\"radio\" name=\"scope\" $sGenericChecked value=\"defaults\"><label for=\"dtbl_dlg_all_{$this->iListId}\">&nbsp;".Dict::S('UI:ForAllLists').'</label></p>';
 		$sHtml .= "</fieldset>";
 		$sHtml .= '<table style="width:100%"><tr><td style="text-align:center;">';
 		$sHtml .= '<button type="button" onclick="$(\'#datatable_'.$this->iListId.'\').datatable(\'onDlgCancel\'); $(\'#datatable_dlg_'.$this->iListId.'\').dialog(\'close\')">'.Dict::S('UI:Button:Cancel').'</button>';
@@ -377,7 +377,11 @@ EOF;
 	
 	public function GetHTMLTable(WebPage $oPage, $aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams)
 	{
-		$iNbPages = ($iPageSize == -1) ? 1 : ceil($this->iNbObjects / $iPageSize);
+		$iNbPages = ($iPageSize < 1) ? 1 : ceil($this->iNbObjects / $iPageSize);
+		if ($iPageSize < 1)
+		{
+			$iPageSize = -1; // convention: no pagination
+		}
 		$aAttribs = $this->GetHTMLTableConfig($aColumns, $sSelectMode, $bViewLink);
 
 		$aValues = $this->GetHTMLTableValues($aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams);
@@ -432,7 +436,7 @@ EOF;
 		}
 		if ($bViewLink)
 		{
-			$iColOffset += 1;
+//			$iColOffset += 1;
 		}
 		foreach($aRealSortOrder as $sColCode => $bAscending)
 		{
@@ -443,7 +447,7 @@ EOF;
 			}
 			else if($sColCode == 'friendlyname' && $bViewLink)
 			{
-				$aDefaultSort[] = "[".($iColOffset-1).",".($bAscending ? '0' : '1')."]";
+				$aDefaultSort[] = "[".($iColOffset).",".($bAscending ? '0' : '1')."]";
 			}
 		}
 		$sSortList = '';
@@ -491,10 +495,18 @@ EOF
 	
 	public function UpdatePager(WebPage $oPage, $iDefaultPageSize, $iStart)
 	{
-		$iPageSize = $iDefaultPageSize;
+		$iPageSize = ($iDefaultPageSize < 1) ? 1 : $iDefaultPageSize;
 		$iPageIndex = 1 + floor($iStart / $iPageSize);
 		$sHtml = $this->GetPager($oPage, $iPageSize, $iDefaultPageSize, $iPageIndex);
 		$oPage->add_ready_script("$('#pager{$this->iListId}').html('".str_replace("\n", ' ', addslashes($sHtml))."');");
+		if ($iDefaultPageSize < 1)
+		{
+			$oPage->add_ready_script("$('#pager{$this->iListId}').hide()");
+		}
+		else
+		{
+			$oPage->add_ready_script("$('#pager{$this->iListId}').show()");
+		}
 	}
 }
 
@@ -504,20 +516,21 @@ class DataTableSettings implements Serializable
 	public $sTableId;
 	public $iDefaultPageSize;
 	public $aColumns;
+
 	
 	public function __construct($aClassAliases, $sTableId = null)
 	{
 		$this->aClassAliases = $aClassAliases;
 		$this->sTableId = $sTableId;
 		$this->iDefaultPageSize = 10;
-		$this->aColumns = array();		
+		$this->aColumns = array();
 	}
 	
 	protected function Init($iDefaultPageSize, $aSortOrder, $aColumns)
 	{
 		$this->iDefaultPageSize = $iDefaultPageSize;
 		$this->aColumns = $aColumns;
-		$this->FixVisibleColumns();		
+		$this->FixVisibleColumns();
 	}
 	
 	public function serialize()
@@ -654,6 +667,7 @@ class DataTableSettings implements Serializable
 	{
 		$pref = null;
 		$oSettings = new DataTableSettings($aClassAliases, $sTableId);
+
 		if ($sTableId != null)
 		{
 			// An identified table, let's fetch its own settings (if any)
@@ -671,7 +685,26 @@ class DataTableSettings implements Serializable
 			}
 		}
 		$oSettings->unserialize($pref);
+		
 		return $oSettings;
+	}
+	
+	public function GetSortOrder()
+	{
+		$aSortOrder = array();
+		foreach($this->aColumns as $sAlias => $aColumns)
+		{
+			foreach($aColumns as $aColumn)
+			{
+				if ($aColumn['sort'] != 'none')
+				{
+					$sCode = ($aColumn['code'] == '_key_') ? 'friendlyname' : $aColumn['code'];
+					$aSortOrder[$sCode] = ($aColumn['sort']=='asc'); // true for ascending, false for descending
+				}
+			}
+			break; // TODO: For now the Set object supports only sorting on the first class of the set
+		}
+		return $aSortOrder;
 	}
 	
 	public function Save()

@@ -316,6 +316,19 @@ class DBObjectSet
 		$this->m_iLimitStart = $iLimitStart;
 	}
 
+	public function SetOrderBy($aOrderBy)
+	{
+		if ($this->m_aOrderBy != $aOrderBy)
+		{
+			$this->m_aOrderBy = $aOrderBy;
+			if ($this->m_bLoaded)
+			{
+				$this->m_bLoaded = false;
+				$this->Load();
+			}
+		}
+	}
+
 	public function GetLimitCount()
 	{
 		return $this->m_iLimitCount;

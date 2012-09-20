@@ -60,6 +60,21 @@ $(function()
 			oParams.display_key = this.options.sViewLink;
 			oParams.class_aliases = this.options.oClassAliases;
 			oParams.columns = this.options.oColumns;
+			var iSortCol = 0;
+			for(var k1 in oParams.columns) //Aliases
+			{
+				for(var k2 in oParams.columns[k1]) //Attribute codes
+				{
+					if (oParams.columns[k1][k2].sort != 'none')
+					{
+						oParams.sort_col = iSortCol;
+						oParams.sort_order = oParams.columns[k1][k2].sort;
+						break; //TODO make this more generic, Sort on just one column for now
+					}
+					iSortCol++;
+				}
+				break; //TODO: DBObjectSet supports only sorting on the first alias of the set
+			}
 			
 			var sId = new String(this.element.attr('id'));
 			var sListId = sId.replace('datatable_', '');
@@ -129,10 +144,10 @@ $(function()
 				var oColumns = $('#datatable_dlg_'+sListId).find(':itop-fieldsorter').fieldsorter('get_params');
 				var iPageSize = parseInt($('#datatable_dlg_'+sListId+' input[name=page_size]').val(), 10);
 				
-				oOptions = {oColumns: oColumns, iPageSize: iPageSize };
+				oOptions = {oColumns: oColumns, iPageSize: iPageSize, iDefaultPageSize: iPageSize };
 			}
 			this._setOptions(oOptions);
-			
+
 			// Check if we need to save the settings or not...
 			var oSaveCheck = $('#datatable_dlg_'+sListId).find('input[name=save_settings]');
 			var oSaveScope = $('#datatable_dlg_'+sListId).find('input[name=scope]:checked');
@@ -148,6 +163,7 @@ $(function()
 				}
 			}
 			this._saveDlgState();
+			
 		},
 		onDlgCancel: function()
 		{
@@ -166,7 +182,12 @@ $(function()
 			var oSaveCheck = $('#datatable_dlg_'+sListId).find('input[name=save_settings]');
 			if (oSaveCheck.attr('checked'))
 			{
-				$('#datatable_dlg_'+sListId).find('input[name=scope]').removeAttr('disabled');
+				$('#datatable_dlg_'+sListId).find('input[name=scope]').each(function() {
+					if ($(this).attr('stay-disabled') != 'true')
+					{
+						$(this).removeAttr('disabled');
+					}
+				});
 			}
 			else
 			{
@@ -183,6 +204,7 @@ $(function()
 			var sId = new String(this.element.attr('id'));
 			var sListId = sId.replace('datatable_', '');
 			$('#sfl_'+sListId).remove();
+			$('#datatable_dlg_'+sListId).remove();
 			
 			// call the original destroy method since we overwrote it
 			$.Widget.prototype.destroy.call( this );			

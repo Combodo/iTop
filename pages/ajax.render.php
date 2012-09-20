@@ -174,6 +174,7 @@ try
 			{
 				$aColumns[$sAlias][$sAttCode]['checked'] = ($aData['checked'] == 'true');
 				$aColumns[$sAlias][$sAttCode]['disabled'] = ($aData['disabled'] == 'true');
+				$aColumns[$sAlias][$sAttCode]['sort'] = ($aData['sort']);
 			}
 		}
 		
