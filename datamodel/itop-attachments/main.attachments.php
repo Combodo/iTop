@@ -263,7 +263,7 @@ EOF
 		/*
 			prepareing ajax file upload
 			url: the url of script file handling the uploaded files
-                        fileElementId: the file type of input element id and it will be the index of  $_FILES Array()
+                        fileElementId: the file type of input element id and it will be the index of  \$_FILES Array()
 			dataType: it support json, xml
 			secureuri:use secure protocol
 			success: call back function when the ajax complete
