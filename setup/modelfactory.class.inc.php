@@ -132,9 +132,7 @@ class ModelFactory
 		$this->oRoot->AppendChild($this->oClasses);
 		foreach (self::$aWellKnownParents as $sWellKnownParent)
 		{
-			$oWKClass = $this->oDOMDocument->CreateElement('class');
-			$oWKClass->setAttribute('id', $sWellKnownParent);
-			$this->oClasses->AppendChild($oWKClass);
+			$this->AddWellKnownParent($sWellKnownParent);
 		}
 		$this->oMenus = $this->oDOMDocument->CreateElement('menus');
 		$this->oRoot->AppendChild($this->oMenus);
@@ -200,9 +198,19 @@ class ModelFactory
 	
 				if (!$oTargetParentNode)
 				{
-					echo "Dumping target doc - looking for '$sPath'<br/>\n";
-					$this->oDOMDocument->firstChild->Dump();
-					throw new Exception("XML datamodel loader: could not find parent node for $oSourceNode->tagName/".$oSourceNode->getAttribute('id')." with parent id $sParentId");
+					if (substr($sParentId, 0, 1) == '/') // Convention for well known classes
+					{
+						$oTargetParentNode = $this->AddWellKnownParent(substr($sParentId, 1));
+						// Remove the leading slash character
+						$oParentNameNode = $oSourceNode->GetOptionalElement('parent')->firstChild; // Get the DOMCharacterData node
+						$oParentNameNode->data = substr($sParentId, 1);
+					}
+					else
+					{
+						echo "Dumping target doc - looking for '$sPath'<br/>\n";
+						$this->oDOMDocument->firstChild->Dump();
+						throw new Exception("XML datamodel loader: could not find parent node for $oSourceNode->tagName / ".$oSourceNode->getAttribute('id')." with parent id $sParentId");
+					}
 				}
 			}
 			else 
@@ -465,6 +473,13 @@ class ModelFactory
 				$oClassNode->SetAttribute('_created_in', $sModuleName);
 			}
 			$oParentNode->AddChildNode($this->oDOMDocument->importNode($oClassNode, true));
+			
+			if (substr($sParentClass, 0, 1) == '/') // Convention for well known parent classes
+			{
+				// Remove the leading slash character
+				$oParentNameNode = $oClassNode->GetOptionalElement('parent')->firstChild; // Get the DOMCharacterData node
+				$oParentNameNode->data = substr($sParentClass, 1);
+			}
 		}
 	}
 	
@@ -601,7 +616,15 @@ EOF
 		$oClassNode = $this->GetNodes("/itop_design/classes//class[@id='$sClassName']")->item(0);
 		if ($oClassNode == null)
 		{
-			return null;
+			if (substr($sClassName, 0, 1) == '/') // Convention: this class is a "well known" parent
+			{
+				return $this->AddWellKnownParent(substr($sClassName, 1));
+			}
+			else
+			{
+				return null;
+			}
+			
 		}
 		elseif ($bFlattenLayers)
 		{
@@ -612,6 +635,14 @@ EOF
 			}
 		}
 		return $oClassNode;
+	}
+	
+	public function AddWellKnownParent($sWellKnownParent)
+	{
+		$oWKClass = $this->oDOMDocument->CreateElement('class');
+		$oWKClass->setAttribute('id', $sWellKnownParent);
+		$this->oClasses->AppendChild($oWKClass);
+		return $oWKClass;	
 	}
 	
 	public function GetChildClasses($oClassNode, $bFlattenLayers = true)
