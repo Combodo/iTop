@@ -71,7 +71,14 @@ class DataTable
 		}
 		$this->oSet->SetOrderBy($oCustomSettings->GetSortOrder());
 		
-		return $this->GetAsHTML($oPage, $oCustomSettings->iDefaultPageSize, $oCustomSettings->iDefaultPageSize, 0, $oCustomSettings->aColumns, $bActionsMenu, true, $sSelectMode, $bViewLink, $aExtraParams);
+		$bToolkitMenu = true;
+		if (UserRights::IsPortalUser())
+		{
+			// Portal users have a limited access to data, for now they can only see what's configured for them
+			$bToolkitMenu = false;
+		}
+		
+		return $this->GetAsHTML($oPage, $oCustomSettings->iDefaultPageSize, $oCustomSettings->iDefaultPageSize, 0, $oCustomSettings->aColumns, $bActionsMenu, $bToolkitMenu, $sSelectMode, $bViewLink, $aExtraParams);
 	}
 	
 	public function GetAsHTML(WebPage $oPage, $iPageSize, $iDefaultPageSize, $iPageIndex, $aColumns, $bActionsMenu, $bToolkitMenu, $sSelectMode, $bViewLink, $aExtraParams)
