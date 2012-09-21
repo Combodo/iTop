@@ -20,11 +20,30 @@ $(function()
 			this.element
 			.addClass('itop-dashlet')
 			.bind('click.itop-dashlet', function(event) { me._on_click(event); } );
-			
-			this.closeBox = $('<div class="close-box"/>');
-			this.closeBox.click(function() { me._remove_dashlet(); }).hide().prependTo(this.element);
+
+			this._update();
 		},
 	
+		// to call when the contents are changed
+		_update: function()
+		{
+			var me = this; 
+
+			this.closeBox = $('<div class="close-box"/>');
+			this.closeBox
+				.click(function() { me._remove_dashlet(); })
+				.prependTo(this.element);
+			if (this.element.hasClass('dashlet-selected'))
+			{
+				this.closeBox.show();
+			}
+			else
+			{
+				this.closeBox.hide();
+			}
+
+		},
+
 		// called when created, and later when changing options
 		_refresh: function()
 		{
@@ -47,6 +66,7 @@ $(function()
 		{
 			// in 1.9 would use _superApply
 			$.Widget.prototype._setOptions.apply( this, arguments );
+			this._update();
 		},
 		// _setOption is called for each individual option that is changing
 		_setOption: function( key, value )

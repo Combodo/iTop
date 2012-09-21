@@ -938,13 +938,13 @@ class DashletHeaderDynamic extends Dashlet
 		catch(Exception $e)
 		{
 			$oField = new DesignerTextField('group_by', Dict::S('UI:DashletHeaderDynamic:Prop-GroupBy'), $this->aProperties['group_by']);
-			$oField->SetMandatory();
+			$oField->SetReadOnly();
 		}
 		$oForm->AddField($oField);
 
 		$oField = new DesignerComboField('values', Dict::S('UI:DashletHeaderDynamic:Prop-Values'), $this->aProperties['values']);
 		$oField->MultipleSelection(true);
-		if (MetaModel::IsValidAttCode($sClass, $this->aProperties['group_by']))
+		if (isset($sClass) && MetaModel::IsValidAttCode($sClass, $this->aProperties['group_by']))
 		{
 			$aValues = MetaModel::GetAllowedValues_att($sClass, $this->aProperties['group_by']);
 			$oField->SetAllowedValues($aValues);

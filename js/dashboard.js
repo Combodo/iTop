@@ -24,10 +24,13 @@ $(function()
 			var me = this; 
 
 			this.element
-			.addClass('itop-dashboard');
+			.addClass('itop-dashboard')
+			.bind('mark_as_modified.itop-dashboard', function(){me.mark_as_modified();} );
 
 			this.ajax_div = $('<div></div>').appendTo(this.element);
 			this._make_draggable();
+			this.bModified = false;
+			
 		},
 	
 		// called when created, and later when changing options
@@ -95,6 +98,32 @@ $(function()
 			oState.title = this.options.title;
 			
 			return oState;
+		},
+		// Modified means: at least one change has been applied
+		mark_as_modified: function()
+		{
+			this.bModified = true;
+		},
+		is_modified: function()
+		{
+			return this.bModified;
+		},
+		// Dirty means: at least one change has not been committed yet
+		is_dirty: function()
+		{
+			if ($('#dashboard_editor .ui-layout-east .itop-property-field-modified').size() > 0)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		},
+		// Force the changes of all the properties being "dirty"
+		apply_changes: function()
+		{
+			$('#dashboard_editor .ui-layout-east .itop-property-field-modified').trigger('apply_changes');
 		},
 		save: function()
 		{

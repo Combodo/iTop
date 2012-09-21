@@ -1202,8 +1202,8 @@ td.prop_value {
 tr.itop-property-field-modified td {
 	background: #fbb;
 }
-tr.itop-property-field-modified td.prop_value.hover {
-	background: #fbb;
+tr.itop-property-field-modified td.hover {
+	background: #f99;
 }
 td.prop_value textarea, td.prop_value input[type=text]{
 	width: 98%;

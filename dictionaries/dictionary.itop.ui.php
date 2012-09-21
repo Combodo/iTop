@@ -960,6 +960,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:FavoriteOtherSettings' => 'Other Settings',
 	'UI:Favorites:Default_X_ItemsPerPage' => 'Default length for lists:  %1$s items per page',
 	'UI:NavigateAwayConfirmationMessage' => 'Any modification will be discarded.',
+	'UI:CancelConfirmationMessage' => 'You will loose your changes. Continue anyway?',
+	'UI:AutoApplyConfirmationMessage' => 'Some changes have not been applied yet. Do you want itop to take them into account?',
 	'UI:Create_Class_InState' => 'Create the %1$s in state: ',
 	'UI:OrderByHint_Values' => 'Sort order: %1$s',
 	'UI:Menu:AddToDashboard' => 'Add To Dashboard...',

@@ -203,7 +203,7 @@ abstract class Dashboard
 		$oField = new DesignerLongTextField('dashboard_title', Dict::S('UI:DashboardEdit:DashboardTitle'), $this->sTitle);
 		$oForm->AddField($oField);
 		$this->SetFormParams($oForm);
-		$oForm->RenderAsPropertySheet($oPage);	
+		$oForm->RenderAsPropertySheet($oPage, false, ':itop-dashboard');	
 		
 		$oPage->add('</div>');
 		$oPage->add_ready_script(
@@ -213,7 +213,7 @@ abstract class Dashboard
 		var sLayoutClass = $(this).val();
 		$(':itop-dashboard').dashboard('option', {layout_class: sLayoutClass});
 	} );
-	$('#row_attr_dashboard_title').property_field('option', {'do_apply': function() {
+	$('#row_attr_dashboard_title').property_field('option', {parent_selector: ':itop-dashboard', auto_apply: false, 'do_apply': function() {
 			var sTitle = $('#attr_dashboard_title').val();
 			$(':itop-dashboard').dashboard('option', {title: sTitle});
 			return true;
@@ -272,7 +272,7 @@ EOF
 					$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$sId.'" style="display:none">');
 					$oForm = $oDashlet->GetForm();
 					$this->SetFormParams($oForm);
-					$oForm->RenderAsPropertySheet($oPage);		
+					$oForm->RenderAsPropertySheet($oPage, false, ':itop-dashboard');		
 					$oPage->add('</div>');
 				}
 			}
@@ -430,9 +430,15 @@ EOF
 		$sLayoutClass = addslashes($this->sLayoutClass);
 		$sTitle = addslashes($this->sTitle);
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
+
+		$sExitConfirmationMessage = addslashes(Dict::S('UI:NavigateAwayConfirmationMessage'));
+		$sCancelConfirmationMessage = addslashes(Dict::S('UI:CancelConfirmationMessage'));
+		$sAutoApplyConfirmationMessage = addslashes(Dict::S('UI:AutoApplyConfirmationMessage'));
 		
 		$oPage->add_ready_script(
 <<<EOF
+window.bLeavingOnUserAction = false;
+
 $('#dashboard_editor').dialog({
 	height: $('body').height() - 50,
 	width: $('body').width() - 50,
@@ -440,9 +446,34 @@ $('#dashboard_editor').dialog({
 	title: '$sDialogTitle',
 	buttons: [
 	{ text: "$sOkButtonLabel", click: function() {
-		$('#dashboard_editor .ui-layout-center').dashboard('save'); /* $(this).dialog( "close" ); $(this).remove(); */
+		var oDashboard = $(':itop-dashboard').data('dashboard');
+		if (oDashboard.is_dirty())
+		{
+			if (!confirm('$sAutoApplyConfirmationMessage'))
+			{
+				return;
+			}
+			else
+			{
+				oDashboard.apply_changes();
+			}
+		}
+		window.bLeavingOnUserAction = true;
+		oDashboard.save();
 	} },
-	{ text: "$sCancelButtonLabel", click: function() { $(this).dialog( "close" ); $(this).remove(); } },
+	{ text: "$sCancelButtonLabel", click: function() {
+		var oDashboard = $(':itop-dashboard').data('dashboard');
+		if (oDashboard.is_modified())
+		{
+			if (!confirm('$sCancelConfirmationMessage'))
+			{
+				return;
+			}
+		}
+		window.bLeavingOnUserAction = true;
+		$(this).dialog( "close" );
+		$(this).remove();
+	} },
 	],
 	close: function() { $(this).remove(); }
 });
@@ -497,6 +528,25 @@ $('#dashboard_editor').layout({
 		},
 	}
 });
+
+window.onbeforeunload = function() {
+	if (!window.bLeavingOnUserAction)
+	{
+		var oDashboard = $(':itop-dashboard').data('dashboard');
+		if (oDashboard)
+		{
+			if (oDashboard.is_dirty())
+			{
+				return '$sExitConfirmationMessage';
+			}	
+			if (oDashboard.is_modified())
+			{
+				return '$sExitConfirmationMessage';
+			}
+		}	
+	}
+	// return nothing ! safer for IE
+};
 EOF
 		);
 		$oPage->add_ready_script("");

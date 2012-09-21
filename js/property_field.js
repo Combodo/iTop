@@ -8,21 +8,27 @@ $(function()
 		// default options
 		options:
 		{
+			parent_selector: null,
 			field_id: '',
 			submit_to: 'index.php',
 			submit_parameters: {operation: 'async_action'},
 			do_apply: null,
-			do_cancel: null
+			do_cancel: null,
+			auto_apply: false
 			
 		},
 	
 		// the constructor
 		_create: function()
 		{	
-			this.element.addClass( "itop-property-field" );
+			var me = this;
+
+			this.element
+				.addClass( "itop-property-field" )
+				.bind('apply_changes.itop-property-field', function(){me._do_apply();} );
+				
 			this.bModified = false;
 			
-			var me = this;
 			if (this.options.field_id != '')
 			{
 				$('#'+this.options.field_id).bind('change.itop-property-field', function() { me._on_change(); });
@@ -80,6 +86,10 @@ $(function()
 			if (new_value != this.value)
 			{
 				this.bModified = true;
+				if (this.options.auto_apply)
+				{
+					this._do_apply();
+				}
 			}
 			else
 			{
@@ -105,6 +115,10 @@ $(function()
 		},
 		_do_apply: function()
 		{
+			if (this.options.parent_selector)
+			{
+				$(this.options.parent_selector).trigger('mark_as_modified');
+			}
 			if (this.options.do_apply)
 			{
 				// specific behavior...
@@ -214,15 +228,18 @@ function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId)
 		re = new RegExp(sPattern);
 		bValid = re.test(currentVal);
 	}
+	if (oFormValidation[sFormId] == undefined) oFormValidation[sFormId] = [];
 	if (!bValid)
 	{
 		$('#v_'+sFieldId).addClass('ui-state-error');
-		if (oFormValidation[sFormId] == undefined) oFormValidation[sFormId] = [];
 		oFormValidation[sFormId].push(sFieldId);
 	}
 	else
 	{
 		$('#v_'+sFieldId).removeClass('ui-state-error');
+		// Remove the element from the array 
+		iFieldIdPos = oFormValidation[sFormId].indexOf(sFieldId);
+		oFormValidation[sFormId].splice(iFieldIdPos, 1);
 	}
 }
 

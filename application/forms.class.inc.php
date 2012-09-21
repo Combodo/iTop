@@ -144,7 +144,7 @@ class DesignerForm
 	}
 	
 	
-	public function RenderAsPropertySheet($oP, $bReturnHTML = false)
+	public function RenderAsPropertySheet($oP, $bReturnHTML = false, $sNotifyParentSelector = null)
 	{
 		$sReturn = '';		
 		$sActionUrl = addslashes($this->sSubmitTo);
@@ -183,9 +183,11 @@ class DesignerForm
 					{
 						$sReturn .= $sValidationFields;
 					}
+					$sNotifyParentSelectorJS = is_null($sNotifyParentSelector) ? 'null' : "'".addslashes($sNotifyParentSelector)."'";
+					$sAutoApply = $oField->IsAutoApply() ? 'true' : 'false';
 					$this->AddReadyScript(
 <<<EOF
-$('#row_$sFieldId').property_field({field_id: '$sFieldId', value: '', submit_to: '$sActionUrl', submit_parameters: $sJSSubmitParams });
+$('#row_$sFieldId').property_field({parent_selector: $sNotifyParentSelectorJS, field_id: '$sFieldId', auto_apply: $sAutoApply, value: '', submit_to: '$sActionUrl', submit_parameters: $sJSSubmitParams });
 EOF
 					);
 				}
@@ -482,6 +484,7 @@ class DesignerFormField
 	protected $oForm;
 	protected $bMandatory;
 	protected $bReadOnly;
+	protected $bAutoApply;
 	
 	public function __construct($sCode, $sLabel, $defaultValue)
 	{
@@ -490,6 +493,7 @@ class DesignerFormField
 		$this->defaultValue = $defaultValue;
 		$this->bMandatory = false;
 		$this->bReadOnly = false;
+		$this->bAutoApply = false;
 	}
 	
 	public function GetCode()
@@ -517,7 +521,17 @@ class DesignerFormField
 	{
 		return ($this->oForm->IsReadOnly() || $this->bReadOnly);
 	}
-	
+
+	public function SetAutoApply($bAutoApply)
+	{
+		$this->bAutoApply = $bAutoApply;
+	}
+
+	public function IsAutoApply()
+	{
+		return $this->bAutoApply;
+	}
+
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
@@ -663,6 +677,8 @@ class DesignerComboField extends DesignerFormField
 		$this->aAllowedValues = array();
 		$this->bMultipleSelection = false;
 		$this->bOtherChoices = false;
+
+		$this->bAutoApply = true;
 	}
 	
 	public function SetAllowedValues($aAllowedValues)
@@ -740,6 +756,7 @@ class DesignerBooleanField extends DesignerFormField
 	public function __construct($sCode, $sLabel = '', $defaultValue = '')
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
+		$this->bAutoApply = true;
 	}
 	
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
@@ -812,6 +829,7 @@ class DesignerIconSelectionField extends DesignerFormField
 	public function __construct($sCode, $sLabel = '', $defaultValue = '')
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
+		$this->bAutoApply = true;
 	}
 	
 	public function SetAllowedValues($aAllowedValues)

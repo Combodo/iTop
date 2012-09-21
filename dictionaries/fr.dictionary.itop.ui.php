@@ -804,6 +804,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:FavoriteOtherSettings' => 'Autres réglages',
 	'UI:Favorites:Default_X_ItemsPerPage' => 'Longueur par défaut des listes:  %1$s éléments par page',
 	'UI:NavigateAwayConfirmationMessage' => 'Toute modification sera perdue.',
+	'UI:CancelConfirmationMessage' => 'Vous allez perdre vos modifications. Voulez-vous continuer ?',
+	'UI:AutoApplyConfirmationMessage' => 'Des modifications n\'ont pas encore été prises en compte. Voulez-vous qu\'elles soient prises en compte automatiquement ?',
 	'UI:Create_Class_InState' => 'Créer l\'objet %1$s dans l\'état: ',
 	'UI:OrderByHint_Values' => 'Ordre de tri: %1$s',
 	'UI:Menu:AddToDashboard' => 'Ajouter au Tableau de Bord...',
