@@ -91,10 +91,14 @@ class DataTable
 		$sDataTable = $this->GetHTMLTable($oPage, $aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams);
 		$sConfigDlg = $this->GetTableConfigDlg($oPage, $aColumns, $bViewLink, $iDefaultPageSize);
 		
-		$sHtml = "<table id=\"datatable_{$this->iListId}\" class=\"datatable\">\n";
-		$sHtml .= "<tr><td><table style=\"width:100%;\"><tr><td>$sObjectsCount</td><td class=\"menucontainer\">$sActionsMenu</td></tr></table></td></tr>\n";
-		$sHtml .= "<tr><td><table style=\"width:100%\"><tr><td>$sPager</td><td class=\"menucontainer\">$sToolkitMenu</td></tr></table></td></tr>\n";
-		$sHtml .= "<tr><td class=\"datacontents\">$sDataTable</td></tr>\n";
+		$sHtml = "<table id=\"datatable_{$this->iListId}\" class=\"datatable\">";
+		$sHtml .= "<tr><td>";
+		$sHtml .= "<table style=\"width:100%;\">";
+		$sHtml .= "<tr><td class=\"pagination_container\">$sObjectsCount</td><td class=\"menucontainer\">$sToolkitMenu $sActionsMenu</td></tr>";
+		$sHtml .= "<tr>$sPager</tr>";
+		$sHtml .= "</table>";
+		$sHtml .= "</td></tr>";
+		$sHtml .= "<tr><td class=\"datacontents\">$sDataTable</td></tr>";
 		$sHtml .= "</table>\n";
 		$oPage->add_at_the_end($sConfigDlg);
 		
@@ -146,11 +150,11 @@ class DataTable
 	{
 		if (($sSelectMode == 'single') || ($sSelectMode == 'multiple'))
 		{
-			$sHtml = Dict::Format('UI:Pagination:HeaderSelection', '<span id="total">'.$this->iNbObjects.'</span>', '<span class="selectedCount">0</span>');
+			$sHtml = '<div class="pagination_objcount">'.Dict::Format('UI:Pagination:HeaderSelection', '<span id="total">'.$this->iNbObjects.'</span>', '<span class="selectedCount">0</span>').'</div>';
 		}
 		else
 		{
-			$sHtml = Dict::Format('UI:Pagination:HeaderNoSelection', '<span id="total">'.$this->iNbObjects.'</span>');
+			$sHtml = '<div class="pagination_objcount">'.Dict::Format('UI:Pagination:HeaderNoSelection', '<span id="total">'.$this->iNbObjects.'</span>').'</div>';
 		}
 		return $sHtml;		
 	}
@@ -210,19 +214,20 @@ class DataTable
 		$sSelectionMode = ($iNbPages == 1) ? '' : 'positive';
 		$sHtml =
 <<<EOF
-<div id="pager{$this->iListId}" class="pager" $sPagerStyle>
-		<p><table class="pagination"><tr><td>$sPages</td><td><img src="../images/first.png" class="first"/></td>
+		<td $sPagerStyle colspan="2">
+		<table id="pager{$this->iListId}" class="pager"><tr>
+		<td>$sPages</td>
+		<td><img src="../images/first.png" class="first"/></td>
 		<td><img src="../images/prev.png" class="prev"/></td>
 		<td><span id="index">$sPagesLinks</span></td>
 		<td><img src="../images/next.png" class="next"/></td>
 		<td><img src="../images/last.png" class="last"/></td>
 		<td>$sPageSizeCombo</td>
-		<td><span id="loading">&nbsp;</span></td>
+		<td><span id="loading">&nbsp;</span><input type="hidden" name="selectionMode" value="$sSelectionMode"></input>
+		</td>
 		</tr>
 		</table>
-		
-		<input type="hidden" name="selectionMode" value="$sSelectionMode"></input>
-</div>
+		</td>
 EOF;
 		return $sHtml;
 	}
@@ -238,7 +243,7 @@ EOF;
 	protected function GetToolkitMenu(WebPage $oPage, $aExtraParams)
 	{
 		$sMenuTitle = Dict::S('UI:ConfigureThisList');
-		$sHtml = '<div class="itop_popup" id="tk_'.$this->iListId.'"><ul><li><img src="../images/toolkit_menu.png"><ul><li><a  onclick="$(\'#datatable_dlg_'.$this->iListId.'\').dialog(\'open\');">'.$sMenuTitle.'</a></li></li></ul></div>';
+		$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$this->iListId.'"><ul><li><img src="../images/toolkit_menu.png"><ul><li><a  onclick="$(\'#datatable_dlg_'.$this->iListId.'\').dialog(\'open\');">'.$sMenuTitle.'</a></li></li></ul></div>';
 		//$oPage->add_ready_script("$('#tk_{$this->iListId} > ul').popupmenu();");
 		return $sHtml;
 	}
@@ -501,11 +506,11 @@ EOF
 		$oPage->add_ready_script("$('#pager{$this->iListId}').html('".str_replace("\n", ' ', addslashes($sHtml))."');");
 		if ($iDefaultPageSize < 1)
 		{
-			$oPage->add_ready_script("$('#pager{$this->iListId}').hide()");
+			$oPage->add_ready_script("$('#pager{$this->iListId}').parent().hide()");
 		}
 		else
 		{
-			$oPage->add_ready_script("$('#pager{$this->iListId}').show()");
+			$oPage->add_ready_script("$('#pager{$this->iListId}').parent().show()");
 		}
 	}
 }
@@ -735,7 +740,8 @@ class DataTableSettings implements Serializable
 		{
 			// Turn the key into a suitable PCRE pattern
 			$sKey = $this->GetPrefsKey(null);
-			$sPattern = '!^'.str_replace(array('*'), array('.*'), $sKey).'$!';
+			$sPattern = str_replace(array('|'), array('\\|'), $sKey); // escape the | character
+			$sPattern = '#^'.str_replace(array('*'), array('.*'), $sPattern).'$#'; // Don't use slash as the delimiter since it's used in our key to delimit aliases
 			appUserPreferences::UnsetPref($sPattern, true);
 		}
 		else

@@ -151,7 +151,7 @@ function sprintf(format, etc) {
 				{
 					s = table.config.totalRows - ex;
 				}
-				pager.closest('table').find('.selectedCount').text(s);
+				pager.parent().closest('table').find('.selectedCount').text(s);
 				if (table.config.cssCount != '')
 				{
 					$(table.config.cssCount).val(s);

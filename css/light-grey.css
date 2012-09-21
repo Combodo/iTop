@@ -400,6 +400,10 @@ a.CollapsibleLabel.open,  td a.CollapsibleLabel.open {
 	background-color:#f6f6f1;
 	padding:5px;
 }
+/* move up a header immediately following a display block (i.e. "actions" menu) */
+.display_block + .page_header {
+	margin-top: -8px;
+}
 
 .notreeview li { background: url(../images/tv-item.gif) 0 0 no-repeat; }
 .notreeview .collapsable { background-image: url(../images/tv-collapsable.gif); }
@@ -432,6 +436,7 @@ div.actions_menu > ul {
 	padding-left: 5px;
 	background: url(../images/actions_left.png) no-repeat top left;
 	cursor: pointer;
+	margin: 0;
 }
 
 div.actions_menu > ul > li {
@@ -446,12 +451,14 @@ div.actions_menu > ul > li {
 	font-weight: bold;
 	color: #fff;
 	vertical-align: middle;
+	margin: 0;
 }
 #logOffBtn > ul > li {
 	list-style: none;
 	vertical-align: middle;
 	margin: 0;
 	padding: 0;
+	cursor: pointer;
 }
 #logOffBtn > ul {
 	list-style: none;
@@ -482,6 +489,14 @@ div.actions_menu > ul > li {
 	white-space: nowrap;
 	background: #fff;
 }
+.itop_popup ul {
+	padding-left: 0;
+}
+
+.menucontainer div.toolkit_menu {
+	margin-left: 10px;
+}
+
 .itop_popup li a:hover, #logOffBtn li a:hover {
 	background: #1A4473;
 }
@@ -515,6 +530,9 @@ div.actions_menu > ul > li {
 	background: #D81515;
 	color: #fff;
 	font-weight: bold;
+}
+.itop_popup > ul {
+	margin: 0;
 }
 hr.menu-separator {
 	border: none 0;
@@ -1081,8 +1099,11 @@ table.pagination {
 table.pagination tr td {
 	padding: 3px;
 }
+.pagination_container {
+	padding-left: 3px;
+}
 .pager {
-	float:left;
+	display:inline-block;
 }
 .pager p {
 	margin-top: 0;
@@ -1111,7 +1132,7 @@ div.actions_button {
 	float:right;
 	background: url("../images/actions_left.png") no-repeat scroll left top transparent;
 	padding-left: 5px;
-	margin-top: 13px;
+	margin-top: 0;
 	margin-right: 10px;
 	height:17px;
 	vertical-align: middle;
@@ -1227,7 +1248,7 @@ td.prop_icon {
 }
 .main_header {
     background-color: #F1F1F6;
-    height: 60px;
+    min-height: 60px;
     width: 100%;
 }
 .main_header h1 {
@@ -1243,10 +1264,11 @@ td.prop_icon {
 	margin-right: 10px;
 	float:left;
 }
-a.summary {
+a.summary,  a.summary:hover {
     background: none repeat scroll 0 0 transparent;
     color: #666666;
     text-decoration: none;
+    padding-left: 0;
 }
 .summary-details td {
     background: none repeat scroll 0 0 transparent;
@@ -1259,6 +1281,7 @@ a.summary {
 	vertical-align: middle;
 	margin: 0;
 	padding: 0;
+	cursor: pointer;
 }
 
 #DashboardMenu > ul {
