@@ -380,6 +380,7 @@ abstract class MetaModel
 				return self::GetClassIcon($sParentClass, $bImgTag, $sMoreStyles);
 			}
 		}
+		$sIcon = str_replace('/modules/', '/env-'.utils::GetCurrentEnvironment().'/', $sIcon); // Support of pre-2.0 modules
 		if ($bImgTag && ($sIcon != ''))
 		{
 			$sIcon = "<img src=\"$sIcon\" style=\"vertical-align:middle;$sMoreStyles\"/>";
