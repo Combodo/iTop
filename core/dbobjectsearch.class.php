@@ -986,7 +986,7 @@ class DBObjectSearch
 						break;
 						
 					}
-					$sRes .= ' JOIN '.$oFilter->GetClass().' AS '.$oFilter->GetClassAlias().' ON '.$this->GetClassAlias().'.'.$sExtKey.$sOperator.$oFilter->GetClassAlias().'.id';
+					$sRes .= ' JOIN '.$oFilter->GetFirstJoinedClass().' AS '.$oFilter->GetFirstJoinedClassAlias().' ON '.$this->GetFirstJoinedClassAlias().'.'.$sExtKey.$sOperator.$oFilter->GetFirstJoinedClassAlias().'.id';
 					$sRes .= $oFilter->ToOQL_Joins();				
 				}
 			}
@@ -995,7 +995,7 @@ class DBObjectSearch
 		{
 			foreach($aReferences as $sForeignExtKeyAttCode=>$oForeignFilter)
 			{
-				$sRes .= ' JOIN '.$oForeignFilter->GetClass().' AS '.$oForeignFilter->GetClassAlias().' ON '.$oForeignFilter->GetClassAlias().'.'.$sForeignExtKeyAttCode.' = '.$this->GetClassAlias().'.id';
+				$sRes .= ' JOIN '.$oForeignFilter->GetFirstJoinedClass().' AS '.$oForeignFilter->GetFirstJoinedClassAlias().' ON '.$oForeignFilter->GetFirstJoinedClassAlias().'.'.$sForeignExtKeyAttCode.' = '.$this->GetFirstJoinedClassAlias().'.id';
 				$sRes .= $oForeignFilter->ToOQL_Joins();
 			}
 		}
