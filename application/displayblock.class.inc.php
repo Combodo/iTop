@@ -909,7 +909,7 @@ EOF
 						$oBarValue->on_click("ofc_drill_down_$sId");
 						$aData[] = $oBarValue;
 						if ($iCount > $maxValue) $maxValue = $iCount;
-						$aChartLabels[] = $aLabels[$iRow];
+						$aChartLabels[] = html_entity_decode($aLabels[$iRow], ENT_QUOTES, 'UTF-8');
 					}
 					$oYAxis = new y_axis();
 					$aMagicValues = array(1,2,5,10);
@@ -984,7 +984,8 @@ EOF
 					$aData = array();
 					foreach($aGroupBy as $iRow => $iCount)
 					{
-						$PieValue = new pie_value($iCount, $aLabels[$iRow]); //@@ BUG: not passed via ajax !!!
+						$sFlashLabel = html_entity_decode($aLabels[$iRow], ENT_QUOTES, 'UTF-8');
+						$PieValue = new pie_value($iCount, $sFlashLabel); //@@ BUG: not passed via ajax !!!
 						$PieValue->on_click("ofc_drill_down_$sId");
 						$aData[] = $PieValue;
 					}
@@ -995,7 +996,16 @@ EOF
 			}				
 			if (isset($aExtraParams['chart_title']))
 			{
-				$oTitle = new title( Dict::S($aExtraParams['chart_title']) );
+				// The title has been given in an url, and urlencoded...
+				// and urlencode transforms utf-8 into something similar to ISO-8859-1
+				// Example: é (C3A9 becomes %E9)
+				// Let's transform back into utf-8 !
+				$sTitle = iconv("ISO-8859-1", "UTF-8//IGNORE", $aExtraParams['chart_title']);
+
+				// If the title is a dictionnary entry, fetch it
+				$sTitle = Dict::S($sTitle);
+
+				$oTitle = new title($sTitle);
 				$oChart->set_title( $oTitle );
 			}
 			$oChart->set_bg_colour('#FFFFFF');
