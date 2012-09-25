@@ -7,7 +7,7 @@
   <dashlet id="1" xsi:type="DashletGroupByBars">
    <title>UI-RequestManagementOverview-RequestByService</title>
    <query>SELECT UserRequest</query>
-   <group_by>service_name</group_by>
+   <group_by>service_id</group_by>
    <style>bars</style>
   </dashlet>
  </cell>

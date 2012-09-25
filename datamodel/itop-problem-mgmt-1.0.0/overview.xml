@@ -7,12 +7,12 @@
       <dashlet id="1" xsi:type="DashletGroupByBars">
         <title>UI-ProblemManagementOverview-ProblemByService</title>
         <query>SELECT Problem</query>
-        <group_by>service_name</group_by>
+        <group_by>service_id</group_by>
         <style>bars</style>
       </dashlet>
     </cell>
     <cell>
-      <dashlet id="1" xsi:type="DashletGroupByPie">
+      <dashlet id="2" xsi:type="DashletGroupByPie">
         <title>UI-ProblemManagementOverview-ProblemByPriority</title>
         <query>SELECT Problem</query>
         <group_by>priority</group_by>

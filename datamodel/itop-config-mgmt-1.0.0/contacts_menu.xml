@@ -23,7 +23,7 @@
       <dashlet id="4" xsi:type="DashletGroupByPie">
         <title>UI-ContactsMenu-ContactsByLocation</title>
         <query>SELECT Contact</query>
-        <group_by>location_name</group_by>
+        <group_by>location_id</group_by>
         <style>pie</style>
       </dashlet>
     </cell>
