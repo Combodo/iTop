@@ -202,7 +202,7 @@ EOF
 	
 	protected function MakeID($sName)
 	{
-		return str_replace(array('[', ']'), '_', $sName);
+		return str_replace(array('[', ']', '-'), '_', $sName);
 	}
 
 	/**
