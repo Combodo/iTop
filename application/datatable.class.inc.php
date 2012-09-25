@@ -457,6 +457,11 @@ EOF;
 			{
 				$aDefaultSort[] = "[".($iColOffset+$iPos).",".($bAscending ? '0' : '1')."]";
 			}
+			else if (($iPos = array_search(preg_replace('/_friendlyname$/', '', $sColCode), $aUniqueOrderedList)) !== false)
+			{
+				// if sorted on the friendly name of an external key, then consider it sorted on the column that shows the links
+				$aDefaultSort[] = "[".($iColOffset+$iPos).",".($bAscending ? '0' : '1')."]";
+			}
 			else if($sColCode == 'friendlyname' && $bViewLink)
 			{
 				$aDefaultSort[] = "[".($iColOffset).",".($bAscending ? '0' : '1')."]";
@@ -474,7 +479,6 @@ var oTable = $('#{$this->iListId} table.listResults');
 oTable.tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList'] $sSortList} ).tablesorterPager({container: $('#pager{$this->iListId}'), totalRows:$iCount, size: $iPageSize, filter: '$sOQL', extra_params: '$sExtraParams', select_mode: '$sSelectModeJS', displayKey: $sDisplayKey, columns: $sJSColumns, class_aliases: $sJSClassAliases $sCssCount});
 EOF
 		);
-		
 		//if ($iNbPages == 1)
 		if (false)
 		{
@@ -663,14 +667,20 @@ class DataTableSettings implements Serializable
 			}
 			$aList = MetaModel::ListAttributeDefs($sClass);
 			
-			// Add the other (non visible ones)
+			// Add the other (non visible ones), sorted in alphabetical order
+			$aTempData = array();
 			foreach($aList as $sAttCode => $oAttDef)
 			{
 				if ( (!array_key_exists($sAttCode, $this->aColumns[$sAlias])) && (!$oAttDef instanceof AttributeLinkSet))
 				{
 					$aFieldData = $this->GetFieldData($sAlias, $sAttCode, $oAttDef, false /* bChecked */, 'none');
-					if ($aFieldData) $this->aColumns[$sAlias][$sAttCode] = $aFieldData;
+					if ($aFieldData) $aTempData[$aFieldData['label']] = $aFieldData;
 				}
+			}
+			ksort($aTempData);
+			foreach($aTempData as $sLabel => $aFieldData)
+			{
+				$this->aColumns[$sAlias][$aFieldData['code']] = $aFieldData;
 			}
 		}		
 	}
