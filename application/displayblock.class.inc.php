@@ -254,7 +254,7 @@ class DisplayBlock
 	
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
-		if (empty($aExtraParams['currentId']))
+		if (!isset($aExtraParams['currentId']))
 		{
 			$sId = $oPage->GetUniqueId(); // Works only if the page is not an Ajax one !
 		}
