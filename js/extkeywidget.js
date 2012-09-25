@@ -34,7 +34,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		// make sure that the form is clean
 		$('#'+this.id+'_btnRemove').attr('disabled','disabled');
 		$('#'+this.id+'_linksToRemove').val('');
-	}
+	};
 	
 	this.StopPendingRequest = function()
 	{
@@ -43,7 +43,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			me.ajax_request.abort();
 			me.ajax_request = null;
 		}
-	}
+	};
 	
 	this.Search = function()
 	{
@@ -67,7 +67,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				   sTargetClass: me.sTargetClass,
 				   bSearchMode: me.bSearchMode,
 				   operation: 'objectSearchForm'
-				 }
+				 };
 	
 		if (me.oWizardHelper == null)
 		{
@@ -97,7 +97,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			},
 			'html'
 		);
-	}
+	};
 	
 	this.UpdateSizes = function()
 	{
@@ -113,15 +113,20 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		}
 		var searchForm = dlg.find('div.display_block:first'); // Top search form, enclosing display_block
 		var results = $('#dr_'+me.id);
-		padding_right = parseInt(dlg.css('padding-right').replace('px', ''));
-		padding_left = parseInt(dlg.css('padding-left').replace('px', ''));
-		padding_top = parseInt(dlg.css('padding-top').replace('px', ''));
-		padding_bottom = parseInt(dlg.css('padding-bottom').replace('px', ''));
-		width = dlg.innerWidth() - padding_right - padding_left - 22; // 5 (margin-left) + 5 (padding-left) + 5 (padding-right) + 5 (margin-right) + 2 for rounding !
-		height = dlg.innerHeight() - padding_top - padding_bottom -22;
+		var oPadding = {};
+		for(k in ['top', 'right', 'bottom', 'left'])
+		{
+			oPadding[k] = 0;
+			if (dlg.css('padding-'+k))
+			{
+				oPadding[k] = parseInt(dlg.css('padding-'+k).replace('px', ''));
+			}
+		}
+		width = dlg.innerWidth() - oPadding.right - oPadding.left - 22; // 5 (margin-left) + 5 (padding-left) + 5 (padding-right) + 5 (margin-right) + 2 for rounding !
+		height = dlg.innerHeight() - oPadding.top - oPadding.bottom -22;
 		form_height = searchForm.outerHeight();
 		results.height(height - form_height - 40); // Leave some space for the buttons
-	}
+	};
 	
 	this.UpdateButtons = function()
 	{
@@ -134,7 +139,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		{
 			okBtn.attr('disabled', 'disabled');
 		}
-	}
+	};
 	
 	this.DoSearchObjects = function(id)
 	{
@@ -142,7 +147,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					   iInputId: me.id,
 					   sFilter: me.sFilter,
 					   bSearchMode: me.bSearchMode
-					 }
+					 };
 		
 		// Gather the parameters from the search form
 		$('#fs_'+me.id+' :input').each(
@@ -196,7 +201,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		);
 
 		return false; // Don't submit the form, stay in the current page !
-	}
+	};
 	
 	this.DoOk = function()
 	{
@@ -220,7 +225,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				   sAttCode: me.sAttCode,
 				   bSearchMode: me.bSearchMode,
 				   operation: 'getObjectName'
-				 }
+				 };
 	
 		// Make sure that we cancel any pending request before issuing another
 		// since responses may arrive in arbitrary order
@@ -230,7 +235,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		me.ajax_request = $.post( AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap, 
 			function(data)
 			{
-				$('#label_'+me.id).val(data.name);
+				var oTemp = $('<div id="ac_temp" style="display:none">'+data.name+'</div>'); 
+				var txt = oTemp.html(); // this causes HTML entities to be interpreted
+				$('#label_'+me.id).val(txt);
 				$('#label_'+me.id).removeClass('ac_dlg_loading');
 				var prevValue = $('#'+me.id).val();
 				$('#'+me.id).val(iObjectId);
@@ -247,7 +254,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		);
 		
 		return false; // Do NOT submit the form in case we are called by OnSubmit...
-	}
+	};
 	
 	// Workaround for a ui.jquery limitation: if the content of
 	// the dialog contains many INPUTs, closing and opening the
@@ -263,7 +270,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#label_'+me.id).removeClass('ac_dlg_loading');
 		$('#label_'+me.id).focus();
 		me.ajax_request = null;
-	}
+	};
 	
 	this.CreateObject = function(oWizHelper)
 	{
@@ -284,7 +291,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				   sAttCode: me.sAttCode,
 				   'json': me.oWizardHelper.ToJSON(),
 				   operation: 'objectCreationForm'
-				 }
+				 };
 	
 		// Make sure that we cancel any pending request before issuing another
 		// since responses may arrive in arbitrary order
@@ -312,12 +319,12 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			},
 			'html'
 		);
-	}
+	};
 	
 	this.CloseCreateObject = function()
 	{
 		$('#ac_create_'+me.id).dialog( "close" );
-	}
+	};
 	
 	this.OnCloseCreateObject = function()
 	{
@@ -333,7 +340,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#ac_create_'+me.id).dialog("destroy");
 		$('#ac_create_'+me.id).remove();
 		$('#ajax_'+me.id).html('');
-	}
+	};
 	
 	this.DoCreateObject = function()
 	{
@@ -345,7 +352,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					   iInputId: me.id,
 					   sAttCode: me.sAttCode,
 					   'json': me.oWizardHelper.ToJSON()
-					 }
+					 };
 
 			// Gather the values from the form
 			// Gather the parameters from the search form
@@ -382,7 +389,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					else
 					{
 						// Put the value corresponding to the newly created object in the autocomplete
-						$('#label_'+me.id).val(data.name);
+						var oTemp = $('<div id="ac_temp" style="display:none">'+data.name+'</div>'); 
+						var txt = oTemp.html(); // this causes HTML entities to be interpreted
+						$('#label_'+me.id).val(txt);
 						$('#'+me.id).val(data.id);
 						$('#label_'+me.id).removeClass('ac_dlg_loading');
 						$('#label_'+me.id).focus();
@@ -396,7 +405,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			);
 		}
 		return false; // do NOT submit the form
-	}
+	};
 	
 	this.Update = function()
 	{
@@ -417,7 +426,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			$('#mini_tree_'+me.id).show();
 			$('#mini_search_'+me.id).show();
 		}
-	}
+	};
 	
 	this.HKDisplay = function()
 	{
@@ -466,7 +475,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			},
 			'html'
 		);
-	}
+	};
 
 	this.OnHKResize = function(event, ui)
 	{
@@ -480,7 +489,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			var h = tree.height();
 			tree.height(h + dh - 1);
 		}
-	}
+	};
 	
 	this.OnHKClose = function()
 	{
@@ -495,7 +504,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#label_'+me.id).focus();
 		$('#dlg_tree_'+me.id).dialog("destroy");
 		$('#dlg_tree_'+me.id).remove();
-	}
+	};
 
 	this.DoHKOk = function()
 	{
@@ -510,7 +519,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				   sAttCode: me.sAttCode,
 				   bSearchMode: me.bSearchMode,
 				   operation: 'getObjectName'
-				 }
+				 };
 	
 		// Make sure that we cancel any pending request before issuing another
 		// since responses may arrive in arbitrary order
@@ -520,7 +529,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		me.ajax_request = $.post( AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap, 
 			function(data)
 			{
-				$('#label_'+me.id).val(data.name);
+				var oTemp = $('<div id="ac_temp" style="display:none">'+data.name+'</div>'); 
+				var txt = oTemp.html(); // this causes HTML entities to be interpreted
+				$('#label_'+me.id).val(txt);
 				$('#label_'+me.id).removeClass('ac_dlg_loading');
 				var prevValue = $('#'+me.id).val();
 				$('#'+me.id).val(iObjectId);
@@ -537,6 +548,6 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		);
 		
 		return false; // Do NOT submit the form in case we are called by OnSubmit...
-	}
+	};
 	
 }
