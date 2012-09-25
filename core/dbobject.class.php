@@ -451,7 +451,7 @@ abstract class DBObject
 					//
 					$sExtKeyAttCode = $oAttDef->GetKeyAttCode();
 	
-					if ($iRemote = $this->Get($sExtKeyAttCode))
+					if (($iRemote = $this->Get($sExtKeyAttCode)) && ($iRemote > 0)) // Objects in memory have negative IDs
 					{
 						$oExtKeyAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyAttCode);
 						$oRemote = MetaModel::GetObject($oExtKeyAttDef->GetTargetClass(), $iRemote);
@@ -558,8 +558,16 @@ abstract class DBObject
 			//return $this->Get($sAttCode.'_friendlyname');
 			$sTargetClass = $oAtt->GetTargetClass(EXTKEY_ABSOLUTE);
 			$iTargetKey = $this->Get($sAttCode);
-			$sLabel = $this->Get($sAttCode.'_friendlyname');
-			return $this->MakeHyperLink($sTargetClass, $iTargetKey, $sLabel);
+			if ($iTargetKey < 0)
+			{
+				// the key points to an object that exists only in memory... no hyperlink points to it yet
+				return '';
+			}
+			else
+			{
+				$sLabel = $this->Get($sAttCode.'_friendlyname');
+				return $this->MakeHyperLink($sTargetClass, $iTargetKey, $sLabel);
+			}
 		}
 
 		// That's a standard attribute (might be an ext field or a direct field, etc.)
