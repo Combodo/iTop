@@ -132,7 +132,7 @@ $(function()
 			if (oSettings.val() == 'defaults')
 			{
 				oOptions = { iPageSize: this.options.oDefaultSettings.iDefaultPageSize, 
-							 oColumns: this.options.oDefaultSettings.oColumns,
+							 oColumns: this.options.oDefaultSettings.oColumns
 						   };
 			}
 			else
@@ -247,6 +247,14 @@ $(function()
 			dlgElement.find('input[name=page_size]').val(this.originalState.iDefaultPageSize);
 			
 			dlgElement.find(':itop-fieldsorter').fieldsorter('option', { fields: this.originalState.oFields });
+		},
+		IsDialogOpen: function()
+		{
+			var sId = new String(this.element.attr('id'));
+			var sListId = sId.replace('datatable_', '');
+			var oDlgOpen = $('#datatable_dlg_'+sListId+' :visible');
+			
+			return (oDlgOpen.length > 0);
 		}
 	});	
 });

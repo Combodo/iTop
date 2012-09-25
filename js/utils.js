@@ -74,16 +74,26 @@ function TruncateList(divId, iLimit, sNewLabel, sLinkLabel)
  */ 
 function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams)
 {
-	$('#'+divId).block();
-	//$('#'+divId).blockUI();
-	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?style='+sStyle,
-	   { operation: 'ajax', filter: sSerializedFilter, extra_params: sExtraParams },
-	   function(data){
-		 $('#'+divId).empty();
-		 $('#'+divId).append(data);
-		 $('#'+divId).removeClass('loading');
-		}
-	 );
+	// Check if the user is not editing the list properties right now
+	var bDialogOpen = false;
+	var oDataTable = $('#'+divId+' :itop-datatable');
+	if (oDataTable.length > 0)
+	{
+		bDialogOpen = oDataTable.datatable('IsDialogOpen');
+	}
+	if (!bDialogOpen)
+	{
+		$('#'+divId).block();
+		
+		$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?style='+sStyle,
+		   { operation: 'ajax', filter: sSerializedFilter, extra_params: sExtraParams },
+		   function(data){
+			 $('#'+divId).empty();
+			 $('#'+divId).append(data);
+			 $('#'+divId).removeClass('loading');
+			}
+		 );
+	}
 }
 
 /**
