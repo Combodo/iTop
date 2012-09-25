@@ -739,12 +739,23 @@ EOF;
 			{
 				$sState = $oState->getAttribute('id');
 	
+				$oInitialStatePath = $oState->GetOptionalElement('initial_state_path');
+				if ($oInitialStatePath)
+				{
+					$aInitialStatePath = array();
+					foreach ($oInitialStatePath->getElementsByTagName('state_ref') as $oIntermediateState)
+					{
+						$aInitialStatePath[] = "'".$oIntermediateState->GetText()."'";
+					}
+					$sInitialStatePath = 'Array('.implode(', ', $aInitialStatePath).')';
+				}
+
 				$sLifecycle .= "		MetaModel::Init_DefineState(\n";
 				$sLifecycle .= "			\"".$sState."\",\n";
 				$sLifecycle .= "			array(\n";
 				$sLifecycle .= "				\"attribute_inherit\" => '',\n";
 				$sLifecycle .= "				\"attribute_list\" => array(\n";
-	
+
 				$oFlags = $oState->GetUniqueElement('flags');
 				foreach ($oFlags->getElementsByTagName('attribute') as $oAttributeNode)
 				{
@@ -755,8 +766,12 @@ EOF;
 						$sLifecycle .= "					'$sAttCode' => $sFlags,\n";
 					}
 				}
-	
+
 				$sLifecycle .= "				),\n";
+				if (isset($sInitialStatePath))
+				{
+					$sLifecycle .= "				\"initial_state_path\" => $sInitialStatePath,\n";
+				}
 				$sLifecycle .= "			)\n";
 				$sLifecycle .= "		);\n";
 	
