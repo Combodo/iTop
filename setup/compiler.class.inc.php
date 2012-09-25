@@ -768,7 +768,7 @@ EOF;
 				}
 
 				$sLifecycle .= "				),\n";
-				if (isset($sInitialStatePath))
+				if (isset($oInitialStatePath))
 				{
 					$sLifecycle .= "				\"initial_state_path\" => $sInitialStatePath,\n";
 				}
