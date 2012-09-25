@@ -999,7 +999,10 @@ EOF
 				// The title has been given in an url, and urlencoded...
 				// and urlencode transforms utf-8 into something similar to ISO-8859-1
 				// Example: é (C3A9 becomes %E9)
-				// Let's transform back into utf-8 !
+				// As a consequence, json_encode (called within open-flash-chart.php)
+				// was returning 'null' and the graph was not displayed at all
+				// To make sure that the graph is displayed AND to get a correct title
+				// (at least for european characters) let's transform back into utf-8 !
 				$sTitle = iconv("ISO-8859-1", "UTF-8//IGNORE", $aExtraParams['chart_title']);
 
 				// If the title is a dictionnary entry, fetch it
