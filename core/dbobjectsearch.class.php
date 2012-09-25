@@ -548,24 +548,38 @@ class DBObjectSearch
 	{
 		if ($bTranslateMainAlias)
 		{
-			$sOrigAlias = $this->GetClassAlias();
+			$sOrigAlias = $this->GetFirstJoinedClassAlias();
 			if (array_key_exists($sOrigAlias, $aClassAliases))
 			{
-				$sNewAlias = MetaModel::GenerateUniqueAlias($aClassAliases, $sOrigAlias, $this->GetClass());
-//echo "<p>Generating a new alias for $sOrigAlias (already used). It is now: $sNewAlias</p>\n";
-				$this->m_aSelectedClasses[$sNewAlias] = $this->GetClass();
-				unset($this->m_aSelectedClasses[$sOrigAlias]);
-	
-				$this->m_aClasses[$sNewAlias] = $this->GetClass();
-				unset($this->m_aClasses[$sOrigAlias]);
+				$sNewAlias = MetaModel::GenerateUniqueAlias($aClassAliases, $sOrigAlias, $this->GetFirstJoinedClass());
+				if (isset($this->m_aSelectedClasses[$sOrigAlias]))
+				{
+					$this->m_aSelectedClasses[$sNewAlias] = $this->GetFirstJoinedClass();
+					unset($this->m_aSelectedClasses[$sOrigAlias]);
+				}
+
+				// TEMPORARY ALGORITHM (m_aClasses is not correctly updated, it is not possible to add a subtree onto a subnode)
+				// Replace the element at the same position (unset + set is not enough because the hash array is ordered)
+				$aPrevList = $this->m_aClasses;
+				$this->m_aClasses = array();
+				foreach ($aPrevList as $sSomeAlias => $sSomeClass)
+				{
+					if ($sSomeAlias == $sOrigAlias)
+					{
+						$this->m_aClasses[$sNewAlias] = $sSomeClass; // note: GetFirstJoinedClass now returns '' !!!
+					}
+					else
+					{
+						$this->m_aClasses[$sSomeAlias] = $sSomeClass;
+					}
+				}
 	
 				// Translate the condition expression with the new alias
 				$aAliasTranslation[$sOrigAlias]['*'] = $sNewAlias;
 			}
 	
-//echo "<p>Adding the alias ".$this->GetClass()." as ".$this->GetClassAlias()."</p>\n";
 			// add the alias into the filter aliases list
-			$aClassAliases[$this->GetClassAlias()] = $this->GetClass();
+			$aClassAliases[$this->GetFirstJoinedClassAlias()] = $this->GetFirstJoinedClass();
 		}
 		
 		foreach($this->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
@@ -598,7 +612,6 @@ class DBObjectSearch
 
 	protected function AddCondition_PointingTo_InNameSpace(DBObjectSearch $oFilter, $sExtKeyAttCode, &$aClassAliases, &$aAliasTranslation, $iOperatorCode)
 	{
-//echo "<p style=\"color:green\">Calling: AddCondition_PointingTo_InNameSpace([<pre>".print_r($aClassAliases, true)."</pre></br>], [<pre>".print_r($aAliasTranslation, true)."</pre>]);</p>";
 		if (!MetaModel::IsValidKeyAttCode($this->GetClass(), $sExtKeyAttCode))
 		{
 			throw new CoreWarning("The attribute code '$sExtKeyAttCode' is not an external key of the class '{$this->GetClass()}' - the condition will be ignored");
@@ -620,27 +633,19 @@ class DBObjectSearch
 			{
 				if (array_key_exists($oFilter->GetClassAlias(), $this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode]))
 				{
-//echo "<p style=\"color:red\">[".__LINE__."]this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][".$oFilter->GetFirstJoinedClassAlias()."]:<pre>\n".print_r($this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode], true)."</pre>;</p>";
 					$bSamePointingTo = true;
 				}
 			}
 		}
 
-//echo "<p style=\"color:red\">[".__LINE__."]Calling: AddToNameSpace([".implode(',', $aClassAliases)."], [".implode(',', $aAliasTranslation)."]);</p>";
 		if ($bSamePointingTo)
 		{
-//echo "<p style=\"color:red\">[".__LINE__."]AddPointingTo: Merging filters for [$sExtKeyAttCode][$iOperatorCode][".$oFilter->GetClassAlias()."]</p>";
 			// Same ext key, alias and same operator, merge the filters together
-//			$sAlias = $oFilter->GetClassAlias();
-//echo "<p style=\"color:red\">[".__LINE__."]before: AddToNameSpace(aClassAliases[<pre>\n".print_r($aClassAliases, true)."</pre>], aAliasTranslation[<pre>\n".print_r($aAliasTranslation, true)."</pre>]);</p>";
 			$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation, true /* Don't translate the main alias */);
-//echo "<p style=\"color:blue\">[".__LINE__."]after: AddToNameSpace(aClassAliases[<pre>\n".print_r($aClassAliases, true)."</pre>], aAliasTranslation[<pre>\n".print_r($aAliasTranslation, true)."</pre>]);</p>";
-//			$this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][$sAlias]->MergeWith($oFilter, $aClassAliases, $aAliasTranslation);
 			$this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][$oFilter->GetClassAlias()] = $oFilter;
 		}
 		else
 		{
-//echo "<p style=\"color:red\">[".__LINE__."]AddPointingTo: Adding a new PointingTo filter for [$sExtKeyAttCode][$iOperatorCode][".$oFilter->GetClassAlias()."]</p>";
 			$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
 			$this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][$oFilter->GetClassAlias()] = $oFilter;
 		}

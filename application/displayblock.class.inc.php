@@ -44,6 +44,7 @@ class DisplayBlock
 {
 	const TAG_BLOCK = 'itopblock';
 	protected $m_oFilter;
+	protected $m_aConditions; // Conditions added to the filter -> avoid duplicate conditions
 	protected $m_sStyle;
 	protected $m_bAsynchronous;
 	protected $m_aParams;
@@ -51,7 +52,8 @@ class DisplayBlock
 	
 	public function __construct(DBObjectSearch $oFilter, $sStyle = 'list', $bAsynchronous = false, $aParams = array(), $oSet = null)
 	{
-		$this->m_oFilter = $oFilter;
+		$this->m_oFilter = clone $oFilter;
+		$this->m_aConditions = array();
 		$this->m_sStyle = $sStyle;
 		$this->m_bAsynchronous = $bAsynchronous;
 		$this->m_aParams = $aParams;
@@ -1015,6 +1017,15 @@ EOF
 	 */
 	protected function AddCondition($sFilterCode, $condition)
 	{
+		// Workaround to an issue revealed whenever a condition on org_id is applied twice (with a hierarchy of organizations)
+		// Moreover, it keeps the query as simple as possible
+		if (isset($this->m_aConditions[$sFilterCode]) && $condition == $this->m_aConditions[$sFilterCode])
+		{
+			// Skip
+			return;
+		}
+		$this->m_aConditions[$sFilterCode] = $condition;
+
 		$sClass = $this->m_oFilter->GetClass();
 		$bConditionAdded = false;
 		
