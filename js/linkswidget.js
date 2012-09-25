@@ -15,7 +15,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		$('#linkedset_'+this.id+' .selection').each( function() { this.checked = false; });
 		$('#'+this.id+'_btnRemove').attr('disabled','disabled');
 		$('#'+this.id+'_linksToRemove').val('');
-	}
+	};
 	
 	this.RemoveSelected = function()
 	{
@@ -46,8 +46,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			// All items were removed: add a dummy hidden input to make sure that the linkset will be updated (emptied) when posted
 			$('#'+me.id+'_empty_row').show();
 		}
-		
-	}
+	};
 
 	this.OnSelectChange = function()
 	{
@@ -86,7 +85,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				},
 				'html'
 			);
-	}
+	};
 	
 	this.SearchObjectsToAdd = function()
 	{
@@ -94,7 +93,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 					   iInputId: me.iInputId,
 					   sSuffix: me.sSuffix,
 					   bDuplicates: me.bDuplicates
-					 }
+					 };
 		
 		me.UpdateButtons(0);
 		// Gather the parameters from the search form
@@ -139,7 +138,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		);
 
 		return false; // Don't submit the form, stay in the current page !
-	}
+	};
 
 	this.UpdateButtons = function(iCount)
 	{
@@ -152,7 +151,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		{
 			okBtn.attr('disabled', 'disabled');
 		}
-	}
+	};
 	
 	this.DoAddObjects = function()
 	{
@@ -161,7 +160,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				   	   sSuffix: me.sSuffix,
 				   	   bDuplicates: me.bDuplicates,
 				   	   'class': me.sClass
-				 	 }
+				 	 };
 		
 		// Gather the parameters from the search form
 		var context = $('#SearchResultsToAdd_'+me.id);
@@ -253,17 +252,33 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		);
 		$('#dlg_'+me.id).dialog('close');
 		return false;
-	}
+	};
 	
 	this.UpdateSizes = function(event, ui)
 	{
 		var dlg = $('#dlg_'+me.id);
 		var searchForm = $('#SearchFormToAdd_'+me.id);
 		var results = $('#SearchResultsToAdd_'+me.id);
-		padding_right = parseInt(dlg.css('padding-right').replace('px', ''));
-		padding_left = parseInt(dlg.css('padding-left').replace('px', ''));
-		padding_top = parseInt(dlg.css('padding-top').replace('px', ''));
-		padding_bottom = parseInt(dlg.css('padding-bottom').replace('px', ''));
+		var padding_right = 0;
+		if (dlg.css('padding-right'))
+		{
+			padding_right = parseInt(dlg.css('padding-right').replace('px', ''));			
+		}
+		var padding_left = 0;
+		if (dlg.css('padding-left'))
+		{
+			padding_left = parseInt(dlg.css('padding-left').replace('px', ''));			
+		}
+		var padding_top = 0;
+		if (dlg.css('padding-top'))
+		{
+			padding_top = parseInt(dlg.css('padding-top').replace('px', ''));			
+		}
+		var padding_bottom = 0;
+		if (dlg.css('padding-bottom'))
+		{
+			padding_bottom = parseInt(dlg.css('padding-bottom').replace('px', ''));			
+		}
 		width = dlg.innerWidth() - padding_right - padding_left - 22; // 5 (margin-left) + 5 (padding-left) + 5 (padding-right) + 5 (margin-right) + 2 for rounding !
 		height = dlg.innerHeight() - padding_top - padding_bottom -22;
 		wizard = dlg.find('.wizContainer:first');
@@ -271,5 +286,5 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		wizard.height(height);
 		form_height = searchForm.outerHeight();
 		results.height(height - form_height - 40); // Leave some space for the buttons
-	}
+	};
 }
