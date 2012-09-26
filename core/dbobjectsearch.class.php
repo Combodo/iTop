@@ -921,6 +921,7 @@ class DBObjectSearch
 			{
 				$aParams = array_merge($aContextParams, $this->m_aParams);
 			}
+			$aParams = MetaModel::PrepareQueryArguments($aParams);
 		}
 		else
 		{

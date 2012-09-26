@@ -1976,7 +1976,7 @@ abstract class MetaModel
 
 	protected static $m_aQueryStructCache = array();
 
-	protected static function PrepareQueryArguments($aArgs)
+	public static function PrepareQueryArguments($aArgs)
 	{
 		// Translate any object into scalars
 		//
