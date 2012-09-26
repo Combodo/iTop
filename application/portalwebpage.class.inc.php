@@ -285,7 +285,7 @@ EOF
 				//
 
 				$this->add("<div id=\"listOf$sClass\">\n");
-				cmdbAbstractObject::DisplaySet($this, $oSet, array('currentId' => "listOf$sClass", 'menu' => false, 'zlist' => false, 'extra_fields' => implode(',', $aZList)));
+				cmdbAbstractObject::DisplaySet($this, $oSet, array('currentId' => $this->GetUniqueId()."$sClass", 'menu' => false, 'zlist' => false, 'extra_fields' => implode(',', $aZList)));
 				$this->add("</div>\n");
 			}
 			else
