@@ -829,6 +829,7 @@ try
 catch (Exception $e)
 {
 	echo $e->GetMessage();
+	echo "<p>Debug trace: <pre>".print_r($e->getTrace(), true)."</pre></p>\n";
 	IssueLog::Error($e->getMessage());
 }
 
@@ -856,6 +857,12 @@ function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisp
 		$oDocument = $oObj->Get($sAttCode);
 		if (is_object($oDocument))
 		{
+			// Make sure there is NO output at all before our content, otherwise the document will be corrupted
+			$sPreviousContent = ob_get_clean();
+			if (trim($sPreviousContent) != '')
+			{
+				IssueLog::Error("Output already started before downloading file:\nContent was:'$sPreviousContent'\n");
+			}
 			$oPage->SetContentType($oDocument->GetMimeType());
 			$oPage->SetContentDisposition($sContentDisposition,$oDocument->GetFileName());
 			$oPage->add($oDocument->GetData());
