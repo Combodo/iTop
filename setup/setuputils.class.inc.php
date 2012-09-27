@@ -667,8 +667,29 @@ function ValidateField(sFieldId, bUsed)
 		{
 			if (sValue.match(/^[A-Za-z][A-Za-z0-9_]*$/))
 			{
-				$("#v_"+sFieldId).html("");
-				return true;
+				var bCollision = false;
+				if (sFieldId == 'db_new_name')
+				{
+					// check that the "new name" does not correspond to an existing database
+					var sNewName = $('#db_new_name').val();
+					$('#db_name option').each( function() {
+						if ($(this).attr('value') == sNewName)
+						{
+							bCollision = true;
+						}
+					});
+				}
+				
+				if (bCollision)
+				{
+					$("#v_"+sFieldId).html('<img src="../images/validation_error.png" title="A database with the same name already exists"/>');
+					return false;
+				}
+				else
+				{
+					$("#v_"+sFieldId).html("");
+					return true;
+				}
 			}
 			else
 			{
@@ -883,4 +904,26 @@ EOF
 		
 		return $sHtml;
 	}
+	
+	public static function AnalyzeInstallation($oWizard)
+	{
+		require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
+		$oConfig = new Config();
+		
+		$aParamValues = array(
+			'db_server' => $oWizard->GetParameter('db_server', ''),
+			'db_user' => $oWizard->GetParameter('db_user', ''),
+			'db_pwd' => $oWizard->GetParameter('db_server', ''),
+			'db_name' => $oWizard->GetParameter('db_name', ''),
+			'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
+			'source_dir' => APPROOT.'datamodel',
+		);
+		$oConfig->UpdateFromParams($aParamValues, 'datamodel');
+
+		$oProductionEnv = new RunTimeEnvironment();
+		$oConfig = new Config();
+		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, 'datamodel');
+
+		return $aAvailableModules;
+	}	
 }

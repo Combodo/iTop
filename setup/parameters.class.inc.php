@@ -37,6 +37,59 @@ class PHPParameters extends Parameters
 			$this->aData = $ITOP_PARAMS;
 		}
 	}
+	
+	public function ToXML(DOMNode $oRoot, $data = null, $sNodeName = null)
+	{
+		if ($data === null)
+		{
+			$data = $this->aData;
+		}
+				
+		if (is_array($data))
+		{
+			if ($oRoot instanceof DOMDocument)
+			{
+				$oNode = $oRoot->createElement($sNodeName);
+			}
+			else
+			{
+				$oNode = $oRoot->ownerDocument->createElement($sNodeName);
+			}
+			$oRoot->appendChild($oNode);
+
+			$aKeys = array_keys($data);
+			$bNumericKeys = true;
+			foreach($aKeys as $idx => $subkey)
+			{
+				if(((int)$subkey) !== $subkey)
+				{
+					$bNumericKeys = false;
+					break;
+				}
+			}
+			if ($bNumericKeys)
+			{
+				$oNode->setAttribute("type", "array");
+				foreach($data as $key => $value)
+				{
+					$this->ToXML($oNode, $value , 'item');
+				}
+			}
+			else
+			{
+				foreach($data as $key => $value)
+				{
+					$this->ToXML($oNode, $value , $key);
+				}
+			}
+		}
+		else
+		{
+			$oNode = $oRoot->ownerDocument->createElement($sNodeName, $data);
+			$oRoot->appendChild($oNode);
+		}
+		return $oNode;
+	}
 }
 
 class XMLParameters extends Parameters
