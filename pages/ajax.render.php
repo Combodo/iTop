@@ -820,6 +820,56 @@ try
 		}
 		break;
 		
+		case 'export_dashboard':
+		$sMenuId = utils::ReadParam('id', '');
+		ApplicationMenu::LoadAdditionalMenus();
+		$index = ApplicationMenu::GetMenuIndexById($sMenuId);
+		$oMenu = ApplicationMenu::GetMenuNode($index);
+		if ($oMenu instanceof DashboardMenuNode)
+		{
+			$oDashboard = $oMenu->GetDashboard();
+			$sPreviousContent = ob_get_clean();
+			if (trim($sPreviousContent) != '')
+			{
+				IssueLog::Error("Output already started before downloading file:\nContent was:'$sPreviousContent'\n");
+			}
+			$oPage->SetContentType('text/xml');
+			$oPage->SetContentDisposition('attachment', $oMenu->GetLabel().'.xml');
+			$oPage->add($oDashboard->ToXml());
+		}
+		break;
+		
+		case 'import_dashboard':
+		$sMenuId = utils::ReadParam('id', '');
+		ApplicationMenu::LoadAdditionalMenus();
+		$index = ApplicationMenu::GetMenuIndexById($sMenuId);
+		$oMenu = ApplicationMenu::GetMenuNode($index);
+		$aResult = array('error' => '');
+		try
+		{
+			if ($oMenu instanceof DashboardMenuNode)
+			{
+				$oDoc = utils::ReadPostedDocument('dashboard_upload_file');
+				$oDashboard = $oMenu->GetDashboard();
+				$oDashboard->FromXml($oDoc->GetData());
+				$oDashboard->Save();
+			}
+			else
+			{
+				$aResult['error'] = 'Dashboard id="'.$sMenuId.'" not found.';
+			}
+		}
+		catch(DOMException $e)
+		{
+			$aResult = array('error' => Dict::S('UI:Error:InvalidDashboardFile'));
+		}
+		catch(Exception $e)
+		{
+			$aResult = array('error' => $e->getMessage());
+		}
+		$oPage->add(json_encode($aResult));
+		break;
+		
 		default:
 		$oPage->p("Invalid query.");
 	}

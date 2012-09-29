@@ -832,6 +832,10 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Dashboard:Edit' => 'Editer cette page...',
 	'UI:Dashboard:Revert' => 'Revenir à la version d\'origine...',
 	'UI:Dashboard:RevertConfirm' => 'Toutes modifications apportées à la version d\'origine seront perdues. Veuillez confirmer l\'opération.',
+	'UI:ExportDashBoard' => 'Exporter dans un fichier',
+	'UI:ImportDashBoard' => 'Importer depuis un fichier...',
+	'UI:ImportDashboardTitle' => 'Importation depuis un fichier',
+	'UI:ImportDashboardText' => 'Choisissez un fichier de définition de tableau de bord :',
 
 	'UI:DashletCreation:Title' => 'Créer un Indicateur',
 	'UI:DashletCreation:Dashboard' => 'Tableau de bord',

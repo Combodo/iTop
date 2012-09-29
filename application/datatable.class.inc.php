@@ -21,10 +21,11 @@
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://www.opensource.org/licenses/gpl-3.0.html GPL
  */
+
 class DataTable
 {
 	protected $iListId;		// Unique ID inside the web page
-	protected $sTableId;	// identifier for sqve the settings (combined with the class aliases)
+	protected $sTableId;	// identifier for saving the settings (combined with the class aliases)
 	protected $oSet;		// The set of objects to display
 	protected $aClassAliases;	// The aliases (alias => class) inside the set
 	protected $iNbObjects;		// Total number of objects inthe set
@@ -250,8 +251,16 @@ EOF;
 	protected function GetToolkitMenu(WebPage $oPage, $aExtraParams)
 	{
 		$sMenuTitle = Dict::S('UI:ConfigureThisList');
-		$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$this->iListId.'"><ul><li><img src="../images/toolkit_menu.png"><ul><li><a  onclick="$(\'#datatable_dlg_'.$this->iListId.'\').dialog(\'open\');">'.$sMenuTitle.'</a></li></li></ul></div>';
-		//$oPage->add_ready_script("$('#tk_{$this->iListId} > ul').popupmenu();");
+		$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$this->iListId.'"><ul><li><img src="../images/toolkit_menu.png"><ul>';
+		
+		$oMenuItem1 = new JSPopupMenuItem('iTop::ConfigureList', $sMenuTitle, "$('#datatable_dlg_".$this->iListId."').dialog('open');");
+		$aActions = array(
+			$oMenuItem1->GetUID() => $oMenuItem1->GetMenuItem(),
+		);
+		$this->oSet->Rewind();
+		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $this->oSet, $aActions);
+		$this->oSet->Rewind();
+		$sHtml .= $oPage->RenderPopupMenuItems($aActions);
 		return $sHtml;
 	}
 	

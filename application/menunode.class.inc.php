@@ -812,7 +812,7 @@ class DashboardMenuNode extends MenuNode
 		return parent::GetHyperlink($aExtraParams);
 	}
 
-	protected function GetDashboard()
+	public function GetDashboard()
 	{
 		$sDashboardDefinition = @file_get_contents($this->sDashboardFile);		
 		if ($sDashboardDefinition !== false)

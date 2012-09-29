@@ -220,3 +220,123 @@ $(function()
 		}
 	});	
 });
+
+function UploadDashboard(oOptions)
+{
+	var sFileId = 'dashboard_upload_file';
+	var oDlg = $('<div id="dashboard_upload_dlg"><form><p>'+oOptions.text+'</p><p><input type="file" id="'+sFileId+'" name="dashboard_upload_file"></p></form></div>');
+	$('body').append(oDlg);
+	oOptions.file_id = sFileId;
+	
+	oDlg.dashboard_upload_dlg(oOptions);
+}
+
+
+//jQuery UI style "widget" for managing a "import dashboard" dialog (file upload)
+$(function()
+{
+	// the widget definition, where "itop" is the namespace,
+	// "dashboard-upload-dlg" the widget name
+	$.widget( "itop.dashboard_upload_dlg",
+	{
+		// default options
+		options:
+		{
+			dashboard_id: '',
+			file_id: '',
+			text: 'Select a dashboard file to import',
+			title: 'Dahsboard Import',
+			close_btn: 'Close',
+			submit_to: GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=import_dashboard'
+		},
+	
+		// the constructor
+		_create: function()
+		{
+			var me = this; 
+
+			var oButtons = {};
+			oButtons[this.options.close_btn] = function() {
+				me.element.dialog('close');
+				//me.onClose();
+			};
+			$('#'+this.options.file_id).bind('change', function() { me._doUpload(); } );
+			this.element
+			.addClass('itop-dashboard_upload_dlg')
+			.dialog({
+				modal: true,
+				width: 500,
+				height: 'auto',
+				title: this.options.title,
+				close: function() { me._onClose(); },
+				buttons: oButtons
+			});
+		},
+	
+		// called when created, and later when changing options
+		_refresh: function()
+		{
+		},
+		// events bound via _bind are removed automatically
+		// revert other modifications here
+		destroy: function()
+		{
+			this.element
+			.removeClass('itop-dashboard_upload_dlg');
+
+			// call the original destroy method since we overwrote it
+			$.Widget.prototype.destroy.call( this );			
+		},
+		// _setOptions is called with a hash of all options that are changing
+		_setOptions: function()
+		{
+			// in 1.9 would use _superApply
+			$.Widget.prototype._setOptions.apply( this, arguments );
+			this._refresh();
+		},
+		// _setOption is called for each individual option that is changing
+		_setOption: function( key, value )
+		{
+			// in 1.9 would use _super
+			$.Widget.prototype._setOption.call( this, key, value );
+		},
+		_onClose: function()
+		{
+			this.element.remove();
+		},
+		_doUpload: function()
+		{
+			var me = this;
+			$.ajaxFileUpload
+			(
+				{
+					url: me.options.submit_to+'&id='+me.options.dashboard_id, 
+					secureuri:false,
+					fileElementId: me.options.file_id,
+					dataType: 'json',
+					success: function (data, status)
+					{
+						if(typeof(data.error) != 'undefined')
+						{
+							if(data.error != '')
+							{
+								alert(data.error);
+								me.element.dialog('close');
+							}
+							else
+							{
+								me.element.dialog('close');
+								location.reload();
+							}
+						}
+					},
+					error: function (data, status, e)
+					{
+						alert(e);
+						me.element.dialog('close');
+					}
+				}
+			)			
+		}
+	});
+});

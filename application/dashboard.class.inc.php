@@ -40,8 +40,11 @@ abstract class Dashboard
 	
 	public function FromXml($sXml)
 	{
+		$this->aCells = array(); // reset the content of the dashboard
+		set_error_handler(array('Dashboard', 'ErrorHandler'));
 		$oDoc = new DOMDocument();
 		$oDoc->loadXML($sXml);
+		restore_error_handler();
 		$this->oDOMNode = $oDoc->getElementsByTagName('dashboard')->item(0);
 		
 		$oLayoutNode = $this->oDOMNode->getElementsByTagName('layout')->item(0);
@@ -68,6 +71,21 @@ abstract class Dashboard
 		}
 	}
 	
+	/**
+	 * Error handler to turn XML loading warnings into exceptions
+	 */
+	public static function ErrorHandler($errno, $errstr, $errfile, $errline)
+	{
+		if ($errno == E_WARNING && (substr_count($errstr,"DOMDocument::loadXML()")>0))
+		{
+			throw new DOMException($errstr);
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 	public function ToXml()
 	{
 		$oDoc = new DOMDocument();
@@ -365,13 +383,21 @@ class RuntimeDashboard extends Dashboard
 		if (!$bEditMode)
 		{
 			$sEditMenu = "<td><span id=\"DashboardMenu\"><ul><li><img src=\"../images/edit.png\"><ul>";
+		
+			$aActions = array();
+			$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:Edit'), "return EditDashboard('{$this->sId}')");
+			$aActions[$oEdit->GetUID()] = $oEdit->GetMenuItem();
 
-			$sEditMenu .= "<li><a href=\"#\" onclick=\"return EditDashboard('{$this->sId}')\">".Dict::S('UI:Dashboard:Edit')."</a></li>";
 			if ($this->bCustomized)
 			{
-				$sEditMenu .= "<li><a href=\"#\" onclick=\"if (confirm('".addslashes(Dict::S('UI:Dashboard:RevertConfirm'))."')) return RevertDashboard('{$this->sId}'); else return false;\">".Dict::S('UI:Dashboard:Revert')."</a></li>";
+				$oRevert = new JSPopupMenuItem('UI:Dashboard:RevertConfirm', Dict::S('UI:Dashboard:Revert'),
+												"if (confirm('".addslashes(Dict::S('UI:Dashboard:RevertConfirm'))."')) return RevertDashboard('{$this->sId}'); else return false");
+				$aActions[$oRevert->GetUID()] = $oRevert->GetMenuItem();
 			}
-			$sEditMenu .= "</ul></li></ul></span></td>";
+			utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_DASHBOARD_ACTIONS, $this, $aActions);
+			$sEditMenu .= $oPage->RenderPopupMenuItems($aActions);
+					
+
 			$sEditMenu = addslashes($sEditMenu);
 			//$sEditBtn = addslashes('<div style="display: inline-block; height: 55px; width:200px;vertical-align:center;line-height:60px;text-align:left;"><button onclick="EditDashboard(\''.$this->sId.'\');">Edit This Page</button></div>');
 			$oPage->add_ready_script(

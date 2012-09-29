@@ -769,6 +769,27 @@ class utils
 	}
 	
 	/**
+	 * Get the "Back" button to go out of the current environment
+	 */
+	public static function GetPopupMenuItems($oPage, $iMenuId, $param, &$aActions)
+	{
+		foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
+		{
+			foreach($oExtensionInstance->EnumItems($iMenuId, $param) as $oMenuItem)
+			{
+				if (is_object($oMenuItem))
+				{
+					$aActions[$oMenuItem->GetUID()] = $oMenuItem->GetMenuItem();
+					
+					foreach($oMenuItem->GetLinkedScripts() as $sLinkedScript)
+					{
+						$oPage->add_linked_script($sLinkedScript);
+					}
+				}
+			}
+		}
+	}
+	/**
 	 * Get target configuration file name (including full path)
 	 */
 	public static function GetConfigFilePath()

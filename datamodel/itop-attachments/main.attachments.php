@@ -356,7 +356,6 @@ EOF
 			$oPage->add('<div style="clear:both"></div>');			
 			$sMaxUpload = $this->GetMaxUpload();
 			$oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file" onChange="ajaxFileUpload();"><span style="display:none;" id="attachment_loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUpload);
-			//$oPage->p('<input type="button" onClick="ajaxFileUpload();" value=" Upload !">');
 			$oPage->p('<span style="display:none;" id="attachment_loading">Loading, please wait...</span>');
 			$oPage->p('<input type="hidden" id="attachment_plugin"/>');
 			$oPage->add('</fieldset>');

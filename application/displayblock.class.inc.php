@@ -1359,7 +1359,7 @@ class MenuBlock extends DisplayBlock
 					{
 						// New plugins can provide javascript handlers via the 'onclick' property
 						//TODO: enable extension of different menus by checking the 'target' property ??
-						$aActions[$sLabel] = array ('label' => $sLabel, 'url' => isset($data['url']) ? $data['url'] : '#', 'url' => isset($data['onclick']) ? $data['onclick'] : '');
+						$aActions[$sLabel] = array ('label' => $sLabel, 'url' => isset($data['url']) ? $data['url'] : '#', 'onclick' => isset($data['onclick']) ? $data['onclick'] : '');
 					}
 					else
 					{
@@ -1368,6 +1368,24 @@ class MenuBlock extends DisplayBlock
 					}
 				}
 			}
+			
+			// New extensions based on iPopupMenuItem interface 
+			switch($this->m_sStyle)
+			{
+				case 'list':
+				$oSet->Rewind();
+				$param  = $oSet;
+				$iMenuId = iPopupMenuExtension::MENU_OBJLIST_ACTIONS;
+				break;
+				
+				case 'details':
+				$oSet->Rewind();
+				$param  = $oSet->Fetch();
+				$iMenuId = iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS;
+				break;
+				
+			}
+			utils::GetPopupMenuItems($oPage, $iMenuId, $param, $aActions);
 		}
 		$aFavoriteActions = array();
 		$aCallSpec = array($sClass, 'GetShortcutActions');
@@ -1395,38 +1413,10 @@ class MenuBlock extends DisplayBlock
 		else
 		{
 			$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:Actions')."\n<ul>\n";
-		}	
-		$sPrevUrl = '';
-		foreach ($aActions as $key => $aAction)
-		{
-			if (in_array($key, $aShortcutActions))
-			{
-				$aFavoriteActions[] = $aAction;
-			}
-			else
-			{
-				$sClass = isset($aAction['class']) ? " class=\"{$aAction['class']}\"" : "";
-				$sOnClick = isset($aAction['onclick']) ? " onclick=\"{$aAction['onclick']}\"" : "";
-				if (empty($aAction['url']))
-				{
-					if ($sPrevUrl != '') // Don't output consecutively two separators...
-					{
-						$sHtml .= "<li>{$aAction['label']}</li>\n";			
-					}
-					$sPrevUrl = '';
-				}
-				else
-				{
-					$sHtml .= "<li><a href=\"{$aAction['url']}\"$sClass $sOnClick>{$aAction['label']}</a></li>\n";
-					$sPrevUrl = $aAction['url'];
-				}
-			}
 		}
-		$sHtml .= "</ul>\n</li>\n</ul></div>";
-		foreach(array_reverse($aFavoriteActions) as $aAction)
-		{
-			$sHtml .= "<div class=\"actions_button\"><a href='{$aAction['url']}'>{$aAction['label']}</a></div>";			
-		}
+
+		$sHtml .= $oPage->RenderPopupMenuItems($aActions, $aFavoriteActions);
+
 		static $bPopupScript = false;
 		if (!$bPopupScript)
 		{
@@ -1456,4 +1446,87 @@ class MenuBlock extends DisplayBlock
 		}
 	}	
 }
-?>
+
+/**
+ * Some dummy menus for testing
+ */
+class ExtraMenus implements iPopupMenuExtension
+{
+	/*
+	const MENU_OBJLIST_ACTIONS = 1; 	// $param is a DBObjectSet containing the list of objects
+	const MENU_OBJLIST_TOOLKIT = 2;		// $param is a DBObjectSet containing the list of objects
+	const MENU_OBJDETAILS_ACTIONS = 3;	// $param is a DBObject instance: the object currently displayed
+	const MENU_DASHBOARD_ACTIONS = 4;	// $param is a Dashboard instance: the dashboard currently displayed
+	const MENU_USER_ACTIONS = 5;		// $param is a null ??
+	*/
+	
+	/**
+	 * Get the list of items to be added to a menu. The items will be inserted in the menu in the order of the returned array
+	 * @param int $iMenuId The identifier of the type of menu, as listed by the constants MENU_xxx above
+	 * @param mixed $param Depends on $iMenuId see the constants define above
+	 * @return Array An array of ApplicationPopupMenuItem or an empty array if no action is to be added to the menu
+	 */
+	public static function EnumItems($iMenuId, $param)
+	{
+		switch($iMenuId)
+		{
+			/*
+			case iPopupMenuExtension::MENU_OBJLIST_ACTIONS:
+			// $param is a DBObjectSet
+			$aResult = array(
+				new JSPopupMenuItem('Test::Item1', 'List Test 1', "alert('Test 1')"),
+				new JSPopupMenuItem('Test::Item2', 'List Test 2', "alert('Test 2')"),
+			);
+			break;
+			
+			case iPopupMenuExtension::MENU_OBJLIST_TOOLKIT:
+			// $param is a DBObjectSet
+			$aResult = array(
+				new JSPopupMenuItem('Test::Item1', 'Toolkit Test 1', "alert('Test 1')"),
+				new JSPopupMenuItem('Test::Item2', 'Toolkit Test 2', "alert('Test 2')"),
+			);
+			break;
+			
+			case iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS:
+			// $param is a DBObject
+			$aResult = array(
+				new JSPopupMenuItem('Test::Item1', 'Object Test 1', "alert('Test 1')"),
+				new JSPopupMenuItem('Test::Item2', 'Object Test 2', "alert('Test 2')"),
+			);
+			break;
+			*/
+			
+			case iPopupMenuExtension::MENU_DASHBOARD_ACTIONS:
+			// $param is a Dashboard
+			$oAppContext = new ApplicationContext();
+			$aParams = $oAppContext->GetAsHash();
+			$sMenuId = ApplicationMenu::GetActiveNodeId();
+			$sDlgTitle = addslashes(Dict::S('UI:ImportDashboardTitle'));
+			$sDlgText = addslashes(Dict::S('UI:ImportDashboardText'));
+			$sCloseBtn = addslashes(Dict::S('UI:Button:Cancel'));
+			$aResult = array(
+				new SeparatorPopupMenuItem(),
+				new URLPopupMenuItem('UI:ExportDashboard', Dict::S('UI:ExportDashBoard'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=export_dashboard&id='.$sMenuId),
+				new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sMenuId', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn' })",
+									array('../js/ajaxfileupload.js')),
+			);
+			break;
+			
+			/*
+			case iPopupMenuExtension::MENU_USER_ACTIONS:
+			// $param is null ??
+			$aResult = array(
+				new SeparatorPopupMenuItem(),
+				new JSPopupMenuItem('Test::Item1', 'Reset preferences...', "alert('Test 1')"),
+				new JSPopupMenuItem('Test::Item2', 'Do Something Stupid', "alert('Hey Dude !')"),
+			);
+			break;
+			*/
+			
+			default:
+			// Unknown type of menu, do nothing
+			$aResult = array();
+		}
+		return $aResult;
+	}
+}

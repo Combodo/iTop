@@ -604,5 +604,36 @@ class WebPage implements Page
 			$this->a_OutputOptions[$sFormat][$sOptionName] = $sValue;
 		}
 	}
+	
+	public function RenderPopupMenuItems($aActions, $aFavoriteActions = array())
+	{
+		$sPrevUrl = '';
+		$sHtml = '';
+		foreach ($aActions as $aAction)
+		{
+			$sClass = isset($aAction['class']) ? " class=\"{$aAction['class']}\"" : "";
+			$sOnClick = isset($aAction['onclick']) ? " onclick=\"{$aAction['onclick']}\"" : "";
+			if (empty($aAction['url']))
+			{
+				if ($sPrevUrl != '') // Don't output consecutively two separators...
+				{
+					$sHtml .= "<li>{$aAction['label']}</li>";			
+				}
+				$sPrevUrl = '';
+			}
+			else
+			{
+				$sHtml .= "<li><a href=\"{$aAction['url']}\"$sClass $sOnClick>{$aAction['label']}</a></li>";
+				$sPrevUrl = $aAction['url'];
+			}
+		}
+		$sHtml .= "</ul></li></ul></div>";
+		foreach(array_reverse($aFavoriteActions) as $aAction)
+		{
+			$sHtml .= "<div class=\"actions_button\"><a href='{$aAction['url']}'>{$aAction['label']}</a></div>";			
+		}
+		
+		return $sHtml;
+	}
 }
 ?>

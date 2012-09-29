@@ -650,18 +650,24 @@ EOF
 			}
 			$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><img src=\"../images/onOffBtn.png\"><ul>";
 			$sLogOffMenu .= "<li><span>$sLogonMessage</span></li>\n";
-			$sLogOffMenu .= "<li><a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/preferences.php?".$oAppContext->GetForLink()."\">".Dict::S('UI:Preferences')."</a></li>\n";
+			$aActions = array();
+
+			$oPrefs = new URLPopupMenuItem('UI:Preferences', Dict::S('UI:Preferences'), utils::GetAbsoluteUrlAppRoot()."pages/preferences.php?".$oAppContext->GetForLink());
+			$aActions[$oPrefs->GetUID()] = $oPrefs->GetMenuItem();
 				
 			if (utils::CanLogOff())
 			{
-				//$sLogOffMenu .= "<li><a href=\"../pages/UI.php?loginop=logoff\">".Dict::S('UI:LogOffMenu')."</a></li>\n";
-				$sLogOffMenu .= "<li><a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a></li>\n";
+				$oLogOff = new URLPopupMenuItem('UI:LogOffMenu', Dict::S('UI:LogOffMenu'), utils::GetAbsoluteUrlAppRoot().'pages/logoff.php');
+				$aActions[$oLogOff->GetUID()] = $oLogOff->GetMenuItem();
 			}
 			if (UserRights::CanChangePassword())
 			{
-				$sLogOffMenu .= "<li><a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?loginop=change_pwd\">".Dict::S('UI:ChangePwdMenu')."</a></li>\n";
+				$oChangePwd = new URLPopupMenuItem('UI:ChangePwdMenu', Dict::S('UI:ChangePwdMenu'), utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=change_pwd');
+				$aActions[$oChangePwd->GetUID()] = $oChangePwd->GetMenuItem();
 			}
-			$sLogOffMenu .= "</ul>\n</li>\n</ul></span>\n";
+			utils::GetPopupMenuItems($this, iPopupMenuExtension::MENU_USER_ACTIONS, null, $aActions);
+			$sLogOffMenu .= $this->RenderPopupMenuItems($aActions);
+
 
 			$sRestrictions = '';
 			if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))

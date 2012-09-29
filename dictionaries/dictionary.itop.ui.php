@@ -988,6 +988,11 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Dashboard:Edit' => 'Edit This Page...',
 	'UI:Dashboard:Revert' => 'Revert To Original Version...',
 	'UI:Dashboard:RevertConfirm' => 'Every changes made to the original version will be lost. Please confirm that you want to do this.',
+	'UI:ExportDashBoard' => 'Export to a file',
+	'UI:ImportDashBoard' => 'Import from a file...',
+	'UI:ImportDashboardTitle' => 'Import From a File',
+	'UI:ImportDashboardText' => 'Select a dashboard file to import:',
+
 
 	'UI:DashletCreation:Title' => 'Create a new Dashlet',
 	'UI:DashletCreation:Dashboard' => 'Dashboard',
