@@ -377,6 +377,36 @@ class WizStepDetectedInfo extends WizardStep
 	public function Display(WebPage $oPage)
 	{
 		$oPage->p('Info about the detected version');
+		$sSourceDir = $this->oWizard->GetParameter('source_dir', '');
+		$aInstalledModules = SetupUtils::AnalyzeInstallation($this->oWizard);		
+		$sVersion = $aInstalledModules[ROOT_MODULE]['version_db'];
+		
+		if (preg_match('/^([0-9]+)\.([0-9]+)\.([0-9]+)\.(.*)$/', $sVersion, $aMatches))
+		{
+			$sVersion = $aMatches[1].'.'.$aMatches[2].'.'.$aMatches[3];
+		}
+		
+		$sKnownManifestFile = APPROOT.'setup/known-versions/'.$sVersion.'/manifest.xml';
+		if ($sSourceDir != '')
+		{
+			if (file_exists($sKnownManifestFile))
+			{
+				$aDMchanges = SetupUtils::CheckDataModelFiles($sKnownManifestFile, $sSourceDir);
+				$aPortalChanges = SetupUtils::CheckPortalFiles($sKnownManifestFile, $sSourceDir);
+				$aCodeChanges = SetupUtils::CheckApplicationFiles($sKnownManifestFile, $sSourceDir);
+				
+				$oPage->add("Changes detected compared to $sVersion:<br/>DataModel:<br/><pre>".print_r($aDMchanges, true)."</pre><br/>Portal:<br/><pre>".print_r($aPortalChanges, true)."</pre><br/>Code:<br/><pre>".print_r($aCodeChanges, true)."</pre>");
+			}
+			else
+			{
+				$oPage->p("Unknown version $sVersion. Do you want to upgrade anyway ??? NOT GUARANTEED AT ALL !!!");
+			}
+		}
+		else
+		{
+			$oPage->p("No source dir provided assuming that the installed version '$sVersion' is genuine iTop build...");
+		}
+		
 	}
 }
 

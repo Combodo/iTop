@@ -913,7 +913,7 @@ EOF
 		$aParamValues = array(
 			'db_server' => $oWizard->GetParameter('db_server', ''),
 			'db_user' => $oWizard->GetParameter('db_user', ''),
-			'db_pwd' => $oWizard->GetParameter('db_server', ''),
+			'db_pwd' => $oWizard->GetParameter('db_pwd', ''),
 			'db_name' => $oWizard->GetParameter('db_name', ''),
 			'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
 			'source_dir' => APPROOT.'datamodel',
@@ -921,9 +921,149 @@ EOF
 		$oConfig->UpdateFromParams($aParamValues, 'datamodel');
 
 		$oProductionEnv = new RunTimeEnvironment();
-		$oConfig = new Config();
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, 'datamodel');
 
 		return $aAvailableModules;
-	}	
+	}
+
+	/**
+	 * Checks if the content of a directory matches the given manifest
+	 * @param string $sBaseDir Path to the root directory of iTop
+	 * @param string $sSourceDir Relative path to the directory to check under $sBaseDir
+	 * @param Array $aDOMManifest Array of array('path' => relative_path 'size'=> iSize, 'md5' => sHexMD5)
+	 * @param Hash $aResult Used for recursion 
+	 * @return hash Hash array ('added' => array(), 'removed' => array(), 'modified' => array()) 
+	 */
+	public static function CheckDirAgainstManifest($sBaseDir, $sSourceDir, $aManifest, $aExcludeNames = array('.svn'), $aResult = null)
+	{
+		if ($aResult === null)
+		{
+			$aResult = array('added' => array(), 'removed' => array(), 'modified' => array());
+		}
+		
+		if (substr($sSourceDir, 0, 1) == '/')
+		{
+			$sSourceDir = substr($sSourceDir, 1);
+		}
+		
+		// Manifest limited to all the files supposed to be located in this directory
+		$aDirManifest = array(); 
+		foreach($aManifest as $aFileInfo)
+		{
+			$sDir = dirname($aFileInfo['path']);
+			if ($sDir == '.')
+			{
+				// Hmm... the file seems located at the root of iTop
+				$sDir = '';
+			}
+			if ($sDir == $sSourceDir)
+			{
+				$aDirManifest[basename($aFileInfo['path'])] = $aFileInfo;
+			}
+		}
+
+		// Read the content of the directory
+		foreach(glob($sBaseDir.'/'.$sSourceDir .'/*') as $sFilePath)
+		{
+			$sFile = basename($sFilePath);
+			
+			if (in_array(basename($sFile), $aExcludeNames)) continue;
+						
+			if(is_dir($sFilePath))
+			{
+				$aResult = self::CheckDirAgainstManifest($sBaseDir, $sSourceDir.'/'.$sFile, $aManifest, $aExcludeNames, $aResult);
+			}
+			else
+			{
+				if (!array_key_exists($sFile, $aDirManifest))
+				{
+//echo "New file ".$sFile." in $sSourceDir\n"; 
+					$aResult['added'][$sSourceDir.'/'.$sFile] = true;
+				}
+				else
+				{
+					$aStats = stat($sFilePath);
+					if ($aStats['size'] != $aDirManifest[$sFile]['size'])
+					{
+						// Different sizes
+						$aResult['modified'][$sSourceDir.'/'.$sFile] = 'Different sizes. Original size: '.$aDirManifest[$sFile]['size'].' bytes, actual file size on disk: '.$aStats['size'].' bytes.';
+					}
+					else
+					{
+						// Same size, compare the md5 signature
+						$sMD5 = md5_file($sFilePath);
+						if ($sMD5 != $aDirManifest[$sFile]['md5'])
+						{
+							$aResult['modified'][$sSourceDir.'/'.$sFile] = 'Content modified (MD5 checksums differ).';
+						}
+//else
+//{
+//	echo $sSourceDir.'/'.$sFile." unmodified ($sMD5 == {$aDirManifest[$sFile]['md5']})\n";
+//}
+					}
+//echo "Removing ".$sFile." from aDirManifest\n"; 
+					unset($aDirManifest[$sFile]);
+				}				
+			}
+		}
+		// What remains in the array are files that were deleted
+		foreach($aDirManifest as $sDeletedFile => $void)
+		{
+			$aResult['removed'][$sSourceDir.'/'.$sDeletedFile] = true;
+		}
+		return $aResult;
+	}
+	
+	public static function CheckDataModelFiles($sManifestFile, $sBaseDir)
+	{
+		$oXML = simplexml_load_file($sManifestFile);
+		$aManifest = array();
+		foreach($oXML as $oFileInfo)
+		{
+			$aManifest[] = array('path' => (string)$oFileInfo->path, 'size' => (int)$oFileInfo->size, 'md5' => (string)$oFileInfo->md5);
+		}
+		
+		$aResults = self::CheckDirAgainstManifest($sBaseDir, 'modules', $aManifest);
+		
+//		echo "<pre>Comparison of ".dirname($sBaseDir)."/modules:\n".print_r($aResults, true)."</pre>";
+		return $aResults;
+	}
+	
+	public static function CheckPortalFiles($sManifestFile, $sBaseDir)
+	{
+		$oXML = simplexml_load_file($sManifestFile);
+		$aManifest = array();
+		foreach($oXML as $oFileInfo)
+		{
+			$aManifest[] = array('path' => (string)$oFileInfo->path, 'size' => (int)$oFileInfo->size, 'md5' => (string)$oFileInfo->md5);
+		}
+		
+		$aResults = self::CheckDirAgainstManifest($sBaseDir, 'portal', $aManifest);
+		
+//		echo "<pre>Comparison of ".dirname($sBaseDir)."/portal:\n".print_r($aResults, true)."</pre>";
+		return $aResults;
+	}
+	
+	public static function CheckApplicationFiles($sManifestFile, $sBaseDir)
+	{
+		$oXML = simplexml_load_file($sManifestFile);
+		$aManifest = array();
+		foreach($oXML as $oFileInfo)
+		{
+			$aManifest[] = array('path' => (string)$oFileInfo->path, 'size' => (int)$oFileInfo->size, 'md5' => (string)$oFileInfo->md5);
+		}
+		
+		$aResults = array('added' => array(), 'removed' => array(), 'modified' => array());
+		foreach(array('addons', 'core', 'dictionaries', 'js', 'application', 'css', 'pages', 'synchro', 'webservices') as $sDir)
+		{
+			$aTmp = self::CheckDirAgainstManifest($sBaseDir, 'portal', $aManifest);
+			$aResults['added'] = array_merge($aResults['added'], $aTmp['added']);
+			$aResults['modified'] = array_merge($aResults['modified'], $aTmp['modified']);
+			$aResults['removed'] = array_merge($aResults['removed'], $aTmp['removed']);
+		}
+		
+//		echo "<pre>Comparison of ".dirname($sBaseDir)."/portal:\n".print_r($aResults, true)."</pre>";
+		return $aResults;
+	}
+	
 }
