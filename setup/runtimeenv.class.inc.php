@@ -165,7 +165,7 @@ class RunTimeEnvironment
 		}
 		catch (MySQLException $e)
 		{
-			// No database or eroneous information
+			// No database or erroneous information
 			$aSelectInstall = array();
 		}
 	
@@ -184,12 +184,12 @@ class RunTimeEnvironment
 				$sModuleName = ROOT_MODULE;
 			}
 	
-				if (array_key_exists($sModuleName, $aInstallByModule))
+			if (array_key_exists($sModuleName, $aInstallByModule))
+			{
+				if ($iInstalled < $aInstallByModule[$sModuleName]['installed'])
 				{
-					if ($iInstalled < $aInstallByModule[$sModuleName]['installed'])
-					{
-						continue;
-					}
+					continue;
+				}
 			}
 	
 			if ($aInstall['parent_id'] == 0)
