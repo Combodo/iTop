@@ -1489,7 +1489,7 @@ class AttributeFinalClass extends AttributeString
 
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
-		$aRawValues = MetaModel::EnumChildClasses($this->GetHostClass());
+		$aRawValues = MetaModel::EnumChildClasses($this->GetHostClass(), ENUM_CHILD_CLASSES_ALL);
 		$aLocalizedValues = array();
 		foreach ($aRawValues as $sClass)
 		{
@@ -3491,17 +3491,17 @@ class AttributeStopWatch extends AttributeDefinition
 	public function GetSQLColumns()
 	{
 		$aColumns = array();
-		$aColumns[$this->GetCode().'_timespent'] = 'INT(11) UNSIGNED DEFAULT 0';
-		$aColumns[$this->GetCode().'_started'] = 'DATETIME NULL';
-		$aColumns[$this->GetCode().'_laststart'] = 'DATETIME NULL';
-		$aColumns[$this->GetCode().'_stopped'] = 'DATETIME NULL';
+		$aColumns[$this->GetCode().'_timespent'] = 'INT(11) UNSIGNED';
+		$aColumns[$this->GetCode().'_started'] = 'DATETIME';
+		$aColumns[$this->GetCode().'_laststart'] = 'DATETIME';
+		$aColumns[$this->GetCode().'_stopped'] = 'DATETIME';
 		foreach ($this->ListThresholds() as $iThreshold => $aFoo)
 		{
 			$sPrefix = $this->GetCode().'_'.$iThreshold;
-			$aColumns[$sPrefix.'_deadline'] = 'DATETIME NULL';
-			$aColumns[$sPrefix.'_passed'] = 'TINYINT(1) NULL';
-			$aColumns[$sPrefix.'_triggered'] = 'TINYINT(1) NULL';
-			$aColumns[$sPrefix.'_overrun'] = 'INT(11) UNSIGNED NULL';
+			$aColumns[$sPrefix.'_deadline'] = 'DATETIME';
+			$aColumns[$sPrefix.'_passed'] = 'TINYINT(1) UNSIGNED';
+			$aColumns[$sPrefix.'_triggered'] = 'TINYINT(1)';
+			$aColumns[$sPrefix.'_overrun'] = 'INT(11) UNSIGNED';
 		}
 		return $aColumns;
 	}

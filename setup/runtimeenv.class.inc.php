@@ -24,6 +24,9 @@
  */
 
 require_once(APPROOT."setup/modulediscovery.class.inc.php");
+require_once(APPROOT.'setup/modelfactory.class.inc.php');
+require_once(APPROOT.'setup/compiler.class.inc.php');
+require_once(APPROOT.'core/metamodel.class.php');
 
 define ('MODULE_ACTION_OPTIONAL', 1);
 define ('MODULE_ACTION_MANDATORY', 2);
@@ -233,7 +236,93 @@ class RunTimeEnvironment
 	
 		return $aRes;
 	}
-	
+
+
+	public function WriteConfigFileSafe($oConfig)
+	{
+		self::MakeDirSafe(APPCONF);
+		self::MakeDirSafe(APPCONF.$this->sTargetEnv);
+		
+		$sTargetConfigFile = APPCONF.$this->sTargetEnv.'/'.ITOP_CONFIG_FILE;
+		
+		// Write the config file
+		@chmod($sTargetConfigFile, 0770); // In case it exists: RWX for owner and group, nothing for others
+		$oConfig->WriteToFile($sTargetConfigFile);
+		@chmod($sTargetConfigFile, 0440); // Read-only for owner and group, nothing for others
+	}
+
+	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir)
+	{
+		$sSourceDirFull = APPROOT.$sSourceDir;
+		if (!is_dir($sSourceDirFull))
+		{
+			throw new Exception("The source directory '$sSourceDir' does not exist (or could not be read)");
+		}
+
+		$aRet = array();
+
+		// Determine the installed modules
+		//
+		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
+		$oSourceEnv = new RunTimeEnvironment($sSourceEnv);
+		$aInstalledModules = $oSourceEnv->AnalyzeInstallation($oSourceConfig, $sSourceDir);
+
+		// Do load the required modules
+		//
+		$oFactory = new ModelFactory($sSourceDirFull);
+		$aModules = $oFactory->FindModules();
+		foreach($aModules as $foo => $oModule)
+		{
+			$sModule = $oModule->GetName();
+			if (array_key_exists($sModule, $aInstalledModules))
+			{
+				$aRet[] = $oModule;
+			}
+		}
+		return $aRet;
+	}
+
+	public function CompileFrom($sSourceEnv, $sSourceDir = 'datamodel')
+	{
+		$sSourceDirFull = APPROOT.$sSourceDir;
+		// Do load the required modules
+		//
+		$oFactory = new ModelFactory($sSourceDirFull);
+		foreach($this->GetMFModulesToCompile($sSourceEnv, $sSourceDir) as $oModule)
+		{
+			$sModule = $oModule->GetName();
+			$oFactory->LoadModule($oModule);
+			if ($oFactory->HasLoadErrors())
+			{
+				break;
+			}
+		}
+		
+		if ($oFactory->HasLoadErrors())
+		{
+			foreach($oFactory->GetLoadErrors() as $sModuleId => $aErrors)
+			{
+				echo "<h3>Module: ".$sModuleId."</h3>\n";
+				foreach($aErrors as $oXmlError)
+				{
+					echo "<p>File: ".$oXmlError->file." Line:".$oXmlError->line." Message:".$oXmlError->message."</p>\n";
+				}
+			}
+		}
+		else
+		{
+			$oFactory->ApplyChanges();
+			//$oFactory->Dump();
+
+			$sTargetDir = APPROOT.'env-'.$this->sTargetEnv;
+			self::MakeDirSafe($sTargetDir);
+			$oMFCompiler = new MFCompiler($oFactory, $sSourceDirFull);
+			$oMFCompiler->Compile($sTargetDir);
+
+			MetaModel::ResetCache($this->sTargetEnv);
+		}
+	}
+
 	/**
 	 * Helper function to create the database structure
 	 * @return boolean true on success, false otherwise
@@ -354,6 +443,15 @@ class RunTimeEnvironment
 		}
 		// Database is created, installation has been tracked into it
 		return true;	
+	}
+
+	public static function MakeDirSafe($sDir)
+	{
+		if (!is_dir($sDir))
+		{
+			@mkdir($sDir);
+		}
+		@chmod($sDir, 0770); // RWX for owner and group, nothing for others
 	}
 
 	/**
