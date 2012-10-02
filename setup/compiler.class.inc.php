@@ -120,7 +120,7 @@ class MFCompiler
 					{
 						$sCompiledCode .= $this->CompileClass($oClass, $sRelativeDir, $oP);
 					}
-					catch (ssDOMFormatException $e)
+					catch (DOMFormatException $e)
 					{
 						throw new Exception("Failed to process class '$sClass', from '$sModuleRootDir': ".$e->getMessage());
 					}
@@ -835,6 +835,30 @@ EOF;
 		// Let's make the whole class declaration
 		//
 		$sPHP = "\n\n$sCodeComment\n";
+		$sParentClass = $oClass->GetChildText('php_parent');
+		$oPhpParent = $oClass->GetUniqueElement('php_parent', false);
+		if ($oPhpParent)
+		{
+			$sParentClass = $oPhpParent->GetChildText('name', '');
+			if ($sParentClass == '')
+			{
+				throw new Exception("Failed to process class '".$oClass->getAttribute('id')."', from '$sRelativeDir':  missing required tag 'name' under 'php_parent'.");
+			}
+			$sIncludeFile = $oPhpParent->GetChildText('file', '');
+			if ($sIncludeFile != '')
+			{
+				$sPHP .= "\nrequire_once('$sIncludeFile'); // Implementation of the class $sParentClass\n";
+			}
+			$sFullPath =  $this->sSourceDir.'/'.$sModuleRelativeDir.'/'.$sIncludeFile;
+			if (!file_exists($sFullPath))
+			{
+				throw new Exception("Failed to process class '".$oClass->getAttribute('id')."', from '$sModuleRelativeDir'. The required include file: '$sFullPath' does not exist.");
+			}
+		}
+		else
+		{
+			$sParentClass = $oClass->GetChildText('parent', 'DBObject');
+		}
 		if ($oProperties->GetChildText('abstract') == 'true')
 		{
 			$sPHP .= 'abstract class '.$oClass->getAttribute('id');
@@ -843,7 +867,7 @@ EOF;
 		{
 			$sPHP .= 'class '.$oClass->getAttribute('id');
 		}
-		$sPHP .= " extends ".$oClass->GetChildText('parent', 'DBObject')."\n";
+		$sPHP .= " extends $sParentClass\n";
 		$sPHP .=
 <<<EOF
 {

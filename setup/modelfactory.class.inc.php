@@ -198,19 +198,9 @@ class ModelFactory
 	
 				if (!$oTargetParentNode)
 				{
-					if (substr($sParentId, 0, 1) == '/') // Convention for well known classes
-					{
-						$oTargetParentNode = $this->AddWellKnownParent(substr($sParentId, 1));
-						// Remove the leading slash character
-						$oParentNameNode = $oSourceNode->GetOptionalElement('parent')->firstChild; // Get the DOMCharacterData node
-						$oParentNameNode->data = substr($sParentId, 1);
-					}
-					else
-					{
-						echo "Dumping target doc - looking for '$sPath'<br/>\n";
-						$this->oDOMDocument->firstChild->Dump();
-						throw new Exception("XML datamodel loader: could not find parent node for $oSourceNode->tagName / ".$oSourceNode->getAttribute('id')." with parent id $sParentId");
-					}
+					echo "Dumping target doc - looking for '$sParentId'<br/>\n";
+					$this->oDOMDocument->firstChild->Dump();
+					throw new Exception("XML datamodel loader: could not find parent node for $oSourceNode->tagName / ".$oSourceNode->getAttribute('id')." with parent id $sParentId");
 				}
 			}
 			else 
@@ -218,7 +208,7 @@ class ModelFactory
 				$oTargetNode = $oTarget->GetNodeById('/itop_design/classes//class', $oSourceNode->getAttribute('id'))->item(0);
 				if (!$oTargetNode)
 				{
-					echo "Dumping target doc - looking for '$sPath'<br/>\n";
+					echo "Dumping target doc - looking for '".$oSourceNode->getAttribute('id')."'<br/>\n";
 					$this->oDOMDocument->firstChild->Dump();
 					throw new Exception("XML datamodel loader: could not find node for $oSourceNode->tagName/".$oSourceNode->getAttribute('id'));
 				}
@@ -614,19 +604,7 @@ EOF
 	public function GetClass($sClassName, $bFlattenLayers = true)
 	{
 		$oClassNode = $this->GetNodes("/itop_design/classes//class[@id='$sClassName']")->item(0);
-		if ($oClassNode == null)
-		{
-			if (substr($sClassName, 0, 1) == '/') // Convention: this class is a "well known" parent
-			{
-				return $this->AddWellKnownParent(substr($sClassName, 1));
-			}
-			else
-			{
-				return null;
-			}
-			
-		}
-		elseif ($bFlattenLayers)
+		if (($oClassNode != null) && ($bFlattenLayers))
 		{
 			$sOperation = $oClassNode->getAttribute('_alteration');
 			if ($sOperation == 'removed')
