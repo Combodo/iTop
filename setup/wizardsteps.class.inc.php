@@ -1538,7 +1538,7 @@ EOF
 EOF
 		);
 		}
-		else if ($aRes['next-step'] == '')
+		else if ($aRes['status'] != ApplicationInstaller::ERROR)
 		{
 			// Installation complete, move to the next step of the wizard
 			$oPage->add_ready_script(

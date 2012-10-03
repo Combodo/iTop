@@ -175,8 +175,22 @@ class ApplicationInstaller
 				}
 				$sTargetDir = 'env-'.$sTargetEnvironment;
 				$sWorkspaceDir = $this->oParams->Get('workspace_dir', 'workspace');
+				$bUseSymbolicLinks = false;
+				$aMiscOptions = $this->oParams->Get('options', array());
+				if (isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks'] )
+				{
+					if (function_exists('symlink'))
+					{
+						$bUseSymbolicLinks = true;
+						SetupPage::log_info("Using symbolic links instead of copying data model files (for developers only!)");
+					}
+					else
+					{
+						SetupPage::log_info("Symbolic links (function symlinks) does not seem to be supported on this platform (OS/PHP version).");
+					}
+				}
 						
-				self::DoCompile($aSelectedModules, $sSourceDir, $sTargetDir, $sWorkspaceDir);
+				self::DoCompile($aSelectedModules, $sSourceDir, $sTargetDir, $sWorkspaceDir, $bUseSymbolicLinks);
 				
 				$aResult = array(
 					'status' => self::OK,
@@ -360,7 +374,7 @@ class ApplicationInstaller
 	}
 
 	
-	protected static function DoCompile($aSelectedModules, $sSourceDir, $sTargetDir, $sWorkspaceDir = '')
+	protected static function DoCompile($aSelectedModules, $sSourceDir, $sTargetDir, $sWorkspaceDir = '', $bUseSymbolicLinks = false)
 	{
 		SetupPage::log_info("Compiling data model.");
 
@@ -428,7 +442,7 @@ class ApplicationInstaller
 		else
 		{
 			$oMFCompiler = new MFCompiler($oFactory, $sSourcePath);
-			$oMFCompiler->Compile($sTargetPath);
+			$oMFCompiler->Compile($sTargetPath, null, $bUseSymbolicLinks);
 			SetupPage::log_info("Data model successfully compiled to '$sTargetPath'.");
 		}
 	}
@@ -501,6 +515,8 @@ class ApplicationInstaller
 			$aPredefinedObjects = call_user_func(array($sClass, 'GetPredefinedObjects'));
 			if ($aPredefinedObjects != null)
 			{
+				SetupPage::log_info("$sClass::GetPredefinedObjects() returned ".count($aPredefinedObjects)." elements.");
+				
 				// Temporary... until this get really encapsulated as the default and transparent behavior
 				$oMyChange = MetaModel::NewObject("CMDBChange");
 				$oMyChange->Set("date", time());

@@ -460,7 +460,7 @@ class SetupUtils
 	 * Helper to copy a directory to a target directory, skipping .SVN files (for developer's comfort!)
 	 * Returns true if successfull
 	 */
-	public static function copydir($sSource, $sDest)
+	public static function copydir($sSource, $sDest, $bUseSymbolicLinks = false)
 	{
 		if (is_dir($sSource))
 		{
@@ -482,11 +482,25 @@ class SetupUtils
 					if (is_dir($sSource.'/'.$sFile))
 					{
 						// Recurse
-						self::copydir($sSource.'/'.$sFile, $sDest.'/'.$sFile);
+						self::copydir($sSource.'/'.$sFile, $sDest.'/'.$sFile, $bUseSymbolicLinks);
 					}
 					else
 					{
-						copy($sSource.'/'.$sFile, $sDest.'/'.$sFile);
+						if ($bUseSymbolicLinks)
+						{
+							if (function_exists('symlink'))
+							{
+								symlink($sSource.'/'.$sFile, $sDest.'/'.$sFile);
+							}
+							else
+							{
+								throw(new Exception("Error, cannot *copy* '$sSource/$sFile' to '$sDest/$sFile' using symbolic links, 'symlink' is not supported on this system."));
+							}
+						}
+						else
+						{
+							copy($sSource.'/'.$sFile, $sDest.'/'.$sFile);
+						}
 					}
 				}
 			}
@@ -494,7 +508,21 @@ class SetupUtils
 		}
 		elseif (is_file($sSource))
 		{
-			return copy($sSource, $sDest);
+			if ($bUseSymbolicLinks)
+			{
+				if (function_exists('symlink'))
+				{
+					return symlink($sSource, $sDest);
+				}
+				else
+				{
+					throw(new Exception("Error, cannot *copy* '$sSource' to '$sDest' using symbolic links, 'symlink' is not supported on this system."));
+				}
+			}
+			else
+			{
+				return copy($sSource, $sDest);
+			}
 		}
 		else
 		{

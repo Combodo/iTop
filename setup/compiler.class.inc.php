@@ -53,7 +53,7 @@ class MFCompiler
 		}
 	}
 
-	public function Compile($sTargetDir, $oP = null)
+	public function Compile($sTargetDir, $oP = null, $bUseSymbolicLinks = false)
 	{
 		$aAllClasses = array(); // flat list of classes
 
@@ -100,7 +100,7 @@ class MFCompiler
 			$sRelativeDir = substr($sModuleRootDir, strlen($this->sSourceDir) + 1);
 		
 			// Push the other module files
-			SetupUtils::copydir($sModuleRootDir, $sTargetDir.'/'.$sRelativeDir);
+			SetupUtils::copydir($sModuleRootDir, $sTargetDir.'/'.$sRelativeDir, $bUseSymbolicLinks);
 
 			$sCompiledCode = '';
 

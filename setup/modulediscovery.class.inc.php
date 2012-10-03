@@ -171,7 +171,7 @@ class ModuleDiscovery
 	public static function GetAvailableModules($sRootDir, $sSearchDir, $oP = null)
 	{
 		$sLookupDir = realpath($sRootDir.'/'.$sSearchDir);
-
+		
 		if (self::$m_sModulesRoot != $sLookupDir)
 		{
 			self::ResetCache();
@@ -234,7 +234,7 @@ class ModuleDiscovery
 	protected static function ListModuleFiles($sRelDir, $sRootDir)
 	{
 		$sDirectory = $sRootDir.'/'.$sRelDir;
-		//echo "<p>$sDirectory</p>\n";
+		
 		if ($hDir = opendir($sDirectory))
 		{
 			// This is the correct way to loop over the directory. (according to the documentation)
@@ -255,7 +255,8 @@ class ModuleDiscovery
 					{
 						//echo "<p>Loading: $sDirectory/$sFile...</p>\n";
 						//SetupPage::log_info("Discovered module $sFile");
-						require_once($sDirectory.'/'.$sFile);
+						require($sDirectory.'/'.$sFile); // WARNING require_once will NOT work IIF doing an unattended installation WITH symbolic links
+														 // since datamodel/xxx/module.xxx.php and env-production/xxx/module.xxx.php are actually the same file (= inode)
 						//echo "<p>Done.</p>\n";
 					}
 					catch(Exception $e)
