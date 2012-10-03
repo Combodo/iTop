@@ -5,9 +5,9 @@
   <cells>
     <cell>
       <dashlet id="1" xsi:type="DashletHeaderDynamic">
-        <title>Menu_Contact</title>
+        <title>UI:ContactsMenu</title>
         <icon>itop-config-mgmt-1.0.0/images/team.png</icon>
-        <subtitle>Contacts</subtitle>
+        <subtitle>Menu:ConfigManagement:AllContacts</subtitle>
         <query>SELECT Contact</query>
         <group_by>status</group_by>
         <values>active,inactive</values>

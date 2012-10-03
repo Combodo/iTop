@@ -5,9 +5,9 @@
   <cells>
     <cell>
       <dashlet id="1" xsi:type="DashletHeaderDynamic">
-        <title>Configuration Management</title>
+        <title>UI:ConfigurationManagementMenu</title>
         <icon>itop-config-mgmt-1.0.0/images/database.png</icon>
-        <subtitle>Configuration Items</subtitle>
+        <subtitle>UI:WelcomeMenu:AllConfigItems</subtitle>
         <query>SELECT FunctionalCI</query>
         <group_by>status</group_by>
         <values>implementation,production,obsolete</values>
@@ -33,30 +33,30 @@
     </cell>
     <cell>
       <dashlet id="8" xsi:type="DashletHeaderDynamic">
-        <title>Helpdesk</title>
+        <title>Menu:RequestManagement</title>
         <icon>itop-request-mgmt-1.0.0/images/user-request-deadline.png</icon>
-        <subtitle>Open Requests</subtitle>
+        <subtitle>UI:WelcomeMenu:AllOpenRequests</subtitle>
         <query>SELECT UserRequest WHERE status != "closed"</query>
         <group_by>status</group_by>
         <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
       </dashlet>
       <dashlet id="9" xsi:type="DashletObjectList">
-        <title>My Open Requests</title>
+        <title>UI:WelcomeMenu:MyCalls</title>
         <query>SELECT UserRequest AS i WHERE i.caller_id = :current_contact_id AND status NOT IN ("closed", "resolved")</query>
         <menu>true</menu>
       </dashlet>
     </cell>
     <cell>
       <dashlet id="10" xsi:type="DashletHeaderDynamic">
-        <title>Incident Management</title>
+        <title>Menu:IncidentManagement</title>
         <icon>itop-incident-mgmt-1.0.0/images/incident-escalated.png</icon>
-        <subtitle>Open incidents</subtitle>
+        <subtitle>UI:WelcomeMenu:OpenIncidents</subtitle>
         <query>SELECT Incident WHERE status != "closed"</query>
         <group_by>status</group_by>
         <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
       </dashlet>
       <dashlet id="11" xsi:type="DashletObjectList">
-        <title>My Open incidents</title>
+        <title>UI:WelcomeMenu:MyIncidents</title>
         <query>SELECT Incident AS i WHERE i.agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")</query>
         <menu>true</menu>
       </dashlet>
