@@ -162,7 +162,7 @@ class ormStopWatch
 		}
 		else
 		{
-			$iElapsedTemp = $this->ComputeDuration($oHostObject, $oAttDef, $this->iLastStart, time());
+			$iElapsedTemp = ''; //$this->ComputeDuration($oHostObject, $oAttDef, $this->iLastStart, time());
 			$aProperties['Elapsed'] = $this->iTimeSpent.' + '.$iElapsedTemp.' s + <img src="../images/indicator.gif">';
 		}
 
