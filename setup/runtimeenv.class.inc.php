@@ -130,6 +130,15 @@ class RunTimeEnvironment
 		foreach($aModules as $sModuleId => $aModuleInfo)
 		{
 			list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+			if ($sModuleName == '')
+			{
+				throw new Exception("Missing name for the module: '$sModuleId'");
+			}
+			if ($sModuleVersion == '')
+			{
+				// The version must not be empty (it will be used as a criteria to determine wether a module has been installed or not)
+				throw new Exception("Missing version for the module: '$sModuleId'");
+			}
 	
 			$sModuleAppVersion = $aModuleInfo['itop_version'];
 			$aModuleInfo['version_db'] = '';
@@ -181,6 +190,13 @@ class RunTimeEnvironment
 			$iInstalled = strtotime($aInstall['installed']);
 			$sModuleName = $aInstall['name'];
 			$sModuleVersion = $aInstall['version'];
+			if ($sModuleVersion == '')
+			{
+				// Though the version cannot be empty in iTop 2.0, it used to be possible
+				// therefore we have to put something here or the module will not be considered
+				// as being installed
+				$sModuleVersion = '0.0.0';
+			}
 	
 			if ($aInstall['parent_id'] == 0)
 			{
@@ -251,6 +267,9 @@ class RunTimeEnvironment
 		@chmod($sTargetConfigFile, 0440); // Read-only for owner and group, nothing for others
 	}
 
+	/**
+	 * Get the installed modules (only the installed ones)	
+	 */	
 	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir)
 	{
 		$sSourceDirFull = APPROOT.$sSourceDir;
@@ -265,7 +284,7 @@ class RunTimeEnvironment
 		//
 		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
 		$oSourceEnv = new RunTimeEnvironment($sSourceEnv);
-		$aInstalledModules = $oSourceEnv->AnalyzeInstallation($oSourceConfig, $sSourceDir);
+		$aAvailableModules = $oSourceEnv->AnalyzeInstallation($oSourceConfig, $sSourceDir);
 
 		// Do load the required modules
 		//
@@ -274,9 +293,12 @@ class RunTimeEnvironment
 		foreach($aModules as $foo => $oModule)
 		{
 			$sModule = $oModule->GetName();
-			if (array_key_exists($sModule, $aInstalledModules))
+			if (array_key_exists($sModule, $aAvailableModules))
 			{
-				$aRet[] = $oModule;
+				if ($aAvailableModules[$sModule]['version_db'] != '')
+				{
+					$aRet[] = $oModule;
+				}
 			}
 		}
 		return $aRet;
