@@ -304,8 +304,13 @@ class RunTimeEnvironment
 		return $aRet;
 	}
 
-	public function CompileFrom($sSourceEnv, $sSourceDir = 'datamodel')
+	public function CompileFrom($sSourceEnv, $sSourceDir = null)
 	{
+		if (is_null($sSourceDir))
+		{
+			$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
+			$sSourceDir = $oSourceConfig->Get('source_dir');
+		}
 		$sSourceDirFull = APPROOT.$sSourceDir;
 		// Do load the required modules
 		//

@@ -792,9 +792,13 @@ class utils
 	/**
 	 * Get target configuration file name (including full path)
 	 */
-	public static function GetConfigFilePath()
+	public static function GetConfigFilePath($sEnvironment = null)
 	{
-		return APPCONF.self::GetCurrentEnvironment().'/'.ITOP_CONFIG_FILE;
+		if (is_null($sEnvironment))
+		{
+			$sEnvironment = self::GetCurrentEnvironment();
+		}
+		return APPCONF.$sEnvironment.'/'.ITOP_CONFIG_FILE;
 	}
 
     /**
