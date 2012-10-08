@@ -485,12 +485,7 @@ EOF
 		$aErrors = $oObj->UpdateObjectFromPostedForm($this->iId);
 		if (count($aErrors) == 0)
 		{
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			$sUserString = CMDBChange::GetCurrentUserName();
-			$oMyChange->Set("userinfo", $sUserString);
-			$iChangeId = $oMyChange->DBInsert();
-			$oObj->DBInsertTracked($oMyChange);
+			$oObj->DBInsert();
 			return array('name' => $oObj->GetName(), 'id' => $oObj->GetKey());
 		}
 		else

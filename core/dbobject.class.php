@@ -1424,6 +1424,8 @@ abstract class DBObject
 			$oTrigger->DoActivate($this->ToArgs('this'));
 		}
 
+		$this->RecordObjCreation();
+
 		return $this->m_iKey;
 	}
 
@@ -1434,13 +1436,15 @@ abstract class DBObject
 		return $this->m_iKey;
 	}
 	
-	public function DBInsertTracked(CMDBChange $oVoid)
+	public function DBInsertTracked(CMDBChange $oChange)
 	{
+		CMDBObject::SetCurrentChange($oChange);
 		return $this->DBInsert();
 	}
 
-	public function DBInsertTrackedNoReload(CMDBChange $oVoid)
+	public function DBInsertTrackedNoReload(CMDBChange $oChange)
 	{
+		CMDBObject::SetCurrentChange($oChange);
 		return $this->DBInsertNoReload();
 	}
 
@@ -1450,7 +1454,9 @@ abstract class DBObject
 	{
 		$this->m_bIsInDB = false;
 		$this->m_iKey = $iNewKey;
-		return $this->DBInsert();
+		$ret = $this->DBInsert();
+		$this->RecordObjCreation();
+		return $ret;
 	}
 	
 	/**
@@ -1498,7 +1504,7 @@ abstract class DBObject
 		$aChanges = $this->ListChanges();
 		if (count($aChanges) == 0)
 		{
-			//throw new CoreWarning("Attempting to update an unchanged object");
+			// Attempting to update an unchanged object
 			return;
 		}
 
@@ -1509,6 +1515,9 @@ abstract class DBObject
 			$sIssues = implode(', ', $aIssues);
 			throw new CoreException("Object not following integrity rules", array('issues' => $sIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
 		}
+
+		// Save the original values (will be reset to the new values when the object get written to the DB)
+		$aOriginalValues = $this->m_aOrigValues;
 
 		$bHasANewExternalKeyValue = false;
 		$aHierarchicalKeys = array();
@@ -1588,11 +1597,17 @@ abstract class DBObject
 			$this->Reload();
 		}
 
+		if (count($aChanges) != 0)
+		{
+			$this->RecordAttChanges($aChanges, $aOriginalValues);
+		}
+
 		return $this->m_iKey;
 	}
 	
-	public function DBUpdateTracked(CMDBChange $oVoid)
+	public function DBUpdateTracked(CMDBChange $oChange)
 	{
+		CMDBObject::SetCurrentChange($oChange);
 		return $this->DBUpdate();
 	}
 
@@ -1664,6 +1679,8 @@ abstract class DBObject
 
 		$this->AfterDelete();
 
+		$this->RecordObjDeletion($this->m_iKey);
+
 		$this->m_bIsInDB = false;
 		$this->m_iKey = null;
 	}
@@ -1719,8 +1736,9 @@ abstract class DBObject
 		return $oDeletionPlan;
 	}
 
-	public function DBDeleteTracked(CMDBChange $oVoid, $bSkipStrongSecurity = null, &$oDeletionPlan = null)
+	public function DBDeleteTracked(CMDBChange $oChange, $bSkipStrongSecurity = null, &$oDeletionPlan = null)
 	{
+		CMDBObject::SetCurrentChange($oChange);
 		$this->DBDelete($oDeletionPlan);
 	}
 
@@ -1897,6 +1915,152 @@ abstract class DBObject
 	// To be optionaly overloaded
 	protected function AfterDelete()
 	{
+	}
+
+
+	/**
+	 * Common to the recording of link set changes (add/remove/modify)	
+	 */	
+	private function PrepareChangeOpLinkSet($iLinkSetOwnerId, $oLinkSet, $sChangeOpClass, $aOriginalValues = null)
+	{
+		if ($iLinkSetOwnerId <= 0)
+		{
+			return null;
+		}
+
+		if (!is_subclass_of($oLinkSet->GetHostClass(), 'CMDBObject'))
+		{
+			// The link set owner class does not keep track of its history
+			return null;
+		}
+
+		// Determine the linked item class and id
+		//
+		if ($oLinkSet->IsIndirect())
+		{
+			// The "item" is on the other end (N-N links)
+			$sExtKeyToRemote = $oLinkSet->GetExtKeyToRemote();
+			$oExtKeyToRemote = MetaModel::GetAttributeDef(get_class($this), $sExtKeyToRemote);
+			$sItemClass = $oExtKeyToRemote->GetTargetClass();
+			if ($aOriginalValues)
+			{
+				// Get the value from the original values
+				$iItemId = $aOriginalValues[$sExtKeyToRemote];
+			}
+			else
+			{
+				$iItemId = $this->Get($sExtKeyToRemote);
+			}
+		}
+		else
+		{
+			// I am the "item" (1-N links)
+			$sItemClass = get_class($this);
+			$iItemId = $this->GetKey();
+		}
+
+		// Get the remote object, to determine its exact class
+		// Possible optimization: implement a tool in MetaModel, to get the final class of an object (not always querying + query reduced to a select on the root table!
+		$oOwner = MetaModel::GetObject($oLinkSet->GetHostClass(), $iLinkSetOwnerId, false);
+		if ($oOwner)
+		{
+			$sLinkSetOwnerClass = get_class($oOwner);
+			
+			$oMyChangeOp = MetaModel::NewObject($sChangeOpClass);
+			$oMyChangeOp->Set("objclass", $sLinkSetOwnerClass);
+			$oMyChangeOp->Set("objkey", $iLinkSetOwnerId);
+			$oMyChangeOp->Set("attcode", $oLinkSet->GetCode());
+			$oMyChangeOp->Set("item_class", $sItemClass);
+			$oMyChangeOp->Set("item_id", $iItemId);
+			return $oMyChangeOp;
+		}
+		else
+		{
+			// Depending on the deletion order, it may happen that the id is already invalid... ignore
+			return null;
+		}
+	}
+
+	/**
+	 *  This object has been created/deleted, record that as a change in link sets pointing to this (if any)
+	 */	
+	private function RecordLinkSetListChange($bAdd = true)
+	{
+		$aForwardChangeTracking = MetaModel::GetTrackForwardExternalKeys(get_class($this));
+		foreach(MetaModel::GetTrackForwardExternalKeys(get_class($this)) as $sExtKeyAttCode => $oLinkSet)
+		{
+			if (($oLinkSet->GetTrackingLevel() & LINKSET_TRACKING_LIST) == 0) continue;
+			
+			$iLinkSetOwnerId  = $this->Get($sExtKeyAttCode);
+			$oMyChangeOp = $this->PrepareChangeOpLinkSet($iLinkSetOwnerId, $oLinkSet, 'CMDBChangeOpSetAttributeLinksAddRemove');
+			if ($oMyChangeOp)
+			{
+				if ($bAdd)
+				{
+					$oMyChangeOp->Set("type", "added");
+				}
+				else
+				{
+					$oMyChangeOp->Set("type", "removed");
+				}
+				$iId = $oMyChangeOp->DBInsertNoReload();
+			}
+		}
+	}
+
+	protected function RecordObjCreation()
+	{
+		$this->RecordLinkSetListChange(true);
+	}
+
+	protected function RecordObjDeletion($objkey)
+	{
+		$this->RecordLinkSetListChange(false);
+	}
+
+	protected function RecordAttChanges(array $aValues, array $aOrigValues)
+	{
+		$aForwardChangeTracking = MetaModel::GetTrackForwardExternalKeys(get_class($this));
+		foreach(MetaModel::GetTrackForwardExternalKeys(get_class($this)) as $sExtKeyAttCode => $oLinkSet)
+		{
+
+			if (array_key_exists($sExtKeyAttCode, $aValues))
+			{
+				if (($oLinkSet->GetTrackingLevel() & LINKSET_TRACKING_LIST) == 0) continue;
+
+				// Keep track of link added/removed
+				//
+				$iLinkSetOwnerNext = $aValues[$sExtKeyAttCode];
+				$oMyChangeOp = $this->PrepareChangeOpLinkSet($iLinkSetOwnerNext, $oLinkSet, 'CMDBChangeOpSetAttributeLinksAddRemove');
+				if ($oMyChangeOp)
+				{
+					$oMyChangeOp->Set("type", "added");
+					$oMyChangeOp->DBInsertNoReload();
+				}
+
+				$iLinkSetOwnerPrevious = $aOrigValues[$sExtKeyAttCode];
+				$oMyChangeOp = $this->PrepareChangeOpLinkSet($iLinkSetOwnerPrevious, $oLinkSet, 'CMDBChangeOpSetAttributeLinksAddRemove', $aOrigValues);
+				if ($oMyChangeOp)
+				{
+					$oMyChangeOp->Set("type", "removed");
+					$oMyChangeOp->DBInsertNoReload();
+				}
+			}
+			else
+			{
+				// Keep track of link changes
+				//
+				if (($oLinkSet->GetTrackingLevel() & LINKSET_TRACKING_DETAILS) == 0) continue;
+				
+				$iLinkSetOwnerId  = $this->Get($sExtKeyAttCode);
+				$oMyChangeOp = $this->PrepareChangeOpLinkSet($iLinkSetOwnerId, $oLinkSet, 'CMDBChangeOpSetAttributeLinksTune');
+				if ($oMyChangeOp)
+				{
+					$oMyChangeOp->Set("link_id", $this->GetKey());
+					$iId = $oMyChangeOp->DBInsertNoReload();
+				}
+			}
+		}
 	}
 
 	// Return an empty set for the parent of all
@@ -2103,7 +2267,7 @@ abstract class DBObject
 		}
 		// to be continued...
 	}
-}
 
+}
 
 ?>

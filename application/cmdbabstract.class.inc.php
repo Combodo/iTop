@@ -2487,7 +2487,7 @@ EOF
 		// Invoke extensions after insertion (the object must exist, have an id, etc.)
 		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
-			$oExtensionInstance->OnDBInsert($this, self::$m_oCurrChange);
+			$oExtensionInstance->OnDBInsert($this, self::GetCurrentChange());
 		}
 
 		return $res;
@@ -2500,7 +2500,7 @@ EOF
 		// Invoke extensions after insertion (the object must exist, have an id, etc.)
 		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
-			$oExtensionInstance->OnDBInsert($oNewObj, self::$m_oCurrChange);
+			$oExtensionInstance->OnDBInsert($oNewObj, self::GetCurrentChange());
 		}
 		return $oNewObj;
 	}
@@ -2512,7 +2512,7 @@ EOF
 		// Invoke extensions after the update (could be before)
 		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
-			$oExtensionInstance->OnDBUpdate($this, self::$m_oCurrChange);
+			$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
 		}
 		return $res;
 	}
@@ -2528,16 +2528,10 @@ EOF
 		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
 		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
-			$oExtensionInstance->OnDBDelete($this, self::$m_oCurrChange);
+			$oExtensionInstance->OnDBDelete($this, self::GetCurrentChange());
 		}
 
 		return parent::DBDeleteTracked_Internal($oDeletionPlan);
-	}
-
-	protected static function BulkDeleteTracked_Internal(DBObjectSearch $oFilter)
-	{
-		// Todo - invoke the extension
-		return parent::BulkDeleteTracked_Internal($oFilter);
 	}
 
 	public function IsModified()

@@ -311,11 +311,9 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	// Installation: create the very first user
 	public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
 	{
-		// Create a change to record the history of the User object
-		$oChange = MetaModel::NewObject("CMDBChange");
-		$oChange->Set("date", time());
-		$oChange->Set("userinfo", "Initialization");
-		$iChangeId = $oChange->DBInsert();
+		CMDBObject::SetTrackInfo('Initialization');
+
+		$oChange = CMDBObject::GetCurrentChange();
 
 		$iContactId = 0;
 		// Support drastic data model changes: no organization class (or not writable)!

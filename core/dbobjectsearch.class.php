@@ -1126,7 +1126,12 @@ class DBObjectSearch
 		if ($bOQLCacheEnabled && array_key_exists($sQuery, self::$m_aOQLQueries))
 		{
 			// hit!
-			return clone self::$m_aOQLQueries[$sQuery];
+			$oClone = clone self::$m_aOQLQueries[$sQuery];
+			if (!is_null($aParams))
+			{
+				$oClone->m_aParams = $aParams;
+			}
+			return $oClone;
 		}
 
 		$oOql = new OqlInterpreter($sQuery);

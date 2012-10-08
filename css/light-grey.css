@@ -1369,3 +1369,6 @@ a.summary,  a.summary:hover {
 .sortable_field_list > li.selected {
 	background: #F6A828;
 }
+.itop-deleted-object {
+	text-decoration: line-through;
+}

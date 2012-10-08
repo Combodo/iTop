@@ -64,6 +64,19 @@ class CMDBChangeOp extends DBObject
 	{
 		return '';
 	}
+
+	/**
+	 * Safety net: in case the change is not given, let's guarantee that it will
+	 * be set to the current ongoing change (or create a new one)	
+	 */	
+	protected function OnInsert()
+	{
+		if ($this->Get('change') <= 0)
+		{
+			$this->Set('change', CMDBObject::GetCurrentChange());
+		}
+		parent::OnInsert();
+	}
 }
 
 
@@ -124,6 +137,11 @@ class CMDBChangeOpDelete extends CMDBChangeOp
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
+
+		// Final class of the object (objclass must be set to the root class for efficiency purposes)
+		MetaModel::Init_AddAttribute(new AttributeString("fclass", array("allowed_values"=>null, "sql"=>"fclass", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		// Last friendly name of the object
+		MetaModel::Init_AddAttribute(new AttributeString("fname", array("allowed_values"=>null, "sql"=>"fname", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 	}
 	/**
 	 * Describe (as a text string) the modifications corresponding to this change
@@ -533,6 +551,174 @@ class CMDBChangeOpPlugin extends CMDBChangeOp
 	public function GetDescription()
 	{
 		return $this->Get('description');
+	}
+}
+
+/**
+ * Record added/removed objects from within a link set 
+ *
+ * @package     iTopORM
+ */
+abstract class CMDBChangeOpSetAttributeLinks extends CMDBChangeOpSetAttribute
+{
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "core/cmdb",
+			"key_type" => "",
+			"name_attcode" => "change",
+			"state_attcode" => "",
+			"reconc_keys" => array(),
+			"db_table" => "priv_changeop_links",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+
+		// Note: item class/id points to the link class itself in case of a direct link set (e.g. Server::interface_list => Interface)
+		//       item class/id points to the remote class in case of a indirect link set (e.g. Server::contract_list => Contract)
+		MetaModel::Init_AddAttribute(new AttributeString("item_class", array("allowed_values"=>null, "sql"=>"item_class", "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("item_id", array("allowed_values"=>null, "sql"=>"item_id", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
+	}
+}
+
+/**
+ * Record added/removed objects from within a link set 
+ *
+ * @package     iTopORM
+ */
+class CMDBChangeOpSetAttributeLinksAddRemove extends CMDBChangeOpSetAttributeLinks
+{
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "core/cmdb",
+			"key_type" => "",
+			"name_attcode" => "change",
+			"state_attcode" => "",
+			"reconc_keys" => array(),
+			"db_table" => "priv_changeop_links_addremove",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+
+		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum('added,removed'), "sql"=>"type", "default_value"=>"added", "is_null_allowed"=>false, "depends_on"=>array())));
+	}
+
+	/**
+	 * Describe (as a text string) the modifications corresponding to this change
+	 */	 
+	public function GetDescription()
+	{
+		$sResult = '';
+		$oTargetObjectClass = $this->Get('objclass');
+		$oTargetObjectKey = $this->Get('objkey');
+		$oTargetSearch = new DBObjectSearch($oTargetObjectClass);
+		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
+
+		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
+		{
+			if (!MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) return ''; // Protects against renamed attributes...
+
+			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
+			$sAttName = $oAttDef->GetLabel();
+
+			$sItemDesc = MetaModel::GetHyperLink($this->Get('item_class'), $this->Get('item_id'));
+
+			$sResult = $sAttName.' - ';
+			switch ($this->Get('type'))
+			{
+			case 'added':
+				$sResult .= Dict::Format('Change:LinkSet:Added', $sItemDesc);
+				break;
+
+			case 'removed':
+				$sResult .= Dict::Format('Change:LinkSet:Removed', $sItemDesc);
+				break;
+			}
+		}
+		return $sResult;
+	}
+}
+
+/**
+ * Record attribute changes from within a link set
+ * A single record redirects to the modifications made within the same change  
+ *
+ * @package     iTopORM
+ */
+class CMDBChangeOpSetAttributeLinksTune extends CMDBChangeOpSetAttributeLinks
+{
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "core/cmdb",
+			"key_type" => "",
+			"name_attcode" => "change",
+			"state_attcode" => "",
+			"reconc_keys" => array(),
+			"db_table" => "priv_changeop_links_tune",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+
+		MetaModel::Init_AddAttribute(new AttributeInteger("link_id", array("allowed_values"=>null, "sql"=>"link_id", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
+	}
+
+	/**
+	 * Describe (as a text string) the modifications corresponding to this change
+	 */	 
+	public function GetDescription()
+	{
+		$sResult = '';
+		$oTargetObjectClass = $this->Get('objclass');
+		$oTargetObjectKey = $this->Get('objkey');
+		$oTargetSearch = new DBObjectSearch($oTargetObjectClass);
+		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
+
+		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
+		{
+			if (!MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) return ''; // Protects against renamed attributes...
+
+			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
+			$sAttName = $oAttDef->GetLabel();
+
+			$sLinkClass = $oAttDef->GetLinkedClass();
+
+			// Search for changes on the corresponding link
+			//
+			$oSearch = new DBObjectSearch('CMDBChangeOpSetAttribute');
+			$oSearch->AddCondition('change', $this->Get('change'), '=');
+			$oSearch->AddCondition('objclass', $sLinkClass, '=');
+			$oSearch->AddCondition('objkey', $this->Get('link_id'), '=');
+			$oSet = new DBObjectSet($oSearch);
+			$aChanges = array();
+			while ($oChangeOp = $oSet->Fetch())
+			{
+				$aChanges[] = $oChangeOp->GetDescription();
+			}
+			if (count($aChanges) == 0)
+			{
+				return '';
+			}
+
+			$sItemDesc = MetaModel::GetHyperLink($this->Get('item_class'), $this->Get('item_id'));
+
+			$sResult = $sAttName.' - ';
+			$sResult .= Dict::Format('Change:LinkSet:Modified', $sItemDesc);
+			$sResult .= ' : '.implode(', ', $aChanges);
+		}
+		return $sResult;
 	}
 }
 ?>

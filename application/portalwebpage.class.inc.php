@@ -658,12 +658,7 @@ EOF
 		
 		// Record the change
 		//
-		$oMyChange = MetaModel::NewObject("CMDBChange");
-		$oMyChange->Set("date", time());
-		$sUserString = CMDBChange::GetCurrentUserName();
-		$oMyChange->Set("userinfo", $sUserString);
-		$iChangeId = $oMyChange->DBInsert();
-		$oObj->DBUpdateTracked($oMyChange);
+		$oObj->DBUpdate();
 		
 		// Trigger ?
 		//

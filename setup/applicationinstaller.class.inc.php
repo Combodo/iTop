@@ -516,13 +516,6 @@ class ApplicationInstaller
 			if ($aPredefinedObjects != null)
 			{
 				SetupPage::log_info("$sClass::GetPredefinedObjects() returned ".count($aPredefinedObjects)." elements.");
-				
-				// Temporary... until this get really encapsulated as the default and transparent behavior
-				$oMyChange = MetaModel::NewObject("CMDBChange");
-				$oMyChange->Set("date", time());
-				$sUserString = CMDBChange::GetCurrentUserName();
-				$oMyChange->Set("userinfo", $sUserString);
-				$iChangeId = $oMyChange->DBInsert();
 
 				// Create/Delete/Update objects of this class,
 				// according to the given constant values
@@ -538,12 +531,12 @@ class ApplicationInstaller
 						{
 							$oObj->Set($sAttCode, $value);
 						}
-						$oObj->DBUpdateTracked($oMyChange);
+						$oObj->DBUpdate();
 						$aDBIds[$oObj->GetKey()] = true;
 					}
 					else
 					{
-						$oObj->DBDeleteTracked($oMyChange);
+						$oObj->DBDelete();
 					}
 				}
 				foreach ($aPredefinedObjects as $iRefId => $aObjValues)
@@ -556,7 +549,7 @@ class ApplicationInstaller
 						{
 							$oNewObj->Set($sAttCode, $value);
 						}
-						$oNewObj->DBInsertTracked($oMyChange);
+						$oNewObj->DBInsert();
 					}
 				}
 			}
@@ -622,12 +615,12 @@ class ApplicationInstaller
 		
 		
 		$oDataLoader = new XMLDataLoader(); 
-		$oChange = MetaModel::NewObject("CMDBChange");
-		$oChange->Set("date", time());
-		$oChange->Set("userinfo", "Initialization");
-		$iChangeId = $oChange->DBInsert();
+
+		CMDBObject::SetTrackInfo("Initialization");
+		$oMyChange = CMDBObject::GetCurrentChange();
+
 		SetupPage::log_info("starting data load session");
-		$oDataLoader->StartSession($oChange);
+		$oDataLoader->StartSession($oMyChange);
 
 		$aFiles = array();		
 		$oProductionEnv = new RunTimeEnvironment();

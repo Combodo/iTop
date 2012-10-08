@@ -24,6 +24,12 @@
  */
 
 Dict::Add('EN US', 'English', 'English', array(
+	'Core:DeletedObjectLabel' => '%1s (deleted)',
+	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)',
+
+	'Core:UnknownObjectLabel' => 'Object not found (class: %1$s, id: %2$d)',
+	'Core:UnknownObjectTip' => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.',
+
 	'Core:AttributeLinkedSet' => 'Array of objects',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
 
@@ -240,6 +246,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modified, previous value: %2$s',
 	'Change:AttName_Changed' => '%1$s modified',
 	'Change:AttName_EntryAdded' => '%1$s modified, new entry added.',
+	'Change:LinkSet:Added' => 'added %1$s',
+	'Change:LinkSet:Removed' => 'removed %1$s',
+	'Change:LinkSet:Modified' => 'modified %1$s',
 ));
 
 //

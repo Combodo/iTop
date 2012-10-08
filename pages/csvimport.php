@@ -298,15 +298,10 @@ try
 		if (!$bSimulate)
 		{
 			// We're doing it for real, let's create a change
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			$sUserString = CMDBChange::GetCurrentUserName();
-			$sUserString .= ' (CSV)';
-			$oMyChange->Set("userinfo", $sUserString);
-			$iChangeId = $oMyChange->DBInsert();		
+			$sUserString = CMDBChange::GetCurrentUserName().' (CSV)';
+			CMDBObject::SetTrackInfo($sUserString);
 
-			// Todo - simplify that when reworking the change tracking
-			CMDBObject::SetCurrentChange($oMyChange);
+			$oMyChange = CMDBObject::GetCurrentChange();
 		}
 	
 		$oBulk = new BulkChange(

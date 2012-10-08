@@ -76,6 +76,18 @@ define('DEL_MOVEUP', 3);
 
 
 /**
+ * For Link sets: tracking_level
+ *
+ * @package     iTopORM
+ */
+define('LINKSET_TRACKING_NONE', 0); // Do not track changes in the link set
+define('LINKSET_TRACKING_LIST', 1); // Do track added/removed items
+define('LINKSET_TRACKING_DETAILS', 2); // Do track modified items
+define('LINKSET_TRACKING_ALL', 3); // Do track added/removed/modified items
+
+
+
+/**
  * Attribute definition API, implemented in and many flavours (Int, String, Enum, etc.) 
  *
  * @package     iTopORM
@@ -567,6 +579,11 @@ class AttributeLinkedSet extends AttributeDefinition
 		}
 	}
 
+	public function GetTrackingLevel()
+	{
+		return $this->GetOptional('tracking_level', LINKSET_TRACKING_LIST);
+	}
+
 	public function GetLinkedClass() {return $this->Get('linked_class');}
 	public function GetExtKeyToMe() {return $this->Get('ext_key_to_me');}
 
@@ -855,6 +872,11 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 	public function GetExtKeyToRemote() { return $this->Get('ext_key_to_remote'); }
 	public function GetEditClass() {return "LinkedSet";}
 	public function DuplicatesAllowed() {return $this->GetOptional("duplicates", false);} // The same object may be linked several times... or not...
+
+	public function GetTrackingLevel()
+	{
+		return $this->GetOptional('tracking_level', LINKSET_TRACKING_ALL);
+	}
 }
 
 /**

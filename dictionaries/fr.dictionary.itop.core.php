@@ -22,6 +22,10 @@
  */
 
 Dict::Add('FR FR', 'French', 'Français', array(
+	'Core:DeletedObjectTip' => 'L\'objet a été effacé le %1$s (%2$s)',
+	'Core:UnknownObjectLabel' => 'Classe: %1$s, Identifiant: %2$d',
+	'Core:UnknownObjectTip' => 'L\'objet n\'a pu être trouvé. Il se peut que les archives aient été purgées après son effacement.',
+
 	'Class:ActionEmail' => 'email notification',
 	'Class:ActionEmail+' => 'Action: Email notification',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Destinataire de test',
@@ -503,6 +507,9 @@ Opérateurs :<br/>
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modifié, ancienne valeur: %2$s',
 	'Change:AttName_Changed' => '%1$s modifié',
 	'Change:AttName_EntryAdded' => '%1$s champ modifié, une nouvelle entrée a été ajoutée',
+	'Change:LinkSet:Added' => 'ajout de %1$s',
+	'Change:LinkSet:Removed' => 'suppression de %1$s',
+	'Change:LinkSet:Modified' => 'modification de %1$s',
 	'Class:Action' => 'Action',
 	'Class:Action+' => 'Action spécifique',
 	'Class:Action/Attribute:name' => 'Nom',

@@ -91,8 +91,11 @@ abstract class CMDBObject extends DBObject
 	protected $m_datUpdated;
 	// Note: this value is static, but that could be changed because it is sometimes a real issue (see update of interfaces / connected_to
 	protected static $m_oCurrChange = null;
+	protected static $m_sInfo = null; // null => the information is built in a standard way
 
-
+	/**
+	 * Specify another change (this is mainly for backward compatibility)
+	 */
 	public static function SetCurrentChange(CMDBChange $oChange)
 	{
 		self::$m_oCurrChange = $oChange;
@@ -100,34 +103,86 @@ abstract class CMDBObject extends DBObject
 
 	//
 	// Todo: simplify the APIs and do not pass the current change as an argument anymore
-	//       SetCurrentChange to be invoked in very few cases (UI.php, CSV import, Data synchro)
+	//       SetTrackInfo to be invoked in very few cases (UI.php, CSV import, Data synchro)
+	//       SetCurrentChange is an alternative to SetTrackInfo (csv ?)
 	//			GetCurrentChange to be called ONCE (!) by CMDBChangeOp::OnInsert ($this->Set('change', ..GetCurrentChange())
 	//			GetCurrentChange to create a default change if not already done in the current context
 	//
-	public static function GetCurrentChange()
+	/**
+	 * Get a change record (create it if not existing)	 
+	 */
+	public static function GetCurrentChange($bAutoCreate = true)
 	{
+		if ($bAutoCreate && is_null(self::$m_oCurrChange))
+		{
+			self::CreateChange();
+		}
 		return self::$m_oCurrChange;
 	}
 
-
-	private function RecordObjCreation(CMDBChange $oChange)
+	/**
+	 * Override the additional information (defaulting to user name)
+	 * A call to this verb should replace every occurence of
+	 *    $oMyChange = MetaModel::NewObject("CMDBChange");	  	 
+	 *    $oMyChange->Set("date", time());
+	 *    $oMyChange->Set("userinfo", 'this is done by ... for ...');
+	 *    $iChangeId = $oMyChange->DBInsert();
+	 */	 	
+	public static function SetTrackInfo($sInfo)
 	{
+		self::$m_sInfo = $sInfo;
+	}
+
+	/**
+	 * Get the additional information (defaulting to user name)
+	 */	 	
+	protected static function GetTrackInfo()
+	{
+		if (is_null(self::$m_sInfo))
+		{
+			return CMDBChange::GetCurrentUserName();
+		}
+		else
+		{
+			return self::$m_sInfo;
+		}
+	}
+
+	/**
+	 * Create a standard change record (done here 99% of the time, and nearly once per page)
+	 */	 	
+	protected static function CreateChange()
+	{
+		self::$m_oCurrChange = MetaModel::NewObject("CMDBChange");
+		self::$m_oCurrChange->Set("date", time());
+		self::$m_oCurrChange->Set("userinfo", self::GetTrackInfo());
+		self::$m_oCurrChange->DBInsert();
+	}
+
+	protected function RecordObjCreation()
+	{
+		parent::RecordObjCreation();
 		$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpCreate");
-		$oMyChangeOp->Set("change", $oChange->GetKey());
 		$oMyChangeOp->Set("objclass", get_class($this));
 		$oMyChangeOp->Set("objkey", $this->GetKey());
 		$iId = $oMyChangeOp->DBInsertNoReload();
 	}
-	private function RecordObjDeletion(CMDBChange $oChange, $objkey)
+
+	protected function RecordObjDeletion($objkey)
 	{
+		parent::RecordObjDeletion($objkey);
 		$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpDelete");
-		$oMyChangeOp->Set("change", $oChange->GetKey());
-		$oMyChangeOp->Set("objclass", get_class($this));
+		$oMyChangeOp->Set("objclass", MetaModel::GetRootClass(get_class($this)));
 		$oMyChangeOp->Set("objkey", $objkey);
+		$oMyChangeOp->Set("fclass", get_class($this));
+		$oMyChangeOp->Set("fname", $this->GetRawName());
 		$iId = $oMyChangeOp->DBInsertNoReload();
 	}
-	private function RecordAttChanges(CMDBChange $oChange, array $aValues, array $aOrigValues)
+
+	protected function RecordAttChanges(array $aValues, array $aOrigValues)
 	{
+		parent::RecordAttChanges($aValues, $aOrigValues);
+
 		// $aValues is an array of $sAttCode => $value
 		//
 		foreach ($aValues as $sAttCode=> $value)
@@ -149,7 +204,6 @@ abstract class CMDBObject extends DBObject
 			{
 				// One Way encrypted passwords' history is stored -one way- encrypted
 				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeOneWayPassword");
-				$oMyChangeOp->Set("change", $oChange->GetKey());
 				$oMyChangeOp->Set("objclass", get_class($this));
 				$oMyChangeOp->Set("objkey", $this->GetKey());
 				$oMyChangeOp->Set("attcode", $sAttCode);
@@ -165,7 +219,6 @@ abstract class CMDBObject extends DBObject
 			{
 				// Encrypted string history is stored encrypted
 				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeEncrypted");
-				$oMyChangeOp->Set("change", $oChange->GetKey());
 				$oMyChangeOp->Set("objclass", get_class($this));
 				$oMyChangeOp->Set("objkey", $this->GetKey());
 				$oMyChangeOp->Set("attcode", $sAttCode);
@@ -181,7 +234,6 @@ abstract class CMDBObject extends DBObject
 			{
 				// Data blobs
 				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeBlob");
-				$oMyChangeOp->Set("change", $oChange->GetKey());
 				$oMyChangeOp->Set("objclass", get_class($this));
 				$oMyChangeOp->Set("objkey", $this->GetKey());
 				$oMyChangeOp->Set("attcode", $sAttCode);
@@ -209,7 +261,6 @@ abstract class CMDBObject extends DBObject
 					if ($item_value != $item_original)
 					{
 						$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeScalar");
-						$oMyChangeOp->Set("change", $oChange->GetKey());
 						$oMyChangeOp->Set("objclass", get_class($this));
 						$oMyChangeOp->Set("objkey", $this->GetKey());
 						$oMyChangeOp->Set("attcode", $sSubItemAttCode);
@@ -223,7 +274,6 @@ abstract class CMDBObject extends DBObject
 			elseif ($oAttDef instanceOf AttributeCaseLog)
 			{
 				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeCaseLog");
-				$oMyChangeOp->Set("change", $oChange->GetKey());
 				$oMyChangeOp->Set("objclass", get_class($this));
 				$oMyChangeOp->Set("objkey", $this->GetKey());
 				$oMyChangeOp->Set("attcode", $sAttCode);
@@ -235,7 +285,6 @@ abstract class CMDBObject extends DBObject
 			{
 				// Data blobs
 				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeText");
-				$oMyChangeOp->Set("change", $oChange->GetKey());
 				$oMyChangeOp->Set("objclass", get_class($this));
 				$oMyChangeOp->Set("objkey", $this->GetKey());
 				$oMyChangeOp->Set("attcode", $sAttCode);
@@ -252,7 +301,6 @@ abstract class CMDBObject extends DBObject
 				// Scalars
 				//
 				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeScalar");
-				$oMyChangeOp->Set("change", $oChange->GetKey());
 				$oMyChangeOp->Set("objclass", get_class($this));
 				$oMyChangeOp->Set("objkey", $this->GetKey());
 				$oMyChangeOp->Set("attcode", $sAttCode);
@@ -294,32 +342,24 @@ abstract class CMDBObject extends DBObject
 
 	public function DBInsert()
 	{
-		if(!is_object(self::$m_oCurrChange))
-		{
-			throw new CoreException("DBInsert() could not be used here, please use DBInsertTracked() instead");
-		}
 		return $this->DBInsertTracked_Internal();
 	}
 
 	public function DBInsertTracked(CMDBChange $oChange, $bSkipStrongSecurity = null)
 	{
+		self::SetCurrentChange($oChange);
 		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
 
-		$oPreviousChange = self::$m_oCurrChange;
-		self::$m_oCurrChange = $oChange;
 		$ret = $this->DBInsertTracked_Internal();
-		self::$m_oCurrChange = $oPreviousChange;
 		return $ret;
 	}
 
 	public function DBInsertTrackedNoReload(CMDBChange $oChange, $bSkipStrongSecurity = null)
 	{
+		self::SetCurrentChange($oChange);
 		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
 
-		$oPreviousChange = self::$m_oCurrChange;
-		self::$m_oCurrChange = $oChange;
 		$ret = $this->DBInsertTracked_Internal(true);
-		self::$m_oCurrChange = $oPreviousChange;
 		return $ret;
 	}
 
@@ -333,25 +373,18 @@ abstract class CMDBObject extends DBObject
 		{
 			$ret = parent::DBInsert();
 		}
-		$this->RecordObjCreation(self::$m_oCurrChange);
 		return $ret;
 	}
 
 	public function DBClone($newKey = null)
 	{
-		if(!self::$m_oCurrChange)
-		{
-			throw new CoreException("DBClone() could not be used here, please use DBCloneTracked() instead");
-		}
 		return $this->DBCloneTracked_Internal();
 	}
 
 	public function DBCloneTracked(CMDBChange $oChange, $newKey = null)
 	{
-		$oPreviousChange = self::$m_oCurrChange;
-		self::$m_oCurrChange = $oChange;
+		self::SetCurrentChange($oChange);
 		$this->DBCloneTracked_Internal($newKey);
-		self::$m_oCurrChange = $oPreviousChange;
 	}
 
 	protected function DBCloneTracked_Internal($newKey = null)
@@ -359,128 +392,57 @@ abstract class CMDBObject extends DBObject
 		$newKey = parent::DBClone($newKey);
 		$oClone = MetaModel::GetObject(get_class($this), $newKey); 
 
-		$oClone->RecordObjCreation(self::$m_oCurrChange);
 		return $newKey;
 	}
 
 	public function DBUpdate()
 	{
-		if(!self::$m_oCurrChange)
-		{
-			throw new CoreException("DBUpdate() could not be used here, please use DBUpdateTracked() instead");
-		}
-		return $this->DBUpdateTracked_internal();
-	}
-
-	public function DBUpdateTracked(CMDBChange $oChange, $bSkipStrongSecurity = null)
-	{
-		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
-
-		$oPreviousChange = self::$m_oCurrChange;
-		self::$m_oCurrChange = $oChange;
-		$this->DBUpdateTracked_Internal();
-		self::$m_oCurrChange = $oPreviousChange;
-	}
-
-	protected function DBUpdateTracked_Internal()
-	{
 		// Copy the changes list before the update (the list should be reset afterwards)
 		$aChanges = $this->ListChanges();
 		if (count($aChanges) == 0)
 		{
-			//throw new CoreWarning("Attempting to update an unchanged object");
 			return;
 		}
 		
-		// Save the original values (will be reset to the new values when the object get written to the DB)
-		$aOriginalValues = $this->m_aOrigValues;
 		$ret = parent::DBUpdate();
-		$this->RecordAttChanges(self::$m_oCurrChange, $aChanges, $aOriginalValues);
 		return $ret;
+	}
+
+	public function DBUpdateTracked(CMDBChange $oChange, $bSkipStrongSecurity = null)
+	{
+		self::SetCurrentChange($oChange);
+		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
+		$this->DBUpdate();
 	}
 
 	public function DBDelete(&$oDeletionPlan = null)
 	{
-		if(!self::$m_oCurrChange)
-		{
-			throw new CoreException("DBDelete() could not be used here, please use DBDeleteTracked() instead");
-		}
 		return $this->DBDeleteTracked_Internal($oDeletionPlan);
 	}
 
 	public function DBDeleteTracked(CMDBChange $oChange, $bSkipStrongSecurity = null, &$oDeletionPlan = null)
 	{
+		self::SetCurrentChange($oChange);
 		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_DELETE);
-
-		$oPreviousChange = self::$m_oCurrChange;
-		self::$m_oCurrChange = $oChange;
 		$this->DBDeleteTracked_Internal($oDeletionPlan);
-		self::$m_oCurrChange = $oPreviousChange;
 	}
 
 	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
 	{
 		$prevkey = $this->GetKey();
 		$ret = parent::DBDelete($oDeletionPlan);
-		$this->RecordObjDeletion(self::$m_oCurrChange, $prevkey);
-		return $ret;
-	}
-
-	public static function BulkDelete(DBObjectSearch $oFilter)
-	{
-		if(!self::$m_oCurrChange)
-		{
-			throw new CoreException("BulkDelete() could not be used here, please use BulkDeleteTracked() instead");
-		}
-		return $this->BulkDeleteTracked_Internal($oFilter);
-	}
-
-	public static function BulkDeleteTracked(CMDBChange $oChange, DBObjectSearch $oFilter)
-	{
-		$oPreviousChange = self::$m_oCurrChange;
-		self::$m_oCurrChange = $oChange;
-		$this->BulkDeleteTracked_Internal($oFilter);
-		self::$m_oCurrChange = $oPreviousChange;
-	}
-
-	protected static function BulkDeleteTracked_Internal(DBObjectSearch $oFilter)
-	{
-		throw new CoreWarning("Change tracking not tested for bulk operations");
-
-		// Get the list of objects to delete (and record data before deleting the DB records)
-		$oObjSet = new CMDBObjectSet($oFilter);
-		$aObjAndKeys = array(); // array of id=>object
-		while ($oItem = $oObjSet->Fetch())
-		{
-			$aObjAndKeys[$oItem->GetKey()] = $oItem;
-		}
-		$oObjSet->FreeResult();
-
-		// Delete in one single efficient query
-		$ret = parent::BulkDelete($oFilter);
-		// Record... in many queries !!!
-		foreach($aObjAndKeys as $prevkey=>$oItem)
-		{
-			$oItem->RecordObjDeletion(self::$m_oCurrChange, $prevkey);
-		}
 		return $ret;
 	}
 
 	public static function BulkUpdate(DBObjectSearch $oFilter, array $aValues)
 	{
-		if(!self::$m_oCurrChange)
-		{
-			throw new CoreException("BulkUpdate() could not be used here, please use BulkUpdateTracked() instead");
-		}
 		return $this->BulkUpdateTracked_Internal($oFilter, $aValues);
 	}
 
 	public static function BulkUpdateTracked(CMDBChange $oChange, DBObjectSearch $oFilter, array $aValues)
 	{
-		$oPreviousChange = self::$m_oCurrChange;
-		self::$m_oCurrChange = $oChange;
+		self::SetCurrentChange($oChange);
 		$this->BulkUpdateTracked_Internal($oFilter, $aValues);
-		self::$m_oCurrChange = $oPreviousChange;
 	}
 
 	protected static function BulkUpdateTracked_Internal(DBObjectSearch $oFilter, array $aValues)
@@ -507,7 +469,7 @@ abstract class CMDBObject extends DBObject
 		while ($oItem = $oObjSet->Fetch())
 		{
 			$aChangedValues = $oItem->ListChangedValues($aValues);
-			$oItem->RecordAttChanges(self::$m_oCurrChange, $aChangedValues, $aOriginalValues[$oItem->GetKey()]);
+			$oItem->RecordAttChanges($aChangedValues, $aOriginalValues[$oItem->GetKey()]);
 		}
 		return $ret;
 	}

@@ -879,6 +879,34 @@ abstract class MetaModel
 		}
 	}
 
+	protected static $m_aTrackForwardCache = array();
+	/**
+	 * List external keys for which there is a LinkSet (direct or indirect) on the other end
+	 * For those external keys, a change will have a special meaning on the other end
+	 * in term of change tracking	 	 	 
+	 */	 	
+	final static public function GetTrackForwardExternalKeys($sClass)
+	{
+		if (!isset(self::$m_aTrackForwardCache[$sClass]))
+		{
+			$aRes = array();
+			foreach (MetaModel::GetExternalKeys($sClass) as $sAttCode => $oAttDef)
+			{
+				$sRemoteClass = $oAttDef->GetTargetClass();
+				foreach (MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef)
+				{
+					if (!$oRemoteAttDef->IsLinkSet()) continue;
+					if ($oRemoteAttDef->GetLinkedClass() != $sClass) continue;
+					if ($oRemoteAttDef->GetExtKeyToMe() != $sAttCode) continue;
+					$aRes[$sAttCode] = $oRemoteAttDef;
+				}
+			}
+			self::$m_aTrackForwardCache[$sClass] = $aRes;
+		}
+		return self::$m_aTrackForwardCache[$sClass];
+	}
+
+
 	public static function GetLabel($sClass, $sAttCode)
 	{
 		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
@@ -4730,7 +4758,23 @@ abstract class MetaModel
 		$oObj = self::GetObject($sTargetClass, $iKey, false);
 		if (is_null($oObj))
 		{
-			return "$sTargetClass: $iKey (not found)";
+			// Whatever we are looking for, the root class is the key to search for
+			$sRootClass = self::GetRootClass($sTargetClass);
+			$oSearch = DBObjectSearch::FromOQL('SELECT CMDBChangeOpDelete WHERE objclass = :objclass AND objkey = :objkey', array('objclass' => $sRootClass, 'objkey' => $iKey));
+			$oSet = new DBObjectSet($oSearch);
+			$oRecord = $oSet->Fetch();
+			// An empty fname is obtained with iTop < 2.0
+			if (is_null($oRecord) || (strlen(trim($oRecord->Get('fname'))) == 0))
+			{
+				$sName = Dict::Format('Core:UnknownObjectLabel', $sTargetClass, $iKey);
+				$sTitle = Dict::S('Core:UnknownObjectTip');
+			}
+			else
+			{
+				$sName = $oRecord->Get('fname');
+				$sTitle = Dict::Format('Core:DeletedObjectTip', $oRecord->Get('date'), $oRecord->Get('userinfo'));
+			}
+			return '<span class="itop-deleted-object" title="'.htmlentities($sTitle, ENT_QUOTES, 'UTF-8').'">'.htmlentities($sName, ENT_QUOTES, 'UTF-8').'</span>';
 		}
 		return $oObj->GetHyperLink();
 	}
@@ -4751,6 +4795,8 @@ abstract class MetaModel
 
 	public static function BulkDelete(DBObjectSearch $oFilter)
 	{
+		throw new Exception("Bulk deletion cannot be done this way: it will not work with hierarchical keys - implementation to be reviewed!");
+
 		$sSQL = self::MakeDeleteQuery($oFilter);
 		if (!self::DBIsReadOnly())
 		{

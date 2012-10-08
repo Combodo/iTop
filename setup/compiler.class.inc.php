@@ -288,6 +288,27 @@ EOF;
 		return $sRes;
 	}
 
+	/**
+	 * Helper to format the tracking level for linkset (direct or indirect attributes)
+	 * @param string $sTrackingLevel Value set from within the XML
+	 * Returns string PHP flag
+	 */ 
+	protected function TrackingLevelToPHP($sTrackingLevel)
+	{
+		static $aXmlToPHP = array(
+			'none' => 'LINKSET_TRACKING_NONE',
+			'list' => 'LINKSET_TRACKING_LIST',
+			'details' => 'LINKSET_TRACKING_DETAILS',
+			'all' => 'LINKSET_TRACKING_ALL',
+		);
+	
+		if (!array_key_exists($sTrackingLevel, $aXmlToPHP))
+		{
+			throw new exception("Tracking level: unknown value '$sTrackingLevel'");
+		}
+		return $aXmlToPHP[$sTrackingLevel];
+	}
+
 
 	/**
 	 * Format a path (file or url) as an absolute path or relative to the module or the app
@@ -542,21 +563,29 @@ EOF;
 				$aParameters['linked_class'] = $this->GetPropString($oField, 'linked_class', '');
 				$aParameters['ext_key_to_me'] = $this->GetPropString($oField, 'ext_key_to_me', '');
 				$aParameters['ext_key_to_remote'] = $this->GetPropString($oField, 'ext_key_to_remote', '');
-	// todo - utile ?
 				$aParameters['allowed_values'] = 'null';
 				$aParameters['count_min'] = $this->GetPropNumber($oField, 'count_min', 0);
 				$aParameters['count_max'] = $this->GetPropNumber($oField, 'count_max', 0);
 				$aParameters['duplicates'] = $this->GetPropBoolean($oField, 'duplicates', false);
+				$sTrackingLevel = $oField->GetChildText('tracking_level');
+				if (!is_null($sTrackingLevel))
+				{
+					$aParameters['tracking_level'] = $this->TrackingLevelToPHP($sTrackingLevel);
+				}
 				$aParameters['depends_on'] = $sDependencies;
 			}
 			elseif ($sAttType == 'AttributeLinkedSet')
 			{
 				$aParameters['linked_class'] = $this->GetPropString($oField, 'linked_class', '');
 				$aParameters['ext_key_to_me'] = $this->GetPropString($oField, 'ext_key_to_me', '');
-	// todo - utile ?
 				$aParameters['allowed_values'] = 'null';
 				$aParameters['count_min'] = $this->GetPropNumber($oField, 'count_min', 0);
 				$aParameters['count_max'] = $this->GetPropNumber($oField, 'count_max', 0);
+				$sTrackingLevel = $oField->GetChildText('tracking_level');
+				if (!is_null($sTrackingLevel))
+				{
+					$aParameters['tracking_level'] = $this->TrackingLevelToPHP($sTrackingLevel);
+				}
 				$aParameters['depends_on'] = $sDependencies;
 			}
 			elseif ($sAttType == 'AttributeExternalKey')

@@ -636,19 +636,17 @@ try
 	}
 	else
 	{
-		$oMyChange = MetaModel::NewObject("CMDBChange");
-		$oMyChange->Set("date", time());
-		$sUserString = CMDBChange::GetCurrentUserName();
 		if (strlen($sComment) > 0)
 		{
-			$sMoreInfo = 'Web Service (CSV) - '.$sComment;
+			$sMoreInfo = CMDBChange::GetCurrentUserName().', Web Service (CSV) - '.$sComment;
 		}
 		else
 		{
-			$sMoreInfo = 'Web Service (CSV)';
+			$sMoreInfo = CMDBChange::GetCurrentUserName().', Web Service (CSV)';
 		}
-		$oMyChange->Set("userinfo", $sUserString.', '.$sMoreInfo);
-		$iChangeId = $oMyChange->DBInsert();
+		CMDBChange::SetTrackInfo($sMoreInfo);
+
+		$oMyChange = CMDBObject::GetCurrentChange();
 	}
 
 	$aRes = $oBulk->Process($oMyChange);

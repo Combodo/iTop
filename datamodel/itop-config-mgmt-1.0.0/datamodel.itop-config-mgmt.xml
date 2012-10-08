@@ -2621,6 +2621,10 @@
           <code><![CDATA[	protected function UpdateConnectedInterface()
 	{
 		$iPrevTargetIf = $this->m_aOrigValues['connected_if']; // The interface this interface was connected to
+		if ($iPrevTargetIf == $this->Get('connected_if'))
+		{
+			return;
+		}
  			
 		if ($iPrevTargetIf != 0)
 		{
@@ -2628,11 +2632,11 @@
 			$oPrevConnectedIf = MetaModel::GetObject('NetworkInterface', $iPrevTargetIf, false);
 			if (!is_null($oPrevConnectedIf))
 			{
-				$oPrevConnectedIf->Set('connected_if', 0);			
-				// Need to backup the current change, because it is reset when DBUpdateTracked is complete
-				$oCurrChange = self::$m_oCurrChange;
-				$oPrevConnectedIf->DBUpdateTracked($oCurrChange);
-				self::$m_oCurrChange = $oCurrChange;
+				if ($oPrevConnectedIf->Get('connected_if') == $this->GetKey()) // protection against reentrance
+				{
+					$oPrevConnectedIf->Set('connected_if', 0);			
+					$oPrevConnectedIf->DBUpdate();
+				}
 			}
 		}
 
@@ -2644,28 +2648,12 @@
   
  			if (($oConnIf->Get('connected_if') != $this->GetKey()) || ($sConnLink != $oConnIf->Get('link_type')))
 			{
-				// Something has to be changed on the connected interface...
-				if ($oConnIf->Get('connected_if') != $this->GetKey())
-				{
-					// It is connected to another interface: reset that third one...
-					$oThirdIf = MetaModel::GetObject('NetworkInterface', $oConnIf->Get('connected_if'), false);
-					if (!is_null($oThirdIf))
-					{
-						$oThirdIf->Set('connected_if', 0);			
-						// Need to backup the current change, because it is reset when DBUpdateTracked is complete
-						$oCurrChange = self::$m_oCurrChange;
-						$oThirdIf->DBUpdateTracked($oCurrChange);
-						self::$m_oCurrChange = $oCurrChange;
-					}
-				}
 				// Connect the remote interface to the current one
 				$oConnIf->Set('connected_if', $this->GetKey());
 				$oConnIf->Set('link_type', $sConnLink);
 
 				// Need to backup the current change, because it is reset when DBUpdateTracked is complete
-				$oCurrChange = self::$m_oCurrChange;
-				$oConnIf->DBUpdateTracked($oCurrChange);
-				self::$m_oCurrChange = $oCurrChange;
+				$oConnIf->DBUpdate();
 			}
 		}
 	}]]></code>

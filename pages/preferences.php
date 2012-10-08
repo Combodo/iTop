@@ -232,12 +232,7 @@ try
 		$sLangCode = utils::ReadParam('language', 'EN US');
 		$oUser = UserRights::GetUserObject();
 		$oUser->Set('language', $sLangCode);
-		$oMyChange = MetaModel::NewObject("CMDBChange");
-		$oMyChange->Set("date", time());
-		$sUserString = CMDBChange::GetCurrentUserName();
-		$oMyChange->Set("userinfo", $sUserString);
-		$iChangeId = $oMyChange->DBInsert();
-		$oUser->DBUpdateTracked($oMyChange);
+		$oUser->DBUpdate();
 		// Redirect to force a reload/display of the page with the new language
 		$oAppContext = new ApplicationContext();
 		$sURL = utils::GetAbsoluteUrlAppRoot().'pages/preferences.php?'.$oAppContext->GetForLink();

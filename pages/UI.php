@@ -34,15 +34,7 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 	{
 		if ($bDeleteConfirmed)
 		{
-			// Prepare the change reporting
-			//
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			$sUserString = CMDBChange::GetCurrentUserName();
-			$oMyChange->Set("userinfo", $sUserString);
-			$oMyChange->DBInsert();
-
-			$oObj->DBDeleteTracked($oMyChange, null, $oDeletionPlan);
+			$oObj->DBDeleteTracked(CMDBObject::GetCurrentChange(), null, $oDeletionPlan);
 		}
 		else
 		{
@@ -363,9 +355,8 @@ EOF
  * @param $oP WebPage The page for the output
  * @param $oObj CMDBObject The object to process
  * @param $sNextAction string The code of the stimulus for the 'action' (i.e. Transition) to apply
- * @param $oMyChange CMDBChange The change used to log the modifications or null is none is available (a new one will be created)
  */
-function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction, $oMyChange)
+function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction)
 {
 	// Here handle the apply stimulus
 	$aTransitions = $oObj->EnumTransitions();
@@ -383,15 +374,7 @@ function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction, $oMyChange
 		// If all the mandatory fields are already present, just apply the transition silently...
 		if ($oObj->ApplyStimulus($sNextAction))
 		{
-			if ($oMyChange == null)
-			{
-				$oMyChange = MetaModel::NewObject("CMDBChange");
-				$oMyChange->Set("date", time());
-				$sUserString = CMDBChange::GetCurrentUserName();
-				$oMyChange->Set("userinfo", $sUserString);
-				$iChangeId = $oMyChange->DBInsert();							
-			}
-			$oObj->DBUpdateTracked($oMyChange);
+			$oObj->DBUpdate();
 		}
 		$oObj->Reload();
 		$oObj->DisplayDetails($oP);
@@ -1013,11 +996,6 @@ EOF
 			{
 				throw new Exception(Dict::S('UI:Error:ObjectAlreadyUpdated'));
 			}
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			$sUserString = CMDBChange::GetCurrentUserName();
-			$oMyChange->Set("userinfo", $sUserString);
-			$iChangeId = $oMyChange->DBInsert();
 			utils::RemoveTransaction($sTransactionId);
 		}
 		foreach($aSelectedObj as $iId)
@@ -1049,7 +1027,7 @@ EOF
 			);
 			if ($bResult && (!$bPreview))
 			{
-				$oObj->DBUpdateTracked($oMyChange);
+				$oObj->DBUpdate();
 			}
 		}
 		$oP->Table($aHeaders, $aRows);
@@ -1224,7 +1202,6 @@ EOF
 			}
 			else
 			{
-				$oMyChange = null;
 				$oObj->UpdateObjectFromPostedForm();
 
 				if (!$oObj->IsModified())
@@ -1240,12 +1217,7 @@ EOF
 						$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 						$oP->add("<h1>".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
 
-						$oMyChange = MetaModel::NewObject("CMDBChange");
-						$oMyChange->Set("date", time());
-						$sUserString = CMDBChange::GetCurrentUserName();
-						$oMyChange->Set("userinfo", $sUserString);
-						$iChangeId = $oMyChange->DBInsert();
-						$oObj->DBUpdateTracked($oMyChange);
+						$oObj->DBUpdate();
 						utils::RemoveTransaction($sTransactionId);
 			
 						$oP->p(Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
@@ -1273,7 +1245,7 @@ EOF
 				$sNextAction = utils::ReadPostedParam('next_action', '');
 				if (!empty($sNextAction))
 				{
-					ApplyNextAction($oP, $oObj, $sNextAction, $oMyChange);
+					ApplyNextAction($oP, $oObj, $sNextAction);
 				}
 				else
 				{
@@ -1386,12 +1358,7 @@ EOF
 			list($bRes, $aIssues) = $oObj->CheckToWrite();
 			if ($bRes)
 			{
-				$oMyChange = MetaModel::NewObject("CMDBChange");
-				$oMyChange->Set("date", time());
-				$sUserString = CMDBChange::GetCurrentUserName();
-				$oMyChange->Set("userinfo", $sUserString);
-				$iChangeId = $oMyChange->DBInsert();
-				$oObj->DBInsertTracked($oMyChange);
+				$oObj->DBInsert();
 				utils::RemoveTransaction($sTransactionId);
 				$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
 				$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oObj->GetName(), $sClassLabel)."</h1>\n");
@@ -1400,7 +1367,7 @@ EOF
 				$sNextAction = utils::ReadPostedParam('next_action', '');
 				if (!empty($sNextAction))
 				{
-					ApplyNextAction($oP, $oObj, $sNextAction, $oMyChange);
+					ApplyNextAction($oP, $oObj, $sNextAction);
 				}
 				else
 				{
@@ -1440,12 +1407,7 @@ EOF
 			{
 				$sClass = get_class($oObj);
 				$sClassLabel = MetaModel::GetName($sClass);
-				$oMyChange = MetaModel::NewObject("CMDBChange");
-				$oMyChange->Set("date", time());
-				$sUserString = CMDBChange::GetCurrentUserName();
-				$oMyChange->Set("userinfo", $sUserString);
-				$iChangeId = $oMyChange->DBInsert();
-				$oObj->DBInsertTracked($oMyChange);
+				$oObj->DBInsert();
 				$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
 				$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oObj->GetName(), $sClassLabel)."</h1>\n");
 				$oObj->DisplayDetails($oP);
@@ -1683,11 +1645,6 @@ EOF
 			$oP->add('</div>');
 			
 			$oSet = DBObjectSet::FromArray($sClass, $aObjects);
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			$sUserString = CMDBChange::GetCurrentUserName();
-			$oMyChange->Set("userinfo", $sUserString);
-			$iChangeId = $oMyChange->DBInsert();
 			
 			// For reporting
 			$aHeaders = array(
@@ -1743,7 +1700,7 @@ EOF
 								$sStatus = $bResult ? Dict::S('UI:BulkModifyStatusModified') : Dict::S('UI:BulkModifyStatusSkipped');							
 								if ($bResult)
 								{
-									$oObj->DBUpdateTracked($oMyChange);
+									$oObj->DBUpdate();
 								}
 								else
 								{
@@ -1982,12 +1939,7 @@ EOF
 				{
 					if ($oObj->ApplyStimulus($sStimulus))
 					{
-						$oMyChange = MetaModel::NewObject("CMDBChange");
-						$oMyChange->Set("date", time());
-						$sUserString = CMDBChange::GetCurrentUserName();
-						$oMyChange->Set("userinfo", $sUserString);
-						$iChangeId = $oMyChange->DBInsert();
-						$oObj->DBUpdateTracked($oMyChange);
+						$oObj->DBUpdate();
 						$oP->p(Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
 					}
 					else

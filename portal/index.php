@@ -356,12 +356,7 @@ function DoCreateRequest($oP, $oUserOrg)
 	list($bRes, $aIssues) = $oRequest->CheckToWrite();
 	if ($bRes)
 	{
-		$oMyChange = MetaModel::NewObject("CMDBChange");
-		$oMyChange->Set("date", time());
-		$sUserString = CMDBChange::GetCurrentUserName();
-		$oMyChange->Set("userinfo", $sUserString);
-		$iChangeId = $oMyChange->DBInsert();
-		$oRequest->DBInsertTracked($oMyChange);
+		$oRequest->DBInsert();
 		$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oRequest->GetName(), MetaModel::GetName(get_class($oRequest)))."</h1>\n");
 
 		//DisplayObject($oP, $oRequest, $oUserOrg);

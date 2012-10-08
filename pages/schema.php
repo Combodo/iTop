@@ -378,12 +378,19 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 	$oPage->AddTabContainer('details');
 	$oPage->SetCurrentTabContainer('details');
 	// List the attributes of the object
+	$aForwardChangeTracking = MetaModel::GetTrackForwardExternalKeys($sClass);
 	$aDetails = array();
 	foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
 	{
 		if ($oAttDef->IsExternalKey())
 		{
 		   $sValue = Dict::Format('UI:Schema:ExternalKey_To',MakeClassHLink($oAttDef->GetTargetClass(), $sContext));
+			if (array_key_exists($sAttCode, $aForwardChangeTracking))
+			{
+				$oLinkSet = $aForwardChangeTracking[$sAttCode];
+				$sRemoteClass = $oLinkSet->GetHostClass();
+				$sValue = $sValue."<span title=\"Forward changes to $sRemoteClass\">*</span>";
+			}
 		}
 		elseif ($oAttDef->IsLinkSet())
 		{

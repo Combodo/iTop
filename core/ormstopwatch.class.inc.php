@@ -429,12 +429,9 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 		
 							if($oObj->IsModified())
 							{
-								// Todo - factorize so that only one single change will be instantiated
-								$oMyChange = new CMDBChange();
-								$oMyChange->Set("date", time());
-								$oMyChange->Set("userinfo", "Automatic - threshold triggered");
-								$iChangeId = $oMyChange->DBInsertNoReload();
-		
+								CMDBObject::SetTrackInfo("Automatic - threshold triggered");
+					
+								$oMyChange = CMDBObject::GetCurrentChange();
 								$oObj->DBUpdateTracked($oMyChange, true /*skip security*/);
 							}
 
