@@ -3,6 +3,10 @@
   <classes>
     <class id="Organization" _delta="define">
       <parent>cmdbAbstractObject</parent>
+      <php_parent>
+		<name>_Organization</name>
+		<file>_organization.class.inc.php</file>
+	  </php_parent>
       <properties>
         <comment><![CDATA[/**
  * Persistent classes for a CMDB

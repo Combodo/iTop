@@ -21,8 +21,8 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-config-mgmt.php',
 			'main.itop-config-mgmt.php',
+			'model.itop-config-mgmt.php',
 		),
 		'data.struct' => array(
 			'data.struct.Audit.xml',
