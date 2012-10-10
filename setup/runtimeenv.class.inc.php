@@ -432,7 +432,7 @@ class RunTimeEnvironment
 		$oInstallRec = new ModuleInstallation();
 		$oInstallRec->Set('name', DATAMODEL_MODULE);
 		$oInstallRec->Set('version', $sDataModelVersion);
-		$oInstallRec->Set('comment', json_encode($aData, true));
+		$oInstallRec->Set('comment', json_encode($aData));
 		$oInstallRec->Set('parent_id', 0); // root module
 		$iMainItopRecord = $oInstallRec->DBInsertNoReload();
 		

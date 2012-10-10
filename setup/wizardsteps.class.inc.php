@@ -1443,7 +1443,7 @@ EOF
 		if (count($aSteps[count($aSteps) - 1]['options']) == 0)
 		{
 			// No extensions at all, remove the last step
-			unset($aSteps[1]);
+			array_pop($aSteps);
 		}
 		
 		if (array_key_exists($index, $aSteps))
