@@ -961,7 +961,7 @@ EOF
 			'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
 			'source_dir' => $sRelativeSourceDir,
 		);
-		$oConfig->UpdateFromParams($aParamValues, 'datamodel');
+		$oConfig->UpdateFromParams($aParamValues, null);
 		$aDirsToScan = array($sSourceDir);
 
 		if (is_dir($sSourceDir.'/extensions'))
@@ -991,7 +991,7 @@ EOF
 			'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
 			'source_dir' => '',
 		);
-		$oConfig->UpdateFromParams($aParamValues, 'datamodel');
+		$oConfig->UpdateFromParams($aParamValues, null);
 
 		$oProductionEnv = new RunTimeEnvironment();
 		return $oProductionEnv->GetApplicationVersion($oConfig);
