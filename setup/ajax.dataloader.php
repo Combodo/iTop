@@ -136,18 +136,36 @@ try
 	switch($sOperation)
 	{
 		case 'async_action':
-		require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
-		require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
+		ini_set('max_execution_time', max(240, ini_get('max_execution_time')));
+		// While running the setup it is desirable to see any error that may happen
+		ini_set('display_errors', true);
+		ini_set('display_startup_errors', true);
 		
-		$sClass = utils::ReadParam('step_class', '');
-		$sState = utils::ReadParam('step_state', '');
-		$sActionCode = utils::ReadParam('code', '');
-		$aParams = utils::ReadParam('params', array(), false, 'raw_data');
-		$oPage = new ajax_page('');
-		$oDummyController = new WizardController('');
-		$oStep = new $sClass($oDummyController, $sState);
-		$oStep->AsyncAction($oPage, $sActionCode, $aParams);
-		$oPage->output();
+		$sConfigFile = utils::GetConfigFilePath();
+		if (file_exists($sConfigFile) && !is_writable($sConfigFile))
+		{
+			$oPage->error("<b>Error:</b> the configuration file '".$sConfigFile."' already exists and cannot be overwritten.");
+			$oPage->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".realpath($sConfigFile)."</b>' can be modified by the web server.");
+			$oPage->output();
+		}
+		else
+		{
+			require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
+			require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
+			
+			$sClass = utils::ReadParam('step_class', '');
+			$sState = utils::ReadParam('step_state', '');
+			$sActionCode = utils::ReadParam('code', '');
+			$aParams = utils::ReadParam('params', array(), false, 'raw_data');
+			$oPage = new ajax_page('');
+			$oDummyController = new WizardController('');
+			if (is_subclass_of($sClass, 'WizardStep'))
+			{
+				$oStep = new $sClass($oDummyController, $sState);
+				$oStep->AsyncAction($oPage, $sActionCode, $aParams);
+			}
+			$oPage->output();
+		}
 		break;
 
 		//////////////////////////////

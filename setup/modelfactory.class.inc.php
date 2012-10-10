@@ -1076,7 +1076,7 @@ EOF
 	 */
 	public function FindModules($sSubDirectory = '')
 	{
-		$aAvailableModules = ModuleDiscovery::GetAvailableModules($this->sRootDir, $sSubDirectory);
+		$aAvailableModules = ModuleDiscovery::GetAvailableModules($this->sRootDir, array($sSubDirectory));
 		$aResult = array();
 		foreach($aAvailableModules as $sId => $aModule)
 		{

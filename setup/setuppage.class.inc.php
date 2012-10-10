@@ -304,5 +304,3 @@ h3.clickable.open {
 		}
 	}
 } // End of class
-
-?>

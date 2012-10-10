@@ -126,7 +126,7 @@ class ApplicationInstaller
 				$aPreinstall = $this->oParams->Get('preinstall');
 				$aCopies = $aPreinstall['copies'];
 
-				// disabled - $sReport = self::DoCopy($aCopies);
+				$sReport = self::DoCopy($aCopies);
 				$sReport = "copy disabled...";
 
 				$aResult = array(
@@ -167,7 +167,8 @@ class ApplicationInstaller
 				
 				case 'compile':
 				$aSelectedModules = $this->oParams->Get('selected_modules');
-				$sSourceDir = $this->oParams->Get('source_dir', 'datamodel');
+				$sSourceDir = $this->oParams->Get('source_dir', 'datamodels/latest');
+				$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
 				$sTargetEnvironment = $this->oParams->Get('target_env', '');
 				if ($sTargetEnvironment == '')
 				{
@@ -190,7 +191,7 @@ class ApplicationInstaller
 					}
 				}
 						
-				self::DoCompile($aSelectedModules, $sSourceDir, $sTargetDir, $sWorkspaceDir, $bUseSymbolicLinks);
+				self::DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $sTargetDir, $sWorkspaceDir, $bUseSymbolicLinks);
 				
 				$aResult = array(
 					'status' => self::OK,
@@ -215,8 +216,9 @@ class ApplicationInstaller
 				$sDBPwd = $aDBParams['pwd'];
 				$sDBName = $aDBParams['name'];
 				$sDBPrefix = $aDBParams['prefix'];
+				$bOldAddon = $this->oParams->Get('old_addon', false);
 				
-				self::DoUpdateDBSchema($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment);
+				self::DoUpdateDBSchema($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment, $bOldAddon);
 				
 				$aResult = array(
 					'status' => self::OK,
@@ -247,8 +249,12 @@ class ApplicationInstaller
 				$sAdminLanguage = $aAdminParams['language'];
 				$sLanguage = $this->oParams->Get('language');
 				$aSelectedModules = $this->oParams->Get('selected_modules', array());
+				$sDataModelVersion = $this->oParams->Get('datamodel_version', '0.0.0');
+				$bOldAddon = $this->oParams->Get('old_addon', false);
+				$sSourceDir = $this->oParams->Get('source_dir', '');
 				
-				self::AfterDBCreate($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sAdminUser, $sAdminPwd, $sAdminLanguage, $sLanguage, $aSelectedModules, $sTargetEnvironment);
+				self::AfterDBCreate($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sAdminUser,
+									$sAdminPwd, $sAdminLanguage, $sLanguage, $aSelectedModules, $sTargetEnvironment, $bOldAddon, $sDataModelVersion, $sSourceDir);
 				
 				$aResult = array(
 					'status' => self::OK,
@@ -277,8 +283,9 @@ class ApplicationInstaller
 				$sDBName = $aDBParams['name'];
 				$sDBPrefix = $aDBParams['prefix'];
 				$aFiles = $this->oParams->Get('files', array());
+				$bOldAddon = $this->oParams->Get('old_addon', false);
 				
-				self::DoLoadFiles($aSelectedModules, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment);
+				self::DoLoadFiles($aSelectedModules, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment, $bOldAddon);
 				
 				$aResult = array(
 					'status' => self::INFO,
@@ -306,8 +313,11 @@ class ApplicationInstaller
 				$sUrl = $this->oParams->Get('url', '');
 				$sLanguage = $this->oParams->Get('language', '');
 				$aSelectedModules = $this->oParams->Get('selected_modules', array());
+				$bOldAddon = $this->oParams->Get('old_addon', false);
+				$sSourceDir = $this->oParams->Get('source_dir', '');
+				$sPreviousConfigFile = $this->oParams->Get('previous_configuration_file', '');
 				
-				self::DoCreateConfig($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModules, $sTargetEnvironment);
+				self::DoCreateConfig($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModules, $sTargetEnvironment, $bOldAddon, $sSourceDir, $sPreviousConfigFile);
 				
 				$aResult = array(
 					'status' => self::INFO,
@@ -338,6 +348,9 @@ class ApplicationInstaller
 				'next-step-label' => '',
 				'percentage-completed' => 100,
 			);
+			
+			SetupPage::log_error('An exception occurred: '.$e->getMessage());
+			SetupPage::log("Stack trace:\n".$e->getTraceAsString());
 		}
 		return $aResult;
 	}
@@ -374,7 +387,7 @@ class ApplicationInstaller
 	}
 
 	
-	protected static function DoCompile($aSelectedModules, $sSourceDir, $sTargetDir, $sWorkspaceDir = '', $bUseSymbolicLinks = false)
+	protected static function DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $sTargetDir, $sWorkspaceDir = '', $bUseSymbolicLinks = false)
 	{
 		SetupPage::log_info("Compiling data model.");
 
@@ -388,6 +401,7 @@ class ApplicationInstaller
 		}		
 
 		$sSourcePath = APPROOT.$sSourceDir;
+		$sExtensionsPath = APPROOT.$sExtensionDir;
 		$sTargetPath = APPROOT.$sTargetDir;
 		if (!is_dir($sSourcePath))
 		{
@@ -407,7 +421,7 @@ class ApplicationInstaller
 			}
 		}
 
-		$oFactory = new ModelFactory($sSourcePath);
+		$oFactory = new ModelFactory(array($sSourcePath, $sExtensionsPath));
 		$aModules = $oFactory->FindModules();
 
 		foreach($aModules as $foo => $oModule)
@@ -441,13 +455,24 @@ class ApplicationInstaller
 		}
 		else
 		{
-			$oMFCompiler = new MFCompiler($oFactory, $sSourcePath);
+			$oMFCompiler = new MFCompiler($oFactory);
 			$oMFCompiler->Compile($sTargetPath, null, $bUseSymbolicLinks);
 			SetupPage::log_info("Data model successfully compiled to '$sTargetPath'.");
 		}
+		
+		// Special case to patch a ugly patch in itop-config-mgmt
+		$sFileToPatch = $sTargetPath.'/itop-config-mgmt-1.0.0/model.itop-config-mgmt.php';
+		if (file_exists($sFileToPatch))
+		{
+			$sContent = file_get_contents($sFileToPatch);
+			
+			$sContent = str_replace("require_once(APPROOT.'modules/itop-welcome-itil/model.itop-welcome-itil.php');", "//\n// The line below is no longer needed in iTop 2.0 -- patched by the setup program\n// require_once(APPROOT.'modules/itop-welcome-itil/model.itop-welcome-itil.php');", $sContent);
+			
+			file_put_contents($sFileToPatch, $sContent);
+		}
 	}
 	
-	protected static function DoUpdateDBSchema($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment  = '')
+	protected static function DoUpdateDBSchema($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment  = '', $bOldAddon = false)
 	{
 		SetupPage::log_info("Update Database Schema for environment '$sTargetEnvironment'.");
 
@@ -461,7 +486,14 @@ class ApplicationInstaller
 			'db_prefix' => $sDBPrefix,
 		);
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
-
+		if ($bOldAddon)
+		{
+			// Old version of the add-on for backward compatibility with pre-2.0 data models
+			$oConfig->SetAddons(array(
+				'user rights' => 'addons/userrights/userrightsprofile.db.class.inc.php',
+			));
+		}
+		
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model only
 
@@ -472,7 +504,7 @@ class ApplicationInstaller
 		SetupPage::log_info("Database Schema Successfully Updated for environment '$sTargetEnvironment'.");
 	}
 	
-	protected static function AfterDBCreate($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sAdminUser, $sAdminPwd, $sAdminLanguage, $sLanguage, $aSelectedModules, $sTargetEnvironment  = '')
+	protected static function AfterDBCreate($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sAdminUser, $sAdminPwd, $sAdminLanguage, $sLanguage, $aSelectedModules, $sTargetEnvironment, $bOldAddon, $sDataModelVersion, $sSourceDir)
 	{
 
 		SetupPage::log_info('After Database Creation');
@@ -487,18 +519,27 @@ class ApplicationInstaller
 			'db_prefix' => $sDBPrefix,
 		);
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
-
+		if ($bOldAddon)
+		{
+			// Old version of the add-on for backward compatibility with pre-2.0 data models
+			$oConfig->SetAddons(array(
+				'user rights' => 'addons/userrights/userrightsprofile.db.class.inc.php',
+			));
+		}
+		$oConfig->Set('source_dir', $sSourceDir); // Needed by RecordInstallation below
+		
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
-		$oProductionEnv->InitDataModel($oConfig, false);  // load data model and connect to the database
+		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
+		
 		self::$bMetaModelStarted = true; // No need to reload the final MetaModel in case the installer runs synchronously 
 		
 		// Perform here additional DB setup... profiles, etc...
 		//
-		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), $sModulesDir);
+		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
 		foreach($aAvailableModules as $sModuleId => $aModule)
 		{
 			if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules) &&
-			     isset($aAvailableModules[$sModuleId]['installer']) )
+				isset($aAvailableModules[$sModuleId]['installer']) )
 			{
 				$sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
 				SetupPage::log_info("Calling Module Handler: $sModuleInstallerClass::AfterDatabaseCreation(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
@@ -555,7 +596,7 @@ class ApplicationInstaller
 			}
 		}
 
-		if (!$oProductionEnv->RecordInstallation($oConfig, $aSelectedModules, $sModulesDir))
+		if (!$oProductionEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModules, $sModulesDir))
 		{
 			throw new Exception("Failed to record the installation information");
 		}
@@ -591,7 +632,7 @@ class ApplicationInstaller
 		}
 	}
 	
-	protected static function DoLoadFiles($aSelectedModules, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment = '')
+	protected static function DoLoadFiles($aSelectedModules, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment = '', $bOldAddon = false)
 	{
 		$aParamValues = array(
 			'db_server' => $sDBServer,
@@ -604,7 +645,14 @@ class ApplicationInstaller
 		$oConfig = new Config();
 
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
-
+		if ($bOldAddon)
+		{
+			// Old version of the add-on for backward compatibility with pre-2.0 data models
+			$oConfig->SetAddons(array(
+				'user rights' => 'addons/userrights/userrightsprofile.db.class.inc.php',
+			));
+		}
+		
 		//Load the MetaModel if needed (asynchronous mode)
 		if (!self::$bMetaModelStarted)
 		{
@@ -624,7 +672,7 @@ class ApplicationInstaller
 
 		$aFiles = array();		
 		$oProductionEnv = new RunTimeEnvironment();
-		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $sModulesDir);
+		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, APPROOT.$sModulesDir);
 		foreach($aAvailableModules as $sModuleId => $aModule)
 		{
 			if (($sModuleId != ROOT_MODULE))
@@ -658,7 +706,7 @@ class ApplicationInstaller
 	    SetupPage::log_info("ending data load session");
 	}
 	
-	protected static function DoCreateConfig($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModules, $sTargetEnvironment  = '')
+	protected static function DoCreateConfig($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModules, $sTargetEnvironment, $bOldAddon, $sSourceDir, $sPreviousConfigFile)
 	{	
 		$aParamValues = array(
 			'db_server' => $sDBServer,
@@ -668,20 +716,46 @@ class ApplicationInstaller
 			'new_db_name' => $sDBName,
 			'db_prefix' => $sDBPrefix,
 			'application_path' => $sUrl,
-			'mode' => $sMode,
 			'language' => $sLanguage,
 			'selected_modules' => implode(',', $aSelectedModules), 
 		);
 		
-		$oConfig = new Config();
+		$bPreserveModuleSettings = false;
+		if ($sMode == 'upgrade')
+		{
+			try 
+			{
+				$oOldConfig = new Config($sPreviousConfigFile);
+				$oConfig = clone($oOldConfig);
+				$bPreserveModuleSettings = true;
+			}
+			catch(Exception $e)
+			{
+				// In case the previous configuration is corrupted... start with a blank new one
+				$oConfig = new Config();
+			}
+		}
+		else
+		{
+			$oConfig = new Config();
+		}
+		
 		
 		// Migration: force utf8_unicode_ci as the collation to make the global search
 		// NON case sensitive
 		$oConfig->SetDBCollation('utf8_unicode_ci');
 		
 		// Final config update: add the modules
-		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
-
+		$oConfig->UpdateFromParams($aParamValues, $sModulesDir, $bPreserveModuleSettings);
+		if ($bOldAddon)
+		{
+			// Old version of the add-on for backward compatibility with pre-2.0 data models
+			$oConfig->SetAddons(array(
+				'user rights' => 'addons/userrights/userrightsprofile.db.class.inc.php',
+			));
+		}
+		$oConfig->Set('source_dir', $sSourceDir);
+		
 		// Make sure the root configuration directory exists
 		if (!file_exists(APPCONF))
 		{
@@ -700,5 +774,7 @@ class ApplicationInstaller
 			
 		// try to make the final config file read-only
 		@chmod($sConfigFile, 0444); // Read-only for owner and group, nothing for others
+		// Ready to go !!
+		MetaModel::ResetCache($sTargetEnvironment);
 	}
 }

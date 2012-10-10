@@ -657,7 +657,7 @@ function DoCheckDBConnection()
 		'db_pwd': $("#db_pwd").val(),
 		'db_name': $("#db_name").val()
 	}
-	if (oXHRCheckDB !== null)
+	if ((oXHRCheckDB != null) && (oXHRCheckDB != undefined))
 	{
 		oXHRCheckDB.abort();
 		oXHRCheckDB = null;
@@ -937,6 +937,21 @@ EOF
 	{
 		require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
 		$oConfig = new Config();
+		$sSourceDir = $oWizard->GetParameter('source_dir', '');
+		
+		if (strpos($sSourceDir, APPROOT) !== false)
+		{
+			$sRelativeSourceDir = str_replace(APPROOT, '', $sSourceDir);
+		}
+		else if (strpos($sSourceDir, $oWizard->GetParameter('previous_version_dir')) !== false)
+		{
+			$sRelativeSourceDir = str_replace($oWizard->GetParameter('previous_version_dir'), '', $sSourceDir);
+		}
+		else
+		{
+			throw(new Exception('Internal error: AnalyzeInstallation: source_dir is neither under APPROOT nor under previous_installation_dir ???'));
+		}
+		
 		
 		$aParamValues = array(
 			'db_server' => $oWizard->GetParameter('db_server', ''),
@@ -944,16 +959,43 @@ EOF
 			'db_pwd' => $oWizard->GetParameter('db_pwd', ''),
 			'db_name' => $oWizard->GetParameter('db_name', ''),
 			'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
-			'source_dir' => APPROOT.'datamodel',
+			'source_dir' => $sRelativeSourceDir,
 		);
 		$oConfig->UpdateFromParams($aParamValues, 'datamodel');
+		$aDirsToScan = array($sSourceDir);
 
+		if (is_dir($sSourceDir.'/extensions'))
+		{
+			$aDirsToScan[] = $sSourceDir.'/extensions';
+		}
+		if (is_dir($oWizard->GetParameter('copy_extensions_from')))
+		{
+			$aDirsToScan[] = $oWizard->GetParameter('copy_extensions_from');
+		}
 		$oProductionEnv = new RunTimeEnvironment();
-		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, 'datamodel');
+		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $aDirsToScan);
 
 		return $aAvailableModules;
 	}
 
+	public static function GetApplicationVersion($oWizard)
+	{
+		require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
+		$oConfig = new Config();
+		
+		$aParamValues = array(
+			'db_server' => $oWizard->GetParameter('db_server', ''),
+			'db_user' => $oWizard->GetParameter('db_user', ''),
+			'db_pwd' => $oWizard->GetParameter('db_pwd', ''),
+			'db_name' => $oWizard->GetParameter('db_name', ''),
+			'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
+			'source_dir' => '',
+		);
+		$oConfig->UpdateFromParams($aParamValues, 'datamodel');
+
+		$oProductionEnv = new RunTimeEnvironment();
+		return $oProductionEnv->GetApplicationVersion($oConfig);
+	}
 	/**
 	 * Checks if the content of a directory matches the given manifest
 	 * @param string $sBaseDir Path to the root directory of iTop
@@ -964,6 +1006,7 @@ EOF
 	 */
 	public static function CheckDirAgainstManifest($sBaseDir, $sSourceDir, $aManifest, $aExcludeNames = array('.svn'), $aResult = null)
 	{
+//echo "CheckDirAgainstManifest($sBaseDir, $sSourceDir ...)\n"; 
 		if ($aResult === null)
 		{
 			$aResult = array('added' => array(), 'removed' => array(), 'modified' => array());
@@ -990,10 +1033,13 @@ EOF
 			}
 		}
 
+//echo "The manifest contains ".count($aDirManifest)." files for the directory '$sSourceDir' (and below)\n"; 
+		
 		// Read the content of the directory
 		foreach(glob($sBaseDir.'/'.$sSourceDir .'/*') as $sFilePath)
 		{
 			$sFile = basename($sFilePath);
+//echo "Checking $sFile ($sFilePath)\n"; 
 			
 			if (in_array(basename($sFile), $aExcludeNames)) continue;
 						
@@ -1023,6 +1069,7 @@ EOF
 						if ($sMD5 != $aDirManifest[$sFile]['md5'])
 						{
 							$aResult['modified'][$sSourceDir.'/'.$sFile] = 'Content modified (MD5 checksums differ).';
+//echo $sSourceDir.'/'.$sFile." modified ($sMD5 == {$aDirManifest[$sFile]['md5']})\n";
 						}
 //else
 //{
@@ -1051,9 +1098,10 @@ EOF
 			$aManifest[] = array('path' => (string)$oFileInfo->path, 'size' => (int)$oFileInfo->size, 'md5' => (string)$oFileInfo->md5);
 		}
 		
+		$sBaseDir = preg_replace('|modules/?$|', '', $sBaseDir);
 		$aResults = self::CheckDirAgainstManifest($sBaseDir, 'modules', $aManifest);
 		
-//		echo "<pre>Comparison of ".dirname($sBaseDir)."/modules:\n".print_r($aResults, true)."</pre>";
+//		echo "<pre>Comparison of ".dirname($sBaseDir)."/modules against $sManifestFile:\n".print_r($aResults, true)."</pre>";
 		return $aResults;
 	}
 	
@@ -1084,7 +1132,7 @@ EOF
 		$aResults = array('added' => array(), 'removed' => array(), 'modified' => array());
 		foreach(array('addons', 'core', 'dictionaries', 'js', 'application', 'css', 'pages', 'synchro', 'webservices') as $sDir)
 		{
-			$aTmp = self::CheckDirAgainstManifest($sBaseDir, 'portal', $aManifest);
+			$aTmp = self::CheckDirAgainstManifest($sBaseDir, $sDir, $aManifest);
 			$aResults['added'] = array_merge($aResults['added'], $aTmp['added']);
 			$aResults['modified'] = array_merge($aResults['modified'], $aTmp['modified']);
 			$aResults['removed'] = array_merge($aResults['removed'], $aTmp['removed']);
@@ -1094,4 +1142,99 @@ EOF
 		return $aResults;
 	}
 	
+	public static function CheckVersion($sInstalledVersion, $sSourceDir)
+	{
+		$sManifestFilePath = self::GetVersionManifest($sInstalledVersion);
+		if ($sSourceDir != '')
+		{
+			if (file_exists($sManifestFilePath))
+			{
+				$aDMchanges = self::CheckDataModelFiles($sManifestFilePath, $sSourceDir);
+				//$aPortalChanges = self::CheckPortalFiles($sManifestFilePath, $sSourceDir);
+				//$aCodeChanges = self::CheckApplicationFiles($sManifestFilePath, $sSourceDir);
+				
+				//echo("Changes detected compared to $sInstalledVersion:<br/>DataModel:<br/><pre>".print_r($aDMchanges, true)."</pre>");
+				//echo("Changes detected compared to $sInstalledVersion:<br/>DataModel:<br/><pre>".print_r($aDMchanges, true)."</pre><br/>Portal:<br/><pre>".print_r($aPortalChanges, true)."</pre><br/>Code:<br/><pre>".print_r($aCodeChanges, true)."</pre>");
+				return $aDMchanges;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+				throw(new Exception("Cannot check version '$sInstalledVersion', no source directory provided to check the files."));
+		}
+	}
+	
+	public static function GetVersionManifest($sInstalledVersion)
+	{
+		if (preg_match('/^([0-9]+)\./', $sInstalledVersion, $aMatches))
+		{
+			return APPROOT.'datamodels/'.$aMatches[1].'.x/manifest-'.$sInstalledVersion.'.xml';
+		}
+		return false;
+	}
+	
+	public static function CheckWritableDirs($aWritableDirs)
+	{
+		$aNonWritableDirs = array();
+		foreach($aWritableDirs as $sDir)
+		{
+			$sFullPath = APPROOT.$sDir;
+			if (is_dir($sFullPath) && !is_writable($sFullPath))
+			{
+				$aNonWritableDirs[APPROOT.$sDir] = new CheckResult(CheckResult::ERROR, "The directory '".APPROOT.$sDir."' exists but is not writable for the application.");
+			}
+			else if (file_exists($sFullPath) && !is_dir($sFullPath))
+			{
+				$aNonWritableDirs[APPROOT.$sDir] = new CheckResult(CheckResult::ERROR, "A file with the same name as '".APPROOT.$sDir."' exists.");
+			}
+			else if (!is_dir($sFullPath) && !is_writable(APPROOT))
+			{
+				$aNonWritableDirs[APPROOT] = new CheckResult(CheckResult::ERROR, "The directory '".APPROOT."' is not writable, the application cannot create the directory '$sDir' inside it.");
+			}				
+		}
+		return $aNonWritableDirs;		
+	}
+	
+	public static function GetLatestDataModelDir()
+	{
+		$sBaseDir = APPROOT.'datamodels';
+		
+		$aDirs = glob($sBaseDir.'/*', GLOB_MARK | GLOB_ONLYDIR);
+		if ($aDirs !== false)
+		{
+			sort($aDirs);
+			
+			return array_pop($aDirs);
+		}
+		return false;
+	}
+	
+	public static function GetCompatibleDataModelDir($sInstalledVersion)
+	{
+		if (preg_match('/^([0-9]+)\./', $sInstalledVersion, $aMatches))
+		{
+			$sMajorVersion = $aMatches[1];
+			$sDir = APPROOT.'datamodels/'.$sMajorVersion.'.x/';
+			if (is_dir($sDir))
+			{
+				return $sDir;
+			}
+		}
+		return false;
+	}
+	
+	static public function GetDataModelVersion($sDatamodelDir)
+	{
+		$sVersionFile = $sDatamodelDir.'version.xml';
+		if (file_exists($sVersionFile))
+		{
+			$oParams = new XMLParameters($sVersionFile);
+			return $oParams->Get('version');
+		}
+		return false;
+	}
 }

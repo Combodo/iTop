@@ -532,7 +532,7 @@ class Config
 			'type' => 'string',
 			'description' => 'Source directory for the datamodel files. (which gets compiled to env-production).',
 			// examples... not used
-			'default' => 'datamodels/latest',
+			'default' => '',
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
@@ -1420,7 +1420,7 @@ class Config
 	/**
 	 * Helper function to initialize a configuration from the page arguments
 	 */
-	public function UpdateFromParams($aParamValues, $sModulesDir = null)
+	public function UpdateFromParams($aParamValues, $sModulesDir = null, $bPreserveModuleSettings = false)
 	{
 		if (isset($aParamValues['application_path']))
 		{
@@ -1469,7 +1469,7 @@ class Config
 			// Merge the values with the ones provided by the modules
 			// Make sure when don't load the same file twice...
 	
-			$aModules = ModuleDiscovery::GetAvailableModules(APPROOT, $sModulesDir);
+			$aModules = ModuleDiscovery::GetAvailableModules(array(APPROOT.$sModulesDir));
 			foreach($aModules as $sModuleId => $aModuleInfo)
 			{
 				list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
@@ -1489,10 +1489,17 @@ class Config
 					}
 					if (isset($aModuleInfo['settings']))
 					{
+						list($sName, $sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
 						foreach($aModuleInfo['settings'] as $sProperty => $value)
 						{
-							list($sName, $sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
-							$this->SetModuleSetting($sName, $sProperty, $value);
+							if ($bPreserveModuleSettings && isset($this->m_aModuleSettings[$sName][$sProperty]))
+							{
+								// Do nothing keep the original value
+							}
+							else
+							{
+								$this->SetModuleSetting($sName, $sProperty, $value);
+							}
 						}
 					}
 					if (isset($aModuleInfo['installer']))

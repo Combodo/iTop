@@ -32,6 +32,7 @@ define ('MODULE_ACTION_OPTIONAL', 1);
 define ('MODULE_ACTION_MANDATORY', 2);
 define ('MODULE_ACTION_IMPOSSIBLE', 3);
 define ('ROOT_MODULE', '_Root_'); // Convention to store IN MEMORY the name/version of the root module i.e. application
+define ('DATAMODEL_MODULE', 'datamodel'); // Convention to store the version of the datamodel
 
 class RunTimeEnvironment
 {
@@ -91,7 +92,8 @@ class RunTimeEnvironment
 	/**
 	 * Analyzes the current installation and the possibilities
 	 * 
-	 * @param $oConfig Config Defines the target environment (DB)
+	 * @param Config $oConfig Defines the target environment (DB)
+	 * @param mixed $modulesPath Either a single string or an array of absolute paths
 	 * @return hash Array with the following format:
 	 * array =>
 	 *     'iTop' => array(
@@ -115,7 +117,7 @@ class RunTimeEnvironment
 	 *     )
 	 * )
 	 */     
-	public function AnalyzeInstallation($oConfig, $sModulesRelativePath)
+	public function AnalyzeInstallation($oConfig, $modulesPath)
 	{
 		$aRes = array(
 			ROOT_MODULE => array(
@@ -126,7 +128,8 @@ class RunTimeEnvironment
 			)
 		);
 	
-		$aModules = ModuleDiscovery::GetAvailableModules(APPROOT, $sModulesRelativePath);
+		$aDirs = is_array($modulesPath) ? $modulesPath : array($modulesPath);
+		$aModules = ModuleDiscovery::GetAvailableModules($aDirs);
 		foreach($aModules as $sModuleId => $aModuleInfo)
 		{
 			list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
@@ -137,7 +140,8 @@ class RunTimeEnvironment
 			if ($sModuleVersion == '')
 			{
 				// The version must not be empty (it will be used as a criteria to determine wether a module has been installed or not)
-				throw new Exception("Missing version for the module: '$sModuleId'");
+				//throw new Exception("Missing version for the module: '$sModuleId'");
+				$sModuleVersion  = '1.0.0';
 			}
 	
 			$sModuleAppVersion = $aModuleInfo['itop_version'];
@@ -225,7 +229,7 @@ class RunTimeEnvironment
 		//
 		foreach ($aInstallByModule as $sModuleName => $aModuleDB)
 		{
-				if ($sModuleName == ROOT_MODULE) continue; // Skip the main module
+			if ($sModuleName == ROOT_MODULE) continue; // Skip the main module
 				
 			if (!array_key_exists($sModuleName, $aRes))
 			{
@@ -284,7 +288,7 @@ class RunTimeEnvironment
 		//
 		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
 		$oSourceEnv = new RunTimeEnvironment($sSourceEnv);
-		$aAvailableModules = $oSourceEnv->AnalyzeInstallation($oSourceConfig, $sSourceDir);
+		$aAvailableModules = $oSourceEnv->AnalyzeInstallation($oSourceConfig, $sSourceDir); //TODO: use an absolute PATH
 
 		// Do load the required modules
 		//
@@ -419,8 +423,19 @@ class RunTimeEnvironment
 		return true;
 	}
 	
-	public function RecordInstallation(Config $oConfig, $aSelectedModules, $sModulesRelativePath)
+	public function RecordInstallation(Config $oConfig, $sDataModelVersion, $aSelectedModules, $sModulesRelativePath)
 	{
+		// Record datamodel version
+		$aData = array(
+			'source_dir' => $oConfig->Get('source_dir'),
+		);
+		$oInstallRec = new ModuleInstallation();
+		$oInstallRec->Set('name', DATAMODEL_MODULE);
+		$oInstallRec->Set('version', $sDataModelVersion);
+		$oInstallRec->Set('comment', json_encode($aData, true));
+		$oInstallRec->Set('parent_id', 0); // root module
+		$iMainItopRecord = $oInstallRec->DBInsertNoReload();
+		
 		// Record main installation
 		$oInstallRec = new ModuleInstallation();
 		$oInstallRec->Set('name', ITOP_APPLICATION);
@@ -429,9 +444,10 @@ class RunTimeEnvironment
 		$oInstallRec->Set('parent_id', 0); // root module
 		$iMainItopRecord = $oInstallRec->DBInsertNoReload();
 	
+		
 		// Record installed modules
 		//
-		$aAvailableModules = $this->AnalyzeInstallation($oConfig, $sModulesRelativePath);
+		$aAvailableModules = $this->AnalyzeInstallation($oConfig, APPROOT.$sModulesRelativePath);
 		foreach($aSelectedModules as $sModuleId)
 		{
 			$aModuleData = $aAvailableModules[$sModuleId];
@@ -471,6 +487,60 @@ class RunTimeEnvironment
 		// Database is created, installation has been tracked into it
 		return true;	
 	}
+	
+	public function GetApplicationVersion(Config $oConfig)
+	{
+		$aResult = false;
+		try
+		{
+			require_once(APPROOT.'/core/cmdbsource.class.inc.php');
+			CMDBSource::Init($oConfig->GetDBHost(), $oConfig->GetDBUser(), $oConfig->GetDBPwd(), $oConfig->GetDBName());
+			$aSelectInstall = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->GetDBSubname()."priv_module_install");
+		}
+		catch (MySQLException $e)
+		{
+			// No database or erroneous information
+			return false;
+		}
+	
+		// Scan the list of installed modules to get the version of the 'ROOT' module which holds the main application version
+		foreach ($aSelectInstall as $aInstall)
+		{
+			$sModuleVersion = $aInstall['version'];
+			if ($sModuleVersion == '')
+			{
+				// Though the version cannot be empty in iTop 2.0, it used to be possible
+				// therefore we have to put something here or the module will not be considered
+				// as being installed
+				$sModuleVersion = '0.0.0';
+			}
+	
+			if ($aInstall['parent_id'] == 0)
+			{
+				if ($aInstall['name'] == DATAMODEL_MODULE)
+				{
+					$aResult['datamodel_version'] = $sModuleVersion;
+					$aComments = json_decode($aInstall['comment'], true);
+					if (is_array($aComments))
+					{
+						$aResult = array_merge($aResult, $aComments);
+					}
+				}
+				else
+				{
+					$aResult['product_name'] = $aInstall['name'];
+					$aResult['product_version'] = $sModuleVersion;
+				}
+			}
+		}
+		if (!array_key_exists('datamodel_version', $aResult))
+		{
+			// Versions prior to 2.0 did not record the version of the datamodel
+			// so assume that the datamodel version is equal to the application version
+			$aResult['datamodel_version'] = $aResult['product_version'];
+		}
+		return $aResult;	
+	}
 
 	public static function MakeDirSafe($sDir)
 	{
@@ -501,6 +571,3 @@ class RunTimeEnvironment
 		SetupPage::log_ok($sText);
 	}
 } // End of class
-
-
-?>

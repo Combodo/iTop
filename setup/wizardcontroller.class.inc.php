@@ -164,6 +164,23 @@ class WizardController
 	protected function DisplayStep(WizardStep $oStep)
 	{
 		$oPage = new SetupPage($oStep->GetTitle());
+		if ($oStep->RequiresWritableConfig())
+		{
+			$sConfigFile = utils::GetConfigFilePath();
+			if (file_exists($sConfigFile))
+			{
+				// The configuration file already exists
+				if (!is_writable($sConfigFile))
+				{
+					$oP = new SetupPage('Installation Cannot Continue');
+					$oP->add("<h2>Fatal error</h2>\n");
+					$oP->error("<b>Error:</b> the configuration file '".$sConfigFile."' already exists and cannot be overwritten.");
+					$oP->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".realpath($sConfigFile)."</b>' can be modified by the web server.");
+					$oP->output();
+					return;
+				}
+			}			
+		}
 		$oPage->add_linked_script('../setup/setup.js');
 		$oPage->add_script("function CanMoveForward()\n{\n".$oStep->JSCanMoveForward()."\n}\n");
 		$oPage->add_script("function CanMoveBackward()\n{\n".$oStep->JSCanMoveBackward()."\n}\n");
@@ -430,6 +447,15 @@ abstract class WizardStep
 	public function JSCanMoveBackward()
 	{
 		return 'return true;';
+	}
+
+	/**
+	 * Tells whether this step of the wizard requires that the configuration file be writable
+	 * @return bool True if the wizard will possibly need to modify the configuration at some point
+	 */
+	public function RequiresWritableConfig()
+	{
+		return true;
 	}
 
 	/**

@@ -27,15 +27,14 @@ class DOMFormatException extends Exception
 class MFCompiler
 {
 	protected $oFactory;
-	protected $sSourceDir;
+	protected $aSourceDirs;
 
 	protected $aRootClasses;
 	protected $aLog;
 
-	public function __construct($oModelFactory, $sSourceDir)
+	public function __construct($oModelFactory)
 	{
 		$this->oFactory = $oModelFactory;
-		$this->sSourceDir = $sSourceDir;
 
 		$this->aLog = array();
 	}
@@ -97,7 +96,7 @@ class MFCompiler
 			$sModuleVersion = $oModule->GetVersion();
 		
 			$sModuleRootDir = realpath($oModule->GetRootDir());
-			$sRelativeDir = substr($sModuleRootDir, strlen($this->sSourceDir) + 1);
+			$sRelativeDir = basename($sModuleRootDir);
 		
 			// Push the other module files
 			SetupUtils::copydir($sModuleRootDir, $sTargetDir.'/'.$sRelativeDir, $bUseSymbolicLinks);
@@ -878,11 +877,12 @@ EOF;
 			{
 				$sPHP .= "\nrequire_once('$sIncludeFile'); // Implementation of the class $sParentClass\n";
 			}
-			$sFullPath =  $this->sSourceDir.'/'.$sModuleRelativeDir.'/'.$sIncludeFile;
-			if (!file_exists($sFullPath))
-			{
-				throw new Exception("Failed to process class '".$oClass->getAttribute('id')."', from '$sModuleRelativeDir'. The required include file: '$sFullPath' does not exist.");
-			}
+//TODO fix this !!!
+//			$sFullPath =  $this->sSourceDir.'/'.$sModuleRelativeDir.'/'.$sIncludeFile;
+//			if (!file_exists($sFullPath))
+//			{
+//				throw new Exception("Failed to process class '".$oClass->getAttribute('id')."', from '$sModuleRelativeDir'. The required include file: '$sFullPath' does not exist.");
+//			}
 		}
 		else
 		{
@@ -1151,7 +1151,6 @@ EOF;
 
 		$sPHP =
 <<<EOF
-
 //
 // List of constant profiles
 // - used by the class URP_Profiles at setup (create/update/delete records)

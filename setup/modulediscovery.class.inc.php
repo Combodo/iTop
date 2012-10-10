@@ -30,11 +30,8 @@ class ModuleDiscovery
 	);
 	
 
-	// Cache the results and the source directory
-	// Note that, as class can be declared within the module files, they cannot be loaded twice.
-	// Then the following assumption is made: within the same execution page, the module
-	// discovery CANNOT be executed on several different paths
-	protected static $m_sModulesRoot = null;
+	// Cache the results and the source directories
+	protected static $m_aSearchDirs = null;
 	protected static $m_aModules = array();
 
 	// All the entries below are list of file paths relative to the module directory
@@ -164,45 +161,44 @@ class ModuleDiscovery
 	/**
 	 * Search (on the disk) for all defined iTop modules, load them and returns the list (as an array)
 	 * of the possible iTop modules to install
-	 * @param sRootDir Application root directory
-	 * @param sSearchDir Directory to search (relative to root dir)
+	 * @param aSearchDirs Array of directories to search (absolute paths)
 	 * @return Hash A big array moduleID => ModuleData
 	 */
-	public static function GetAvailableModules($sRootDir, $sSearchDir, $oP = null)
+	public static function GetAvailableModules($aSearchDirs, $oP = null)
 	{
-		$sLookupDir = realpath($sRootDir.'/'.$sSearchDir);
-		
-		if (self::$m_sModulesRoot != $sLookupDir)
+		if (self::$m_aSearchDirs != $aSearchDirs)
 		{
 			self::ResetCache();
 		}
 		
-		if (is_null(self::$m_sModulesRoot))
+		if (is_null(self::$m_aSearchDirs))
 		{
-			// First call
-			//
-			if ($sLookupDir == '')
+			self::$m_aSearchDirs = $aSearchDirs;
+			
+			// Not in cache, let's scan the disk
+			foreach($aSearchDirs as $sSearchDir)
 			{
-				throw new Exception("Invalid directory '$sRootDir/$sSearchDir'");
+				$sLookupDir = realpath($sSearchDir);			
+				if ($sLookupDir == '')
+				{
+					throw new Exception("Invalid directory '$sSearchDir'");
+				}
+	
+				clearstatcache();
+				self::ListModuleFiles(basename($sSearchDir), dirname($sSearchDir));
 			}
-			self::$m_sModulesRoot = $sLookupDir;
-
-			clearstatcache();
-			self::ListModuleFiles($sSearchDir, $sRootDir);
 			return self::GetModules($oP);
 		}
 		else
 		{
 			// Reuse the previous results
-			//
 			return self::GetModules($oP);
 		}
 	}
 	
 	public static function ResetCache()
 	{
-		self::$m_sModulesRoot = null;
-		self::$m_sModulesRoot = null;
+		self::$m_aSearchDirs = null;
 		self::$m_aModules = array();
 	}
 
@@ -233,6 +229,8 @@ class ModuleDiscovery
 	 */    
 	protected static function ListModuleFiles($sRelDir, $sRootDir)
 	{
+		static $iDummyClassIndex = 0;
+		static $aDefinedClasses = array();
 		$sDirectory = $sRootDir.'/'.$sRelDir;
 		
 		if ($hDir = opendir($sDirectory))
@@ -253,15 +251,35 @@ class ModuleDiscovery
 					self::SetModulePath($sRelDir);
 					try
 					{
-						//echo "<p>Loading: $sDirectory/$sFile...</p>\n";
-						//SetupPage::log_info("Discovered module $sFile");
-						require($sDirectory.'/'.$sFile); // WARNING require_once will NOT work IIF doing an unattended installation WITH symbolic links
-														 // since datamodel/xxx/module.xxx.php and env-production/xxx/module.xxx.php are actually the same file (= inode)
+						$sModuleFileContents = file_get_contents($sDirectory.'/'.$sFile);
+						$sModuleFileContents = str_replace(array('<?php', '?>'), '', $sModuleFileContents);
+						$sModuleFileContents = str_replace('__FILE__', "'".addslashes($sDirectory.'/'.$sFile)."'", $sModuleFileContents);
+						preg_match_all('/class ([A-Za-z0-9_]+) extends ([A-Za-z0-9_]+)/', $sModuleFileContents, $aMatches);
+						//print_r($aMatches);
+						$idx = 0;
+						foreach($aMatches[1] as $sClassName)
+						{
+							if (class_exists($sClassName))
+							{
+								// rename the class inside the code to prevent a "duplicate class" declaration
+								// and change its parent class as well so that nobody will find it and try to execute it
+								$sModuleFileContents = str_replace($sClassName.' extends '.$aMatches[2][$idx], $sClassName.'_'.($iDummyClassIndex++).' extends DummyHandler', $sModuleFileContents);
+							}
+							$idx++;
+						}
+						$bRet = eval($sModuleFileContents);
+						
+						if ($bRet === false)
+						{
+							SetupPage::log_warning("Eval of $sRelDir/$sFile returned false");
+						}
+						
 						//echo "<p>Done.</p>\n";
 					}
 					catch(Exception $e)
 					{
 						// Continue...
+						SetupPage::log_warning("Eval of $sRelDir/$sFile caused an exception: ".$e->getMessage());
 					}
 				}
 			}
@@ -279,6 +297,41 @@ class ModuleDiscovery
  *  the declaration of a module invokes SetupWebPage::AddModule()
  *  whereas the new form is ModuleDiscovery::AddModule()
  */  
-class SetupWebPage extends ModuleDiscovery{}
+class SetupWebPage extends ModuleDiscovery
+{
+	// For backward compatibility with old modules...
+	public static function log_error($sText)
+	{
+		SetupPage::log_error($sText);
+	}
 
-?>
+	public static function log_warning($sText)
+	{
+		SetupPage::log_warning($sText);
+	}
+
+	public static function log_info($sText)
+	{
+		SetupPage::log_info($sText);
+	}
+
+	public static function log_ok($sText)
+	{
+		SetupPage::log_ok($sText);
+	}
+
+	public static function log($sText)
+	{
+		SetupPage::log($sText);
+	}	
+}
+		
+/** Ugly patch !!!
+ * In order to be able to analyse / load several times
+ * the same module file, we rename the class (to avoid duplicate class definitions)
+ * and we make the class extends the dummy class below in order to "deactivate" completely
+ * the class (in case some piece of code enumerate the classes derived from a well known class)
+ * Note that this will not work if someone enumerates the classes that implement a given interface
+ */
+class DummyHandler {
+}

@@ -157,7 +157,7 @@ class WizStepInstallOrUpgrade extends WizardStep
 		$sNextStep = '';
 		$sInstallMode = utils::ReadParam('install_mode');
 
-		$this->oWizard->SaveParameter('source_dir', '');
+		$this->oWizard->SaveParameter('previous_version_dir', '');
 		$this->oWizard->SaveParameter('db_server', '');
 		$this->oWizard->SaveParameter('db_user', '');
 		$this->oWizard->SaveParameter('db_pwd', '');
@@ -169,6 +169,9 @@ class WizStepInstallOrUpgrade extends WizardStep
 		if ($sInstallMode == 'install')
 		{
 			$this->oWizard->SetParameter('install_mode', 'install');
+			$sFullSourceDir = SetupUtils::GetLatestDataModelDir();
+			$this->oWizard->SetParameter('source_dir', $sFullSourceDir);
+			$this->oWizard->SetParameter('datamodel_version', SetupUtils::GetDataModelVersion($sFullSourceDir));
 			$sNextStep = 'WizStepLicense';
 		}
 		else
@@ -183,7 +186,6 @@ class WizStepInstallOrUpgrade extends WizardStep
 	public function Display(WebPage $oPage)
 	{
 		$sInstallMode = $this->oWizard->GetParameter('install_mode', '');
-		$sSourceDir = $this->oWizard->GetParameter('source_dir', '');
 		$sDBServer = $this->oWizard->GetParameter('db_server', '');
 		$sDBUser = $this->oWizard->GetParameter('db_user', '');
 		$sDBPwd = $this->oWizard->GetParameter('db_pwd', '');
@@ -191,6 +193,7 @@ class WizStepInstallOrUpgrade extends WizardStep
 		$sDBPrefix = $this->oWizard->GetParameter('db_prefix', '');
 		$bDBBackup = $this->oWizard->GetParameter('db_backup', false);
 		$sDBBackupPath = $this->oWizard->GetParameter('db_backup_path', '');
+		$sPreviousVersionDir = '';
 		if ($sInstallMode == '')
 		{
 			$sDBBackupPath = APPROOT.'data/'.ITOP_APPLICATION.strftime('-backup-%Y-%m-%d.zip');
@@ -205,14 +208,15 @@ class WizStepInstallOrUpgrade extends WizardStep
 				$sDBPwd = $aPreviousInstance['db_pwd'];
 				$sDBName = $aPreviousInstance['db_name'];
 				$sDBPrefix = $aPreviousInstance['db_prefix'];
-				//TODO: check if we can run the backup
 				$sStyle = '';
+				$sPreviousVersionDir = APPROOT;
 			}
 			else
 			{
 				$sInstallMode = 'install';
 			}
 		}
+		$sPreviousVersionDir = $this->oWizard->GetParameter('previous_version_dir', $sPreviousVersionDir);
 		
 		$sUpgradeInfoStyle = '';
 		if ($sInstallMode == 'install')
@@ -227,7 +231,7 @@ class WizStepInstallOrUpgrade extends WizardStep
 		//$oPage->add('<fieldset  id="upgrade_info"'.$sUpgradeInfoStyle.'>');
 		//$oPage->add('<legend>Information about the previous instance:</legend>');
 		$oPage->add('<table id="upgrade_info"'.$sUpgradeInfoStyle.'>');
-		$oPage->add('<tr><td>Location on the disk:</td><td><input id="source_dir" type="text" name="source_dir" value="'.htmlentities($sSourceDir, ENT_QUOTES, 'UTF-8').'" size="25"/></td></tr>');
+		$oPage->add('<tr><td>Location on the disk:</td><td><input id="previous_version_dir" type="text" name="previous_version_dir" value="'.htmlentities($sPreviousVersionDir, ENT_QUOTES, 'UTF-8').'" size="25"/></td></tr>');
 		SetupUtils::DisplayDBParameters($oPage, false, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix);
 
 		$aBackupChecks = SetupUtils::CheckBackupPrerequisites($sDBBackupPath);
@@ -263,7 +267,7 @@ class WizStepInstallOrUpgrade extends WizardStep
 <<<EOF
 	$("#radio_update").bind('change', function() { if (this.checked ) { $('#upgrade_info').show(); WizardUpdateButtons(); } else { $('#upgrade_info').hide(); } });
 	$("#radio_install").bind('change', function() { if (this.checked ) { $('#upgrade_info').hide(); WizardUpdateButtons(); } else { $('#upgrade_info').show(); } });
-	$("#source_dir").bind('change keyup', function() { WizardAsyncAction('check_path', { source_dir: $('#source_dir').val() }); });
+	$("#previous_version_dir").bind('change keyup', function() { WizardAsyncAction('check_path', { previous_version_dir: $('#previous_version_dir').val() }); });
 	$("#db_backup_path").bind('change keyup', function() { WizardAsyncAction('check_backup', { db_backup_path: $('#db_backup_path').val() }); });
 EOF
 		);
@@ -274,8 +278,8 @@ EOF
 		switch($sCode)
 		{
 			case 'check_path':
-			$sSourceDir = $aParameters['source_dir'];
-			$aPreviousInstance = SetupUtils::GetPreviousInstance($sSourceDir);
+			$sPreviousVersionDir = $aParameters['previous_version_dir'];
+			$aPreviousInstance = SetupUtils::GetPreviousInstance($sPreviousVersionDir);
 			if ($aPreviousInstance['found'])
 			{
 				$sDBServer = htmlentities($aPreviousInstance['db_server'], ENT_QUOTES, 'UTF-8');
@@ -358,90 +362,8 @@ EOF
  */
 class WizStepDetectedInfo extends WizardStep
 {
-	public function GetTitle()
-	{
-		return 'Detected Info';
-	}
+	protected $bCanMoveForward;
 	
-	public function GetPossibleSteps()
-	{
-		return array('WizStepUpgradeKeep', 'WizStepUpgradeAuto', 'WizStepLicense2');
-	}
-	
-	public function ProcessParams($bMoveForward = true)
-	{
-
-		return array('class' => 'WizStepLicense2', 'state' => '');
-	}
-	
-	public function Display(WebPage $oPage)
-	{
-		$oPage->p('Info about the detected version');
-		$sSourceDir = $this->oWizard->GetParameter('source_dir', '');
-		$aInstalledModules = SetupUtils::AnalyzeInstallation($this->oWizard);		
-		$sVersion = $aInstalledModules[ROOT_MODULE]['version_db'];
-		
-		if (preg_match('/^([0-9]+)\.([0-9]+)\.([0-9]+)\.(.*)$/', $sVersion, $aMatches))
-		{
-			$sVersion = $aMatches[1].'.'.$aMatches[2].'.'.$aMatches[3];
-		}
-		
-		$sKnownManifestFile = APPROOT.'setup/known-versions/'.$sVersion.'/manifest.xml';
-		if ($sSourceDir != '')
-		{
-			if (file_exists($sKnownManifestFile))
-			{
-				$aDMchanges = SetupUtils::CheckDataModelFiles($sKnownManifestFile, $sSourceDir);
-				$aPortalChanges = SetupUtils::CheckPortalFiles($sKnownManifestFile, $sSourceDir);
-				$aCodeChanges = SetupUtils::CheckApplicationFiles($sKnownManifestFile, $sSourceDir);
-				
-				$oPage->add("Changes detected compared to $sVersion:<br/>DataModel:<br/><pre>".print_r($aDMchanges, true)."</pre><br/>Portal:<br/><pre>".print_r($aPortalChanges, true)."</pre><br/>Code:<br/><pre>".print_r($aCodeChanges, true)."</pre>");
-			}
-			else
-			{
-				$oPage->p("Unknown version $sVersion. Do you want to upgrade anyway ??? NOT GUARANTEED AT ALL !!!");
-			}
-		}
-		else
-		{
-			$oPage->p("No source dir provided assuming that the installed version '$sVersion' is genuine iTop build...");
-		}
-		
-	}
-}
-
-/**
- * Keep or Upgrade choice
- */
-class WizStepUpgradeKeep extends WizardStep
-{
-	public function GetTitle()
-	{
-		return 'Keep or Upgrade';
-	}
-	
-	public function GetPossibleSteps()
-	{
-		return array('WizStepModulesChoice');
-	}
-	
-	public function ProcessParams($bMoveForward = true)
-	{
-
-		return array('class' => 'WizStepModulesChoice', 'state' => 'start_upgrade');
-	}
-	
-	public function Display(WebPage $oPage)
-	{
-		$oPage->p('Keep or Upgrade the data model');
-	}
-}
-
-/**
- * Automatic Upgrade info
- */
-class WizStepUpgradeAuto extends WizardStep
-{
 	public function GetTitle()
 	{
 		return 'Upgrade Information';
@@ -449,20 +371,261 @@ class WizStepUpgradeAuto extends WizardStep
 	
 	public function GetPossibleSteps()
 	{
-		return array('WizStepModulesChoice');
+		return array('WizStepUpgradeMiscParams', 'WizStepLicense2');
 	}
 	
 	public function ProcessParams($bMoveForward = true)
 	{
+		$sUpgradeType = utils::ReadParam('upgrade_type');
+		
+		$this->oWizard->SetParameter('mode', 'upgrade');
+		$this->oWizard->SetParameter('upgrade_type', $sUpgradeType);
+		$this->oWizard->SaveParameter('copy_extensions_from', '');
+		$bDisplayLicense = $this->oWizard->GetParameter('display_license');
 
-		return array('class' => 'WizStepModulesChoice', 'state' => 'start_upgrade');
+		switch ($sUpgradeType)
+		{
+			case 'keep-previous':
+			$sSourceDir = utils::ReadParam('relative_source_dir', '', false, 'raw_data');
+			$this->oWizard->SetParameter('source_dir', $this->oWizard->GetParameter('previous_version_dir').'/'.$sSourceDir);
+			$this->oWizard->SetParameter('datamodel_version', utils::ReadParam('datamodel_previous_version', '', false, 'raw_data'));
+			break;
+			
+			case 'use-compatible':
+			$sDataModelPath = utils::ReadParam('datamodel_path', '', false, 'raw_data');
+			$this->oWizard->SetParameter('source_dir', $sDataModelPath);
+			$this->oWizard->SaveParameter('datamodel_version', '');
+			break;
+			
+			default:
+			// Do nothing, maybe the user pressed the Back button
+		}
+		if ($bDisplayLicense)
+		{
+			$aRet = array('class' => 'WizStepLicense2', 'state' => '');
+		}
+		else
+		{
+			$aRet = array('class' => 'WizStepUpgradeMiscParams', 'state' => '');
+		}
+		return $aRet;
 	}
 	
 	public function Display(WebPage $oPage)
 	{
-		$oPage->p('Automatic Upgrade information');
+		$oPage->add_style(
+<<<EOF
+#changes_summary {
+	max-height: 200px;
+	overflow: auto;
+}
+#changes_summary div {
+	width:100;
+	margin-top:0;
+	padding-top: 0.5em;
+	padding-left: 0;
+}
+#changes_summary div ul {
+	margin-left:0;
+	padding-left: 20px;
+}
+#changes_summary div.closed ul {
+	display:none;
+}
+#changes_summary div li {
+	list-style: none;
+	width: 100;
+	margin-left:0;
+	padding-left: 0em;
+}
+.title {
+	padding-left: 20px;
+	font-weight: bold;
+	cursor: pointer;
+	background: url(../images/minus.gif) 2px 2px no-repeat;
+}
+#changes_summary div.closed .title {
+	background: url(../images/plus.gif) 2px 2px no-repeat;
+}
+EOF
+		);		
+		$this->bCanMoveForward = true;
+		$bDisplayLicense = true;
+		$sPreviousVersionDir = $this->oWizard->GetParameter('previous_version_dir', '');
+		$aInstalledInfo = SetupUtils::GetApplicationVersion($this->oWizard);
+				
+		if ($aInstalledInfo === false)
+		{
+			throw(new Exception('No previous version of '.ITOP_APPLICATION.' found in the supplied database. The upgrade cannot continue.'));
+		}
+		else if (strcasecmp($aInstalledInfo['product_name'], ITOP_APPLICATION) != 0)
+		{
+			$oPage->p("<b>Warning: The installed products seem different. Are you sure the you want to upgrade {$aInstalledInfo['product_name']} with ".ITOP_APPLICATION."?</b>");			
+		}
+		
+		$sInstalledVersion = $aInstalledInfo['product_version'];
+		$sInstalledDataModelVersion = $aInstalledInfo['datamodel_version'];
+		
+		if ($sInstalledDataModelVersion == '$ITOP_VERSION$.$WCREV$')
+		{
+			// Special case for upgrading some  development versions (temporary)
+			$sLatestDMDir = SetupUtils::GetLatestDataModelDir();
+			$sInstalledDataModelVersion = SetupUtils::GetDataModelVersion($sLatestDMDir);
+		}
+		
+		$oPage->add("<h2>Information about the upgrade from version $sInstalledVersion to ".ITOP_VERSION.'.'.ITOP_REVISION."</h2>");
+		
+		if ($sInstalledVersion == (ITOP_VERSION.'.'.ITOP_REVISION))
+		{
+			// Reinstalling the same version let's skip the license agreement...
+			$bDisplayLicense = false;
+		}		
+		$this->oWizard->SetParameter('license', $bDisplayLicense); // Remember for later
+		
+			$sCompatibleDMDir = SetupUtils::GetCompatibleDataModelDir($sInstalledDataModelVersion);
+		if ($sCompatibleDMDir === false)
+		{
+			// No compatible version exists... cannot upgrade. Either it is too old, or too new (downgrade !)
+			$this->bCanMoveForward = false;
+			$oPage->p("The current version of ".ITOP_APPLICATION." (".ITOP_VERSION.'.'.ITOP_REVISION.") does not sem to be compatible with the installed version ($sInstalledVersion).");
+			$oPage->p("The upgrade cannot continue, sorry.");
+		}
+		else
+		{
+			$sUpgradeDMVersion = SetupUtils::GetDataModelVersion($sCompatibleDMDir);
+			$sPreviousSourceDir = isset($aInstalledInfo['source_dir']) ? $aInstalledInfo['source_dir'] : 'modules';
+			$aChanges = false;
+			if (is_dir($sPreviousVersionDir))
+			{
+				// Check if the previous version is a "genuine" one or not...
+				$aChanges = SetupUtils::CheckVersion($sInstalledDataModelVersion, $sPreviousVersionDir.'/'.$sPreviousSourceDir);
+			}
+			if (($aChanges !== false) && (count($aChanges) > 0))
+			{
+				// Some changes were detected, prompt the user to keep or discard them
+				$oPage->p("<img src=\"../images/error.png\"/>&nbsp;Some modifications were detected between the ".ITOP_APPLICATION." version in '$sPreviousVersionDir' and a genuine $sInstalledVersion version.");
+				$oPage->p("What do you want to do?");
+
+				$aWritableDirs = array('modules', 'portal');
+				$aErrors = SetupUtils::CheckWritableDirs($aWritableDirs);
+				$sChecked = ($this->oWizard->GetParameter('upgrade_type') == 'keep-previous') ? ' checked ' : '';
+				$sDisabled = (count($aErrors) > 0) ? ' disabled ' : '';
+				
+				$oPage->p('<input id="radio_upgrade_keep" type="radio" name="upgrade_type" value="keep-previous"'.$sChecked.$sDisabled.'/><label for="radio_upgrade_keep">&nbsp;Preserve the modifications of the installed version (the dasboards inside '.ITOP_APPLICATION.' may not be editable).</label>');
+				$oPage->add('<input type="hidden" name="datamodel_previous_version" value="'.htmlentities($sInstalledDataModelVersion, ENT_QUOTES, 'UTF-8').'">');
+				
+				$oPage->add('<input type="hidden" name="relative_source_dir" value="'.htmlentities($sPreviousSourceDir, ENT_QUOTES, 'UTF-8').'">');
+				
+				if (count($aErrors) > 0)
+				{
+					$oPage->p("Cannot copy the installed version due to the following access rights issue(s):");
+					foreach($aErrors as $sDir => $oCheckResult)
+					{
+						$oPage->p('<img src="../images/error.png"/>&nbsp;'.$oCheckResult->sLabel);
+					}
+				}
+						
+				$sChecked = ($this->oWizard->GetParameter('upgrade_type') == 'use-compatible') ? ' checked ' : '';
+				
+				$oPage->p('<input id="radio_upgrade_convert" type="radio" name="upgrade_type" value="use-compatible"'.$sChecked.'/><label for="radio_upgrade_convert">&nbsp;Discard the modifications, use a standard '.$sUpgradeDMVersion.' data model.</label>');
+				
+				$oPage->add('<input type="hidden" name="datamodel_path" value="'.htmlentities($sCompatibleDMDir, ENT_QUOTES, 'UTF-8').'">');
+				$oPage->add('<input type="hidden" name="datamodel_version" value="'.htmlentities($sUpgradeDMVersion, ENT_QUOTES, 'UTF-8').'">');
+				
+				$oPage->add('<div id="changes_summary"><div class="closed"><span class="title">Details of the modifications</span><div>');
+				if (count($aChanges['added']) > 0)
+				{
+					$oPage->add('<ul>New files added:');
+					foreach($aChanges['added'] as $sFilePath => $void)
+					{
+						$oPage->add('<li>'.$sFilePath.'</li>');
+					}
+					$oPage->add('</ul>');
+				}
+				if (count($aChanges['removed']) > 0)
+				{
+					$oPage->add('<ul>Deleted files:');
+					foreach($aChanges['removed'] as $sFilePath => $void)
+					{
+						$oPage->add('<li>'.$sFilePath.'</li>');
+					}
+					$oPage->add('</ul>');
+				}
+				if (count($aChanges['modified']) > 0)
+				{
+					$oPage->add('<ul>Modified files:');
+					foreach($aChanges['modified'] as $sFilePath => $void)
+					{
+						$oPage->add('<li>'.$sFilePath.'</li>');
+					}
+					$oPage->add('</ul>');
+				}
+				$oPage->add('</div></div></div>');
+			}
+			else
+			{
+				// No changes detected... or no way to tell because of the lack of a manifest or previous source dir
+				// Use the "compatible" datamodel as-is.
+				$oPage->p("<img src=\"../images/validation_ok.png\"/>&nbsp;The datamodel will be upgraded from version $sInstalledDataModelVersion to version $sUpgradeDMVersion.");
+				$oPage->add('<input type="hidden" name="upgrade_type" value="use-compatible">');
+				$oPage->add('<input type="hidden" name="datamodel_path" value="'.htmlentities($sCompatibleDMDir, ENT_QUOTES, 'UTF-8').'">');
+				$oPage->add('<input type="hidden" name="datamodel_version" value="'.htmlentities($sUpgradeDMVersion, ENT_QUOTES, 'UTF-8').'">');
+			}
+
+			// Check if there are "extensions" to preserve and if it's possible
+			if (is_dir($sPreviousVersionDir.'/extensions'))
+			{
+				$aExtensions = glob($sPreviousVersionDir.'/extensions/*', GLOB_ONLYDIR);
+				if (($aExtensions !== false) && (count($aExtensions)>0))
+				{
+					$aWritableDirs = array('extensions');
+					$aErrors = SetupUtils::CheckWritableDirs($aWritableDirs);
+					if (count($aErrors) > 0)
+					{
+						$oPage->p("Cannot copy the extensions from '$sPreviousVersionDir/extensions' to '".APPROOT."extensions' due to the following access rights issue(s):");
+						foreach($aErrors as $sDir => $oCheckResult)
+						{
+							$oPage->p('<img src="../images/error.png"/>&nbsp;'.$oCheckResult->sLabel);
+						}
+					}
+					else
+					{
+						$oPage->p("<b>Note:</b> The extensions present in '$sPreviousVersionDir/extensions' will be copied to '".APPROOT."extensions'.");
+						$oPage->add('<input type="hidden" name="copy_extensions_from" value="'.htmlentities($sPreviousVersionDir.'/extensions', ENT_QUOTES, 'UTF-8').'">');
+					}
+				}
+			}			
+			$oPage->add_ready_script(
+<<<EOF
+	$("#changes_summary .title").click(function() { $(this).parent().toggleClass('closed'); } );
+	$('input[name=upgrade_type]').bind('click change', function() { WizardUpdateButtons(); });
+EOF
+			);	
+		}				
+	}
+	
+	public function CanMoveForward()
+	{
+		return $this->bCanMoveForward;
+	}
+	
+	/**
+	 * Tells whether the "Next" button should be enabled interactively
+	 * @return string A piece of javascript code returning either true or false
+	 */
+	public function JSCanMoveForward()
+	{
+		return
+<<<EOF
+	if ($("#radio_upgrade_keep").length == 0) return true;
+	
+	bRet = ($('input[name=upgrade_type]:checked').length > 0);
+	return bRet;
+EOF
+		;
 	}
 }
+
 /**
  * License acceptation screen
  */
@@ -534,12 +697,12 @@ class WizStepLicense2 extends WizStepLicense
 {
 	public function GetPossibleSteps()
 	{
-		return array('WizStepUpgradeKeep', 'WizStepUpgradeAuto');
+		return array('WizStepUpgradeMiscParams');
 	}
 	
 	public function ProcessParams($bMoveForward = true)
 	{
-		return array('class' => 'WizStepUpgradeAuto', 'state' => '');
+		return array('class' => 'WizStepUpgradeMiscParams', 'state' => '');
 	}
 }
 
@@ -800,6 +963,67 @@ EOF
 }
 
 /**
+ * Miscellaneous Parameters (URL...) in case of upgrade
+ */
+class WizStepUpgradeMiscParams extends WizardStep
+{
+	public function GetTitle()
+	{
+		return 'Miscellaneous Parameters';
+	}
+	
+	public function GetPossibleSteps()
+	{
+		return array('WizStepModulesChoice');
+	}
+	
+	public function ProcessParams($bMoveForward = true)
+	{
+		$this->oWizard->SaveParameter('application_url', '');
+		return array('class' => 'WizStepModulesChoice', 'state' => 'start_upgrade');
+	}
+	
+	public function Display(WebPage $oPage)
+	{
+		$sApplicationURL = $this->oWizard->GetParameter('application_url', utils::GetDefaultUrlAppRoot());
+		$oPage->add('<h2>Additional parameters</h2>');
+		$oPage->add('<fieldset>');
+		$oPage->add('<legend>Application URL</legend>');
+		$oPage->add('<table>');
+		$oPage->add('<tr><td>URL: </td><td><input id="application_url" name="application_url" type="text" size="35" maxlength="1024" value="'.htmlentities($sApplicationURL, ENT_QUOTES, 'UTF-8').'"><span id="v_application_url"/></td><tr>');
+		$oPage->add('<tr><td colspan="2">Change the value above if the end-users will be accessing the application by another path due to a specific configuration of the web server.</td><tr>');
+		$oPage->add('</table>');
+		$oPage->add('</fieldset>');
+		$oPage->add_ready_script(
+<<<EOF
+		$('#application_url').bind('change keyup', function() { WizardUpdateButtons(); } );
+EOF
+		);
+	}
+	
+	/**
+	 * Tells whether the "Next" button should be enabled interactively
+	 * @return string A piece of javascript code returning either true or false
+	 */
+	public function JSCanMoveForward()
+	{
+		return
+<<<EOF
+	bRet = ($('#application_url').val() != '');
+	if (!bRet)
+	{
+		$("#v_application_url").html('<img src="../images/validation_error.png" title="This field cannot be empty"/>');
+	}
+	else
+	{
+		$("#v_application_url").html('');
+	}
+	return bRet;
+EOF
+		;
+	}
+}
+/**
  * Choice of the modules to be installed
  */
 class WizStepModulesChoice extends WizardStep
@@ -848,6 +1072,10 @@ class WizStepModulesChoice extends WizardStep
 					$sDisplayChoices .= $this->GetSelectedModules($aStepInfo, $aSelectedChoices[$i], $aModules);
 				}
 				$sDisplayChoices .= '</ul>';
+				if (class_exists('CreateITILProfilesInstaller'))
+				{
+					$this->oWizard->SetParameter('old_addon', true);
+				}
 				$this->oWizard->SetParameter('selected_modules', json_encode(array_keys($aModules)));
 				$this->oWizard->SetParameter('display_choices', $sDisplayChoices);
 				return array('class' => 'WizStepSummary', 'state' => '');
@@ -865,6 +1093,7 @@ class WizStepModulesChoice extends WizardStep
 	{
 		$aStepInfo = $this->GetStepInfo();
 		$oPage->add_style("div.choice { margin: 0.5em;}");
+		$oPage->add_style("div.choice a { text-decoration:none; font-weight: bold; color: #1C94C4 }");
 		$oPage->add_style("div.description { margin-left: 2em; }");
 		$oPage->add_style(".choice-disabled { color: #999; }");
 		$oPage->add('<table><tr>');
@@ -891,7 +1120,8 @@ class WizStepModulesChoice extends WizardStep
 		
 		// Build the default choices
 		$aDefaults = array();
-		$this->GetDefaults($aStepInfo, $aDefaults);
+		$aModules = SetupUtils::AnalyzeInstallation($this->oWizard);
+		$this->GetDefaults($aStepInfo, $aDefaults, $aModules);
 		$index = $this->GetStepIndex();
 		
 		// retrieve the saved selection
@@ -903,7 +1133,7 @@ class WizStepModulesChoice extends WizardStep
 		}
 		$aSelectedComponents = $aParameters[$index];
 
-		$oPage->add('<div style="max-height:250px;overflow:auto;border:#ccc 1px solid;">');
+		$oPage->add('<div style="height:250px;overflow:auto;border:#ccc 1px solid;">');
 		$this->DisplayOptions($oPage, $aStepInfo, $aSelectedComponents);
 		$oPage->add('</div>');
 		
@@ -964,7 +1194,7 @@ EOF
 		);
 	}
 	
-	protected function GetDefaults($aInfo, &$aDefaults, $sParentId = '')
+	protected function GetDefaults($aInfo, &$aDefaults, $aModules, $sParentId = '')
 	{
 		$aOptions = isset($aInfo['options']) ? $aInfo['options'] : array();
 		foreach($aOptions as $index => $aChoice)
@@ -973,6 +1203,15 @@ EOF
 			if (isset($aChoice['default']) && $aChoice['default'])
 			{
 				$aDefaults[$sChoiceId] = $sChoiceId;
+			}
+			foreach($aChoice['modules'] as $sModuleId)
+			{
+				if ($aModules[$sModuleId]['version_db'] != '')
+				{
+					// A module corresponding to this choice is installed, the whole choice is selected
+					$aDefaults[$sChoiceId] = $sChoiceId;
+					break;
+				}
 			}
 			if (isset($aChoice['sub_options']))
 			{
@@ -996,9 +1235,29 @@ EOF
 			}
 			if (isset($aChoice['sub_options']))
 			{
-				$this->GetDefaults($aChoice['sub_options'], $aDefaults, $sChoiceId);
+				$this->GetDefaults($aChoice['sub_options'], $aDefaults, $aModules, $sChoiceId);
 			}
 			$index++;
+		}
+		
+		// the installed choices have precedence over the 'default' choices
+		$sChoiceName = null;
+		foreach($aAlternatives as $index => $aChoice)
+		{
+			$sChoiceId = $sParentId.'_'.$index;
+			if ($sChoiceName == null)
+			{
+				$sChoiceName = $sChoiceId;
+			}
+			foreach($aChoice['modules'] as $sModuleId)
+			{
+				if ($aModules[$sModuleId]['version_db'] != '')
+				{
+					// A module corresponding to this choice is installed, the whole choice is selected
+					$aDefaults[$sChoiceName] = $sChoiceId;
+					break;
+				}
+			}
 		}
 	} 
 	
@@ -1023,7 +1282,7 @@ EOF
 					{
 						$aModules[$sModuleId] = true;
 					}
-				}				
+				}
 			}
 			
 		}
@@ -1113,64 +1372,101 @@ EOF
 		{
 			$index = $idx;
 		}
+		
+		$aSteps = array();
 		if (@file_exists($this->GetSourceFilePath()))
 		{
 			$aParams = new XMLParameters($this->GetSourceFilePath());
 			$aSteps = $aParams->Get('steps', array());
-			if (array_key_exists($index, $aSteps))
-			{
-				$aStepInfo = $aSteps[$index];
-			}
+			$bAddExtensionsOnly = true;
 		}
-		else if ($idx == 0)
+		else
 		{
 			// No wizard configuration provided, build a standard one:
-			$aAvailableModules = SetupUtils::AnalyzeInstallation($this->oWizard);
-			$aStepInfo = array(
+			$bAddExtensionsOnly = false;
+			$aSteps[] = array(
 				'title' => 'Modules Selection',
 				'description' => '<h2>Select the modules to install. You can launch the installation again to install new modules, but you cannot remove already installed modules.</h2>',
 				'banner' => '/images/modules.png',
-				'options' => array(),
+				'options' => array()
+				);
+		}
+		
+		// Additional step for the extensions
+		$aSteps[] = array(
+			'title' => 'Extensions',
+			'description' => '<h2>Select additional extensions to install. You can launch the installation again to install new extensions, but you cannot remove already installed extensions.</h2>',
+			'banner' => '/images/extension.png',
+			'options' => array()
 			);
-			
-			try
-			{
-				$sDefaultAppPath = 	utils::GetDefaultUrlAppRoot();		
-			}
-			catch(Exception $e)
-			{
-				$sDefaultAppPath = '..';
-			}
 		
-			foreach($aAvailableModules as $sModuleId => $aModule)
+		try
+		{
+			$sDefaultAppPath = 	utils::GetDefaultUrlAppRoot();		
+		}
+		catch(Exception $e)
+		{
+			$sDefaultAppPath = '..';
+		}
+	
+		$aAvailableModules = SetupUtils::AnalyzeInstallation($this->oWizard);
+		foreach($aAvailableModules as $sModuleId => $aModule)
+		{
+			if ($sModuleId == ROOT_MODULE) continue; // Convention: the version number of the application (and datamodel) are stored as a module named ROOT_MODULE
+	
+			$sModuleLabel = $aModule['label'];
+			$sModuleHelp = $aModule['doc.more_information'];
+			$sMoreInfo = (!empty($aModule['doc.more_information'])) ? "<a href=\"$sDefaultAppPath{$aModule['doc.more_information']}\" target=\"_blank\">more info</a>": '';
+			if (($aModule['category'] != 'authentication') && ($aModule['visible']))
 			{
-				if ($sModuleId == ROOT_MODULE) continue; // Convention: the version number of the application is stored as a module named ROOT_MODULE
-		
-				$sModuleLabel = $aModule['label'];
-				$sModuleHelp = $aModule['doc.more_information'];
-				$sMoreInfo = (!empty($aModule['doc.more_information'])) ? "<a href=\"$sDefaultAppPath{$aModule['doc.more_information']}\" target=\"_blank\">more info</a>": '';
-				if (($aModule['category'] != 'authentication') && ($aModule['visible']))
+				if (($bAddExtensionsOnly) && (!$this->IsExtension($aModule))) continue;
+				
+				if ($this->IsExtension($aModule))
 				{
-					$aStepInfo['options'][$index] = array(
-						'title' => $sModuleLabel,
-						'description' => '',
-						'more_info' => $sMoreInfo,
-						'default' => true, // by default offer to install all modules
-						'modules' => array($sModuleId),
-					);
-					
-					switch($aModule['install']['flag'])
-					{
-						case MODULE_ACTION_MANDATORY:
-						$aStepInfo['options'][$index]['mandatory']  = true;
-						break;
-						
-					}
-					$index++;
+					$iStepIndex = count($aSteps) - 1;
 				}
+				else
+				{
+					$iStepIndex = 0;
+				}
+				$aSteps[$iStepIndex]['options'][] = array(
+					'title' => $sModuleLabel,
+					'description' => '',
+					'more_info' => $sMoreInfo,
+					'default' => true, // by default offer to install all modules
+					'modules' => array($sModuleId),
+					'mandatory' => ($aModule['install']['flag'] & MODULE_ACTION_MANDATORY) ? true : false,
+				);
 			}
 		}
+		
+		if (count($aSteps[count($aSteps) - 1]['options']) == 0)
+		{
+			// No extensions at all, remove the last step
+			unset($aSteps[1]);
+		}
+		
+		if (array_key_exists($index, $aSteps))
+		{
+			$aStepInfo = $aSteps[$index];
+		}
+	
 		return $aStepInfo;
+	}
+	
+	protected function GetExtensionsStepInfo()
+	{
+		// let the user select from the list of modules located in the "extensions" folder
+	}
+	
+	protected function IsExtension($aModule)
+	{
+		// root_dir is the directory containing the module, check if its parent is "extensions"
+		if (basename(dirname($aModule['root_dir'])) == 'extensions')
+		{
+			return true;
+		}
+		return false;
 	}
 		
 	protected function DisplayOptions($oPage, $aStepInfo, $aSelectedComponents, $sParentId = '')
@@ -1222,7 +1518,8 @@ EOF
 	
 	protected function DisplayChoice($oPage, $aChoice, $aSelectedComponents, $sChoiceId)
 	{
-		$oPage->add('<label for="choice'.$sChoiceId.'"><b>'.htmlentities($aChoice['title'], ENT_QUOTES, 'UTF-8').'</b></label>');
+		$sMoreInfo = isset($aChoice['more_info']) ? $aChoice['more_info'] : '';
+		$oPage->add('<label for="choice'.$sChoiceId.'"><b>'.htmlentities($aChoice['title'], ENT_QUOTES, 'UTF-8').'</b></label> '.$sMoreInfo);
 		$sDescription = isset($aChoice['description']) ? htmlentities($aChoice['description'], ENT_QUOTES, 'UTF-8') : '';
 		$oPage->add('<div class="description">'.$sDescription.'<span id="sub_choices'.$sChoiceId.'">');
 		if (isset($aChoice['sub_options']))
@@ -1234,7 +1531,8 @@ EOF
 	
 	protected function GetSourceFilePath()
 	{
-		return APPROOT.'datamodel/installation.xml';
+		$sSourceDir = $this->oWizard->GetParameter('source_dir');
+		return $sSourceDir.'/installation.xml';
 	}
 	
 }
@@ -1286,7 +1584,7 @@ class WizStepSummary extends WizardStep
 	overflow: auto;
 }
 #params_summary div {
-	width:100;
+	width:100%;
 	margin-top:0;
 	padding-top: 0.5em;
 	padding-left: 0;
@@ -1300,7 +1598,7 @@ class WizStepSummary extends WizardStep
 }
 #params_summary div li {
 	list-style: none;
-	width: 100;
+	width: 100%;
 	margin-left:0;
 	padding-left: 0em;
 }
@@ -1323,36 +1621,39 @@ class WizStepSummary extends WizardStep
 }
 EOF
 		);
-		$sMode = $this->oWizard->GetParameter('mode', 'install');
+		
+		$aInstallParams = $this->BuildConfig();
+		
+		$sMode = $aInstallParams['mode'];
 		
 		$sPreinstallationPhase = '';
 		
 		$sDestination = ITOP_APPLICATION.(($sMode == 'install') ? ' version '.ITOP_VERSION.' is about to be installed ' : ' is about to be upgraded ');
-		$sDBDescription = ' <b>existing</b> database <b>'.$this->oWizard->GetParameter('db_name').'</b>';
+		$sDBDescription = ' <b>existing</b> database <b>'.$aInstallParams['database']['name'].'</b>';
 		if (($sMode == 'install') && ($this->oWizard->GetParameter('create_db') == 'yes'))
 		{
-			$sDBDescription = ' <b>new</b> database <b>'.$this->oWizard->GetParameter('db_new_name').'</b>';
+			$sDBDescription = ' <b>new</b> database <b>'.$aInstallParams['database']['name'].'</b>';
 		}
-		$sDestination .= 'into the '.$sDBDescription.' on the server <b>'.$this->oWizard->GetParameter('db_server').'</b>.';
+		$sDestination .= 'into the '.$sDBDescription.' on the server <b>'.$aInstallParams['database']['server'].'</b>.';
 		$oPage->add('<h2>'.$sDestination.'</h2>');
 		
 		$oPage->add('<fieldset id="summary"><legend>Installation Parameters</legend>');
 		$oPage->add('<div id="params_summary">');
 		$oPage->add('<div class="closed"><span class="title">Database Parameters</span><ul>');
-		$oPage->add('<li>Server Name: '.$this->oWizard->GetParameter('db_server').'</li>');
-		$oPage->add('<li>DB User Name: '.$this->oWizard->GetParameter('db_user').'</li>');
-		$oPage->add('<li>DB user password: '.$this->oWizard->GetParameter('db_pwd').'</li>');
+		$oPage->add('<li>Server Name: '.$aInstallParams['database']['server'].'</li>');
+		$oPage->add('<li>DB User Name: '.$aInstallParams['database']['user'].'</li>');
+		$oPage->add('<li>DB user password: '.$aInstallParams['database']['pwd'].'</li>');
 		if (($sMode == 'install') && ($this->oWizard->GetParameter('create_db') == 'yes'))
 		{
-			$oPage->add('<li>Database Name: '.$this->oWizard->GetParameter('db_new_name').' (will be created)</li>');
+			$oPage->add('<li>Database Name: '.$aInstallParams['database']['name'].' (will be created)</li>');
 		}
 		else
 		{
-			$oPage->add('<li>Database Name: '.$this->oWizard->GetParameter('db_name').'</li>');
+			$oPage->add('<li>Database Name: '.$aInstallParams['database']['name'].'</li>');
 		}
-		if ($this->oWizard->GetParameter('db_prefix') != '')
+		if ($aInstallParams['database']['prefix'] != '')
 		{
-			$oPage->add('<li>Prefix for the '.ITOP_APPLICATION.' tables: '.$this->oWizard->GetParameter('db_prefix').'</li>');
+			$oPage->add('<li>Prefix for the '.ITOP_APPLICATION.' tables: '.$aInstallParams['database']['prefix'].'</li>');
 		}
 		else
 		{
@@ -1365,21 +1666,32 @@ EOF
 		$oPage->add('</div>');
 		
 		$oPage->add('<div class="closed"><span class="title">Other Parameters</span><ul>');
-		$oPage->add('<li>Default language: '.$this->oWizard->GetParameter('default_language').'</li>');
-		$oPage->add('<li>URL to access the application: '.$this->oWizard->GetParameter('application_url').'</li>');
-		if ($this->oWizard->GetParameter('sample_data') == 'yes')
+		if ($sMode == 'install')
+		{
+			$oPage->add('<li>Default language: '.$aInstallParams['language'].'</li>');
+		}
+		
+		$oPage->add('<li>URL to access the application: '.$aInstallParams['url'].'</li>');
+		if ($aInstallParams['sample_data'] == 'yes')
 		{
 			$oPage->add('<li>Sample data will be loaded into the database.</li>');
 		}
+		if ($aInstallParams['old_addon'])
+		{
+			$oPage->add('<li>Compatibility mode: Using the version 1.2 of the UserRightsProfiles add-on.</li>');
+		}
 		$oPage->add('</ul></div>');
 		
-		$oPage->add('<div class="closed"><span class="title">Admininistrator Account</span><ul>');
-		$oPage->add('<li>Login: '.$this->oWizard->GetParameter('admin_user').'</li>');
-		$oPage->add('<li>Password: '.$this->oWizard->GetParameter('admin_pwd').'</li>');
-		$oPage->add('<li>Language: '.$this->oWizard->GetParameter('admin_language').'</li>');
-		$oPage->add('</ul></div>');
+		if ($sMode == 'install')
+		{
+			$oPage->add('<div class="closed"><span class="title">Admininistrator Account</span><ul>');
+			$oPage->add('<li>Login: '.$aInstallParams['admin_account']['user'].'</li>');
+			$oPage->add('<li>Password: '.$aInstallParams['admin_account']['pwd'].'</li>');
+			$oPage->add('<li>Language: '.$aInstallParams['admin_account']['language'].'</li>');
+			$oPage->add('</ul></div>');
+		}
 		
-		$aMiscOptions = json_decode($this->oWizard->GetParameter('misc_options', '[]'), true /* bAssoc */);
+		$aMiscOptions = $aInstallParams['options'];
 		if (count($aMiscOptions) > 0)
 		{
 			$oPage->add('<div class="closed"><span class="title">Miscellaneous Options</span><ul>');
@@ -1391,100 +1703,8 @@ EOF
 			
 		}
 		
-		$aSelectedModules = json_decode($this->oWizard->GetParameter('selected_modules'), true);
-/*		
-		$oPage->add('<ul>Selected modules:');
-		sort($aSelectedModules);
-		foreach($aSelectedModules as $sModuleId)
-		{
-			$oPage->add('<li>'.$sModuleId.'</li>');
-			
-		}
-		$oPage->add('</ul>');
-*/		
-		$oPage->add_ready_script(
-<<<EOF
-	$("#params_summary div").addClass('closed');
-	$("#params_summary .title").click(function() { $(this).parent().toggleClass('closed'); } );
-	$("#btn_next").bind("click.install", function(event) {
-			$('#summary').hide();
-			$('#installation_progress').show();
-			$(this).attr("disabled", "disabled"); event.preventDefault(); ExecuteStep("");
-	});
-	$("#wiz_form").data("installation_status", "not started")
-EOF
-		);
+		$aSelectedModules = $aInstallParams['selected_modules'];
 		
-		// Prepare the parameters to execute the installation asynchronously
-		
-		$sBackupDestination = '';
-		$sConfigurationFile = '';
-		$sDBName = $this->oWizard->GetParameter('db_name');
-		if ($sMode == 'upgrade')
-		{
-			if ($this->oWizard->GetParameter('db_backup', false))
-			{
-				$sSourceDir = $this->oWizard->GetParameter('source_dir', '');
-				if (!empty($sSourceDir))
-				{
-					$aPreviousInstance = SetupUtils::GetPreviousInstance($sSourceDir);
-					if ($aPreviousInstance['found'])
-					{
-						$sConfigurationFile = $aPreviousInstance['configuration_file'];
-					}
-				}
-			}
-		}
-		else
-		{
-			
-			$sDBNewName = $this->oWizard->GetParameter('db_new_name', '');
-			if ($sDBNewName != '')
-			{
-				$sDBName = $sDBNewName; // Database will be created
-			}
-		}
-		
-		$aInstallParams = array (
-		  'mode' => $sMode,
-		  'preinstall' => array (
-		    'copies' => array (
-//		      0 => array (
-//		        'source' => '',
-//		        'destination' => '',
-//		      ),
-		    ),
-		  ),
-		  'source_dir' => 'datamodel',
-		  'target_env' => 'production',
-		  'workspace_dir' => '',
-		  'database' => array (
-		    'server' => $this->oWizard->GetParameter('db_server'),
-		    'user' => $this->oWizard->GetParameter('db_user'),
-		    'pwd' => $this->oWizard->GetParameter('db_pwd'),
-		    'name' => $sDBName,
-		    'prefix' => $this->oWizard->GetParameter('db_prefix'),
-		  ),
-		  'url' => $this->oWizard->GetParameter('application_url'),
-		  'admin_account' => array (
-		    'user' => $this->oWizard->GetParameter('admin_user'),
-		    'pwd' => $this->oWizard->GetParameter('admin_pwd'),
-		    'language' => $this->oWizard->GetParameter('admin_language'),
-		  ),
-		  'language' => $this->oWizard->GetParameter('default_language'),
-		  'selected_modules' =>  $aSelectedModules,
-		  'sample_data' => ($this->oWizard->GetParameter('sample_data', '') == 'yes') ? true : false ,
-		  'options' => json_decode($this->oWizard->GetParameter('misc_options', '[]'), true),
-		);
-
-		if ($sBackupDestination != '')
-		{
-			$aInstallParams['backup'] = array (
-			      'destination' => $sBackupDestination,
-			      'configuration_file' => $sConfigurationFile,
-			);
-		}
-		$sJSONData = json_encode($aInstallParams);
 		if (isset($aMiscOptions['generate_config']))
 		{
 			$oDoc = new DOMDocument('1.0', 'UTF-8');
@@ -1499,7 +1719,6 @@ EOF
 			$oPage->add(htmlentities($sXML, ENT_QUOTES, 'UTF-8'));
 			$oPage->add('</pre></ul></div>');
 		}
-		
 	
 		$oPage->add('</div>'); // params_summary
 		$oPage->add('</fieldset>');
@@ -1511,7 +1730,127 @@ EOF
 		$oPage->add('</div>'); // progress_content
 		$oPage->add('</fieldset>');
 		
+		$sJSONData = json_encode($aInstallParams);
 		$oPage->add('<input type="hidden" id="installer_parameters" value="'.htmlentities($sJSONData, ENT_QUOTES, 'UTF-8').'"/>');
+
+		$oPage->add_ready_script(
+<<<EOF
+	$("#params_summary div").addClass('closed');
+	$("#params_summary .title").click(function() { $(this).parent().toggleClass('closed'); } );
+	$("#btn_next").bind("click.install", function(event) {
+			$('#summary').hide();
+			$('#installation_progress').show();
+			$(this).attr("disabled", "disabled"); event.preventDefault(); ExecuteStep("");
+	});
+	$("#wiz_form").data("installation_status", "not started")
+EOF
+		);
+	}
+	
+	/**
+	 * Prepare the parameters to execute the installation asynchronously
+	 * @return Hash A big hash array that can be converted to XML or JSON with all the needed parameters
+	 */
+	protected function BuildConfig()
+	{
+		$sMode = $this->oWizard->GetParameter('install_mode', 'install');
+		$aSelectedModules = json_decode($this->oWizard->GetParameter('selected_modules'), true);
+		$sBackupDestination = '';
+		$sPreviousConfigurationFile = '';
+		$sDBName = $this->oWizard->GetParameter('db_name');
+		if ($sMode == 'upgrade')
+		{
+			$sPreviousVersionDir = $this->oWizard->GetParameter('previous_version_dir', '');
+			if (!empty($sPreviousVersionDir))
+			{
+				$aPreviousInstance = SetupUtils::GetPreviousInstance($sPreviousVersionDir);
+				if ($aPreviousInstance['found'])
+				{
+					$sPreviousConfigurationFile = $aPreviousInstance['configuration_file'];
+				}
+			}
+			
+			if ($this->oWizard->GetParameter('db_backup', false))
+			{
+				$sBackupDestination = $this->oWizard->GetParameter('db_backup_path', '');
+			}
+		}
+		else
+		{
+			
+			$sDBNewName = $this->oWizard->GetParameter('db_new_name', '');
+			if ($sDBNewName != '')
+			{
+				$sDBName = $sDBNewName; // Database will be created
+			}
+		}
+		
+		$sSourceDir = $this->oWizard->GetParameter('source_dir');
+		$aCopies = array();
+		if (($sMode == 'upgrade') && ($this->oWizard->GetParameter('upgrade_type') == 'keep-previous'))
+		{
+			$sPreviousVersionDir = $this->oWizard->GetParameter('previous_version_dir');
+			$aCopies[] = array('source' => $sSourceDir, 'destination' => 'modules'); // Source is an absolute path, destination is relative to APPROOT
+			$aCopies[] = array('source' => $sPreviousVersionDir.'/portal', 'destination' => 'portal'); // Source is an absolute path, destination is relative to APPROOT
+			$sSourceDir = APPROOT.'modules';
+		}
+		
+		if (($sMode == 'upgrade'))
+		{
+			// Copy the previous extensions, if any
+			$sPreviousExtensionsDir = $this->oWizard->GetParameter('copy_extensions_from');
+			if (is_dir($sPreviousExtensionsDir))
+			{
+				// Copy the extensions one by one to merge them with the existing extensions in /extensions
+				$aExtensions = glob($sPreviousExtensionsDir.'/*', GLOB_ONLYDIR);
+				foreach($aExtensions as $sDirPath)
+				{
+					$sExtName = basename($sDirPath);
+					$aCopies[] = array('source' => $sDirPath, 'destination' => 'extensions/'.$sExtName); // Source is an absolute path, destination is relative to APPROOT
+				}
+			}
+		}
+				
+		$aInstallParams = array (
+			'mode' => $sMode,
+			'preinstall' => array (
+				'copies' => $aCopies,
+				// 'backup' => see below
+			),
+			'source_dir' => str_replace(APPROOT, '', $sSourceDir),
+			'datamodel_version' => $this->oWizard->GetParameter('datamodel_version'), //TODO: let the installer compute this automatically...
+			'previous_configuration_file' => $sPreviousConfigurationFile,
+			'extensions_dir' => 'extensions',
+			'target_env' => 'production',
+			'workspace_dir' => '',
+			'database' => array (
+				'server' => $this->oWizard->GetParameter('db_server'),
+				'user' => $this->oWizard->GetParameter('db_user'),
+				'pwd' => $this->oWizard->GetParameter('db_pwd'),
+				'name' => $sDBName,
+				'prefix' => $this->oWizard->GetParameter('db_prefix'),
+			),
+			'url' => $this->oWizard->GetParameter('application_url'),
+			'admin_account' => array (
+				'user' => $this->oWizard->GetParameter('admin_user'),
+				'pwd' => $this->oWizard->GetParameter('admin_pwd'),
+				'language' => $this->oWizard->GetParameter('admin_language'),
+			),
+			'language' => $this->oWizard->GetParameter('default_language'),
+			'selected_modules' =>  $aSelectedModules,
+			'sample_data' => ($this->oWizard->GetParameter('sample_data', '') == 'yes') ? true : false ,
+			'old_addon' => $this->oWizard->GetParameter('old_addon', false), // whether or not to use the "old" userrights profile addon
+			'options' => json_decode($this->oWizard->GetParameter('misc_options', '[]'), true),
+		);
+
+		if ($sBackupDestination != '')
+		{
+			$aInstallParams['backup'] = array (
+				'destination' => $sBackupDestination,
+				'configuration_file' => $sPreviousConfigurationFile,
+			);
+		}
+		return $aInstallParams;
 	}
 	
 	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
@@ -1658,4 +1997,14 @@ class WizStepDone extends WizardStep
 	{
 		return false;
 	}
+	
+	/**
+	 * Tells whether this step of the wizard requires that the configuration file be writable
+	 * @return bool True if the wizard will possibly need to modify the configuration at some point
+	 */
+	public function RequiresWritableConfig()
+	{
+		return false; //This step executes once the config was written and secured
+	}
+	
 }
