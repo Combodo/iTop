@@ -465,14 +465,7 @@ EOF
 		
 		$sInstalledVersion = $aInstalledInfo['product_version'];
 		$sInstalledDataModelVersion = $aInstalledInfo['datamodel_version'];
-		
-		if ($sInstalledDataModelVersion == '$ITOP_VERSION$.$WCREV$')
-		{
-			// Special case for upgrading some  development versions (temporary)
-			$sLatestDMDir = SetupUtils::GetLatestDataModelDir();
-			$sInstalledDataModelVersion = SetupUtils::GetDataModelVersion($sLatestDMDir);
-		}
-		
+				
 		$oPage->add("<h2>Information about the upgrade from version $sInstalledVersion to ".ITOP_VERSION.'.'.ITOP_REVISION."</h2>");
 		
 		if ($sInstalledVersion == (ITOP_VERSION.'.'.ITOP_REVISION))
@@ -481,13 +474,25 @@ EOF
 			$bDisplayLicense = false;
 		}		
 		$this->oWizard->SetParameter('license', $bDisplayLicense); // Remember for later
+
+		 echo "sInstalledDataModelVersion: $sInstalledDataModelVersion";
 		
+		if ($sInstalledDataModelVersion == '$ITOP_VERSION$.$WCREV$')
+		{
+			// Special case for upgrading some  development versions (temporary)
+			$sCompatibleDMDir = SetupUtils::GetLatestDataModelDir();
+			$sInstalledDataModelVersion = SetupUtils::GetDataModelVersion($sLatestDMDir);
+		}
+		else
+		{
 			$sCompatibleDMDir = SetupUtils::GetCompatibleDataModelDir($sInstalledDataModelVersion);
+		}
+		
 		if ($sCompatibleDMDir === false)
 		{
 			// No compatible version exists... cannot upgrade. Either it is too old, or too new (downgrade !)
 			$this->bCanMoveForward = false;
-			$oPage->p("The current version of ".ITOP_APPLICATION." (".ITOP_VERSION.'.'.ITOP_REVISION.") does not sem to be compatible with the installed version ($sInstalledVersion).");
+			$oPage->p("The current version of ".ITOP_APPLICATION." (".ITOP_VERSION.'.'.ITOP_REVISION.") does not seem to be compatible with the installed version ($sInstalledVersion).");
 			$oPage->p("The upgrade cannot continue, sorry.");
 		}
 		else
@@ -668,7 +673,7 @@ class WizStepLicense extends WizardStep
 		foreach($aLicenses as $index => $oLicense)
 		{
 			$oPage->add('<li><b>'.$oLicense->product.'</b>, licensed by '.$oLicense->author.' under the <b>'.$oLicense->license_type.' license</b>. (<span class="toggle" id="toggle_'.$index.'">Details</span>)');
-			$oPage->add('<div id="license_'.$index.'" class="license_text" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'<div>');
+			$oPage->add('<div id="license_'.$index.'" class="license_text" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'</div>');
 			$oPage->add_ready_script('$(".license_text a").attr("target", "_blank").addClass("no-arrow");');
 			$oPage->add_ready_script('$("#toggle_'.$index.'").click( function() { $("#license_'.$index.'").toggle(); } );');
 		}
@@ -748,7 +753,7 @@ class WizStepDBParams extends WizardStep
 		$oPage->add('<table>');
 		SetupUtils::DisplayDBParameters($oPage, true, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sNewDBName);
 		$oPage->add('</table>');
-		$sCreateDB = $this->oWizard->GetParameter('create_db', 'no');
+		$sCreateDB = $this->oWizard->GetParameter('create_db', 'yes');
 		if ($sCreateDB == 'no')
 		{
 			$oPage->add_ready_script('$("#existing_db").attr("checked", "checked");');
@@ -1845,7 +1850,7 @@ EOF
 
 		if ($sBackupDestination != '')
 		{
-			$aInstallParams['backup'] = array (
+			$aInstallParams['preinstall']['backup'] = array (
 				'destination' => $sBackupDestination,
 				'configuration_file' => $sPreviousConfigurationFile,
 			);
@@ -1973,13 +1978,30 @@ class WizStepDone extends WizardStep
 			$oPage->add("<h2>Congratulations for installing iTop</h2>");
 			$oPage->ok("The installation completed successfully.");
 		}
+
+		if ($this->oWizard->GetParameter('db_backup', false))
+		{
+			$sBackupDestination = $this->oWizard->GetParameter('db_backup_path', '');
+			if (file_exists($sBackupDestination))
+			{
+				// To mitigate security risks: pass only the filename without the extension, the download will add the extensino itself
+				$sTruncatedFilePath = preg_replace('/\.zip$/', '', $sBackupDestination);
+				$oPage->p('Your backup is ready');
+				$oPage->p('<a style="background:transparent;" href="'.utils::GetAbsoluteUrlAppRoot().'setup/ajax.dataloader.php?operation=async_action&step_class=WizStepDone&params[backup]='.urlencode($sTruncatedFilePath).'" target="_blank"><img src="../images/tar.png" style="border:0;vertical-align:middle;">&nbspDownload '.basename($sBackupDestination).'</a>');
+			}
+			else
+			{
+				$oPage->p('<img src="../images/error.png"/>&nbsp;Warning: Backup creation failed !');
+			}
+		}
+
 		// Form goes here.. No back button since the job is done !
 		$oPage->add('<table style="width:600px;border:0;padding:0;"><tr>');
 		$oPage->add("<td><a style=\"background:transparent;padding:0;\" title=\"Free: Register your iTop version.\" href=\"http://www.combodo.com/register?product=iTop&version=".urlencode(ITOP_VERSION." revision ".ITOP_REVISION)."\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-register.gif\"/></td></a>");
 		$oPage->add("<td><a style=\"background:transparent;padding:0;\" title=\"Get Professional Support from Combodo\" href=\"http://www.combodo.com/itopsupport\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-support.gif\"/></td></a>");
 		$oPage->add("<td><a style=\"background:transparent;padding:0;\" title=\"Get Professional Training from Combodo\" href=\"http://www.combodo.com/itoptraining\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-training.gif\"/></td></a>");
 		$oPage->add('</tr></table>');
-		$sForm = '<form method="post" action="'.$this->oWizard->GetParameter('application_url').'/pages/UI.php">';
+		$sForm = '<form method="post" action="'.$this->oWizard->GetParameter('application_url').'pages/UI.php">';
 		$sForm .= '<input type="hidden" name="auth_user" value="'.htmlentities($this->oWizard->GetParameter('admin_user'), ENT_QUOTES, 'UTF-8').'">';
 		$sForm .= '<input type="hidden" name="auth_pwd" value="'.htmlentities($this->oWizard->GetParameter('admin_pwd'), ENT_QUOTES, 'UTF-8').'">';
 		$sForm .= "<p style=\"text-align:center;width:100%\"><button id=\"enter_itop\" type=\"submit\">Enter iTop</button></p>";
@@ -2007,4 +2029,18 @@ class WizStepDone extends WizardStep
 		return false; //This step executes once the config was written and secured
 	}
 	
+	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
+	{
+		$oParameters = new PHPParameters();
+		// For security reasons: add the extension now so that this action can be used to read *only* .zip files from the disk...
+		$sBackupFile = $aParameters['backup'].'.zip';
+		if (file_exists($sBackupFile))
+		{
+			// Make sure there is NO output at all before our content, otherwise the document will be corrupted
+			$sPreviousContent = ob_get_clean();
+			$oPage->SetContentType('application/zip');
+			$oPage->SetContentDisposition('attachment', basename($sBackupFile));
+			$oPage->add(file_get_contents($sBackupFile));			
+		}
+	}	
 }

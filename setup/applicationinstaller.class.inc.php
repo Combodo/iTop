@@ -127,7 +127,7 @@ class ApplicationInstaller
 				$aCopies = $aPreinstall['copies'];
 
 				$sReport = self::DoCopy($aCopies);
-				$sReport = "copy disabled...";
+				$sReport = "Copying...";
 
 				$aResult = array(
 					'status' => self::OK,
@@ -136,7 +136,7 @@ class ApplicationInstaller
 				if (isset($aPreinstall['backup']))
 				{
 					$aResult['next-step'] = 'backup';
-					$aResult['next-step-label'] = 'Backuping the database';
+					$aResult['next-step-label'] = 'Performing a backup of the database';
 					$aResult['percentage-completed'] = 20;
 				}
 				else
@@ -224,7 +224,7 @@ class ApplicationInstaller
 					'status' => self::OK,
 					'message' => '',
 					'next-step' => 'after-db-create',
-					'next-step-label' => 'Creating Profiles',
+					'next-step-label' => 'Creating profiles',
 					'percentage-completed' => 60,
 				);
 				break;
@@ -260,7 +260,7 @@ class ApplicationInstaller
 					'status' => self::OK,
 					'message' => '',
 					'next-step' => 'sample-data',
-					'next-step-label' => 'Loading Sample Data',
+					'next-step-label' => 'Loading sample data',
 					'percentage-completed' => 80,
 				);
 
@@ -268,7 +268,7 @@ class ApplicationInstaller
 				if (!$bLoadData)
 				{
 					$aResult['next-step'] = 'create-config';
-					$aResult['next-step-label'] = 'Creating the Configuration File';
+					$aResult['next-step-label'] = 'Creating the configuration File';
 				}
 				break;
 				
@@ -291,7 +291,7 @@ class ApplicationInstaller
 					'status' => self::INFO,
 					'message' => 'All data loaded',
 					'next-step' => 'create-config',
-					'next-step-label' => 'Creating the Configuration File',
+					'next-step-label' => 'Creating the configuration File',
 					'percentage-completed' => 99,
 				);
 				break;
@@ -401,7 +401,13 @@ class ApplicationInstaller
 		}		
 
 		$sSourcePath = APPROOT.$sSourceDir;
+		$aDirsToScan = array($sSourcePath);
 		$sExtensionsPath = APPROOT.$sExtensionDir;
+		if (is_dir($sExtensionsPath))
+		{
+			// if the extensions dir exists, scan it for additional modules as well
+			$aDirsToScan[] = $sExtensionsPath;
+		}
 		$sTargetPath = APPROOT.$sTargetDir;
 		if (!is_dir($sSourcePath))
 		{
@@ -421,7 +427,7 @@ class ApplicationInstaller
 			}
 		}
 
-		$oFactory = new ModelFactory(array($sSourcePath, $sExtensionsPath));
+		$oFactory = new ModelFactory($aDirsToScan);
 		$aModules = $oFactory->FindModules();
 
 		foreach($aModules as $foo => $oModule)

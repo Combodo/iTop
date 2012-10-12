@@ -141,31 +141,31 @@ try
 		ini_set('display_errors', true);
 		ini_set('display_startup_errors', true);
 		
-		$sConfigFile = utils::GetConfigFilePath();
-		if (file_exists($sConfigFile) && !is_writable($sConfigFile))
+		require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
+		require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
+		
+		$sClass = utils::ReadParam('step_class', '');
+		$sState = utils::ReadParam('step_state', '');
+		$sActionCode = utils::ReadParam('code', '');
+		$aParams = utils::ReadParam('params', array(), false, 'raw_data');
+		$oPage = new ajax_page('');
+		$oDummyController = new WizardController('');
+		if (is_subclass_of($sClass, 'WizardStep'))
 		{
-			$oPage->error("<b>Error:</b> the configuration file '".$sConfigFile."' already exists and cannot be overwritten.");
-			$oPage->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".realpath($sConfigFile)."</b>' can be modified by the web server.");
-			$oPage->output();
-		}
-		else
-		{
-			require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
-			require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
-			
-			$sClass = utils::ReadParam('step_class', '');
-			$sState = utils::ReadParam('step_state', '');
-			$sActionCode = utils::ReadParam('code', '');
-			$aParams = utils::ReadParam('params', array(), false, 'raw_data');
-			$oPage = new ajax_page('');
-			$oDummyController = new WizardController('');
-			if (is_subclass_of($sClass, 'WizardStep'))
+			$oStep = new $sClass($oDummyController, $sState);
+			$sConfigFile = utils::GetConfigFilePath();
+			if (file_exists($sConfigFile) && !is_writable($sConfigFile) && $oStep->RequiresWritableConfig())
 			{
-				$oStep = new $sClass($oDummyController, $sState);
+				$oPage->error("<b>Error:</b> the configuration file '".$sConfigFile."' already exists and cannot be overwritten.");
+				$oPage->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".realpath($sConfigFile)."</b>' can be modified by the web server.");
+				$oPage->output();
+			}
+			else
+			{
 				$oStep->AsyncAction($oPage, $sActionCode, $aParams);
 			}
-			$oPage->output();
 		}
+		$oPage->output();
 		break;
 
 		//////////////////////////////
