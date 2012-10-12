@@ -907,11 +907,45 @@ abstract class MetaModel
 	}
 
 
-	public static function GetLabel($sClass, $sAttCode)
+	/**
+	 * Get the attribute label
+	 * @param string sClass	Persistent class
+	 * @param string sAttCodeEx Extended attribute code: attcode[->attcode]	 
+	 * @return string A user friendly format of the string: AttributeName or AttributeName->ExtAttributeName
+	 */	 	
+	public static function GetLabel($sClass, $sAttCodeEx)
 	{
-		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
-		if ($oAttDef) return $oAttDef->GetLabel();
-		return "";
+		$sLabel = '';
+		if (preg_match('/(.+)->(.+)/', $sAttCodeEx, $aMatches) > 0)
+		{
+			$sAttribute = $aMatches[1];
+			$sField = $aMatches[2];
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttribute);
+			if ($oAttDef->IsExternalKey())
+			{
+				$sTargetClass = $oAttDef->GetTargetClass();
+				$oTargetAttDef = MetaModel::GetAttributeDef($sTargetClass, $sField);
+				$sLabel = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel();
+			}
+			else
+			{
+				// Let's return something displayable... but this should never happen!
+				$sLabel = $oAttDef->GetLabel().'->'.$aMatches[2];
+			}
+		}
+		else
+		{
+			if ($sAttCodeEx == 'id')
+			{
+				$sLabel = Dict::S('UI:CSVImport:idField');
+			}
+			else
+			{
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCodeEx);
+				$sLabel = $oAttDef->GetLabel();
+			}
+		}
+		return $sLabel;
 	}
 
 	public static function GetDescription($sClass, $sAttCode)

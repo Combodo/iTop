@@ -3251,7 +3251,7 @@ class TestSetLinkset extends TestBizModel
       $sLinkSetSpec = "profileid:10;reason:service manager|profileid->name:Problem Manager;'reason:problem manager;glandeur";
 
 		$oAttDef = MetaModel::GetAttributeDef('UserLocal', 'profile_list');
-		$oSet = $oAttDef->MakeValueFromString($sLinkSetSpec);
+		$oSet = $oAttDef->MakeValueFromString($sLinkSetSpec, $bLocalizedValue = false);
 		$oUser->Set('profile_list', $oSet);
 
 		// Create a change to record the history of the User object

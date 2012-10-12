@@ -895,6 +895,18 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			$aFields = explode(',', $aParams['fields']);
 		}
 
+		$bFieldsAdvanced = false;
+		if (isset($aParams['fields_advanced']))
+		{
+			$bFieldsAdvanced = (bool) $aParams['fields_advanced'];
+		}
+
+		$bLocalize = true;
+		if (isset($aParams['localize_values']))
+		{
+			$bLocalize = (bool) $aParams['localize_values'];
+		}
+
 		$aList = array();
 
 		$oAppContext = new ApplicationContext();
@@ -920,7 +932,29 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 					// Standard list of attributes (no link sets)
 					if ($oAttDef->IsScalar() && ($oAttDef->IsWritable() || $oAttDef->IsExternalField()))
 					{
-						$aList[$sAlias][$sAttCode] = $oAttDef;
+						$sAttCodeEx = $oAttDef->IsExternalField() ? $oAttDef->GetKeyAttCode().'->'.$oAttDef->GetExtAttCode() : $sAttCode;
+						
+						if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
+						{
+							if ($bFieldsAdvanced)
+							{
+								$aList[$sAlias][$sAttCodeEx] = $oAttDef;
+
+								if ($oAttDef->IsExternalKey(EXTKEY_RELATIVE))
+								{
+							  		$sRemoteClass = $oAttDef->GetTargetClass();
+									foreach(MetaModel::GetReconcKeys($sRemoteClass) as $sRemoteAttCode)
+								  	{
+										$aList[$sAlias][$sAttCode.'->'.$sRemoteAttCode] = MetaModel::GetAttributeDef($sRemoteClass, $sRemoteAttCode);
+								  	}
+								}
+							}
+						}
+						else
+						{
+							// Any other attribute
+							$aList[$sAlias][$sAttCodeEx] = $oAttDef;
+						}
 					}
 				}
 				else
@@ -932,36 +966,18 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 					}
 				}
 			}
-			$aHeader[] = 'id';
-			foreach($aList[$sAlias] as $sAttCode => $oAttDef)
+			if ($bFieldsAdvanced)
+			{
+				$aHeader[] = 'id';
+			}
+			foreach($aList[$sAlias] as $sAttCodeEx => $oAttDef)
 			{
 				$sStar = '';
-				if ($oAttDef->IsExternalField())
+				if (!$oAttDef->IsNullAllowed() && isset($aParams['showMandatoryFields']))
 				{
-					$sExtKeyLabel = MetaModel::GetLabel($sClassName, $oAttDef->GetKeyAttCode());
-					$oExtKeyAttDef = MetaModel::GetAttributeDef($sClassName, $oAttDef->GetKeyAttCode());
-					if (!$oExtKeyAttDef->IsNullAllowed() && isset($aParams['showMandatoryFields']))
-					{
-						$sStar = '*';
-					}
-					$sRemoteAttLabel = MetaModel::GetLabel($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
-					$oTargetAttDef = MetaModel::GetAttributeDef($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
-					$sSuffix = '';
-					if ($oTargetAttDef->IsExternalKey())
-					{
-						$sSuffix = '->id';
-					}
-					
-					$aHeader[] = $sExtKeyLabel.'->'.$sRemoteAttLabel.$sSuffix.$sStar;
+					$sStar = '*';
 				}
-				else
-				{
-					if (!$oAttDef->IsNullAllowed() && isset($aParams['showMandatoryFields']))
-					{
-						$sStar = '*';
-					}
-					$aHeader[] = MetaModel::GetLabel($sClassName, $sAttCode).$sStar;
-				}
+				$aHeader[] = ($bLocalize ? MetaModel::GetLabel($sClassName, $sAttCodeEx) : $sAttCodeEx).$sStar;
 			}
 		}
 		$sHtml = implode($sSeparator, $aHeader)."\n";
@@ -972,15 +988,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			foreach($aAuthorizedClasses as $sAlias => $sClassName)
 			{
 				$oObj = $aObjects[$sAlias];
-				if (is_null($oObj))
-				{
-					$aRow[] = '';
-				}
-				else
-				{
-					$aRow[] = $oObj->GetKey();
-				}
-				foreach($aList[$sAlias] as $sAttCode => $oAttDef)
+				if ($bFieldsAdvanced)
 				{
 					if (is_null($oObj))
 					{
@@ -988,7 +996,19 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 					}
 					else
 					{
-						$aRow[] = $oObj->GetAsCSV($sAttCode, $sSeparator, $sTextQualifier);
+						$aRow[] = $oObj->GetKey();
+					}
+				}
+				foreach($aList[$sAlias] as $sAttCodeEx => $oAttDef)
+				{
+					if (is_null($oObj))
+					{
+						$aRow[] = '';
+					}
+					else
+					{
+						$value = $oObj->Get($sAttCodeEx);
+						$aRow[] = $oAttDef->GetAsCSV($value, $sSeparator, $sTextQualifier, $oObj, $bLocalize);
 					}
 				}
 			}
@@ -1015,6 +1035,18 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			$aFields = explode(',', $aParams['fields']);
 		}
 
+		$bFieldsAdvanced = false;
+		if (isset($aParams['fields_advanced']))
+		{
+			$bFieldsAdvanced = (bool) $aParams['fields_advanced'];
+		}
+
+		$bLocalize = true;
+		if (isset($aParams['localize_values']))
+		{
+			$bLocalize = (bool) $aParams['localize_values'];
+		}
+
 		$aList = array();
 
 		$oAppContext = new ApplicationContext();
@@ -1040,7 +1072,18 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 					// Standard list of attributes (no link sets)
 					if ($oAttDef->IsScalar() && ($oAttDef->IsWritable() || $oAttDef->IsExternalField()))
 					{
-						$aList[$sAlias][$sAttCode] = $oAttDef;
+						$sAttCodeEx = $oAttDef->IsExternalField() ? $oAttDef->GetKeyAttCode().'->'.$oAttDef->GetExtAttCode() : $sAttCode;
+						
+						$aList[$sAlias][$sAttCodeEx] = $oAttDef;
+
+					  	if ($bFieldsAdvanced && $oAttDef->IsExternalKey(EXTKEY_RELATIVE))
+					  	{
+					  		$sRemoteClass = $oAttDef->GetTargetClass();
+							foreach(MetaModel::GetReconcKeys($sRemoteClass) as $sRemoteAttCode)
+						  	{
+								$aList[$sAlias][$sAttCode.'->'.$sRemoteAttCode] = MetaModel::GetAttributeDef($sRemoteClass, $sRemoteAttCode);
+						  	}
+						}
 					}
 				}
 				else
@@ -1067,25 +1110,10 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				}
 			}
 
-			foreach($aList[$sAlias] as $sAttCode => $oAttDef)
+			foreach($aList[$sAlias] as $sAttCodeEx => $oAttDef)
 			{
-				if ($oAttDef->IsExternalField())
-				{
-					$sExtKeyLabel = MetaModel::GetLabel($sClassName, $oAttDef->GetKeyAttCode());
-					$oExtKeyAttDef = MetaModel::GetAttributeDef($sClassName, $oAttDef->GetKeyAttCode());
-					$sRemoteAttLabel = MetaModel::GetLabel($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
-					$oTargetAttDef = MetaModel::GetAttributeDef($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
-					$sSuffix = '';
-					if ($oTargetAttDef->IsExternalKey())
-					{
-						$sSuffix = '->id';
-					}
-					$sColLabel = $sExtKeyLabel.'->'.$sRemoteAttLabel.$sSuffix;
-				}
-				else
-				{
-					$sColLabel = MetaModel::GetLabel($sClassName, $sAttCode);
-				}
+				$sColLabel = $bLocalize ? MetaModel::GetLabel($sClassName, $sAttCodeEx) : $sAttCodeEx;
+
 				$oFinalAttDef = $oAttDef->GetFinalAttDef();
 				if (get_class($oFinalAttDef) == 'AttributeDateTime')
 				{
@@ -1111,8 +1139,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			foreach($aAuthorizedClasses as $sAlias => $sClassName)
 			{
 				$oObj = $aObjects[$sAlias];
-				foreach($aList[$sAlias] as $sAttCode => $oAttDef)
-
+				foreach($aList[$sAlias] as $sAttCodeEx => $oAttDef)
 				{
 					if (is_null($oObj))
 					{
@@ -1123,13 +1150,22 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 						$oFinalAttDef = $oAttDef->GetFinalAttDef();
 						if (get_class($oFinalAttDef) == 'AttributeDateTime')
 						{
-							$iDate = AttributeDateTime::GetAsUnixSeconds($oObj->Get($sAttCode));
+							$iDate = AttributeDateTime::GetAsUnixSeconds($oObj->Get($sAttCodeEx));
 							$aRow[] = '<td>'.date('Y-m-d', $iDate).'</td>';
 							$aRow[] = '<td>'.date('H:i:s', $iDate).'</td>';
 						}
 						else
 						{
-							$aRow[] = '<td>'.(string) $oObj->Get($sAttCode).'</td>';
+							$rawValue = $oObj->Get($sAttCodeEx);
+							if ($bLocalize)
+							{
+								$outputValue = htmlentities($oFinalAttDef->GetValueLabel($rawValue), ENT_QUOTES, 'UTF-8');
+							}
+							else
+							{
+								$outputValue = htmlentities($rawValue, ENT_QUOTES, 'UTF-8');
+							}
+							$aRow[] = '<td>'.$outputValue.'</td>';
 						}
 					}
 				}
@@ -1144,6 +1180,12 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	
 	static function DisplaySetAsXML(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
+		$bLocalize = true;
+		if (isset($aParams['localize_values']))
+		{
+			$bLocalize = (bool) $aParams['localize_values'];
+		}
+
 		$oAppContext = new ApplicationContext();
 		$aClasses = $oSet->GetFilter()->GetSelectedClasses();
 		$aAuthorizedClasses = array();
@@ -1189,7 +1231,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 						{
 							if (!$oAttDef->IsLinkSet())
 							{
-								$sValue = $oObj->GetAsXML($sAttCode);
+								$sValue = $oObj->GetAsXML($sAttCode, $bLocalize);
 								$oPage->add("<$sAttCode>$sValue</$sAttCode>\n");
 							}
 						}

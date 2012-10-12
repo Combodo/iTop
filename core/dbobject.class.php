@@ -548,7 +548,7 @@ abstract class DBObject
 		$this->ComputeValues();
 	}
 
-	public function GetAsHTML($sAttCode)
+	public function GetAsHTML($sAttCode, $bLocalize = true)
 	{
 		$sClass = get_class($this);
 		$oAtt = MetaModel::GetAttributeDef($sClass, $sAttCode);
@@ -571,7 +571,7 @@ abstract class DBObject
 		}
 
 		// That's a standard attribute (might be an ext field or a direct field, etc.)
-		return $oAtt->GetAsHTML($this->Get($sAttCode), $this);
+		return $oAtt->GetAsHTML($this->Get($sAttCode), $this, $bLocalize);
 	}
 
 	public function GetEditValue($sAttCode)
@@ -609,34 +609,34 @@ abstract class DBObject
 		return $sEditValue;
 	}
 
-	public function GetAsXML($sAttCode)
+	public function GetAsXML($sAttCode, $bLocalize = true)
 	{
 		$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		return $oAtt->GetAsXML($this->Get($sAttCode), $this);
+		return $oAtt->GetAsXML($this->Get($sAttCode), $this, $bLocalize);
 	}
 
-	public function GetAsCSV($sAttCode, $sSeparator = ',', $sTextQualifier = '"')
+	public function GetAsCSV($sAttCode, $sSeparator = ',', $sTextQualifier = '"', $bLocalize = true)
 	{
 		$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		return $oAtt->GetAsCSV($this->Get($sAttCode), $sSeparator, $sTextQualifier, $this);
+		return $oAtt->GetAsCSV($this->Get($sAttCode), $sSeparator, $sTextQualifier, $this, $bLocalize);
 	}
 
-	public function GetOriginalAsHTML($sAttCode)
+	public function GetOriginalAsHTML($sAttCode, $bLocalize = true)
 	{
 		$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		return $oAtt->GetAsHTML($this->GetOriginal($sAttCode), $this);
+		return $oAtt->GetAsHTML($this->GetOriginal($sAttCode), $this, $bLocalize);
 	}
 
-	public function GetOriginalAsXML($sAttCode)
+	public function GetOriginalAsXML($sAttCode, $bLocalize = true)
 	{
 		$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		return $oAtt->GetAsXML($this->GetOriginal($sAttCode), $this);
+		return $oAtt->GetAsXML($this->GetOriginal($sAttCode), $this, $bLocalize);
 	}
 
-	public function GetOriginalAsCSV($sAttCode, $sSeparator = ',', $sTextQualifier = '"')
+	public function GetOriginalAsCSV($sAttCode, $sSeparator = ',', $sTextQualifier = '"', $bLocalize = true)
 	{
 		$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		return $oAtt->GetAsCSV($this->GetOriginal($sAttCode), $sSeparator, $sTextQualifier, $this);
+		return $oAtt->GetAsCSV($this->GetOriginal($sAttCode), $sSeparator, $sTextQualifier, $this, $bLocalize);
 	}
 
 	public static function MakeHyperLink($sObjClass, $sObjKey, $sLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true)

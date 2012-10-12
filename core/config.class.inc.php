@@ -537,6 +537,16 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'csv_file_default_charset' => array(
+			'type' => 'string',
+			'description' => 'Character set used by default for downloading and uploading data as a CSV file. Warning: it is case sensitive (uppercase is preferable).',
+			// examples... not used
+			'default' => 'ISO-8859-1',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		
 	);
 
 	public function IsProperty($sPropCode)

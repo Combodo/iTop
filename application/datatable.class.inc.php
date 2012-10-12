@@ -73,6 +73,10 @@ class DataTable
 		$this->oSet->SetOrderBy($oCustomSettings->GetSortOrder());
 		
 		$bToolkitMenu = true;
+		if (isset($aExtraParams['toolkit_menu']))
+		{
+			$bToolkitMenu = (bool) $aExtraParams['toolkit_menu'];
+		}
 		if (UserRights::IsPortalUser())
 		{
 			// Portal users have a limited access to data, for now they can only see what's configured for them
@@ -341,6 +345,12 @@ EOF;
 	
 	protected function GetHTMLTableValues($aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams)
 	{
+		$bLocalize = true;
+		if (isset($aExtraParams['localize_values']))
+		{
+			$bLocalize = (bool) $aExtraParams['localize_values'];
+		}
+
 		$aValues = array();
 		$this->oSet->Seek(0);
 		$iMaxObjects = $iPageSize;
@@ -384,7 +394,7 @@ EOF;
 						}
 						else
 						{
-							$aRow[$sAttCode.'_'.$sAlias] = $aObjects[$sAlias]->GetAsHTML($sAttCode);
+							$aRow[$sAttCode.'_'.$sAlias] = $aObjects[$sAlias]->GetAsHTML($sAttCode, $bLocalize);
 						}
 					}
 				}

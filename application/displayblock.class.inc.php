@@ -711,7 +711,7 @@ class DisplayBlock
 					$oFilter->AddCondition($sStateAttrCode, $sStateValue, '=');
 					$oSet = new DBObjectSet($oFilter);
 					$aCounts[$sStateValue] = $oSet->Count();
-					$aStateLabels[$sStateValue] = $oAttDef->GetValueLabel($sStateValue);
+					$aStateLabels[$sStateValue] = htmlentities($oAttDef->GetValueLabel($sStateValue), ENT_QUOTES, 'UTF-8');
 					if ($aCounts[$sStateValue] == 0)
 					{
 						$aCounts[$sStateValue] = '-';
@@ -733,8 +733,67 @@ class DisplayBlock
 			break;
 			
 			case 'csv':
+			$bAdvancedMode = utils::ReadParam('advanced', false);
+
+			$sCsvFile = strtolower($this->m_oFilter->GetClass()).'.csv'; 
+			$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?expression='.urlencode($this->m_oFilter->ToOQL()).'&format=csv&filename='.urlencode($sCsvFile);
+			$sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($this->m_oFilter->serialize()).'&format=csv';
+			if ($bAdvancedMode)
+			{
+				$sDownloadLink .= '&fields_advanced=1';
+				$sChecked = 'CHECKED';
+			}
+			else
+			{
+				$sLinkToToggle = $sLinkToToggle.'&advanced=1';
+				$sChecked = '';
+			}
+
+			$sCSVData = cmdbAbstractObject::GetSetAsCSV($this->m_oSet, array('fields_advanced' => $bAdvancedMode));
+			$sCharset = MetaModel::GetConfig()->Get('csv_file_default_charset');
+			if ($sCharset == 'UTF-8')
+			{
+				$bLostChars = false;
+			}
+			else
+			{
+				$sConverted = @iconv('UTF-8', $sCharset, $sCSVData);
+				$sRestored = @iconv($sCharset, 'UTF-8', $sConverted);
+				$bLostChars = ($sRestored != $sCSVData);
+			}
+
+			if ($bLostChars)
+			{
+				$sCharsetNotice = "&nbsp;&nbsp;<span id=\"csv_charset_issue\">";
+				$sCharsetNotice .= '<img src="../images/error.png"  style="vertical-align:middle"/>';
+				$sCharsetNotice .= "</span>";
+
+				$sTip = "<p>".htmlentities(Dict::S('UI:CSVExport:LostChars'), ENT_QUOTES, 'UTF-8')."</p>";
+				$sTip .= "<p>".htmlentities(Dict::Format('UI:CSVExport:LostChars+', $sCharset), ENT_QUOTES, 'UTF-8')."</p>";
+				$oPage->add_ready_script("$('#csv_charset_issue').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
+			}
+			else
+			{
+				$sCharsetNotice = '';
+			}
+
+			$sHtml .= "<div>";
+			$sHtml .= '<table style="width:100%" class="transparent">';
+			$sHtml .= '<tr>';
+			$sHtml .= '<td><a href="'.$sDownloadLink.'">'.Dict::Format('UI:Download-CSV', $sCsvFile).'</a>'.$sCharsetNotice.'</td>';
+			$sHtml .= '<td style="text-align:right"><input type="checkbox" '.$sChecked.' onClick="window.location.href=\''.$sLinkToToggle.'\'">&nbsp;'.Dict::S('UI:CSVExport:AdvancedMode').'</td>';
+			$sHtml .= '</tr>';
+			$sHtml .= '</table>';
+			if ($bAdvancedMode)
+			{
+				$sHtml .= "<p>";
+				$sHtml .= htmlentities(Dict::S('UI:CSVExport:AdvancedMode+'), ENT_QUOTES, 'UTF-8');
+				$sHtml .= "</p>";
+			}
+			$sHtml .= "</div>";
+
 			$sHtml .= "<textarea style=\"width:95%;height:98%\">\n";
-			$sHtml .= cmdbAbstractObject::GetSetAsCSV($this->m_oSet);
+			$sHtml .= htmlentities($sCSVData, ENT_QUOTES, 'UTF-8');
 			$sHtml .= "</textarea>\n";
 			break;
 

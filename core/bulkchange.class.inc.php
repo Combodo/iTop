@@ -24,6 +24,10 @@
  */
 
 
+// The BOM is added at the head of exported UTF-8 CSV data, and removed (if present) from input UTF-8 data.
+// This helps MS-Excel (Version > 2007, Windows only) in changing its interpretation of a CSV file (by default Excel reads data as ISO-8859-1 -not 100% sure!)
+define('UTF8_BOM', chr(239).chr(187).chr(191)); // 0xEF, 0xBB, 0xBF
+
 /**
  * BulkChange
  * Interpret a given data set and update the DB accordingly (fake mode avail.) 
@@ -84,15 +88,16 @@ class CellStatus_Modify extends CellChangeSpec
 {
 	protected $m_previousValue;
 
-	public function __construct($proposedValue, $previousValue)
+	public function __construct($proposedValue, $previousValue = null)
 	{
-		$this->m_previousValue = $previousValue;
+		// Unused (could be costly to know -see the case of reconciliation on ext keys)
+		//$this->m_previousValue = $previousValue;
 		parent::__construct($proposedValue);
 	}
 
 	public function GetDescription()
 	{
-		return 'Modified';
+		return Dict::S('UI:CSVReport-Value-Modified');
 	}
 
 	//public function GetPreviousValue()
@@ -115,9 +120,9 @@ class CellStatus_Issue extends CellStatus_Modify
 	{
 		if (is_null($this->m_proposedValue))
 		{
-			return 'Could not be changed - reason: '.$this->m_sReason;
+			return Dict::Format('UI:CSVReport-Value-SetIssue', $this->m_sReason);
 		}
-		return 'Could not be changed to '.$this->m_proposedValue.' - reason: '.$this->m_sReason;
+		return Dict::Format('UI:CSVReport-Value-ChangeIssue', $this->m_proposedValue, $this->m_sReason);
 	}
 }
 
@@ -130,7 +135,7 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 
 	public function GetDescription()
 	{
-		return 'No match';
+		return Dict::S('UI:CSVReport-Value-NoMatch');
 	}
 }
 
@@ -143,7 +148,7 @@ class CellStatus_NullIssue extends CellStatus_Issue
 
 	public function GetDescription()
 	{
-		return 'Missing mandatory value';
+		return Dict::S('UI:CSVReport-Value-Missing');
 	}
 }
 
@@ -162,7 +167,7 @@ class CellStatus_Ambiguous extends CellStatus_Issue
 	public function GetDescription()
 	{
 		$sCount = $this->m_iCount;
-		return "Ambiguous: found $sCount objects";
+		return Dict::Format('UI:CSVReport-Value-Ambiguous', $sCount);
 	}
 }
 
@@ -186,7 +191,7 @@ class RowStatus_NoChange extends RowStatus
 {
 	public function GetDescription()
 	{
-		return "unchanged";
+		return Dict::S('UI:CSVReport-Row-Unchanged');
 	}
 }
 
@@ -194,7 +199,7 @@ class RowStatus_NewObj extends RowStatus
 {
 	public function GetDescription()
 	{
-		return "created";
+		return Dict::S('UI:CSVReport-Row-Created');
 	}
 }
 
@@ -209,7 +214,7 @@ class RowStatus_Modify extends RowStatus
 
 	public function GetDescription()
 	{
-		return "updated ".$this->m_iChanged." cols";
+		return Dict::Format('UI:CSVReport-Row-Updated', $this->m_iChanged);
 	}
 }
 
@@ -217,7 +222,7 @@ class RowStatus_Disappeared extends RowStatus_Modify
 {
 	public function GetDescription()
 	{
-		return "disappeared, changed ".$this->m_iChanged." cols";
+		return Dict::Format('UI:CSVReport-Row-Disappeared', $this->m_iChanged);
 	}
 }
 
@@ -232,7 +237,7 @@ class RowStatus_Issue extends RowStatus
 
 	public function GetDescription()
 	{
-		return 'Issue: '.$this->m_sReason;
+		return Dict::Format('UI:CSVReport-Row-Issue', $this->m_sReason);
 	}
 }
 
@@ -253,8 +258,9 @@ class BulkChange
 	protected $m_sSynchroScope; // OQL - if specified, then the missing items will be reported
 	protected $m_aOnDisappear; // array of attcode => value, values to be set when an object gets out of scope (ignored if no scope has been defined)
 	protected $m_sDateFormat; // Date format specification, see utils::StringToTime()
+	protected $m_bLocalizedValues; // Values in the data set are localized (see AttributeEnum)
 
-	public function __construct($sClass, $aData, $aAttList, $aExtKeys, $aReconcilKeys, $sSynchroScope = null, $aOnDisappear = null, $sDateFormat = null)
+	public function __construct($sClass, $aData, $aAttList, $aExtKeys, $aReconcilKeys, $sSynchroScope = null, $aOnDisappear = null, $sDateFormat = null, $bLocalize = false)
 	{
 		$this->m_sClass = $sClass;
 		$this->m_aData = $aData;
@@ -264,6 +270,7 @@ class BulkChange
 		$this->m_sSynchroScope = $sSynchroScope;
 		$this->m_aOnDisappear = $aOnDisappear;
 		$this->m_sDateFormat = $sDateFormat;
+		$this->m_bLocalizedValues = $bLocalize;
 	}
 
 	protected $m_bReportHtml = false;
@@ -331,6 +338,7 @@ class BulkChange
 			{
 				foreach ($aKeyConfig as $sForeignAttCode => $iCol)
 				{
+					// Default reporting
 					$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
 				}
 				if ($oExtKey->IsNullAllowed())
@@ -340,8 +348,8 @@ class BulkChange
 				}
 				else
 				{
-					$aErrors[$sAttCode] = "Null not allowed";
-					$aResults[$sAttCode]= new CellStatus_Issue(null, $oTargetObj->Get($sAttCode), 'Null not allowed');
+					$aErrors[$sAttCode] = Dict::S('UI:CSVReport-Value-Issue-Null');
+					$aResults[$sAttCode]= new CellStatus_Issue(null, $oTargetObj->Get($sAttCode), Dict::S('UI:CSVReport-Value-Issue-Null'));
 				}
 			}
 			else
@@ -357,7 +365,7 @@ class BulkChange
 				switch($oExtObjects->Count())
 				{
 				case 0:
-					$aErrors[$sAttCode] = "Object not found";
+					$aErrors[$sAttCode] = Dict::S('UI:CSVReport-Value-Issue-NotFound');
 					$aResults[$sAttCode]= new CellStatus_SearchIssue();
 					break;
 				case 1:
@@ -366,7 +374,7 @@ class BulkChange
 					$oTargetObj->Set($sAttCode, $oForeignObj->GetKey());
 					break;
 				default:
-					$aErrors[$sAttCode] = "Found ".$oExtObjects->Count()." matches";
+					$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-FoundMany', $oExtObjects->Count());
 					$aResults[$sAttCode]= new CellStatus_Ambiguous($oTargetObj->Get($sAttCode), $oExtObjects->Count(), $oReconFilter->ToOql());
 				}
 			}
@@ -384,6 +392,11 @@ class BulkChange
 					else
 					{
 						$aResults[$sAttCode]= new CellStatus_Modify($iForeignObj, $oTargetObj->GetOriginal($sAttCode));
+						foreach ($aKeyConfig as $sForeignAttCode => $iCol)
+						{
+							// Report the change on reconciliation values as well
+							$aResults[$iCol] = new CellStatus_Modify($aRowData[$iCol]);
+						}
 					}
 				}
 				else
@@ -405,31 +418,39 @@ class BulkChange
 			$iFlags = $oTargetObj->GetAttributeFlags($sAttCode, $aReasons);
 			if ( (($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY) && ( $oTargetObj->Get($sAttCode) != $aRowData[$iCol]) )
 			{
-					$aErrors[$sAttCode] = "the attribute '$sAttCode' is read-only and cannot be modified (current value: ".$oTargetObj->Get($sAttCode).", proposed value: {$aRowData[$iCol]}).";
+					$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-Readonly', $sAttCode, $oTargetObj->Get($sAttCode), $aRowData[$iCol]);
 			}
 			else if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
 			{
 				try
 				{
-					$oSet = $oAttDef->MakeValueFromString($aRowData[$iCol]);
+					$oSet = $oAttDef->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
 					$oTargetObj->Set($sAttCode, $oSet);
 				}
 				catch(CoreException $e)
 				{
-					$aErrors[$sAttCode] = "Failed to process input: ".$e->getMessage();
+					$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-Format', $e->getMessage());
 				}
 			}
 			else
 			{
-				$res = $oTargetObj->CheckValue($sAttCode, $aRowData[$iCol]);
-				if ($res === true)
+				$value = $oAttDef->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
+				if (is_null($value) && (strlen($aRowData[$iCol]) > 0))
 				{
-					$oTargetObj->Set($sAttCode, $aRowData[$iCol]);
+					$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-NoMatch', $sAttCode);
 				}
 				else
 				{
-					// $res is a string with the error description
-					$aErrors[$sAttCode] = "Unexpected value for attribute '$sAttCode': $res";
+					$res = $oTargetObj->CheckValue($sAttCode, $value);
+					if ($res === true)
+					{
+						$oTargetObj->Set($sAttCode, $value);
+					}
+					else
+					{
+						// $res is a string with the error description
+						$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-Unknown', $sAttCode, $res);
+					}
 				}
 			}
 		}
@@ -447,17 +468,19 @@ class BulkChange
 			{
 				if ($this->m_bReportHtml)
 				{
-					$sCurValue = $oTargetObj->GetAsHTML($sAttCode);
-					$sOrigValue = $oTargetObj->GetOriginalAsHTML($sAttCode);
+					$sCurValue = $oTargetObj->GetAsHTML($sAttCode, $this->m_bLocalizedValues);
+					$sOrigValue = $oTargetObj->GetOriginalAsHTML($sAttCode, $this->m_bLocalizedValues);
+					$sInput = htmlentities($aRowData[$iCol], ENT_QUOTES, 'UTF-8');
 				}
 				else
 				{
-					$sCurValue = $oTargetObj->GetAsCSV($sAttCode, $this->m_sReportCsvSep, $this->m_sReportCsvDelimiter);
-					$sOrigValue = $oTargetObj->GetOriginalAsCSV($sAttCode, $this->m_sReportCsvSep, $this->m_sReportCsvDelimiter);
+					$sCurValue = $oTargetObj->GetAsCSV($sAttCode, $this->m_sReportCsvSep, $this->m_sReportCsvDelimiter, $this->m_bLocalizedValues);
+					$sOrigValue = $oTargetObj->GetOriginalAsCSV($sAttCode, $this->m_sReportCsvSep, $this->m_sReportCsvDelimiter, $this->m_bLocalizedValues);
+					$sInput = $aRowData[$iCol];
 				}
 				if (isset($aErrors[$sAttCode]))
 				{
-					$aResults[$iCol]= new CellStatus_Issue($sCurValue, $sOrigValue, $aErrors[$sAttCode]);
+					$aResults[$iCol]= new CellStatus_Issue($aRowData[$iCol], $sOrigValue, $aErrors[$sAttCode]);
 				}
 				elseif (array_key_exists($sAttCode, $aChangedFields))
 				{
@@ -484,7 +507,7 @@ class BulkChange
 		if ($res !== true)
 		{
 			// $res contains the error description
-			$aErrors["GLOBAL"] = "Attributes not consistent with each others: $res";
+			$aErrors["GLOBAL"] = Dict::Format('UI:CSVReport-Row-Issue-Inconsistent', $res);
 		}
 		return $aResults;
 	}
@@ -548,7 +571,7 @@ class BulkChange
 		if ($res !== true)
 		{
 			// $res contains the error description
-			$aErrors["GLOBAL"] = "Attributes not consistent with each others: $res";
+			$aErrors["GLOBAL"] = Dict::Format('UI:CSVReport-Row-Issue-Inconsistent', $res);
 		}
 		return $aResults;
 	}
@@ -562,7 +585,7 @@ class BulkChange
 		if (count($aErrors) > 0)
 		{
 			$sErrors = implode(', ', $aErrors);
-			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue("Unexpected attribute value(s)");
+			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Attribute'));
 			return $oTargetObj;
 		}
 	
@@ -581,7 +604,7 @@ class BulkChange
 		if (count($aMissingKeys) > 0)
 		{
 			$sMissingKeys = implode(', ', $aMissingKeys);
-			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue("Could not be created, due to missing external key(s): $sMissingKeys");
+			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::Format('UI:CSVReport-Row-Issue-MissingExtKey', $sMissingKeys));
 			return $oTargetObj;
 		}
 	
@@ -615,7 +638,7 @@ class BulkChange
 		if (count($aErrors) > 0)
 		{
 			$sErrors = implode(', ', $aErrors);
-			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue("Unexpected attribute value(s)");
+			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Attribute'));
 			return;
 		}
 	
@@ -656,7 +679,7 @@ class BulkChange
 		if (count($aErrors) > 0)
 		{
 			$sErrors = implode(', ', $aErrors);
-			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue("Unexpected attribute value(s)");
+			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Attribute'));
 			return;
 		}
 	
@@ -732,8 +755,8 @@ class BulkChange
 						else
 						{
 							// Leave the cell unchanged
-							$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue("wrong date format");
-							$aResult[$iRow][$sAttCode] = new CellStatus_Issue(null, $this->m_aData[$iRow][$iCol], 'Wrong date format');
+							$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
+							$aResult[$iRow][$sAttCode] = new CellStatus_Issue(null, $this->m_aData[$iRow][$iCol], Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
 						}
 					}
 				}
@@ -753,91 +776,98 @@ class BulkChange
 				// An issue at the earlier steps - skip the rest
 				continue;
 			}
-			$oReconciliationFilter = new CMDBSearchFilter($this->m_sClass);
-			$bSkipQuery = false;
-			foreach($this->m_aReconcilKeys as $sAttCode)
+			try
 			{
-				$valuecondition = null;
-				if (array_key_exists($sAttCode, $this->m_aExtKeys))
+				$oReconciliationFilter = new CMDBSearchFilter($this->m_sClass);
+				$bSkipQuery = false;
+				foreach($this->m_aReconcilKeys as $sAttCode)
 				{
-					if ($this->IsNullExternalKeySpec($aRowData, $sAttCode))
+					$valuecondition = null;
+					if (array_key_exists($sAttCode, $this->m_aExtKeys))
 					{
-						$oExtKey = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
-						if ($oExtKey->IsNullAllowed())
+						if ($this->IsNullExternalKeySpec($aRowData, $sAttCode))
 						{
-							$valuecondition = $oExtKey->GetNullValue();
-							$aResult[$iRow][$sAttCode] = new CellStatus_Void($oExtKey->GetNullValue());
+							$oExtKey = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+							if ($oExtKey->IsNullAllowed())
+							{
+								$valuecondition = $oExtKey->GetNullValue();
+								$aResult[$iRow][$sAttCode] = new CellStatus_Void($oExtKey->GetNullValue());
+							}
+							else
+							{
+								$aResult[$iRow][$sAttCode] = new CellStatus_NullIssue();
+							}
 						}
 						else
 						{
-							$aResult[$iRow][$sAttCode] = new CellStatus_NullIssue();
-						}
+							// The value has to be found or verified
+							list($sQuery, $aMatches) = $this->ResolveExternalKey($aRowData, $sAttCode, $aResult[$iRow]);
+		
+							if (count($aMatches) == 1)
+							{
+								$oRemoteObj = reset($aMatches); // first item
+								$valuecondition = $oRemoteObj->GetKey();
+								$aResult[$iRow][$sAttCode] = new CellStatus_Void($oRemoteObj->GetKey());
+							} 					
+							elseif (count($aMatches) == 0)
+							{
+								$aResult[$iRow][$sAttCode] = new CellStatus_SearchIssue();
+							} 					
+							else
+							{
+								$aResult[$iRow][$sAttCode] = new CellStatus_Ambiguous(null, count($aMatches), $sQuery);
+							}
+						} 					
 					}
 					else
 					{
-						// The value has to be found or verified
-						list($sQuery, $aMatches) = $this->ResolveExternalKey($aRowData, $sAttCode, $aResult[$iRow]);
-	
-						if (count($aMatches) == 1)
-						{
-							$oRemoteObj = reset($aMatches); // first item
-							$valuecondition = $oRemoteObj->GetKey();
-							$aResult[$iRow][$sAttCode] = new CellStatus_Void($oRemoteObj->GetKey());
-						} 					
-						elseif (count($aMatches) == 0)
-						{
-							$aResult[$iRow][$sAttCode] = new CellStatus_SearchIssue();
-						} 					
-						else
-						{
-							$aResult[$iRow][$sAttCode] = new CellStatus_Ambiguous(null, count($aMatches), $sQuery);
-						}
-					} 					
-				}
-				else
-				{
-					// The value is given in the data row
-					$iCol = $this->m_aAttList[$sAttCode];
-					$valuecondition = $aRowData[$iCol];
-				}
-				if (is_null($valuecondition))
-				{
-					$bSkipQuery = true;
-				}
-				else
-				{
-					$oReconciliationFilter->AddCondition($sAttCode, $valuecondition, '=');
-				}
-			}
-			if ($bSkipQuery)
-			{
-				$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue("failed to reconcile");
-			}
-			else
-			{
-				$oReconciliationSet = new CMDBObjectSet($oReconciliationFilter);
-				switch($oReconciliationSet->Count())
-				{
-				case 0:
-					$oTargetObj = $this->CreateObject($aResult, $iRow, $aRowData, $oChange);
-					// $aResult[$iRow]["__STATUS__"]=> set in CreateObject
-					$aVisited[] = $oTargetObj->GetKey();
-					break;
-				case 1:
-					$oTargetObj = $oReconciliationSet->Fetch();
-					$this->UpdateObject($aResult, $iRow, $oTargetObj, $aRowData, $oChange);
-					// $aResult[$iRow]["__STATUS__"]=> set in UpdateObject
-					if (!is_null($this->m_sSynchroScope))
-					{
-						$aVisited[] = $oTargetObj->GetKey();
+						// The value is given in the data row
+						$iCol = $this->m_aAttList[$sAttCode];
+						$valuecondition = $aRowData[$iCol];
 					}
-					break;
-				default:
-					// Found several matches, ambiguous
-					$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue("ambiguous reconciliation");
-					$aResult[$iRow]["id"]= new CellStatus_Ambiguous(0, $oReconciliationSet->Count(), $oReconciliationFilter->ToOql());
-					$aResult[$iRow]["finalclass"]= 'n/a';
+					if (is_null($valuecondition))
+					{
+						$bSkipQuery = true;
+					}
+					else
+					{
+						$oReconciliationFilter->AddCondition($sAttCode, $valuecondition, '=');
+					}
 				}
+				if ($bSkipQuery)
+				{
+					$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Reconciliation'));
+				}
+				else
+				{
+					$oReconciliationSet = new CMDBObjectSet($oReconciliationFilter);
+					switch($oReconciliationSet->Count())
+					{
+					case 0:
+						$oTargetObj = $this->CreateObject($aResult, $iRow, $aRowData, $oChange);
+						// $aResult[$iRow]["__STATUS__"]=> set in CreateObject
+						$aVisited[] = $oTargetObj->GetKey();
+						break;
+					case 1:
+						$oTargetObj = $oReconciliationSet->Fetch();
+						$this->UpdateObject($aResult, $iRow, $oTargetObj, $aRowData, $oChange);
+						// $aResult[$iRow]["__STATUS__"]=> set in UpdateObject
+						if (!is_null($this->m_sSynchroScope))
+						{
+							$aVisited[] = $oTargetObj->GetKey();
+						}
+						break;
+					default:
+						// Found several matches, ambiguous
+						$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Ambiguous'));
+						$aResult[$iRow]["id"]= new CellStatus_Ambiguous(0, $oReconciliationSet->Count(), $oReconciliationFilter->ToOql());
+						$aResult[$iRow]["finalclass"]= 'n/a';
+					}
+				}
+			}
+			catch (Exception $e)
+			{
+				$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::Format('UI:CSVReport-Row-Issue-Internal', get_class($e), $e->getMessage()));
 			}
 		}
 
@@ -1166,49 +1196,6 @@ EOF
 		}
 		$oPage->table($aConfig, $aDetails);
 	}	
-
-	/**
-	 * Get the user friendly name for an 'extended' attribute code i.e 'name', becomes 'Name' and 'org_id->name' becomes 'Organization->Name'
-	 * @param string $sClassName The name of the class
-	 * @param string $sAttCodeEx Either an attribute code or ext_key_name->att_code
-	 * @return string A user friendly format of the string: AttributeName or AttributeName->ExtAttributeName
-	 */
-	public static function GetFriendlyAttCodeName($sClassName, $sAttCodeEx)
-	{
-		$sFriendlyName = '';
-		if (preg_match('/(.+)->(.+)/', $sAttCodeEx, $aMatches) > 0)
-		{
-			$sAttribute = $aMatches[1];
-			$sField = $aMatches[2];
-			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttribute);
-			if ($oAttDef->IsExternalKey())
-			{
-				$sTargetClass = $oAttDef->GetTargetClass();
-				$oTargetAttDef = MetaModel::GetAttributeDef($sTargetClass, $sField);
-				$sFriendlyName = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel();
-			}
-			else
-			{
-				 // hum, hum... should never happen, we'd better raise an exception
-				 throw(new Exception(Dict::Format('UI:CSVImport:ErrorExtendedAttCode', $sAttCodeEx, $sAttribute, $sClassName)));
-			}
-	
-		}
-		else
-		{
-			if ($sAttCodeEx == 'id')
-			{
-				$sFriendlyName = Dict::S('UI:CSVImport:idField');
-			}
-			else
-			{
-				$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCodeEx);
-				$sFriendlyName = $oAttDef->GetLabel();
-			}
-		}
-		return $sFriendlyName;
-	}
-	
 }
 
 

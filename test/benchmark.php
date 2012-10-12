@@ -148,7 +148,7 @@ class BenchmarkDataCreation
 				// transform into a link set
 				$sCSVSpec = implode('|', $value);
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sProp);
-				$value = $oAttDef->MakeValueFromString($sCSVSpec, $sSepItem = '|', $sSepAttribute = ';', $sSepValue = ':', $sAttributeQualifier = '"');
+				$value = $oAttDef->MakeValueFromString($sCSVSpec, $bLocalizedValue = false, $sSepItem = '|', $sSepAttribute = ';', $sSepValue = ':', $sAttributeQualifier = '"');
 			}
 			$oMyObject->Set($sProp, $value);
 		}

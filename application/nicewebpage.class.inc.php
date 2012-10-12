@@ -44,6 +44,10 @@ class NiceWebPage extends WebPage
 		$this->add_linked_script("../js/jquery.tablesorter.min.js");
 		$this->add_linked_script("../js/jquery.tablesorter.pager.js");
 		$this->add_linked_script("../js/jquery.tablehover.js");
+		$this->add_linked_script('../js/field_sorter.js');
+		$this->add_linked_script('../js/datatable.js');
+		$this->add_linked_script("../js/jquery.positionBy.js");
+		$this->add_linked_script("../js/jquery.popupmenu.js");
 		$this->add_ready_script(
 <<< EOF
 	//add new widget called TruncatedList to properly display truncated lists when they are sorted

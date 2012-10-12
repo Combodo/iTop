@@ -2019,7 +2019,8 @@ class SynchroReplica extends DBObject implements iDisplay
 				return null;
 			}
 			// MakeValueFromString() throws an exception in case of failure
-			$retValue = $oAttDef->MakeValueFromString($rawValue, $oSyncAtt->Get('row_separator'), $oSyncAtt->Get('attribute_separator'), $oSyncAtt->Get('value_separator'), $oSyncAtt->Get('attribute_qualifier'));
+			$bLocalizedValue = false;
+			$retValue = $oAttDef->MakeValueFromString($rawValue, $bLocalizedValue, $oSyncAtt->Get('row_separator'), $oSyncAtt->Get('attribute_separator'), $oSyncAtt->Get('value_separator'), $oSyncAtt->Get('attribute_qualifier'));
 		}
 		else
 		{

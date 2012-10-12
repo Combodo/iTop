@@ -87,8 +87,8 @@ $aPageParams = array
 	(
 		'mandatory' => false,
 		'modes' => 'http,cli',
-		'default' => 'UTF-8',
-		'description' => 'Character set encoding of the CSV data: UTF-8, ISO-8859-1, WINDOWS-1251, WINDOWS-1252, ISO-8859-15',
+		'default' => '',
+		'description' => 'Character set encoding of the CSV data: UTF-8, ISO-8859-1, WINDOWS-1251, WINDOWS-1252, ISO-8859-15, If blank, then the charset is set to config(csv_file_default_charset)',
 	),
 	'date_format' => array
 	(
@@ -147,6 +147,13 @@ $aPageParams = array
 		'modes' => 'http,cli',
 		'default' => '',
 		'description' => 'Comment to be added into the change log',
+	),
+	'no_localize' => array
+	(
+		'mandatory' => false,
+		'modes' => 'http,cli',
+		'default' => '0',
+		'description' => 'If set to 0, then header and values are supposed to be localized in the language of the logged in user. Set to 1 to use internal attribute codes and values (enums)',
 	),
 );
 
@@ -268,20 +275,22 @@ else
 
 try
 {
+	$aWarnings = array();
+
 	//////////////////////////////////////////////////
 	//
 	// Read parameters
 	//
-	$sClass = ReadMandatoryParam($oP, 'class', 'class');
+	$sClass = ReadMandatoryParam($oP, 'class', 'raw_data'); // do not filter as a valid class, we want to produce the report "wrong class" ourselves 
 	$sSep = ReadParam($oP, 'separator', 'raw_data');
 	$sQualifier = ReadParam($oP, 'qualifier', 'raw_data');
 	$sCharSet = ReadParam($oP, 'charset', 'raw_data');
 	$sDateFormat = ReadParam($oP, 'date_format', 'raw_data');
 	$sOutput = ReadParam($oP, 'output', 'string');
-//	$sReportLevel = ReadParam($oP, 'reportlevel');
 	$sReconcKeys = ReadParam($oP, 'reconciliationkeys', 'raw_data');
 	$sSimulate = ReadParam($oP, 'simulate');
 	$sComment = ReadParam($oP, 'comment', 'raw_data');
+	$bLocalize = (ReadParam($oP, 'no_localize') != 1);
 
 	if (strtolower(trim($sSep)) == 'tab')
 	{
@@ -322,16 +331,10 @@ try
 		$sDateFormat = null;
 	}
 	
-/*
-	$aReportLevels = explode('|', $sReportLevel);
-	foreach($aReportLevels as $sLevel)
+	if ($sCharSet == '')
 	{
-		if (!in_array($sLevel, explode('|', 'errors|warnings|created|changed|unchanged')))
-		{
-			throw new BulkLoadException("Unknown level in reporting level: '$sLevel'");
-		}
+		$sCharSet = MetaModel::GetConfig()->Get('csv_file_default_charset');
 	}
-*/
 
 	if ($sSimulate == '1')
 	{
@@ -357,6 +360,7 @@ try
 		{
 			$oP->add_comment("Date format: <none>");
 		}
+		$oP->add_comment("Localize: ".($bLocalize?'yes':'no'));
 		$oP->add_comment("Data Size: ".strlen($sCSVData));
 	}
 	//////////////////////////////////////////////////
@@ -370,24 +374,31 @@ try
 
 	//////////////////////////////////////////////////
 	//
-	// Make translated column reference
+	// Create an index of the known column names (in lower case)
+	// If data is localized, an array of <TranslatedName> => array of <ExtendedAttCode> (several leads to ambiguity)
+	// Otherwise             an array of <ExtendedAttCode> => array of <ExtendedAttCode> (1 element by construction)
 	//
-	// array of <LowercaseTranslatedName> => <ExtendedAttCode>
-	//
-	// Examples:
-	//   'organization' => 'org_id'
-	//   'organization->name' => 'org_id->name'
+	// Examples (localized in french):
+	//   'lieu' => 'location_id'
+	//   'lieu->name' => 'location_id->name'
 	//
 	// Note: it may happen that an external field has the same label as the external key
 	//       in that case, we consider that the external key has precedence
 	//
-	$aFriendlyToInternalAttCode = array();
+	$aKnownColumnNames = array();
 	foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 	{
-	  	$sFriendlyName = strtolower(BulkChange::GetFriendlyAttCodeName($sClass, $sAttCode));
-	  	if (!$oAttDef->IsExternalField() || !array_key_exists($sFriendlyName, $aFriendlyToInternalAttCode))
+		if ($bLocalize)
+		{
+	  		$sColName = strtolower(MetaModel::GetLabel($sClass, $sAttCode));
+	  	}
+	  	else
 	  	{
-		  	$aFriendlyToInternalAttCode[$sFriendlyName] = $sAttCode;
+	  		$sColName = strtolower($sAttCode);
+	  	}
+	  	if (!$oAttDef->IsExternalField() || !array_key_exists($sColName, $aKnownColumnNames))
+	  	{
+		  	$aKnownColumnNames[$sColName][] = $sAttCode;
 		}
 	  	if ($oAttDef->IsExternalKey(EXTKEY_RELATIVE))
 	  	{
@@ -395,22 +406,40 @@ try
 			foreach(MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef)
 		  	{
 	  			$sAttCodeEx = $sAttCode.'->'.$sRemoteAttCode;
-	  			$sFriendlyName = strtolower(BulkChange::GetFriendlyAttCodeName($sClass, $sAttCodeEx));
-		  		if (!array_key_exists($sFriendlyName, $aFriendlyToInternalAttCode))
+				if ($bLocalize)
+				{
+		  			$sColName = strtolower(MetaModel::GetLabel($sClass, $sAttCodeEx));
+			  	}
+			  	else
+			  	{
+			  		$sColName = strtolower($sAttCodeEx);
+			  	}
+		  		if (!array_key_exists($sColName, $aKnownColumnNames))
 		  		{
-		  			$aFriendlyToInternalAttCode[$sFriendlyName] = $sAttCodeEx;
+		  			$aKnownColumnNames[$sColName][] = $sAttCodeEx;
 		  		}
 		  	}
 		}
    }
-   
+
+	//print_r($aKnownColumnNames);
+	//print_r(array_keys($aKnownColumnNames));
+	//exit;
+
 	//////////////////////////////////////////////////
 	//
 	// Parse first line, check attributes, analyse the request
 	//
 	if ($sCharSet == 'UTF-8')
 	{
-		$sUTF8Data = $sCSVData;		
+		// Remove the BOM if any
+		if (substr($sCSVData, 0, 3) == UTF8_BOM)
+		{
+			$sCSVData = substr($sCSVData, 3);
+		}
+		// Clean the input
+		// Todo: warn the user if some characters are lost/substituted
+		$sUTF8Data = iconv('UTF-8', 'UTF-8//IGNORE//TRANSLIT', $sCSVData);
 	}
 	else
 	{
@@ -433,15 +462,25 @@ try
 			// Ignore any trailing "star" (*) that simply indicates a mandatory field
 			$sFieldName = $aMatches[1];
 		}
-		if (array_key_exists(strtolower($sFieldName), $aFriendlyToInternalAttCode))
+		if (array_key_exists(strtolower($sFieldName), $aKnownColumnNames))
 		{
-			$aFieldList[$iFieldId] = $aFriendlyToInternalAttCode[strtolower($sFieldName)];
+			$aColumns = $aKnownColumnNames[strtolower($sFieldName)];
+			if (count($aColumns) > 1)
+			{
+				$aCompetitors = array();
+				foreach ($aColumns as $sAttCodeEx)
+				{
+					$aCompetitors[] = $sAttCodeEx;
+				}
+				$aWarnings[] = "Input column '$sFieldName' is ambiguous. Could be related to ".implode (' or ', $aCompetitors).". The first one will be used: ".$aColumns[0];
+			}
+			$aFieldList[$iFieldId] = $aColumns[0];
 		}
 		else
 		{
-			// Secure the field names against XSS injection (no <> neither " chars)
+			// Protect against XSS injection
 			$sSafeName = str_replace(array('"', '<', '>'), '', $sFieldName);
-			$aFieldList[$iFieldId] = $sSafeName;
+			throw new BulkLoadException("Unknown column: '$sSafeName'");
 		}
 	}
 	// Note: at this stage the list of fields is supposed to be made of attcodes (and the symbol '->')	
@@ -459,16 +498,19 @@ try
 			$sRemoteAttCode = $aMatches[2];
 			if (!MetaModel::IsValidAttCode($sClass, $sExtKeyAttCode))
 			{
+				// Safety net - should not happen now that column names are checked against known names
 				throw new BulkLoadException("Unknown attribute '$sExtKeyAttCode' (class: '$sClass')");
 			}
 			$oAtt = MetaModel::GetAttributeDef($sClass, $sExtKeyAttCode);
 			if (!$oAtt->IsExternalKey())
 			{
+				// Safety net - should not happen now that column names are checked against known names
 				throw new BulkLoadException("Not an external key '$sExtKeyAttCode' (class: '$sClass')");
 			}
 			$sTargetClass = $oAtt->GetTargetClass();
 			if (!MetaModel::IsValidAttCode($sTargetClass, $sRemoteAttCode))
 			{
+				// Safety net - should not happen now that column names are checked against known names
 				throw new BulkLoadException("Unknown attribute '$sRemoteAttCode' (key: '$sExtKeyAttCode', class: '$sTargetClass')");
 			}
 			$aExtKeys[$sExtKeyAttCode][$sRemoteAttCode] = $iFieldId;
@@ -483,6 +525,7 @@ try
 			//
 			if (!MetaModel::IsValidAttCode($sClass, $sFieldName))
 			{
+				// Safety net - should not happen now that column names are checked against known names
 				throw new BulkLoadException("Unknown attribute '$sFieldName' (class: '$sClass')");
 			}
 			$oAtt = MetaModel::GetAttributeDef($sClass, $sFieldName);
@@ -515,7 +558,14 @@ try
 		{
 			if (in_array($sReconcKeyAttCode, $aFieldList))
 			{
-				$aReconcSpec[] = $sReconcKeyAttCode;
+				if ($bLocalize)
+				{
+					$aReconcSpec[] = MetaModel::GetLabel($sClass, $sReconcKeyAttCode);
+				}
+				else
+				{
+					$aReconcSpec[] = $sReconcKeyAttCode;
+				}
 			}
 		}
 		if (count($aReconcSpec) == 0)
@@ -534,10 +584,26 @@ try
 		$sReconcKey = trim($sReconcKey);
 		if (empty($sReconcKey)) continue; // skip empty spec
 
-		if (array_key_exists(strtolower($sReconcKey), $aFriendlyToInternalAttCode))
+		if (array_key_exists(strtolower($sReconcKey), $aKnownColumnNames))
 		{
 			// Translate from a translated name to codes
-			$sReconcKey = $aFriendlyToInternalAttCode[strtolower($sReconcKey)];
+			$aColumns = $aKnownColumnNames[strtolower($sReconcKey)];
+			if (count($aColumns) > 1)
+			{
+				$aCompetitors = array();
+				foreach ($aColumns as $sAttCodeEx)
+				{
+					$aCompetitors[] = $sAttCodeEx;
+				}
+				$aWarnings[] = "Reconciliation key '$sReconcKey' is ambiguous. Could be related to ".implode (' or ', $aCompetitors).". The first one will be used: ".$aColumns[0];
+			}
+			$sReconcKey = $aColumns[0];
+		}
+		else
+		{
+			// Protect against XSS injection
+			$sSafeName = str_replace(array('"', '<', '>'), '', $sReconcKey);
+			throw new BulkLoadException("Unknown reconciliation key: '$sSafeName'");
 		}
 
 		// Check that the reconciliation key is either a given column, or an external key
@@ -565,7 +631,7 @@ try
 		{
 			if (!MetaModel::IsValidAttCode($sClass, $sReconcKey))
 			{
-				// Safety net: should never happen, but...
+				// Safety net - should not happen now that column names are checked against known names
 				throw new BulkLoadException("Unknown reconciliation attribute '$sReconcKey' (class: '$sClass')");
 			}
 			$oAtt = MetaModel::GetAttributeDef($sClass, $sReconcKey);
@@ -617,6 +683,11 @@ try
 			}
 		}
 		$oP->add_comment("Reconciliation Keys: ".implode(', ', $aReconciliationReport));
+
+		foreach ($aWarnings as $sWarning)
+		{
+			$oP->add_comment("Warning: ".$sWarning);
+		}
 	}
 
 	$oBulk = new BulkChange(
@@ -627,7 +698,8 @@ try
 		$aFinalReconcilKeys,
 		null, // synchro scope
 		null, // on delete
-		$sDateFormat
+		$sDateFormat,
+		$bLocalize
 	);
 
 	if ($bSimulate)
@@ -717,7 +789,6 @@ try
 
 	if (($sOutput == "summary") || ($sOutput == 'details'))
 	{
-//		$oP->add_comment("Report level: ".$sReportLevel);
 		$oP->add_comment("Change tracking comment: ".$sComment);
 		$oP->add_comment("Issues: ".$iCountErrors);
 		$oP->add_comment("Warnings: ".$iCountWarnings);

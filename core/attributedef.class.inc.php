@@ -235,12 +235,21 @@ abstract class AttributeDefinition
 	}
 	
 	/**
-	 * Get the label corresponding to the given value
+	 * Get the label corresponding to the given value (in plain text)
 	 * To be overloaded for localized enums
 	 */
 	public function GetValueLabel($sValue)
 	{
-		return $this->GetAsHTML($sValue);
+		return $sValue;
+	}
+
+	/**
+	 * Get the value from a given string (plain text, CSV import)
+	 * Return null if no match could be found	 
+	 */
+	public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
+	{
+		return $this->MakeRealValue($sProposedValue, null);
 	}
 
 	public function GetLabel_Obsolete()
@@ -422,7 +431,7 @@ abstract class AttributeDefinition
 	/**
 	 * Override to display the value in the GUI
 	 */	
-	public function GetAsHTML($sValue, $oHostObject = null)
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		return Str::pure2html((string)$sValue);
 	}
@@ -430,7 +439,7 @@ abstract class AttributeDefinition
 	/**
 	 * Override to export the value in XML	
 	 */	
-	public function GetAsXML($sValue, $oHostObject = null)
+	public function GetAsXML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		return Str::pure2xml((string)$sValue);
 	}
@@ -438,7 +447,7 @@ abstract class AttributeDefinition
 	/**
 	 * Override to escape the value when read by DBObject::GetAsCSV()	
 	 */	
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
 	{
 		return (string)$sValue;
 	}
@@ -591,7 +600,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function GetBasicFilterLooseOperator() {return '';}
 	public function GetBasicFilterSQLExpr($sOpCode, $value) {return '';}
 
-	public function GetAsHTML($sValue, $oHostObject = null)
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		if (is_object($sValue) && ($sValue instanceof DBObjectSet))
 		{
@@ -619,12 +628,12 @@ class AttributeLinkedSet extends AttributeDefinition
 		return null;
 	}
 
-	public function GetAsXML($sValue, $oHostObject = null)
+	public function GetAsXML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		return "Sorry, no yet implemented";
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
 	{
 		$sSepItem = MetaModel::GetConfig()->Get('link_set_item_separator');
 		$sSepAttribute = MetaModel::GetConfig()->Get('link_set_attribute_separator');
@@ -684,8 +693,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		return $aColumns;
 	}
 
-	// Specific to this kind of attribute : transform a string into a value
-	public function MakeValueFromString($sProposedValue, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
+	public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
 	{
 		if (is_null($sSepItem) || empty($sSepItem))
 		{
@@ -1080,7 +1088,7 @@ class AttributeInteger extends AttributeDBField
  */
 class AttributePercentage extends AttributeInteger
 {
-	public function GetAsHTML($sValue, $oHostObject = null)
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		$iWidth = 5; // Total width of the percentage bar graph, in em...
 		$iValue = (int)$sValue;
@@ -1237,7 +1245,7 @@ class AttributeBoolean extends AttributeInteger
 		return 0;
 	}
 
-	public function GetAsXML($sValue, $oHostObject = null)
+	public function GetAsXML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		return $sValue ? '1' : '0';
 	}
@@ -1355,7 +1363,7 @@ class AttributeString extends AttributeDBField
 		return $value;
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
 	{
 		$sFrom = array("\r\n", $sTextQualifier);
 		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
@@ -1403,7 +1411,7 @@ class AttributeClass extends AttributeString
 		return $sDefault;
 	}
 
-	public function GetAsHTML($sValue, $oHostObject = null)
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		if (empty($sValue)) return '';
 		return MetaModel::GetName($sValue);
@@ -1492,7 +1500,7 @@ class AttributeFinalClass extends AttributeString
 		return $this->m_sValue;
 	}
 
-	public function GetAsHTML($sValue, $oHostObject = null)
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		if (empty($sValue)) return '';
 		return MetaModel::GetName($sValue);
@@ -1550,7 +1558,7 @@ class AttributePassword extends AttributeString
 		return array();
 	}
 
-	public function GetAsHTML($sValue, $oHostObject = null)
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		if (strlen($sValue) == 0)
 		{
@@ -1708,9 +1716,9 @@ class AttributeText extends AttributeString
 		return $sText;
 	}
 
-	public function GetAsHTML($sValue, $oHostObject = null)
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		$sValue = parent::GetAsHTML($sValue);
+		$sValue = parent::GetAsHTML($sValue, $oHostObject, $bLocalize);
 		$sValue = self::RenderWikiHtml($sValue);
 		$aStyles = array();
 		if ($this->GetWidth() != '')
@@ -1772,7 +1780,7 @@ class AttributeText extends AttributeString
 		return $sValue;
 	}
 
-	public function GetAsXML($value, $oHostObject = null)
+	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
 		return Str::pure2xml($value);
 	}
@@ -1948,7 +1956,7 @@ class AttributeCaseLog extends AttributeLongText
 		return $aColumns;
 	}
 
-	public function GetAsHTML($value, $oHostObject = null)
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		if ($value instanceOf ormCaseLog)
 		{
@@ -1975,11 +1983,11 @@ class AttributeCaseLog extends AttributeLongText
 		return "<div class=\"caselog\" $sStyle>".$sContent.'</div>';	}
 
 
-	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
 	{
 		if ($value instanceOf ormCaseLog)
 		{
-			return parent::GetAsCSV($value->GetText(), $sSeparator, $sTextQualifier, $oHostObject);
+			return parent::GetAsCSV($value->GetText(), $sSeparator, $sTextQualifier, $oHostObject, $bLocalize);
 		}
 		else
 		{
@@ -1987,11 +1995,11 @@ class AttributeCaseLog extends AttributeLongText
 		}
 	}
 	
-	public function GetAsXML($value, $oHostObject = null)
+	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
 		if ($value instanceOf ormCaseLog)
 		{
-			return parent::GetAsXML($value->GetText(), $oHostObject);
+			return parent::GetAsXML($value->GetText(), $oHostObject, $bLocalize);
 		}
 		else
 		{
@@ -2009,7 +2017,7 @@ class AttributeHTML extends AttributeLongText
 {
 	public function GetEditClass() {return "HTML";}
 
-	public function GetAsHTML($sValue, $oHostObject = null)
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		return $sValue;
 	}
@@ -2028,7 +2036,7 @@ class AttributeEmailAddress extends AttributeString
 		return "^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
 	}
 
-	public function GetAsHTML($sValue, $oHostObject = null)
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		if (empty($sValue)) return '';
 		return '<a class="mailto" href="mailto:'.$sValue.'">'.parent::GetAsHTML($sValue).'</a>';
@@ -2092,7 +2100,7 @@ class AttributeTemplateHTML extends AttributeText
 {
 	public function GetEditClass() {return "HTML";}
 
-	public function GetAsHTML($sValue, $oHostObject = null)
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		return $sValue;
 	}
@@ -2226,13 +2234,50 @@ class AttributeEnum extends AttributeString
 		return $sDescription;
 	}
 
-	public function GetAsHTML($sValue, $oHostObject = null)
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		$sLabel = $this->GetValueLabel($sValue);
-		$sDescription = $this->GetValueDescription($sValue);
-		// later, we could imagine a detailed description in the title
-		return "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
+		if ($bLocalize)
+		{
+			$sLabel = $this->GetValueLabel($sValue);
+			$sDescription = $this->GetValueDescription($sValue);
+			// later, we could imagine a detailed description in the title
+			$sRes = "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
+		}
+		else
+		{
+			$sRes = parent::GetAsHtml($sValue, $oHostObject, $bLocalize);
+		}
+		return $sRes;
 	}
+
+	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
+	{
+		if ($bLocalize)
+		{
+			$sFinalValue = $this->GetValueLabel($value);
+		}
+		else
+		{
+			$sFinalValue = $value;
+		}
+		$sRes = parent::GetAsXML($sFinalValue, $oHostObject, $bLocalize);
+		return $sRes;
+	}
+
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	{
+		if ($bLocalize)
+		{
+			$sFinalValue = $this->GetValueLabel($sValue);
+		}
+		else
+		{
+			$sFinalValue = $sValue;
+		}
+		$sRes = parent::GetAsCSV($sFinalValue, $sSeparator, $sTextQualifier, $oHostObject, $bLocalize);
+		return $sRes;
+	}
+
 
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
@@ -2254,11 +2299,46 @@ class AttributeEnum extends AttributeString
 		$aLocalizedValues = array();
 		foreach ($aRawValues as $sKey => $sValue)
 		{
-			$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
+			$aLocalizedValues[$sKey] = Str::pure2html($this->GetValueLabel($sKey));
 		}
   		return $aLocalizedValues;
   	}
   	
+	/**
+	 * An enum can be localized
+	 */	 	
+	public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
+	{
+		if ($bLocalizedValue)
+		{
+			// Lookup for the value matching the input
+			//
+			$sFoundValue = null;
+			$aRawValues = parent::GetAllowedValues();
+			if (!is_null($aRawValues))
+			{
+				foreach ($aRawValues as $sKey => $sValue)
+				{
+					$sRefValue = $this->GetValueLabel($sKey);
+					if ($sProposedValue == $sRefValue)
+					{
+						$sFoundValue = $sKey;
+						break;
+					}
+				}
+			}
+			if (is_null($sFoundValue))
+			{
+				return null;
+			}
+	  		return $this->MakeRealValue($sFoundValue, null);
+		}
+		else
+		{
+			return parent::MakeValueFromString($sProposedValue, $bLocalizedValue, $sSepItem, $sSepAttribute, $sSepValue, $sAttributeQualifier);
+		}
+	}
+
   	/**
   	 * Processes the input value to align it with the values supported
   	 * by this type of attribute. In this case: turns empty strings into nulls
@@ -2424,17 +2504,17 @@ class AttributeDateTime extends AttributeDBField
 		return $value;
 	}
 
-	public function GetAsHTML($value, $oHostObject = null)
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		return Str::pure2html($value);
 	}
 
-	public function GetAsXML($value, $oHostObject = null)
+	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
 		return Str::pure2xml($value);
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
 	{
 		$sFrom = array("\r\n", $sTextQualifier);
 		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
@@ -2546,7 +2626,7 @@ class AttributeDuration extends AttributeInteger
 		return $value;
 	}
 
-	public function GetAsHTML($value, $oHostObject = null)
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		return Str::pure2html(self::FormatDuration($value));
 	}
@@ -2625,7 +2705,7 @@ class AttributeDate extends AttributeDateTime
  */
 class AttributeDeadline extends AttributeDateTime
 {
-	public function GetAsHTML($value, $oHostObject = null)
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		$sResult = self::FormatDeadline($value);
 		return $sResult;
@@ -3140,20 +3220,20 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->FromSQLToValue($aCols, $sPrefix);
 	}
 
-	public function GetAsHTML($value, $oHostObject = null)
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->GetAsHTML($value);
+		return $oExtAttDef->GetAsHTML($value, null, $bLocalize);
 	}
-	public function GetAsXML($value, $oHostObject = null)
+	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->GetAsXML($value);
+		return $oExtAttDef->GetAsXML($value, null, $bLocalize);
 	}
-	public function GetAsCSV($value, $sSeparator = ',', $sTestQualifier = '"', $oHostObject = null)
+	public function GetAsCSV($value, $sSeparator = ',', $sTestQualifier = '"', $oHostObject = null, $bLocalize = true)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->GetAsCSV($value, $sSeparator, $sTestQualifier);
+		return $oExtAttDef->GetAsCSV($value, $sSeparator, $sTestQualifier, null, $bLocalize);
 	}
 }
 
@@ -3172,7 +3252,7 @@ class AttributeURL extends AttributeString
 
 	public function GetEditClass() {return "String";}
 
-	public function GetAsHTML($sValue, $oHostObject = null)
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		$sTarget = $this->Get("target");
 		if (empty($sTarget)) $sTarget = "_blank";
@@ -3322,7 +3402,7 @@ class AttributeBlob extends AttributeDefinition
 		return 'true';
 	} 
 
-	public function GetAsHTML($value, $oHostObject = null)
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		if (is_object($value))
 		{
@@ -3330,12 +3410,12 @@ class AttributeBlob extends AttributeDefinition
 		}
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
 	{
 		return ''; // Not exportable in CSV !
 	}
 	
-	public function GetAsXML($value, $oHostObject = null)
+	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
 		return ''; // Not exportable in XML, or as CDATA + some subtags ??
 	}
@@ -3561,7 +3641,7 @@ class AttributeStopWatch extends AttributeDefinition
 		return 'true';
 	} 
 
-	public function GetAsHTML($value, $oHostObject = null)
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		if (is_object($value))
 		{
@@ -3569,12 +3649,12 @@ class AttributeStopWatch extends AttributeDefinition
 		}
 	}
 
-	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
 	{
 		return $value->GetTimeSpent();
 	}
 	
-	public function GetAsXML($value, $oHostObject = null)
+	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
 		return $value->GetTimeSpent();
 	}
@@ -3891,21 +3971,21 @@ class AttributeSubItem extends AttributeDefinition
 		return $res;
 	}
 
-	public function GetAsHTML($value, $oHostObject = null)
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		$oParent = $this->GetTargetAttDef();
 		$res = $oParent->GetSubItemAsHTML($this->Get('item_code'), $value);
 		return $res;
 	}
 
-	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
 	{
 		$oParent = $this->GetTargetAttDef();
 		$res = $oParent->GetSubItemAsCSV($this->Get('item_code'), $value, $sSeparator = ',', $sTextQualifier = '"');
 		return $res;
 	}
 	
-	public function GetAsXML($value, $oHostObject = null)
+	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
 		$oParent = $this->GetTargetAttDef();
 		$res = $oParent->GetSubItemAsXML($this->Get('item_code'), $value);
@@ -4057,7 +4137,7 @@ class AttributeOneWayPassword extends AttributeDefinition
 		return 'true';
 	} 
 
-	public function GetAsHTML($value, $oHostObject = null)
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		if (is_object($value))
 		{
@@ -4065,12 +4145,12 @@ class AttributeOneWayPassword extends AttributeDefinition
 		}
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
 	{
 		return ''; // Not exportable in CSV
 	}
 	
-	public function GetAsXML($value, $oHostObject = null)
+	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
 		return ''; // Not exportable in XML
 	}
@@ -4132,7 +4212,7 @@ class AttributeTable extends AttributeDBField
 		return $aValues;
 	}
 
-	public function GetAsHTML($value, $oHostObject = null)
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		if (!is_array($value))
 		{
@@ -4160,13 +4240,13 @@ class AttributeTable extends AttributeDBField
 		return $sRes;
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
 	{
 		// Not implemented
 		return '';
 	}
 
-	public function GetAsXML($value, $oHostObject = null)
+	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
 		if (count($value) == 0)
 		{
@@ -4203,7 +4283,7 @@ class AttributePropertySet extends AttributeTable
 		return $proposedValue;
 	}
 
-	public function GetAsHTML($value, $oHostObject = null)
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		if (!is_array($value))
 		{
@@ -4232,7 +4312,7 @@ class AttributePropertySet extends AttributeTable
 		return $sRes;
 	}
 
-	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null)
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
 	{
 		if (count($value) == 0)
 		{
@@ -4258,7 +4338,7 @@ class AttributePropertySet extends AttributeTable
 		return $sTextQualifier.$sEscaped.$sTextQualifier;
 	}
 
-	public function GetAsXML($value, $oHostObject = null)
+	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
 		if (count($value) == 0)
 		{
@@ -4455,7 +4535,7 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 		return $this->m_sValue;
 	}
 
-	public function GetAsHTML($sValue, $oHostObject = null)
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		return Str::pure2html((string)$sValue);
 	}

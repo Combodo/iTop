@@ -98,9 +98,10 @@ function GetMappingsForExtKey($sAttCode, AttributeDefinition $oExtKeyAttDef, $bA
  * @param string $sFieldName Name of the field, as it comes from the data file (header line)
  * @param integer $iFieldIndex Number of the field in the sequence
  * @param bool $bAdvancedMode Whether or not advanced mode was chosen
+ * @param string $sDefaultChoice If set, this will be the item selected by default
  * @return string The HTML code corresponding to the drop-down list for this field
  */
-function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMode = false)
+function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMode, $sDefaultChoice)
 {
 	$aChoices = array('' => Dict::S('UI:CSVImport:MappingSelectOne'));
 	$aChoices[':none:'] = Dict::S('UI:CSVImport:MappingNotApplicable');
@@ -178,7 +179,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 		}		
 	}
 	asort($aChoices);
-	
+
 	$sHtml = "<select id=\"mapping_{$iFieldIndex}\" name=\"field[$iFieldIndex]\">\n";
 	$bIsIdField = IsIdField($sClassName, $sFieldCode);
 	foreach($aChoices as $sAttCode => $sLabel)
@@ -198,7 +199,11 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 				$sSelected = ' selected';
 			}
 		}
-		else if ($sFieldCode == $sAttCode) // Otherwise map by default if there is a match
+		else if (is_null($sDefaultChoice) && ($sFieldCode == $sAttCode))
+		{
+			$sSelected = ' selected';
+		}
+		else if (!is_null($sDefaultChoice) && ($sDefaultChoice == $sAttCode))
 		{
 			$sSelected = ' selected';
 		}
@@ -228,7 +233,7 @@ try
 		$sSeparator = utils::ReadParam('separator', ',', false, 'raw_data');
 		if ($sSeparator == 'tab') $sSeparator = "\t";
 		$sTextQualifier = utils::ReadParam('qualifier', '"', false, 'raw_data');
-		$iLinesToSkip = utils::ReadParam('nb_lines_skipped', 0);
+		$iLinesToSkip = utils::ReadParam('do_skip_lines', 0);
 		$bFirstLineAsHeader = utils::ReadParam('header_line', true);
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 		$sData = stripslashes(utils::ReadParam('csvdata', true, false, 'raw_data'));
@@ -253,18 +258,24 @@ try
 				$sCSSClass = 'csv_row'.($index % 2);
 				if ( ($bFirstLineAsHeader) && ($index == 1))
 				{
-					$oPage->add("<tr class=\"$sCSSClass\"><td style=\"border-left:#999 3px solid;padding-right:10px;padding-left:10px;\">".sprintf($sFormat, $index)."</td><th>");
-					$oPage->add(implode('</th><th>', $aRow));
-					$oPage->add("</th></tr>\n");
+					$oPage->add("<tr class=\"$sCSSClass\"><td style=\"border-left:#999 3px solid;padding-right:10px;padding-left:10px;\">".sprintf($sFormat, $index)."</td>");
+					foreach ($aRow as $sCell)
+					{
+						$oPage->add('<th>'.htmlentities($sCell, ENT_QUOTES, 'UTF-8').'</th>');
+					}
+					$oPage->add("</tr>\n");
 					$iNbCols = count($aRow);
 									
 				}
 				else
 				{
 					if ($index == 1) $iNbCols = count($aRow);
-					$oPage->add("<tr class=\"$sCSSClass\"><td style=\"border-left:#999 3px solid;padding-right:10px;padding-left:10px;\">".sprintf($sFormat, $index)."</td><td>");
-					$oPage->add(implode('</td><td>', $aRow));
-					$oPage->add("</td></tr>\n");
+					$oPage->add("<tr class=\"$sCSSClass\"><td style=\"border-left:#999 3px solid;padding-right:10px;padding-left:10px;\">".sprintf($sFormat, $index)."</td>");
+					foreach ($aRow as $sCell)
+					{
+						$oPage->add('<td>'.htmlentities($sCell, ENT_QUOTES, 'UTF-8').'</td>');
+					}
+					$oPage->add("</tr>\n");
 				}
 				$index++;
 				if ($index > $iMaxIndex) break;
@@ -288,12 +299,18 @@ try
 		$oPage->SetContentType('text/html');
 		$sSeparator = utils::ReadParam('separator', ',', false, 'raw_data');
 		$sTextQualifier = utils::ReadParam('qualifier', '"', false, 'raw_data');
-		$iLinesToSkip = utils::ReadParam('nb_lines_skipped', 0);
+		$iLinesToSkip = utils::ReadParam('do_skip_lines', 0);
 		$bFirstLineAsHeader = utils::ReadParam('header_line', false);
 		$sData = stripslashes(utils::ReadParam('csvdata', '', false, 'raw_data'));
 		$sClassName = utils::ReadParam('class_name', '');
 		$bAdvanced = utils::ReadParam('advanced', false);
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
+
+		$sInitFieldMapping = utils::ReadParam('init_field_mapping', '', false, 'raw_data');
+		$sInitSearchField = utils::ReadParam('init_search_field', '', false, 'raw_data');
+		$aInitFieldMapping = empty($sInitFieldMapping) ? array() : json_decode($sInitFieldMapping, true);
+		$aInitSearchField = empty($sInitSearchField) ? array() : json_decode($sInitSearchField, true);
+
 		$oCSVParser = new CSVParser($sData, $sSeparator, $sTextQualifier);
 		$aData = $oCSVParser->ToArray($iLinesToSkip);
 		$iTarget = count($aData);
@@ -332,9 +349,14 @@ try
 			$index = 1;
 			foreach($aHeader as $sField)
 			{
+				$sDefaultChoice = null;
+				if (isset($aInitFieldMapping[$index]))
+				{
+					$sDefaultChoice = $aInitFieldMapping[$index];
+				}
 				$oPage->add('<tr>');
 				$oPage->add("<th>$sField</th>");
-				$oPage->add('<td>'.GetMappingForField($sClassName, $sField, $index, $bAdvanced).'</td>');
+				$oPage->add('<td>'.GetMappingForField($sClassName, $sField, $index, $bAdvanced, $sDefaultChoice).'</td>');
 				$oPage->add('<td>&nbsp;</td>');
 				$oPage->add('<td><input id="search_'.$index.'" type="checkbox" name="search_field['.$index.']" value="1" /></td>');
 				$oPage->add('<td>'.(isset($aData[$iStartLine][$index-1]) ? htmlentities($aData[$iStartLine][$index-1], ENT_QUOTES, 'UTF-8') : '&nbsp;').'</td>');
@@ -343,28 +365,46 @@ try
 				$index++;
 			}
 			$oPage->add("</table>\n");
-			$aReconciliationKeys = MetaModel::GetReconcKeys($sClassName);
-			$aMoreReconciliationKeys = array(); // Store: key => void to automatically remove duplicates
-			foreach($aReconciliationKeys as $sAttCode)
+
+			if (empty($sInitSearchField))
 			{
-				if (!MetaModel::IsValidAttCode($sClassName, $sAttCode)) continue;
-				$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
-				if ($oAttDef->IsExternalKey())
+				// Propose a reconciliation scheme
+				//
+				$aReconciliationKeys = MetaModel::GetReconcKeys($sClassName);
+				$aMoreReconciliationKeys = array(); // Store: key => void to automatically remove duplicates
+				foreach($aReconciliationKeys as $sAttCode)
 				{
-					// An external key is specified as a reconciliation key: this means that all the reconciliation
-					// keys of this class are proposed to identify the target object
-					$aMoreReconciliationKeys = array_merge($aMoreReconciliationKeys, GetMappingsForExtKey($sAttCode, $oAttDef, $bAdvanced));
+					if (!MetaModel::IsValidAttCode($sClassName, $sAttCode)) continue;
+					$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
+					if ($oAttDef->IsExternalKey())
+					{
+						// An external key is specified as a reconciliation key: this means that all the reconciliation
+						// keys of this class are proposed to identify the target object
+						$aMoreReconciliationKeys = array_merge($aMoreReconciliationKeys, GetMappingsForExtKey($sAttCode, $oAttDef, $bAdvanced));
+					}
+					elseif($oAttDef->IsExternalField())
+					{
+						// An external field is specified as a reconciliation key, translate the field into a field on the target class
+						// since external fields are not writable, and thus never appears in the mapping form
+						$sKeyAttCode = $oAttDef->GetKeyAttCode();
+						$sTargetAttCode = $oAttDef->GetExtAttCode();
+						$aMoreReconciliationKeys[$sKeyAttCode.'->'.$sTargetAttCode] = '';			
+					}
 				}
-				elseif($oAttDef->IsExternalField())
-				{
-					// An external field is specified as a reconciliation key, translate the field into a field on the target class
-					// since external fields are not writable, and thus never appears in the mapping form
-					$sKeyAttCode = $oAttDef->GetKeyAttCode();
-					$sTargetAttCode = $oAttDef->GetExtAttCode();
-					$aMoreReconciliationKeys[$sKeyAttCode.'->'.$sTargetAttCode] = '';			
-				}
+				$sDefaultKeys = '"'.implode('", "',array_merge($aReconciliationKeys, array_keys($aMoreReconciliationKeys))).'"';
 			}
-			$sDefaultKeys = '"'.implode('", "',array_merge($aReconciliationKeys, array_keys($aMoreReconciliationKeys))).'"';
+			else
+			{
+				// The reconciliation scheme is given (navigating back in the wizard)
+				//
+				$aDefaultKeys = array();
+				foreach ($aInitSearchField as $iSearchField => $void)
+				{
+					$sAttCodeEx = $aInitFieldMapping[$iSearchField];
+					$aDefaultKeys[] = $sAttCodeEx;
+				}
+				$sDefaultKeys = '"'.implode('", "', $aDefaultKeys).'"';
+			}
 			$oPage->add_ready_script(
 <<<EOF
 		$('select[name^=field]').change( DoCheckMapping );

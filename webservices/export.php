@@ -69,14 +69,17 @@ else
 ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
 
 
-$sOperation = utils::ReadParam('operation', 'menu');
 $oAppContext = new ApplicationContext();
 $iActiveNodeId = utils::ReadParam('menu', -1);
 $currentOrganization = utils::ReadParam('org_id', '');
 
+$bLocalize = (utils::ReadParam('no_localize', 0) != 1);
+$sFileName = utils::ReadParam('filename', '', true, 'string');
+
 // Main program
 $sExpression = utils::ReadParam('expression', '', true /* Allow CLI */, 'raw_data');
 $sFields = trim(utils::ReadParam('fields', '', true, 'raw_data')); // CSV field list (allows to specify link set attributes, still not taken into account for XML export)
+$bFieldsAdvanced = utils::ReadParam('fields_advanced', 0);
 
 if (strlen($sExpression) == 0)
 {
@@ -187,11 +190,11 @@ if (!empty($sExpression))
 						$bViewLink = false;
 					}
 					$sFields = implode(',', $aFields);
-					$aExtraParams = array('menu' => false, 'display_limit' => false, 'zlist' => false, 'extra_fields' => $sFields, 'view_link' => $bViewLink);
+					$aExtraParams = array('menu' => false, 'toolkit_menu' => false, 'display_limit' => false, 'localize_values' => $bLocalize, 'zlist' => false, 'extra_fields' => $sFields, 'view_link' => $bViewLink);
 				}
 				else
 				{
-					$aExtraParams = array('menu' => false, 'display_limit' => false, 'zlist' => 'details');
+					$aExtraParams = array('menu' => false, 'toolkit_menu' => false, 'display_limit' => false, 'localize_values' => $bLocalize, 'zlist' => 'details');
 				}
 
 				$oResultBlock = new DisplayBlock($oFilter, 'list', false, $aExtraParams);
@@ -201,7 +204,26 @@ if (!empty($sExpression))
 				case 'csv':
 				$oP = new CSVPage("iTop - Export");
 				$sFields = implode(',', $aFields);
-				cmdbAbstractObject::DisplaySetAsCSV($oP, $oSet, array('fields' => $sFields));
+				$sCSVData = cmdbAbstractObject::GetSetAsCSV($oSet, array('fields' => $sFields, 'fields_advanced' => $bFieldsAdvanced, 'localize_values' => $bLocalize));
+				$sCharset = MetaModel::GetConfig()->Get('csv_file_default_charset');
+				if ($sCharset == 'UTF-8')
+				{
+					$sOutputData = UTF8_BOM.iconv('UTF-8', 'UTF-8//IGNORE//TRANSLIT', $sCSVData);
+				}
+				else
+				{
+					$sOutputData = iconv('UTF-8', $sCharset.'//IGNORE//TRANSLIT', $sCSVData);
+				}
+				if ($sFileName == '')
+				{
+					// Plain text => Firefox will NOT propose to download the file
+					$oP->add_header("Content-type: text/plain; charset=$sCharset");
+				}
+				else
+				{
+					$oP->add_header("Content-type: text/csv; charset=$sCharset");
+				}
+				$oP->add($sOutputData);
 				break;
 				
 				case 'spreadsheet':
@@ -214,12 +236,12 @@ if (!empty($sExpression))
 				header("Cache-control:", true);
 
 				$sFields = implode(',', $aFields);
-				cmdbAbstractObject::DisplaySetAsHTMLSpreadsheet($oP, $oSet, array('fields' => $sFields));
+				cmdbAbstractObject::DisplaySetAsHTMLSpreadsheet($oP, $oSet, array('fields' => $sFields, 'fields_advanced' => $bFieldsAdvanced, 'localize_values' => $bLocalize));
 				break;
 
 				case 'xml':
 				$oP = new XMLPage("iTop - Export", true /* passthrough */);
-				cmdbAbstractObject::DisplaySetAsXML($oP, $oSet);
+				cmdbAbstractObject::DisplaySetAsXML($oP, $oSet, array('localize_values' => $bLocalize));
 				break;
 				
 				default:
@@ -261,7 +283,13 @@ if (!$oP)
 	$oP->p(" * arg_xxx: (needed if the query has parameters) the value of the parameter 'xxx'");
 	$oP->p(" * format: (optional, default is html) the desired output format. Can be one of 'html', 'spreadsheet', 'csv' or 'xml'");
 	$oP->p(" * fields: (optional, no effect on XML format) list of fields (attribute codes, or alias.attcode) separated by a coma");
+	$oP->p(" * fields_advanced: (optional, no effect on XML format ; ignored is fields is specified) If set to 1, the default list of fields will include the external keys and their reconciliation keys");
+	$oP->p(" * filename: (optional, no effect in CLI mode) if set then the results will be downloaded as a file");
 }
 
+if ($sFileName != '')
+{
+	$oP->add_header('Content-Disposition: attachment; filename="'.$sFileName.'"');
+}
 $oP->output();
 ?>

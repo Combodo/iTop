@@ -196,7 +196,11 @@ try
 		$sSeparator = utils::ReadParam('separator', ',', false, 'raw_data');
 		$sTextQualifier = utils::ReadParam('text_qualifier', '"', false, 'raw_data');
 		$bHeaderLine = (utils::ReadParam('header_line', '0') == 1);
-		$iRealSkippedLines = $iSkippedLines = utils::ReadParam('nb_skipped_lines', '0');
+		$iSkippedLines = 0;
+		if (utils::ReadParam('box_skiplines', '0') == 1)
+		{
+			$iSkippedLines = utils::ReadParam('nb_skipped_lines', '0');
+		}
 		$sClassName = utils::ReadParam('class_name', '', false, 'class');
 		$aFieldsMapping = utils::ReadParam('field', array(), false, 'raw_data');
 		$aSearchFields = utils::ReadParam('search_field', array(), false, 'field_name');
@@ -223,6 +227,7 @@ try
 		// Parse the data set
 		$oCSVParser = new CSVParser($sCSVData, $sSeparator, $sTextQualifier);
 		$aData = $oCSVParser->ToArray($iSkippedLines);
+		$iRealSkippedLines = $iSkippedLines;
 		if ($bHeaderLine)
 		{
 			$aResult[] = $sTextQualifier.implode($sTextQualifier.$sSeparator.$sTextQualifier, array_shift($aData)).$sTextQualifier; // Remove the first line and store it in case of error
@@ -311,7 +316,9 @@ try
 			$aExtKeys,
 			array_keys($aSearchKeys),
 			empty($sSynchroScope) ? null : $sSynchroScope,
-			$aSynchroUpdate		
+			$aSynchroUpdate,
+			null, // date format
+			true // localize		
 		);
 		$oBulk->SetReportHtml();
 
@@ -326,7 +333,7 @@ try
 		{
 			if (!empty($sAttCode) && ($sAttCode != ':none:') && ($sAttCode != 'finalclass'))
 			{
-				$sHtml .= "<th style=\"padding:2px;border-right: 2px #fff solid;\">".BulkChange::GetFriendlyAttCodeName($sClassName, $sAttCode)."</th>";
+				$sHtml .= "<th style=\"padding:2px;border-right: 2px #fff solid;\">".MetaModel::GetLabel($sClassName, $sAttCode)."</th>";
 			}
 		}
 		$sHtml .= '<th>Message</th>';
@@ -351,7 +358,7 @@ try
 				$sFinalClass = $aResRow['finalclass'];
 				$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 				$sUrl = $oObj->GetHyperlink();
-				$sStatus = '<img src="../images/unchanged.png" title="Unchanged">';
+				$sStatus = '<img src="../images/unchanged.png" title="'.Dict::S('UI:CSVReport-Icon-Unchanged').'">';
 				$sCSSRowClass = 'row_unchanged';
 				break;
 						
@@ -360,7 +367,7 @@ try
 				$sFinalClass = $aResRow['finalclass'];
 				$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 				$sUrl = $oObj->GetHyperlink();
-				$sStatus = '<img src="../images/modified.png" title="Modified">';
+				$sStatus = '<img src="../images/modified.png" title="'.Dict::S('UI:CSVReport-Icon-Modified').'">';
 				$sCSSRowClass = 'row_modified';
 				break;
 						
@@ -369,40 +376,40 @@ try
 				$sFinalClass = $aResRow['finalclass'];
 				$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 				$sUrl = $oObj->GetHyperlink();
-				$sStatus = '<img src="../images/delete.png" title="Missing">';
+				$sStatus = '<img src="../images/delete.png" title="'.Dict::S('UI:CSVReport-Icon-Missing').'">';
 				$sCSSRowClass = 'row_modified';
 				if ($bSimulate)
 				{
-					$sMessage = 'Missing object: will be updated';				
+					$sMessage = Dict::S('UI:CSVReport-Object-MissingToUpdate');				
 				}
 				else
 				{
-					$sMessage = 'Missing object: updated';
+					$sMessage = Dict::S('UI:CSVReport-Object-MissingUpdated');
 				}
 				break;
 						
 				case 'RowStatus_NewObj':
 				$iCreated++;
 				$sFinalClass = $aResRow['finalclass'];
-				$sStatus = '<img src="../images/added.png" title="Created">';
+				$sStatus = '<img src="../images/added.png" title="'.Dict::S('UI:CSVReport-Icon-Created').'">';
 				$sCSSRowClass = 'row_added';
 				if ($bSimulate)
 				{
-					$sMessage = 'Object will be created';				
+					$sMessage = Dict::S('UI:CSVReport-Object-ToCreate');				
 				}
 				else
 				{
 					$sFinalClass = $aResRow['finalclass'];
 					$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 					$sUrl = $oObj->GetHyperlink();
-					$sMessage = 'Object created';				
+					$sMessage = Dict::S('UI:CSVReport-Object-Created');
 				}
 				break;
 						
 				case 'RowStatus_Issue':
 				$iErrors++;
 				$sMessage .= $oPage->GetP($oStatus->GetDescription());
-				$sStatus = '<img src="../images/error.png" title="Error">';
+				$sStatus = '<img src="../images/error.png" title="'.Dict::S('UI:CSVReport-Icon-Error').'">';//translate
 				$sCSSMessageClass = 'cell_error';
 				$sCSSRowClass = 'row_error';
 				if (array_key_exists($iLine, $aData))
@@ -447,7 +454,7 @@ try
 					{
 						case 'CellStatus_Issue':
 						$sCellMessage .= $oPage->GetP($oCellStatus->GetDescription());
-						$sHtml .= '<td class="cell_error" style="border-right:1px #eee solid;">ERROR: '.$sHtmlValue.$sCellMessage.'</td>';
+						$sHtml .= '<td class="cell_error" style="border-right:1px #eee solid;">'.Dict::Format('UI:CSVReport-Object-Error', $sHtmlValue).$sCellMessage.'</td>';
 						break;
 						
 						case 'CellStatus_SearchIssue':
@@ -457,7 +464,7 @@ try
 						
 						case 'CellStatus_Ambiguous':
 						$sCellMessage .= $oPage->GetP($oCellStatus->GetDescription());
-						$sHtml .= '<td class="cell_error" style="border-right:1px #eee solid;">AMBIGUOUS: '.$sHtmlValue.$sCellMessage.'</td>';
+						$sHtml .= '<td class="cell_error" style="border-right:1px #eee solid;">'.Dict::Format('UI:CSVReport-Object-Ambiguous', $sHtmlValue).$sCellMessage.'</td>';
 						break;
 						
 						case 'CellStatus_Modify':
@@ -481,8 +488,8 @@ try
 		$oPage->add('<input type="hidden" name="separator" value="'.htmlentities($sSeparator, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="text_qualifier" value="'.htmlentities($sTextQualifier, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="header_line" value="'.$bHeaderLine.'"/>');
-		$oPage->add('<input type="hidden" name="box_skiplines" value="'.(($iSkippedLines > 0) ? 1 : 0).'"/>');
-		$oPage->add('<input type="hidden" name="nb_skipped_lines" value="'.$iSkippedLines.'"/>');
+		$oPage->add('<input type="hidden" name="nb_skipped_lines" value="'.utils::ReadParam('nb_skipped_lines', '0').'"/>');
+		$oPage->add('<input type="hidden" name="box_skiplines" value="'.utils::ReadParam('box_skiplines', '0').'"/>');
 		$oPage->add('<input type="hidden" name="csvdata" value="'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="class_name" value="'.$sClassName.'"/>');
@@ -542,19 +549,19 @@ try
 				$fErrorsPercentage = (100.0*$iErrors)/count($aRes);
 				if ($fErrorsPercentage >= MetaModel::GetConfig()->Get('csv_import_errors_percentage'))
 				{
-					$sMessage = sprintf("%.0f %% of the loaded objects have errors and will be ignored.", $fErrorsPercentage);
+					$sMessage = Dict::Format('UI:CSVReport-Stats-Errors', $fErrorsPercentage);
 					$bShouldConfirm = true;
 				}
 				$fCreatedPercentage = (100.0*$iCreated)/count($aRes);
 				if ($fCreatedPercentage >= MetaModel::GetConfig()->Get('csv_import_creations_percentage'))
 				{
-					$sMessage = sprintf("%.0f %% of the loaded objects will be created.", $fCreatedPercentage);
+					$sMessage = Dict::Format('UI:CSVReport-Stats-Created', $fCreatedPercentage);
 					$bShouldConfirm = true;
 				}
 				$fModifiedPercentage = (100.0*$iModified)/count($aRes);
 				if ($fModifiedPercentage >= MetaModel::GetConfig()->Get('csv_import_modifications_percentage'))
 				{
-					$sMessage = sprintf("%.0f %% of the loaded objects will be modified.", $fModifiedPercentage);
+					$sMessage = Dict::Format('UI:CSVReport-Stats-Modified', $fModifiedPercentage);
 					$bShouldConfirm = true;
 				}
 				
@@ -799,11 +806,6 @@ EOF
 			$sTextQualifier = utils::ReadParam('other_qualifier', '"', false, 'raw_data');
 		}
 		$bHeaderLine = (utils::ReadParam('header_line', '0') == 1);
-		$iSkippedLines = 0;
-		if (utils::ReadParam('box_skiplines', '0') == 1)
-		{
-			$iSkippedLines = utils::ReadParam('nb_skipped_lines', '0');
-		}
 		$sClassName = utils::ReadParam('class_name', '', false, 'class');
 		$bAdvanced = utils::ReadParam('advanced', 0);
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
@@ -835,8 +837,8 @@ EOF
 		$oPage->add('<input type="hidden" name="separator" value="'.htmlentities($sSeparator, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="text_qualifier" value="'.htmlentities($sTextQualifier, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="header_line" value="'.$bHeaderLine.'"/>');
-		$oPage->add('<input type="hidden" name="box_skiplines" value="'.(($iSkippedLines > 0) ? 1 : 0).'"/>');
-		$oPage->add('<input type="hidden" name="nb_skipped_lines" value="'.$iSkippedLines.'"/>');
+		$oPage->add('<input type="hidden" name="nb_skipped_lines" value="'.utils::ReadParam('nb_skipped_lines', '0').'"/>');
+		$oPage->add('<input type="hidden" name="box_skiplines" value="'.utils::ReadParam('box_skiplines', '0').'"/>');
 		$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="csvdata" value="'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="encoding" value="'.$sEncoding.'">');
@@ -859,12 +861,17 @@ EOF
 		
 		$oPage->add_ready_script(
 <<<EOF
-	$('#select_class_name').change( DoMapping );
+	$('#select_class_name').change( function(ev) { DoMapping(); } );
 EOF
 	);
 		if ($sClassName != '')
 		{
-			$oPage->add_ready_script("DoMapping();"); // There is already a class selected, run the mapping
+			$aFieldsMapping = utils::ReadParam('field', array(), false, 'raw_data');
+			$aSearchFields = utils::ReadParam('search_field', array(), false, 'field_name');
+			$sFieldsMapping = addslashes(json_encode($aFieldsMapping));
+			$sSearchFields = addslashes(json_encode($aSearchFields));
+		
+			$oPage->add_ready_script("DoMapping('$sFieldsMapping', '$sSearchFields');"); // There is already a class selected, run the mapping
 		}
 	
 		$oPage->add_script(
@@ -889,7 +896,7 @@ EOF
 
 	var ajax_request = null;
 	
-	function DoMapping()
+	function DoMapping(sInitFieldsMapping, sInitSearchFields)
 	{
 		var class_name = $('select[name=class_name]').val();
 		var advanced = $('input[name=advanced]:checked').val();
@@ -906,7 +913,11 @@ EOF
 			var separator = $('input[name=separator]').val();
 			var text_qualifier = $('input[name=text_qualifier]').val();
 			var header_line = $('input[name=header_line]').val();
-			var nb_lines_skipped = $('input[name=nb_skipped_lines]').val();
+			var do_skip_lines = 0;
+			if ($('input[name=box_skiplines]').val() == '1')
+			{
+				do_skip_lines = $('input[name=nb_skipped_lines]').val();
+			}
 			var csv_data = $('input[name=csvdata]').val();
 			var encoding = $('input[name=encoding]').val();
 			if (advanced != 1)
@@ -922,11 +933,19 @@ EOF
 				ajax_request.abort();
 				ajax_request = null;
 			}
-	
+
+			var aParams = { operation: 'display_mapping_form', enctype: 'multipart/form-data', csvdata: csv_data, separator: separator, 
+			   	 qualifier: text_qualifier, do_skip_lines: do_skip_lines, header_line: header_line, class_name: class_name,
+			   	 advanced: advanced, encoding: encoding };
+		
+			if (sInitFieldsMapping != undefined)
+			{
+				aParams.init_field_mapping = sInitFieldsMapping;
+				aParams.init_search_field = sInitSearchFields;
+			}
+
 			ajax_request = $.post(GetAbsoluteUrlAppRoot()+'pages/ajax.csvimport.php',
-				   { operation: 'display_mapping_form', enctype: 'multipart/form-data', csvdata: csv_data, separator: separator, 
-				   	 qualifier: text_qualifier, nb_lines_skipped: nb_lines_skipped, header_line: header_line, class_name: class_name,
-				   	 advanced: advanced, encoding: encoding },
+				   aParams,
 				   function(data) {
 					 $('#mapping').empty();
 					 $('#mapping').append(data);
@@ -1067,6 +1086,13 @@ EOF
 		// Compute a subset of the data set, now that we know the charset
 		if ($sEncoding == 'UTF-8')
 		{
+			// Remove the BOM if any
+			if (substr($sCSVData, 0, 3) == UTF8_BOM)
+			{
+				$sCSVData = substr($sCSVData, 3);
+			}
+			// Clean the input
+			// Todo: warn the user if some characters are lost/substituted
 			$sUTF8Data = iconv('UTF-8', 'UTF-8//IGNORE//TRANSLIT', $sCSVData);
 		}
 		else
@@ -1094,6 +1120,8 @@ EOF
 		$bHeaderLine = utils::ReadParam('header_line', 0);
 		$sClassName = utils::ReadParam('class_name', '', false, 'class');
 		$bAdvanced = utils::ReadParam('advanced', 0);
+		$aFieldsMapping = utils::ReadParam('field', array(), false, 'raw_data');
+		$aSearchFields = utils::ReadParam('search_field', array(), false, 'field_name');
 		
 		// Create a truncated version of the data used for the fast preview
 		// Take about 20 lines of data... knowing that some lines may contain carriage returns
@@ -1157,9 +1185,19 @@ EOF
 		$oPage->add('</td></tr></table>');
 		$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="csvdata" id="csvdata" value="'.htmlentities($sUTF8Data, ENT_QUOTES, 'UTF-8').'"/>');
+		// The encoding has changed, keep that information within the wizard
+		$oPage->add('<input type="hidden" name="encoding" value="UTF-8">');
 		$oPage->add('<input type="hidden" name="class_name" value="'.$sClassName.'"/>');
 		$oPage->add('<input type="hidden" name="advanced" value="'.$bAdvanced.'"/>');
 		$oPage->add('<input type="hidden" name="synchro_scope" value="'.$sSynchroScope.'"/>');
+		foreach($aFieldsMapping as $iNumber => $sAttCode)
+		{
+			$oPage->add('<input type="hidden" name="field['.$iNumber.']" value="'.$sAttCode.'"/>');
+		}
+		foreach($aSearchFields as $index => $sDummy)
+		{
+			$oPage->add('<input type="hidden" name="search_field['.$index.']" value="1"/>');
+		}
 		$oPage->add('<input type="hidden" name="step" value="3"/>');
 		if (!empty($sSynchroScope))
 		{
@@ -1199,10 +1237,10 @@ EOF
 		{
 			text_qualifier = $('#other_qualifier').val();
 		}
-		var nb_lines_skipped = 0;
+		var do_skip_lines = 0;
 		if ($('#box_skiplines:checked').val() != null)
 		{
-			nb_lines_skipped = $('#nb_skipped_lines').val();
+			do_skip_lines = $('#nb_skipped_lines').val();
 		}
 		var header_line = 0;
 		if ($('#box_header:checked').val() != null)
@@ -1222,7 +1260,7 @@ EOF
 		}
 		
 		ajax_request = $.post(GetAbsoluteUrlAppRoot()+'pages/ajax.csvimport.php',
-			   { operation: 'parser_preview', enctype: 'multipart/form-data', csvdata: $("#csvdata_truncated").val(), separator: separator, qualifier: text_qualifier, nb_lines_skipped: nb_lines_skipped, header_line: header_line, encoding: encoding },
+			   { operation: 'parser_preview', enctype: 'multipart/form-data', csvdata: $("#csvdata_truncated").val(), separator: separator, qualifier: text_qualifier, do_skip_lines: do_skip_lines, header_line: header_line, encoding: encoding },
 			   function(data) {
 				 $('#preview').empty();
 				 $('#preview').append(data);
@@ -1280,11 +1318,16 @@ EOF
 		$sSeparator = utils::ReadParam('separator', '', false, 'raw_data');
 		$sTextQualifier = utils::ReadParam('text_qualifier', '', false, 'raw_data');
 		$bHeaderLine = utils::ReadParam('header_line', true);
-		$iSkippedLines = utils::ReadParam('nb_skipped_lines', '');
 		$sClassName = utils::ReadParam('class_name', '');
 		$bAdvanced = utils::ReadParam('advanced', 0);
-		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
-	
+		$sEncoding = utils::ReadParam('encoding', '');
+		if ($sEncoding == '')
+		{
+			$sEncoding = MetaModel::GetConfig()->Get('csv_file_default_charset');
+		}
+		$aFieldsMapping = utils::ReadParam('field', array(), false, 'raw_data');
+		$aSearchFields = utils::ReadParam('search_field', array(), false, 'field_name');
+
 		$sFileLoadHtml = '<div><form enctype="multipart/form-data" method="post"><p>'.Dict::S('UI:CSVImport:SelectFile').'</p>'.
 				'<p><input type="file" name="csvdata"/></p>';
 				
@@ -1304,7 +1347,8 @@ EOF
 				'<input type="hidden" name="step" value="2"/>'.
 				'<input type="hidden" name="operation" value="file_upload"/>'.
 				'<input type="hidden" name="header_line" value="'.$bHeaderLine.'"/>'.
-				'<input type="hidden" name="nb_skipped_lines" value="'.$iSkippedLines.'"/>'.
+				'<input type="hidden" name="nb_skipped_lines" value="'.utils::ReadParam('nb_skipped_lines', '0').'"/>'.
+				'<input type="hidden" name="box_skiplines" value="'.utils::ReadParam('box_skiplines', '0').'"/>'.
 				'<input type="hidden" name="class_name" value="'.$sClassName.'"/>'.
 				'<input type="hidden" name="advanced" value="'.$bAdvanced.'"/>'.
 				'<input type="hidden" name="synchro_scope" value="'.$sSynchroScope.'"/>';
@@ -1315,6 +1359,15 @@ EOF
 				$sFileLoadHtml .= '<input type="hidden" name="synchro_update['.$sKey.']" value="'.$value.'"/>';				
 			}
 		}
+		foreach($aFieldsMapping as $iNumber => $sAttCode)
+		{
+			$oPage->add('<input type="hidden" name="field['.$iNumber.']" value="'.$sAttCode.'"/>');
+		}
+		foreach($aSearchFields as $index => $sDummy)
+		{
+			$oPage->add('<input type="hidden" name="search_field['.$index.']" value="1"/>');
+		}
+
 		$sFileLoadHtml .= '</form></div>';
 		
 		$oPage->AddToTab('tabs1', Dict::S('UI:CSVImport:Tab:LoadFromFile'), $sFileLoadHtml);	
@@ -1339,7 +1392,8 @@ EOF
 				'<input type="hidden" name="separator" value="'.htmlentities($sSeparator, ENT_QUOTES, 'UTF-8').'"/>'.
 				'<input type="hidden" name="text_qualifier" value="'.htmlentities($sTextQualifier, ENT_QUOTES, 'UTF-8').'"/>'.
 				'<input type="hidden" name="header_line" value="'.$bHeaderLine.'"/>'.
-				'<input type="hidden" name="nb_skipped_lines" value="'.$iSkippedLines.'"/>'.
+				'<input type="hidden" name="nb_skipped_lines" value="'.utils::ReadParam('nb_skipped_lines', '0').'"/>'.
+				'<input type="hidden" name="box_skiplines" value="'.utils::ReadParam('box_skiplines', '0').'"/>'.
 				'<input type="hidden" name="class_name" value="'.$sClassName.'"/>'.
 				'<input type="hidden" name="advanced" value="'.$bAdvanced.'"/>'.
 				'<input type="hidden" name="synchro_scope" value="'.$sSynchroScope.'"/>';
@@ -1349,6 +1403,14 @@ EOF
 			{
 				$sPasteDataHtml .= '<input type="hidden" name="synchro_update['.$sKey.']" value="'.$value.'"/>';				
 			}
+		}
+		foreach($aFieldsMapping as $iNumber => $sAttCode)
+		{
+			$sPasteDataHtml .= '<input type="hidden" name="field['.$iNumber.']" value="'.$sAttCode.'"/>';
+		}
+		foreach($aSearchFields as $index => $sDummy)
+		{
+			$sPasteDataHtml .= '<input type="hidden" name="search_field['.$index.']" value="1"/>';
 		}
 		$sPasteDataHtml .= '</form></div>';
 				

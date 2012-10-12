@@ -60,8 +60,6 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
 		$this->add_linked_script("../js/jquery.treeview.js");
 		$this->add_linked_script("../js/jquery.autocomplete.js");
-		$this->add_linked_script("../js/jquery.positionBy.js");
-		$this->add_linked_script("../js/jquery.popupmenu.js");
 		$this->add_linked_script("../js/date.js");
 		$this->add_linked_script("../js/jquery.blockUI.js");
 		$this->add_linked_script("../js/utils.js");
@@ -77,8 +75,6 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_script('../js/g.pie.js');
 		$this->add_linked_script('../js/g.dot.js');
 		$this->add_linked_script('../js/charts.js');
-		$this->add_linked_script('../js/field_sorter.js');
-		$this->add_linked_script('../js/datatable.js');
 		
 		$this->m_sInitScript =
 <<< EOF
