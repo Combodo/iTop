@@ -106,7 +106,7 @@ class MFModule
  */
 class ModelFactory
 {
-	protected $sRootDir;
+	protected $aRootDirs;
 	protected $oDOMDocument;
 	protected $oRoot;
 	protected $oModules;
@@ -119,9 +119,9 @@ class ModelFactory
 	static protected $aLoadErrors;
 
 	
-	public function __construct($sRootDir, $aRootNodeExtensions = array())
+	public function __construct($aRootDirs, $aRootNodeExtensions = array())
 	{
-		$this->sRootDir = $sRootDir;
+		$this->aRootDirs = $aRootDirs;
 		$this->oDOMDocument = new MFDocument();
 		$this->oRoot = $this->oDOMDocument->CreateElement('itop_design');
 		$this->oRoot->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
@@ -1070,13 +1070,13 @@ EOF
 	}
 	
 	/**
-	 * Searches on disk in the root directory for module description files
+	 * Searches on disk in the root directories for module description files
 	 * and returns an array of MFModules
 	 * @return array Array of MFModules
 	 */
-	public function FindModules($sSubDirectory = '')
+	public function FindModules()
 	{
-		$aAvailableModules = ModuleDiscovery::GetAvailableModules($this->sRootDir, array($sSubDirectory));
+		$aAvailableModules = ModuleDiscovery::GetAvailableModules($this->aRootDirs);
 		$aResult = array();
 		foreach($aAvailableModules as $sId => $aModule)
 		{

@@ -279,20 +279,25 @@ class RunTimeEnvironment
 		$sSourceDirFull = APPROOT.$sSourceDir;
 		if (!is_dir($sSourceDirFull))
 		{
-			throw new Exception("The source directory '$sSourceDir' does not exist (or could not be read)");
+			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");
 		}
-
+		$aDirsToCompile = array($sSourceDirFull);
+		if (is_dir(APPROOT.'extensions'))
+		{
+			$aDirsToCompile[] = APPROOT.'extensions';
+		}
+		
 		$aRet = array();
 
 		// Determine the installed modules
 		//
 		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
 		$oSourceEnv = new RunTimeEnvironment($sSourceEnv);
-		$aAvailableModules = $oSourceEnv->AnalyzeInstallation($oSourceConfig, $sSourceDir); //TODO: use an absolute PATH
+		$aAvailableModules = $oSourceEnv->AnalyzeInstallation($oSourceConfig, $aDirsToCompile);
 
 		// Do load the required modules
 		//
-		$oFactory = new ModelFactory($sSourceDirFull);
+		$oFactory = new ModelFactory($aDirsToCompile);
 		$aModules = $oFactory->FindModules();
 		foreach($aModules as $foo => $oModule)
 		{
@@ -308,13 +313,11 @@ class RunTimeEnvironment
 		return $aRet;
 	}
 
-	public function CompileFrom($sSourceEnv, $sSourceDir = null)
+	public function CompileFrom($sSourceEnv)
 	{
-		if (is_null($sSourceDir))
-		{
-			$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
-			$sSourceDir = $oSourceConfig->Get('source_dir');
-		}
+		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
+		$sSourceDir = $oSourceConfig->Get('source_dir');
+
 		$sSourceDirFull = APPROOT.$sSourceDir;
 		// Do load the required modules
 		//
@@ -347,9 +350,10 @@ class RunTimeEnvironment
 
 			$sTargetDir = APPROOT.'env-'.$this->sTargetEnv;
 			self::MakeDirSafe($sTargetDir);
-			$oMFCompiler = new MFCompiler($oFactory, $sSourceDirFull);
+			$oMFCompiler = new MFCompiler($oFactory);
 			$oMFCompiler->Compile($sTargetDir);
-
+			
+			require_once(APPROOT.'/core/dict.class.inc.php');
 			MetaModel::ResetCache($this->sTargetEnv);
 		}
 	}
@@ -546,9 +550,12 @@ class RunTimeEnvironment
 	{
 		if (!is_dir($sDir))
 		{
-			@mkdir($sDir);
+			if (!@mkdir($sDir))
+			{
+				throw new Exception("Failed to create directory '$sTargetPath', please check the rights of the web server");
+			}
+			@chmod($sDir, 0770); // RWX for owner and group, nothing for others
 		}
-		@chmod($sDir, 0770); // RWX for owner and group, nothing for others
 	}
 
 	/**

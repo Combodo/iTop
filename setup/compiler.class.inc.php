@@ -27,7 +27,6 @@ class DOMFormatException extends Exception
 class MFCompiler
 {
 	protected $oFactory;
-	protected $aSourceDirs;
 
 	protected $aRootClasses;
 	protected $aLog;
