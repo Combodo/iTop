@@ -4827,10 +4827,17 @@ abstract class MetaModel
 		return $iNextKey;
 	}
 
+	/**
+	 * Deletion of records, bypassing DBObject::DBDelete !!!
+	 * It is NOT recommended to use this shortcut
+	 * In particular, it will not work	 
+	 *  - if the class is not a final class
+	 *  - if the class has a hierarchical key (need to rebuild the indexes)
+	 *  - if the class overload DBDelete !	 
+	 * Todo: protect it against forbidden usages (in such a case, delete objects one by one)
+	 */	 	
 	public static function BulkDelete(DBObjectSearch $oFilter)
 	{
-		throw new Exception("Bulk deletion cannot be done this way: it will not work with hierarchical keys - implementation to be reviewed!");
-
 		$sSQL = self::MakeDeleteQuery($oFilter);
 		if (!self::DBIsReadOnly())
 		{
