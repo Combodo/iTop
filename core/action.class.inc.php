@@ -288,8 +288,8 @@ class ActionEmail extends ActionNotification
 			$sCC = $this->FindRecipients('cc', $aContextArgs);
 			$sBCC = $this->FindRecipients('bcc', $aContextArgs);
 	
-			$sFrom = $this->Get('from');
-			$sReplyTo = $this->Get('reply_to');
+			$sFrom = MetaModel::ApplyParams($this->Get('from'), $aContextArgs);
+			$sReplyTo = MetaModel::ApplyParams($this->Get('reply_to'), $aContextArgs);
 	
 			$sSubject = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
 			$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
