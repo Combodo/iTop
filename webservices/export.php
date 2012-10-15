@@ -283,7 +283,7 @@ if (!$oP)
 	$oP->p(" * arg_xxx: (needed if the query has parameters) the value of the parameter 'xxx'");
 	$oP->p(" * format: (optional, default is html) the desired output format. Can be one of 'html', 'spreadsheet', 'csv' or 'xml'");
 	$oP->p(" * fields: (optional, no effect on XML format) list of fields (attribute codes, or alias.attcode) separated by a coma");
-	$oP->p(" * fields_advanced: (optional, no effect on XML format ; ignored is fields is specified) If set to 1, the default list of fields will include the external keys and their reconciliation keys");
+	$oP->p(" * fields_advanced: (optional, no effect on XML/HTML formats ; ignored is fields is specified) If set to 1, the default list of fields will include the external keys and their reconciliation keys");
 	$oP->p(" * filename: (optional, no effect in CLI mode) if set then the results will be downloaded as a file");
 }
 
