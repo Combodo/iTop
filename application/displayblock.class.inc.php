@@ -736,7 +736,7 @@ class DisplayBlock
 			$bAdvancedMode = utils::ReadParam('advanced', false);
 
 			$sCsvFile = strtolower($this->m_oFilter->GetClass()).'.csv'; 
-			$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?expression='.urlencode($this->m_oFilter->ToOQL()).'&format=csv&filename='.urlencode($sCsvFile);
+			$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?expression='.urlencode($this->m_oFilter->ToOQL(true)).'&format=csv&filename='.urlencode($sCsvFile);
 			$sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($this->m_oFilter->serialize()).'&format=csv';
 			if ($bAdvancedMode)
 			{
