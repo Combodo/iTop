@@ -475,8 +475,6 @@ EOF
 		}		
 		$this->oWizard->SetParameter('license', $bDisplayLicense); // Remember for later
 
-		 echo "sInstalledDataModelVersion: $sInstalledDataModelVersion";
-		
 		if ($sInstalledDataModelVersion == '$ITOP_VERSION$.$WCREV$')
 		{
 			// Special case for upgrading some  development versions (temporary)
