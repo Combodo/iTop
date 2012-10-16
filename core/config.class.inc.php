@@ -211,7 +211,7 @@ class Config
 			'default' => true,
 			'value' => true,
 			'source_of_value' => '',
-			'show_in_conf_sample' => false,
+			'show_in_conf_sample' => true,
 		),
 		'access_mode' => array(
 			'type' => 'integer',
