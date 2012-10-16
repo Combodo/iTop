@@ -546,7 +546,15 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
-		
+		'debug_report_spurious_chars' => array(
+			'type' => 'bool',
+			'description' => 'Report, in the error log, the characters found in the output buffer, echoed by mistake in the loaded modules, and potentially corrupting the output',
+			// examples... not used
+			'default' => false,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)

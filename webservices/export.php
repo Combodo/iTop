@@ -291,5 +291,7 @@ if ($sFileName != '')
 {
 	$oP->add_header('Content-Disposition: attachment; filename="'.$sFileName.'"');
 }
+
+$oP->TrashUnexpectedOutput();
 $oP->output();
 ?>

@@ -4605,7 +4605,22 @@ abstract class MetaModel
 			$sConfigFile = self::$m_oConfig->GetLoadedFile();
 			throw new CoreException('Wrong filename in configuration file', array('file' => $sConfigFile, 'module' => $sModuleType, 'filename' => $sFile));
 		}
+
+		// Note: We do not expect the modules to output characters while loading them.
+		//       Therefore, and because unexpected characters can corrupt the output,
+		//       they must be trashed here.
+		//       Additionnaly, pages aiming at delivering data in their output can call WebPage::TrashUnexpectedOutput()
+		//       to get rid of chars that could be generated during the execution of the code
+		ob_start();
 		require_once($sFile);
+		$sPreviousContent = ob_get_clean();
+		if (self::$m_oConfig->Get('debug_report_spurious_chars'))
+		{
+			if ($sPreviousContent != '')
+			{
+				IssueLog::Error("Spurious characters injected by $sModuleType/$sToInclude");
+			}
+		}
 	}
 
 	// Building an object

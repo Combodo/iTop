@@ -379,6 +379,25 @@ class WebPage implements Page
 	}
 	
 	/**
+	 * Discard unexpected output data
+	 * This is a MUST when the Page output is DATA (download of a document, download CSV export, download ...)
+	 */	
+	public function TrashUnexpectedOutput()
+	{
+		// This protection is redundant with a protection implemented in MetaModel::IncludeModule
+		// which detects such issues while loading module files
+		// Here, the purpose is to detect and discard characters produced by the code execution (echo)
+		$sPreviousContent = ob_get_clean();
+		if (trim($sPreviousContent) != '')
+		{
+			if (Utils::GetConfig() && Utils::GetConfig()->Get('debug_report_spurious_chars'))
+			{
+				IssueLog::Error("Output already started before downloading file:\nContent was:'$sPreviousContent'\n");
+			}
+		}
+	}
+
+	/**
 	 * Outputs (via some echo) the complete HTML page by assembling all its elements
 	 */
     public function output()
