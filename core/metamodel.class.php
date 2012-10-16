@@ -1348,7 +1348,8 @@ abstract class MetaModel
 
 		// Initialize the classes (declared attributes, etc.)
 		//
-		foreach(get_declared_classes() as $sPHPClass) {
+		foreach(get_declared_classes() as $sPHPClass)
+		{
 			if (is_subclass_of($sPHPClass, 'DBObject'))
 			{
 				$sParent = get_parent_class($sPHPClass);
@@ -1357,13 +1358,21 @@ abstract class MetaModel
 					// Inherit info about attributes to ignore
 					self::$m_aIgnoredAttributes[$sPHPClass] = self::$m_aIgnoredAttributes[$sParent];
 				}
-				if (method_exists($sPHPClass, 'Init'))
+				try
 				{
-					call_user_func(array($sPHPClass, 'Init'));
-					foreach (MetaModel::EnumPlugins('iOnClassInitialization') as $sPluginClass => $oClassInit)
+					$oMethod = new ReflectionMethod($sPHPClass, 'Init');
+					if ($oMethod->getDeclaringClass()->name == $sPHPClass)
 					{
-						$oClassInit->OnAfterClassInitialization($sPHPClass);
+						call_user_func(array($sPHPClass, 'Init'));
+						foreach (MetaModel::EnumPlugins('iOnClassInitialization') as $sPluginClass => $oClassInit)
+						{
+							$oClassInit->OnAfterClassInitialization($sPHPClass);
+						}
 					}
+				}
+				catch (ReflectionException $e)
+				{
+					// This class is only implementing methods, ignore it from the MetaModel perspective
 				}
 			}
 		}
@@ -1991,7 +2000,8 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);	
 		$aSubClasses = array();
-		foreach(get_declared_classes() as $sSubClass) {
+		foreach(self::$m_aClassParams as $sSubClass => $foo)
+		{
 			if (is_subclass_of($sSubClass, $sClass))
 			{
 				$aSubClasses[] = $sSubClass;
