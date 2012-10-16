@@ -205,6 +205,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'csv_import_history_display' => array(
+			'type' => 'bool',
+			'description' => 'Display the history tab in the import wizard',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'access_mode' => array(
 			'type' => 'integer',
 			'description' => 'Combination of flags (ACCESS_USER_WRITE | ACCESS_ADMIN_WRITE, or ACCESS_FULL)',
