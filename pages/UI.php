@@ -1737,13 +1737,13 @@ EOF
 								{
 									$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 									$aErrors[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel());
-								}
-								else
-								{
-									$oObj->Set($sAttCode, $paramValue);
+									unset($aExpectedAttributes[$sAttCode]);
 								}
 							}
 						}
+						
+						$oObj->UpdateObjectFromPostedForm('', array_keys($aExpectedAttributes), $sTargetState);
+						
 						if (count($aErrors) == 0)
 						{
 							if ($oObj->ApplyStimulus($sStimulus))
@@ -1980,13 +1980,13 @@ EOF
 						{
 							$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 							$aErrors[] = Dict::Format('UI:AttemptingToChangeASlaveAttribute_Name', $oAttDef->GetLabel());
+							unset($aExpectedAttributes[$sAttCode]);
 						}
-						else
-						{
-						$oObj->Set($sAttCode, $paramValue);
 					}
 				}
-				}
+				
+				$oObj->UpdateObjectFromPostedForm('', array_keys($aExpectedAttributes), $sTargetState);
+				
 				if (count($aErrors) == 0)
 				{
 					if ($oObj->ApplyStimulus($sStimulus))
