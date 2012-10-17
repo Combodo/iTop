@@ -193,7 +193,7 @@ function SelectServiceSubCategory($oP, $oUserOrg)
  */
 function RequestCreationForm($oP, $oUserOrg)
 {
-		$oP->add_ready_script(
+		$oP->add_script(
 <<<EOF
 		// Create the object once at the beginning of the page...
 		var oWizardHelper = new WizardHelper('UserRequest', '');
