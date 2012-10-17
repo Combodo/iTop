@@ -302,30 +302,53 @@ abstract class DBObject
 			$this->Reload();
 		}
 
-		if ($oAttDef->IsExternalKey() && is_object($value))
+		if ($oAttDef->IsExternalKey())
 		{
-			// Setting an external key with a whole object (instead of just an ID)
-			// let's initialize also the external fields that depend on it
-			// (useful when building objects in memory and not from a query)
-			if ( (get_class($value) != $oAttDef->GetTargetClass()) && (!is_subclass_of($value, $oAttDef->GetTargetClass())))
+			if (is_object($value))
 			{
-				throw new CoreUnexpectedValue("Trying to set the value of '$sAttCode', to an object of class '".get_class($value)."', whereas it's an ExtKey to '".$oAttDef->GetTargetClass()."'. Ignored");
+				// Setting an external key with a whole object (instead of just an ID)
+				// let's initialize also the external fields that depend on it
+				// (useful when building objects in memory and not from a query)
+				if ( (get_class($value) != $oAttDef->GetTargetClass()) && (!is_subclass_of($value, $oAttDef->GetTargetClass())))
+				{
+					throw new CoreUnexpectedValue("Trying to set the value of '$sAttCode', to an object of class '".get_class($value)."', whereas it's an ExtKey to '".$oAttDef->GetTargetClass()."'. Ignored");
+				}
+				else
+				{	
+					$this->m_aCurrValues[$sAttCode] = $value->GetKey();
+					foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
+					{
+						if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sAttCode))
+						{
+							$this->m_aCurrValues[$sCode] = $value->Get($oDef->GetExtAttCode());
+						}
+					}
+					$this->m_aCurrValues[$sAttCode.'_friendlyname'] = $value->GetName();
+				}
 			}
-			else
+			else if ($this->m_aCurrValues[$sAttCode] != $value)
 			{
-				// The object has changed, reset caches
-				$this->m_bCheckStatus = null;
-				$this->m_aAsArgs = null;
-
-				$this->m_aCurrValues[$sAttCode] = $value->GetKey();
+				// If the external key changed, invalidate all the external fields (and friendly name) related to this external key
+				$this->m_aCurrValues[$sAttCode] = $value;
 				foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
 				{
 					if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sAttCode))
 					{
-						$this->m_aCurrValues[$sCode] = $value->Get($oDef->GetExtAttCode());
+						unset($this->m_aLoadedAtt[$sCode]);
+						$this->m_aCurrValues[$sCode] = null;
 					}
 				}
+				$this->m_aCurrValues[$sAttCode.'_friendlyname'] = null;
+				unset($this->m_aLoadedAtt[$sAttCode.'_friendlyname']);			
 			}
+
+			// The object has changed, reset caches
+			$this->m_bCheckStatus = null;
+			$this->m_aAsArgs = null;
+			
+			// Make sure we do not reload it anymore... before saving it
+			$this->RegisterAsDirty();
+			
 			return;
 		}
 		if(!$oAttDef->IsScalar() && !is_object($value))
@@ -400,10 +423,60 @@ abstract class DBObject
 		{
 			throw new CoreException("Unknown attribute code '$sAttCode' for the class ".get_class($this));
 		}
-		if ($this->m_bIsInDB && !isset($this->m_aLoadedAtt[$sAttCode]) && !$this->m_bDirty)
+		if ($this->m_bIsInDB && !isset($this->m_aLoadedAtt[$sAttCode]))
 		{
 			// #@# non-scalar attributes.... handle that differently
-			$this->Reload();
+			if (!$this->m_bDirty)
+			{
+				$this->Reload();
+			}
+			else
+			{
+				// If the missing attribute is an external fields (or a friendlyname), try to selectively reload it
+				// from the value of its external key... and reload the related external fields & friendlyname as well
+				$sTargetClass = '';
+				$iCurrKey = 0;
+				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+				if ($oAttDef->IsExternalField())
+				{
+					$sKeyAttCode = $sAttCode;
+					$iCurrKey = $this->m_aCurrValues[$oAttDef->GetKeyAttCode()];
+					$sTargetClass= $oAttDef->GetTargetClass();
+				}
+				else if ($oAttDef instanceof AttributeFriendlyName)
+				{
+					$sKeyAttCode = $oAttDef->GetKeyAttCode();
+					$oKeyAttDef =  MetaModel::GetAttributeDef(get_class($this), $sKeyAttCode);
+					$iCurrKey = $this->m_aCurrValues[$oAttDef->GetKeyAttCode()];
+					$sTargetClass = $oKeyAttDef->GetTargetClass();
+				}
+				
+				if (($sTargetClass != '') && ($iCurrKey != 0))
+				{
+					$oTargetObj = MetaModel::GetObject($sTargetClass, $iCurrKey, false);
+					if (is_object($oTargetObj))
+					{
+						foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
+						{
+							if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sKeyAttCode))
+							{
+								$this->m_aLoadedAtt[$sCode] = true;
+								$this->m_aCurrValues[$sCode] = $oTargetObj->Get($oDef->GetExtAttCode());
+							}
+						}
+						if ($oAttDef instanceof AttributeFriendlyName)
+						{
+							$this->m_aLoadedAtt[$sAttCode] = true;
+							$this->m_aCurrValues[$sAttCode] = $oTargetObj->GetName();
+						}
+						else
+						{
+							$this->m_aLoadedAtt[$sAttCode.'_friendlyname'] = true;
+							$this->m_aCurrValues[$sAttCode.'_friendlyname'] = $oTargetObj->GetName();
+						}
+					}						
+				}
+			}
 		}
 		$value = $this->m_aCurrValues[$sAttCode];
 		if ($value instanceof DBObjectSet)
@@ -981,30 +1054,35 @@ abstract class DBObject
 		$aDelta = array();
 		foreach ($aProposal as $sAtt => $proposedValue)
 		{
-			if (!array_key_exists($sAtt, $this->m_aOrigValues))
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAtt);
+			// Ignore external fields and friendly names that change only  as a consequence of modifying another field
+			if ((!$oAttDef->IsExternalField() && !($oAttDef instanceof AttributeFriendlyName)))
 			{
-				// The value was not set
-				$aDelta[$sAtt] = $proposedValue;
-			}
-			elseif(is_object($proposedValue))
-			{
-				$oLinkAttDef = MetaModel::GetAttributeDef(get_class($this), $sAtt);
-				// The value is an object, the comparison is not strict
-				if (!$oLinkAttDef->Equals($proposedValue, $this->m_aOrigValues[$sAtt]))
+				if (!array_key_exists($sAtt, $this->m_aOrigValues))
 				{
+					// The value was not set
 					$aDelta[$sAtt] = $proposedValue;
 				}
-			}
-			else
-			{
-				// The value is a scalar, the comparison must be 100% strict
-				if($this->m_aOrigValues[$sAtt] !== $proposedValue)
-				{	
-					//echo "$sAtt:<pre>\n";
-					//var_dump($this->m_aOrigValues[$sAtt]);
-					//var_dump($proposedValue);
-					//echo "</pre>\n";
-					$aDelta[$sAtt] = $proposedValue;
+				elseif(is_object($proposedValue))
+				{
+					$oLinkAttDef = MetaModel::GetAttributeDef(get_class($this), $sAtt);
+					// The value is an object, the comparison is not strict
+					if (!$oLinkAttDef->Equals($proposedValue, $this->m_aOrigValues[$sAtt]))
+					{
+						$aDelta[$sAtt] = $proposedValue;
+					}
+				}
+				else
+				{
+					// The value is a scalar, the comparison must be 100% strict
+					if($this->m_aOrigValues[$sAtt] !== $proposedValue)
+					{	
+						//echo "$sAtt:<pre>\n";
+						//var_dump($this->m_aOrigValues[$sAtt]);
+						//var_dump($proposedValue);
+						//echo "</pre>\n";
+						$aDelta[$sAtt] = $proposedValue;
+					}
 				}
 			}
 		}
