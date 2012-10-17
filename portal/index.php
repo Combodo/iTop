@@ -250,8 +250,9 @@ EOF
 			}
 			$aArgs = array('this' => $oRequest);
 				
-			$aFieldsMap[$sAttCode] = 'attr_'.$sAttCode;
-			$sValue = $oRequest->GetFormElementForField($oP, get_class($oRequest), $sAttCode, $oAttDef, $value, '', 'attr_'.$sAttCode, '', $iFlags, $aArgs);
+			$sInputId = 'attr_'.$sAttCode;
+			$aFieldsMap[$sAttCode] = $sInputId;
+			$sValue = "<span id=\"field_{$sInputId}\">".$oRequest->GetFormElementForField($oP, get_class($oRequest), $sAttCode, $oAttDef, $value, '', 'attr_'.$sAttCode, '', $iFlags, $aArgs).'</span>';
 			$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sValue);
 		}
 		$aDetails[] = array('label' => Dict::S('Class:Ticket/Attribute:ticket_log'), 'value' => '<textarea id="attr_moreinfo" class="resizable ui-resizable" cols="40" rows="8" name="attr_moreinfo" title="" style="margin: 0px; resize: none; position: static; display: block; height: 145px; width: 339px;">'.$sDescription.'</textarea>');
