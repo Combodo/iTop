@@ -290,7 +290,7 @@ function RequestCreationForm($oP, $oUserOrg)
 		$oP->add("</div>\n");
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);
-		$oP->add_ready_script(
+		$oP->add_script(
 <<<EOF
 		// Create the object once at the beginning of the page... no state specified => new
 		var oWizardHelper = new WizardHelper('UserRequest', '');
