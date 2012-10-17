@@ -102,7 +102,8 @@ try
 }
 catch (Exception $e)
 {
-	echo $e->GetMessage();
+	// note: transform to cope with XSS attacks
+	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
 	IssueLog::Error($e->getMessage());
 }
 ?>

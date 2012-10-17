@@ -1371,7 +1371,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				if (is_null($aAllowedValues))
 				{
 					// Any value is possible, display an input box
-					$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;<input class=\"textSearch\" name=\"$sFilterCode\" value=\"$sFilterValue\"/>\n";
+					$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;<input class=\"textSearch\" name=\"$sFilterCode\" value=\"".htmlentities($sFilterValue, ENT_QUOTES, 'utf-8')."\"/>\n";
 				}
 				else
 				{
