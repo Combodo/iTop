@@ -1596,6 +1596,19 @@ abstract class DBObject
 		{
 			$this->Reload();
 		}
+		else
+		{
+			// Reset original values although the object has not been reloaded
+			foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded)
+			{
+				if ($bLoaded)
+				{
+					$value = $this->m_aCurrValues[$sAttCode];
+					$this->m_aOrigValues[$sAttCode] = is_object($value) ? clone $value : $value;
+				}
+			}
+		
+		}
 
 		if (count($aChanges) != 0)
 		{
@@ -1755,7 +1768,7 @@ abstract class DBObject
 	* Designed as an action to be called when a stop watch threshold times out
 	* or from within the framework	
 	*/	
-	public function ApplyStimulus($sStimulusCode)
+	public function ApplyStimulus($sStimulusCode, $bDoNotWrite = false)
 	{
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
 		if (empty($sStateAttCode)) return false;
@@ -1791,20 +1804,7 @@ abstract class DBObject
 		}
 		if ($bSuccess)
 		{
-			// Change state triggers...
 			$sClass = get_class($this);
-			$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateLeave AS t WHERE t.target_class IN ('$sClassList') AND t.state='$sPreviousState'"));
-			while ($oTrigger = $oSet->Fetch())
-			{
-				$oTrigger->DoActivate($this->ToArgs('this'));
-			}
-	
-			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateEnter AS t WHERE t.target_class IN ('$sClassList') AND t.state='$sNewState'"));
-			while ($oTrigger = $oSet->Fetch())
-			{
-				$oTrigger->DoActivate($this->ToArgs('this'));
-			}
 
 			// Stop watches
 			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
@@ -1822,6 +1822,25 @@ abstract class DBObject
 					}
 					$this->Set($sAttCode, $oSW);
 				}
+			}
+			
+			if (!$bDoNotWrite)
+			{
+				$this->DBWrite();
+			}
+
+			// Change state triggers...
+			$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateLeave AS t WHERE t.target_class IN ('$sClassList') AND t.state='$sPreviousState'"));
+			while ($oTrigger = $oSet->Fetch())
+			{
+				$oTrigger->DoActivate($this->ToArgs('this'));
+			}
+	
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateEnter AS t WHERE t.target_class IN ('$sClassList') AND t.state='$sNewState'"));
+			while ($oTrigger = $oSet->Fetch())
+			{
+				$oTrigger->DoActivate($this->ToArgs('this'));
 			}
 		}
 
