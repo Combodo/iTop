@@ -279,13 +279,9 @@ EOF
 			{
 				// Home-made and very limited display of an object set
 
-				//
-				//$oSet->Seek(0);// juste pour que le warning soit moins crado
-				//$oSet->Fetch();// juste pour que le warning soit moins crado
-				//
-
-				$this->add("<div id=\"listOf$sClass\">\n");
-				cmdbAbstractObject::DisplaySet($this, $oSet, array('currentId' => $this->GetUniqueId()."$sClass", 'menu' => false, 'zlist' => false, 'extra_fields' => implode(',', $aZList)));
+				$sUniqueId = $sClass.$this->GetUniqueId();
+				$this->add("<div id=\"$sUniqueId\">\n"); // The id here MUST be the same as currentId, otherwise the pagination will be broken
+				cmdbAbstractObject::DisplaySet($this, $oSet, array('currentId' => $sUniqueId, 'menu' => false, 'zlist' => false, 'extra_fields' => implode(',', $aZList)));
 				$this->add("</div>\n");
 			}
 			else
