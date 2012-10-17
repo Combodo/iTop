@@ -212,8 +212,10 @@ EOF
 	}
 EOF
 );
-		
-	}
+
+		// For Wizard helper to process the ajax replies
+		$this->add('<div id="ajax_content"></div>');
+}
 
 	public function SetCurrentTab($sTabLabel = '')
 	{

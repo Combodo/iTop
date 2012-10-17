@@ -245,8 +245,9 @@ function RequestCreationForm($oP, $oUserOrg)
 			}
 			$aArgs = array('this' => $oRequest);
 				
-			$aFieldsMap[$sAttCode] = 'attr_'.$sAttCode;
-			$sValue = $oRequest->GetFormElementForField($oP, get_class($oRequest), $sAttCode, $oAttDef, $value, '', 'attr_'.$sAttCode, '', $iFlags, $aArgs);
+			$sInputId = 'attr_'.$sAttCode;
+			$aFieldsMap[$sAttCode] = $sInputId;
+			$sValue = "<span id=\"field_{$sInputId}\">".$oRequest->GetFormElementForField($oP, get_class($oRequest), $sAttCode, $oAttDef, $value, '', 'attr_'.$sAttCode, '', $iFlags, $aArgs).'</span>';
 			$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => $sValue);
 		}
 		if (!class_exists('AttachmentPlugIn'))
