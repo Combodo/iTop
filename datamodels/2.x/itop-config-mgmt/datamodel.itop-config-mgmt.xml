@@ -4441,7 +4441,7 @@
         </list>
       </presentation>
     </class>
-    <class id="PCsoftware" _delta="define">
+    <class id="PCSoftware" _delta="define">
       <parent>SoftwareInstance</parent>
       <properties>
         <category>bizmodel,searchable</category>
@@ -6108,7 +6108,7 @@
           <values>
             <value>Middleware</value>
             <value>DBserver</value>
-            <value>PCsoftware</value>
+            <value>PCSoftware</value>
             <value>OtherSoftware</value>
             <value>Webserver</value>
           </values>
@@ -8598,6 +8598,16 @@
           <extkey_attcode>person_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="role_id" xsi:type="AttributeExternalKey">
+          <sql>role_id</sql>
+          <target_class>ContactType</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="role_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>role_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -8605,18 +8615,21 @@
           <items>
             <item>team_id</item>
             <item>person_id</item>
+            <item>role_id</item>
           </items>
         </details>
         <search>
           <items>
             <item>team_id</item>
             <item>person_id</item>
+            <item>role_id</item>
           </items>
         </search>
         <list>
           <items>
             <item>team_id</item>
             <item>person_id</item>
+            <item>role_id</item>
           </items>
         </list>
       </presentation>

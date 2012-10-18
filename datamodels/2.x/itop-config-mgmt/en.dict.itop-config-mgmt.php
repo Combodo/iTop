@@ -767,12 +767,12 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
-// Class: PCsoftware
+// Class: PCSoftware
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:PCsoftware' => 'PC software',
-	'Class:PCsoftware+' => '',
+	'Class:PCSoftware' => 'PC software',
+	'Class:PCSoftware+' => '',
 ));
 
 //
@@ -1065,8 +1065,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Software/Attribute:type/Value:Middleware+' => 'Middleware',
 	'Class:Software/Attribute:type/Value:OtherSoftware' => 'Other Software',
 	'Class:Software/Attribute:type/Value:OtherSoftware+' => 'Other Software',
-	'Class:Software/Attribute:type/Value:PCsoftware' => 'PC software',
-	'Class:Software/Attribute:type/Value:PCsoftware+' => 'PC software',
+	'Class:Software/Attribute:type/Value:PCSoftware' => 'PC software',
+	'Class:Software/Attribute:type/Value:PCSoftware+' => 'PC software',
 	'Class:Software/Attribute:type/Value:Webserver' => 'Web server',
 	'Class:Software/Attribute:type/Value:Webserver+' => 'Web server',
 	'Class:Software/Attribute:softwareinstance_list' => 'Software instances',
@@ -1619,6 +1619,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkPersonToTeam/Attribute:person_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:person_name' => 'Person name',
 	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
+	'Class:lnkPersonToTeam/Attribute:role_id' => 'Role',
+	'Class:lnkPersonToTeam/Attribute:role_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:role_name' => 'Role name',
+	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
 ));
 
 //
