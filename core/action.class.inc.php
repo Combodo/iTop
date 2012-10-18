@@ -356,6 +356,14 @@ class ActionEmail extends ActionNotification
 			$oEmail->SetMessageId($sMessageId);
 		}
 
+		if (isset($aContextArgs['attachments']))
+		{
+			foreach($aContextArgs['attachments'] as $oDocument)
+			{
+				$oEmail->AddAttachment($oDocument->GetData(), $oDocument->GetFileName(), $oDocument->GetMimeType());
+			}
+		}
+
 		if (empty($this->m_aMailErrors))
 		{
 			if ($this->m_iRecipients == 0)
