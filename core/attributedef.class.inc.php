@@ -2378,7 +2378,8 @@ class AttributeDateTime extends AttributeDBField
 	}
 
 	public function GetEditClass() {return "DateTime";}
-	protected function GetSQLCol() {return "TIMESTAMP";}
+
+	protected function GetSQLCol() {return "DATETIME";}
 	public static function GetAsUnixSeconds($value)
 	{
 		$oDeadlineDateTime = new DateTime($value);
@@ -2386,13 +2387,8 @@ class AttributeDateTime extends AttributeDBField
 		return $iUnixSeconds;
 	}
 
-	// #@# THIS HAS TO REVISED
-	// Having null not allowed was interpreted by mySQL
-	// which was creating the field with the flag 'ON UPDATE CURRENT_TIMESTAMP'
-	// Then, on each update of the record, the field was modified.
-	// We will have to specify the default value if we want to restore this option
-	// In fact, we could also have more verbs dedicated to the DB:
-	// GetDBDefaultValue()... or GetDBFieldCreationStatement()....
+	// This has been done at the time when itop was using TIMESTAMP columns,
+	// now that iTop is using DATETIME columns, it seems possible to have IsNullAllowed returning false... later when this is needed
 	public function IsNullAllowed() {return true;}
 	public function GetDefaultValue()
 	{
