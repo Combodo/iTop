@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<Hypervisor alias="Hypervisor" id="9">
+<name>ESX1</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>low</business_criticity>
+<move2production></move2production>
+<status>production</status>
+<farm_id>7</farm_id>
+<server_id>2</server_id>
+</Hypervisor>
+<Hypervisor alias="Hypervisor" id="10">
+<name>ESX2</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>low</business_criticity>
+<move2production></move2production>
+<status>production</status>
+<farm_id>7</farm_id>
+<server_id>4</server_id>
+</Hypervisor>
+<Hypervisor alias="Hypervisor" id="11">
+<name>ESX3</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>low</business_criticity>
+<move2production></move2production>
+<status>production</status>
+<farm_id>8</farm_id>
+<server_id>0</server_id>
+</Hypervisor>
+</Set>

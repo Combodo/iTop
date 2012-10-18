@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<lnkCustomerContractToService alias="lnkCustomerContractToService" id="2">
+<customercontract_id>1</customercontract_id>
+<service_id>2</service_id>
+<sla_id>1</sla_id>
+</lnkCustomerContractToService>
+<lnkCustomerContractToService alias="lnkCustomerContractToService" id="4">
+<customercontract_id>1</customercontract_id>
+<service_id>3</service_id>
+<sla_id>1</sla_id>
+</lnkCustomerContractToService>
+<lnkCustomerContractToService alias="lnkCustomerContractToService" id="6">
+<customercontract_id>1</customercontract_id>
+<service_id>4</service_id>
+<sla_id>1</sla_id>
+</lnkCustomerContractToService>
+</Set>

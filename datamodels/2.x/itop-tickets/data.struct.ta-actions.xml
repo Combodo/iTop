@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<ActionEmail id="1">
+<name>Notification to a Workgroup</name>
+<description>This action informs a team that a ticket has been assigned their workgroup</description>
+<status>disabled</status>
+<test_recipient></test_recipient>
+<from>test@test.com</from>
+<reply_to></reply_to>
+<to>SELECT Team WHERE id=:this-&gt;workgroup_id</to>
+<cc></cc>
+<bcc></bcc>
+<subject>The ticket $this-&gt;name()$, priority $this-&gt;label(priority)$ has been assigned to the workgroup $this-&gt;workgroup_name$</subject>
+<body>&lt;html&gt;
+&lt;body&gt;
+&lt;p&gt;The ticket $this-&gt;name()$ has been assigned to the workgroup $this-&gt;workgroup_name$.&lt;/p&gt;
+&lt;p&gt;Description: $this-&gt;title$&lt;/p&gt;
+&lt;p&gt;Title: $this-&gt;title$&lt;/p&gt;
+&lt;hr/&gt;
+&lt;p&gt;for more information on this ticket, click here: $this-&gt;hyperlink()$&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</body>
+<importance>normal</importance>
+</ActionEmail>
+<ActionEmail id="2">
+<name>Notification to Agent</name>
+<description>This action informs an agent that a ticket has been assigned to her/him</description>
+<status>disabled</status>
+<test_recipient></test_recipient>
+<from>test@test.com</from>
+<reply_to></reply_to>
+<to>SELECT Person WHERE id=:this-&gt;agent_id</to>
+<cc></cc>
+<bcc></bcc>
+<subject>The ticket $this-&gt;name()$, priority $this-&gt;label(priority)$ has been assigned to you</subject>
+<body>&lt;html&gt;
+&lt;body&gt;
+&lt;p&gt;The ticket $this-&gt;name()$ has been assigned to you.&lt;/p&gt;
+&lt;p&gt;Description: $this-&gt;title$&lt;/p&gt; 
+&lt;p&gt;Title: $this-&gt;title$&lt;/p&gt;
+&lt;hr/&gt;
+&lt;p&gt;for more information on this ticket, click here: $this-&gt;hyperlink()$&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</body>
+<importance>normal</importance>
+</ActionEmail>
+<ActionEmail id="3">
+<name>Notification to caller</name>
+<description>This action is used to inform the caller</description>
+<status>disabled</status>
+<test_recipient></test_recipient>
+<from>test@test.com</from>
+<reply_to></reply_to>
+<to>SELECT Person WHERE id=:this-&gt;caller_id</to>
+<cc></cc>
+<bcc></bcc>
+<subject>Ticket $this-&gt;name()$, priority $this-&gt;label(priority)$ - $this-&gt;status$</subject>
+<body>&lt;html&gt;
+&lt;body&gt;
+&lt;p&gt;The ticket $this-&gt;name()$ has changed to status $this-&gt;status$&lt;/p&gt;
+&lt;p&gt;Last update: $this-&gt;last_update$&lt;/p&gt;
+&lt;hr/&gt;
+&lt;p&gt;for more information on this ticket, click here: $this-&gt;hyperlink(portal)$&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</body>
+<importance>normal</importance>
+</ActionEmail>
+</Set>

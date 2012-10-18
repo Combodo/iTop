@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<Rack alias="Rack" id="1">
+<name>Rack1</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>low</business_criticity>
+<move2production></move2production>
+<serialnumber></serialnumber>
+<location_id>2</location_id>
+<status>production</status>
+<brand_id>0</brand_id>
+<model_id>0</model_id>
+<asset_number></asset_number>
+<purchase_date></purchase_date>
+<end_of_warranty></end_of_warranty>
+<nb_u></nb_u>
+</Rack>
+</Set>

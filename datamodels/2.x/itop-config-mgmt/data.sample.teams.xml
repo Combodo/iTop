@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<Team alias="Team" id="4">
+<name>Hardware support</name>
+<status>active</status>
+<org_id>3</org_id>
+<email>hw@test.com</email>
+<phone></phone>
+<notify>yes</notify>
+<function></function>
+</Team>
+<Team alias="Team" id="17">
+<name>Helpdesk</name>
+<status>active</status>
+<org_id>3</org_id>
+<email></email>
+<phone></phone>
+<notify>yes</notify>
+<function></function>
+</Team>
+<Team alias="Team" id="5">
+<name>Network support</name>
+<status>active</status>
+<org_id>3</org_id>
+<email>nw@test.com</email>
+<phone></phone>
+<notify>yes</notify>
+<function></function>
+</Team>
+<Team alias="Team" id="16">
+<name>System &amp; application support</name>
+<status>active</status>
+<org_id>3</org_id>
+<email></email>
+<phone></phone>
+<notify>yes</notify>
+<function></function>
+</Team>
+</Set>

@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <layout>DashboardLayoutTwoCols</layout>
+  <title>UI:IncidentMgmtMenuOverview:Title</title>
+  <cells>
+    <cell>
+      <dashlet id="1" xsi:type="DashletGroupByPie">
+        <title>UI-IncidentManagementOverview-IncidentByPriority-last-14-days</title>
+        <query>SELECT Incident WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) &lt; start_date</query>
+        <group_by>priority</group_by>
+        <style>pie</style>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="2" xsi:type="DashletGroupByBars">
+        <title>UI-IncidentManagementOverview-Last-14-days</title>
+        <query>SELECT Incident WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) &lt; start_date</query>
+        <group_by>start_date:day_of_month</group_by>
+        <style>bars</style>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="3" xsi:type="DashletGroupByTable">
+        <title>UI-IncidentManagementOverview-OpenIncidentByStatus</title>
+        <query>SELECT Incident WHERE status NOT IN ('closed','rejected')</query>
+        <group_by>status</group_by>
+        <style>table</style>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="4" xsi:type="DashletGroupByTable">
+        <title>UI-IncidentManagementOverview-OpenIncidentByAgent</title>
+        <query>SELECT Incident WHERE status NOT IN ('closed','rejected')</query>
+        <group_by>agent_id</group_by>
+        <style>table</style>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="5" xsi:type="DashletGroupByTable">
+        <title>UI-IncidentManagementOverview-OpenIncidentByCustomer</title>
+        <query>SELECT Incident WHERE status NOT IN ('closed','rejected')</query>
+        <group_by>org_id</group_by>
+        <style>table</style>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="0" xsi:type="DashletEmptyCell"/>
+    </cell>
+    <cell>
+      <dashlet id="0" xsi:type="DashletEmptyCell"/>
+    </cell>
+  </cells>
+</dashboard>

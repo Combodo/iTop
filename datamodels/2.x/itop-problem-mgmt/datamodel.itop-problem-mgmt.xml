@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <classes>
+    <class id="Problem" _delta="define">
+      <parent>Ticket</parent>
+      <properties>
+        <comment><![CDATA[/**
+ * Persistent classes for a CMDB
+ *
+ * @author      Erwan Taloc <erwan.taloc@combodo.com>
+ * @author      Romain Quetiez <romain.quetiez@combodo.com>
+ * @author      Denis Flaven <denis.flaven@combodo.com>
+ * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ */]]></comment>
+        <category>bizmodel,searchable,problemmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>ticket_problem</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="ref"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>images/problem.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="ref"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="status" xsi:type="AttributeEnum">
+          <values>
+            <value>new</value>
+            <value>assigned</value>
+            <value>resolved</value>
+            <value>closed</value>
+          </values>
+          <sql>status</sql>
+          <default_value>new</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="service_id" xsi:type="AttributeExternalKey">
+          <filter>SELECT Service</filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <sql>service_id</sql>
+          <target_class>Service</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="servicesubcategory_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT ServiceSubcategory WHERE service_id = :this->service_id]]></filter>
+          <dependencies>
+            <attribute id="service_id"/>
+          </dependencies>
+          <sql>servicesubcategory_id</sql>
+          <target_class>ServiceSubcategory</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="servicesubcategory_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>servicesubcategory_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="product" xsi:type="AttributeString">
+          <sql>product</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="impact" xsi:type="AttributeEnum">
+          <values>
+            <value>1</value>
+            <value>2</value>
+            <value>3</value>
+          </values>
+          <sql>impact</sql>
+          <default_value>1</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="emergency" xsi:type="AttributeEnum">
+          <values>
+            <value>1</value>
+            <value>2</value>
+            <value>3</value>
+            <value>4</value>
+          </values>
+          <sql>emergency</sql>
+          <default_value>1</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="priority" xsi:type="AttributeEnum">
+          <values>
+            <value>1</value>
+            <value>2</value>
+            <value>3</value>
+            <value>4</value>
+          </values>
+          <sql>priority</sql>
+          <default_value>1</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="related_change_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Change WHERE status != "closed"]]></filter>
+          <sql>related_change_id</sql>
+          <target_class>Change</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="related_change_ref" xsi:type="AttributeExternalField">
+          <extkey_attcode>related_change_id</extkey_attcode>
+          <target_attcode>ref</target_attcode>
+        </field>
+        <field id="assignment_date" xsi:type="AttributeDateTime">
+          <sql>assignment_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="resolution_date" xsi:type="AttributeDateTime">
+          <sql>resolution_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="knownerrors_list" xsi:type="AttributeLinkedSet">
+          <linked_class>KnownError</linked_class>
+          <ext_key_to_me>problem_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+        <field id="related_request_list" xsi:type="AttributeLinkedSet">
+          <linked_class>UserRequest</linked_class>
+          <ext_key_to_me>parent_problem_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+      </fields>
+      <lifecycle>
+        <attribute>status</attribute>
+        <stimuli>
+          <stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_reassign" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_resolve" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_close" xsi:type="StimulusUserAction"/>
+        </stimuli>
+        <states>
+          <state id="new">
+            <flags>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <must_change/>
+              </attribute>
+              <attribute id="team_id">
+                <hidden/>
+              </attribute>
+              <attribute id="agent_id">
+                <hidden/>
+              </attribute>
+              <attribute id="description">
+                <must_change/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="service_id">
+                <normal/>
+              </attribute>
+              <attribute id="servicesubcategory_id">
+                <normal/>
+              </attribute>
+              <attribute id="product">
+                <normal/>
+              </attribute>
+              <attribute id="impact">
+                <must_change/>
+              </attribute>
+              <attribute id="emergency">
+                <must_change/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="related_change_id">
+                <normal/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition>
+                <stimulus>ev_assign</stimulus>
+                <target>assigned</target>
+                <actions>
+                  <action>
+                    <verb>SetAssignedDate</verb>
+                  </action>
+                </actions>
+              </transition>
+            </transitions>
+          </state>
+          <state id="assigned">
+            <flags>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <normal/>
+              </attribute>
+              <attribute id="team_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="agent_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="title">
+                <normal/>
+              </attribute>
+              <attribute id="description">
+                <normal/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition>
+                <stimulus>ev_reassign</stimulus>
+                <target>assigned</target>
+                <actions/>
+              </transition>
+              <transition>
+                <stimulus>ev_resolve</stimulus>
+                <target>resolved</target>
+                <actions>
+                  <action>
+                    <verb>SetResolveDate</verb>
+                  </action>
+                </actions>
+              </transition>
+            </transitions>
+          </state>
+          <state id="resolved">
+            <flags>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <read_only/>
+              </attribute>
+              <attribute id="team_id">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_id">
+                <read_only/>
+              </attribute>
+              <attribute id="caller_id">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="service_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="servicesubcategory_id">
+                <must_prompt/>
+              </attribute>
+              <attribute id="product">
+                <must_prompt/>
+              </attribute>
+              <attribute id="impact">
+                <read_only/>
+              </attribute>
+              <attribute id="emergency">
+                <read_only/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition>
+                <stimulus>ev_reassign</stimulus>
+                <target>assigned</target>
+                <actions/>
+              </transition>
+              <transition>
+                <stimulus>ev_close</stimulus>
+                <target>closed</target>
+                <actions>
+                  <action>
+                    <verb>SetClosureDate</verb>
+                  </action>
+                </actions>
+              </transition>
+            </transitions>
+          </state>
+          <state id="closed">
+            <flags>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <read_only/>
+              </attribute>
+              <attribute id="team_id">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_id">
+                <read_only/>
+              </attribute>
+              <attribute id="caller_id">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <read_only/>
+              </attribute>
+              <attribute id="private_log">
+                <read_only/>
+              </attribute>
+              <attribute id="service_id">
+                <read_only/>
+              </attribute>
+              <attribute id="servicesubcategory_id">
+                <read_only/>
+              </attribute>
+              <attribute id="product">
+                <read_only/>
+              </attribute>
+              <attribute id="impact">
+                <read_only/>
+              </attribute>
+              <attribute id="emergency">
+                <read_only/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="related_change_id">
+                <read_only/>
+              </attribute>
+            </flags>
+            <transitions/>
+          </state>
+        </states>
+      </lifecycle>
+      <methods>
+        <method id="SetAssignedDate">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[        public function SetAssignedDate($sStimulusCode)
+        {
+                $this->Set('assignment_date', time());
+                return true;
+        }]]></code>
+        </method>
+        <method id="SetResolveDate">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[        public function SetResolveDate($sStimulusCode)
+        {
+                $this->Set('resolution_date', time());
+                return true;
+        }]]></code>
+        </method>
+        <method id="SetClosureDate">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[        public function SetClosureDate($sStimulusCode)
+        {
+                $this->Set('close_date', time());
+                return true;
+        }]]></code>
+        </method>
+        <method id="ComputePriority">
+          <comment>/** Compute the priority of the ticket based on its impact and emergency&#13;
+         * @return integer The priority of the ticket 1(high) .. 3(low)&#13;
+         */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[        public function ComputePriority()
+        {
+                // priority[impact][emergency]
+                $aPriorities = array(
+                        // single person
+                        1 => array(
+                                        1 => 1,
+                                        2 => 1,
+                                        3 => 2,
+                                        4 => 4,
+                        ),
+                        // a group
+                        2 => array(
+                                1 => 1,
+                                2 => 2,
+                                3 => 3,
+                                4 => 4,
+                        ),
+                        // a departement!
+                        3 => array(
+                                        1 => 2,
+                                        2 => 3,
+                                        3 => 3,
+                                        4 => 4,
+                        ),
+                );
+                $iPriority = $aPriorities[(int)$this->Get('impact')][(int)$this->Get('emergency')];
+                return $iPriority;              
+        }]]></code>
+        </method>
+        <method id="ComputeValues">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function ComputeValues()
+	{
+		// Compute the priority of the ticket
+		$this->Set('priority', $this->ComputePriority());
+
+		$sCurrRef = $this->Get('ref');
+		if (strlen($sCurrRef) == 0)
+		{
+			$iKey = $this->GetKey();
+			if ($iKey < 0)
+			{
+				// Object not yet in the Database
+				$iKey = MetaModel::GetNextKey(get_class($this));
+			}
+			$sName = sprintf('P-%06d', $iKey);
+			$this->Set('ref', $sName);
+		}
+	}]]></code>
+        </method>
+        <method id="OnInsert">
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	protected function OnInsert()
+	{
+		$this->Set('start_date', time());
+		$this->Set('last_update', time());
+	}]]></code>
+        </method>
+        <method id="OnUpdate">
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	protected function OnUpdate()
+	{
+		$this->Set('last_update', time());
+	}]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item>functionalcis_list</item>
+            <item>contacts_list</item>
+            <item>knownerrors_list</item>
+            <item>workorders_list</item>
+            <item>related_request_list</item>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:Ticket:baseinfo">
+                  <items>
+                    <item>ref</item>
+                    <item>title</item>
+                    <item>org_id</item>
+                    <item>status</item>
+                    <item>priority</item>
+                    <item>service_id</item>
+                    <item>servicesubcategory_id</item>
+                    <item>product</item>
+                  </items>
+                </item>
+                <item id="fieldset:Ticket:moreinfo">
+                  <items>
+                    <item>impact</item>
+                    <item>emergency</item>
+                    <item>description</item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Ticket:date">
+                  <items>
+                    <item>start_date</item>
+                    <item>last_update</item>
+                    <item>assignment_date</item>
+                    <item>resolution_date</item>
+                    <item>close_date</item>
+                  </items>
+                </item>
+                <item id="fieldset:Ticket:contact">
+                  <items>
+                    <item>caller_id</item>
+                    <item>team_id</item>
+                    <item>agent_id</item>
+                  </items>
+                </item>
+                <item id="fieldset:Ticket:relation">
+                  <items>
+                    <item>related_change_id</item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>ref</item>
+            <item>title</item>
+            <item>org_id</item>
+            <item>start_date</item>
+            <item>status</item>
+            <item>service_id</item>
+            <item>servicesubcategory_id</item>
+            <item>product</item>
+            <item>impact</item>
+            <item>emergency</item>
+            <item>priority</item>
+            <item>caller_id</item>
+            <item>team_id</item>
+            <item>agent_id</item>
+            <item>close_date</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>title</item>
+            <item>org_id</item>
+            <item>start_date</item>
+            <item>status</item>
+            <item>service_id</item>
+            <item>priority</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+  </classes>
+  <menus>
+    <menu id="ProblemManagement" xsi:type="MenuGroup" _delta="define">
+      <rank>42</rank>
+    </menu>
+    <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
+      <rank>5</rank>
+      <parent>ProblemManagement</parent>
+      <template_file></template_file>
+    </menu>
+    <menu id="Problem:Overview" xsi:type="DashboardMenuNode" _delta="define">
+      <rank>0</rank>
+      <parent>ProblemManagement</parent>
+      <definition_file>overview.xml</definition_file>
+    </menu>
+    <menu id="NewProblem" xsi:type="NewObjectMenuNode" _delta="define">
+      <rank>1</rank>
+      <parent>ProblemManagement</parent>
+      <class>Problem</class>
+    </menu>
+    <menu id="SearchProblems" xsi:type="SearchMenuNode" _delta="define">
+      <rank>2</rank>
+      <parent>ProblemManagement</parent>
+      <class>Problem</class>
+    </menu>
+    <menu id="Problem:MyProblems" xsi:type="OQLMenuNode" _delta="define">
+      <rank>1</rank>
+      <parent>Problem:Shortcuts</parent>
+      <oql><![CDATA[SELECT Problem WHERE agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")]]></oql>
+      <do_search></do_search>
+    </menu>
+    <menu id="Problem:OpenProblems" xsi:type="OQLMenuNode" _delta="define">
+      <rank>2</rank>
+      <parent>Problem:Shortcuts</parent>
+      <oql><![CDATA[SELECT Problem WHERE status IN ("new", "assigned", "resolved")]]></oql>
+      <do_search>1</do_search>
+    </menu>
+  </menus>
+</itop_design>

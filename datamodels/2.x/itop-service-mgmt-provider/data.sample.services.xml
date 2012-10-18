@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<Service alias="Service" id="2">
+<name>Computers and peripherals</name>
+<org_id>3</org_id>
+<description>Ordering of new hardware (Desktop computer, laptop computer, monitor, mouse, keyboard...) and support in case of hardware failure.</description>
+<status>production</status>
+</Service>
+<Service alias="Service" id="3">
+<name>Software</name>
+<org_id>3</org_id>
+<description>Management of computer software and applications. Installation, upgrade, troubleshooting and removal of software.</description>
+<status>production</status>
+</Service>
+<Service alias="Service" id="4">
+<name>Telecom and connectivity</name>
+<org_id>3</org_id>
+<description>Ordering and configuration of new mobile phones, computer connectivity requests, cabling, etc...</description>
+<status>production</status>
+</Service>
+</Set>

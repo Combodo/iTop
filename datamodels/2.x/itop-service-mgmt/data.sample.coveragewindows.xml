@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<CoverageWindow alias="CoverageWindow" id="1">
+<name>8h-18h30 5*7</name>
+<description></description>
+<monday_start>8</monday_start>
+<monday_end>18.5</monday_end>
+<tuesday_start>8</tuesday_start>
+<tuesday_end>18.5</tuesday_end>
+<wednesday_start>8</wednesday_start>
+<wednesday_end>18.5</wednesday_end>
+<thursday_start>8</thursday_start>
+<thursday_end>18.5</thursday_end>
+<friday_start>8</friday_start>
+<friday_end>18.5</friday_end>
+<saturday_start>0</saturday_start>
+<saturday_end>0</saturday_end>
+<sunday_start>0</sunday_start>
+<sunday_end>0</sunday_end>
+</CoverageWindow>
+</Set>

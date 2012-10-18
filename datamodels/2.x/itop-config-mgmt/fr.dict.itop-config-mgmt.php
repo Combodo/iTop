@@ -1,0 +1,1767 @@
+<?php
+// Copyright (C) 2010 Combodo SARL
+//
+//   This program is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by
+//   the Free Software Foundation; version 3 of the License.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program; if not, write to the Free Software
+//   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+/**
+ * @author	Erwan Taloc <erwan.taloc@combodo.com>
+ * @author	Romain Quetiez <romain.quetiez@combodo.com>
+ * @author	Denis Flaven <denis.flaven@combodo.com>
+
+ * @licence	http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ */
+
+
+
+
+//
+// Class: Organization
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Organization' => 'Organisation',
+	'Class:Organization+' => '',
+	'Class:Organization/Attribute:name' => 'Nom organisation',
+	'Class:Organization/Attribute:name+' => 'Nom commun',
+	'Class:Organization/Attribute:code' => 'Code',
+	'Class:Organization/Attribute:code+' => 'Organisation code (Siret, DUNS,...)',
+	'Class:Organization/Attribute:status' => 'Statut',
+	'Class:Organization/Attribute:status+' => '',
+	'Class:Organization/Attribute:status/Value:active' => 'active',
+	'Class:Organization/Attribute:status/Value:active+' => 'active',
+	'Class:Organization/Attribute:status/Value:inactive' => 'inactive',
+	'Class:Organization/Attribute:status/Value:inactive+' => 'Inactive',
+	'Class:Organization/Attribute:parent_id' => 'Organisation Parent',
+	'Class:Organization/Attribute:parent_id+' => 'Organisation parent',
+	'Class:Organization/Attribute:parent_name' => 'Nom du parent',
+	'Class:Organization/Attribute:parent_name+' => 'Nom de l\'organisation parente',
+	'Class:Organization/Attribute:deliverymodel_id' => 'Modèle de support',
+	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_name' => 'Nom modèle de support',
+	'Class:Organization/Attribute:deliverymodel_name+' => '',
+	'Class:Organization/Attribute:parent_id_friendlyname' => 'Nom commun',
+	'Class:Organization/Attribute:parent_id_friendlyname+' => '',
+));
+
+//
+// Class: Location
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Location' => 'Lieu',
+	'Class:Location+' => 'Tout type de lieu: Région, Pays, Ville, Site, batiment, Bureau,...',
+	'Class:Location/Attribute:name' => 'Nom',
+	'Class:Location/Attribute:name+' => '',
+	'Class:Location/Attribute:status' => 'Statut',
+	'Class:Location/Attribute:status+' => '',
+	'Class:Location/Attribute:status/Value:active' => 'Actif',
+	'Class:Location/Attribute:status/Value:active+' => 'Actif',
+	'Class:Location/Attribute:status/Value:inactive' => 'Inactif',
+	'Class:Location/Attribute:status/Value:inactive+' => 'Inactif',
+	'Class:Location/Attribute:org_id' => 'Organisation',
+	'Class:Location/Attribute:org_id+' => '',
+	'Class:Location/Attribute:org_name' => 'Nom organisation',
+	'Class:Location/Attribute:org_name+' => '',
+	'Class:Location/Attribute:address' => 'Adresse',
+	'Class:Location/Attribute:address+' => 'Adresse postale',
+	'Class:Location/Attribute:postal_code' => 'Code postal',
+	'Class:Location/Attribute:postal_code+' => 'Code postal',
+	'Class:Location/Attribute:city' => 'Ville',
+	'Class:Location/Attribute:city+' => '',
+	'Class:Location/Attribute:country' => 'Pays',
+	'Class:Location/Attribute:country+' => '',
+	'Class:Location/Attribute:physicaldevice_list' => 'Matériels',
+	'Class:Location/Attribute:physicaldevice_list+' => '',
+	'Class:Location/Attribute:person_list' => 'Contacts',
+	'Class:Location/Attribute:person_list+' => '',
+));
+
+//
+// Class: Contact
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Contact' => 'Contact',
+	'Class:Contact+' => '',
+	'Class:Contact/Attribute:name' => 'Nom',
+	'Class:Contact/Attribute:name+' => '',
+	'Class:Contact/Attribute:status' => 'Statut',
+	'Class:Contact/Attribute:status+' => '',
+	'Class:Contact/Attribute:status/Value:active' => 'Actif',
+	'Class:Contact/Attribute:status/Value:active+' => 'Actif',
+	'Class:Contact/Attribute:status/Value:inactive' => 'Inactif',
+	'Class:Contact/Attribute:status/Value:inactive+' => 'Inactif',
+	'Class:Contact/Attribute:org_id' => 'Organisation',
+	'Class:Contact/Attribute:org_id+' => '',
+	'Class:Contact/Attribute:org_name' => 'Nom organisation',
+	'Class:Contact/Attribute:org_name+' => '',
+	'Class:Contact/Attribute:email' => 'Email',
+	'Class:Contact/Attribute:email+' => '',
+	'Class:Contact/Attribute:phone' => 'Téléphone',
+	'Class:Contact/Attribute:phone+' => '',
+	'Class:Contact/Attribute:notify' => 'Notification',
+	'Class:Contact/Attribute:notify+' => '',
+	'Class:Contact/Attribute:notify/Value:no' => 'non',
+	'Class:Contact/Attribute:notify/Value:no+' => 'non',
+	'Class:Contact/Attribute:notify/Value:yes' => 'oui',
+	'Class:Contact/Attribute:notify/Value:yes+' => 'oui',
+	'Class:Contact/Attribute:function' => 'Fonction',
+	'Class:Contact/Attribute:function+' => '',
+	'Class:Contact/Attribute:cis_list' => 'CIs',
+	'Class:Contact/Attribute:cis_list+' => '',
+	'Class:Contact/Attribute:finalclass' => 'Type de contact',
+	'Class:Contact/Attribute:finalclass+' => '',
+));
+
+//
+// Class: Person
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Person' => 'Personne',
+	'Class:Person+' => '',
+	'Class:Person/Attribute:first_name' => 'Prénom',
+	'Class:Person/Attribute:first_name+' => '',
+	'Class:Person/Attribute:employee_number' => 'Numéro d\'employé',
+	'Class:Person/Attribute:employee_number+' => '',
+	'Class:Person/Attribute:mobile_phone' => 'Téléphone mobile',
+	'Class:Person/Attribute:mobile_phone+' => '',
+	'Class:Person/Attribute:location_id' => 'Site',
+	'Class:Person/Attribute:location_id+' => '',
+	'Class:Person/Attribute:location_name' => 'Nom site',
+	'Class:Person/Attribute:location_name+' => '',
+	'Class:Person/Attribute:manager_id' => 'Manager',
+	'Class:Person/Attribute:manager_id+' => '',
+	'Class:Person/Attribute:manager_name' => 'Nom Manager',
+	'Class:Person/Attribute:manager_name+' => '',
+	'Class:Person/Attribute:team_list' => 'Equipes',
+	'Class:Person/Attribute:team_list+' => '',
+	'Class:Person/Attribute:tickets_list' => 'Tickets',
+	'Class:Person/Attribute:tickets_list+' => '',
+	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager friendly name',
+	'Class:Person/Attribute:manager_id_friendlyname+' => '',
+));
+
+//
+// Class: Team
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Team' => 'Equipe',
+	'Class:Team+' => '',
+	'Class:Team/Attribute:persons_list' => 'Membres',
+	'Class:Team/Attribute:persons_list+' => '',
+	'Class:Team/Attribute:tickets_list' => 'Tickets',
+	'Class:Team/Attribute:tickets_list+' => '',
+));
+
+//
+// Class: Document
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Document' => 'Document',
+	'Class:Document+' => '',
+	'Class:Document/Attribute:name' => 'Nom',
+	'Class:Document/Attribute:name+' => '',
+	'Class:Document/Attribute:org_id' => 'Organisation',
+	'Class:Document/Attribute:org_id+' => '',
+	'Class:Document/Attribute:org_name' => 'Nom organisation',
+	'Class:Document/Attribute:org_name+' => '',
+	'Class:Document/Attribute:documenttype_id' => 'Type de document',
+	'Class:Document/Attribute:documenttype_id+' => '',
+	'Class:Document/Attribute:documenttype_name' => 'Nom type de document',
+	'Class:Document/Attribute:documenttype_name+' => '',
+	'Class:Document/Attribute:description' => 'Description',
+	'Class:Document/Attribute:description+' => '',
+	'Class:Document/Attribute:status' => 'Statut',
+	'Class:Document/Attribute:status+' => '',
+	'Class:Document/Attribute:status/Value:draft' => 'Brouillon',
+	'Class:Document/Attribute:status/Value:draft+' => '',
+	'Class:Document/Attribute:status/Value:obsolete' => 'Obsolète',
+	'Class:Document/Attribute:status/Value:obsolete+' => '',
+	'Class:Document/Attribute:status/Value:published' => 'Publié',
+	'Class:Document/Attribute:status/Value:published+' => '',
+	'Class:Document/Attribute:cis_list' => 'CIs',
+	'Class:Document/Attribute:cis_list+' => '',
+	'Class:Document/Attribute:contracts_list' => 'Contrats',
+	'Class:Document/Attribute:contracts_list+' => '',
+	'Class:Document/Attribute:services_list' => 'Services',
+	'Class:Document/Attribute:services_list+' => '',
+	'Class:Document/Attribute:finalclass' => 'Type de document',
+	'Class:Document/Attribute:finalclass+' => '',
+));
+
+//
+// Class: DocumentFile
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:DocumentFile' => 'Document Fichier',
+	'Class:DocumentFile+' => '',
+	'Class:DocumentFile/Attribute:file' => 'Fichier',
+	'Class:DocumentFile/Attribute:file+' => '',
+));
+
+//
+// Class: DocumentNote
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:DocumentNote' => 'Document Note',
+	'Class:DocumentNote+' => '',
+	'Class:DocumentNote/Attribute:text' => 'Texte',
+	'Class:DocumentNote/Attribute:text+' => '',
+));
+
+//
+// Class: DocumentWeb
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:DocumentWeb' => 'Document Web',
+	'Class:DocumentWeb+' => '',
+	'Class:DocumentWeb/Attribute:url' => 'URL',
+	'Class:DocumentWeb/Attribute:url+' => '',
+));
+
+//
+// Class: FunctionalCI
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:FunctionalCI' => 'CI fonctionnel',
+	'Class:FunctionalCI+' => '',
+	'Class:FunctionalCI/Attribute:name' => 'Nom',
+	'Class:FunctionalCI/Attribute:name+' => '',
+	'Class:FunctionalCI/Attribute:description' => 'Description',
+	'Class:FunctionalCI/Attribute:description+' => '',
+	'Class:FunctionalCI/Attribute:org_id' => 'Organisation',
+	'Class:FunctionalCI/Attribute:org_id+' => '',
+	'Class:FunctionalCI/Attribute:organization_name' => 'Nom organization',
+	'Class:FunctionalCI/Attribute:organization_name+' => '',
+	'Class:FunctionalCI/Attribute:business_criticity' => 'Criticité',
+	'Class:FunctionalCI/Attribute:business_criticity+' => '',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:high' => 'haute',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:high+' => 'haute',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:low' => 'basse',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:low+' => 'basse',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:medium' => 'moyenne',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:medium+' => 'moyenne',
+	'Class:FunctionalCI/Attribute:move2production' => 'Date de mise en production',
+	'Class:FunctionalCI/Attribute:move2production+' => '',
+	'Class:FunctionalCI/Attribute:contacts_list' => 'Contacts',
+	'Class:FunctionalCI/Attribute:contacts_list+' => '',
+	'Class:FunctionalCI/Attribute:documents_list' => 'Documents',
+	'Class:FunctionalCI/Attribute:documents_list+' => '',
+	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Solutions applicatives',
+	'Class:FunctionalCI/Attribute:applicationsolution_list+' => '',
+	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Contrats fournisseur',
+	'Class:FunctionalCI/Attribute:providercontracts_list+' => '',
+	'Class:FunctionalCI/Attribute:services_list' => 'Services',
+	'Class:FunctionalCI/Attribute:services_list+' => '',
+	'Class:FunctionalCI/Attribute:softwares_list' => 'Logiciels',
+	'Class:FunctionalCI/Attribute:softwares_list+' => '',
+	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
+	'Class:FunctionalCI/Attribute:tickets_list+' => '',
+	'Class:FunctionalCI/Attribute:finalclass' => 'Type de CI',
+	'Class:FunctionalCI/Attribute:finalclass+' => '',
+));
+
+//
+// Class: PhysicalDevice
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:PhysicalDevice' => 'Matériel physique',
+	'Class:PhysicalDevice+' => '',
+	'Class:PhysicalDevice/Attribute:serialnumber' => 'Numéro de série',
+	'Class:PhysicalDevice/Attribute:serialnumber+' => '',
+	'Class:PhysicalDevice/Attribute:location_id' => 'Site',
+	'Class:PhysicalDevice/Attribute:location_id+' => '',
+	'Class:PhysicalDevice/Attribute:location_name' => 'Nom site',
+	'Class:PhysicalDevice/Attribute:location_name+' => '',
+	'Class:PhysicalDevice/Attribute:status' => 'Statut',
+	'Class:PhysicalDevice/Attribute:status+' => '',
+	'Class:PhysicalDevice/Attribute:status/Value:implementation' => 'implémentation',
+	'Class:PhysicalDevice/Attribute:status/Value:implementation+' => 'implémentation',
+	'Class:PhysicalDevice/Attribute:status/Value:obsolete' => 'obsolète',
+	'Class:PhysicalDevice/Attribute:status/Value:obsolete+' => 'obsolète',
+	'Class:PhysicalDevice/Attribute:status/Value:production' => 'production',
+	'Class:PhysicalDevice/Attribute:status/Value:production+' => 'production',
+	'Class:PhysicalDevice/Attribute:status/Value:stock' => 'stock',
+	'Class:PhysicalDevice/Attribute:status/Value:stock+' => 'stock',
+	'Class:PhysicalDevice/Attribute:brand_id' => 'Marque',
+	'Class:PhysicalDevice/Attribute:brand_id+' => '',
+	'Class:PhysicalDevice/Attribute:brand_name' => 'Nom Marque',
+	'Class:PhysicalDevice/Attribute:brand_name+' => '',
+	'Class:PhysicalDevice/Attribute:model_id' => 'Modèle',
+	'Class:PhysicalDevice/Attribute:model_id+' => '',
+	'Class:PhysicalDevice/Attribute:model_name' => 'Nom Modèle',
+	'Class:PhysicalDevice/Attribute:model_name+' => '',
+	'Class:PhysicalDevice/Attribute:asset_number' => 'Numéro Asset',
+	'Class:PhysicalDevice/Attribute:asset_number+' => '',
+	'Class:PhysicalDevice/Attribute:purchase_date' => 'Date d\'achat',
+	'Class:PhysicalDevice/Attribute:purchase_date+' => '',
+	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'Date de fin de garantie',
+	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '',
+));
+
+//
+// Class: Rack
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Rack' => 'Rack',
+	'Class:Rack+' => '',
+	'Class:Rack/Attribute:nb_u' => 'NB Unité',
+	'Class:Rack/Attribute:nb_u+' => '',
+	'Class:Rack/Attribute:device_list' => 'Matériels',
+	'Class:Rack/Attribute:device_list+' => '',
+	'Class:Rack/Attribute:enclosure_list' => 'Chassis',
+	'Class:Rack/Attribute:enclosure_list+' => '',
+));
+
+//
+// Class: TelephonyCI
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:TelephonyCI' => 'CI Téléphonie',
+	'Class:TelephonyCI+' => '',
+	'Class:TelephonyCI/Attribute:phonenumber' => 'Numéro',
+	'Class:TelephonyCI/Attribute:phonenumber+' => '',
+));
+
+//
+// Class: Phone
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Phone' => 'Téléphone',
+	'Class:Phone+' => '',
+));
+
+//
+// Class: MobilePhone
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:MobilePhone' => 'Téléphone mobile',
+	'Class:MobilePhone+' => '',
+	'Class:MobilePhone/Attribute:imei' => 'IMEI',
+	'Class:MobilePhone/Attribute:imei+' => '',
+	'Class:MobilePhone/Attribute:hw_pin' => 'PIN',
+	'Class:MobilePhone/Attribute:hw_pin+' => '',
+));
+
+//
+// Class: IpPhone
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:IpPhone' => 'Téléphone IP',
+	'Class:IpPhone+' => '',
+));
+
+//
+// Class: Tablet
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Tablet' => 'Tablette',
+	'Class:Tablet+' => '',
+));
+
+//
+// Class: ConnectableCI
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:ConnectableCI' => 'CI connecté',
+	'Class:ConnectableCI+' => '',
+	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Equipements réseaux',
+	'Class:ConnectableCI/Attribute:networkdevice_list+' => '',
+	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Interfaces réseaux',
+	'Class:ConnectableCI/Attribute:physicalinterface_list+' => '',
+));
+
+//
+// Class: DatacenterDevice
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:DatacenterDevice' => 'Matériel Datacenter',
+	'Class:DatacenterDevice+' => '',
+	'Class:DatacenterDevice/Attribute:rack_id' => 'Rack',
+	'Class:DatacenterDevice/Attribute:rack_id+' => '',
+	'Class:DatacenterDevice/Attribute:rack_name' => 'Nom Rack',
+	'Class:DatacenterDevice/Attribute:rack_name+' => '',
+	'Class:DatacenterDevice/Attribute:enclosure_id' => 'Chassis',
+	'Class:DatacenterDevice/Attribute:enclosure_id+' => '',
+	'Class:DatacenterDevice/Attribute:enclosure_name' => 'Nom Chassis',
+	'Class:DatacenterDevice/Attribute:enclosure_name+' => '',
+	'Class:DatacenterDevice/Attribute:nb_u' => 'NB Unité',
+	'Class:DatacenterDevice/Attribute:nb_u+' => '',
+	'Class:DatacenterDevice/Attribute:managementip' => 'IP',
+	'Class:DatacenterDevice/Attribute:managementip+' => '',
+	'Class:DatacenterDevice/Attribute:powerA_id' => 'Source électrique A',
+	'Class:DatacenterDevice/Attribute:powerA_id+' => '',
+	'Class:DatacenterDevice/Attribute:powerA_name' => 'Nom Source électrique A',
+	'Class:DatacenterDevice/Attribute:powerA_name+' => '',
+	'Class:DatacenterDevice/Attribute:powerB_id' => 'Source électrique B',
+	'Class:DatacenterDevice/Attribute:powerB_id+' => '',
+	'Class:DatacenterDevice/Attribute:powerB_name' => 'Nom Source électrique B',
+	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'FC ports',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => '',
+	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
+	'Class:DatacenterDevice/Attribute:san_list+' => '',
+));
+
+//
+// Class: NetworkDevice
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:NetworkDevice' => 'Equipement réseau',
+	'Class:NetworkDevice+' => '',
+	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Type',
+	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
+	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Nom Type',
+	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '',
+	'Class:NetworkDevice/Attribute:connectablecis_list' => 'Matériel connectés',
+	'Class:NetworkDevice/Attribute:connectablecis_list+' => '',
+	'Class:NetworkDevice/Attribute:iosversion_id' => 'Version IOS',
+	'Class:NetworkDevice/Attribute:iosversion_id+' => '',
+	'Class:NetworkDevice/Attribute:iosversion_name' => 'Nom Version IOS',
+	'Class:NetworkDevice/Attribute:iosversion_name+' => '',
+	'Class:NetworkDevice/Attribute:ram' => 'RAM',
+	'Class:NetworkDevice/Attribute:ram+' => '',
+));
+
+//
+// Class: Server
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Server' => 'Serveur',
+	'Class:Server+' => '',
+	'Class:Server/Attribute:osfamily_id' => 'Famille OS',
+	'Class:Server/Attribute:osfamily_id+' => '',
+	'Class:Server/Attribute:osfamily_name' => 'Nom Famille OS',
+	'Class:Server/Attribute:osfamily_name+' => '',
+	'Class:Server/Attribute:osversion_id' => 'Version OS',
+	'Class:Server/Attribute:osversion_id+' => '',
+	'Class:Server/Attribute:osversion_name' => 'Nom Version OS',
+	'Class:Server/Attribute:osversion_name+' => '',
+	'Class:Server/Attribute:oslicence_id' => 'Licence OS',
+	'Class:Server/Attribute:oslicence_id+' => '',
+	'Class:Server/Attribute:oslicence_name' => 'Nom Licence OS',
+	'Class:Server/Attribute:oslicence_name+' => '',
+	'Class:Server/Attribute:cpu' => 'CPU',
+	'Class:Server/Attribute:cpu+' => '',
+	'Class:Server/Attribute:ram' => 'RAM',
+	'Class:Server/Attribute:ram+' => '',
+	'Class:Server/Attribute:logicalvolumes_list' => 'Volumes logiques',
+	'Class:Server/Attribute:logicalvolumes_list+' => '',
+));
+
+//
+// Class: StorageSystem
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:StorageSystem' => 'Système de stockage',
+	'Class:StorageSystem+' => '',
+	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Volumes logiques',
+	'Class:StorageSystem/Attribute:logicalvolume_list+' => '',
+));
+
+//
+// Class: SANSwitch
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:SANSwitch' => 'Switch SAN',
+	'Class:SANSwitch+' => '',
+	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Matériels connectés',
+	'Class:SANSwitch/Attribute:datacenterdevice_list+' => '',
+));
+
+//
+// Class: TapeLibrary
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:TapeLibrary' => 'Bandothèque',
+	'Class:TapeLibrary+' => '',
+	'Class:TapeLibrary/Attribute:tapes_list' => 'Bandes',
+	'Class:TapeLibrary/Attribute:tapes_list+' => '',
+));
+
+//
+// Class: NAS
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:NAS' => 'NAS',
+	'Class:NAS+' => '',
+	'Class:NAS/Attribute:nasfilesystem_list' => 'Systèmes de fichier NAS',
+	'Class:NAS/Attribute:nasfilesystem_list+' => '',
+));
+
+//
+// Class: PC
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:PC' => 'PC',
+	'Class:PC+' => '',
+	'Class:PC/Attribute:osfamily_id' => 'Famille OS',
+	'Class:PC/Attribute:osfamily_id+' => '',
+	'Class:PC/Attribute:osfamily_name' => 'Nom Famille OS',
+	'Class:PC/Attribute:osfamily_name+' => '',
+	'Class:PC/Attribute:osversion_id' => 'Version OS',
+	'Class:PC/Attribute:osversion_id+' => '',
+	'Class:PC/Attribute:osversion_name' => 'Nom Version OS',
+	'Class:PC/Attribute:osversion_name+' => '',
+	'Class:PC/Attribute:cpu' => 'CPU',
+	'Class:PC/Attribute:cpu+' => '',
+	'Class:PC/Attribute:ram' => 'RAM',
+	'Class:PC/Attribute:ram+' => '',
+	'Class:PC/Attribute:type' => 'Type',
+	'Class:PC/Attribute:type+' => '',
+	'Class:PC/Attribute:type/Value:desktop' => 'desktop',
+	'Class:PC/Attribute:type/Value:desktop+' => 'desktop',
+	'Class:PC/Attribute:type/Value:laptop' => 'laptop',
+	'Class:PC/Attribute:type/Value:laptop+' => 'laptop',
+));
+
+//
+// Class: Printer
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Printer' => 'Imprimante',
+	'Class:Printer+' => '',
+));
+
+//
+// Class: ElectricalConnection
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:ElectricalConnection' => 'Connection Electrique',
+	'Class:ElectricalConnection+' => '',
+));
+
+//
+// Class: Arrival
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Arrival' => 'Arrivée électrique',
+	'Class:Arrival+' => '',
+	'Class:Arrival/Attribute:pdus_list' => 'PDUs',
+	'Class:Arrival/Attribute:pdus_list+' => '',
+));
+
+//
+// Class: PDU
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:PDU' => 'PDU',
+	'Class:PDU+' => '',
+	'Class:PDU/Attribute:rack_id' => 'Rack',
+	'Class:PDU/Attribute:rack_id+' => '',
+	'Class:PDU/Attribute:rack_name' => 'Nom rack',
+	'Class:PDU/Attribute:rack_name+' => '',
+	'Class:PDU/Attribute:powerstart_id' => 'Arrivée électrique',
+	'Class:PDU/Attribute:powerstart_id+' => '',
+	'Class:PDU/Attribute:powerstart_name' => 'Nom Arrivée électrique',
+	'Class:PDU/Attribute:powerstart_name+' => '',
+));
+
+//
+// Class: Peripheral
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Peripheral' => 'Périphérique',
+	'Class:Peripheral+' => '',
+));
+
+//
+// Class: Enclosure
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Enclosure' => 'Chassis',
+	'Class:Enclosure+' => '',
+	'Class:Enclosure/Attribute:rack_id' => 'Rack',
+	'Class:Enclosure/Attribute:rack_id+' => '',
+	'Class:Enclosure/Attribute:rack_name' => 'Nom rack',
+	'Class:Enclosure/Attribute:rack_name+' => '',
+	'Class:Enclosure/Attribute:nb_u' => 'NB Unité',
+	'Class:Enclosure/Attribute:nb_u+' => '',
+	'Class:Enclosure/Attribute:device_list' => 'Devices',
+	'Class:Enclosure/Attribute:device_list+' => '',
+));
+
+//
+// Class: ApplicationSolution
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:ApplicationSolution' => 'Solution applicative',
+	'Class:ApplicationSolution+' => '',
+	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs',
+	'Class:ApplicationSolution/Attribute:functionalcis_list+' => '',
+	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Processus métiers',
+	'Class:ApplicationSolution/Attribute:businessprocess_list+' => '',
+	'Class:ApplicationSolution/Attribute:status' => 'Statut',
+	'Class:ApplicationSolution/Attribute:status+' => '',
+	'Class:ApplicationSolution/Attribute:status/Value:active' => 'active',
+	'Class:ApplicationSolution/Attribute:status/Value:active+' => 'active',
+	'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'inactive',
+	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => 'inactive',
+));
+
+//
+// Class: BusinessProcess
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:BusinessProcess' => 'Processus métier',
+	'Class:BusinessProcess+' => '',
+	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Solutions applicatives',
+	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => '',
+	'Class:BusinessProcess/Attribute:status' => 'Statut',
+	'Class:BusinessProcess/Attribute:status+' => '',
+	'Class:BusinessProcess/Attribute:status/Value:active' => 'actif',
+	'Class:BusinessProcess/Attribute:status/Value:active+' => 'actif',
+	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'inactif',
+	'Class:BusinessProcess/Attribute:status/Value:inactive+' => 'inactif',
+));
+
+//
+// Class: SoftwareInstance
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:SoftwareInstance' => 'Instance logiciel',
+	'Class:SoftwareInstance+' => '',
+	'Class:SoftwareInstance/Attribute:system_id' => 'Système',
+	'Class:SoftwareInstance/Attribute:system_id+' => '',
+	'Class:SoftwareInstance/Attribute:system_name' => 'Nom du système',
+	'Class:SoftwareInstance/Attribute:system_name+' => '',
+	'Class:SoftwareInstance/Attribute:software_id' => 'Logiciel',
+	'Class:SoftwareInstance/Attribute:software_id+' => '',
+	'Class:SoftwareInstance/Attribute:software_name' => 'Nom du logiciel',
+	'Class:SoftwareInstance/Attribute:software_name+' => '',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Licence logiciel',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Nom Licence logiciel',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '',
+	'Class:SoftwareInstance/Attribute:path' => 'Chemin d`installation',
+	'Class:SoftwareInstance/Attribute:path+' => '',
+	'Class:SoftwareInstance/Attribute:status' => 'Statut',
+	'Class:SoftwareInstance/Attribute:status+' => '',
+	'Class:SoftwareInstance/Attribute:status/Value:active' => 'actif',
+	'Class:SoftwareInstance/Attribute:status/Value:active+' => '',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'inactif',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => '',
+));
+
+//
+// Class: Middleware
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Middleware' => 'Middleware',
+	'Class:Middleware+' => '',
+	'Class:Middleware/Attribute:middlewareinstance_list' => 'Instance Middleware',
+	'Class:Middleware/Attribute:middlewareinstance_list+' => '',
+));
+
+//
+// Class: DBserver
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:DBserver' => 'Serveur de base de données',
+	'Class:DBserver+' => '',
+	'Class:DBserver/Attribute:dbschema_list' => 'Instances de base de données',
+	'Class:DBserver/Attribute:dbschema_list+' => '',
+));
+
+//
+// Class: Webserver
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Webserver' => 'Serveur Web',
+	'Class:Webserver+' => '',
+	'Class:Webserver/Attribute:webapp_list' => 'Application Web',
+	'Class:Webserver/Attribute:webapp_list+' => '',
+));
+
+//
+// Class: PCsoftware
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:PCsoftware' => 'Logicel PC',
+	'Class:PCsoftware+' => '',
+));
+
+//
+// Class: OtherSoftware
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:OtherSoftware' => 'Autre logiciel',
+	'Class:OtherSoftware+' => '',
+));
+
+//
+// Class: MiddlewareInstance
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:MiddlewareInstance' => 'Instance Middleware',
+	'Class:MiddlewareInstance+' => '',
+	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
+	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
+	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Nom Middleware',
+	'Class:MiddlewareInstance/Attribute:middleware_name+' => '',
+));
+
+//
+// Class: DatabaseSchema
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:DatabaseSchema' => 'Instance de base de données',
+	'Class:DatabaseSchema+' => '',
+	'Class:DatabaseSchema/Attribute:dbserver_id' => 'Serveur de base de données',
+	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
+	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Nom Serveur de base de données',
+	'Class:DatabaseSchema/Attribute:dbserver_name+' => '',
+));
+
+//
+// Class: WebApplication
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:WebApplication' => 'Application Web',
+	'Class:WebApplication+' => '',
+	'Class:WebApplication/Attribute:webserver_id' => 'Serveur Web',
+	'Class:WebApplication/Attribute:webserver_id+' => '',
+	'Class:WebApplication/Attribute:webserver_name' => 'Nom Serveur Web',
+	'Class:WebApplication/Attribute:webserver_name+' => '',
+	'Class:WebApplication/Attribute:url' => 'URL',
+	'Class:WebApplication/Attribute:url+' => '',
+));
+
+//
+// Class: VirtualDevice
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:VirtualDevice' => 'Device Virtuel',
+	'Class:VirtualDevice+' => '',
+	'Class:VirtualDevice/Attribute:status' => 'Statut',
+	'Class:VirtualDevice/Attribute:status+' => '',
+	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'implémentation',
+	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'implémentation',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'obsolète',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'obsolète',
+	'Class:VirtualDevice/Attribute:status/Value:production' => 'production',
+	'Class:VirtualDevice/Attribute:status/Value:production+' => 'production',
+	'Class:VirtualDevice/Attribute:status/Value:stock' => 'stock',
+	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'stock',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Volumes logiques',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => '',
+));
+
+//
+// Class: VirtualHost
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:VirtualHost' => 'Host Virtuel',
+	'Class:VirtualHost+' => '',
+	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Machines virtuelles',
+	'Class:VirtualHost/Attribute:virtualmachine_list+' => '',
+));
+
+//
+// Class: Hypervisor
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Hypervisor' => 'Hyperviseur',
+	'Class:Hypervisor+' => '',
+	'Class:Hypervisor/Attribute:farm_id' => 'vCluster',
+	'Class:Hypervisor/Attribute:farm_id+' => '',
+	'Class:Hypervisor/Attribute:farm_name' => 'Nom vCluster',
+	'Class:Hypervisor/Attribute:farm_name+' => '',
+	'Class:Hypervisor/Attribute:server_id' => 'Serveur',
+	'Class:Hypervisor/Attribute:server_id+' => '',
+	'Class:Hypervisor/Attribute:server_name' => 'Nom serveur',
+	'Class:Hypervisor/Attribute:server_name+' => '',
+));
+
+//
+// Class: Farm
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Farm' => 'vCluster',
+	'Class:Farm+' => '',
+	'Class:Farm/Attribute:hypervisor_list' => 'Hyperviseurs',
+	'Class:Farm/Attribute:hypervisor_list+' => '',
+));
+
+//
+// Class: VirtualMachine
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:VirtualMachine' => 'Machine virtuelle',
+	'Class:VirtualMachine+' => '',
+	'Class:VirtualMachine/Attribute:virtualhost_id' => 'vCluster / Hyperviseur',
+	'Class:VirtualMachine/Attribute:virtualhost_id+' => '',
+	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Nom Host',
+	'Class:VirtualMachine/Attribute:virtualhost_name+' => '',
+	'Class:VirtualMachine/Attribute:osfamily_id' => 'Famille OS',
+	'Class:VirtualMachine/Attribute:osfamily_id+' => '',
+	'Class:VirtualMachine/Attribute:osfamily_name' => 'Nom Famille OS',
+	'Class:VirtualMachine/Attribute:osfamily_name+' => '',
+	'Class:VirtualMachine/Attribute:osversion_id' => 'Version OS',
+	'Class:VirtualMachine/Attribute:osversion_id+' => '',
+	'Class:VirtualMachine/Attribute:osversion_name' => 'Nom Version OS',
+	'Class:VirtualMachine/Attribute:osversion_name+' => '',
+	'Class:VirtualMachine/Attribute:oslicence_id' => 'Licence OS',
+	'Class:VirtualMachine/Attribute:oslicence_id+' => '',
+	'Class:VirtualMachine/Attribute:oslicence_name' => 'Nom Licence OS',
+	'Class:VirtualMachine/Attribute:oslicence_name+' => '',
+	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
+	'Class:VirtualMachine/Attribute:cpu+' => '',
+	'Class:VirtualMachine/Attribute:ram' => 'RAM',
+	'Class:VirtualMachine/Attribute:ram+' => '',
+	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Interfaces réseaux',
+	'Class:VirtualMachine/Attribute:logicalinterface_list+' => '',
+));
+
+//
+// Class: LogicalVolume
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:LogicalVolume' => 'Volume logique',
+	'Class:LogicalVolume+' => '',
+	'Class:LogicalVolume/Attribute:name' => 'Nom',
+	'Class:LogicalVolume/Attribute:name+' => '',
+	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
+	'Class:LogicalVolume/Attribute:lun_id+' => '',
+	'Class:LogicalVolume/Attribute:description' => 'Description',
+	'Class:LogicalVolume/Attribute:description+' => '',
+	'Class:LogicalVolume/Attribute:raid_level' => 'Niveau RAID',
+	'Class:LogicalVolume/Attribute:raid_level+' => '',
+	'Class:LogicalVolume/Attribute:size' => 'Taille',
+	'Class:LogicalVolume/Attribute:size+' => '',
+	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Système de stockage',
+	'Class:LogicalVolume/Attribute:storagesystem_id+' => '',
+	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Nom Système de stockage',
+	'Class:LogicalVolume/Attribute:storagesystem_name+' => '',
+	'Class:LogicalVolume/Attribute:servers_list' => 'Servers',
+	'Class:LogicalVolume/Attribute:servers_list+' => '',
+	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Machines virtuelles',
+	'Class:LogicalVolume/Attribute:virtualdevices_list+' => '',
+));
+
+//
+// Class: lnkServerToVolume
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkServerToVolume' => 'Lien Serveur / Volume',
+	'Class:lnkServerToVolume+' => '',
+	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volume logique',
+	'Class:lnkServerToVolume/Attribute:volume_id+' => '',
+	'Class:lnkServerToVolume/Attribute:volume_name' => 'Nom Volume logique',
+	'Class:lnkServerToVolume/Attribute:volume_name+' => '',
+	'Class:lnkServerToVolume/Attribute:server_id' => 'Serveur',
+	'Class:lnkServerToVolume/Attribute:server_id+' => '',
+	'Class:lnkServerToVolume/Attribute:server_name' => 'Nom Serveur',
+	'Class:lnkServerToVolume/Attribute:server_name+' => '',
+	'Class:lnkServerToVolume/Attribute:size_used' => 'Taille utilisée',
+	'Class:lnkServerToVolume/Attribute:size_used+' => '',
+));
+
+//
+// Class: lnkVirtualDeviceToVolume
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkVirtualDeviceToVolume' => 'Lien Device virtuel / Volume',
+	'Class:lnkVirtualDeviceToVolume+' => '',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume logique',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Nom Volume logique',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Device virtuel',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Nom Device virtuel',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Taille utilisée',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '',
+));
+
+//
+// Class: lnkSanToDatacenterDevice
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkSanToDatacenterDevice' => 'Lien San / Device',
+	'Class:lnkSanToDatacenterDevice+' => '',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'Switch SAN',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'Nom Switch SAN',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Device',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Nom Device',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'SAN FC',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Device FC',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '',
+));
+
+//
+// Class: Tape
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Tape' => 'Bande',
+	'Class:Tape+' => '',
+	'Class:Tape/Attribute:name' => 'Nom',
+	'Class:Tape/Attribute:name+' => '',
+	'Class:Tape/Attribute:description' => 'Description',
+	'Class:Tape/Attribute:description+' => '',
+	'Class:Tape/Attribute:size' => 'Taille',
+	'Class:Tape/Attribute:size+' => '',
+	'Class:Tape/Attribute:tapelibrary_id' => 'Bandothèque',
+	'Class:Tape/Attribute:tapelibrary_id+' => '',
+	'Class:Tape/Attribute:tapelibrary_name' => 'Nom Bandothèque',
+	'Class:Tape/Attribute:tapelibrary_name+' => '',
+));
+
+//
+// Class: NasFileSystem
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:NasFileSystem' => 'Système de fichier NAS',
+	'Class:NasFileSystem+' => '',
+	'Class:NasFileSystem/Attribute:name' => 'Nom',
+	'Class:NasFileSystem/Attribute:name+' => '',
+	'Class:NasFileSystem/Attribute:description' => 'Description',
+	'Class:NasFileSystem/Attribute:description+' => '',
+	'Class:NasFileSystem/Attribute:raid_level' => 'Niveau RAID',
+	'Class:NasFileSystem/Attribute:raid_level+' => '',
+	'Class:NasFileSystem/Attribute:size' => 'Taille',
+	'Class:NasFileSystem/Attribute:size+' => '',
+	'Class:NasFileSystem/Attribute:nas_id' => 'NAS',
+	'Class:NasFileSystem/Attribute:nas_id+' => '',
+	'Class:NasFileSystem/Attribute:nas_name' => 'Nom NAS',
+	'Class:NasFileSystem/Attribute:nas_name+' => '',
+));
+
+//
+// Class: Software
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Software' => 'Logiciel',
+	'Class:Software+' => '',
+	'Class:Software/Attribute:name' => 'Nom',
+	'Class:Software/Attribute:name+' => '',
+	'Class:Software/Attribute:vendor' => 'Vendeur',
+	'Class:Software/Attribute:vendor+' => '',
+	'Class:Software/Attribute:version' => 'Version',
+	'Class:Software/Attribute:version+' => '',
+	'Class:Software/Attribute:documents_list' => 'Documents',
+	'Class:Software/Attribute:documents_list+' => '',
+	'Class:Software/Attribute:type' => 'Type',
+	'Class:Software/Attribute:type+' => '',
+	'Class:Software/Attribute:type/Value:DBserver' => 'Serveur de base de données',
+	'Class:Software/Attribute:type/Value:DBserver+' => 'Serveur de base de données',
+	'Class:Software/Attribute:type/Value:Middleware' => 'Middleware',
+	'Class:Software/Attribute:type/Value:Middleware+' => 'Middleware',
+	'Class:Software/Attribute:type/Value:OtherSoftware' => 'Autre logiciel',
+	'Class:Software/Attribute:type/Value:OtherSoftware+' => 'Autre logiciel',
+	'Class:Software/Attribute:type/Value:PCsoftware' => 'Logiciel PC',
+	'Class:Software/Attribute:type/Value:PCsoftware+' => 'Logiciel PC',
+	'Class:Software/Attribute:type/Value:Webserver' => 'Serveur Web',
+	'Class:Software/Attribute:type/Value:Webserver+' => 'Serveur Web',
+	'Class:Software/Attribute:softwareinstance_list' => 'Instances logiciels',
+	'Class:Software/Attribute:softwareinstance_list+' => '',
+	'Class:Software/Attribute:softwarepatch_list' => 'Patchs logiciels',
+	'Class:Software/Attribute:softwarepatch_list+' => '',
+	'Class:Software/Attribute:softwarelicence_list' => 'Software licences',
+	'Class:Software/Attribute:softwarelicence_list+' => '',
+));
+
+//
+// Class: Patch
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Patch' => 'Patch',
+	'Class:Patch+' => '',
+	'Class:Patch/Attribute:name' => 'Nom',
+	'Class:Patch/Attribute:name+' => '',
+	'Class:Patch/Attribute:documents_list' => 'Documents',
+	'Class:Patch/Attribute:documents_list+' => '',
+	'Class:Patch/Attribute:description' => 'Description',
+	'Class:Patch/Attribute:description+' => '',
+	'Class:Patch/Attribute:finalclass' => 'Type',
+	'Class:Patch/Attribute:finalclass+' => '',
+));
+
+//
+// Class: OSpatch
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:OSpatch' => 'Patch OS',
+	'Class:OSpatch+' => '',
+	'Class:OSpatch/Attribute:functionalcis_list' => 'Systèmes',
+	'Class:OSpatch/Attribute:functionalcis_list+' => '',
+	'Class:OSpatch/Attribute:osversion_id' => 'Version OS',
+	'Class:OSpatch/Attribute:osversion_id+' => '',
+	'Class:OSpatch/Attribute:osversion_name' => 'Nom Version OS',
+	'Class:OSpatch/Attribute:osversion_name+' => '',
+));
+
+//
+// Class: SoftwarePatch
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:SoftwarePatch' => 'Patch Logiciel',
+	'Class:SoftwarePatch+' => '',
+	'Class:SoftwarePatch/Attribute:software_id' => 'Logiciel',
+	'Class:SoftwarePatch/Attribute:software_id+' => '',
+	'Class:SoftwarePatch/Attribute:software_name' => 'Nom logiciel',
+	'Class:SoftwarePatch/Attribute:software_name+' => '',
+	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Instances logiciels',
+	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => '',
+));
+
+//
+// Class: Licence
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Licence' => 'License',
+	'Class:Licence+' => '',
+	'Class:Licence/Attribute:name' => 'Nom',
+	'Class:Licence/Attribute:name+' => '',
+	'Class:Licence/Attribute:documents_list' => 'Documents',
+	'Class:Licence/Attribute:documents_list+' => '',
+	'Class:Licence/Attribute:org_id' => 'Organisation',
+	'Class:Licence/Attribute:org_id+' => '',
+	'Class:Licence/Attribute:organization_name' => 'Nom organisation',
+	'Class:Licence/Attribute:organization_name+' => 'Common name',
+	'Class:Licence/Attribute:usage_limit' => 'Limite d\'utilisation',
+	'Class:Licence/Attribute:usage_limit+' => '',
+	'Class:Licence/Attribute:description' => 'Description',
+	'Class:Licence/Attribute:description+' => '',
+	'Class:Licence/Attribute:start_date' => 'Date de début de validité',
+	'Class:Licence/Attribute:start_date+' => '',
+	'Class:Licence/Attribute:end_date' => 'Date de fin de validité',
+	'Class:Licence/Attribute:end_date+' => '',
+	'Class:Licence/Attribute:licence_key' => 'Clé',
+	'Class:Licence/Attribute:licence_key+' => '',
+	'Class:Licence/Attribute:finalclass' => 'Type',
+	'Class:Licence/Attribute:finalclass+' => '',
+));
+
+//
+// Class: OsLicence
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:OsLicence' => 'Licence OS',
+	'Class:OsLicence+' => '',
+	'Class:OsLicence/Attribute:osversion_id' => 'Version OS',
+	'Class:OsLicence/Attribute:osversion_id+' => '',
+	'Class:OsLicence/Attribute:osversion_name' => 'Nom Version OS',
+	'Class:OsLicence/Attribute:osversion_name+' => '',
+	'Class:OsLicence/Attribute:virtualmachines_list' => 'Machines virtuelles',
+	'Class:OsLicence/Attribute:virtualmachines_list+' => '',
+	'Class:OsLicence/Attribute:servers_list' => 'Serveurs',
+	'Class:OsLicence/Attribute:servers_list+' => '',
+));
+
+//
+// Class: SoftwareLicence
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:SoftwareLicence' => 'Licence Logiciel',
+	'Class:SoftwareLicence+' => '',
+	'Class:SoftwareLicence/Attribute:software_id' => 'Logiciel',
+	'Class:SoftwareLicence/Attribute:software_id+' => '',
+	'Class:SoftwareLicence/Attribute:software_name' => 'Nom Logiciel',
+	'Class:SoftwareLicence/Attribute:software_name+' => '',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Instances logiciels',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => '',
+));
+
+//
+// Class: lnkDocumentToLicence
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkDocumentToLicence' => 'Lien Document / Licence',
+	'Class:lnkDocumentToLicence+' => '',
+	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licence',
+	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
+	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Nom Licence',
+	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '',
+	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Document',
+	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
+	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Nom Document',
+	'Class:lnkDocumentToLicence/Attribute:document_name+' => '',
+));
+
+//
+// Class: Typology
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Typology' => 'Typologie',
+	'Class:Typology+' => '',
+	'Class:Typology/Attribute:name' => 'Nom',
+	'Class:Typology/Attribute:name+' => '',
+	'Class:Typology/Attribute:finalclass' => 'Type',
+	'Class:Typology/Attribute:finalclass+' => '',
+));
+
+//
+// Class: OSversion
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:OSversion' => 'Version OS',
+	'Class:OSversion+' => '',
+	'Class:OSversion/Attribute:osfamily_id' => 'Famille OS',
+	'Class:OSversion/Attribute:osfamily_id+' => '',
+	'Class:OSversion/Attribute:osfamily_name' => 'Nom Famille OS',
+	'Class:OSversion/Attribute:osfamily_name+' => '',
+));
+
+//
+// Class: OSfamily
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:OSfamily' => 'Famille OS',
+	'Class:OSfamily+' => '',
+));
+
+//
+// Class: DocumentType
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:DocumentType' => 'Type de document',
+	'Class:DocumentType+' => '',
+));
+
+//
+// Class: ContactType
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:ContactType' => 'Type de contact',
+	'Class:ContactType+' => '',
+));
+
+//
+// Class: Brand
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Brand' => 'Marque',
+	'Class:Brand+' => '',
+	'Class:Brand/Attribute:physicaldevices_list' => 'Matériels',
+	'Class:Brand/Attribute:physicaldevices_list+' => '',
+));
+
+//
+// Class: Model
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Model' => 'Modèle',
+	'Class:Model+' => '',
+	'Class:Model/Attribute:brand_id' => 'Marque',
+	'Class:Model/Attribute:brand_id+' => '',
+	'Class:Model/Attribute:brand_name' => 'Nom marque',
+	'Class:Model/Attribute:brand_name+' => '',
+	'Class:Model/Attribute:Type' => 'Type de matériel',
+	'Class:Model/Attribute:Type+' => '',
+	'Class:Model/Attribute:Type/Value:Arrival' => 'Arrivée électrique',
+	'Class:Model/Attribute:Type/Value:Arrival+' => 'Arrivée électrique',
+	'Class:Model/Attribute:Type/Value:Enclosure' => 'Chassis',
+	'Class:Model/Attribute:Type/Value:Enclosure+' => 'Chassis',
+	'Class:Model/Attribute:Type/Value:IpPhone' => 'Téléphone IP',
+	'Class:Model/Attribute:Type/Value:IpPhone+' => 'Téléphone IP',
+	'Class:Model/Attribute:Type/Value:MobilePhone' => 'Téléphone mobile',
+	'Class:Model/Attribute:Type/Value:MobilePhone+' => 'Téléphone mobile',
+	'Class:Model/Attribute:Type/Value:NAS' => 'NAS',
+	'Class:Model/Attribute:Type/Value:NAS+' => 'NAS',
+	'Class:Model/Attribute:Type/Value:NetworkDevice' => 'Equipement réseau',
+	'Class:Model/Attribute:Type/Value:NetworkDevice+' => 'Equipement réseau',
+	'Class:Model/Attribute:Type/Value:PC' => 'PC',
+	'Class:Model/Attribute:Type/Value:PC+' => 'PC',
+	'Class:Model/Attribute:Type/Value:PDU' => 'PDU',
+	'Class:Model/Attribute:Type/Value:PDU+' => 'PDU',
+	'Class:Model/Attribute:Type/Value:Peripheral' => 'Périphérique',
+	'Class:Model/Attribute:Type/Value:Peripheral+' => 'Périphérique',
+	'Class:Model/Attribute:Type/Value:Printer' => 'Imprimante',
+	'Class:Model/Attribute:Type/Value:Printer+' => 'Imprimante',
+	'Class:Model/Attribute:Type/Value:Rack' => 'Rack',
+	'Class:Model/Attribute:Type/Value:Rack+' => 'Rack',
+	'Class:Model/Attribute:Type/Value:SANswitch' => 'Switch SAN',
+	'Class:Model/Attribute:Type/Value:SANswitch+' => 'Switch SAN',
+	'Class:Model/Attribute:Type/Value:Server' => 'Serveur',
+	'Class:Model/Attribute:Type/Value:Server+' => 'Serveur',
+	'Class:Model/Attribute:Type/Value:StorageSystem' => 'Système de stockage',
+	'Class:Model/Attribute:Type/Value:StorageSystem+' => 'SSystème de stockage',
+	'Class:Model/Attribute:Type/Value:Tablet' => 'Tablette',
+	'Class:Model/Attribute:Type/Value:Tablet+' => 'Tablette',
+	'Class:Model/Attribute:Type/Value:TapeLibrary' => 'Bandothèque',
+	'Class:Model/Attribute:Type/Value:TapeLibrary+' => 'Bandothèque',
+	'Class:Model/Attribute:Type/Value:Telephone' => 'Téléphone',
+	'Class:Model/Attribute:Type/Value:Telephone+' => 'Téléphone',
+	'Class:Model/Attribute:physicaldevices_list' => 'Matériels',
+	'Class:Model/Attribute:physicaldevices_list+' => '',
+));
+
+//
+// Class: NetworkDeviceType
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:NetworkDeviceType' => 'Type d\'équipement réseau',
+	'Class:NetworkDeviceType+' => '',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Equipements réseaux',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => '',
+));
+
+//
+// Class: IOSversion
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:IOSversion' => 'Version IOS',
+	'Class:IOSversion+' => '',
+	'Class:IOSversion/Attribute:brand_id' => 'Marque',
+	'Class:IOSversion/Attribute:brand_id+' => '',
+	'Class:IOSversion/Attribute:brand_name' => 'Nom Marque',
+	'Class:IOSversion/Attribute:brand_name+' => '',
+));
+
+//
+// Class: lnkDocumentToPatch
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkDocumentToPatch' => 'Lien Document / Patch',
+	'Class:lnkDocumentToPatch+' => '',
+	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Patch',
+	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
+	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Nom patch',
+	'Class:lnkDocumentToPatch/Attribute:patch_name+' => '',
+	'Class:lnkDocumentToPatch/Attribute:document_id' => 'Document',
+	'Class:lnkDocumentToPatch/Attribute:document_id+' => '',
+	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Nom document',
+	'Class:lnkDocumentToPatch/Attribute:document_name+' => '',
+));
+
+//
+// Class: lnkSoftwareInstanceToSoftwarePatch
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Lien Instance logiciel / Patch logiciel',
+	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Patch logiciel',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name' => 'Nom patch logiciel',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id' => 'Instance logicielle',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Nom instance logicielle',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '',
+));
+
+//
+// Class: lnkFunctionalCIToOSpatch
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkFunctionalCIToOSpatch' => 'Lien CI Fonctionel / Patch OS',
+	'Class:lnkFunctionalCIToOSpatch+' => '',
+	'Class:lnkFunctionalCIToOSpatch/Attribute:ospatch_id' => 'Patch OS',
+	'Class:lnkFunctionalCIToOSpatch/Attribute:ospatch_id+' => '',
+	'Class:lnkFunctionalCIToOSpatch/Attribute:ospatch_name' => 'Nom Patch OS',
+	'Class:lnkFunctionalCIToOSpatch/Attribute:ospatch_name+' => '',
+	'Class:lnkFunctionalCIToOSpatch/Attribute:functionalci_id' => 'CI',
+	'Class:lnkFunctionalCIToOSpatch/Attribute:functionalci_id+' => '',
+	'Class:lnkFunctionalCIToOSpatch/Attribute:functionalci_name' => 'Nom CI',
+	'Class:lnkFunctionalCIToOSpatch/Attribute:functionalci_name+' => '',
+));
+
+//
+// Class: lnkDocumentToSoftware
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkDocumentToSoftware' => 'Lien Document / Logiciel',
+	'Class:lnkDocumentToSoftware+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Logiciel',
+	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Nom logiciel',
+	'Class:lnkDocumentToSoftware/Attribute:software_name+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:document_id' => 'Document',
+	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Nom document',
+	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '',
+));
+
+//
+// Class: lnkContactToFunctionalCI
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkContactToFunctionalCI' => 'Lien Contact / CI Fonctionel',
+	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'CI',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'Nom CI',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Contact',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Nom contact',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
+));
+
+//
+// Class: lnkDocumentToFunctionalCI
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkDocumentToFunctionalCI' => 'Lien Document / CI Fonctionel',
+	'Class:lnkDocumentToFunctionalCI+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'CI',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Nom CI',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Document',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Nom Document',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
+));
+
+//
+// Class: Subnet
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Subnet' => 'Subnet',
+	'Class:Subnet+' => '',
+	'Class:Subnet/Attribute:description' => 'Description',
+	'Class:Subnet/Attribute:description+' => '',
+	'Class:Subnet/Attribute:org_id' => 'Organisation',
+	'Class:Subnet/Attribute:org_id+' => '',
+	'Class:Subnet/Attribute:org_name' => 'Nom organisation',
+	'Class:Subnet/Attribute:org_name+' => '',
+	'Class:Subnet/Attribute:ip' => 'IP',
+	'Class:Subnet/Attribute:ip+' => '',
+	'Class:Subnet/Attribute:ip_mask' => 'Masque IP',
+	'Class:Subnet/Attribute:ip_mask+' => '',
+));
+
+//
+// Class: NetworkInterface
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:NetworkInterface' => 'Interface Réseau',
+	'Class:NetworkInterface+' => '',
+	'Class:NetworkInterface/Attribute:name' => 'Nom',
+	'Class:NetworkInterface/Attribute:name+' => '',
+	'Class:NetworkInterface/Attribute:finalclass' => 'Type',
+	'Class:NetworkInterface/Attribute:finalclass+' => '',
+));
+
+//
+// Class: IPinterface
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:IPinterface' => 'Interface IP',
+	'Class:IPinterface+' => '',
+	'Class:IPinterface/Attribute:ipaddress' => 'Adresse IP',
+	'Class:IPinterface/Attribute:ipaddress+' => '',
+	'Class:IPinterface/Attribute:macaddress' => 'Adresse MAC',
+	'Class:IPinterface/Attribute:macaddress+' => '',
+	'Class:IPinterface/Attribute:coment' => 'Commentaire',
+	'Class:IPinterface/Attribute:coment+' => '',
+	'Class:IPinterface/Attribute:ipgateway' => 'Passerelle',
+	'Class:IPinterface/Attribute:ipgateway+' => '',
+	'Class:IPinterface/Attribute:ipmask' => 'Masque de sous réseau',
+	'Class:IPinterface/Attribute:ipmask+' => '',
+	'Class:IPinterface/Attribute:speed' => 'Vitesse',
+	'Class:IPinterface/Attribute:speed+' => '',
+));
+
+//
+// Class: PhysicalInterface
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:PhysicalInterface' => 'Interface physique',
+	'Class:PhysicalInterface+' => '',
+	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Matériel',
+	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
+	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Nom matériel',
+	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
+));
+
+//
+// Class: LogicalInterface
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:LogicalInterface' => 'Interface logique',
+	'Class:LogicalInterface+' => '',
+	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Machine virtuelle',
+	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '',
+	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Nom Machine virtuelle',
+	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '',
+));
+
+//
+// Class: FiberChanelInterface
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:FiberChanelInterface' => 'Interface Fibre',
+	'Class:FiberChanelInterface+' => '',
+	'Class:FiberChanelInterface/Attribute:speed' => 'Vitesse',
+	'Class:FiberChanelInterface/Attribute:speed+' => '',
+	'Class:FiberChanelInterface/Attribute:topology' => 'Topologie',
+	'Class:FiberChanelInterface/Attribute:topology+' => '',
+	'Class:FiberChanelInterface/Attribute:wwn' => 'WWN',
+	'Class:FiberChanelInterface/Attribute:wwn+' => '',
+	'Class:FiberChanelInterface/Attribute:datacenterdevice_id' => 'Matériel',
+	'Class:FiberChanelInterface/Attribute:datacenterdevice_id+' => '',
+	'Class:FiberChanelInterface/Attribute:datacenterdevice_name' => 'Nom Matériel',
+	'Class:FiberChanelInterface/Attribute:datacenterdevice_name+' => '',
+));
+
+//
+// Class: lnkConnectableCIToNetworkDevice
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkConnectableCIToNetworkDevice' => 'Lien Device / Equipement réseau',
+	'Class:lnkConnectableCIToNetworkDevice+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Equipement réseau',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name' => 'Nom Equipement réseau',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id' => 'Matériel connecté',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name' => 'Nom Matériel connecté',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port' => 'Port réseau',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port' => 'Port matériel',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type' => 'Type de connection',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink' => 'lien descendant',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'lien descendant',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'lien montant',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'lien montant',
+));
+
+//
+// Class: lnkApplicationSolutionToFunctionalCI
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkApplicationSolutionToFunctionalCI' => 'Lien Solution Applicative / CI Fonctionel',
+	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Solution applicative',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => 'Nom Solution applicative',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id' => 'CI',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'Nom CI',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '',
+));
+
+//
+// Class: lnkApplicationSolutionToBusinessProcess
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkApplicationSolutionToBusinessProcess' => 'Lien ApplicationSolutionToSolution Applicative / Processus métier',
+	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Processus métier',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name' => 'Nom Processus métier',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id' => 'Solution applicative',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Nom Solution applicative',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '',
+));
+
+//
+// Class: lnkPersonToTeam
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkPersonToTeam' => 'Lien Personne / Equipe',
+	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam/Attribute:team_id' => 'Equipe',
+	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:team_name' => 'Nom Equipe',
+	'Class:lnkPersonToTeam/Attribute:team_name+' => '',
+	'Class:lnkPersonToTeam/Attribute:person_id' => 'Personne',
+	'Class:lnkPersonToTeam/Attribute:person_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:person_name' => 'Nom Personne',
+	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
+));
+
+//
+// Class: Group
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Group' => 'Groupe',
+	'Class:Group+' => '',
+	'Class:Group/Attribute:name' => 'Nom',
+	'Class:Group/Attribute:name+' => '',
+	'Class:Group/Attribute:status' => 'Statut',
+	'Class:Group/Attribute:status+' => '',
+	'Class:Group/Attribute:status/Value:implementation' => 'Implémentation',
+	'Class:Group/Attribute:status/Value:implementation+' => 'Implémentation',
+	'Class:Group/Attribute:status/Value:obsolete' => 'Obsolète',
+	'Class:Group/Attribute:status/Value:obsolete+' => 'Obsolète',
+	'Class:Group/Attribute:status/Value:production' => 'Production',
+	'Class:Group/Attribute:status/Value:production+' => 'Production',
+	'Class:Group/Attribute:org_id' => 'Organisation',
+	'Class:Group/Attribute:org_id+' => '',
+	'Class:Group/Attribute:owner_name' => 'Nom organisation',
+	'Class:Group/Attribute:owner_name+' => '',
+	'Class:Group/Attribute:description' => 'Description',
+	'Class:Group/Attribute:description+' => '',
+	'Class:Group/Attribute:type' => 'Type',
+	'Class:Group/Attribute:type+' => '',
+	'Class:Group/Attribute:parent_id' => 'Groupe parent',
+	'Class:Group/Attribute:parent_id+' => '',
+	'Class:Group/Attribute:parent_name' => 'Nom groupe parent',
+	'Class:Group/Attribute:parent_name+' => '',
+	'Class:Group/Attribute:ci_list' => 'CIs liés',
+	'Class:Group/Attribute:ci_list+' => '',
+	'Class:Group/Attribute:parent_id_friendlyname' => 'Nom usuel du parent',
+	'Class:Group/Attribute:parent_id_friendlyname+' => '',
+));
+
+//
+// Class: lnkGroupToCI
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkGroupToCI' => 'Lien Groupe / CI',
+	'Class:lnkGroupToCI+' => '',
+	'Class:lnkGroupToCI/Attribute:group_id' => 'Groupe',
+	'Class:lnkGroupToCI/Attribute:group_id+' => '',
+	'Class:lnkGroupToCI/Attribute:group_name' => 'Nom du groupe',
+	'Class:lnkGroupToCI/Attribute:group_name+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_id' => 'CI',
+	'Class:lnkGroupToCI/Attribute:ci_id+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_name' => 'Nom du CI',
+	'Class:lnkGroupToCI/Attribute:ci_name+' => '',
+	'Class:lnkGroupToCI/Attribute:reason' => 'Raison',
+	'Class:lnkGroupToCI/Attribute:reason+' => '',
+));
+
+
+
+
+
+//
+// Class extensions
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+'Class:Subnet/Tab:IPUsage' => 'IP Utilisées',
+'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces ayant une IP dans l\'interval: <em>%1$s</em> à <em>%2$s</em>',
+'Class:Subnet/Tab:FreeIPs' => 'IPs libres',
+'Class:Subnet/Tab:FreeIPs-count' => 'IPs libres: %1$s',
+'Class:Subnet/Tab:FreeIPs-explain' => 'Extrait des 10 premières IPs libres',
+));
+
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Menu:Catalogs' => 'Catalogues',
+	'Menu:Catalogs+' => 'Types de données',
+	'Menu:Audit' => 'Audit',
+	'Menu:Audit+' => 'Audit',
+	'Menu:Organization' => 'Organisations',
+	'Menu:Organization+' => 'Toutes les organizations',
+	'Menu:Application' => 'Logiciels',
+	'Menu:Application+' => 'Tous les logiciels',
+	'Menu:DBServer' => 'Serveur de base de données',
+	'Menu:DBServer+' => '',
+	'Menu:ConfigManagement' => 'Gestion des configurations',
+	'Menu:ConfigManagement+' => 'Gestion des configurations',
+	'Menu:ConfigManagementOverview' => 'Tableaux de bord',
+	'Menu:ConfigManagementOverview+' => 'Tableaux de bord',
+	'Menu:Contact' => 'Contacts',
+	'Menu:Contact+' => 'Contacts',
+	'Menu:Person' => 'Personnes',
+	'Menu:Person+' => 'Toutes les personnes',
+	'Menu:Team' => 'Equipes',
+	'Menu:Team+' => 'Toutes les équipes',
+	'Menu:Document' => 'Documents',
+	'Menu:Document+' => 'Tous les documents',
+	'Menu:Location' => 'Lieux',
+	'Menu:Location+' => 'Tous les lieux',
+	'Menu:ConfigManagementCI' => 'CIs',
+	'Menu:ConfigManagementCI+' => 'CIs',
+	'Menu:BusinessProcess' => 'Processus métier',
+	'Menu:BusinessProcess+' => 'Tous les processus métiers',
+	'Menu:ApplicationSolution' => 'Solutions applicatives',
+	'Menu:ApplicationSolution+' => 'Toutes les solutions applicatives',
+	'Menu:ConfigManagementSoftware' => 'Gestion des logiciels',
+	'Menu:Licence' => 'Licences',
+	'Menu:Licence+' => 'Toutes les licences',
+	'Menu:Patch' => 'Patches',
+	'Menu:Patch+' => 'Tous les patches',
+	'Menu:ApplicationInstance' => 'Instances logiciels',
+	'Menu:ApplicationInstance+' => 'Logiciels installés',
+	'Menu:ConfigManagementHardware' => 'Gestion des infrastructures',
+	'Menu:Subnet' => 'Sous réseaux',
+	'Menu:Subnet+' => '',
+	'Menu:NetworkDevice' => 'Equipements réseaux',
+	'Menu:NetworkDevice+' => 'Tous les équipements réseaux',
+	'Menu:System' => 'Systèmes',
+	'Menu:System+' => '',
+	'Menu:Server' => 'Serveurs',
+	'Menu:Server+' => '',
+	'Menu:Printer' => 'Imprimantes',
+	'Menu:Printer+' => 'Toutes les imprimantes',
+	'Menu:MobilePhone' => 'Téléphones portables',
+	'Menu:MobilePhone+' => 'Tous les téléphones portables',
+	'Menu:PC' => 'PCs',
+	'Menu:PC+' => 'Tous les PCs',
+	'Menu:NewContact' => 'Nouveau contact',
+	'Menu:NewContact+' => 'Nouveau contact',
+	'Menu:SearchContacts' => 'Rechercher des contacts',
+	'Menu:SearchContacts+' => 'Rechercher des contacts',
+	'Menu:NewCI' => 'Nouveau CI',
+	'Menu:NewCI+' => 'Nouveau CI',
+	'Menu:SearchCIs' => 'Rechercher des CIs',
+	'Menu:SearchCIs+' => 'Rechercher des CIs',
+	'Menu:ConfigManagement:Devices' => 'Equipements',
+	'Menu:ConfigManagement:AllDevices' => 'Infrastructures',
+	'Menu:ConfigManagementInfrastructure' => 'Infrastructures',
+	'Menu:ConfigManagement:SWAndApps' => 'Logiciels et Applications',
+	'Menu:ConfigManagement:Misc' => 'Divers',
+	'Menu:Group' => 'Groupe de CIs',
+	'Menu:Group+' => 'Groupe de CIs',
+	'Menu:ConfigManagement:Shortcuts' => 'Raccourcis',
+	'Menu:ConfigManagement:AllContacts' => 'Tous les contacts: %1$d',
+	'Menu:DocumentType' => 'Types de documents',
+	'Menu:DocumentType+' => '',
+	'Menu:Software' => 'Catalogue des logiciels de références',
+	'Menu:Software+' => 'Catalogue des logiciels de références',
+	'Menu:Model' => 'Modèles',
+	'Menu:Model+' => 'Modèles',
+	'Menu:Brand+' => 'Marques',
+	'Menu:Brand' => 'Marques',
+	'Menu:NetworkType' => 'Types réseau',
+	'Menu:NetworkType+' => '',
+	'Menu:Typology' => 'Typologie configuration',
+	'Menu:Typology+' => 'Typologie configuration',
+	'Menu:OSversion' => 'Versions d\'OS',
+	'Menu:OSversion+' => '',
+	'Menu:ContactType' => 'Types de contact',
+	'Menu:ContactType+' => '',
+	'Menu:LicenceType' => 'Types de licence',
+	'Menu:LicenceType+' => '',
+	'Menu:Environment' => 'Environnements',
+	'Menu:Environment+' => '',
+	'Menu:PeripheralType' => 'Type de périphérique',
+	'Menu:PeripheralType+' => 'Tous les types de périphérique',
+	'UI-ConfigMgmtMenuOverview-DeviceBySite' => 'Equipements par site',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIByTypeStock' => 'Equipements en stock par type',
+	'UI-ConfigMgmtMenuOverview-DeviceByBrand' => 'Equipements par marque',
+	'UI-ConfigMgmtMenuOverview-DeviceToRenew' => 'Equipements à remplacer dans 6 mois',
+	'Menu:UI_WelcomeMenu_AllConfigItems' => 'Résumé',
+	'Relation:flow depends on/VerbUp' => 'Dépend du flux',
+	'Relation:flow impacts/VerbUp' => 'Impact flux',
+	'Relation:flow depends on/Description' => 'Dépendence de flux pour:',
+	'Relation:flow impacts/Description' => 'Impact de flux pour:',
+	'Relation:impacts/Description' => 'Eléments impactés par',
+	'Relation:impacts/VerbUp' => 'Impacte...',
+	'Relation:impacts/VerbDown' => 'Dépend de...',
+	'Relation:depends on/Description' => 'Eléments dont dépend cet élément',
+	'Relation:depends on/VerbUp' => 'Dépend de...',
+	'Relation:depends on/VerbDown' => 'Impacte...',
+	'Menu:ConfigManagement:Typology' => 'Configuration des typologies',
+));
+
+// Add translation for Fieldsets
+
+Dict::Add('EN US', 'English', 'English', array(
+'Server:baseinfo' => 'Informations générales',
+'Server:Date' => 'Date',
+'Server:moreinfo' => 'Informations complémentaires',
+'Server:otherinfo' => 'Autres informations',
+'Person:info' => 'Informations générales',
+'Person:notifiy' => 'Notification',
+
+));
+?>

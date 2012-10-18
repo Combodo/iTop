@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <layout>DashboardLayoutTwoCols</layout>
+  <title>UI:ChangeMgmtMenuOverview:Title</title>
+  <cells>
+    <cell>
+      <dashlet id="1" xsi:type="DashletGroupByTable">
+        <title>UI-ChangeManagementOverview-ChangeByCategory-last-7-days</title>
+        <query>SELECT Change WHERE start_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
+        <group_by>category</group_by>
+        <style>table</style>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="2" xsi:type="DashletGroupByBars">
+        <title>UI-ChangeManagementOverview-Last-7-days</title>
+        <query>SELECT Change WHERE start_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
+        <group_by>start_date:day_of_month</group_by>
+        <style>bars</style>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="3" xsi:type="DashletGroupByTable">
+        <title>UI-ChangeManagementOverview-ChangeByDomain-last-7-days</title>
+        <query>SELECT Change WHERE start_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
+        <group_by>finalclass</group_by>
+        <style>table</style>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="4" xsi:type="DashletGroupByTable">
+        <title>UI-ChangeManagementOverview-ChangeByStatus-last-7-days</title>
+        <query>SELECT Change WHERE start_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
+        <group_by>status</group_by>
+        <style>table</style>
+      </dashlet>
+    </cell>
+  </cells>
+</dashboard>

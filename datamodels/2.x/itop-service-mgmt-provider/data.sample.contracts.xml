@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<CustomerContract alias="CustomerContract" id="1">
+<name>Customer contract Demo</name>
+<org_id>2</org_id>
+<description></description>
+<start_date></start_date>
+<end_date></end_date>
+<cost></cost>
+<cost_currency></cost_currency>
+<billing_frequency></billing_frequency>
+<cost_unit></cost_unit>
+<provider_id>3</provider_id>
+<status></status>
+</CustomerContract>
+</Set>

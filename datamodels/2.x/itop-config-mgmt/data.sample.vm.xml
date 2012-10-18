@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<VirtualMachine alias="VirtualMachine" id="12">
+<name>VM1</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>low</business_criticity>
+<move2production></move2production>
+<status>production</status>
+<virtualhost_id>7</virtualhost_id>
+<osfamily_id>7</osfamily_id>
+<osversion_id>8</osversion_id>
+<oslicence_id>0</oslicence_id>
+<cpu></cpu>
+<ram></ram>
+</VirtualMachine>
+<VirtualMachine alias="VirtualMachine" id="13">
+<name>VM2</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>low</business_criticity>
+<move2production></move2production>
+<status>production</status>
+<virtualhost_id>7</virtualhost_id>
+<osfamily_id>3</osfamily_id>
+<osversion_id>4</osversion_id>
+<oslicence_id>0</oslicence_id>
+<cpu></cpu>
+<ram></ram>
+</VirtualMachine>
+<VirtualMachine alias="VirtualMachine" id="14">
+<name>VM3</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>low</business_criticity>
+<move2production></move2production>
+<status>production</status>
+<virtualhost_id>7</virtualhost_id>
+<osfamily_id>7</osfamily_id>
+<osversion_id>8</osversion_id>
+<oslicence_id>0</oslicence_id>
+<cpu></cpu>
+<ram></ram>
+</VirtualMachine>
+<VirtualMachine alias="VirtualMachine" id="15">
+<name>VM4</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>low</business_criticity>
+<move2production></move2production>
+<status>production</status>
+<virtualhost_id>8</virtualhost_id>
+<osfamily_id>3</osfamily_id>
+<osversion_id>4</osversion_id>
+<oslicence_id>0</oslicence_id>
+<cpu></cpu>
+<ram></ram>
+</VirtualMachine>
+</Set>

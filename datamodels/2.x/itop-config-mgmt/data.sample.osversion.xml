@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<OSversion alias="OSversion" id="8">
+<name>Unbuntu 11.10</name>
+<osfamily_id>7</osfamily_id>
+</OSversion>
+<OSversion alias="OSversion" id="4">
+<name>Windows 2008 Server</name>
+<osfamily_id>3</osfamily_id>
+</OSversion>
+</Set>

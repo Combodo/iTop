@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<ContactType alias="ContactType" id="17">
+<name>Customer manager</name>
+</ContactType>
+<ContactType alias="ContactType" id="12">
+<name>Helpdesk</name>
+</ContactType>
+<ContactType alias="ContactType" id="15">
+<name>Manager</name>
+</ContactType>
+<ContactType alias="ContactType" id="14">
+<name>Support Agent</name>
+</ContactType>
+<ContactType alias="ContactType" id="13">
+<name>Support level1</name>
+</ContactType>
+<ContactType alias="ContactType" id="16">
+<name>Team leader</name>
+</ContactType>
+</Set>

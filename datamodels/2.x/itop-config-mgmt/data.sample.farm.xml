@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<Farm alias="Farm" id="7">
+<name>Cluster1</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>low</business_criticity>
+<move2production></move2production>
+<status>production</status>
+</Farm>
+<Farm alias="Farm" id="8">
+<name>Cluster2</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>medium</business_criticity>
+<move2production></move2production>
+<status>production</status>
+</Farm>
+</Set>

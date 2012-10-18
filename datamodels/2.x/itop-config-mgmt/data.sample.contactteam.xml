@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<lnkPersonToTeam alias="lnkPersonToTeam" id="8">
+<team_id>16</team_id>
+<person_id>10</person_id>
+</lnkPersonToTeam>
+<lnkPersonToTeam alias="lnkPersonToTeam" id="7">
+<team_id>16</team_id>
+<person_id>15</person_id>
+</lnkPersonToTeam>
+<lnkPersonToTeam alias="lnkPersonToTeam" id="9">
+<team_id>17</team_id>
+<person_id>10</person_id>
+</lnkPersonToTeam>
+<lnkPersonToTeam alias="lnkPersonToTeam" id="10">
+<team_id>17</team_id>
+<person_id>14</person_id>
+</lnkPersonToTeam>
+<lnkPersonToTeam alias="lnkPersonToTeam" id="11">
+<team_id>17</team_id>
+<person_id>8</person_id>
+</lnkPersonToTeam>
+<lnkPersonToTeam alias="lnkPersonToTeam" id="4">
+<team_id>4</team_id>
+<person_id>11</person_id>
+</lnkPersonToTeam>
+<lnkPersonToTeam alias="lnkPersonToTeam" id="3">
+<team_id>4</team_id>
+<person_id>13</person_id>
+</lnkPersonToTeam>
+<lnkPersonToTeam alias="lnkPersonToTeam" id="5">
+<team_id>5</team_id>
+<person_id>12</person_id>
+</lnkPersonToTeam>
+<lnkPersonToTeam alias="lnkPersonToTeam" id="6">
+<team_id>5</team_id>
+<person_id>9</person_id>
+</lnkPersonToTeam>
+</Set>

@@ -1,0 +1,1801 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <classes>
+    <class id="Incident" _delta="define">
+      <parent>Ticket</parent>
+      <properties>
+        <comment><![CDATA[/**
+ * Persistent classes for a CMDB
+ *
+ * @author      Erwan Taloc <erwan.taloc@combodo.com>
+ * @author      Romain Quetiez <romain.quetiez@combodo.com>
+ * @author      Denis Flaven <denis.flaven@combodo.com>
+ * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ */]]></comment>
+        <category>bizmodel,searchable,requestmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>ticket_incident</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="ref"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>images/incident.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="ref"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="status" xsi:type="AttributeEnum">
+          <values>
+            <value>new</value>
+            <value>assigned</value>
+            <value>pending</value>
+            <value>escalated_tto</value>
+            <value>escalated_ttr</value>
+            <value>resolved</value>
+            <value>closed</value>
+          </values>
+          <sql>status</sql>
+          <default_value>new</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="impact" xsi:type="AttributeEnum">
+          <values>
+            <value>1</value>
+            <value>2</value>
+            <value>3</value>
+          </values>
+          <sql>impact</sql>
+          <default_value>1</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="priority" xsi:type="AttributeEnum">
+          <values>
+            <value>1</value>
+            <value>2</value>
+            <value>3</value>
+            <value>4</value>
+          </values>
+          <sql>priority</sql>
+          <default_value>4</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="emergency" xsi:type="AttributeEnum">
+          <values>
+            <value>1</value>
+            <value>2</value>
+            <value>3</value>
+            <value>4</value>
+          </values>
+          <sql>emergency</sql>
+          <default_value>4</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="origin" xsi:type="AttributeEnum">
+          <values>
+            <value>mail</value>
+            <value>phone</value>
+            <value>portal</value>
+            <value>monitoring</value>
+          </values>
+          <sql>origin</sql>
+          <default_value>phone</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="service_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <sql>service_id</sql>
+          <target_class>Service</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="servicesubcategory_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT ServiceSubcategory WHERE service_id = :this->service_id AND request_type = 'incident']]></filter>
+          <dependencies>
+            <attribute id="service_id"/>
+          </dependencies>
+          <sql>servicesubcategory_id</sql>
+          <target_class>ServiceSubcategory</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="servicesubcategory_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>servicesubcategory_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="escalation_flag" xsi:type="AttributeEnum">
+          <values>
+            <value>yes</value>
+            <value>no</value>
+          </values>
+          <sql>escalation_flag</sql>
+          <default_value>no</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="escalation_reason" xsi:type="AttributeString">
+          <sql>escalation_reason</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="assignment_date" xsi:type="AttributeDateTime">
+          <sql>assignment_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="resolution_date" xsi:type="AttributeDateTime">
+          <sql>resolution_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="last_pending_date" xsi:type="AttributeDateTime">
+          <sql>last_pending_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="cumulatedpending" xsi:type="AttributeStopWatch">
+          <states>
+            <state id="pending"/>
+          </states>
+          <working_time></working_time>
+	   <thresholds/>
+          <goal></goal>
+        </field>
+        <field id="tto" xsi:type="AttributeStopWatch">
+          <states>
+            <state id="new"/>
+            <state id="escalated_tto"/>
+          </states>
+          <working_time></working_time>
+          <goal>ResponseTicketTTO</goal>
+          <thresholds>
+            <threshold>
+            	<percent>75</percent>
+            	<actions>
+		</actions>
+            </threshold>
+            <threshold>
+            	<percent>100</percent>
+            	<actions>
+            	  <action>
+            	    <verb>ApplyStimulus</verb>
+            	    <params>
+            	      <param>ev_timeout</param>
+            	    </params>
+            	  </action>
+		</actions>
+            </threshold>
+	   </thresholds>
+        </field>
+        <field id="ttr" xsi:type="AttributeStopWatch">
+          <states>
+            <state id="new"/>
+            <state id="escalated_tto"/>
+            <state id="assigned"/>
+            <state id="escalated_ttr"/>
+          </states>
+          <working_time></working_time>
+          <goal>ResponseTicketTTR</goal>
+          <thresholds>
+            <threshold>
+            	<percent>75</percent>
+            	<actions>
+		</actions>
+            </threshold>
+            <threshold>
+            	<percent>100</percent>
+            	<actions>
+            	  <action>
+            	    <verb>ApplyStimulus</verb>
+            	    <params>
+            	      <param>ev_timeout</param>
+            	    </params>
+            	  </action>
+		</actions>
+            </threshold>
+	  </thresholds>
+        </field>
+        <field id="tto_escalation_deadline" xsi:type="AttributeSubItem">
+			<target_attcode>tto</target_attcode>
+			<item_code>100_deadline</item_code>
+        </field>
+        <field id="sla_tto_passed" xsi:type="AttributeSubItem">
+			<target_attcode>tto</target_attcode>
+			<item_code>100_passed</item_code>
+        </field>
+        <field id="sla_tto_over" xsi:type="AttributeSubItem">
+			<target_attcode>tto</target_attcode>
+			<item_code>100_overrun</item_code>
+        </field>
+        <field id="ttr_escalation_deadline" xsi:type="AttributeSubItem">
+			<target_attcode>ttr</target_attcode>
+			<item_code>100_deadline</item_code>
+        </field>
+        <field id="sla_ttr_passed" xsi:type="AttributeSubItem">
+			<target_attcode>ttr</target_attcode>
+			<item_code>100_passed</item_code>
+        </field>
+        <field id="sla_ttr_over" xsi:type="AttributeSubItem">
+			<target_attcode>ttr</target_attcode>
+			<item_code>100_overrun</item_code>
+        </field>
+        <field id="time_spent" xsi:type="AttributeDuration">
+          <sql>time_spent</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="resolution_code" xsi:type="AttributeEnum">
+          <values>
+            <value>assistance</value>
+            <value>other</value>
+            <value>software patch</value>
+            <value>training</value>
+            <value>hardware repair</value>
+            <value>system update</value>
+            <value>bug fixed</value>
+          </values>
+          <sql>resolution_code</sql>
+          <default_value>assistance</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="solution" xsi:type="AttributeText">
+          <sql>solution</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="pending_reason" xsi:type="AttributeText">
+          <sql>pending_reason</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="parent_incident_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Incident WHERE id != :this->id AND status NOT IN ('resolved','closed')]]></filter>
+          <sql>parent_incident_id</sql>
+          <target_class>Incident</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="parent_incident_ref" xsi:type="AttributeExternalField">
+          <extkey_attcode>parent_incident_id</extkey_attcode>
+          <target_attcode>ref</target_attcode>
+        </field>
+        <field id="parent_problem_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Problem WHERE status != "closed"]]></filter>
+          <sql>parent_problem_id</sql>
+          <target_class>Problem</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="parent_problem_ref" xsi:type="AttributeExternalField">
+          <extkey_attcode>parent_problem_id</extkey_attcode>
+          <target_attcode>ref</target_attcode>
+        </field>
+        <field id="parent_change_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Change WHERE status != "closed"]]></filter>
+          <sql>parent_change_id</sql>
+          <target_class>Change</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="parent_change_ref" xsi:type="AttributeExternalField">
+          <extkey_attcode>parent_change_id</extkey_attcode>
+          <target_attcode>ref</target_attcode>
+        </field>
+        <field id="related_request_list" xsi:type="AttributeLinkedSet">
+          <linked_class>UserRequest</linked_class>
+          <ext_key_to_me>parent_incident_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+        <field id="child_incidents_list" xsi:type="AttributeLinkedSet">
+          <linked_class>Incident</linked_class>
+          <ext_key_to_me>parent_incident_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+        <field id="public_log" xsi:type="AttributeCaseLog">
+          <sql>public_log</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="user_satisfaction" xsi:type="AttributeEnum">
+          <values>
+            <value>1</value>
+            <value>2</value>
+            <value>3</value>
+            <value>4</value>
+          </values>
+          <sql>user_satisfaction</sql>
+          <default_value>1</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="user_comment" xsi:type="AttributeText">
+          <sql>user_commment</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+      <lifecycle>
+        <attribute>status</attribute>
+        <stimuli>
+          <stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_reassign" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_pending" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_timeout" xsi:type="StimulusInternal"/>
+          <stimulus id="ev_autoresolve" xsi:type="StimulusInternal"/>
+          <stimulus id="ev_autoclose" xsi:type="StimulusInternal"/>
+          <stimulus id="ev_resolve" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_close" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_reopen" xsi:type="StimulusUserAction"/>
+        </stimuli>
+        <states>
+          <state id="new">
+            <flags>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="caller_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="team_id">
+                <hidden/>
+              </attribute>
+              <attribute id="agent_id">
+                <hidden/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="escalation_flag">
+                <hidden/>
+              </attribute>
+              <attribute id="escalation_reason">
+                <hidden/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_pending_date">
+                <hidden/>
+              </attribute>
+              <attribute id="time_spent">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="solution">
+                <hidden/>
+              </attribute>
+              <attribute id="pending_reason">
+                <hidden/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_comment">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <read_only/>
+              </attribute>
+              <attribute id="sla_tto_passed">
+                <hidden/>
+              </attribute>
+              <attribute id="sla_tto_over">
+                <hidden/>
+              </attribute>
+              <attribute id="sla_ttr_passed">
+                <hidden/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="sla_ttr_over">
+                <hidden/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition>
+                <stimulus>ev_assign</stimulus>
+                <target>assigned</target>
+                <actions>
+                  <action>
+                    <verb>SetAssignedDate</verb>
+                  </action>
+                </actions>
+              </transition>
+              <transition>
+                <stimulus>ev_timeout</stimulus>
+                <target>escalated_tto</target>
+                <actions/>
+              </transition>
+              <transition>
+                <stimulus>ev_autoresolve</stimulus>
+                <target>resolved</target>
+                <actions>
+                  <action>
+                    <verb>SetResolveDate</verb>
+                  </action>
+                  <action>
+                    <verb>resolveChilds</verb>
+                  </action>
+                </actions>
+              </transition>
+            </transitions>
+          </state>
+          <state id="escalated_tto">
+            <flags>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="caller_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="agent_id">
+                <hidden/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="escalation_flag">
+                <hidden/>
+              </attribute>
+              <attribute id="escalation_reason">
+                <hidden/>
+              </attribute>
+              <attribute id="assignment_date">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_pending_date">
+                <hidden/>
+              </attribute>
+              <attribute id="time_spent">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="solution">
+                <hidden/>
+              </attribute>
+              <attribute id="pending_reason">
+                <hidden/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_comment">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <read_only/>
+              </attribute>
+              <attribute id="sla_tto_passed">
+                <hidden/>
+              </attribute>
+              <attribute id="sla_tto_over">
+                <hidden/>
+              </attribute>
+              <attribute id="sla_ttr_passed">
+                <hidden/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="sla_ttr_over">
+                <hidden/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition>
+                <stimulus>ev_assign</stimulus>
+                <target>assigned</target>
+                <actions>
+                  <action>
+                    <verb>SetAssignedDate</verb>
+                  </action>
+                </actions>
+              </transition>
+            </transitions>
+          </state>
+          <state id="assigned">
+            <flags>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="team_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="agent_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="assignment_date">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_pending_date">
+                <hidden/>
+              </attribute>
+              <attribute id="time_spent">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="solution">
+                <hidden/>
+              </attribute>
+              <attribute id="pending_reason">
+                <hidden/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_comment">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="sla_tto_passed">
+                <read_only/>
+              </attribute>
+              <attribute id="sla_tto_over">
+                <read_only/>
+              </attribute>
+              <attribute id="sla_ttr_passed">
+                <hidden/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <read_only/>
+              </attribute>
+              <attribute id="sla_ttr_over">
+                <hidden/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition>
+                <stimulus>ev_pending</stimulus>
+                <target>pending</target>
+                <actions>
+                  <action>
+                    <verb>SetLastPendingDate</verb>
+                  </action>
+                </actions>
+              </transition>
+              <transition>
+                <stimulus>ev_resolve</stimulus>
+                <target>resolved</target>
+                <actions>
+                  <action>
+                    <verb>SetResolveDate</verb>
+                  </action>
+                  <action>
+                    <verb>resolveChilds</verb>
+                  </action>
+                </actions>
+              </transition>
+              <transition>
+                <stimulus>ev_reassign</stimulus>
+                <target>assigned</target>
+                <actions/>
+              </transition>
+              <transition>
+                <stimulus>ev_autoresolve</stimulus>
+                <target>resolved</target>
+                <actions>
+                  <action>
+                    <verb>SetResolveDate</verb>
+                  </action>
+                  <action>
+                    <verb>resolveChilds</verb>
+                  </action>
+                </actions>
+              </transition>
+            </transitions>
+          </state>
+          <state id="escalated_ttr">
+            <flags>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="team_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="agent_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="assignment_date">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_pending_date">
+                <hidden/>
+              </attribute>
+              <attribute id="time_spent">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="solution">
+                <hidden/>
+              </attribute>
+              <attribute id="pending_reason">
+                <hidden/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_comment">
+                <hidden/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="sla_tto_passed">
+                <read_only/>
+              </attribute>
+              <attribute id="sla_tto_over">
+                <read_only/>
+              </attribute>
+              <attribute id="sla_ttr_passed">
+                <hidden/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <read_only/>
+              </attribute>
+              <attribute id="sla_ttr_over">
+                <hidden/>
+              </attribute>
+            </flags>
+            <transitions/>
+          </state>
+          <state id="pending">
+            <flags>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="team_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="agent_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="assignment_date">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_pending_date">
+                <read_only/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="sla_tto_passed">
+                <hidden/>
+              </attribute>
+              <attribute id="sla_tto_over">
+                <hidden/>
+              </attribute>
+              <attribute id="sla_ttr_passed">
+                <hidden/>
+              </attribute>
+              <attribute id="sla_ttr_over">
+                <hidden/>
+              </attribute>
+              <attribute id="time_spent">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="solution">
+                <hidden/>
+              </attribute>
+              <attribute id="pending_reason">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_comment">
+                <hidden/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition>
+                <stimulus>ev_assign</stimulus>
+                <target>assigned</target>
+                <actions>
+                </actions>
+              </transition>
+              <transition>
+                <stimulus>ev_autoresolve</stimulus>
+                <target>resolved</target>
+                <actions>
+                  <action>
+                    <verb>SetResolveDate</verb>
+                  </action>
+                  <action>
+                    <verb>resolveChilds</verb>
+                  </action>
+                </actions>
+              </transition>
+            </transitions>
+          </state>
+          <state id="resolved">
+            <flags>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <read_only/>
+              </attribute>
+               <attribute id="caller_id">
+                <read_only/>
+              </attribute>
+              <attribute id="origin">
+                <read_only/>
+              </attribute>
+              <attribute id="team_id">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_id">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="private_log">
+                <normal/>
+              </attribute>
+              <attribute id="impact">
+                <read_only/>
+              </attribute>
+              <attribute id="emergency">
+                <read_only/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="service_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="servicesubcategory_id">
+                <must_prompt/>
+              </attribute>
+              <attribute id="escalation_flag">
+                <read_only/>
+              </attribute>
+              <attribute id="escalation_reason">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_date">
+                <read_only/>
+              </attribute>
+              <attribute id="last_pending_date">
+                <hidden/>
+              </attribute>
+              <attribute id="time_spent">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_code">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="solution">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="pending_reason">
+                <read_only/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <hidden/>
+              </attribute>
+              <attribute id="user_comment">
+                <hidden/>
+              </attribute>
+              <attribute id="parent_incident_id">
+                <read_only/>
+              </attribute>
+              <attribute id="parent_change_id">
+                <read_only/>
+              </attribute>
+              <attribute id="parent_problem_id">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="sla_tto_passed">
+                <read_only/>
+              </attribute>
+              <attribute id="sla_tto_over">
+                <read_only/>
+              </attribute>
+              <attribute id="sla_ttr_passed">
+                <read_only/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="sla_ttr_over">
+                <read_only/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition>
+                <stimulus>ev_close</stimulus>
+                <target>closed</target>
+                <actions>
+                  <action>
+                    <verb>SetClosureDate</verb>
+                  </action>
+                </actions>
+              </transition>
+              <transition>
+                <stimulus>ev_reopen</stimulus>
+                <target>assigned</target>
+                <actions>
+                </actions>
+              </transition>
+              <transition>
+                <stimulus>ev_autoresolve</stimulus>
+                <target>resolved</target>
+                <actions>
+                  <action>
+                    <verb>SetResolveDate</verb>
+                  </action>
+                  <action>
+                    <verb>resolveChilds</verb>
+                  </action>
+                </actions>
+              </transition>
+            </transitions>
+          </state>
+          <state id="closed">
+            <flags>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="org_id">
+                <read_only/>
+              </attribute>
+              <attribute id="caller_id">
+                <read_only/>
+              </attribute>
+              <attribute id="origin">
+                <read_only/>
+              </attribute>
+              <attribute id="team_id">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_id">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <read_only/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="private_log">
+                <read_only/>
+              </attribute>
+              <attribute id="impact">
+                <read_only/>
+              </attribute>
+              <attribute id="emergency">
+                <read_only/>
+              </attribute>
+              <attribute id="priority">
+                <read_only/>
+              </attribute>
+              <attribute id="service_id">
+                <read_only/>
+              </attribute>
+              <attribute id="servicesubcategory_id">
+                <read_only/>
+              </attribute>
+              <attribute id="escalation_flag">
+                <read_only/>
+              </attribute>
+              <attribute id="escalation_reason">
+                <read_only/>
+              </attribute>
+              <attribute id="assignment_date">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_date">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <read_only/>
+              </attribute>
+              <attribute id="last_pending_date">
+                <hidden/>
+              </attribute>
+              <attribute id="time_spent">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_code">
+                <read_only/>
+              </attribute>
+              <attribute id="solution">
+                <read_only/>
+              </attribute>
+              <attribute id="pending_reason">
+                <read_only/>
+              </attribute>
+              <attribute id="public_log">
+                <read_only/>
+              </attribute>
+              <attribute id="user_satisfaction">
+                <must_prompt/>
+              </attribute>
+              <attribute id="user_comment">
+                <must_prompt/>
+              </attribute>
+              <attribute id="pending_reason">
+                <read_only/>
+              </attribute>
+              <attribute id="parent_incident_id">
+                <read_only/>
+              </attribute>
+              <attribute id="parent_change_id">
+                <read_only/>
+              </attribute>
+              <attribute id="parent_problem_id">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="tto_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="sla_tto_passed">
+                <read_only/>
+              </attribute>
+              <attribute id="sla_tto_over">
+                <read_only/>
+              </attribute>
+              <attribute id="sla_ttr_passed">
+                <read_only/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <hidden/>
+              </attribute>
+              <attribute id="sla_ttr_over">
+                <read_only/>
+              </attribute>
+            </flags>
+            <transitions/>
+          </state>
+        </states>
+      </lifecycle>
+      <methods>
+        <method id="SetAssignedDate">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function SetAssignedDate($sStimulusCode)
+	{
+		$this->Set('assignment_date', time());
+		return true;
+	}]]></code>
+        </method>
+        <method id="SetLastPendingDate">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function SetLastPendingDate($sStimulusCode)
+	{
+		$this->Set('last_pending_date', time());
+		return true;
+	}]]></code>
+        </method>
+        <method id="SetResolveDate">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function SetResolveDate($sStimulusCode)
+	{
+		$this->Set('resolution_date', time());
+                $iTimeSpent = time() - AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
+		$this->Set('time_spent', $iTimeSpent);
+		return true;
+	}]]></code>
+        </method>
+        <method id="SetClosureDate">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function SetClosureDate($sStimulusCode)
+	{
+		$this->Set('close_date', time());
+		return true;
+	}]]></code>
+        </method>
+        <method id="ComputePriority">
+          <comment>/** Compute the priority of the ticket based on its impact and emergency&#13;
+         * @return integer The priority of the ticket 1(high) .. 3(low)&#13;
+         */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[        public function ComputePriority()
+        {
+                // priority[impact][emergency]
+                $aPriorities = array(
+                        // single person
+                        1 => array(
+                                        1 => 1,
+                                        2 => 1,
+                                        3 => 2,
+                                        4 => 4,
+                        ),
+                        // a group
+                        2 => array(
+                                1 => 1,
+                                2 => 2,
+                                3 => 3,
+                                4 => 4,
+                        ),
+                        // a departement!
+                        3 => array(
+                                        1 => 2,
+                                        2 => 3,
+                                        3 => 3,
+                                        4 => 4,
+                        ),
+                );
+                $iPriority = $aPriorities[(int)$this->Get('impact')][(int)$this->Get('emergency')];
+                return $iPriority;              
+        }]]></code>
+        </method>
+        <method id="ComputeValues">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function ComputeValues()
+	{
+
+		// Compute the priority of the ticket
+		$this->Set('priority', $this->ComputePriority());
+
+		$sCurrRef = $this->Get('ref');
+		if (strlen($sCurrRef) == 0)
+		{
+			$iKey = $this->GetKey();
+			if ($iKey < 0)
+			{
+				// Object not yet in the Database
+				$iKey = MetaModel::GetNextKey(get_class($this));
+			}
+			$sName = sprintf('I-%06d', $iKey);
+			$this->Set('ref', $sName);
+		}
+
+		return parent::ComputeValues();
+	}]]></code>
+        </method>
+        <method id="DisplayBareRelations">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-cmdbAbstractObject</type>
+          <code><![CDATA[	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	{
+		parent::DisplayBareRelations($oPage, $bEditMode);
+
+		if (!$bEditMode)
+		{
+			if (MetaModel::IsValidClass('KnownError'))
+			{
+				//Search for known errors
+				$oPage->SetCurrentTab(Dict::S('Class:UserRequest:KnownErrorList'));
+				$iTicketID = $this->GetKey();;
+				$oKnownErrorSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT KnownError AS ke JOIN lnkErrorToFunctionalCI AS l1 ON l1.error_id=ke.id JOIN FunctionalCI AS ci ON l1.functionalci_id=ci.id JOIN lnkFunctionalCIToTicket AS l2 ON l2.functionalci_id=ci.id WHERE l2.ticket_id=$iTicketID"));
+				$iNumberKE=$oKnownErrorSet->count();
+				if ($iNumberKE > 0)
+				{
+					$oPage->SetCurrentTab(Dict::S('Class:UserRequest:KnownErrorList')." ($iNumberKE)");
+				}
+				else
+				{
+					$oPage->SetCurrentTab(Dict::S('Class:UserRequest:KnownErrorList'));	
+				}			
+				self::DisplaySet($oPage, $oKnownErrorSet, array ('menu' => false));
+			}
+		}
+	}]]></code>
+        </method>
+        <method id="GetIcon">
+          <comment>/**&#13;
+	 * Get the icon representing this object&#13;
+	 * @param boolean $bImgTag If true the result is a full IMG tag (or an emtpy string if no icon is defined)&#13;
+	 * @return string Either the full IMG tag ($bImgTag == true) or just the path to the icon file&#13;
+	 */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function GetIcon($bImgTag = true)
+	{
+		$sStatus = $this->Get('status');
+		switch($this->GetState())
+		{
+
+			case 'escalated_tto':
+			case 'escalated_ttr':
+			$sIcon = self::MakeIconFromName('incident-escalated.png');
+			break;
+			
+			case 'resolved':
+			case 'closed':
+			$sIcon = self::MakeIconFromName('incident-closed.png');
+			break;
+
+			case 'new':
+			case 'approved':
+			$sIcon = self::MakeIconFromName('user-request.png');
+			$iEscalationDeadline = $this->Get('tto_escalation_deadline');
+			if ($iEscalationDeadline != null)
+			{
+				// A SLA is running
+				$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
+	
+				$ratio = ($iEscalationDeadline - time())/($iEscalationDeadline - $iStartDate);
+				if ($ratio <= 0)
+				{
+					$sIcon = self::MakeIconFromName('incident-escalated.png');
+				}
+				else if ($ratio <= 0.25)
+				{
+					$sIcon = self::MakeIconFromName('incident-deadline.png');
+				}
+			}
+			break;
+			
+			case 'assigned':
+			$sIcon = self::MakeIconFromName('user-request.png');
+			$iEscalationDeadline = $this->Get('ttr_escalation_deadline');
+			if ($iEscalationDeadline != null)
+			{
+				// A SLA is running
+				$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
+				$ratio = ($iEscalationDeadline - time())/($iEscalationDeadline - $iStartDate);
+				if ($ratio <= 0)
+				{
+					$sIcon = self::MakeIconFromName('incident-escalated.png');
+				}
+				else if ($ratio <= 0.25)
+				{
+					$sIcon = self::MakeIconFromName('incident-deadline.png');
+				}
+			}
+			break;
+
+
+			
+
+
+			
+			default:
+			$sIcon = MetaModel::GetClassIcon(get_class($this), $bImgTag);
+		}
+		return $sIcon;
+	}]]></code>
+        </method>
+        <method id="MakeIconFromName">
+          <static>true</static>
+          <access>protected</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	protected static function MakeIconFromName($sIconName, $bImgTag = true)
+	{
+		$sIcon = '';
+		if ($sIconName != '')
+		{
+			$sPath = '../env-'.utils::GetCurrentEnvironment().'/itop-incident-mgmt-itil/images/'.$sIconName;
+			if ($bImgTag)
+			{
+				$sIcon = "<img src=\"$sPath\" style=\"vertical-align:middle;\"/>";
+			}
+			else
+			{
+				$sIcon  = $sPath;
+			}
+		}
+		return $sIcon;
+	}]]></code>
+        </method>
+        <method id="GetHilightClass">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-iDisplay</type>
+          <code><![CDATA[	public function GetHilightClass()
+	{
+		$sHilightClass = '';
+		switch($this->GetState())
+		{
+			case 'new':
+			case 'approved':
+			$iEscalationDeadline  = $this->Get('tto_escalation_deadline');
+			if ($iEscalationDeadline != null)
+			{
+				// A SLA is running
+				$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
+				$ratio = ($iEscalationDeadline - time())/($iEscalationDeadline - $iStartDate);
+				if ($ratio <= 0)
+				{
+					$sHilightClass = HILIGHT_CLASS_CRITICAL;
+				}
+				else if ($ratio <= 0.25)
+				{
+					$sHilightClass = HILIGHT_CLASS_WARNING;
+				}
+			}
+			break;
+
+			case 'assigned':
+			$iEscalationDeadline = $this->Get('ttr_escalation_deadline');
+			if ($iEscalationDeadline != null)
+			{
+				// A SLA is running
+				$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
+				$ratio = ($iEscalationDeadline - time())/($iEscalationDeadline - $iStartDate);
+				if ($ratio <= 0)
+				{
+					$sHilightClass = HILIGHT_CLASS_CRITICAL;
+				}
+				else if ($ratio <= 0.25)
+				{
+					$sHilightClass = HILIGHT_CLASS_WARNING;
+				}
+			}
+			break;			
+			
+			case 'escalated_tto':
+			case 'escalated_ttr':
+			$sHilightClass = HILIGHT_CLASS_CRITICAL;
+			break;
+		}
+		return $sHilightClass;
+	}]]></code>
+        </method>
+        <method id="resolveChilds">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function resolveChilds($sStimulusCode)
+	{
+				
+		$oMyChange = MetaModel::NewObject("CMDBChange");
+		$oMyChange->Set("date", time());
+		$sUserString = CMDBChange::GetCurrentUserName();
+		$oMyChange->Set("userinfo", $sUserString."(automatic resolution)");
+		$iChangeId = $oMyChange->DBInsert();
+		$sOQL = "SELECT UserRequest WHERE parent_request_id=:ticket";
+		$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
+						array(),
+						array(
+							'ticket' => $this->GetKey(),
+							)
+						);
+		//automatically resolve child requests
+		while($oRequest = $oChildRequestSet->Fetch())
+		{
+			if ( $oRequest->Get('status') != 'resolved')
+			{
+				$oRequest->set('servicesubcategory_id',$this->Get('servicesubcategory_id'));
+				$oRequest->set('service_id',$this->Get('service_id'));		
+				$oRequest->set('team_id',$this->Get('team_id'));
+				$oRequest->set('agent_id',$this->Get('agent_id'));	
+				$oRequest->set('resolution_code',$this->Get('resolution_code'));
+				$oRequest->set('solution','Automatically resolved by incident:[[Incident:'.$this->Get('ref').']]');
+				$oRequest->ApplyStimulus('ev_autoresolve');
+				$oRequest->DBUpdateTracked($oMyChange);
+			}
+		}
+
+		//automatically resolve child incidents
+		$sOQL = "SELECT Incident WHERE parent_incident_id=:ticket";
+		$oChildIncidentSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
+						array(),
+						array(
+							'ticket' => $this->GetKey(),
+							)
+						);
+		while($oIncident = $oChildIncidentSet->Fetch())
+		{
+			if ( $oIncident->Get('status') != 'resolved')
+			{
+				$oIncident->set('servicesubcategory_id',$this->Get('servicesubcategory_id'));
+				$oIncident->set('service_id',$this->Get('service_id'));		
+				$oIncident->set('team_id',$this->Get('team_id'));
+				$oIncident->set('agent_id',$this->Get('agent_id'));	
+				$oIncident->set('resolution_code',$this->Get('resolution_code'));
+				$oIncident->set('solution','Automatically resolved by incident:[[Incident:'.$this->Get('ref').']]');
+				$oIncident->ApplyStimulus('ev_autoresolve');
+				$oIncident->DBUpdateTracked($oMyChange);
+			}
+		}
+		return true;
+
+	}]]></code>
+        </method>
+        <method id="UpdateChildRequestLog">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function UpdateChildRequestLog()
+	{
+		$sLogPublic = utils::ReadPostedParam('attr_public_log', null,false,'raw_data');
+		if ( $sLogPublic != null)
+		{
+			$oMyChange = MetaModel::NewObject("CMDBChange");
+			$oMyChange->Set("date", time());
+			$sUserString = CMDBChange::GetCurrentUserName();
+			$oMyChange->Set("userinfo", $sUserString."(automatic update)");
+			$iChangeId = $oMyChange->DBInsert();
+			$sOQL = "SELECT UserRequest WHERE parent_incident_id=:ticket";
+			$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
+							array(),
+							array(
+								'ticket' => $this->GetKey(),
+								)
+							);
+			while($oRequest = $oChildRequestSet->Fetch())
+			{
+				$oRequest->set('public_log',$sLogPublic);
+				$oRequest->DBUpdateTracked($oMyChange);
+			}
+
+		}
+		$sLogPrivate = utils::ReadPostedParam('attr_private_log', null,false,'raw_data');
+		if ( $sLogPrivate != null)
+		{
+			$oMyChange = MetaModel::NewObject("CMDBChange");
+			$oMyChange->Set("date", time());
+			$sUserString = CMDBChange::GetCurrentUserName();
+			$oMyChange->Set("userinfo", $sUserString."(automatic update)");
+			$iChangeId = $oMyChange->DBInsert();
+			$sOQL = "SELECT UserRequest WHERE parent_incident_id=:ticket";
+			$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
+							array(),
+							array(
+								'ticket' => $this->GetKey(),
+								)
+							);
+			while($oRequest = $oChildRequestSet->Fetch())
+			{
+				$oRequest->set('private_log',$sLogPrivate);
+				$oRequest->DBUpdateTracked($oMyChange);
+			}
+		}
+		return true;
+
+	}]]></code>
+        </method>
+        <method id="UpdateChildIncidentLog">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function UpdateChildIncidentLog()
+	{
+		$sLogPublic = utils::ReadPostedParam('attr_public_log', null,false,'raw_data');
+		if ( $sLogPublic != null)
+		{
+			$oMyChange = MetaModel::NewObject("CMDBChange");
+			$oMyChange->Set("date", time());
+			$sUserString = CMDBChange::GetCurrentUserName();
+			$oMyChange->Set("userinfo", $sUserString."(automatic update)");
+			$iChangeId = $oMyChange->DBInsert();
+			$sOQL = "SELECT Incident WHERE parent_incident_id=:ticket";
+			$oChildIncidentSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
+							array(),
+							array(
+								'ticket' => $this->GetKey(),
+								)
+							);
+			while($oIncident = $oChildIncidentSet->Fetch())
+			{
+				$oIncident->set('public_log',$sLogPublic);
+				$oIncident->DBUpdateTracked($oMyChange);
+			}
+
+		}
+		$sLogPrivate = utils::ReadPostedParam('attr_private_log', null,false,'raw_data');
+		if ( $sLogPrivate != null)
+		{
+			$oMyChange = MetaModel::NewObject("CMDBChange");
+			$oMyChange->Set("date", time());
+			$sUserString = CMDBChange::GetCurrentUserName();
+			$oMyChange->Set("userinfo", $sUserString."(automatic update)");
+			$iChangeId = $oMyChange->DBInsert();
+			$sOQL = "SELECT Incident WHERE parent_incident_id=:ticket";
+			$oChildIncidentSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
+							array(),
+							array(
+								'ticket' => $this->GetKey(),
+								)
+							);
+			while($oIncident = $oChildIncidentSet->Fetch())
+			{
+				$oIncident->set('private_log',$sLogPrivate);
+				$oIncident->DBUpdateTracked($oMyChange);
+			}
+		}
+		return true;
+
+	}]]></code>
+        </method>
+        <method id="ComputeImpactedItems">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function ComputeImpactedItems()
+	{
+		$oToNotify = $this->Get('contacts_list');
+		$oToImpact = $this->Get('functionalcis_list');
+
+		$oImpactedInfras = DBObjectSet::FromLinkSet($this, 'functionalcis_list', 'functionalci_id');
+
+		$aComputed = $oImpactedInfras->GetRelatedObjects('impacts', 10);
+
+		if (isset($aComputed['FunctionalCI']) && is_array($aComputed['FunctionalCI']))
+		{
+			foreach($aComputed['FunctionalCI'] as $iKey => $oObject)
+			{
+				$oNewLink = new lnkFunctionalCIToTicket();
+				$oNewLink->Set('functionalci_id', $iKey);
+				$oNewLink->Set('impact', 'potentially impacted (automatically computed)');
+				$oToImpact->AddObject($oNewLink);
+			}
+		}
+		if (isset($aComputed['Contact']) && is_array($aComputed['Contact']))
+		{
+			foreach($aComputed['Contact'] as $iKey => $oObject)
+			{
+				$oNewLink = new lnkContactToTicket();
+				$oNewLink->Set('contact_id', $iKey);
+				$oNewLink->Set('role', 'contact automatically computed');
+				$oToNotify->AddObject($oNewLink);
+			}
+		}
+		parent::OnInsert();
+	}]]></code>
+        </method>
+        <method id="OnInsert">
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	protected function OnInsert()
+
+	{
+		$this->ComputeImpactedItems();
+		$this->Set('last_update', time());
+		$this->Set('start_date', time());
+	}]]></code>
+        </method>
+        <method id="OnUpdate">
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	protected function OnUpdate()
+	{
+		$this->Set('last_update', time());
+		$this->UpdateChildRequestLog();
+		$this->UpdateChildIncidentLog();
+	}]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item>functionalcis_list</item>
+            <item>contacts_list</item>
+	    <item>child_incidents_list</item>
+            <item>related_request_list</item>
+            <item>workorders_list</item>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:Ticket:baseinfo">
+                  <items>
+                    <item>org_id</item>
+                    <item>caller_id</item>
+                    <item>status</item>
+                    <item>origin</item>
+                    <item>title</item>
+                    <item>description</item>
+                  </items>
+                </item>
+                <item id="fieldset:Ticket:moreinfo">
+                  <items>
+                    <item>service_id</item>
+                    <item>servicesubcategory_id</item>
+                    <item>escalation_flag</item>
+                    <item>escalation_reason</item>
+                    <item>pending_reason</item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Ticket:Type">
+                  <items>
+                    <item>impact</item>
+                    <item>emergency</item>
+                    <item>priority</item>
+                  </items>
+                </item>
+                <item id="fieldset:Ticket:contact">
+                  <items>
+                    <item>team_id</item>
+                    <item>agent_id</item>
+                  </items>
+                </item>
+                <item id="fieldset:Ticket:date">
+                  <items>
+                    <item>start_date</item>
+                    <item>last_update</item>
+                    <item>assignment_date</item>
+                    <item>tto_escalation_deadline</item>
+                    <item>ttr_escalation_deadline</item>
+                    <item>last_pending_date</item>
+                    <item>resolution_date</item>
+                    <item>close_date</item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col3">
+              <items>
+                <item id="fieldset:Relations">
+                  <items>
+                    <item>parent_incident_id</item>
+                    <item>parent_problem_id</item>
+                    <item>parent_change_id</item>
+                  </items>
+                </item>
+                <item id="fieldset:Ticket:resolution">
+                  <items>
+                    <item>resolution_code</item>
+                    <item>solution</item>
+                    <item>time_spent</item>
+                    <item>user_satisfaction</item>
+                    <item>user_comment</item>
+                  </items>
+                </item>
+                <item id="fieldset:Ticket:SLA">
+                  <items>
+		   <item>sla_tto_passed</item>
+		   <item>sla_tto_over</item>
+		   <item>sla_ttr_passed</item>
+		   <item>sla_ttr_over</item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>ref</item>
+            <item>org_id</item>
+            <item>title</item>
+            <item>description</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>resolution_date</item>
+            <item>close_date</item>
+            <item>status</item>
+            <item>caller_id</item>
+            <item>origin</item>
+            <item>impact</item>
+            <item>emergency</item>
+            <item>priority</item>
+            <item>service_id</item>
+            <item>servicesubcategory_id</item>
+            <item>team_id</item>
+            <item>agent_id</item>
+            <item>escalation_flag</item>
+            <item>resolution_code</item>
+            <item>user_satisfaction</item>
+	    <item>sla_tto_passed</item>
+	    <item>sla_ttr_passed</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>title</item>
+            <item>org_id</item>
+            <item>caller_id</item>
+            <item>start_date</item>
+            <item>status</item>
+            <item>agent_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+  </classes>
+  <menus>
+    <menu id="IncidentManagement" xsi:type="MenuGroup" _delta="define">
+      <rank>35</rank>
+      <enable_class>Contact</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+      <enable_permission>UR_ALLOWED_YES</enable_permission>
+      <enable_stimulus/>
+    </menu>
+    <menu id="Incident:Overview" xsi:type="DashboardMenuNode" _delta="define">
+      <rank>0</rank>
+      <parent>IncidentManagement</parent>
+      <definition_file>overview.xml</definition_file>
+    </menu>
+    <menu id="NewIncident" xsi:type="NewObjectMenuNode" _delta="define">
+      <rank>1</rank>
+      <parent>IncidentManagement</parent>
+      <class>Incident</class>
+    </menu>
+    <menu id="SearchIncidents" xsi:type="SearchMenuNode" _delta="define">
+      <rank>2</rank>
+      <parent>IncidentManagement</parent>
+      <class>Incident</class>
+    </menu>
+    <menu id="Incident:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
+      <rank>3</rank>
+      <parent>IncidentManagement</parent>
+      <template_file></template_file>
+    </menu>
+    <menu id="Incident:MyIncidents" xsi:type="OQLMenuNode" _delta="define">
+      <rank>0</rank>
+      <parent>Incident:Shortcuts</parent>
+      <oql><![CDATA[SELECT Incident WHERE agent_id = :current_contact_id AND status NOT IN ("closed","resolved")]]></oql>
+      <do_search></do_search>
+      <auto_reload>fast</auto_reload>
+    </menu>
+    <menu id="Incident:EscalatedIncidents" xsi:type="OQLMenuNode" _delta="define">
+      <rank>1</rank>
+      <parent>Incident:Shortcuts</parent>
+      <oql><![CDATA[SELECT Incident WHERE status IN ("escalated_tto", "escalated_ttr") OR escalation_flag="yes"]]></oql>
+      <do_search></do_search>
+      <auto_reload>fast</auto_reload>
+    </menu>
+    <menu id="Incident:OpenIncidents" xsi:type="OQLMenuNode" _delta="define">
+      <rank>2</rank>
+      <parent>Incident:Shortcuts</parent>
+      <oql><![CDATA[SELECT Incident WHERE status NOT IN ("closed")]]></oql>
+      <do_search>1</do_search>
+      <auto_reload>fast</auto_reload>
+    </menu>
+  </menus>
+</itop_design>

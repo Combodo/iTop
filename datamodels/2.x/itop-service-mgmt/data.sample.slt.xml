@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<SLT alias="SLT" id="1">
+<name>TTO priority high Incident 5mn</name>
+<priority>1</priority>
+<request_type>incident</request_type>
+<metric>tto</metric>
+<value>5</value>
+<unit>minutes</unit>
+</SLT>
+<SLT alias="SLT" id="2">
+<name>TTR priority high incident 15 mn</name>
+<priority>1</priority>
+<request_type>incident</request_type>
+<metric>ttr</metric>
+<value>15</value>
+<unit>minutes</unit>
+</SLT>
+</Set>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<DeliveryModel alias="DeliveryModel" id="2">
+<name>Standard support</name>
+<description></description>
+<org_id>3</org_id>
+</DeliveryModel>
+</Set>

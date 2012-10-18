@@ -1,0 +1,1779 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <classes>
+     <class id="Contract" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <comment><![CDATA[/**
+ * Persistent classes for a CMDB
+ *
+ * @author      Erwan Taloc <erwan.taloc@combodo.com>
+ * @author      Romain Quetiez <romain.quetiez@combodo.com>
+ * @author      Denis Flaven <denis.flaven@combodo.com>
+ * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ */]]></comment>
+        <category>bizmodel,searchable,structure</category>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>contract</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field>finalclass</db_final_class_field>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>images/contract.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="organization_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="contacts_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkContactToContract</linked_class>
+          <ext_key_to_me>contract_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>contact_id</ext_key_to_remote>
+          <duplicates></duplicates>
+        </field>
+        <field id="documents_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkContractToDocument</linked_class>
+          <ext_key_to_me>contract_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>document_id</ext_key_to_remote>
+          <duplicates></duplicates>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="start_date" xsi:type="AttributeDate">
+          <sql>start_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="end_date" xsi:type="AttributeDate">
+          <sql>end_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="cost" xsi:type="AttributeString">
+          <sql>cost</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="cost_currency" xsi:type="AttributeEnum">
+          <values>
+            <value>dollars</value>
+            <value>euros</value>
+          </values>
+          <sql>cost_currency</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="contracttype_id" xsi:type="AttributeExternalKey">
+          <sql>contracttype_id</sql>
+          <target_class>ContractType</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="contracttype_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contracttype_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="billing_frequency" xsi:type="AttributeString">
+          <sql>billing_frequency</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="cost_unit" xsi:type="AttributeString">
+          <sql>cost_unit</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="provider_id" xsi:type="AttributeExternalKey">
+          <sql>provider_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="provider_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>provider_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <values>
+            <value>production</value>
+            <value>implementation</value>
+            <value>obsolete</value>
+          </values>
+          <sql>status</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>      <parent>Typology</parent>
+        <details>
+          <items>
+            <item>name</item>
+            <item>org_id</item>
+            <item>contacts_list</item>
+            <item>documents_list</item>
+            <item>description</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>cost</item>
+            <item>cost_currency</item>
+            <item>billing_frequency</item>
+            <item>cost_unit</item>
+            <item>provider_id</item>
+            <item>status</item>
+	    <item>contracttype_id</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+            <item>org_id</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>cost</item>
+            <item>provider_id</item>
+            <item>cost_currency</item>
+            <item>billing_frequency</item>
+            <item>cost_unit</item>
+            <item>status</item>
+	    <item>contracttype_id</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>name</item>
+            <item>status</item>
+            <item>org_id</item>
+            <item>description</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>cost_unit</item>
+            <item>provider_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="ContractType" _delta="define">
+      <parent>Typology</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>contracttype</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields/>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>name</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="CustomerContract" _delta="define">
+      <parent>Contract</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>customercontract</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>images/contract.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="services_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkCustomerContractToService</linked_class>
+          <ext_key_to_me>customercontract_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>service_id</ext_key_to_remote>
+          <duplicates></duplicates>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+            <item>org_id</item>
+            <item>contacts_list</item>
+            <item>documents_list</item>
+            <item>description</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>cost</item>
+            <item>cost_currency</item>
+            <item>billing_frequency</item>
+            <item>cost_unit</item>
+            <item>provider_id</item>
+            <item>status</item>
+	    <item>contracttype_id</item>
+            <item>services_list</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+            <item>org_id</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>provider_id</item>
+            <item>cost</item>
+            <item>cost_currency</item>
+            <item>billing_frequency</item>
+            <item>cost_unit</item>
+            <item>status</item>
+	    <item>contracttype_id</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>status</item>
+            <item>org_id</item>
+            <item>description</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>provider_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="ProviderContract" _delta="define">
+      <parent>Contract</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>providercontract</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>images/contract.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="functionalcis_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkFunctionalCIToProviderContract</linked_class>
+          <ext_key_to_me>providercontract_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>functionalci_id</ext_key_to_remote>
+          <duplicates></duplicates>
+        </field>
+        <field id="sla" xsi:type="AttributeString">
+          <sql>sla</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="coverage" xsi:type="AttributeString">
+          <sql>coverage</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+            <item>org_id</item>
+            <item>contacts_list</item>
+            <item>documents_list</item>
+            <item>description</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>contracttype_id</item>
+            <item>cost</item>
+            <item>cost_currency</item>
+            <item>billing_frequency</item>
+            <item>cost_unit</item>
+            <item>provider_id</item>
+            <item>functionalcis_list</item>
+            <item>sla</item>
+            <item>coverage</item>
+            <item>status</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+            <item>org_id</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>provider_id</item>
+            <item>contracttype_id</item>
+            <item>cost</item>
+            <item>cost_currency</item>
+            <item>billing_frequency</item>
+            <item>cost_unit</item>
+            <item>sla</item>
+            <item>coverage</item>
+            <item>status</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>status</item>
+            <item>org_id</item>
+            <item>description</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>provider_id</item>
+            <item>sla</item>
+            <item>coverage</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkContactToContract" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkcontacttocontract</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="contract_id"/>
+            <attribute id="contact_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="contract_id"/>
+            <attribute id="contact_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="contract_id" xsi:type="AttributeExternalKey">
+          <sql>contract_id</sql>
+          <target_class>Contract</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="contract_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contract_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="contact_id" xsi:type="AttributeExternalKey">
+          <sql>contact_id</sql>
+          <target_class>Contact</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="contact_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>contract_id</item>
+            <item>contact_id</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>contract_id</item>
+            <item>contact_id</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>contract_id</item>
+            <item>contact_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkContractToDocument" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkcontracttodocument</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="contract_id"/>
+            <attribute id="document_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="contract_id"/>
+            <attribute id="document_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="contract_id" xsi:type="AttributeExternalKey">
+          <sql>contract_id</sql>
+          <target_class>Contract</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="contract_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contract_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="document_id" xsi:type="AttributeExternalKey">
+          <sql>document_id</sql>
+          <target_class>Document</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="document_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>document_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>contract_id</item>
+            <item>document_id</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>contract_id</item>
+            <item>document_id</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>contract_id</item>
+            <item>document_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkFunctionalCIToProviderContract" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkfunctionalcitoprovidercontract</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="providercontract_id"/>
+            <attribute id="functionalci_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="providercontract_id"/>
+            <attribute id="functionalci_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="providercontract_id" xsi:type="AttributeExternalKey">
+          <sql>providercontract_id</sql>
+          <target_class>ProviderContract</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="providercontract_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>providercontract_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="functionalci_id" xsi:type="AttributeExternalKey">
+          <sql>functionalci_id</sql>
+          <target_class>FunctionalCI</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="functionalci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>functionalci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>providercontract_id</item>
+            <item>functionalci_id</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>providercontract_id</item>
+            <item>functionalci_id</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>providercontract_id</item>
+            <item>functionalci_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="ServiceFamily" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>servicefamily</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>images/service.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="services_list" xsi:type="AttributeLinkedSet">
+          <linked_class>Service</linked_class>
+          <ext_key_to_me>servicefamily_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <duplicates></duplicates>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+            <item>services_list</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>name</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="Service" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>service</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>images/service.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="organization_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="organization_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="servicefamily_id" xsi:type="AttributeExternalKey">
+          <sql>servicefamily_id</sql>
+          <target_class>ServiceFamily</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="servicefamily_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>servicefamily_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="documents_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkDocumentToService</linked_class>
+          <ext_key_to_me>service_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>document_id</ext_key_to_remote>
+          <duplicates></duplicates>
+        </field>
+        <field id="contacts_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkContactToService</linked_class>
+          <ext_key_to_me>service_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>contact_id</ext_key_to_remote>
+          <duplicates></duplicates>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <values>
+            <value>production</value>
+            <value>implementation</value>
+            <value>obsolete</value>
+          </values>
+          <sql>status</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="customercontracts_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkCustomerContractToService</linked_class>
+          <ext_key_to_me>service_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>customercontract_id</ext_key_to_remote>
+          <duplicates></duplicates>
+        </field>
+        <field id="providercontracts_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkProviderContractToService</linked_class>
+          <ext_key_to_me>service_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>providercontract_id</ext_key_to_remote>
+          <duplicates></duplicates>
+        </field>
+        <field id="functionalcis_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkFunctionalCIToService</linked_class>
+          <ext_key_to_me>service_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>functionalci_id</ext_key_to_remote>
+          <duplicates></duplicates>
+        </field>
+        <field id="servicesubcategories_list" xsi:type="AttributeLinkedSet">
+          <linked_class>ServiceSubcategory</linked_class>
+          <ext_key_to_me>service_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <duplicates></duplicates>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+            <item>org_id</item>
+	    <item>servicefamily_id</item>
+            <item>description</item>
+            <item>status</item>
+	    <item>servicesubcategories_list</item>
+            <item>documents_list</item>
+            <item>contacts_list</item>
+            <item>customercontracts_list</item>
+            <item>providercontracts_list</item>
+            <item>functionalcis_list</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+            <item>status</item>
+            <item>org_id</item>
+	    <item>servicefamily_id</item>
+            <item>description</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>name</item>
+            <item>org_id</item>
+            <item>status</item>
+	    <item>servicefamily_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkDocumentToService" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkdocumenttoservice</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="service_id"/>
+            <attribute id="document_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="service_id"/>
+            <attribute id="document_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="service_id" xsi:type="AttributeExternalKey">
+          <sql>service_id</sql>
+          <target_class>Service</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="document_id" xsi:type="AttributeExternalKey">
+          <sql>document_id</sql>
+          <target_class>Document</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="document_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>document_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>service_id</item>
+            <item>document_id</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>service_id</item>
+            <item>document_id</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>service_id</item>
+            <item>document_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkContactToService" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkcontacttoservice</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="service_id"/>
+            <attribute id="contact_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="service_id"/>
+            <attribute id="contact_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="service_id" xsi:type="AttributeExternalKey">
+          <sql>service_id</sql>
+          <target_class>Service</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="contact_id" xsi:type="AttributeExternalKey">
+          <sql>contact_id</sql>
+          <target_class>Contact</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="contact_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>service_id</item>
+            <item>contact_id</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>service_id</item>
+            <item>contact_id</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>service_id</item>
+            <item>contact_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="ServiceSubcategory" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>servicesubcategory</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>images/service.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="service_id"/>
+            <attribute id="service_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="service_id" xsi:type="AttributeExternalKey">
+          <sql>service_id</sql>
+          <target_class>Service</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="request_type" xsi:type="AttributeEnum">
+          <values>
+            <value>incident</value>
+            <value>service_request</value>
+          </values>
+          <sql>request_type</sql>
+          <default_value>incident</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <values>
+            <value>production</value>
+            <value>implementation</value>
+            <value>obsolete</value>
+          </values>
+          <sql>status</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+            <item>service_id</item>
+            <item>status</item>
+            <item>request_type</item>
+            <item>description</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+            <item>service_id</item>
+            <item>description</item>
+            <item>status</item>
+            <item>request_type</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>service_id</item>
+            <item>status</item>
+            <item>request_type</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="SLA" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>sla</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>images/sla.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="organization_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="organization_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="slts_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkSLAToSLT</linked_class>
+          <ext_key_to_me>sla_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>slt_id</ext_key_to_remote>
+          <duplicates></duplicates>
+        </field>
+        <field id="customercontracts_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkCustomerContractToService</linked_class>
+          <ext_key_to_me>sla_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>customercontract_id</ext_key_to_remote>
+          <duplicates></duplicates>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+            <item>org_id</item>
+            <item>description</item>
+            <item>slts_list</item>
+            <item>customercontracts_list</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+            <item>org_id</item>
+            <item>description</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>name</item>
+            <item>org_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="SLT" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>slt</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>images/slt.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="priority" xsi:type="AttributeEnum">
+          <values>
+            <value>1</value>
+            <value>2</value>
+            <value>3</value>
+            <value>4</value>
+          </values>
+          <sql>priority</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="request_type" xsi:type="AttributeEnum">
+          <values>
+            <value>servicerequest</value>
+            <value>incident</value>
+            <value>other</value>
+          </values>
+          <sql>request_type</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="metric" xsi:type="AttributeEnum">
+          <values>
+            <value>tto</value>
+            <value>ttr</value>
+          </values>
+          <sql>metric</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="value" xsi:type="AttributeInteger">
+          <sql>value</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="unit" xsi:type="AttributeEnum">
+          <values>
+            <value>hours</value>
+            <value>minutes</value>
+          </values>
+          <sql>unit</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+            <item>priority</item>
+            <item>request_type</item>
+            <item>metric</item>
+            <item>value</item>
+            <item>unit</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+            <item>priority</item>
+            <item>request_type</item>
+            <item>metric</item>
+            <item>value</item>
+            <item>unit</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>priority</item>
+            <item>request_type</item>
+            <item>metric</item>
+            <item>value</item>
+            <item>unit</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkSLAToSLT" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkslatoslt</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="sla_id"/>
+            <attribute id="slt_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="sla_id"/>
+            <attribute id="slt_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="sla_id" xsi:type="AttributeExternalKey">
+          <sql>sla_id</sql>
+          <target_class>SLA</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="sla_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>sla_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="slt_id" xsi:type="AttributeExternalKey">
+          <sql>slt_id</sql>
+          <target_class>SLT</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="slt_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>slt_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>sla_id</item>
+            <item>slt_id</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>sla_id</item>
+            <item>slt_id</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>sla_id</item>
+            <item>slt_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkCustomerContractToService" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkcustomercontracttoservice</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="customercontract_id"/>
+            <attribute id="service_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="customercontract_id"/>
+            <attribute id="service_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="customercontract_id" xsi:type="AttributeExternalKey">
+          <sql>customercontract_id</sql>
+          <target_class>CustomerContract</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="customercontract_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>customercontract_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="service_id" xsi:type="AttributeExternalKey">
+          <sql>service_id</sql>
+          <target_class>Service</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="sla_id" xsi:type="AttributeExternalKey">
+          <sql>sla_id</sql>
+          <target_class>SLA</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="sla_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>sla_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>customercontract_id</item>
+            <item>service_id</item>
+            <item>sla_id</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>customercontract_id</item>
+            <item>service_id</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>customercontract_id</item>
+            <item>service_id</item>
+            <item>sla_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkProviderContractToService" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkprovidercontracttoservice</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="service_id"/>
+            <attribute id="providercontract_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="service_id"/>
+            <attribute id="providercontract_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="service_id" xsi:type="AttributeExternalKey">
+          <sql>service_id</sql>
+          <target_class>Service</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="providercontract_id" xsi:type="AttributeExternalKey">
+          <sql>providercontract_id</sql>
+          <target_class>ProviderContract</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="providercontract_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>providercontract_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>service_id</item>
+            <item>providercontract_id</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>service_id</item>
+            <item>providercontract_id</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>service_id</item>
+            <item>providercontract_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkFunctionalCIToService" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkfunctionalcitoservice</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="service_id"/>
+            <attribute id="functionalci_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="service_id"/>
+            <attribute id="functionalci_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="service_id" xsi:type="AttributeExternalKey">
+          <sql>service_id</sql>
+          <target_class>Service</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="service_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="functionalci_id" xsi:type="AttributeExternalKey">
+          <sql>functionalci_id</sql>
+          <target_class>FunctionalCI</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="functionalci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>functionalci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>service_id</item>
+            <item>functionalci_id</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>service_id</item>
+            <item>functionalci_id</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>service_id</item>
+            <item>functionalci_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="DeliveryModel" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>deliverymodel</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon>images/service.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="organization_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="organization_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="contacts_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkDeliveryModelToContact</linked_class>
+          <ext_key_to_me>deliverymodel_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>contact_id</ext_key_to_remote>
+          <duplicates></duplicates>
+        </field>
+        <field id="customers_list" xsi:type="AttributeLinkedSet">
+          <linked_class>Organization</linked_class>
+          <ext_key_to_me>deliverymodel_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+            <item>org_id</item>
+            <item>description</item>
+            <item>contacts_list</item>
+            <item>customers_list</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+            <item>org_id</item>
+            <item>description</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>org_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkDeliveryModelToContact" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkdeliverymodeltocontact</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="deliverymodel_id"/>
+            <attribute id="contact_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="deliverymodel_id"/>
+            <attribute id="contact_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="deliverymodel_id" xsi:type="AttributeExternalKey">
+          <sql>deliverymodel_id</sql>
+          <target_class>DeliveryModel</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="deliverymodel_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>deliverymodel_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="contact_id" xsi:type="AttributeExternalKey">
+          <sql>contact_id</sql>
+          <target_class>Contact</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="contact_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="role_id" xsi:type="AttributeExternalKey">
+          <sql>role_id</sql>
+          <target_class>ContactType</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="role_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>role_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>deliverymodel_id</item>
+            <item>contact_id</item>
+            <item>role_id</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>deliverymodel_id</item>
+            <item>contact_id</item>
+            <item>role_id</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>deliverymodel_id</item>
+            <item>contact_id</item>
+            <item>role_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+  </classes>
+  <menus>
+    <menu id="ServiceManagement" xsi:type="MenuGroup" _delta="define">
+      <rank>60</rank>
+    </menu>
+    <menu id="CustomerContract" xsi:type="OQLMenuNode" _delta="define">
+      <rank>1</rank>
+      <parent>ServiceManagement</parent>
+      <oql>SELECT CustomerContract</oql>
+      <do_search>1</do_search>
+    </menu>
+    <menu id="ProviderContract" xsi:type="OQLMenuNode" _delta="define">
+      <rank>2</rank>
+      <parent>ServiceManagement</parent>
+      <oql>SELECT ProviderContract</oql>
+      <do_search>1</do_search>
+    </menu>
+    <menu id="ServiceFamily" xsi:type="OQLMenuNode" _delta="define">
+      <rank>3</rank>
+      <parent>ServiceManagement</parent>
+      <oql>SELECT ServiceFamily</oql>
+      <do_search>1</do_search>
+    </menu>
+    <menu id="Service" xsi:type="OQLMenuNode" _delta="define">
+      <rank>4</rank>
+      <parent>ServiceManagement</parent>
+      <oql>SELECT Service</oql>
+      <do_search>1</do_search>
+    </menu>
+    <menu id="ServiceSubcategory" xsi:type="OQLMenuNode" _delta="define">
+      <rank>5</rank>
+      <parent>ServiceManagement</parent>
+      <oql>SELECT ServiceSubcategory</oql>
+      <do_search>1</do_search>
+    </menu>
+    <menu id="SLA" xsi:type="OQLMenuNode" _delta="define">
+      <rank>6</rank>
+      <parent>ServiceManagement</parent>
+      <oql>SELECT SLA</oql>
+      <do_search>1</do_search>
+    </menu>
+    <menu id="SLT" xsi:type="OQLMenuNode" _delta="define">
+      <rank>7</rank>
+      <parent>ServiceManagement</parent>
+      <oql>SELECT SLT</oql>
+      <do_search>1</do_search>
+    </menu>
+    <menu id="DeliveryModel" xsi:type="OQLMenuNode" _delta="define">
+      <rank>8</rank>
+      <parent>ServiceManagement</parent>
+      <oql>SELECT DeliveryModel</oql>
+      <do_search>1</do_search>
+    </menu>
+  </menus>
+</itop_design>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<Person alias="Person" id="13">
+<name>Gavalda</name>
+<status>active</status>
+<org_id>3</org_id>
+<email>gavalda@it.com</email>
+<phone></phone>
+<notify>yes</notify>
+<function></function>
+<first_name>Anna</first_name>
+<employee_number></employee_number>
+<mobile_phone></mobile_phone>
+<location_id>0</location_id>
+<manager_id>0</manager_id>
+</Person>
+<Person alias="Person" id="7">
+<name>Monet</name>
+<status>active</status>
+<org_id>2</org_id>
+<email>monet@demo.com</email>
+<phone></phone>
+<notify>yes</notify>
+<function></function>
+<first_name>Claude</first_name>
+<employee_number></employee_number>
+<mobile_phone></mobile_phone>
+<location_id>0</location_id>
+<manager_id>0</manager_id>
+</Person>
+<Person alias="Person" id="6">
+<name>Delacroix</name>
+<status>active</status>
+<org_id>2</org_id>
+<email>delacroix@demo.com</email>
+<phone></phone>
+<notify>yes</notify>
+<function></function>
+<first_name>Eugène</first_name>
+<employee_number></employee_number>
+<mobile_phone></mobile_phone>
+<location_id>0</location_id>
+<manager_id>0</manager_id>
+</Person>
+<Person alias="Person" id="11">
+<name>Flaubert</name>
+<status>active</status>
+<org_id>3</org_id>
+<email>flaubert@it.com</email>
+<phone></phone>
+<notify>yes</notify>
+<function></function>
+<first_name>Gustave</first_name>
+<employee_number></employee_number>
+<mobile_phone></mobile_phone>
+<location_id>0</location_id>
+<manager_id>0</manager_id>
+</Person>
+<Person alias="Person" id="12">
+<name>Cocteau</name>
+<status>active</status>
+<org_id>3</org_id>
+<email>cocteau@it.com</email>
+<phone></phone>
+<notify>yes</notify>
+<function></function>
+<first_name>Jean</first_name>
+<employee_number></employee_number>
+<mobile_phone></mobile_phone>
+<location_id>0</location_id>
+<manager_id>0</manager_id>
+</Person>
+<Person alias="Person" id="9">
+<name>Rousseau</name>
+<status>active</status>
+<org_id>3</org_id>
+<email>rousseau@it.com</email>
+<phone></phone>
+<notify>yes</notify>
+<function></function>
+<first_name>Jean-Jacques</first_name>
+<employee_number></employee_number>
+<mobile_phone></mobile_phone>
+<location_id>0</location_id>
+<manager_id>0</manager_id>
+</Person>
+<Person alias="Person" id="15">
+<name>Sartre</name>
+<status>active</status>
+<org_id>3</org_id>
+<email>sartre@it.com</email>
+<phone></phone>
+<notify>yes</notify>
+<function></function>
+<first_name>Jean-Paul</first_name>
+<employee_number></employee_number>
+<mobile_phone></mobile_phone>
+<location_id>0</location_id>
+<manager_id>0</manager_id>
+</Person>
+<Person alias="Person" id="10">
+<name>Vernes</name>
+<status>active</status>
+<org_id>3</org_id>
+<email>vernes@it.com</email>
+<phone></phone>
+<notify>yes</notify>
+<function></function>
+<first_name>Jules</first_name>
+<employee_number></employee_number>
+<mobile_phone></mobile_phone>
+<location_id>0</location_id>
+<manager_id>0</manager_id>
+</Person>
+<Person alias="Person" id="14">
+<name>Duras</name>
+<status>active</status>
+<org_id>3</org_id>
+<email>duras@it.com</email>
+<phone></phone>
+<notify>yes</notify>
+<function></function>
+<first_name>Marguerite</first_name>
+<employee_number></employee_number>
+<mobile_phone></mobile_phone>
+<location_id>0</location_id>
+<manager_id>0</manager_id>
+</Person>
+<Person alias="Person" id="1">
+<name>My last name</name>
+<status>active</status>
+<org_id>1</org_id>
+<email>my.email@foo.org</email>
+<phone>+00 000 000 000</phone>
+<notify>yes</notify>
+<function></function>
+<first_name>My first name</first_name>
+<employee_number></employee_number>
+<mobile_phone></mobile_phone>
+<location_id>0</location_id>
+<manager_id>0</manager_id>
+</Person>
+<Person alias="Person" id="2">
+<name>Picasso</name>
+<status>active</status>
+<org_id>2</org_id>
+<email>pablo@demo.com</email>
+<phone></phone>
+<notify>yes</notify>
+<function></function>
+<first_name>Pablo</first_name>
+<employee_number></employee_number>
+<mobile_phone></mobile_phone>
+<location_id>2</location_id>
+<manager_id>0</manager_id>
+</Person>
+<Person alias="Person" id="3">
+<name>Dali</name>
+<status>active</status>
+<org_id>2</org_id>
+<email>dali@demo.com</email>
+<phone></phone>
+<notify>yes</notify>
+<function></function>
+<first_name>Salvador</first_name>
+<employee_number></employee_number>
+<mobile_phone></mobile_phone>
+<location_id>2</location_id>
+<manager_id>0</manager_id>
+</Person>
+<Person alias="Person" id="8">
+<name>Hugo</name>
+<status>active</status>
+<org_id>3</org_id>
+<email>hugo@it.com</email>
+<phone></phone>
+<notify>yes</notify>
+<function></function>
+<first_name>Victor</first_name>
+<employee_number></employee_number>
+<mobile_phone></mobile_phone>
+<location_id>0</location_id>
+<manager_id>0</manager_id>
+</Person>
+</Set>

@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <layout>DashboardLayoutTwoCols</layout>
+  <title>UI:RequestMgmtMenuOverview:Title</title>
+  <cells>
+    <cell>
+      <dashlet id="1" xsi:type="DashletGroupByPie">
+        <title>UI-RequestManagementOverview-RequestByType-last-14-days</title>
+        <query>SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) &lt; start_date</query>
+        <group_by>request_type</group_by>
+        <style>pie</style>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="2" xsi:type="DashletGroupByBars">
+        <title>UI-RequestManagementOverview-Last-14-days</title>
+        <query>SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) &lt; start_date</query>
+        <group_by>start_date:day_of_month</group_by>
+        <style>bars</style>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="3" xsi:type="DashletGroupByTable">
+        <title>UI-RequestManagementOverview-OpenRequestByStatus</title>
+        <query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
+        <group_by>status</group_by>
+        <style>table</style>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="4" xsi:type="DashletGroupByTable">
+        <title>UI-RequestManagementOverview-OpenRequestByAgent</title>
+        <query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
+        <group_by>agent_id</group_by>
+        <style>table</style>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="5" xsi:type="DashletGroupByTable">
+        <title>UI-RequestManagementOverview-OpenRequestByType</title>
+        <query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
+        <group_by>finalclass</group_by>
+        <style>table</style>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="6" xsi:type="DashletGroupByTable">
+        <title>UI-RequestManagementOverview-OpenRequestByCustomer</title>
+        <query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
+        <group_by>org_id</group_by>
+        <style>table</style>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="0" xsi:type="DashletEmptyCell"/>
+    </cell>
+    <cell>
+      <dashlet id="0" xsi:type="DashletEmptyCell"/>
+    </cell>
+  </cells>
+</dashboard>

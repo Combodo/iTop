@@ -1,0 +1,22 @@
+<h1><itopstring>UI:ChangeMgmtMenuOverview:Title</itopstring></h1>
+<table border="0" padding="5" class="layout" width="100%">
+<tr>
+<td class="dashboard">
+<itopblock BlockClass="DisplayBlock" type="open_flash_chart" parameters="chart_type:bars;group_by:finalclass;chart_title:UI-ChangeManagementOverview-ChangeByType" asynchronous="false" encoding="text/oql">SELECT Change</itopblock>
+</td>
+<td class="dashboard">
+<h2><itopstring>UI-ChangeManagementOverview-ChangeUnassigned</itopstring></h2>
+<itopblock BlockClass="DisplayBlock" type="list" parameters="dashboard:true" asynchronous="false" encoding="text/oql">SELECT Change WHERE status = 'new'</itopblock>
+</td>
+</tr>
+<tr>
+<td class="dashboard">
+<h2><itopstring>UI-ChangeManagementOverview-ChangeWithOutage</itopstring></h2>
+<itopblock BlockClass="DisplayBlock" type="list" parameters="dashboard:true" asynchronous="false" encoding="text/oql">SELECT Change WHERE outage = 'yes'</itopblock>
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+</table>
+

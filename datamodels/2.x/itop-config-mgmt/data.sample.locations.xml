@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<Location alias="Location" id="1">
+<name>Bordeaux</name>
+<status>active</status>
+<org_id>2</org_id>
+<address></address>
+<postal_code></postal_code>
+<city></city>
+<country></country>
+</Location>
+<Location alias="Location" id="2">
+<name>Grenoble</name>
+<status>active</status>
+<org_id>2</org_id>
+<address>24, rue Lamartine</address>
+<postal_code>38320</postal_code>
+<city>Eybens</city>
+<country>France</country>
+</Location>
+<Location alias="Location" id="3">
+<name>Paris</name>
+<status>active</status>
+<org_id>2</org_id>
+<address>5, rue du Sentier</address>
+<postal_code>75002</postal_code>
+<city>Paris</city>
+<country>France</country>
+</Location>
+</Set>

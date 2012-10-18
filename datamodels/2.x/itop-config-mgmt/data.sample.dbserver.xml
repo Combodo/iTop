@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<DBserver alias="DBserver" id="16">
+<name>MySQL</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>low</business_criticity>
+<move2production></move2production>
+<system_id>13</system_id>
+<software_id>1</software_id>
+<softwarelicence_id>0</softwarelicence_id>
+<path></path>
+<status></status>
+</DBserver>
+<DBserver alias="DBserver" id="17">
+<name>Oracle</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>low</business_criticity>
+<move2production></move2production>
+<system_id>3</system_id>
+<software_id>2</software_id>
+<softwarelicence_id>0</softwarelicence_id>
+<path></path>
+<status></status>
+</DBserver>
+<DBserver alias="DBserver" id="18">
+<name>Oracle</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>low</business_criticity>
+<move2production></move2production>
+<system_id>14</system_id>
+<software_id>2</software_id>
+<softwarelicence_id>0</softwarelicence_id>
+<path></path>
+<status></status>
+</DBserver>
+</Set>

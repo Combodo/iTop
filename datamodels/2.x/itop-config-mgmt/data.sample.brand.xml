@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<Brand alias="Brand" id="10">
+<name>Cisco</name>
+</Brand>
+<Brand alias="Brand" id="1">
+<name>HP</name>
+</Brand>
+</Set>

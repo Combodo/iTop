@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<SLA alias="SLA" id="1">
+<name>Standard SLA</name>
+<description></description>
+<org_id>2</org_id>
+</SLA>
+</Set>

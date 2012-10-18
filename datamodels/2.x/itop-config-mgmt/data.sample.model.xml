@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<Model alias="Model" id="11">
+<name>Cisco 6500</name>
+<brand_id>10</brand_id>
+<Type>NetworkDevice</Type>
+</Model>
+<Model alias="Model" id="4">
+<name>DL380</name>
+<brand_id>1</brand_id>
+<Type>Server</Type>
+</Model>
+<Model alias="Model" id="5">
+<name>Procurve 2450</name>
+<brand_id>1</brand_id>
+<Type>NetworkDevice</Type>
+</Model>
+</Set>

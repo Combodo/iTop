@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <classes>
+    <class id="Ticket" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <comment><![CDATA[/**
+ * Persistent classes for a CMDB
+ *
+ * @author      Erwan Taloc <erwan.taloc@combodo.com>
+ * @author      Romain Quetiez <romain.quetiez@combodo.com>
+ * @author      Denis Flaven <denis.flaven@combodo.com>
+ * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ */]]></comment>
+        <category>bizmodel,searchable,structure</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>ticket</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field>finalclass</db_final_class_field>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="ref"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="ref"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="ref" xsi:type="AttributeString">
+          <sql>ref</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="caller_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Person WHERE org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <sql>caller_id</sql>
+          <target_class>Person</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="caller_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>caller_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="team_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Team AS t JOIN lnkDeliveryModelToContact AS l1 ON l1.contact_id=t.id JOIN DeliveryModel AS dm ON l1.deliverymodel_id=dm.id JOIN Organization AS o ON o.deliverymodel_id=dm.id WHERE o.id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <sql>team_id</sql>
+          <target_class>Team</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="team_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>team_id</extkey_attcode>
+          <target_attcode>email</target_attcode>
+        </field>
+        <field id="agent_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Person AS p JOIN lnkPersonToTeam AS l ON l.person_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this->team_id]]></filter>
+          <dependencies>
+            <attribute id="team_id"/>
+          </dependencies>
+          <sql>agent_id</sql>
+          <target_class>Person</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="agent_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>agent_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="title" xsi:type="AttributeString">
+          <sql>title</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="start_date" xsi:type="AttributeDateTime">
+          <sql>start_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="end_date" xsi:type="AttributeDateTime">
+          <sql>end_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="last_update" xsi:type="AttributeDateTime">
+          <sql>last_update</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="close_date" xsi:type="AttributeDateTime">
+          <sql>close_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="private_log" xsi:type="AttributeCaseLog">
+          <sql>private_log</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="contacts_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkContactToTicket</linked_class>
+          <ext_key_to_me>ticket_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>contact_id</ext_key_to_remote>
+          <duplicates></duplicates>
+        </field>
+        <field id="functionalcis_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkFunctionalCIToTicket</linked_class>
+          <ext_key_to_me>ticket_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>functionalci_id</ext_key_to_remote>
+          <duplicates></duplicates>
+        </field>
+        <field id="workorders_list" xsi:type="AttributeLinkedSet">
+          <linked_class>WorkOrder</linked_class>
+          <ext_key_to_me>ticket_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>ref</item>
+            <item>org_id</item>
+            <item>caller_id</item>
+            <item>team_id</item>
+            <item>agent_id</item>
+            <item>title</item>
+            <item>description</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>last_update</item>
+            <item>close_date</item>
+            <item>private_log</item>
+            <item>contacts_list</item>
+            <item>functionalcis_list</item>
+            <item>workorders_list</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>ref</item>
+            <item>title</item>
+            <item>description</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>last_update</item>
+            <item>close_date</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>ref</item>
+            <item>org_id</item>
+            <item>title</item>
+            <item>caller_id</item>
+            <item>team_id</item>
+            <item>agent_id</item>
+            <item>start_date</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkContactToTicket" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkcontacttoticket</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="ticket_id"/>
+            <attribute id="contact_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="ticket_id"/>
+            <attribute id="contact_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="ticket_id" xsi:type="AttributeExternalKey">
+          <sql>ticket_id</sql>
+          <target_class>Ticket</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="ticket_ref" xsi:type="AttributeExternalField">
+          <extkey_attcode>ticket_id</extkey_attcode>
+          <target_attcode>ref</target_attcode>
+        </field>
+        <field id="contact_id" xsi:type="AttributeExternalKey">
+          <sql>contact_id</sql>
+          <target_class>Contact</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+       <field id="contact_email" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>email</target_attcode>
+        </field>
+        <field id="role" xsi:type="AttributeString">
+          <sql>role</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>ticket_id</item>
+            <item>contact_id</item>
+            <item>role</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>ticket_id</item>
+            <item>contact_id</item>
+            <item>role</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>ticket_id</item>
+            <item>contact_id</item>
+            <item>role</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkFunctionalCIToTicket" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkfunctionalcitoticket</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="ticket_id"/>
+            <attribute id="functionalci_id"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="ticket_id"/>
+            <attribute id="functionalci_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="ticket_id" xsi:type="AttributeExternalKey">
+          <sql>ticket_id</sql>
+          <target_class>Ticket</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="ticket_ref" xsi:type="AttributeExternalField">
+          <extkey_attcode>ticket_id</extkey_attcode>
+          <target_attcode>ref</target_attcode>
+        </field>
+        <field id="functionalci_id" xsi:type="AttributeExternalKey">
+          <sql>functionalci_id</sql>
+          <target_class>FunctionalCI</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="functionalci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>functionalci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="impact" xsi:type="AttributeString">
+          <sql>impact</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item>ticket_id</item>
+            <item>functionalci_id</item>
+            <item>impact</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>ticket_id</item>
+            <item>functionalci_id</item>
+            <item>impact</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>ticket_id</item>
+            <item>functionalci_id</item>
+            <item>impact</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="WorkOrder" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,m2prequest</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>workorder</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field></db_final_class_field>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template></display_template>
+        <icon></icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="ticket_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <values>
+            <value>open</value>
+            <value>closed</value>
+          </values>
+          <sql>status</sql>
+          <default_value>open</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="ticket_id" xsi:type="AttributeExternalKey">
+          <sql>ticket_id</sql>
+          <target_class>Ticket</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="ticket_ref" xsi:type="AttributeExternalField">
+          <extkey_attcode>ticket_id</extkey_attcode>
+          <target_attcode>ref</target_attcode>
+        </field>
+        <field id="team_id" xsi:type="AttributeExternalKey">
+          <filter>SELECT Team</filter>
+          <sql>team_id</sql>
+          <target_class>Team</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="team_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>team_id</extkey_attcode>
+          <target_attcode>email</target_attcode>
+        </field>
+        <field id="agent_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Person AS p JOIN lnkTeamToContact AS l ON l.contact_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this->team_id]]></filter>
+          <dependencies>
+            <attribute id="team_id"/>
+          </dependencies>
+          <sql>owner_id</sql>
+          <target_class>Person</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="agent_email" xsi:type="AttributeExternalField">
+          <extkey_attcode>agent_id</extkey_attcode>
+          <target_attcode>email</target_attcode>
+        </field>
+        <field id="start_date" xsi:type="AttributeDateTime">
+          <sql>start_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="end_date" xsi:type="AttributeDateTime">
+          <sql>end_date</sql>
+          <default_value></default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="log" xsi:type="AttributeCaseLog">
+          <sql>log</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+      <lifecycle>
+        <attribute>status</attribute>
+        <stimuli>
+          <stimulus id="ev_close" xsi:type="StimulusUserAction"/>
+        </stimuli>
+        <states>
+          <state id="open">
+            <flags/>
+            <transitions>
+              <transition>
+                <stimulus>ev_close</stimulus>
+                <target>closed</target>
+                <actions/>
+              </transition>
+            </transitions>
+          </state>
+          <state id="closed">
+            <flags/>
+            <transitions/>
+          </state>
+        </states>
+      </lifecycle>
+      <methods>
+        <method id="UpdateParentTicketLog">
+          <static>false</static>
+          <access>public</access>
+          <type>StimulusUserAction</type>
+          <code><![CDATA[	public function UpdateParentTicketLog()
+	{
+		$sLog = utils::ReadPostedParam('attr_log', null,false,'raw_data');
+		if ( $sLog != null)
+		{
+			$oMyChange = MetaModel::NewObject("CMDBChange");
+			$oMyChange->Set("date", time());
+			$sUserString = CMDBChange::GetCurrentUserName();
+			$oMyChange->Set("userinfo", $sUserString);
+			$iChangeId = $oMyChange->DBInsert();
+			$sOQL = "SELECT Ticket WHERE id=:ticket";
+			$oParentTicketSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
+							array(),
+							array(
+								'ticket' => $this->Get('ticket_id'),
+								)
+							);
+			while($oTicket = $oParentTicketSet->Fetch())
+			{
+				$oTicket->set('private_log',$sLog);
+				$oTicket->DBUpdateTracked($oMyChange);
+			}
+
+		}
+		return true;
+
+	}]]></code>
+        </method>
+        <method id="OnUpdate">
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	protected function OnUpdate()
+	{
+		$this->UpdateParentTicketLog();
+	}]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item>name</item>
+            <item>status</item>
+            <item>ticket_id</item>
+            <item>team_id</item>
+            <item>agent_id</item>
+            <item>description</item>
+            <item>start_date</item>
+            <item>end_date</item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item>name</item>
+            <item>status</item>
+            <item>ticket_id</item>
+            <item>team_id</item>
+            <item>agent_id</item>
+            <item>start_date</item>
+            <item>end_date</item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item>status</item>
+            <item>ticket_id</item>
+            <item>start_date</item>
+            <item>end_date</item>
+            <item>team_id</item>
+            <item>agent_id</item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+  </classes>
+</itop_design>

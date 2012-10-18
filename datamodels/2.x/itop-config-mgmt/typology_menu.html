@@ -1,0 +1,143 @@
+<style>
+.main_container {
+	width: 100%;
+	border: 0;
+	overflow-y: hidden;
+	overflow-x: hidden;
+	margin-bottom: 5px;
+	margin-top: 5px;
+	border-bottom: #ccc 1px solid;
+	border-top: #ccc 1px solid;
+}
+.main_header {
+	width:100%;
+	height: 60px;
+	cursor: move;
+	background-color: #F1F1F6;
+}
+.main_header h1 {
+	color: #1C94C4;
+	margin-top:0;
+	margin-bottom:0;
+	padding-top: 10px;
+	padding-bottom: 10px;p
+	font-size: 16px;
+	line-height: 16px;
+}
+.main_header img {
+	margin-top: 10px;
+	margin-right: 10px;
+	float:left;
+}
+.item {
+	overflow-y: auto;
+	overflow-x: hidden;
+	background-color: #fff;
+	padding: 5px;
+	height: auto;
+}
+.main_menu {
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: auto;
+	background-color: #eee;
+	width: 100%;
+}
+.element {
+	display: inline-block;
+}
+.element a {
+	font-size: 10px;
+}
+.element a.actions {
+	font-size: 16px;
+	text-decoration: none;
+	background: transparent;
+	color: #666;
+}
+.element a img {
+	border: 0;
+}
+.summary-details {
+	float:right;
+	margin-top: 5px;
+}
+
+.summary-details td {
+	text-align: center;
+	background: transparent;
+	padding: 5px;
+}
+.summary-details th {
+	text-align: center;
+	background: #CCC;
+	padding: 5px;
+	color: #eee;
+}
+a.summary {
+	text-decoration: none;
+	background: transparent;
+	color: #666;
+}
+a.summary:hover {
+	text-decoration: underline;
+}
+</style>
+<div id="ci_menu" class="sortable persistent">
+
+<!-- ######################################### -->
+
+<div id="menu_1" class="main_container v-resizable">
+
+<div class="main_header drag_handle" id="config_typology">
+<h1><itopstring>Menu:ConfigManagement:Typology</itopstring></h1>
+</div><!-- Drag Handle -->
+
+<div class="item">
+
+<div class="element">
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql" parameters="context_filter:1">SELECT Brand</itopblock>
+</div><!-- element -->
+
+<div class="element">
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql" parameters="context_filter:1">SELECT Model</itopblock>
+</div><!-- element -->
+
+<div class="element">
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql" parameters="context_filter:1">SELECT OSfamily</itopblock>
+</div><!-- element -->
+
+<div class="element">
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql" parameters="context_filter:1">SELECT OSversion</itopblock>
+</div><!-- element -->
+
+<div class="element">
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql" parameters="context_filter:1">SELECT IOSversion</itopblock>
+</div><!-- element -->
+
+<div class="element">
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql" parameters="context_filter:1">SELECT NetworkDeviceType</itopblock>
+</div><!-- element -->
+
+<div class="element">
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql" parameters="context_filter:1">SELECT ContractType</itopblock>
+</div><!-- element -->
+
+<div class="element">
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql" parameters="context_filter:1">SELECT ContactType</itopblock>
+</div><!-- element -->
+
+<div class="element">
+<itopblock BlockClass="DisplayBlock" type="actions" asynchronous="false" encoding="text/oql" parameters="context_filter:1">SELECT DocumentType</itopblock>
+</div><!-- element -->
+
+</div><!-- item -->
+
+</div><!-- menu_1 -->
+
+
+
+
+<!-- ######################################### -->
+
+</div>

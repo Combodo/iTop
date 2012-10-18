@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<NetworkDeviceType alias="NetworkDeviceType" id="10">
+<name>Router</name>
+</NetworkDeviceType>
+<NetworkDeviceType alias="NetworkDeviceType" id="11">
+<name>Switch</name>
+</NetworkDeviceType>
+</Set>

@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <layout>DashboardLayoutOneCol</layout>
+  <title></title>
+  <cells>
+    <cell>
+      <dashlet id="1" xsi:type="DashletHeaderStatic">
+        <title>Menu:ConfigManagement:AllDevices</title>
+        <icon>itop-config-mgmt/images/server.png</icon>
+        <subtitle>Menu_ConfigManagement_AllDevices</subtitle>
+      </dashlet>
+      <dashlet id="2" xsi:type="DashletBadge">
+        <class>Rack</class>
+      </dashlet>
+      <dashlet id="3" xsi:type="DashletBadge">
+        <class>Enclosure</class>
+      </dashlet>
+      <dashlet id="4" xsi:type="DashletBadge">
+        <class>Server</class>
+      </dashlet>
+      <dashlet id="5" xsi:type="DashletBadge">
+        <class>NetworkDevice</class>
+      </dashlet>
+      <dashlet id="6" xsi:type="DashletBadge">
+        <class>StorageSystem</class>
+      </dashlet>
+      <dashlet id="7" xsi:type="DashletBadge">
+        <class>SANSwitch</class>
+      </dashlet>
+      <dashlet id="8" xsi:type="DashletBadge">
+        <class>NAS</class>
+      </dashlet>
+      <dashlet id="9" xsi:type="DashletBadge">
+        <class>TapeLibrary</class>
+      </dashlet>
+      <dashlet id="10" xsi:type="DashletBadge">
+        <class>ElectricalConnection</class>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="11" xsi:type="DashletHeaderStatic">
+        <title>Menu:ConfigManagement:virtualization</title>
+        <icon>itop-config-mgmt/images/application.png</icon>
+      </dashlet>
+      <dashlet id="12" xsi:type="DashletBadge">
+        <class>Farm</class>
+      </dashlet>
+      <dashlet id="13" xsi:type="DashletBadge">
+        <class>Hypervisor</class>
+      </dashlet>
+      <dashlet id="14" xsi:type="DashletBadge">
+        <class>VirtualMachine</class>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="15" xsi:type="DashletHeaderStatic">
+        <title>Menu:ConfigManagement:EndUsers</title>
+        <icon>itop-config-mgmt/images/team.png</icon>
+      </dashlet>
+      <dashlet id="16" xsi:type="DashletBadge">
+        <class>PC</class>
+      </dashlet>
+      <dashlet id="17" xsi:type="DashletBadge">
+        <class>Phone</class>
+      </dashlet>
+      <dashlet id="18" xsi:type="DashletBadge">
+        <class>IpPhone</class>
+      </dashlet>
+      <dashlet id="19" xsi:type="DashletBadge">
+        <class>MobilePhone</class>
+      </dashlet>
+      <dashlet id="20" xsi:type="DashletBadge">
+        <class>Tablet</class>
+      </dashlet>
+      <dashlet id="21" xsi:type="DashletBadge">
+        <class>Printer</class>
+      </dashlet>
+      <dashlet id="22" xsi:type="DashletBadge">
+        <class>Peripheral</class>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="23" xsi:type="DashletHeaderStatic">
+        <title>Menu:ConfigManagement:SWAndApps</title>
+        <icon>itop-config-mgmt/images/application.png</icon>
+      </dashlet>
+      <dashlet id="24" xsi:type="DashletBadge">
+        <class>Middleware</class>
+      </dashlet>
+      <dashlet id="25" xsi:type="DashletBadge">
+        <class>DBserver</class>
+      </dashlet>
+      <dashlet id="26" xsi:type="DashletBadge">
+        <class>Webserver</class>
+      </dashlet>
+      <dashlet id="27" xsi:type="DashletBadge">
+        <class>OtherSoftware</class>
+      </dashlet>
+      <dashlet id="29" xsi:type="DashletBadge">
+        <class>MiddlewareInstance</class>
+      </dashlet>
+      <dashlet id="30" xsi:type="DashletBadge">
+        <class>DatabaseSchema</class>
+      </dashlet>
+      <dashlet id="31" xsi:type="DashletBadge">
+        <class>WebApplication</class>
+      </dashlet>
+      <dashlet id="32" xsi:type="DashletBadge">
+        <class>Patch</class>
+      </dashlet>
+      <dashlet id="33" xsi:type="DashletBadge">
+        <class>Licence</class>
+      </dashlet>
+    </cell>
+    <cell>
+      <dashlet id="34" xsi:type="DashletHeaderStatic">
+        <title>Menu:ConfigManagement:Misc</title>
+        <icon>itop-config-mgmt/images/subnet.png</icon>
+      </dashlet>
+      <dashlet id="35" xsi:type="DashletBadge">
+        <class>NetworkInterface</class>
+      </dashlet>
+      <dashlet id="36" xsi:type="DashletBadge">
+        <class>Subnet</class>
+      </dashlet>
+      <dashlet id="37" xsi:type="DashletBadge">
+        <class>LogicalVolume</class>
+      </dashlet>
+      <dashlet id="38" xsi:type="DashletBadge">
+        <class>BusinessProcess</class>
+      </dashlet>
+      <dashlet id="39" xsi:type="DashletBadge">
+        <class>ApplicationSolution</class>
+      </dashlet>
+      <dashlet id="40" xsi:type="DashletBadge">
+        <class>Group</class>
+      </dashlet>
+    </cell>
+  </cells>
+</dashboard>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<ApplicationSolution alias="ApplicationSolution" id="27">
+<name>CRM</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>high</business_criticity>
+<move2production></move2production>
+<status>active</status>
+</ApplicationSolution>
+<ApplicationSolution alias="ApplicationSolution" id="28">
+<name>ERP</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>low</business_criticity>
+<move2production></move2production>
+<status>active</status>
+</ApplicationSolution>
+<ApplicationSolution alias="ApplicationSolution" id="29">
+<name>itop</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>low</business_criticity>
+<move2production></move2production>
+<status>active</status>
+</ApplicationSolution>
+<ApplicationSolution alias="ApplicationSolution" id="30">
+<name>Sales web site</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>high</business_criticity>
+<move2production></move2production>
+<status>active</status>
+</ApplicationSolution>
+</Set>
