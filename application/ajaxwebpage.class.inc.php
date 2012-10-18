@@ -113,7 +113,7 @@ class ajax_page extends WebPage
         }
 		if (count($this->m_aTabs) > 0)
 		{
-					$this->add_ready_script(
+			$this->add_ready_script(
 <<<EOF
 			// The "tab widgets" to handle.
 			var tabs = $('div[id^=tabbedContent]');
@@ -183,7 +183,33 @@ EOF
 			$this->s_content = str_replace("\$Tabs:$sTabContainerName\$", $sTabs, $this->s_content);
 			$container_index++;
 		}
-	
+		
+		// Additional UI widgets to be activated inside the ajax fragment ??
+    	if ($this->sContentType == 'text/html')
+		{
+			$this->add_ready_script(
+<<<EOF
+	$(".date-pick").datepicker({
+			showOn: 'button',
+			buttonImage: '../images/calendar.png',
+			buttonImageOnly: true,
+			dateFormat: 'yy-mm-dd',
+			constrainInput: false,
+			changeMonth: true,
+			changeYear: true
+		});
+	$(".datetime-pick").datepicker({
+			showOn: 'button',
+			buttonImage: '../images/calendar.png',
+			buttonImageOnly: true,
+			dateFormat: 'yy-mm-dd 00:00:00',
+			constrainInput: false,
+			changeMonth: true,
+			changeYear: true
+		});
+EOF
+			);
+		}	
         $s_captured_output = ob_get_contents();
         ob_end_clean();
         if (($this->sContentType == 'text/html') &&  ($this->sContentDisposition == 'inline'))

@@ -238,6 +238,30 @@ try
 		$oWidget->SearchObjectsToAdd($oPage, $sRemoteClass, $aAlreadyLinked);	
 		break;
 		
+		//ui.linksdirectwidget
+		case 'createObject':
+		$sClass = utils::ReadParam('class', '', false, 'class');
+		$sRealClass = utils::ReadParam('real_class', '', false, 'class');
+		$sAttCode = utils::ReadParam('att_code', '');
+		$iInputId = utils::ReadParam('iInputId', '');
+		$oPage->SetContentType('text/html');
+		$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
+		$oWidget->GetObjectCreationDlg($oPage, $sRealClass);
+		break;
+		
+		// ui.linksdirectwidget
+		case 'getLinksetRow':
+		$sClass = utils::ReadParam('class', '', false, 'class');
+		$sRealClass = utils::ReadParam('real_class', '', false, 'class');
+		$sAttCode = utils::ReadParam('att_code', '');
+		$iInputId = utils::ReadParam('iInputId', '');
+		$iTempId = utils::ReadParam('tempId', '');
+		$aValues = utils::ReadParam('values', array(), false, 'raw_data');
+		$oPage->SetContentType('text/html');
+		$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
+		$oPage->add($oWidget->GetRow($oPage, $sRealClass, $aValues, $iTempId));
+		break;
+		
 		////////////////////////////////////////////////////////////
 		
 		// ui.extkeywidget

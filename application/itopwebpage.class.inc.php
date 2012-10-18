@@ -281,7 +281,7 @@ EOF
 			changeMonth: true,
 			changeYear: true
 		});
-		$(".datetime-pick").datepicker({
+	$(".datetime-pick").datepicker({
 			showOn: 'button',
 			buttonImage: '../images/calendar.png',
 			buttonImageOnly: true,
@@ -290,23 +290,6 @@ EOF
 			changeMonth: true,
 			changeYear: true
 		});
-	// Restore the persisted sortable order, for all sortable lists... if any
-	$('.sortable').each(function()
-	{
-		var sTemp = GetUserPreference(this.id+'_order', undefined);
-		if (sTemp != undefined)
-		{
-			var aSerialized = sTemp.split(',');
-			var sortable = $(this);
-			$.each(aSerialized, function(i,v) {
-			  var item = $('#menu_'+v);
-			  if (item.length >  0) // Check that the menu exists
-			  {
-					sortable.append(item);
-			  }
-			});
-		}
-	});
 
 	// Make sortable, everything that claims to be sortable
 	$('.sortable').sortable( {axis: 'y', cursor: 'move', handle: '.drag_handle', stop: function()

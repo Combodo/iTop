@@ -307,7 +307,28 @@ EOF;
 		return $aXmlToPHP[$sTrackingLevel];
 	}
 
+	/**
+	 * Helper to format the edit-mode for direct linkset
+	 * @param string $sEditMode Value set from within the XML
+	 * Returns string PHP flag
+	 */ 
+	protected function EditModeToPHP($sEditMode)
+	{
+		static $aXmlToPHP = array(
+			'none' => 'LINKSET_EDITMODE_NONE',
+			'add_only' => 'LINKSET_EDITMODE_ADDONLY',
+			'actions' => 'LINKSET_EDITMODE_ACTIONS',
+			'in_place' => 'LINKSET_EDITMODE_INPLACE',
+		);
+	
+		if (!array_key_exists($sEditMode, $aXmlToPHP))
+		{
+			throw new exception("Edit mode: unknown value '$sTrackingLevel'");
+		}
+		return $aXmlToPHP[$sEditMode];
+	}
 
+	
 	/**
 	 * Format a path (file or url) as an absolute path or relative to the module or the app
 	 */ 
@@ -583,6 +604,11 @@ EOF;
 				if (!is_null($sTrackingLevel))
 				{
 					$aParameters['tracking_level'] = $this->TrackingLevelToPHP($sTrackingLevel);
+				}
+				$sEditMode = $oField->GetChildText('edit_mode');
+				if (!is_null($sEditMode))
+				{
+					$aParameters['edit_mode'] = $this->EditModeToPHP($sEditMode);
 				}
 				$aParameters['depends_on'] = $sDependencies;
 			}

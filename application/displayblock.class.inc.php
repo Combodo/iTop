@@ -568,11 +568,13 @@ class DisplayBlock
 					{
 						if ((UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
 						{
+							$sLinkTarget = '';
 							$oAppContext = new ApplicationContext();
 							$sParams = $oAppContext->GetForLink();
 							// 1:n links, populate the target object as a default value when creating a new linked object
 							if (isset($aExtraParams['target_attr']))
 							{
+								$sLinkTarget = ' target="_blank" ';
 								$aExtraParams['default'][$aExtraParams['target_attr']] = $aExtraParams['object_id'];
 							}
 							$sDefault = '';
@@ -584,7 +586,7 @@ class DisplayBlock
 								}
 							}
 							
-							$sHtml .= $oPage->GetP("<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=new&class=$sClass&$sParams{$sDefault}\">".Dict::Format('UI:ClickToCreateNew', Metamodel::GetName($sClass))."</a>\n");
+							$sHtml .= $oPage->GetP("<a{$sLinkTarget} href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=new&class=$sClass&$sParams{$sDefault}\">".Dict::Format('UI:ClickToCreateNew', Metamodel::GetName($sClass))."</a>\n");
 						}
 					}
 				}

@@ -36,6 +36,7 @@ require_once(APPROOT.'/application/applicationextension.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/application/applicationcontext.class.inc.php');
 require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
+require_once(APPROOT.'/application/ui.linksdirectwidget.class.inc.php');
 require_once(APPROOT.'/application/ui.passwordwidget.class.inc.php');
 require_once(APPROOT.'/application/ui.extkeywidget.class.inc.php');
 require_once(APPROOT.'/application/ui.htmleditorwidget.class.inc.php');
@@ -266,58 +267,25 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			if ($bEditMode && (!$bReadOnly))
 			{
 				$sInputId = $this->m_iFormId.'_'.$sAttCode;
-				if (get_class($oAttDef) == 'AttributeLinkedSet')
+
+				$sLinkedClass = $oAttDef->GetLinkedClass();
+				if ($oAttDef->IsIndirect())
 				{
-					// 1:n links
-					$sTargetClass = $oAttDef->GetLinkedClass();
-					if ($this->IsNew())
-					{
-						$oPage->p(Dict::Format('UI:BeforeAdding_Class_ObjectsSaveThisObject', MetaModel::GetName($sTargetClass)));
-					}
-					else
-					{
-						$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription());
-	
-						$oFilter = new DBObjectSearch($sTargetClass);
-						$oFilter->AddCondition($oAttDef->GetExtKeyToMe(), $this->GetKey(),'=');
-	
-						$aDefaults = array($oAttDef->GetExtKeyToMe() => $this->GetKey());
-						$oAppContext = new ApplicationContext();
-						foreach($oAppContext->GetNames() as $sKey)
-						{
-							// The linked object inherits the parent's value for the context
-							if (MetaModel::IsValidAttCode($sClass, $sKey))
-							{
-								$aDefaults[$sKey] = $this->Get($sKey);
-							}
-						}
-						$aParams = array(
-							'target_attr' => $oAttDef->GetExtKeyToMe(),
-							'object_id' => $this->GetKey(),
-							'menu' => true,
-							'default' => $aDefaults,
-							'table_id' => $sClass.'_'.$sAttCode,
-						);
-	
-						$oBlock = new DisplayBlock($oFilter, 'list', false);
-						$oBlock->Display($oPage, $sInputId, $aParams);
-					}
-				}
-				else // get_class($oAttDef) == 'AttributeLinkedSetIndirect'
-				{
-					// n:n links
-					$sLinkedClass = $oAttDef->GetLinkedClass();
 					$oLinkingAttDef = 	MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
 					$sTargetClass = $oLinkingAttDef->GetTargetClass();
-					$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription().'<span id="busy_'.$sInputId.'"></span>');
-
-					$sValue = $this->Get($sAttCode);
-					$sDisplayValue = ''; // not used
-					$aArgs = array('this' => $this);
-					$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
-					$aFieldsMap[$sAttCode] = $sInputId;
-					$oPage->add($sHTMLValue);
 				}
+				else
+				{
+					$sTargetClass = $sLinkedClass;
+				}
+				$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription().'<span id="busy_'.$sInputId.'"></span>');
+
+				$oValue = $this->Get($sAttCode);
+				$sDisplayValue = ''; // not used
+				$aArgs = array('this' => $this);
+				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $oValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+				$aFieldsMap[$sAttCode] = $sInputId;
+				$oPage->add($sHTMLValue);
 			}
 			else
 			{
@@ -414,6 +382,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$iInputId = 0;
 		$aFieldsMap = array();
 		$aFieldsComments = (isset($aExtraParams['fieldsComments'])) ? $aExtraParams['fieldsComments'] : array();
+		$aExtraFlags = (isset($aExtraParams['fieldsFlags'])) ? $aExtraParams['fieldsFlags'] : array();
 		$bFieldComments = (count($aFieldsComments) > 0);
 		
 		foreach($aDetailsStruct as $sTab => $aCols )
@@ -473,6 +442,11 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 						if (($iFlags & OPT_ATT_MANDATORY) && $this->IsNew())
 						{
 							$iFlags = $iFlags & ~OPT_ATT_READONLY; // Mandatory fields cannot be read-only when creating an object
+						}
+						if (array_key_exists($sAttCode, $aExtraFlags))
+						{
+							// the caller may override some flags if needed
+							$iFlags = $iFlags | $aExtraFlags[$sAttCode];
 						}
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 						if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0))
@@ -1608,12 +1582,19 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				break;
 
 				case 'LinkedSet':
+					if ($oAttDef->IsIndirect())
+					{
+						$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix, $oAttDef->DuplicatesAllowed(), $aArgs);
+					}
+					else
+					{
+						$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iId, $sNameSuffix, $aArgs);
+					}					
 					$aEventsList[] ='validate';
 					$aEventsList[] ='change';
-					$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix, $oAttDef->DuplicatesAllowed(), $aArgs);
 					$oObj = isset($aArgs['this']) ? $aArgs['this'] : null;
 					$sHTMLValue = $oWidget->Display($oPage, $value, array(), $sFormPrefix, $oObj);
-				break;
+					break;
 							
 				case 'Document':
 					$aEventsList[] ='validate';
@@ -2434,6 +2415,50 @@ EOF
 					$this->Set($sAttCode, $iValue);
 				}
 			}
+			else if (($oAttDef->GetEditClass() == 'LinkedSet') && !$oAttDef->IsIndirect() && ($oAttDef->GetEditMode() == LINKSET_EDITMODE_INPLACE))
+			{
+				$oLinkset = $this->Get($sAttCode);
+				$sLinkedClass = $oLinkset->GetClass();
+				$aObjSet = array();
+				$oLinkset->Rewind();
+				$bModified = false;
+				while($oLink = $oLinkset->Fetch())
+				{
+					if (in_array($oLink->GetKey(), $value['to_be_deleted']))
+					{
+						// The link is to be deleted, don't copy it in the array
+						$bModified = true;
+					}
+					else
+					{
+						$aObjSet[] = $oLink;
+					}
+				}
+
+				if (array_key_exists('to_be_created', $value) && (count($value['to_be_created']) > 0))
+				{
+					// Now handle the lniks to be created
+					foreach($value['to_be_created'] as $aData)
+					{
+						$sSubClass = $aData['class'];
+						if ( ($sLinkedClass == $sSubClass) || (is_subclass_of($sSubClass, $sLinkedClass)) )
+						{
+							$aObjData = $aData['data'];
+							
+							$oLink = new $sSubClass;
+							$oLink->UpdateObjectFromArray($aObjData);
+							$aObjSet[] = $oLink;
+							$bModified = true;
+						}
+					}
+				}
+
+				if ($bModified)
+				{
+					$oNewSet = DBObjectSet::FromArray($oLinkset->GetClass(), $aObjSet);
+					$this->Set($sAttCode, $oNewSet);
+				}		
+			}
 			else
 			{
 				if (!is_null($value))
@@ -2465,6 +2490,28 @@ EOF
 			if ($oAttDef->GetEditClass() == 'Document')
 			{
 				$value = array('fcontents' => utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents'));
+			}
+			else if (($oAttDef->GetEditClass() == 'LinkedSet') && !$oAttDef->IsIndirect() && ($oAttDef->GetEditMode() == LINKSET_EDITMODE_INPLACE))
+			{
+				$aRawToBeCreated = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbc", '{}', 'raw_data'), true);
+				$aToBeCreated = array();
+				foreach($aRawToBeCreated as $aData)
+				{
+					$sSubFormPrefix = $aData['formPrefix'];
+					$sObjClass = $aData['class'];
+					$aObjData = array();
+					foreach($aData as $sKey => $value)
+					{
+						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
+						{
+							$aObjData[$aMatches[1]] = $value;
+						}
+					}
+					$aToBeCreated[] = array('class' => $sObjClass, 'data' => $aObjData);
+				}
+				
+				$value = array('to_be_created' => $aToBeCreated, 
+							   'to_be_deleted' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbd", '[]', 'raw_data'), true) );
 			}
 			else
 			{

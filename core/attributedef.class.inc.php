@@ -85,6 +85,10 @@ define('LINKSET_TRACKING_LIST', 1); // Do track added/removed items
 define('LINKSET_TRACKING_DETAILS', 2); // Do track modified items
 define('LINKSET_TRACKING_ALL', 3); // Do track added/removed/modified items
 
+define('LINKSET_EDITMODE_NONE', 0); // The linkset cannot be edited at all from inside this object
+define('LINKSET_EDITMODE_ADDONLY', 1); // The only possible action is to open a new window to create a new object
+define('LINKSET_EDITMODE_ACTIONS', 2); // Show the usual 'Actions' popup menu
+define('LINKSET_EDITMODE_INPLACE', 3); // The "linked" objects can be created/modified/deleted in place
 
 
 /**
@@ -563,7 +567,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		return array_merge(parent::ListExpectedParams(), array("allowed_values", "depends_on", "linked_class", "ext_key_to_me", "count_min", "count_max"));
 	}
 
-	public function GetEditClass() {return "List";}
+	public function GetEditClass() {return "LinkedSet";}
 
 	public function IsWritable() {return true;} 
 	public function IsLinkSet() {return true;} 
@@ -593,6 +597,11 @@ class AttributeLinkedSet extends AttributeDefinition
 		return $this->GetOptional('tracking_level', LINKSET_TRACKING_LIST);
 	}
 
+	public function GetEditMode()
+	{
+		return $this->GetOptional('edit_mode', LINKSET_EDITMODE_ACTIONS);
+	}
+	
 	public function GetLinkedClass() {return $this->Get('linked_class');}
 	public function GetExtKeyToMe() {return $this->Get('ext_key_to_me');}
 
