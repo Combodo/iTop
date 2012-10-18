@@ -121,7 +121,8 @@ EOF
 			$sAuthPwd = utils::ReadParam('suggest_pwd', '', true, 'raw_data');
 	
 			$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
-			$this->add("<div id=\"login-logo\"><a href=\"http://www.combodo.com/itop\"><img title=\"$sVersionShort\" src=\"../images/itop-logo-external.png\"></a></div>\n");
+			$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
+			$this->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8')."\"><img title=\"$sVersionShort\" src=\"../images/itop-logo-external.png\"></a></div>\n");
 			$this->add("<div id=\"login\">\n");
 			$this->add("<h1>".Dict::S('UI:Login:Welcome')."</h1>\n");
 			if ($bFailedLogin)
@@ -176,7 +177,8 @@ function DoCheckPwd()
 }
 EOF
 );
-		$this->add("<div id=\"login-logo\"><a href=\"http://www.combodo.com/itop\"><img title=\"$sVersionShort\" src=\"../images/itop-logo.png\"></a></div>\n");
+		$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
+		$this->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8')."\"><img title=\"$sVersionShort\" src=\"../images/itop-logo.png\"></a></div>\n");
 		$this->add("<div id=\"login\">\n");
 		$this->add("<h1>".Dict::S('UI:Login:ChangeYourPassword')."</h1>\n");
 		if ($bFailedLogin)

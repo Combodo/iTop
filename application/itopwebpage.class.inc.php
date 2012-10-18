@@ -709,6 +709,7 @@ EOF
 				$sApplicationBanner .= '<div id="admin-banner"><span style="padding:5px;">'.Dict::Format('UI:ApplicationEnvironment', $sEnvLabel).$sBackButton.'<span></div>';
 			}
 
+			$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
 			$sOnlineHelpUrl = MetaModel::GetConfig()->Get('online_help');
 			//$sLogOffMenu = "<span id=\"logOffBtn\" style=\"height:55px;padding:0;margin:0;\"><img src=\"../images/onOffBtn.png\"></span>";
 
@@ -716,7 +717,7 @@ EOF
 			$sHtml .= '<!-- Beginning of the left pane -->';
 			$sHtml .= ' <div class="ui-layout-north">';
 			$sHtml .= ' <div id="header-logo">';
-			$sHtml .= ' <div id="top-left"></div><div id="logo"><a href="http://www.combodo.com/itop"><img src="../images/itop-logo.png" title="'.htmlentities($sVersionString, ENT_QUOTES, 'UTF-8').'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
+			$sHtml .= ' <div id="top-left"></div><div id="logo"><a href="'.htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8').'"><img src="../images/itop-logo.png" title="'.htmlentities($sVersionString, ENT_QUOTES, 'UTF-8').'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
 			$sHtml .= ' </div>';
 			$sHtml .= ' <div class="header-menu">';
 			$sHtml .= '		<div class="icon ui-state-default ui-corner-all"><span id="tPinMenu" class="ui-icon ui-icon-pin-w">pin</span></div>';

@@ -100,6 +100,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'app_icon_url' => array(
+			'type' => 'string',
+			'description' => 'Hyperlink to redirect the user when clicking on the application icon (in the main window, or login/logoff pages)',
+			'default' => 'http://www.combodo.com/itop',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'skip_check_to_write' => array(
 			'type' => 'bool',
 			'description' => 'Disable data format and integrity checks to boost up data load (insert or update)',
