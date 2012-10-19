@@ -62,9 +62,10 @@ function GraphvizLifecycle($sClass)
 		$aStates = MetaModel::EnumStates($sClass);
 		$aStimuli = MetaModel::EnumStimuli($sClass);
 		$sDotFileContent .= "digraph finite_state_machine {
+	graph [bgcolor = \"transparent\"];
 	rankdir=LR;
 	size=\"12,12\"
-	node [ fontname=Verdana ];
+	node [ fontname=Verdana style=filled fillcolor=\"#ffffff\" ];
 	edge [ fontname=Verdana ];
 ";
 		$aStatesLinks = array();
@@ -108,25 +109,55 @@ function GraphvizLifecycle($sClass)
 	return $sDotFileContent;
 }
 
-$sClass = utils::ReadParam('class', 'bizIncidentTicket', false, 'class');
-$sDir = dirname(__FILE__);
-$sImageFilePath = $sDir."/../images/lifecycle/".$sClass.".png";
+$sClass = utils::ReadParam('class', '', false, 'class');
+$oReflection = new ReflectionClass($sClass);
+$sDeclarationFile = $oReflection->getFileName();
+$sModuleDir = dirname($sDeclarationFile);
+
+$sImageFilePath = $sModuleDir."/lifecycle/".$sClass.".png";
 $sDotExecutable = MetaModel::GetConfig()->Get('graphviz_path');
 if (file_exists($sDotExecutable))
 {
 	// create the file with Graphviz
+	$sImageFilePath = APPROOT."data/lifecycle/".$sClass.".png";
+	if (!is_dir(APPROOT."data"))
+	{
+		@mkdir(APPROOT."data");
+	}
+	if (!is_dir(APPROOT."data/lifecycle"))
+	{
+		@mkdir(APPROOT."data/lifecycle");
+	}
 	$sDotDescription = GraphvizLifecycle($sClass);
-	$sDotFilePath = $sDir."/tmp-lifecycle.dot";
-	// From now on, fail silently, since the image file may
-	// already exist and we should not "pollute" the page's output
-	// with warnings in case we are unable to refresh the image
+	$sDotFilePath = APPROOT."data/lifecycle/{$sClass}.dot";
+	
 	$rFile = @fopen($sDotFilePath, "w");
 	@fwrite($rFile, $sDotDescription);
 	@fclose($rFile);
-	//echo "<p>Executing command: <tt>$sDotExecutable -Tpng < $sDotFilePath > $sImageFilePath</tt></p>\n";
-	@exec("$sDotExecutable -Tpng < $sDotFilePath > $sImageFilePath");
+	$aOutput = array();
+	$CommandLine = "$sDotExecutable -v -Tpng < $sDotFilePath -o$sImageFilePath 2>&1";
+	
+	exec($CommandLine, $aOutput, $iRetCode);
+	if ($iRetCode != 0)
+	{
+		header('Content-type: text/html');
+		echo "<p><b>Error:</b></p>";
+		echo "<p>The command: <pre>$CommandLine</pre> returned $iRetCode</p>";
+		echo "<p>The output of the command is:<pre>\n".implode("\n", $aOutput)."</pre></p>";
+		echo "<hr>";
+		echo "<p>Content of the '".basename($sDotFilePath)."' file:<pre>\n$sDotDescription</pre>";
+	}
+	else
+	{
+		header('Content-type: image/png');
+		echo file_get_contents($sImageFilePath);
+	}
+	@unlink($sDotFilePath);
+}
+else
+{
+	header('Content-type: image/png');
+	echo file_get_contents($sImageFilePath);
 }
 
-header('Content-type: image/png');
-echo file_get_contents($sImageFilePath);
 ?>
