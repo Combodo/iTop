@@ -162,6 +162,7 @@ try
 		break;
 		
 		case 'datatable_save_settings':
+		$oPage->SetContentType('text/plain');
 		$iPageSize = utils::ReadParam('page_size', 10);
 		$sTableId = utils::ReadParam('table_id', null, false, 'raw_data');
 		$bSaveAsDefaults = (utils::ReadParam('defaults', 'true') == 'true');
@@ -194,6 +195,7 @@ try
 		break;
 		
 		case 'datatable_reset_settings':
+		$oPage->SetContentType('text/plain');
 		$sTableId = utils::ReadParam('table_id', null, false, 'raw_data');
 		$aClassAliases = utils::ReadParam('class_aliases', array(), false, 'raw_data');
 		$bResetAll = (utils::ReadParam('defaults', 'true') == 'true');
@@ -240,6 +242,7 @@ try
 		
 		//ui.linksdirectwidget
 		case 'createObject':
+		$oPage->SetContentType('text/html');
 		$sClass = utils::ReadParam('class', '', false, 'class');
 		$sRealClass = utils::ReadParam('real_class', '', false, 'class');
 		$sAttCode = utils::ReadParam('att_code', '');
@@ -251,6 +254,7 @@ try
 		
 		// ui.linksdirectwidget
 		case 'getLinksetRow':
+		$oPage->SetContentType('text/html');
 		$sClass = utils::ReadParam('class', '', false, 'class');
 		$sRealClass = utils::ReadParam('real_class', '', false, 'class');
 		$sAttCode = utils::ReadParam('att_code', '');
@@ -290,6 +294,7 @@ try
 	
 		// ui.extkeywidget: autocomplete
 		case 'ac_extkey':
+		$oPage->SetContentType('text/plain');
 		$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sFilter = utils::ReadParam('sFilter', '', false, 'raw_data');
@@ -338,6 +343,7 @@ try
 
 		// ui.extkeywidget
 		case 'objectCreationForm':
+		$oPage->SetContentType('text/html');
 		$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sAttCode = utils::ReadParam('sAttCode', '');
@@ -358,6 +364,7 @@ try
 		
 		// ui.extkeywidget
 		case 'doCreateObject':
+		$oPage->SetContentType('application/json');
 		$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$sFormPrefix = utils::ReadParam('sFormPrefix', '');
@@ -369,6 +376,7 @@ try
 		
 		// ui.extkeywidget
 		case 'getObjectName':
+		$oPage->SetContentType('application/json');
 		$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$iObjectId = utils::ReadParam('iObjectId', '');

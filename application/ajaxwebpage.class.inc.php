@@ -185,7 +185,7 @@ EOF
 		}
 		
 		// Additional UI widgets to be activated inside the ajax fragment ??
-    	if ($this->sContentType == 'text/html')
+    	if (($this->sContentType == 'text/html') && (preg_match('/class="date-pick"/', $this->s_content) || preg_match('/class="datetime-pick"/', $this->s_content)) )
 		{
 			$this->add_ready_script(
 <<<EOF
