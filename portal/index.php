@@ -27,18 +27,6 @@ require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/nicewebpage.class.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 
-
-
-define('SERVICECATEGORY_QUERY', 'SELECT Service AS s JOIN SLA AS sla ON sla.service_id=s.id JOIN lnkContractToSLA AS ln ON ln.sla_id=sla.id JOIN CustomerContract AS cc ON ln.contract_id=cc.id WHERE cc.org_id = :org_id');
-define('SERVICE_SUBCATEGORY_QUERY', 'SELECT ServiceSubcategory WHERE service_id = :svc_id');
-
-define('VALIDATE_SERVICECATEGORY_QUERY', 'SELECT Service AS s JOIN SLA AS sla ON sla.service_id=s.id JOIN lnkContractToSLA AS ln ON ln.sla_id=sla.id JOIN CustomerContract AS cc ON ln.contract_id=cc.id WHERE cc.org_id = :org_id AND s.id = :id');
-define('VALIDATE_SERVICESUBCATEGORY_QUERY', 'SELECT ServiceSubcategory AS Sub JOIN Service AS Svc ON Sub.service_id = Svc.id WHERE Sub.id=:id');
-
-define('ALL_PARAMS', 'from_service_id,org_id,caller_id,service_id,servicesubcategory_id,title,description,impact,urgency,workgroup_id,moreinfo,caller_id,start_date,end_date,duration,impact_duration');
-
-
-
 /**
  * Displays the portal main menu
  * @param WebPage $oP The current web page
@@ -94,14 +82,14 @@ function ShowClosedTickets(WebPage $oP)
  */
 function SelectServiceCategory($oP, $oUserOrg)
 {
-	$aParameters = $oP->ReadAllParams(ALL_PARAMS);
+	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS);
 	
 	$oP->add("<div class=\"wizContainer\" id=\"form_select_service\">\n");
 	$oP->WizardFormStart('request_wizard', 1);
 
 	$oP->add("<h1 id=\"select_category\">".Dict::S('Portal:SelectService')."</h1>\n");
 	$oP->add("<table>\n");
-	$oSearch = DBObjectSearch::FromOQL(SERVICECATEGORY_QUERY);
+	$oSearch = DBObjectSearch::FromOQL(PORTAL_SERVICECATEGORY_QUERY);
 	$oSet = new CMDBObjectSet($oSearch, array(), array('org_id' => $oUserOrg->GetKey()));
 	while($oService = $oSet->Fetch())
 	{
@@ -134,14 +122,14 @@ function SelectServiceCategory($oP, $oUserOrg)
 
 function SelectServiceSubCategory($oP, $oUserOrg)
 {
-	$aParameters = $oP->ReadAllParams(ALL_PARAMS);
+	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS);
 
 	$iSvcId = $aParameters['service_id'];
 	$iDefaultSubSvcId = isset($aParameters['servicesubcategory_id']) ? $aParameters['servicesubcategory_id'] : 0;
 
 	$iDefaultWizNext = 2;
 
-	$oSearch = DBObjectSearch::FromOQL(SERVICE_SUBCATEGORY_QUERY);
+	$oSearch = DBObjectSearch::FromOQL(PORTAL_SERVICE_SUBCATEGORY_QUERY);
 	$oSet = new CMDBObjectSet($oSearch, array(), array('svc_id' => $iSvcId, 'org_id' => $oUserOrg->GetKey()));
 	$oServiceCategory = MetaModel::GetObject('Service', $iSvcId, false);
 	if (is_object($oServiceCategory))
@@ -199,9 +187,10 @@ function RequestCreationForm($oP, $oUserOrg)
 		var oWizardHelper = new WizardHelper('UserRequest', '');
 EOF
 );
-	$aParameters = $oP->ReadAllParams(ALL_PARAMS);
+	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS);
 
-	$aList = array('title', 'description', 'impact', 'urgency', 'workgroup_id');
+	// Example: $aList = array('title', 'description', 'impact', 'emergency');
+	$aList = explode(',', PORTAL_REQUEST_FORM_ATTRIBUTES);
 
 	$sDescription = '';
 	if (isset($aParameters['template_id']))
@@ -255,7 +244,7 @@ EOF
 			$sValue = "<span id=\"field_{$sInputId}\">".$oRequest->GetFormElementForField($oP, get_class($oRequest), $sAttCode, $oAttDef, $value, '', 'attr_'.$sAttCode, '', $iFlags, $aArgs).'</span>';
 			$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sValue);
 		}
-		$aDetails[] = array('label' => Dict::S('Class:Ticket/Attribute:ticket_log'), 'value' => '<textarea id="attr_moreinfo" class="resizable ui-resizable" cols="40" rows="8" name="attr_moreinfo" title="" style="margin: 0px; resize: none; position: static; display: block; height: 145px; width: 339px;">'.$sDescription.'</textarea>');
+		$aDetails[] = array('label' => MetaModel::GetLabel('UserRequest', PORTAL_ATTCODE_LOG), 'value' => '<textarea id="attr_moreinfo" class="resizable ui-resizable" cols="40" rows="8" name="attr_moreinfo" title="" style="margin: 0px; resize: none; position: static; display: block; height: 145px; width: 339px;">'.$sDescription.'</textarea>');
 
 		$oP->add_linked_script("../js/json.js");
 		$oP->add_linked_script("../js/forms-json-utils.js");
@@ -309,7 +298,7 @@ EOF
  */
 function DoCreateRequest($oP, $oUserOrg)
 {
-	$aParameters = $oP->ReadAllParams(ALL_PARAMS);
+	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS);
 	$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 	if (!utils::IsTransactionValid($sTransactionId))
 	{
@@ -320,7 +309,7 @@ function DoCreateRequest($oP, $oUserOrg)
 		
 	// Validate the parameters
 	// 1) ServiceCategory
-	$oSearch = DBObjectSearch::FromOQL(VALIDATE_SERVICECATEGORY_QUERY);
+	$oSearch = DBObjectSearch::FromOQL(PORTAL_VALIDATE_SERVICECATEGORY_QUERY);
 	$oSet = new CMDBObjectSet($oSearch, array(), array('id' => $aParameters['service_id'], 'org_id' => $oUserOrg->GetKey()));
 	if ($oSet->Count() != 1)
 	{
@@ -330,7 +319,7 @@ function DoCreateRequest($oP, $oUserOrg)
 	$oServiceCategory = $oSet->Fetch();
 	
 	// 2) Service Subcategory
-	$oSearch = DBObjectSearch::FromOQL(VALIDATE_SERVICESUBCATEGORY_QUERY);
+	$oSearch = DBObjectSearch::FromOQL(PORTAL_VALIDATE_SERVICESUBCATEGORY_QUERY);
 	$oSet = new CMDBObjectSet($oSearch, array(), array('service_id' => $aParameters['service_id'], 'id' =>$aParameters['servicesubcategory_id'],'org_id' => $oUserOrg->GetKey() ));
 	if ($oSet->Count() != 1)
 	{
@@ -338,7 +327,7 @@ function DoCreateRequest($oP, $oUserOrg)
 		throw new Exception("Invalid ServiceSubcategory: id={$aParameters['servicesubcategory_id']} for service category ".$oServiceCategory->GetName()."({$aParameters['service_id']}) - count: ".$oSet->Count());
 	}
 	$oServiceSubCategory = $oSet->Fetch();
-	
+
 	$oRequest = new UserRequest();
 	$oRequest->Set('org_id', $oUserOrg->GetKey());
 	$oRequest->Set('caller_id', UserRights::GetContactId());
@@ -347,7 +336,12 @@ function DoCreateRequest($oP, $oUserOrg)
 	if (isset($aParameters['moreinfo']))
 	{
 		// There is a template, insert it into the description
-		$oRequest->Set('ticket_log', $aParameters['moreinfo']);
+		$oRequest->Set(PORTAL_ATTCODE_LOG, $aParameters['moreinfo']);
+	}
+
+	if ((PORTAL_ATTCODE_TYPE != '') && (PORTAL_SET_TYPE_FROM != ''))
+	{
+		$oRequest->Set(PORTAL_ATTCODE_TYPE, $oServiceSubCategory->Get(PORTAL_SET_TYPE_FROM));
 	}
 
 	/////$oP->DoUpdateObjectFromPostedForm($oObj);
@@ -515,7 +509,7 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 		case 'assigned':
 		case 'frozen':
 		$aEditAtt = array(
-			'ticket_log' => '????'
+			PORTAL_ATTCODE_LOG => '????'
 		);
 		$bEditAttachments = true;
 		// disabled - $bIsEscalateButton = true;
@@ -524,7 +518,7 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 		case 'escalated_tto':
 		case 'escalated_ttr':
 		$aEditAtt = array(
-			'ticket_log' => '????'
+			PORTAL_ATTCODE_LOG => '????'
 		);
 		$bEditAttachments = true;
 		break;
@@ -533,7 +527,7 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 		$aEditAtt = array(
 			// non, read-only dans cet etat - 'ticket_log' => '????',
 			'user_satisfaction' => '????',
-			'user_commment' => '????',
+			PORTAL_ATTCODE_COMMENT => '????',
 		);
 		$bIsCloseButton = true;
 		break;
@@ -551,17 +545,14 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 	switch($sClass)
 	{
 		case 'UserIssue':
-		//$aAttList = array('ref', 'status', 'title', 'description', 'start_date', 'caller_id', 'servicesubcategory_id', 'impact', 'priority', 'agent_id', 'close_date', 'last_update', 'assignment_date', 'resolution_code', 'solution', 'origin', 'time_spent', 'respected_gtr', 'gtr_overdue', 'user_satisfaction', 'user_commment', 'freeze_reason', 'ticket_log');
 		$aAttList = array('col:0'=> array('ref','caller_id','impact','perimeter','servicesubcategory_id','title'),'col:1'=> array('status','priority','start_date','resolution_date','last_update','agent_id'));
 		break;
 
 		case 'UserRequest':
-		//$aAttList = array('ref', 'status', 'title', 'description', 'requesttype', 'start_date', 'caller_id', 'servicesubcategory_id', 'priority', 'agent_id', 'close_date', 'last_update', 'assignment_date', 'user_satisfaction', 'user_commment', 'freeze_reason', 'ticket_log');
 		$aAttList = array('col:0'=> array('ref','caller_id','servicesubcategory_id','title'),'col:1'=> array('status','priority','start_date','resolution_date','last_update','agent_id'));
 		break;
 
 		default:
-		//$aAttList = array('ref');
 		array('col:0'=> array('ref','service_id','servicesubcategory_id','title'),'col:1'=> array('status','start_date'));
 		break;
 	}
@@ -650,7 +641,7 @@ EOF
 		}
 		foreach($aEditFields as $sAttCode => $aFieldSpec)
 		{
-			if ($sAttCode == 'ticket_log')
+			if ($sAttCode == PORTAL_ATTCODE_LOG)
 			{
 				// Skip, the public log will be displayed below the buttons
 				continue;
@@ -683,17 +674,17 @@ EOF
 
 	$oP->add('<tr>');
 	$oP->add('<td colspan="2" style="vertical-align:top;">');
-	if (isset($aEditFields['ticket_log']))
+	if (isset($aEditFields[PORTAL_ATTCODE_LOG]))
 	{
 		$oP->add("<div class=\"edit_item\">");
-		$oP->add('<h1>'.$aEditFields['ticket_log']['label'].'</h1>');
-		$oP->add($aEditFields['ticket_log']['value']);
+		$oP->add('<h1>'.$aEditFields[PORTAL_ATTCODE_LOG]['label'].'</h1>');
+		$oP->add($aEditFields[PORTAL_ATTCODE_LOG]['value']);
 		$oP->add('</div>');
 	}
 	else
 	{
-		$oP->add('<h1>'.MetaModel::GetLabel($sClass, 'ticket_log').'</h1>');
-		$oP->add($oObj->GetAsHTML('ticket_log'));
+		$oP->add('<h1>'.MetaModel::GetLabel($sClass, PORTAL_ATTCODE_LOG).'</h1>');
+		$oP->add($oObj->GetAsHTML(PORTAL_ATTCODE_LOG));
 	}
 	$oP->add('</td>');
 	$oP->add('</tr>');
@@ -738,74 +729,82 @@ try
 	require_once(APPROOT.'/application/portalwebpage.class.inc.php');
 	$oAppContext = new ApplicationContext();
 	$sOperation = utils::ReadParam('operation', '');
-	
+
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(false /* bMustBeAdmin */, true /* IsAllowedToPortalUsers */); // Check user rights and prompt if needed
 
    ApplicationContext::SetUrlMakerClass('MyPortalURLMaker');
 
-	$oUserOrg = GetUserOrg();
-
-	$sCode = $oUserOrg->Get('code');
-	$sAlternateStylesheet = '';
-	if (@file_exists("./$sCode/portal.css"))
+	if (!class_exists('UserRequest'))
 	{
-		$sAlternateStylesheet = "$sCode";
+		$oP = new WebPage(Dict::S('Portal:Title'));
+		$oP->p(dict::Format('Portal:NoRequestMgmt', UserRights::GetUserFriendlyName()));
 	}
-
-	$oP = new PortalWebPage(Dict::S('Portal:Title'), $sAlternateStylesheet);
-
-   $oP->EnableDisconnectButton(utils::CanLogOff());
-   $oP->SetWelcomeMessage(Dict::Format('Portal:WelcomeUserOrg', UserRights::GetUserFriendlyName(), $oUserOrg->GetName()));
-
-	if (is_object($oUserOrg))
+	else
 	{
-		switch($sOperation)
+		$oUserOrg = GetUserOrg();
+	
+		$sCode = $oUserOrg->Get('code');
+		$sAlternateStylesheet = '';
+		if (@file_exists("./$sCode/portal.css"))
 		{
-			case 'show_closed':
-			DisplayMainMenu($oP);
-			ShowClosedTickets($oP);
-			break;
-					
-			case 'create_request':
-			DisplayMainMenu($oP);
-			CreateRequest($oP, $oUserOrg);
-			break;
-					
-			case 'details':
-			DisplayMainMenu($oP);
-			$oObj = $oP->FindObjectFromArgs(array('UserRequest'));
-			DisplayObject($oP, $oObj, $oUserOrg);
-			break;
-			
-			case 'update_request':
-			DisplayMainMenu($oP);
-			$oObj = $oP->FindObjectFromArgs(array('UserRequest'));
-			switch(get_class($oObj))
+			$sAlternateStylesheet = "$sCode";
+		}
+	
+		$oP = new PortalWebPage(Dict::S('Portal:Title'), $sAlternateStylesheet);
+	
+	   $oP->EnableDisconnectButton(utils::CanLogOff());
+	   $oP->SetWelcomeMessage(Dict::Format('Portal:WelcomeUserOrg', UserRights::GetUserFriendlyName(), $oUserOrg->GetName()));
+	
+		if (is_object($oUserOrg))
+		{
+			switch($sOperation)
 			{
-			case 'UserRequest':
-				$aAttList = array('ticket_log', 'user_satisfaction', 'user_commment');
+				case 'show_closed':
+				DisplayMainMenu($oP);
+				ShowClosedTickets($oP);
 				break;
-
-			default:
-				throw new Exception("Implementation issue: unexpected class '".get_class($oObj)."'");
-			}
-			try
-			{
-				$oP->DoUpdateObjectFromPostedForm($oObj, $aAttList);
-			}
-			catch(TransactionException $e)
-			{
-				$oP->add("<h1>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</h1>\n");
-			}
-			DisplayObject($oP, $oObj, $oUserOrg);
-			break;
-
-			case 'show_ongoing':
-			default:
-			DisplayMainMenu($oP);
-			ShowOngoingTickets($oP);
-		} 
+						
+				case 'create_request':
+				DisplayMainMenu($oP);
+				CreateRequest($oP, $oUserOrg);
+				break;
+						
+				case 'details':
+				DisplayMainMenu($oP);
+				$oObj = $oP->FindObjectFromArgs(array('UserRequest'));
+				DisplayObject($oP, $oObj, $oUserOrg);
+				break;
+				
+				case 'update_request':
+				DisplayMainMenu($oP);
+				$oObj = $oP->FindObjectFromArgs(array('UserRequest'));
+				switch(get_class($oObj))
+				{
+				case 'UserRequest':
+					$aAttList = array(PORTAL_ATTCODE_LOG, 'user_satisfaction', PORTAL_ATTCODE_COMMENT);
+					break;
+	
+				default:
+					throw new Exception("Implementation issue: unexpected class '".get_class($oObj)."'");
+				}
+				try
+				{
+					$oP->DoUpdateObjectFromPostedForm($oObj, $aAttList);
+				}
+				catch(TransactionException $e)
+				{
+					$oP->add("<h1>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</h1>\n");
+				}
+				DisplayObject($oP, $oObj, $oUserOrg);
+				break;
+	
+				case 'show_ongoing':
+				default:
+				DisplayMainMenu($oP);
+				ShowOngoingTickets($oP);
+			} 
+		}
 	}
 	$oP->output();
 }

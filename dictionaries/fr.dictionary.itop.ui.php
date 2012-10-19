@@ -778,6 +778,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:ElementsDisplayed' => 'Filtrage',
 	'UI:OperationCancelled' => 'Opération Annulée',
 	'Portal:Title' => 'Portail utilisateur iTop',
+	'Portal:NoRequestMgmt' => 'Chèr(e) %1$s, vous avez été redirigé(e) vers cette page car votre compte utilisateur est configuré avec le profil \'Utilisateur du Portail\'. Malheureusement, iTop n\'a pas été installé avec le module de \'Gestion des Demandes\'. Merci de contacter votre administrateur iTop.',
 	'Portal:Refresh' => 'Rafraîchir',
 	'Portal:Back' => 'Retour',
 	'Portal:WelcomeUserOrg' => 'Bienvenue %1$s (%2$s)',

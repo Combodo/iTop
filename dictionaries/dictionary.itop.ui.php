@@ -933,6 +933,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ElementsDisplayed' => 'Filtering',
 
 	'Portal:Title' => 'iTop user portal',
+	'Portal:NoRequestMgmt' => 'Dear %1$s, you have been redirected to this page because your account is configured with the profile \'Portal user\'. Unfortunately, iTop has not been installed with the feature \'Request Management\'. Please contact your administrator.',
 	'Portal:Refresh' => 'Refresh',
 	'Portal:Back' => 'Back',
 	'Portal:WelcomeUserOrg' => 'Welcome %1$s, from %2$s',

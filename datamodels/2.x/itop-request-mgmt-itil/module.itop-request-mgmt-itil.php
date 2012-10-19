@@ -23,6 +23,7 @@ SetupWebPage::AddModule(
 		//
 		'datamodel' => array(
 			'model.itop-request-mgmt-itil.php',
+			'main.itop-request-mgmt-itil.php',
 		),
 		'data.struct' => array(
 
