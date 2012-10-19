@@ -65,7 +65,7 @@ class WizStepWelcome extends WizardStep
 		$sMiscOptions = $this->oWizard->GetParameter('misc_options', json_encode($aMiscOptions));
 		$this->oWizard->SetParameter('misc_options', $sMiscOptions);
 		
-		$oPage->add('<h1>iTop Installation Wizard</h1>');
+		$oPage->add('<h1>'.ITOP_APPLICATION.' Installation Wizard</h1>');
 		$aResults = SetupUtils::CheckPHPVersion($oPage);
 		$this->bCanMoveForward = true;
 		$aInfo = array();
@@ -249,9 +249,9 @@ class WizStepInstallOrUpgrade extends WizardStep
 				$sMySQLDumpMessage .= '<img src="../images/validation_ok.png"/> '.$oCheck->sLabel.' ';
 			}
 		}
-		$sChecked = ($bCanBackup && ($bDBBackup == 'install')) ? ' checked ' : '';
+		$sChecked = ($bCanBackup && $bDBBackup) ? ' checked ' : '';
 		$sDisabled = $bCanBackup ? '' : ' disabled ';
-		$oPage->add('<tr><td colspan="2"><input id="db_backup" type="checkbox" name="db_backup"'.$sChecked.$sDisabled.' value="1"/>&nbsp;Backup the '.ITOP_APPLICATION.' database before upgrading</td></tr>');
+		$oPage->add('<tr><td colspan="2"><input id="db_backup" type="checkbox" name="db_backup"'.$sChecked.$sDisabled.' value="1"/><label for="db_backup">&nbsp;Backup the '.ITOP_APPLICATION.' database before upgrading</label></td></tr>');
 		$oPage->add('<tr><td colspan="2">Save the backup to: <input id="db_backup_path" type="text" name="db_backup_path" '.$sDisabled.'value="'.htmlentities($sDBBackupPath, ENT_QUOTES, 'UTF-8').'" size="25"/></td></tr>');
 		$fFreeSpace = SetupUtils::CheckDiskSpace($sDBBackupPath);
 		$sMessage = '';
@@ -1969,23 +1969,23 @@ class WizStepDone extends WizardStep
 			{
 				$oPage->p("<a href=\"$sUrl\" target=\"_blank\">Manual instructions for $sModuleLabel</a>");
 			}
-			$oPage->add("<h2>Congratulations for installing iTop</h2>");
+			$oPage->add("<h2>Congratulations for installing ".ITOP_APPLICATION."</h2>");
 		}
 		else
 		{
-			$oPage->add("<h2>Congratulations for installing iTop</h2>");
+			$oPage->add("<h2>Congratulations for installing ".ITOP_APPLICATION."</h2>");
 			$oPage->ok("The installation completed successfully.");
 		}
 
-		if ($this->oWizard->GetParameter('db_backup', false))
+		if (($this->oWizard->GetParameter('mode', '') == 'upgrade') && $this->oWizard->GetParameter('db_backup', false))
 		{
 			$sBackupDestination = $this->oWizard->GetParameter('db_backup_path', '');
 			if (file_exists($sBackupDestination))
 			{
-				// To mitigate security risks: pass only the filename without the extension, the download will add the extensino itself
+				// To mitigate security risks: pass only the filename without the extension, the download will add the extension itself
 				$sTruncatedFilePath = preg_replace('/\.zip$/', '', $sBackupDestination);
 				$oPage->p('Your backup is ready');
-				$oPage->p('<a style="background:transparent;" href="'.utils::GetAbsoluteUrlAppRoot().'setup/ajax.dataloader.php?operation=async_action&step_class=WizStepDone&params[backup]='.urlencode($sTruncatedFilePath).'" target="_blank"><img src="../images/tar.png" style="border:0;vertical-align:middle;">&nbspDownload '.basename($sBackupDestination).'</a>');
+				$oPage->p('<a style="background:transparent;" href="'.utils::GetAbsoluteUrlAppRoot().'setup/ajax.dataloader.php?operation=async_action&step_class=WizStepDone&params[backup]='.urlencode($sTruncatedFilePath).'" target="_blank"><img src="../images/tar.png" style="border:0;vertical-align:middle;">&nbsp;Download '.basename($sBackupDestination).'</a>');
 			}
 			else
 			{
@@ -2002,7 +2002,7 @@ class WizStepDone extends WizardStep
 		$sForm = '<form method="post" action="'.$this->oWizard->GetParameter('application_url').'pages/UI.php">';
 		$sForm .= '<input type="hidden" name="auth_user" value="'.htmlentities($this->oWizard->GetParameter('admin_user'), ENT_QUOTES, 'UTF-8').'">';
 		$sForm .= '<input type="hidden" name="auth_pwd" value="'.htmlentities($this->oWizard->GetParameter('admin_pwd'), ENT_QUOTES, 'UTF-8').'">';
-		$sForm .= "<p style=\"text-align:center;width:100%\"><button id=\"enter_itop\" type=\"submit\">Enter iTop</button></p>";
+		$sForm .= "<p style=\"text-align:center;width:100%\"><button id=\"enter_itop\" type=\"submit\">Enter ".ITOP_APPLICATION."</button></p>";
 		$sForm .= '</form>';
 		$oPage->add('<img style="border:0" src="http://www.combodo.com/stats/?p='.urlencode(ITOP_APPLICATION).'&v='.urlencode(ITOP_VERSION).'"/>');
 		$sForm = addslashes($sForm);
