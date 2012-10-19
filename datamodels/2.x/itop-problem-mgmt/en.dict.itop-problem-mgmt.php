@@ -144,7 +144,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Problem/Attribute:related_request_list+' => '',
 	'Class:Problem/Stimulus:ev_assign' => 'Assign',
 	'Class:Problem/Stimulus:ev_assign+' => '',
-	'Class:Problem/Stimulus:ev_reassign' => 'Reaassign',
+	'Class:Problem/Stimulus:ev_reassign' => 'Reassign',
 	'Class:Problem/Stimulus:ev_reassign+' => '',
 	'Class:Problem/Stimulus:ev_resolve' => 'Resolve',
 	'Class:Problem/Stimulus:ev_resolve+' => '',
