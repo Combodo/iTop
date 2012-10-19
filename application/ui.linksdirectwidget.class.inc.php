@@ -142,7 +142,15 @@ class UILinksWidgetDirect
 		$oPage->table($aAttribs, $aData);
 		$oPage->add('</td></tr></table>'); //listcontainer
 		$sInputName = $sFormPrefix.'attr_'.$this->sAttCode;
-		$oPage->add_ready_script("$('#{$this->sInputid}').directlinks({class_name: '$this->sClass', att_code: '$this->sAttCode', input_name:'$sInputName' });");
+		$aLabels = array(
+			'delete' => Dict::S('UI:Button:Delete'),
+			// 'modify' => 'Modify...' , 
+			'creation_title' => Dict::Format('UI:CreationTitle_Class', MetaModel::GetName($this->sLinkedClass)),
+			'create' => Dict::Format('UI:ClickToCreateNew', MetaModel::GetName($this->sLinkedClass)),
+		);
+		$sSubmitUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
+		$sJSONLabels = json_encode($aLabels);
+		$oPage->add_ready_script("$('#{$this->sInputid}').directlinks({class_name: '$this->sClass', att_code: '$this->sAttCode', input_name:'$sInputName', labels: $sJSONLabels, sumit_to: '$sSubmitUrl' });");
 	}
 	
 	public function GetObjectCreationDlg(WebPage $oPage, $sProposedRealClass = '')

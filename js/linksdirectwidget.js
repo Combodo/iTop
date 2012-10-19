@@ -11,7 +11,7 @@ $(function()
 			input_name: '',
 			class_name: '',
 			att_code: '',
-			submit_to: GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+			submit_to: '../pages/ajax.render.php',
 			submit_parameters: {},
 			labels: { 'delete': 'Delete',
 				  	  modify: 'Modify...' , 
