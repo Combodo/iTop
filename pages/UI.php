@@ -943,7 +943,7 @@ try
 			$oP->add("</div>\n");
 
 			$oP->add("<div class=\"wizContainer\">\n");
-			$oDummyObj->DisplayModifyForm($oP, array('fieldsComments' => $aComments, 'noRelations' => true, 'custom_operation' => 'preview_or_modify_all', 'custom_button' => Dict::S('UI:Button:PreviewModifications'), 'selectObj' => $sSelectedObj, 'filter' => $sFilter, 'preview_mode' => true, 'disabled_fields' => '{}'));
+			$oDummyObj->DisplayModifyForm($oP, array('fieldsComments' => $aComments, 'noRelations' => true, 'custom_operation' => 'preview_or_modify_all', 'custom_button' => Dict::S('UI:Button:PreviewModifications'), 'selectObj' => $sSelectedObj, 'filter' => $sFilter, 'preview_mode' => true, 'disabled_fields' => '{}', 'disable_plugins' => true));
 			$oP->add("</div>\n");
 			$oP->add_ready_script($sReadyScript);
 			$sURL = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();

@@ -357,7 +357,7 @@ EOF
 			$sMaxUpload = $this->GetMaxUpload();
 			$oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file" onChange="ajaxFileUpload();"><span style="display:none;" id="attachment_loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUpload);
 			$oPage->p('<span style="display:none;" id="attachment_loading">Loading, please wait...</span>');
-			$oPage->p('<input type="hidden" id="attachment_plugin"/>');
+			$oPage->p('<input type="hidden" id="attachment_plugin" name="attachment_plugin"/>');
 			$oPage->add('</fieldset>');
 			if ($this->m_bDeleteEnabled)
 			{
@@ -388,6 +388,12 @@ EOF
 
 	protected static function UpdateAttachments($oObject, $oChange = null)
 	{
+		if (utils::ReadParam('attachment_plugin', 'not-in-form') == 'not-in-form')
+		{
+			// Workaround to an issue in iTop < 2.0
+			// Leave silently if there is no trace of the attachment form
+			return;
+		}
 		$iTransactionId = utils::ReadParam('transaction_id', null);
 		if (!is_null($iTransactionId))
 		{

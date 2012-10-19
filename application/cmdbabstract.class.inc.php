@@ -210,9 +210,13 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	{
 		$aFieldsMap = $this->GetBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);		
 
-		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
+
+		if (!isset($aExtraParams['disable_plugins']) || !$aExtraParams['disable_plugins'])
 		{
-			$oExtensionInstance->OnDisplayProperties($this, $oPage, $bEditMode);
+			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
+			{
+				$oExtensionInstance->OnDisplayProperties($this, $oPage, $bEditMode);
+			}
 		}
 		
 		// Special case to display the case log, if any...
