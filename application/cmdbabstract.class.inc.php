@@ -96,7 +96,16 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	{
 		// Standard Header with name, actions menu and history block
 		//
-
+		
+		// Is there a message for this object ??
+		$sMessageKey = get_class($this).'::'.$this->GetKey();
+		if (array_key_exists('obj_messages', $_SESSION) && array_key_exists($sMessageKey, $_SESSION['obj_messages']))
+		{
+			$sMsgClass = 'message_'.$_SESSION['obj_messages'][$sMessageKey]['severity'];
+			$oPage->add("<div class=\"header_message $sMsgClass\">".$_SESSION['obj_messages'][$sMessageKey]['message']."</div>");
+			unset($_SESSION['obj_messages'][$sMessageKey]);
+		}
+		
 		// action menu
 		$oSingletonFilter = new DBObjectSearch(get_class($this));
 		$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
@@ -191,7 +200,11 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		}
 	
 		$oPage->add("<div class=\"page_header\"><h1>".$this->GetIcon()."&nbsp;\n");
-		$oPage->add(MetaModel::GetName(get_class($this)).": <span class=\"hilite\">".$this->GetName()."</span>$sSynchroIcon</h1>\n");
+		if ($_SERVER['REQUEST_METHOD'] == 'GET')
+		{
+			$sRefreshIcon = '&nbsp<button type="button" onclick="window.location.reload();">'.Dict::S('UI:Button:Refresh').'</button>';
+		}
+		$oPage->add(MetaModel::GetName(get_class($this)).": <span class=\"hilite\">".$this->GetName()."</span>$sRefreshIcon $sSynchroIcon</h1>\n");
 		$oPage->add("</div>\n");
 		
 	}

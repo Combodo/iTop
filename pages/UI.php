@@ -376,8 +376,7 @@ function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction)
 		{
 			$oObj->DBUpdate();
 		}
-		$oObj->Reload();
-		$oObj->DisplayDetails($oP);
+		ReloadAndDisplay($oP, $oObj);
 	}
 	else
 	{
@@ -387,6 +386,17 @@ function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction)
 		
 		$oP->add_header('Location: '.utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=stimulus&class='.get_class($oObj).'&stimulus='.$sNextAction.'&id='.$oObj->getKey().'&'.$oAppContext->GetForLink());
 	}
+}
+
+function ReloadAndDisplay($oPage, $oObj, $sMessage = '', $sSeverity)
+{
+	$oAppContext = new ApplicationContext();
+	$sMessageKey = get_class($oObj).'::'.$oObj->GetKey();
+	if ($sMessage != '')
+	{
+		$_SESSION['obj_messages'][$sMessageKey] = array('severity' => $sSeverity, 'message' => $sMessage);
+	}
+	$oPage->add_header('Location: '.utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.get_class($oObj).'&id='.$oObj->getKey().'&'.$oAppContext->GetForLink());
 }
 /**
  * Displays the details of an object
@@ -1204,24 +1214,25 @@ EOF
 			else
 			{
 				$oObj->UpdateObjectFromPostedForm();
+				$sMessage = '';
+				$sSeverity = 'ok';
 
 				if (!$oObj->IsModified())
 				{
 					$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-					$oP->p(Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
+					$sMessage = Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
+					$sSeverity = 'info';
 				}
 				else
 				{
 					list($bRes, $aIssues) = $oObj->CheckToWrite();
 					if ($bRes)
 					{
-						$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-						$oP->add("<h1>".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
-
 						$oObj->DBUpdate();
 						utils::RemoveTransaction($sTransactionId);
 			
-						$oP->p(Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
+						$sMessage = Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
+						$sSeverity = 'ok';
 					}
 					else
 					{
@@ -1251,7 +1262,7 @@ EOF
 				else
 				{
 					// Nothing more to do
-					$oObj->DisplayDetails($oP);
+					ReloadAndDisplay($oP, $oObj, $sMessage, $sSeverity);
 				}
 			}
 		break;
@@ -1362,18 +1373,20 @@ EOF
 				$oObj->DBInsert();
 				utils::RemoveTransaction($sTransactionId);
 				$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
-				$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oObj->GetName(), $sClassLabel)."</h1>\n");
+				$sMessage = Dict::Format('UI:Title:Object_Of_Class_Created', $oObj->GetName(), $sClassLabel);
+				
 				$oObj = MetaModel::GetObject(get_class($oObj), $oObj->GetKey()); //Workaround: reload the object so that the linkedset are displayed properly
 
 				$sNextAction = utils::ReadPostedParam('next_action', '');
 				if (!empty($sNextAction))
 				{
+					$oP->add("<h1>$sMessage</h1>");
 					ApplyNextAction($oP, $oObj, $sNextAction);
 				}
 				else
 				{
 					// Nothing more to do
-					$oObj->DisplayDetails($oP);
+					ReloadAndDisplay($oP, $oObj, $sMessage, 'ok');
 				}
 			}
 			else
@@ -1390,32 +1403,7 @@ EOF
 			}
 		}
 		break;
-		
-		///////////////////////////////////////////////////////////////////////////////////////////
-
-		case 'wizard_apply_new': // no more used ???
-		$sJson = utils::ReadPostedParam('json_obj', '', 'raw_data');
-		$oWizardHelper = WizardHelper::FromJSON($sJson);
-		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
-		if (!utils::IsTransactionValid($sTransactionId))
-		{
-			$oP->p(Dict::S('UI:Error:ObjectAlreadyCreated'));
-		}
-		else
-		{
-			$oObj = $oWizardHelper->GetTargetObject(true /* read uploaded files */);
-			if (is_object($oObj))
-			{
-				$sClass = get_class($oObj);
-				$sClassLabel = MetaModel::GetName($sClass);
-				$oObj->DBInsert();
-				$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
-				$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oObj->GetName(), $sClassLabel)."</h1>\n");
-				$oObj->DisplayDetails($oP);
-			}
-		}
-		break;
-	
+			
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'select_bulk_stimulus': // Form displayed when applying a stimulus to many objects
@@ -1900,13 +1888,16 @@ EOF
 		{
 			$aTransitions = $oObj->EnumTransitions();
 			$aStimuli = MetaModel::EnumStimuli($sClass);
+			$sMessage = '';
+			$sSeverity = 'ok';
 			if (!isset($aTransitions[$sStimulus]))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulus, $oObj->GetName(), $oObj->GetStateLabel()));
 			}
 			if (!utils::IsTransactionValid($sTransactionId))
 			{
-				$oP->p(Dict::S('UI:Error:ObjectAlreadyUpdated'));
+				$sMessage = Dict::S('UI:Error:ObjectAlreadyUpdated');
+				$sSeverity = 'info';
 			}
 			else
 			{
@@ -1941,20 +1932,22 @@ EOF
 					if ($oObj->ApplyStimulus($sStimulus))
 					{
 						$oObj->DBUpdate();
-						$oP->p(Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName()));
+						$sMessage = Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
+						$sSeverity = 'ok';
 					}
 					else
 					{
-						$oP->p(Dict::S('UI:FailedToApplyStimuli'));
+						$sMessage = Dict::S('UI:FailedToApplyStimuli');
+						$sSeverity = 'error';
 					}
 				}
 				else
 				{
-					$oP->p(implode('</p><p>', $aErrors));
+					$sMessage = implode('</p><p>', $aErrors);
+					$sSeverity = 'error';
 				}
 			}
-			$oObj->Reload();
-			$oObj->DisplayDetails($oP);
+			ReloadAndDisplay($oP, $oObj, $sMessage, $sSeverity);
 		}
 		else
 		{
