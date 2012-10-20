@@ -77,6 +77,7 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_script('../js/g.dot.js');
 		$this->add_linked_script('../js/charts.js');
 		$this->add_linked_script('../js/jquery.multiselect.min.js');
+		$this->add_linked_script('../js/ajaxfileupload.js');
 		
 		$sSearchAny = addslashes(Dict::S('UI:SearchValue:Any'));
 		$sSearchNbSelected = addslashes(Dict::S('UI:SearchValue:NbSelected'));

@@ -238,7 +238,6 @@ EOF
 		{
 			$sIsDeleteEnabled = $this->m_bDeleteEnabled ? 'true' : 'false';
 			$iTransactionId = $oPage->GetTransactionId();
-			$oPage->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'itop-attachments/ajaxfileupload.js');
 			$sClass = get_class($oObject);
 			$sTempId = session_id().'_'.$iTransactionId;
 			$sDeleteBtn = Dict::S('Attachments:DeleteBtn');
