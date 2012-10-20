@@ -97,15 +97,16 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		
 		me.UpdateButtons(0);
 		// Gather the parameters from the search form
-		$('#SearchFormToAdd_'+me.id+' :input').each(
-			function(i)
-			{
+		$('#SearchFormToAdd_'+me.id+' :input').each( function() {
 				if (this.name != '')
 				{
-					theMap[this.name] = this.value;
+					var val = $(this).val(); // supports multiselect as well
+					if (val !== null)
+					{
+						theMap[this.name] = val;					
+					}
 				}
-			}
-		);
+		});
 		
 		// Gather the already linked target objects
 		theMap.aAlreadyLinked = new Array();

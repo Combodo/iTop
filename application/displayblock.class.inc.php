@@ -300,23 +300,40 @@ class DisplayBlock
 				}
 				foreach($aFilterCodes as $sFilterCode)
 				{
-					$sExternalFilterValue = utils::ReadParam($sFilterCode, '', false, 'raw_data');
+					$externalFilterValue = utils::ReadParam($sFilterCode, '', false, 'raw_data');
 					$condition = null;
 					if (isset($aExtraParams[$sFilterCode]))
 					{
 						$condition = $aExtraParams[$sFilterCode];
 					}
-//					else if ($bDoSearch && $sExternalFilterValue != "")
-					if ($bDoSearch && $sExternalFilterValue != "")
+					if ($bDoSearch && $externalFilterValue != "")
 					{
 						// Search takes precedence over context params...
 						unset($aExtraParams[$sFilterCode]);
-						$condition = trim($sExternalFilterValue);
+						if (!is_array($externalFilterValue))
+						{
+							$condition = trim($externalFilterValue);
+						}
+						else if (count($externalFilterValue) == 1)
+						{
+							$condition = trim($externalFilterValue[0]);
+						}
+						else
+						{
+							$condition = $externalFilterValue;
+						}
 					}
 
 					if (!is_null($condition))
 					{
-						$this->AddCondition($sFilterCode, $condition);
+						$sOpCode = null; // default operator
+						if (is_array($condition))
+						{
+							// Multiple values, add them as AND X IN (v1, v2, v3...)
+							$sOpCode = 'IN';
+						}
+
+						$this->AddCondition($sFilterCode, $condition, $sOpCode);
 					}
 				}
 				if ($bDoSearch)
@@ -1089,7 +1106,7 @@ EOF
 	 * Add a condition (restriction) to the current DBObjectSearch on which the display block is based
 	 * taking into account the hierarchical keys for which the condition is based on the 'below' operator
 	 */
-	protected function AddCondition($sFilterCode, $condition)
+	protected function AddCondition($sFilterCode, $condition, $sOpCode = null)
 	{
 		// Workaround to an issue revealed whenever a condition on org_id is applied twice (with a hierarchy of organizations)
 		// Moreover, it keeps the query as simple as possible
@@ -1115,12 +1132,29 @@ EOF
 				if ($sHierarchicalKeyCode !== false)
 				{
 					$oFilter = new DBObjectSearch($oAttDef->GetTargetClass());
-					$oFilter->AddCondition('id', $condition);
+					if (($sOpCode == 'IN') && is_array($condition))
+					{
+						$oFilter->AddConditionExpression(self::GetConditionIN($oFilter, 'id', $condition));						
+					}
+					else
+					{
+						$oFilter->AddCondition('id', $condition);
+					}
 					$oHKFilter = new DBObjectSearch($oAttDef->GetTargetClass());
 					$oHKFilter->AddCondition_PointingTo($oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW); // Use the 'below' operator by default
 					$this->m_oFilter->AddCondition_PointingTo($oHKFilter, $sFilterCode);
 					$bConditionAdded = true;
 				}
+				else if (($sOpCode == 'IN') && is_array($condition))
+				{
+					$this->m_oFilter->AddConditionExpression(self::GetConditionIN($this->m_oFilter, $sFilterCode, $condition));
+					$bConditionAdded = true;
+				}
+			}
+			else if (($sOpCode == 'IN') && is_array($condition))
+			{
+				$this->m_oFilter->AddConditionExpression(self::GetConditionIN($this->m_oFilter, $sFilterCode, $condition));
+				$bConditionAdded = true;
 			}
 		}
 		
@@ -1129,6 +1163,15 @@ EOF
 		{
 			$this->m_oFilter->AddCondition($sFilterCode, $condition); // Use the default 'loose' operator
 		}
+	}
+	
+	static protected function GetConditionIN($oFilter, $sFilterCode, $condition)
+	{
+		$oField = new FieldExpression($sFilterCode,  $oFilter->GetClassAlias());
+		$sListExpr = '('.implode(', ', CMDBSource::Quote($condition)).')';
+		$sOQLCondition = $oField->Render()." IN $sListExpr";
+		$oNewCondition = Expression::FromOQL($sOQLCondition);
+		return $oNewCondition;		
 	}
 }
 

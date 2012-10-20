@@ -1234,6 +1234,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	public static function GetSearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		static $iSearchFormId = 0;
+		$bMultiSelect = false;
 		$oAppContext = new ApplicationContext();
 		$sHtml = '';
 		$numCols=4;
@@ -1353,12 +1354,17 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				}
 				else
 				{
-					//Enum field, display a combo
-					$sValue = "<select name=\"$sFilterCode\">\n";
-					$sValue .= "<option value=\"\">".Dict::S('UI:SearchValue:Any')."</option>\n";
+					//Enum field, display a multi-select combo
+					$sValue = "<select class=\"multiselect\" size=\"1\" name=\"{$sFilterCode}[]\" multiple>\n";
+					$bMultiSelect = true;
+					//$sValue .= "<option value=\"\">".Dict::S('UI:SearchValue:Any')."</option>\n";
 					foreach($aAllowedValues as $key => $value)
 					{
-						if ($sFilterValue == $key)
+						if (is_array($sFilterValue) && in_array($key, $sFilterValue))
+						{
+							$sSelected = ' selected';
+						}
+						else if ($sFilterValue == $key)
 						{
 							$sSelected = ' selected';
 						}
@@ -1406,6 +1412,10 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		if (!isset($aExtraParams['currentId']))
 		{
 			$sHtml .= "</div><!-- Simple search form -->\n";
+		}
+		if ($bMultiSelect)
+		{
+			$oPage->add_ready_script("$('.multiselect').multiselect({header: false, noneSelectedText: '".addslashes(Dict::S('UI:SearchValue:Any'))."', selectedList: 1, selectedText:'".addslashes(Dict::S('UI:SearchValue:NbSelected'))."'});");
 		}
 /*
 		// OQL query builder

@@ -101,7 +101,7 @@ class UIExtKeyWidget
 	 * @param Hash $aArgs Extra context arguments
 	 * @return string The HTML fragment to be inserted into the page
 	 */
-	public function Display(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix = '', $aArgs = array(), $bSearchMode = null, $sDisplayStyle = 'select')
+	public function Display(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix = '', $aArgs = array(), $bSearchMode = null, $sDisplayStyle = 'select', $bSearchMultiple = true)
 	{
 		if (!is_null($bSearchMode))
 		{
@@ -169,14 +169,22 @@ class UIExtKeyWidget
 				
 				$sHelpText = ''; //$this->oAttDef->GetHelpOnEdition();
 				
-				$sHTMLValue = "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
 				if ($this->bSearchMode)
 				{
-					$sDisplayValue = isset($aArgs['sDefaultValue']) ? $aArgs['sDefaultValue'] : Dict::S('UI:SearchValue:Any');
-					$sHTMLValue .= "<option value=\"\">$sDisplayValue</option>\n";			
+					if ($bSearchMultiple)
+					{
+						$sHTMLValue = "<select class=\"multiselect\" multiple title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}[]\" id=\"$this->iId\">\n";
+					}
+					else
+					{
+						$sHTMLValue = "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
+						$sDisplayValue = isset($aArgs['sDefaultValue']) ? $aArgs['sDefaultValue'] : Dict::S('UI:SearchValue:Any');
+						$sHTMLValue .= "<option value=\"\">$sDisplayValue</option>\n";
+					}
 				}
 				else
 				{
+					$sHTMLValue = "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
 					$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
 				}
 				$oAllowedValues->Rewind();
@@ -192,11 +200,15 @@ class UIExtKeyWidget
 					}
 					else
 					{
-						$sSelected = ($value == $key) ? ' selected' : '';
+						$sSelected = (is_array($value) && in_array($key, $value)) || ($value == $key) ? ' selected' : '';
 					}
 					$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
 				}
 				$sHTMLValue .= "</select>\n";
+				if (($this->bSearchMode) && $bSearchMultiple)
+				{
+					$oPage->add_ready_script("$('.multiselect').multiselect({header: false, noneSelectedText: '".addslashes(Dict::S('UI:SearchValue:Any'))."', selectedList: 1, selectedText:'".addslashes(Dict::S('UI:SearchValue:NbSelected'))."'});");
+				}
 				$oPage->add_ready_script(
 <<<EOF
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode);

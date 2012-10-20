@@ -465,6 +465,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Details+' => 'Details',
 	'UI:SearchValue:Any' => '* Any *',
 	'UI:SearchValue:Mixed' => '* mixed *',
+	'UI:SearchValue:NbSelected' => '# selected',
 	'UI:SelectOne' => '-- select one --',
 	'UI:Login:Welcome' => 'Welcome to iTop!',
 	'UI:Login:IncorrectLoginPassword' => 'Incorrect login/password, please try again.',

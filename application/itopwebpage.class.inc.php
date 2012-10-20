@@ -56,6 +56,7 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_stylesheet("../css/jquery.treeview.css");
 		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
 		$this->add_linked_stylesheet("../css/fg.menu.css");
+		$this->add_linked_stylesheet("../css/jquery.multiselect.css");
 		$this->add_linked_script('../js/jquery.layout.min.js');
 		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
 		$this->add_linked_script("../js/jquery.treeview.js");
@@ -75,6 +76,10 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_script('../js/g.pie.js');
 		$this->add_linked_script('../js/g.dot.js');
 		$this->add_linked_script('../js/charts.js');
+		$this->add_linked_script('../js/jquery.multiselect.min.js');
+		
+		$sSearchAny = addslashes(Dict::S('UI:SearchValue:Any'));
+		$sSearchNbSelected = addslashes(Dict::S('UI:SearchValue:NbSelected'));
 		
 		$this->m_sInitScript =
 <<< EOF
@@ -154,6 +159,8 @@ class iTopWebPage extends NiceWebPage
 				$('.resizable', ui.panel).resizable(); // Make resizable everything that claims to be resizable !
 			}
 		});
+		
+		$('.multiselect').multiselect({header: false, noneSelectedText: '$sSearchAny', selectedList: 1, selectedText:'$sSearchNbSelected'});
 		
 		$('.resizable').filter(':visible').resizable();
 	}
@@ -429,7 +436,9 @@ EOF
 
 			$sFavoriteOrgs = '';
 			$oWidget = new UIExtKeyWidget('Organization', 'org_id', '', true /* search mode */);
-			$sHtml .= $oWidget->Display($this, 50, false, '', $oSet, $iCurrentOrganization, 'org_id', false, 'c[org_id]', '', array('iFieldSize' => 20, 'iMinChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'), 'sDefaultValue' => Dict::S('UI:AllOrganizations')));
+			$sHtml .= $oWidget->Display($this, 50, false, '', $oSet, $iCurrentOrganization, 'org_id', false, 'c[org_id]', '',
+										array('iFieldSize' => 20, 'iMinChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'), 'sDefaultValue' => Dict::S('UI:AllOrganizations')),
+										null, 'select', false /* bSearchMultiple */);
 			$this->add_ready_script('$("#org_id").bind("extkeychange", function() { $("#SiloSelection form").submit(); } )');
 			$this->add_ready_script("$('#label_org_id').click( function() { $(this).val(''); $('#org_id').val(''); return true; } );\n");
 			// Add other dimensions/context information to this form

@@ -150,16 +150,17 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					 };
 		
 		// Gather the parameters from the search form
-		$('#fs_'+me.id+' :input').each(
-			function(i)
+		$('#fs_'+me.id+' :input').each( function() {
+			if (this.name != '')
 			{
-				if (this.name != '')
+				var val = $(this).val(); // supports multiselect as well
+				if (val !== null)
 				{
-					theMap[this.name] = this.value;
+					theMap[this.name] = val;					
 				}
 			}
-		);
-		
+		});
+					
 		if (me.oWizardHelper == null)
 		{
 			theMap['json'] = '';
