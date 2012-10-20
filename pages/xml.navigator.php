@@ -142,6 +142,7 @@ try
 		switch($sFormat)
 		{
 			case 'html':
+			$oPage->SetContentType('text/html');	
 			$oObj = MetaModel::GetObject($sClass, $id, true /* object must exist */);
 			$aResults = array();
 			$oObj->GetRelatedObjects($sRelation, MAX_RECURSION_DEPTH /* iMaxDepth */, $aResults);
@@ -162,6 +163,7 @@ try
 			
 			case 'xml':
 			default:
+			$oPage->SetContentType('text/xml');				
 			$oObj = MetaModel::GetObject($sClass, $id, true /* object must exist */);
 			// Build the root XML part
 			$oXmlDoc = new DOMDocument( '1.0', 'UTF-8' );
