@@ -579,7 +579,7 @@ EOF
 			if (is_dir($sPreviousVersionDir.'/extensions'))
 			{
 				$aExtensions = glob($sPreviousVersionDir.'/extensions/*', GLOB_ONLYDIR);
-				if (($aExtensions !== false) && (count($aExtensions)>0))
+				if (($aExtensions !== false) && (count($aExtensions)>0) && (realpath($sPreviousVersionDir.'/extensions') != realpath(APPROOT.'extensions')) )
 				{
 					$aWritableDirs = array('extensions');
 					$aErrors = SetupUtils::CheckWritableDirs($aWritableDirs);

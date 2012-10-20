@@ -964,9 +964,9 @@ EOF
 		$oConfig->UpdateFromParams($aParamValues, null);
 		$aDirsToScan = array($sSourceDir);
 
-		if (is_dir($sSourceDir.'/extensions'))
+		if (is_dir(APPROOT.'extensions'))
 		{
-			$aDirsToScan[] = $sSourceDir.'/extensions';
+			$aDirsToScan[] = APPROOT.'extensions';
 		}
 		if (is_dir($oWizard->GetParameter('copy_extensions_from')))
 		{
