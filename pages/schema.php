@@ -38,7 +38,7 @@ LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be 
  */
 function MakeClassHLink($sClass, $sContext)
 {
-	return "<a href=\"schema.php?operation=details_class&class=$sClass{$sContext}\" title=\"".MetaModel::GetClassDescription($sClass)."\">".MetaModel::GetName($sClass)."</a>";
+	return "<a href=\"schema.php?operation=details_class&class=$sClass{$sContext}\" title=\"".MetaModel::GetClassDescription($sClass)."\">".MetaModel::GetName($sClass)." ($sClass)</a>";
 }
 
 /**
@@ -75,7 +75,7 @@ function DisplaySubclasses($oPage, $sClass, $sContext)
 			// Skip indirect childs, they will be handled somewhere else
 			if (MetaModel::GetParentPersistentClass($sClassName) == $sClass)
 			{
-					$oPage->add("<li>".MakeClassHLink($sClassName, $sContext)."\n");
+					$oPage->add("<li class=\"open\">".MakeClassHLink($sClassName, $sContext)."\n");
 					DisplaySubclasses($oPage, $sClassName, $sContext);
 					$oPage->add("</li>\n");
 			}
@@ -304,7 +304,7 @@ function DisplayClassesList($oPage, $sContext)
 	{
 		if (MetaModel::IsRootClass($sClassName))
 		{
-			$oPage->add("<li class=\"closed\">".MakeClassHLink($sClassName, $sContext)."\n");
+			$oPage->add("<li class=\"open\">".MakeClassHLink($sClassName, $sContext)."\n");
 			DisplaySubclasses($oPage, $sClassName, $sContext);
 			$oPage->add("</li>\n");
 		}
@@ -338,7 +338,7 @@ function DisplayClassesList($oPage, $sContext)
  */
 function DisplayClassDetails($oPage, $sClass, $sContext)
 {
-	$oPage->add("<h2>$sClass - ".MetaModel::GetClassDescription($sClass)."</h2>\n");
+	$oPage->add("<h2>".MetaModel::GetName($sClass)." ($sClass) - ".MetaModel::GetClassDescription($sClass)."</h2>\n");
 	if (MetaModel::IsAbstract($sClass))
 	{
 		$oPage->p(Dict::S('UI:Schema:AbstractClass'));
