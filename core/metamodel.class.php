@@ -5076,18 +5076,18 @@ abstract class MetaModel
 		return $aEntries;
 	}
 
-	public static function ResetCache($sEnvironment = null)
+	public static function ResetCache($sEnvironmentId = null)
 	{
 		if (!function_exists('apc_delete')) return;
-		if (is_null($sEnvironment))
+		if (is_null($sEnvironmentId))
 		{
-			$sEnvironment = MetaModel::GetEnvironmentId();
+			$sEnvironmentId = MetaModel::GetEnvironmentId();
 		}
 
-		$sAppIdentity = 'itop-'.$sEnvironment;
+		$sAppIdentity = 'itop-'.$sEnvironmentId;
 		Dict::ResetCache($sAppIdentity);
 
-		foreach(self::GetCacheEntries($sEnvironment) as $sKey => $aAPCInfo)
+		foreach(self::GetCacheEntries($sEnvironmentId) as $sKey => $aAPCInfo)
 		{
 			$sAPCKey = $aAPCInfo['info'];
 			apc_delete($sAPCKey);

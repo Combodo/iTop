@@ -783,6 +783,6 @@ class ApplicationInstaller
 
 		// Ready to go !!
 		require_once(APPROOT.'core/dict.class.inc.php');
-		MetaModel::ResetCache($sTargetEnvironment);
+		MetaModel::ResetCache();
 	}
 }
