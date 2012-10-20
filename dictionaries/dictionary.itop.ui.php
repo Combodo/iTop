@@ -331,7 +331,7 @@ Dict::Add('EN US', 'English', 'English', array(
 <li>Improves customer satisfaction and provides executives with insights into business performance.</li>
 </ul>
 </p>
-<p>iTop is completely opened to be integrated within your current IT Management infrastructure.</p>
+<p>iTop is completely open to be integrated within your current IT Management infrastructure.</p>
 <p>
 <ul>Adopting this new generation of IT Operational portal will help you to:
 <li>Better manage a more and more complex IT environment.</li>
