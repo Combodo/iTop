@@ -1359,6 +1359,7 @@ class MenuBlock extends DisplayBlock
 						$aActions[$sRelationCode] = array ('label' => MetaModel::GetRelationVerbUp($sRelationCode), 'url' => "{$sRootUrl}pages/$sUIPage?operation=swf_navigator&relation=$sRelationCode&class=$sClass&id=$id{$sContext}");
 					}
 				}
+				/*
 				$this->AddMenuSeparator($aActions);
 				// Static menus: Email this page & CSV Export
 				$sUrl = ApplicationContext::MakeObjectUrl($sClass, $id);
@@ -1371,6 +1372,7 @@ class MenuBlock extends DisplayBlock
 					$sOQL = addslashes($sFilterDesc);
 					$aActions['UI:Menu:AddToDashboard'] = array ('label' => Dict::S('UI:Menu:AddToDashboard'), 'url' => "#", 'onclick' => "return DashletCreationDlg('$sOQL')");
 				}
+				*/
 			}
 			$this->AddMenuSeparator($aActions);
 			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
@@ -1446,51 +1448,55 @@ class MenuBlock extends DisplayBlock
 						}
 					}
 				}
+				/*
 				$this->AddMenuSeparator($aActions);
 				$sUrl = utils::GetAbsoluteUrlAppRoot();
 				$aActions['UI:Menu:EMail'] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=$sFilterDesc&body=".urlencode("{$sUrl}pages/$sUIPage?operation=search&filter=".urlencode($sFilter)."{$sContext}"));
 				$aActions['UI:Menu:CSVExport'] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=search&filter=".urlencode($sFilter)."&format=csv{$sContext}");
 				$sOQL = addslashes($sFilterDesc);
 				$aActions['UI:Menu:AddToDashboard'] = array ('label' => Dict::S('UI:Menu:AddToDashboard'), 'url' => "#", 'onclick' => "return DashletCreationDlg('$sOQL')");
+				*/
 			}
-			$this->AddMenuSeparator($aActions);
-			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
+		}
+		
+		$this->AddMenuSeparator($aActions);
+		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
+		{
+			$oSet->Rewind();
+			foreach($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $data)
 			{
-				$oSet->Rewind();
-				foreach($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $data)
+				if (is_array($data))
 				{
-					if (is_array($data))
-					{
-						// New plugins can provide javascript handlers via the 'onclick' property
-						//TODO: enable extension of different menus by checking the 'target' property ??
-						$aActions[$sLabel] = array ('label' => $sLabel, 'url' => isset($data['url']) ? $data['url'] : '#', 'onclick' => isset($data['onclick']) ? $data['onclick'] : '');
-					}
-					else
-					{
-						// Backward compatibility with old plugins
-						$aActions[$sLabel] = array ('label' => $sLabel, 'url' => $data);
-					}
+					// New plugins can provide javascript handlers via the 'onclick' property
+					//TODO: enable extension of different menus by checking the 'target' property ??
+					$aActions[$sLabel] = array ('label' => $sLabel, 'url' => isset($data['url']) ? $data['url'] : '#', 'onclick' => isset($data['onclick']) ? $data['onclick'] : '');
+				}
+				else
+				{
+					// Backward compatibility with old plugins
+					$aActions[$sLabel] = array ('label' => $sLabel, 'url' => $data);
 				}
 			}
-			
-			// New extensions based on iPopupMenuItem interface 
-			switch($this->m_sStyle)
-			{
-				case 'list':
-				$oSet->Rewind();
-				$param  = $oSet;
-				$iMenuId = iPopupMenuExtension::MENU_OBJLIST_ACTIONS;
-				break;
-				
-				case 'details':
-				$oSet->Rewind();
-				$param  = $oSet->Fetch();
-				$iMenuId = iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS;
-				break;
-				
-			}
-			utils::GetPopupMenuItems($oPage, $iMenuId, $param, $aActions);
 		}
+					
+		// New extensions based on iPopupMenuItem interface 
+		switch($this->m_sStyle)
+		{
+			case 'list':
+			$oSet->Rewind();
+			$param  = $oSet;
+			$iMenuId = iPopupMenuExtension::MENU_OBJLIST_ACTIONS;
+			break;
+			
+			case 'details':
+			$oSet->Rewind();
+			$param  = $oSet->Fetch();
+			$iMenuId = iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS;
+			break;
+			
+		}
+		utils::GetPopupMenuItems($oPage, $iMenuId, $param, $aActions);
+
 		$aFavoriteActions = array();
 		$aCallSpec = array($sClass, 'GetShortcutActions');
 		if (is_callable($aCallSpec))
@@ -1582,23 +1588,50 @@ class ExtraMenus implements iPopupMenuExtension
 				new JSPopupMenuItem('Test::Item2', 'List Test 2', "alert('Test 2')"),
 			);
 			break;
+		
+				$this->AddMenuSeparator($aActions);
+				$sUrl = utils::GetAbsoluteUrlAppRoot();
+				$aActions['UI:Menu:EMail'] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=$sFilterDesc&body=".urlencode("{$sUrl}pages/$sUIPage?operation=search&filter=".urlencode($sFilter)."{$sContext}"));
+				$aActions['UI:Menu:CSVExport'] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=search&filter=".urlencode($sFilter)."&format=csv{$sContext}");
+				$sOQL = addslashes($sFilterDesc);
+				$aActions['UI:Menu:AddToDashboard'] = array ('label' => Dict::S('UI:Menu:AddToDashboard'), 'url' => "#", 'onclick' => "return DashletCreationDlg('$sOQL')");
+			*/
 			
 			case iPopupMenuExtension::MENU_OBJLIST_TOOLKIT:
 			// $param is a DBObjectSet
+			$oAppContext = new ApplicationContext();
+			$sContext = $oAppContext->GetForLink();
+			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($param->GetFilter()->GetClass());
+			$sOQL = addslashes($param->GetFilter()->ToOQL(true));
+			$sFilter = urlencode($param->GetFilter()->serialize());
+			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
 			$aResult = array(
-				new JSPopupMenuItem('Test::Item1', 'Toolkit Test 1', "alert('Test 1')"),
-				new JSPopupMenuItem('Test::Item2', 'Toolkit Test 2', "alert('Test 2')"),
+				new SeparatorPopupMenuItem(),
+				// Static menus: Email this page, CSV Export & Add to Dashboard
+				new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'), "mailto:?body=".urlencode($sUrl)),
+				new URLPopupMenuItem('UI:Menu:CSVExport', Dict::S('UI:Menu:CSVExport'), $sUrl."&format=csv"),
+				new JSPopupMenuItem('UI:Menu:AddToDashboard', Dict::S('UI:Menu:AddToDashboard'), "DashletCreationDlg('$sOQL')"),
 			);
 			break;
 			
+			
 			case iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS:
 			// $param is a DBObject
+			$oObj = $param;
+			$oFilter = DBobjectSearch::FromOQL("SELECT ".get_class($oObj)." WHERE id=".$oObj->GetKey());
+			$sFilter = $oFilter->serialize();
+			$sUrl = ApplicationContext::MakeObjectUrl(get_class($oObj), $oObj->GetKey());
+			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage(get_class($oObj));
+			$oAppContext = new ApplicationContext();
+			$sContext = $oAppContext->GetForLink();
 			$aResult = array(
-				new JSPopupMenuItem('Test::Item1', 'Object Test 1', "alert('Test 1')"),
-				new JSPopupMenuItem('Test::Item2', 'Object Test 2', "alert('Test 2')"),
+				new SeparatorPopupMenuItem(),
+				// Static menus: Email this page & CSV Export
+				new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'), "mailto:?subject=".urlencode($oObj->GetRawName())."&body=".urlencode($sUrl)),
+				new URLPopupMenuItem('UI:Menu:CSVExport', Dict::S('UI:Menu:CSVExport'), utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".urlencode($sFilter)."&format=csv&{$sContext}"),
 			);
 			break;
-			*/
+			
 			
 			case iPopupMenuExtension::MENU_DASHBOARD_ACTIONS:
 			// $param is a Dashboard
@@ -1611,8 +1644,7 @@ class ExtraMenus implements iPopupMenuExtension
 			$aResult = array(
 				new SeparatorPopupMenuItem(),
 				new URLPopupMenuItem('UI:ExportDashboard', Dict::S('UI:ExportDashBoard'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=export_dashboard&id='.$sMenuId),
-				new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sMenuId', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn' })",
-									array('../js/ajaxfileupload.js')),
+				new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sMenuId', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn' })"),
 			);
 			break;
 			
