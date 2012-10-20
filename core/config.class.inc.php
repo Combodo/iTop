@@ -1312,8 +1312,24 @@ class Config
 					'value' => $bValue,
 				);
 			}
-			
-			// Old fashioned non boolean values
+	
+			// Old fashioned integer settings
+			$aIntValues = array(
+				'fast_reload_interval' => $this->m_iFastReloadInterval,
+				'max_display_limit' => $this->m_iMaxDisplayLimit,
+				'min_display_limit' => $this->m_iMinDisplayLimit,
+				'standard_reload_interval' => $this->m_iStandardReloadInterval,
+			);
+			foreach($aIntValues as $sKey => $iValue)
+			{
+				$aConfigSettings[$sKey] = array(
+					'show_in_conf_sample' => true,
+					'type' => 'integer',
+					'value' => $iValue,
+				);
+			}
+
+			// Old fashioned remaining values
 			$aOtherValues = array(
 				'db_host' => $this->m_sDBHost,
 				'db_user' => $this->m_sDBUser,
@@ -1340,7 +1356,8 @@ class Config
 			fwrite($hFile, "\$MySettings = array(\n");
 			foreach($aConfigSettings as $sPropCode => $aSettingInfo)
 			{
-				if ($aSettingInfo['show_in_conf_sample'])
+				// Write all values that are either always visible or present in the cloned config file
+				if ($aSettingInfo['show_in_conf_sample'] || ($aSettingInfo['source_of_value'] != 'unknown') )
 				{
 					$sType = $aSettingInfo['type'];
 					switch($sType)
