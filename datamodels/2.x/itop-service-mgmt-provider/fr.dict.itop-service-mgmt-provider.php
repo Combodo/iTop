@@ -175,6 +175,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ServiceFamilly+' => '',
 	'Class:ServiceFamilly/Attribute:name' => 'Nom',
 	'Class:ServiceFamilly/Attribute:name+' => '',
+	'Class:ServiceFamily/Attribute:services_list' => 'Services',
+	'Class:ServiceFamily/Attribute:services_list+' => '',
 ));
 
 //

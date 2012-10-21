@@ -230,6 +230,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ServiceFamilly+' => '',
 	'Class:ServiceFamilly/Attribute:name' => 'Name',
 	'Class:ServiceFamilly/Attribute:name+' => '',
+	'Class:ServiceFamily/Attribute:services_list' => 'Services',
+	'Class:ServiceFamily/Attribute:services_list+' => '',
 ));
 
 //

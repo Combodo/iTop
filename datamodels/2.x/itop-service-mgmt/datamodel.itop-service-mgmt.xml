@@ -648,6 +648,7 @@
         <field id="services_list" xsi:type="AttributeLinkedSet">
           <linked_class>Service</linked_class>
           <ext_key_to_me>servicefamily_id</ext_key_to_me>
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates></duplicates>
@@ -783,6 +784,7 @@
         <field id="servicesubcategories_list" xsi:type="AttributeLinkedSet">
           <linked_class>ServiceSubcategory</linked_class>
           <ext_key_to_me>service_id</ext_key_to_me>
+          <edit_mode>add_only</edit_mode> 
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates></duplicates>
@@ -1610,6 +1612,7 @@
         <field id="customers_list" xsi:type="AttributeLinkedSet">
           <linked_class>Organization</linked_class>
           <ext_key_to_me>deliverymodel_id</ext_key_to_me>
+          <edit_mode>none</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
