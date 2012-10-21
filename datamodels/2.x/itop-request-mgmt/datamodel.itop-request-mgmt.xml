@@ -1132,9 +1132,6 @@
               <attribute id="last_pending_date">
                 <read_only/>
               </attribute>
-              <attribute id="cumulated_pending_period">
-                <read_only/>
-              </attribute>
               <attribute id="time_spent">
                 <hidden/>
               </attribute>
