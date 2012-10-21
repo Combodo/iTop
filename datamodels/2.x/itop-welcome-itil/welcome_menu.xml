@@ -6,7 +6,7 @@
     <cell>
       <dashlet id="1" xsi:type="DashletHeaderStatic">
         <title>Menu:ConfigManagementCI</title>
-        <icon>itop-config-mgmt/images/database.png</icon>
+        <icon>itop-welcome-itil/images/database.png</icon>
       </dashlet>
       <dashlet id="2" xsi:type="DashletBadge">
         <class>BusinessProcess</class>
@@ -33,7 +33,7 @@
     <cell>
       <dashlet id="8" xsi:type="DashletHeaderDynamic">
         <title>Menu:RequestManagement</title>
-        <icon>itop-request-mgmt/images/user-request-deadline.png</icon>
+        <icon>itop-welcome-itil/images/user-request-deadline.png</icon>
         <subtitle>Open Requests</subtitle>
         <query>SELECT UserRequest WHERE status != "closed"</query>
         <group_by>status</group_by>
