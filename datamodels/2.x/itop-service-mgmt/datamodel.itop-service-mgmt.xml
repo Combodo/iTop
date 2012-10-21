@@ -42,7 +42,7 @@
           <sql>org_id</sql>
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="organization_name" xsi:type="AttributeExternalField">
           <extkey_attcode>org_id</extkey_attcode>
@@ -118,7 +118,7 @@
           <sql>provider_id</sql>
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="provider_name" xsi:type="AttributeExternalField">
           <extkey_attcode>provider_id</extkey_attcode>
@@ -709,7 +709,7 @@
           <sql>org_id</sql>
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="organization_name" xsi:type="AttributeExternalField">
           <extkey_attcode>org_id</extkey_attcode>
@@ -719,7 +719,7 @@
           <sql>servicefamily_id</sql>
           <target_class>ServiceFamily</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="servicefamily_name" xsi:type="AttributeExternalField">
           <extkey_attcode>servicefamily_id</extkey_attcode>
@@ -1006,7 +1006,7 @@
           <sql>service_id</sql>
           <target_class>Service</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="service_name" xsi:type="AttributeExternalField">
           <extkey_attcode>service_id</extkey_attcode>
@@ -1103,7 +1103,7 @@
           <sql>org_id</sql>
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="organization_name" xsi:type="AttributeExternalField">
           <extkey_attcode>org_id</extkey_attcode>
@@ -1384,7 +1384,7 @@
           <sql>sla_id</sql>
           <target_class>SLA</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="sla_name" xsi:type="AttributeExternalField">
           <extkey_attcode>sla_id</extkey_attcode>
@@ -1590,7 +1590,7 @@
           <sql>org_id</sql>
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="organization_name" xsi:type="AttributeExternalField">
           <extkey_attcode>org_id</extkey_attcode>
@@ -1693,7 +1693,7 @@
           <sql>role_id</sql>
           <target_class>ContactType</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="role_name" xsi:type="AttributeExternalField">
           <extkey_attcode>role_id</extkey_attcode>

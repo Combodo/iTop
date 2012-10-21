@@ -933,7 +933,7 @@
           <sql>org_id</sql>
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="organization_name" xsi:type="AttributeExternalField">
           <extkey_attcode>org_id</extkey_attcode>
@@ -1107,7 +1107,7 @@
           <sql>location_id</sql>
           <target_class>Location</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="location_name" xsi:type="AttributeExternalField">
           <extkey_attcode>location_id</extkey_attcode>
@@ -1129,7 +1129,7 @@
           <sql>brand_id</sql>
           <target_class>Brand</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="brand_name" xsi:type="AttributeExternalField">
           <extkey_attcode>brand_id</extkey_attcode>
@@ -1143,7 +1143,7 @@
           <sql>model_id</sql>
           <target_class>Model</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="model_name" xsi:type="AttributeExternalField">
           <extkey_attcode>model_id</extkey_attcode>
@@ -1892,7 +1892,7 @@
           <sql>rack_id</sql>
           <target_class>Rack</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="rack_name" xsi:type="AttributeExternalField">
           <extkey_attcode>rack_id</extkey_attcode>
@@ -1906,7 +1906,7 @@
           <sql>enclosure_id</sql>
           <target_class>Enclosure</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="enclosure_name" xsi:type="AttributeExternalField">
           <extkey_attcode>enclosure_id</extkey_attcode>
@@ -1930,7 +1930,7 @@
           <sql>powera_id</sql>
           <target_class>ElectricalConnection</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="powerA_name" xsi:type="AttributeExternalField">
           <extkey_attcode>powerA_id</extkey_attcode>
@@ -1944,7 +1944,7 @@
           <sql>powerB_id</sql>
           <target_class>ElectricalConnection</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="powerB_name" xsi:type="AttributeExternalField">
           <extkey_attcode>powerB_id</extkey_attcode>
@@ -2077,7 +2077,7 @@
           <sql>networkdevicetype_id</sql>
           <target_class>NetworkDeviceType</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="networkdevicetype_name" xsi:type="AttributeExternalField">
           <extkey_attcode>networkdevicetype_id</extkey_attcode>
@@ -2095,7 +2095,7 @@
           <sql>iosversion_id</sql>
           <target_class>IOSversion</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="iosversion_name" xsi:type="AttributeExternalField">
           <extkey_attcode>iosversion_id</extkey_attcode>
@@ -2256,7 +2256,7 @@
           <sql>osfamily_id</sql>
           <target_class>OSfamily</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="osfamily_name" xsi:type="AttributeExternalField">
           <extkey_attcode>osfamily_id</extkey_attcode>
@@ -2270,7 +2270,7 @@
           <sql>osversion_id</sql>
           <target_class>OSversion</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="osversion_name" xsi:type="AttributeExternalField">
           <extkey_attcode>osversion_id</extkey_attcode>
@@ -2284,7 +2284,7 @@
           <sql>oslicence_id</sql>
           <target_class>OsLicence</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="oslicence_name" xsi:type="AttributeExternalField">
           <extkey_attcode>oslicence_id</extkey_attcode>
@@ -3036,7 +3036,7 @@
           <sql>osfamily_id</sql>
           <target_class>OSfamily</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="osfamily_name" xsi:type="AttributeExternalField">
           <extkey_attcode>osfamily_id</extkey_attcode>
@@ -3050,7 +3050,7 @@
           <sql>osversion_id</sql>
           <target_class>OSversion</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="osversion_name" xsi:type="AttributeExternalField">
           <extkey_attcode>osversion_id</extkey_attcode>
@@ -3495,7 +3495,7 @@
           <sql>rack_id</sql>
           <target_class>Rack</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="rack_name" xsi:type="AttributeExternalField">
           <extkey_attcode>rack_id</extkey_attcode>
@@ -3681,7 +3681,7 @@
           <sql>rack_id</sql>
           <target_class>Rack</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="rack_name" xsi:type="AttributeExternalField">
           <extkey_attcode>rack_id</extkey_attcode>
@@ -4037,7 +4037,7 @@
           <sql>software_id</sql>
           <target_class>Software</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="software_name" xsi:type="AttributeExternalField">
           <extkey_attcode>software_id</extkey_attcode>
@@ -4051,7 +4051,7 @@
           <sql>softwarelicence_id</sql>
           <target_class>SoftwareLicence</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="softwarelicence_name" xsi:type="AttributeExternalField">
           <extkey_attcode>softwarelicence_id</extkey_attcode>
@@ -4628,7 +4628,7 @@
           <sql>middleware_id</sql>
           <target_class>Middleware</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="middleware_name" xsi:type="AttributeExternalField">
           <extkey_attcode>middleware_id</extkey_attcode>
@@ -4728,7 +4728,7 @@
           <sql>dbserver_id</sql>
           <target_class>DBserver</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="dbserver_name" xsi:type="AttributeExternalField">
           <extkey_attcode>dbserver_id</extkey_attcode>
@@ -4828,7 +4828,7 @@
           <sql>webserver_id</sql>
           <target_class>Webserver</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="webserver_name" xsi:type="AttributeExternalField">
           <extkey_attcode>webserver_id</extkey_attcode>
@@ -5114,7 +5114,7 @@
           <sql>farm_id</sql>
           <target_class>Farm</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="farm_name" xsi:type="AttributeExternalField">
           <extkey_attcode>farm_id</extkey_attcode>
@@ -5330,7 +5330,7 @@
           <sql>virtualhost_id</sql>
           <target_class>VirtualHost</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="virtualhost_name" xsi:type="AttributeExternalField">
           <extkey_attcode>virtualhost_id</extkey_attcode>
@@ -5340,7 +5340,7 @@
           <sql>osfamily_id</sql>
           <target_class>OSfamily</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="osfamily_name" xsi:type="AttributeExternalField">
           <extkey_attcode>osfamily_id</extkey_attcode>
@@ -5354,7 +5354,7 @@
           <sql>osversion_id</sql>
           <target_class>OSversion</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="osversion_name" xsi:type="AttributeExternalField">
           <extkey_attcode>osversion_id</extkey_attcode>
@@ -5368,7 +5368,7 @@
           <sql>oslicence_id</sql>
           <target_class>OsLicence</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="oslicence_name" xsi:type="AttributeExternalField">
           <extkey_attcode>oslicence_id</extkey_attcode>
@@ -5542,7 +5542,7 @@
           <sql>storagesystem_id</sql>
           <target_class>StorageSystem</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
         <field id="storagesystem_name" xsi:type="AttributeExternalField">
           <extkey_attcode>storagesystem_id</extkey_attcode>
@@ -5906,7 +5906,7 @@
           <sql>tapelibrary_id</sql>
           <target_class>TapeLibrary</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
         <field id="tapelibrary_name" xsi:type="AttributeExternalField">
           <extkey_attcode>tapelibrary_id</extkey_attcode>
@@ -6014,7 +6014,7 @@
           <sql>nas_id</sql>
           <target_class>NAS</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
         <field id="nas_name" xsi:type="AttributeExternalField">
           <extkey_attcode>nas_id</extkey_attcode>
@@ -6291,7 +6291,7 @@
           <sql>osversion_id</sql>
           <target_class>OSversion</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="osversion_name" xsi:type="AttributeExternalField">
           <extkey_attcode>osversion_id</extkey_attcode>
@@ -6352,7 +6352,7 @@
           <sql>software_id</sql>
           <target_class>Software</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="software_name" xsi:type="AttributeExternalField">
           <extkey_attcode>software_id</extkey_attcode>
@@ -6436,7 +6436,7 @@
           <sql>org_id</sql>
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="organization_name" xsi:type="AttributeExternalField">
           <extkey_attcode>org_id</extkey_attcode>
@@ -6533,7 +6533,7 @@
           <sql>osversion_id</sql>
           <target_class>OSversion</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="osversion_name" xsi:type="AttributeExternalField">
           <extkey_attcode>osversion_id</extkey_attcode>
@@ -6624,7 +6624,7 @@
           <sql>software_id</sql>
           <target_class>Software</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="software_name" xsi:type="AttributeExternalField">
           <extkey_attcode>software_id</extkey_attcode>
@@ -7065,7 +7065,7 @@
           <sql>brand_id</sql>
           <target_class>Brand</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="brand_name" xsi:type="AttributeExternalField">
           <extkey_attcode>brand_id</extkey_attcode>
@@ -7215,7 +7215,7 @@
           <sql>brand_id</sql>
           <target_class>Brand</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="brand_name" xsi:type="AttributeExternalField">
           <extkey_attcode>brand_id</extkey_attcode>
@@ -8631,7 +8631,7 @@
           <sql>role_id</sql>
           <target_class>ContactType</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="role_name" xsi:type="AttributeExternalField">
           <extkey_attcode>role_id</extkey_attcode>
@@ -8807,7 +8807,7 @@
           <sql>group_id</sql>
           <target_class>Group</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
         <field id="group_name" xsi:type="AttributeExternalField">
           <extkey_attcode>group_id</extkey_attcode>
@@ -8817,7 +8817,7 @@
           <sql>ci_id</sql>
           <target_class>FunctionalCI</target_class>
           <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
         <field id="ci_name" xsi:type="AttributeExternalField">
           <extkey_attcode>ci_id</extkey_attcode>

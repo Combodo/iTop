@@ -68,7 +68,7 @@
           <sql>changemanager_id</sql>
           <target_class>Person</target_class>
           <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
         <field id="changemanager_email" xsi:type="AttributeExternalField">
           <extkey_attcode>changemanager_id</extkey_attcode>
@@ -721,6 +721,7 @@
                     <item>start_date</item>
                     <item>end_date</item>
                     <item>last_update</item>
+
                     <item>approval_date</item>
                     <item>close_date</item>
                   </items>
