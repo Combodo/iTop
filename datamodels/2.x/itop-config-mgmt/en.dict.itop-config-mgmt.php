@@ -1525,22 +1525,22 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
-// Class: FiberChanelInterface
+// Class: FiberChannelInterface
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:FiberChanelInterface' => 'Fiber Chanel Interface',
-	'Class:FiberChanelInterface+' => '',
-	'Class:FiberChanelInterface/Attribute:speed' => 'Speed',
-	'Class:FiberChanelInterface/Attribute:speed+' => '',
-	'Class:FiberChanelInterface/Attribute:topology' => 'Topology',
-	'Class:FiberChanelInterface/Attribute:topology+' => '',
-	'Class:FiberChanelInterface/Attribute:wwn' => 'WWN',
-	'Class:FiberChanelInterface/Attribute:wwn+' => '',
-	'Class:FiberChanelInterface/Attribute:datacenterdevice_id' => 'Device',
-	'Class:FiberChanelInterface/Attribute:datacenterdevice_id+' => '',
-	'Class:FiberChanelInterface/Attribute:datacenterdevice_name' => 'Device name',
-	'Class:FiberChanelInterface/Attribute:datacenterdevice_name+' => '',
+	'Class:FiberChannelInterface' => 'Fiber Channel Interface',
+	'Class:FiberChannelInterface+' => '',
+	'Class:FiberChannelInterface/Attribute:speed' => 'Speed',
+	'Class:FiberChannelInterface/Attribute:speed+' => '',
+	'Class:FiberChannelInterface/Attribute:topology' => 'Topology',
+	'Class:FiberChannelInterface/Attribute:topology+' => '',
+	'Class:FiberChannelInterface/Attribute:wwn' => 'WWN',
+	'Class:FiberChannelInterface/Attribute:wwn+' => '',
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_id' => 'Device',
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '',
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Device name',
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '',
 ));
 
 //
