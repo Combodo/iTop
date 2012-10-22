@@ -339,7 +339,7 @@ class DBObjectSearch
 		{
 			foreach($aPointingTo as $iOperatorCode => $aFilter)
 			{
-				foreach($aFilter as $sAlias => $oExtFilter)
+				foreach($aFilter as $oExtFilter)
 				{
 					$oExtFilter->RenameParam($sOldName, $sNewName);
 				}
@@ -586,7 +586,7 @@ class DBObjectSearch
 		{
 			foreach($aPointingTo as $iOperatorCode => $aFilter)
 			{
-				foreach($aFilter as $sAlias => $oFilter)
+				foreach($aFilter as $oFilter)
 				{
 					$oFilter->AddToNameSpace($aClassAliases, $aAliasTranslation);
 				}
@@ -601,6 +601,48 @@ class DBObjectSearch
 			}
 		}
 	}
+
+
+	// Browse the tree nodes recursively
+	//
+	protected function GetNode($sAlias)
+	{
+		if ($this->GetFirstJoinedClassAlias() == $sAlias)
+		{
+			return $this;
+		}
+		else
+		{
+			foreach($this->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
+			{
+				foreach($aPointingTo as $iOperatorCode => $aFilter)
+				{
+					foreach($aFilter as $oFilter)
+					{
+						$ret = $oFilter->GetNode($sAlias);
+						if (is_object($ret))
+						{
+							return $ret;
+						}
+					}
+				}
+			}
+			foreach($this->m_aReferencedBy as $sForeignClass=>$aReferences)
+			{
+				foreach($aReferences as $sForeignExtKeyAttCode=>$oForeignFilter)
+				{
+					$ret = $oForeignFilter->GetNode($sAlias);
+					if (is_object($ret))
+					{
+						return $ret;
+					}
+				}
+			}
+		}
+		// Not found
+		return null;
+	}
+
 
 	public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS)
 	{
@@ -626,29 +668,11 @@ class DBObjectSearch
 			throw new CoreException("The specified tree operator $iOperatorCode is not applicable to the key '{$this->GetClass()}::$sExtKeyAttCode', which is not a HierarchicalKey");
 		}
 
-		$bSamePointingTo = false;
-		if (array_key_exists($sExtKeyAttCode, $this->m_aPointingTo))
-		{
-			if (array_key_exists($iOperatorCode, $this->m_aPointingTo[$sExtKeyAttCode]))
-			{
-				if (array_key_exists($oFilter->GetClassAlias(), $this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode]))
-				{
-					$bSamePointingTo = true;
-				}
-			}
-		}
+		// Find the node on which the new tree must be attached (most of the time it is "this")
+		$oReceivingFilter = $this->GetNode($this->GetClassAlias());
 
-		if ($bSamePointingTo)
-		{
-			// Same ext key, alias and same operator, merge the filters together
-			$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation, true /* Don't translate the main alias */);
-			$this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][$oFilter->GetClassAlias()] = $oFilter;
-		}
-		else
-		{
-			$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
-			$this->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][$oFilter->GetClassAlias()] = $oFilter;
-		}
+		$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
+		$oReceivingFilter->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][] = $oFilter;
 	}
 
 	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode)
@@ -672,9 +696,13 @@ class DBObjectSearch
 		{
 			throw new CoreException("The specified filter (objects referencing an object of class {$this->GetClass()}) is not compatible with the key '{$sForeignClass}::$sForeignExtKeyAttCode', which is pointing to {$oAttExtKey->GetTargetClass()}");
 		}
+
+		// Find the node on which the new tree must be attached (most of the time it is "this")
+		$oReceivingFilter = $this->GetNode($this->GetClassAlias());
+
 		if (array_key_exists($sForeignClass, $this->m_aReferencedBy) && array_key_exists($sForeignExtKeyAttCode, $this->m_aReferencedBy[$sForeignClass]))
 		{
-			$this->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode]->MergeWith_InNamespace($oFilter, $aClassAliases, $aAliasTranslation);
+			$oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode]->MergeWith_InNamespace($oFilter, $aClassAliases, $aAliasTranslation);
 		}
 		else
 		{
@@ -684,7 +712,7 @@ class DBObjectSearch
 			//$oNewFilter = clone $oFilter;
 			//$oNewFilter->ResetCondition();
 
-			$this->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode]= $oFilter;
+			$oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode]= $oFilter;
 		}
 	}
 
@@ -728,7 +756,7 @@ class DBObjectSearch
 		{
 			foreach($aPointingTo as $iOperatorCode => $aFilter)
 			{
-				foreach($aFilter as $sAlias => $oExtFilter)
+				foreach($aFilter as $oExtFilter)
 				{
 					$this->AddCondition_PointingTo_InNamespace($oExtFilter, $sExtKeyAttCode, $aClassAliases, $aAliasTranslation, $iOperatorCode);
 				}
@@ -951,7 +979,7 @@ class DBObjectSearch
 		{
 			foreach($aPointingTo as $iOperatorCode => $aFilter)
 			{
-				foreach($aFilter as $sAlias => $oFilter)
+				foreach($aFilter as $oFilter)
 				{
 					switch($iOperatorCode)
 					{

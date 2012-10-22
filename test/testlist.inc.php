@@ -1100,7 +1100,7 @@ class TestItopEfficiency extends TestBizModel
 		return 'Measure time to perform the queries';
 	}
 
-	static public function GetConfigFile() {return '/config-itop.php';}
+	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
 
 	protected function DoBenchmark($sOqlQuery)
 	{
@@ -1225,7 +1225,7 @@ class TestQueries extends TestBizModel
 		return 'Try as many queries as possible';
 	}
 
-	static public function GetConfigFile() {return '/config-itop.php';}
+	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
 
 	protected function DoBenchmark($sOqlQuery)
 	{
@@ -1322,6 +1322,106 @@ class TestQueries extends TestBizModel
 }
 
 ///////////////////////////////////////////////////////////////////////////
+// Check programmaticaly built queries
+///////////////////////////////////////////////////////////////////////////
+
+class TestQueriesByAPI extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Itop - queries build programmaticaly';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Validate the DBObjectSearch API, through a set of complex (though realistic cases)';
+	}
+
+	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
+
+	protected function DoExecute()
+	{
+		// Note: relying on eval() - after upgrading to PHP 5.3 we can move to closure (aka anonymous functions)
+		$aQueries = array(
+			'Basic (validate the test)' => array(
+				'search' => '
+$oSearch = DBObjectSearch::FromOQL("SELECT P FROM Organization AS O JOIN Person AS P ON P.org_id = O.id WHERE org_id = 2");
+				',
+				'oql' => 'SELECT P FROM Organization AS O JOIN Person AS P ON P.org_id = O.id WHERE P.org_id = 2'
+			),
+			'Double constraint' => array(
+				'search' => '
+$oSearch = DBObjectSearch::FromOQL("SELECT Contact AS c");
+$sClass = $oSearch->GetClass();
+$sFilterCode = "org_id";
+
+$oAttDef = MetaModel::GetAttributeDef($sClass, $sFilterCode);
+
+if ($oAttDef->IsExternalKey())
+{
+	$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($oAttDef->GetTargetClass());
+	
+	if ($sHierarchicalKeyCode !== false)
+	{
+		$oFilter = new DBObjectSearch($oAttDef->GetTargetClass(), "ORGA");
+		$oFilter->AddCondition("id", 2);
+		$oHKFilter = new DBObjectSearch($oAttDef->GetTargetClass(), "ORGA");
+		$oHKFilter->AddCondition_PointingTo(clone $oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW);
+
+		$oSearch->AddCondition_PointingTo(clone $oHKFilter, $sFilterCode);
+
+		$oFilter = new DBObjectSearch($oAttDef->GetTargetClass(), "ORGA");
+		$oFilter->AddCondition("id", 2);
+		$oHKFilter = new DBObjectSearch($oAttDef->GetTargetClass(), "ORGA");
+		$oHKFilter->AddCondition_PointingTo(clone $oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW);
+
+		$oSearch->AddCondition_PointingTo(clone $oHKFilter, $sFilterCode);
+	}
+}
+				',
+				'oql' => 'SELECT Contact AS C JOIN Organization ???'
+			),
+			'Simplified issue' => array(
+				'search' => '
+$oSearch = DBObjectSearch::FromOQL("SELECT P FROM Organization AS O JOIN Person AS P ON P.org_id = O.id WHERE O.id = 2");
+$oOrgSearch = new DBObjectSearch("Organization", "O2");
+$oOrgSearch->AddCondition("id", 2);
+$oSearch->AddCondition_PointingTo($oOrgSearch, "org_id");
+				',
+				'oql' => 'SELECT P FROM Organization AS O JOIN Person AS P ON P.org_id = O.id JOIN Organization AS O2 ON P.org_id = O2.id WHERE O.id = 2 AND O2.id = 2'
+			),
+		);
+		foreach ($aQueries as $sQueryDesc => $aQuerySpec)
+		{
+			echo "<h2>Query $sQueryDesc</h2>\n";
+			echo "<p>Using code: ".highlight_string("<?php\n".trim($aQuerySpec['search'])."\n?".'>', true)."</p>\n";
+			echo "<p>Expected OQL: ".$aQuerySpec['oql']."</p>\n";
+
+			if (isset($oSearch))
+			{
+				unset($oSearch);
+			}
+			eval($aQuerySpec['search']);
+			$sResOQL = $oSearch->ToOQL();
+			echo "<p>Resulting OQL: ".$sResOQL."</p>\n";
+
+			echo "<pre>";
+			print_r($oSearch);
+			echo "</pre>";
+
+			$sSQL = MetaModel::MakeSelectQuery($oSearch);
+			$res = CMDBSource::Query($sSQL);
+			foreach (CMDBSource::ExplainQuery($sSQL) as $aRow)
+			{
+			}
+		}
+
+//		throw new UnitTestException("Expecting result '{$aWebService['expected result']}', but got '$res'");
+
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////
 // Test bulk load API
 ///////////////////////////////////////////////////////////////////////////
 
@@ -1337,7 +1437,7 @@ class TestItopBulkLoad extends TestBizModel
 		return 'Execute a bulk change at the Core API level';
 	}
 
-	static public function GetConfigFile() {return '/config-itop.php';}
+	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
 
 	
 	protected function DoExecute()
@@ -1906,7 +2006,7 @@ class TestDataExchange extends TestBizModel
 		return 'Test REST services: synchro_import and synchro_exec';
 	}
 
-	static public function GetConfigFile() {return '/config-itop.php';}
+	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
 
 	protected function DoExecScenario($aSingleScenario)
 	{
@@ -2910,7 +3010,7 @@ abstract class TestSoapDirect extends TestBizModel
 	static public function GetName() {return 'Test web services locally';}
 	static public function GetDescription() {return 'Invoke the service directly (troubleshooting)';}
 
-	static public function GetConfigFile() {return '/config-itop.php';}
+	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
 
 	protected $m_aTestSpecs;
 
@@ -3010,7 +3110,7 @@ class TestTriggerAndEmail extends TestBizModel
 	static public function GetName() {return 'Test trigger and email';}
 	static public function GetDescription() {return 'Create a trigger and an email, then activates the trigger';}
 
-	static public function GetConfigFile() {return '/config-itop.php';}
+	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
 
 	protected function CreateEmailSpec($oTrigger, $sStatus, $sTo, $sCC, $sTesterEmail)
 	{
@@ -3154,7 +3254,7 @@ class TestDBProperties extends TestBizModel
 		return 'Write and read a dummy property';
 	}
 
-	static public function GetConfigFile() {return '/config-itop.php';}
+	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
 
 	protected function DoExecute()
 	{
@@ -3177,7 +3277,7 @@ class TestCreateObjects extends TestBizModel
 		return 'Create weird objects (reproduce a bug?)';
 	}
 
-	static public function GetConfigFile() {return '/config-itop.php';}
+	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
 
 	protected function DoExecute()
 	{
@@ -3238,7 +3338,7 @@ class TestSetLinkset extends TestBizModel
 		return 'Create a user account, setting its profile by the mean of a string (prerequisite to CSV import of linksets)';
 	}
 
-	static public function GetConfigFile() {return '/config-itop.php';}
+	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
 
 	protected function DoExecute()
 	{
@@ -3272,7 +3372,7 @@ class TestEmailAsynchronous extends TestBizModel
 		return 'Queues a request to send an email';
 	}
 
-	static public function GetConfigFile() {return '/config-itop.php';}
+	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
 
 	protected function DoExecute()
 	{

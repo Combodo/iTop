@@ -2096,36 +2096,37 @@ abstract class MetaModel
 		// Check the order by specification, and prefix with the class alias
 		// and make sure that the ordering columns are going to be selected
 		//
+		$sClass = $oFilter->GetClass();
+		$sClassAlias = $oFilter->GetClassAlias();
 		$aOrderSpec = array();
 		foreach ($aOrderBy as $sFieldAlias => $bAscending)
 		{
 			if ($sFieldAlias != 'id')
 			{
-				MyHelpers::CheckValueInArray('field name in ORDER BY spec', $sFieldAlias, self::GetAttributesList($oFilter->GetFirstJoinedClass()));
+				MyHelpers::CheckValueInArray('field name in ORDER BY spec', $sFieldAlias, self::GetAttributesList($sClass));
 			}
 			if (!is_bool($bAscending))
 			{
 				throw new CoreException("Wrong direction in ORDER BY spec, found '$bAscending' and expecting a boolean value");
 			}
-			$sFirstClassAlias = $oFilter->GetClassAlias();
 			
-			if (self::IsValidAttCode($oFilter->GetClass(), $sFieldAlias))
+			if (self::IsValidAttCode($sClass, $sFieldAlias))
 			{
-				$oAttDef = self::GetAttributeDef($oFilter->GetClass(), $sFieldAlias);
-				foreach($oAttDef->GetOrderBySQLExpressions($sFirstClassAlias) as $sSQLExpression)
+				$oAttDef = self::GetAttributeDef($sClass, $sFieldAlias);
+				foreach($oAttDef->GetOrderBySQLExpressions($sClassAlias) as $sSQLExpression)
 				{
 					$aOrderSpec[$sSQLExpression] = $bAscending;
 				}
 			}
 			else
 			{
-				$aOrderSpec['`'.$sFirstClassAlias.$sFieldAlias.'`'] = $bAscending;
+				$aOrderSpec['`'.$sClassAlias.$sFieldAlias.'`'] = $bAscending;
 			}
 
 			// Make sure that the columns used for sorting are present in the loaded columns
-			if (!is_null($aAttToLoad) && !isset($aAttToLoad[$sFirstClassAlias][$sFieldAlias]))
+			if (!is_null($aAttToLoad) && !isset($aAttToLoad[$sClassAlias][$sFieldAlias]))
 			{
-				$aAttToLoad[$sFirstClassAlias][$sFieldAlias] = MetaModel::GetAttributeDef($oFilter->GetFirstJoinedClass(), $sFieldAlias);
+				$aAttToLoad[$sClassAlias][$sFieldAlias] = MetaModel::GetAttributeDef($sClass, $sFieldAlias);
 			}			
 		}
 
@@ -2135,7 +2136,7 @@ abstract class MetaModel
 		try
 		{
 			$sRes = $oSelect->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount);
-			if ($oFilter->GetClassAlias() == 'itop')
+			if ($sClassAlias == 'itop')
 			{
 				echo $sRes."<br/>\n";
 			}
@@ -2827,7 +2828,7 @@ abstract class MetaModel
 		{
 			foreach($aPointingTo as $iOperatorCode => $aFilter)
 			{
-				foreach($aFilter as $sAlias => $oExtFilter)
+				foreach($aFilter as $oExtFilter)
 				{
 					if (!MetaModel::IsValidAttCode($sTableClass, $sKeyAttCode)) continue; // Not defined in the class, skip it
 					// The aliases should not conflict because normalization occured while building the filter
