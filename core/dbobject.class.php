@@ -331,7 +331,7 @@ abstract class DBObject
 					}
 				}
 			}
-			else
+			else if ($this->m_aCurrValues[$sAttCode] != $value)
 			{
 				// Setting an external key, but no any other information is available...
 				// Invalidate the corresponding fields so that they get reloaded in case they are needed (See Get())
