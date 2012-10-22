@@ -1402,7 +1402,7 @@ $('#select_template_class').change( function() {
 EOF
 	);
 
-		if (Utils::GetConfig()->Get('csv_import_history_display'))
+		if (MetaModel::GetConfig()->Get('csv_import_history_display'))
 		{
 		$oPage->SetCurrentTabContainer('tabs1');
 		$oPage->SetCurrentTab(Dict::S('UI:History:BulkImports'));
