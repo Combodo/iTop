@@ -41,7 +41,7 @@ class DBObjectSet
 
 	public function __construct(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array(), $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0)
 	{
-		$this->m_oFilter = $oFilter;
+		$this->m_oFilter = clone $oFilter;
 		$this->m_aAddedIds = array();
 		$this->m_aOrderBy = $aOrderBy;
 		$this->m_aArgs = $aArgs;
@@ -269,14 +269,16 @@ class DBObjectSet
 
 	public function GetFilter()
 	{
+		// Make sure that we carry on the parameters of the set with the filter
+		$oFilter = clone $this->m_oFilter;
+		$oFilter->SetInternalParams(array_merge($oFilter->GetInternalParams(), $this->m_aArgs));
+		
 		if (count($this->m_aAddedIds) == 0)
 		{
-			return $this->m_oFilter;
+			return $oFilter;
 		}
 		else
 		{
-			$oFilter = clone $this->m_oFilter;
-
 			$oIdListExpr = ListExpression::FromScalars(array_keys($this->m_aAddedIds));
 			$oIdExpr = new FieldExpression('id', $oFilter->GetClassAlias());
 			$oIdInList = new BinaryExpression($oIdExpr, 'IN', $oIdListExpr);

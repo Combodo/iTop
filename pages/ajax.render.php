@@ -909,7 +909,7 @@ catch (Exception $e)
 {
 	// note: transform to cope with XSS attacks
 	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
-	echo "<p>Debug trace: <pre>".print_r($e->getTrace(), true)."</pre></p>\n";
+	echo "<p>Debug trace: <pre>".$e->getTraceAsString()."</pre></p>\n";
 	IssueLog::Error($e->getMessage());
 }
 

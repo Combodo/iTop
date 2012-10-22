@@ -344,23 +344,11 @@ EOF
 		{
 			throw new Exception('Implementation: null value for allowed values definition');
 		}
-		try
-		{
-			$oFilter = DBObjectSearch::FromOQL($sFilter);
-			$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
-			$oBlock = new DisplayBlock($oFilter, 'list', false, array('query_params' => array('this' => $oObj)));
-			$oBlock->Display($oP, $this->iId.'_results', array('this' => $oObj, 'cssCount'=> '#count_'.$this->iId, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'table_id' => 'select_'.$this->sAttCode)); // Don't display the 'Actions' menu on the results
-		}
-		catch(MissingQueryArgument $e)
-		{
-			// When used in a search form the $this parameter may be missing, in this case return all possible values...
-			// TODO check if we can improve this behavior...
-			$sOQL = 'SELECT '.$sRemoteClass;
-			$oFilter = DBObjectSearch::FromOQL($sOQL);
-			$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
-			//$oBlock = new DisplayBlock($oFilter, 'list', false);
-			//$oBlock->Display($oP, $this->iId.'_results', array('cssCount'=> '#count_'.$this->iId, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single')); // Don't display the 'Actions' menu on the results
-		}
+		
+		$oFilter = DBObjectSearch::FromOQL($sFilter);
+		$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
+		$oBlock = new DisplayBlock($oFilter, 'list', false, array('query_params' => array('this' => $oObj)));
+		$oBlock->Display($oP, $this->iId.'_results', array('this' => $oObj, 'cssCount'=> '#count_'.$this->iId, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'table_id' => 'select_'.$this->sAttCode)); // Don't display the 'Actions' menu on the results
 	}
 	
 	/**

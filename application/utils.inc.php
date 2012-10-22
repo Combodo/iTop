@@ -775,7 +775,15 @@ class utils
 	{
 		foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
 		{
-			foreach($oExtensionInstance->EnumItems($iMenuId, $param) as $oMenuItem)
+			if (is_object($param))
+			{
+				$tmpParam = clone $param; // In case the parameter is an object, clone it to prevent alterations
+			}
+			else
+			{
+				$tmpParam = $param;
+			}
+			foreach($oExtensionInstance->EnumItems($iMenuId, $tmpParam) as $oMenuItem)
 			{
 				if (is_object($oMenuItem))
 				{
