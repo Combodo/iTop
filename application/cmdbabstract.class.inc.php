@@ -202,7 +202,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$oPage->add("<div class=\"page_header\"><h1>".$this->GetIcon()."&nbsp;\n");
 		if ($_SERVER['REQUEST_METHOD'] == 'GET')
 		{
-			$sRefreshIcon = '&nbsp<button type="button" onclick="window.location.reload();">'.Dict::S('UI:Button:Refresh').'</button>';
+			$sRefreshIcon = '<img src="../images/reload.png" style="cursor:pointer;vertical-align:middle;margin-left:1em;" onclick="window.location.reload();" title="'.htmlentities(Dict::S('UI:Button:Refresh'), ENT_QUOTES, 'UTF-8').'"/>';
 		}
 		$oPage->add(MetaModel::GetName(get_class($this)).": <span class=\"hilite\">".$this->GetName()."</span>$sRefreshIcon $sSynchroIcon</h1>\n");
 		$oPage->add("</div>\n");
