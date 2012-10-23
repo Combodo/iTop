@@ -25,18 +25,14 @@
 /**
  * Classes and menus for itop-tickets (version 1.0.0)
  *
- * @author      Combodo compiler
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  */
 
 
 /**
  * Persistent classes for a CMDB
  *
- * @author      Erwan Taloc <erwan.taloc@combodo.com>
- * @author      Romain Quetiez <romain.quetiez@combodo.com>
- * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class Ticket extends cmdbAbstractObject
 {
