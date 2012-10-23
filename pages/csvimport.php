@@ -1374,18 +1374,8 @@ EOF
 		$sCSVData = utils::ReadParam('csvdata', '', false, 'raw_data');
 		$sPasteDataHtml = '<div><form enctype="multipart/form-data" method="post"><p>'.Dict::S('UI:CSVImport:PasteData').'</p>'.
 						  '<p><textarea cols="100" rows="30" name="csvdata">'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'</textarea></p>';
-		$sPasteDataHtml .= '<p>'.Dict::S('UI:CSVImport:Encoding').': ';
-		$sPasteDataHtml .= '<select name="encoding" style="font-family:Arial,Helvetica,Sans-serif"/>';  // IE8 has some troubles if the font is different
-		foreach($aPossibleEncodings as $sIconvCode => $sDisplayName )
-		{
-			$sSelected  = '';
-			if ($sEncoding == $sIconvCode)
-			{
-				$sSelected = ' selected';
-			}
-			$sPasteDataHtml .= '<option value="'.$sIconvCode.'"'.$sSelected.'>'.$sDisplayName.'</option>';
-		}
-		$sPasteDataHtml .= '</select></p>'.
+		$sPasteDataHtml .= '<hidden name="encoding" value="UTF-8">';
+		$sPasteDataHtml .=
 				'<p><input type="submit" value="'.Dict::S('UI:Button:Next').'"/></p>'.
 				'<input type="hidden" name="step" value="2"/>'.
 				'<input type="hidden" name="operation" value="csv_data"/>'.
