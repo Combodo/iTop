@@ -1008,6 +1008,10 @@
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
+        <field id="service_org_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
         <field id="service_name" xsi:type="AttributeExternalField">
           <extkey_attcode>service_id</extkey_attcode>
           <target_attcode>name</target_attcode>
@@ -1040,6 +1044,7 @@
           <items>
             <item>name</item>
             <item>service_id</item>
+            <item>service_org_id</item>
             <item>status</item>
             <item>request_type</item>
             <item>description</item>
