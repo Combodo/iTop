@@ -2596,9 +2596,9 @@ EOF
 		return $aErrors;
 	}
 
-	protected function DBInsertTracked_Internal($bDoNotReload = false)
+	public function DBInsertNoReload()
 	{
-		$res = parent::DBInsertTracked_Internal($bDoNotReload);
+		$res = parent::DBInsertNoReload();
 
 		// Invoke extensions after insertion (the object must exist, have an id, etc.)
 		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
@@ -2621,9 +2621,9 @@ EOF
 		return $oNewObj;
 	}
 
-	protected function DBUpdateTracked_Internal()
+	public function DBUpdate()
 	{
-		$res = parent::DBUpdateTracked_Internal();
+		$res = parent::DBUpdate();
 
 		// Invoke extensions after the update (could be before)
 		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
