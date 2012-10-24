@@ -348,7 +348,11 @@ class DisplayBlock
 				$aGroupBy = array();
 				$sLabels = array();
 				$iTotalCount = $this->m_oSet->Count();
-				while($oObj = $this->m_oSet->Fetch())
+				$oTmpSet = clone $this->m_oSet;
+				// Speed up the load, load only the needed field to group on
+				$sAlias = $oTmpSet->GetFilter()->GetClassAlias();
+				$oTmpSet->OptimizeColumnLoad(array($sAlias => array($sGroupByField)));
+				while($oObj = $oTmpSet->Fetch())
 				{
 					if (isset($aExtraParams['group_by_expr']))
 					{
