@@ -1179,7 +1179,10 @@ class MenuBlock extends DisplayBlock
 
 				// Stimuli
 				$aStates = MetaModel::EnumStates($sClass);
-				if (count($aStates) > 0)
+				// Do not perform time consuming computations if there are too may objects in the list
+				$iLimit = MetaModel::GetConfig()->Get('complex_actions_limit');
+				
+				if ((count($aStates) > 0) && (($iLimit == 0) || ($oSet->Count() < $iLimit)))
 				{
 					// Life cycle actions may be available... if all objects are in the same state
 					$oSet->Rewind();
