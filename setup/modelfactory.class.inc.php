@@ -1409,7 +1409,7 @@ class MFElement extends DOMElement
 				}
 				else
 				{
-					$aRanks[] = max($aRanks) + 1;
+					$aRanks[] = count($aRanks) > 0 ? max($aRanks) + 1 : 0;
 				}
 				array_multisort($aRanks, $res);
 			}
