@@ -3,72 +3,99 @@
   <layout>DashboardLayoutOneCol</layout>
   <title></title>
   <cells>
-    <cell>
-      <dashlet id="1" xsi:type="DashletHeaderDynamic">
-        <title>Menu_ConfigManagement_Devices</title>
-        <icon>itop-config-mgmt-1.0.0/images/server.png</icon>
-        <subtitle>Menu_ConfigManagement_AllDevices</subtitle>
-        <query>SELECT FunctionalCI</query>
-        <group_by>status</group_by>
-        <values>implementation,production,obsolete</values>
-      </dashlet>
-      <dashlet id="2" xsi:type="DashletBadge">
-        <class>Server</class>
-      </dashlet>
-      <dashlet id="3" xsi:type="DashletBadge">
-        <class>NetworkDevice</class>
-      </dashlet>
-      <dashlet id="5" xsi:type="DashletBadge">
-        <class>PC</class>
-      </dashlet>
-      <dashlet id="6" xsi:type="DashletBadge">
-        <class>MobilePhone</class>
-      </dashlet>
-      <dashlet id="7" xsi:type="DashletBadge">
-        <class>Printer</class>
-      </dashlet>
+    <cell id="0">
+      <rank>0</rank>
+      <dashlets>
+        <dashlet id="1" xsi:type="DashletHeaderDynamic">
+          <rank>0</rank>
+          <title>Menu_ConfigManagement_Devices</title>
+          <icon>itop-config-mgmt-1.0.0/images/server.png</icon>
+          <subtitle>Menu_ConfigManagement_AllDevices</subtitle>
+          <query>SELECT FunctionalCI</query>
+          <group_by>status</group_by>
+          <values>implementation,production,obsolete</values>
+        </dashlet>
+        <dashlet id="2" xsi:type="DashletBadge">
+          <rank>1</rank>
+          <class>Server</class>
+        </dashlet>
+        <dashlet id="3" xsi:type="DashletBadge">
+          <rank>2</rank>
+          <class>NetworkDevice</class>
+        </dashlet>
+        <dashlet id="5" xsi:type="DashletBadge">
+          <rank>3</rank>
+          <class>PC</class>
+        </dashlet>
+        <dashlet id="6" xsi:type="DashletBadge">
+          <rank>4</rank>
+          <class>MobilePhone</class>
+        </dashlet>
+        <dashlet id="7" xsi:type="DashletBadge">
+          <rank>5</rank>
+          <class>Printer</class>
+        </dashlet>
+      </dashlets>
     </cell>
-    <cell>
-      <dashlet id="8" xsi:type="DashletHeaderStatic">
-        <title>Menu:ConfigManagement:SWAndApps</title>
-        <icon>itop-config-mgmt-1.0.0/images/application.png</icon>
-      </dashlet>
-      <dashlet id="9" xsi:type="DashletBadge">
-        <class>ApplicationInstance</class>
-      </dashlet>
-      <dashlet id="10" xsi:type="DashletBadge">
-        <class>DBServerInstance</class>
-      </dashlet>
-      <dashlet id="11" xsi:type="DashletBadge">
-        <class>DatabaseInstance</class>
-      </dashlet>
-      <dashlet id="12" xsi:type="DashletBadge">
-        <class>Patch</class>
-      </dashlet>
-      <dashlet id="13" xsi:type="DashletBadge">
-        <class>Licence</class>
-      </dashlet>
+    <cell id="1">
+      <rank>1</rank>
+      <dashlets>
+        <dashlet id="8" xsi:type="DashletHeaderStatic">
+          <rank>0</rank>
+          <title>Menu:ConfigManagement:SWAndApps</title>
+          <icon>itop-config-mgmt-1.0.0/images/application.png</icon>
+        </dashlet>
+        <dashlet id="9" xsi:type="DashletBadge">
+          <rank>1</rank>
+          <class>ApplicationInstance</class>
+        </dashlet>
+        <dashlet id="10" xsi:type="DashletBadge">
+          <rank>2</rank>
+          <class>DBServerInstance</class>
+        </dashlet>
+        <dashlet id="11" xsi:type="DashletBadge">
+          <rank>3</rank>
+          <class>DatabaseInstance</class>
+        </dashlet>
+        <dashlet id="12" xsi:type="DashletBadge">
+          <rank>4</rank>
+          <class>Patch</class>
+        </dashlet>
+        <dashlet id="13" xsi:type="DashletBadge">
+          <rank>5</rank>
+          <class>Licence</class>
+        </dashlet>
+      </dashlets>
     </cell>
-    <cell>
-      <dashlet id="14" xsi:type="DashletHeaderStatic">
-        <title>Menu:ConfigManagement:Misc</title>
-        <icon>itop-config-mgmt-1.0.0/images/subnet.png</icon>
-      </dashlet>
-      <dashlet id="15" xsi:type="DashletBadge">
-        <class>NetworkInterface</class>
-      </dashlet>
-      <dashlet id="16" xsi:type="DashletBadge">
-        <class>Subnet</class>
-      </dashlet>
-      <dashlet id="17" xsi:type="DashletBadge">
-        <class>BusinessProcess</class>
-      </dashlet>
-      <dashlet id="18" xsi:type="DashletBadge">
-        <class>ApplicationSolution</class>
-      </dashlet>
-      <dashlet id="19" xsi:type="DashletBadge">
-        <class>Group</class>
-      </dashlet>
+    <cell id="2">
+      <rank>2</rank>
+      <dashlets>
+        <dashlet id="14" xsi:type="DashletHeaderStatic">
+          <rank>0</rank>
+          <title>Menu:ConfigManagement:Misc</title>
+          <icon>itop-config-mgmt-1.0.0/images/subnet.png</icon>
+        </dashlet>
+        <dashlet id="15" xsi:type="DashletBadge">
+          <rank>1</rank>
+          <class>NetworkInterface</class>
+        </dashlet>
+        <dashlet id="16" xsi:type="DashletBadge">
+          <rank>2</rank>
+          <class>Subnet</class>
+        </dashlet>
+        <dashlet id="17" xsi:type="DashletBadge">
+          <rank>3</rank>
+          <class>BusinessProcess</class>
+        </dashlet>
+        <dashlet id="18" xsi:type="DashletBadge">
+          <rank>4</rank>
+          <class>ApplicationSolution</class>
+        </dashlet>
+        <dashlet id="19" xsi:type="DashletBadge">
+          <rank>5</rank>
+          <class>Group</class>
+        </dashlet>
+      </dashlets>
     </cell>
   </cells>
 </dashboard>

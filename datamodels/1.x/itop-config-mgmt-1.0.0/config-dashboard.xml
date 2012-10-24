@@ -1,31 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-<title>UI:ConfigMgmtMenuOverview:Title</title>
-<layout>DashboardLayoutTwoCols</layout>
-<cells>
- <cell>
-  <dashlet id="1" xsi:type="DashletGroupByPie">
-   <title>UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus</title>
-   <query>SELECT FunctionalCI</query>
-   <group_by>status</group_by>
-   <style>pie</style>
-  </dashlet>
- </cell>
- <cell>
-  <dashlet id="2" xsi:type="DashletGroupByBars">
-   <title>UI-ConfigMgmtMenuOverview-FunctionalCIByType</title>
-   <query>SELECT FunctionalCI</query>
-   <group_by>finalclass</group_by>
-   <style>bars</style>
-  </dashlet>
- </cell>
- <cell>
-  <dashlet id="3" xsi:type="DashletGroupByTable">
-   <title>UI-ConfigMgmtMenuOverview-FunctionalCIByType</title>
-   <query>SELECT FunctionalCI</query>
-   <group_by>finalclass</group_by>
-   <style>table</style>
-  </dashlet>
- </cell>
-</cells>
+  <title>UI:ConfigMgmtMenuOverview:Title</title>
+  <layout>DashboardLayoutTwoCols</layout>
+  <cells>
+    <cell id="0">
+      <rank>0</rank>
+      <dashlets>
+        <dashlet id="1" xsi:type="DashletGroupByPie">
+          <rank>0</rank>
+          <title>UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus</title>
+          <query>SELECT FunctionalCI</query>
+          <group_by>status</group_by>
+          <style>pie</style>
+        </dashlet>
+      </dashlets>
+    </cell>
+    <cell id="0">
+      <rank>0</rank>
+      <dashlets>
+        <dashlet id="2" xsi:type="DashletGroupByBars">
+          <rank>0</rank>
+          <title>UI-ConfigMgmtMenuOverview-FunctionalCIByType</title>
+          <query>SELECT FunctionalCI</query>
+          <group_by>finalclass</group_by>
+          <style>bars</style>
+        </dashlet>
+      </dashlets>
+    </cell>
+    <cell id="0">
+      <rank>0</rank>
+      <dashlets>
+        <dashlet id="3" xsi:type="DashletGroupByTable">
+          <rank>0</rank>
+          <title>UI-ConfigMgmtMenuOverview-FunctionalCIByType</title>
+          <query>SELECT FunctionalCI</query>
+          <group_by>finalclass</group_by>
+          <style>table</style>
+        </dashlet>
+      </dashlets>
+    </cell>
+  </cells>
 </dashboard>

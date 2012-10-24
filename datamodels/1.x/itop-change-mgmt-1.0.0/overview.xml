@@ -3,25 +3,39 @@
   <layout>DashboardLayoutTwoCols</layout>
   <title></title>
   <cells>
-    <cell>
-      <dashlet id="1" xsi:type="DashletGroupByBars">
-        <title>UI-ChangeManagementOverview-ChangeByType</title>
-        <query>SELECT Change</query>
-        <group_by>finalclass</group_by>
-        <style>bars</style>
-      </dashlet>
+    <cell id="0">
+      <rank>0</rank>
+      <dashlets>
+        <dashlet id="1" xsi:type="DashletGroupByBars">
+          <rank>0</rank>
+          <title>UI-ChangeManagementOverview-ChangeByType</title>
+          <query>SELECT Change</query>
+          <group_by>finalclass</group_by>
+          <style>bars</style>
+        </dashlet>
+      </dashlets>
     </cell>
-    <cell>
-      <dashlet id="2" xsi:type="DashletObjectList"/>
-      <title>UI-ChangeManagementOverview-ChangeUnassigned</title>
-      <query>SELECT Change WHERE status = 'new'</query>
-      <menu>false</menu>
+    <cell id="1">
+      <rank>1</rank>
+      <dashlets>
+        <dashlet id="2" xsi:type="DashletObjectList">
+          <rank>0</rank>
+          <title>UI-ChangeManagementOverview-ChangeUnassigned</title>
+          <query>SELECT Change WHERE status = 'new'</query>
+          <menu>false</menu>
+        </dashlet>
+      </dashlets>
     </cell>
-    <cell>
-      <dashlet id="3" xsi:type="DashletObjectList"/>
-      <title>UI-ChangeManagementOverview-ChangeWithOutage</title>
-      <query>SELECT Change WHERE outage = 'yes'</query>
-      <menu>false</menu>
+    <cell id="2">
+      <rank>2</rank>
+      <dashlets>
+        <dashlet id="3" xsi:type="DashletObjectList">
+          <rank>0</rank>
+          <title>UI-ChangeManagementOverview-ChangeWithOutage</title>
+          <query>SELECT Change WHERE outage = 'yes'</query>
+          <menu>false</menu>
+        </dashlet>
+      </dashlets>
     </cell>
   </cells>
 </dashboard>

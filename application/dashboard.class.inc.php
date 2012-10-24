@@ -59,22 +59,54 @@ abstract class Dashboard
 		
 		$oCellsNode = $this->oDOMNode->getElementsByTagName('cells')->item(0);
 		$oCellsList = $oCellsNode->getElementsByTagName('cell');
+		$aCellOrder = array();
+		$iCellRank = 0;
 		foreach($oCellsList as $oCellNode)
 		{
 			$aDashletList = array();
-			$oDashletList = $oCellNode->getElementsByTagName('dashlet');
+			$oCellRank =  $oCellNode->getElementsByTagName('rank')->item(0);
+			if ($oCellRank)
+			{
+				$iCellRank = (int)$oCellRank->textContent;
+			}
+			$oDashletsNode = $oCellNode->getElementsByTagName('dashlets')->item(0);
+			$oDashletList = $oDashletsNode->getElementsByTagName('dashlet');
+			$iRank = 0;
+			$aDashletOrder = array();
 			foreach($oDashletList as $oDomNode)
 			{
 				$sDashletClass = $oDomNode->getAttribute('xsi:type');
+				$oRank =  $oDomNode->getElementsByTagName('rank')->item(0);
+				if ($oRank)
+				{
+					$iRank = (int)$oRank->textContent;
+				}
 				$sId = $oDomNode->getAttribute('id');
 				$oNewDashlet = new $sDashletClass($sId);
 				$oNewDashlet->FromDOMNode($oDomNode);
-				$aDashletList[] = $oNewDashlet;
+				$aDashletOrder[] = array('rank' => $iRank, 'dashlet' => $oNewDashlet);
 			}
-			$this->aCells[] = $aDashletList;
+			usort($aDashletOrder, array(get_class($this), 'SortOnRank'));
+			$aDashletList = array();
+			foreach($aDashletOrder as $aItem)
+			{
+				$aDashletList[] = $aItem['dashlet'];
+			}
+			$aCellOrder[] = array('rank' => $iCellRank, 'dashlets' => $aDashletList);
 		}
+		usort($aCellOrder, array(get_class($this), 'SortOnRank'));
+		foreach($aCellOrder as $aItem)
+		{
+			$this->aCells[] = $aItem['dashlets'];
+		}
+		
+		
 	}
 	
+	static function SortOnRank($aItem1, $aItem2)
+	{
+		return ($aItem1['rank'] > $aItem2['rank']) ? +1 : -1;
+	}
 	/**
 	 * Error handler to turn XML loading warnings into exceptions
 	 */
@@ -108,17 +140,29 @@ abstract class Dashboard
 
 		$oCellsNode = $oDoc->createElement('cells');
 		$oMainNode->appendChild($oCellsNode);
-
+		
+		$iCellRank = 0;
 		foreach ($this->aCells as $aCell)
 		{
 			$oCellNode = $oDoc->createElement('cell');
+			$oCellNode->setAttribute('id', $iCellRank);
 			$oCellsNode->appendChild($oCellNode);
+			$oCellRank = $oDoc->createElement('rank', $iCellRank);
+			$oCellNode->appendChild($oCellRank);
+			$iCellRank++;
+						
+			$iDashletRank = 0;
+			$oDashletsNode = $oDoc->createElement('dashlets');
+			$oCellNode->appendChild($oDashletsNode);
 			foreach ($aCell as $oDashlet)
 			{
 				$oNode = $oDoc->createElement('dashlet');
-				$oCellNode->appendChild($oNode);
+				$oDashletsNode->appendChild($oNode);
 				$oNode->setAttribute('id', $oDashlet->GetID());
 				$oNode->setAttribute('xsi:type', get_class($oDashlet));
+				$oDashletRank = $oDoc->createElement('rank', $iDashletRank);
+				$oNode->appendChild($oDashletRank);
+				$iDashletRank++;
 				$oDashlet->ToDOMNode($oNode);
 			}
 		}

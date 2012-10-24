@@ -4,62 +4,82 @@
   <title></title>
   <cells>
     <cell>
-      <dashlet id="1" xsi:type="DashletHeaderDynamic">
-        <title>UI:ConfigurationManagementMenu</title>
-        <icon>itop-config-mgmt-1.0.0/images/database.png</icon>
-        <subtitle>UI:WelcomeMenu:AllConfigItems</subtitle>
-        <query>SELECT FunctionalCI</query>
-        <group_by>status</group_by>
-        <values>implementation,production,obsolete</values>
-      </dashlet>
-      <dashlet id="2" xsi:type="DashletBadge">
-        <class>BusinessProcess</class>
-      </dashlet>
-      <dashlet id="3" xsi:type="DashletBadge">
-        <class>Contact</class>
-      </dashlet>
-      <dashlet id="4" xsi:type="DashletBadge">
-        <class>Location</class>
-      </dashlet>
-      <dashlet id="5" xsi:type="DashletBadge">
-        <class>Server</class>
-      </dashlet>
-      <dashlet id="6" xsi:type="DashletBadge">
-        <class>DatabaseInstance</class>
-      </dashlet>
-      <dashlet id="7" xsi:type="DashletBadge">
-        <class>NetworkDevice</class>
-      </dashlet>
+      <rank>0</rank>
+      <dashlets>
+        <dashlet id="1" xsi:type="DashletHeaderDynamic">
+          <rank>0</rank>
+          <title>UI:ConfigurationManagementMenu</title>
+          <icon>itop-config-mgmt-1.0.0/images/database.png</icon>
+          <subtitle>UI:WelcomeMenu:AllConfigItems</subtitle>
+          <query>SELECT FunctionalCI</query>
+          <group_by>status</group_by>
+          <values>implementation,production,obsolete</values>
+        </dashlet>
+        <dashlet id="2" xsi:type="DashletBadge">
+          <rank>1</rank>
+          <class>BusinessProcess</class>
+        </dashlet>
+        <dashlet id="3" xsi:type="DashletBadge">
+          <rank>2</rank>
+          <class>Contact</class>
+        </dashlet>
+        <dashlet id="4" xsi:type="DashletBadge">
+          <rank>3</rank>
+          <class>Location</class>
+        </dashlet>
+        <dashlet id="5" xsi:type="DashletBadge">
+          <rank>4</rank>
+          <class>Server</class>
+        </dashlet>
+        <dashlet id="6" xsi:type="DashletBadge">
+          <rank>5</rank>
+          <class>DatabaseInstance</class>
+        </dashlet>
+        <dashlet id="7" xsi:type="DashletBadge">
+          <rank>6</rank>
+          <class>NetworkDevice</class>
+        </dashlet>
+      </dashlets>
     </cell>
     <cell>
-      <dashlet id="8" xsi:type="DashletHeaderDynamic">
-        <title>Menu:RequestManagement</title>
-        <icon>itop-request-mgmt-1.0.0/images/user-request-deadline.png</icon>
-        <subtitle>UI:WelcomeMenu:AllOpenRequests</subtitle>
-        <query>SELECT UserRequest WHERE status != "closed"</query>
-        <group_by>status</group_by>
-        <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
-      </dashlet>
-      <dashlet id="9" xsi:type="DashletObjectList">
-        <title>UI:WelcomeMenu:MyCalls</title>
-        <query>SELECT UserRequest AS i WHERE i.caller_id = :current_contact_id AND status NOT IN ("closed", "resolved")</query>
-        <menu>true</menu>
-      </dashlet>
+      <rank>0</rank>
+      <dashlets>
+        <dashlet id="8" xsi:type="DashletHeaderDynamic">
+          <rank>0</rank>
+          <title>Menu:RequestManagement</title>
+          <icon>itop-request-mgmt-1.0.0/images/user-request-deadline.png</icon>
+          <subtitle>UI:WelcomeMenu:AllOpenRequests</subtitle>
+          <query>SELECT UserRequest WHERE status != "closed"</query>
+          <group_by>status</group_by>
+          <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
+        </dashlet>
+        <dashlet id="9" xsi:type="DashletObjectList">
+          <rank>1</rank>
+          <title>UI:WelcomeMenu:MyCalls</title>
+          <query>SELECT UserRequest AS i WHERE i.caller_id = :current_contact_id AND status NOT IN ("closed", "resolved")</query>
+          <menu>true</menu>
+        </dashlet>
+      </dashlets>
     </cell>
     <cell>
-      <dashlet id="10" xsi:type="DashletHeaderDynamic">
-        <title>Menu:IncidentManagement</title>
-        <icon>itop-incident-mgmt-1.0.0/images/incident-escalated.png</icon>
-        <subtitle>UI:WelcomeMenu:OpenIncidents</subtitle>
-        <query>SELECT Incident WHERE status != "closed"</query>
-        <group_by>status</group_by>
-        <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
-      </dashlet>
-      <dashlet id="11" xsi:type="DashletObjectList">
-        <title>UI:WelcomeMenu:MyIncidents</title>
-        <query>SELECT Incident AS i WHERE i.agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")</query>
-        <menu>true</menu>
-      </dashlet>
+      <rank>0</rank>
+      <dashlets>
+        <dashlet id="10" xsi:type="DashletHeaderDynamic">
+          <rank>0</rank>
+          <title>Menu:IncidentManagement</title>
+          <icon>itop-incident-mgmt-1.0.0/images/incident-escalated.png</icon>
+          <subtitle>UI:WelcomeMenu:OpenIncidents</subtitle>
+          <query>SELECT Incident WHERE status != "closed"</query>
+          <group_by>status</group_by>
+          <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
+        </dashlet>
+        <dashlet id="11" xsi:type="DashletObjectList">
+          <rank>1</rank>
+          <title>UI:WelcomeMenu:MyIncidents</title>
+          <query>SELECT Incident AS i WHERE i.agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")</query>
+          <menu>true</menu>
+        </dashlet>
+      </dashlets>
     </cell>
   </cells>
 </dashboard>
