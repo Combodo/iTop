@@ -536,6 +536,15 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'complex_actions_limit' => array(
+			'type' => 'integer',
+			'description' => 'Display the "actions" menu items that require long computation only if the list of objects is contains less objects than this number (0 means no limit)',
+			// examples... not used
+			'default' => 50,
+			'value' => 50,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'synchro_prevent_delete_all' => array(
 			'type' => 'bool',
 			'description' => 'Stop the synchro if all the replicas of a data source become obsolete at the same time.',
