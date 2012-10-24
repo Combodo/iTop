@@ -439,7 +439,7 @@ abstract class DBObject
 				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 				if ($oAttDef->IsExternalField())
 				{
-					$sKeyAttCode = $sAttCode;
+					$sKeyAttCode = $oAttDef->GetKeyAttCode();
 					$iCurrKey = $this->m_aCurrValues[$oAttDef->GetKeyAttCode()];
 					$sTargetClass= $oAttDef->GetTargetClass();
 				}
@@ -471,8 +471,8 @@ abstract class DBObject
 						}
 						else
 						{
-							$this->m_aLoadedAtt[$sAttCode.'_friendlyname'] = true;
-							$this->m_aCurrValues[$sAttCode.'_friendlyname'] = $oTargetObj->GetName();
+							$this->m_aLoadedAtt[$sKeyAttCode.'_friendlyname'] = true;
+							$this->m_aCurrValues[$sKeyAttCode.'_friendlyname'] = $oTargetObj->GetName();
 						}
 					}						
 				}
