@@ -64,7 +64,13 @@ class SetupUtils
 	static function CheckPHPVersion()
 	{
 		$aResult = array();
-
+		
+		// For log file(s)
+		if (!is_dir(APPROOT.'log'))
+		{
+			@mkdir(APPROOT.'log');
+		}
+		
 		SetupPage::log('Info - CheckPHPVersion');
 		if (version_compare(phpversion(), self::PHP_MIN_VERSION, '>='))
 		{
@@ -74,6 +80,11 @@ class SetupUtils
 		{
 			$aResult[] = new CheckResult(CheckResult::ERROR, "Error: The current PHP Version (".phpversion().") is lower than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")");
 		}
+		
+		// Check the common directories
+		$aWritableDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'conf', 'data'));
+		$aResult = array_merge($aResult, $aWritableDirsErrors);
+		
 		$aMandatoryExtensions = array('mysqli', 'iconv', 'simplexml', 'soap', 'hash', 'json', 'session', 'pcre', 'dom');
 		$aOptionalExtensions = array('mcrypt' => 'Strong encryption will not be used.',
 									 'ldap' => 'LDAP authentication will be disabled.');
@@ -196,7 +207,7 @@ class SetupUtils
 
 		if ($iMaxPostSize <= $iMaxUploadSize)
 		{
-			$aResult[] = new CheckResult(CheckResult::WARNING, "post_max_size (".ini_get('post_max_size').") in php.ini should be bigger than upload_max_filesize (".ini_get('upload_max_filesize').") otherwise you cannot upload files of the maximun size.");
+			$aResult[] = new CheckResult(CheckResult::WARNING, "post_max_size (".ini_get('post_max_size').") in php.ini should be strictly greater than upload_max_filesize (".ini_get('upload_max_filesize').") otherwise you cannot upload files of the maximum size.");
 		}
 
 
@@ -603,7 +614,7 @@ class SetupUtils
 		$oPage->add('<table>');
 		$oPage->add('<tr><td>Server Name:</td><td><input id="db_server" type="text" name="db_server" value="'.htmlentities($sDBServer, ENT_QUOTES, 'UTF-8').'" size="15"/></td><td>E.g. "localhost", "dbserver.mycompany.com" or "192.142.10.23"</td></tr>');
 		$oPage->add('<tr><td>Login:</td><td><input id="db_user" type="text" name="db_user" value="'.htmlentities($sDBUser, ENT_QUOTES, 'UTF-8').'" size="15"/></td><td rowspan="2" style="vertical-align:top">The account must have the following privileges on the database: SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, CREATE VIEW, SUPER, TRIGGER</td></tr>');
-		$oPage->add('<tr><td>Password:</td><td><input id="db_pwd" type="password" name="db_pwd" value="'.htmlentities($sDBPwd, ENT_QUOTES, 'UTF-8').'" size="15"/></td></tr>');
+		$oPage->add('<tr><td>Password:</td><td><input id="db_pwd" autocomplete="off" type="password" name="db_pwd" value="'.htmlentities($sDBPwd, ENT_QUOTES, 'UTF-8').'" size="15"/></td></tr>');
 		$oPage->add('</table>');
 		$oPage->add('</fieldset>');
 		$oPage->add('</td></tr>');
@@ -1183,15 +1194,15 @@ EOF
 			$sFullPath = APPROOT.$sDir;
 			if (is_dir($sFullPath) && !is_writable($sFullPath))
 			{
-				$aNonWritableDirs[APPROOT.$sDir] = new CheckResult(CheckResult::ERROR, "The directory '".APPROOT.$sDir."' exists but is not writable for the application.");
+				$aNonWritableDirs[APPROOT.$sDir] = new CheckResult(CheckResult::ERROR, "The directory <b>'".APPROOT.$sDir."'</b> exists but is not writable for the application.");
 			}
 			else if (file_exists($sFullPath) && !is_dir($sFullPath))
 			{
-				$aNonWritableDirs[APPROOT.$sDir] = new CheckResult(CheckResult::ERROR, "A file with the same name as '".APPROOT.$sDir."' exists.");
+				$aNonWritableDirs[APPROOT.$sDir] = new CheckResult(CheckResult::ERROR, ITOP_APPLICATION." needs the directory <b>'".APPROOT.$sDir."'</b> to be writable. However <i>file</i> named <b>'".APPROOT.$sDir."'</b> already exists.");
 			}
 			else if (!is_dir($sFullPath) && !is_writable(APPROOT))
 			{
-				$aNonWritableDirs[APPROOT] = new CheckResult(CheckResult::ERROR, "The directory '".APPROOT."' is not writable, the application cannot create the directory '$sDir' inside it.");
+				$aNonWritableDirs[APPROOT.$sDir] = new CheckResult(CheckResult::ERROR, ITOP_APPLICATION." needs the directory <b>'".APPROOT.$sDir."'</b> to be writable. The directory <b>'".APPROOT.$sDir."'</b> does not exist and '".APPROOT."' is not writable, the application cannot create the directory '$sDir' inside it.");
 			}				
 		}
 		return $aNonWritableDirs;		

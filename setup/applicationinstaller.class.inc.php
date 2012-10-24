@@ -426,6 +426,11 @@ class ApplicationInstaller
 				chmod($sTargetPath, 0755);
 			}
 		}
+		else if (substr($sTargetPath, 0, strlen(APPROOT)) == APPROOT)
+		{
+			// If the directory is under the root folder - as expected - let's clean-it before compiling
+			SetupUtils::tidydir($sTargetPath);
+		}
 
 		$oFactory = new ModelFactory($aDirsToScan);
 		$aModules = $oFactory->FindModules();

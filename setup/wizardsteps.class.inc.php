@@ -670,7 +670,7 @@ class WizStepLicense extends WizardStep
 		$oPage->add('<ul>');
 		foreach($aLicenses as $index => $oLicense)
 		{
-			$oPage->add('<li><b>'.$oLicense->product.'</b>, licensed by '.$oLicense->author.' under the <b>'.$oLicense->license_type.' license</b>. (<span class="toggle" id="toggle_'.$index.'">Details</span>)');
+			$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<span class="toggle" id="toggle_'.$index.'">Details</span>)');
 			$oPage->add('<div id="license_'.$index.'" class="license_text" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'</div>');
 			$oPage->add_ready_script('$(".license_text a").attr("target", "_blank").addClass("no-arrow");');
 			$oPage->add_ready_script('$("#toggle_'.$index.'").click( function() { $("#license_'.$index.'").toggle(); } );');
@@ -828,8 +828,8 @@ class WizStepAdminAccount extends WizardStep
 		$oPage->add('<legend>Administrator Account</legend>');
 		$oPage->add('<table>');
 		$oPage->add('<tr><td>Login: </td><td><input id="admin_user" name="admin_user" type="text" size="25" maxlength="64" value="'.htmlentities($sAdminUser, ENT_QUOTES, 'UTF-8').'"><span id="v_admin_user"/></td><tr>');
-		$oPage->add('<tr><td>Password: </td><td><input id="admin_pwd" name="admin_pwd" type="password" size="25" maxlength="64" value="'.htmlentities($sAdminPwd, ENT_QUOTES, 'UTF-8').'"><span id="v_admin_pwd"/></td><tr>');
-		$oPage->add('<tr><td>Confirm password: </td><td><input id="confirm_pwd" name="confirm_pwd" type="password" size="25" maxlength="64" value="'.htmlentities($sConfirmPwd, ENT_QUOTES, 'UTF-8').'"></td><tr>');
+		$oPage->add('<tr><td>Password: </td><td><input id="admin_pwd" autocomplete="off" name="admin_pwd" type="password" size="25" maxlength="64" value="'.htmlentities($sAdminPwd, ENT_QUOTES, 'UTF-8').'"><span id="v_admin_pwd"/></td><tr>');
+		$oPage->add('<tr><td>Confirm password: </td><td><input id="confirm_pwd" autocomplete="off" name="confirm_pwd" type="password" size="25" maxlength="64" value="'.htmlentities($sConfirmPwd, ENT_QUOTES, 'UTF-8').'"></td><tr>');
 		$sSourceDir = APPROOT.'dictionaries/';
 		$aLanguages = SetupUtils::GetAvailableLanguages($sSourceDir);
 		$oPage->add('<tr><td>Language: </td><td>');
@@ -1031,6 +1031,8 @@ EOF
  */
 class WizStepModulesChoice extends WizardStep
 {
+	static protected $SEP = '_';
+	protected $bUpgrade = false;
 	public function GetTitle()
 	{
 		$aStepInfo = $this->GetStepInfo();
@@ -1094,6 +1096,7 @@ class WizStepModulesChoice extends WizardStep
 	
 	protected function DisplayStep($oPage)
 	{
+		$this->bUpgrade = ($this->oWizard->GetParameter('install_mode') != 'install');
 		$aStepInfo = $this->GetStepInfo();
 		$oPage->add_style("div.choice { margin: 0.5em;}");
 		$oPage->add_style("div.choice a { text-decoration:none; font-weight: bold; color: #1C94C4 }");
@@ -1125,6 +1128,9 @@ class WizStepModulesChoice extends WizardStep
 		$aDefaults = array();
 		$aModules = SetupUtils::AnalyzeInstallation($this->oWizard);
 		$this->GetDefaults($aStepInfo, $aDefaults, $aModules);
+		//echo "<pre>aStepInfo:\n ".print_r($aStepInfo, true)."</pre>";
+		//echo "<pre>aDefaults:\n ".print_r($aDefaults, true)."</pre>";
+
 		$index = $this->GetStepIndex();
 		
 		// retrieve the saved selection
@@ -1137,14 +1143,13 @@ class WizStepModulesChoice extends WizardStep
 		$aSelectedComponents = $aParameters[$index];
 
 		$oPage->add('<div style="height:250px;overflow:auto;border:#ccc 1px solid;">');
-		$this->DisplayOptions($oPage, $aStepInfo, $aSelectedComponents);
+		$this->DisplayOptions($oPage, $aStepInfo, $aSelectedComponents, $aDefaults);
 		$oPage->add('</div>');
 		
 		$oPage->add_script(
 <<<EOF
 function CheckChoice(sChoiceId)
 {
-	console.log('Ici !!');
 	var oElement = $('#'+sChoiceId);
 	var bChecked = (oElement.attr('checked') == 'checked');
 	var sId = sChoiceId.replace('choice', '');
@@ -1154,7 +1159,7 @@ function CheckChoice(sChoiceId)
 		sName = oElement.attr('name');
 		$('input[name="'+sName+'"]').each(function() {
 			var sRadioId = $(this).attr('id');
-			if (sRadioId != sChoiceId)
+			if ((sRadioId != sChoiceId) && (sRadioId != undefined))
 			{
 				CheckChoice(sRadioId);
 			}
@@ -1199,69 +1204,99 @@ EOF
 	
 	protected function GetDefaults($aInfo, &$aDefaults, $aModules, $sParentId = '')
 	{
+		$iScore = 0;
+		
 		$aOptions = isset($aInfo['options']) ? $aInfo['options'] : array();
 		foreach($aOptions as $index => $aChoice)
 		{
-			$sChoiceId = $sParentId.'_'.$index;
-			if (isset($aChoice['default']) && $aChoice['default'])
+			$sChoiceId = $sParentId.self::$SEP.$index;
+			if (!$this->bUpgrade && isset($aChoice['default']) && $aChoice['default'])
 			{
 				$aDefaults[$sChoiceId] = $sChoiceId;
 			}
-			foreach($aChoice['modules'] as $sModuleId)
+			if ($this->bUpgrade)
 			{
-				if ($aModules[$sModuleId]['version_db'] != '')
+				// In upgrade mode, the defaults are the installed modules
+				foreach($aChoice['modules'] as $sModuleId)
 				{
-					// A module corresponding to this choice is installed, the whole choice is selected
-					$aDefaults[$sChoiceId] = $sChoiceId;
-					break;
+					if ($aModules[$sModuleId]['version_db'] != '')
+					{
+						// A module corresponding to this choice is installed, the whole choice is selected
+						$aDefaults[$sChoiceId] = $sChoiceId;
+						$iScore = 99; // The whole parent choice is selected
+						break;
+					}
 				}
 			}
+			
 			if (isset($aChoice['sub_options']))
 			{
-				$this->GetDefaults($aChoice['sub_options'], $aDefaults, $sChoiceId);
+				$aScores[$sChoiceId] = $this->GetDefaults($aChoice['sub_options'], $aDefaults, $sChoiceId);
 			}
 			$index++;
 		}
 
 		$aAlternatives = isset($aInfo['alternatives']) ? $aInfo['alternatives'] : array();
 		$sChoiceName = null;
+		$aScores = array();
+		$sChoiceIdNone = null;
 		foreach($aAlternatives as $index => $aChoice)
 		{
-			$sChoiceId = $sParentId.'_'.$index;
+			$sChoiceId = $sParentId.self::$SEP.$index;
 			if ($sChoiceName == null)
 			{
 				$sChoiceName = $sChoiceId;
 			}
-			if (isset($aChoice['default']) && $aChoice['default'])
+			if (!$this->bUpgrade && isset($aChoice['default']) && $aChoice['default'])
 			{
 				$aDefaults[$sChoiceName] = $sChoiceId;
 			}
 			if (isset($aChoice['sub_options']))
 			{
-				$this->GetDefaults($aChoice['sub_options'], $aDefaults, $aModules, $sChoiceId);
+				$aScores[$sChoiceId] = $this->GetDefaults($aChoice['sub_options'], $aDefaults, $aModules, $sChoiceId);
 			}
 			$index++;
 		}
 		
-		// the installed choices have precedence over the 'default' choices
-		$sChoiceName = null;
-		foreach($aAlternatives as $index => $aChoice)
+		$iMaxScore = 0;
+		if ($this->bUpgrade && (count($aAlternatives) > 0))
 		{
-			$sChoiceId = $sParentId.'_'.$index;
-			if ($sChoiceName == null)
+			// The installed choices have precedence over the 'default' choices
+			// In case several choices share the same base modules, let's weight the alternative choices
+			// based on their number of installed modules
+			$sChoiceName = null;
+
+			foreach($aAlternatives as $index => $aChoice)
 			{
-				$sChoiceName = $sChoiceId;
-			}
-			foreach($aChoice['modules'] as $sModuleId)
-			{
-				if ($aModules[$sModuleId]['version_db'] != '')
+				$sChoiceId = $sParentId.self::$SEP.$index;
+				if ($sChoiceName == null)
 				{
-					// A module corresponding to this choice is installed, the whole choice is selected
-					$aDefaults[$sChoiceName] = $sChoiceId;
-					break;
+					$sChoiceName = $sChoiceId;
+				}
+				$aScores[$sChoiceId] = 0;
+				foreach($aChoice['modules'] as $sModuleId)
+				{
+					if ($aModules[$sModuleId]['version_db'] != '')
+					{
+						// A module corresponding to this choice is installed, increase the score of this choice
+						if (!isset($aScores[$sChoiceId])) $aScores[$sChoiceId] = 0;
+						$aScores[$sChoiceId]++;
+						$iMaxScore = max($iMaxScore, $aScores[$sChoiceId]);
+						$iScore = 99; // The whole parent choice is selected
+					}
 				}
 			}
 		}
+		if ($iMaxScore > 0)
+		{
+			//echo "Scores: <pre>".print_r($aScores, true)."</pre><br/>";
+			// The choice with the bigger score wins !
+			asort($aScores, SORT_NUMERIC); 
+			$aKeys = array_keys($aScores);
+			$sBetterChoiceId = array_pop($aKeys);
+			$aDefaults[$sChoiceName] = $sBetterChoiceId;			
+		}
+		return $iScore;
 	} 
 	
 	/**
@@ -1292,7 +1327,7 @@ EOF
 		$aOptions = isset($aInfo['options']) ? $aInfo['options'] : array();
 		foreach($aOptions as $index => $aChoice)
 		{
-			$sChoiceId = $sParentId.'_'.$index;
+			$sChoiceId = $sParentId.self::$SEP.$index;
 			if ( (isset($aChoice['mandatory']) && $aChoice['mandatory']) || 
 				 (isset($aSelectedChoices[$sChoiceId]) && ($aSelectedChoices[$sChoiceId] == $sChoiceId)) )
 			{
@@ -1320,7 +1355,7 @@ EOF
 		$sChoiceName = null;
 		foreach($aAlternatives as $index => $aChoice)
 		{
-			$sChoiceId = $sParentId.'_'.$index;
+			$sChoiceId = $sParentId.self::$SEP.$index;
 			if ($sChoiceName == null)
 			{
 				$sChoiceName = $sChoiceId;
@@ -1472,7 +1507,7 @@ EOF
 		return false;
 	}
 		
-	protected function DisplayOptions($oPage, $aStepInfo, $aSelectedComponents, $sParentId = '')
+	protected function DisplayOptions($oPage, $aStepInfo, $aSelectedComponents, $aDefaults, $sParentId = '')
 	{
 		$aOptions = isset($aStepInfo['options']) ? $aStepInfo['options'] : array();
 		$aAlternatives = isset($aStepInfo['alternatives']) ? $aStepInfo['alternatives'] : array();
@@ -1481,12 +1516,15 @@ EOF
 		foreach($aOptions as $index => $aChoice)
 		{
 			$sAttributes = '';
-			$sChoiceId = $sParentId.'_'.$index;
-			if (isset($aChoice['mandatory']) && $aChoice['mandatory'])
+			$sChoiceId = $sParentId.self::$SEP.$index;
+			$bIsDefault = array_key_exists($sChoiceId, $aDefaults);
+			$bSelected = isset($aSelectedComponents[$sChoiceId]) && ($aSelectedComponents[$sChoiceId] == $sChoiceId);
+			$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || ($this->bUpgrade && $bIsDefault);
+			if ($bMandatory)
 			{
 				$oPage->add('<div class="choice"><input id="choice'.$sChoiceId.'" checked disabled data-disabled="disabled" type="checkbox"'.$sAttributes.'/><input type="hidden" name="choice['.$sChoiceId.']" value="'.$sChoiceId.'">&nbsp;');
 			}
-			else if (isset($aSelectedComponents[$sChoiceId]) && ($aSelectedComponents[$sChoiceId] == $sChoiceId))
+			else if ($bSelected)
 			{
 				$oPage->add('<div class="choice"><input class="wiz-choice" id="choice'.$sChoiceId.'" name="choice['.$sChoiceId.']" type="checkbox" checked value="'.$sChoiceId.'"/>&nbsp;');
 			}
@@ -1494,32 +1532,68 @@ EOF
 			{
 				$oPage->add('<div class="choice"><input class="wiz-choice" id="choice'.$sChoiceId.'" name="choice['.$sChoiceId.']" type="checkbox" value="'.$sChoiceId.'"/>&nbsp;');
 			}
-			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $sChoiceId);
+			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId);
 			$oPage->add('</div>');
 			$index++;
 		}
 		$sChoiceName = null;
+		$sDisabled = '';
+		$sChoiceIdNone = null;
 		foreach($aAlternatives as $index => $aChoice)
 		{
-			$sAttributes = '';
-			$sChoiceId = $sParentId.'_'.$index;
+			$sChoiceId = $sParentId.self::$SEP.$index;
 			if ($sChoiceName == null)
 			{
 				$sChoiceName = $sChoiceId; // All radios share the same name
 			}
+			$bIsDefault = array_key_exists($sChoiceName, $aDefaults) && ($aDefaults[$sChoiceName] == $sChoiceId);
+			$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || ($this->bUpgrade && $bIsDefault);
+			if ($bMandatory)
+			{
+				// One choice is mandatory, all alternatives are disabled
+				$sDisabled = ' disabled data-disabled="disabled"';
+			}
+			if ( (!isset($aChoice['sub_options']) || (count($aChoice['sub_options']) == 0)) && (!isset($aChoice['modules']) || (count($aChoice['modules']) == 0)) )
+			{
+				$sChoiceIdNone = $sChoiceId; // the "None" / empty choice
+			}
+		}
+
+		foreach($aAlternatives as $index => $aChoice)
+		{
+			$sAttributes = '';
+			$sChoiceId = $sParentId.self::$SEP.$index;
+			if ($sChoiceName == null)
+			{
+				$sChoiceName = $sChoiceId; // All radios share the same name
+			}
+			$bIsDefault = array_key_exists($sChoiceName, $aDefaults) && ($aDefaults[$sChoiceName] == $sChoiceId);
+			$bSelected = isset($aSelectedComponents[$sChoiceName]) && ($aSelectedComponents[$sChoiceName] == $sChoiceId);
+			if ( !isset($aSelectedComponents[$sChoiceName]) && ($sChoiceIdNone != null))
+			{
+				// No choice selected, select the "None" option
+				$bSelected = ($sChoiceId == $sChoiceIdNone);
+			}
+			$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || ($this->bUpgrade && $bIsDefault);
 			
-			if (isset($aSelectedComponents[$sChoiceName]) && ($aSelectedComponents[$sChoiceName] == $sChoiceId))
+			if ($bSelected)
 			{
 				$sAttributes = ' checked ';
 			}
-			$oPage->add('<div class="choice"><input class="wiz-choice" id="choice'.$sChoiceId.'" name="choice['.$sChoiceName.']" type="radio"'.$sAttributes.' value="'.$sChoiceId.'"/>&nbsp;');
-			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $sChoiceId);
+			$sHidden = '';
+			if ($bMandatory)
+			{
+				$sAttributes = ' checked ';
+				$sHidden = '<input type="hidden" name="choice['.$sChoiceId.']" value="'.$sChoiceId.'"/>';
+			}
+			$oPage->add('<div class="choice"><input class="wiz-choice" id="choice'.$sChoiceId.'" name="choice['.$sChoiceName.']" type="radio"'.$sAttributes.' value="'.$sChoiceId.'"'.$sDisabled.'/>'.$sHidden.'&nbsp;');
+			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId);
 			$oPage->add('</div>');
 			$index++;
 		}
 	}
 	
-	protected function DisplayChoice($oPage, $aChoice, $aSelectedComponents, $sChoiceId)
+	protected function DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId)
 	{
 		$sMoreInfo = isset($aChoice['more_info']) ? $aChoice['more_info'] : '';
 		$oPage->add('<label for="choice'.$sChoiceId.'"><b>'.htmlentities($aChoice['title'], ENT_QUOTES, 'UTF-8').'</b></label> '.$sMoreInfo);
@@ -1527,7 +1601,7 @@ EOF
 		$oPage->add('<div class="description">'.$sDescription.'<span id="sub_choices'.$sChoiceId.'">');
 		if (isset($aChoice['sub_options']))
 		{
-			$this->DisplayOptions($oPage, $aChoice['sub_options'], $aSelectedComponents, $sChoiceId);
+			$this->DisplayOptions($oPage, $aChoice['sub_options'], $aSelectedComponents, $aDefaults, $sChoiceId);
 		}
 		$oPage->add('</span></div>');
 	}

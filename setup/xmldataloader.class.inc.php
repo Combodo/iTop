@@ -24,7 +24,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-define ('KEYS_CACHE_FILE', APPROOT.'/keyscache.tmp');
+define ('KEYS_CACHE_FILE', APPROOT.'data/keyscache.tmp');
 /**
  * Class to load sets of objects from XML files into the database
  * XML files can be produced by the 'export' web service or by any other means
@@ -121,6 +121,10 @@ class XMLDataLoader
 	 */
 	protected function SaveKeysCache()
 	{
+		if (!is_dir(APPROOT.'data'))
+		{
+			mkdir(APPROOT.'data');
+		}
 		$hFile = @fopen($this->m_sCacheFileName, 'w');
 		if ($hFile !== false)
 		{
