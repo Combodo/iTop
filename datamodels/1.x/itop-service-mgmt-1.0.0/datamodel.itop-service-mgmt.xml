@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
   <classes>
     <class id="Contract" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -22,7 +22,7 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>contract.png</icon>
         <reconciliation>
           <attributes>
@@ -33,27 +33,27 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="start_date" xsi:type="AttributeDateTime">
           <sql>start_date</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="end_date" xsi:type="AttributeDateTime">
           <sql>end_date</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="cost" xsi:type="AttributeInteger">
           <sql>cost</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="cost_currency" xsi:type="AttributeEnum">
@@ -67,12 +67,12 @@
         </field>
         <field id="cost_unit" xsi:type="AttributeString">
           <sql>cost_unit</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="billing_frequency" xsi:type="AttributeString">
           <sql>billing_frequency</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="contact_list" xsi:type="AttributeLinkedSetIndirect">
@@ -101,40 +101,92 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>description</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>cost</item>
-            <item>cost_currency</item>
-            <item>cost_unit</item>
-            <item>billing_frequency</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>ci_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="start_date">
+              <rank>30</rank>
+            </item>
+            <item id="end_date">
+              <rank>40</rank>
+            </item>
+            <item id="cost">
+              <rank>50</rank>
+            </item>
+            <item id="cost_currency">
+              <rank>60</rank>
+            </item>
+            <item id="cost_unit">
+              <rank>70</rank>
+            </item>
+            <item id="billing_frequency">
+              <rank>80</rank>
+            </item>
+            <item id="contact_list">
+              <rank>90</rank>
+            </item>
+            <item id="document_list">
+              <rank>100</rank>
+            </item>
+            <item id="ci_list">
+              <rank>110</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>description</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>cost</item>
-            <item>cost_currency</item>
-            <item>cost_unit</item>
-            <item>billing_frequency</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="start_date">
+              <rank>30</rank>
+            </item>
+            <item id="end_date">
+              <rank>40</rank>
+            </item>
+            <item id="cost">
+              <rank>50</rank>
+            </item>
+            <item id="cost_currency">
+              <rank>60</rank>
+            </item>
+            <item id="cost_unit">
+              <rank>70</rank>
+            </item>
+            <item id="billing_frequency">
+              <rank>80</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>description</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>cost</item>
-            <item>cost_currency</item>
-            <item>cost_unit</item>
-            <item>billing_frequency</item>
+            <item id="description">
+              <rank>10</rank>
+            </item>
+            <item id="start_date">
+              <rank>20</rank>
+            </item>
+            <item id="end_date">
+              <rank>30</rank>
+            </item>
+            <item id="cost">
+              <rank>40</rank>
+            </item>
+            <item id="cost_currency">
+              <rank>50</rank>
+            </item>
+            <item id="cost_unit">
+              <rank>60</rank>
+            </item>
+            <item id="billing_frequency">
+              <rank>70</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -147,14 +199,14 @@
         <key_type>autoincrement</key_type>
         <db_table>providercontract</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>contract.png</icon>
         <reconciliation>
           <attributes>
@@ -169,7 +221,7 @@
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="provider_name" xsi:type="AttributeExternalField">
           <extkey_attcode>provider_id</extkey_attcode>
@@ -177,12 +229,12 @@
         </field>
         <field id="sla" xsi:type="AttributeString">
           <sql>sla</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="coverage" xsi:type="AttributeString">
           <sql>coverage</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -212,44 +264,104 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>description</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>cost</item>
-            <item>cost_currency</item>
-            <item>cost_unit</item>
-            <item>billing_frequency</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>ci_list</item>
-            <item>provider_id</item>
-            <item>sla</item>
-            <item>coverage</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="start_date">
+              <rank>30</rank>
+            </item>
+            <item id="end_date">
+              <rank>40</rank>
+            </item>
+            <item id="cost">
+              <rank>50</rank>
+            </item>
+            <item id="cost_currency">
+              <rank>60</rank>
+            </item>
+            <item id="cost_unit">
+              <rank>70</rank>
+            </item>
+            <item id="billing_frequency">
+              <rank>80</rank>
+            </item>
+            <item id="contact_list">
+              <rank>90</rank>
+            </item>
+            <item id="document_list">
+              <rank>100</rank>
+            </item>
+            <item id="ci_list">
+              <rank>110</rank>
+            </item>
+            <item id="provider_id">
+              <rank>120</rank>
+            </item>
+            <item id="sla">
+              <rank>130</rank>
+            </item>
+            <item id="coverage">
+              <rank>140</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>description</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>cost</item>
-            <item>cost_currency</item>
-            <item>cost_unit</item>
-            <item>billing_frequency</item>
-            <item>provider_id</item>
-            <item>sla</item>
-            <item>coverage</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="start_date">
+              <rank>30</rank>
+            </item>
+            <item id="end_date">
+              <rank>40</rank>
+            </item>
+            <item id="cost">
+              <rank>50</rank>
+            </item>
+            <item id="cost_currency">
+              <rank>60</rank>
+            </item>
+            <item id="cost_unit">
+              <rank>70</rank>
+            </item>
+            <item id="billing_frequency">
+              <rank>80</rank>
+            </item>
+            <item id="provider_id">
+              <rank>90</rank>
+            </item>
+            <item id="sla">
+              <rank>100</rank>
+            </item>
+            <item id="coverage">
+              <rank>110</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>provider_id</item>
-            <item>sla</item>
-            <item>coverage</item>
+            <item id="start_date">
+              <rank>10</rank>
+            </item>
+            <item id="end_date">
+              <rank>20</rank>
+            </item>
+            <item id="provider_id">
+              <rank>30</rank>
+            </item>
+            <item id="sla">
+              <rank>40</rank>
+            </item>
+            <item id="coverage">
+              <rank>50</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -262,14 +374,14 @@
         <key_type>autoincrement</key_type>
         <db_table>customercontract</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>contract.png</icon>
         <reconciliation>
           <attributes>
@@ -285,7 +397,7 @@
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="org_name" xsi:type="AttributeExternalField">
           <extkey_attcode>org_id</extkey_attcode>
@@ -296,7 +408,7 @@
           <target_class>Organization</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="provider_name" xsi:type="AttributeExternalField">
           <extkey_attcode>provider_id</extkey_attcode>
@@ -311,7 +423,7 @@
           <target_class>Team</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="support_team_name" xsi:type="AttributeExternalField">
           <extkey_attcode>support_team_id</extkey_attcode>
@@ -336,46 +448,110 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>description</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>cost</item>
-            <item>cost_currency</item>
-            <item>cost_unit</item>
-            <item>billing_frequency</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>ci_list</item>
-            <item>provider_list</item>
-            <item>provider_id</item>
-            <item>support_team_id</item>
-            <item>sla_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="start_date">
+              <rank>40</rank>
+            </item>
+            <item id="end_date">
+              <rank>50</rank>
+            </item>
+            <item id="cost">
+              <rank>60</rank>
+            </item>
+            <item id="cost_currency">
+              <rank>70</rank>
+            </item>
+            <item id="cost_unit">
+              <rank>80</rank>
+            </item>
+            <item id="billing_frequency">
+              <rank>90</rank>
+            </item>
+            <item id="contact_list">
+              <rank>100</rank>
+            </item>
+            <item id="document_list">
+              <rank>110</rank>
+            </item>
+            <item id="ci_list">
+              <rank>120</rank>
+            </item>
+            <item id="provider_list">
+              <rank>130</rank>
+            </item>
+            <item id="provider_id">
+              <rank>140</rank>
+            </item>
+            <item id="support_team_id">
+              <rank>150</rank>
+            </item>
+            <item id="sla_list">
+              <rank>160</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>description</item>
-            <item>org_id</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>cost</item>
-            <item>cost_currency</item>
-            <item>cost_unit</item>
-            <item>billing_frequency</item>
-            <item>provider_id</item>
-            <item>support_team_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="start_date">
+              <rank>40</rank>
+            </item>
+            <item id="end_date">
+              <rank>50</rank>
+            </item>
+            <item id="cost">
+              <rank>60</rank>
+            </item>
+            <item id="cost_currency">
+              <rank>70</rank>
+            </item>
+            <item id="cost_unit">
+              <rank>80</rank>
+            </item>
+            <item id="billing_frequency">
+              <rank>90</rank>
+            </item>
+            <item id="provider_id">
+              <rank>100</rank>
+            </item>
+            <item id="support_team_id">
+              <rank>110</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>org_id</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>provider_id</item>
-            <item>support_team_id</item>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="start_date">
+              <rank>20</rank>
+            </item>
+            <item id="end_date">
+              <rank>30</rank>
+            </item>
+            <item id="provider_id">
+              <rank>40</rank>
+            </item>
+            <item id="support_team_id">
+              <rank>50</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -389,15 +565,15 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkcustomercontracttoprovider</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="customer_contract_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="customer_contract_id"/>
@@ -411,7 +587,7 @@
           <target_class>CustomerContract</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="customer_contract_name" xsi:type="AttributeExternalField">
           <extkey_attcode>customer_contract_id</extkey_attcode>
@@ -422,7 +598,7 @@
           <target_class>ProviderContract</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="provider_contract_name" xsi:type="AttributeExternalField">
           <extkey_attcode>provider_contract_id</extkey_attcode>
@@ -441,24 +617,44 @@
       <presentation>
         <details>
           <items>
-            <item>customer_contract_id</item>
-            <item>provider_contract_id</item>
-            <item>provider_sla</item>
-            <item>provider_coverage</item>
+            <item id="customer_contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="provider_contract_id">
+              <rank>20</rank>
+            </item>
+            <item id="provider_sla">
+              <rank>30</rank>
+            </item>
+            <item id="provider_coverage">
+              <rank>40</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>customer_contract_id</item>
-            <item>provider_contract_id</item>
+            <item id="customer_contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="provider_contract_id">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>customer_contract_id</item>
-            <item>provider_contract_id</item>
-            <item>provider_sla</item>
-            <item>provider_coverage</item>
+            <item id="customer_contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="provider_contract_id">
+              <rank>20</rank>
+            </item>
+            <item id="provider_sla">
+              <rank>30</rank>
+            </item>
+            <item id="provider_coverage">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -472,15 +668,15 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkcontracttosla</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="contract_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="contract_id"/>
@@ -494,7 +690,7 @@
           <target_class>CustomerContract</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="contract_name" xsi:type="AttributeExternalField">
           <extkey_attcode>contract_id</extkey_attcode>
@@ -505,7 +701,7 @@
           <target_class>SLA</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="sla_name" xsi:type="AttributeExternalField">
           <extkey_attcode>sla_id</extkey_attcode>
@@ -517,7 +713,7 @@
         </field>
         <field id="coverage" xsi:type="AttributeString">
           <sql>coverage</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -525,25 +721,47 @@
       <presentation>
         <details>
           <items>
-            <item>contract_id</item>
-            <item>sla_id</item>
-            <item>sla_service_name</item>
-            <item>coverage</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="sla_id">
+              <rank>20</rank>
+            </item>
+            <item id="sla_service_name">
+              <rank>30</rank>
+            </item>
+            <item id="coverage">
+              <rank>40</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>contract_id</item>
-            <item>sla_id</item>
-            <item>coverage</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="sla_id">
+              <rank>20</rank>
+            </item>
+            <item id="coverage">
+              <rank>30</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>contract_id</item>
-            <item>sla_id</item>
-            <item>sla_service_name</item>
-            <item>coverage</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="sla_id">
+              <rank>20</rank>
+            </item>
+            <item id="sla_service_name">
+              <rank>30</rank>
+            </item>
+            <item id="coverage">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -557,15 +775,15 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkcontracttodoc</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="contract_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="contract_id"/>
@@ -579,7 +797,7 @@
           <target_class>Contract</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="contract_name" xsi:type="AttributeExternalField">
           <extkey_attcode>contract_id</extkey_attcode>
@@ -590,7 +808,7 @@
           <target_class>Document</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="document_name" xsi:type="AttributeExternalField">
           <extkey_attcode>document_id</extkey_attcode>
@@ -609,26 +827,50 @@
       <presentation>
         <details>
           <items>
-            <item>contract_id</item>
-            <item>document_id</item>
-            <item>document_type</item>
-            <item>document_status</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
+            <item id="document_type">
+              <rank>30</rank>
+            </item>
+            <item id="document_status">
+              <rank>40</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>contract_id</item>
-            <item>document_id</item>
-            <item>document_type</item>
-            <item>document_status</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
+            <item id="document_type">
+              <rank>30</rank>
+            </item>
+            <item id="document_status">
+              <rank>40</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>contract_id</item>
-            <item>document_id</item>
-            <item>document_type</item>
-            <item>document_status</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
+            <item id="document_type">
+              <rank>30</rank>
+            </item>
+            <item id="document_status">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -642,15 +884,15 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkcontracttocontact</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="contract_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="contract_id"/>
@@ -664,7 +906,7 @@
           <target_class>Contract</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="contract_name" xsi:type="AttributeExternalField">
           <extkey_attcode>contract_id</extkey_attcode>
@@ -675,7 +917,7 @@
           <target_class>Contact</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="contact_name" xsi:type="AttributeExternalField">
           <extkey_attcode>contact_id</extkey_attcode>
@@ -687,7 +929,7 @@
         </field>
         <field id="role" xsi:type="AttributeString">
           <sql>role</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -695,26 +937,50 @@
       <presentation>
         <details>
           <items>
-            <item>contract_id</item>
-            <item>contact_id</item>
-            <item>contact_email</item>
-            <item>role</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="contact_email">
+              <rank>30</rank>
+            </item>
+            <item id="role">
+              <rank>40</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>contract_id</item>
-            <item>contact_id</item>
-            <item>contact_email</item>
-            <item>role</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="contact_email">
+              <rank>30</rank>
+            </item>
+            <item id="role">
+              <rank>40</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>contract_id</item>
-            <item>contact_id</item>
-            <item>contact_email</item>
-            <item>role</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="contact_email">
+              <rank>30</rank>
+            </item>
+            <item id="role">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -728,15 +994,15 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkcontracttoci</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="contract_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="contract_id"/>
@@ -750,7 +1016,7 @@
           <target_class>Contract</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="contract_name" xsi:type="AttributeExternalField">
           <extkey_attcode>contract_id</extkey_attcode>
@@ -761,7 +1027,7 @@
           <target_class>FunctionalCI</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="ci_name" xsi:type="AttributeExternalField">
           <extkey_attcode>ci_id</extkey_attcode>
@@ -776,23 +1042,41 @@
       <presentation>
         <details>
           <items>
-            <item>contract_id</item>
-            <item>ci_id</item>
-            <item>ci_status</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_id">
+              <rank>20</rank>
+            </item>
+            <item id="ci_status">
+              <rank>30</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>contract_id</item>
-            <item>ci_id</item>
-            <item>ci_status</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_id">
+              <rank>20</rank>
+            </item>
+            <item id="ci_status">
+              <rank>30</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>contract_id</item>
-            <item>ci_id</item>
-            <item>ci_status</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_id">
+              <rank>20</rank>
+            </item>
+            <item id="ci_status">
+              <rank>30</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -805,14 +1089,14 @@
         <key_type>autoincrement</key_type>
         <db_table>service</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>service.png</icon>
         <reconciliation>
           <attributes>
@@ -827,7 +1111,7 @@
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="provider_name" xsi:type="AttributeExternalField">
           <extkey_attcode>org_id</extkey_attcode>
@@ -835,12 +1119,12 @@
         </field>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="type" xsi:type="AttributeEnum">
@@ -911,32 +1195,68 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>description</item>
-            <item>org_id</item>
-            <item>type</item>
-            <item>status</item>
-            <item>subcategory_list</item>
-            <item>sla_list</item>
-            <item>document_list</item>
-            <item>contact_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
+            <item id="subcategory_list">
+              <rank>60</rank>
+            </item>
+            <item id="sla_list">
+              <rank>70</rank>
+            </item>
+            <item id="document_list">
+              <rank>80</rank>
+            </item>
+            <item id="contact_list">
+              <rank>90</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>description</item>
-            <item>org_id</item>
-            <item>type</item>
-            <item>status</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>description</item>
-            <item>org_id</item>
-            <item>type</item>
-            <item>status</item>
+            <item id="description">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="type">
+              <rank>30</rank>
+            </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -949,14 +1269,14 @@
         <key_type>autoincrement</key_type>
         <db_table>servicesubcategory</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>sla.png</icon>
         <reconciliation>
           <attributes>
@@ -968,12 +1288,12 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="description" xsi:type="AttributeString">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="service_id" xsi:type="AttributeExternalKey">
@@ -981,7 +1301,7 @@
           <target_class>Service</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="service_name" xsi:type="AttributeExternalField">
           <extkey_attcode>service_id</extkey_attcode>
@@ -1000,24 +1320,44 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>service_id</item>
-            <item>description</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="service_id">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>description</item>
-            <item>service_id</item>
-            <item>provider_name</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="service_id">
+              <rank>30</rank>
+            </item>
+            <item id="provider_name">
+              <rank>40</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>service_id</item>
-            <item>description</item>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1030,14 +1370,14 @@
         <key_type>autoincrement</key_type>
         <db_table>sla</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>sla.png</icon>
         <reconciliation>
           <attributes>
@@ -1049,7 +1389,7 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="service_id" xsi:type="AttributeExternalKey">
@@ -1057,7 +1397,7 @@
           <target_class>Service</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="service_name" xsi:type="AttributeExternalField">
           <extkey_attcode>service_id</extkey_attcode>
@@ -1075,20 +1415,32 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>service_id</item>
-            <item>slt_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="service_id">
+              <rank>20</rank>
+            </item>
+            <item id="slt_list">
+              <rank>30</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>service_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="service_id">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>service_id</item>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1101,14 +1453,14 @@
         <key_type>autoincrement</key_type>
         <db_table>slt</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>slt.png</icon>
         <reconciliation>
           <attributes>
@@ -1119,7 +1471,7 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="metric" xsi:type="AttributeEnum">
@@ -1143,7 +1495,7 @@
         </field>
         <field id="value" xsi:type="AttributeInteger">
           <sql>value</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="value_unit" xsi:type="AttributeEnum">
@@ -1168,29 +1520,59 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>metric</item>
-            <item>ticket_priority</item>
-            <item>value</item>
-            <item>value_unit</item>
-            <item>sla_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="metric">
+              <rank>20</rank>
+            </item>
+            <item id="ticket_priority">
+              <rank>30</rank>
+            </item>
+            <item id="value">
+              <rank>40</rank>
+            </item>
+            <item id="value_unit">
+              <rank>50</rank>
+            </item>
+            <item id="sla_list">
+              <rank>60</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>metric</item>
-            <item>ticket_priority</item>
-            <item>value</item>
-            <item>value_unit</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="metric">
+              <rank>20</rank>
+            </item>
+            <item id="ticket_priority">
+              <rank>30</rank>
+            </item>
+            <item id="value">
+              <rank>40</rank>
+            </item>
+            <item id="value_unit">
+              <rank>50</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>metric</item>
-            <item>ticket_priority</item>
-            <item>value</item>
-            <item>value_unit</item>
+            <item id="metric">
+              <rank>10</rank>
+            </item>
+            <item id="ticket_priority">
+              <rank>20</rank>
+            </item>
+            <item id="value">
+              <rank>30</rank>
+            </item>
+            <item id="value_unit">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1204,15 +1586,15 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkslttosla</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="sla_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="sla_id"/>
@@ -1226,7 +1608,7 @@
           <target_class>SLA</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="sla_name" xsi:type="AttributeExternalField">
           <extkey_attcode>sla_id</extkey_attcode>
@@ -1237,7 +1619,7 @@
           <target_class>SLT</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="slt_name" xsi:type="AttributeExternalField">
           <extkey_attcode>slt_id</extkey_attcode>
@@ -1264,32 +1646,68 @@
       <presentation>
         <details>
           <items>
-            <item>sla_id</item>
-            <item>slt_id</item>
-            <item>slt_metric</item>
-            <item>slt_ticket_priority</item>
-            <item>slt_value</item>
-            <item>slt_value_unit</item>
+            <item id="sla_id">
+              <rank>10</rank>
+            </item>
+            <item id="slt_id">
+              <rank>20</rank>
+            </item>
+            <item id="slt_metric">
+              <rank>30</rank>
+            </item>
+            <item id="slt_ticket_priority">
+              <rank>40</rank>
+            </item>
+            <item id="slt_value">
+              <rank>50</rank>
+            </item>
+            <item id="slt_value_unit">
+              <rank>60</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>sla_id</item>
-            <item>slt_id</item>
-            <item>slt_metric</item>
-            <item>slt_ticket_priority</item>
-            <item>slt_value</item>
-            <item>slt_value_unit</item>
+            <item id="sla_id">
+              <rank>10</rank>
+            </item>
+            <item id="slt_id">
+              <rank>20</rank>
+            </item>
+            <item id="slt_metric">
+              <rank>30</rank>
+            </item>
+            <item id="slt_ticket_priority">
+              <rank>40</rank>
+            </item>
+            <item id="slt_value">
+              <rank>50</rank>
+            </item>
+            <item id="slt_value_unit">
+              <rank>60</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>sla_id</item>
-            <item>slt_id</item>
-            <item>slt_metric</item>
-            <item>slt_ticket_priority</item>
-            <item>slt_value</item>
-            <item>slt_value_unit</item>
+            <item id="sla_id">
+              <rank>10</rank>
+            </item>
+            <item id="slt_id">
+              <rank>20</rank>
+            </item>
+            <item id="slt_metric">
+              <rank>30</rank>
+            </item>
+            <item id="slt_ticket_priority">
+              <rank>40</rank>
+            </item>
+            <item id="slt_value">
+              <rank>50</rank>
+            </item>
+            <item id="slt_value_unit">
+              <rank>60</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1303,15 +1721,15 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkservicetodoc</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="service_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="service_id"/>
@@ -1325,7 +1743,7 @@
           <target_class>Service</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="service_name" xsi:type="AttributeExternalField">
           <extkey_attcode>service_id</extkey_attcode>
@@ -1336,7 +1754,7 @@
           <target_class>Document</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="document_name" xsi:type="AttributeExternalField">
           <extkey_attcode>document_id</extkey_attcode>
@@ -1355,26 +1773,50 @@
       <presentation>
         <details>
           <items>
-            <item>service_id</item>
-            <item>document_id</item>
-            <item>document_type</item>
-            <item>document_status</item>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
+            <item id="document_type">
+              <rank>30</rank>
+            </item>
+            <item id="document_status">
+              <rank>40</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>service_id</item>
-            <item>document_id</item>
-            <item>document_type</item>
-            <item>document_status</item>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
+            <item id="document_type">
+              <rank>30</rank>
+            </item>
+            <item id="document_status">
+              <rank>40</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>service_id</item>
-            <item>document_id</item>
-            <item>document_type</item>
-            <item>document_status</item>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
+            <item id="document_type">
+              <rank>30</rank>
+            </item>
+            <item id="document_status">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1388,15 +1830,15 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkservicetocontact</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="service_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="service_id"/>
@@ -1410,7 +1852,7 @@
           <target_class>Service</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="service_name" xsi:type="AttributeExternalField">
           <extkey_attcode>service_id</extkey_attcode>
@@ -1421,7 +1863,7 @@
           <target_class>Contact</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="contact_name" xsi:type="AttributeExternalField">
           <extkey_attcode>contact_id</extkey_attcode>
@@ -1433,7 +1875,7 @@
         </field>
         <field id="role" xsi:type="AttributeString">
           <sql>role</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -1441,26 +1883,50 @@
       <presentation>
         <details>
           <items>
-            <item>service_id</item>
-            <item>contact_id</item>
-            <item>contact_email</item>
-            <item>role</item>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="contact_email">
+              <rank>30</rank>
+            </item>
+            <item id="role">
+              <rank>40</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>service_id</item>
-            <item>contact_id</item>
-            <item>contact_email</item>
-            <item>role</item>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="contact_email">
+              <rank>30</rank>
+            </item>
+            <item id="role">
+              <rank>40</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>service_id</item>
-            <item>contact_id</item>
-            <item>contact_email</item>
-            <item>role</item>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="contact_email">
+              <rank>30</rank>
+            </item>
+            <item id="role">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1473,15 +1939,15 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkservicetoci</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="service_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="service_id"/>
@@ -1495,7 +1961,7 @@
           <target_class>Service</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="service_name" xsi:type="AttributeExternalField">
           <extkey_attcode>service_id</extkey_attcode>
@@ -1506,7 +1972,7 @@
           <target_class>FunctionalCI</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="ci_name" xsi:type="AttributeExternalField">
           <extkey_attcode>ci_id</extkey_attcode>
@@ -1521,23 +1987,41 @@
       <presentation>
         <details>
           <items>
-            <item>service_id</item>
-            <item>ci_id</item>
-            <item>ci_status</item>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_id">
+              <rank>20</rank>
+            </item>
+            <item id="ci_status">
+              <rank>30</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>service_id</item>
-            <item>ci_id</item>
-            <item>ci_status</item>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_id">
+              <rank>20</rank>
+            </item>
+            <item id="ci_status">
+              <rank>30</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>service_id</item>
-            <item>ci_id</item>
-            <item>ci_status</item>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_id">
+              <rank>20</rank>
+            </item>
+            <item id="ci_status">
+              <rank>30</rank>
+            </item>
           </items>
         </list>
       </presentation>

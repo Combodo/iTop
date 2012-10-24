@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
   <classes>
     <class id="KnownError" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -12,14 +12,14 @@
         <key_type>autoincrement</key_type>
         <db_table>knownerror</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/known-error.png</icon>
         <reconciliation>
           <attributes>
@@ -31,7 +31,7 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="org_id" xsi:type="AttributeExternalKey">
@@ -56,27 +56,27 @@
         </field>
         <field id="symptom" xsi:type="AttributeText">
           <sql>symptom</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="root_cause" xsi:type="AttributeText">
           <sql>rootcause</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="workaround" xsi:type="AttributeText">
           <sql>workaround</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="solution" xsi:type="AttributeText">
           <sql>solution</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="error_code" xsi:type="AttributeString">
           <sql>error_code</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="domain" xsi:type="AttributeEnum">
@@ -93,17 +93,17 @@
         </field>
         <field id="vendor" xsi:type="AttributeString">
           <sql>vendor</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="model" xsi:type="AttributeString">
           <sql>model</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="version" xsi:type="AttributeString">
           <sql>version</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="ci_list" xsi:type="AttributeLinkedSetIndirect">
@@ -112,7 +112,7 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>functionalci_id</ext_key_to_remote>
-          <duplicates></duplicates>
+          <duplicates/>
         </field>
         <field id="document_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkDocumentToError</linked_class>
@@ -120,45 +120,93 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>document_id</ext_key_to_remote>
-          <duplicates></duplicates>
+          <duplicates/>
         </field>
       </fields>
       <methods/>
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>problem_id</item>
-            <item>error_code</item>
-            <item>domain</item>
-            <item>vendor</item>
-            <item>model</item>
-            <item>version</item>
-            <item>symptom</item>
-            <item>root_cause</item>
-            <item>workaround</item>
-            <item>solution</item>
-            <item>ci_list</item>
-            <item>document_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="problem_id">
+              <rank>30</rank>
+            </item>
+            <item id="error_code">
+              <rank>40</rank>
+            </item>
+            <item id="domain">
+              <rank>50</rank>
+            </item>
+            <item id="vendor">
+              <rank>60</rank>
+            </item>
+            <item id="model">
+              <rank>70</rank>
+            </item>
+            <item id="version">
+              <rank>80</rank>
+            </item>
+            <item id="symptom">
+              <rank>90</rank>
+            </item>
+            <item id="root_cause">
+              <rank>100</rank>
+            </item>
+            <item id="workaround">
+              <rank>110</rank>
+            </item>
+            <item id="solution">
+              <rank>120</rank>
+            </item>
+            <item id="ci_list">
+              <rank>130</rank>
+            </item>
+            <item id="document_list">
+              <rank>140</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>problem_id</item>
-            <item>error_code</item>
-            <item>domain</item>
-            <item>symptom</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="problem_id">
+              <rank>30</rank>
+            </item>
+            <item id="error_code">
+              <rank>40</rank>
+            </item>
+            <item id="domain">
+              <rank>50</rank>
+            </item>
+            <item id="symptom">
+              <rank>60</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>org_id</item>
-            <item>problem_id</item>
-            <item>error_code</item>
-            <item>symptom</item>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="problem_id">
+              <rank>20</rank>
+            </item>
+            <item id="error_code">
+              <rank>30</rank>
+            </item>
+            <item id="symptom">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -175,13 +223,13 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkerrortofunctionalci</db_table>
         <db_key_field>link_id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>lnkErrorToFunctionalCI</format>
           <attributes/>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="functionalci_id"/>
@@ -212,7 +260,7 @@
         </field>
         <field id="reason" xsi:type="AttributeString">
           <sql>dummy</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -220,22 +268,38 @@
       <presentation>
         <details>
           <items>
-            <item>functionalci_id</item>
-            <item>error_id</item>
-            <item>reason</item>
+            <item id="functionalci_id">
+              <rank>10</rank>
+            </item>
+            <item id="error_id">
+              <rank>20</rank>
+            </item>
+            <item id="reason">
+              <rank>30</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>functionalci_id</item>
-            <item>error_id</item>
+            <item id="functionalci_id">
+              <rank>10</rank>
+            </item>
+            <item id="error_id">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>functionalci_id</item>
-            <item>error_id</item>
-            <item>reason</item>
+            <item id="functionalci_id">
+              <rank>10</rank>
+            </item>
+            <item id="error_id">
+              <rank>20</rank>
+            </item>
+            <item id="reason">
+              <rank>30</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -252,7 +316,7 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkdocumenttoerror</db_table>
         <db_key_field>link_id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
@@ -260,7 +324,7 @@
           </attributes>
         </naming>
         <display_template>../business/templates/default.html</display_template>
-        <icon></icon>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="document_id"/>
@@ -291,7 +355,7 @@
         </field>
         <field id="link_type" xsi:type="AttributeString">
           <sql>link_type</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -299,16 +363,28 @@
       <presentation>
         <details>
           <items>
-            <item>document_id</item>
-            <item>error_name</item>
-            <item>link_type</item>
+            <item id="document_id">
+              <rank>10</rank>
+            </item>
+            <item id="error_name">
+              <rank>20</rank>
+            </item>
+            <item id="link_type">
+              <rank>30</rank>
+            </item>
           </items>
         </details>
         <list>
           <items>
-            <item>document_id</item>
-            <item>error_name</item>
-            <item>link_type</item>
+            <item id="document_id">
+              <rank>10</rank>
+            </item>
+            <item id="error_name">
+              <rank>20</rank>
+            </item>
+            <item id="link_type">
+              <rank>30</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -321,14 +397,14 @@
         <key_type>autoincrement</key_type>
         <db_table>faq</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="title"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/faq.png</icon>
         <reconciliation>
           <attributes>
@@ -339,17 +415,17 @@
       <fields>
         <field id="title" xsi:type="AttributeString">
           <sql>title</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="summary" xsi:type="AttributeText">
           <sql>summary</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="description" xsi:type="AttributeHTML">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="category_id" xsi:type="AttributeExternalKey">
@@ -364,12 +440,12 @@
         </field>
         <field id="error_code" xsi:type="AttributeString">
           <sql>error_code</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="key_words" xsi:type="AttributeString">
           <sql>key_words</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -377,28 +453,56 @@
       <presentation>
         <details>
           <items>
-            <item>category_id</item>
-            <item>title</item>
-            <item>error_code</item>
-            <item>key_words</item>
-            <item>summary</item>
-            <item>description</item>
+            <item id="category_id">
+              <rank>10</rank>
+            </item>
+            <item id="title">
+              <rank>20</rank>
+            </item>
+            <item id="error_code">
+              <rank>30</rank>
+            </item>
+            <item id="key_words">
+              <rank>40</rank>
+            </item>
+            <item id="summary">
+              <rank>50</rank>
+            </item>
+            <item id="description">
+              <rank>60</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>category_id</item>
-            <item>title</item>
-            <item>summary</item>
-            <item>error_code</item>
-            <item>key_words</item>
+            <item id="category_id">
+              <rank>10</rank>
+            </item>
+            <item id="title">
+              <rank>20</rank>
+            </item>
+            <item id="summary">
+              <rank>30</rank>
+            </item>
+            <item id="error_code">
+              <rank>40</rank>
+            </item>
+            <item id="key_words">
+              <rank>50</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>category_id</item>
-            <item>error_code</item>
-            <item>key_words</item>
+            <item id="category_id">
+              <rank>10</rank>
+            </item>
+            <item id="error_code">
+              <rank>20</rank>
+            </item>
+            <item id="key_words">
+              <rank>30</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -411,15 +515,15 @@
         <key_type>autoincrement</key_type>
         <db_table>faqcategory</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -429,7 +533,7 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>nam</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="faq_list" xsi:type="AttributeLinkedSet">
@@ -444,13 +548,19 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>faq_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="faq_list">
+              <rank>20</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
           </items>
         </search>
       </presentation>

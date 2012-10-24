@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
   <classes>
     <class id="Incident" _delta="define">
       <parent>ResponseTicket</parent>
@@ -15,14 +15,14 @@
         <key_type>autoincrement</key_type>
         <db_table>ticket_incident</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="ref"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/incident.png</icon>
         <reconciliation>
           <attributes>
@@ -807,61 +807,130 @@
       <presentation>
         <details>
           <items>
-            <item>document_list</item>
-            <item>ci_list</item>
-            <item>contact_list</item>
-            <item>incident_list</item>
+            <item id="document_list">
+              <rank>10</rank>
+            </item>
+            <item id="ci_list">
+              <rank>20</rank>
+            </item>
+            <item id="contact_list">
+              <rank>30</rank>
+            </item>
+            <item id="incident_list">
+              <rank>40</rank>
+            </item>
             <item id="col:col1">
+              <rank>50</rank>
               <items>
                 <item id="fieldset:Ticket:baseinfo">
+                  <rank>10</rank>
                   <items>
-                    <item>ref</item>
-                    <item>title</item>
-                    <item>org_id</item>
-                    <item>status</item>
-                    <item>priority</item>
-                    <item>service_id</item>
-                    <item>servicesubcategory_id</item>
-                    <item>product</item>
+                    <item id="ref">
+                      <rank>10</rank>
+                    </item>
+                    <item id="title">
+                      <rank>20</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="status">
+                      <rank>40</rank>
+                    </item>
+                    <item id="priority">
+                      <rank>50</rank>
+                    </item>
+                    <item id="service_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="servicesubcategory_id">
+                      <rank>70</rank>
+                    </item>
+                    <item id="product">
+                      <rank>80</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Ticket:moreinfo">
+                  <rank>20</rank>
                   <items>
-                    <item>impact</item>
-                    <item>urgency</item>
-                    <item>description</item>
-                    <item>resolution_code</item>
-                    <item>solution</item>
-                    <item>user_satisfaction</item>
-                    <item>user_commment</item>
+                    <item id="impact">
+                      <rank>10</rank>
+                    </item>
+                    <item id="urgency">
+                      <rank>20</rank>
+                    </item>
+                    <item id="description">
+                      <rank>30</rank>
+                    </item>
+                    <item id="resolution_code">
+                      <rank>40</rank>
+                    </item>
+                    <item id="solution">
+                      <rank>50</rank>
+                    </item>
+                    <item id="user_satisfaction">
+                      <rank>60</rank>
+                    </item>
+                    <item id="user_commment">
+                      <rank>70</rank>
+                    </item>
                   </items>
                 </item>
               </items>
             </item>
             <item id="col:col2">
+              <rank>60</rank>
               <items>
                 <item id="fieldset:Ticket:date">
+                  <rank>10</rank>
                   <items>
-                    <item>start_date</item>
-                    <item>last_update</item>
-                    <item>assignment_date</item>
-                    <item>tto_escalation_deadline</item>
-                    <item>ttr_escalation_deadline</item>
-                    <item>close_date</item>
-                    <item>closure_deadline</item>
+                    <item id="start_date">
+                      <rank>10</rank>
+                    </item>
+                    <item id="last_update">
+                      <rank>20</rank>
+                    </item>
+                    <item id="assignment_date">
+                      <rank>30</rank>
+                    </item>
+                    <item id="tto_escalation_deadline">
+                      <rank>40</rank>
+                    </item>
+                    <item id="ttr_escalation_deadline">
+                      <rank>50</rank>
+                    </item>
+                    <item id="close_date">
+                      <rank>60</rank>
+                    </item>
+                    <item id="closure_deadline">
+                      <rank>70</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Ticket:contact">
+                  <rank>20</rank>
                   <items>
-                    <item>caller_id</item>
-                    <item>workgroup_id</item>
-                    <item>agent_id</item>
+                    <item id="caller_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="workgroup_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="agent_id">
+                      <rank>30</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Ticket:relation">
+                  <rank>30</rank>
                   <items>
-                    <item>related_problem_id</item>
-                    <item>related_change_id</item>
+                    <item id="related_problem_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="related_change_id">
+                      <rank>20</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -870,38 +939,94 @@
         </details>
         <search>
           <items>
-            <item>ref</item>
-            <item>title</item>
-            <item>org_id</item>
-            <item>start_date</item>
-            <item>status</item>
-            <item>caller_id</item>
-            <item>service_id</item>
-            <item>servicesubcategory_id</item>
-            <item>product</item>
-            <item>impact</item>
-            <item>urgency</item>
-            <item>priority</item>
-            <item>workgroup_id</item>
-            <item>agent_id</item>
-            <item>agent_email</item>
-            <item>close_date</item>
-            <item>resolution_code</item>
-            <item>solution</item>
-            <item>user_satisfaction</item>
-            <item>user_commment</item>
+            <item id="ref">
+              <rank>10</rank>
+            </item>
+            <item id="title">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="start_date">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
+            <item id="caller_id">
+              <rank>60</rank>
+            </item>
+            <item id="service_id">
+              <rank>70</rank>
+            </item>
+            <item id="servicesubcategory_id">
+              <rank>80</rank>
+            </item>
+            <item id="product">
+              <rank>90</rank>
+            </item>
+            <item id="impact">
+              <rank>100</rank>
+            </item>
+            <item id="urgency">
+              <rank>110</rank>
+            </item>
+            <item id="priority">
+              <rank>120</rank>
+            </item>
+            <item id="workgroup_id">
+              <rank>130</rank>
+            </item>
+            <item id="agent_id">
+              <rank>140</rank>
+            </item>
+            <item id="agent_email">
+              <rank>150</rank>
+            </item>
+            <item id="close_date">
+              <rank>160</rank>
+            </item>
+            <item id="resolution_code">
+              <rank>170</rank>
+            </item>
+            <item id="solution">
+              <rank>180</rank>
+            </item>
+            <item id="user_satisfaction">
+              <rank>190</rank>
+            </item>
+            <item id="user_commment">
+              <rank>200</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>title</item>
-            <item>org_id</item>
-            <item>start_date</item>
-            <item>status</item>
-            <item>service_id</item>
-            <item>priority</item>
-            <item>workgroup_id</item>
-            <item>agent_id</item>
+            <item id="title">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="start_date">
+              <rank>30</rank>
+            </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
+            <item id="service_id">
+              <rank>50</rank>
+            </item>
+            <item id="priority">
+              <rank>60</rank>
+            </item>
+            <item id="workgroup_id">
+              <rank>70</rank>
+            </item>
+            <item id="agent_id">
+              <rank>80</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -915,15 +1040,15 @@
         <key_type>autoincrement</key_type>
         <db_table>lnktickettoincident</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="ticket_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="ticket_id"/>
@@ -937,7 +1062,7 @@
           <target_class>Ticket</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="ticket_ref" xsi:type="AttributeExternalField">
           <extkey_attcode>ticket_id</extkey_attcode>
@@ -948,7 +1073,7 @@
           <target_class>Incident</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="incident_ref" xsi:type="AttributeExternalField">
           <extkey_attcode>incident_id</extkey_attcode>
@@ -956,7 +1081,7 @@
         </field>
         <field id="reason" xsi:type="AttributeString">
           <sql>reason</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -964,22 +1089,38 @@
       <presentation>
         <details>
           <items>
-            <item>ticket_id</item>
-            <item>incident_id</item>
-            <item>reason</item>
+            <item id="ticket_id">
+              <rank>10</rank>
+            </item>
+            <item id="incident_id">
+              <rank>20</rank>
+            </item>
+            <item id="reason">
+              <rank>30</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>ticket_id</item>
-            <item>incident_id</item>
+            <item id="ticket_id">
+              <rank>10</rank>
+            </item>
+            <item id="incident_id">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>ticket_id</item>
-            <item>incident_id</item>
-            <item>reason</item>
+            <item id="ticket_id">
+              <rank>10</rank>
+            </item>
+            <item id="incident_id">
+              <rank>20</rank>
+            </item>
+            <item id="reason">
+              <rank>30</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1007,27 +1148,27 @@
     <menu id="Incident:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
       <rank>3</rank>
       <parent>IncidentManagement</parent>
-      <template_file></template_file>
+      <template_file/>
     </menu>
     <menu id="Incident:MyIncidents" xsi:type="OQLMenuNode" _delta="define">
       <rank>1</rank>
       <parent>Incident:Shortcuts</parent>
       <oql><![CDATA[SELECT Incident WHERE agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")]]></oql>
-      <do_search></do_search>
+      <do_search/>
       <auto_reload>fast</auto_reload>
     </menu>
     <menu id="Incident:EscalatedIncidents" xsi:type="OQLMenuNode" _delta="define">
       <rank>2</rank>
       <parent>Incident:Shortcuts</parent>
       <oql><![CDATA[SELECT Incident WHERE status IN ("escalated_tto", "escalated_ttr")]]></oql>
-      <do_search></do_search>
+      <do_search/>
       <auto_reload>fast</auto_reload>
     </menu>
     <menu id="Incident:OpenIncidents" xsi:type="OQLMenuNode" _delta="define">
       <rank>3</rank>
       <parent>Incident:Shortcuts</parent>
       <oql><![CDATA[SELECT Incident WHERE status IN ("new", "assigned", "escalated_tto", "escalated_ttr", "resolved")]]></oql>
-      <do_search></do_search>
+      <do_search/>
       <auto_reload>standard</auto_reload>
     </menu>
   </menus>

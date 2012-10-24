@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
   <classes>
     <class id="Contract" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -22,7 +22,7 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/contract.png</icon>
         <reconciliation>
           <attributes>
@@ -33,7 +33,7 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="org_id" xsi:type="AttributeExternalKey">
@@ -52,7 +52,7 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>contact_id</ext_key_to_remote>
-          <duplicates></duplicates>
+          <duplicates/>
         </field>
         <field id="documents_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkContractToDocument</linked_class>
@@ -60,26 +60,26 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>document_id</ext_key_to_remote>
-          <duplicates></duplicates>
+          <duplicates/>
         </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="start_date" xsi:type="AttributeDate">
           <sql>start_date</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="end_date" xsi:type="AttributeDate">
           <sql>end_date</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="cost" xsi:type="AttributeString">
           <sql>cost</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="cost_currency" xsi:type="AttributeEnum">
@@ -88,11 +88,11 @@
             <value>euros</value>
           </values>
           <sql>cost_currency</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
           <display_style>list</display_style>
         </field>
-         <field id="contracttype_id" xsi:type="AttributeExternalKey">
+        <field id="contracttype_id" xsi:type="AttributeExternalKey">
           <sql>contracttype_id</sql>
           <target_class>ContractType</target_class>
           <is_null_allowed>true</is_null_allowed>
@@ -104,12 +104,12 @@
         </field>
         <field id="billing_frequency" xsi:type="AttributeString">
           <sql>billing_frequency</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="cost_unit" xsi:type="AttributeString">
           <sql>cost_unit</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="provider_id" xsi:type="AttributeExternalKey">
@@ -129,7 +129,7 @@
             <value>obsolete</value>
           </values>
           <sql>status</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
           <display_style>list</display_style>
         </field>
@@ -138,47 +138,113 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>contacts_list</item>
-            <item>documents_list</item>
-            <item>description</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>cost</item>
-            <item>cost_currency</item>
-            <item>billing_frequency</item>
-            <item>cost_unit</item>
-            <item>provider_id</item>
-            <item>status</item>
-	    <item>contracttype_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>30</rank>
+            </item>
+            <item id="documents_list">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
+            <item id="start_date">
+              <rank>60</rank>
+            </item>
+            <item id="end_date">
+              <rank>70</rank>
+            </item>
+            <item id="cost">
+              <rank>80</rank>
+            </item>
+            <item id="cost_currency">
+              <rank>90</rank>
+            </item>
+            <item id="billing_frequency">
+              <rank>100</rank>
+            </item>
+            <item id="cost_unit">
+              <rank>110</rank>
+            </item>
+            <item id="provider_id">
+              <rank>120</rank>
+            </item>
+            <item id="status">
+              <rank>130</rank>
+            </item>
+            <item id="contracttype_id">
+              <rank>140</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>cost</item>
-            <item>provider_id</item>
-            <item>cost_currency</item>
-            <item>billing_frequency</item>
-            <item>cost_unit</item>
-            <item>status</item>
-	    <item>contracttype_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="start_date">
+              <rank>30</rank>
+            </item>
+            <item id="end_date">
+              <rank>40</rank>
+            </item>
+            <item id="cost">
+              <rank>50</rank>
+            </item>
+            <item id="provider_id">
+              <rank>60</rank>
+            </item>
+            <item id="cost_currency">
+              <rank>70</rank>
+            </item>
+            <item id="billing_frequency">
+              <rank>80</rank>
+            </item>
+            <item id="cost_unit">
+              <rank>90</rank>
+            </item>
+            <item id="status">
+              <rank>100</rank>
+            </item>
+            <item id="contracttype_id">
+              <rank>110</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>description</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>cost_unit</item>
-            <item>provider_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+            <item id="start_date">
+              <rank>50</rank>
+            </item>
+            <item id="end_date">
+              <rank>60</rank>
+            </item>
+            <item id="cost_unit">
+              <rank>70</rank>
+            </item>
+            <item id="provider_id">
+              <rank>80</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -191,15 +257,15 @@
         <key_type>autoincrement</key_type>
         <db_table>contracttype</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -211,17 +277,23 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>name</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -234,14 +306,14 @@
         <key_type>autoincrement</key_type>
         <db_table>customercontract</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/contract.png</icon>
         <reconciliation>
           <attributes>
@@ -256,7 +328,7 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>service_id</ext_key_to_remote>
-          <duplicates></duplicates>
+          <duplicates/>
         </field>
         <field id="functionalcis_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkCustomerContractToFunctionalCI</linked_class>
@@ -264,7 +336,7 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>functionalci_id</ext_key_to_remote>
-          <duplicates></duplicates>
+          <duplicates/>
         </field>
         <field id="providercontracts_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkCustomerContractToProviderContract</linked_class>
@@ -272,56 +344,126 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>providercontract_id</ext_key_to_remote>
-          <duplicates></duplicates>
+          <duplicates/>
         </field>
       </fields>
       <methods/>
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>contacts_list</item>
-            <item>documents_list</item>
-            <item>description</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>cost</item>
-            <item>cost_currency</item>
-            <item>billing_frequency</item>
-            <item>cost_unit</item>
-            <item>provider_id</item>
-            <item>status</item>
-	    <item>contracttype_id</item>
-           <item>services_list</item>
-            <item>functionalcis_list</item>
-            <item>providercontracts_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>30</rank>
+            </item>
+            <item id="documents_list">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
+            <item id="start_date">
+              <rank>60</rank>
+            </item>
+            <item id="end_date">
+              <rank>70</rank>
+            </item>
+            <item id="cost">
+              <rank>80</rank>
+            </item>
+            <item id="cost_currency">
+              <rank>90</rank>
+            </item>
+            <item id="billing_frequency">
+              <rank>100</rank>
+            </item>
+            <item id="cost_unit">
+              <rank>110</rank>
+            </item>
+            <item id="provider_id">
+              <rank>120</rank>
+            </item>
+            <item id="status">
+              <rank>130</rank>
+            </item>
+            <item id="contracttype_id">
+              <rank>140</rank>
+            </item>
+            <item id="services_list">
+              <rank>150</rank>
+            </item>
+            <item id="functionalcis_list">
+              <rank>160</rank>
+            </item>
+            <item id="providercontracts_list">
+              <rank>170</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>provider_id</item>
-            <item>cost</item>
-            <item>cost_currency</item>
-            <item>billing_frequency</item>
-            <item>cost_unit</item>
-            <item>status</item>
-	    <item>contracttype_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="start_date">
+              <rank>30</rank>
+            </item>
+            <item id="end_date">
+              <rank>40</rank>
+            </item>
+            <item id="provider_id">
+              <rank>50</rank>
+            </item>
+            <item id="cost">
+              <rank>60</rank>
+            </item>
+            <item id="cost_currency">
+              <rank>70</rank>
+            </item>
+            <item id="billing_frequency">
+              <rank>80</rank>
+            </item>
+            <item id="cost_unit">
+              <rank>90</rank>
+            </item>
+            <item id="status">
+              <rank>100</rank>
+            </item>
+            <item id="contracttype_id">
+              <rank>110</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>description</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>provider_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+            <item id="start_date">
+              <rank>50</rank>
+            </item>
+            <item id="end_date">
+              <rank>60</rank>
+            </item>
+            <item id="provider_id">
+              <rank>70</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -334,14 +476,14 @@
         <key_type>autoincrement</key_type>
         <db_table>providercontract</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/contract.png</icon>
         <reconciliation>
           <attributes>
@@ -356,16 +498,16 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>functionalci_id</ext_key_to_remote>
-          <duplicates></duplicates>
+          <duplicates/>
         </field>
         <field id="sla" xsi:type="AttributeString">
           <sql>sla</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="coverage" xsi:type="AttributeString">
           <sql>coverage</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -373,53 +515,131 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>contacts_list</item>
-            <item>documents_list</item>
-            <item>description</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>cost</item>
-            <item>cost_currency</item>
-            <item>billing_frequency</item>
-            <item>cost_unit</item>
-            <item>provider_id</item>
-            <item>functionalcis_list</item>
-            <item>sla</item>
-            <item>coverage</item>
-            <item>status</item>
-	    <item>contracttype_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>30</rank>
+            </item>
+            <item id="documents_list">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
+            <item id="start_date">
+              <rank>60</rank>
+            </item>
+            <item id="end_date">
+              <rank>70</rank>
+            </item>
+            <item id="cost">
+              <rank>80</rank>
+            </item>
+            <item id="cost_currency">
+              <rank>90</rank>
+            </item>
+            <item id="billing_frequency">
+              <rank>100</rank>
+            </item>
+            <item id="cost_unit">
+              <rank>110</rank>
+            </item>
+            <item id="provider_id">
+              <rank>120</rank>
+            </item>
+            <item id="functionalcis_list">
+              <rank>130</rank>
+            </item>
+            <item id="sla">
+              <rank>140</rank>
+            </item>
+            <item id="coverage">
+              <rank>150</rank>
+            </item>
+            <item id="status">
+              <rank>160</rank>
+            </item>
+            <item id="contracttype_id">
+              <rank>170</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>provider_id</item>
-            <item>cost</item>
-            <item>cost_currency</item>
-            <item>billing_frequency</item>
-            <item>cost_unit</item>
-            <item>sla</item>
-            <item>coverage</item>
-            <item>status</item>
-	    <item>contracttype_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="start_date">
+              <rank>30</rank>
+            </item>
+            <item id="end_date">
+              <rank>40</rank>
+            </item>
+            <item id="provider_id">
+              <rank>50</rank>
+            </item>
+            <item id="cost">
+              <rank>60</rank>
+            </item>
+            <item id="cost_currency">
+              <rank>70</rank>
+            </item>
+            <item id="billing_frequency">
+              <rank>80</rank>
+            </item>
+            <item id="cost_unit">
+              <rank>90</rank>
+            </item>
+            <item id="sla">
+              <rank>100</rank>
+            </item>
+            <item id="coverage">
+              <rank>110</rank>
+            </item>
+            <item id="status">
+              <rank>120</rank>
+            </item>
+            <item id="contracttype_id">
+              <rank>130</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>description</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>provider_id</item>
-            <item>sla</item>
-            <item>coverage</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+            <item id="start_date">
+              <rank>50</rank>
+            </item>
+            <item id="end_date">
+              <rank>60</rank>
+            </item>
+            <item id="provider_id">
+              <rank>70</rank>
+            </item>
+            <item id="sla">
+              <rank>80</rank>
+            </item>
+            <item id="coverage">
+              <rank>90</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -433,7 +653,7 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkcontacttocontract</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s %2$s</format>
           <attributes>
@@ -441,8 +661,8 @@
             <attribute id="contact_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="contract_id"/>
@@ -476,20 +696,32 @@
       <presentation>
         <details>
           <items>
-            <item>contract_id</item>
-            <item>contact_id</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>contract_id</item>
-            <item>contact_id</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>contract_id</item>
-            <item>contact_id</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -503,7 +735,7 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkcontracttodocument</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s %2$s</format>
           <attributes>
@@ -511,8 +743,8 @@
             <attribute id="document_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="contract_id"/>
@@ -546,20 +778,32 @@
       <presentation>
         <details>
           <items>
-            <item>contract_id</item>
-            <item>document_id</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>contract_id</item>
-            <item>document_id</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>contract_id</item>
-            <item>document_id</item>
+            <item id="contract_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -573,7 +817,7 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkfunctionalcitoprovidercontract</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s %2$s</format>
           <attributes>
@@ -581,8 +825,8 @@
             <attribute id="functionalci_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="providercontract_id"/>
@@ -616,20 +860,32 @@
       <presentation>
         <details>
           <items>
-            <item>providercontract_id</item>
-            <item>functionalci_id</item>
+            <item id="providercontract_id">
+              <rank>10</rank>
+            </item>
+            <item id="functionalci_id">
+              <rank>20</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>providercontract_id</item>
-            <item>functionalci_id</item>
+            <item id="providercontract_id">
+              <rank>10</rank>
+            </item>
+            <item id="functionalci_id">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>providercontract_id</item>
-            <item>functionalci_id</item>
+            <item id="providercontract_id">
+              <rank>10</rank>
+            </item>
+            <item id="functionalci_id">
+              <rank>20</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -642,14 +898,14 @@
         <key_type>autoincrement</key_type>
         <db_table>servicefamilly</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/service.png</icon>
         <reconciliation>
           <attributes>
@@ -660,7 +916,7 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="services_list" xsi:type="AttributeLinkedSet">
@@ -669,25 +925,33 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <duplicates></duplicates>
+          <duplicates/>
         </field>
       </fields>
       <methods/>
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>services_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="services_list">
+              <rank>20</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>name</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -700,14 +964,14 @@
         <key_type>autoincrement</key_type>
         <db_table>service</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/service.png</icon>
         <reconciliation>
           <attributes>
@@ -720,7 +984,7 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="org_id" xsi:type="AttributeExternalKey">
@@ -745,7 +1009,7 @@
         </field>
         <field id="description" xsi:type="AttributeString">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="documents_list" xsi:type="AttributeLinkedSetIndirect">
@@ -754,7 +1018,7 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>document_id</ext_key_to_remote>
-          <duplicates></duplicates>
+          <duplicates/>
         </field>
         <field id="contacts_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkContactToService</linked_class>
@@ -762,7 +1026,7 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>contact_id</ext_key_to_remote>
-          <duplicates></duplicates>
+          <duplicates/>
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
@@ -771,7 +1035,7 @@
             <value>obsolete</value>
           </values>
           <sql>status</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
           <display_style>list</display_style>
         </field>
@@ -781,47 +1045,83 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>customercontract_id</ext_key_to_remote>
-          <duplicates></duplicates>
+          <duplicates/>
         </field>
         <field id="servicesubcategories_list" xsi:type="AttributeLinkedSet">
           <linked_class>ServiceSubcategory</linked_class>
           <ext_key_to_me>service_id</ext_key_to_me>
-          <edit_mode>add_only</edit_mode> 
+          <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <duplicates></duplicates>
+          <duplicates/>
         </field>
       </fields>
       <methods/>
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-	    <item>servicefamily_id</item>
-            <item>description</item>
-            <item>status</item>
-	    <item>servicesubcategories_list</item>
-            <item>documents_list</item>
-            <item>contacts_list</item>
-            <item>customercontracts_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="servicefamily_id">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
+            <item id="servicesubcategories_list">
+              <rank>60</rank>
+            </item>
+            <item id="documents_list">
+              <rank>70</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>80</rank>
+            </item>
+            <item id="customercontracts_list">
+              <rank>90</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-	    <item>servicefamily_id</item>
-            <item>description</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="servicefamily_id">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-	    <item>servicefamily_id</item>
-            <item>status</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="servicefamily_id">
+              <rank>30</rank>
+            </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -835,7 +1135,7 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkdocumenttoservice</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s %2$s</format>
           <attributes>
@@ -843,8 +1143,8 @@
             <attribute id="document_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="service_id"/>
@@ -878,20 +1178,32 @@
       <presentation>
         <details>
           <items>
-            <item>service_id</item>
-            <item>document_id</item>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>service_id</item>
-            <item>document_id</item>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>service_id</item>
-            <item>document_id</item>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -905,7 +1217,7 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkcontacttoservice</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s %2$s</format>
           <attributes>
@@ -913,8 +1225,8 @@
             <attribute id="contact_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="service_id"/>
@@ -948,20 +1260,32 @@
       <presentation>
         <details>
           <items>
-            <item>service_id</item>
-            <item>contact_id</item>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>service_id</item>
-            <item>contact_id</item>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>service_id</item>
-            <item>contact_id</item>
+            <item id="service_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -974,14 +1298,14 @@
         <key_type>autoincrement</key_type>
         <db_table>ServiceSubcategory</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/service.png</icon>
         <reconciliation>
           <attributes>
@@ -994,12 +1318,12 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="description" xsi:type="AttributeString">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="service_id" xsi:type="AttributeExternalKey">
@@ -1019,7 +1343,7 @@
             <value>obsolete</value>
           </values>
           <sql>status</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
           <display_style>list</display_style>
         </field>
@@ -1038,28 +1362,56 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>service_id</item>
-            <item>status</item>
-            <item>request_type</item>
-            <item>description</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="service_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="request_type">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>service_id</item>
-            <item>description</item>
-            <item>status</item>
-            <item>request_type</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="service_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
+            <item id="request_type">
+              <rank>50</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>name</item>
-            <item>service_id</item>
-            <item>status</item>
-            <item>request_type</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="service_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="request_type">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1072,14 +1424,14 @@
         <key_type>autoincrement</key_type>
         <db_table>sla</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/sla.png</icon>
         <reconciliation>
           <attributes>
@@ -1092,12 +1444,12 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="org_id" xsi:type="AttributeExternalKey">
@@ -1116,7 +1468,7 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>slt_id</ext_key_to_remote>
-          <duplicates></duplicates>
+          <duplicates/>
         </field>
         <field id="customercontracts_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkCustomerContractToService</linked_class>
@@ -1124,31 +1476,51 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>customercontract_id</ext_key_to_remote>
-          <duplicates></duplicates>
+          <duplicates/>
         </field>
       </fields>
       <methods/>
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>description</item>
-            <item>slts_list</item>
-            <item>customercontracts_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="slts_list">
+              <rank>40</rank>
+            </item>
+            <item id="customercontracts_list">
+              <rank>50</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>description</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>name</item>
-            <item>org_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1161,14 +1533,14 @@
         <key_type>autoincrement</key_type>
         <db_table>slt</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/slt.png</icon>
         <reconciliation>
           <attributes>
@@ -1179,7 +1551,7 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="priority" xsi:type="AttributeEnum">
@@ -1190,7 +1562,7 @@
             <value>4</value>
           </values>
           <sql>priority</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
           <display_style>list</display_style>
         </field>
@@ -1201,7 +1573,7 @@
             <value>other</value>
           </values>
           <sql>request_type</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
           <display_style>list</display_style>
         </field>
@@ -1211,13 +1583,13 @@
             <value>ttr</value>
           </values>
           <sql>metric</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
           <display_style>list</display_style>
         </field>
         <field id="value" xsi:type="AttributeInteger">
           <sql>value</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="unit" xsi:type="AttributeEnum">
@@ -1226,7 +1598,7 @@
             <value>minutes</value>
           </values>
           <sql>unit</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
           <display_style>radio_horizontal</display_style>
         </field>
@@ -1235,31 +1607,65 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>priority</item>
-            <item>request_type</item>
-            <item>metric</item>
-            <item>value</item>
-            <item>unit</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="priority">
+              <rank>20</rank>
+            </item>
+            <item id="request_type">
+              <rank>30</rank>
+            </item>
+            <item id="metric">
+              <rank>40</rank>
+            </item>
+            <item id="value">
+              <rank>50</rank>
+            </item>
+            <item id="unit">
+              <rank>60</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>priority</item>
-            <item>request_type</item>
-            <item>metric</item>
-            <item>value</item>
-            <item>unit</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="priority">
+              <rank>20</rank>
+            </item>
+            <item id="request_type">
+              <rank>30</rank>
+            </item>
+            <item id="metric">
+              <rank>40</rank>
+            </item>
+            <item id="value">
+              <rank>50</rank>
+            </item>
+            <item id="unit">
+              <rank>60</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>priority</item>
-            <item>request_type</item>
-            <item>metric</item>
-            <item>value</item>
-            <item>unit</item>
+            <item id="priority">
+              <rank>10</rank>
+            </item>
+            <item id="request_type">
+              <rank>20</rank>
+            </item>
+            <item id="metric">
+              <rank>30</rank>
+            </item>
+            <item id="value">
+              <rank>40</rank>
+            </item>
+            <item id="unit">
+              <rank>50</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1273,7 +1679,7 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkslatoslt</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s %2$s</format>
           <attributes>
@@ -1281,8 +1687,8 @@
             <attribute id="slt_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="sla_id"/>
@@ -1316,20 +1722,32 @@
       <presentation>
         <details>
           <items>
-            <item>sla_id</item>
-            <item>slt_id</item>
+            <item id="sla_id">
+              <rank>10</rank>
+            </item>
+            <item id="slt_id">
+              <rank>20</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>sla_id</item>
-            <item>slt_id</item>
+            <item id="sla_id">
+              <rank>10</rank>
+            </item>
+            <item id="slt_id">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>sla_id</item>
-            <item>slt_id</item>
+            <item id="sla_id">
+              <rank>10</rank>
+            </item>
+            <item id="slt_id">
+              <rank>20</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1343,7 +1761,7 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkcustomercontracttoservice</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s %2$s</format>
           <attributes>
@@ -1351,8 +1769,8 @@
             <attribute id="service_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="customercontract_id"/>
@@ -1396,22 +1814,38 @@
       <presentation>
         <details>
           <items>
-            <item>customercontract_id</item>
-            <item>service_id</item>
-            <item>sla_id</item>
+            <item id="customercontract_id">
+              <rank>10</rank>
+            </item>
+            <item id="service_id">
+              <rank>20</rank>
+            </item>
+            <item id="sla_id">
+              <rank>30</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>customercontract_id</item>
-            <item>service_id</item>
+            <item id="customercontract_id">
+              <rank>10</rank>
+            </item>
+            <item id="service_id">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>customercontract_id</item>
-            <item>service_id</item>
-            <item>sla_id</item>
+            <item id="customercontract_id">
+              <rank>10</rank>
+            </item>
+            <item id="service_id">
+              <rank>20</rank>
+            </item>
+            <item id="sla_id">
+              <rank>30</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1425,7 +1859,7 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkcustomercontracttoprovidercontract</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s %2$s</format>
           <attributes>
@@ -1433,8 +1867,8 @@
             <attribute id="providercontract_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="customercontract_id"/>
@@ -1468,20 +1902,32 @@
       <presentation>
         <details>
           <items>
-            <item>customercontract_id</item>
-            <item>providercontract_id</item>
+            <item id="customercontract_id">
+              <rank>10</rank>
+            </item>
+            <item id="providercontract_id">
+              <rank>20</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>customercontract_id</item>
-            <item>providercontract_id</item>
+            <item id="customercontract_id">
+              <rank>10</rank>
+            </item>
+            <item id="providercontract_id">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>customercontract_id</item>
-            <item>providercontract_id</item>
+            <item id="customercontract_id">
+              <rank>10</rank>
+            </item>
+            <item id="providercontract_id">
+              <rank>20</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1495,7 +1941,7 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkcustomercontracttofunctionalci</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s %2$s</format>
           <attributes>
@@ -1503,8 +1949,8 @@
             <attribute id="functionalci_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="customercontract_id"/>
@@ -1538,20 +1984,32 @@
       <presentation>
         <details>
           <items>
-            <item>customercontract_id</item>
-            <item>functionalci_id</item>
+            <item id="customercontract_id">
+              <rank>10</rank>
+            </item>
+            <item id="functionalci_id">
+              <rank>20</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>customercontract_id</item>
-            <item>functionalci_id</item>
+            <item id="customercontract_id">
+              <rank>10</rank>
+            </item>
+            <item id="functionalci_id">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>customercontract_id</item>
-            <item>functionalci_id</item>
+            <item id="customercontract_id">
+              <rank>10</rank>
+            </item>
+            <item id="functionalci_id">
+              <rank>20</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1564,14 +2022,14 @@
         <key_type>autoincrement</key_type>
         <db_table>deliverymodel</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/service.png</icon>
         <reconciliation>
           <attributes>
@@ -1584,7 +2042,7 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="org_id" xsi:type="AttributeExternalKey">
@@ -1599,7 +2057,7 @@
         </field>
         <field id="description" xsi:type="AttributeString">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="contacts_list" xsi:type="AttributeLinkedSetIndirect">
@@ -1608,38 +2066,56 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>contact_id</ext_key_to_remote>
-          <duplicates></duplicates>
+          <duplicates/>
         </field>
         <field id="customers_list" xsi:type="AttributeLinkedSet">
           <linked_class>Organization</linked_class>
           <ext_key_to_me>deliverymodel_id</ext_key_to_me>
-          <edit_mode>none</edit_mode> 
+          <edit_mode>none</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
-          <duplicates></duplicates>
+          <duplicates/>
         </field>
       </fields>
       <methods/>
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>description</item>
-            <item>contacts_list</item>
-            <item>customers_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>40</rank>
+            </item>
+            <item id="customers_list">
+              <rank>50</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>description</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>org_id</item>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1653,7 +2129,7 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkdeliverymodeltocontact</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s %2$s</format>
           <attributes>
@@ -1661,8 +2137,8 @@
             <attribute id="contact_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="deliverymodel_id"/>
@@ -1706,23 +2182,41 @@
       <presentation>
         <details>
           <items>
-            <item>deliverymodel_id</item>
-            <item>contact_id</item>
-            <item>role_id</item>
+            <item id="deliverymodel_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="role_id">
+              <rank>30</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>deliverymodel_id</item>
-            <item>contact_id</item>
-            <item>role_id</item>
+            <item id="deliverymodel_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="role_id">
+              <rank>30</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>deliverymodel_id</item>
-            <item>contact_id</item>
-            <item>role_id</item>
+            <item id="deliverymodel_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="role_id">
+              <rank>30</rank>
+            </item>
           </items>
         </list>
       </presentation>

@@ -1384,18 +1384,34 @@ class MFElement extends DOMElement
 		if ($oItems)
 		{
 			$res = array();
+			$aRanks = array();
 			foreach($oItems->childNodes as $oItem)
 			{
 				// When an attribute is missing
 				if ($oItem->hasAttribute('id'))
 				{
 					$key = $oItem->getAttribute('id');
+					if (array_key_exists($key, $res))
+					{
+						// Houston!
+						throw new DOMFormatException("Tag ".$oItem->getNodePath().", id '$key' already used!!!");
+					}
 					$res[$key] = $oItem->GetNodeAsArrayOfItems();
 				}
 				else
 				{
 					$res[] = $oItem->GetNodeAsArrayOfItems();
 				}
+				$sRank = $oItem->GetChildText('rank');
+				if ($sRank != '')
+				{
+					$aRanks[] = (float) $sRank;
+				}
+				else
+				{
+					$aRanks[] = max($aRanks) + 1;
+				}
+				array_multisort($aRanks, $res);
 			}
 		}
 		else

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
   <classes>
     <class id="Organization" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -15,15 +15,15 @@
         <key_type>autoincrement</key_type>
         <db_table>organization</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -33,12 +33,12 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="code" xsi:type="AttributeString">
           <sql>code</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="status" xsi:type="AttributeEnum">
@@ -64,24 +64,44 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>code</item>
-            <item>status</item>
-            <item>parent_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="code">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="parent_id">
+              <rank>40</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>code</item>
-            <item>status</item>
-            <item>parent_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="code">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="parent_id">
+              <rank>40</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>status</item>
-            <item>parent_id</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="parent_id">
+              <rank>20</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -94,14 +114,14 @@
         <key_type>autoincrement</key_type>
         <db_table>location</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/location.png</icon>
         <reconciliation>
           <attributes>
@@ -114,7 +134,7 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="status" xsi:type="AttributeEnum">
@@ -131,7 +151,7 @@
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="org_name" xsi:type="AttributeExternalField">
           <extkey_attcode>org_id</extkey_attcode>
@@ -139,22 +159,22 @@
         </field>
         <field id="address" xsi:type="AttributeText">
           <sql>address</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="postal_code" xsi:type="AttributeString">
           <sql>postal_code</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="city" xsi:type="AttributeString">
           <sql>city</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="country" xsi:type="AttributeString">
           <sql>country</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="parent_id" xsi:type="AttributeHierarchicalKey">
@@ -187,34 +207,74 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>address</item>
-            <item>postal_code</item>
-            <item>city</item>
-            <item>country</item>
-            <item>parent_id</item>
-            <item>contact_list</item>
-            <item>infra_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="address">
+              <rank>40</rank>
+            </item>
+            <item id="postal_code">
+              <rank>50</rank>
+            </item>
+            <item id="city">
+              <rank>60</rank>
+            </item>
+            <item id="country">
+              <rank>70</rank>
+            </item>
+            <item id="parent_id">
+              <rank>80</rank>
+            </item>
+            <item id="contact_list">
+              <rank>90</rank>
+            </item>
+            <item id="infra_list">
+              <rank>100</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>city</item>
-            <item>country</item>
-            <item>parent_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="city">
+              <rank>40</rank>
+            </item>
+            <item id="country">
+              <rank>50</rank>
+            </item>
+            <item id="parent_id">
+              <rank>60</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>city</item>
-            <item>country</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="city">
+              <rank>30</rank>
+            </item>
+            <item id="country">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -234,7 +294,7 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/team.png</icon>
         <reconciliation>
           <attributes>
@@ -248,7 +308,7 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="status" xsi:type="AttributeEnum">
@@ -265,7 +325,7 @@
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="org_name" xsi:type="AttributeExternalField">
           <extkey_attcode>org_id</extkey_attcode>
@@ -273,12 +333,12 @@
         </field>
         <field id="email" xsi:type="AttributeEmailAddress">
           <sql>email</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="phone" xsi:type="AttributeString">
           <sql>phone</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="location_id" xsi:type="AttributeExternalKey">
@@ -290,7 +350,7 @@
           <target_class>Location</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="location_name" xsi:type="AttributeExternalField">
           <extkey_attcode>location_id</extkey_attcode>
@@ -336,37 +396,83 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>email</item>
-            <item>phone</item>
-            <item>location_id</item>
-            <item>contract_list</item>
-            <item>service_list</item>
-            <item>ticket_list</item>
-            <item>ci_list</item>
-            <item>team_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="email">
+              <rank>40</rank>
+            </item>
+            <item id="phone">
+              <rank>50</rank>
+            </item>
+            <item id="location_id">
+              <rank>60</rank>
+            </item>
+            <item id="contract_list">
+              <rank>70</rank>
+            </item>
+            <item id="service_list">
+              <rank>80</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>90</rank>
+            </item>
+            <item id="ci_list">
+              <rank>100</rank>
+            </item>
+            <item id="team_list">
+              <rank>110</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>email</item>
-            <item>phone</item>
-            <item>location_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="email">
+              <rank>40</rank>
+            </item>
+            <item id="phone">
+              <rank>50</rank>
+            </item>
+            <item id="location_id">
+              <rank>60</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>finalclass</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>email</item>
-            <item>phone</item>
-            <item>location_id</item>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="email">
+              <rank>40</rank>
+            </item>
+            <item id="phone">
+              <rank>50</rank>
+            </item>
+            <item id="location_id">
+              <rank>60</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -379,7 +485,7 @@
         <key_type>autoincrement</key_type>
         <db_table>person</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s %2$s</format>
           <attributes>
@@ -387,7 +493,7 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/person.png</icon>
         <reconciliation>
           <attributes>
@@ -401,12 +507,12 @@
       <fields>
         <field id="first_name" xsi:type="AttributeString">
           <sql>first_name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="employee_id" xsi:type="AttributeString">
           <sql>employee_id</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -414,42 +520,98 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>first_name</item>
-            <item>org_id</item>
-            <item>status</item>
-            <item>location_id</item>
-            <item>email</item>
-            <item>phone</item>
-            <item>employee_id</item>
-            <item>team_list</item>
-            <item>contract_list</item>
-            <item>service_list</item>
-            <item>ticket_list</item>
-            <item>ci_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="first_name">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="email">
+              <rank>60</rank>
+            </item>
+            <item id="phone">
+              <rank>70</rank>
+            </item>
+            <item id="employee_id">
+              <rank>80</rank>
+            </item>
+            <item id="team_list">
+              <rank>90</rank>
+            </item>
+            <item id="contract_list">
+              <rank>100</rank>
+            </item>
+            <item id="service_list">
+              <rank>110</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>120</rank>
+            </item>
+            <item id="ci_list">
+              <rank>130</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>email</item>
-            <item>phone</item>
-            <item>location_id</item>
-            <item>first_name</item>
-            <item>employee_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="email">
+              <rank>40</rank>
+            </item>
+            <item id="phone">
+              <rank>50</rank>
+            </item>
+            <item id="location_id">
+              <rank>60</rank>
+            </item>
+            <item id="first_name">
+              <rank>70</rank>
+            </item>
+            <item id="employee_id">
+              <rank>80</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>name</item>
-            <item>first_name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>email</item>
-            <item>phone</item>
-            <item>location_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="first_name">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+            <item id="email">
+              <rank>50</rank>
+            </item>
+            <item id="phone">
+              <rank>60</rank>
+            </item>
+            <item id="location_id">
+              <rank>70</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -462,14 +624,14 @@
         <key_type>autoincrement</key_type>
         <db_table>team</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/team.png</icon>
         <reconciliation>
           <attributes>
@@ -491,37 +653,83 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>location_id</item>
-            <item>email</item>
-            <item>phone</item>
-            <item>member_list</item>
-            <item>contract_list</item>
-            <item>service_list</item>
-            <item>ticket_list</item>
-            <item>ci_list</item>
-            <item>team_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="location_id">
+              <rank>40</rank>
+            </item>
+            <item id="email">
+              <rank>50</rank>
+            </item>
+            <item id="phone">
+              <rank>60</rank>
+            </item>
+            <item id="member_list">
+              <rank>70</rank>
+            </item>
+            <item id="contract_list">
+              <rank>80</rank>
+            </item>
+            <item id="service_list">
+              <rank>90</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>100</rank>
+            </item>
+            <item id="ci_list">
+              <rank>110</rank>
+            </item>
+            <item id="team_list">
+              <rank>120</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>email</item>
-            <item>phone</item>
-            <item>location_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="email">
+              <rank>40</rank>
+            </item>
+            <item id="phone">
+              <rank>50</rank>
+            </item>
+            <item id="location_id">
+              <rank>60</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>email</item>
-            <item>phone</item>
-            <item>location_id</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="email">
+              <rank>30</rank>
+            </item>
+            <item id="phone">
+              <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -535,15 +743,15 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkteamtocontact</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="team_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id=""/>
@@ -556,7 +764,7 @@
           <target_class>Team</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="team_name" xsi:type="AttributeExternalField">
           <extkey_attcode>team_id</extkey_attcode>
@@ -567,7 +775,7 @@
           <target_class>Contact</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="contact_name" xsi:type="AttributeExternalField">
           <extkey_attcode>contact_id</extkey_attcode>
@@ -591,7 +799,7 @@
         </field>
         <field id="role" xsi:type="AttributeString">
           <sql>role</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -599,26 +807,50 @@
       <presentation>
         <details>
           <items>
-            <item>team_id</item>
-            <item>contact_id</item>
-            <item>role</item>
+            <item id="team_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="role">
+              <rank>30</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>team_id</item>
-            <item>contact_id</item>
-            <item>role</item>
+            <item id="team_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="role">
+              <rank>30</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>team_id</item>
-            <item>contact_id</item>
-            <item>contact_location_id</item>
-            <item>contact_email</item>
-            <item>contact_phone</item>
-            <item>role</item>
+            <item id="team_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="contact_location_id">
+              <rank>30</rank>
+            </item>
+            <item id="contact_email">
+              <rank>40</rank>
+            </item>
+            <item id="contact_phone">
+              <rank>50</rank>
+            </item>
+            <item id="role">
+              <rank>60</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -638,7 +870,7 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/document.png</icon>
         <reconciliation>
           <attributes>
@@ -651,7 +883,7 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="org_id" xsi:type="AttributeExternalKey">
@@ -659,7 +891,7 @@
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="org_name" xsi:type="AttributeExternalField">
           <extkey_attcode>org_id</extkey_attcode>
@@ -667,7 +899,7 @@
         </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="type" xsi:type="AttributeEnum">
@@ -726,31 +958,65 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>description</item>
-            <item>type</item>
-            <item>status</item>
-            <item>contract_list</item>
-            <item>service_list</item>
-            <item>ticket_list</item>
-            <item>ci_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
+            <item id="contract_list">
+              <rank>60</rank>
+            </item>
+            <item id="service_list">
+              <rank>70</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>80</rank>
+            </item>
+            <item id="ci_list">
+              <rank>90</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>description</item>
-            <item>type</item>
-            <item>status</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>org_id</item>
-            <item>type</item>
-            <item>status</item>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -763,14 +1029,14 @@
         <key_type>autoincrement</key_type>
         <db_table>externaldoc</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/document.png</icon>
         <reconciliation>
           <attributes>
@@ -783,7 +1049,7 @@
       <fields>
         <field id="url" xsi:type="AttributeURL">
           <sql>url</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
           <target>_blank</target>
         </field>
@@ -792,34 +1058,74 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>description</item>
-            <item>type</item>
-            <item>status</item>
-            <item>contract_list</item>
-            <item>service_list</item>
-            <item>ticket_list</item>
-            <item>ci_list</item>
-            <item>url</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
+            <item id="contract_list">
+              <rank>60</rank>
+            </item>
+            <item id="service_list">
+              <rank>70</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>80</rank>
+            </item>
+            <item id="ci_list">
+              <rank>90</rank>
+            </item>
+            <item id="url">
+              <rank>100</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>description</item>
-            <item>type</item>
-            <item>status</item>
-            <item>url</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
+            <item id="url">
+              <rank>60</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>org_id</item>
-            <item>type</item>
-            <item>status</item>
-            <item>url</item>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="url">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -832,14 +1138,14 @@
         <key_type>autoincrement</key_type>
         <db_table>note</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/document.png</icon>
         <reconciliation>
           <attributes>
@@ -852,7 +1158,7 @@
       <fields>
         <field id="note" xsi:type="AttributeText">
           <sql>note</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -860,34 +1166,74 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>description</item>
-            <item>type</item>
-            <item>status</item>
-            <item>contract_list</item>
-            <item>service_list</item>
-            <item>ticket_list</item>
-            <item>ci_list</item>
-            <item>note</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
+            <item id="contract_list">
+              <rank>60</rank>
+            </item>
+            <item id="service_list">
+              <rank>70</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>80</rank>
+            </item>
+            <item id="ci_list">
+              <rank>90</rank>
+            </item>
+            <item id="note">
+              <rank>100</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>description</item>
-            <item>type</item>
-            <item>status</item>
-            <item>note</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
+            <item id="note">
+              <rank>60</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>org_id</item>
-            <item>type</item>
-            <item>status</item>
-            <item>note</item>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="note">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -900,14 +1246,14 @@
         <key_type>autoincrement</key_type>
         <db_table>filedoc</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/document.png</icon>
         <reconciliation>
           <attributes>
@@ -945,33 +1291,71 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>description</item>
-            <item>type</item>
-            <item>status</item>
-            <item>contract_list</item>
-            <item>service_list</item>
-            <item>ticket_list</item>
-            <item>ci_list</item>
-            <item>contents</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
+            <item id="contract_list">
+              <rank>60</rank>
+            </item>
+            <item id="service_list">
+              <rank>70</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>80</rank>
+            </item>
+            <item id="ci_list">
+              <rank>90</rank>
+            </item>
+            <item id="contents">
+              <rank>100</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>description</item>
-            <item>type</item>
-            <item>status</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>org_id</item>
-            <item>type</item>
-            <item>status</item>
-            <item>contents</item>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="contents">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -984,14 +1368,14 @@
         <key_type>autoincrement</key_type>
         <db_table>licence</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/licence.png</icon>
         <reconciliation>
           <attributes>
@@ -1004,7 +1388,7 @@
       <fields>
         <field id="provider" xsi:type="AttributeString">
           <sql>provider</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="org_id" xsi:type="AttributeExternalKey">
@@ -1012,7 +1396,7 @@
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="org_name" xsi:type="AttributeExternalField">
           <extkey_attcode>org_id</extkey_attcode>
@@ -1020,37 +1404,37 @@
         </field>
         <field id="product" xsi:type="AttributeString">
           <sql>product</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="start" xsi:type="AttributeDate">
           <sql>start</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="end" xsi:type="AttributeDate">
           <sql>end</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="licence_key" xsi:type="AttributeString">
           <sql>licence_key</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="scope" xsi:type="AttributeText">
           <sql>scope</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="usage_limit" xsi:type="AttributeInteger">
           <sql>usage_limit</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="usage_list" xsi:type="AttributeLinkedSet">
@@ -1064,37 +1448,83 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>org_id</item>
-            <item>provider</item>
-            <item>product</item>
-            <item>start</item>
-            <item>end</item>
-            <item>licence_key</item>
-            <item>scope</item>
-            <item>usage_limit</item>
-            <item>usage_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="provider">
+              <rank>30</rank>
+            </item>
+            <item id="product">
+              <rank>40</rank>
+            </item>
+            <item id="start">
+              <rank>50</rank>
+            </item>
+            <item id="end">
+              <rank>60</rank>
+            </item>
+            <item id="licence_key">
+              <rank>70</rank>
+            </item>
+            <item id="scope">
+              <rank>80</rank>
+            </item>
+            <item id="usage_limit">
+              <rank>90</rank>
+            </item>
+            <item id="usage_list">
+              <rank>100</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>org_id</item>
-            <item>provider</item>
-            <item>product</item>
-            <item>name</item>
-            <item>start</item>
-            <item>end</item>
-            <item>licence_key</item>
-            <item>scope</item>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="provider">
+              <rank>20</rank>
+            </item>
+            <item id="product">
+              <rank>30</rank>
+            </item>
+            <item id="name">
+              <rank>40</rank>
+            </item>
+            <item id="start">
+              <rank>50</rank>
+            </item>
+            <item id="end">
+              <rank>60</rank>
+            </item>
+            <item id="licence_key">
+              <rank>70</rank>
+            </item>
+            <item id="scope">
+              <rank>80</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>org_id</item>
-            <item>provider</item>
-            <item>product</item>
-            <item>start</item>
-            <item>end</item>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="provider">
+              <rank>20</rank>
+            </item>
+            <item id="product">
+              <rank>30</rank>
+            </item>
+            <item id="start">
+              <rank>40</rank>
+            </item>
+            <item id="end">
+              <rank>50</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1107,7 +1537,7 @@
         <key_type>autoincrement</key_type>
         <db_table>subnet</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s / %2$s</format>
           <attributes>
@@ -1115,7 +1545,7 @@
             <attribute id="ip_mask"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/subnet.png</icon>
         <reconciliation>
           <attributes>
@@ -1129,7 +1559,7 @@
       <fields>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="org_id" xsi:type="AttributeExternalKey">
@@ -1137,7 +1567,7 @@
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="org_name" xsi:type="AttributeExternalField">
           <extkey_attcode>org_id</extkey_attcode>
@@ -1145,12 +1575,12 @@
         </field>
         <field id="ip" xsi:type="AttributeIPAddress">
           <sql>ip</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="ip_mask" xsi:type="AttributeIPAddress">
           <sql>ip_mask</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
       </fields>
@@ -1214,25 +1644,47 @@
       <presentation>
         <details>
           <items>
-            <item>ip</item>
-            <item>ip_mask</item>
-            <item>org_id</item>
-            <item>description</item>
+            <item id="ip">
+              <rank>10</rank>
+            </item>
+            <item id="ip_mask">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>ip</item>
-            <item>ip_mask</item>
-            <item>org_id</item>
-            <item>description</item>
+            <item id="ip">
+              <rank>10</rank>
+            </item>
+            <item id="ip_mask">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>ip</item>
-            <item>ip_mask</item>
-            <item>org_id</item>
+            <item id="ip">
+              <rank>10</rank>
+            </item>
+            <item id="ip_mask">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1245,14 +1697,14 @@
         <key_type>autoincrement</key_type>
         <db_table>patch</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/patch.png</icon>
         <reconciliation>
           <attributes>
@@ -1263,22 +1715,22 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="target_sw" xsi:type="AttributeString">
           <sql>target_sw</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="version" xsi:type="AttributeString">
           <sql>version</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="type" xsi:type="AttributeEnum">
@@ -1304,28 +1756,56 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>description</item>
-            <item>target_sw</item>
-            <item>version</item>
-            <item>type</item>
-            <item>ci_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="target_sw">
+              <rank>30</rank>
+            </item>
+            <item id="version">
+              <rank>40</rank>
+            </item>
+            <item id="type">
+              <rank>50</rank>
+            </item>
+            <item id="ci_list">
+              <rank>60</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>target_sw</item>
-            <item>version</item>
-            <item>type</item>
-            <item>description</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="target_sw">
+              <rank>20</rank>
+            </item>
+            <item id="version">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>target_sw</item>
-            <item>version</item>
-            <item>type</item>
+            <item id="target_sw">
+              <rank>10</rank>
+            </item>
+            <item id="version">
+              <rank>20</rank>
+            </item>
+            <item id="type">
+              <rank>30</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1345,7 +1825,7 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/software.png</icon>
         <reconciliation>
           <attributes>
@@ -1356,12 +1836,12 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -1369,19 +1849,29 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>description</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>description</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>description</item>
+            <item id="description">
+              <rank>10</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1394,14 +1884,14 @@
         <key_type>autoincrement</key_type>
         <db_table>software_app</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/software.png</icon>
         <reconciliation>
           <attributes>
@@ -1421,20 +1911,32 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>description</item>
-            <item>instance_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="instance_list">
+              <rank>30</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>description</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>description</item>
+            <item id="description">
+              <rank>10</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1447,14 +1949,14 @@
         <key_type>autoincrement</key_type>
         <db_table>software_db</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/software.png</icon>
         <reconciliation>
           <attributes>
@@ -1474,20 +1976,32 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>description</item>
-            <item>instance_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="instance_list">
+              <rank>30</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>description</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>description</item>
+            <item id="description">
+              <rank>10</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1501,15 +2015,15 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkpatchtoci</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="patch_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="patch_id"/>
@@ -1523,7 +2037,7 @@
           <target_class>Patch</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="patch_name" xsi:type="AttributeExternalField">
           <extkey_attcode>patch_id</extkey_attcode>
@@ -1534,7 +2048,7 @@
           <target_class>Device</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="ci_name" xsi:type="AttributeExternalField">
           <extkey_attcode>ci_id</extkey_attcode>
@@ -1549,22 +2063,38 @@
       <presentation>
         <details>
           <items>
-            <item>patch_id</item>
-            <item>ci_id</item>
-            <item>ci_status</item>
+            <item id="patch_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_id">
+              <rank>20</rank>
+            </item>
+            <item id="ci_status">
+              <rank>30</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>patch_id</item>
-            <item>ci_id</item>
+            <item id="patch_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_id">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>patch_id</item>
-            <item>ci_id</item>
-            <item>ci_status</item>
+            <item id="patch_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_id">
+              <rank>20</rank>
+            </item>
+            <item id="ci_status">
+              <rank>30</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1584,7 +2114,7 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/server.png</icon>
         <reconciliation>
           <attributes>
@@ -1597,7 +2127,7 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="status" xsi:type="AttributeEnum">
@@ -1615,7 +2145,7 @@
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="owner_name" xsi:type="AttributeExternalField">
           <extkey_attcode>org_id</extkey_attcode>
@@ -1692,31 +2222,65 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>solution_list</item>
-            <item>contract_list</item>
-            <item>ticket_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="contact_list">
+              <rank>50</rank>
+            </item>
+            <item id="document_list">
+              <rank>60</rank>
+            </item>
+            <item id="solution_list">
+              <rank>70</rank>
+            </item>
+            <item id="contract_list">
+              <rank>80</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>90</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>finalclass</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1729,7 +2293,7 @@
         <key_type>autoincrement</key_type>
         <db_table>softwareinstance</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s - %2$s</format>
           <attributes>
@@ -1737,7 +2301,7 @@
             <attribute id="device_id_friendlyname"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/application.png</icon>
         <reconciliation>
           <attributes>
@@ -1759,7 +2323,7 @@
           <target_class>Device</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="device_name" xsi:type="AttributeExternalField">
           <extkey_attcode>device_id</extkey_attcode>
@@ -1774,7 +2338,7 @@
           <target_class>Licence</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="licence_name" xsi:type="AttributeExternalField">
           <extkey_attcode>licence_id</extkey_attcode>
@@ -1782,12 +2346,12 @@
         </field>
         <field id="version" xsi:type="AttributeString">
           <sql>version</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -1832,39 +2396,89 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>device_id</item>
-            <item>licence_id</item>
-            <item>version</item>
-            <item>description</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>solution_list</item>
-            <item>contract_list</item>
-            <item>ticket_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="device_id">
+              <rank>50</rank>
+            </item>
+            <item id="licence_id">
+              <rank>60</rank>
+            </item>
+            <item id="version">
+              <rank>70</rank>
+            </item>
+            <item id="description">
+              <rank>80</rank>
+            </item>
+            <item id="contact_list">
+              <rank>90</rank>
+            </item>
+            <item id="document_list">
+              <rank>100</rank>
+            </item>
+            <item id="solution_list">
+              <rank>110</rank>
+            </item>
+            <item id="contract_list">
+              <rank>120</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>130</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>device_id</item>
-            <item>licence_id</item>
-            <item>version</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="importance">
+              <rank>30</rank>
+            </item>
+            <item id="device_id">
+              <rank>40</rank>
+            </item>
+            <item id="licence_id">
+              <rank>50</rank>
+            </item>
+            <item id="version">
+              <rank>60</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>finalclass</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>device_id</item>
-            <item>version</item>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="device_id">
+              <rank>50</rank>
+            </item>
+            <item id="version">
+              <rank>60</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1877,7 +2491,7 @@
         <key_type>autoincrement</key_type>
         <db_table>softwareinstance_dbserver</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s - %2$s</format>
           <attributes>
@@ -1885,7 +2499,7 @@
             <attribute id="device_id_friendlyname"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/database.png</icon>
         <reconciliation>
           <attributes>
@@ -1905,7 +2519,7 @@
           <target_class>DBServer</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="software_name" xsi:type="AttributeExternalField">
           <extkey_attcode>software_id</extkey_attcode>
@@ -1922,42 +2536,98 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>device_id</item>
-            <item>licence_id</item>
-            <item>software_id</item>
-            <item>version</item>
-            <item>description</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>solution_list</item>
-            <item>contract_list</item>
-            <item>ticket_list</item>
-            <item>dbinstance_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="device_id">
+              <rank>50</rank>
+            </item>
+            <item id="licence_id">
+              <rank>60</rank>
+            </item>
+            <item id="software_id">
+              <rank>70</rank>
+            </item>
+            <item id="version">
+              <rank>80</rank>
+            </item>
+            <item id="description">
+              <rank>90</rank>
+            </item>
+            <item id="contact_list">
+              <rank>100</rank>
+            </item>
+            <item id="document_list">
+              <rank>110</rank>
+            </item>
+            <item id="solution_list">
+              <rank>120</rank>
+            </item>
+            <item id="contract_list">
+              <rank>130</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>140</rank>
+            </item>
+            <item id="dbinstance_list">
+              <rank>150</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>device_id</item>
-            <item>licence_id</item>
-            <item>software_id</item>
-            <item>version</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="importance">
+              <rank>30</rank>
+            </item>
+            <item id="device_id">
+              <rank>40</rank>
+            </item>
+            <item id="licence_id">
+              <rank>50</rank>
+            </item>
+            <item id="software_id">
+              <rank>60</rank>
+            </item>
+            <item id="version">
+              <rank>70</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>device_id</item>
-            <item>software_id</item>
-            <item>version</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="importance">
+              <rank>30</rank>
+            </item>
+            <item id="device_id">
+              <rank>40</rank>
+            </item>
+            <item id="software_id">
+              <rank>50</rank>
+            </item>
+            <item id="version">
+              <rank>60</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -1970,7 +2640,7 @@
         <key_type>autoincrement</key_type>
         <db_table>softwareinstance_application</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s - %2$s</format>
           <attributes>
@@ -1978,7 +2648,7 @@
             <attribute id="device_id_friendlyname"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/application.png</icon>
         <reconciliation>
           <attributes>
@@ -1998,7 +2668,7 @@
           <target_class>Application</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="software_name" xsi:type="AttributeExternalField">
           <extkey_attcode>software_id</extkey_attcode>
@@ -2009,41 +2679,95 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>device_id</item>
-            <item>licence_id</item>
-            <item>software_id</item>
-            <item>version</item>
-            <item>description</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>solution_list</item>
-            <item>contract_list</item>
-            <item>ticket_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="device_id">
+              <rank>50</rank>
+            </item>
+            <item id="licence_id">
+              <rank>60</rank>
+            </item>
+            <item id="software_id">
+              <rank>70</rank>
+            </item>
+            <item id="version">
+              <rank>80</rank>
+            </item>
+            <item id="description">
+              <rank>90</rank>
+            </item>
+            <item id="contact_list">
+              <rank>100</rank>
+            </item>
+            <item id="document_list">
+              <rank>110</rank>
+            </item>
+            <item id="solution_list">
+              <rank>120</rank>
+            </item>
+            <item id="contract_list">
+              <rank>130</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>140</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>device_id</item>
-            <item>licence_id</item>
-            <item>software_id</item>
-            <item>version</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="importance">
+              <rank>30</rank>
+            </item>
+            <item id="device_id">
+              <rank>40</rank>
+            </item>
+            <item id="licence_id">
+              <rank>50</rank>
+            </item>
+            <item id="software_id">
+              <rank>60</rank>
+            </item>
+            <item id="version">
+              <rank>70</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>device_id</item>
-            <item>software_id</item>
-            <item>version</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="importance">
+              <rank>30</rank>
+            </item>
+            <item id="device_id">
+              <rank>40</rank>
+            </item>
+            <item id="software_id">
+              <rank>50</rank>
+            </item>
+            <item id="version">
+              <rank>60</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -2056,7 +2780,7 @@
         <key_type>autoincrement</key_type>
         <db_table>databaseinstance</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s - %2$s</format>
           <attributes>
@@ -2064,7 +2788,7 @@
             <attribute id="db_server_instance_id_friendlyname"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/database-instance.png</icon>
         <reconciliation>
           <attributes>
@@ -2086,7 +2810,7 @@
           <target_class>DBServerInstance</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="db_server_instance_name" xsi:type="AttributeExternalField">
           <extkey_attcode>db_server_instance_id</extkey_attcode>
@@ -2098,7 +2822,7 @@
         </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -2127,37 +2851,83 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>db_server_instance_id</item>
-            <item>db_server_instance_version</item>
-            <item>description</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>solution_list</item>
-            <item>contract_list</item>
-            <item>ticket_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="db_server_instance_id">
+              <rank>50</rank>
+            </item>
+            <item id="db_server_instance_version">
+              <rank>60</rank>
+            </item>
+            <item id="description">
+              <rank>70</rank>
+            </item>
+            <item id="contact_list">
+              <rank>80</rank>
+            </item>
+            <item id="document_list">
+              <rank>90</rank>
+            </item>
+            <item id="solution_list">
+              <rank>100</rank>
+            </item>
+            <item id="contract_list">
+              <rank>110</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>120</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>db_server_instance_id</item>
-            <item>db_server_instance_version</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="db_server_instance_id">
+              <rank>50</rank>
+            </item>
+            <item id="db_server_instance_version">
+              <rank>60</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>db_server_instance_id</item>
-            <item>db_server_instance_version</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="importance">
+              <rank>30</rank>
+            </item>
+            <item id="db_server_instance_id">
+              <rank>40</rank>
+            </item>
+            <item id="db_server_instance_version">
+              <rank>50</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -2170,14 +2940,14 @@
         <key_type>autoincrement</key_type>
         <db_table>applicationsolution</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/solution.png</icon>
         <reconciliation>
           <attributes>
@@ -2190,7 +2960,7 @@
       <fields>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="ci_list" xsi:type="AttributeLinkedSetIndirect">
@@ -2240,33 +3010,71 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>description</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>solution_list</item>
-            <item>contract_list</item>
-            <item>ticket_list</item>
-            <item>ci_list</item>
-            <item>process_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
+            <item id="contact_list">
+              <rank>60</rank>
+            </item>
+            <item id="document_list">
+              <rank>70</rank>
+            </item>
+            <item id="solution_list">
+              <rank>80</rank>
+            </item>
+            <item id="contract_list">
+              <rank>90</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>100</rank>
+            </item>
+            <item id="ci_list">
+              <rank>110</rank>
+            </item>
+            <item id="process_list">
+              <rank>120</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="importance">
+              <rank>30</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -2279,14 +3087,14 @@
         <key_type>autoincrement</key_type>
         <db_table>businessprocess</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/business-process.png</icon>
         <reconciliation>
           <attributes>
@@ -2299,7 +3107,7 @@
       <fields>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="used_solution_list" xsi:type="AttributeLinkedSetIndirect">
@@ -2335,32 +3143,68 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>description</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>contract_list</item>
-            <item>ticket_list</item>
-            <item>used_solution_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
+            <item id="contact_list">
+              <rank>60</rank>
+            </item>
+            <item id="document_list">
+              <rank>70</rank>
+            </item>
+            <item id="contract_list">
+              <rank>80</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>90</rank>
+            </item>
+            <item id="used_solution_list">
+              <rank>100</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>description</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="importance">
+              <rank>30</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -2373,14 +3217,14 @@
         <key_type>autoincrement</key_type>
         <db_table>connectableci</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/server.png</icon>
         <reconciliation>
           <attributes>
@@ -2393,22 +3237,22 @@
       <fields>
         <field id="brand" xsi:type="AttributeString">
           <sql>brand</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="model" xsi:type="AttributeString">
           <sql>model</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="serial_number" xsi:type="AttributeString">
           <sql>serial_number</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="asset_ref" xsi:type="AttributeString">
           <sql>asset_ref</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -2416,43 +3260,101 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>solution_list</item>
-            <item>contract_list</item>
-            <item>ticket_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
+            <item id="contact_list">
+              <rank>90</rank>
+            </item>
+            <item id="document_list">
+              <rank>100</rank>
+            </item>
+            <item id="solution_list">
+              <rank>110</rank>
+            </item>
+            <item id="contract_list">
+              <rank>120</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>130</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>finalclass</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -2465,7 +3367,7 @@
         <key_type>autoincrement</key_type>
         <db_table>networkinterface</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s - %2$s</format>
           <attributes>
@@ -2473,7 +3375,7 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/interface.png</icon>
         <reconciliation>
           <attributes>
@@ -2494,7 +3396,7 @@
           <target_class>Device</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="device_name" xsi:type="AttributeExternalField">
           <extkey_attcode>device_id</extkey_attcode>
@@ -2525,22 +3427,22 @@
         </field>
         <field id="ip_address" xsi:type="AttributeIPAddress">
           <sql>ip_address</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="ip_mask" xsi:type="AttributeIPAddress">
           <sql>ip_mask</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="mac_address" xsi:type="AttributeString">
           <sql>mac_address</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="speed" xsi:type="AttributeInteger">
           <sql>speed</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="duplex" xsi:type="AttributeEnum">
@@ -2563,7 +3465,7 @@
           <target_class>NetworkInterface</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="connected_name" xsi:type="AttributeExternalField">
           <extkey_attcode>connected_if</extkey_attcode>
@@ -2680,57 +3582,143 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
-            <item>device_id</item>
-            <item>logical_type</item>
-            <item>physical_type</item>
-            <item>ip_address</item>
-            <item>ip_mask</item>
-            <item>mac_address</item>
-            <item>speed</item>
-            <item>duplex</item>
-            <item>link_type</item>
-            <item>connected_if</item>
-            <item>connected_if_device_id</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>solution_list</item>
-            <item>contract_list</item>
-            <item>ticket_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
+            <item id="device_id">
+              <rank>90</rank>
+            </item>
+            <item id="logical_type">
+              <rank>100</rank>
+            </item>
+            <item id="physical_type">
+              <rank>110</rank>
+            </item>
+            <item id="ip_address">
+              <rank>120</rank>
+            </item>
+            <item id="ip_mask">
+              <rank>130</rank>
+            </item>
+            <item id="mac_address">
+              <rank>140</rank>
+            </item>
+            <item id="speed">
+              <rank>150</rank>
+            </item>
+            <item id="duplex">
+              <rank>160</rank>
+            </item>
+            <item id="link_type">
+              <rank>170</rank>
+            </item>
+            <item id="connected_if">
+              <rank>180</rank>
+            </item>
+            <item id="connected_if_device_id">
+              <rank>190</rank>
+            </item>
+            <item id="contact_list">
+              <rank>200</rank>
+            </item>
+            <item id="document_list">
+              <rank>210</rank>
+            </item>
+            <item id="solution_list">
+              <rank>220</rank>
+            </item>
+            <item id="contract_list">
+              <rank>230</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>240</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>device_id</item>
-            <item>logical_type</item>
-            <item>physical_type</item>
-            <item>ip_address</item>
-            <item>ip_mask</item>
-            <item>mac_address</item>
-            <item>connected_if_device_id</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="device_id">
+              <rank>50</rank>
+            </item>
+            <item id="logical_type">
+              <rank>60</rank>
+            </item>
+            <item id="physical_type">
+              <rank>70</rank>
+            </item>
+            <item id="ip_address">
+              <rank>80</rank>
+            </item>
+            <item id="ip_mask">
+              <rank>90</rank>
+            </item>
+            <item id="mac_address">
+              <rank>100</rank>
+            </item>
+            <item id="connected_if_device_id">
+              <rank>110</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>status</item>
-            <item>ip_address</item>
-            <item>importance</item>
-            <item>device_id</item>
-            <item>logical_type</item>
-            <item>physical_type</item>
-            <item>link_type</item>
-            <item>connected_if_device_id</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="ip_address">
+              <rank>20</rank>
+            </item>
+            <item id="importance">
+              <rank>30</rank>
+            </item>
+            <item id="device_id">
+              <rank>40</rank>
+            </item>
+            <item id="logical_type">
+              <rank>50</rank>
+            </item>
+            <item id="physical_type">
+              <rank>60</rank>
+            </item>
+            <item id="link_type">
+              <rank>70</rank>
+            </item>
+            <item id="connected_if_device_id">
+              <rank>80</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -2743,14 +3731,14 @@
         <key_type>autoincrement</key_type>
         <db_table>device</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/server.png</icon>
         <reconciliation>
           <attributes>
@@ -2801,44 +3789,104 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>solution_list</item>
-            <item>contract_list</item>
-            <item>ticket_list</item>
-            <item>nwinterface_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
+            <item id="contact_list">
+              <rank>90</rank>
+            </item>
+            <item id="document_list">
+              <rank>100</rank>
+            </item>
+            <item id="solution_list">
+              <rank>110</rank>
+            </item>
+            <item id="contract_list">
+              <rank>120</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>130</rank>
+            </item>
+            <item id="nwinterface_list">
+              <rank>140</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>finalclass</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -2851,14 +3899,14 @@
         <key_type>autoincrement</key_type>
         <db_table>pc</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/laptop.png</icon>
         <reconciliation>
           <attributes>
@@ -2871,27 +3919,27 @@
       <fields>
         <field id="cpu" xsi:type="AttributeString">
           <sql>cpu</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="ram" xsi:type="AttributeString">
           <sql>ram</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="hdd" xsi:type="AttributeString">
           <sql>hdd</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="os_family" xsi:type="AttributeString">
           <sql>os_family</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="os_version" xsi:type="AttributeString">
           <sql>os_version</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="application_list" xsi:type="AttributeLinkedSet">
@@ -2912,51 +3960,125 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
-            <item>cpu</item>
-            <item>ram</item>
-            <item>hdd</item>
-            <item>os_family</item>
-            <item>os_version</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>solution_list</item>
-            <item>contract_list</item>
-            <item>ticket_list</item>
-            <item>nwinterface_list</item>
-            <item>application_list</item>
-            <item>patch_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
+            <item id="cpu">
+              <rank>90</rank>
+            </item>
+            <item id="ram">
+              <rank>100</rank>
+            </item>
+            <item id="hdd">
+              <rank>110</rank>
+            </item>
+            <item id="os_family">
+              <rank>120</rank>
+            </item>
+            <item id="os_version">
+              <rank>130</rank>
+            </item>
+            <item id="contact_list">
+              <rank>140</rank>
+            </item>
+            <item id="document_list">
+              <rank>150</rank>
+            </item>
+            <item id="solution_list">
+              <rank>160</rank>
+            </item>
+            <item id="contract_list">
+              <rank>170</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>180</rank>
+            </item>
+            <item id="nwinterface_list">
+              <rank>190</rank>
+            </item>
+            <item id="application_list">
+              <rank>200</rank>
+            </item>
+            <item id="patch_list">
+              <rank>210</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
-            <item>os_family</item>
-            <item>os_version</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
+            <item id="os_family">
+              <rank>90</rank>
+            </item>
+            <item id="os_version">
+              <rank>100</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>os_family</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="importance">
+              <rank>30</rank>
+            </item>
+            <item id="brand">
+              <rank>40</rank>
+            </item>
+            <item id="model">
+              <rank>50</rank>
+            </item>
+            <item id="os_family">
+              <rank>60</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -2969,14 +4091,14 @@
         <key_type>autoincrement</key_type>
         <db_table>mobileci</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/mobile-phone.png</icon>
         <reconciliation>
           <attributes>
@@ -2991,41 +4113,95 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>solution_list</item>
-            <item>contract_list</item>
-            <item>ticket_list</item>
-            <item>nwinterface_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
+            <item id="contact_list">
+              <rank>90</rank>
+            </item>
+            <item id="document_list">
+              <rank>100</rank>
+            </item>
+            <item id="solution_list">
+              <rank>110</rank>
+            </item>
+            <item id="contract_list">
+              <rank>120</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>130</rank>
+            </item>
+            <item id="nwinterface_list">
+              <rank>140</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="importance">
+              <rank>30</rank>
+            </item>
+            <item id="brand">
+              <rank>40</rank>
+            </item>
+            <item id="model">
+              <rank>50</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -3038,14 +4214,14 @@
         <key_type>autoincrement</key_type>
         <db_table>mobilephone</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/mobile-phone.png</icon>
         <reconciliation>
           <attributes>
@@ -3058,17 +4234,17 @@
       <fields>
         <field id="number" xsi:type="AttributeString">
           <sql>number</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="imei" xsi:type="AttributeString">
           <sql>IMIE</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="hw_pin" xsi:type="AttributeString">
           <sql>hw_pin</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -3076,46 +4252,110 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
-            <item>number</item>
-            <item>imei</item>
-            <item>hw_pin</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>solution_list</item>
-            <item>contract_list</item>
-            <item>ticket_list</item>
-            <item>nwinterface_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
+            <item id="number">
+              <rank>90</rank>
+            </item>
+            <item id="imei">
+              <rank>100</rank>
+            </item>
+            <item id="hw_pin">
+              <rank>110</rank>
+            </item>
+            <item id="contact_list">
+              <rank>120</rank>
+            </item>
+            <item id="document_list">
+              <rank>130</rank>
+            </item>
+            <item id="solution_list">
+              <rank>140</rank>
+            </item>
+            <item id="contract_list">
+              <rank>150</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>160</rank>
+            </item>
+            <item id="nwinterface_list">
+              <rank>170</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
-            <item>number</item>
-            <item>imei</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
+            <item id="number">
+              <rank>90</rank>
+            </item>
+            <item id="imei">
+              <rank>100</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="importance">
+              <rank>30</rank>
+            </item>
+            <item id="brand">
+              <rank>40</rank>
+            </item>
+            <item id="model">
+              <rank>50</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -3128,14 +4368,14 @@
         <key_type>autoincrement</key_type>
         <db_table>infrastructureci</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/server.png</icon>
         <reconciliation>
           <attributes>
@@ -3150,7 +4390,7 @@
       <fields>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="location_id" xsi:type="AttributeExternalKey">
@@ -3162,7 +4402,7 @@
           <target_class>Location</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="location_name" xsi:type="AttributeExternalField">
           <extkey_attcode>location_id</extkey_attcode>
@@ -3170,17 +4410,17 @@
         </field>
         <field id="location_details" xsi:type="AttributeText">
           <sql>location_details</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="management_ip" xsi:type="AttributeIPAddress">
           <sql>management_ip</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="default_gateway" xsi:type="AttributeString">
           <sql>default_gateway</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -3188,50 +4428,122 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
-            <item>description</item>
-            <item>location_id</item>
-            <item>location_details</item>
-            <item>management_ip</item>
-            <item>default_gateway</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>solution_list</item>
-            <item>contract_list</item>
-            <item>ticket_list</item>
-            <item>nwinterface_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
+            <item id="description">
+              <rank>90</rank>
+            </item>
+            <item id="location_id">
+              <rank>100</rank>
+            </item>
+            <item id="location_details">
+              <rank>110</rank>
+            </item>
+            <item id="management_ip">
+              <rank>120</rank>
+            </item>
+            <item id="default_gateway">
+              <rank>130</rank>
+            </item>
+            <item id="contact_list">
+              <rank>140</rank>
+            </item>
+            <item id="document_list">
+              <rank>150</rank>
+            </item>
+            <item id="solution_list">
+              <rank>160</rank>
+            </item>
+            <item id="contract_list">
+              <rank>170</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>180</rank>
+            </item>
+            <item id="nwinterface_list">
+              <rank>190</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
-            <item>location_id</item>
-            <item>management_ip</item>
-            <item>default_gateway</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
+            <item id="location_id">
+              <rank>90</rank>
+            </item>
+            <item id="management_ip">
+              <rank>100</rank>
+            </item>
+            <item id="default_gateway">
+              <rank>110</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>location_id</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="importance">
+              <rank>30</rank>
+            </item>
+            <item id="brand">
+              <rank>40</rank>
+            </item>
+            <item id="model">
+              <rank>50</rank>
+            </item>
+            <item id="location_id">
+              <rank>60</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -3244,14 +4556,14 @@
         <key_type>autoincrement</key_type>
         <db_table>networkdevice</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/switch.png</icon>
         <reconciliation>
           <attributes>
@@ -3279,22 +4591,22 @@
         </field>
         <field id="ios_version" xsi:type="AttributeString">
           <sql>ios_version</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="ram" xsi:type="AttributeString">
           <sql>ram</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="snmp_read" xsi:type="AttributeString">
           <sql>snmp_read</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="snmp_write" xsi:type="AttributeString">
           <sql>snmp_write</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -3302,58 +4614,146 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
-            <item>description</item>
-            <item>location_id</item>
-            <item>location_details</item>
-            <item>management_ip</item>
-            <item>default_gateway</item>
-            <item>type</item>
-            <item>ios_version</item>
-            <item>ram</item>
-            <item>snmp_read</item>
-            <item>snmp_write</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>solution_list</item>
-            <item>contract_list</item>
-            <item>ticket_list</item>
-            <item>nwinterface_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
+            <item id="description">
+              <rank>90</rank>
+            </item>
+            <item id="location_id">
+              <rank>100</rank>
+            </item>
+            <item id="location_details">
+              <rank>110</rank>
+            </item>
+            <item id="management_ip">
+              <rank>120</rank>
+            </item>
+            <item id="default_gateway">
+              <rank>130</rank>
+            </item>
+            <item id="type">
+              <rank>140</rank>
+            </item>
+            <item id="ios_version">
+              <rank>150</rank>
+            </item>
+            <item id="ram">
+              <rank>160</rank>
+            </item>
+            <item id="snmp_read">
+              <rank>170</rank>
+            </item>
+            <item id="snmp_write">
+              <rank>180</rank>
+            </item>
+            <item id="contact_list">
+              <rank>190</rank>
+            </item>
+            <item id="document_list">
+              <rank>200</rank>
+            </item>
+            <item id="solution_list">
+              <rank>210</rank>
+            </item>
+            <item id="contract_list">
+              <rank>220</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>230</rank>
+            </item>
+            <item id="nwinterface_list">
+              <rank>240</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
-            <item>location_id</item>
-            <item>management_ip</item>
-            <item>default_gateway</item>
-            <item>type</item>
-            <item>ios_version</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
+            <item id="location_id">
+              <rank>90</rank>
+            </item>
+            <item id="management_ip">
+              <rank>100</rank>
+            </item>
+            <item id="default_gateway">
+              <rank>110</rank>
+            </item>
+            <item id="type">
+              <rank>120</rank>
+            </item>
+            <item id="ios_version">
+              <rank>130</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>location_id</item>
-            <item>type</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="importance">
+              <rank>30</rank>
+            </item>
+            <item id="brand">
+              <rank>40</rank>
+            </item>
+            <item id="model">
+              <rank>50</rank>
+            </item>
+            <item id="location_id">
+              <rank>60</rank>
+            </item>
+            <item id="type">
+              <rank>70</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -3366,14 +4766,14 @@
         <key_type>autoincrement</key_type>
         <db_table>server</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/server.png</icon>
         <reconciliation>
           <attributes>
@@ -3388,27 +4788,27 @@
       <fields>
         <field id="cpu" xsi:type="AttributeString">
           <sql>cpu</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="ram" xsi:type="AttributeString">
           <sql>ram</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="hdd" xsi:type="AttributeString">
           <sql>hdd</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="os_family" xsi:type="AttributeString">
           <sql>os_family</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="os_version" xsi:type="AttributeString">
           <sql>os_version</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="application_list" xsi:type="AttributeLinkedSet">
@@ -3429,60 +4829,152 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
-            <item>description</item>
-            <item>location_id</item>
-            <item>location_details</item>
-            <item>management_ip</item>
-            <item>default_gateway</item>
-            <item>cpu</item>
-            <item>ram</item>
-            <item>hdd</item>
-            <item>os_family</item>
-            <item>os_version</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>solution_list</item>
-            <item>contract_list</item>
-            <item>ticket_list</item>
-            <item>nwinterface_list</item>
-            <item>application_list</item>
-            <item>patch_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
+            <item id="description">
+              <rank>90</rank>
+            </item>
+            <item id="location_id">
+              <rank>100</rank>
+            </item>
+            <item id="location_details">
+              <rank>110</rank>
+            </item>
+            <item id="management_ip">
+              <rank>120</rank>
+            </item>
+            <item id="default_gateway">
+              <rank>130</rank>
+            </item>
+            <item id="cpu">
+              <rank>140</rank>
+            </item>
+            <item id="ram">
+              <rank>150</rank>
+            </item>
+            <item id="hdd">
+              <rank>160</rank>
+            </item>
+            <item id="os_family">
+              <rank>170</rank>
+            </item>
+            <item id="os_version">
+              <rank>180</rank>
+            </item>
+            <item id="contact_list">
+              <rank>190</rank>
+            </item>
+            <item id="document_list">
+              <rank>200</rank>
+            </item>
+            <item id="solution_list">
+              <rank>210</rank>
+            </item>
+            <item id="contract_list">
+              <rank>220</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>230</rank>
+            </item>
+            <item id="nwinterface_list">
+              <rank>240</rank>
+            </item>
+            <item id="application_list">
+              <rank>250</rank>
+            </item>
+            <item id="patch_list">
+              <rank>260</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
-            <item>location_id</item>
-            <item>management_ip</item>
-            <item>default_gateway</item>
-            <item>os_family</item>
-            <item>os_version</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
+            <item id="location_id">
+              <rank>90</rank>
+            </item>
+            <item id="management_ip">
+              <rank>100</rank>
+            </item>
+            <item id="default_gateway">
+              <rank>110</rank>
+            </item>
+            <item id="os_family">
+              <rank>120</rank>
+            </item>
+            <item id="os_version">
+              <rank>130</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>location_id</item>
-            <item>os_family</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="importance">
+              <rank>30</rank>
+            </item>
+            <item id="brand">
+              <rank>40</rank>
+            </item>
+            <item id="model">
+              <rank>50</rank>
+            </item>
+            <item id="location_id">
+              <rank>60</rank>
+            </item>
+            <item id="os_family">
+              <rank>70</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -3495,14 +4987,14 @@
         <key_type>autoincrement</key_type>
         <db_table>printer</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/printer.png</icon>
         <reconciliation>
           <attributes>
@@ -3539,62 +5031,158 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
-            <item>description</item>
-            <item>location_id</item>
-            <item>location_details</item>
-            <item>management_ip</item>
-            <item>default_gateway</item>
-            <item>type</item>
-            <item>technology</item>
-            <item>contact_list</item>
-            <item>document_list</item>
-            <item>solution_list</item>
-            <item>contract_list</item>
-            <item>ticket_list</item>
-            <item>nwinterface_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
+            <item id="description">
+              <rank>90</rank>
+            </item>
+            <item id="location_id">
+              <rank>100</rank>
+            </item>
+            <item id="location_details">
+              <rank>110</rank>
+            </item>
+            <item id="management_ip">
+              <rank>120</rank>
+            </item>
+            <item id="default_gateway">
+              <rank>130</rank>
+            </item>
+            <item id="type">
+              <rank>140</rank>
+            </item>
+            <item id="technology">
+              <rank>150</rank>
+            </item>
+            <item id="contact_list">
+              <rank>160</rank>
+            </item>
+            <item id="document_list">
+              <rank>170</rank>
+            </item>
+            <item id="solution_list">
+              <rank>180</rank>
+            </item>
+            <item id="contract_list">
+              <rank>190</rank>
+            </item>
+            <item id="ticket_list">
+              <rank>200</rank>
+            </item>
+            <item id="nwinterface_list">
+              <rank>210</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
-            <item>description</item>
-            <item>location_id</item>
-            <item>location_details</item>
-            <item>management_ip</item>
-            <item>default_gateway</item>
-            <item>type</item>
-            <item>technology</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="importance">
+              <rank>40</rank>
+            </item>
+            <item id="brand">
+              <rank>50</rank>
+            </item>
+            <item id="model">
+              <rank>60</rank>
+            </item>
+            <item id="serial_number">
+              <rank>70</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>80</rank>
+            </item>
+            <item id="description">
+              <rank>90</rank>
+            </item>
+            <item id="location_id">
+              <rank>100</rank>
+            </item>
+            <item id="location_details">
+              <rank>110</rank>
+            </item>
+            <item id="management_ip">
+              <rank>120</rank>
+            </item>
+            <item id="default_gateway">
+              <rank>130</rank>
+            </item>
+            <item id="type">
+              <rank>140</rank>
+            </item>
+            <item id="technology">
+              <rank>150</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>importance</item>
-            <item>brand</item>
-            <item>model</item>
-            <item>serial_number</item>
-            <item>asset_ref</item>
-            <item>location_id</item>
-            <item>management_ip</item>
-            <item>default_gateway</item>
-            <item>type</item>
-            <item>technology</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="importance">
+              <rank>30</rank>
+            </item>
+            <item id="brand">
+              <rank>40</rank>
+            </item>
+            <item id="model">
+              <rank>50</rank>
+            </item>
+            <item id="serial_number">
+              <rank>60</rank>
+            </item>
+            <item id="asset_ref">
+              <rank>70</rank>
+            </item>
+            <item id="location_id">
+              <rank>80</rank>
+            </item>
+            <item id="management_ip">
+              <rank>90</rank>
+            </item>
+            <item id="default_gateway">
+              <rank>100</rank>
+            </item>
+            <item id="type">
+              <rank>110</rank>
+            </item>
+            <item id="technology">
+              <rank>120</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -3607,14 +5195,14 @@
         <key_type>autoincrement</key_type>
         <db_table>group</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/group.png</icon>
         <reconciliation>
           <attributes>
@@ -3627,7 +5215,7 @@
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="status" xsi:type="AttributeEnum">
@@ -3645,7 +5233,7 @@
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="owner_name" xsi:type="AttributeExternalField">
           <extkey_attcode>org_id</extkey_attcode>
@@ -3653,12 +5241,12 @@
         </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="type" xsi:type="AttributeString">
           <sql>type</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="parent_id" xsi:type="AttributeHierarchicalKey">
@@ -3685,29 +5273,59 @@
       <presentation>
         <details>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>type</item>
-            <item>description</item>
-            <item>parent_id</item>
-            <item>ci_list</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
+            <item id="parent_id">
+              <rank>60</rank>
+            </item>
+            <item id="ci_list">
+              <rank>70</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>name</item>
-            <item>status</item>
-            <item>org_id</item>
-            <item>type</item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>40</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>status</item>
-            <item>org_id</item>
-            <item>type</item>
-            <item>parent_id</item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="type">
+              <rank>30</rank>
+            </item>
+            <item id="parent_id">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -3721,15 +5339,15 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkgrouptoci</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="group_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="group_id"/>
@@ -3743,7 +5361,7 @@
           <target_class>Group</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="group_name" xsi:type="AttributeExternalField">
           <extkey_attcode>group_id</extkey_attcode>
@@ -3754,7 +5372,7 @@
           <target_class>FunctionalCI</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="ci_name" xsi:type="AttributeExternalField">
           <extkey_attcode>ci_id</extkey_attcode>
@@ -3766,7 +5384,7 @@
         </field>
         <field id="reason" xsi:type="AttributeString">
           <sql>reason</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -3774,25 +5392,47 @@
       <presentation>
         <details>
           <items>
-            <item>group_id</item>
-            <item>ci_id</item>
-            <item>ci_status</item>
-            <item>reason</item>
+            <item id="group_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_id">
+              <rank>20</rank>
+            </item>
+            <item id="ci_status">
+              <rank>30</rank>
+            </item>
+            <item id="reason">
+              <rank>40</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>group_id</item>
-            <item>ci_id</item>
-            <item>reason</item>
+            <item id="group_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_id">
+              <rank>20</rank>
+            </item>
+            <item id="reason">
+              <rank>30</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>group_id</item>
-            <item>ci_id</item>
-            <item>ci_status</item>
-            <item>reason</item>
+            <item id="group_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_id">
+              <rank>20</rank>
+            </item>
+            <item id="ci_status">
+              <rank>30</rank>
+            </item>
+            <item id="reason">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -3806,15 +5446,15 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkcitodoc</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="ci_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="ci_id"/>
@@ -3828,7 +5468,7 @@
           <target_class>FunctionalCI</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="ci_name" xsi:type="AttributeExternalField">
           <extkey_attcode>ci_id</extkey_attcode>
@@ -3843,7 +5483,7 @@
           <target_class>Document</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="document_name" xsi:type="AttributeExternalField">
           <extkey_attcode>document_id</extkey_attcode>
@@ -3862,26 +5502,50 @@
       <presentation>
         <details>
           <items>
-            <item>ci_id</item>
-            <item>ci_status</item>
-            <item>document_id</item>
-            <item>document_type</item>
-            <item>document_status</item>
+            <item id="ci_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_status">
+              <rank>20</rank>
+            </item>
+            <item id="document_id">
+              <rank>30</rank>
+            </item>
+            <item id="document_type">
+              <rank>40</rank>
+            </item>
+            <item id="document_status">
+              <rank>50</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>ci_id</item>
-            <item>document_id</item>
+            <item id="ci_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>ci_id</item>
-            <item>ci_status</item>
-            <item>document_id</item>
-            <item>document_type</item>
-            <item>document_status</item>
+            <item id="ci_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_status">
+              <rank>20</rank>
+            </item>
+            <item id="document_id">
+              <rank>30</rank>
+            </item>
+            <item id="document_type">
+              <rank>40</rank>
+            </item>
+            <item id="document_status">
+              <rank>50</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -3895,14 +5559,14 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkcitocontact</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="ci_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/contact.png</icon>
         <reconciliation>
           <attributes>
@@ -3917,7 +5581,7 @@
           <target_class>FunctionalCI</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="ci_name" xsi:type="AttributeExternalField">
           <extkey_attcode>ci_id</extkey_attcode>
@@ -3932,7 +5596,7 @@
           <target_class>Contact</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="contact_name" xsi:type="AttributeExternalField">
           <extkey_attcode>contact_id</extkey_attcode>
@@ -3944,7 +5608,7 @@
         </field>
         <field id="role" xsi:type="AttributeString">
           <sql>role</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -3952,27 +5616,53 @@
       <presentation>
         <details>
           <items>
-            <item>ci_id</item>
-            <item>ci_status</item>
-            <item>contact_id</item>
-            <item>contact_email</item>
-            <item>role</item>
+            <item id="ci_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_status">
+              <rank>20</rank>
+            </item>
+            <item id="contact_id">
+              <rank>30</rank>
+            </item>
+            <item id="contact_email">
+              <rank>40</rank>
+            </item>
+            <item id="role">
+              <rank>50</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>ci_id</item>
-            <item>contact_id</item>
-            <item>role</item>
+            <item id="ci_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="role">
+              <rank>30</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>ci_id</item>
-            <item>ci_status</item>
-            <item>contact_id</item>
-            <item>contact_email</item>
-            <item>role</item>
+            <item id="ci_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_status">
+              <rank>20</rank>
+            </item>
+            <item id="contact_id">
+              <rank>30</rank>
+            </item>
+            <item id="contact_email">
+              <rank>40</rank>
+            </item>
+            <item id="role">
+              <rank>50</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -3986,15 +5676,15 @@
         <key_type>autoincrement</key_type>
         <db_table>lnksolutiontoci</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="solution_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="solution_id"/>
@@ -4008,7 +5698,7 @@
           <target_class>ApplicationSolution</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="solution_name" xsi:type="AttributeExternalField">
           <extkey_attcode>solution_id</extkey_attcode>
@@ -4019,7 +5709,7 @@
           <target_class>FunctionalCI</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="ci_name" xsi:type="AttributeExternalField">
           <extkey_attcode>ci_id</extkey_attcode>
@@ -4031,7 +5721,7 @@
         </field>
         <field id="utility" xsi:type="AttributeString">
           <sql>utility</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -4039,25 +5729,47 @@
       <presentation>
         <details>
           <items>
-            <item>solution_id</item>
-            <item>ci_id</item>
-            <item>ci_status</item>
-            <item>utility</item>
+            <item id="solution_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_id">
+              <rank>20</rank>
+            </item>
+            <item id="ci_status">
+              <rank>30</rank>
+            </item>
+            <item id="utility">
+              <rank>40</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>solution_id</item>
-            <item>ci_id</item>
-            <item>utility</item>
+            <item id="solution_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_id">
+              <rank>20</rank>
+            </item>
+            <item id="utility">
+              <rank>30</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>solution_id</item>
-            <item>ci_id</item>
-            <item>ci_status</item>
-            <item>utility</item>
+            <item id="solution_id">
+              <rank>10</rank>
+            </item>
+            <item id="ci_id">
+              <rank>20</rank>
+            </item>
+            <item id="ci_status">
+              <rank>30</rank>
+            </item>
+            <item id="utility">
+              <rank>40</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -4071,15 +5783,15 @@
         <key_type>autoincrement</key_type>
         <db_table>lnkprocesstosolution</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="solution_id"/>
           </attributes>
         </naming>
-        <display_template></display_template>
-        <icon></icon>
+        <display_template/>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="solution_id"/>
@@ -4093,7 +5805,7 @@
           <target_class>ApplicationSolution</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="solution_name" xsi:type="AttributeExternalField">
           <extkey_attcode>solution_id</extkey_attcode>
@@ -4104,7 +5816,7 @@
           <target_class>BusinessProcess</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="process_name" xsi:type="AttributeExternalField">
           <extkey_attcode>process_id</extkey_attcode>
@@ -4112,7 +5824,7 @@
         </field>
         <field id="reason" xsi:type="AttributeString">
           <sql>reason</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -4120,23 +5832,41 @@
       <presentation>
         <details>
           <items>
-            <item>solution_id</item>
-            <item>process_id</item>
-            <item>reason</item>
+            <item id="solution_id">
+              <rank>10</rank>
+            </item>
+            <item id="process_id">
+              <rank>20</rank>
+            </item>
+            <item id="reason">
+              <rank>30</rank>
+            </item>
           </items>
         </details>
         <search>
           <items>
-            <item>solution_id</item>
-            <item>process_id</item>
-            <item>reason</item>
+            <item id="solution_id">
+              <rank>10</rank>
+            </item>
+            <item id="process_id">
+              <rank>20</rank>
+            </item>
+            <item id="reason">
+              <rank>30</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>solution_id</item>
-            <item>process_id</item>
-            <item>reason</item>
+            <item id="solution_id">
+              <rank>10</rank>
+            </item>
+            <item id="process_id">
+              <rank>20</rank>
+            </item>
+            <item id="reason">
+              <rank>30</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -4158,7 +5888,7 @@
     <menu id="Catalogs" xsi:type="TemplateMenuNode" _delta="define">
       <rank>50</rank>
       <parent>DataAdministration</parent>
-      <template_file></template_file>
+      <template_file/>
     </menu>
     <menu id="Organization" xsi:type="OQLMenuNode" _delta="define">
       <rank>10</rank>
@@ -4170,13 +5900,13 @@
       <rank>20</rank>
       <parent>Catalogs</parent>
       <oql>SELECT Application</oql>
-      <do_search></do_search>
+      <do_search/>
     </menu>
     <menu id="DBServer" xsi:type="OQLMenuNode" _delta="define">
       <rank>40</rank>
       <parent>Catalogs</parent>
       <oql>SELECT DBServer</oql>
-      <do_search></do_search>
+      <do_search/>
     </menu>
     <menu id="ConfigManagement" xsi:type="MenuGroup" _delta="define">
       <rank>20</rank>
@@ -4237,43 +5967,43 @@
     <menu id="ConfigManagement:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
       <rank>6</rank>
       <parent>ConfigManagement</parent>
-      <template_file></template_file>
+      <template_file/>
     </menu>
     <menu id="Server" xsi:type="OQLMenuNode" _delta="define">
       <rank>1</rank>
       <parent>ConfigManagement:Shortcuts</parent>
       <oql>SELECT Server</oql>
-      <do_search></do_search>
+      <do_search/>
     </menu>
     <menu id="NetworkDevice" xsi:type="OQLMenuNode" _delta="define">
       <rank>2</rank>
       <parent>ConfigManagement:Shortcuts</parent>
       <oql>SELECT NetworkDevice</oql>
-      <do_search></do_search>
+      <do_search/>
     </menu>
     <menu id="Printer" xsi:type="OQLMenuNode" _delta="define">
       <rank>3</rank>
       <parent>ConfigManagement:Shortcuts</parent>
       <oql>SELECT Printer</oql>
-      <do_search></do_search>
+      <do_search/>
     </menu>
     <menu id="PC" xsi:type="OQLMenuNode" _delta="define">
       <rank>4</rank>
       <parent>ConfigManagement:Shortcuts</parent>
       <oql>SELECT PC</oql>
-      <do_search></do_search>
+      <do_search/>
     </menu>
     <menu id="BusinessProcess" xsi:type="OQLMenuNode" _delta="define">
       <rank>5</rank>
       <parent>ConfigManagement:Shortcuts</parent>
       <oql>SELECT BusinessProcess</oql>
-      <do_search></do_search>
+      <do_search/>
     </menu>
     <menu id="ApplicationSolution" xsi:type="OQLMenuNode" _delta="define">
       <rank>6</rank>
       <parent>ConfigManagement:Shortcuts</parent>
       <oql>SELECT ApplicationSolution</oql>
-      <do_search></do_search>
+      <do_search/>
     </menu>
   </menus>
 </itop_design>

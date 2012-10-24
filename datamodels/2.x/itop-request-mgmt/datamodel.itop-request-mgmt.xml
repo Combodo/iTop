@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
   <classes>
     <class id="UserRequest" _delta="define">
       <parent>Ticket</parent>
@@ -15,14 +15,14 @@
         <key_type>autoincrement</key_type>
         <db_table>ticket_request</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="ref"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/user-request.png</icon>
         <reconciliation>
           <attributes>
@@ -111,7 +111,7 @@
           <target_class>Person</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="approver_email" xsi:type="AttributeExternalField">
           <extkey_attcode>approver_id</extkey_attcode>
@@ -127,7 +127,7 @@
           <target_class>Service</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="service_name" xsi:type="AttributeExternalField">
           <extkey_attcode>service_id</extkey_attcode>
@@ -144,7 +144,7 @@
           <target_class>ServiceSubcategory</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="servicesubcategory_name" xsi:type="AttributeExternalField">
           <extkey_attcode>servicesubcategory_id</extkey_attcode>
@@ -162,57 +162,57 @@
         </field>
         <field id="escalation_reason" xsi:type="AttributeString">
           <sql>escalation_reason</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="assignment_date" xsi:type="AttributeDateTime">
           <sql>assignment_date</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="resolution_date" xsi:type="AttributeDateTime">
           <sql>resolution_date</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="last_pending_date" xsi:type="AttributeDateTime">
           <sql>last_pending_date</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="cumulatedpending" xsi:type="AttributeStopWatch">
           <states>
             <state id="pending"/>
           </states>
-          <working_time></working_time>
-	   <thresholds/>
-          <goal></goal>
+          <working_time/>
+          <thresholds/>
+          <goal/>
         </field>
         <field id="tto" xsi:type="AttributeStopWatch">
           <states>
             <state id="new"/>
             <state id="escalated_tto"/>
           </states>
-          <working_time></working_time>
+          <working_time/>
           <goal>ResponseTicketTTO</goal>
           <thresholds>
             <threshold>
-            	<percent>75</percent>
-            	<actions>
+              <percent>75</percent>
+              <actions>
 		</actions>
             </threshold>
             <threshold>
-            	<percent>100</percent>
-            	<actions>
-            	  <action>
-            	    <verb>ApplyStimulus</verb>
-            	    <params>
-            	      <param>ev_timeout</param>
-            	    </params>
-            	  </action>
-		</actions>
+              <percent>100</percent>
+              <actions>
+                <action>
+                  <verb>ApplyStimulus</verb>
+                  <params>
+                    <param>ev_timeout</param>
+                  </params>
+                </action>
+              </actions>
             </threshold>
-	   </thresholds>
+          </thresholds>
         </field>
         <field id="ttr" xsi:type="AttributeStopWatch">
           <states>
@@ -222,55 +222,54 @@
             <state id="approved"/>
             <state id="escalated_ttr"/>
           </states>
-          <working_time></working_time>
+          <working_time/>
           <goal>ResponseTicketTTR</goal>
           <thresholds>
             <threshold>
-            	<percent>75</percent>
-            	<actions>
+              <percent>75</percent>
+              <actions>
 		</actions>
             </threshold>
             <threshold>
-            	<percent>100</percent>
-            	<actions>
-            	  <action>
-            	    <verb>ApplyStimulus</verb>
-            	    <params>
-            	      <param>ev_timeout</param>
-            	    </params>
-            	  </action>
-		</actions>
+              <percent>100</percent>
+              <actions>
+                <action>
+                  <verb>ApplyStimulus</verb>
+                  <params>
+                    <param>ev_timeout</param>
+                  </params>
+                </action>
+              </actions>
             </threshold>
-	  </thresholds>
+          </thresholds>
         </field>
         <field id="tto_escalation_deadline" xsi:type="AttributeSubItem">
-			<target_attcode>tto</target_attcode>
-			<item_code>100_deadline</item_code>
+          <target_attcode>tto</target_attcode>
+          <item_code>100_deadline</item_code>
         </field>
         <field id="sla_tto_passed" xsi:type="AttributeSubItem">
-			<target_attcode>tto</target_attcode>
-			<item_code>100_passed</item_code>
+          <target_attcode>tto</target_attcode>
+          <item_code>100_passed</item_code>
         </field>
         <field id="sla_tto_over" xsi:type="AttributeSubItem">
-			<target_attcode>tto</target_attcode>
-			<item_code>100_overrun</item_code>
+          <target_attcode>tto</target_attcode>
+          <item_code>100_overrun</item_code>
         </field>
         <field id="ttr_escalation_deadline" xsi:type="AttributeSubItem">
-			<target_attcode>ttr</target_attcode>
-			<item_code>100_deadline</item_code>
+          <target_attcode>ttr</target_attcode>
+          <item_code>100_deadline</item_code>
         </field>
         <field id="sla_ttr_passed" xsi:type="AttributeSubItem">
-			<target_attcode>ttr</target_attcode>
-			<item_code>100_passed</item_code>
+          <target_attcode>ttr</target_attcode>
+          <item_code>100_passed</item_code>
         </field>
         <field id="sla_ttr_over" xsi:type="AttributeSubItem">
-			<target_attcode>ttr</target_attcode>
-			<item_code>100_overrun</item_code>
+          <target_attcode>ttr</target_attcode>
+          <item_code>100_overrun</item_code>
         </field>
-
         <field id="time_spent" xsi:type="AttributeDuration">
           <sql>time_spent</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="resolution_code" xsi:type="AttributeEnum">
@@ -289,12 +288,12 @@
         </field>
         <field id="solution" xsi:type="AttributeText">
           <sql>solution</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="pending_reason" xsi:type="AttributeText">
           <sql>pending_reason</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="parent_request_id" xsi:type="AttributeExternalKey">
@@ -306,7 +305,7 @@
           <target_class>UserRequest</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="parent_request_ref" xsi:type="AttributeExternalField">
           <extkey_attcode>parent_request_id</extkey_attcode>
@@ -314,12 +313,12 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="parent_problem_id" xsi:type="AttributeExternalKey">
-         <filter><![CDATA[SELECT Problem WHERE status != "closed"]]></filter>
+          <filter><![CDATA[SELECT Problem WHERE status != "closed"]]></filter>
           <sql>parent_problem_id</sql>
           <target_class>Problem</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="parent_problem_ref" xsi:type="AttributeExternalField">
           <extkey_attcode>parent_problem_id</extkey_attcode>
@@ -327,12 +326,12 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="parent_change_id" xsi:type="AttributeExternalKey">
-         <filter><![CDATA[SELECT Change WHERE status != "closed"]]></filter>
+          <filter><![CDATA[SELECT Change WHERE status != "closed"]]></filter>
           <sql>parent_change_id</sql>
           <target_class>Change</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype></jointype>
+          <jointype/>
         </field>
         <field id="parent_change_ref" xsi:type="AttributeExternalField">
           <extkey_attcode>parent_change_id</extkey_attcode>
@@ -348,7 +347,7 @@
         </field>
         <field id="public_log" xsi:type="AttributeCaseLog">
           <sql>public_log</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="user_satisfaction" xsi:type="AttributeEnum">
@@ -364,7 +363,7 @@
         </field>
         <field id="user_comment" xsi:type="AttributeText">
           <sql>user_commment</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -1198,7 +1197,7 @@
               <attribute id="org_id">
                 <read_only/>
               </attribute>
-                <attribute id="caller_id">
+              <attribute id="caller_id">
                 <read_only/>
               </attribute>
               <attribute id="origin">
@@ -1920,88 +1919,183 @@
       <presentation>
         <details>
           <items>
-            <item>functionalcis_list</item>
-            <item>contacts_list</item>
-            <item>related_request_list</item>
-            <item>workorders_list</item>
+            <item id="functionalcis_list">
+              <rank>10</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>20</rank>
+            </item>
+            <item id="related_request_list">
+              <rank>30</rank>
+            </item>
+            <item id="workorders_list">
+              <rank>40</rank>
+            </item>
             <item id="col:col1">
+              <rank>50</rank>
               <items>
                 <item id="fieldset:Ticket:baseinfo">
+                  <rank>10</rank>
                   <items>
-                    <item>org_id</item>
-                    <item>caller_id</item>
-                    <item>status</item>
-                    <item>origin</item>
-                    <item>title</item>
-                    <item>description</item>
+                    <item id="org_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="caller_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="origin">
+                      <rank>40</rank>
+                    </item>
+                    <item id="title">
+                      <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Ticket:moreinfo">
+                  <rank>20</rank>
                   <items>
-                    <item>service_id</item>
-                    <item>servicesubcategory_id</item>
-                    <item>escalation_flag</item>
-                    <item>escalation_reason</item>
-                    <item>pending_reason</item>
+                    <item id="service_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="servicesubcategory_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="escalation_flag">
+                      <rank>30</rank>
+                    </item>
+                    <item id="escalation_reason">
+                      <rank>40</rank>
+                    </item>
+                    <item id="pending_reason">
+                      <rank>50</rank>
+                    </item>
                   </items>
                 </item>
               </items>
             </item>
             <item id="col:col2">
+              <rank>60</rank>
               <items>
                 <item id="fieldset:Ticket:Type">
+                  <rank>10</rank>
                   <items>
-                    <item>request_type</item>
-                    <item>impact</item>
-                    <item>emergency</item>
-                    <item>priority</item>
+                    <item id="request_type">
+                      <rank>10</rank>
+                    </item>
+                    <item id="impact">
+                      <rank>20</rank>
+                    </item>
+                    <item id="emergency">
+                      <rank>30</rank>
+                    </item>
+                    <item id="priority">
+                      <rank>40</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Ticket:contact">
+                  <rank>20</rank>
                   <items>
-                    <item>team_id</item>
-                    <item>agent_id</item>
-                    <item>approver_id</item>
+                    <item id="team_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="agent_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="approver_id">
+                      <rank>30</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Ticket:date">
+                  <rank>30</rank>
                   <items>
-                    <item>start_date</item>
-                    <item>last_update</item>
-                    <item>assignment_date</item>
-                    <item>tto_escalation_deadline</item>
-                    <item>ttr_escalation_deadline</item>
-                    <item>last_pending_date</item>
-                    <item>resolution_date</item>
-                    <item>close_date</item>
+                    <item id="start_date">
+                      <rank>10</rank>
+                    </item>
+                    <item id="last_update">
+                      <rank>20</rank>
+                    </item>
+                    <item id="assignment_date">
+                      <rank>30</rank>
+                    </item>
+                    <item id="tto_escalation_deadline">
+                      <rank>40</rank>
+                    </item>
+                    <item id="ttr_escalation_deadline">
+                      <rank>50</rank>
+                    </item>
+                    <item id="last_pending_date">
+                      <rank>60</rank>
+                    </item>
+                    <item id="resolution_date">
+                      <rank>70</rank>
+                    </item>
+                    <item id="close_date">
+                      <rank>80</rank>
+                    </item>
                   </items>
                 </item>
               </items>
             </item>
             <item id="col:col3">
+              <rank>70</rank>
               <items>
                 <item id="fieldset:Relations">
+                  <rank>10</rank>
                   <items>
-                    <item>parent_request_id</item>
-                    <item>parent_problem_id</item>
-                    <item>parent_change_id</item>
+                    <item id="parent_request_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="parent_problem_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="parent_change_id">
+                      <rank>30</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Ticket:resolution">
+                  <rank>20</rank>
                   <items>
-                    <item>resolution_code</item>
-                    <item>solution</item>
-                    <item>time_spent</item>
-                    <item>user_satisfaction</item>
-                    <item>user_comment</item>
+                    <item id="resolution_code">
+                      <rank>10</rank>
+                    </item>
+                    <item id="solution">
+                      <rank>20</rank>
+                    </item>
+                    <item id="time_spent">
+                      <rank>30</rank>
+                    </item>
+                    <item id="user_satisfaction">
+                      <rank>40</rank>
+                    </item>
+                    <item id="user_comment">
+                      <rank>50</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Ticket:SLA">
+                  <rank>30</rank>
                   <items>
-		   <item>sla_tto_passed</item>
-		   <item>sla_tto_over</item>
-		   <item>sla_ttr_passed</item>
-		   <item>sla_ttr_over</item>
+                    <item id="sla_tto_passed">
+                      <rank>10</rank>
+                    </item>
+                    <item id="sla_tto_over">
+                      <rank>20</rank>
+                    </item>
+                    <item id="sla_ttr_passed">
+                      <rank>30</rank>
+                    </item>
+                    <item id="sla_ttr_over">
+                      <rank>40</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -2010,40 +2104,100 @@
         </details>
         <search>
           <items>
-            <item>ref</item>
-            <item>org_id</item>
-            <item>title</item>
-            <item>description</item>
-            <item>start_date</item>
-            <item>end_date</item>
-            <item>resolution_date</item>
-            <item>close_date</item>
-            <item>status</item>
-            <item>caller_id</item>
-            <item>origin</item>
-            <item>request_type</item>
-            <item>impact</item>
-            <item>emergency</item>
-            <item>priority</item>
-            <item>service_id</item>
-            <item>servicesubcategory_id</item>
-            <item>team_id</item>
-            <item>agent_id</item>
-            <item>escalation_flag</item>
-            <item>resolution_code</item>
-            <item>user_satisfaction</item>
-	    <item>sla_tto_passed</item>
-	    <item>sla_ttr_passed</item>
+            <item id="ref">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="title">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+            <item id="start_date">
+              <rank>50</rank>
+            </item>
+            <item id="end_date">
+              <rank>60</rank>
+            </item>
+            <item id="resolution_date">
+              <rank>70</rank>
+            </item>
+            <item id="close_date">
+              <rank>80</rank>
+            </item>
+            <item id="status">
+              <rank>90</rank>
+            </item>
+            <item id="caller_id">
+              <rank>100</rank>
+            </item>
+            <item id="origin">
+              <rank>110</rank>
+            </item>
+            <item id="request_type">
+              <rank>120</rank>
+            </item>
+            <item id="impact">
+              <rank>130</rank>
+            </item>
+            <item id="emergency">
+              <rank>140</rank>
+            </item>
+            <item id="priority">
+              <rank>150</rank>
+            </item>
+            <item id="service_id">
+              <rank>160</rank>
+            </item>
+            <item id="servicesubcategory_id">
+              <rank>170</rank>
+            </item>
+            <item id="team_id">
+              <rank>180</rank>
+            </item>
+            <item id="agent_id">
+              <rank>190</rank>
+            </item>
+            <item id="escalation_flag">
+              <rank>200</rank>
+            </item>
+            <item id="resolution_code">
+              <rank>210</rank>
+            </item>
+            <item id="user_satisfaction">
+              <rank>220</rank>
+            </item>
+            <item id="sla_tto_passed">
+              <rank>230</rank>
+            </item>
+            <item id="sla_ttr_passed">
+              <rank>240</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>title</item>
-            <item>org_id</item>
-            <item>caller_id</item>
-            <item>start_date</item>
-            <item>status</item>
-            <item>agent_id</item>
+            <item id="title">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="caller_id">
+              <rank>30</rank>
+            </item>
+            <item id="start_date">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
+            <item id="agent_id">
+              <rank>60</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -2075,20 +2229,20 @@
     <menu id="UserRequest:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
       <rank>3</rank>
       <parent>RequestManagement</parent>
-      <template_file></template_file>
+      <template_file/>
     </menu>
     <menu id="UserRequest:MyRequests" xsi:type="OQLMenuNode" _delta="define">
       <rank>0</rank>
       <parent>UserRequest:Shortcuts</parent>
       <oql><![CDATA[SELECT UserRequest WHERE agent_id = :current_contact_id AND status NOT IN ("closed","resolved")]]></oql>
-      <do_search></do_search>
+      <do_search/>
       <auto_reload>fast</auto_reload>
     </menu>
     <menu id="UserRequest:EscalatedRequests" xsi:type="OQLMenuNode" _delta="define">
       <rank>1</rank>
       <parent>UserRequest:Shortcuts</parent>
       <oql><![CDATA[SELECT UserRequest WHERE status IN ("escalated_tto", "escalated_ttr") OR escalation_flag="yes"]]></oql>
-      <do_search></do_search>
+      <do_search/>
       <auto_reload>fast</auto_reload>
     </menu>
     <menu id="UserRequest:OpenRequests" xsi:type="OQLMenuNode" _delta="define">
@@ -2102,7 +2256,7 @@
       <rank>3</rank>
       <parent>UserRequest:Shortcuts</parent>
       <oql><![CDATA[SELECT UserRequest WHERE caller_id = :current_contact_id AND status NOT IN ("closed")]]></oql>
-      <do_search></do_search>
+      <do_search/>
       <auto_reload>fast</auto_reload>
     </menu>
   </menus>

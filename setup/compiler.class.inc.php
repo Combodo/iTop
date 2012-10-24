@@ -243,6 +243,30 @@ EOF;
 	}
 
 	/**
+	 * Helper to form a valid ZList from the array built by GetNodeAsArrayOfItems()
+	 */	 	
+	protected function ArrayOfItemsToZList(&$aItems)
+	{
+		$aTransformed = array();
+		foreach ($aItems as $key => $value)
+		{
+			if (is_null($value))
+			{
+				$aTransformed[] = $key;
+			}
+			else
+			{
+				if (is_array($value))
+				{
+					$this->ArrayOfItemsToZList($value);
+				}
+				$aTransformed[$key] = $value;
+			}
+		}
+		$aItems = $aTransformed;
+	}
+
+	/**
 	 * Helper to format the flags for an attribute, in a given state
 	 * @param object $oAttNode DOM node containing the information to build the flags
 	 * Returns string PHP flags, based on the OPT_ATT_ constants, or empty (meaning 0, can be omitted)
@@ -847,6 +871,7 @@ EOF;
 			if ($oListNode)
 			{
 				$aAttributes = $oListNode->GetNodeAsArrayOfItems();
+				$this->ArrayOfItemsToZList($aAttributes);
 		
 				$sZAttributes = var_export($aAttributes, true);
 				$sZlists .= "		MetaModel::Init_SetZListItems('$sListCode', $sZAttributes);\n";

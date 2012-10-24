@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
   <classes>
     <class id="Problem" _delta="define">
       <parent>Ticket</parent>
@@ -15,14 +15,14 @@
         <key_type>autoincrement</key_type>
         <db_table>ticket_problem</db_table>
         <db_key_field>id</db_key_field>
-        <db_final_class_field></db_final_class_field>
+        <db_final_class_field/>
         <naming>
           <format>%1$s</format>
           <attributes>
             <attribute id="ref"/>
           </attributes>
         </naming>
-        <display_template></display_template>
+        <display_template/>
         <icon>images/problem.png</icon>
         <reconciliation>
           <attributes>
@@ -73,7 +73,7 @@
         </field>
         <field id="product" xsi:type="AttributeString">
           <sql>product</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="impact" xsi:type="AttributeEnum">
@@ -124,12 +124,12 @@
         </field>
         <field id="assignment_date" xsi:type="AttributeDateTime">
           <sql>assignment_date</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="resolution_date" xsi:type="AttributeDateTime">
           <sql>resolution_date</sql>
-          <default_value></default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="knownerrors_list" xsi:type="AttributeLinkedSet">
@@ -535,55 +535,112 @@
       <presentation>
         <details>
           <items>
-            <item>functionalcis_list</item>
-            <item>contacts_list</item>
-            <item>knownerrors_list</item>
-            <item>workorders_list</item>
-            <item>related_request_list</item>
+            <item id="functionalcis_list">
+              <rank>10</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>20</rank>
+            </item>
+            <item id="knownerrors_list">
+              <rank>30</rank>
+            </item>
+            <item id="workorders_list">
+              <rank>40</rank>
+            </item>
+            <item id="related_request_list">
+              <rank>50</rank>
+            </item>
             <item id="col:col1">
+              <rank>60</rank>
               <items>
                 <item id="fieldset:Ticket:baseinfo">
+                  <rank>10</rank>
                   <items>
-                    <item>ref</item>
-                    <item>title</item>
-                    <item>org_id</item>
-                    <item>status</item>
-                    <item>priority</item>
-                    <item>service_id</item>
-                    <item>servicesubcategory_id</item>
-                    <item>product</item>
+                    <item id="ref">
+                      <rank>10</rank>
+                    </item>
+                    <item id="title">
+                      <rank>20</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="status">
+                      <rank>40</rank>
+                    </item>
+                    <item id="priority">
+                      <rank>50</rank>
+                    </item>
+                    <item id="service_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="servicesubcategory_id">
+                      <rank>70</rank>
+                    </item>
+                    <item id="product">
+                      <rank>80</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Ticket:moreinfo">
+                  <rank>20</rank>
                   <items>
-                    <item>impact</item>
-                    <item>emergency</item>
-                    <item>description</item>
+                    <item id="impact">
+                      <rank>10</rank>
+                    </item>
+                    <item id="emergency">
+                      <rank>20</rank>
+                    </item>
+                    <item id="description">
+                      <rank>30</rank>
+                    </item>
                   </items>
                 </item>
               </items>
             </item>
             <item id="col:col2">
+              <rank>70</rank>
               <items>
                 <item id="fieldset:Ticket:date">
+                  <rank>10</rank>
                   <items>
-                    <item>start_date</item>
-                    <item>last_update</item>
-                    <item>assignment_date</item>
-                    <item>resolution_date</item>
-                    <item>close_date</item>
+                    <item id="start_date">
+                      <rank>10</rank>
+                    </item>
+                    <item id="last_update">
+                      <rank>20</rank>
+                    </item>
+                    <item id="assignment_date">
+                      <rank>30</rank>
+                    </item>
+                    <item id="resolution_date">
+                      <rank>40</rank>
+                    </item>
+                    <item id="close_date">
+                      <rank>50</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Ticket:contact">
+                  <rank>20</rank>
                   <items>
-                    <item>caller_id</item>
-                    <item>team_id</item>
-                    <item>agent_id</item>
+                    <item id="caller_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="team_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="agent_id">
+                      <rank>30</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Ticket:relation">
+                  <rank>30</rank>
                   <items>
-                    <item>related_change_id</item>
+                    <item id="related_change_id">
+                      <rank>10</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -592,31 +649,73 @@
         </details>
         <search>
           <items>
-            <item>ref</item>
-            <item>title</item>
-            <item>org_id</item>
-            <item>start_date</item>
-            <item>status</item>
-            <item>service_id</item>
-            <item>servicesubcategory_id</item>
-            <item>product</item>
-            <item>impact</item>
-            <item>emergency</item>
-            <item>priority</item>
-            <item>caller_id</item>
-            <item>team_id</item>
-            <item>agent_id</item>
-            <item>close_date</item>
+            <item id="ref">
+              <rank>10</rank>
+            </item>
+            <item id="title">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="start_date">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
+            <item id="service_id">
+              <rank>60</rank>
+            </item>
+            <item id="servicesubcategory_id">
+              <rank>70</rank>
+            </item>
+            <item id="product">
+              <rank>80</rank>
+            </item>
+            <item id="impact">
+              <rank>90</rank>
+            </item>
+            <item id="emergency">
+              <rank>100</rank>
+            </item>
+            <item id="priority">
+              <rank>110</rank>
+            </item>
+            <item id="caller_id">
+              <rank>120</rank>
+            </item>
+            <item id="team_id">
+              <rank>130</rank>
+            </item>
+            <item id="agent_id">
+              <rank>140</rank>
+            </item>
+            <item id="close_date">
+              <rank>150</rank>
+            </item>
           </items>
         </search>
         <list>
           <items>
-            <item>title</item>
-            <item>org_id</item>
-            <item>start_date</item>
-            <item>status</item>
-            <item>service_id</item>
-            <item>priority</item>
+            <item id="title">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="start_date">
+              <rank>30</rank>
+            </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
+            <item id="service_id">
+              <rank>50</rank>
+            </item>
+            <item id="priority">
+              <rank>60</rank>
+            </item>
           </items>
         </list>
       </presentation>
@@ -629,7 +728,7 @@
     <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
       <rank>5</rank>
       <parent>ProblemManagement</parent>
-      <template_file></template_file>
+      <template_file/>
     </menu>
     <menu id="Problem:Overview" xsi:type="DashboardMenuNode" _delta="define">
       <rank>0</rank>
@@ -650,7 +749,7 @@
       <rank>1</rank>
       <parent>Problem:Shortcuts</parent>
       <oql><![CDATA[SELECT Problem WHERE agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")]]></oql>
-      <do_search></do_search>
+      <do_search/>
     </menu>
     <menu id="Problem:OpenProblems" xsi:type="OQLMenuNode" _delta="define">
       <rank>2</rank>
