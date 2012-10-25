@@ -14,6 +14,7 @@
             <module>itop-attachments</module>
             <module>itop-profiles-itil</module>
             <module>itop-welcome-itil</module>
+            <module>itop-tickets</module>
           </modules>
           <mandatory>true</mandatory>
         </choice>
@@ -82,7 +83,6 @@
           <title>Simple Ticket Management</title>
           <description>Select this option to use one single type of tickets for all kind of requests.</description>
           <modules type="array">
-            <module>itop-tickets</module>
             <module>itop-request-mgmt</module>
           </modules>
           <default>true</default>
@@ -90,9 +90,6 @@
         <choice>
           <title>ITIL Compliant Tickets Management</title>
           <description>Select this option to have different types of ticket for managing user requests and incidents. Each type of ticket has a specific life cycle and specific fields</description>
-          <modules type="array">
-            <module>itop-tickets</module>
-          </modules>
           <sub_options>
             <options type="array">
               <choice>
