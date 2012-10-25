@@ -558,23 +558,23 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
-// Class: ElectricalConnection
+// Class: PowerConnection
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:ElectricalConnection' => 'Connection Electrique',
-	'Class:ElectricalConnection+' => '',
+	'Class:PowerConnection' => 'Connection Electrique',
+	'Class:PowerConnection+' => '',
 ));
 
 //
-// Class: Arrival
+// Class: PowerSource
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Arrival' => 'Arrivée électrique',
-	'Class:Arrival+' => '',
-	'Class:Arrival/Attribute:pdus_list' => 'PDUs',
-	'Class:Arrival/Attribute:pdus_list+' => '',
+	'Class:PowerSource' => 'Arrivée électrique',
+	'Class:PowerSource+' => '',
+	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
+	'Class:PowerSourcel/Attribute:pdus_list+' => '',
 ));
 
 //
@@ -1231,8 +1231,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Model/Attribute:brand_name+' => '',
 	'Class:Model/Attribute:Type' => 'Type de matériel',
 	'Class:Model/Attribute:Type+' => '',
-	'Class:Model/Attribute:Type/Value:Arrival' => 'Arrivée électrique',
-	'Class:Model/Attribute:Type/Value:Arrival+' => 'Arrivée électrique',
+	'Class:Model/Attribute:Type/Value:PowerSource' => 'Arrivée électrique',
+	'Class:Model/Attribute:Type/Value:PowerSource+' => 'Arrivée électrique',
 	'Class:Model/Attribute:Type/Value:Enclosure' => 'Chassis',
 	'Class:Model/Attribute:Type/Value:Enclosure+' => 'Chassis',
 	'Class:Model/Attribute:Type/Value:IpPhone' => 'Téléphone IP',

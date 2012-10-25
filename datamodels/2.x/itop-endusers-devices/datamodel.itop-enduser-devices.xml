@@ -5,7 +5,7 @@
       <parent>PhysicalDevice</parent>
       <properties>
         <category>bizmodel,searchable</category>
-        <abstract>false</abstract>
+        <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>telephonyci</db_table>
         <db_key_field>id</db_key_field>

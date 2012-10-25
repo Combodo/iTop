@@ -19,10 +19,11 @@
         </choice>
         <choice>
           <title>Data Center Devices</title>
-          <description>Manage Data Center devices such as racks, enclosures, etc.</description>
+          <description>Manage Data Center devices such as Racks, Enclosures, PDUs, etc.</description>
           <modules type="array">
             <module>itop-datacenter-mgmt</module>
           </modules>
+          <default>true</default>
         </choice>
         <choice>
           <title>End-User Devices</title>
@@ -30,6 +31,7 @@
           <modules type="array">
             <module>itop-endusers-devices</module>
           </modules>
+           <default>true</default>
         </choice>
         <choice>
           <title>Storage Devices</title>
@@ -37,6 +39,7 @@
           <modules type="array">
             <module>itop-storage-mgmt</module>
           </modules>
+          <default>true</default>
         </choice>
         <choice>
           <title>Virtualization</title>
@@ -44,6 +47,7 @@
           <modules type="array">
             <module>itop-virtualization-mgmt</module>
           </modules>
+          <default>true</default>
         </choice>
       </options>
     </step>
@@ -135,7 +139,6 @@
           <modules type="array">
             <module>itop-change-mgmt-itil</module>
           </modules>
-          <default>false</default>
         </choice>
         <choice>
           <title>None</title>
@@ -152,11 +155,10 @@
       <options type="array">
         <choice>
           <title>Known Errors Management</title>
-          <description>Select this option to track "Known Errors" in iTop.</description>
+          <description>Select this option to track "Known Errors" and FAQs in iTop.</description>
           <modules type="array">
             <module>itop-knownerror-mgmt</module>
           </modules>
-          <default>false</default>
         </choice>
         <choice>
           <title>Problem Management</title>
@@ -164,7 +166,6 @@
           <modules type="array">
             <module>itop-problem-mgmt</module>
           </modules>
-          <default>false</default>
         </choice>
       </options>
     </step>

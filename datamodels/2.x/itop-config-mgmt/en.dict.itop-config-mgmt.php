@@ -468,7 +468,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:DatacenterDevice/Attribute:powerA_id+' => '',
 	'Class:DatacenterDevice/Attribute:powerA_name' => 'PowerA source name',
 	'Class:DatacenterDevice/Attribute:powerA_name+' => '',
-	'Class:DatacenterDevice/Attribute:powerB_id' => 'PowerB',
+	'Class:DatacenterDevice/Attribute:powerB_id' => 'PowerB source',
 	'Class:DatacenterDevice/Attribute:powerB_id+' => '',
 	'Class:DatacenterDevice/Attribute:powerB_name' => 'PowerB source name',
 	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
@@ -607,23 +607,23 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
-// Class: ElectricalConnection
+// Class: PowerConnection
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:ElectricalConnection' => 'Electrical Connection',
-	'Class:ElectricalConnection+' => '',
+	'Class:PowerConnection' => 'Power Connection',
+	'Class:PowerConnection+' => '',
 ));
 
 //
-// Class: Arrival
+// Class: PowerSource
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:Arrival' => 'Arrival',
-	'Class:Arrival+' => '',
-	'Class:Arrival/Attribute:pdus_list' => 'PDUs',
-	'Class:Arrival/Attribute:pdus_list+' => '',
+	'Class:PowerSource' => 'Power Source',
+	'Class:PowerSource+' => '',
+	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
+	'Class:PowerSource/Attribute:pdus_list+' => '',
 ));
 
 //
@@ -1280,10 +1280,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Model/Attribute:brand_name+' => '',
 	'Class:Model/Attribute:Type' => 'Device type',
 	'Class:Model/Attribute:Type+' => '',
-	'Class:Model/Attribute:Type/Value:Arrival' => 'Arrival',
-	'Class:Model/Attribute:Type/Value:Arrival+' => 'Arrival',
-	'Class:Model/Attribute:Type/Value:DiskArray' => 'DiskArray',
-	'Class:Model/Attribute:Type/Value:DiskArray+' => 'DiskArray',
+	'Class:Model/Attribute:Type/Value:PowerSource' => 'Power Source',
+	'Class:Model/Attribute:Type/Value:PowerSource+' => 'Power Source',
+	'Class:Model/Attribute:Type/Value:DiskArray' => 'Disk Array',
+	'Class:Model/Attribute:Type/Value:DiskArray+' => 'Disk Array',
 	'Class:Model/Attribute:Type/Value:Enclosure' => 'Enclosure',
 	'Class:Model/Attribute:Type/Value:Enclosure+' => 'Enclosure',
 	'Class:Model/Attribute:Type/Value:IpPhone' => 'Ip Phone',

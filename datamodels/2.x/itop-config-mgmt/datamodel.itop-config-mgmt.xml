@@ -1938,12 +1938,12 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="powerA_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT ElectricalConnection WHERE location_id= :this->location_id]]></filter>
+          <filter><![CDATA[SELECT PowerConnection WHERE location_id= :this->location_id]]></filter>
           <dependencies>
             <attribute id="location_id"/>
           </dependencies>
           <sql>powera_id</sql>
-          <target_class>ElectricalConnection</target_class>
+          <target_class>PowerConnection</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -1952,12 +1952,12 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="powerB_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT ElectricalConnection WHERE location_id= :this->location_id]]></filter>
+          <filter><![CDATA[SELECT PowerConnection WHERE location_id= :this->location_id]]></filter>
           <dependencies>
             <attribute id="location_id"/>
           </dependencies>
           <sql>powerB_id</sql>
-          <target_class>ElectricalConnection</target_class>
+          <target_class>PowerConnection</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -5648,7 +5648,7 @@
             <value>TapeLibrary</value>
             <value>IpPhone</value>
             <value>Peripheral</value>
-            <value>Arrival</value>
+            <value>PowerSource</value>
             <value>PDU</value>
           </values>
           <sql>type</sql>
@@ -7800,10 +7800,61 @@
       <oql>SELECT Group</oql>
       <do_search>1</do_search>
     </menu>
-    <menu id="Typology" xsi:type="TemplateMenuNode" _delta="define">
-      <rank>80</rank>
-      <parent>Catalogs</parent>
-      <template_file>typology_menu.html</template_file>
-    </menu>
+  <menu id="Typology" xsi:type="DashboardMenuNode" _delta="define">
+    <rank>80</rank>
+    <parent>Catalogs</parent>
+    <definition>
+      <layout>DashboardLayoutOneCol</layout>
+      <title>Menu:ConfigManagement:Typology</title>
+      <cells>
+        <cell id="0">
+          <rank>0</rank>
+          <dashlets>
+            <dashlet id="1" xsi:type="DashletHeaderStatic">
+              <rank>0</rank>
+              <title>Menu:ConfigManagement:Typology</title>
+              <icon>itop-config-mgmt/images/typology.png</icon>
+            </dashlet>
+            <dashlet id="2" xsi:type="DashletBadge">
+              <rank>1</rank>
+              <class>Brand</class>
+            </dashlet>
+            <dashlet id="3" xsi:type="DashletBadge">
+              <rank>2</rank>
+              <class>Model</class>
+            </dashlet>
+            <dashlet id="4" xsi:type="DashletBadge">
+              <rank>3</rank>
+              <class>OSfamily</class>
+            </dashlet>
+            <dashlet id="5" xsi:type="DashletBadge">
+              <rank>4</rank>
+              <class>OSversion</class>
+            </dashlet>
+            <dashlet id="6" xsi:type="DashletBadge">
+              <rank>5</rank>
+              <class>IOSversion</class>
+            </dashlet>
+            <dashlet id="7" xsi:type="DashletBadge">
+              <rank>6</rank>
+              <class>NetworkDeviceType</class>
+            </dashlet>
+            <dashlet id="8" xsi:type="DashletBadge">
+              <rank>7</rank>
+              <class>ContractType</class>
+            </dashlet>
+            <dashlet id="9" xsi:type="DashletBadge">
+              <rank>8</rank>
+              <class>ContactType</class>
+            </dashlet>
+            <dashlet id="10" xsi:type="DashletBadge">
+              <rank>9</rank>
+              <class>DocumentType</class>
+            </dashlet>
+          </dashlets>
+        </cell>
+      </cells>
+    </definition>
+  </menu>
   </menus>
 </itop_design>

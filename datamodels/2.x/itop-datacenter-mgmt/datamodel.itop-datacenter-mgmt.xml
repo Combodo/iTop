@@ -389,13 +389,13 @@
         </list>
       </presentation>
     </class>
-    <class id="ElectricalConnection" _delta="define">
+    <class id="PowerConnection" _delta="define">
       <parent>PhysicalDevice</parent>
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
-        <db_table>electricalconnection</db_table>
+        <db_table>powerconnection</db_table>
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
@@ -573,13 +573,13 @@
         </list>
       </presentation>
     </class>
-    <class id="Arrival" _delta="define">
-      <parent>ElectricalConnection</parent>
+    <class id="PowerSource" _delta="define">
+      <parent>PowerConnection</parent>
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
-        <db_table>arrival</db_table>
+        <db_table>powersource</db_table>
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
@@ -738,7 +738,7 @@
       </presentation>
     </class>
     <class id="PDU" _delta="define">
-      <parent>ElectricalConnection</parent>
+      <parent>PowerConnection</parent>
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
@@ -774,12 +774,12 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="powerstart_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT ElectricalConnection WHERE id != :this->id AND location_id = :this->location_id]]></filter>
+          <filter><![CDATA[SELECT PowerConnection WHERE id != :this->id AND location_id = :this->location_id]]></filter>
           <dependencies>
             <attribute id="location_id"/>
           </dependencies>
           <sql>powerstart_id</sql>
-          <target_class>ElectricalConnection</target_class>
+          <target_class>PowerConnection</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -941,7 +941,7 @@
         </dashlet>
         <dashlet id="10" xsi:type="DashletBadge" _delta="define">
           <rank>9</rank>
-          <class>ElectricalConnection</class>
+          <class>PowerConnection</class>
         </dashlet>
       </dashlets>
     </cell>
