@@ -7,8 +7,8 @@
       <banner>/images/modules.png</banner>
       <options type="array">
         <choice>
-          <title>Configuration Management Base</title>
-          <description>This module is always installed, it contains all the base objects that are mandatory in the iTop CMDB: Organizations, Locations, Teams, Persons, etc.</description>
+          <title>Configuration Management Core</title>
+          <description>All the base objects that are mandatory in the iTop CMDB: Organizations, Locations, Teams, Persons, etc.</description>
           <modules type="array">
             <module>itop-config-mgmt</module>
             <module>itop-attachments</module>
@@ -33,7 +33,7 @@
         </choice>
         <choice>
           <title>Storage Devices</title>
-          <description>Manage storage devices such as NAS, SAN Switches, Tape Libraries and Tapes, Logical volumes, etc.</description>
+          <description>Manage storage devices such as NAS, SAN Switches, Tape Libraries and Tapes, etc.</description>
           <modules type="array">
             <module>itop-storage-mgmt</module>
           </modules>
@@ -50,7 +50,7 @@
     <step>
       <title>Service Management options</title>
       <description><![CDATA[<h2>Select the choice that best describes the relationships between the services and the IT infrastructure in your IT environment.</h2>]]></description>
-      <banner>./wizard_icons/service.png</banner>
+      <banner>./wizard-icons/service.png</banner>
       <alternatives type="array">
         <choice>
           <title>Service Management for Enterprises</title>
@@ -71,8 +71,8 @@
     </step>
     <step>
       <title>Tickets Management options</title>
-      <description>Select the type of tickets you want to use in order to respond to user requests and incidents.</description>
-      <banner></banner>
+      <description><![CDATA[<h2>Select the type of tickets you want to use in order to respond to user requests and incidents.</h2>]]></description>
+      <banner>./itop-incident-mgmt-itil/images/incident-escalated.png</banner>
       <alternatives type="array">
         <choice>
           <title>Simple Ticket Management</title>
@@ -119,7 +119,7 @@
     <step>
       <title>Change Management options</title>
       <description><![CDATA[<h2>Select the type of tickets you want to use in order to manage changes to the IT infrastructure.</h2>]]></description>
-      <banner>./itop-change-mgmt-1.0.0/images/change.png</banner>
+      <banner>./itop-change-mgmt/images/change.png</banner>
       <alternatives type="array">
         <choice>
           <title>Simple Change Management</title>
@@ -148,7 +148,7 @@
     <step>
       <title>Additional ITIL tickets</title>
       <description><![CDATA[<h2>Pick from the list below the additional ITIl processes that are to be implemented in iTop.</h2>]]></description>
-      <banner>./itop-change-mgmt-1.0.0/images/change.png</banner>
+      <banner>./itop-knownerror-mgmt/images/known-error.png</banner>
       <options type="array">
         <choice>
           <title>Known Errors Management</title>
