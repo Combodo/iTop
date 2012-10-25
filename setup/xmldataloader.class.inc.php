@@ -212,8 +212,9 @@ class XMLDataLoader
 				if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
 				{
 					$sMsg = "Unknown attribute code - $sClass/$sAttCode";
-					SetupPage::log_error($sMsg);
-					throw(new Exception($sMsg));
+					continue; // ignore silently...
+					//SetupPage::log_error($sMsg);
+					//throw(new Exception($sMsg));
 				}
 
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
