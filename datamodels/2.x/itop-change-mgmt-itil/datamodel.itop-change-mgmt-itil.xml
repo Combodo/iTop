@@ -5138,9 +5138,6 @@
                     <item id="approval_comment">
                       <rank>60</rank>
                     </item>
-                    <item id="acceptance_comment">
-                      <rank>70</rank>
-                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Ticket:contact">
