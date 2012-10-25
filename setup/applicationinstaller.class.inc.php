@@ -120,6 +120,16 @@ class ApplicationInstaller
 					'next-step' => 'copy',
 					'next-step-label' => 'Copying data model files',
 				);
+				
+				// Log the parameters...
+				$oDoc = new DOMDocument('1.0', 'UTF-8');
+				$oDoc->preserveWhiteSpace = false;
+				$oDoc->formatOutput = true;
+				$this->oParams->ToXML($oDoc, null, 'installation');
+				$sXML = $oDoc->saveXML();
+				$sSafeXml = preg_replace("|<pwd>([^<]*)</pwd>|", "<pwd>**removed**</pwd>", $sXML);
+				SetupPage::log_info("======= Installation starts =======\nParameters:\n$sSafeXml\n");
+				
 				break;
 				
 				case 'copy':
