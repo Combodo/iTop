@@ -59,6 +59,7 @@ class PortalWebPage extends NiceWebPage
 		$this->add_header("Cache-control: no-cache");
 		$this->add_linked_stylesheet("../css/jquery.treeview.css");
 		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
+		$this->add_linked_stylesheet("../css/jquery.multiselect.css");
 		$sAbsURLAppRoot = addslashes(utils::GetAbsoluteUrlAppRoot()); // Pass it to Javascript scripts
 		$sAbsURLModulesRoot = addslashes(utils::GetAbsoluteUrlModulesRoot()); // Pass it to Javascript scripts
 		$oAppContext = new ApplicationContext();
@@ -86,6 +87,7 @@ class PortalWebPage extends NiceWebPage
 		$this->add_linked_script("../js/forms-json-utils.js");
 		$this->add_linked_script("../js/swfobject.js");
 		$this->add_linked_script("../js/jquery.qtip-1.0.min.js");
+		$this->add_linked_script('../js/jquery.multiselect.min.js');
 		$this->add_linked_script("../js/ajaxfileupload.js");
 		$this->add_ready_script(
 <<<EOF
@@ -597,7 +599,7 @@ EOF
 		{
 			$sFieldName = str_replace('->', PARAM_ARROW_SEP, $sAttSpec);
 			$value = utils::ReadPostedParam($sPrefix.$sFieldName, null, 'raw_data');
-			if (!is_null($value) && strlen($value) > 0)
+			if (!is_null($value) && (is_array($value) ? count($value)>0 : strlen($value)>0))
 			{
 				$oFilter->AddConditionAdvanced($sAttSpec, $value);
 				$iCountParams++;

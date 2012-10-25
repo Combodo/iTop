@@ -475,7 +475,7 @@ class DBObjectSearch
 	 * Specify a condition on external keys or link sets
 	 * @param sAttSpec Can be either an attribute code or extkey->[sAttSpec] or linkset->[sAttSpec] and so on, recursively
 	 *                 Example: infra_list->ci_id->location_id->country	 
-	 * @param value The value to match
+	 * @param value The value to match (can be an array => IN(val1, val2...)
 	 * @return void
 	 */
 	public function AddConditionAdvanced($sAttSpec, $value)
@@ -522,7 +522,18 @@ class DBObjectSearch
 		{
 			// $sAttSpec is an attribute code
 			//
-			$this->AddCondition($sAttSpec, $value);
+			if (is_array($value))
+			{
+				$oField = new FieldExpression($sAttSpec, $this->GetClass());
+				$oListExpr = ListExpression::FromScalars($value);
+				$oInValues = new BinaryExpression($oField, 'IN', $oListExpr);
+
+				$this->AddConditionExpression($oInValues);
+			}
+			else
+			{
+				$this->AddCondition($sAttSpec, $value);
+			}
 		}
 	}
 
