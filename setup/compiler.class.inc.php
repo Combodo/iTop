@@ -696,6 +696,7 @@ EOF;
 			}
 			elseif ($sAttType == 'AttributeBlob')
 			{
+				$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
 				$aParameters['depends_on'] = $sDependencies;
 			}
 			elseif ($sAttType == 'AttributeStopWatch')
