@@ -289,7 +289,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array('Class:EventNotificationEmail'
 // Class: EventIssue
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('JA JP', 'English', 'English', array(
 					       'Class:EventIssue' => 'イシューイベント', //'Issue event',
 					       'Class:EventIssue+' => 'イシュー(警告、エラーetc)のトレース', //'Trace of an issue (warning, error, etc.)',
 					       'Class:EventIssue/Attribute:issue' => 'イシュー', //'Issue',
