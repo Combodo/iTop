@@ -527,6 +527,19 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
+// Class: TriggerOnThresholdReached
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:TriggerOnThresholdReached' => 'Trigger (on timeout)',
+	'Class:TriggerOnThresholdReached+' => 'Trigger on Stop-Watch threshold reached',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stop watch',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Threshold',
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
+));
+
+//
 // Class: lnkTriggerAction
 //
 
