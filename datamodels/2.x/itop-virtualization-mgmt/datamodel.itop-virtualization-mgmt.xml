@@ -801,6 +801,111 @@
         </list>
       </presentation>
     </class>
+    <class id="LogicalInterface" _delta="define">
+      <parent>IPinterface</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>logicalinterface</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="virtualmachine_name"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon>images/interface.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="virtualmachine_id"/>
+            <attribute id="virtualmachine_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="virtualmachine_id" xsi:type="AttributeExternalKey">
+          <sql>virtualmachine_id</sql>
+          <target_class>VirtualMachine</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="virtualmachine_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>virtualmachine_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="ipaddress">
+              <rank>10</rank>
+            </item>
+            <item id="macaddress">
+              <rank>20</rank>
+            </item>
+            <item id="comment">
+              <rank>30</rank>
+            </item>
+            <item id="ipgateway">
+              <rank>40</rank>
+            </item>
+            <item id="ipmask">
+              <rank>50</rank>
+            </item>
+            <item id="speed">
+              <rank>60</rank>
+            </item>
+            <item id="virtualmachine_id">
+              <rank>70</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="ipaddress">
+              <rank>10</rank>
+            </item>
+            <item id="macaddress">
+              <rank>20</rank>
+            </item>
+            <item id="ipgateway">
+              <rank>30</rank>
+            </item>
+            <item id="ipmask">
+              <rank>40</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="ipaddress">
+              <rank>10</rank>
+            </item>
+            <item id="macaddress">
+              <rank>20</rank>
+            </item>
+            <item id="comment">
+              <rank>30</rank>
+            </item>
+            <item id="ipgateway">
+              <rank>40</rank>
+            </item>
+            <item id="ipmask">
+              <rank>50</rank>
+            </item>
+            <item id="speed">
+              <rank>60</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>   
 </classes>
 <menus>
   <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">

@@ -1436,8 +1436,11 @@
       $aRels = array(
         // Actually this should be limited to the Software instances based on a DBServer Application type...
         "server" => array("sQuery"=>"SELECT Server AS s JOIN lnkServerToVolume AS l1 ON l1.server_id=s.id  WHERE l1.volume_id = :this->id", "bPropagate"=>true, "iDistance"=>5),  
-        "virtualdevice" => array("sQuery"=>"SELECT VirtualDevice AS vd JOIN lnkVirtualDeviceToVolume AS l1 ON l1.virtualdevice_id=vd.id  WHERE l1.volume_id = :this->id", "bPropagate"=>true, "iDistance"=>5),
       );
+      if (class_exists('VirtualDevice'))
+      {
+        $aRels["virtualdevice"] = array("sQuery"=>"SELECT VirtualDevice AS vd JOIN lnkVirtualDeviceToVolume AS l1 ON l1.virtualdevice_id=vd.id  WHERE l1.volume_id = :this->id", "bPropagate"=>true, "iDistance"=>5);
+      }
       return array_merge($aRels, parent::GetRelationQueries($sRelCode));
       break;
       
