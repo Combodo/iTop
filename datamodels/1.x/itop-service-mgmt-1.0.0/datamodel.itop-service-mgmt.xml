@@ -2031,10 +2031,10 @@
     <menu id="ServiceManagement" xsi:type="MenuGroup" _delta="define">
       <rank>60</rank>
     </menu>
-    <menu id="Service:Overview" xsi:type="TemplateMenuNode" _delta="define">
+    <menu id="Service:Overview" xsi:type="DashboardMenuNode" _delta="define">
       <rank>0</rank>
       <parent>ServiceManagement</parent>
-      <template_file>overview.html</template_file>
+      <definition_file>overview.xml</definition_file>
     </menu>
     <menu id="ProviderContract" xsi:type="OQLMenuNode" _delta="define">
       <rank>1</rank>

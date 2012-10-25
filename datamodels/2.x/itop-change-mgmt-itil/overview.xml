@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <layout>DashboardLayoutTwoCols</layout>
+  <title>UI:ChangeMgmtMenuOverview:Title</title>
+  <cells>
+    <cell id="0">
+      <rank>0</rank>
+      <dashlets>
+        <dashlet id="1" xsi:type="DashletGroupByTable">
+          <rank>0</rank>
+          <title>UI-ChangeManagementOverview-ChangeByCategory-last-7-days</title>
+          <query>SELECT Change WHERE start_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
+          <group_by>category</group_by>
+          <style>table</style>
+        </dashlet>
+      </dashlets>
+    </cell>
+    <cell id="1">
+      <rank>1</rank>
+      <dashlets>
+        <dashlet id="2" xsi:type="DashletGroupByBars">
+          <rank>0</rank>
+          <title>UI-ChangeManagementOverview-Last-7-days</title>
+          <query>SELECT Change WHERE start_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
+          <group_by>start_date:day_of_month</group_by>
+          <style>bars</style>
+        </dashlet>
+      </dashlets>
+    </cell>
+    <cell id="2">
+      <rank>2</rank>
+      <dashlets>
+        <dashlet id="3" xsi:type="DashletGroupByTable">
+          <rank>0</rank>
+          <title>UI-ChangeManagementOverview-ChangeByDomain-last-7-days</title>
+          <query>SELECT Change WHERE start_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
+          <group_by>finalclass</group_by>
+          <style>table</style>
+        </dashlet>
+      </dashlets>
+    </cell>
+    <cell id="3">
+      <rank>3</rank>
+      <dashlets>
+        <dashlet id="4" xsi:type="DashletGroupByTable">
+          <rank>0</rank>
+          <title>UI-ChangeManagementOverview-ChangeByStatus-last-7-days</title>
+          <query>SELECT Change WHERE start_date &gt; DATE_SUB(NOW(),
+            INTERVAL 7 DAY)</query>
+          <group_by>status</group_by>
+          <style>table</style>
+        </dashlet>
+      </dashlets>
+    </cell>
+  </cells>
+</dashboard>

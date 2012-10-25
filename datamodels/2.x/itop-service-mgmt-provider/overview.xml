@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <title>UI:ServiceMgmtMenuOverview:Title</title>
+  <layout>DashboardLayoutTwoCols</layout>
+  <cells>
+    <cell id="1">
+      <rank>1</rank>
+      <dashlets>
+        <dashlet id="1" xsi:type="DashletObjectList">
+          <rank>1</rank>
+          <title>UI-ServiceManagementOverview-CustomerContractToRenew</title>
+          <query>SELECT CustomerContract AS c WHERE c.end_date &lt; DATE_ADD(NOW(), INTERVAL 30 DAY)</query>
+        </dashlet>
+      </dashlets>
+    </cell>
+    <cell id="2">
+      <rank>2</rank>
+      <dashlets>
+        <dashlet id="2" xsi:type="DashletObjectList">
+          <rank>1</rank>
+          <title>UI-ServiceManagementOverview-ProviderContractToRenew</title>
+          <query>SELECT ProviderContract AS c WHERE c.end_date &lt; DATE_ADD(NOW(), INTERVAL 30 DAY)</query>
+        </dashlet>
+      </dashlets>
+    </cell>
+  </cells>
+</dashboard>

@@ -2226,6 +2226,11 @@
     <menu id="ServiceManagement" xsi:type="MenuGroup" _delta="define">
       <rank>60</rank>
     </menu>
+    <menu id="Service:Overview" xsi:type="DashboardMenuNode" _delta="define">
+      <rank>0</rank>
+      <parent>ServiceManagement</parent>
+      <definition_file>overview.xml</definition_file>
+    </menu>
     <menu id="CustomerContract" xsi:type="OQLMenuNode" _delta="define">
       <rank>1</rank>
       <parent>ServiceManagement</parent>
