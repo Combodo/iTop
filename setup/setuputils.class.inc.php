@@ -918,7 +918,7 @@ EOF
 			}
 	
 			$sFilePath = $sDir.'/'.$sFile;
-			if (is_file($sFilePath) && preg_match('/^.+\.dict.*\.php$/i', $sFilePath, $aMatches))
+			if (is_file($sFilePath) && preg_match('/^.*dict.*\.php$/i', $sFilePath, $aMatches))
 			{
 				require_once($sFilePath);
 			}
