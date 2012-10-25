@@ -2204,6 +2204,32 @@
     </class>
   </classes>
   <menus>
+    <menu id="WelcomeMenuPage" xsi:type="DashboardMenuNode" _delta="must_exist">
+      <definition>
+        <cells>
+          <cell id="1" _delta="define">
+            <rank>1</rank>
+            <dashlets>
+              <dashlet id="8" xsi:type="DashletHeaderDynamic">
+                <rank>0</rank>
+                <title>Menu:RequestManagement</title>
+                <icon>itop-welcome-itil/images/user-request-deadline.png</icon>
+                <subtitle>Open Requests</subtitle>
+                <query>SELECT UserRequest WHERE status != "closed"</query>
+                <group_by>status</group_by>
+                <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
+              </dashlet>
+              <dashlet id="9" xsi:type="DashletObjectList">
+                <rank>1</rank>
+                <title>UI:WelcomeMenu:MyCalls</title>
+                <query>SELECT UserRequest AS i WHERE i.agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")</query>
+                <menu>true</menu>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
     <menu id="RequestManagement" xsi:type="MenuGroup" _delta="define">
       <rank>30</rank>
       <enable_class>Contact</enable_class>

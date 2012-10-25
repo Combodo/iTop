@@ -22,6 +22,7 @@ SetupWebPage::AddModule(
 		//
 		'datamodel' => array(
 			'main.itop-welcome-itil.php',
+			'model.itop-welcome-itil.php',
 		),
 		'webservice' => array(
 			//'webservices.itop-welcome-itil.php',

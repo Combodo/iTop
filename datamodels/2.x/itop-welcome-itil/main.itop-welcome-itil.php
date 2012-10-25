@@ -44,8 +44,8 @@ class ItopWelcome extends ModuleHandlerAPI
 {
 	public static function OnMenuCreation()
 	{
-		$oWelcomeMenu = new MenuGroup('WelcomeMenu', 10 /* fRank */);
-		new DashboardMenuNode('WelcomeMenuPage', dirname(__FILE__).'/welcome_menu.xml', $oWelcomeMenu->GetIndex() /* oParent */, 1 /* fRank */);
+		//$oWelcomeMenu = new MenuGroup('WelcomeMenu', 10 /* fRank */);
+		//new DashboardMenuNode('WelcomeMenuPage', dirname(__FILE__).'/welcome_menu.xml', $oWelcomeMenu->GetIndex() /* oParent */, 1 /* fRank */);
 		
 		$oToolsMenu = new MenuGroup('DataAdministration', 70 /* fRank */, 'Organization', UR_ACTION_MODIFY, UR_ALLOWED_YES|UR_ALLOWED_DEPENDS);
 		new WebPageMenuNode('CSVImportMenu', utils::GetAbsoluteUrlAppRoot().'pages/csvimport.php', $oToolsMenu->GetIndex(), 1 /* fRank */);

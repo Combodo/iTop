@@ -1,28 +1,26 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010 Combodo SARL
 //
-//   This file is part of iTop.
+//   This program is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by
+//   the Free Software Foundation; version 3 of the License.
 //
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
+//   This program is distributed in the hope that it will be useful,
 //   but WITHOUT ANY WARRANTY; without even the implied warranty of
 //   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
+//   GNU General Public License for more details.
 //
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+//   You should have received a copy of the GNU General Public License
+//   along with this program; if not, write to the Free Software
+//   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-datacenter-mgmt/2.0.0',
+	'itop-endusers-devices/2.0.0',
 	array(
 		// Identification
 		//
-		'label' => 'Datacenter Management',
+		'label' => 'End User Devices management',
 		'category' => 'business',
 
 		// Setup
@@ -36,8 +34,7 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-datacenter-mgmt.php',
-			
+			'model.itop-endusers-devices.php'
 		),
 		'webservice' => array(
 			
@@ -47,7 +44,6 @@ SetupWebPage::AddModule(
 		),
 		'data.sample' => array(
 			// add your sample data XML files here,
-			'data.sample.racks.xml',
 		),
 		
 		// Documentation

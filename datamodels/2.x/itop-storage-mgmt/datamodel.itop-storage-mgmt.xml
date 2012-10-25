@@ -1,0 +1,1855 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+  <classes>
+    <class id="StorageSystem" _delta="define">
+      <parent>DatacenterDevice</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>storagesystem</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon>images/storageArea.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="organization_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="logicalvolume_list" xsi:type="AttributeLinkedSet">
+          <linked_class>LogicalVolume</linked_class>
+          <ext_key_to_me>storagesystem_id</ext_key_to_me>
+          <edit_mode>in_place</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+      </fields>
+      <methods>
+        <method id="GetRelationQueries">
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
+  {
+    switch ($sRelCode)
+    {
+    case "impacts":
+      $aRels = array(
+        "logicalvolume" => array("sQuery"=>"SELECT LogicalVolume WHERE storagesystem_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
+      );
+      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+      break;
+    default:
+      return parent::GetRelationQueries($sRelCode);
+    }
+  }]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="contacts_list">
+              <rank>10</rank>
+            </item>
+            <item id="documents_list">
+              <rank>20</rank>
+            </item>
+            <item id="tickets_list">
+              <rank>30</rank>
+            </item>
+            <item id="physicalinterface_list">
+              <rank>40</rank>
+            </item>
+            <item id="fiberinterfacelist_list">
+              <rank>50</rank>
+            </item>
+            <item id="networkdevice_list">
+              <rank>60</rank>
+            </item>
+            <item id="logicalvolume_list">
+              <rank>70</rank>
+            </item>
+            <item id="san_list">
+              <rank>80</rank>
+            </item>
+            <item id="providercontracts_list">
+              <rank>90</rank>
+            </item>
+            <item id="services_list">
+              <rank>100</rank>
+            </item>
+            <item id="col:col1">
+              <rank>110</rank>
+              <items>
+                <item id="fieldset:Server:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="rack_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="enclosure_id">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="brand_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="model_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="nb_u">
+                      <rank>30</rank>
+                    </item>
+                    <item id="serialnumber">
+                      <rank>40</rank>
+                    </item>
+                    <item id="asset_number">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>120</rank>
+              <items>
+                <item id="fieldset:Server:Date">
+                  <rank>10</rank>
+                  <items>
+                    <item id="move2production">
+                      <rank>10</rank>
+                    </item>
+                    <item id="purchase_date">
+                      <rank>20</rank>
+                    </item>
+                    <item id="end_of_warranty">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="powerA_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="powerB_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="description">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="brand_id">
+              <rank>60</rank>
+            </item>
+            <item id="model_id">
+              <rank>70</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>80</rank>
+            </item>
+            <item id="asset_number">
+              <rank>90</rank>
+            </item>
+            <item id="powerA_id">
+              <rank>100</rank>
+            </item>
+            <item id="powerB_id">
+              <rank>110</rank>
+            </item>
+            <item id="move2production">
+              <rank>120</rank>
+            </item>
+            <item id="purchase_date">
+              <rank>130</rank>
+            </item>
+            <item id="end_of_warranty">
+              <rank>140</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="location_id">
+              <rank>40</rank>
+            </item>
+            <item id="brand_id">
+              <rank>50</rank>
+            </item>
+            <item id="model_id">
+              <rank>60</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>70</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="SANSwitch" _delta="define">
+      <parent>DatacenterDevice</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>sanswitch</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon>images/switch.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="organization_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="datacenterdevice_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkSanToDatacenterDevice</linked_class>
+          <ext_key_to_me>san_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>datacenterdevice_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
+      <methods>
+        <method id="GetRelationQueries">
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
+  {
+    switch ($sRelCode)
+    {
+    case "impacts":
+      $aRels = array(
+        "datacenterdevice" => array("sQuery"=>"SELECT DatacenterDevice AS dc JOIN lnkSanToDatacenterDevice AS l1 ON l1.datacenterdevice_id = dc.id WHERE l1.san_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
+
+      );
+      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+      break;
+    default:
+      return parent::GetRelationQueries($sRelCode);
+    }
+  }]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="contacts_list">
+              <rank>10</rank>
+            </item>
+            <item id="documents_list">
+              <rank>20</rank>
+            </item>
+            <item id="tickets_list">
+              <rank>30</rank>
+            </item>
+            <item id="physicalinterface_list">
+              <rank>40</rank>
+            </item>
+            <item id="fiberinterfacelist_list">
+              <rank>50</rank>
+            </item>
+            <item id="networkdevice_list">
+              <rank>60</rank>
+            </item>
+            <item id="datacenterdevice_list">
+              <rank>70</rank>
+            </item>
+            <item id="providercontracts_list">
+              <rank>80</rank>
+            </item>
+            <item id="services_list">
+              <rank>90</rank>
+            </item>
+            <item id="col:col1">
+              <rank>100</rank>
+              <items>
+                <item id="fieldset:Server:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="rack_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="enclosure_id">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="brand_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="model_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="nb_u">
+                      <rank>30</rank>
+                    </item>
+                    <item id="serialnumber">
+                      <rank>40</rank>
+                    </item>
+                    <item id="asset_number">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>110</rank>
+              <items>
+                <item id="fieldset:Server:Date">
+                  <rank>10</rank>
+                  <items>
+                    <item id="move2production">
+                      <rank>10</rank>
+                    </item>
+                    <item id="purchase_date">
+                      <rank>20</rank>
+                    </item>
+                    <item id="end_of_warranty">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="powerA_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="powerB_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="description">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="brand_id">
+              <rank>60</rank>
+            </item>
+            <item id="model_id">
+              <rank>70</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>80</rank>
+            </item>
+            <item id="asset_number">
+              <rank>90</rank>
+            </item>
+            <item id="powerA_id">
+              <rank>100</rank>
+            </item>
+            <item id="powerB_id">
+              <rank>110</rank>
+            </item>
+            <item id="move2production">
+              <rank>120</rank>
+            </item>
+            <item id="purchase_date">
+              <rank>130</rank>
+            </item>
+            <item id="end_of_warranty">
+              <rank>140</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="location_id">
+              <rank>40</rank>
+            </item>
+            <item id="brand_id">
+              <rank>50</rank>
+            </item>
+            <item id="model_id">
+              <rank>60</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>70</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="TapeLibrary" _delta="define">
+      <parent>DatacenterDevice</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>tapelibrary</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon>images/tapelibrary.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="organization_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="tapes_list" xsi:type="AttributeLinkedSet">
+          <linked_class>Tape</linked_class>
+          <ext_key_to_me>tapelibrary_id</ext_key_to_me>
+          <edit_mode>in_place</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+      </fields>
+      <methods>
+        <method id="GetRelationQueries">
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
+  {
+    switch ($sRelCode)
+    {
+    case "impacts":
+      $aRels = array(
+        "tape" => array("sQuery"=>"SELECT Tape  WHERE tapelibrary_id= :this->id", "bPropagate"=>true, "iDistance"=>10),
+
+      );
+      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+      break;
+    default:
+      return parent::GetRelationQueries($sRelCode);
+    }
+  }]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="tapes_list">
+              <rank>10</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>20</rank>
+            </item>
+            <item id="documents_list">
+              <rank>30</rank>
+            </item>
+            <item id="tickets_list">
+              <rank>40</rank>
+            </item>
+            <item id="physicalinterface_list">
+              <rank>50</rank>
+            </item>
+            <item id="fiberinterfacelist_list">
+              <rank>60</rank>
+            </item>
+            <item id="networkdevice_list">
+              <rank>70</rank>
+            </item>
+            <item id="providercontracts_list">
+              <rank>80</rank>
+            </item>
+            <item id="services_list">
+              <rank>90</rank>
+            </item>
+            <item id="col:col1">
+              <rank>100</rank>
+              <items>
+                <item id="fieldset:Server:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="rack_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="enclosure_id">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="brand_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="model_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="nb_u">
+                      <rank>30</rank>
+                    </item>
+                    <item id="serialnumber">
+                      <rank>40</rank>
+                    </item>
+                    <item id="asset_number">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>110</rank>
+              <items>
+                <item id="fieldset:Server:Date">
+                  <rank>10</rank>
+                  <items>
+                    <item id="move2production">
+                      <rank>10</rank>
+                    </item>
+                    <item id="purchase_date">
+                      <rank>20</rank>
+                    </item>
+                    <item id="end_of_warranty">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="powerA_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="powerB_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="description">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="brand_id">
+              <rank>60</rank>
+            </item>
+            <item id="model_id">
+              <rank>70</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>80</rank>
+            </item>
+            <item id="asset_number">
+              <rank>90</rank>
+            </item>
+            <item id="powerA_id">
+              <rank>100</rank>
+            </item>
+            <item id="powerB_id">
+              <rank>110</rank>
+            </item>
+            <item id="move2production">
+              <rank>120</rank>
+            </item>
+            <item id="purchase_date">
+              <rank>130</rank>
+            </item>
+            <item id="end_of_warranty">
+              <rank>140</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="location_id">
+              <rank>40</rank>
+            </item>
+            <item id="brand_id">
+              <rank>50</rank>
+            </item>
+            <item id="model_id">
+              <rank>60</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>70</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="NAS" _delta="define">
+      <parent>DatacenterDevice</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>nas</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon>images/nas.jpeg</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="organization_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="nasfilesystem_list" xsi:type="AttributeLinkedSet">
+          <linked_class>NasFileSystem</linked_class>
+          <ext_key_to_me>nas_id</ext_key_to_me>
+          <edit_mode>in_place</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+      </fields>
+      <methods>
+        <method id="GetRelationQueries">
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
+  {
+    switch ($sRelCode)
+    {
+    case "impacts":
+      $aRels = array(
+        "nasfilesystem" => array("sQuery"=>"SELECT NasFileSystem WHERE nas_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
+
+      );
+      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+      break;
+    default:
+      return parent::GetRelationQueries($sRelCode);
+    }
+  }]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="contacts_list">
+              <rank>10</rank>
+            </item>
+            <item id="documents_list">
+              <rank>20</rank>
+            </item>
+            <item id="tickets_list">
+              <rank>30</rank>
+            </item>
+            <item id="physicalinterface_list">
+              <rank>40</rank>
+            </item>
+            <item id="fiberinterfacelist_list">
+              <rank>50</rank>
+            </item>
+            <item id="networkdevice_list">
+              <rank>60</rank>
+            </item>
+            <item id="nasfilesystem_list">
+              <rank>70</rank>
+            </item>
+            <item id="providercontracts_list">
+              <rank>80</rank>
+            </item>
+            <item id="services_list">
+              <rank>90</rank>
+            </item>
+            <item id="col:col1">
+              <rank>100</rank>
+              <items>
+                <item id="fieldset:Server:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="rack_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="enclosure_id">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="brand_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="model_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="nb_u">
+                      <rank>30</rank>
+                    </item>
+                    <item id="serialnumber">
+                      <rank>40</rank>
+                    </item>
+                    <item id="asset_number">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>110</rank>
+              <items>
+                <item id="fieldset:Server:Date">
+                  <rank>10</rank>
+                  <items>
+                    <item id="move2production">
+                      <rank>10</rank>
+                    </item>
+                    <item id="purchase_date">
+                      <rank>20</rank>
+                    </item>
+                    <item id="end_of_warranty">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="powerA_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="powerB_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="description">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="brand_id">
+              <rank>60</rank>
+            </item>
+            <item id="model_id">
+              <rank>70</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>80</rank>
+            </item>
+            <item id="asset_number">
+              <rank>90</rank>
+            </item>
+            <item id="powerA_id">
+              <rank>100</rank>
+            </item>
+            <item id="powerB_id">
+              <rank>110</rank>
+            </item>
+            <item id="move2production">
+              <rank>120</rank>
+            </item>
+            <item id="purchase_date">
+              <rank>130</rank>
+            </item>
+            <item id="end_of_warranty">
+              <rank>140</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="location_id">
+              <rank>40</rank>
+            </item>
+            <item id="brand_id">
+              <rank>50</rank>
+            </item>
+            <item id="model_id">
+              <rank>60</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>70</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="Tape" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable,configmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>tape</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon>images/tape.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="tapelibrary_id"/>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="size" xsi:type="AttributeString">
+          <sql>size</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="tapelibrary_id" xsi:type="AttributeExternalKey">
+          <sql>tapelibrary_id</sql>
+          <target_class>TapeLibrary</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="tapelibrary_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>tapelibrary_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods>
+        <method id="GetRelationQueries">
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
+  {
+    switch ($sRelCode)
+    {
+      case "impacts":
+      $aRels = array(
+
+      );
+      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+      break;
+      
+      case 'depends on':
+      $aRels = array(
+        "tapelibrary" => array("sQuery"=>"SELECT TapeLibrary  WHERE id = :this->tapelibrary_id", "bPropagate"=>true, "iDistance"=>5), 
+      );
+      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+      break;
+      
+      default:
+      return parent::GetRelationQueries($sRelCode);     
+    }
+  }]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="tapelibrary_id">
+              <rank>30</rank>
+            </item>
+            <item id="size">
+              <rank>40</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="tapelibrary_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="tapelibrary_id">
+              <rank>10</rank>
+            </item>
+            <item id="size">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="NasFileSystem" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable,configmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>nasfilesystem</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon>images/filesystem.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="nas_id"/>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="raid_level" xsi:type="AttributeString">
+          <sql>raid_level</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="size" xsi:type="AttributeString">
+          <sql>size</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="nas_id" xsi:type="AttributeExternalKey">
+          <sql>nas_id</sql>
+          <target_class>NAS</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="nas_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>nas_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods>
+        <method id="GetRelationQueries">
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
+  {
+    switch ($sRelCode)
+    {
+      case "impacts":
+      $aRels = array(
+
+      );
+      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+      break;
+      
+      case 'depends on':
+      $aRels = array(
+        "nas" => array("sQuery"=>"SELECT NAS  WHERE id = :this->nas_id", "bPropagate"=>true, "iDistance"=>5), 
+      );
+      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+      break;
+      
+      default:
+      return parent::GetRelationQueries($sRelCode);     
+    }
+  }]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="nas_id">
+              <rank>30</rank>
+            </item>
+            <item id="raid_level">
+              <rank>40</rank>
+            </item>
+            <item id="size">
+              <rank>50</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="nas_id">
+              <rank>20</rank>
+            </item>
+            <item id="raid_level">
+              <rank>30</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="nas_id">
+              <rank>10</rank>
+            </item>
+            <item id="raid_level">
+              <rank>20</rank>
+            </item>
+            <item id="size">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="FiberChannelInterface" _delta="define">
+      <parent>NetworkInterface</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>fiberchannelinterface</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="datacenterdevice_name"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon>images/application.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="datacenterdevice_id"/>
+            <attribute id="datacenterdevice_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="speed" xsi:type="AttributeDecimal">
+          <sql>speed</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <digits>6</digits>
+          <decimals>2</decimals>
+        </field>
+        <field id="topology" xsi:type="AttributeString">
+          <sql>topology</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="wwn" xsi:type="AttributeString">
+          <sql>wwn</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="datacenterdevice_id" xsi:type="AttributeExternalKey">
+          <sql>datacenterdevice_id</sql>
+          <target_class>DatacenterDevice</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="datacenterdevice_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>datacenterdevice_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="datacenterdevice_id">
+              <rank>20</rank>
+            </item>
+            <item id="speed">
+              <rank>30</rank>
+            </item>
+            <item id="topology">
+              <rank>40</rank>
+            </item>
+            <item id="wwn">
+              <rank>50</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="speed">
+              <rank>20</rank>
+            </item>
+            <item id="topology">
+              <rank>30</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="datacenterdevice_id">
+              <rank>20</rank>
+            </item>
+            <item id="speed">
+              <rank>30</rank>
+            </item>
+            <item id="topology">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="LogicalVolume" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable,configmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>logicalvolume</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="storagesystem_name"/>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon>images/volume.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="lun_id"/>
+            <attribute id="name"/>
+            <attribute id="storagesystem_id"/>
+            <attribute id="storagesystem_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="lun_id" xsi:type="AttributeString">
+          <sql>lun_id</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="raid_level" xsi:type="AttributeString">
+          <sql>raid_level</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="size" xsi:type="AttributeString">
+          <sql>size</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="storagesystem_id" xsi:type="AttributeExternalKey">
+          <sql>storagesystem_id</sql>
+          <target_class>StorageSystem</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="storagesystem_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>storagesystem_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="servers_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkServerToVolume</linked_class>
+          <ext_key_to_me>volume_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>server_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+        <field id="virtualdevices_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkVirtualDeviceToVolume</linked_class>
+          <ext_key_to_me>volume_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>virtualdevice_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
+      <methods>
+        <method id="GetRelationQueries">
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
+  {
+    switch ($sRelCode)
+    {
+      case "impacts":
+      $aRels = array(
+        // Actually this should be limited to the Software instances based on a DBServer Application type...
+        "server" => array("sQuery"=>"SELECT Server AS s JOIN lnkServerToVolume AS l1 ON l1.server_id=s.id  WHERE l1.volume_id = :this->id", "bPropagate"=>true, "iDistance"=>5),  
+        "virtualdevice" => array("sQuery"=>"SELECT VirtualDevice AS vd JOIN lnkVirtualDeviceToVolume AS l1 ON l1.virtualdevice_id=vd.id  WHERE l1.volume_id = :this->id", "bPropagate"=>true, "iDistance"=>5),
+      );
+      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+      break;
+      
+      case 'depends on':
+      $aRels = array(
+        "sotragesystem" => array("sQuery"=>"SELECT StorageStystem AS storage WHERE storage.id = :this->storagesystem_id", "bPropagate"=>true, "iDistance"=>5),  
+      );
+      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+      break;
+      
+      default:
+      return parent::GetRelationQueries($sRelCode);     
+    }
+  }]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="lun_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="storagesystem_id">
+              <rank>40</rank>
+            </item>
+            <item id="raid_level">
+              <rank>50</rank>
+            </item>
+            <item id="size">
+              <rank>60</rank>
+            </item>
+            <item id="servers_list">
+              <rank>70</rank>
+            </item>
+            <item id="virtualdevices_list">
+              <rank>80</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="lun_id">
+              <rank>20</rank>
+            </item>
+            <item id="storagesystem_id">
+              <rank>30</rank>
+            </item>
+            <item id="raid_level">
+              <rank>40</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="lun_id">
+              <rank>10</rank>
+            </item>
+            <item id="storagesystem_id">
+              <rank>20</rank>
+            </item>
+            <item id="raid_level">
+              <rank>30</rank>
+            </item>
+            <item id="size">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkServerToVolume" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,configmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkservertovolume</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="volume_id"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="volume_id"/>
+            <attribute id="server_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="volume_id" xsi:type="AttributeExternalKey">
+          <sql>volume_id</sql>
+          <target_class>LogicalVolume</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="volume_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>volume_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="server_id" xsi:type="AttributeExternalKey">
+          <sql>server_id</sql>
+          <target_class>Server</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="server_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>server_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="size_used" xsi:type="AttributeString">
+          <sql>size_used</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="volume_id">
+              <rank>10</rank>
+            </item>
+            <item id="server_id">
+              <rank>20</rank>
+            </item>
+            <item id="size_used">
+              <rank>30</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="volume_id">
+              <rank>10</rank>
+            </item>
+            <item id="server_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="volume_id">
+              <rank>10</rank>
+            </item>
+            <item id="server_id">
+              <rank>20</rank>
+            </item>
+            <item id="size_used">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkVirtualDeviceToVolume" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,configmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkvirtualdevicetovolume</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="volume_id"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="volume_id"/>
+            <attribute id="virtualdevice_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="volume_id" xsi:type="AttributeExternalKey">
+          <sql>volume_id</sql>
+          <target_class>LogicalVolume</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="volume_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>volume_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="virtualdevice_id" xsi:type="AttributeExternalKey">
+          <sql>virtualdevice_id</sql>
+          <target_class>VirtualDevice</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="virtualdevice_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>virtualdevice_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="size_used" xsi:type="AttributeString">
+          <sql>size_used</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="volume_id">
+              <rank>10</rank>
+            </item>
+            <item id="virtualdevice_id">
+              <rank>20</rank>
+            </item>
+            <item id="size_used">
+              <rank>30</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="volume_id">
+              <rank>10</rank>
+            </item>
+            <item id="virtualdevice_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="volume_id">
+              <rank>10</rank>
+            </item>
+            <item id="virtualdevice_id">
+              <rank>20</rank>
+            </item>
+            <item id="size_used">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkSanToDatacenterDevice" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel,configmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkdatacenterdevicetosan</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="san_id"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="san_id"/>
+            <attribute id="datacenterdevice_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="san_id" xsi:type="AttributeExternalKey">
+          <sql>san_id</sql>
+          <target_class>SANSwitch</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="san_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>san_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="datacenterdevice_id" xsi:type="AttributeExternalKey">
+          <sql>datacenterdevice_id</sql>
+          <target_class>DatacenterDevice</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="datacenterdevice_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>datacenterdevice_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="san_port" xsi:type="AttributeString">
+          <sql>san_port</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="datacenterdevice_port" xsi:type="AttributeString">
+          <sql>datacenterdevice_port</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="san_id">
+              <rank>10</rank>
+            </item>
+            <item id="san_port">
+              <rank>20</rank>
+            </item>
+            <item id="datacenterdevice_id">
+              <rank>30</rank>
+            </item>
+            <item id="datacenterdevice_port">
+              <rank>40</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="san_id">
+              <rank>10</rank>
+            </item>
+            <item id="san_port">
+              <rank>20</rank>
+            </item>
+            <item id="datacenterdevice_id">
+              <rank>30</rank>
+            </item>
+            <item id="datacenterdevice_port">
+              <rank>40</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="san_id">
+              <rank>10</rank>
+            </item>
+            <item id="san_port">
+              <rank>20</rank>
+            </item>
+            <item id="datacenterdevice_id">
+              <rank>30</rank>
+            </item>
+            <item id="datacenterdevice_port">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+</classes>
+<menus>
+    <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
+      <rank>1</rank>
+      <parent>ConfigManagement</parent>
+      <definition>
+  <layout>DashboardLayoutOneCol</layout>
+  <title></title>
+  <cells>
+    <cell id="0" _delta="must_exist">
+      <rank>0</rank>
+      <dashlets>
+        <dashlet id="6" xsi:type="DashletBadge" _delta="define">
+          <rank>5</rank>
+          <class>StorageSystem</class>
+        </dashlet>
+        <dashlet id="7" xsi:type="DashletBadge" _delta="define">
+          <rank>6</rank>
+          <class>SANSwitch</class>
+        </dashlet>
+        <dashlet id="8" xsi:type="DashletBadge" _delta="define">
+          <rank>7</rank>
+          <class>NAS</class>
+        </dashlet>
+        <dashlet id="9" xsi:type="DashletBadge" _delta="define">
+          <rank>8</rank>
+          <class>TapeLibrary</class>
+        </dashlet>
+      </dashlets>
+    </cell>
+    <cell id="4" _delta="must_exist">
+      <rank>4</rank>
+      <dashlets>
+        <dashlet id="37" xsi:type="DashletBadge" _delta="define">
+          <rank>3</rank>
+          <class>LogicalVolume</class>
+        </dashlet>
+      </dashlets>
+    </cell>
+
+    </cells>
+    </definition>
+    </menu>
+ </menus>
+</itop_design>
