@@ -420,7 +420,7 @@ class XMLDataLoader
 					}
 					catch(Exception $e)
 					{
-						$this->m_aErrors[] = "The object changes could not be tracked - $sClass/$iSrcId - ".$e->getMessage();
+						$this->m_aErrors[] = "The object changes could not be tracked - $sClass/$iExtKey - ".$e->getMessage();
 					}
 				}
 			}
