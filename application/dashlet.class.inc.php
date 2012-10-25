@@ -808,7 +808,7 @@ class DashletHeaderStatic extends Dashlet
 			while (($sFile = readdir($hDir)) !== false)
 			{
 				$aMatches = array();
-				if (($sFile != '.') && ($sFile != '..') && is_dir($sBaseDir.'/'.$sDir.'/'.$sFile))
+				if (($sFile != '.') && ($sFile != '..') && ($sFile != 'lifecycle') && is_dir($sBaseDir.'/'.$sDir.'/'.$sFile))
 				{
 					$sDirSubPath = ($sDir == '') ? $sFile : $sDir.'/'.$sFile;
 					$aResult = array_merge($aResult, self::FindIcons($sBaseDir, $sDirSubPath));
