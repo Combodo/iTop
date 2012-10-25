@@ -1274,15 +1274,18 @@ EOF
 					$sChoiceName = $sChoiceId;
 				}
 				$aScores[$sChoiceId] = 0;
-				foreach($aChoice['modules'] as $sModuleId)
+				if (array_key_exists('modules', $aChoice))
 				{
-					if ($aModules[$sModuleId]['version_db'] != '')
+					foreach($aChoice['modules'] as $sModuleId)
 					{
-						// A module corresponding to this choice is installed, increase the score of this choice
-						if (!isset($aScores[$sChoiceId])) $aScores[$sChoiceId] = 0;
-						$aScores[$sChoiceId]++;
-						$iMaxScore = max($iMaxScore, $aScores[$sChoiceId]);
-						$iScore = 99; // The whole parent choice is selected
+						if ($aModules[$sModuleId]['version_db'] != '')
+						{
+							// A module corresponding to this choice is installed, increase the score of this choice
+							if (!isset($aScores[$sChoiceId])) $aScores[$sChoiceId] = 0;
+							$aScores[$sChoiceId]++;
+							$iMaxScore = max($iMaxScore, $aScores[$sChoiceId]);
+							$iScore = 99; // The whole parent choice is selected
+						}
 					}
 				}
 			}
@@ -1584,7 +1587,7 @@ EOF
 			if ($bMandatory)
 			{
 				$sAttributes = ' checked ';
-				$sHidden = '<input type="hidden" name="choice['.$sChoiceId.']" value="'.$sChoiceId.'"/>';
+				$sHidden = '<input type="hidden" name="choice['.$sChoiceName.']" value="'.$sChoiceId.'"/>';
 			}
 			$oPage->add('<div class="choice"><input class="wiz-choice" id="choice'.$sChoiceId.'" name="choice['.$sChoiceName.']" type="radio"'.$sAttributes.' value="'.$sChoiceId.'"'.$sDisabled.'/>'.$sHidden.'&nbsp;');
 			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId);
@@ -1781,9 +1784,9 @@ EOF
 		}
 		
 		$aSelectedModules = $aInstallParams['selected_modules'];
-		
+				
 		if (isset($aMiscOptions['generate_config']))
-		{
+		{		
 			$oDoc = new DOMDocument('1.0', 'UTF-8');
 			$oDoc->preserveWhiteSpace = false;
 			$oDoc->formatOutput = true;
@@ -1791,7 +1794,6 @@ EOF
 			$oParams->LoadFromHash($aInstallParams);
 			$oParams->ToXML($oDoc, null, 'installation');
 			$sXML = $oDoc->saveXML();
-			
 			$oPage->add('<div class="closed"><span class="title">XML Config file</span><ul><pre>');
 			$oPage->add(htmlentities($sXML, ENT_QUOTES, 'UTF-8'));
 			$oPage->add('</pre></ul></div>');
@@ -1927,6 +1929,7 @@ EOF
 				'configuration_file' => $sPreviousConfigurationFile,
 			);
 		}
+		
 		return $aInstallParams;
 	}
 	
