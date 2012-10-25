@@ -5914,12 +5914,92 @@
     <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="define">
       <rank>0</rank>
       <parent>ConfigManagement</parent>
-      <definition_file>config-dashboard.xml</definition_file>
+      <definition>
+        <title>UI:ConfigMgmtMenuOverview:Title</title>
+        <layout>DashboardLayoutTwoCols</layout>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="1" xsi:type="DashletGroupByPie">
+                <rank>0</rank>
+                <title>UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus</title>
+                <query>SELECT FunctionalCI</query>
+                <group_by>status</group_by>
+                <style>pie</style>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="2" xsi:type="DashletGroupByBars">
+                <rank>0</rank>
+                <title>UI-ConfigMgmtMenuOverview-FunctionalCIByType</title>
+                <query>SELECT FunctionalCI</query>
+                <group_by>finalclass</group_by>
+                <style>bars</style>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="3" xsi:type="DashletGroupByTable">
+                <rank>0</rank>
+                <title>UI-ConfigMgmtMenuOverview-FunctionalCIByType</title>
+                <query>SELECT FunctionalCI</query>
+                <group_by>finalclass</group_by>
+                <style>table</style>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+	  </definition>
     </menu>
     <menu id="Contact" xsi:type="DashboardMenuNode" _delta="define">
       <rank>1</rank>
       <parent>ConfigManagement</parent>
-      <definition_file>contacts_menu.xml</definition_file>
+      <definition>
+        <layout>DashboardLayoutOneCol</layout>
+        <title></title>
+        <cells>
+          <cell>
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="1" xsi:type="DashletHeaderDynamic">
+                <rank>0</rank>
+                <title>UI:ContactsMenu</title>
+                <icon>itop-config-mgmt-1.0.0/images/team.png</icon>
+                <subtitle>Menu:ConfigManagement:AllContacts</subtitle>
+                <query>SELECT Contact</query>
+                <group_by>status</group_by>
+                <values>active,inactive</values>
+              </dashlet>
+              <dashlet id="2" xsi:type="DashletBadge">
+                <rank>1</rank>
+                <class>Team</class>
+              </dashlet>
+              <dashlet id="3" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>Person</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell>
+            <rank>1</rank>
+            <dashlets>
+              <dashlet id="4" xsi:type="DashletGroupByPie">
+                <rank>0</rank>
+                <title>UI-ContactsMenu-ContactsByLocation</title>
+                <query>SELECT Contact</query>
+                <group_by>location_id</group_by>
+                <style>pie</style>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+	  </definition>
     </menu>
     <menu id="NewContact" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>1</rank>
@@ -5952,7 +6032,106 @@
     <menu id="ConfigManagementCI" xsi:type="DashboardMenuNode" _delta="define">
       <rank>5</rank>
       <parent>ConfigManagement</parent>
-      <definition_file>cis_menu.xml</definition_file>
+      <definition>
+        <layout>DashboardLayoutOneCol</layout>
+        <title></title>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="1" xsi:type="DashletHeaderDynamic">
+                <rank>0</rank>
+                <title>Menu_ConfigManagement_Devices</title>
+                <icon>itop-config-mgmt-1.0.0/images/server.png</icon>
+                <subtitle>Menu_ConfigManagement_AllDevices</subtitle>
+                <query>SELECT FunctionalCI</query>
+                <group_by>status</group_by>
+                <values>implementation,production,obsolete</values>
+              </dashlet>
+              <dashlet id="2" xsi:type="DashletBadge">
+                <rank>1</rank>
+                <class>Server</class>
+              </dashlet>
+              <dashlet id="3" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>NetworkDevice</class>
+              </dashlet>
+              <dashlet id="5" xsi:type="DashletBadge">
+                <rank>3</rank>
+                <class>PC</class>
+              </dashlet>
+              <dashlet id="6" xsi:type="DashletBadge">
+                <rank>4</rank>
+                <class>MobilePhone</class>
+              </dashlet>
+              <dashlet id="7" xsi:type="DashletBadge">
+                <rank>5</rank>
+                <class>Printer</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="1">
+            <rank>1</rank>
+            <dashlets>
+              <dashlet id="8" xsi:type="DashletHeaderStatic">
+                <rank>0</rank>
+                <title>Menu:ConfigManagement:SWAndApps</title>
+                <icon>itop-config-mgmt-1.0.0/images/application.png</icon>
+              </dashlet>
+              <dashlet id="9" xsi:type="DashletBadge">
+                <rank>1</rank>
+                <class>ApplicationInstance</class>
+              </dashlet>
+              <dashlet id="10" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>DBServerInstance</class>
+              </dashlet>
+              <dashlet id="11" xsi:type="DashletBadge">
+                <rank>3</rank>
+                <class>DatabaseInstance</class>
+              </dashlet>
+              <dashlet id="12" xsi:type="DashletBadge">
+                <rank>4</rank>
+                <class>Patch</class>
+              </dashlet>
+              <dashlet id="13" xsi:type="DashletBadge">
+                <rank>5</rank>
+                <class>Licence</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="2">
+            <rank>2</rank>
+            <dashlets>
+              <dashlet id="14" xsi:type="DashletHeaderStatic">
+                <rank>0</rank>
+                <title>Menu:ConfigManagement:Misc</title>
+                <icon>itop-config-mgmt-1.0.0/images/subnet.png</icon>
+              </dashlet>
+              <dashlet id="15" xsi:type="DashletBadge">
+                <rank>1</rank>
+                <class>NetworkInterface</class>
+              </dashlet>
+              <dashlet id="16" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>Subnet</class>
+              </dashlet>
+              <dashlet id="17" xsi:type="DashletBadge">
+                <rank>3</rank>
+                <class>BusinessProcess</class>
+              </dashlet>
+              <dashlet id="18" xsi:type="DashletBadge">
+                <rank>4</rank>
+                <class>ApplicationSolution</class>
+              </dashlet>
+              <dashlet id="19" xsi:type="DashletBadge">
+                <rank>5</rank>
+                <class>Group</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+	  </definition>
     </menu>
     <menu id="NewCI" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>0</rank>
