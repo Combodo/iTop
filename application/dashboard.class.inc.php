@@ -67,7 +67,7 @@ abstract class Dashboard
 			$oCellRank =  $oCellNode->getElementsByTagName('rank')->item(0);
 			if ($oCellRank)
 			{
-				$iCellRank = (int)$oCellRank->textContent;
+				$iCellRank = (float)$oCellRank->textContent;
 			}
 			$oDashletsNode = $oCellNode->getElementsByTagName('dashlets')->item(0);
 			$oDashletList = $oDashletsNode->getElementsByTagName('dashlet');
@@ -79,7 +79,7 @@ abstract class Dashboard
 				$oRank =  $oDomNode->getElementsByTagName('rank')->item(0);
 				if ($oRank)
 				{
-					$iRank = (int)$oRank->textContent;
+					$iRank = (float)$oRank->textContent;
 				}
 				$sId = $oDomNode->getAttribute('id');
 				$oNewDashlet = new $sDashletClass($sId);
