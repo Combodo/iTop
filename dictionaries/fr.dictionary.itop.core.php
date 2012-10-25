@@ -547,7 +547,7 @@ Opérateurs :<br/>
 	'Class:TriggerOnStateChange+' => '',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Etat',
 	'Class:TriggerOnStateChange/Attribute:state+' => 'label',
-	'Class:TriggerOnThresholdReached' => 'Déclencheur (dépassement de durée)',
+	'Class:TriggerOnThresholdReached' => 'Déclencheur sur dépassement de durée',
 	'Class:TriggerOnThresholdReached+' => 'Déclencheur sur franchissement de seuil d\'un chronomètre',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Chronomètre',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',

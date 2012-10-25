@@ -858,11 +858,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:NotificationsMenu:Title' => 'Configuration of the <span class="hilite">Notifications</span>',
 	'UI:NotificationsMenu:Help' => 'Help',
 	'UI:NotificationsMenu:HelpContent' => '<p>In iTop the notifications are fully customizable. They are based on two sets of objects: <i>triggers and actions</i>.</p>
-<p><i><b>Triggers</b></i> define when a notification will be executed. There are 3 types of triggers for covering 3 differents phases of an object life cycle:
+<p><i><b>Triggers</b></i> define when a notification will be executed. There are 5 types of triggers for covering 3 differents phases of an object life cycle:
 <ol>
-	<li>the "OnCreate" triggers get executed when an object of the specified class is created</li>
-	<li>the "OnStateEnter" triggers get executed before an object of the given class enters a specified state (coming from another state)</li>
-	<li>the "OnStateLeave" triggers get executed when an object of the given class is leaving a specified state</li>
+	<li>the "on object creation" triggers get executed when an object of the specified class is created</li>
+	<li>the "on entering a state" triggers get executed before an object of the given class enters a specified state (coming from another state)</li>
+	<li>the "on leaving a state" triggers get executed when an object of the given class is leaving a specified state</li>
+	<li>the "on timeout" triggers get executed when a TTR or TTO as been reached</li>
+	<li>the "on portal update" triggers get executed when a ticket is updated from the portal</li>
 </ol>
 </p>
 <p>

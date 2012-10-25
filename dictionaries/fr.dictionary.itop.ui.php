@@ -716,11 +716,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:NotificationsMenu:Title' => 'Configuration des <span class="hilite">Notifications</span>',
 	'UI:NotificationsMenu:Help' => 'Aide',
 	'UI:NotificationsMenu:HelpContent' => '<p>Dans iTop les notifications sont totalement configurables. Elles sont basées sur deux types d\'objets: <i>déclencheurs et actions</i>.</p>
-<p><i><b>Les déclencheurs</b></i> définissent quand une notification doit être exécutée. Il y a 3 types de déclencheurs pour couvrir les 3 différentes phases de la vie d\'un objet:
+<p><i><b>Les déclencheurs</b></i> définissent quand une notification doit être exécutée. Il y a 5 types de déclencheurs pour couvrir les 3 différentes phases du cycle de vie d\'un objet:
 <ol>
-	<li>un déclencheur "OnCreate" est exécuté quand un objet d\'une classe spécifique est créé.</li>
-	<li>un déclencheur "OnEnter" est exécuté avant que l\'objet n\'entre dans un état donné (en venant d\'un autre état du cycle de vie)</li>
-	<li>un déclencheur "OnLeave" est exécuté  quand l\'objet quitte un état spécifié</li>
+	<li>un déclencheur "sur création d\'un objet" est exécuté quand un objet d\'une classe spécifique est créé.</li>
+	<li>un déclencheur "sur objet entrant dans un état" est exécuté avant que l\'objet n\'entre dans un état donné (en venant d\'un autre état du cycle de vie)</li>
+	<li>un déclencheur "sur objet quittant un état" est exécuté  quand l\'objet quitte un état spécifié</li>
+	<li>un déclencheur "sur dépassement de durée" est exécuté quand un TTO/TTR est dépassé</li>
+	<li>un déclencheur "sur mise à jour depuis le portail" est exécuté quand un ticket est modifié depuis le portail dédié aux clients externes</li>
 </ol>
 </p>
 <p>
