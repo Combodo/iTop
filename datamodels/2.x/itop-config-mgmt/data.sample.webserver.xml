@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<Webserver alias="Webserver" id="22">
-<name>Apache</name>
-<description></description>
-<org_id>2</org_id>
-<business_criticity>low</business_criticity>
-<move2production></move2production>
-<system_id>12</system_id>
-<software_id>0</software_id>
-<softwarelicence_id>0</softwarelicence_id>
-<path></path>
-<status></status>
-</Webserver>
 <Webserver alias="Webserver" id="23">
 <name>IIS</name>
 <description></description>
