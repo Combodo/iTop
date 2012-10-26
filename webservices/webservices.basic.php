@@ -107,11 +107,12 @@ class BasicServices extends WebServicesBase
 		}
 		UserRights::Login($sLogin);
 
+		
 		if (!class_exists('Incident'))
 		{
 			$oRes = new WebServiceResult();
 			$oRes->LogError("The class Incident does not exist. Did you install the Incident Management (ITIL) module ?");
-			return $oRes;
+			return $oRes->ToSoapStructure();
 		}
 		
 		$aCallerDesc = self::SoapStructToExternalKeySearch($oCallerDesc);

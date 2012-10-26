@@ -134,10 +134,11 @@ class WebServiceResult
 	 */
 	public function AddResultObject($sLabel, $oObject)
 	{
+		$oAppContext = new ApplicationContext();
 		$this->m_aResult[$sLabel] = array(
 			'id' => $oObject->GetKey(),
 			'name' => $oObject->GetRawName(),
-			'url' => $oObject->GetHyperlink(),
+			'url' => $oAppContext->MakeObjectUrl(get_class($oObject), $oObject->GetKey(), null, false), // Raw URL without HTML tags
 		);
 	}
 
@@ -297,7 +298,7 @@ abstract class WebServicesBase
 		if (is_object($oAttDef))
 		{
 			$iMaxSize = $oAttDef->GetMaxSize();
-			if ($iMaxSize)
+			if ($iMaxSize && (strlen($sValue) > $iMaxSize))
 			{
 				$sValue = substr($sValue, 0, $iMaxSize);
 			}
