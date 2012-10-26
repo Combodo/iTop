@@ -29,6 +29,11 @@
             <attribute id="ref"/>
           </attributes>
         </reconciliation>
+        <order>
+          <columns>
+            <column id="ref" ascending="false"/>
+          </columns>
+        </order>
       </properties>
       <fields>
         <field id="status" xsi:type="AttributeEnum">
