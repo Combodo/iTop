@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<WebApplication alias="WebApplication" id="25">
+<name>Open ERP</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>low</business_criticity>
+<move2production></move2production>
+<webserver_id>22</webserver_id>
+<url></url>
+</WebApplication>
+<WebApplication alias="WebApplication" id="26">
+<name>Sugar CRM</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>high</business_criticity>
+<move2production></move2production>
+<webserver_id>22</webserver_id>
+<url></url>
+</WebApplication>
+</Set>

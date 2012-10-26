@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<DatabaseSchema alias="DatabaseSchema" id="19">
+<name>itop-demo</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>low</business_criticity>
+<move2production></move2production>
+<dbserver_id>16</dbserver_id>
+</DatabaseSchema>
+<DatabaseSchema alias="DatabaseSchema" id="21">
+<name>sugarcrmprod</name>
+<description></description>
+<org_id>2</org_id>
+<business_criticity>low</business_criticity>
+<move2production></move2production>
+<dbserver_id>18</dbserver_id>
+</DatabaseSchema>
+</Set>

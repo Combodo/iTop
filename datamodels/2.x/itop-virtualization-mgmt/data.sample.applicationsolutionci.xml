@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<lnkApplicationSolutionToFunctionalCI alias="lnkApplicationSolutionToFunctionalCI" id="4">
+<applicationsolution_id>27</applicationsolution_id>
+<functionalci_id>21</functionalci_id>
+</lnkApplicationSolutionToFunctionalCI>
+<lnkApplicationSolutionToFunctionalCI alias="lnkApplicationSolutionToFunctionalCI" id="3">
+<applicationsolution_id>27</applicationsolution_id>
+<functionalci_id>26</functionalci_id>
+</lnkApplicationSolutionToFunctionalCI>
+<lnkApplicationSolutionToFunctionalCI alias="lnkApplicationSolutionToFunctionalCI" id="5">
+<applicationsolution_id>28</applicationsolution_id>
+<functionalci_id>25</functionalci_id>
+</lnkApplicationSolutionToFunctionalCI>
+<lnkApplicationSolutionToFunctionalCI alias="lnkApplicationSolutionToFunctionalCI" id="1">
+<applicationsolution_id>29</applicationsolution_id>
+<functionalci_id>19</functionalci_id>
+</lnkApplicationSolutionToFunctionalCI>
+<lnkApplicationSolutionToFunctionalCI alias="lnkApplicationSolutionToFunctionalCI" id="2">
+<applicationsolution_id>29</applicationsolution_id>
+<functionalci_id>22</functionalci_id>
+</lnkApplicationSolutionToFunctionalCI>
+</Set>

@@ -47,6 +47,11 @@ SetupWebPage::AddModule(
 			'data.sample.farm.xml',
 			'data.sample.hypervisor.xml',
 			'data.sample.vm.xml',
+			'data.sample.dbserver.xml',
+			'data.sample.dbschema.xml',
+			'data.sample.webserver.xml',
+			'data.sample.webapp.xml',
+			'data.sample.applicationsolutionci.xml',
 		),
 		
 		// Documentation
