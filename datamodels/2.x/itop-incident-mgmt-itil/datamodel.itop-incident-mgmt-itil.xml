@@ -68,14 +68,14 @@
           <default_value>4</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
-        <field id="emergency" xsi:type="AttributeEnum">
+        <field id="urgency" xsi:type="AttributeEnum">
           <values>
             <value>1</value>
             <value>2</value>
             <value>3</value>
             <value>4</value>
           </values>
-          <sql>emergency</sql>
+          <sql>urgency</sql>
           <default_value>4</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
@@ -864,7 +864,7 @@
               <attribute id="impact">
                 <read_only/>
               </attribute>
-              <attribute id="emergency">
+              <attribute id="urgency">
                 <read_only/>
               </attribute>
               <attribute id="priority">
@@ -1011,7 +1011,7 @@
               <attribute id="impact">
                 <read_only/>
               </attribute>
-              <attribute id="emergency">
+              <attribute id="urgency">
                 <read_only/>
               </attribute>
               <attribute id="priority">
@@ -1147,7 +1147,7 @@
 	}]]></code>
         </method>
         <method id="ComputePriority">
-          <comment>/** Compute the priority of the ticket based on its impact and emergency&#13;
+          <comment>/** Compute the priority of the ticket based on its impact and urgency&#13;
          * @return integer The priority of the ticket 1(high) .. 3(low)&#13;
          */</comment>
           <static>false</static>
@@ -1155,7 +1155,7 @@
           <type>LifecycleAction</type>
           <code><![CDATA[        public function ComputePriority()
         {
-                // priority[impact][emergency]
+                // priority[impact][urgency]
                 $aPriorities = array(
                         // single person
                         1 => array(
@@ -1179,7 +1179,7 @@
                                         4 => 4,
                         ),
                 );
-                $iPriority = $aPriorities[(int)$this->Get('impact')][(int)$this->Get('emergency')];
+                $iPriority = $aPriorities[(int)$this->Get('impact')][(int)$this->Get('urgency')];
                 return $iPriority;              
         }]]></code>
         </method>
@@ -1693,7 +1693,7 @@
                     <item id="impact">
                       <rank>10</rank>
                     </item>
-                    <item id="emergency">
+                    <item id="urgency">
                       <rank>20</rank>
                     </item>
                     <item id="priority">
@@ -1839,7 +1839,7 @@
             <item id="impact">
               <rank>120</rank>
             </item>
-            <item id="emergency">
+            <item id="urgency">
               <rank>130</rank>
             </item>
             <item id="priority">
