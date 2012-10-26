@@ -110,8 +110,8 @@
           </sub_options>
         </choice>
         <choice>
-          <title>None</title>
-          <description>Don't manage incidents in iTop</description>
+          <title>No Tickets Management</title>
+          <description>Don't manage incidents or user requests in iTop</description>
           <modules type="array">
           </modules>
         </choice>
@@ -138,7 +138,7 @@
           </modules>
         </choice>
         <choice>
-          <title>None</title>
+          <title>No Change Management</title>
           <description>Don't manage changes in iTop</description>
           <modules type="array">
           </modules>
