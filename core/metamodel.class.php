@@ -3161,7 +3161,7 @@ abstract class MetaModel
 		throw new CoreException('Failed to create an alias', array('aliases' => $aAliases, 'new'=>$sNewName));
 	}
 
-	public static function CheckDefinitions()
+	public static function CheckDefinitions($bExitOnError = true)
 	{
 		if (count(self::GetClasses()) == 0)
 		{
@@ -3411,9 +3411,9 @@ abstract class MetaModel
 				}
 				echo "</ul>\n";
 			}
-			echo "<p>Aborting...</p>\n";
+			if ($bExitOnError) echo "<p>Aborting...</p>\n";
 			echo "</div>\n";
-			exit;
+			if ($bExitOnError) exit;
 		}
 	}
 
