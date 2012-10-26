@@ -130,6 +130,16 @@ class ApplicationInstaller
 				$sSafeXml = preg_replace("|<pwd>([^<]*)</pwd>|", "<pwd>**removed**</pwd>", $sXML);
 				SetupPage::log_info("======= Installation starts =======\nParameters:\n$sSafeXml\n");
 				
+				// Save the response file as a stand-alone file as well
+				$sFileName = 'install-'.date('Y-m-d');
+				$index = 0;
+				while(file_exists(APPROOT.'log/'.$sFileName.'.xml'))
+				{
+					$index++;
+					$sFileName = 'install-'.date('Y-m-d').'-'.$index;
+				}
+				file_put_contents(APPROOT.'log/'.$sFileName.'.xml', $sSafeXml);
+				
 				break;
 				
 				case 'copy':
