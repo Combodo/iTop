@@ -1368,7 +1368,7 @@ class AttributeString extends AttributeDBField
 	{
 		if (!is_string($value) && !is_null($value))
 		{
-			throw new CoreWarning('Expected the attribute value to be a string', array('found_type' => gettype($value), 'value' => $value, 'class' => $this->GetCode(), 'attribute' => $this->GetHostClass()));
+			throw new CoreWarning('Expected the attribute value to be a string', array('found_type' => gettype($value), 'value' => $value, 'class' => $this->GetHostClass(), 'attribute' => $this->GetCode()));
 		}
 		return $value;
 	}
