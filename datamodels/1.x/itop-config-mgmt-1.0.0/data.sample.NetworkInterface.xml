@@ -74,7 +74,7 @@
 <physical_type>ethernet</physical_type>
 <ip_address>10.1.1.10</ip_address>
 <ip_mask>255.255.255.0</ip_mask>
-<mac_address>00:a2:23:45:34</mac_address>
+<mac_address>00:a2:23:45:34:77</mac_address>
 <speed></speed>
 <duplex>full</duplex>
 <connected_if>2</connected_if>
