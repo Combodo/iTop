@@ -284,10 +284,10 @@ abstract class WebServicesBase
 		$oLog->Set('userinfo', UserRights::GetUser());
 		$oLog->Set('verb', $sVerb);
 		$oLog->Set('result', $oRes->IsOk());
-		$this->TrimAndSetValue($oLog, 'log_info', $oRes->GetInfoAsText());
-		$this->TrimAndSetValue($oLog, 'log_warning', $oRes->GetWarningsAsText());
-		$this->TrimAndSetValue($oLog, 'log_error', $oRes->GetErrorsAsText());
-		$this->TrimAndSetValue($oLog, 'data', $oRes->GetReturnedDataAsText());
+		$this->TrimAndSetValue($oLog, 'log_info', (string)$oRes->GetInfoAsText());
+		$this->TrimAndSetValue($oLog, 'log_warning', (string)$oRes->GetWarningsAsText());
+		$this->TrimAndSetValue($oLog, 'log_error', (string)$oRes->GetErrorsAsText());
+		$this->TrimAndSetValue($oLog, 'data', (string)$oRes->GetReturnedDataAsText());
 		$oLog->DBInsertNoReload();
 	}
 	
