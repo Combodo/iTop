@@ -46,10 +46,11 @@ else
 require_once('../approot.inc.php');
 require_once(APPROOT.'webservices/webservices.class.inc.php');
 require_once(APPROOT.'core/config.class.inc.php');
+require_once(APPROOT.'application/utils.inc.php');
 
 // Load the modules installed and enabled
 //
-$oConfig = new Config(APPROOT.'config-itop.php');
+$oConfig = utils::GetConfig();
 $aFiles = $oConfig->GetWebServiceCategories();
 foreach ($aFiles as $sFile)
 {
