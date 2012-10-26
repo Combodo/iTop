@@ -20,24 +20,7 @@ abstract class Parameters
 		}
 		return $default;
 	}
-}
 
-class PHPParameters extends Parameters
-{
-	public function LoadFromHash($aData)
-	{
-		$this->aData = $aData;
-	}
-	
-	public function LoadFromFile($sParametersFile)
-	{
-		if ($this->aData == null)
-		{
-			require_once($sParametersFile);
-			$this->aData = $ITOP_PARAMS;
-		}
-	}
-	
 	public function ToXML(DOMNode $oRoot, $data = null, $sNodeName = null)
 	{
 		if ($data === null)
@@ -89,6 +72,23 @@ class PHPParameters extends Parameters
 			$oRoot->appendChild($oNode);
 		}
 		return $oNode;
+	}
+}
+
+class PHPParameters extends Parameters
+{
+	public function LoadFromHash($aData)
+	{
+		$this->aData = $aData;
+	}
+	
+	public function LoadFromFile($sParametersFile)
+	{
+		if ($this->aData == null)
+		{
+			require_once($sParametersFile);
+			$this->aData = $ITOP_PARAMS;
+		}
 	}
 }
 
