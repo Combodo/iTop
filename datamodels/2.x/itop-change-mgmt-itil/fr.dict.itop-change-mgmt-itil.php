@@ -275,6 +275,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:Changes+' => 'Tickets de changement ouverts',
 	'Menu:MyChanges' => 'Mes tickets',
 	'Menu:MyChanges+' => 'Tickets de changement qui me sont assignés',
+	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changements par catégorie',
+	'UI-ChangeManagementOverview-Last-7-days' => 'Changements par jour',
+	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changements par domaine',
+	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changements par statut',
+	'UI:ChangeMgmtMenuOverview:Title' => 'Tableau de bord des changements pour les 7 derniers jours',
+
 
 ));
 ?>

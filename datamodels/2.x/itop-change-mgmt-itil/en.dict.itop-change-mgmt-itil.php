@@ -42,6 +42,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:Changes+' => 'All Opened Changes',
 	'Menu:MyChanges' => 'Changes assigned to me',
 	'Menu:MyChanges+' => 'Changes assigned to me (as Agent)',
+	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changes by category for the last 7 days',
+	'UI-ChangeManagementOverview-Last-7-days' => 'Number of changes for the last 7 days',
+	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes by domain for the last 7 days',
+	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes by status for the last 7 days',
 ));
 
 // Dictionnay conventions

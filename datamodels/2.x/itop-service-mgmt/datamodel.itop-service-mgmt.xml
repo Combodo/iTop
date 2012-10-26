@@ -1105,17 +1105,14 @@
         </search>
         <list>
           <items>
-            <item id="name">
+            <item id="org_id">
               <rank>10</rank>
             </item>
-            <item id="org_id">
+            <item id="status">
               <rank>20</rank>
             </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
             <item id="servicefamily_id">
-              <rank>40</rank>
+              <rank>30</rank>
             </item>
           </items>
         </list>
@@ -1335,6 +1332,11 @@
           <extkey_attcode>service_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="service_provider" xsi:type="AttributeExternalField">
+          <extkey_attcode>service_id</extkey_attcode>
+          <target_attcode>organization_name</target_attcode>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="request_type" xsi:type="AttributeEnum">
           <values>
             <value>incident</value>
@@ -1376,8 +1378,11 @@
             <item id="request_type">
               <rank>50</rank>
             </item>
-            <item id="description">
+            <item id="service_provider">
               <rank>60</rank>
+            </item>
+            <item id="description">
+              <rank>70</rank>
             </item>
           </items>
         </details>
@@ -1398,6 +1403,9 @@
             <item id="request_type">
               <rank>50</rank>
             </item>
+            <item id="service_provider">
+              <rank>60</rank>
+            </item>
           </items>
         </search>
         <list>
@@ -1410,6 +1418,9 @@
             </item>
             <item id="request_type">
               <rank>30</rank>
+            </item>
+            <item id="service_provider">
+              <rank>60</rank>
             </item>
           </items>
         </list>
@@ -1569,7 +1580,6 @@
           <values>
             <value>servicerequest</value>
             <value>incident</value>
-            <value>other</value>
           </values>
           <sql>request_type</sql>
           <default_value/>
@@ -1716,6 +1726,31 @@
           <extkey_attcode>slt_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="slt_metric" xsi:type="AttributeExternalField">
+          <extkey_attcode>slt_id</extkey_attcode>
+          <target_attcode>metric</target_attcode>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="slt_request_type" xsi:type="AttributeExternalField">
+          <extkey_attcode>slt_id</extkey_attcode>
+          <target_attcode>request_type</target_attcode>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="slt_ticket_priority" xsi:type="AttributeExternalField">
+          <extkey_attcode>slt_id</extkey_attcode>
+          <target_attcode>priority</target_attcode>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="slt_value" xsi:type="AttributeExternalField">
+          <extkey_attcode>slt_id</extkey_attcode>
+          <target_attcode>value</target_attcode>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="slt_value_unit" xsi:type="AttributeExternalField">
+          <extkey_attcode>slt_id</extkey_attcode>
+          <target_attcode>unit</target_attcode>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -1746,6 +1781,21 @@
             </item>
             <item id="slt_id">
               <rank>20</rank>
+            </item>
+            <item id="slt_metric">
+              <rank>30</rank>
+            </item>
+            <item id="slt_request_type">
+              <rank>40</rank>
+            </item>
+            <item id="slt_ticket_priority">
+              <rank>50</rank>
+            </item>
+            <item id="slt_value">
+              <rank>60</rank>
+            </item>
+            <item id="slt_value_unit">
+              <rank>70</rank>
             </item>
           </items>
         </list>

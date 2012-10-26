@@ -10,7 +10,7 @@
           <rank>0</rank>
           <title>UI-ChangeManagementOverview-ChangeByCategory-last-7-days</title>
           <query>SELECT Change WHERE start_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
-          <group_by>category</group_by>
+          <group_by>finalclass</group_by>
           <style>table</style>
         </dashlet>
       </dashlets>
@@ -54,3 +54,4 @@
     </cell>
   </cells>
 </dashboard>
+
