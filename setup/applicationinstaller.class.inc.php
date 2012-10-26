@@ -59,6 +59,7 @@ class ApplicationInstaller
 	{
 		$sStep = '';
 		$sStepLabel = '';
+		$iOverallStatus = self::OK;
 		do
 		{
 			if($sStep != '')
@@ -81,10 +82,12 @@ class ApplicationInstaller
 				break;
 				
 				case self::ERROR:
+				$iOverallStatus = self::ERROR;
 				echo "Error: ".$aRes['message']."\n";
 				break;
 				
 				case self::WARNING:
+				$iOverallStatus = self::WARNING;
 				echo "Warning: ".$aRes['message']."\n";
 				echo $aRes['percentage-completed']." % done.\n";
 				break;
@@ -97,7 +100,7 @@ class ApplicationInstaller
 		}
 		while(($aRes['status'] != self::ERROR) && ($aRes['next-step'] != ''));
 		
-		return ($aRes['status'] == self::OK);
+		return ($iOverallStatus == self::OK);
 	}
 	
 	/**
