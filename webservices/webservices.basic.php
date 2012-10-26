@@ -182,12 +182,35 @@ class BasicServices extends WebServicesBase
 				$aServiceSubcategoryDesc['service_id'] = $oNewTicket->Get('service_id');
 			}
 			$this->MyObjectSetExternalKey('servicesubcategory_id', 'servicesubcategory', $aServiceSubcategoryDesc, $oNewTicket, $oRes);
-			$this->MyObjectSetScalar('product', 'product', $sProduct, $oNewTicket, $oRes);
+			if (MetaModel::IsValidAttCode($sClass, 'product'))
+			{
+				// 1.x data models
+				$this->MyObjectSetScalar('product', 'product', $sProduct, $oNewTicket, $oRes);
+			}
 
-			$this->MyObjectSetExternalKey('workgroup_id', 'workgroup', $aWorkgroupDesc, $oNewTicket, $oRes);
+			if (MetaModel::IsValidAttCode($sClass, 'workgroup_id'))
+			{
+				// 1.x data models
+				$this->MyObjectSetExternalKey('workgroup_id', 'workgroup', $aWorkgroupDesc, $oNewTicket, $oRes);
+			}
+			else if (MetaModel::IsValidAttCode($sClass, 'team_id'))
+			{
+				// 2.x data models
+				$this->MyObjectSetExternalKey('team_id', 'workgroup', $aWorkgroupDesc, $oNewTicket, $oRes);
+			}
 
 
-			$aDevicesNotFound = $this->AddLinkedObjects('ci_list', 'impacted_cis', 'FunctionalCI', $aImpactedCIs, $oNewTicket, $oRes);
+			if (MetaModel::IsValidAttCode($sClass, 'ci_list'))
+			{
+				// 1.x data models
+				$aDevicesNotFound = $this->AddLinkedObjects('ci_list', 'impacted_cis', 'FunctionalCI', $aImpactedCIs, $oNewTicket, $oRes);
+			}
+			else if (MetaModel::IsValidAttCode($sClass, 'functionalcis_list'))
+			{
+				// 2.x data models
+				$aDevicesNotFound = $this->AddLinkedObjects('functionalcis_list', 'impacted_cis', 'FunctionalCI', $aImpactedCIs, $oNewTicket, $oRes);
+			}
+			
 			if (count($aDevicesNotFound) > 0)
 			{
 				$this->MyObjectSetScalar('description', 'n/a', $sDescription.' - Related CIs: '.implode(', ', $aDevicesNotFound), $oNewTicket, $oRes);
