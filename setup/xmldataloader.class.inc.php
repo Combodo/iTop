@@ -206,7 +206,15 @@ class XMLDataLoader
 			// and its original Id
 			// Once all the objects have been created re-assign all the external keys to
 			// their actual Ids
-			$oTargetObj = MetaModel::NewObject($sClass);
+			$iExistingId = $this->GetObjectKey($sClass, $iSrcId);
+			if ($iExistingId != 0)
+			{
+				$oTargetObj = MetaModel::GetObject($sClass, $iExistingId);
+			}
+			else
+			{
+				$oTargetObj = MetaModel::NewObject($sClass);
+			}
 			foreach($oXmlObj as $sAttCode => $oSubNode)
 			{
 				if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
@@ -344,16 +352,16 @@ class XMLDataLoader
 			
 			if ($iObjId == 0)
 			{
-				// No similar object found for sure, let's create it
-				if (is_subclass_of($oTargetObj, 'CMDBObject'))
+				if($oTargetObj->IsNew())
 				{
-			        $iObjId = $oTargetObj->DBInsertTrackedNoReload($this->m_oChange);
+			        $iObjId = $oTargetObj->DBInsertNoReload();
+					$this->m_iCountCreated++;
 				}
 				else
 				{
-			        $iObjId = $oTargetObj->DBInsertNoReload();
+					$iObjId = $oTargetObj->GetKey();
+					$oTargetObj->DBUpdate();
 				}
-				$this->m_iCountCreated++;
 			}	        
 		}
 		catch(Exception $e)
