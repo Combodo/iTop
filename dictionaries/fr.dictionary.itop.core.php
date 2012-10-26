@@ -271,6 +271,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SynchroDataSource/Attribute:delete_policy_update+' => 'Format: nom_de_champ:valeur; ...',
 	'Class:SynchroDataSource/Attribute:delete_policy_retention' => 'Durée de rétention',
 	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'Si la politique est \'Mettre à jour puis effacer\', les objets obsolètes sont encore conservés pendant cette durée avant d\'être effacés',
+
 	'Class:SynchroDataSource/Attribute:attribute_list' => 'Liste des champs',
 	'Class:SynchroDataSource/Attribute:attribute_list+' => '',
 	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Utilisateurs autorisés',
@@ -547,7 +548,7 @@ Opérateurs :<br/>
 	'Class:TriggerOnStateChange+' => '',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Etat',
 	'Class:TriggerOnStateChange/Attribute:state+' => 'label',
-	'Class:TriggerOnThresholdReached' => 'Déclencheur sur dépassement de durée',
+	'Class:TriggerOnThresholdReached' => 'Déclencheur sur dépassement de seuil',
 	'Class:TriggerOnThresholdReached+' => 'Déclencheur sur franchissement de seuil d\'un chronomètre',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Chronomètre',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',

@@ -721,7 +721,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	<li>un déclencheur "sur création d\'un objet" est exécuté quand un objet d\'une classe spécifique est créé.</li>
 	<li>un déclencheur "sur objet entrant dans un état" est exécuté avant que l\'objet n\'entre dans un état donné (en venant d\'un autre état du cycle de vie)</li>
 	<li>un déclencheur "sur objet quittant un état" est exécuté  quand l\'objet quitte un état spécifié</li>
-	<li>un déclencheur "sur dépassement de durée" est exécuté quand un TTO/TTR est dépassé</li>
+	<li>un déclencheur "sur dépassement de seuil" est exécuté quand un seuil prédéfini pour TTO/TTR est dépassé</li>
 	<li>un déclencheur "sur mise à jour depuis le portail" est exécuté quand un ticket est modifié depuis le portail dédié aux clients externes</li>
 </ol>
 </p>

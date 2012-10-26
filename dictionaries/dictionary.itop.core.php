@@ -531,7 +531,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:TriggerOnThresholdReached' => 'Trigger (on timeout)',
+	'Class:TriggerOnThresholdReached' => 'Trigger (on threshold)',
 	'Class:TriggerOnThresholdReached+' => 'Trigger on Stop-Watch threshold reached',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stop watch',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
