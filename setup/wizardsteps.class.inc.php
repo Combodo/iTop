@@ -503,7 +503,7 @@ EOF
 				// Check if the previous version is a "genuine" one or not...
 				$aChanges = SetupUtils::CheckVersion($sInstalledDataModelVersion, $sPreviousVersionDir.'/'.$sPreviousSourceDir);
 			}
-			if (($aChanges !== false) && (count($aChanges) > 0))
+			if (($aChanges !== false) && ( (count($aChanges['added']) > 0) || (count($aChanges['removed']) > 0) || (count($aChanges['modified']) > 0)) )
 			{
 				// Some changes were detected, prompt the user to keep or discard them
 				$oPage->p("<img src=\"../images/error.png\"/>&nbsp;Some modifications were detected between the ".ITOP_APPLICATION." version in '$sPreviousVersionDir' and a genuine $sInstalledVersion version.");
