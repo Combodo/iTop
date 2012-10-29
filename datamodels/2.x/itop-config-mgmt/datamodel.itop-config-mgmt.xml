@@ -7635,11 +7635,11 @@
           <icon>itop-config-mgmt/images/server.png</icon>
           <subtitle>Menu_ConfigManagement_AllDevices</subtitle>
         </dashlet>
-        <dashlet id="4" xsi:type="DashletBadge">
+        <dashlet id="2" xsi:type="DashletBadge">
           <rank>3</rank>
           <class>Server</class>
         </dashlet>
-        <dashlet id="5" xsi:type="DashletBadge">
+        <dashlet id="3" xsi:type="DashletBadge">
           <rank>4</rank>
           <class>NetworkDevice</class>
         </dashlet>
@@ -7648,44 +7648,44 @@
     <cell id="3">
       <rank>3</rank>
       <dashlets>
-        <dashlet id="23" xsi:type="DashletHeaderStatic">
+        <dashlet id="4" xsi:type="DashletHeaderStatic">
           <rank>0</rank>
           <title>Menu:ConfigManagement:SWAndApps</title>
           <icon>itop-config-mgmt/images/application.png</icon>
         </dashlet>
-        <dashlet id="24" xsi:type="DashletBadge">
+        <dashlet id="5" xsi:type="DashletBadge">
           <rank>1</rank>
           <class>Middleware</class>
         </dashlet>
-        <dashlet id="25" xsi:type="DashletBadge">
+        <dashlet id="6" xsi:type="DashletBadge">
           <rank>2</rank>
           <class>DBserver</class>
         </dashlet>
-        <dashlet id="26" xsi:type="DashletBadge">
+        <dashlet id="7" xsi:type="DashletBadge">
           <rank>3</rank>
           <class>Webserver</class>
         </dashlet>
-        <dashlet id="27" xsi:type="DashletBadge">
+        <dashlet id="8" xsi:type="DashletBadge">
           <rank>4</rank>
           <class>OtherSoftware</class>
         </dashlet>
-        <dashlet id="29" xsi:type="DashletBadge">
+        <dashlet id="9" xsi:type="DashletBadge">
           <rank>5</rank>
           <class>MiddlewareInstance</class>
         </dashlet>
-        <dashlet id="30" xsi:type="DashletBadge">
+        <dashlet id="10" xsi:type="DashletBadge">
           <rank>6</rank>
           <class>DatabaseSchema</class>
         </dashlet>
-        <dashlet id="31" xsi:type="DashletBadge">
+        <dashlet id="11" xsi:type="DashletBadge">
           <rank>7</rank>
           <class>WebApplication</class>
         </dashlet>
-        <dashlet id="32" xsi:type="DashletBadge">
+        <dashlet id="12" xsi:type="DashletBadge">
           <rank>8</rank>
           <class>Patch</class>
         </dashlet>
-        <dashlet id="33" xsi:type="DashletBadge">
+        <dashlet id="13" xsi:type="DashletBadge">
           <rank>9</rank>
           <class>Licence</class>
         </dashlet>
@@ -7694,28 +7694,28 @@
     <cell id="4">
       <rank>4</rank>
       <dashlets>
-        <dashlet id="34" xsi:type="DashletHeaderStatic">
+        <dashlet id="14" xsi:type="DashletHeaderStatic">
           <rank>0</rank>
           <title>Menu:ConfigManagement:Misc</title>
           <icon>itop-config-mgmt/images/subnet.png</icon>
         </dashlet>
-        <dashlet id="35" xsi:type="DashletBadge">
+        <dashlet id="15" xsi:type="DashletBadge">
           <rank>1</rank>
           <class>NetworkInterface</class>
         </dashlet>
-        <dashlet id="36" xsi:type="DashletBadge">
+        <dashlet id="16" xsi:type="DashletBadge">
           <rank>2</rank>
           <class>Subnet</class>
         </dashlet>
-        <dashlet id="38" xsi:type="DashletBadge">
+        <dashlet id="17" xsi:type="DashletBadge">
           <rank>4</rank>
           <class>BusinessProcess</class>
         </dashlet>
-        <dashlet id="39" xsi:type="DashletBadge">
+        <dashlet id="18" xsi:type="DashletBadge">
           <rank>5</rank>
           <class>ApplicationSolution</class>
         </dashlet>
-        <dashlet id="40" xsi:type="DashletBadge">
+        <dashlet id="19" xsi:type="DashletBadge">
           <rank>6</rank>
           <class>Group</class>
         </dashlet>

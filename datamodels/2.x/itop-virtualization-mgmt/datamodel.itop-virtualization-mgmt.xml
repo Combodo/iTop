@@ -914,20 +914,20 @@
         <cell id="1" _delta="define">
           <rank>1</rank>
           <dashlets>
-            <dashlet id="0" xsi:type="DashletHeaderStatic">
+            <dashlet id="38" xsi:type="DashletHeaderStatic">
               <rank>0</rank>
               <title>Menu:ConfigManagement:virtualization</title>
               <icon>itop-virtualization-mgmt/images/hypervisor-sw.png</icon>
             </dashlet>
-            <dashlet id="1" xsi:type="DashletBadge">
+            <dashlet id="39" xsi:type="DashletBadge">
               <rank>1</rank>
               <class>Farm</class>
             </dashlet>
-            <dashlet id="2" xsi:type="DashletBadge">
+            <dashlet id="40" xsi:type="DashletBadge">
               <rank>2</rank>
               <class>Hypervisor</class>
             </dashlet>
-            <dashlet id="3" xsi:type="DashletBadge">
+            <dashlet id="41" xsi:type="DashletBadge">
               <rank>3</rank>
               <class>VirtualMachine</class>
             </dashlet>

@@ -931,15 +931,15 @@
   <cells>
     <cell id="0" _delta="must_exist">
       <dashlets>
-        <dashlet id="2" xsi:type="DashletBadge" _delta="define">
+        <dashlet id="20" xsi:type="DashletBadge" _delta="define">
           <rank>1</rank>
           <class>Rack</class>
         </dashlet>
-        <dashlet id="3" xsi:type="DashletBadge" _delta="define">
+        <dashlet id="21" xsi:type="DashletBadge" _delta="define">
           <rank>2</rank>
           <class>Enclosure</class>
         </dashlet>
-        <dashlet id="10" xsi:type="DashletBadge" _delta="define">
+        <dashlet id="22" xsi:type="DashletBadge" _delta="define">
           <rank>9</rank>
           <class>PowerConnection</class>
         </dashlet>

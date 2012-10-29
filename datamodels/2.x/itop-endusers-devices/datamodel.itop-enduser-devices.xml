@@ -1401,36 +1401,36 @@
         <cell id="2" _delta="define">
           <rank>2</rank>
           <dashlets>
-            <dashlet id="15" xsi:type="DashletHeaderStatic">
+            <dashlet id="25" xsi:type="DashletHeaderStatic">
               <rank>0</rank>
               <title>Menu:ConfigManagement:EndUsers</title>
               <icon>itop-config-mgmt/images/team.png</icon>
             </dashlet>
-            <dashlet id="16" xsi:type="DashletBadge">
+            <dashlet id="26" xsi:type="DashletBadge">
               <rank>1</rank>
               <class>PC</class>
             </dashlet>
-            <dashlet id="17" xsi:type="DashletBadge">
+            <dashlet id="27" xsi:type="DashletBadge">
               <rank>2</rank>
               <class>Phone</class>
             </dashlet>
-            <dashlet id="18" xsi:type="DashletBadge">
+            <dashlet id="28" xsi:type="DashletBadge">
               <rank>3</rank>
               <class>IpPhone</class>
             </dashlet>
-            <dashlet id="19" xsi:type="DashletBadge">
+            <dashlet id="29" xsi:type="DashletBadge">
               <rank>4</rank>
               <class>MobilePhone</class>
             </dashlet>
-            <dashlet id="20" xsi:type="DashletBadge">
+            <dashlet id="30" xsi:type="DashletBadge">
               <rank>5</rank>
               <class>Tablet</class>
             </dashlet>
-            <dashlet id="21" xsi:type="DashletBadge">
+            <dashlet id="31" xsi:type="DashletBadge">
               <rank>6</rank>
               <class>Printer</class>
             </dashlet>
-            <dashlet id="22" xsi:type="DashletBadge">
+            <dashlet id="32" xsi:type="DashletBadge">
               <rank>7</rank>
               <class>Peripheral</class>
             </dashlet>

@@ -1823,19 +1823,19 @@
     <cell id="0" _delta="must_exist">
       <rank>0</rank>
       <dashlets>
-        <dashlet id="6" xsi:type="DashletBadge" _delta="define">
+        <dashlet id="33" xsi:type="DashletBadge" _delta="define">
           <rank>5</rank>
           <class>StorageSystem</class>
         </dashlet>
-        <dashlet id="7" xsi:type="DashletBadge" _delta="define">
+        <dashlet id="34" xsi:type="DashletBadge" _delta="define">
           <rank>6</rank>
           <class>SANSwitch</class>
         </dashlet>
-        <dashlet id="8" xsi:type="DashletBadge" _delta="define">
+        <dashlet id="35" xsi:type="DashletBadge" _delta="define">
           <rank>7</rank>
           <class>NAS</class>
         </dashlet>
-        <dashlet id="9" xsi:type="DashletBadge" _delta="define">
+        <dashlet id="36" xsi:type="DashletBadge" _delta="define">
           <rank>8</rank>
           <class>TapeLibrary</class>
         </dashlet>

@@ -60,17 +60,5 @@
         </dashlet>
       </dashlets>
     </cell>
-    <cell id="5">
-      <rank>5</rank>
-      <dashlets>
-        <dashlet id="0" xsi:type="DashletEmptyCell" />
-      </dashlets>
-    </cell>
-    <cell id="6">
-      <rank>6</rank>
-      <dashlets>
-        <dashlet id="0" xsi:type="DashletEmptyCell" />
-      </dashlets>
-    </cell>
   </cells>
 </dashboard>
