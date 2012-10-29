@@ -248,6 +248,20 @@ class ModelFactory
 			}			
 			break;
 
+		case 'define_if_not_exists':
+			$oExistingNode = $oTargetParentNode->FindExistingChildNode($oSourceNode);
+			if ($oExistingNode == null)
+			{
+				// Same as 'define' below
+				$oTargetNode = $oTarget->ImportNode($oSourceNode, true);
+				$oTargetParentNode->AddChildNode($oTargetNode);	
+			}
+			else
+			{
+				$oTargetNode = $oExistingNode;
+			}
+			break;
+			
 		case 'define':
 			// New node - copy child nodes as well
 			$oTargetNode = $oTarget->ImportNode($oSourceNode, true);
