@@ -727,10 +727,10 @@
     </class>
   </classes>
   <menus>
-    <menu id="ProblemManagement" xsi:type="MenuGroup" _delta="define">
+    <menu id="ProblemManagement" xsi:type="MenuGroup" _delta="define_if_not_exists">
       <rank>42</rank>
     </menu>
-    <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
+    <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode" _delta="define_if_not_exists">
       <rank>5</rank>
       <parent>ProblemManagement</parent>
       <template_file/>
