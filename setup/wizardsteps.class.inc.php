@@ -928,12 +928,10 @@ class WizStepMiscParams extends WizardStep
 		$oPage->add('</fieldset>');
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>Sample Data</legend>');
-		$oPage->add('<table>');
 		$sChecked = ($sSampleData == 'yes') ? ' checked ' : '';
 		$oPage->p('<input id="sample_data_yes" name="sample_data" type="radio" value="yes"'.$sChecked.'><label for="sample_data_yes">&nbsp;I am installing a <b>demo or test</b> instance, populate the database with some demo data.');
 		$sChecked = ($sSampleData == 'no') ? ' checked ' : '';
 		$oPage->p('<input id="sample_data_no" name="sample_data" type="radio" value="no"'.$sChecked.'><label for="sample_data_no">&nbsp;I am installing a <b>production</b> instance, create an empty database to start from.');
-		$oPage->add('</table>');
 		$oPage->add('</fieldset>');
 		$oPage->add_ready_script(
 <<<EOF
