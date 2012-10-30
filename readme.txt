@@ -15,15 +15,14 @@ Readme file
 1. ABOUT THIS RELEASE
    ==================
 Thank you for downloading the twelfth packaged release of iTop.
-This version is a major release, with a new datamodel, editable dashboards, new way to edit object lists.
+This version is a major release, with a new datamodel, editable dashboards and user customizable lists.
 
 A wiki is available: https://sourceforge.net/apps/mediawiki/itop/index.php?title=ITop_Documentation
-Additional documentation can be downloaded from there:
+Additional documentation can be downloaded from the link above:
  - User guide
  - Administrator guide
  - Customization guide
  - Implementation guide
-Wiki articles complete the documentation for advanced/specific concerns.
 
 
 iTop is released under the AGPL (v3) license. (Check license.txt in this directory).
@@ -31,29 +30,31 @@ The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
 
 1.1 What's new?
     ---------------------------
-This version has a new datamodel -though you can keep the existing one (see the upgrade section hereafter):
-- Virtualization, Data Centers, Storage needs have been taken into account
-- You can choose between an ITIL compliant model, or a simpler one
+This version comes with an enhanced data model (but you can keep the existing one,
+see the upgrade section hereafter).
+- Virtualization, Data Centers, and Storage are now optional modules of the CMDB
+- You can choose between fully ITIL-compliant tickets or a simpler model for
+  managing user requests, incidents and changes
 
 End users can customize the GUI:
 - Dashboards become editable
-- List of objects are configurable (list of columns and sort order)
+- List of objects are configurable per user (list of columns and sort order)
 - Some application settings can be overriden: language, favorite organizations, ... 
 
-1.2 Should I upgrade to 2.0.0?
-    ---------------------------
-First note that upgrading an installation of iTop 1.x will preserve your data model and data.
+1.2 Should I upgrade to 2.0.0 beta?
+    -------------------------------
+Despite all the care taken to prepare this release, it is still considered as "beta" quality
+and therefore is NOT recommended for a production use. However, feel free to use it and experiment.     
+    
+Note that upgrading an installation of iTop 1.x will preserve your original data model and data.
 Would you like to benefit from the new modelization of the data, then you have to install 2.0
-from scratch and migrate your data between the two applications.
+from scratch and migrate your data between the two applications by exporting and importing them back.
 
-This version does fix a significant number of issues.
+This version does fix a significant number of issues (sse the list below).
 It also comes with significant improvements in the end-user experience:
 - editable dashboards
 - customize lists
 - user preferences
-
-Therefore, the upgrade is recommended.
-
 
 1.3 Special Thanks To:
     -----------------
@@ -265,7 +266,7 @@ The complete list of active tickets can be reviewed at http://sourceforge.net/ap
 #565 Fixed security issues (XSS)
 
 
-Other bugs not listed in Trac:
+Other bug fixes not listed in Trac:
 Do not perform time consuming computations for building the menus if there are too many objects in a list (limit is configurable).
 Portal fixes (relative URLs and parameter validation)...
 Restore the previous URLMaker in case the sending of a notification is not the last action of a page... (e.g. if the page displays the details of an object after sending the notifications...)
@@ -317,7 +318,7 @@ The hierarchical key in Organizations is not always named 'parent_id'
 
 Suhosin can interfere with iTop. More information can be found here: https://sourceforge.net/apps/mediawiki/itop/index.php?title=ITop_and_Suhosin
 Internet Explorer 6 is not supported (neither IE7 nor IE8 in compatibility mode)
-Tested with IE8 and IE9, Firefox 3.6 up to Firefox 8 and Chrome. Be aware that there are certain limitations when using IE8 in "security mode" (when running IE on a Windows 2008 Server for example)
+Tested with IE8 and IE9, Firefox 3.6 up to Firefox 16 and Chrome. Be aware that there are certain limitations when using IE8 in "security mode" (when running IE on a Windows 2008 Server for example)
 
 
 3.3. Known issues (https://sourceforge.net/apps/trac/itop/report/3)
