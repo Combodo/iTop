@@ -1753,11 +1753,6 @@ abstract class MetaModel
 				self::$m_aIgnoredAttributes[$sTargetClass][$oAtt->GetCode()] = $sRemoteClass;
 				return;
 			}
-			elseif ($oAtt->IsIndirect() && !self::IsValidAttCode($sRemoteClass, $oAtt->GetExtKeyToRemote()))
-			{
-				self::$m_aIgnoredAttributes[$sTargetClass][$oAtt->GetCode()] = $sRemoteClass;
-				return;
-			}
 		}
 		elseif($oAtt->IsExternalKey())
 		{
