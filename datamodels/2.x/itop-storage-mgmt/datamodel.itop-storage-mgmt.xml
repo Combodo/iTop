@@ -1630,8 +1630,6 @@
         <icon/>
         <reconciliation>
           <attributes>
-            <attribute id="volume_id"/>
-            <attribute id="virtualdevice_id"/>
           </attributes>
         </reconciliation>
       </properties>
