@@ -26,7 +26,7 @@ define('PORTAL_ALL_PARAMS', 'from_service_id,org_id,caller_id,service_id,service
 
 define('PORTAL_ATTCODE_LOG', 'public_log');
 define('PORTAL_ATTCODE_COMMENT', 'user_comment');
-define('PORTAL_REQUEST_FORM_ATTRIBUTES', 'title,description,impact,emergency');
+define('PORTAL_REQUEST_FORM_ATTRIBUTES', 'title,description,impact,urgency');
 
 define('PORTAL_ATTCODE_TYPE', 'request_type'); // optional if the type has to be set
 define('PORTAL_SET_TYPE_FROM', 'request_type'); // The attribute to get the type from (Subcategory)
