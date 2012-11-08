@@ -47,9 +47,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:Incident:HelpdeskIncidents+' => 'Incidents assigned to Level2',
 	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => 'Last 14 days incident per priority',
 	'UI-IncidentManagementOverview-Last-14-days' => 'Last 14 days number of incidents',
-	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Opened incidents by status',
-	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Opened incidents by agent',
-	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Opened incidents by customer',
+	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Open incidents by status',
+	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Open incidents by agent',
+	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Open incidents by customer',
 ));
 
 
