@@ -359,10 +359,13 @@ class ActionEmail extends ActionNotification
 
 		if (isset($aContextArgs['attachments']))
 		{
+			$aAttachmentReport = array();
 			foreach($aContextArgs['attachments'] as $oDocument)
 			{
 				$oEmail->AddAttachment($oDocument->GetData(), $oDocument->GetFileName(), $oDocument->GetMimeType());
+				$aAttachmentReport[] = array($oDocument->GetFileName(), $oDocument->GetMimeType(), strlen($oDocument->GetData()));
 			}
+			$oLog->Set('attachments', $aAttachmentReport);
 		}
 
 		if (empty($this->m_aMailErrors))

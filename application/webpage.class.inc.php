@@ -57,6 +57,7 @@ class WebPage implements Page
     protected $s_content;
     protected $s_deferred_content;
     protected $a_scripts;
+    protected $a_dict_entries;
     protected $a_styles;
     protected $a_include_scripts;
     protected $a_include_stylesheets;
@@ -76,6 +77,7 @@ class WebPage implements Page
         $this->s_content = "";
         $this->s_deferred_content = '';
         $this->a_scripts = array();
+        $this->a_dict_entries = array();
         $this->a_styles = array();
         $this->a_linked_scripts = array();
         $this->a_linked_stylesheets = array();
@@ -231,6 +233,16 @@ class WebPage implements Page
     {
         // Do nothing silently... this is not supported by this type of page...
     }
+
+	/**
+	 * Add a dictionary entry for the Javascript side
+	 */
+    public function add_dict_entry($s_entryId)
+    {
+        $this->a_dict_entries[$s_entryId] = Dict::S($s_entryId);
+    }
+    
+
 	/**
 	 * Add some CSS definitions to the header of the page
 	 */
@@ -438,6 +450,7 @@ class WebPage implements Page
             }
             echo "</script>\n";
         }
+        $this->output_dict_entries();
         foreach($this->a_linked_stylesheets as $a_stylesheet)
         {
 			if ($a_stylesheet['condition'] != "")
@@ -654,6 +667,31 @@ class WebPage implements Page
 		}
 		
 		return $sHtml;
+	}
+
+	protected function output_dict_entries()
+	{
+		if (count($this->a_dict_entries)>0)
+		{
+			echo "<script type=\"text/javascript\">\n";
+			echo "var Dict = {};\n";
+			echo "Dict._entries = {};\n";
+			echo "Dict.S = function(sEntry) {\n";
+			echo "   if (sEntry in Dict._entries)\n";
+			echo "   {\n";
+			echo "      return Dict._entries[sEntry];\n";
+			echo "   }\n";
+			echo "   else\n";
+			echo "   {\n";
+			echo "      return sEntry;\n";
+			echo "   }\n";
+			echo "};\n";
+			foreach($this->a_dict_entries as $s_entry => $s_value)
+			{
+				echo "Dict._entries['$s_entry'] = '".addslashes($s_value)."';\n";
+			}
+			echo "</script>\n";
+		}
 	}
 }
 ?>

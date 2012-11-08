@@ -548,6 +548,7 @@ EOF
 				}
 				$sHtml .= "</script>\n";
 			}
+			$this->output_dict_entries();
 		}
 	
 		if (count($this->a_styles)>0)

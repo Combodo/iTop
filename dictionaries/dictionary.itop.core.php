@@ -325,6 +325,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventNotificationEmail/Attribute:subject+' => 'Subject',
 	'Class:EventNotificationEmail/Attribute:body' => 'Body',
 	'Class:EventNotificationEmail/Attribute:body+' => 'Body',
+	'Class:EventNotificationEmail/Attribute:attachments' => 'Attachments',
+	'Class:EventNotificationEmail/Attribute:attachments+' => '',
 ));
 
 //

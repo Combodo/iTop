@@ -169,6 +169,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:EventNotificationEmail/Attribute:subject+' => '',
 	'Class:EventNotificationEmail/Attribute:body' => 'Message',
 	'Class:EventNotificationEmail/Attribute:body+' => '',
+	'Class:EventNotificationEmail/Attribute:attachments' => 'Pièces jointes',
+	'Class:EventNotificationEmail/Attribute:attachments+' => '',
 	'Class:EventIssue' => 'Erreur',
 	'Class:EventIssue+' => '',
 	'Class:EventIssue/Attribute:issue' => 'Erreur',

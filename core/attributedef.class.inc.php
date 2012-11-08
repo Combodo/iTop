@@ -4186,7 +4186,11 @@ class AttributeTable extends AttributeDBField
 	// Facilitate things: allow the user to Set the value from a string
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (!is_array($proposedValue))
+		if (is_null($proposedValue))
+		{
+			return array();
+		}
+		else if (!is_array($proposedValue))
 		{
 			return array(0 => array(0 => $proposedValue));
 		}
