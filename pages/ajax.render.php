@@ -854,7 +854,7 @@ try
 		break;
 		
 		case 'export_dashboard':
-		$sMenuId = utils::ReadParam('id', '');
+		$sMenuId = utils::ReadParam('id', '', false, 'raw_data');
 		ApplicationMenu::LoadAdditionalMenus();
 		$index = ApplicationMenu::GetMenuIndexById($sMenuId);
 		$oMenu = ApplicationMenu::GetMenuNode($index);
@@ -870,7 +870,7 @@ try
 		break;
 		
 		case 'import_dashboard':
-		$sMenuId = utils::ReadParam('id', '');
+		$sMenuId = utils::ReadParam('id', '', false, 'raw_data');
 		ApplicationMenu::LoadAdditionalMenus();
 		$index = ApplicationMenu::GetMenuIndexById($sMenuId);
 		$oMenu = ApplicationMenu::GetMenuNode($index);
