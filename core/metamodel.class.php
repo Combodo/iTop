@@ -1238,7 +1238,10 @@ abstract class MetaModel
 				foreach($aStates[$sState] as $sPrevState)
 				{
 					$iPrevFlags = self::GetAttributeFlags($sClass, $sPrevState, $sAttCode);
-					$bReadOnly = $bReadOnly && (($iPrevFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY); // if it is/was not readonly => then it's not
+					if (($iPrevFlags & OPT_ATT_HIDDEN) != OPT_ATT_HIDDEN)
+					{
+						$bReadOnly = $bReadOnly && (($iPrevFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY); // if it is/was not readonly => then it's not
+					}
 					$bHidden = $bHidden && (($iPrevFlags & OPT_ATT_HIDDEN) == OPT_ATT_HIDDEN); // if it is/was not hidden => then it's not
 				}
 				if ($bReadOnly)
