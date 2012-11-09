@@ -1149,6 +1149,14 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 						else
 						{
 							$rawValue = $oObj->Get($sAttCodeEx);
+							if ($oAttDef instanceof AttributeFriendlyName)
+							{
+								$sKeyAttCode = $oAttDef->GetKeyAttCode();
+								if ($oObj->Get($sKeyAttCode) == 0)
+								{
+									$rawValue = '';
+								}
+							}
 							if ($bLocalize)
 							{
 								$outputValue = htmlentities($oFinalAttDef->GetValueLabel($rawValue), ENT_QUOTES, 'UTF-8');
