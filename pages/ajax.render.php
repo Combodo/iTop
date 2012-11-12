@@ -801,6 +801,14 @@ try
 		$oDashboard->FromParams($aParams);
 		$oDashboard->Save();
 		// trigger a reload of the current page since the dashboard just changed
+		$oPage->add_ready_script(
+<<<EOF
+	var sLocation = new String(window.location.href);
+	var sNewLocation = sLocation.replace('&edit=1', '');
+	sNewLocation = sLocation.replace(/#(.?)$/, ''); // Strips everything after the hash, since IF the URL does not change AND contains a hash, then Chrome does not reload the page
+	window.location.href = sNewLocation;
+EOF
+		);
 		$oPage->add_ready_script("sLocation = new String(window.location.href); window.location.href=sLocation.replace('&edit=1', '');"); // reloads the page, doing a GET even if we arrived via a POST
 		break;
 
