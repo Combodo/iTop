@@ -508,7 +508,7 @@
           <target_attcode>email</target_attcode>
         </field>
         <field id="agent_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT Person AS p JOIN lnkTeamToContact AS l ON l.contact_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this->team_id]]></filter>
+          <filter><![CDATA[SELECT Person AS p JOIN lnkPersonToTeam AS l ON l.person_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this->team_id]]></filter>
           <dependencies>
             <attribute id="team_id"/>
           </dependencies>
