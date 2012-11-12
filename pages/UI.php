@@ -27,7 +27,7 @@
 /**
  * Perform all the needed checks to delete one (or more) objects
  */
-function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
+function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed, $oFilter = null)
 {
 	$oDeletionPlan = new DeletionPlan();
 
@@ -292,6 +292,7 @@ function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed)
 				$oP->add("<form method=\"post\">\n");
 				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::ReadParam('transaction_id')."\">\n");
 				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"bulk_delete_confirmed\">\n");
+				$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".$oFilter->Serialize()."\">\n");
 				$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
 				foreach($aObjects as $oObj)
 				{
@@ -1316,7 +1317,7 @@ EOF
 				throw new SecurityException(Dict::Format('UI:Error:BulkDeleteNotAllowedOn_Class', $sClass));
 			}
 			$oP->set_title(Dict::S('UI:BulkDeletePageTitle'));
-			DeleteObjects($oP, $sClass, $aObjects, ($operation == 'bulk_delete_confirmed'));
+			DeleteObjects($oP, $sClass, $aObjects, ($operation == 'bulk_delete_confirmed'), $oFullSetFilter);
 		break;
 			
 		///////////////////////////////////////////////////////////////////////////////////////////
