@@ -311,8 +311,13 @@ class SQLQuery
 		{
 			if (count($aSelectedIdFields) > 0)
 			{
-				$sIDFields = implode(', ', $aSelectedIdFields);
-				$sSQL = "SELECT COUNT(DISTINCT $sIDFields) AS COUNT FROM $sFrom WHERE $sWhere";
+				$aCountFields = array();
+				foreach ($aSelectedIdFields as $sFieldExpr)
+				{
+					$aCountFields[] = "COALESCE($sFieldExpr, 0)"; // Null values are excluded from the count
+				}
+				$sCountFields = implode(', ', $aCountFields);
+				$sSQL = "SELECT COUNT(DISTINCT $sCountFields) AS COUNT FROM $sFrom WHERE $sWhere";
 			}
 			else
 			{
