@@ -2237,9 +2237,6 @@
     </menu>
     <menu id="RequestManagement" xsi:type="MenuGroup" _delta="define">
       <rank>30</rank>
-      <enable_class>Contact</enable_class>
-      <enable_action>UR_ACTION_MODIFY</enable_action>
-      <enable_permission>UR_ALLOWED_YES</enable_permission>
       <enable_stimulus/>
     </menu>
     <menu id="UserRequest:Overview" xsi:type="DashboardMenuNode" _delta="define">
