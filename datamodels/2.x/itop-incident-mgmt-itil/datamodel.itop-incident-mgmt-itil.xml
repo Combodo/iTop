@@ -1907,9 +1907,6 @@
   <menus>
     <menu id="IncidentManagement" xsi:type="MenuGroup" _delta="define">
       <rank>35</rank>
-      <enable_class>Contact</enable_class>
-      <enable_action>UR_ACTION_MODIFY</enable_action>
-      <enable_permission>UR_ALLOWED_YES</enable_permission>
       <enable_stimulus/>
     </menu>
     <menu id="Incident:Overview" xsi:type="DashboardMenuNode" _delta="define">
