@@ -76,6 +76,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Attribute:related_request_list+' => '',
 	'Class:Change/Attribute:related_incident_list' => 'Incidents liés',
 	'Class:Change/Attribute:related_incident_list+' => '',
+	'Class:Change/Attribute:related_problems_list' => 'Problèmes liés',
+	'Class:Change/Attribute:related_problems_list+' => '',
 	'Class:Change/Attribute:child_changes_list' => 'Changements fils',
 	'Class:Change/Attribute:child_changes_list+' => '',
 	'Class:Change/Attribute:parent_id_friendlyname' => 'Nom usuel du changement parent',

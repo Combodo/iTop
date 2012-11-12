@@ -114,6 +114,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Change/Attribute:related_request_list+' => '',
 	'Class:Change/Attribute:related_incident_list' => 'Related incidents',
 	'Class:Change/Attribute:related_incident_list+' => '',
+	'Class:Change/Attribute:related_problems_list' => 'Related problems',
+	'Class:Change/Attribute:related_problems_list+' => '',
 	'Class:Change/Attribute:child_changes_list' => 'Child changes',
 	'Class:Change/Attribute:child_changes_list+' => '',
 	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent change friendly name',

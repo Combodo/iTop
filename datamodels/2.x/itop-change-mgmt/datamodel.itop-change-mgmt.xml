@@ -655,7 +655,7 @@
 		$sIcon = '';
 		if ($sIconName != '')
 		{
-			$sPath = '../modules/Sofaxis-change-mgmt/images/'.$sIconName;
+			$sPath = '../env-'.utils::GetCurrentEnvironment().'/itop-change-mgmt/images/'.$sIconName;
 			if ($bImgTag)
 			{
 				$sIcon = "<img src=\"$sPath\" style=\"vertical-align:middle;\"/>";
