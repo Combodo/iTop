@@ -1653,10 +1653,11 @@ abstract class DBObject
 
 	protected function DBDeleteSingleObject()
 	{
-		$this->OnDelete();
-
 		if (!MetaModel::DBIsReadOnly())
 		{
+			$this->OnDelete();
+			$this->RecordObjDeletion($this->m_iKey); // May cause a reload for storing history information
+			
 			foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
 			{
 				if ($oAttDef->IsHierarchicalKey())
@@ -1689,14 +1690,12 @@ abstract class DBObject
 			{
 				$this->DBDeleteSingleTable($sParentClass);
 			}
+			
+			$this->AfterDelete();
+
+			$this->m_bIsInDB = false;
+			$this->m_iKey = null;
 		}
-
-		$this->AfterDelete();
-
-		$this->RecordObjDeletion($this->m_iKey);
-
-		$this->m_bIsInDB = false;
-		$this->m_iKey = null;
 	}
 
 	// Delete an object... and guarantee data integrity
