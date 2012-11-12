@@ -982,7 +982,7 @@
 		$sIcon = '';
 		if ($sIconName != '')
 		{
-			$sPath = '../modules/itop-change-mgmt-itil/images/'.$sIconName;
+			$sPath = '../env-'.utils::GetCurrentEnvironment().'/itop-change-mgmt-itil/images/'.$sIconName;
 			if ($bImgTag)
 			{
 				$sIcon = "<img src=\"$sPath\" style=\"vertical-align:middle;\"/>";
