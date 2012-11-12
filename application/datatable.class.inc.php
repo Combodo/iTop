@@ -360,41 +360,61 @@ EOF;
 			$aRow = array();
 			foreach($this->aClassAliases as $sAlias => $sClassName)
 			{
-				$sHilightClass = $aObjects[$sAlias]->GetHilightClass();
-				if ($sHilightClass != '')
+				if (is_object($aObjects[$sAlias]))
 				{
-					$aRow['@class'] = $sHilightClass;	
-				}
-				if ((($sSelectMode == 'single') || ($sSelectMode == 'multiple')) && $bFirstObject)
-				{
-					if (array_key_exists('selection_enabled', $aExtraParams) && isset($aExtraParams['selection_enabled'][$aObjects[$sAlias]->GetKey()]))
+					$sHilightClass = $aObjects[$sAlias]->GetHilightClass();
+					if ($sHilightClass != '')
 					{
-						$sDisabled = ($aExtraParams['selection_enabled'][$aObjects[$sAlias]->GetKey()]) ? '' : ' disabled="disabled"';
+						$aRow['@class'] = $sHilightClass;	
 					}
-					else
+					if ((($sSelectMode == 'single') || ($sSelectMode == 'multiple')) && $bFirstObject)
 					{
-						$sDisabled = '';
-					}
-					if ($sSelectMode == 'single')
-					{
-						$aRow['form::select'] = "<input type=\"radio\" $sDisabled class=\"selectList{$this->iListId}\" name=\"selectObject\" value=\"".$aObjects[$sAlias]->GetKey()."\"></input>";
-					}
-					else
-					{
-						$aRow['form::select'] = "<input type=\"checkBox\" $sDisabled class=\"selectList{$this->iListId}\" name=\"selectObject[]\" value=\"".$aObjects[$sAlias]->GetKey()."\"></input>";
-					}
-				}
-				foreach($aColumns[$sAlias] as $sAttCode => $aData)
-				{
-					if ($aData['checked'])
-					{
-						if ($sAttCode == '_key_')
+						if (array_key_exists('selection_enabled', $aExtraParams) && isset($aExtraParams['selection_enabled'][$aObjects[$sAlias]->GetKey()]))
 						{
-							$aRow['key_'.$sAlias] = $aObjects[$sAlias]->GetHyperLink();
+							$sDisabled = ($aExtraParams['selection_enabled'][$aObjects[$sAlias]->GetKey()]) ? '' : ' disabled="disabled"';
 						}
 						else
 						{
-							$aRow[$sAttCode.'_'.$sAlias] = $aObjects[$sAlias]->GetAsHTML($sAttCode, $bLocalize);
+							$sDisabled = '';
+						}
+						if ($sSelectMode == 'single')
+						{
+							$aRow['form::select'] = "<input type=\"radio\" $sDisabled class=\"selectList{$this->iListId}\" name=\"selectObject\" value=\"".$aObjects[$sAlias]->GetKey()."\"></input>";
+						}
+						else
+						{
+							$aRow['form::select'] = "<input type=\"checkBox\" $sDisabled class=\"selectList{$this->iListId}\" name=\"selectObject[]\" value=\"".$aObjects[$sAlias]->GetKey()."\"></input>";
+						}
+					}
+					foreach($aColumns[$sAlias] as $sAttCode => $aData)
+					{
+						if ($aData['checked'])
+						{
+							if ($sAttCode == '_key_')
+							{
+								$aRow['key_'.$sAlias] = $aObjects[$sAlias]->GetHyperLink();
+							}
+							else
+							{
+								$aRow[$sAttCode.'_'.$sAlias] = $aObjects[$sAlias]->GetAsHTML($sAttCode, $bLocalize);
+							}
+						}
+					}
+				}
+				else
+				{
+					foreach($aColumns[$sAlias] as $sAttCode => $aData)
+					{
+						if ($aData['checked'])
+						{
+							if ($sAttCode == '_key_')
+							{
+								$aRow['key_'.$sAlias] = '';
+							}
+							else
+							{
+								$aRow[$sAttCode.'_'.$sAlias] = '';
+							}
 						}
 					}
 				}
