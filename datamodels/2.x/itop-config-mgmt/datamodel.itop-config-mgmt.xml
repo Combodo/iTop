@@ -1541,7 +1541,7 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
-        <field id="purchase_date" xsi:type="AttributeString">
+        <field id="purchase_date" xsi:type="AttributeDate">
           <sql>purchase_date</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
