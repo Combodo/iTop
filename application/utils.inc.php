@@ -819,5 +819,27 @@ class utils
 		$sUrl = self::GetAbsoluteUrlAppRoot().'env-'.self::GetCurrentEnvironment().'/';
 		return $sUrl;
 	}
+
+	/**
+	 * Returns a name unique amongst the given list
+	 * @param string $sProposed The default value
+	 * @param array  $aExisting An array of existing values (strings)	 	 
+	 */
+	static public function MakeUniqueName($sProposed, $aExisting)
+	{
+		if (in_array($sProposed, $aExisting))
+		{
+			$i = 1;
+			while (in_array($sProposed.$i, $aExisting) && ($i < 50))
+			{
+				$i++;
+			}
+			return $sProposed.$i;
+		}
+		else
+		{
+			return $sProposed;
+		}
+	}	 	
 }
 ?>

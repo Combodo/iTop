@@ -36,6 +36,7 @@ class ajax_page extends WebPage
 	protected $m_sCurrentTab;
 	protected $m_sCurrentTabContainer;
 	protected $m_aTabs;
+	private $m_sMenu; // If set, then the menu will be updated
 	
     /**
      * constructor for the web page
@@ -52,6 +53,7 @@ class ajax_page extends WebPage
 		$this->m_aTabs = array();
 		$this->sContentType = 'text/html';
 		$this->sContentDisposition = 'inline';
+		$this->m_sMenu = "";
     }	
 
 	public function AddTabContainer($sTabContainer, $sPrefix = '')
@@ -93,6 +95,11 @@ class ajax_page extends WebPage
 		return $this->m_sCurrentTab;
 	}
 	
+	public function AddToMenu($sHtml)
+	{
+		$this->m_sMenu .= $sHtml;
+	}
+
     /**
      * Echoes the content of the whole page
      * @return void
@@ -221,6 +228,24 @@ EOF
         {
         	echo $this->s_content;
         }
+        if (!empty($this->m_sMenu))
+        {
+           $uid = time();
+           echo "<div id=\"accordion_temp_$uid\">\n";
+           echo "<div id=\"accordion\">\n";
+           echo "<!-- Beginning of the accordion menu -->\n";
+           echo self::FilterXSS($this->m_sMenu);
+           echo "<!-- End of the accordion menu-->\n";
+           echo "</div>\n";
+           echo "</div>\n";
+
+	        echo "<script type=\"text/javascript\">\n";
+	        echo "$('#inner_menu').html($('#accordion_temp_$uid').html());\n";
+	        echo "$('#accordion_temp_$uid').remove();\n";
+	        echo "$('#accordion').accordion({ header: 'h3', navigation: true, autoHeight: false, collapsible: false, icons: false });\n";
+	        echo "\n</script>\n";
+        }
+
         //echo $this->s_deferred_content;
         if (count($this->a_scripts) > 0)
         {
@@ -240,6 +265,7 @@ EOF
 	        echo $this->m_sReadyScript; // Ready Scripts are output as simple scripts
 	        echo "\n</script>\n";
         }
+        
 		if (trim($s_captured_output) != "")
         {
         	echo self::FilterXSS($s_captured_output);

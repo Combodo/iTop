@@ -80,6 +80,15 @@ class ApplicationMenu
 					call_user_func($aCallSpec);
 				}
 			}
+
+			// Build menus from the menus themselves (e.g. the ShortcutContainerMenuNode will do that)
+			//
+			foreach(self::$aRootMenus as $aMenu)
+			{
+				$oMenuNode = self::GetMenuNode($aMenu['index']);
+				$oMenuNode->PopulateChildMenus();
+			}
+
 			self::$bAdditionalMenusLoaded = true;
 		}
 	}
@@ -131,7 +140,7 @@ class ApplicationMenu
 			//       they were not used to display the menus (redundant or unused)
 			//
 			$aBacktrace = debug_backtrace();
-			$sFile = $aBacktrace[2]["file"];
+			$sFile = isset($aBacktrace[2]["file"]) ? $aBacktrace[2]["file"] : $aBacktrace[1]["file"];
 			self::$aMenusIndex[$index] = array('node' => $oMenuNode, 'children' => array(), 'parent' => $sParentId, 'rank' => $fRank, 'source_file' => $sFile);
 		}
 		else
@@ -154,7 +163,7 @@ class ApplicationMenu
 	/**
 	 * Entry point to display the whole menu into the web page, used by iTopWebPage
 	 */
-	static public function DisplayMenu(iTopWebPage $oPage, $aExtraParams)
+	static public function DisplayMenu($oPage, $aExtraParams)
 	{
 		self::LoadAdditionalMenus();
 		// Sort the root menu based on the rank
@@ -253,11 +262,11 @@ class ApplicationMenu
 	/**
 	 * Helper function to get the list of child(ren) of a menu
 	 */
-	static protected function GetChildren($index)
+	static public function GetChildren($index)
 	{
 		return self::$aMenusIndex[$index]['children'];
 	}
-	
+
 	/**
 	 * Helper function to get the ID of a menu based on its name
 	 * @param string $sTitle Title of the menu (as passed when creating the menu)
@@ -407,6 +416,16 @@ abstract class MenuNode
 		return $this->index;
 	}
 	
+	public function PopulateChildMenus()
+	{
+		foreach (ApplicationMenu::GetChildren($this->GetIndex()) as $aMenu)
+		{
+			$index = $aMenu['index'];
+			$oMenu = ApplicationMenu::GetMenuNode($index);
+			$oMenu->PopulateChildMenus();
+		}
+	}
+
 	public function GetHyperlink($aExtraParams)
 	{
 		$aExtraParams['c[menu]'] = $this->GetMenuId();
@@ -617,31 +636,38 @@ class OQLMenuNode extends MenuNode
 	
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
-		$aExtraParams = array_merge($aExtraParams, $this->m_aParams);
-		try
-		{
-			$oSearch = DBObjectSearch::FromOQL($this->sOQL);
-			$sIcon = MetaModel::GetClassIcon($oSearch->GetClass());
-		}
-		catch(Exception $e)
-		{
-			$sIcon = '';
-		}
+		OQLMenuNode::RenderOQLSearch
+		(
+			$this->sOQL,
+			Dict::S($this->sPageTitle),
+			'Menu_'.$this->GetMenuId(),
+			$this->bSearch, // Search pane
+			true, // Search open
+			$oPage, 
+			$aExtraParams
+		);
+	}
 
-		if ($this->bSearch)
+	public static function RenderOQLSearch($sOql, $sTitle, $sUsageId, $bSearchPane, $bSearchOpen, WebPage $oPage, $aExtraParams = array())
+	{
+		$oSearch = DBObjectSearch::FromOQL($sOql);
+		$sIcon = MetaModel::GetClassIcon($oSearch->GetClass());
+
+		if ($bSearchPane)
 		{
-			$aParams = array_merge(array('open' => true, 'table_id' => 'Menu_'.$this->GetMenuId()), $aExtraParams);
+			$aParams = array_merge(array('open' => $bSearchOpen, 'table_id' => $sUsageId), $aExtraParams);
 			$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
 			$oBlock->Display($oPage, 0);
 		}
 		
-		$oPage->add("<p class=\"page-header\">$sIcon ".Dict::S($this->sPageTitle)."</p>");
+		$oPage->add("<p class=\"page-header\">$sIcon ".Dict::S($sTitle)."</p>");
 		
-		$aParams = array_merge(array('table_id' => 'Menu_'.$this->GetMenuId()), $aExtraParams);
+		$aParams = array_merge(array('table_id' => $sUsageId), $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'list', false /* Asynchronous */, $aParams);
-		$oBlock->Display($oPage, 1);
+		$oBlock->Display($oPage, $sUsageId);
 	}
 }
+
 /**
  * This class defines a menu item that displays a search form for the given class of objects
  */
@@ -891,5 +917,97 @@ class DashboardMenuNode extends MenuNode
 		}
 	}
 	
+}
+
+/**
+ * A shortcut container is the preferred destination of newly created shortcuts
+ */
+class ShortcutContainerMenuNode extends MenuNode
+{
+	public function GetHyperlink($aExtraParams)
+	{
+		return '';
+	}
+
+	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	{
+	}
+
+	public function PopulateChildMenus()
+	{
+		// Load user shortcuts in DB
+		//
+		$oBMSearch = new DBObjectSearch('Shortcut');
+		$oBMSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
+		$oBMSet = new DBObjectSet($oBMSearch, array('friendlyname' => true)); // ascending on friendlyname
+		$fRank = 1;
+		while ($oShortcut = $oBMSet->Fetch())
+		{
+			$sName = $this->GetMenuId().'_'.$oShortcut->GetKey();
+			$oShortcutMenu = new ShortcutMenuNode($sName, $oShortcut, $this->GetIndex(), $fRank++);
+		}
+	
+		// Complete the tree
+		//
+		parent::PopulateChildMenus();
+	}
+}
+
+
+require_once(APPROOT.'application/shortcut.class.inc.php');
+/**
+ * This class defines a menu item which content is a shortcut.
+ */
+class ShortcutMenuNode extends MenuNode
+{
+	protected $oShortcut;
+	
+	/**
+	 * Create a menu item based on a custom template and inserts it into the application's main menu
+	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
+	 * @param object $oShortcut Shortcut object
+	 * @param integer $iParentIndex ID of the parent menu
+	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
+	 * @param string $sEnableClass Name of class of object
+	 * @param integer $iActionCode Either UR_ACTION_READ, UR_ACTION_MODIFY, UR_ACTION_DELETE, UR_ACTION_BULKREAD, UR_ACTION_BULKMODIFY or UR_ACTION_BULKDELETE
+	 * @param integer $iAllowedResults Expected "rights" for the action: either UR_ALLOWED_YES, UR_ALLOWED_NO, UR_ALLOWED_DEPENDS or a mix of them...
+	 * @return MenuNode
+	 */
+	public function __construct($sMenuId, $oShortcut, $iParentIndex, $fRank = 0, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null)
+	{
+		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
+		$this->oShortcut = $oShortcut;
+		$this->aReflectionProperties['shortcut'] = $oShortcut->GetKey();
+	}
+	
+	public function GetHyperlink($aExtraParams)
+	{
+		$sContext = $this->oShortcut->Get('context');
+		$aContext = unserialize($sContext);
+		if (isset($aContext['menu']))
+		{
+			unset($aContext['menu']);
+		}
+		foreach ($aContext as $sArgName => $sArgValue)
+		{
+			$aExtraParams[$sArgName] = $sArgValue;
+		}
+		return parent::GetHyperlink($aExtraParams);
+	}
+
+	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	{
+		$this->oShortcut->RenderContent($oPage, $aExtraParams);
+	}
+
+	public function GetTitle()
+	{
+		return $this->oShortcut->Get('name');
+	}
+	
+	public function GetLabel()
+	{
+		return $this->oShortcut->Get('name');
+	}
 }
 

@@ -256,6 +256,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:FilterList' => ' Filtrer... ',
 	'UI:Button:Create' => ' Créer ',
 	'UI:Button:Delete' => ' Supprimer ! ',
+	'UI:Button:Rename' => ' Renommer... ',
 	'UI:Button:ChangePassword' => ' Changer ! ',
 	'UI:Button:ResetPassword' => ' Ràz du mot de passe ',
 	'UI:SearchToggle' => 'Recherche',
@@ -964,5 +965,19 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'DayOfWeek-Thursday' => 'Jeudi',
 	'DayOfWeek-Friday' => 'Vendredi',
 	'DayOfWeek-Saturday' => 'Samedi',
+
+	'UI:Menu:ShortcutList' => 'Créer un Raccourci...',
+	'UI:ShortcutListDlg:Title' => 'Créer un raccourci pour la liste',
+	'UI:ShortcutRenameDlg:Title' => 'Renommer le raccourci',
+	'UI:ShortcutDelete:Confirm' => 'Veuillez confirmer la suppression du ou des raccourci(s)',
+	'Menu:MyShortcuts' => 'Mes raccourcis',
+	'Class:Shortcut' => 'Raccourci',
+	'Class:Shortcut+' => '',
+	'Class:Shortcut/Attribute:name' => 'Nom',
+	'Class:Shortcut/Attribute:name+' => 'Label utilisé dans le menu et comme titre de la page',
+	'Class:ShortcutOQL' => 'Raccourci vers une liste d\'objets',
+	'Class:ShortcutOQL+' => '',
+	'Class:ShortcutOQL/Attribute:oql' => 'Requête',
+	'Class:ShortcutOQL/Attribute:oql+' => 'Requête de définition de l\'ensemble des objets',
 ));
 ?>

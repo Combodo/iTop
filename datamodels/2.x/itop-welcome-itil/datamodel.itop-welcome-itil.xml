@@ -5,7 +5,7 @@
       <rank>10</rank>
     </menu>
     <menu id="WelcomeMenuPage" xsi:type="DashboardMenuNode" _delta="define">
-      <rank>1</rank>
+      <rank>10</rank>
       <parent>WelcomeMenu</parent>
       <definition>
         <layout>DashboardLayoutOneCol</layout>
@@ -51,6 +51,10 @@
           </cell>
         </cells>
       </definition>
+    </menu>
+    <menu id="MyShortcuts" xsi:type="ShortcutContainerMenuNode" _delta="define">
+      <rank>20</rank>
+      <parent>WelcomeMenu</parent>
     </menu>
   </menus>
 </itop_design>

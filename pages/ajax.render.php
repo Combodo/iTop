@@ -861,6 +861,69 @@ EOF
 		}
 		break;
 		
+		case 'shortcut_list_dlg':
+		$sOQL = utils::ReadParam('oql', '', false, 'raw_data');
+		ShortcutOQL::GetCreationDlgFromOQL($oPage, $sOQL);
+		break;
+		
+		case 'shortcut_list_create':
+		$oForm = ShortcutOQL::GetCreationForm();
+		$aValues = $oForm->ReadParams();
+
+		$oAppContext = new ApplicationContext();
+		$aContext = $oAppContext->GetAsHash();
+		$sContext = serialize($aContext);
+		
+		$oShortcut = MetaModel::NewObject("ShortcutOQL");
+		$oShortcut->Set('user_id', UserRights::GetUserId());
+		$oShortcut->Set("context", $sContext);
+		$oShortcut->Set("name", $aValues['name']);
+		$oShortcut->Set("oql", $aValues['oql']);
+		$iId = $oShortcut->DBInsertNoReload();
+
+		// Add the menu node in the right place
+		//
+		// Mmmm... already done because the newly created menu is read from the DB
+		//         as soon as we invoke DisplayMenu 
+
+		// Refresh the menu pane
+		$aExtraParams = array();
+		ApplicationMenu::DisplayMenu($oPage, $aExtraParams);
+		break;
+
+		case 'shortcut_rename_dlg':
+		$oSearch = new DBObjectSearch('Shortcut');
+		$aShortcuts = utils::ReadMultipleSelection($oSearch);
+		$iShortcut = $aShortcuts[0];
+		$oShortcut = MetaModel::GetObject('Shortcut', $iShortcut);
+		$oShortcut->StartRenameDialog($oPage);
+		break;
+
+		case 'shortcut_rename_go':
+		$iShortcut = utils::ReadParam('id', 0);
+		$oShortcut = MetaModel::GetObject('Shortcut', $iShortcut);
+
+		$sName = utils::ReadParam('attr_name', '', false, 'raw_data');
+		if (strlen($sName) > 0)
+		{
+			$oShortcut->Set('name', $sName);
+			$oShortcut->DBUpdate();
+			$oPage->add_ready_script('window.location.reload();');
+		}
+		
+		break;
+
+		case 'shortcut_delete_go':
+		$oSearch = new DBObjectSearch('Shortcut');
+		$aShortcuts = utils::ReadMultipleSelection($oSearch);
+		foreach ($aShortcuts as $iShortcut)
+		{
+			$oShortcut = MetaModel::GetObject('Shortcut', $iShortcut);
+			$oShortcut->DBDelete();
+			$oPage->add_ready_script('window.location.reload();');
+		}
+		break;
+
 		case 'export_dashboard':
 		$sMenuId = utils::ReadParam('id', '', false, 'raw_data');
 		ApplicationMenu::LoadAdditionalMenus();

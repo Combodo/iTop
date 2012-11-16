@@ -178,7 +178,7 @@ EOF;
 					{
 						$sCompiledCode .= $this->CompileMenu($oMenuNode, $sTargetDir, $sRelativeDir, $oP);
 					}
-					catch (ssDOMFormatException $e)
+					catch (DOMFormatException $e)
 					{
 						throw new Exception("Failed to process menu '$sMenuId', from '$sModuleRootDir': ".$e->getMessage());
 					}
@@ -1018,6 +1018,10 @@ EOF;
 			$sNewMenu = "new TemplateMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank);";
 			break;
 
+		case 'ShortcutContainerMenuNode':
+			$sNewMenu = "new ShortcutContainerMenuNode('$sMenuId', $sParentSpec, $fRank);";
+			break;
+
 		case 'OQLMenuNode':
 			$sOQL = self::QuoteForPHP($oMenu->GetChildText('oql'));
 			$bSearch = ($oMenu->GetChildText('do_search') == '1') ? 'true' : 'false';
@@ -1043,17 +1047,16 @@ EOF;
 				$sEnableStimulus = $oMenu->GetChildText('enable_stimulus');
 				if (strlen($sEnableStimulus) > 0)
 				{
-					$sNewMenu = "new MenuGroup('$sMenuId', $fRank, '$sEnableClass', $sEnableAction, $sEnablePermission, '$sEnableStimulus');";
+					$sNewMenu = "new $sMenuClass('$sMenuId', $fRank, '$sEnableClass', $sEnableAction, $sEnablePermission, '$sEnableStimulus');";
 				}
 				else
 				{
-					$sNewMenu = "new MenuGroup('$sMenuId', $fRank, '$sEnableClass', $sEnableAction, $sEnablePermission);";
+					$sNewMenu = "new $sMenuClass('$sMenuId', $fRank, '$sEnableClass', $sEnableAction, $sEnablePermission);";
 				}
-				//$sNewMenu = "new MenuGroup('$sMenuId', $fRank, '$sEnableClass', UR_ACTION_MODIFY, UR_ALLOWED_YES|UR_ALLOWED_DEPENDS);";
 			}
 			else
 			{
-				$sNewMenu = "new MenuGroup('$sMenuId', $fRank);";
+				$sNewMenu = "new $sMenuClass('$sMenuId', $fRank);";
 			}
 		}
 

@@ -319,3 +319,11 @@ function DashletCreationDlg(sOQL)
 	});
 	return false;
 }
+
+function ShortcutListDlg(sOQL, sContext)
+{
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?'+sContext, {operation: 'shortcut_list_dlg', oql: sOQL}, function(data){
+		$('body').append(data);
+	});
+	return false;
+}

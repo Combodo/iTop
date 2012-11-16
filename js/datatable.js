@@ -255,6 +255,28 @@ $(function()
 			var oDlgOpen = $('#datatable_dlg_'+sListId+' :visible');
 			
 			return (oDlgOpen.length > 0);
+		},
+		GetMultipleSelectionParams: function()
+		{
+			var oRes = {};
+
+			oRes.selectionMode = '';
+			if (this.element.find(':input[name=selectionMode]').length > 0)
+			{
+				oRes.selectionMode = this.element.find(':input[name=selectionMode]').val();
+			}
+
+			oRes.selectObject = [];
+			this.element.find(':input[name^=selectObject]').each(function() {
+				oRes.selectObject.push($(this).val());
+			});
+
+			oRes.storedSelection = [];
+			this.element.find(':input[name^=storedSelection]').each(function() {
+				oRes.storedSelection.push($(this).val());
+			});
+
+			return oRes;
 		}
 	});	
 });

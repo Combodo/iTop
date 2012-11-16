@@ -144,7 +144,6 @@ EOF
 		var pager = $('#user_prefs form .pager');
 		$(':input[name=selectionMode]', pager).val('negative');
 		$('#user_prefs table.listResults').trigger('load_selection');
-		
 	}
 	else
 	{
@@ -186,7 +185,102 @@ EOF
 EOF
 );
 	}
+
+	//////////////////////////////////////////////////////////////////////////
+	//
+	// Shortcuts
+	//
+	//////////////////////////////////////////////////////////////////////////
+
+	$oP->add('<fieldset><legend>'.Dict::S('Menu:MyShortcuts').'</legend>');
+	//$oP->p(Dict::S('UI:Menu:MyShortcuts+'));
+	$oBMSearch = new DBObjectSearch('Shortcut');
+	$oBMSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
+
+	//$aExtraParams = array('menu' => false, 'toolkit_menu' => false, 'display_limit' => false, 'localize_values' => $bLocalize, 'zlist' => 'details');
+	$aExtraParams = array();
+	$oBlock = new DisplayBlock($oBMSearch, 'list', false, $aExtraParams);
+	$oBlock->Display($oP, 'shortcut_list', array('view_link' => false, 'menu' => false, 'toolkit_menu' => false, 'selection_mode' => true, 'selection_type' => 'multiple', 'cssCount'=> '#shortcut_selection_count', 'table_id' => 'user_prefs_shortcuts'));
+	$oP->add('<p>');
+
+	$oSet = new DBObjectSet($oBMSearch);
+	if ($oSet->Count() > 0)
+	{
+		$sButtons = '<img src="../images/tv-item-last.gif">';
+		$sButtons .= '&nbsp;';
+		$sButtons .= '<button id="shortcut_btn_rename">'.Dict::S('UI:Button:Rename').'</button>';
+		$sButtons .= '&nbsp;';
+		$sButtons .= '<button id="shortcut_btn_delete">'.Dict::S('UI:Button:Delete').'</button>';
+
+		// Selection count updated by the pager, and used to enable buttons
+		$oP->add('<input type="hidden" id="shortcut_selection_count"/>');
+		$oP->add('</fieldset>');
 	
+		$sConfirmDelete = addslashes(Dict::S('UI:ShortcutDelete:Confirm'));
+	
+		$oP->add_ready_script(
+<<<EOF
+function OnShortcutBtnRename()
+{
+	var oParams = $('#datatable_shortcut_list').datatable('GetMultipleSelectionParams');
+	oParams.operation = 'shortcut_rename_dlg';
+
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data){
+		$('body').append(data);
+	});
+	return false;
+}
+
+function OnShortcutBtnDelete()
+{
+	if (confirm('$sConfirmDelete'))
+	{
+		var oParams = $('#datatable_shortcut_list').datatable('GetMultipleSelectionParams');
+		oParams.operation = 'shortcut_delete_go';
+
+		$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data){
+			$('body').append(data);
+		});
+	}
+	return false;
+}
+
+function OnSelectionCountChange()
+{
+	var iCountSelected = $("#shortcut_selection_count").val();
+	if (iCountSelected == 0)
+	{
+		$('#shortcut_btn_rename').attr('disabled', 'disabled');
+		$('#shortcut_btn_delete').attr('disabled', 'disabled');
+	}
+	else if (iCountSelected == 1)
+	{
+		$('#shortcut_btn_rename').removeAttr('disabled');
+		$('#shortcut_btn_delete').removeAttr('disabled');
+	}
+	else
+	{
+		$('#shortcut_btn_rename').attr('disabled', 'disabled');
+		$('#shortcut_btn_delete').removeAttr('disabled');
+	}
+}
+
+var oUpperCheckBox = $('#datatable_shortcut_list .checkAll').first();
+oUpperCheckBox.parent().width(oUpperCheckBox.width() + 2);
+
+$('#datatable_shortcut_list').append('<tr><td colspan="2">&nbsp;&nbsp;&nbsp;$sButtons</td></tr>');
+$('#shortcut_selection_count').bind('change', OnSelectionCountChange);
+$('#shortcut_btn_rename').bind('click', OnShortcutBtnRename);
+$('#shortcut_btn_delete').bind('click', OnShortcutBtnDelete);
+OnSelectionCountChange();
+EOF
+		);
+	} // if count > 0
+
+	//////////////////////////////////////////////////////////////////////////
+	//
+	// Footer
+	//
 	$oP->add('</div>');
 	$oP->add_ready_script("$('#fav_page_length').bind('keyup change', function(){ ValidateOtherSettings(); })");
 }

@@ -375,6 +375,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:FilterList' => ' Filter... ',
 	'UI:Button:Create' => ' Create ',
 	'UI:Button:Delete' => ' Delete ! ',
+	'UI:Button:Rename' => ' Rename... ',
 	'UI:Button:ChangePassword' => ' Change Password ',
 	'UI:Button:ResetPassword' => ' Reset Password ',
 	
@@ -1122,5 +1123,19 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'DayOfWeek-Thursday' => 'Thursday',
 	'DayOfWeek-Friday' => 'Friday',
 	'DayOfWeek-Saturday' => 'Saturday',
+
+	'UI:Menu:ShortcutList' => 'Create a Shortcut...',
+	'UI:ShortcutRenameDlg:Title' => 'Rename the shortcut',
+	'UI:ShortcutListDlg:Title' => 'Create a shortcut for the list',
+	'UI:ShortcutDelete:Confirm' => 'Please confirm that wou wish to delete the shortcut(s).',
+	'Menu:MyShortcuts' => 'My Shortcuts',
+	'Class:Shortcut' => 'Shortcut',
+	'Class:Shortcut+' => '',
+	'Class:Shortcut/Attribute:name' => 'Name',
+	'Class:Shortcut/Attribute:name+' => 'Label used in the menu and page title',
+	'Class:ShortcutOQL' => 'Search result shortcut',
+	'Class:ShortcutOQL+' => '',
+	'Class:ShortcutOQL/Attribute:oql' => 'Query',
+	'Class:ShortcutOQL/Attribute:oql+' => 'OQL defining the list of objects to search for',
 ));
 ?>
