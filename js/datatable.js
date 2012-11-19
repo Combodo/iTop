@@ -267,7 +267,7 @@ $(function()
 			}
 
 			oRes.selectObject = [];
-			this.element.find(':input[name^=selectObject]').each(function() {
+			this.element.find(':input[name^=selectObject]:checked').each(function() {
 				oRes.selectObject.push($(this).val());
 			});
 
