@@ -10,7 +10,7 @@
           <class id="Contact"/>
           <class id="Person"/>
           <class id="Team"/>
-          <class id="lnkTeamToContact"/>
+          <class id="lnkPersonToTeam"/>
         </classes>
       </group>
       <group id="Documentation" _delta="define">
@@ -48,11 +48,24 @@
           <class id="Server"/>
           <class id="Printer"/>
           <class id="Group"/>
+          <class id="lnkDocumentToLicence"/>
+          <class id="Typology"/>
+          <class id="NasFileSystem"/>
+          <class id="LogicalVolume"/>
+          <class id="Tape"/>
+          <class id="lnkApplicationSolutionToBusinessProcess"/>
+          <class id="lnkApplicationSolutionToFunctionalCI"/>
+          <class id="lnkConnectableCIToNetworkDevice"/>
+          <class id="lnkContactToFunctionalCI"/>
+          <class id="lnkDocumentToFunctionalCI"/>
+          <class id="lnkDocumentToLicence"/>
+          <class id="lnkDocumentToPatch"/>
+          <class id="lnkDocumentToSoftware"/>
+          <class id="lnkFunctionalCIToOSpatch"/>
           <class id="lnkGroupToCI"/>
-          <class id="lnkCIToDoc"/>
-          <class id="lnkCIToContact"/>
-          <class id="lnkSolutionToCI"/>
-          <class id="lnkProcessToSolution"/>
+          <class id="lnkSanToDatacenterDevice"/>
+          <class id="lnkServerToVolume"/>
+          <class id="lnkSoftwareInstanceToSoftwarePatch"/>
         </classes>
       </group>
       <group id="Incident" _delta="define">
@@ -90,27 +103,28 @@
           <class id="ProviderContract"/>
           <class id="CustomerContract"/>
           <class id="lnkCustomerContractToProviderContract"/>
-          <class id="lnkContractToSLA"/>
-          <class id="lnkContractToDoc"/>
-          <class id="lnkContractToContact"/>
-          <class id="lnkContractToCI"/>
           <class id="Service"/>
           <class id="ServiceSubcategory"/>
           <class id="SLA"/>
           <class id="SLT"/>
-          <class id="lnkSLTToSLA"/>
-          <class id="lnkServiceToDoc"/>
-          <class id="lnkServiceToContact"/>
-          <class id="lnkServiceToCI"/>
+          <class id="DeliveryModel"/>
+          <class id="lnkContactToContract"/>
+          <class id="lnkContactToService"/>
+          <class id="lnkContractToDocument"/>
+          <class id="lnkCustomerContractToService"/>
+          <class id="lnkDeliveryModelToContact"/>
+          <class id="lnkDocumentToService"/>
+          <class id="lnkFunctionalCIToProviderContract"/>
+          <class id="lnkFunctionalCIToService"/>
+          <class id="lnkProviderContractToService"/>
+          <class id="lnkSLAToSLT"/>
         </classes>
       </group>
       <group id="Call" _delta="define">
         <classes>
-          <class id="lnkTicketToDoc"/>
-          <class id="lnkTicketToContact"/>
-          <class id="lnkTicketToCI"/>
-          <class id="lnkTicketToIncident"/>
           <class id="UserRequest"/>
+          <class id="lnkFunctionalCIToTicket"/>
+          <class id="lnkContactToTicket"/>
         </classes>
       </group>
       <group id="KnownError" _delta="define">
@@ -118,31 +132,29 @@
           <class id="KnownError"/>
           <class id="lnkInfraError"/>
           <class id="lnkDocumentError"/>
+          <class id="FAQ"/>
+         <class id="FAQcategory"/>
         </classes>
       </group>
       <group id="LnkTickets" _delta="define">
         <classes>
-          <class id="lnkTicketToDoc"/>
-          <class id="lnkTicketToContact"/>
-          <class id="lnkTicketToCI"/>
-        </classes>
-      </group>
-      <group id="LnkIncidents" _delta="define">
-        <classes>
-          <class id="lnkTicketToIncident"/>
+          <class id="lnkFunctionalCIToTicket"/>
+          <class id="lnkContactToTicket"/>
+          <class id="WorkOrder"/>
         </classes>
       </group>
       <group id="LnkServices" _delta="define">
         <classes>
-          <class id="lnkCustomerContractToProviderContract"/>
-          <class id="lnkContractToSLA"/>
-          <class id="lnkContractToDoc"/>
-          <class id="lnkContractToContact"/>
-          <class id="lnkContractToCI"/>
-          <class id="lnkSLTToSLA"/>
-          <class id="lnkServiceToDoc"/>
-          <class id="lnkServiceToContact"/>
-          <class id="lnkServiceToCI"/>
+          <class id="lnkContactToContract"/>
+          <class id="lnkContactToService"/>
+          <class id="lnkContractToDocument"/>
+          <class id="lnkCustomerContractToService"/>
+          <class id="lnkDeliveryModelToContact"/>
+          <class id="lnkDocumentToService"/>
+          <class id="lnkFunctionalCIToProviderContract"/>
+          <class id="lnkFunctionalCIToService"/>
+          <class id="lnkProviderContractToService"/>
+          <class id="lnkSLAToSLT"/>
         </classes>
       </group>
       <group id="LnkKnownErrors" _delta="define">
@@ -247,11 +259,9 @@
           <group id="LnkTickets">
             <actions>
               <action xsi:type="delete">allow</action>
-            </actions>
-          </group>
-          <group id="LnkIncidents">
-            <actions>
-              <action xsi:type="delete">allow</action>
+             <action xsi:type="write">allow</action>
+              <action xsi:type="bulk write">allow</action>
+              <action id="ev_close" xsi:type="stimulus">allow</action>
             </actions>
           </group>
           <group id="class:Incident">
@@ -291,11 +301,9 @@
           <group id="LnkTickets">
             <actions>
               <action xsi:type="delete">allow</action>
-            </actions>
-          </group>
-          <group id="LnkIncidents">
-            <actions>
-              <action xsi:type="delete">allow</action>
+             <action xsi:type="write">allow</action>
+              <action xsi:type="bulk write">allow</action>
+              <action id="ev_close" xsi:type="stimulus">allow</action>
             </actions>
           </group>
           <group id="class:Incident">
@@ -342,6 +350,9 @@
           <group id="LnkTickets">
             <actions>
               <action xsi:type="delete">allow</action>
+             <action xsi:type="write">allow</action>
+              <action xsi:type="bulk write">allow</action>
+              <action id="ev_close" xsi:type="stimulus">allow</action>
             </actions>
           </group>
           <group id="LnkKnownErrors">
@@ -378,6 +389,9 @@
           <group id="LnkTickets">
             <actions>
               <action xsi:type="delete">allow</action>
+             <action xsi:type="write">allow</action>
+              <action xsi:type="bulk write">allow</action>
+              <action id="ev_close" xsi:type="stimulus">allow</action>
             </actions>
           </group>
           <group id="class:NormalChange">
@@ -425,6 +439,9 @@
           <group id="LnkTickets">
             <actions>
               <action xsi:type="delete">allow</action>
+             <action xsi:type="write">allow</action>
+              <action xsi:type="bulk write">allow</action>
+              <action id="ev_close" xsi:type="stimulus">allow</action>
             </actions>
           </group>
           <group id="class:NormalChange">
@@ -471,6 +488,9 @@
           <group id="LnkTickets">
             <actions>
               <action xsi:type="delete">allow</action>
+             <action xsi:type="write">allow</action>
+              <action xsi:type="bulk write">allow</action>
+              <action id="ev_close" xsi:type="stimulus">allow</action>
             </actions>
           </group>
           <group id="class:NormalChange">
@@ -527,11 +547,6 @@
             <actions>
               <action xsi:type="write">allow</action>
               <action xsi:type="bulk write">allow</action>
-              <action xsi:type="delete">allow</action>
-            </actions>
-          </group>
-          <group id="LnkTickets">
-            <actions>
               <action xsi:type="delete">allow</action>
             </actions>
           </group>
