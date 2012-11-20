@@ -890,7 +890,7 @@
         </list>
       </presentation>
     </class>
-    <class id="ServiceFamilly" _delta="define">
+    <class id="ServiceFamily" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable</category>

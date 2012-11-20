@@ -4,12 +4,12 @@
 <name>MySql</name>
 <vendor>Oracle</vendor>
 <version>5.3</version>
-<type>DBserver</type>
+<type>DBServer</type>
 </Software>
 <Software alias="Software" id="1">
 <name>Oracle DB engine</name>
 <vendor>Oracle</vendor>
 <version>11i</version>
-<type>DBserver</type>
+<type>DBServer</type>
 </Software>
 </Set>

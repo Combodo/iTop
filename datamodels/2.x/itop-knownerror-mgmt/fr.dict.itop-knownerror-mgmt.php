@@ -132,16 +132,16 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
-// Class: FAQcategory
+// Class: FAQCategory
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:FAQcategory' => 'Catégorie de FAQ',
-	'Class:FAQcategory+' => 'Catégorie de FAQ',
-	'Class:FAQcategory/Attribute:name' => 'Nom',
-	'Class:FAQcategory/Attribute:name+' => '',
-	'Class:FAQcategory/Attribute:faq_list' => 'FAQs',
-	'Class:FAQcategory/Attribute:faq_list+' => '',
+	'Class:FAQCategory' => 'Catégorie de FAQ',
+	'Class:FAQCategory+' => 'Catégorie de FAQ',
+	'Class:FAQCategory/Attribute:name' => 'Nom',
+	'Class:FAQCategory/Attribute:name+' => '',
+	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
+	'Class:FAQCategory/Attribute:faq_list+' => '',
 ));
 
 Dict::Add('EN US', 'English', 'English', array(

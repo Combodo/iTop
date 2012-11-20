@@ -223,14 +223,14 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
-// Class: ServiceFamilly
+// Class: ServiceFamily
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:ServiceFamilly' => 'Service Familly',
-	'Class:ServiceFamilly+' => '',
-	'Class:ServiceFamilly/Attribute:name' => 'Name',
-	'Class:ServiceFamilly/Attribute:name+' => '',
+	'Class:ServiceFamily' => 'Service Family',
+	'Class:ServiceFamily+' => '',
+	'Class:ServiceFamily/Attribute:name' => 'Name',
+	'Class:ServiceFamily/Attribute:name+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Services',
 	'Class:ServiceFamily/Attribute:services_list+' => '',
 ));
@@ -307,7 +307,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:ServiceSubcategory' => 'Service Sub category',
+	'Class:ServiceSubcategory' => 'Service Subcategory',
 	'Class:ServiceSubcategory+' => '',
 	'Class:ServiceSubcategory/Attribute:name' => 'Name',
 	'Class:ServiceSubcategory/Attribute:name+' => '',

@@ -167,14 +167,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
-// Class: ServiceFamilly
+// Class: ServiceFamily
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:ServiceFamilly' => 'Famille de service',
-	'Class:ServiceFamilly+' => '',
-	'Class:ServiceFamilly/Attribute:name' => 'Nom',
-	'Class:ServiceFamilly/Attribute:name+' => '',
+	'Class:ServiceFamily' => 'Famille de service',
+	'Class:ServiceFamily+' => '',
+	'Class:ServiceFamily/Attribute:name' => 'Nom',
+	'Class:ServiceFamily/Attribute:name+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Services',
 	'Class:ServiceFamily/Attribute:services_list+' => '',
 ));

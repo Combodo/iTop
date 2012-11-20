@@ -593,7 +593,7 @@
         </field>
         <field id="osfamily_id" xsi:type="AttributeExternalKey">
           <sql>osfamily_id</sql>
-          <target_class>OSfamily</target_class>
+          <target_class>OSFamily</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -602,12 +602,12 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="osversion_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT OSversion WHERE osfamily_id = :this->osfamily_id]]></filter>
+          <filter><![CDATA[SELECT OSVersion WHERE osfamily_id = :this->osfamily_id]]></filter>
           <dependencies>
             <attribute id="osfamily_id"/>
           </dependencies>
           <sql>osversion_id</sql>
-          <target_class>OSversion</target_class>
+          <target_class>OSVersion</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -616,12 +616,12 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="oslicence_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT OsLicence WHERE osversion_id = :this->osversion_id]]></filter>
+          <filter><![CDATA[SELECT OSLicence WHERE osversion_id = :this->osversion_id]]></filter>
           <dependencies>
             <attribute id="osversion_id"/>
           </dependencies>
           <sql>oslicence_id</sql>
-          <target_class>OsLicence</target_class>
+          <target_class>OSLicence</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -802,7 +802,7 @@
       </presentation>
     </class>
     <class id="LogicalInterface" _delta="define">
-      <parent>IPinterface</parent>
+      <parent>IPInterface</parent>
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>

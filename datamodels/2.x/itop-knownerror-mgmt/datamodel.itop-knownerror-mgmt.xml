@@ -430,7 +430,7 @@
         </field>
         <field id="category_id" xsi:type="AttributeExternalKey">
           <sql>category_id</sql>
-          <target_class>FAQcategory</target_class>
+          <target_class>FAQCategory</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -507,7 +507,7 @@
         </list>
       </presentation>
     </class>
-    <class id="FAQcategory" _delta="define">
+    <class id="FAQCategory" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable,knownerrormgmt</category>
@@ -594,7 +594,7 @@
     <menu id="FAQCategory" xsi:type="OQLMenuNode" _delta="define">
       <rank>4.5</rank>
       <parent>Problem:Shortcuts</parent>
-      <oql>SELECT FAQcategory</oql>
+      <oql>SELECT FAQCategory</oql>
       <do_search>1</do_search>
     </menu>
     <menu id="FAQ" xsi:type="OQLMenuNode" _delta="define">

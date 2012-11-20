@@ -1523,7 +1523,7 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="model_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT Model WHERE brand_id=:this->brand_id AND Type=:this->finalclass]]></filter>
+          <filter><![CDATA[SELECT Model WHERE brand_id=:this->brand_id AND type=:this->finalclass]]></filter>
           <dependencies>
             <attribute id="brand_id"/>
           </dependencies>
@@ -2201,7 +2201,7 @@
         </field>
         <field id="iosversion_id" xsi:type="AttributeExternalKey">
           <sql>iosversion_id</sql>
-          <target_class>IOSversion</target_class>
+          <target_class>IOSVersion</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -2466,7 +2466,7 @@
       <fields>
         <field id="osfamily_id" xsi:type="AttributeExternalKey">
           <sql>osfamily_id</sql>
-          <target_class>OSfamily</target_class>
+          <target_class>OSFamily</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -2475,12 +2475,12 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="osversion_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT OSversion WHERE osfamily_id = :this->osfamily_id]]></filter>
+          <filter><![CDATA[SELECT OSVersion WHERE osfamily_id = :this->osfamily_id]]></filter>
           <dependencies>
             <attribute id="osfamily_id"/>
           </dependencies>
           <sql>osversion_id</sql>
-          <target_class>OSversion</target_class>
+          <target_class>OSVersion</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -2489,12 +2489,12 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="oslicence_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT OsLicence WHERE osversion_id = :this->osversion_id]]></filter>
+          <filter><![CDATA[SELECT OSLicence WHERE osversion_id = :this->osversion_id]]></filter>
           <dependencies>
             <attribute id="osversion_id"/>
           </dependencies>
           <sql>oslicence_id</sql>
-          <target_class>OsLicence</target_class>
+          <target_class>OSLicence</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -3404,7 +3404,7 @@
         </list>
       </presentation>
     </class>
-    <class id="DBserver" _delta="define">
+    <class id="DBServer" _delta="define">
       <parent>SoftwareInstance</parent>
       <properties>
         <category>bizmodel,searchable</category>
@@ -3560,7 +3560,7 @@
         </list>
       </presentation>
     </class>
-    <class id="Webserver" _delta="define">
+    <class id="WebServer" _delta="define">
       <parent>SoftwareInstance</parent>
       <properties>
         <category>bizmodel,searchable</category>
@@ -4118,7 +4118,7 @@
       <fields>
         <field id="dbserver_id" xsi:type="AttributeExternalKey">
           <sql>dbserver_id</sql>
-          <target_class>DBserver</target_class>
+          <target_class>DBServer</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -4144,7 +4144,7 @@
 			
 			case 'depends on':
 			$aRels = array(
-				"DBserver" => array("sQuery"=>"SELECT DBserver WHERE id = :this->dbserver_id", "bPropagate"=>true, "iDistance"=>10),
+				"DBServer" => array("sQuery"=>"SELECT DBServer WHERE id = :this->dbserver_id", "bPropagate"=>true, "iDistance"=>10),
 			
 			);
 			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
@@ -4256,7 +4256,7 @@
       <fields>
         <field id="webserver_id" xsi:type="AttributeExternalKey">
           <sql>webserver_id</sql>
-          <target_class>Webserver</target_class>
+          <target_class>WebServer</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -4288,7 +4288,7 @@
 			
 			case 'depends on':
 			$aRels = array(
-				"Webserver" => array("sQuery"=>"SELECT Webserver WHERE id = :this->webserver_id", "bPropagate"=>true, "iDistance"=>10),
+				"WebServer" => array("sQuery"=>"SELECT WebServer WHERE id = :this->webserver_id", "bPropagate"=>true, "iDistance"=>10),
 			
 			);
 			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
@@ -4426,10 +4426,10 @@
         <field id="type" xsi:type="AttributeEnum">
           <values>
             <value>Middleware</value>
-            <value>DBserver</value>
+            <value>DBServer</value>
             <value>PCSoftware</value>
             <value>OtherSoftware</value>
-            <value>Webserver</value>
+            <value>WebServer</value>
           </values>
           <sql>type</sql>
           <default_value/>
@@ -4596,7 +4596,7 @@
         </list>
       </presentation>
     </class>
-    <class id="OSpatch" _delta="define">
+    <class id="OSPatch" _delta="define">
       <parent>Patch</parent>
       <properties>
         <category>bizmodel,searchable</category>
@@ -4621,7 +4621,7 @@
       </properties>
       <fields>
         <field id="functionalcis_list" xsi:type="AttributeLinkedSetIndirect">
-          <linked_class>lnkFunctionalCIToOSpatch</linked_class>
+          <linked_class>lnkFunctionalCIToOSPatch</linked_class>
           <ext_key_to_me>ospatch_id</ext_key_to_me>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -4630,7 +4630,7 @@
         </field>
         <field id="osversion_id" xsi:type="AttributeExternalKey">
           <sql>osversion_id</sql>
-          <target_class>OSversion</target_class>
+          <target_class>OSVersion</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -4922,7 +4922,7 @@
         </list>
       </presentation>
     </class>
-    <class id="OsLicence" _delta="define">
+    <class id="OSLicence" _delta="define">
       <parent>Licence</parent>
       <properties>
         <category>bizmodel,searchable</category>
@@ -4950,7 +4950,7 @@
       <fields>
         <field id="osversion_id" xsi:type="AttributeExternalKey">
           <sql>osversion_id</sql>
-          <target_class>OSversion</target_class>
+          <target_class>OSVersion</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -5317,7 +5317,7 @@
         </list>
       </presentation>
     </class>
-    <class id="OSversion" _delta="define">
+    <class id="OSVersion" _delta="define">
       <parent>Typology</parent>
       <properties>
         <category>bizmodel,searchable</category>
@@ -5345,7 +5345,7 @@
       <fields>
         <field id="osfamily_id" xsi:type="AttributeExternalKey">
           <sql>osfamily_id</sql>
-          <target_class>OSfamily</target_class>
+          <target_class>OSFamily</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -5385,7 +5385,7 @@
         </list>
       </presentation>
     </class>
-    <class id="OSfamily" _delta="define">
+    <class id="OSFamily" _delta="define">
       <parent>Typology</parent>
       <properties>
         <category>bizmodel,searchable</category>
@@ -5615,7 +5615,7 @@
             <attribute id="name"/>
             <attribute id="brand_id"/>
             <attribute id="brand_name"/>
-            <attribute id="Type"/>
+            <attribute id="type"/>
           </attributes>
         </reconciliation>
       </properties>
@@ -5630,11 +5630,11 @@
           <extkey_attcode>brand_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
-        <field id="Type" xsi:type="AttributeEnum">
+        <field id="type" xsi:type="AttributeEnum">
           <values>
             <value>NetworkDevice</value>
             <value>Server</value>
-            <value>SANswitch</value>
+            <value>SANSwitch</value>
             <value>StorageSystem</value>
             <value>Rack</value>
             <value>Enclosure</value>
@@ -5646,7 +5646,7 @@
             <value>DiskArray</value>
             <value>NAS</value>
             <value>TapeLibrary</value>
-            <value>IpPhone</value>
+            <value>IPPhone</value>
             <value>Peripheral</value>
             <value>PowerSource</value>
             <value>PDU</value>
@@ -5675,7 +5675,7 @@
             <item id="brand_id">
               <rank>20</rank>
             </item>
-            <item id="Type">
+            <item id="type">
               <rank>30</rank>
             </item>
             <item id="physicaldevices_list">
@@ -5688,7 +5688,7 @@
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="Type">
+            <item id="type">
               <rank>20</rank>
             </item>
           </items>
@@ -5701,7 +5701,7 @@
             <item id="brand_id">
               <rank>20</rank>
             </item>
-            <item id="Type">
+            <item id="type">
               <rank>30</rank>
             </item>
           </items>
@@ -5769,7 +5769,7 @@
         </list>
       </presentation>
     </class>
-    <class id="IOSversion" _delta="define">
+    <class id="IOSVersion" _delta="define">
       <parent>Typology</parent>
       <properties>
         <category>bizmodel,searchable</category>
@@ -6002,7 +6002,7 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkFunctionalCIToOSpatch" _delta="define">
+    <class id="lnkFunctionalCIToOSPatch" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
@@ -6031,7 +6031,7 @@
       <fields>
         <field id="ospatch_id" xsi:type="AttributeExternalKey">
           <sql>ospatch_id</sql>
-          <target_class>OSpatch</target_class>
+          <target_class>OSPatch</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
@@ -6408,7 +6408,7 @@
 	
 			$oPage->p(Dict::Format('Class:Subnet/Tab:IPUsage-explain', $sIPMin, $sIPMax));
 			
-			$oIfFilter = DBObjectSearch::FromOQL("SELECT IPinterface AS if WHERE INET_ATON(if.ipaddress) >= INET_ATON('$sIPMin') AND INET_ATON(if.ipaddress) <= INET_ATON('$sIPMax')");
+			$oIfFilter = DBObjectSearch::FromOQL("SELECT IPInterface AS if WHERE INET_ATON(if.ipaddress) >= INET_ATON('$sIPMin') AND INET_ATON(if.ipaddress) <= INET_ATON('$sIPMax')");
 			$oIfSet = new CMDBObjectSet($oIfFilter);
 			$oBlock = new DisplayBlock($oIfFilter, 'list', false);
 			$oBlock->Display($oPage, 'nwif', array('menu' => false));
@@ -6547,7 +6547,7 @@
         </list>
       </presentation>
     </class>
-    <class id="IPinterface" _delta="define">
+    <class id="IPInterface" _delta="define">
       <parent>NetworkInterface</parent>
       <properties>
         <category>bizmodel,searchable</category>
@@ -6678,7 +6678,7 @@
       </presentation>
     </class>
     <class id="PhysicalInterface" _delta="define">
-      <parent>IPinterface</parent>
+      <parent>IPInterface</parent>
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
@@ -7659,11 +7659,11 @@
         </dashlet>
         <dashlet id="6" xsi:type="DashletBadge">
           <rank>2</rank>
-          <class>DBserver</class>
+          <class>DBServer</class>
         </dashlet>
         <dashlet id="7" xsi:type="DashletBadge">
           <rank>3</rank>
-          <class>Webserver</class>
+          <class>WebServer</class>
         </dashlet>
         <dashlet id="8" xsi:type="DashletBadge">
           <rank>4</rank>
@@ -7825,15 +7825,15 @@
             </dashlet>
             <dashlet id="4" xsi:type="DashletBadge">
               <rank>3</rank>
-              <class>OSfamily</class>
+              <class>OSFamily</class>
             </dashlet>
             <dashlet id="5" xsi:type="DashletBadge">
               <rank>4</rank>
-              <class>OSversion</class>
+              <class>OSVersion</class>
             </dashlet>
             <dashlet id="6" xsi:type="DashletBadge">
               <rank>5</rank>
-              <class>IOSversion</class>
+              <class>IOSVersion</class>
             </dashlet>
             <dashlet id="7" xsi:type="DashletBadge">
               <rank>6</rank>

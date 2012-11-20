@@ -50,7 +50,7 @@
           <class id="Group"/>
           <class id="lnkDocumentToLicence"/>
           <class id="Typology"/>
-          <class id="NasFileSystem"/>
+          <class id="NASFileSystem"/>
           <class id="LogicalVolume"/>
           <class id="Tape"/>
           <class id="lnkApplicationSolutionToBusinessProcess"/>
@@ -61,7 +61,7 @@
           <class id="lnkDocumentToLicence"/>
           <class id="lnkDocumentToPatch"/>
           <class id="lnkDocumentToSoftware"/>
-          <class id="lnkFunctionalCIToOSpatch"/>
+          <class id="lnkFunctionalCIToOSPatch"/>
           <class id="lnkGroupToCI"/>
           <class id="lnkSanToDatacenterDevice"/>
           <class id="lnkServerToVolume"/>
@@ -130,10 +130,10 @@
       <group id="KnownError" _delta="define">
         <classes>
           <class id="KnownError"/>
-          <class id="lnkInfraError"/>
+          <class id="lnkErrorToFunctionalCI"/>
           <class id="lnkDocumentError"/>
           <class id="FAQ"/>
-         <class id="FAQcategory"/>
+         <class id="FAQCategory"/>
         </classes>
       </group>
       <group id="LnkTickets" _delta="define">
@@ -159,7 +159,7 @@
       </group>
       <group id="LnkKnownErrors" _delta="define">
         <classes>
-          <class id="lnkInfraError"/>
+          <class id="lnkErrorToFunctionalCI"/>
           <class id="lnkDocumentError"/>
         </classes>
       </group>

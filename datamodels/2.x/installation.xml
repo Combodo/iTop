@@ -147,7 +147,7 @@
     </step>
     <step>
       <title>Additional ITIL tickets</title>
-      <description><![CDATA[<h2>Pick from the list below the additional ITIl processes that are to be implemented in iTop.</h2>]]></description>
+      <description><![CDATA[<h2>Pick from the list below the additional ITIL processes that are to be implemented in iTop.</h2>]]></description>
       <banner>./itop-knownerror-mgmt/images/known-error.png</banner>
       <options type="array">
         <choice>

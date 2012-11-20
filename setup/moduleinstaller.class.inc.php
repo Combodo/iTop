@@ -17,6 +17,8 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 
+require_once(APPROOT.'setup/setuppage.class.inc.php');
+
 /**
  * Class ModuleInstaller
  * Defines the API to implement module specific actions during the setup 
@@ -32,12 +34,124 @@ abstract class ModuleInstallerAPI
 		return $oConfiguration;
 	}
 
+	/**
+	 * Handler called before creating or upgrading the database schema
+	 * @param $oConfiguration Config The new configuration of the application
+	 * @param $sPreviousVersion string Previous version number of the module (empty string in case of first install)
+	 * @param $sCurrentVersion string Current version number of the module
+	 */
 	public static function BeforeDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 	{
 	}
 	
+	/**
+	 * Handler called after the creation/update of the database schema
+	 * @param $oConfiguration Config The new configuration of the application
+	 * @param $sPreviousVersion string Previous version number of the module (empty string in case of first install)
+	 * @param $sCurrentVersion string Current version number of the module
+	 */
 	public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 	{
 	}
+
+	/**
+	 * Helper to complete the renaming of a class
+	 * The renaming is made in the datamodel definition, but the name has to be changed in the DB as well	 	 
+	 * Must be called after DB update, i.e within an implementation of AfterDatabaseCreation()
+	 * 	 
+	 * @param string $sFrom Original name (already INVALID in the current datamodel)	 	
+	 * @param string $sTo New name (valid in the current datamodel)
+	 * @return void	 	 	
+	 */
+	public static function RenameClassInDB($sFrom, $sTo)
+	{
+		if (!MetaModel::IsStandaloneClass($sTo))
+		{
+			$sRootClass = MetaModel::GetRootClass($sTo);
+			$sTableName = MetaModel::DBGetTable($sRootClass);
+			$sFinalClassCol = MetaModel::DBGetClassField($sRootClass);
+			$sRepair = "UPDATE `$sTableName` SET `$sFinalClassCol` = '$sTo' WHERE `$sFinalClassCol` = BINARY '$sFrom'";
+			CMDBSource::Query($sRepair);
+			$iAffectedRows = CMDBSource::AffectedRows();
+			SetupPage::log_info("Renaming class in DB - final class from '$sFrom' to '$sTo': $iAffectedRows rows affected"); 
+		}
+	}
+
+	/**
+	 * Helper to modify an enum value	
+	 * The change is made in the datamodel definition, but the value has to be changed in the DB as well	 	 
+	 * Must be called BEFORE DB update, i.e within an implementation of BeforeDatabaseCreation()
+	 * 	 
+	 * @param string $sClass A valid class name
+	 * @param string $sAttCode The enum attribute code
+	 * @param string $sFrom Original value (already INVALID in the current datamodel)	 	
+	 * @param string $sTo New value (valid in the current datamodel)
+	 * @return void	 	 	
+	 */
+	public static function RenameEnumValueInDB($sClass, $sAttCode, $sFrom, $sTo)
+	{
+		$sOriginClass = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
+		$sTableName = MetaModel::DBGetTable($sOriginClass);
+
+		$oAttDef = MetaModel::GetAttributeDef($sOriginClass, $sAttCode);
+		if ($oAttDef instanceof AttributeEnum)
+		{
+			$oValDef = $oAttDef->GetValuesDef();
+			if ($oValDef)
+			{
+				$aNewValues = array_keys($oValDef->GetValues(array(), ""));
+				if (in_array($sTo, $aNewValues))
+				{
+					$aAllValues = $aNewValues;
+					$aAllValues[] = $sFrom;
+					if (!in_array($sFrom, $aNewValues))
+					{
+						$sEnumCol = $oAttDef->Get("sql");
+						$sNullSpec = $oAttDef->IsNullAllowed() ? 'NULL' : 'NOT NULL';
+
+						if (strtolower($sTo) == strtolower($sFrom))
+						{
+							SetupPage::log_info("Changing enum in DB - $sClass::$sAttCode from '$sFrom' to '$sTo' (just a change in the case)"); 
+							$sColumnDefinition = "ENUM(".implode(",", CMDBSource::Quote($aNewValues)).") $sNullSpec";
+							$sRepair = "ALTER TABLE `$sTableName` MODIFY `$sEnumCol` $sColumnDefinition";
+							CMDBSource::Query($sRepair);
+						}
+						else
+						{
+							// 1st - Allow both values in the column definition
+							//
+							SetupPage::log_info("Changing enum in DB - $sClass::$sAttCode from '$sFrom' to '$sTo'"); 
+							$sColumnDefinition = "ENUM(".implode(",", CMDBSource::Quote($aAllValues)).") $sNullSpec";
+							$sRepair = "ALTER TABLE `$sTableName` MODIFY `$sEnumCol` $sColumnDefinition";
+							CMDBSource::Query($sRepair);
+			
+							// 2nd - Change the old value into the new value
+							//
+							$sRepair = "UPDATE `$sTableName` SET `$sEnumCol` = '$sTo' WHERE `$sEnumCol` = BINARY '$sFrom'";
+							CMDBSource::Query($sRepair);
+							$iAffectedRows = CMDBSource::AffectedRows();
+							SetupPage::log_info("Changing enum in DB - $iAffectedRows rows updated"); 
+			
+							// 3rd - Remove the useless value from the column definition
+							//
+							$sColumnDefinition = "ENUM(".implode(",", CMDBSource::Quote($aNewValues)).") $sNullSpec";
+							$sRepair = "ALTER TABLE `$sTableName` MODIFY `$sEnumCol` $sColumnDefinition";
+							CMDBSource::Query($sRepair);
+							SetupPage::log_info("Changing enum in DB - removed useless value '$sFrom'");
+						}
+					}
+					else
+					{
+						SetupPage::log_warning("Changing enum in DB - $sClass::$sAttCode - '$sFrom' is still a valid value (".implode(', ', $aNewValues).")"); 
+					}
+				}
+				else
+				{
+					SetupPage::log_warning("Changing enum in DB - $sClass::$sAttCode - '$sTo' is not a known value (".implode(', ', $aNewValues).")"); 
+				}
+			}
+		}
+	}
+
 }
 ?>

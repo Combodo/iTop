@@ -766,7 +766,7 @@
       </properties>
       <fields>
         <field id="nasfilesystem_list" xsi:type="AttributeLinkedSet">
-          <linked_class>NasFileSystem</linked_class>
+          <linked_class>NASFileSystem</linked_class>
           <ext_key_to_me>nas_id</ext_key_to_me>
           <edit_mode>in_place</edit_mode>
           <count_min>0</count_min>
@@ -784,7 +784,7 @@
     {
     case "impacts":
       $aRels = array(
-        "nasfilesystem" => array("sQuery"=>"SELECT NasFileSystem WHERE nas_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
+        "nasfilesystem" => array("sQuery"=>"SELECT NASFileSystem WHERE nas_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
 
       );
       return array_merge($aRels, parent::GetRelationQueries($sRelCode));
@@ -1103,7 +1103,7 @@
         </list>
       </presentation>
     </class>
-    <class id="NasFileSystem" _delta="define">
+    <class id="NASFileSystem" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable,configmgmt</category>

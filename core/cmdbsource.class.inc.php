@@ -375,6 +375,11 @@ class CMDBSource
 		return mysqli_num_rows($result);
 	}
 
+	public static function AffectedRows()
+	{
+		return mysqli_affected_rows(self::$m_resDBLink);
+	}
+
 	public static function FetchArray($result)
 	{
 		return mysqli_fetch_array($result, MYSQLI_ASSOC);

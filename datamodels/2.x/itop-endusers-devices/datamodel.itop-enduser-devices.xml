@@ -489,7 +489,7 @@
         </list>
       </presentation>
     </class>
-    <class id="IpPhone" _delta="define">
+    <class id="IPPhone" _delta="define">
       <parent>TelephonyCI</parent>
       <properties>
         <category>bizmodel,searchable</category>
@@ -826,7 +826,7 @@
       <fields>
         <field id="osfamily_id" xsi:type="AttributeExternalKey">
           <sql>osfamily_id</sql>
-          <target_class>OSfamily</target_class>
+          <target_class>OSFamily</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -835,12 +835,12 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="osversion_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT OSversion WHERE osfamily_id = :this->osfamily_id]]></filter>
+          <filter><![CDATA[SELECT OSVersion WHERE osfamily_id = :this->osfamily_id]]></filter>
           <dependencies>
             <attribute id="osfamily_id"/>
           </dependencies>
           <sql>osversion_id</sql>
-          <target_class>OSversion</target_class>
+          <target_class>OSVersion</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -1416,7 +1416,7 @@
             </dashlet>
             <dashlet id="28" xsi:type="DashletBadge">
               <rank>3</rank>
-              <class>IpPhone</class>
+              <class>IPPhone</class>
             </dashlet>
             <dashlet id="29" xsi:type="DashletBadge">
               <rank>4</rank>

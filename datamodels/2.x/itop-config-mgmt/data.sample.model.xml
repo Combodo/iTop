@@ -3,16 +3,16 @@
 <Model alias="Model" id="11">
 <name>Cisco 6500</name>
 <brand_id>10</brand_id>
-<Type>NetworkDevice</Type>
+<type>NetworkDevice</type>
 </Model>
 <Model alias="Model" id="4">
 <name>DL380</name>
 <brand_id>1</brand_id>
-<Type>Server</Type>
+<type>Server</type>
 </Model>
 <Model alias="Model" id="5">
 <name>Procurve 2450</name>
 <brand_id>1</brand_id>
-<Type>NetworkDevice</Type>
+<type>NetworkDevice</type>
 </Model>
 </Set>

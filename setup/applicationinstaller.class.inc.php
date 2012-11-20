@@ -227,6 +227,7 @@ class ApplicationInstaller
 				
 				case 'db-schema':
 				$sMode = $this->oParams->Get('mode');
+				$aSelectedModules = $this->oParams->Get('selected_modules', array());
 				$sTargetEnvironment = $this->oParams->Get('target_env', '');
 				if ($sTargetEnvironment == '')
 				{
@@ -241,7 +242,7 @@ class ApplicationInstaller
 				$sDBPrefix = $aDBParams['prefix'];
 				$bOldAddon = $this->oParams->Get('old_addon', false);
 				
-				self::DoUpdateDBSchema($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment, $bOldAddon);
+				self::DoUpdateDBSchema($sMode, $aSelectedModules, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment, $bOldAddon);
 				
 				$aResult = array(
 					'status' => self::OK,
@@ -506,7 +507,7 @@ class ApplicationInstaller
 		}
 	}
 	
-	protected static function DoUpdateDBSchema($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment  = '', $bOldAddon = false)
+	protected static function DoUpdateDBSchema($sMode, $aSelectedModules, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment  = '', $bOldAddon = false)
 	{
 		SetupPage::log_info("Update Database Schema for environment '$sTargetEnvironment'.");
 
@@ -530,6 +531,21 @@ class ApplicationInstaller
 		
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model only
+
+		// Module specific actions (migrate the data)
+		//
+		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
+		foreach($aAvailableModules as $sModuleId => $aModule)
+		{
+			if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules) &&
+				isset($aAvailableModules[$sModuleId]['installer']) )
+			{
+				$sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
+				SetupPage::log_info("Calling Module Handler: $sModuleInstallerClass::BeforeDatabaseCreation(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
+				$aCallSpec = array($sModuleInstallerClass, 'BeforeDatabaseCreation');
+				call_user_func_array($aCallSpec, array(MetaModel::GetConfig(), $aModule['version_db'], $aModule['version_code']));								
+			}
+		}
 
 		if(!$oProductionEnv->CreateDatabaseStructure(MetaModel::GetConfig(), $sMode))
 		{

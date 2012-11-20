@@ -223,7 +223,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:ServiceFamily' => 'Service Familly',
+	'Class:ServiceFamily' => 'Service Family',
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => 'Name',
 	'Class:ServiceFamily/Attribute:name+' => '',
@@ -311,7 +311,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:ServiceSubcategory' => 'Service Sub category',
+	'Class:ServiceSubcategory' => 'Service Subcategory',
 	'Class:ServiceSubcategory+' => '',
 	'Class:ServiceSubcategory/Attribute:name' => 'Name',
 	'Class:ServiceSubcategory/Attribute:name+' => '',

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<DBserver alias="DBserver" id="17">
+<DBServer alias="DBServer" id="17">
 <name>Oracle</name>
 <description></description>
 <org_id>2</org_id>
@@ -11,5 +11,5 @@
 <softwarelicence_id>0</softwarelicence_id>
 <path></path>
 <status></status>
-</DBserver>
+</DBServer>
 </Set>

@@ -327,7 +327,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ExternalDoc' => 'Externes Dokument',
-	'Class:ExternalDoc+' => 'Das Dokument ist auf einem anderen Webserver verfügbar',
+	'Class:ExternalDoc+' => 'Das Dokument ist auf einem anderen WebServer verfügbar',
 	'Class:ExternalDoc/Attribute:url' => 'URL',
 	'Class:ExternalDoc/Attribute:url+' => '',
 ));

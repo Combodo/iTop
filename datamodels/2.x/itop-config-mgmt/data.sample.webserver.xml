@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<Webserver alias="Webserver" id="23">
+<WebServer alias="WebServer" id="23">
 <name>IIS</name>
 <description></description>
 <org_id>2</org_id>
@@ -11,5 +11,5 @@
 <softwarelicence_id>0</softwarelicence_id>
 <path></path>
 <status>active</status>
-</Webserver>
+</WebServer>
 </Set>

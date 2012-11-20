@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<DBserver alias="DBserver" id="16">
+<DBServer alias="DBServer" id="16">
 <name>MySQL</name>
 <description></description>
 <org_id>2</org_id>
@@ -11,8 +11,8 @@
 <softwarelicence_id>0</softwarelicence_id>
 <path></path>
 <status></status>
-</DBserver>
-<DBserver alias="DBserver" id="18">
+</DBServer>
+<DBServer alias="DBServer" id="18">
 <name>Oracle</name>
 <description></description>
 <org_id>2</org_id>
@@ -23,5 +23,5 @@
 <softwarelicence_id>0</softwarelicence_id>
 <path></path>
 <status></status>
-</DBserver>
+</DBServer>
 </Set>

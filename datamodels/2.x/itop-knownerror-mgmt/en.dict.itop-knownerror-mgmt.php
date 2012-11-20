@@ -160,16 +160,16 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
-// Class: FAQcategory
+// Class: FAQCategory
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:FAQcategory' => 'FAQ Category',
-	'Class:FAQcategory+' => 'Category for FAQ',
-	'Class:FAQcategory/Attribute:name' => 'Name',
-	'Class:FAQcategory/Attribute:name+' => '',
-	'Class:FAQcategory/Attribute:faq_list' => 'FAQs',
-	'Class:FAQcategory/Attribute:faq_list+' => '',
+	'Class:FAQCategory' => 'FAQ Category',
+	'Class:FAQCategory+' => 'Category for FAQ',
+	'Class:FAQCategory/Attribute:name' => 'Name',
+	'Class:FAQCategory/Attribute:name+' => '',
+	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
+	'Class:FAQCategory/Attribute:faq_list+' => '',
 ));
 Dict::Add('EN US', 'English', 'English', array(
 	'Menu:NewError' => 'New Known Error',
