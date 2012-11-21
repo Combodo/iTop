@@ -3901,7 +3901,7 @@ class AttributeSubItem extends AttributeDefinition
 	/**
 	 * Helper : get the attribute definition to which the execution will be forwarded	
 	 */	
-	protected function GetTargetAttDef()
+	public function GetTargetAttDef()
 	{
 		$sClass = $this->GetHostClass();
 		$oParentAttDef = MetaModel::GetAttributeDef($sClass, $this->Get('target_attcode'));
