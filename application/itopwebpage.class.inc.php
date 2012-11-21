@@ -320,6 +320,11 @@ EOF
 	$('.caselog_header').click( function () { $(this).toggleClass('open').next('.caselog_entry').toggle(); });
 EOF
 		);
+		$bForceMenuPane = utils::ReadParam('force_menu_pane', null);
+		if ($bForceMenuPane !== null)
+		{
+			appUserPreferences::SetPref('menu_pane',  ($bForceMenuPane) ? 'open' : 'closed');
+		}
 		$sUserPrefs = appUserPreferences::GetAsJSON();
 		$this->add_script(
 <<<EOF
