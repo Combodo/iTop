@@ -3175,6 +3175,14 @@ abstract class MetaModel
 		$aSugFix = array();
 		foreach (self::GetClasses() as $sClass)
 		{
+			$sTable = self::DBGetTable($sClass);
+			$sTableLowercase = strtolower($sTable);
+			if ($sTableLowercase != $sTable)
+			{
+				$aErrors[$sClass][] = "Table name '".$sTable."' has upper case characters. You might encounter issues when moving your installation between Linux and Windows.";
+				$aSugFix[$sClass][] = "Use '$sTableLowercase' instead. Step 1: If already installed, then rename manually in the DB: RENAME TABLE `$sTable` TO `{$sTableLowercase}_tempname`, `{$sTableLowercase}_tempname` TO `$sTableLowercase`; Step 2: Rename the table in the datamodel and compile the application. Note: the MySQL statement provided in step 1 has been designed to be compatible with Windows or Linux.";
+			}
+
 			$aNameSpec = self::GetNameSpec($sClass);
 			foreach($aNameSpec[1] as $i => $sAttCode)
 			{

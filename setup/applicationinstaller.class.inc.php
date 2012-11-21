@@ -532,6 +532,21 @@ class ApplicationInstaller
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model only
 
+		// Migrate application data format
+		//
+		// priv_internalUser caused troubles because MySQL transforms table names to lower case under Windows
+		// This becomes an issue when moving your installation data to/from Windows
+		// Starting 2.0, all table names must be lowercase
+		if ($sMode != 'install')
+		{
+			SetupPage::log_info("Renaming 'priv_internalUser' into 'priv_internaluser' (lowercase)"); 
+			// This command will have no effect under Windows...
+			// and it has been written in two steps so as to make it work under windows!
+			$sRepair = "RENAME TABLE `priv_internalUser` TO `priv_internaluser_other`, `priv_internaluser_other` TO `priv_internaluser`";
+			CMDBSource::SelectDB($sDBName);
+			CMDBSource::Query($sRepair);
+		}
+
 		// Module specific actions (migrate the data)
 		//
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
