@@ -56,6 +56,7 @@ It also comes with significant improvements in the end-user experience:
 - editable dashboards
 - customize lists
 - user preferences
+- personal shortcuts
 
 1.3 Special Thanks To:
     -----------------
@@ -64,7 +65,7 @@ Randall Badilla Castro and Miguel Turrubiates for the Spanish translation.
 Jonathan Lucas, Stephan Rosenke and David Gümbel from ITOMIG GmbH, for the German translation.
 Christian Lempereur and Olivier Fouquet for their feedbacks.
 Everaldo Coelho and the Oxygen Team for their wonderful icons.
-The JQuery team and the all the jQuery plugins authors for developing such a powerful library.
+The JQuery team and all the jQuery plugins authors for developing such a powerful library.
 Phil Eddies for the numerous feedbacks provided, and the first implementation of CKEdit
 Marco Tulio and Bruno Cassaro for the Portuguese (Brazilian) translation
 Vladimir Shilov and Shamil Khamit for the Russian translation
@@ -185,7 +186,7 @@ The "Preference" page now allows a user to:
 
 - Users can create a shortcut to any list displayed:
  - the search criteria are saved, including the current organization if it was set
- - the list can be edited in the user "Preferences" page
+ - the list of shortcuts can be edited in the user "Preferences" page
  - a shortcut is strictly private to a given user
 
 Localization
@@ -199,17 +200,17 @@ http://www.combodo.com/itop-localization/
 
 Fixed between 2.0 Beta and 2.0 Beta 2
 -------------------------------------
-Make Incident Mgmt module visible for all
-Update translation for customer satisfaction
-Change constraint on attribute agent_id for a workorder
+Made Incident Mgmt module visible to all users
+Updated translation for "customer satisfaction"
+Changed constraint on attribute agent_id for a workorder
 Fixed user profiles for the new data model
 Renamed a few classes/enums/attributes to improve the classes naming consistency and ease the writing of OQLs
 #621 Cannot create a service family
 #628 Typos
 Allow duplicate links for device / network connections
-Add PC software in Dashboard
-All documentation of software on a PC device
-Add software list on PC devices
+Added PC software in Dashboard
+Added documentation of software on a PC device
+Added software list on PC devices
 Fixed issue with Subnet usage computation
 Fixed tab translation for Subnet
 Record the list of attachments (in EventNotificationEmail)
@@ -221,7 +222,7 @@ Prevent a crash when deleting objects accessed from a list of their abstract cla
 #614 Fixed regression on multi column queries (could not display Null objects)
 #615 Fixed bug on multi column queries - wrong count resulting in strange effects in the display of results
 Bug fix: incorrect handling of "negative" selections in bulk delete
-Renamed priv_Userinternal into priv_userinternal, and added a check for table names (lowercase is the rule!)
+Renamed the SQl table from priv_Userinternal to priv_userinternal, and added a check for table names (lowercase is the rule!)
 error.log moved into the log directory
 Changed mysqldump invocation to verbose mode (at least for the duration of the beta) in order to ease the troubleshooting of backup failures.
 Increased memory_limit for the setup to 64 MB
