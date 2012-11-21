@@ -1487,6 +1487,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP address',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
+
 	'Class:IPInterface/Attribute:macaddress' => 'MAC address',
 	'Class:IPInterface/Attribute:macaddress+' => '',
 	'Class:IPInterface/Attribute:comment' => 'Comment',
@@ -1776,6 +1777,10 @@ Dict::Add('EN US', 'English', 'English', array(
 'Server:otherinfo' => 'Other informations',
 'Person:info' => 'General informations',
 'Person:notifiy' => 'Notification',
-
+'Class:Subnet/Tab:IPUsage' => 'IP Usage',
+'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces having an IP in the range: <em>%1$s</em> to <em>%2$s</em>',
+'Class:Subnet/Tab:FreeIPs' => 'Free IPs',
+'Class:Subnet/Tab:FreeIPs-count' => 'Free IPs: %1$s',
+'Class:Subnet/Tab:FreeIPs-explain' => 'Here is an extract of 10 free IP addresses',
 ));
 ?>

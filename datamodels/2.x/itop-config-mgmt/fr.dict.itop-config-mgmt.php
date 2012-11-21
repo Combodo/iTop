@@ -1765,6 +1765,10 @@ Dict::Add('EN US', 'English', 'English', array(
 'Server:otherinfo' => 'Autres informations',
 'Person:info' => 'Informations générales',
 'Person:notifiy' => 'Notification',
-
+'Class:Subnet/Tab:IPUsage' => 'IP utilisées',
+'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces ayant une IP dans la plage: <em>%1$s</em> à <em>%2$s</em>',
+'Class:Subnet/Tab:FreeIPs' => 'IP disponibles',
+'Class:Subnet/Tab:FreeIPs-count' => 'IP disponibles: %1$s',
+'Class:Subnet/Tab:FreeIPs-explain' => 'Voici un échantillon de dix addresses IP disponibles',
 ));
 ?>
