@@ -17,41 +17,11 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * Localized data
- *
- * @author      Vladimir Shilov <shilow@ukr.net>
+ * @author	Vladimir Shilov <shilow@ukr.net>
+
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: KnownError
-//
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:KnownError' => 'Известные ошибки',
@@ -60,12 +30,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:KnownError/Attribute:name+' => '',
 	'Class:KnownError/Attribute:org_id' => 'Клинт',
 	'Class:KnownError/Attribute:org_id+' => '',
-	'Class:KnownError/Attribute:cust_name' => 'Имя клиента',
-	'Class:KnownError/Attribute:cust_name+' => '',
 	'Class:KnownError/Attribute:problem_id' => 'Связанная проблема',
 	'Class:KnownError/Attribute:problem_id+' => '',
-	'Class:KnownError/Attribute:problem_ref' => 'Ссылка',
-	'Class:KnownError/Attribute:problem_ref+' => '',
 	'Class:KnownError/Attribute:symptom' => 'Проявление',
 	'Class:KnownError/Attribute:symptom+' => '',
 	'Class:KnownError/Attribute:root_cause' => 'Основная причина',
@@ -96,55 +62,65 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:KnownError/Attribute:ci_list+' => '',
 	'Class:KnownError/Attribute:document_list' => 'Документы',
 	'Class:KnownError/Attribute:document_list+' => '',
-));
-
-
-//
-// Class: lnkInfraError
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:lnkInfraError' => 'InfraErrorLinks',
-	'Class:lnkInfraError+' => 'Infra относящаяся к известной ошибке',
-	'Class:lnkInfraError/Attribute:infra_id' => 'КЕ',
-	'Class:lnkInfraError/Attribute:infra_id+' => '',
-	'Class:lnkInfraError/Attribute:infra_name' => 'Название КЕ',
-	'Class:lnkInfraError/Attribute:infra_name+' => '',
-	'Class:lnkInfraError/Attribute:infra_status' => 'Статус КЕ',
-	'Class:lnkInfraError/Attribute:infra_status+' => '',
-	'Class:lnkInfraError/Attribute:error_id' => 'Ошибка',
-	'Class:lnkInfraError/Attribute:error_id+' => '',
-	'Class:lnkInfraError/Attribute:error_name' => 'Название ошибки',
-	'Class:lnkInfraError/Attribute:error_name+' => '',
-	'Class:lnkInfraError/Attribute:reason' => 'Причина',
-	'Class:lnkInfraError/Attribute:reason+' => '',
-));
-
-//
-// Class: lnkDocumentError
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:lnkDocumentError' => 'DocumentsErrorLinks',
-	'Class:lnkDocumentError+' => 'Связь между документом и известной ошибкой',
-	'Class:lnkDocumentError/Attribute:doc_id' => 'Документ',
-	'Class:lnkDocumentError/Attribute:doc_id+' => '',
-	'Class:lnkDocumentError/Attribute:doc_name' => 'Название документа',
-	'Class:lnkDocumentError/Attribute:doc_name+' => '',
-	'Class:lnkDocumentError/Attribute:error_id' => 'Ошибка',
-	'Class:lnkDocumentError/Attribute:error_id+' => '',
-	'Class:lnkDocumentError/Attribute:error_name' => 'Название ошибки',
-	'Class:lnkDocumentError/Attribute:error_name+' => '',
-	'Class:lnkDocumentError/Attribute:link_type' => 'Информация',
-	'Class:lnkDocumentError/Attribute:link_type+' => '',
-));
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:lnkErrorToFunctionalCI' => 'Link Error / FunctionalCI~~',
+	'Class:lnkErrorToFunctionalCI+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Error~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Reason~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
+	'Class:lnkDocumentToError' => 'Link Documents / Errors~~',
+	'Class:lnkDocumentToError+' => '',
+	'Class:lnkDocumentToError/Attribute:document_id' => 'Document~~',
+	'Class:lnkDocumentToError/Attribute:document_id+' => '',
+	'Class:lnkDocumentToError/Attribute:error_id' => 'Error~~',
+	'Class:lnkDocumentToError/Attribute:error_id+' => '',
+	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type~~',
+	'Class:lnkDocumentToError/Attribute:link_type+' => '',
+	'Class:FAQ' => 'FAQ~~',
+	'Class:FAQ+' => '',
+	'Class:FAQ/Attribute:title' => 'Title~~',
+	'Class:FAQ/Attribute:title+' => '',
+	'Class:FAQ/Attribute:summary' => 'Summary~~',
+	'Class:FAQ/Attribute:summary+' => '',
+	'Class:FAQ/Attribute:description' => 'Description~~',
+	'Class:FAQ/Attribute:description+' => '',
+	'Class:FAQ/Attribute:category_id' => 'Category~~',
+	'Class:FAQ/Attribute:category_id+' => '',
+	'Class:FAQ/Attribute:error_code' => 'Error code~~',
+	'Class:FAQ/Attribute:error_code+' => '',
+	'Class:FAQ/Attribute:key_words' => 'Key words~~',
+	'Class:FAQ/Attribute:key_words+' => '',
+	'Class:FAQcategory' => 'FAQ Category~~',
+	'Class:FAQcategory+' => '',
+	'Class:FAQcategory/Attribute:name' => 'Name~~',
+	'Class:FAQcategory/Attribute:name+' => '',
+	'Class:FAQcategory/Attribute:faq_list' => 'FAQs~~',
+	'Class:FAQcategory/Attribute:faq_list+' => '',
 	'Menu:NewError' => 'Новая известная ошибка',
 	'Menu:NewError+' => 'Создание новой известной ошибки',
 	'Menu:SearchError' => 'Поиск известных ошибок',
 	'Menu:SearchError+' => 'Поиск известных ошибок',
-        'Menu:Problem:KnownErrors' => 'Все известные ошибки',
-        'Menu:Problem:KnownErrors+' => 'Все известные ошибки',
+	'Menu:Problem:KnownErrors' => 'Все известные ошибки',
+	'Menu:Problem:KnownErrors+' => 'Все известные ошибки',
+	'Menu:FAQCategory' => 'FAQ categories~~',
+	'Menu:FAQCategory+' => '',
+	'Menu:FAQ' => 'FAQs~~',
+	'Menu:FAQ+' => '',
+	'Class:KnownError/Attribute:cust_name' => 'Имя клиента',
+	'Class:KnownError/Attribute:cust_name+' => '',
+	'Class:KnownError/Attribute:problem_ref' => 'Ссылка',
+	'Class:KnownError/Attribute:problem_ref+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI name~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Error name~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
+	'Class:lnkDocumentToError/Attribute:document_name' => 'Document Name~~',
+	'Class:lnkDocumentToError/Attribute:document_name+' => '',
+	'Class:lnkDocumentToError/Attribute:error_name' => 'Error name~~',
+	'Class:lnkDocumentToError/Attribute:error_name+' => '',
+	'Class:FAQ/Attribute:category_name' => 'Category name~~',
+	'Class:FAQ/Attribute:category_name+' => '',
 ));
 ?>

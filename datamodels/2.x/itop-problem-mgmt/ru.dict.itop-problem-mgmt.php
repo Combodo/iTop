@@ -17,68 +17,11 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * Localized data
- *
- * @author      Vladimir Shilov <shilow@ukr.net>
+ * @author	Vladimir Shilov <shilow@ukr.net>
+
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-
-
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
-        'Menu:ProblemManagement' => 'Управление проблемами',
-        'Menu:ProblemManagement+' => 'Управление проблемами',
-    	'Menu:Problem:Overview' => 'Обзор',
-    	'Menu:Problem:Overview+' => 'Обзор',
-    	'Menu:NewProblem' => 'Новая проблема',
-    	'Menu:NewProblem+' => 'Новая проблема',
-    	'Menu:SearchProblems' => 'Поиск проблем',
-    	'Menu:SearchProblems+' => 'Поиск проблем',
-    	'Menu:Problem:Shortcuts' => 'Ярлыки',
-        'Menu:Problem:MyProblems' => 'Мои проблемы',
-        'Menu:Problem:MyProblems+' => 'Мои проблемы',
-        'Menu:Problem:OpenProblems' => 'Все открытые проблемы',
-        'Menu:Problem:OpenProblems+' => 'Все открытые проблемы',
-	'UI-ProblemManagementOverview-ProblemByService' => 'Проблемы по сервису',
-	'UI-ProblemManagementOverview-ProblemByService+' => 'Проблемы по сервису',
-	'UI-ProblemManagementOverview-ProblemByPriority' => 'Проблемы по приоритету',
-	'UI-ProblemManagementOverview-ProblemByPriority+' => 'Проблемы по приоритету',
-	'UI-ProblemManagementOverview-ProblemUnassigned' => 'Неназначенные проблемы',
-	'UI-ProblemManagementOverview-ProblemUnassigned+' => 'Неназначенные проблемы',
-	'UI:ProblemMgmtMenuOverview:Title' => 'Панель управление проблемами',
-	'UI:ProblemMgmtMenuOverview:Title+' => 'Панель управление проблемами',
-
-));
-//
-// Class: Problem
-//
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Problem' => 'Проблема',
@@ -93,18 +36,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Problem/Attribute:status/Value:resolved+' => '',
 	'Class:Problem/Attribute:status/Value:closed' => 'Закрыта',
 	'Class:Problem/Attribute:status/Value:closed+' => '',
-	'Class:Problem/Attribute:org_id' => 'Клиент',
-	'Class:Problem/Attribute:org_id+' => '',
-	'Class:Problem/Attribute:org_name' => 'Название',
-	'Class:Problem/Attribute:org_name+' => 'Общее название',
 	'Class:Problem/Attribute:service_id' => 'Услуга',
 	'Class:Problem/Attribute:service_id+' => '',
-	'Class:Problem/Attribute:service_name' => 'Название',
-	'Class:Problem/Attribute:service_name+' => '',
 	'Class:Problem/Attribute:servicesubcategory_id' => 'Категория услуги',
 	'Class:Problem/Attribute:servicesubcategory_id+' => '',
-	'Class:Problem/Attribute:servicesubcategory_name' => 'Название',
-	'Class:Problem/Attribute:servicesubcategory_name+' => '',
 	'Class:Problem/Attribute:product' => 'Продукт',
 	'Class:Problem/Attribute:product+' => '',
 	'Class:Problem/Attribute:impact' => 'Воздействие',
@@ -123,6 +58,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Problem/Attribute:urgency/Value:2+' => 'Средняя',
 	'Class:Problem/Attribute:urgency/Value:3' => 'Высокая',
 	'Class:Problem/Attribute:urgency/Value:3+' => 'Высокая',
+	'Class:Problem/Attribute:urgency/Value:4' => 'low~~',
+	'Class:Problem/Attribute:urgency/Value:4+' => '',
 	'Class:Problem/Attribute:priority' => 'Приоритет',
 	'Class:Problem/Attribute:priority+' => '',
 	'Class:Problem/Attribute:priority/Value:1' => 'Низкий',
@@ -131,30 +68,18 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Problem/Attribute:priority/Value:2+' => '',
 	'Class:Problem/Attribute:priority/Value:3' => 'Высокий',
 	'Class:Problem/Attribute:priority/Value:3+' => '',
-	'Class:Problem/Attribute:workgroup_id' => 'Рабочая группа',
-	'Class:Problem/Attribute:workgroup_id+' => '',
-	'Class:Problem/Attribute:workgroup_name' => 'Название',
-	'Class:Problem/Attribute:workgroup_name+' => '',
-	'Class:Problem/Attribute:agent_id' => 'Агент',
-	'Class:Problem/Attribute:agent_id+' => '',
-	'Class:Problem/Attribute:agent_name' => 'Имя агента',
-	'Class:Problem/Attribute:agent_name+' => '',
-	'Class:Problem/Attribute:agent_email' => 'e-mail агента',
-	'Class:Problem/Attribute:agent_email+' => '',
+	'Class:Problem/Attribute:priority/Value:4' => 'Low~~',
+	'Class:Problem/Attribute:priority/Value:4+' => '',
 	'Class:Problem/Attribute:related_change_id' => 'Связанные изменения',
 	'Class:Problem/Attribute:related_change_id+' => '',
-	'Class:Problem/Attribute:related_change_ref' => 'Ссылка',
-	'Class:Problem/Attribute:related_change_ref+' => '',
-	'Class:Problem/Attribute:close_date' => 'Дата закрытия',
-	'Class:Problem/Attribute:close_date+' => '',
-	'Class:Problem/Attribute:last_update' => 'Последнее обновление',
-	'Class:Problem/Attribute:last_update+' => '',
 	'Class:Problem/Attribute:assignment_date' => 'Дата назначения',
 	'Class:Problem/Attribute:assignment_date+' => '',
 	'Class:Problem/Attribute:resolution_date' => 'Дата решения',
 	'Class:Problem/Attribute:resolution_date+' => '',
 	'Class:Problem/Attribute:knownerrors_list' => 'Известные ошибки',
 	'Class:Problem/Attribute:knownerrors_list+' => '',
+	'Class:Problem/Attribute:related_request_list' => 'Related requests~~',
+	'Class:Problem/Attribute:related_request_list+' => '',
 	'Class:Problem/Stimulus:ev_assign' => 'Назначить',
 	'Class:Problem/Stimulus:ev_assign+' => '',
 	'Class:Problem/Stimulus:ev_reassign' => 'Переназначить',
@@ -163,6 +88,32 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Закрыть',
 	'Class:Problem/Stimulus:ev_close+' => '',
+	'Menu:ProblemManagement' => 'Управление проблемами',
+	'Menu:ProblemManagement+' => 'Управление проблемами',
+	'Menu:Problem:Overview' => 'Обзор',
+	'Menu:Problem:Overview+' => 'Обзор',
+	'Menu:NewProblem' => 'Новая проблема',
+	'Menu:NewProblem+' => 'Новая проблема',
+	'Menu:SearchProblems' => 'Поиск проблем',
+	'Menu:SearchProblems+' => 'Поиск проблем',
+	'Menu:Problem:Shortcuts' => 'Ярлыки',
+	'Menu:Problem:MyProblems' => 'Мои проблемы',
+	'Menu:Problem:MyProblems+' => 'Мои проблемы',
+	'Menu:Problem:OpenProblems' => 'Все открытые проблемы',
+	'Menu:Problem:OpenProblems+' => 'Все открытые проблемы',
+	'UI-ProblemManagementOverview-ProblemByService' => 'Проблемы по сервису',
+	'UI-ProblemManagementOverview-ProblemByService+' => 'Проблемы по сервису',
+	'UI-ProblemManagementOverview-ProblemByPriority' => 'Проблемы по приоритету',
+	'UI-ProblemManagementOverview-ProblemByPriority+' => 'Проблемы по приоритету',
+	'UI-ProblemManagementOverview-ProblemUnassigned' => 'Неназначенные проблемы',
+	'UI-ProblemManagementOverview-ProblemUnassigned+' => 'Неназначенные проблемы',
+	'UI:ProblemMgmtMenuOverview:Title' => 'Панель управление проблемами',
+	'UI:ProblemMgmtMenuOverview:Title+' => 'Панель управление проблемами',
+	'Class:Problem/Attribute:service_name' => 'Название',
+	'Class:Problem/Attribute:service_name+' => '',
+	'Class:Problem/Attribute:servicesubcategory_name' => 'Название',
+	'Class:Problem/Attribute:servicesubcategory_name+' => '',
+	'Class:Problem/Attribute:related_change_ref' => 'Ссылка',
+	'Class:Problem/Attribute:related_change_ref+' => '',
 ));
-
 ?>
