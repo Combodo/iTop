@@ -443,7 +443,7 @@ Dict::Add('ES CR', 'ESpanish', 'Español, Castellano', array(
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id' => 'Acuerdo con Cliente',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id+' => 'Acuerdo con Cliente',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name' => 'Acuerdo con Cliente',
-	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name+' =>Acuerdo con Cliente '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name+' =>'Acuerdo con Cliente',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id' => 'Contrato con Proveedor',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id+' => 'Contrato con Proveedor',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name' => 'Contrato con Proveedor',
