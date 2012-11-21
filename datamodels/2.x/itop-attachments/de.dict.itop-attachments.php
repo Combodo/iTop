@@ -17,16 +17,23 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @author	Hirofumi Kosaka <kosaka@rworks.jp>
-
+ * @author 	David M. Gümbel <david.guembel@itomig.de>
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:UserLocal' => 'iTopユーザー',
-	'Class:UserLocal+' => 'iTopローカル認証ユーザー',
-	'Class:UserLocal/Attribute:password' => 'パスワード',
-	'Class:UserLocal/Attribute:password+' => '認証文字列',
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Attachments:TabTitle_Count' => 'Attachments (%1$d)',
+	'Attachments:EmptyTabTitle' => 'Attachments',
+	'Attachments:FieldsetTitle' => 'Attachments',
+	'Attachments:DeleteBtn' => 'Löschen',
+	'Attachments:History_File_Added' => 'Attachment %1$s hinzugefügt.',
+	'Attachments:History_File_Removed' => 'Attachment %1$s entfernt.',
+	'Attachments:AddAttachment' => 'Attachment hinzufügen: ',
+	'Attachments:UploadNotAllowedOnThisSystem' => 'Dateiupload in diesem System NICHT erlaubt.',
+	'Attachment:Max_Go' => '(Maximale Dateigröße: %1$s GB)',
+	'Attachment:Max_Mo' => '(Maximale Dateigröße: %1$s MB)',
+	'Attachment:Max_Ko' => '(Maximale Dateigröße: %1$s KB)',
+	'Attachments:NoAttachment' => 'Kein Attachment. ',
 ));
 ?>

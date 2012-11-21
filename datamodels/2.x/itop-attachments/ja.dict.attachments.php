@@ -17,16 +17,22 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @author	Hirofumi Kosaka <kosaka@rworks.jp>
-
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:UserLocal' => 'iTopユーザー',
-	'Class:UserLocal+' => 'iTopローカル認証ユーザー',
-	'Class:UserLocal/Attribute:password' => 'パスワード',
-	'Class:UserLocal/Attribute:password+' => '認証文字列',
+	'Attachments:TabTitle_Count' => '添付 (%1$d)',
+	'Attachments:EmptyTabTitle' => '添付',
+	'Attachments:FieldsetTitle' => '添付',
+	'Attachments:DeleteBtn' => '削除',
+	'Attachments:History_File_Added' => '添付 %1$s を追加しました。',
+	'Attachments:History_File_Removed' => '添付 %1$s を削除しました。',
+	'Attachments:AddAttachment' => '添付追加: ',
+	'Attachments:UploadNotAllowedOnThisSystem' => 'このシステムでは、ファイルのアップロードは許可されていません。',
+	'Attachment:Max_Go' => '(最大ファイルサイズ: %1$s GB)',
+	'Attachment:Max_Mo' => '(最大ファイルサイズ: %1$s MB)',
+	'Attachment:Max_Ko' => '(最大ファイルサイズ: %1$s KB)',
+	'Attachments:NoAttachment' => '添付はありません。',
 ));
 ?>

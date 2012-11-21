@@ -16,6 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+
 /**
  * Localized data
  *
@@ -49,33 +50,138 @@
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
 //
-// Class: lnkDocumentError
+// Class: KnownError
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-        'Class:lnkDocumentError' => 'Error / Tiquete',
-        'Class:lnkDocumentError+' => 'Error / Tiquete',
-        'Class:lnkDocumentError/Attribute:doc_id' => 'Documento',
-        'Class:lnkDocumentError/Attribute:doc_id+' => '',
-        'Class:lnkDocumentError/Attribute:doc_name' => 'Identificación del Documento',
-        'Class:lnkDocumentError/Attribute:doc_name+' => '',
-        'Class:lnkDocumentError/Attribute:error_id' => 'Error',
-        'Class:lnkDocumentError/Attribute:error_id+' => '',
-        'Class:lnkDocumentError/Attribute:error_name' => 'Identificación del Error',
-        'Class:lnkDocumentError/Attribute:error_name+' => '',
-        'Class:lnkDocumentError/Attribute:link_type' => 'Información',
-        'Class:lnkDocumentError/Attribute:link_type+' => '',
+	'Class:KnownError' => 'Error Conocido',
+	'Class:KnownError+' => 'Documentación para un error conocido',
+	'Class:KnownError/Attribute:name' => 'Nombre',
+	'Class:KnownError/Attribute:name+' => 'Nombre',
+	'Class:KnownError/Attribute:org_id' => 'Organización',
+	'Class:KnownError/Attribute:org_id+' => 'Organización',
+	'Class:KnownError/Attribute:cust_name' => 'Nombre',
+	'Class:KnownError/Attribute:cust_name+' => 'Nombre',
+	'Class:KnownError/Attribute:problem_id' => 'Problema Relacionado',
+	'Class:KnownError/Attribute:problem_id+' => 'Problema',
+	'Class:KnownError/Attribute:problem_ref' => 'Referencia',
+	'Class:KnownError/Attribute:problem_ref+' => 'Refencia',
+	'Class:KnownError/Attribute:symptom' => 'Síntoma',
+	'Class:KnownError/Attribute:symptom+' => 'Síntoma',
+	'Class:KnownError/Attribute:root_cause' => 'Causa Raíz',
+	'Class:KnownError/Attribute:root_cause+' => 'Causa Raíz',
+	'Class:KnownError/Attribute:workaround' => 'Solución Temporal',
+	'Class:KnownError/Attribute:workaround+' => 'Solución Temporal',
+	'Class:KnownError/Attribute:solution' => 'Solución Final',
+	'Class:KnownError/Attribute:solution+' => 'Solución Final',
+	'Class:KnownError/Attribute:error_code' => 'Código de Error',
+	'Class:KnownError/Attribute:error_code+' => 'Código de Error',
+	'Class:KnownError/Attribute:domain' => 'Dominio',
+	'Class:KnownError/Attribute:domain+' => 'Dominio',
+	'Class:KnownError/Attribute:domain/Value:Application' => 'Aplicación',
+	'Class:KnownError/Attribute:domain/Value:Application+' => 'Aplicación',
+	'Class:KnownError/Attribute:domain/Value:Desktop' => 'Escritorio',
+	'Class:KnownError/Attribute:domain/Value:Desktop+' => 'Escritorio',
+	'Class:KnownError/Attribute:domain/Value:Network' => 'Red',
+	'Class:KnownError/Attribute:domain/Value:Network+' => 'Red',
+	'Class:KnownError/Attribute:domain/Value:Server' => 'Servidor',
+	'Class:KnownError/Attribute:domain/Value:Server+' => 'Servidor',
+	'Class:KnownError/Attribute:vendor' => 'Proveedor',
+	'Class:KnownError/Attribute:vendor+' => 'Proveedor',
+	'Class:KnownError/Attribute:model' => 'Modelo',
+	'Class:KnownError/Attribute:model+' => 'Modelo',
+	'Class:KnownError/Attribute:version' => 'Versión',
+	'Class:KnownError/Attribute:version+' => 'Versión',
+	'Class:KnownError/Attribute:ci_list' => 'ECs',
+	'Class:KnownError/Attribute:ci_list+' => 'ECs',
+	'Class:KnownError/Attribute:document_list' => 'Documentos',
+	'Class:KnownError/Attribute:document_list+' => 'Documentos',
 ));
+
+//
+// Class: lnkErrorToFunctionalCI
+//
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-        'Menu:ProblemManagement' => 'Gestión de Errores',
-        'Menu:ProblemManagement+' => 'Gestión de Errores',
-        'Menu:NewError' => 'Nueva Error',
-        'Menu:NewError+' => 'Nueva Error',
-        'Menu:SearchError' => 'Búsqueda de errores ',
-        'Menu:SearchError+' => 'Búsqueda de errores',
-        'Menu:Problem:KnownErrors' => 'Todos los errores',
-        'Menu:Problem:KnownErrors+' => 'Todos los errores',
+	'Class:lnkErrorToFunctionalCI' => 'Relación Error Conocido y EC Funcional',
+	'Class:lnkErrorToFunctionalCI+' => 'Relación Error Conocido y EC Funcional',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'EC',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => 'Elemento de Configuración',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => 'Elemento de Configuración',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Error Conocido',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => 'Error Conocido',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Error Conocido',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => 'Error Conocido',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Motivo',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => 'Motivo',
 ));
 
+//
+// Class: lnkDocumentToError
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkDocumentToError' => 'Relación Documento y Error Conocido',
+	'Class:lnkDocumentToError+' => 'Relación Documento y Error Conocido',
+	'Class:lnkDocumentToError/Attribute:document_id' => 'Documento',
+	'Class:lnkDocumentToError/Attribute:document_id+' => 'Documento',
+	'Class:lnkDocumentToError/Attribute:document_name' => 'Documento',
+	'Class:lnkDocumentToError/Attribute:document_name+' => 'Documento',
+	'Class:lnkDocumentToError/Attribute:error_id' => 'Error Conocido',
+	'Class:lnkDocumentToError/Attribute:error_id+' => 'Error Conocido',
+	'Class:lnkDocumentToError/Attribute:error_name' => 'Error Conocido',
+	'Class:lnkDocumentToError/Attribute:error_name+' => 'Error Conocido',
+	'Class:lnkDocumentToError/Attribute:link_type' => 'Tipo',
+	'Class:lnkDocumentToError/Attribute:link_type+' => 'Tipo',
+));
+
+//
+// Class: FAQ
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:FAQ' => 'Preguntas y Respuestas Frecuentes',
+	'Class:FAQ+' => 'Preguntas y Respuestas Frecuentes',
+	'Class:FAQ/Attribute:title' => 'Asunto',
+	'Class:FAQ/Attribute:title+' => 'Asunto',
+	'Class:FAQ/Attribute:summary' => 'Resumen',
+	'Class:FAQ/Attribute:summary+' => 'Resumen',
+	'Class:FAQ/Attribute:description' => 'Descripción',
+	'Class:FAQ/Attribute:description+' => 'Descripción',
+	'Class:FAQ/Attribute:category_id' => 'Categoría',
+	'Class:FAQ/Attribute:category_id+' => 'Categoría',
+	'Class:FAQ/Attribute:category_name' => 'Categoría',
+	'Class:FAQ/Attribute:category_name+' => 'Categoría',
+	'Class:FAQ/Attribute:error_code' => 'Código de Error',
+	'Class:FAQ/Attribute:error_code+' => 'Código de Error',
+	'Class:FAQ/Attribute:key_words' => 'Palabras Clave',
+	'Class:FAQ/Attribute:key_words+' => 'Palabras Clave',
+));
+
+//
+// Class: FAQcategory
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:FAQcategory' => 'Categoría de Preguntas y Respusta Frecuentes',
+	'Class:FAQcategory+' => 'Categoría de Preguntas y Respusta Frecuentes',
+	'Class:FAQcategory/Attribute:name' => 'Nombre',
+	'Class:FAQcategory/Attribute:name+' => 'Nombre',
+	'Class:FAQcategory/Attribute:faq_list' => 'FAQs',
+	'Class:FAQcategory/Attribute:faq_list+' => 'FAQs',
+));
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Menu:NewError' => 'Nuevo Error Conocido',
+	'Menu:NewError+' => 'Nuevo Error Conocido',
+	'Menu:SearchError' => 'Búsqueda de Errores Conocidos',
+	'Menu:SearchError+' => 'Búsqueda de Errores Conocidos',
+        'Menu:Problem:KnownErrors' => 'Errores Conocidos',
+        'Menu:Problem:KnownErrors+' => 'Errores Conocidos',
+	'Menu:FAQCategory' => 'Categorías de FAQ',
+	'Menu:FAQCategory+' => 'Categorías FAQ',
+	'Menu:FAQ' => 'Preguntas y Respuestas Frecuentes',
+	'Menu:FAQ+' => 'Preguntas y Respuestas Frecuentes',
+
+));
 ?>

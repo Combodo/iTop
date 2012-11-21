@@ -16,6 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+
 /**
  * Localized data
  *
@@ -29,12 +30,12 @@
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Relation:impacts/Description' => 'Elementos impactados por',
+	'Relation:impacts/Description' => 'Elementos Impactados por',
 	'Relation:impacts/VerbUp' => 'Impacto...',
-	'Relation:impacts/VerbDown' => 'Elementos impactados por...',
+	'Relation:impacts/VerbDown' => 'Elementos Impactados por...',
 	'Relation:depends on/Description' => 'Elementos de los cuales este elemento depende',
 	'Relation:depends on/VerbUp' => 'Depende de...',
-	'Relation:depends on/VerbDown' => 'Impacta...',
+	'Relation:depends on/VerbDown' => 'Impactos...',
 ));
 
 
@@ -71,118 +72,67 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //////////////////////////////////////////////////////////////////////
 //
 
+
 //
 // Class: Organization
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Organization' => 'Organización',
-	'Class:Organization+' => '',
+	'Class:Organization+' => 'Organización',
 	'Class:Organization/Attribute:name' => 'Nombre',
-	'Class:Organization/Attribute:name+' => 'Common name',
+	'Class:Organization/Attribute:name+' => 'Nombre',
 	'Class:Organization/Attribute:code' => 'Código',
-	'Class:Organization/Attribute:code+' => 'Código de organización  (Siret, DUNS,...)',
-	'Class:Organization/Attribute:status' => 'Estado',
-	'Class:Organization/Attribute:status+' => '',
+	'Class:Organization/Attribute:code+' => 'Código de Organización  (RFC, DUNS, Siret, etc.)',
+	'Class:Organization/Attribute:status' => 'Estatus',
+	'Class:Organization/Attribute:status+' => 'Estatus',
 	'Class:Organization/Attribute:status/Value:active' => 'Activo',
 	'Class:Organization/Attribute:status/Value:active+' => 'Activo',
 	'Class:Organization/Attribute:status/Value:inactive' => 'Inactivo',
 	'Class:Organization/Attribute:status/Value:inactive+' => 'Inactivo',
 	'Class:Organization/Attribute:parent_id' => 'Padre',
-	'Class:Organization/Attribute:parent_id+' => 'Organización padre',
-	'Class:Organization/Attribute:parent_name' => 'Nombre de padre',
-	'Class:Organization/Attribute:parent_name+' => 'Nombre de la organización padre',
+	'Class:Organization/Attribute:parent_id+' => 'Organización Padre',
+	'Class:Organization/Attribute:parent_name' => 'Organización Padre',
+	'Class:Organization/Attribute:parent_name+' => 'Nombre de la Organización Padre',
+	'Class:Organization/Attribute:deliverymodel_id' => 'Modelo de Entrega',
+	'Class:Organization/Attribute:deliverymodel_id+' => 'Modelo de Entrega',
+	'Class:Organization/Attribute:deliverymodel_name' => 'Nombre del Modelo de Entrega',
+	'Class:Organization/Attribute:deliverymodel_name+' => 'Nombre del Modelo de Entrega',
+	'Class:Organization/Attribute:parent_id_friendlyname' => 'Padre',
+	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Organización Padre',
 ));
-
 
 //
 // Class: Location
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:Location' => 'Ubicación',
-	'Class:Location+' => 'Cualquier tipo de ubicación: Región, País, Ciudad, Sitio, Edificio, Piso, Cuarto, Rack,...',
+	'Class:Location' => 'Localidad',
+	'Class:Location+' => 'Cualquier Tipo de Localidad: Región, País, Ciudad, Sitio, Edificio, Piso, Cuarto, Rack,...',
 	'Class:Location/Attribute:name' => 'Nombre',
-	'Class:Location/Attribute:name+' => '',
-	'Class:Location/Attribute:status' => 'Estado',
-	'Class:Location/Attribute:status+' => '',
+	'Class:Location/Attribute:name+' => 'Nombre de Localidad',
+	'Class:Location/Attribute:status' => 'Estatus',
+	'Class:Location/Attribute:status+' => 'Estatus de Localidad',
 	'Class:Location/Attribute:status/Value:active' => 'Activo',
 	'Class:Location/Attribute:status/Value:active+' => 'Activo',
 	'Class:Location/Attribute:status/Value:inactive' => 'Inactivo',
 	'Class:Location/Attribute:status/Value:inactive+' => 'Inactivo',
-	'Class:Location/Attribute:org_id' => 'Organización propietaria',
-	'Class:Location/Attribute:org_id+' => '',
-	'Class:Location/Attribute:org_name' => 'Nombre de la organización propietaria',
-	'Class:Location/Attribute:org_name+' => '',
+	'Class:Location/Attribute:org_id' => 'Organización',
+	'Class:Location/Attribute:org_id+' => 'Organización',
+	'Class:Location/Attribute:org_name' => 'Nombre de la Organización',
+	'Class:Location/Attribute:org_name+' => 'Nombre de la Organización',
 	'Class:Location/Attribute:address' => 'Dirección',
-	'Class:Location/Attribute:address+' => 'Dirección postal',
-	'Class:Location/Attribute:postal_code' => 'Código postal',
-	'Class:Location/Attribute:postal_code+' => 'ZIP/Código postal',
+	'Class:Location/Attribute:address+' => 'Dirección Postal',
+	'Class:Location/Attribute:postal_code' => 'Código Postal',
+	'Class:Location/Attribute:postal_code+' => 'ZIP/Código Postal',
 	'Class:Location/Attribute:city' => 'Ciudad',
-	'Class:Location/Attribute:city+' => '',
+	'Class:Location/Attribute:city+' => 'Ciudad',
 	'Class:Location/Attribute:country' => 'País',
-	'Class:Location/Attribute:country+' => '',
-	'Class:Location/Attribute:parent_id' => 'Ubicación Padre',
-	'Class:Location/Attribute:parent_id+' => '',
-	'Class:Location/Attribute:parent_name' => 'Nombre de padre',
-	'Class:Location/Attribute:parent_name+' => '',
-	'Class:Location/Attribute:contact_list' => 'Contactos',
-	'Class:Location/Attribute:contact_list+' => 'Contactos localizables en ese sitio',
-	'Class:Location/Attribute:infra_list' => 'Infraestructura',
-	'Class:Location/Attribute:infra_list+' => 'Ítem Configurados (CI) ubicados en este sitio',
-));
-//
-// Class: Group
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:Group' => 'Grupo',
-	'Class:Group+' => '',
-	'Class:Group/Attribute:name' => 'Nombre',
-	'Class:Group/Attribute:name+' => '',
-	'Class:Group/Attribute:status' => 'Estado',
-	'Class:Group/Attribute:status+' => '',
-	'Class:Group/Attribute:status/Value:implementation' => 'Implementación',
-	'Class:Group/Attribute:status/Value:implementation+' => 'Implementación',
-	'Class:Group/Attribute:status/Value:obsolete' => 'Obsoleto',
-	'Class:Group/Attribute:status/Value:obsolete+' => 'Obsoleto',
-	'Class:Group/Attribute:status/Value:production' => 'Producción',
-	'Class:Group/Attribute:status/Value:production+' => 'Producción',
-	'Class:Group/Attribute:org_id' => 'Organización propietaria',
-	'Class:Group/Attribute:org_id+' => '',
-	'Class:Group/Attribute:owner_name' => 'Nombre de la Organización propietaria',
-	'Class:Group/Attribute:owner_name+' => 'Organización propietaria',
-	'Class:Group/Attribute:description' => 'Descripción',
-	'Class:Group/Attribute:description+' => '',
-	'Class:Group/Attribute:type' => 'Tipo',
-	'Class:Group/Attribute:type+' => '',
-	'Class:Group/Attribute:parent_id' => 'Padre',
-	'Class:Group/Attribute:parent_id+' => '',
-	'Class:Group/Attribute:parent_name' => 'Grupo padre',
-	'Class:Group/Attribute:parent_name+' => '',
-	'Class:Group/Attribute:ci_list' => 'I.C.s',
-	'Class:Group/Attribute:ci_list+' => 'Ítems Configurados relacionados con el grupo',
-));
-
-//
-// Class: lnkGroupToCI
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:lnkGroupToCI' => 'Grupo I.C',
-	'Class:lnkGroupToCI+' => '',
-	'Class:lnkGroupToCI/Attribute:group_id' => 'Grupo',
-	'Class:lnkGroupToCI/Attribute:group_id+' => '',
-	'Class:lnkGroupToCI/Attribute:group_name' => 'Nombre',
-	'Class:lnkGroupToCI/Attribute:group_name+' => '',
-	'Class:lnkGroupToCI/Attribute:ci_id' => 'I.C',
-	'Class:lnkGroupToCI/Attribute:ci_id+' => '',
-	'Class:lnkGroupToCI/Attribute:ci_name' => 'Nombre',
-	'Class:lnkGroupToCI/Attribute:ci_name+' => '',
-	'Class:lnkGroupToCI/Attribute:ci_status' => 'Estato',
-	'Class:lnkGroupToCI/Attribute:ci_status+' => '',
-	'Class:lnkGroupToCI/Attribute:reason' => 'Razón',
-	'Class:lnkGroupToCI/Attribute:reason+' => '',
+	'Class:Location/Attribute:country+' => 'País',
+	'Class:Location/Attribute:physicaldevice_list' => 'Dispositivos',
+	'Class:Location/Attribute:physicaldevice_list+' => 'Dispositivos',
+	'Class:Location/Attribute:person_list' => 'Contactos',
+	'Class:Location/Attribute:person_list+' => 'Contactos',
 ));
 
 //
@@ -191,39 +141,35 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Contact' => 'Contacto',
-	'Class:Contact+' => '',
-	'Class:Contact/Attribute:name' => 'Nombre',
-	'Class:Contact/Attribute:name+' => '',
-	'Class:Contact/Attribute:status' => 'Estado',
-	'Class:Contact/Attribute:status+' => '',
+	'Class:Contact+' => 'Contacto',
+	'Class:Contact/Attribute:name' => 'Apellidos',
+	'Class:Contact/Attribute:name+' => 'Apellidos',
+	'Class:Contact/Attribute:status' => 'Estatus',
+	'Class:Contact/Attribute:status+' => 'Estatus',
 	'Class:Contact/Attribute:status/Value:active' => 'Activo',
 	'Class:Contact/Attribute:status/Value:active+' => 'Activo',
 	'Class:Contact/Attribute:status/Value:inactive' => 'Inactivo',
 	'Class:Contact/Attribute:status/Value:inactive+' => 'Inactivo',
 	'Class:Contact/Attribute:org_id' => 'Organización',
-	'Class:Contact/Attribute:org_id+' => '',
+	'Class:Contact/Attribute:org_id+' => 'Organización',
 	'Class:Contact/Attribute:org_name' => 'Organización',
-	'Class:Contact/Attribute:org_name+' => '',
+	'Class:Contact/Attribute:org_name+' => 'Organización',
 	'Class:Contact/Attribute:email' => 'Correo Electrónico',
-	'Class:Contact/Attribute:email+' => '',
+	'Class:Contact/Attribute:email+' => 'Correo Electrónico',
 	'Class:Contact/Attribute:phone' => 'Teléfono',
-	'Class:Contact/Attribute:phone+' => '',
-	'Class:Contact/Attribute:location_id' => 'Ubicación',
-	'Class:Contact/Attribute:location_id+' => '',
-	'Class:Contact/Attribute:location_name' => 'Ubicación',
-	'Class:Contact/Attribute:location_name+' => '',
-	'Class:Contact/Attribute:ci_list' => 'I.C.s',
-	'Class:Contact/Attribute:ci_list+' => 'Ítems Configurados relacionados con el contacto',
-	'Class:Contact/Attribute:contract_list' => 'Contratos',
-	'Class:Contact/Attribute:contract_list+' => 'Contractos relacionados con el contacto',
-	'Class:Contact/Attribute:service_list' => 'Servicios',
-	'Class:Contact/Attribute:service_list+' => 'Servicios relacionados con el contacto',
-	'Class:Contact/Attribute:ticket_list' => 'Tiquetes',
-	'Class:Contact/Attribute:ticket_list+' => 'Tiquetes relacionados con el contrato',
-	'Class:Contact/Attribute:team_list' => 'Equipos',
-	'Class:Contact/Attribute:team_list+' => 'Equipos a los que pertenece este contacto',
+	'Class:Contact/Attribute:phone+' => 'Teléfono',
+	'Class:Contact/Attribute:notify' => 'Notificación',
+	'Class:Contact/Attribute:notify+' => 'Notificación',
+	'Class:Contact/Attribute:notify/Value:no' => 'No',
+	'Class:Contact/Attribute:notify/Value:no+' => 'No',
+	'Class:Contact/Attribute:notify/Value:yes' => 'Si',
+	'Class:Contact/Attribute:notify/Value:yes+' => 'Si',
+	'Class:Contact/Attribute:function' => 'Función',
+	'Class:Contact/Attribute:function+' => 'Función',
+	'Class:Contact/Attribute:cis_list' => 'ECs',
+	'Class:Contact/Attribute:cis_list+' => 'Elementos de Configuración relacionados con el contacto',
 	'Class:Contact/Attribute:finalclass' => 'Tipo',
-	'Class:Contact/Attribute:finalclass+' => '',
+	'Class:Contact/Attribute:finalclass+' => 'Tipo',
 ));
 
 //
@@ -232,11 +178,27 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Person' => 'Persona',
-	'Class:Person+' => '',
+	'Class:Person+' => 'Persona',
 	'Class:Person/Attribute:first_name' => 'Nombre',
-	'Class:Person/Attribute:first_name+' => '',
-	'Class:Person/Attribute:employee_id' => 'Identificación de empleado',
-	'Class:Person/Attribute:employee_id+' => '',
+	'Class:Person/Attribute:first_name+' => 'Nombre',
+	'Class:Person/Attribute:employee_number' => 'Número de Empleado',
+	'Class:Person/Attribute:employee_number+' => 'Número de Empleado',
+	'Class:Person/Attribute:mobile_phone' => 'Celular',
+	'Class:Person/Attribute:mobile_phone+' => 'Celular',
+	'Class:Person/Attribute:location_id' => 'Localidad',
+	'Class:Person/Attribute:location_id+' => 'Localidad',
+	'Class:Person/Attribute:location_name' => 'Nombre de Localidad',
+	'Class:Person/Attribute:location_name+' => 'Nombre de Localidad',
+	'Class:Person/Attribute:manager_id' => 'Jefe',
+	'Class:Person/Attribute:manager_id+' => 'Jefe',
+	'Class:Person/Attribute:manager_name' => 'Nombre del Jefe',
+	'Class:Person/Attribute:manager_name+' => 'Nombre del Jefe',
+	'Class:Person/Attribute:team_list' => 'Grupos',
+	'Class:Person/Attribute:team_list+' => 'Grupos',
+	'Class:Person/Attribute:tickets_list' => 'Tickets',
+	'Class:Person/Attribute:tickets_list+' => 'Tickets',
+	'Class:Person/Attribute:manager_id_friendlyname' => 'Nombre del Jefe',
+	'Class:Person/Attribute:manager_id_friendlyname+' => 'Nombre del Jefe',
 ));
 
 //
@@ -244,31 +206,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:Team' => 'Equipo',
-	'Class:Team+' => '',
-	'Class:Team/Attribute:member_list' => 'Miembros',
-	'Class:Team/Attribute:member_list+' => 'Contactos que son parte del equipo',
-));
-
-//
-// Class: lnkTeamToContact
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:lnkTeamToContact' => 'Miembros de Equipo',
-	'Class:lnkTeamToContact+' => 'Miembros del equipo',
-	'Class:lnkTeamToContact/Attribute:team_id' => 'Equipo',
-	'Class:lnkTeamToContact/Attribute:team_id+' => '',
-	'Class:lnkTeamToContact/Attribute:contact_id' => 'Miembro',
-	'Class:lnkTeamToContact/Attribute:contact_id+' => '',
-	'Class:lnkTeamToContact/Attribute:contact_location_id' => 'Ubicación',
-	'Class:lnkTeamToContact/Attribute:contact_location_id+' => '',
-	'Class:lnkTeamToContact/Attribute:contact_email' => 'Correo Electrónico',
-	'Class:lnkTeamToContact/Attribute:contact_email+' => '',
-	'Class:lnkTeamToContact/Attribute:contact_phone' => 'Teléfono',
-	'Class:lnkTeamToContact/Attribute:contact_phone+' => '',
-	'Class:lnkTeamToContact/Attribute:role' => 'Rol',
-	'Class:lnkTeamToContact/Attribute:role+' => '',
+	'Class:Team' => 'Grupo de Trabajo',
+	'Class:Team+' => 'Grupo de Trabajo',
+	'Class:Team/Attribute:persons_list' => 'Miembros',
+	'Class:Team/Attribute:persons_list+' => 'Miembros',
+	'Class:Team/Attribute:tickets_list' => 'Tickets',
+	'Class:Team/Attribute:tickets_list+' => 'Tickets',
 ));
 
 //
@@ -277,218 +220,68 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Document' => 'Documento',
-	'Class:Document+' => '',
+	'Class:Document+' => 'Documento',
 	'Class:Document/Attribute:name' => 'Nombre',
-	'Class:Document/Attribute:name+' => '',
+	'Class:Document/Attribute:name+' => 'Nombre',
 	'Class:Document/Attribute:org_id' => 'Organización',
-	'Class:Document/Attribute:org_id+' => '',
-	'Class:Document/Attribute:org_name' => 'Nombre de la organización',
-	'Class:Document/Attribute:org_name+' => '',
-	'Class:Document/Attribute:description+' => '',
+	'Class:Document/Attribute:org_id+' => 'Organización',
+	'Class:Document/Attribute:org_name' => 'Nombre de la Organización',
+	'Class:Document/Attribute:org_name+' => 'Nombre de la Organización',
+	'Class:Document/Attribute:documenttype_id' => 'Tipo de Documento',
+	'Class:Document/Attribute:documenttype_id+' => 'Tipo de Documento',
+	'Class:Document/Attribute:documenttype_name' => 'Tipo de Documento',
+	'Class:Document/Attribute:documenttype_name+' => 'Tipo de Documento',
 	'Class:Document/Attribute:description' => 'Descripción',
-	'Class:Document/Attribute:description+' => '',
-	'Class:Document/Attribute:type' => 'Tipo',
-	'Class:Document/Attribute:type+' => '',
-	'Class:Document/Attribute:type/Value:contract' => 'Contrato',
-	'Class:Document/Attribute:type/Value:contract+' => '',
-	'Class:Document/Attribute:type/Value:networkmap' => 'Mapa de la Red',
-	'Class:Document/Attribute:type/Value:networkmap+' => '',
-	'Class:Document/Attribute:type/Value:presentation' => 'Presentación',
-	'Class:Document/Attribute:type/Value:presentation+' => '',
-	'Class:Document/Attribute:type/Value:training' => 'Capacitación',
-	'Class:Document/Attribute:type/Value:training+' => '',
-	'Class:Document/Attribute:type/Value:whitePaper' => 'Artículo de divulgación',
-	'Class:Document/Attribute:type/Value:whitePaper+' => '',
-	'Class:Document/Attribute:type/Value:workinginstructions' => 'Instrucciones de trabajo',
-	'Class:Document/Attribute:type/Value:workinginstructions+' => '',
-	'Class:Document/Attribute:status' => 'Estado',
-	'Class:Document/Attribute:status+' => '',
-	'Class:Document/Attribute:status/Value:draft' => 'Borrador de documento',
-	'Class:Document/Attribute:status/Value:draft+' => '',
+	'Class:Document/Attribute:description+' => 'Descripción',
+	'Class:Document/Attribute:status' => 'Estatus',
+	'Class:Document/Attribute:status+' => 'Estatus',
+	'Class:Document/Attribute:status/Value:draft' => 'Borrador de Documento',
+	'Class:Document/Attribute:status/Value:draft+' => 'Borrador de Documento',
 	'Class:Document/Attribute:status/Value:obsolete' => 'Obsoleto',
-	'Class:Document/Attribute:status/Value:obsolete+' => '',
+	'Class:Document/Attribute:status/Value:obsolete+' => 'Obsoleto',
 	'Class:Document/Attribute:status/Value:published' => 'Publicado',
-	'Class:Document/Attribute:status/Value:published+' => '',
-	'Class:Document/Attribute:ci_list' => 'I.C.s',
-	'Class:Document/Attribute:ci_list+' => 'Ítems Configurados referenciados en este documento',
-	'Class:Document/Attribute:contract_list' => 'Contratos',
-	'Class:Document/Attribute:contract_list+' => 'Contratos referenciados en este documento',
-	'Class:Document/Attribute:service_list' => 'Servicios',
-	'Class:Document/Attribute:service_list+' => 'Servicios referenciados en este documento',
-	'Class:Document/Attribute:ticket_list' => 'Tiquetes',
-	'Class:Document/Attribute:ticket_list+' => 'Tiquetes referenciados en este documento',
-	'Class:Document:PreviewTab' => 'Preview',
+	'Class:Document/Attribute:status/Value:published+' => 'Publicado',
+	'Class:Document/Attribute:cis_list' => 'ECs',
+	'Class:Document/Attribute:cis_list+' => 'Elementos de Configuración referenciados en este documento',
+	'Class:Document/Attribute:contracts_list' => 'Contratos',
+	'Class:Document/Attribute:contracts_list+' => 'Contratos Referenciados con este Documento',
+	'Class:Document/Attribute:services_list' => 'Servicios',
+	'Class:Document/Attribute:services_list+' => 'Servicios Referenciados con este Documento',
+	'Class:Document/Attribute:finalclass' => 'Tipo de Documento',
+	'Class:Document/Attribute:finalclass+' => 'Tipo de Documento',
 ));
 
 //
-// Class: WebDoc
+// Class: DocumentFile
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:WebDoc' => 'Documento Web',
-	'Class:WebDoc+' => 'Documento disponible en otro servidor Web',
-	'Class:WebDoc/Attribute:url' => 'Url',
-	'Class:WebDoc/Attribute:url+' => '',
+	'Class:DocumentFile' => 'Documento de Archivo',
+	'Class:DocumentFileDoc+' => 'Documento de Archivo',
+	'Class:DocumentFile/Attribute:file' => 'Archivo',
+	'Class:DocumentFile/Attribute:file+' => 'Archivo',
 ));
 
 //
-// Class: Note
+// Class: DocumentNote
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:Note' => 'Nota',
-	'Class:Note+' => '',
-	'Class:Note/Attribute:note' => 'Texto',
-	'Class:Note/Attribute:note+' => '',
+	'Class:DocumentNote' => 'Nota',
+	'Class:DocumentNote+' => 'Nota',
+	'Class:DocumentNote/Attribute:text' => 'Texto',
+	'Class:DocumentNote/Attribute:text+' => 'Texto',
 ));
 
 //
-// Class: FileDoc
+// Class: DocumentWeb
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:FileDoc' => 'Documento (archivo)',
-	'Class:FileDoc+' => '',
-	'Class:FileDoc/Attribute:contents' => 'Contenido',
-	'Class:FileDoc/Attribute:contents+' => '',
-));
-
-//
-// Class: Licence
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:Licence' => 'Licencia',
-	'Class:Licence+' => '',
-	'Class:Licence/Attribute:provider' => 'Proveedor',
-	'Class:Licence/Attribute:provider+' => '',
-	'Class:Licence/Attribute:product' => 'Producto',
-	'Class:Licence/Attribute:product+' => '',
-	'Class:Licence/Attribute:name' => 'Nombre',
-	'Class:Licence/Attribute:name+' => '',
-	'Class:Licence/Attribute:start' => 'Fecha de inicio',
-	'Class:Licence/Attribute:start+' => '',
-	'Class:Licence/Attribute:end' => 'Fecha de finalización',
-	'Class:Licence/Attribute:end+' => '',
-	'Class:Licence/Attribute:licence_key' => 'Llave',
-	'Class:Licence/Attribute:licence_key+' => 'Llave o cógido (hash) de la licencia',
-	'Class:Licence/Attribute:scope' => 'Ámbito',
-	'Class:Licence/Attribute:scope+' => '',
-	'Class:Licence/Attribute:usage_limit' => 'Límite de uso',
-	'Class:Licence/Attribute:usage_limit+' => '',
-	'Class:Licence/Attribute:usage_list' => 'Uso',
-	'Class:Licence/Attribute:usage_list+' => 'Instancias/Aplicaciones que estan usando esta licencia',
-));
-
-//
-// Class: Subnet
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:Subnet' => 'Sub-Red',
-	'Class:Subnet+' => '',
-	'Class:Subnet/Name' => '%1$s / %2$s',
-	//'Class:Subnet/Attribute:name' => 'Nombre',
-	//'Class:Subnet/Attribute:name+' => '',
-	'Class:Subnet/Attribute:org_id' => 'Organización propietaria',
-	'Class:Subnet/Attribute:org_id+' => '',
-	'Class:Subnet/Attribute:description' => 'Descripción',
-	'Class:Subnet/Attribute:description+' => '',
-	'Class:Subnet/Attribute:ip' => 'IP',
-	'Class:Subnet/Attribute:ip+' => 'Número IP',
-	'Class:Subnet/Attribute:ip_mask' => 'Máscara IP',
-	'Class:Subnet/Attribute:ip_mask+' => 'Máscara de la red IP',
-));
-
-//
-// Class: Patch
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:Patch' => 'Parche',
-	'Class:Patch+' => '',
-	'Class:Patch/Attribute:name' => 'Nombre',
-	'Class:Patch/Attribute:name+' => '',
-	'Class:Patch/Attribute:description' => 'Descripción',
-	'Class:Patch/Attribute:description+' => '',
-	'Class:Patch/Attribute:target_sw' => 'Ámbito de la aplicación',
-	'Class:Patch/Attribute:target_sw+' => 'Software destino (S.O. o aplicación)',
-	'Class:Patch/Attribute:version' => 'Versión',
-	'Class:Patch/Attribute:version+' => '',
-	'Class:Patch/Attribute:type' => 'Tipo',
-	'Class:Patch/Attribute:type+' => '',
-	'Class:Patch/Attribute:type/Value:application' => 'Aplicación',
-	'Class:Patch/Attribute:type/Value:application+' => '',
-	'Class:Patch/Attribute:type/Value:os' => 'S.O',
-	'Class:Patch/Attribute:type/Value:os+' => '',
-	'Class:Patch/Attribute:type/Value:security' => 'Seguridad',
-	'Class:Patch/Attribute:type/Value:security+' => '',
-	'Class:Patch/Attribute:type/Value:servicepack' => 'Paquete de Servicio',
-	'Class:Patch/Attribute:type/Value:servicepack+' => '',
-	'Class:Patch/Attribute:ci_list' => 'Dispositivos',
-	'Class:Patch/Attribute:ci_list+' => 'Dispositivos donde el parche esta instalado',
-));
-
-//
-// Class: Software
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:Software' => 'Software',
-	'Class:Software+' => '',
-	'Class:Software/Attribute:name' => 'Nombre',
-	'Class:Software/Attribute:name+' => '',
-	'Class:Software/Attribute:description' => 'Descripción',
-	'Class:Software/Attribute:description+' => '',
-	'Class:Software/Attribute:instance_list' => 'Instalaciones',
-	'Class:Software/Attribute:instance_list+' => 'Instancias de este software',
-	'Class:Software/Attribute:finalclass' => 'Tipo',
-	'Class:Software/Attribute:finalclass+' => '',
-));
-
-//
-// Class: Application
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:Application' => 'Aplicación',
-	'Class:Application+' => 'Aplicación/Programa',
-	'Class:Application/Attribute:name' => 'Nombre',
-	'Class:Application/Attribute:name+' => '',
-	'Class:Application/Attribute:description' => 'Descripción',
-	'Class:Application/Attribute:description+' => '',
-	'Class:Application/Attribute:instance_list' => 'Instalaciones',
-	'Class:Application/Attribute:instance_list+' => 'Instancias de esta aplicación',
-));
-
-//
-// Class: DBServer
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:DBServer' => 'Base de datos',
-	'Class:DBServer+' => 'Software de Base de Datos',
-	'Class:DBServer/Attribute:instance_list' => 'Instalaciones',
-	'Class:DBServer/Attribute:instance_list+' => 'Instancia de este servidor de Base de Datos',
-));
-
-//
-// Class: lnkPatchToCI
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:lnkPatchToCI' => 'Uso del parche',
-	'Class:lnkPatchToCI+' => '',
-	'Class:lnkPatchToCI/Attribute:patch_id' => 'Parche',
-	'Class:lnkPatchToCI/Attribute:patch_id+' => '',
-	'Class:lnkPatchToCI/Attribute:patch_name' => 'Parche',
-	'Class:lnkPatchToCI/Attribute:patch_name+' => '',
-	'Class:lnkPatchToCI/Attribute:ci_id' => 'I.C.s',
-	'Class:lnkPatchToCI/Attribute:ci_id+' => 'ID de los Ítems Configurados',
-	'Class:lnkPatchToCI/Attribute:ci_name' => 'I.C.s',
-	'Class:lnkPatchToCI/Attribute:ci_name+' => 'Nombre de los I.C.s',
-	'Class:lnkPatchToCI/Attribute:ci_status' => 'Estado de los I.C.s',
-	'Class:lnkPatchToCI/Attribute:ci_status+' => '',
+	'Class:DocumentWeb' => 'Documento Web',
+	'Class:DocumentWeb+' => 'Documento disponible en otro servidor Web',
+	'Class:DocumentWeb/Attribute:url' => 'URL',
+	'Class:DocumentWeb/Attribute:url+' => 'URL de Internet',
 ));
 
 //
@@ -496,258 +289,116 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:FunctionalCI' => 'Ítem Configurado Funcional',
-	'Class:FunctionalCI+' => '',
+	'Class:FunctionalCI' => 'EC Funcional',
+	'Class:FunctionalCI+' => 'Elemento de Configuración Funcional',
 	'Class:FunctionalCI/Attribute:name' => 'Nombre',
-	'Class:FunctionalCI/Attribute:name+' => '',
-	'Class:FunctionalCI/Attribute:status' => 'Estado',
-	'Class:FunctionalCI/Attribute:status+' => '',
-	'Class:FunctionalCI/Attribute:status/Value:implementation' => 'Implementación',
-	'Class:FunctionalCI/Attribute:status/Value:implementation+' => '',
-	'Class:FunctionalCI/Attribute:status/Value:obsolete' => 'Obsoleto',
-	'Class:FunctionalCI/Attribute:status/Value:obsolete+' => '',
-	'Class:FunctionalCI/Attribute:status/Value:production' => 'Producción',
-	'Class:FunctionalCI/Attribute:status/Value:production+' => '',
-	'Class:FunctionalCI/Attribute:org_id' => 'Organización propietaria',
-	'Class:FunctionalCI/Attribute:org_id+' => '',
-	'Class:FunctionalCI/Attribute:owner_name' => 'Organización propietaria',
-	'Class:FunctionalCI/Attribute:owner_name+' => '',
-	'Class:FunctionalCI/Attribute:importance' => 'Criticidad para el negocio',
-	'Class:FunctionalCI/Attribute:importance+' => 'Qué tan crítco es para el negocio este ítem',
-	'Class:FunctionalCI/Attribute:importance/Value:high' => 'Alto',
-	'Class:FunctionalCI/Attribute:importance/Value:high+' => 'Alto grado de importancia',
-	'Class:FunctionalCI/Attribute:importance/Value:low' => 'Bajo',
-	'Class:FunctionalCI/Attribute:importance/Value:low+' => 'Bajo grado de importancia',
-	'Class:FunctionalCI/Attribute:importance/Value:medium' => 'Medio',
-	'Class:FunctionalCI/Attribute:importance/Value:medium+' => 'Grado medio de importancia',
-	'Class:FunctionalCI/Attribute:contact_list' => 'Contactos',
-	'Class:FunctionalCI/Attribute:contact_list+' => 'Contactos para este I.C.s',
-	'Class:FunctionalCI/Attribute:document_list' => 'Documentos',
-	'Class:FunctionalCI/Attribute:document_list+' => 'Documentación para este I.C.s',
-	'Class:FunctionalCI/Attribute:solution_list' => 'Soluciones',
-	'Class:FunctionalCI/Attribute:solution_list+' => 'Soluciones que estan usando este I.C.s',
-	'Class:FunctionalCI/Attribute:contract_list' => 'Contratos',
-	'Class:FunctionalCI/Attribute:contract_list+' => 'Contratos soportando este I.C.s',
-	'Class:FunctionalCI/Attribute:ticket_list' => 'Tiquetes',
-	'Class:FunctionalCI/Attribute:ticket_list+' => 'Tiquetes relacionados con este I.C.s',
+	'Class:FunctionalCI/Attribute:name+' => 'Nombre',
+	'Class:FunctionalCI/Attribute:description' => 'Descripción',
+	'Class:FunctionalCI/Attribute:description+' => 'Descripción',
+	'Class:FunctionalCI/Attribute:org_id' => 'Organización',
+	'Class:FunctionalCI/Attribute:org_id+' => 'Organización',
+	'Class:FunctionalCI/Attribute:organization_name' => 'Nombre de Organización',
+	'Class:FunctionalCI/Attribute:organization_name+' => 'Nombre de Organización',
+	'Class:FunctionalCI/Attribute:business_criticity' => 'Criticidad para el Negocio',
+	'Class:FunctionalCI/Attribute:business_criticity+' => 'Qué tan crítico es para el negocio este elemento',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:high' => 'Alto',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:high+' => 'Alto Grado de Importancia',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:low' => 'Bajo',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:low+' => 'Bajo Grado de Importancia',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:medium' => 'Medio',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:medium+' => 'Grado Medio de Importancia',
+	'Class:FunctionalCI/Attribute:move2production' => 'Puesto en Producción',
+	'Class:FunctionalCI/Attribute:move2production+' => 'Puesto en Producción',
+	'Class:FunctionalCI/Attribute:contacts_list' => 'Contactos',
+	'Class:FunctionalCI/Attribute:contacts_list+' => 'Contactos para este EC',
+	'Class:FunctionalCI/Attribute:documents_list' => 'Documentos',
+	'Class:FunctionalCI/Attribute:documents_list+' => 'Documentación para este EC',
+	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Soluciones Aplicativa',
+	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'Soluciones Aplicativa',
+	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Contratos',
+	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'Contratos',
+	'Class:FunctionalCI/Attribute:services_list' => 'Servicios',
+	'Class:FunctionalCI/Attribute:services_list+' => 'Servicios',
+	'Class:FunctionalCI/Attribute:softwares_list' => 'Software',
+	'Class:FunctionalCI/Attribute:softwares_list+' => 'Software',
+	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'Tickets relacionados con este EC',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Tipo',
-	'Class:FunctionalCI/Attribute:finalclass+' => '',
+	'Class:FunctionalCI/Attribute:finalclass+' => 'Tipo',
 ));
 
 //
-// Class: SoftwareInstance
+// Class: PhysicalDevice
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:SoftwareInstance' => 'Instancia de Software',
-	'Class:SoftwareInstance+' => '',
-	'Class:SoftwareInstance/Name' => '%1$s - %2$s',
-	'Class:SoftwareInstance/Attribute:device_id' => 'Dispositivo',
-	'Class:SoftwareInstance/Attribute:device_id+' => '',
-	'Class:SoftwareInstance/Attribute:device_name' => 'Dispositivo',
-	'Class:SoftwareInstance/Attribute:device_name+' => '',
-	'Class:SoftwareInstance/Attribute:licence_id' => 'Licencia',
-	'Class:SoftwareInstance/Attribute:licence_id+' => '',
-	'Class:SoftwareInstance/Attribute:licence_name' => 'Licencia',
-	'Class:SoftwareInstance/Attribute:licence_name+' => '',
-	'Class:SoftwareInstance/Attribute:software_id' => 'Software',
-	'Class:SoftwareInstance/Attribute:software_id+' => '',
-	'Class:SoftwareInstance/Attribute:software_name' => 'Software',
-	'Class:SoftwareInstance/Attribute:software_name+' => '',
-	'Class:SoftwareInstance/Attribute:version' => 'Versión',
-	'Class:SoftwareInstance/Attribute:version+' => '',
-	'Class:SoftwareInstance/Attribute:description' => 'Descripción',
-	'Class:SoftwareInstance/Attribute:description+' => '',
+	'Class:PhysicalDevice' => 'Dispositivo Físico',
+	'Class:PhysicalDevice+' => 'Dispositivo Físico',
+	'Class:PhysicalDevice/Attribute:serialnumber' => 'Número de Serie',
+	'Class:PhysicalDevice/Attribute:serialnumber+' => 'Número de Serie',
+	'Class:PhysicalDevice/Attribute:location_id' => 'Localidad',
+	'Class:PhysicalDevice/Attribute:location_id+' => 'Localidad',
+	'Class:PhysicalDevice/Attribute:location_name' => 'Nombre Localidad',
+	'Class:PhysicalDevice/Attribute:location_name+' => 'Nombre Localidad',
+	'Class:PhysicalDevice/Attribute:status' => 'Estatus',
+	'Class:PhysicalDevice/Attribute:status+' => 'Estatus',
+	'Class:PhysicalDevice/Attribute:status/Value:implementation' => 'No Productivo',
+	'Class:PhysicalDevice/Attribute:status/Value:implementation+' => 'No Productivo',
+	'Class:PhysicalDevice/Attribute:status/Value:obsolete' => 'Obsoleto',
+	'Class:PhysicalDevice/Attribute:status/Value:obsolete+' => 'Obsoleto',
+	'Class:PhysicalDevice/Attribute:status/Value:production' => 'Productivo',
+	'Class:PhysicalDevice/Attribute:status/Value:production+' => 'Productivo',
+	'Class:PhysicalDevice/Attribute:status/Value:stock' => 'En Inventario',
+	'Class:PhysicalDevice/Attribute:status/Value:stock+' => 'En Imventario',
+	'Class:PhysicalDevice/Attribute:brand_id' => 'Marca',
+	'Class:PhysicalDevice/Attribute:brand_id+' => 'Marca',
+	'Class:PhysicalDevice/Attribute:brand_name' => 'Nombre Marca',
+	'Class:PhysicalDevice/Attribute:brand_name+' => 'Nombre Marca',
+	'Class:PhysicalDevice/Attribute:model_id' => 'Modelo',
+	'Class:PhysicalDevice/Attribute:model_id+' => 'Modelo',
+	'Class:PhysicalDevice/Attribute:model_name' => 'Nombre Modelo',
+	'Class:PhysicalDevice/Attribute:model_name+' => 'Nombre Modelo',
+	'Class:PhysicalDevice/Attribute:asset_number' => 'Número Activo',
+	'Class:PhysicalDevice/Attribute:asset_number+' => 'Número Activo',
+	'Class:PhysicalDevice/Attribute:purchase_date' => 'Fecha de Compra',
+	'Class:PhysicalDevice/Attribute:purchase_date+' => 'Fecha de Compra',
+	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'Vencimiento de Garantía',
+	'Class:PhysicalDevice/Attribute:end_of_warranty+' => 'Vencimiento de Garantía',
 ));
 
 //
-// Class: ApplicationInstance
+// Class: Rack
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:ApplicationInstance' => 'Instancia de aplicación',
-	'Class:ApplicationInstance+' => '',
-	'Class:ApplicationInstance/Name' => '%1$s - %2$s',
+	'Class:Rack' => 'Rack',
+	'Class:Rack+' => '',
+	'Class:Rack/Attribute:nb_u' => 'NB U',
+	'Class:Rack/Attribute:nb_u+' => 'NB U',
+	'Class:Rack/Attribute:device_list' => 'Dispositivos',
+	'Class:Rack/Attribute:device_list+' => 'Dispositivos',
+	'Class:Rack/Attribute:enclosure_list' => 'Enclosures',
+	'Class:Rack/Attribute:enclosure_list+' => 'Enclosures',
 ));
 
 //
-// Class: DBServerInstance
+// Class: TelephonyCI
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:DBServerInstance' => 'Instancia de Servidor de BD',
-	'Class:DBServerInstance+' => '',
-	'Class:DBServerInstance/Name' => '%1$s - %2$s',
-	'Class:DBServerInstance/Attribute:dbinstance_list' => 'Bases de Datos',
-	'Class:DBServerInstance/Attribute:dbinstance_list+' => 'Fuentes de Bases de Datos',
+	'Class:TelephonyCI' => 'EC Telefónico',
+	'Class:TelephonyCI+' => 'EC Telefónico',
+	'Class:TelephonyCI/Attribute:phonenumber' => 'Número Telefónico',
+	'Class:TelephonyCI/Attribute:phonenumber+' => 'Número Telefónico',
 ));
 
 //
-// Class: DatabaseInstance
+// Class: Phone
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:DatabaseInstance' => 'Instancia de Base de Datos',
-	'Class:DatabaseInstance+' => '',
-	'Class:DatabaseInstance/Name' => '%1$s - %2$s',
-	'Class:DatabaseInstance/Attribute:db_server_instance_id' => 'Servidor de Base de Datos',
-	'Class:DatabaseInstance/Attribute:db_server_instance_id+' => '',
-	'Class:DatabaseInstance/Attribute:db_server_instance_version' => 'Versión de Base de Datos',
-	'Class:DatabaseInstance/Attribute:db_server_instance_version+' => '',
-	'Class:DatabaseInstance/Attribute:description' => 'Descripción',
-	'Class:DatabaseInstance/Attribute:description+' => '',
-));
-
-//
-// Class: ApplicationSolution
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:ApplicationSolution' => 'Soluciones',
-	'Class:ApplicationSolution+' => '',
-	'Class:ApplicationSolution/Attribute:description' => 'Descripción',
-	'Class:ApplicationSolution/Attribute:description+' => '',
-	'Class:ApplicationSolution/Attribute:ci_list' => 'I.C.s',
-	'Class:ApplicationSolution/Attribute:ci_list+' => 'I.C.s que conforman esta solución',
-	'Class:ApplicationSolution/Attribute:process_list' => 'Procesos de Negocios',
-	'Class:ApplicationSolution/Attribute:process_list+' => 'Procesos de negocios que dependen en la solución',
-));
-
-//
-// Class: BusinessProcess
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:BusinessProcess' => 'Procesos de negocios',
-	'Class:BusinessProcess+' => '',
-	'Class:BusinessProcess/Attribute:description' => 'Descripción',
-	'Class:BusinessProcess/Attribute:description+' => '',
-	'Class:BusinessProcess/Attribute:used_solution_list' => 'Soluciones',
-	'Class:BusinessProcess/Attribute:used_solution_list+' => 'Soluciones en la que los procesos se apoyan',
-));
-
-//
-// Class: ConnectableCI
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:ConnectableCI' => 'I.C.s conectable',
-	'Class:ConnectableCI+' => 'I.C.s físico',
-	'Class:ConnectableCI/Attribute:brand' => 'Marca',
-	'Class:ConnectableCI/Attribute:brand+' => '',
-	'Class:ConnectableCI/Attribute:model' => 'Modelo',
-	'Class:ConnectableCI/Attribute:model+' => '',
-	'Class:ConnectableCI/Attribute:serial_number' => 'Número de Serie',
-	'Class:ConnectableCI/Attribute:serial_number+' => '',
-	'Class:ConnectableCI/Attribute:asset_ref' => 'Placa de Referencia',
-	'Class:ConnectableCI/Attribute:asset_ref+' => '',
-));
-
-//
-// Class: NetworkInterface
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:NetworkInterface' => 'Interfase de Red',
-	'Class:NetworkInterface+' => '',
-	'Class:NetworkInterface/Name' => '%1$s - %2$s',
-	'Class:NetworkInterface/Attribute:device_id' => 'Dispositivo',
-	'Class:NetworkInterface/Attribute:device_id+' => '',
-	'Class:NetworkInterface/Attribute:device_name' => 'Dispositivo',
-	'Class:NetworkInterface/Attribute:device_name+' => '',
-	'Class:NetworkInterface/Attribute:logical_type' => 'Tipo Lógico',
-	'Class:NetworkInterface/Attribute:logical_type+' => '',
-	'Class:NetworkInterface/Attribute:logical_type/Value:backup' => 'Respaldo',
-	'Class:NetworkInterface/Attribute:logical_type/Value:backup+' => '',
-	'Class:NetworkInterface/Attribute:logical_type/Value:logical' => 'Lógico',
-	'Class:NetworkInterface/Attribute:logical_type/Value:logical+' => '',
-	'Class:NetworkInterface/Attribute:logical_type/Value:port' => 'Puerto',
-	'Class:NetworkInterface/Attribute:logical_type/Value:port+' => '',
-	'Class:NetworkInterface/Attribute:logical_type/Value:primary' => 'Primario',
-	'Class:NetworkInterface/Attribute:logical_type/Value:primary+' => '',
-	'Class:NetworkInterface/Attribute:logical_type/Value:secondary' => 'Secundario',
-	'Class:NetworkInterface/Attribute:logical_type/Value:secondary+' => '',
-	'Class:NetworkInterface/Attribute:physical_type' => 'Tipo Físico',
-	'Class:NetworkInterface/Attribute:physical_type+' => '',
-	'Class:NetworkInterface/Attribute:physical_type/Value:atm' => 'ATM',
-	'Class:NetworkInterface/Attribute:physical_type/Value:atm+' => '',
-	'Class:NetworkInterface/Attribute:physical_type/Value:ethernet' => 'Ethernet',
-	'Class:NetworkInterface/Attribute:physical_type/Value:ethernet+' => '',
-	'Class:NetworkInterface/Attribute:physical_type/Value:framerelay' => 'Frame Relay',
-	'Class:NetworkInterface/Attribute:physical_type/Value:framerelay+' => '',
-	'Class:NetworkInterface/Attribute:physical_type/Value:vlan' => 'VLAN',
-	'Class:NetworkInterface/Attribute:physical_type/Value:vlan+' => '',
-	'Class:NetworkInterface/Attribute:ip_address' => 'Dirección IP',
-	'Class:NetworkInterface/Attribute:ip_address+' => '',
-	'Class:NetworkInterface/Attribute:ip_mask' => 'Máscara IP',
-	'Class:NetworkInterface/Attribute:ip_mask+' => '',
-	'Class:NetworkInterface/Attribute:mac_address' => 'Dirección MAC',
-	'Class:NetworkInterface/Attribute:mac_address+' => '',
-	'Class:NetworkInterface/Attribute:speed' => 'Velocidad',
-	'Class:NetworkInterface/Attribute:speed+' => '',
-	'Class:NetworkInterface/Attribute:duplex' => 'Duplex',
-	'Class:NetworkInterface/Attribute:duplex+' => '',
-	'Class:NetworkInterface/Attribute:duplex/Value:full' => 'Full',
-	'Class:NetworkInterface/Attribute:duplex/Value:full+' => '',
-	'Class:NetworkInterface/Attribute:duplex/Value:half' => 'Half',
-	'Class:NetworkInterface/Attribute:duplex/Value:half+' => '',
-	'Class:NetworkInterface/Attribute:duplex/Value:unknown' => 'Desconocido',
-	'Class:NetworkInterface/Attribute:duplex/Value:unknown+' => '',
-	'Class:NetworkInterface/Attribute:connected_if' => 'Conectado a',
-	'Class:NetworkInterface/Attribute:connected_if+' => 'Interfase conectada',
-	'Class:NetworkInterface/Attribute:connected_name' => 'Conectado a',
-	'Class:NetworkInterface/Attribute:connected_name+' => '',
-	'Class:NetworkInterface/Attribute:connected_if_device_id' => 'Dispositivo Conectado',
-	'Class:NetworkInterface/Attribute:connected_if_device_id+' => '',
-	'Class:NetworkInterface/Attribute:link_type' => 'Tipo de Enlace',
-	'Class:NetworkInterface/Attribute:link_type+' => '',
-	'Class:NetworkInterface/Attribute:link_type/Value:uplink' => 'Up link',
-	'Class:NetworkInterface/Attribute:link_type/Value:uplink+' => 'Enlace de Subida',
-	'Class:NetworkInterface/Attribute:link_type/Value:downlink' => 'Down link',
-	'Class:NetworkInterface/Attribute:link_type/Value:downlink+' => 'Enlace de Bajada',
-));
-
-//
-// Class: Device
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:Device' => 'Dispositivo',
-	'Class:Device+' => '',
-	'Class:Device/Attribute:nwinterface_list' => 'Interfases de Red',
-	'Class:Device/Attribute:nwinterface_list+' => '',
-));
-
-//
-// Class: PC
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:PC' => 'PC',
-	'Class:PC+' => '',
-	'Class:PC/Attribute:cpu' => 'CPU',
-	'Class:PC/Attribute:cpu+' => 'Tipo de CPU',
-	'Class:PC/Attribute:ram' => 'RAM',
-	'Class:PC/Attribute:ram+' => 'Memoria RAM',
-	'Class:PC/Attribute:hdd' => 'Disco Duro',
-	'Class:PC/Attribute:hdd+' => '',
-	'Class:PC/Attribute:os_family' => 'Familia de S.O',
-	'Class:PC/Attribute:os_family+' => '',
-	'Class:PC/Attribute:os_version' => 'Versión de S.O',
-	'Class:PC/Attribute:os_version+' => '',
-	'Class:PC/Attribute:application_list' => 'Aplicaciones',
-	'Class:PC/Attribute:application_list+' => 'Aplicaciones/Programas instalados en este PC',
-	'Class:PC/Attribute:patch_list' => 'Parches',
-	'Class:PC/Attribute:patch_list+' => 'Parches instalados en este PC',
-));
-
-//
-// Class: MobileCI
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:MobileCI' => 'I.C.s Móvil',
-	'Class:MobileCI+' => '',
+	'Class:Phone' => 'Teléfono',
+	'Class:Phone+' => 'Teléfono',
 ));
 
 //
@@ -755,35 +406,76 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:MobilePhone' => 'Teléfono Celular',
-	'Class:MobilePhone+' => '',
-	'Class:MobilePhone/Attribute:number' => 'Número de Teléfono',
-	'Class:MobilePhone/Attribute:number+' => '',
+	'Class:MobilePhone' => 'Teléfono Móvil',
+	'Class:MobilePhone+' => 'Teléfono Móvil',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
-	'Class:MobilePhone/Attribute:imei+' => '',
-	'Class:MobilePhone/Attribute:hw_pin' => 'PIN del Hardware',
-	'Class:MobilePhone/Attribute:hw_pin+' => '',
+	'Class:MobilePhone/Attribute:imei+' => 'IMEI',
+	'Class:MobilePhone/Attribute:hw_pin' => 'PIN',
+	'Class:MobilePhone/Attribute:hw_pin+' => 'PIN',
 ));
 
 //
-// Class: InfrastructureCI
+// Class: IpPhone
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:InfrastructureCI' => 'I.C.s de Infraestructura',
-	'Class:InfrastructureCI+' => '',
-	'Class:InfrastructureCI/Attribute:description' => 'Descripción',
-	'Class:InfrastructureCI/Attribute:description+' => '',
-	'Class:InfrastructureCI/Attribute:location_id' => 'Ubicación',
-	'Class:InfrastructureCI/Attribute:location_id+' => '',
-	'Class:InfrastructureCI/Attribute:location_name' => 'Ubicación',
-	'Class:InfrastructureCI/Attribute:location_name+' => '',
-	'Class:InfrastructureCI/Attribute:location_details' => 'Detalles de la ubicación',
-	'Class:InfrastructureCI/Attribute:location_details+' => '',
-	'Class:InfrastructureCI/Attribute:management_ip' => 'IP de Administración',
-	'Class:InfrastructureCI/Attribute:management_ip+' => 'Número IP para la Adminstración',
-	'Class:InfrastructureCI/Attribute:default_gateway' => 'Pasarela por defecto',
-	'Class:InfrastructureCI/Attribute:default_gateway+' => 'Pararela por defecto (Default Gateway)',
+	'Class:IpPhone' => 'Teléfono IP',
+	'Class:IpPhone+' => 'Teléfono IP',
+));
+
+//
+// Class: Tablet
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Tablet' => 'Tableta',
+	'Class:Tablet+' => 'Tableta',
+));
+
+//
+// Class: ConnectableCI
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:ConnectableCI' => 'EC Conectable',
+	'Class:ConnectableCI+' => 'EC Físico',
+	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Dispositivos de Red',
+	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Dispositivos de Red',
+	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Interfases de Red',
+	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'Interfases de Red',
+));
+
+//
+// Class: DatacenterDevice
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:DatacenterDevice' => 'Dispositivos de Centro de Datos',
+	'Class:DatacenterDevice+' => 'Dispositivos de Centro de Datos',
+	'Class:DatacenterDevice/Attribute:rack_id' => 'Rack',
+	'Class:DatacenterDevice/Attribute:rack_id+' => 'Rack',
+	'Class:DatacenterDevice/Attribute:rack_name' => 'Nombre Rack',
+	'Class:DatacenterDevice/Attribute:rack_name+' => 'Nombre Rack',
+	'Class:DatacenterDevice/Attribute:enclosure_id' => 'Enclosure',
+	'Class:DatacenterDevice/Attribute:enclosure_id+' => 'Enclosure',
+	'Class:DatacenterDevice/Attribute:enclosure_name' => 'Nombre Enclosure',
+	'Class:DatacenterDevice/Attribute:enclosure_name+' => 'Nombre Enclosure',
+	'Class:DatacenterDevice/Attribute:nb_u' => 'NB U',
+	'Class:DatacenterDevice/Attribute:nb_u+' => 'NB U',
+	'Class:DatacenterDevice/Attribute:managementip' => 'IP',
+	'Class:DatacenterDevice/Attribute:managementip+' => 'IP',
+	'Class:DatacenterDevice/Attribute:powerA_id' => 'Fuente de Poder A',
+	'Class:DatacenterDevice/Attribute:powerA_id+' => 'Fuente de Poder A',
+	'Class:DatacenterDevice/Attribute:powerA_name' => 'Fuente de Poder A',
+	'Class:DatacenterDevice/Attribute:powerA_name+' => 'Fuente de Poder A',
+	'Class:DatacenterDevice/Attribute:powerB_id' => 'Fuente de Poder B',
+	'Class:DatacenterDevice/Attribute:powerB_id+' => 'Fuente de Poder B',
+	'Class:DatacenterDevice/Attribute:powerB_name' => 'Fuente de Poder B',
+	'Class:DatacenterDevice/Attribute:powerB_name+' => 'Fuente de Poder B',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'Puertos de Fibra',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'Puertos de Fibra',
+	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
+	'Class:DatacenterDevice/Attribute:san_list+' => 'SANs',
 ));
 
 //
@@ -792,29 +484,19 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:NetworkDevice' => 'Dispositivo de Red',
-	'Class:NetworkDevice+' => '',
-	'Class:NetworkDevice/Attribute:type' => 'Tipo',
-	'Class:NetworkDevice/Attribute:type+' => '',
-	'Class:NetworkDevice/Attribute:type/Value:wanaccelerator' => 'Acelerador de enlace WAN',
-	'Class:NetworkDevice/Attribute:type/Value:wanaccelerator+' => '',
-	'Class:NetworkDevice/Attribute:type/Value:firewall' => 'Corta Fuego',
-	'Class:NetworkDevice/Attribute:type/Value:firewall+' => '',
-	'Class:NetworkDevice/Attribute:type/Value:hub' => 'Concentrador',
-	'Class:NetworkDevice/Attribute:type/Value:hub+' => '',
-	'Class:NetworkDevice/Attribute:type/Value:loadbalancer' => 'Balanceador de Carga',
-	'Class:NetworkDevice/Attribute:type/Value:loadbalancer+' => '',
-	'Class:NetworkDevice/Attribute:type/Value:router' => 'Enrutador',
-	'Class:NetworkDevice/Attribute:type/Value:router+' => '',
-	'Class:NetworkDevice/Attribute:type/Value:switch' => 'Switch',
-	'Class:NetworkDevice/Attribute:type/Value:switch+' => '',
-	'Class:NetworkDevice/Attribute:ios_version' => 'Versión de I.O.S',
-	'Class:NetworkDevice/Attribute:ios_version+' => '',
+	'Class:NetworkDevice+' => 'Dispositivo de Red',
+	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Tipo de Red',
+	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => 'Tipo de Red',
+	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Tipo de Red',
+	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => 'Tipo de Red',
+	'Class:NetworkDevice/Attribute:connectablecis_list' => 'Dispositivos',
+	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'Dispositivos',
+	'Class:NetworkDevice/Attribute:iosversion_id' => 'Versión IOS',
+	'Class:NetworkDevice/Attribute:iosversion_id+' => 'Versión IOS',
+	'Class:NetworkDevice/Attribute:iosversion_name' => 'Versión IOS',
+	'Class:NetworkDevice/Attribute:iosversion_name+' => 'Versión IOS',
 	'Class:NetworkDevice/Attribute:ram' => 'RAM',
-	'Class:NetworkDevice/Attribute:ram+' => '',
-	'Class:NetworkDevice/Attribute:snmp_read' => 'SNMP de Lectura',
-	'Class:NetworkDevice/Attribute:snmp_read+' => 'Comunidad SNMP de lectura',
-	'Class:NetworkDevice/Attribute:snmp_write' => 'SNMP de Escritura',
-	'Class:NetworkDevice/Attribute:snmp_write+' => 'Comunidad SNMP de escritura',
+	'Class:NetworkDevice/Attribute:ram+' => 'RAM',
 ));
 
 //
@@ -822,22 +504,97 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:Server' => 'Server',
-	'Class:Server+' => '',
+	'Class:Server' => 'Servidor',
+	'Class:Server+' => 'Servidor',
+	'Class:Server/Attribute:osfamily_id' => 'Familia de SO',
+	'Class:Server/Attribute:osfamily_id+' => 'Familia de SO',
+	'Class:Server/Attribute:osfamily_name' => 'Familia de SO',
+	'Class:Server/Attribute:osfamily_name+' => 'Familia de SO',
+	'Class:Server/Attribute:osversion_id' => 'Versión de SO',
+	'Class:Server/Attribute:osversion_id+' => 'Versión de SO',
+	'Class:Server/Attribute:osversion_name' => 'Versión de SO',
+	'Class:Server/Attribute:osversion_name+' => 'Versión de SO',
+	'Class:Server/Attribute:oslicence_id' => 'Licencia de SO',
+	'Class:Server/Attribute:oslicence_id+' => 'Licencia de SO',
+	'Class:Server/Attribute:oslicence_name' => 'Licencia de SO',
+	'Class:Server/Attribute:oslicence_name+' => 'Licencia de SO',
 	'Class:Server/Attribute:cpu' => 'CPU',
-	'Class:Server/Attribute:cpu+' => '',
+	'Class:Server/Attribute:cpu+' => 'CPU',
 	'Class:Server/Attribute:ram' => 'RAM',
-	'Class:Server/Attribute:ram+' => '',
-	'Class:Server/Attribute:hdd' => 'Disco Duro',
-	'Class:Server/Attribute:hdd+' => '',
-	'Class:Server/Attribute:os_family' => 'Familia de S.O',
-	'Class:Server/Attribute:os_family+' => '',
-	'Class:Server/Attribute:os_version' => 'Versión de S.O',
-	'Class:Server/Attribute:os_version+' => '',
-	'Class:Server/Attribute:application_list' => 'Aplicaciones',
-	'Class:Server/Attribute:application_list+' => 'Applications installed on this server',
-	'Class:Server/Attribute:patch_list' => 'Parches',
-	'Class:Server/Attribute:patch_list+' => 'Patches installed on this server',
+	'Class:Server/Attribute:ram+' => 'RAM',
+	'Class:Server/Attribute:logicalvolumes_list' => 'Volumenes Lógicos',
+	'Class:Server/Attribute:logicalvolumes_list+' => 'Volumenes Lógicos',
+));
+
+//
+// Class: StorageSystem
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:StorageSystem' => 'Sistema de Almacenamiento',
+	'Class:StorageSystem+' => 'Sistema de Almacenamiento',
+	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Volumenes Lógicos',
+	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Volumenes Lógicos',
+));
+
+//
+// Class: SANSwitch
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:SANSwitch' => 'Switch de SAN',
+	'Class:SANSwitch+' => 'Switch de SAN',
+	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Dispositivos',
+	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Dispositivos',
+));
+
+//
+// Class: TapeLibrary
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:TapeLibrary' => 'Libreria de Cintas',
+	'Class:TapeLibrary+' => 'Libreria de Cintas',
+	'Class:TapeLibrary/Attribute:tapes_list' => 'Cintas',
+	'Class:TapeLibrary/Attribute:tapes_list+' => 'Cintas',
+));
+
+//
+// Class: NAS
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:NAS' => 'NAS',
+	'Class:NAS+' => 'NAS',
+	'Class:NAS/Attribute:nasfilesystem_list' => 'Filesystems',
+	'Class:NAS/Attribute:nasfilesystem_list+' => 'Filesystems',
+));
+
+//
+// Class: PC
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:PC' => 'PC/Laptop',
+	'Class:PC+' => 'PC/Laptop',
+	'Class:PC/Attribute:osfamily_id' => 'Familia de SO',
+	'Class:PC/Attribute:osfamily_id+' => 'Familia de SO',
+	'Class:PC/Attribute:osfamily_name' => 'Familia de SO',
+	'Class:PC/Attribute:osfamily_name+' => 'Familia de SO',
+	'Class:PC/Attribute:osversion_id' => 'Versión de SO',
+	'Class:PC/Attribute:osversion_id+' => 'Versión de SO',
+	'Class:PC/Attribute:osversion_name' => 'Versión de SO',
+	'Class:PC/Attribute:osversion_name+' => 'Versión de SO',
+	'Class:PC/Attribute:cpu' => 'CPU',
+	'Class:PC/Attribute:cpu+' => 'Tipo de CPU',
+	'Class:PC/Attribute:ram' => 'RAM',
+	'Class:PC/Attribute:ram+' => 'Memoria RAM',
+	'Class:PC/Attribute:type' => 'Tipo',
+	'Class:PC/Attribute:type+' => 'Tipo',
+	'Class:PC/Attribute:type/Value:desktop' => 'Escritorio',
+	'Class:PC/Attribute:type/Value:desktop+' => 'Escritorio',
+	'Class:PC/Attribute:type/Value:laptop' => 'Laptop',
+	'Class:PC/Attribute:type/Value:laptop+' => 'Laptop',
 ));
 
 //
@@ -846,122 +603,1087 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Printer' => 'Impresora',
-	'Class:Printer+' => '',
-	'Class:Printer/Attribute:type' => 'Tipo',
-	'Class:Printer/Attribute:type+' => '',
-	'Class:Printer/Attribute:type/Value:mopier' => 'Mopier',
-	'Class:Printer/Attribute:type/Value:mopier+' => '',
-	'Class:Printer/Attribute:type/Value:printer' => 'Impresora',
-	'Class:Printer/Attribute:type/Value:printer+' => '',
-	'Class:Printer/Attribute:technology' => 'Tecnología',
-	'Class:Printer/Attribute:technology+' => '',
-	'Class:Printer/Attribute:technology/Value:inkjet' => 'Chorro de Tinta',
-	'Class:Printer/Attribute:technology/Value:inkjet+' => '',
-	'Class:Printer/Attribute:technology/Value:laser' => 'Laser',
-	'Class:Printer/Attribute:technology/Value:laser+' => '',
-	'Class:Printer/Attribute:technology/Value:tracer' => 'Tracer',
-	'Class:Printer/Attribute:technology/Value:tracer+' => '',
+	'Class:Printer+' => 'Impresora',
 ));
 
 //
-// Class: lnkCIToDoc
+// Class: PowerConnection
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:lnkCIToDoc' => 'Doc/CI',
-	'Class:lnkCIToDoc+' => '',
-	'Class:lnkCIToDoc/Attribute:ci_id' => 'I.C.s',
-	'Class:lnkCIToDoc/Attribute:ci_id+' => '',
-	'Class:lnkCIToDoc/Attribute:ci_name' => 'I.C.s',
-	'Class:lnkCIToDoc/Attribute:ci_name+' => '',
-	'Class:lnkCIToDoc/Attribute:ci_status' => 'Estado de los I.C.s',
-	'Class:lnkCIToDoc/Attribute:ci_status+' => '',
-	'Class:lnkCIToDoc/Attribute:document_id' => 'Documento',
-	'Class:lnkCIToDoc/Attribute:document_id+' => '',
-	'Class:lnkCIToDoc/Attribute:document_name' => 'Nombre del Documento',
-	'Class:lnkCIToDoc/Attribute:document_name+' => '',
-	'Class:lnkCIToDoc/Attribute:document_type' => 'Tipo de Documento',
-	'Class:lnkCIToDoc/Attribute:document_type+' => '',
-	'Class:lnkCIToDoc/Attribute:document_status' => 'Estado del Documento',
-	'Class:lnkCIToDoc/Attribute:document_status+' => '',
+	'Class:PowerConnection' => 'Conexión Eléctrica',
+	'Class:PowerConnection+' => 'Conexión Eléctrica',
 ));
 
 //
-// Class: lnkCIToContact
+// Class: PowerSource
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:lnkCIToContact' => 'CI/Contact',
-	'Class:lnkCIToContact+' => '',
-	'Class:lnkCIToContact/Attribute:ci_id' => 'I.C.s',
-	'Class:lnkCIToContact/Attribute:ci_id+' => '',
-	'Class:lnkCIToContact/Attribute:ci_name' => 'I.C.s',
-	'Class:lnkCIToContact/Attribute:ci_name+' => '',
-	'Class:lnkCIToContact/Attribute:ci_status' => 'Estado de los I.C.s',
-	'Class:lnkCIToContact/Attribute:ci_status+' => '',
-	'Class:lnkCIToContact/Attribute:contact_id' => 'Contacto',
-	'Class:lnkCIToContact/Attribute:contact_id+' => '',
-	'Class:lnkCIToContact/Attribute:contact_name' => 'Contacto',
-	'Class:lnkCIToContact/Attribute:contact_name+' => '',
-	'Class:lnkCIToContact/Attribute:contact_email' => 'Correo Electrónico del Contacto',
-	'Class:lnkCIToContact/Attribute:contact_email+' => '',
-	'Class:lnkCIToContact/Attribute:role' => 'Rol',
-	'Class:lnkCIToContact/Attribute:role+' => 'Rol del contacto con respecto al I.C.s',
+	'Class:PowerSource' => 'Fuente de Poder',
+	'Class:PowerSource+' => 'Fuente de Poder',
+	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
+	'Class:PowerSource/Attribute:pdus_list+' => 'PDUs',
 ));
 
 //
-// Class: lnkSolutionToCI
+// Class: PDU
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:lnkSolutionToCI' => 'I.C.s/Solución',
-	'Class:lnkSolutionToCI+' => '',
-	'Class:lnkSolutionToCI/Attribute:solution_id' => 'Soluciones',
-	'Class:lnkSolutionToCI/Attribute:solution_id+' => '',
-	'Class:lnkSolutionToCI/Attribute:solution_name' => 'Soluciones',
-	'Class:lnkSolutionToCI/Attribute:solution_name+' => '',
-	'Class:lnkSolutionToCI/Attribute:ci_id' => 'I.C.s',
-	'Class:lnkSolutionToCI/Attribute:ci_id+' => '',
-	'Class:lnkSolutionToCI/Attribute:ci_name' => 'I.C.s',
-	'Class:lnkSolutionToCI/Attribute:ci_name+' => '',
-	'Class:lnkSolutionToCI/Attribute:ci_status' => 'Estado de los I.C.s',
-	'Class:lnkSolutionToCI/Attribute:ci_status+' => '',
-	'Class:lnkSolutionToCI/Attribute:utility' => 'Utilidad',
-	'Class:lnkSolutionToCI/Attribute:utility+' => 'Utilidad del I.C.s en la solución',
+	'Class:PDU' => 'PDU',
+	'Class:PDU+' => 'PDU',
+	'Class:PDU/Attribute:rack_id' => 'Rack',
+	'Class:PDU/Attribute:rack_id+' => 'Rack',
+	'Class:PDU/Attribute:rack_name' => 'Nombre Rack',
+	'Class:PDU/Attribute:rack_name+' => 'Nombre Rack',
+	'Class:PDU/Attribute:powerstart_id' => 'Conector de Poder',
+	'Class:PDU/Attribute:powerstart_id+' => 'Conector de Poder',
+	'Class:PDU/Attribute:powerstart_name' => 'Conector de Poder',
+	'Class:PDU/Attribute:powerstart_name+' => 'Conector de Poder',
 ));
 
 //
-// Class: lnkProcessToSolution
+// Class: Peripheral
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:lnkProcessToSolution' => 'Procesos de Negocios/Solución',
-	'Class:lnkProcessToSolution+' => '',
-	'Class:lnkProcessToSolution/Attribute:solution_id' => 'Soluciones',
-	'Class:lnkProcessToSolution/Attribute:solution_id+' => '',
-	'Class:lnkProcessToSolution/Attribute:solution_name' => 'Soluciones',
-	'Class:lnkProcessToSolution/Attribute:solution_name+' => '',
-	'Class:lnkProcessToSolution/Attribute:process_id' => 'Procesos',
-	'Class:lnkProcessToSolution/Attribute:process_id+' => '',
-	'Class:lnkProcessToSolution/Attribute:process_name' => 'Procesos',
-	'Class:lnkProcessToSolution/Attribute:process_name+' => '',
-	'Class:lnkProcessToSolution/Attribute:reason' => 'Razón',
-	'Class:lnkProcessToSolution/Attribute:reason+' => 'Más inforacióin del vínculo entre el proceso y la solución',
+	'Class:Peripheral' => 'Periférico',
+	'Class:Peripheral+' => 'Periférico',
 ));
 
-
-
 //
-// Class extensions
+// Class: Enclosure
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-'Class:Subnet/Tab:IPUsage' => 'Uso de Números IPs',
-'Class:Subnet/Tab:IPUsage-explain' => 'Interfases que tienen IP en el rango: <em>%1$s</em> hasta <em>%2$s</em>',
-'Class:Subnet/Tab:FreeIPs' => 'IPs libres',
-'Class:Subnet/Tab:FreeIPs-count' => 'IPs Libres/sin asignar: %1$s',
-'Class:Subnet/Tab:FreeIPs-explain' => 'Aquí esta un extracto de las 10 direcciones IPs libres',
+	'Class:Enclosure' => 'Enclosure',
+	'Class:Enclosure+' => 'Enclosure',
+	'Class:Enclosure/Attribute:rack_id' => 'Rack',
+	'Class:Enclosure/Attribute:rack_id+' => 'Rack',
+	'Class:Enclosure/Attribute:rack_name' => 'Nombre Rack',
+	'Class:Enclosure/Attribute:rack_name+' => 'Nombre Rack',
+	'Class:Enclosure/Attribute:nb_u' => 'NB U',
+	'Class:Enclosure/Attribute:nb_u+' => 'NB U',
+	'Class:Enclosure/Attribute:device_list' => 'Dispositivos',
+	'Class:Enclosure/Attribute:device_list+' => 'Dispositivos',
 ));
+
+//
+// Class: ApplicationSolution
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:ApplicationSolution' => 'Solución Aplicativa',
+	'Class:ApplicationSolution+' => 'Solución Aplicativa',
+	'Class:ApplicationSolution/Attribute:contacts_list' => 'Contactos',
+	'Class:ApplicationSolution/Attribute:contacts_list+' => 'Contactos',
+	'Class:ApplicationSolution/Attribute:documents_list' => 'Documentos',
+	'Class:ApplicationSolution/Attribute:documents_list+' => 'Documentos',
+	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'ECs',
+	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'ECs',
+	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Procesos de Negocio',
+	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Procesos de Negocio',
+	'Class:ApplicationSolution/Attribute:status' => 'Estatus',
+	'Class:ApplicationSolution/Attribute:status+' => 'Estatus',
+	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Activo',
+	'Class:ApplicationSolution/Attribute:status/Value:active+' => 'Activo',
+	'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'Inactivo',
+	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => 'Inactivo',
+));
+
+//
+// Class: BusinessProcess
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:BusinessProcess' => 'Proceso de Negocio',
+	'Class:BusinessProcess+' => 'Proceso de Negocio',
+	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Soluciones Aplicativas',
+	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Soluciones Aplicativas',
+	'Class:BusinessProcess/Attribute:status' => 'Estatus',    
+	'Class:BusinessProcess/Attribute:status+' => 'Estatus',
+	'Class:BusinessProcess/Attribute:status/Value:active' => 'Activo',
+	'Class:BusinessProcess/Attribute:status/Value:active+' => 'Activo',
+	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'Inactivo',
+	'Class:BusinessProcess/Attribute:status/Value:inactive+' => 'Inactivo',
+));
+
+//
+// Class: SoftwareInstance
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:SoftwareInstance' => 'Instalación de Software',
+	'Class:SoftwareInstance+' => 'Instalación de Software',
+	'Class:SoftwareInstance/Attribute:system_id' => 'Sistema',
+	'Class:SoftwareInstance/Attribute:system_id+' => 'Sistema',
+	'Class:SoftwareInstance/Attribute:system_name' => 'Sistema',
+	'Class:SoftwareInstance/Attribute:system_name+' => 'Sistema',
+	'Class:SoftwareInstance/Attribute:software_id' => 'Software',
+	'Class:SoftwareInstance/Attribute:software_id+' => 'Software',
+	'Class:SoftwareInstance/Attribute:software_name' => 'Software',
+	'Class:SoftwareInstance/Attribute:software_name+' => 'Software',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Licencia de Software',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => 'Licencia de Software',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Licencia de Software',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => 'Licencia de Software',
+	'Class:SoftwareInstance/Attribute:path' => 'Parche',
+	'Class:SoftwareInstance/Attribute:path+' => 'Parche',
+	'Class:SoftwareInstance/Attribute:status' => 'Estatus',
+	'Class:SoftwareInstance/Attribute:status+' => 'Estatus',
+	'Class:SoftwareInstance/Attribute:status/Value:active' => 'Activo',
+	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'Activo',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'Inactivo',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'Inactivo',
+));
+
+//
+// Class: Middleware
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Middleware' => 'Middleware',
+	'Class:Middleware+' => 'Middleware',
+	'Class:Middleware/Attribute:middlewareinstance_list' => 'Instalaciones de Middleware',
+	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Instalaciones de Middleware',
+));
+
+//
+// Class: DBserver
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:DBserver' => 'Servidor de Base de Datos',
+	'Class:DBserver+' => 'Servidor de Base de Datos',
+	'Class:DBserver/Attribute:dbschema_list' => 'Esquema de BD',
+	'Class:DBserver/Attribute:dbschema_list+' => 'Esquema de BD',
+));
+
+//
+// Class: Webserver
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Webserver' => 'Servidor Web',
+	'Class:Webserver+' => 'Servidor Web',
+	'Class:Webserver/Attribute:webapp_list' => 'Aplicaciones Web',
+	'Class:Webserver/Attribute:webapp_list+' => 'Aplicaciones Web',
+));
+
+//
+// Class: PCSoftware
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:PCSoftware' => 'Software de PC',
+	'Class:PCSoftware+' => 'Software de PC',
+));
+
+//
+// Class: OtherSoftware
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:OtherSoftware' => 'Otro Software',
+	'Class:OtherSoftware+' => 'Otro Software',
+));
+
+//
+// Class: MiddlewareInstance
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:MiddlewareInstance' => 'Instalación de Middleware',
+	'Class:MiddlewareInstance+' => 'Instalación de Middleware',
+	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
+	'Class:MiddlewareInstance/Attribute:middleware_id+' => 'Middleware',
+	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Middleware',
+	'Class:MiddlewareInstance/Attribute:middleware_name+' => 'Middleware',
+));
+
+//
+// Class: DatabaseSchema
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:DatabaseSchema' => 'Esquema de Base de Datos',
+	'Class:DatabaseSchema+' => 'Esquema de Base de Datos',
+	'Class:DatabaseSchema/Attribute:dbserver_id' => 'Servidor de Base de Datos',
+	'Class:DatabaseSchema/Attribute:dbserver_id+' => 'Servidor de Base de Datos',
+	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Servidor de Base de Datos',
+	'Class:DatabaseSchema/Attribute:dbserver_name+' => 'Servidor de Base de Datos',
+));
+
+//
+// Class: WebApplication
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:WebApplication' => 'Aplicación Web',
+	'Class:WebApplication+' => 'Aplicación Web',
+	'Class:WebApplication/Attribute:webserver_id' => 'Servidor Web',
+	'Class:WebApplication/Attribute:webserver_id+' => 'Servidor Web',
+	'Class:WebApplication/Attribute:webserver_name' => 'Servidor Web',
+	'Class:WebApplication/Attribute:webserver_name+' => 'Servidor Web',
+	'Class:WebApplication/Attribute:url' => 'URL',
+	'Class:WebApplication/Attribute:url+' => 'URL de Uso',
+));
+
+//
+// Class: VirtualDevice
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:VirtualDevice' => 'Dispositivo Virtual',
+	'Class:VirtualDevice+' => 'Dispositivo Virtual',
+	'Class:VirtualDevice/Attribute:status' => 'Estatus',
+	'Class:VirtualDevice/Attribute:status+' => 'Estatus',
+	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'No Productivo',
+	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'No Productivo',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Obsoleto',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'Obsoleto',
+	'Class:VirtualDevice/Attribute:status/Value:production' => 'Productivo',
+	'Class:VirtualDevice/Attribute:status/Value:production+' => 'Productivo',
+	'Class:VirtualDevice/Attribute:status/Value:stock' => 'En inventario',
+	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'En inventario',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Volumenes Lógicos',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Volumenes Lógicos',
+));
+
+//
+// Class: VirtualHost
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:VirtualHost' => 'Host Virtual',
+	'Class:VirtualHost+' => 'Host Virtual',
+	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Máquinas Virtuales',
+	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Máquinas Virtuales',
+));
+
+//
+// Class: Hypervisor
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Hypervisor' => 'Hypervisor',
+	'Class:Hypervisor+' => 'Hypervisor',
+	'Class:Hypervisor/Attribute:farm_id' => 'Granja',
+	'Class:Hypervisor/Attribute:farm_id+' => 'Granja',
+	'Class:Hypervisor/Attribute:farm_name' => 'Granja',
+	'Class:Hypervisor/Attribute:farm_name+' => 'Granja',
+	'Class:Hypervisor/Attribute:server_id' => 'Servidor',
+	'Class:Hypervisor/Attribute:server_id+' => 'Servidor',
+	'Class:Hypervisor/Attribute:server_name' => 'Servidor',
+	'Class:Hypervisor/Attribute:server_name+' => 'Servidor',
+));
+
+//
+// Class: Farm
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Farm' => 'Granja',
+	'Class:Farm+' => 'Granja',
+	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisores',
+	'Class:Farm/Attribute:hypervisor_list+' => 'Hypervisores',
+));
+
+//
+// Class: VirtualMachine
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:VirtualMachine' => 'Máquina Virtual',
+	'Class:VirtualMachine+' => 'Máquina Virtual',
+	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Host Virtual',
+	'Class:VirtualMachine/Attribute:virtualhost_id+' => 'Host Virtual',
+	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Host Virtual',
+	'Class:VirtualMachine/Attribute:virtualhost_name+' => 'Host Virtual',
+	'Class:VirtualMachine/Attribute:osfamily_id' => 'Familia de SO',
+	'Class:VirtualMachine/Attribute:osfamily_id+' => 'Familia de SO',
+	'Class:VirtualMachine/Attribute:osfamily_name' => 'Familia de SO',
+	'Class:VirtualMachine/Attribute:osfamily_name+' => 'Familia de SO',
+	'Class:VirtualMachine/Attribute:osversion_id' => 'Versión de SO',
+	'Class:VirtualMachine/Attribute:osversion_id+' => 'Versión de SO',
+	'Class:VirtualMachine/Attribute:osversion_name' => 'Versión de SO',
+	'Class:VirtualMachine/Attribute:osversion_name+' => 'Versión de SO',
+	'Class:VirtualMachine/Attribute:oslicence_id' => 'Licencia de SO',
+	'Class:VirtualMachine/Attribute:oslicence_id+' => 'Licencia de SO',
+	'Class:VirtualMachine/Attribute:oslicence_name' => 'Licencia de SO',
+	'Class:VirtualMachine/Attribute:oslicence_name+' => 'Licencia de SO',
+	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
+	'Class:VirtualMachine/Attribute:cpu+' => 'CPU',
+	'Class:VirtualMachine/Attribute:ram' => 'RAM',
+	'Class:VirtualMachine/Attribute:ram+' => 'RAM',
+	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Interfases de Red',
+	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Interfases de Red',
+));
+
+//
+// Class: LogicalVolume
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:LogicalVolume' => 'Volumen Lógico',
+	'Class:LogicalVolume+' => 'Volumen Lógico',
+	'Class:LogicalVolume/Attribute:name' => 'Nombre',
+	'Class:LogicalVolume/Attribute:name+' => 'Nombre',
+	'Class:LogicalVolume/Attribute:lun_id' => 'LUN',
+	'Class:LogicalVolume/Attribute:lun_id+' => 'LUN',
+	'Class:LogicalVolume/Attribute:description' => 'Descripción',
+	'Class:LogicalVolume/Attribute:description+' => 'Descripción',
+	'Class:LogicalVolume/Attribute:raid_level' => 'Nivel de RAID',
+	'Class:LogicalVolume/Attribute:raid_level+' => 'Nivel de RAID',
+	'Class:LogicalVolume/Attribute:size' => 'Tama&ntilde;o',
+	'Class:LogicalVolume/Attribute:size+' => 'Tama&ntilde;o',
+	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Sistema de Almacenamiento',
+	'Class:LogicalVolume/Attribute:storagesystem_id+' => 'Sistema de Almacenamiento',
+	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Sistema de Almacenamiento',
+	'Class:LogicalVolume/Attribute:storagesystem_name+' => 'Sistema de Almacenamiento',
+	'Class:LogicalVolume/Attribute:servers_list' => 'Servidores',
+	'Class:LogicalVolume/Attribute:servers_list+' => 'Servidores',
+	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Dispossitivos Virtuales',
+	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Dispossitivos Virtuales',
+));
+
+//
+// Class: lnkServerToVolume
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkServerToVolume' => 'Relación Servidor y Volumen',
+	'Class:lnkServerToVolume+' => 'Relación Servidor y Volumen',
+	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volumen',
+	'Class:lnkServerToVolume/Attribute:volume_id+' => 'Volumen',
+	'Class:lnkServerToVolume/Attribute:volume_name' => 'Volume',
+	'Class:lnkServerToVolume/Attribute:volume_name+' => 'Volumen',
+	'Class:lnkServerToVolume/Attribute:server_id' => 'Servidor',
+	'Class:lnkServerToVolume/Attribute:server_id+' => 'Servidor',
+	'Class:lnkServerToVolume/Attribute:server_name' => 'Servidor',
+	'Class:lnkServerToVolume/Attribute:server_name+' => 'Servidor',
+	'Class:lnkServerToVolume/Attribute:size_used' => 'Tama&ntilde;o Asignado',
+	'Class:lnkServerToVolume/Attribute:size_used+' => 'Tama&ntilde;o Asignado',
+));
+
+//
+// Class: lnkVirtualDeviceToVolume
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkVirtualDeviceToVolume' => 'Relación Dispositivo Virtual y Volumen',
+	'Class:lnkVirtualDeviceToVolume+' => 'Relación Dispositivo Virtual y Volumen',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volumen',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => 'Volumen',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Volumen',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => 'Volumen',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Dispositivo Virtual',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => 'Dispositivo Virtual',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Dispositivo Virtual',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => 'Dispositivo Virtual',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Tama&ntilde;o Asignado',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => 'Tama&ntilde;o Asignado',
+));
+
+//
+// Class: lnkSanToDatacenterDevice
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkSanToDatacenterDevice' => 'Relación SAN y Dispositivo del Centro de Datos',
+	'Class:lnkSanToDatacenterDevice+' => 'Relación SAN y Dispositivo del Centro de Datos',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'Switch de SAN',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => 'Switch de SAN',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'Switch de SAN',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => 'Switch de SAN',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Dispositivo',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => 'Dispositivo',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Dispositivo',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => 'Dispositivo',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'FC en SAN',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => 'FC en SAN',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'FC en Dispositivo',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => 'FC en Dispositivo',
+));
+
+//
+// Class: Tape
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Tape' => 'Cinta',
+	'Class:Tape+' => 'Cinta',
+	'Class:Tape/Attribute:name' => 'Nombre',
+	'Class:Tape/Attribute:name+' => 'Nombre',
+	'Class:Tape/Attribute:description' => 'Descriptción',
+	'Class:Tape/Attribute:description+' => 'Descriptción',
+	'Class:Tape/Attribute:size' => 'Tama&ntilde;o',
+	'Class:Tape/Attribute:size+' => 'Tama&ntilde;o',
+	'Class:Tape/Attribute:tapelibrary_id' => 'Liberia de Cintas',
+	'Class:Tape/Attribute:tapelibrary_id+' => 'Liberia de Cintas',
+	'Class:Tape/Attribute:tapelibrary_name' => 'Liberia de Cintas',
+	'Class:Tape/Attribute:tapelibrary_name+' => 'Liberia de Cintas',
+));
+
+//
+// Class: NasFileSystem
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:NasFileSystem' => 'Filesysten en NAS',
+	'Class:NasFileSystem+' => 'Filesysten en NAS',
+	'Class:NasFileSystem/Attribute:name' => 'Nombre',
+	'Class:NasFileSystem/Attribute:name+' => 'Nombre',
+	'Class:NasFileSystem/Attribute:description' => 'Descripción',
+	'Class:NasFileSystem/Attribute:description+' => 'Descripción',
+	'Class:NasFileSystem/Attribute:raid_level' => 'Nivel de RAID',
+	'Class:NasFileSystem/Attribute:raid_level+' => 'Nivel de RAID',
+	'Class:NasFileSystem/Attribute:size' => 'Tama&ntilde;o',
+	'Class:NasFileSystem/Attribute:size+' => 'Tama&ntilde;o',
+	'Class:NasFileSystem/Attribute:nas_id' => 'NAS',
+	'Class:NasFileSystem/Attribute:nas_id+' => 'NAS',
+	'Class:NasFileSystem/Attribute:nas_name' => 'NAS',
+	'Class:NasFileSystem/Attribute:nas_name+' => 'NAS',
+));
+
+//
+// Class: Software
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Software' => 'Software',
+	'Class:Software+' => 'Software',
+	'Class:Software/Attribute:name' => 'Nombre',
+	'Class:Software/Attribute:name+' => 'Nombre',
+	'Class:Software/Attribute:vendor' => 'Proveedor',
+	'Class:Software/Attribute:vendor+' => 'Proveedor',
+	'Class:Software/Attribute:version' => 'Versión',
+	'Class:Software/Attribute:version+' => 'Versión',
+	'Class:Software/Attribute:documents_list' => 'Documentos',
+	'Class:Software/Attribute:documents_list+' => 'Documentos',
+	'Class:Software/Attribute:type' => 'Tipo',
+	'Class:Software/Attribute:type+' => 'Tipo',
+	'Class:Software/Attribute:type/Value:DBserver' => 'Servidor de BD',
+	'Class:Software/Attribute:type/Value:DBserver+' => 'Servidor de BD',
+	'Class:Software/Attribute:type/Value:Middleware' => 'Middleware',
+	'Class:Software/Attribute:type/Value:Middleware+' => 'Middleware',
+	'Class:Software/Attribute:type/Value:OtherSoftware' => 'Otro Software',
+	'Class:Software/Attribute:type/Value:OtherSoftware+' => 'Otro Software',
+	'Class:Software/Attribute:type/Value:PCSoftware' => 'Software de PC',
+	'Class:Software/Attribute:type/Value:PCSoftware+' => 'Software de PC',
+	'Class:Software/Attribute:type/Value:Webserver' => 'Servidor Web',
+	'Class:Software/Attribute:type/Value:Webserver+' => 'Servidor Web',
+	'Class:Software/Attribute:softwareinstance_list' => 'Instalaciones de Software',
+	'Class:Software/Attribute:softwareinstance_list+' => 'Instalaciones de Software',
+	'Class:Software/Attribute:softwarepatch_list' => 'Parches de Software',
+	'Class:Software/Attribute:softwarepatch_list+' => 'Parches de Software',
+	'Class:Software/Attribute:softwarelicence_list' => 'Licencias de Software',
+	'Class:Software/Attribute:softwarelicence_list+' => 'Licencias de Software',
+));
+
+//
+// Class: Patch
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Patch' => 'Parche',
+	'Class:Patch+' => 'Parche',
+	'Class:Patch/Attribute:name' => 'Nombre',
+	'Class:Patch/Attribute:name+' => 'Nombre',
+	'Class:Patch/Attribute:documents_list' => 'Documentos',
+	'Class:Patch/Attribute:documents_list+' => 'Documentos',
+	'Class:Patch/Attribute:description' => 'Descripción',
+	'Class:Patch/Attribute:description+' => 'Descripción',
+	'Class:Patch/Attribute:finalclass' => 'Tipo',
+	'Class:Patch/Attribute:finalclass+' => 'Tipo',
+));
+
+//
+// Class: OSpatch
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:OSpatch' => 'Parche de SO',
+	'Class:OSpatch+' => 'Parche de SO',
+	'Class:OSpatch/Attribute:functionalcis_list' => 'Dispositivos',
+	'Class:OSpatch/Attribute:functionalcis_list+' => 'Dispositivos',
+	'Class:OSpatch/Attribute:osversion_id' => 'Versión de SO',
+	'Class:OSpatch/Attribute:osversion_id+' => 'Versión de SO',
+	'Class:OSpatch/Attribute:osversion_name' => 'Versión de SO',
+	'Class:OSpatch/Attribute:osversion_name+' => 'Versión de SO',
+));
+
+//
+// Class: SoftwarePatch
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:SoftwarePatch' => 'Parche de Software',
+	'Class:SoftwarePatch+' => 'Parche de Software',
+	'Class:SoftwarePatch/Attribute:software_id' => 'Software',
+	'Class:SoftwarePatch/Attribute:software_id+' => 'Software',
+	'Class:SoftwarePatch/Attribute:software_name' => 'Software',
+	'Class:SoftwarePatch/Attribute:software_name+' => 'Software',
+	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Instalaciones de Software',
+	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'Instalaciones de Software',
+));
+
+//
+// Class: Licence
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Licence' => 'Licencia',
+	'Class:Licence+' => 'Licencia',
+	'Class:Licence/Attribute:name' => 'Nombre',
+	'Class:Licence/Attribute:name+' => 'Nombre',
+	'Class:Licence/Attribute:documents_list' => 'Documentos',
+	'Class:Licence/Attribute:documents_list+' => 'Documentos',
+	'Class:Licence/Attribute:org_id' => 'Compañía',
+	'Class:Licence/Attribute:org_id+' => 'Compañía',
+	'Class:Licence/Attribute:organization_name' => 'Compañía',
+	'Class:Licence/Attribute:organization_name+' => 'Compañía',
+	'Class:Licence/Attribute:usage_limit' => 'Límite de Uso',
+	'Class:Licence/Attribute:usage_limit+' => 'Límite de Uso',
+	'Class:Licence/Attribute:description' => 'Descripción',
+	'Class:Licence/Attribute:description+' => 'Descripción',
+	'Class:Licence/Attribute:start_date' => 'Fecha de Inicio',
+	'Class:Licence/Attribute:start_date+' => 'Fecha de Inicio',
+	'Class:Licence/Attribute:end_date' => 'Fecha de Fin',
+	'Class:Licence/Attribute:end_date+' => 'Fecha de Fin',
+	'Class:Licence/Attribute:licence_key' => 'LLave',
+	'Class:Licence/Attribute:licence_key+' => 'LLave',
+	'Class:Licence/Attribute:finalclass' => 'Tipo',
+	'Class:Licence/Attribute:finalclass+' => 'Tipo',
+));
+
+//
+// Class: OsLicence
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:OsLicence' => 'Licencia de SO',
+	'Class:OsLicence+' => 'Licencia de SO',
+	'Class:OsLicence/Attribute:osversion_id' => 'Versión de SO',
+	'Class:OsLicence/Attribute:osversion_id+' => 'Versión de SO',
+	'Class:OsLicence/Attribute:osversion_name' => 'Versión de SO',
+	'Class:OsLicence/Attribute:osversion_name+' => 'Versión de SO',
+	'Class:OsLicence/Attribute:virtualmachines_list' => 'Máquinas Virtuales',
+	'Class:OsLicence/Attribute:virtualmachines_list+' => 'Máquinas Virtuales',
+	'Class:OsLicence/Attribute:servers_list' => 'Servidores',
+	'Class:OsLicence/Attribute:servers_list+' => 'Servidores',
+));
+
+//
+// Class: SoftwareLicence
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:SoftwareLicence' => 'Licencia de Software',
+	'Class:SoftwareLicence+' => 'Licencia de Software',
+	'Class:SoftwareLicence/Attribute:software_id' => 'Software',
+	'Class:SoftwareLicence/Attribute:software_id+' => 'Software',
+	'Class:SoftwareLicence/Attribute:software_name' => 'Software',
+	'Class:SoftwareLicence/Attribute:software_name+' => 'Software',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Instalaciones de Software',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'Instalaciones de Software',
+));
+
+//
+// Class: lnkDocumentToLicence
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkDocumentToLicence' => 'Relación Documento y Licencia',
+	'Class:lnkDocumentToLicence+' => 'Relación Documento y Licencia',
+	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licencia',
+	'Class:lnkDocumentToLicence/Attribute:licence_id+' => 'Licencia',
+	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Licencia',
+	'Class:lnkDocumentToLicence/Attribute:licence_name+' => 'Licencia',
+	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Documento',
+	'Class:lnkDocumentToLicence/Attribute:document_id+' => 'Documento',
+	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Documento',
+	'Class:lnkDocumentToLicence/Attribute:document_name+' => 'Documento',
+));
+
+//
+// Class: Typology
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Typology' => 'Tipología',
+	'Class:Typology+' => 'Tipología',
+	'Class:Typology/Attribute:name' => 'Nombre',
+	'Class:Typology/Attribute:name+' => 'Nombre',
+	'Class:Typology/Attribute:finalclass' => 'Tipo',
+	'Class:Typology/Attribute:finalclass+' => 'Tipo',
+));
+
+//
+// Class: OSversion
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:OSversion' => 'Versión de SO',
+	'Class:OSversion+' => 'Versión de SO',
+	'Class:OSversion/Attribute:osfamily_id' => 'Familia de SO',
+	'Class:OSversion/Attribute:osfamily_id+' => 'Familia de SO',
+	'Class:OSversion/Attribute:osfamily_name' => 'Familia de SO',
+	'Class:OSversion/Attribute:osfamily_name+' => 'Familia de SO',
+));
+
+//
+// Class: OSfamily
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:OSfamily' => 'Familia de SO',
+	'Class:OSfamily+' => 'Familia de SO',
+));
+
+//
+// Class: DocumentType
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:DocumentType' => 'Tipo de Documento',
+	'Class:DocumentType+' => 'Tipo de Documento',
+));
+
+//
+// Class: ContactType
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:ContactType' => 'Tipo de Contacto',
+	'Class:ContactType+' => 'Tipo de Contacto',
+));
+
+//
+// Class: Brand
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Brand' => 'Marca',
+	'Class:Brand+' => 'Marca',
+	'Class:Brand/Attribute:physicaldevices_list' => 'Dispositivo Físico',
+	'Class:Brand/Attribute:physicaldevices_list+' => 'Dispositivo Físico',
+));
+
+//
+// Class: Model
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Model' => 'Modelo',
+	'Class:Model+' => 'Modelo',
+	'Class:Model/Attribute:brand_id' => 'Marca',
+	'Class:Model/Attribute:brand_id+' => 'Marca',
+	'Class:Model/Attribute:brand_name' => 'Marca',
+	'Class:Model/Attribute:brand_name+' => 'Marca',
+	'Class:Model/Attribute:Type' => 'Tipo de Dispositivo',
+	'Class:Model/Attribute:Type+' => 'Tipo de Dispositivo',
+	'Class:Model/Attribute:Type/Value:PowerSource' => 'Fuente de Poder',
+	'Class:Model/Attribute:Type/Value:PowerSource+' => 'Fuente de Poder',
+	'Class:Model/Attribute:Type/Value:DiskArray' => 'Arreglo de Discos',
+	'Class:Model/Attribute:Type/Value:DiskArray+' => 'Arreglo de Discos',
+	'Class:Model/Attribute:Type/Value:Enclosure' => 'Enclosure',
+	'Class:Model/Attribute:Type/Value:Enclosure+' => 'Enclosure',
+	'Class:Model/Attribute:Type/Value:IpPhone' => 'Teléfono IP',
+	'Class:Model/Attribute:Type/Value:IpPhone+' => 'Teléfono IP',
+	'Class:Model/Attribute:Type/Value:MobilePhone' => 'Teléfono Móvil',
+	'Class:Model/Attribute:Type/Value:MobilePhone+' => 'Teléfono Móvil',
+	'Class:Model/Attribute:Type/Value:NAS' => 'NAS',
+	'Class:Model/Attribute:Type/Value:NAS+' => 'NAS',
+	'Class:Model/Attribute:Type/Value:NetworkDevice' => 'Dispositivo de Red',
+	'Class:Model/Attribute:Type/Value:NetworkDevice+' => 'Dispositivo de Red',
+	'Class:Model/Attribute:Type/Value:PC' => 'PC/Laptop',
+	'Class:Model/Attribute:Type/Value:PC+' => 'PC/Laptor',
+	'Class:Model/Attribute:Type/Value:PDU' => 'PDU',
+	'Class:Model/Attribute:Type/Value:PDU+' => 'PDU',
+	'Class:Model/Attribute:Type/Value:Peripheral' => 'Periférico',
+	'Class:Model/Attribute:Type/Value:Peripheral+' => 'Periférico',
+	'Class:Model/Attribute:Type/Value:Printer' => 'Impresora',
+	'Class:Model/Attribute:Type/Value:Printer+' => 'Impresora',
+	'Class:Model/Attribute:Type/Value:Rack' => 'Rack',
+	'Class:Model/Attribute:Type/Value:Rack+' => 'Rack',
+	'Class:Model/Attribute:Type/Value:SANswitch' => 'Switch de SAN',
+	'Class:Model/Attribute:Type/Value:SANswitch+' => 'Switch de SAN',
+	'Class:Model/Attribute:Type/Value:Server' => 'Servidor',
+	'Class:Model/Attribute:Type/Value:Server+' => 'Servidor',
+	'Class:Model/Attribute:Type/Value:StorageSystem' => 'Sistema de Almacenamiento',
+	'Class:Model/Attribute:Type/Value:StorageSystem+' => 'Sistema de Almacenamiento',
+	'Class:Model/Attribute:Type/Value:Tablet' => 'Tableta',
+	'Class:Model/Attribute:Type/Value:Tablet+' => 'Tableta',
+	'Class:Model/Attribute:Type/Value:TapeLibrary' => 'Librería de Cinta',
+	'Class:Model/Attribute:Type/Value:TapeLibrary+' => 'Librería de Cinta',
+	'Class:Model/Attribute:Type/Value:Telephone' => 'Teléfono',
+	'Class:Model/Attribute:Type/Value:Telephone+' => 'Teléfono',
+	'Class:Model/Attribute:physicaldevices_list' => 'Dispositivo Físico',
+	'Class:Model/Attribute:physicaldevices_list+' => 'Dispositivo Físico',
+));
+
+//
+// Class: NetworkDeviceType
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:NetworkDeviceType' => 'Dispositivo de Red',
+	'Class:NetworkDeviceType+' => 'Tipo de Dispositivo de Red',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Dispositivos de Red',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Dispositivos de Red',
+));
+
+//
+// Class: IOSversion
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:IOSversion' => 'Versión de IOS',
+	'Class:IOSversion+' => 'Versión de IOS',
+	'Class:IOSversion/Attribute:brand_id' => 'Marca',
+	'Class:IOSversion/Attribute:brand_id+' => 'Marca',
+	'Class:IOSversion/Attribute:brand_name' => 'Marca',
+	'Class:IOSversion/Attribute:brand_name+' => 'Marca',
+));
+
+//
+// Class: lnkDocumentToPatch
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkDocumentToPatch' => 'Relación Documentos y Parche',
+	'Class:lnkDocumentToPatch+' => 'Relación Documentos y Parche',
+	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Parche',
+	'Class:lnkDocumentToPatch/Attribute:patch_id+' => 'Parche',
+	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Parche',
+	'Class:lnkDocumentToPatch/Attribute:patch_name+' => 'Parche',
+	'Class:lnkDocumentToPatch/Attribute:document_id' => 'Documento',
+	'Class:lnkDocumentToPatch/Attribute:document_id+' => 'Documento',
+	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Documento',
+	'Class:lnkDocumentToPatch/Attribute:document_name+' => 'Documento',
+));
+
+//
+// Class: lnkSoftwareInstanceToSoftwarePatch
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Relación Instalación de Software y Parche de Software',
+	'Class:lnkSoftwareInstanceToSoftwarePatch+' => 'Relación Instalación de Software y Parche de Software',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Parche de Software',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => 'Parche de Software',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name' => 'Parche de Software',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name+' => 'Parche de Software',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id' => 'Instalación de Software',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => 'Instalación de Software',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Instalación de Software',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => 'Instalación de Software',
+));
+
+//
+// Class: lnkFunctionalCIToOSpatch
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkFunctionalCIToOSpatch' => 'Relación EC Funcional y Parche de SO',
+	'Class:lnkFunctionalCIToOSpatch+' => 'Relación EC Funcional y Parche de SO',
+	'Class:lnkFunctionalCIToOSpatch/Attribute:ospatch_id' => 'Parche de SO',
+	'Class:lnkFunctionalCIToOSpatch/Attribute:ospatch_id+' => 'Parche de SO',
+	'Class:lnkFunctionalCIToOSpatch/Attribute:ospatch_name' => 'Parche de SO',
+	'Class:lnkFunctionalCIToOSpatch/Attribute:ospatch_name+' => 'Parche de SO',
+	'Class:lnkFunctionalCIToOSpatch/Attribute:functionalci_id' => 'EC Funcional',
+	'Class:lnkFunctionalCIToOSpatch/Attribute:functionalci_id+' => 'EC Funcional',
+	'Class:lnkFunctionalCIToOSpatch/Attribute:functionalci_name' => 'EC Funcional',
+	'Class:lnkFunctionalCIToOSpatch/Attribute:functionalci_name+' => 'EC Funcional',
+));
+
+//
+// Class: lnkDocumentToSoftware
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkDocumentToSoftware' => 'Relación Documento y Software',
+	'Class:lnkDocumentToSoftware+' => 'Relación Documento y Software',
+	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Software',
+	'Class:lnkDocumentToSoftware/Attribute:software_id+' => 'Software',
+	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Software',
+	'Class:lnkDocumentToSoftware/Attribute:software_name+' => 'Software',
+	'Class:lnkDocumentToSoftware/Attribute:document_id' => 'Documento',
+	'Class:lnkDocumentToSoftware/Attribute:document_id+' => 'Documento',
+	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Documento',
+	'Class:lnkDocumentToSoftware/Attribute:document_name+' => 'Documento',
+));
+
+//
+// Class: lnkContactToFunctionalCI
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkContactToFunctionalCI' => 'Relación Contacto y  EC Funcional',
+	'Class:lnkContactToFunctionalCI+' => 'Relación Contacto y  EC Funcional',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'EC Funcional',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => 'EC Funcional',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'EC Funcional',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => 'EC Funcional',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Contacto',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => 'Contacto',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Contacto',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => 'Contacto',
+));
+
+//
+// Class: lnkDocumentToFunctionalCI
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkDocumentToFunctionalCI' => 'Relación Documento y EC Funcional',
+	'Class:lnkDocumentToFunctionalCI+' => 'Relación Documento y EC Funcional',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'EC Funcional',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => 'EC Funcional',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'EC Funcional',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => 'EC Funcional',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Documento',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => 'Documento',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Documento',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => 'Documento',
+));
+
+//
+// Class: Subnet
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Subnet' => 'SubRed',
+	'Class:Subnet+' => 'SubRed',
+	'Class:Subnet/Attribute:description' => 'Descripción',
+	'Class:Subnet/Attribute:description+' => 'Descripción',
+	'Class:Subnet/Attribute:org_id' => 'Organización',
+	'Class:Subnet/Attribute:org_id+' => 'Organización',
+	'Class:Subnet/Attribute:org_name' => 'Organización',
+	'Class:Subnet/Attribute:org_name+' => 'Organización',
+	'Class:Subnet/Attribute:ip' => 'IP',
+	'Class:Subnet/Attribute:ip+' => 'IP',
+	'Class:Subnet/Attribute:ip_mask' => 'Máscara de Red',
+	'Class:Subnet/Attribute:ip_mask+' => 'Máscara de Red',
+));
+
+//
+// Class: NetworkInterface
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:NetworkInterface' => 'Interfaz de Red',
+	'Class:NetworkInterface+' => 'Interfaz de Red',
+	'Class:NetworkInterface/Attribute:name' => 'Nombre',
+	'Class:NetworkInterface/Attribute:name+' => 'Nombre',
+	'Class:NetworkInterface/Attribute:finalclass' => 'Tipo',
+	'Class:NetworkInterface/Attribute:finalclass+' => 'Tipo',
+));
+
+//
+// Class: IPinterface
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:IPinterface' => 'Interfaz IP',
+	'Class:IPinterface+' => 'Interfaz IP',
+	'Class:IPinterface/Attribute:ipaddress' => 'Dirección IP',
+	'Class:IPinterface/Attribute:ipaddress+' => 'Dirección IP',
+	'Class:IPinterface/Attribute:macaddress' => 'Dirección MAC',
+	'Class:IPinterface/Attribute:macaddress+' => 'Dirección MAC',
+	'Class:IPinterface/Attribute:comment' => 'Comentario',
+	'Class:IPinterface/Attribute:coment+' => 'Comentario',
+	'Class:IPinterface/Attribute:ipgateway' => 'Gateway IP',
+	'Class:IPinterface/Attribute:ipgateway+' => 'Gateway IP',
+	'Class:IPinterface/Attribute:ipmask' => 'Máscara de Red',
+	'Class:IPinterface/Attribute:ipmask+' => 'Máscara de Red',
+	'Class:IPinterface/Attribute:speed' => 'Velocidad',
+	'Class:IPinterface/Attribute:speed+' => 'Velocidad',
+));
+
+//
+// Class: PhysicalInterface
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:PhysicalInterface' => 'Interfaz Física',
+	'Class:PhysicalInterface+' => 'Interfaz Física',
+	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Dispositivo',
+	'Class:PhysicalInterface/Attribute:connectableci_id+' => 'Dispositivo',
+	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Dispositivo',
+	'Class:PhysicalInterface/Attribute:connectableci_name+' => 'Dispositivo',
+));
+
+//
+// Class: LogicalInterface
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:LogicalInterface' => 'Interfaz Lógica',
+	'Class:LogicalInterface+' => 'Interfaz Lógica',
+	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Máquina Virtual',
+	'Class:LogicalInterface/Attribute:virtualmachine_id+' => 'Máquina Virtual',
+	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Máquina Virtual',
+	'Class:LogicalInterface/Attribute:virtualmachine_name+' => 'Máquina Virtual',
+));
+
+//
+// Class: FiberChannelInterface
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:FiberChannelInterface' => 'Intefaz de Fibra',
+	'Class:FiberChannelInterface+' => 'Intefaz de Fibra',
+	'Class:FiberChannelInterface/Attribute:speed' => 'Velocidad',
+	'Class:FiberChannelInterface/Attribute:speed+' => 'Velocidad',
+	'Class:FiberChannelInterface/Attribute:topology' => 'Topología',
+	'Class:FiberChannelInterface/Attribute:topology+' => 'Topología',
+	'Class:FiberChannelInterface/Attribute:wwn' => 'WWN',
+	'Class:FiberChannelInterface/Attribute:wwn+' => 'WWN',
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_id' => 'Dispositivo',
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => 'Dispositivo',
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Dispositivo',
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => 'Dispositivo',
+));
+
+//
+// Class: lnkConnectableCIToNetworkDevice
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkConnectableCIToNetworkDevice' => 'Relación EC Conectable y Dispositivo de Red',
+	'Class:lnkConnectableCIToNetworkDevice+' => 'Relación EC Conectable y Dispositivo de Red',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Dispositivo de Red',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => 'Dispositivo de Red',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name' => 'Dispositivo de Red',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name+' => 'Dispositivo de Red',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id' => 'Dispositivo Conectado',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id+' => 'Dispositivo Conectado',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name' => 'Dispositivo Conectado',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name+' => 'Dispositivo Conectado',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port' => 'Puerto de Red',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port+' => 'Puerto de Red',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port' => 'Puerto en Dispositivo',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port+' => 'Puerto en Dispositivo',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type' => 'Tipo de Conexión',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type+' => 'Tipo de Conexión',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink' => 'Down Link',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'Down Link',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'Up Link',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'Up Link',
+));
+
+//
+// Class: lnkApplicationSolutionToFunctionalCI
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkApplicationSolutionToFunctionalCI' => 'Relación Solución Aplicativa y EC Funcional',
+	'Class:lnkApplicationSolutionToFunctionalCI+' => 'Relación Solución Aplicativa y EC Funcional',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Solución Aplicativa',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => 'Solución Aplicativa',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => 'Solución Aplicativa',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name+' => 'Solución Aplicativa',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id' => 'EC Funcional',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => 'EC Funcional',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'EC Funcional',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => 'EC Funcional',
+));
+
+//
+// Class: lnkApplicationSolutionToBusinessProcess
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkApplicationSolutionToBusinessProcess' => 'Relación Solución Aplicativa y Proceso de Negocio',
+	'Class:lnkApplicationSolutionToBusinessProcess+' => 'Relación Solución Aplicativa y Proceso de Negocio',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Proceso de Negocio',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => 'Proceso de Negocio',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name' => 'Proceso de Negocio',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name+' => 'Proceso de Negocio',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id' => 'Solución Aplicativa',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => 'Solución Aplicativa',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Solución Aplicativa',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => 'Solución Aplicativa',
+));
+
+//
+// Class: lnkPersonToTeam
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkPersonToTeam' => 'Relación Persona y Grupo',
+	'Class:lnkPersonToTeam+' => 'Relación Persona y Grupo',
+	'Class:lnkPersonToTeam/Attribute:team_id' => 'Grupo',
+	'Class:lnkPersonToTeam/Attribute:team_id+' => 'Grupo',
+	'Class:lnkPersonToTeam/Attribute:team_name' => 'Grupo',
+	'Class:lnkPersonToTeam/Attribute:team_name+' => 'Grupo',
+	'Class:lnkPersonToTeam/Attribute:person_id' => 'Persona',
+	'Class:lnkPersonToTeam/Attribute:person_id+' => 'Persona',
+	'Class:lnkPersonToTeam/Attribute:person_name' => 'Persona',
+	'Class:lnkPersonToTeam/Attribute:person_name+' => 'Persona',
+	'Class:lnkPersonToTeam/Attribute:role_id' => 'Rol',
+	'Class:lnkPersonToTeam/Attribute:role_id+' => 'Rol',
+	'Class:lnkPersonToTeam/Attribute:role_name' => 'Rol',
+	'Class:lnkPersonToTeam/Attribute:role_name+' => 'Rol',
+));
+
+//
+// Class: Group
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Group' => 'Grupo',
+	'Class:Group+' => 'Grupo',
+	'Class:Group/Attribute:name' => 'Nombre',
+	'Class:Group/Attribute:name+' => 'Nombre',
+	'Class:Group/Attribute:status' => 'Estatus',
+	'Class:Group/Attribute:status+' => 'Estatus',
+	'Class:Group/Attribute:status/Value:implementation' => 'No Productivo',
+	'Class:Group/Attribute:status/Value:implementation+' => 'No Productivo',
+	'Class:Group/Attribute:status/Value:obsolete' => 'Obsoleto',
+	'Class:Group/Attribute:status/Value:obsolete+' => 'Obsoletp',
+	'Class:Group/Attribute:status/Value:production' => 'Productivo',
+	'Class:Group/Attribute:status/Value:production+' => 'Productivo',
+	'Class:Group/Attribute:org_id' => 'Compañía',
+	'Class:Group/Attribute:org_id+' => 'Compañía',
+	'Class:Group/Attribute:owner_name' => 'Compañía',
+	'Class:Group/Attribute:owner_name+' => 'Compañía',
+	'Class:Group/Attribute:description' => 'Descripción',
+	'Class:Group/Attribute:description+' => 'Descripción',
+	'Class:Group/Attribute:type' => 'Tipo',
+	'Class:Group/Attribute:type+' => 'Tipo',
+	'Class:Group/Attribute:parent_id' => 'Grupo Padre',
+	'Class:Group/Attribute:parent_id+' => 'Grupo Padre',
+	'Class:Group/Attribute:parent_name' => 'Grupo Padre',
+	'Class:Group/Attribute:parent_name+' => 'Grupo Padre',
+	'Class:Group/Attribute:ci_list' => 'ECs Relacionados',
+	'Class:Group/Attribute:ci_list+' => 'ECs Relacionados',
+	'Class:Group/Attribute:parent_id_friendlyname' => 'Grupo Padre',
+	'Class:Group/Attribute:parent_id_friendlyname+' => 'Grupo Padre',
+));
+
+//
+// Class: lnkGroupToCI
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkGroupToCI' => 'Relación Grupo y EC',
+	'Class:lnkGroupToCI+' => 'Relación Grupo y EC',
+	'Class:lnkGroupToCI/Attribute:group_id' => 'Grupo',
+	'Class:lnkGroupToCI/Attribute:group_id+' => 'Grupo',
+	'Class:lnkGroupToCI/Attribute:group_name' => 'Grupo',
+	'Class:lnkGroupToCI/Attribute:group_name+' => 'Grupo',
+	'Class:lnkGroupToCI/Attribute:ci_id' => 'EC',
+	'Class:lnkGroupToCI/Attribute:ci_id+' => 'EC',
+	'Class:lnkGroupToCI/Attribute:ci_name' => 'Elemento de Configuración',
+	'Class:lnkGroupToCI/Attribute:ci_name+' => 'Elemento de Configuración',
+	'Class:lnkGroupToCI/Attribute:reason' => 'Motivo',
+	'Class:lnkGroupToCI/Attribute:reason+' => 'Motivo',
+));
+
 
 //
 // Application Menu
@@ -973,55 +1695,92 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 'Menu:Audit' => 'Auditoría',
 'Menu:Audit+' => 'Auditoría',
 'Menu:Organization' => 'Organizaciones',
-'Menu:Organization+' => 'Todas las Organizaciones',
+'Menu:Organization+' => 'Organizaciones',
 'Menu:Application' => 'Aplicaciones',
-'Menu:Application+' => 'Todas las Aplicaiones/Pogramas',
+'Menu:Application+' => 'Aplicaciones/Pogramas',
 'Menu:DBServer' => 'Servidores de Base de Datos',
 'Menu:DBServer+' => 'Servidores de Base de Datos',
 'Menu:Audit' => 'Auditoría',
-'Menu:ConfigManagement' => 'Gestión de Configuración',
-'Menu:ConfigManagement+' => 'Gestión de Configuración',
-'Menu:ConfigManagementOverview' => 'Visión General',
-'Menu:ConfigManagementOverview+' => 'Visión General',
+'Menu:ConfigManagement' => 'Administración de la Configuración',
+'Menu:ConfigManagement+' => 'Administración de la Configuración',
+'Menu:ConfigManagementOverview' => 'Resumen de Infraestructura',
+'Menu:ConfigManagementOverview+' => 'Resumen de Infraestructura',
+'Menu:Contact:Count' => 'Contactos',
 'Menu:Contact' => 'Contactos',
 'Menu:Contact+' => 'Contactos',
 'Menu:Person' => 'Personas',
-'Menu:Person+' => 'Todas las Personas',
-'Menu:Team' => 'Equipos',
-'Menu:Team+' => 'Todos los Equipos de Trabajo',
+'Menu:Person+' => 'Personas',
+'Menu:Team' => 'Grupos',
+'Menu:Team+' => 'Grupos de Trabajo',
 'Menu:Document' => 'Documentos',
-'Menu:Document+' => 'Todos los Documentos',
-'Menu:Location' => 'Ubicaciones',
-'Menu:Location+' => 'Todas las Ubicaciones',
-'Menu:ConfigManagementCI' => 'I.C.s',
-'Menu:ConfigManagementCI+' => 'Todos los I.C.s',
-'Menu:BusinessProcess' => 'Procesos de Negocios',
-'Menu:BusinessProcess+' => 'Todos los Procesos de Negocios',
-'Menu:ApplicationSolution' => 'Soluciones',
-'Menu:ApplicationSolution+' => 'Todas las Soluciones',
-'Menu:ConfigManagementSoftware' => 'Gestión de Aplicaciones',
+'Menu:Document+' => 'Documentos',
+'Menu:Location' => 'Localidades',
+'Menu:Location+' => 'Localidades',
+'Menu:ConfigManagementCI' => 'Elementos de Configuración',
+'Menu:ConfigManagementCI+' => 'Elementos de Confirguración',
+'Menu:BusinessProcess' => 'Proceso de Negocio',
+'Menu:BusinessProcess+' => 'Proceso de Negocios',
+'Menu:ApplicationSolution' => 'Solución Aplicativa',
+'Menu:ApplicationSolution+' => 'Solución Aplicativa',
+'Menu:ConfigManagementSoftware' => 'Administración de Aplicaciones',
 'Menu:Licence' => 'Licencias',
-'Menu:Licence+' => 'Todas las Licencias',
+'Menu:Licence+' => 'Licencias',
 'Menu:Patch' => 'Parches',
-'Menu:Patch+' => 'Todos los parches',
+'Menu:Patch+' => 'Parches',
 'Menu:ApplicationInstance' => 'Software Instalado',
 'Menu:ApplicationInstance+' => 'Aplicaciones y Servidores de Base de Datos',
-'Menu:ConfigManagementHardware' => 'Infrastructure Management',
-'Menu:Subnet' => 'Sub-Redes',
-'Menu:Subnet+' => 'Todas las Sub-Redes',
+'Menu:ConfigManagementHardware' => 'Administración de Infraestructura',
+'Menu:Subnet' => 'SubRedes',
+'Menu:Subnet+' => 'SubRedes',
 'Menu:NetworkDevice' => 'Dispositivos de Red',
-'Menu:NetworkDevice+' => 'Todos los Dispositivos de Red',
+'Menu:NetworkDevice+' => 'Dispositivos de Red',
 'Menu:Server' => 'Servidores',
-'Menu:Server+' => 'Todos los Servidores',
+'Menu:Server+' => 'Servidores',
 'Menu:Printer' => 'Impresoras',
-'Menu:Printer+' => 'Todas las Impresoras',
+'Menu:Printer+' => 'Impresoras',
 'Menu:MobilePhone' => 'Teléfonos Celulares',
-'Menu:MobilePhone+' => 'Todos los Teléfonos Celulares',
-'Menu:PC' => 'PCs (Computadores de Personales',
-'Menu:PC+' => 'Todos los PCs (Computadores de Personales',
-'Menu:Group' => 'Grupos de ICs',
-'Menu:Group+' => 'Grupos de ICs',
-'Menu:ConfigManagement:Shortcuts' => 'Atajos',
-'Menu:ConfigManagement:AllContacts' => 'Todos los Contactos: %1$d',
+'Menu:MobilePhone+' => 'Teléfonos Celulares',
+'Menu:PC' => 'PCs y Laptops',
+'Menu:PC+' => 'PCs y Laptops',
+'Menu:NewContact' => 'Nuevo Contacto',
+'Menu:NewContact+' => 'Nuevo Contacto',
+'Menu:SearchContacts' => 'Búsqueda de Contactos',
+'Menu:SearchContacts+' => 'Búsqueda de Contactos',
+'Menu:NewCI' => 'Nuevo EC',
+'Menu:NewCI+' => 'Nuevo EC',
+'Menu:SearchCIs' => 'Búsqueda de ECs',
+'Menu:SearchCIs+' => 'Búsqueda de ECs',
+'Menu:ConfigManagement:Devices' => 'Dispositivos',
+'Menu:ConfigManagement:AllDevices' => 'Infraestructura',
+'Menu:ConfigManagement:virtualization' => 'Virtualización',
+'Menu:ConfigManagement:EndUsers' => 'Dispositivos de Usuario Final',
+'Menu:ConfigManagement:SWAndApps' => 'Software y Aplicaciones',
+'Menu:ConfigManagement:Misc' => 'Misceláneo',
+'Menu:Group' => 'Grupos de ECs',
+'Menu:Group+' => 'Grupos de ECs',
+'Menu:ConfigManagement:Shortcuts' => 'Acceso Rápido',
+'Menu:ConfigManagement:AllContacts' => 'Contactos: %1$d',
+'Menu:Typology' => 'Configuración de Tipos',
+'Menu:Typology+' => 'Configuración de Tipos',
+'Menu:OSversion' => 'Versiones de SO',
+'Menu:OSversion+' => 'Versiones de SO',
+'Menu:Software' => 'Catálogo de Software',
+'Menu:Software+' => 'Catálogo de Software',
+'UI_WelcomeMenu_AllConfigItems' => 'Resumen',
+'Menu:ConfigManagement:Typology' => 'Configuración de Tipos',
+
+));
+
+
+// Add translation for Fieldsets
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+'Server:baseinfo' => 'Información General',
+'Server:Date' => 'Fecha',
+'Server:moreinfo' => 'Más Información',
+'Server:otherinfo' => 'Otra Información',
+'Person:info' => 'Información General',
+'Person:notifiy' => 'Notificación',
+
 ));
 ?>

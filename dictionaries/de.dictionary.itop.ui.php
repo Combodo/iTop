@@ -17,81 +17,17 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * Localized data
- *
- * @author   Stephan Rosenke <stephan.rosenke@itomig.de>
+ * @author	Stephan Rosenke <stephan.rosenke@itomig.de>
+
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'gui'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: menuNode
-//
-
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:menuNode' => 'Menü-Punkt',
-	'Class:menuNode+' => 'Einstellungen der Hauptmenü-Elemente',
-	'Class:menuNode/Attribute:name' => 'Menü-Name',
-	'Class:menuNode/Attribute:name+' => 'Kurzname für dieses Menü',
-	'Class:menuNode/Attribute:label' => 'Menü-Beschreibung',
-	'Class:menuNode/Attribute:label+' => 'Ausführliche Beschreibung für dieses Menü',
-	'Class:menuNode/Attribute:hyperlink' => 'Hyperlink',
-	'Class:menuNode/Attribute:hyperlink+' => 'Hyperlink zu dieser Seite',
-	'Class:menuNode/Attribute:icon_path' => 'Menü-Icon',
-	'Class:menuNode/Attribute:icon_path+' => 'Pfad zu dem Menü-Icon',
-	'Class:menuNode/Attribute:template' => 'Template',
-	'Class:menuNode/Attribute:template+' => 'HTML-Template zur Ansicht',
-	'Class:menuNode/Attribute:type' => 'Typ',
-	'Class:menuNode/Attribute:type+' => 'Menü-Typ',
-	'Class:menuNode/Attribute:type/Value:application' => 'Anwendung',
-	'Class:menuNode/Attribute:type/Value:application+' => 'Anwendung',
-	'Class:menuNode/Attribute:type/Value:user' => 'Benutzer',
-	'Class:menuNode/Attribute:type/Value:user+' => 'Benutzer',
-	'Class:menuNode/Attribute:type/Value:administrator' => 'Administrator',
-	'Class:menuNode/Attribute:type/Value:administrator+' => 'Administrator',
-	'Class:menuNode/Attribute:rank' => 'Zeige den Rang',
-	'Class:menuNode/Attribute:rank+' => 'Sortierreihenfolge für das Menü',
-	'Class:menuNode/Attribute:parent_id' => 'Übergeordneter Menüeintrag',
-	'Class:menuNode/Attribute:parent_id+' => 'Übergeordneter Menüeintrag',
-	'Class:menuNode/Attribute:parent_name' => 'Übergeordneter Menüeintrag',
-	'Class:menuNode/Attribute:parent_name+' => 'Übergeordneter Menüeintrag',
-	'Class:menuNode/Attribute:user_id' => 'Besitzer des Menüs',
-	'Class:menuNode/Attribute:user_id+' => 'Benutzer, die dieses Menü besitzen (für benutzerdefinierte Menüs)',
-));
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'application'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: AuditCategory
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:AuditCategory' => 'Audit-Kategorie',
-	'Class:AuditCategory+' => 'Ein Abschnitt aller Audits',
-	'Class:AuditCategory/Attribute:name' => 'Kategorienname',
-	'Class:AuditCategory/Attribute:name+' => 'Kurzname für diese Kategorie',
-	'Class:AuditCategory/Attribute:description' => 'Beschreibung der Audit-Kategorien',
-	'Class:AuditCategory/Attribute:description+' => 'Ausführliche Beschreibung dieser Audit-Kategorie',
-	'Class:AuditCategory/Attribute:definition_set' => 'Definition Set',
-	'Class:AuditCategory/Attribute:definition_set+' => 'OQL-Ausdrücke, die den Umfang der zu auditierenden Objekte festlegen',
-	'Class:AuditCategory/Attribute:rules_list' => 'Audit-Regeln',
-	'Class:AuditCategory/Attribute:rules_list+' => 'Audit-Regeln für diese Kategorie',
-));
-
-//
-// Class: AuditRule
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:QueryOQL' => 'OQL Abfrage',
+	'Class:QueryOQL+' => '',
+	'Class:QueryOQL/Attribute:oql' => 'Ausdruck',
+	'Class:QueryOQL/Attribute:oql+' => '',
 	'Class:AuditRule' => 'Audit-Regel',
 	'Class:AuditRule+' => 'Eine Regel um eine gegebene Audit-Kategorie zu überprüfen',
 	'Class:AuditRule/Attribute:name' => 'Regelname',
@@ -102,26 +38,56 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:AuditRule/Attribute:query+' => 'Die auszuführende OQL-Abfrage',
 	'Class:AuditRule/Attribute:valid_flag' => 'Gültiges Objekt?',
 	'Class:AuditRule/Attribute:valid_flag+' => 'true falls die Regel ein gültiges Objekt zurückgibt, andernfalls false',
-	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'true',
-	'Class:AuditRule/Attribute:valid_flag/Value:true+' => 'true',
 	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'false',
 	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'false',
+	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'true',
+	'Class:AuditRule/Attribute:valid_flag/Value:true+' => 'true',
 	'Class:AuditRule/Attribute:category_id' => 'Kategorie',
 	'Class:AuditRule/Attribute:category_id+' => 'Kategorie für diese Regel',
+	'Class:AuditCategory' => 'Audit-Kategorie',
+	'Class:AuditCategory+' => 'Ein Abschnitt aller Audits',
+	'Class:AuditCategory/Attribute:name' => 'Kategorienname',
+	'Class:AuditCategory/Attribute:name+' => 'Kurzname für diese Kategorie',
+	'Class:AuditCategory/Attribute:description' => 'Beschreibung der Audit-Kategorien',
+	'Class:AuditCategory/Attribute:description+' => 'Ausführliche Beschreibung dieser Audit-Kategorie',
+	'Class:AuditCategory/Attribute:definition_set' => 'Definition Set',
+	'Class:AuditCategory/Attribute:definition_set+' => 'OQL-Ausdrücke, die den Umfang der zu auditierenden Objekte festlegen',
+	'Class:AuditCategory/Attribute:rules_list' => 'Audit-Regeln',
+	'Class:AuditCategory/Attribute:rules_list+' => 'Audit-Regeln für diese Kategorie',
+	'Class:URP_Profiles' => 'Profile',
+	'Class:URP_Profiles+' => 'Benutzerprofile',
+	'Class:URP_Profiles/Attribute:name' => 'Name',
+	'Class:URP_Profiles/Attribute:name+' => 'Label',
+	'Class:URP_Profiles/Attribute:description' => 'Beschreibung',
+	'Class:URP_Profiles/Attribute:description+' => 'Kurze Beschreibung',
+	'Class:URP_Profiles/Attribute:user_list' => 'Benutzer',
+	'Class:URP_Profiles/Attribute:user_list+' => 'Personen, die diese Rolle haben',
+	'Class:URP_UserProfile' => 'Benutzerprofil',
+	'Class:URP_UserProfile+' => 'Benutzerprofil',
+	'Class:URP_UserProfile/Attribute:userid' => 'Benutzer',
+	'Class:URP_UserProfile/Attribute:userid+' => 'Benutzerkonto',
+	'Class:URP_UserProfile/Attribute:profileid' => 'Profile',
+	'Class:URP_UserProfile/Attribute:profileid+' => 'Verwende Profil',
+	'Class:URP_UserProfile/Attribute:reason' => 'Begründung',
+	'Class:URP_UserProfile/Attribute:reason+' => 'Erklären Sie, warum diese Person diese Rolle haben soll',
+	'Class:URP_UserOrg' => 'Benutzerorganisationen',
+	'Class:URP_UserOrg+' => 'Zulässige Organisationen',
+	'Class:URP_UserOrg/Attribute:userid' => 'User',
+	'Class:URP_UserOrg/Attribute:userid+' => '',
+	'Class:URP_UserOrg/Attribute:allowed_org_id' => 'Organisation',
+	'Class:URP_UserOrg/Attribute:allowed_org_id+' => '',
+	'Class:URP_UserOrg/Attribute:reason' => 'Begründung',
+	'Class:URP_UserOrg/Attribute:reason+' => '',
 	'Class:AuditRule/Attribute:category_name' => 'Kategorie',
 	'Class:AuditRule/Attribute:category_name+' => 'Kategorienname für diese Regel',
-));
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'addon/userrights'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: URP_Users
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:Query' => 'Query',
+	'Class:Query+' => '',
+	'Class:Query/Attribute:name' => 'Name',
+	'Class:Query/Attribute:name+' => '',
+	'Class:Query/Attribute:description' => 'Beschreibung',
+	'Class:Query/Attribute:description+' => '',
+	'Class:Query/Attribute:fields' => 'Felder',
+	'Class:Query/Attribute:fields+' => '',
 	'Class:User' => 'Benutzer',
 	'Class:User+' => 'Benutzer-Login',
 	'Class:User/Attribute:finalclass' => 'Typ des Benutzerkontos',
@@ -148,48 +114,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:User/Attribute:allowed_org_list+' => 'Der Endbenutzer ist berechtigt, die Daten der folgenden Organisationen zu sehen. Wenn keine Organisation zu sehen ist, gibt es keine Beschränkung.',
 	'Class:User/Error:LoginMustBeUnique' => 'Login-Namen müssen unterschiedlich sein - "%1s" benutzt diesen Login-Name bereits.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Mindestens ein Profil muss diesem Benutzer zugewiesen sein.',
-));
-
-//
-// Class: URP_Profiles
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:URP_Profiles' => 'Profile',
-	'Class:URP_Profiles+' => 'Benutzerprofile',
-	'Class:URP_Profiles/Attribute:name' => 'Name',
-	'Class:URP_Profiles/Attribute:name+' => 'Label',
-	'Class:URP_Profiles/Attribute:description' => 'Beschreibung',
-	'Class:URP_Profiles/Attribute:description+' => 'Kurze Beschreibung',
-	'Class:URP_Profiles/Attribute:user_list' => 'Benutzer',
-	'Class:URP_Profiles/Attribute:user_list+' => 'Personen, die diese Rolle haben',
-));
-
-//
-// Class: URP_UserOrg
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:URP_UserOrg' => 'Benutzerorganisationen',
-	'Class:URP_UserOrg+' => 'Zulässige Organisationen',
-	'Class:URP_UserProfile/Attribute:userid' => 'Benutzer',
-	'Class:URP_UserProfile/Attribute:userid+' => 'Benutzerkonto',
-	'Class:URP_UserProfile/Attribute:userlogin' => 'Benutzer-Login',
-	'Class:URP_UserProfile/Attribute:userlogin+' => 'Logindaten des Benutzers',
-	'Class:URP_UserProfile/Attribute:allowed_org_id' => 'Organisation',
-	'Class:URP_UserProfile/Attribute:allowed_org_id+' => 'Gestattete Organisation',
-	'Class:URP_UserProfile/Attribute:allowed_org_name' => 'Organisation',
-	'Class:URP_UserProfile/Attribute:allowed_org_name+' => 'Gestattete Organisation',
-	'Class:URP_UserProfile/Attribute:reason' => 'Grund',
-	'Class:URP_UserProfile/Attribute:reason+' => 'Erklären Sie, warum diese Person berechtigt ist, Zugriff auf die Daten der Organisation zu haben',
-));
-
-
-//
-// Class: URP_Dimensions
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_Dimensions' => 'Dimension',
 	'Class:URP_Dimensions+' => 'Anwendungsdimension (Festlegen von Silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Name',
@@ -198,32 +122,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_Dimensions/Attribute:description+' => 'Kurzbeschreibung',
 	'Class:URP_Dimensions/Attribute:type' => 'Typ',
 	'Class:URP_Dimensions/Attribute:type+' => 'Klassenname oder Datentyp (Abbildungseinheit)',
-));
-
-//
-// Class: URP_UserProfile
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:URP_UserProfile' => 'Benutzerprofil',
-	'Class:URP_UserProfile+' => 'Benutzerprofil',
-	'Class:URP_UserProfile/Attribute:userid' => 'Benutzer',
-	'Class:URP_UserProfile/Attribute:userid+' => 'Benutzerkonto',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
 	'Class:URP_UserProfile/Attribute:userlogin+' => 'Benutzer-Login',
-	'Class:URP_UserProfile/Attribute:profileid' => 'Profile',
-	'Class:URP_UserProfile/Attribute:profileid+' => 'Verwende Profil',
 	'Class:URP_UserProfile/Attribute:profile' => 'Profil',
 	'Class:URP_UserProfile/Attribute:profile+' => 'Profil-Name',
-	'Class:URP_UserProfile/Attribute:reason' => 'Begründung',
-	'Class:URP_UserProfile/Attribute:reason+' => 'Erklären Sie, warum diese Person diese Rolle haben soll',
-));
-
-//
-// Class: URP_ProfileProjection
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
+	'Class:URP_UserOrg/Attribute:userlogin+' => '',
+	'Class:URP_UserOrg/Attribute:allowed_org_name' => 'Organisation',
+	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '',
 	'Class:URP_ProfileProjection' => 'Profilabbildung',
 	'Class:URP_ProfileProjection+' => 'Profilabbildungen',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimension',
@@ -238,13 +144,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL-Ausdruck (Benutzung von $user) | konstant | | + Attribut-Code',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Ziel des Attribut-Codes (optional)',
-));
-
-//
-// Class: URP_ClassProjection
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_ClassProjection' => 'Klassenabbildung',
 	'Class:URP_ClassProjection+' => 'Klassenabbildungen',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimension',
@@ -257,13 +156,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL-Audsdruck (Benutzung von $this) | konstant | | + Attribut-Code',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Ziel des Attribut-Codes (optional)',
-));
-
-//
-// Class: URP_ActionGrant
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_ActionGrant' => 'Autorisierungen von Aktionen',
 	'Class:URP_ActionGrant+' => 'Autorisierungen auf Klassen',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profil',
@@ -280,13 +172,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'Nein',
 	'Class:URP_ActionGrant/Attribute:action' => 'Aktion',
 	'Class:URP_ActionGrant/Attribute:action+' => 'Operationen, die auf die gegebene Klasse ausgeführt werden sollen',
-));
-
-//
-// Class: URP_StimulusGrant
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_StimulusGrant' => 'Autorisierung des Stimulus',
 	'Class:URP_StimulusGrant+' => 'Autorisierungen auf den Stimulus des Lebenszyklus des Objektes',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profil',
@@ -303,32 +188,17 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'Nein',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'Stimulus-Code',
-));
-
-//
-// Class: URP_AttributeGrant
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_AttributeGrant' => 'Autorisierung des Attribute',
 	'Class:URP_AttributeGrant+' => 'Autorisierungen auf Attributebene',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Aktion gewähren',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'Aktion gewähren',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribut',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'Attribut-Code',
-));
-
-//
-// String from the User Interface: menu, messages, buttons, etc...
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:WelcomeMenu' => 'Willkommen',
 	'Menu:WelcomeMenu+' => 'Willkommen bei iTop',
 	'Menu:WelcomeMenuPage' => 'Willkommen',
 	'Menu:WelcomeMenuPage+' => 'Willkommen bei iTop',
 	'UI:WelcomeMenu:Title' => 'Willkommen bei iTop',
-
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop ist ein ein vollständiges, ITIL- und webbasiertes IT-Service-Management-Tool (ITSM)</p>
 <ul>Es umfasst...
 <li>eine vollständige CMDB (Configuration Management Database), um das IT-Portfolio zu dokumentieren und zu managen,</li>
@@ -339,7 +209,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 <li>unterschiedliche Dashboards, um sich einen schnellen Überblick über Ihre IT zu verschaffen.</li>
 </ul>
 <p>Alle Module können nacheinander und vollständig unabhängig voneinander eingerichtet werden.</p>',
-
 	'UI:WelcomeMenu:RightBlock' => '<p>iTop ist mandantenfähig, es erlaubt IT-Technikern, auf einfache Art eine Vielzahl an Kunden und Firmen zu verwalten.
 <ul>iTop bietet ein umfangreiches Set an Business-Prozessen, die
 <li>die Effizienz des IT-Managements steigern,</li> 
@@ -369,9 +238,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Button:Search' => ' Suche ',
 	'UI:Button:Query' => ' Abfrage ',
 	'UI:Button:Ok' => 'Ok',
+	'UI:Button:Save' => 'Speichern',
 	'UI:Button:Cancel' => 'Abbrechen',
 	'UI:Button:Apply' => 'Anwenden',
 	'UI:Button:Back' => ' << Zurück ',
+	'UI:Button:Restart' => ' |<< Neustart ',
 	'UI:Button:Next' => ' Weiter >> ',
 	'UI:Button:Finish' => ' Abschließen ',
 	'UI:Button:DoImport' => ' Führe den Import durch! ',
@@ -389,7 +260,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Button:Delete' => ' Löschen! ',
 	'UI:Button:ChangePassword' => ' Passwort ändern ',
 	'UI:Button:ResetPassword' => ' Passwort zurücksetzen ',
-
 	'UI:SearchToggle' => 'Suche',
 	'UI:ClickToCreateNew' => 'Klicken Sie hier, um eine neues Objekt vom Typ %1$s zu erstellen',
 	'UI:SearchFor_Class' => 'Suche nach Objekten vom Typ "%1$s"',
@@ -408,7 +278,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Error:CannotWriteToTmp_Dir' => 'Nicht möglich, die tempöräre Datei auf die Festplatte zu speichern: upload_tmp_dir = "%1$s".',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'Der Upload wurde von der Erweiterung gestoppt. (urspünglicher Dateiname = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'Dateiupload fehlgeschlagen, unbekannte Ursache (Fehlercode = "%1$s").',
-	
 	'UI:Error:1ParametersMissing' => 'Fehler: der folgende Parameter muss für diese Operation spezifiziert sein: %1$s.',
 	'UI:Error:2ParametersMissing' => 'Fehler: die folgenden Parameter müssen für diese Operation spezifiziert sein: %1$s und %2$s.',
 	'UI:Error:3ParametersMissing' => 'Fehler: die folgenden Parameter müssen für diese Operation spezifiziert sein: %1$s, %2$s und %3$s.',
@@ -424,8 +293,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Error:ObjectAlreadyCloned' => 'Fehler: das Objekt wurde bereits dupliziert!',
 	'UI:Error:ObjectAlreadyCreated' => 'Fehler: das Objekt wurde bereits erstellt!',
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Fehler: ungültiger Operation "%1$s" auf Objekt %2$s in Zustand "%3$s".',
-	
-	
 	'UI:GroupBy:Count' => 'Anzahl',
 	'UI:GroupBy:Count+' => 'Anzahl der Elemente',
 	'UI:CountOfObjects' => '%1$d Objekte, die das Kriterium erfüllen.',
@@ -434,6 +301,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:History:LastModified_On_By' => 'Zuletzt verändert am %1$s von %2$s.',
 	'UI:HistoryTab' => 'Verlauf',
 	'UI:NotificationsTab' => 'Benachrichtigungen',
+	'UI:History:BulkImports' => 'Verlauf',
+	'UI:History:BulkImports+' => '',
+	'UI:History:BulkImportDetails' => 'Veränderungen durch den CSV-Import durchgeführt am %1$s (durch %2$s)',
 	'UI:History:Date' => 'Datum',
 	'UI:History:Date+' => 'Datum der Änderung',
 	'UI:History:User' => 'Benutzer',
@@ -447,8 +317,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:History:StatsDeletes' => 'Deleted',
 	'UI:History:StatsDeletes+' => 'Count of objects deleted',
 	'UI:Loading' => 'Laden...',
-	'UI:Menu:Actions' => 'Aktionen', 
-	'UI:Menu:OtherActions' => 'Andere Aktionen', 
+	'UI:Menu:Actions' => 'Aktionen',
+	'UI:Menu:OtherActions' => 'Andere Aktionen',
 	'UI:Menu:New' => 'Neu...',
 	'UI:Menu:Add' => 'Hinzufügen...',
 	'UI:Menu:Manage' => 'Verwalten...',
@@ -456,11 +326,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Menu:CSVExport' => 'CSV-Export',
 	'UI:Menu:Modify' => 'Modifizieren...',
 	'UI:Menu:Delete' => 'Löschen...',
-	'UI:Menu:Manage' => 'Verwalten...',
 	'UI:Menu:BulkDelete' => 'Löschen...',
 	'UI:UndefinedObject' => 'nicht definiert',
 	'UI:Document:OpenInNewWindow:Download' => 'In neuem Fenster öffnen: %1$s, Download: %2$s',
 	'UI:SelectAllToggle+' => 'Alle auswählen/deselektieren',
+	'UI:SplitDateTime-Date' => 'Datum',
+	'UI:SplitDateTime-Time' => 'Zeit',
 	'UI:TruncatedResults' => '%1$d angezeigte Objekte von %2$d',
 	'UI:DisplayAll' => 'Alle anzeigen',
 	'UI:CollapseList' => 'Ausklappen',
@@ -474,12 +345,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Details+' => 'Details',
 	'UI:SearchValue:Any' => '*beliebig*',
 	'UI:SearchValue:Mixed' => '*gemischt*',
+	'UI:SearchValue:NbSelected' => '# ausgewählt',
 	'UI:SelectOne' => 'bitte wählen',
 	'UI:Login:Welcome' => 'Willkommen bei iTop!',
 	'UI:Login:IncorrectLoginPassword' => 'Ungültiges Passwort oder Login-Daten. Bitte versuchen Sie es erneut.',
 	'UI:Login:IdentifyYourself' => 'Bitte identifizieren Sie sich, bevor Sie fortfahren.',
 	'UI:Login:UserNamePrompt' => 'Benutzername',
 	'UI:Login:PasswordPrompt' => 'Passwort',
+	'UI:Login:About' => 'Über',
 	'UI:Login:ChangeYourPassword' => 'Ändern Sie Ihr Passwort',
 	'UI:Login:OldPasswordPrompt' => 'Altes Passwort',
 	'UI:Login:NewPasswordPrompt' => 'Neues Passwort',
@@ -489,8 +362,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:LogOff:ThankYou' => 'Vielen Dank dafür, dass Sie iTop benutzen!',
 	'UI:LogOff:ClickHereToLoginAgain' => 'Klicken Sie hier, um sich wieder anzumelden...',
 	'UI:ChangePwdMenu' => 'Passwort ändern...',
+	'UI:Login:PasswordChanged' => 'Passwort erfolgreich gesetzt!',
 	'UI:AccessRO-All' => 'iTop ist nur lesbar',
 	'UI:AccessRO-Users' => 'iTop ist nur lesbar für Endnutzer',
+	'UI:ApplicationEnvironment' => 'Applikationsumgebung: %1$s',
 	'UI:Login:RetypePwdDoesNotMatch' => 'Neues Passwort und das wiederholte Passwort stimmen nicht überein!',
 	'UI:Button:Login' => 'in iTop anmelden',
 	'UI:Login:Error:AccessRestricted' => 'Der iTop-Zugang ist gesperrt. Bitte kontaktieren Sie Ihren iTop-Administrator.',
@@ -506,6 +381,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:CSVImport:idField' => 'ID (Primärer Schlüssel)',
 	'UI:Title:BulkImport' => 'iTop - Massenimport',
 	'UI:Title:BulkImport+' => 'CSV-Import-Assistent',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronisation von %1$d Objekten der Klasse %2$s',
 	'UI:CSVImport:ClassesSelectOne' => 'Bitte wählen',
 	'UI:CSVImport:ErrorExtendedAttCode' => 'Interner Fehler: "%1$s" ist ungültiger Code. Begründung "%2$s" ist NICHT ein externer Schlüssel der Klasse "%3$s"',
 	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d Objekte bleiben unverändert.',
@@ -543,27 +419,68 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:CSVImport:CommentsAndHeader' => 'Kommentare und Kopfzeile',
 	'UI:CSVImport:SelectClass' => 'Wählen Sie die Klasse zum Import:',
 	'UI:CSVImport:AdvancedMode' => 'Fortgeschrittener Modus',
-	'UI:CSVImport:AdvancedMode+' => 'Im fortgeschrittenen Modus kann die "ID" (primärer Schlüssel) der Objekte benutzt werden, um Ojekte zu aktualisieren oder umzubenennen.' .
-	'Allerdings kann die Spalte "ID" (sofern vorhanden) nur als Suchkriterium verwendet werden und nicht mit anderen Suchkriterien kombiniert werden.',
+	'UI:CSVImport:AdvancedMode+' => 'Im fortgeschrittenen Modus kann die "ID" (primärer Schlüssel) der Objekte benutzt werden, um Ojekte zu aktualisieren oder umzubenennen.Allerdings kann die Spalte "ID" (sofern vorhanden) nur als Suchkriterium verwendet werden und nicht mit anderen Suchkriterien kombiniert werden.',
 	'UI:CSVImport:SelectAClassFirst' => 'Wählen Sie bitte zuerst eine Klasse aus, bevor Sie das Mapping erstellen',
 	'UI:CSVImport:HeaderFields' => 'Felder',
 	'UI:CSVImport:HeaderMappings' => 'Mappings',
 	'UI:CSVImport:HeaderSearch' => 'Suchen?',
 	'UI:CSVImport:AlertIncompleteMapping' => 'Bitte wählen Sie ein Mapping für jedes Feld aus.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Bitte wählen Sie mindestens ein Suchkriterium aus.',
-	'UI:CSVImport:Encoding' => 'Buchstaben-Codierung',	
-
+	'UI:CSVImport:Encoding' => 'Buchstaben-Codierung',
 	'UI:UniversalSearchTitle' => 'iTop - universelle Suche',
 	'UI:UniversalSearch:Error' => 'Fehler: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Wählen Sie für die Suche die Klasse aus: ',
-	
+	'UI:CSVReport-Value-Modified' => 'Modifiziert',
+	'UI:CSVReport-Value-SetIssue' => 'Konnte nicht geändert werden - Grund: %1$s',
+	'UI:CSVReport-Value-ChangeIssue' => 'Konnte nicht zu %1$s  geändert werden - Grund: %2$s',
+	'UI:CSVReport-Value-NoMatch' => 'Kein Treffer',
+	'UI:CSVReport-Value-Missing' => 'Pflichtfeld fehlt',
+	'UI:CSVReport-Value-Ambiguous' => 'Doppeldeutig: %1$s Objekte gefunden',
+	'UI:CSVReport-Row-Unchanged' => 'Unverändert',
+	'UI:CSVReport-Row-Created' => 'Erzeugt',
+	'UI:CSVReport-Row-Updated' => '%1$d cols aktualisiert',
+	'UI:CSVReport-Row-Disappeared' => 'verschwunden, %1$d cols geändert',
+	'UI:CSVReport-Row-Issue' => 'Problem: %1$s',
+	'UI:CSVReport-Value-Issue-Null' => 'Null nicht erlaubt',
+	'UI:CSVReport-Value-Issue-NotFound' => 'Objekt nicht gefunden',
+	'UI:CSVReport-Value-Issue-FoundMany' => '%1$d Treffer gefunden',
+	'UI:CSVReport-Value-Issue-Readonly' => 'Das Attribut \'%1$s\' ist Read-Only und kann nicht modifiziert werden (derzeitiger Wert: %2$s, vorgeschlagener Wert: %3$s)',
+	'UI:CSVReport-Value-Issue-Format' => 'Fehler beim Verarbeiten des Inputs: %1$s',
+	'UI:CSVReport-Value-Issue-NoMatch' => 'Unerwarteter Wert für Attribut \'%1$s\': kein Treffer gefunden, Rechtschreibung überprüfen',
+	'UI:CSVReport-Value-Issue-Unknown' => 'Unerwarteter Wert für Attribut \'%1$s\': %2$s',
+	'UI:CSVReport-Row-Issue-Inconsistent' => 'Attribute nicht konsistent miteinander: %1$s',
+	'UI:CSVReport-Row-Issue-Attribute' => 'Unerwartete(r) Attributwert(e)',
+	'UI:CSVReport-Row-Issue-MissingExtKey' => 'Konnte nicht erzeugt werden, wegen fehlendem/n externen Key(s): %1$s',
+	'UI:CSVReport-Row-Issue-DateFormat' => 'falsches Datumsformat',
+	'UI:CSVReport-Row-Issue-Reconciliation' => 'Abgleich fehlgeschlagen',
+	'UI:CSVReport-Row-Issue-Ambiguous' => 'doppeldeutiger Abgleich (Reconcilation)',
+	'UI:CSVReport-Row-Issue-Internal' => 'Interner Fehler: %1$s, %2$s',
+	'UI:CSVReport-Icon-Unchanged' => 'Unverändert',
+	'UI:CSVReport-Icon-Modified' => 'Modifiziert',
+	'UI:CSVReport-Icon-Missing' => 'Fehlend',
+	'UI:CSVReport-Object-MissingToUpdate' => 'Fehlendes Objekt: wird aktualisiert',
+	'UI:CSVReport-Object-MissingUpdated' => 'Fehlendes Objekt: aktualisiert',
+	'UI:CSVReport-Icon-Created' => 'Erzeugt',
+	'UI:CSVReport-Object-ToCreate' => 'Objekt wird erzeugt',
+	'UI:CSVReport-Object-Created' => 'Objekt erzeugt',
+	'UI:CSVReport-Icon-Error' => 'Fehler',
+	'UI:CSVReport-Object-Error' => 'FEHLER: %1$s',
+	'UI:CSVReport-Object-Ambiguous' => 'DOPPELDEUTIG: %1$s',
+	'UI:CSVReport-Stats-Errors' => '%1$.0f %% der geladenen Objekte haben Fehler und werden ignoriert werden.',
+	'UI:CSVReport-Stats-Created' => '%1$.0f %% der geladenen Objekte werden erzeugt werden.',
+	'UI:CSVReport-Stats-Modified' => '%1$.0f %% der geladenen Objekte werden modifiziert,',
+	'UI:CSVExport:AdvancedMode' => 'Erweiterter Modus',
+	'UI:CSVExport:AdvancedMode+' => '',
+	'UI:CSVExport:LostChars' => 'Kodierungsproblem',
+	'UI:CSVExport:LostChars+' => '',
 	'UI:Audit:Title' => 'iTop - CMDB-Audit',
 	'UI:Audit:InteractiveAudit' => 'Interaktives Audit',
 	'UI:Audit:HeaderAuditRule' => 'Audit-Regel',
 	'UI:Audit:HeaderNbObjects' => '# Objekte',
 	'UI:Audit:HeaderNbErrors' => '# Fehler',
 	'UI:Audit:PercentageOk' => '% Ok',
-	
+	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL Fehler in der Regel %1$s: %2$s.',
+	'UI:Audit:ErrorIn_Category_Reason' => 'OQL Fehler in der Kategorie %1$s: %2$s.',
 	'UI:RunQuery:Title' => 'iTop - OQL-Abfrage-Auswertung',
 	'UI:RunQuery:QueryExamples' => 'Abfragebeispiele',
 	'UI:RunQuery:HeaderPurpose' => 'Verwendungszweck',
@@ -575,7 +492,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:RunQuery:DevelopedQuery' => 'Überarbeiteter Abfrageausdruck: ',
 	'UI:RunQuery:SerializedFilter' => 'Serieller Filter: ',
 	'UI:RunQuery:Error' => 'Ein Fehler trat während der Abfrage auf: %1$s auf.',
-	
+	'UI:Query:UrlForExcel' => 'URL für MS Excel Web Queries',
 	'UI:Schema:Title' => 'iTop Objekte-Schema',
 	'UI:Schema:CategoryMenuItem' => 'Kategorie <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Wechselseite Beziehungen',
@@ -594,7 +511,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Schema:Label' => 'Label',
 	'UI:Schema:Label+' => 'Label des Attributes',
 	'UI:Schema:Type' => 'Typ',
-	
 	'UI:Schema:Type+' => 'Datentyp des Attributes',
 	'UI:Schema:Origin' => 'Ursprung',
 	'UI:Schema:Origin+' => 'Die Basisklasse, in welcher dieses Attribut definiert ist.',
@@ -635,13 +551,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Schema:LifeCycleAttributeMustChange' => 'Muss ändern',
 	'UI:Schema:LifeCycleAttributeMustPrompt' => 'Benutzer wird zur Änderung des Wertes aufgefordert werden',
 	'UI:Schema:LifeCycleEmptyList' => 'Leere Liste',
-	
 	'UI:LinksWidget:Autocomplete+' => 'Geben Sie die ersten 3 Buchstaben ein...',
+	'UI:Edit:TestQuery' => 'Query testen',
 	'UI:Combo:SelectValue' => '--- wählen Sie einen Wert ---',
 	'UI:Label:SelectedObjects' => 'Ausgewählte Objekte: ',
 	'UI:Label:AvailableObjects' => 'Verfügbare Objekte: ',
 	'UI:Link_Class_Attributes' => '%1$s kennzeichnet',
-	'UI:SelectAllToggle+' => 'Alle auswählen/deselektieren',
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Fügen Sie %1$s Objekte verbunden mit %2$s hinzu: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Fügen Sie %1$s Objekte verbunden mit %2$s hinzu',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Verwalten Sie %1$s Objekte verbunden mit %2$s: %3$s',
@@ -649,16 +564,17 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:RemoveLinkedObjectsOf_Class' => 'Entferne ausgewählte Objekte',
 	'UI:Message:EmptyList:UseAdd' => 'Die Liste ist leer, benutzten Sie "Hinzufügen..." um Elemente hinzuzufügen.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Benutzen Sie das Suchformular oben, um nach hinzufügbaren Objekten zu suchen.',
-	
 	'UI:Wizard:FinalStepTitle' => 'Letzter Schritt: Bestätigung',
 	'UI:Title:DeletionOf_Object' => 'Löschung von %1$s',
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => 'Massenlöschung von %1$d Objekten der %2$s',
 	'UI:Delete:NotAllowedToDelete' => 'Sie sind nicht berechtigt, dieses Objekt zu löschen.',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'Sie sind nicht berechtigt, die folgenden Felder zu aktualisieren: %1$s',
-	'UI:Error:CannotDeleteBecause' => 'Dieses Objekt konnte aus folgendem Grund nicht gelöscht werden: %1$s',
 	'UI:Error:NotEnoughRightsToDelete' => 'Dieses Objekt konnte nicht gelöscht werden, da der derzeitige Benutzer nicht die notwendigen Rechte dazu besitzt.',
-	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Dieses Objekt konnte nicht gelöscht werden, da zuerst dazu einige manuelle Operationen durchgeführt werden müssen.',
+	'UI:Error:CannotDeleteBecause' => 'Dieses Objekt konnte aus folgendem Grund nicht gelöscht werden: %1$s',
+	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Dieses Objekt konnte nicht gelöscht werden, da zuerst einige Manuelle Operationen ausgeführt werden müssen (bzgl. Abhängigkeiten des Objekts).',
+	'UI:Error:CannotDeleteBecauseManualOpNeeded' => 'Dieses Objekt konnte nicht gelöscht werden, da zuerst dazu einige manuelle Operationen durchgeführt werden müssen.',
 	'UI:Archive_User_OnBehalfOf_User' => '%1$s im Auftrag von %2$s',
+	'UI:Delete:Deleted' => 'gelöscht',
 	'UI:Delete:AutomaticallyDeleted' => 'Automatisch gelöscht',
 	'UI:Delete:AutomaticResetOf_Fields' => 'Automatischer Reset der Felder: %1$s',
 	'UI:Delete:CleaningUpRefencesTo_Object' => 'Aufräumen aller Referenzen zu %1$s...',
@@ -667,14 +583,15 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Delete:_Name_Class_Deleted' => '%1$s - %2$s gelöscht.',
 	'UI:Delete:ConfirmDeletionOf_Name' => 'Löschung von %1$s',
 	'UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class' => 'Löschung von %1$d Objekten der Klasse %2$s',
-//	'UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible' => 'Sollte automatisch gelöscht werden, aber Sie sind nicht berechtigt, dies zu tun',
-//	'UI:Delete:MustBeDeletedManuallyButNotPossible' => 'Muss automatisch gelöscht werden, aber Sie sind nicht berechtigt, dieses Objekt zu löschen. Bitte kontaktieren Sie Ihren Anwendungs-Administrator',
+	'UI:Delete:CannotDeleteBecause' => 'Konnte nicht gelöscht werden: %1$s',
+	'UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible' => 'Sollte automatisch gelöscht werden, was aber nicht durchführbar ist: %1$s',
+	'UI:Delete:MustBeDeletedManuallyButNotPossible' => 'Muss manuell gelöscht werden, was aber nicht durchführbar ist: %1$s',
 	'UI:Delete:WillBeDeletedAutomatically' => 'Wird automatisch gelöscht',
 	'UI:Delete:MustBeDeletedManually' => 'Muss manuell gelöscht werden',
 	'UI:Delete:CannotUpdateBecause_Issue' => 'Sollte automatisch aktualisiert werden, aber: %1$s',
 	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'Wird automatisch aktualisiert (Reset: %1$s)',
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d Objekte/Links referenzieren %2$s',
-	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d Objekte/Links referenzieren einige der zu löschenden Objekte',	
+	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d Objekte/Links referenzieren einige der zu löschenden Objekte',
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'Um Datenbankintegrität sicherzustellen sollten alle weiteren Referenzen entfernt werden.',
 	'UI:Delete:Consequence+' => 'Was getan wird',
 	'UI:Delete:SorryDeletionNotAllowed' => 'Leider ist Ihnen nicht gestattet, dieses Objekt zu löschen. Eine ausführliche Erklärung dazu finden Sie oben',
@@ -704,11 +621,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:PageTitle:ObjectCreated' => 'iTop-Objekt wurde erstellt.',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s erstellt.',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => 'Anwenden von %1$s auf Objekt: %2$s in Status %3$s zu Zielstatus: %4$s.',
+	'UI:ObjectCouldNotBeWritten' => 'Das Objekt konnte nicht geschrieben werden: %1$s',
 	'UI:PageTitle:FatalError' => 'iTop - Fataler Fehler',
+	'UI:SystemIntrusion' => 'Zugriff verweigert. Sie haben versucht, eine Aktion auszuführen, für die Sie keine ausreichende Berechtigungen besitzen.',
 	'UI:FatalErrorMessage' => 'Fataler Fehler! iTop kann leider nicht fortfahren.',
 	'UI:Error_Details' => 'Fehler: %1$s.',
-
-	'UI:PageTitle:ClassProjections'	=> 'iTop Benutzerverwaltung - Klassenabbildung',
+	'UI:PageTitle:ClassProjections' => 'iTop Benutzerverwaltung - Klassenabbildung',
 	'UI:PageTitle:ProfileProjections' => 'iTop Benutzerverwaltung - Profilabbildung',
 	'UI:UserManagement:Class' => 'Klasse',
 	'UI:UserManagement:Class+' => 'Klasse von Objekten',
@@ -750,7 +668,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:AdminTools' => 'Admin-Tools',
 	'Menu:AdminTools+' => 'Administrationswerkzeuge',
 	'Menu:AdminTools?' => 'Werkzeuge, die nur für Benutzer mit Adminstratorprofil zugänglich sind',
-
 	'UI:ChangeManagementMenu' => 'Change Management',
 	'UI:ChangeManagementMenu+' => 'Change Management',
 	'UI:ChangeManagementMenu:Title' => 'Übersicht an Changes',
@@ -758,52 +675,41 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changes nach Status',
 	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changes nach Arbeitsgruppen',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Changes, die noch nicht zugeordnet wurden',
-
 	'UI:ConfigurationManagementMenu' => 'Configuration Management',
 	'UI:ConfigurationManagementMenu+' => 'Configuration Management',
 	'UI:ConfigurationManagementMenu:Title' => 'Übersicht der Infrastruktur',
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Infrastrukturbestandteile nach Typ',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Infrastrukturbestandteile nach Status',
-
-'UI:ConfigMgmtMenuOverview:Title' => 'Dashboard für das Configuration Management',
-'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Configuration Items nach Status',
-'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Configuration Items nach Typ',
-
-'UI:RequestMgmtMenuOverview:Title' => 'Dashboard für das Request Management',
-'UI-RequestManagementOverview-RequestByService' => 'Benutzeranfragen nach Service gegliedert',
-'UI-RequestManagementOverview-RequestByPriority' => 'Benutzeranfragen nach Priorität gegliedert',
-'UI-RequestManagementOverview-RequestUnassigned' => 'Benutzeranfragen, die noch nicht an einen Bearbeiter zugeteilt wurden',
-
-'UI:IncidentMgmtMenuOverview:Title' => 'Dashboard für Incident Management',
-'UI-IncidentManagementOverview-IncidentByService' => 'Incidents nach Service',
-'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidents nach Priorität',
-'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidents, die noch nicht an einen Bearbeiter zugeteilt wurden',
-
-'UI:ChangeMgmtMenuOverview:Title' => 'Dashboard für das Change Management',
-'UI-ChangeManagementOverview-ChangeByType' => 'Changes nach Typ',
-'UI-ChangeManagementOverview-ChangeUnassigned' => 'Changes, die noch nicht an einen Bearbeiter zugeteilt wurden',
-'UI-ChangeManagementOverview-ChangeWithOutage' => 'Ausfälle bedingt durch Changes',
-
-'UI:ServiceMgmtMenuOverview:Title' => 'Dashboard für das Service Management',
-'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Kundenverträge, die in weniger als 30 Tagen erneuert werden müssen',
-'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Provider-Verträge, die in weniger als 30 Tagen erneuert werden müssen',
-
+	'UI:ConfigMgmtMenuOverview:Title' => 'Dashboard für das Configuration Management',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Configuration Items nach Status',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Configuration Items nach Typ',
+	'UI:RequestMgmtMenuOverview:Title' => 'Dashboard für das Request Management',
+	'UI-RequestManagementOverview-RequestByService' => 'Benutzeranfragen nach Service gegliedert',
+	'UI-RequestManagementOverview-RequestByPriority' => 'Benutzeranfragen nach Priorität gegliedert',
+	'UI-RequestManagementOverview-RequestUnassigned' => 'Benutzeranfragen, die noch nicht an einen Bearbeiter zugeteilt wurden',
+	'UI:IncidentMgmtMenuOverview:Title' => 'Dashboard für Incident Management',
+	'UI-IncidentManagementOverview-IncidentByService' => 'Incidents nach Service',
+	'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidents nach Priorität',
+	'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidents, die noch nicht an einen Bearbeiter zugeteilt wurden',
+	'UI:ChangeMgmtMenuOverview:Title' => 'Dashboard für das Change Management',
+	'UI-ChangeManagementOverview-ChangeByType' => 'Changes nach Typ',
+	'UI-ChangeManagementOverview-ChangeUnassigned' => 'Changes, die noch nicht an einen Bearbeiter zugeteilt wurden',
+	'UI-ChangeManagementOverview-ChangeWithOutage' => 'Ausfälle bedingt durch Changes',
+	'UI:ServiceMgmtMenuOverview:Title' => 'Dashboard für das Service Management',
+	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Kundenverträge, die in weniger als 30 Tagen erneuert werden müssen',
+	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Provider-Verträge, die in weniger als 30 Tagen erneuert werden müssen',
 	'UI:ContactsMenu' => 'Kontakte',
 	'UI:ContactsMenu+' => 'Kontakte',
 	'UI:ContactsMenu:Title' => 'Kontaktübersicht',
 	'UI-ContactsMenu-ContactsByLocation' => 'Kontakte nach Standort',
 	'UI-ContactsMenu-ContactsByType' => 'Kontakte nach Typ',
 	'UI-ContactsMenu-ContactsByStatus' => 'Kontakte nach Status',
-
 	'Menu:CSVImportMenu' => 'CSV-Import',
 	'Menu:CSVImportMenu+' => 'Massenerstellung oder -aktualisierung',
-	
 	'Menu:DataModelMenu' => 'Datenmodell',
 	'Menu:DataModelMenu+' => 'Übersicht des Datenmodells',
-	
 	'Menu:ExportMenu' => 'Export',
 	'Menu:ExportMenu+' => 'Export einer beliebigen Abfrage in HTML, CSV oder XML',
-	
 	'Menu:NotificationsMenu' => 'Benachrichtigungen',
 	'Menu:NotificationsMenu+' => 'Einstellungen der Benachrichtigungen',
 	'UI:NotificationsMenu:Title' => 'Einstellungen der <span class="hilite">Benachrichtigungen</span>',
@@ -829,47 +735,39 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:NotificationsMenu:OnStateLeave' => 'Wenn ein Objekt einen gegebenen Status verlässt',
 	'UI:NotificationsMenu:Actions' => 'Aktionen',
 	'UI:NotificationsMenu:AvailableActions' => 'Verfügbare Aktionen',
-	
 	'Menu:AuditCategories' => 'Audit-Kategorien',
 	'Menu:AuditCategories+' => 'Audit-Kategorien',
 	'Menu:Notifications:Title' => 'Audit-Kategorien',
-		
 	'Menu:RunQueriesMenu' => 'Abfrage ausführen',
 	'Menu:RunQueriesMenu+' => 'Eine beliebige Abfrage ausführen',
-	
+	'Menu:QueryMenu' => 'Query-Bibliothek',
+	'Menu:QueryMenu+' => '',
 	'Menu:DataAdministration' => 'Data Management',
 	'Menu:DataAdministration+' => 'Data Management',
-	
 	'Menu:UniversalSearchMenu' => 'Universelle Suche',
 	'Menu:UniversalSearchMenu+' => 'Suchen Sie nach beliebigen Inhalt...',
-	
 	'Menu:ApplicationLogMenu' => 'Protokoll der Anwendung',
 	'Menu:ApplicationLogMenu+' => 'Protokoll der Anwendung',
 	'Menu:ApplicationLogMenu:Title' => 'Protokoll der Anwendung',
-
 	'Menu:UserManagementMenu' => 'User-Management',
 	'Menu:UserManagementMenu+' => 'User-Management',
-
 	'Menu:ProfilesMenu' => 'Profile',
 	'Menu:ProfilesMenu+' => 'Profile',
 	'Menu:ProfilesMenu:Title' => 'Profile',
-
 	'Menu:UserAccountsMenu' => 'Benutzerkonten',
 	'Menu:UserAccountsMenu+' => 'Benutzerkonten',
-	'Menu:UserAccountsMenu:Title' => 'Benutzerkonten',	
-
+	'Menu:UserAccountsMenu:Title' => 'Benutzerkonten',
 	'UI:iTopVersion:Short' => 'iTop Version %1$s',
 	'UI:iTopVersion:Long' => 'iTop Version %1$s-%2$s compiliert am %3$s',
 	'UI:PropertiesTab' => 'Eigenschaften',
-
 	'UI:OpenDocumentInNewWindow_' => 'Dieses Dokument in einem neuen Fenster öffnen: %1$s',
 	'UI:DownloadDocument_' => 'Dieses Dokument herunterladen: %1$s',
 	'UI:Document:NoPreview' => 'Für diesen Typ Dokument ist keine Vorschau vorhanden',
-
+	'UI:Download-CSV' => '%1$s herunterladen',
 	'UI:DeadlineMissedBy_duration' => 'Verpasst um %1$s',
-	'UI:Deadline_LessThan1Min' => '< 1 Minute',		
-	'UI:Deadline_Minutes' => '%1$d Minuten',			
-	'UI:Deadline_Hours_Minutes' => '%1$dStunden %2$dMinuten',			
+	'UI:Deadline_LessThan1Min' => '< 1 Minute',
+	'UI:Deadline_Minutes' => '%1$d Minuten',
+	'UI:Deadline_Hours_Minutes' => '%1$dStunden %2$dMinuten',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dTage %2$dStunden %3$dMinuten',
 	'UI:Help' => 'Hilfe',
 	'UI:PasswordConfirm' => '(Bestätigen)',
@@ -877,8 +775,10 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:DisplayThisMessageAtStartup' => 'Diese Meldung beim Start immer anzeigen',
 	'UI:RelationshipGraph' => 'Grafische Ansicht',
 	'UI:RelationshipList' => 'Liste',
-
+	'UI:OperationCancelled' => 'Operation abgebrochen',
+	'UI:ElementsDisplayed' => 'Filtere',
 	'Portal:Title' => 'iTop-Benutzerportal',
+	'Portal:NoRequestMgmt' => 'Lieber %1$s, Sie wurden hierher umgeleitet, weil Ihr Account mit dem Profil \'Portal user\' konfiguriert wurde. Leider wurde in iTop aber das \'Request Management\'-Feature nicht installiert. Bitte kontaktieren Sie Ihren Administrator.',
 	'Portal:Refresh' => 'Neu laden',
 	'Portal:Back' => 'Zurück',
 	'Portal:WelcomeUserOrg' => 'Welcome %1$s, from %2$s',
@@ -888,8 +788,8 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Portal:ChangeMyPassword' => 'Mein Passwort ändern',
 	'Portal:Disconnect' => 'Disconnect',
 	'Portal:OpenRequests' => 'Meine offenen Requests',
-	'Portal:ClosedRequests'  => 'My closed requests',
-	'Portal:ResolvedRequests'  => 'Meine gelösten Requests',
+	'Portal:ClosedRequests' => 'My closed requests',
+	'Portal:ResolvedRequests' => 'Meine gelösten Requests',
 	'Portal:SelectService' => 'Wählen Sie einen Service aus dem Katalog:',
 	'Portal:PleaseSelectOneService' => 'Bitte wählen Sie einen Service',
 	'Portal:SelectSubcategoryFrom_Service' => 'Wählen Sie einen Unterkategorie für diesen Service vom Typ "%1$s":',
@@ -903,11 +803,148 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Portal:Button:UpdateRequest' => 'Update the request',
 	'Portal:EnterYourCommentsOnTicket' => 'Geben Sie einen Kommentar zur Lösung dieses Tickets ein:',
 	'Portal:ErrorNoContactForThisUser' => 'Fehler: der derzeitige Benutzer wurde nicht einem Kontakt oder einer Person zugewiesen. Bitte kontaktieren Sie Ihren Administrator.',
-
+	'Portal:Attachments' => 'Attachments',
+	'Portal:AddAttachment' => ' Attachment hinzufügen',
+	'Portal:RemoveAttachment' => 'Attachment entfernen',
+	'Portal:Attachment_No_To_Ticket_Name' => 'Attachment #%1$d an %2$s (%3$s)',
 	'Enum:Undefined' => 'Nicht definiert',
+	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s Tage %2$s Stunden %3$s Minuten %4$s Sekunden',
+	'UI:ModifyAllPageTitle' => 'Alle modifizieren',
+	'UI:Modify_N_ObjectsOf_Class' => 'Modifiziere %1$d Objekte der Klasse %2$s',
+	'UI:Modify_M_ObjectsOf_Class_OutOf_N' => 'Modifiziere %1$d Objekte der Klasse %2$s von insgesamt %3$d',
+	'UI:Menu:ModifyAll' => 'Modifizieren...',
+	'UI:Button:ModifyAll' => 'Alle modifizieren',
+	'UI:Button:PreviewModifications' => 'Vorschau auf Modifikationen >>',
+	'UI:ModifiedObject' => 'Objekt modifiziert',
+	'UI:BulkModifyStatus' => 'Operation',
+	'UI:BulkModifyStatus+' => '',
+	'UI:BulkModifyErrors' => 'Fehler (falls vorhanden)',
+	'UI:BulkModifyErrors+' => '',
+	'UI:BulkModifyStatusOk' => 'Ok',
+	'UI:BulkModifyStatusError' => 'Fehler',
+	'UI:BulkModifyStatusModified' => 'Modifiziert',
+	'UI:BulkModifyStatusSkipped' => 'Übersprungen',
+	'UI:BulkModify_Count_DistinctValues' => '%1$d unterschiedliche Werte:',
+	'UI:BulkModify:Value_Exists_N_Times' => '%1$s, %2$d mal',
+	'UI:BulkModify:N_MoreValues' => '%1$d weitere Werte...',
+	'UI:AttemptingToSetAReadOnlyAttribute_Name' => 'Versuche, Read-Only-Feld zu setzen: %1$s',
+	'UI:FailedToApplyStimuli' => 'Der Vorgang ist fehlgeschlagen.',
+	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: Modifiziere %2$d Objekte der Klasse %3$s',
+	'UI:CaseLogTypeYourTextHere' => 'Geben Sie Ihren Text hier ein:',
+	'UI:CaseLog:DateFormat' => 'Y-m-d H:i:s',
+	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
+	'UI:CaseLog:InitialValue' => 'Anfangswert:',
+	'UI:AttemptingToSetASlaveAttribute_Name' => 'Das Feld %1$s ist nicht schreibbar, weil es durch die Datensynchronisation geführt wird. Wert nicht gesetzt.',
+	'UI:ActionNotAllowed' => 'Sie haben nicht die Berechtigung, diese Aktion auf diesen Objekten auszuführen.',
+	'UI:BulkAction:NoObjectSelected' => 'Bitte wählen Sie mindestens ein Objekt, um diese Aktion auszuführen.',
+	'UI:AttemptingToChangeASlaveAttribute_Name' => 'Das Feld %1$s ist nicht schreibbar, weil es durch die Datensynchronisation geführt wird. Wert bleibt unverändert.',
+	'UI:Pagination:HeaderSelection' => 'Gesamt: %1$s Objekte (%2$s Objekte ausgewählt).',
+	'UI:Pagination:HeaderNoSelection' => 'Gesamt: %1$s Objekte.',
+	'UI:Pagination:PageSize' => '%1$s Objekte pro Seite',
+	'UI:Pagination:PagesLabel' => 'Seiten:',
+	'UI:Pagination:All' => 'Alles',
+	'UI:HierarchyOf_Class' => 'Hierarchie von %1$s',
+	'UI:Preferences' => 'Einstellungen...',
+	'UI:FavoriteOrganizations' => 'Bevorzugte Organisationen',
+	'UI:FavoriteOrganizations+' => '',
+	'UI:FavoriteLanguage' => 'Sprache des Benutzerinterfaces',
+	'UI:Favorites:SelectYourLanguage' => 'Wählen Sie Ihre bevorzugte Sprache aus',
+	'UI:FavoriteOtherSettings' => 'Andere Einstellungen',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Default-Länge für Listen:  %1$s Elemente pro Seite',
+	'UI:NavigateAwayConfirmationMessage' => 'Jedwede Veränderung wird verworfen.',
+	'UI:CancelConfirmationMessage' => 'Sie werden Ihre Änderungen verlieren. Dennoch fortfahren?',
+	'UI:AutoApplyConfirmationMessage' => 'Einige Änderungen wurden noch nicht angewandt. Möchten Sie, daß iTop diese berüchsichtigt?',
+	'UI:Create_Class_InState' => 'Erzeuge die/das %1$s in Status: ',
+	'UI:OrderByHint_Values' => 'Sortierreihenfolge: %1$s',
+	'UI:Menu:AddToDashboard' => 'Zu Dashboard hinzufügen...',
 	'UI:Button:Refresh' => 'Neu laden',
+	'UI:ConfigureThisList' => 'Liste konfigurieren...',
+	'UI:ListConfigurationTitle' => 'Listenkonfiguration',
+	'UI:ColumnsAndSortOrder' => 'Spalten und Sortierrheienfolge:',
+	'UI:UseDefaultSettings' => 'Verwende Default-Einstellungen',
+	'UI:UseSpecificSettings' => 'Verwende folgende Einstellungen:',
+	'UI:Display_X_ItemsPerPage' => '%1$s Elemente pro Seite anzeigen',
+	'UI:UseSavetheSettings' => 'Einstellungen speichern',
+	'UI:OnlyForThisList' => 'Nur für diese Liste',
+	'UI:ForAllLists' => 'Für alle Listen',
+	'UI:ExtKey_AsLink' => '%1$s (Link)',
+	'UI:ExtKey_AsFriendlyName' => '%1$s (Friendly Name)',
+	'UI:ExtField_AsRemoteField' => '%1$s (%2$s)',
+	'UI:Button:MoveUp' => 'Nach oben',
+	'UI:Button:MoveDown' => 'Nach unten',
+	'UI:OQL:UnknownClassAndFix' => 'Unbekannte Klasse "%1$s". Sie könnten stattdessen "%2$s" versuchen.',
+	'UI:OQL:UnknownClassNoFix' => 'Unbekannte Klasse "%1$s"',
+	'UI:Dashboard:Edit' => 'Diese Seite bearbeiten...',
+	'UI:Dashboard:Revert' => 'Auf Originalversion zurücksetzen...',
+	'UI:Dashboard:RevertConfirm' => 'Alle gemachten Änderungen gehen verloren. Bitte bestätigen Sie, daß Sie dies so wünschen.',
+	'UI:ExportDashBoard' => 'In Datei exportieren',
+	'UI:ImportDashBoard' => 'Aus Datei importieren...',
+	'UI:ImportDashboardTitle' => 'Import aus einer Datei',
+	'UI:ImportDashboardText' => 'Wählen Sie eine Dashboard-Datei zum Import:',
+	'UI:DashletCreation:Title' => 'Neues ashlet erzeugen',
+	'UI:DashletCreation:Dashboard' => 'Dashboard',
+	'UI:DashletCreation:DashletType' => 'Dashlet-Typ',
+	'UI:DashletCreation:EditNow' => 'Dashboard bearbeiten',
+	'UI:DashboardEdit:Title' => 'Dashboard-Editor',
+	'UI:DashboardEdit:DashboardTitle' => 'Titel',
+	'UI:DashboardEdit:Layout' => 'Layout',
+	'UI:DashboardEdit:Properties' => 'Dashboard-Einstellungen',
+	'UI:DashboardEdit:Dashlets' => 'Verfügbare Dashlets',
+	'UI:DashboardEdit:DashletProperties' => 'Dashlet-Einstellungen',
+	'UI:Form:Property' => 'Einstellung',
+	'UI:Form:Value' => 'Wert',
+	'UI:DashletPlainText:Label' => 'Text',
+	'UI:DashletPlainText:Description' => 'Reiner Text (ohne Formatierung)',
+	'UI:DashletPlainText:Prop-Text' => 'Text',
+	'UI:DashletPlainText:Prop-Text:Default' => 'Bitte Text hier eingeben...',
+	'UI:DashletObjectList:Label' => 'Objektliste',
+	'UI:DashletObjectList:Description' => 'Objektlisten-Dashlet',
+	'UI:DashletObjectList:Prop-Title' => 'Titel',
+	'UI:DashletObjectList:Prop-Query' => 'Query',
+	'UI:DashletObjectList:Prop-Menu' => 'Menü',
+	'UI:DashletGroupBy:Prop-Title' => 'Titel',
+	'UI:DashletGroupBy:Prop-Query' => 'Query',
+	'UI:DashletGroupBy:Prop-Style' => 'Stil',
+	'UI:DashletGroupBy:Prop-GroupBy' => 'Gruppieren nach...',
+	'UI:DashletGroupBy:Prop-GroupBy:Hour' => 'Stunde von %1$s (0-23)',
+	'UI:DashletGroupBy:Prop-GroupBy:Month' => 'Monat von %1$s (1 - 12)',
+	'UI:DashletGroupBy:Prop-GroupBy:DayOfWeek' => 'Wochentag für %1$s',
+	'UI:DashletGroupBy:Prop-GroupBy:DayOfMonth' => 'Tag im Monat für %1$s',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-Hour' => '%1$s (Stunde)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (Monat)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (Wochentag)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (Wochentag)',
+	'UI:DashletGroupBy:MissingGroupBy' => 'Bitte wählen Sie das Feld, nach dem die Objekte gruppiert werden',
+	'UI:DashletGroupByPie:Label' => 'Tortendiagramm',
+	'UI:DashletGroupByPie:Description' => 'Tortendiagramm',
+	'UI:DashletGroupByBars:Label' => 'Balkendiagramm',
+	'UI:DashletGroupByBars:Description' => 'Balkendiagramm',
+	'UI:DashletGroupByTable:Label' => 'Gruppieren nach (Tabelle)',
+	'UI:DashletGroupByTable:Description' => 'Liste (gruppiert nach einem Feld)',
+	'UI:DashletHeaderStatic:Label' => 'Header',
+	'UI:DashletHeaderStatic:Description' => 'Zeigt einen horizontalen Trenner',
+	'UI:DashletHeaderStatic:Prop-Title' => 'Titel',
+	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Kontakte',
+	'UI:DashletHeaderStatic:Prop-Icon' => 'Icon',
+	'UI:DashletHeaderDynamic:Label' => 'Header mit Statistiken',
+	'UI:DashletHeaderDynamic:Description' => 'Header mit Statistiken (gruppirt nach...)',
+	'UI:DashletHeaderDynamic:Prop-Title' => 'Titel',
+	'UI:DashletHeaderDynamic:Prop-Title:Default' => 'Kontakte',
+	'UI:DashletHeaderDynamic:Prop-Icon' => 'Icon',
+	'UI:DashletHeaderDynamic:Prop-Subtitle' => 'Untertitel',
+	'UI:DashletHeaderDynamic:Prop-Subtitle:Default' => 'Kontakte',
+	'UI:DashletHeaderDynamic:Prop-Query' => 'Query',
+	'UI:DashletHeaderDynamic:Prop-GroupBy' => 'Gruppieren nache',
+	'UI:DashletHeaderDynamic:Prop-Values' => 'Werte',
+	'UI:DashletBadge:Label' => 'Badge',
+	'UI:DashletBadge:Description' => 'Objekt-Icon bei \'Neu/Suche\'',
+	'UI:DashletBadge:Prop-Class' => 'Klasse',
+	'DayOfWeek-Sunday' => 'Sonntag',
+	'DayOfWeek-Monday' => 'Montag',
+	'DayOfWeek-Tuesday' => 'Dienstag',
+	'DayOfWeek-Wednesday' => 'Mittwoch',
+	'DayOfWeek-Thursday' => 'Donnerstag',
+	'DayOfWeek-Friday' => 'Freitag',
+	'DayOfWeek-Saturday' => 'Samstag',
 ));
-
-
-
 ?>

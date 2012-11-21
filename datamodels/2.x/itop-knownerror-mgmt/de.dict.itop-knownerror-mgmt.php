@@ -16,43 +16,12 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
- * Localized data
- *
- * @author      Stephan Rosenke <stephan.rosenke@itomig.de>
+ * @author	Stephan Rosenke <stephan.rosenke@itomig.de>
+
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: KnownError
-//
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:KnownError' => 'Known Error',
@@ -61,12 +30,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:KnownError/Attribute:name+' => '',
 	'Class:KnownError/Attribute:org_id' => 'Kunde',
 	'Class:KnownError/Attribute:org_id+' => '',
-	'Class:KnownError/Attribute:cust_name' => 'Kundenname',
-	'Class:KnownError/Attribute:cust_name+' => '',
 	'Class:KnownError/Attribute:problem_id' => 'Dazugehöriges Problem',
 	'Class:KnownError/Attribute:problem_id+' => '',
-	'Class:KnownError/Attribute:problem_ref' => 'Referenz',
-	'Class:KnownError/Attribute:problem_ref+' => '',
 	'Class:KnownError/Attribute:symptom' => 'Symptom',
 	'Class:KnownError/Attribute:symptom+' => '',
 	'Class:KnownError/Attribute:root_cause' => 'Grundursache',
@@ -97,59 +62,65 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:KnownError/Attribute:ci_list+' => '',
 	'Class:KnownError/Attribute:document_list' => 'Dokumente',
 	'Class:KnownError/Attribute:document_list+' => '',
+	'Class:lnkErrorToFunctionalCI' => 'Verknüpfung Fehler/FunctionalCI',
+	'Class:lnkErrorToFunctionalCI+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Fehler',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Begründung',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
+	'Class:lnkDocumentToError' => 'Verknüpfun Dokumente/Fehler',
+	'Class:lnkDocumentToError+' => '',
+	'Class:lnkDocumentToError/Attribute:document_id' => 'Dokument',
+	'Class:lnkDocumentToError/Attribute:document_id+' => '',
+	'Class:lnkDocumentToError/Attribute:error_id' => 'Fehler',
+	'Class:lnkDocumentToError/Attribute:error_id+' => '',
+	'Class:lnkDocumentToError/Attribute:link_type' => 'Verknüpfungstyp',
+	'Class:lnkDocumentToError/Attribute:link_type+' => '',
+	'Class:FAQ' => 'FAQ',
+	'Class:FAQ+' => '',
+	'Class:FAQ/Attribute:title' => 'Titel',
+	'Class:FAQ/Attribute:title+' => '',
+	'Class:FAQ/Attribute:summary' => 'Zusammenfassung',
+	'Class:FAQ/Attribute:summary+' => '',
+	'Class:FAQ/Attribute:description' => 'Beschreibung',
+	'Class:FAQ/Attribute:description+' => '',
+	'Class:FAQ/Attribute:category_id' => 'Kategorie',
+	'Class:FAQ/Attribute:category_id+' => '',
+	'Class:FAQ/Attribute:error_code' => 'Fehlercode',
+	'Class:FAQ/Attribute:error_code+' => '',
+	'Class:FAQ/Attribute:key_words' => 'Schlüsselwörter',
+	'Class:FAQ/Attribute:key_words+' => '',
+	'Class:FAQcategory' => 'FAQ-Kategorie',
+	'Class:FAQcategory+' => '',
+	'Class:FAQcategory/Attribute:name' => 'Name',
+	'Class:FAQcategory/Attribute:name+' => '',
+	'Class:FAQcategory/Attribute:faq_list' => 'FAQs',
+	'Class:FAQcategory/Attribute:faq_list+' => '',
+	'Menu:NewError' => 'Neuer bekannter Fehler',
+	'Menu:NewError+' => '',
+	'Menu:SearchError' => 'Nach bekannten Fehler suchen',
+	'Menu:SearchError+' => '',
+	'Menu:Problem:KnownErrors' => 'Alle bekannten Fehler',
+	'Menu:Problem:KnownErrors+' => 'Alle bekannten Fehler',
+	'Menu:FAQCategory' => 'FAQ-Kategorien',
+	'Menu:FAQCategory+' => '',
+	'Menu:FAQ' => 'FAQs',
+	'Menu:FAQ+' => '',
+	'Class:KnownError/Attribute:cust_name' => 'Kundenname',
+	'Class:KnownError/Attribute:cust_name+' => '',
+	'Class:KnownError/Attribute:problem_ref' => 'Referenz',
+	'Class:KnownError/Attribute:problem_ref+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI-Name',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Fehler-Name',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
+	'Class:lnkDocumentToError/Attribute:document_name' => 'Dokumentname',
+	'Class:lnkDocumentToError/Attribute:document_name+' => '',
+	'Class:lnkDocumentToError/Attribute:error_name' => 'Fehlername',
+	'Class:lnkDocumentToError/Attribute:error_name+' => '',
+	'Class:FAQ/Attribute:category_name' => 'Kategoriename',
+	'Class:FAQ/Attribute:category_name+' => '',
 ));
-
-
-//
-// Class: lnkInfraError
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:lnkInfraError' => 'InfraErrorLinks',
-	'Class:lnkInfraError+' => 'Infrastruktur bezogen auf einen bekannten Fehler',
-	'Class:lnkInfraError/Attribute:infra_id' => 'CI',
-	'Class:lnkInfraError/Attribute:infra_id+' => '',
-	'Class:lnkInfraError/Attribute:infra_name' => 'CI-Name',
-	'Class:lnkInfraError/Attribute:infra_name+' => '',
-	'Class:lnkInfraError/Attribute:infra_status' => 'CI-Status',
-	'Class:lnkInfraError/Attribute:infra_status+' => '',
-	'Class:lnkInfraError/Attribute:error_id' => 'Fehler',
-	'Class:lnkInfraError/Attribute:error_id+' => '',
-	'Class:lnkInfraError/Attribute:error_name' => 'Fehlername',
-	'Class:lnkInfraError/Attribute:error_name+' => '',
-	'Class:lnkInfraError/Attribute:reason' => 'Ursache',
-	'Class:lnkInfraError/Attribute:reason+' => '',
-));
-
-//
-// Class: lnkDocumentError
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:lnkDocumentError' => 'Mit Fehler verbundenes Dokument',
-	'Class:lnkDocumentError+' => 'Verbindung zwischen dem Dokument und dem bekannten Fehler',
-	'Class:lnkDocumentError/Attribute:doc_id' => 'Dokument',
-	'Class:lnkDocumentError/Attribute:doc_id+' => '',
-	'Class:lnkDocumentError/Attribute:doc_name' => 'Dokumentename',
-	'Class:lnkDocumentError/Attribute:doc_name+' => '',
-	'Class:lnkDocumentError/Attribute:error_id' => 'Fehler',
-	'Class:lnkDocumentError/Attribute:error_id+' => '',
-	'Class:lnkDocumentError/Attribute:error_name' => 'Fehlername',
-	'Class:lnkDocumentError/Attribute:error_name+' => '',
-	'Class:lnkDocumentError/Attribute:link_type' => 'Information',
-	'Class:lnkDocumentError/Attribute:link_type+' => '',
-));
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-        'Menu:ProblemManagement' => 'Problem-Management', // Duplicated from Pb Mgmt module, since the two modules are independent
-        'Menu:ProblemManagement+' => 'Problem-Management',// and the KEDB may be installed independently of the Pb Mgmt module
-        'Menu:NewError' => 'Neuer bekannter Fehler',
-        'Menu:NewError+' => '',
-        'Menu:SearchError' => 'Nach bekannten Fehler suchen',
-        'Menu:SearchError+' => '',
-    	'Menu:Problem:KnownErrors' => 'Alle bekannten Fehler',
-    	'Menu:Problem:KnownErrors+' => 'Alle bekannten Fehler',
-));
-
-
 ?>

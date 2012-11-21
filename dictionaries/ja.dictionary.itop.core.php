@@ -16,15 +16,21 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+
 /**
  * Localized data
  *
- * @author 	Tadashi Kaneda <kaneda@rworks.jp>
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Core:DeletedObjectLabel' => '%1s (削除されました)',
+	'Core:DeletedObjectTip' => 'オブジェクトは削除されました %1$s (%2$s)',
+
+	'Core:UnknownObjectLabel' => 'オブジェクトは見つかりません (クラス: %1$s, id: %2$d)',
+	'Core:UnknownObjectTip' => 'オブジェクトは見つかりません。しばらく前に削除され、その後ログが削除されたかもしれません。',
+
 	'Core:AttributeLinkedSet' => 'オブジェクト配列',
 	'Core:AttributeLinkedSet+' => '同一あるいはサブクラスに属するオブジェクト',
 
@@ -47,7 +53,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:AttributeClass+' => 'クラス',
 
 	'Core:AttributeApplicationLanguage' => '使用言語',
-	'Core:AttributeApplicationLanguage+' => '言語・国別 (EN US)',
+	'Core:AttributeApplicationLanguage+' => '言語・国別 (JA JP)',
 
 	'Core:AttributeFinalClass' => 'クラス (自動)',
 	'Core:AttributeFinalClass+' => 'オブジェクトの実クラス (コアで自動的に生成される)',
@@ -85,14 +91,38 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:AttributeTemplateHTML' => 'テンプレートHTML',
 	'Core:AttributeTemplateHTML+' => 'プレースホルダを含むHTML',
 
-	'Core:AttributeWikiText' => 'Wikiアーティクル',
-	'Core:AttributeWikiText+' => 'Wikiフォーマット済みテキスト',
-
 	'Core:AttributeDateTime' => '日付/時刻',
 	'Core:AttributeDateTime+' => '日付と時刻(年-月-日 hh:mm:ss)',
+	'Core:AttributeDateTime?SmartSearch' => '
+<p>
+	Date format:<br/>
+	<b>yyyy-mm-dd hh:mm:ss</b><br/>
+	例: 2011-07-19 18:40:00
+</p>
+<p>
+Operators:<br/>
+	<b>&gt;</b><em>日付</em><br/>
+	<b>&lt;</b><em>日付</em><br/>
+	<b>[</b><em>日付</em>,<em>日付</em><b>]</b>
+</p>
+<p>
+もし、時刻がなければ、規定値 00:00:00となります。
+</p>',
 
 	'Core:AttributeDate' => '日付',
 	'Core:AttributeDate+' => '日付 (年-月-日)',
+	'Core:AttributeDate?SmartSearch' => '
+<p>
+	日付フォーマット:<br/>
+	<b>yyyy-mm-dd</b><br/>
+	例: 2011-07-19
+</p>
+<p>
+演算子:<br/>
+	<b>&gt;</b><em>日付</em><br/>
+	<b>&lt;</b><em>日付</em><br/>
+	<b>[</b><em>日付</em>,<em>日付</em><b>]</b>
+</p>',
 
 	'Core:AttributeDeadline' => '締切',
 	'Core:AttributeDeadline+' => '日付, 現在時刻からの相対表示',
@@ -107,7 +137,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:AttributeURL+' => '絶対URLもしくは相対URLのテキスト文字列',
 
 	'Core:AttributeBlob' => 'Blob',
-	'Core:AttributeBlob+' => '任意のバイナリコンテンツ(ドキュメント)',
+	'Core:AttributeBlob+' => '任意のバイナリコンテンツ(文書)',
 
 	'Core:AttributeOneWayPassword' => '一方向パスワード',
 	'Core:AttributeOneWayPassword+' => '一方向暗号化(ハッシュ)パスワード',
@@ -117,8 +147,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 
 	'Core:AttributePropertySet' => 'プロパティ',
 	'Core:AttributePropertySet+' => '型づけされていないプロパティのリスト(名前とバリュー)',
-));
 
+	'Core:AttributeFriendlyName' => 'Friendly name',
+	'Core:AttributeFriendlyName+' => 'Attribute created automatically ; the friendly name is computed after several attributes',
+
+	'Core:FriendlyName-Label' => 'Name',
+	'Core:FriendlyName-Description' => 'Friendly name',
+
+));
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'core/cmdb'
@@ -155,7 +191,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:CMDBChangeOp/Attribute:objclass+' => 'オブジェクトクラス',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'オブジェクトID',
 	'Class:CMDBChangeOp/Attribute:objkey+' => 'オブジェクトID',
-	'Class:CMDBChangeOp/Attribute:finalclass' => '型',
+	'Class:CMDBChangeOp/Attribute:finalclass' => 'タイプ',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
 ));
 
@@ -164,8 +200,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:CMDBChangeOpCreate' => 'オブジェクト生成',
-	'Class:CMDBChangeOpCreate+' => 'オブジェクト生成履歴',
+	'Class:CMDBChangeOpCreate' => 'オブジェクト作成',
+	'Class:CMDBChangeOpCreate+' => 'オブジェクト作成履歴',
 ));
 
 //
@@ -204,11 +240,16 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Change:ObjectCreated' => 'オブジェクトを生成しました',
 	'Change:ObjectDeleted' => 'オブジェクトを削除しました',
-	'Change:ObjectModified' => 'オブジェクトを更新しました',
+	'Change:ObjectModified' => 'オブジェクトを修正しました',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$sを%2$sに設定しました (変更前の値: %3$s)',
+	'Change:AttName_SetTo' => '%1$s は %2$sにセットされました。', // '%1$s set to %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$sを%2$sに追加しました',
-	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$sを更新しました。更新前の値: %2$s',
-	'Change:AttName_Changed' => '%1$sを更新しました',
+	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$sを変更しました。更新前の値: %2$s',
+	'Change:AttName_Changed' => '%1$sを変更しました',
+	'Change:AttName_EntryAdded' => '%1$s は、修正されました。新しいエントリーが追加されました。',
+	'Change:LinkSet:Added' => '追加されました %1$s',
+	'Change:LinkSet:Removed' => '削除されました %1$s',
+	'Change:LinkSet:Modified' => '修正されました %1$s',
 ));
 
 //
@@ -218,8 +259,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:CMDBChangeOpSetAttributeBlob' => 'データ変更',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'データ変更履歴',
-	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => '変更前のデータ', //'Previous data',
-	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'この属性の以前の内容', //'previous contents of the attribute',
+	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => '以前のデータ',
+	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'この属性の以前の内容',
 ));
 
 //
@@ -227,10 +268,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:CMDBChangeOpSetAttributeText' => 'テキストの変更', //'text change',
-	'Class:CMDBChangeOpSetAttributeText+' => 'テキストの変更履歴', //'text change tracking',
-	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => '以前の内容', //'Previous data',
-	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'この属性の以前の内容', //'previous contents of the attribute',
+	'Class:CMDBChangeOpSetAttributeText' => 'テキストの変更',
+	'Class:CMDBChangeOpSetAttributeText+' => 'テキストの変更履歴',
+	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => '以前の内容',
+	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'この属性の以前の内容',
 ));
 
 //
@@ -238,15 +279,15 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:Event' => 'ログイベント',// 'Log Event',
-	'Class:Event+' => 'アプリケーション内部イベント', //'An application internal event',
-	'Class:Event/Attribute:message' => 'メッセージ', //'message',
-	'Class:Event/Attribute:message+' => 'イベント概略', //'short description of the event',
-	'Class:Event/Attribute:date' => '日付', //'date',
-	'Class:Event/Attribute:date+' => '変更が記録された日時', //'date and time at which the changes have been recorded',
-	'Class:Event/Attribute:userinfo' => 'ユーザ情報', //'user info',
-	'Class:Event/Attribute:userinfo+' => 'このイベントをトリガーにアクションを起こすユーザの識別', //'identification of the user that was doing the action that triggered this event',
-	'Class:Event/Attribute:finalclass' => '型', //'type',
+	'Class:Event' => 'ログイベント',
+	'Class:Event+' => 'アプリケーション内部イベント',
+	'Class:Event/Attribute:message' => 'メッセージ', 
+	'Class:Event/Attribute:message+' => 'イベントの短い説明',
+	'Class:Event/Attribute:date' => '日付',
+	'Class:Event/Attribute:date+' => '変更が記録された日時',
+	'Class:Event/Attribute:userinfo' => 'ユーザ情報',
+	'Class:Event/Attribute:userinfo+' => 'このイベントをトリガーしたアクションを行ったユーザ',
+	'Class:Event/Attribute:finalclass' => 'タイプ',
 	'Class:Event/Attribute:finalclass+' => '',
 ));
 
@@ -255,13 +296,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:EventNotification' => '通知イベント', // 'Notification event',
-	'Class:EventNotification+' => '創出された通知のトレース', //'Trace of a notification that has been sent',
-	'Class:EventNotification/Attribute:trigger_id' => 'トリガー', //'Trigger',
-	'Class:EventNotification/Attribute:trigger_id+' => 'ユーザアカウント', //'user account',
-	'Class:EventNotification/Attribute:action_id' => 'ユーザ', //'user',
-	'Class:EventNotification/Attribute:action_id+' => 'ユーザアカウント', //'user account',
-	'Class:EventNotification/Attribute:object_id' => 'オブジェクトID', //'Object id',
+	'Class:EventNotification' => '通知イベント',
+	'Class:EventNotification+' => '送信された通知のトレース',
+	'Class:EventNotification/Attribute:trigger_id' => 'トリガー',
+	'Class:EventNotification/Attribute:trigger_id+' => 'ユーザアカウント',
+	'Class:EventNotification/Attribute:action_id' => 'ユーザ',
+	'Class:EventNotification/Attribute:action_id+' => 'ユーザアカウント',
+	'Class:EventNotification/Attribute:object_id' => 'オブジェクトID',
 	'Class:EventNotification/Attribute:object_id+' => 'オブジェクトID(トリガーでクラスが定義済み?)', //'object id (class defined by the trigger ?)',
 ));
 
@@ -269,8 +310,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 // Class: EventNotificationEmail
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array('Class:EventNotificationEmail' => 'メール送出イベント', //'Email emission event',
-					       'Class:EventNotificationEmail+' => '送出されたメールのトレース',//Trace of an email that has been sent',
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:EventNotificationEmail' => 'メール送出イベント',
+	'Class:EventNotificationEmail+' => '送出されたメールのトレース',
 	'Class:EventNotificationEmail/Attribute:to' => 'TO',
 	'Class:EventNotificationEmail/Attribute:to+' => 'TO',
 	'Class:EventNotificationEmail/Attribute:cc' => 'CC',
@@ -278,34 +320,34 @@ Dict::Add('JA JP', 'Japanese', '日本語', array('Class:EventNotificationEmail'
 	'Class:EventNotificationEmail/Attribute:bcc' => 'BCC',
 	'Class:EventNotificationEmail/Attribute:bcc+' => 'BCC',
 	'Class:EventNotificationEmail/Attribute:from' => 'From',
-					       'Class:EventNotificationEmail/Attribute:from+' => 'メール送信者', //'Sender of the message',
+	'Class:EventNotificationEmail/Attribute:from+' => 'メール送信者',
 	'Class:EventNotificationEmail/Attribute:subject' => 'Subject',
-	'Class:EventNotificationEmail/Attribute:subject+' => 'Subject',
+	'Class:EventNotificationEmail/Attribute:subject+' => '件名',
 	'Class:EventNotificationEmail/Attribute:body' => 'Body',
-	'Class:EventNotificationEmail/Attribute:body+' => 'Body',
+	'Class:EventNotificationEmail/Attribute:body+' => '本文',
 ));
 
 //
 // Class: EventIssue
 //
 
-Dict::Add('JA JP', 'English', 'English', array(
-					       'Class:EventIssue' => 'イシューイベント', //'Issue event',
-					       'Class:EventIssue+' => 'イシュー(警告、エラーetc)のトレース', //'Trace of an issue (warning, error, etc.)',
-					       'Class:EventIssue/Attribute:issue' => 'イシュー', //'Issue',
-					       'Class:EventIssue/Attribute:issue+' => '何が起こったか', //'What happened',
-					       'Class:EventIssue/Attribute:impact' => 'インパクト', //'Impact',
-					       'Class:EventIssue/Attribute:impact+' => 'その結果', //'What are the consequences',
-					       'Class:EventIssue/Attribute:page' => 'ページ', //'Page',
-					       'Class:EventIssue/Attribute:page+' => 'HTTPエントリポイント', //'HTTP entry point',
-					       'Class:EventIssue/Attribute:arguments_post' => 'POSTされた引数', //'Posted arguments',
-					       'Class:EventIssue/Attribute:arguments_post+' => 'HTTP POST引数', //'HTTP POST arguments',
-					       'Class:EventIssue/Attribute:arguments_get' => 'URLパラメータ', //'URL arguments',
-					       'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GETパラメータ', //'HTTP GET arguments',
-					       'Class:EventIssue/Attribute:callstack' => 'コールスタック', //'Callstack',
-					       'Class:EventIssue/Attribute:callstack+' => 'スタックをコールする', //'Call stack',
-					       'Class:EventIssue/Attribute:data' => 'データ', //'Data',
-					       'Class:EventIssue/Attribute:data+' => '詳細情報', //'More information',
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:EventIssue' => '課題',
+	'Class:EventIssue+' => '課題(警告、エラー、etc)のトレース', 
+	'Class:EventIssue/Attribute:issue' => '課題',
+	'Class:EventIssue/Attribute:issue+' => '課題',
+	'Class:EventIssue/Attribute:impact' => 'インパクト',
+	'Class:EventIssue/Attribute:impact+' => 'その結果',
+	'Class:EventIssue/Attribute:page' => 'ページ',
+	'Class:EventIssue/Attribute:page+' => 'HTTPエントリポイント', 
+	'Class:EventIssue/Attribute:arguments_post' => 'POSTされた引数',
+	'Class:EventIssue/Attribute:arguments_post+' => 'HTTP POST引数',
+	'Class:EventIssue/Attribute:arguments_get' => 'URLパラメータ',
+	'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GETパラメータ',
+	'Class:EventIssue/Attribute:callstack' => 'コールスタック',
+	'Class:EventIssue/Attribute:callstack+' => 'スタックをコールする',
+	'Class:EventIssue/Attribute:data' => 'データ',
+	'Class:EventIssue/Attribute:data+' => '追加情報',
 ));
 
 //
@@ -313,20 +355,35 @@ Dict::Add('JA JP', 'English', 'English', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-					       'Class:EventWebService' => 'ウェブサービスイベント', //'Web service event',
-					       'Class:EventWebService+' => 'ウェブサービス呼出のYトレース', //'Trace of an web service call',
-					       'Class:EventWebService/Attribute:verb' => '動詞', //'Verb',
-					       'Class:EventWebService/Attribute:verb+' => '操作名', //'Name of the operation',
-					       'Class:EventWebService/Attribute:result' => '結果', //'Result',
-					       'Class:EventWebService/Attribute:result+' => '総体的な成功/失敗', //'Overall success/failure',
-					       'Class:EventWebService/Attribute:log_info' => 'インフォログ', //'Info log',
-					       'Class:EventWebService/Attribute:log_info+' => 'インフォログの結果', //'Result info log',
-					       'Class:EventWebService/Attribute:log_warning' => 'ウォーニングログ', //'Warning log',
-					       'Class:EventWebService/Attribute:log_warning+' => 'ウォーニングログ結果', //'Result warning log',
-					       'Class:EventWebService/Attribute:log_error' => 'エラーログ', //'Error log',
-					       'Class:EventWebService/Attribute:log_error+' => 'エラーログ結果', //'Result error log',
-					       'Class:EventWebService/Attribute:data' => 'データ', //'Data',
-					       'Class:EventWebService/Attribute:data+' => 'データ結果', //'Result data',
+	'Class:EventWebService' => 'ウェブサービスイベント',
+	'Class:EventWebService+' => 'ウェブサービス呼出のトレース',
+	'Class:EventWebService/Attribute:verb' => '動作',
+	'Class:EventWebService/Attribute:verb+' => '操作名',
+	'Class:EventWebService/Attribute:result' => '結果',
+	'Class:EventWebService/Attribute:result+' => '総体的な成功/失敗',
+	'Class:EventWebService/Attribute:log_info' => 'インフォログ',
+	'Class:EventWebService/Attribute:log_info+' => 'インフォログの結果',
+	'Class:EventWebService/Attribute:log_warning' => 'ワーニンググ',
+	'Class:EventWebService/Attribute:log_warning+' => 'ワーニングログ結果',
+	'Class:EventWebService/Attribute:log_error' => 'エラーログ',
+	'Class:EventWebService/Attribute:log_error+' => 'エラーログ結果',
+	'Class:EventWebService/Attribute:data' => 'データ',
+	'Class:EventWebService/Attribute:data+' => '結果データ',
+));
+
+//
+// Class: EventLoginUsage
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:EventLoginUsage' => 'ログイン方法',
+	'Class:EventLoginUsage+' => 'アプリケーションへ接続します。',
+	'Class:EventLoginUsage/Attribute:user_id' => 'ログイン',
+	'Class:EventLoginUsage/Attribute:user_id+' => 'ログイン',
+	'Class:EventLoginUsage/Attribute:contact_name' => 'ユーザ名',
+	'Class:EventLoginUsage/Attribute:contact_name+' => 'ユーザ名',
+	'Class:EventLoginUsage/Attribute:contact_email' => 'ユーザのEmail',
+	'Class:EventLoginUsage/Attribute:contact_email+' => 'ユーザの電子メールアドレス',
 ));
 
 //
@@ -334,24 +391,24 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-					       'Class:Action' => 'カスタムアクション', //'Custom Action',
-					       'Class:Action+' => 'ユーザ定義アクション', //'User defined action',
-					       'Class:Action/Attribute:name' => '名前', //'Name',
+	'Class:Action' => 'カスタムアクション',
+	'Class:Action+' => 'ユーザ定義アクション',
+	'Class:Action/Attribute:name' => '名前',
 	'Class:Action/Attribute:name+' => '',
-					       'Class:Action/Attribute:description' => '概要', //'Description',
+	'Class:Action/Attribute:description' => '説明',
 	'Class:Action/Attribute:description+' => '',
-					       'Class:Action/Attribute:status' => 'ステータス', //'Status',
-					       'Class:Action/Attribute:status+' => '製品化済み、あるいは?', //'In production or ?',
-					       'Class:Action/Attribute:status/Value:test' => 'テスト済み', //'Being tested',
-					       'Class:Action/Attribute:status/Value:test+' => 'テスト済み', //'Being tested',
-					       'Class:Action/Attribute:status/Value:enabled' => '製品化済み', //'In production',
-					       'Class:Action/Attribute:status/Value:enabled+' => '製品化済み', //'In production',
-					       'Class:Action/Attribute:status/Value:disabled' => '非アクティブ', //'Inactive',
-					       'Class:Action/Attribute:status/Value:disabled+' => '非アクティブ', //'Inactive',
-					       'Class:Action/Attribute:trigger_list' => '関連トリガ', //'Related Triggers',
-					       'Class:Action/Attribute:trigger_list+' => 'このアクションにリンクされたトリガ', //'Triggers linked to this action',
-					       'Class:Action/Attribute:finalclass' => '型', //'Type',
-	'Class:Action/Attribute:finalclass+' => '',
+	'Class:Action/Attribute:status' => '状態',
+	'Class:Action/Attribute:status+' => '稼働中、あるいは?',
+	'Class:Action/Attribute:status/Value:test' => 'テスト中',
+	'Class:Action/Attribute:status/Value:test+' => 'テスト中',
+	'Class:Action/Attribute:status/Value:enabled' => '稼働中',
+	'Class:Action/Attribute:status/Value:enabled+' => '稼働中',
+	'Class:Action/Attribute:status/Value:disabled' => '非アクティブ',
+	'Class:Action/Attribute:status/Value:disabled+' => '非アクティブ',
+	'Class:Action/Attribute:trigger_list' => '関連トリガー', 
+	'Class:Action/Attribute:trigger_list+' => 'このアクションにリンクされたトリガー',
+	'Class:Action/Attribute:finalclass' => 'タイプ',
+	'Class:Action/Attribute:finalclass+' => 'タイプ',
 ));
 
 //
@@ -359,8 +416,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-					       'Class:ActionNotification' => 'ノーティフィケーション', //'Notification',
-					       'Class:ActionNotification+' => 'ノーティフィケーション(抽象)', //'Notification (abstract)',
+	'Class:ActionNotification' => '通知',
+	'Class:ActionNotification+' => '通知(要約)',
 ));
 
 //
@@ -368,32 +425,32 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-					       'Class:ActionEmail' => 'メール通知', //'Email notification',
+	'Class:ActionEmail' => 'メール通知',
 	'Class:ActionEmail+' => '',
-					       'Class:ActionEmail/Attribute:test_recipient' => 'テストレシピ', //'Test recipient',
-	'Class:ActionEmail/Attribute:test_recipient+' => 'Detination in case status is set to "Test"',
+	'Class:ActionEmail/Attribute:test_recipient' => 'テストレシピ',
+	'Class:ActionEmail/Attribute:test_recipient+' => '状態がテストの場合の宛先',
 	'Class:ActionEmail/Attribute:from' => 'From',
-	'Class:ActionEmail/Attribute:from+' => 'Will be sent into the email header',
+	'Class:ActionEmail/Attribute:from+' => '電子メールのヘッダーに挿入されます',
 	'Class:ActionEmail/Attribute:reply_to' => 'Reply to',
-	'Class:ActionEmail/Attribute:reply_to+' => 'Will be sent into the email header',
+	'Class:ActionEmail/Attribute:reply_to+' => '電子メールのヘッダーに挿入されます',
 	'Class:ActionEmail/Attribute:to' => 'To',
-					       'Class:ActionEmail/Attribute:to+' => 'メールの宛先', //'Destination of the email',
+	'Class:ActionEmail/Attribute:to+' => 'メールの宛先',
 	'Class:ActionEmail/Attribute:cc' => 'Cc',
 	'Class:ActionEmail/Attribute:cc+' => 'Carbon Copy',
 	'Class:ActionEmail/Attribute:bcc' => 'bcc',
 	'Class:ActionEmail/Attribute:bcc+' => 'Blind Carbon Copy',
 	'Class:ActionEmail/Attribute:subject' => 'subject',
-					       'Class:ActionEmail/Attribute:subject+' => 'メールのタイトル', //'Title of the email',
+	'Class:ActionEmail/Attribute:subject+' => 'メールの題名',
 	'Class:ActionEmail/Attribute:body' => 'body',
-					       'Class:ActionEmail/Attribute:body+' => 'メールの本文', //'Contents of the email',
-	'Class:ActionEmail/Attribute:importance' => 'importance',
-					       'Class:ActionEmail/Attribute:importance+' => '重要度フラグ', //'Importance flag',
-	'Class:ActionEmail/Attribute:importance/Value:low' => 'low',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => 'low',
-	'Class:ActionEmail/Attribute:importance/Value:normal' => 'normal',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'normal',
-	'Class:ActionEmail/Attribute:importance/Value:high' => 'high',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => 'high',
+	'Class:ActionEmail/Attribute:body+' => 'メールの本文',
+	'Class:ActionEmail/Attribute:importance' => '重要度',
+	'Class:ActionEmail/Attribute:importance+' => '重要度フラグ',
+	'Class:ActionEmail/Attribute:importance/Value:low' => '低',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '低',
+	'Class:ActionEmail/Attribute:importance/Value:normal' => '通常',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => '通常',
+	'Class:ActionEmail/Attribute:importance/Value:high' => '高',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '高',
 ));
 
 //
@@ -401,14 +458,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-					       'Class:Trigger' => 'トリガー', //'Trigger',
-					       'Class:Trigger+' => 'カスタムイベントヘッダ', //'Custom event handler',
-					       'Class:Trigger/Attribute:description' => '概要', //'Description',
-					       'Class:Trigger/Attribute:description+' => '1行概要', //'one line description',
-					       'Class:Trigger/Attribute:action_list' => 'トリガされたアクション', //'Triggered actions',
-					       'Class:Trigger/Attribute:action_list+' => 'トリガが発火した場合に動作するアクション', //'Actions performed when the trigger is activated',
-					       'Class:Trigger/Attribute:finalclass' => '型', //'Type',
-	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger' => 'トリガー',
+	'Class:Trigger+' => 'カスタムイベントハンドラー',
+	'Class:Trigger/Attribute:description' => '説明',
+	'Class:Trigger/Attribute:description+' => '1行の説明',
+	'Class:Trigger/Attribute:action_list' => 'トリガーされたアクション',
+	'Class:Trigger/Attribute:action_list+' => 'トリガーが発行された場合に動作するアクション',
+	'Class:Trigger/Attribute:finalclass' => 'タイプ',
+	'Class:Trigger/Attribute:finalclass+' => 'タイプ',
 ));
 
 //
@@ -416,10 +473,19 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-					       'Class:TriggerOnObject' => 'トリガ(クラス依存)', //'Trigger (class dependent)',
-					       'Class:TriggerOnObject+' => '指定オブジェクトのクラスへのトリガ', //'Trigger on a given class of objects',
-					       'Class:TriggerOnObject/Attribute:target_class' => 'ターゲットクラス', //'Target class',
+	'Class:TriggerOnObject' => 'トリガー(クラス依存)', 
+	'Class:TriggerOnObject+' => 'オブジェクトの指定されたクラスのトリガー',
+	'Class:TriggerOnObject/Attribute:target_class' => 'ターゲットクラス',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
+));
+
+//
+// Class: TriggerOnPortalUpdate
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:TriggerOnPortalUpdate' => 'トリガー（ポータルから更新された時）',
+	'Class:TriggerOnPortalUpdate+' => 'エンドユーザがポータルから更新した場合のトリガー',
 ));
 
 //
@@ -427,10 +493,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-					       'Class:TriggerOnStateChange' => '(状態変更の)トリガ', // Trigger (on state change)',
-					       'Class:TriggerOnStateChange+' => 'オブジェクト状態変更のトリガ', //'Trigger on object state change',
-					       'Class:TriggerOnStateChange/Attribute:state' => '状態', //'State',
-	'Class:TriggerOnStateChange/Attribute:state+' => '',
+	'Class:TriggerOnStateChange' => '(状態変化の)トリガー',
+	'Class:TriggerOnStateChange+' => 'オブジェクトの状態変化のトリガー',
+	'Class:TriggerOnStateChange/Attribute:state' => '状態',
+	'Class:TriggerOnStateChange/Attribute:state+' => '状態',
 ));
 
 //
@@ -438,8 +504,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-					       'Class:TriggerOnStateEnter' => 'トリガ(ある状態に入る)', // 'Trigger (on entering a state)',
-					       'Class:TriggerOnStateEnter+' => 'オブジェクト状態変更のトリガ: 入場', //'Trigger on object state change - entering',
+	'Class:TriggerOnStateEnter' => '入状態トリガー',
+	'Class:TriggerOnStateEnter+' => 'オブジェクトの状態へ入る変化（エンター,on entering a state）時のトリガー',
 ));
 
 //
@@ -447,8 +513,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-					       'Class:TriggerOnStateLeave' => '(ある状態から退場する)トリガ', // 'Trigger (on leaving a state)',
-					       'Class:TriggerOnStateLeave+' => 'オブジェクト状態変更のトリガ: 退場', //Trigger on object state change - leaving',
+	'Class:TriggerOnStateLeave' => '出状態トリガー',
+	'Class:TriggerOnStateLeave+' => 'オブジェクトの状態から出る変化（リーブ,on leaving a state）時のトリガー',
 ));
 
 //
@@ -456,8 +522,21 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-					       'Class:TriggerOnObjectCreate' => '(オブジェクト生成の)トリガ', //Trigger (on object creation)',
-					       'Class:TriggerOnObjectCreate+' => '指定されたクラスの(子クラスの)オブジェクト生成のトリガ', //Trigger on object creation of [a child class of] the given class',
+	'Class:TriggerOnObjectCreate' => 'オブジェクト作成トリガー',
+	'Class:TriggerOnObjectCreate+' => '指定されたクラスの(子クラスの)オブジェクト作成時のトリガ',
+));
+
+//
+// Class: TriggerOnThresholdReached
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:TriggerOnThresholdReached' => 'トリガー (on threshold)',
+	'Class:TriggerOnThresholdReached+' => 'トリガー (on Stop-Watch threshold reached)',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'ストップウオッチ',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'しきい値',
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
 ));
 
 //
@@ -465,19 +544,240 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-					       'Class:lnkTriggerAction' => 'アクション/トリガ', //'Action/Trigger',
-					       'Class:lnkTriggerAction+' => 'トリガとアクション間のリンク', //'Link between a trigger and an action',
-					       'Class:lnkTriggerAction/Attribute:action_id' => 'アクション', //'Action',
-					       'Class:lnkTriggerAction/Attribute:action_id+' => '実行されるべきアクション', //'The action to be executed',
-					       'Class:lnkTriggerAction/Attribute:action_name' => 'アクション', //'Action',
+	'Class:lnkTriggerAction' => 'トリガ/アクション',
+	'Class:lnkTriggerAction+' => 'トリガとアクション間のリンク',
+	'Class:lnkTriggerAction/Attribute:action_id' => 'アクション',
+	'Class:lnkTriggerAction/Attribute:action_id+' => '実行されるアクション',
+	'Class:lnkTriggerAction/Attribute:action_name' => 'アクション',
 	'Class:lnkTriggerAction/Attribute:action_name+' => '',
-					       'Class:lnkTriggerAction/Attribute:trigger_id' => 'トリガ', //'Trigger',
+	'Class:lnkTriggerAction/Attribute:trigger_id' => 'トリガ',
 	'Class:lnkTriggerAction/Attribute:trigger_id+' => '',
-					       'Class:lnkTriggerAction/Attribute:trigger_name' => 'トリガ', //'Trigger',
+	'Class:lnkTriggerAction/Attribute:trigger_name' => 'トリガ',
 	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
-					       'Class:lnkTriggerAction/Attribute:order' => '処理順序', //'Order',
-					       'Class:lnkTriggerAction/Attribute:order+' => 'アクション実行順序', //'Actions execution order',
+	'Class:lnkTriggerAction/Attribute:order' => '順序',
+	'Class:lnkTriggerAction/Attribute:order+' => 'アクション実行順序', 
 ));
 
+//
+// Synchro Data Source
+//
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:SynchroDataSource/Attribute:name' => '名前',
+	'Class:SynchroDataSource/Attribute:name+' => '名前',
+	'Class:SynchroDataSource/Attribute:description' => '説明',
+	'Class:SynchroDataSource/Attribute:status' => '状態', //TODO: enum values
+	'Class:SynchroDataSource/Attribute:scope_class' => 'ターゲットクラス',
+	'Class:SynchroDataSource/Attribute:user_id' => 'ユーザ',
+	'Class:SynchroDataSource/Attribute:notify_contact_id' => '通知する連絡先',
+	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'エラーが発生した場合に通知する連絡先。',
+	'Class:SynchroDataSource/Attribute:url_icon' => 'アイコンのハイパーリンク',
+	'Class:SynchroDataSource/Attribute:url_icon+' => 'iTopが同期されたアプリケーションを示すハイパーリンク（小さな）イメージ',
+	'Class:SynchroDataSource/Attribute:url_application' => 'アプリケーションのハイパーリンク',
+	'Class:SynchroDataSource/Attribute:url_application+' => 'iTopが同期化された外部アプリケーションのiTopオブジェクトへのハイパーリンク（該当する場合）。可能なプレースホルダ: $this->attribute$ and $replica->primary_key$',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy' => '調整ポリシー', //TODO enum values
+	'Class:SynchroDataSource/Attribute:full_load_periodicity' => '全データロードの間隔',
+	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => '全データの完全な再ロードを最低ここに指定されている間隔で行う必要があります。',
+	'Class:SynchroDataSource/Attribute:action_on_zero' => '検索結果0件時のアクション',
+	'Class:SynchroDataSource/Attribute:action_on_zero+' => '検索結果としてオブジェクトが何も返さない場合に実行されるアクション',
+	'Class:SynchroDataSource/Attribute:action_on_one' => '検索結果１件時のアクション',
+	'Class:SynchroDataSource/Attribute:action_on_one+' => '検索結果として一つのみのオブジェクトが返されたときに実行されるアクション',
+	'Class:SynchroDataSource/Attribute:action_on_multiple' => '検索結果複数時のアクション',
+	'Class:SynchroDataSource/Attribute:action_on_multiple+' => '検索結果として二つ以上のオブジェクトが返されたときに実行されるアクション',
+	'Class:SynchroDataSource/Attribute:user_delete_policy' => '許可されたユーザ',
+	'Class:SynchroDataSource/Attribute:user_delete_policy+' => '同期されたオブジェクトの削除が許可されたユーザ',
+//	'Class:SynchroDataSource/Attribute:user_delete_policy' => '許可されたユーザ',  // double 
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => '誰もいない',//'Nobody',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:depends' => '管理者のみ',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:always' => '全ての許可されたユーザ',
+	'Class:SynchroDataSource/Attribute:delete_policy_update' => '更新ルール',
+	'Class:SynchroDataSource/Attribute:delete_policy_update+' => '構文: フィールド名:値; ...',
+	'Class:SynchroDataSource/Attribute:delete_policy_retention' => '保持時間',
+	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => '廃止されたオブジェクトを削除するまでに保持しておく時間',
+	'Class:SynchroDataSource/Attribute:database_table_name' => 'データテーブル',
+	'Class:SynchroDataSource/Attribute:database_table_name+' => '同期データを保存するテーブル名。 もし、空欄の場合は、規定の名前が計算されます。',
+	'SynchroDataSource:Description' => '説明',
+	'SynchroDataSource:Reconciliation' => '検索と調整',
+	'SynchroDataSource:Deletion' => '削除ルール',
+	'SynchroDataSource:Status' => '状態',
+	'SynchroDataSource:Information' => 'インフォメーション',
+	'SynchroDataSource:Definition' => '定義',
+	'Core:SynchroAttributes' => '属性',
+	'Core:SynchroStatus' => '状態',
+	'Core:Synchro:ErrorsLabel' => 'エラー',	
+	'Core:Synchro:CreatedLabel' => '作成',
+	'Core:Synchro:ModifiedLabel' => '修正',
+	'Core:Synchro:UnchangedLabel' => '無変更',
+	'Core:Synchro:ReconciledErrorsLabel' => 'エラー',
+	'Core:Synchro:ReconciledLabel' => '調整',
+	'Core:Synchro:ReconciledNewLabel' => '新',
+	'Core:SynchroReconcile:Yes' => 'はい',
+	'Core:SynchroReconcile:No' => 'いいえ',
+	'Core:SynchroUpdate:Yes' => 'はい',
+	'Core:SynchroUpdate:No' => 'いいえ',
+	'Core:Synchro:LastestStatus' => '最新の状態',
+	'Core:Synchro:History' => '同期履歴',
+	'Core:Synchro:NeverRun' => 'この同期は実行されたことがありません。ログはありません。',
+	'Core:Synchro:SynchroEndedOn_Date' => '最後の同期は %1$s に終了しました。',
+	'Core:Synchro:SynchroRunningStartedOn_Date' => '同期は %1$s に始まり、現在実行中です。',
+	'Menu:DataSources' => '同期データソース',
+	'Menu:DataSources+' => '全ての同期データソース',
+	'Core:Synchro:label_repl_ignored' => '無視 (%1$s)',
+	'Core:Synchro:label_repl_disappeared' => '消えた (%1$s)',
+	'Core:Synchro:label_repl_existing' => '存在 (%1$s)',
+	'Core:Synchro:label_repl_new' => '新しい (%1$s)',
+	'Core:Synchro:label_obj_deleted' => '削除 (%1$s)',
+	'Core:Synchro:label_obj_obsoleted' => '廃止 (%1$s)',
+	'Core:Synchro:label_obj_disappeared_errors' => 'エラー (%1$s)',
+	'Core:Synchro:label_obj_disappeared_no_action' => '何もしない (%1$s)',
+	'Core:Synchro:label_obj_unchanged' => '無変更 (%1$s)',
+	'Core:Synchro:label_obj_updated' => '更新 (%1$s)', 
+	'Core:Synchro:label_obj_updated_errors' => 'エラー (%1$s)',
+	'Core:Synchro:label_obj_new_unchanged' => '無変更 (%1$s)',
+	'Core:Synchro:label_obj_new_updated' => '無変更 (%1$s)',
+	'Core:Synchro:label_obj_created' => '作成 (%1$s)',
+	'Core:Synchro:label_obj_new_errors' => 'エラー (%1$s)',
+	'Core:Synchro:History' => '同期履歴',
+	'Core:SynchroLogTitle' => '%1$s - %2$s',
+	'Core:Synchro:Nb_Replica' => 'レプリカプロセス: %1$s',
+	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
+	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => '少なくとも一つの調整キーが必要です。または、調整ポリシーは主キーを使用しなければなりません。',
+	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'オブジェクトは廃止としてマークされた後に削除されますので、削除の保存期間を指定する必要があります。',
+	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => '廃止されたオブジェクトは更新されます、しかし、更新は指定されていません。',
+	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'テーブル %1$s は、データベース中にすでに存在しています。 同期データテーブルには、別の名前をお使いください。',
+	'Core:SynchroReplica:PublicData' => 'パブリックデータ',
+	'Core:SynchroReplica:PrivateDetails' => 'プライベート詳細',
+	'Core:SynchroReplica:BackToDataSource' => '同期データソースへ戻る: %1$s',
+	'Core:SynchroReplica:ListOfReplicas' => 'レプリカのリスト',
+	'Core:SynchroAttExtKey:ReconciliationById' => 'id (主キー)',
+	'Core:SynchroAtt:attcode' => '属性',
+	'Core:SynchroAtt:attcode+' => 'オブジェクトのフィールド',
+	'Core:SynchroAtt:reconciliation' => '調整?',
+	'Core:SynchroAtt:reconciliation+' => '検索に使用',
+	'Core:SynchroAtt:update' => '更新?',
+	'Core:SynchroAtt:update+' => 'オブジェクトの更新のため使用',
+	'Core:SynchroAtt:update_policy' => '更新ポリシー',
+	'Core:SynchroAtt:update_policy+' => '更新されたフィールドの振る舞い',
+	'Core:SynchroAtt:reconciliation_attcode' => '調整キー',
+	'Core:SynchroAtt:reconciliation_attcode+' => '外部キー調整用の属性コード',
+	'Core:SyncDataExchangeComment' => '(データ同期)',
+	'Core:Synchro:ListOfDataSources' => 'データソースのリスト:',
+	'Core:Synchro:LastSynchro' => '最後の同期:',
+	'Core:Synchro:ThisObjectIsSynchronized' => 'このオブジェクトは、外部データソースと同期されます。',
+	'Core:Synchro:TheObjectWasCreatedBy_Source' => 'このオブジェクトは、外部データソース%1$sにより<b>作成</b>されました。',
+	'Core:Synchro:TheObjectCanBeDeletedBy_Source' => 'オブジェクトは、外部データソース%1$sにより削除可能です。',
+	'Core:Synchro:TheObjectCannotBeDeletedByUser_Source' => 'このオブジェクトは、外部データソースに保持されているので削除できません。',
+	'TitleSynchroExecution' => '同期の実行',
+	'Class:SynchroDataSource:DataTable' => 'データベーステーブル: %1$s',
+	'Core:SyncDataSourceObsolete' => 'データソースは廃止とマークされています。操作はキャンセルされました。',
+	'Core:SyncDataSourceAccessRestriction' => '管理者またはデータ·ソースに指定されたユーザーのみ、この操作を実行することができます。操作はキャンセルされました。',
+	'Core:SyncTooManyMissingReplicas' => '暫くの間全てのレコードは変更されていません。（全てのオブジェクトが削除される可能性があります。）同期テーブルへ書き込むプロセスがまだ実行中であることを確認ください。操作は、キャンセルされました。',
+	'Core:SyncSplitModeCLIOnly' => 'CLIモードでの実行時のみチャンクで同期を実行することが出来ます。',
+	'Core:Synchro:ListReplicas_AllReplicas_Errors_Warnings' => '%1$s レプリカ、 %2$s エラー、 %3$s 警告。',
+	'Core:SynchroReplica:TargetObject' => '同期されたオブジェクト: %1$s',
+	'Class:AsyncSendEmail' => '電子メール (非同期)',
+	'Class:AsyncSendEmail/Attribute:to' => 'To',
+	'Class:AsyncSendEmail/Attribute:subject' => '件名',
+	'Class:AsyncSendEmail/Attribute:body' => '本文',
+	'Class:AsyncSendEmail/Attribute:header' => 'ヘッダー',
+	'Class:CMDBChangeOpSetAttributeOneWayPassword' => '暗号化パスワード',
+	'Class:CMDBChangeOpSetAttributeOneWayPassword/Attribute:prev_pwd' => '以前の値',
+	'Class:CMDBChangeOpSetAttributeEncrypted' => '暗号化フィールド',
+	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => '以前の値',
+	'Class:CMDBChangeOpSetAttributeCaseLog' => 'ケースログ',
+	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => '最後のエントリー',
+	'Class:SynchroDataSource' => '同期データソース',
+	'Class:SynchroDataSource/Attribute:status/Value:implementation' => '実装中',
+	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => '廃止済',
+	'Class:SynchroDataSource/Attribute:status/Value:production' => '稼働中',
+	'Class:SynchroDataSource/Attribute:scope_restriction' => '範囲の制限',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => '属性を使用',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => '主キーフィールドを使用',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => '作成',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'エラー',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'エラー',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => '更新',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => '作成',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'エラー',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => '最初を採用 (ランダム?)',
+	'Class:SynchroDataSource/Attribute:delete_policy' => '削除ポリシー',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => '削除',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => '無視',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => '更新',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => '更新そして削除',
+	'Class:SynchroDataSource/Attribute:attribute_list' => '属性リスト',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => '管理者のみ',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => '誰でもがそのようなオブジェクトを削除出来ます。',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => '誰もない',
+	'Class:SynchroAttribute' => '同期属性',
+	'Class:SynchroAttribute/Attribute:sync_source_id' => '同期データソース',
+	'Class:SynchroAttribute/Attribute:attcode' => '属性コード',
+	'Class:SynchroAttribute/Attribute:update' => '更新',
+	'Class:SynchroAttribute/Attribute:reconcile' => '調整',
+	'Class:SynchroAttribute/Attribute:update_policy' => '更新ポリシー',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => 'ロック',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => 'アンロック',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty' => '空の場合は、初期化',
+	'Class:SynchroAttribute/Attribute:finalclass' => 'クラス',
+	'Class:SynchroAttExtKey' => '同期属性 (外部キー)',
+	'Class:SynchroAttExtKey/Attribute:reconciliation_attcode' => '調整属性',
+	'Class:SynchroAttLinkSet' => '同期属性 (リンクセット)',
+	'Class:SynchroAttLinkSet/Attribute:row_separator' => '行の区切り',
+	'Class:SynchroAttLinkSet/Attribute:attribute_separator' => '属性区切り',
+	'Class:SynchroLog' => '同期ログ',
+	'Class:SynchroLog/Attribute:sync_source_id' => '同期データソース',
+	'Class:SynchroLog/Attribute:start_date' => '開始日',
+	'Class:SynchroLog/Attribute:end_date' => '終了日',
+	'Class:SynchroLog/Attribute:status' => '状態',
+	'Class:SynchroLog/Attribute:status/Value:completed' => '完了',
+	'Class:SynchroLog/Attribute:status/Value:error' => 'エラー',
+	'Class:SynchroLog/Attribute:status/Value:running' => '実行中',
+	'Class:SynchroLog/Attribute:stats_nb_replica_seen' => 'のレプリカ　',
+	'Class:SynchroLog/Attribute:stats_nb_replica_total' => 'レプリカ合計　',
+	'Class:SynchroLog/Attribute:stats_nb_obj_deleted' => 'オブジェクト削除　',
+	'Class:SynchroLog/Attribute:stats_nb_obj_deleted_errors' => '削除中のエラー　',
+	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted' => 'オブジェクト廃止　',
+	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted_errors' => '廃止中のエラー　',
+	'Class:SynchroLog/Attribute:stats_nb_obj_created' => 'オブジェクト作成　',
+	'Class:SynchroLog/Attribute:stats_nb_obj_created_errors' => '作成中のエラー　',
+	'Class:SynchroLog/Attribute:stats_nb_obj_updated' => 'オブジェクト更新　',
+	'Class:SynchroLog/Attribute:stats_nb_obj_updated_errors' => '更新中のエラー　',
+	'Class:SynchroLog/Attribute:stats_nb_replica_reconciled_errors' => '調整中のエラー　',
+	'Class:SynchroLog/Attribute:stats_nb_replica_disappeared_no_action' => 'レプリカ消　',
+	'Class:SynchroLog/Attribute:stats_nb_obj_new_updated' => ' オブジェクトは更新されました',
+	'Class:SynchroLog/Attribute:stats_nb_obj_new_unchanged' => ' オブジェクトは変更されていません',
+	'Class:SynchroLog/Attribute:last_error' => '最後のエラー',
+	'Class:SynchroLog/Attribute:traces' => 'トレース',
+	'Class:SynchroReplica' => '同期レプリカ',
+	'Class:SynchroReplica/Attribute:sync_source_id' => '同期データソース',
+	'Class:SynchroReplica/Attribute:dest_id' => '同期先オブジェクト (ID)',
+	'Class:SynchroReplica/Attribute:dest_class' => '同期先タイプ',
+	'Class:SynchroReplica/Attribute:status_last_seen' => 'ラストシーン',
+	'Class:SynchroReplica/Attribute:status' => '状態',
+	'Class:SynchroReplica/Attribute:status/Value:modified' => '修正済み',
+	'Class:SynchroReplica/Attribute:status/Value:new' => '新規',
+	'Class:SynchroReplica/Attribute:status/Value:obsolete' => '廃止',
+	'Class:SynchroReplica/Attribute:status/Value:orphan' => '孤立',
+	'Class:SynchroReplica/Attribute:status/Value:synchronized' => '同期済み',
+	'Class:SynchroReplica/Attribute:status_dest_creator' => 'オブジェクト作成 ?',
+	'Class:SynchroReplica/Attribute:status_last_error' => '最後のエラー',
+	'Class:SynchroReplica/Attribute:status_last_warning' => '警告',
+	'Class:SynchroReplica/Attribute:info_creation_date' => '作成日',
+	'Class:SynchroReplica/Attribute:info_last_modified' => '最終修正日',
+	'Class:appUserPreferences' => 'ユーザプリファレンス',
+	'Class:appUserPreferences/Attribute:userid' => 'ユーザ',
+	'Class:appUserPreferences/Attribute:preferences' => 'プリファレンス',
+	'Core:ExecProcess:Code1' => '間違ったコマンドまたはエラーで終了したコマンド（例えば、間違ったスクリプト名）',
+	'Core:ExecProcess:Code255' => 'PHP エラー (parsing, or runtime)',
+));
+
+//
+// Attribute Duration
+//
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Core:Duration_Seconds'	=> '%1$ds',	
+	'Core:Duration_Minutes_Seconds'	=>'%1$d分 %2$d秒',	
+	'Core:Duration_Hours_Minutes_Seconds' => '%1$d時 %2$d分 %3$d秒',		
+	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$s日 %2$d時 %3$d分 %4$d秒',		
+));
 
 ?>

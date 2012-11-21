@@ -16,17 +16,33 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+
 /**
- * @author	Stephan Rosenke <stephan.rosenke@itomig.de>
- * @author 	David M. GÃ¼mbel <david.guembel@itomig.de>
+ * Localized data
+ *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:UserLDAP' => 'LDAP-Benutzer',
-	'Class:UserLDAP+' => 'Benutzer, der Ã¼ber LDAP authentifiziert wird',
-	'Class:UserLDAP/Attribute:password' => 'Passwort',
-	'Class:UserLDAP/Attribute:password+' => 'Benutzerpasswort',
+// Dictionnay conventions
+// Class:<class_name>
+// Class:<class_name>+
+// Class:<class_name>/Attribute:<attribute_code>
+// Class:<class_name>/Attribute:<attribute_code>+
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
+// Class:<class_name>/Stimulus:<stimulus_code>
+// Class:<class_name>/Stimulus:<stimulus_code>+
+
+//
+// Class: UserExternal
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Class:UserExternal' => 'Usuario Externo (Webserver)',
+	'Class:UserExternal+' => 'Usuario Autenticado fuera de iTop',
 ));
+
+
+
 ?>

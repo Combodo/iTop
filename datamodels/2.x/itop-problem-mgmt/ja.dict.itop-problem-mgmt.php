@@ -16,6 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+
 /**
  * Localized data
  *
@@ -51,117 +52,105 @@
 
 
 
-Dict::Add('JA JP', 'Japanese', '日本語', array (
-        'Menu:ProblemManagement' => 'プロブレム管理', // 'Problem Management',	# 'Problem Management'
-        'Menu:ProblemManagement+' => 'プロブレム管理', // 'Problem Management',	# 'Problem Management'
-    	'Menu:Problem:Overview' => '概要',			# 'Overview'
-    	'Menu:Problem:Overview+' => '概要',			# 'Overview'
-    	'Menu:NewProblem' => '新規プロブレム', // 'New Problem',			# 'New Problem'
-    	'Menu:NewProblem+' => '新規プロブレム', // 'New Problem',			# 'New Problem'
-    	'Menu:SearchProblems' => 'プロブレムを検索', // 'Search for Problems',		# 'Search for Problems'
-    	'Menu:SearchProblems+' => 'プロブレムを検索', // 'Search for Problems',	# 'Search for Problems'
-    	'Menu:Problem:Shortcuts' => 'ショートカット',		# 'Shortcuts'
-        'Menu:Problem:MyProblems' => 'マイプロブレム', // 'My Problems',		# 'My Problems'
-        'Menu:Problem:MyProblems+' => 'マイプロブレム', // 'My Problems',		# 'My Problems'
-        'Menu:Problem:OpenProblems' => '担当のいない problems',	# 'All Open problems'
-        'Menu:Problem:OpenProblems+' => '担当のいない problems',	# 'All Open problems'
-	'UI-ProblemManagementOverview-ProblemByService' => 'サービス別プロブレム', // 'Problems by Service',	# 'Problems by Service'
-	'UI-ProblemManagementOverview-ProblemByService+' => 'サービス別プロブレム', // 'Problems by Service',	# 'Problems by Service'
-	'UI-ProblemManagementOverview-ProblemByPriority' => 'プライオリティ別プロブレム', // 'Problems by Priority',	# 'Problems by Priority'
-	'UI-ProblemManagementOverview-ProblemByPriority+' => 'プライオリティ別プロブレム', // 'Problems by Priority',	# 'Problems by Priority'
-	'UI-ProblemManagementOverview-ProblemUnassigned' => '未アサインプロブレム', // 'Unassigned Problems',	# 'Unassigned Problems'
-	'UI-ProblemManagementOverview-ProblemUnassigned+' => '未アサインプロブレム', // 'Unassigned Problems',	# 'Unassigned Problems'
-	'UI:ProblemMgmtMenuOverview:Title' => 'プロブレム管理用ダッシュボード', // 'Dashboard for Problem Management',	# 'Dashboard for Problem Management'
-	'UI:ProblemMgmtMenuOverview:Title+' => 'プロブレム管理用ダッシュボード', // 'Dashboard for Problem Management',	# 'Dashboard for Problem Management'
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+        'Menu:ProblemManagement' => '問題管理',
+        'Menu:ProblemManagement+' => '問題管理',
+    	'Menu:Problem:Overview' => '概要',
+    	'Menu:Problem:Overview+' => '概要',
+    	'Menu:NewProblem' => '新規問題',
+    	'Menu:NewProblem+' => '新規問題',
+    	'Menu:SearchProblems' => '問題検索',
+    	'Menu:SearchProblems+' => '問題検索',
+    	'Menu:Problem:Shortcuts' => 'ショートカット',
+        'Menu:Problem:MyProblems' => '担当してる問題',
+        'Menu:Problem:MyProblems+' => '担当している問題',
+        'Menu:Problem:OpenProblems' => '全オープン問題',
+        'Menu:Problem:OpenProblems+' => '全オープン問題',
+	'UI-ProblemManagementOverview-ProblemByService' => 'サービス別問題',
+	'UI-ProblemManagementOverview-ProblemByService+' => 'サービス別問題',
+	'UI-ProblemManagementOverview-ProblemByPriority' => '優先度別問題',
+	'UI-ProblemManagementOverview-ProblemByPriority+' => '優先度別問題',
+	'UI-ProblemManagementOverview-ProblemUnassigned' => '未割り当て問題',
+	'UI-ProblemManagementOverview-ProblemUnassigned+' => '未割り当て問題',
+	'UI:ProblemMgmtMenuOverview:Title' => '問題管理ダッシュボード',
+	'UI:ProblemMgmtMenuOverview:Title+' => '問題管理ダッシュボード',
 
 ));
 //
 // Class: Problem
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array (
-	'Class:Problem' => 'プロブレム', // 'Problem',	# 'Problem'
-	'Class:Problem+' => '',		# ''
-	'Class:Problem/Attribute:status' => 'ステータス', // 'Status',	# 'Status'
-	'Class:Problem/Attribute:status+' => '',	# ''
-	'Class:Problem/Attribute:status/Value:new' => '新規',	# 'New'
-	'Class:Problem/Attribute:status/Value:new+' => '',	# ''
-	'Class:Problem/Attribute:status/Value:assigned' => '割当済',	# 'Assigned'
-	'Class:Problem/Attribute:status/Value:assigned+' => '',		# ''
-	'Class:Problem/Attribute:status/Value:resolved' => '解決済み', // 'Resolved',	# 'Resolved'
-	'Class:Problem/Attribute:status/Value:resolved+' => '',		# ''
-	'Class:Problem/Attribute:status/Value:closed' => '完了',	# 'Closed'
-	'Class:Problem/Attribute:status/Value:closed+' => '',		# ''
-	'Class:Problem/Attribute:org_id' => 'カスタマー', // 'Customer',	  # 'Customer'
-	'Class:Problem/Attribute:org_id+' => '',	  # ''
-	'Class:Problem/Attribute:org_name' => '名前', // 'Name',	  # 'Name'
-	'Class:Problem/Attribute:org_name+' => '共通名', // 'Common name',	# 'Common name'
-	'Class:Problem/Attribute:service_id' => 'サービス', // 'Service',	# 'Service'
-	'Class:Problem/Attribute:service_id+' => '',		# ''
-	'Class:Problem/Attribute:service_name' => '名前', // 'Name',	# 'Name'
-	'Class:Problem/Attribute:service_name+' => '',		# ''
-	'Class:Problem/Attribute:servicesubcategory_id' => 'サービスカテゴリ', // 'Service Category',	# 'Service Category'
-	'Class:Problem/Attribute:servicesubcategory_id+' => '',	    # ''
-	'Class:Problem/Attribute:servicesubcategory_name' => '名前', // 'Name',  # 'Name'
-	'Class:Problem/Attribute:servicesubcategory_name+' => '',     # ''
-	'Class:Problem/Attribute:product' => 'プロダクト', // 'Product',	   # 'Product'
-	'Class:Problem/Attribute:product+' => '',	   # ''
-	'Class:Problem/Attribute:impact' => '影響', // 'Impact',	   # 'Impact'
-	'Class:Problem/Attribute:impact+' => '',	   # ''
-	'Class:Problem/Attribute:impact/Value:1' => 'パーソン', // 'A Person',	# 'A Person'
-	'Class:Problem/Attribute:impact/Value:1+' => '',	# ''
-	'Class:Problem/Attribute:impact/Value:2' => 'サービス', // 'A Service',  # 'A Service'
-	'Class:Problem/Attribute:impact/Value:2+' => '',	  # ''
-	'Class:Problem/Attribute:impact/Value:3' => '部署', // 'A Department', # 'A Department'
-	'Class:Problem/Attribute:impact/Value:3+' => '',	    # ''
-	'Class:Problem/Attribute:urgency' => '緊急', // 'Urgency',		    # 'Urgency'
-	'Class:Problem/Attribute:urgency+' => '',		    # ''
-	'Class:Problem/Attribute:urgency/Value:1' => '低', // 'Low',	    # 'Low'
-	'Class:Problem/Attribute:urgency/Value:1+' => '低', // 'Low',	    # 'Low'
-	'Class:Problem/Attribute:urgency/Value:2' => '中', // 'Medium',	    # 'Medium'
-	'Class:Problem/Attribute:urgency/Value:2+' => '中', // 'Medium',	    # 'Medium'
-	'Class:Problem/Attribute:urgency/Value:3' => '高', // 'High',	    # 'High'
-	'Class:Problem/Attribute:urgency/Value:3+' => '高', // 'High',	    # 'High'
-	'Class:Problem/Attribute:priority' => 'プライオリティ', // 'Priority',	    # 'Priority'
-	'Class:Problem/Attribute:priority+' => '',		    # ''
-	'Class:Problem/Attribute:priority/Value:1' => '低', // 'Low',	    # 'Low'
-	'Class:Problem/Attribute:priority/Value:1+' => '',	    # ''
-	'Class:Problem/Attribute:priority/Value:2' => '中', // 'Medium',	    # 'Medium'
-	'Class:Problem/Attribute:priority/Value:2+' => '',	    # ''
-	'Class:Problem/Attribute:priority/Value:3' => '高', // 'High',	    # 'High'
-	'Class:Problem/Attribute:priority/Value:3+' => '',	    # ''
-	'Class:Problem/Attribute:workgroup_id' => 'ワークグループ', // 'WorkGroup',	    # 'WorkGroup'
-	'Class:Problem/Attribute:workgroup_id+' => '',		    # ''
-	'Class:Problem/Attribute:workgroup_name' => '名前', // 'Name',	    # 'Name'
-	'Class:Problem/Attribute:workgroup_name+' => '',	    # ''
-	'Class:Problem/Attribute:agent_id' => 'エージェント', // 'Agent',		    # 'Agent'
-	'Class:Problem/Attribute:agent_id+' => '',		    # ''
-	'Class:Problem/Attribute:agent_name' => 'エージェント名', // 'Agent Name',	    # 'Agent Name'
-	'Class:Problem/Attribute:agent_name+' => '',   		    # ''
-	'Class:Problem/Attribute:agent_email' => 'エージェントEメール', // 'Agent Email',	# 'Agent Email'
-	'Class:Problem/Attribute:agent_email+' => '',		# ''
-	'Class:Problem/Attribute:related_change_id' => '関連する変更', // 'Related Change',	# 'Related Change'
-	'Class:Problem/Attribute:related_change_id+' => '',			# ''
-	'Class:Problem/Attribute:related_change_ref' => '参照', // 'Ref',	# 'Ref'
-	'Class:Problem/Attribute:related_change_ref+' => '',	# ''
-	'Class:Problem/Attribute:close_date' => 'クローズ日付', // 'Close Date',	# 'Close Date'
-	'Class:Problem/Attribute:close_date+' => '',      	# ''
-	'Class:Problem/Attribute:last_update' => '最終更新日', // 'Last Update',	# 'Last Update'
-	'Class:Problem/Attribute:last_update+' => '',  		# ''
-	'Class:Problem/Attribute:assignment_date' => 'アサイン日付', // 'Assignment Date',	# 'Assignment Date'
-	'Class:Problem/Attribute:assignment_date+' => '',	 	# ''
-	'Class:Problem/Attribute:resolution_date' => '解決日付', // 'Resolution Date',	# 'Resolution Date'
-	'Class:Problem/Attribute:resolution_date+' => '',	 	# ''
-	'Class:Problem/Attribute:knownerrors_list' => '既知のエラー', // 'Known Errors',	# 'Known Errors'
-	'Class:Problem/Attribute:knownerrors_list+' => '',   # ''
-	'Class:Problem/Stimulus:ev_assign' => '割当',	     # 'Assign'
-	'Class:Problem/Stimulus:ev_assign+' => '',	     # ''
-	'Class:Problem/Stimulus:ev_reassign' => '再割当', // 'Reaassign', # 'Reaassign'
-	'Class:Problem/Stimulus:ev_reassign+' => '',	     # ''
-	'Class:Problem/Stimulus:ev_resolve' => '解決', // 'Resolve',    # 'Resolve'
-	'Class:Problem/Stimulus:ev_resolve+' => '',	     # ''
-	'Class:Problem/Stimulus:ev_close' => '完了',	     # 'Close'
-	'Class:Problem/Stimulus:ev_close+' => '',	     # ''
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:Problem' => '問題',
+	'Class:Problem+' => '',
+	'Class:Problem/Attribute:status' => '状態',
+	'Class:Problem/Attribute:status+' => '',
+	'Class:Problem/Attribute:status/Value:new' => '新規',
+	'Class:Problem/Attribute:status/Value:new+' => '',
+	'Class:Problem/Attribute:status/Value:assigned' => '割り当て済み',
+	'Class:Problem/Attribute:status/Value:assigned+' => '',
+	'Class:Problem/Attribute:status/Value:resolved' => '解決済み',
+	'Class:Problem/Attribute:status/Value:resolved+' => '',
+	'Class:Problem/Attribute:status/Value:closed' => 'クローズ',
+	'Class:Problem/Attribute:status/Value:closed+' => '',
+	'Class:Problem/Attribute:service_id' => 'サービス',
+	'Class:Problem/Attribute:service_id+' => '',
+	'Class:Problem/Attribute:service_name' => 'サービス名',
+	'Class:Problem/Attribute:service_name+' => '',
+	'Class:Problem/Attribute:servicesubcategory_id' => 'サービスサブカテゴリ',
+	'Class:Problem/Attribute:servicesubcategory_id+' => '',
+	'Class:Problem/Attribute:servicesubcategory_name' => 'サービスサブカテゴリ',
+	'Class:Problem/Attribute:servicesubcategory_name+' => '',
+	'Class:Problem/Attribute:product' => '製品',
+	'Class:Problem/Attribute:product+' => '',
+	'Class:Problem/Attribute:impact' => 'インパクト',
+	'Class:Problem/Attribute:impact+' => '',
+	'Class:Problem/Attribute:impact/Value:1' => '部門',
+	'Class:Problem/Attribute:impact/Value:1+' => '',
+	'Class:Problem/Attribute:impact/Value:2' => 'サービス',
+	'Class:Problem/Attribute:impact/Value:2+' => '',
+	'Class:Problem/Attribute:impact/Value:3' => '人',
+	'Class:Problem/Attribute:impact/Value:3+' => '',
+	'Class:Problem/Attribute:urgency' => '緊急度',
+	'Class:Problem/Attribute:urgency+' => '',
+	'Class:Problem/Attribute:urgency/Value:1' => '至急',
+	'Class:Problem/Attribute:urgency/Value:1+' => '至急',
+	'Class:Problem/Attribute:urgency/Value:2' => '高',
+	'Class:Problem/Attribute:urgency/Value:2+' => '高',
+	'Class:Problem/Attribute:urgency/Value:3' => '中',
+	'Class:Problem/Attribute:urgency/Value:3+' => '中',
+	'Class:Problem/Attribute:urgency/Value:4' => '低',
+	'Class:Problem/Attribute:urgency/Value:4+' => '低',
+	'Class:Problem/Attribute:priority' => '優先度',
+	'Class:Problem/Attribute:priority+' => '',
+	'Class:Problem/Attribute:priority/Value:1' => '最優先',
+	'Class:Problem/Attribute:priority/Value:1+' => '最優先',
+	'Class:Problem/Attribute:priority/Value:2' => '高',
+	'Class:Problem/Attribute:priority/Value:2+' => '高',
+	'Class:Problem/Attribute:priority/Value:3' => '中',
+	'Class:Problem/Attribute:priority/Value:3+' => '中',
+	'Class:Problem/Attribute:priority/Value:4' => '低',
+	'Class:Problem/Attribute:priority/Value:4+' => '低',
+	'Class:Problem/Attribute:related_change_id' => '関連する変更',
+	'Class:Problem/Attribute:related_change_id+' => '',
+	'Class:Problem/Attribute:related_change_ref' => '関連する変更参照',
+	'Class:Problem/Attribute:related_change_ref+' => '',
+	'Class:Problem/Attribute:assignment_date' => '割り当て日',
+	'Class:Problem/Attribute:assignment_date+' => '',
+	'Class:Problem/Attribute:resolution_date' => '解決日',
+	'Class:Problem/Attribute:resolution_date+' => '',
+	'Class:Problem/Attribute:knownerrors_list' => '既知のエラー',
+	'Class:Problem/Attribute:knownerrors_list+' => '',
+	'Class:Problem/Attribute:related_request_list' => '関連する要求',
+	'Class:Problem/Attribute:related_request_list+' => '',
+	'Class:Problem/Stimulus:ev_assign' => '割り当て',
+	'Class:Problem/Stimulus:ev_assign+' => '',
+	'Class:Problem/Stimulus:ev_reassign' => '再割り当て',
+	'Class:Problem/Stimulus:ev_reassign+' => '',
+	'Class:Problem/Stimulus:ev_resolve' => '解決',
+	'Class:Problem/Stimulus:ev_resolve+' => '',
+	'Class:Problem/Stimulus:ev_close' => 'クローズ',
+	'Class:Problem/Stimulus:ev_close+' => '',
 ));
 
 ?>

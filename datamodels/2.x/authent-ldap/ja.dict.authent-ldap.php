@@ -16,36 +16,17 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
- * Localized data
- *
- * @author      Hirofumi Kosaka <kosaka@rworks.jp>
+ * @author	Hirofumi Kosaka <kosaka@rworks.jp>
+
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: UserLDAP
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', array (
-	'Class:UserLDAP' => 'LDAP ユーザー', # 'LDAP user',
-	'Class:UserLDAP+' => 'LDAP認証ユーザー', # 'User authentified by LDAP',
-	'Class:UserLDAP/Attribute:password' => 'パスワード',   #  'Password',
-	'Class:UserLDAP/Attribute:password+' => '認証文字列', # 'user authentication string',
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:UserLDAP' => 'LDAP ユーザー',
+	'Class:UserLDAP+' => 'LDAP認証ユーザー',
+	'Class:UserLDAP/Attribute:password' => 'パスワード',
+	'Class:UserLDAP/Attribute:password+' => '認証文字列',
 ));
-
-
-
 ?>

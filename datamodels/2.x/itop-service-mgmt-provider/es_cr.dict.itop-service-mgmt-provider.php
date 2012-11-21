@@ -60,18 +60,20 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 'Menu:SLA+' => 'Acuerdos de Nivel de Servicio',
 'Menu:SLT' => 'SLTs - Objetivos de Nivel de Servicio',
 'Menu:SLT+' => 'Objetivos de Nivel de Servicio',
-'Menu:RequestTemplate' => 'Plantillas de Requerimiento',
-'Menu:RequestTemplate+' => 'Plantillas de Requerimiento',
 'Menu:DeliveryModel' => 'Modelos de Entrega',
 'Menu:DeliveryModel+' => 'Modelos de Entrega',
-'Menu:ServiceFamily' => 'Familias de Servicio',
-'Menu:ServiceFamily+' => 'Familias de Servicio',
-'Menu:Procedure' => 'Catálogo de Procedimientos',
-'Menu:Procedure+' => 'Catálogo de Procedimientos',
-
-
 
 ));
+
+
+/*
+	'UI:ServiceManagementMenu' => 'Gestion des Services',
+	'UI:ServiceManagementMenu+' => 'Gestion des Services',
+	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
+*/
 
 
 //
@@ -82,6 +84,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ContractType' => 'Tipo de Contrato',
 	'Class:ContractType+' => 'Tipo de Contrato',
 ));
+
 
 //
 // Class: Contract
@@ -137,6 +140,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Contract/Attribute:finalclass' => 'Tipo',
 	'Class:Contract/Attribute:finalclass+' => 'Tipo',
 ));
+
 //
 // Class: CustomerContract
 //
@@ -146,6 +150,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CustomerContract+' => 'Acuerdo con Cliente',
 	'Class:CustomerContract/Attribute:services_list' => 'Servicios',
 	'Class:CustomerContract/Attribute:services_list+' => 'Servicios',
+	'Class:CustomerContract/Attribute:functionalcis_list' => 'ECs',
+	'Class:CustomerContract/Attribute:functionalcis_list+' => 'Elementos de Configuración',
+	'Class:CustomerContract/Attribute:providercontracts_list' => 'Contratos con Proveedores',
+	'Class:CustomerContract/Attribute:providercontracts_list+' => 'Contratos con Proveedores',
 ));
 
 //
@@ -161,10 +169,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ProviderContract/Attribute:sla+' => 'Acuerdo de Nivel de Servicio',
 	'Class:ProviderContract/Attribute:coverage' => 'Horario de Servicio',
 	'Class:ProviderContract/Attribute:coverage+' => 'Horario de Servicio',
-	'Class:ProviderContract/Attribute:contracttype_id' => 'Tipo de Contrato',
-	'Class:ProviderContract/Attribute:contracttype_id+' => 'Tipo de Contrato',
-	'Class:ProviderContract/Attribute:contracttype_name' => 'Tipo de Contrato',
-	'Class:ProviderContract/Attribute:contracttype_name+' => 'Tipo de Contrato',
 ));
 
 //
@@ -208,10 +212,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkFunctionalCIToProviderContract' => 'Relación EC Funcional y Contrato con Proveedor',
 	'Class:lnkFunctionalCIToProviderContract+' => 'Relación EC Funcional y Contrato con Proveedor',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Contraro con Proveedor',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => 'Contraro con Proveedor',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Contraro con Proveedor',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => 'Contraro con Proveedor',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Contrato con Proveedor',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => 'Contrato con Proveedor',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Contrato con Proveedor',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => 'Contrato con Proveedor',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'EC',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => 'Elemento de Configuración',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'Elemento de Configuración',
@@ -244,10 +248,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Service/Attribute:org_id+' => 'Proveedor',
 	'Class:Service/Attribute:organization_name' => 'Proveedor',
 	'Class:Service/Attribute:organization_name+' => 'Proveedor',
-	'Class:Service/Attribute:servicefamily_id' => 'Familia de Servicios',
-	'Class:Service/Attribute:servicefamily_id+' => 'Familia de Servicios',
-	'Class:Service/Attribute:servicefamily_name' => 'Familia de Servicios',
-	'Class:Service/Attribute:servicefamily_name+' => 'Familia de Servicios',
 	'Class:Service/Attribute:description' => 'Descripción',
 	'Class:Service/Attribute:description+' => 'Descripción',
 	'Class:Service/Attribute:documents_list' => 'Documentos',
@@ -264,10 +264,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Service/Attribute:status/Value:production+' => 'Productivo',
 	'Class:Service/Attribute:customercontracts_list' => 'Acuerdos con Clientes',
 	'Class:Service/Attribute:customercontracts_list+' => 'Acuerdos con Clientes',
-	'Class:Service/Attribute:providercontracts_list' => 'Contratos con Proveedores',
-	'Class:Service/Attribute:providercontracts_list+' => 'Contratos con Proveedores',
-	'Class:Service/Attribute:functionalcis_list' => 'Depende de ECs',
-	'Class:Service/Attribute:functionalcis_list+' => 'Depende de ECs',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Subcategorias de Servicio',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'Subcategorias de Servicio',
 ));
@@ -438,37 +434,37 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 ));
 
 //
-// Class: lnkProviderContractToService
+// Class: lnkCustomerContractToProviderContract
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:lnkProviderContractToService' => 'Relación Contrato con Proveedor y Servicio',
-	'Class:lnkProviderContractToService+' => 'Relación Contrato con Proveedor y Servicio',
-	'Class:lnkProviderContractToService/Attribute:service_id' => 'Servicio',
-	'Class:lnkProviderContractToService/Attribute:service_id+' => 'Servicio',
-	'Class:lnkProviderContractToService/Attribute:service_name' => 'Servicio',
-	'Class:lnkProviderContractToService/Attribute:service_name+' => 'Servicio',
-	'Class:lnkProviderContractToService/Attribute:providercontract_id' => 'Contrato con Proveedor',
-	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => 'Contrato con Proveedor',
-	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Contrato con Proveedor',
-	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => 'Contrato con Proveedor',
+Dict::Add('ES CR', 'ESpanish', 'Español, Castellano', array(
+	'Class:lnkCustomerContractToProviderContract' => 'Relación Acuerdo con Cliente y Contrato con Proveedor',
+	'Class:lnkCustomerContractToProviderContract+' => 'Relación Acuerdo con Cliente y Contrato con Proveedor',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id' => 'Acuerdo con Cliente',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id+' => 'Acuerdo con Cliente',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name' => 'Acuerdo con Cliente',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name+' =>Acuerdo con Cliente '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id' => 'Contrato con Proveedor',
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id+' => 'Contrato con Proveedor',
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name' => 'Contrato con Proveedor',
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name+' => 'Contrato con Proveedor',
 ));
 
 //
-// Class: lnkFunctionalCIToService
+// Class: lnkCustomerContractToFunctionalCI
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:lnkFunctionalCIToService' => 'Relación EC Funcional y Servicio',
-	'Class:lnkFunctionalCIToService+' => 'Relación EC Funcional y Servicio',
-	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Servicio',
-	'Class:lnkFunctionalCIToService/Attribute:service_id+' => 'Servicio',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Servicio',
-	'Class:lnkFunctionalCIToService/Attribute:service_name+' => 'Servicio',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'EC',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => 'Elemento de Configuración',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'EC',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => 'Elemento de Configuración',
+Dict::Add('ES CR', 'ESpanish', 'Español, Castellano', array(
+	'Class:lnkCustomerContractToFunctionalCI' => 'Relación Acuerdo con Cliente y EC Funcional',
+	'Class:lnkCustomerContractToFunctionalCI+' => 'Relación Acuerdo con Cliente y EC Funcional',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id' => 'Acuerdo con Cliente',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id+' => 'Acuerdo con Cliente',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name' => 'Acuerdo con Cliente',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name+' => 'Acuerdo con Cliente',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id' => 'EC',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id+' => 'Elemento de Configuración',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name' => 'Elemento de Configuración',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name+' => 'Elemento de Configuración',
 ));
 
 //
@@ -512,6 +508,5 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Rol',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => 'Rol',
 ));
-
 
 ?>

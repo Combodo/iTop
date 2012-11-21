@@ -144,7 +144,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FAQCategory/Attribute:faq_list+' => '',
 ));
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('FR FR', 'English', 'English', array(
 	'Menu:NewError' => 'Nouvelle erreur connue',
 	'Menu:NewError+' => 'Créer une erreur connue',
 	'Menu:SearchError' => 'Rechercher une erreur connue',

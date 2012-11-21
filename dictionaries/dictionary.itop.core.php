@@ -130,6 +130,9 @@ Operators:<br/>
 	'Core:AttributeExternalKey' => 'External key',
 	'Core:AttributeExternalKey+' => 'External (or foreign) key',
 
+	'Core:AttributeHierarchicalKey' => 'Hierarchical Key',
+	'Core:AttributeHierarchicalKey+' => 'External (or foreign) key to the parent',
+
 	'Core:AttributeExternalField' => 'External field',
 	'Core:AttributeExternalField+' => 'Field mapped to an external key',
 
