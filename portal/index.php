@@ -545,15 +545,15 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 	switch($sClass)
 	{
 		case 'UserIssue':
-		$aAttList = array('col:0'=> array('ref','caller_id','impact','perimeter','servicesubcategory_id','title'),'col:1'=> array('status','priority','start_date','resolution_date','last_update','agent_id'));
+		$aAttList = array('col:0'=> array('ref','caller_id','impact','perimeter','servicesubcategory_id','title','description'),'col:1'=> array('status','priority','start_date','resolution_date','last_update','agent_id'));
 		break;
 
 		case 'UserRequest':
-		$aAttList = array('col:0'=> array('ref','caller_id','servicesubcategory_id','title'),'col:1'=> array('status','priority','start_date','resolution_date','last_update','agent_id'));
+		$aAttList = array('col:0'=> array('ref','caller_id','servicesubcategory_id','title','description'),'col:1'=> array('status','priority','start_date','resolution_date','last_update','agent_id'));
 		break;
 
 		default:
-		array('col:0'=> array('ref','service_id','servicesubcategory_id','title'),'col:1'=> array('status','start_date'));
+		array('col:0'=> array('ref','service_id','servicesubcategory_id','title','description'),'col:1'=> array('status','start_date'));
 		break;
 	}
 
