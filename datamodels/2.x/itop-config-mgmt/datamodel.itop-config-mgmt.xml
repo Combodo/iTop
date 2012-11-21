@@ -6421,7 +6421,7 @@
 			$oPage->p(Dict::Format('Class:Subnet/Tab:FreeIPs-count', $iFreeCount));
 			$oPage->p(Dict::S('Class:Subnet/Tab:FreeIPs-explain'));
 	
-			$aUsedIPs = $oIfSet->GetColumnAsArray('ip_address', false);
+			$aUsedIPs = $oIfSet->GetColumnAsArray('ipaddress', false);
 			$iAnIP = $iIPMin;
 			$iFound = 0;
 			while (($iFound < min($iFreeCount, 10)) && ($iAnIP <= $iIPMax))
