@@ -4407,12 +4407,12 @@ abstract class MetaModel
 			if (self::$m_oConfig->GetLogIssue())
 			{
 				self::$m_bLogIssue = true;
-				IssueLog::Enable(APPROOT.'/error.log');
+				IssueLog::Enable(APPROOT.'log/error.log');
 			}
 			self::$m_bLogNotification = self::$m_oConfig->GetLogNotification();
 			self::$m_bLogWebService = self::$m_oConfig->GetLogWebService();
 
-			ToolsLog::Enable(APPROOT.'/tools.log');
+			ToolsLog::Enable(APPROOT.'log/tools.log');
 		}
 		else
 		{

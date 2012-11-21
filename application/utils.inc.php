@@ -613,7 +613,7 @@ class utils
 		$bCASDebug = self::GetConfig()->Get('cas_debug');
 		if ($bCASDebug)
 		{
-			phpCAS::setDebug(APPROOT.'/error.log');
+			phpCAS::setDebug(APPROOT.'log/error.log');
 		}
 		
 		if (!self::$m_bCASClient)
