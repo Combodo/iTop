@@ -542,9 +542,16 @@ class ApplicationInstaller
 			SetupPage::log_info("Renaming 'priv_internalUser' into 'priv_internaluser' (lowercase)"); 
 			// This command will have no effect under Windows...
 			// and it has been written in two steps so as to make it work under windows!
-			$sRepair = "RENAME TABLE `priv_internalUser` TO `priv_internaluser_other`, `priv_internaluser_other` TO `priv_internaluser`";
 			CMDBSource::SelectDB($sDBName);
-			CMDBSource::Query($sRepair);
+			try
+			{
+				$sRepair = "RENAME TABLE `priv_internalUser` TO `priv_internaluser_other`, `priv_internaluser_other` TO `priv_internaluser`";
+				CMDBSource::Query($sRepair);
+			}
+			catch (Exception $e)
+			{
+				SetupPage::log_info("Renaming 'priv_internalUser' failed (already done in a previous upgrade?)"); 
+			}
 		}
 
 		// Module specific actions (migrate the data)
