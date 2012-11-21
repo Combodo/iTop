@@ -59,7 +59,7 @@ It also comes with significant improvements in the end-user experience:
 1.3 Special Thanks To:
     -----------------
 Bruno Bonfils for his guidance about LDAP and authentication.
-Randall Badilla Castro for the Spanish translation.
+Randall Badilla Castro and Miguel Turrubiates for the Spanish translation.
 Jonathan Lucas, Stephan Rosenke and David Gümbel from ITOMIG GmbH, for the German translation.
 Christian Lempereur and Olivier Fouquet for their feedbacks.
 Everaldo Coelho and the Oxygen Team for their wonderful icons.
@@ -72,7 +72,7 @@ Deng Lixin for the Chinese translation
 Marialaura Colantoni for the Italian translation
 Schlobinux for the fix of the setup temporary file verification.
 Gabor Kiss for the Hungarian translation
-Tadashi Kaneda for the Japanese translation
+Tadashi Kaneda, Shoji Seki and Hirofumi Kosaka for the Japanese translation
 Antoine Coetsier for the CAS support and tests
 Vincenzo Todisco for his contribution to the enhancement of the webservices
 Tobias Glemser and Sabri Saleh for their consulting about iTop security
