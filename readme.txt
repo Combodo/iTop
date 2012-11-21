@@ -1,4 +1,4 @@
-iTop - version 2.0.0 Beta - 30-Oct-2012
+iTop - version 2.0.0 Beta 2 - 21-Nov-2012
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -14,10 +14,10 @@ Readme file
 
 1. ABOUT THIS RELEASE
    ==================
-Thank you for downloading the twelfth packaged release of iTop.
-This version is a major release, with a new datamodel, editable dashboards and user customizable lists.
+Thank you for downloading the 13th packaged release of iTop.
+This version is a major release, with a new datamodel, editable dashboards, user customizable lists and user shortcuts.
 
-A wiki is available: https://sourceforge.net/apps/mediawiki/itop/index.php?title=ITop_Documentation
+A wiki is available: http://www.combodo.com/wiki
 Additional documentation can be downloaded from the link above:
  - User guide
  - Administrator guide
@@ -39,7 +39,8 @@ see the upgrade section hereafter).
 End users can customize the GUI:
 - Dashboards become editable
 - List of objects are configurable per user (list of columns and sort order)
-- Some application settings can be overriden: language, favorite organizations, ... 
+- Some application settings can be overriden: language, favorite organizations, ...
+- Users can create shortcuts to any list of objects 
 
 1.2 Should I upgrade to 2.0.0 beta?
     -------------------------------
@@ -182,12 +183,49 @@ The "Preference" page now allows a user to:
  - sorting issues have been fixed
  - almost every list can be exported
 
+- Users can create a shortcut to any list displayed:
+ - the search criteria are saved, including the current organization if it was set
+ - the list can be edited in the user "Preferences" page
+ - a shortcut is strictly private to a given user
+
 Localization
 ------------
 No big changes in localization for this release.
 
+From Beta 2, the new datamodel has been translated into Spanish, Russian, German and Japanese.
+
 More information on the localization (completion progress, how to contribute) here:
 http://www.combodo.com/itop-localization/
+
+Fixed between 2.0 Beta and 2.0 Beta 2
+-------------------------------------
+Make Incident Mgmt module visible for all
+Update translation for customer satisfaction
+Change constraint on attribute agent_id for a workorder
+Fixed user profiles for the new data model
+Renamed a few classes/enums/attributes to improve the classes naming consistency and ease the writing of OQLs
+#621 Cannot create a service family
+#628 Typos
+Allow duplicate links for device / network connections
+Add PC software in Dashboard
+All documentation of software on a PC device
+Add software list on PC devices
+Fixed issue with Subnet usage computation
+Fixed tab translation for Subnet
+Record the list of attachments (in EventNotificationEmail)
+#609  export/import was broken for dashboards with a non-alphanumeric identifier.
+#611 Fixed regression in import.php
+Bug fix: display an empty string for the friendlyname of a NULL external key
+Bug fix: "save" in edit dashboard did nothing on Chrome on a *just reloaded* dashboard (actually on any page which URL contained a hash)
+Prevent a crash when deleting objects accessed from a list of their abstract class (i.e. Select some Contacts, "delete...", select a Person, delete => crash).
+#614 Fixed regression on multi column queries (could not display Null objects)
+#615 Fixed bug on multi column queries - wrong count resulting in strange effects in the display of results
+Bug fix: incorrect handling of "negative" selections in bulk delete
+Renamed priv_Userinternal into priv_userinternal, and added a check for table names (lowercase is the rule!)
+error.log moved into the log directory
+Changed mysqldump invocation to verbose mode (at least for the duration of the beta) in order to ease the troubleshooting of backup failures.
+Increased memory_limit for the setup to 64 MB
+#602 Description not shown in portal
 
 Minor changes
 -------------
@@ -212,7 +250,6 @@ Config: use app_icon_url to change the hyperlink used when clicking on the main 
 Added a new favicon
 Cosmetic enhancements to ease the search for a class in the schema.
 Integration of the latest version of CKEditor: version 3.6.4, released on 17 July 2012
-
 
 CSV import/export
 -----------------
