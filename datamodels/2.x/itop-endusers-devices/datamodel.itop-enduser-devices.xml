@@ -873,6 +873,9 @@
       <presentation>
         <details>
           <items>
+            <item id="softwares_list">
+              <rank>5</rank>
+            </item>
             <item id="contacts_list">
               <rank>10</rank>
             </item>
