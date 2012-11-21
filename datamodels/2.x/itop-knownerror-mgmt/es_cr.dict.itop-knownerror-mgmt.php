@@ -164,12 +164,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:FAQcategory' => 'Categoría de Preguntas y Respusta Frecuentes',
-	'Class:FAQcategory+' => 'Categoría de Preguntas y Respusta Frecuentes',
-	'Class:FAQcategory/Attribute:name' => 'Nombre',
-	'Class:FAQcategory/Attribute:name+' => 'Nombre',
-	'Class:FAQcategory/Attribute:faq_list' => 'FAQs',
-	'Class:FAQcategory/Attribute:faq_list+' => 'FAQs',
+	'Class:FAQCategory' => 'Categoría de Preguntas y Respusta Frecuentes',
+	'Class:FAQCategory+' => 'Categoría de Preguntas y Respusta Frecuentes',
+	'Class:FAQCategory/Attribute:name' => 'Nombre',
+	'Class:FAQCategory/Attribute:name+' => 'Nombre',
+	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
+	'Class:FAQCategory/Attribute:faq_list+' => 'FAQs',
 ));
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:NewError' => 'Nuevo Error Conocido',

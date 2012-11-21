@@ -419,8 +419,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:IpPhone' => 'IP電話',
-	'Class:IpPhone+' => '',
+	'Class:IPPhone' => 'IP電話',
+	'Class:IPPhone+' => '',
 ));
 
 //
@@ -750,10 +750,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:DBserver' => 'DBサーバ',
-	'Class:DBserver+' => '',
-	'Class:DBserver/Attribute:dbschema_list' => 'DBスキーマ',
-	'Class:DBserver/Attribute:dbschema_list+' => '',
+	'Class:DBServer' => 'DBサーバ',
+	'Class:DBServer+' => '',
+	'Class:DBServer/Attribute:dbschema_list' => 'DBスキーマ',
+	'Class:DBServer/Attribute:dbschema_list+' => '',
 ));
 
 //
@@ -761,10 +761,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:Webserver' => 'Webサーバ',
-	'Class:Webserver+' => '',
-	'Class:Webserver/Attribute:webapp_list' => 'Webアプリケーション',
-	'Class:Webserver/Attribute:webapp_list+' => '',
+	'Class:WebServer' => 'Webサーバ',
+	'Class:WebServer+' => '',
+	'Class:WebServer/Attribute:webapp_list' => 'Webアプリケーション',
+	'Class:WebServer/Attribute:webapp_list+' => '',
 ));
 
 //
@@ -1027,20 +1027,20 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:NasFileSystem' => 'NASファイルシステム',
-	'Class:NasFileSystem+' => '',
-	'Class:NasFileSystem/Attribute:name' => '名前',
-	'Class:NasFileSystem/Attribute:name+' => '',
-	'Class:NasFileSystem/Attribute:description' => '説明',
-	'Class:NasFileSystem/Attribute:description+' => '',
-	'Class:NasFileSystem/Attribute:raid_level' => 'Raidレベル',
-	'Class:NasFileSystem/Attribute:raid_level+' => '',
-	'Class:NasFileSystem/Attribute:size' => 'サイズ',
-	'Class:NasFileSystem/Attribute:size+' => '',
-	'Class:NasFileSystem/Attribute:nas_id' => 'NAS',
-	'Class:NasFileSystem/Attribute:nas_id+' => '',
-	'Class:NasFileSystem/Attribute:nas_name' => 'NAS名',
-	'Class:NasFileSystem/Attribute:nas_name+' => '',
+	'Class:NASFileSystem' => 'NASファイルシステム',
+	'Class:NASFileSystem+' => '',
+	'Class:NASFileSystem/Attribute:name' => '名前',
+	'Class:NASFileSystem/Attribute:name+' => '',
+	'Class:NASFileSystem/Attribute:description' => '説明',
+	'Class:NASFileSystem/Attribute:description+' => '',
+	'Class:NASFileSystem/Attribute:raid_level' => 'Raidレベル',
+	'Class:NASFileSystem/Attribute:raid_level+' => '',
+	'Class:NASFileSystem/Attribute:size' => 'サイズ',
+	'Class:NASFileSystem/Attribute:size+' => '',
+	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
+	'Class:NASFileSystem/Attribute:nas_id+' => '',
+	'Class:NASFileSystem/Attribute:nas_name' => 'NAS名',
+	'Class:NASFileSystem/Attribute:nas_name+' => '',
 ));
 
 //
@@ -1060,16 +1060,16 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Software/Attribute:documents_list+' => '',
 	'Class:Software/Attribute:type' => 'タイプ',
 	'Class:Software/Attribute:type+' => '',
-	'Class:Software/Attribute:type/Value:DBserver' => 'DBサーバ',
-	'Class:Software/Attribute:type/Value:DBserver+' => 'DBサーバ',
+	'Class:Software/Attribute:type/Value:DBServer' => 'DBサーバ',
+	'Class:Software/Attribute:type/Value:DBServer+' => 'DBサーバ',
 	'Class:Software/Attribute:type/Value:Middleware' => 'ミドルウエア',
 	'Class:Software/Attribute:type/Value:Middleware+' => 'ミドルウエア',
 	'Class:Software/Attribute:type/Value:OtherSoftware' => '他のソフトウエア',
 	'Class:Software/Attribute:type/Value:OtherSoftware+' => '他のソフトウエア',
 	'Class:Software/Attribute:type/Value:PCSoftware' => 'PCソフトウエア',
 	'Class:Software/Attribute:type/Value:PCSoftware+' => 'PCソフトウエア',
-	'Class:Software/Attribute:type/Value:Webserver' => 'Webサーバ',
-	'Class:Software/Attribute:type/Value:Webserver+' => 'Webサーバ',
+	'Class:Software/Attribute:type/Value:WebServer' => 'Webサーバ',
+	'Class:Software/Attribute:type/Value:WebServer+' => 'Webサーバ',
 	'Class:Software/Attribute:softwareinstance_list' => 'ソフトウエアインスタンス',
 	'Class:Software/Attribute:softwareinstance_list+' => '',
 	'Class:Software/Attribute:softwarepatch_list' => 'ソフトウエアパッチ',
@@ -1100,14 +1100,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:OSpatch' => 'OSパッチ',
-	'Class:OSpatch+' => '',
-	'Class:OSpatch/Attribute:functionalcis_list' => 'デバイス',
-	'Class:OSpatch/Attribute:functionalcis_list+' => '',
-	'Class:OSpatch/Attribute:osversion_id' => 'OSバージョン',
-	'Class:OSpatch/Attribute:osversion_id+' => '',
-	'Class:OSpatch/Attribute:osversion_name' => 'OSバージョン名',
-	'Class:OSpatch/Attribute:osversion_name+' => '',
+	'Class:OSPatch' => 'OSパッチ',
+	'Class:OSPatch+' => '',
+	'Class:OSPatch/Attribute:functionalcis_list' => 'デバイス',
+	'Class:OSPatch/Attribute:functionalcis_list+' => '',
+	'Class:OSPatch/Attribute:osversion_id' => 'OSバージョン',
+	'Class:OSPatch/Attribute:osversion_id+' => '',
+	'Class:OSPatch/Attribute:osversion_name' => 'OSバージョン名',
+	'Class:OSPatch/Attribute:osversion_name+' => '',
 ));
 
 //
@@ -1159,16 +1159,16 @@ Dict::Add('JA JP', 'Japanese', '日本語', array (
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:OsLicence' => 'OSライセンス',
-	'Class:OsLicence+' => '',
-	'Class:OsLicence/Attribute:osversion_id' => 'OSバージョン',
-	'Class:OsLicence/Attribute:osversion_id+' => '',
-	'Class:OsLicence/Attribute:osversion_name' => 'OSバージョン名',
-	'Class:OsLicence/Attribute:osversion_name+' => '',
-	'Class:OsLicence/Attribute:virtualmachines_list' => '仮想マシン',
-	'Class:OsLicence/Attribute:virtualmachines_list+' => '',
-	'Class:OsLicence/Attribute:servers_list' => 'サーバ',
-	'Class:OsLicence/Attribute:servers_list+' => '',
+	'Class:OSLicence' => 'OSライセンス',
+	'Class:OSLicence+' => '',
+	'Class:OSLicence/Attribute:osversion_id' => 'OSバージョン',
+	'Class:OSLicence/Attribute:osversion_id+' => '',
+	'Class:OSLicence/Attribute:osversion_name' => 'OSバージョン名',
+	'Class:OSLicence/Attribute:osversion_name+' => '',
+	'Class:OSLicence/Attribute:virtualmachines_list' => '仮想マシン',
+	'Class:OSLicence/Attribute:virtualmachines_list+' => '',
+	'Class:OSLicence/Attribute:servers_list' => 'サーバ',
+	'Class:OSLicence/Attribute:servers_list+' => '',
 ));
 
 //
@@ -1221,12 +1221,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:OSversion' => 'OSバージョン',
-	'Class:OSversion+' => '',
-	'Class:OSversion/Attribute:osfamily_id' => 'OSファミリ',
-	'Class:OSversion/Attribute:osfamily_id+' => '',
-	'Class:OSversion/Attribute:osfamily_name' => 'OSファミリ名',
-	'Class:OSversion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion' => 'OSバージョン',
+	'Class:OSVersion+' => '',
+	'Class:OSVersion/Attribute:osfamily_id' => 'OSファミリ',
+	'Class:OSVersion/Attribute:osfamily_id+' => '',
+	'Class:OSVersion/Attribute:osfamily_name' => 'OSファミリ名',
+	'Class:OSVersion/Attribute:osfamily_name+' => '',
 ));
 
 //
@@ -1234,8 +1234,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:OSfamily' => 'OSファミリ',
-	'Class:OSfamily+' => '',
+	'Class:OSFamily' => 'OSファミリ',
+	'Class:OSFamily+' => '',
 ));
 
 //
@@ -1278,44 +1278,44 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Model/Attribute:brand_id+' => '',
 	'Class:Model/Attribute:brand_name' => 'ブランド名',
 	'Class:Model/Attribute:brand_name+' => '',
-	'Class:Model/Attribute:Type' => 'デバイスタイプ',
-	'Class:Model/Attribute:Type+' => '',
-	'Class:Model/Attribute:Type/Value:PowerSource' => '電源',
-	'Class:Model/Attribute:Type/Value:PowerSource+' => '電源',
-	'Class:Model/Attribute:Type/Value:DiskArray' => 'ディスクアレー',
-	'Class:Model/Attribute:Type/Value:DiskArray+' => 'ディスクアレー',
-	'Class:Model/Attribute:Type/Value:Enclosure' => 'エンクロージャ',
-	'Class:Model/Attribute:Type/Value:Enclosure+' => 'エンクロージャ',
-	'Class:Model/Attribute:Type/Value:IpPhone' => 'Ip電話',
-	'Class:Model/Attribute:Type/Value:IpPhone+' => 'Ip電話',
-	'Class:Model/Attribute:Type/Value:MobilePhone' => '携帯電話',
-	'Class:Model/Attribute:Type/Value:MobilePhone+' => '携帯電話',
-	'Class:Model/Attribute:Type/Value:NAS' => 'NAS',
-	'Class:Model/Attribute:Type/Value:NAS+' => 'NAS',
-	'Class:Model/Attribute:Type/Value:NetworkDevice' => 'ネットワークデバイス',
-	'Class:Model/Attribute:Type/Value:NetworkDevice+' => 'ネットワークデバイス',
-	'Class:Model/Attribute:Type/Value:PC' => 'PC',
-	'Class:Model/Attribute:Type/Value:PC+' => 'PC',
-	'Class:Model/Attribute:Type/Value:PDU' => 'PDU',
-	'Class:Model/Attribute:Type/Value:PDU+' => 'PDU',
-	'Class:Model/Attribute:Type/Value:Peripheral' => '周辺',
-	'Class:Model/Attribute:Type/Value:Peripheral+' => '周辺',
-	'Class:Model/Attribute:Type/Value:Printer' => 'プリンタ',
-	'Class:Model/Attribute:Type/Value:Printer+' => 'プリンタ',
-	'Class:Model/Attribute:Type/Value:Rack' => 'ラック',
-	'Class:Model/Attribute:Type/Value:Rack+' => 'ラック',
-	'Class:Model/Attribute:Type/Value:SANswitch' => 'SANスイッチ',
-	'Class:Model/Attribute:Type/Value:SANswitch+' => 'SANスイッチ',
-	'Class:Model/Attribute:Type/Value:Server' => 'サーバ',
-	'Class:Model/Attribute:Type/Value:Server+' => 'サーバ',
-	'Class:Model/Attribute:Type/Value:StorageSystem' => 'ストレージシステム',
-	'Class:Model/Attribute:Type/Value:StorageSystem+' => 'ストレージシステム',
-	'Class:Model/Attribute:Type/Value:Tablet' => 'タブレット',
-	'Class:Model/Attribute:Type/Value:Tablet+' => 'タブレット',
-	'Class:Model/Attribute:Type/Value:TapeLibrary' => 'テープライブラリ',
-	'Class:Model/Attribute:Type/Value:TapeLibrary+' => 'テープライブラリ',
-	'Class:Model/Attribute:Type/Value:Telephone' => '電話',
-	'Class:Model/Attribute:Type/Value:Telephone+' => '電話',
+	'Class:Model/Attribute:type' => 'デバイスタイプ',
+	'Class:Model/Attribute:type+' => '',
+	'Class:Model/Attribute:type/Value:PowerSource' => '電源',
+	'Class:Model/Attribute:type/Value:PowerSource+' => '電源',
+	'Class:Model/Attribute:type/Value:DiskArray' => 'ディスクアレー',
+	'Class:Model/Attribute:type/Value:DiskArray+' => 'ディスクアレー',
+	'Class:Model/Attribute:type/Value:Enclosure' => 'エンクロージャ',
+	'Class:Model/Attribute:type/Value:Enclosure+' => 'エンクロージャ',
+	'Class:Model/Attribute:type/Value:IPPhone' => 'Ip電話',
+	'Class:Model/Attribute:type/Value:IPPhone+' => 'Ip電話',
+	'Class:Model/Attribute:type/Value:MobilePhone' => '携帯電話',
+	'Class:Model/Attribute:type/Value:MobilePhone+' => '携帯電話',
+	'Class:Model/Attribute:type/Value:NAS' => 'NAS',
+	'Class:Model/Attribute:type/Value:NAS+' => 'NAS',
+	'Class:Model/Attribute:type/Value:NetworkDevice' => 'ネットワークデバイス',
+	'Class:Model/Attribute:type/Value:NetworkDevice+' => 'ネットワークデバイス',
+	'Class:Model/Attribute:type/Value:PC' => 'PC',
+	'Class:Model/Attribute:type/Value:PC+' => 'PC',
+	'Class:Model/Attribute:type/Value:PDU' => 'PDU',
+	'Class:Model/Attribute:type/Value:PDU+' => 'PDU',
+	'Class:Model/Attribute:type/Value:Peripheral' => '周辺',
+	'Class:Model/Attribute:type/Value:Peripheral+' => '周辺',
+	'Class:Model/Attribute:type/Value:Printer' => 'プリンタ',
+	'Class:Model/Attribute:type/Value:Printer+' => 'プリンタ',
+	'Class:Model/Attribute:type/Value:Rack' => 'ラック',
+	'Class:Model/Attribute:type/Value:Rack+' => 'ラック',
+	'Class:Model/Attribute:type/Value:SANSwitch' => 'SANスイッチ',
+	'Class:Model/Attribute:type/Value:SANSwitch+' => 'SANスイッチ',
+	'Class:Model/Attribute:type/Value:Server' => 'サーバ',
+	'Class:Model/Attribute:type/Value:Server+' => 'サーバ',
+	'Class:Model/Attribute:type/Value:StorageSystem' => 'ストレージシステム',
+	'Class:Model/Attribute:type/Value:StorageSystem+' => 'ストレージシステム',
+	'Class:Model/Attribute:type/Value:Tablet' => 'タブレット',
+	'Class:Model/Attribute:type/Value:Tablet+' => 'タブレット',
+	'Class:Model/Attribute:type/Value:TapeLibrary' => 'テープライブラリ',
+	'Class:Model/Attribute:type/Value:TapeLibrary+' => 'テープライブラリ',
+	'Class:Model/Attribute:type/Value:Telephone' => '電話',
+	'Class:Model/Attribute:type/Value:Telephone+' => '電話',
 	'Class:Model/Attribute:physicaldevices_list' => '物理デバイス',
 	'Class:Model/Attribute:physicaldevices_list+' => '',
 ));
@@ -1336,12 +1336,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:IOSversion' => 'IOSバージョン',
-	'Class:IOSversion+' => '',
-	'Class:IOSversion/Attribute:brand_id' => 'ブランド',
-	'Class:IOSversion/Attribute:brand_id+' => '',
-	'Class:IOSversion/Attribute:brand_name' => 'ブランド名',
-	'Class:IOSversion/Attribute:brand_name+' => '',
+	'Class:IOSVersion' => 'IOSバージョン',
+	'Class:IOSVersion+' => '',
+	'Class:IOSVersion/Attribute:brand_id' => 'ブランド',
+	'Class:IOSVersion/Attribute:brand_id+' => '',
+	'Class:IOSVersion/Attribute:brand_name' => 'ブランド名',
+	'Class:IOSVersion/Attribute:brand_name+' => '',
 ));
 
 //
@@ -1383,16 +1383,16 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:lnkFunctionalCIToOSpatch' => 'リンク 機能的CI/OSパッチ',
-	'Class:lnkFunctionalCIToOSpatch+' => '',
-	'Class:lnkFunctionalCIToOSpatch/Attribute:ospatch_id' => 'OSパッチ',
-	'Class:lnkFunctionalCIToOSpatch/Attribute:ospatch_id+' => '',
-	'Class:lnkFunctionalCIToOSpatch/Attribute:ospatch_name' => 'OSパッチ名',
-	'Class:lnkFunctionalCIToOSpatch/Attribute:ospatch_name+' => '',
-	'Class:lnkFunctionalCIToOSpatch/Attribute:functionalci_id' => '機能的ci',
-	'Class:lnkFunctionalCIToOSpatch/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToOSpatch/Attribute:functionalci_name' => '機能的ci名',
-	'Class:lnkFunctionalCIToOSpatch/Attribute:functionalci_name+' => '',
+	'Class:lnkFunctionalCIToOSPatch' => 'リンク 機能的CI/OSパッチ',
+	'Class:lnkFunctionalCIToOSPatch+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'OSパッチ',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name' => 'OSパッチ名',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id' => '機能的ci',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => '機能的ci名',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '',
 ));
 
 //
@@ -1483,20 +1483,20 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:IPinterface' => 'IPインターフェース',
-	'Class:IPinterface+' => '',
-	'Class:IPinterface/Attribute:ipaddress' => 'IPアドレス',
-	'Class:IPinterface/Attribute:ipaddress+' => '',
-	'Class:IPinterface/Attribute:macaddress' => 'MACアドレス',
-	'Class:IPinterface/Attribute:macaddress+' => '',
-	'Class:IPinterface/Attribute:comment' => 'コメント',
-	'Class:IPinterface/Attribute:coment+' => '',
-	'Class:IPinterface/Attribute:ipgateway' => 'IPゲートウエイ',
-	'Class:IPinterface/Attribute:ipgateway+' => '',
-	'Class:IPinterface/Attribute:ipmask' => 'IPマスク',
-	'Class:IPinterface/Attribute:ipmask+' => '',
-	'Class:IPinterface/Attribute:speed' => '速度',
-	'Class:IPinterface/Attribute:speed+' => '',
+	'Class:IPInterface' => 'IPインターフェース',
+	'Class:IPInterface+' => '',
+	'Class:IPInterface/Attribute:ipaddress' => 'IPアドレス',
+	'Class:IPInterface/Attribute:ipaddress+' => '',
+	'Class:IPInterface/Attribute:macaddress' => 'MACアドレス',
+	'Class:IPInterface/Attribute:macaddress+' => '',
+	'Class:IPInterface/Attribute:comment' => 'コメント',
+	'Class:IPInterface/Attribute:coment+' => '',
+	'Class:IPInterface/Attribute:ipgateway' => 'IPゲートウエイ',
+	'Class:IPInterface/Attribute:ipgateway+' => '',
+	'Class:IPInterface/Attribute:ipmask' => 'IPマスク',
+	'Class:IPInterface/Attribute:ipmask+' => '',
+	'Class:IPInterface/Attribute:speed' => '速度',
+	'Class:IPInterface/Attribute:speed+' => '',
 ));
 
 //

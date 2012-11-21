@@ -164,12 +164,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 //
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:FAQcategory' => 'FAQカテゴリ',
-	'Class:FAQcategory+' => 'FAQのためのカテゴリ',
-	'Class:FAQcategory/Attribute:name' => '名前',
-	'Class:FAQcategory/Attribute:name+' => '',
-	'Class:FAQcategory/Attribute:faq_list' => 'FAQ',
-	'Class:FAQcategory/Attribute:faq_list+' => '',
+	'Class:FAQCategory' => 'FAQカテゴリ',
+	'Class:FAQCategory+' => 'FAQのためのカテゴリ',
+	'Class:FAQCategory/Attribute:name' => '名前',
+	'Class:FAQCategory/Attribute:name+' => '',
+	'Class:FAQCategory/Attribute:faq_list' => 'FAQ',
+	'Class:FAQCategory/Attribute:faq_list+' => '',
 ));
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:NewError' => '新規既知のエラー',

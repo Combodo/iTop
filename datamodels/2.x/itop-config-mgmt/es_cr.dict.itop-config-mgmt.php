@@ -419,8 +419,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:IpPhone' => 'Teléfono IP',
-	'Class:IpPhone+' => 'Teléfono IP',
+	'Class:IPPhone' => 'Teléfono IP',
+	'Class:IPPhone+' => 'Teléfono IP',
 ));
 
 //
@@ -754,10 +754,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:DBserver' => 'Servidor de Base de Datos',
-	'Class:DBserver+' => 'Servidor de Base de Datos',
-	'Class:DBserver/Attribute:dbschema_list' => 'Esquema de BD',
-	'Class:DBserver/Attribute:dbschema_list+' => 'Esquema de BD',
+	'Class:DBServer' => 'Servidor de Base de Datos',
+	'Class:DBServer+' => 'Servidor de Base de Datos',
+	'Class:DBServer/Attribute:dbschema_list' => 'Esquema de BD',
+	'Class:DBServer/Attribute:dbschema_list+' => 'Esquema de BD',
 ));
 
 //
@@ -765,10 +765,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:Webserver' => 'Servidor Web',
-	'Class:Webserver+' => 'Servidor Web',
-	'Class:Webserver/Attribute:webapp_list' => 'Aplicaciones Web',
-	'Class:Webserver/Attribute:webapp_list+' => 'Aplicaciones Web',
+	'Class:WebServer' => 'Servidor Web',
+	'Class:WebServer+' => 'Servidor Web',
+	'Class:WebServer/Attribute:webapp_list' => 'Aplicaciones Web',
+	'Class:WebServer/Attribute:webapp_list+' => 'Aplicaciones Web',
 ));
 
 //
@@ -1031,20 +1031,20 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:NasFileSystem' => 'Filesysten en NAS',
-	'Class:NasFileSystem+' => 'Filesysten en NAS',
-	'Class:NasFileSystem/Attribute:name' => 'Nombre',
-	'Class:NasFileSystem/Attribute:name+' => 'Nombre',
-	'Class:NasFileSystem/Attribute:description' => 'Descripción',
-	'Class:NasFileSystem/Attribute:description+' => 'Descripción',
-	'Class:NasFileSystem/Attribute:raid_level' => 'Nivel de RAID',
-	'Class:NasFileSystem/Attribute:raid_level+' => 'Nivel de RAID',
-	'Class:NasFileSystem/Attribute:size' => 'Tama&ntilde;o',
-	'Class:NasFileSystem/Attribute:size+' => 'Tama&ntilde;o',
-	'Class:NasFileSystem/Attribute:nas_id' => 'NAS',
-	'Class:NasFileSystem/Attribute:nas_id+' => 'NAS',
-	'Class:NasFileSystem/Attribute:nas_name' => 'NAS',
-	'Class:NasFileSystem/Attribute:nas_name+' => 'NAS',
+	'Class:NASFileSystem' => 'Filesysten en NAS',
+	'Class:NASFileSystem+' => 'Filesysten en NAS',
+	'Class:NASFileSystem/Attribute:name' => 'Nombre',
+	'Class:NASFileSystem/Attribute:name+' => 'Nombre',
+	'Class:NASFileSystem/Attribute:description' => 'Descripción',
+	'Class:NASFileSystem/Attribute:description+' => 'Descripción',
+	'Class:NASFileSystem/Attribute:raid_level' => 'Nivel de RAID',
+	'Class:NASFileSystem/Attribute:raid_level+' => 'Nivel de RAID',
+	'Class:NASFileSystem/Attribute:size' => 'Tama&ntilde;o',
+	'Class:NASFileSystem/Attribute:size+' => 'Tama&ntilde;o',
+	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
+	'Class:NASFileSystem/Attribute:nas_id+' => 'NAS',
+	'Class:NASFileSystem/Attribute:nas_name' => 'NAS',
+	'Class:NASFileSystem/Attribute:nas_name+' => 'NAS',
 ));
 
 //
@@ -1064,16 +1064,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Software/Attribute:documents_list+' => 'Documentos',
 	'Class:Software/Attribute:type' => 'Tipo',
 	'Class:Software/Attribute:type+' => 'Tipo',
-	'Class:Software/Attribute:type/Value:DBserver' => 'Servidor de BD',
-	'Class:Software/Attribute:type/Value:DBserver+' => 'Servidor de BD',
+	'Class:Software/Attribute:type/Value:DBServer' => 'Servidor de BD',
+	'Class:Software/Attribute:type/Value:DBServer+' => 'Servidor de BD',
 	'Class:Software/Attribute:type/Value:Middleware' => 'Middleware',
 	'Class:Software/Attribute:type/Value:Middleware+' => 'Middleware',
 	'Class:Software/Attribute:type/Value:OtherSoftware' => 'Otro Software',
 	'Class:Software/Attribute:type/Value:OtherSoftware+' => 'Otro Software',
 	'Class:Software/Attribute:type/Value:PCSoftware' => 'Software de PC',
 	'Class:Software/Attribute:type/Value:PCSoftware+' => 'Software de PC',
-	'Class:Software/Attribute:type/Value:Webserver' => 'Servidor Web',
-	'Class:Software/Attribute:type/Value:Webserver+' => 'Servidor Web',
+	'Class:Software/Attribute:type/Value:WebServer' => 'Servidor Web',
+	'Class:Software/Attribute:type/Value:WebServer+' => 'Servidor Web',
 	'Class:Software/Attribute:softwareinstance_list' => 'Instalaciones de Software',
 	'Class:Software/Attribute:softwareinstance_list+' => 'Instalaciones de Software',
 	'Class:Software/Attribute:softwarepatch_list' => 'Parches de Software',
@@ -1104,14 +1104,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:OSpatch' => 'Parche de SO',
-	'Class:OSpatch+' => 'Parche de SO',
-	'Class:OSpatch/Attribute:functionalcis_list' => 'Dispositivos',
-	'Class:OSpatch/Attribute:functionalcis_list+' => 'Dispositivos',
-	'Class:OSpatch/Attribute:osversion_id' => 'Versión de SO',
-	'Class:OSpatch/Attribute:osversion_id+' => 'Versión de SO',
-	'Class:OSpatch/Attribute:osversion_name' => 'Versión de SO',
-	'Class:OSpatch/Attribute:osversion_name+' => 'Versión de SO',
+	'Class:OSPatch' => 'Parche de SO',
+	'Class:OSPatch+' => 'Parche de SO',
+	'Class:OSPatch/Attribute:functionalcis_list' => 'Dispositivos',
+	'Class:OSPatch/Attribute:functionalcis_list+' => 'Dispositivos',
+	'Class:OSPatch/Attribute:osversion_id' => 'Versión de SO',
+	'Class:OSPatch/Attribute:osversion_id+' => 'Versión de SO',
+	'Class:OSPatch/Attribute:osversion_name' => 'Versión de SO',
+	'Class:OSPatch/Attribute:osversion_name+' => 'Versión de SO',
 ));
 
 //
@@ -1163,16 +1163,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:OsLicence' => 'Licencia de SO',
-	'Class:OsLicence+' => 'Licencia de SO',
-	'Class:OsLicence/Attribute:osversion_id' => 'Versión de SO',
-	'Class:OsLicence/Attribute:osversion_id+' => 'Versión de SO',
-	'Class:OsLicence/Attribute:osversion_name' => 'Versión de SO',
-	'Class:OsLicence/Attribute:osversion_name+' => 'Versión de SO',
-	'Class:OsLicence/Attribute:virtualmachines_list' => 'Máquinas Virtuales',
-	'Class:OsLicence/Attribute:virtualmachines_list+' => 'Máquinas Virtuales',
-	'Class:OsLicence/Attribute:servers_list' => 'Servidores',
-	'Class:OsLicence/Attribute:servers_list+' => 'Servidores',
+	'Class:OSLicence' => 'Licencia de SO',
+	'Class:OSLicence+' => 'Licencia de SO',
+	'Class:OSLicence/Attribute:osversion_id' => 'Versión de SO',
+	'Class:OSLicence/Attribute:osversion_id+' => 'Versión de SO',
+	'Class:OSLicence/Attribute:osversion_name' => 'Versión de SO',
+	'Class:OSLicence/Attribute:osversion_name+' => 'Versión de SO',
+	'Class:OSLicence/Attribute:virtualmachines_list' => 'Máquinas Virtuales',
+	'Class:OSLicence/Attribute:virtualmachines_list+' => 'Máquinas Virtuales',
+	'Class:OSLicence/Attribute:servers_list' => 'Servidores',
+	'Class:OSLicence/Attribute:servers_list+' => 'Servidores',
 ));
 
 //
@@ -1225,12 +1225,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:OSversion' => 'Versión de SO',
-	'Class:OSversion+' => 'Versión de SO',
-	'Class:OSversion/Attribute:osfamily_id' => 'Familia de SO',
-	'Class:OSversion/Attribute:osfamily_id+' => 'Familia de SO',
-	'Class:OSversion/Attribute:osfamily_name' => 'Familia de SO',
-	'Class:OSversion/Attribute:osfamily_name+' => 'Familia de SO',
+	'Class:OSVersion' => 'Versión de SO',
+	'Class:OSVersion+' => 'Versión de SO',
+	'Class:OSVersion/Attribute:osfamily_id' => 'Familia de SO',
+	'Class:OSVersion/Attribute:osfamily_id+' => 'Familia de SO',
+	'Class:OSVersion/Attribute:osfamily_name' => 'Familia de SO',
+	'Class:OSVersion/Attribute:osfamily_name+' => 'Familia de SO',
 ));
 
 //
@@ -1238,8 +1238,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:OSfamily' => 'Familia de SO',
-	'Class:OSfamily+' => 'Familia de SO',
+	'Class:OSFamily' => 'Familia de SO',
+	'Class:OSFamily+' => 'Familia de SO',
 ));
 
 //
@@ -1282,44 +1282,44 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Model/Attribute:brand_id+' => 'Marca',
 	'Class:Model/Attribute:brand_name' => 'Marca',
 	'Class:Model/Attribute:brand_name+' => 'Marca',
-	'Class:Model/Attribute:Type' => 'Tipo de Dispositivo',
-	'Class:Model/Attribute:Type+' => 'Tipo de Dispositivo',
-	'Class:Model/Attribute:Type/Value:PowerSource' => 'Fuente de Poder',
-	'Class:Model/Attribute:Type/Value:PowerSource+' => 'Fuente de Poder',
-	'Class:Model/Attribute:Type/Value:DiskArray' => 'Arreglo de Discos',
-	'Class:Model/Attribute:Type/Value:DiskArray+' => 'Arreglo de Discos',
-	'Class:Model/Attribute:Type/Value:Enclosure' => 'Enclosure',
-	'Class:Model/Attribute:Type/Value:Enclosure+' => 'Enclosure',
-	'Class:Model/Attribute:Type/Value:IpPhone' => 'Teléfono IP',
-	'Class:Model/Attribute:Type/Value:IpPhone+' => 'Teléfono IP',
-	'Class:Model/Attribute:Type/Value:MobilePhone' => 'Teléfono Móvil',
-	'Class:Model/Attribute:Type/Value:MobilePhone+' => 'Teléfono Móvil',
-	'Class:Model/Attribute:Type/Value:NAS' => 'NAS',
-	'Class:Model/Attribute:Type/Value:NAS+' => 'NAS',
-	'Class:Model/Attribute:Type/Value:NetworkDevice' => 'Dispositivo de Red',
-	'Class:Model/Attribute:Type/Value:NetworkDevice+' => 'Dispositivo de Red',
-	'Class:Model/Attribute:Type/Value:PC' => 'PC/Laptop',
-	'Class:Model/Attribute:Type/Value:PC+' => 'PC/Laptor',
-	'Class:Model/Attribute:Type/Value:PDU' => 'PDU',
-	'Class:Model/Attribute:Type/Value:PDU+' => 'PDU',
-	'Class:Model/Attribute:Type/Value:Peripheral' => 'Periférico',
-	'Class:Model/Attribute:Type/Value:Peripheral+' => 'Periférico',
-	'Class:Model/Attribute:Type/Value:Printer' => 'Impresora',
-	'Class:Model/Attribute:Type/Value:Printer+' => 'Impresora',
-	'Class:Model/Attribute:Type/Value:Rack' => 'Rack',
-	'Class:Model/Attribute:Type/Value:Rack+' => 'Rack',
-	'Class:Model/Attribute:Type/Value:SANswitch' => 'Switch de SAN',
-	'Class:Model/Attribute:Type/Value:SANswitch+' => 'Switch de SAN',
-	'Class:Model/Attribute:Type/Value:Server' => 'Servidor',
-	'Class:Model/Attribute:Type/Value:Server+' => 'Servidor',
-	'Class:Model/Attribute:Type/Value:StorageSystem' => 'Sistema de Almacenamiento',
-	'Class:Model/Attribute:Type/Value:StorageSystem+' => 'Sistema de Almacenamiento',
-	'Class:Model/Attribute:Type/Value:Tablet' => 'Tableta',
-	'Class:Model/Attribute:Type/Value:Tablet+' => 'Tableta',
-	'Class:Model/Attribute:Type/Value:TapeLibrary' => 'Librería de Cinta',
-	'Class:Model/Attribute:Type/Value:TapeLibrary+' => 'Librería de Cinta',
-	'Class:Model/Attribute:Type/Value:Telephone' => 'Teléfono',
-	'Class:Model/Attribute:Type/Value:Telephone+' => 'Teléfono',
+	'Class:Model/Attribute:type' => 'Tipo de Dispositivo',
+	'Class:Model/Attribute:type+' => 'Tipo de Dispositivo',
+	'Class:Model/Attribute:type/Value:PowerSource' => 'Fuente de Poder',
+	'Class:Model/Attribute:type/Value:PowerSource+' => 'Fuente de Poder',
+	'Class:Model/Attribute:type/Value:DiskArray' => 'Arreglo de Discos',
+	'Class:Model/Attribute:type/Value:DiskArray+' => 'Arreglo de Discos',
+	'Class:Model/Attribute:type/Value:Enclosure' => 'Enclosure',
+	'Class:Model/Attribute:type/Value:Enclosure+' => 'Enclosure',
+	'Class:Model/Attribute:type/Value:IPPhone' => 'Teléfono IP',
+	'Class:Model/Attribute:type/Value:IPPhone+' => 'Teléfono IP',
+	'Class:Model/Attribute:type/Value:MobilePhone' => 'Teléfono Móvil',
+	'Class:Model/Attribute:type/Value:MobilePhone+' => 'Teléfono Móvil',
+	'Class:Model/Attribute:type/Value:NAS' => 'NAS',
+	'Class:Model/Attribute:type/Value:NAS+' => 'NAS',
+	'Class:Model/Attribute:type/Value:NetworkDevice' => 'Dispositivo de Red',
+	'Class:Model/Attribute:type/Value:NetworkDevice+' => 'Dispositivo de Red',
+	'Class:Model/Attribute:type/Value:PC' => 'PC/Laptop',
+	'Class:Model/Attribute:type/Value:PC+' => 'PC/Laptor',
+	'Class:Model/Attribute:type/Value:PDU' => 'PDU',
+	'Class:Model/Attribute:type/Value:PDU+' => 'PDU',
+	'Class:Model/Attribute:type/Value:Peripheral' => 'Periférico',
+	'Class:Model/Attribute:type/Value:Peripheral+' => 'Periférico',
+	'Class:Model/Attribute:type/Value:Printer' => 'Impresora',
+	'Class:Model/Attribute:type/Value:Printer+' => 'Impresora',
+	'Class:Model/Attribute:type/Value:Rack' => 'Rack',
+	'Class:Model/Attribute:type/Value:Rack+' => 'Rack',
+	'Class:Model/Attribute:type/Value:SANSwitch' => 'Switch de SAN',
+	'Class:Model/Attribute:type/Value:SANSwitch+' => 'Switch de SAN',
+	'Class:Model/Attribute:type/Value:Server' => 'Servidor',
+	'Class:Model/Attribute:type/Value:Server+' => 'Servidor',
+	'Class:Model/Attribute:type/Value:StorageSystem' => 'Sistema de Almacenamiento',
+	'Class:Model/Attribute:type/Value:StorageSystem+' => 'Sistema de Almacenamiento',
+	'Class:Model/Attribute:type/Value:Tablet' => 'Tableta',
+	'Class:Model/Attribute:type/Value:Tablet+' => 'Tableta',
+	'Class:Model/Attribute:type/Value:TapeLibrary' => 'Librería de Cinta',
+	'Class:Model/Attribute:type/Value:TapeLibrary+' => 'Librería de Cinta',
+	'Class:Model/Attribute:type/Value:Telephone' => 'Teléfono',
+	'Class:Model/Attribute:type/Value:Telephone+' => 'Teléfono',
 	'Class:Model/Attribute:physicaldevices_list' => 'Dispositivo Físico',
 	'Class:Model/Attribute:physicaldevices_list+' => 'Dispositivo Físico',
 ));
@@ -1340,12 +1340,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:IOSversion' => 'Versión de IOS',
-	'Class:IOSversion+' => 'Versión de IOS',
-	'Class:IOSversion/Attribute:brand_id' => 'Marca',
-	'Class:IOSversion/Attribute:brand_id+' => 'Marca',
-	'Class:IOSversion/Attribute:brand_name' => 'Marca',
-	'Class:IOSversion/Attribute:brand_name+' => 'Marca',
+	'Class:IOSVersion' => 'Versión de IOS',
+	'Class:IOSVersion+' => 'Versión de IOS',
+	'Class:IOSVersion/Attribute:brand_id' => 'Marca',
+	'Class:IOSVersion/Attribute:brand_id+' => 'Marca',
+	'Class:IOSVersion/Attribute:brand_name' => 'Marca',
+	'Class:IOSVersion/Attribute:brand_name+' => 'Marca',
 ));
 
 //
@@ -1387,16 +1387,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:lnkFunctionalCIToOSpatch' => 'Relación EC Funcional y Parche de SO',
-	'Class:lnkFunctionalCIToOSpatch+' => 'Relación EC Funcional y Parche de SO',
-	'Class:lnkFunctionalCIToOSpatch/Attribute:ospatch_id' => 'Parche de SO',
-	'Class:lnkFunctionalCIToOSpatch/Attribute:ospatch_id+' => 'Parche de SO',
-	'Class:lnkFunctionalCIToOSpatch/Attribute:ospatch_name' => 'Parche de SO',
-	'Class:lnkFunctionalCIToOSpatch/Attribute:ospatch_name+' => 'Parche de SO',
-	'Class:lnkFunctionalCIToOSpatch/Attribute:functionalci_id' => 'EC Funcional',
-	'Class:lnkFunctionalCIToOSpatch/Attribute:functionalci_id+' => 'EC Funcional',
-	'Class:lnkFunctionalCIToOSpatch/Attribute:functionalci_name' => 'EC Funcional',
-	'Class:lnkFunctionalCIToOSpatch/Attribute:functionalci_name+' => 'EC Funcional',
+	'Class:lnkFunctionalCIToOSPatch' => 'Relación EC Funcional y Parche de SO',
+	'Class:lnkFunctionalCIToOSPatch+' => 'Relación EC Funcional y Parche de SO',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'Parche de SO',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => 'Parche de SO',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name' => 'Parche de SO',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name+' => 'Parche de SO',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id' => 'EC Funcional',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => 'EC Funcional',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => 'EC Funcional',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => 'EC Funcional',
 ));
 
 //
@@ -1487,20 +1487,20 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:IPinterface' => 'Interfaz IP',
-	'Class:IPinterface+' => 'Interfaz IP',
-	'Class:IPinterface/Attribute:ipaddress' => 'Dirección IP',
-	'Class:IPinterface/Attribute:ipaddress+' => 'Dirección IP',
-	'Class:IPinterface/Attribute:macaddress' => 'Dirección MAC',
-	'Class:IPinterface/Attribute:macaddress+' => 'Dirección MAC',
-	'Class:IPinterface/Attribute:comment' => 'Comentario',
-	'Class:IPinterface/Attribute:coment+' => 'Comentario',
-	'Class:IPinterface/Attribute:ipgateway' => 'Gateway IP',
-	'Class:IPinterface/Attribute:ipgateway+' => 'Gateway IP',
-	'Class:IPinterface/Attribute:ipmask' => 'Máscara de Red',
-	'Class:IPinterface/Attribute:ipmask+' => 'Máscara de Red',
-	'Class:IPinterface/Attribute:speed' => 'Velocidad',
-	'Class:IPinterface/Attribute:speed+' => 'Velocidad',
+	'Class:IPInterface' => 'Interfaz IP',
+	'Class:IPInterface+' => 'Interfaz IP',
+	'Class:IPInterface/Attribute:ipaddress' => 'Dirección IP',
+	'Class:IPInterface/Attribute:ipaddress+' => 'Dirección IP',
+	'Class:IPInterface/Attribute:macaddress' => 'Dirección MAC',
+	'Class:IPInterface/Attribute:macaddress+' => 'Dirección MAC',
+	'Class:IPInterface/Attribute:comment' => 'Comentario',
+	'Class:IPInterface/Attribute:coment+' => 'Comentario',
+	'Class:IPInterface/Attribute:ipgateway' => 'Gateway IP',
+	'Class:IPInterface/Attribute:ipgateway+' => 'Gateway IP',
+	'Class:IPInterface/Attribute:ipmask' => 'Máscara de Red',
+	'Class:IPInterface/Attribute:ipmask+' => 'Máscara de Red',
+	'Class:IPInterface/Attribute:speed' => 'Velocidad',
+	'Class:IPInterface/Attribute:speed+' => 'Velocidad',
 ));
 
 //
