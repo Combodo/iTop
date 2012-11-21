@@ -1710,7 +1710,7 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>networkdevice_id</ext_key_to_remote>
-          <duplicates/>
+          <duplicates>true</duplicates>
         </field>
         <field id="physicalinterface_list" xsi:type="AttributeLinkedSet">
           <linked_class>PhysicalInterface</linked_class>
@@ -2197,7 +2197,7 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>connectableci_id</ext_key_to_remote>
-          <duplicates/>
+          <duplicates>true</duplicates>
         </field>
         <field id="iosversion_id" xsi:type="AttributeExternalKey">
           <sql>iosversion_id</sql>
@@ -3086,7 +3086,7 @@
       </properties>
       <fields>
         <field id="system_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT FunctionalCI WHERE finalclass IN ('Server','VirtualMachine')]]></filter>
+          <filter><![CDATA[SELECT FunctionalCI WHERE finalclass IN ('Server','VirtualMachine','PC')]]></filter>
           <sql>functionalci_id</sql>
           <target_class>FunctionalCI</target_class>
           <is_null_allowed>false</is_null_allowed>
@@ -7667,25 +7667,29 @@
         </dashlet>
         <dashlet id="8" xsi:type="DashletBadge">
           <rank>4</rank>
-          <class>OtherSoftware</class>
+          <class>PCSoftware</class>
         </dashlet>
         <dashlet id="9" xsi:type="DashletBadge">
           <rank>5</rank>
-          <class>MiddlewareInstance</class>
+          <class>OtherSoftware</class>
         </dashlet>
         <dashlet id="10" xsi:type="DashletBadge">
           <rank>6</rank>
-          <class>DatabaseSchema</class>
+          <class>MiddlewareInstance</class>
         </dashlet>
         <dashlet id="11" xsi:type="DashletBadge">
           <rank>7</rank>
-          <class>WebApplication</class>
+          <class>DatabaseSchema</class>
         </dashlet>
         <dashlet id="12" xsi:type="DashletBadge">
+          <rank>7</rank>
+          <class>WebApplication</class>
+        </dashlet>
+        <dashlet id="13" xsi:type="DashletBadge">
           <rank>8</rank>
           <class>Patch</class>
         </dashlet>
-        <dashlet id="13" xsi:type="DashletBadge">
+        <dashlet id="14" xsi:type="DashletBadge">
           <rank>9</rank>
           <class>Licence</class>
         </dashlet>
@@ -7694,28 +7698,28 @@
     <cell id="4">
       <rank>4</rank>
       <dashlets>
-        <dashlet id="14" xsi:type="DashletHeaderStatic">
+        <dashlet id="15" xsi:type="DashletHeaderStatic">
           <rank>0</rank>
           <title>Menu:ConfigManagement:Misc</title>
           <icon>itop-config-mgmt/images/subnet.png</icon>
         </dashlet>
-        <dashlet id="15" xsi:type="DashletBadge">
+        <dashlet id="16" xsi:type="DashletBadge">
           <rank>1</rank>
           <class>NetworkInterface</class>
         </dashlet>
-        <dashlet id="16" xsi:type="DashletBadge">
+        <dashlet id="17" xsi:type="DashletBadge">
           <rank>2</rank>
           <class>Subnet</class>
         </dashlet>
-        <dashlet id="17" xsi:type="DashletBadge">
+        <dashlet id="18" xsi:type="DashletBadge">
           <rank>4</rank>
           <class>BusinessProcess</class>
         </dashlet>
-        <dashlet id="18" xsi:type="DashletBadge">
+        <dashlet id="19" xsi:type="DashletBadge">
           <rank>5</rank>
           <class>ApplicationSolution</class>
         </dashlet>
-        <dashlet id="19" xsi:type="DashletBadge">
+        <dashlet id="20" xsi:type="DashletBadge">
           <rank>6</rank>
           <class>Group</class>
         </dashlet>
