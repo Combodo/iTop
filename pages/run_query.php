@@ -39,20 +39,20 @@ function ShowExamples($oP, $sExpression)
 
 	$aExamples = array(
 		'Pedagogic examples' => array(
-			"Applications" => "SELECT Application",
+			"Web applications" => "SELECT WebApplication",
 			"Person having an 'A' in their name" => "SELECT Person AS B WHERE B.name LIKE '%A%'",
 			"Servers having a name like dbserver1.demo.com or dbserver023.foo.fr" => "SELECT Server WHERE name REGEXP '^dbserver[0-9]+\\\\..+\\\\.[a-z]{2,3}$'",
 			"Changes planned on new year's day" => "SELECT Change AS ch WHERE ch.start_date >= '2009-12-31' AND ch.end_date <= '2010-01-01'",
-			"IPs in a range" => "SELECT InfrastructureCI AS dev WHERE INET_ATON(dev.management_ip) > INET_ATON('10.22.32.224') AND INET_ATON(dev.management_ip) < INET_ATON('10.22.32.255')",
+			"IPs in a range" => "SELECT DatacenterDevice AS dev WHERE INET_ATON(dev.managementip) > INET_ATON('10.22.32.224') AND INET_ATON(dev.managementip) < INET_ATON('10.22.32.255')",
 			"Persons below a given root organization" => "SELECT Person AS P JOIN Organization AS Node ON P.org_id = Node.id JOIN Organization AS Root ON Node.parent_id BELOW Root.id WHERE Root.id=1",
 		),
 		'Usefull examples' => array(
-			"NW interfaces of equipment in production for customer 'Demo'" => "SELECT NetworkInterface AS if JOIN InfrastructureCI AS dev ON if.device_id = dev.id WHERE if.status = 'production' AND dev.status = 'production' AND dev.owner_name = 'Demo' AND if.physical_type = 'ethernet'",
-			"My tickets" => "SELECT Incident AS i WHERE i.agent_id = :current_contact_id",
-			"People being owner of an active ticket" => "SELECT Person AS p JOIN Incident AS i ON i.agent_id = p.id WHERE i.status != 'Closed'",
+			"NW interfaces of equipment in production for customer 'Demo'" => "SELECT PhysicalInterface AS if JOIN DatacenterDevice AS dev ON if.connectableci_id = dev.id WHERE dev.status = 'production' AND dev.organization_name = 'Demo'",
+			"My tickets" => "SELECT Ticket AS t WHERE t.agent_id = :current_contact_id",
+			"People being owner of an active ticket" => "SELECT Person AS p JOIN UserRequest AS u ON u.agent_id = p.id WHERE u.status != 'closed'",
 			"Contracts terminating in the next thirty days" => "SELECT Contract AS c WHERE c.end_date > NOW() AND c.end_date < DATE_ADD(NOW(), INTERVAL 30 DAY)",
-			"Orphan tickets (opened one hour ago, still not assigned)" => "SELECT Incident AS i WHERE i.start_date < DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND i.status = 'New'",
-			"Long lasting incidents (duration > 8 hours)" => "SELECT Incident AS i WHERE i.close_date > DATE_ADD(i.start_date, INTERVAL 8 HOUR)",
+			"Orphan tickets (opened one hour ago, still not assigned)" => "SELECT UserRequest AS u WHERE u.start_date < DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND u.status = 'new'",
+			"Long lasting incidents (duration > 8 hours)" => "SELECT UserRequest AS u WHERE u.close_date > DATE_ADD(u.start_date, INTERVAL 8 HOUR)",
 		),
 	);
 
