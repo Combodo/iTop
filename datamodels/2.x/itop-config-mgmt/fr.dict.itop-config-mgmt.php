@@ -1758,7 +1758,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 // Add translation for Fieldsets
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 'Server:baseinfo' => 'Informations générales',
 'Server:Date' => 'Date',
 'Server:moreinfo' => 'Informations complémentaires',

@@ -474,7 +474,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 // Class: DeliveryModel
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:DeliveryModel' => '提供モデル',
 	'Class:DeliveryModel+' => '',
 	'Class:DeliveryModel/Attribute:name' => '名前',
