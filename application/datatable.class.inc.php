@@ -516,9 +516,12 @@ EOF;
 <<<EOF
 var oTable = $('#{$this->iListId} table.listResults');
 oTable.tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList']} ).tablesorterPager({container: $('#pager{$this->iListId}'), totalRows:$iCount, size: $iPageSize, filter: '$sOQL', extra_params: '$sExtraParams', select_mode: '$sSelectModeJS', displayKey: $sDisplayKey, columns: $sJSColumns, class_aliases: $sJSClassAliases $sCssCount});
-oTable.trigger("fakesorton", [$sFakeSortList]);
 EOF
 		);
+		if ($sFakeSortList != '')
+		{
+			$oPage->add_ready_script("oTable.trigger(\"fakesorton\", [$sFakeSortList]);");
+		}
 		//if ($iNbPages == 1)
 		if (false)
 		{
