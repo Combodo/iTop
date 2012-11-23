@@ -105,7 +105,16 @@ try
 					{
 						if ($iSortCol == $iSortIndex)
 						{
-							$aOrderBy['friendlyname'] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+							$aNameSpec = MetaModel::GetNameSpec($oFilter->GetClass());
+							if ($aNameSpec[0] == '%1$s')
+							{
+								// The name is made of a single column, let's sort according to the sort algorithm for this column
+								$aOrderBy[$aNameSpec[1][0]] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+							}
+							else
+							{
+								$aOrderBy['friendlyname'] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+							}
 						}
 					}
 					else

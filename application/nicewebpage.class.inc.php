@@ -42,7 +42,7 @@ class NiceWebPage extends WebPage
 		$this->add_linked_script('../js/jquery-ui-1.8.17.custom.min.js');
 		$this->add_linked_script("../js/hovertip.js");
 		// table sorting
-		$this->add_linked_script("../js/jquery.tablesorter.min.js");
+		$this->add_linked_script("../js/jquery.tablesorter.js");
 		$this->add_linked_script("../js/jquery.tablesorter.pager.js");
 		$this->add_linked_script("../js/jquery.tablehover.js");
 		$this->add_linked_script('../js/field_sorter.js');

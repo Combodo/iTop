@@ -506,16 +506,17 @@ EOF;
 				$aDefaultSort[] = "[".($iColOffset).",".($bAscending ? '0' : '1')."]";
 			}
 		}
-		$sSortList = '';
+		$sFakeSortList = '';
 		if (count($aDefaultSort) > 0)
 		{
-			$sSortList = ', sortList: ['.implode(',', $aDefaultSort).']';
+			$sFakeSortList = '['.implode(',', $aDefaultSort).']';
 		}
 		$sOQL = addslashes($this->oSet->GetFilter()->serialize());
 		$oPage->add_ready_script(
 <<<EOF
 var oTable = $('#{$this->iListId} table.listResults');
-oTable.tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList'] $sSortList} ).tablesorterPager({container: $('#pager{$this->iListId}'), totalRows:$iCount, size: $iPageSize, filter: '$sOQL', extra_params: '$sExtraParams', select_mode: '$sSelectModeJS', displayKey: $sDisplayKey, columns: $sJSColumns, class_aliases: $sJSClassAliases $sCssCount});
+oTable.tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList']} ).tablesorterPager({container: $('#pager{$this->iListId}'), totalRows:$iCount, size: $iPageSize, filter: '$sOQL', extra_params: '$sExtraParams', select_mode: '$sSelectModeJS', displayKey: $sDisplayKey, columns: $sJSColumns, class_aliases: $sJSClassAliases $sCssCount});
+oTable.trigger("fakesorton", [$sFakeSortList]);
 EOF
 		);
 		//if ($iNbPages == 1)
