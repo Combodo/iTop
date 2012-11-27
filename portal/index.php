@@ -791,6 +791,7 @@ try
 				try
 				{
 					$oP->DoUpdateObjectFromPostedForm($oObj, $aAttList);
+					$oObj->Reload(); // Make sure the object is in good shape to be displayed
 				}
 				catch(TransactionException $e)
 				{

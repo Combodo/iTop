@@ -20,16 +20,6 @@ html, body {
 }
 div#portal #welcome {
 	display: none;
-	background: url("./images/dockbar_bg.png") repeat-x scroll 0 0 #97A1AE;
-	border-bottom: 1px solid #636364;
-	font-size: 13px;
-	padding: 1px 5px;
-	position: relative;
-	z-index: 300;
-	text-align:right;
-	color: #2C2F34;
-	font-weight: bold;
-	text-shadow: 1px 1px #FFFFFF;
 }
 div#portal #banner {
 	background-color: #F6F6F1;
@@ -61,6 +51,7 @@ div#menu {
 	right: 0;
 	top: 0;
 	width: auto;
+	overflow: hidden;
 }
 
 #portal_menu {
