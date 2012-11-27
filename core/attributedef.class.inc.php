@@ -1259,6 +1259,10 @@ class AttributeBoolean extends AttributeInteger
 	{
 		return $sValue ? '1' : '0';
 	}
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	{
+		return $sValue ? '1' : '0';
+	}
 }
 
 /**
