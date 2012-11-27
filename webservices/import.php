@@ -304,7 +304,7 @@ try
 	//
 	if (strlen($sCSVData) == 0)
 	{
-		throw new ExchangeException("Missing data - at least one line is expected");
+		throw new BulkLoadException("Missing data - at least one line is expected");
 	}
 
 	if (!MetaModel::IsValidClass($sClass))
