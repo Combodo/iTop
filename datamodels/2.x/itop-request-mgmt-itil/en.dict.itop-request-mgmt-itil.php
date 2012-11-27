@@ -208,6 +208,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserRequest/Attribute:pending_reason+' => '',
 	'Class:UserRequest/Attribute:parent_request_id' => 'Parent request',
 	'Class:UserRequest/Attribute:parent_request_id+' => '',
+	'Class:UserRequest/Attribute:parent_incident_id' => 'Parent incident',
+	'Class:UserRequest/Attribute:parent_incident_id+' => '',
 	'Class:UserRequest/Attribute:parent_request_ref' => 'Ref request',
 	'Class:UserRequest/Attribute:parent_request_ref+' => '',
 	'Class:UserRequest/Attribute:parent_problem_id' => 'Parent problem',
