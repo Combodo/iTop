@@ -613,7 +613,7 @@ class SetupUtils
 		$oPage->add('<fieldset><legend>Database Server Connection</legend>');
 		$oPage->add('<table>');
 		$oPage->add('<tr><td>Server Name:</td><td><input id="db_server" type="text" name="db_server" value="'.htmlentities($sDBServer, ENT_QUOTES, 'UTF-8').'" size="15"/></td><td>E.g. "localhost", "dbserver.mycompany.com" or "192.142.10.23"</td></tr>');
-		$oPage->add('<tr><td>Login:</td><td><input id="db_user" type="text" name="db_user" value="'.htmlentities($sDBUser, ENT_QUOTES, 'UTF-8').'" size="15"/></td><td rowspan="2" style="vertical-align:top">The account must have the following privileges on the database: SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, CREATE VIEW, SUPER, TRIGGER</td></tr>');
+		$oPage->add('<tr><td>Login:</td><td><input id="db_user" type="text" name="db_user" value="'.htmlentities($sDBUser, ENT_QUOTES, 'UTF-8').'" size="15"/></td><td rowspan="2" style="vertical-align:top">The account must have the following privileges on the database: SELECT, INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, CREATE VIEW, SUPER, TRIGGER</td></tr>');
 		$oPage->add('<tr><td>Password:</td><td><input id="db_pwd" autocomplete="off" type="password" name="db_pwd" value="'.htmlentities($sDBPwd, ENT_QUOTES, 'UTF-8').'" size="15"/></td></tr>');
 		$oPage->add('</table>');
 		$oPage->add('</fieldset>');
