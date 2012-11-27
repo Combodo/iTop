@@ -2090,6 +2090,7 @@ abstract class MetaModel
 			$e->addInfo('OQL', $oFilter->ToOQL());
 			throw $e;
 		}
+		self::AddQueryTraceGroupBy($oFilter, $aArgs, $aGroupByExpr, $sRes);
 		return $sRes;
 	}
 
@@ -2138,7 +2139,8 @@ abstract class MetaModel
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		try
 		{
-			$sRes = $oSelect->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount);
+			$bBeautifulSQL = self::$m_bTraceQueries || self::$m_bDebugQuery;
+			$sRes = $oSelect->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount, $bBeautifulSQL);
 			if ($sClassAlias == 'itop')
 			{
 				echo $sRes."<br/>\n";
@@ -2147,9 +2149,10 @@ abstract class MetaModel
 		catch (MissingQueryArgument $e)
 		{
 			// Add some information...
-			$e->addInfo('OQL', $sOqlQuery);
+			$e->addInfo('OQL', $oFilter->ToOQL());
 			throw $e;
 		}
+		self::AddQueryTraceSelect($oFilter, $aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $sRes);
 		return $sRes;
 	}
 
@@ -2306,30 +2309,66 @@ abstract class MetaModel
 			$oSelect->AddInnerJoin($oSelectExt, 'id', $aExtendedDataSpec['join_key'] /*, $sTableAlias*/);
 		}
 		
+		return $oSelect;
+	}
+
+	protected static function AddQueryTraceSelect($oFilter, $aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $sSql)
+	{
+		$aQueryData = array(
+			'type' => 'select',
+			'filter' => $oFilter,
+			'order_by' => $aOrderBy,
+			'args' => $aArgs,
+			'att_to_load' => $aAttToLoad,
+			'extended_data_spec' => $aExtendedDataSpec,
+			'limit_count' => $iLimitCount,
+			'limit_start' => $iLimitStart,
+			'is_count' => $bGetCount
+		);
+		$sOql = $oFilter->ToOQL(true, $aArgs);
+		self::AddQueryTrace($aQueryData, $sOql, $sSql);
+	}
+	
+	protected static function AddQueryTraceGroupBy($oFilter, $aArgs, $aGroupByExpr, $sSql)
+	{
+		$aQueryData = array(
+			'type' => 'group_by',
+			'filter' => $oFilter,
+			'args' => $aArgs,
+			'group_by_expr' => $aGroupByExpr
+		);
+		$sOql = $oFilter->ToOQL(true, $aArgs);
+		self::AddQueryTrace($aQueryData, $sOql, $sSql);
+	}
+
+	protected static function AddQueryTrace($aQueryData, $sOql, $sSql)
+	{
 		if (self::$m_bTraceQueries)
 		{
-			$sQueryId = md5($sRes);
-			if(!isset(self::$m_aQueriesLog[$sOqlId]))
+			$sQueryId = md5(serialize($aQueryData));
+			$sMySQLQueryId = md5($sSql);
+			if(!isset(self::$m_aQueriesLog[$sQueryId]))
 			{
-				self::$m_aQueriesLog[$sOqlId]['oql'] = $sOqlQuery;
-				self::$m_aQueriesLog[$sOqlId]['hits'] = 1;
+				self::$m_aQueriesLog[$sQueryId]['data'] = serialize($aQueryData);
+				self::$m_aQueriesLog[$sQueryId]['oql'] = $sOql;
+				self::$m_aQueriesLog[$sQueryId]['hits'] = 1;
 			}
 			else
 			{
-				self::$m_aQueriesLog[$sOqlId]['hits']++;
+				self::$m_aQueriesLog[$sQueryId]['hits']++;
 			}
-			if(!isset(self::$m_aQueriesLog[$sOqlId]['queries'][$sQueryId]))
+			if(!isset(self::$m_aQueriesLog[$sQueryId]['queries'][$sMySQLQueryId]))
 			{
-				self::$m_aQueriesLog[$sOqlId]['queries'][$sQueryId]['sql'] = $sRes;
-				self::$m_aQueriesLog[$sOqlId]['queries'][$sQueryId]['count'] = 1;
+				self::$m_aQueriesLog[$sQueryId]['queries'][$sMySQLQueryId]['sql'] = $sSql;
+				self::$m_aQueriesLog[$sQueryId]['queries'][$sMySQLQueryId]['count'] = 1;
+				$iTableCount = count(CMDBSource::ExplainQuery($sSql));
+				self::$m_aQueriesLog[$sQueryId]['queries'][$sMySQLQueryId]['table_count'] = $iTableCount;
 			}
 			else
 			{
-				self::$m_aQueriesLog[$sOqlId]['queries'][$sQueryId]['count']++;
+				self::$m_aQueriesLog[$sQueryId]['queries'][$sMySQLQueryId]['count']++;
 			}
 		}
-
-		return $oSelect;
 	}
 
 	public static function ShowQueryTrace()
@@ -2337,34 +2376,55 @@ abstract class MetaModel
 		if (!self::$m_bTraceQueries) return;
 
 		$iOqlCount = count(self::$m_aQueriesLog);
-		if ($iOqlCount == 0)
-		{
-			echo "<p>Trace activated, but no query found</p>\n";
-			return;
-		}
-
 		$iSqlCount = 0;
-		foreach (self::$m_aQueriesLog as $aOqlData)
+		foreach (self::$m_aQueriesLog as $sQueryId => $aOqlData)
 		{
 			$iSqlCount += $aOqlData['hits'];
 		}
-		echo "<h2>Stats on SELECT queries: OQL=$iOqlCount, SQL=$iSqlCount</h2>\n";
-
-		foreach (self::$m_aQueriesLog as $aOqlData)
+		$sHtml = "<h2>Stats on SELECT queries: OQL=$iOqlCount, SQL=$iSqlCount</h2>\n";
+		foreach (self::$m_aQueriesLog as $sQueryId => $aOqlData)
 		{
 			$sOql = $aOqlData['oql'];
 			$sHits = $aOqlData['hits'];
 
-			echo "<p><b>$sHits</b> hits for OQL query: $sOql</p>\n";
-			echo "<ul id=\"ClassesRelationships\" class=\"treeview\">\n";
+			$sHtml .= "<p><b>$sHits</b> hits for OQL query: $sOql</p>\n";
+			$sHtml .= "<ul id=\"ClassesRelationships\" class=\"treeview\">\n";
 			foreach($aOqlData['queries'] as $aSqlData)
 			{
 				$sQuery = $aSqlData['sql'];
 				$sSqlHits = $aSqlData['count'];
-				echo "<li><b>$sSqlHits</b> hits for SQL: <span style=\"font-size:60%\">$sQuery</span><li>\n";
+				$iTableCount = $aSqlData['table_count'];
+				$sHtml .= "<li><b>$sSqlHits</b> hits for SQL ($iTableCount tables): <pre style=\"font-size:60%\">$sQuery</pre></li>\n";
 			}
-			echo "</ul>\n";
+			$sHtml .= "</ul>\n";
 		}
+
+		$sLogFile = 'queries.latest';
+		file_put_contents(APPROOT.'data/'.$sLogFile.'.html', $sHtml);
+
+		$sLog = "<?php\n\$aQueriesLog = ".var_export(self::$m_aQueriesLog, true).";";
+		file_put_contents(APPROOT.'data/'.$sLogFile.'.log', $sLog);
+
+		// Cumulate the queries
+		$sAllQueries = APPROOT.'data/queries.log';
+		if (file_exists($sAllQueries))
+		{
+			// Merge the new queries into the existing log
+			include($sAllQueries);
+			foreach (self::$m_aQueriesLog as $sQueryId => $aOqlData)
+			{
+				if (!array_key_exists($sQueryId, $aQueriesLog))
+				{
+					$aQueriesLog[$sQueryId] = $aOqlData;
+				}
+			}
+		}
+		else
+		{
+			$aQueriesLog = self::$m_aQueriesLog;
+		}
+		$sLog = "<?php\n\$aQueriesLog = ".var_export($aQueriesLog, true).";";
+		file_put_contents($sAllQueries, $sLog);
 	}
 
 	protected static function MakeModifierProperties($oFilter)
@@ -4430,7 +4490,7 @@ abstract class MetaModel
 			ExecutionKPI::EnableMemory();
 		}
 
-		self::$m_bTraceQueries = self::$m_oConfig->GetDebugQueries();
+		self::$m_bTraceQueries = self::$m_oConfig->GetLogQueries();
 		self::$m_bQueryCacheEnabled = self::$m_oConfig->GetQueryCacheEnabled();
 
 		self::$m_bSkipCheckToWrite = self::$m_oConfig->Get('skip_check_to_write');

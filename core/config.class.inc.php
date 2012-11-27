@@ -49,7 +49,7 @@ define ('DEFAULT_LOG_ISSUE', true);
 define ('DEFAULT_LOG_WEB_SERVICE', true);
 define ('DEFAULT_LOG_KPI_DURATION', false);
 define ('DEFAULT_LOG_KPI_MEMORY', false);
-define ('DEFAULT_DEBUG_QUERIES', false);
+define ('DEFAULT_LOG_QUERIES', false);
 
 define ('DEFAULT_QUERY_CACHE_ENABLED', true);
 
@@ -641,7 +641,7 @@ class Config
 	protected $m_bLogWebService;
 	protected $m_bLogKPIDuration; // private setting
 	protected $m_bLogKPIMemory; // private setting
-	protected $m_bDebugQueries; // private setting
+	protected $m_bLogQueries; // private setting
 	protected $m_bQueryCacheEnabled; // private setting
 
 	/**
@@ -888,7 +888,7 @@ class Config
 		$this->m_bLogWebService = isset($MySettings['log_web_service']) ? (bool) trim($MySettings['log_web_service']) : DEFAULT_LOG_WEB_SERVICE;
 		$this->m_bLogKPIDuration = isset($MySettings['log_kpi_duration']) ? (bool) trim($MySettings['log_kpi_duration']) : DEFAULT_LOG_KPI_DURATION;
 		$this->m_bLogKPIMemory = isset($MySettings['log_kpi_memory']) ? (bool) trim($MySettings['log_kpi_memory']) : DEFAULT_LOG_KPI_MEMORY;
-		$this->m_bDebugQueries = isset($MySettings['debug_queries']) ? (bool) trim($MySettings['debug_queries']) : DEFAULT_DEBUG_QUERIES;
+		$this->m_bLogQueries = isset($MySettings['log_queries']) ? (bool) trim($MySettings['log_queries']) : DEFAULT_LOG_QUERIES;
 		$this->m_bQueryCacheEnabled = isset($MySettings['query_cache_enabled']) ? (bool) trim($MySettings['query_cache_enabled']) : DEFAULT_QUERY_CACHE_ENABLED;
 
 		$this->m_iMinDisplayLimit = isset($MySettings['min_display_limit']) ? trim($MySettings['min_display_limit']) : DEFAULT_MIN_DISPLAY_LIMIT;
@@ -1036,9 +1036,9 @@ class Config
 		return $this->m_bLogKPIMemory;
 	}
 
-	public function GetDebugQueries()
+	public function GetLogQueries()
 	{
-		return $this->m_bDebugQueries;
+		return $this->m_bLogQueries;
 	}
 
 	public function GetQueryCacheEnabled()

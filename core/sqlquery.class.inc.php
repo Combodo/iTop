@@ -48,6 +48,7 @@ class SQLQuery
 	private $m_aValues = array(); // Values to set in case of an update query
 	private $m_oSelectedIdField = null;
 	private $m_aJoinSelects = array();
+	private $m_bBeautifulQuery = false;
 
 	public function __construct($sTable, $sTableAlias, $aFields, $bToDelete = true, $aValues = array(), $oSelectedIdField = null)
 	{
@@ -293,8 +294,11 @@ class SQLQuery
 	}
 
 	// Interface, build the SQL query
-	public function RenderSelect($aOrderBy = array(), $aArgs = array(), $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false)
+	public function RenderSelect($aOrderBy = array(), $aArgs = array(), $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false, $bBeautifulQuery = false)
 	{
+		$this->m_bBeautifulQuery = $bBeautifulQuery;
+		$sLineSep = $this->m_bBeautifulQuery ? "\n" : '';
+
 		// The goal will be to complete the lists as we build the Joins
 		$aFrom = array();
 		$aFields = array();
@@ -305,7 +309,9 @@ class SQLQuery
 		$aSelectedIdFields = array();
 		$this->privRender($aFrom, $aFields, $aGroupBy, $oCondition, $aDelTables, $aSetValues, $aSelectedIdFields);
 
-		$sFrom   = self::ClauseFrom($aFrom);
+		$sIndent = $this->m_bBeautifulQuery ? "   " : null;
+		$sFrom   = self::ClauseFrom($aFrom, $sIndent);
+
 		$sWhere  = self::ClauseWhere($oCondition, $aArgs);
 		if ($bGetCount)
 		{
@@ -317,11 +323,11 @@ class SQLQuery
 					$aCountFields[] = "COALESCE($sFieldExpr, 0)"; // Null values are excluded from the count
 				}
 				$sCountFields = implode(', ', $aCountFields);
-				$sSQL = "SELECT COUNT(DISTINCT $sCountFields) AS COUNT FROM $sFrom WHERE $sWhere";
+				$sSQL = "SELECT$sLineSep COUNT(DISTINCT $sCountFields) AS COUNT$sLineSep FROM $sFrom$sLineSep WHERE $sWhere";
 			}
 			else
 			{
-				$sSQL = "SELECT COUNT(*) AS COUNT FROM $sFrom WHERE $sWhere";
+				$sSQL = "SELECT$sLineSep COUNT(*) AS COUNT$sLineSep FROM $sFrom$sLineSep WHERE $sWhere";
 			}
 		}
 		else
@@ -340,7 +346,7 @@ class SQLQuery
 			{
 				$sLimit = '';
 			}
-			$sSQL = "SELECT DISTINCT $sSelect FROM $sFrom WHERE $sWhere $sOrderBy $sLimit";
+			$sSQL = "SELECT$sLineSep DISTINCT $sSelect$sLineSep FROM $sFrom$sLineSep WHERE $sWhere$sLineSep $sOrderBy$sLineSep $sLimit";
 		}
 		return $sSQL;
 	}
@@ -394,27 +400,30 @@ class SQLQuery
 		return $sDelTables;
 	}
 
-	private static function ClauseFrom($aFrom)
+	private static function ClauseFrom($aFrom, $sIndent = null, $iIndentLevel = 0)
 	{
+		$sLineBreakLong = $sIndent ? "\n".str_repeat($sIndent, $iIndentLevel + 1) : '';
+		$sLineBreak = $sIndent ? "\n".str_repeat($sIndent, $iIndentLevel) : '';
+
 		$sFrom = "";
 		foreach ($aFrom as $sTableAlias => $aJoinInfo)
 		{
 			switch ($aJoinInfo["jointype"])
 			{
 				case "first":
-					$sFrom .= "`".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
-					$sFrom .= " ".self::ClauseFrom($aJoinInfo["subfrom"]);
+					$sFrom .= $sLineBreakLong."`".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
+					$sFrom .= self::ClauseFrom($aJoinInfo["subfrom"], $sIndent, $iIndentLevel + 1);
 					break;
 				case "inner":
 				case "inner_tree":
-					$sFrom .= " INNER JOIN (`".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
-					$sFrom .= " ".self::ClauseFrom($aJoinInfo["subfrom"]);
-					$sFrom .= ") ON ".$aJoinInfo["joincondition"];
+					$sFrom .= $sLineBreak."INNER JOIN ($sLineBreakLong`".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
+					$sFrom .= " ".self::ClauseFrom($aJoinInfo["subfrom"], $sIndent, $iIndentLevel + 1);
+					$sFrom .= $sLineBreak.") ON ".$aJoinInfo["joincondition"];
 					break;
 				case "left":
-					$sFrom .= " LEFT JOIN (`".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
-					$sFrom .= " ".self::ClauseFrom($aJoinInfo["subfrom"]);
-					$sFrom .= ") ON ".$aJoinInfo["joincondition"];
+					$sFrom .= $sLineBreak."LEFT JOIN ($sLineBreakLong`".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
+					$sFrom .= " ".self::ClauseFrom($aJoinInfo["subfrom"], $sIndent, $iIndentLevel + 1);
+					$sFrom .= $sLineBreak.") ON ".$aJoinInfo["joincondition"];
 					break;
 				default:
 					throw new CoreException("Unknown jointype: '".$aJoinInfo["jointype"]."'");
