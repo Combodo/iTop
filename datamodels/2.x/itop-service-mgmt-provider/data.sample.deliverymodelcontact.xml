@@ -15,9 +15,4 @@
 <contact_id>17</contact_id>
 <role_id>16</role_id>
 </lnkDeliveryModelToContact>
-<lnkDeliveryModelToContact alias="lnkDeliveryModelToContact" id="4">
-<deliverymodel_id>2</deliverymodel_id>
-<contact_id>18</contact_id>
-<role_id>16</role_id>
-</lnkDeliveryModelToContact>
 </Set>
