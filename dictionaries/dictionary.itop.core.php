@@ -714,7 +714,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Everybody allowed to delete such objects',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Nobody',
 	'Class:SynchroAttribute' => 'Synchro Attribute',
-	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Sycnhro Data Source',
+	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Synchro Data Source',
 	'Class:SynchroAttribute/Attribute:attcode' => 'Attribute Code',
 	'Class:SynchroAttribute/Attribute:update' => 'Update',
 	'Class:SynchroAttribute/Attribute:reconcile' => 'Reconcile',

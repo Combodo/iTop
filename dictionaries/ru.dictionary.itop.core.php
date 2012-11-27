@@ -238,7 +238,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:SynchroDataSource/Attribute:url_application' => 'Ссылки программ~~',
 	'Class:SynchroDataSource/Attribute:url_application+' => '',
 	'Class:SynchroAttribute' => 'Synchro Attribute~~',
-	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Sycnhro Data Source~~',
+	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Synchro Data Source~~',
 	'Class:SynchroAttribute/Attribute:attcode' => 'Attribute Code~~',
 	'Class:SynchroAttribute/Attribute:update' => 'Обновить~~',
 	'Class:SynchroAttribute/Attribute:reconcile' => 'Reconcile~~',
