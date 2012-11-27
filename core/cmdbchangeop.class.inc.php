@@ -286,8 +286,16 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
 		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
 		{
-			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
-			$sAttName = $oAttDef->GetLabel();
+			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
+			{
+				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
+				$sAttName = $oAttDef->GetLabel();
+			}
+			else
+			{
+				// The attribute was renamed or removed from the object ?
+				$sAttName = $this->Get('attcode');
+			}
 			$oPrevDoc = $this->Get('prevdata');
 			$sDocView = $oPrevDoc->GetAsHtml();
 			$sDocView .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_',$oPrevDoc->GetDisplayLink(get_class($this), $this->GetKey(), 'prevdata')).", \n";
@@ -342,8 +350,16 @@ class CMDBChangeOpSetAttributeOneWayPassword extends CMDBChangeOpSetAttribute
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
 		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
 		{
-			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
-			$sAttName = $oAttDef->GetLabel();
+			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
+			{
+				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
+				$sAttName = $oAttDef->GetLabel();
+			}
+			else
+			{
+				// The attribute was renamed or removed from the object ?
+				$sAttName = $this->Get('attcode');
+			}
 			$sResult = Dict::Format('Change:AttName_Changed', $sAttName);
 		}
 		return $sResult;
@@ -394,8 +410,16 @@ class CMDBChangeOpSetAttributeEncrypted extends CMDBChangeOpSetAttribute
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
 		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
 		{
-			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
-			$sAttName = $oAttDef->GetLabel();
+			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
+			{
+				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
+				$sAttName = $oAttDef->GetLabel();
+			}
+			else
+			{
+				// The attribute was renamed or removed from the object ?
+				$sAttName = $this->Get('attcode');
+			}
 			$sPrevString = $this->Get('prevstring');
 			$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sPrevString);
 		}
@@ -449,8 +473,16 @@ class CMDBChangeOpSetAttributeText extends CMDBChangeOpSetAttribute
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
 		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
 		{
-			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
-			$sAttName = $oAttDef->GetLabel();
+			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
+			{
+				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
+				$sAttName = $oAttDef->GetLabel();
+			}
+			else
+			{
+				// The attribute was renamed or removed from the object ?
+				$sAttName = $this->Get('attcode');
+			}
 			$sTextView = '<div>'.$this->GetAsHtml('prevdata').'</div>';
 
 			//$sDocView = $oPrevDoc->GetDisplayInline(get_class($this), $this->GetKey(), 'prevdata');
@@ -509,8 +541,16 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
 		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
 		{
-			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
-			$sAttName = $oAttDef->GetLabel();
+			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
+			{
+				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
+				$sAttName = $oAttDef->GetLabel();
+			}
+			else
+			{
+				// The attribute was renamed or removed from the object ?
+				$sAttName = $this->Get('attcode');
+			}
 			$sResult = Dict::Format('Change:AttName_EntryAdded', $sAttName);
 		}
 		return $sResult;
