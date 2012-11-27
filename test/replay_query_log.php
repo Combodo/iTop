@@ -97,7 +97,7 @@ case 'benchmark':
 	// Reset the log contents
 	file_put_contents(APPROOT.'data/queries.results.log', date('Y-m-d H:i:s')."\n");
 	file_put_contents(APPROOT.'data/queries.benchmark.csv', '');
-	LogBenchmarkCSV('oql', 'type', 'properties', 'make duration', 'tables', 'query length', 'exec duration', 'rows');
+	LogBenchmarkCSV('type', 'properties', 'make duration', 'class', 'tables', 'query length', 'exec duration', 'rows', 'oql');
 
 	foreach ($aQueriesLog as $sQueryId => $aOqlData)
 	{
@@ -106,6 +106,7 @@ case 'benchmark':
 		$aQueryData = unserialize($aOqlData['data']);
 
 		$oFilter = $aQueryData['filter'];
+		$sClass = $oFilter->GetClass();
 		$aArgs = $aQueryData['args'];
 
 		if ($aQueryData['type'] == 'select')
@@ -213,7 +214,7 @@ case 'benchmark':
 			}
 			LogResult("row count = ".$iRowCount);
 
-			LogBenchmarkCSV($sOql, $sQueryType, $sQueryDesc, round($fMakeDuration, 3), $iTableCount, strlen($sSql), round($fExecDuration, 3), $iRowCount);
+			LogBenchmarkCSV($sQueryType, $sQueryDesc, round($fMakeDuration, 3), $sClass, $iTableCount, strlen($sSql), round($fExecDuration, 3), $iRowCount, $sOql);
 		}
 	}
 }

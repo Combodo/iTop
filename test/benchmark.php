@@ -867,6 +867,6 @@ catch(ZZCoreException $e)
 }
 $oKPI->ComputeAndReport('Total execution');
 // too big (showing all queries) ExecutionKPI::ReportStats();
-//MetaModel::ShowQueryTrace();
+//MetaModel::RecordQueryTrace();
 $oP->output();
 ?>

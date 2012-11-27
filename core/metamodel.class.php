@@ -2371,7 +2371,7 @@ abstract class MetaModel
 		}
 	}
 
-	public static function ShowQueryTrace()
+	public static function RecordQueryTrace()
 	{
 		if (!self::$m_bTraceQueries) return;
 
