@@ -424,7 +424,7 @@ EOF
 		// 3rd - set values from the page argument 'default'
 		$oNewObj->UpdateObjectFromArg('default');
 
-		$sDialogTitle = addslashes($this->sTitle);
+		$sDialogTitle = '';
 		$oPage->add('<div id="ac_create_'.$this->iId.'"><div class="wizContainer" style="vertical-align:top;"><div id="dcr_'.$this->iId.'">');
 		$oPage->add("<h1>".MetaModel::GetClassIcon($this->sTargetClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', MetaModel::GetName($this->sTargetClass))."</h1>\n");
 	 	cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), array('formPrefix' => $this->iId, 'noRelations' => true));	
