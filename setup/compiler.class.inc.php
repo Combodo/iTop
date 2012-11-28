@@ -52,7 +52,12 @@ class MFCompiler
 			$oPage->p($sText);
 		}
 	}
-
+	
+	public function GetLog()
+	{
+		return $this->aLog;
+	}
+	
 	public function Compile($sTargetDir, $oP = null, $bUseSymbolicLinks = false)
 	{
 		$aAllClasses = array(); // flat list of classes
@@ -77,6 +82,7 @@ class MFCompiler
 		if ($oUserRightsNode)
 		{
 			$sUserRightsModule = $oUserRightsNode->getAttribute('_created_in');
+			$this->Log("User Rights module foud: $sUserRightsModule");
 		}
 
 		// List root classes
@@ -236,7 +242,18 @@ EOF;
  */
 
 EOF;
-				file_put_contents($sResultFile, $sFileHeader.$sCompiledCode);
+				$ret = file_put_contents($sResultFile, $sFileHeader.$sCompiledCode);
+				if ($ret === false)
+				{
+					$iLen = strlen($sFileHeader.$sCompiledCode);
+					$fFree = @disk_free_space(dirname($sResultFile));
+					$aErr = error_get_last();
+					throw new Exception("Failed to write '$sResultFile'. Last error: '{$aErr['message']}', content to write: $iLen bytes, available free space on disk: $fFree.");
+				}
+			}
+			else
+			{
+					$this->Log("Compilation of module $sModuleName in version $sModuleVersion produced not code at all. No file written.");
 			}
 			
 		}
