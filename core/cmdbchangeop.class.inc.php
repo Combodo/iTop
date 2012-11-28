@@ -735,13 +735,26 @@ class CMDBChangeOpSetAttributeLinksTune extends CMDBChangeOpSetAttributeLinks
 			$sAttName = $oAttDef->GetLabel();
 
 			$sLinkClass = $oAttDef->GetLinkedClass();
+			$aLinkClasses = MetaModel::EnumChildClasses($sLinkClass, ENUM_CHILD_CLASSES_ALL);
 
 			// Search for changes on the corresponding link
 			//
 			$oSearch = new DBObjectSearch('CMDBChangeOpSetAttribute');
 			$oSearch->AddCondition('change', $this->Get('change'), '=');
-			$oSearch->AddCondition('objclass', $sLinkClass, '=');
 			$oSearch->AddCondition('objkey', $this->Get('link_id'), '=');
+			if (count($aLinkClasses) == 1)
+			{
+				// Faster than the whole building of the expression below for just one value ??
+				$oSearch->AddCondition('objclass', $sLinkClass, '=');
+			}
+			else
+			{
+				$oField = new FieldExpression('objclass',  $oSearch->GetClassAlias());
+				$sListExpr = '('.implode(', ', CMDBSource::Quote($aLinkClasses)).')';
+				$sOQLCondition = $oField->Render()." IN $sListExpr";
+				$oNewCondition = Expression::FromOQL($sOQLCondition);
+				$oSearch->AddConditionExpression($oNewCondition);
+			}
 			$oSet = new DBObjectSet($oSearch);
 			$aChanges = array();
 			while ($oChangeOp = $oSet->Fetch())

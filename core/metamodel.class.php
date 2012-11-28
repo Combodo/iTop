@@ -896,7 +896,7 @@ abstract class MetaModel
 				foreach (MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef)
 				{
 					if (!$oRemoteAttDef->IsLinkSet()) continue;
-					if ($oRemoteAttDef->GetLinkedClass() != $sClass) continue;
+					if (!is_subclass_of($sClass, $oRemoteAttDef->GetLinkedClass()) && $oRemoteAttDef->GetLinkedClass() != $sClass) continue;
 					if ($oRemoteAttDef->GetExtKeyToMe() != $sAttCode) continue;
 					$aRes[$sAttCode] = $oRemoteAttDef;
 				}

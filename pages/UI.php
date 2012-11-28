@@ -1063,7 +1063,18 @@ EOF
 			{
 				if (preg_match('/attr_(.+)/', $sKey, $aMatches))
 				{
-					$oP->add("<input type=\"hidden\" name=\"$sKey\" value=\"$value\">\n");
+					// Beware: some values (like durations) are passed as arrays
+					if (is_array($value))
+					{
+						foreach($value as $vKey => $vValue)
+						{
+							$oP->add("<input type=\"hidden\" name=\"{$sKey}[$vKey]\" value=\"$vValue\">\n");
+						}
+					}
+					else
+					{
+						$oP->add("<input type=\"hidden\" name=\"$sKey\" value=\"$value\">\n");
+					}
 				}
 			}
 			$oP->add("</form>\n");

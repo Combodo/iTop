@@ -1263,6 +1263,10 @@ class AttributeBoolean extends AttributeInteger
 	{
 		return $sValue ? '1' : '0';
 	}
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+	{
+		return $sValue ? '1' : '0';
+	}
 }
 
 /**

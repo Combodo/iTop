@@ -76,7 +76,7 @@ class SynchroDataSource extends cmdbAbstractObject
 		// Format: seconds (unsigned int)
 		MetaModel::Init_AddAttribute(new AttributeDuration("delete_policy_retention", array("allowed_values"=>null, "sql"=>"delete_policy_retention", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
-		MetaModel::Init_AddAttribute(new AttributeLinkedSet("attribute_list", array("linked_class"=>"SynchroAttribute", "ext_key_to_me"=>"sync_source_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSet("attribute_list", array("linked_class"=>"SynchroAttribute", "ext_key_to_me"=>"sync_source_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array(), 'tracking_level' => LINKSET_TRACKING_DETAILS)));
 		// Not used yet !
 		MetaModel::Init_AddAttribute(new AttributeEnum("user_delete_policy", array("allowed_values"=>new ValueSetEnum('everybody,administrators,nobody'), "sql"=>"user_delete_policy", "default_value"=>"nobody", "is_null_allowed"=>true, "depends_on"=>array())));
 
@@ -1171,7 +1171,7 @@ class SynchroAttribute extends cmdbAbstractObject
 		(
 			"category" => "core/cmdb,view_in_gui",
 			"key_type" => "autoincrement",
-			"name_attcode" => "",
+			"name_attcode" => "attcode",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_sync_att",
@@ -1205,7 +1205,7 @@ class SynchroAttExtKey extends SynchroAttribute
 		(
 			"category" => "core/cmdb,view_in_gui",
 			"key_type" => "autoincrement",
-			"name_attcode" => "",
+			"name_attcode" => "attcode",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_sync_att_extkey",
@@ -1253,7 +1253,7 @@ class SynchroAttLinkSet extends SynchroAttribute
 		(
 			"category" => "core/cmdb,view_in_gui",
 			"key_type" => "autoincrement",
-			"name_attcode" => "",
+			"name_attcode" => "attcode",
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_sync_att_linkset",
