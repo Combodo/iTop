@@ -373,8 +373,15 @@ class ApplicationInstaller
 				'percentage-completed' => 100,
 			);
 			
-			SetupPage::log_error('An exception occurred: '.$e->getMessage());
-			SetupPage::log("Stack trace:\n".$e->getTraceAsString());
+			SetupPage::log_error('An exception occurred: '.$e->getMessage().' at line '.$e->getLine().' in file '.$e->getFile());
+			$idx = 0;
+			// Log the call stack, but log the parameters since they may contain passwords or other sensitive data
+			SetupPage::log("Call stack:");
+			foreach($e->getTrace() as $aTrace)
+			{
+				SetupPage::log("#$idx {$aTrace['file']}({$aTrace['line']}): {$aTrace['function']}(...)");
+				$idx++;
+			}
 		}
 		return $aResult;
 	}
