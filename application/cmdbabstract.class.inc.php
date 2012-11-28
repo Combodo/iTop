@@ -201,6 +201,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		}
 	
 		$oPage->add("<div class=\"page_header\"><h1>".$this->GetIcon()."&nbsp;\n");
+		$sRefreshIcon = '';
 		if ($_SERVER['REQUEST_METHOD'] == 'GET')
 		{
 			$sRefreshIcon = '<img src="../images/reload.png" style="cursor:pointer;vertical-align:middle;margin-left:1em;" onclick="window.location.reload();" title="'.htmlentities(Dict::S('UI:Button:Refresh'), ENT_QUOTES, 'UTF-8').'"/>';
