@@ -728,7 +728,7 @@ EOF
 		$this->m_sWizardId = $sId;
 
 		// multipart... needed for file upload
-		$this->add("<form id=\"{$this->m_sWizardId}\" method=\"$sMethod\" enctype=\"multipart/form-data\">\n");
+		$this->add("<form id=\"{$this->m_sWizardId}\" method=\"$sMethod\" enctype=\"multipart/form-data\" onsubmit=\"window.bInSubmit = true;\">\n");
 
 		$aPreviousSteps = $this->GetWizardStepHistory();
 		if (utils::ReadParam('step_back', 0) == 1)
