@@ -45,6 +45,7 @@ class CSVPage extends WebPage
             header($s_header);
         }
         echo trim($this->s_content);
+        echo "\n";
     }
 
 	public function small_p($sText)
