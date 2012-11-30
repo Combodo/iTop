@@ -1686,7 +1686,9 @@ class MFElement extends DOMElement
 				{
 					throw new Exception("XML datamodel loader: found mandatory node $this->tagName/$sSearchId marked as deleted in $oContainer->tagName");
 				}
-				$oTargetNode = $oContainer->ownerDocument->ImportNode($this, false);
+				// Beware: ImportNode(xxx, false) DOES NOT copy the node's attribute on *some* PHP versions (<5.2.17)
+				// So use this workaround to import a node and its attributes on *any* PHP version
+				$oTargetNode = $oContainer->ownerDocument->ImportNode($this->cloneNode(false), true);
 				$oContainer->AddChildNode($oTargetNode);
 			}
 		}
@@ -1698,7 +1700,9 @@ class MFElement extends DOMElement
 				$oContainer->Dump();
 				throw new Exception("XML datamodel loader: could not find $this->tagName/$sSearchId in $oContainer->tagName");
 			}
-			$oTargetNode = $oContainer->ownerDocument->ImportNode($this, false);
+			// Beware: ImportNode(xxx, false) DOES NOT copy the node's attribute on *some* PHP versions (<5.2.17)
+			// So use this workaround to import a node and its attributes on *any* PHP version
+			$oTargetNode = $oContainer->ownerDocument->ImportNode($this->cloneNode(false), true);
 			$oContainer->AddChildNode($oTargetNode);
 		}
 		return $oTargetNode;

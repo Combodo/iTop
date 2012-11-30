@@ -82,7 +82,7 @@ class MFCompiler
 		if ($oUserRightsNode)
 		{
 			$sUserRightsModule = $oUserRightsNode->getAttribute('_created_in');
-			$this->Log("User Rights module foud: $sUserRightsModule");
+			$this->Log("User Rights module found: $sUserRightsModule");
 		}
 
 		// List root classes
@@ -90,7 +90,7 @@ class MFCompiler
 		$this->aRootClasses = array();
 		foreach ($this->oFactory->ListRootClasses() as $oClass)
 		{
-			$this->Log("Root class: ".$oClass->getAttribute('id'));
+			$this->Log("Root class (with child classes): ".$oClass->getAttribute('id'));
 			$this->aRootClasses[$oClass->getAttribute('id')] = $oClass;
 		}
 
