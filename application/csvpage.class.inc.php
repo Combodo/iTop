@@ -46,6 +46,11 @@ class CSVPage extends WebPage
         }
         echo trim($this->s_content);
         echo "\n";
+
+        if (class_exists('MetaModel'))
+        {
+            MetaModel::RecordQueryTrace();
+        }
     }
 
 	public function small_p($sText)

@@ -35,6 +35,10 @@ class CLIPage implements Page
 
     public function output()
     {
+        if (class_exists('MetaModel'))
+        {
+            MetaModel::RecordQueryTrace();
+        }
     }
 
 	public function add($sText)

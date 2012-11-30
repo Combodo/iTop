@@ -798,6 +798,7 @@ EOF
 			}
 			$oMPDF->Output($sOutputName, 'I');
 		}
+		MetaModel::RecordQueryTrace();
 	}
 
 	public function AddTabContainer($sTabContainer)

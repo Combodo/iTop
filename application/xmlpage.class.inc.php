@@ -59,6 +59,10 @@ class XMLPage extends WebPage
 	        }
 	        echo trim($this->s_content);
     	}
+      if (class_exists('MetaModel'))
+      {
+          MetaModel::RecordQueryTrace();
+      }
     }
     
     public function add($sText)

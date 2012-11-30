@@ -270,6 +270,11 @@ EOF
         {
         	echo self::FilterXSS($s_captured_output);
         }
+
+        if (class_exists('MetaModel'))
+        {
+            MetaModel::RecordQueryTrace();
+        }
     }
 
     /**

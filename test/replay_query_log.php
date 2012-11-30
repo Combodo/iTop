@@ -36,7 +36,7 @@ function LogBenchmarkCSV()
 	{
 		if (is_string($arg))
 		{
-			$aValues[] = '"'.str_replace('"', '\\"', $arg).'"';
+			$aValues[] = '"'.str_replace('"', '""', $arg).'"';
 		}
 		else
 		{
@@ -47,6 +47,162 @@ function LogBenchmarkCSV()
 	file_put_contents(APPROOT.'data/queries.benchmark.csv', "\n".$sLine, FILE_APPEND);
 }
 
+class QueryLogEntry
+{
+	public function __construct($aLogEntryId, $aLogEntryData)
+	{
+		$this->aErrors = array();
+		$this->sSql = '';
+		$this->MakeDuration = 0;
+		$this->fExecDuration = 0;
+		$this->iTableCount = 0;
+		$this->aRows = array();
+
+		$this->sLogId = $aLogEntryId;
+		$this->sOql = $aLogEntryData['oql'];
+		$this->sOqlHtml = htmlentities($this->sOql, ENT_QUOTES, 'UTF-8');
+
+
+		$aQueryData = unserialize($aLogEntryData['data']);
+		$this->oFilter = $aQueryData['filter'];
+		$this->sClass = $this->oFilter->GetClass();
+		$this->aArgs = $aQueryData['args'];
+
+		$iRepeat = utils::ReadParam('repeat', 3);
+
+		if ($aQueryData['type'] == 'select')
+		{
+			$this->aOrderBy = $aQueryData['order_by'];
+			$this->aAttToLoad = $aQueryData['att_to_load'];
+			$this->aExtendedDataSpec = $aQueryData['extended_data_spec'];
+			$this->iLimitCount = $aQueryData['limit_count'];
+			$this->iLimitStart = $aQueryData['limit_start'];
+			$this->bGetCount = $aQueryData['is_count'];
+
+			if ($this->bGetCount)
+			{
+				$this->sQueryType = 'COUNT';
+				$this->sQueryDesc = '';
+			}
+			else
+			{
+				$this->sQueryType = 'LIST';
+				$this->sQueryDesc = "limit count: $this->iLimitCount";
+				$this->sQueryDesc .= "; limit start: $this->iLimitStart";
+				if (count($this->aOrderBy) > 0)
+				{
+					$this->sQueryDesc .= "; order by: ".implode(',', array_keys($this->aOrderBy));
+				}
+				if (is_array($this->aAttToLoad))
+				{
+					$this->sQueryDesc .= "; attributes: ".implode(',', array_keys($this->aAttToLoad));
+				}
+			}
+
+			$fRefTime = MyHelpers::getmicrotime();
+			try
+			{
+				for($i = 0 ; $i < $iRepeat ; $i++)
+				{
+					$this->sSql = MetaModel::MakeSelectQuery($this->oFilter, $this->aOrderBy, $this->aArgs, $this->aAttToLoad, $this->aExtendedDataSpec, $this->iLimitCount, $this->iLimitStart, $this->bGetCount);
+				}
+			}
+			catch(Exception $e)
+			{
+				$this->aErrors[] = "Failed to create the SQL:".$e->getMessage();
+			}
+			$this->fMakeDuration = (MyHelpers::getmicrotime() - $fRefTime) / $iRepeat;
+		}
+		elseif ($aQueryData['type'] == 'group_by')
+		{
+			$this->aGroupByExpr = $aQueryData['group_by_expr'];
+
+			$this->sQueryType = 'GROUP BY';
+			$aGroupedBy = array();
+			foreach ($this->aGroupByExpr as $oExpr)
+			{
+				$aGroupedBy[] = $oExpr->Render();
+			}
+			$this->sQueryDesc = implode(', ', $aGroupedBy);
+
+			$fRefTime = MyHelpers::getmicrotime();
+			try
+			{
+				for($i = 0 ; $i < $iRepeat ; $i++)
+				{
+					$this->sSql = MetaModel::MakeGroupByQuery($this->oFilter, $this->aArgs, $this->aGroupByExpr);
+				}
+			}
+			catch(Exception $e)
+			{
+				$this->aErrors[] = "Failed to create the SQL:".$e->getMessage();
+			}
+			$this->fMakeDuration = (MyHelpers::getmicrotime() - $fRefTime) / $iRepeat;
+		}
+		else
+		{
+			// unsupported
+			$this->sQueryType = 'ERROR';
+			$this->sQueryDesc = "Unkown type of query: ".$aQueryData['type'];
+		}
+	}
+
+	public function Exec()
+	{
+		if ($this->sSql != '')
+		{
+			$iRepeat = utils::ReadParam('repeat', 3);
+			try
+			{
+				$fRefTime = MyHelpers::getmicrotime();
+				for($i = 0 ; $i < $iRepeat ; $i++)
+				{
+					$resQuery = CMDBSource::Query($this->sSql);
+				}
+				$this->fExecDuration = (MyHelpers::getmicrotime() - $fRefTime) / $iRepeat;
+
+				// This is not relevant... 
+				if (preg_match_all('|\s*JOIN\s*\(\s*`|', $this->sSql, $aMatches)) // JOIN (`mytable...
+				{
+					$this->iTableCount = 1 + count($aMatches[0]);
+				}
+				else
+				{
+					$this->iTableCount = 1;
+				}
+			}
+			catch (Exception $e)
+			{
+				$this->aErrors[] = "Failed to execute the SQL:".$e->getMessage();
+				$resQuery = null;
+			}
+			if ($resQuery)
+			{
+				while ($aRow = CMDBSource::FetchArray($resQuery))
+				{
+					$this->aRows[] = $aRow;
+				}
+				CMDBSource::FreeResult($resQuery);
+			}
+		}
+	}
+		
+	public function HasErrors()
+	{
+		return (count($this->aErrors) > 0);
+	}
+
+	public function Display($oP)
+	{
+		$oP->p($this->sOqlHtml);
+		$oP->p($this->sQueryType);
+		$oP->p($this->sQueryDesc);
+		foreach ($this->aErrors as $sError)
+		{
+			$oP->p($sError);
+		}
+	}
+}
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -84,137 +240,119 @@ default:
 	{
 		$sOql = $aOqlData['oql'];
 		$sOqlHtml = htmlentities($sOql, ENT_QUOTES, 'UTF-8');
-		$oP->add("<li>$sOqlHtml</li>\n");
+		$oP->add("<li>$sOqlHtml <a href=\"?operation=zoom&query=$sQueryId\">zoom</a></li>\n");
 	}
 	$oP->add("</ol>\n");
 	
-	$oP->add("<form action=\"?operation=benchmark\" method=\"post\">\n");
-	$oP->add("<input type=\"submit\" value=\"Benchmark!\">\n");
+	$oP->add("<form action=\"?operation=benchmark?repeat=3\" method=\"post\">\n");
+	$oP->add("<input type=\"submit\" value=\"Benchmark (3 repeats)!\">\n");
+	$oP->add("</form>\n");
+
+	$oP->add("<form action=\"?operation=check\" method=\"post\">\n");
+	$oP->add("<input type=\"submit\" value=\"Check!\">\n");
 	$oP->add("</form>\n");
 	break;
 
+case 'zoom':
+	$sQueryId = utils::ReadParam('query', '', false, 'raw_data');
+	$oP->add("<h2>Zoom on query</h2>\n");
+	$oQuery = new QueryLogEntry($sQueryId, $aQueriesLog[$sQueryId]);
+	$oQuery->Exec();
+	$oQuery->Display($oP);
+
+	$oP->add("<pre>$oQuery->sSql</pre>\n");
+	$oP->p("Tables: $oQuery->iTableCount");
+
+	if (strlen($oQuery->sSql) > 0)
+	{
+		$aExplain = CMDBSource::ExplainQuery($oQuery->sSql);
+		$oP->add("<h4>Explain</h4>\n");
+		$oP->add("<table border=\"1\">\n");
+		foreach ($aExplain as $aRow)
+		{
+			$oP->add("   <tr>\n");
+			$oP->add("      <td>".implode('</td><td>', $aRow)."</td>\n");
+			$oP->add("   </tr>\n");
+		}
+		$oP->add("</table>\n");
+	}
+	
+	if (count($oQuery->aRows))
+	{
+		$oP->add("<h4>Values</h4>\n");
+		$oP->add("<table border=\"1\">\n");
+		foreach ($oQuery->aRows as $iRow => $aRow)
+		{
+			$oP->add("   <tr>\n");
+			$oP->add("      <td>".implode('</td><td>', $aRow)."</td>\n");
+			$oP->add("   </tr>\n");
+		}
+		$oP->add("</table>\n");
+	}
+	else
+	{
+		$oP->p("No data");
+	}
+	
+	break;
+
+
+case 'check':
+	$oP->add("<h2>List queries in error</h2>\n");
+	foreach ($aQueriesLog as $sQueryId => $aOqlData)
+	{
+		$oQuery = new QueryLogEntry($sQueryId, $aOqlData);
+		$oQuery->Exec();
+		
+		if ($oQuery->HasErrors())
+		{
+			$oQuery->Display($oP);
+			$oP->p("<a href=\"?operation=zoom&query=$sQueryId\">zoom</a>");
+		}
+	}
+	break;
+
+
 case 'benchmark':
+	$oP->add("<h2>Create data/queries.xxx reports</h2>\n");
 	// Reset the log contents
 	file_put_contents(APPROOT.'data/queries.results.log', date('Y-m-d H:i:s')."\n");
 	file_put_contents(APPROOT.'data/queries.benchmark.csv', '');
 	LogBenchmarkCSV('type', 'properties', 'make duration', 'class', 'tables', 'query length', 'exec duration', 'rows', 'oql');
 
+	$iErrors = 0;
+
 	foreach ($aQueriesLog as $sQueryId => $aOqlData)
 	{
-		$sOql = $aOqlData['oql'];
-		$sOqlHtml = htmlentities($sOql, ENT_QUOTES, 'UTF-8');
-		$aQueryData = unserialize($aOqlData['data']);
-
-		$oFilter = $aQueryData['filter'];
-		$sClass = $oFilter->GetClass();
-		$aArgs = $aQueryData['args'];
-
-		if ($aQueryData['type'] == 'select')
+		$oQuery = new QueryLogEntry($sQueryId, $aOqlData);
+		$oQuery->Exec();
+	
+		LogResult('-----------------------------------------------------------');
+		LogResult($oQuery->sOql);
+		LogResult($oQuery->sQueryType);
+		if (strlen($oQuery->sQueryDesc) > 0)
 		{
-			$aOrderBy = $aQueryData['order_by'];
-			$aAttToLoad = $aQueryData['att_to_load'];
-			$aExtendedDataSpec = $aQueryData['extended_data_spec'];
-			$iLimitCount = $aQueryData['limit_count'];
-			$iLimitStart = $aQueryData['limit_start'];
-			$bGetCount = $aQueryData['is_count'];
-
-			if ($bGetCount)
-			{
-				$sQueryType = 'COUNT';
-				$sQueryDesc = '';
-			}
-			else
-			{
-				$sQueryType = 'LIST';
-				$sQueryDesc = "limit count: $iLimitCount";
-				$sQueryDesc .= "; limit start: $iLimitStart";
-				if (count($aOrderBy) > 0)
-				{
-					$sQueryDesc .= "; order by: ".implode(',', array_keys($aOrderBy));
-				}
-				if (is_array($aAttToLoad))
-				{
-					$sQueryDesc .= "; attributes: ".implode(',', array_keys($aAttToLoad));
-				}
-			}
-
-			$fRefTime = MyHelpers::getmicrotime();
-			try
-			{
-				$sSql = MetaModel::MakeSelectQuery($oFilter, $aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount);
-			}
-			catch(Exception $e)
-			{
-				LogResult("Failed to create the SQL:".$e->getMessage());
-				$sSql = '';
-			}
-			$fMakeDuration = MyHelpers::getmicrotime() - $fRefTime;
+			LogResult($oQuery->sQueryDesc);
 		}
-		elseif ($aQueryData['type'] == 'group_by')
+	
+		if ($oQuery->HasErrors())
 		{
-			$aGroupByExpr = $aQueryData['group_by_expr'];
-
-			$sQueryType = 'GROUP BY';
-			$sQueryDesc = 'expr: '.serialize($aGroupByExpr);
-
-			$fRefTime = MyHelpers::getmicrotime();
-			try
+			foreach($oQuery->aErrors as $sError)
 			{
-				$sSql = MetaModel::MakeGroupByQuery($oFilter, $aArgs, $aGroupByExpr);
+				LogResult($sError);
+				$iErrors++;
 			}
-			catch(Exception $e)
-			{
-				LogResult("Failed to create the SQL:".$e->getMessage());
-				$sSql = '';
-			}
-			$fMakeDuration = MyHelpers::getmicrotime() - $fRefTime;
 		}
 		else
 		{
-			// unsupported
-			$sQueryType = 'ERROR';
-			$sQueryDesc = "Unkown type of query: ".$aQueryData['type'];
-			$fMakeDuration = 0;
-		}
-
-		LogResult($sOql);
-		LogResult($sQueryType);
-		if (strlen($sQueryDesc) > 0)
-		{
-			LogResult($sQueryDesc);
-		}
-
-		if ($sSql != '')
-		{
-			try
+			LogResult("row count = ".count($oQuery->aRows));
+			foreach($oQuery->aRows as $iRow => $aRow)
 			{
-				$fRefTime = MyHelpers::getmicrotime();
-				$resQuery = CMDBSource::Query($sSql);
-				$fExecDuration = MyHelpers::getmicrotime() - $fRefTime;
-
-				$iTableCount = count(CMDBSource::ExplainQuery($sSql));
+				LogResult("row: ".serialize($aRow));
+				if ($iRow > 100) break;
 			}
-			catch (Exception $e)
-			{
-				LogResult("Failed to execute the SQL:".$e->getMessage());
-				LogResult("The failing SQL:\n".$sSql);
-				$resQuery = null;
-				$fExecDuration = 0;
-				$iTableCount = 0;
-			}
-			$iRowCount = 0;
-			if ($resQuery)
-			{
-				while ($aRow = CMDBSource::FetchArray($resQuery))
-				{
-					LogResult("row: ".serialize($aRow));
-					$iRowCount++;
-				}
-				CMDBSource::FreeResult($resQuery);
-			}
-			LogResult("row count = ".$iRowCount);
-
-			LogBenchmarkCSV($sQueryType, $sQueryDesc, round($fMakeDuration, 3), $sClass, $iTableCount, strlen($sSql), round($fExecDuration, 3), $iRowCount, $sOql);
+	
+			LogBenchmarkCSV($oQuery->sQueryType, $oQuery->sQueryDesc, sprintf('%1.3f', round($oQuery->fMakeDuration, 3)), $oQuery->sClass, $oQuery->iTableCount, strlen($oQuery->sSql), sprintf('%1.4f', round($oQuery->fExecDuration, 4)), count($oQuery->aRows), $oQuery->sOql);
 		}
 	}
 }

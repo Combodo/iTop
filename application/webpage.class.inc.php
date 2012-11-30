@@ -487,6 +487,11 @@ class WebPage implements Page
         echo '<div id="at_the_end">'.self::FilterXSS($this->s_deferred_content).'</div>';
         echo "</body>\n";
         echo "</html>\n";
+
+        if (class_exists('MetaModel'))
+        {
+            MetaModel::RecordQueryTrace();
+        }
     }
 
 	/**

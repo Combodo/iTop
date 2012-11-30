@@ -225,7 +225,5 @@ catch(Exception $e)
 	$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getMessage()).'</b>');
 }
 
-MetaModel::RecordQueryTrace();
-
 $oP->output();
 ?>

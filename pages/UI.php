@@ -2133,7 +2133,6 @@ EOF
 	$oKPI->ComputeAndReport('GUI creation before output');
 
 	ExecutionKPI::ReportStats();
-	MetaModel::RecordQueryTrace();
 
 	DisplayWelcomePopup($oP);
 	$oP->output();	
