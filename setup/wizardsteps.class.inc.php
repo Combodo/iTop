@@ -2079,7 +2079,9 @@ class WizStepDone extends WizardStep
 		$sForm .= '<input type="hidden" name="auth_pwd" value="'.htmlentities($this->oWizard->GetParameter('admin_pwd'), ENT_QUOTES, 'UTF-8').'">';
 		$sForm .= "<p style=\"text-align:center;width:100%\"><button id=\"enter_itop\" type=\"submit\">Enter ".ITOP_APPLICATION."</button></p>";
 		$sForm .= '</form>';
-		$oPage->add('<img style="border:0" src="http://www.combodo.com/stats/?p='.urlencode(ITOP_APPLICATION).'&v='.urlencode(ITOP_VERSION).'"/>');
+		$sPHPVersion = phpversion();
+		$sMySQLVersion = SetupUtils::GetMySQLVersion($this->oWizard->GetParameter('db_server'), $this->oWizard->GetParameter('db_user'), $this->oWizard->GetParameter('db_pwd'));
+		$oPage->add('<img style="border:0" src="http://www.combodo.com/stats/?p='.urlencode(ITOP_APPLICATION).'&v='.urlencode(ITOP_VERSION).'&php='.urlencode($sPHPVersion).'&mysql='.urlencode($sMySQLVersion).'&os='.urlencode(PHP_OS).'"/>');
 		$sForm = addslashes($sForm);
 		$oPage->add_ready_script("$('#wiz_form').after('$sForm');");
 	}

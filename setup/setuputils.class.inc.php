@@ -825,6 +825,14 @@ EOF
 		return $aResult;
 	}
 	
+	static public function GetMySQLVersion($sDBServer, $sDBUser, $sDBPwd)
+	{
+		$oDBSource = new CMDBSource;
+		$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd);
+		$sDBVersion = $oDBSource->GetDBVersion();
+		return $sDBVersion;
+	}
+	
 	static public function AsyncCheckDB($oPage, $aParameters)
 	{
 		$sDBServer = $aParameters['db_server'];
