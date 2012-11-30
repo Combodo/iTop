@@ -1101,6 +1101,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Licence/Attribute:end_date+' => '',
 	'Class:Licence/Attribute:licence_key' => 'Clé',
 	'Class:Licence/Attribute:licence_key+' => '',
+	'Class:Licence/Attribute:perpetual' => 'Perpetuelle',
+	'Class:Licence/Attribute:perpetual+' => '',
+	'Class:Licence/Attribute:perpetual/Value:no' => 'non',
+	'Class:Licence/Attribute:perpetual/Value:no+' => 'non',
+	'Class:Licence/Attribute:perpetual/Value:yes' => 'oui',
+	'Class:Licence/Attribute:perpetual/Value:yes+' => 'oui',
 	'Class:Licence/Attribute:finalclass' => 'Type',
 	'Class:Licence/Attribute:finalclass+' => '',
 ));

@@ -2543,7 +2543,7 @@
 
 			case "depends on":
 			$aRels = array(
-
+				"volume" => array("sQuery"=>"SELECT LogicalVolume AS v JOIN lnkServerToVolume AS l1 ON l1.volume_id=v.id WHERE l1.server_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
 			);
 			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
 			break;
@@ -4546,7 +4546,7 @@
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
           <default_value/>
-          <is_null_allowed>true</is_null_allowed>
+          <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="documents_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkDocumentToPatch</linked_class>
@@ -4848,6 +4848,16 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
+        <field id="perpetual" xsi:type="AttributeEnum">
+          <values>
+            <value>yes</value>
+            <value>no</value>
+          </values>
+          <sql>perpetual</sql>
+          <default_value>no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -4868,6 +4878,9 @@
             <item id="description">
               <rank>50</rank>
             </item>
+            <item id="perpetual">
+              <rank>55</rank>
+            </item>
             <item id="start_date">
               <rank>60</rank>
             </item>
@@ -4883,6 +4896,9 @@
           <items>
             <item id="name">
               <rank>10</rank>
+            </item>
+            <item id="perpetual">
+              <rank>15</rank>
             </item>
             <item id="start_date">
               <rank>20</rank>
@@ -4995,6 +5011,9 @@
             <item id="description">
               <rank>60</rank>
             </item>
+            <item id="perpetual">
+              <rank>65</rank>
+            </item>
             <item id="start_date">
               <rank>70</rank>
             </item>
@@ -5016,6 +5035,9 @@
           <items>
             <item id="name">
               <rank>10</rank>
+            </item>
+            <item id="perpetual">
+              <rank>15</rank>
             </item>
             <item id="start_date">
               <rank>20</rank>
@@ -5123,6 +5145,9 @@
             <item id="description">
               <rank>60</rank>
             </item>
+            <item id="perpetual">
+              <rank>65</rank>
+            </item>
             <item id="start_date">
               <rank>70</rank>
             </item>
@@ -5141,6 +5166,9 @@
           <items>
             <item id="name">
               <rank>10</rank>
+            </item>
+            <item id="perpetual">
+              <rank>15</rank>
             </item>
             <item id="start_date">
               <rank>20</rank>
@@ -5289,7 +5317,7 @@
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
           <default_value/>
-          <is_null_allowed>true</is_null_allowed>
+          <is_null_allowed>false</is_null_allowed>
         </field>
       </fields>
       <methods/>
@@ -6519,7 +6547,7 @@
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
           <default_value/>
-          <is_null_allowed>true</is_null_allowed>
+          <is_null_allowed>false</is_null_allowed>
         </field>
       </fields>
       <methods/>

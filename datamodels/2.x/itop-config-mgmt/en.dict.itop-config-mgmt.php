@@ -1150,6 +1150,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Licence/Attribute:end_date+' => '',
 	'Class:Licence/Attribute:licence_key' => 'Key',
 	'Class:Licence/Attribute:licence_key+' => '',
+	'Class:Licence/Attribute:perpetual' => 'Perpetual',
+	'Class:Licence/Attribute:perpetual+' => '',
+	'Class:Licence/Attribute:perpetual/Value:no' => 'no',
+	'Class:Licence/Attribute:perpetual/Value:no+' => 'no',
+	'Class:Licence/Attribute:perpetual/Value:yes' => 'yes',
+	'Class:Licence/Attribute:perpetual/Value:yes+' => 'yes',
 	'Class:Licence/Attribute:finalclass' => 'Type',
 	'Class:Licence/Attribute:finalclass+' => '',
 ));
@@ -1488,6 +1494,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPInterface/Attribute:ipaddress' => 'IP address',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
 
+
 	'Class:IPInterface/Attribute:macaddress' => 'MAC address',
 	'Class:IPInterface/Attribute:macaddress+' => '',
 	'Class:IPInterface/Attribute:comment' => 'Comment',
@@ -1653,6 +1660,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Group/Attribute:type' => 'Type',
 	'Class:Group/Attribute:type+' => '',
 	'Class:Group/Attribute:parent_id' => 'Parent Group',
+
 	'Class:Group/Attribute:parent_id+' => '',
 	'Class:Group/Attribute:parent_name' => 'Name',
 	'Class:Group/Attribute:parent_name+' => '',
