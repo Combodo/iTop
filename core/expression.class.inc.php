@@ -42,6 +42,9 @@ abstract class Expression
 	// recursively builds an array of class => fieldname
 	abstract public function ListRequiredFields();
 
+	// recursively list field parents ($aTable = array of sParent => dummy)
+	abstract public function CollectUsedParents(&$aTable);
+
 	abstract public function IsTrue();
 	
 	// recursively builds an array of [classAlias][fieldName] => value
@@ -143,6 +146,10 @@ class SQLExpression extends Expression
 	public function ListRequiredFields()
 	{
 		return array();
+	}
+
+	public function CollectUsedParents(&$aTable)
+	{
 	}
 	
 	public function ListConstantFields()
@@ -260,7 +267,12 @@ class BinaryExpression extends Expression
 		$aRight = $this->GetRightExpr()->ListRequiredFields();
 		return array_merge($aLeft, $aRight);
 	}
-	
+
+	public function CollectUsedParents(&$aTable)
+	{
+		$this->GetLeftExpr()->CollectUsedParents($aTable);
+		$this->GetRightExpr()->CollectUsedParents($aTable);
+	}
 	
 	/**
 	 * List all constant expression of the form <field> = <scalar> or <field> = :<variable>
@@ -349,6 +361,10 @@ class UnaryExpression extends Expression
 	public function ListRequiredFields()
 	{
 		return array();
+	}
+
+	public function CollectUsedParents(&$aTable)
+	{
 	}
 
 	public function ListConstantFields()
@@ -450,6 +466,11 @@ class FieldExpression extends UnaryExpression
 	public function ListRequiredFields()
 	{
 		return array($this->m_sParent.'.'.$this->m_sName);
+	}
+
+	public function CollectUsedParents(&$aTable)
+	{
+		$aTable[$this->m_sParent] = true;
 	}
 
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
@@ -711,6 +732,14 @@ class ListExpression extends Expression
 		return $aRes;
 	}
 	
+	public function CollectUsedParents(&$aTable)
+	{
+		foreach ($this->m_aExpressions as $oExpr)
+		{
+			$oExpr->CollectUsedParents($aTable);
+		}
+	}
+
 	public function ListConstantFields()
 	{
 		$aRes = array();
@@ -814,6 +843,14 @@ class FunctionExpression extends Expression
 		return $aRes;
 	}
 	
+	public function CollectUsedParents(&$aTable)
+	{
+		foreach ($this->m_aArgs as $oExpr)
+		{
+			$oExpr->CollectUsedParents($aTable);
+		}
+	}
+
 	public function ListConstantFields()
 	{
 		$aRes = array();
@@ -932,6 +969,10 @@ class IntervalExpression extends Expression
 		return array();
 	}
 
+	public function CollectUsedParents(&$aTable)
+	{
+	}
+
 	public function ListConstantFields()
 	{
 		return array();
@@ -1018,6 +1059,14 @@ class CharConcatExpression extends Expression
 			$aRes = array_merge($aRes, $oExpr->ListRequiredFields());
 		}
 		return $aRes;
+	}
+
+	public function CollectUsedParents(&$aTable)
+	{
+		foreach ($this->m_aExpressions as $oExpr)
+		{
+			$oExpr->CollectUsedParents($aTable);
+		}
 	}
 
 	public function ListConstantFields()

@@ -244,7 +244,7 @@ default:
 	}
 	$oP->add("</ol>\n");
 	
-	$oP->add("<form action=\"?operation=benchmark?repeat=3\" method=\"post\">\n");
+	$oP->add("<form action=\"?operation=benchmark&repeat=3\" method=\"post\">\n");
 	$oP->add("<input type=\"submit\" value=\"Benchmark (3 repeats)!\">\n");
 	$oP->add("</form>\n");
 

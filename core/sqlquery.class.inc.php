@@ -298,6 +298,7 @@ class SQLQuery
 	{
 		$this->m_bBeautifulQuery = $bBeautifulQuery;
 		$sLineSep = $this->m_bBeautifulQuery ? "\n" : '';
+		$sIndent = $this->m_bBeautifulQuery ? "   " : null;
 
 		// The goal will be to complete the lists as we build the Joins
 		$aFrom = array();
@@ -309,9 +310,7 @@ class SQLQuery
 		$aSelectedIdFields = array();
 		$this->privRender($aFrom, $aFields, $aGroupBy, $oCondition, $aDelTables, $aSetValues, $aSelectedIdFields);
 
-		$sIndent = $this->m_bBeautifulQuery ? "   " : null;
 		$sFrom   = self::ClauseFrom($aFrom, $sIndent);
-
 		$sWhere  = self::ClauseWhere($oCondition, $aArgs);
 		if ($bGetCount)
 		{
@@ -352,8 +351,12 @@ class SQLQuery
 	}
 
 	// Interface, build the SQL query
-	public function RenderGroupBy($aArgs = array())
+	public function RenderGroupBy($aArgs = array(), $bBeautifulQuery = false)
 	{
+		$this->m_bBeautifulQuery = $bBeautifulQuery;
+		$sLineSep = $this->m_bBeautifulQuery ? "\n" : '';
+		$sIndent = $this->m_bBeautifulQuery ? "   " : null;
+
 		// The goal will be to complete the lists as we build the Joins
 		$aFrom = array();
 		$aFields = array();
@@ -365,10 +368,10 @@ class SQLQuery
 		$this->privRender($aFrom, $aFields, $aGroupBy, $oCondition, $aDelTables, $aSetValues, $aSelectedIdFields);
 
 		$sSelect = self::ClauseSelect($aFields);
-		$sFrom   = self::ClauseFrom($aFrom);
+		$sFrom   = self::ClauseFrom($aFrom, $sIndent);
 		$sWhere  = self::ClauseWhere($oCondition, $aArgs);
 		$sGroupBy = self::ClauseGroupBy($aGroupBy);
-		$sSQL = "SELECT $sSelect, COUNT(*) AS _itop_count_ FROM $sFrom WHERE $sWhere GROUP BY $sGroupBy";
+		$sSQL = "SELECT $sSelect,$sLineSep COUNT(*) AS _itop_count_$sLineSep FROM $sFrom$sLineSep WHERE $sWhere$sLineSep GROUP BY $sGroupBy";
 		return $sSQL;
 	}
 
@@ -570,7 +573,6 @@ class SQLQuery
 		{
 			$aDelTables[] = "`{$this->m_sTableAlias}`";
 		}
-//echo "<p>in privRenderSingleTable this->m_aValues<pre>".print_r($this->m_aValues, true)."</pre></p>\n";	
 		foreach($this->m_aValues as $sFieldName=>$value)
 		{
 			$aSetValues["`{$this->m_sTableAlias}`.`$sFieldName`"] = $value; // quoted further!
@@ -595,6 +597,93 @@ class SQLQuery
 		return $this->m_sTableAlias;
 	}
 
-}
+	public function OptimizeJoins($aUsedTables = null)
+	{
+		if (is_null($aUsedTables))
+		{
+			// Top call: build the list of tables absolutely required to perform the query
+			$aUsedTables = $this->CollectUsedTables();
+		}
 
+		$aToDiscard = array();
+		foreach ($this->m_aJoinSelects as $i => $aJoinInfo)
+		{
+			$oSQLQuery = $aJoinInfo["select"];
+			$sTableAlias = $oSQLQuery->GetTableAlias();
+			if ($oSQLQuery->OptimizeJoins($aUsedTables) && !array_key_exists($sTableAlias, $aUsedTables))
+			{
+				$aToDiscard[] = $i;
+			}
+		}
+		foreach ($aToDiscard as $i)
+		{
+			unset($this->m_aJoinSelects[$i]);
+		}
+
+		return (count($this->m_aJoinSelects) == 0);
+	}
+
+	protected function CollectUsedTables(&$aTables = null)
+	{
+		if (is_null($aTables))
+		{
+			$aTables = array();
+	
+			$this->m_oConditionExpr->CollectUsedParents($aTables);
+			foreach($this->m_aFields as $sFieldAlias => $oField)
+			{
+				$oField->CollectUsedParents($aTables);
+			}
+			if ($this->m_aGroupBy)
+			{
+				foreach($this->m_aGroupBy as $sAlias => $oExpression)
+				{
+					$oExpression->CollectUsedParents($aTables);
+				}
+			}
+	  		if (!is_null($this->m_oSelectedIdField))
+	  		{
+	  			$this->m_oSelectedIdField->CollectUsedParents($aTables);
+			}
+		}
+
+		foreach ($this->m_aJoinSelects as $i => $aJoinInfo)
+		{
+			$oSQLQuery = $aJoinInfo["select"];
+			if ($oSQLQuery->HasRequiredTables($aTables))
+			{
+				// There is something required in the branch, then this node is a MUST
+				if (isset($aJoinInfo['righttablealias']))
+				{
+					$aTables[$aJoinInfo['righttablealias']] = true;
+				}
+				if (isset($aJoinInfo["on_expression"]))
+				{
+					$sJoinCond = $aJoinInfo["on_expression"]->CollectUsedParents($aTables);
+				}
+			}
+		}
+
+		return $aTables;
+	}
+
+	// Is required in the JOIN, and therefore we must ensure that the join expression will be valid
+	protected function HasRequiredTables($aTables)
+	{
+		if (array_key_exists($this->m_sTableAlias, $aTables))
+		{
+			return true;
+		}
+		foreach ($this->m_aJoinSelects as $i => $aJoinInfo)
+		{
+			$oSQLQuery = $aJoinInfo["select"];
+			if ($oSQLQuery->HasRequiredTables($aTables))
+			{
+				return true;
+			}
+		}
+		// None of the tables is in the list of required tables
+		return false;
+	}
+}
 ?>

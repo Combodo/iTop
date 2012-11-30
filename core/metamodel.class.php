@@ -240,6 +240,8 @@ abstract class MetaModel
 
 	private static $m_bQueryCacheEnabled = false;
 	private static $m_bTraceQueries = false;
+	private static $m_bIndentQueries = false;
+	private static $m_bOptimizeQueries = false;
 	private static $m_aQueriesLog = array();
 	
 	private static $m_bLogIssue = false;
@@ -2082,7 +2084,8 @@ abstract class MetaModel
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		try
 		{
-			$sRes = $oSelect->RenderGroupBy($aScalarArgs);
+			$bBeautifulSQL = self::$m_bTraceQueries || self::$m_bDebugQuery || self::$m_bIndentQueries;
+			$sRes = $oSelect->RenderGroupBy($aScalarArgs, $bBeautifulSQL);
 		}
 		catch (MissingQueryArgument $e)
 		{
@@ -2135,13 +2138,14 @@ abstract class MetaModel
 		}
 
 		$oSelect = self::MakeSelectStructure($oFilter, $aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount);
+		$oSelect = unserialize(serialize($oSelect));
 
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		try
 		{
-			$bBeautifulSQL = self::$m_bTraceQueries || self::$m_bDebugQuery;
+			$bBeautifulSQL = self::$m_bTraceQueries || self::$m_bDebugQuery || self::$m_bIndentQueries;
 			$sRes = $oSelect->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount, $bBeautifulSQL);
-			if ($sClassAlias == 'itop')
+			if ($sClassAlias == '_itop_')
 			{
 				echo $sRes."<br/>\n";
 			}
@@ -2185,6 +2189,8 @@ abstract class MetaModel
 		//
 		$aModifierProperties = self::MakeModifierProperties($oFilter);
 
+		// Create a unique cache id
+		//
 		if (self::$m_bQueryCacheEnabled || self::$m_bTraceQueries)
 		{
 			// Need to identify the query
@@ -2203,18 +2209,16 @@ abstract class MetaModel
 			$sRawId = $sOqlQuery.$sModifierProperties;
 			if (!is_null($aAttToLoad))
 			{
-				foreach($aAttToLoad as $sAlias => $aAttributes)
-				{
-					$sRawId = $sOqlQuery.'|'.implode(',', array_keys($aAttributes));
-				}
+				$sRawId .= json_encode($aAttToLoad);
 			}
 			if (!is_null($aGroupByExpr))
 			{
 				foreach($aGroupByExpr as $sAlias => $oExpr)
 				{
-					$sRawId = 'g:'.$sAlias.'!'.$oExpr->Render();
+					$sRawId .= 'g:'.$sAlias.'!'.$oExpr->Render();
 				}
 			}
+			$sRawId .= $bGetCount;
 			$sOqlId = md5($sRawId);
 		}
 		else
@@ -2242,6 +2246,7 @@ abstract class MetaModel
 			{
 				// hit!
 				$oSelect = clone self::$m_aQueryStructCache[$sOqlId];
+				// Note: cloning is not enough... should be replaced by unserialize(serialize()) !!!
 			}
 			elseif (self::$m_bUseAPCCache)
 			{
@@ -2291,6 +2296,17 @@ abstract class MetaModel
 				}
 
 				self::$m_aQueryStructCache[$sOqlId] = clone $oSelect;
+			}
+
+			if (self::$m_bOptimizeQueries)
+			{
+				// Simplify the query if just getting the count
+				//
+				if ($bGetCount)
+				{
+					$oSelect->SetSelect(array());
+				}
+				$oSelect->OptimizeJoins();
 			}
 		}
 
@@ -2668,7 +2684,7 @@ abstract class MetaModel
 		foreach(self::EnumParentClasses($sClass) as $sParentClass)
 		{
 			if (!self::HasTable($sParentClass)) continue;
-//echo "<p>Parent class: $sParentClass... let's call MakeQuerySingleTable()</p>";
+
 			self::DbgTrace("Parent class: $sParentClass... let's call MakeQuerySingleTable()");
 			$oSelectParentTable = self::MakeQuerySingleTable($oBuild, $oFilter, $sParentClass, $aExtKeys, $aValues);
 			if (is_null($oSelectBase))
@@ -2785,10 +2801,9 @@ abstract class MetaModel
 		// 1/a - Get the key and friendly name
 		//
 		// We need one pkey to be the key, let's take the one corresponding to the root class
-		// (used to be based on the leaf, but it may happen that this one has no table defined)
-		$sRootClass = self::GetRootClass($sTargetClass);
+		// (used to be based on the leaf, then moved to the root class... now back to the leaf for optimization concerns)
 		$oSelectedIdField = null;
-		if ($sTableClass == $sRootClass)
+		if ($sTableClass == $sTargetClass)
 		{
 			$oIdField = new FieldExpressionResolved(self::DBGetKey($sTableClass), $sTableAlias);
 			$aTranslation[$sTargetAlias]['id'] = $oIdField;
@@ -4491,8 +4506,10 @@ abstract class MetaModel
 		}
 
 		self::$m_bTraceQueries = self::$m_oConfig->GetLogQueries();
+		self::$m_bIndentQueries = self::$m_oConfig->Get('query_indentation_enabled');
 		self::$m_bQueryCacheEnabled = self::$m_oConfig->GetQueryCacheEnabled();
 
+		self::$m_bOptimizeQueries = self::$m_oConfig->Get('query_optimization_enabled');
 		self::$m_bSkipCheckToWrite = self::$m_oConfig->Get('skip_check_to_write');
 		self::$m_bSkipCheckExtKeys = self::$m_oConfig->Get('skip_check_ext_keys');
 
