@@ -1513,6 +1513,10 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				$aEventsList[] ='validate';
 				$aEventsList[] ='keyup';
 				$aEventsList[] ='change';
+				if (($iFlags & OPT_ATT_MANDATORY) && (empty($sDisplayValue)))
+				{
+					$sDisplayValue = date($oAttDef->GetDateFormat());
+				}
 				$sHTMLValue = "<input title=\"$sHelpText\" class=\"date-pick\" type=\"text\" size=\"12\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationField}";
 				break;
 
@@ -1520,6 +1524,10 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				$aEventsList[] ='validate';
 				$aEventsList[] ='keyup';
 				$aEventsList[] ='change';
+				if (($iFlags & OPT_ATT_MANDATORY) && (empty($sDisplayValue)))
+				{
+					$sDisplayValue = date($oAttDef->GetDateFormat());
+				}
 				$sHTMLValue = "<input title=\"$sHelpText\" class=\"datetime-pick\" type=\"text\" size=\"20\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationField}";
 				break;
 

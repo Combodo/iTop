@@ -2384,7 +2384,7 @@ class AttributeEnum extends AttributeString
  */
 class AttributeDateTime extends AttributeDBField
 {
-	static protected function GetDateFormat()
+	static public function GetDateFormat()
 	{
 		return "Y-m-d H:i:s";
 	}
@@ -2692,7 +2692,7 @@ class AttributeDate extends AttributeDateTime
 {
 	const MYDATEFORMAT = "Y-m-d";
 
-	static protected function GetDateFormat()
+	static public function GetDateFormat()
 	{
 		return "Y-m-d";
 	}
