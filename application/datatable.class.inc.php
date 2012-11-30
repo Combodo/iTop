@@ -40,7 +40,7 @@ class DataTable
 	 */
 	public function __construct($iListId, $oSet, $aClassAliases, $sTableId = null)
 	{
-		$this->iListId = $iListId;
+		$this->iListId = str_replace(array('[', ']', '-', ':'), '_', $iListId); // Make a "safe" ID for jQuery
 		$this->oSet = $oSet;
 		$this->aClassAliases = $aClassAliases;
 		$this->sTableId = $sTableId;
