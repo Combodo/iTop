@@ -145,7 +145,7 @@ class Config
 			'type' => 'bool',
 			'description' => 'For developpers: format the SQL queries for human analysis',
 			'default' => false,
-			'value' => true,
+			'value' => false,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),

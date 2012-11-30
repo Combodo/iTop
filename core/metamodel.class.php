@@ -2138,7 +2138,6 @@ abstract class MetaModel
 		}
 
 		$oSelect = self::MakeSelectStructure($oFilter, $aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount);
-		$oSelect = unserialize(serialize($oSelect));
 
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		try
@@ -2245,8 +2244,8 @@ abstract class MetaModel
 			if (array_key_exists($sOqlId, self::$m_aQueryStructCache))
 			{
 				// hit!
-				$oSelect = clone self::$m_aQueryStructCache[$sOqlId];
-				// Note: cloning is not enough... should be replaced by unserialize(serialize()) !!!
+				$oSelect = unserialize(serialize(self::$m_aQueryStructCache[$sOqlId]));
+				// Note: cloning is not enough because the subtree is made of objects
 			}
 			elseif (self::$m_bUseAPCCache)
 			{
@@ -2284,6 +2283,16 @@ abstract class MetaModel
 				$oSelect->SetSelect($oBuild->m_oQBExpressions->GetSelect());
 			}
 
+			if (self::$m_bOptimizeQueries)
+			{
+				if ($bGetCount)
+				{
+					// Simplify the query if just getting the count
+					$oSelect->SetSelect(array());
+				}
+				$oSelect->OptimizeJoins();
+			}
+
 			$oKPI->ComputeStats('MakeQuery (select)', $sOqlQuery);
 
 			if (self::$m_bQueryCacheEnabled)
@@ -2296,17 +2305,6 @@ abstract class MetaModel
 				}
 
 				self::$m_aQueryStructCache[$sOqlId] = clone $oSelect;
-			}
-
-			if (self::$m_bOptimizeQueries)
-			{
-				// Simplify the query if just getting the count
-				//
-				if ($bGetCount)
-				{
-					$oSelect->SetSelect(array());
-				}
-				$oSelect->OptimizeJoins();
 			}
 		}
 
