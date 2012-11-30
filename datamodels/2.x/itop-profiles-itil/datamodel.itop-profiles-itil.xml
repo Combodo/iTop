@@ -524,6 +524,7 @@
             <actions>
               <action xsi:type="write">allow</action>
               <action xsi:type="bulk write">allow</action>
+              <action xsi:type="delete">allow</action>
             </actions>
           </group>
           <group id="LnkServices">
