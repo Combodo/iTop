@@ -179,6 +179,8 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Person' => 'Person',
 	'Class:Person+' => '',
+	'Class:Person/Attribute:name' => 'Last Name',
+	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => 'First Name',
 	'Class:Person/Attribute:first_name+' => '',
 	'Class:Person/Attribute:employee_number' => 'Employee number',

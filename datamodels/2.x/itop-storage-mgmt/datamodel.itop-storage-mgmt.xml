@@ -1434,7 +1434,7 @@
       
       case 'depends on':
       $aRels = array(
-        "sotragesystem" => array("sQuery"=>"SELECT StorageStystem AS storage WHERE storage.id = :this->storagesystem_id", "bPropagate"=>true, "iDistance"=>5),  
+        "sotragesystem" => array("sQuery"=>"SELECT StorageSystem AS storage WHERE storage.id = :this->storagesystem_id", "bPropagate"=>true, "iDistance"=>5),  
       );
       return array_merge($aRels, parent::GetRelationQueries($sRelCode));
       break;

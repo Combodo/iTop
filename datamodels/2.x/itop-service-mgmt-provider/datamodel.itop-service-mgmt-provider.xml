@@ -917,7 +917,7 @@
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
           <default_value/>
-          <is_null_allowed>true</is_null_allowed>
+          <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="services_list" xsi:type="AttributeLinkedSet">
           <linked_class>Service</linked_class>
@@ -985,7 +985,7 @@
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
           <default_value/>
-          <is_null_allowed>true</is_null_allowed>
+          <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="org_id" xsi:type="AttributeExternalKey">
           <sql>org_id</sql>
@@ -1316,7 +1316,7 @@
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
           <default_value/>
-          <is_null_allowed>true</is_null_allowed>
+          <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
@@ -1460,7 +1460,7 @@
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
           <default_value/>
-          <is_null_allowed>true</is_null_allowed>
+          <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
@@ -1567,7 +1567,7 @@
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
           <default_value/>
-          <is_null_allowed>true</is_null_allowed>
+          <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="priority" xsi:type="AttributeEnum">
           <values>
@@ -2097,7 +2097,7 @@
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
           <default_value/>
-          <is_null_allowed>true</is_null_allowed>
+          <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="org_id" xsi:type="AttributeExternalKey">
           <sql>org_id</sql>

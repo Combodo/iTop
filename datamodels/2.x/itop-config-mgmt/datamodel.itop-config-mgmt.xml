@@ -490,7 +490,7 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="location_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT Location AS L WHERE L.org_id = :this->org_id]]></filter>
+          <filter><![CDATA[SELECT l FROM Organization AS child JOIN Organization AS root ON child.parent_id BELOW root.id JOIN Location AS l ON l.org_id=root.id WHERE child.id=:this->org_id]]></filter>
           <dependencies>
             <attribute id="org_id"/>
           </dependencies>
@@ -1487,7 +1487,7 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="location_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT Location WHERE org_id= :this->org_id]]></filter>
+          <filter><![CDATA[SELECT l FROM Organization AS child JOIN Organization AS root ON child.parent_id BELOW root.id JOIN Location AS l ON l.org_id=root.id WHERE child.id= :this->org_id]]></filter>
           <dependencies>
             <attribute id="org_id"/>
           </dependencies>

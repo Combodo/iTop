@@ -23,7 +23,7 @@
           </attributes>
         </naming>
         <display_template/>
-        <icon>../modules/itop-change-mgmt-itil/images/change.png</icon>
+        <icon>images/change.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="ref"/>
