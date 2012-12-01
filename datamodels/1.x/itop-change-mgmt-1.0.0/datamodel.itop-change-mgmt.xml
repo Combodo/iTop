@@ -496,6 +496,7 @@
               </attribute>
               <attribute id="start_date">
                 <mandatory/>
+                <must_prompt/>
               </attribute>
               <attribute id="reason">
                 <read_only/>
@@ -517,6 +518,7 @@
               </attribute>
               <attribute id="end_date">
                 <mandatory/>
+                <must_prompt/>
               </attribute>
               <attribute id="close_date">
                 <hidden/>
@@ -1531,6 +1533,7 @@
               </attribute>
               <attribute id="start_date">
                 <mandatory/>
+                <must_prompt/>
               </attribute>
               <attribute id="reason">
                 <read_only/>
@@ -1552,6 +1555,7 @@
               </attribute>
               <attribute id="end_date">
                 <mandatory/>
+                <must_prompt/>
               </attribute>
               <attribute id="close_date">
                 <hidden/>
@@ -2506,6 +2510,7 @@
               </attribute>
               <attribute id="start_date">
                 <mandatory/>
+                <must_prompt/>
               </attribute>
               <attribute id="reason">
                 <read_only/>
@@ -2527,6 +2532,7 @@
               </attribute>
               <attribute id="end_date">
                 <mandatory/>
+                <must_prompt/>
               </attribute>
               <attribute id="close_date">
                 <hidden/>
@@ -3516,6 +3522,7 @@
               </attribute>
               <attribute id="start_date">
                 <mandatory/>
+                <must_prompt/>
               </attribute>
               <attribute id="reason">
                 <read_only/>
@@ -4591,6 +4598,7 @@
               </attribute>
               <attribute id="start_date">
                 <mandatory/>
+                <must_prompt/>
               </attribute>
               <attribute id="reason">
                 <read_only/>
@@ -4612,6 +4620,7 @@
               </attribute>
               <attribute id="end_date">
                 <mandatory/>
+                <must_prompt/>
               </attribute>
               <attribute id="close_date">
                 <hidden/>
@@ -4730,6 +4739,7 @@
               </attribute>
               <attribute id="approval_date">
                 <mandatory/>
+                <must_prompt/>
               </attribute>
               <attribute id="approval_comment">
                 <mandatory/>
