@@ -692,6 +692,9 @@
             <item id="tickets_list">
               <rank>40</rank>
             </item>
+            <item id="applicationsolution_list">
+              <rank>45</rank>
+            </item>
             <item id="logicalinterface_list">
               <rank>50</rank>
             </item>

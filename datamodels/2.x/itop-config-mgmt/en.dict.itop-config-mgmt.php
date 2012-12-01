@@ -130,9 +130,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Location/Attribute:country' => 'Country',
 	'Class:Location/Attribute:country+' => '',
 	'Class:Location/Attribute:physicaldevice_list' => 'Devices',
-	'Class:Location/Attribute:physicaldevice_list+' => '',
+	'Class:Location/Attribute:physicaldevice_list+' => 'All the devices in this location',
 	'Class:Location/Attribute:person_list' => 'Contacts',
-	'Class:Location/Attribute:person_list+' => '',
+	'Class:Location/Attribute:person_list+' => 'All the contacts located on this location',
 ));
 
 //
@@ -167,7 +167,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Contact/Attribute:function' => 'Function',
 	'Class:Contact/Attribute:function+' => '',
 	'Class:Contact/Attribute:cis_list' => 'CIs',
-	'Class:Contact/Attribute:cis_list+' => '',
+	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact',
 	'Class:Contact/Attribute:finalclass' => 'Contact Type',
 	'Class:Contact/Attribute:finalclass+' => '',
 ));
@@ -196,9 +196,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Person/Attribute:manager_name' => 'Manager name',
 	'Class:Person/Attribute:manager_name+' => '',
 	'Class:Person/Attribute:team_list' => 'Teams',
-	'Class:Person/Attribute:team_list+' => '',
+	'Class:Person/Attribute:team_list+' => 'All the teams this person belongs to',
 	'Class:Person/Attribute:tickets_list' => 'Tickets',
-	'Class:Person/Attribute:tickets_list+' => '',
+	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager friendly name',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 ));
@@ -211,9 +211,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Team' => 'Team',
 	'Class:Team+' => '',
 	'Class:Team/Attribute:persons_list' => 'Members',
-	'Class:Team/Attribute:persons_list+' => '',
+	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
-	'Class:Team/Attribute:tickets_list+' => '',
+	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team',
 ));
 
 //
@@ -244,11 +244,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Document/Attribute:status/Value:published' => 'Published',
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CIs',
-	'Class:Document/Attribute:cis_list+' => '',
+	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document',
 	'Class:Document/Attribute:contracts_list' => 'Contracts',
-	'Class:Document/Attribute:contracts_list+' => '',
+	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document',
 	'Class:Document/Attribute:services_list' => 'Services',
-	'Class:Document/Attribute:services_list+' => '',
+	'Class:Document/Attribute:services_list+' => 'All the services linked to this document',
 	'Class:Document/Attribute:finalclass' => 'Document Type',
 	'Class:Document/Attribute:finalclass+' => '',
 ));
@@ -312,19 +312,19 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FunctionalCI/Attribute:move2production' => 'Move to production date',
 	'Class:FunctionalCI/Attribute:move2production+' => '',
 	'Class:FunctionalCI/Attribute:contacts_list' => 'Contacts',
-	'Class:FunctionalCI/Attribute:contacts_list+' => '',
+	'Class:FunctionalCI/Attribute:contacts_list+' => 'All the contracts for this configuration item',
 	'Class:FunctionalCI/Attribute:documents_list' => 'Documents',
-	'Class:FunctionalCI/Attribute:documents_list+' => '',
+	'Class:FunctionalCI/Attribute:documents_list+' => 'All the documents linked to this configuration item',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Application solutions',
-	'Class:FunctionalCI/Attribute:applicationsolution_list+' => '',
+	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'All the application solutions depending on this configuration item',
 	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Provider contracts',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => '',
+	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'All the provider contracts for this configuration item',
 	'Class:FunctionalCI/Attribute:services_list' => 'Services',
-	'Class:FunctionalCI/Attribute:services_list+' => '',
+	'Class:FunctionalCI/Attribute:services_list+' => 'All the services impacted by this configuration item',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Softwares',
-	'Class:FunctionalCI/Attribute:softwares_list+' => '',
+	'Class:FunctionalCI/Attribute:softwares_list+' => 'All the softwares installed on this configuration item',
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
-	'Class:FunctionalCI/Attribute:tickets_list+' => '',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item',
 	'Class:FunctionalCI/Attribute:finalclass' => 'CI Type',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 ));
@@ -378,9 +378,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Rack/Attribute:nb_u' => 'NB U',
 	'Class:Rack/Attribute:nb_u+' => '',
 	'Class:Rack/Attribute:device_list' => 'Devices',
-	'Class:Rack/Attribute:device_list+' => '',
+	'Class:Rack/Attribute:device_list+' => 'All the physical devices racked into this rack',
 	'Class:Rack/Attribute:enclosure_list' => 'Enclosures',
-	'Class:Rack/Attribute:enclosure_list+' => '',
+	'Class:Rack/Attribute:enclosure_list+' => 'All the enclosures in this rack',
 ));
 
 //
@@ -442,9 +442,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ConnectableCI' => 'Connectable CI',
 	'Class:ConnectableCI+' => 'Physical CI',
 	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Network devices',
-	'Class:ConnectableCI/Attribute:networkdevice_list+' => '',
+	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'All network devices connected to this device',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Network interfaces',
-	'Class:ConnectableCI/Attribute:physicalinterface_list+' => '',
+	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'All the physical network interfaces',
 ));
 
 //
@@ -475,9 +475,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:DatacenterDevice/Attribute:powerB_name' => 'PowerB source name',
 	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'FC ports',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => '',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'All the fiber channel interfaces for this device',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
-	'Class:DatacenterDevice/Attribute:san_list+' => '',
+	'Class:DatacenterDevice/Attribute:san_list+' => 'All the SAN switches connected to this device',
 ));
 
 //
@@ -492,7 +492,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Network type name',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '',
 	'Class:NetworkDevice/Attribute:connectablecis_list' => 'Devices',
-	'Class:NetworkDevice/Attribute:connectablecis_list+' => '',
+	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'All the devices connected to this network device',
 	'Class:NetworkDevice/Attribute:iosversion_id' => 'IOS version',
 	'Class:NetworkDevice/Attribute:iosversion_id+' => '',
 	'Class:NetworkDevice/Attribute:iosversion_name' => 'IOS version name',
@@ -525,7 +525,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Server/Attribute:ram' => 'RAM',
 	'Class:Server/Attribute:ram+' => '',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Logical volumes',
-	'Class:Server/Attribute:logicalvolumes_list+' => '',
+	'Class:Server/Attribute:logicalvolumes_list+' => 'All the logical volumes connected to this server',
 ));
 
 //
@@ -536,7 +536,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:StorageSystem' => 'Storage System',
 	'Class:StorageSystem+' => '',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Logical volumes',
-	'Class:StorageSystem/Attribute:logicalvolume_list+' => '',
+	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'All the logical volumes in this storage system',
 ));
 
 //
@@ -547,7 +547,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SANSwitch' => 'SAN Switch',
 	'Class:SANSwitch+' => '',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Devices',
-	'Class:SANSwitch/Attribute:datacenterdevice_list+' => '',
+	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'All the devices connected to this SAN switch',
 ));
 
 //
@@ -558,7 +558,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:TapeLibrary' => 'Tape Library',
 	'Class:TapeLibrary+' => '',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Tapes',
-	'Class:TapeLibrary/Attribute:tapes_list+' => '',
+	'Class:TapeLibrary/Attribute:tapes_list+' => 'All the tapes in the tape library',
 ));
 
 //
@@ -569,7 +569,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:NAS' => 'NAS',
 	'Class:NAS+' => '',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Filesystems',
-	'Class:NAS/Attribute:nasfilesystem_list+' => '',
+	'Class:NAS/Attribute:nasfilesystem_list+' => 'All the file systems in this NAS',
 ));
 
 //
@@ -625,7 +625,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:PowerSource' => 'Power Source',
 	'Class:PowerSource+' => '',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
-	'Class:PowerSource/Attribute:pdus_list+' => '',
+	'Class:PowerSource/Attribute:pdus_list+' => 'All the PDUs using this power source',
 ));
 
 //
@@ -668,7 +668,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Enclosure/Attribute:nb_u' => 'NB U',
 	'Class:Enclosure/Attribute:nb_u+' => '',
 	'Class:Enclosure/Attribute:device_list' => 'Devices',
-	'Class:Enclosure/Attribute:device_list+' => '',
+	'Class:Enclosure/Attribute:device_list+' => 'All the devices in this enclosure',
 ));
 
 //
@@ -679,9 +679,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ApplicationSolution' => 'Application Solution',
 	'Class:ApplicationSolution+' => '',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs',
-	'Class:ApplicationSolution/Attribute:functionalcis_list+' => '',
+	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'All the configuration items that compose this application solution',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Business processes',
-	'Class:ApplicationSolution/Attribute:businessprocess_list+' => '',
+	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'All the business processes depending on this application solution',
 	'Class:ApplicationSolution/Attribute:status' => 'Status',
 	'Class:ApplicationSolution/Attribute:status+' => '',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'active',
@@ -698,7 +698,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:BusinessProcess' => 'Business Process',
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Application solutions',
-	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => '',
+	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'All the application solutions that impact this business process',
 	'Class:BusinessProcess/Attribute:status' => 'Status',
 	'Class:BusinessProcess/Attribute:status+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'active',
@@ -744,7 +744,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Middleware' => 'Middleware',
 	'Class:Middleware+' => '',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware instances',
-	'Class:Middleware/Attribute:middlewareinstance_list+' => '',
+	'Class:Middleware/Attribute:middlewareinstance_list+' => 'All the middleware instances provided by this middleware',
 ));
 
 //
@@ -755,7 +755,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:DBServer' => 'DB Server',
 	'Class:DBServer+' => '',
 	'Class:DBServer/Attribute:dbschema_list' => 'DB schemas',
-	'Class:DBServer/Attribute:dbschema_list+' => '',
+	'Class:DBServer/Attribute:dbschema_list+' => 'All the database schemas for this DB server',
 ));
 
 //
@@ -766,7 +766,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:WebServer' => 'Web server',
 	'Class:WebServer+' => '',
 	'Class:WebServer/Attribute:webapp_list' => 'Web applications',
-	'Class:WebServer/Attribute:webapp_list+' => '',
+	'Class:WebServer/Attribute:webapp_list+' => 'All the web applications available on this web server',
 ));
 
 //
@@ -846,7 +846,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VirtualDevice/Attribute:status/Value:stock' => 'stock',
 	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'stock',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Logical volumes',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => '',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'All the logical volumes used by this device',
 ));
 
 //
@@ -857,7 +857,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VirtualHost' => 'Virtual Host',
 	'Class:VirtualHost+' => '',
 	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Virtual machines',
-	'Class:VirtualHost/Attribute:virtualmachine_list+' => '',
+	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'All the virtual machines hosted by this host',
 ));
 
 //
@@ -885,7 +885,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Farm' => 'Farm',
 	'Class:Farm+' => '',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisors',
-	'Class:Farm/Attribute:hypervisor_list+' => '',
+	'Class:Farm/Attribute:hypervisor_list+' => 'All the hypervisors that compose this farm',
 ));
 
 //
@@ -916,7 +916,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VirtualMachine/Attribute:ram' => 'RAM',
 	'Class:VirtualMachine/Attribute:ram+' => '',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Network Interfaces',
-	'Class:VirtualMachine/Attribute:logicalinterface_list+' => '',
+	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'All the logical network interfaces',
 ));
 
 //
@@ -941,9 +941,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Storage system name',
 	'Class:LogicalVolume/Attribute:storagesystem_name+' => '',
 	'Class:LogicalVolume/Attribute:servers_list' => 'Servers',
-	'Class:LogicalVolume/Attribute:servers_list+' => '',
+	'Class:LogicalVolume/Attribute:servers_list+' => 'All the servers using this volume',
 	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Virtual devices',
-	'Class:LogicalVolume/Attribute:virtualdevices_list+' => '',
+	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'All the virtual devices using this volume',
 ));
 
 //
@@ -1059,7 +1059,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Software/Attribute:version' => 'Version',
 	'Class:Software/Attribute:version+' => '',
 	'Class:Software/Attribute:documents_list' => 'Documents',
-	'Class:Software/Attribute:documents_list+' => '',
+	'Class:Software/Attribute:documents_list+' => 'All the documents linked to this software',
 	'Class:Software/Attribute:type' => 'Type',
 	'Class:Software/Attribute:type+' => '',
 	'Class:Software/Attribute:type/Value:DBServer' => 'DB Server',
@@ -1073,11 +1073,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Software/Attribute:type/Value:WebServer' => 'Web Server',
 	'Class:Software/Attribute:type/Value:WebServer+' => 'Web Server',
 	'Class:Software/Attribute:softwareinstance_list' => 'Software Instances',
-	'Class:Software/Attribute:softwareinstance_list+' => '',
+	'Class:Software/Attribute:softwareinstance_list+' => 'All the software instances for this software',
 	'Class:Software/Attribute:softwarepatch_list' => 'Software Patches',
-	'Class:Software/Attribute:softwarepatch_list+' => '',
+	'Class:Software/Attribute:softwarepatch_list+' => 'All the patchs for this software',
 	'Class:Software/Attribute:softwarelicence_list' => 'Software Licences',
-	'Class:Software/Attribute:softwarelicence_list+' => '',
+	'Class:Software/Attribute:softwarelicence_list+' => 'All the licences for this software',
 ));
 
 //
@@ -1090,7 +1090,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Patch/Attribute:name' => 'Name',
 	'Class:Patch/Attribute:name+' => '',
 	'Class:Patch/Attribute:documents_list' => 'Documents',
-	'Class:Patch/Attribute:documents_list+' => '',
+	'Class:Patch/Attribute:documents_list+' => 'All the documents linked to this patch',
 	'Class:Patch/Attribute:description' => 'Description',
 	'Class:Patch/Attribute:description+' => '',
 	'Class:Patch/Attribute:finalclass' => 'Type',
@@ -1105,7 +1105,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:OSPatch' => 'OS Patch',
 	'Class:OSPatch+' => '',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Devices',
-	'Class:OSPatch/Attribute:functionalcis_list+' => '',
+	'Class:OSPatch/Attribute:functionalcis_list+' => 'All the systems where this patch is installed',
 	'Class:OSPatch/Attribute:osversion_id' => 'OS version',
 	'Class:OSPatch/Attribute:osversion_id+' => '',
 	'Class:OSPatch/Attribute:osversion_name' => 'OS version name',
@@ -1124,7 +1124,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwarePatch/Attribute:software_name' => 'Software name',
 	'Class:SoftwarePatch/Attribute:software_name+' => '',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Software instances',
-	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => '',
+	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'All the systems where this software patch is installed',
 ));
 
 //
@@ -1137,7 +1137,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Licence/Attribute:name' => 'Name',
 	'Class:Licence/Attribute:name+' => '',
 	'Class:Licence/Attribute:documents_list' => 'Documents',
-	'Class:Licence/Attribute:documents_list+' => '',
+	'Class:Licence/Attribute:documents_list+' => 'All the documents linked to this licence',
 	'Class:Licence/Attribute:org_id' => 'Organization',
 	'Class:Licence/Attribute:org_id+' => '',
 	'Class:Licence/Attribute:organization_name' => 'Organization name',
@@ -1174,9 +1174,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:OSLicence/Attribute:osversion_name' => 'OS version name',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtual machines',
-	'Class:OSLicence/Attribute:virtualmachines_list+' => '',
+	'Class:OSLicence/Attribute:virtualmachines_list+' => 'All the virtual machines where this licence is used',
 	'Class:OSLicence/Attribute:servers_list' => 'servers',
-	'Class:OSLicence/Attribute:servers_list+' => '',
+	'Class:OSLicence/Attribute:servers_list+' => 'All the servers where this licence is used',
 ));
 
 //
@@ -1191,7 +1191,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareLicence/Attribute:software_name' => 'Software name',
 	'Class:SoftwareLicence/Attribute:software_name+' => '',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Software instances',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => '',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'All the systems where this licence is used',
 ));
 
 //
@@ -1272,7 +1272,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Brand' => 'Brand',
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Physical devices',
-	'Class:Brand/Attribute:physicaldevices_list+' => '',
+	'Class:Brand/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this brand',
 ));
 
 //
@@ -1325,7 +1325,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Model/Attribute:type/Value:Telephone' => 'Telephone',
 	'Class:Model/Attribute:type/Value:Telephone+' => 'Telephone',
 	'Class:Model/Attribute:physicaldevices_list' => 'Physical devices',
-	'Class:Model/Attribute:physicaldevices_list+' => '',
+	'Class:Model/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this model',
 ));
 
 //
@@ -1336,7 +1336,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:NetworkDeviceType' => 'Network Device Type',
 	'Class:NetworkDeviceType+' => '',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Network devices',
-	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => '',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'All the network devices corresponding to this type',
 ));
 
 //
@@ -1667,7 +1667,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Group/Attribute:parent_name' => 'Name',
 	'Class:Group/Attribute:parent_name+' => '',
 	'Class:Group/Attribute:ci_list' => 'Linked CIs',
-	'Class:Group/Attribute:ci_list+' => '',
+	'Class:Group/Attribute:ci_list+' => 'All the configuration items linked to this group',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Parent Group',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '',
 ));

@@ -93,9 +93,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:KnownError/Attribute:version' => 'Version',
 	'Class:KnownError/Attribute:version+' => '',
 	'Class:KnownError/Attribute:ci_list' => 'CIs',
-	'Class:KnownError/Attribute:ci_list+' => '',
+	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error',
 	'Class:KnownError/Attribute:document_list' => 'Documents',
-	'Class:KnownError/Attribute:document_list+' => '',
+	'Class:KnownError/Attribute:document_list+' => 'All the documents link to this known error',
 ));
 
 //
@@ -169,7 +169,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FAQCategory/Attribute:name' => 'Name',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
-	'Class:FAQCategory/Attribute:faq_list+' => '',
+	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category',
 ));
 Dict::Add('EN US', 'English', 'English', array(
 	'Menu:NewError' => 'New Known Error',

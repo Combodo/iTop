@@ -199,7 +199,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Incident/Attribute:parent_change_ref' => 'Parent change ref',
 	'Class:Incident/Attribute:parent_change_ref+' => '',
 	'Class:Incident/Attribute:child_incidents_list' => 'Child incidents',
-	'Class:Incident/Attribute:child_incidents_list+' => '',
+	'Class:Incident/Attribute:child_incidents_list+' => 'All the child incidents related to this incident',
 	'Class:Incident/Attribute:public_log' => 'Public log',
 	'Class:Incident/Attribute:public_log+' => '',
 	'Class:Incident/Attribute:user_satisfaction' => 'User satisfaction',

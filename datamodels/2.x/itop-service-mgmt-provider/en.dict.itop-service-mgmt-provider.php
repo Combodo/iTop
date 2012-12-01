@@ -100,9 +100,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Contract/Attribute:organization_name' => 'Organization Name',
 	'Class:Contract/Attribute:organization_name+' => 'Common name',
 	'Class:Contract/Attribute:contacts_list' => 'Contacts',
-	'Class:Contract/Attribute:contacts_list+' => '',
+	'Class:Contract/Attribute:contacts_list+' => 'All the contacts for this customer contract',
 	'Class:Contract/Attribute:documents_list' => 'Documents',
-	'Class:Contract/Attribute:documents_list+' => '',
+	'Class:Contract/Attribute:documents_list+' => 'All the documents for this customer contract',
 	'Class:Contract/Attribute:description' => 'Description',
 	'Class:Contract/Attribute:description+' => '',
 	'Class:Contract/Attribute:start_date' => 'Start date',
@@ -149,11 +149,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:CustomerContract' => 'Customer Contract',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Services',
-	'Class:CustomerContract/Attribute:services_list+' => '',
+	'Class:CustomerContract/Attribute:services_list+' => 'All the services purchased for this contract',
 	'Class:CustomerContract/Attribute:functionalcis_list' => 'CIs',
-	'Class:CustomerContract/Attribute:functionalcis_list+' => '',
+	'Class:CustomerContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this contract',
 	'Class:CustomerContract/Attribute:providercontracts_list' => 'Provider contracts',
-	'Class:CustomerContract/Attribute:providercontracts_list+' => '',
+	'Class:CustomerContract/Attribute:providercontracts_list+' => 'All the provider contracts to deliver the services for this contract (underpinning contract)',
 ));
 
 //
@@ -164,7 +164,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ProviderContract' => 'Provider Contract',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CIs',
-	'Class:ProviderContract/Attribute:functionalcis_list+' => '',
+	'Class:ProviderContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this contract',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Service Level Agreement',
 	'Class:ProviderContract/Attribute:coverage' => 'Service hours',
@@ -232,7 +232,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ServiceFamily/Attribute:name' => 'Name',
 	'Class:ServiceFamily/Attribute:name+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Services',
-	'Class:ServiceFamily/Attribute:services_list+' => '',
+	'Class:ServiceFamily/Attribute:services_list+' => 'All the services in this category',
 ));
 
 //
@@ -251,9 +251,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Service/Attribute:description' => 'Description',
 	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:documents_list' => 'Documents',
-	'Class:Service/Attribute:documents_list+' => '',
+	'Class:Service/Attribute:documents_list+' => 'All the documents linked to the service',
 	'Class:Service/Attribute:contacts_list' => 'Contacts',
-	'Class:Service/Attribute:contacts_list+' => '',
+	'Class:Service/Attribute:contacts_list+' => 'All the contacts for this service',
 	'Class:Service/Attribute:status' => 'Status',
 	'Class:Service/Attribute:status+' => '',
 	'Class:Service/Attribute:status/Value:implementation' => 'implementation',
@@ -263,9 +263,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Service/Attribute:status/Value:production' => 'production',
 	'Class:Service/Attribute:status/Value:production+' => '',
 	'Class:Service/Attribute:customercontracts_list' => 'Customer contracts',
-	'Class:Service/Attribute:customercontracts_list+' => '',
+	'Class:Service/Attribute:customercontracts_list+' => 'All the customer contracts that have purchased this service',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Service sub categories',
-	'Class:Service/Attribute:servicesubcategories_list+' => '',
+	'Class:Service/Attribute:servicesubcategories_list+' => 'All the sub categories for this service',
 ));
 
 //
@@ -349,9 +349,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SLA/Attribute:organization_name' => 'Organization Name',
 	'Class:SLA/Attribute:organization_name+' => '',
 	'Class:SLA/Attribute:slts_list' => 'SLTs',
-	'Class:SLA/Attribute:slts_list+' => '',
+	'Class:SLA/Attribute:slts_list+' => 'All the service level targets for this SLA',
 	'Class:SLA/Attribute:customercontracts_list' => 'Customer contracts',
-	'Class:SLA/Attribute:customercontracts_list+' => '',
+	'Class:SLA/Attribute:customercontracts_list+' => 'All the customer contracts using this SLA',
 ));
 
 //
@@ -483,9 +483,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:DeliveryModel/Attribute:description' => 'Description',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Contacts',
-	'Class:DeliveryModel/Attribute:contacts_list+' => '',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Person) for this delivery model',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Customers',
-	'Class:DeliveryModel/Attribute:customers_list+' => '',
+	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model',
 ));
 
 //

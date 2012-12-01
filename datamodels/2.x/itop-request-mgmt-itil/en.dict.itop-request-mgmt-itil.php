@@ -221,7 +221,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserRequest/Attribute:parent_change_ref' => 'Ref change',
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Child Requests',
-	'Class:UserRequest/Attribute:related_request_list+' => '',
+	'Class:UserRequest/Attribute:related_request_list+' => 'All the requests that are linked to this parent request',
 	'Class:UserRequest/Attribute:public_log' => 'Public log',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => 'User satisfaction',
