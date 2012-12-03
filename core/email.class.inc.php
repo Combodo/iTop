@@ -189,8 +189,11 @@ class EMail
 
 	public function SetRecipientTO($sAddress)
 	{
-		$aAddresses = explode(', ', $sAddress);
-		$this->m_oMessage->setTo($aAddresses);
+		if (!empty($sAddress))
+		{
+			$aAddresses = explode(', ', $sAddress);
+			$this->m_oMessage->setTo($aAddresses);
+		}
 	}
 
 	public function GetRecipientTO($bAsString = false)
@@ -221,14 +224,20 @@ class EMail
 
 	public function SetRecipientCC($sAddress)
 	{
-		$aAddresses = explode(', ', $sAddress);
-		$this->m_oMessage->setCc($aAddresses);
+		if (!empty($sAddress))
+		{
+			$aAddresses = explode(', ', $sAddress);
+			$this->m_oMessage->setCc($aAddresses);
+		}
 	}
 
 	public function SetRecipientBCC($sAddress)
 	{
-		$aAddresses = explode(', ', $sAddress);
-		$this->m_oMessage->setBcc($aAddresses);
+		if (!empty($sAddress))
+		{
+			$aAddresses = explode(', ', $sAddress);
+			$this->m_oMessage->setBcc($aAddresses);
+		}
 	}
 
 	public function SetRecipientFrom($sAddress, $sLabel = '')
@@ -237,7 +246,7 @@ class EMail
 		{
 			$this->m_oMessage->setFrom(array($sAddress => $sLabel));		
 		}
-		else
+		else if (!empty($sAddress))
 		{
 			$this->m_oMessage->setFrom($sAddress);
 		}
@@ -245,7 +254,10 @@ class EMail
 
 	public function SetRecipientReplyTo($sAddress)
 	{
-		$this->m_oMessage->setReplyTo($sAddress);
+		if (!empty($sAddress))
+		{
+			$this->m_oMessage->setReplyTo($sAddress);
+		}
 	}
 
 }
