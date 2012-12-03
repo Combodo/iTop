@@ -597,12 +597,12 @@ class SQLQuery
 		return $this->m_sTableAlias;
 	}
 
-	public function OptimizeJoins($aUsedTables = null)
+	public function OptimizeJoins($aUsedTables, $bTopCall = true)
 	{
-		if (is_null($aUsedTables))
+		if ($bTopCall)
 		{
-			// Top call: build the list of tables absolutely required to perform the query
-			$aUsedTables = $this->CollectUsedTables();
+			// Top call: complete the list of tables absolutely required to perform the right query
+			$this->CollectUsedTables($aUsedTables);
 		}
 
 		$aToDiscard = array();
@@ -610,7 +610,7 @@ class SQLQuery
 		{
 			$oSQLQuery = $aJoinInfo["select"];
 			$sTableAlias = $oSQLQuery->GetTableAlias();
-			if ($oSQLQuery->OptimizeJoins($aUsedTables) && !array_key_exists($sTableAlias, $aUsedTables))
+			if ($oSQLQuery->OptimizeJoins($aUsedTables, false) && !array_key_exists($sTableAlias, $aUsedTables))
 			{
 				$aToDiscard[] = $i;
 			}
@@ -623,28 +623,23 @@ class SQLQuery
 		return (count($this->m_aJoinSelects) == 0);
 	}
 
-	protected function CollectUsedTables(&$aTables = null)
+	protected function CollectUsedTables(&$aTables)
 	{
-		if (is_null($aTables))
+		$this->m_oConditionExpr->CollectUsedParents($aTables);
+		foreach($this->m_aFields as $sFieldAlias => $oField)
 		{
-			$aTables = array();
-	
-			$this->m_oConditionExpr->CollectUsedParents($aTables);
-			foreach($this->m_aFields as $sFieldAlias => $oField)
+			$oField->CollectUsedParents($aTables);
+		}
+		if ($this->m_aGroupBy)
+		{
+			foreach($this->m_aGroupBy as $sAlias => $oExpression)
 			{
-				$oField->CollectUsedParents($aTables);
+				$oExpression->CollectUsedParents($aTables);
 			}
-			if ($this->m_aGroupBy)
-			{
-				foreach($this->m_aGroupBy as $sAlias => $oExpression)
-				{
-					$oExpression->CollectUsedParents($aTables);
-				}
-			}
-	  		if (!is_null($this->m_oSelectedIdField))
-	  		{
-	  			$this->m_oSelectedIdField->CollectUsedParents($aTables);
-			}
+		}
+  		if (!is_null($this->m_oSelectedIdField))
+  		{
+  			$this->m_oSelectedIdField->CollectUsedParents($aTables);
 		}
 
 		foreach ($this->m_aJoinSelects as $i => $aJoinInfo)

@@ -1121,13 +1121,20 @@ class QueryBuilderExpressions
 	protected $m_aSelectExpr;
 	protected $m_aGroupByExpr;
 	protected $m_aJoinFields;
+	protected $m_aClassIds;
 
-	public function __construct($oCondition, $aGroupByExpr = null)
+	public function __construct($oSearch, $aGroupByExpr = null)
 	{
-		$this->m_oConditionExpr = $oCondition;
+		$this->m_oConditionExpr = $oSearch->GetCriteria();
 		$this->m_aSelectExpr = array();
 		$this->m_aGroupByExpr = $aGroupByExpr;
 		$this->m_aJoinFields = array();
+
+		$this->m_aClassIds = array();
+		foreach($oSearch->GetJoinedClasses() as $sClassAlias => $sClass)
+		{
+			$this->m_aClassIds[$sClassAlias] = new FieldExpression('id', $sClassAlias);
+		}
 	}
 
 	public function GetSelect()
@@ -1164,6 +1171,20 @@ class QueryBuilderExpressions
 	public function PushJoinField($oExpression)
 	{
 		array_push($this->m_aJoinFields, $oExpression);
+	}
+
+	/**
+	 * Get tables representing the queried objects
+	 * Could be further optimized: when the first join is an outer join, then the rest can be omitted	 
+	 */	 	
+	public function GetMandatoryTables(&$aTables = null)
+	{
+		if (is_null($aTables)) $aTables = array();
+
+		foreach($this->m_aClassIds as $sClass => $oExpression)
+		{
+			$oExpression->CollectUsedParents($aTables);
+		}
 	}
 
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
@@ -1203,6 +1224,11 @@ class QueryBuilderExpressions
 		foreach($this->m_aJoinFields as $index => $oExpression)
 		{
 			$this->m_aJoinFields[$index] = $oExpression->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
+		}
+
+		foreach($this->m_aClassIds as $sClass => $oExpression)
+		{
+			$this->m_aClassIds[$sClass] = $oExpression->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		}
 	}
 

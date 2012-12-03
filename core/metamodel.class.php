@@ -2290,7 +2290,8 @@ abstract class MetaModel
 					// Simplify the query if just getting the count
 					$oSelect->SetSelect(array());
 				}
-				$oSelect->OptimizeJoins();
+				$oBuild->m_oQBExpressions->GetMandatoryTables($aMandatoryTables);
+				$oSelect->OptimizeJoins($aMandatoryTables);
 			}
 
 			$oKPI->ComputeStats('MakeQuery (select)', $sOqlQuery);
@@ -2504,7 +2505,6 @@ abstract class MetaModel
 		{
 			// default to the whole list of attributes + the very std id/finalclass
 			$oBuild->m_oQBExpressions->AddSelect($sClassAlias.'id', new FieldExpression('id', $sClassAlias));
-
 			if (is_null($aAttToLoad) || !array_key_exists($sClassAlias, $aAttToLoad))
 			{
 				$aAttList = self::ListAttributeDefs($sClass);
@@ -2798,19 +2798,15 @@ abstract class MetaModel
 
 		// 1/a - Get the key and friendly name
 		//
-		// We need one pkey to be the key, let's take the one corresponding to the root class
-		// (used to be based on the leaf, then moved to the root class... now back to the leaf for optimization concerns)
+		// We need one pkey to be the key, let's take the first one available
 		$oSelectedIdField = null;
-		if ($sTableClass == $sTargetClass)
-		{
-			$oIdField = new FieldExpressionResolved(self::DBGetKey($sTableClass), $sTableAlias);
-			$aTranslation[$sTargetAlias]['id'] = $oIdField;
+		$oIdField = new FieldExpressionResolved(self::DBGetKey($sTableClass), $sTableAlias);
+		$aTranslation[$sTargetAlias]['id'] = $oIdField;
 
-			if ($bIsOnQueriedClass)
-			{
-				// Add this field to the list of queried fields (required for the COUNT to work fine)
-				$oSelectedIdField = $oIdField;
-			}
+		if ($bIsOnQueriedClass)
+		{
+			// Add this field to the list of queried fields (required for the COUNT to work fine)
+			$oSelectedIdField = $oIdField;
 		}
 
 		// 1/b - Get the other attributes
