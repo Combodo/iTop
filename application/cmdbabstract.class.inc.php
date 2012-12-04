@@ -1160,7 +1160,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 							}
 							if ($bLocalize)
 							{
-								$outputValue = htmlentities($oFinalAttDef->GetValueLabel($rawValue), ENT_QUOTES, 'UTF-8');
+								$outputValue = htmlentities($oFinalAttDef->GetEditValue($rawValue), ENT_QUOTES, 'UTF-8');
 							}
 							else
 							{

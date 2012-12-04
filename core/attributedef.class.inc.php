@@ -2286,7 +2286,11 @@ class AttributeEnum extends AttributeString
 
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if ($bLocalize)
+		if (is_null($value))
+		{
+			$sFinalValue = '';
+		}
+		elseif ($bLocalize)
 		{
 			$sFinalValue = $this->GetValueLabel($value);
 		}
@@ -2300,7 +2304,11 @@ class AttributeEnum extends AttributeString
 
 	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
 	{
-		if ($bLocalize)
+		if (is_null($sValue))
+		{
+			$sFinalValue = '';
+		}
+		elseif ($bLocalize)
 		{
 			$sFinalValue = $this->GetValueLabel($sValue);
 		}
@@ -2315,7 +2323,14 @@ class AttributeEnum extends AttributeString
 
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
-		return $this->GetValueLabel($sValue);
+		if (is_null($sValue))
+		{
+			return '';
+		}
+		else
+		{
+			return $this->GetValueLabel($sValue);
+		}
 	}
 
 	public function GetAsHTMLForHistory($sOldValue, $sNewValue, $sLabel = null)
