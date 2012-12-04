@@ -220,9 +220,16 @@ class SimpleCryptMcryptEngine implements CryptEngine
     {
         $iv = substr($encrypted_data, 0, mcrypt_enc_get_iv_size($this->td));
         $string = substr($encrypted_data, mcrypt_enc_get_iv_size($this->td));       
-		mcrypt_generic_init($this->td, $key, $iv);
-		$decrypted_data = rtrim(mdecrypt_generic($this->td, $string), "\0");
-		mcrypt_generic_deinit($this->td);
+		$r = mcrypt_generic_init($this->td, $key, $iv);
+		if (($r < 0) || ($r === false))
+		{
+			$decrypted_data = '** decryption error **';
+		}
+		else
+		{
+			$decrypted_data = rtrim(mdecrypt_generic($this->td, $string), "\0");
+			mcrypt_generic_deinit($this->td);
+		}
         return $decrypted_data;
     }
     

@@ -1609,6 +1609,22 @@ class AttributeEncryptedString extends AttributeString
 			self::$sKey = MetaModel::GetConfig()->GetEncryptionKey();
 		}
 	}
+	/**
+	 * When the attribute definitions are stored in APC cache:
+	 * 1) The static class variable $sKey is NOT serialized
+	 * 2) The object's constructor is NOT called upon wakeup
+	 * 3) mcrypt may crash the server if passed an empty key !!
+	 * 
+	 * So let's restore the key (if needed) when waking up
+	 **/
+	public function __wakeup()
+	{
+		if (self::$sKey == null)
+		{
+			self::$sKey = MetaModel::GetConfig()->GetEncryptionKey();
+		}
+	}
+	
 
 	protected function GetSQLCol() {return "TINYBLOB";}	
 
