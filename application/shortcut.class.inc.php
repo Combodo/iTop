@@ -25,13 +25,13 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-abstract class Shortcut extends cmdbAbstractObject
+abstract class Shortcut extends DBObject implements iDisplay
 {
 	public static function Init()
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb,view_in_gui,application",
+			"category" => "gui,view_in_gui",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -118,6 +118,32 @@ $('#shortcut_rename_dlg').dialog({
 EOF
 		);
 	}
+
+	// Minimual implementation of iDisplay: to make the shortcut be listable
+	//
+	public static function MapContextParam($sContextParam)
+	{
+		return (($sContextParam == 'menu') ? null : $sContextParam);
+	}
+
+	public function GetHilightClass()
+	{
+		return HILIGHT_CLASS_NONE;
+	}
+
+	public static function GetUIPage()
+	{
+		return '';
+	}
+
+	function DisplayDetails(WebPage $oPage, $bEditMode = false)
+	{
+	}
+
+	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
+	{
+	}
+	// End of the minimal implementation of iDisplay
 }
 
 class ShortcutOQL extends Shortcut
@@ -126,7 +152,7 @@ class ShortcutOQL extends Shortcut
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb,view_in_gui,application",
+			"category" => "gui,view_in_gui",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
