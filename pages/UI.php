@@ -699,7 +699,7 @@ try
 		case 'details': // Details of an object
 			$sClass = utils::ReadParam('class', '');
 			$id = utils::ReadParam('id', '');
-		if ( empty($sClass) || empty($id))
+			if ( empty($sClass) || empty($id))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
@@ -719,7 +719,21 @@ try
 			}
 			else
 			{
-			DisplayDetails($oP, $sClass, $oObj, $id);
+				try
+				{
+					$oObj->Reload();
+				}
+				catch(Exception $e)
+				{
+					// Probably not allowed to see this instance of a derived class
+					$oObj = null; 
+					$oP->set_title(Dict::S('UI:ErrorPageTitle'));
+					$oP->P(Dict::S('UI:ObjectDoesNotExist'));
+				}
+				if (!is_null($oObj))
+				{
+					DisplayDetails($oP, $sClass, $oObj, $id);
+				}				
 			}
 		break;
 	
