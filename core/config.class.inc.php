@@ -597,6 +597,15 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'impact_analysis_first_tab' => array(
+			'type' => 'string',
+			'description' => 'Which tab to display first in the impact analysis view: list or graphics. Graphics are nicer but slower to display when there are many objects',
+			// examples... not used
+			'default' => 'graphics',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)
