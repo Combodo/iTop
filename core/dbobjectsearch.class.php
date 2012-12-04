@@ -71,6 +71,14 @@ class DBObjectSearch
 		$this->m_aModifierProperties = array();
 	}
 
+	/**
+	 * Perform a deep clone (as opposed to "clone" which does copy a reference to the underlying objects
+	 **/	 	
+	public function DeepClone()
+	{
+		return unserialize(serialize($this));
+	}
+
 	public function AllowAllData() {$this->m_bAllowAllData = true;}
 	public function IsAllDataAllowed() {return $this->m_bAllowAllData;}
 	public function IsDataFiltered() {return $this->m_bDataFiltered; }
@@ -658,6 +666,10 @@ class DBObjectSearch
 
 	public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS)
 	{
+		// Note: though it seems to be a good practice to clone the given source filter
+		//       (as it was done and fixed an issue in MergeWith())
+		//       this was not implemented here because it was causing a regression (login as admin, select an org, click on any badge) 
+		// buggy: $oFilter = $oFilter->DeepClone();
 		$aAliasTranslation = array();
 		$res = $this->AddCondition_PointingTo_InNameSpace($oFilter, $sExtKeyAttCode, $this->m_aClasses, $aAliasTranslation, $iOperatorCode);
 		$this->TransferConditionExpression($oFilter, $aAliasTranslation);
@@ -689,6 +701,7 @@ class DBObjectSearch
 
 	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode)
 	{
+		$oFilter = $oFilter->DeepClone();
 		$aAliasTranslation = array();
 		$res = $this->AddCondition_ReferencedBy_InNameSpace($oFilter, $sForeignExtKeyAttCode, $this->m_aClasses, $aAliasTranslation);
 		$this->TransferConditionExpression($oFilter, $aAliasTranslation);
@@ -721,20 +734,11 @@ class DBObjectSearch
 			$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
 
 			// #@# The condition expression found in that filter should not be used - could be another kind of structure like a join spec tree !!!!
-			//$oNewFilter = clone $oFilter;
+			//$oNewFilter = $oFilter->DeepClone();
 			//$oNewFilter->ResetCondition();
 
 			$oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode]= $oFilter;
 		}
-	}
-
-	public function AddCondition_LinkedTo(DBObjectSearch $oLinkFilter, $sExtKeyAttCodeToMe, $sExtKeyAttCodeTarget, DBObjectSearch $oFilterTarget)
-	{
-		$oLinkFilterFinal = clone $oLinkFilter;
-		// todo : new function prototype
-		$oLinkFilterFinal->AddCondition_PointingTo($sExtKeyAttCodeToMe);
-
-		$this->AddCondition_ReferencedBy($oLinkFilterFinal, $sExtKeyAttCodeToMe);
 	}
 
 	public function AddCondition_RelatedTo(DBObjectSearch $oFilter, $sRelCode, $iMaxDepth)
@@ -745,6 +749,7 @@ class DBObjectSearch
 
 	public function MergeWith($oFilter)
 	{
+		$oFilter = $oFilter->DeepClone();
 		$aAliasTranslation = array();
 		$res = $this->MergeWith_InNamespace($oFilter, $this->m_aClasses, $aAliasTranslation);
 		$this->TransferConditionExpression($oFilter, $aAliasTranslation);
@@ -1166,7 +1171,7 @@ class DBObjectSearch
 		if ($bOQLCacheEnabled && array_key_exists($sQuery, self::$m_aOQLQueries))
 		{
 			// hit!
-			$oClone = clone self::$m_aOQLQueries[$sQuery];
+			$oClone = self::$m_aOQLQueries[$sQuery]->DeepClone();
 			if (!is_null($aParams))
 			{
 				$oClone->m_aParams = $aParams;
@@ -1316,7 +1321,7 @@ class DBObjectSearch
 
 		if ($bOQLCacheEnabled)
 		{
-			self::$m_aOQLQueries[$sQuery] = clone $oResultFilter;
+			self::$m_aOQLQueries[$sQuery] = $oResultFilter->DeepClone();
 		}
 
 		return $oResultFilter;

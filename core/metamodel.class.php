@@ -2305,7 +2305,7 @@ abstract class MetaModel
 					$oKPI->ComputeStats('Query APC (store)', $sOqlQuery);
 				}
 
-				self::$m_aQueryStructCache[$sOqlId] = clone $oSelect;
+				self::$m_aQueryStructCache[$sOqlId] = $oSelect->DeepClone();
 			}
 		}
 

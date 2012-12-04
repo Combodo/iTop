@@ -94,7 +94,7 @@ function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext)
 	if ($oRule->Get('valid_flag') == 'false')
 	{
 		// The query returns directly the invalid elements
-		$oFilter = $oRuleFilter; 
+		$oFilter = $oRuleFilter;
 		$oFilter->MergeWith($oDefinitionFilter);
 	}
 	else
@@ -106,7 +106,7 @@ function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext)
 		{
 			$aValidIds[] = $aRow['id'];
 		}
-		$oFilter = clone $oDefinitionFilter;
+		$oFilter = $oDefinitionFilter->DeepClone();
 		if (count($aValidIds) > 0)
 		{
 			$aInDefSet = array();

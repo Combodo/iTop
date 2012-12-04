@@ -52,7 +52,7 @@ class DisplayBlock
 	
 	public function __construct(DBObjectSearch $oFilter, $sStyle = 'list', $bAsynchronous = false, $aParams = array(), $oSet = null)
 	{
-		$this->m_oFilter = clone $oFilter;
+		$this->m_oFilter = $oFilter->DeepClone();
 		$this->m_aConditions = array();
 		$this->m_sStyle = $sStyle;
 		$this->m_bAsynchronous = $bAsynchronous;
@@ -414,7 +414,7 @@ class DisplayBlock
 				foreach($aGroupBy as $iRow => $iCount)
 				{
 					// Build the search for this subset
-					$oSubsetSearch = clone $this->m_oFilter;
+					$oSubsetSearch = $this->m_oFilter->DeepClone();
 					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($aValues[$iRow]));
 					$oSubsetSearch->AddConditionExpression($oCondition);
 					$sFilter = urlencode($oSubsetSearch->serialize());
@@ -492,7 +492,7 @@ class DisplayBlock
 
 					$sHtml .= "<table>\n";
 					// Construct a new (parametric) query that will return the content of this block
-					$oBlockFilter = clone $this->m_oFilter;
+					$oBlockFilter = $this->m_oFilter->DeepClone();
 					$aExpressions = array();
 					$index = 0;
 					foreach($aGroupByFields as $aField)
@@ -726,7 +726,7 @@ class DisplayBlock
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttrCode);
 				foreach($aStates as $sStateValue)
 				{
-					$oFilter = clone($this->m_oFilter);
+					$oFilter = $this->m_oFilter->DeepClone();
 					$oFilter->AddCondition($sStateAttrCode, $sStateValue, '=');
 					$oSet = new DBObjectSet($oFilter);
 					$aCounts[$sStateValue] = $oSet->Count();
@@ -911,7 +911,7 @@ EOF
 				foreach($aGroupBy as $iRow => $iCount)
 				{
 					// Build the search for this subset
-					$oSubsetSearch = clone $this->m_oFilter;
+					$oSubsetSearch = $this->m_oFilter->DeepClone();
 					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($aValues[$iRow]));
 					$oSubsetSearch->AddConditionExpression($oCondition);
 					$aURLs[$idx] = $oSubsetSearch->serialize();

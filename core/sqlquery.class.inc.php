@@ -72,6 +72,14 @@ class SQLQuery
 		$this->m_oSelectedIdField = $oSelectedIdField;
 	}
 
+	/**
+	 * Perform a deep clone (as opposed to "clone" which does copy a reference to the underlying objects
+	 **/	 	
+	public function DeepClone()
+	{
+		return unserialize(serialize($this));
+	}
+
 	public function GetTableAlias()
 	{
 		return $this->m_sTableAlias;
