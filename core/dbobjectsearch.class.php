@@ -701,7 +701,7 @@ class DBObjectSearch
 
 	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode)
 	{
-		$oFilter = $oFilter->DeepClone();
+		//$oFilter = $oFilter->DeepClone();
 		$aAliasTranslation = array();
 		$res = $this->AddCondition_ReferencedBy_InNameSpace($oFilter, $sForeignExtKeyAttCode, $this->m_aClasses, $aAliasTranslation);
 		$this->TransferConditionExpression($oFilter, $aAliasTranslation);
