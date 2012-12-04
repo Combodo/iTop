@@ -384,6 +384,10 @@
             <actions>
               <action xsi:type="write">allow</action>
               <action xsi:type="bulk write">allow</action>
+              <action id="ev_assign" xsi:type="stimulus">allow</action>
+              <action id="ev_plan" xsi:type="stimulus">allow</action>
+              <action id="ev_reopen" xsi:type="stimulus">allow</action>
+              <action id="ev_finish" xsi:type="stimulus">allow</action>
             </actions>
           </group>
           <group id="LnkTickets">
@@ -434,6 +438,9 @@
             <actions>
               <action xsi:type="write">allow</action>
               <action xsi:type="bulk write">allow</action>
+              <action id="ev_assign" xsi:type="stimulus">allow</action>
+              <action id="ev_reopen" xsi:type="stimulus">allow</action>
+              <action id="ev_finish" xsi:type="stimulus">allow</action>
             </actions>
           </group>
           <group id="LnkTickets">
@@ -483,6 +490,8 @@
             <actions>
               <action xsi:type="write">allow</action>
               <action xsi:type="bulk write">allow</action>
+              <action id="ev_approve" xsi:type="stimulus">allow</action>
+              <action id="ev_reject" xsi:type="stimulus">allow</action>
             </actions>
           </group>
           <group id="LnkTickets">
