@@ -402,7 +402,7 @@ function ListOpenRequests(WebPage $oP)
 {
 	$oUserOrg = GetUserOrg();
 
-	$sOQL = 'SELECT UserRequest WHERE org_id = :org_id AND status NOT IN ("closed")';
+	$sOQL = 'SELECT UserRequest WHERE org_id = :org_id AND status NOT IN ("closed", "resolved")';
 	$oSearch = DBObjectSearch::FromOQL($sOQL);
 	$iUser = UserRights::GetContactId();
 	if ($iUser > 0)
