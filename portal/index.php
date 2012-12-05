@@ -343,6 +343,10 @@ function DoCreateRequest($oP, $oUserOrg)
 	{
 		$oRequest->Set(PORTAL_ATTCODE_TYPE, $oServiceSubCategory->Get(PORTAL_SET_TYPE_FROM));
 	}
+	if (MetaModel::IsValidAttCode('UserRequest', 'origin'))
+	{
+		$oRequest->Set('origin', 'portal');
+	}
 
 	/////$oP->DoUpdateObjectFromPostedForm($oObj);
 	$oAttPlugin = new AttachmentPlugIn();
