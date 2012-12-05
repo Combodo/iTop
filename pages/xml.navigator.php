@@ -55,6 +55,8 @@ function AddNodeDetails(&$oNode, $oObj)
 	$oNode->SetAttribute('zlist', implode(',', $aLabels));
 }
 
+$G_aCachedObjects = array();
+
 /**
  * Get the related objects through the given relation, output in XML
  * @param DBObject $oObj The current object
@@ -62,10 +64,23 @@ function AddNodeDetails(&$oNode, $oObj)
  */
 function GetRelatedObjectsAsXml(DBObject $oObj, $sRelationName, &$oLinks, &$oXmlDoc, &$oXmlNode, $iDepth = 0, $aExcludedClasses)
 {
+	global $G_aCachedObjects;
 	$aResults = array();
 	$bAddLinks = false;
-	$oObj->GetRelatedObjects($sRelationName, 1 /* iMaxDepth */, $aResults);
+
 	if ($iDepth > MAX_RECURSION_DEPTH) return;
+
+	$sIdxKey = get_class($oObj).':'.$oObj->GetKey();
+	if (!array_key_exists($sIdxKey, $G_aCachedObjects))
+	{
+		$oObj->GetRelatedObjects($sRelationName, 1 /* iMaxDepth */, $aResults);
+		$G_aCachedObjects[$sIdxKey] = true;
+	}
+	else
+	{
+		return;
+		//$aResults = $G_aCachedObjects[$sIdxKey];
+	}
 	
 	foreach($aResults as $sRelatedClass => $aObjects)
 	{
