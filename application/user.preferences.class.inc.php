@@ -103,7 +103,7 @@ class appUserPreferences extends DBObject
 		}
 		else
 		{
-			unset($aPrefs[$sCode]);
+			unset($aPrefs[$sCodeOrPattern]);
 			self::$oUserPrefs->Set('preferences', $aPrefs);
 		}
 		// Save only if needed

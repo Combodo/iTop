@@ -117,7 +117,28 @@ $(function()
 			oParams.defaults = bSaveAsDefaults;
 			oParams.class_aliases = this.options.oClassAliases;
 			oParams.columns = this.options.oColumns;
-			
+			var iSortCol = 0;
+			var sSortOrder = '';
+			for(var i in this.options.oColumns)
+			{
+				if (this.options.oColumns[i].checked)
+				{
+					if (this.options.oColumns[i].sort != 'none')
+					{
+						sSortOrder = this.options.oColumns[i].sort;
+					}
+					else
+					{
+						iSortCol++;
+					}
+				}
+			}
+			if ((this.options.sSelectMode != '') && (this.options.sSelectMode != 'none'))
+			{
+				iSortCol++;
+			}
+			oParams.sort_col = iSortCol;
+			oParams.sort_order = sSortOrder;
 			var me = this;
 			$.post(this.options.sRenderUrl, oParams, function(data) {
 				// Do nothing...

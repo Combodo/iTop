@@ -82,6 +82,11 @@ try
 		$iEnd = utils::ReadParam('end',1);
 		$iSortCol = utils::ReadParam('sort_col','null');
 		$sSelectMode = utils::ReadParam('select_mode', '');
+		if (!empty($sSelectMode) && ($sSelectMode != 'none'))
+		{
+			// The first column is used for the selection (radio / checkbox) and is not sortable
+			$iSortCol--;
+		}
 		$bDisplayKey = utils::ReadParam('display_key', 'true') == 'true';
 		$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
 		$aClassAliases = utils::ReadParam('class_aliases', array());
@@ -105,11 +110,18 @@ try
 					{
 						if ($iSortCol == $iSortIndex)
 						{
-							$aNameSpec = MetaModel::GetNameSpec($oFilter->GetClass());
-							if ($aNameSpec[0] == '%1$s')
+							if (!MetaModel::HasChildrenClasses($oFilter->GetClass()))
 							{
-								// The name is made of a single column, let's sort according to the sort algorithm for this column
-								$aOrderBy[$aNameSpec[1][0]] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+								$aNameSpec = MetaModel::GetNameSpec($oFilter->GetClass());
+								if ($aNameSpec[0] == '%1$s')
+								{
+									// The name is made of a single column, let's sort according to the sort algorithm for this column
+									$aOrderBy[$aNameSpec[1][0]] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+								}
+								else
+								{
+									$aOrderBy['friendlyname'] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+								}
 							}
 							else
 							{
