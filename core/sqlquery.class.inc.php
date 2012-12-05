@@ -671,22 +671,33 @@ class SQLQuery
 	}
 
 	// Is required in the JOIN, and therefore we must ensure that the join expression will be valid
-	protected function HasRequiredTables($aTables)
+	protected function HasRequiredTables(&$aTables)
 	{
+		$bResult = false;
 		if (array_key_exists($this->m_sTableAlias, $aTables))
 		{
-			return true;
+			$bResult = true;
 		}
 		foreach ($this->m_aJoinSelects as $i => $aJoinInfo)
 		{
 			$oSQLQuery = $aJoinInfo["select"];
 			if ($oSQLQuery->HasRequiredTables($aTables))
 			{
-				return true;
+				// There is something required in the branch, then this node is a MUST
+				if (isset($aJoinInfo['righttablealias']))
+				{
+					$aTables[$aJoinInfo['righttablealias']] = true;
+				}
+				if (isset($aJoinInfo["on_expression"]))
+				{
+					$sJoinCond = $aJoinInfo["on_expression"]->CollectUsedParents($aTables);
+				}
+				$bResult = true;
 			}
 		}
 		// None of the tables is in the list of required tables
-		return false;
+		return $bResult;
 	}
 }
 ?>
+
