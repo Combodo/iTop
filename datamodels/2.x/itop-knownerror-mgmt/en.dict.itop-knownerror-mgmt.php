@@ -172,12 +172,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category',
 ));
 Dict::Add('EN US', 'English', 'English', array(
-	'Menu:NewError' => 'New Known Error',
+	'Menu:NewError' => 'New known error',
 	'Menu:NewError+' => 'Creation of a new known error',
-	'Menu:SearchError' => 'Search for Known Errors',
-	'Menu:SearchError+' => 'Search for Known Errors',
-        'Menu:Problem:KnownErrors' => 'All Known Errors',
-        'Menu:Problem:KnownErrors+' => 'All Known Errors',
+	'Menu:SearchError' => 'Search for known errors',
+	'Menu:SearchError+' => 'Search for known errors',
+        'Menu:Problem:KnownErrors' => 'All known errors',
+        'Menu:Problem:KnownErrors+' => 'All known errors',
 	'Menu:FAQCategory' => 'FAQ categories',
 	'Menu:FAQCategory+' => 'All FAQ categories',
 	'Menu:FAQ' => 'FAQs',
