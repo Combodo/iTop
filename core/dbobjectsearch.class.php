@@ -668,8 +668,10 @@ class DBObjectSearch
 	{
 		// Note: though it seems to be a good practice to clone the given source filter
 		//       (as it was done and fixed an issue in MergeWith())
-		//       this was not implemented here because it was causing a regression (login as admin, select an org, click on any badge) 
-		// buggy: $oFilter = $oFilter->DeepClone();
+		//       this was not implemented here because it was causing a regression (login as admin, select an org, click on any badge)
+		//       root cause: FromOQL relies on the fact that the passed filter can be modified later 
+		// NO: $oFilter = $oFilter->DeepClone();
+		// See also: Trac #639, and self::AddCondition_ReferencedBy()
 		$aAliasTranslation = array();
 		$res = $this->AddCondition_PointingTo_InNameSpace($oFilter, $sExtKeyAttCode, $this->m_aClasses, $aAliasTranslation, $iOperatorCode);
 		$this->TransferConditionExpression($oFilter, $aAliasTranslation);
@@ -701,7 +703,12 @@ class DBObjectSearch
 
 	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode)
 	{
-		//$oFilter = $oFilter->DeepClone();
+		// Note: though it seems to be a good practice to clone the given source filter
+		//       (as it was done and fixed an issue in MergeWith())
+		//       this was not implemented here because it was causing a regression (login as admin, select an org, click on any badge)
+		//       root cause: FromOQL relies on the fact that the passed filter can be modified later 
+		// NO: $oFilter = $oFilter->DeepClone();
+		// See also: Trac #639, and self::AddCondition_PointingTo()
 		$aAliasTranslation = array();
 		$res = $this->AddCondition_ReferencedBy_InNameSpace($oFilter, $sForeignExtKeyAttCode, $this->m_aClasses, $aAliasTranslation);
 		$this->TransferConditionExpression($oFilter, $aAliasTranslation);
