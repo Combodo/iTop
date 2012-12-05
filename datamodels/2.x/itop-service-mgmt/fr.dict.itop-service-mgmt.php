@@ -484,15 +484,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:SLA+' => 'Accords de niveau de service (SLA)',
 	'Menu:SLT' => 'SLTs',
 	'Menu:SLT+' => 'Objectifs de niveau de service (SLT)',
-	'Menu:Module' => 'Modules',
-	'Menu:Module+' => 'Tous les modules',
-	'Menu:RequestTemplate' => 'Modèles de requête',
-	'Menu:RequestTemplate+' => 'Modèles de requête',
-	'Menu:CustomerCategory' => 'Catégories client',
-	'Menu:CustomerCategory+' => 'Catégories client',
 	'Menu:DeliveryModel' => 'Modèles de support',
 	'Menu:DeliveryModel+' => 'Modèles de support',
-	'Menu:Procedure' => 'Catalogue des procédures',
-	'Menu:Procedure+' => 'Catalogue des procédures',
 ));
 ?>
