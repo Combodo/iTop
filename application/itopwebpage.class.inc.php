@@ -708,11 +708,37 @@ EOF
 				}
 				$sApplicationBanner .= '<div id="admin-banner"><span style="padding:5px;">'.Dict::Format('UI:ApplicationEnvironment', $sEnvLabel).$sBackButton.'<span></div>';
 			}
-
+			
+			foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
+			{
+				$sApplicationBanner .= $oExtensionInstance->GetBannerHtml($this);
+			}
+			
+			$sNorthPane = '';
+			foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
+			{
+				$sNorthPane .= $oExtensionInstance->GetNorthPaneHtml($this);
+			}
+			if (!empty($sNorthPane))
+			{
+				$sNorthPane = '<div id="bottom-pane" class="ui-layout-south">'.$sNorthPane.'</div>';
+			}
+			
+			$sSouthPane = '';
+			foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
+			{
+				$sSouthPane .= $oExtensionInstance->GetSouthPaneHtml($this);
+			}
+			if (!empty($sSouthPane))
+			{
+				$sSouthPane = '<div id="bottom-pane" class="ui-layout-south">'.$sSouthPane.'</div>';
+			}
+			
 			$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
 			$sOnlineHelpUrl = MetaModel::GetConfig()->Get('online_help');
 			//$sLogOffMenu = "<span id=\"logOffBtn\" style=\"height:55px;padding:0;margin:0;\"><img src=\"../images/onOffBtn.png\"></span>";
 
+			$sHtml .= $sNorthPane;
 			$sHtml .= '<div id="left-pane" class="ui-layout-west">';
 			$sHtml .= '<!-- Beginning of the left pane -->';
 			$sHtml .= ' <div class="ui-layout-north">';
@@ -752,7 +778,8 @@ EOF
 			$sHtml .= ' <!-- End of page content -->';
 			$sHtml .= ' </div>';
 			$sHtml .= '</div>';
-				
+			$sHtml .= $sSouthPane;
+			
 			// Add the captured output
 			if (trim($s_captured_output) != "")
 			{

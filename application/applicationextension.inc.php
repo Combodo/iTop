@@ -191,3 +191,39 @@ class SeparatorPopupMenuItem extends ApplicationPopupMenuItem
 		return array ('label' => '<hr class="menu-separator">', 'url' => '');
 	}
 }
+
+/**
+ * Implement this interface to add content to any iTopWebPage
+ * There are 3 places where content can be added:
+ * - The north pane: (normaly empty/hidden) at the top of the page, spanning the whole
+ *   width of the page
+ * - The south pane: (normaly empty/hidden) at the bottom of the page, spanning the whole
+ *   width of the page
+ * - The admin banner (two tones gray background) at the left of the global search.
+ *   Limited space, use it for short messages
+ * Each of the methods of this interface is supposed to return the HTML to be inserted at
+ * the specified place and can use the passed iTopWebPage object to add javascript or CSS definitions
+ *
+ */
+interface iPageUIExtension
+{
+	/**
+	 * Add content to the North pane
+	 * @param WebPage $oPage The page to insert stuff into.
+	 * @return string The HTML content to add into the page
+	 */
+	public function GetNorthPaneHtml(iTopWebPage $oPage);
+	/**
+	 * Add content to the South pane
+	 * @param WebPage $oPage The page to insert stuff into.
+	 * @return string The HTML content to add into the page
+	 */
+	public function GetSouthPaneHtml(iTopWebPage $oPage);
+	/**
+	 * Add content to the "admin banner"
+	 * @param WebPage $oPage The page to insert stuff into.
+	 * @return string The HTML content to add into the page
+	 */
+	public function GetBannerHtml(iTopWebPage $oPage);
+}
+
