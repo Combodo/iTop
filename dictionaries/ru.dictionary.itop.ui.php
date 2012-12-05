@@ -26,7 +26,7 @@
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:QueryOQL' => 'OQL Query~~',
 	'Class:QueryOQL+' => '',
-	'Class:QueryOQL/Attribute:oql' => 'Expression~~',
+	'Class:QueryOQL/Attribute:oql' => 'Выражение~~',
 	'Class:QueryOQL/Attribute:oql+' => '',
 	'Class:AuditRule' => 'Правило аудита',
 	'Class:AuditRule+' => 'Правило для проверки данной категории аудита',
@@ -111,7 +111,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:User/Attribute:profile_list' => 'Профили',
 	'Class:User/Attribute:profile_list+' => 'Роли, предоставление прав этому человеку',
 	'Class:User/Attribute:allowed_org_list' => 'Разрешённые организации',
-	'Class:User/Attribute:allowed_org_list+' => 'Конечный пользователь имеет право видеть данные, принадлежащие к следующим организациям. Если ни одна организация не указан, нет никаких ограничений.',
+	'Class:User/Attribute:allowed_org_list+' => 'Пользователь может видеть данные только указанных ниже организации. Оставьте поле пустым, для доступа ко всем данным.',
+	'Class:User/Attribute:allowed_org_list+' => 'Пользователь может видеть данные только указанных ниже организации. Оставьте поле пустым, для доступа ко всем данным.',
 	'Class:User/Error:LoginMustBeUnique' => 'Логин должен быть уникальным - "%1s" уже используется.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'По крайней мере, один профиль должен быть отнесен к этому пользователю.',
 	'Class:URP_Dimensions' => 'размерность',
@@ -199,7 +200,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:WelcomeMenuPage' => 'Добро пожаловать',
 	'Menu:WelcomeMenuPage+' => 'Добро пожаловать в iTop',
 	'UI:WelcomeMenu:Title' => 'Добро пожаловать в iTop',
-	'UI:WelcomeMenu:LeftBlock' => '<p>iTop is a complete, OpenSource, IT Operational Portal.</p>
+	'UI:WelcomeMenu:LeftBlock' => '<p>iTop является порталом оперативного централизованного управления IT инфраструктурой с открытым исходным кодом.</p>
 <ul>Он включает:
 <li>A complete CMDB (Configuration management database) to document and manage the IT inventory.</li>
 <li>Модуль управления инцидентами для отслеживания и общения по вопросам IT.</li>
@@ -211,17 +212,17 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 <p>Все модули могут быть настроены, шаг за шагом, независмо друг от друга.</p>',
 	'UI:WelcomeMenu:RightBlock' => '<p>iTop ориентирован на предоставления сервисов, он позволяет IT специалистам легко управляться с несколькими заказчиками или организациями.
 <ul>iTop обеспечивает многофункциональный набор бизнес-процессов, которые:
-<li>Повышает эффективность управления IT</li> 
-<li>Повышает производительность IT-операция</li> 
-<li>Улучшает удовлетворенность клиентов и обеспечивает понимание бизнес-процессов.</li>
+<li>Повышают эффективность управления IT</li> 
+<li>Повышают производительность IT-операция</li> 
+<li>Улучшают удовлетворенность клиентов и обеспечивают понимание бизнес-процессов.</li>
 </ul>
 </p>
 <p>iTop полностью открыт для интеграции в рамках текущего управления ИТ-инфраструктурой.</p>
 <p>
 <ul>Внедрение ИТ-портала нового поколения поможет вам:
 <li>Лучше управлять более и более сложными ИТ-окружениями.</li>
-<li>Реализовывать процессы ITIL в ваем собственном темпе.</li>
-<li>Управлять наиболее важнім активом ИТ: документацией.</li>
+<li>Реализовывать процессы ITIL в вашем собственном темпе.</li>
+<li>Управлять наиболее важным активом ИТ: документацией.</li>
 </ul>
 </p>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Открытые запросы: %1$d',
@@ -242,7 +243,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Button:Cancel' => 'Отмена',
 	'UI:Button:Apply' => 'Применить',
 	'UI:Button:Back' => ' << Назад ',
-	'UI:Button:Restart' => ' |<< Перзапустить ~~',
+	'UI:Button:Restart' => ' |<< Перезапустить ~~',
 	'UI:Button:Next' => ' Вперёд >> ',
 	'UI:Button:Finish' => ' Конец ',
 	'UI:Button:DoImport' => ' Выполнить импорт ! ',
@@ -261,8 +262,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Button:ChangePassword' => ' Сменить пароль ',
 	'UI:Button:ResetPassword' => ' Сбросить пароль ',
 	'UI:SearchToggle' => 'Поиск',
-	'UI:ClickToCreateNew' => 'Создать новый %1$s',
-	'UI:SearchFor_Class' => 'Поиск для %1$s объектов',
+	'UI:ClickToCreateNew' => 'Создать: %1$s',
+	'UI:SearchFor_Class' => 'Поиск: %1$s',
 	'UI:NoObjectToDisplay' => 'Нет объектов для отображения.',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Параметр object_id является обязательным если указан link_attr. Проверьте определение отображения шаблона.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'Параметр object_id является обязательным если указан link_attr. Проверьте определение отображения шаблона',
@@ -338,7 +339,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:CountOfResults' => '%1$d объект(ы)',
 	'UI:ChangesLogTitle' => 'Журнал изменений (%1$d):',
 	'UI:EmptyChangesLogTitle' => 'Журнал изменений пустой',
-	'UI:SearchFor_Class_Objects' => 'Поиск объекта %1$s',
+	'UI:SearchFor_Class_Objects' => 'Поиск %1$s',
 	'UI:OQLQueryBuilderTitle' => 'Коструктор запросов OQL',
 	'UI:OQLQueryTab' => 'Запрос OQL',
 	'UI:SimpleSearchTab' => 'Простой поиск',
@@ -346,7 +347,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:SearchValue:Any' => '* Любой *',
 	'UI:SearchValue:Mixed' => '* смешанный *',
 	'UI:SearchValue:NbSelected' => '# выбрано~~',
-	'UI:SelectOne' => '-- выбрать один --',
+	'UI:SelectOne' => '-- выбрать --',
 	'UI:Login:Welcome' => 'Добро пожаловать в iTop!',
 	'UI:Login:IncorrectLoginPassword' => 'Неправильный логин/пароль. Пожалуйста, попробуйте еще раз.',
 	'UI:Login:IdentifyYourself' => 'Представтесть, прежде чем продолжить',
@@ -366,7 +367,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:AccessRO-All' => 'Только чтение~~',
 	'UI:AccessRO-Users' => 'Только чтение для конечных пользователей~~',
 	'UI:ApplicationEnvironment' => 'Application environment: %1$s~~',
-	'UI:Login:RetypePwdDoesNotMatch' => 'Новый пароль и повторный пароль не совпадают!',
+	'UI:Login:RetypePwdDoesNotMatch' => 'Пароли не совпадают',
 	'UI:Button:Login' => 'Введите iTop',
 	'UI:Login:Error:AccessRestricted' => 'Доступ к iTop ограничен. Пожалуйста, свяжитесь с администратором iTop.',
 	'UI:Login:Error:AccessAdmin' => 'Доступ ограничен для лиц с административными привилегиями. Пожалуйста, свяжитесь с администратором iTop.',
@@ -433,45 +434,45 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:CSVReport-Value-Modified' => 'Изменен~~',
 	'UI:CSVReport-Value-SetIssue' => 'Не может быть изменен - reason: %1$s~~',
 	'UI:CSVReport-Value-ChangeIssue' => 'Не может быть изменен %1$s - reason: %2$s~~',
-	'UI:CSVReport-Value-NoMatch' => 'No match~~',
-	'UI:CSVReport-Value-Missing' => 'Missing mandatory value~~',
-	'UI:CSVReport-Value-Ambiguous' => 'Ambiguous: found %1$s objects~~',
-	'UI:CSVReport-Row-Unchanged' => 'unchanged~~',
-	'UI:CSVReport-Row-Created' => 'created~~',
+	'UI:CSVReport-Value-NoMatch' => 'Нет совпадений',
+	'UI:CSVReport-Value-Missing' => 'Отсутствует обязательное значение',
+	'UI:CSVReport-Value-Ambiguous' => 'Ambiguous: найдено %1$s объектов~~',
+	'UI:CSVReport-Row-Unchanged' => 'без изменений',
+	'UI:CSVReport-Row-Created' => 'созданный',
 	'UI:CSVReport-Row-Updated' => 'updated %1$d cols~~',
 	'UI:CSVReport-Row-Disappeared' => 'disappeared, changed %1$d cols~~',
 	'UI:CSVReport-Row-Issue' => 'Issue: %1$s~~',
 	'UI:CSVReport-Value-Issue-Null' => 'Поле не должно быть пустым~~',
 	'UI:CSVReport-Value-Issue-NotFound' => 'Не найден~~',
 	'UI:CSVReport-Value-Issue-FoundMany' => 'Найдено %1$d значений~~',
-	'UI:CSVReport-Value-Issue-Readonly' => 'The attribute \'%1$s\' is read-only and cannot be modified (current value: %2$s, proposed value: %3$s)~~',
-	'UI:CSVReport-Value-Issue-Format' => 'Failed to process input: %1$s~~',
-	'UI:CSVReport-Value-Issue-NoMatch' => 'Unexpected value for attribute \'%1$s\': no match found, check spelling~~',
-	'UI:CSVReport-Value-Issue-Unknown' => 'Unexpected value for attribute \'%1$s\': %2$s~~',
-	'UI:CSVReport-Row-Issue-Inconsistent' => 'Attributes not consistent with each others: %1$s~~',
-	'UI:CSVReport-Row-Issue-Attribute' => 'Unexpected attribute value(s)~~',
-	'UI:CSVReport-Row-Issue-MissingExtKey' => 'Could not be created, due to missing external key(s): %1$s~~',
+	'UI:CSVReport-Value-Issue-Readonly' => 'Аттрибут \'%1$s\' доступен только для чтения и не может быть изменен (ткущее значение: %2$s, предложенное значение: %3$s)~~',
+	'UI:CSVReport-Value-Issue-Format' => 'Не удалось обработать запрос: %1$s~~',
+	'UI:CSVReport-Value-Issue-NoMatch' => 'Неизвестное значение атрибута \'%1$s\': ничего не найдено, проверьте правильность ввода',
+	'UI:CSVReport-Value-Issue-Unknown' => 'Неизвестное значение атрибута \'%1$s\': %2$s~~',
+	'UI:CSVReport-Row-Issue-Inconsistent' => 'Несоответствие атрибутов: %1$s~~',
+	'UI:CSVReport-Row-Issue-Attribute' => 'Неизвестное значение(я) атрибута~~',
+	'UI:CSVReport-Row-Issue-MissingExtKey' => 'Не может быть создан так как отсутсвует внешний ключ(и): %1$s~~',
 	'UI:CSVReport-Row-Issue-DateFormat' => 'Формат даты неверен~~',
-	'UI:CSVReport-Row-Issue-Reconciliation' => 'failed to reconcile~~',
-	'UI:CSVReport-Row-Issue-Ambiguous' => 'ambiguous reconciliation~~',
+	'UI:CSVReport-Row-Issue-Reconciliation' => 'Невозможно согласовать',
+	'UI:CSVReport-Row-Issue-Ambiguous' => 'Согласование спорное',
 	'UI:CSVReport-Row-Issue-Internal' => 'Внутренняя ошибка: %1$s, %2$s~~',
-	'UI:CSVReport-Icon-Unchanged' => 'Unchanged~~',
-	'UI:CSVReport-Icon-Modified' => 'Modified~~',
-	'UI:CSVReport-Icon-Missing' => 'Missing~~',
-	'UI:CSVReport-Object-MissingToUpdate' => 'Missing object: will be updated~~',
-	'UI:CSVReport-Object-MissingUpdated' => 'Missing object: updated~~',
-	'UI:CSVReport-Icon-Created' => 'Created~~',
+	'UI:CSVReport-Icon-Unchanged' => 'Неизмен.',
+	'UI:CSVReport-Icon-Modified' => 'Измен.',
+	'UI:CSVReport-Icon-Missing' => 'Упущен.',
+	'UI:CSVReport-Object-MissingToUpdate' => 'Отсутствующий объект: будет обновлен',
+	'UI:CSVReport-Object-MissingUpdated' => 'Отсутствующий объект: обновлен',
+	'UI:CSVReport-Icon-Created' => 'Создан',
 	'UI:CSVReport-Object-ToCreate' => 'Был создан объект~~',
 	'UI:CSVReport-Object-Created' => 'Объект создан~~',
 	'UI:CSVReport-Icon-Error' => 'Ошибка~~',
 	'UI:CSVReport-Object-Error' => 'ОШИБКА: %1$s~~',
-	'UI:CSVReport-Object-Ambiguous' => 'AMBIGUOUS: %1$s~~',
-	'UI:CSVReport-Stats-Errors' => '%1$.0f %% of the loaded objects have errors and will be ignored.~~',
-	'UI:CSVReport-Stats-Created' => '%1$.0f %% of the loaded objects will be created.~~',
-	'UI:CSVReport-Stats-Modified' => '%1$.0f %% of the loaded objects will be modified.~~',
-	'UI:CSVExport:AdvancedMode' => 'Advanced mode~~',
+	'UI:CSVReport-Object-Ambiguous' => 'Двусмыслен.: %1$s~~',
+	'UI:CSVReport-Stats-Errors' => '%1$.0f %% загруженных объектов имеют ошибки. Проигнорированы.',
+	'UI:CSVReport-Stats-Created' => '%1$.0f %% загруженных объектов были созданы.',
+	'UI:CSVReport-Stats-Modified' => '%1$.0f %% загруженных объектов были изменены.',
+	'UI:CSVExport:AdvancedMode' => 'Расширенный режим',
 	'UI:CSVExport:AdvancedMode+' => '',
-	'UI:CSVExport:LostChars' => 'Encoding issue~~',
+	'UI:CSVExport:LostChars' => 'Проблема кодировки',
 	'UI:CSVExport:LostChars+' => '',
 	'UI:Audit:Title' => 'iTop - Аудит CMDB',
 	'UI:Audit:InteractiveAudit' => 'Интерактивный аудит',
@@ -487,7 +488,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:RunQuery:HeaderPurpose+' => 'Объяснение запросов',
 	'UI:RunQuery:HeaderOQLExpression' => 'Выражение OQL',
 	'UI:RunQuery:HeaderOQLExpression+' => 'Запрос в синтаксисе OQL',
-	'UI:RunQuery:ExpressionToEvaluate' => 'Оценка віражения: ',
+	'UI:RunQuery:ExpressionToEvaluate' => 'Оценка выражения: ',
 	'UI:RunQuery:MoreInfo' => 'Подробная информация о запросе: ',
 	'UI:RunQuery:DevelopedQuery' => 'Переработанное выражение запроса: ',
 	'UI:RunQuery:SerializedFilter' => 'Сериализованные фильты: ',
@@ -562,7 +563,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Управление %1$s объектами связанными с %2$s: %3$s',
 	'UI:AddLinkedObjectsOf_Class' => 'Добавить %1$ss...',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Удалить выбранные объекты',
-	'UI:Message:EmptyList:UseAdd' => 'Список пуст, используй кнопку "Добавить ...", для добавения элементов.',
+	'UI:Message:EmptyList:UseAdd' => 'Список пуст, используте кнопку "Добавить ...", для добавения новых элементов.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Используйте форму поиска выше для поиска объектов, которые будут добавлены.',
 	'UI:Wizard:FinalStepTitle' => 'Последний шаг: подтверждение',
 	'UI:Title:DeletionOf_Object' => 'Удаление %1$s',
@@ -697,7 +698,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI-ChangeManagementOverview-ChangeWithOutage' => 'Отключения в связи с изменениями',
 	'UI:ServiceMgmtMenuOverview:Title' => 'Панель управления сервисами',
 	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Договора с клиентами, которые будут обновлены в течении 30 дней',
-	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Договора с поставщиками, которые будут обновлены в течении 30 дней',
+	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Договора с провайдерами, которые будут обновлены в течении 30 дней',
 	'UI:ContactsMenu' => 'Договора',
 	'UI:ContactsMenu+' => 'Договора',
 	'UI:ContactsMenu:Title' => 'Обзор договоров',
@@ -714,19 +715,19 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:NotificationsMenu+' => 'Конфигурация уведомлений',
 	'UI:NotificationsMenu:Title' => 'Конфигурация <span class="hilite">Уведомлений</span>',
 	'UI:NotificationsMenu:Help' => 'Помощь',
-	'UI:NotificationsMenu:HelpContent' => '<p>В iTop уведомления полностью настраиваемые. Они основаны на двух наборах объектов: <i>триггеры и действия</i>.</p>
+	'UI:NotificationsMenu:HelpContent' => '<p>В iTop уведомления полностью настраиваемые. Они основаны на двух наборах объектов: <i>триггеры</i> и <i>действия</i>.</p>
 <p><i><b>Триггеры</b></i> оперделяют когда уведомление будет выполнено. Есть 3 типа триггеров обробатывающих 3 разных фазы жизненного цикла объекта:
 <ol>
-	<li>the "OnCreate" триггеры сработают когда объект заданного класса будет создан</li>
-	<li>the "OnStateEnter" триггеры сработают перед тем как объект заданного класса войдёт в заданное состояние (выйдет из другого состояния)</li>
-	<li>the "OnStateLeave" триггеры сработают когда объекты заданного класса выйдут из заданного состояния</li>
+	<li>"OnCreate" триггеры сработают когда объект заданного класса будет создан</li>
+	<li>"OnStateEnter" триггеры сработают перед тем как объект заданного класса войдёт в заданное состояние (выйдет из другого состояния)</li>
+	<li>"OnStateLeave" триггеры сработают когда объекты заданного класса выйдут из заданного состояния</li>
 </ol>
 </p>
 <p>
 <i><b>Действия</b></i> определяют, какое действие будет выполнено при срабатывании триггера. Пока есть только одно действие, которое состоит в отправке сообщения на электронную почту.
 Эти действия также определяют шаблон, который будет использован для отправки электронного сообщения, а также другие параметры сообщения, такие как получатель, важность и т.д.
 </p>
-<p>Специальная страница: <a href="../setup/email.test.php" target="_blank">email.test.php</a> доступна для тестирования и устранения неполадок в настройка почты в PHP.</p>
+<p>Специальная страница: <a href="../setup/email.test.php" target="_blank">email.test.php</a> доступна для тестирования и устранения неполадок в настройках почты.</p>
 <p>Чтобы быть выполненными, действия необходимо ассоциировать с триггерами.
 При ассоциации с триггером, каждое действие получает "порядковый" номер, который определяет порядок выполнения действий.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Триггеры',
@@ -854,7 +855,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Favorites:Default_X_ItemsPerPage' => 'Default length for lists:  %1$s items per page~~',
 	'UI:NavigateAwayConfirmationMessage' => 'Any modification will be discarded.~~',
 	'UI:CancelConfirmationMessage' => 'Настройки НЕ будут сохранены. Продолжить?',
-	'UI:AutoApplyConfirmationMessage' => 'Some changes have not been applied yet. Do you want itop to take them into account?~~',
+	'UI:AutoApplyConfirmationMessage' => 'Некоторые изменения не вступили в силу.Хотите что бы iТop применил их немедленно?~~',
 	'UI:Create_Class_InState' => 'Create the %1$s in state: ~~',
 	'UI:OrderByHint_Values' => 'Sort order: %1$s~~',
 	'UI:Menu:AddToDashboard' => 'Add To Dashboard...~~',
