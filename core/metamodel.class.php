@@ -2329,31 +2329,37 @@ abstract class MetaModel
 
 	protected static function AddQueryTraceSelect($oFilter, $aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $sSql)
 	{
-		$aQueryData = array(
-			'type' => 'select',
-			'filter' => $oFilter,
-			'order_by' => $aOrderBy,
-			'args' => $aArgs,
-			'att_to_load' => $aAttToLoad,
-			'extended_data_spec' => $aExtendedDataSpec,
-			'limit_count' => $iLimitCount,
-			'limit_start' => $iLimitStart,
-			'is_count' => $bGetCount
-		);
-		$sOql = $oFilter->ToOQL(true, $aArgs);
-		self::AddQueryTrace($aQueryData, $sOql, $sSql);
+		if (self::$m_bTraceQueries)
+		{
+			$aQueryData = array(
+				'type' => 'select',
+				'filter' => $oFilter,
+				'order_by' => $aOrderBy,
+				'args' => $aArgs,
+				'att_to_load' => $aAttToLoad,
+				'extended_data_spec' => $aExtendedDataSpec,
+				'limit_count' => $iLimitCount,
+				'limit_start' => $iLimitStart,
+				'is_count' => $bGetCount
+			);
+			$sOql = $oFilter->ToOQL(true, $aArgs);
+			self::AddQueryTrace($aQueryData, $sOql, $sSql);
+		}
 	}
 	
 	protected static function AddQueryTraceGroupBy($oFilter, $aArgs, $aGroupByExpr, $sSql)
 	{
-		$aQueryData = array(
-			'type' => 'group_by',
-			'filter' => $oFilter,
-			'args' => $aArgs,
-			'group_by_expr' => $aGroupByExpr
-		);
-		$sOql = $oFilter->ToOQL(true, $aArgs);
-		self::AddQueryTrace($aQueryData, $sOql, $sSql);
+		if (self::$m_bTraceQueries)
+		{
+			$aQueryData = array(
+				'type' => 'group_by',
+				'filter' => $oFilter,
+				'args' => $aArgs,
+				'group_by_expr' => $aGroupByExpr
+			);
+			$sOql = $oFilter->ToOQL(true, $aArgs);
+			self::AddQueryTrace($aQueryData, $sOql, $sSql);
+		}
 	}
 
 	protected static function AddQueryTrace($aQueryData, $sOql, $sSql)
