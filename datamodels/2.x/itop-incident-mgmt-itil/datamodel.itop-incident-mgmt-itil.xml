@@ -656,6 +656,11 @@
                 <actions/>
               </transition>
               <transition>
+                <stimulus>ev_timeout</stimulus>
+                <target>escalated_ttr</target>
+                <actions/>
+              </transition>
+              <transition>
                 <stimulus>ev_autoresolve</stimulus>
                 <target>resolved</target>
                 <actions>
@@ -741,7 +746,46 @@
                 <hidden/>
               </attribute>
             </flags>
-            <transitions/>
+            <transitions>
+              <transition>
+                <stimulus>ev_pending</stimulus>
+                <target>pending</target>
+                <actions>
+                  <action>
+                    <verb>SetLastPendingDate</verb>
+                  </action>
+                </actions>
+              </transition>
+              <transition>
+                <stimulus>ev_resolve</stimulus>
+                <target>resolved</target>
+                <actions>
+                  <action>
+                    <verb>SetResolveDate</verb>
+                  </action>
+                  <action>
+                    <verb>resolveChilds</verb>
+                  </action>
+                </actions>
+              </transition>
+              <transition>
+                <stimulus>ev_reassign</stimulus>
+                <target>assigned</target>
+                <actions/>
+              </transition>
+              <transition>
+                <stimulus>ev_autoresolve</stimulus>
+                <target>resolved</target>
+                <actions>
+                  <action>
+                    <verb>SetResolveDate</verb>
+                  </action>
+                  <action>
+                    <verb>resolveChilds</verb>
+                  </action>
+                </actions>
+              </transition>
+            </transitions>
           </state>
           <state id="pending">
             <flags>

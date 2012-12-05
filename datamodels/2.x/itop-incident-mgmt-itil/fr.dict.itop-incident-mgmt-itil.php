@@ -200,7 +200,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:IncidentManagement+' => 'Gestion des incidents',
 	'Menu:Incident:Overview' => 'Vue d\'ensemble',
 	'Menu:Incident:Overview+' => 'Vue d\'ensemble',
-	'Menu:NewIncident' => 'Nouvel Incident',
+	'Menu:NewIncident' => 'Nouvel incident',
 	'Menu:NewIncident+' => 'Créer un nouveau ticket d\'incident',
 	'Menu:SearchIncidents' => 'Rechercher des incidents',
 	'Menu:SearchIncidents+' => 'Rechercher parmi les tickets d\'incidents',
