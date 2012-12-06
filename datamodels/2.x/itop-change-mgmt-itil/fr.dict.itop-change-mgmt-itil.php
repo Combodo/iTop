@@ -50,7 +50,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Attribute:status/Value:monitored+' => '',
 	'Class:Change/Attribute:status/Value:closed' => 'Fermé',
 	'Class:Change/Attribute:status/Value:closed+' => '',
-	'Class:Change/Attribute:reason' => 'Raison',
+	'Class:Change/Attribute:reason' => 'Raison du rejet',
 	'Class:Change/Attribute:reason+' => '',
 	'Class:Change/Attribute:requestor_id' => 'Demandeur',
 	'Class:Change/Attribute:requestor_id+' => '',

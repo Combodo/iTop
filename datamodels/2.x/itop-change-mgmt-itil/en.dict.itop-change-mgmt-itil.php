@@ -88,7 +88,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Change/Attribute:status/Value:monitored+' => '',
 	'Class:Change/Attribute:status/Value:closed' => 'Closed',
 	'Class:Change/Attribute:status/Value:closed+' => '',
-	'Class:Change/Attribute:reason' => 'Reason',
+	'Class:Change/Attribute:reason' => 'Reject reason',
 	'Class:Change/Attribute:reason+' => '',
 	'Class:Change/Attribute:requestor_id' => 'Requestor',
 	'Class:Change/Attribute:requestor_id+' => '',

@@ -301,7 +301,7 @@
                 <hidden/>
               </attribute>
               <attribute id="reason">
-                <hidden/>
+                <read_only/>
               </attribute>
               <attribute id="requestor_id">
                 <read_only/>
@@ -620,7 +620,8 @@
                 <hidden/>
               </attribute>
               <attribute id="reason">
-                <read_only/>
+                <mandatory/>
+		<must_prompt/>
               </attribute>
               <attribute id="requestor_id">
                 <read_only/>
@@ -869,6 +870,16 @@
           <code><![CDATA[	public function SetClosureDate($sStimulusCode)
 	{
 		$this->Set('close_date', time());
+		return true;
+	}]]></code>
+        </method>
+        <method id="ResetRejectReason">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function ResetRejectReason($sStimulusCode)
+	{
+		$this->Set('reason', '');
 		return true;
 	}]]></code>
         </method>
@@ -1238,7 +1249,7 @@
           </attributes>
         </naming>
         <display_template/>
-        <icon>../modules/itop-change-mgmt-itil/images/change.png</icon>
+        <icon>images/change.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="ref"/>
@@ -1294,7 +1305,7 @@
                 <hidden/>
               </attribute>
               <attribute id="reason">
-                <mandatory/>
+                <hidden/>
               </attribute>
               <attribute id="requestor_id">
                 <mandatory/>
@@ -1578,7 +1589,8 @@
                 <hidden/>
               </attribute>
               <attribute id="reason">
-                <read_only/>
+                <mandatory/>
+		<must_prompt/>
               </attribute>
               <attribute id="requestor_id">
                 <read_only/>
@@ -2096,7 +2108,7 @@
           </attributes>
         </naming>
         <display_template/>
-        <icon>../modules/itop-change-mgmt-itil/images/change.png</icon>
+        <icon>images/change.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="ref"/>
@@ -2163,7 +2175,7 @@
                 <hidden/>
               </attribute>
               <attribute id="reason">
-                <mandatory/>
+                <hidden/>
               </attribute>
               <attribute id="requestor_id">
                 <mandatory/>
@@ -2297,6 +2309,7 @@
               </attribute>
               <attribute id="reason">
                 <mandatory/>
+		<must_prompt/>
               </attribute>
               <attribute id="requestor_id">
                 <mandatory/>
@@ -3090,7 +3103,7 @@
           </attributes>
         </naming>
         <display_template/>
-        <icon>../modules/itop-change-mgmt-itil/images/change.png</icon>
+        <icon>images/change.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="ref"/>
@@ -3152,7 +3165,7 @@
                 <hidden/>
               </attribute>
               <attribute id="reason">
-                <mandatory/>
+                <hidden/>
               </attribute>
               <attribute id="requestor_id">
                 <mandatory/>
@@ -3198,7 +3211,11 @@
               <transition>
                 <stimulus>ev_validate</stimulus>
                 <target>validated</target>
-                <actions/>
+                <actions>
+                  <action>
+                    <verb>ResetRejectReason</verb>
+                  </action>
+                </actions>
               </transition>
               <transition>
                 <stimulus>ev_reject</stimulus>
@@ -3315,6 +3332,7 @@
               </attribute>
               <attribute id="reason">
                 <mandatory/>
+		<must_prompt/>
               </attribute>
               <attribute id="requestor_id">
                 <mandatory/>
@@ -3519,7 +3537,11 @@
               <transition>
                 <stimulus>ev_approve</stimulus>
                 <target>approved</target>
-                <actions/>
+                <actions>
+                  <action>
+                    <verb>ResetRejectReason</verb>
+                  </action>
+                </actions>
               </transition>
               <transition>
                 <stimulus>ev_notapprove</stimulus>
@@ -3638,7 +3660,8 @@
                 <hidden/>
               </attribute>
               <attribute id="reason">
-                <read_only/>
+                <mandatory/>
+		<must_prompt/>
               </attribute>
               <attribute id="requestor_id">
                 <read_only/>
@@ -4219,7 +4242,7 @@
           </attributes>
         </naming>
         <display_template/>
-        <icon>../modules/itop-change-mgmt-itil/images/change.png</icon>
+        <icon>images/change.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="ref"/>
@@ -4275,7 +4298,7 @@
                 <hidden/>
               </attribute>
               <attribute id="reason">
-                <mandatory/>
+                <hidden/>
               </attribute>
               <attribute id="requestor_id">
                 <mandatory/>
@@ -4475,7 +4498,11 @@
               <transition>
                 <stimulus>ev_approve</stimulus>
                 <target>approved</target>
-                <actions/>
+                <actions>
+                  <action>
+                    <verb>ResetRejectReason</verb>
+                  </action>
+                </actions>
               </transition>
               <transition>
                 <stimulus>ev_notapprove</stimulus>
@@ -4594,7 +4621,8 @@
                 <hidden/>
               </attribute>
               <attribute id="reason">
-                <read_only/>
+                <mandatory/>
+		<must_prompt/>
               </attribute>
               <attribute id="requestor_id">
                 <read_only/>
