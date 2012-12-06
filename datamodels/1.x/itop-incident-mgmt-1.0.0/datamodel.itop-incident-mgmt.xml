@@ -1169,7 +1169,7 @@
       <parent>Incident:Shortcuts</parent>
       <oql><![CDATA[SELECT Incident WHERE status IN ("new", "assigned", "escalated_tto", "escalated_ttr", "resolved")]]></oql>
       <do_search/>
-      <auto_reload>standard</auto_reload>
+      <auto_reload>fast</auto_reload>
     </menu>
   </menus>
 </itop_design>
