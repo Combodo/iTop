@@ -9,7 +9,7 @@
         <dashlet id="1" xsi:type="DashletGroupByTable">
           <rank>0</rank>
           <title>UI-ChangeManagementOverview-ChangeByCategory-last-7-days</title>
-          <query>SELECT Change WHERE start_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
+          <query>SELECT Change WHERE creation_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
           <group_by>finalclass</group_by>
           <style>table</style>
         </dashlet>
@@ -21,7 +21,7 @@
         <dashlet id="2" xsi:type="DashletGroupByBars">
           <rank>0</rank>
           <title>UI-ChangeManagementOverview-Last-7-days</title>
-          <query>SELECT Change WHERE start_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
+          <query>SELECT Change WHERE creation_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
           <group_by>start_date:day_of_month</group_by>
           <style>bars</style>
         </dashlet>
@@ -33,7 +33,7 @@
         <dashlet id="3" xsi:type="DashletGroupByTable">
           <rank>0</rank>
           <title>UI-ChangeManagementOverview-ChangeByDomain-last-7-days</title>
-          <query>SELECT Change WHERE start_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
+          <query>SELECT Change WHERE creation_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
           <group_by>finalclass</group_by>
           <style>table</style>
         </dashlet>
@@ -45,7 +45,7 @@
         <dashlet id="4" xsi:type="DashletGroupByTable">
           <rank>0</rank>
           <title>UI-ChangeManagementOverview-ChangeByStatus-last-7-days</title>
-          <query>SELECT Change WHERE start_date &gt; DATE_SUB(NOW(),
+          <query>SELECT Change WHERE creation_date &gt; DATE_SUB(NOW(),
             INTERVAL 7 DAY)</query>
           <group_by>status</group_by>
           <style>table</style>

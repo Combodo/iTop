@@ -195,7 +195,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:NormalChange' => 'Ticket de Changement',
+	'Class:NormalChange' => 'Ticket de Changement Normal',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Date d\'acceptation',
 	'Class:NormalChange/Attribute:acceptance_date+' => '',
@@ -269,13 +269,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:SearchChanges+' => 'Rechercher parmi les tickets de changement',
 	'Menu:Change:Shortcuts' => 'Raccourcis',
 	'Menu:Change:Shortcuts+' => '',
-	'Menu:WaitingAcceptance' => 'Tickets en attente d\'acceptance',
-	'Menu:WaitingAcceptance+' => '',
-	'Menu:WaitingApproval' => 'Tickets en attente d\'approbation',
-	'Menu:WaitingApproval+' => '',
-	'Menu:Changes' => 'Tickets ouverts',
+	'Menu:WaitingAcceptance' => 'Changements en attente d\'acceptance',
+	'Menu:WaitingAcceptance+' => 'Changements en attente d\'acceptance',
+	'Menu:WaitingApproval' => 'Changements en attente d\'approbation',
+	'Menu:WaitingApproval+' => 'Changements en attente d\'approbation',
+	'Menu:Changes' => 'Changements ouverts',
 	'Menu:Changes+' => 'Tickets de changement ouverts',
-	'Menu:MyChanges' => 'Mes tickets',
+	'Menu:MyChanges' => 'Mes changements',
 	'Menu:MyChanges+' => 'Tickets de changement qui me sont assignés',
 	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changements par catégorie',
 	'UI-ChangeManagementOverview-Last-7-days' => 'Changements par jour',
