@@ -1188,4 +1188,3 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_Users/Attribute:profile_list+' => 'Perfiles',
 ));
 ?>
-
