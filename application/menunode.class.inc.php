@@ -644,12 +644,13 @@ class OQLMenuNode extends MenuNode
 			$this->bSearch, // Search pane
 			true, // Search open
 			$oPage, 
-			$aExtraParams
+			array_merge($this->m_aParams, $aExtraParams)
 		);
 	}
 
 	public static function RenderOQLSearch($sOql, $sTitle, $sUsageId, $bSearchPane, $bSearchOpen, WebPage $oPage, $aExtraParams = array())
 	{
+		$sUsageId = utils::GetSafeId($sUsageId);
 		$oSearch = DBObjectSearch::FromOQL($sOql);
 		$sIcon = MetaModel::GetClassIcon($oSearch->GetClass());
 
@@ -699,7 +700,7 @@ class SearchMenuNode extends MenuNode
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
 		$oSearch = new DBObjectSearch($this->sClass);
-		$aParams = array_merge(array('open' => true, 'table_id' => 'Menu_'.$this->GetMenuId()), $aExtraParams);
+		$aParams = array_merge(array('open' => true, 'table_id' => 'Menu_'.utils::GetSafeId($this->GetMenuId())), $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
 		$oBlock->Display($oPage, 0);
 	}

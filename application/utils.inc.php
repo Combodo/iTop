@@ -840,6 +840,16 @@ class utils
 		{
 			return $sProposed;
 		}
-	}	 	
+	}
+	
+	/**
+	 * Some characters cause troubles with jQuery when used inside DOM IDs, so let's replace them by the safe _ (underscore)
+	 * @param string $sId The ID to sanitize
+	 * @return string The sanitized ID
+	 */
+	static public function GetSafeId($sId)
+	{
+		return str_replace(array(':', '[', ']', '+', '-'), '_', $sId);
+	}	
 }
 ?>

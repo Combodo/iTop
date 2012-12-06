@@ -120,7 +120,7 @@ class UILinksWidget
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
 				$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId->GetKey().']';
-				$sSafeId = self::MakeID($sFieldId);
+				$sSafeId = utils::GetSafeId($sFieldId);
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
 				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $linkObjOrId->Get($sFieldCode), '' /* DisplayValue */, $sSafeId, $sNameSuffix, 0, $aArgs);
 				$aFieldsMap[$sFieldCode] = $sSafeId;
@@ -145,7 +145,7 @@ class UILinksWidget
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
 				$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId.']';
-				$sSafeId = self::MakeID($sFieldId);
+				$sSafeId = utils::GetSafeId($sFieldId);
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
 				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $oNewLinkObj->Get($sFieldCode) /* TO DO/ call GetDefaultValue($oObject->ToArgs()) */, '' /* DisplayValue */, $sSafeId /* id */, $sNameSuffix, 0, $aArgs);
 				$aFieldsMap[$sFieldCode] = $sSafeId;
@@ -175,11 +175,11 @@ EOF
 			);
 		}
 		
-		$sExtKeyToMeId = self::MakeID($sPrefix.$this->m_sExtKeyToMe);
+		$sExtKeyToMeId = utils::GetSafeId($sPrefix.$this->m_sExtKeyToMe);
 		$aFieldsMap[$this->m_sExtKeyToMe] = $sExtKeyToMeId;
 		$aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToMeId\" value=\"".$oCurrentObj->GetKey()."\">";
 
-		$sExtKeyToRemoteId = self::MakeID($sPrefix.$this->m_sExtKeyToRemote);
+		$sExtKeyToRemoteId = utils::GetSafeId($sPrefix.$this->m_sExtKeyToRemote);
 		$aFieldsMap[$this->m_sExtKeyToRemote] = $sExtKeyToRemoteId;
 		$aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToRemoteId\" value=\"$iRemoteObjKey\">";
 		
@@ -199,11 +199,6 @@ EOF
 			$aRow['static::'.$sFieldCode] = $oLinkedObj->GetAsHTML($sFieldCode);
 		}
 		return $aRow;
-	}
-	
-	protected function MakeID($sName)
-	{
-		return str_replace(array('[', ']', '-'), '_', $sName);
 	}
 
 	/**
