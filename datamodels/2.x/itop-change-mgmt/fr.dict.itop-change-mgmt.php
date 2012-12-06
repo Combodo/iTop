@@ -109,7 +109,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:Change:Shortcuts' => 'Raccourcis',
 	'Menu:Change:Shortcuts+' => '',
 	'Menu:WaitingApproval' => 'Changement en attente d\'approbation',
-	'Menu:WaitingApproval+' => '',
+	'Menu:WaitingApproval+' => 'Changement en attente d\'approbation',
 	'Menu:Changes' => 'Changements ouverts',
 	'Menu:Changes+' => 'Tickets de changement ouverts',
 	'Menu:MyChanges' => 'Mes tickets de changement',
