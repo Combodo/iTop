@@ -103,6 +103,8 @@
           <class id="ProviderContract"/>
           <class id="CustomerContract"/>
           <class id="lnkCustomerContractToProviderContract"/>
+          <class id="lnkCustomerContractToFunctionalCI"/>
+          <class id="ServiceFamily"/>
           <class id="Service"/>
           <class id="ServiceSubcategory"/>
           <class id="SLA"/>
@@ -131,7 +133,7 @@
         <classes>
           <class id="KnownError"/>
           <class id="lnkErrorToFunctionalCI"/>
-          <class id="lnkDocumentError"/>
+          <class id="lnkDocumentToError"/>
           <class id="FAQ"/>
          <class id="FAQCategory"/>
         </classes>
@@ -160,7 +162,7 @@
       <group id="LnkKnownErrors" _delta="define">
         <classes>
           <class id="lnkErrorToFunctionalCI"/>
-          <class id="lnkDocumentError"/>
+          <class id="lnkDocumentToError"/>
         </classes>
       </group>
       <group id="Portal user - write" _delta="define">
@@ -345,6 +347,7 @@
             <actions>
               <action xsi:type="write">allow</action>
               <action xsi:type="bulk write">allow</action>
+              <action xsi:type="delete">allow</action>
             </actions>
           </group>
           <group id="LnkTickets">
