@@ -312,6 +312,9 @@
                   <action>
                     <verb>SetApprovalDate</verb>
                   </action>
+                  <action>
+                    <verb>ResetRejectReason</verb>
+                  </action>
                 </actions>
               </transition>
             </transitions>
@@ -532,6 +535,16 @@
           <code><![CDATA[	public function SetApprovalDate($sStimulusCode)
 	{
 		$this->Set('approval_date', time());
+		return true;
+	}]]></code>
+        </method>
+        <method id="ResetRejectReason">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function ResetRejectReason($sStimulusCode)
+	{
+		$this->Set('reject_reason', '');
 		return true;
 	}]]></code>
         </method>
