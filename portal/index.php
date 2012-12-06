@@ -507,40 +507,43 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 	$bIsEscalateButton = false;
 	$bIsCloseButton = false;
 	$bEditAttachments = false;
-	switch($oObj->GetState())
+	$aEditAtt = array();
+	if (!MetaModel::DBIsReadOnly())
 	{
-		case 'new':
-		case 'assigned':
-		case 'frozen':
-		$aEditAtt = array(
-			PORTAL_ATTCODE_LOG => '????'
-		);
-		$bEditAttachments = true;
-		// disabled - $bIsEscalateButton = true;
-		break;
-
-		case 'escalated_tto':
-		case 'escalated_ttr':
-		$aEditAtt = array(
-			PORTAL_ATTCODE_LOG => '????'
-		);
-		$bEditAttachments = true;
-		break;
-
-		case 'resolved':
-		$aEditAtt = array(
-			// non, read-only dans cet etat - 'ticket_log' => '????',
-			'user_satisfaction' => '????',
-			PORTAL_ATTCODE_COMMENT => '????',
-		);
-		$bIsCloseButton = true;
-		break;
-
-		case 'closed':
-		case 'closure_requested':
-		default:
-		$aEditAtt = array();
-		break;
+		switch($oObj->GetState())
+		{
+			case 'new':
+			case 'assigned':
+			case 'frozen':
+			$aEditAtt = array(
+				PORTAL_ATTCODE_LOG => '????'
+			);
+			$bEditAttachments = true;
+			// disabled - $bIsEscalateButton = true;
+			break;
+	
+			case 'escalated_tto':
+			case 'escalated_ttr':
+			$aEditAtt = array(
+				PORTAL_ATTCODE_LOG => '????'
+			);
+			$bEditAttachments = true;
+			break;
+	
+			case 'resolved':
+			$aEditAtt = array(
+				// non, read-only dans cet etat - 'ticket_log' => '????',
+				'user_satisfaction' => '????',
+				PORTAL_ATTCODE_COMMENT => '????',
+			);
+			$bIsCloseButton = true;
+			break;
+	
+			case 'closed':
+			case 'closure_requested':
+			default:
+			break;
+		}
 	}
 
 // REFACTORISER LA MISE EN FORME
@@ -771,7 +774,10 @@ try
 						
 				case 'create_request':
 				DisplayMainMenu($oP);
-				CreateRequest($oP, $oUserOrg);
+				if (!MetaModel::DBIsReadOnly())
+				{
+					CreateRequest($oP, $oUserOrg);
+				}
 				break;
 						
 				case 'details':
@@ -782,26 +788,29 @@ try
 				
 				case 'update_request':
 				DisplayMainMenu($oP);
-				$oObj = $oP->FindObjectFromArgs(array('UserRequest'));
-				switch(get_class($oObj))
+				if (!MetaModel::DBIsReadOnly())
 				{
-				case 'UserRequest':
-					$aAttList = array(PORTAL_ATTCODE_LOG, 'user_satisfaction', PORTAL_ATTCODE_COMMENT);
-					break;
-	
-				default:
-					throw new Exception("Implementation issue: unexpected class '".get_class($oObj)."'");
+					$oObj = $oP->FindObjectFromArgs(array('UserRequest'));
+					switch(get_class($oObj))
+					{
+					case 'UserRequest':
+						$aAttList = array(PORTAL_ATTCODE_LOG, 'user_satisfaction', PORTAL_ATTCODE_COMMENT);
+						break;
+		
+					default:
+						throw new Exception("Implementation issue: unexpected class '".get_class($oObj)."'");
+					}
+					try
+					{
+						$oP->DoUpdateObjectFromPostedForm($oObj, $aAttList);
+						$oObj->Reload(); // Make sure the object is in good shape to be displayed
+					}
+					catch(TransactionException $e)
+					{
+						$oP->add("<h1>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</h1>\n");
+					}
+					DisplayObject($oP, $oObj, $oUserOrg);
 				}
-				try
-				{
-					$oP->DoUpdateObjectFromPostedForm($oObj, $aAttList);
-					$oObj->Reload(); // Make sure the object is in good shape to be displayed
-				}
-				catch(TransactionException $e)
-				{
-					$oP->add("<h1>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</h1>\n");
-				}
-				DisplayObject($oP, $oObj, $oUserOrg);
 				break;
 	
 				case 'show_ongoing':

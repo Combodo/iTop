@@ -28,6 +28,9 @@ div#portal #banner {
 	vertical-align: middle;
 	width: 100%;
 }
+div#portal #admin-banner {
+	width: 100%;
+}
 div#portal #logo {
 	background: url("../images/itop-logo.png") no-repeat scroll 0 0 transparent;
 	border: 0 none;

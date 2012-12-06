@@ -255,6 +255,21 @@ EOF
 	
 	public function output()
 	{
+		$sApplicationBanner = '';
+		if (!MetaModel::DBHasAccess(ACCESS_USER_WRITE))
+		{
+			$sReadOnly = Dict::S('UI:AccessRO-Users');
+			$sAdminMessage = trim(MetaModel::GetConfig()->Get('access_message'));
+			$sApplicationBanner .= '<div id="admin-banner">';
+			$sApplicationBanner .= '<img src="../images/locked.png" style="vertical-align:middle;">';
+			$sApplicationBanner .= '&nbsp;<b>'.$sReadOnly.'</b>';
+			if (strlen($sAdminMessage) > 0)
+			{
+				$sApplicationBanner .= '&nbsp;: '.$sAdminMessage.'';
+			}
+			$sApplicationBanner .= '</div>';
+		}
+
 		$sMenu = '';
 		if ($this->m_bEnableDisconnectButton)
 		{
@@ -264,7 +279,7 @@ EOF
 		{
 			$sMenu .= "<a class=\"button\" id=\"{$aMenuItem['id']}\" href=\"{$aMenuItem['hyperlink']}\"><span>".Dict::S($aMenuItem['label'])."</span></a>";
 		}
-		$this->s_content = '<div id="portal"><div id="welcome">'.$this->m_sWelcomeMsg.'</div><div id="banner"><div id="logo"></div><div id="menu">'.$sMenu.'</div></div><div id="content">'.$this->s_content.'</div></div>';
+		$this->s_content = '<div id="portal"><div id="welcome">'.$this->m_sWelcomeMsg.'</div><div id="banner"><div id="logo"></div><div id="menu">'.$sMenu.'</div></div>'.$sApplicationBanner.'<div id="content">'.$this->s_content.'</div></div>';
 		parent::output();
 	}
 
