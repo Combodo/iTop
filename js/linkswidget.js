@@ -41,7 +41,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		// Re-run the zebra plugin to properly highlight the remaining lines & and take into account the removed ones
 		$('#linkedset_'+this.id+' .listResults').trigger('update').trigger("applyWidgets");
 		
-		if ($('$linkedset_'+this.id+' .selection').length == 0)
+		if ($('#linkedset_'+this.id+' .selection').length == 0)
 		{
 			// All items were removed: add a dummy hidden input to make sure that the linkset will be updated (emptied) when posted
 			$('#'+me.id+'_empty_row').show();
