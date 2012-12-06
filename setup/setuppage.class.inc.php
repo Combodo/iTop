@@ -38,7 +38,6 @@ class SetupPage extends NiceWebPage
         parent::__construct($sTitle);
    		$this->add_linked_script("../js/jquery.blockUI.js");
    		$this->add_linked_script("../setup/setup.js");
-   		$this->add_linked_script("../setup/setup_environment.js");
         $this->add_style("
 body {
 	background-color: #eee;

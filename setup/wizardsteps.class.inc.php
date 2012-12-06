@@ -294,6 +294,7 @@ EOF
 	$("#db_pwd").val('$sDBPwd');
 	$("#db_name").val('$sDBName');
 	$("#db_prefix").val('$sDBPrefix');
+	$("#db_pwd").trigger('change'); // Forces check of the DB connection
 EOF
 				);
 			}
