@@ -1414,6 +1414,14 @@
           <ext_key_to_remote>server_id</ext_key_to_remote>
           <duplicates/>
         </field>
+        <field id="virtualdevices_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkVirtualDeviceToVolume</linked_class>
+          <ext_key_to_me>volume_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>virtualdevice_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
       </fields>
       <methods>
         <method id="GetRelationQueries">
@@ -1429,6 +1437,10 @@
         // Actually this should be limited to the Software instances based on a DBServer Application type...
         "server" => array("sQuery"=>"SELECT Server AS s JOIN lnkServerToVolume AS l1 ON l1.server_id=s.id  WHERE l1.volume_id = :this->id", "bPropagate"=>true, "iDistance"=>5),  
       );
+      if (class_exists('VirtualDevice'))
+      {
+        $aRels["virtualdevice"] = array("sQuery"=>"SELECT VirtualDevice AS vd JOIN lnkVirtualDeviceToVolume AS l1 ON l1.virtualdevice_id=vd.id  WHERE l1.volume_id = :this->id", "bPropagate"=>true, "iDistance"=>5);
+      }
       return array_merge($aRels, parent::GetRelationQueries($sRelCode));
       break;
       
@@ -1468,6 +1480,9 @@
             </item>
             <item id="servers_list">
               <rank>70</rank>
+            </item>
+            <item id="virtualdevices_list">
+              <rank>80</rank>
             </item>
           </items>
         </details>

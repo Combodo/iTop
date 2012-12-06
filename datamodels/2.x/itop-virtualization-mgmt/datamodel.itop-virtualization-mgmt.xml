@@ -79,6 +79,9 @@
             <item id="applicationsolution_list">
               <rank>90</rank>
             </item>
+            <item id="logicalvolumes_list">
+              <rank>100</rank>
+            </item>
           </items>
         </details>
         <search>
@@ -167,15 +170,17 @@
       case "impacts":
       $aRels = array(
         "virtualmachine" => array("sQuery"=>"SELECT VirtualMachine WHERE virtualhost_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-
       );
       return array_merge($aRels, parent::GetRelationQueries($sRelCode));
       break;
       
       case 'depends on':
       $aRels = array(
-      
       );
+      if (class_exists('LogicalVolume'))
+      {
+        $aRels["logicalvolume"] = array("sQuery"=>"SELECT LogicalVolume AS lv JOIN lnkVirtualDeviceToVolume AS l1 ON l1.volume_id=lv.id  WHERE l1.virtualdevice_id = :this->id", "bPropagate"=>true, "iDistance"=>5);
+      }
       return array_merge($aRels, parent::GetRelationQueries($sRelCode));
       break;
       
@@ -211,6 +216,12 @@
             </item>
             <item id="applicationsolution_list">
               <rank>80</rank>
+            </item>
+            <item id="logicalvolumes_list">
+              <rank>90</rank>
+            </item>
+            <item id="virtualmachine_list">
+              <rank>100</rank>
             </item>
           </items>
         </details>
@@ -365,6 +376,9 @@
             <item id="applicationsolution_list">
               <rank>110</rank>
             </item>
+            <item id="logicalvolumes_list">
+              <rank>115</rank>
+            </item>
             <item id="virtualmachine_list">
               <rank>120</rank>
             </item>
@@ -506,6 +520,9 @@
             </item>
             <item id="applicationsolution_list">
               <rank>90</rank>
+            </item>
+            <item id="logicalvolumes_list">
+              <rank>95</rank>
             </item>
             <item id="hypervisor_list">
               <rank>100</rank>
@@ -908,7 +925,7 @@
           </items>
         </list>
       </presentation>
-    </class>   
+    </class>
 </classes>
 <menus>
   <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
