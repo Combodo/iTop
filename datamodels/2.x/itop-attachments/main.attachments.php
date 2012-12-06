@@ -19,6 +19,8 @@
 
 class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExtension
 {
+	protected static $m_bIsModified = false;
+
 	public function OnDisplayProperties($oObject, WebPage $oPage, $bEditMode = false)
 	{
 		if ($this->GetAttachmentsPosition() == 'properties')
@@ -111,16 +113,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 
 	public function OnIsModified($oObject)
 	{
-		if ($this->IsTargetObject($oObject))
-		{
-			$aAttachmentIds = utils::ReadParam('attachments', array());
-			$aRemovedAttachmentIds = utils::ReadParam('removed_attachments', array());
-			if ( (count($aAttachmentIds) > 0) || (count($aRemovedAttachmentIds) > 0) )
-			{
-				return true;
-			}
-		}
-		return false;
+		return self::$m_bIsModified;
 	}
 
 	public function OnCheckToWrite($oObject)
@@ -388,8 +381,11 @@ EOF
 		}
 	}
 
+
 	protected static function UpdateAttachments($oObject, $oChange = null)
 	{
+		self::$m_bIsModified = false;
+
 		if (utils::ReadParam('attachment_plugin', 'not-in-form') == 'not-in-form')
 		{
 			// Workaround to an issue in iTop < 2.0
@@ -457,6 +453,7 @@ EOF
 				{
 					self::RecordHistory($oChange, $oObject, $sActionDescription);
 				}
+				self::$m_bIsModified = true;
 			}
 		}
 	}

@@ -19,6 +19,8 @@
 
 class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExtension
 {
+	protected static $m_bIsModified = false;
+
 	public function OnDisplayProperties($oObject, WebPage $oPage, $bEditMode = false)
 	{
 		if ($this->GetAttachmentsPosition() == 'properties')
@@ -111,16 +113,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 
 	public function OnIsModified($oObject)
 	{
-		if ($this->IsTargetObject($oObject))
-		{
-			$aAttachmentIds = utils::ReadParam('attachments', array());
-			$aRemovedAttachmentIds = utils::ReadParam('removed_attachments', array());
-			if ( (count($aAttachmentIds) > 0) || (count($aRemovedAttachmentIds) > 0) )
-			{
-				return true;
-			}
-		}
-		return false;
+		return self::$m_bIsModified;
 	}
 
 	public function OnCheckToWrite($oObject)
@@ -289,7 +282,7 @@ EOF
 						}
 						else
 						{
-							var sDownloadLink = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=download_document&class=Attachment&id='+data.att_id+'&field=contents';
+							var sDownloadLink = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php/?operation=download_document&class=Attachment&id='+data.att_id+'&field=contents';
 							$('#attachments').append('<div class="attachment" id="display_attachment_'+data.att_id+'"><a href="'+sDownloadLink+'"><img src="'+data.icon+'"><br/>'+data.msg+'<input id="attachment_'+data.att_id+'" type="hidden" name="attachments[]" value="'+data.att_id+'"/></a><br/><input type="button" class="btn_hidden" value="{$sDeleteBtn}" onClick="RemoveNewAttachment('+data.att_id+');"/></div>');
 							if($sIsDeleteEnabled)
 							{
@@ -320,7 +313,7 @@ EOF
 				$oDoc = $oAttachment->Get('contents');
 				$sFileName = $oDoc->GetFileName();
 				$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
-				$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
+				$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php/?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
 				$oPage->add('<div class="attachment" id="attachment_'.$iAttId.'"><a href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="Delete" onClick="$(\'#attachment_'.$iAttId.'\').remove();"/>&nbsp;</div>');
 			}
 			
@@ -347,7 +340,7 @@ EOF
 						$oDoc = $oAttachment->Get('contents');
 						$sFileName = $oDoc->GetFileName();
 						$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
-						$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
+						$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php/?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
 						$oPage->add('<div class="attachment" id="display_attachment_'.$iAttId.'"><a href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="Delete" onClick="RemoveNewAttachment('.$iAttId.');"/>&nbsp;</div>');
 						$oPage->add_ready_script("$('#attachment_plugin').trigger('add_attachment', [$iAttId, '".addslashes($sFileName)."']);");
 					}
@@ -381,15 +374,18 @@ EOF
 					$oDoc = $oAttachment->Get('contents');
 					$sFileName = $oDoc->GetFileName();
 					$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
-					$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
+					$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php/?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
 					$oPage->add('<div class="attachment" id="attachment_'.$iAttId.'"><a href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'</a><input type="hidden" name="attachments[]" value="'.$iAttId.'"/><br/>&nbsp;&nbsp;</div>');
 				}
 			}
 		}
 	}
 
+
 	protected static function UpdateAttachments($oObject, $oChange = null)
 	{
+		self::$m_bIsModified = false;
+
 		if (utils::ReadParam('attachment_plugin', 'not-in-form') == 'not-in-form')
 		{
 			// Workaround to an issue in iTop < 2.0
@@ -457,6 +453,7 @@ EOF
 				{
 					self::RecordHistory($oChange, $oObject, $sActionDescription);
 				}
+				self::$m_bIsModified = true;
 			}
 		}
 	}

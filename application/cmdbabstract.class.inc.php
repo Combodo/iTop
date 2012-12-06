@@ -2684,6 +2684,7 @@ EOF
 				return true;
 			}
 		}
+		return false;
 	}
 
 	public function DoCheckToWrite()
