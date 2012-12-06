@@ -48,7 +48,31 @@
           <duplicates/>
         </field>
       </fields>
-      <methods/>
+      <methods>
+        <method id="GetRelationQueries">
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
+  {
+    switch ($sRelCode)
+    {
+      case 'depends on':
+      $aRels = array(
+      );
+      if (class_exists('LogicalVolume'))
+      {
+        $aRels["logicalvolume"] = array("sQuery"=>"SELECT LogicalVolume AS lv JOIN lnkVirtualDeviceToVolume AS l1 ON l1.volume_id=lv.id  WHERE l1.virtualdevice_id = :this->id", "bPropagate"=>true, "iDistance"=>5);
+      }
+      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+      break;
+      
+      default:
+      return parent::GetRelationQueries($sRelCode);     
+    }
+  }]]></code>
+        </method>
+      </methods>
       <presentation>
         <details>
           <items>
@@ -171,16 +195,6 @@
       $aRels = array(
         "virtualmachine" => array("sQuery"=>"SELECT VirtualMachine WHERE virtualhost_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
       );
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-      
-      case 'depends on':
-      $aRels = array(
-      );
-      if (class_exists('LogicalVolume'))
-      {
-        $aRels["logicalvolume"] = array("sQuery"=>"SELECT LogicalVolume AS lv JOIN lnkVirtualDeviceToVolume AS l1 ON l1.volume_id=lv.id  WHERE l1.virtualdevice_id = :this->id", "bPropagate"=>true, "iDistance"=>5);
-      }
       return array_merge($aRels, parent::GetRelationQueries($sRelCode));
       break;
       

@@ -1255,3 +1255,32 @@ EOF
 		return false;
 	}
 }
+/**
+ * Helper class to write rules (as PHP expressions) in the 'auto_select' field of the 'module'
+ */
+class SetupInfo
+{
+	static $aSelectedModules = array();
+	
+	/**
+	 * Called by the setup process to initializes the list of selected modules. Do not call this method
+	 * from an 'auto_select' rule
+	 * @param hash $aModules
+	 * @return void
+	 */
+	static function SetSelectedModules($aModules)
+	{
+		self::$aSelectedModules = $aModules;
+	}
+	
+	/**
+	 * Returns true if a module is selected (as a consequence of the end-user's choices,
+	 * or because the module is hidden, or mandatory, or because of a previous auto_select rule)
+	 * @param string $sModuleId The identifier of the module (without the version number. Example: itop-config-mgmt)
+	 * @return boolean True if the module is already selected, false otherwise
+	 */
+	static function ModuleIsSelected($sModuleId)
+	{
+		return (array_key_exists($sModuleId, self::$aSelectedModules));
+	}
+}

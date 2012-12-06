@@ -15,7 +15,7 @@ SetupWebPage::AddModule(
 		'dependencies' => array(
 		),
 		'mandatory' => false,
-		'visible' => false,
+		'visible' => true, // To prevent auto-install but shall not be listed in the install wizard
 		'auto_select' => 'SetupInfo::ModuleIsSelected("itop-storage-mgmt") && SetupInfo::ModuleIsSelected("itop-virtualization-mgmt")',
 
 		// Components

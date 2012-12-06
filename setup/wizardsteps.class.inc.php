@@ -1384,6 +1384,41 @@ EOF
 			}
 			$index++;
 		}
+		if ($sParentId == '')
+		{
+			// Last pass (after all the user's choices are turned into "selected" modules):
+			// Process 'auto_select' modules for modules that are not already selected
+			$aAvailableModules = SetupUtils::AnalyzeInstallation($this->oWizard);
+			do
+			{
+				// Loop while new modules are added...
+				$bModuleAdded = false;
+				foreach($aAvailableModules as $sModuleId => $aModule)
+				{
+					if (($sModuleId != ROOT_MODULE) && !array_key_exists($sModuleId, $aModules) && isset($aModule['auto_select']))
+					{
+						try
+						{
+							$bSelected = false;
+							SetupInfo::SetSelectedModules($aModules);
+							eval('$bSelected = ('.$aModule['auto_select'].');');
+						}
+						catch(Exception $e)
+						{
+							$sDisplayChoices .= '<li><b>Warning: auto_select failed with exception ('.$e->getMessage().') for module "'.$sModuleId.'"</b></li>';
+							$bSelected = false;
+						}
+						if ($bSelected)
+						{
+							$aModules[$sModuleId] = true; // store the Id of the selected module
+							$bModuleAdded  = true;
+						}
+					}
+				}
+			}
+			while($bModuleAdded);	
+		}
+		
 		return $sDisplayChoices;
 	}
 	
