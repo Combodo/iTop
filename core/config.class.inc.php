@@ -91,7 +91,7 @@ class Config
 			'default' => '',
 			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'app_root_url' => array(
 			'type' => 'string',
@@ -424,7 +424,7 @@ class Config
 			'default' => '2.0',
 			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'cas_host' => array(
 			'type' => 'string',
@@ -433,7 +433,7 @@ class Config
 			'default' => '',
 			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'cas_port' => array(
 			'type' => 'integer',
@@ -442,7 +442,7 @@ class Config
 			'default' => 443,
 			'value' => 443,
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'cas_context' => array(
 			'type' => 'string',
@@ -451,7 +451,7 @@ class Config
 			'default' => '',
 			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'cas_server_ca_cert_path' => array(
 			'type' => 'string',
@@ -460,7 +460,7 @@ class Config
 			'default' => '',
 			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'cas_logout_redirect_service' => array(
 			'type' => 'string',
@@ -469,7 +469,7 @@ class Config
 			'default' => '',
 			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'cas_memberof' => array(
 			'type' => 'string',
@@ -478,7 +478,7 @@ class Config
 			'default' => '',
 			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'cas_user_synchro' => array(
 			'type' => 'bool',
@@ -487,7 +487,7 @@ class Config
 			'default' => 0,
 			'value' => 0,
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'cas_update_profiles' => array(
 			'type' => 'bool',
@@ -496,7 +496,7 @@ class Config
 			'default' => 0,
 			'value' => 0,
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'cas_profile_pattern' => array(
 			'type' => 'string',
@@ -505,7 +505,7 @@ class Config
 			'default' => '/^cn=([^,]+),/',
 			'value' => '/^cn=([^,]+),/',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'cas_default_profiles' => array(
 			'type' => 'string',
@@ -514,7 +514,7 @@ class Config
 			'default' => 'Portal user',
 			'value' => 'Portal user',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'cas_debug' => array(
 			'type' => 'bool',
@@ -523,7 +523,7 @@ class Config
 			'default' => false,
 			'value' => false,
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'deadline_format' => array(
 			'type' => 'string',
@@ -1392,7 +1392,7 @@ class Config
 			foreach($aConfigSettings as $sPropCode => $aSettingInfo)
 			{
 				// Write all values that are either always visible or present in the cloned config file
-				if ($aSettingInfo['show_in_conf_sample'] || ($aSettingInfo['source_of_value'] != 'unknown') )
+				if ($aSettingInfo['show_in_conf_sample'] || (!empty($aSettingInfo['source_of_value']) && ($aSettingInfo['source_of_value'] != 'unknown')) )
 				{
 					$sType = $aSettingInfo['type'];
 					switch($sType)
