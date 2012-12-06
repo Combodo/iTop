@@ -1407,3 +1407,6 @@ a.summary,  a.summary:hover {
 	background: url(../images/error.png) 1em 1em no-repeat #fcc;
 	padding-left: 3em;
 }
+.fg-menu a img {
+        border: 0;
+}
