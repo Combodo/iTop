@@ -297,6 +297,40 @@ class SetupUtils
 			}
 			$aResult[] = new CheckResult(CheckResult::INFO,  "Loaded php.ini files: $sPhpIniFile");
 		}
+		
+		// Check the configuration of the sessions persistence, since this is critical for the authentication
+		if (ini_get('session.save_handler') == 'files')
+		{
+			$sSavePath = ini_get('session.save_path');
+			// According to the PHP documentation, the format can be /path/where/to_save_sessions or "N;/path/where/to_save_sessions" or "N;MODE;/path/where/to_save_sessions"
+			$sSavePath = ltrim(rtrim($sSavePath, '"'), '"'); // remove surrounding quotes (if any)
+			
+			if (!empty($sSavePath))
+			{
+				if (($iPos = strrpos($sSavePath, ';', 0)) !== false)
+				{
+					// The actual path is after the last semicolon
+					$sSavePath = substr($sSavePath, $iPos+1);
+				}
+				if (!is_writable($sSavePath))
+				{
+					$aResult[] = new CheckResult(CheckResult::ERROR, "The value for session.save_path ($sSavePath) is not writable for the web server. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)");				
+				}
+				else
+				{
+					$aResult[] = new CheckResult(CheckResult::INFO, "The value for session.save_path ($sSavePath) is writable for the web server.");				
+				}
+			}
+			else
+			{
+				$aResult[] = new CheckResult(CheckResult::WARNING, "Empty path for session.save_path. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)");				
+			}
+		}
+		else
+		{
+			$aResult[] = new CheckResult(CheckResult::INFO, "session.save_handler is: '".ini_get('session.save_handler')."' (different from 'files').");
+		}
+		
 		return $aResult;
 	}
 
