@@ -65,6 +65,7 @@
           <class id="lnkGroupToCI"/>
           <class id="lnkSanToDatacenterDevice"/>
           <class id="lnkServerToVolume"/>
+          <class id="lnkVirtualDeviceToVolume"/>
           <class id="lnkSoftwareInstanceToSoftwarePatch"/>
         </classes>
       </group>
