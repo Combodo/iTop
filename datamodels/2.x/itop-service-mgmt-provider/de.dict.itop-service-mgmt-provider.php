@@ -153,7 +153,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SLT/Attribute:request_type/Value:incident+' => '',
 	'Class:SLT/Attribute:request_type/Value:servicerequest' => 'Service-Request',
 	'Class:SLT/Attribute:request_type/Value:servicerequest+' => '',
-	'Class:SLT/Attribute:metric' => 'Metrik',
+	'Class:SLT/Attribute:metric' => 'Metrisch',
 	'Class:SLT/Attribute:metric+' => '',
 	'Class:SLT/Attribute:metric/Value:tto' => 'TTO (Time To Own)',
 	'Class:SLT/Attribute:metric/Value:tto+' => '',
