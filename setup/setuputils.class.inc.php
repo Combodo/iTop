@@ -302,6 +302,8 @@ class SetupUtils
 		if (ini_get('session.save_handler') == 'files')
 		{
 			$sSavePath = ini_get('session.save_path');
+			SetupPage::log("Info - session.save_path is: '$sSavePath'.");
+			
 			// According to the PHP documentation, the format can be /path/where/to_save_sessions or "N;/path/where/to_save_sessions" or "N;MODE;/path/where/to_save_sessions"
 			$sSavePath = ltrim(rtrim($sSavePath, '"'), '"'); // remove surrounding quotes (if any)
 			
