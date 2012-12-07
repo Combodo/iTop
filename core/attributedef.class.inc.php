@@ -4222,6 +4222,11 @@ class AttributeTable extends AttributeDBField
 		return (count($proposedValue) == 0);
 	} 
 
+	public function GetEditValue($sValue, $oHostObj = null)
+	{
+		return '';
+	}
+
 	// Facilitate things: allow the user to Set the value from a string
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
