@@ -900,7 +900,7 @@
 		{
 			foreach($aComputed['FunctionalCI'] as $iKey => $oObject)
 			{
-				$oNewLink = new lnkTicketToCI();
+				$oNewLink = new lnkFunctionalCIToTicket();
 				$oNewLink->Set('functionalci_id', $iKey);
 				$oToImpact->AddObject($oNewLink);
 			}
@@ -909,7 +909,7 @@
 		{
 			foreach($aComputed['Contact'] as $iKey => $oObject)
 			{
-				$oNewLink = new lnkTicketToContact();
+				$oNewLink = new lnkContactToTicket();
 				$oNewLink->Set('contact_id', $iKey);
 				$oNewLink->Set('role', 'contact automatically computed');
 				$oToNotify->AddObject($oNewLink);
@@ -1265,8 +1265,6 @@
       <lifecycle>
         <attribute>status</attribute>
         <stimuli>
-          <stimulus id="ev_validate" xsi:type="StimulusUserAction"/>
-          <stimulus id="ev_reject" xsi:type="StimulusUserAction"/>
           <stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
           <stimulus id="ev_reopen" xsi:type="StimulusUserAction"/>
           <stimulus id="ev_plan" xsi:type="StimulusUserAction"/>
@@ -1342,6 +1340,140 @@
                 <actions/>
               </transition>
             </transitions>
+          </state>
+          <state id="validated">
+            <flags>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_id">
+                <hidden/>
+              </attribute>
+              <attribute id="title">
+                <mandatory/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <hidden/>
+              </attribute>
+              <attribute id="end_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="reason">
+                <read_only/>
+              </attribute>
+              <attribute id="requestor_id">
+                <read_only/>
+              </attribute>
+              <attribute id="creation_date">
+                <read_only/>
+              </attribute>
+              <attribute id="impact">
+                <hidden/>
+              </attribute>
+              <attribute id="team_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="supervisor_group_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="supervisor_id">
+                <hidden/>
+              </attribute>
+              <attribute id="manager_group_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="manager_id">
+                <hidden/>
+              </attribute>
+              <attribute id="outage">
+                <hidden/>
+              </attribute>
+              <attribute id="fallback">
+                <hidden/>
+              </attribute>
+              <attribute id="approval_date">
+                <hidden/>
+              </attribute>
+              <attribute id="approval_comment">
+                <hidden/>
+              </attribute>
+            </flags>
+            <transitions/>
+          </state>
+          <state id="rejected">
+            <flags>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_id">
+                <hidden/>
+              </attribute>
+              <attribute id="title">
+                <mandatory/>
+              </attribute>
+              <attribute id="start_date">
+                <hidden/>
+              </attribute>
+              <attribute id="end_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="reason">
+                <mandatory/>
+		<must_prompt/>
+              </attribute>
+              <attribute id="requestor_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="creation_date">
+                <read_only/>
+              </attribute>
+              <attribute id="impact">
+                <hidden/>
+              </attribute>
+              <attribute id="supervisor_group_id">
+                <hidden/>
+              </attribute>
+              <attribute id="supervisor_id">
+                <hidden/>
+              </attribute>
+              <attribute id="manager_group_id">
+                <hidden/>
+              </attribute>
+              <attribute id="manager_id">
+                <hidden/>
+              </attribute>
+              <attribute id="outage">
+                <hidden/>
+              </attribute>
+              <attribute id="fallback">
+                <hidden/>
+              </attribute>
+              <attribute id="approval_date">
+                <hidden/>
+              </attribute>
+              <attribute id="approval_comment">
+                <hidden/>
+              </attribute>
+            </flags>
+            <transitions/>
           </state>
            <state id="assigned">
             <flags>
@@ -4258,8 +4390,6 @@
       <lifecycle>
         <attribute>status</attribute>
         <stimuli>
-          <stimulus id="ev_validate" xsi:type="StimulusUserAction"/>
-          <stimulus id="ev_reject" xsi:type="StimulusUserAction"/>
           <stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
           <stimulus id="ev_reopen" xsi:type="StimulusUserAction"/>
           <stimulus id="ev_plan" xsi:type="StimulusUserAction"/>
@@ -4341,6 +4471,140 @@
                 <actions/>
               </transition>
             </transitions>
+          </state>
+          <state id="validated">
+            <flags>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_id">
+                <hidden/>
+              </attribute>
+              <attribute id="title">
+                <mandatory/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
+              </attribute>
+              <attribute id="start_date">
+                <hidden/>
+              </attribute>
+              <attribute id="end_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="reason">
+                <read_only/>
+              </attribute>
+              <attribute id="requestor_id">
+                <read_only/>
+              </attribute>
+              <attribute id="creation_date">
+                <read_only/>
+              </attribute>
+              <attribute id="impact">
+                <hidden/>
+              </attribute>
+              <attribute id="team_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="supervisor_group_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="supervisor_id">
+                <hidden/>
+              </attribute>
+              <attribute id="manager_group_id">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="manager_id">
+                <hidden/>
+              </attribute>
+              <attribute id="outage">
+                <hidden/>
+              </attribute>
+              <attribute id="fallback">
+                <hidden/>
+              </attribute>
+              <attribute id="approval_date">
+                <hidden/>
+              </attribute>
+              <attribute id="approval_comment">
+                <hidden/>
+              </attribute>
+            </flags>
+            <transitions/>
+          </state>
+          <state id="rejected">
+            <flags>
+              <attribute id="ref">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_id">
+                <hidden/>
+              </attribute>
+              <attribute id="title">
+                <mandatory/>
+              </attribute>
+              <attribute id="start_date">
+                <hidden/>
+              </attribute>
+              <attribute id="end_date">
+                <hidden/>
+              </attribute>
+              <attribute id="last_update">
+                <read_only/>
+              </attribute>
+              <attribute id="close_date">
+                <hidden/>
+              </attribute>
+              <attribute id="reason">
+                <mandatory/>
+		<must_prompt/>
+              </attribute>
+              <attribute id="requestor_id">
+                <mandatory/>
+              </attribute>
+              <attribute id="creation_date">
+                <read_only/>
+              </attribute>
+              <attribute id="impact">
+                <hidden/>
+              </attribute>
+              <attribute id="supervisor_group_id">
+                <hidden/>
+              </attribute>
+              <attribute id="supervisor_id">
+                <hidden/>
+              </attribute>
+              <attribute id="manager_group_id">
+                <hidden/>
+              </attribute>
+              <attribute id="manager_id">
+                <hidden/>
+              </attribute>
+              <attribute id="outage">
+                <hidden/>
+              </attribute>
+              <attribute id="fallback">
+                <hidden/>
+              </attribute>
+              <attribute id="approval_date">
+                <hidden/>
+              </attribute>
+              <attribute id="approval_comment">
+                <hidden/>
+              </attribute>
+            </flags>
+            <transitions/>
           </state>
           <state id="assigned">
             <flags>
