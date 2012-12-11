@@ -7,7 +7,7 @@ SetupWebPage::AddModule(
 	array(
 		// Identification
 		//
-		'label' => 'Tickets - prerequisite for ticket modules',
+		'label' => 'Tickets Management',
 		'category' => 'business',
 
 		// Setup
@@ -33,7 +33,7 @@ SetupWebPage::AddModule(
 		
 		// Documentation
 		//
-		'doc.manual_setup' => '',
+		'doc.manual_setup' => '/documentation/itop-tickets.htm',
 		'doc.more_information' => '',
 
 		// Default settings

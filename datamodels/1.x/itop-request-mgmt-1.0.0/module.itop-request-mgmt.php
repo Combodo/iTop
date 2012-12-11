@@ -36,7 +36,7 @@ SetupWebPage::AddModule(
 		// Documentation
 		//
 		'doc.manual_setup' => '',
-		'doc.more_information' => '/doc/itop-documentation.htm#RequestMgmt',
+		'doc.more_information' => '',
 
 		// Default settings
 		//

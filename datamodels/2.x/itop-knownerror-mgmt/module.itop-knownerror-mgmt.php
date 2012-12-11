@@ -35,7 +35,7 @@ SetupWebPage::AddModule(
 		// Documentation
 		//
 		'doc.manual_setup' => '', // No manual installation instructions
-		'doc.more_information' => '/doc/itop-documentation.htm#KnownErrorsDB',
+		'doc.more_information' => '',
 
 		// Default settings
 		//

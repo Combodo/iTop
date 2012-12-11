@@ -33,8 +33,8 @@ SetupWebPage::AddModule(
 		
 		// Documentation
 		//
-		'doc.manual_setup' => '', // No manual installation instructions
-		'doc.more_information' => '/doc/itop-documentation.htm#ProblemMgmt',
+		'doc.manual_setup' => '',
+		'doc.more_information' => '',
 
 		// Default settings
 		//
