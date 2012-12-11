@@ -122,7 +122,7 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext)
     aSubmit = new Array();
 	if ( (oFormEvents != null) && (oFormEvents.submit != undefined))
 	{
-		for(index = 0; index < oFormEvents.submit.length; index++)
+		for(var index = 0; index < oFormEvents.submit.length; index++)
 		{
 			aSubmit [index ] = { data:oFormEvents.submit[index].data, namespace:oFormEvents.submit[index].namespace, handler:  oFormEvents.submit[index].handler};
 		}
@@ -147,7 +147,7 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext)
 		   if (aSubmit.length > 0)
 		   {
 			    var oForm = $('#ds_'+divId+' form'); // Form was reloaded, recompute it
-				for(index = 0; index < aSubmit.length; index++)
+				for(var index = 0; index < aSubmit.length; index++)
 				{
 					// Restore the previously bound submit handlers
 					if (aSubmit[index].data != undefined)
