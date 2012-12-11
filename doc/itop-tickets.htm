@@ -1,0 +1,108 @@
+<html>
+<head>
+<title>iTop Installation Help</title>
+<style>
+body {
+	font-family: Verdana,Arial,Helvetica,Sans-Serif;
+	font-size: 10pt;
+	margin: 0;
+	padding: 0;
+}
+#banner {
+	display: block;
+	height: 60px;
+	padding: 5px;
+	line-height: 24px;
+	vertical-align: middle;
+	background: url(../images/itop-logo.png) no-repeat #f6f6f6;
+	background-position: 5px 5px;;
+}
+#banner span {
+	margin-left: 150px;
+	padding-top: 12px;
+	text-align: center;
+	font-size: 24px;
+	line-height: 24px;
+	font-weight: bold;
+	color: #1C94C4;
+	display: block;
+}
+#content {
+	margin: 20px;
+}
+h2 {
+	padding-left: 60px;
+	line-height: 48px;
+}
+#Config {
+	background: url(../modules/itop-config-mgmt-1.0.0/images/database.png) no-repeat transparent;
+}
+#Service {
+	background: url(../modules/itop-service-mgmt-1.0.0/sla.png) no-repeat transparent;
+}
+#Request {
+	background: url(../modules/itop-request-mgmt-1.0.0/images/user-request-deadline.png) no-repeat transparent;
+}
+#Incident {
+	background: url(../modules/itop-incident-mgmt-1.0.0/images/incident-escalated.png) no-repeat transparent;
+}
+#Change {
+	background: url(../modules/itop-change-mgmt-1.0.0/images/change.png) no-repeat transparent;
+}
+#Problem {
+	background: url(../modules/itop-problem-mgmt-1.0.0/images/problem.png) no-repeat transparent;
+}
+#KnownErrors {
+	background: url(../modules/itop-knownerror-mgmt-1.0.0/images/known-error.png) no-repeat transparent;
+}
+a.internal {
+	color: #1C94C4;
+	text-decoration: none;
+}
+a.internal:hover {
+	text-decoration: underline;
+}
+.code {
+	background-color: #ccc;
+	padding: 10px;
+	border: 1px solid #999;
+	font-family: Courier, Courier-New, monospace;
+}
+</style>
+</head>
+<body>
+<div id="banner"><span>Installation Help</span></div>
+<div id="content">
+<h1>Completing the iTop installation for workflow management</h1>
+<h2>Overview</h2>
+<p>In order to operate properly, iTop maintenance operations and asynchronous tasks must be executed on a regular basis.
+In order to ease the installation, all the background tasks have been grouped to be launched from a single file: <tt>webservices/cron.php</tt></p>
+<p>The following features require the activation of cron.php</p>
+<ul>
+   <li><b>Asynchronous emails</b>. By default, this option is disabled. To enable it, set 'email_asynchronous' to 1 in the configuration file</li>
+   <li><b>Check ticket SLA</b>. Tickets reaching the limits will be passed into Escalation TTO/TTR states</li>
+</ul>
+</p>
+<p>For more information about cron.php, check the <a href="http://www.combodo.com/wiki/doku.php?id=admin:cron">iTop Wiki</a></p>
+<h2>Scheduling cron.php on Windows</h2>
+<ol>
+<li>Edit the file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> to set the credentials used for cronified tasks (requires administator privileges)</li>
+<li>Edit the file <em>&lt;itop root&gt</em>/webservices/<b>cron.cmd</b>, and set the relevant path for your installation of PHP. If you care about security, it is recommended to change also the path to the parameters file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> and move this file to a place where its content is not served by the web server.</li>
+<li>Schedule the execution of cron.cmd:
+  <pre>schtasks.exe /create /tn "iTop CRON" /sc minute /mo 1 /tr "\"<em>&lt;itop root&gt</em>/webservices/cron.cmd\""</pre>
+</li> 
+</ol>
+
+
+<h2>Scheduling cron.php on Linux/Unix</h2>
+<ol>
+<li>Edit the file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> to set the credentials used for cronified tasks (requires administator privileges)</li>
+<li>If you care about security: move the file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> into a directory not in the scope of the web server (Apache), and make it be readable only by the account that will execute the cron</li>
+<li>Edit the crontab and add the following line:
+   <pre>* * * * * /usr/bin/php <em>&lt;itop root&gt</em>/webservices/cron.php --param_file=<em>&lt;itop root&gt</em>/webservices/cron.params</pre>
+</li>
+</ol>
+
+</div><!-- End of content -->
+</body>
+</html>
