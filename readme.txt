@@ -1,4 +1,4 @@
-iTop - version 2.0.0 Beta 2 - 21-Nov-2012
+iTop - version 2.0.0 - 14-Dec-2012
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -14,16 +14,10 @@ Readme file
 
 1. ABOUT THIS RELEASE
    ==================
-Thank you for downloading the 13th packaged release of iTop.
+Thank you for downloading the 14th packaged release of iTop.
 This version is a major release, with a new datamodel, editable dashboards, user customizable lists and user shortcuts.
 
-A wiki is available: http://www.combodo.com/wiki
-Additional documentation can be downloaded from the link above:
- - User guide
- - Administrator guide
- - Customization guide
- - Implementation guide
-
+The documentation is available as a Wiki: http://www.combodo.com/wiki
 
 iTop is released under the AGPL (v3) license. (Check license.txt in this directory).
 The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
@@ -42,21 +36,23 @@ End users can customize the GUI:
 - Some application settings can be overriden: language, favorite organizations, ...
 - Users can create shortcuts to any list of objects 
 
-1.2 Should I upgrade to 2.0.0 beta?
+1.2 Should I upgrade to 2.0.0?
     -------------------------------
-Despite all the care taken to prepare this release, it is still considered as "beta" quality
-and therefore is NOT recommended for a production use. However, feel free to use it and experiment.     
-    
-Note that upgrading an installation of iTop 1.x will preserve your original data model and data.
+Yes, we recommend you to upgrade.     
+
+Please note that upgrading an installation of iTop 1.x will preserve your original data model and data.
 Would you like to benefit from the new modelization of the data, then you have to install 2.0
 from scratch and migrate your data between the two applications by exporting and importing them back.
 
-This version does fix a significant number of issues (sse the list below).
-It also comes with significant improvements in the end-user experience:
+This version fixes a significant number of issues (see the list below).
+It also comes with significant improvements to the end-user experience:
 - editable dashboards
 - customize lists
 - user preferences
 - personal shortcuts
+
+Moreover, the performance has been improved. The gain is much more visible
+if you manage thousands of CIs and tickets in iTop.
 
 1.3 Special Thanks To:
     -----------------
@@ -193,40 +189,10 @@ Localization
 ------------
 No big changes in localization for this release.
 
-From Beta 2, the new datamodel has been translated into Spanish, Russian, German and Japanese.
+The portuguese localization is 90% complete for the data model 1.3, but it is rather incomplete if you use the brand new data model 2.0.
 
 More information on the localization (completion progress, how to contribute) here:
 http://www.combodo.com/itop-localization/
-
-Fixed between 2.0 Beta and 2.0 Beta 2
--------------------------------------
-Made Incident Mgmt module visible to all users
-Updated translation for "customer satisfaction"
-Changed constraint on attribute agent_id for a workorder
-Fixed user profiles for the new data model
-Renamed a few classes/enums/attributes to improve the classes naming consistency and ease the writing of OQLs
-#621 Cannot create a service family
-#628 Typos
-Allow duplicate links for device / network connections
-Added PC software in Dashboard
-Added documentation of software on a PC device
-Added software list on PC devices
-Fixed issue with Subnet usage computation
-Fixed tab translation for Subnet
-Record the list of attachments (in EventNotificationEmail)
-#609  export/import was broken for dashboards with a non-alphanumeric identifier.
-#611 Fixed regression in import.php
-Bug fix: display an empty string for the friendlyname of a NULL external key
-Bug fix: "save" in edit dashboard did nothing on Chrome on a *just reloaded* dashboard (actually on any page which URL contained a hash)
-Prevent a crash when deleting objects accessed from a list of their abstract class (i.e. Select some Contacts, "delete...", select a Person, delete => crash).
-#614 Fixed regression on multi column queries (could not display Null objects)
-#615 Fixed bug on multi column queries - wrong count resulting in strange effects in the display of results
-Bug fix: incorrect handling of "negative" selections in bulk delete
-Renamed the SQl table from priv_Userinternal to priv_userinternal, and added a check for table names (lowercase is the rule!)
-error.log moved into the log directory
-Changed mysqldump invocation to verbose mode (at least for the duration of the beta) in order to ease the troubleshooting of backup failures.
-Increased memory_limit for the setup to 64 MB
-#602 Description not shown in portal
 
 Minor changes
 -------------
@@ -234,6 +200,7 @@ The license has been changed to AGPL (replacing GPL/LPGL)
 #421 Sort IP addresses on INET_ATON (API only, see #520 to have this as the default sort order for NW Interfaces)
 #520 Capability to define a default sort order (PHP/XML)
 #439 Record and display changes in the link sets (ex: Members of a team)
+#569 Mandatory date (and time) fields are prefilled with the current date (and time).
 Implemented the "multiple choices" in search forms for Enums and External keys.
 Added a refresh button (and creation /modification messages) on the details of an object
 Friendly names: improved the behavior. Now fully compliant with end users expectations (e.g. a list of contacts shows the friendly name of the persons and team, not only the attribute 'name', the search can be performed on the friendly name as well)
@@ -251,6 +218,16 @@ Config: use app_icon_url to change the hyperlink used when clicking on the main 
 Added a new favicon
 Cosmetic enhancements to ease the search for a class in the schema.
 Integration of the latest version of CKEditor: version 3.6.4, released on 17 July 2012
+error.log moved into the log directory
+Display an empty string for the friendlyname of a NULL external key
+New developer tool: set log_queries=1 to enable query logging into data/queries.log. The accumulative log data/queries.log can be replayed with test/replay_query_log.php which produces a result file (to check the stability of the results) and a benchmark file (to see the efficiency in CSV)
+Debugging: run_query now produces the debug output (log_kpi_duration)
+Optimization of SQL queries: reduce the number of JOINS, assuming that data are consistent. Can be disabled with config setting query_optimization_enabled => 0.
+New parameter to tweak the display of Impact anaysis: which tab to display first? list or graphics?
+Performance enhancement for impact analysis: avoid looping in the recursion.
+When iTop is in read only mode, then the portal displays a banner and prevent the user from accessing the modification forms
+Added some checks around the configuration of PHP sessions since it seems to cause a lot of troubles.
+
 
 CSV import/export
 -----------------
@@ -302,7 +279,30 @@ The complete list of active tickets can be reviewed at http://sourceforge.net/ap
 #559 ldap user can login with blank password
 #439 Make sure that changes made by a plugin get recorded
 #565 Fixed security issues (XSS)
-
+#614 Fixed regression on multi column queries (could not display Null objects)
+#615 Fixed bug on multi column queries - wrong count resulting in strange effects in the display of results
+#602 Description not shown in portal
+#631 Impossible to assign a routine or emergency change.
+#584 Documentation of needed piviledges
+#625 CSV export of boolean attributes was broken (false => "")
+#624 Corrupted display of the log when updating from the portal.
+#589 Do not use ExchangeException here
+#627 Do not log the parameters in the call stack in case of exception to protect sensitive data.
+#619 Added the option -- single-transaction to the mysqldump command to avoid locking issues with non-existing definer accounts.
+#497 Allow bulk modification of "duration" fields.
+- Proper display of the modifications on the SynchroAttributes in the History of a SynchroDataSource
+- Better display of the history of Boolean atrtibutes (false is no longer displayed as an empty string)
+#628 Fix for "undefined property"
+#608 Install broken on PHP < 5.2.17
+#640 Portal: Resolved requests shown in both lists (opened and resolved)
+#628 Sort order and configurable tables
+#647 iTop says "ticket updated" but nothing has been changed
+#398 Import CSV: Unchanged attributes marked as "modified"
+#645 Incorrect URL for downloading attachments, that nobody really to noticed before since it is working fine on most of the web servers
+#560 typo for german translation of "Metric"
+#629 Nested object creation (button plus) does not work with PHP 5.4 + notification sent on object creation + PHP error level allows NOTICE
+#597 IE9: Black border around icons
+#441 /doc redirects to Apache documentation! Directory renamed into "/documentation"
 
 Other bug fixes not listed in Trac:
 Do not perform time consuming computations for building the menus if there are too many objects in a list (limit is configurable).
@@ -325,7 +325,26 @@ Fixed issue in the portal: the list of opened requests and closed request where 
 Bug fix: preserve the previous settings in the configuration file in case of upgrade.
 Fixed the "Reset(APC)Cache" at the end of the installation.
 Fixed two bugs revealed with specific constraints (query expression like 'SELECT b FROM a JOIN b', AND the organization context is set)
-Bug of month: make sure that GetFilter returns a usable filter (i.e. with the parameters)
+Make sure that GetFilter returns a usable filter (i.e. with the parameters)
+Incorrect handling of "negative" selections in bulk delete
+Renamed the SQl table from priv_Userinternal to priv_userinternal, and added a check for table names (lowercase is the rule!)
+Bug fix:
+- Correct initial sort order of a table if the default sort column is not an "alphabetical" column (i.e. IP Address)
+- Properly sort on the first column (name) when the name is made of a column with a different sort algorithm (i.e. IP Address).
+Protects the display of the history against renamed/removed attributes.
+Fixed a bit the portal's stylesheet and prevent calling OnFormCancel on a true submit
+Make sure that CSV files end with a proper carriage return
+Prevent a undefined variable when logging directly to a details page (bookmarked page)
+Fixed caching issue (hard to reproduce)
+Notifications: Support multiple recipients in To: Cc: and Bcc:
+Protect against empty email addresses
+Web Server crashes when using together APC cache and Mcrypt
+Fixed issue in CSV export: null enums rendered as 'undefined' whereas '' is the value expected in the import (See an export of Organization/status)
+Improved the format for DateTimes (don't let 2012-12-05 1900:00 pass through since it turns into 0000-00-00 00:00:00 in MySQL) but allow to omit the seconds (i.e. 2012-12-05 18:45 will become 2012-12-05 18:45:00 in MySQL)
+Make auto_reload work on OQL menus
+Do not send a notification if nothing has been changed from the portal web page
+Typo causing a bug in IE8 when removing an element from a n:n linkset.
+Prevent a crash when not authorized to see an object of a derived class.
 
 
 Extension capabilities
@@ -348,6 +367,7 @@ Capability to add 'attachments' => array of ormDocument to the context of a trig
 Added the ability to Find then Remove a tab inside a page
 Support edition of the "latest modified" entry of a case log
 The hierarchical key in Organizations is not always named 'parent_id'
+New extension API: iPageUIExtension to alter the display of *each* iTopWebPage.
 
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
@@ -367,13 +387,10 @@ Tested with IE8 and IE9, Firefox 3.6 up to Firefox 16 and Chrome. Be aware that 
 #382	Search form / base class lost after a search
 #377	Case log: exclude the index from the views
 #388	IE9: edition fields not resizable
-#597 	IE9: Black border around icons
 #443 	Objects remain in the database after de-installing some modules
-#442 	Useless profiles installed
-#441 	/doc redirects to Apache documentation!
+#442 	Useless profiles installed (1.x legacy data model only)
 #438 	The selection of Organizations using the hierarchy does not work on IE8 in security mode
 #436 	Cannot type "All Organizations" 	
-#398 	Import CSV: Unchanged attributes marked as "modified"
 #381 	Deletion of dependencies could fail in a multi-org environment
 #241 	"status" is a free-text field when configuring a Trigger
 #358 	Multi-column queries sometimes returning an empty set
