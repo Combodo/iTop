@@ -95,7 +95,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:KnownError/Attribute:ci_list' => 'CIs',
 	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error',
 	'Class:KnownError/Attribute:document_list' => 'Documents',
-	'Class:KnownError/Attribute:document_list+' => 'All the documents link to this known error',
+	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error',
 ));
 
 //
