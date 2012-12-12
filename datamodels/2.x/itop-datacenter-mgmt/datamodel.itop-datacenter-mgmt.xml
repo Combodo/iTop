@@ -428,15 +428,12 @@
 			$aRels = array(
 				"DatacenterDevice" => array("sQuery"=>"SELECT DatacenterDevice WHERE powerA_id = :this->id OR powerB_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
 				"pdu" => array("sQuery"=>"SELECT PDU WHERE powerstart_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-
 			);
 			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
 			break;
 			
 			case 'depends on':
-
 			$aRels = array(
-			
 			);
 			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
 			break;
@@ -788,7 +785,34 @@
           <target_attcode>name</target_attcode>
         </field>
       </fields>
-      <methods/>
+      <methods>
+        <method id="GetRelationQueries">
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
+	{
+		switch ($sRelCode)
+		{
+			case "impacts":
+			$aRels = array(
+			);
+			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+			break;
+			
+			case 'depends on':
+			$aRels = array(
+				"powerconnection" => array("sQuery"=>"SELECT PowerConnection WHERE id = :this->powerstart_id", "bPropagate"=>true, "iDistance"=>10),
+			);
+			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
+			break;
+			
+			default:
+			return parent::GetRelationQueries($sRelCode);			
+		}
+	}]]></code>
+        </method>
+      </methods>
       <presentation>
         <details>
           <items>

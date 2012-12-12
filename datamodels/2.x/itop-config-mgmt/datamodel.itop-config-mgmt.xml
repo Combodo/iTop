@@ -2000,6 +2000,19 @@
             {
               $aRels['SANSwitch'] = array("sQuery"=>"SELECT SANSwitch AS san JOIN lnkSanToDatacenterDevice AS l1 ON l1.san_id = san.id WHERE l1.datacenterdevice_id = :this->id", "bPropagate"=>true, "iDistance"=>10);
             }
+            if (class_exists('PowerConnection'))
+            {
+              $aRels['PowerA'] = array(
+                 "sQuery"=>"SELECT PowerConnection WHERE id = :this->powerA_id",
+					  "bPropagate"=>true,
+                 "iDistance"=>10
+              );
+              $aRels['PowerB'] = array(
+                 "sQuery"=>"SELECT PowerConnection WHERE id = :this->powerB_id",
+					  "bPropagate"=>true,
+                 "iDistance"=>10
+              );
+            }
 			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
 			break;
 		default:
