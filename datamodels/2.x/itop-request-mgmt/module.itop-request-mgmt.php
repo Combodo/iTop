@@ -7,7 +7,7 @@ SetupWebPage::AddModule(
 	array(
 		// Identification
 		//
-		'label' => 'User request management (Service Desk)',
+		'label' => 'Simple Ticket Management',
 		'category' => 'business',
 
 		// Setup
