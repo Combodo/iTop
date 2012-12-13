@@ -233,8 +233,8 @@ class Config
 		'csv_import_history_display' => array(
 			'type' => 'bool',
 			'description' => 'Display the history tab in the import wizard',
-			'default' => true,
-			'value' => true,
+			'default' => false,
+			'value' => false,
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
