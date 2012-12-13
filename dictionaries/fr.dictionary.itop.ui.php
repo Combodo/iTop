@@ -219,7 +219,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 <ul>Grâce à ce portail opérationnel de nouvelle génération:
 <li>Gérez un environnement informatique de plus en plus complexe.</li>
 <li>Mettez en place la méthodologie ITIL à votre rythme.</li>
-<li>Contrôllez l\'actif le plus important de votre SI&nbsp;: la documentation.</li>
+<li>Contrôlez l\'actif le plus important de votre SI&nbsp;: la documentation.</li>
 </ul>
 </p>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Requêtes en cours: %1$d',
