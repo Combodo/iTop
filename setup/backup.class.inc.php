@@ -139,8 +139,8 @@ class DBBackup
 
 		// Store the results in a temporary file
 		$sTmpFileName = self::EscapeShellArg($sBackupFileName);
-		$sCommand = "$sMySQLDump --verbose --opt --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost --user=$sUser --password=$sPwd --result-file=$sTmpFileName $sDBName $sTables 2>&1";
-		$sCommandDisplay = "$sMySQLDump --verbose --opt --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost --user=xxxxx --password=xxxxx --result-file=$sTmpFileName $sDBName $sTables";
+		$sCommand = "$sMySQLDump --opt --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost --user=$sUser --password=$sPwd --result-file=$sTmpFileName $sDBName $sTables 2>&1";
+		$sCommandDisplay = "$sMySQLDump --opt --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost --user=xxxxx --password=xxxxx --result-file=$sTmpFileName $sDBName $sTables";
 
 		// Now run the command for real
 		SetupPage::log("Info - Executing command: $sCommandDisplay");
