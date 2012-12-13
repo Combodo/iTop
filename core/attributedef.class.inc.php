@@ -2067,7 +2067,7 @@ class AttributeEmailAddress extends AttributeString
 	public function GetValidationPattern()
 	{
 		// return "^([0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{2,9})$";
-		return "^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
+		return "^[a-zA-Z0-9._&-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
 	}
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
