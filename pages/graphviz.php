@@ -32,7 +32,7 @@ require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-// LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 /**
  * Escape a label (string) in a manner suitable for use with graphviz' DOT syntax
