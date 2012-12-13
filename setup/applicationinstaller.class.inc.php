@@ -499,8 +499,8 @@ class ApplicationInstaller
 		{
 			$oMFCompiler = new MFCompiler($oFactory);
 			$oMFCompiler->Compile($sTargetPath, null, $bUseSymbolicLinks);
-			$aCompilerLog = $oMFCompiler->GetLog();
-			SetupPage::log_info(implode("\n", $aCompilerLog));
+			//$aCompilerLog = $oMFCompiler->GetLog();
+			//SetupPage::log_info(implode("\n", $aCompilerLog));
 			SetupPage::log_info("Data model successfully compiled to '$sTargetPath'.");
 		}
 		
