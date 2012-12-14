@@ -83,6 +83,13 @@ class iTopWebPage extends NiceWebPage
 		$sSearchAny = addslashes(Dict::S('UI:SearchValue:Any'));
 		$sSearchNbSelected = addslashes(Dict::S('UI:SearchValue:NbSelected'));
 		
+		$bForceMenuPane = utils::ReadParam('force_menu_pane', null);
+		$sInitClosed = '';
+		if (($bForceMenuPane !== null) && ($bForceMenuPane == 0))
+		{
+			$sInitClosed = 'initClosed: true,';
+		}
+		
 		$this->m_sInitScript =
 <<< EOF
 	try
@@ -93,7 +100,7 @@ class iTopWebPage extends NiceWebPage
 		paneSize = GetUserPreference('menu_size', 300)
 		myLayout = $('body').layout({
 			west :	{
-						minSize: 200, size: paneSize, spacing_open: 16, spacing_close: 16, slideTrigger_open: "mouseover", hideTogglerOnSlide: true, enableCursorHotkey: false,
+						$sInitClosed minSize: 200, size: paneSize, spacing_open: 16, spacing_close: 16, slideTrigger_open: "mouseover", hideTogglerOnSlide: true, enableCursorHotkey: false,
 						onclose_end: function(name, elt, state, options, layout)
 						{
 								if (state.isSliding == false)
@@ -320,11 +327,6 @@ EOF
 	$('.caselog_header').click( function () { $(this).toggleClass('open').next('.caselog_entry').toggle(); });
 EOF
 		);
-		$bForceMenuPane = utils::ReadParam('force_menu_pane', null);
-		if ($bForceMenuPane !== null)
-		{
-			appUserPreferences::SetPref('menu_pane',  ($bForceMenuPane) ? 'open' : 'closed');
-		}
 		$sUserPrefs = appUserPreferences::GetAsJSON();
 		$this->add_script(
 <<<EOF
