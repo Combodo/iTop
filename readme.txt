@@ -305,6 +305,7 @@ The complete list of active tickets can be reviewed at http://sourceforge.net/ap
 #441 /doc redirects to Apache documentation! Directory renamed into "/documentation"
 
 Other bug fixes not listed in Trac:
+Patch to add the support of indexOf for IE8.
 Do not perform time consuming computations for building the menus if there are too many objects in a list (limit is configurable).
 Portal fixes (relative URLs and parameter validation)...
 Restore the previous URLMaker in case the sending of a notification is not the last action of a page... (e.g. if the page displays the details of an object after sending the notifications...)
