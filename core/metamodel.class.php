@@ -4328,7 +4328,15 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 
 	public static function MakeSingleRow($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false)
 	{
-		if (!array_key_exists($sClass, self::$aQueryCacheGetObject))
+		// Build the query cache signature
+		//
+		$sQuerySign = $sClass;
+		if($bAllowAllData)
+		{
+			$sQuerySign .= '_all_';
+		}
+		
+		if (!array_key_exists($sQuerySign, self::$aQueryCacheGetObject))
 		{
 			// NOTE: Quick and VERY dirty caching mechanism which relies on
 			//       the fact that the string '987654321' will never appear in the
@@ -4343,13 +4351,13 @@ if (!array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]))
 			}
 	
 			$sSQL = self::MakeSelectQuery($oFilter);
-			self::$aQueryCacheGetObject[$sClass] = $sSQL;
-			self::$aQueryCacheGetObjectHits[$sClass] = 0;
+			self::$aQueryCacheGetObject[$sQuerySign] = $sSQL;
+			self::$aQueryCacheGetObjectHits[$sQuerySign] = 0;
 		}
 		else
 		{
-			$sSQL = self::$aQueryCacheGetObject[$sClass];
-			self::$aQueryCacheGetObjectHits[$sClass] += 1;
+			$sSQL = self::$aQueryCacheGetObject[$sQuerySign];
+			self::$aQueryCacheGetObjectHits[$sQuerySign] += 1;
 //			echo " -load $sClass/$iKey- ".self::$aQueryCacheGetObjectHits[$sClass]."<br/>\n";
 		}
 		$sSQL = str_replace(CMDBSource::Quote(987654321), CMDBSource::Quote($iKey), $sSQL);
