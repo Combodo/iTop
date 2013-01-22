@@ -674,7 +674,7 @@ try
 			else
 			{
 				$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
-				$oP->p("<h1>".Dict::Format('UI:FullTextSearchTitle_Text', $sFullText)."</h1>");
+				$oP->p("<h1>".Dict::Format('UI:FullTextSearchTitle_Text', htmlentities($sFullText, ENT_QUOTES, 'UTF-8'))."</h1>");
 				$iCount = 0;
 				$iBlock = 0;
 				// Search in full text mode in all the classes
