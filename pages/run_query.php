@@ -161,7 +161,7 @@ try
 
 	$oP->add("<form method=\"get\">\n");
 	$oP->add(Dict::S('UI:RunQuery:ExpressionToEvaluate')."<br/>\n");
-	$oP->add("<textarea cols=\"120\" rows=\"8\" name=\"expression\">$sExpression</textarea>\n");
+	$oP->add("<textarea cols=\"120\" rows=\"8\" name=\"expression\">".htmlentities($sExpression, ENT_QUOTES, 'UTF-8')."</textarea>\n");
 
 	if (count($aArgs) > 0)
 	{
@@ -187,7 +187,7 @@ try
 
 		$oP->p('');
 		$oP->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false);
-		$oP->p(Dict::S('UI:RunQuery:DevelopedQuery').$oFilter->ToOQL());
+		$oP->p(Dict::S('UI:RunQuery:DevelopedQuery').htmlentities($oFilter->ToOQL(), ENT_QUOTES, 'UTF-8'));
 		$oP->p(Dict::S('UI:RunQuery:SerializedFilter').$oFilter->serialize());
 		$oP->EndCollapsibleSection();
 	}
