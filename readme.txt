@@ -73,7 +73,7 @@ Gabor Kiss for the Hungarian translation
 Tadashi Kaneda, Shoji Seki and Hirofumi Kosaka for the Japanese translation
 Antoine Coetsier for the CAS support and tests
 Vincenzo Todisco for his contribution to the enhancement of the webservices
-Tobias Glemser and Sabri Saleh for their consulting about iTop security
+Stephan Rickauer, Tobias Glemser and Sabri Saleh for their consulting about iTop security
 Claudio Cesar Sanchez Tejeda for his contribution to bug fixes on the export and data synchronization
 
 2. INSTALLATION
