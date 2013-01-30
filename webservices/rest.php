@@ -95,8 +95,8 @@ try
 {
 	utils::UseParamFile();
 
-	$sAuthUser = utils::ReadPostedParam('auth_user', null, 'raw_data');
-	$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, 'raw_data');
+	$sAuthUser = utils::ReadParam('auth_user', null, false, 'raw_data');
+	$sAuthPwd = utils::ReadParam('auth_pwd', null, false, 'raw_data');
 	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
 	{
 		UserRights::Login($sAuthUser); // Login & set the user's language
@@ -112,7 +112,7 @@ try
 		throw new Exception("Missing parameter 'version' (e.g. '1.0')", RestResult::MISSING_VERSION);
 	}
 	
-	$sJsonString = utils::ReadPostedParam('json_data', null, 'raw_data');
+	$sJsonString = utils::ReadParam('json_data', null, false, 'raw_data');
 	if ($sJsonString == null)
 	{
 		throw new Exception("Missing parameter 'json_data", RestResult::MISSING_JSON);
@@ -169,7 +169,7 @@ try
 	{
 		if (!array_key_exists($sOperation, $aOpToRestService))
 		{
-			throw new Exception("Unknown verb '$sVersion'", RestResult::UNKNOWN_OPERATION);
+			throw new Exception("Unknown verb '$sOperation' in version '$sVersion'", RestResult::UNKNOWN_OPERATION);
 		}
 		$oRS = $aOpToRestService[$sOperation]['service_provider'];
 	
