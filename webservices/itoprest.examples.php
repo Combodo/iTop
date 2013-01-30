@@ -92,10 +92,13 @@ function DoPostRequest_curl($sUrl, $aData)
 
 $aOperations = array(
 	array(
-		'operation' => 'object_create', // operation code
+		'operation' => 'list_operations', // operation code
+	),
+	array(
+		'operation' => 'core/create', // operation code
 		'comment' => 'Synchronization from blah...', // comment recorded in the change tracking log
 		'class' => 'UserRequest',
-		'results' => 'id, friendlyname', // list of fields to show in the results (* or a,b,c)
+		'output_fields' => 'id, friendlyname', // list of fields to show in the results (* or a,b,c)
 		// Values for the object to create
 		'fields' => array(
 			'org_id' => "SELECT Organization WHERE name = 'Demo'",
@@ -105,11 +108,11 @@ $aOperations = array(
 		),
 	),
 	array(
-		'operation' => 'object_update', // operation code
+		'operation' => 'core/update', // operation code
 		'comment' => 'Synchronization from blah...', // comment recorded in the change tracking log
 		'class' => 'UserRequest',
 		'key' => 'SELECT UserRequest WHERE id=1',
-		'results' => 'id, friendlyname, title', // list of fields to show in the results (* or a,b,c)
+		'output_fields' => 'id, friendlyname, title', // list of fields to show in the results (* or a,b,c)
 		// Values for the object to create
 		'fields' => array(
 			'title' => 'Issue #'.rand(0, 100),
@@ -122,15 +125,14 @@ $aOperations = array(
 		),
 	),
 	array(
-		'operation' => 'object_get', // operation code
+		'operation' => 'core/get', // operation code
 		'class' => 'UserRequest',
 		'key' => 'SELECT UserRequest',
-		'results' => 'id, friendlyname, title, contacts_list', // list of fields to show in the results (* or a,b,c)
+		'output_fields' => 'id, friendlyname, title, contacts_list', // list of fields to show in the results (* or a,b,c)
 	),
 );
 
-
-$sUrl = "http://localhost/rest-services/webservices/rest.php?version=0.9";
+$sUrl = "http://localhost/rest-services/webservices/rest.php?version=1.0";
 
 $aData = array();
 $aData['auth_user'] = 'admin';
@@ -148,6 +150,7 @@ foreach ($aOperations as $iOp => $aOperation)
 
 	$response = DoPostRequest($sUrl, $aData);
 	$aResults = json_decode($response);
+	$aResults = $response;
 	if ($aResults)
 	{
 		echo "--------------------------------------\n";

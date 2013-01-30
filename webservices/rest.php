@@ -61,372 +61,35 @@
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/clipage.class.inc.php');
+require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
+require_once(APPROOT.'core/restservices.class.inc.php');
 
 
-class RestServices
+/**
+ * Result structure that is specific to the hardcoded verb 'list_operations'
+ */ 
+class RestResultListOperations extends RestResult
 {
-	public function InitTrackingComment($oData)
+	public $version;
+	public $operations;
+
+	public function AddOperation($sVerb, $sDescription, $sServiceProviderClass)
 	{
-		$sComment = $this->GetMandatoryParam($oData, 'comment');
-		CMDBObject::SetTrackInfo($sComment);
-	}
-
-
-	public function GetMandatoryParam($oData, $sParamName)
-	{
-		if (isset($oData->$sParamName))
-		{
-			return $oData->$sParamName;
-		}
-		else
-		{
-			throw new Exception("Missing parameter '$sParamName'");
-		}
-	}
-
-
-	public function GetOptionalParam($oData, $sParamName, $default)
-	{
-		if (isset($oData->$sParamName))
-		{
-			return $oData->$sParamName;
-		}
-		else
-		{
-			return $default;
-		}
-	}
-
-
-	public function GetClass($oData, $sParamName)
-	{
-		$sClass = $this->GetMandatoryParam($oData, $sParamName);
-		if (!MetaModel::IsValidClass($sClass))
-		{
-			throw new Exception("$sParamName: '$sClass' is not a valid class'");
-		}
-		return $sClass;
-	}
-
-
-	public function GetFieldList($sClass, $oData, $sParamName)
-	{
-		$sFields = $this->GetOptionalParam($oData, $sParamName, '*');
-		$aShowFields = array();
-		if ($sFields == '*')
-		{
-			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
-				$aShowFields[] = $sAttCode;
-			}
-		}
-		else
-		{
-			foreach(explode(',', $sFields) as $sAttCode)
-			{
-				$sAttCode = trim($sAttCode);
-				if (($sAttCode != 'id') && (!MetaModel::IsValidAttCode($sClass, $sAttCode)))
-				{
-					throw new Exception("$sParamName: invalid attribute code '$sAttCode'");
-				}
-				$aShowFields[] = $sAttCode;
-			}
-		}
-		return $aShowFields;
-	}
-
-	protected function FindObjectFromCriteria($sClass, $oCriteria)
-	{
-		$aCriteriaReport = array();
-		if (isset($oCriteria->finalclass))
-		{
-			$sClass = $oCriteria->finalclass;
-			if (!MetaModel::IsValidClass($sClass))
-			{
-				throw new Exception("finalclass: Unknown class '$sClass'");
-			}
-		}
-		$oSearch = new DBObjectSearch($sClass);
-		foreach ($oCriteria as $sAttCode => $value)
-		{
-			$realValue = $this->MakeValue($sClass, $sAttCode, $value);
-			$oSearch->AddCondition($sAttCode, $realValue);
-			$aCriteriaReport[] = "$sAttCode: $value ($realValue)";
-		}
-		$oSet = new DBObjectSet($oSearch);
-		$iCount = $oSet->Count();
-		if ($iCount == 0)
-		{
-			throw new Exception("No item found for criteria: ".implode(', ', $aCriteriaReport));
-		}
-		elseif ($iCount > 1)
-		{
-			throw new Exception("Several items found ($iCount) for criteria: ".implode(', ', $aCriteriaReport));
-		}
-		$res = $oSet->Fetch();
-		return $res;
-	}
-
-
-	public function FindObjectFromKey($sClass, $key)
-	{
-		if (is_object($key))
-		{
-			$res = $this->FindObjectFromCriteria($sClass, $key);
-		}
-		elseif (is_numeric($key))
-		{
-			$res = MetaModel::GetObject($sClass, $key);
-		}
-		elseif (is_string($key))
-		{
-			// OQL
-			$oSearch = DBObjectSearch::FromOQL($key);
-			$oSet = new DBObjectSet($oSearch);
-			$iCount = $oSet->Count();
-			if ($iCount == 0)
-			{
-				throw new Exception("No item found for query: $key");
-			}
-			elseif ($iCount > 1)
-			{
-				throw new Exception("Several items found ($iCount) for query: $key");
-			}
-			$res = $oSet->Fetch();
-		}
-		else
-		{
-			throw new Exception("Wrong format for key");
-		}
-		return $res;
-	}
-
-
-	public function GetObjectSetFromKey($sClass, $key)
-	{
-		if (is_object($key))
-		{
-			if (isset($oCriteria->finalclass))
-			{
-				$sClass = $oCriteria->finalclass;
-				if (!MetaModel::IsValidClass($sClass))
-				{
-					throw new Exception("finalclass: Unknown class '$sClass'");
-				}
-			}
-		
-			$oSearch = new DBObjectSearch($sClass);
-			foreach ($key as $sAttCode => $value)
-			{
-				$realValue = $this->MakeValue($sClass, $sAttCode, $value);
-				$oSearch->AddCondition($sAttCode, $realValue);
-			}
-		}
-		elseif (is_numeric($key))
-		{
-			$oSearch = new DBObjectSearch($sClass);
-			$oSearch->AddCondition('id', $key);
-		}
-		elseif (is_string($key))
-		{
-			// OQL
-			$oSearch = DBObjectSearch::FromOQL($key);
-			$oObjectSet = new DBObjectSet($oSearch);
-		}
-		else
-		{
-			throw new Exception("Wrong format for key");
-		}
-		$oObjectSet = new DBObjectSet($oSearch);
-		return $oObjectSet;
-	}
-
-
-	protected function MakeValue($sClass, $sAttCode, $value)
-	{
-		try
-		{
-			if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
-			{
-				throw new Exception("Unknown attribute");
-			}
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			if ($oAttDef instanceof AttributeExternalKey)
-			{
-				$oExtKeyObject = $this->FindObjectFromKey($oAttDef->GetTargetClass(), $value);
-				$value = $oExtKeyObject->GetKey();
-			}
-			elseif ($oAttDef instanceof AttributeLinkedSet)
-			{
-				if (!is_array($value))
-				{
-					throw new Exception("A link set must be defined by an array of objects");
-				}
-				$sLnkClass = $oAttDef->GetLinkedClass();
-				$aLinks = array();
-				foreach($value as $oValues)
-				{
-					$oLnk = $this->MakeObjectFromFields($sLnkClass, $oValues);
-					$aLinks[] = $oLnk;
-				}
-				$value = DBObjectSet::FromArray($sLnkClass, $aLinks);
-			}
-		}
-		catch (Exception $e)
-		{
-			throw new Exception("$sAttCode: ".$e->getMessage());
-		}
-		return $value;
-	}
-
-
-	public function MakeObjectFromFields($sClass, $aFields)
-	{
-		$oObject = MetaModel::NewObject($sClass);
-		foreach ($aFields as $sAttCode => $value)
-		{
-			$realValue = $this->MakeValue($sClass, $sAttCode, $value);
-			$oObject->Set($sAttCode, $realValue);
-		}
-		return $oObject;
-	}
-
-
-	public function UpdateObjectFromFields($oObject, $aFields)
-	{
-		$sClass = get_class($oObject);
-		foreach ($aFields as $sAttCode => $value)
-		{
-			$realValue = $this->MakeValue($sClass, $sAttCode, $value);
-			$oObject->Set($sAttCode, $realValue);
-		}
-		return $oObject;
+		$this->operations[] = array(
+			'verb' => $sVerb,
+			'description' => $sDescription,
+			'extension' => $sServiceProviderClass
+		);
 	}
 }
-
-class FieldResult
-{
-	protected $value;
-	
-	public function __construct()
-	{
-	}
-
-	public function GetValue()
-	{
-	}
-}
-
-class ObjectResult
-{
-	public $code;
-	public $message;
-	public $fields;
-	
-	public function __construct()
-	{
-		$this->code = 0;
-		$this->message = '';
-		$this->fields = array();
-	}
-
-	protected function MakeResultValue($oObject, $sAttCode)
-	{
-		if ($sAttCode == 'id')
-		{
-			$value = $oObject->GetKey();
-		}
-		else
-		{
-			$sClass = get_class($oObject);
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			if ($oAttDef instanceof AttributeLinkedSet)
-			{
-				$value = array();
-
-				// Make the list of required attributes
-				// - Skip attributes pointing to the current object (redundant data)
-				// - Skip link sets refering to the current data (infinite recursion!)
-				$aRelevantAttributes = array();
-				$sLnkClass = $oAttDef->GetLinkedClass();
-				foreach (MetaModel::ListAttributeDefs($sLnkClass) as $sLnkAttCode => $oLnkAttDef)
-				{
-					// Skip any attribute of the link that points to the current object
-					//
-					if ($sLnkAttCode == $oAttDef->GetExtKeyToMe()) continue;
-					if (method_exists($oLnkAttDef, 'GetKeyAttCode'))
-					{
-						if ($oLnkAttDef->GetKeyAttCode() ==$oAttDef->GetExtKeyToMe()) continue;
-					}
-
-					$aRelevantAttributes[] = $sLnkAttCode;
-				}
-
-				// Iterate on the set and build an array of array of attcode=>value
-				$oSet = $oObject->Get($sAttCode);
-				while ($oLnk = $oSet->Fetch())
-				{
-					$aLnkValues = array();
-					foreach ($aRelevantAttributes as $sLnkAttCode)
-					{
-						$aLnkValues[$sLnkAttCode] = $this->MakeResultValue($oLnk, $sLnkAttCode);
-					}
-					$value[] = $aLnkValues;
-				}
-			}
-			else
-			{
-				$value = $oObject->GetEditValue($sAttCode);
-			}
-		}
-		return $value;
-	}
-
-	public function AddField($oObject, $sAttCode)
-	{
-		$this->fields[$sAttCode] = $this->MakeResultValue($oObject, $sAttCode);
-	}
-}
-
-class RestResult
-{
-	public function __construct()
-	{
-	}
-
-	public $code;
-	public $message;
-	public $objects;
-
-	public function AddObject($iCode, $sMessage, $oObject = null, $aFields = null)
-	{
-		$oObjRes = new ObjectResult();
-		$oObjRes->code = $iCode;
-		$oObjRes->message = $sMessage;
-
-		if ($oObject)
-		{
-			foreach ($aFields as $sAttCode)
-			{
-				$oObjRes->AddField($oObject, $sAttCode);
-			}
-		}
-
-		$this->objects[] = $oObjRes;
-	}
-}
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Main
 //
-$oP = new CLIPage("iTop - REST");
-$oResult = new RestResult();
+$oP = new ajax_page('rest');
 
 try
 {
@@ -440,69 +103,107 @@ try
 	}
 	else
 	{
-		throw new Exception("Invalid login '$sAuthUser'");
+		throw new Exception("Invalid login '$sAuthUser'", RestResult::UNAUTHORIZED);
+	}
+
+	$sVersion = utils::ReadParam('version', null, false, 'raw_data');
+	if ($sVersion == null)
+	{
+		throw new Exception("Missing parameter 'version' (e.g. '1.0')", RestResult::MISSING_VERSION);
 	}
 	
-	$aJsonData = json_decode(utils::ReadPostedParam('json_data', null, 'raw_data'));
+	$sJsonString = utils::ReadPostedParam('json_data', null, 'raw_data');
+	if ($sJsonString == null)
+	{
+		throw new Exception("Missing parameter 'json_data", RestResult::MISSING_JSON);
+	}
+	$aJsonData = json_decode($sJsonString);
 	if ($aJsonData == null)
 	{
-		throw new Exception('Parameter json_data is not a valid JSON structure');
+		throw new Exception("Parameter json_data is not a valid JSON structure", RestResult::INVALID_JSON);
 	}
 
-	$oRS = new RestServices();
 
-	$sOperation = $oRS->GetMandatoryParam($aJsonData, 'operation');
-	switch ($sOperation)
+	$aProviders = array();
+	foreach(get_declared_classes() as $sPHPClass)
 	{
-	case 'object_create':
-		$oRS->InitTrackingComment($aJsonData);
-		$sClass = $oRS->GetClass($aJsonData, 'class');
-		$aFields = $oRS->GetMandatoryParam($aJsonData, 'fields');
-		$aShowFields = $oRS->GetFieldList($sClass, $aJsonData, 'results');
-
-		$oObject = $oRS->MakeObjectFromFields($sClass, $aFields);
-		$oObject->DBInsert();
-
-		$oResult->AddObject(0, 'created', $oObject, $aShowFields);
-		break;
-
-	case 'object_update':
-		$oRS->InitTrackingComment($aJsonData);
-		$sClass = $oRS->GetClass($aJsonData, 'class');
-		$key = $oRS->GetMandatoryParam($aJsonData, 'key');
-		$aFields = $oRS->GetMandatoryParam($aJsonData, 'fields');
-		$aShowFields = $oRS->GetFieldList($sClass, $aJsonData, 'results');
-
-		$oObject = $oRS->FindObjectFromKey($sClass, $key);
-		$oRS->UpdateObjectFromFields($oObject, $aFields);
-		$oObject->DBUpdate();
-
-		$oResult->AddObject(0, 'updated', $oObject, $aShowFields);
-		break;
-
-	case 'object_get':
-		$sClass = $oRS->GetClass($aJsonData, 'class');
-		$key = $oRS->GetMandatoryParam($aJsonData, 'key');
-		$aShowFields = $oRS->GetFieldList($sClass, $aJsonData, 'results');
-
-		$oObjectSet = $oRS->GetObjectSetFromKey($sClass, $key);
-		while ($oObject = $oObjectSet->Fetch())
+		$oRefClass = new ReflectionClass($sPHPClass);
+		if ($oRefClass->implementsInterface('iRestServiceProvider'))
 		{
-			$oResult->AddObject(0, '', $oObject, $aShowFields);
+			$aProviders[] = new $sPHPClass;
 		}
-		$oResult->message = "Found: ".$oObjectSet->Count();
-		break;
+	}
 
-	default:
-		throw new Exception("Uknown operation '$sOperation'");
+	$aOpToRestService = array(); // verb => $oRestServiceProvider
+	foreach ($aProviders as $oRestSP)
+	{
+		$aOperations = $oRestSP->ListOperations($sVersion);
+		foreach ($aOperations as $aOpData)
+		{
+			$aOpToRestService[$aOpData['verb']] = array
+			(
+				'service_provider' => $oRestSP,
+				'description' => $aOpData['description'],
+			);
+		}
+	}
+
+	if (count($aOpToRestService) == 0)
+	{
+		throw new Exception("There is no service available for version '$sVersion'", RestResult::UNSUPPORTED_VERSION);
+	}
+
+
+	$sOperation = RestUtils::GetMandatoryParam($aJsonData, 'operation');
+	if ($sOperation == 'list_operations')
+	{
+		$oResult = new RestResultListOperations();
+		$oResult->message = "Operations: ".count($aOpToRestService);
+		$oResult->version = $sVersion;
+		foreach ($aOpToRestService as $sVerb => $aOpData)
+		{
+			$oResult->AddOperation($sVerb, $aOpData['description'], get_class($aOpData['service_provider']));
+		}
+	}
+	else
+	{
+		if (!array_key_exists($sOperation, $aOpToRestService))
+		{
+			throw new Exception("Unknown verb '$sVersion'", RestResult::UNKNOWN_OPERATION);
+		}
+		$oRS = $aOpToRestService[$sOperation]['service_provider'];
+	
+		$oResult = $oRS->ExecOperation($sVersion, $sOperation, $aJsonData);
 	}
 }
 catch(Exception $e)
 {
-	$oResult->code = 1234;
+	$oResult = new RestResult();
+	if ($e->GetCode() == 0)
+	{
+		$oResult->code = RestResult::INTERNAL_ERROR;
+	}
+	else
+	{
+		$oResult->code = $e->GetCode();
+	}
 	$oResult->message = "Error: ".$e->GetMessage();
 }
 
-$oP->add(json_encode($oResult));
+// Output the results
+//
+$oP->add_header('Access-Control-Allow-Origin: *');
+
+$sCallback = utils::ReadParam('callback', null);
+if ($sCallback == null)
+{
+	$oP->SetContentType('application/json');
+	$oP->add(json_encode($oResult));
+}
+else
+{
+	$oP->SetContentType('application/javascript');
+	$oP->add($sCallback.'('.json_encode($oResult).')');
+}
 $oP->Output();
 ?>
