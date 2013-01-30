@@ -99,8 +99,13 @@ class ObjectResult
 					$value[] = $aLnkValues;
 				}
 			}
+			elseif ($oAttDef->IsExternalKey())
+			{
+				$value = $oObject->Get($sAttCode);
+			}
 			else
 			{
+				// Still to be refined...
 				$value = $oObject->GetEditValue($sAttCode);
 			}
 		}

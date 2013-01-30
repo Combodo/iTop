@@ -150,7 +150,6 @@ foreach ($aOperations as $iOp => $aOperation)
 
 	$response = DoPostRequest($sUrl, $aData);
 	$aResults = json_decode($response);
-	$aResults = $response;
 	if ($aResults)
 	{
 		echo "--------------------------------------\n";
