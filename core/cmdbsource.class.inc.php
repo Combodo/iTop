@@ -64,7 +64,7 @@ class CMDBSource
 		}
 		if (!empty($sSource))
 		{
-			if (!((bool)mysqli_query(self::$m_resDBLink, "USE $sSource")))
+			if (!((bool)mysqli_query(self::$m_resDBLink, "USE `$sSource`")))
 			{
 				throw new MySQLException('Could not select DB', array('host'=>$sServer, 'user'=>$sUser, 'db_name'=>$sSource));
 			}
@@ -120,7 +120,7 @@ class CMDBSource
 		{
 			// In case we don't have rights to enumerate the databases
 			// Let's try to connect directly
-			return @((bool)mysqli_query(self::$m_resDBLink, "USE $sSource"));
+			return @((bool)mysqli_query(self::$m_resDBLink, "USE `$sSource`"));
 		}
 
 	}
@@ -133,7 +133,7 @@ class CMDBSource
 	
 	public static function SelectDB($sSource)
 	{
-		if (!((bool)mysqli_query(self::$m_resDBLink, "USE $sSource")))
+		if (!((bool)mysqli_query(self::$m_resDBLink, "USE `$sSource`")))
 		{
 			throw new MySQLException('Could not select DB', array('db_name'=>$sSource));
 		}
