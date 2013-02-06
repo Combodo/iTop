@@ -16,7 +16,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * Execute and shows the data quality audit
  *
@@ -147,6 +146,8 @@ try
 	require_once('../approot.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
 	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
+	require_once(APPROOT.'/application/csvpage.class.inc.php');
+
 	
 	require_once(APPROOT.'/application/startup.inc.php');
 	$operation = utils::ReadParam('operation', '');
@@ -159,6 +160,67 @@ try
 	
 	switch($operation)
 	{
+		case 'csv':
+		// Big result sets cause long OQL that cannot be passed (serialized) as a GET parameter
+		// Therefore we don't use the standard "search_oql" operation of UI.php to display the CSV
+		$iCategory = utils::ReadParam('category', '');
+		$iRuleIndex = utils::ReadParam('rule', 0);
+	
+		$oAuditCategory = MetaModel::GetObject('AuditCategory', $iCategory);
+		$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
+		FilterByContext($oDefinitionFilter, $oAppContext);
+		$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
+		$oFilter = GetRuleResultFilter($iRuleIndex, $oDefinitionFilter, $oAppContext);
+		$oErrorObjectSet = new CMDBObjectSet($oFilter);
+		$oAuditRule = MetaModel::GetObject('AuditRule', $iRuleIndex);
+		$sFileName = utils::ReadParam('filename', null, true, 'string');
+		$bAdvanced = utils::ReadParam('advanced', false);
+		$sAdvanced = $bAdvanced ? '&advanced=1' : '';
+		
+		if ($sFileName != null)
+		{
+			$oP = new CSVPage("iTop - Export");
+			$sCSVData = cmdbAbstractObject::GetSetAsCSV($oErrorObjectSet, array('localize_values' => true, 'fields_advanced' => $bAdvanced));
+			$sCharset = MetaModel::GetConfig()->Get('csv_file_default_charset');
+			if ($sCharset == 'UTF-8')
+			{
+				$sOutputData = UTF8_BOM.iconv('UTF-8', 'UTF-8//IGNORE//TRANSLIT', $sCSVData);
+			}
+			else
+			{
+				$sOutputData = iconv('UTF-8', $sCharset.'//IGNORE//TRANSLIT', $sCSVData);
+			}
+			if ($sFileName == '')
+			{
+				// Plain text => Firefox will NOT propose to download the file
+				$oP->add_header("Content-type: text/plain; charset=$sCharset");
+			}
+			else
+			{
+				$oP->add_header("Content-type: text/csv; charset=$sCharset");
+			}
+			$oP->add($sOutputData);
+			$oP->TrashUnexpectedOutput();
+			$oP->output();
+			exit;
+		}
+		else
+		{
+			$oP->add('<div class="page_header"><h1>Audit Errors: <span class="hilite">'.$oAuditRule->Get('description').'</span></h1><img style="margin-top: -20px; margin-right: 10px; float: right;" src="../images/stop.png"/></div>');
+			$oP->p('<a href="./audit.php?'.$oAppContext->GetForLink().'">[Back to audit results]</a>');
+		    $sBlockId = 'audit_errors';
+			$oP->p("<div id=\"$sBlockId\" style=\"clear:both\">\n");
+			$oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'csv');    
+			$oBlock->Display($oP, 1);
+			$oP->p("</div>\n");    
+			// Adjust the size of the Textarea containing the CSV to fit almost all the remaining space
+			$oP->add_ready_script(" $('#1>textarea').height(400);"); // adjust the size of the block			
+			$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey();
+			$oP->add_ready_script("$('a[href*=\"webservices/export.php?expression=\"]').attr('href', '".$sExportUrl."&filename=audit.csv".$sAdvanced."');");
+			$oP->add_ready_script("$('#1 :checkbox').removeAttr('onclick').click( function() { var sAdvanced = ''; if (this.checked) sAdvanced = '&advanced=1'; window.location.href='$sExportUrl'+sAdvanced; } );");
+		}
+		break;
+						
 		case 'errors':
 		$iCategory = utils::ReadParam('category', '');
 		$iRuleIndex = utils::ReadParam('rule', 0);
@@ -176,7 +238,9 @@ try
 		$oP->p("<div id=\"$sBlockId\" style=\"clear:both\">\n");
 		$oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'list');    
 		$oBlock->Display($oP, 1);
-		$oP->p("</div>\n");    
+		$oP->p("</div>\n");
+		$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey();
+		$oP->add_ready_script("$('a[href*=\"pages/UI.php?operation=search\"]').attr('href', '".$sExportUrl."')");
 		break;
 		
 		case 'audit':
@@ -233,7 +297,7 @@ try
 							{
 								$aObjectsWithErrors[$aErrorRow['id']] = true;
 							}
-							$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a>"; 
+							$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a> <a href=\"?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">(CSV)</a>"; 
 							$aRow['percent_ok'] = sprintf('%.2f', 100.0 * (($iCount - $iErrorsCount) / $iCount));
 							$aRow['class'] = GetReportColor($iCount, $iErrorsCount);							
 						}
