@@ -117,7 +117,7 @@ try
 	{
 		throw new Exception("Missing parameter 'json_data", RestResult::MISSING_JSON);
 	}
-	$aJsonData = json_decode($sJsonString);
+	$aJsonData = @json_decode($sJsonString);
 	if ($aJsonData == null)
 	{
 		throw new Exception("Parameter json_data is not a valid JSON structure", RestResult::INVALID_JSON);
