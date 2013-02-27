@@ -59,6 +59,11 @@ class DisplayBlock
 		$this->m_aParams = $aParams;
 		$this->m_oSet = $oSet;
 	}
+	
+	public function GetFilter()
+	{
+		return $this->m_oFilter;
+	}
 	/**
 	 * Constructs a DisplayBlock object from a DBObjectSet already in memory
 	 * @param $oSet DBObjectSet
