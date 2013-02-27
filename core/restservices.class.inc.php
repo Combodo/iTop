@@ -193,6 +193,10 @@ class CoreServices implements iRestServiceProvider
 				'description' => 'Update an object'
 			);
 			$aOps[] = array(
+				'verb' => 'core/apply_stimulus',
+				'description' => 'Apply a stimulus to change the state of an object'
+			);
+			$aOps[] = array(
 				'verb' => 'core/get',
 				'description' => 'Search for objects'
 			);
@@ -237,7 +241,60 @@ class CoreServices implements iRestServiceProvider
 			$oResult->AddObject(0, 'updated', $oObject, $aShowFields);
 			break;
 	
-		case 'core/get':
+		case 'core/apply_stimulus':
+			RestUtils::InitTrackingComment($aParams);
+			$sClass = RestUtils::GetClass($aParams, 'class');
+			$key = RestUtils::GetMandatoryParam($aParams, 'key');
+			$aFields = RestUtils::GetMandatoryParam($aParams, 'fields');
+			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
+			$sStimulus = RestUtils::GetMandatoryParam($aParams, 'stimulus');
+	
+			$oObject = RestUtils::FindObjectFromKey($sClass, $key);
+			RestUtils::UpdateObjectFromFields($oObject, $aFields);
+		
+			$aTransitions = $oObject->EnumTransitions();
+			$aStimuli = MetaModel::EnumStimuli(get_class($oObject));
+			if (!isset($aTransitions[$sStimulus]))
+			{
+				// Invalid stimulus
+				$oResult->code = RestResult::INTERNAL_ERROR;
+				$oResult->message = "Invalid stimulus: '$sStimulus' on the object ".$oObject->GetName()." in state '".$oObject->GetState()."'";
+			}
+			else
+			{
+				$aTransition = $aTransitions[$sStimulus];
+				$sTargetState = $aTransition['target_state'];
+				$aStates = MetaModel::EnumStates($sClass);
+				$aTargetStateDef = $aStates[$sTargetState];
+				$aExpectedAttributes = $aTargetStateDef['attribute_list'];
+				
+				$aMissingMandatory = array();
+				foreach($aExpectedAttributes as $sAttCode => $iExpectCode)
+				{
+					if ( ($iExpectCode & OPT_ATT_MANDATORY) && ($oObject->Get($sAttCode) == ''))
+					{
+						$aMissingMandatory[] = $sAttCode;
+					}
+				}				
+				if (count($aMissingMandatory) == 0)
+				{
+					// If all the mandatory fields are already present, just apply the transition silently...
+					if ($oObject->ApplyStimulus($sStimulus))
+					{
+						$oObject->DBUpdate();
+						$oResult->AddObject(0, 'updated', $oObject, $aShowFields);
+					}
+				}
+				else
+				{
+					// Missing mandatory attributes for the transition
+					$oResult->code = RestResult::INTERNAL_ERROR;
+					$oResult->message = 'Missing mandatory attribute(s) for applying the stimulus: '.implode(', ', $aMissingMandatory).'.';
+				}
+			}	
+			break;
+	
+			case 'core/get':
 			$sClass = RestUtils::GetClass($aParams, 'class');
 			$key = RestUtils::GetMandatoryParam($aParams, 'key');
 			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
