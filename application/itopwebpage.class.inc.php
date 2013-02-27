@@ -480,6 +480,25 @@ EOF
 		$sForm = $this->GetSiloSelectionForm();
 		$this->DisplayMenu(); // Compute the menu
 
+		// Call the extensions to add content to the page, so that they can also add styles or scripts
+		$sBannerExtraHtml = '';
+		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
+		{
+			$sBannerExtraHtml .= $oExtensionInstance->GetBannerHtml($this);
+		}
+		
+		$sNorthPane = '';
+		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
+		{
+			$sNorthPane .= $oExtensionInstance->GetNorthPaneHtml($this);
+		}
+		
+		$sSouthPane = '';
+		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
+		{
+			$sSouthPane .= $oExtensionInstance->GetSouthPaneHtml($this);
+		}
+		
 		// Put here the 'ready scripts' that must be executed after all others
 		$this->add_ready_script(
 <<<EOF
@@ -711,26 +730,13 @@ EOF
 				$sApplicationBanner .= '<div id="admin-banner"><span style="padding:5px;">'.Dict::Format('UI:ApplicationEnvironment', $sEnvLabel).$sBackButton.'<span></div>';
 			}
 			
-			foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
-			{
-				$sApplicationBanner .= $oExtensionInstance->GetBannerHtml($this);
-			}
+			$sApplicationBanner .= $sBannerExtraHtml;
 			
-			$sNorthPane = '';
-			foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
-			{
-				$sNorthPane .= $oExtensionInstance->GetNorthPaneHtml($this);
-			}
 			if (!empty($sNorthPane))
 			{
-				$sNorthPane = '<div id="bottom-pane" class="ui-layout-south">'.$sNorthPane.'</div>';
+				$sNorthPane = '<div id="bottom-pane" class="ui-layout-north">'.$sNorthPane.'</div>';
 			}
 			
-			$sSouthPane = '';
-			foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
-			{
-				$sSouthPane .= $oExtensionInstance->GetSouthPaneHtml($this);
-			}
 			if (!empty($sSouthPane))
 			{
 				$sSouthPane = '<div id="bottom-pane" class="ui-layout-south">'.$sSouthPane.'</div>';
