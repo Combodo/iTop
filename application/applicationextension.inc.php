@@ -227,3 +227,425 @@ interface iPageUIExtension
 	public function GetBannerHtml(iTopWebPage $oPage);
 }
 
+/**
+ * Implement this interface to add new operations to the REST/JSON web service
+ *  
+ * @package     Extensibility
+ * @api
+ * @since 2.0.1  
+ */
+interface iRestServiceProvider
+{
+	/**
+	 * Enumerate services delivered by this class
+	 * @param string $sVersion The version (e.g. 1.0) supported by the services
+	 * @return array An array of hash 'verb' => verb, 'description' => description
+	 */
+	public function ListOperations($sVersion);
+	/**
+	 * Enumerate services delivered by this class
+	 * @param string $sVersion The version (e.g. 1.0) supported by the services
+	 * @return RestResult The standardized result structure (at least a message)
+	 * @throws Exception in case of internal failure.	 
+	 */
+	public function ExecOperation($sVersion, $sVerb, $aParams);
+}
+
+/**
+ * Minimal REST response structure. Derive this structure to add response data and error codes.
+ *
+ * @package     Extensibility
+ * @api
+ * @since 2.0.1  
+ */
+class RestResult
+{
+	/**
+	 * Result: no issue has been encountered
+	 */
+	const OK = 0;
+	/**
+	 * Result: missing/wrong credentials or the user does not have enough rights to perform the requested operation 
+	 */
+	const UNAUTHORIZED = 1;
+	/**
+	 * Result: the parameter 'version' is missing
+	 */
+	const MISSING_VERSION = 2;
+	/**
+	 * Result: the parameter 'json_data' is missing
+	 */
+	const MISSING_JSON = 3;
+	/**
+	 * Result: the input structure is not a valid JSON string
+	 */
+	const INVALID_JSON = 4;
+	/**
+	 * Result: no operation is available for the specified version
+	 */
+	const UNSUPPORTED_VERSION = 10;
+	/**
+	 * Result: the requested operation is not valid for the specified version
+	 */
+	const UNKNOWN_OPERATION = 11;
+	/**
+	 * Result: the operation could not be performed, see the message for troubleshooting
+	 */
+	const INTERNAL_ERROR = 100;
+
+	/**
+	 * Default constructor - ok!
+	 * 	 
+	 * @param DBObject $oObject The object being reported
+	 * @param string $sAttCode The attribute code (must be valid)
+	 * @return string A scalar representation of the value
+	 */
+	public function __construct()
+	{
+		$this->code = RestResult::OK;
+	}
+
+	public $code;
+	public $message;
+}
+
+/**
+ * Helpers for implementing REST services
+ *
+ * @package     Extensibility
+ * @api
+ */
+class RestUtils
+{
+	/**
+	 * Registering tracking information. Any further object modification be associated with the given comment, when the modification gets recorded into the DB
+	 * 	 
+	 * @param StdClass $oData Structured input data. Must contain 'comment'.
+	 * @return void
+	 * @throws Exception
+	 * @api
+	 */
+	public static function InitTrackingComment($oData)
+	{
+		$sComment = self::GetMandatoryParam($oData, 'comment');
+		CMDBObject::SetTrackInfo($sComment);
+	}
+
+	/**
+	 * Read a mandatory parameter from  from a Rest/Json structure.
+	 * 	 
+	 * @param StdClass $oData Structured input data. Must contain the entry defined by sParamName.
+	 * @param string $sParamName Name of the parameter to fetch from the input data
+	 * @return void
+	 * @throws Exception If the parameter is missing
+	 * @api
+	 */
+	public static function GetMandatoryParam($oData, $sParamName)
+	{
+		if (isset($oData->$sParamName))
+		{
+			return $oData->$sParamName;
+		}
+		else
+		{
+			throw new Exception("Missing parameter '$sParamName'");
+		}
+	}
+
+
+	/**
+	 * Read an optional parameter from  from a Rest/Json structure.
+	 * 	 
+	 * @param StdClass $oData Structured input data.
+	 * @param string $sParamName Name of the parameter to fetch from the input data
+	 * @param mixed $default Default value if the parameter is not found in the input data
+	 * @return void
+	 * @throws Exception
+	 * @api
+	 */
+	public static function GetOptionalParam($oData, $sParamName, $default)
+	{
+		if (isset($oData->$sParamName))
+		{
+			return $oData->$sParamName;
+		}
+		else
+		{
+			return $default;
+		}
+	}
+
+
+	/**
+	 * Read a class  from a Rest/Json structure.
+	 *
+	 * @param StdClass $oData Structured input data. Must contain the entry defined by sParamName.
+	 * @param string $sParamName Name of the parameter to fetch from the input data
+	 * @return void
+	 * @throws Exception If the parameter is missing or the class is unknown
+	 * @api
+	 */
+	public static function GetClass($oData, $sParamName)
+	{
+		$sClass = self::GetMandatoryParam($oData, $sParamName);
+		if (!MetaModel::IsValidClass($sClass))
+		{
+			throw new Exception("$sParamName: '$sClass' is not a valid class'");
+		}
+		return $sClass;
+	}
+
+
+	/**
+	 * Read a list of attribute codes from a Rest/Json structure.
+	 * 	 
+	 * @param string $sClass Name of the class
+	 * @param StdClass $oData Structured input data.
+	 * @param string $sParamName Name of the parameter to fetch from the input data
+	 * @return void
+	 * @throws Exception
+	 * @api
+	 */
+	public static function GetFieldList($sClass, $oData, $sParamName)
+	{
+		$sFields = self::GetOptionalParam($oData, $sParamName, '*');
+		$aShowFields = array();
+		if ($sFields == '*')
+		{
+			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+			{
+				$aShowFields[] = $sAttCode;
+			}
+		}
+		else
+		{
+			foreach(explode(',', $sFields) as $sAttCode)
+			{
+				$sAttCode = trim($sAttCode);
+				if (($sAttCode != 'id') && (!MetaModel::IsValidAttCode($sClass, $sAttCode)))
+				{
+					throw new Exception("$sParamName: invalid attribute code '$sAttCode'");
+				}
+				$aShowFields[] = $sAttCode;
+			}
+		}
+		return $aShowFields;
+	}
+
+	/**
+	 * Read and interpret object search criteria from a Rest/Json structure
+	 * 	  	 
+	 * @param string $sClass Name of the class
+	 * @param StdClass $oCriteria Hash of attribute code => value (can be a substructure or a scalar, depending on the nature of the attriute)
+	 * @return object The object found
+	 * @throws Exception If the input structure is not valid or it could not find exactly one object
+	 */
+	protected static function FindObjectFromCriteria($sClass, $oCriteria)
+	{
+		$aCriteriaReport = array();
+		if (isset($oCriteria->finalclass))
+		{
+			$sClass = $oCriteria->finalclass;
+			if (!MetaModel::IsValidClass($sClass))
+			{
+				throw new Exception("finalclass: Unknown class '$sClass'");
+			}
+		}
+		$oSearch = new DBObjectSearch($sClass);
+		foreach ($oCriteria as $sAttCode => $value)
+		{
+			$realValue = self::MakeValue($sClass, $sAttCode, $value);
+			$oSearch->AddCondition($sAttCode, $realValue);
+			$aCriteriaReport[] = "$sAttCode: $value ($realValue)";
+		}
+		$oSet = new DBObjectSet($oSearch);
+		$iCount = $oSet->Count();
+		if ($iCount == 0)
+		{
+			throw new Exception("No item found with criteria: ".implode(', ', $aCriteriaReport));
+		}
+		elseif ($iCount > 1)
+		{
+			throw new Exception("Several items found ($iCount) with criteria: ".implode(', ', $aCriteriaReport));
+		}
+		$res = $oSet->Fetch();
+		return $res;
+	}
+
+
+	/**
+	 * Find an object from a polymorph search specification (Rest/Json)
+	 * 	 
+	 * @param string $sClass Name of the class
+	 * @param mixed $key Either search criteria (substructure), or an object or an OQL string.
+	 * @return DBObject The object found
+	 * @throws Exception If the input structure is not valid or it could not find exactly one object
+	 * @api
+	 */
+	public static function FindObjectFromKey($sClass, $key)
+	{
+		if (is_object($key))
+		{
+			$res = self::FindObjectFromCriteria($sClass, $key);
+		}
+		elseif (is_numeric($key))
+		{
+			$res = MetaModel::GetObject($sClass, $key);
+		}
+		elseif (is_string($key))
+		{
+			// OQL
+			$oSearch = DBObjectSearch::FromOQL($key);
+			$oSet = new DBObjectSet($oSearch);
+			$iCount = $oSet->Count();
+			if ($iCount == 0)
+			{
+				throw new Exception("No item found for query: $key");
+			}
+			elseif ($iCount > 1)
+			{
+				throw new Exception("Several items found ($iCount) for query: $key");
+			}
+			$res = $oSet->Fetch();
+		}
+		else
+		{
+			throw new Exception("Wrong format for key");
+		}
+		return $res;
+	}
+
+	/**
+	 * Search objects from a polymorph search specification (Rest/Json)
+	 * 	 
+	 * @param string $sClass Name of the class
+	 * @param mixed $key Either search criteria (substructure), or an object or an OQL string.
+	 * @return DBObjectSet The search result set
+	 * @throws Exception If the input structure is not valid
+	 */
+	public static function GetObjectSetFromKey($sClass, $key)
+	{
+		if (is_object($key))
+		{
+			if (isset($oCriteria->finalclass))
+			{
+				$sClass = $oCriteria->finalclass;
+				if (!MetaModel::IsValidClass($sClass))
+				{
+					throw new Exception("finalclass: Unknown class '$sClass'");
+				}
+			}
+		
+			$oSearch = new DBObjectSearch($sClass);
+			foreach ($key as $sAttCode => $value)
+			{
+				$realValue = self::MakeValue($sClass, $sAttCode, $value);
+				$oSearch->AddCondition($sAttCode, $realValue);
+			}
+		}
+		elseif (is_numeric($key))
+		{
+			$oSearch = new DBObjectSearch($sClass);
+			$oSearch->AddCondition('id', $key);
+		}
+		elseif (is_string($key))
+		{
+			// OQL
+			$oSearch = DBObjectSearch::FromOQL($key);
+			$oObjectSet = new DBObjectSet($oSearch);
+		}
+		else
+		{
+			throw new Exception("Wrong format for key");
+		}
+		$oObjectSet = new DBObjectSet($oSearch);
+		return $oObjectSet;
+	}
+
+	/**
+	 * Interpret the Rest/Json value and get a valid attribute value
+	 * 	 
+	 * @param string $sClass Name of the class
+	 * @param string $sAttCode Attribute code
+	 * @param mixed $value Depending on the type of attribute (a scalar, or search criteria, or list of related objects...)
+	 * @return mixed The value that can be used with DBObject::Set()
+	 * @throws Exception If the specification of the value is not valid.
+	 * @api
+	 */
+	public static function MakeValue($sClass, $sAttCode, $value)
+	{
+		try
+		{
+			if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
+			{
+				throw new Exception("Unknown attribute");
+			}
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			if ($oAttDef instanceof AttributeExternalKey)
+			{
+				$oExtKeyObject = self::FindObjectFromKey($oAttDef->GetTargetClass(), $value);
+				$value = $oExtKeyObject->GetKey();
+			}
+			elseif ($oAttDef instanceof AttributeLinkedSet)
+			{
+				if (!is_array($value))
+				{
+					throw new Exception("A link set must be defined by an array of objects");
+				}
+				$sLnkClass = $oAttDef->GetLinkedClass();
+				$aLinks = array();
+				foreach($value as $oValues)
+				{
+					$oLnk = self::MakeObjectFromFields($sLnkClass, $oValues);
+					$aLinks[] = $oLnk;
+				}
+				$value = DBObjectSet::FromArray($sLnkClass, $aLinks);
+			}
+		}
+		catch (Exception $e)
+		{
+			throw new Exception("$sAttCode: ".$e->getMessage(), $e->getCode());
+		}
+		return $value;
+	}
+
+	/**
+	 * Interpret a Rest/Json structure that defines attribute values, and build an object
+	 * 	 
+	 * @param string $sClass Name of the class
+	 * @param array $aFields A hash of attribute code => value specification.
+	 * @return DBObject The newly created object
+	 * @throws Exception If the specification of the values is not valid
+	 * @api
+	 */
+	public static function MakeObjectFromFields($sClass, $aFields)
+	{
+		$oObject = MetaModel::NewObject($sClass);
+		foreach ($aFields as $sAttCode => $value)
+		{
+			$realValue = self::MakeValue($sClass, $sAttCode, $value);
+			$oObject->Set($sAttCode, $realValue);
+		}
+		return $oObject;
+	}
+
+	/**
+	 * Interpret a Rest/Json structure that defines attribute values, and update the given object
+	 * 	 
+	 * @param DBObject $oObject The object being modified
+	 * @param array $aFields A hash of attribute code => value specification.
+	 * @return DBObject The object modified
+	 * @throws Exception If the specification of the values is not valid
+	 * @api
+	 */
+	public static function UpdateObjectFromFields($oObject, $aFields)
+	{
+		$sClass = get_class($oObject);
+		foreach ($aFields as $sAttCode => $value)
+		{
+			$realValue = self::MakeValue($sClass, $sAttCode, $value);
+			$oObject->Set($sAttCode, $realValue);
+		}
+		return $oObject;
+	}
+}
