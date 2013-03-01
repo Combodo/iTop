@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -51,16 +51,39 @@ function UsageAndExit($oP)
 	if ($bModeCLI)
 	{
 		$oP->p("USAGE:\n");
-		$oP->p("php -q cron.php --auth_user=<login> --auth_pwd=<password> [--param_file=<file>] [--verbose=1]\n");		
+		$oP->p("php cron.php --auth_user=<login> --auth_pwd=<password> [--param_file=<file>] [--verbose=1] [--status_only=1]\n");		
 	}
 	else
 	{
-		$oP->p("Optional parameters: verbose, param_file\n");		
+		$oP->p("Optional parameters: verbose, param_file, status_only\n");		
 	}
 	$oP->output();
 	exit -2;
 }
 
+function RunTask($oBackgroundProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
+{
+	$oNow = new DateTime();
+	$fStart = microtime(true);
+	$sMessage = $oBackgroundProcess->Process($iTimeLimit);
+	$fDuration = microtime(true) - $fStart;
+	$oTask->ComputeDurations($fDuration);
+	$oTask->Set('latest_run_date', $oNow->format('Y-m-d H:i:s'));
+	$oPlannedStart = new DateTime($oTask->Get('latest_run_date'));
+	// Let's assume that the task was started exactly when planned so that the schedule does no shift each time
+	// this allows to schedule a task everyday "around" 11:30PM for example
+	$oPlannedStart->modify('+'.$oBackgroundProcess->GetPeriodicity().' seconds');
+	$oEnd = new DateTime();
+	if ($oPlannedStart->format('U') < $oEnd->format('U'))
+	{
+		// Huh, next planned start is already in the past, shift it of the periodicity !
+		$oPlannedStart = $oEnd->modify('+'.$oBackgroundProcess->GetPeriodicity().' seconds');
+	}
+	$oTask->Set('next_run_date', $oPlannedStart->format('Y-m-d H:i:s'));
+	$oTask->DBUpdate();
+	
+	return $sMessage;	
+}
 
 // Known limitation - the background process periodicity is NOT taken into account
 function CronExec($oP, $aBackgroundProcesses, $bVerbose)
@@ -76,18 +99,72 @@ function CronExec($oP, $aBackgroundProcesses, $bVerbose)
 
 	$iCronSleep = MetaModel::GetConfig()->Get('cron_sleep');
 	
+	$oSearch = new DBObjectSearch('BackgroundTask');
 	while (time() < $iTimeLimit)
 	{
+		$oTasks = new DBObjectSet($oSearch);
+		$aTasks = array();
+		while($oTask = $oTasks->Fetch())
+		{
+			$aTasks[$oTask->Get('class_name')] = $oTask;
+		}
 		foreach ($aBackgroundProcesses as $oBackgroundProcess)
 		{
-			if ($bVerbose)
+			$sTaskClass = get_class($oBackgroundProcess);
+			$oNow = new DateTime();
+			if (!array_key_exists($sTaskClass, $aTasks))
 			{
-				$oP->p("Processing asynchronous task: ".get_class($oBackgroundProcess));
+				// New entry, let's create a new BackgroundTask record and run the task immediately
+				$oTask = new BackgroundTask();
+				$oTask->Set('class_name', get_class($oBackgroundProcess));
+				$oTask->Set('first_run_date', $oNow->format('Y-m-d H:i:s'));
+				$oTask->Set('total_exec_count', 0);
+				$oTask->Set('min_run_duration', 99999.999);
+				$oTask->Set('max_run_duration', 0);
+				$oTask->Set('average_run_duration', 0);
+				$oTask->Set('next_run_date', $oNow->format('Y-m-d H:i:s')); // in case of crash...
+				$oTask->DBInsert();
+				if ($bVerbose)
+				{
+					$oP->p(">> === ".$oNow->format('Y-m-d H:i:s').sprintf(" Starting:%-'=40s", ' '.$sTaskClass.' (first run) '));
+				}
+				$sMessage = RunTask($oBackgroundProcess, $oTask, $oNow, $iTimeLimit);
+				if ($bVerbose)
+				{
+					if(!empty($sMessage))
+					{
+						$oP->p("$sTaskClass: $sMessage");
+					}
+					$oEnd = new DateTime();
+					$oP->p("<< === ".$oEnd->format('Y-m-d H:i:s').sprintf(" End of:  %-'=40s", ' '.$sTaskClass.' '));
+				}
 			}
-			$sMessage = $oBackgroundProcess->Process($iTimeLimit);
-			if ($bVerbose && !empty($sMessage))
+			else if( ($aTasks[$sTaskClass]->Get('status') == 'active') && ($aTasks[$sTaskClass]->Get('next_run_date') <= $oNow->format('Y-m-d H:i:s')))
 			{
-				$oP->p("Returned: $sMessage");
+				$oTask = $aTasks[$sTaskClass];
+				// Run the task and record its next run time
+				if ($bVerbose)
+				{
+					$oP->p(">> === ".$oNow->format('Y-m-d H:i:s').sprintf(" Starting:%-'=40s", ' '.$sTaskClass.' '));
+				}
+				$sMessage = RunTask($oBackgroundProcess, $aTasks[$sTaskClass], $oNow, $iTimeLimit);
+				if ($bVerbose)
+				{
+					if(!empty($sMessage))
+					{
+						$oP->p("$sTaskClass: $sMessage");
+					}
+					$oEnd = new DateTime();
+					$oP->p("<< === ".$oEnd->format('Y-m-d H:i:s').sprintf(" End of:  %-'=40s", ' '.$sTaskClass.' '));
+				}
+			}
+			else 
+			{
+				// will run later
+				if (($aTasks[$sTaskClass]->Get('status') == 'active') && $bVerbose)
+				{
+					$oP->p("Skipping asynchronous task: $sTaskClass until ".$aTasks[$sTaskClass]->Get('next_run_date'));
+				}
 			}
 		}
 		if ($bVerbose)
@@ -102,6 +179,25 @@ function CronExec($oP, $aBackgroundProcesses, $bVerbose)
 	}
 }
 
+function DisplayStatus($oP)
+{
+	$oSearch = new DBObjectSearch('BackgroundTask');
+	$oTasks = new DBObjectSet($oSearch);
+	$oP->p('+---------------------------+---------+---------------------+---------------------+--------+-----------+');
+	$oP->p('| Task Class                | Status  | Last Run            | Next Run            | Nb Run | Avg. Dur. |');
+	$oP->p('+---------------------------+---------+---------------------+---------------------+--------+-----------+');
+	while($oTask = $oTasks->Fetch())
+	{
+		$sTaskName = $oTask->Get('class_name');
+		$sStatus = $oTask->Get('status');
+		$sLastRunDate = $oTask->Get('latest_run_date');
+		$sNextRunDate = $oTask->Get('next_run_date');
+		$iNbRun = (int)$oTask->Get('total_exec_count');
+		$sAverageRunTime = $oTask->Get('average_run_duration');
+		$oP->p(sprintf('| %1$-25.25s | %2$-7s | %3$s | %4$s | %5$6d | %6$7s s |', $sTaskName, $sStatus, $sLastRunDate, $sNextRunDate, $iNbRun, $sAverageRunTime));
+	}	
+	$oP->p('+---------------------------+---------+---------------------+---------------------+--------+-----------+');
+}
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Main
@@ -189,10 +285,16 @@ if ($bVerbose)
 	$sDisplayProcesses = implode(', ', $aDisplayProcesses);
 	$oP->p("Background processes: ".$sDisplayProcesses);
 }
+if (utils::ReadParam('status_only', false, true /* Allow CLI */))
+{
+	// Display status and exit
+	DisplayStatus($oP);
+	exit(0);
+}
 
 $sLockName = 'itop.cron.php';
 
-$oP->p("Starting: ".time());
+$oP->p("Starting: ".time().' ('.date('Y-m-d H:i:s').')');
 $res = CMDBSource::QueryToScalar("SELECT GET_LOCK('$sLockName', 1)");// timeout = 1 second (see also IS_FREE_LOCK)
 if (is_null($res))
 {
@@ -209,7 +311,8 @@ elseif ($res === '1')
 	catch(Exception $e)
 	{
 		// TODO - Log ?
-	   $oP->p("ERROR:".$e->GetMessage());
+	   $oP->p("ERROR:".$e->getMessage());
+	   $oP->p($e->getTraceAsString());
 	}
 	$res = CMDBSource::QueryToScalar("SELECT RELEASE_LOCK('$sLockName')");
 }
@@ -219,7 +322,7 @@ else
 	// Exit silently
 	$oP->p("Already running...");
 }
-$oP->p("Exiting: ".time());
+$oP->p("Exiting: ".time().' ('.date('Y-m-d H:i:s').')');
 
 $oP->Output();
 ?>

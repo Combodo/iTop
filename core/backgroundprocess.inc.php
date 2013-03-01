@@ -18,7 +18,7 @@
 
 
 /**
- * Class BackgroundProcess
+ * interface iBackgroundProcess
  * Any extension that must be called regularly to be executed in the background 
  *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL

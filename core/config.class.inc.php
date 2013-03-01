@@ -747,6 +747,7 @@ class Config
 			'core/action.class.inc.php',
 			'core/trigger.class.inc.php',
 			'synchro/synchrodatasource.class.inc.php',
+			'core/backgroundtask.class.inc.php',
 		);
 		$this->m_aDataModels = array();
 		$this->m_aWebServiceCategories = array(
