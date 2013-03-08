@@ -24,288 +24,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-/**
- * Perform all the needed checks to delete one (or more) objects
- */
-function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bDeleteConfirmed, $oFilter = null)
-{
-	$oDeletionPlan = new DeletionPlan();
-
-	foreach($aObjects as $oObj)
-	{
-		if ($bDeleteConfirmed)
-		{
-			$oObj->DBDeleteTracked(CMDBObject::GetCurrentChange(), null, $oDeletionPlan);
-		}
-		else
-		{
-			$oObj->CheckToDelete($oDeletionPlan);
-		}
-	}
-	
-	if ($bDeleteConfirmed)
-	{
-		if (count($aObjects) == 1)
-		{
-			$oObj = $aObjects[0];
-			$oP->add("<h1>".Dict::Format('UI:Title:DeletionOf_Object', $oObj->GetName())."</h1>\n");				
-		}
-		else
-		{
-			$oP->add("<h1>".Dict::Format('UI:Title:BulkDeletionOf_Count_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass))."</h1>\n");		
-		}
-		// Security - do not allow the user to force a forbidden delete by the mean of page arguments...
-		if ($oDeletionPlan->FoundSecurityIssue())
-		{
-			throw new CoreException(Dict::S('UI:Error:NotEnoughRightsToDelete'));
-		}
-		if ($oDeletionPlan->FoundManualOperation())
-		{
-			throw new CoreException(Dict::S('UI:Error:CannotDeleteBecauseManualOpNeeded'));
-		}
-		if ($oDeletionPlan->FoundManualDelete())
-		{
-			throw new CoreException(Dict::S('UI:Error:CannotDeleteBecauseOfDepencies'));
-		}
-
-		// Report deletions
-		//
-		$aDisplayData = array();
-		foreach ($oDeletionPlan->ListDeletes() as $sTargetClass => $aDeletes)
-		{
-			foreach ($aDeletes as $iId => $aData)
-			{
-				$oToDelete = $aData['to_delete'];
-
-				if (isset($aData['requested_explicitely']))
-				{
-					$sMessage = Dict::S('UI:Delete:Deleted');
-				}
-				else
-				{
-					$sMessage = Dict::S('UI:Delete:AutomaticallyDeleted');
-				}
-				$aDisplayData[] = array(
-					'class' => MetaModel::GetName(get_class($oToDelete)),
-					'object' => $oToDelete->GetName(),
-					'consequence' => $sMessage,
-				);
-			}
-		}
-	
-		// Report updates
-		//
-		foreach ($oDeletionPlan->ListUpdates() as $sTargetClass => $aToUpdate)
-		{
-			foreach ($aToUpdate as $iId => $aData)
-			{
-				$oToUpdate = $aData['to_reset'];
-				$aDisplayData[] = array(
-					'class' => MetaModel::GetName(get_class($oToUpdate)),
-					'object' => $oToUpdate->GetHyperLink(),
-					'consequence' => Dict::Format('UI:Delete:AutomaticResetOf_Fields', $aData['attributes_list']),
-				);
-			}
-		}
-
-		// Report automatic jobs
-		//
-		if ($oDeletionPlan->GetTargetCount() > 0)
-		{
-			if (count($aObjects) == 1)
-			{
-				$oObj = $aObjects[0];
-				$oP->p(Dict::Format('UI:Delete:CleaningUpRefencesTo_Object', $oObj->GetName()));
-			}
-			else
-			{
-				$oP->p(Dict::Format('UI:Delete:CleaningUpRefencesTo_Several_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass)));
-			}
-			$aDisplayConfig = array();
-			$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
-			$aDisplayConfig['object'] = array('label' => 'Object', 'description' => '');
-			$aDisplayConfig['consequence'] = array('label' => 'Done', 'description' => Dict::S('UI:Delete:Done+'));
-			$oP->table($aDisplayConfig, $aDisplayData);
-		}
-	}
-	else
-	{
-		if (count($aObjects) == 1)
-		{
-			$oObj = $aObjects[0];
-			$oP->add("<h1>".Dict::Format('UI:Delete:ConfirmDeletionOf_Name', $oObj->GetName())."</h1>\n");
-		}
-		else
-		{
-			$oP->add("<h1>".Dict::Format('UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass))."</h1>\n");
-		}
-		// Explain what should be done
-		//
-		$aDisplayData = array();
-		foreach ($oDeletionPlan->ListDeletes() as $sTargetClass => $aDeletes)
-		{
-			foreach ($aDeletes as $iId => $aData)
-			{
-				$oToDelete = $aData['to_delete'];
-				$bAutoDel = (($aData['mode'] == DEL_SILENT) || ($aData['mode'] == DEL_AUTO));
-				if (array_key_exists('issue', $aData))
-				{
-					if ($bAutoDel)
-					{
-						if (isset($aData['requested_explicitely']))
-						{
-							$sConsequence = Dict::Format('UI:Delete:CannotDeleteBecause', $aData['issue']);
-						}
-						else
-						{
-							$sConsequence = Dict::Format('UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible', $aData['issue']);
-						}
-					}
-					else
-					{
-						$sConsequence = Dict::Format('UI:Delete:MustBeDeletedManuallyButNotPossible', $aData['issue']);
-					}
-				}
-				else
-				{
-					if ($bAutoDel)
-					{
-						if (isset($aData['requested_explicitely']))
-						{
-	                  $sConsequence = ''; // not applicable
-						}
-						else
-						{
-							$sConsequence = Dict::S('UI:Delete:WillBeDeletedAutomatically');
-						}
-					}
-					else
-					{
-						$sConsequence = Dict::S('UI:Delete:MustBeDeletedManually');
-					}
-				}
-				$aDisplayData[] = array(
-					'class' => MetaModel::GetName(get_class($oToDelete)),
-					'object' => $oToDelete->GetHyperLink(),
-					'consequence' => $sConsequence,
-				);
-			}
-		}
-		foreach ($oDeletionPlan->ListUpdates() as $sRemoteClass => $aToUpdate)
-		{
-			foreach ($aToUpdate as $iId => $aData)
-			{
-				$oToUpdate = $aData['to_reset'];
-				if (array_key_exists('issue', $aData))
-				{
-					$sConsequence = Dict::Format('UI:Delete:CannotUpdateBecause_Issue', $aData['issue']);
-				}
-				else
-				{
-					$sConsequence = Dict::Format('UI:Delete:WillAutomaticallyUpdate_Fields', $aData['attributes_list']);
-				}
-				$aDisplayData[] = array(
-					'class' => MetaModel::GetName(get_class($oToUpdate)),
-					'object' => $oToUpdate->GetHyperLink(),
-					'consequence' => $sConsequence,
-				);
-			}
-		}
-
-      $iImpactedIndirectly = $oDeletionPlan->GetTargetCount() - count($aObjects);
-		if ($iImpactedIndirectly > 0)
-		{
-			if (count($aObjects) == 1)
-			{
-				$oObj = $aObjects[0];
-				$oP->p(Dict::Format('UI:Delete:Count_Objects/LinksReferencing_Object', $iImpactedIndirectly, $oObj->GetName()));
-			}
-			else
-			{
-				$oP->p(Dict::Format('UI:Delete:Count_Objects/LinksReferencingTheObjects', $iImpactedIndirectly));
-			}
-			$oP->p(Dict::S('UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity'));
-		}
-
-		if (($iImpactedIndirectly > 0) || $oDeletionPlan->FoundStopper())
-		{
-			$aDisplayConfig = array();
-			$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
-			$aDisplayConfig['object'] = array('label' => 'Object', 'description' => '');
-			$aDisplayConfig['consequence'] = array('label' => 'Consequence', 'description' => Dict::S('UI:Delete:Consequence+'));
-			$oP->table($aDisplayConfig, $aDisplayData);
-		}
-
-		if ($oDeletionPlan->FoundStopper())
-		{
-			if ($oDeletionPlan->FoundSecurityIssue())
-			{
-				$oP->p(Dict::S('UI:Delete:SorryDeletionNotAllowed'));
-			}
-			elseif ($oDeletionPlan->FoundManualOperation())
-			{
-				$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
-			}
-			else // $bFoundManualOp
-			{
-				$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
-			}		
-			$oAppContext = new ApplicationContext();
-			$oP->add("<form method=\"post\">\n");
-			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::ReadParam('transaction_id')."\">\n");
-			$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Back')."\">\n");
-			$oP->add("<input DISABLED type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
-			$oP->add($oAppContext->GetForForm());
-			$oP->add("</form>\n");
-		}
-		else
-		{
-			$oAppContext = new ApplicationContext();
-			if (count($aObjects) == 1)
-			{
-				$oObj = $aObjects[0];
-				$id = $oObj->GetKey();
-				$oP->p('<h1>'.Dict::Format('UI:Delect:Confirm_Object', $oObj->GetHyperLink()).'</h1>');
-				$oP->add("<form method=\"post\">\n");
-				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::ReadParam('transaction_id')."\">\n");
-				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"delete_confirmed\">\n");
-				$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-				$oP->add("<input type=\"hidden\" name=\"id\" value=\"$id\">\n");
-				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Back')."\">\n");
-				$oP->add("<input type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
-				$oP->add($oAppContext->GetForForm());
-				$oP->add("</form>\n");
-			}
-			else
-			{
-				$oP->p('<h1>'.Dict::Format('UI:Delect:Confirm_Count_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass)).'</h1>');
-				foreach($aObjects as $oObj)
-				{
-					$aKeys[] = $oObj->GetKey();
-				}
-				$oFilter = new DBObjectSearch($sClass);
-				$oFilter->AddCondition('id', $aKeys, 'IN');
-				$oSet = new CMDBobjectSet($oFilter);
-				$oP->add('<div id="0">');
-				CMDBAbstractObject::DisplaySet($oP, $oSet, array('display_limit' => false, 'menu' => false));
-				$oP->add("</div>\n");
-				$oP->add("<form method=\"post\">\n");
-				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::ReadParam('transaction_id')."\">\n");
-				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"bulk_delete_confirmed\">\n");
-				$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".$oFilter->Serialize()."\">\n");
-				$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-				foreach($aObjects as $oObj)
-				{
-					$oP->add("<input type=\"hidden\" name=\"selectObject[]\" value=\"".$oObj->GetKey()."\">\n");
-				}
-				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Back')."\">\n");
-				$oP->add("<input type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
-				$oP->add($oAppContext->GetForForm());
-				$oP->add("</form>\n");
-			}
-		}
-	}
-}
 
 /**
  * Displays a popup welcome message, once per session at maximum
@@ -390,13 +108,12 @@ function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction)
 	}
 }
 
-function ReloadAndDisplay($oPage, $oObj, $sMessage = '', $sSeverity)
+function ReloadAndDisplay($oPage, $oObj, $sMessageId = '', $sMessage = '', $sSeverity = null)
 {
 	$oAppContext = new ApplicationContext();
-	$sMessageKey = get_class($oObj).'::'.$oObj->GetKey();
-	if ($sMessage != '')
+	if ($sMessageId != '')
 	{
-		$_SESSION['obj_messages'][$sMessageKey] = array('severity' => $sSeverity, 'message' => $sMessage);
+		cmdbAbstractObject::SetSessionMessage(get_class($oObj), $oObj->GetKey(), $sMessageId, $sMessage, $sSeverity, 0, true /* must not exist */);
 	}
 	$oPage->add_header('Location: '.utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.get_class($oObj).'&id='.$oObj->getKey().'&'.$oAppContext->GetForLink());
 }
@@ -959,174 +676,9 @@ try
 		$sClass = utils::ReadParam('class', '', false, 'class');
 		$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
 		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
-		if (count($aSelectedObj) > 0)
-		{
-			$iAllowedCount = count($aSelectedObj);
-			$sSelectedObj = implode(',', $aSelectedObj);
-
-			$sOQL = "SELECT $sClass WHERE id IN (".$sSelectedObj.")";
-			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL));
-			
-			// Compute the distribution of the values for each field to determine which of the "scalar" fields are homogenous
-			$aList = MetaModel::ListAttributeDefs($sClass);
-			$aValues = array();
-			foreach($aList as $sAttCode => $oAttDef)
-			{
-				if ($oAttDef->IsScalar())
-				{
-					$aValues[$sAttCode] = array();
-				}
-			}
-			while($oObj = $oSet->Fetch())
-			{
-				foreach($aList as $sAttCode => $oAttDef)
-				{
-					if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
-					{
-						$currValue = $oObj->Get($sAttCode);
-						if ($oAttDef instanceof AttributeCaseLog)
-						{
-							$currValue = ' '; // Don't put an empty string, in case the field would be considered as mandatory...
-						}
-						if (is_object($currValue)) continue; // Skip non scalar values...
-						if(!array_key_exists($currValue, $aValues[$sAttCode]))
-						{
-							$aValues[$sAttCode][$currValue] = array('count' => 1, 'display' => $oObj->GetAsHTML($sAttCode)); 
-						}
-						else
-						{
-							$aValues[$sAttCode][$currValue]['count']++; 
-						}
-					}
-				}
-			}
-			// Now create an object that has values for the homogenous values only				
-			$oDummyObj = new $sClass(); // @@ What if the class is abstract ?
-			$aComments = array();
-			function MyComparison($a, $b) // Sort descending
-			{
-			    if ($a['count'] == $b['count'])
-			    {
-			        return 0;
-			    }
-			    return ($a['count'] > $b['count']) ? -1 : 1;
-			}
-
-			$iFormId = cmdbAbstractObject::GetNextFormId(); // Identifier that prefixes all the form fields
-			$sReadyScript = '';
-			$aDependsOn = array();
-			$sFormPrefix = '2_';
-			foreach($aList as $sAttCode => $oAttDef)
-			{
-				$aPrerequisites = MetaModel::GetPrequisiteAttributes($sClass, $sAttCode); // List of attributes that are needed for the current one
-				if (count($aPrerequisites) > 0)
-				{
-					// When 'enabling' a field, all its prerequisites must be enabled too
-					$sFieldList = "['{$sFormPrefix}".implode("','{$sFormPrefix}", $aPrerequisites)."']";
-					$oP->add_ready_script("$('#enable_{$sFormPrefix}{$sAttCode}').bind('change', function(evt, sFormId) { return PropagateCheckBox( this.checked, $sFieldList, true); } );\n");
-				}
-				$aDependents = MetaModel::GetDependentAttributes($sClass, $sAttCode); // List of attributes that are needed for the current one
-				if (count($aDependents) > 0)
-				{
-					// When 'disabling' a field, all its dependent fields must be disabled too
-					$sFieldList = "['{$sFormPrefix}".implode("','{$sFormPrefix}", $aDependents)."']";
-					$oP->add_ready_script("$('#enable_{$sFormPrefix}{$sAttCode}').bind('change', function(evt, sFormId) { return PropagateCheckBox( this.checked, $sFieldList, false); } );\n");
-				}
-				if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
-				{
-					if ($oAttDef->GetEditClass() == 'One Way Password')
-					{
-						
-						$sTip = "Unknown values";
-						$sReadyScript .= "$('#multi_values_$sAttCode').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );";
-
-						$oDummyObj->Set($sAttCode, null);
-						$aComments[$sAttCode] = '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToogleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
-						$aComments[$sAttCode] .= '<div class="multi_values" id="multi_values_'.$sAttCode.'"> ? </div>';
-						$sReadyScript .=  'ToogleField(false, \''.$iFormId.'_'.$sAttCode.'\');'."\n";
-					}
-					else
-					{
-						$iCount = count($aValues[$sAttCode]);
-						if ($iCount == 1)
-						{
-							// Homogenous value
-							reset($aValues[$sAttCode]);
-							$aKeys = array_keys($aValues[$sAttCode]);
-							$currValue = $aKeys[0]; // The only value is the first key
-							//echo "<p>current value for $sAttCode : $currValue</p>";
-							$oDummyObj->Set($sAttCode, $currValue);
-							$aComments[$sAttCode] = '<input type="checkbox" checked id="enable_'.$iFormId.'_'.$sAttCode.'"  onClick="ToogleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
-							$aComments[$sAttCode] .= '<div class="mono_value">1</div>';
-						}
-						else
-						{
-							// Non-homogenous value
-							$aMultiValues = $aValues[$sAttCode];
-							uasort($aMultiValues, 'MyComparison');
-							$iMaxCount = 5;
-							$sTip = "<p><b>".Dict::Format('UI:BulkModify_Count_DistinctValues', $iCount)."</b><ul>";
-							$index = 0;
-							foreach($aMultiValues as $sCurrValue => $aVal)
-							{
-								$sDisplayValue = empty($aVal['display']) ? '<i>'.Dict::S('Enum:Undefined').'</i>' : str_replace(array("\n", "\r"), " ", $aVal['display']);
-								$sTip .= "<li>".Dict::Format('UI:BulkModify:Value_Exists_N_Times', $sDisplayValue, $aVal['count'])."</li>";
-								$index++;
-								if ($iMaxCount == $index)
-								{
-									$sTip .= "<li>".Dict::Format('UI:BulkModify:N_MoreValues', count($aMultiValues) - $iMaxCount)."</li>";
-									break;
-								}					
-							}
-							$sTip .= "</ul></p>";
-							$sTip = addslashes($sTip);
-							$sReadyScript .= "$('#multi_values_$sAttCode').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );";
-	
-							$oDummyObj->Set($sAttCode, null);
-							$aComments[$sAttCode] = '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToogleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
-							$aComments[$sAttCode] .= '<div class="multi_values" id="multi_values_'.$sAttCode.'">'.$iCount.'</div>';
-						}
-						$sReadyScript .=  'ToogleField('.(($iCount == 1) ? 'true': 'false').', \''.$iFormId.'_'.$sAttCode.'\');'."\n";
-					}
-				}
-			}				
-			
-			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-			if (($sStateAttCode != '') && ($oDummyObj->GetState() == ''))
-			{
-				// Hmmm, it's not gonna work like this ! Set a default value for the "state"
-				// Maybe we should use the "state" that is the most common among the objects...
-				$aMultiValues = $aValues[$sStateAttCode];
-				uasort($aMultiValues, 'MyComparison');
-				foreach($aMultiValues as $sCurrValue => $aVal)
-				{
-					$oDummyObj->Set($sStateAttCode, $sCurrValue);
-					break;
-				}				
-				//$oStateAtt = MetaModel::GetAttributeDef($sClass, $sStateAttCode);
-				//$oDummyObj->Set($sStateAttCode, $oStateAtt->GetDefaultValue());
-			}
-			$oP->add("<div class=\"page_header\">\n");
-			$oP->add("<h1>".$oDummyObj->GetIcon()."&nbsp;".Dict::Format('UI:Modify_M_ObjectsOf_Class_OutOf_N', $iAllowedCount, $sClass, $iAllowedCount)."</h1>\n");
-			$oP->add("</div>\n");
-
-			$oP->add("<div class=\"wizContainer\">\n");
-			$oDummyObj->DisplayModifyForm($oP, array('fieldsComments' => $aComments, 'noRelations' => true, 'custom_operation' => 'preview_or_modify_all', 'custom_button' => Dict::S('UI:Button:PreviewModifications'), 'selectObj' => $sSelectedObj, 'filter' => $sFilter, 'preview_mode' => true, 'disabled_fields' => '{}', 'disable_plugins' => true));
-			$oP->add("</div>\n");
-			$oP->add_ready_script($sReadyScript);
-			$sURL = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-			$oP->add_ready_script(
-<<<EOF
-$('.wizContainer button.cancel').unbind('click');
-$('.wizContainer button.cancel').click( function() { window.location.href = '$sURL'; } );
-EOF
-);
-
-		} // Else no object selected ???
-		else
-		{
-			$oP->p("No object selected !, nothing to do");
-		}
+		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
+		$aContext = array('filter' => $sFilter);
+		cmdbAbstractObject::DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $sCancelUrl, array(), $aContext);
 		break;
 		
 		///////////////////////////////////////////////////////////////////////////////////////////
@@ -1145,101 +697,12 @@ EOF
 			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObj'));
 		}
 		$aSelectedObj = explode(',', $sSelectedObj);
-		$aHeaders = array(
-			'form::select' => array('label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList:not(:disabled)', this.checked);\"></input>", 'description' => Dict::S('UI:SelectAllToggle+')),
-			'object' => array('label' => MetaModel::GetName($sClass), 'description' => Dict::S('UI:ModifiedObject')),
-			'status' => array('label' => Dict::S('UI:BulkModifyStatus'), 'description' => Dict::S('UI:BulkModifyStatus+')),
-			'errors' => array('label' => Dict::S('UI:BulkModifyErrors'), 'description' => Dict::S('UI:BulkModifyErrors+')),
+		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
+		$aContext = array(
+			'filter' => $sFilter,
+			'selectObj' => $sSelectedObj,
 		);
-		$aRows = array();
-
-		$oP->add("<div class=\"page_header\">\n");
-		$oP->add("<h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:Modify_N_ObjectsOf_Class', count($aSelectedObj), $sClass)."</h1>\n");
-		$oP->add("</div>\n");
-		$oP->set_title(Dict::Format('UI:Modify_N_ObjectsOf_Class', count($aSelectedObj), $sClass));
-		if (!$bPreview)
-		{
-			// Not in preview mode, do the update for real
-			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
-			if (!utils::IsTransactionValid($sTransactionId, false))
-			{
-				throw new Exception(Dict::S('UI:Error:ObjectAlreadyUpdated'));
-			}
-			utils::RemoveTransaction($sTransactionId);
-		}
-		foreach($aSelectedObj as $iId)
-		{
-			$oObj = MetaModel::GetObject($sClass, $iId);
-			$aErrors = $oObj->UpdateObjectFromPostedForm('');
-			$bResult = (count($aErrors) == 0);
-			if ($bResult)
-			{
-				list($bResult, $aErrors) = $oObj->CheckToWrite(true /* Enforce Read-only fields */);
-			}
-			if ($bPreview)
-			{
-				$sStatus = $bResult ? Dict::S('UI:BulkModifyStatusOk') : Dict::S('UI:BulkModifyStatusError');
-			}
-			else
-			{
-				$sStatus = $bResult ? Dict::S('UI:BulkModifyStatusModified') : Dict::S('UI:BulkModifyStatusSkipped');
-			}
-			$sCSSClass = $bResult ? HILIGHT_CLASS_NONE : HILIGHT_CLASS_CRITICAL;
-			$sChecked = $bResult ? 'checked' : '';
-			$sDisabled = $bResult ? '' : 'disabled';
-			$aRows[] = array(
-				'form::select' => "<input type=\"checkbox\" class=\"selectList\" $sChecked $sDisabled\"></input>",
-				'object' => $oObj->GetHyperlink(),
-				'status' => $sStatus,
-				'errors' => '<p>'.($bResult ? '': implode('</p><p>', $aErrors)).'</p>',
-				'@class' => $sCSSClass,
-			);
-			if ($bResult && (!$bPreview))
-			{
-				$oObj->DBUpdate();
-			}
-		}
-		$oP->Table($aHeaders, $aRows);
-		$sURL = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-		if ($bPreview)
-		{
-			// Form to submit:
-			$oP->add("<form method=\"post\" action=\"UI.php\" enctype=\"multipart/form-data\">\n");
-			$aDefaults = utils::ReadParam('default', array());
-			$oP->add($oAppContext->GetForForm());
-			$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-			$oP->add("<input type=\"hidden\" name=\"filter\" value=\"$sFilter\">\n");
-			$oP->add("<input type=\"hidden\" name=\"selectObj\" value=\"$sSelectedObj\">\n");
-			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"preview_or_modify_all\">\n");
-			$oP->add("<input type=\"hidden\" name=\"preview_mode\" value=\"0\">\n");
-			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-			$oP->add("<button type=\"button\" class=\"action cancel\" onClick=\"window.location.href='$sURL'\">".Dict::S('UI:Button:Cancel')."</button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
-			$oP->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:ModifyAll')."</span></button>\n");
-			foreach($_POST as $sKey => $value)
-			{
-				if (preg_match('/attr_(.+)/', $sKey, $aMatches))
-				{
-					// Beware: some values (like durations) are passed as arrays
-					if (is_array($value))
-					{
-						foreach($value as $vKey => $vValue)
-						{
-							$oP->add("<input type=\"hidden\" name=\"{$sKey}[$vKey]\" value=\"$vValue\">\n");
-						}
-					}
-					else
-					{
-						$oP->add("<input type=\"hidden\" name=\"$sKey\" value=\"$value\">\n");
-					}
-				}
-			}
-			$oP->add("</form>\n");
-		}
-		else
-		{
-			$sURL = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-			$oP->add("<button type=\"button\" onClick=\"window.location.href='$sURL'\" class=\"action\"><span>".Dict::S('UI:Button:Done')."</span></button>\n");
-		}
+		cmdbAbstractObject::DoBulkModify($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $bPreview, $sCancelUrl, $aContext);
 		break;
 
 		///////////////////////////////////////////////////////////////////////////////////////////
@@ -1431,7 +894,7 @@ EOF
 				else
 				{
 					// Nothing more to do
-					ReloadAndDisplay($oP, $oObj, $sMessage, $sSeverity);
+					ReloadAndDisplay($oP, $oObj, 'update', $sMessage, $sSeverity);
 				}
 			}
 		break;
@@ -1464,45 +927,46 @@ EOF
 			
 		///////////////////////////////////////////////////////////////////////////////////////////
 
+		case 'delete':
 		case 'bulk_delete': // Actual bulk deletion (if confirmed)
-			$sClass = utils::ReadPostedParam('class', '');
+			$sClass = utils::ReadParam('class', '', false, 'class');
 			$sClassLabel = MetaModel::GetName($sClass);
-			$sFilter = utils::ReadPostedParam('filter', '');
-			$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
-			$aSelectObject = utils::ReadMultipleSelection($oFullSetFilter);
 			$aObjects = array();
-			if ( empty($sClass) || empty($aSelectObject)) // TO DO: check that the class name is valid !
+			if ($operation == 'delete')
 			{
-				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObject[]'));
+				// Single object
+				$id = utils::ReadParam('id', '');
+				$oObj = MetaModel::GetObject($sClass, $id);
+				$aObjects[] = $oObj;
+				if (!UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, DBObjectSet::FromObject($oObj)))
+				{
+					throw new SecurityException(Dict::Format('UI:Error:DeleteNotAllowedOn_Class', $sClass));
+				}
 			}
-			foreach($aSelectObject as $iId)
+			else
 			{
-				$aObjects[] = MetaModel::GetObject($sClass, $iId);
+				// Several objects
+				$sFilter = utils::ReadPostedParam('filter', '');
+				$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
+				$aSelectObject = utils::ReadMultipleSelection($oFullSetFilter);
+				if ( empty($sClass) || empty($aSelectObject)) // TO DO: check that the class name is valid !
+				{
+					throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObject[]'));
+				}
+				foreach($aSelectObject as $iId)
+				{
+					$aObjects[] = MetaModel::GetObject($sClass, $iId);
+				}
+				if (!UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, DBObjectSet::FromArray($sClass, $aObjects)))
+				{
+					throw new SecurityException(Dict::Format('UI:Error:BulkDeleteNotAllowedOn_Class', $sClass));
+				}
+				$oP->set_title(Dict::S('UI:BulkDeletePageTitle'));
 			}
-			if (!UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, DBObjectSet::FromArray($sClass, $aObjects)))
-			{
-				throw new SecurityException(Dict::Format('UI:Error:BulkDeleteNotAllowedOn_Class', $sClass));
-			}
-			$oP->set_title(Dict::S('UI:BulkDeletePageTitle'));
-			DeleteObjects($oP, $sClass, $aObjects, ($operation == 'bulk_delete_confirmed'), $oFullSetFilter);
-		break;
+			// Go for the common part... (delete single, delete bulk, delete confirmed)
+			cmdbAbstractObject::DeleteObjects($oP, $sClass, $aObjects, ($operation != 'bulk_delete_confirmed'), 'bulk_delete_confirmed');
+			break;
 			
-		///////////////////////////////////////////////////////////////////////////////////////////
-
-		case 'delete':				// Deletion (preview)
-		case 'delete_confirmed':	// Deletion (confirmed)
-		$sClass = utils::ReadParam('class', '', false, 'class');
-		$sClassLabel = MetaModel::GetName($sClass);
-		$id = utils::ReadParam('id', '');
-		$oObj = MetaModel::GetObject($sClass, $id);
-	
-		if (!UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, DBObjectSet::FromObject($oObj)))
-		{
-			throw new SecurityException(Dict::Format('UI:Error:DeleteNotAllowedOn_Class', $sClass));
-		}
-		DeleteObjects($oP, $sClass, array($oObj), ($operation == 'delete_confirmed'));
-		break;
-	
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'apply_new': // Creation of a new object
@@ -1555,7 +1019,7 @@ EOF
 				else
 				{
 					// Nothing more to do
-					ReloadAndDisplay($oP, $oObj, $sMessage, 'ok');
+					ReloadAndDisplay($oP, $oObj, 'create', $sMessage, 'ok');
 				}
 			}
 			else
@@ -2116,7 +1580,7 @@ EOF
 					$sSeverity = 'error';
 				}
 			}
-			ReloadAndDisplay($oP, $oObj, $sMessage, $sSeverity);
+			ReloadAndDisplay($oP, $oObj, 'apply_stimulus', $sMessage, $sSeverity);
 		}
 		else
 		{
