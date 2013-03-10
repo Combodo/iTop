@@ -127,6 +127,9 @@
                     <item id="model_id">
                       <rank>20</rank>
                     </item>
+                    <item id="managementip">
+                      <rank>25</rank>
+                    </item>
                     <item id="nb_u">
                       <rank>30</rank>
                     </item>
@@ -197,6 +200,9 @@
             </item>
             <item id="model_id">
               <rank>70</rank>
+            </item>
+            <item id="managementip">
+              <rank>75</rank>
             </item>
             <item id="serialnumber">
               <rank>80</rank>
@@ -373,6 +379,9 @@
                     <item id="model_id">
                       <rank>20</rank>
                     </item>
+                    <item id="managementip">
+                      <rank>35</rank>
+                    </item>
                     <item id="nb_u">
                       <rank>30</rank>
                     </item>
@@ -443,6 +452,9 @@
             </item>
             <item id="model_id">
               <rank>70</rank>
+            </item>
+            <item id="managementip">
+              <rank>75</rank>
             </item>
             <item id="serialnumber">
               <rank>80</rank>
@@ -618,6 +630,9 @@
                     <item id="model_id">
                       <rank>20</rank>
                     </item>
+                    <item id="managementip">
+                      <rank>25</rank>
+                    </item>
                     <item id="nb_u">
                       <rank>30</rank>
                     </item>
@@ -688,6 +703,9 @@
             </item>
             <item id="model_id">
               <rank>70</rank>
+            </item>
+            <item id="managementip">
+              <rank>75</rank>
             </item>
             <item id="serialnumber">
               <rank>80</rank>
@@ -863,6 +881,9 @@
                     <item id="model_id">
                       <rank>20</rank>
                     </item>
+                    <item id="managementip">
+                      <rank>25</rank>
+                    </item>
                     <item id="nb_u">
                       <rank>30</rank>
                     </item>
@@ -933,6 +954,9 @@
             </item>
             <item id="model_id">
               <rank>70</rank>
+            </item>
+            <item id="managementip">
+              <rank>75</rank>
             </item>
             <item id="serialnumber">
               <rank>80</rank>
