@@ -1578,7 +1578,7 @@
         </field>
         <field id="request_type" xsi:type="AttributeEnum">
           <values>
-            <value>servicerequest</value>
+            <value>service_request</value>
             <value>incident</value>
           </values>
           <sql>request_type</sql>
