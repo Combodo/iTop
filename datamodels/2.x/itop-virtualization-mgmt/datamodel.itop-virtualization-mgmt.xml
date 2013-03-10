@@ -877,6 +877,9 @@
       <presentation>
         <details>
           <items>
+            <item id="name">
+              <rank>5</rank>
+            </item>
             <item id="ipaddress">
               <rank>10</rank>
             </item>
@@ -902,6 +905,9 @@
         </details>
         <search>
           <items>
+            <item id="name">
+              <rank>5</rank>
+            </item>
             <item id="ipaddress">
               <rank>10</rank>
             </item>
