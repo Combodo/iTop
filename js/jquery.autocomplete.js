@@ -361,6 +361,7 @@ $.Autocompleter = function(input, options) {
 			$.ajax({
 				// try to leverage ajaxQueue plugin to abort previous requests
 				mode: "abort",
+				type: "POST",
 				// limit abortion to this input
 				port: "autocomplete" + input.name,
 				dataType: options.dataType,
