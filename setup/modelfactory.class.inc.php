@@ -297,59 +297,66 @@ class ModelFactory
 	 */
 	public function LoadModule(MFModule $oModule)
 	{
-		$aDataModels = $oModule->GetDataModelFiles();
-		$sModuleName = $oModule->GetName();
-		$aClasses = array();
-		self::$aLoadedModules[] = $oModule;
-		
-		// For persistence in the cache
-		$oModuleNode = $this->oDOMDocument->CreateElement('module');
-		$oModuleNode->setAttribute('id', $oModule->GetId());
-		$oModuleNode->AppendChild($this->oDOMDocument->CreateElement('root_dir', $oModule->GetRootDir()));
-		$oModuleNode->AppendChild($this->oDOMDocument->CreateElement('label', $oModule->GetLabel()));
-		$this->oModules->AppendChild($oModuleNode);
-		
-		foreach($aDataModels as $sXmlFile)
+		try
 		{
-			$oDocument = new MFDocument();
-			libxml_clear_errors();
-			$oDocument->load($sXmlFile);
-			//$bValidated = $oDocument->schemaValidate(APPROOT.'setup/itop_design.xsd');
-			$aErrors = libxml_get_errors();
-			if (count($aErrors) > 0)
+			$aDataModels = $oModule->GetDataModelFiles();
+			$sModuleName = $oModule->GetName();
+			$aClasses = array();
+			self::$aLoadedModules[] = $oModule;
+			
+			// For persistence in the cache
+			$oModuleNode = $this->oDOMDocument->CreateElement('module');
+			$oModuleNode->setAttribute('id', $oModule->GetId());
+			$oModuleNode->AppendChild($this->oDOMDocument->CreateElement('root_dir', $oModule->GetRootDir()));
+			$oModuleNode->AppendChild($this->oDOMDocument->CreateElement('label', $oModule->GetLabel()));
+			$this->oModules->AppendChild($oModuleNode);
+			
+			foreach($aDataModels as $sXmlFile)
 			{
-				self::$aLoadErrors[$sModuleName] = $aErrors;
-				return;
-			}
-
-			$oXPath = new DOMXPath($oDocument);
-			$oNodeList = $oXPath->query('/itop_design/classes//class');
-			foreach($oNodeList as $oNode)
-			{
-				if ($oNode->getAttribute('_created_in') == '')
+				$oDocument = new MFDocument();
+				libxml_clear_errors();
+				$oDocument->load($sXmlFile);
+				//$bValidated = $oDocument->schemaValidate(APPROOT.'setup/itop_design.xsd');
+				$aErrors = libxml_get_errors();
+				if (count($aErrors) > 0)
 				{
-					$oNode->SetAttribute('_created_in', $sModuleName);
+					self::$aLoadErrors[$sModuleName] = $aErrors;
+					return;
 				}
-			}
-			$oNodeList = $oXPath->query('/itop_design/menus/menu');
-			foreach($oNodeList as $oNode)
-			{
-				if ($oNode->getAttribute('_created_in') == '')
+	
+				$oXPath = new DOMXPath($oDocument);
+				$oNodeList = $oXPath->query('/itop_design/classes//class');
+				foreach($oNodeList as $oNode)
 				{
-					$oNode->SetAttribute('_created_in', $sModuleName);
+					if ($oNode->getAttribute('_created_in') == '')
+					{
+						$oNode->SetAttribute('_created_in', $sModuleName);
+					}
 				}
-			}
-			$oUserRightsNode = $oXPath->query('/itop_design/user_rights')->item(0);
-			if ($oUserRightsNode)
-			{
-				if ($oUserRightsNode->getAttribute('_created_in') == '')
+				$oNodeList = $oXPath->query('/itop_design/menus/menu');
+				foreach($oNodeList as $oNode)
 				{
-					$oUserRightsNode->SetAttribute('_created_in', $sModuleName);
+					if ($oNode->getAttribute('_created_in') == '')
+					{
+						$oNode->SetAttribute('_created_in', $sModuleName);
+					}
 				}
+				$oUserRightsNode = $oXPath->query('/itop_design/user_rights')->item(0);
+				if ($oUserRightsNode)
+				{
+					if ($oUserRightsNode->getAttribute('_created_in') == '')
+					{
+						$oUserRightsNode->SetAttribute('_created_in', $sModuleName);
+					}
+				}
+	
+				$oDeltaRoot = $oDocument->childNodes->item(0);
+				$this->LoadDelta($oDocument, $oDeltaRoot, $this->oDOMDocument);
 			}
-
-			$oDeltaRoot = $oDocument->childNodes->item(0);
-			$this->LoadDelta($oDocument, $oDeltaRoot, $this->oDOMDocument);
+		}
+		catch(Exception $e)
+		{
+			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage());
 		}
 	}
 
