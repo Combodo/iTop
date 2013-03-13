@@ -82,6 +82,9 @@ class DeletionPlan
 
 	public function ComputeResults()
 	{
+		$this->m_iToDelete = 0;
+		$this->m_iToUpdate = 0;
+
 		foreach($this->m_aToDelete as $sClass => $aToDelete)
 		{
 			foreach($aToDelete as $iId => $aData)

@@ -155,6 +155,7 @@ class RestResultWithObjects extends RestResult
 
 		if ($oObject)
 		{
+			$oObjRes->class = get_class($oObject);
 			foreach ($aFields as $sAttCode)
 			{
 				$oObjRes->AddField($oObject, $sAttCode);
@@ -165,6 +166,44 @@ class RestResultWithObjects extends RestResult
 	}
 }
 
+/**
+ * Deletion result codes for a target object (either deleted or updated)
+ *
+ * @package     Extensibility
+ * @api
+ * @since 2.0.1  
+ */
+class RestDelete
+{
+	/**
+	 * Result: Object deleted as per the initial request
+	 */
+	const OK = 0;
+	/**
+	 * Result: general issue (user rights or ... ?) 
+	 */
+	const ISSUE = 1;
+	/**
+	 * Result: Must be deleted to preserve database integrity 
+	 */
+	const AUTO_DELETE = 2;
+	/**
+	 * Result: Must be deleted to preserve database integrity, but that is NOT possible 
+	 */
+	const AUTO_DELETE_ISSUE = 3;
+	/**
+	 * Result: Must be deleted to preserve database integrity, but this must be requested explicitely 
+	 */
+	const REQUEST_EXPLICITELY = 4;
+	/**
+	 * Result: Must be updated to preserve database integrity
+	 */
+	const AUTO_UPDATE = 5;
+	/**
+	 * Result: Must be updated to preserve database integrity, but that is NOT possible
+	 */
+	const AUTO_UPDATE_ISSUE = 6;
+}
 
 /**
  * Implementation of core REST services (create/get/update... objects)
@@ -199,6 +238,10 @@ class CoreServices implements iRestServiceProvider
 			$aOps[] = array(
 				'verb' => 'core/get',
 				'description' => 'Search for objects'
+			);
+			$aOps[] = array(
+				'verb' => 'core/delete',
+				'description' => 'Delete objects'
 			);
 		}
 		return $aOps;
@@ -294,7 +337,7 @@ class CoreServices implements iRestServiceProvider
 			}	
 			break;
 	
-			case 'core/get':
+		case 'core/get':
 			$sClass = RestUtils::GetClass($aParams, 'class');
 			$key = RestUtils::GetMandatoryParam($aParams, 'key');
 			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
@@ -306,10 +349,147 @@ class CoreServices implements iRestServiceProvider
 			}
 			$oResult->message = "Found: ".$oObjectSet->Count();
 			break;
+
+		case 'core/delete':
+			$sClass = RestUtils::GetClass($aParams, 'class');
+			$key = RestUtils::GetMandatoryParam($aParams, 'key');
+			$bSimulate = RestUtils::GetOptionalParam($aParams, 'simulate', false);
 	
+			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key);
+			$aObjects = $oObjectSet->ToArray();
+			$this->DeleteObjects($oResult, $aObjects, $bSimulate);
+			break;
+
 		default:
 			// unknown operation: handled at a higher level
 		}
 		return $oResult;
+	}
+
+	/**
+	 * Helper for object deletion	
+	 */
+	public function DeleteObjects($oResult, $aObjects, $bSimulate)
+	{
+		$oDeletionPlan = new DeletionPlan();
+		foreach($aObjects as $oObj)
+		{
+			if ($bSimulate)
+			{
+				$oObj->CheckToDelete($oDeletionPlan);
+			}
+			else
+			{
+				$oObj->DBDelete($oDeletionPlan);
+			}
+		}
+
+		foreach ($oDeletionPlan->ListDeletes() as $sTargetClass => $aDeletes)
+		{
+			foreach ($aDeletes as $iId => $aData)
+			{
+				$oToDelete = $aData['to_delete'];
+				$bAutoDel = (($aData['mode'] == DEL_SILENT) || ($aData['mode'] == DEL_AUTO));
+				if (array_key_exists('issue', $aData))
+				{
+					if ($bAutoDel)
+					{
+						if (isset($aData['requested_explicitely'])) // i.e. in the initial list of objects to delete
+						{
+							$iCode = RestDelete::ISSUE;
+							$sPlanned = 'Cannot be deleted: '.$aData['issue'];
+						}
+						else
+						{
+							$iCode = RestDelete::AUTO_DELETE_ISSUE;
+							$sPlanned = 'Should be deleted automatically... but: '.$aData['issue'];
+						}
+					}
+					else
+					{
+						$iCode = RestDelete::REQUEST_EXPLICITELY;
+						$sPlanned = 'Must be deleted explicitely... but: '.$aData['issue'];
+					}
+				}
+				else
+				{
+					if ($bAutoDel)
+					{
+						if (isset($aData['requested_explicitely']))
+						{
+							$iCode = RestDelete::OK;
+		               $sPlanned = '';
+						}
+						else
+						{
+							$iCode = RestDelete::AUTO_DELETE;
+							$sPlanned = 'Deleted automatically';
+						}
+					}
+					else
+					{
+						$iCode = RestDelete::REQUEST_EXPLICITELY;
+						$sPlanned = 'Must be deleted explicitely';
+					}
+				}
+				$oResult->AddObject($iCode, $sPlanned, $oToDelete, array('id', 'friendlyname'));
+			}
+		}
+		foreach ($oDeletionPlan->ListUpdates() as $sRemoteClass => $aToUpdate)
+		{
+			foreach ($aToUpdate as $iId => $aData)
+			{
+				$oToUpdate = $aData['to_reset'];
+				if (array_key_exists('issue', $aData))
+				{
+					$iCode = RestDelete::AUTO_UPDATE_ISSUE;
+					$sPlanned = 'Should be updated automatically... but: '.$aData['issue'];
+				}
+				else
+				{
+					$iCode = RestDelete::AUTO_UPDATE;
+					$sPlanned = 'Reset external keys: '.$aData['attributes_list'];
+				}
+				$oResult->AddObject($iCode, $sPlanned, $oToUpdate, array('id', 'friendlyname'));
+			}
+		}
+		
+		if ($oDeletionPlan->FoundStopper())
+		{
+			if ($oDeletionPlan->FoundSecurityIssue())
+			{
+				$iRes = RestResult::UNAUTHORIZED;
+				$sRes = 'Deletion not allowed on some objects';
+			}
+			elseif ($oDeletionPlan->FoundManualOperation())
+			{
+				$iRes = RestResult::UNSAFE; 
+				$sRes = 'The deletion requires that other objects be deleted/updated, and those operations must be requested explicitely';
+			}
+			else
+			{
+				$iRes = RestResult::INTERNAL_ERROR; 
+				$sRes = 'Some issues have been encountered. See the list of planned changes for more information about the issue(s).';
+			}		
+		}
+		else
+		{
+			$iRes = RestResult::OK; 
+			$sRes = 'Deleted: '.count($aObjects);
+			$iIndirect = $oDeletionPlan->GetTargetCount() - count($aObjects);
+			if ($iIndirect > 0)
+			{
+				$sRes .= ' plus (for DB integrity) '.$iIndirect;
+			}
+		}
+		$oResult->code = $iRes;
+		if ($bSimulate)
+		{
+			$oResult->message = 'SIMULATING: '.$sRes;
+		}
+		else
+		{
+			$oResult->message = $sRes;
+		}
 	}
 }
