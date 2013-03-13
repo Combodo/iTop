@@ -24,10 +24,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 require_once('itopsoaptypes.class.inc.php');
-
-$sItopRoot = 'http'.((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/..';
+$sItopRoot = 'http'.(utils::IsConnectionSecure() ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/..';
 $sWsdlUri = $sItopRoot.'/webservices/itop.wsdl.php';
 //$sWsdlUri .= '?service_category=';
 

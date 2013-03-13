@@ -2935,7 +2935,7 @@ abstract class TestSoap extends TestSoapWebService
 		$aSOAPMapping = SOAPMapping::GetMapping();
 
 		// this file is generated dynamically with location = here
-		$sWsdlUri = 'http'.(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off') ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../webservices/itop.wsdl.php';
+		$sWsdlUri = 'http'.(utils::IsConnectionSecure() ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../webservices/itop.wsdl.php';
 
 		ini_set("soap.wsdl_cache_enabled","0");
 

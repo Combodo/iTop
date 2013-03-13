@@ -220,20 +220,9 @@ EOF
 		return MetaModel::GetConfig()->GetSecureConnectionRequired();
 	}
 
-	static function IsConnectionSecure()
-	{
-		$bSecured = false;
-
-		if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off'))
-		{
-			$bSecured = true;
-		}
-		return $bSecured;
-	}
-	
 	protected static function Login()
 	{
-		if (self::SecureConnectionRequired() && !self::IsConnectionSecure())
+		if (self::SecureConnectionRequired() && !utils::IsConnectionSecure())
 		{
 			// Non secured URL... request for a secure connection
 			throw new Exception('Secure connection required!');			

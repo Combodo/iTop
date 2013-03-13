@@ -508,7 +508,7 @@ class utils
 	{
 		// Build an absolute URL to this page on this server/port
 		$sServerName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
-		$sProtocol = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!="off")) ? 'https' : 'http';
+		$sProtocol = self::IsConnectionSecure() ? 'https' : 'http';
 		$iPort = isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : 80;
 		if ($sProtocol == 'http')
 		{
@@ -569,6 +569,25 @@ class utils
 			}			
 		}
 		return $sAppRootUrl;
+	}
+
+	/**
+	 * Helper to handle the variety of HTTP servers
+	 * See #286 (fixed in [896]), and #634 (this fix)
+	 * 	 
+	 * Though the official specs says 'a non empty string', some servers like IIS do set it to 'off' !
+	 * nginx set it to an empty string
+	 * Others might leave it unset (no array entry)	 
+	 */	 	
+	static public function IsConnectionSecure()
+	{
+		$bSecured = false;
+
+		if (!empty($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off'))
+		{
+			$bSecured = true;
+		}
+		return $bSecured;
 	}
 
 	/**
