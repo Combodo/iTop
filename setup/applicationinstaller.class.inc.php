@@ -375,11 +375,17 @@ class ApplicationInstaller
 			
 			SetupPage::log_error('An exception occurred: '.$e->getMessage().' at line '.$e->getLine().' in file '.$e->getFile());
 			$idx = 0;
-			// Log the call stack, but log the parameters since they may contain passwords or other sensitive data
+			// Log the call stack, but not the parameters since they may contain passwords or other sensitive data
 			SetupPage::log("Call stack:");
 			foreach($e->getTrace() as $aTrace)
 			{
-				SetupPage::log("#$idx {$aTrace['file']}({$aTrace['line']}): {$aTrace['function']}(...)");
+				$sLine = empty($aTrace['line']) ? "" : $aTrace['line'];
+				$sFile = empty($aTrace['file']) ? "" : $aTrace['file'];
+				$sClass = empty($aTrace['class']) ? "" : $aTrace['class'];
+				$sType = empty($aTrace['type']) ? "" : $aTrace['type'];
+				$sFunction = empty($aTrace['function']) ? "" : $aTrace['function'];
+				$sVerb = empty($sClass) ? $sFunction : "$sClass{$sType}$sFunction";
+				SetupPage::log("#$idx $sFile($sLine): $sVerb(...)");
 				$idx++;
 			}
 		}
