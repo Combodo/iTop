@@ -1295,6 +1295,14 @@ EOF;
 
 
 /**
+ * Allow the setup page to load and perform its checks (including the check about the required extensions)
+ */
+if (!class_exists('DOMElement'))
+{
+class DOMElement {function __construct(){throw new Exception('The dom extension is not enabled');}}
+}
+
+/**
  * MFElement: helper to read/change the DOM
  * @package ModelFactory
  */
@@ -1777,6 +1785,14 @@ class MFElement extends DOMElement
 		}
 		return $aCurrentRules;
 	 }	 	
+}
+
+/**
+ * Allow the setup page to load and perform its checks (including the check about the required extensions)
+ */
+if (!class_exists('DOMDocument'))
+{
+class DOMDocument {function __construct(){throw new Exception('The dom extension is not enabled');}}
 }
 
 /**
