@@ -546,6 +546,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 												{
 													$sTip .= "<p>Synchronized with {$aRow['name']} - {$aRow['description']}</p>";
 												}
+												$sTip = addslashes($sTip);
 												$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
 											}
 
@@ -2832,6 +2833,7 @@ EOF
 					{
 						$sTip .= "<p>Synchronized with {$aRow['name']} - {$aRow['description']}</p>";
 					}
+					$sTip = addslashes($sTip);
 					$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
 				}
 
