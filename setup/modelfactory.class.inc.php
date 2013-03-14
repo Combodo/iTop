@@ -213,7 +213,7 @@ class ModelFactory
 				{
 					echo "Dumping target doc - looking for '$sParentId'<br/>\n";
 					$this->oDOMDocument->firstChild->Dump();
-					throw new Exception("XML datamodel loader: could not find parent node for $oSourceNode->tagName / ".$oSourceNode->getAttribute('id')." with parent id $sParentId");
+					throw new Exception("could not find parent node for $oSourceNode->tagName(id:".$oSourceNode->getAttribute('id').") with parent id $sParentId");
 				}
 			}
 			else 
@@ -223,7 +223,7 @@ class ModelFactory
 				{
 					echo "Dumping target doc - looking for '".$oSourceNode->getAttribute('id')."'<br/>\n";
 					$this->oDOMDocument->firstChild->Dump();
-					throw new Exception("XML datamodel loader: could not find node for $oSourceNode->tagName/".$oSourceNode->getAttribute('id'));
+					throw new Exception("could not find node for $oSourceNode->tagName(id:".$oSourceNode->getAttribute('id').")");
 				}
 				else
 				{
@@ -303,7 +303,7 @@ class ModelFactory
 			$sModuleName = $oModule->GetName();
 			$aClasses = array();
 			self::$aLoadedModules[] = $oModule;
-			
+		
 			// For persistence in the cache
 			$oModuleNode = $this->oDOMDocument->CreateElement('module');
 			$oModuleNode->setAttribute('id', $oModule->GetId());
@@ -356,7 +356,12 @@ class ModelFactory
 		}
 		catch(Exception $e)
 		{
-			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage());
+			$aLoadedModuleNames = array();
+			foreach (self::$aLoadedModules as $oModule)
+			{
+				$aLoadedModuleNames[] = $oModule->GetName();
+			}
+			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(',', $aLoadedModuleNames));
 		}
 	}
 
@@ -1691,7 +1696,7 @@ class MFElement extends DOMElement
 			{
 				if ($bMustExist)
 				{
-					throw new Exception("XML datamodel loader: found mandatory node $this->tagName/$sSearchId marked as deleted in $oContainer->tagName");
+					throw new Exception("found mandatory node $this->tagName(id:$sSearchId) marked as deleted in ".$oContainer->getNodePath());
 				}
 				// Beware: ImportNode(xxx, false) DOES NOT copy the node's attribute on *some* PHP versions (<5.2.17)
 				// So use this workaround to import a node and its attributes on *any* PHP version
@@ -1705,7 +1710,7 @@ class MFElement extends DOMElement
 			{
 				echo "Dumping parent node<br/>\n";
 				$oContainer->Dump();
-				throw new Exception("XML datamodel loader: could not find $this->tagName/$sSearchId in $oContainer->tagName");
+				throw new Exception("could not find $this->tagName(id:$sSearchId) in ".$oContainer->getNodePath());
 			}
 			// Beware: ImportNode(xxx, false) DOES NOT copy the node's attribute on *some* PHP versions (<5.2.17)
 			// So use this workaround to import a node and its attributes on *any* PHP version
