@@ -2076,10 +2076,27 @@ abstract class MetaModel
 		return $aScalarArgs;
 	}
 
-	public static function MakeGroupByQuery(DBObjectSearch $oFilter, $aArgs, $aGroupByExpr)
+	public static function MakeGroupByQuery(DBObjectSearch $oFilter, $aArgs, $aGroupByExpr, $bExcludeNullValues = false)
 	{
 		$aAttToLoad = array();
-		$oSelect = self::MakeSelectStructure($oFilter, array(), $aArgs, $aAttToLoad, null, 0, 0, false, $aGroupByExpr);
+
+		if ($bExcludeNullValues)
+		{
+			// Null values are not handled (though external keys set to 0 are allowed)
+			$oQueryFilter = $oFilter->DeepClone();
+			foreach ($aGroupByExpr as $oGroupByExp)
+			{
+				$oNull = new FunctionExpression('ISNULL', array($oGroupByExp));
+				$oNotNull = new BinaryExpression($oNull, '!=', new TrueExpression());
+				$oQueryFilter->AddConditionExpression($oNotNull);
+			}
+		}
+		else
+		{
+			$oQueryFilter = $oFilter;
+		}
+
+		$oSelect = self::MakeSelectStructure($oQueryFilter, array(), $aArgs, $aAttToLoad, null, 0, 0, false, $aGroupByExpr);
 
 		$aScalarArgs = array_merge(self::PrepareQueryArguments($aArgs), $oFilter->GetInternalParams());
 		try
