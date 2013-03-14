@@ -5148,7 +5148,7 @@ abstract class MetaModel
 		}
 		$aEntries = array();
 		$aCacheUserData = @apc_cache_info('user');
-		if (is_array($aCacheUserData))
+		if (is_array($aCacheUserData) && isset($aCacheUserData['cache_list']))
 		{ 
 			$sPrefix = 'itop-'.$sEnvironment.'-';
 	
