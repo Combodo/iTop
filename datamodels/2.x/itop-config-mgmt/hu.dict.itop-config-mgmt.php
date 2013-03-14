@@ -657,6 +657,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:ConfigManagementOverview+' => '',
 	'Menu:Contact' => 'Kapcsolattartók',
 	'Menu:Contact+' => '',
+	'Menu:Contact:Count' => '%1$d',
 	'Menu:Person' => 'Személyek',
 	'Menu:Person+' => '',
 	'Menu:Team' => 'Csoportok',

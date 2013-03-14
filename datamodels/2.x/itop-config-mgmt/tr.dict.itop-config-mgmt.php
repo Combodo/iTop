@@ -1007,6 +1007,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 'Menu:ConfigManagementOverview+' => 'Özet',
 'Menu:Contact' => 'İrtibatlar',
 'Menu:Contact+' => 'İrtibatlar',
+'Menu:Contact:Count' => '%1$d',
 'Menu:Person' => 'Kişiler',
 'Menu:Person+' => 'Tüm Kişiler',
 'Menu:Team' => 'Ekipler',

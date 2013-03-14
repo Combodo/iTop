@@ -658,6 +658,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:ConfigManagementOverview+' => 'Visão Global',
 	'Menu:Contact' => 'Contatos',
 	'Menu:Contact+' => 'Contatos',
+	'Menu:Contact:Count' => '%1$d contatos',
 	'Menu:Person' => 'Pessoas',
 	'Menu:Person+' => 'Todas Pessoas',
 	'Menu:Team' => 'Equipes',

@@ -1705,7 +1705,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 'Menu:ConfigManagement+' => 'Administración de la Configuración',
 'Menu:ConfigManagementOverview' => 'Resumen de Infraestructura',
 'Menu:ConfigManagementOverview+' => 'Resumen de Infraestructura',
-'Menu:Contact:Count' => 'Contactos',
+'Menu:Contact:Count' => '%1$d contactos',
 'Menu:Contact' => 'Contactos',
 'Menu:Contact+' => 'Contactos',
 'Menu:Person' => 'Personas',

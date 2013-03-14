@@ -657,6 +657,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:ConfigManagementOverview+' => 'Panoramica',
 	'Menu:Contact' => 'Contatti',
 	'Menu:Contact+' => 'Contatti',
+	'Menu:Contact:Count' => '%1$d contatti',
 	'Menu:Person' => 'Persone',
 	'Menu:Person+' => 'Tutte le persone',
 	'Menu:Team' => 'Teams',

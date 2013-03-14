@@ -1037,6 +1037,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ConfigManagementOverview+' => 'Übersicht',
 	'Menu:Contact' => 'Kontakte',
 	'Menu:Contact+' => 'Kontakte',
+	'Menu:Contact:Count' => '%1$d kontakten',
 	'Menu:Person' => 'Personen',
 	'Menu:Person+' => 'Alle Personen',
 	'Menu:Team' => 'Teams',

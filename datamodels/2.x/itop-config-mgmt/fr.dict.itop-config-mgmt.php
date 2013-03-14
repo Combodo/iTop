@@ -1669,6 +1669,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ConfigManagementOverview+' => 'Tableaux de bord',
 	'Menu:Contact' => 'Contacts',
 	'Menu:Contact+' => 'Contacts',
+	'Menu:Contact:Count' => '%1$d contacts',
 	'Menu:Person' => 'Personnes',
 	'Menu:Person+' => 'Toutes les personnes',
 	'Menu:Team' => 'Equipes',

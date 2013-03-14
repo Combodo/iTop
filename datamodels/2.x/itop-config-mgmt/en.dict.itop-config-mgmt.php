@@ -1714,6 +1714,7 @@ Dict::Add('EN US', 'English', 'English', array(
 'Menu:ConfigManagementOverview+' => 'Overview',
 'Menu:Contact' => 'Contacts',
 'Menu:Contact+' => 'Contacts',
+'Menu:Contact:Count' => '%1$d contacts',
 'Menu:Person' => 'Persons',
 'Menu:Person+' => 'All persons',
 'Menu:Team' => 'Teams',

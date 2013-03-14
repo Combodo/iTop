@@ -1703,6 +1703,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 'Menu:ConfigManagementOverview+' => '概要',
 'Menu:Contact' => '連絡先',
 'Menu:Contact+' => '連絡先',
+'Menu:Contact:Count' => '%1$d',
 'Menu:Person' => '人物',
 'Menu:Person+' => '全人物',
 'Menu:Team' => 'チーム',

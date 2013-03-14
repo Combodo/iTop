@@ -1036,6 +1036,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:ConfigManagementOverview+' => 'Обзор',
 	'Menu:Contact' => 'Контакты',
 	'Menu:Contact+' => 'Контакты',
+	'Menu:Contact:Count' => '%1$d',
 	'Menu:Person' => 'Лица',
 	'Menu:Person+' => 'Все лица',
 	'Menu:Team' => 'Команды',

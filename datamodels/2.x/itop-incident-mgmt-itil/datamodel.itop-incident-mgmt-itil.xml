@@ -1795,7 +1795,7 @@
             <item id="col:col3">
               <rank>80</rank>
               <items>
-                <item id="fieldset:Relations">
+                <item id="fieldset:Ticket:relation">
                   <rank>10</rank>
                   <items>
                     <item id="parent_incident_id">

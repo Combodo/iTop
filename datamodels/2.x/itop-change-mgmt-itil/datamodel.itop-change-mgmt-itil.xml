@@ -1102,7 +1102,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Relations">
+                <item id="fieldset:Ticket:relation">
                   <rank>20</rank>
                   <items>
                     <item id="parent_id">
@@ -2093,7 +2093,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Relations">
+                <item id="fieldset:Ticket:relation">
                   <rank>20</rank>
                   <items>
                     <item id="parent_id">
@@ -3082,7 +3082,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Relations">
+                <item id="fieldset:Ticket:relation">
                   <rank>20</rank>
                   <items>
                     <item id="parent_id">
@@ -4215,7 +4215,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Relations">
+                <item id="fieldset:Ticket:relation">
                   <rank>20</rank>
                   <items>
                     <item id="parent_id">
@@ -5290,7 +5290,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Relations">
+                <item id="fieldset:Ticket:relation">
                   <rank>20</rank>
                   <items>
                     <item id="parent_id">

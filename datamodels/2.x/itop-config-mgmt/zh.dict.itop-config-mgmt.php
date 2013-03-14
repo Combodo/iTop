@@ -1009,6 +1009,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 'Menu:ConfigManagementOverview+' => '总览',
 'Menu:Contact' => '联系人',
 'Menu:Contact+' => '联系人',
+'Menu:Contact:Count' => '%1$d',
 'Menu:Person' => '人员',
 'Menu:Person+' => '所有人员',
 'Menu:Team' => '团队',
