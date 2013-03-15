@@ -655,7 +655,7 @@ EOF;
 				$aParameters['on_target_delete'] = $oField->GetChildText('on_target_delete');
 				$aParameters['depends_on'] = $sDependencies;
 				$aParameters['max_combo_length'] = $this->GetPropNumber($oField, 'max_combo_length');
-				$aParameters['min_auto_complete_chars'] = $this->GetPropNumber($oField, 'min_auto_complete_chars');
+				$aParameters['min_autocomplete_chars'] = $this->GetPropNumber($oField, 'min_autocomplete_chars');
 				$aParameters['allow_target_creation'] = $this->GetPropBoolean($oField, 'allow_target_creation');
 			}
 			elseif ($sAttType == 'AttributeHierarchicalKey')
@@ -674,7 +674,7 @@ EOF;
 				$aParameters['on_target_delete'] = $oField->GetChildText('on_target_delete');
 				$aParameters['depends_on'] = $sDependencies;
 				$aParameters['max_combo_length'] = $this->GetPropNumber($oField, 'max_combo_length');
-				$aParameters['min_auto_complete_chars'] = $this->GetPropNumber($oField, 'min_auto_complete_chars');
+				$aParameters['min_autocomplete_chars'] = $this->GetPropNumber($oField, 'min_autocomplete_chars');
 				$aParameters['allow_target_creation'] = $this->GetPropBoolean($oField, 'allow_target_creation');
 			}
 			elseif ($sAttType == 'AttributeExternalField')
