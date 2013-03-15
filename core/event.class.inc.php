@@ -41,6 +41,7 @@ class Event extends DBObject implements iDisplay
 			"db_key_field" => "id",
 			"db_finalclass_field" => "realclass",
 			"display_template" => "",
+			"order_by_default" => array('date' => false)
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -135,6 +136,7 @@ class EventNotification extends Event
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
 			"display_template" => "",
+			"order_by_default" => array('date' => false)
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -167,6 +169,7 @@ class EventNotificationEmail extends EventNotification
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
 			"display_template" => "",
+			"order_by_default" => array('date' => false)
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -204,6 +207,7 @@ class EventIssue extends Event
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
 			"display_template" => "",
+			"order_by_default" => array('date' => false)
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -303,6 +307,7 @@ class EventWebService extends Event
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
 			"display_template" => "",
+			"order_by_default" => array('date' => false)
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -337,6 +342,7 @@ class EventLoginUsage extends Event
 			"db_table" => "priv_event_loginusage",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
+			"order_by_default" => array('date' => false)
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
