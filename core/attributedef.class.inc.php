@@ -220,7 +220,7 @@ abstract class AttributeDefinition
 			$sDefault = str_replace('_', ' ', $this->m_sCode);
 		}
 
-		$sLabel = Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode, '');
+		$sLabel = Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode, '', true /* user language only */);
 		if (strlen($sLabel) == 0)
 		{
 			// Nothing found: go higher in the hierarchy (if possible)
@@ -277,7 +277,7 @@ abstract class AttributeDefinition
 		{
 			$sDefault = '';
 		}
-		$sLabel = Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'+', '');
+		$sLabel = Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'+', '', true /* user language only */);
 		if (strlen($sLabel) == 0)
 		{
 			// Nothing found: go higher in the hierarchy (if possible)
@@ -303,7 +303,7 @@ abstract class AttributeDefinition
 		{
 			$sDefault = '';
 		}
-		$sLabel = Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'?', '');
+		$sLabel = Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'?', '', true /* user language only */);
 		if (strlen($sLabel) == 0)
 		{
 			// Nothing found: go higher in the hierarchy (if possible)
@@ -2224,7 +2224,7 @@ class AttributeEnum extends AttributeString
 		}
 		else
 		{
-			$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue, '');
+			$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue, '', true /* user language only */);
 			if (strlen($sLabel) == 0)
 			{
 				$sLabel = str_replace('_', ' ', $sValue);
@@ -2251,7 +2251,7 @@ class AttributeEnum extends AttributeString
 		}
 		else
 		{
-			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+', '');
+			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+', '', true /* user language only */);
 			if (strlen($sDescription) == 0)
 			{
 				$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
