@@ -4421,6 +4421,8 @@
         <reconciliation>
           <attributes>
             <attribute id="name"/>
+            <attribute id="version"/>
+            <attribute id="vendor"/>
           </attributes>
         </reconciliation>
       </properties>
