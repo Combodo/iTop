@@ -297,7 +297,9 @@ class BulkChange
 		foreach ($this->m_aExtKeys[$sAttCode] as $sForeignAttCode => $iCol)
 		{
 			// The foreign attribute is one of our reconciliation key
-			$oReconFilter->AddCondition($sForeignAttCode, $aRowData[$iCol], '=');
+			$oForeignAtt = MetaModel::GetAttributeDef($oExtKey->GetTargetClass(), $sForeignAttCode);
+			$value = $oForeignAtt->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
+			$oReconFilter->AddCondition($sForeignAttCode, $value);
 			$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
 		}
 
@@ -359,7 +361,9 @@ class BulkChange
 				foreach ($aKeyConfig as $sForeignAttCode => $iCol)
 				{
 					// The foreign attribute is one of our reconciliation key
-					$oReconFilter->AddCondition($sForeignAttCode, $aRowData[$iCol], '=');
+					$oForeignAtt = MetaModel::GetAttributeDef($oExtKey->GetTargetClass(), $sForeignAttCode);
+					$value = $oForeignAtt->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
+					$oReconFilter->AddCondition($sForeignAttCode, $value, '=');
 					$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
 				}
 				$oExtObjects = new CMDBObjectSet($oReconFilter);
@@ -824,7 +828,8 @@ class BulkChange
 					{
 						// The value is given in the data row
 						$iCol = $this->m_aAttList[$sAttCode];
-						$valuecondition = $aRowData[$iCol];
+						$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+						$valuecondition = $oAttDef->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
 					}
 					if (is_null($valuecondition))
 					{
