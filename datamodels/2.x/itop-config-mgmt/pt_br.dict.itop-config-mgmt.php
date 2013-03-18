@@ -702,7 +702,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:SearchCIs' => 'Pesquisa para CIs',
 	'Menu:SearchCIs+' => 'Pesquisa para CIs',
 	'Menu:ConfigManagement:Devices' => 'Dispositivo',
-	'Menu:ConfigManagement:AllDevices' => 'Número de dispositivos: %1$d',
+	'Menu:ConfigManagement:AllDevices' => 'Infra-estrutura',
 	'Menu:ConfigManagement:SWAndApps' => 'Software e Aplicações',
 	'Menu:ConfigManagement:Misc' => 'Diversos',
 	'Menu:Group' => 'Grupo de CIs',

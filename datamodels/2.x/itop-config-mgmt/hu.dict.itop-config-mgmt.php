@@ -701,7 +701,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:SearchCIs' => 'CI keresés',
 	'Menu:SearchCIs+' => '',
 	'Menu:ConfigManagement:Devices' => 'Eszközök',
-	'Menu:ConfigManagement:AllDevices' => 'Eszközök száma: %1$d',
+	'Menu:ConfigManagement:AllDevices' => 'Infrastruktúra',
 	'Menu:ConfigManagement:SWAndApps' => 'Szoftverek és egyedi alkalmazások',
 	'Menu:ConfigManagement:Misc' => 'Egyéb',
 	'Menu:Group' => 'CI csoportok',

@@ -1081,7 +1081,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:SearchCIs' => 'Nach CIs suchen',
 	'Menu:SearchCIs+' => 'Nach CIs suchen',
 	'Menu:ConfigManagement:Devices' => 'Geräte',
-	'Menu:ConfigManagement:AllDevices' => 'Anzahl der Geräte: %1$d',
+	'Menu:ConfigManagement:AllDevices' => 'Infrastruktur',
 	'Menu:ConfigManagement:virtualization' => 'Virtualisierung',
 	'Menu:ConfigManagement:EndUsers' => 'Endbenutzer-Geräte',
 	'Menu:ConfigManagement:SWAndApps' => 'Software und Anwendungen',

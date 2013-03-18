@@ -1053,7 +1053,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 'Menu:SearchCIs' => '查找CI',
 'Menu:SearchCIs+' => '查找CI',
 'Menu:ConfigManagement:Devices' => '设备',
-'Menu:ConfigManagement:AllDevices' => '设备数量: %1$d',
+'Menu:ConfigManagement:AllDevices' => '基础架构',
 'Menu:ConfigManagement:SWAndApps' => '软件和应用程序',
 'Menu:ConfigManagement:Misc' => '杂项',
 'Menu:Group' => 'CI族',

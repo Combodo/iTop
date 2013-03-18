@@ -1051,7 +1051,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 'Menu:SearchCIs' => 'KK ara',
 'Menu:SearchCIs+' => 'KK ara',
 'Menu:ConfigManagement:Devices' => 'Cihazlar',
-'Menu:ConfigManagement:AllDevices' => 'Cihaz sayısı: %1$d',
+'Menu:ConfigManagement:AllDevices' => 'Altyapı',
 'Menu:ConfigManagement:SWAndApps' => 'Yazılım ve uygulamalar',
 'Menu:ConfigManagement:Misc' => 'Diğer',
 'Menu:Group' => 'KK Grupları',

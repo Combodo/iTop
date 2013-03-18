@@ -701,7 +701,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:SearchCIs' => 'Ricerca CIs',
 	'Menu:SearchCIs+' => 'Ricerca CIs',
 	'Menu:ConfigManagement:Devices' => 'Dispositvi',
-	'Menu:ConfigManagement:AllDevices' => 'Numero di dispositivi: %1$d',
+	'Menu:ConfigManagement:AllDevices' => 'Infrastrutture',
 	'Menu:ConfigManagement:SWAndApps' => 'Software e Applicazioni',
 	'Menu:ConfigManagement:Misc' => 'Varie',
 	'Menu:Group' => 'Gruppi di CIs',
