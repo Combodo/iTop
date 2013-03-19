@@ -1555,6 +1555,9 @@
         <reconciliation>
           <attributes>
             <attribute id="name"/>
+            <attribute id="priority"/>
+            <attribute id="request_type"/>
+            <attribute id="metric"/>
           </attributes>
         </reconciliation>
       </properties>

@@ -298,7 +298,6 @@
         <field id="parent_request_id" xsi:type="AttributeExternalKey">
           <filter><![CDATA[SELECT UserRequest WHERE id != :this->id AND status NOT IN ('rejected','resolved','closed')]]></filter>
           <dependencies>
-            <attribute id="service_id"/>
           </dependencies>
           <sql>parent_request_id</sql>
           <target_class>UserRequest</target_class>
