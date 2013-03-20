@@ -1214,7 +1214,7 @@ class AttributeDecimal extends AttributeDBField
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue)) return null;
-		if ($proposedValue == '') return null;
+		if ($proposedValue === '') return null;
 		return (string)$proposedValue;
 	}
 

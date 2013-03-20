@@ -322,6 +322,18 @@ abstract class CMDBObject extends DBObject
 				$oMyChangeOp->Set("newvalue", $value ? 1 : 0);
 				$iId = $oMyChangeOp->DBInsertNoReload();
 			}
+			elseif ($oAttDef instanceOf AttributeHierarchicalKey)
+			{
+				// Hierarchical keys
+				//
+				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeScalar");
+				$oMyChangeOp->Set("objclass", get_class($this));
+				$oMyChangeOp->Set("objkey", $this->GetKey());
+				$oMyChangeOp->Set("attcode", $sAttCode);
+				$oMyChangeOp->Set("oldvalue", $original);
+				$oMyChangeOp->Set("newvalue", $value[$sAttCode]);
+				$iId = $oMyChangeOp->DBInsertNoReload();
+			}
 			else
 			{
 				// Scalars
