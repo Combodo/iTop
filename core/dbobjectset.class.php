@@ -272,7 +272,9 @@ class DBObjectSet
 	{
 		// Make sure that we carry on the parameters of the set with the filter
 		$oFilter = $this->m_oFilter->DeepClone();
-		$oFilter->SetInternalParams(array_merge($oFilter->GetInternalParams(), $this->m_aArgs));
+		// Note: the arguments found within a set can be object (but not in a filter)
+		// That's why PrepareQueryArguments must be invoked there
+		$oFilter->SetInternalParams(array_merge($oFilter->GetInternalParams(), MetaModel::PrepareQueryArguments($this->m_aArgs)));
 		
 		if (count($this->m_aAddedIds) == 0)
 		{

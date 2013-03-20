@@ -96,7 +96,7 @@ class UIExtKeyWidget
 	}
 	
 	/**
-	 * Get the HTML fragment corresponding to the linkset editing widget
+	 * Get the HTML fragment corresponding to the ext key editing widget
 	 * @param WebPage $oP The web page used for all the output
 	 * @param Hash $aArgs Extra context arguments
 	 * @return string The HTML fragment to be inserted into the page
@@ -225,6 +225,15 @@ EOF
 			// Too many choices, use an autocomplete
 			$sSelectMode = 'false';
 		
+			// Check that the given value is allowed
+			$oSearch = $oAllowedValues->GetFilter();
+			$oSearch->AddCondition('id', $value);
+			$oSet = new DBObjectSet($oSearch);
+			if ($oSet->Count() == 0)
+			{
+				$value = 0;
+			}
+
 			if (is_null($value) || ($value == 0)) // Null values are displayed as ''
 			{
 				$sDisplayValue = isset($aArgs['sDefaultValue']) ? $aArgs['sDefaultValue'] : '';
