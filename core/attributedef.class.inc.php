@@ -212,15 +212,12 @@ abstract class AttributeDefinition
 	public function IsNullAllowed() {return true;} 
 	public function GetCode() {return $this->m_sCode;} 
 
-	public function GetLabel($sDefault = null)
+	/**
+	 * Helper to browse the hierarchy of classes, searching for a label
+	 */	 	
+	protected function SearchLabel($sDictEntrySuffix, $sDefault, $bUserLanguageOnly)
 	{
-		// If no default value is specified, let's define the most relevant one for developping purposes
-		if (is_null($sDefault))
-		{
-			$sDefault = str_replace('_', ' ', $this->m_sCode);
-		}
-
-		$sLabel = Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode, '');
+		$sLabel = Dict::S('Class:'.$this->m_sHostClass.$sDictEntrySuffix, '', $bUserLanguageOnly);
 		if (strlen($sLabel) == 0)
 		{
 			// Nothing found: go higher in the hierarchy (if possible)
@@ -232,13 +229,29 @@ abstract class AttributeDefinition
 				if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode))
 				{
 					$oAttDef = MetaModel::GetAttributeDef($sParentClass, $this->m_sCode);
-					$sLabel = $oAttDef->GetLabel($sDefault);
+					$sLabel = $oAttDef->SearchLabel($sDictEntrySuffix, $sDefault, $bUserLanguageOnly);
 				}
 			}
 		}
 		return $sLabel;
 	}
-	
+
+	public function GetLabel($sDefault = null)
+	{
+		$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode, null, true /*user lang*/);
+		if (is_null($sLabel))
+		{
+			// If no default value is specified, let's define the most relevant one for developping purposes
+			if (is_null($sDefault))
+			{
+				$sDefault = str_replace('_', ' ', $this->m_sCode);
+			}
+			// Browse the hierarchy again, accepting default (english) translations
+			$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode, $sDefault, false);
+		}
+		return $sLabel;
+	}
+
 	/**
 	 * Get the label corresponding to the given value (in plain text)
 	 * To be overloaded for localized enums
@@ -272,52 +285,32 @@ abstract class AttributeDefinition
 
 	public function GetDescription($sDefault = null)
 	{
-		// If no default value is specified, let's define the most relevant one for developping purposes
-		if (is_null($sDefault))
+		$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'+', null, true /*user lang*/);
+		if (is_null($sLabel))
 		{
-			$sDefault = '';
-		}
-		$sLabel = Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'+', '');
-		if (strlen($sLabel) == 0)
-		{
-			// Nothing found: go higher in the hierarchy (if possible)
-			//
-			$sLabel = $sDefault;
-			$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
-			if ($sParentClass)
+			// If no default value is specified, let's define the most relevant one for developping purposes
+			if (is_null($sDefault))
 			{
-				if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode))
-				{
-					$oAttDef = MetaModel::GetAttributeDef($sParentClass, $this->m_sCode);
-					$sLabel = $oAttDef->GetDescription($sDefault);
-				}
+				$sDefault = '';
 			}
+			// Browse the hierarchy again, accepting default (english) translations
+			$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'+', $sDefault, false);
 		}
 		return $sLabel;
-	} 
+	}
 
 	public function GetHelpOnEdition($sDefault = null)
 	{
-		// If no default value is specified, let's define the most relevant one for developping purposes
-		if (is_null($sDefault))
+		$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'?', null, true /*user lang*/);
+		if (is_null($sLabel))
 		{
-			$sDefault = '';
-		}
-		$sLabel = Dict::S('Class:'.$this->m_sHostClass.'/Attribute:'.$this->m_sCode.'?', '');
-		if (strlen($sLabel) == 0)
-		{
-			// Nothing found: go higher in the hierarchy (if possible)
-			//
-			$sLabel = $sDefault;
-			$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
-			if ($sParentClass)
+			// If no default value is specified, let's define the most relevant one for developping purposes
+			if (is_null($sDefault))
 			{
-				if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode))
-				{
-					$oAttDef = MetaModel::GetAttributeDef($sParentClass, $this->m_sCode);
-					$sLabel = $oAttDef->GetHelpOnEdition($sDefault);
-				}
+				$sDefault = '';
 			}
+			// Browse the hierarchy again, accepting default (english) translations
+			$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'?', $sDefault, false);
 		}
 		return $sLabel;
 	} 
@@ -2224,19 +2217,12 @@ class AttributeEnum extends AttributeString
 		}
 		else
 		{
-			$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue, '');
-			if (strlen($sLabel) == 0)
+			$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, null, true /*user lang*/);
+			if (is_null($sLabel))
 			{
-				$sLabel = str_replace('_', ' ', $sValue);
-				$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
-				if ($sParentClass)
-				{
-					if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode))
-					{
-						$oAttDef = MetaModel::GetAttributeDef($sParentClass, $this->m_sCode);
-						$sLabel = $oAttDef->GetValueLabel($sValue);
-					}
-				}
+				$sDefault = str_replace('_', ' ', $sValue);
+				// Browse the hierarchy again, accepting default (english) translations
+				$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, $sDefault, false);
 			}
 		}
 		return $sLabel;
@@ -2251,7 +2237,7 @@ class AttributeEnum extends AttributeString
 		}
 		else
 		{
-			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+', '');
+			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+', '', true /* user language only */);
 			if (strlen($sDescription) == 0)
 			{
 				$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
