@@ -231,7 +231,7 @@ EOF
 			$oSet = new DBObjectSet($oSearch);
 			if ($oSet->Count() == 0)
 			{
-				$value = 0;
+				$value = null;
 			}
 
 			if (is_null($value) || ($value == 0)) // Null values are displayed as ''
