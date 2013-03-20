@@ -17,7 +17,7 @@ SetupWebPage::AddModule(
 		),
 		'mandatory' => false,
 		'visible' => true,
-		'installer' => 'ServiceMgmtInstaller',
+		'installer' => 'ServiceMgmtProviderInstaller',
 
 		// Components
 		//
@@ -52,11 +52,11 @@ SetupWebPage::AddModule(
 	)
 );
 
-if (!class_exists('ServiceMgmtInstaller'))
+if (!class_exists('ServiceMgmtProviderInstaller'))
 {
 	// Module installation handler
 	//
-	class ServiceMgmtInstaller extends ModuleInstallerAPI
+	class ServiceMgmtProviderInstaller extends ModuleInstallerAPI
 	{
 		public static function BeforeWritingConfig(Config $oConfiguration)
 		{
@@ -76,6 +76,8 @@ if (!class_exists('ServiceMgmtInstaller'))
 			{
 				// If you want to migrate data from one format to another, do it here
 				self::RenameClassInDB('ServiceFamilly', 'ServiceFamily');
+
+				self::RenameEnumValueInDB('SLT', 'request_type', 'servicerequest', 'service_request');
 			}
 		}
 	
