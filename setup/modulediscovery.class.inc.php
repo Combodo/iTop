@@ -114,6 +114,7 @@ class ModuleDiscovery
 		{
 			$aDependencies[$sId] = $aModule['dependencies'];
 		}
+		ksort($aDependencies);
 		$aOrderedModules = array();
 		$iLoopCount = 1;
 		while(($iLoopCount < count(self::$m_aModules)) && (count($aDependencies) > 0) )

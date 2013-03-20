@@ -2327,6 +2327,9 @@
                     <item id="iosversion_id">
                       <rank>40</rank>
                     </item>
+                    <item id="managementip">
+                      <rank>45</rank>
+                    </item>
                     <item id="ram">
                       <rank>50</rank>
                     </item>
@@ -2394,6 +2397,9 @@
             </item>
             <item id="location_id">
               <rank>50</rank>
+            </item>
+            <item id="managementip">
+              <rank>55</rank>
             </item>
             <item id="brand_id">
               <rank>60</rank>
@@ -2647,6 +2653,9 @@
                     <item id="osversion_id">
                       <rank>40</rank>
                     </item>
+                    <item id="managementip">
+                      <rank>45</rank>
+                    </item>
                     <item id="oslicence_id">
                       <rank>50</rank>
                     </item>
@@ -2720,6 +2729,9 @@
             </item>
             <item id="location_id">
               <rank>50</rank>
+            </item>
+            <item id="managementip">
+              <rank>55</rank>
             </item>
             <item id="brand_id">
               <rank>60</rank>
@@ -4409,6 +4421,8 @@
         <reconciliation>
           <attributes>
             <attribute id="name"/>
+            <attribute id="version"/>
+            <attribute id="vendor"/>
           </attributes>
         </reconciliation>
       </properties>

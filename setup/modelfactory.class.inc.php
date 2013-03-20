@@ -213,7 +213,7 @@ class ModelFactory
 				{
 					echo "Dumping target doc - looking for '$sParentId'<br/>\n";
 					$this->oDOMDocument->firstChild->Dump();
-					throw new Exception("XML datamodel loader: could not find parent node for $oSourceNode->tagName / ".$oSourceNode->getAttribute('id')." with parent id $sParentId");
+					throw new Exception("could not find parent node for $oSourceNode->tagName(id:".$oSourceNode->getAttribute('id').") with parent id $sParentId");
 				}
 			}
 			else 
@@ -223,7 +223,7 @@ class ModelFactory
 				{
 					echo "Dumping target doc - looking for '".$oSourceNode->getAttribute('id')."'<br/>\n";
 					$this->oDOMDocument->firstChild->Dump();
-					throw new Exception("XML datamodel loader: could not find node for $oSourceNode->tagName/".$oSourceNode->getAttribute('id'));
+					throw new Exception("could not find node for $oSourceNode->tagName(id:".$oSourceNode->getAttribute('id').")");
 				}
 				else
 				{
@@ -297,59 +297,71 @@ class ModelFactory
 	 */
 	public function LoadModule(MFModule $oModule)
 	{
-		$aDataModels = $oModule->GetDataModelFiles();
-		$sModuleName = $oModule->GetName();
-		$aClasses = array();
-		self::$aLoadedModules[] = $oModule;
-		
-		// For persistence in the cache
-		$oModuleNode = $this->oDOMDocument->CreateElement('module');
-		$oModuleNode->setAttribute('id', $oModule->GetId());
-		$oModuleNode->AppendChild($this->oDOMDocument->CreateElement('root_dir', $oModule->GetRootDir()));
-		$oModuleNode->AppendChild($this->oDOMDocument->CreateElement('label', $oModule->GetLabel()));
-		$this->oModules->AppendChild($oModuleNode);
-		
-		foreach($aDataModels as $sXmlFile)
+		try
 		{
-			$oDocument = new MFDocument();
-			libxml_clear_errors();
-			$oDocument->load($sXmlFile);
-			//$bValidated = $oDocument->schemaValidate(APPROOT.'setup/itop_design.xsd');
-			$aErrors = libxml_get_errors();
-			if (count($aErrors) > 0)
+			$aDataModels = $oModule->GetDataModelFiles();
+			$sModuleName = $oModule->GetName();
+			$aClasses = array();
+			self::$aLoadedModules[] = $oModule;
+		
+			// For persistence in the cache
+			$oModuleNode = $this->oDOMDocument->CreateElement('module');
+			$oModuleNode->setAttribute('id', $oModule->GetId());
+			$oModuleNode->AppendChild($this->oDOMDocument->CreateElement('root_dir', $oModule->GetRootDir()));
+			$oModuleNode->AppendChild($this->oDOMDocument->CreateElement('label', $oModule->GetLabel()));
+			$this->oModules->AppendChild($oModuleNode);
+			
+			foreach($aDataModels as $sXmlFile)
 			{
-				self::$aLoadErrors[$sModuleName] = $aErrors;
-				return;
-			}
-
-			$oXPath = new DOMXPath($oDocument);
-			$oNodeList = $oXPath->query('/itop_design/classes//class');
-			foreach($oNodeList as $oNode)
-			{
-				if ($oNode->getAttribute('_created_in') == '')
+				$oDocument = new MFDocument();
+				libxml_clear_errors();
+				$oDocument->load($sXmlFile);
+				//$bValidated = $oDocument->schemaValidate(APPROOT.'setup/itop_design.xsd');
+				$aErrors = libxml_get_errors();
+				if (count($aErrors) > 0)
 				{
-					$oNode->SetAttribute('_created_in', $sModuleName);
+					self::$aLoadErrors[$sModuleName] = $aErrors;
+					return;
 				}
-			}
-			$oNodeList = $oXPath->query('/itop_design/menus/menu');
-			foreach($oNodeList as $oNode)
-			{
-				if ($oNode->getAttribute('_created_in') == '')
+	
+				$oXPath = new DOMXPath($oDocument);
+				$oNodeList = $oXPath->query('/itop_design/classes//class');
+				foreach($oNodeList as $oNode)
 				{
-					$oNode->SetAttribute('_created_in', $sModuleName);
+					if ($oNode->getAttribute('_created_in') == '')
+					{
+						$oNode->SetAttribute('_created_in', $sModuleName);
+					}
 				}
-			}
-			$oUserRightsNode = $oXPath->query('/itop_design/user_rights')->item(0);
-			if ($oUserRightsNode)
-			{
-				if ($oUserRightsNode->getAttribute('_created_in') == '')
+				$oNodeList = $oXPath->query('/itop_design/menus/menu');
+				foreach($oNodeList as $oNode)
 				{
-					$oUserRightsNode->SetAttribute('_created_in', $sModuleName);
+					if ($oNode->getAttribute('_created_in') == '')
+					{
+						$oNode->SetAttribute('_created_in', $sModuleName);
+					}
 				}
+				$oUserRightsNode = $oXPath->query('/itop_design/user_rights')->item(0);
+				if ($oUserRightsNode)
+				{
+					if ($oUserRightsNode->getAttribute('_created_in') == '')
+					{
+						$oUserRightsNode->SetAttribute('_created_in', $sModuleName);
+					}
+				}
+	
+				$oDeltaRoot = $oDocument->childNodes->item(0);
+				$this->LoadDelta($oDocument, $oDeltaRoot, $this->oDOMDocument);
 			}
-
-			$oDeltaRoot = $oDocument->childNodes->item(0);
-			$this->LoadDelta($oDocument, $oDeltaRoot, $this->oDOMDocument);
+		}
+		catch(Exception $e)
+		{
+			$aLoadedModuleNames = array();
+			foreach (self::$aLoadedModules as $oModule)
+			{
+				$aLoadedModuleNames[] = $oModule->GetName();
+			}
+			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(',', $aLoadedModuleNames));
 		}
 	}
 
@@ -1283,6 +1295,14 @@ EOF;
 
 
 /**
+ * Allow the setup page to load and perform its checks (including the check about the required extensions)
+ */
+if (!class_exists('DOMElement'))
+{
+class DOMElement {function __construct(){throw new Exception('The dom extension is not enabled');}}
+}
+
+/**
  * MFElement: helper to read/change the DOM
  * @package ModelFactory
  */
@@ -1684,7 +1704,7 @@ class MFElement extends DOMElement
 			{
 				if ($bMustExist)
 				{
-					throw new Exception("XML datamodel loader: found mandatory node $this->tagName/$sSearchId marked as deleted in $oContainer->tagName");
+					throw new Exception("found mandatory node $this->tagName(id:$sSearchId) marked as deleted in ".$oContainer->getNodePath());
 				}
 				// Beware: ImportNode(xxx, false) DOES NOT copy the node's attribute on *some* PHP versions (<5.2.17)
 				// So use this workaround to import a node and its attributes on *any* PHP version
@@ -1698,7 +1718,7 @@ class MFElement extends DOMElement
 			{
 				echo "Dumping parent node<br/>\n";
 				$oContainer->Dump();
-				throw new Exception("XML datamodel loader: could not find $this->tagName/$sSearchId in $oContainer->tagName");
+				throw new Exception("could not find $this->tagName(id:$sSearchId) in ".$oContainer->getNodePath());
 			}
 			// Beware: ImportNode(xxx, false) DOES NOT copy the node's attribute on *some* PHP versions (<5.2.17)
 			// So use this workaround to import a node and its attributes on *any* PHP version
@@ -1765,6 +1785,14 @@ class MFElement extends DOMElement
 		}
 		return $aCurrentRules;
 	 }	 	
+}
+
+/**
+ * Allow the setup page to load and perform its checks (including the check about the required extensions)
+ */
+if (!class_exists('DOMDocument'))
+{
+class DOMDocument {function __construct(){throw new Exception('The dom extension is not enabled');}}
 }
 
 /**

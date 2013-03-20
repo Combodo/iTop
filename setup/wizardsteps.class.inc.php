@@ -480,7 +480,7 @@ EOF
 		{
 			// Special case for upgrading some  development versions (temporary)
 			$sCompatibleDMDir = SetupUtils::GetLatestDataModelDir();
-			$sInstalledDataModelVersion = SetupUtils::GetDataModelVersion($sLatestDMDir);
+			$sInstalledDataModelVersion = SetupUtils::GetDataModelVersion($sCompatibleDMDir);
 		}
 		else
 		{
@@ -1209,6 +1209,7 @@ EOF
 		foreach($aOptions as $index => $aChoice)
 		{
 			$sChoiceId = $sParentId.self::$SEP.$index;
+			$aScores[$sChoiceId] = 0;
 			if (!$this->bUpgrade && isset($aChoice['default']) && $aChoice['default'])
 			{
 				$aDefaults[$sChoiceId] = $sChoiceId;
@@ -1272,7 +1273,6 @@ EOF
 				{
 					$sChoiceName = $sChoiceId;
 				}
-				$aScores[$sChoiceId] = 0;
 				if (array_key_exists('modules', $aChoice))
 				{
 					foreach($aChoice['modules'] as $sModuleId)
@@ -1286,7 +1286,8 @@ EOF
 							$iScore = 99; // The whole parent choice is selected
 						}
 					}
-				}
+				}		
+				$iMaxScore = max($iMaxScore, isset($aScores[$sChoiceId]) ? $aScores[$sChoiceId] : 0);
 			}
 		}
 		if ($iMaxScore > 0)

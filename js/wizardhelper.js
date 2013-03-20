@@ -134,6 +134,9 @@ function WizardHelper(sClass, sFormPrefix, sState)
 			//console.log(sFieldCode);
 			this.UpdateCurrentValue(sCleanFieldCode);
 		}
+		// Remove unnecessary stuff
+		this.m_oData.m_oDefaultValue = {};
+		this.m_oData.m_oAllowedValues = {};
 	}
 	
 	this.UpdateWizardToJSON = function ()

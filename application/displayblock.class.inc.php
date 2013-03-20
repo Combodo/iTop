@@ -395,7 +395,7 @@ class DisplayBlock
 
 				$aGroupBy = array();
 				$aGroupBy['grouped_by_1'] = $oGroupByExp;
-				$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy);
+				$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy, true);
 				$aRes = CMDBSource::QueryToArray($sSql);
 
 				$aGroupBy = array();
@@ -893,7 +893,7 @@ EOF
 
 				$aGroupBy = array();
 				$aGroupBy['grouped_by_1'] = $oGroupByExp;
-				$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy);
+				$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy, true);
 				$aRes = CMDBSource::QueryToArray($sSql);
 
 				$aGroupBy = array();
@@ -968,7 +968,7 @@ EOF
 	
 					$aGroupBy = array();
 					$aGroupBy['grouped_by_1'] = $oGroupByExp;
-					$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy);
+					$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy, true);
 					$aRes = CMDBSource::QueryToArray($sSql);
 	
 					$aGroupBy = array();
@@ -1049,7 +1049,8 @@ EOF
 	
 					$aGroupBy = array();
 					$aGroupBy['grouped_by_1'] = $oGroupByExp;
-					$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy);
+
+					$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy, true);
 					$aRes = CMDBSource::QueryToArray($sSql);
 	
 					$aGroupBy = array();

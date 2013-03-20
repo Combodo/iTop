@@ -79,6 +79,7 @@ function FatalErrorCatcher($sOutput)
 	if ( preg_match('|<phpfatalerror>.*</phpfatalerror>|s', $sOutput, $aMatches) )
 	{
 		header("HTTP/1.0 500 Internal server error.");
+		$errors = '';
 		foreach ($aMatches as $sMatch)
 		{
 			$errors .= strip_tags($sMatch)."\n";

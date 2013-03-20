@@ -535,6 +535,10 @@ class SetupUtils
 						{
 							if (function_exists('symlink'))
 							{
+								if (file_exists($sDest.'/'.$sFile))
+								{
+									unlink($sDest.'/'.$sFile);
+								}
 								symlink($sSource.'/'.$sFile, $sDest.'/'.$sFile);
 							}
 							else
@@ -544,6 +548,10 @@ class SetupUtils
 						}
 						else
 						{
+							if (is_link($sDest.'/'.$sFile))
+							{
+								unlink($sDest.'/'.$sFile);
+							}
 							copy($sSource.'/'.$sFile, $sDest.'/'.$sFile);
 						}
 					}
@@ -738,7 +746,7 @@ function ValidateField(sFieldId, bUsed)
 	{
 		if (sValue != "")
 		{
-			if (sValue.match(/^[A-Za-z][A-Za-z0-9_]*$/))
+			if (sValue.match(/^[A-Za-z0-9_]*$/))
 			{
 				var bCollision = false;
 				if (sFieldId == 'db_new_name')

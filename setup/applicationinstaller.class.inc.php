@@ -375,11 +375,17 @@ class ApplicationInstaller
 			
 			SetupPage::log_error('An exception occurred: '.$e->getMessage().' at line '.$e->getLine().' in file '.$e->getFile());
 			$idx = 0;
-			// Log the call stack, but log the parameters since they may contain passwords or other sensitive data
+			// Log the call stack, but not the parameters since they may contain passwords or other sensitive data
 			SetupPage::log("Call stack:");
 			foreach($e->getTrace() as $aTrace)
 			{
-				SetupPage::log("#$idx {$aTrace['file']}({$aTrace['line']}): {$aTrace['function']}(...)");
+				$sLine = empty($aTrace['line']) ? "" : $aTrace['line'];
+				$sFile = empty($aTrace['file']) ? "" : $aTrace['file'];
+				$sClass = empty($aTrace['class']) ? "" : $aTrace['class'];
+				$sType = empty($aTrace['type']) ? "" : $aTrace['type'];
+				$sFunction = empty($aTrace['function']) ? "" : $aTrace['function'];
+				$sVerb = empty($sClass) ? $sFunction : "$sClass{$sType}$sFunction";
+				SetupPage::log("#$idx $sFile($sLine): $sVerb(...)");
 				$idx++;
 			}
 		}
@@ -548,18 +554,18 @@ class ApplicationInstaller
 		// Starting 2.0, all table names must be lowercase
 		if ($sMode != 'install')
 		{
-			SetupPage::log_info("Renaming 'priv_internalUser' into 'priv_internaluser' (lowercase)"); 
+			SetupPage::log_info("Renaming '{$sDBPrefix}priv_internalUser' into '{$sDBPrefix}priv_internaluser' (lowercase)"); 
 			// This command will have no effect under Windows...
 			// and it has been written in two steps so as to make it work under windows!
 			CMDBSource::SelectDB($sDBName);
 			try
 			{
-				$sRepair = "RENAME TABLE `priv_internalUser` TO `priv_internaluser_other`, `priv_internaluser_other` TO `priv_internaluser`";
+				$sRepair = "RENAME TABLE `{$sDBPrefix}priv_internalUser` TO `{$sDBPrefix}priv_internaluser_other`, `{$sDBPrefix}priv_internaluser_other` TO `{$sDBPrefix}priv_internaluser`";
 				CMDBSource::Query($sRepair);
 			}
 			catch (Exception $e)
 			{
-				SetupPage::log_info("Renaming 'priv_internalUser' failed (already done in a previous upgrade?)"); 
+				SetupPage::log_info("Renaming '{$sDBPrefix}priv_internalUser' failed (already done in a previous upgrade?)"); 
 			}
 		}
 
