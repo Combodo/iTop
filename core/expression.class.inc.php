@@ -618,7 +618,7 @@ class VariableExpression extends UnaryExpression
 		}
 		else
 		{
-			throw new MissingQueryArgument('Missing query argument', array('expecting'=>$this->m_sName, 'available'=>$aArgs));
+			throw new MissingQueryArgument('Missing query argument', array('expecting'=>$this->m_sName, 'available'=>array_keys($aArgs)));
 		}
 	}
 	
