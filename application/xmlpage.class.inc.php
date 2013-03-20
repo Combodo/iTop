@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -37,69 +37,77 @@ class XMLPage extends WebPage
 	var $m_bPassThrough;
 	var $m_bHeaderSent;
 	
-    function __construct($s_title, $bPassThrough = false)
-    {
-        parent::__construct($s_title);
-        $this->m_bPassThrough = $bPassThrough;
-        $this->m_bHeaderSent = false;
-        $this->add_header("Content-type: text/xml; charset=utf-8");
+	function __construct($s_title, $bPassThrough = false)
+	{
+		parent::__construct($s_title);
+		$this->m_bPassThrough = $bPassThrough;
+		$this->m_bHeaderSent = false;
+		$this->add_header("Content-type: text/xml; charset=utf-8");
 		$this->add_header("Cache-control: no-cache");
 		$this->add_header("Content-location: export.xml");
-    }	
+	}	
 
-    public function output()
-    {
-    	if (!$this->m_bPassThrough)
-    	{
-			$this->add("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n");
-			$this->add_header("Content-Length: ".strlen(trim($this->s_content)));
-	        foreach($this->a_headers as $s_header)
-	        {
-	            header($s_header);
-	        }
-	        echo trim($this->s_content);
-    	}
-      if (class_exists('MetaModel'))
-      {
-          MetaModel::RecordQueryTrace();
-      }
-    }
-    
-    public function add($sText)
-    {
-    	if (!$this->m_bPassThrough)
-    	{
-    		parent::add($sText);
-    	}
-    	else
-    	{
-    		if ($this->m_bHeaderSent)
-    		{
-		   		echo $sText;
-    		}
-    		else
-    		{
-		        $s_captured_output = ob_get_contents();
-		        ob_end_clean();
-		        foreach($this->a_headers as $s_header)
-		        {
-		            header($s_header);
-		        }
-				echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n";
-		        echo trim($s_captured_output);
-		        echo trim($this->s_content);
-		        echo $sText;
-		        $this->m_bHeaderSent = true;
-    		}
-     	}
-    }
-
-    public function small_p($sText)
-    {
+	public function output()
+	{
+		if (!$this->m_bPassThrough)
+		{
+			$this->s_content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n".trim($this->s_content);
+			$this->add_header("Content-Length: ".strlen($this->s_content));
+			foreach($this->a_headers as $s_header)
+			{
+				header($s_header);
+			}
+			echo $this->s_content;
+		}
+		if (class_exists('MetaModel'))
+		{
+			MetaModel::RecordQueryTrace();
+		}
 	}
-	
+
+	public function add($sText)
+	{
+		if (!$this->m_bPassThrough)
+		{
+			parent::add($sText);
+		}
+		else
+		{
+			if ($this->m_bHeaderSent)
+			{
+				echo $sText;
+			}
+			else
+			{
+				$s_captured_output = ob_get_contents();
+				ob_end_clean();
+				foreach($this->a_headers as $s_header)
+				{
+					header($s_header);
+				}
+				echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n";
+				echo trim($s_captured_output);
+				echo trim($this->s_content);
+				echo $sText;
+				$this->m_bHeaderSent = true;
+			}
+		}
+	}
+
+	public function small_p($sText)
+	{
+	}
+
 	public function table($aConfig, $aData, $aParams = array())
 	{
+	}
+
+	public function TrashUnexpectedOutput()
+	{
+		if (!$this->m_bPassThrough)
+		{
+			parent::TrashUnexpectedOutput();
+		}
 	}
 }
 ?>
