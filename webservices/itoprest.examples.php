@@ -130,6 +130,26 @@ $aOperations = array(
 		'key' => 'SELECT UserRequest',
 		'output_fields' => 'id, friendlyname, title, contacts_list', // list of fields to show in the results (* or a,b,c)
 	),
+	array(
+		'operation' => 'core/delete', // operation code
+		'comment' => 'Cleanup for synchro with...', // comment recorded in the change tracking log
+		'class' => 'UserRequest',
+		'key' => 'SELECT UserRequest WHERE org_id = 2',
+		'simulate' => true,
+	),
+	array(
+		'operation' => 'core/apply_stimulus', // operation code
+		'comment' => 'Synchronization from blah...', // comment recorded in the change tracking log
+		'class' => 'UserRequest',
+		'key' => 1,
+		'stimulus' => 'ev_assign',
+		// Values to set
+		'fields' => array(
+			'team_id' => 15, // Helpdesk
+			'agent_id' => 9 // Jules Verne
+		),
+		'output_fields' => 'id, friendlyname, title, contacts_list', // list of fields to show in the results (* or a,b,c)
+	),
 );
 
 $sUrl = "http://localhost/rest-services/webservices/rest.php?version=1.0";

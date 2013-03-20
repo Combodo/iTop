@@ -289,6 +289,10 @@ class RestResult
 	 */
 	const UNKNOWN_OPERATION = 11;
 	/**
+	 * Result: the requested operation cannot be performed because it can cause data (integrity) loss 
+	 */
+	const UNSAFE = 12;
+	/**
 	 * Result: the operation could not be performed, see the message for troubleshooting
 	 */
 	const INTERNAL_ERROR = 100;
@@ -490,7 +494,11 @@ class RestUtils
 		}
 		elseif (is_numeric($key))
 		{
-			$res = MetaModel::GetObject($sClass, $key);
+			$res = MetaModel::GetObject($sClass, $key, false);
+			if (is_null($res))
+			{
+				throw new Exception("Invalid object $sClass::$key");
+			}
 		}
 		elseif (is_string($key))
 		{
