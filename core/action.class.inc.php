@@ -213,8 +213,12 @@ class ActionEmail extends ActionNotification
 		$aRecipients = array();
 		while ($oObj = $oSet->Fetch())
 		{
-			$aRecipients[] = $oObj->Get($sEmailAttCode);
-			$this->m_iRecipients++;
+			$sAddress = trim($oObj->Get($sEmailAttCode));
+			if (strlen($sAddress) > 0)
+			{
+				$aRecipients[] = $sAddress;
+				$this->m_iRecipients++;
+			}
 		}
 		return implode(', ', $aRecipients);
 	}
