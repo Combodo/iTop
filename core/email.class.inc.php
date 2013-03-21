@@ -187,11 +187,29 @@ class EMail
 		return $this->m_oMessage->getSubject();
 	}
 
+	/**
+	 * Helper to transform and sanitize addresses
+	 * - get rid of empty addresses	 
+	 */	 	
+	protected function AddressStringToArray($sAddressCSVList)
+	{
+		$aAddresses = array();
+		foreach(explode(',', $sAddressCSVList) as $sAddress)
+		{
+			$sAddress = trim($sAddress);
+			if (strlen($sAddress) > 0)
+			{
+				$aAddresses[] = $sAddress;
+			}
+		}
+		return $aAddresses;
+	}	
+
 	public function SetRecipientTO($sAddress)
 	{
 		if (!empty($sAddress))
 		{
-			$aAddresses = explode(', ', $sAddress);
+			$aAddresses = $this->AddressStringToArray($sAddress);
 			$this->m_oMessage->setTo($aAddresses);
 		}
 	}
@@ -226,7 +244,7 @@ class EMail
 	{
 		if (!empty($sAddress))
 		{
-			$aAddresses = explode(', ', $sAddress);
+			$aAddresses = $this->AddressStringToArray($sAddress);
 			$this->m_oMessage->setCc($aAddresses);
 		}
 	}
@@ -235,7 +253,7 @@ class EMail
 	{
 		if (!empty($sAddress))
 		{
-			$aAddresses = explode(', ', $sAddress);
+			$aAddresses = $this->AddressStringToArray($sAddress);
 			$this->m_oMessage->setBcc($aAddresses);
 		}
 	}
