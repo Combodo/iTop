@@ -146,6 +146,8 @@ class MFCompiler
 // Menus
 //
 
+global \$__comp_menus__; // ensure that the global variable is indeed global !
+
 EOF;
 				// Preliminary: determine parent menus not defined within the current module
 				$aMenusToLoad = array();
