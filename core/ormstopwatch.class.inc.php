@@ -389,6 +389,7 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 	{
 		foreach (MetaModel::GetClasses() as $sClass)
 		{
+			$aList = array();
 			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
 				if ($oAttDef instanceof AttributeStopWatch)
@@ -400,7 +401,6 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 						$sExpression = "SELECT $sClass WHERE {$sAttCode}_laststart AND {$sAttCode}_{$iThreshold}_triggered = 0 AND {$sAttCode}_{$iThreshold}_deadline < NOW()";
 						//echo $sExpression."<br/>\n";
 						$oFilter = DBObjectSearch::FromOQL($sExpression);
-						$aList = array();
 						$oSet = new DBObjectSet($oFilter);
 						while ((time() < $iTimeLimit) && ($oObj = $oSet->Fetch()))
 						{
