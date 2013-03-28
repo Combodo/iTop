@@ -194,7 +194,7 @@ function DisplayStatus($oP)
 		$sNextRunDate = $oTask->Get('next_run_date');
 		$iNbRun = (int)$oTask->Get('total_exec_count');
 		$sAverageRunTime = $oTask->Get('average_run_duration');
-		$oP->p(sprintf('| %1$-25.25s | %2$-7s | %3$s | %4$s | %5$6d | %6$7s s |', $sTaskName, $sStatus, $sLastRunDate, $sNextRunDate, $iNbRun, $sAverageRunTime));
+		$oP->p(sprintf('| %1$-25.25s | %2$-7s | %3$-19s | %4$-19s | %5$6d | %6$7s s |', $sTaskName, $sStatus, $sLastRunDate, $sNextRunDate, $iNbRun, $sAverageRunTime));
 	}	
 	$oP->p('+---------------------------+---------+---------------------+---------------------+--------+-----------+');
 }
