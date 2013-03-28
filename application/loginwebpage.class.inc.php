@@ -148,6 +148,16 @@ EOF
 			$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"> <input type=\"submit\" value=\"".Dict::S('UI:Button:Login')."\" /></td></tr>\n");
 			$this->add("</table>\n");
 			$this->add("<input type=\"hidden\" name=\"loginop\" value=\"login\" />\n");
+						
+			// Keep the OTHER parameters posted
+			foreach($_POST as $sPostedKey => $sPostedValue)
+			{
+				if (!in_array($sPostedKey, array('auth_user', 'auth_pwd')))
+				{
+					$this->add("<input type=\"hidden\" name=\"".htmlentities($sPostedKey, ENT_QUOTES, 'UTF-8')."\" value=\"".htmlentities($sPostedValue, ENT_QUOTES, 'UTF-8')."\" />\n");
+				}	
+			}
+			
 			$this->add("</form>\n");
 			$this->add(Dict::S('UI:Login:About'));
 			$this->add("</div>\n");
