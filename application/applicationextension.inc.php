@@ -834,9 +834,9 @@ class RestUtils
 	{
 		if (is_object($key))
 		{
-			if (isset($oCriteria->finalclass))
+			if (isset($key->finalclass))
 			{
-				$sClass = $oCriteria->finalclass;
+				$sClass = $key->finalclass;
 				if (!MetaModel::IsValidClass($sClass))
 				{
 					throw new Exception("finalclass: Unknown class '$sClass'");
