@@ -314,7 +314,7 @@ class RunTimeEnvironment
 		return $aRet;
 	}
 
-	public function CompileFrom($sSourceEnv)
+	public function CompileFrom($sSourceEnv, $bUseSymLinks = false)
 	{
 		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
 		$sSourceDir = $oSourceConfig->Get('source_dir');
@@ -352,7 +352,7 @@ class RunTimeEnvironment
 			$sTargetDir = APPROOT.'env-'.$this->sTargetEnv;
 			self::MakeDirSafe($sTargetDir);
 			$oMFCompiler = new MFCompiler($oFactory);
-			$oMFCompiler->Compile($sTargetDir);
+			$oMFCompiler->Compile($sTargetDir, null, $bUseSymLinks);
 			
 			require_once(APPROOT.'/core/dict.class.inc.php');
 			MetaModel::ResetCache($this->sTargetEnv);
@@ -500,11 +500,15 @@ class RunTimeEnvironment
 		{
 			require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 			CMDBSource::Init($oConfig->GetDBHost(), $oConfig->GetDBUser(), $oConfig->GetDBPwd(), $oConfig->GetDBName());
-			$aSelectInstall = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->GetDBSubname()."priv_module_install");
+			$sSQLQuery = "SELECT * FROM ".$oConfig->GetDBSubname()."priv_module_install";
+			$this->log_info('Query:'.$sSQLQuery);
+			$aSelectInstall = CMDBSource::QueryToArray($sSQLQuery);
 		}
 		catch (MySQLException $e)
 		{
 			// No database or erroneous information
+			$this->log_error('Can not connect to the database: host: '.$oConfig->GetDBHost().', user:'.$oConfig->GetDBUser().', pwd:'.$oConfig->GetDBPwd().', db name:'.$oConfig->GetDBName());
+			$this->log_error('Exception '.$e->getMessage());
 			return false;
 		}
 	
@@ -519,9 +523,11 @@ class RunTimeEnvironment
 				// as being installed
 				$sModuleVersion = '0.0.0';
 			}
-	
+			$this->log_info('Found module: '.print_r($aInstall, true));
+			
 			if ($aInstall['parent_id'] == 0)
 			{
+				$this->log_info($aInstall['name'].' is a root module');
 				if ($aInstall['name'] == DATAMODEL_MODULE)
 				{
 					$aResult['datamodel_version'] = $sModuleVersion;
@@ -544,6 +550,7 @@ class RunTimeEnvironment
 			// so assume that the datamodel version is equal to the application version
 			$aResult['datamodel_version'] = $aResult['product_version'];
 		}
+		$this->log_info(">>> GetApplicationVersion returns: product_name: ".$aResult['product_name'].', product_version: '.$aResult['product_version']);
 		return $aResult;	
 	}
 
