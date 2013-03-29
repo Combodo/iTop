@@ -470,12 +470,13 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
  */
 class SeparatorPopupMenuItem extends ApplicationPopupMenuItem
 {
+	static $idx = 0;
 	/**
 	 * Constructor	
 	 */
 	public function __construct()
 	{
-		parent::__construct('', '');
+		parent::__construct('_separator_'.(self::$idx++), '');
 	}
 	
 	/** @ignore */
