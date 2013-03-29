@@ -1186,9 +1186,18 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 						$oFinalAttDef = $oAttDef->GetFinalAttDef();
 						if (get_class($oFinalAttDef) == 'AttributeDateTime')
 						{
-							$iDate = AttributeDateTime::GetAsUnixSeconds($oObj->Get($sAttCodeEx));
-							$aRow[] = '<td>'.date('Y-m-d', $iDate).'</td>';
-							$aRow[] = '<td>'.date('H:i:s', $iDate).'</td>';
+							$sDate = $oObj->Get($sAttCodeEx);
+							if ($sDate === null)
+							{
+								$aRow[] = '<td></td>';
+								$aRow[] = '<td></td>';
+							}
+							else
+							{
+								$iDate = AttributeDateTime::GetAsUnixSeconds($sDate);
+								$aRow[] = '<td>'.date('Y-m-d', $iDate).'</td>';
+								$aRow[] = '<td>'.date('H:i:s', $iDate).'</td>';								
+							}
 						}
 						else
 						{
