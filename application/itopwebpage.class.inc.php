@@ -82,6 +82,7 @@ class iTopWebPage extends NiceWebPage
 		
 		$sSearchAny = addslashes(Dict::S('UI:SearchValue:Any'));
 		$sSearchNbSelected = addslashes(Dict::S('UI:SearchValue:NbSelected'));
+		$this->add_dict_entry('UI:FillAllMandatoryFields');
 		
 		$bForceMenuPane = utils::ReadParam('force_menu_pane', null);
 		$sInitClosed = '';

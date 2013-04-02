@@ -1137,5 +1137,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Class:ShortcutOQL+' => '',
 	'Class:ShortcutOQL/Attribute:oql' => 'Query',
 	'Class:ShortcutOQL/Attribute:oql+' => 'OQL defining the list of objects to search for',
+	'UI:FillAllMandatoryFields' => 'Please fill all mandatory fields.'
 ));
 ?>

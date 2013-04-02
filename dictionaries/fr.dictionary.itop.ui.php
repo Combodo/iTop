@@ -979,5 +979,6 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Class:ShortcutOQL+' => '',
 	'Class:ShortcutOQL/Attribute:oql' => 'Requête',
 	'Class:ShortcutOQL/Attribute:oql+' => 'Requête de définition de l\'ensemble des objets',
+	'UI:FillAllMandatoryFields' => 'Veuillez remplir tous les champs obligatoires.'
 ));
 ?>

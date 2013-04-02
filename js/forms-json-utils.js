@@ -134,7 +134,7 @@ function CheckFields(sFormId, bDisplayAlert)
 	{
 		if (bDisplayAlert)
 		{
-			alert('Please fill-in all mandatory fields before continuing.');
+			alert(Dict.S('UI:FillAllMandatoryFields'));
 		}
 		$('#'+sFormId+' :submit').attr('disable', '');
 		$('#'+sFormId+' :button[type=submit]').attr('disable', '');

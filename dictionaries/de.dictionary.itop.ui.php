@@ -946,5 +946,6 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'DayOfWeek-Thursday' => 'Donnerstag',
 	'DayOfWeek-Friday' => 'Freitag',
 	'DayOfWeek-Saturday' => 'Samstag',
+	'UI:FillAllMandatoryFields' => 'Bitte füllen Sie alle Pflichtfelder',
 ));
 ?>
