@@ -1,4 +1,4 @@
-iTop - version 2.0.1-beta - 05-April-2012
+﻿iTop - version 2.0.1-beta - 03-April-2012
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -33,7 +33,7 @@ This version brings a number of bug fixes since 2.0.0 and two enhancements:
 
 1.2 Should I upgrade to 2.0.1?
     -------------------------------
-Considering that iTop 2.0.1 fully compatible with iTop 2.0.0 and the number of bugs fixed, we recommend you to upgrade.
+Considering that iTop 2.0.1 is fully compatible with iTop 2.0.0 and the number of bugs fixed, we recommend you to upgrade.
 
 1.3 Special Thanks To:
     -----------------
