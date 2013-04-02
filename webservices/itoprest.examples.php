@@ -150,6 +150,13 @@ $aOperations = array(
 		),
 		'output_fields' => 'id, friendlyname, title, contacts_list', // list of fields to show in the results (* or a,b,c)
 	),
+	array(
+		'operation' => 'core/get_related', // operation code
+		'class' => 'Server',
+		'key' => 'SELECT Server',
+		'relation' => 'impacts', // relation code
+		'depth' => 4, // max recursion depth
+	),
 );
 
 $sUrl = "http://localhost/rest-services/webservices/rest.php?version=1.0";

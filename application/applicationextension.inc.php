@@ -909,6 +909,10 @@ class RestUtils
 				}
 				$value = DBObjectSet::FromArray($sLnkClass, $aLinks);
 			}
+			else
+			{
+				$value = $oAttDef->FromJSONToValue($value);
+			}
 		}
 		catch (Exception $e)
 		{

@@ -99,14 +99,9 @@ class ObjectResult
 					$value[] = $aLnkValues;
 				}
 			}
-			elseif ($oAttDef->IsExternalKey())
-			{
-				$value = $oObject->Get($sAttCode);
-			}
 			else
 			{
-				// Still to be refined...
-				$value = $oObject->GetEditValue($sAttCode);
+				$value = $oAttDef->GetForJSON($oObject->Get($sAttCode));
 			}
 		}
 		return $value;
@@ -147,22 +142,20 @@ class RestResultWithObjects extends RestResult
 	 * @param array $aFields An array of attribute codes. List of the attributes to be reported.
 	 * @return void
 	 */
-	public function AddObject($iCode, $sMessage, $oObject = null, $aFields = null)
+	public function AddObject($iCode, $sMessage, $oObject, $aFields)
 	{
 		$oObjRes = new ObjectResult();
 		$oObjRes->code = $iCode;
 		$oObjRes->message = $sMessage;
 
-		if ($oObject)
+		$oObjRes->class = get_class($oObject);
+		foreach ($aFields as $sAttCode)
 		{
-			$oObjRes->class = get_class($oObject);
-			foreach ($aFields as $sAttCode)
-			{
-				$oObjRes->AddField($oObject, $sAttCode);
-			}
+			$oObjRes->AddField($oObject, $sAttCode);
 		}
 
-		$this->objects[] = $oObjRes;
+		$sObjKey = get_class($oObject).'::'.$oObject->GetKey();
+		$this->objects[$sObjKey] = $oObjRes;
 	}
 }
 
@@ -182,7 +175,7 @@ class RestResultWithRelations extends RestResultWithObjects
 		{
 			$this->relations[$sSrcKey] = array();
 		}
-		$this->relations[$sSrcKey][] = $sDestKey;
+		$this->relations[$sSrcKey][] = array('key' => $sDestKey);
 	}
 }
 
@@ -389,14 +382,16 @@ class CoreServices implements iRestServiceProvider
 			$sClass = RestUtils::GetClass($aParams, 'class');
 			$key = RestUtils::GetMandatoryParam($aParams, 'key');
 			$sRelation = RestUtils::GetMandatoryParam($aParams, 'relation');
-			$iMaxRecursionDepth = RestUtils::GetOptionalParam($aParams, 'depth', 20 /* = MAX_RECUSTION_DEPTH */);
-			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
+			$iMaxRecursionDepth = RestUtils::GetOptionalParam($aParams, 'depth', 20 /* = MAX_RECURSION_DEPTH */);
+			$aShowFields = array('id', 'friendlyname');
 	
 			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key);
+			$aIndexByClass = array();
 			while ($oObject = $oObjectSet->Fetch())
 			{
 				$aRelated = array();
 				$aGraph = array();
+				$aIndexByClass[get_class($oObject)][$oObject->GetKey()] = null;
 				$oResult->AddObject(0, '', $oObject, $aShowFields);
 				$this->GetRelatedObjects($oObject, $sRelation, $iMaxRecursionDepth, $aRelated, $aGraph);
 	
@@ -404,15 +399,31 @@ class CoreServices implements iRestServiceProvider
 				{
 					foreach($aObjects as $oRelatedObj)
 					{
+						$aIndexByClass[get_class($oRelatedObj)][$oRelatedObj->GetKey()] = null;
 						$oResult->AddObject(0, '', $oRelatedObj, $aShowFields);
 					}				
 				}
-				foreach($aGraph as $sSrcKey => $sDestKey)
+				foreach($aGraph as $sSrcKey => $aDestinations)
 				{
-					$oResult->AddRelation($sSrcKey, $sDestKey);
+					foreach ($aDestinations as $sDestKey)
+					{
+						$oResult->AddRelation($sSrcKey, $sDestKey);
+					}
 				}
-			}		
-			$oResult->message = "Found: ".$oObjectSet->Count();
+			}
+			if (count($aIndexByClass) > 0)
+			{
+				$aStats = array();
+				foreach ($aIndexByClass as $sClass => $aIds)
+				{
+					$aStats[] = $sClass.'= '.count($aIds);
+				}
+				$oResult->message = "Scope: ".$oObjectSet->Count()."; Related objects: ".implode(', ', $aStats);
+			}
+			else
+			{
+				$oResult->message = "Nothing found";
+			}
 			break;
 			
 		default:
