@@ -192,7 +192,8 @@ This maintenance version consists mostly in bug fixes. There are only two enhanc
 Bug fixes from Trac:
 --------------------
 #698 SeparatorPopupMenuItem was not working.
-#697: properly export NULL dates in "spreadsheet" format.
+#697 Properly export NULL dates in "spreadsheet" format.
+#696 The message "Please fill all mandatory fields" can now be localized (done in English, French and German).
 #694 A module can now add a menu under a menu from another module
 #691 Notifications were not sent at all if some recicipients had an empty address
 #690 XML export broken
