@@ -427,6 +427,26 @@ abstract class AttributeDefinition
 	}
 
 	/**
+	 * Helper to get a value that will be JSON encoded
+	 * The operation is the opposite to FromJSONToValue	 
+	 */	 	
+	public function GetForJSON($value)
+	{
+		// In most of the cases, that will be the expected behavior...
+		return $this->GetEditValue($value);
+	}
+
+	/**
+	 * Helper to form a value, given JSON decoded data
+	 * The operation is the opposite to GetForJSON	 
+	 */	 	
+	public function FromJSONToValue($json)
+	{
+		// Passthrough in most of the cases
+		return $json;
+	}
+
+	/**
 	 * Override to display the value in the GUI
 	 */	
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
@@ -3322,6 +3342,11 @@ class AttributeBlob extends AttributeDefinition
 	public function GetDefaultValue() {return "";}
 	public function IsNullAllowed() {return $this->GetOptional("is_null_allowed", false);}
 
+	public function GetEditValue($sValue, $oHostObj = null)
+	{
+		return '';
+	}
+
 
 	// Facilitate things: allow the user to Set the value from a string
 	public function MakeRealValue($proposedValue, $oHostObj)
@@ -3449,6 +3474,44 @@ class AttributeBlob extends AttributeDefinition
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
 		return ''; // Not exportable in XML, or as CDATA + some subtags ??
+	}
+
+	/**
+	 * Helper to get a value that will be JSON encoded
+	 * The operation is the opposite to FromJSONToValue	 
+	 */	 	
+	public function GetForJSON($value)
+	{
+		if ($value instanceOf ormDocument)
+		{
+			$aValues = array();
+			$aValues['data'] = base64_encode($value->GetData());
+			$aValues['mimetype'] = $value->GetMimeType();
+			$aValues['filename'] = $value->GetFileName();
+		}
+		else
+		{
+			$aValues = null;
+		}
+		return $aValues;
+	}
+
+	/**
+	 * Helper to form a value, given JSON decoded data
+	 * The operation is the opposite to GetForJSON	 
+	 */	 	
+	public function FromJSONToValue($json)
+	{
+		if (isset($json->data))
+		{
+			$data = base64_decode($json->data);
+			$value = new ormDocument($data, $json->mimetype, $json->filename);
+		}
+		else
+		{
+			$value = null;
+		}
+		return $value;
 	}
 }
 

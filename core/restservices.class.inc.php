@@ -99,14 +99,9 @@ class ObjectResult
 					$value[] = $aLnkValues;
 				}
 			}
-			elseif ($oAttDef->IsExternalKey())
-			{
-				$value = $oObject->Get($sAttCode);
-			}
 			else
 			{
-				// Still to be refined...
-				$value = $oObject->GetEditValue($sAttCode);
+				$value = $oAttDef->GetForJSON($oObject->Get($sAttCode));
 			}
 		}
 		return $value;
@@ -147,22 +142,40 @@ class RestResultWithObjects extends RestResult
 	 * @param array $aFields An array of attribute codes. List of the attributes to be reported.
 	 * @return void
 	 */
-	public function AddObject($iCode, $sMessage, $oObject = null, $aFields = null)
+	public function AddObject($iCode, $sMessage, $oObject, $aFields)
 	{
 		$oObjRes = new ObjectResult();
 		$oObjRes->code = $iCode;
 		$oObjRes->message = $sMessage;
 
-		if ($oObject)
+		$oObjRes->class = get_class($oObject);
+		foreach ($aFields as $sAttCode)
 		{
-			$oObjRes->class = get_class($oObject);
-			foreach ($aFields as $sAttCode)
-			{
-				$oObjRes->AddField($oObject, $sAttCode);
-			}
+			$oObjRes->AddField($oObject, $sAttCode);
 		}
 
-		$this->objects[] = $oObjRes;
+		$sObjKey = get_class($oObject).'::'.$oObject->GetKey();
+		$this->objects[$sObjKey] = $oObjRes;
+	}
+}
+
+class RestResultWithRelations extends RestResultWithObjects
+{
+	public $relations;
+	
+	public function __construct()
+	{
+		parent::__construct();
+		$this->relations = array();
+	}
+	
+	public function AddRelation($sSrcKey, $sDestKey)
+	{
+		if (!array_key_exists($sSrcKey, $this->relations))
+		{
+			$this->relations[$sSrcKey] = array();
+		}
+		$this->relations[$sSrcKey][] = array('key' => $sDestKey);
 	}
 }
 
@@ -242,6 +255,10 @@ class CoreServices implements iRestServiceProvider
 			$aOps[] = array(
 				'verb' => 'core/delete',
 				'description' => 'Delete objects'
+			);
+			$aOps[] = array(
+				'verb' => 'core/get_related',
+				'description' => 'Get related objects through the specified relation'
 			);
 		}
 		return $aOps;
@@ -360,6 +377,55 @@ class CoreServices implements iRestServiceProvider
 			$this->DeleteObjects($oResult, $aObjects, $bSimulate);
 			break;
 
+		case 'core/get_related':
+			$oResult = new RestResultWithRelations();
+			$sClass = RestUtils::GetClass($aParams, 'class');
+			$key = RestUtils::GetMandatoryParam($aParams, 'key');
+			$sRelation = RestUtils::GetMandatoryParam($aParams, 'relation');
+			$iMaxRecursionDepth = RestUtils::GetOptionalParam($aParams, 'depth', 20 /* = MAX_RECURSION_DEPTH */);
+			$aShowFields = array('id', 'friendlyname');
+	
+			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key);
+			$aIndexByClass = array();
+			while ($oObject = $oObjectSet->Fetch())
+			{
+				$aRelated = array();
+				$aGraph = array();
+				$aIndexByClass[get_class($oObject)][$oObject->GetKey()] = null;
+				$oResult->AddObject(0, '', $oObject, $aShowFields);
+				$this->GetRelatedObjects($oObject, $sRelation, $iMaxRecursionDepth, $aRelated, $aGraph);
+	
+				foreach($aRelated as $sClass => $aObjects)
+				{
+					foreach($aObjects as $oRelatedObj)
+					{
+						$aIndexByClass[get_class($oRelatedObj)][$oRelatedObj->GetKey()] = null;
+						$oResult->AddObject(0, '', $oRelatedObj, $aShowFields);
+					}				
+				}
+				foreach($aGraph as $sSrcKey => $aDestinations)
+				{
+					foreach ($aDestinations as $sDestKey)
+					{
+						$oResult->AddRelation($sSrcKey, $sDestKey);
+					}
+				}
+			}
+			if (count($aIndexByClass) > 0)
+			{
+				$aStats = array();
+				foreach ($aIndexByClass as $sClass => $aIds)
+				{
+					$aStats[] = $sClass.'= '.count($aIds);
+				}
+				$oResult->message = "Scope: ".$oObjectSet->Count()."; Related objects: ".implode(', ', $aStats);
+			}
+			else
+			{
+				$oResult->message = "Nothing found";
+			}
+			break;
+			
 		default:
 			// unknown operation: handled at a higher level
 		}
@@ -490,6 +556,40 @@ class CoreServices implements iRestServiceProvider
 		else
 		{
 			$oResult->message = $sRes;
+		}
+	}
+	
+	/**
+	 * Helper function to get the related objects up to the given depth along with the "graph" of the relation
+	 * @param DBObject $oObject Starting point of the computation
+	 * @param string $sRelation Code of the relation (i.e; 'impact', 'depends on'...)
+	 * @param integer $iMaxRecursionDepth Maximum level of recursion
+	 * @param Hash $aRelated Two dimensions hash of the already related objects: array( 'class' => array(key => ))
+	 * @param Hash	$aGraph Hash array for the topology of the relation: source => related: array('class:key' => array( DBObjects ))
+	 * @param integer $iRecursionDepth Current level of recursion
+	 */
+	protected function GetRelatedObjects(DBObject $oObject, $sRelation, $iMaxRecursionDepth, &$aRelated, &$aGraph, $iRecursionDepth = 1)
+	{
+		// Avoid loops
+		if ((array_key_exists(get_class($oObject), $aRelated)) && (array_key_exists($oObject->GetKey(), $aRelated[get_class($oObject)]))) return;
+		// Stop at maximum recursion level
+		if ($iRecursionDepth > $iMaxRecursionDepth) return;
+		
+		$sSrcKey = get_class($oObject).'::'.$oObject->GetKey();
+		$aNewRelated = array();
+		$oObject->GetRelatedObjects($sRelation, 1, $aNewRelated);
+		foreach($aNewRelated as $sClass => $aObjects)
+		{
+			if (!array_key_exists($sSrcKey, $aGraph))
+			{
+				$aGraph[$sSrcKey] = array();
+			}
+			foreach($aObjects as $oRelatedObject)
+			{
+				$aRelated[$sClass][$oRelatedObject->GetKey()] = $oRelatedObject;
+				$aGraph[$sSrcKey][] = get_class($oRelatedObject).'::'.$oRelatedObject->GetKey();
+				$this->GetRelatedObjects($oRelatedObject, $sRelation, $iMaxRecursionDepth, $aRelated, $aGraph, $iRecursionDepth+1);
+			}
 		}
 	}
 }
