@@ -1,12 +1,12 @@
 Prerequisites:
 
 iTop requires
-- A web server running PHP 5.2.0 or higher, with PCRE, SESSION, mysql, iconv, simplexml, hash, json and soap support.
+- A web server running PHP 5.2.0 or higher, with PCRE, SESSION, php-xml, mysql, iconv, simplexml, hash, json and soap support.
   If you wish to use LDAP authentication, then LDAP support must be enabled in PHP. 
-- A connection to MySQL 5.0 or higher
+- A connection to MySQL 5.0 or higher database
 
 Web browser support:
-iTop is developed using FireFox 3.x and tested with IE 8, IE 9, Safari 5 and Chrome.
+iTop is developed using FireFox 3.x+ and tested with IE 8+, Safari 5+ and Chrome.
 
 Installation:
 
@@ -19,6 +19,13 @@ Installation:
 2. Ensure that all the scripts have the appropriate owner (if PHP is running in
    safe mode, having some scripts with an owner different from the owner of
    other scripts will be a problem).
+   Check the access rights on the files/folders: the setup needs to have write
+   access either to the whole directory where iTop is installed or to the following
+   subdirectories (create them if needed)
+    - conf
+    - data
+    - env-production
+    - log
 
 3. Open the main iTop directory in your web browser. iTop should then display
    the setup instructions on screen.

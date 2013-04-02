@@ -1,4 +1,4 @@
-iTop - version 2.0.0 - 14-Dec-2012
+iTop - version 2.0.1-beta - 05-April-2012
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -6,53 +6,34 @@ Readme file
 2.1. Requirements
 2.2. Install procedure
 2.3. CRON
-2.4. Migration from previous version
+2.4. Upgrading from 2.0.0
+2.5. Migration from 1.x versions
 3.   FEATURES
-3.1. Changes since 1.2.1
+3.1. Changes since 2.0.0
 3.2. Known limitations
 3.3. Known issues
 
 1. ABOUT THIS RELEASE
    ==================
-Thank you for downloading the 14th packaged release of iTop.
-This version is a major release, with a new datamodel, editable dashboards, user customizable lists and user shortcuts.
+Thank you for downloading the 15th packaged release of iTop.
+This version is a maintenance release, with quite a few bug fixes and two enhancements.
 
-The documentation is available as a Wiki: http://www.combodo.com/wiki
+The documentation about iTop is available as a Wiki: http://www.combodo.com/wiki
 
 iTop is released under the AGPL (v3) license. (Check license.txt in this directory).
-The source code of iTop can be found on SourceForge: http://itop.sourceforge.net
+The source code of iTop can be found on SourceForge: https://sourceforge.net/p/itop/code/
 
 1.1 What's new?
     ---------------------------
-This version comes with an enhanced data model (but you can keep the existing one,
-see the upgrade section hereafter).
-- Virtualization, Data Centers, and Storage are now optional modules of the CMDB
-- You can choose between fully ITIL-compliant tickets or a simpler model for
-  managing user requests, incidents and changes
+This version brings a number of bug fixes since 2.0.0 and two enhancements:
+- CRON jobs are now scheduled according to their "periodicity"
+- A new REST/JSON web service API is available (documented at: http://www.combodo.com/wiki/doku.php?id=advancedtopics:rest_json)
 
-End users can customize the GUI:
-- Dashboards become editable
-- List of objects are configurable per user (list of columns and sort order)
-- Some application settings can be overriden: language, favorite organizations, ...
-- Users can create shortcuts to any list of objects 
+... and about 40 bug fixes.
 
-1.2 Should I upgrade to 2.0.0?
+1.2 Should I upgrade to 2.0.1?
     -------------------------------
-Yes, we recommend you to upgrade.     
-
-Please note that upgrading an installation of iTop 1.x will preserve your original data model and data.
-Would you like to benefit from the new modelization of the data, then you have to install 2.0
-from scratch and migrate your data between the two applications by exporting and importing them back.
-
-This version fixes a significant number of issues (see the list below).
-It also comes with significant improvements to the end-user experience:
-- editable dashboards
-- customize lists
-- user preferences
-- personal shortcuts
-
-Moreover, the performance has been improved. The gain is much more visible
-if you manage thousands of CIs and tickets in iTop.
+Considering that iTop 2.0.1 fully compatible with iTop 2.0.0 and the number of bugs fixed, we recommend you to upgrade.
 
 1.3 Special Thanks To:
     -----------------
@@ -85,11 +66,12 @@ Server configuration:
 iTop is based on the AMP (Apache / MySQL / PHP) platform and requires PHP 5.2 and
 MySQL 5. The installation of iTop does not require any command line access to the
 server. The only operations required to install iTop are: copying the files to the
-server and browsing web pages. iTop can be installed on Apache and IIS.
+server and browsing web pages. iTop can be installed on any web server supporting
+PHP 5.2: Apache, IIS, nginx...
 
 End-user configuration:
 Although iTop should work with most modern web browsers, the application has been
-tested mostly with Firefox 3, IE8, IE9, Safari 5 and Chrome. iTop was designed for
+tested mostly with Firefox 3+, IE8, IE9, Safari 5 and Chrome. iTop was designed for
 at least a 1024x768 screen resolution. For the graphical view of the impact analysis,
 Flash version 8 or higher is required.
 
@@ -113,7 +95,7 @@ more modules), just make sure that the configuration file (located at <itop>/con
 is writable by the web server (on Windows: remove the "read-only" flag, on Linux
 adjust the rights of the file) and point your browser to <itop>/setup/.
 
-2.3. CRON.PHP
+2.3. cron.php
      --------
 The following features will require the activation of CRON.PHP:
  - asynchronous emails. By default, this option is disabled. To enable it, set 'email_asynchronous' to 1 in the configuration file.
@@ -121,7 +103,48 @@ The following features will require the activation of CRON.PHP:
 
 More information into the Wiki: https://sourceforge.net/apps/mediawiki/itop/index.php?title=Cron.php
 
-2.4. Migrating from 1.x versions
+New in 2.0.1: you can get a status of the cron "tasks" with the command:
+
+php cron.php --auth_user=admin_login --auth_pwd=admin_pwd --status_only=1
+
+The output will look as shown below:
++---------------------------+---------+---------------------+---------------------+--------+-----------+
+| Task Class                | Status  | Last Run            | Next Run            | Nb Run | Avg. Dur. |
++---------------------------+---------+---------------------+---------------------+--------+-----------+
+| CheckStopWatchThresholds  | active  | 2013-03-28 10:32:27 | 2013-03-28 10:32:37 |     51 |   0.317 s |
+| EmailBackgroundProcess    | active  | 2013-03-28 10:32:27 | 2013-03-28 10:32:57 |     12 |   7.089 s |
+| ExecAsyncTask             | active  | 2013-03-28 10:32:27 | 2013-03-28 10:32:29 |     51 |   0.032 s |
++---------------------------+---------+---------------------+---------------------+--------+-----------+
+
+2.4. Upgrading from 2.0.0
+     --------------------
+The version 2.0.1 if fully compatible with 2.0.0. Due to the new database table used for storing the
+definition of cron jobs, you must run the setup when upgrading.
+
+If the location of mysql binaries is in the "path", the setup proposes to perform a full backup
+of iTop (database + configuration file) using mysqldump.
+
+Here is how to upgrade, step by step, a 2.0.0 instance of iTop:
+
+1) Do NOT overwrite the files from the previous version. Expand the content of the "web" directory of
+   the new package into a new directory on the web server.
+2) Check the access rights on the files/folders: the setup needs to have write access either to the
+   whole directory where iTop is installed or to the following subdirectories (create them if needed)
+    - conf
+    - data
+    - env-production
+    - log
+
+3) Point your web browser to the URL corresponding to the new location. You should see the setup screen.
+4) When prompted (At step 2 of the installation), choose "Upgrade an existing instance"
+5) Either enter the path (on the disk) to the previous instance, or supply the needed credentials.
+6) Run the setup to completion. Once this is done you can connect to your upgraded iTop.
+7) To replace the old instance of iTop with the newly installed one:
+   Rename the directories to switch the locations
+   Edit the new configuration file (now located at <itop>/conf/production/config-itop.php) and change the
+   value of the "application_url" parameter.
+
+2.5. Migrating from 1.x versions
      ---------------------------
 The setup is designed to upgrade existing 1.x instances of iTop automatically. In case the instance was
 customized (for example by altering its data model), the installation process will detect the modifications
@@ -159,223 +182,79 @@ That's it.
 3. FEATURES
    ========
 
-3.1. Changes since 1.2.1
+3.1. Changes since 2.0.0
      -------------------
 
-Version 2.0.0 brings a few major improvements.
+This maintenance version consists mostly in bug fixes. There are only two enhancements:
+- CRON jobs are now scheduled according to their "periodicity"
+- A new REST/JSON web service API is available (documented at: http://www.combodo.com/wiki/doku.php?id=advancedtopics:rest_json)
 
-Major changes
--------------
-- Editable dashboards: end-users can edit a dashboard by the mean of a WYSIWYG GUI. They can share
-  their tuned dashboards with other users by the mean of an export/import capability. They can also
-  leave their custom dashboard and get back to the original dashboard.
-
-The "Preference" page now allows a user to:
-- change her/his favorite language
-- set a global default for the length of all lists, overriding the system-wide configuration.
-- change her/his favorite organizations
-
-- The list of objects have been improved:
- - the end-user can change list of displayed columns, and the sort order
- - sorting issues have been fixed
- - almost every list can be exported
-
-- Users can create a shortcut to any list displayed:
- - the search criteria are saved, including the current organization if it was set
- - the list of shortcuts can be edited in the user "Preferences" page
- - a shortcut is strictly private to a given user
-
-Localization
-------------
-No big changes in localization for this release.
-
-The portuguese localization is 90% complete for the data model 1.3, but it is rather incomplete if you use the brand new data model 2.0.
-
-More information on the localization (completion progress, how to contribute) here:
-http://www.combodo.com/itop-localization/
-
-Minor changes
--------------
-The license has been changed to AGPL (replacing GPL/LPGL)
-#421 Sort IP addresses on INET_ATON (API only, see #520 to have this as the default sort order for NW Interfaces)
-#520 Capability to define a default sort order (PHP/XML)
-#439 Record and display changes in the link sets (ex: Members of a team)
-#569 Mandatory date (and time) fields are prefilled with the current date (and time).
-Implemented the "multiple choices" in search forms for Enums and External keys.
-Added a refresh button (and creation /modification messages) on the details of an object
-Friendly names: improved the behavior. Now fully compliant with end users expectations (e.g. a list of contacts shows the friendly name of the persons and team, not only the attribute 'name', the search can be performed on the friendly name as well)
-The date picker fills the "time" part of the field with 00:00:00 when picking a DateTime instead of just a Date.
-Allow more than 64K for the email content (including attachments)
-Distinguish between creation and modification user rights
-Updated schema.php to add web link to link class on linked set attributes
-Reload the impact/depends on graph only on demand for better performance, via the new Refresh button
-Move the "favorites" organization at the bottom of the page.
-Do NOT grab cursor hotkeys (CTRL + left arrow) to hide/show the menu pane.
-Enhancement: prevent reloading a list while the configuration dialog is open.
-Pretty print of the configuration file (parameters ordered alphabetically + comments added)
-Allow utilization of place holder in from and reply_to fields for action emails
-Config: use app_icon_url to change the hyperlink used when clicking on the main icon
-Added a new favicon
-Cosmetic enhancements to ease the search for a class in the schema.
-Integration of the latest version of CKEditor: version 3.6.4, released on 17 July 2012
-error.log moved into the log directory
-Display an empty string for the friendlyname of a NULL external key
-New developer tool: set log_queries=1 to enable query logging into data/queries.log. The accumulative log data/queries.log can be replayed with test/replay_query_log.php which produces a result file (to check the stability of the results) and a benchmark file (to see the efficiency in CSV)
-Debugging: run_query now produces the debug output (log_kpi_duration)
-Optimization of SQL queries: reduce the number of JOINS, assuming that data are consistent. Can be disabled with config setting query_optimization_enabled => 0.
-New parameter to tweak the display of Impact anaysis: which tab to display first? list or graphics?
-Performance enhancement for impact analysis: avoid looping in the recursion.
-When iTop is in read only mode, then the portal displays a banner and prevent the user from accessing the modification forms
-Added some checks around the configuration of PHP sessions since it seems to cause a lot of troubles.
-
-
-CSV import/export
------------------
-#283  Import.php localized by default, option no_localize to disable
-#175  When moving backward in the CSV import wizard, some settings may be reset (e.g column mapping)
-#174  CSV import not displaying the labels of enums
-#585  Error in CSV export (from a search result)
-#265  Add reconciliations keys into CSV template
-#554  Export.php localized by default, option no_localize to disable
-#555  Friendlyname abusively used as a reconciliation key
-Default charset is ISO-8859-1 to be compatible with Excel (See config parameter csv_file_default_charset)
-CSV export in UTF-8 with BOM to help Excel in getting it right (not all versions)
-Fixed reporting issues (wrong class, exceptions, changed external key)
-Fixed settings lost when navigating in the import wizard
-Fixed issues when some html entities were found in the data (reporting + export)
-Added a link to download the CSV export.php
-CSV import: added flag 'csv_import_history_display' to disable the history tab (too long to display, when the feature is heavily used)
-CSV Import: when using cut&paste, the character set is de facto utf-8 (no user choice)
-Do not allow changing read-only attributes by CSV import.
-
-Data Synchronization
+Bug fixes from Trac:
 --------------------
-#540  Data synchro: the option "write if empty" was not implemented
-#582  "stable name" for synchro_data_xxx tables.
-Make sure that the creation of the data_synchro_xxx tables uses the utf8 charset and collation and the same DB Engine as the rest of the database.
-Added detecting of missing columns in the synchro_data_xxx tables (in case of duplicate SQL column names in the orignal data model). See Trac #503.
-Bug fix: to do not try to access a DataSource while it's being deleted
-Enhancement: added a new (hidden) configuration setting 'synchro_prevent_delete_all' (default to true) to deactivate the "safety belt" and allow the deletion of all replicas of a synchro task in one go.
+#698 SeparatorPopupMenuItem was not working.
+#697: properly export NULL dates in "spreadsheet" format.
+#694 A module can now add a menu under a menu from another module
+#691 Notifications were not sent at all if some recicipients had an empty address
+#690 XML export broken
+#688 When the autocomplete is activated, and the allowed values depend on another value, then it is possible to set a wrong value
+#687 Label for attribute Person: "name" was always shown in English (Last Name)
+#684 CSV import / reconciliation using an enum does not take the translation into account
+#683 Allow installation on a DB which names begins with numbers
+#682 Order notifications (last first).
+#680 Setup failing to display the check report when DOM extension not enabled (php-xml not installed on redhat distributions)
+#679 Improved the reporting in case of an error while loading a module: 1) the list of already loaded modules is given, 2) the full path of the searched node is given
+#677 Cosmetics in the german localization (and a few other languages): first header of the config mgmt overview
+#675 Error when drilling down on graph/pie/table with group by on a field that can be null (this case has been excluded)
+#674 request_type:servicerequest changed into service_request - added the DB update to allow an upgrade
+#674 Fix bug  TTO / TTR computation for Service request
+#670 Fix for an XSS vulnerability issue.
+#666 Add reconciliation key for Software
+#664 Could not login after upgrade of an iTop 1.x with a DB prefix
+#661 and #662 Could not create a user request (or ?) as soon as the autocomplete feature gets active
+#660 Warning raised with ZendServer (with APC cache enabled) causing the setup to fail
+#659 Exception handling producing notices, hence causing confusion
+#657 JavaScript error when modifying UserLDAP object with Sync
+#634 Detection of HTTPS not working with nginx (iTop always considering the current connection as being secure)
+#626 Fixed missing translation in dictionaries (Tickets: "relations", and Contacts overview / count)
 
-CAS integration
----------------
-- regression fix: support patterns for the MemberOf groups filtering
-- activate/de-activate the profiles synchronization using the 'cas_update_profiles' configuration flag
-- provide default profile(s) when creating a new user from CAS, only if no match is found for assigning profiles from the CAS MemberOf group(s).
-- properly log-off (and report the issue in the log) in case we fail to create a user during the CAS Synchro
+Setup/installation fixes
+------------------------
+Compiler: typo preventing from setting the property 'min_autocomplete_chars' on an external key
+Better error reporting when loading a module fails.
+Sort the modules before processing them for dependencies, in order to obtain a predictable result independent from the order of the modules in the file system... hopefully... (should fix Trac#679)
+Data model alternate options were not properly checked when upgrading (especially when selecting ITIL tickets)
+Enable support of databases which name either is a reserved word or contains non-alphanumeric characters (i.e. itop-production).
+Added support for creating symbolic links via the toolkit
+Added more debug info in the setup.log about the detection of the previously installed modules
 
-Bugs fixed
-----------
-The complete list of active tickets can be reviewed at http://sourceforge.net/apps/trac/itop/report/1
+Data model fixes
+----------------
+Correction to display IP address field for:
+  Physical Device
+  Network Device
+  Server
+  Storage System
+  NAS
+  Tape Library
+  SAN switch
+Fix an issue that prevented the creation of Logical Interfaces
+Add reconciliation keys for SLT in order to allow import for SLT having the same name
+Remove wrong dependency to service_id on parent_request_id (for ITIL tickets)
 
-#583 Losing attachments when performing massive change
-#528 Typo: criticALity
-#527 Typo: license get an S in the US
-#467 Friendly names not up to date when sending notifications
-#411, #421, #520 Sorting of lists: sort is now always executed server-side.
-#541 Fixed bug in the export for spreadsheet (time format)
-#556 Reworked the caching of user rights data
-#558 properly parse OQL strings containing hexadecimal sequences (i.e. 'QWERTY0xCUIOP'). Note that for now hexadecimal numbers are parsed but not interpreted properly...
-#559 ldap user can login with blank password
-#439 Make sure that changes made by a plugin get recorded
-#565 Fixed security issues (XSS)
-#614 Fixed regression on multi column queries (could not display Null objects)
-#615 Fixed bug on multi column queries - wrong count resulting in strange effects in the display of results
-#602 Description not shown in portal
-#631 Impossible to assign a routine or emergency change.
-#584 Documentation of needed piviledges
-#625 CSV export of boolean attributes was broken (false => "")
-#624 Corrupted display of the log when updating from the portal.
-#589 Do not use ExchangeException here
-#627 Do not log the parameters in the call stack in case of exception to protect sensitive data.
-#619 Added the option -- single-transaction to the mysqldump command to avoid locking issues with non-existing definer accounts.
-#497 Allow bulk modification of "duration" fields.
-- Proper display of the modifications on the SynchroAttributes in the History of a SynchroDataSource
-- Better display of the history of Boolean atrtibutes (false is no longer displayed as an empty string)
-#628 Fix for "undefined property"
-#608 Install broken on PHP < 5.2.17
-#640 Portal: Resolved requests shown in both lists (opened and resolved)
-#628 Sort order and configurable tables
-#647 iTop says "ticket updated" but nothing has been changed
-#398 Import CSV: Unchanged attributes marked as "modified"
-#645 Incorrect URL for downloading attachments, that nobody really to noticed before since it is working fine on most of the web servers
-#560 typo for german translation of "Metric"
-#629 Nested object creation (button plus) does not work with PHP 5.4 + notification sent on object creation + PHP error level allows NOTICE
-#597 IE9: Black border around icons
-#441 /doc redirects to Apache documentation! Directory renamed into "/documentation"
-
-Other bug fixes not listed in Trac:
-Patch to add the support of indexOf for IE8.
-Do not perform time consuming computations for building the menus if there are too many objects in a list (limit is configurable).
-Portal fixes (relative URLs and parameter validation)...
-Restore the previous URLMaker in case the sending of a notification is not the last action of a page... (e.g. if the page displays the details of an object after sending the notifications...)
-Protect against a non-existent "MapContextParams" function
-Protects against too long string when logging web services events
-XML Export: do not export "unimplemented" link sets, so that the resulting output can be used as sample data in the setup
-Bug fix: properly export boolean attributes to XML (a value of false was creating an empty XML tag)
-- HTML attributes > 64 Kb
-- Log of notification displayed as HTML
-Bug fix for queries where the selected class is not the first one in the list
-Some changes to the application layout: logs now go to the ./log folder ./data should be used to store application's data.
-Fixed an issue revealed by fix [2201], occurring when filtering on organization (context) - the fix is not complete (see Trac #588)
-Bug fix: prevent 'assertion failed' when a block auto reloads: '0' is indeed a valid ID for a display block !!
-Properly parse accentuated characters inside the "autocomplete" widget.
-Protects the dialog resizing against some JS errors
-Fixed issues with accentuated characters in the graphs (bars or pie)
-Fixed issue in the portal: the list of opened requests and closed request where messed up when pagination was activated on both lists
-Bug fix: preserve the previous settings in the configuration file in case of upgrade.
-Fixed the "Reset(APC)Cache" at the end of the installation.
-Fixed two bugs revealed with specific constraints (query expression like 'SELECT b FROM a JOIN b', AND the organization context is set)
-Make sure that GetFilter returns a usable filter (i.e. with the parameters)
-Incorrect handling of "negative" selections in bulk delete
-Renamed the SQl table from priv_Userinternal to priv_userinternal, and added a check for table names (lowercase is the rule!)
-Bug fix:
-- Correct initial sort order of a table if the default sort column is not an "alphabetical" column (i.e. IP Address)
-- Properly sort on the first column (name) when the name is made of a column with a different sort algorithm (i.e. IP Address).
-Protects the display of the history against renamed/removed attributes.
-Fixed a bit the portal's stylesheet and prevent calling OnFormCancel on a true submit
-Make sure that CSV files end with a proper carriage return
-Prevent a undefined variable when logging directly to a details page (bookmarked page)
-Fixed caching issue (hard to reproduce)
-Notifications: Support multiple recipients in To: Cc: and Bcc:
-Protect against empty email addresses
-Web Server crashes when using together APC cache and Mcrypt
-Fixed issue in CSV export: null enums rendered as 'undefined' whereas '' is the value expected in the import (See an export of Organization/status)
-Improved the format for DateTimes (don't let 2012-12-05 1900:00 pass through since it turns into 0000-00-00 00:00:00 in MySQL) but allow to omit the seconds (i.e. 2012-12-05 18:45 will become 2012-12-05 18:45:00 in MySQL)
-Make auto_reload work on OQL menus
-Do not send a notification if nothing has been changed from the portal web page
-Typo causing a bug in IE8 when removing an element from a n:n linkset.
-Prevent a crash when not authorized to see an object of a derived class.
-
-
-Extension capabilities
-----------------------
-When there is still no dictionary available, the menus / classes / attributes have a default label based on their raw names (replacing _ by a blank)
-Named tab containers instead of non-unique numbering !
-Make GetConfig independent of the MetaModel
-In the 'context', pass menus by ID and no longer by index.
-Use the 'style' of the MenuBlock (inherited from DisplayBlock) to distinguish between a list of one object and the details of the same object.
-Datamodel/Menus/Dashboards/Profiles are now defined in XML
-Protect the download of documents against spurious blank lines coming from nowhere !!
-Implementation of a new extension "iPopupMenuExtension" to allow a module to add menu items almost anywhere inside iTop.
-Handling of "pure PHP" classes inside the data model
-Don't perform computations inside GetAsHTML because this may cause an infinite recursion since GetAsHTML is called by ToArgs
-Simplified the change tracking. Simply call DBObject::DBInsert (resp. Update and Delete) and the change will be recorded for the current page. This is compatible with the old (not mandatory anymore) way that was requiring DBInsertTracked APIs (resp. Update, Delete).
-"extensions" is now the offical place for storing extension modules
-Portal: enable adding dependent attributes in the request creation form
-Objects always recorded before the notifications are sent
-Capability to add 'attachments' => array of ormDocument to the context of a trigger, the attachments will be added to the email sent
-Added the ability to Find then Remove a tab inside a page
-Support edition of the "latest modified" entry of a case log
-The hierarchical key in Organizations is not always named 'parent_id'
-New extension API: iPageUIExtension to alter the display of *each* iTopWebPage.
-
+Miscellaneous fixes
+-------------------
+Preserve POSted parameters on the login web page (useful when the session expires)
+More readable edition for AttributeDuration
+Properly record history of Hierarchical Keys
+Fix for supporting the CSV export of big audit results.
+Fix for making iUIPageExtension usable !
+Fixed transparent background issues on the icons at the top-right of the main iTop page...
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
      -----------------
 #71   The same MySQL credentials are used during the setup and for running the application.
 
-Suhosin can interfere with iTop. More information can be found here: https://sourceforge.net/apps/mediawiki/itop/index.php?title=ITop_and_Suhosin
+Suhosin can interfere with iTop. More information can be found here: http://www.combodo.com/wiki/doku.php?id=admin:suhosin
 Internet Explorer 6 is not supported (neither IE7 nor IE8 in compatibility mode)
 Tested with IE8 and IE9, Firefox 3.6 up to Firefox 16 and Chrome. Be aware that there are certain limitations when using IE8 in "security mode" (when running IE on a Windows 2008 Server for example)
 
