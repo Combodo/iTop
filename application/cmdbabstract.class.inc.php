@@ -800,7 +800,10 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			$iDefaultPageSize = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
 			$oSettings->iDefaultPageSize = $iDefaultPageSize;
 		}
-		
+		else
+		{
+			$oSettings->iDefaultPageSize = 0;
+		}
 		$oSettings->aSortOrder = MetaModel::GetOrderByDefault($sClassName);
 		
 		return $oDataTable->Display($oPage, $oSettings, $bDisplayMenu, $sSelectMode, $bViewLink, $aExtraParams);

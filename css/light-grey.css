@@ -1102,9 +1102,6 @@ table.pagination tr td {
 .pagination_container {
 	padding-left: 3px;
 }
-.pager {
-	display:inline-block;
-}
 .pager p {
 	margin-top: 0;
 	margin-bottom: 0;
