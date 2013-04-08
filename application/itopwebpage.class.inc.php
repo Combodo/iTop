@@ -768,7 +768,7 @@ EOF
 			$sHtml .= '			</div>';
 			$sHtml .= '		</div> <!-- /inner menu -->';
 			$sHtml .= ' </div> <!-- /menu -->';
-			$sHtml .= ' <div class="footer ui-layout-south"><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logo-combodo.png"/></a></div>';
+			$sHtml .= ' <div class="footer ui-layout-south"><div id="combodo_logo"><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logo-combodo.png"/></a></div></div>';
 			$sHtml .= '<!-- End of the left pane -->';
 			$sHtml .= '</div>';
 

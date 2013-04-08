@@ -60,6 +60,10 @@ class DataTable
 		{
 			// Custom settings overload the default ones
 			$this->bUseCustomSettings = true;
+			if ($this->oDefaultSettings->iDefaultPageSize == 0)
+			{
+				$oCustomSettings->iDefaultPageSize = 0;
+			}
 		}
 		else
 		{
@@ -176,6 +180,8 @@ class DataTable
 		if ($iPageSize < 1) // Display all
 		{
 			$sPagerStyle = 'style="display:none"'; // no limit: display the full table, so hide the "pager" UI
+												   // WARNING: mPDF does not take the "display" style into account
+												   // when applied to a <td> or a <table> tag, so make sure you apply this to a div
 		}
 		else
 		{
@@ -226,7 +232,8 @@ class DataTable
 		$sSelectionMode = ($iNbPages == 1) ? '' : 'positive';
 		$sHtml =
 <<<EOF
-		<td $sPagerStyle colspan="2">
+		<td colspan="2">
+		<div $sPagerStyle>
 		<table id="pager{$this->iListId}" class="pager"><tr>
 		<td>$sPages</td>
 		<td><img src="../images/first.png" class="first"/></td>
@@ -239,6 +246,7 @@ class DataTable
 		</td>
 		</tr>
 		</table>
+		</div>
 		</td>
 EOF;
 		return $sHtml;
