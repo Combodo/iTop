@@ -45,8 +45,7 @@ SetupWebPage::AddModule(
 			
 		),
 		'dictionary' => array(
-			'en.dict.attachments.php',
-			'fr.dict.attachments.php',
+
 		),
 		'data.struct' => array(
 			// add your 'structure' definition XML files here,
