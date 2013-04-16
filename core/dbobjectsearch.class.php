@@ -118,6 +118,25 @@ class DBObjectSearch
 		return key($this->m_aClasses);
 	}
 
+	/**
+	 * Change the class (only subclasses are supported as of now, because the conditions must fit the new class)
+	 * Defaults to the first selected class (most of the time it is also the first joined class	 
+	 */	 	
+	public function ChangeClass($sNewClass, $sAlias = null)
+	{
+		if (is_null($sAlias))
+		{
+			$sAlias = $this->GetClassAlias();
+		}
+		$sCurrClass = $this->GetClassName($sAlias);
+		if (!MetaModel::IsParentClass($sCurrClass, $sNewClass))
+		{
+			throw new Exception("Could not change the search class from '$sCurrClass' to '$sNewClass'. Only child classes are permitted.");
+		}
+		$this->m_aSelectedClasses[$sAlias] = $sNewClass;
+		$this->m_aClasses[$sAlias] = $sNewClass;
+	}
+
 	public function SetSelectedClasses($aNewSet)
 	{
 		$this->m_aSelectedClasses = array();
