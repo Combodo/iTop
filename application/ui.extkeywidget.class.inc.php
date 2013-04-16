@@ -355,6 +355,10 @@ EOF
 		}
 		
 		$oFilter = DBObjectSearch::FromOQL($sFilter);
+		if (strlen($sRemoteClass) > 0)
+		{
+			$oFilter->ChangeClass($sRemoteClass);
+		}
 		$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 		$oBlock = new DisplayBlock($oFilter, 'list', false, array('query_params' => array('this' => $oObj)));
 		$oBlock->Display($oP, $this->iId.'_results', array('this' => $oObj, 'cssCount'=> '#count_'.$this->iId, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'table_id' => 'select_'.$this->sAttCode)); // Don't display the 'Actions' menu on the results
