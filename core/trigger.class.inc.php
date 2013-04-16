@@ -76,6 +76,19 @@ abstract class Trigger extends cmdbAbstractObject
 			}
 		}
 	}
+	
+	/**
+	 * Check whether the given object is in the scope of this trigger
+	 * and can potentially be the subject of notifications
+	 * @param DBObject $oObject The object to check
+	 * @return bool
+	 */
+	public function IsInScope(DBObject $oObject)
+	{
+		// By default the answer is no
+		// Overload this function in your own derived class for a different behavior
+		return false;
+	}
 }
 
 abstract class TriggerOnObject extends Trigger
@@ -104,6 +117,18 @@ abstract class TriggerOnObject extends Trigger
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+	}
+	
+	/**
+	 * Check whether the given object is in the scope of this trigger
+	 * and can potentially be the subject of notifications
+	 * @param DBObject $oObject The object to check
+	 * @return bool
+	 */
+	public function IsInScope(DBObject $oObject)
+	{
+		$sRootClass = $this->Get('target_class');
+		return  ($oObject instanceof $sRootClass);
 	}
 }
 /**

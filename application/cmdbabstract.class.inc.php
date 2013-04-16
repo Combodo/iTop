@@ -406,18 +406,24 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		// Display Notifications after the other tabs since this tab disappears in edition
 		if (!$bEditMode)
 		{
-			// Get the actual class of the current object
-			// And look for triggers referring to it
+			// Look for any trigger that considers this object as "In Scope"
 			// If any trigger has been found then display a tab with notifications
 			//			
-			$sClass = get_class($this);
-			$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-			$oTriggerSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObject AS T WHERE T.target_class IN ('$sClassList')"));
-			if ($oTriggerSet->Count() > 0)
+			$oTriggerSet = new CMDBObjectSet(new DBObjectSearch('Trigger'));
+			$aTriggers = array();
+			while($oTrigger = $oTriggerSet->Fetch())
+			{
+				if($oTrigger->IsInScope($this))
+				{
+					$aTriggers[] = $oTrigger->GetKey();
+				}
+			}
+			if (count($aTriggers) > 0)
 			{
 				// Display notifications regarding the object
 				$iId = $this->GetKey();
-				$oNotifSearch = DBObjectSearch::FromOQL("SELECT EventNotificationEmail AS Ev JOIN TriggerOnObject AS T ON Ev.trigger_id = T.id WHERE T.target_class IN ('$sClassList') AND Ev.object_id = $iId");
+				$sTriggersList = implode(',', $aTriggers);
+				$oNotifSearch = DBObjectSearch::FromOQL("SELECT EventNotificationEmail AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN ($sTriggersList) AND Ev.object_id = $iId");
 				$oNotifSet = new DBObjectSet($oNotifSearch);
 				$sCount = ($oNotifSet->Count() > 0) ? ' ('.$oNotifSet->Count().')' : '';
 				$oPage->SetCurrentTab(Dict::S('UI:NotificationsTab').$sCount);
