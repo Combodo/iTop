@@ -33,10 +33,15 @@ define ('EMAIL_SEND_OK', 0);
 define ('EMAIL_SEND_PENDING', 1);
 define ('EMAIL_SEND_ERROR', 2);
 
-
 class EMail
 {
+	// Serialization formats
+	const ORIGINAL_FORMAT = 1; // Original format, consisting in serializing the whole object, inculding the Swift Mailer's object.
+							   // Did not work with attachements since their binary representation cannot be stored as a valid UTF-8 string
+	const FORMAT_V2 = 2; // New format, only the raw data are serialized (base64 encoded if needed)
+	
 	protected static $m_oConfig = null;
+	protected $m_aData; // For storing data to serialize
 
 	public function LoadConfig($sConfigFile = ITOP_DEFAULT_CONFIG_FILE)
 	{
@@ -46,17 +51,95 @@ class EMail
 		}
 	}
 
-
 	protected $m_oMessage;
 
 	public function __construct()
 	{
+		$this->m_aData = array();
 		$this->m_oMessage = Swift_Message::newInstance();
 
 		$oEncoder = new Swift_Mime_ContentEncoder_PlainContentEncoder('8bit');
 		$this->m_oMessage->setEncoder($oEncoder);
 	}
 
+	/**
+	 * Custom serialization method
+	 * No longer use the brute force "serialize" method since
+	 * 1) It does not work with binary attachments (since they cannot be stored in a UTF-8 text field)
+	 * 2) The size tends to be quite big (sometimes ten times the size of the email)
+	 */
+	public function SerializeV2()
+	{
+		return serialize($this->m_aData);
+	}
+	
+	/**
+	 * Custom de-serialization method
+	 * @param string $sSerializedMessage The serialized representation of the message
+	 */
+	static public function UnSerializeV2($sSerializedMessage)
+	{
+		$aData = unserialize($sSerializedMessage);
+		$oMessage = new Email();
+		
+		if (array_key_exists('body', $aData))
+		{
+			$oMessage->SetBody($aData['body']['body'], $aData['body']['mimeType']);
+		}
+		if (array_key_exists('message_id', $aData))
+		{
+			$oMessage->SetMessageId($aData['message_id']);
+		}
+		if (array_key_exists('bcc', $aData))
+		{
+			$oMessage->SetRecipientBCC($aData['bcc']);
+		}
+		if (array_key_exists('cc', $aData))
+		{
+			$oMessage->SetRecipientCC($aData['cc']);
+		}
+		if (array_key_exists('from', $aData))
+		{
+			$oMessage->SetRecipientFrom($aData['from']['address'], $aData['from']['label']);
+		}
+		if (array_key_exists('reply_to', $aData))
+		{
+			$oMessage->SetRecipientReplyTo($aData['reply_to']);
+		}
+		if (array_key_exists('to', $aData))
+		{
+			$oMessage->SetRecipientTO($aData['to']);
+		}
+		if (array_key_exists('subject', $aData))
+		{
+			$oMessage->SetSubject($aData['subject']);
+		}
+		
+		
+		if (array_key_exists('headers', $aData))
+		{
+			foreach($aData['headers'] as $sKey => $sValue)
+			{
+				$oMessage->AddToHeader($sKey, $sValue);
+			}
+		}
+		if (array_key_exists('parts', $aData))
+		{
+			foreach($aData['parts'] as $aPart)
+			{
+				$oMessage->AddPart($aPart['text'], $aPart['mimeType']);
+			}
+		}
+		if (array_key_exists('attachments', $aData))
+		{
+			foreach($aData['attachments'] as $aAttachment)
+			{
+				$oMessage->AddAttachment(base64_decode($aAttachment['data']), $aAttachment['filename'], $aAttachment['mimeType']);
+			}
+		}
+		return $oMessage;
+	}
+	
   	protected function SendAsynchronous(&$aIssues, $oLog = null)
 	{
 		try
@@ -102,9 +185,9 @@ class EMail
 		$oMailer = Swift_Mailer::newInstance($oTransport);
 
 		$iSent = $oMailer->send($this->m_oMessage);
-		if ($iSent === false)
+		if ($iSent === 0)
 		{
-			$aIssues = 'une erreur s\'est produite... mais quoi !!!';
+			$aIssues = array('No valid recipient for this message.');
 			return EMAIL_SEND_ERROR;
 		}
 		else
@@ -136,6 +219,12 @@ class EMail
 
 	public function AddToHeader($sKey, $sValue)
 	{
+		if (!array_key_exists('headers', $this->m_aData))
+		{
+			$this->m_aData['headers'] = array();
+		}
+		$this->m_aData['headers'][$sKey] = $sValue;
+		
 		if (strlen($sValue) > 0)
 		{
 			$oHeaders = $this->m_oMessage->getHeaders();
@@ -149,6 +238,8 @@ class EMail
 
 	public function SetMessageId($sId)
 	{
+		$this->m_aData['message_id'] = $sId;
+		
 		// Note: Swift will add the angle brackets for you
 		// so let's remove the angle brackets if present, for historical reasons
 		$sId = str_replace(array('<', '>'), '', $sId);
@@ -164,22 +255,34 @@ class EMail
 
 	public function SetBody($sBody, $sMimeType = 'text/html')
 	{
+		$this->m_aData['body'] = array('body' => $sBody, 'mimeType' => $sMimeType);
 		$this->m_oMessage->setBody($sBody, $sMimeType);
 	}
 
 	public function AddPart($sText, $sMimeType = 'text/html')
 	{
+		if (!array_key_exists('parts', $this->m_aData))
+		{
+			$this->m_aData['parts'] = array();
+		}
+		$this->m_aData['parts'][] = array('text' => $sText, 'mimeType' => $sMimeType);
 		$this->m_oMessage->addPart($sText, $sMimeType);
 	}
 
 	public function AddAttachment($data, $sFileName, $sMimeType)
 	{
+		if (!array_key_exists('attachments', $this->m_aData))
+		{
+			$this->m_aData['attachments'] = array();
+		}
+		$this->m_aData['attachments'][] = array('data' => base64_encode($data), 'filename' => $sFileName, 'mimeType' => $sMimeType);
 		$this->m_oMessage->attach(Swift_Attachment::newInstance($data, $sFileName, $sMimeType));
 	}
 
-	public function SetSubject($aSubject)
+	public function SetSubject($sSubject)
 	{
-		$this->m_oMessage->setSubject($aSubject);
+		$this->m_aData['subject'] = $sSubject;
+		$this->m_oMessage->setSubject($sSubject);
 	}
 
 	public function GetSubject()
@@ -203,10 +306,11 @@ class EMail
 			}
 		}
 		return $aAddresses;
-	}	
-
+	}
+	
 	public function SetRecipientTO($sAddress)
 	{
+		$this->m_aData['to'] = $sAddress;
 		if (!empty($sAddress))
 		{
 			$aAddresses = $this->AddressStringToArray($sAddress);
@@ -242,6 +346,7 @@ class EMail
 
 	public function SetRecipientCC($sAddress)
 	{
+		$this->m_aData['cc'] = $sAddress;
 		if (!empty($sAddress))
 		{
 			$aAddresses = $this->AddressStringToArray($sAddress);
@@ -251,6 +356,7 @@ class EMail
 
 	public function SetRecipientBCC($sAddress)
 	{
+		$this->m_aData['bcc'] = $sAddress;
 		if (!empty($sAddress))
 		{
 			$aAddresses = $this->AddressStringToArray($sAddress);
@@ -260,6 +366,7 @@ class EMail
 
 	public function SetRecipientFrom($sAddress, $sLabel = '')
 	{
+		$this->m_aData['from'] = array('address' => $sAddress, 'label' => $sLabel);
 		if ($sLabel != '')
 		{
 			$this->m_oMessage->setFrom(array($sAddress => $sLabel));		
@@ -272,6 +379,7 @@ class EMail
 
 	public function SetRecipientReplyTo($sAddress)
 	{
+		$this->m_aData['reply_to'] = $sAddress;
 		if (!empty($sAddress))
 		{
 			$this->m_oMessage->setReplyTo($sAddress);
