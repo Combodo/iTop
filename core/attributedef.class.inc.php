@@ -484,11 +484,14 @@ abstract class AttributeDefinition
 			$sLabel = $this->GetLabel();
 		}
 
+		$sNewValueHtml = $this->GetAsHTML($sNewValue);
+		$sOldValueHtml = $this->GetAsHTML($sOldValue);
+
 		if($this->IsExternalKey())
 		{
 			$sTargetClass = $this->GetTargetClass();
-			$sOldValue = (int)$sOldValue ? MetaModel::GetHyperLink($sTargetClass, (int)$sOldValue) : null;
-			$sNewValue = (int)$sNewValue ? MetaModel::GetHyperLink($sTargetClass, (int)$sNewValue) : null;
+			$sOldValueHtml = (int)$sOldValue ? MetaModel::GetHyperLink($sTargetClass, (int)$sOldValue) : null;
+			$sNewValueHtml = (int)$sNewValue ? MetaModel::GetHyperLink($sTargetClass, (int)$sNewValue) : null;
 		}
 		if ( (($this->GetType() == 'String') || ($this->GetType() == 'Text')) &&
 			 (strlen($sNewValue) > strlen($sOldValue)) )
@@ -496,27 +499,27 @@ abstract class AttributeDefinition
 			// Check if some text was not appended to the field
 			if (substr($sNewValue,0, strlen($sOldValue)) == $sOldValue) // Text added at the end
 			{
-				$sDelta = substr($sNewValue, strlen($sOldValue));
+				$sDelta = $this->GetAsHTML(substr($sNewValue, strlen($sOldValue)));
 				$sResult = Dict::Format('Change:Text_AppendedTo_AttName', $sDelta, $sLabel);
 			}
 			else if (substr($sNewValue, -strlen($sOldValue)) == $sOldValue)   // Text added at the beginning
 			{
-				$sDelta = substr($sNewValue, 0, strlen($sNewValue) - strlen($sOldValue));
+				$sDelta = $this->GetAsHTML(substr($sNewValue, 0, strlen($sNewValue) - strlen($sOldValue)));
 				$sResult = Dict::Format('Change:Text_AppendedTo_AttName', $sDelta, $sLabel);
 			}
 			else
 			{
 				if (strlen($sOldValue) == 0)
 				{
-					$sResult = Dict::Format('Change:AttName_SetTo', $sLabel, $sNewValue);
+					$sResult = Dict::Format('Change:AttName_SetTo', $sLabel, $sNewValueHtml);
 				}
 				else
 				{
 					if (is_null($sNewValue))
 					{
-						$sNewValue = Dict::S('UI:UndefinedObject');
+						$sNewValueHtml = Dict::S('UI:UndefinedObject');
 					}
-					$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sLabel, $sNewValue, $sOldValue);
+					$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sLabel, $sNewValueHtml, $sOldValueHtml);
 				}
 			}
 		}
@@ -524,15 +527,15 @@ abstract class AttributeDefinition
 		{
 			if (strlen($sOldValue) == 0)
 			{
-				$sResult = Dict::Format('Change:AttName_SetTo', $sLabel, $sNewValue);
+				$sResult = Dict::Format('Change:AttName_SetTo', $sLabel, $sNewValueHtml);
 			}
 			else
 			{
 				if (is_null($sNewValue))
 				{
-					$sNewValue = Dict::S('UI:UndefinedObject');
+					$sNewValueHtml = Dict::S('UI:UndefinedObject');
 				}
-				$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sLabel, $sNewValue, $sOldValue);
+				$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sLabel, $sNewValueHtml, $sOldValueHtml);
 			}
 		}
 		return $sResult;
@@ -2337,14 +2340,6 @@ class AttributeEnum extends AttributeString
 		{
 			return $this->GetValueLabel($sValue);
 		}
-	}
-
-	public function GetAsHTMLForHistory($sOldValue, $sNewValue, $sLabel = null)
-	{
-		$sOldValue = is_null($sOldValue) ? null : $this->GetAsHTML($sOldValue);
-		$sNewValue = is_null($sNewValue) ? null : $this->GetAsHTML($sNewValue);
-		$sResult = parent::GetAsHTMLForHistory($sOldValue, $sNewValue, $sLabel);
-		return $sResult;
 	}
 
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
