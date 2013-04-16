@@ -139,6 +139,7 @@ class AsyncSendEmail extends AsyncTask
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
+		MetaModel::Init_AddAttribute(new AttributeInteger("version", array("allowed_values"=>null, "sql"=>"version", "default_value"=>Email::ORIGINAL_FORMAT, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("to", array("allowed_values"=>null, "sql"=>"to", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("subject", array("allowed_values"=>null, "sql"=>"subject", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLongText("message", array("allowed_values"=>null, "sql"=>"message", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
@@ -161,7 +162,10 @@ class AsyncSendEmail extends AsyncTask
 		$oNew->Set('to', $oEMail->GetRecipientTO(true /* string */));
 		$oNew->Set('subject', $oEMail->GetSubject());
 
-		$sMessage = serialize($oEMail);
+//		$oNew->Set('version', 1);
+//		$sMessage = serialize($oEMail);
+		$oNew->Set('version', 2);
+		$sMessage = $oEMail->SerializeV2();
 		$oNew->Set('message', $sMessage);
 		$oNew->DBInsert();
 	}
@@ -169,7 +173,20 @@ class AsyncSendEmail extends AsyncTask
 	public function DoProcess()
 	{
 		$sMessage = $this->Get('message');
-		$oEMail = unserialize($sMessage);
+		$iVersion = (int) $this->Get('version');
+		switch($iVersion)
+		{
+			case Email::FORMAT_V2:
+			$oEMail = Email::UnSerializeV2($sMessage);				
+			break;
+			
+			case Email::ORIGINAL_FORMAT:
+			$oEMail = unserialize($sMessage);				
+			break;
+			
+			default:
+			return 'Unknown version of the serialization format: '.$iVersion;				
+		}
 		$iRes = $oEMail->Send($aIssues, true /* force synchro !!!!! */);
 		switch ($iRes)
 		{
