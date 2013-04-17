@@ -128,6 +128,14 @@ class DBObjectSearch
 		{
 			$sAlias = $this->GetClassAlias();
 		}
+		else
+		{
+			if (!array_key_exists($sAlias, $this->m_aClasses))
+			{
+				// discard silently - necessary when recursing on the related nodes (see code below)
+				return;
+			}
+		}
 		$sCurrClass = $this->GetClassName($sAlias);
 		if (!MetaModel::IsParentClass($sCurrClass, $sNewClass))
 		{
