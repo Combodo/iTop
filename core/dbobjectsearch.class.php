@@ -133,8 +133,35 @@ class DBObjectSearch
 		{
 			throw new Exception("Could not change the search class from '$sCurrClass' to '$sNewClass'. Only child classes are permitted.");
 		}
+
+		// Change for this node
+		//
 		$this->m_aSelectedClasses[$sAlias] = $sNewClass;
 		$this->m_aClasses[$sAlias] = $sNewClass;
+
+		// Change for all the related node (yes, this was necessary with some queries - strange effects otherwise)
+		//
+		foreach($this->m_aRelatedTo as $aRelatedTo)
+		{
+			$aRelatedTo['flt']->ChangeClass($sNewClass, $sAlias);
+		}
+		foreach($this->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
+		{
+			foreach($aPointingTo as $iOperatorCode => $aFilter)
+			{
+				foreach($aFilter as $oExtFilter)
+				{
+					$oExtFilter->ChangeClass($sNewClass, $sAlias);
+				}
+			}
+		}
+		foreach($this->m_aReferencedBy as $sForeignClass => $aReferences)
+		{
+			foreach($aReferences as $sForeignExtKeyAttCode => $oForeignFilter)
+			{
+				$oForeignFilter->ChangeClass($sNewClass, $sAlias);
+			}
+		}
 	}
 
 	public function SetSelectedClasses($aNewSet)
