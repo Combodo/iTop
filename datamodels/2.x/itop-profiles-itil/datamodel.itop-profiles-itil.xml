@@ -599,6 +599,11 @@
           </group>
         </groups>
       </profile>
+      <profile id="12" _delta="define">
+        <name>Portal power user</name>
+        <description>Users having this profile will have the rights to see all the tickets for a customer in the portal. Must be used in conjunction with other profiles (e.g. Portal User).</description>
+        <groups/>
+      </profile>
     </profiles>
   </user_rights>
 </itop_design>

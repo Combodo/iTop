@@ -409,7 +409,7 @@ function ListOpenRequests(WebPage $oP)
 	$sOQL = 'SELECT UserRequest WHERE org_id = :org_id AND status NOT IN ("closed", "resolved")';
 	$oSearch = DBObjectSearch::FromOQL($sOQL);
 	$iUser = UserRights::GetContactId();
-	if ($iUser > 0)
+	if ($iUser > 0 && !IsPowerUser())
 	{
 		$oSearch->AddCondition('caller_id', $iUser);
 	}
@@ -430,7 +430,7 @@ function ListResolvedRequests(WebPage $oP)
 	$sOQL = 'SELECT UserRequest WHERE org_id = :org_id AND status = "resolved"';
 	$oSearch = DBObjectSearch::FromOQL($sOQL);
 	$iUser = UserRights::GetContactId();
-	if ($iUser > 0)
+	if ($iUser > 0 && !IsPowerUser())
 	{
 		$oSearch->AddCondition('caller_id', $iUser);
 	}
@@ -462,7 +462,7 @@ function ListClosedTickets(WebPage $oP)
 	$oSearch->AddCondition('org_id', $oUserOrg->GetKey());
 	$oSearch->AddCondition('status', 'closed');
 	$iUser = UserRights::GetContactId();
-	if ($iUser > 0)
+	if ($iUser > 0 && !IsPowerUser())
 	{
 		$oSearch->AddCondition('caller_id', $iUser);
 	}
@@ -505,9 +505,10 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 	$sClass = get_class($oObj);
 
 	$bIsEscalateButton = false;
+	$bIsReopenButton = false;
 	$bIsCloseButton = false;
 	$bEditAttachments = false;
-	$aEditAtt = array();
+	$aEditAtt = array(); // List of attributes editable in the main form
 	if (!MetaModel::DBIsReadOnly())
 	{
 		switch($oObj->GetState())
@@ -531,12 +532,14 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 			break;
 	
 			case 'resolved':
-			$aEditAtt = array(
-				// non, read-only dans cet etat - 'ticket_log' => '????',
-				'user_satisfaction' => '????',
-				PORTAL_ATTCODE_COMMENT => '????',
-			);
+			$aEditAtt = array();
+			if (array_key_exists('ev_reopen', MetaModel::EnumStimuli($sClass)))
+			{
+				$bIsReopenButton = true;
+				MakeStimulusForm($oP, $oObj, 'ev_reopen', array(PORTAL_ATTCODE_LOG));
+			}
 			$bIsCloseButton = true;
+			MakeStimulusForm($oP, $oObj, 'ev_close', array('user_satisfaction', PORTAL_ATTCODE_COMMENT));
 			break;
 	
 			case 'closed':
@@ -551,16 +554,18 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 
 	switch($sClass)
 	{
-		case 'UserIssue':
-		$aAttList = array('col:0'=> array('ref','caller_id','impact','perimeter','servicesubcategory_id','title','description'),'col:1'=> array('status','priority','start_date','resolution_date','last_update','agent_id'));
-		break;
-
 		case 'UserRequest':
-		$aAttList = array('col:0'=> array('ref','caller_id','servicesubcategory_id','title','description'),'col:1'=> array('status','priority','start_date','resolution_date','last_update','agent_id'));
+		$aAttList = array('col:left'=> array('ref','caller_id','servicesubcategory_id','title','description'),'col:right'=> array('status','priority','start_date','resolution_date','last_update','agent_id'));
+		switch($oObj->GetState())
+		{
+			case 'closed':
+			$aAttList['centered'][] = 'user_satisfaction';
+			$aAttList['centered'][] = PORTAL_ATTCODE_COMMENT;
+		}
 		break;
 
 		default:
-		array('col:0'=> array('ref','service_id','servicesubcategory_id','title','description'),'col:1'=> array('status','start_date'));
+		array('col:left'=> array('ref','service_id','servicesubcategory_id','title','description'),'col:right'=> array('status','start_date'));
 		break;
 	}
 
@@ -588,12 +593,20 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 
 	$oP->add('<tr>');
 	$oP->add('<td style="vertical-align:top;">');
-	$oP->DisplayObjectDetails($oObj, $aAttList['col:0']);
+	$oP->DisplayObjectDetails($oObj, $aAttList['col:left']);
 	$oP->add('</td>');
 	$oP->add('<td style="vertical-align:top;">');
-	$oP->DisplayObjectDetails($oObj, $aAttList['col:1']);
+	$oP->DisplayObjectDetails($oObj, $aAttList['col:right']);
 	$oP->add('</td>');
 	$oP->add('</tr>');
+	if (array_key_exists('centered', $aAttList))
+	{
+		$oP->add('<tr>');
+		$oP->add('<td style="vertical-align:top;" colspan="2">');
+		$oP->DisplayObjectDetails($oObj, $aAttList['centered']);
+		$oP->add('</td>');
+		$oP->add('</tr>');
+	}
 
 // REFACTORISER
 	$oP->add('<tr>');
@@ -611,73 +624,78 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 	$oP->add('</td>');
 	$oP->add('</tr>');
 
-	if (count($aEditAtt) > 0)
-	{
-		$oP->add('<tr>');
-		$oP->add('<td colspan="2" style="vertical-align:top;">');
+	$oP->add('<tr>');
+	$oP->add('<td colspan="2" style="vertical-align:top;">');
 
-		//$oP->add("<form action=\"../portal/index.php\" id=\"request_form\" method=\"post\">\n");
-		//$oP->add('<table id=""><tr><td style="vertical-align:top;">');
-		//$oP->add("<h1 id=\"title_request_details\">".Dict::Format('Portal:CommentsFor_Request', $oObj->GetName())."</h1>\n");
-		$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">");
-		$oP->add("<input type=\"hidden\" name=\"id\" value=\"".$oObj->GetKey()."\">");
-		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"update_request\">");
-		$oP->add("<input type=\"hidden\" id=\"stimulus_to_apply\" name=\"apply_stimulus\" value=\"\">\n");
-		$oP->add_script(
+	//$oP->add("<form action=\"../portal/index.php\" id=\"request_form\" method=\"post\">\n");
+	//$oP->add('<table id=""><tr><td style="vertical-align:top;">');
+	//$oP->add("<h1 id=\"title_request_details\">".Dict::Format('Portal:CommentsFor_Request', $oObj->GetName())."</h1>\n");
+	$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">");
+	$oP->add("<input type=\"hidden\" name=\"id\" value=\"".$oObj->GetKey()."\">");
+	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"update_request\">");
+	$oP->add("<input type=\"hidden\" id=\"stimulus_to_apply\" name=\"apply_stimulus\" value=\"\">\n");
+	$oP->add_script(
 <<<EOF
-		function SetStimulusToApply(sStimulusCode)
-		{
-			$('#stimulus_to_apply').val(sStimulusCode);
-		}
+	function SetStimulusToApply(sStimulusCode)
+	{
+		$('#stimulus_to_apply').val(sStimulusCode);
+	}
 EOF
 );
-		$aEditFields = array(); // Intermediate array to avoid code duplication while splitting btw ticket_log and the rest
-		foreach($aEditAtt as $sAttCode => $foo)
-		{
-			$sValue = $oObj->Get($sAttCode);
-			$sDisplayValue = $oObj->GetEditValue($sAttCode);
-			$aArgs = array('this' => $oObj, 'formPrefix' => '');
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			$sInputId = 'input_'.$sAttCode;
-			$sHTMLValue = "<span id=\"field_{$sInputId}\">".cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', 0 /*$iFlags*/, $aArgs).'</span>';
+	$aEditFields = array(); // Intermediate array to avoid code duplication while splitting btw ticket_log and the rest
+	foreach($aEditAtt as $sAttCode => $foo)
+	{
+		$sValue = $oObj->Get($sAttCode);
+		$sDisplayValue = $oObj->GetEditValue($sAttCode);
+		$aArgs = array('this' => $oObj, 'formPrefix' => '');
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$sInputId = 'input_'.$sAttCode;
+		$sHTMLValue = "<span id=\"field_{$sInputId}\">".cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', 0 /*$iFlags*/, $aArgs).'</span>';
 
-			$aEditFields[$sAttCode] = array(
-				'label' => MetaModel::GetLabel($sClass, $sAttCode),
-				'value' => $sHTMLValue
-			);
-		}
-		foreach($aEditFields as $sAttCode => $aFieldSpec)
-		{
-			if ($sAttCode == PORTAL_ATTCODE_LOG)
-			{
-				// Skip, the public log will be displayed below the buttons
-				continue;
-			}
-			$oP->add("<div class=\"edit_item\">");
-			$oP->add('<h1>'.$aFieldSpec['label'].'</h1>');
-			$oP->add($aFieldSpec['value']);
-			$oP->add('</div>');
-		}
-	//	$oP->p('<textarea id="user_request_commment" name="commment"></textarea>');
-		if($bIsCloseButton)
-		{
-			$sStimulusCode = 'ev_close';
-			$oP->p('<input type="submit" onClick="SetStimulusToApply(\''.$sStimulusCode.'\');" value="'.Dict::S('Portal:Button:CloseTicket').'">');
-		}
-		else
-		{
-			$oP->p('<input type="submit" value="'.Dict::S('Portal:Button:UpdateRequest').'">');
-		}
-		
-		if ($bIsEscalateButton)
-		{
-			$sStimulusCode = 'ev_timeout';
-			$oP->p('<input type="submit" onClick="SetStimulusToApply(\''.$sStimulusCode.'\');" value="'.Dict::S('Portal:ButtonEscalate').'">');
-		}
-
-		$oP->add('</td>');
-		$oP->add('</tr>');
+		$aEditFields[$sAttCode] = array(
+			'label' => MetaModel::GetLabel($sClass, $sAttCode),
+			'value' => $sHTMLValue
+		);
 	}
+	foreach($aEditFields as $sAttCode => $aFieldSpec)
+	{
+		if ($sAttCode == PORTAL_ATTCODE_LOG)
+		{
+			// Skip, the public log will be displayed below the buttons
+			continue;
+		}
+		$oP->add("<div class=\"edit_item\">");
+		$oP->add('<h1>'.$aFieldSpec['label'].'</h1>');
+		$oP->add($aFieldSpec['value']);
+		$oP->add('</div>');
+	}
+	if($bIsReopenButton)
+	{
+		$sStimulusCode = 'ev_reopen';
+		$sTitle = addslashes(Dict::S('Portal:Button:ReopenTicket'));
+		$sOk = addslashes(Dict::S('UI:Button:Ok'));
+		$oP->p('<input type="button" onClick="RunStimulusDialog(\''.$sStimulusCode.'\', \''.$sTitle.'\', \''.$sOk.'\');" value="'.$sTitle.'...">');
+	}
+	if($bIsCloseButton)
+	{
+		$sStimulusCode = 'ev_close';
+		$sTitle = addslashes(Dict::S('Portal:Button:CloseTicket'));
+		$sOk = addslashes(Dict::S('UI:Button:Ok'));
+		$oP->p('<input type="button" onClick="RunStimulusDialog(\''.$sStimulusCode.'\', \''.$sTitle.'\', \''.$sOk.'\');" value="'.$sTitle.'...">');
+	}
+	elseif (count($aEditAtt) > 0)
+	{
+		$oP->p('<input type="submit" value="'.Dict::S('Portal:Button:UpdateRequest').'">');
+	}
+	
+	if ($bIsEscalateButton)
+	{
+		$sStimulusCode = 'ev_timeout';
+		$oP->p('<input type="submit" onClick="SetStimulusToApply(\''.$sStimulusCode.'\');" value="'.Dict::S('Portal:ButtonEscalate').'">');
+	}
+
+	$oP->add('</td>');
+	$oP->add('</tr>');
 
 	$oP->add('<tr>');
 	$oP->add('<td colspan="2" style="vertical-align:top;">');
@@ -704,6 +722,76 @@ EOF
 }
 
 /**
+ * Create form to apply a stimulus
+ * @param WebPage $oP The current web page
+ * @param Object $oObj The target object
+ * @param String $sStimulusCode Stimulus that will be applied
+ * @param Array $aEditAtt List of attributes to edit
+ * @return void
+ */
+function MakeStimulusForm(WebPage $oP, $oObj, $sStimulusCode, $aEditAtt)
+{
+	static $bHasStimulusForm = false;
+
+	$sDialogId = $sStimulusCode."_dialog";
+	$sFormId = $sStimulusCode."_form";
+	$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
+
+	$oP->add('<div id="'.$sDialogId.'" style="display: none;">');
+	$sClass = get_class($oObj);
+
+	$oP->add('<form id="'.$sFormId.'" method="post">');
+	$sTransactionId = utils::GetNewTransactionId();
+	$oP->add("<input type=\"hidden\" id=\"transaction_id\" name=\"transaction_id\" value=\"$sTransactionId\">\n");
+	$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">");
+	$oP->add("<input type=\"hidden\" name=\"id\" value=\"".$oObj->GetKey()."\">");
+	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"update_request\">");
+	$oP->add("<input type=\"hidden\" id=\"stimulus_to_apply\" name=\"apply_stimulus\" value=\"$sStimulusCode\">\n");
+	
+	foreach($aEditAtt as $sAttCode)
+	{
+		$sValue = $oObj->Get($sAttCode);
+		$sDisplayValue = $oObj->GetEditValue($sAttCode);
+		$aArgs = array('this' => $oObj, 'formPrefix' => '');
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$sInputId = 'input_'.$sAttCode;
+		$sHTMLValue = "<span id=\"field_{$sStimulusCode}_{$sInputId}\">".cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', 0 /*$iFlags*/, $aArgs).'</span>';
+
+		$oP->add('<h1>'.MetaModel::GetLabel($sClass, $sAttCode).'</h1>');
+		$oP->add($sHTMLValue);
+	}
+	$oP->add('</form>');
+	$oP->add('</div>');
+
+	if (!$bHasStimulusForm)
+	{
+		$bHasStimulusForm = true;
+		$oP->add_script(
+<<<EOF
+
+function RunStimulusDialog(sStimulusCode, sTitle, sOkButtonLabel)
+{
+	$('#'+sStimulusCode+'_dialog').dialog({
+		height: 'auto',
+		width: 'auto',
+		modal: true,
+		title: sTitle,
+		buttons: [
+		{ text: sOkButtonLabel, click: function() {
+			$(this).find('#'+sStimulusCode+'_form').submit();
+		} },
+		{ text: "$sCancelButtonLabel", click: function() {
+			$(this).dialog( "close" );
+		} },
+		],
+	});
+}
+EOF
+		);
+	}
+}
+
+/**
  * Get The organization of the current user (i.e. the organization of its contact)
  * @param WebPage $oP The current page, for errors output
  * @return Organization The user's org or null in case of problem...
@@ -722,6 +810,25 @@ function GetUserOrg()
 		throw new Exception(Dict::S('Portal:ErrorNoContactForThisUser'));
 	}
 	return $oOrg;
+}
+
+/**
+ * Determine if the current user can be considered as being a portal power user
+ */ 
+function IsPowerUSer()
+{
+	$iUserID = UserRights::GetUserId();
+	$sOQLprofile = "SELECT URP_Profiles AS p JOIN URP_UserProfile AS up ON up.profileid=p.id WHERE up.userid = :user AND p.name = :profile";
+	$oProfileSet = new DBObjectSet(
+		DBObjectSearch::FromOQL($sOQLprofile),
+		array(),
+		array(
+			'user' => $iUserID,
+			'profile' => PORTAL_POWER_USER_PROFILE,
+		)
+	);	
+	$bRes = ($oProfileSet->count() > 0);
+	return $bRes;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
