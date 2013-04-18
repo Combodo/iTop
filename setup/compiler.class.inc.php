@@ -1110,6 +1110,24 @@ EOF;
 		return $sPHP;
 	} // function CompileMenu
 
+	/**
+	 * Helper to compute the grant, taking any existing grant into account
+	*/
+	protected function CumulateGrant(&$aGrants, $sKey, $bGrant)
+	{
+		if (isset($aGrants[$sKey]))
+		{
+			if (!$bGrant)
+			{
+				$aGrants[$sKey] = false;
+			}
+		}
+		else
+		{
+			$aGrants[$sKey] = $bGrant;
+		}
+	}
+
 	protected function CompileUserRights($oUserRightsNode)
 	{
 		static $aActionsInShort = array(
@@ -1120,6 +1138,36 @@ EOF;
 			'delete' => 'd',
 			'bulk delete' => 'bd',
 		);
+
+		// Preliminary : create an index so that links will be taken into account implicitely
+		$aLinkToClasses = array();
+		$oClasses = $this->oFactory->ListAllClasses();
+		foreach($oClasses as $oClass)
+		{
+			$bIsLink = false;
+			$oProperties = $oClass->GetOptionalElement('properties');
+			if ($oProperties)
+			{
+				$bIsLink = (bool) $this->GetPropNumber($oProperties, 'is_link', 0);
+			}
+			if ($bIsLink)
+			{
+				foreach($this->oFactory->ListFields($oClass) as $oField)
+				{
+					$sAttType = $oField->getAttribute('xsi:type');
+		
+					if (($sAttType == 'AttributeExternalKey') || ($sAttType == 'AttributeHierarchicalKey'))
+					{
+						$sOnTargetDel = $oField->GetChildText('on_target_delete');
+						if ($sOnTargetDel == 'DEL_AUTO')
+						{
+							$sTargetClass = $oField->GetChildText('target_class');
+							$aLinkToClasses[$oClass->getAttribute('id')][] = $sTargetClass;
+						}
+					}
+				}
+			}
+		}
 
 		// Groups
 		//
@@ -1187,38 +1235,14 @@ EOF;
 					{
 						if ($sType == 'stimulus')
 						{
-							$sGrantKey = $iProfile.'_'.$sClass.'_s_'.$sAction;
-							$sGrantKeyPlus = $iProfile.'_'.$sClass.'+_s_'.$sAction; // subclasses inherit this grant
+							$this->CumulateGrant($aGrants, $iProfile.'_'.$sClass.'_s_'.$sAction, $bGrant);
+							$this->CumulateGrant($aGrants, $iProfile.'_'.$sClass.'+_s_'.$sAction, $bGrant); // subclasses inherit this grant
 						}
 						else
 						{
 							$sAction = $aActionsInShort[$sType];
-							$sGrantKey = $iProfile.'_'.$sClass.'_'.$sAction;
-							$sGrantKeyPlus = $iProfile.'_'.$sClass.'+_'.$sAction;  // subclasses inherit this grant
-						}
-						// The class itself
-						if (isset($aGrants[$sGrantKey]))
-						{
-							if (!$bGrant)
-							{
-								$aGrants[$sGrantKey] = false;
-							}
-						}
-						else
-						{
-							$aGrants[$sGrantKey] = $bGrant;
-						}
-						// The subclasses
-						if (isset($aGrants[$sGrantKeyPlus]))
-						{
-							if (!$bGrant)
-							{
-								$aGrants[$sGrantKeyPlus] = false;
-							}
-						}
-						else
-						{
-							$aGrants[$sGrantKeyPlus] = $bGrant;
+							$this->CumulateGrant($aGrants, $iProfile.'_'.$sClass.'_'.$sAction, $bGrant);
+							$this->CumulateGrant($aGrants, $iProfile.'_'.$sClass.'+_'.$sAction, $bGrant); // subclasses inherit this grant
 						}
 					}
 				}
@@ -1232,6 +1256,7 @@ EOF;
 
 		$sProfiles = var_export($aProfiles, true);
 		$sGrants = var_export($aGrants, true);
+		$sLinkToClasses = var_export($aLinkToClasses, true);
 
 		$sPHP =
 <<<EOF
@@ -1246,14 +1271,24 @@ class ProfilesConfig
 
 	protected static \$aGRANTS = $sGrants;
 
+	protected static \$aLINKTOCLASSES = $sLinkToClasses;
+
 	public static function GetProfileActionGrant(\$iProfileId, \$sClass, \$sAction)
 	{
+		// Search for a grant, starting from the most explicit declaration,
+		// then searching for less and less explicit declaration
+
+		// 1 - The class itself
+		// 
 		\$sGrantKey = \$iProfileId.'_'.\$sClass.'_'.\$sAction;
 		if (isset(self::\$aGRANTS[\$sGrantKey]))
 		{
 			return self::\$aGRANTS[\$sGrantKey];
 		}
-		foreach (MetaModel::EnumParentClasses(\$sClass) as \$sParent)
+
+		// 2 - The parent classes, up to the root class
+		// 
+		foreach (MetaModel::EnumParentClasses(\$sClass, ENUM_PARENT_CLASSES_EXCLUDELEAF, false /*bRootFirst*/) as \$sParent)
 		{
 			\$sGrantKey = \$iProfileId.'_'.\$sParent.'+_'.\$sAction;
 			if (isset(self::\$aGRANTS[\$sGrantKey]))
@@ -1261,11 +1296,59 @@ class ProfilesConfig
 				return self::\$aGRANTS[\$sGrantKey];
 			}
 		}
+
+		// 3 - The related classes (if the current is an N-N link with AUTO_DEL)
+		//
+		if (array_key_exists(\$sClass, self::\$aLINKTOCLASSES))
+		{
+			// Get the grant for the remote classes. The resulting grant is:
+			// - One YES => YES
+			// - 100% undefined => undefined
+			// - otherwise => NO
+			//
+
+			// Having write allowed on the remote class implies write + delete on the N-N link class
+			if (\$sAction == 'd')
+			{
+				\$sRemoteAction = 'w';
+			}
+			elseif (\$sAction == 'bd')
+			{
+				\$sRemoteAction = 'bw';
+			}
+			else
+			{
+				\$sRemoteAction = \$sAction;
+			}
+
+			foreach (self::\$aLINKTOCLASSES[\$sClass] as \$sRemoteClass)
+			{
+				\$bUndefined = true;
+				\$bGrant = self::GetProfileActionGrant(\$iProfileId, \$sRemoteClass, \$sAction);
+				if (\$bGrant === true)
+				{
+					return true;
+				}
+				if (\$bGrant === false)
+				{
+					\$bUndefined = false;
+				}
+			}
+			if (!\$bUndefined)
+			{
+				return false;
+			}
+		}
+
+		// 4 - All
+		// 
 		\$sGrantKey = \$iProfileId.'_*_'.\$sAction;
 		if (isset(self::\$aGRANTS[\$sGrantKey]))
 		{
 			return self::\$aGRANTS[\$sGrantKey];
 		}
+
+		// Still undefined for this class
 		return null;
 	}	
 

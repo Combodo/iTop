@@ -1967,15 +1967,30 @@ abstract class MetaModel
 	{
 		return array_unique(self::$m_aRootClasses);
 	}
-	public static function EnumParentClasses($sClass, $iOption = ENUM_PARENT_CLASSES_EXCLUDELEAF)
+	public static function EnumParentClasses($sClass, $iOption = ENUM_PARENT_CLASSES_EXCLUDELEAF, $bRootFirst = true)
 	{
 		self::_check_subclass($sClass);	
-		if ($iOption == ENUM_PARENT_CLASSES_EXCLUDELEAF)
+		if ($bRootFirst)
 		{
-			return self::$m_aParentClasses[$sClass];
+			$aRes = self::$m_aParentClasses[$sClass];
 		}
-		$aRes = self::$m_aParentClasses[$sClass];
-		$aRes[] = $sClass;
+		else
+		{
+			$aRes = array_reverse(self::$m_aParentClasses[$sClass], true);
+		}
+		if ($iOption != ENUM_PARENT_CLASSES_EXCLUDELEAF)
+		{
+			if ($bRootFirst)
+			{
+				// Leaf class at the end
+				$aRes[] = $sClass;
+			}
+			else
+			{
+				// Leaf class on top
+				array_unshift($aRes, $sClass);
+			}
+		}
 		return $aRes;
 	}
 	public static function EnumChildClasses($sClass, $iOption = ENUM_CHILD_CLASSES_EXCLUDETOP)
