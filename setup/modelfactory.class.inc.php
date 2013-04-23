@@ -1089,6 +1089,9 @@ EOF
 			case 'removed':
 				$oNodeClone->setAttribute('_delta', 'delete');
 				break;
+			case 'needed':
+				$oNodeClone->setAttribute('_delta', 'define_if_not_exists');
+				break;
 			}
 			$oParentClone->appendChild($oNodeClone);
 		}
