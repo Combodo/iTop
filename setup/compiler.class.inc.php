@@ -124,7 +124,7 @@ class MFCompiler
 					$aAllClasses[] = $sClass;
 					try
 					{
-						$sCompiledCode .= $this->CompileClass($oClass, $sRelativeDir, $oP);
+						$sCompiledCode .= $this->CompileClass($oClass, $sTargetDir, $sRelativeDir, $oP);
 					}
 					catch (DOMFormatException $e)
 					{
@@ -329,7 +329,7 @@ EOF;
 	
 		if (!array_key_exists($sTrackingLevel, $aXmlToPHP))
 		{
-			throw new exception("Tracking level: unknown value '$sTrackingLevel'");
+			throw new DOMFormatException("Tracking level: unknown value '$sTrackingLevel'");
 		}
 		return $aXmlToPHP[$sTrackingLevel];
 	}
@@ -350,7 +350,7 @@ EOF;
 	
 		if (!array_key_exists($sEditMode, $aXmlToPHP))
 		{
-			throw new exception("Edit mode: unknown value '$sTrackingLevel'");
+			throw new DOMFormatException("Edit mode: unknown value '$sTrackingLevel'");
 		}
 		return $aXmlToPHP[$sEditMode];
 	}
@@ -458,7 +458,7 @@ EOF;
 		return $sRet;
 	}
 
-	protected function CompileClass($oClass, $sModuleRelativeDir, $oP)
+	protected function CompileClass($oClass, $sTargetDir, $sModuleRelativeDir, $oP)
 	{
 		$sClass = $oClass->getAttribute('id');
 		$oProperties = $oClass->GetUniqueElement('properties');
@@ -549,6 +549,36 @@ EOF;
 		{
 			$sIcon = $sModuleRelativeDir.'/'.$sIcon;
 			$aClassParams['icon'] = "utils::GetAbsoluteUrlModulesRoot().'$sIcon'";
+		}
+		else // si <fileref ref="nnn">
+		{
+			$oIcon = $oProperties->GetOptionalElement('icon');
+			if ($oIcon)
+			{
+				$oFileRef = $oIcon->GetOptionalElement('fileref');
+				if ($oFileRef)
+				{
+					$iFileId = $oFileRef->getAttribute('ref');
+					$sXPath = "/itop_design/files/file[@id='$iFileId']";
+					$oNodes = $this->oFactory->GetNodes($sXPath);
+					if ($oNodes->length == 0)
+					{
+						throw new DOMFormatException('Could not find the file with ref '.$iFileId);
+					}
+
+					$sName = $oNodes->item(0)->GetChildText('name');
+					$sData = base64_decode($oNodes->item(0)->GetChildText('data'));
+					$aPathInfo = pathinfo($sName);
+					$sFile = 'icon-file'.$iFileId.'.'.$aPathInfo['extension'];
+					$sFilePath = $sTargetDir.'/'.$sModuleRelativeDir.'/'.$sFile;
+					file_put_contents($sFilePath, $sData);
+					if (!file_exists($sFilePath))
+					{
+						throw new Exception('Could not write icon file '.$sFilePath);
+					}
+					$aClassParams['icon'] = "utils::GetAbsoluteUrlModulesRoot().'$sModuleRelativeDir/$sFile'";
+				}
+			}
 		}
 	
 		$oOrder = $oProperties->GetOptionalElement('order');
@@ -1009,7 +1039,7 @@ EOF;
 				$oDashboardDefinition = $oMenu->GetOptionalElement('definition');
 				if ($oDashboardDefinition == null)
 				{
-					throw(new Exception('Missing definition for Dashboard menu "'.$sMenuId.'" expecting either a tag "definition_file" or "definition".'));
+					throw(new DOMFormatException('Missing definition for Dashboard menu "'.$sMenuId.'" expecting either a tag "definition_file" or "definition".'));
 				}
 				$sFileName = strtolower(str_replace(array(':', '/', '\\', '*'), '_', $sMenuId)).'_dashboard_menu.xml';
 				$sTemplateSpec = $this->PathToPHP($sFileName, $sModuleRelativeDir);
