@@ -1064,7 +1064,7 @@ EOF
 		if (!$oNodeClone)
 		{
 			$sAlteration = $oNode->getAttribute('_alteration');
-			$bCopyContents = ($sAlteration == 'replaced') || ($sAlteration == 'added');
+			$bCopyContents = ($sAlteration == 'replaced') || ($sAlteration == 'added') || ($sAlteration == 'needed');
 			$oNodeClone = $oTargetDoc->importNode($oNode->cloneNode($bCopyContents), $bCopyContents);
 			$oNodeClone->removeAttribute('_alteration');
 			if ($oNodeClone->hasAttribute('_old_id'))
