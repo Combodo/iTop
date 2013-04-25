@@ -16,62 +16,10 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
- * Localized data
- *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Menu:RequestManagement' => 'ヘルプデスク',
-	'Menu:RequestManagement+' => 'ヘルプデスクk',
-	'Menu:RequestManagementProvider' => 'ヘルプデスクプロバイダー',
-	'Menu:RequestManagementProvider+' => 'ヘルプディスクプロバイダー',
-	'Menu:UserRequest:Provider' => 'プロバイダーに移管されたオープンな要求',
-	'Menu:UserRequest:Provider+' => 'プロバイダーに移管されたオープンな要求',
-	'Menu:UserRequest:Overview' => '概要',
-	'Menu:UserRequest:Overview+' => '概要',
-	'Menu:NewUserRequest' => '新規ユーザ要求',
-	'Menu:NewUserRequest+' => '新規ユーザ要求チケットの作成',
-	'Menu:SearchUserRequests' => 'ユーザ要求検索',
-	'Menu:SearchUserRequests+' => 'ユーザ要求チケットの検索',
-	'Menu:UserRequest:Shortcuts' => 'ショートカット',
-	'Menu:UserRequest:Shortcuts+' => '',
-	'Menu:UserRequest:MyRequests' => '私に割り当てられた要求',
-	'Menu:UserRequest:MyRequests+' => '私に割り当てられた要求（エージェントとして）',
-	'Menu:UserRequest:MySupportRequests' => "私のサポートコール",
-	'Menu:UserRequest:MySupportRequests+' => "私のサポートコール",
-	'Menu:UserRequest:EscalatedRequests' => 'エスカレートされた要求',
-	'Menu:UserRequest:EscalatedRequests+' => 'エスカレートされた要求',
-	'Menu:UserRequest:OpenRequests' => '全てのオープンな要求',
-	'Menu:UserRequest:OpenRequests+' => '全てのオープンな要求',
-	'Menu:UserRequest:OpenProblems' => '全てのオープンな問題',
-	'Menu:UserRequest:OpenProblems+' => '全てのオープンな問題',
-	'UI:WelcomeMenu:MyAssignedCalls' => '私に割り当てられた要求',
-	'UI-RequestManagementOverview-RequestByType-last-14-days' => '最近14日間のタイプ別要求',
-	'UI-RequestManagementOverview-Last-14-days' => '最近14日間の要求数',
-	'UI-RequestManagementOverview-OpenRequestByStatus' => 'ステータス別のオープンなリクエスト',
-	'UI-RequestManagementOverview-OpenRequestByAgent' => 'エージェント別のオープンなリクエスト',
-	'UI-RequestManagementOverview-OpenRequestByType' => 'タイプ別のオープンなリクエスト',
-	'UI-RequestManagementOverview-OpenRequestByCustomer' => '顧客別のオープンなリクエスト',
-	'Class:UserRequest:KnownErrorList' => '既知のエラー',
-));
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: UserRequest
-//
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserRequest' => 'ユーザ要求',
@@ -134,24 +82,16 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserRequest/Attribute:origin+' => '',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'メール',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => 'メール',
-	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'モニタリング',
-	'Class:UserRequest/Attribute:origin/Value:monitoring+' => 'モニタリング',
 	'Class:UserRequest/Attribute:origin/Value:phone' => '電話',
 	'Class:UserRequest/Attribute:origin/Value:phone+' => '電話',
 	'Class:UserRequest/Attribute:origin/Value:portal' => 'ポータル',
 	'Class:UserRequest/Attribute:origin/Value:portal+' => 'ポータル',
 	'Class:UserRequest/Attribute:approver_id' => '承認者',
 	'Class:UserRequest/Attribute:approver_id+' => '',
-	'Class:UserRequest/Attribute:approver_email' => '承認者メール',
-	'Class:UserRequest/Attribute:approver_email+' => '',
 	'Class:UserRequest/Attribute:service_id' => 'サービス',
 	'Class:UserRequest/Attribute:service_id+' => '',
-	'Class:UserRequest/Attribute:service_name' => 'サービス名',
-	'Class:UserRequest/Attribute:service_name+' => '',
 	'Class:UserRequest/Attribute:servicesubcategory_id' => 'サービスサブカテゴリ',
 	'Class:UserRequest/Attribute:servicesubcategory_id+' => '',
-	'Class:UserRequest/Attribute:servicesubcategory_name' => 'サービスサブカテゴリ名',
-	'Class:UserRequest/Attribute:servicesubcategory_name+' => '',
 	'Class:UserRequest/Attribute:escalation_flag' => 'エスカレーションフラグ',
 	'Class:UserRequest/Attribute:escalation_flag+' => '',
 	'Class:UserRequest/Attribute:escalation_flag/Value:no' => 'いいえ',
@@ -208,16 +148,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserRequest/Attribute:pending_reason+' => '',
 	'Class:UserRequest/Attribute:parent_request_id' => '親要求',
 	'Class:UserRequest/Attribute:parent_request_id+' => '',
-	'Class:UserRequest/Attribute:parent_request_ref' => '参照要求',
-	'Class:UserRequest/Attribute:parent_request_ref+' => '',
 	'Class:UserRequest/Attribute:parent_problem_id' => '親問題',
 	'Class:UserRequest/Attribute:parent_problem_id+' => '',
-	'Class:UserRequest/Attribute:parent_problem_ref' => '参照問題',
-	'Class:UserRequest/Attribute:parent_problem_ref+' => '',
 	'Class:UserRequest/Attribute:parent_change_id' => '親変更',
 	'Class:UserRequest/Attribute:parent_change_id+' => '',
-	'Class:UserRequest/Attribute:parent_change_ref' => '参照変更',
-	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => '子要求',
 	'Class:UserRequest/Attribute:related_request_list+' => '',
 	'Class:UserRequest/Attribute:public_log' => '公開ログ',
@@ -234,8 +168,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => '非常に不満',
 	'Class:UserRequest/Attribute:user_comment' => 'ユーザコメント',
 	'Class:UserRequest/Attribute:user_comment+' => '',
-	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => '親要求id名',
-	'Class:UserRequest/Attribute:parent_request_id_friendlyname+' => '',
 	'Class:UserRequest/Stimulus:ev_assign' => '割り当て',
 	'Class:UserRequest/Stimulus:ev_assign+' => '',
 	'Class:UserRequest/Stimulus:ev_reassign' => '再割り当て',
@@ -260,8 +192,51 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserRequest/Stimulus:ev_reopen+' => '',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => '承認待ち',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
+	'Menu:RequestManagement' => 'ヘルプデスク',
+	'Menu:RequestManagement+' => 'ヘルプデスクk',
+	'Menu:RequestManagementProvider' => 'ヘルプデスクプロバイダー',
+	'Menu:RequestManagementProvider+' => 'ヘルプディスクプロバイダー',
+	'Menu:UserRequest:Provider' => 'プロバイダーに移管されたオープンな要求',
+	'Menu:UserRequest:Provider+' => 'プロバイダーに移管されたオープンな要求',
+	'Menu:UserRequest:Overview' => '概要',
+	'Menu:UserRequest:Overview+' => '概要',
+	'Menu:NewUserRequest' => '新規ユーザ要求',
+	'Menu:NewUserRequest+' => '新規ユーザ要求チケットの作成',
+	'Menu:SearchUserRequests' => 'ユーザ要求検索',
+	'Menu:SearchUserRequests+' => 'ユーザ要求チケットの検索',
+	'Menu:UserRequest:Shortcuts' => 'ショートカット',
+	'Menu:UserRequest:Shortcuts+' => '',
+	'Menu:UserRequest:MyRequests' => '私に割り当てられた要求',
+	'Menu:UserRequest:MyRequests+' => '私に割り当てられた要求（エージェントとして）',
+	'Menu:UserRequest:MySupportRequests' => '私のサポートコール',
+	'Menu:UserRequest:MySupportRequests+' => '私のサポートコール',
+	'Menu:UserRequest:EscalatedRequests' => 'エスカレートされた要求',
+	'Menu:UserRequest:EscalatedRequests+' => 'エスカレートされた要求',
+	'Menu:UserRequest:OpenRequests' => '全てのオープンな要求',
+	'Menu:UserRequest:OpenRequests+' => '全てのオープンな要求',
+	'UI:WelcomeMenu:MyAssignedCalls' => '私に割り当てられた要求',
+	'UI-RequestManagementOverview-RequestByType-last-14-days' => '最近14日間のタイプ別要求',
+	'UI-RequestManagementOverview-Last-14-days' => '最近14日間の要求数',
+	'UI-RequestManagementOverview-OpenRequestByStatus' => 'ステータス別のオープンなリクエスト',
+	'UI-RequestManagementOverview-OpenRequestByAgent' => 'エージェント別のオープンなリクエスト',
+	'UI-RequestManagementOverview-OpenRequestByType' => 'タイプ別のオープンなリクエスト',
+	'UI-RequestManagementOverview-OpenRequestByCustomer' => '顧客別のオープンなリクエスト',
+	'Class:UserRequest:KnownErrorList' => '既知のエラー',
+	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'モニタリング',
+	'Class:UserRequest/Attribute:origin/Value:monitoring+' => 'モニタリング',
+	'Class:UserRequest/Attribute:approver_email' => '承認者メール',
+	'Class:UserRequest/Attribute:approver_email+' => '',
+	'Class:UserRequest/Attribute:service_name' => 'サービス名',
+	'Class:UserRequest/Attribute:service_name+' => '',
+	'Class:UserRequest/Attribute:servicesubcategory_name' => 'サービスサブカテゴリ名',
+	'Class:UserRequest/Attribute:servicesubcategory_name+' => '',
+	'Class:UserRequest/Attribute:parent_request_ref' => '参照要求',
+	'Class:UserRequest/Attribute:parent_request_ref+' => '',
+	'Class:UserRequest/Attribute:parent_problem_ref' => '参照問題',
+	'Class:UserRequest/Attribute:parent_problem_ref+' => '',
+	'Class:UserRequest/Attribute:parent_change_ref' => '参照変更',
+	'Class:UserRequest/Attribute:parent_change_ref+' => '',
+	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => '親要求id名',
+	'Class:UserRequest/Attribute:parent_request_id_friendlyname+' => '',
 ));
-
-
-
 ?>

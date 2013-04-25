@@ -16,47 +16,20 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
- * Localized data
- *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'gui'
-//////////////////////////////////////////////////////////////////////
-//
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'application'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: AuditCategory
-//
-
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:AuditCategory' => '監査カテゴリ',
-	'Class:AuditCategory+' => '監査全体の内部セクション',
-	'Class:AuditCategory/Attribute:name' => 'カテゴリ名',
-	'Class:AuditCategory/Attribute:name+' => 'カテゴリの短縮名',
-	'Class:AuditCategory/Attribute:description' => '監査カテゴリ説明',
-	'Class:AuditCategory/Attribute:description+' => '監査カテゴリの説明',
-	'Class:AuditCategory/Attribute:definition_set' => '定義セット',
-	'Class:AuditCategory/Attribute:definition_set+' => '監査するべきオブジェクトの集合を定義するOQL式',
-	'Class:AuditCategory/Attribute:rules_list' => '監査ルール',
-	'Class:AuditCategory/Attribute:rules_list+' => 'このカテゴリの監査ルール',
-));
-
-//
-// Class: AuditRule
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:QueryOQL' => 'OQL クエリ',
+	'Class:QueryOQL+' => ' Object Query Language に基づいたクエリ',
+	'Class:QueryOQL/Attribute:oql' => '式',
+	'Class:QueryOQL/Attribute:oql+' => 'OQL 式',
+	'Class:ShortcutOQL' => '検索結果ショートカット',
+	'Class:ShortcutOQL+' => '',
+	'Class:ShortcutOQL/Attribute:oql' => 'クエリ',
+	'Class:ShortcutOQL/Attribute:oql+' => '',
 	'Class:AuditRule' => '監査ルール',
 	'Class:AuditRule+' => '指定された監査カテゴリをチェックするためのルール',
 	'Class:AuditRule/Attribute:name' => 'ルール名',
@@ -67,21 +40,48 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:AuditRule/Attribute:query+' => '実行するOQL式',
 	'Class:AuditRule/Attribute:valid_flag' => '有効なオブジェクト',
 	'Class:AuditRule/Attribute:valid_flag+' => 'このルールが有効なオブジェクトを返す場合は真、そうでなければ偽',
-	'Class:AuditRule/Attribute:valid_flag/Value:true' => '真',
-	'Class:AuditRule/Attribute:valid_flag/Value:true+' => '真',
 	'Class:AuditRule/Attribute:valid_flag/Value:false' => '偽',
 	'Class:AuditRule/Attribute:valid_flag/Value:false+' => '偽',
+	'Class:AuditRule/Attribute:valid_flag/Value:true' => '真',
+	'Class:AuditRule/Attribute:valid_flag/Value:true+' => '真',
 	'Class:AuditRule/Attribute:category_id' => 'カテゴリ',
 	'Class:AuditRule/Attribute:category_id+' => 'このルールのカテゴリ',
+	'Class:AuditCategory' => '監査カテゴリ',
+	'Class:AuditCategory+' => '監査全体の内部セクション',
+	'Class:AuditCategory/Attribute:name' => 'カテゴリ名',
+	'Class:AuditCategory/Attribute:name+' => 'カテゴリの短縮名',
+	'Class:AuditCategory/Attribute:description' => '監査カテゴリ説明',
+	'Class:AuditCategory/Attribute:description+' => '監査カテゴリの説明',
+	'Class:AuditCategory/Attribute:definition_set' => '定義セット',
+	'Class:AuditCategory/Attribute:definition_set+' => '監査するべきオブジェクトの集合を定義するOQL式',
+	'Class:AuditCategory/Attribute:rules_list' => '監査ルール',
+	'Class:AuditCategory/Attribute:rules_list+' => 'このカテゴリの監査ルール',
+	'Class:URP_Profiles' => 'プロフィール',
+	'Class:URP_Profiles+' => 'ユーザプロフィール',
+	'Class:URP_Profiles/Attribute:name' => '名前',
+	'Class:URP_Profiles/Attribute:name+' => 'ラベル',
+	'Class:URP_Profiles/Attribute:description' => '説明',
+	'Class:URP_Profiles/Attribute:description+' => '1行の説明',
+	'Class:URP_Profiles/Attribute:user_list' => 'ユーザー',
+	'Class:URP_Profiles/Attribute:user_list+' => 'この役割をもつ人',
+	'Class:URP_UserProfile' => 'ユーザープロフィール',
+	'Class:URP_UserProfile+' => 'ユーザープロフィール',
+	'Class:URP_UserProfile/Attribute:userid' => 'ユーザー',
+	'Class:URP_UserProfile/Attribute:userid+' => 'ユーザアカウント',
+	'Class:URP_UserProfile/Attribute:profileid' => 'プロフィール',
+	'Class:URP_UserProfile/Attribute:profileid+' => '使用プロフィール',
+	'Class:URP_UserProfile/Attribute:reason' => '理由',
+	'Class:URP_UserProfile/Attribute:reason+' => 'なぜ、この人物がこの役割を持つかを説明する',
+	'Class:URP_UserOrg' => 'ユーザー組織',
+	'Class:URP_UserOrg+' => '許可された組織',
+	'Class:URP_UserOrg/Attribute:userid' => 'ユーザー',
+	'Class:URP_UserOrg/Attribute:userid+' => 'ユーザーアカウント',
+	'Class:URP_UserOrg/Attribute:allowed_org_id' => '組織',
+	'Class:URP_UserOrg/Attribute:allowed_org_id+' => '許可された組織',
+	'Class:URP_UserOrg/Attribute:reason' => '理由',
+	'Class:URP_UserOrg/Attribute:reason+' => 'なぜこの人物がこの組織に属するデータを参照できるのかを説明する',
 	'Class:AuditRule/Attribute:category_name' => 'カテゴリ',
 	'Class:AuditRule/Attribute:category_name+' => 'このルールのカテゴリ名',
-));
-
-//
-// Class: QueryOQL
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Query' => 'クエリ',
 	'Class:Query+' => 'クエリは動的な方法で定義されるデータセットです。',
 	'Class:Query/Attribute:name' => '名前',
@@ -90,30 +90,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Query/Attribute:description+' => 'クエリの長い説明（目的、使用方法等）',
 	'Class:Query/Attribute:fields' => 'フィールド',
 	'Class:Query/Attribute:fields+' => 'エクスポートする属性（またはエイリアス属性,alias.attribute）のコンマ区切り(CSV)リスト',
-
-	'Class:QueryOQL' => 'OQL クエリ',
-	'Class:QueryOQL+' => ' Object Query Language に基づいたクエリ',
-	'Class:QueryOQL/Attribute:oql' => '式',
-	'Class:QueryOQL/Attribute:oql+' => 'OQL 式',
-));
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'addon/userrights'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: User
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:User' => 'ユーザー',
 	'Class:User+' => 'ユーザーログイン',
 	'Class:User/Attribute:finalclass' => 'アカウントタイプ',
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => '連絡先(人物)',
 	'Class:User/Attribute:contactid+' => 'ビジネスデータから抽出した個人の詳細',
-	'Class:User/Attribute:last_name' => 'ラストネーム', 
+	'Class:User/Attribute:last_name' => 'ラストネーム',
 	'Class:User/Attribute:last_name+' => '対応する連絡先の名前',
 	'Class:User/Attribute:first_name' => 'ファーストネーム',
 	'Class:User/Attribute:first_name+' => '対応する連絡先のファーストネーム',
@@ -131,31 +114,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:User/Attribute:profile_list+' => '役割、この人物に付与された権限',
 	'Class:User/Attribute:allowed_org_list' => '許可された組織',
 	'Class:User/Attribute:allowed_org_list+' => 'エンドユーザは以下の組織に属するデータの参照を許可されています。組織が指定されていなければ、制限はありません。',
-
 	'Class:User/Error:LoginMustBeUnique' => 'ログイン名は一意でないといけません。- "%1s" はすでに使われています。',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => '少なくとも1件のプロフィールがこのユーザに指定されなければなりません。',
-));
-
-//
-// Class: URP_Profiles
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:URP_Profiles' => 'プロフィール',
-	'Class:URP_Profiles+' => 'ユーザプロフィール',
-	'Class:URP_Profiles/Attribute:name' => '名前',
-	'Class:URP_Profiles/Attribute:name+' => 'ラベル',
-	'Class:URP_Profiles/Attribute:description' => '説明',
-	'Class:URP_Profiles/Attribute:description+' => '1行の説明',
-	'Class:URP_Profiles/Attribute:user_list' => 'ユーザー',
-	'Class:URP_Profiles/Attribute:user_list+' => 'この役割をもつ人',
-));
-
-//
-// Class: URP_Dimensions
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_Dimensions' => 'ディメンション',
 	'Class:URP_Dimensions+' => 'アプリケーションディメンション(defining silos)',
 	'Class:URP_Dimensions/Attribute:name' => '名前',
@@ -164,52 +124,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_Dimensions/Attribute:description+' => '1行の説明',
 	'Class:URP_Dimensions/Attribute:type' => 'タイプ',
 	'Class:URP_Dimensions/Attribute:type+' => 'クラス名、もしくはデータ型(projection unit)',
-));
-
-//
-// Class: URP_UserProfile
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:URP_UserProfile' => 'ユーザープロフィール',
-	'Class:URP_UserProfile+' => 'ユーザープロフィール',
-	'Class:URP_UserProfile/Attribute:userid' => 'ユーザー',
-	'Class:URP_UserProfile/Attribute:userid+' => 'ユーザアカウント',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'ログイン',
 	'Class:URP_UserProfile/Attribute:userlogin+' => 'ユーザーのログイン',
-	'Class:URP_UserProfile/Attribute:profileid' => 'プロフィール',
-	'Class:URP_UserProfile/Attribute:profileid+' => '使用プロフィール',
 	'Class:URP_UserProfile/Attribute:profile' => 'プロフィール',
 	'Class:URP_UserProfile/Attribute:profile+' => 'プロフィール名',
-	'Class:URP_UserProfile/Attribute:reason' => '理由',
-	'Class:URP_UserProfile/Attribute:reason+' => 'なぜ、この人物がこの役割を持つかを説明する',
-));
-
-//
-// Class: URP_UserOrg
-//
-
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:URP_UserOrg' => 'ユーザー組織',
-	'Class:URP_UserOrg+' => '許可された組織',
-	'Class:URP_UserOrg/Attribute:userid' => 'ユーザー',
-	'Class:URP_UserOrg/Attribute:userid+' => 'ユーザーアカウント',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'ログイン',
 	'Class:URP_UserOrg/Attribute:userlogin+' => 'ユーザのログイン',
-	'Class:URP_UserOrg/Attribute:allowed_org_id' => '組織',
-	'Class:URP_UserOrg/Attribute:allowed_org_id+' => '許可された組織',
 	'Class:URP_UserOrg/Attribute:allowed_org_name' => '組織',
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '許可された組織',
-	'Class:URP_UserOrg/Attribute:reason' => '理由',
-	'Class:URP_UserOrg/Attribute:reason+' => 'なぜこの人物がこの組織に属するデータを参照できるのかを説明する',
-));
-
-//
-// Class: URP_ProfileProjection
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_ProfileProjection' => 'プロフィールプロジェクション',
 	'Class:URP_ProfileProjection+' => 'プロフィールプロジェクション',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'ディメンション',
@@ -224,13 +146,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => '($userを使う)OQL式 | 定数 |  | +属性コード',
 	'Class:URP_ProfileProjection/Attribute:attribute' => '属性',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'ターゲット属性コード (オプション)',
-));
-
-//
-// Class: URP_ClassProjection
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_ClassProjection' => 'クラスプロジェクション',
 	'Class:URP_ClassProjection+' => 'クラスのプロジェクション',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'ディメンション',
@@ -243,15 +158,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_ClassProjection/Attribute:value+' => '($this を使った)OQL式 | 定数 |  | +属性コード',
 	'Class:URP_ClassProjection/Attribute:attribute' => '属性',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'ターゲット属性コード(オプション)',
-));
-
-//
-// Class: URP_ActionGrant
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_ActionGrant' => 'アクション権限',
- 	'Class:URP_ActionGrant+' => 'クラスに対する権限',
+	'Class:URP_ActionGrant+' => 'クラスに対する権限',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'プロフィール',
 	'Class:URP_ActionGrant/Attribute:profileid+' => '使用プロフィール',
 	'Class:URP_ActionGrant/Attribute:profile' => 'プロフィール',
@@ -266,13 +174,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'いいえ',
 	'Class:URP_ActionGrant/Attribute:action' => 'アクション',
 	'Class:URP_ActionGrant/Attribute:action+' => '指定されたクラスに実行する操作',
-));
-
-//
-// Class: URP_StimulusGrant
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_StimulusGrant' => 'シティミュラス権限',
 	'Class:URP_StimulusGrant+' => 'オブジェクトのライフサイクル中のシティミュラスにおける権限',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'プロフィール',
@@ -289,32 +190,17 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'いいえ',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'シティミュラス',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'シティミュラスコード',
-));
-
-//
-// Class: URP_AttributeGrant
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_AttributeGrant' => '属性権限',
 	'Class:URP_AttributeGrant+' => '属性レベルでの権限',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => '実行権限',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => '実行権限',
 	'Class:URP_AttributeGrant/Attribute:attcode' => '属性',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => '属性コード',
-));
-
-//
-// String from the User Interface: menu, messages, buttons, etc...
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:WelcomeMenu' => 'ようこそ',
 	'Menu:WelcomeMenu+' => 'ようこそ、iTopへ',
 	'Menu:WelcomeMenuPage' => 'ようこそ',
 	'Menu:WelcomeMenuPage+' => 'ようこそ、iTopへ',
 	'UI:WelcomeMenu:Title' => 'ようこそ、iTopへ',
-
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTopは、オープンソースの、完結したIT運用ポータルです。</p>
 <ul>以下を含みます。
 <li>ITインベントリを文書化し、管理するための完全なCMDB(構成管理データベース)。</li>
@@ -325,7 +211,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 <li>ITの概観を素早く得るためのダッシュボード。</li>
 </ul>
 <p>すべてのモジュールはお互いに独立しており、別個にセットアップが可能です。</p>',
-
 	'UI:WelcomeMenu:RightBlock' => '<p>iTopはサービスプロバイダ志向であり、ITエンジニアが複数の顧客や組織を簡単に管理できるようになります。
 <ul>iTopは、機能豊富な下記のビジネスプロセスのセットを提供します。
 <li>IT管理の実効性の強化。</li>
@@ -375,9 +260,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Button:FilterList' => ' フィルタ... ',
 	'UI:Button:Create' => ' 作成 ',
 	'UI:Button:Delete' => ' 削除! ',
+	'UI:Button:Rename' => ' 名前変更',
 	'UI:Button:ChangePassword' => ' パスワード変更 ',
 	'UI:Button:ResetPassword' => 'パスワードリセット ',
-	
 	'UI:SearchToggle' => '検索（トグル↓↑)',
 	'UI:ClickToCreateNew' => '新規 %1$s を作成',
 	'UI:SearchFor_Class' => '%1$s オブジェクトを検索',
@@ -396,7 +281,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Error:CannotWriteToTmp_Dir' => '一時ファイルをディスクに書き込めません。upload_tmp_dir = "%1$s"',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'extensionにより、アップロードを停止しました。(オリジナルのファイル名は"%1$s"です)。',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'ファイルのアップロードに失敗しました。原因は不明(エラーコード: "%1$s")です。',
-
 	'UI:Error:1ParametersMissing' => 'エラー: この操作には下記のパラメータを指定する必要があります：%1$s',
 	'UI:Error:2ParametersMissing' => 'エラー：この操作には、下記のパラメータを指定する必要があります：%1$s , %2$s',
 	'UI:Error:3ParametersMissing' => 'エラー：この操作には、下記のパラメータを指定する必要があります：%1$s, %2$s, %3$s',
@@ -412,8 +296,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Error:ObjectAlreadyCloned' => 'エラー：このオブジェクトはすでに、クローンされています。',
 	'UI:Error:ObjectAlreadyCreated' => 'エラー：このオブジェクトは既に作成済みです。',
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'エラー：状態"%3$s"のオブジェクト%2$s上の無効なスティミュラス"%1$s".',
-	
-	
 	'UI:GroupBy:Count' => 'カウント',
 	'UI:GroupBy:Count+' => '要素数',
 	'UI:CountOfObjects' => '%1$d 個のオブジェクトが条件にマッチしました。',
@@ -447,15 +329,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Menu:CSVExport' => 'CSVエクスポート',
 	'UI:Menu:Modify' => '修正...',
 	'UI:Menu:Delete' => '削除...',
-	'UI:Menu:Manage' => '管理...',
 	'UI:Menu:BulkDelete' => '削除...',
 	'UI:UndefinedObject' => '未定義',
 	'UI:Document:OpenInNewWindow:Download' => '新規ウィンドウで開く: %1$s、 ダウンロード: %2$s',
-	'UI:SelectAllToggle+' => 'すべて選択 / すべて非選択',
+	'UI:SelectAllToggle+' => '全てを選択 / 全てを非選択',
 	'UI:SplitDateTime-Date' => '日付',
 	'UI:SplitDateTime-Time' => '時刻',
 	'UI:TruncatedResults' => '%2$d中%1$dのオブジェクトを表示',
-	'UI:DisplayAll' => 'すべて表示', 
+	'UI:DisplayAll' => 'すべて表示',
 	'UI:CollapseList' => '折りたたむ',
 	'UI:CountOfResults' => '%1$d オブジェクト',
 	'UI:ChangesLogTitle' => '変更履歴(%1$d)',
@@ -471,7 +352,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:SelectOne' => '-- 選んでください --',
 	'UI:Login:Welcome' => 'iTopへようこそ',
 	'UI:Login:IncorrectLoginPassword' => 'ログイン/パスワードが正しくありません。再度入力ください。',
-	'UI:Login:IdentifyYourself' => '続けて作業を行う前に認証を受けてください。', 
+	'UI:Login:IdentifyYourself' => '続けて作業を行う前に認証を受けてください。',
 	'UI:Login:UserNamePrompt' => 'ユーザー名',
 	'UI:Login:PasswordPrompt' => 'パスワード',
 	'UI:Login:About' => '',
@@ -487,7 +368,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Login:PasswordChanged' => 'パスワードは変更されました。',
 	'UI:AccessRO-All' => 'iTopは参照専用です。',
 	'UI:AccessRO-Users' => 'エンドユーザの方はiTopは参照専用です。',
-	'UI:ApplicationEnvironment' => 'Application environment: %1$s',
+	'UI:ApplicationEnvironment' => 'アプリケーション環境: %1$s',
 	'UI:Login:RetypePwdDoesNotMatch' => '2度入力された新しいパスワードが一致しません!',
 	'UI:Button:Login' => 'iTopへ入る',
 	'UI:Login:Error:AccessRestricted' => 'iTopへのアクセスは制限されています。iTop管理者に問い合わせしてください。',
@@ -541,8 +422,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:CSVImport:CommentsAndHeader' => 'コメントとヘッダ',
 	'UI:CSVImport:SelectClass' => 'インポートするクラスを選択してください:',
 	'UI:CSVImport:AdvancedMode' => '拡張モード',
-	'UI:CSVImport:AdvancedMode+' => '拡張モードでは、オブジェクトの"id"(主キー)はオブジェクトの更新、リネームに使用可能です。' . 
-'しかしながら、"id"カラムは(たとえ存在しても)検索条件として使用可能なだけであり、他の検索条件と組み合わせて利用することはできません。',
+	'UI:CSVImport:AdvancedMode+' => '拡張モードでは、オブジェクトの"id"(主キー)はオブジェクトの更新、リネームに使用可能です。しかしながら、"id"カラムは(たとえ存在しても)検索条件として使用可能なだけであり、他の検索条件と組み合わせて利用することはできません。',
 	'UI:CSVImport:SelectAClassFirst' => 'マッピングを設定するには、まず最初にクラスを選択してください。',
 	'UI:CSVImport:HeaderFields' => 'フィールド',
 	'UI:CSVImport:HeaderMappings' => 'マッピング',
@@ -553,7 +433,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:UniversalSearchTitle' => 'iTop - ユニバーサル検索',
 	'UI:UniversalSearch:Error' => 'エラー：%1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => '検索するクラスを選択してください。',
-
 	'UI:CSVReport-Value-Modified' => '修正済み',
 	'UI:CSVReport-Value-SetIssue' => '変更出来ません - 理由: %1$s',
 	'UI:CSVReport-Value-ChangeIssue' => '%1$s へ変更出来ません - 理由: %2$s',
@@ -579,7 +458,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:CSVReport-Row-Issue-Reconciliation' => '調整に失敗しました',
 	'UI:CSVReport-Row-Issue-Ambiguous' => 'あいまいな調整',
 	'UI:CSVReport-Row-Issue-Internal' => '内部エラー: %1$s, %2$s',
-
 	'UI:CSVReport-Icon-Unchanged' => '未変更',
 	'UI:CSVReport-Icon-Modified' => '修正済み',
 	'UI:CSVReport-Icon-Missing' => '不足',
@@ -594,21 +472,18 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:CSVReport-Stats-Errors' => '%1$.0f %% ロードされたオブジェクトはエラーがあり、無視されます。',
 	'UI:CSVReport-Stats-Created' => '%1$.0f %% ロードされたオブジェクトは作成されます。',
 	'UI:CSVReport-Stats-Modified' => '%1$.0f %% of ロードされたオブジェクトは修正されます。',
-
 	'UI:CSVExport:AdvancedMode' => 'アドバンスドモード',
 	'UI:CSVExport:AdvancedMode+' => 'アドバンスドモードでは、エキスポートのためにいくつかのカラムが追加されます。: オブジェクトのid, 外部キーの id ,そして調整属性。',
 	'UI:CSVExport:LostChars' => 'エンコーディングの課題',
 	'UI:CSVExport:LostChars+' => 'ダウンロードファイルは %1$s でエンコードされます. iTop はこのフォーマットと整合性のない文字を検出しました。 これらの文字は代りの文字になります。（たとえばアクセント付き文字からはアクセント記号が無くなります。または、削除されます。 Webブラウザからコピー／ペーストが出来ます。 あるいは、システム管理者にエンコードの変更を問い合わせください。 (See parameter \'csv_file_default_charset\').',
-
 	'UI:Audit:Title' => 'iTop - CMDB 監査',
-	'UI:Audit:InteractiveAudit' => '対話型監査', 
+	'UI:Audit:InteractiveAudit' => '対話型監査',
 	'UI:Audit:HeaderAuditRule' => '監査ルール',
 	'UI:Audit:HeaderNbObjects' => 'オブジェクト数',
 	'UI:Audit:HeaderNbErrors' => 'エラー数',
 	'UI:Audit:PercentageOk' => '% OK',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'ルール %1$s 中のOQLエラー: %2$s.',
 	'UI:Audit:ErrorIn_Category_Reason' => 'カテゴリ %1$s 中のOQLエラー: %2$s.',
-
 	'UI:RunQuery:Title' => 'iTop - OQLクエリ評価',
 	'UI:RunQuery:QueryExamples' => 'クエリの例',
 	'UI:RunQuery:HeaderPurpose' => '目的',
@@ -639,7 +514,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Schema:Label' => 'ラベル',
 	'UI:Schema:Label+' => '属性のラベル',
 	'UI:Schema:Type' => '型',
-	
 	'UI:Schema:Type+' => '属性のデータ型',
 	'UI:Schema:Origin' => 'オリジン',
 	'UI:Schema:Origin+' => 'この属性が定義されているベースクラス',
@@ -663,7 +537,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Schema:Triggers' => 'トリガー',
 	'UI:Schema:Relation_Code_Description' => 'リレーション <em>%1$s</em> (%2$s)',
 	'UI:Schema:RelationDown_Description' => '下へ: %1$s',
-	'UI:Schema:RelationUp_Description' => '上へ: %1$s', 
+	'UI:Schema:RelationUp_Description' => '上へ: %1$s',
 	'UI:Schema:RelationPropagates' => '%1$s: %2$d レベルへ伝播、クエリ：%3$s',
 	'UI:Schema:RelationDoesNotPropagate' => '%1$s: 伝播しない (%2$d レベル), クエリ: %3$s',
 	'UI:Schema:Class_ReferencingClasses_From_By' => '%1$s は%2$s クラスから %3$s フィールドにより参照されている',
@@ -686,7 +560,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Label:SelectedObjects' => '選択されたオブジェクト: ',
 	'UI:Label:AvailableObjects' => '利用可能なオブジェクト: ',
 	'UI:Link_Class_Attributes' => '%1$s 属性',
-	'UI:SelectAllToggle+' => '全てを選択 / 全てを非選択',
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => '%2$s にリンクされた%1$sオブジェクトを追加：%3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => '%1$s オブジェクトを%2$sとのリンクに追加',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => '%2$s にリンクされた%1$sオブジェクトの管理: %3$s',
@@ -756,8 +629,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:SystemIntrusion' => 'アクセスが拒否されました。あなたが許可されていない操作を実行しようとしています。',
 	'UI:FatalErrorMessage' => '致命的なエラー、ITOPを続行することはできません。',
 	'UI:Error_Details' => 'エラー：%1$s',
-
-	'UI:PageTitle:ClassProjections'	=> 'iTop ユーザ管理 - クラスプロジェクション',
+	'UI:PageTitle:ClassProjections' => 'iTop ユーザ管理 - クラスプロジェクション',
 	'UI:PageTitle:ProfileProjections' => 'iTop ユーザ管理 - プロフィールプロジェクション',
 	'UI:UserManagement:Class' => 'クラス',
 	'UI:UserManagement:Class+' => 'オブジェクトのクラス',
@@ -775,7 +647,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:UserManagement:Action:Delete' => '削除',
 	'UI:UserManagement:Action:Delete+' => 'オブジェクトの削除',
 	'UI:UserManagement:Action:BulkRead' => '一括読み出し(エクスポート)',
-	'UI:UserManagement:Action:BulkRead+' =>  'オブジェクトのリスト表示、もしくは一括エクスポート',
+	'UI:UserManagement:Action:BulkRead+' => 'オブジェクトのリスト表示、もしくは一括エクスポート',
 	'UI:UserManagement:Action:BulkModify' => '一括修正',
 	'UI:UserManagement:Action:BulkModify+' => '一括作成/編集(CVSインポート)',
 	'UI:UserManagement:Action:BulkDelete' => '一括削除',
@@ -791,16 +663,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:UserManagement:ActionAllowed:Yes' => 'はい',
 	'UI:UserManagement:ActionAllowed:No' => 'いいえ',
 	'UI:UserManagement:AdminProfile+' => '管理者はデータベース中の全てのオブジェクトに対する全ての読み/書き権限を持っています。',
-	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
+	'UI:UserManagement:NoLifeCycleApplicable' => '該当なし',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'このクラスにはライフサイクルは定義されていません。',
 	'UI:UserManagement:GrantMatrix' => '権限マトリクス',
 	'UI:UserManagement:LinkBetween_User_And_Profile' => '%1$s と %2$s間のリンク',
 	'UI:UserManagement:LinkBetween_User_And_Org' => '%1$s と %2$s 間のリンク',
-	
 	'Menu:AdminTools' => '管理ツール',
 	'Menu:AdminTools+' => '管理ツール',
 	'Menu:AdminTools?' => 'このツールは管理者プロフィールを持つユーザのみアクセスが可能です。',
-
 	'UI:ChangeManagementMenu' => '変更管理',
 	'UI:ChangeManagementMenu+' => '変更管理',
 	'UI:ChangeManagementMenu:Title' => '変更管理概要',
@@ -808,52 +678,41 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI-ChangeManagementMenu-ChangesByStatus' => '状態別変更',
 	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'ワークグループ別変更',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'まだ割り当てられていない変更',
-
 	'UI:ConfigurationManagementMenu' => '構成管理',
 	'UI:ConfigurationManagementMenu+' => '構成管理',
 	'UI:ConfigurationManagementMenu:Title' => 'インフラ概要',
 	'UI-ConfigurationManagementMenu-InfraByType' => 'タイプ別のインフラ',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => '状態別のインフラ',
-
-'UI:ConfigMgmtMenuOverview:Title' => '構成管理ダッシュボード',
-'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => '状態別構成項目(CI)',
-'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'タイプ別構成項目(CI)',
-
+	'UI:ConfigMgmtMenuOverview:Title' => '構成管理ダッシュボード',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => '状態別構成項目(CI)',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'タイプ別構成項目(CI)',
 	'UI:RequestMgmtMenuOverview:Title' => '要求管理ダッシュボード',
 	'UI-RequestManagementOverview-RequestByService' => 'サービス別要求',
 	'UI-RequestManagementOverview-RequestByPriority' => '優先度別要求',
 	'UI-RequestManagementOverview-RequestUnassigned' => 'エージェントへ未割り当て要求',
-
 	'UI:IncidentMgmtMenuOverview:Title' => 'インシデント管理ダッシュボード',
 	'UI-IncidentManagementOverview-IncidentByService' => 'サービス別インシデント',
 	'UI-IncidentManagementOverview-IncidentByPriority' => '優先度別インシデント',
 	'UI-IncidentManagementOverview-IncidentUnassigned' => 'エージェントへ未割り当てインシデント',
-
 	'UI:ChangeMgmtMenuOverview:Title' => '変更管理ダッシュボード',
 	'UI-ChangeManagementOverview-ChangeByType' => 'タイプ別変更内容',
 	'UI-ChangeManagementOverview-ChangeUnassigned' => 'エージェントへ未割り当て変更内容',
 	'UI-ChangeManagementOverview-ChangeWithOutage' => '変更に伴う停止',
-
 	'UI:ServiceMgmtMenuOverview:Title' => 'サービス管理ダッシュボード',
 	'UI-ServiceManagementOverview-CustomerContractToRenew' => '30日以内に契約更新が必要な顧客',
 	'UI-ServiceManagementOverview-ProviderContractToRenew' => '30日以内に契約更新が必要なプロバイダ',
-
 	'UI:ContactsMenu' => '連絡先',
-	'UI:ContactsMenu+' => '連絡先', 
+	'UI:ContactsMenu+' => '連絡先',
 	'UI:ContactsMenu:Title' => '連絡先概要',
 	'UI-ContactsMenu-ContactsByLocation' => '場所別連絡先',
 	'UI-ContactsMenu-ContactsByType' => 'タイプ別連絡先',
 	'UI-ContactsMenu-ContactsByStatus' => '状態別連絡先',
-
 	'Menu:CSVImportMenu' => 'CSV インポート',
 	'Menu:CSVImportMenu+' => '一括作成/一括更新',
-	
 	'Menu:DataModelMenu' => 'データモデル',
 	'Menu:DataModelMenu+' => 'データモデル概要',
-	
 	'Menu:ExportMenu' => 'エクスポート',
 	'Menu:ExportMenu+' => '任意のクエリ結果をHTML、CSV、XMLでエクスポートする',
-	
 	'Menu:NotificationsMenu' => '通知',
 	'Menu:NotificationsMenu+' => '通知の設定',
 	'UI:NotificationsMenu:Title' => '<span class="hilite">通知</span>の設定',
@@ -882,47 +741,35 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:NotificationsMenu:OnStateLeave' => 'オブジェクトが指定状態から出た時',
 	'UI:NotificationsMenu:Actions' => 'アクション',
 	'UI:NotificationsMenu:AvailableActions' => '利用可能アクション',
-	
 	'Menu:AuditCategories' => '監査カテゴリ',
 	'Menu:AuditCategories+' => '監査カテゴリ',
 	'Menu:Notifications:Title' => '監査カテゴリ',
-	
 	'Menu:RunQueriesMenu' => 'クエリ実行',
 	'Menu:RunQueriesMenu+' => '任意のクエリを実行',
-		
 	'Menu:QueryMenu' => 'クエリのフレーズブック',
 	'Menu:QueryMenu+' => 'クエリのフレーズブック',
-	
 	'Menu:DataAdministration' => 'データ管理',
 	'Menu:DataAdministration+' => 'データ管理',
-	
 	'Menu:UniversalSearchMenu' => '全検索',
 	'Menu:UniversalSearchMenu+' => '何か...検索',
-	
 	'Menu:ApplicationLogMenu' => 'アプリケーションのログ',
 	'Menu:ApplicationLogMenu+' => 'アプリケーションのログ',
 	'Menu:ApplicationLogMenu:Title' => 'アプリケーションのログ',
-
 	'Menu:UserManagementMenu' => 'ユーザ管理',
 	'Menu:UserManagementMenu+' => 'ユーザ管理',
-
 	'Menu:ProfilesMenu' => 'プロフィール',
 	'Menu:ProfilesMenu+' => 'プロフィール',
 	'Menu:ProfilesMenu:Title' => 'プロフィール',
-
 	'Menu:UserAccountsMenu' => 'ユーザアカウント',
 	'Menu:UserAccountsMenu+' => 'ユーザアカウント',
 	'Menu:UserAccountsMenu:Title' => 'ユーザアカウント',
-
 	'UI:iTopVersion:Short' => 'iTopバージョン%1$s',
 	'UI:iTopVersion:Long' => 'iTopバージョン%1$s-%2$s ビルド%3$s',
 	'UI:PropertiesTab' => 'プロパティ',
-
 	'UI:OpenDocumentInNewWindow_' => '新規ウィンドウでこ文章を開く: %1$s',
 	'UI:DownloadDocument_' => 'この文書をダウンロードする: %1$s',
 	'UI:Document:NoPreview' => 'このタイプの文書はプレビューできません。',
 	'UI:Download-CSV' => 'ダウンロード-CSV %1$s',
-
 	'UI:DeadlineMissedBy_duration' => '%1$s によって消去されました。',
 	'UI:Deadline_LessThan1Min' => ' < 1分',
 	'UI:Deadline_Minutes' => '%1$d 分',
@@ -936,7 +783,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:RelationshipList' => 'リスト',
 	'UI:OperationCancelled' => '操作はキャンセルされました',
 	'UI:ElementsDisplayed' => 'フィルターリング',
-
 	'Portal:Title' => 'iTopユーザポータル',
 	'Portal:NoRequestMgmt' => '%1$s さん, このページにリダイレクトされました。あなたのプロファイルは、「ポータルユーザ」として登録されています。残念ながら、iTop は、「要求管理」としてインストールされていません。管理者に問い合わせてください。',
 	'Portal:Refresh' => 'リフレッシュ',
@@ -948,8 +794,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Portal:ChangeMyPassword' => 'パスワードを変更',
 	'Portal:Disconnect' => '切断する',
 	'Portal:OpenRequests' => '担当のオープン中の要求',
-	'Portal:ClosedRequests'  => '担当のクローズした要求',
-	'Portal:ResolvedRequests'  => '担当の解決済み要求',
+	'Portal:ClosedRequests' => '担当のクローズした要求',
+	'Portal:ResolvedRequests' => '担当の解決済み要求',
 	'Portal:SelectService' => 'カタログからサービスを選択してください：',
 	'Portal:PleaseSelectOneService' => 'サービスを1つ選んでください',
 	'Portal:SelectSubcategoryFrom_Service' => 'サービス%1$sのサブカテゴリを選んでください:',
@@ -979,7 +825,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:BulkModifyStatus' => '操作',
 	'UI:BulkModifyStatus+' => '操作の状態',
 	'UI:BulkModifyErrors' => 'エラー (もしあれば)',
-	'UI:BulkModifyErrors+' => '修正を出来ないようにしているエラー',	
+	'UI:BulkModifyErrors+' => '修正を出来ないようにしているエラー',
 	'UI:BulkModifyStatusOk' => 'Ok',
 	'UI:BulkModifyStatusError' => 'エラー',
 	'UI:BulkModifyStatusModified' => '修正',
@@ -1006,8 +852,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:HierarchyOf_Class' => '%1$s の階層',
 	'UI:Preferences' => 'プリファレンス...',
 	'UI:FavoriteOrganizations' => 'クイックアクセス組織',
-	'UI:FavoriteOrganizations+' => '迅速なアクセスのためのドロップダウンメニューに表示したい組織は、以下のリストで確認してください。'.
-								   'セキュリティ設定ではないことに注意してください。全ての組織のオブジェクトは、表示可能です。ドロップダウンリストで「すべての組織(All Organizations)」を選択することでアクセスすることができます。',
+	'UI:FavoriteOrganizations+' => '迅速なアクセスのためのドロップダウンメニューに表示したい組織は、以下のリストで確認してください。セキュリティ設定ではないことに注意してください。全ての組織のオブジェクトは、表示可能です。ドロップダウンリストで「すべての組織(All Organizations)」を選択することでアクセスすることができます。',
 	'UI:FavoriteLanguage' => 'ユーザインターフェースの言語',
 	'UI:Favorites:SelectYourLanguage' => '希望する言語を選択ください。',
 	'UI:FavoriteOtherSettings' => '他のセッティング',
@@ -1019,7 +864,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:OrderByHint_Values' => '並び順: %1$s',
 	'UI:Menu:AddToDashboard' => 'ダッシュボードに追加...',
 	'UI:Button:Refresh' => '再表示',
-
 	'UI:ConfigureThisList' => 'このリストを構成...',
 	'UI:ListConfigurationTitle' => 'リストコンフィギュレーション',
 	'UI:ColumnsAndSortOrder' => 'カラムと並び順:',
@@ -1034,10 +878,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:ExtField_AsRemoteField' => '%1$s (%2$s)',
 	'UI:Button:MoveUp' => '上へ',
 	'UI:Button:MoveDown' => '下へ',
-
 	'UI:OQL:UnknownClassAndFix' => '未知のクラス "%1$s"。 代りに "%2$s" を試すことが出来ます。',
 	'UI:OQL:UnknownClassNoFix' => '未知のクラス "%1$s"',
-
 	'UI:Dashboard:Edit' => 'このページを編集...',
 	'UI:Dashboard:Revert' => '元のバージョンに戻す...',
 	'UI:Dashboard:RevertConfirm' => '元のバージョンに加えられたすべての変更は失われます。この実行を望む事をご確認ください。',
@@ -1045,34 +887,27 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:ImportDashBoard' => 'ファイルからインポート...',
 	'UI:ImportDashboardTitle' => 'ファイルからインポート',
 	'UI:ImportDashboardText' => 'インポートするダッシュボードファイルを選択ください。:',
-
-
 	'UI:DashletCreation:Title' => '新しいダッシュレットを作成',
 	'UI:DashletCreation:Dashboard' => 'ダッシュボード',
 	'UI:DashletCreation:DashletType' => 'ダッシュレットタイプ',
 	'UI:DashletCreation:EditNow' => 'ダッシュレットの編集',
-
 	'UI:DashboardEdit:Title' => 'ダッシュボードエディター',
 	'UI:DashboardEdit:DashboardTitle' => '題名',
 	'UI:DashboardEdit:Layout' => 'レイアウト',
 	'UI:DashboardEdit:Properties' => 'ダッシュボードプロパティ',
-	'UI:DashboardEdit:Dashlets' => '利用可能なダッシュレット',	
-	'UI:DashboardEdit:DashletProperties' => 'ダッシュレットプロパティ',	
-
+	'UI:DashboardEdit:Dashlets' => '利用可能なダッシュレット',
+	'UI:DashboardEdit:DashletProperties' => 'ダッシュレットプロパティ',
 	'UI:Form:Property' => 'プロパティ',
 	'UI:Form:Value' => '値',
-
 	'UI:DashletPlainText:Label' => 'テキスト',
 	'UI:DashletPlainText:Description' => 'プレーンテキスト (フォーマットなし)',
 	'UI:DashletPlainText:Prop-Text' => 'テキスト',
 	'UI:DashletPlainText:Prop-Text:Default' => 'ここにテキストを入力ください...',
-
 	'UI:DashletObjectList:Label' => 'オブジェクトリスト',
 	'UI:DashletObjectList:Description' => 'オブジェクトリストダッシュレット',
 	'UI:DashletObjectList:Prop-Title' => '題名',
 	'UI:DashletObjectList:Prop-Query' => 'クエリ',
 	'UI:DashletObjectList:Prop-Menu' => 'メニュー',
-
 	'UI:DashletGroupBy:Prop-Title' => '題名',
 	'UI:DashletGroupBy:Prop-Query' => 'クエリ',
 	'UI:DashletGroupBy:Prop-Style' => 'スタイル',
@@ -1086,20 +921,17 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (週の日)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (月の日)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'グループ化されるオブジェクトのフィールドを選択ください。',
-
 	'UI:DashletGroupByPie:Label' => '円グラフ',
 	'UI:DashletGroupByPie:Description' => '円グラフ',
 	'UI:DashletGroupByBars:Label' => '棒グラフ',
 	'UI:DashletGroupByBars:Description' => '棒グラフ',
 	'UI:DashletGroupByTable:Label' => 'グループ化 (table)による',
 	'UI:DashletGroupByTable:Description' => 'リスト (フィールドでグループ化)',
-
 	'UI:DashletHeaderStatic:Label' => 'ヘッダー',
 	'UI:DashletHeaderStatic:Description' => '水平セパレータの表示',
 	'UI:DashletHeaderStatic:Prop-Title' => '題名',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => '連絡先',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'アイコン',
-
 	'UI:DashletHeaderDynamic:Label' => '統計付ヘッダー',
 	'UI:DashletHeaderDynamic:Description' => '状態付ヘッダー (..によるグループ化)',
 	'UI:DashletHeaderDynamic:Prop-Title' => '題名',
@@ -1110,11 +942,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:DashletHeaderDynamic:Prop-Query' => 'クエリ',
 	'UI:DashletHeaderDynamic:Prop-GroupBy' => 'グループ化(Group by)',
 	'UI:DashletHeaderDynamic:Prop-Values' => '値',
-
 	'UI:DashletBadge:Label' => 'バッジ',
 	'UI:DashletBadge:Description' => '新規/検索付オブジェクトアイコン',
 	'UI:DashletBadge:Prop-Class' => 'クラス',
-
 	'DayOfWeek-Sunday' => '日',
 	'DayOfWeek-Monday' => '月',
 	'DayOfWeek-Tuesday' => '火',
@@ -1122,5 +952,15 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'DayOfWeek-Thursday' => '木',
 	'DayOfWeek-Friday' => '金',
 	'DayOfWeek-Saturday' => '土',
+	'UI:Menu:ShortcutList' => 'ショートカットを作成',
+	'UI:ShortcutRenameDlg:Title' => 'ショートカットの名前変更',
+	'UI:ShortcutListDlg:Title' => 'このリストのショートカットを作成',
+	'UI:ShortcutDelete:Confirm' => 'このショートカットを本当に削除してもいいですか。',
+	'Menu:MyShortcuts' => '私のショートカット',
+	'Class:Shortcut' => 'ショートカット',
+	'Class:Shortcut+' => '',
+	'Class:Shortcut/Attribute:name' => '名前',
+	'Class:Shortcut/Attribute:name+' => '',
+	'UI:FillAllMandatoryFields' => '全ての必須フィールドを入力ください。',
 ));
 ?>

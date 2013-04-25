@@ -16,69 +16,10 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
- * Localized data
- *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-
-
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
-        'Menu:ProblemManagement' => '問題管理',
-        'Menu:ProblemManagement+' => '問題管理',
-    	'Menu:Problem:Overview' => '概要',
-    	'Menu:Problem:Overview+' => '概要',
-    	'Menu:NewProblem' => '新規問題',
-    	'Menu:NewProblem+' => '新規問題',
-    	'Menu:SearchProblems' => '問題検索',
-    	'Menu:SearchProblems+' => '問題検索',
-    	'Menu:Problem:Shortcuts' => 'ショートカット',
-        'Menu:Problem:MyProblems' => '担当してる問題',
-        'Menu:Problem:MyProblems+' => '担当している問題',
-        'Menu:Problem:OpenProblems' => '全オープン問題',
-        'Menu:Problem:OpenProblems+' => '全オープン問題',
-	'UI-ProblemManagementOverview-ProblemByService' => 'サービス別問題',
-	'UI-ProblemManagementOverview-ProblemByService+' => 'サービス別問題',
-	'UI-ProblemManagementOverview-ProblemByPriority' => '優先度別問題',
-	'UI-ProblemManagementOverview-ProblemByPriority+' => '優先度別問題',
-	'UI-ProblemManagementOverview-ProblemUnassigned' => '未割り当て問題',
-	'UI-ProblemManagementOverview-ProblemUnassigned+' => '未割り当て問題',
-	'UI:ProblemMgmtMenuOverview:Title' => '問題管理ダッシュボード',
-	'UI:ProblemMgmtMenuOverview:Title+' => '問題管理ダッシュボード',
-
-));
-//
-// Class: Problem
-//
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Problem' => '問題',
@@ -95,12 +36,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Problem/Attribute:status/Value:closed+' => '',
 	'Class:Problem/Attribute:service_id' => 'サービス',
 	'Class:Problem/Attribute:service_id+' => '',
-	'Class:Problem/Attribute:service_name' => 'サービス名',
-	'Class:Problem/Attribute:service_name+' => '',
 	'Class:Problem/Attribute:servicesubcategory_id' => 'サービスサブカテゴリ',
 	'Class:Problem/Attribute:servicesubcategory_id+' => '',
-	'Class:Problem/Attribute:servicesubcategory_name' => 'サービスサブカテゴリ',
-	'Class:Problem/Attribute:servicesubcategory_name+' => '',
 	'Class:Problem/Attribute:product' => '製品',
 	'Class:Problem/Attribute:product+' => '',
 	'Class:Problem/Attribute:impact' => 'インパクト',
@@ -133,8 +70,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Problem/Attribute:priority/Value:4+' => '低',
 	'Class:Problem/Attribute:related_change_id' => '関連する変更',
 	'Class:Problem/Attribute:related_change_id+' => '',
-	'Class:Problem/Attribute:related_change_ref' => '関連する変更参照',
-	'Class:Problem/Attribute:related_change_ref+' => '',
 	'Class:Problem/Attribute:assignment_date' => '割り当て日',
 	'Class:Problem/Attribute:assignment_date+' => '',
 	'Class:Problem/Attribute:resolution_date' => '解決日',
@@ -151,6 +86,32 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'クローズ',
 	'Class:Problem/Stimulus:ev_close+' => '',
+	'Menu:ProblemManagement' => '問題管理',
+	'Menu:ProblemManagement+' => '問題管理',
+	'Menu:Problem:Overview' => '概要',
+	'Menu:Problem:Overview+' => '概要',
+	'Menu:NewProblem' => '新規問題',
+	'Menu:NewProblem+' => '新規問題',
+	'Menu:SearchProblems' => '問題検索',
+	'Menu:SearchProblems+' => '問題検索',
+	'Menu:Problem:Shortcuts' => 'ショートカット',
+	'Menu:Problem:MyProblems' => '担当してる問題',
+	'Menu:Problem:MyProblems+' => '担当している問題',
+	'Menu:Problem:OpenProblems' => '全オープン問題',
+	'Menu:Problem:OpenProblems+' => '全オープン問題',
+	'UI-ProblemManagementOverview-ProblemByService' => 'サービス別問題',
+	'UI-ProblemManagementOverview-ProblemByService+' => 'サービス別問題',
+	'UI-ProblemManagementOverview-ProblemByPriority' => '優先度別問題',
+	'UI-ProblemManagementOverview-ProblemByPriority+' => '優先度別問題',
+	'UI-ProblemManagementOverview-ProblemUnassigned' => '未割り当て問題',
+	'UI-ProblemManagementOverview-ProblemUnassigned+' => '未割り当て問題',
+	'UI:ProblemMgmtMenuOverview:Title' => '問題管理ダッシュボード',
+	'UI:ProblemMgmtMenuOverview:Title+' => '問題管理ダッシュボード',
+	'Class:Problem/Attribute:service_name' => 'サービス名',
+	'Class:Problem/Attribute:service_name+' => '',
+	'Class:Problem/Attribute:servicesubcategory_name' => 'サービスサブカテゴリ',
+	'Class:Problem/Attribute:servicesubcategory_name+' => '',
+	'Class:Problem/Attribute:related_change_ref' => '関連する変更参照',
+	'Class:Problem/Attribute:related_change_ref+' => '',
 ));
-
 ?>
