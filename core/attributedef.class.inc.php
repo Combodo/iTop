@@ -2649,10 +2649,6 @@ class AttributeDuration extends AttributeInteger
 	protected function GetSQLCol() {return "INT(11) UNSIGNED";}
 
 	public function GetNullValue() {return '0';}
-	public function GetDefaultValue()
-	{
-		return 0;
-	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
