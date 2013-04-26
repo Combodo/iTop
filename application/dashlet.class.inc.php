@@ -458,7 +458,7 @@ abstract class DashletGroupBy extends Dashlet
 
 				case 'month':
 					$sGroupByLabel = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Month', $sAttLabel);
-					$sGroupByExpr = "DATE_FORMAT($sClassAlias.$sAttCode, '%m')"; // 0 -> 31
+					$sGroupByExpr = "DATE_FORMAT($sClassAlias.$sAttCode, '%Y-%m')"; // yyyy-mm
 					break;
 
 				case 'day_of_week':
@@ -468,7 +468,7 @@ abstract class DashletGroupBy extends Dashlet
 
 				case 'day_of_month':
 					$sGroupByLabel = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:DayOfMonth', $sAttLabel);
-					$sGroupByExpr = "DATE_FORMAT($sClassAlias.$sAttCode, '%e')"; // 0 -> 31
+					$sGroupByExpr = "DATE_FORMAT($sClassAlias.$sAttCode, '%m-%d')"; // mm-dd
 					break;
 
 				default:

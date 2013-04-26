@@ -946,6 +946,18 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'DayOfWeek-Thursday' => 'Donnerstag',
 	'DayOfWeek-Friday' => 'Freitag',
 	'DayOfWeek-Saturday' => 'Samstag',
+	'Month-01' => 'Januar',
+	'Month-02' => 'Februar',
+	'Month-03' => 'März',
+	'Month-04' => 'April',
+	'Month-05' => 'Mai',
+	'Month-06' => 'Juni',
+	'Month-07' => 'Juli',
+	'Month-08' => 'August',
+	'Month-09' => 'September',
+	'Month-10' => 'Oktober',
+	'Month-11' => 'November',
+	'Month-12' => 'Dezember',
 	'UI:FillAllMandatoryFields' => 'Bitte füllen Sie alle Pflichtfelder',
 ));
 ?>

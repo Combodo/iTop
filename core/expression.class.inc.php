@@ -879,30 +879,62 @@ class FunctionExpression extends Expression
 	 */	
 	public function MakeValueLabel($oFilter, $sValue, $sDefault)
 	{
+		static $aWeekDayToString = null;
+		if (is_null($aWeekDayToString))
+		{
+			// Init the correspondance table
+			$aWeekDayToString = array(
+				0 => Dict::S('DayOfWeek-Sunday'),
+				1 => Dict::S('DayOfWeek-Monday'),
+				2 => Dict::S('DayOfWeek-Tuesday'),
+				3 => Dict::S('DayOfWeek-Wednesday'),
+				4 => Dict::S('DayOfWeek-Thursday'),
+				5 => Dict::S('DayOfWeek-Friday'),
+				6 => Dict::S('DayOfWeek-Saturday')
+			);
+		}
+		static $aMonthToString = null;
+		if (is_null($aMonthToString))
+		{
+			// Init the correspondance table
+			$aMonthToString = array(
+				1 => Dict::S('Month-01'),
+				2 => Dict::S('Month-02'),
+				3 => Dict::S('Month-03'),
+				4 => Dict::S('Month-04'),
+				5 => Dict::S('Month-05'),
+				6 => Dict::S('Month-06'),
+				7 => Dict::S('Month-07'),
+				8 => Dict::S('Month-08'),
+				9 => Dict::S('Month-09'),
+				10 => Dict::S('Month-10'),
+				11 => Dict::S('Month-11'),
+				12 => Dict::S('Month-12'),
+			);
+		}
+
 		$sRes = $sDefault;
 		if (strtolower($this->m_sVerb) == 'date_format')
 		{
 			$oFormatExpr = $this->m_aArgs[1];
 			if ($oFormatExpr->Render() == "'%w'")
 			{
-				static $aWeekDayToString = null;
-				if (is_null($aWeekDayToString))
-				{
-					// Init the correspondance table
-					$aWeekDayToString = array(
-						0 => Dict::S('DayOfWeek-Sunday'),
-						1 => Dict::S('DayOfWeek-Monday'),
-						2 => Dict::S('DayOfWeek-Tuesday'),
-						3 => Dict::S('DayOfWeek-Wednesday'),
-						4 => Dict::S('DayOfWeek-Thursday'),
-						5 => Dict::S('DayOfWeek-Friday'),
-						6 => Dict::S('DayOfWeek-Saturday')
-					);
-				}
 				if (isset($aWeekDayToString[(int)$sValue]))
 				{
 					$sRes = $aWeekDayToString[(int)$sValue];
 				}
+			}
+			elseif ($oFormatExpr->Render() == "'%Y-%m'")
+			{
+				// yyyy-mm
+				$iMonth = (int) substr($sValue, -2); // the two last chars
+				$sRes = substr($sValue, 0, 4).' '.$aMonthToString[$iMonth];
+			}
+			elseif ($oFormatExpr->Render() == "'%m-%d'")
+			{
+				// mm-dd
+				$iMonth = (int) substr($sValue, 0, 2); // the two first chars
+				$sRes = $aMonthToString[$iMonth].' '.substr($sValue, -2);
 			}
 		}
 		return $sRes;

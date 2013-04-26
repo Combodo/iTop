@@ -1122,6 +1122,19 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'DayOfWeek-Thursday' => 'Jueves',
 	'DayOfWeek-Friday' => 'Viernes',
 	'DayOfWeek-Saturday' => 'Sábado',
+
+	'Month-01' => 'Enero',
+	'Month-02' => 'Febrero',
+	'Month-03' => 'Marzo',
+	'Month-04' => 'Abril',
+	'Month-05' => 'Mayo',
+	'Month-06' => 'Junio',
+	'Month-07' => 'Julio',
+	'Month-08' => 'Agosto',
+	'Month-09' => 'Septiembre',
+	'Month-10' => 'Octubre',
+	'Month-11' => 'Noviembre',
+	'Month-12' => 'Diciembre',
 ));
 
 //
