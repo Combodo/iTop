@@ -926,15 +926,15 @@ class FunctionExpression extends Expression
 			}
 			elseif ($oFormatExpr->Render() == "'%Y-%m'")
 			{
-				// yyyy-mm
+				// yyyy-mm => "yyyy month"
 				$iMonth = (int) substr($sValue, -2); // the two last chars
 				$sRes = substr($sValue, 0, 4).' '.$aMonthToString[$iMonth];
 			}
-			elseif ($oFormatExpr->Render() == "'%m-%d'")
+			elseif ($oFormatExpr->Render() == "'%Y-%m-%d'")
 			{
-				// mm-dd
-				$iMonth = (int) substr($sValue, 0, 2); // the two first chars
-				$sRes = $aMonthToString[$iMonth].' '.substr($sValue, -2);
+				// yyyy-mm-dd => "month d"
+				$iMonth = (int) substr($sValue, 5, 2);
+				$sRes = $aMonthToString[$iMonth].' '.(int)substr($sValue, -2);
 			}
 		}
 		return $sRes;
