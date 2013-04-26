@@ -138,6 +138,17 @@ try
 			changeMonth: true,
 			changeYear: true
 		});
+
+	$(".datetime-pick").datepicker({
+		showOn: 'button',
+		buttonImage: '../images/calendar.png',
+		buttonImageOnly: true,
+		dateFormat: 'yy-mm-dd 00:00:00',
+		constrainInput: false,
+		changeMonth: true,
+		changeYear: true
+		});
+
 	//$('.resizable').resizable(); // Make resizable everything that claims to be resizable !
 	$('.caselog_header').click( function () { $(this).toggleClass('open').next('.caselog_entry').toggle(); });
 }
