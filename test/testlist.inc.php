@@ -114,6 +114,21 @@ class TestOQLParser extends TestFunction
 				return true;
 			}
 		}
+		catch (Exception $e)
+		{
+			if ($bIsCorrectQuery)
+			{
+				echo "<p>More info on this <b>un</b>expected failure:<br/>".htmlentities($e->getMessage(), ENT_QUOTES, 'UTF-8')."</p>\n";
+				throw $OqlException;
+				return false;
+			}
+			else
+			{
+				// Everything is fine :-)
+				echo "<p>More info on this expected failure:<br/>".htmlentities($e->getMessage(), ENT_QUOTES, 'UTF-8')."</p>\n";
+				return true;
+			}
+		}
 		// The query was correctly parsed, was it expected to be correct ?
 		if ($bIsCorrectQuery)
 		{
@@ -208,8 +223,8 @@ class TestOQLParser extends TestFunction
 			'SELECT A,B FROM A JOIN B ON A.myB = B.id WHERE A.col1 = 2' => true,
 			'SELECT A, B FROM A JOIN B ON A.myB = B.id WHERE A.col1 = 2' => true,
 			'SELECT B,A FROM A JOIN B ON A.myB = B.id WHERE A.col1 = 2' => true,
-			'SELECT  A, B,C FROM A JOIN B ON A.myB = B.id' => false,
-			'SELECT C FROM A JOIN B ON A.myB = B.id WHERE A.col1 = 2' => false,
+			'SELECT  A, B,C FROM A JOIN B ON A.myB = B.id' => true,
+			'SELECT C FROM A JOIN B ON A.myB = B.id WHERE A.col1 = 2' => true,
 			'SELECT A JOIN B ON A.myB BELOW B.id WHERE A.col1 = 2' => true,
 			'SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id BELOW B.id WHERE A.col1 = 2 AND B.id = 3' => true,
 			'SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id BELOW STRICT B.id WHERE A.col1 = 2 AND B.id = 3' => true,
@@ -230,7 +245,7 @@ class TestOQLParser extends TestFunction
 			}
 			catch(Exception $e)
 			{
-				$this->m_aErrors[] = "Exception: ".$e->getMessage();
+				$this->m_aErrors[] = $e->getMessage();
 				$bRet = false;
 			}
 			if (!$bRet) $iErrors++;
