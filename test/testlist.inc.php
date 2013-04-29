@@ -140,6 +140,12 @@ class TestOQLParser extends TestFunction
 		$aQueries = array(
 			'SELECT toto' => true,
 			'SELECT toto WHERE toto.a = 1' => true,
+			'SELECT toto WHERE toto.a = -1' => true,
+			'SELECT toto WHERE toto.a = (1-1)' => true,
+			'SELECT toto WHERE toto.a = (-1+3)' => true,
+			'SELECT toto WHERE toto.a = (3+-1)' => true,
+			'SELECT toto WHERE toto.a = (3--1)' => true,
+			'SELECT toto WHERE toto.a = (3++1)' => false,
 			'SELECT toto WHERE toto.a = 0xC' => true,
 			'SELECT toto WHERE toto.a = \'AXDVFS0xCZ32\'' => true,
 			'SELECT toto WHERE toto.a = :myparameter' => true,
@@ -150,7 +156,12 @@ class TestOQLParser extends TestFunction
 			'SELECT toto WHHHERE toto.a = "1"' => false,
 			'SELECT toto WHERE toto.a == "1"' => false,
 			'SELECT toto WHERE toto.a % 1' => false,
-			//'SELECT toto WHERE toto.a LIKE 1' => false,
+			'SELECT toto WHERE toto.a & 1' => true, // bitwise and
+			'SELECT toto WHERE toto.a | 1' => true, // bitwise or
+			'SELECT toto WHERE toto.a ^ 1' => true, // bitwise xor
+			'SELECT toto WHERE toto.a << 1' => true, // bitwise left shift
+			'SELECT toto WHERE toto.a >> 1' => true, // bitwise right shift
+		//'SELECT toto WHERE toto.a LIKE 1' => false,
 			'SELECT toto WHERE toto.a like \'arg\'' => false,
 			'SELECT toto WHERE toto.a NOT LIKE "That\'s it"' => true,
 			'SELECT toto WHERE toto.a NOT LIKE "That\'s "it""' => false,
@@ -184,7 +195,8 @@ class TestOQLParser extends TestFunction
 			"SELECT A JOIN B ON A.myB = B.id WHERE A.col1 + B.col2 * B.col1 = A.col2" => true,
 			"SELECT A JOIN B ON A.myB = B.id WHERE A.col1 + (B.col2 * B.col1) = A.col2" => true,
 			"SELECT A JOIN B ON A.myB = B.id WHERE (A.col1 + B.col2) * B.col1 = A.col2" => true,
-
+			"SELECT A JOIN B ON A.myB = B.id WHERE (A.col1 & B.col2) = A.col2" => true,
+		
 			'SELECT Device AS D_ JOIN Site AS S_ ON D_.site = S_.id WHERE S_.country = "Francia"' => true,
 
 			// Several objects in a row...

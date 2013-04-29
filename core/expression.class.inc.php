@@ -383,7 +383,7 @@ class ScalarExpression extends UnaryExpression
 {
 	public function __construct($value)
 	{
-		if (!is_scalar($value) && !is_null($value))
+		if (!is_scalar($value) && !is_null($value) && (!$value instanceof OqlHexValue))
 		{
 			throw new CoreException('Attempt to create a scalar expression from a non scalar', array('var_type'=>gettype($value)));
 		}

@@ -54,6 +54,27 @@ class OqlName
 	} 
 }
 
+/**
+ * 
+ * Store hexadecimal values as strings so that we can support 64-bit values
+ *
+ */
+class OqlHexValue
+{
+	protected $m_sValue;
+
+	public function __construct($sValue)
+	{
+		$this->m_sValue = $sValue;
+	}
+	
+	public function __toString()
+	{
+		return $this->m_sValue;
+	}
+	
+}
+
 class OqlJoinSpec
 {
 	protected $m_oClass;

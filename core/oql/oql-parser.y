@@ -164,19 +164,23 @@ name(A) ::= NAME(X). {
 	}
 	A = new OqlName($name, $this->m_iColPrev);
 }
-
-num_value(A) ::= NUMVAL(X). {A=X;}
+num_value(A) ::= NUMVAL(X). {A=(int)X;}
+num_value(A) ::= MATH_MINUS NUMVAL(X). {A=(int)-X;}
+num_value(A) ::= HEXVAL(X). {A=new OqlHexValue(X);}
 str_value(A) ::= STRVAL(X). {A=stripslashes(substr(X, 1, strlen(X) - 2));}
 
 
 operator1(A) ::= num_operator1(X). {A=X;}
+operator1(A) ::= bitwise_operator1(X). {A=X;}
 operator2(A) ::= num_operator2(X). {A=X;}
 operator2(A) ::= str_operator(X). {A=X;}
 operator2(A) ::= REGEXP(X). {A=X;}
 operator2(A) ::= EQ(X). {A=X;}
 operator2(A) ::= NOT_EQ(X). {A=X;}
 operator3(A) ::= LOG_AND(X). {A=X;}
+operator3(A) ::= bitwise_operator3(X). {A=X;}
 operator4(A) ::= LOG_OR(X). {A=X;}
+operator4(A) ::= bitwise_operator4(X). {A=X;}
 
 num_operator1(A) ::= MATH_DIV(X). {A=X;}
 num_operator1(A) ::= MATH_MULT(X). {A=X;}
@@ -189,6 +193,12 @@ num_operator2(A) ::= LE(X). {A=X;}
 
 str_operator(A) ::= LIKE(X). {A=X;}
 str_operator(A) ::= NOT_LIKE(X). {A=X;}
+
+bitwise_operator1(A) ::= BITWISE_LEFT_SHIFT(X). {A=X;}
+bitwise_operator1(A) ::= BITWISE_RIGHT_SHIFT(X). {A=X;}
+bitwise_operator3(A) ::= BITWISE_AND(X). {A=X;}
+bitwise_operator4(A) ::= BITWISE_OR(X). {A=X;}
+bitwise_operator4(A) ::= BITWISE_XOR(X). {A=X;}
 
 list_operator(A) ::= IN(X). {A=X;}
 list_operator(A) ::= NOT_IN(X). {A=X;}

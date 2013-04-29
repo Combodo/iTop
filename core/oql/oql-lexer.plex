@@ -95,6 +95,11 @@ math_plus  = "+"
 math_minus = "-"
 log_and    = "AND"
 log_or     = "OR"
+bitwise_and    = "&"
+bitwise_or     = "|"
+bitwise_xor     = "^"
+bitwise_leftshift     = "<<"
+bitwise_rightshift     = ">>"
 regexp     = "REGEXP"
 eq         = "="
 not_eq     = "!="
@@ -156,8 +161,11 @@ not_above_strict = "NOT ABOVE STRICT"
 //
 // numval     = /([0-9]+|0x[0-9a-fA-F]+)/
 // Does not work either, the hexadecimal numbers are not matched properly
-// The following seems to work...
-numval     = /(0x[0-9a-fA-F]+|[0-9]+)/
+// Anyhow let's distinguish the hexadecimal values from decimal integers, hex numbers will be stored as strings
+// and passed as-is to MySQL which enables us to pass 64-bit values without messing with them in PHP
+//
+hexval     = /(0x[0-9a-fA-F]+)/
+numval     = /([0-9]+)/
 strval     = /"([^\\"]|\\"|\\\\)*"|'.chr(94).chr(39).'([^\\'.chr(39).']|\\'.chr(39).'|\\\\)*'.chr(39).'/
 name       = /([_a-zA-Z][_a-zA-Z0-9]*|`[^`]+`)/
 varname    = /:([_a-zA-Z][_a-zA-Z0-9]*->[_a-zA-Z][_a-zA-Z0-9]*|[_a-zA-Z][_a-zA-Z0-9]*)/
@@ -203,6 +211,21 @@ log_and {
 }
 log_or {
 	$this->token = OQLParser::LOG_OR;
+}
+bitwise_or {
+	$this->token = OQLParser::BITWISE_OR;
+}
+bitwise_and {
+	$this->token = OQLParser::BITWISE_AND;
+}
+bitwise_xor {
+	$this->token = OQLParser::BITWISE_XOR;
+}
+bitwise_leftshift {
+	$this->token = OQLParser::BITWISE_LEFT_SHIFT;
+}
+bitwise_rightshift {
+	$this->token = OQLParser::BITWISE_RIGHT_SHIFT;
 }
 coma {
 	$this->token = OQLParser::COMA;
@@ -350,6 +373,9 @@ not_above {
 }
 not_above_strict {
 	$this->token = OQLParser::NOT_ABOVE_STRICT;
+}
+hexval {
+	$this->token = OQLParser::HEXVAL;
 }
 numval {
 	$this->token = OQLParser::NUMVAL;
