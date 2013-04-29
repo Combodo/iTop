@@ -471,16 +471,30 @@ class SetupUtils
 			throw new Exception("Attempting to delete directory: '$dir'");
 		}
 
-		foreach(glob($dir . '/*') as $file)
+		$aFiles = scandir($dir); // Warning glob('.*') does not seem to return the broken symbolic links, thus leaving a non-empty directory
+		if ($aFiles !== false)
 		{
-			if(is_dir($file))
+			foreach($aFiles as $file)
 			{
-				self::tidydir($file);
-				rmdir($file);
-			}
-			else
-			{
-				unlink($file);
+				if (($file != '.') && ($file != '..'))
+				{
+					if(is_dir($dir.'/'.$file))
+					{
+						self::tidydir($dir.'/'.$file);
+						rmdir($dir.'/'.$file);
+					}
+					else
+					{
+						if (!unlink($dir.'/'.$file))
+						{
+							SetupPage::log("Warning - FAILED to remove file '$dir/$file'");
+						}
+						else if (file_exists($dir.'/'.$file))
+						{
+							SetupPage::log("Warning - FAILED to remove file '$dir/.$file'");
+						}
+					}
+				}
 			}
 		}
 	}
