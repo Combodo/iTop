@@ -124,7 +124,7 @@ class ModuleDiscovery
 				$bDependenciesSolved = true;
 				foreach($aRemainingDeps as $sDepId)
 				{
-					if (!in_array($sDepId, $aOrderedModules))
+					if (!self::DependencyIsResolved($sDepId, $aOrderedModules))
 					{
 						$bDependenciesSolved = false;
 					}
@@ -166,6 +166,41 @@ class ModuleDiscovery
 			$aResult[$sId] = self::$m_aModules[$sId];
 		}
 		return $aResult;
+	}
+	
+	protected static function DependencyIsResolved($sDepString, $aOrderedModules)
+	{
+		$bResult = false;
+		if (preg_match_all('/([^\(\)&| ]+)/', $sDepString, $aMatches))
+		{
+			$aReplacements = array();
+			foreach($aMatches as $aMatch)
+			{
+				foreach($aMatch as $sModuleId)
+				{
+					if (in_array($sModuleId, $aOrderedModules))
+					{
+						// module is present
+						$aReplacements[$sModuleId] = '(true)'; // Add parentheses to protect against invalid condition causing
+															   // a function call that results in a runtime fatal error
+					}
+					else
+					{
+						// module is not present
+						$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
+															    // a function call that results in a runtime fatal error
+					}
+				}
+			}
+			$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $sDepString);
+			$bOk = @eval('$bResult = '.$sBooleanExpr.'; return true;');
+			if($bOk == false)
+			{
+				SetupPage::log_warning("Eval of $sRelDir/$sFile returned false");
+				echo "Failed to parse the boolean Expression = '$sBooleanExpr'<br/>";			
+			}
+		}
+		return $bResult;
 	}
 
 	/**
