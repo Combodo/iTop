@@ -490,7 +490,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'Requête OQL',
 	'UI:RunQuery:HeaderOQLExpression+' => 'La requête en OQL',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Requête à exécuter : ',
-	'UI:RunQuery:MoreInfo' => 'Plus d\'information sur le requête : ',
+	'UI:RunQuery:MoreInfo' => 'Plus d\'information sur la requête : ',
 	'UI:RunQuery:DevelopedQuery' => 'Requête OQL décompilée : ',
 	'UI:RunQuery:SerializedFilter' => 'Version sérialisée : ',
 	'UI:RunQuery:Error' => 'Une erreur s\'est produite durant l\'exécution de la requête : %1$s',
