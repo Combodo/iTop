@@ -1570,10 +1570,6 @@ class Config
 					{
 						$aWebServiceCategories = array_unique(array_merge($aWebServiceCategories, $aModuleInfo['webservice']));
 					}
-					if (isset($aModuleInfo['dictionary']))
-					{
-						$aDictionaries = array_unique(array_merge($aDictionaries, $aModuleInfo['dictionary']));
-					}
 					if (isset($aModuleInfo['settings']))
 					{
 						list($sName, $sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
@@ -1609,6 +1605,17 @@ class Config
 			$this->SetAppModules($aAppModules);
 			$this->SetDataModels($aDataModels);
 			$this->SetWebServiceCategories($aWebServiceCategories);
+
+			// Scan dictionaries
+			//
+			if (!is_null($sModulesDir))
+			{
+				foreach(glob(APPROOT.$sModulesDir.'/dictionaries/*.dict.php') as $sFilePath)
+				{
+					$sFile = basename($sFilePath);
+					$aDictionaries[] = $sModulesDir.'/dictionaries/'.$sFile;
+				}
+			}
 			$this->SetDictionaries($aDictionaries);
 		}
 	}

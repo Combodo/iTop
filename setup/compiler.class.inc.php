@@ -257,7 +257,21 @@ EOF;
 			{
 					$this->Log("Compilation of module $sModuleName in version $sModuleVersion produced not code at all. No file written.");
 			}
-			
+		} // foreach module
+
+		// Compile the dictionaries -out of the modules
+		//
+		$sDictDir = $sTargetDir.'/dictionaries';
+		if (!is_dir($sDictDir))
+		{
+			$this->Log("Creating directory $sDictDir");
+			mkdir($sDictDir, 0777, true);
+		}
+
+		$oDictionaries = $this->oFactory->ListActiveChildNodes('dictionaries', 'dictionary');
+		foreach($oDictionaries as $oDictionaryNode)
+		{
+			$this->CompileDictionary($oDictionaryNode, $sTargetDir);
 		}
 	}
 
@@ -451,10 +465,18 @@ EOF;
 	/**
 	 * Adds quotes and escape characters
 	 */	 	
-	protected function QuoteForPHP($sStr)
+	protected function QuoteForPHP($sStr, $bSimpleQuotes = false)
 	{
-		$sEscaped = str_replace(array('\\', '"', "\n"), array('\\\\', '\\"', '\\n'), $sStr);
-		$sRet = '"'.$sEscaped.'"';
+		if ($bSimpleQuotes)
+		{
+			$sEscaped = str_replace(array('\\', "'"), array('\\\\', "\\'"), $sStr);
+			$sRet = "'$sEscaped'";
+		}
+		else
+		{
+			$sEscaped = str_replace(array('\\', '"', "\n"), array('\\\\', '\\"', '\\n'), $sStr);
+			$sRet = '"'.$sEscaped.'"';
+		}
 		return $sRet;
 	}
 
@@ -1408,8 +1430,38 @@ EOF;
 	return $sPHP;
 	} // function CompileUserRights
 
+	protected function CompileDictionary($oDictionaryNode, $sTargetDir)
+	{
+		$sLang = $oDictionaryNode->getAttribute('id');
+		$sEnglishLanguageDesc = $oDictionaryNode->GetChildText('english_description');
+		$sLocalizedLanguageDesc = $oDictionaryNode->GetChildText('localized_description');
+
+		$aEntriesPHP = array();
+		$oEntries = $oDictionaryNode->GetUniqueElement('entries');
+		foreach($oEntries->getElementsByTagName('entry') as $oEntry)
+		{
+			$sStringCode = $oEntry->getAttribute('id');
+			$sValue = $oEntry->GetText();
+			$aEntriesPHP[] = "\t'$sStringCode' => ".self::QuoteForPHP($sValue, true).",";
+		}
+		$sEntriesPHP = implode("\n", $aEntriesPHP);
+
+		$sEscEnglishLanguageDesc = self::QuoteForPHP($sEnglishLanguageDesc);
+		$sEscLocalizedLanguageDesc = self::QuoteForPHP($sLocalizedLanguageDesc);
+		$sPHPDict =
+<<<EOF
+<?php
+//
+// Dictionary built by the compiler for the language "$sLang"
+//
+Dict::Add('$sLang', $sEscEnglishLanguageDesc, $sEscLocalizedLanguageDesc, array(
+$sEntriesPHP
+));
+EOF;
+		$sSafeLang = str_replace(' ', '-', strtolower(trim($sLang)));
+		$sDictFile = $sTargetDir.'/dictionaries/'.$sSafeLang.'.dict.php';
+		file_put_contents($sDictFile, $sPHPDict);
+	}
 }
-
-
 
 ?>

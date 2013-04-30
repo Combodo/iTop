@@ -111,6 +111,24 @@ class MFModule
 	{
 		return array();
 	}
+	
+	public function GetDictionaryFiles()
+	{
+		$aDictionaries = array();
+		if ($hDir = opendir($this->sRootDir))
+		{
+			while (($sFile = readdir($hDir)) !== false)
+			{
+				$aMatches = array();
+				if (preg_match("/^[^\\.]+.dict.".$this->sName.".php$/i", $sFile, $aMatches)) // Dictionary files are named like <Lang>.dict.<ModuleName>.php
+				{
+					$aDictionaries[] = $this->sRootDir.'/'.$sFile;
+				}
+			}
+			closedir($hDir);
+		}
+		return $aDictionaries;		
+	}
 }
 
 /**
@@ -125,15 +143,20 @@ class ModelFactory
 	protected $oModules;
 	protected $oClasses;
 	protected $oMenus;
+	protected $oDictionaries;
 	static protected $aLoadedClasses;
 	static protected $aWellKnownParents = array('DBObject', 'CMDBObject','cmdbAbstractObject');
 //	static protected $aWellKnownMenus = array('DataAdministration', 'Catalogs', 'ConfigManagement', 'Contact', 'ConfigManagementCI', 'ConfigManagement:Shortcuts', 'ServiceManagement');
 	static protected $aLoadedModules;
 	static protected $aLoadErrors;
-
+	protected $aDict;
+	protected $aDictKeys;
+	
 	
 	public function __construct($aRootDirs, $aRootNodeExtensions = array())
 	{
+		$this->aDict = array();
+		$this->aDictKeys = array();
 		$this->aRootDirs = $aRootDirs;
 		$this->oDOMDocument = new MFDocument();
 		$this->oRoot = $this->oDOMDocument->CreateElement('itop_design');
@@ -143,6 +166,9 @@ class ModelFactory
 		$this->oRoot->AppendChild($this->oModules);
 		$this->oClasses = $this->oDOMDocument->CreateElement('classes');
 		$this->oRoot->AppendChild($this->oClasses);
+		$this->oDictionaries = $this->oDOMDocument->CreateElement('dictionaries');
+		$this->oRoot->AppendChild($this->oDictionaries);
+		
 		foreach (self::$aWellKnownParents as $sWellKnownParent)
 		{
 			$this->AddWellKnownParent($sWellKnownParent);
@@ -353,6 +379,65 @@ class ModelFactory
 				$oDeltaRoot = $oDocument->childNodes->item(0);
 				$this->LoadDelta($oDocument, $oDeltaRoot, $this->oDOMDocument);
 			}
+			
+			$aDictionaries = $oModule->GetDictionaryFiles();
+			
+			try
+			{
+				$this->ResetTempDictionary();
+				foreach($aDictionaries as $sPHPFile)
+				{
+					$sDictFileContents = file_get_contents($sPHPFile);
+					$sDictFileContents = str_replace(array('<'.'?'.'php', '?'.'>'), '', $sDictFileContents);
+					$sDictFileContents = str_replace('Dict::Add', '$this->AddToTempDictionary', $sDictFileContents);
+					eval($sDictFileContents);
+				}
+				
+				foreach ($this->aDict as $sLanguageCode => $aDictDefinition)
+				{
+					$oNodes = $this->GetNodeById('dictionary', $sLanguageCode, $this->oDictionaries);
+					if ($oNodes->length == 0)
+					{
+						$oXmlDict = $this->oDOMDocument->CreateElement('dictionary');
+						$oXmlDict->setAttribute('id', $sLanguageCode);
+						$this->oDictionaries->AddChildNode($oXmlDict);
+						$oXmlEntries = $this->oDOMDocument->CreateElement('english_description', $aDictDefinition['english_description']);
+						$oXmlDict->AppendChild($oXmlEntries);
+						$oXmlEntries = $this->oDOMDocument->CreateElement('localized_description', $aDictDefinition['localized_description']);
+						$oXmlDict->AppendChild($oXmlEntries);
+						$oXmlEntries = $this->oDOMDocument->CreateElement('entries');
+						$oXmlDict->AppendChild($oXmlEntries);
+					}
+					else
+					{
+						$oXmlDict = $oNodes->item(0);
+						$oXmlEntries = $oXmlDict->GetUniqueElement('entries');
+					}
+							
+					foreach ($aDictDefinition['entries'] as $sCode => $sLabel)
+					{
+						
+						$oXmlEntry = $this->oDOMDocument->CreateElement('entry');
+						$oXmlEntry->setAttribute('id', $sCode);
+						$oXmlValue = $this->oDOMDocument->CreateCDATASection($sLabel);
+						$oXmlEntry->appendChild($oXmlValue);
+						if (array_key_exists($sLanguageCode, $this->aDictKeys) && array_key_exists($sCode, $this->aDictKeys[$sLanguageCode]))
+						{
+							$oXmlEntries->RedefineChildNode($oXmlEntry);
+						}
+						else 
+						{
+							$oXmlEntries->appendChild($oXmlEntry);
+						}
+						$this->aDictKeys[$sLanguageCode][$sCode] = true;
+					}
+				}	 				
+			}
+			catch(Exception $e)
+			{
+				throw new Exception('Failed to load dictionary file "'.$sPHPFile.'", reason: '.$e->getMessage());
+			}
+			
 		}
 		catch(Exception $e)
 		{
@@ -365,6 +450,33 @@ class ModelFactory
 		}
 	}
 
+	/**
+	 * Collects the PHP Dict entries into the ModelFactory for transforming the dictionary into an XML structure
+	 * @param string $sLanguageCode The language code
+	 * @param string $sEnglishLanguageDesc English description of the language (unused but kept for API compatibility)
+	 * @param string $sLocalizedLanguageDesc Localized description of the language (unused but kept for API compatibility)
+	 * @param hash $aEntries The entries to load: string_code => translation
+	 */
+	protected function AddToTempDictionary($sLanguageCode, $sEnglishLanguageDesc, $sLocalizedLanguageDesc, $aEntries)
+	{
+		$this->aDict[$sLanguageCode]['english_description'] = $sEnglishLanguageDesc;
+		$this->aDict[$sLanguageCode]['localized_description'] = $sLocalizedLanguageDesc;
+		if (!array_key_exists('entries', $this->aDict[$sLanguageCode]))
+		{
+			$this->aDict[$sLanguageCode]['entries'] = array();
+		}
+
+		foreach($aEntries as $sKey => $sValue)
+		{
+			$this->aDict[$sLanguageCode]['entries'][$sKey] = $sValue;
+		}
+	}
+	
+	protected function ResetTempDictionary()
+	{
+		$this->aDict = array();
+	}
+	
 	/**
 	 *	XML load errors (XML format and validation)
 	 */	
@@ -568,7 +680,7 @@ class ModelFactory
 	
 	public function GetClassXMLTemplate($sName, $sIcon)
 	{
-		$sHeader = '<?xml version="1.0" encoding="utf-8"?'.'>';
+		$sHeader = '<?'.'xml version="1.0" encoding="utf-8"?'.'>';
 		return
 <<<EOF
 $sHeader
