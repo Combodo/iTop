@@ -320,8 +320,9 @@ class ModelFactory
 	/**
 	 * Loads the definitions corresponding to the given Module
 	 * @param MFModule $oModule
+	 * @param Array $aLanguages The list of languages to process (for the dictionaries). If empty all languages are kept
 	 */
-	public function LoadModule(MFModule $oModule)
+	public function LoadModule(MFModule $oModule, $aLanguages = array())
 	{
 		try
 		{
@@ -395,6 +396,12 @@ class ModelFactory
 				
 				foreach ($this->aDict as $sLanguageCode => $aDictDefinition)
 				{
+					if ((count($aLanguages) > 0 ) && !in_array($sLanguageCode, $aLanguages))
+					{
+						// skip some languages if the parameter says so
+						continue;
+					}
+					
 					$oNodes = $this->GetNodeById('dictionary', $sLanguageCode, $this->oDictionaries);
 					if ($oNodes->length == 0)
 					{
