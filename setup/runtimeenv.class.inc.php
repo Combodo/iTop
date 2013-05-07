@@ -84,7 +84,7 @@ class RunTimeEnvironment
 		if (!$bUseCache)
 		{
 			// Reset the cache for the first use !
-			MetaModel::ResetCache($this->sTargetEnv);
+			MetaModel::ResetCache(md5(APPROOT).'-'.$this->sTargetEnv);
 		}
 	
 		MetaModel::Startup($oConfig, $bModelOnly, $bUseCache);
@@ -355,7 +355,7 @@ class RunTimeEnvironment
 			$oMFCompiler->Compile($sTargetDir, null, $bUseSymLinks);
 			
 			require_once(APPROOT.'/core/dict.class.inc.php');
-			MetaModel::ResetCache($this->sTargetEnv);
+			MetaModel::ResetCache(md5(APPROOT).'-'.$this->sTargetEnv);
 		}
 	}
 
