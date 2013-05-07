@@ -9,7 +9,9 @@ $(function()
 		options:
 		{
 			items: [],
-			current_idx: 0
+			current_idx: 0,
+			labels: {cancel: 'Cancel', pick_icon_file: 'Select an icon file to upload:', upload_dlg_title: 'Icon Upload...', upload: 'Upload...'},
+			post_upload_to: null
 		},
 	
 		// the constructor
@@ -37,7 +39,13 @@ $(function()
 					me.oLabel.text(me.options.items[idx].label);
 				}
 			});
-			
+			if (this.options.post_upload_to != null)
+			{
+				this.oUploadBtn = $('<button title="'+this.options.labels['upload']+'"><div style="display: inline-block;position: relative;vertical-align:middle;height:48px; line-height:48px; width:16px"><span style="height:16px;display:block;position:absolute;top:50%;margin-top:-8px" class="ui-icon ui-icon-circle-plus"/></div></button>');
+				this.oUploadBtn.click( function() { me._upload_dlg(); } );
+				this.oButton.after(this.oUploadBtn);
+			}
+			this.oUploadDlg = null;
 			this._refresh();
 		},
 	
@@ -110,18 +118,84 @@ $(function()
 			}
 			return res;
 		},
-		add_item: function(value, label, position)
+		add_item: function(value, label, icon, position)
 		{
 			if (position == 'bottom')
 			{
-				this.options.items.push({value: value, label: label });
+				this.options.items.push({value: value, label: label, icon: icon });
 			}
 			else
 			{
 				// Assume 'top'
-				this.options.items.unshift({value: value, label: label });				
+				this.options.items.unshift({value: value, label: label, icon: icon });				
 			}
 			this._refresh();
+		},
+		_upload_dlg: function()
+		{
+			var me = this;
+			this.oUploadDlg = $('<div><p>'+this.options.labels['pick_icon_file']+'</p><p><input type="file" name="file" id="file"/></p></div>');
+			this.element.after(this.oUploadDlg);
+			$('input[type=file]').bind('change', function() { me._do_upload(); });
+			this.oUploadDlg.dialog({
+				width: 400,
+				modal: true,
+				title: this.options.labels['upload_dlg_title'],
+				buttons: [
+				{ text: this.options.labels['cancel'], click: function() {
+					me.oUploadDlg.dialog( "close" );
+					}
+				}
+				],
+				close: function() { me._on_upload_close(); }
+			});
+		},
+		_on_upload_close: function()
+		{
+			this.oUploadDlg.remove();
+			this.oUploadDlg = null;
+		},
+		_do_upload: function()
+		{
+			var me = this;
+			$.ajaxFileUpload
+			(
+				{
+					url: this.options.post_upload_to, 
+					secureuri:false,
+					fileElementId:'file',
+					dataType: 'json',
+					success: function (data, status)
+					{
+						me._on_upload_complete(data);
+					},
+					error: function (data, status, e)
+					{
+						me._on_upload_error(data, status, e);
+					}
+				}
+			);			
+		},
+		_on_upload_complete: function(data)
+		{
+			console.log(data);
+			console.log(data.icon);
+			var sIcon = data.icon.replace(/&amp;/g, "&");
+			console.log(sIcon);
+			this.add_item(data.id, data.msg, sIcon, 'top');
+			this.element.val(data.id);
+			var idx = this._find_item(data.id);
+			if (idx != null)
+			{
+				this.oImg.attr('src', this.options.items[idx].icon);
+				this.oLabel.text(this.options.items[idx].label);
+			}
+			this.element.trigger('change');
+			this.oUploadDlg.dialog( "close" );
+		},
+		_on_upload_error: function(data, status, e)
+		{
+			alert(e);
 		}
 	});
 });
