@@ -761,6 +761,10 @@
       </properties>
       <fields>
         <field id="rack_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Rack WHERE location_id= :this->location_id]]></filter>
+          <dependencies>
+            <attribute id="location_id"/>
+          </dependencies>
           <sql>rack_id</sql>
           <target_class>Rack</target_class>
           <is_null_allowed>false</is_null_allowed>
