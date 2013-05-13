@@ -52,6 +52,7 @@ switch($sLoginMode)
 	break;
 }
 $oPage = new LoginWebPage();
+$oPage->no_cache();
 $sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
 $sIconUrl = Utils::GetConfig()->Get('app_icon_url');
 $oPage->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8')."\"><img title=\"$sVersionShort\" src=\"../images/itop-logo-external.png\"></a></div>\n");
