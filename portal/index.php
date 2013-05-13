@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -90,6 +90,7 @@ function SelectServiceCategory($oP, $oUserOrg)
 	$oP->add("<h1 id=\"select_category\">".Dict::S('Portal:SelectService')."</h1>\n");
 	$oP->add("<table>\n");
 	$oSearch = DBObjectSearch::FromOQL(PORTAL_SERVICECATEGORY_QUERY);
+	$oSearch->AllowAllData(); // In case the user has the rights on his org only
 	$oSet = new CMDBObjectSet($oSearch, array(), array('org_id' => $oUserOrg->GetKey()));
 	while($oService = $oSet->Fetch())
 	{
@@ -130,8 +131,9 @@ function SelectServiceSubCategory($oP, $oUserOrg)
 	$iDefaultWizNext = 2;
 
 	$oSearch = DBObjectSearch::FromOQL(PORTAL_SERVICE_SUBCATEGORY_QUERY);
+	$oSearch->AllowAllData(); // In case the user has the rights on his org only
 	$oSet = new CMDBObjectSet($oSearch, array(), array('svc_id' => $iSvcId, 'org_id' => $oUserOrg->GetKey()));
-	$oServiceCategory = MetaModel::GetObject('Service', $iSvcId, false);
+	$oServiceCategory = MetaModel::GetObject('Service', $iSvcId, false, true /* allow all data*/);
 	if (is_object($oServiceCategory))
 	{
 		$oP->add("<div class=\"wizContainer\" id=\"form_select_servicesubcategory\">\n");
@@ -202,8 +204,8 @@ EOF
 		}
 	}
 
-	$oServiceCategory = MetaModel::GetObject('Service', $aParameters['service_id'], false);
-	$oServiceSubCategory = MetaModel::GetObject('ServiceSubcategory', $aParameters['servicesubcategory_id'], false);
+	$oServiceCategory = MetaModel::GetObject('Service', $aParameters['service_id'], false, true /* allow all data*/);
+	$oServiceSubCategory = MetaModel::GetObject('ServiceSubcategory', $aParameters['servicesubcategory_id'], false, true /* allow all data*/);
 	if (is_object($oServiceCategory) && is_object($oServiceSubCategory))
 	{
 		$oRequest = new UserRequest();
@@ -310,6 +312,7 @@ function DoCreateRequest($oP, $oUserOrg)
 	// Validate the parameters
 	// 1) ServiceCategory
 	$oSearch = DBObjectSearch::FromOQL(PORTAL_VALIDATE_SERVICECATEGORY_QUERY);
+	$oSearch->AllowAllData(); // In case the user has the rights on his org only
 	$oSet = new CMDBObjectSet($oSearch, array(), array('id' => $aParameters['service_id'], 'org_id' => $oUserOrg->GetKey()));
 	if ($oSet->Count() != 1)
 	{
@@ -320,6 +323,7 @@ function DoCreateRequest($oP, $oUserOrg)
 	
 	// 2) Service Subcategory
 	$oSearch = DBObjectSearch::FromOQL(PORTAL_VALIDATE_SERVICESUBCATEGORY_QUERY);
+	$oSearch->AllowAllData(); // In case the user has the rights on his org only
 	$oSet = new CMDBObjectSet($oSearch, array(), array('service_id' => $aParameters['service_id'], 'id' =>$aParameters['servicesubcategory_id'],'org_id' => $oUserOrg->GetKey() ));
 	if ($oSet->Count() != 1)
 	{
@@ -355,7 +359,7 @@ function DoCreateRequest($oP, $oUserOrg)
 	list($bRes, $aIssues) = $oRequest->CheckToWrite();
 	if ($bRes)
 	{
-		$oRequest->DBInsert();
+		$oRequest->DBInsertNoReload();
 		$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oRequest->GetName(), MetaModel::GetName(get_class($oRequest)))."</h1>\n");
 
 		//DisplayObject($oP, $oRequest, $oUserOrg);
@@ -935,6 +939,7 @@ catch(CoreException $e)
 	$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
 	$oP->error(Dict::Format('UI:Error_Details', $e->getHtmlDesc()));	
+	//$oP->p($e->getTraceAsString());	
 	$oP->output();
 
 	if (MetaModel::IsLogEnabledIssue())
@@ -971,6 +976,7 @@ catch(Exception $e)
 	$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
 	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));	
+	//$oP->p($e->getTraceAsString());	
 	$oP->output();
 
 	if (MetaModel::IsLogEnabledIssue())

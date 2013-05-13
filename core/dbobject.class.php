@@ -455,7 +455,10 @@ abstract class DBObject
 					if (($iRemote = $this->Get($sExtKeyAttCode)) && ($iRemote > 0)) // Objects in memory have negative IDs
 					{
 						$oExtKeyAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyAttCode);
-						$oRemote = MetaModel::GetObject($oExtKeyAttDef->GetTargetClass(), $iRemote);
+						// Note: "allow all data" must be enabled because the external fields are always visible
+						//       to the current user even if this is not the case for the remote object
+						//       This is consistent with the behavior of the lists
+						$oRemote = MetaModel::GetObject($oExtKeyAttDef->GetTargetClass(), $iRemote, true, true);
 					}
 					else
 					{
@@ -509,6 +512,9 @@ abstract class DBObject
 	/**
 	 * Updates the value of an external field by (re)loading the object
 	 * corresponding to the external key and getting the value from it
+	 * 	 
+	 * UNUSED ?
+	 * 	 
 	 * @param string $sAttCode Attribute code of the external field to update
 	 * @return void
 	 */
@@ -519,7 +525,10 @@ abstract class DBObject
 		{
 			$sTargetClass = $oAttDef->GetTargetClass();
 			$objkey = $this->Get($oAttDef->GetKeyAttCode());
-			$oObj = MetaModel::GetObject($sTargetClass, $objkey);
+			// Note: "allow all data" must be enabled because the external fields are always visible
+			//       to the current user even if this is not the case for the remote object
+			//       This is consistent with the behavior of the lists
+			$oObj = MetaModel::GetObject($sTargetClass, $objkey, true, true);
 			if (is_object($oObj))
 			{
 				$value = $oObj->Get($oAttDef->GetExtAttCode());
