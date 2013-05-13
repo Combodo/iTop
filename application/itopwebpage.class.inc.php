@@ -547,6 +547,7 @@ EOF
 
 		if ($this->GetOutputFormat() == 'html')
 		{
+			$sHtml .= $this->output_dict_entries(true); // before any script so that they can benefit from the translations
 			foreach($this->a_linked_scripts as $s_script)
 			{
 					// Make sure that the URL to the script contains the application's version number
@@ -575,7 +576,6 @@ EOF
 				}
 				$sHtml .= "</script>\n";
 			}
-			$this->output_dict_entries();
 		}
 	
 		if (count($this->a_styles)>0)

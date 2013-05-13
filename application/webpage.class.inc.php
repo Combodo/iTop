@@ -651,6 +651,7 @@ class WebPage implements Page
 		{
 			$sClass = isset($aAction['class']) ? " class=\"{$aAction['class']}\"" : "";
 			$sOnClick = isset($aAction['onclick']) ? " onclick=\"{$aAction['onclick']}\"" : "";
+			$sTarget = isset($aAction['target']) ? " target=\"{$aAction['target']}\"" : "";
 			if (empty($aAction['url']))
 			{
 				if ($sPrevUrl != '') // Don't output consecutively two separators...
@@ -661,41 +662,51 @@ class WebPage implements Page
 			}
 			else
 			{
-				$sHtml .= "<li><a href=\"{$aAction['url']}\"$sClass $sOnClick>{$aAction['label']}</a></li>";
+				$sHtml .= "<li><a $sTarget href=\"{$aAction['url']}\"$sClass $sOnClick>{$aAction['label']}</a></li>";
 				$sPrevUrl = $aAction['url'];
 			}
 		}
 		$sHtml .= "</ul></li></ul></div>";
 		foreach(array_reverse($aFavoriteActions) as $aAction)
 		{
-			$sHtml .= "<div class=\"actions_button\"><a href='{$aAction['url']}'>{$aAction['label']}</a></div>";			
+			$sTarget = isset($aAction['target']) ? " target=\"{$aAction['target']}\"" : "";
+			$sHtml .= "<div class=\"actions_button\"><a $sTarget href='{$aAction['url']}'>{$aAction['label']}</a></div>";			
 		}
 		
 		return $sHtml;
 	}
 
-	protected function output_dict_entries()
+	protected function output_dict_entries($bReturnOutput = false)
 	{
 		if (count($this->a_dict_entries)>0)
 		{
-			echo "<script type=\"text/javascript\">\n";
-			echo "var Dict = {};\n";
-			echo "Dict._entries = {};\n";
-			echo "Dict.S = function(sEntry) {\n";
-			echo "   if (sEntry in Dict._entries)\n";
-			echo "   {\n";
-			echo "      return Dict._entries[sEntry];\n";
-			echo "   }\n";
-			echo "   else\n";
-			echo "   {\n";
-			echo "      return sEntry;\n";
-			echo "   }\n";
-			echo "};\n";
+			$sHtml = "<script type=\"text/javascript\">\n";
+			$sHtml .= "var Dict = {};\n";
+			$sHtml .= "Dict._entries = {};\n";
+			$sHtml .= "Dict.S = function(sEntry) {\n";
+			$sHtml .= "   if (sEntry in Dict._entries)\n";
+			$sHtml .= "   {\n";
+			$sHtml .= "      return Dict._entries[sEntry];\n";
+			$sHtml .= "   }\n";
+			$sHtml .= "   else\n";
+			$sHtml .= "   {\n";
+			$sHtml .= "      return sEntry;\n";
+			$sHtml .= "   }\n";
+			$sHtml .= "};\n";
 			foreach($this->a_dict_entries as $s_entry => $s_value)
 			{
-				echo "Dict._entries['$s_entry'] = '".addslashes($s_value)."';\n";
+				$sHtml .= "Dict._entries['$s_entry'] = '".addslashes($s_value)."';\n";
 			}
-			echo "</script>\n";
+			$sHtml .= "</script>\n";
+		}
+		
+		if ($bReturnOutput)
+		{
+			return $sHtml;
+		}
+		else
+		{
+			echo $sHtml;
 		}
 	}
 }
