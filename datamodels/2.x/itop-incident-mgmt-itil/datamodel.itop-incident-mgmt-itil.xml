@@ -1315,7 +1315,7 @@
 
 			case 'new':
 			case 'approved':
-			$sIcon = self::MakeIconFromName('user-request.png');
+			$sIcon = self::MakeIconFromName('incident.png');
 			$iEscalationDeadline = $this->Get('tto_escalation_deadline');
 			if ($iEscalationDeadline != null)
 			{
@@ -1335,7 +1335,7 @@
 			break;
 			
 			case 'assigned':
-			$sIcon = self::MakeIconFromName('user-request.png');
+			$sIcon = self::MakeIconFromName('incident.png');
 			$iEscalationDeadline = $this->Get('ttr_escalation_deadline');
 			if ($iEscalationDeadline != null)
 			{
