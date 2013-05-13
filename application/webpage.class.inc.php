@@ -678,9 +678,10 @@ class WebPage implements Page
 
 	protected function output_dict_entries($bReturnOutput = false)
 	{
+		$sHtml = '';
 		if (count($this->a_dict_entries)>0)
 		{
-			$sHtml = "<script type=\"text/javascript\">\n";
+			$sHtml .= "<script type=\"text/javascript\">\n";
 			$sHtml .= "var Dict = {};\n";
 			$sHtml .= "Dict._entries = {};\n";
 			$sHtml .= "Dict.S = function(sEntry) {\n";
