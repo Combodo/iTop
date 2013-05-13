@@ -64,7 +64,7 @@
 </ServiceSubcategory>
 <ServiceSubcategory alias="ServiceSubcategory" id="11">
 <name>New mobile phone ordering</name>
-<description>Ordér a new mobile phone, for a new employee or for replacing a broken phone.</description>
+<description>Order a new mobile phone, for a new employee or for replacing a broken phone.</description>
 <service_id>4</service_id>
 <status></status>
 <request_type>service_request</request_type>
@@ -112,7 +112,7 @@
 <request_type>incident</request_type>
 </ServiceSubcategory>
 <ServiceSubcategory alias="ServiceSubcategory" id="18">
-<name>Windows installation/ / Upgrade</name>
+<name>Windows installation/upgrade</name>
 <description>Ask for installing or upgrading Windows on a computer.</description>
 <service_id>3</service_id>
 <status></status>
