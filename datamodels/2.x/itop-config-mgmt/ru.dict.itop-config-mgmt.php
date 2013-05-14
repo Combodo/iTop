@@ -1097,5 +1097,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:Software+' => '',
 	'UI_WelcomeMenu_AllConfigItems' => 'Общее~~',
 	'Menu:ConfigManagement:Typology' => 'Конфигурация топологии~~',
+	'Class:Document:PreviewTab' => 'Предпросмотр',
 ));
 ?>

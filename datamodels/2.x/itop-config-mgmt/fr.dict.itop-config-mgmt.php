@@ -1773,5 +1773,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 'Class:Subnet/Tab:FreeIPs' => 'IP disponibles',
 'Class:Subnet/Tab:FreeIPs-count' => 'IP disponibles: %1$s',
 'Class:Subnet/Tab:FreeIPs-explain' => 'Voici un échantillon de dix addresses IP disponibles',
+'Class:Document:PreviewTab' => 'Aperçu',
 ));
 ?>

@@ -1781,6 +1781,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 'Server:otherinfo' => 'Otra Información',
 'Person:info' => 'Información General',
 'Person:notifiy' => 'Notificación',
-
+'Class:Document:PreviewTab' => ' Visualización',
 ));
 ?>

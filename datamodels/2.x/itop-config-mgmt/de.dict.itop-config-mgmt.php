@@ -1098,5 +1098,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:Software+' => '',
 	'UI_WelcomeMenu_AllConfigItems' => 'Zusammenfassung',
 	'Menu:ConfigManagement:Typology' => 'Typologie-Konfiguration',
+	'Class:Document:PreviewTab' => 'Vorschau',
 ));
 ?>

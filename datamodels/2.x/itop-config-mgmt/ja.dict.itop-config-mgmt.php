@@ -1091,5 +1091,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Server:otherinfo' => '他の情報',
 	'Person:info' => '情報',
 	'Person:notifiy' => '通知',
+	'Class:Document:PreviewTab' => 'プレビュー', //  'Preview',  # 'Preview'
 ));
 ?>

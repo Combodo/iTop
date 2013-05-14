@@ -553,7 +553,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Document/Attribute:service_list+' => 'Services liés à ce document',
 	'Class:Document/Attribute:ticket_list' => 'Tickets',
 	'Class:Document/Attribute:ticket_list+' => 'Tickets liés à ce document',
-	'Class:Document:PreviewTab' => 'Entrevue',
+	'Class:Document:PreviewTab' => 'Aperçu',
 	'Class:Subnet/Name' => '%1$s / %2$s',
 	'Class:Software' => 'Logiciel',
 	'Class:Software+' => '',

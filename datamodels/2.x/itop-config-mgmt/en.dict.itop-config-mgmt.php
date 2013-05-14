@@ -1793,5 +1793,6 @@ Dict::Add('EN US', 'English', 'English', array(
 'Class:Subnet/Tab:FreeIPs' => 'Free IPs',
 'Class:Subnet/Tab:FreeIPs-count' => 'Free IPs: %1$s',
 'Class:Subnet/Tab:FreeIPs-explain' => 'Here is an extract of 10 free IP addresses',
+'Class:Document:PreviewTab' => 'Preview',
 ));
 ?>

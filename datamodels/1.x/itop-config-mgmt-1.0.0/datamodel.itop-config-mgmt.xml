@@ -1277,14 +1277,14 @@
           <type>Overload-cmdbAbstractObject</type>
           <code><![CDATA[	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
+		parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
 		if (!$bEditMode)
 		{
-			$oPage->SetCurrentTab(Dict::S('Class:Document:PreviewTab'));
+			$oPage->add('<fieldset>');
+			$oPage->add('<legend>'.Dict::S('Class:Document:PreviewTab').'</legend>');
 			$oPage->add($this->DisplayDocumentInline($oPage, 'contents'));
-			$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
+			$oPage->add('</fieldset>');
 		}
-		parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
-		
 	}]]></code>
         </method>
       </methods>

@@ -970,7 +970,29 @@
       <fields>
         <field id="file" xsi:type="AttributeBlob"/>
       </fields>
-      <methods/>
+      <methods>
+        <method id="DisplayBareRelations">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-cmdbAbstractObject</type>
+        <comment><![CDATA[/**
+	 * Overload the display of the properties to add a tab (the first one)
+	 * with the preview of the document
+	 */
+	]]></comment>
+          <code><![CDATA[public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
+	{
+		parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
+		if (!$bEditMode)
+		{
+			$oPage->add('<fieldset>');
+			$oPage->add('<legend>'.Dict::S('Class:Document:PreviewTab').'</legend>');
+			$oPage->add($this->DisplayDocumentInline($oPage, 'file'));
+			$oPage->add('</fieldset>');
+		}
+	}]]></code>
+        </method>
+      </methods>
       <presentation>
         <details>
           <items>
