@@ -292,9 +292,15 @@ if (utils::ReadParam('status_only', false, true /* Allow CLI */))
 	exit(0);
 }
 
-$sLockName = 'itop.cron.php';
+// Compute the name of a lock for mysql
+// The name is server-wide
+$oConfig = utils::GetConfig();
+$sLockName = 'itop.cron.'.$oConfig->GetDBName().'_'.$oConfig->GetDBSubname();
 
 $oP->p("Starting: ".time().' ('.date('Y-m-d H:i:s').')');
+
+// CAUTION: using GET_LOCK anytime on the same connexion will RELEASE the lock
+// Todo: invoke GET_LOCK from a dedicated session (encapsulate that into a mutex class)
 $res = CMDBSource::QueryToScalar("SELECT GET_LOCK('$sLockName', 1)");// timeout = 1 second (see also IS_FREE_LOCK)
 if (is_null($res))
 {
