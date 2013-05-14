@@ -8,6 +8,11 @@ body {
 	overflow: hidden;	/* Remove scroll bars on browser window */
 }
 
+/* to prevent flicker, hide the pane's content until it's ready */
+.ui-layout-center, .ui-layout-north, .ui-layout-south {
+    display: none;
+}
+
 .raw_output {
     font-family: Courier-New, Courier, Arial, Helvetica;
     font-size: 8pt;

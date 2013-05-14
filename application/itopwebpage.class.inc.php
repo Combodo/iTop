@@ -141,6 +141,7 @@ class iTopWebPage extends NiceWebPage
 				
 					}
 		});
+		window.clearTimeout(iPaneVisWatchDog);
 		myLayout.addPinBtn( "#tPinMenu", "west" );
 		//myLayout.open( "west" );
 		$('.ui-layout-resizer-west .ui-layout-toggler').css({background: 'transparent'});
@@ -391,6 +392,11 @@ EOF
 			
 		});
 
+		
+		function FixPaneVis()
+		{
+			$('.ui-layout-center, .ui-layout-north, .ui-layout-south').css({display: 'block'});
+		}
 EOF
 		);
 	}
@@ -562,7 +568,7 @@ EOF
 					}
 					$sHtml .= "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
 			}
-			$this->add_script("\$(document).ready(function() {\n{$this->m_sInitScript};\nwindow.setTimeout('onDelayedReady()',10)\n});");
+			$this->add_script("var iPaneVisWatchDog  = window.setTimeout('FixPaneVis()',5000);\n\$(document).ready(function() {\n{$this->m_sInitScript};\nwindow.setTimeout('onDelayedReady()',10)\n});");
 			if (count($this->m_aReadyScripts)>0)
 			{
 				$this->add_script("\nonDelayedReady = function() {\n".implode("\n", $this->m_aReadyScripts)."\n}\n");
