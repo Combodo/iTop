@@ -78,7 +78,14 @@ class DisplayBlock
 			$aKeys[] = $oObject->GetKey();	
 		}
 		$oSet->Rewind();
-		$oDummyFilter->AddCondition('id', $aKeys, 'IN');
+		if (count($aKeys) > 0)
+		{
+			$oDummyFilter->AddCondition('id', $aKeys, 'IN');
+		}
+		else
+		{
+			$oDummyFilter->AddCondition('id', 0, '=');
+		}
 		$oBlock = new DisplayBlock($oDummyFilter, $sStyle, false, $aParams); // DisplayBlocks built this way are synchronous
 		return $oBlock;
 	}
