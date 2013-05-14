@@ -1693,12 +1693,6 @@ class AttributeEncryptedString extends AttributeString
 // Example: [[Server:db1.tnut.com]]
 define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)\]\]/U');
 
-// <url>
-// Example: http://romain:trustno1@127.0.0.1:8888/iTop-trunk/modules/itop-caches/itop-caches.php?agument=machin%20#monAncre
-define('WIKI_URL', "/(https?|ftp)\:\/\/([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?([a-z0-9-.]{3,})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i");
-//                   SHEME............. USER.................... PASSWORD...................... HOST/IP......... PORT.......... PATH...................... GET................................... ANCHOR....................
-// Origin of this regexp: http://www.php.net/manual/fr/function.preg-match.php#93824
-
 
 /**
  * Map a text column (size > ?) to an attribute 
@@ -1719,7 +1713,8 @@ class AttributeText extends AttributeString
 
 	static public function RenderWikiHtml($sText)
 	{
-		if (preg_match_all(WIKI_URL, $sText, $aAllMatches, PREG_SET_ORDER /* important !*/ |PREG_OFFSET_CAPTURE /* important ! */))
+		$sPattern = '/'.str_replace('/', '\/', utils::GetConfig()->Get('url_validation_pattern')).'/i';
+		if (preg_match_all($sPattern, $sText, $aAllMatches, PREG_SET_ORDER /* important !*/ |PREG_OFFSET_CAPTURE /* important ! */))
 		{
 			$aUrls = array();
 			$i = count($aAllMatches);
@@ -3299,17 +3294,17 @@ class AttributeURL extends AttributeString
 		$sTarget = $this->Get("target");
 		if (empty($sTarget)) $sTarget = "_blank";
 		$sLabel = Str::pure2html($sValue);
-		if (strlen($sLabel) > 40)
+		if (strlen($sLabel) > 255)
 		{
-			// Truncate the length to about 40 characters, by removing the middle
-			$sLabel = substr($sLabel, 0, 25).'...'.substr($sLabel, -15);
+			// Truncate the length to 128 characters, by removing the middle
+			$sLabel = substr($sLabel, 0, 100).'.....'.substr($sLabel, -20);
 		}
 		return "<a target=\"$sTarget\" href=\"$sValue\">$sLabel</a>";
 	}
 
 	public function GetValidationPattern()
 	{
-		return "^(http|https|ftp)\://[a-zA-Z0-9\-\.]+(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*$";
+		return $this->GetOptional('validation_pattern', '^'.utils::GetConfig()->Get('url_validation_pattern').'$');
 	}
 }
 
