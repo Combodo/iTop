@@ -178,7 +178,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Ticket:resolution' => 'Resolution',
 	'Ticket:SLA' => 'SLA report',
 	'WorkOrder:Details' => 'Details',
-	'WorkOrder:Moreinfo' => 'More informations',
+	'WorkOrder:Moreinfo' => 'More information',
 
 ));
 

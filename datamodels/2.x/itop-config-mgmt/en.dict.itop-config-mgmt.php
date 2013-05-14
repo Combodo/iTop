@@ -375,7 +375,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:Rack' => 'Rack',
 	'Class:Rack+' => '',
-	'Class:Rack/Attribute:nb_u' => 'NB U',
+	'Class:Rack/Attribute:nb_u' => 'Rack units',
 	'Class:Rack/Attribute:nb_u+' => '',
 	'Class:Rack/Attribute:device_list' => 'Devices',
 	'Class:Rack/Attribute:device_list+' => 'All the physical devices racked into this rack',
@@ -462,7 +462,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:DatacenterDevice/Attribute:enclosure_id+' => '',
 	'Class:DatacenterDevice/Attribute:enclosure_name' => 'Enclosure name',
 	'Class:DatacenterDevice/Attribute:enclosure_name+' => '',
-	'Class:DatacenterDevice/Attribute:nb_u' => 'NB U',
+	'Class:DatacenterDevice/Attribute:nb_u' => 'Rack units',
 	'Class:DatacenterDevice/Attribute:nb_u+' => '',
 	'Class:DatacenterDevice/Attribute:managementip' => 'Management ip',
 	'Class:DatacenterDevice/Attribute:managementip+' => '',
@@ -665,7 +665,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Enclosure/Attribute:rack_id+' => '',
 	'Class:Enclosure/Attribute:rack_name' => 'Rack name',
 	'Class:Enclosure/Attribute:rack_name+' => '',
-	'Class:Enclosure/Attribute:nb_u' => 'NB U',
+	'Class:Enclosure/Attribute:nb_u' => 'Rack units',
 	'Class:Enclosure/Attribute:nb_u+' => '',
 	'Class:Enclosure/Attribute:device_list' => 'Devices',
 	'Class:Enclosure/Attribute:device_list+' => 'All the devices in this enclosure',
@@ -1782,11 +1782,11 @@ Dict::Add('EN US', 'English', 'English', array(
 // Add translation for Fieldsets
 
 Dict::Add('EN US', 'English', 'English', array(
-'Server:baseinfo' => 'General informations',
+'Server:baseinfo' => 'General information',
 'Server:Date' => 'Date',
-'Server:moreinfo' => 'More informations',
-'Server:otherinfo' => 'Other informations',
-'Person:info' => 'General informations',
+'Server:moreinfo' => 'More information',
+'Server:otherinfo' => 'Other information',
+'Person:info' => 'General information',
 'Person:notifiy' => 'Notification',
 'Class:Subnet/Tab:IPUsage' => 'IP Usage',
 'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces having an IP in the range: <em>%1$s</em> to <em>%2$s</em>',
