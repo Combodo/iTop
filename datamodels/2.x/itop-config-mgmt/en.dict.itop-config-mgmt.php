@@ -312,7 +312,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FunctionalCI/Attribute:move2production' => 'Move to production date',
 	'Class:FunctionalCI/Attribute:move2production+' => '',
 	'Class:FunctionalCI/Attribute:contacts_list' => 'Contacts',
-	'Class:FunctionalCI/Attribute:contacts_list+' => 'All the contracts for this configuration item',
+	'Class:FunctionalCI/Attribute:contacts_list+' => 'All the contacts for this configuration item',
 	'Class:FunctionalCI/Attribute:documents_list' => 'Documents',
 	'Class:FunctionalCI/Attribute:documents_list+' => 'All the documents linked to this configuration item',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Application solutions',
