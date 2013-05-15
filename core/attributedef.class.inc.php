@@ -4464,7 +4464,7 @@ class AttributeComputedFieldVoid extends AttributeDefinition
 	public function GetEditClass() {return "";}
 	
 	public function GetValuesDef() {return null;} 
-	public function GetPrerequisiteAttributes() {return $this->Get("depends_on");} 
+	public function GetPrerequisiteAttributes() {return $this->GetOptional("depends_on", array());} 
 
 	public function IsDirectField() {return true;} 
 	public function IsScalar() {return true;} 

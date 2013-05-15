@@ -1,5 +1,5 @@
 // JavaScript Document
-function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizHelper)
+function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizHelper, sExtKeyToRemote)
 {
 	this.id = id;
 	this.iInputId = iInputId;
@@ -8,6 +8,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	this.sSuffix = sSuffix;
 	this.bDuplicates = bDuplicates;
 	this.oWizardHelper = oWizHelper;
+	this.sExtKeyToRemote = sExtKeyToRemote;
 	var me = this;
 	this.Init = function()
 	{
@@ -59,7 +60,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		{
 			$('#'+me.id+'_btnRemove').attr('disabled','disabled');
 		}
-	}
+	};
 	
 	this.AddObjects  = function()
 	{
@@ -287,5 +288,45 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		wizard.height(height);
 		form_height = searchForm.outerHeight();
 		results.height(height - form_height - 40); // Leave some space for the buttons
+	};
+	
+	this.GetUpdatedValue = function()
+	{
+		var sSelector = '#linkedset_'+me.id+' input[name^=attr_'+me.id+']';
+		var aIndexes = [];
+		var aValues = [];
+		$(sSelector).each(function() {
+			var re = /\[([^\[]+)\]\[(.+)\]/;
+			var aMatches = [];
+			if (aMatches = this.name.match(re))
+			{
+				var idx = aMatches[1];
+				var index = aIndexes.indexOf(idx);
+				if (index == -1)
+				{
+					aIndexes.push(idx);
+					index = aIndexes.indexOf(idx);
+					aValues[index] = {};
+				}
+				var value = $(this).val();
+				if (aMatches[2] == "id")
+				{
+					var iId = parseInt(aMatches[1], 10);
+					if (iId < 0)
+					{
+						aValues[index][me.sExtKeyToRemote] = -iId;
+					}
+					else
+					{
+						aValues[index]['id'] = value;						
+					}
+				}
+				else
+				{
+					aValues[index][aMatches[2]] = value;					
+				}
+			}
+		});
+		return JSON.stringify(aValues);
 	};
 }

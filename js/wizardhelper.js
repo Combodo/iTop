@@ -36,19 +36,18 @@ function WizardHelper(sClass, sFormPrefix, sState)
 	this.SetFieldsMap = function (oFieldsMap)
 	{
 		this.m_oData.m_oFieldsMap = oFieldsMap;
-	}
+	};
 	
 	this.SetFieldsCount = function (count)
 	{
 		this.m_oData.m_iFieldsCount = count;
-		
-	}
+	};
 	
 	this.GetFieldId = function(sFieldName)
 	{
 		id = this.m_oData.m_oFieldsMap[sFieldName];
 		return id;
-	}
+	};
 
 	this.RequestDefaultValue = function (sFieldName)
 	{
@@ -57,26 +56,28 @@ function WizardHelper(sClass, sFormPrefix, sState)
 		{
 			this.m_oData.m_aDefaultValueRequested.push(sFieldName);
 		}
-	}
+	};
+	
 	this.RequestAllowedValues = function (sFieldName)
 	{
 		this.m_oData.m_aAllowedValuesRequested.push(sFieldName);
-	}
+	};
+	
 	this.SetCurrentValue = function (sFieldName, currentValue)
 	{
 		this.m_oData.m_oCurrentValues[sFieldName] = currentValue;
-	}
+	};
 	
 	this.ToJSON = function ()
 	{
 		return JSON.stringify(this.m_oData);
-	}
+	};
 	
 	this.FromJSON = function (sJSON)
 	{
 		//console.log('Parsing JSON:'+sJSON);
 		this.m_oData = JSON.parse(sJSON);
-	}
+	};
 
 	this.ResetQuery = function ()
 	{
@@ -84,7 +85,7 @@ function WizardHelper(sClass, sFormPrefix, sState)
 		this.m_oData.m_oDefaultValue = {};
 		this.m_oData.m_aAllowedValuesRequested = [];
 		this.m_oData.m_oAllowedValues = {};
-	}
+	};
 	
 	this.UpdateFields = function ()
 	{
@@ -120,10 +121,10 @@ function WizardHelper(sClass, sFormPrefix, sState)
 		// For each "refreshed" field, asynchronously trigger a change in case there are dependent fields to update
 		for(i=0; i<aRefreshed.length; i++)
 		{
-			var sString = "$('#"+aRefreshed[i]+"').trigger('change').trigger('update');"
+			var sString = "$('#"+aRefreshed[i]+"').trigger('change').trigger('update');";
 			window.setTimeout(sString, 1); // Synchronous 'trigger' does nothing, call it asynchronously
 		}
-	}
+	};
 	
 	this.UpdateWizard = function ()
 	{
@@ -134,16 +135,13 @@ function WizardHelper(sClass, sFormPrefix, sState)
 			//console.log(sFieldCode);
 			this.UpdateCurrentValue(sCleanFieldCode);
 		}
-		// Remove unnecessary stuff
-		this.m_oData.m_oDefaultValue = {};
-		this.m_oData.m_oAllowedValues = {};
-	}
+	};
 	
 	this.UpdateWizardToJSON = function ()
 	{
 		this.UpdateWizard();
-		return this.ToJSON()
-	}
+		return this.ToJSON();
+	};
 	
 	this.AjaxQueryServer = function ()
 	{
@@ -159,7 +157,7 @@ function WizardHelper(sClass, sFormPrefix, sState)
 				//console.log(oWizardHelper);
 				//$('#wizStep'+ G_iCurrentStep).unblock( {fadeOut: 0} );
 			});
-	}
+	};
 	
 	this.Preview = function (divId)
 	{
@@ -170,10 +168,11 @@ function WizardHelper(sClass, sFormPrefix, sState)
 			function(responseText, textStatus, XMLHttpRequest){
 				$('#wizStep'+ G_iCurrentStep).unblock( {fadeOut: 0} );
 			});
-	}
+	};
 	
 	this.UpdateCurrentValue = function (sFieldCode)
 	{
+		$('#'+this.m_oData.m_oFieldsMap[sFieldCode]).trigger('update_value'); // Give the widget a chance to update its value (if it is aware of this event)
 		value = $('#'+this.m_oData.m_oFieldsMap[sFieldCode]).val();
 		if (value == '')
 		{
@@ -181,7 +180,7 @@ function WizardHelper(sClass, sFormPrefix, sState)
 		}
 		this.m_oData.m_oCurrentValues[sFieldCode] = value;
 		return value;		
-	}
+	};
 
 	this.UpdateDependentFields = function(aFieldNames)
 	{
@@ -197,7 +196,7 @@ function WizardHelper(sClass, sFormPrefix, sState)
 			index++;
 		}
 		this.AjaxQueryServer();
-	}
+	};
 	
 	this.ReloadObjectCreationForm = function(sFormId, sTargetState)
 	{
@@ -224,5 +223,5 @@ function WizardHelper(sClass, sFormPrefix, sState)
 				$('#'+sFormId).unblock();
 			}
 		);		
-	}
+	};
 }

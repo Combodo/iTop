@@ -80,6 +80,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 {
 	protected $m_iFormId; // The ID of the form used to edit the object (when in edition mode !)
 	static $iGlobalFormId = 1;
+	protected $aFieldsMap;
 
 	/**
 	 * returns what will be the next ID for the forms
@@ -289,6 +290,16 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 
 		return $aFieldsMap;
 	}
+	
+	/**
+	 * Add a field to the map: attcode => id used when building a form
+	 * @param string $sAttCode The attribute code of the field being edited
+	 * @param string $sInputId The unique ID of the control/widget in the page
+	 */
+	protected function AddToFieldsMap($sAttCode, $sInputId)
+	{
+		$this->aFieldsMap[$sAttCode] = $sInputId;
+	}
 
 	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
@@ -345,7 +356,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				$sDisplayValue = ''; // not used
 				$aArgs = array('this' => $this);
 				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $oValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
-				$aFieldsMap[$sAttCode] = $sInputId;
+				$this->AddToFieldsMap($sAttCode,  $sInputId);
 				$oPage->add($sHTMLValue);
 			}
 			else
@@ -1819,6 +1830,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	public function DisplayModifyForm(WebPage $oPage, $aExtraParams = array())
 	{
 		self::$iGlobalFormId++;
+		$this->aFieldsMap = array();
 		$sPrefix = '';
 		if (isset($aExtraParams['formPrefix']))
 		{
@@ -1963,7 +1975,8 @@ EOF
 		// Now display the relations, one tab per relation
 		if (!isset($aExtraParams['noRelations']))
 		{
-			$this->DisplayBareRelations($oPage, true); // Edit mode
+			$this->DisplayBareRelations($oPage, true); // Edit mode, will fill $this->aFieldsMap
+			$aFieldsMap = array_merge($aFieldsMap, $this->aFieldsMap);
 		}
 
 		$oPage->SetCurrentTab('');

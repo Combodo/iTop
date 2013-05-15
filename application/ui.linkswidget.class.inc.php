@@ -106,7 +106,7 @@ class UILinksWidget
 		$sPrefix = "$this->m_sAttCode{$this->m_sNameSuffix}";
 		$aRow = array();
 		$aFieldsMap = array();
-		if(is_object($linkObjOrId))
+		if(is_object($linkObjOrId) && (!$linkObjOrId->IsNew()))
 		{
 			$key = $linkObjOrId->GetKey();
 			$iRemoteObjKey =  $linkObjOrId->Get($this->m_sExtKeyToRemote);
@@ -130,12 +130,24 @@ class UILinksWidget
 		else
 		{
 			// form for creating a new record
+			if (is_object($linkObjOrId))
+			{
+				// New link existing only in memory
+				$oNewLinkObj = $linkObjOrId;
+				$iRemoteObjKey = $oNewLinkObj->Get($this->m_sExtKeyToRemote);
+				$oRemoteObj = MetaModel::GetObject($this->m_sRemoteClass, $iRemoteObjKey);
+				$oNewLinkObj->Set($this->m_sExtKeyToMe, $oCurrentObj); // Setting the extkey with the object also fills the related external fields
+				$linkObjOrId = -$iRemoteObjKey;
+			}
+			else
+			{
+				$iRemoteObjKey = -$linkObjOrId;
+				$oNewLinkObj = MetaModel::NewObject($this->m_sLinkedClass);
+				$oRemoteObj = MetaModel::GetObject($this->m_sRemoteClass, -$linkObjOrId);
+				$oNewLinkObj->Set($this->m_sExtKeyToRemote, $oRemoteObj); // Setting the extkey with the object alsoo fills the related external fields
+				$oNewLinkObj->Set($this->m_sExtKeyToMe, $oCurrentObj); // Setting the extkey with the object also fills the related external fields
+			}
 			$sPrefix .= "[$linkObjOrId][";
-			$iRemoteObjKey = -$linkObjOrId;
-			$oNewLinkObj = MetaModel::NewObject($this->m_sLinkedClass);
-			$oRemoteObj = MetaModel::GetObject($this->m_sRemoteClass, -$linkObjOrId);
-			$oNewLinkObj->Set($this->m_sExtKeyToRemote, $oRemoteObj); // Setting the extkey with the object alsoo fills the related external fields
-			$oNewLinkObj->Set($this->m_sExtKeyToMe, $oCurrentObj); // Setting the extkey with the object also fills the related external fields
 			$sNameSuffix = "]"; // To make a tabular form
 			$aArgs['prefix'] = $sPrefix;
 			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}_".(-$linkObjOrId);
@@ -275,6 +287,7 @@ EOF
 		$sHtmlValue = '';
 		$sTargetClass = self::GetTargetClass($this->m_sClass, $this->m_sAttCode);
 		$sHtmlValue .= "<div id=\"linkedset_{$this->m_sAttCode}{$this->m_sNameSuffix}\">\n";
+		$sHtmlValue .= "<input type=\"hidden\" id=\"{$sFormPrefix}{$this->m_iInputId}\">\n";
 		$oValue->Rewind();
 		$aForm = array();
 		while($oCurrentLink = $oValue->Fetch())
@@ -284,7 +297,7 @@ EOF
 			if ($oCurrentLink->IsNew())
 			{
 				$key = -$oLinkedObj->GetKey();
-				$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $key, $aArgs, $oCurrentObj);
+				$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj);
 			}
 			else
 			{
@@ -297,8 +310,9 @@ EOF
 		$sDuplicates = ($this->m_bDuplicatesAllowed) ? 'true' : 'false';
 		$sWizHelper = 'oWizardHelper'.$sFormPrefix;
 		$oPage->add_ready_script(<<<EOF
-		oWidget{$this->m_iInputId} = new LinksWidget('{$this->m_sAttCode}{$this->m_sNameSuffix}', '{$this->m_sClass}', '{$this->m_sAttCode}', '{$this->m_iInputId}', '{$this->m_sNameSuffix}', $sDuplicates, $sWizHelper);
+		oWidget{$this->m_iInputId} = new LinksWidget('{$this->m_sAttCode}{$this->m_sNameSuffix}', '{$this->m_sClass}', '{$this->m_sAttCode}', '{$this->m_iInputId}', '{$this->m_sNameSuffix}', $sDuplicates, $sWizHelper, '{$this->m_sExtKeyToRemote}');
 		oWidget{$this->m_iInputId}.Init();
+		$('#{$this->m_iInputId}').bind('update_value', function() { $(this).val(oWidget{$this->m_iInputId}.GetUpdatedValue()); })
 EOF
 );
 		$sHtmlValue .= "<span style=\"float:left;\">&nbsp;&nbsp;&nbsp;<img src=\"../images/tv-item-last.gif\">&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnRemove\" type=\"button\" value=\"".Dict::S('UI:RemoveLinkedObjectsOf_Class')."\" onClick=\"oWidget{$this->m_iInputId}.RemoveSelected();\" >";
