@@ -283,9 +283,29 @@ class ObjectDetailsTemplate extends DisplayTemplate
 		$sStateAttCode = MetaModel :: GetStateAttributeCode(get_class($this->m_oObj));
 		$aTemplateFields = array();
 		preg_match_all('/\\$this->([a-z0-9_]+)\\$/', $this->m_sTemplate, $aMatches);
-		$aTemplateFields = $aMatches[1];
+		foreach ($aMatches[1] as $sAttCode)
+		{
+			if (MetaModel::IsValidAttCode(get_class($this->m_oObj), $sAttCode))
+			{
+				$aTemplateFields[] = $sAttCode;
+			}
+			else
+			{
+				$aParams['this->'.$sAttCode] = "<!--Unknown attribute: $sAttCode-->";					
+			}
+		}
 		preg_match_all('/\\$this->field\\(([a-z0-9_]+)\\)\\$/', $this->m_sTemplate, $aMatches);
-		$aTemplateFields = array_merge($aTemplateFields, $aMatches[1]);
+		foreach ($aMatches[1] as $sAttCode)
+		{
+			if (MetaModel::IsValidAttCode(get_class($this->m_oObj), $sAttCode))
+			{
+				$aTemplateFields[] = $sAttCode;
+			}
+			else
+			{
+				$aParams['this->field('.$sAttCode.')'] = "<!--Unknown attribute: $sAttCode-->";
+			}
+		}
 		$aFieldsComments = (isset($aParams['fieldsComments'])) ? $aParams['fieldsComments'] : array();
 		$aFieldsMap = array();
 
