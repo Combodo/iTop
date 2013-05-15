@@ -1237,7 +1237,7 @@ class AttributeDecimal extends AttributeDBField
 	public function ScalarToSQL($value)
 	{
 		assert(is_null($value) || preg_match('/'.$this->GetValidationPattern().'/', $value));
-		return (string)$value; // treated as a string
+		return $value; // null or string
 	}
 }
 
