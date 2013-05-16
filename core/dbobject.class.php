@@ -1785,6 +1785,11 @@ abstract class DBObject
 		MyHelpers::CheckKeyInArray('object lifecycle stimulus', $sStimulusCode, MetaModel::EnumStimuli(get_class($this)));
 
 		$aStateTransitions = $this->EnumTransitions();
+		if (!array_key_exists($sStimulusCode, $aStateTransitions))
+		{
+			// This simulus has no effect in the current state... do nothing
+			return;
+		}
 		$aTransitionDef = $aStateTransitions[$sStimulusCode];
 
 		// Change the state before proceeding to the actions, this is necessary because an action might

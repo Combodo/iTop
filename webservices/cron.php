@@ -63,25 +63,31 @@ function UsageAndExit($oP)
 
 function RunTask($oBackgroundProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
 {
-	$oNow = new DateTime();
-	$fStart = microtime(true);
-	$sMessage = $oBackgroundProcess->Process($iTimeLimit);
-	$fDuration = microtime(true) - $fStart;
-	$oTask->ComputeDurations($fDuration);
-	$oTask->Set('latest_run_date', $oNow->format('Y-m-d H:i:s'));
-	$oPlannedStart = new DateTime($oTask->Get('latest_run_date'));
-	// Let's assume that the task was started exactly when planned so that the schedule does no shift each time
-	// this allows to schedule a task everyday "around" 11:30PM for example
-	$oPlannedStart->modify('+'.$oBackgroundProcess->GetPeriodicity().' seconds');
-	$oEnd = new DateTime();
-	if ($oPlannedStart->format('U') < $oEnd->format('U'))
+	try
 	{
-		// Huh, next planned start is already in the past, shift it of the periodicity !
-		$oPlannedStart = $oEnd->modify('+'.$oBackgroundProcess->GetPeriodicity().' seconds');
+		$oNow = new DateTime();
+		$fStart = microtime(true);
+		$sMessage = $oBackgroundProcess->Process($iTimeLimit);
+		$fDuration = microtime(true) - $fStart;
+		$oTask->ComputeDurations($fDuration);
+		$oTask->Set('latest_run_date', $oNow->format('Y-m-d H:i:s'));
+		$oPlannedStart = new DateTime($oTask->Get('latest_run_date'));
+		// Let's assume that the task was started exactly when planned so that the schedule does no shift each time
+		// this allows to schedule a task everyday "around" 11:30PM for example
+		$oPlannedStart->modify('+'.$oBackgroundProcess->GetPeriodicity().' seconds');
+		$oEnd = new DateTime();
+		if ($oPlannedStart->format('U') < $oEnd->format('U'))
+		{
+			// Huh, next planned start is already in the past, shift it of the periodicity !
+			$oPlannedStart = $oEnd->modify('+'.$oBackgroundProcess->GetPeriodicity().' seconds');
+		}
+		$oTask->Set('next_run_date', $oPlannedStart->format('Y-m-d H:i:s'));
+		$oTask->DBUpdate();
 	}
-	$oTask->Set('next_run_date', $oPlannedStart->format('Y-m-d H:i:s'));
-	$oTask->DBUpdate();
-	
+	catch(Exception $e)
+	{
+		$sMessage = 'Processing failed, the following exception occured: '.$e->getMessage();
+	}
 	return $sMessage;	
 }
 
