@@ -24,6 +24,7 @@ class BackupException extends Exception
 class DBBackup
 {
 	protected $sDBHost;
+	protected $iDBPort;
 	protected $sDBUser;
 	protected $sDBPwd;
 	protected $sDBName;
@@ -43,20 +44,32 @@ class DBBackup
 	{
 		if (is_null($sDBHost))
 		{
-			$this->sDBHost = MetaModel::GetConfig()->GetDBHost();
-			$this->sDBUser = MetaModel::GetConfig()->GetDBUser();
-			$this->sDBPwd = MetaModel::GetConfig()->GetDBPwd();
-			$this->sDBName = MetaModel::GetConfig()->GetDBName();
-			$this->sDBSubName = MetaModel::GetConfig()->GetDBSubName();
+			// Defaulting to the current config
+			$sDBHost = MetaModel::GetConfig()->GetDBHost();
+			$sDBUser = MetaModel::GetConfig()->GetDBUser();
+			$sDBPwd = MetaModel::GetConfig()->GetDBPwd();
+			$sDBName = MetaModel::GetConfig()->GetDBName();
+			$sDBSubName = MetaModel::GetConfig()->GetDBSubName();
+		}
+
+		// Compute the port (if present in the host name)
+		$aConnectInfo = explode(':', $sDBHost);
+		$sDBHostName = $aConnectInfo[0];
+		if (count($aConnectInfo) > 1)
+		{
+			$iDBPort = $aConnectInfo[1];
 		}
 		else
 		{
-			$this->sDBHost = $sDBHost;
-			$this->sDBUser = $sDBUser;
-			$this->sDBPwd = $sDBPwd;
-			$this->sDBName = $sDBName;
-			$this->sDBSubName = $sDBSubName;
+			$iDBPort = null;
 		}
+
+		$this->sDBHost = $sDBHostName;
+		$this->iDBPort = $iDBPort;
+		$this->sDBUser = $sDBUser;
+		$this->sDBPwd = $sDBPwd;
+		$this->sDBName = $sDBName;
+		$this->sDBSubName = $sDBSubName;
 	}
 
 	/**
@@ -76,6 +89,8 @@ class DBBackup
 
 	public function CreateZip($sZipFile, $sSourceConfigFile = null)
 	{
+		// Note: the file is created by tempnam and might not be writeable by another process (Windows/IIS)
+		// (delete it before spawning a process)
 		$sDataFile = tempnam(SetupUtils::GetTmpDir(), 'itop-');
 		SetupPage::log("Info - Data file: '$sDataFile'");
 
@@ -87,7 +102,9 @@ class DBBackup
 		$this->DoBackup($sDataFile);
 
 		$this->DoZip($sDataFile, $sSourceConfigFile, $sZipFile);
-		unlink($sDataFile);
+		// Windows/IIS: the data file has been created by the spawned process...
+		//   trying to delete it will issue a warning, itself stopping the setup abruptely
+		@unlink($sDataFile);
 	}
 
 
@@ -107,6 +124,9 @@ class DBBackup
 		$sUser = self::EscapeShellArg($this->sDBUser);
 		$sPwd = self::EscapeShellArg($this->sDBPwd);
 		$sDBName = self::EscapeShellArg($this->sDBName);
+
+		// Just to check the connection to the DB (better than getting the retcode of mysqldump = 1)
+		$oMysqli = $this->DBConnect();
 
 		$sTables = '';
 		if ($this->sDBSubName != '')
@@ -139,22 +159,32 @@ class DBBackup
 
 		// Store the results in a temporary file
 		$sTmpFileName = self::EscapeShellArg($sBackupFileName);
-		$sCommand = "$sMySQLDump --opt --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost --user=$sUser --password=$sPwd --result-file=$sTmpFileName $sDBName $sTables 2>&1";
-		$sCommandDisplay = "$sMySQLDump --opt --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost --user=xxxxx --password=xxxxx --result-file=$sTmpFileName $sDBName $sTables";
+		if (is_null($this->iDBPort))
+		{
+			$sPortOption = '';
+		}
+		else
+		{
+			$sPortOption = '--port='.$this->iDBPort.' ';
+		}
+		// Delete the file created by tempnam() so that the spawned process can write into it (Windows/IIS)
+		unlink($sBackupFileName);
+		$sCommand = "$sMySQLDump --opt --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=$sUser --password=$sPwd --result-file=$sTmpFileName $sDBName $sTables 2>&1";
+		$sCommandDisplay = "$sMySQLDump --opt --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xxxxx --password=xxxxx --result-file=$sTmpFileName $sDBName $sTables";
 
 		// Now run the command for real
 		SetupPage::log("Info - Executing command: $sCommandDisplay");
 		$aOutput = array();
 		$iRetCode = 0;
 		exec($sCommand, $aOutput, $iRetCode);
+		foreach($aOutput as $sLine)
+		{
+			SetupPage::log("Info - mysqldump said: $sLine");
+		}
 		if ($iRetCode != 0)
 		{
 			SetupPage::log("Error - retcode=".$iRetCode."\n");
 			throw new BackupException("Failed to execute mysqldump. Return code: $iRetCode");
-		}
-		foreach($aOutput as $sLine)
-		{
-			SetupPage::log("Info - mysqldump said: $sLine");
 		}
 	}
 
@@ -212,10 +242,18 @@ class DBBackup
 	 */
 	protected function DBConnect()
 	{
-		$oMysqli = new mysqli($this->sDBHost, $this->sDBUser, $this->sDBPwd);
+		if (is_null($this->iDBPort))
+		{
+			$oMysqli = new mysqli($this->sDBHost, $this->sDBUser, $this->sDBPwd);
+		}
+		else
+		{
+			$oMysqli = new mysqli($this->sDBHost, $this->sDBUser, $this->sDBPwd, '', $this->iDBPort);
+		}
 		if ($oMysqli->connect_errno)
 		{
-			throw new BackupException("Cannot connect to the MySQL server '$this->sDBHost' (".$mysqli->connect_errno . ") ".$mysqli->connect_error);
+			$sHost = is_null($this->iDBPort) ? $this->sDBHost : $this->sDBHost.' on port '.$this->iDBPort;
+			throw new BackupException("Cannot connect to the MySQL server '$this->sDBHost' (".$oMysqli->connect_errno . ") ".$oMysqli->connect_error);
 		}
 		if (!$oMysqli->select_db($this->sDBName))
 		{

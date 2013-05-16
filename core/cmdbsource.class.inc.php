@@ -58,15 +58,29 @@ class CMDBSource
 		self::$m_sDBUser = $sUser;
 		self::$m_sDBPwd = $sPwd;
 		self::$m_sDBName = $sSource;
-		if (!self::$m_resDBLink = @mysqli_connect($sServer, $sUser, $sPwd))
+
+		$aConnectInfo = explode(':', self::$m_sDBHost);
+		if (count($aConnectInfo) > 1)
 		{
-			throw new MySQLException('Could not connect to the DB server', array('host'=>$sServer, 'user'=>$sUser));
+			// Override the default port
+			$sServer = $aConnectInfo[0];
+			$iPort = $aConnectInfo[1];
+			self::$m_resDBLink = @mysqli_connect($sServer, self::$m_sDBUser, self::$m_sDBPwd, '', $iPort);
+		}
+		else
+		{
+			self::$m_resDBLink = @mysqli_connect(self::$m_sDBHost, self::$m_sDBUser, self::$m_sDBPwd);
+		}
+
+		if (!self::$m_resDBLink)
+		{
+			throw new MySQLException('Could not connect to the DB server', array('host'=>self::$m_sDBHost, 'user'=>self::$m_sDBUser));
 		}
 		if (!empty($sSource))
 		{
 			if (!((bool)mysqli_query(self::$m_resDBLink, "USE `$sSource`")))
 			{
-				throw new MySQLException('Could not select DB', array('host'=>$sServer, 'user'=>$sUser, 'db_name'=>$sSource));
+				throw new MySQLException('Could not select DB', array('host'=>self::$m_sDBHost, 'user'=>self::$m_sDBUser, 'db_name'=>self::$m_sDBName));
 			}
 		}
 	}
