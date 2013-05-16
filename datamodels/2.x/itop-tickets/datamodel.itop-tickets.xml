@@ -382,6 +382,10 @@
           <extkey_attcode>ticket_id</extkey_attcode>
           <target_attcode>ref</target_attcode>
         </field>
+        <field id="ticket_title" xsi:type="AttributeExternalField">
+          <extkey_attcode>ticket_id</extkey_attcode>
+          <target_attcode>title</target_attcode>
+        </field>
         <field id="functionalci_id" xsi:type="AttributeExternalKey">
           <sql>functionalci_id</sql>
           <target_class>FunctionalCI</target_class>
