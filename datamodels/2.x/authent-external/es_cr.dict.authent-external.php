@@ -39,7 +39,7 @@
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:UserExternal' => 'Usuario Externo (Webserver)',
+	'Class:UserExternal' => 'Usuario Externo',
 	'Class:UserExternal+' => 'Usuario Autenticado fuera de iTop',
 ));
 

@@ -22,8 +22,6 @@
  *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
-
-
  */
 
 // Dictionnay conventions
@@ -41,7 +39,6 @@
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:UserInternal' => 'Usuario Interno',
 	'Class:UserLocal' => 'Usuario de iTop',
 	'Class:UserLocal+' => 'Usuario Autenticado vía iTop',
 	'Class:UserLocal/Attribute:password' => 'Contrase&ntilde;a',

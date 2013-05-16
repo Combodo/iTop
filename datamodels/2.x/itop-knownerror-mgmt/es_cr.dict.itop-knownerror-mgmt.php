@@ -57,7 +57,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:KnownError' => 'Error Conocido',
 	'Class:KnownError+' => 'Documentación para un error conocido',
 	'Class:KnownError/Attribute:name' => 'Nombre',
-	'Class:KnownError/Attribute:name+' => 'Nombre',
+	'Class:KnownError/Attribute:name+' => 'Nombre del Error Conocido',
 	'Class:KnownError/Attribute:org_id' => 'Organización',
 	'Class:KnownError/Attribute:org_id+' => 'Organización',
 	'Class:KnownError/Attribute:cust_name' => 'Nombre',
@@ -164,10 +164,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:FAQCategory' => 'Categoría de Preguntas y Respusta Frecuentes',
-	'Class:FAQCategory+' => 'Categoría de Preguntas y Respusta Frecuentes',
+	'Class:FAQCategory' => 'Categoría de Preguntas y Respuesta Frecuentes',
+	'Class:FAQCategory+' => 'Categoría de Preguntas y Respuesta Frecuentes',
 	'Class:FAQCategory/Attribute:name' => 'Nombre',
-	'Class:FAQCategory/Attribute:name+' => 'Nombre',
+	'Class:FAQCategory/Attribute:name+' => 'Nombre de Categoría de Preguntas y Respuestas Frecuentes',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
 	'Class:FAQCategory/Attribute:faq_list+' => 'FAQs',
 ));

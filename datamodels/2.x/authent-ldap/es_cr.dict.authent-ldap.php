@@ -39,8 +39,7 @@
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:UserInternal' => 'Usuario Interno',
-	'Class:UserLDAP' => 'Usuario LDAP',
+  'Class:UserLDAP' => 'Usuario LDAP',
 	'Class:UserLDAP+' => 'Usuario Autenticado vía LDAP',
 	'Class:UserLDAP/Attribute:password' => 'Contrase&ntilde;a',
 	'Class:UserLDAP/Attribute:password+' => 'Contrase&ntilde;a',

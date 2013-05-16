@@ -26,10 +26,10 @@
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:DeletedObjectLabel' => '%1s (eliminado)',
-	'Core:DeletedObjectTip' => 'El objeto ha sido eliminado en %1$s (%2$s)',
+	'Core:DeletedObjectTip' => 'Elemento ha sido Eliminado en %1$s (%2$s)',
 
-	'Core:UnknownObjectLabel' => 'Objeto no encontrado (clase: %1$s, identificador: %2$d)',
-	'Core:UnknownObjectTip' => 'El objeto no pudo ser encontrado.  Pudo haber sido eliminado hace tiempo y purgado de la bitácora.',
+	'Core:UnknownObjectLabel' => 'Elemento No Encontrado (Clase: %1$s, Identificador: %2$d)',
+	'Core:UnknownObjectTip' => 'El Elemento no pudo ser encontrado.  Pudo haber sido eliminado hace tiempo y purgado de la Bitácora.',
 
 	'Core:AttributeLinkedSet' => 'Arreglo de objetos',
 	'Core:AttributeLinkedSet+' => 'Cualquier tipo de objetos [subclass] de la misma clase',
@@ -65,7 +65,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:AttributeEncryptedString+' => 'Cadena encriptada con llave local',
 
 	'Core:AttributeText' => 'Texto',
-	'Core:AttributeText+' => 'Cadena de multiples lineas de caracteres',
+	'Core:AttributeText+' => 'Cadena de Múltiples Líneas de Caracteres',
 
 	'Core:AttributeHTML' => 'HTML',
 	'Core:AttributeHTML+' => 'Cadena HTML',
@@ -77,7 +77,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:AttributeIPAddress+' => 'Dirección IP',
 
 	'Core:AttributeOQL' => 'OQL',
-	'Core:AttributeOQL+' => 'Object Query Langage expresion',
+	'Core:AttributeOQL+' => 'Object Query Language expresion',
 
 	'Core:AttributeEnum' => 'Enum',
 	'Core:AttributeEnum+' => 'Lista de cadenas alfanumericas predefinidas',
@@ -85,7 +85,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:AttributeTemplateString' => 'Cadena de plantilla',
 	'Core:AttributeTemplateString+' => 'Cadena conteniendo lugares',
 
-	'Core:AttributeTemplateText' => 'Texto de plantillat',
+	'Core:AttributeTemplateText' => 'Texto de plantilla',
 	'Core:AttributeTemplateText+' => 'Texto conteniendo lugares',
 
 	'Core:AttributeTemplateHTML' => 'Plantilla HTML',
@@ -151,7 +151,7 @@ Operadores:<br/>
 	'Core:AttributeFriendlyName' => 'Nombre común',
 	'Core:AttributeFriendlyName+' => 'Atributo creado automáticamente; el nombre común es obtenido de varios atributos',
 
-	'Core:FriendlyName-Label' => 'Nombre',
+	'Core:FriendlyName-Label' => 'Nombre común',
 	'Core:FriendlyName-Description' => 'Nombre común',
 ));
 
@@ -279,7 +279,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:Event' => 'Bitacora de Eventos',
+	'Class:Event' => 'Bitácora de Eventos',
 	'Class:Event+' => 'Evento interno de aplicación',
 	'Class:Event/Attribute:message' => 'Mensaje',
 	'Class:Event/Attribute:message+' => 'Descripción corta del evento',
@@ -396,7 +396,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Action' => 'Acción Personalizada',
 	'Class:Action+' => 'Acción definida por el usuario',
 	'Class:Action/Attribute:name' => 'Nombre',
-	'Class:Action/Attribute:name+' => 'Nombre',
+	'Class:Action/Attribute:name+' => 'Nombre de la Acción',
 	'Class:Action/Attribute:description' => 'Descripción',
 	'Class:Action/Attribute:description+' => 'Descripción',
 	'Class:Action/Attribute:status' => 'Estatus',
@@ -565,7 +565,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:SynchroDataSource/Attribute:name' => 'Nombre',
-	'Class:SynchroDataSource/Attribute:name+' => 'Nombre',
+	'Class:SynchroDataSource/Attribute:name+' => 'Nombre de la Fuente de Datos',
 	'Class:SynchroDataSource/Attribute:description' => 'Descripción',
 	'Class:SynchroDataSource/Attribute:status' => 'Estatus', //TODO: enum values
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Clase',
@@ -619,7 +619,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:Synchro:History' => 'Historia de Sincronización',
 	'Core:Synchro:NeverRun' => 'Esta Sincronización no ha sido ejecutada. No hay bitácora todavía.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'La última Sincronización terminó en %1$s.',
-	'Core:Synchro:SynchroRunningStartedOn_Date' => 'La Sincronización iniciadaa en %1$s está todavía en ejecución.',
+	'Core:Synchro:SynchroRunningStartedOn_Date' => 'La Sincronización iniciada en %1$s está todavía en ejecución.',
 	'Menu:DataSources' => 'Fuentes de Datos Sincronizables',
 	'Menu:DataSources+' => 'Fuentes de Datos Sincronizables',
 	'Core:Synchro:label_repl_ignored' => 'Ignorados (%1$s)',
@@ -721,7 +721,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:SynchroAttribute/Attribute:finalclass' => 'Clase',
 	'Class:SynchroAttExtKey' => 'Atributo de Sincronización (ExtKey)',
 	'Class:SynchroAttExtKey/Attribute:reconciliation_attcode' => 'Atributo de Reconciliación',
-	'Class:SynchroAttLinkSet' => 'Atibuto de Sincronización (Linkset)',
+	'Class:SynchroAttLinkSet' => 'Atributo de Sincronización (Linkset)',
 	'Class:SynchroAttLinkSet/Attribute:row_separator' => 'Separador de Renglones',
 	'Class:SynchroAttLinkSet/Attribute:attribute_separator' => 'Separador de Atributos',
 	'Class:SynchroLog' => 'Bitácora de Sincronización',
