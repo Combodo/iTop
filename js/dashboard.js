@@ -158,7 +158,7 @@ $(function()
 						var oDragItem = $(this).dashlet('get_drag_icon');
 						return oDragItem;
 					},
-					cursorAt: { top: 16, left: 16 },
+					cursorAt: { top: 16, left: 16 }
 				});
 				if (options.refresh)
 				{
@@ -189,7 +189,7 @@ $(function()
 					var oDragItem = $(this).dashlet('get_drag_icon');
 					return oDragItem;
 				},
-				cursorAt: { top: 16, left: 16 },
+				cursorAt: { top: 16, left: 16 }
 			});
 			this.element.find('table td').droppable({
 				accept: '.dashlet,.dashlet_icon',
@@ -215,7 +215,7 @@ $(function()
 						var sDashletClass = ui.draggable.attr('dashlet_class');
 						$(':itop-dashboard').dashboard('add_dashlet', {dashlet_class: sDashletClass, container: $(this), refresh: bRefresh });
 					}
-				},
+				}
 			});	
 		}
 	});	
@@ -336,7 +336,7 @@ $(function()
 						me.element.dialog('close');
 					}
 				}
-			)			
+			);			
 		}
 	});
 });
