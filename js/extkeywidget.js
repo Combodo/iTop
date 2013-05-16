@@ -116,16 +116,17 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		var searchForm = dlg.find('div.display_block:first'); // Top search form, enclosing display_block
 		var results = $('#dr_'+me.id);
 		var oPadding = {};
-		for(k in ['top', 'right', 'bottom', 'left'])
+		var aKeys = ['top', 'right', 'bottom', 'left'];
+		for(k in aKeys)
 		{
-			oPadding[k] = 0;
-			if (dlg.css('padding-'+k))
+			oPadding[aKeys[k]] = 0;
+			if (dlg.css('padding-'+aKeys[k]))
 			{
-				oPadding[k] = parseInt(dlg.css('padding-'+k).replace('px', ''));
+				oPadding[aKeys[k]] = parseInt(dlg.css('padding-'+aKeys[k]).replace('px', ''));
 			}
 		}
-		width = dlg.innerWidth() - oPadding.right - oPadding.left - 22; // 5 (margin-left) + 5 (padding-left) + 5 (padding-right) + 5 (margin-right) + 2 for rounding !
-		height = dlg.innerHeight() - oPadding.top - oPadding.bottom -22;
+		width = dlg.innerWidth() - oPadding['right'] - oPadding['left'] - 22; // 5 (margin-left) + 5 (padding-left) + 5 (padding-right) + 5 (margin-right) + 2 for rounding !
+		height = dlg.innerHeight() - oPadding['top'] - oPadding['bottom'] -22;
 		form_height = searchForm.outerHeight();
 		results.height(height - form_height - 40); // Leave some space for the buttons
 	};
@@ -199,6 +200,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				$('#count_'+me.id).change(function(){
 					me.UpdateButtons();
 				});
+				me.UpdateSizes();
 			},
 			'html'
 		);
