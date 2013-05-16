@@ -110,7 +110,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:User/Attribute:language/Value:FR FR+' => 'French (France)',
 	'Class:User/Attribute:profile_list' => 'Profile',
 	'Class:User/Attribute:profile_list+' => 'Rollen, Rechtemanagement für diese Person',
-	'Class:User/Attribute:allowed_org_list' => '',
+	'Class:User/Attribute:allowed_org_list' => 'Erlaubte Organisationen',
 	'Class:User/Attribute:allowed_org_list+' => 'Der Endbenutzer ist berechtigt, die Daten der folgenden Organisationen zu sehen. Wenn keine Organisation zu sehen ist, gibt es keine Beschränkung.',
 	'Class:User/Error:LoginMustBeUnique' => 'Login-Namen müssen unterschiedlich sein - "%1s" benutzt diesen Login-Name bereits.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Mindestens ein Profil muss diesem Benutzer zugewiesen sein.',
