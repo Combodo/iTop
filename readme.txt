@@ -1,4 +1,4 @@
-﻿iTop - version 2.0.1-beta - 03-April-2012
+iTop - version 2.0.1-beta - 03-April-2012
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -280,3 +280,4 @@ Tested with IE8 and IE9, Firefox 3.6 up to Firefox 16 and Chrome. Be aware that 
 #343 	CKEditor (HTML Editor) not compatible with direct object creation on ExtKeys
 #350 	Object edition form: validation does not tell which field has a problem
 #317 	Edition of a Document - opens the second tab
+#730  Leaving temporary files when performing a backup of the data during installation
