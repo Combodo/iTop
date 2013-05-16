@@ -150,11 +150,21 @@ EOF
 			$this->add("<input type=\"hidden\" name=\"loginop\" value=\"login\" />\n");
 						
 			// Keep the OTHER parameters posted
-			foreach($_POST as $sPostedKey => $sPostedValue)
+			foreach($_POST as $sPostedKey => $postedValue)
 			{
 				if (!in_array($sPostedKey, array('auth_user', 'auth_pwd')))
 				{
-					$this->add("<input type=\"hidden\" name=\"".htmlentities($sPostedKey, ENT_QUOTES, 'UTF-8')."\" value=\"".htmlentities($sPostedValue, ENT_QUOTES, 'UTF-8')."\" />\n");
+					if (is_array($postedValue))
+					{
+						foreach($postedValue as $sKey => $sValue)
+						{
+							$this->add("<input type=\"hidden\" name=\"".htmlentities($sPostedKey, ENT_QUOTES, 'UTF-8')."[".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."]\" value=\"".htmlentities($sValue, ENT_QUOTES, 'UTF-8')."\" />\n");
+						}
+					}
+					else
+					{
+						$this->add("<input type=\"hidden\" name=\"".htmlentities($sPostedKey, ENT_QUOTES, 'UTF-8')."\" value=\"".htmlentities($postedValue, ENT_QUOTES, 'UTF-8')."\" />\n");
+					}
 				}	
 			}
 			
