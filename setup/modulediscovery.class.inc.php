@@ -23,6 +23,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+class MissingDependencyException extends Exception
+{
+}
+
 class ModuleDiscovery
 {
 	static $m_aModuleArgs = array(
@@ -106,13 +110,22 @@ class ModuleDiscovery
 		}
 	}
 
-	protected static function GetModules($oP = null)
+	/**
+	 *	
+	 * @param bool  $bAbortOnMissingDependency ...
+	 * @param hash $aModulesToLoad List of modules to search for, defaults to all if ommitted
+	 */	 
+	protected static function GetModules($bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
 		// Order the modules to take into account their inter-dependencies
 		$aDependencies = array();
 		foreach(self::$m_aModules as $sId => $aModule)
 		{
-			$aDependencies[$sId] = $aModule['dependencies'];
+			list($sModuleName, $sModuleVersion) = self::GetModuleName($sId);
+			if (is_null($aModulesToLoad) || in_array($sModuleName, $aModulesToLoad))
+			{
+				$aDependencies[$sId] = $aModule['dependencies'];
+			}
 		}
 		ksort($aDependencies);
 		$aOrderedModules = array();
@@ -137,27 +150,16 @@ class ModuleDiscovery
 			}
 			$iLoopCount++;
 		}
-		if (count($aDependencies) >0)
+		if ($bAbortOnMissingDependency && count($aDependencies) > 0)
 		{
-			$sHtml = "<ul><b>Warning: the following modules have unmet dependencies, and have been ignored:</b>\n";			
+			$aModuleDeps = array();			
 			foreach($aDependencies as $sId => $aDeps)
 			{
 				$aModule = self::$m_aModules[$sId];
-				$sHtml.= "<li>{$aModule['label']} (id: $sId), depends on: ".implode(', ', $aDeps)."</li>";
+				$aModuleDeps[] = "{$aModule['label']} (id: $sId) depends on ".implode(' + ', $aDeps);
 			}
-			$sHtml .= "</ul>\n";
-			if ($oP instanceof SetupPage)
-			{
-				$oP->warning($sHtml); // used in the context of the installation
-			}
-			elseif (class_exists('SetupPage'))
-			{
-				SetupPage::log_warning($sHtml); // used in the context of ?
-			}
-			else
-			{
-				echo $sHtml; // used in the context of the compiler
-			}
+			$sMessage = "The following modules have unmet dependencies: ".implode(', ', $aModuleDeps);
+			throw new MissingDependencyException($sMessage);
 		}
 		// Return the ordered list, so that the dependencies are met...
 		$aResult = array();
@@ -207,9 +209,11 @@ class ModuleDiscovery
 	 * Search (on the disk) for all defined iTop modules, load them and returns the list (as an array)
 	 * of the possible iTop modules to install
 	 * @param aSearchDirs Array of directories to search (absolute paths)
+	 * @param bool  $bAbortOnMissingDependency ...
+	 * @param hash $aModulesToLoad List of modules to search for, defaults to all if ommitted
 	 * @return Hash A big array moduleID => ModuleData
 	 */
-	public static function GetAvailableModules($aSearchDirs, $oP = null)
+	public static function GetAvailableModules($aSearchDirs, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
 		if (self::$m_aSearchDirs != $aSearchDirs)
 		{
@@ -232,12 +236,12 @@ class ModuleDiscovery
 				clearstatcache();
 				self::ListModuleFiles(basename($sSearchDir), dirname($sSearchDir));
 			}
-			return self::GetModules($oP);
+			return self::GetModules($bAbortOnMissingDependency, $aModulesToLoad);
 		}
 		else
 		{
 			// Reuse the previous results
-			return self::GetModules($oP);
+			return self::GetModules($bAbortOnMissingDependency, $aModulesToLoad);
 		}
 	}
 	

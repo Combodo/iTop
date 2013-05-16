@@ -1095,6 +1095,16 @@ class WizStepModulesChoice extends WizardStep
 	
 	protected function DisplayStep($oPage)
 	{
+		// Sanity check (not stopper, to let developpers go further...)
+		try
+		{
+			SetupUtils::AnalyzeInstallation($this->oWizard, true);
+		}
+		catch(MissingDependencyException $e)
+		{
+			$oPage->warning($e->getMessage());
+		}
+
 		$this->bUpgrade = ($this->oWizard->GetParameter('install_mode') != 'install');
 		$aStepInfo = $this->GetStepInfo();
 		$oPage->add_style("div.choice { margin: 0.5em;}");
@@ -1657,6 +1667,28 @@ EOF
  */
 class WizStepSummary extends WizardStep
 {
+	protected $bDependencyCheck = null;
+	protected $sDependencyIssue = null;
+
+	protected function CheckDependencies()
+	{
+		if (is_null($this->bDependencyCheck))
+		{
+			$aSelectedModules = json_decode($this->oWizard->GetParameter('selected_modules'), true);
+			$this->bDependencyCheck = true;
+			try
+			{
+				SetupUtils::AnalyzeInstallation($this->oWizard, true, $aSelectedModules);
+			}
+			catch(MissingDependencyException $e)
+			{
+				$this->bDependencyCheck = false;
+				$this->sDependencyIssue = $e->getMessage();
+			}
+		}
+		return $this->bDependencyCheck; 
+	}
+
 	public function GetTitle()
 	{
 		$sMode = $this->oWizard->GetParameter('mode', 'install');
@@ -1684,7 +1716,19 @@ class WizStepSummary extends WizardStep
 	{
 		return ' Install ! ';
 	}
-		
+
+	public function CanMoveForward()
+	{
+		if ($this->CheckDependencies())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 	public function ProcessParams($bMoveForward = true)
 	{
 		return array('class' => 'WizStepDone', 'state' => '');
@@ -1736,7 +1780,7 @@ class WizStepSummary extends WizardStep
 }
 EOF
 		);
-		
+
 		$aInstallParams = $this->BuildConfig();
 		
 		$sMode = $aInstallParams['mode'];
@@ -1846,6 +1890,11 @@ EOF
 		
 		$sJSONData = json_encode($aInstallParams);
 		$oPage->add('<input type="hidden" id="installer_parameters" value="'.htmlentities($sJSONData, ENT_QUOTES, 'UTF-8').'"/>');
+
+		if (!$this->CheckDependencies())
+		{
+			$oPage->error($this->sDependencyIssue);
+		}
 
 		$oPage->add_ready_script(
 <<<EOF

@@ -95,6 +95,8 @@ class RunTimeEnvironment
 	 * 
 	 * @param Config $oConfig Defines the target environment (DB)
 	 * @param mixed $modulesPath Either a single string or an array of absolute paths
+	 * @param bool  $bAbortOnMissingDependency ...
+	 * @param hash $aModulesToLoad List of modules to search for, defaults to all if ommitted
 	 * @return hash Array with the following format:
 	 * array =>
 	 *     'iTop' => array(
@@ -118,7 +120,7 @@ class RunTimeEnvironment
 	 *     )
 	 * )
 	 */     
-	public function AnalyzeInstallation($oConfig, $modulesPath)
+	public function AnalyzeInstallation($oConfig, $modulesPath, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
 		$aRes = array(
 			ROOT_MODULE => array(
@@ -130,7 +132,7 @@ class RunTimeEnvironment
 		);
 	
 		$aDirs = is_array($modulesPath) ? $modulesPath : array($modulesPath);
-		$aModules = ModuleDiscovery::GetAvailableModules($aDirs);
+		$aModules = ModuleDiscovery::GetAvailableModules($aDirs, $bAbortOnMissingDependency, $aModulesToLoad);
 		foreach($aModules as $sModuleId => $aModuleInfo)
 		{
 			list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);

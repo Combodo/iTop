@@ -337,6 +337,33 @@ class SetupUtils
 	}
 
 	/**
+	 * Check that the selected modules meet their dependencies
+	 */	 	
+	static function CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules)
+	{
+		$aResult = array();
+		SetupPage::log('Info - CheckSelectedModules');
+
+		$aDirsToScan = array(APPROOT.$sSourceDir);
+		$sExtensionsPath = APPROOT.$sExtensionDir;
+		if (is_dir($sExtensionsPath))
+		{
+			// if the extensions dir exists, scan it for additional modules as well
+			$aDirsToScan[] = $sExtensionsPath;
+		}
+		require_once(APPROOT.'setup/modulediscovery.class.inc.php');
+		try
+		{
+			ModuleDiscovery::GetAvailableModules($aDirsToScan, true, $aSelectedModules);
+		}
+		catch(MissingDependencyException $e)
+		{
+			$aResult[] = new CheckResult(CheckResult::ERROR, $e->getMessage());
+		}
+		return $aResult;
+	}
+
+	/**
 	 * Check that the backup could be executed
 	 * @param Page $oP The page used only for its 'log' method
 	 * @return array An array of CheckResults objects
@@ -1008,7 +1035,12 @@ EOF
 		return $sHtml;
 	}
 	
-	public static function AnalyzeInstallation($oWizard)
+	/**
+	 *	
+	 * @param bool  $bAbortOnMissingDependency ...
+	 * @param array $aModulesToLoad List of modules to search for, defaults to all if ommitted
+	 */	 
+	public static function AnalyzeInstallation($oWizard, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
 		require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
 		$oConfig = new Config();
@@ -1048,7 +1080,7 @@ EOF
 			$aDirsToScan[] = $oWizard->GetParameter('copy_extensions_from');
 		}
 		$oProductionEnv = new RunTimeEnvironment();
-		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $aDirsToScan);
+		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $aDirsToScan, $bAbortOnMissingDependency, $aModulesToLoad);
 
 		return $aAvailableModules;
 	}
