@@ -503,7 +503,6 @@ class RunTimeEnvironment
 			require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 			CMDBSource::Init($oConfig->GetDBHost(), $oConfig->GetDBUser(), $oConfig->GetDBPwd(), $oConfig->GetDBName());
 			$sSQLQuery = "SELECT * FROM ".$oConfig->GetDBSubname()."priv_module_install";
-			$this->log_info('Query:'.$sSQLQuery);
 			$aSelectInstall = CMDBSource::QueryToArray($sSQLQuery);
 		}
 		catch (MySQLException $e)
@@ -525,11 +524,9 @@ class RunTimeEnvironment
 				// as being installed
 				$sModuleVersion = '0.0.0';
 			}
-			$this->log_info('Found module: '.print_r($aInstall, true));
 			
 			if ($aInstall['parent_id'] == 0)
 			{
-				$this->log_info($aInstall['name'].' is a root module');
 				if ($aInstall['name'] == DATAMODEL_MODULE)
 				{
 					$aResult['datamodel_version'] = $sModuleVersion;
@@ -552,7 +549,7 @@ class RunTimeEnvironment
 			// so assume that the datamodel version is equal to the application version
 			$aResult['datamodel_version'] = $aResult['product_version'];
 		}
-		$this->log_info(">>> GetApplicationVersion returns: product_name: ".$aResult['product_name'].', product_version: '.$aResult['product_version']);
+		$this->log_info("GetApplicationVersion returns: product_name: ".$aResult['product_name'].', product_version: '.$aResult['product_version']);
 		return $aResult;	
 	}
 

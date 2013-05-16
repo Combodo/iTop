@@ -184,7 +184,7 @@ class DBBackup
 		if ($iRetCode != 0)
 		{
 			SetupPage::log("Error - retcode=".$iRetCode."\n");
-			throw new BackupException("Failed to execute mysqldump. Return code: $iRetCode");
+			throw new BackupException("Failed to execute mysqldump. Return code: $iRetCode. Check the log file '".realpath(APPROOT.'/log/setup.log')."' for more information.");
 		}
 	}
 
