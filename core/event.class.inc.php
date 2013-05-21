@@ -107,7 +107,7 @@ class Event extends DBObject implements iDisplay
 	
 	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
-		if ($bEditMode) return; // Not editable
+		if ($bEditMode) return array(); // Not editable
 		
 		$aDetails = array();
 		$sClass = get_class($this);
@@ -118,6 +118,7 @@ class Event extends DBObject implements iDisplay
 			$aDetails[] = array('label' => '<span title="'.MetaModel::GetDescription($sClass, $sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>', 'value' => $sDisplayValue);
 		}
 		$oPage->Details($aDetails);
+		return array();
 	}
 }
 

@@ -88,7 +88,7 @@ class QueryOQL extends Query
 
 	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
-		parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
+		$aFieldsMap = parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
 		
 		if (!$bEditMode)
 		{
@@ -102,6 +102,7 @@ class QueryOQL extends Query
 			}
 			$oPage->p(Dict::S('UI:Query:UrlForExcel').':<br/><textarea cols="80" rows="3" READONLY>'.$sUrl.'</textarea>');		
 		}
+		return $aFieldsMap;
 	}
 }
 

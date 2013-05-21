@@ -142,6 +142,7 @@ EOF
 
 	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
+		return array();
 	}
 	// End of the minimal implementation of iDisplay
 }

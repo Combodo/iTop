@@ -105,7 +105,7 @@ class SynchroDataSource extends cmdbAbstractObject
 		{
 			$this->Set('database_table_name', $this->GetDataTable());
 		}
-		parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
+		return parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
 	}
 		
 	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)

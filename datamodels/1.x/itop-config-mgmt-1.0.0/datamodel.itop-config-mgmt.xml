@@ -1277,7 +1277,7 @@
           <type>Overload-cmdbAbstractObject</type>
           <code><![CDATA[	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
-		parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
+		$aFieldsMap = parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
 		if (!$bEditMode)
 		{
 			$oPage->add('<fieldset>');
@@ -1285,6 +1285,7 @@
 			$oPage->add($this->DisplayDocumentInline($oPage, 'contents'));
 			$oPage->add('</fieldset>');
 		}
+		return $aFieldsMap;
 	}]]></code>
         </method>
       </methods>
