@@ -470,6 +470,7 @@
             <attribute id="org_id"/>
             <attribute id="org_name"/>
             <attribute id="email"/>
+            <attribute id="employee_number"/>
           </attributes>
         </reconciliation>
       </properties>
