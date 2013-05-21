@@ -140,6 +140,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 ));
 
 Dict::Add('IT IT', 'Italian', 'Italian', array(
+	'Menu:ProblemManagement' => 'Gestione dei Problemi',
+	'Menu:ProblemManagement+' => 'Gestione dei Problemi',
+	'Menu:Problem:Shortcuts' => 'Scorciatoia',
 	'Menu:NewError' => 'Nuovo errore conosciuto',
 	'Menu:NewError+' => 'Creazione di un Nuovo Errore Conosciuto',
 	'Menu:SearchError' => 'Ricerca per Errori Conosciuti',

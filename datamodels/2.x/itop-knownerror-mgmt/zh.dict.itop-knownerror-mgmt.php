@@ -141,6 +141,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 ));
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Menu:ProblemManagement' => '问题管理',
+	'Menu:ProblemManagement+' => '问题管理',
+	'Menu:Problem:Shortcuts' => '快捷方式',
 	'Menu:NewError' => '新的已知错误',
 	'Menu:NewError+' => '新已知错误的创建',
 	'Menu:SearchError' => '搜索已知错误',

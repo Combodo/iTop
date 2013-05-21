@@ -172,6 +172,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:FAQCategory/Attribute:faq_list+' => 'FAQs',
 ));
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Menu:ProblemManagement' => 'Gestión de problemas',
+	'Menu:ProblemManagement+' => 'Gestión de problemas',
+	'Menu:Problem:Shortcuts' => 'Acceso Rápido',
 	'Menu:NewError' => 'Nuevo Error Conocido',
 	'Menu:NewError+' => 'Nuevo Error Conocido',
 	'Menu:SearchError' => 'Búsqueda de Errores Conocidos',

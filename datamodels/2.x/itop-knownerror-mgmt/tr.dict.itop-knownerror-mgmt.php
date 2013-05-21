@@ -141,6 +141,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 ));
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Menu:ProblemManagement' => 'Problem Yönetimi',
+	'Menu:ProblemManagement+' => 'Problem Yönetimi',
+	'Menu:Problem:Shortcuts' => 'Kısayollar',
 	'Menu:NewError' => 'Yeni bilinen hata',
 	'Menu:NewError+' => 'Yeni bilinen hata yatarımı',
 	'Menu:SearchError' => 'Bilinen hataları ara',

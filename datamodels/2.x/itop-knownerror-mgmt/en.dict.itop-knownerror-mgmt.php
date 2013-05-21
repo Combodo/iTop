@@ -172,6 +172,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category',
 ));
 Dict::Add('EN US', 'English', 'English', array(
+	'Menu:ProblemManagement' => 'Problem Management',
+	'Menu:ProblemManagement+' => 'Problem Management',
+	'Menu:Problem:Shortcuts' => 'Shortcuts',
 	'Menu:NewError' => 'New known error',
 	'Menu:NewError+' => 'Creation of a new known error',
 	'Menu:SearchError' => 'Search for known errors',
