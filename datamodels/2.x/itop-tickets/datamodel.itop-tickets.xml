@@ -11,7 +11,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
         <category>bizmodel,searchable,structure</category>
-        <abstract>false</abstract>
+        <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>ticket</db_table>
         <db_key_field>id</db_key_field>
