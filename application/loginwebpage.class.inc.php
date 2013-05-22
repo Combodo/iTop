@@ -436,6 +436,7 @@ EOF
 				$oPage = new LoginWebPage();
 				$oPage->DisplayChangePwdForm(true); // old pwd was wrong
 				$oPage->output();
+				exit;
 			}
 			$sMessage = Dict::S('UI:Login:PasswordChanged');
 		}
