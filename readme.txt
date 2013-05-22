@@ -200,6 +200,7 @@ This maintenance version consists mostly in bug fixes. There are only two enhanc
 
 Bug fixes from Trac:
 --------------------
+#732 Change password: exit after building the page in case of wrong "old" password
 #729 Backup fails on Windows IIS
 #728 The ticket's title is now an (external) attribute of the link between a ticket and a CI.
 #727 Prevent a crash in cron.php
@@ -233,6 +234,7 @@ Bug fixes from Trac:
 #692 Allow to set a default value for AttributeDuration (was forced to 0 anytime)
 #691 Notifications were not sent at all if some recicipients had an empty address
 #690 XML export broken
+#689 Logoff / Change Pwd buttons not visible in the portal if the window is too small: now allow line wrapping...
 #688 When the autocomplete is activated, and the allowed values depend on another value, then it is possible to set a wrong value
 #687 Label for attribute Person: "name" was always shown in English (Last Name)
 #684 CSV import / reconciliation using an enum does not take the translation into account
@@ -258,6 +260,7 @@ Bug fixes from Trac:
 #626 Fixed missing translation in dictionaries (Tickets: "relations", and Contacts overview / count)
 #383 support negative numbers in OQL
      also added support for MySQL bitwise operators (&, |, ^, <<, >>) and hexadecimal numbers (up to 64-bit).
+
 
 Setup/installation fixes
 ------------------------
@@ -289,6 +292,12 @@ Fix an issue that prevented the creation of Logical Interfaces
 Add reconciliation keys for SLT in order to allow import for SLT having the same name
 Remove wrong dependency to service_id on parent_request_id (for ITIL tickets)
 Fixed typos in the sample data for the service subcategories
+Make icons transparent...
+All the overloads of DisplayBareProperties must return an array (otherwise a warning is issued and field validation will not work as expected)
+The ticket class must be abstract!
+Add "Employee number" to the list of possible reconciliation keys for the class Person.
+Missing localized label for some problem management menus, when the Known Error Management module is installed without the Problem Management module
+
 
 Miscellaneous fixes
 -------------------
