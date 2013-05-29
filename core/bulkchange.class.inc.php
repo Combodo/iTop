@@ -299,7 +299,7 @@ class BulkChange
 			// The foreign attribute is one of our reconciliation key
 			$oForeignAtt = MetaModel::GetAttributeDef($oExtKey->GetTargetClass(), $sForeignAttCode);
 			$value = $oForeignAtt->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
-			$oReconFilter->AddCondition($sForeignAttCode, $value);
+			$oReconFilter->AddCondition($sForeignAttCode, $value, '=');
 			$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
 		}
 
