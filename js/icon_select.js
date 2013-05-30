@@ -78,7 +78,7 @@ $(function()
 		_destroy: function()
 		{
 			this.element.removeClass( "itop-icon-select" );
-			this.oButton.destroy();
+			this.oButton._destroy();
 		},
 		
 		// _setOptions is called with a hash of all options that are changing
@@ -86,7 +86,7 @@ $(function()
 		_setOptions: function()
 		{
 			// in 1.9 would use _superApply
-			$.Widget.prototype._setOptions.apply( this, arguments );
+			this._superApply(arguments);
 			this._refresh();
 		},
 	
@@ -99,7 +99,7 @@ $(function()
 			}
 
 			// in 1.9 would use _super
-			$.Widget.prototype._setOption.call( this, key, value );
+			this._superApply(arguments);
 		},
 		_on_icon_selection: function(data)
 		{

@@ -520,7 +520,7 @@ $('#dashboard_editor').dialog({
 	title: '$sDialogTitle',
 	buttons: [
 	{ text: "$sOkButtonLabel", click: function() {
-		var oDashboard = $(':itop-dashboard').data('dashboard');
+		var oDashboard = $(':itop-dashboard').data('itopDashboard');
 		if (oDashboard.is_dirty())
 		{
 			if (!confirm('$sAutoApplyConfirmationMessage'))
@@ -536,7 +536,7 @@ $('#dashboard_editor').dialog({
 		oDashboard.save();
 	} },
 	{ text: "$sCancelButtonLabel", click: function() {
-		var oDashboard = $(':itop-dashboard').data('dashboard');
+		var oDashboard = $(':itop-dashboard').data('itopDashboard');
 		if (oDashboard.is_modified())
 		{
 			if (!confirm('$sCancelConfirmationMessage'))
@@ -606,7 +606,7 @@ $('#dashboard_editor').layout({
 window.onbeforeunload = function() {
 	if (!window.bLeavingOnUserAction)
 	{
-		var oDashboard = $(':itop-dashboard').data('dashboard');
+		var oDashboard = $(':itop-dashboard').data('itopDashboard');
 		if (oDashboard)
 		{
 			if (oDashboard.is_dirty())

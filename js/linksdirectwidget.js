@@ -69,25 +69,22 @@ $(function()
 		},
 		// events bound via _bind are removed automatically
 		// revert other modifications here
-		destroy: function()
+		_destroy: function()
 		{
 			this.element
-			.removeClass('itop-directlinks');
-			
-			// call the original destroy method since we overwrote it
-			$.Widget.prototype.destroy.call( this );			
+			.removeClass('itop-directlinks');			
 		},
 		// _setOptions is called with a hash of all options that are changing
 		_setOptions: function()
 		{
 			// in 1.9 would use _superApply
-			$.Widget.prototype._setOptions.apply( this, arguments );
+			this._superApply(arguments);
 		},
 		// _setOption is called for each individual option that is changing
 		_setOption: function( key, value )
 		{
 			// in 1.9 would use _super
-			$.Widget.prototype._setOption.call( this, key, value );
+			this._superApply(arguments);
 			
 			if (key == 'fields') this._refresh();
 		},

@@ -217,7 +217,7 @@ $(function()
 		},
 		// events bound via _bind are removed automatically
 		// revert other modifications here
-		destroy: function()
+		_destroy: function()
 		{
 			this.element
 			.removeClass('itop-datatable');
@@ -225,23 +225,20 @@ $(function()
 			var sId = new String(this.element.attr('id'));
 			var sListId = sId.replace('datatable_', '');
 			$('#sfl_'+sListId).remove();
-			$('#datatable_dlg_'+sListId).remove();
-			
-			// call the original destroy method since we overwrote it
-			$.Widget.prototype.destroy.call( this );			
+			$('#datatable_dlg_'+sListId).remove();			
 		},
 		// _setOptions is called with a hash of all options that are changing
 		_setOptions: function()
 		{
 			// in 1.9 would use _superApply
-			$.Widget.prototype._setOptions.apply( this, arguments );
+			this._superApply(arguments);
 			this._refresh();
 		},
 		// _setOption is called for each individual option that is changing
 		_setOption: function( key, value )
 		{
 			// in 1.9 would use _super
-			$.Widget.prototype._setOption.call( this, key, value );
+			this._superApply(arguments);
 		},
 		_saveDlgState: function()
 		{

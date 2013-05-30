@@ -70,7 +70,7 @@ $(function()
 		_setOptions: function()
 		{
 			// in 1.9 would use _superApply
-			$.Widget.prototype._setOptions.apply( this, arguments );
+			this._superApply(arguments);
 			this._refresh();
 		},
 	
@@ -78,7 +78,7 @@ $(function()
 		_setOption: function( key, value )
 		{
 			// in 1.9 would use _super
-			$.Widget.prototype._setOption.call( this, key, value );
+			this._superApply(arguments);
 		},
 		_on_change: function()
 		{

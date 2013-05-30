@@ -45,29 +45,26 @@ $(function()
 		},
 		// events bound via _bind are removed automatically
 		// revert other modifications here
-		destroy: function()
+		_destroy: function()
 		{
 			this.element
 			.removeClass('itop-dashboard');
 
 			this.ajax_div.remove();
-			$(document).unbind('keyup.dashboard_editor');
-			
-			// call the original destroy method since we overwrote it
-			$.Widget.prototype.destroy.call( this );			
+			$(document).unbind('keyup.dashboard_editor');			
 		},
 		// _setOptions is called with a hash of all options that are changing
 		_setOptions: function()
 		{
 			// in 1.9 would use _superApply
-			$.Widget.prototype._setOptions.apply( this, arguments );
+			this._superApply(arguments);
 			this._refresh();
 		},
 		// _setOption is called for each individual option that is changing
 		_setOption: function( key, value )
 		{
 			// in 1.9 would use _super
-			$.Widget.prototype._setOption.call( this, key, value );
+			this._superApply(arguments);
 		},
 		_get_state: function(oMergeInto)
 		{
@@ -76,7 +73,7 @@ $(function()
 			this.element.find('.layout_cell').each(function() {
 				var aList = [];
 				$(this).find(':itop-dashlet').each(function() {
-					var oDashlet = $(this).data('dashlet');
+					var oDashlet = $(this).data('itopDashlet');
 					if(oDashlet)
 					{
 						var oDashletParams = oDashlet.get_params();
@@ -170,7 +167,7 @@ $(function()
 		{
 			var iMaxId = 0;
 			this.element.find(':itop-dashlet').each(function() {
-				var oDashlet = $(this).data('dashlet');
+				var oDashlet = $(this).data('itopDashlet');
 				if(oDashlet)
 				{
 					var oDashletParams = oDashlet.get_params();
@@ -279,26 +276,23 @@ $(function()
 		},
 		// events bound via _bind are removed automatically
 		// revert other modifications here
-		destroy: function()
+		_destroy: function()
 		{
 			this.element
-			.removeClass('itop-dashboard_upload_dlg');
-
-			// call the original destroy method since we overwrote it
-			$.Widget.prototype.destroy.call( this );			
+			.removeClass('itop-dashboard_upload_dlg');		
 		},
 		// _setOptions is called with a hash of all options that are changing
 		_setOptions: function()
 		{
 			// in 1.9 would use _superApply
-			$.Widget.prototype._setOptions.apply( this, arguments );
+			this._superApply(arguments);
 			this._refresh();
 		},
 		// _setOption is called for each individual option that is changing
 		_setOption: function( key, value )
 		{
 			// in 1.9 would use _super
-			$.Widget.prototype._setOption.call( this, key, value );
+			this._superApply(arguments);
 		},
 		_onClose: function()
 		{

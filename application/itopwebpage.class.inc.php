@@ -153,7 +153,7 @@ class iTopWebPage extends NiceWebPage
 		$('#left-pane').layout({ resizable: false, spacing_open: 0, south: { size: 94 }, enableCursorHotkey: false });
 	
 		// Accordion Menu
-		$("#accordion").accordion({ header: "h3", navigation: true, autoHeight: false, collapsible: false, icons: false }); // collapsible will be enabled once the item will be selected
+		$("#accordion").accordion({ header: "h3", navigation: true, heightStyle: "content", collapsible: false, icons: false }); // collapsible will be enabled once the item will be selected
 	
 		// Tabs, using JQuery BBQ to store the history
 		// The "tab widgets" to handle.
@@ -787,7 +787,7 @@ EOF
 			$sHtml .= '<td style="padding-right:20px;padding-left:10px;">'.self::FilterXSS($sLogOffMenu).'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
 			//echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
 			$sHtml .= ' </div>';
-			$sHtml .= ' <div class="ui-layout-content">';
+			$sHtml .= ' <div class="ui-layout-content" style="overflow:auto;">';
 			$sHtml .= ' <!-- Beginning of page content -->';
 			$sHtml .= self::FilterXSS($this->s_content);
 			$sHtml .= ' <!-- End of page content -->';

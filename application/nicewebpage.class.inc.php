@@ -37,9 +37,12 @@ class NiceWebPage extends WebPage
     {
         parent::__construct($s_title);
 		$this->m_aReadyScripts = array();
-		$this->add_linked_script("../js/jquery-1.7.1.min.js");
-		$this->add_linked_stylesheet('../css/ui-lightness/jquery-ui-1.8.17.custom.css');
-		$this->add_linked_script('../js/jquery-ui-1.8.17.custom.min.js');
+		$this->add_linked_script("../js/jquery-1.10.0.min.js");
+		// TODO: use the minified version once debugging is complete and the compatibility is fully tested
+		$this->add_linked_script("../js/jquery-migrate-1.2.1.js"); // Provides backward compatibility and warns about the use of obsolete features...
+		//$this->add_linked_script("../js/jquery-migrate-1.2.1.min.js"); // Needed since many other plugins still rely on oldies like $.browser
+		$this->add_linked_stylesheet('../css/ui-lightness/jquery-ui-1.10.3.custom.min.css');
+		$this->add_linked_script('../js/jquery-ui-1.10.3.custom.min.js');
 		$this->add_linked_script("../js/hovertip.js");
 		// table sorting
 		$this->add_linked_script("../js/jquery.tablesorter.js");

@@ -50,35 +50,32 @@ $(function()
 		},
 		// events bound via _bind are removed automatically
 		// revert other modifications here
-		destroy: function()
+		_destroy: function()
 		{
 			this.element
 			.removeClass('itop-dashlet')
 			.unbind('click.itop-dashlet');
 			
-			this.closeBox.remove();
-
-			// call the original destroy method since we overwrote it
-			$.Widget.prototype.destroy.call( this );			
+			this.closeBox.remove();			
 		},
 		// _setOptions is called with a hash of all options that are changing
 		_setOptions: function()
 		{
 			// in 1.9 would use _superApply
-			$.Widget.prototype._setOptions.apply( this, arguments );
+			this._superApply(arguments);
 			this._update();
 		},
 		// _setOption is called for each individual option that is changing
 		_setOption: function( key, value )
 		{
 			// in 1.9 would use _super
-			$.Widget.prototype._setOption.call( this, key, value );
+			this._superApply(arguments);
 		},
 		select: function()
 		{
 			this.element.addClass('dashlet-selected');
 			this.closeBox.fadeIn(500);
-			$('#event_bus').trigger('dashlet-selected', {'dashlet_id': this.options.dashlet_id, 'dashlet_class': this.options.dashlet_class})
+			$('#event_bus').trigger('dashlet-selected', {'dashlet_id': this.options.dashlet_id, 'dashlet_class': this.options.dashlet_class});
 		},
 		deselect: function()
 		{
@@ -89,7 +86,7 @@ $(function()
 		{
 			$(':itop-dashlet').each(function(){
 				var sId = $(this).attr('id');
-				var oWidget = $(this).data('dashlet');
+				var oWidget = $(this).data('itopDashlet');
 				if (oWidget)
 				{
 					oWidget.deselect();
@@ -106,7 +103,7 @@ $(function()
 			var oParams = {};
 			var oProperties = $('#dashlet_properties_'+this.options.dashlet_id);
 			oProperties.find(':itop-property_field').each(function(){
-				var oWidget = $(this).data('property_field');
+				var oWidget = $(this).data('itopProperty_field');
 				if (oWidget)
 				{
 					var oVal = oWidget._get_committed_value();

@@ -150,7 +150,10 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext)
 {
     var oDiv = $('#ds_'+divId);
 	oDiv.block();
-	var oFormEvents = $('#ds_'+divId+' form').data('events');
+	// deprecated in jQuery 1.8 
+	//var oFormEvents = $('#ds_'+divId+' form').data('events');
+	var oForm = $('#ds_'+divId+' form');
+	var oFormEvents = $._data(oForm[0], "events");
 
 	// Save the submit handlers
     aSubmit = new Array();
