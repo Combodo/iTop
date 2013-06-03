@@ -62,6 +62,12 @@ function IsAValidTestClass($sClassName)
 	return true;
 }
 
+function GetTestClassLine($sClassName)
+{
+	$oReflectionClass = new ReflectionClass($sClassName);
+	return $oReflectionClass->getStartLine();
+}
+
 function DisplayEvents($aEvents, $sTitle)
 {
 	echo "<h4>$sTitle</h4>\n";
@@ -122,7 +128,9 @@ else if ($sTodo == 'exec')
 	else
 	{
 		$oTest  = new $sTestClass();
+		$iStartLine = GetTestClassLine($sTestClass);
 		echo "<h3>Testing: ".$oTest->GetName()."</h3>\n";
+		echo "<h6>testlist.inc.php: $iStartLine</h6>\n";
 		$bRes = $oTest->Execute();
 	}
 

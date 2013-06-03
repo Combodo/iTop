@@ -18,6 +18,7 @@
 
 require_once(APPROOT.'application/dashboardlayout.class.inc.php');
 require_once(APPROOT.'application/dashlet.class.inc.php');
+require_once(APPROOT.'core/modelreflection.class.inc.php');
 
 /**
  * A user editable dashboard page
@@ -82,7 +83,7 @@ abstract class Dashboard
 					$iRank = (float)$oRank->textContent;
 				}
 				$sId = $oDomNode->getAttribute('id');
-				$oNewDashlet = new $sDashletClass($sId);
+				$oNewDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sId);
 				$oNewDashlet->FromDOMNode($oDomNode);
 				$aDashletOrder[] = array('rank' => $iRank, 'dashlet' => $oNewDashlet);
 			}
@@ -183,7 +184,7 @@ abstract class Dashboard
 			{
 				$sDashletClass = $aDashletParams['dashlet_class'];
 				$sId = $aDashletParams['dashlet_id'];
-				$oNewDashlet = new $sDashletClass($sId);
+				$oNewDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sId);
 				
 				$oForm = $oNewDashlet->GetForm();
 				$oForm->SetParamsContainer($sId);
@@ -687,7 +688,7 @@ EOF
 		foreach($aDashlets as $sDashletClass => $aDashletInfo)
 		{
 			$oSubForm = new DesignerForm();
-			$oDashlet = new $sDashletClass(0);
+			$oDashlet = new $sDashletClass(new ModelReflectionRuntime(), 0);
 			$oDashlet->GetPropertiesFieldsFromOQL($oSubForm, $sOQL);
 			
 			$oSelectorField->AddSubForm($oSubForm, $aDashletInfo['label'], $aDashletInfo['class']);

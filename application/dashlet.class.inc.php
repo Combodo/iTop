@@ -26,14 +26,16 @@ require_once(APPROOT.'application/forms.class.inc.php');
  */
 abstract class Dashlet
 {
+	protected $oModelReflection;
 	protected $sId;
 	protected $bRedrawNeeded;
 	protected $bFormRedrawNeeded;
 	protected $aProperties; // array of {property => value}
 	protected $aCSSClasses;
 	
-	public function __construct($sId)
+	public function __construct(ModelReflection $oModelReflection, $sId)
 	{
+		$this->oModelReflection = $oModelReflection;
 		$this->sId = $sId;
 		$this->bRedrawNeeded = true; // By default: redraw each time a property changes
 		$this->bFormRedrawNeeded = false; // By default: no need to redraw the form (independent fields)
@@ -268,9 +270,9 @@ EOF
 
 class DashletEmptyCell extends Dashlet
 {
-	public function __construct($sId)
+	public function __construct($oModelReflection, $sId)
 	{
-		parent::__construct($sId);
+		parent::__construct($oModelReflection, $sId);
 	}
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
@@ -299,9 +301,9 @@ class DashletEmptyCell extends Dashlet
 
 class DashletPlainText extends Dashlet
 {
-	public function __construct($sId)
+	public function __construct($oModelReflection, $sId)
 	{
-		parent::__construct($sId);
+		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['text'] = Dict::S('UI:DashletPlainText:Prop-Text:Default');
 	}
 	
@@ -332,9 +334,9 @@ class DashletPlainText extends Dashlet
 
 class DashletObjectList extends Dashlet
 {
-	public function __construct($sId)
+	public function __construct($oModelReflection, $sId)
 	{
-		parent::__construct($sId);
+		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['title'] = '';
 		$this->aProperties['query'] = 'SELECT Contact';
 		$this->aProperties['menu'] = false;
@@ -406,9 +408,9 @@ class DashletObjectList extends Dashlet
 
 abstract class DashletGroupBy extends Dashlet
 {
-	public function __construct($sId)
+	public function __construct($oModelReflection, $sId)
 	{
-		parent::__construct($sId);
+		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['title'] = '';
 		$this->aProperties['query'] = 'SELECT Contact';
 		$this->aProperties['group_by'] = 'status';
@@ -439,13 +441,13 @@ abstract class DashletGroupBy extends Dashlet
 			$sAttCode = $sGroupBy;
 			$sFunction = null;
 		}
-		if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
+		if (!$this->oModelReflection->IsValidAttCode($sClass, $sAttCode))
 		{
 			$oPage->add('<p>'.Dict::S('UI:DashletGroupBy:MissingGroupBy').'</p>');
 		}
 		else
 		{
-			$sAttLabel = MetaModel::GetLabel($sClass, $sAttCode);
+			$sAttLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
 			if (!is_null($sFunction))
 			{
 				$sFunction = $aMatches[2];
@@ -534,7 +536,7 @@ abstract class DashletGroupBy extends Dashlet
 		$oSearch = DBObjectSearch::FromOQL($sOql);
 		$sClass = $oSearch->GetClass();
 		$aGroupBy = array();
-		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+		foreach($this->oModelReflection->ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 		{
 			if (!$oAttDef->IsScalar()) continue; // skip link sets
 			if ($oAttDef instanceof AttributeFriendlyName) continue;
@@ -691,9 +693,9 @@ abstract class DashletGroupBy extends Dashlet
 
 class DashletGroupByPie extends DashletGroupBy
 {
-	public function __construct($sId)
+	public function __construct($oModelReflection, $sId)
 	{
-		parent::__construct($sId);
+		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['style'] = 'pie';
 	}
 	
@@ -710,9 +712,9 @@ class DashletGroupByPie extends DashletGroupBy
 
 class DashletGroupByBars extends DashletGroupBy
 {
-	public function __construct($sId)
+	public function __construct($oModelReflection, $sId)
 	{
-		parent::__construct($sId);
+		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['style'] = 'bars';
 	}
 	
@@ -728,9 +730,9 @@ class DashletGroupByBars extends DashletGroupBy
 
 class DashletGroupByTable extends DashletGroupBy
 {
-	public function __construct($sId)
+	public function __construct($oModelReflection, $sId)
 	{
-		parent::__construct($sId);
+		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['style'] = 'table';
 	}
 	
@@ -747,11 +749,11 @@ class DashletGroupByTable extends DashletGroupBy
 
 class DashletHeaderStatic extends Dashlet
 {
-	public function __construct($sId)
+	public function __construct($oModelReflection, $sId)
 	{
-		parent::__construct($sId);
+		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['title'] = Dict::S('UI:DashletHeaderStatic:Prop-Title:Default');
-		$sIcon = MetaModel::GetClassIcon('Contact', false);
+		$sIcon = $this->oModelReflection->GetClassIcon('Contact', false);
 		$sIcon = str_replace(utils::GetAbsoluteUrlModulesRoot(), '', $sIcon);
 		$this->aProperties['icon'] = $sIcon;
 	}
@@ -827,11 +829,11 @@ class DashletHeaderStatic extends Dashlet
 
 class DashletHeaderDynamic extends Dashlet
 {
-	public function __construct($sId)
+	public function __construct($oModelReflection, $sId)
 	{
-		parent::__construct($sId);
+		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['title'] = Dict::S('UI:DashletHeaderDynamic:Prop-Title:Default');
-		$sIcon = MetaModel::GetClassIcon('Contact', false);
+		$sIcon = $this->oModelReflection->GetClassIcon('Contact', false);
 		$sIcon = str_replace(utils::GetAbsoluteUrlModulesRoot(), '', $sIcon);
 		$this->aProperties['icon'] = $sIcon;
 		$this->aProperties['subtitle'] = Dict::S('UI:DashletHeaderDynamic:Prop-Subtitle:Default');
@@ -854,11 +856,11 @@ class DashletHeaderDynamic extends Dashlet
 
 		$sIconPath = utils::GetAbsoluteUrlModulesRoot().$sIcon;
 
-		if (MetaModel::IsValidAttCode($sClass, $sGroupBy))
+		if ($this->oModelReflection->IsValidAttCode($sClass, $sGroupBy))
 		{
 			if (count($aValues) == 0)
 			{
-				$aAllowed = MetaModel::GetAllowedValues_att($sClass, $sGroupBy);
+				$aAllowed = $this->oModelReflection->GetAllowedValues_att($sClass, $sGroupBy);
 				if (is_array($aAllowed))
 				{
 					$aValues = array_keys($aAllowed);
@@ -929,9 +931,9 @@ class DashletHeaderDynamic extends Dashlet
 			$oSearch = DBObjectSearch::FromOQL($this->aProperties['query']);
 			$sClass = $oSearch->GetClass();
 			$aGroupBy = array();
-			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+			foreach($this->oModelReflection->ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
-				if (!$oAttDef instanceof AttributeEnum && (!$oAttDef instanceof AttributeFinalClass || !MetaModel::HasChildrenClasses($sClass))) continue;
+				if (!$oAttDef instanceof AttributeEnum && (!$oAttDef instanceof AttributeFinalClass || !$this->oModelReflection->HasChildrenClasses($sClass))) continue;
 				$sLabel = $oAttDef->GetLabel();
 				$aGroupBy[$sAttCode] = $sLabel;
 			}
@@ -948,9 +950,9 @@ class DashletHeaderDynamic extends Dashlet
 
 		$oField = new DesignerComboField('values', Dict::S('UI:DashletHeaderDynamic:Prop-Values'), $this->aProperties['values']);
 		$oField->MultipleSelection(true);
-		if (isset($sClass) && MetaModel::IsValidAttCode($sClass, $this->aProperties['group_by']))
+		if (isset($sClass) && $this->oModelReflection->IsValidAttCode($sClass, $this->aProperties['group_by']))
 		{
-			$aValues = MetaModel::GetAllowedValues_att($sClass, $this->aProperties['group_by']);
+			$aValues = $this->oModelReflection->GetAllowedValues_att($sClass, $this->aProperties['group_by']);
 			$oField->SetAllowedValues($aValues);
 		}
 		else
@@ -1008,9 +1010,9 @@ class DashletHeaderDynamic extends Dashlet
 
 class DashletBadge extends Dashlet
 {
-	public function __construct($sId)
+	public function __construct($oModelReflection, $sId)
 	{
-		parent::__construct($sId);
+		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['class'] = 'Contact';
 		$this->aCSSClasses[] = 'dashlet-inline';
 		$this->aCSSClasses[] = 'dashlet-badge';
@@ -1046,9 +1048,9 @@ class DashletBadge extends Dashlet
 		
 		$aLinkClasses = array();
 	
-		foreach(MetaModel::GetClasses('bizmodel') as $sClass)
+		foreach($this->oModelReflection->GetClasses('bizmodel') as $sClass)
 		{	
-			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+			foreach($this->oModelReflection->ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
 				if ($oAttDef instanceof AttributeLinkedSetIndirect)
 				{
@@ -1065,14 +1067,14 @@ class DashletBadge extends Dashlet
 		{
 			if (!array_key_exists($sClass, $aLinkClasses))
 			{
-				$sIconUrl = MetaModel::GetClassIcon($sClass, false);
+				$sIconUrl = $this->oModelReflection->GetClassIcon($sClass, false);
 				$sIconFilePath = str_replace(utils::GetAbsoluteUrlAppRoot(), APPROOT, $sIconUrl);
 				if (($sIconUrl == '') || !file_exists($sIconFilePath))
 				{
 					// The icon does not exist, leet's use a transparent one of the same size.
 					$sIconUrl = utils::GetAbsoluteUrlAppRoot().'images/transparent_32_32.png';
 				}
-				$aValues[] = array('value' => $sClass, 'label' => MetaModel::GetName($sClass), 'icon' => $sIconUrl);
+				$aValues[] = array('value' => $sClass, 'label' => $this->oModelReflection->GetName($sClass), 'icon' => $sIconUrl);
 			}
 		}
 		$oField->SetAllowedValues($aValues);

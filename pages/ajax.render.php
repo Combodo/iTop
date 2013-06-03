@@ -739,7 +739,7 @@ try
 		$sDashletId =  utils::ReadParam('dashlet_id', '', false, 'raw_data');
 		if (is_subclass_of($sDashletClass, 'Dashlet'))
 		{
-			$oDashlet = new $sDashletClass($sDashletId);
+			$oDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sDashletId);
 			$offset = $oPage->start_capture();
 			$oDashlet->DoRender($oPage, true /* bEditMode */, false /* bEnclosingDiv */);
 			$sHtml = addslashes($oPage->end_capture($offset));
@@ -767,7 +767,7 @@ try
 		$aPreviousValues = $aParams['previous_values']; // hash array: 'attr_xxx' => 'old_value'
 		if (is_subclass_of($sDashletClass, 'Dashlet'))
 		{
-			$oDashlet = new $sDashletClass($sDashletId);
+			$oDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sDashletId);
 			$oForm = $oDashlet->GetForm();
 			$aValues = $oForm->ReadParams(); // hash array: 'xxx' => 'new_value'
 			
@@ -867,7 +867,7 @@ EOF
 		
 		if (is_subclass_of($sDashletClass, 'Dashlet'))
 		{
-			$oDashlet = new $sDashletClass(0);
+			$oDashlet = new $sDashletClass(new ModelReflectionRuntime(), 0);
 			$oDashlet->FromParams($aValues);
 
 			ApplicationMenu::LoadAdditionalMenus();

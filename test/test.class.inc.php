@@ -402,6 +402,8 @@ abstract class TestBizModel extends TestHandler
 //	abstract static public function GetBusinessModelFile();
 //	abstract static public function GetConfigFile();
 
+	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
+
 	protected function DoPrepare()
 	{
 		$sConfigFile = APPROOT.$this->GetConfigFile();

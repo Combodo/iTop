@@ -255,6 +255,141 @@ class TestOQLParser extends TestFunction
 	}
 }
 
+class TestOQLNormalization extends TestBizModel
+{
+	static public function GetName() {return 'Check OQL normalization';}
+	static public function GetDescription() {return 'Attempts a series of queries, and in particular those with unknown or inconsistent class/attributes. Assumes a very standard installation!';}
+
+	protected function CheckQuery($sQuery, $bIsCorrectQuery)
+	{
+		try
+		{
+			$oSearch = DBObjectSearch::FromOQL($sQuery);
+			self::DumpVariable($sQuery);
+		}
+		catch (OQLNormalizeException $OqlException)
+		{
+			if ($bIsCorrectQuery)
+			{
+				echo "<p>More info on this unexpected failure:<br/>".$OqlException->getHtmlDesc()."</p>\n";
+				throw $OqlException;
+				return false;
+			}
+			else
+			{
+				// Everything is fine :-)
+				echo "<p>More info on this expected failure:<br/>".$OqlException->getHtmlDesc()."</p>\n";
+				return true;
+			}
+		}
+		catch (Exception $e)
+		{
+			if ($bIsCorrectQuery)
+			{
+				echo "<p>More info on this <b>un</b>expected failure:<br/>".htmlentities($e->getMessage(), ENT_QUOTES, 'UTF-8')."</p>\n";
+				throw $e;
+				return false;
+			}
+			else
+			{
+				// Everything is fine :-)
+				echo "<p>More info on this expected failure:<br/>".htmlentities($e->getMessage(), ENT_QUOTES, 'UTF-8')."</p>\n";
+				return true;
+			}
+		}
+		// The query was correctly parsed, was it expected to be correct ?
+		if ($bIsCorrectQuery)
+		{
+			return true;
+		}
+		else
+		{
+			throw new UnitTestException("The query '$sQuery' was parsed with success, while it shouldn't (?)");
+			return false;
+		}
+	}
+
+	protected function TestQuery($sQuery, $bIsCorrectQuery)
+	{
+		if (!$this->CheckQuery($sQuery, $bIsCorrectQuery))
+		{
+			return false;
+		}
+		return true;
+	}
+
+	public function DoExecute()
+	{
+		$aQueries = array(
+			'SELECT Contact' => true,
+			'SELECT Contact WHERE nom_de_famille = "foo"' => false,
+			'SELECT Contact AS c WHERE name = "foo"' => true,
+			'SELECT Contact AS c WHERE nom_de_famille = "foo"' => false,
+			'SELECT Contact AS c WHERE c.name = "foo"' => true,
+			'SELECT Contact AS c WHERE Contact.name = "foo"' => false,
+			'SELECT Contact AS c WHERE x.name = "foo"' => false,
+
+			'SELECT RelationProfessionnelle' => false,
+			'SELECT RelationProfessionnelle AS c WHERE name = "foo"' => false,
+
+			// The first query is the base query altered only in one place in the subsequent queries
+			'SELECT Person AS p JOIN lnkPersonToTeam AS lnk ON lnk.person_id = p.id WHERE p.name LIKE "foo"' => true,
+			'SELECT Person AS p JOIN lnkXXXXXXXXXXXX AS lnk ON lnk.person_id = p.id WHERE p.name LIKE "foo"' => false,
+			'SELECT Person AS p JOIN lnkPersonToTeam AS lnk ON   p.person_id = p.id WHERE p.name LIKE "foo"' => false,
+			'SELECT Person AS p JOIN lnkPersonToTeam AS lnk ON     person_id = p.id WHERE p.name LIKE "foo"' => false,
+			'SELECT Person AS p JOIN lnkPersonToTeam AS lnk ON lnk.person_id =   id WHERE p.name LIKE "foo"' => false,
+			'SELECT Person AS p JOIN lnkPersonToTeam AS lnk ON lnk.role      = p.id WHERE p.name LIKE "foo"' => false,
+			'SELECT Person AS p JOIN lnkPersonToTeam AS lnk ON lnk.team_id   = p.id WHERE p.name LIKE "foo"' => false,
+			'SELECT Person AS p JOIN lnkPersonToTeam AS lnk ON lnk.person_id BELOW p.id WHERE p.name LIKE "foo"' => false,
+			'SELECT Person AS p JOIN lnkPersonToTeam AS lnk ON lnk.person_id = p.org_id WHERE p.name LIKE "foo"' => false,
+			'SELECT Person AS p JOIN lnkPersonToTeam AS lnk ON p.id = lnk.person_id WHERE p.name LIKE "foo"' => false, // inverted the JOIN spec
+			'SELECT Person AS p JOIN lnkPersonToTeam AS lnk ON lnk.person_id = p.id WHERE   name LIKE "foo"' => true,
+			'SELECT Person AS p JOIN lnkPersonToTeam AS lnk ON lnk.person_id = p.id WHERE x.name LIKE "foo"' => false,
+			'SELECT Person AS p JOIN lnkPersonToTeam AS lnk ON lnk.person_id = p.id WHERE p.eman LIKE "foo"' => false,
+			'SELECT Person AS p JOIN lnkPersonToTeam AS lnk ON lnk.person_id = p.id WHERE   eman LIKE "foo"' => false,
+			'SELECT Person AS p JOIN lnkPersonToTeam AS lnk ON lnk.person_id = p.id WHERE id = 1' => false,
+			'SELECT Person AS p JOIN lnkPersonToTeam AS lnk ON p.id = lnk.person_id WHERE p.name LIKE "foo"' => false,
+
+			'SELECT Person AS p JOIN Organization AS o ON p.org_id = o.id WHERE p.name LIKE "foo" AND o.name LIKE "land"' => true,
+			'SELECT Person AS p JOIN Organization AS o ON p.location_id = o.id WHERE p.name LIKE "foo" AND o.name LIKE "land"' => false,
+			'SELECT Person AS p JOIN Organization AS o ON p.name = o.id WHERE p.name LIKE "foo" AND o.name LIKE "land"' => false,
+
+			'SELECT Person AS p JOIN Organization AS o ON      p.org_id = o.id JOIN Person AS p ON      p.org_id = o.id' => false,
+			'SELECT Person      JOIN Organization AS o ON Person.org_id = o.id JOIN Person      ON Person.org_id = o.id' => false,
+
+			'SELECT Person AS p JOIN Location AS l ON p.location_id = l.id' => true,
+			'SELECT Person AS p JOIN Location AS l ON p.location_id BELOW l.id' => false,
+
+			'SELECT Person FROM Person JOIN Location ON Person.location_id = Location.id' => true,
+			'SELECT p FROM Person AS p JOIN Location AS l ON p.location_id = l.id' => true,
+			'SELECT l FROM Person AS p JOIN Location AS l ON p.location_id = l.id' => true,
+			'SELECT l, p FROM Person AS p JOIN Location AS l ON p.location_id = l.id' => true,
+			'SELECT p, l FROM Person AS p JOIN Location AS l ON p.location_id = l.id' => true,
+			'SELECT foo FROM Person AS p JOIN Location AS l ON p.location_id = l.id' => false,
+			'SELECT p, foo FROM Person AS p JOIN Location AS l ON p.location_id = l.id' => false,
+		);
+
+		$iErrors = 0;
+
+		foreach($aQueries as $sQuery => $bIsCorrectQuery)
+		{
+			$sIsOk = $bIsCorrectQuery ? 'good' : 'bad';
+			echo "<h4>Testing query: $sQuery ($sIsOk)</h4>\n";
+			try
+			{
+				$bRet = $this->TestQuery($sQuery, $bIsCorrectQuery);
+			}
+			catch(Exception $e)
+			{
+				$this->m_aErrors[] = $e->getMessage();
+				$bRet = false;
+			}
+			if (!$bRet) $iErrors++;
+		}
+		
+		return ($iErrors == 0);
+	}
+}
 
 class TestCSVParser extends TestFunction
 {
@@ -1127,8 +1262,6 @@ class TestItopEfficiency extends TestBizModel
 		return 'Measure time to perform the queries';
 	}
 
-	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
-
 	protected function DoBenchmark($sOqlQuery)
 	{
 		echo "<h3>Testing query: $sOqlQuery</h3>";
@@ -1252,8 +1385,6 @@ class TestQueries extends TestBizModel
 		return 'Try as many queries as possible';
 	}
 
-	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
-
 	protected function DoBenchmark($sOqlQuery)
 	{
 		echo "<h5>Testing query: $sOqlQuery</h5>";
@@ -1314,9 +1445,9 @@ class TestQueries extends TestBizModel
 			'SELECT Person AS PP WHERE PP.friendlyname LIKE "%dali"',
 			'SELECT Person AS PP WHERE PP.location_id_friendlyname LIKE "%ce ch%"',
 			'SELECT Organization AS OO JOIN Person AS PP ON PP.org_id = OO.id',
-			'SELECT lnkTeamToContact AS lnk JOIN Team AS T ON lnk.team_id = T.id',
-			'SELECT lnkTeamToContact AS lnk JOIN Team AS T ON lnk.team_id = T.id JOIN Contact AS C ON lnk.contact_id = C.id',
-			'SELECT Incident JOIN Person ON Incident.agent_id = Person.id WHERE Person.id = 5',
+			'SELECT lnkPersonToTeam AS lnk JOIN Team AS T ON lnk.team_id = T.id',
+			'SELECT lnkPersonToTeam AS lnk JOIN Team AS T ON lnk.team_id = T.id JOIN Person AS p ON lnk.person_id = p.id',
+			'SELECT UserRequest AS ur JOIN Person ON ur.agent_id = Person.id WHERE Person.id = 5',
 			// this one is failing...
 			//'SELECT L, P FROM Person AS P JOIN Location AS L ON P.location_id = L.id',
 		);
@@ -1363,8 +1494,6 @@ class TestQueriesByAPI extends TestBizModel
 	{
 		return 'Validate the DBObjectSearch API, through a set of complex (though realistic cases)';
 	}
-
-	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
 
 	protected function DoExecute()
 	{
@@ -1464,9 +1593,6 @@ class TestItopBulkLoad extends TestBizModel
 		return 'Execute a bulk change at the Core API level';
 	}
 
-	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
-
-	
 	protected function DoExecute()
 	{
 		$sLogin = 'testbulkload_'.time();
@@ -2032,8 +2158,6 @@ class TestDataExchange extends TestBizModel
 	{
 		return 'Test REST services: synchro_import and synchro_exec';
 	}
-
-	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
 
 	protected function DoExecScenario($aSingleScenario)
 	{
@@ -3037,8 +3161,6 @@ abstract class TestSoapDirect extends TestBizModel
 	static public function GetName() {return 'Test web services locally';}
 	static public function GetDescription() {return 'Invoke the service directly (troubleshooting)';}
 
-	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
-
 	protected $m_aTestSpecs;
 
 	protected function DoExecute()
@@ -3136,8 +3258,6 @@ class TestTriggerAndEmail extends TestBizModel
 {
 	static public function GetName() {return 'Test trigger and email';}
 	static public function GetDescription() {return 'Create a trigger and an email, then activates the trigger';}
-
-	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
 
 	protected function CreateEmailSpec($oTrigger, $sStatus, $sTo, $sCC, $sTesterEmail)
 	{
@@ -3281,8 +3401,6 @@ class TestDBProperties extends TestBizModel
 		return 'Write and read a dummy property';
 	}
 
-	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
-
 	protected function DoExecute()
 	{
 		$sName = 'test';
@@ -3303,8 +3421,6 @@ class TestCreateObjects extends TestBizModel
 	{
 		return 'Create weird objects (reproduce a bug?)';
 	}
-
-	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
 
 	protected function DoExecute()
 	{
@@ -3365,8 +3481,6 @@ class TestSetLinkset extends TestBizModel
 		return 'Create a user account, setting its profile by the mean of a string (prerequisite to CSV import of linksets)';
 	}
 
-	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
-
 	protected function DoExecute()
 	{
 		$oUser = new UserLocal();
@@ -3398,8 +3512,6 @@ class TestEmailAsynchronous extends TestBizModel
 	{
 		return 'Queues a request to send an email';
 	}
-
-	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
 
 	protected function DoExecute()
 	{

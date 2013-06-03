@@ -720,6 +720,19 @@ class DBObjectSearch
 
 	public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS)
 	{
+		if (!MetaModel::IsValidKeyAttCode($this->GetClass(), $sExtKeyAttCode))
+		{
+			throw new CoreWarning("The attribute code '$sExtKeyAttCode' is not an external key of the class '{$this->GetClass()}'");
+		}
+		$oAttExtKey = MetaModel::GetAttributeDef($this->GetClass(), $sExtKeyAttCode);
+		if(!MetaModel::IsSameFamilyBranch($oFilter->GetClass(), $oAttExtKey->GetTargetClass()))
+		{
+			throw new CoreException("The specified filter (pointing to {$oFilter->GetClass()}) is not compatible with the key '{$this->GetClass()}::$sExtKeyAttCode', which is pointing to {$oAttExtKey->GetTargetClass()}");
+		}
+		if(($iOperatorCode != TREE_OPERATOR_EQUALS) && !($oAttExtKey instanceof AttributeHierarchicalKey))
+		{
+			throw new CoreException("The specified tree operator $iOperatorCode is not applicable to the key '{$this->GetClass()}::$sExtKeyAttCode', which is not a HierarchicalKey");
+		}
 		// Note: though it seems to be a good practice to clone the given source filter
 		//       (as it was done and fixed an issue in MergeWith())
 		//       this was not implemented here because it was causing a regression (login as admin, select an org, click on any badge)
@@ -734,20 +747,6 @@ class DBObjectSearch
 
 	protected function AddCondition_PointingTo_InNameSpace(DBObjectSearch $oFilter, $sExtKeyAttCode, &$aClassAliases, &$aAliasTranslation, $iOperatorCode)
 	{
-		if (!MetaModel::IsValidKeyAttCode($this->GetClass(), $sExtKeyAttCode))
-		{
-			throw new CoreWarning("The attribute code '$sExtKeyAttCode' is not an external key of the class '{$this->GetClass()}' - the condition will be ignored");
-		}
-		$oAttExtKey = MetaModel::GetAttributeDef($this->GetClass(), $sExtKeyAttCode);
-		if(!MetaModel::IsSameFamilyBranch($oFilter->GetClass(), $oAttExtKey->GetTargetClass()))
-		{
-			throw new CoreException("The specified filter (pointing to {$oFilter->GetClass()}) is not compatible with the key '{$this->GetClass()}::$sExtKeyAttCode', which is pointing to {$oAttExtKey->GetTargetClass()}");
-		}
-		if(($iOperatorCode != TREE_OPERATOR_EQUALS) && !($oAttExtKey instanceof AttributeHierarchicalKey))
-		{
-			throw new CoreException("The specified tree operator $iOperatorCode is not applicable to the key '{$this->GetClass()}::$sExtKeyAttCode', which is not a HierarchicalKey");
-		}
-
 		// Find the node on which the new tree must be attached (most of the time it is "this")
 		$oReceivingFilter = $this->GetNode($this->GetClassAlias());
 
@@ -757,6 +756,17 @@ class DBObjectSearch
 
 	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode)
 	{
+		$sForeignClass = $oFilter->GetClass();
+		if (!MetaModel::IsValidKeyAttCode($sForeignClass, $sForeignExtKeyAttCode))
+		{
+			throw new CoreException("The attribute code '$sForeignExtKeyAttCode' is not an external key of the class '{$sForeignClass}'");
+		}
+		$oAttExtKey = MetaModel::GetAttributeDef($sForeignClass, $sForeignExtKeyAttCode);
+		if(!MetaModel::IsSameFamilyBranch($this->GetClass(), $oAttExtKey->GetTargetClass()))
+		{
+			// à refaire en spécifique dans FromOQL
+			throw new CoreException("The specified filter (objects referencing an object of class {$this->GetClass()}) is not compatible with the key '{$sForeignClass}::$sForeignExtKeyAttCode', which is pointing to {$oAttExtKey->GetTargetClass()}");
+		}
 		// Note: though it seems to be a good practice to clone the given source filter
 		//       (as it was done and fixed an issue in MergeWith())
 		//       this was not implemented here because it was causing a regression (login as admin, select an org, click on any badge)
@@ -772,16 +782,6 @@ class DBObjectSearch
 	protected function AddCondition_ReferencedBy_InNameSpace(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, &$aClassAliases, &$aAliasTranslation)
 	{
 		$sForeignClass = $oFilter->GetClass();
-		$sForeignClassAlias = $oFilter->GetClassAlias();
-		if (!MetaModel::IsValidKeyAttCode($sForeignClass, $sForeignExtKeyAttCode))
-		{
-			throw new CoreException("The attribute code '$sForeignExtKeyAttCode' is not an external key of the class '{$sForeignClass}' - the condition will be ignored");
-		}
-		$oAttExtKey = MetaModel::GetAttributeDef($sForeignClass, $sForeignExtKeyAttCode);
-		if(!MetaModel::IsSameFamilyBranch($this->GetClass(), $oAttExtKey->GetTargetClass()))
-		{
-			throw new CoreException("The specified filter (objects referencing an object of class {$this->GetClass()}) is not compatible with the key '{$sForeignClass}::$sForeignExtKeyAttCode', which is pointing to {$oAttExtKey->GetTargetClass()}");
-		}
 
 		// Find the node on which the new tree must be attached (most of the time it is "this")
 		$oReceivingFilter = $this->GetNode($this->GetClassAlias());
@@ -1129,7 +1129,7 @@ class DBObjectSearch
 			$sFltCode = $oExpression->GetName();
 			if (empty($sClassAlias))
 			{
-				// Try to find an alias
+				// Need to find the right alias
 				// Build an array of field => array of aliases
 				$aFieldClasses = array();
 				foreach($aClassAliases as $sAlias => $sReal)
@@ -1139,29 +1139,8 @@ class DBObjectSearch
 						$aFieldClasses[$sAnFltCode][] = $sAlias;
 					}
 				}
-				if (!array_key_exists($sFltCode, $aFieldClasses))
-				{
-					throw new OqlNormalizeException('Unknown filter code', $sQuery, $oExpression->GetNameDetails(), array_keys($aFieldClasses));
-				}
-				if (count($aFieldClasses[$sFltCode]) > 1)
-				{
-					throw new OqlNormalizeException('Ambiguous filter code', $sQuery, $oExpression->GetNameDetails());
-				}
 				$sClassAlias = $aFieldClasses[$sFltCode][0];
 			}
-			else
-			{
-				if (!array_key_exists($sClassAlias, $aClassAliases))
-				{
-					throw new OqlNormalizeException('Unknown class [alias]', $sQuery, $oExpression->GetParentDetails(), array_keys($aClassAliases));
-				}
-				$sClass = $aClassAliases[$sClassAlias];
-				if (!MetaModel::IsValidFilterCode($sClass, $sFltCode))
-				{
-					throw new OqlNormalizeException('Unknown filter code', $sQuery, $oExpression->GetNameDetails(), MetaModel::GetFiltersList($sClass));
-				}
-			}
-
 			return new FieldExpression($sFltCode, $sClassAlias);
 		}
 		elseif ($oExpression instanceof VariableOqlExpression)
@@ -1242,14 +1221,12 @@ class DBObjectSearch
 
 		$oOql = new OqlInterpreter($sQuery);
 		$oOqlQuery = $oOql->ParseObjectQuery();
-		
+
+		$oMetaModel = new ModelReflectionRuntime();
+		$oOqlQuery->Check($oMetaModel, $sQuery); // Exceptions thrown in case of issue
+
 		$sClass = $oOqlQuery->GetClass();
 		$sClassAlias = $oOqlQuery->GetClassAlias();
-
-		if (!MetaModel::IsValidClass($sClass))
-		{
-			throw new UnknownClassOqlException($sQuery, $oOqlQuery->GetClassDetails(), MetaModel::GetClasses());
-		}
 
 		$oResultFilter = new DBObjectSearch($sClass, $sClassAlias);
 		$aAliases = array($sClassAlias => $sClass);
@@ -1266,21 +1243,6 @@ class DBObjectSearch
 			{
 				$sJoinClass = $oJoinSpec->GetClass();
 				$sJoinClassAlias = $oJoinSpec->GetClassAlias();
-				if (!MetaModel::IsValidClass($sJoinClass))
-				{
-					throw new UnknownClassOqlException($sQuery, $oJoinSpec->GetClassDetails(), MetaModel::GetClasses());
-				}
-				if (array_key_exists($sJoinClassAlias, $aAliases))
-				{
-					if ($sJoinClassAlias != $sJoinClass)
-					{
-						throw new OqlNormalizeException('Duplicate class alias', $sQuery, $oJoinSpec->GetClassAliasDetails());
-					}
-					else
-					{
-						throw new OqlNormalizeException('Duplicate class name', $sQuery, $oJoinSpec->GetClassDetails());
-					}
-				} 
 
 				// Assumption: ext key on the left only !!!
 				// normalization should take care of this
@@ -1290,32 +1252,17 @@ class DBObjectSearch
 
 				$oRightField = $oJoinSpec->GetRightField();
 				$sToClass = $oRightField->GetParent();
-				$sPKeyDescriptor = $oRightField->GetName();
-				if ($sPKeyDescriptor != 'id')
-				{
-					throw new OqlNormalizeException('Wrong format for Join clause (right hand), expecting an id', $sQuery, $oRightField->GetNameDetails(), array('id'));
-				}
 
 				$aAliases[$sJoinClassAlias] = $sJoinClass;
 				$aJoinItems[$sJoinClassAlias] = new DBObjectSearch($sJoinClass, $sJoinClassAlias);
 
-				if (!array_key_exists($sFromClass, $aJoinItems))
-				{
-					throw new OqlNormalizeException('Unknown class in join condition (left expression)', $sQuery, $oLeftField->GetParentDetails(), array_keys($aJoinItems));
-				}
-				if (!array_key_exists($sToClass, $aJoinItems))
-				{
-					throw new OqlNormalizeException('Unknown class in join condition (right expression)', $sQuery, $oRightField->GetParentDetails(), array_keys($aJoinItems));
-				}
-				$aExtKeys = array_keys(MetaModel::GetExternalKeys($aAliases[$sFromClass]));
-				if (!in_array($sExtKeyAttCode, $aExtKeys))
-				{
-					throw new OqlNormalizeException('Unknown external key in join condition (left expression)', $sQuery, $oLeftField->GetNameDetails(), $aExtKeys);
-				}
-
 				if ($sFromClass == $sJoinClassAlias)
 				{
-					$aJoinItems[$sToClass]->AddCondition_ReferencedBy($aJoinItems[$sFromClass], $sExtKeyAttCode);
+					$oReceiver = $aJoinItems[$sToClass];
+					$oNewComer = $aJoinItems[$sFromClass];
+
+					$aAliasTranslation = array();
+					$oReceiver->AddCondition_ReferencedBy_InNameSpace($oNewComer, $sExtKeyAttCode, $oReceiver->m_aClasses, $aAliasTranslation);
 				}
 				else
 				{
@@ -1350,7 +1297,11 @@ class DBObjectSearch
 						$iOperatorCode = TREE_OPERATOR_NOT_ABOVE_STRICT;
 						break;
 					}
-					$aJoinItems[$sFromClass]->AddCondition_PointingTo($aJoinItems[$sToClass], $sExtKeyAttCode, $iOperatorCode);
+					$oReceiver = $aJoinItems[$sFromClass];
+					$oNewComer = $aJoinItems[$sToClass];
+
+					$aAliasTranslation = array();
+					$oReceiver->AddCondition_PointingTo_InNameSpace($oNewComer, $sExtKeyAttCode, $oReceiver->m_aClasses, $aAliasTranslation, $iOperatorCode);
 				}
 			}
 		}
@@ -1360,10 +1311,6 @@ class DBObjectSearch
 		foreach ($oOqlQuery->GetSelectedClasses() as $oClassDetails)
 		{
 			$sClassToSelect = $oClassDetails->GetValue();
-			if (!array_key_exists($sClassToSelect, $aAliases))
-			{
-				throw new OqlNormalizeException('Unknown class [alias]', $sQuery, $oClassDetails, array_keys($aAliases));
-			}
 			$aSelected[$sClassToSelect] = $aAliases[$sClassToSelect];
 		}
 		$oResultFilter->m_aClasses = $aAliases;
