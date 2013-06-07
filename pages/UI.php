@@ -938,9 +938,9 @@ try
 				$id = utils::ReadParam('id', '');
 				$oObj = MetaModel::GetObject($sClass, $id);
 				$aObjects[] = $oObj;
-				if (!UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, DBObjectSet::FromObject($oObj)))
+				if (!UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, DBObjectSet::FromObject($oObj)))
 				{
-					throw new SecurityException(Dict::Format('UI:Error:DeleteNotAllowedOn_Class', $sClass));
+					throw new SecurityException(Dict::Format('UI:Error:DeleteNotAllowedOn_Class', $sClassLabel));
 				}
 			}
 			else
@@ -957,11 +957,21 @@ try
 				{
 					$aObjects[] = MetaModel::GetObject($sClass, $iId);
 				}
-				if (!UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, DBObjectSet::FromArray($sClass, $aObjects)))
+				if (count($aObjects) == 1)
 				{
-					throw new SecurityException(Dict::Format('UI:Error:BulkDeleteNotAllowedOn_Class', $sClass));
+					if (!UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, DBObjectSet::FromArray($sClass, $aObjects)))
+					{
+						throw new SecurityException(Dict::Format('UI:Error:BulkDeleteNotAllowedOn_Class', $sClassLabel));
+					}
 				}
-				$oP->set_title(Dict::S('UI:BulkDeletePageTitle'));
+				else
+				{
+					if (!UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, DBObjectSet::FromArray($sClass, $aObjects)))
+					{
+						throw new SecurityException(Dict::Format('UI:Error:BulkDeleteNotAllowedOn_Class', $sClassLabel));
+					}
+					$oP->set_title(Dict::S('UI:BulkDeletePageTitle'));
+				}
 			}
 			// Go for the common part... (delete single, delete bulk, delete confirmed)
 			cmdbAbstractObject::DeleteObjects($oP, $sClass, $aObjects, ($operation != 'bulk_delete_confirmed'), 'bulk_delete_confirmed');
