@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -335,7 +335,7 @@ class OqlObjectQuery extends OqlQuery
 
 		if (!$oModelReflection->IsValidClass($sClass))
 		{
-			throw new UnknownClassOqlException($sSourceQuery, $this->GetClassDetails(), $oModelReflection->GetClasses('bizmodelx'));
+			throw new UnknownClassOqlException($sSourceQuery, $this->GetClassDetails(), $oModelReflection->GetClasses());
 		}
 
 		$aAliases = array($sClassAlias => $sClass);
@@ -387,18 +387,18 @@ class OqlObjectQuery extends OqlQuery
 				{
 					throw new OqlNormalizeException('Unknown class in join condition (right expression)', $sSourceQuery, $oRightField->GetParentDetails(), array_keys($aAliases));
 				}
-				$aExtKeys = array_keys($oModelReflection->GetExternalKeys($aAliases[$sFromClass]));
-				if (!in_array($sExtKeyAttCode, $aExtKeys))
+				$aExtKeys = $oModelReflection->ListAttributes($aAliases[$sFromClass], 'AttributeExternalKey');
+				if (!array_key_exists($sExtKeyAttCode, $aExtKeys))
 				{
-					throw new OqlNormalizeException('Unknown external key in join condition (left expression)', $sSourceQuery, $oLeftField->GetNameDetails(), $aExtKeys);
+					throw new OqlNormalizeException('Unknown external key in join condition (left expression)', $sSourceQuery, $oLeftField->GetNameDetails(), array_keys($aExtKeys));
 				}
 
 				if ($sFromClass == $sJoinClassAlias)
 				{
-					$oAttExtKey = $oModelReflection->GetAttributeDef($aAliases[$sFromClass], $sExtKeyAttCode);
-					if(!$oModelReflection->IsSameFamilyBranch($aAliases[$sToClass], $oAttExtKey->GetTargetClass()))
+					$sTargetClass = $oModelReflection->GetAttributeProperty($aAliases[$sFromClass], $sExtKeyAttCode, 'targetclass');
+					if(!$oModelReflection->IsSameFamilyBranch($aAliases[$sToClass], $sTargetClass))
 					{
-						throw new OqlNormalizeException("The joined class ($aAliases[$sFromClass]) is not compatible with the external key, which is pointing to {$oAttExtKey->GetTargetClass()}", $sSourceQuery, $oLeftField->GetNameDetails());
+						throw new OqlNormalizeException("The joined class ($aAliases[$sFromClass]) is not compatible with the external key, which is pointing to $sTargetClass", $sSourceQuery, $oLeftField->GetNameDetails());
 					}
 				}
 				else
@@ -434,12 +434,14 @@ class OqlObjectQuery extends OqlQuery
 						$iOperatorCode = TREE_OPERATOR_NOT_ABOVE_STRICT;
 						break;
 					}
-					$oAttExtKey = $oModelReflection->GetAttributeDef($aAliases[$sFromClass], $sExtKeyAttCode);
-					if(!$oModelReflection->IsSameFamilyBranch($aAliases[$sToClass], $oAttExtKey->GetTargetClass()))
+					$sTargetClass = $oModelReflection->GetAttributeProperty($aAliases[$sFromClass], $sExtKeyAttCode, 'targetclass');
+					if(!$oModelReflection->IsSameFamilyBranch($aAliases[$sToClass], $sTargetClass))
 					{
-						throw new OqlNormalizeException("The joined class ($aAliases[$sToClass]) is not compatible with the external key, which is pointing to {$oAttExtKey->GetTargetClass()}", $sSourceQuery, $oLeftField->GetNameDetails());
+						throw new OqlNormalizeException("The joined class ($aAliases[$sToClass]) is not compatible with the external key, which is pointing to $sTargetClass", $sSourceQuery, $oLeftField->GetNameDetails());
 					}
-					if(($iOperatorCode != TREE_OPERATOR_EQUALS) && !($oAttExtKey instanceof AttributeHierarchicalKey))
+					$aAttList = $oModelReflection->ListAttributes($aAliases[$sFromClass]);
+					$sAttType = $aAttList[$sExtKeyAttCode];
+					if(($iOperatorCode != TREE_OPERATOR_EQUALS) && !is_subclass_of($sAttType, 'AttributeHierarchicalKey') && ($sAttType != 'AttributeHierarchicalKey'))
 					{
 						throw new OqlNormalizeException("The specified tree operator $sOperator is not applicable to the key", $sSourceQuery, $oLeftField->GetNameDetails());
 					}

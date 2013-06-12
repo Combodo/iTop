@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2012-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -536,16 +536,19 @@ abstract class DashletGroupBy extends Dashlet
 		$oSearch = DBObjectSearch::FromOQL($sOql);
 		$sClass = $oSearch->GetClass();
 		$aGroupBy = array();
-		foreach($this->oModelReflection->ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+		foreach($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType)
 		{
-			if (!$oAttDef->IsScalar()) continue; // skip link sets
-			if ($oAttDef instanceof AttributeFriendlyName) continue;
-			if ($oAttDef instanceof AttributeExternalField) continue;
+			if ($sAttType == 'AttributeLinkedSet') continue;
+			if (is_subclass_of($sAttType, 'AttributeLinkedSet')) continue;
+			if ($sAttType == 'AttributeFriendlyName') continue;
+			if (is_subclass_of($sAttType, 'AttributeFriendlyName')) continue;
+			if ($sAttType == 'AttributeExternalField') continue;
+			if (is_subclass_of($sAttType, 'AttributeExternalField')) continue;
 
-			$sLabel = $oAttDef->GetLabel();
+			$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
 			$aGroupBy[$sAttCode] = $sLabel;
 
-			if ($oAttDef instanceof AttributeDateTime)
+			if (is_subclass_of($sAttType, 'AttributeDateTime') || $sAttType == 'AttributeDateTime')
 			{
 				$aGroupBy[$sAttCode.':hour'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Hour', $sLabel);
 				$aGroupBy[$sAttCode.':month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Month', $sLabel);
@@ -931,10 +934,13 @@ class DashletHeaderDynamic extends Dashlet
 			$oSearch = DBObjectSearch::FromOQL($this->aProperties['query']);
 			$sClass = $oSearch->GetClass();
 			$aGroupBy = array();
-			foreach($this->oModelReflection->ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+			foreach($this->oModelReflection->ListAttributes($sClass, 'AttributeEnum,AttributeFinalClass') as $sAttCode => $sAttType)
 			{
-				if (!$oAttDef instanceof AttributeEnum && (!$oAttDef instanceof AttributeFinalClass || !$this->oModelReflection->HasChildrenClasses($sClass))) continue;
-				$sLabel = $oAttDef->GetLabel();
+				if (is_subclass_of($sAttType, 'AttributeFinalClass') || ($sAttType == 'AttributeFinalClass'))
+				{
+					if (!$this->oModelReflection->HasChildrenClasses($sClass)) continue;
+				}
+				$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
 				$aGroupBy[$sAttCode] = $sLabel;
 			}
 			$oField = new DesignerComboField('group_by', Dict::S('UI:DashletHeaderDynamic:Prop-GroupBy'), $this->aProperties['group_by']);
@@ -1050,11 +1056,12 @@ class DashletBadge extends Dashlet
 	
 		foreach($this->oModelReflection->GetClasses('bizmodel') as $sClass)
 		{	
-			foreach($this->oModelReflection->ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+			foreach($this->oModelReflection->ListAttributes($sClass, 'AttributeLinkedSetIndirect') as $sAttCode => $sAttType)
 			{
-				if ($oAttDef instanceof AttributeLinkedSetIndirect)
+				$sLinkedClass = $this->oModelReflection->GetAttributeProperty($sClass, $sAttCode, 'linked_class');
+				if ($sLinkedClass != null)
 				{
-					$aLinkClasses[$oAttDef->GetLinkedClass()] = true;
+					$aLinkClasses[$sLinkedClass] = true;
 				}
 			}
 		}

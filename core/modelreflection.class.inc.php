@@ -30,13 +30,12 @@ interface ModelReflection
 	public function IsValidAttCode($sClass, $sAttCode);
 	public function GetName($sClass);
 	public function GetLabel($sClass, $sAttCodeEx);
-	public function ListAttributeDefs($sClass);
+	public function ListAttributes($sClass, $sScope = null);
+	public function GetAttributeProperty($sClass, $sAttCode, $sPropName);
 	public function GetAllowedValues_att($sClass, $sAttCode);
 	public function HasChildrenClasses($sClass);
 	public function GetClasses($sCategories = '');
 	public function IsValidClass($sClass);
-	public function GetExternalKeys($sClass);
-	public function GetAttributeDef($sClass, $sAttCode);
 	public function IsSameFamilyBranch($sClassA, $sClassB);
 	public function GetFiltersList($sClass);
 	public function IsValidFilterCode($sClass, $sFilterCode);
@@ -68,11 +67,55 @@ class ModelReflectionRuntime implements ModelReflection
 		return MetaModel::GetLabel($sClass, $sAttCodeEx);
 	}
  
-	public function ListAttributeDefs($sClass)
+	public function ListAttributes($sClass, $sScope = null)
 	{
-		return MetaModel::ListAttributeDefs($sClass);
+		$aScope = null;
+		if ($sScope != null)
+		{
+			$aScope = array();
+			foreach (explode(',', $sScope) as $sScopeClass)
+			{
+				$aScope[] = trim($sScopeClass);
+			}
+		}
+		$aAttributes = array();
+		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+		{
+			$sAttributeClass = get_class($oAttDef);
+			if ($aScope != null)
+			{
+				foreach ($aScope as $sScopeClass)
+				{
+					if (($sAttributeClass == $sScopeClass) || is_subclass_of($sAttributeClass, $sScopeClass))
+					{
+						$aAttributes[$sAttCode] = $sAttributeClass;
+						break;
+					}
+				}
+			}
+			else
+			{
+				$aAttributes[$sAttCode] = $sAttributeClass;
+			}
+		}
+		return $aAttributes;
 	}
  
+	public function GetAttributeProperty($sClass, $sAttCode, $sPropName, $default = null)
+	{
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$aParams = $oAttDef->GetParams();
+		if (array_key_exists($sPropName, $aParams))
+		{
+			$ret = $aParams[$sPropName];
+		}
+		else
+		{
+			$ret = $default;
+		}
+		return $ret;
+	}
+
 	public function GetAllowedValues_att($sClass, $sAttCode)
 	{
 		return MetaModel::GetAllowedValues_att($sClass, $sAttCode);
@@ -91,16 +134,6 @@ class ModelReflectionRuntime implements ModelReflection
 	public function IsValidClass($sClass)
 	{
 		return MetaModel::IsValidClass($sClass);
-	}
-
-	public function GetExternalKeys($sClass)
-	{
-		return MetaModel::GetExternalKeys($sClass);
-	}
-
-	public function GetAttributeDef($sClass, $sAttCode)
-	{
-		return MetaModel::GetAttributeDef($sClass, $sAttCode);
 	}
 
 	public function IsSameFamilyBranch($sClassA, $sClassB)
