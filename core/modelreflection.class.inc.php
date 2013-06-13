@@ -31,12 +31,13 @@ interface ModelReflection
 	public function GetName($sClass);
 	public function GetLabel($sClass, $sAttCodeEx);
 	public function ListAttributes($sClass, $sScope = null);
-	public function GetAttributeProperty($sClass, $sAttCode, $sPropName);
+	public function GetAttributeProperty($sClass, $sAttCode, $sPropName, $default = null);
 	public function GetAllowedValues_att($sClass, $sAttCode);
 	public function HasChildrenClasses($sClass);
 	public function GetClasses($sCategories = '');
 	public function IsValidClass($sClass);
 	public function IsSameFamilyBranch($sClassA, $sClassB);
+	public function GetParentClass($sClass);
 	public function GetFiltersList($sClass);
 	public function IsValidFilterCode($sClass, $sFilterCode);
 }
@@ -103,15 +104,21 @@ class ModelReflectionRuntime implements ModelReflection
  
 	public function GetAttributeProperty($sClass, $sAttCode, $sPropName, $default = null)
 	{
+		$ret = $default;
+
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$aParams = $oAttDef->GetParams();
 		if (array_key_exists($sPropName, $aParams))
 		{
 			$ret = $aParams[$sPropName];
 		}
-		else
+
+		if ($oAttDef instanceof AttributeHierarchicalKey)
 		{
-			$ret = $default;
+			if ($sPropName == 'targetclass')
+			{
+				$ret = $sClass;
+			}
 		}
 		return $ret;
 	}
@@ -139,6 +146,11 @@ class ModelReflectionRuntime implements ModelReflection
 	public function IsSameFamilyBranch($sClassA, $sClassB)
 	{
 		return MetaModel::IsSameFamilyBranch($sClassA, $sClassB);
+	}
+
+	public function GetParentClass($sClass)
+	{
+		return MetaModel::GetParentClass($sClass);
 	}
 
 	public function GetFiltersList($sClass)

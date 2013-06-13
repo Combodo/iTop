@@ -174,7 +174,7 @@ abstract class MetaModel
 		// (it is not possible to guess it when called as myderived::...)
 		if (!array_key_exists($sClass, self::$m_aClassParams))
 		{
-			throw new CoreException("Unknown class '$sClass', expected a value in {".implode(', ', array_keys(self::$m_aClassParams))."}");
+			throw new CoreException("Unknown class '$sClass'");
 		}
 	}
 
