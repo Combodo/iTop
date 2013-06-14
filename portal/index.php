@@ -879,11 +879,13 @@ try
 			switch($sOperation)
 			{
 				case 'show_closed':
+				$oP->set_title(Dict::S('Portal:ShowClosed'));
 				DisplayMainMenu($oP);
 				ShowClosedTickets($oP);
 				break;
 						
 				case 'create_request':
+				$oP->set_title(Dict::S('Portal:CreateNewRequest'));
 				DisplayMainMenu($oP);
 				if (!MetaModel::DBIsReadOnly())
 				{
@@ -892,12 +894,14 @@ try
 				break;
 						
 				case 'details':
+				$oP->set_title(Dict::S('Portal:TitleDetailsFor_Request'));
 				DisplayMainMenu($oP);
 				$oObj = $oP->FindObjectFromArgs(array('UserRequest'));
 				DisplayObject($oP, $oObj, $oUserOrg);
 				break;
 				
 				case 'update_request':
+				$oP->set_title(Dict::S('Portal:TitleDetailsFor_Request'));
 				DisplayMainMenu($oP);
 				if (!MetaModel::DBIsReadOnly())
 				{
@@ -926,6 +930,7 @@ try
 	
 				case 'show_ongoing':
 				default:
+				$oP->set_title(Dict::S('Portal:ShowOngoing'));
 				DisplayMainMenu($oP);
 				ShowOngoingTickets($oP);
 			} 

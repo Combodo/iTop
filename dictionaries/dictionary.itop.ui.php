@@ -943,6 +943,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Portal:Refresh' => 'Refresh',
 	'Portal:Back' => 'Back',
 	'Portal:WelcomeUserOrg' => 'Welcome %1$s, from %2$s',
+	'Portal:TitleDetailsFor_Request' => 'Details for request',
 	'Portal:ShowOngoing' => 'Show open requests',
 	'Portal:ShowClosed' => 'Show closed requests',
 	'Portal:CreateNewRequest' => 'Create a new request',

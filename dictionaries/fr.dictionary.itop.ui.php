@@ -786,6 +786,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Portal:Refresh' => 'Rafraîchir',
 	'Portal:Back' => 'Retour',
 	'Portal:WelcomeUserOrg' => 'Bienvenue %1$s (%2$s)',
+	'Portal:TitleDetailsFor_Request' => 'Détail de la requête',
 	'Portal:ShowOngoing' => 'Requêtes en cours',
 	'Portal:ShowClosed' => 'Requêtes fermées',
 	'Portal:CreateNewRequest' => 'Créer une nouvelle requête',
