@@ -788,6 +788,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Portal:Refresh' => 'リフレッシュ',
 	'Portal:Back' => '戻る',
 	'Portal:WelcomeUserOrg' => 'ようこそ %1$s, %2$sより',
+	'Portal:TitleDetailsFor_Request' => '要求の詳細',
 	'Portal:ShowOngoing' => 'オープン中の要求を表示',
 	'Portal:ShowClosed' => 'クローズした要求を表示',
 	'Portal:CreateNewRequest' => '新規要求を作成',
