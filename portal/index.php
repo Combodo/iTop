@@ -101,7 +101,7 @@ function SelectServiceCategory($oP, $oUserOrg)
 			$sChecked = "checked";
 		}
 		$oP->add("<tr><td style=\"vertical-align:top\"><p><input name=\"attr_service_id\" $sChecked type=\"radio\" id=\"service_$id\" value=\"$id\"></p></td><td style=\"vertical-align:top\"><p><b><label for=\"service_$id\">".$oService->GetName()."</label></b></p>");
-		$oP->add("".$oService->GetAsHTML('description')."</td></tr>");		
+		$oP->add($oService->GetAsHTML('description')."</td></tr>");		
 	}
 	$oP->add("</table>\n");	
 
@@ -157,7 +157,7 @@ function SelectServiceSubCategory($oP, $oUserOrg)
 
 			$oP->add("<td style=\"vertical-align:top\">");
 			$oP->add("<p><b><label for=\"servicesubcategory_$id\">".$oSubService->GetName()."</label></b></p>");
-			$oP->add("<p>".$oSubService->GetAsHTML('description')."</p>");
+			$oP->add($oSubService->GetAsHTML('description'));
 			$oP->add("</td>");
 			$oP->add("</tr>");
 		}
@@ -471,10 +471,8 @@ function ListClosedTickets(WebPage $oP)
 		$oSearch->AddCondition('caller_id', $iUser);
 	}
 	$oSet1 = new CMDBObjectSet($oSearch);
-	$oP->add("<p>\n");
 	$oP->add("<h1>".Dict::S('Portal:ClosedRequests')."</h1>\n");
 	$oP->DisplaySet($oSet1, $aZList, Dict::S('Portal:NoClosedRequest'));
-	$oP->add("</p>\n");
 }
 
 
