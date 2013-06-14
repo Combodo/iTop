@@ -100,8 +100,8 @@ function SelectServiceCategory($oP, $oUserOrg)
 		{
 			$sChecked = "checked";
 		}
-		$oP->p("<tr><td style=\"vertical-align:top\"><p><input name=\"attr_service_id\" $sChecked type=\"radio\" id=\"service_$id\" value=\"$id\"></p></td><td style=\"vertical-align:top\"><p><b><label for=\"service_$id\">".$oService->GetName()."</label></b></p>");
-		$oP->p("<p>".$oService->GetAsHTML('description')."</p></td></tr>");		
+		$oP->add("<tr><td style=\"vertical-align:top\"><p><input name=\"attr_service_id\" $sChecked type=\"radio\" id=\"service_$id\" value=\"$id\"></p></td><td style=\"vertical-align:top\"><p><b><label for=\"service_$id\">".$oService->GetName()."</label></b></p>");
+		$oP->add("".$oService->GetAsHTML('description')."</td></tr>");		
 	}
 	$oP->add("</table>\n");	
 
