@@ -174,7 +174,7 @@ EOF
 	          $i = 0;
 			  foreach($m_aTabs as $sTabName => $sTabContent)
 			  {
-			      $sTabs .= "<li><a href=\"#tab_{$sPrefix}$i\" class=\"tab\"><span>".htmlentities($sTabName, ENT_QUOTES, 'UTF-8')."</span></a></li>\n";
+			      $sTabs .= "<li><a href=\"#tab_{$sPrefix}{$sTabContainerName}$i\" class=\"tab\"><span>".htmlentities($sTabName, ENT_QUOTES, 'UTF-8')."</span></a></li>\n";
 			      $i++;
 	          }
 			  $sTabs .= "</ul>\n";
@@ -182,7 +182,7 @@ EOF
 			  $i = 0;
 			  foreach($m_aTabs as $sTabName => $sTabContent)
 			  {
-			      $sTabs .= "<div id=\"tab_{$sPrefix}$i\">".$sTabContent."</div>\n";
+			      $sTabs .= "<div id=\"tab_{$sPrefix}{$sTabContainerName}$i\">".$sTabContent."</div>\n";
 			      $i++;
 	          }
 			  $sTabs .= "</div>\n<!-- end of tabs-->\n";
