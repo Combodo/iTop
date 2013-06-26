@@ -268,7 +268,7 @@ $('#$sDialogId').dialog({
 		title: '$sDialogTitle',
 		buttons: [
 		{ text: "$sOkButtonLabel", click: function() {
-			var oForm = $(this).parents('.ui-dialog :first').find('form');
+			var oForm = $(this).closest('.ui-dialog').find('form');
 			oForm.submit();
 		} },
 		{ text: "$sCancelButtonLabel", click: function() { KillAllMenus(); $(this).dialog( "close" ); $(this).remove(); } },
