@@ -2,6 +2,9 @@
 
 //IE 8 compatibility, copied from: https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/IndexOf
 if (!Array.prototype.indexOf) {
+	
+	if (false) // deactivated since it causes troubles: for(k in aData) => returns the indexOf function as first element on empty arrays !
+	{
 	Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
     	"use strict";
         if (this == null) {
@@ -32,6 +35,7 @@ if (!Array.prototype.indexOf) {
         }
         return -1;
     }
+	}
 }
 /**
  * Reload a truncated list
