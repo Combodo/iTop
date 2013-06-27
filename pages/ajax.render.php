@@ -745,12 +745,11 @@ try
 			$sHtml = addslashes($oPage->end_capture($offset));
 			$sHtml = str_replace("\n", '', $sHtml);
 			$sHtml = str_replace("\r", '', $sHtml);
-			
-			$oPage->add_script("$('#dashlet_$sDashletId').html('$sHtml')"); // in ajax web page add_script has the same effect as add_ready_script
+			$oPage->add_script("$('#dashlet_$sDashletId').html('$sHtml');"); // in ajax web page add_script has the same effect as add_ready_script
 																			// but is executed BEFORE all 'ready_scripts'
 			$oForm = $oDashlet->GetForm(); // Rebuild the form since the values/content changed
 			$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property'));
-			$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true /* bReturnHtml */, ':itop-dashboard'));
+			$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true /* bReturnHtml */, '.itop-dashboard'));
 			$sHtml = str_replace("\n", '', $sHtml);
 			$sHtml = str_replace("\r", '', $sHtml);
 			$oPage->add_script("$('#dashlet_properties_$sDashletId').html('$sHtml')"); // in ajax web page add_script has the same effect as add_ready_script																	   // but is executed BEFORE all 'ready_scripts'
@@ -803,7 +802,7 @@ try
 			{
 				$oForm = $oDashlet->GetForm(); // Rebuild the form since the values/content changed
 				$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property'));
-				$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true /* bReturnHtml */, ':itop-dashboard'));
+				$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true /* bReturnHtml */, '.itop-dashboard'));
 				$sHtml = str_replace("\n", '', $sHtml);
 				$sHtml = str_replace("\r", '', $sHtml);
 				$oPage->add_script("$('#dashlet_properties_$sDashletId').html('$sHtml')"); // in ajax web page add_script has the same effect as add_ready_script																	   // but is executed BEFORE all 'ready_scripts'

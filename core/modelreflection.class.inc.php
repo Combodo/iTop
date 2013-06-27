@@ -24,25 +24,59 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
  
-interface ModelReflection
+abstract class ModelReflection
 {
-	public function GetClassIcon($sClass, $bImgTag = true); 
-	public function IsValidAttCode($sClass, $sAttCode);
-	public function GetName($sClass);
-	public function GetLabel($sClass, $sAttCodeEx);
-	public function ListAttributes($sClass, $sScope = null);
-	public function GetAttributeProperty($sClass, $sAttCode, $sPropName, $default = null);
-	public function GetAllowedValues_att($sClass, $sAttCode);
-	public function HasChildrenClasses($sClass);
-	public function GetClasses($sCategories = '');
-	public function IsValidClass($sClass);
-	public function IsSameFamilyBranch($sClassA, $sClassB);
-	public function GetParentClass($sClass);
-	public function GetFiltersList($sClass);
-	public function IsValidFilterCode($sClass, $sFilterCode);
+	abstract public function GetClassIcon($sClass, $bImgTag = true); 
+	abstract public function IsValidAttCode($sClass, $sAttCode);
+	abstract public function GetName($sClass);
+	abstract public function GetLabel($sClass, $sAttCodeEx);
+	abstract public function GetValueLabel($sClass, $sAttCode, $sValue);
+	abstract public function ListAttributes($sClass, $sScope = null);
+	abstract public function GetAttributeProperty($sClass, $sAttCode, $sPropName, $default = null);
+	abstract public function GetAllowedValues_att($sClass, $sAttCode);
+	abstract public function HasChildrenClasses($sClass);
+	abstract public function GetClasses($sCategories = '', $bExcludeLinks = false);
+	abstract public function IsValidClass($sClass);
+	abstract public function IsSameFamilyBranch($sClassA, $sClassB);
+	abstract public function GetParentClass($sClass);
+	abstract public function GetFiltersList($sClass);
+	abstract public function IsValidFilterCode($sClass, $sFilterCode);
+
+	abstract public function GetQuery($sOQL);
+
+	abstract public function DictString($sStringCode, $sDefault = null, $bUserLanguageOnly = false);
+
+	public function DictFormat($sFormatCode /*, ... arguments ....*/)
+	{
+		$sLocalizedFormat = $this->DictString($sFormatCode);
+		$aArguments = func_get_args();
+		array_shift($aArguments);
+		
+		if ($sLocalizedFormat == $sFormatCode)
+		{
+			// Make sure the information will be displayed (ex: an error occuring before the dictionary gets loaded)
+			return $sFormatCode.' - '.implode(', ', $aArguments);
+		}
+
+		return vsprintf($sLocalizedFormat, $aArguments);
+	}
+
+	abstract public function GetIconSelectionField($sCode, $sLabel = '', $defaultValue = '');
 }
 
-class ModelReflectionRuntime implements ModelReflection
+abstract class QueryReflection
+{
+	/**
+	 * Throws an exception in case of an invalid syntax
+	 */
+	abstract public function __construct($sOQL);
+
+	abstract public function GetClass();
+	abstract public function GetClassAlias();
+}
+
+
+class ModelReflectionRuntime extends ModelReflection
 {
 	public function __construct()
 	{
@@ -68,6 +102,12 @@ class ModelReflectionRuntime implements ModelReflection
 		return MetaModel::GetLabel($sClass, $sAttCodeEx);
 	}
  
+	public function GetValueLabel($sClass, $sAttCode, $sValue)
+	{
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		return $oAttDef->GetValueLabel($sValue);
+	}
+
 	public function ListAttributes($sClass, $sScope = null)
 	{
 		$aScope = null;
@@ -133,9 +173,26 @@ class ModelReflectionRuntime implements ModelReflection
 		return MetaModel::HasChildrenClasses($sClass);
 	}
  
-	public function GetClasses($sCategories = '')
+	public function GetClasses($sCategories = '', $bExcludeLinks = false)
 	{
-		return MetaModel::GetClasses($sCategories);
+		$aClasses = MetaModel::GetClasses($sCategories);
+		if ($bExcludeLinks)
+		{
+			$aExcluded = ProfilesConfig::GetLinkClasses(); // table computed at compile time
+			$aRes = array();
+			foreach ($aClasses as $sClass)
+			{
+				if (!array_key_exists($sClass, $aExcluded))
+				{
+					$aRes[] = $sClass;
+				}
+			}
+		}
+		else
+		{
+			$aRes = $aClasses;
+		}
+		return $aRes;
 	}
 
 	public function IsValidClass($sClass)
@@ -161,5 +218,44 @@ class ModelReflectionRuntime implements ModelReflection
 	public function IsValidFilterCode($sClass, $sFilterCode)
 	{
 		return MetaModel::IsValidFilterCode($sClass, $sFilterCode);
+	}
+
+	public function GetQuery($sOQL)
+	{
+		return new QueryReflectionRuntime($sOQL);
+	}
+
+	public function DictString($sStringCode, $sDefault = null, $bUserLanguageOnly = false)
+	{
+		return Dict::S($sStringCode, $sDefault, $bUserLanguageOnly);
+	}
+
+	public function GetIconSelectionField($sCode, $sLabel = '', $defaultValue = '')
+	{
+		return new RunTimeIconSelectionField($sCode, $sLabel, $defaultValue);
+	}
+}
+
+
+class QueryReflectionRuntime extends QueryReflection
+{
+	protected $oFilter;
+
+	/**
+	 *	throws an exception in case of a wrong syntax
+	 */
+	public function __construct($sOQL)
+	{
+		$this->oFilter = DBObjectSearch::FromOQL($sOQL);
+	}
+
+	public function GetClass()
+	{
+		return $this->oFilter->GetClass();
+	}
+
+	public function GetClassAlias()
+	{
+		return $this->oFilter->GetClassAlias();
 	}
 }

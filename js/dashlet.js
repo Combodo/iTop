@@ -123,8 +123,13 @@ $(function()
 		},
 		_remove_dashlet: function()
 		{
-			$('#dashlet_properties_'+this.options.dashlet_id).remove();
+			var iDashletId = this.options.dashlet_id;
+			var sDashletClass = this.options.dashlet_class;
+			var oContainer = this.element.parent();
+
+			$('#dashlet_properties_'+iDashletId).remove();
 			this.element.remove();
+			$('#event_bus').trigger('dashlet-removed', {'dashlet_id': iDashletId, 'dashlet_class': sDashletClass, 'container': oContainer});
 		}
 	});	
 });

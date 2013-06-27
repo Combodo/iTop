@@ -567,42 +567,13 @@ EOF;
 			$aClassParams['display_template'] = "utils::GetAbsoluteUrlModulesRoot().'$sDisplayTemplate'";
 		}
 	
+		$this->CompileFiles($oProperties, $sTargetDir.'/'.$sModuleRelativeDir, '');
 		if (($sIcon = $oProperties->GetChildText('icon')) && (strlen($sIcon) > 0))
 		{
 			$sIcon = $sModuleRelativeDir.'/'.$sIcon;
 			$aClassParams['icon'] = "utils::GetAbsoluteUrlModulesRoot().'$sIcon'";
 		}
-		else // si <fileref ref="nnn">
-		{
-			$oIcon = $oProperties->GetOptionalElement('icon');
-			if ($oIcon)
-			{
-				$oFileRef = $oIcon->GetOptionalElement('fileref');
-				if ($oFileRef)
-				{
-					$iFileId = $oFileRef->getAttribute('ref');
-					$sXPath = "/itop_design/files/file[@id='$iFileId']";
-					$oNodes = $this->oFactory->GetNodes($sXPath);
-					if ($oNodes->length == 0)
-					{
-						throw new DOMFormatException('Could not find the file with ref '.$iFileId);
-					}
 
-					$sName = $oNodes->item(0)->GetChildText('name');
-					$sData = base64_decode($oNodes->item(0)->GetChildText('data'));
-					$aPathInfo = pathinfo($sName);
-					$sFile = 'icon-file'.$iFileId.'.'.$aPathInfo['extension'];
-					$sFilePath = $sTargetDir.'/'.$sModuleRelativeDir.'/'.$sFile;
-					file_put_contents($sFilePath, $sData);
-					if (!file_exists($sFilePath))
-					{
-						throw new Exception('Could not write icon file '.$sFilePath);
-					}
-					$aClassParams['icon'] = "utils::GetAbsoluteUrlModulesRoot().'$sModuleRelativeDir/$sFile'";
-				}
-			}
-		}
-	
 		$oOrder = $oProperties->GetOptionalElement('order');
 		if ($oOrder)
 		{
@@ -1028,6 +999,8 @@ EOF;
 
 	protected function CompileMenu($oMenu, $sTargetDir, $sModuleRelativeDir, $oP)
 	{
+		$this->CompileFiles($oMenu, $sTargetDir.'/'.$sModuleRelativeDir, $sModuleRelativeDir);
+
 		$sMenuId = $oMenu->getAttribute("id");
 		$sMenuClass = $oMenu->getAttribute("xsi:type");
 
@@ -1065,11 +1038,11 @@ EOF;
 				}
 				$sFileName = strtolower(str_replace(array(':', '/', '\\', '*'), '_', $sMenuId)).'_dashboard_menu.xml';
 				$sTemplateSpec = $this->PathToPHP($sFileName, $sModuleRelativeDir);
-				
+
 				$oXMLDoc = new DOMDocument('1.0', 'UTF-8');
 				$oXMLDoc->formatOutput = true; // indent (must be loaded with option LIBXML_NOBLANKS)
 				$oXMLDoc->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
-				
+
 				$oRootNode = $oXMLDoc->createElement('dashboard'); // make sure that the document is not empty
 				$oRootNode->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
 				$oXMLDoc->appendChild($oRootNode);
@@ -1325,6 +1298,11 @@ class ProfilesConfig
 
 	protected static \$aLINKTOCLASSES = $sLinkToClasses;
 
+	public static function GetLinkClasses()
+	{
+		return self::\$aLINKTOCLASSES;
+	}
+
 	public static function GetProfileActionGrant(\$iProfileId, \$sClass, \$sAction)
 	{
 		// Search for a grant, starting from the most explicit declaration,
@@ -1461,6 +1439,42 @@ EOF;
 		$sSafeLang = str_replace(' ', '-', strtolower(trim($sLang)));
 		$sDictFile = $sTargetDir.'/dictionaries/'.$sSafeLang.'.dict.php';
 		file_put_contents($sDictFile, $sPHPDict);
+	}
+
+	// Transform the file references into the corresponding filename (and create the file in the relevant directory)
+	//
+	protected function CompileFiles($oNode, $sTargetDir, $sRelativePath)
+	{
+		$oFileRefs = $oNode->GetNodes(".//fileref");
+		foreach ($oFileRefs as $oFileRef)
+		{
+			$iFileId = $oFileRef->getAttribute('ref');
+			if ($iFileId > 0)
+			{
+				$oNodes = $this->oFactory->GetNodes("/itop_design/files/file[@id='$iFileId']");
+				if ($oNodes->length == 0)
+				{
+					throw new DOMFormatException('Could not find the file with ref '.$iFileId);
+				}
+	
+				$sName = $oNodes->item(0)->GetChildText('name');
+				$sData = base64_decode($oNodes->item(0)->GetChildText('data'));
+				$aPathInfo = pathinfo($sName);
+				$sFile = 'icon-file'.$iFileId.'.'.$aPathInfo['extension'];
+				$sFilePath = $sTargetDir.'/images/'.$sFile;
+				@mkdir($sTargetDir.'/images');
+				file_put_contents($sFilePath, $sData);
+				if (!file_exists($sFilePath))
+				{
+					throw new Exception('Could not write icon file '.$sFilePath);
+				}
+				$oParentNode = $oFileRef->parentNode;
+				$oParentNode->removeChild($oFileRef);
+				
+				$oTextNode = $oParentNode->ownerDocument->createTextNode($sRelativePath.'/images/'.$sFile);
+				$oParentNode->appendChild($oTextNode);
+			}
+		}
 	}
 }
 

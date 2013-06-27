@@ -34,15 +34,16 @@ abstract class Dashboard
 	protected $oDOMNode;
 	protected $sId;
 	protected $aCells;
+	protected $oMetaModel;
 	
 	public function __construct($sId)
 	{
-		$this->sLayoutClass = null;
+		$this->sLayoutClass = 'DashboardLayoutOneCol';
 		$this->aCells = array();
 		$this->oDOMNode = null;
 		$this->sId = $sId;
 	}
-	
+
 	public function FromXml($sXml)
 	{
 		$this->aCells = array(); // reset the content of the dashboard
@@ -50,60 +51,83 @@ abstract class Dashboard
 		$oDoc = new DOMDocument();
 		$oDoc->loadXML($sXml);
 		restore_error_handler();
-		$this->oDOMNode = $oDoc->getElementsByTagName('dashboard')->item(0);
-		
-		$oLayoutNode = $this->oDOMNode->getElementsByTagName('layout')->item(0);
-		$this->sLayoutClass = $oLayoutNode->textContent;
-		
-		$oTitleNode = $this->oDOMNode->getElementsByTagName('title')->item(0);
-		$this->sTitle = $oTitleNode->textContent;
-		
-		$oCellsNode = $this->oDOMNode->getElementsByTagName('cells')->item(0);
-		$oCellsList = $oCellsNode->getElementsByTagName('cell');
-		$aCellOrder = array();
-		$iCellRank = 0;
-		foreach($oCellsList as $oCellNode)
-		{
-			$aDashletList = array();
-			$oCellRank =  $oCellNode->getElementsByTagName('rank')->item(0);
-			if ($oCellRank)
-			{
-				$iCellRank = (float)$oCellRank->textContent;
-			}
-			$oDashletsNode = $oCellNode->getElementsByTagName('dashlets')->item(0);
-			$oDashletList = $oDashletsNode->getElementsByTagName('dashlet');
-			$iRank = 0;
-			$aDashletOrder = array();
-			foreach($oDashletList as $oDomNode)
-			{
-				$sDashletClass = $oDomNode->getAttribute('xsi:type');
-				$oRank =  $oDomNode->getElementsByTagName('rank')->item(0);
-				if ($oRank)
-				{
-					$iRank = (float)$oRank->textContent;
-				}
-				$sId = $oDomNode->getAttribute('id');
-				$oNewDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sId);
-				$oNewDashlet->FromDOMNode($oDomNode);
-				$aDashletOrder[] = array('rank' => $iRank, 'dashlet' => $oNewDashlet);
-			}
-			usort($aDashletOrder, array(get_class($this), 'SortOnRank'));
-			$aDashletList = array();
-			foreach($aDashletOrder as $aItem)
-			{
-				$aDashletList[] = $aItem['dashlet'];
-			}
-			$aCellOrder[] = array('rank' => $iCellRank, 'dashlets' => $aDashletList);
-		}
-		usort($aCellOrder, array(get_class($this), 'SortOnRank'));
-		foreach($aCellOrder as $aItem)
-		{
-			$this->aCells[] = $aItem['dashlets'];
-		}
-		
-		
+		$this->FromDOMDocument($oDoc);
 	}
 	
+	public function FromDOMDocument(DOMDocument $oDoc)
+	{
+		$this->oDOMNode = $oDoc->getElementsByTagName('dashboard')->item(0);
+		
+		if ($oLayoutNode = $this->oDOMNode->getElementsByTagName('layout')->item(0))
+		{
+			$this->sLayoutClass = $oLayoutNode->textContent;
+		}
+		else
+		{
+			$this->sLayoutClass = 'DashboardLayoutOneCol';
+		}
+		
+		if ($oTitleNode = $this->oDOMNode->getElementsByTagName('title')->item(0))
+		{
+			$this->sTitle = $oTitleNode->textContent;
+		}
+		else
+		{
+			$this->sTitle = '';
+		}
+		
+		if ($oCellsNode = $this->oDOMNode->getElementsByTagName('cells')->item(0))
+		{
+			$oCellsList = $oCellsNode->getElementsByTagName('cell');
+			$aCellOrder = array();
+			$iCellRank = 0;
+			foreach($oCellsList as $oCellNode)
+			{
+				$aDashletList = array();
+				$oCellRank =  $oCellNode->getElementsByTagName('rank')->item(0);
+				if ($oCellRank)
+				{
+					$iCellRank = (float)$oCellRank->textContent;
+				}
+				$oDashletsNode = $oCellNode->getElementsByTagName('dashlets')->item(0);
+				{
+					$oDashletList = $oDashletsNode->getElementsByTagName('dashlet');
+					$iRank = 0;
+					$aDashletOrder = array();
+					foreach($oDashletList as $oDomNode)
+					{
+						$sDashletClass = $oDomNode->getAttribute('xsi:type');
+						$oRank =  $oDomNode->getElementsByTagName('rank')->item(0);
+						if ($oRank)
+						{
+							$iRank = (float)$oRank->textContent;
+						}
+						$sId = $oDomNode->getAttribute('id');
+						$oNewDashlet = new $sDashletClass($this->oMetaModel, $sId);
+						$oNewDashlet->FromDOMNode($oDomNode);
+						$aDashletOrder[] = array('rank' => $iRank, 'dashlet' => $oNewDashlet);
+					}
+					usort($aDashletOrder, array(get_class($this), 'SortOnRank'));
+					$aDashletList = array();
+					foreach($aDashletOrder as $aItem)
+					{
+						$aDashletList[] = $aItem['dashlet'];
+					}
+					$aCellOrder[] = array('rank' => $iCellRank, 'dashlets' => $aDashletList);
+				}
+			}
+			usort($aCellOrder, array(get_class($this), 'SortOnRank'));
+			foreach($aCellOrder as $aItem)
+			{
+				$this->aCells[] = $aItem['dashlets'];
+			}
+		}
+		else
+		{
+			$this->aCells = array();
+		}
+	}
+
 	static function SortOnRank($aItem1, $aItem2)
 	{
 		return ($aItem1['rank'] > $aItem2['rank']) ? +1 : -1;
@@ -133,14 +157,24 @@ abstract class Dashboard
 		$oMainNode->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
 		$oDoc->appendChild($oMainNode);
 		
+		$this->ToDOMNode($oMainNode);
+
+		$sXml = $oDoc->saveXML();
+		return $sXml;
+	}
+
+	public function ToDOMNode($oDefinition)
+	{
+		$oDoc = $oDefinition->ownerDocument;
+
 		$oNode = $oDoc->createElement('layout', $this->sLayoutClass);
-		$oMainNode->appendChild($oNode);
+		$oDefinition->appendChild($oNode);
 
 		$oNode = $oDoc->createElement('title', $this->sTitle);
-		$oMainNode->appendChild($oNode);
+		$oDefinition->appendChild($oNode);
 
 		$oCellsNode = $oDoc->createElement('cells');
-		$oMainNode->appendChild($oCellsNode);
+		$oDefinition->appendChild($oCellsNode);
 		
 		$iCellRank = 0;
 		foreach ($this->aCells as $aCell)
@@ -167,10 +201,8 @@ abstract class Dashboard
 				$oDashlet->ToDOMNode($oNode);
 			}
 		}
-
-		$sXml = $oDoc->saveXML();
-		return $sXml;
 	}
+
 
 	public function FromParams($aParams)
 	{
@@ -184,7 +216,7 @@ abstract class Dashboard
 			{
 				$sDashletClass = $aDashletParams['dashlet_class'];
 				$sId = $aDashletParams['dashlet_id'];
-				$oNewDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sId);
+				$oNewDashlet = new $sDashletClass($this->oMetaModel, $sId);
 				
 				$oForm = $oNewDashlet->GetForm();
 				$oForm->SetParamsContainer($sId);
@@ -197,7 +229,7 @@ abstract class Dashboard
 		}
 		
 	}
-	
+
 	public function Save()
 	{
 		
@@ -267,24 +299,43 @@ abstract class Dashboard
 		$oPage->add('</div>');
 		
 		$oForm = new DesignerForm();
+
+		$oField = new DesignerHiddenField('dashboard_id', '', $this->sId);
+		$oForm->AddField($oField);
+
 		$oField = new DesignerLongTextField('dashboard_title', Dict::S('UI:DashboardEdit:DashboardTitle'), $this->sTitle);
 		$oForm->AddField($oField);
 		$this->SetFormParams($oForm);
-		$oForm->RenderAsPropertySheet($oPage, false, ':itop-dashboard');	
+		$oForm->RenderAsPropertySheet($oPage, false, '.itop-dashboard');	
 		
 		$oPage->add('</div>');
 		$oPage->add_ready_script(
 <<<EOF
 	$('#select_layout').buttonset();
-	$('#select_layout input').click( function() {
-		var sLayoutClass = $(this).val();
-		$(':itop-dashboard').dashboard('option', {layout_class: sLayoutClass});
-	} );
-	$('#row_attr_dashboard_title').property_field('option', {parent_selector: ':itop-dashboard', auto_apply: false, 'do_apply': function() {
-			var sTitle = $('#attr_dashboard_title').val();
-			$(':itop-dashboard').dashboard('option', {title: sTitle});
-			return true;
-		}
+	$('#select_dashlet').droppable({
+		accept: '.dashlet',
+		drop: function(event, ui) {
+			$( this ).find( ".placeholder" ).remove();
+			var oDashlet = ui.draggable.data('itopDashlet');
+			oDashlet._remove_dashlet();
+		},
+	});
+
+	$('#event_bus').bind('dashlet-selected', function(event, data){
+		var sDashletId = data.dashlet_id;
+		var sPropId = 'dashlet_properties_'+sDashletId;
+		$('.dashlet_properties').each(function() {
+			var sId = $(this).attr('id');
+			var bShow = (sId == sPropId);
+			if (bShow)
+			{
+				$(this).show();
+			}
+			else
+			{
+				$(this).hide();
+			}
+		});
 	});
 EOF
 		);
@@ -319,7 +370,6 @@ EOF
 
 		$oPage->add('</div>');
 		$oPage->add_ready_script("$('.dashlet_icon').draggable({helper: 'clone', appendTo: 'body', zIndex: 10000, revert:'invalid'});");
-		$oPage->add_ready_script("$('.layout_cell').droppable({accept:'.dashlet_icon', hoverClass:'dragHover'});");
 	}
 	
 	public function RenderDashletsProperties($oPage)
@@ -339,7 +389,7 @@ EOF
 					$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$sId.'" style="display:none">');
 					$oForm = $oDashlet->GetForm();
 					$this->SetFormParams($oForm);
-					$oForm->RenderAsPropertySheet($oPage, false, ':itop-dashboard');		
+					$oForm->RenderAsPropertySheet($oPage, false, '.itop-dashboard');		
 					$oPage->add('</div>');
 				}
 			}
@@ -368,11 +418,12 @@ EOF
 class RuntimeDashboard extends Dashboard
 {
 	protected $bCustomized;
-	
+
 	public function __construct($sId)
 	{
 		parent::__construct($sId);
 		$this->bCustomized = false;
+		$this->oMetaModel = new ModelReflectionRuntime();
 	}
 		
 	public function SetCustomFlag($bCustomized)
@@ -482,7 +533,28 @@ EOF
 			);
 		}
 	}
-	
+
+	public function RenderProperties($oPage)
+	{
+		parent::RenderProperties($oPage);
+
+		$oPage->add_ready_script(
+<<<EOF
+	$('#select_layout input').click( function() {
+		var sLayoutClass = $(this).val();
+		$('.itop-dashboard').runtimedashboard('option', {layout_class: sLayoutClass});
+	} );
+	$('#row_attr_dashboard_title').property_field('option', {parent_selector: '.itop-dashboard', auto_apply: false, 'do_apply': function() {
+			var sTitle = $('#attr_dashboard_title').val();
+			$('.itop-dashboard').runtimedashboard('option', {title: sTitle});
+			return true;
+		}
+	});
+EOF
+		);
+	}
+
+
 	public function RenderEditor($oPage)
 	{
 		$oPage->add('<div id="dashboard_editor">');
@@ -521,7 +593,7 @@ $('#dashboard_editor').dialog({
 	title: '$sDialogTitle',
 	buttons: [
 	{ text: "$sOkButtonLabel", click: function() {
-		var oDashboard = $(':itop-dashboard').data('itopDashboard');
+		var oDashboard = $('.itop-dashboard').data('itopRuntimedashboard');
 		if (oDashboard.is_dirty())
 		{
 			if (!confirm('$sAutoApplyConfirmationMessage'))
@@ -537,7 +609,7 @@ $('#dashboard_editor').dialog({
 		oDashboard.save();
 	} },
 	{ text: "$sCancelButtonLabel", click: function() {
-		var oDashboard = $(':itop-dashboard').data('itopDashboard');
+		var oDashboard = $('.itop-dashboard').data('itopRuntimedashboard');
 		if (oDashboard.is_modified())
 		{
 			if (!confirm('$sCancelConfirmationMessage'))
@@ -553,40 +625,13 @@ $('#dashboard_editor').dialog({
 	close: function() { $(this).remove(); }
 });
 
-$('#dashboard_editor .ui-layout-center').dashboard({
+$('#dashboard_editor .ui-layout-center').runtimedashboard({
 	dashboard_id: '$sId', layout_class: '$sLayoutClass', title: '$sTitle',
 	submit_to: '$sUrl', submit_parameters: {operation: 'save_dashboard'},
 	render_to: '$sUrl', render_parameters: {operation: 'render_dashboard'},
 	new_dashlet_parameters: {operation: 'new_dashlet'}
 });
 
-$('#select_dashlet').droppable({
-	accept: '.dashlet',
-	drop: function(event, ui) {
-		$( this ).find( ".placeholder" ).remove();
-		var oDashlet = ui.draggable;
-		oDashlet.remove();
-	},
-});
-
-$('#event_bus').bind('dashlet-selected', function(event, data){
-		var sDashletId = data.dashlet_id;
-		var sPropId = 'dashlet_properties_'+sDashletId;
-		$('.dashlet_properties').each(function() {
-			var sId = $(this).attr('id');
-			var bShow = (sId == sPropId);
-			if (bShow)
-			{
-				$(this).show();
-			}
-			else
-			{
-				$(this).hide();
-			}
-		});
-
-	});
-	
 dashboard_prop_size = GetUserPreference('dashboard_prop_size', 350);
 $('#dashboard_editor').layout({
 	east: {
@@ -607,7 +652,7 @@ $('#dashboard_editor').layout({
 window.onbeforeunload = function() {
 	if (!window.bLeavingOnUserAction)
 	{
-		var oDashboard = $(':itop-dashboard').data('itopDashboard');
+		var oDashboard = $('.itop-dashboard').data('itopRuntimedashboard');
 		if (oDashboard)
 		{
 			if (oDashboard.is_dirty())
@@ -688,7 +733,7 @@ EOF
 		foreach($aDashlets as $sDashletClass => $aDashletInfo)
 		{
 			$oSubForm = new DesignerForm();
-			$oDashlet = new $sDashletClass(new ModelReflectionRuntime(), 0);
+			$oDashlet = new $sDashletClass($this->oMetaModel, 0);
 			$oDashlet->GetPropertiesFieldsFromOQL($oSubForm, $sOQL);
 			
 			$oSelectorField->AddSubForm($oSubForm, $aDashletInfo['label'], $aDashletInfo['class']);

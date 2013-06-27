@@ -187,7 +187,7 @@ $(function()
 			});
 			this.element.closest('form').find('.itop-property-field').each(function()
 			{
-				var oWidget = $(this).data('property_field');
+				var oWidget = $(this).data('itopProperty_field');
 				if (oWidget && oWidget._is_visible())
 				{
 					var oVal = oWidget._get_committed_value();

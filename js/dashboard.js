@@ -1,4 +1,9 @@
 // jQuery UI style "widget" for editing an iTop "dashboard"
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// dashboard
+//
 $(function()
 {
 	// the widget definition, where "itop" is the namespace,
@@ -25,23 +30,18 @@ $(function()
 
 			this.element
 			.addClass('itop-dashboard')
-			.bind('mark_as_modified.itop-dashboard', function(){me.mark_as_modified();} );
+			.bind('add_dashlet.itop_dashboard', function(event, oParams){
+				me.add_dashlet(oParams);
+			});
 
-			this.ajax_div = $('<div></div>').appendTo(this.element);
+			this.ajax_div = $('<div></div>');
+			this.element.after(this.ajax_div);
 			this._make_draggable();
-			this.bModified = false;
-			
 		},
 	
 		// called when created, and later when changing options
 		_refresh: function()
 		{
-			var oParams = this._get_state(this.options.render_parameters);
-			var me = this;
-			$.post(this.options.render_to, oParams, function(data){
-				me.element.html(data);
-				me._make_draggable();
-			});
 		},
 		// events bound via _bind are removed automatically
 		// revert other modifications here
@@ -58,7 +58,6 @@ $(function()
 		{
 			// in 1.9 would use _superApply
 			this._superApply(arguments);
-			this._refresh();
 		},
 		// _setOption is called for each individual option that is changing
 		_setOption: function( key, value )
@@ -96,6 +95,170 @@ $(function()
 			
 			return oState;
 		},
+		_get_new_id: function()
+		{
+			var iMaxId = 0;
+			this.element.find(':itop-dashlet').each(function() {
+				var oDashlet = $(this).data('itopDashlet');
+				if(oDashlet)
+				{
+					var oDashletParams = oDashlet.get_params();
+					var id = parseInt(oDashletParams.dashlet_id, 10);
+					if (id > iMaxId) iMaxId = id;
+				}
+			});
+			return 1 + iMaxId;			
+		},
+		_make_draggable: function()
+		{
+			var me = this;
+			this.element.find('.dashlet').draggable({
+				revert: 'invalid', appendTo: 'body', zIndex: 9999,
+				helper: function() {
+					var oDragItem = $(this).dashlet('get_drag_icon');
+					return oDragItem;
+				},
+				cursorAt: { top: 16, left: 16 }
+			});
+			this.element.find('table td').droppable({
+				accept: '.dashlet,.dashlet_icon',
+				drop: function(event, ui) {
+					$( this ).find( ".placeholder" ).remove();
+					var bRefresh = $(this).hasClass('layout_extension');
+					var oDropped = ui.draggable;
+					if (oDropped.hasClass('dashlet'))
+					{
+						// moving around a dashlet
+						oDropped.detach();
+						oDropped.css({top: 0, left: 0});
+						oDropped.appendTo($(this));
+
+						var oDashlet = ui.draggable.data('itopDashlet');
+						me.on_dashlet_moved(oDashlet, $(this), bRefresh);
+					}
+					else
+					{
+						// inserting a new dashlet
+						var sDashletClass = ui.draggable.attr('dashlet_class');
+						$('.itop-dashboard').trigger('add_dashlet', {dashlet_class: sDashletClass, container: $(this), refresh: bRefresh });
+					}
+				}
+			});	
+		},
+		add_dashlet: function(options)
+		{
+			// 1) Create empty divs for the dashlet and its properties
+			//
+			var sDashletId = this._get_new_id();
+			var oDashlet = $('<div class="dashlet" id="dashlet_'+sDashletId+'"/>');
+			oDashlet.appendTo(options.container);
+			var oDashletProperties = $('<div class="dashlet_properties" id="dashlet_properties_'+sDashletId+'"/>');
+			oDashletProperties.appendTo($('#dashlet_properties'));
+
+			// 2) Ajax call to fill the divs with default values
+			//    => in return, it must call add_dashlet_finalize
+			//
+			this.add_dashlet_ajax(options, sDashletId);
+		},
+		add_dashlet_finalize: function(options, sDashletId, sDashletClass)
+		{
+			$('#dashlet_'+sDashletId)
+			.dashlet({dashlet_id: sDashletId, dashlet_class: sDashletClass})
+			.dashlet('deselect_all')
+			.dashlet('select')
+			.draggable({
+				revert: 'invalid', appendTo: 'body', zIndex: 9999,
+				helper: function() {
+					var oDragItem = $(this).dashlet('get_drag_icon');
+					return oDragItem;
+				},
+				cursorAt: { top: 16, left: 16 }
+			});
+			if (options.refresh)
+			{
+				this._refresh();
+			}
+		},
+		on_dashlet_moved: function(oDashlet, oReceiver, bRefresh)
+		{
+			if (bRefresh)
+			{
+				// The layout was extended... refresh the whole dashboard
+				this._refresh();
+			}
+		}
+	});	
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// runtimedashboard (extends dashboard)
+//
+$(function()
+{
+	// the widget definition, where "itop" is the namespace,
+	// "dashboard" the widget name
+	$.widget( "itop.runtimedashboard", $.itop.dashboard,
+	{
+		// default options
+		options:
+		{
+			dashboard_id: '',
+			layout_class: '',
+			title: '',
+			submit_to: 'index.php',
+			submit_parameters: {},
+			render_to: 'index.php',
+			render_parameters: {},
+			new_dashlet_parameters: {}
+		},
+	
+		// the constructor
+		_create: function()
+		{
+			var me = this; 
+
+			this._superApply(arguments);
+
+			this.element
+			.addClass('itop-runtimedashboard')
+			.bind('mark_as_modified.itop-dashboard', function(){me.mark_as_modified();} );
+
+			this.bModified = false;
+		},
+	
+		// events bound via _bind are removed automatically
+		// revert other modifications here
+		_destroy: function()
+		{
+			this.element
+			.removeClass('itop-runtimedashboard');
+
+			this._superApply(arguments);
+		},
+		// _setOptions is called with a hash of all options that are changing
+		_setOptions: function()
+		{
+			this._superApply(arguments);
+			this._refresh();
+		},
+		// _setOption is called for each individual option that is changing
+		_setOption: function( key, value )
+		{
+			this._superApply(arguments);
+		},
+		// called when created, and later when changing options
+		_refresh: function()
+		{
+			this._super();
+
+			var oParams = this._get_state(this.options.render_parameters);
+			var me = this;
+			$.post(this.options.render_to, oParams, function(data){
+				me.element.html(data);
+				me._make_draggable();
+			});
+		},
 		// Modified means: at least one change has been applied
 		mark_as_modified: function()
 		{
@@ -130,14 +293,8 @@ $(function()
 				me.ajax_div.html(data);
 			});
 		},
-		add_dashlet: function(options)
+		add_dashlet_ajax: function(options, sDashletId)
 		{
-			var sDashletId = this._get_new_id();
-			var oDashlet = $('<div class="dashlet" id="dashlet_'+sDashletId+'"/>');
-			oDashlet.appendTo(options.container);
-			var oDashletProperties = $('<div class="dashlet_properties" id="dashlet_properties_'+sDashletId+'"/>');
-			oDashletProperties.appendTo($('#dashlet_properties'));
-			
 			var oParams = this.options.new_dashlet_parameters;
 			var sDashletClass = options.dashlet_class;
 			oParams.dashlet_class = sDashletClass;
@@ -145,79 +302,17 @@ $(function()
 			var me = this;
 			$.post(this.options.render_to, oParams, function(data){
 				me.ajax_div.html(data);
-				$('#dashlet_'+sDashletId)
-				.dashlet({dashlet_id: sDashletId, dashlet_class: sDashletClass})
-				.dashlet('deselect_all')
-				.dashlet('select')
-				.draggable({
-					revert: 'invalid', appendTo: 'body', zIndex: 9999,
-					helper: function() {
-						var oDragItem = $(this).dashlet('get_drag_icon');
-						return oDragItem;
-					},
-					cursorAt: { top: 16, left: 16 }
-				});
-				if (options.refresh)
-				{
-					me._refresh();
-				}
+				me.add_dashlet_finalize(options, sDashletId, sDashletClass);
 			});
-		},
-		_get_new_id: function()
-		{
-			var iMaxId = 0;
-			this.element.find(':itop-dashlet').each(function() {
-				var oDashlet = $(this).data('itopDashlet');
-				if(oDashlet)
-				{
-					var oDashletParams = oDashlet.get_params();
-					var id = parseInt(oDashletParams.dashlet_id, 10);
-					if (id > iMaxId) iMaxId = id;
-				}
-			});
-			return 1 + iMaxId;			
-		},
-		_make_draggable: function()
-		{
-			var me = this;
-			this.element.find('.dashlet').draggable({
-				revert: 'invalid', appendTo: 'body', zIndex: 9999,
-				helper: function() {
-					var oDragItem = $(this).dashlet('get_drag_icon');
-					return oDragItem;
-				},
-				cursorAt: { top: 16, left: 16 }
-			});
-			this.element.find('table td').droppable({
-				accept: '.dashlet,.dashlet_icon',
-				drop: function(event, ui) {
-					$( this ).find( ".placeholder" ).remove();
-					var bRefresh = $(this).hasClass('layout_extension');
-					var oDashlet = ui.draggable;
-					if (oDashlet.hasClass('dashlet'))
-					{
-						// moving around a dashlet
-						oDashlet.detach();
-						oDashlet.css({top: 0, left: 0});
-						oDashlet.appendTo($(this));
-						if( bRefresh )
-						{
-							// The layout was extended... refresh the whole dashboard
-							me._refresh();
-						}
-					}
-					else
-					{
-						// inserting a new dashlet
-						var sDashletClass = ui.draggable.attr('dashlet_class');
-						$(':itop-dashboard').dashboard('add_dashlet', {dashlet_class: sDashletClass, container: $(this), refresh: bRefresh });
-					}
-				}
-			});	
 		}
 	});	
 });
 
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Helper to upload the file selected in the "import dashboard" dialog
+//
 function UploadDashboard(oOptions)
 {
 	var sFileId = 'dashboard_upload_file';
@@ -229,6 +324,10 @@ function UploadDashboard(oOptions)
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// dashboard_upload_dlg
+//
 //jQuery UI style "widget" for managing a "import dashboard" dialog (file upload)
 $(function()
 {

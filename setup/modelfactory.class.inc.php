@@ -1441,11 +1441,25 @@ class MFElement extends DOMElement
 	}
 
 	/**
+	 * Extracts some nodes from the DOM (active nodes only !!!)
+	 * @param string $sXPath A XPath expression
+	 * @return DOMNodeList
+	 */
+	public function GetNodeById($sXPath, $sId)
+	{
+		return $this->ownerDocument->GetNodeById($sXPath, $sId, $this);
+	}
+
+	/**
 	 * For debugging purposes - but this is currently buggy: the whole document is rendered
 	 */
 	public function Dump($bReturnRes = false)
 	{
-		$sXml = $this->ownerDocument->saveXML($this);
+		$oMFDoc = new MFDocument();
+		$oClone = $oMFDoc->importNode($this->cloneNode(true), true);
+		$oMFDoc->appendChild($oClone);
+
+		$sXml = $oMFDoc->saveXML($oClone);
 		if ($bReturnRes)
 		{
 			return $sXml;
@@ -1713,6 +1727,9 @@ class MFElement extends DOMElement
 	 */	
 	public function AddChildNode(MFElement $oNode)
 	{
+		// First: cleanup any flag behind the new node
+		$oNode->ApplyChanges();
+	
 		$oExisting = $this->FindExistingChildNode($oNode);
 		if ($oExisting)
 		{
@@ -1740,6 +1757,9 @@ class MFElement extends DOMElement
 	 */	
 	public function RedefineChildNode(MFElement $oNode, $sSearchId = null)
 	{
+		// First: cleanup any flag behind the new node
+		$oNode->ApplyChanges();
+
 		$oExisting = $this->FindExistingChildNode($oNode, $sSearchId);
 		if (!$oExisting)
 		{
@@ -1906,7 +1926,45 @@ class MFElement extends DOMElement
 			$aCurrentRules = $oRulesNode->GetNodeAsArrayOfItems();
 		}
 		return $aCurrentRules;
-	 }	 	
+	 }
+
+	/**
+	 * List changes below a given node (see also MFDocument::ListChanges)	
+	 */	
+	public function ListChanges()
+	{
+		// Note: omitting the dot will make the query be global to the whole document!!!
+		return $this->GetNodes('.//*[@_alteration or @_old_id]');
+	}
+
+	/**
+	 * List changes below a given node (see also MFDocument::ApplyChanges)	
+	 */	
+	public function ApplyChanges()
+	{
+		$oNodes = $this->ListChanges();
+		foreach($oNodes as $oNode)
+		{
+			$sOperation = $oNode->GetAttribute('_alteration');
+			switch($sOperation)
+			{
+				case 'added':
+				case 'replaced':
+				// marked as added or modified, just reset the flag
+				$oNode->removeAttribute('_alteration');
+				break;
+				
+				case 'removed':
+				// marked as deleted, let's remove the node from the tree
+				$oNode->parentNode->removeChild($oNode);
+				break;
+			}
+			if ($oNode->hasAttribute('_old_id'))
+			{
+				$oNode->removeAttribute('_old_id');
+			}
+		}
+	}
 }
 
 /**

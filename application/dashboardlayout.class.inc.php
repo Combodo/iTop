@@ -107,14 +107,16 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		$oPage->add('<table style="width:100%"><tbody>');
 		$iCellIdx = 0;
 		$fColSize = 100 / $this->iNbCols;
-		$sStyle = $bEditMode ? 'style="border: 1px #ccc dashed; width:'.$fColSize.'%;" class="layout_cell edit_mode"' : 'style="width: '.$fColSize.'%;" class="dashboard"';
+		$sStyle = $bEditMode ? 'border: 1px #ccc dashed; width:'.$fColSize.'%;' : 'width: '.$fColSize.'%;';
+		$sClass = $bEditMode ? 'layout_cell edit_mode' : 'dashboard';
 		$iNbRows = ceil(count($aCells) / $this->iNbCols);
 		for($iRows = 0; $iRows < $iNbRows; $iRows++)
 		{
 			$oPage->add('<tr>');
 			for($iCols = 0; $iCols < $this->iNbCols; $iCols++)
 			{
-				$oPage->add("<td $sStyle>");
+				$sCellClass = ($iRows == $iNbRows-1) ? $sClass.' layout_last_used_rank' : $sClass;
+				$oPage->add("<td style=\"$sStyle\" class=\"$sCellClass\" data-dashboard-cell-index=\"$iCellIdx\">");
 				if (array_key_exists($iCellIdx, $aCells))
 				{
 					$aDashlets = $aCells[$iCellIdx];
@@ -144,7 +146,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		}
 		if ($bEditMode) // Add one row for extensibility
 		{
-			$sStyle = 'style="border: 1px #ccc dashed; width:'.$fColSize.'%;" class="layout_cell edit_mode layout_extension"';
+			$sStyle = 'style="border: 1px #ccc dashed; width:'.$fColSize.'%;" class="layout_cell edit_mode layout_extension" data-dashboard-cell-index="'.$iCellIdx.'"';
 			$oPage->add('<tr>');
 			for($iCols = 0; $iCols < $this->iNbCols; $iCols++)
 			{

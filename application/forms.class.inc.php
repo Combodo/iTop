@@ -828,19 +828,26 @@ class DesignerHiddenField extends DesignerFormField
 
 class DesignerIconSelectionField extends DesignerFormField
 {
+	protected $sUploadUrl;
 	protected $aAllowedValues;
 	
 	public function __construct($sCode, $sLabel = '', $defaultValue = '')
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
 		$this->bAutoApply = true;
+		$this->sUploadUrl = null;
 	}
 	
 	public function SetAllowedValues($aAllowedValues)
 	{
 		$this->aAllowedValues = $aAllowedValues;
 	}
-	
+
+	public function EnableUpload($sIconUploadUrl)
+	{
+		$this->sUploadUrl = $sIconUploadUrl;
+	}
+
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
@@ -867,6 +874,71 @@ EOF
 		return array('label' =>$this->sLabel, 'value' => "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"{$this->defaultValue}\"/>");
 	}
 }
+
+class RunTimeIconSelectionField extends DesignerIconSelectionField
+{
+	public function __construct($sCode, $sLabel = '', $defaultValue = '')
+	{
+		parent::__construct($sCode, $sLabel, $defaultValue);
+
+		$aAllIcons = self::FindIconsOnDisk(APPROOT.'env-'.utils::GetCurrentEnvironment());
+		ksort($aAllIcons);
+		$aValues = array();
+		foreach($aAllIcons as $sFilePath)
+		{
+			$aValues[] = array('value' => $sFilePath, 'label' => basename($sFilePath), 'icon' => utils::GetAbsoluteUrlModulesRoot().$sFilePath);
+		}
+		$this->SetAllowedValues($aValues);
+	}
+
+	static protected function FindIconsOnDisk($sBaseDir, $sDir = '')
+	{
+		$aResult = array();
+		// Populate automatically the list of icon files
+		if ($hDir = @opendir($sBaseDir.'/'.$sDir))
+		{
+			while (($sFile = readdir($hDir)) !== false)
+			{
+				$aMatches = array();
+				if (($sFile != '.') && ($sFile != '..') && ($sFile != 'lifecycle') && is_dir($sBaseDir.'/'.$sDir.'/'.$sFile))
+				{
+					$sDirSubPath = ($sDir == '') ? $sFile : $sDir.'/'.$sFile;
+					$aResult = array_merge($aResult, self::FindIconsOnDisk($sBaseDir, $sDirSubPath));
+				}
+				if (preg_match("/\.(png|jpg|jpeg|gif)$/i", $sFile, $aMatches)) // png, jp(e)g and gif are considered valid
+				{
+					$aResult[$sFile.'_'.$sDir] = $sDir.'/'.$sFile;
+				}
+			}
+			closedir($hDir);
+		}
+		return $aResult;
+	}
+
+	public function ValueFromDOMNode($oDOMNode)
+	{
+		return $oDOMNode->textContent;
+	}
+
+	public function ValueToDOMNode($oDOMNode, $value)
+	{
+		$oTextNode = $oDOMNode->ownerDocument->createTextNode($value);
+		$oDOMNode->appendChild($oTextNode);
+	}
+
+	public function MakeFileUrl($value)
+	{
+		return utils::GetAbsoluteUrlModulesRoot().$value;
+	}
+
+	public function GetDefaultValue($sClass = 'Contact')
+	{
+		$sIconPath = MetaModel::GetClassIcon($sClass, false);
+		$sIcon = str_replace(utils::GetAbsoluteUrlModulesRoot(), '', $sIconPath);
+		return $sIcon;	
+	}
+}
+
 
 class DesignerSortableField extends DesignerFormField
 {

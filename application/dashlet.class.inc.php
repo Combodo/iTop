@@ -87,11 +87,10 @@ abstract class Dashlet
 	{
 		foreach ($this->aProperties as $sProperty => $value)
 		{
-			$this->oDOMNode = $oDOMNode->getElementsByTagName($sProperty)->item(0);
-			if ($this->oDOMNode != null)
+			$oPropNode = $oDOMNode->getElementsByTagName($sProperty)->item(0);
+			if ($oPropNode != null)
 			{
-				$newvalue = $this->Str2Prop($sProperty, $this->oDOMNode->textContent);
-				$this->aProperties[$sProperty] = $newvalue;
+				$this->aProperties[$sProperty] = $this->PropertyFromDOMNode($oPropNode, $sProperty);
 			}
 		}
 	}
@@ -100,12 +99,26 @@ abstract class Dashlet
 	{
 		foreach ($this->aProperties as $sProperty => $value)
 		{
-			$sXmlValue = $this->Prop2Str($value);
-			$oPropNode = $oDOMNode->ownerDocument->createElement($sProperty, $sXmlValue);
+			$oPropNode = $oDOMNode->ownerDocument->createElement($sProperty);
 			$oDOMNode->appendChild($oPropNode);
+			$this->PropertyToDOMNode($oPropNode, $sProperty, $value);
 		}
 	}
-	
+
+
+	protected function PropertyFromDOMNode($oDOMNode, $sProperty)
+	{
+		$res = $this->Str2Prop($sProperty, $oDOMNode->textContent);
+		return $res;
+	}
+
+	protected function PropertyToDOMNode($oDOMNode, $sProperty, $value)
+	{
+		$sXmlValue = $this->Prop2Str($value);
+		$oTextNode = $oDOMNode->ownerDocument->createTextNode($sXmlValue);
+		$oDOMNode->appendChild($oTextNode);
+	}
+
 	public function FromXml($sXml)
 	{
 		$oDomDoc = new DOMDocument('1.0', 'UTF-8');
@@ -139,10 +152,24 @@ abstract class Dashlet
 				$oPage->add('<div class="'.$sCSSClasses.'">');
 			}
 		}
+		else
+		{
+			foreach ($this->aCSSClasses as $sCSSClass)
+			{
+				$oPage->add_ready_script("$('#dashlet_".$sId."').addClass('$sCSSClass');");
+			}
+		}
 		
 		try
 		{
-			$this->Render($oPage, $bEditMode, $aExtraParams);
+			if (get_class($this->oModelReflection) == 'ModelReflectionRuntime')
+			{
+				$this->Render($oPage, $bEditMode, $aExtraParams);
+			}
+			else
+			{
+				$this->RenderNoData($oPage, $bEditMode, $aExtraParams);
+			}
 		}
 		catch(UnknownClassOqlException $e)
 		{
@@ -195,6 +222,12 @@ EOF
 	}
 	
 	abstract public function Render($oPage, $bEditMode = false, $aExtraParams = array());
+
+	/* Rendering without the real data */
+	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$this->Render($oPage, $bEditMode, $aExtraParams);
+	}
 		
 	abstract public function GetPropertiesFields(DesignerForm $oForm);
 	
@@ -312,7 +345,7 @@ class DashletPlainText extends Dashlet
 		$sText = htmlentities($this->aProperties['text'], ENT_QUOTES, 'UTF-8');
 
 		$sId = 'plaintext_'.($bEditMode? 'edit_' : '').$this->sId;
-		$oPage->add('<div id='.$sId.'" class="dashlet-content">'.$sText.'</div>');
+		$oPage->add('<div id="'.$sId.'" class="dashlet-content">'.$sText.'</div>');
 	}
 
 	public function GetPropertiesFields(DesignerForm $oForm)
@@ -362,6 +395,27 @@ class DashletObjectList extends Dashlet
 		);
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 		$oBlock->Display($oPage, $sBlockId, $aExtraParams);
+		$oPage->add('</div>');
+	}
+
+	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$sTitle = $this->aProperties['title'];
+		$sQuery = $this->aProperties['query'];
+		$sShowMenu = $this->aProperties['menu'] ? '1' : '0';
+
+		$oPage->add('<div class="dashlet-content">');
+		$sHtmlTitle = htmlentities($this->oModelReflection->DictString($sTitle), ENT_QUOTES, 'UTF-8'); // done in the itop block
+		if ($sHtmlTitle != '')
+		{
+			$oPage->add('<h1>'.$sHtmlTitle.'</h1>');
+		}
+		$oQuery = $this->oModelReflection->GetQuery($sQuery);
+		$sClass = $oQuery->GetClass();
+		$oPage->add('<div id="block_fake_'.$this->sId.'" class="display_block">');
+		$oPage->p(Dict::S('UI:NoObjectToDisplay'));
+		$oPage->p('<a href="">'.Dict::Format('UI:ClickToCreateNew', $this->oModelReflection->GetName($sClass)).'</a>');
+		$oPage->add('</div>');
 		$oPage->add('</div>');
 	}
 
@@ -531,10 +585,74 @@ abstract class DashletGroupBy extends Dashlet
 		}
 	}
 
+	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$sTitle = $this->aProperties['title'];
+		$sQuery = $this->aProperties['query'];
+		$sGroupBy = $this->aProperties['group_by'];
+		$sStyle = $this->aProperties['style'];
+
+		$oQuery = $this->oModelReflection->GetQuery($sQuery);
+		$sClass = $oQuery->GetClass();
+
+
+		$aDisplayValues = array();
+		$sAttLabel = '';
+		if ($this->oModelReflection->IsValidAttCode($sClass, $sGroupBy))
+		{
+			$sAttLabel = $this->oModelReflection->GetLabel($sClass, $sGroupBy);
+			$aAllowed = $this->oModelReflection->GetAllowedValues_att($sClass, $sGroupBy);
+			if ($aAllowed) // null for non enums
+			{
+				$iTotal = 0;
+				foreach ($aAllowed as $sValue => $sValueLabel)
+				{
+					$iCount = (int) rand(2, 100);
+					$iTotal += $iCount;
+					$aDisplayValues[] = array(
+						'label' => $sValueLabel,
+						'count' => $iCount
+					);
+				}
+			}
+		}
+		else
+		{
+			$oPage->add('<div class="dashlet-content">Sorry, grouping by date/time cannot be viewed in the designer</div>');
+		}
+
+		$oPage->add('<div class="dashlet-content">');
+
+		$sBlockId = 'block_fake_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
+
+		$oPage->add('<div id="'.$sBlockId.'" class="display_block">');
+		$oPage->add('<p>'.Dict::Format('UI:Pagination:HeaderNoSelection', $iTotal).'</p>');
+		$oPage->add('<table class="listResults">');
+		$oPage->add('<thead>');
+		$oPage->add('<tr>');
+		$oPage->add('<th class="header" title="">'.$sAttLabel.'</th>');
+		$oPage->add('<th class="header" title="'.Dict::S('UI:GroupBy:Count+').'">'.Dict::S('UI:GroupBy:Count').'</th>');
+		$oPage->add('</tr>');
+		$oPage->add('</thead>');
+		$oPage->add('<tbody>');
+		foreach($aDisplayValues as $aDisplayData)
+		{
+			$oPage->add('<tr class="even">');
+			$oPage->add('<td class=""><span title="Active">'.$aDisplayData['label'].'</span></td>');
+			$oPage->add('<td class=""><a href="">'.$aDisplayData['count'].'</a></td>');
+			$oPage->add('</tr>');
+		}
+		$oPage->add('</tbody>');
+		$oPage->add('</table>');
+		$oPage->add('</div>');
+
+		$oPage->add('</div>');
+	}
+
 	protected function GetGroupByOptions($sOql)
 	{
-		$oSearch = DBObjectSearch::FromOQL($sOql);
-		$sClass = $oSearch->GetClass();
+		$oQuery = $this->oModelReflection->GetQuery($sOql);
+		$sClass = $oQuery->GetClass();
 		$aGroupBy = array();
 		foreach($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType)
 		{
@@ -604,11 +722,11 @@ abstract class DashletGroupBy extends Dashlet
 			try
 			{
 				$sCurrQuery = $aValues['query'];
-				$oCurrSearch = DBObjectSearch::FromOQL($sCurrQuery);
+				$oCurrSearch = $this->oModelReflection->GetQuery($sCurrQuery);
 				$sCurrClass = $oCurrSearch->GetClass();
 	
 				$sPrevQuery = $this->aProperties['query'];
-				$oPrevSearch = DBObjectSearch::FromOQL($sPrevQuery);
+				$oPrevSearch = $this->oModelReflection->GetQuery($sPrevQuery);
 				$sPrevClass = $oPrevSearch->GetClass();
 	
 				if ($sCurrClass != $sPrevClass)
@@ -631,15 +749,15 @@ abstract class DashletGroupBy extends Dashlet
 			{
 				// Style changed, mutate to the specified type of chart
 				case 'pie':
-				$oDashlet = new DashletGroupByPie($this->sId);
+				$oDashlet = new DashletGroupByPie($this->oModelReflection, $this->sId);
 				break;
 					
 				case 'bars':
-				$oDashlet = new DashletGroupByBars($this->sId);
+				$oDashlet = new DashletGroupByBars($this->oModelReflection, $this->sId);
 				break;
 					
 				case 'table':
-				$oDashlet = new DashletGroupByTable($this->sId);
+				$oDashlet = new DashletGroupByTable($this->oModelReflection, $this->sId);
 				break;
 			}
 			$oDashlet->FromParams($aValues);
@@ -756,9 +874,8 @@ class DashletHeaderStatic extends Dashlet
 	{
 		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['title'] = Dict::S('UI:DashletHeaderStatic:Prop-Title:Default');
-		$sIcon = $this->oModelReflection->GetClassIcon('Contact', false);
-		$sIcon = str_replace(utils::GetAbsoluteUrlModulesRoot(), '', $sIcon);
-		$this->aProperties['icon'] = $sIcon;
+		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
+		$this->aProperties['icon'] = $oIconSelect->GetDefaultValue('Contact');
 	}
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
@@ -766,13 +883,14 @@ class DashletHeaderStatic extends Dashlet
 		$sTitle = $this->aProperties['title'];
 		$sIcon = $this->aProperties['icon'];
 
-		$sIconPath = utils::GetAbsoluteUrlModulesRoot().$sIcon;
+		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
+		$sIconPath = $oIconSelect->MakeFileUrl($sIcon);
 
 		$oPage->add('<div class="dashlet-content">');
 		$oPage->add('<div class="main_header">');
 
 		$oPage->add('<img src="'.$sIconPath.'">');
-		$oPage->add('<h1>'.Dict::S($sTitle).'</h1>');
+		$oPage->add('<h1>'.$this->oModelReflection->DictString($sTitle).'</h1>');
 
 		$oPage->add('</div>');
 		$oPage->add('</div>');
@@ -783,18 +901,36 @@ class DashletHeaderStatic extends Dashlet
 		$oField = new DesignerTextField('title', Dict::S('UI:DashletHeaderStatic:Prop-Title'), $this->aProperties['title']);
 		$oForm->AddField($oField);
 		
-		$oField = new DesignerIconSelectionField('icon', Dict::S('UI:DashletHeaderStatic:Prop-Icon'), $this->aProperties['icon']);
-		$aAllIcons = self::FindIcons(APPROOT.'env-'.utils::GetCurrentEnvironment());
-		ksort($aAllIcons);
-		$aValues = array();
-		foreach($aAllIcons as $sFilePath)
-		{
-			$aValues[] = array('value' => $sFilePath, 'label' => basename($sFilePath), 'icon' => utils::GetAbsoluteUrlModulesRoot().$sFilePath);
-		}
-		$oField->SetAllowedValues($aValues);
+		$oField = $this->oModelReflection->GetIconSelectionField('icon', Dict::S('UI:DashletHeaderStatic:Prop-Icon'), $this->aProperties['icon']);
 		$oForm->AddField($oField);
 	}
 	
+	protected function PropertyFromDOMNode($oDOMNode, $sProperty)
+	{
+		if ($sProperty == 'icon')
+		{
+			$oIconField = $this->oModelReflection->GetIconSelectionField('icon');
+			return $oIconField->ValueFromDOMNode($oDOMNode);
+		}
+		else
+		{
+			return parent::PropertyFromDOMNode($oDOMNode, $sProperty);
+		}
+	}
+
+	protected function PropertyToDOMNode($oDOMNode, $sProperty, $value)
+	{
+		if ($sProperty == 'icon')
+		{
+			$oIconField = $this->oModelReflection->GetIconSelectionField('icon');
+			$oIconField->ValueToDOMNode($oDOMNode, $value);
+		}
+		else
+		{
+			parent::PropertyToDOMNode($oDOMNode, $sProperty, $value);
+		}
+	}
+
 	static public function GetInfo()
 	{
 		return array(
@@ -802,30 +938,6 @@ class DashletHeaderStatic extends Dashlet
 			'icon' => 'images/dashlet-header.png',
 			'description' => Dict::S('UI:DashletHeaderStatic:Description'),
 		);
-	}
-	
-	static public function FindIcons($sBaseDir, $sDir = '')
-	{
-		$aResult = array();
-		// Populate automatically the list of icon files
-		if ($hDir = @opendir($sBaseDir.'/'.$sDir))
-		{
-			while (($sFile = readdir($hDir)) !== false)
-			{
-				$aMatches = array();
-				if (($sFile != '.') && ($sFile != '..') && ($sFile != 'lifecycle') && is_dir($sBaseDir.'/'.$sDir.'/'.$sFile))
-				{
-					$sDirSubPath = ($sDir == '') ? $sFile : $sDir.'/'.$sFile;
-					$aResult = array_merge($aResult, self::FindIcons($sBaseDir, $sDirSubPath));
-				}
-				if (preg_match("/\.(png|jpg|jpeg|gif)$/i", $sFile, $aMatches)) // png, jp(e)g and gif are considered valid
-				{
-					$aResult[$sFile.'_'.$sDir] = $sDir.'/'.$sFile;
-				}
-			}
-			closedir($hDir);
-		}
-		return $aResult;
 	}
 }
 
@@ -836,28 +948,27 @@ class DashletHeaderDynamic extends Dashlet
 	{
 		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['title'] = Dict::S('UI:DashletHeaderDynamic:Prop-Title:Default');
-		$sIcon = $this->oModelReflection->GetClassIcon('Contact', false);
-		$sIcon = str_replace(utils::GetAbsoluteUrlModulesRoot(), '', $sIcon);
-		$this->aProperties['icon'] = $sIcon;
+		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
+		$this->aProperties['icon'] = $oIconSelect->GetDefaultValue('Contact');
 		$this->aProperties['subtitle'] = Dict::S('UI:DashletHeaderDynamic:Prop-Subtitle:Default');
 		$this->aProperties['query'] = 'SELECT Contact';
 		$this->aProperties['group_by'] = 'status';
 		$this->aProperties['values'] = array('active', 'inactive');
 	}
-	
-	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
+
+	protected function GetValues()
 	{
-		$sTitle = $this->aProperties['title'];
-		$sIcon = $this->aProperties['icon'];
-		$sSubtitle = $this->aProperties['subtitle'];
 		$sQuery = $this->aProperties['query'];
 		$sGroupBy = $this->aProperties['group_by'];
 		$aValues = $this->aProperties['values'];
 
-		$oFilter = DBObjectSearch::FromOQL($sQuery);
-		$sClass = $oFilter->GetClass();
+		if (empty($aValues))
+		{
+			$aValues = array();
+		}
 
-		$sIconPath = utils::GetAbsoluteUrlModulesRoot().$sIcon;
+		$oQuery = $this->oModelReflection->GetQuery($sQuery);
+		$sClass = $oQuery->GetClass();
 
 		if ($this->oModelReflection->IsValidAttCode($sClass, $sGroupBy))
 		{
@@ -870,6 +981,21 @@ class DashletHeaderDynamic extends Dashlet
 				}
 			}
 		}
+		return $aValues;
+	}
+
+	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$sTitle = $this->aProperties['title'];
+		$sIcon = $this->aProperties['icon'];
+		$sSubtitle = $this->aProperties['subtitle'];
+		$sQuery = $this->aProperties['query'];
+		$sGroupBy = $this->aProperties['group_by'];
+
+		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
+		$sIconPath = $oIconSelect->MakeFileUrl($sIcon);
+
+		$aValues = $this->GetValues();
 		if (count($aValues) > 0)
 		{
 			// Stats grouped by <group_by>
@@ -897,9 +1023,76 @@ class DashletHeaderDynamic extends Dashlet
 
 		$oPage->add('<img src="'.$sIconPath.'">');
 
+		$oFilter = DBObjectSearch::FromOQL($sQuery);
 		$oBlock = new DisplayBlock($oFilter, 'summary');
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 		$oBlock->Display($oPage, $sBlockId, $aExtraParams);
+
+		$oPage->add('</div>');
+		$oPage->add('</div>');
+	}
+
+	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$sTitle = $this->aProperties['title'];
+		$sIcon = $this->aProperties['icon'];
+		$sSubtitle = $this->aProperties['subtitle'];
+		$sQuery = $this->aProperties['query'];
+		$sGroupBy = $this->aProperties['group_by'];
+		$aValues = $this->aProperties['values'];
+
+		$oQuery = $this->oModelReflection->GetQuery($sQuery);
+		$sClass = $oQuery->GetClass();
+
+		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
+		$sIconPath = $oIconSelect->MakeFileUrl($sIcon);
+
+		$oPage->add('<div class="dashlet-content">');
+		$oPage->add('<div class="main_header">');
+
+		$oPage->add('<img src="'.$sIconPath.'">');
+
+		$sBlockId = 'block_fake_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
+
+		$iTotal = 0;
+		$aValues = $this->GetValues();
+		if (count($aValues) > 0)
+		{
+			// Stats grouped by <group_by>
+		}
+		else
+		{
+			// Simple stats
+		}
+
+		$oPage->add('<div class="display_block" id="'.$sBlockId.'">');
+		$oPage->add('<div class="summary-details">');
+		$oPage->add('<table><tbody>');
+		$oPage->add('<tr>');
+		foreach ($aValues as $sValue)
+		{
+			$sValueLabel = $this->oModelReflection->GetValueLabel($sClass, $sGroupBy, $sValue);
+   		$oPage->add('	<th>'.$sValueLabel.'</th>');
+   	}
+		$oPage->add('</tr>');
+		$oPage->add('<tr>');
+		foreach ($aValues as $sValue)
+		{
+			$iCount = (int) rand(2, 100);
+			$iTotal += $iCount;
+			$oPage->add('	<td>'.$iCount.'</td>');
+		}
+		$oPage->add('</tr>');
+		$oPage->add('</tbody></table>');
+		$oPage->add('</div>');
+
+		$sTitle = $this->oModelReflection->DictString($sTitle);
+		$sSubtitle = $this->oModelReflection->DictFormat($sSubtitle, $iTotal);
+//		$sSubtitle = "original: $sSubtitle, S:".$this->oModelReflection->DictString($sSubtitle).", Format: '".$this->oModelReflection->DictFormat($sSubtitle, $iTotal)."'";
+
+		$oPage->add('<h1>'.$sTitle.'</h1>');
+		$oPage->add('<a href="" class="summary">'.$sSubtitle.'</a>');
+		$oPage->add('</div>');
 
 		$oPage->add('</div>');
 		$oPage->add('</div>');
@@ -910,15 +1103,7 @@ class DashletHeaderDynamic extends Dashlet
 		$oField = new DesignerTextField('title', Dict::S('UI:DashletHeaderDynamic:Prop-Title'), $this->aProperties['title']);
 		$oForm->AddField($oField);
 
-		$oField = new DesignerIconSelectionField('icon', Dict::S('UI:DashletHeaderDynamic:Prop-Icon'), $this->aProperties['icon']);
-		$aAllIcons = DashletHeaderStatic::FindIcons(APPROOT.'env-'.utils::GetCurrentEnvironment());
-		ksort($aAllIcons);
-		$aValues = array();
-		foreach($aAllIcons as $sFilePath)
-		{
-			$aValues[] = array('value' => $sFilePath, 'label' => basename($sFilePath), 'icon' => utils::GetAbsoluteUrlModulesRoot().$sFilePath);
-		}
-		$oField->SetAllowedValues($aValues);
+		$oField = $this->oModelReflection->GetIconSelectionField('icon', Dict::S('UI:DashletHeaderDynamic:Prop-Icon'), $this->aProperties['icon']);
 		$oForm->AddField($oField);
 
 		$oField = new DesignerTextField('subtitle', Dict::S('UI:DashletHeaderDynamic:Prop-Subtitle'), $this->aProperties['subtitle']);
@@ -931,8 +1116,8 @@ class DashletHeaderDynamic extends Dashlet
 		try
 		{
 			// Group by field: build the list of possible values (attribute codes + ...)
-			$oSearch = DBObjectSearch::FromOQL($this->aProperties['query']);
-			$sClass = $oSearch->GetClass();
+			$oQuery = $this->oModelReflection->GetQuery($this->aProperties['query']);
+			$sClass = $oQuery->GetClass();
 			$aGroupBy = array();
 			foreach($this->oModelReflection->ListAttributes($sClass, 'AttributeEnum,AttributeFinalClass') as $sAttCode => $sAttType)
 			{
@@ -975,11 +1160,11 @@ class DashletHeaderDynamic extends Dashlet
 			try
 			{
 				$sCurrQuery = $aValues['query'];
-				$oCurrSearch = DBObjectSearch::FromOQL($sCurrQuery);
+				$oCurrSearch = $this->oModelReflection->GetQuery($sCurrQuery);
 				$sCurrClass = $oCurrSearch->GetClass();
 	
 				$sPrevQuery = $this->aProperties['query'];
-				$oPrevSearch = DBObjectSearch::FromOQL($sPrevQuery);
+				$oPrevSearch = $this->oModelReflection->GetQuery($sPrevQuery);
 				$sPrevClass = $oPrevSearch->GetClass();
 	
 				if ($sCurrClass != $sPrevClass)
@@ -1003,6 +1188,32 @@ class DashletHeaderDynamic extends Dashlet
 		return parent::Update($aValues, $aUpdatedFields);
 	}
 	
+	protected function PropertyFromDOMNode($oDOMNode, $sProperty)
+	{
+		if ($sProperty == 'icon')
+		{
+			$oIconField = $this->oModelReflection->GetIconSelectionField('icon');
+			return $oIconField->ValueFromDOMNode($oDOMNode);
+		}
+		else
+		{
+			return parent::PropertyFromDOMNode($oDOMNode, $sProperty);
+		}
+	}
+
+	protected function PropertyToDOMNode($oDOMNode, $sProperty, $value)
+	{
+		if ($sProperty == 'icon')
+		{
+			$oIconField = $this->oModelReflection->GetIconSelectionField('icon');
+			$oIconField->ValueToDOMNode($oDOMNode, $value);
+		}
+		else
+		{
+			parent::PropertyToDOMNode($oDOMNode, $sProperty, $value);
+		}
+	}
+
 	static public function GetInfo()
 	{
 		return array(
@@ -1023,7 +1234,7 @@ class DashletBadge extends Dashlet
 		$this->aCSSClasses[] = 'dashlet-inline';
 		$this->aCSSClasses[] = 'dashlet-badge';
 	}
-	
+
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sClass = $this->aProperties['class'];
@@ -1039,52 +1250,63 @@ class DashletBadge extends Dashlet
 		$oBlock->Display($oPage, $sBlockId, $aExtraParams);
 
 		$oPage->add('</div>');
-		if ($bEditMode)
-		{
-			// Since the container div is not rendered the same way in edit mode, add the 'inline' style to it
-			$oPage->add_ready_script("$('#dashlet_".$this->sId."').addClass('dashlet-inline');");
-		}
 	}
+
+	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$sClass = $this->aProperties['class'];
+
+		$sIconUrl = $this->oModelReflection->GetClassIcon($sClass, false);
+		$sClassLabel = $this->oModelReflection->GetName($sClass);
+
+		$oPage->add('<div class="dashlet-content">');
+
+		$oPage->add('<div id="block_fake_'.$this->sId.'" class="display_block">');
+		$oPage->add('<p>');
+		$oPage->add('   <a class="actions" href=""><img src="'.$sIconUrl.'" style="vertical-align:middle;float;left;margin-right:10px;border:0;">'.$sClassLabel.': 947</a>');
+		$oPage->add('</p>');
+		$oPage->add('<p>');
+		$oPage->add('   <a href="">'.Dict::Format('UI:ClickToCreateNew', $sClassLabel).'</a>');
+		$oPage->add('   <br/>');
+		$oPage->add('   <a href="http://localhost/trunk/pages/UI.php?operation=search_form&amp;class=Server&amp;c[menu]=WelcomeMenuPage">Search for Server objects</a>');
+		$oPage->add('</p>');
+		$oPage->add('</div>');
+
+		$oPage->add('</div>');
+	}
+
+	static protected $aClassList = null;
 
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
-
-		$oClassesSet = new ValueSetEnumClasses('bizmodel', array());
-		$aClasses = $oClassesSet->GetValues(array());
-		
-		$aLinkClasses = array();
-	
-		foreach($this->oModelReflection->GetClasses('bizmodel') as $sClass)
-		{	
-			foreach($this->oModelReflection->ListAttributes($sClass, 'AttributeLinkedSetIndirect') as $sAttCode => $sAttType)
-			{
-				$sLinkedClass = $this->oModelReflection->GetAttributeProperty($sClass, $sAttCode, 'linked_class');
-				if ($sLinkedClass != null)
-				{
-					$aLinkClasses[$sLinkedClass] = true;
-				}
-			}
-		}
-			
-		
-		$oField = new DesignerIconSelectionField('class', Dict::S('UI:DashletBadge:Prop-Class'), $this->aProperties['class']);
-		ksort($aClasses);
-		$aValues = array();
-		foreach($aClasses as $sClass => $sClass)
+		if (is_null(self::$aClassList))
 		{
-			if (!array_key_exists($sClass, $aLinkClasses))
+			// Cache the ordered list of classes (ordered on the label)
+			// (has a significant impact when editing a page with lots of badges)
+			//
+			$aClasses = array();
+			foreach($this->oModelReflection->GetClasses('bizmodel', true /*exclude links*/) as $sClass)
+			{	
+				$aClasses[$sClass] = $this->oModelReflection->GetName($sClass);
+			}
+			asort($aClasses);
+
+			self::$aClassList = array();
+			foreach($aClasses as $sClass => $sLabel)
 			{
 				$sIconUrl = $this->oModelReflection->GetClassIcon($sClass, false);
 				$sIconFilePath = str_replace(utils::GetAbsoluteUrlAppRoot(), APPROOT, $sIconUrl);
-				if (($sIconUrl == '') || !file_exists($sIconFilePath))
+				if ($sIconUrl == '')
 				{
-					// The icon does not exist, leet's use a transparent one of the same size.
+					// The icon does not exist, let's use a transparent one of the same size.
 					$sIconUrl = utils::GetAbsoluteUrlAppRoot().'images/transparent_32_32.png';
 				}
-				$aValues[] = array('value' => $sClass, 'label' => $this->oModelReflection->GetName($sClass), 'icon' => $sIconUrl);
+				self::$aClassList[] = array('value' => $sClass, 'label' => $sLabel, 'icon' => $sIconUrl);
 			}
 		}
-		$oField->SetAllowedValues($aValues);
+
+		$oField = new DesignerIconSelectionField('class', Dict::S('UI:DashletBadge:Prop-Class'), $this->aProperties['class']);
+		$oField->SetAllowedValues(self::$aClassList);
 		
 		$oForm->AddField($oField);
 	}
