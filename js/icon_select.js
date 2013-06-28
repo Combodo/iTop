@@ -29,6 +29,7 @@ $(function()
 			this.oLabel = $('<span>'+sLabel+'</span>');
 			this.oButton = $('<button><div style="display: inline-block;vertical-align: middle;"><span class="ui-icon ui-icon-triangle-1-s"/></div></button>');
 			this.oButton.prepend(this.oLabel).prepend(this.oImg);
+			this.oButton.click(function(event, ui) { me._on_button_clicked(event, ui); });
 			this.element.after(this.oButton);
 			this.element.addClass( "itop-icon-select" ).button();
 			this.element.bind( "reverted.itop-icon-select", function(ev, data) {
@@ -71,6 +72,13 @@ $(function()
 			sMenu = sMenu + '</ul>';
 			var iWidth = Math.max(250, this.oButton.width());
 			this.oMenu = this.oButton.menu({ content: sMenu, callback: function(data) {me._on_icon_selection(data);}, showSpeed: 0, maxHeight: 300, flyOut: true, width: iWidth, positionOpts: {posX: 'left', posY: 'top', offsetX: 0, offsetY: 0} });
+		},
+		_on_button_clicked: function(event, ui)
+		{
+			// Adjust the position of the menu, in case the button was moved...
+			// The simpler is to kill and rebuild the menu !!!
+			KillAllMenus();
+			this._create_menu();
 		},
 	
 		// events bound via _bind are removed automatically
