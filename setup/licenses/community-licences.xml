@@ -2,12 +2,12 @@
 <licenses>
 	<license>
 		<product>iTop</product>
-		<author>2010-2012 Combodo SARL</author>
+		<author>2010-2013 Combodo SARL</author>
 		<license_type>AGPL v3</license_type>
 		<text><![CDATA[
 <h3 style="text-align: center;">iTop - IT Operational Portal</h3>
 <pre>
-   Copyright (C) 2010-2012  Combodo SARL
+   Copyright (C) 2010-2013  Combodo SARL
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License as
@@ -703,7 +703,7 @@ For more information on this, and how to apply and follow the GNU AGPL, see
 		<product>jQuery, jQuery UI</product>
 		<author>the jQuery Foundation</author>
 		<license_type>MIT</license_type>
-		<text><![CDATA[<pre>Copyright 2012 jQuery Foundation and other contributors
+		<text><![CDATA[<pre>Copyright 2013 jQuery Foundation and other contributors
 http://jquery.com/
 
 Permission is hereby granted, free of charge, to any person obtaining
