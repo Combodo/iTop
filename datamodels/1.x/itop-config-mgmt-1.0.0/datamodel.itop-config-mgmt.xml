@@ -5931,7 +5931,7 @@
               </dashlet>
             </dashlets>
           </cell>
-          <cell id="0">
+          <cell id="1">
             <rank>0</rank>
             <dashlets>
               <dashlet id="2" xsi:type="DashletGroupByBars">
@@ -5943,7 +5943,7 @@
               </dashlet>
             </dashlets>
           </cell>
-          <cell id="0">
+          <cell id="2">
             <rank>0</rank>
             <dashlets>
               <dashlet id="3" xsi:type="DashletGroupByTable">
@@ -5965,7 +5965,7 @@
         <layout>DashboardLayoutOneCol</layout>
         <title></title>
         <cells>
-          <cell>
+          <cell id="1">
             <rank>0</rank>
             <dashlets>
               <dashlet id="1" xsi:type="DashletHeaderDynamic">
@@ -5987,7 +5987,7 @@
               </dashlet>
             </dashlets>
           </cell>
-          <cell>
+          <cell id="2">
             <rank>1</rank>
             <dashlets>
               <dashlet id="4" xsi:type="DashletGroupByPie">

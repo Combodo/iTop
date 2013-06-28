@@ -3,7 +3,7 @@
   <layout>DashboardLayoutOneCol</layout>
   <title></title>
   <cells>
-    <cell>
+    <cell id="0">
       <rank>0</rank>
       <dashlets>
         <dashlet id="1" xsi:type="DashletHeaderDynamic">
@@ -41,7 +41,7 @@
         </dashlet>
       </dashlets>
     </cell>
-    <cell>
+    <cell id="1">
       <rank>0</rank>
       <dashlets>
         <dashlet id="8" xsi:type="DashletHeaderDynamic">
@@ -61,7 +61,7 @@
         </dashlet>
       </dashlets>
     </cell>
-    <cell>
+    <cell id="2">
       <rank>0</rank>
       <dashlets>
         <dashlet id="10" xsi:type="DashletHeaderDynamic">
