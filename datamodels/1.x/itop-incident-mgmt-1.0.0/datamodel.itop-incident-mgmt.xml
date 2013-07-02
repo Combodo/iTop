@@ -1133,7 +1133,46 @@
     <menu id="Incident:Overview" xsi:type="DashboardMenuNode" _delta="define">
       <rank>0</rank>
       <parent>IncidentManagement</parent>
-      <definition_file>incident-dashboard.xml</definition_file>
+      <definition>
+        <title>UI:IncidentMgmtMenuOverview:Title</title>
+        <layout>DashboardLayoutTwoCols</layout>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="1" xsi:type="DashletGroupByBars">
+                <rank>0</rank>
+                <title>UI-IncidentManagementOverview-IncidentByService</title>
+                <query>SELECT Incident</query>
+                <group_by>service_id</group_by>
+                <style>bars</style>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="1">
+            <rank>1</rank>
+            <dashlets>
+              <dashlet id="2" xsi:type="DashletGroupByPie">
+                <rank>0</rank>
+                <title>UI-IncidentManagementOverview-IncidentByPriority</title>
+                <query>SELECT Incident</query>
+                <group_by>priority</group_by>
+                <style>pie</style>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="2">
+            <rank>2</rank>
+            <dashlets>
+              <dashlet id="3" xsi:type="DashletObjectList">
+                <rank>0</rank>
+                <title>UI-IncidentManagementOverview-IncidentUnassigned</title>
+                <query>SELECT Incident WHERE status IN ("new", "escalated_tto")</query>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
     </menu>
     <menu id="NewIncident" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>1</rank>
