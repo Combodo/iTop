@@ -1557,31 +1557,34 @@ class MFElement extends DOMElement
 			$aRanks = array();
 			foreach($oItems->childNodes as $oItem)
 			{
-				// When an attribute is missing
-				if ($oItem->hasAttribute('id'))
+				if ($oItem instanceof DOMElement)
 				{
-					$key = $oItem->getAttribute('id');
-					if (array_key_exists($key, $res))
+					// When an attribute is missing
+					if ($oItem->hasAttribute('id'))
 					{
-						// Houston!
-						throw new DOMFormatException("Tag ".$oItem->getNodePath().", id '$key' already used!!!");
+						$key = $oItem->getAttribute('id');
+						if (array_key_exists($key, $res))
+						{
+							// Houston!
+							throw new DOMFormatException("Tag ".$oItem->getNodePath().", id '$key' already used!!!");
+						}
+						$res[$key] = $oItem->GetNodeAsArrayOfItems();
 					}
-					$res[$key] = $oItem->GetNodeAsArrayOfItems();
+					else
+					{
+						$res[] = $oItem->GetNodeAsArrayOfItems();
+					}
+					$sRank = $oItem->GetChildText('rank');
+					if ($sRank != '')
+					{
+						$aRanks[] = (float) $sRank;
+					}
+					else
+					{
+						$aRanks[] = count($aRanks) > 0 ? max($aRanks) + 1 : 0;
+					}
+					array_multisort($aRanks, $res);
 				}
-				else
-				{
-					$res[] = $oItem->GetNodeAsArrayOfItems();
-				}
-				$sRank = $oItem->GetChildText('rank');
-				if ($sRank != '')
-				{
-					$aRanks[] = (float) $sRank;
-				}
-				else
-				{
-					$aRanks[] = count($aRanks) > 0 ? max($aRanks) + 1 : 0;
-				}
-				array_multisort($aRanks, $res);
 			}
 		}
 		else
