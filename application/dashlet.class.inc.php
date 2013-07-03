@@ -49,7 +49,12 @@ abstract class Dashlet
 	{
 		$refValue = $this->aProperties[$sProperty];
 		$sRefType = gettype($refValue);
-		if ($sRefType == 'boolean')
+		if (gettype($sValue) == $sRefType)
+		{
+			// Do not change anything in that case!
+			$ret = $sValue;
+		}
+		elseif ($sRefType == 'boolean')
 		{
 			$ret = ($sValue == 'true');
 		}
@@ -83,6 +88,10 @@ abstract class Dashlet
 		return $sRet;
 	}
 
+	protected function OnUpdate()
+	{
+	}
+
 	public function FromDOMNode($oDOMNode)
 	{
 		foreach ($this->aProperties as $sProperty => $value)
@@ -93,6 +102,7 @@ abstract class Dashlet
 				$this->aProperties[$sProperty] = $this->PropertyFromDOMNode($oPropNode, $sProperty);
 			}
 		}
+		$this->OnUpdate();
 	}
 
 	public function ToDOMNode($oDOMNode)
@@ -135,6 +145,7 @@ abstract class Dashlet
 				$this->aProperties[$sProperty] = $aParams[$sProperty];
 			}
 		}
+		$this->OnUpdate();
 	}
 	
 	public function DoRender($oPage, $bEditMode = false, $bEnclosingDiv = true, $aExtraParams = array())
@@ -242,9 +253,10 @@ EOF
 		{
 			if (array_key_exists($sProp, $this->aProperties))
 			{
-				$this->aProperties[$sProp] = $aValues[$sProp];
+				$this->aProperties[$sProp] = $this->Str2Prop($sProp, $aValues[$sProp]);
 			}
 		}
+		$this->OnUpdate();
 		return $this;
 	}
 	
@@ -402,7 +414,7 @@ class DashletObjectList extends Dashlet
 	{
 		$sTitle = $this->aProperties['title'];
 		$sQuery = $this->aProperties['query'];
-		$sShowMenu = $this->aProperties['menu'] ? '1' : '0';
+		$bShowMenu = $this->aProperties['menu'];
 
 		$oPage->add('<div class="dashlet-content">');
 		$sHtmlTitle = htmlentities($this->oModelReflection->DictString($sTitle), ENT_QUOTES, 'UTF-8'); // done in the itop block
@@ -414,7 +426,10 @@ class DashletObjectList extends Dashlet
 		$sClass = $oQuery->GetClass();
 		$oPage->add('<div id="block_fake_'.$this->sId.'" class="display_block">');
 		$oPage->p(Dict::S('UI:NoObjectToDisplay'));
-		$oPage->p('<a href="">'.Dict::Format('UI:ClickToCreateNew', $this->oModelReflection->GetName($sClass)).'</a>');
+		if ($bShowMenu)
+		{
+			$oPage->p('<a>'.Dict::Format('UI:ClickToCreateNew', $this->oModelReflection->GetName($sClass)).'</a>');
+		}
 		$oPage->add('</div>');
 		$oPage->add('</div>');
 	}
@@ -471,6 +486,85 @@ abstract class DashletGroupBy extends Dashlet
 		$this->aProperties['style'] = 'table';
 	}
 
+	protected $sGroupByLabel = null;
+	protected $sGroupByExpr = null;
+	protected $sGroupByAttCode = null;
+	protected $sFunction = null;
+
+	/**
+	 * Compute Grouping	
+	 */
+	public function OnUpdate()
+	{
+		$this->sGroupByExpr = null;
+		$this->sGroupByLabel = null;
+		$this->sGroupByAttCode = null;
+		$this->sFunction = null;
+
+		$sQuery = $this->aProperties['query'];
+		$sGroupBy = $this->aProperties['group_by'];
+		$sStyle = $this->aProperties['style'];
+
+		// First perform the query - if the OQL is not ok, it will generate an exception : no need to go further 
+		$oQuery = $this->oModelReflection->GetQuery($sQuery);
+		$sClass = $oQuery->GetClass();
+		$sClassAlias = $oQuery->GetClassAlias();
+
+		// Check groupby... it can be wrong at this stage
+		if (preg_match('/^(.*):(.*)$/', $sGroupBy, $aMatches))
+		{
+			$this->sGroupByAttCode = $aMatches[1];
+			$this->sFunction = $aMatches[2];
+		}
+		else
+		{
+			$this->sGroupByAttCode = $sGroupBy;
+			$this->sFunction = null;
+		}
+		if ($this->oModelReflection->IsValidAttCode($sClass, $this->sGroupByAttCode))
+		{
+			$sAttLabel = $this->oModelReflection->GetLabel($sClass, $this->sGroupByAttCode);
+			if (!is_null($this->sFunction))
+			{
+				switch($this->sFunction)
+				{
+				case 'hour':
+					$this->sGroupByLabel = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Hour', $sAttLabel);
+					$this->sGroupByExpr = "DATE_FORMAT($sClassAlias.{$this->sGroupByAttCode}, '%H')"; // 0 -> 23
+					break;
+
+				case 'month':
+					$this->sGroupByLabel = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Month', $sAttLabel);
+					$this->sGroupByExpr = "DATE_FORMAT($sClassAlias.{$this->sGroupByAttCode}, '%Y-%m')"; // yyyy-mm
+					break;
+
+				case 'day_of_week':
+					$this->sGroupByLabel = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:DayOfWeek', $sAttLabel);
+					$this->sGroupByExpr = "DATE_FORMAT($sClassAlias.{$this->sGroupByAttCode}, '%w')";
+					break;
+
+				case 'day_of_month':
+					$this->sGroupByLabel = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:DayOfMonth', $sAttLabel);
+					$this->sGroupByExpr = "DATE_FORMAT($sClassAlias.{$this->sGroupByAttCode}, '%Y-%m-%d')"; // mm-dd
+					break;
+
+				default:
+					$this->sGroupByLabel = 'Unknown group by function '.$this->sFunction;
+					$this->sGroupByExpr = $sClassAlias.'.'.$this->sGroupByAttCode;
+				}
+			}
+			else
+			{
+				$this->sGroupByExpr = $sClassAlias.'.'.$this->sGroupByAttCode;
+				$this->sGroupByLabel = $sAttLabel;
+			}
+		}
+		else
+		{
+			$this->sGroupByAttCode = null;
+		}
+	}
+
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sTitle = $this->aProperties['title'];
@@ -484,60 +578,12 @@ abstract class DashletGroupBy extends Dashlet
 		$sClass = $oFilter->GetClass();
 		$sClassAlias = $oFilter->GetClassAlias();
 
-		// Check groupby... it can be wrong at this stage
-		if (preg_match('/^(.*):(.*)$/', $sGroupBy, $aMatches))
-		{
-			$sAttCode = $aMatches[1];
-			$sFunction = $aMatches[2];
-		}
-		else
-		{
-			$sAttCode = $sGroupBy;
-			$sFunction = null;
-		}
-		if (!$this->oModelReflection->IsValidAttCode($sClass, $sAttCode))
+		if (!$this->oModelReflection->IsValidAttCode($sClass, $this->sGroupByAttCode))
 		{
 			$oPage->add('<p>'.Dict::S('UI:DashletGroupBy:MissingGroupBy').'</p>');
 		}
 		else
 		{
-			$sAttLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
-			if (!is_null($sFunction))
-			{
-				$sFunction = $aMatches[2];
-				switch($sFunction)
-				{
-				case 'hour':
-					$sGroupByLabel = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Hour', $sAttLabel);
-					$sGroupByExpr = "DATE_FORMAT($sClassAlias.$sAttCode, '%H')"; // 0 -> 23
-					break;
-
-				case 'month':
-					$sGroupByLabel = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Month', $sAttLabel);
-					$sGroupByExpr = "DATE_FORMAT($sClassAlias.$sAttCode, '%Y-%m')"; // yyyy-mm
-					break;
-
-				case 'day_of_week':
-					$sGroupByLabel = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:DayOfWeek', $sAttLabel);
-					$sGroupByExpr = "DATE_FORMAT($sClassAlias.$sAttCode, '%w')";
-					break;
-
-				case 'day_of_month':
-					$sGroupByLabel = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:DayOfMonth', $sAttLabel);
-					$sGroupByExpr = "DATE_FORMAT($sClassAlias.$sAttCode, '%Y-%m-%d')"; // mm-dd
-					break;
-
-				default:
-					$sGroupByLabel = 'Unknown group by function '.$sFunction;
-					$sGroupByExpr = $sClassAlias.'.'.$sAttCode;
-				}
-			}
-			else
-			{
-				$sGroupByExpr = $sClassAlias.'.'.$sAttCode;
-				$sGroupByLabel = $sAttLabel;
-			}
-
 			switch($sStyle)
 			{
 			case 'bars':
@@ -545,8 +591,8 @@ abstract class DashletGroupBy extends Dashlet
 				$aExtraParams = array(
 					'chart_type' => 'bars',
 					'chart_title' => $sTitle,
-					'group_by' => $sGroupByExpr,
-					'group_by_label' => $sGroupByLabel,
+					'group_by' => $this->sGroupByExpr,
+					'group_by_label' => $this->sGroupByLabel,
 				);
 				$sHtmlTitle = ''; // done in the itop block
 				break;
@@ -556,8 +602,8 @@ abstract class DashletGroupBy extends Dashlet
 				$aExtraParams = array(
 					'chart_type' => 'pie',
 					'chart_title' => $sTitle,
-					'group_by' => $sGroupByExpr,
-					'group_by_label' => $sGroupByLabel,
+					'group_by' => $this->sGroupByExpr,
+					'group_by_label' => $this->sGroupByLabel,
 				);
 				$sHtmlTitle = ''; // done in the itop block
 				break;
@@ -567,8 +613,8 @@ abstract class DashletGroupBy extends Dashlet
 				$sHtmlTitle = htmlentities(Dict::S($sTitle), ENT_QUOTES, 'UTF-8'); // done in the itop block
 				$sType = 'count';
 				$aExtraParams = array(
-					'group_by' => $sGroupByExpr,
-					'group_by_label' => $sGroupByLabel,
+					'group_by' => $this->sGroupByExpr,
+					'group_by_label' => $this->sGroupByLabel,
 				);
 				break;
 			}
@@ -585,67 +631,83 @@ abstract class DashletGroupBy extends Dashlet
 		}
 	}
 
-	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
+	protected function MakeSimulatedData()
 	{
-		$sTitle = $this->aProperties['title'];
 		$sQuery = $this->aProperties['query'];
 		$sGroupBy = $this->aProperties['group_by'];
-		$sStyle = $this->aProperties['style'];
 
 		$oQuery = $this->oModelReflection->GetQuery($sQuery);
 		$sClass = $oQuery->GetClass();
 
-
 		$aDisplayValues = array();
-		$sAttLabel = '';
-		if ($this->oModelReflection->IsValidAttCode($sClass, $sGroupBy))
+		if ($this->oModelReflection->IsValidAttCode($sClass, $this->sGroupByAttCode))
 		{
-			$sAttLabel = $this->oModelReflection->GetLabel($sClass, $sGroupBy);
-			$aAllowed = $this->oModelReflection->GetAllowedValues_att($sClass, $sGroupBy);
-			if ($aAllowed) // null for non enums
+			$aAttributeTypes = $this->oModelReflection->ListAttributes($sClass);
+			$sAttributeType = $aAttributeTypes[$this->sGroupByAttCode];
+			if (is_subclass_of($sAttributeType, 'AttributeDateTime') || $sAttributeType == 'AttributeDateTime')
 			{
-				$iTotal = 0;
-				foreach ($aAllowed as $sValue => $sValueLabel)
+				// Note: an alternative to this somewhat hardcoded way of doing things would be to implement...
+				//$oExpr = Expression::FromOQL($this->sGroupByExpr);
+				//$aTranslationData = array($oQuery->GetClassAlias() => array($this->sGroupByAttCode => new ScalarExpression(date('Y-m-d H:i:s', $iTime))));
+				//$sRawValue = CMDBSource::QueryToScalar('SELECT '.$oExpr->Translate($aTranslationData)->Render());
+				//$sValueLabel = $oExpr->MakeValueLabel(oFilter, $sRawValue, $sRawValue);
+				// Anyhow, this requires :
+				// - an update to the prototype of MakeValueLabel() so that it takes ModelReflection parameters
+				// - propose clever date/times samples
+
+				$aValues = array();
+				switch($this->sFunction)
 				{
-					$iCount = (int) rand(2, 100);
-					$iTotal += $iCount;
-					$aDisplayValues[] = array(
-						'label' => $sValueLabel,
-						'count' => $iCount
-					);
+				case 'hour':
+					$aValues = array(8, 9, 15, 18);
+					break;
+
+				case 'month':
+					$aValues = array('2013 '.Dict::S('Month-11'), '2013 '.Dict::S('Month-12'), '2014 '.Dict::S('Month-01'), '2014 '.Dict::S('Month-02'), '2014 '.Dict::S('Month-03'));
+					break;
+
+				case 'day_of_week':
+					$aValues = array(Dict::S('DayOfWeek-Monday'), Dict::S('DayOfWeek-Wednesday'), Dict::S('DayOfWeek-Thursday'), Dict::S('DayOfWeek-Friday'));
+					break;
+
+				case 'day_of_month':
+					$aValues = array(Dict::S('Month-03'). ' 30', Dict::S('Month-03'). ' 31', Dict::S('Month-04'). ' 01', Dict::S('Month-04'). ' 02', Dict::S('Month-04'). ' 03');
+					break;
+				}
+				foreach ($aValues as $sValue)
+				{
+					$aDisplayValues[] = array('label' => $sValue, 'count' => (int)rand(1, 15));
 				}
 			}
+			elseif (is_subclass_of($sAttributeType, 'AttributeEnum') || $sAttributeType == 'AttributeEnum')
+			{
+				$aAllowed = $this->oModelReflection->GetAllowedValues_att($sClass, $this->sGroupByAttCode);
+				if ($aAllowed) // null for non enums
+				{
+					foreach ($aAllowed as $sValue => $sValueLabel)
+					{
+						$iCount = (int) rand(2, 100);
+						$aDisplayValues[] = array(
+							'label' => $sValueLabel,
+							'count' => $iCount
+						);
+					}
+				}
+			}
+			else
+			{
+				$aDisplayValues[] = array('label' => 'a', 'count' => 123);
+				$aDisplayValues[] = array('label' => 'b', 'count' => 321);
+				$aDisplayValues[] = array('label' => 'c', 'count' => 456);
+			}
 		}
-		else
-		{
-			$oPage->add('<div class="dashlet-content">Sorry, grouping by date/time cannot be viewed in the designer</div>');
-		}
+		return $aDisplayValues;
+	}
 
+	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
+	{
 		$oPage->add('<div class="dashlet-content">');
-
-		$sBlockId = 'block_fake_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
-
-		$oPage->add('<div id="'.$sBlockId.'" class="display_block">');
-		$oPage->add('<p>'.Dict::Format('UI:Pagination:HeaderNoSelection', $iTotal).'</p>');
-		$oPage->add('<table class="listResults">');
-		$oPage->add('<thead>');
-		$oPage->add('<tr>');
-		$oPage->add('<th class="header" title="">'.$sAttLabel.'</th>');
-		$oPage->add('<th class="header" title="'.Dict::S('UI:GroupBy:Count+').'">'.Dict::S('UI:GroupBy:Count').'</th>');
-		$oPage->add('</tr>');
-		$oPage->add('</thead>');
-		$oPage->add('<tbody>');
-		foreach($aDisplayValues as $aDisplayData)
-		{
-			$oPage->add('<tr class="even">');
-			$oPage->add('<td class=""><span title="Active">'.$aDisplayData['label'].'</span></td>');
-			$oPage->add('<td class=""><a href="">'.$aDisplayData['count'].'</a></td>');
-			$oPage->add('</tr>');
-		}
-		$oPage->add('</tbody>');
-		$oPage->add('</table>');
-		$oPage->add('</div>');
-
+		$oPage->add('error!');
 		$oPage->add('</div>');
 	}
 
@@ -828,6 +890,89 @@ class DashletGroupByPie extends DashletGroupBy
 			'description' => Dict::S('UI:DashletGroupByPie:Description'),
 		);
 	}
+
+	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$sTitle = $this->aProperties['title'];
+
+		$aDisplayValues = $this->MakeSimulatedData();
+
+		require_once(APPROOT.'/pages/php-ofc-library/open-flash-chart.php');
+		$oChart = new open_flash_chart();
+	
+		$aGroupBy = array();
+		$aLabels = array();
+		foreach($aDisplayValues as $iRow => $aDisplayData)
+		{
+			$aLabels[$iRow] = $aDisplayData['label'];
+			$aGroupBy[$iRow] = (int) $aDisplayData['count'];
+		}
+
+		$oChartElement = new pie();
+		$oChartElement->set_start_angle( 35 );
+		$oChartElement->set_animate( true );
+		$oChartElement->set_tooltip( '#label# - #val# (#percent#)' );
+		$oChartElement->set_colours( array('#FF8A00', '#909980', '#2C2B33', '#CCC08D', '#596664') );
+	
+		$aData = array();
+		foreach($aGroupBy as $iRow => $iCount)
+		{
+			$sFlashLabel = html_entity_decode($aLabels[$iRow], ENT_QUOTES, 'UTF-8');
+			$PieValue = new pie_value($iCount, $sFlashLabel);
+			$aData[] = $PieValue;
+		}
+	
+		$oChartElement->set_values($aData);
+		$oChart->x_axis = null;
+
+		if (!empty($sTitle))
+		{
+			// The title has been given in an url, and urlencoded...
+			// and urlencode transforms utf-8 into something similar to ISO-8859-1
+			// Example: é (C3A9 becomes %E9)
+			// As a consequence, json_encode (called within open-flash-chart.php)
+			// was returning 'null' and the graph was not displayed at all
+			// To make sure that the graph is displayed AND to get a correct title
+			// (at least for european characters) let's transform back into utf-8 !
+			$sTitle = iconv("ISO-8859-1", "UTF-8//IGNORE", $sTitle);
+		
+			// If the title is a dictionnary entry, fetch it
+			$sTitle = $this->oModelReflection->DictString($sTitle);
+		
+			$oTitle = new title($sTitle);
+			$oChart->set_title($oTitle);
+		}
+		$oChart->set_bg_colour('#FFFFFF');
+		$oChart->add_element($oChartElement);
+
+		$sData = $oChart->toPrettyString();
+		$sData = json_encode($sData);
+		$oPage->add_script(
+<<< EOF
+function ofc_get_data_dashlet_{$this->sId}()
+{
+	return $sData;
+}
+EOF
+		);
+
+		$oPage->add('<div class="dashlet-content">');
+		$oPage->add("<div id=\"dashlet_chart_{$this->sId}\">If the chart does not display, <a href=\"http://get.adobe.com/flash/\" target=\"_blank\">install Flash</a></div>\n");
+		$oPage->add('</div>');
+
+//		$oPage->add_script("function ofc_resize(left, width, top, height) { /* do nothing special */ }");
+		$oPage->add_ready_script(
+<<<EOF
+swfobject.embedSWF(	"../images/open-flash-chart.swf", 
+	"dashlet_chart_{$this->sId}", 
+	"100%", "300","9.0.0",
+	"expressInstall.swf",
+	{"get-data":"ofc_get_data_dashlet_{$this->sId}", "id":"dashlet_chart_{$this->sId}"}, 
+	{'wmode': 'transparent'}
+);
+EOF
+		);
+	}
 }
 
 
@@ -847,6 +992,113 @@ class DashletGroupByBars extends DashletGroupBy
 			'description' => Dict::S('UI:DashletGroupByBars:Description'),
 		);
 	}
+
+	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$sTitle = $this->aProperties['title'];
+
+		$aDisplayValues = $this->MakeSimulatedData();
+
+		require_once(APPROOT.'/pages/php-ofc-library/open-flash-chart.php');
+		$oChart = new open_flash_chart();
+	
+		$aGroupBy = array();
+		$aLabels = array();
+		foreach($aDisplayValues as $iRow => $aDisplayData)
+		{
+			$aLabels[$iRow] = $aDisplayData['label'];
+			$aGroupBy[$iRow] = (int) $aDisplayData['count'];
+		}
+
+		$oChartElement = new bar_glass();
+
+		$aData = array();
+		$aChartLabels = array();
+		$maxValue = 0;
+		foreach($aGroupBy as $iRow => $iCount)
+		{
+			$oBarValue = new bar_value($iCount);
+			$aData[] = $oBarValue;
+			if ($iCount > $maxValue) $maxValue = $iCount;
+			$aChartLabels[] = html_entity_decode($aLabels[$iRow], ENT_QUOTES, 'UTF-8');
+		}
+		$oYAxis = new y_axis();
+		$aMagicValues = array(1,2,5,10);
+		$iMultiplier = 1;
+		$index = 0;
+		$iTop = $aMagicValues[$index % count($aMagicValues)]*$iMultiplier;
+		while($maxValue > $iTop)
+		{
+			$index++;
+			$iTop = $aMagicValues[$index % count($aMagicValues)]*$iMultiplier;
+			if (($index % count($aMagicValues)) == 0)
+			{
+				$iMultiplier = $iMultiplier * 10;
+			}
+		}
+		//echo "oYAxis->set_range(0, $iTop, $iMultiplier);\n";
+		$oYAxis->set_range(0, $iTop, $iMultiplier);
+		$oChart->set_y_axis( $oYAxis );
+	
+		$oChartElement->set_values( $aData );
+		$oXAxis = new x_axis();
+		$oXLabels = new x_axis_labels();
+		// set them vertical
+		$oXLabels->set_vertical();
+		// set the label text
+		$oXLabels->set_labels($aChartLabels);
+		// Add the X Axis Labels to the X Axis
+		$oXAxis->set_labels( $oXLabels );
+		$oChart->set_x_axis( $oXAxis );
+
+		if (!empty($sTitle))
+		{
+			// The title has been given in an url, and urlencoded...
+			// and urlencode transforms utf-8 into something similar to ISO-8859-1
+			// Example: é (C3A9 becomes %E9)
+			// As a consequence, json_encode (called within open-flash-chart.php)
+			// was returning 'null' and the graph was not displayed at all
+			// To make sure that the graph is displayed AND to get a correct title
+			// (at least for european characters) let's transform back into utf-8 !
+			$sTitle = iconv("ISO-8859-1", "UTF-8//IGNORE", $sTitle);
+		
+			// If the title is a dictionnary entry, fetch it
+			$sTitle = $this->oModelReflection->DictString($sTitle);
+		
+			$oTitle = new title($sTitle);
+			$oChart->set_title($oTitle);
+		}
+		$oChart->set_bg_colour('#FFFFFF');
+		$oChart->add_element($oChartElement);
+
+		$sData = $oChart->toPrettyString();
+		$sData = json_encode($sData);
+		$oPage->add_script(
+<<< EOF
+function ofc_get_data_dashlet_{$this->sId}()
+{
+	return $sData;
+}
+EOF
+		);
+
+		$oPage->add('<div class="dashlet-content">');
+		$oPage->add("<div id=\"dashlet_chart_{$this->sId}\">If the chart does not display, <a href=\"http://get.adobe.com/flash/\" target=\"_blank\">install Flash</a></div>\n");
+		$oPage->add('</div>');
+
+//		$oPage->add_script("function ofc_resize(left, width, top, height) { /* do nothing special */ }");
+		$oPage->add_ready_script(
+<<<EOF
+swfobject.embedSWF(	"../images/open-flash-chart.swf", 
+	"dashlet_chart_{$this->sId}", 
+	"100%", "300","9.0.0",
+	"expressInstall.swf",
+	{"get-data":"ofc_get_data_dashlet_{$this->sId}", "id":"dashlet_chart_{$this->sId}"}, 
+	{'wmode': 'transparent'}
+);
+EOF
+		);
+	}
 }
 
 class DashletGroupByTable extends DashletGroupBy
@@ -864,6 +1116,45 @@ class DashletGroupByTable extends DashletGroupBy
 			'description' => Dict::S('UI:DashletGroupByTable:Description'),
 			'icon' => 'images/dashlet-groupby-table.png',
 		);
+	}
+
+	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
+	{
+		$sTitle = $this->aProperties['title'];
+
+		$aDisplayValues = $this->MakeSimulatedData();
+		$iTotal = 0;
+		foreach($aDisplayValues as $iRow => $aDisplayData)
+		{
+			$iTotal += $aDisplayData['count'];
+		}
+
+		$oPage->add('<div class="dashlet-content">');
+
+		$sBlockId = 'block_fake_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
+
+		$oPage->add('<div id="'.$sBlockId.'" class="display_block">');
+		$oPage->add('<p>'.Dict::Format('UI:Pagination:HeaderNoSelection', $iTotal).'</p>');
+		$oPage->add('<table class="listResults">');
+		$oPage->add('<thead>');
+		$oPage->add('<tr>');
+		$oPage->add('<th class="header" title="">'.$this->sGroupByLabel.'</th>');
+		$oPage->add('<th class="header" title="'.Dict::S('UI:GroupBy:Count+').'">'.Dict::S('UI:GroupBy:Count').'</th>');
+		$oPage->add('</tr>');
+		$oPage->add('</thead>');
+		$oPage->add('<tbody>');
+		foreach($aDisplayValues as $aDisplayData)
+		{
+			$oPage->add('<tr class="even">');
+			$oPage->add('<td class=""><span title="Active">'.$aDisplayData['label'].'</span></td>');
+			$oPage->add('<td class=""><a>'.$aDisplayData['count'].'</a></td>');
+			$oPage->add('</tr>');
+		}
+		$oPage->add('</tbody>');
+		$oPage->add('</table>');
+		$oPage->add('</div>');
+
+		$oPage->add('</div>');
 	}
 }
 
@@ -1091,7 +1382,7 @@ class DashletHeaderDynamic extends Dashlet
 //		$sSubtitle = "original: $sSubtitle, S:".$this->oModelReflection->DictString($sSubtitle).", Format: '".$this->oModelReflection->DictFormat($sSubtitle, $iTotal)."'";
 
 		$oPage->add('<h1>'.$sTitle.'</h1>');
-		$oPage->add('<a href="" class="summary">'.$sSubtitle.'</a>');
+		$oPage->add('<a class="summary">'.$sSubtitle.'</a>');
 		$oPage->add('</div>');
 
 		$oPage->add('</div>');
@@ -1263,12 +1554,12 @@ class DashletBadge extends Dashlet
 
 		$oPage->add('<div id="block_fake_'.$this->sId.'" class="display_block">');
 		$oPage->add('<p>');
-		$oPage->add('   <a class="actions" href=""><img src="'.$sIconUrl.'" style="vertical-align:middle;float;left;margin-right:10px;border:0;">'.$sClassLabel.': 947</a>');
+		$oPage->add('   <a class="actions"><img src="'.$sIconUrl.'" style="vertical-align:middle;float;left;margin-right:10px;border:0;">'.$sClassLabel.': 947</a>');
 		$oPage->add('</p>');
 		$oPage->add('<p>');
-		$oPage->add('   <a href="">'.Dict::Format('UI:ClickToCreateNew', $sClassLabel).'</a>');
+		$oPage->add('   <a>'.Dict::Format('UI:ClickToCreateNew', $sClassLabel).'</a>');
 		$oPage->add('   <br/>');
-		$oPage->add('   <a href="http://localhost/trunk/pages/UI.php?operation=search_form&amp;class=Server&amp;c[menu]=WelcomeMenuPage">Search for Server objects</a>');
+		$oPage->add('   <a>Search for Server objects</a>');
 		$oPage->add('</p>');
 		$oPage->add('</div>');
 

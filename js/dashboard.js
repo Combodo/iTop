@@ -113,7 +113,7 @@ $(function()
 		{
 			var me = this;
 			this.element.find('.dashlet').draggable({
-				revert: 'invalid', appendTo: 'body', zIndex: 9999,
+				revert: 'invalid', appendTo: 'body', zIndex: 9999, distance: 10,
 				helper: function() {
 					var oDragItem = $(this).dashlet('get_drag_icon');
 					return oDragItem;
@@ -167,7 +167,7 @@ $(function()
 			.dashlet('deselect_all')
 			.dashlet('select')
 			.draggable({
-				revert: 'invalid', appendTo: 'body', zIndex: 9999,
+				revert: 'invalid', appendTo: 'body', zIndex: 9999, distance: 10,
 				helper: function() {
 					var oDragItem = $(this).dashlet('get_drag_icon');
 					return oDragItem;
