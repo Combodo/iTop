@@ -254,7 +254,7 @@ EOF
 	{
 		$sDialogTitle = addslashes($sDialogTitle);
 		$sOkButtonLabel = addslashes($sOkButtonLabel);
-		$sCancelButtonLabel = 'Cancel'; //TODO: localize
+		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
 		$oPage->add("<div id=\"$sDialogId\">");
 		$this->Render($oPage);
 		$oPage->add('</div>');
@@ -489,6 +489,7 @@ class DesignerFormField
 	protected $bMandatory;
 	protected $bReadOnly;
 	protected $bAutoApply;
+	protected $aCSSClasses;
 	
 	public function __construct($sCode, $sLabel, $defaultValue)
 	{
@@ -498,6 +499,7 @@ class DesignerFormField
 		$this->bMandatory = false;
 		$this->bReadOnly = false;
 		$this->bAutoApply = false;
+		$this->aCSSClasses = array();
 	}
 	
 	public function GetCode()
@@ -574,6 +576,11 @@ class DesignerFormField
 	{
 		return true;
 	}
+	
+	public function AddCSSClass($sCSSClass)
+	{
+		$this->aCSSClasses[] = $sCSSClass;
+	}
 }
 
 class DesignerLabelField extends DesignerFormField
@@ -633,7 +640,12 @@ $('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId'
 }
 EOF
 );
-		return array('label' => $this->sLabel, 'value' => "<input type=\"text\" id=\"$sId\" $sReadOnly name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\">");
+		$sCSSClasses = '';
+		if (count($this->aCSSClasses) > 0)
+		{
+			$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
+		}
+		return array('label' => $this->sLabel, 'value' => "<input type=\"text\" $sCSSClasses id=\"$sId\" $sReadOnly name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\">");
 	}
 
 	public function ReadParam(&$aValues)
@@ -665,7 +677,12 @@ $('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId'
 }
 EOF
 );
-		return array('label' => $this->sLabel, 'value' => "<textarea id=\"$sId\" $sReadOnly name=\"$sName\">".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."</textarea>");
+		$sCSSClasses = '';
+		if (count($this->aCSSClasses) > 0)
+		{
+			$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
+		}
+		return array('label' => $this->sLabel, 'value' => "<textarea $sCSSClasses id=\"$sId\" $sReadOnly name=\"$sName\">".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."</textarea>");
 	}
 }
 
@@ -709,13 +726,18 @@ class DesignerComboField extends DesignerFormField
 		$sChecked = $this->defaultValue ? 'checked' : '';
 		$sMandatory = $this->bMandatory ? 'true' :  'false';
 		$sReadOnly = $this->IsReadOnly() ? 'disabled="disabled"' :  '';
+		$sCSSClasses = '';
+		if (count($this->aCSSClasses) > 0)
+		{
+			$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
+		}
 		if ($this->bMultipleSelection)
 		{
-			$sHtml = "<select multiple size=\"8\"id=\"$sId\" name=\"$sName\" $sReadOnly>";
+			$sHtml = "<select $sCSSClasses multiple size=\"8\"id=\"$sId\" name=\"$sName\" $sReadOnly>";
 		}
 		else
 		{
-			$sHtml = "<select id=\"$sId\" name=\"$sName\" $sReadOnly>";
+			$sHtml = "<select $sCSSClasses id=\"$sId\" name=\"$sName\" $sReadOnly>";
 			$sHtml .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>";
 		}
 		foreach($this->aAllowedValues as $sKey => $sDisplayValue)
@@ -770,7 +792,12 @@ class DesignerBooleanField extends DesignerFormField
 		$sChecked = $this->defaultValue ? 'checked' : '';
 		$sReadOnly = $this->IsReadOnly() ? 'disabled' :  ''; // readonly does not work as expected on checkboxes:
 															 // readonly prevents the user from changing the input's value not its state (checked/unchecked)
-		return array('label' => $this->sLabel, 'value' => "<input type=\"checkbox\" $sChecked $sReadOnly id=\"$sId\" name=\"$sName\" value=\"true\">");
+		$sCSSClasses = '';
+		if (count($this->aCSSClasses) > 0)
+		{
+			$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
+		}
+		return array('label' => $this->sLabel, 'value' => "<input $sCSSClasses type=\"checkbox\" $sChecked $sReadOnly id=\"$sId\" name=\"$sName\" value=\"true\">");
 	}
 	
 	public function ReadParam(&$aValues)
@@ -862,11 +889,12 @@ class DesignerIconSelectionField extends DesignerFormField
 			}
 		}
 		$sJSItems = json_encode($this->aAllowedValues);
+		$sPostUploadTo = ($this->sUploadUrl == null) ? 'null' : "'{$this->sUploadUrl}'";
 		if (!$this->IsReadOnly())
 		{
 			$oP->add_ready_script(
 <<<EOF
-	$('#$sId').icon_select({current_idx: $idx, items: $sJSItems});
+	$('#$sId').icon_select({current_idx: $idx, items: $sJSItems, post_upload_to: $sPostUploadTo});
 EOF
 			);
 		}
@@ -960,7 +988,13 @@ class DesignerSortableField extends DesignerFormField
 		$bOpen = false;
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
-		$sHtml = "<span class=\"sort_$sId fieldslist\" id=\"sortable_$sId\">";
+		$sCSSClasses = '';
+		$this->aCSSClasses[] = "sort_$sId fieldslist";
+		if (count($this->aCSSClasses) > 0)
+		{
+			$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
+		}
+		$sHtml = "<span $sCSSClasses id=\"sortable_$sId\">";
 		foreach($this->defaultValue as $sValue)
 		{
 			$sHtml .= "<span class=\"movable_attr\">$sValue</span>";
@@ -1016,7 +1050,12 @@ class DesignerFormSelectorField extends DesignerFormField
 		$sName = $this->oForm->GetFieldName($this->sCode);
 		$sReadOnly = $this->IsReadOnly() ? 'disabled="disabled"' :  '';
 		
-		$sHtml = "<select id=\"$sId\" name=\"$sName\" $sReadOnly>";
+		$sCSSClasses = '';
+		if (count($this->aCSSClasses) > 0)
+		{
+			$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
+		}
+		$sHtml = "<select $sCSSClasses id=\"$sId\" name=\"$sName\" $sReadOnly>";
 		foreach($this->aSubForms as $sKey => $aFormData)
 		{
 			$sDisplayValue = $aFormData['label'];
