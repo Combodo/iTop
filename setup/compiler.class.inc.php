@@ -1014,7 +1014,7 @@ EOF;
 			$sParentSpec = '-1';
 		}
 
-		$fRank = $oMenu->GetChildText('rank');
+		$fRank = (float) $oMenu->GetChildText('rank');
 		switch($sMenuClass)
 		{
 		case 'WebPageMenuNode':
@@ -1056,12 +1056,6 @@ EOF;
 			$sNewMenu = "new DashboardMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank);";
 			break;
 
-		case 'TemplateMenuNode':
-			$sTemplateFile = $oMenu->GetChildText('template_file');
-			$sTemplateSpec = $this->PathToPHP($sTemplateFile, $sModuleRelativeDir);
-			$sNewMenu = "new TemplateMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank);";
-			break;
-
 		case 'ShortcutContainerMenuNode':
 			$sNewMenu = "new ShortcutContainerMenuNode('$sMenuId', $sParentSpec, $fRank);";
 			break;
@@ -1082,14 +1076,38 @@ EOF;
 			$sNewMenu = "new SearchMenuNode('$sMenuId', '$sClass', $sParentSpec, $fRank);";
 			break;
 
+		case 'TemplateMenuNode':
+			$sTemplateFile = $oMenu->GetChildText('template_file');
+			$sTemplateSpec = $this->PathToPHP($sTemplateFile, $sModuleRelativeDir);
+
+			if ($sEnableClass = $oMenu->GetChildText('enable_class'))
+			{
+				$sEnableAction = $oMenu->GetChildText('enable_action', 'null');
+				$sEnablePermission = $oMenu->GetChildText('enable_permission', 'UR_ALLOWED_YES');
+				$sEnableStimulus = $oMenu->GetChildText('enable_stimulus');
+				if ($sEnableStimulus != null)
+				{
+					$sNewMenu = "new TemplateMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank, '$sEnableClass', $sEnableAction, $sEnablePermission, '$sEnableStimulus');";
+				}
+				else
+				{
+					$sNewMenu = "new TemplateMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank, '$sEnableClass', $sEnableAction, $sEnablePermission);";
+				}
+			}
+			else
+			{
+				$sNewMenu = "new TemplateMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank);";
+			}
+			break;
+
 		case 'MenuGroup':
 		default:
 			if ($sEnableClass = $oMenu->GetChildText('enable_class'))
 			{
-				$sEnableAction = $oMenu->GetChildText('enable_action');
-				$sEnablePermission = $oMenu->GetChildText('enable_permission');
+				$sEnableAction = $oMenu->GetChildText('enable_action', 'null');
+				$sEnablePermission = $oMenu->GetChildText('enable_permission', 'UR_ALLOWED_YES');
 				$sEnableStimulus = $oMenu->GetChildText('enable_stimulus');
-				if (strlen($sEnableStimulus) > 0)
+				if ($sEnableStimulus != null)
 				{
 					$sNewMenu = "new $sMenuClass('$sMenuId', $fRank, '$sEnableClass', $sEnableAction, $sEnablePermission, '$sEnableStimulus');";
 				}
