@@ -72,7 +72,6 @@ class DesignerForm
 	
 	public function Render($oP, $bReturnHTML = false)
 	{
-		$sReturn = '';
 		if ($this->oParentForm == null)
 		{
 			$sFormId = $this->sFormId;
@@ -80,6 +79,7 @@ class DesignerForm
 		}
 		else
 		{
+			$sReturn = '';
 			$sFormId = $this->oParentForm->sFormId;
 		}
 		$sHiddenFields = '';
@@ -250,12 +250,17 @@ EOF
 			$oP->add($sReturn);
 		}
 	}	
-	public function RenderAsDialog($oPage, $sDialogId, $sDialogTitle, $iDialogWidth, $sOkButtonLabel)
+	public function RenderAsDialog($oPage, $sDialogId, $sDialogTitle, $iDialogWidth, $sOkButtonLabel, $sIntroduction = null)
 	{
 		$sDialogTitle = addslashes($sDialogTitle);
 		$sOkButtonLabel = addslashes($sOkButtonLabel);
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
+
 		$oPage->add("<div id=\"$sDialogId\">");
+		if ($sIntroduction != null)
+		{
+			$oPage->add('<div class="ui-dialog-header">'.$sIntroduction.'</div>');
+		}
 		$this->Render($oPage);
 		$oPage->add('</div>');
 		
