@@ -1220,12 +1220,20 @@ EOF
 	/**
 	 * Get the text/XML version of the delta
 	 */	
-	public function GetDelta()
+	public function GetDelta($aNodesToIgnore = array())
 	{
 		$oDelta = new MFDocument();
 		foreach($this->ListChanges() as $oAlteredNode)
 		{
 			$this->ImportNodeAndPathDelta($oDelta, $oAlteredNode);
+		}
+		foreach($aNodesToIgnore as $sXPath)
+		{
+			$oNodesToRemove = $oDelta->GetNodes($sXPath);
+			foreach($oNodesToRemove as $oNode)
+			{
+				$oNode->parentNode->removeChild($oNode);
+			}
 		}
 		return $oDelta->saveXML();
 	}
