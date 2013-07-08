@@ -213,30 +213,53 @@ $(function()
 
 var oFormValidation = {};
 
-function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId)
+function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId, aForbiddenValues, sExplainForbiddenValues)
 {
 	var currentVal = $('#'+sFieldId).val();
 	var bValid = true;
+	var sMessage = null;
 	
 	if (bMandatory && (currentVal == ''))
 	{
 		bValid = false;
 	}
-	
 	if ((sPattern != '') && (currentVal != ''))
 	{
 		re = new RegExp(sPattern);
 		bValid = re.test(currentVal);
 	}
+	if (aForbiddenValues)
+	{
+		for(var i = 0; i < aForbiddenValues.length; i++)
+		{
+			if (aForbiddenValues[i] == currentVal)
+			{
+				bValid = false;
+				sMessage = sExplainForbiddenValues;
+				break;
+			}
+		}
+	}
+
 	if (oFormValidation[sFormId] == undefined) oFormValidation[sFormId] = [];
 	if (!bValid)
 	{
 		$('#v_'+sFieldId).addClass('ui-state-error');
 		oFormValidation[sFormId].push(sFieldId);
+		if (sMessage)
+		{
+			$('#'+sFieldId).attr('title', sMessage).tooltip();
+			if ($('#'+sFieldId).is(":focus"))
+			{
+				$('#'+sFieldId).tooltip('open');
+			}
+		}
 	}
 	else
 	{
 		$('#v_'+sFieldId).removeClass('ui-state-error');
+		$('#'+sFieldId).tooltip('close');
+		$('#'+sFieldId).removeAttr('title');
 		// Remove the element from the array 
 		iFieldIdPos = oFormValidation[sFormId].indexOf(sFieldId);
 		oFormValidation[sFormId].splice(iFieldIdPos, 1);

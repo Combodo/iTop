@@ -618,15 +618,25 @@ class DesignerLabelField extends DesignerFormField
 class DesignerTextField extends DesignerFormField
 {
 	protected $sValidationPattern;
+	protected $aForbiddenValues;
+	protected $sExplainForbiddenValues;
 	public function __construct($sCode, $sLabel = '', $defaultValue = '')
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
 		$this->sValidationPattern = '';
+		$this->aForbiddenValues = null;
+		$this->sExplainForbiddenValues = null;
 	}
 	
 	public function SetValidationPattern($sValidationPattern)
 	{
 		$this->sValidationPattern = $sValidationPattern;
+	}
+
+	public function SetForbiddenValues($aValues, $sExplain)
+	{
+		$this->aForbiddenValues = $aValues;
+		$this->sExplainForbiddenValues = $sExplain;
 	}
 	
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
@@ -634,11 +644,21 @@ class DesignerTextField extends DesignerFormField
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
 		$sPattern = addslashes($this->sValidationPattern);
+		if (is_array($this->aForbiddenValues))
+		{
+			$sForbiddenValues = json_encode($this->aForbiddenValues);
+			$sExplainForbiddenValues = addslashes($this->sExplainForbiddenValues);
+		}
+		else
+		{
+			$sForbiddenValues = 'null';
+			$sExplainForbiddenValues = 'null';
+		}
 		$sMandatory = $this->bMandatory ? 'true' :  'false';
 		$sReadOnly = $this->IsReadOnly() ? 'readonly' :  '';
 		$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern', '$sFormId'); } );
+$('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern', '$sFormId', $sForbiddenValues, '$sExplainForbiddenValues'); } );
 {
 	var myTimer = null;
 	$('#$sId').bind('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
@@ -671,11 +691,21 @@ class DesignerLongTextField extends DesignerTextField
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
 		$sPattern = addslashes($this->sValidationPattern);
+		if (is_array($this->aForbiddenValues))
+		{
+			$sForbiddenValues = json_encode($this->aForbiddenValues);
+			$sExplainForbiddenValues = addslashes($this->sExplainForbiddenValues);
+		}
+		else
+		{
+			$sForbiddenValues = 'null';
+			$sExplainForbiddenValues = 'null';
+		}
 		$sMandatory = $this->bMandatory ? 'true' :  'false';
 		$sReadOnly = $this->IsReadOnly() ? 'readonly' :  '';
 		$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern', '$sFormId'); } );
+$('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern', '$sFormId', $sForbiddenValues, '$sExplainForbiddenValues'); } );
 {
 	var myTimer = null;
 	$('#$sId').bind('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
@@ -766,7 +796,7 @@ class DesignerComboField extends DesignerFormField
 		}
 		$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change validate', function() { ValidateWithPattern('$sId', $sMandatory, '', '$sFormId'); } );
+$('#$sId').bind('change validate', function() { ValidateWithPattern('$sId', $sMandatory, '', '$sFormId', null, null); } );
 EOF
 );
 		return array('label' => $this->sLabel, 'value' => $sHtml);
