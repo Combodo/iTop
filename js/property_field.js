@@ -258,7 +258,10 @@ function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId, aForbidden
 	else
 	{
 		$('#v_'+sFieldId).removeClass('ui-state-error');
-		$('#'+sFieldId).tooltip('close');
+		if ($('#'+sFieldId).data('uiTooltip'))
+		{
+			$('#'+sFieldId).tooltip('close');
+		}
 		$('#'+sFieldId).removeAttr('title');
 		// Remove the element from the array 
 		iFieldIdPos = oFormValidation[sFormId].indexOf(sFieldId);
