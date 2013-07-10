@@ -203,7 +203,7 @@ EOF
 	 */
     public function output()
     {
-		$this->set_base($this->m_sRootUrl.'pages/');
+		//$this->set_base($this->m_sRootUrl.'pages/');
         if (count($this->m_aReadyScripts)>0)
         {
 			$this->add_script("\$(document).ready(function() {\n".implode("\n", $this->m_aReadyScripts)."\n});");
