@@ -84,33 +84,43 @@ function SelectServiceCategory($oP, $oUserOrg)
 {
 	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS);
 	
-	$oP->add("<div class=\"wizContainer\" id=\"form_select_service\">\n");
-	$oP->WizardFormStart('request_wizard', 1);
-
-	$oP->add("<h1 id=\"select_category\">".Dict::S('Portal:SelectService')."</h1>\n");
-	$oP->add("<table>\n");
 	$oSearch = DBObjectSearch::FromOQL(PORTAL_SERVICECATEGORY_QUERY);
 	$oSearch->AllowAllData(); // In case the user has the rights on his org only
 	$oSet = new CMDBObjectSet($oSearch, array(), array('org_id' => $oUserOrg->GetKey()));
-	while($oService = $oSet->Fetch())
+	if ($oSet->Count() == 1)
 	{
-		$id = $oService->GetKey();
-		$sChecked = "";
-		if (isset($aParameters['service_id']) && ($id == $aParameters['service_id']))
-		{
-			$sChecked = "checked";
-		}
-		$oP->add("<tr><td style=\"vertical-align:top\"><p><input name=\"attr_service_id\" $sChecked type=\"radio\" id=\"service_$id\" value=\"$id\"></p></td><td style=\"vertical-align:top\"><p><b><label for=\"service_$id\">".$oService->GetName()."</label></b></p>");
-		$oP->add($oService->GetAsHTML('description')."</td></tr>");		
+		$oService = $oSet->Fetch();
+		$iSvcCategory = $oService->GetKey();
+		// Only one Category, skip this step in the wizard
+		SelectServiceSubCategory($oP, $oUserOrg, $iSvcCategory);
 	}
-	$oP->add("</table>\n");	
+	else
+	{
+		$oP->add("<div class=\"wizContainer\" id=\"form_select_service\">\n");
+		$oP->WizardFormStart('request_wizard', 1);
 
-	$oP->DumpHiddenParams($aParameters, array('service_id'));
-	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"create_request\">");
-	$oP->WizardFormButtons(BUTTON_BACK | BUTTON_NEXT | BUTTON_CANCEL);
-	$oP->WizardFormEnd();
-	$oP->WizardCheckSelectionOnSubmit(Dict::S('Portal:PleaseSelectOneService'));
-	$oP->add("</div>\n");
+		$oP->add("<h1 id=\"select_category\">".Dict::S('Portal:SelectService')."</h1>\n");
+		$oP->add("<table>\n");
+		while($oService = $oSet->Fetch())
+		{
+			$id = $oService->GetKey();
+			$sChecked = "";
+			if (isset($aParameters['service_id']) && ($id == $aParameters['service_id']))
+			{
+				$sChecked = "checked";
+			}
+			$oP->p("<tr><td style=\"vertical-align:top\"><p><input name=\"attr_service_id\" $sChecked type=\"radio\" id=\"service_$id\" value=\"$id\"></p></td><td style=\"vertical-align:top\"><p><b><label for=\"service_$id\">".$oService->GetName()."</label></b></p>");
+			$oP->p("<p>".$oService->GetAsHTML('description')."</p></td></tr>");		
+		}
+		$oP->add("</table>\n");	
+	
+		$oP->DumpHiddenParams($aParameters, array('service_id'));
+		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"create_request\">");
+		$oP->WizardFormButtons(BUTTON_NEXT | BUTTON_CANCEL); // NO back button since it's the first step of the Wizard
+		$oP->WizardFormEnd();
+		$oP->WizardCheckSelectionOnSubmit(Dict::S('Portal:PleaseSelectOneService'));
+		$oP->add("</div>\n");
+	}
 }
 
 /**
@@ -118,14 +128,23 @@ function SelectServiceCategory($oP, $oUserOrg)
  * and based on the page's parameter 'service_id'
  * @param WebPage $oP Web page for the form output
  * @param Organization $oUserOrg The organization of the current user
+ * @param $iSvcId Id of the selected service in case of pass-through (when there is only one service)
  * @return void
  */
 
-function SelectServiceSubCategory($oP, $oUserOrg)
+function SelectServiceSubCategory($oP, $oUserOrg, $iSvcId = null)
 {
 	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS);
-
-	$iSvcId = $aParameters['service_id'];
+	$iWizardButtons = 0;
+	if ($iSvcId == null)
+	{
+		$iSvcId = $aParameters['service_id'];
+	}
+	else
+	{
+		$aParameters['service_id'] = $iSvcId;
+		$iWizardButtons = BUTTON_NEXT;
+	}
 	$iDefaultSubSvcId = isset($aParameters['servicesubcategory_id']) ? $aParameters['servicesubcategory_id'] : 0;
 
 	$iDefaultWizNext = 2;
@@ -133,45 +152,56 @@ function SelectServiceSubCategory($oP, $oUserOrg)
 	$oSearch = DBObjectSearch::FromOQL(PORTAL_SERVICE_SUBCATEGORY_QUERY);
 	$oSearch->AllowAllData(); // In case the user has the rights on his org only
 	$oSet = new CMDBObjectSet($oSearch, array(), array('svc_id' => $iSvcId, 'org_id' => $oUserOrg->GetKey()));
-	$oServiceCategory = MetaModel::GetObject('Service', $iSvcId, false, true /* allow all data*/);
-	if (is_object($oServiceCategory))
+	if ($oSet->Count() == 1)
 	{
-		$oP->add("<div class=\"wizContainer\" id=\"form_select_servicesubcategory\">\n");
-		$oP->add("<h1 id=\"select_subcategory\">".Dict::Format('Portal:SelectSubcategoryFrom_Service', $oServiceCategory->GetName())."</h1>\n");
-		$oP->WizardFormStart('request_wizard', $iDefaultWizNext);
-		$oP->add("<table>\n");
-		while($oSubService = $oSet->Fetch())
-		{
-			$id = $oSubService->GetKey();
-			$sChecked = "";
-			if ($id == $iDefaultSubSvcId)
-			{
-				$sChecked = "checked";
-			}
-
-			$oP->add("<tr>");
-
-			$oP->add("<td style=\"vertical-align:top\">");
-			$oP->add("<p><input name=\"attr_servicesubcategory_id\" $sChecked type=\"radio\" id=\"servicesubcategory_$id\" value=\"$id\"></p>");
-			$oP->add("</td>");
-
-			$oP->add("<td style=\"vertical-align:top\">");
-			$oP->add("<p><b><label for=\"servicesubcategory_$id\">".$oSubService->GetName()."</label></b></p>");
-			$oP->add($oSubService->GetAsHTML('description'));
-			$oP->add("</td>");
-			$oP->add("</tr>");
-		}
-		$oP->add("</table>\n");	
-		$oP->DumpHiddenParams($aParameters, array('servicesubcategory_id'));
-		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"create_request\">");
-		$oP->WizardFormButtons(BUTTON_BACK | BUTTON_NEXT | BUTTON_CANCEL);
-		$oP->WizardFormEnd();
-		$oP->WizardCheckSelectionOnSubmit(Dict::S('Portal:PleaseSelectAServiceSubCategory'));
-		$oP->add("</div>\n");
+		// Only one sub service, skip this step of the wizard
+		$oSubService = $oSet->Fetch();
+		$iSubSvdId = $oSubService->GetKey();
+		RequestCreationForm($oP, $oUserOrg, $iSvcId, $iSubSvdId);
 	}
 	else
 	{
-		$oP->p("Error: Invalid Service: id = $iSvcId");
+		$oServiceCategory = MetaModel::GetObject('Service', $iSvcId, false, true /* allow all data*/);
+		if (is_object($oServiceCategory))
+		{
+			$oP->add("<div class=\"wizContainer\" id=\"form_select_servicesubcategory\">\n");
+			$oP->add("<h1 id=\"select_subcategory\">".Dict::Format('Portal:SelectSubcategoryFrom_Service', $oServiceCategory->GetName())."</h1>\n");
+			$oP->WizardFormStart('request_wizard', $iDefaultWizNext);
+			$oP->add("<table>\n");
+			while($oSubService = $oSet->Fetch())
+			{
+				$id = $oSubService->GetKey();
+				$sChecked = "";
+				if ($id == $iDefaultSubSvcId)
+				{
+					$sChecked = "checked";
+				}
+	
+				$oP->add("<tr>");
+	
+				$oP->add("<td style=\"vertical-align:top\">");
+				$oP->add("<p><input name=\"attr_servicesubcategory_id\" $sChecked type=\"radio\" id=\"servicesubcategory_$id\" value=\"$id\"></p>");
+				$oP->add("</td>");
+	
+				$oP->add("<td style=\"vertical-align:top\">");
+				$oP->add("<p><b><label for=\"servicesubcategory_$id\">".$oSubService->GetName()."</label></b></p>");
+				$oP->add("<p>".$oSubService->GetAsHTML('description')."</p>");
+				$oP->add("</td>");
+				$oP->add("</tr>");
+			}
+			$oP->add("</table>\n");	
+			$oP->DumpHiddenParams($aParameters, array('servicesubcategory_id'));
+			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"create_request\">");
+			$iWizardButtons |= BUTTON_NEXT | BUTTON_CANCEL;
+			$oP->WizardFormButtons($iWizardButtons);
+			$oP->WizardFormEnd();
+			$oP->WizardCheckSelectionOnSubmit(Dict::S('Portal:PleaseSelectAServiceSubCategory'));
+			$oP->add("</div>\n");
+		}
+		else
+		{
+			$oP->p("Error: Invalid Service: id = $iSvcId");
+		}
 	}
 }
 
@@ -179,9 +209,11 @@ function SelectServiceSubCategory($oP, $oUserOrg)
  * Displays the form for the final step of the UserRequest creation
  * @param WebPage $oP The current web page for the form output
  * @param Organization $oUserOrg The organization of the current user
+ * @param integer $iSvcId The identifier of the service (in cal of fall through, when there is only one service)
+ * @param integer $iSubSvcId The identifier of the sub-service (in cal of fall through, when there is only one sub-service)
  * @return void
  */
-function RequestCreationForm($oP, $oUserOrg)
+function RequestCreationForm($oP, $oUserOrg, $iSvcId = null, $iSubSvcId = null)
 {
 		$oP->add_script(
 <<<EOF
@@ -190,7 +222,15 @@ function RequestCreationForm($oP, $oUserOrg)
 EOF
 );
 	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS);
-
+	if ($iSvcId != null)
+	{
+		$aParameters['service_id'] = $iSvcId;
+	}
+	if ($iSubSvcId != null)
+	{
+		$aParameters['servicesubcategory_id'] = $iSubSvcId;
+	}
+	
 	// Example: $aList = array('title', 'description', 'impact', 'emergency');
 	$aList = explode(',', PORTAL_REQUEST_FORM_ATTRIBUTES);
 
@@ -418,7 +458,7 @@ function ListOpenRequests(WebPage $oP)
 		$oSearch->AddCondition('caller_id', $iUser);
 	}
 	$oSet = new CMDBObjectSet($oSearch, array(), array('org_id' => $oUserOrg->GetKey()));
-	$aZList =  array('finalclass', 'title', 'start_date', 'status', 'servicesubcategory_id', 'priority', 'caller_id');
+	$aZList =  explode(',', PORTAL_TICKETS_LIST_ZLIST);
 	$oP->DisplaySet($oSet, $aZList, Dict::S('Portal:NoOpenRequest'));
 }
 
@@ -439,7 +479,7 @@ function ListResolvedRequests(WebPage $oP)
 		$oSearch->AddCondition('caller_id', $iUser);
 	}
 	$oSet = new CMDBObjectSet($oSearch, array(), array('org_id' => $oUserOrg->GetKey()));
-	$aZList =  array('finalclass', 'title', 'start_date', 'status', 'servicesubcategory_id', 'priority', 'caller_id');
+	$aZList =  explode(',', PORTAL_TICKETS_LIST_ZLIST);
 	$oP->DisplaySet($oSet, $aZList, Dict::S('Portal:NoOpenRequest'));
 }
 
@@ -450,8 +490,8 @@ function ListResolvedRequests(WebPage $oP)
  */
 function ListClosedTickets(WebPage $oP)
 {
-	$aAttSpecs = array('ref', 'start_date', 'close_date', 'service_id', 'caller_id');
-	$aZList =  array('title', 'start_date', 'close_date', 'servicesubcategory_id');
+	$aAttSpecs = explode(',', PORTAL_TICKETS_SEARCH_CRITERIA);
+	$aZList =  explode(',', PORTAL_TICKETS_CLOSED_ZLIST);
 
 	$oP->DisplaySearchForm('UserRequest', $aAttSpecs, array('operation' => 'show_closed'), 'search_', false /* => not closed */);
 
@@ -503,7 +543,7 @@ function DisplayObject($oP, $oObj, $oUserOrg)
  * @return void
  */
 function ShowDetailsRequest(WebPage $oP, $oObj)
-{
+{	
 	$sClass = get_class($oObj);
 
 	$bIsEscalateButton = false;
@@ -557,7 +597,8 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 	switch($sClass)
 	{
 		case 'UserRequest':
-		$aAttList = array('col:left'=> array('ref','caller_id','servicesubcategory_id','title','description'),'col:right'=> array('status','priority','start_date','resolution_date','last_update','agent_id'));
+		$aAttList = json_decode(PORTAL_TICKET_DETAILS_ZLIST, true);
+
 		switch($oObj->GetState())
 		{
 			case 'closed':
