@@ -33,4 +33,11 @@ define('PORTAL_REQUEST_FORM_ATTRIBUTES', 'title,description,impact,urgency,workg
 define('PORTAL_ATTCODE_TYPE', ''); // optional if the type has to be set
 define('PORTAL_SET_TYPE_FROM', ''); // The attribute to get the type from (Subcategory)
 
+define('PORTAL_TICKETS_LIST_ZLIST', 'finalclass,title,start_date,status,servicesubcategory_id,priority,caller_id');
+define('PORTAL_TICKETS_SEARCH_CRITERIA','ref,start_date,close_date,service_id,caller_id');
+define('PORTAL_TICKETS_CLOSED_ZLIST', 'title,start_date,close_date,servicesubcategory_id');
+// json encoded lists for the portal...
+define('PORTAL_TICKET_DETAILS_ZLIST', '{"col:left":["ref","caller_id","servicesubcategory_id","title","description","solution"],"col:right":["status","priority","start_date","resolution_date","last_update","agent_id"]}');
+
+
 ?>
