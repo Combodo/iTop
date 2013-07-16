@@ -230,7 +230,7 @@ function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId, aForbidden
 	}
 	if (aForbiddenValues)
 	{
-		for(var i = 0; i < aForbiddenValues.length; i++)
+		for(var i in aForbiddenValues)
 		{
 			if (aForbiddenValues[i] == currentVal)
 			{
