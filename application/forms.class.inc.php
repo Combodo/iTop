@@ -36,6 +36,7 @@ class DesignerForm
 	protected $aSubmitParams;
 	protected $sSubmitTo;
 	protected $bReadOnly;
+	protected $sSelectorClass;
 	
 	public function __construct()
 	{
@@ -48,6 +49,7 @@ class DesignerForm
 		$this->sFormId = 'form_'.rand();
 		$this->oParentForm = null;
 		$this->bReadOnly = false;
+		$this->sSelectorClass = '';
 		$this->StartFieldSet($this->sCurrentFieldSet);
 	}
 	
@@ -145,6 +147,16 @@ class DesignerForm
 	{
 		$this->sSubmitTo = $oParentForm->sSubmitTo;
 		$this->aSubmitParams = $oParentForm->aSubmitParams;
+	}
+	
+	public function SetSelectorClass($sSelectorClass)
+	{
+		$this->sSelectorClass = $sSelectorClass;
+	}
+	
+	public function GetSelectorClass()
+	{
+		return $this->sSelectorClass;
 	}
 	
 	
@@ -347,6 +359,12 @@ EOF
 	{
 		$this->oParentForm = $oParentForm;
 	}
+	
+	public function GetParentForm()
+	{
+		return $this->oParentForm;
+	}
+	
 	
 	public function AddScript($sScript)
 	{
@@ -636,6 +654,15 @@ class DesignerTextField extends DesignerFormField
 	public function SetForbiddenValues($aValues, $sExplain)
 	{
 		$this->aForbiddenValues = $aValues;
+		
+		$iDefaultKey = array_search($this->defaultValue, $this->aForbiddenValues);
+		if ($iDefaultKey !== false)
+		{
+			// The default (current) value is always allowed...
+			unset($this->aForbiddenValues[$iDefaultKey]);
+			
+		}
+		
 		$this->sExplainForbiddenValues = $sExplain;
 	}
 	
@@ -679,6 +706,11 @@ EOF
 
 		if (($this->sValidationPattern != '') &&(!preg_match('/'.$this->sValidationPattern.'/', $aValues[$this->sCode])) ) 
 		{
+			$aValues[$this->sCode] = $this->defaultValue;
+		}
+		else if(($this->aForbiddenValues != null) && in_array($aValues[$this->sCode], $this->aForbiddenValues))
+		{
+			// Reject the value...
 			$aValues[$this->sCode] = $this->defaultValue;
 		}
 	}
@@ -1023,37 +1055,15 @@ class DesignerSortableField extends DesignerFormField
 		$bOpen = false;
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
-		$sCSSClasses = '';
-		$this->aCSSClasses[] = "sort_$sId fieldslist";
-		if (count($this->aCSSClasses) > 0)
-		{
-			$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
-		}
-		$sHtml = "<span $sCSSClasses id=\"sortable_$sId\">";
-		foreach($this->defaultValue as $sValue)
-		{
-			$sHtml .= "<span class=\"movable_attr\">$sValue</span>";
-		}
-		$sHtml .="</span>";
-		$sIconClass = $bOpen ? 'ui-icon-circle-triangle-s' : 'ui-icon-circle-triangle-e';
-		$sStyle = $bOpen ? '' : 'style="display:none"';
-		$sHtml .= "<div class=\"fieldspicker\"><table><tr><td><span id=\"collapse_$sId\" class=\"ui-icon $sIconClass\" style=\"opacity: 0.5\"></span>Fields</td></tr><tr><td><div $sStyle id=\"fieldsbasket_$sId\" class=\"sort_$sId fieldsbasket\">";
-		foreach($this->aAllowedValues as $sKey => $sDisplayValue)
-		{
-			$sHtml .= "<span class=\"movable_attr\">$sDisplayValue</span>";
-		}
-		$sHtml .="</div></td></tr>";
-		$sHtml .="<tr id=\"trash_icon_$sId\" $sStyle><td><span class=\"ui-icon ui-icon-trash\" style=\"opacity: 0.5\"></span>Trash</td></tr><tr id=\"trash_$sId\" $sStyle><td><div id=\"recycle_$sId\" class=\"sort_$sId fieldstrash\"></div></div></td></tr></table></div>";
+		$aResult = array('label' => $this->sLabel, 'value' => "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\">");
+		
+
+		$sJSFields = json_encode(array_keys($this->aAllowedValues));
 		$oP->add_ready_script(
-<<<EOF
-	$('#collapse_$sId').click(function() { $(this).toggleClass('ui-icon-circle-triangle-s').toggleClass('ui-icon-circle-triangle-e'); $('#fieldsbasket_$sId').toggle(); $('#trash_icon_$sId').toggle(); $('#trash_$sId').toggle(); } );
-	$('#fieldsbasket_$sId .movable_attr').draggable({connectToSortable: '#sortable_$sId', helper: 'clone', revert: false });
-	$('#recycle_$sId').sortable({ receive: function(event, ui) { ui.item.animate({opacity: 0.25}, { complete: function() { $(this).remove(); } });} });
-	$('#sortable_$sId').sortable({connectWith: '#recycle_$sId', forcePlaceholderSize: true});
-	$('#sortable_$sId').disableSelection();
-EOF
+			"$('#$sId').sortable_field({aAvailableFields: $sJSFields});"
 		);
-		return array('label' => $this->sLabel, 'value' => $sHtml);
+		
+		return $aResult;
 	}
 }
 
@@ -1112,15 +1122,25 @@ class DesignerFormSelectorField extends DesignerFormField
 			$oSubForm->SetParentForm($this->oForm);
 			$oSubForm->CopySubmitParams($this->oForm);
 			$oSubForm->SetPrefix($this->oForm->GetPrefix().$sKey.'_');
+			$oSubForm->SetSelectorClass("subform_{$sId} {$sId}_{$sKey}");
 			
 			if ($sRenderMode == 'property')
 			{
-				$sHtml .= "</tbody><tbody class=\"subform\" id=\"{$sId}_{$sKey}\" $sStyle>";
+				$sHtml .= "</tbody><tbody class=\"subform_{$sId} {$sId}_{$sKey}\" $sStyle>";
 				$sHtml .= $oSubForm->RenderAsPropertySheet($oP, true);	
+				$oParentForm = $this->oForm->GetParentForm();
+				if($oParentForm)
+				{
+					$sHtml .= "</tbody><tbody class=\"".$oParentForm->GetSelectorClass()."\">";
+				}
+				else
+				{
+					$sHtml .= "</tbody><tbody>";
+				}
 			}
 			else
 			{
-				$sHtml .= "<div class=\"subform\" id=\"{$sId}_{$sKey}\" $sStyle>";
+				$sHtml .= "<div class=\"subform_{$sId} {$sId}_{$sKey}\" $sStyle>";
 				$sHtml .= $oSubForm->Render($oP, true);
 				$sHtml .= "</div>";
 			}
@@ -1128,7 +1148,7 @@ class DesignerFormSelectorField extends DesignerFormField
 
 		$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change reverted', function() { $('.subform').hide(); $('#{$sId}_'+this.value).show(); } );
+$('#$sId').bind('change reverted', function() {	$('.subform_{$sId}').hide(); $('.{$sId}_'+this.value).show(); } );
 EOF
 );
 		return array('label' => $this->sLabel, 'value' => $sHtml);
