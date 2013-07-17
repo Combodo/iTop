@@ -665,7 +665,7 @@ try
 		$oFilter = DBObjectSearch::unserialize($sFilter); // TO DO : check that the filter is valid
 		$sClass = $oFilter->GetClass();	
 		$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_MODIFY);
-		$oP->add("<h1>Modify All...</h1>\n");			
+		$oP->add("<h1>".Dict::S('UI:ModifyAllPageTitle')."</h1>\n");			
 		
 		DisplayMultipleSelectionForm($oP, $oFilter, 'form_for_modify_all', $oChecker);
 		break;	
