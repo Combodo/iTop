@@ -1718,7 +1718,7 @@ class MFElement extends DOMElement
 	 * Check if the current node is under a node 'added' or 'altered'
 	 * Usage: In such a case, the change must not be tracked	 	
 	 */
-	 protected function IsInDefinition()
+	 public function IsInDefinition()
 	 {
 		// Iterate through the parents: reset the flag if any of them has a flag set 
 		for($oParent = $this ; $oParent instanceof MFElement ; $oParent = $oParent->parentNode)
