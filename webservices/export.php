@@ -237,6 +237,7 @@ if (!empty($sExpression))
 				header("Cache-control:", true);
 
 				$sFields = implode(',', $aFields);
+				$oP->add_style('table br {mso-data-placement:same-cell;}'); // Trick for Excel: keep line breaks inside the same cell !
 				cmdbAbstractObject::DisplaySetAsHTMLSpreadsheet($oP, $oSet, array('fields' => $sFields, 'fields_advanced' => $bFieldsAdvanced, 'localize_values' => $bLocalize));
 				break;
 

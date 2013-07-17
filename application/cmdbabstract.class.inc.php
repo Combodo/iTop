@@ -1219,6 +1219,13 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 								$aRow[] = '<td>'.date('H:i:s', $iDate).'</td>';								
 							}
 						}
+						else if($oAttDef instanceof AttributeCaseLog)
+						{
+							$rawValue = $oObj->Get($sAttCodeEx);
+							$outputValue = str_replace("\n", "<br/>", htmlentities($rawValue->__toString(), ENT_QUOTES, 'UTF-8'));
+							// Trick for Excel: treat the content as text even if it begins with an equal sign
+							$aRow[] = '<td x:str>'.$outputValue.'</td>';
+						}
 						else
 						{
 							$rawValue = $oObj->Get($sAttCodeEx);
