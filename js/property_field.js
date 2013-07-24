@@ -265,7 +265,10 @@ function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId, aForbidden
 		$('#'+sFieldId).removeAttr('title');
 		// Remove the element from the array 
 		iFieldIdPos = oFormValidation[sFormId].indexOf(sFieldId);
-		oFormValidation[sFormId].splice(iFieldIdPos, 1);
+		if (iFieldIdPos > -1)
+		{
+			oFormValidation[sFormId].splice(iFieldIdPos, 1);			
+		}
 	}
 }
 
