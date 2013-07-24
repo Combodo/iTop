@@ -37,6 +37,7 @@ class DesignerForm
 	protected $sSubmitTo;
 	protected $bReadOnly;
 	protected $sSelectorClass;
+	protected $bDisplayed;
 	
 	public function __construct()
 	{
@@ -51,6 +52,7 @@ class DesignerForm
 		$this->bReadOnly = false;
 		$this->sSelectorClass = '';
 		$this->StartFieldSet($this->sCurrentFieldSet);
+		$this->bDisplayed = true;
 	}
 	
 	public function AddField(DesignerFormField $oField)
@@ -365,7 +367,23 @@ EOF
 		return $this->oParentForm;
 	}
 	
-	
+	public function SetDisplayed($bDisplayed)
+	{
+		$this->bDisplayed = $bDisplayed;
+	}
+
+	public function IsDisplayed()
+	{
+		if ($this->oParentForm == null)
+		{
+			return $this->bDisplayed;
+		}
+		else
+		{
+			return ($this->bDisplayed && $this->oParentForm->IsDisplayed());
+		}
+	}
+		
 	public function AddScript($sScript)
 	{
 		$this->sScript .= $sScript;
@@ -513,6 +531,7 @@ class DesignerFormField
 	protected $bReadOnly;
 	protected $bAutoApply;
 	protected $aCSSClasses;
+	protected $bDisplayed;
 	
 	public function __construct($sCode, $sLabel, $defaultValue)
 	{
@@ -523,6 +542,7 @@ class DesignerFormField
 		$this->bReadOnly = false;
 		$this->bAutoApply = false;
 		$this->aCSSClasses = array();
+		$this->bDisplayed = true;
 	}
 	
 	public function GetCode()
@@ -559,6 +579,16 @@ class DesignerFormField
 	public function IsAutoApply()
 	{
 		return $this->bAutoApply;
+	}
+
+	public function SetDisplayed($bDisplayed)
+	{
+		$this->bDisplayed = $bDisplayed;
+	}
+
+	public function IsDisplayed()
+	{
+		return $this->bDisplayed;
 	}
 
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
@@ -670,20 +700,25 @@ class DesignerTextField extends DesignerFormField
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
-		$sPattern = addslashes($this->sValidationPattern);
-		if (is_array($this->aForbiddenValues))
+		if ($this->IsReadOnly())
 		{
-			$sForbiddenValues = json_encode($this->aForbiddenValues);
-			$sExplainForbiddenValues = addslashes($this->sExplainForbiddenValues);
+			$sHtmlValue = "<span>".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\"/></span>";
 		}
 		else
 		{
-			$sForbiddenValues = 'null';
-			$sExplainForbiddenValues = 'null';
-		}
-		$sMandatory = $this->bMandatory ? 'true' :  'false';
-		$sReadOnly = $this->IsReadOnly() ? 'readonly' :  '';
-		$oP->add_ready_script(
+			$sPattern = addslashes($this->sValidationPattern);
+			if (is_array($this->aForbiddenValues))
+			{
+				$sForbiddenValues = json_encode($this->aForbiddenValues);
+				$sExplainForbiddenValues = addslashes($this->sExplainForbiddenValues);
+			}
+			else
+			{
+				$sForbiddenValues = 'null';
+				$sExplainForbiddenValues = 'null';
+			}
+			$sMandatory = $this->bMandatory ? 'true' :  'false';
+			$oP->add_ready_script(
 <<<EOF
 $('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern', '$sFormId', $sForbiddenValues, '$sExplainForbiddenValues'); } );
 {
@@ -691,13 +726,15 @@ $('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId'
 	$('#$sId').bind('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
 }
 EOF
-);
-		$sCSSClasses = '';
-		if (count($this->aCSSClasses) > 0)
-		{
-			$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
+			);
+			$sCSSClasses = '';
+			if (count($this->aCSSClasses) > 0)
+			{
+				$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
+			}
+			$sHtmlValue = "<input type=\"text\" $sCSSClasses id=\"$sId\" name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\">";
 		}
-		return array('label' => $this->sLabel, 'value' => "<input type=\"text\" $sCSSClasses id=\"$sId\" $sReadOnly name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\">");
+		return array('label' => $this->sLabel, 'value' => $sHtmlValue);
 	}
 
 	public function ReadParam(&$aValues)
@@ -798,39 +835,67 @@ class DesignerComboField extends DesignerFormField
 		{
 			$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
 		}
-		if ($this->bMultipleSelection)
+		if ($this->IsReadOnly())
 		{
-			$sHtml = "<select $sCSSClasses multiple size=\"8\"id=\"$sId\" name=\"$sName\" $sReadOnly>";
+			$aSelected = array();
+			$aHiddenValues = array();
+			foreach($this->aAllowedValues as $sKey => $sDisplayValue)
+			{
+				if ($this->bMultipleSelection)
+				{
+					if(in_array($sKey, $this->defaultValue))
+					{
+						$aSelected[] = $sDisplayValue;
+						$aHiddenValues[] = "<input type=\"hidden\" name=\"{$sName}[]\" value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\"/>";
+					}
+				}
+				else
+				{
+					if ($sKey == $this->defaultValue)
+					{
+						$aSelected[] = $sDisplayValue;
+						$aHiddenValues[] = "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\"/>";
+					}
+				}
+			}
+			$sHtml = "<span $sCSSClasses>".htmlentities(implode(', ', $aSelected), ENT_QUOTES, 'UTF-8').implode($aHiddenValues)."</span>";
 		}
 		else
 		{
-			$sHtml = "<select $sCSSClasses id=\"$sId\" name=\"$sName\" $sReadOnly>";
-			$sHtml .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>";
-		}
-		foreach($this->aAllowedValues as $sKey => $sDisplayValue)
-		{
 			if ($this->bMultipleSelection)
 			{
-				$sSelected = in_array($sKey, $this->defaultValue) ? 'selected' : '';
+				$sHtml = "<select $sCSSClasses multiple size=\"8\"id=\"$sId\" name=\"$sName\">";
 			}
 			else
 			{
-				$sSelected = ($sKey == $this->defaultValue) ? 'selected' : '';
+				$sHtml = "<select $sCSSClasses id=\"$sId\" name=\"$sName\">";
+				$sHtml .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>";
 			}
-			// Quick and dirty: display the menu parents as a tree
-			$sHtmlValue = str_replace(' ', '&nbsp;', htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8'));
-			$sHtml .= "<option value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\" $sSelected>$sHtmlValue</option>";
-		}
-		$sHtml .= "</select>";
-		if ($this->bOtherChoices)
-		{
-			$sHtml .= '<br/><input type="checkbox" id="other_chk_'.$sId.'"><label for="other_chk_'.$sId.'">&nbsp;Other:</label>&nbsp;<input type="text" id="other_'.$sId.'" name="other_'.$sName.'" size="30"/>'; 
-		}
-		$oP->add_ready_script(
+			foreach($this->aAllowedValues as $sKey => $sDisplayValue)
+			{
+				if ($this->bMultipleSelection)
+				{
+					$sSelected = in_array($sKey, $this->defaultValue) ? 'selected' : '';
+				}
+				else
+				{
+					$sSelected = ($sKey == $this->defaultValue) ? 'selected' : '';
+				}
+				// Quick and dirty: display the menu parents as a tree
+				$sHtmlValue = str_replace(' ', '&nbsp;', htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8'));
+				$sHtml .= "<option value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\" $sSelected>$sHtmlValue</option>";
+			}
+			$sHtml .= "</select>";
+			if ($this->bOtherChoices)
+			{
+				$sHtml .= '<br/><input type="checkbox" id="other_chk_'.$sId.'"><label for="other_chk_'.$sId.'">&nbsp;Other:</label>&nbsp;<input type="text" id="other_'.$sId.'" name="other_'.$sName.'" size="30"/>'; 
+			}
+			$oP->add_ready_script(
 <<<EOF
 $('#$sId').bind('change validate', function() { ValidateWithPattern('$sId', $sMandatory, '', '$sFormId', null, null); } );
 EOF
-);
+			);
+		}
 		return array('label' => $this->sLabel, 'value' => $sHtml);
 	}
 
@@ -857,14 +922,21 @@ class DesignerBooleanField extends DesignerFormField
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
 		$sChecked = $this->defaultValue ? 'checked' : '';
-		$sReadOnly = $this->IsReadOnly() ? 'disabled' :  ''; // readonly does not work as expected on checkboxes:
-															 // readonly prevents the user from changing the input's value not its state (checked/unchecked)
-		$sCSSClasses = '';
-		if (count($this->aCSSClasses) > 0)
+		if ($this->IsReadOnly())
 		{
-			$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
+			$sLabel = $this->defaultValue ? Dict::S('UI:UserManagement:ActionAllowed:Yes') : Dict::S('UI:UserManagement:ActionAllowed:No'); //TODO use our own yes/no translations
+			$sHtmlValue = "<span>".htmlentities($sLabel)."<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\"/></span>";
 		}
-		return array('label' => $this->sLabel, 'value' => "<input $sCSSClasses type=\"checkbox\" $sChecked $sReadOnly id=\"$sId\" name=\"$sName\" value=\"true\">");
+		else
+		{
+			$sCSSClasses = '';
+			if (count($this->aCSSClasses) > 0)
+			{
+				$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
+			}
+			$sHtmlValue = "<input $sCSSClasses type=\"checkbox\" $sChecked id=\"$sId\" name=\"$sName\" value=\"true\">";
+		}
+		return array('label' => $this->sLabel, 'value' => $sHtmlValue);
 	}
 	
 	public function ReadParam(&$aValues)
@@ -1055,7 +1127,8 @@ class DesignerSortableField extends DesignerFormField
 		$bOpen = false;
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
-		$aResult = array('label' => $this->sLabel, 'value' => "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\">");
+		$sReadOnly = $this->IsReadOnly() ? 'readonly="readonly"' : '';
+		$aResult = array('label' => $this->sLabel, 'value' => "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" $sReadOnly value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\">");
 		
 
 		$sJSFields = json_encode(array_keys($this->aAllowedValues));
@@ -1100,15 +1173,39 @@ class DesignerFormSelectorField extends DesignerFormField
 		{
 			$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
 		}
-		$sHtml = "<select $sCSSClasses id=\"$sId\" name=\"$sName\" $sReadOnly>";
-		foreach($this->aSubForms as $sKey => $aFormData)
-		{
-			$sDisplayValue = $aFormData['label'];
-			$sSelected = ($sKey == $this->defaultValue) ? 'selected' : '';
-			$sHtml .= "<option value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\" $sSelected>".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."</option>";
-		}
-		$sHtml .= "</select>";
+
 		
+		if ($this->IsReadOnly())
+		{
+			$aSelected = array();
+			$aHiddenValues = array();
+			$sDisplayValue = '';
+			$sHiddenValue = '';
+			foreach($this->aSubForms as $sKey => $aFormData)
+			{
+				if ($sKey == $this->defaultValue)
+				{
+					$sDisplayValue = htmlentities($aFormData['label'], ENT_QUOTES, 'UTF-8');
+					$sHiddenValue = "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\"/>";
+					break;
+				}
+			}
+			$sHtml = "<span $sCSSClasses>".$sDisplayValue.$sHiddenValue."</span>";
+		}
+		else
+		{
+			
+			
+			$sHtml = "<select $sCSSClasses id=\"$sId\" name=\"$sName\" $sReadOnly>";
+			foreach($this->aSubForms as $sKey => $aFormData)
+			{
+				$sDisplayValue = htmlentities($aFormData['label'], ENT_QUOTES, 'UTF-8');;
+				$sSelected = ($sKey == $this->defaultValue) ? 'selected' : '';
+				$sHtml .= "<option value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\" $sSelected>".$sDisplayValue."</option>";
+			}
+			$sHtml .= "</select>";
+		}
+				
 		if ($sRenderMode == 'property')
 		{
 			$sHtml .= '</td><td class="prop_icon prop_apply"><span title="Apply" class="ui-icon ui-icon-circle-check"/></td><td  class="prop_icon prop_cancel"><span title="Revert" class="ui-icon ui-icon-circle-close"/></td></tr>';
@@ -1117,7 +1214,7 @@ class DesignerFormSelectorField extends DesignerFormField
 		foreach($this->aSubForms as $sKey => $aFormData)
 		{
 			$sId = $this->oForm->GetFieldId($this->sCode);
-			$sStyle = ($sKey == $this->defaultValue) ? '' : 'style="display:none"';
+			$sStyle = (($sKey == $this->defaultValue) && $this->oForm->IsDisplayed()) ? '' : 'style="display:none"';
 			$oSubForm = $aFormData['form'];
 			$oSubForm->SetParentForm($this->oForm);
 			$oSubForm->CopySubmitParams($this->oForm);
@@ -1126,6 +1223,7 @@ class DesignerFormSelectorField extends DesignerFormField
 			
 			if ($sRenderMode == 'property')
 			{
+				$oSubForm->SetDisplayed($sKey == $this->defaultValue);
 				$sHtml .= "</tbody><tbody class=\"subform_{$sId} {$sId}_{$sKey}\" $sStyle>";
 				$sHtml .= $oSubForm->RenderAsPropertySheet($oP, true);	
 				$oParentForm = $this->oForm->GetParentForm();
