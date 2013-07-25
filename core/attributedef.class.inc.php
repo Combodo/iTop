@@ -3360,26 +3360,26 @@ class AttributeBlob extends AttributeDefinition
 
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
-		if (!isset($aCols[$sPrefix]))
+		if (!array_key_exists($sPrefix, $aCols))
 		{
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
 		} 
-		$sMimeType = $aCols[$sPrefix];
+		$sMimeType = isset($aCols[$sPrefix]) ? $aCols[$sPrefix] : '';
 
-		if (!isset($aCols[$sPrefix.'_data'])) 
+		if (!array_key_exists($sPrefix.'_data', $aCols)) 
 		{
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '".$sPrefix."_data' from {$sAvailable}");
 		} 
-		$data = $aCols[$sPrefix.'_data'];
+		$data = isset($aCols[$sPrefix.'_data']) ? $aCols[$sPrefix.'_data'] : null;
 
-		if (!isset($aCols[$sPrefix.'_filename'])) 
+		if (!array_key_exists($sPrefix.'_filename', $aCols)) 
 		{
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '".$sPrefix."_filename' from {$sAvailable}");
 		} 
-		$sFileName = $aCols[$sPrefix.'_filename'];
+		$sFileName =  isset($aCols[$sPrefix.'_filename']) ? $aCols[$sPrefix.'_filename'] : '';
 
 		$value = new ormDocument($data, $sMimeType, $sFileName);
 		return $value;
@@ -4127,19 +4127,19 @@ class AttributeOneWayPassword extends AttributeDefinition
 
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
-		if (!isset($aCols[$sPrefix]))
+		if (!array_key_exists($sPrefix, $aCols))
 		{
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
 		} 
-		$hashed = $aCols[$sPrefix];
+		$hashed = isset($aCols[$sPrefix]) ? $aCols[$sPrefix] : '';
 
-		if (!isset($aCols[$sPrefix.'_salt'])) 
+		if (!array_key_exists($sPrefix.'_salt', $aCols)) 
 		{
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '".$sPrefix."_salt' from {$sAvailable}");
 		} 
-		$sSalt = $aCols[$sPrefix.'_salt'];
+		$sSalt = isset($aCols[$sPrefix.'_salt']) ? $aCols[$sPrefix.'_salt'] : '';
 
 		$value = new ormPassword($hashed, $sSalt);
 		return $value;
