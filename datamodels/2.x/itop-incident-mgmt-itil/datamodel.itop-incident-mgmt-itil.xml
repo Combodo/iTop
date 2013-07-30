@@ -1452,28 +1452,31 @@
 		$sUserString = CMDBChange::GetCurrentUserName();
 		$oMyChange->Set("userinfo", $sUserString."(automatic resolution)");
 		$iChangeId = $oMyChange->DBInsert();
-		$sOQL = "SELECT UserRequest WHERE parent_request_id=:ticket";
-		$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
-						array(),
-						array(
-							'ticket' => $this->GetKey(),
-							)
-						);
-		//automatically resolve child requests
-		while($oRequest = $oChildRequestSet->Fetch())
-		{
-			if ( $oRequest->Get('status') != 'resolved')
-			{
-				$oRequest->set('servicesubcategory_id',$this->Get('servicesubcategory_id'));
-				$oRequest->set('service_id',$this->Get('service_id'));		
-				$oRequest->set('team_id',$this->Get('team_id'));
-				$oRequest->set('agent_id',$this->Get('agent_id'));	
-				$oRequest->set('resolution_code',$this->Get('resolution_code'));
-				$oRequest->set('solution','Automatically resolved by incident:[[Incident:'.$this->Get('ref').']]');
-				$oRequest->ApplyStimulus('ev_autoresolve');
-				$oRequest->DBUpdateTracked($oMyChange);
-			}
-		}
+        if (MetaModel::IsValidClass('UserRequest'))
+        {
+    		$sOQL = "SELECT UserRequest WHERE parent_request_id=:ticket";
+    		$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
+    						array(),
+    						array(
+    							'ticket' => $this->GetKey(),
+    							)
+    						);
+    		//automatically resolve child requests
+    		while($oRequest = $oChildRequestSet->Fetch())
+    		{
+    			if ( $oRequest->Get('status') != 'resolved')
+    			{
+    				$oRequest->set('servicesubcategory_id',$this->Get('servicesubcategory_id'));
+    				$oRequest->set('service_id',$this->Get('service_id'));		
+    				$oRequest->set('team_id',$this->Get('team_id'));
+    				$oRequest->set('agent_id',$this->Get('agent_id'));	
+    				$oRequest->set('resolution_code',$this->Get('resolution_code'));
+    				$oRequest->set('solution','Automatically resolved by incident:[[Incident:'.$this->Get('ref').']]');
+    				$oRequest->ApplyStimulus('ev_autoresolve');
+    				$oRequest->DBUpdateTracked($oMyChange);
+    			}
+    		}
+        }
 
 		//automatically resolve child incidents
 		$sOQL = "SELECT Incident WHERE parent_incident_id=:ticket";
@@ -1507,6 +1510,8 @@
           <type>LifecycleAction</type>
           <code><![CDATA[	public function UpdateChildRequestLog()
 	{
+        if (!MetaModel::IsValidClass('UserRequest')) return true; // Do nothing
+  
 		$sLogPublic = utils::ReadPostedParam('attr_public_log', null,false,'raw_data');
 		if ( $sLogPublic != null)
 		{
