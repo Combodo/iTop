@@ -315,6 +315,7 @@
               <action id="ev_reassign" xsi:type="stimulus">allow</action>
               <action id="ev_resolve" xsi:type="stimulus">allow</action>
               <action id="ev_close" xsi:type="stimulus">allow</action>
+              <action id="ev_pending" xsi:type="stimulus">allow</action>
             </actions>
           </group>
           <group id="class:UserRequest">
