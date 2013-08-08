@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,6 +18,19 @@
 
 
 /**
+ * interface iProcess
+ * Something that can be executed 
+ *
+ * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+interface iProcess
+{
+	public function Process($iUnixTimeLimit);
+}
+
+/**
  * interface iBackgroundProcess
  * Any extension that must be called regularly to be executed in the background 
  *
@@ -25,10 +38,30 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-interface iBackgroundProcess
+interface iBackgroundProcess extends iProcess
 {
+	/*
+		Gives the repetition rate in seconds
+		@returns integer
+	*/
 	public function GetPeriodicity();
-	public function Process($iUnixTimeLimit);
+}
+
+/**
+ * interface iScheduledProcess
+ * A variant of process that must be called at specific times
+ *
+ * @copyright   Copyright (C) 2013 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+interface iScheduledProcess extends iProcess
+{
+	/*
+		Gives the exact time at which the process must be run next time
+		@returns DateTime
+	*/
+	public function GetNextOccurrence();
 }
 
 ?>

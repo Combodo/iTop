@@ -61,26 +61,43 @@ function UsageAndExit($oP)
 	exit -2;
 }
 
-function RunTask($oBackgroundProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
+function RunTask($oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
 {
 	try
 	{
 		$oNow = new DateTime();
 		$fStart = microtime(true);
-		$sMessage = $oBackgroundProcess->Process($iTimeLimit);
+		$sMessage = $oProcess->Process($iTimeLimit);
 		$fDuration = microtime(true) - $fStart;
-		$oTask->ComputeDurations($fDuration);
-		$oTask->Set('latest_run_date', $oNow->format('Y-m-d H:i:s'));
-		$oPlannedStart = new DateTime($oTask->Get('latest_run_date'));
-		// Let's assume that the task was started exactly when planned so that the schedule does no shift each time
-		// this allows to schedule a task everyday "around" 11:30PM for example
-		$oPlannedStart->modify('+'.$oBackgroundProcess->GetPeriodicity().' seconds');
-		$oEnd = new DateTime();
-		if ($oPlannedStart->format('U') < $oEnd->format('U'))
+		if ($oTask->Get('total_exec_count') == 0)
 		{
-			// Huh, next planned start is already in the past, shift it of the periodicity !
-			$oPlannedStart = $oEnd->modify('+'.$oBackgroundProcess->GetPeriodicity().' seconds');
+			// First execution
+			$oTask->Set('first_run_date', $oNow->format('Y-m-d H:i:s'));
 		}
+		$oTask->ComputeDurations($fDuration); // does increment the counter and compute statistics
+		$oTask->Set('latest_run_date', $oNow->format('Y-m-d H:i:s'));
+
+		$oRefClass = new ReflectionClass(get_class($oProcess));
+		if ($oRefClass->implementsInterface('iScheduledProcess'))
+		{
+			// Schedules process do repeat at specific moments
+			$oPlannedStart = $oProcess->GetNextOccurrence();
+		}
+		else
+		{
+			// Background processes do repeat periodically
+			$oPlannedStart = new DateTime($oTask->Get('latest_run_date'));
+			// Let's assume that the task was started exactly when planned so that the schedule does no shift each time
+			// this allows to schedule a task everyday "around" 11:30PM for example
+			$oPlannedStart->modify('+'.$oProcess->GetPeriodicity().' seconds');
+			$oEnd = new DateTime();
+			if ($oPlannedStart->format('U') < $oEnd->format('U'))
+			{
+				// Huh, next planned start is already in the past, shift it of the periodicity !
+				$oPlannedStart = $oEnd->modify('+'.$oProcess->GetPeriodicity().' seconds');
+			}
+		}
+
 		$oTask->Set('next_run_date', $oPlannedStart->format('Y-m-d H:i:s'));
 		$oTask->DBUpdate();
 	}
@@ -91,8 +108,7 @@ function RunTask($oBackgroundProcess, BackgroundTask $oTask, $oStartDate, $iTime
 	return $sMessage;	
 }
 
-// Known limitation - the background process periodicity is NOT taken into account
-function CronExec($oP, $aBackgroundProcesses, $bVerbose)
+function CronExec($oP, $aProcesses, $bVerbose)
 {
 	$iStarted = time();
 	$iMaxDuration = MetaModel::GetConfig()->Get('cron_max_execution_time');
@@ -101,6 +117,26 @@ function CronExec($oP, $aBackgroundProcesses, $bVerbose)
 	if ($bVerbose)
 	{
 		$oP->p("Planned duration = $iMaxDuration seconds");
+	}
+
+	// Reset the next planned execution to take into account new settings
+	$oSearch = new DBObjectSearch('BackgroundTask');
+	$oTasks = new DBObjectSet($oSearch);
+	while($oTask = $oTasks->Fetch())
+	{
+		$sTaskClass = $oTask->Get('class_name');
+		$oRefClass = new ReflectionClass($sTaskClass);
+		if ($oRefClass->implementsInterface('iScheduledProcess'))
+		{
+			if ($bVerbose)
+			{
+				$oP->p("Resetting the next run date for $sTaskClass");
+			}
+			$oProcess = $aProcesses[$sTaskClass];
+			$oNextOcc = $oProcess->GetNextOccurrence();
+			$oTask->Set('next_run_date', $oNextOcc->format('Y-m-d H:i:s'));
+			$oTask->DBUpdate();
+		}
 	}
 
 	$iCronSleep = MetaModel::GetConfig()->Get('cron_sleep');
@@ -114,46 +150,47 @@ function CronExec($oP, $aBackgroundProcesses, $bVerbose)
 		{
 			$aTasks[$oTask->Get('class_name')] = $oTask;
 		}
-		foreach ($aBackgroundProcesses as $oBackgroundProcess)
+		foreach ($aProcesses as $oProcess)
 		{
-			$sTaskClass = get_class($oBackgroundProcess);
+			$sTaskClass = get_class($oProcess);
 			$oNow = new DateTime();
 			if (!array_key_exists($sTaskClass, $aTasks))
 			{
-				// New entry, let's create a new BackgroundTask record and run the task immediately
+				// New entry, let's create a new BackgroundTask record, and plan the first execution
 				$oTask = new BackgroundTask();
-				$oTask->Set('class_name', get_class($oBackgroundProcess));
-				$oTask->Set('first_run_date', $oNow->format('Y-m-d H:i:s'));
+				$oTask->Set('class_name', get_class($oProcess));
 				$oTask->Set('total_exec_count', 0);
 				$oTask->Set('min_run_duration', 99999.999);
 				$oTask->Set('max_run_duration', 0);
 				$oTask->Set('average_run_duration', 0);
-				$oTask->Set('next_run_date', $oNow->format('Y-m-d H:i:s')); // in case of crash...
+				$oRefClass = new ReflectionClass($sTaskClass);
+				if ($oRefClass->implementsInterface('iScheduledProcess'))
+				{
+					$oNextOcc = $oProcess->GetNextOccurrence();
+					$oTask->Set('next_run_date', $oNextOcc->format('Y-m-d H:i:s'));
+				}
+				else
+				{
+					// Background processes do start asap, i.e. "now"
+					$oTask->Set('next_run_date', $oNow->format('Y-m-d H:i:s'));
+				}
+				if ($bVerbose)
+				{
+					$oP->p('Creating record for: '.$sTaskClass);
+					$oP->p('First execution planned at: '.$oTask->Get('next_run_date'));
+				}
 				$oTask->DBInsert();
-				if ($bVerbose)
-				{
-					$oP->p(">> === ".$oNow->format('Y-m-d H:i:s').sprintf(" Starting:%-'=40s", ' '.$sTaskClass.' (first run) '));
-				}
-				$sMessage = RunTask($oBackgroundProcess, $oTask, $oNow, $iTimeLimit);
-				if ($bVerbose)
-				{
-					if(!empty($sMessage))
-					{
-						$oP->p("$sTaskClass: $sMessage");
-					}
-					$oEnd = new DateTime();
-					$oP->p("<< === ".$oEnd->format('Y-m-d H:i:s').sprintf(" End of:  %-'=40s", ' '.$sTaskClass.' '));
-				}
+				$aTasks[$oTask->Get('class_name')] = $oTask;
 			}
-			else if( ($aTasks[$sTaskClass]->Get('status') == 'active') && ($aTasks[$sTaskClass]->Get('next_run_date') <= $oNow->format('Y-m-d H:i:s')))
+
+			if( ($aTasks[$sTaskClass]->Get('status') == 'active') && ($aTasks[$sTaskClass]->Get('next_run_date') <= $oNow->format('Y-m-d H:i:s')))
 			{
-				$oTask = $aTasks[$sTaskClass];
 				// Run the task and record its next run time
 				if ($bVerbose)
 				{
 					$oP->p(">> === ".$oNow->format('Y-m-d H:i:s').sprintf(" Starting:%-'=40s", ' '.$sTaskClass.' '));
 				}
-				$sMessage = RunTask($oBackgroundProcess, $aTasks[$sTaskClass], $oNow, $iTimeLimit);
+				$sMessage = RunTask($oProcess, $aTasks[$sTaskClass], $oNow, $iTimeLimit);
 				if ($bVerbose)
 				{
 					if(!empty($sMessage))
@@ -204,10 +241,14 @@ function DisplayStatus($oP)
 	}	
 	$oP->p('+---------------------------+---------+---------------------+---------------------+--------+-----------+');
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Main
 //
+
+set_time_limit(0); // Some background actions may really take long to finish (like backup)
+
 if (utils::IsModeCLI())
 {
 	$oP = new CLIPage("iTop - CRON");
@@ -260,21 +301,28 @@ if (!UserRights::IsAdministrator())
 	exit -1;
 }
 
+if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
+{
+	$oP->p("A database maintenance is ongoing (read-only mode even for admins).");
+	$oP->Output();
+	exit -1;
+}
+
 
 // Enumerate classes implementing BackgroundProcess
 //
-$aBackgroundProcesses = array();
+$aProcesses = array();
 foreach(get_declared_classes() as $sPHPClass)
 {
 	$oRefClass = new ReflectionClass($sPHPClass);
 	$oExtensionInstance = null;
-	if ($oRefClass->implementsInterface('iBackgroundProcess'))
+	if ($oRefClass->implementsInterface('iProcess'))
 	{
 		if (is_null($oExtensionInstance))
 		{
 			$oExecInstance = new $sPHPClass;
 		}
-		$aBackgroundProcesses[$sPHPClass] = $oExecInstance;
+		$aProcesses[$sPHPClass] = $oExecInstance;
 	}
 }
 
@@ -284,7 +332,7 @@ $bVerbose = utils::ReadParam('verbose', false, true /* Allow CLI */);
 if ($bVerbose)
 {
 	$aDisplayProcesses = array();
-	foreach ($aBackgroundProcesses as $oExecInstance)
+	foreach ($aProcesses as $oExecInstance)
 	{
 		$aDisplayProcesses[] = get_class($oExecInstance);
 	}
@@ -318,7 +366,7 @@ elseif ($res === '1')
 	// The current session holds the lock
 	try
 	{
-		CronExec($oP, $aBackgroundProcesses, $bVerbose);
+		CronExec($oP, $aProcesses, $bVerbose);
 	}
 	catch(Exception $e)
 	{

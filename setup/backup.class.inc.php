@@ -23,6 +23,14 @@ class BackupException extends Exception
 
 class DBBackup
 {
+	// To be overriden depending on the expected usages
+	protected function LogInfo($sMsg)
+	{
+	}
+	protected function LogError($sMsg)
+	{
+	}
+
 	protected $sDBHost;
 	protected $iDBPort;
 	protected $sDBUser;
@@ -72,6 +80,16 @@ class DBBackup
 		$this->sDBSubName = $sDBSubName;
 	}
 
+	protected $sMySQLBinDir = '';
+	/**
+	 * Create a normalized backup name, depending on the current date/time and Database
+	 * @param sNameSpec string Name and path, eventually containing itop placeholders + time formatting specs
+	 */	 	
+	public function SetMySQLBinDir($sMySQLBinDir)
+	{
+		$this->sMySQLBinDir = $sMySQLBinDir;
+	}	
+
 	/**
 	 * Create a normalized backup name, depending on the current date/time and Database
 	 * @param sNameSpec string Name and path, eventually containing itop placeholders + time formatting specs
@@ -92,7 +110,7 @@ class DBBackup
 		// Note: the file is created by tempnam and might not be writeable by another process (Windows/IIS)
 		// (delete it before spawning a process)
 		$sDataFile = tempnam(SetupUtils::GetTmpDir(), 'itop-');
-		SetupPage::log("Info - Data file: '$sDataFile'");
+		$this->LogInfo("Data file: '$sDataFile'");
 
 		if (is_null($sSourceConfigFile))
 		{
@@ -147,7 +165,9 @@ class DBBackup
 			$sTables = implode(' ', $aEscapedTables);
 		}
 
-		$sMySQLBinDir = utils::ReadParam('mysql_bindir', '', true);
+		$this->LogInfo("Starting backup of $this->sDBHost/$this->sDBName(suffix:'$this->sDBSubName')");
+
+		$sMySQLBinDir = utils::ReadParam('mysql_bindir', $this->sMySQLBinDir, true);
 		if (empty($sMySQLBinDir))
 		{
 			$sMySQLDump = 'mysqldump';
@@ -173,17 +193,17 @@ class DBBackup
 		$sCommandDisplay = "$sMySQLDump --opt --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xxxxx --password=xxxxx --result-file=$sTmpFileName $sDBName $sTables";
 
 		// Now run the command for real
-		SetupPage::log("Info - Executing command: $sCommandDisplay");
+		$this->LogInfo("Executing command: $sCommandDisplay");
 		$aOutput = array();
 		$iRetCode = 0;
 		exec($sCommand, $aOutput, $iRetCode);
 		foreach($aOutput as $sLine)
 		{
-			SetupPage::log("Info - mysqldump said: $sLine");
+			$this->LogInfo("mysqldump said: $sLine");
 		}
 		if ($iRetCode != 0)
 		{
-			SetupPage::log("Error - retcode=".$iRetCode."\n");
+			$this->LogError("retcode=".$iRetCode."\n");
 			throw new BackupException("Failed to execute mysqldump. Return code: $iRetCode. Check the log file '".realpath(APPROOT.'/log/setup.log')."' for more information.");
 		}
 	}
@@ -210,17 +230,17 @@ class DBBackup
 		
 			if ($oZip->close())
 			{
-				SetupPage::log("Info - Archive: $sZipArchiveFile created");
+				$this->LogInfo("Archive: $sZipArchiveFile created");
 			}
 			else
 			{
-				SetupPage::log("Error - Failed to save zip archive: $sZipArchiveFile");
+				$this->LogError("Failed to save zip archive: $sZipArchiveFile");
 				throw new BackupException("Failed to save zip archive: $sZipArchiveFile");
 			}
 		}
 		else
 		{
-			SetupPage::log("Error - Failed to create zip archive: $sZipArchiveFile.");
+			$this->LogError("Failed to create zip archive: $sZipArchiveFile.");
 			throw new BackupException("Failed to create zip archive: $sZipArchiveFile.");
 		}
 	}

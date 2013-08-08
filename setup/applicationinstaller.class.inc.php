@@ -418,7 +418,7 @@ class ApplicationInstaller
 
 	protected static function DoBackup($sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sBackupFile, $sSourceConfigFile)
 	{
-		$oBackup = new DBBackup($sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix);
+		$oBackup = new SetupDBBackup($sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix);
 		$sZipFile = $oBackup->MakeName($sBackupFile);
 		$oBackup->CreateZip($sZipFile, $sSourceConfigFile);
 	}
@@ -865,5 +865,18 @@ class ApplicationInstaller
 		// Ready to go !!
 		require_once(APPROOT.'core/dict.class.inc.php');
 		MetaModel::ResetCache();
+	}
+}
+
+class SetupDBBackup extends DBBackup
+{
+	protected function LogInfo($sMsg)
+	{
+		SetupPage::log('Info - '.$sMsg);
+	}
+
+	protected function LogError($sMsg)
+	{
+		SetupPage::log('Error - '.$sMsg);
 	}
 }
