@@ -1259,7 +1259,7 @@ EOF
 	/**
 	 * Get the text/XML version of the delta
 	 */	
-	public function GetDelta($aNodesToIgnore = array())
+	public function GetDelta($aNodesToIgnore = array(), $iRevisionId = null)
 	{
 		$oDelta = new MFDocument();
 		foreach($this->ListChanges() as $oAlteredNode)
@@ -1273,6 +1273,10 @@ EOF
 			{
 				$oNode->parentNode->removeChild($oNode);
 			}
+		}
+		if ($iRevisionId != null)
+		{
+			$oDelta->documentElement->setAttribute('revision_id', $iRevisionId);
 		}
 		return $oDelta->saveXML();
 	}
