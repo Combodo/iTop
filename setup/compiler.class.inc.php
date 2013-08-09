@@ -102,11 +102,14 @@ class MFCompiler
 			$sModuleName = $oModule->GetName();
 			$sModuleVersion = $oModule->GetVersion();
 		
-			$sModuleRootDir = realpath($oModule->GetRootDir());
-			$sRelativeDir = basename($sModuleRootDir);
-		
-			// Push the other module files
-			SetupUtils::copydir($sModuleRootDir, $sTargetDir.'/'.$sRelativeDir, $bUseSymbolicLinks);
+			$sModuleRootDir = $oModule->GetRootDir();
+			if ($sModuleRootDir != '')
+			{
+				$sModuleRootDir = realpath($sModuleRootDir);
+				$sRelativeDir = basename($sModuleRootDir);
+				// Push the other module files
+				SetupUtils::copydir($sModuleRootDir, $sTargetDir.'/'.$sRelativeDir, $bUseSymbolicLinks);
+			}
 
 			$sCompiledCode = '';
 

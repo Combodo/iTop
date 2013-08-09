@@ -214,7 +214,7 @@ class ApplicationInstaller
 					}
 				}
 						
-				self::DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $sTargetDir, $sWorkspaceDir, $bUseSymbolicLinks);
+				self::DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $sTargetDir, $sTargetEnvironment, $bUseSymbolicLinks);
 				
 				$aResult = array(
 					'status' => self::OK,
@@ -424,7 +424,7 @@ class ApplicationInstaller
 	}
 
 	
-	protected static function DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $sTargetDir, $sWorkspaceDir = '', $bUseSymbolicLinks = false)
+	protected static function DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $sTargetDir, $sEnvironment, $bUseSymbolicLinks = false)
 	{
 		SetupPage::log_info("Compiling data model.");
 
@@ -480,13 +480,11 @@ class ApplicationInstaller
 				$oFactory->LoadModule($oModule);
 			}
 		}
-		if (strlen($sWorkspaceDir) > 0)
+		$sDeltaFile = APPROOT.'data/'.$sEnvironment.'.delta.xml';
+		if (file_exists($sDeltaFile))
 		{
-			$oWorkspace = new MFWorkspace(APPROOT.$sWorkspaceDir);
-			if (file_exists($oWorkspace->GetWorkspacePath()))
-			{
-				$oFactory->LoadModule($oWorkspace);
-			}
+			$oDelta = new MFDeltaModule($sDeltaFile);
+			$oFactory->LoadModule($oDelta);
 		}
 		//$oFactory->Dump();
 		if ($oFactory->HasLoadErrors())

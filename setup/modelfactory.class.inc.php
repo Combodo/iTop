@@ -131,6 +131,45 @@ class MFModule
 	}
 }
 
+ /**
+ * MFDeltaModule: an optional module, made of a single file
+ * @package ModelFactory
+ */
+class MFDeltaModule extends MFModule
+{
+	public function __construct($sDeltaFile)
+	{
+		$this->sId = 'datamodel-delta';	
+		
+		$this->sName = 'delta';
+		$this->sVersion = '1.0';
+
+		$this->sRootDir = '';
+		$this->sLabel = 'Additional Delta';
+		$this->aDataModels = array($sDeltaFile);
+	}
+
+	public function GetName()
+	{
+		return ''; // Objects created inside this pseudo module retain their original module's name
+	}
+
+	public function GetRootDir()
+	{
+		return '';
+	}
+
+	public function GetModuleDir()
+	{
+		return '';
+	}
+
+	public function GetDictionaryFiles()
+	{
+		return array();
+	}
+}
+
 /**
  * ModelFactory: the class that manages the in-memory representation of the XML MetaModel
  * @package ModelFactory

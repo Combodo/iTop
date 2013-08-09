@@ -35,6 +35,8 @@ define ('MODULE_ACTION_IMPOSSIBLE', 3);
 define ('ROOT_MODULE', '_Root_'); // Convention to store IN MEMORY the name/version of the root module i.e. application
 define ('DATAMODEL_MODULE', 'datamodel'); // Convention to store the version of the datamodel
 
+
+
 class RunTimeEnvironment
 {
 	protected $sTargetEnv;
@@ -313,6 +315,14 @@ class RunTimeEnvironment
 				}
 			}
 		}
+
+		$sDeltaFile = APPROOT.'data/'.$sSourceEnv.'.delta.xml';
+		if (file_exists($sDeltaFile))
+		{
+			$oDelta = new MFDeltaModule($sDeltaFile);
+			$aRet[] = $oDelta;
+		}
+
 		return $aRet;
 	}
 
