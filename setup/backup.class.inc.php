@@ -119,7 +119,25 @@ class DBBackup
 
 		$this->DoBackup($sDataFile);
 
-		$this->DoZip($sDataFile, $sSourceConfigFile, $sZipFile);
+		$aContents = array(
+			array(
+				'source' => $sDataFile,
+				'dest' => 'itop-dump.sql',
+			),
+			array(
+				'source' => $sSourceConfigFile,
+				'dest' => 'config-itop.php',
+			),
+		);
+		$sDeltaFile = APPROOT.'data/'.utils::GetCurrentEnvironment().'.delta.xml';
+		if (file_exists($sDeltaFile))
+		{
+			$aContents[] = array(
+				'source' => $sDeltaFile,
+				'dest' => 'delta.xml',
+			);
+		}
+		$this->DoZip($aContents, $sZipFile);
 		// Windows/IIS: the data file has been created by the spawned process...
 		//   trying to delete it will issue a warning, itself stopping the setup abruptely
 		@unlink($sDataFile);
@@ -211,11 +229,15 @@ class DBBackup
 	/**
 	 * Helper to create a ZIP out of a data file and the configuration file
 	 */	 	
-	protected function DoZip($sDataFile, $sConfigFile, $sZipArchiveFile)
+	protected function DoZip($aFiles, $sZipArchiveFile)
 	{
-		if (!is_file($sConfigFile))
+		foreach ($aFiles as $aFile)
 		{
-			throw new BackupException("Configuration file '$sConfigFile' does not exist or could not be read");
+			$sFile = $aFile['source'];
+			if (!is_file($sFile))
+			{
+				throw new BackupException("File '$sFile' does not exist or could not be read");
+			}
 		}
 		// Make sure the target path exists
 		$sZipDir = dirname($sZipArchiveFile);
@@ -225,9 +247,10 @@ class DBBackup
 		$res = $oZip->open($sZipArchiveFile, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 		if ($res === TRUE)
 		{
-			$oZip->addFile($sDataFile, 'itop-dump.sql');
-			$oZip->addFile($sConfigFile, 'config-itop.php');
-		
+			foreach ($aFiles as $aFile)
+			{
+				$oZip->addFile($aFile['source'], $aFile['dest']);
+			}
 			if ($oZip->close())
 			{
 				$this->LogInfo("Archive: $sZipArchiveFile created");
