@@ -55,6 +55,16 @@ abstract class ModuleInstallerAPI
 	}
 
 	/**
+	 * Handler called at the end of the setup of the database (profiles and admin accounts created), but before the data load
+	 * @param $oConfiguration Config The new configuration of the application
+	 * @param $sPreviousVersion string PRevious version number of the module (empty string in case of first install)
+	 * @param $sCurrentVersion string Current version number of the module
+	 */
+	public static function AfterDatabaseSetup(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
+	{	
+	}
+	
+	/**
 	 * Helper to complete the renaming of a class
 	 * The renaming is made in the datamodel definition, but the name has to be changed in the DB as well	 	 
 	 * Must be called after DB update, i.e within an implementation of AfterDatabaseCreation()
