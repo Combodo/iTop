@@ -29,6 +29,14 @@ require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/nicewebpage.class.inc.php');
 require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/clipage.class.inc.php');
+
+$sConfigFile = APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE;
+if (!file_exists($sConfigFile))
+{
+	echo "iTop is not yet installed. Exiting...";
+	exit(-1);
+}
+
 require_once(APPROOT.'/application/startup.inc.php');
 
 
