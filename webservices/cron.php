@@ -134,7 +134,8 @@ function CronExec($oP, $aProcesses, $bVerbose)
 	{
 		$sTaskClass = $oTask->Get('class_name');
 		$oRefClass = new ReflectionClass($sTaskClass);
-		if ($oRefClass->implementsInterface('iScheduledProcess'))
+		$oNow = new DateTime();
+		if($oRefClass->implementsInterface('iScheduledProcess') && (($oTask->Get('status') != 'active') || ($oTask->Get('next_run_date') > $oNow->format('Y-m-d H:i:s'))))
 		{
 			if ($bVerbose)
 			{
