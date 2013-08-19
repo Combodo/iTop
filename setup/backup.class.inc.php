@@ -207,7 +207,7 @@ class DBBackup
 		}
 		// Delete the file created by tempnam() so that the spawned process can write into it (Windows/IIS)
 		unlink($sBackupFileName);
-		$sCommand = "$sMySQLDump --opt --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xx$sUser --password=$sPwd --result-file=$sTmpFileName $sDBName $sTables 2>&1";
+		$sCommand = "$sMySQLDump --opt --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=$sUser --password=$sPwd --result-file=$sTmpFileName $sDBName $sTables 2>&1";
 		$sCommandDisplay = "$sMySQLDump --opt --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xxxxx --password=xxxxx --result-file=$sTmpFileName $sDBName $sTables";
 
 		// Now run the command for real
