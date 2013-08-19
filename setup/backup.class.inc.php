@@ -207,7 +207,7 @@ class DBBackup
 		}
 		// Delete the file created by tempnam() so that the spawned process can write into it (Windows/IIS)
 		unlink($sBackupFileName);
-		$sCommand = "$sMySQLDump --opt --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=$sUser --password=$sPwd --result-file=$sTmpFileName $sDBName $sTables 2>&1";
+		$sCommand = "$sMySQLDump --opt --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xx$sUser --password=$sPwd --result-file=$sTmpFileName $sDBName $sTables 2>&1";
 		$sCommandDisplay = "$sMySQLDump --opt --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xxxxx --password=xxxxx --result-file=$sTmpFileName $sDBName $sTables";
 
 		// Now run the command for real
@@ -221,8 +221,20 @@ class DBBackup
 		}
 		if ($iRetCode != 0)
 		{
-			$this->LogError("retcode=".$iRetCode."\n");
-			throw new BackupException("Failed to execute mysqldump. Return code: $iRetCode. Check the log file '".realpath(APPROOT.'/log/setup.log')."' for more information.");
+			$this->LogError("Failed to execute: $sCommandDisplay. The command returned:$iRetCode");
+			foreach($aOutput as $sLine)
+			{
+				$this->LogError("mysqldump said: $sLine");
+			}
+			if (count($aOutput) == 1) 
+			{
+				$sMoreInfo = trim($aOutput[0]); 
+			}
+			else
+			{
+				$sMoreInfo = "Check the log files '".realpath(APPROOT.'/log/setup.log or error.log')."' for more information.";
+			}
+			throw new BackupException("Failed to execute mysqldump: ".$sMoreInfo);
 		}
 	}
 
