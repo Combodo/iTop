@@ -33,7 +33,7 @@ require_once(APPROOT.'/application/clipage.class.inc.php');
 $sConfigFile = APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE;
 if (!file_exists($sConfigFile))
 {
-	echo "iTop is not yet installed. Exiting...";
+	echo "iTop is not yet installed. Exiting...\n";
 	exit(-1);
 }
 
