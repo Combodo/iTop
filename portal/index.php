@@ -82,7 +82,7 @@ function ShowClosedTickets(WebPage $oP)
  */
 function SelectServiceCategory($oP, $oUserOrg)
 {
-	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS);
+	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS.',template_id');
 	
 	$oSearch = DBObjectSearch::FromOQL(PORTAL_SERVICECATEGORY_QUERY);
 	$oSearch->AllowAllData(); // In case the user has the rights on his org only
@@ -131,11 +131,9 @@ function SelectServiceCategory($oP, $oUserOrg)
  * @param $iSvcId Id of the selected service in case of pass-through (when there is only one service)
  * @return void
  */
-
 function SelectServiceSubCategory($oP, $oUserOrg, $iSvcId = null)
 {
-	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS);
-	$iWizardButtons = 0;
+	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS.',template_id');
 	if ($iSvcId == null)
 	{
 		$iSvcId = $aParameters['service_id'];
@@ -143,7 +141,6 @@ function SelectServiceSubCategory($oP, $oUserOrg, $iSvcId = null)
 	else
 	{
 		$aParameters['service_id'] = $iSvcId;
-		$iWizardButtons = BUTTON_NEXT;
 	}
 	$iDefaultSubSvcId = isset($aParameters['servicesubcategory_id']) ? $aParameters['servicesubcategory_id'] : 0;
 
@@ -157,7 +154,7 @@ function SelectServiceSubCategory($oP, $oUserOrg, $iSvcId = null)
 		// Only one sub service, skip this step of the wizard
 		$oSubService = $oSet->Fetch();
 		$iSubSvdId = $oSubService->GetKey();
-		RequestCreationForm($oP, $oUserOrg, $iSvcId, $iSubSvdId);
+		SelectRequestTemplate($oP, $oUserOrg, $iSvcId, $iSubSvdId);
 	}
 	else
 	{
@@ -192,8 +189,7 @@ function SelectServiceSubCategory($oP, $oUserOrg, $iSvcId = null)
 			$oP->add("</table>\n");	
 			$oP->DumpHiddenParams($aParameters, array('servicesubcategory_id'));
 			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"create_request\">");
-			$iWizardButtons |= BUTTON_NEXT | BUTTON_CANCEL;
-			$oP->WizardFormButtons($iWizardButtons);
+			$oP->WizardFormButtons(BUTTON_BACK | BUTTON_NEXT | BUTTON_CANCEL); //Back button automatically discarded if on the first page
 			$oP->WizardFormEnd();
 			$oP->WizardCheckSelectionOnSubmit(Dict::S('Portal:PleaseSelectAServiceSubCategory'));
 			$oP->add("</div>\n");
@@ -206,22 +202,17 @@ function SelectServiceSubCategory($oP, $oUserOrg, $iSvcId = null)
 }
 
 /**
- * Displays the form for the final step of the UserRequest creation
- * @param WebPage $oP The current web page for the form output
+ * Displays the form to select a Template
+ * @param WebPage $oP Web page for the form output
  * @param Organization $oUserOrg The organization of the current user
- * @param integer $iSvcId The identifier of the service (in cal of fall through, when there is only one service)
- * @param integer $iSubSvcId The identifier of the sub-service (in cal of fall through, when there is only one sub-service)
+ * @param $iSvcId Id of the selected service in case of pass-through (when there is only one service)
+ * @param integer $iSubSvcId The identifier of the sub-service (fall through when there is only one sub-service)
  * @return void
  */
-function RequestCreationForm($oP, $oUserOrg, $iSvcId = null, $iSubSvcId = null)
+function SelectRequestTemplate($oP, $oUserOrg, $iSvcId = null, $iSubSvcId = null)
 {
-		$oP->add_script(
-<<<EOF
-		// Create the object once at the beginning of the page...
-		var oWizardHelper = new WizardHelper('UserRequest', '');
-EOF
-);
-	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS);
+	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS.',template_id');
+
 	if ($iSvcId != null)
 	{
 		$aParameters['service_id'] = $iSvcId;
@@ -230,17 +221,130 @@ EOF
 	{
 		$aParameters['servicesubcategory_id'] = $iSubSvcId;
 	}
+
+	$iDefaultTemplate = isset($aParameters['template_id']) ? $aParameters['template_id'] : 0;
+	if (MetaModel::IsValidClass('Template'))
+	{
+		$oSearch = DBObjectSearch::FromOQL(REQUEST_TEMPLATE_QUERY);
+		$oSearch->AllowAllData();
+		$oSet = new CMDBObjectSet($oSearch, array(), array(
+			'service_id' => $aParameters['service_id'],
+			'servicesubcategory_id' => $aParameters['servicesubcategory_id']
+		));
+		if ($oSet->Count() == 0)
+		{
+			RequestCreationForm($oP, $oUserOrg, $aParameters['service_id'], $aParameters['servicesubcategory_id']);
+			return;
+		}
+		elseif ($oSet->Count() == 1)
+		{
+			$oTemplate = $oSet->Fetch();
+			$iTemplateId = $oTemplate->GetKey();
+			RequestCreationForm($oP, $oUserOrg, $aParameters['service_id'], $aParameters['servicesubcategory_id'], $iTemplateId);
+			return;
+		}
+
+		$oServiceSubCategory = MetaModel::GetObject('ServiceSubcategory', $aParameters['servicesubcategory_id'], false);
+		if (is_object($oServiceSubCategory))
+		{
+			$oP->add("<div class=\"wizContainer\" id=\"form_select_servicesubcategory\">\n");
+			$oP->add("<h1 id=\"select_template\">".Dict::Format('Portal:SelectRequestTemplate', $oServiceSubCategory->GetName())."</h1>\n");
+			$oP->WizardFormStart('request_wizard', 3);
+			$oP->add("<table>\n");
+			while($oTemplate = $oSet->Fetch())
+			{
+				$id = $oTemplate->GetKey();
+				$sChecked = "";
+				if ($id == $iDefaultTemplate)
+				{
+					$sChecked = "checked";
+				}
+				$oP->add("<tr>");
+
+				$oP->add("<td style=\"vertical-align:top\">");
+				$oP->p("<input name=\"attr_template_id\" $sChecked type=\"radio\" id=\"template_$id\" value=\"$id\">");
+				$oP->add("</td>");
+
+				$oP->add("<td style=\"vertical-align:top\">");
+				$oP->p("<b><label for=\"template_$id\">".$oTemplate->GetAsHTML('label')."</label></b>");
+				$oP->p($oTemplate->GetAsHTML('description'));
+				$oP->add("</td>");
+
+				$oP->add("</tr>");
+			}
+			$oP->add("</table>\n");	
+			$oP->DumpHiddenParams($aParameters, array('template_id'));
+			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"create_request\">");
+			$oP->WizardFormButtons(BUTTON_BACK | BUTTON_NEXT | BUTTON_CANCEL); //Back button automatically discarded if on the first page
+			$oP->WizardCheckSelectionOnSubmit(Dict::S('Portal:PleaseSelectATemplate'));
+			$oP->WizardFormEnd();
+			$oP->add("</div>\n");
+		}
+		else
+		{
+			$oP->p("Error: Invalid servicesubcategory_id = ".$aParameters['servicesubcategory_id']);
+		}
+	}
+	else
+	{
+		RequestCreationForm($oP, $oUserOrg, $aParameters['service_id'], $aParameters['servicesubcategory_id']);
+		return;
+	}
+}
+
+/**
+ * Displays the form for the final step of the UserRequest creation
+ * @param WebPage $oP The current web page for the form output
+ * @param Organization $oUserOrg The organization of the current user
+ * @param integer $iSvcId The identifier of the service (fall through when there is only one service)
+ * @param integer $iSubSvcId The identifier of the sub-service (fall through when there is only one sub-service)
+ * @param integer $iTemplateId The identifier of the template (fall through when there is only one template)
+ * @return void
+ */
+function RequestCreationForm($oP, $oUserOrg, $iSvcId = null, $iSubSvcId = null, $iTemplateId = null)
+{
+		$oP->add_script(
+<<<EOF
+		// Create the object once at the beginning of the page...
+		var oWizardHelper = new WizardHelper('UserRequest', '');
+EOF
+);
+	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS.',template_id');
+	if ($iSvcId != null)
+	{
+		$aParameters['service_id'] = $iSvcId;
+	}
+	if ($iSubSvcId != null)
+	{
+		$aParameters['servicesubcategory_id'] = $iSubSvcId;
+	}
+	if ($iTemplateId != null)
+	{
+		$aParameters['template_id'] = $iTemplateId;
+	}
 	
 	// Example: $aList = array('title', 'description', 'impact', 'emergency');
 	$aList = explode(',', PORTAL_REQUEST_FORM_ATTRIBUTES);
 
 	$sDescription = '';
-	if (isset($aParameters['template_id']))
+	if (isset($aParameters['template_id']) && ($aParameters['template_id'] != 0))
 	{
+		$aTemplateFields = array();
 		$oTemplate = MetaModel::GetObject('Template', $aParameters['template_id'], false);
 		if (is_object($oTemplate))
 		{
-			$sDescription = htmlentities($oTemplate->Get('template'), ENT_QUOTES, 'UTF-8');
+			$oFieldSearch = DBObjectSearch::FromOQL('SELECT TemplateField WHERE template_id = :template_id');
+			$oFieldSearch->AllowAllData();
+			$oFieldSet = new DBObjectSet($oFieldSearch, array('order' => true), array('template_id' => $oTemplate->GetKey()));
+			while($oField = $oFieldSet->Fetch())
+			{
+				$sAttCode = $oField->Get('code');
+				if (isset($aParameters[$sAttCode]))
+				{
+					$oField->Set('initial_value', $aParameters[$sAttCode]);
+				}
+				$aTemplateFields[$sAttCode] = $oField;
+			}
 		}
 	}
 
@@ -286,7 +390,27 @@ EOF
 			$sValue = "<span id=\"field_{$sInputId}\">".$oRequest->GetFormElementForField($oP, get_class($oRequest), $sAttCode, $oAttDef, $value, '', 'attr_'.$sAttCode, '', $iFlags, $aArgs).'</span>';
 			$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sValue);
 		}
-		$aDetails[] = array('label' => MetaModel::GetLabel('UserRequest', PORTAL_ATTCODE_LOG), 'value' => '<textarea id="attr_moreinfo" class="resizable ui-resizable" cols="40" rows="8" name="attr_moreinfo" title="" style="margin: 0px; resize: none; position: static; display: block; height: 145px; width: 339px;">'.$sDescription.'</textarea>');
+//		The log must be requested in the constant PORTAL_REQUEST_FORM_ATTRIBUTES
+//		$aDetails[] = array('label' => MetaModel::GetLabel('UserRequest', PORTAL_ATTCODE_LOG), 'value' => '<textarea id="attr_moreinfo" class="resizable ui-resizable" cols="40" rows="8" name="attr_moreinfo" title="" style="margin: 0px; resize: none; position: static; display: block; height: 145px; width: 339px;">'.$sDescription.'</textarea>');
+
+		if (!empty($aTemplateFields))
+		{
+			foreach ($aTemplateFields as $sAttCode =>  $oField)
+			{
+				if (!in_array($sAttCode, $aList))
+				{
+					$sValue = $oField->GetFormElement($oP, get_class($oRequest));
+					if ($oField->Get('input_type') == 'hidden')
+					{
+						$aHidden[] = $sValue;
+					}
+					else
+					{
+						$aDetails[] = array('label' => $oField->GetAsHTML('label'), 'value' => $sValue);
+					}
+				}
+			}
+		}
 
 		$oP->add_linked_script("../js/json.js");
 		$oP->add_linked_script("../js/forms-json-utils.js");
@@ -297,7 +421,7 @@ EOF
 		$oP->add_linked_script("../js/jquery.blockUI.js");
 		$oP->add("<div class=\"wizContainer\" id=\"form_request_description\">\n");
 		$oP->add("<h1 id=\"title_request_form\">".Dict::S('Portal:DescriptionOfTheRequest')."</h1>\n");
-		$oP->WizardFormStart('request_form', 3);
+		$oP->WizardFormStart('request_form', 4);
 		//$oP->add("<table>\n");
 		$oP->details($aDetails);
 
@@ -306,7 +430,7 @@ EOF
 
 		$oP->DumpHiddenParams($aParameters, $aList);
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"create_request\">");
-		$oP->WizardFormButtons(BUTTON_BACK | BUTTON_FINISH | BUTTON_CANCEL);
+		$oP->WizardFormButtons(BUTTON_BACK | BUTTON_FINISH | BUTTON_CANCEL); //Back button automatically discarded if on the first page
 		$oP->WizardFormEnd();
 		$oP->add("</div>\n");
 		$iFieldsCount = count($aFieldsMap);
@@ -340,7 +464,7 @@ EOF
  */
 function DoCreateRequest($oP, $oUserOrg)
 {
-	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS);
+	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS.',template_id');
 	$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 	if (!utils::IsTransactionValid($sTransactionId))
 	{
@@ -399,7 +523,17 @@ function DoCreateRequest($oP, $oUserOrg)
 	list($bRes, $aIssues) = $oRequest->CheckToWrite();
 	if ($bRes)
 	{
-		$oRequest->DBInsertNoReload();
+		if (isset($aParameters['template_id']))
+		{
+			$oTemplate = MetaModel::GetObject('Template', $aParameters['template_id']);
+			$oRequest->Set('public_log', $oTemplate->GetPostedValuesAsText($oRequest)."\n");
+			$oRequest->DBInsertNoReload();
+			$oTemplate->RecordExtraDataFromPostedForm($oRequest);
+		}
+		else
+		{
+			$oRequest->DBInsertNoReload();
+		}
 		$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oRequest->GetName(), MetaModel::GetName(get_class($oRequest)))."</h1>\n");
 
 		//DisplayObject($oP, $oRequest, $oUserOrg);
@@ -430,12 +564,16 @@ function CreateRequest(WebPage $oP, Organization $oUserOrg)
 		case 1:
 		SelectServiceSubCategory($oP, $oUserOrg);
 		break;
-		
+
 		case 2:
+		SelectRequestTemplate($oP, $oUserOrg);
+		break;
+		
+		case 3:
 		RequestCreationForm($oP, $oUserOrg);
 		break;
 
-		case 3:
+		case 4:
 		DoCreateRequest($oP, $oUserOrg);
 		break;
 	}

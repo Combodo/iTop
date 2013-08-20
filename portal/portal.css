@@ -2,6 +2,8 @@ html, body {
 	margin: 0;
 	padding:0;
 	overflow-y: auto;
+	font-family: Arial,Helvetica,Verdana,sans-serif;
+	font-size: 8pt;
 }
 #portal {
 	height: 100%;
@@ -10,68 +12,60 @@ html, body {
 	margin: auto;
 	padding-left: 10px;
 	padding-right: 10px;
-	text-align: center;
+	no.text-align: center;
 	overflow-y: auto;
-	no.max-width: 90%;
-	min-width: 960px;
-	position: relative;
+    max-width: 90%;
+    min-width: 960px;
+    position: relative;
 	display: block;
 	clear: both;
 }
 div#portal #welcome {
-	display: none;
+    background: url("./images/dockbar_bg.png") repeat-x scroll 0 0 #97A1AE;
+    border-bottom: 1px solid #636364;
+    font-size: 13px;
+    padding: 1px 5px;
+    position: relative;
+    z-index: 300;
+    text-align:right;
+    color: #2C2F34;
+    font-weight: bold;
+    text-shadow: 1px 1px #FFFFFF;
 }
 div#portal #banner {
-	background-color: #F6F6F1;
-	display: block;
-	height: 60px;
-	vertical-align: middle;
-	width: 100%;
-}
-div#portal #admin-banner {
-	width: 100%;
-}
-div#portal #logo {
-	background: url("../images/itop-logo.png") no-repeat scroll 0 0 transparent;
-	border: 0 none;
-	display: inline-block;
 	height: 116px;
-	line-height: 48px;
-	margin-left: 20px;
-	margin-right: 20px;
-	padding-right: 50px;
-	text-align: center;
-	vertical-align: middle;
-	width: 240px;
-}
-
-div#menu {
 	display: block;
-	left: 200px;
-	line-height: 48px;
-	position: absolute;
-	right: 0;
-	top: 0;
-	width: auto;
-	overflow: hidden;
+	vertical-align:middle;
+	background-color: #f6f6f1;
+    background: none repeat scroll 0 0 transparent;
+    margin: 0 auto;
+    max-width: 90%;
+    min-width: 960px;
+    position: relative;
+    margin-bottom: 3em;
 }
 
+div#portal #logo {
+	background: url(./images/company_logo.png) 0 0 no-repeat;
+	margin-left:20px;
+	margin-right:20px;
+	height: 70px;
+	border: 0;
+	vertical-align: middle;
+	text-align: center;
+	display: block;
+	line-height: 116px;
+}
+#menu {
+    background: url("./images/bg.png") repeat-x scroll 0 0 #414445;
+    clear: both;
+    min-height: 2.4em;
+    line-height: 3em;
+    -moz-border-radius: 4px;
+    vertical-align: middle;
+}
 #portal_menu {
 	height: 60px;
-}
-
-#change_pwd {
-	background: url("../images/password.png") no-repeat scroll 0 0 transparent;
-	display: block;
-	float: right;
-}
-
-#logoff {
-	background: url("../images/logoff.png") no-repeat scroll 0 0 transparent;
-	display: block;
-	float: right;
-}
-#logoff span {
 }
 
 div.button {
@@ -79,19 +73,26 @@ div.button {
     font-weight: bold;
     text-decoration: none;
 }
-a.button, a.button:visited {
-	color: #1C94C4;
-	display: inline-block;
-	height: 48px;
-	line-height: 48px;
-	text-decoration: none;
-	vertical-align: middle;
+a.button , a.button:visited {
+    line-height: 1.2em;
+    color: #FFFFFF;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline;
+    clear:both;
 }
-
+a.button:hover span {
+	background: #000;
+}
 a.button span {
-	margin-left: 50px;
-	margin-right: 20px;
-	vertical-align: middle;
+	vertical-align:middle;
+    margin: 0 1px;
+    padding: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
 }
 
 #close_form_table {
@@ -111,8 +112,16 @@ a.button span {
 	display: inline-block;
 }
 
+div.wizContainer
+{
+	border: 1px solid #C8C9CA;
+	-moz-border-radius: 4px 4px 4px 4px;
+	background-color: #fff;
+	padding: 3px;
+}
+
 .wizContainer table {
-	display: inline-block;
+	nodisplay: inline-block;
 	text-align: left;
 }
 
@@ -145,10 +154,18 @@ table.listContainer {
 	width: 100%;
 }
 h1 {
-	font-weight: bold;
-	font-weight: bold;
-	padding: 5px;
-	margin-top: 5px;
+	background: url("./images/header_bg.png") repeat-x scroll 0 0 #D4D4D4;
+	border-color: #C8C9CA #9E9E9E #9E9E9E #C8C9CA;
+    border-style: solid;
+    border-width: 1px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #222222;
+    font-weight: bold;
+    text-shadow: 1px 1px #FFFFFF;
+    padding: 5px;
+    -moz-border-radius: 4px 4px 4px 4px;
+    margin-top: 5px;
 }
 
 div.DrawerHandle {

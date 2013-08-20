@@ -795,7 +795,10 @@ EOF
 		}
 		if ($iButtonFlags & BUTTON_BACK)
 		{
-			$aButtons[] = "<input id=\"btn_back\" type=\"submit\" value=\"".Dict::S('UI:Button:Back')."\"  onClick=\"GoBack('{$this->m_sWizardId}');\">";
+			if (utils::ReadParam('step_back', 1) != 1)
+			{
+				$aButtons[] = "<input id=\"btn_back\" type=\"submit\" value=\"".Dict::S('UI:Button:Back')."\"  onClick=\"GoBack('{$this->m_sWizardId}');\">";
+			}
 		}
 		if ($iButtonFlags & BUTTON_NEXT)
 		{
