@@ -213,6 +213,10 @@ class ormStopWatch
 	protected function ComputeDeadline($oObject, $oAttDef, $iStartTime, $iDurationSec)
 	{
 		$sWorkingTimeComputer = $oAttDef->Get('working_time_computing');
+		if ($sWorkingTimeComputer == '')
+		{
+			$sWorkingTimeComputer = class_exists('SLAComputation') ? 'SLAComputation' : 'DefaultWorkingTimeComputer';
+		}
 		$aCallSpec = array($sWorkingTimeComputer, '__construct');
 		if (!is_callable($aCallSpec))
 		{
@@ -234,6 +238,10 @@ class ormStopWatch
 	protected function ComputeDuration($oObject, $oAttDef, $iStartTime, $iEndTime)
 	{
 		$sWorkingTimeComputer = $oAttDef->Get('working_time_computing');
+		if ($sWorkingTimeComputer == '')
+		{
+			$sWorkingTimeComputer = class_exists('SLAComputation') ? 'SLAComputation' : 'DefaultWorkingTimeComputer';
+		}
 		$oComputer = new $sWorkingTimeComputer();
 		$aCallSpec = array($oComputer, 'GetOpenDuration');
 		if (!is_callable($aCallSpec))

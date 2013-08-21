@@ -756,7 +756,7 @@ EOF;
 				$aParameters['states'] = 'array('.implode(', ', $aStates).')';
 
 				$aParameters['goal_computing'] = $this->GetPropString($oField, 'goal', 'DefaultMetricComputer'); // Optional, no deadline by default
-				$aParameters['working_time_computing'] = $this->GetPropString($oField, 'working_time', 'DefaultWorkingTimeComputer'); // Optional, defaults to 24x7
+				$aParameters['working_time_computing'] = $this->GetPropString($oField, 'working_time', ''); // Blank (different than DefaultWorkingTimeComputer)
 
 				$oThresholds = $oField->GetUniqueElement('thresholds');
 				$oThresholdNodes = $oThresholds->getElementsByTagName('threshold');

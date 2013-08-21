@@ -25,10 +25,10 @@
  */
 
 /**
- * Static class that implements the public interface for utilities
+ * Implements the public interface for utilities
  * related to the SLA computation 
  */
-class SLAComputation
+class SLAComputation implements iWorkingTimeComputer
 {
 	protected static $m_oAddOn;
 
@@ -41,7 +41,7 @@ class SLAComputation
 	{
 		if (!class_exists($sClassName))
 		{
-			throw new CoreException("Could not select this module, '$sModuleName' in not a valid class name");
+			throw new CoreException("Could not select this module, '$sClassName' in not a valid class name");
 			return;
 		}
 		if (($sClassName != 'SLAComputationAddOnAPI') && !is_subclass_of($sClassName, 'SLAComputationAddOnAPI'))
@@ -62,33 +62,34 @@ class SLAComputation
 		return self::$m_oAddOn;
 	}
 	
+	public static function GetDescription()
+	{
+		return "SLA computation (depends on the installed module)";
+	}
+
 	/**
 	 * Get the date/time corresponding to a given delay in the future from the present
-	 * considering only the valid (open) hours for a specified ticket
-	 * @param $oTicket Ticket The ticket for which to compute the deadline
+	 * considering only the valid (open) hours for a specified object
+	 * @param $oObject DBObject The object for which to compute the deadline
 	 * @param $iDuration integer The duration (in seconds) in the future
-	 * @param $oStartDate DateTime The starting point for the computation (default = now)
+	 * @param $oStartDate DateTime The starting point for the computation
 	 * @return DateTime The date/time for the deadline
 	 */
-	public static function GetDeadline($oTicket, $iDuration, $oStartDate = null)
+	public function GetDeadline($oObject, $iDuration, DateTime $oStartDate)
 	{
-		if ($oStartDate == null)
-		{
-			$oStartDate = new DateTime();
-		}
-		return self::$m_oAddOn->GetDeadline($oTicket, $iDuration, $oStartDate);
+		return self::$m_oAddOn->GetDeadline($oObject, $iDuration, $oStartDate);
 	}
 
 	/**
 	 * Get duration (considering only open hours) elapsed bewteen two given DateTimes
-	 * @param $oTicket Ticket The ticket for which to compute the deadline
+	 * @param $oObject DBObject The object for which to compute the duration
 	 * @param $oStartDate DateTime The starting point for the computation (default = now)
 	 * @param $oEndDate DateTime The ending point for the computation (default = now)
 	 * @return integer The duration (number of seconds) of open hours elapsed between the two dates
 	 */
-	public static function GetOpenDuration($oTicket, DateTime $oStartDate, DateTime $oEndDate)
+	public function GetOpenDuration($oObject, DateTime $oStartDate, DateTime $oEndDate)
 	{
-		return self::$m_oAddOn->GetOpenDuration($oTicket, $oStartDate, $oEndDate);
+		return self::$m_oAddOn->GetOpenDuration($oObject, $oStartDate, $oEndDate);
 	}
 }
 
