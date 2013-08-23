@@ -316,7 +316,7 @@ class RunTimeEnvironment
 			}
 		}
 
-		$sDeltaFile = APPROOT.'data/'.$sSourceEnv.'.delta.xml';
+		$sDeltaFile = APPROOT.'data/'.$this->sTargetEnv.'.delta.xml';
 		if (file_exists($sDeltaFile))
 		{
 			$oDelta = new MFDeltaModule($sDeltaFile);
