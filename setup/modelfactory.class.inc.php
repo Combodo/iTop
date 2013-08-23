@@ -1819,14 +1819,77 @@ class MFElement extends DOMElement
 		{
 			throw new Exception("Attempting to modify a non existing node: $oNode->tagName (id: ".$oNode->getAttribute('id').")");
 		}
-		if ($oExisting->getAttribute('_alteration') == 'removed')
+		$sPrevFlag = $oExisting->getAttribute('_alteration');
+		if ($sPrevFlag == 'removed')
 		{
 			throw new Exception("Attempting to modify a deleted node: $oNode->tagName (id: ".$oNode->getAttribute('id')."");
 		}
 		$oExisting->ReplaceWith($oNode);
 		if (!$this->IsInDefinition())
 		{
-			$oNode->setAttribute('_alteration', 'replaced');
+			if ($sPrevFlag == '')
+			{
+				$sPrevFlag = 'replaced';
+			}
+			$oNode->setAttribute('_alteration', $sPrevFlag);
+		}
+	}
+
+	/**
+	 * Combination of AddChildNode or RedefineChildNode... it depends
+	 * This should become the preferred way of doing things (instead of implementing a test + the call to one of the APIs!
+	 * @param MFElement $oNode       The node (including all subnodes) to set
+	 */	
+	public function SetChildNode(MFElement $oNode, $sSearchId = null)
+	{
+		// First: cleanup any flag behind the new node
+		$oNode->ApplyChanges();
+
+		$oExisting = $this->FindExistingChildNode($oNode, $sSearchId);
+		if ($oExisting)
+		{
+			$sPrevFlag = $oExisting->getAttribute('_alteration');
+			if ($sPrevFlag == 'removed')
+			{
+				$sFlag = 'replaced';
+			}
+			else
+			{
+				$sFlag = $sPrevFlag; // added, replaced or ''
+			}
+			$oExisting->ReplaceWith($oNode);
+		}
+		else
+		{
+			$this->appendChild($oNode);
+			$sFlag = 'added';
+		}
+		if (!$this->IsInDefinition())
+		{
+			if ($sFlag == '')
+			{
+				$sFlag = 'replaced';
+			}
+			$oNode->setAttribute('_alteration', $sFlag);
+		}
+	}
+
+	/**
+	 * Check that the current node is actually a class node, under classes
+	 */	
+	protected function IsClassNode()
+	{
+		if ($this->tagName == 'class')
+		{
+			return $this->parentNode->IsClassNode();
+		}
+		elseif ($this->tagName == 'classes')
+		{
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 
@@ -1837,11 +1900,13 @@ class MFElement extends DOMElement
 	protected function ReplaceWith($oNewNode)
 	{
 		// Move the classes from the old node into the new one
-		foreach($this->GetNodes('class') as $oChild)
+		if ($this->IsClassNode())
 		{
-			$oNewNode->appendChild($oChild);
+			foreach($this->GetNodes('class') as $oChild)
+			{
+				$oNewNode->appendChild($oChild);
+			}
 		}
-		
 
 		$oParentNode = $this->parentNode;
 		$oParentNode->replaceChild($oNewNode, $this);
