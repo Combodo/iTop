@@ -19,7 +19,7 @@
 /**
  * Heart beat of the application (process asynchron tasks such as broadcasting email)
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2013 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -59,7 +59,7 @@ function UsageAndExit($oP)
 	if ($bModeCLI)
 	{
 		$oP->p("USAGE:\n");
-		$oP->p("php cron.php --auth_user=<login> --auth_pwd=<password> [--param_file=<file>] [--verbose=1] [--status_only=1]\n");		
+		$oP->p("php cron.php --auth_user=<login> --auth_pwd=<password> [--param_file=<file>] [--verbose=1] [--debug=1] [--status_only=1]\n");		
 	}
 	else
 	{
@@ -337,6 +337,7 @@ foreach(get_declared_classes() as $sPHPClass)
 
 
 $bVerbose = utils::ReadParam('verbose', false, true /* Allow CLI */);
+$bDebug = utils::ReadParam('debug', false, true /* Allow CLI */);
 
 if ($bVerbose)
 {
@@ -355,42 +356,35 @@ if (utils::ReadParam('status_only', false, true /* Allow CLI */))
 	exit(0);
 }
 
-// Compute the name of a lock for mysql
-// The name is server-wide
-$oConfig = utils::GetConfig();
-$sLockName = 'itop.cron.'.$oConfig->GetDBName().'_'.$oConfig->GetDBSubname();
-
+require_once(APPROOT.'core/mutex.class.inc.php');
 $oP->p("Starting: ".time().' ('.date('Y-m-d H:i:s').')');
 
-// CAUTION: using GET_LOCK anytime on the same connexion will RELEASE the lock
-// Todo: invoke GET_LOCK from a dedicated session (encapsulate that into a mutex class)
-$res = CMDBSource::QueryToScalar("SELECT GET_LOCK('$sLockName', 1)");// timeout = 1 second (see also IS_FREE_LOCK)
-if (is_null($res))
+try
 {
-	// TODO - Log ?
-	$oP->p("ERROR: Failed to acquire the lock '$sLockName'");
-}
-elseif ($res === '1')
-{
-	// The current session holds the lock
-	try
+	$oConfig = utils::GetConfig();
+	$oMutex = new iTopMutex('cron.'.$oConfig->GetDBName().'_'.$oConfig->GetDBSubname());
+	if ($oMutex->TryLock())
 	{
 		CronExec($oP, $aProcesses, $bVerbose);
+
+		$oMutex->Unlock();
 	}
-	catch(Exception $e)
+	else
 	{
-		// TODO - Log ?
-	   $oP->p("ERROR:".$e->getMessage());
-	   $oP->p($e->getTraceAsString());
+		// Exit silently
+		$oP->p("Already running...");
 	}
-	$res = CMDBSource::QueryToScalar("SELECT RELEASE_LOCK('$sLockName')");
 }
-else
+catch (Exception $e)
 {
-	// Lock already held by another session
-	// Exit silently
-	$oP->p("Already running...");
+	$oP->p("ERROR: '".$e->getMessage()."'");
+	if ($bDebug)
+	{
+		// Might contain verb parameters such a password...
+		$oP->p($e->getTraceAsString());
+	}
 }
+
 $oP->p("Exiting: ".time().' ('.date('Y-m-d H:i:s').')');
 
 $oP->Output();
