@@ -839,6 +839,34 @@ class utils
 		return $sUrl;
 	}
 
+    /**
+     * Returns the URL to a page that will execute the requested module page
+     *      
+     * To be compatible with this mechanism, the called page must include approot
+     * with an absolute path OR not include it at all (losing the direct access to the page)
+     * if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
+     * require_once(__DIR__.'/../../approot.inc.php');
+     *      
+     * @return string ...
+     */                   
+	static public function GetAbsoluteUrlModulePage($sModule, $sPage, $aArguments = array())
+	{
+		$aArgs = array();
+		$aArgs[] = 'exec_module='.$sModule;
+		$aArgs[] = 'exec_page='.$sPage;
+		$aArgs[] = 'exec_env='.self::GetCurrentEnvironment();
+		foreach($aArguments as $sName => $sValue)
+		{
+			if (($sName == 'exec_module')||($sName == 'exec_page')||($sName == 'exec_env'))
+			{
+				throw new Exception("Module page: $sName is a reserved page argument name");
+			}
+			$aArgs[] = $sName.'='.urlencode($sValue);
+		}
+		$sArgs = implode('&', $aArgs);
+		return self::GetAbsoluteUrlAppRoot().'pages/exec.php?'.$sArgs;
+	}
+
 	/**
 	 * Returns a name unique amongst the given list
 	 * @param string $sProposed The default value

@@ -99,6 +99,7 @@ EOF
 		$this->m_sRootUrl = $this->GetAbsoluteUrlAppRoot();
      	$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
     	$sAbsURLModulesRoot = addslashes($this->GetAbsoluteUrlModulesRoot());
+    	$sEnvironment = addslashes(utils::GetCurrentEnvironment());
 
 		$sAppContext = addslashes($this->GetApplicationContext());
 
@@ -113,6 +114,23 @@ function GetAbsoluteUrlModulesRoot()
 {
 	return '$sAbsURLModulesRoot';
 }
+
+function GetAbsoluteUrlModulePage(sModule, sPage, aArguments)
+{
+	// aArguments is optional, it default to an empty hash
+	aArguments = typeof aArguments !== 'undefined' ? aArguments : {};
+
+	var sUrl = '$sAbsURLAppRoot'+'pages/exec.php?exec_module='+sModule+'&exec_page='+sPage+'&exec_env='+'$sEnvironment';
+	for (var sArgName in aArguments)
+	{
+		if (aArguments.hasOwnProperty(sArgName))
+		{
+			sUrl = sUrl + '&'+sArgName+'='+aArguments[sArgname];
+		}
+	}
+	return sUrl;
+}
+
 function AddAppContext(sURL)
 {
 	var sContext = '$sAppContext';
