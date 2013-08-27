@@ -310,14 +310,6 @@ if (!UserRights::IsAdministrator())
 	exit -1;
 }
 
-if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
-{
-	$oP->p("A database maintenance is ongoing (read-only mode even for admins).");
-	$oP->Output();
-	exit -1;
-}
-
-
 // Enumerate classes implementing BackgroundProcess
 //
 $aProcesses = array();
@@ -365,6 +357,15 @@ try
 	$oMutex = new iTopMutex('cron.'.$oConfig->GetDBName().'_'.$oConfig->GetDBSubname());
 	if ($oMutex->TryLock())
 	{
+		// Note: testing this now in case some of the background processes forces the read-only mode for a while
+		//       in that case it is better to exit with the check on reentrance (mutex)
+		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
+		{
+			$oP->p("A database maintenance is ongoing (read-only mode even for admins).");
+			$oP->Output();
+			exit -1;
+		}
+
 		CronExec($oP, $aProcesses, $bVerbose);
 
 		$oMutex->Unlock();
