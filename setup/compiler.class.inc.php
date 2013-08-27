@@ -58,7 +58,47 @@ class MFCompiler
 		return $this->aLog;
 	}
 	
+
 	public function Compile($sTargetDir, $oP = null, $bUseSymbolicLinks = false)
+	{
+		$sFinalTargetDir = $sTargetDir;
+		if ($bUseSymbolicLinks)
+		{
+			// Skip the creation of a temporary dictionary, not compatible with symbolic links
+			$sTempTargetDir = $sFinalTargetDir;
+		}
+		else
+		{
+			// Create a temporary directory
+			// Once the compilation is 100% successful, then move the results into the target directory
+			$sTempTargetDir = tempnam(SetupUtils::GetTmpDir(), 'itop-');
+			unlink($sTempTargetDir); // I need a directory, not a file...
+			SetupUtils::builddir($sTempTargetDir); // Here is the directory
+		}
+
+		try
+		{
+			$this->DoCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks);
+		}
+		catch (Exception $e)
+		{
+			if ($sTempTargetDir != $sFinalTargetDir)
+			{
+				// Cleanup the temporary directory
+				SetupUtils::rrmdir($sTempTargetDir);
+			}
+			throw $e;
+		}
+
+		if ($sTempTargetDir != $sFinalTargetDir)
+		{
+			// Move the results to the target directory
+			SetupUtils::movedir($sTempTargetDir, $sFinalTargetDir);
+		}
+	}
+	
+
+	protected function DoCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks = false)
 	{
 		$aAllClasses = array(); // flat list of classes
 
@@ -108,7 +148,7 @@ class MFCompiler
 				$sModuleRootDir = realpath($sModuleRootDir);
 				$sRelativeDir = basename($sModuleRootDir);
 				// Push the other module files
-				SetupUtils::copydir($sModuleRootDir, $sTargetDir.'/'.$sRelativeDir, $bUseSymbolicLinks);
+				SetupUtils::copydir($sModuleRootDir, $sTempTargetDir.'/'.$sRelativeDir, $bUseSymbolicLinks);
 			}
 
 			$sCompiledCode = '';
@@ -127,7 +167,7 @@ class MFCompiler
 					$aAllClasses[] = $sClass;
 					try
 					{
-						$sCompiledCode .= $this->CompileClass($oClass, $sTargetDir, $sRelativeDir, $oP);
+						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
 					}
 					catch (DOMFormatException $e)
 					{
@@ -187,7 +227,7 @@ EOF;
 					}
 					try
 					{
-						$sCompiledCode .= $this->CompileMenu($oMenuNode, $sTargetDir, $sRelativeDir, $oP);
+						$sCompiledCode .= $this->CompileMenu($oMenuNode, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
 					}
 					catch (DOMFormatException $e)
 					{
@@ -209,7 +249,7 @@ EOF;
 			{
 				// We have compiled something: write the result file
 				//
-				$sResultFile = $sTargetDir.'/'.$sRelativeDir.'/model.'.$sModuleName.'.php';
+				$sResultFile = $sTempTargetDir.'/'.$sRelativeDir.'/model.'.$sModuleName.'.php';
 				if (is_file($sResultFile))
 				{
 					$this->Log("Updating $sResultFile for module $sModuleName in version $sModuleVersion ($iClassCount classes)");
@@ -264,7 +304,7 @@ EOF;
 
 		// Compile the dictionaries -out of the modules
 		//
-		$sDictDir = $sTargetDir.'/dictionaries';
+		$sDictDir = $sTempTargetDir.'/dictionaries';
 		if (!is_dir($sDictDir))
 		{
 			$this->Log("Creating directory $sDictDir");
@@ -274,9 +314,9 @@ EOF;
 		$oDictionaries = $this->oFactory->ListActiveChildNodes('dictionaries', 'dictionary');
 		foreach($oDictionaries as $oDictionaryNode)
 		{
-			$this->CompileDictionary($oDictionaryNode, $sTargetDir);
+			$this->CompileDictionary($oDictionaryNode, $sTempTargetDir, $sFinalTargetDir);
 		}
-	}
+	} // Compile()
 
 	/**
 	 * Helper to form a valid ZList from the array built by GetNodeAsArrayOfItems()
@@ -483,7 +523,7 @@ EOF;
 		return $sRet;
 	}
 
-	protected function CompileClass($oClass, $sTargetDir, $sModuleRelativeDir, $oP)
+	protected function CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir, $oP)
 	{
 		$sClass = $oClass->getAttribute('id');
 		$oProperties = $oClass->GetUniqueElement('properties');
@@ -570,7 +610,7 @@ EOF;
 			$aClassParams['display_template'] = "utils::GetAbsoluteUrlModulesRoot().'$sDisplayTemplate'";
 		}
 	
-		$this->CompileFiles($oProperties, $sTargetDir.'/'.$sModuleRelativeDir, '');
+		$this->CompileFiles($oProperties, $sTempTargetDir.'/'.$sModuleRelativeDir, $sFinalTargetDir.'/'.$sModuleRelativeDir, '');
 		if (($sIcon = $oProperties->GetChildText('icon')) && (strlen($sIcon) > 0))
 		{
 			$sIcon = $sModuleRelativeDir.'/'.$sIcon;
@@ -1000,9 +1040,9 @@ EOF;
 	}// function CompileClass()
 
 
-	protected function CompileMenu($oMenu, $sTargetDir, $sModuleRelativeDir, $oP)
+	protected function CompileMenu($oMenu, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir, $oP)
 	{
-		$this->CompileFiles($oMenu, $sTargetDir.'/'.$sModuleRelativeDir, $sModuleRelativeDir);
+		$this->CompileFiles($oMenu, $sTempTargetDir.'/'.$sModuleRelativeDir, $sFinalTargetDir.'/'.$sModuleRelativeDir, $sModuleRelativeDir);
 
 		$sMenuId = $oMenu->getAttribute("id");
 		$sMenuClass = $oMenu->getAttribute("xsi:type");
@@ -1054,7 +1094,7 @@ EOF;
 					$oDefNode = $oXMLDoc->importNode($oNode, true); // layout, cells, etc Nodes and below
 					$oRootNode->appendChild($oDefNode);
 				}
-				$oXMLDoc->save($sTargetDir.'/'.$sModuleRelativeDir.'/'.$sFileName);
+				$oXMLDoc->save($sTempTargetDir.'/'.$sModuleRelativeDir.'/'.$sFileName);
 			}
 			$sNewMenu = "new DashboardMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank);";
 			break;
@@ -1429,7 +1469,7 @@ EOF;
 	return $sPHP;
 	} // function CompileUserRights
 
-	protected function CompileDictionary($oDictionaryNode, $sTargetDir)
+	protected function CompileDictionary($oDictionaryNode, $sTempTargetDir, $sFinalTargetDir)
 	{
 		$sLang = $oDictionaryNode->getAttribute('id');
 		$sEnglishLanguageDesc = $oDictionaryNode->GetChildText('english_description');
@@ -1458,13 +1498,13 @@ $sEntriesPHP
 ));
 EOF;
 		$sSafeLang = str_replace(' ', '-', strtolower(trim($sLang)));
-		$sDictFile = $sTargetDir.'/dictionaries/'.$sSafeLang.'.dict.php';
+		$sDictFile = $sTempTargetDir.'/dictionaries/'.$sSafeLang.'.dict.php';
 		file_put_contents($sDictFile, $sPHPDict);
 	}
 
 	// Transform the file references into the corresponding filename (and create the file in the relevant directory)
 	//
-	protected function CompileFiles($oNode, $sTargetDir, $sRelativePath)
+	protected function CompileFiles($oNode, $sTempTargetDir, $sFinalTargetDir, $sRelativePath)
 	{
 		$oFileRefs = $oNode->GetNodes(".//fileref");
 		foreach ($oFileRefs as $oFileRef)
@@ -1482,8 +1522,8 @@ EOF;
 				$sData = base64_decode($oNodes->item(0)->GetChildText('data'));
 				$aPathInfo = pathinfo($sName);
 				$sFile = 'icon-file'.$iFileId.'.'.$aPathInfo['extension'];
-				$sFilePath = $sTargetDir.'/images/'.$sFile;
-				@mkdir($sTargetDir.'/images');
+				$sFilePath = $sTempTargetDir.'/images/'.$sFile;
+				@mkdir($sTempTargetDir.'/images');
 				file_put_contents($sFilePath, $sData);
 				if (!file_exists($sFilePath))
 				{

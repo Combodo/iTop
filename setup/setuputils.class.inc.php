@@ -623,6 +623,44 @@ class SetupUtils
 			return false;
 		}
 	}
+
+	/**
+	 * Helper to move a directory when the parent directory of the target dir cannot be written
+	 * To be used as alternative to rename()	 	 
+	 * Files/Subdirs of the source directory are moved one by one
+	 * Returns void
+	 */
+	public static function movedir($sSource, $sDest)
+	{
+		if (!is_dir($sSource))
+		{
+			throw new Exception("movedir: the source directory '$sSource' is not a valid directory or cannot be read");
+		}
+		if (!is_dir($sDest))
+		{
+			self::builddir($sDest);
+		}
+		else
+		{
+			self::tidydir($sDest);
+		}
+
+		$aFiles = scandir($sSource);
+		if(sizeof($aFiles) > 0)
+		{
+			foreach($aFiles as $sFile)
+			{
+				if ($sFile == '.' || $sFile == '..')
+				{
+					// Skip
+					continue;
+				}
+				rename($sSource.'/'.$sFile, $sDest.'/'.$sFile);
+			}
+		}
+		rmdir($sSource);
+	}
+
 	static function GetPreviousInstance($sDir)
 	{
 		$bFound = false;
