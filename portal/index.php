@@ -19,7 +19,7 @@
 /**
  * iTop User Portal main page
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2013 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 require_once('../approot.inc.php');

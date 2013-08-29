@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Class LoginWebPage
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2013 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -123,7 +123,12 @@ EOF
 	
 			$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
 			$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
-			$this->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8')."\"><img title=\"$sVersionShort\" src=\"../images/itop-logo-external.png\"></a></div>\n");
+			$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/itop-logo-external.png';
+			if (file_exists(MODULESROOT.'branding/login-logo.png'))
+			{
+				$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/login-logo.png';
+			}
+			$this->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8')."\"><img title=\"$sVersionShort\" src=\"$sDisplayIcon\"></a></div>\n");
 			$this->add("<div id=\"login\">\n");
 			$this->add("<h1>".Dict::S('UI:Login:Welcome')."</h1>\n");
 			if ($bFailedLogin)
@@ -199,7 +204,12 @@ function DoCheckPwd()
 EOF
 );
 		$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
-		$this->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8')."\"><img title=\"$sVersionShort\" src=\"../images/itop-logo.png\"></a></div>\n");
+		$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/itop-logo.png';
+		if (file_exists(MODULESROOT.'branding/main-logo.png'))
+		{
+			$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/main-logo.png';
+		}
+		$this->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8')."\"><img title=\"$sVersionShort\" src=\"$sDisplayIcon\"></a></div>\n");
 		$this->add("<div id=\"login\">\n");
 		$this->add("<h1>".Dict::S('UI:Login:ChangeYourPassword')."</h1>\n");
 		if ($bFailedLogin)

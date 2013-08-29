@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Class iTopWebPage
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2013 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -764,12 +764,18 @@ EOF
 			$sOnlineHelpUrl = MetaModel::GetConfig()->Get('online_help');
 			//$sLogOffMenu = "<span id=\"logOffBtn\" style=\"height:55px;padding:0;margin:0;\"><img src=\"../images/onOffBtn.png\"></span>";
 
+			$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/itop-logo.png';
+			if (file_exists(MODULESROOT.'branding/main-logo.png'))
+			{
+				$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/main-logo.png';
+			}
+
 			$sHtml .= $sNorthPane;
 			$sHtml .= '<div id="left-pane" class="ui-layout-west">';
 			$sHtml .= '<!-- Beginning of the left pane -->';
 			$sHtml .= ' <div class="ui-layout-north">';
 			$sHtml .= ' <div id="header-logo">';
-			$sHtml .= ' <div id="top-left"></div><div id="logo"><a href="'.htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8').'"><img src="../images/itop-logo.png" title="'.htmlentities($sVersionString, ENT_QUOTES, 'UTF-8').'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
+			$sHtml .= ' <div id="top-left"></div><div id="logo"><a href="'.htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8').'"><img src="'.$sDisplayIcon.'" title="'.htmlentities($sVersionString, ENT_QUOTES, 'UTF-8').'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
 			$sHtml .= ' </div>';
 			$sHtml .= ' <div class="header-menu">';
 			$sHtml .= '		<div class="icon ui-state-default ui-corner-all"><span id="tPinMenu" class="ui-icon ui-icon-pin-w">pin</span></div>';

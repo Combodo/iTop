@@ -316,7 +316,13 @@ EOF;
 		{
 			$this->CompileDictionary($oDictionaryNode, $sTempTargetDir, $sFinalTargetDir);
 		}
-	} // Compile()
+
+		// Compile the branding
+		//
+		$oBrandingNode = $this->oFactory->GetNodes('branding')->item(0);
+		$this->CompileBranding($oBrandingNode, $sTempTargetDir, $sFinalTargetDir);
+
+	} // DoCompile()
 
 	/**
 	 * Helper to form a valid ZList from the array built by GetNodeAsArrayOfItems()
@@ -1535,6 +1541,48 @@ EOF;
 				$oTextNode = $oParentNode->ownerDocument->createTextNode($sRelativePath.'/images/'.$sFile);
 				$oParentNode->appendChild($oTextNode);
 			}
+		}
+	}
+
+
+	protected function CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $sNodeName, $sTargetFile)
+	{
+		if (($sIcon = $oBrandingNode->GetChildText($sNodeName)) && (strlen($sIcon) > 0))
+		{
+			if (substr($sIcon, 0, 8) == 'branding')
+			{
+				$sSourceFile = $sTempTargetDir.'/'.$sIcon;
+			}
+			else
+			{
+				$sSourceFile = APPROOT.$sIcon;
+			}
+			$sTargetFile = $sTempTargetDir.'/branding/'.$sTargetFile.'.png';
+
+			if (!file_exists($sSourceFile))
+			{
+				throw new Exception("Branding $sNodeName: could not find the file $sIcon ($sSourceFile)");
+			}
+
+			// Note: rename makes sense only when the file given as a file ref, otherwise it may be an item of the application (thus it must be kept there)
+			copy($sSourceFile, $sTargetFile);
+		}
+	}
+
+	protected function CompileBranding($oBrandingNode, $sTempTargetDir, $sFinalTargetDir)
+	{
+		if ($oBrandingNode)
+		{
+			// Transform file refs into files in the images folder
+			SetupUtils::builddir($sTempTargetDir.'/branding');
+			$this->CompileFiles($oBrandingNode, $sTempTargetDir.'/branding', $sFinalTargetDir.'/branding', 'branding');
+
+			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'main_logo', 'main-logo');
+			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'login_logo', 'login-logo');
+			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'portal_logo', 'portal-logo');
+
+			// Cleanup the images directory (made by CompileFiles)
+			SetupUtils::rrmdir($sTempTargetDir.'/branding/images');
 		}
 	}
 }

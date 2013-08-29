@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Class PortalWebPage
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2013 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -235,6 +235,17 @@ EOF
 
 		// For Wizard helper to process the ajax replies
 		$this->add('<div id="ajax_content"></div>');
+
+		// Customize the logo (unless a customer CSS has been defined)
+		if ($sAlternateStyleSheet == '')
+		{
+			if (file_exists(MODULESROOT.'branding/portal-logo.png'))
+			{
+				$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/portal-logo.png';
+				$this->add_style("div#portal #logo {background: url(\"$sDisplayIcon\") no-repeat scroll 0 0 transparent;}");
+			}
+		}
+
 }
 
 	public function SetCurrentTab($sTabLabel = '')
