@@ -964,8 +964,8 @@ class DesignerBooleanField extends DesignerFormField
 			{
 				$sValue = utils::ReadParam($this->oForm->GetParamName($this->sCode), 'false', false, 'raw_data');
 			}
+			$aValues[$this->sCode] = ($sValue == 'true');
 		}
-		$aValues[$this->sCode] = ($sValue == 'true');
 	}
 }
 
