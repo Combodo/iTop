@@ -47,9 +47,10 @@ div#portal #banner {
 
 div#portal #logo {
 	background: url(./images/company_logo.png) 0 0 no-repeat;
+	margin-top:6px;
 	margin-left:20px;
 	margin-right:20px;
-	height: 70px;
+	height: 60px;
 	border: 0;
 	vertical-align: middle;
 	text-align: center;
