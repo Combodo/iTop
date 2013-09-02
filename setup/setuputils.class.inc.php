@@ -645,6 +645,15 @@ class SetupUtils
 			self::tidydir($sDest);
 		}
 
+		self::copydir($sSource, $sDest);
+		self::tidydir($sSource);
+		rmdir($sSource);
+
+		/**
+		 * We have tried the following implementation (based on a rename/mv)
+		 * But this does not work on some OSes.
+		 * More info: https://bugs.php.net/bug.php?id=54097		 		 
+		 *		 		 		 		 		
 		$aFiles = scandir($sSource);
 		if(sizeof($aFiles) > 0)
 		{
@@ -659,6 +668,7 @@ class SetupUtils
 			}
 		}
 		rmdir($sSource);
+		*/
 	}
 
 	static function GetPreviousInstance($sDir)
