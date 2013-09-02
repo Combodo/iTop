@@ -736,18 +736,6 @@ EOF
 				$sApplicationBanner .= '<div id="admin-banner"><span style="padding:5px;">'.$this->m_sMessage.'<span></div>';
 			}
 
-			$sEnvironment = utils::GetCurrentEnvironment();
-			$sBackButton = utils::GetEnvironmentBackButton();
-			if($sEnvironment != 'production')
-			{
-				$sEnvLabel = trim(MetaModel::GetConfig()->Get('app_env_label'));
-				if (strlen($sEnvLabel) == 0)
-				{
-						$sEnvLabel = $sEnvironment;
-				}
-				$sApplicationBanner .= '<div id="admin-banner"><span style="padding:5px;">'.Dict::Format('UI:ApplicationEnvironment', $sEnvLabel).$sBackButton.'<span></div>';
-			}
-			
 			$sApplicationBanner .= $sBannerExtraHtml;
 			
 			if (!empty($sNorthPane))
