@@ -283,20 +283,13 @@ class ApplicationInstaller
 				$aResult = array(
 					'status' => self::OK,
 					'message' => '',
-					'next-step' => 'sample-data',
-					'next-step-label' => 'Loading sample data',
+					'next-step' => 'load-data',
+					'next-step-label' => 'Loading data',
 					'percentage-completed' => 80,
 				);
-
-				$bLoadData = ($this->oParams->Get('sample_data', 0) == 1);
-				if (!$bLoadData)
-				{
-					$aResult['next-step'] = 'create-config';
-					$aResult['next-step-label'] = 'Creating the configuration File';
-				}
 				break;
 				
-				case 'sample-data':
+				case 'load-data':
 				$aSelectedModules = $this->oParams->Get('selected_modules');
 				$sTargetEnvironment = $this->oParams->Get('target_env', '');
 				$sTargetDir = 'env-'.(($sTargetEnvironment == '') ? 'production' : $sTargetEnvironment);
@@ -308,8 +301,9 @@ class ApplicationInstaller
 				$sDBPrefix = $aDBParams['prefix'];
 				$aFiles = $this->oParams->Get('files', array());
 				$bOldAddon = $this->oParams->Get('old_addon', false);
+				$bSampleData = ($this->oParams->Get('sample_data', 0) == 1);
 				
-				self::DoLoadFiles($aSelectedModules, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment, $bOldAddon);
+				self::DoLoadFiles($aSelectedModules, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment, $bOldAddon, $bSampleData);
 				
 				$aResult = array(
 					'status' => self::INFO,
@@ -340,8 +334,9 @@ class ApplicationInstaller
 				$bOldAddon = $this->oParams->Get('old_addon', false);
 				$sSourceDir = $this->oParams->Get('source_dir', '');
 				$sPreviousConfigFile = $this->oParams->Get('previous_configuration_file', '');
-				
-				self::DoCreateConfig($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModules, $sTargetEnvironment, $bOldAddon, $sSourceDir, $sPreviousConfigFile);
+				$sDataModelVersion = $this->oParams->Get('datamodel_version', '0.0.0');
+								
+				self::DoCreateConfig($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModules, $sTargetEnvironment, $bOldAddon, $sSourceDir, $sPreviousConfigFile, $sDataModelVersion);
 				
 				$aResult = array(
 					'status' => self::INFO,
@@ -615,7 +610,6 @@ class ApplicationInstaller
 		
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
-		
 		self::$bMetaModelStarted = true; // No need to reload the final MetaModel in case the installer runs synchronously 
 		
 		// Perform here additional DB setup... profiles, etc...
@@ -680,11 +674,6 @@ class ApplicationInstaller
 				}
 			}
 		}
-
-		if (!$oProductionEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModules, $sModulesDir))
-		{
-			throw new Exception("Failed to record the installation information");
-		}
 		
 		if($sMode == 'install')
 		{
@@ -732,7 +721,7 @@ class ApplicationInstaller
 		}
 	}
 	
-	protected static function DoLoadFiles($aSelectedModules, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment = '', $bOldAddon = false)
+	protected static function DoLoadFiles($aSelectedModules, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment = '', $bOldAddon = false, $bSampleData = false)
 	{
 		$aParamValues = array(
 			'db_server' => $sDBServer,
@@ -771,23 +760,76 @@ class ApplicationInstaller
 		$oDataLoader->StartSession($oMyChange);
 
 		$aFiles = array();		
+		$aPreviouslyLoadedFiles = array();		
 		$oProductionEnv = new RunTimeEnvironment();
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, APPROOT.$sModulesDir);
 		foreach($aAvailableModules as $sModuleId => $aModule)
 		{
 			if (($sModuleId != ROOT_MODULE))
 			{
+				// Load data only for selected AND newly installed modules
 				if (in_array($sModuleId, $aSelectedModules))
 				{
-					$aFiles = array_merge(
-						$aFiles,
-						$aAvailableModules[$sModuleId]['data.struct'],
-						$aAvailableModules[$sModuleId]['data.sample']
-					);
+					if ($aModule['version_db'] != '')
+					{
+						// Simulate the load of the previously loaded XML files to get the mapping of the keys					
+						if ($bSampleData)
+						{
+							$aPreviouslyLoadedFiles = array_merge(
+								$aPreviouslyLoadedFiles,
+								$aAvailableModules[$sModuleId]['data.struct'],
+								$aAvailableModules[$sModuleId]['data.sample']
+							);
+						}
+						else
+						{
+							// Load only structural data
+							$aPreviouslyLoadedFiles = array_merge(
+								$aPreviouslyLoadedFiles,
+								$aAvailableModules[$sModuleId]['data.struct']
+							);
+						}
+					}
+					else
+					{
+						if ($bSampleData)
+						{
+							$aFiles = array_merge(
+								$aFiles,
+								$aAvailableModules[$sModuleId]['data.struct'],
+								$aAvailableModules[$sModuleId]['data.sample']
+							);
+						}
+						else
+						{
+							// Load only structural data
+							$aFiles = array_merge(
+								$aFiles,
+								$aAvailableModules[$sModuleId]['data.struct']
+							);
+						}
+					}
 				}
 			}
 		}
 
+		// Simulate the load of the previously loaded files, in order to initialize
+		// the mapping between the identifiers in the XML and the actual identifiers
+		// in the current database
+		foreach($aPreviouslyLoadedFiles as $sFileRelativePath)
+		{
+			$sFileName = APPROOT.$sFileRelativePath;
+			SetupPage::log_info("Loading file: $sFileName (just to get the keys mapping)");
+			if (empty($sFileName) || !file_exists($sFileName))
+			{
+				throw(new Exception("File $sFileName does not exist"));
+			}
+		
+			$oDataLoader->LoadFile($sFileName, true);
+			$sResult = sprintf("loading of %s done.", basename($sFileName));
+			SetupPage::log_info($sResult);
+		}
+		
 		foreach($aFiles as $sFileRelativePath)
 		{
 			$sFileName = APPROOT.$sFileRelativePath;
@@ -806,7 +848,7 @@ class ApplicationInstaller
 	    SetupPage::log_info("ending data load session");
 	}
 	
-	protected static function DoCreateConfig($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModules, $sTargetEnvironment, $bOldAddon, $sSourceDir, $sPreviousConfigFile)
+	protected static function DoCreateConfig($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModules, $sTargetEnvironment, $bOldAddon, $sSourceDir, $sPreviousConfigFile, $sDataModelVersion)
 	{	
 		$aParamValues = array(
 			'db_server' => $sDBServer,
@@ -855,6 +897,16 @@ class ApplicationInstaller
 			));
 		}
 		$oConfig->Set('source_dir', $sSourceDir);
+
+		// Record which modules are installed...
+		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
+		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
+		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
+		if (!$oProductionEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModules, $sModulesDir))
+		{
+			throw new Exception("Failed to record the installation information");
+		}		
+		
 		
 		// Make sure the root configuration directory exists
 		if (!file_exists(APPCONF))

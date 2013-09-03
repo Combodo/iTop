@@ -179,8 +179,10 @@ class XMLDataLoader
 	
 	/**
 	 * Helper function to load the objects from a standard XML file into the database
+	 * @param $sFilePath string The full path to the XML file to load
+	 * @param $bUpdateKeyCacheOnly bool Set to true to *just* update the keys cache but not reload the objects
 	 */
-	function LoadFile($sFilePath)
+	function LoadFile($sFilePath, $bUpdateKeyCacheOnly = false)
 	{
 		global $aKeys;
 		
@@ -292,7 +294,7 @@ class XMLDataLoader
 					}
 				}
 			}
-			$this->StoreObject($sClass, $oTargetObj, $iSrcId);
+			$this->StoreObject($sClass, $oTargetObj, $iSrcId, $bUpdateKeyCacheOnly, $bUpdateKeyCacheOnly);
 		}
 		return true;
 	}
@@ -315,7 +317,7 @@ class XMLDataLoader
 	 * Store an object in the database and remember the mapping
 	 * between its original ID and the newly created ID in the database
 	 */  
-	protected function StoreObject($sClass, $oTargetObj, $iSrcId, $bSearch = false)
+	protected function StoreObject($sClass, $oTargetObj, $iSrcId, $bSearch = false, $bUpdateKeyCacheOnly = false)
 	{
 		$iObjId = 0;
 		try
@@ -354,13 +356,19 @@ class XMLDataLoader
 			{
 				if($oTargetObj->IsNew())
 				{
-			        $iObjId = $oTargetObj->DBInsertNoReload();
-					$this->m_iCountCreated++;
+					if (!$bUpdateKeyCacheOnly)
+					{
+			        	$iObjId = $oTargetObj->DBInsertNoReload();
+						$this->m_iCountCreated++;
+					}
 				}
 				else
 				{
 					$iObjId = $oTargetObj->GetKey();
-					$oTargetObj->DBUpdate();
+					if (!$bUpdateKeyCacheOnly)
+					{
+						$oTargetObj->DBUpdate();
+					}
 				}
 			}	        
 		}
