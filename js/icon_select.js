@@ -46,6 +46,15 @@ $(function()
 				this.oUploadBtn.click( function() { me._upload_dlg(); } );
 				this.oButton.after(this.oUploadBtn);
 			}
+			var id = this.element.attr('id');
+			$('#event_bus').bind('tabshow.itop-icon-select'+id, function(event) {
+				// Compute the offsetX the first time the 'element' becomes visible...
+				var bVisible = me.element.parent().is(':visible');
+				if ((me.options.offsetX == null) && (bVisible))
+				{
+					me._refresh();
+				}
+			});
 			this.oUploadDlg = null;
 			this._refresh();
 		},
@@ -53,13 +62,20 @@ $(function()
 		// called when created, and later when changing options
 		_refresh: function()
 		{
-			if (this.options.items.length > 0)
+			if (!this.element.parent().is(':visible'))
 			{
-				this.element.val(this.options.items[this.options.current_idx].value);
-				this.oImg.attr('src', this.options.items[this.options.current_idx].icon);
-				this.oLabel.text(this.options.items[this.options.current_idx].label);
+				this.options.offsetX = null; // Menu needs to be reconstructed when the button becomes visible
 			}
-			this._create_menu();
+			else
+			{
+				if (this.options.items.length > 0)
+				{
+					this.element.val(this.options.items[this.options.current_idx].value);
+					this.oImg.attr('src', this.options.items[this.options.current_idx].icon);
+					this.oLabel.text(this.options.items[this.options.current_idx].label);
+				}
+				this._create_menu();
+			}
 		},
 		_create_menu: function()
 		{
