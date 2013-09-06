@@ -182,6 +182,7 @@ class RunTimeEnvironment
 		{
 			require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 			CMDBSource::Init($oConfig->GetDBHost(), $oConfig->GetDBUser(), $oConfig->GetDBPwd(), $oConfig->GetDBName());
+			CMDBSource::SetCharacterSet($oConfig->GetDBCharacterSet(), $oConfig->GetDBCollation());
 			$aSelectInstall = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->GetDBSubname()."priv_module_install");
 		}
 		catch (MySQLException $e)
@@ -512,6 +513,7 @@ class RunTimeEnvironment
 		{
 			require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 			CMDBSource::Init($oConfig->GetDBHost(), $oConfig->GetDBUser(), $oConfig->GetDBPwd(), $oConfig->GetDBName());
+			CMDBSource::SetCharacterSet($oConfig->GetDBCharacterSet(), $oConfig->GetDBCollation());
 			$sSQLQuery = "SELECT * FROM ".$oConfig->GetDBSubname()."priv_module_install";
 			$aSelectInstall = CMDBSource::QueryToArray($sSQLQuery);
 		}
