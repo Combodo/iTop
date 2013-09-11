@@ -162,8 +162,7 @@ class ormStopWatch
 		}
 		else
 		{
-			$iElapsedTemp = ''; //$this->ComputeDuration($oHostObject, $oAttDef, $this->iLastStart, time());
-			$aProperties['Elapsed'] = $this->iTimeSpent.' + '.$iElapsedTemp.' s + <img src="../images/indicator.gif">';
+			$aProperties['Elapsed'] = 'running <img src="../images/indicator.gif">';
 		}
 
 		$aProperties['Started'] = $oAttDef->SecondsToDate($this->iStarted);
@@ -183,7 +182,7 @@ class ormStopWatch
 			}
 			$aProperties[$iPercent.'%'] = $sThresholdDesc;
 		}
-		$sRes = "<TABLE class=\"listResults\">";
+		$sRes = "<TABLE>";
 		$sRes .= "<TBODY>";
 		foreach ($aProperties as $sProperty => $sValue)
 		{
