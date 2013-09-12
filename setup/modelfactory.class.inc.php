@@ -325,6 +325,7 @@ class ModelFactory
 			{
 				$oTargetNode = $oExistingNode;
 			}
+			$oTargetNode->setAttribute('_alteration', 'needed');
 			break;
 			
 		case 'define':
@@ -1150,6 +1151,7 @@ EOF
 			{
 				case 'added':
 				case 'replaced':
+				case 'needed':
 				// marked as added or modified, just reset the flag
 				$oNode->removeAttribute('_alteration');
 				break;
@@ -1924,6 +1926,7 @@ class MFElement extends DOMElement
 			$sFlag = 'removed';
 			break;
 		case 'added':
+		case 'needed':
 			$sFlag = null;
 			break;
 		case 'removed':
@@ -2069,6 +2072,7 @@ class MFElement extends DOMElement
 			{
 				case 'added':
 				case 'replaced':
+				case 'needed':
 				// marked as added or modified, just reset the flag
 				$oNode->removeAttribute('_alteration');
 				break;
