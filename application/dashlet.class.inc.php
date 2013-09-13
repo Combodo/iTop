@@ -1059,7 +1059,7 @@ class DashletBadge extends Dashlet
 			
 		
 		$oField = new DesignerIconSelectionField('class', Dict::S('UI:DashletBadge:Prop-Class'), $this->aProperties['class']);
-		ksort($aClasses);
+		asort($aClasses);
 		$aValues = array();
 		foreach($aClasses as $sClass => $sClass)
 		{
