@@ -782,11 +782,12 @@ class RestUtils
 	 * 	 
 	 * @param string $sClass Name of the class
 	 * @param mixed $key Either search criteria (substructure), or an object or an OQL string.
+	 * @param bool $bAllowNullValue Allow the cases such as key = 0 or key = {null} and return null then
 	 * @return DBObject The object found
 	 * @throws Exception If the input structure is not valid or it could not find exactly one object
 	 * @api
 	 */
-	public static function FindObjectFromKey($sClass, $key)
+	public static function FindObjectFromKey($sClass, $key, $bAllowNullValue = false)
 	{
 		if (is_object($key))
 		{
@@ -794,10 +795,17 @@ class RestUtils
 		}
 		elseif (is_numeric($key))
 		{
-			$res = MetaModel::GetObject($sClass, $key, false);
-			if (is_null($res))
+			if ($bAllowNullValue && ($key == 0))
 			{
-				throw new Exception("Invalid object $sClass::$key");
+				$res = null;
+			}
+			else
+			{
+				$res = MetaModel::GetObject($sClass, $key, false);
+				if (is_null($res))
+				{
+					throw new Exception("Invalid object $sClass::$key");
+				}
 			}
 		}
 		elseif (is_string($key))
@@ -891,8 +899,8 @@ class RestUtils
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			if ($oAttDef instanceof AttributeExternalKey)
 			{
-				$oExtKeyObject = self::FindObjectFromKey($oAttDef->GetTargetClass(), $value);
-				$value = $oExtKeyObject->GetKey();
+				$oExtKeyObject = self::FindObjectFromKey($oAttDef->GetTargetClass(), $value, true /* allow null */);
+				$value = ($oExtKeyObject != null) ? $oExtKeyObject->GetKey() : 0;
 			}
 			elseif ($oAttDef instanceof AttributeLinkedSet)
 			{
