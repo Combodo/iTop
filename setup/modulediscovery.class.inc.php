@@ -173,6 +173,20 @@ class ModuleDiscovery
 	protected static function DependencyIsResolved($sDepString, $aOrderedModules)
 	{
 		$bResult = false;
+		$aModuleVersions = array();
+		// Separate the module names from their version for an easier comparison later
+		foreach($aOrderedModules as $sModuleId)
+		{
+			if (preg_match('|^([^/]+)/(.*)$|', $sModuleId, $aMatches))
+			{
+				$aModuleVersions[$aMatches[1]] = $aMatches[2];
+			}
+			else
+			{
+				// No version number found, assume 1.0.0
+				$aModuleVersions[$sModuleId] = '1.0.0';
+			}
+		}
 		if (preg_match_all('/([^\(\)&| ]+)/', $sDepString, $aMatches))
 		{
 			$aReplacements = array();
@@ -180,17 +194,38 @@ class ModuleDiscovery
 			{
 				foreach($aMatch as $sModuleId)
 				{
-					if (in_array($sModuleId, $aOrderedModules))
+					// $sModuleId in the dependency string is made of a <name>/<optional_operator><version>
+					// where the operator is < <= = > >= (by default >=)
+					if(preg_match('|^([^/]+)/(<?>?=?)([^><=]+)$|', $sModuleId, $aModuleMatches))
 					{
-						// module is present
-						$aReplacements[$sModuleId] = '(true)'; // Add parentheses to protect against invalid condition causing
-															   // a function call that results in a runtime fatal error
-					}
-					else
-					{
-						// module is not present
-						$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
-															    // a function call that results in a runtime fatal error
+						$sModuleName = $aModuleMatches[1];
+						$sOperator = $aModuleMatches[2];
+						if ($sOperator == '')
+						{
+							$sOperator = '>=';
+						}
+						$sExpectedVersion = $aModuleMatches[3];
+						if (array_key_exists($sModuleName, $aModuleVersions))
+						{
+							// module is present, check the version
+							$sCurrentVersion = $aModuleVersions[$sModuleName];
+							if (version_compare($sCurrentVersion, $sExpectedVersion, $sOperator))
+							{
+								$aReplacements[$sModuleId] = '(true)'; // Add parentheses to protect against invalid condition causing
+																	   // a function call that results in a runtime fatal error								
+							}
+							else
+							{
+								$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
+																	   // a function call that results in a runtime fatal error								
+							}
+						}
+						else
+						{
+							// module is not present
+							$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
+																    // a function call that results in a runtime fatal error
+						}
 					}
 				}
 			}
