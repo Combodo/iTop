@@ -525,6 +525,15 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'forgot_password' => array(
+			'type' => 'bool',
+			'description' => 'Enable the "Forgot password" feature',
+			// examples... not used (nor 'description')
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'deadline_format' => array(
 			'type' => 'string',
 			'description' => 'The format used for displaying "deadline" attributes: any string with the following placeholders: $date$, $difference$',

@@ -140,6 +140,7 @@ abstract class User extends cmdbAbstractObject
 				return $sLastName;
 			}
 		}
+		return $this->Get('login');
 	}
 
 	/*
@@ -289,12 +290,56 @@ abstract class UserInternal extends User
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
+		// When set, this token allows for password reset
+		MetaModel::Init_AddAttribute(new AttributeString("reset_pwd_token", array("allowed_values"=>null, "sql"=>"reset_pwd_token", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('contactid', 'first_name', 'email', 'login', 'language', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'login')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('login', 'contactid')); // Criteria of the advanced search form
+	}
+
+	/**
+	 * Use with care!
+	 */	 	
+	public function SetPassword($sNewPassword)
+	{
+	}
+
+	/**
+	 * The email recipient is the person who is allowed to regain control when the password gets lost	
+	 * Throws an exception if the feature cannot be available
+	 */	
+	public function GetResetPasswordEmail()
+	{
+		if (!MetaModel::IsValidAttCode(get_class($this), 'contactid'))
+		{
+			throw new Exception(Dict::S('UI:ResetPwd-Error-NoContact'));
+		}
+		$iContactId = $this->Get('contactid');
+		if ($iContactId == 0)
+		{
+			throw new Exception(Dict::S('UI:ResetPwd-Error-NoContact'));
+		}
+		$oContact = MetaModel::GetObject('Contact', $iContactId);
+		// Determine the email attribute (the first one will be our choice)
+		foreach (MetaModel::ListAttributeDefs(get_class($oContact)) as $sAttCode => $oAttDef)
+		{
+			if ($oAttDef instanceof AttributeEmailAddress)
+			{
+				$sEmailAttCode = $sAttCode;
+				// we've got one, exit the loop
+				break;
+			}
+		}
+		if (!isset($sEmailAttCode))
+		{
+			throw new Exception(Dict::S('UI:ResetPwd-Error-NoEmailAtt'));
+		}
+		$sRes = trim($oContact->Get($sEmailAttCode));
+		return $sRes;
 	}
 }
 

@@ -51,16 +51,9 @@ switch($sLoginMode)
 	phpCAS::logoutWithRedirectService($sCASLogoutUrl); // Redirects to the CAS logout page
 	break;
 }
-$oPage = new LoginWebPage();
+$oPage = LoginWebPage::NewLoginWebPage();
 $oPage->no_cache();
-$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
-$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
-$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/itop-logo-external.png';
-if (file_exists(MODULESROOT.'branding/login-logo.png'))
-{
-	$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/login-logo.png';
-}
-$oPage->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8')."\"><img title=\"$sVersionShort\" src=\"$sDisplayIcon\"></a></div>\n");
+$oPage->DisplayLoginHeader();
 $oPage->add("<div id=\"login\">\n");
 $oPage->add("<h1>".Dict::S('UI:LogOff:ThankYou')."</h1>\n");
 

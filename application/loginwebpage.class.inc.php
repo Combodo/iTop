@@ -31,72 +31,62 @@ require_once(APPROOT."/application/nicewebpage.class.inc.php");
 
 class LoginWebPage extends NiceWebPage
 {
+	protected static $sHandlerClass = __class__;
+	public static function RegisterHandler($sClass)
+	{
+		self::$sHandlerClass = $sClass;
+	}
+
+	public static function NewLoginWebPage()
+	{
+		return new self::$sHandlerClass;
+	}
+
 	protected static $m_sLoginFailedMessage = '';
 	
-    public function __construct()
-    {
-        parent::__construct("iTop Login");
-        $this->add_style(<<<EOF
-body {
-	background: #eee;
-	margin: 0;
-	padding: 0;
-}
-#login-logo {
-	margin-top: 150px;
-	width: 300px;
-	padding-left: 20px;
-	padding-right: 20px;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	margin-left: auto;
-	margin-right: auto;
-	background: #f6f6f1;
-	height: 54px;
-	border-top: 1px solid #000;
-	border-left: 1px solid #000;
-	border-right: 1px solid #000;
-	border-bottom: 0;
-	text-align: center;
-}
-#login-logo img {
-	border: 0;
-}
-#login {
-	width: 300px;
-	margin-left: auto;
-	margin-right: auto;
-	padding: 20px;
-	background-color: #fff;
-	border-bottom: 1px solid #000;
-	border-left: 1px solid #000;
-	border-right: 1px solid #000;
-	border-top: 0;
-	text-align: center;
-}
-#pwd, #user,#old_pwd, #new_pwd, #retype_new_pwd {
-	width: 10em;
-}
-.center {
-	text-align: center;
-}
-
-h1 {
-	color: #1C94C4;
-	font-size: 16pt;
-}
-.v-spacer {
-	padding-top: 1em;
-}
-EOF
-);
+	public function __construct($sTitle = 'iTop Login')
+	{
+		parent::__construct($sTitle);
+		$this->SetStyleSheet();
 	}
 	
+	public function SetStyleSheet()
+	{
+		$this->add_linked_stylesheet("../css/login.css");
+	}
+
 	public static function SetLoginFailedMessage($sMessage)
 	{
 		self::$m_sLoginFailedMessage = $sMessage;
 	}
-	
+
+	public function EnableResetPassword()
+	{
+		return MetaModel::GetConfig()->Get('forgot_password');
+	}
+
+	public function DisplayLoginHeader($bMainAppLogo = false)
+	{
+		if ($bMainAppLogo)
+		{
+			$sLogo = 'itop-logo.png';
+			$sBrandingLogo = 'main-logo.png';
+		}
+		else
+		{
+			$sLogo = 'itop-logo-external.png';
+			$sBrandingLogo = 'login-logo.png';
+		}
+		$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
+		$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
+		$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/'.$sLogo;
+		if (file_exists(MODULESROOT.'branding/'.$sBrandingLogo))
+		{
+			$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/'.$sBrandingLogo;
+		}
+		$this->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8')."\"><img title=\"$sVersionShort\" src=\"$sDisplayIcon\"></a></div>\n");
+	}
+
 	public function DisplayLoginForm($sLoginType, $bFailedLogin = false)
 	{
 		switch($sLoginType)
@@ -121,14 +111,7 @@ EOF
 			$sAuthUser = utils::ReadParam('auth_user', '', true, 'raw_data');
 			$sAuthPwd = utils::ReadParam('suggest_pwd', '', true, 'raw_data');
 	
-			$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
-			$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
-			$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/itop-logo-external.png';
-			if (file_exists(MODULESROOT.'branding/login-logo.png'))
-			{
-				$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/login-logo.png';
-			}
-			$this->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8')."\"><img title=\"$sVersionShort\" src=\"$sDisplayIcon\"></a></div>\n");
+			$this->DisplayLoginHeader();
 			$this->add("<div id=\"login\">\n");
 			$this->add("<h1>".Dict::S('UI:Login:Welcome')."</h1>\n");
 			if ($bFailedLogin)
@@ -148,9 +131,14 @@ EOF
 			}
 			$this->add("<form method=\"post\">\n");
 			$this->add("<table width=\"100%\">\n");
+			$sForgotPwd = $this->EnableResetPassword() ? $this->ForgotPwdLink() : '';
 			$this->add("<tr><td style=\"text-align:right\"><label for=\"user\">".Dict::S('UI:Login:UserNamePrompt').":</label></td><td style=\"text-align:left\"><input id=\"user\" type=\"text\" name=\"auth_user\" value=\"".htmlentities($sAuthUser, ENT_QUOTES, 'UTF-8')."\" /></td></tr>\n");
 			$this->add("<tr><td style=\"text-align:right\"><label for=\"pwd\">".Dict::S('UI:Login:PasswordPrompt').":</label></td><td style=\"text-align:left\"><input id=\"pwd\" type=\"password\" name=\"auth_pwd\" value=\"".htmlentities($sAuthPwd, ENT_QUOTES, 'UTF-8')."\" /></td></tr>\n");
 			$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"> <input type=\"submit\" value=\"".Dict::S('UI:Button:Login')."\" /></td></tr>\n");
+			if (strlen($sForgotPwd) > 0)
+			{
+				$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\">$sForgotPwd</td></tr>\n");
+			}
 			$this->add("</table>\n");
 			$this->add("<input type=\"hidden\" name=\"loginop\" value=\"login\" />\n");
 						
@@ -180,11 +168,194 @@ EOF
 		}
 	}
 
+	/**
+	 * Return '' to disable this feature	
+	 */	
+	public function ForgotPwdLink()
+	{
+		$sUrl = '?loginop=forgot_pwd';
+		$sHtml = "<a href=\"$sUrl\" target=\"_blank\">".Dict::S('UI:Login:ForgotPwd')."</a>";
+		return $sHtml;
+	}
+
+	public function DisplayForgotPwdForm($bFailedToReset = false, $sFailureReason = null)
+	{
+		$this->DisplayLoginHeader();
+		$this->add("<div id=\"login\">\n");
+		$this->add("<h1>".Dict::S('UI:Login:ForgotPwdForm')."</h1>\n");
+		$this->add("<p>".Dict::S('UI:Login:ForgotPwdForm+')."</p>\n");
+		if ($bFailedToReset)
+		{
+			$this->add("<p class=\"hilite\">".Dict::Format('UI:Login:ResetPwdFailed', $sFailureReason)."</p>\n");
+		}
+		$sAuthUser = utils::ReadParam('auth_user', '', true, 'raw_data');
+		$this->add("<form method=\"post\">\n");
+		$this->add("<table width=\"100%\">\n");
+		$this->add("<tr><td style=\"text-align:right\"><label for=\"user\">".Dict::S('UI:Login:UserNamePrompt').":</label></td><td style=\"text-align:left\"><input id=\"user\" type=\"text\" name=\"auth_user\" value=\"".htmlentities($sAuthUser, ENT_QUOTES, 'UTF-8')."\" /></td></tr>\n");
+		$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\">  <input type=\"button\" onClick=\"window.close();\" value=\"".Dict::S('UI:Button:Cancel')."\" />&nbsp;&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:ResetPassword')."\" /></td></tr>\n");
+		$this->add("</table>\n");
+		$this->add("<input type=\"hidden\" name=\"loginop\" value=\"forgot_pwd_go\" />\n");
+		$this->add("</form>\n");
+		$this->add("</div>\n");
+	}
+
+	protected function ForgotPwdGo()
+	{
+		$sAuthUser = utils::ReadParam('auth_user', '', true, 'raw_data');
+
+		try
+		{
+			UserRights::Login($sAuthUser); // Set the user's language (if possible!)
+			$oUser = UserRights::GetUserObject();
+			if ($oUser == null)
+			{
+				throw new Exception(Dict::Format('UI:ResetPwd-Error-WrongLogin', $sAuthUser));
+			}
+			if (!MetaModel::IsValidAttCode(get_class($oUser), 'reset_pwd_token'))
+			{
+				throw new Exception(Dict::S('UI:ResetPwd-Error-NotPossible'));
+			}
+			if (!$oUser->CanChangePassword())
+			{
+				throw new Exception(Dict::S('UI:ResetPwd-Error-FixedPwd'));
+			}
+			
+			$sTo = $oUser->GetResetPasswordEmail(); // throws Exceptions if not allowed
+			if ($sTo == '')
+			{
+				throw new Exception(Dict::S('UI:ResetPwd-Error-NoEmail'));
+			}
+
+			// This token allows the user to change the password without knowing the previous one
+			$sToken = substr(md5(APPROOT.uniqid()), 0, 16);
+			$oUser->Set('reset_pwd_token', $sToken);
+			CMDBObject::SetTrackInfo('Reset password');
+			$oUser->DBUpdate();
+
+			$oEmail = new Email();
+			$oEmail->SetRecipientTO($sTo);
+			$oEmail->SetRecipientFrom($sTo);
+			$oEmail->SetSubject(Dict::S('UI:ResetPwd-EmailSubject'));
+			$sResetUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=reset_pwd&auth_user='.urlencode($oUser->Get('login')).'&token='.urlencode($sToken);
+			$oEmail->SetBody(Dict::Format('UI:ResetPwd-EmailBody', $sResetUrl));
+			$iRes = $oEmail->Send($aIssues, true /* force synchronous exec */);
+			switch ($iRes)
+			{
+				//case EMAIL_SEND_PENDING:
+				case EMAIL_SEND_OK:
+					break;
+		
+				case EMAIL_SEND_ERROR:
+				default:
+					IssueLog::Error('Failed to send the email with the NEW password for '.$oUser->Get('friendlyname').': '.implode(', ', $aIssues));
+					throw new Exception(Dict::S('UI:ResetPwd-Error-Send'));
+			}
+
+			$this->DisplayLoginHeader();
+			$this->add("<div id=\"login\">\n");
+			$this->add("<h1>".Dict::S('UI:Login:ForgotPwdForm')."</h1>\n");
+			$this->add("<p>".Dict::S('UI:ResetPwd-EmailSent')."</p>");
+			$this->add("<form method=\"post\">\n");
+			$this->add("<table width=\"100%\">\n");
+			$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"><input type=\"button\" onClick=\"window.close();\" value=\"".Dict::S('UI:Button:Done')."\" /></td></tr>\n");
+			$this->add("</table>\n");
+			$this->add("</form>\n");
+			$this->add("</div\n");
+		}
+		catch(Exception $e)
+		{
+			$this->DisplayForgotPwdForm(true, $e->getMessage());
+		}
+	}
+
+	public function DisplayResetPwdForm()
+	{
+		$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
+		$sToken = utils::ReadParam('token', '', false, 'raw_data');
+
+		UserRights::Login($sAuthUser); // Set the user's language
+		$oUser = UserRights::GetUserObject();
+
+		$this->DisplayLoginHeader();
+		$this->add("<div id=\"login\">\n");
+		$this->add("<h1>".Dict::S('UI:ResetPwd-Title')."</h1>\n");
+		if ($oUser == null)
+		{
+			$this->add("<p>".Dict::Format('UI:ResetPwd-Error-WrongLogin', $sAuthUser)."</p>\n");
+		}
+		elseif ($oUser->Get('reset_pwd_token') != $sToken)
+		{
+			$this->add("<p>".Dict::S('UI:ResetPwd-Error-InvalidToken')."</p>\n");
+		}
+		else
+		{
+			$this->add("<p>".Dict::Format('UI:ResetPwd-Error-EnterPassword', $oUser->GetFriendlyName())."</p>\n");
+
+			$sInconsistenPwdMsg = Dict::S('UI:Login:RetypePwdDoesNotMatch');
+			$this->add_script(
+<<<EOF
+function DoCheckPwd()
+{
+	if ($('#new_pwd').val() != $('#retype_new_pwd').val())
+	{
+		alert('$sInconsistenPwdMsg');
+		return false;
+	}
+	return true;
+}
+EOF
+			);
+			$this->add("<form method=\"post\">\n");
+			$this->add("<table width=\"100%\">\n");
+			$this->add("<tr><td style=\"text-align:right\"><label for=\"new_pwd\">".Dict::S('UI:Login:NewPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"new_pwd\" name=\"new_pwd\" value=\"\" /></td></tr>\n");
+			$this->add("<tr><td style=\"text-align:right\"><label for=\"retype_new_pwd\">".Dict::S('UI:Login:RetypeNewPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"retype_new_pwd\" name=\"retype_new_pwd\" value=\"\" /></td></tr>\n");
+			$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"><input type=\"submit\" onClick=\"return DoCheckPwd();\" value=\"".Dict::S('UI:Button:ChangePassword')."\" /></td></tr>\n");
+			$this->add("</table>\n");
+			$this->add("<input type=\"hidden\" name=\"loginop\" value=\"do_reset_pwd\" />\n");
+			$this->add("<input type=\"hidden\" name=\"auth_user\" value=\"".htmlentities($sAuthUser, ENT_QUOTES, 'UTF-8')."\" />\n");
+			$this->add("<input type=\"hidden\" name=\"token\" value=\"".htmlentities($sToken, ENT_QUOTES, 'UTF-8')."\" />\n");
+			$this->add("</form>\n");
+			$this->add("</div\n");
+		}
+	}
+
+	public function DoResetPassword()
+	{
+		$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
+		$sToken = utils::ReadParam('token', '', false, 'raw_data');
+		$sNewPwd = utils::ReadPostedParam('new_pwd', '', false, 'raw_data');
+
+		UserRights::Login($sAuthUser); // Set the user's language
+		$oUser = UserRights::GetUserObject();
+
+		$this->DisplayLoginHeader();
+		$this->add("<div id=\"login\">\n");
+		$this->add("<h1>".Dict::S('UI:ResetPwd-Title')."</h1>\n");
+		if ($oUser == null)
+		{
+			$this->add("<p>".Dict::Format('UI:ResetPwd-Error-WrongLogin', $sAuthUser)."</p>\n");
+		}
+		elseif ($oUser->Get('reset_pwd_token') != $sToken)
+		{
+			$this->add("<p>".Dict::S('UI:ResetPwd-Error-InvalidToken')."</p>\n");
+		}
+		else
+		{
+			// Trash the token and change the password
+			$oUser->Set('reset_pwd_token', '');
+			$oUser->SetPassword($sNewPwd); // Does record the change into the DB
+
+			$this->add("<p>".Dict::S('UI:ResetPwd-Ready')."</p>");
+			$sUrl = utils::GetAbsoluteUrlAppRoot();
+			$this->add("<p><a href=\"$sUrl\">".Dict::S('UI:ResetPwd-Login')."</a></p>");
+		}
+		$this->add("</div\n");
+	}
+
 	public function DisplayChangePwdForm($bFailedLogin = false)
 	{
 		$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
 
-		$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
 		$sInconsistenPwdMsg = Dict::S('UI:Login:RetypePwdDoesNotMatch');
 		$this->add_script(<<<EOF
 function GoBack()
@@ -203,13 +374,7 @@ function DoCheckPwd()
 }
 EOF
 );
-		$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
-		$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/itop-logo.png';
-		if (file_exists(MODULESROOT.'branding/main-logo.png'))
-		{
-			$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/main-logo.png';
-		}
-		$this->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8')."\"><img title=\"$sVersionShort\" src=\"$sDisplayIcon\"></a></div>\n");
+		$this->DisplayLoginHeader();
 		$this->add("<div id=\"login\">\n");
 		$this->add("<h1>".Dict::S('UI:Login:ChangeYourPassword')."</h1>\n");
 		if ($bFailedLogin)
@@ -353,7 +518,7 @@ EOF
 				{
 					$sLoginMode = $aAllowedLoginTypes[0]; // First in the list...
 				}
-				$oPage = new LoginWebPage();
+				$oPage = self::NewLoginWebPage();
 				$oPage->DisplayLoginForm( $sLoginMode, false /* no previous failed attempt */);
 				$oPage->output();
 				exit;
@@ -364,7 +529,7 @@ EOF
 				{
 					//echo "Check Credentials returned false for user $sAuthUser!";
 					self::ResetSession();
-					$oPage = new LoginWebPage();
+					$oPage = self::NewLoginWebPage();
 					$oPage->DisplayLoginForm( $sLoginMode, true /* failed attempt */);
 					$oPage->output();
 					exit;
@@ -390,6 +555,19 @@ EOF
 		}
 	}
 	
+	/**
+	 * Overridable: depending on the user, head toward a dedicated portal
+	 * @param bool $bIsAllowedToPortalUsers Whether or not the current page is considered as part of the portal
+	 */	 
+	protected static function ChangeLocation($bIsAllowedToPortalUsers)
+	{
+		if ( (!$bIsAllowedToPortalUsers) && (UserRights::IsPortalUser()))
+		{
+			// No rights to be here, redirect to the portal
+			header('Location: '.utils::GetAbsoluteUrlAppRoot().'portal/index.php');
+		}
+	}
+
 	/**
 	 * Check if the user is already authentified, if yes, then performs some additional validations:
 	 * - if $bMustBeAdmin is true, then the user must be an administrator, otherwise an error is displayed
@@ -421,16 +599,44 @@ EOF
 				}
 			}
 			self::ResetSession();
-			$oPage = new LoginWebPage();
+			$oPage = self::NewLoginWebPage();
 			$oPage->DisplayLoginForm( $sLoginMode, false /* not a failed attempt */);
 			$oPage->output();
 			exit;
 		}		
+		else if ($operation == 'forgot_pwd')
+		{
+			$oPage = self::NewLoginWebPage();
+			$oPage->DisplayForgotPwdForm();
+			$oPage->output();
+			exit;
+		}
+		else if ($operation == 'forgot_pwd_go')
+		{
+			$oPage = self::NewLoginWebPage();
+			$oPage->ForgotPwdGo();
+			$oPage->output();
+			exit;
+		}
+		else if ($operation == 'reset_pwd')
+		{
+			$oPage = self::NewLoginWebPage();
+			$oPage->DisplayResetPwdForm();
+			$oPage->output();
+			exit;
+		}
+		else if ($operation == 'do_reset_pwd')
+		{
+			$oPage = self::NewLoginWebPage();
+			$oPage->DoResetPassword();
+			$oPage->output();
+			exit;
+		}
 		else if ($operation == 'change_pwd')
 		{
 			$sAuthUser = $_SESSION['auth_user'];
 			UserRights::Login($sAuthUser); // Set the user's language
-			$oPage = new LoginWebPage();
+			$oPage = self::NewLoginWebPage();
 			$oPage->DisplayChangePwdForm();
 			$oPage->output();
 			exit;
@@ -443,7 +649,7 @@ EOF
 			$sNewPwd = utils::ReadPostedParam('new_pwd', '', false, 'raw_data');
 			if (UserRights::CanChangePassword() && ((!UserRights::CheckCredentials($sAuthUser, $sOldPwd)) || (!UserRights::ChangePassword($sOldPwd, $sNewPwd))))
 			{
-				$oPage = new LoginWebPage();
+				$oPage = self::NewLoginWebPage();
 				$oPage->DisplayChangePwdForm(true); // old pwd was wrong
 				$oPage->output();
 				exit;
@@ -462,12 +668,7 @@ EOF
 			$oP->output();
 			exit;
 		}
-		elseif ( (!$bIsAllowedToPortalUsers) && (UserRights::IsPortalUser()))
-		{
-			// No rights to be here, redirect to the portal
-			header('Location: '.utils::GetAbsoluteUrlAppRoot().'portal/index.php');
-		}
+		call_user_func(array(self::$sHandlerClass, 'ChangeLocation'), $bIsAllowedToPortalUsers);
 		return $sMessage;
 	}	
 } // End of class
-?>
