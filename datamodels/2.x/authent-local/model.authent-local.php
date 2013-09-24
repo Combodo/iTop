@@ -85,18 +85,24 @@ class UserLocal extends UserInternal
 		// Let's ask the password to compare the hashed values
 		if ($oPassword->CheckPassword($sOldPassword))
 		{
-			$this->Set('password', $sNewPassword);
-			$oChange = MetaModel::NewObject("CMDBChange");
-			$oChange->Set("date", time());
-			$sUserString = CMDBChange::GetCurrentUserName();
-			$oChange->Set("userinfo", $sUserString);
-			$oChange->DBInsert();
-			$this->DBUpdateTracked($oChange, true);
+			$this->SetPassword($sNewPassword);
 			return true;
 		}
 		return false;
 	}
+
+	/**
+	 * Use with care!
+	 */	 	
+	public function SetPassword($sNewPassword)
+	{
+		$this->Set('password', $sNewPassword);
+		$oChange = MetaModel::NewObject("CMDBChange");
+		$oChange->Set("date", time());
+		$sUserString = CMDBChange::GetCurrentUserName();
+		$oChange->Set("userinfo", $sUserString);
+		$oChange->DBInsert();
+		$this->DBUpdateTracked($oChange, true);
+	}
 }
 
-
-?>
