@@ -176,7 +176,7 @@ abstract class CMDBObject extends DBObject
 		$oMyChangeOp->Set("objclass", MetaModel::GetRootClass(get_class($this)));
 		$oMyChangeOp->Set("objkey", $objkey);
 		$oMyChangeOp->Set("fclass", get_class($this));
-		$oMyChangeOp->Set("fname", $this->GetRawName());
+		$oMyChangeOp->Set("fname", substr($this->GetRawName(), 0, 255)); // Protect against very long friendly names
 		$iId = $oMyChangeOp->DBInsertNoReload();
 	}
 
