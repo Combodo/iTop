@@ -36,6 +36,10 @@ body {
 	border-top: 0;
 	text-align: center;
 }
+#login table {
+	width: 100%;
+}
+
 #pwd, #user,#old_pwd, #new_pwd, #retype_new_pwd {
 	width: 10em;
 }
