@@ -759,7 +759,7 @@ class RestUtils
 		foreach ($oCriteria as $sAttCode => $value)
 		{
 			$realValue = self::MakeValue($sClass, $sAttCode, $value);
-			$oSearch->AddCondition($sAttCode, $realValue);
+			$oSearch->AddCondition($sAttCode, $realValue, '=');
 			$aCriteriaReport[] = "$sAttCode: $value ($realValue)";
 		}
 		$oSet = new DBObjectSet($oSearch);
@@ -856,7 +856,7 @@ class RestUtils
 			foreach ($key as $sAttCode => $value)
 			{
 				$realValue = self::MakeValue($sClass, $sAttCode, $value);
-				$oSearch->AddCondition($sAttCode, $realValue);
+				$oSearch->AddCondition($sAttCode, $realValue, '=');
 			}
 		}
 		elseif (is_numeric($key))
