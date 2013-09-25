@@ -37,6 +37,13 @@ else
 {
 	$sUrl .= 'pages/UI.php';
 }
+
+if (isset($_SESSION['auth_user']))
+{
+	$sAuthUser = $_SESSION['auth_user'];
+	UserRights::Login($sAuthUser); // Set the user's language
+}
+
 $sLoginMode = isset($_SESSION['login_mode']) ? $_SESSION['login_mode'] : '';
 LoginWebPage::ResetSession();
 switch($sLoginMode)
