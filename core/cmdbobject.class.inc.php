@@ -189,8 +189,9 @@ abstract class CMDBObject extends DBObject
 		foreach ($aValues as $sAttCode=> $value)
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-			if ($oAttDef->IsExternalField()) continue; // #@# temporary
-			if ($oAttDef->IsLinkSet()) continue; // #@# temporary
+			if ($oAttDef->IsExternalField()) continue;
+			if ($oAttDef->IsLinkSet()) continue;
+			if ($oAttDef->GetTrackingLevel() == TRACKING_NONE) continue;
 
 			if (array_key_exists($sAttCode, $aOrigValues))
 			{

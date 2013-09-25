@@ -81,6 +81,8 @@ define('DEL_MOVEUP', 3);
  *
  * @package     iTopORM
  */
+define('ATTRIBUTE_TRACKING_NONE', 0); // Do not track changes of the attribute
+define('ATTRIBUTE_TRACKING_ALL', 3); // Do track all changes of the attribute
 define('LINKSET_TRACKING_NONE', 0); // Do not track changes in the link set
 define('LINKSET_TRACKING_LIST', 1); // Do track added/removed items
 define('LINKSET_TRACKING_DETAILS', 2); // Do track modified items
@@ -341,6 +343,12 @@ abstract class AttributeDefinition
 			return $this->GetDescription();
 		}
 	}
+
+	public function GetTrackingLevel()
+	{
+		return $this->GetOptional('tracking_level', ATTRIBUTE_TRACKING_ALL);
+	}
+
 	public function GetValuesDef() {return null;} 
 	public function GetPrerequisiteAttributes() {return array();} 
 

@@ -381,18 +381,34 @@ EOF;
 	 * @param string $sTrackingLevel Value set from within the XML
 	 * Returns string PHP flag
 	 */ 
-	protected function TrackingLevelToPHP($sTrackingLevel)
+	protected function TrackingLevelToPHP($sAttType, $sTrackingLevel)
 	{
-		static $aXmlToPHP = array(
+		static $aXmlToPHP_Links = array(
 			'none' => 'LINKSET_TRACKING_NONE',
 			'list' => 'LINKSET_TRACKING_LIST',
 			'details' => 'LINKSET_TRACKING_DETAILS',
 			'all' => 'LINKSET_TRACKING_ALL',
 		);
 	
+		static $aXmlToPHP_Others = array(
+			'none' => 'ATTRIBUTE_TRACKING_NONE',
+			'all' => 'ATTRIBUTE_TRACKING_ALL',
+		);
+
+		switch ($sAttType)
+		{
+		case 'AttributeLinkedSetIndirect':
+		case 'AttributeLinkedSet':
+			$aXmlToPHP = $aXmlToPHP_Links;
+			break;
+
+		default:
+			$aXmlToPHP = $aXmlToPHP_Others;
+		}
+
 		if (!array_key_exists($sTrackingLevel, $aXmlToPHP))
 		{
-			throw new DOMFormatException("Tracking level: unknown value '$sTrackingLevel'");
+			throw new DOMFormatException("Tracking level: unknown value '$sTrackingLevel', expecting a value in {".implode(', ', array_keys($aXmlToPHP))."}");
 		}
 		return $aXmlToPHP[$sTrackingLevel];
 	}
@@ -413,7 +429,7 @@ EOF;
 	
 		if (!array_key_exists($sEditMode, $aXmlToPHP))
 		{
-			throw new DOMFormatException("Edit mode: unknown value '$sTrackingLevel'");
+			throw new DOMFormatException("Edit mode: unknown value '$sEditMode'");
 		}
 		return $aXmlToPHP[$sEditMode];
 	}
@@ -685,11 +701,6 @@ EOF;
 				$aParameters['count_min'] = $this->GetPropNumber($oField, 'count_min', 0);
 				$aParameters['count_max'] = $this->GetPropNumber($oField, 'count_max', 0);
 				$aParameters['duplicates'] = $this->GetPropBoolean($oField, 'duplicates', false);
-				$sTrackingLevel = $oField->GetChildText('tracking_level');
-				if (!is_null($sTrackingLevel))
-				{
-					$aParameters['tracking_level'] = $this->TrackingLevelToPHP($sTrackingLevel);
-				}
 				$aParameters['depends_on'] = $sDependencies;
 			}
 			elseif ($sAttType == 'AttributeLinkedSet')
@@ -699,11 +710,6 @@ EOF;
 				$aParameters['allowed_values'] = 'null';
 				$aParameters['count_min'] = $this->GetPropNumber($oField, 'count_min', 0);
 				$aParameters['count_max'] = $this->GetPropNumber($oField, 'count_max', 0);
-				$sTrackingLevel = $oField->GetChildText('tracking_level');
-				if (!is_null($sTrackingLevel))
-				{
-					$aParameters['tracking_level'] = $this->TrackingLevelToPHP($sTrackingLevel);
-				}
 				$sEditMode = $oField->GetChildText('edit_mode');
 				if (!is_null($sEditMode))
 				{
@@ -857,6 +863,11 @@ EOF;
 			$aParameters['height'] = $this->GetPropNumber($oField, 'height');
 			$aParameters['digits'] = $this->GetPropNumber($oField, 'digits');
 			$aParameters['decimals'] = $this->GetPropNumber($oField, 'decimals');
+			$sTrackingLevel = $oField->GetChildText('tracking_level');
+			if (!is_null($sTrackingLevel))
+			{
+				$aParameters['tracking_level'] = $this->TrackingLevelToPHP($sAttType, $sTrackingLevel);
+			}
 	
 			$aParams = array();
 			foreach($aParameters as $sKey => $sValue)
