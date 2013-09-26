@@ -1364,7 +1364,7 @@ EOF
 			sort($aDirs);
 			// Windows: there is a backslash at the end (though the path is made of slashes!!!)
 			$sDir = basename(array_pop($aDirs));
-			$sRes = $sBaseDir.'/'.$sDir;
+			$sRes = $sBaseDir.'/'.$sDir.'/';
 			return $sRes;
 		}
 		return false;
