@@ -769,8 +769,7 @@ EOF
 	}
 		
 	/**
-	 * List all classes from the DOM, for a given module
-	 * @param string $sModuleNale
+	 * List all classes from the DOM
 	 * @param bool $bFlattenLayers
 	 * @throws Exception
 	 */
