@@ -42,7 +42,7 @@ $(function()
 			});
 			if (this.options.post_upload_to != null)
 			{
-				this.oUploadBtn = $('<button title="'+this.options.labels['upload']+'"><div style="display: inline-block;position: relative;vertical-align:middle;height:48px; line-height:48px; width:16px"><span style="height:16px;display:block;position:absolute;top:50%;margin-top:-8px" class="ui-icon ui-icon-circle-plus"/></div></button>');
+				this.oUploadBtn = $('<button type="button" title="'+this.options.labels['upload']+'"><div style="display: inline-block;position: relative;vertical-align:middle;height:48px; line-height:48px; width:16px"><span style="height:16px;display:block;position:absolute;top:50%;margin-top:-8px" class="ui-icon ui-icon-circle-plus"/></div></button>');
 				this.oUploadBtn.click( function() { me._upload_dlg(); } );
 				this.oButton.after(this.oUploadBtn);
 			}
