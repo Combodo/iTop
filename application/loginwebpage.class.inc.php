@@ -31,6 +31,9 @@ require_once(APPROOT."/application/nicewebpage.class.inc.php");
 
 class LoginWebPage extends NiceWebPage
 {
+	const EXIT_PROMPT = 0;
+	const EXIT_HTTP_401 = 1;
+
 	protected static $sHandlerClass = __class__;
 	public static function RegisterHandler($sClass)
 	{
@@ -415,7 +418,12 @@ EOF
 		return MetaModel::GetConfig()->GetSecureConnectionRequired();
 	}
 
-	protected static function Login()
+	/**
+	 * Attempt a login
+	 * 	 	
+	 * @param int iOnExit What action to take if the user is not logged on (one of the class constants EXIT_...)
+	 */	
+	protected static function Login($iOnExit)
 	{
 		if (self::SecureConnectionRequired() && !utils::IsConnectionSecure())
 		{
@@ -518,10 +526,18 @@ EOF
 				{
 					$sLoginMode = $aAllowedLoginTypes[0]; // First in the list...
 				}
-				$oPage = self::NewLoginWebPage();
-				$oPage->DisplayLoginForm( $sLoginMode, false /* no previous failed attempt */);
-				$oPage->output();
-				exit;
+				if ($iOnExit == self::EXIT_HTTP_401)
+				{
+					header("HTTP/1.0 401 Unauthorized");
+					exit;
+				}
+				else
+				{
+					$oPage = self::NewLoginWebPage();
+					$oPage->DisplayLoginForm( $sLoginMode, false /* no previous failed attempt */);
+					$oPage->output();
+					exit;
+				}
 			}
 			else
 			{
@@ -529,10 +545,18 @@ EOF
 				{
 					//echo "Check Credentials returned false for user $sAuthUser!";
 					self::ResetSession();
-					$oPage = self::NewLoginWebPage();
-					$oPage->DisplayLoginForm( $sLoginMode, true /* failed attempt */);
-					$oPage->output();
-					exit;
+					if ($iOnExit == self::EXIT_HTTP_401)
+					{
+						header("HTTP/1.0 401 Unauthorized");
+						exit;
+					}
+					else
+					{
+						$oPage = self::NewLoginWebPage();
+						$oPage->DisplayLoginForm( $sLoginMode, true /* failed attempt */);
+						$oPage->output();
+						exit;
+					}
 				}
 				else
 				{
@@ -568,14 +592,16 @@ EOF
 		}
 	}
 
+
 	/**
 	 * Check if the user is already authentified, if yes, then performs some additional validations:
 	 * - if $bMustBeAdmin is true, then the user must be an administrator, otherwise an error is displayed
 	 * - if $bIsAllowedToPortalUsers is false and the user has only access to the portal, then the user is redirected to the portal
 	 * @param bool $bMustBeAdmin Whether or not the user must be an admin to access the current page
 	 * @param bool $bIsAllowedToPortalUsers Whether or not the current page is considered as part of the portal
+	 * @param int iOnExit What action to take if the user is not logged on (one of the class constants EXIT_...)
 	 */
-	static function DoLogin($bMustBeAdmin = false, $bIsAllowedToPortalUsers = false)
+	static function DoLogin($bMustBeAdmin = false, $bIsAllowedToPortalUsers = false, $iOnExit = self::EXIT_PROMPT)
 	{
 		$sMessage  = ''; // In case we need to return a message to the calling web page
 		$operation = utils::ReadParam('loginop', '');
@@ -657,7 +683,7 @@ EOF
 			$sMessage = Dict::S('UI:Login:PasswordChanged');
 		}
 		
-		self::Login();
+		self::Login($iOnExit);
 
 		if ($bMustBeAdmin && !UserRights::IsAdministrator())
 		{	
