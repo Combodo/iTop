@@ -20,14 +20,21 @@ $(function()
 			var me = this;
 			var sLabel = '';
 			var sIcon = '';
+			for(var i in this.options.items)
+			{
+				if(this.options.items[i].icon == '')
+				{
+					this.options.items[i].icon = GetAbsoluteUrlAppRoot()+'images/transparent_32_32.png';		
+				}
+			}
 			if (this.options.items.length > 0)
 			{
 				sIcon = this.options.items[this.options.current_idx].icon;
 				sLabel = this.options.items[this.options.current_idx].label;
 			}
-			this.oImg = $('<img src="'+sIcon+'" style="vertical-align: middle;">');
+			this.oImg = $('<img src="'+sIcon+'" style="vertical-align: middle;" foo="bar">');								
 			this.oLabel = $('<span>'+sLabel+'</span>');
-			this.oButton = $('<button><div style="display: inline-block;vertical-align: middle;"><span class="ui-icon ui-icon-triangle-1-s"/></div></button>');
+			this.oButton = $('<button type="button"><div style="display: inline-block;vertical-align: middle;"><span class="ui-icon ui-icon-triangle-1-s"/></div></button>');
 			this.oButton.prepend(this.oLabel).prepend(this.oImg);
 			this.oButton.click(function(event, ui) { me._on_button_clicked(event, ui); });
 			this.element.after(this.oButton);
@@ -83,7 +90,7 @@ $(function()
 			var sMenu = '<ul>';
 			for(var i in this.options.items)
 			{
-				sMenu = sMenu + '<li><a href="#" value="'+i+'"><img src="'+this.options.items[i].icon+'" style="vertical-align: middle;">'+this.options.items[i].label+'</a></li>';
+				sMenu = sMenu + '<li><a href="#" value="'+i+'"><img src="'+this.options.items[i].icon+'" style="vertical-align: middle;">'+this.options.items[i].label+'</a></li>';					
 			}
 			sMenu = sMenu + '</ul>';
 			var iWidth = Math.max(250, this.oButton.width());
