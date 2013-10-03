@@ -177,7 +177,7 @@ class SynchroDataSource extends cmdbAbstractObject
 							// Read-only mode
 							$aRow['reconciliation'] = $oAttribute->Get('reconcile') == 1 ? Dict::S('Core:SynchroReconcile:Yes') :  Dict::S('Core:SynchroReconcile:No'); 
 							$aRow['update'] = $oAttribute->Get('update') == 1 ?  Dict::S('Core:SynchroUpdate:Yes') :  Dict::S('Core:SynchroUpdate:No');
-							$aRow['attcode'] = MetaModel::GetLabel($this->GetTargetClass(), $oAttribute->Get('attcode')); 
+							$aRow['attcode'] = MetaModel::GetLabel($this->GetTargetClass(), $oAttribute->Get('attcode')).' ('.$oAttribute->Get('attcode').')';
 							$aRow['update_policy'] = $oAttribute->GetAsHTML('update_policy');
 							if ($oAttDef->IsExternalKey())
 							{
@@ -196,7 +196,7 @@ class SynchroDataSource extends cmdbAbstractObject
 							$aRow['reconciliation'] = "<input type=\"checkbox\" name=\"reconciliation[$sAttCode]\" $sChecked/>"; 
 							$sChecked = $oAttribute->Get('update') == 1 ? 'checked' : '';
 							$aRow['update'] = "<input type=\"checkbox\" name=\"update[$sAttCode]\" $sChecked/>"; 
-							$aRow['attcode'] = MetaModel::GetLabel($this->GetTargetClass(), $oAttribute->Get('attcode'));
+							$aRow['attcode'] = MetaModel::GetLabel($this->GetTargetClass(), $oAttribute->Get('attcode')).' ('.$oAttribute->Get('attcode').')';
 							$oUpdateAttDef = MetaModel::GetAttributeDef(get_class($oAttribute), 'update_policy'); 
 							$aRow['update_policy'] = cmdbAbstractObject::GetFormElementForField($oPage, get_class($oAttribute), 'update_policy', $oUpdateAttDef, $oAttribute->Get('update_policy'), '', 'update_policy_'.$sAttCode, "[$sAttCode]");
 							if ($oAttDef->IsExternalKey())
