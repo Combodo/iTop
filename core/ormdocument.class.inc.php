@@ -117,5 +117,21 @@ class ormDocument
 	{
 		return "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode\">".$this->GetFileName()."</a>\n";
 	}
+	
+	
+	public function IsPreviewAvailable()
+	{
+		$bRet = false;
+		switch($this->GetMimeType())
+		{
+			case 'image/png':
+			case 'image/jpg':
+			case 'image/jpeg':
+			case 'image/gif':
+			$bRet = true;
+			break;
+		}
+		return $bRet;
+	}
 }
 ?>

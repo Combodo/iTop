@@ -283,7 +283,7 @@ EOF
 						else
 						{
 							var sDownloadLink = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=download_document&class=Attachment&id='+data.att_id+'&field=contents';
-							$('#attachments').append('<div class="attachment" id="display_attachment_'+data.att_id+'"><a href="'+sDownloadLink+'"><img src="'+data.icon+'"><br/>'+data.msg+'<input id="attachment_'+data.att_id+'" type="hidden" name="attachments[]" value="'+data.att_id+'"/></a><br/><input type="button" class="btn_hidden" value="{$sDeleteBtn}" onClick="RemoveNewAttachment('+data.att_id+');"/></div>');
+							$('#attachments').append('<div class="attachment" id="display_attachment_'+data.att_id+'"><a data-preview="'+data.preview+'" href="'+sDownloadLink+'"><img src="'+data.icon+'"><br/>'+data.msg+'<input id="attachment_'+data.att_id+'" type="hidden" name="attachments[]" value="'+data.att_id+'"/></a><br/><input type="button" class="btn_hidden" value="{$sDeleteBtn}" onClick="RemoveNewAttachment('+data.att_id+');"/></div>');
 							if($sIsDeleteEnabled)
 							{
 								$('#display_attachment_'+data.att_id).hover( function() { $(this).children(':button').toggleClass('btn_hidden'); } );
@@ -313,8 +313,9 @@ EOF
 				$oDoc = $oAttachment->Get('contents');
 				$sFileName = $oDoc->GetFileName();
 				$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
+				$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
 				$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
-				$oPage->add('<div class="attachment" id="attachment_'.$iAttId.'"><a href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="Delete" onClick="$(\'#attachment_'.$iAttId.'\').remove();"/>&nbsp;</div>');
+				$oPage->add('<div class="attachment" id="attachment_'.$iAttId.'"><a data-preview="'.$sPreview.'" href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="Delete" onClick="$(\'#attachment_'.$iAttId.'\').remove();"/>&nbsp;</div>');
 			}
 			
 			// Suggested attachments are listed here but treated as temporary
@@ -341,7 +342,8 @@ EOF
 						$sFileName = $oDoc->GetFileName();
 						$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
 						$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
-						$oPage->add('<div class="attachment" id="display_attachment_'.$iAttId.'"><a href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="Delete" onClick="RemoveNewAttachment('.$iAttId.');"/>&nbsp;</div>');
+						$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
+						$oPage->add('<div class="attachment" id="display_attachment_'.$iAttId.'"><a data-preview="'.$sPreview.'" href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="Delete" onClick="RemoveNewAttachment('.$iAttId.');"/>&nbsp;</div>');
 						$oPage->add_ready_script("$('#attachment_plugin').trigger('add_attachment', [$iAttId, '".addslashes($sFileName)."']);");
 					}
 				}
@@ -374,13 +376,15 @@ EOF
 					$oDoc = $oAttachment->Get('contents');
 					$sFileName = $oDoc->GetFileName();
 					$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
+					$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
 					$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
-					$oPage->add('<div class="attachment" id="attachment_'.$iAttId.'"><a href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'</a><input type="hidden" name="attachments[]" value="'.$iAttId.'"/><br/>&nbsp;&nbsp;</div>');
+					$oPage->add('<div class="attachment" id="attachment_'.$iAttId.'"><a data-preview="'.$sPreview.'" href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'</a><input type="hidden" name="attachments[]" value="'.$iAttId.'"/><br/>&nbsp;&nbsp;</div>');
 				}
 			}
 		}
+		$sPreviewNotAvailable = Dict::S('Attachments:PreviewNotAvailable');
+		$oPage->add_ready_script("$(document).tooltip({ items: '.attachment a',  position: { my: 'left top', at: 'right top', using: function( position, feedback ) { $( this ).css( position ); }}, content: function() { if ($(this).attr('data-preview') == 'true') { return('<img style=\"max-width:290px\" src=\"'+$(this).attr('href')+'\"></img>');} else { return '$sPreviewNotAvailable'; }}});");
 	}
-
 
 	protected static function UpdateAttachments($oObject, $oChange = null)
 	{

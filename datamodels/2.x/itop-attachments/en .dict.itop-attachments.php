@@ -37,5 +37,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Attachment:Max_Mo' => '(Maximum file size: %1$s Mo)',
 	'Attachment:Max_Ko' => '(Maximum file size: %1$s Ko)',
 	'Attachments:NoAttachment' => 'No attachment. ',
+	'Attachments:PreviewNotAvailable' => 'Preview not available for this type of attachment.',
 ));
 ?>

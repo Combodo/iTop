@@ -48,6 +48,7 @@ try
 		$aResult = array(
 			'error' => '',
 			'att_id' => 0,
+			'preview' => 'false',
 			'msg' => ''
 		);
 		$sObjClass = stripslashes(utils::ReadParam('obj_class', '', false, 'class'));
@@ -76,6 +77,7 @@ try
 				$aResult['msg'] = $oDoc->GetFileName();
 				$aResult['icon'] = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($oDoc->GetFileName());
 				$aResult['att_id'] = $iAttId;
+				$aResult['preview'] = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
 			}
 			catch (FileUploadException $e)
 			{
