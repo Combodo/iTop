@@ -94,13 +94,26 @@ class QueryOQL extends Query
 		{
 			$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?format=spreadsheet&login_mode=basic&query='.$this->GetKey();
 			$sOql = $this->Get('oql');
-			$oSearch = DBObjectSearch::FromOQL($sOql);
-			$aParameters = $oSearch->GetQueryParams();
-			foreach($aParameters as $sParam => $val)
+			$sMessage = null;
+			try
 			{
-				$sUrl .= '&arg_'.$sParam.'=["'.$sParam.'"]';
+				$oSearch = DBObjectSearch::FromOQL($sOql);
+				$aParameters = $oSearch->GetQueryParams();
+				foreach($aParameters as $sParam => $val)
+				{
+					$sUrl .= '&arg_'.$sParam.'=["'.$sParam.'"]';
+				}
 			}
-			$oPage->p(Dict::S('UI:Query:UrlForExcel').':<br/><textarea cols="80" rows="3" READONLY>'.$sUrl.'</textarea>');		
+			catch (OQLException $e)
+			{
+				$sMessage = '<div class="message message_error" style="padding-left: 30px;"><div style="padding: 10px;">'.Dict::Format('UI:RunQuery:Error', $e->getHtmlDesc()).'</div></div>';
+			}
+
+			$oPage->p(Dict::S('UI:Query:UrlForExcel').':<br/><textarea cols="80" rows="3" READONLY>'.$sUrl.'</textarea>');
+			if (!is_null($sMessage))
+			{
+				$oPage->p($sMessage);
+			}		
 		}
 		return $aFieldsMap;
 	}

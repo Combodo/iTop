@@ -65,8 +65,11 @@ class OQLException extends CoreException
 
 		if (!is_null($this->m_aExpecting) && (count($this->m_aExpecting) > 0))
 		{
-			$sExpectations = '{'.implode(', ', $this->m_aExpecting).'}';
-			$sRet .= ", expecting ".htmlentities($sExpectations, ENT_QUOTES, 'UTF-8'); 
+			if (count($this->m_aExpecting) < 30)
+			{
+				$sExpectations = '{'.implode(', ', $this->m_aExpecting).'}';
+				$sRet .= ", expecting ".htmlentities($sExpectations, ENT_QUOTES, 'UTF-8');
+			} 
 			$sSuggest = self::FindClosestString($this->m_sUnexpected, $this->m_aExpecting);
 			if (strlen($sSuggest) > 0)
 			{
