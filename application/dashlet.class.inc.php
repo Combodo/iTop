@@ -355,6 +355,7 @@ class DashletPlainText extends Dashlet
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sText = htmlentities($this->aProperties['text'], ENT_QUOTES, 'UTF-8');
+		$sText = str_replace(array("\r\n", "\n", "\r"), "<br/>", $sText);
 
 		$sId = 'plaintext_'.($bEditMode? 'edit_' : '').$this->sId;
 		$oPage->add('<div id="'.$sId.'" class="dashlet-content">'.$sText.'</div>');
