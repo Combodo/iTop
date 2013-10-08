@@ -1526,19 +1526,19 @@ EOF;
 		$oFileRefs = $oNode->GetNodes(".//fileref");
 		foreach ($oFileRefs as $oFileRef)
 		{
-			$iFileId = $oFileRef->getAttribute('ref');
-			if ($iFileId > 0)
+			$sFileId = $oFileRef->getAttribute('ref');
+			if ($sFileId !== '')
 			{
-				$oNodes = $this->oFactory->GetNodes("/itop_design/files/file[@id='$iFileId']");
+				$oNodes = $this->oFactory->GetNodes("/itop_design/files/file[@id='$sFileId']");
 				if ($oNodes->length == 0)
 				{
-					throw new DOMFormatException('Could not find the file with ref '.$iFileId);
+					throw new DOMFormatException('Could not find the file with ref '.$sFileId);
 				}
 	
 				$sName = $oNodes->item(0)->GetChildText('name');
 				$sData = base64_decode($oNodes->item(0)->GetChildText('data'));
 				$aPathInfo = pathinfo($sName);
-				$sFile = 'icon-file'.$iFileId.'.'.$aPathInfo['extension'];
+				$sFile = $sFileId.'.'.$aPathInfo['extension'];
 				$sFilePath = $sTempTargetDir.'/images/'.$sFile;
 				@mkdir($sTempTargetDir.'/images');
 				file_put_contents($sFilePath, $sData);
