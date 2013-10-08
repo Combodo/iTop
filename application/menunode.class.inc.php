@@ -300,7 +300,9 @@ class ApplicationMenu
 			// Make sure the root menu is sorted on 'rank'
 			usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
 			$oFirstGroup = self::GetMenuNode(self::$aRootMenus[0]['index']);
-			$oMenuNode = self::GetMenuNode(self::$aMenusIndex[$oFirstGroup->GetIndex()]['children'][0]['index']);
+			$aChildren = self::$aMenusIndex[$oFirstGroup->GetIndex()]['children'];
+			usort($aChildren, array('ApplicationMenu', 'CompareOnRank'));
+			$oMenuNode = self::GetMenuNode($aChildren[0]['index']);
 			$sMenuId = $oMenuNode->GetMenuId();
 		}
 		return $sMenuId;
