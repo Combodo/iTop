@@ -1460,6 +1460,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 					$sValue = "<select class=\"multiselect\" size=\"1\" name=\"{$sFilterCode}[]\" multiple>\n";
 					$bMultiSelect = true;
 					//$sValue .= "<option value=\"\">".Dict::S('UI:SearchValue:Any')."</option>\n";
+					asort($aAllowedValues);
 					foreach($aAllowedValues as $key => $value)
 					{
 						if (is_array($sFilterValue) && in_array($key, $sFilterValue))
