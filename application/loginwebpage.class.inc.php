@@ -51,6 +51,7 @@ class LoginWebPage extends NiceWebPage
 	{
 		parent::__construct($sTitle);
 		$this->SetStyleSheet();
+		$this->add_header("Cache-control: no-cache");
 	}
 	
 	public function SetStyleSheet()
