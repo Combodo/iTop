@@ -209,10 +209,10 @@ $(function()
 		},
 		_on_upload_complete: function(data)
 		{
-			console.log(data);
-			console.log(data.icon);
+			//console.log(data);
+			//console.log(data.icon);
 			var sIcon = data.icon.replace(/&amp;/g, "&");
-			console.log(sIcon);
+			//console.log(sIcon);
 			this.add_item(data.id, data.msg, sIcon, 'top');
 			this.element.val(data.id);
 			var idx = this._find_item(data.id);
