@@ -1232,11 +1232,16 @@ EOF
 					if ($aModules[$sModuleId]['version_db'] != '')
 					{
 						// A module corresponding to this choice is installed, the whole choice is selected
-						$aDefaults[$sChoiceId] = $sChoiceId;
-						$iScore = 99; // The whole parent choice is selected
-						break;
+						if (!isset($aScores[$sChoiceId])) $aScores[$sChoiceId] = 0;
+						$aScores[$sChoiceId]++;
 					}
 				}
+				if ($aScores[$sChoiceId] == count($aChoice['modules']))
+				{
+					$iScore += 100; // Bonus for the parent when the whole choice is selected
+					$aDefaults[$sChoiceId] = $sChoiceId;
+				}
+				$iScore += $aScores[$sChoiceId];
 			}
 			
 			if (isset($aChoice['sub_options']))
@@ -1245,7 +1250,7 @@ EOF
 			}
 			$index++;
 		}
-
+		
 		$aAlternatives = isset($aInfo['alternatives']) ? $aInfo['alternatives'] : array();
 		$sChoiceName = null;
 		$aScores = array();
@@ -1279,6 +1284,7 @@ EOF
 			foreach($aAlternatives as $index => $aChoice)
 			{
 				$sChoiceId = $sParentId.self::$SEP.$index;
+				$aScores[$sChoiceId] = 0;
 				if ($sChoiceName == null)
 				{
 					$sChoiceName = $sChoiceId;
@@ -1293,9 +1299,13 @@ EOF
 							if (!isset($aScores[$sChoiceId])) $aScores[$sChoiceId] = 0;
 							$aScores[$sChoiceId]++;
 							$iMaxScore = max($iMaxScore, $aScores[$sChoiceId]);
-							$iScore = 99; // The whole parent choice is selected
 						}
 					}
+					if ($aScores[$sChoiceId] == count($aChoice['modules']))
+					{
+						$iScore += 100; // Bonus for the parent when a choice is complete
+					}
+					$iScore += $aScores[$sChoiceId];
 				}		
 				$iMaxScore = max($iMaxScore, isset($aScores[$sChoiceId]) ? $aScores[$sChoiceId] : 0);
 			}
