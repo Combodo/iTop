@@ -431,15 +431,28 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			}
 			if (count($aTriggers) > 0)
 			{
-				// Display notifications regarding the object
 				$iId = $this->GetKey();
 				$sTriggersList = implode(',', $aTriggers);
-				$oNotifSearch = DBObjectSearch::FromOQL("SELECT EventNotificationEmail AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN ($sTriggersList) AND Ev.object_id = $iId");
-				$oNotifSet = new DBObjectSet($oNotifSearch);
-				$sCount = ($oNotifSet->Count() > 0) ? ' ('.$oNotifSet->Count().')' : '';
+				$aNotifSearches = array();
+				$iNotifsCount = 0;
+				$aNotificationClasses = MetaModel::EnumChildClasses('EventNotification', ENUM_CHILD_CLASSES_EXCLUDETOP);
+				foreach($aNotificationClasses as $sNotifClass)
+				{
+					$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN ($sTriggersList) AND Ev.object_id = $iId");
+					$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass]);
+					$iNotifsCount += $oNotifSet->Count();	
+				}
+				// Display notifications regarding the object: on block per subclass to have the intersting columns
+				$sCount = ($iNotifsCount > 0) ? ' ('.$iNotifsCount.')' : '';
 				$oPage->SetCurrentTab(Dict::S('UI:NotificationsTab').$sCount);
-				$oBlock = new DisplayBlock($oNotifSearch, 'list', false);
-				$oBlock->Display($oPage, 'notifications', array('menu' => false));
+				
+				foreach($aNotificationClasses as $sNotifClass)
+				{
+					
+					$oPage->p(MetaModel::GetClassIcon($sNotifClass, true).'&nbsp;'.MetaModel::GetName($sNotifClass));
+					$oBlock = new DisplayBlock($aNotifSearches[$sNotifClass], 'list', false);
+					$oBlock->Display($oPage, 'notifications_'.$sNotifClass, array('menu' => false));
+				}
 			}
 		}
 	}
