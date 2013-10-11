@@ -1498,20 +1498,27 @@
                 <hidden/>
               </attribute>
               <attribute id="sla_tto_passed">
-                <readonly/>
+                <read_only/>
               </attribute>
               <attribute id="sla_tto_over">
-                <readonly/>
+                <read_only/>
               </attribute>
               <attribute id="sla_ttr_passed">
-                <readonly/>
+                <read_only/>
               </attribute>
               <attribute id="ttr_escalation_deadline">
                 <hidden/>
               </attribute>
               <attribute id="sla_ttr_over">
-                <readonly/>
+                <read_only/>
               </attribute>
+              <attribute id="functionalcis_list">
+                <read_only/>
+              </attribute>
+              <attribute id="contacts_list">
+                <read_only/>
+              </attribute>
+
             </flags>
             <transitions/>
           </state>
