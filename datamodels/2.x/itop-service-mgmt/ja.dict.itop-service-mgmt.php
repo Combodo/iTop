@@ -22,6 +22,10 @@
  */
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:Organization/Attribute:deliverymodel_id' => '提供モデル',
+	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_name' => '提供モデル名',
+	'Class:Organization/Attribute:deliverymodel_name+' => '',
 	'Class:ContractType' => '契約タイプ',
 	'Class:ContractType+' => '',
 	'Class:CustomerContract' => '顧客契約',

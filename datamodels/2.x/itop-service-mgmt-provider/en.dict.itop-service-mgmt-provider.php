@@ -75,6 +75,18 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
 */
 
+//
+// Class: Organization
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:Organization/Attribute:deliverymodel_id' => 'Delivery model',
+	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_name' => 'Delivery model name',
+	'Class:Organization/Attribute:deliverymodel_name+' => '',
+));
+
+
 
 //
 // Class: ContractType

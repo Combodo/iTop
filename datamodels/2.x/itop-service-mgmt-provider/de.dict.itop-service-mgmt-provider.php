@@ -23,6 +23,10 @@
  */
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:Organization/Attribute:deliverymodel_id' => 'Delivery-Modell',
+	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_name' => 'Delivery-Modell-Name',
+	'Class:Organization/Attribute:deliverymodel_name+' => '',
 	'Class:ContractType' => 'Vertrags-Typ',
 	'Class:ContractType+' => '',
 	'Class:CustomerContract' => 'Kundenvertrag',

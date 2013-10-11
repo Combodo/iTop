@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
   <classes>
+    <class id="Organization">
+      <fields>
+        <field id="deliverymodel_id" xsi:type="AttributeExternalKey" _delta="define">
+          <sql>deliverymodel_id</sql>
+          <target_class>DeliveryModel</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="deliverymodel_name" xsi:type="AttributeExternalField" _delta="define">
+          <extkey_attcode>deliverymodel_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="deliverymodel_id"  _delta="define">
+              <rank>50</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+
+
     <class id="Contract" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>

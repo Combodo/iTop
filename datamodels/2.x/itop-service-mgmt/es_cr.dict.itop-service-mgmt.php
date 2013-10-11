@@ -75,6 +75,17 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 
 //
+// Class: Organization
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Organization/Attribute:deliverymodel_id' => 'Modelo de Entrega',
+	'Class:Organization/Attribute:deliverymodel_id+' => 'Modelo de Entrega',
+	'Class:Organization/Attribute:deliverymodel_name' => 'Nombre del Modelo de Entrega',
+	'Class:Organization/Attribute:deliverymodel_name+' => 'Nombre del Modelo de Entrega',
+));
+
+//
 // Class: ContractType
 //
 

@@ -28,6 +28,7 @@ SetupWebPage::AddModule(
 			//'data.struct.itop-service-mgmt.xml',
 		),
 		'data.sample' => array(
+			'data.sample.organizations.xml',
 			'data.sample.contracts.xml',
 			'data.sample.services.xml',
 			'data.sample.serviceelements.xml',

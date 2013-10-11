@@ -71,6 +71,17 @@ Dict::Add('EN US', 'English', 'English', array(
 
 ));
 
+//
+// Class: Organization
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:Organization/Attribute:deliverymodel_id' => 'Delivery model',
+	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_name' => 'Delivery model name',
+
+));
+
 
 //
 // Class: ContractType

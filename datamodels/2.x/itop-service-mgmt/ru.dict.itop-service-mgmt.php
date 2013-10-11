@@ -24,6 +24,10 @@
  */
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:Organization/Attribute:deliverymodel_id' => 'Модель доставки~~',
+	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_name' => 'Delivery model name~~',
+	'Class:Organization/Attribute:deliverymodel_name+' => '',
 	'Class:ContractType' => 'Contract Type~~',
 	'Class:ContractType+' => '',
 	'Class:CustomerContract' => 'Договора с клиентами',

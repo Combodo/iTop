@@ -45,10 +45,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Organization/Attribute:parent_id+' => 'Organisation parent',
 	'Class:Organization/Attribute:parent_name' => 'Nom du parent',
 	'Class:Organization/Attribute:parent_name+' => 'Nom de l\'organisation parente',
-	'Class:Organization/Attribute:deliverymodel_id' => 'Modèle de support',
-	'Class:Organization/Attribute:deliverymodel_id+' => '',
-	'Class:Organization/Attribute:deliverymodel_name' => 'Nom modèle de support',
-	'Class:Organization/Attribute:deliverymodel_name+' => '',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Nom commun',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => '',
 ));

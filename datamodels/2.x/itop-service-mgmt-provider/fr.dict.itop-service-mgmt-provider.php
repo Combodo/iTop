@@ -31,6 +31,18 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
+// Class: Organization
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Organization/Attribute:deliverymodel_id' => 'Modèle de support',
+	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_name' => 'Nom modèle de support',
+	'Class:Organization/Attribute:deliverymodel_name+' => '',
+));
+
+
+//
 // Class: Contract
 //
 

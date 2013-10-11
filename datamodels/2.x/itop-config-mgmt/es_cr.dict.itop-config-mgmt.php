@@ -94,10 +94,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Organization/Attribute:parent_id+' => 'Organización Padre',
 	'Class:Organization/Attribute:parent_name' => 'Organización Padre',
 	'Class:Organization/Attribute:parent_name+' => 'Nombre de la Organización Padre',
-	'Class:Organization/Attribute:deliverymodel_id' => 'Modelo de Entrega',
-	'Class:Organization/Attribute:deliverymodel_id+' => 'Modelo de Entrega',
-	'Class:Organization/Attribute:deliverymodel_name' => 'Nombre del Modelo de Entrega',
-	'Class:Organization/Attribute:deliverymodel_name+' => 'Nombre del Modelo de Entrega',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Organización Padre',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Organización Padre',
 ));
