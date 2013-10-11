@@ -1403,12 +1403,7 @@
               <attribute id="fallback">
                 <hidden/>
               </attribute>
-              <attribute id="approval_date">
-                <hidden/>
-              </attribute>
-              <attribute id="approval_comment">
-                <hidden/>
-              </attribute>
+
             </flags>
             <transitions/>
           </state>
@@ -1464,12 +1459,6 @@
                 <hidden/>
               </attribute>
               <attribute id="fallback">
-                <hidden/>
-              </attribute>
-              <attribute id="approval_date">
-                <hidden/>
-              </attribute>
-              <attribute id="approval_comment">
                 <hidden/>
               </attribute>
             </flags>
