@@ -2561,20 +2561,24 @@
 		switch ($sRelCode)
 		{
 		case "impacts":
-            $aRels = array();
-            if (class_exists('Hypervisor'))
-            {
-			 $aRels = array(
-				"device" => array("sQuery"=>"SELECT Hypervisor WHERE server_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-              );
-            }
+			$aRels = array();
+			if (class_exists('Hypervisor'))
+			{
+				$aRels = array(
+					"device" => array("sQuery"=>"SELECT Hypervisor WHERE server_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
+			         );
+			}
 			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
 			break;
 
-			case "depends on":
-			$aRels = array(
-				"volume" => array("sQuery"=>"SELECT LogicalVolume AS v JOIN lnkServerToVolume AS l1 ON l1.volume_id=v.id WHERE l1.server_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-			);
+		case "depends on":
+            		$aRels = array();
+            		if (class_exists('LogicalVolume'))
+            		{
+				$aRels = array(
+					"volume" => array("sQuery"=>"SELECT LogicalVolume AS v JOIN lnkServerToVolume AS l1 ON l1.volume_id=v.id WHERE l1.server_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
+				);
+			}
 			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
 			break;
 
@@ -6429,6 +6433,11 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
+        <field id="subnet_name" xsi:type="AttributeString">
+          <sql>subnet_name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="org_id" xsi:type="AttributeExternalKey">
           <sql>org_id</sql>
           <target_class>Organization</target_class>
@@ -6516,6 +6525,9 @@
             <item id="ip_mask">
               <rank>20</rank>
             </item>
+            <item id="subnet_name">
+              <rank>25</rank>
+            </item>
             <item id="org_id">
               <rank>30</rank>
             </item>
@@ -6532,6 +6544,9 @@
             <item id="ip_mask">
               <rank>20</rank>
             </item>
+            <item id="subnet_name">
+              <rank>25</rank>
+            </item>
             <item id="org_id">
               <rank>30</rank>
             </item>
@@ -6547,6 +6562,9 @@
             </item>
             <item id="ip_mask">
               <rank>20</rank>
+            </item>
+            <item id="subnet_name">
+              <rank>25</rank>
             </item>
             <item id="org_id">
               <rank>30</rank>

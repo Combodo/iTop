@@ -1463,6 +1463,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Subnet+' => '',
 	'Class:Subnet/Attribute:description' => 'Description',
 	'Class:Subnet/Attribute:description+' => '',
+	'Class:Subnet/Attribute:subnet_name' => 'Subnet name',
+	'Class:Subnet/Attribute:subnet_name+' => '',
 	'Class:Subnet/Attribute:org_id' => 'Owner organization',
 	'Class:Subnet/Attribute:org_id+' => '',
 	'Class:Subnet/Attribute:org_name' => 'Name',
