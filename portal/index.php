@@ -696,6 +696,7 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 			case 'new':
 			case 'assigned':
 			case 'frozen':
+			case 'pending':
 			$aEditAtt = array(
 				PORTAL_ATTCODE_LOG => '????'
 			);
