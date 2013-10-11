@@ -869,6 +869,60 @@ class utils
 	static public function GetSafeId($sId)
 	{
 		return str_replace(array(':', '[', ']', '+', '-'), '_', $sId);
-	}	
+	}
+	
+	/**
+	 * Helper to execute an HTTP POST request
+	 * Source: http://netevil.org/blog/2006/nov/http-post-from-php-without-curl
+	 *         originaly named after do_post_request
+	 * Does not require cUrl but requires openssl for performing https POSTs.
+	 * 
+	 * @param string $sUrl The URL to POST the data to
+	 * @param hash $aData The data to POST as an array('param_name' => value)
+	 * @param string $sOptionnalHeaders Additional HTTP headers as a string with newlines between headers
+	 * @return string The result of the POST request
+	 * @throws Exception
+	 */ 
+	static public function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null)
+	{
+		// $sOptionnalHeaders is a string containing additional HTTP headers that you would like to send in your request.
+	
+		$sData = http_build_query($aData);
+	
+		$aParams = array('http' => array(
+								'method' => 'POST',
+								'content' => $sData,
+								'header'=> "Content-type: application/x-www-form-urlencoded\r\nContent-Length: ".strlen($sData)."\r\n",
+								));
+		if ($sOptionnalHeaders !== null)
+		{
+			$aParams['http']['header'] .= $sOptionnalHeaders;
+		}
+		$ctx = stream_context_create($aParams);
+	
+		$fp = @fopen($sUrl, 'rb', false, $ctx);
+		if (!$fp)
+		{
+			global $php_errormsg;
+			if (isset($php_errormsg))
+			{
+				throw new Exception("Wrong URL: $sUrl, $php_errormsg");
+			}
+			elseif ((strtolower(substr($sUrl, 0, 5)) == 'https') && !extension_loaded('openssl'))
+			{
+				throw new Exception("Cannot connect to $sUrl: missing module 'openssl'");
+			}
+			else
+			{
+				throw new Exception("Wrong URL: $sUrl");
+			}
+		}
+		$response = @stream_get_contents($fp);
+		if ($response === false)
+		{
+			throw new Exception("Problem reading data from $sUrl, $php_errormsg");
+		}
+		return $response;
+	}
 }
 ?>
