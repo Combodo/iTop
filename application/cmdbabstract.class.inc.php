@@ -1041,12 +1041,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			}
 			foreach($aList[$sAlias] as $sAttCodeEx => $oAttDef)
 			{
-				$sStar = '';
-				if (!$oAttDef->IsNullAllowed() && isset($aParams['showMandatoryFields']))
-				{
-					$sStar = '*';
-				}
-				$aHeader[] = ($bLocalize ? MetaModel::GetLabel($sClassName, $sAttCodeEx) : $sAttCodeEx).$sStar;
+				$aHeader[] = $bLocalize ? MetaModel::GetLabel($sClassName, $sAttCodeEx, isset($aParams['showMandatoryFields'])) : $sAttCodeEx;
 			}
 		}
 		$sHtml = implode($sSeparator, $aHeader)."\n";

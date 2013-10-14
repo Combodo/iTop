@@ -463,6 +463,12 @@ try
 			// Ignore any trailing "star" (*) that simply indicates a mandatory field
 			$sFieldName = $aMatches[1];
 		}
+		else if (preg_match('/^(.+)\*->(.+)$/', $sFieldName, $aMatches))
+		{
+			// Remove any trailing "star" character before the arrow (->)
+			// A star character at the end can be used to indicate a mandatory field
+			$sFieldName = $aMatches[1].'->'.$aMatches[2];
+		}	
 		if (array_key_exists(strtolower($sFieldName), $aKnownColumnNames))
 		{
 			$aColumns = $aKnownColumnNames[strtolower($sFieldName)];
@@ -481,7 +487,7 @@ try
 		{
 			// Protect against XSS injection
 			$sSafeName = str_replace(array('"', '<', '>'), '', $sFieldName);
-			throw new BulkLoadException("Unknown column: '$sSafeName'");
+			throw new BulkLoadException("Unknown column: '$sSafeName'. Possible columns: ".implode(', ', array_keys($aKnownColumnNames)));
 		}
 	}
 	// Note: at this stage the list of fields is supposed to be made of attcodes (and the symbol '->')	

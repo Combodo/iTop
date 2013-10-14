@@ -913,9 +913,10 @@ abstract class MetaModel
 	 * Get the attribute label
 	 * @param string sClass	Persistent class
 	 * @param string sAttCodeEx Extended attribute code: attcode[->attcode]	 
+	 * @param bool $bShowMandatory If true, add a star character (at the end or before the ->) to show that the field is mandatory
 	 * @return string A user friendly format of the string: AttributeName or AttributeName->ExtAttributeName
 	 */	 	
-	public static function GetLabel($sClass, $sAttCodeEx)
+	public static function GetLabel($sClass, $sAttCodeEx, $bShowMandatory = false)
 	{
 		$sLabel = '';
 		if (preg_match('/(.+)->(.+)/', $sAttCodeEx, $aMatches) > 0)
@@ -923,16 +924,17 @@ abstract class MetaModel
 			$sAttribute = $aMatches[1];
 			$sField = $aMatches[2];
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttribute);
+			$sMandatory = ($bShowMandatory && !$oAttDef->IsNullAllowed()) ? '*' : '';
 			if ($oAttDef->IsExternalKey())
 			{
 				$sTargetClass = $oAttDef->GetTargetClass();
 				$oTargetAttDef = MetaModel::GetAttributeDef($sTargetClass, $sField);
-				$sLabel = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel();
+				$sLabel = $oAttDef->GetLabel().$sMandatory.'->'.$oTargetAttDef->GetLabel();
 			}
 			else
 			{
 				// Let's return something displayable... but this should never happen!
-				$sLabel = $oAttDef->GetLabel().'->'.$aMatches[2];
+				$sLabel = $oAttDef->GetLabel().$sMandatory.'->'.$aMatches[2];
 			}
 		}
 		else
@@ -944,7 +946,8 @@ abstract class MetaModel
 			else
 			{
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCodeEx);
-				$sLabel = $oAttDef->GetLabel();
+				$sMandatory = ($bShowMandatory && !$oAttDef->IsNullAllowed()) ? '*' : '';
+				$sLabel = $oAttDef->GetLabel().$sMandatory;
 			}
 		}
 		return $sLabel;

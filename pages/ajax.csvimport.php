@@ -113,6 +113,12 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 		// A star character at the end can be used to indicate a mandatory field
 		$sFieldName = $aMatches[1];
 	}
+	else if (preg_match('/^(.+)\*->(.+)$/', $sFieldName, $aMatches))
+	{
+		// Remove any trailing "star" character before the arrow (->)
+		// A star character at the end can be used to indicate a mandatory field
+		$sFieldName = $aMatches[1].'->'.$aMatches[2];
+	}
 	if ($sFieldName == 'id')
 	{
 		$sFieldCode = 'id';
@@ -155,7 +161,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 					{
 					
 						// When not in advanced mode do not allow to use reconciliation keys (on external keys) if they are themselves external keys !
-						$aChoices[$sAttCode.'->'.$sTargetAttCode] = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel().$sSuffix.$sStar;
+						$aChoices[$sAttCode.'->'.$sTargetAttCode] = MetaModel::GetLabel($sClassName, $sAttCode.'->'.$sTargetAttCode, true);
 						if ((strcasecmp($sFieldName, $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel().$sSuffix) == 0) || (strcasecmp($sFieldName, ($sAttCode.'->'.$sTargetAttCode.$sSuffix)) == 0) )
 						{
 							$sFieldCode = $sAttCode.'->'.$sTargetAttCode;
@@ -166,12 +172,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 		}
 		else if ($oAttDef->IsWritable() && (!$oAttDef->IsLinkset() || ($bAdvancedMode && $oAttDef->IsIndirect())))
 		{
-			
-			if (!$oAttDef->IsNullAllowed())
-			{
-				$sStar = '*';
-			}
-			$aChoices[$sAttCode] = $oAttDef->GetLabel().$sStar;
+			$aChoices[$sAttCode] = MetaModel::GetLabel($sClassName, $sAttCode, true);
 			if ( ($sFieldName == $oAttDef->GetLabel()) || ($sFieldName == $sAttCode))
 			{
 				$sFieldCode = $sAttCode;
