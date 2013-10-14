@@ -159,7 +159,15 @@ $aOperations = array(
 	),
 );
 
-$sUrl = "http://localhost/rest-services/webservices/rest.php?version=1.0";
+if (true)
+{
+	echo "Please edit the sample script and configure the server URL";
+	exit;
+}
+else
+{
+	$sUrl = "http://localhost/trunk/webservices/rest.php?version=1.1";
+}
 
 $aData = array();
 $aData['auth_user'] = 'admin';

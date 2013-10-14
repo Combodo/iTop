@@ -36,15 +36,19 @@ class ObjectResult
 {
 	public $code;
 	public $message;
+	public $class;
+	public $key;
 	public $fields;
 	
 	/**
 	 * Default constructor
 	 */
-	public function __construct()
+	public function __construct($sClass = null, $iId = null)
 	{
 		$this->code = RestResult::OK;
 		$this->message = '';
+		$this->class = $sClass;
+		$this->key = $iId;
 		$this->fields = array();
 	}
 
@@ -144,11 +148,10 @@ class RestResultWithObjects extends RestResult
 	 */
 	public function AddObject($iCode, $sMessage, $oObject, $aFields)
 	{
-		$oObjRes = new ObjectResult();
+		$oObjRes = new ObjectResult(get_class($oObject), $oObject->GetKey());
 		$oObjRes->code = $iCode;
 		$oObjRes->message = $sMessage;
 
-		$oObjRes->class = get_class($oObject);
 		foreach ($aFields as $sAttCode)
 		{
 			$oObjRes->AddField($oObject, $sAttCode);
@@ -233,8 +236,10 @@ class CoreServices implements iRestServiceProvider
 	 */
 	public function ListOperations($sVersion)
 	{
+		// 1.1 - In the reply, objects have a 'key' entry so that it is no more necessary to split class::key programmaticaly
+		//
 		$aOps = array();
-		if ($sVersion == '1.0')
+		if (in_array($sVersion, array('1.0', '1.1'))) 
 		{
 			$aOps[] = array(
 				'verb' => 'core/create',
