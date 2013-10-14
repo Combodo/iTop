@@ -942,6 +942,7 @@ class DashletGroupByPie extends DashletGroupBy
 		
 			$oTitle = new title($sTitle);
 			$oChart->set_title($oTitle);
+			$oTitle->set_style("{font-size: 16px; font-family: Tahoma; font-weight: bold; text-align: center;}");
 		}
 		$oChart->set_bg_colour('#FFFFFF');
 		$oChart->add_element($oChartElement);
@@ -1068,6 +1069,7 @@ class DashletGroupByBars extends DashletGroupBy
 		
 			$oTitle = new title($sTitle);
 			$oChart->set_title($oTitle);
+			$oTitle->set_style("{font-size: 16px; font-family: Tahoma; font-weight: bold; text-align: center;}");
 		}
 		$oChart->set_bg_colour('#FFFFFF');
 		$oChart->add_element($oChartElement);
