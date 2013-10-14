@@ -382,7 +382,7 @@ EOF
 				}
 			}
 		}
-		$sPreviewNotAvailable = Dict::S('Attachments:PreviewNotAvailable');
+		$sPreviewNotAvailable = addslashes(Dict::S('Attachments:PreviewNotAvailable'));
 		$oPage->add_ready_script("$(document).tooltip({ items: '.attachment a',  position: { my: 'left top', at: 'right top', using: function( position, feedback ) { $( this ).css( position ); }}, content: function() { if ($(this).attr('data-preview') == 'true') { return('<img style=\"max-width:290px\" src=\"'+$(this).attr('href')+'\"></img>');} else { return '$sPreviewNotAvailable'; }}});");
 	}
 
