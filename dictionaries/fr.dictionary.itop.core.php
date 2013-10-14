@@ -27,8 +27,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:UnknownObjectLabel' => 'Classe: %1$s, Identifiant: %2$d',
 	'Core:UnknownObjectTip' => 'L\'objet n\'a pu être trouvé. Il se peut que les archives aient été purgées après son effacement.',
 
-	'Class:ActionEmail' => 'email notification',
-	'Class:ActionEmail+' => 'Action: Email notification',
+	'Class:ActionEmail' => 'Notification par mél',
+	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Destinataire de test',
 	'Class:ActionEmail/Attribute:test_recipient+' => '',
 	'Class:ActionEmail/Attribute:from' => 'De',
