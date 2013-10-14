@@ -433,7 +433,9 @@ abstract class DBObject
 			{
 				// Lazy load (polymorphism): complete by reloading the entire object
 				// #@# non-scalar attributes.... handle that differently?
+				$oKPI = new ExecutionKPI();
 				$this->Reload();
+				$oKPI->ComputeStats('Reload', get_class($this).'/'.$sAttCode);
 			}
 			elseif ($sAttCode == 'friendlyname')
 			{
