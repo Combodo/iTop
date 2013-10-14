@@ -209,7 +209,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:UserRequest:Shortcuts+' => '',
 	'Menu:UserRequest:MyRequests' => 'Mit zugewiesene Benutzeranfragen',
 	'Menu:UserRequest:MyRequests+' => '',
-	'Menu:UserRequest:MySupportRequests' => 'Meine Support-Anfragen',
+	'Menu:UserRequest:MySupportRequests' => 'Von mir gestellte Anfragen',
 	'Menu:UserRequest:MySupportRequests+' => '',
 	'Menu:UserRequest:EscalatedRequests' => 'Eskalierte Benutzeranfragen',
 	'Menu:UserRequest:EscalatedRequests+' => '',
