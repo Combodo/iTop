@@ -194,6 +194,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'Aktion gewähren',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribut',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'Attribut-Code',
+	'BooleanLabel:yes' => 'Ja',
+	'BooleanLabel:no' => 'Nein',
 	'Menu:WelcomeMenu' => 'Willkommen',
 	'Menu:WelcomeMenu+' => 'Willkommen bei iTop',
 	'Menu:WelcomeMenuPage' => 'Willkommen',

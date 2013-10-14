@@ -182,6 +182,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_ActionGrant/Attribute:profile+' => '',
 	'Class:URP_StimulusGrant/Attribute:profile' => 'Profil',
 	'Class:URP_StimulusGrant/Attribute:profile+' => '',
+	'BooleanLabel:yes' => 'Igen',
+	'BooleanLabel:no' => 'Nem',
 	'Menu:WelcomeMenu' => 'Üdvözlöm',
 	'Menu:WelcomeMenu+' => '',
 	'Menu:WelcomeMenuPage' => 'Üdvözlöm',

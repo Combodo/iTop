@@ -195,6 +195,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'действие предоставления',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Атрибут',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'Код атрибута',
+	'BooleanLabel:yes' => 'да',
+	'BooleanLabel:no' => 'нет',
 	'Menu:WelcomeMenu' => 'Добро пожаловать',
 	'Menu:WelcomeMenu+' => 'Добро пожаловать в iTop',
 	'Menu:WelcomeMenuPage' => 'Добро пожаловать',

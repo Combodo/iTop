@@ -290,6 +290,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'BooleanLabel:yes' => 'evet',
+	'BooleanLabel:no' => 'hayır',
 	'Menu:WelcomeMenu' => 'Hoşgeldiniz',
 	'Menu:WelcomeMenu+' => 'iTop\'a Hoşgeldiniz',
 	'Menu:WelcomeMenuPage' => 'Hoşgeldiniz',

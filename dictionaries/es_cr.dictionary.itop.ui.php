@@ -309,6 +309,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'BooleanLabel:yes' => 'si',
+	'BooleanLabel:no' => 'no',
 	'Menu:WelcomeMenu' => 'Bienvenido',
 	'Menu:WelcomeMenu+' => 'Bienvenido a iTop',
 	'Menu:WelcomeMenuPage' => 'Bienvenido',

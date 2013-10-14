@@ -306,6 +306,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'BooleanLabel:yes' => 'sim',
+	'BooleanLabel:no' => 'naõ',
 	'Menu:WelcomeMenu' => 'Bem-vindo',
 	'Menu:WelcomeMenu+' => 'Bem-vindo ao iTop',
 	'Menu:WelcomeMenuPage' => 'Bem-vindo',

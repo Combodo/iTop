@@ -196,6 +196,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => '実行権限',
 	'Class:URP_AttributeGrant/Attribute:attcode' => '属性',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => '属性コード',
+	'BooleanLabel:yes' => 'はい',
+	'BooleanLabel:no' => 'いいえ',
 	'Menu:WelcomeMenu' => 'ようこそ',
 	'Menu:WelcomeMenu+' => 'ようこそ、iTopへ',
 	'Menu:WelcomeMenuPage' => 'ようこそ',

@@ -309,6 +309,8 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
+	'BooleanLabel:yes' => 'yes',
+	'BooleanLabel:no' => 'no',
 	'Menu:WelcomeMenu' => 'Welcome',
 	'Menu:WelcomeMenu+' => 'Welcome to iTop',
 	'Menu:WelcomeMenuPage' => 'Welcome',

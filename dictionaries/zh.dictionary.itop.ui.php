@@ -289,6 +289,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'BooleanLabel:yes' => '是',
+	'BooleanLabel:no' => '否',
 	'Menu:WelcomeMenu' => '欢迎',
 	'Menu:WelcomeMenu+' => '欢迎来到iTop',
 	'Menu:WelcomeMenuPage' => '欢迎',

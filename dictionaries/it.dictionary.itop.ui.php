@@ -311,6 +311,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'BooleanLabel:yes' => 'si',
+	'BooleanLabel:no' => 'no',
 	'Menu:WelcomeMenu' => 'Benveuto',
 	'Menu:WelcomeMenu+' => '',
 	'Menu:WelcomeMenuPage' => 'Benvenuto',

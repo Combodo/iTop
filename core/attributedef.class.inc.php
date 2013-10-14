@@ -2568,7 +2568,7 @@ class AttributeDateTime extends AttributeDBField
 		$sFrom = array("\r\n", $sTextQualifier);
 		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
 		$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
-		return '"'.$sEscaped.'"';
+		return $sTextQualifier.$sEscaped.$sTextQualifier;
 	}
 	
 	/**
@@ -3833,6 +3833,12 @@ class AttributeStopWatch extends AttributeDefinition
 		throw new CoreException("Unknown item code '$sItemCode' for attribute ".$this->GetHostClass().'::'.$this->GetCode());
 	}
 
+	protected function GetBooleanLabel($bValue)
+	{
+		$sDictKey = $bValue ? 'yes' : 'no';
+		return Dict::S('BooleanLabel:'.$sDictKey, 'def:'.$sDictKey);
+	}
+
 	public function GetSubItemAsHTMLForHistory($sItemCode, $sOldValue, $sNewValue, $sLabel)
 	{
 		switch($sItemCode)
@@ -3863,12 +3869,12 @@ class AttributeStopWatch extends AttributeDefinition
 						$sHtmlNew = (int)$sNewValue ? date(self::GetDateFormat(true /*full*/), (int)$sNewValue) : null;
 						break;
 					case 'passed':
-						$sHtmlOld = (int)$sOldValue ? '1' : '0';
-						$sHtmlNew = (int)$sNewValue ? '1' : '0';
+						$sHtmlOld = $this->GetBooleanLabel((int)$sOldValue);
+						$sHtmlNew = $this->GetBooleanLabel((int)$sNewValue);
 						break;
 					case 'triggered':
-						$sHtmlOld = (int)$sOldValue ? '1' : '0';
-						$sHtmlNew = (int)$sNewValue ? '1' : '0';
+						$sHtmlOld = $this->GetBooleanLabel((int)$sOldValue);
+						$sHtmlNew = $this->GetBooleanLabel((int)$sNewValue);
 						break;
 					case 'overrun':
 						$sHtmlOld = (int)$sOldValue > 0 ? AttributeDuration::FormatDuration((int)$sOldValue) : '';
@@ -3937,10 +3943,8 @@ class AttributeStopWatch extends AttributeDefinition
 						}
 						break;
 					case 'passed':
-						$sHtml = $value ? '1' : '0';
-						break;
 					case 'triggered':
-						$sHtml = $value ? '1' : '0';
+						$sHtml = $this->GetBooleanLabel($value);
 						break;
 					case 'overrun':
 						$sHtml = Str::pure2html(AttributeDuration::FormatDuration($value));
@@ -3954,12 +3958,141 @@ class AttributeStopWatch extends AttributeDefinition
 
 	public function GetSubItemAsCSV($sItemCode, $value, $sSeparator = ',', $sTextQualifier = '"')
 	{
-		return $value;
+		$sFrom = array("\r\n", $sTextQualifier);
+		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		$sEscaped = str_replace($sFrom, $sTo, (string)$value);
+		$sRet = $sTextQualifier.$sEscaped.$sTextQualifier;
+
+		switch($sItemCode)
+		{
+		case 'timespent':
+		case 'started':
+		case 'laststart':
+		case 'stopped':
+			break;
+
+		default:
+			foreach ($this->ListThresholds() as $iThreshold => $aFoo)
+			{
+				$sThPrefix = $iThreshold.'_';
+				if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
+				{
+					// The current threshold is concerned
+					$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+					switch($sThresholdCode)
+					{
+					case 'deadline':
+						break;
+
+					case 'passed':
+					case 'triggered':
+						$sRet = $sTextQualifier.$this->GetBooleanLabel($value).$sTextQualifier;
+						break;
+
+					case 'overrun':
+						break;
+					}
+				}
+			}
+		}
+		return $sRet;
 	}
 
 	public function GetSubItemAsXML($sItemCode, $value)
 	{
-		return Str::pure2xml((string)$value);
+		$sRet = Str::pure2xml((string)$value);
+
+		switch($sItemCode)
+		{
+		case 'timespent':
+		case 'started':
+		case 'laststart':
+		case 'stopped':
+			break;
+
+		default:
+			foreach ($this->ListThresholds() as $iThreshold => $aFoo)
+			{
+				$sThPrefix = $iThreshold.'_';
+				if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
+				{
+					// The current threshold is concerned
+					$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+					switch($sThresholdCode)
+					{
+					case 'deadline':
+						break;
+
+					case 'passed':
+					case 'triggered':
+						$sRet = $this->GetBooleanLabel($value);
+						break;
+
+					case 'overrun':
+						break;
+					}
+				}
+			}
+		}
+		return $sRet;
+	}
+
+	/**
+	 * Implemented for the HTML spreadsheet format!	
+	 */	
+	public function GetSubItemAsEditValue($sItemCode, $value)
+	{
+		$sRet = $value;
+
+		switch($sItemCode)
+		{
+		case 'timespent':
+			break;
+
+		case 'started':
+		case 'laststart':
+		case 'stopped':
+			if (is_null($value))
+			{
+				$sRet = ''; // Undefined
+			}
+			else
+			{
+				$sRet = date(self::GetDateFormat(), $value);
+			}
+			break;
+
+		default:
+			foreach ($this->ListThresholds() as $iThreshold => $aFoo)
+			{
+				$sThPrefix = $iThreshold.'_';
+				if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
+				{
+					// The current threshold is concerned
+					$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+					switch($sThresholdCode)
+					{
+					case 'deadline':
+						if ($value)
+						{
+							$sRet = date(self::GetDateFormat(true /*full*/), $value);
+						}
+						else
+						{
+							$sRet = '';
+						}
+						break;
+					case 'passed':
+					case 'triggered':
+						$sRet = $this->GetBooleanLabel($value);
+						break;
+					case 'overrun':
+						break;
+					}
+				}
+			}
+		}
+		return $sRet;
 	}
 }
 
@@ -4069,7 +4202,7 @@ class AttributeSubItem extends AttributeDefinition
 	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
 	{
 		$oParent = $this->GetTargetAttDef();
-		$res = $oParent->GetSubItemAsCSV($this->Get('item_code'), $value, $sSeparator = ',', $sTextQualifier = '"');
+		$res = $oParent->GetSubItemAsCSV($this->Get('item_code'), $value, $sSeparator, $sTextQualifier);
 		return $res;
 	}
 	
@@ -4087,6 +4220,16 @@ class AttributeSubItem extends AttributeDefinition
 		$oParent = $this->GetTargetAttDef();
 		$sValue = $oParent->GetSubItemAsHTMLForHistory($this->Get('item_code'), $sOldValue, $sNewValue, $sLabel);
 		return $sValue;
+	}
+
+	/**
+	 * As of now, this function must be implemented to have the value in spreadsheet format
+	 */	 	
+	public function GetEditValue($value, $oHostObj = null)
+	{
+		$oParent = $this->GetTargetAttDef();
+		$res = $oParent->GetSubItemAsEditValue($this->Get('item_code'), $value);
+		return $res;
 	}
 }
 
