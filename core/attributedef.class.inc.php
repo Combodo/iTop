@@ -4506,7 +4506,7 @@ class AttributeComputedFieldVoid extends AttributeDefinition
 
 	public function GetBasicFilterOperators()
 	{
-		return array();
+		return array("="=>"equals", "!="=>"differs from");
 	}
 	public function GetBasicFilterLooseOperator()
 	{
