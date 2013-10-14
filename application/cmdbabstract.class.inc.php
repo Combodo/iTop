@@ -1245,9 +1245,12 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 							if ($oAttDef instanceof AttributeFriendlyName)
 							{
 								$sKeyAttCode = $oAttDef->GetKeyAttCode();
-								if ($oObj->Get($sKeyAttCode) == 0)
+								if ($sKeyAttCode != 'id')
 								{
-									$rawValue = '';
+									if ($oObj->Get($sKeyAttCode) == 0)
+									{
+										$rawValue = '';
+									}
 								}
 							}
 							if ($bLocalize)
