@@ -260,6 +260,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserRequest/Stimulus:ev_reopen+' => '',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Wait for approval',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
+	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself',
 ));
 
 

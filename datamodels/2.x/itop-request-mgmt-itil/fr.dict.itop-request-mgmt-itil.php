@@ -214,6 +214,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Stimulus:ev_reopen+' => '',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Attendre une approbation',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
+	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'La Requête parente ne peut pas être assignée à elle même',
 ));
 
 

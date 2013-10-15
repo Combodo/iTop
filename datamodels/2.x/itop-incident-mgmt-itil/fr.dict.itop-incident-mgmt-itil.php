@@ -192,6 +192,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Stimulus:ev_close+' => '',
 	'Class:Incident/Stimulus:ev_reopen' => 'Ré-ouvrir',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
+	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'L\'Incident parent ne peut pas être assigné à lui même',
 ));
 
 

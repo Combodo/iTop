@@ -1201,6 +1201,19 @@
 		return true;
 	}]]></code>
         </method>
+        <method id="DoCheckToWrite">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[public function DoCheckToWrite()
+  {
+    parent::DoCheckToWrite();
+    if (!$this->IsNew() && ($this->Get('parent_incident_id') == $this->GetKey()))
+    {
+      $this->m_aCheckIssues[] = Dict::Format('Class:Incident/Error:CannotAssignParentIncidentIdToSelf');
+    }
+  }]]></code>
+        </method>
         <method id="ComputePriority">
           <comment>/** Compute the priority of the ticket based on its impact and urgency&#13;
          * @return integer The priority of the ticket 1(high) .. 3(low)&#13;
