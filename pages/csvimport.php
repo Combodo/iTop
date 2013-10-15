@@ -581,9 +581,11 @@ try
 		
 		if ($bShouldConfirm)
 		{
-			$oPage->add('<div id="dlg_confirmation" title="Please confirm the operation">');
+			$sYesButton = Dict::S('UI:Button:Ok');
+			$sNoButton = Dict::S('UI:Button:Cancel');
+			$oPage->add('<div id="dlg_confirmation" title="'.htmlentities(Dict::S('UI:CSVImportConfirmTitle'), ENT_QUOTES, 'UTF-8').'">');
 			$oPage->add('<p style="text-align:center"><b>'.$sMessage.'</b></p>');
-			$oPage->add('<p style="text-align:center">Are you sure you want to do this ?</p>');
+			$oPage->add('<p style="text-align:center">'.htmlentities(Dict::S('UI:CSVImportConfirmMessage'), ENT_QUOTES, 'UTF-8').'</p>');
 			$oPage->add('<div id="confirmation_chart"></div>');
 			$oPage->add('</div> <!-- end of dlg_confirmation -->');
 			$oPage->add_ready_script(
@@ -596,8 +598,8 @@ try
 			autoOpen: false, 
 			buttons:
 			{
-				'Yes': RunImport,
-				'No': CancelImport 
+				'$sYesButton': RunImport,
+				'$sNoButton': CancelImport 
 			} 
 		});
 		swfobject.embedSWF(	"../images/open-flash-chart.swf", 
@@ -611,7 +613,11 @@ EOF
 );
 		}
 		
-		$oPage->add_script(
+		$sErrors = addslashes(Dict::Format('UI:CSVImportError_items', $iUnchanged));
+		$sCreated = addslashes(Dict::Format('UI:CSVImportCreated_items', $iUnchanged));
+		$sModified = addslashes(Dict::Format('UI:CSVImportModified_items', $iUnchanged));
+		$sUnchanged = addslashes(Dict::Format('UI:CSVImportUnchanged_items', $iUnchanged));
+		$oPage->add_script(		
 <<< EOF
 function CSVGoBack()
 {
@@ -694,7 +700,7 @@ function open_flash_chart_data()
 		var oErrors =
 		{
 			"value":  iErrors,
-			"label": "Errors: "+iErrors,
+			"label": "$sErrors",
 			"alpha": fAlpha,
 			"label-colour": "#CC3333",
 		};
@@ -706,7 +712,7 @@ function open_flash_chart_data()
 		var oModified =
 		{
 			"value":  iModified,
-			"label": "Modified: "+iModified,
+			"label": "$sModified",
 			"alpha": fAlpha,
 			"label-colour": "#3333CC",
 		};
@@ -718,7 +724,7 @@ function open_flash_chart_data()
 		var oCreated =
 		{
 			"value":  iCreated,
-			"label": "Created: "+iCreated,
+			"label": "$sCreated",
 			"alpha": fAlpha,
 			"label-colour": "#33CC33",
 			
@@ -731,7 +737,7 @@ function open_flash_chart_data()
 		var oUnchanged =
 		{
 			"value":  iUnchanged,
-			"label": "Unchanged: "+iUnchanged,
+			"label": "$sUnchanged",
 			"alpha": fAlpha,
 			"label-colour": "#333333",
 			

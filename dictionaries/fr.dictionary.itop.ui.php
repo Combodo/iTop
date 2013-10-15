@@ -1017,6 +1017,13 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Class:ShortcutOQL+' => '',
 	'Class:ShortcutOQL/Attribute:oql' => 'Requête',
 	'Class:ShortcutOQL/Attribute:oql+' => 'Requête de définition de l\'ensemble des objets',
-	'UI:FillAllMandatoryFields' => 'Veuillez remplir tous les champs obligatoires.'
+	'UI:FillAllMandatoryFields' => 'Veuillez remplir tous les champs obligatoires.',
+	
+	'UI:CSVImportConfirmTitle' => 'Veuillez confirmer cette opération',
+	'UI:CSVImportConfirmMessage' => 'Etes-vous sûr(e) de vouloir faire cela ?',
+	'UI:CSVImportError_items' => 'Erreurs: %1$d',
+	'UI:CSVImportCreated_items' => 'Créations: %1$d',
+	'UI:CSVImportModified_items' => 'Modifications: %1$d',
+	'UI:CSVImportUnchanged_items' => 'Inchangés: %1$d',
 ));
 ?>

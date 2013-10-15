@@ -1175,6 +1175,14 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Class:ShortcutOQL+' => '',
 	'Class:ShortcutOQL/Attribute:oql' => 'Query',
 	'Class:ShortcutOQL/Attribute:oql+' => 'OQL defining the list of objects to search for',
-	'UI:FillAllMandatoryFields' => 'Please fill all mandatory fields.'
+	'UI:FillAllMandatoryFields' => 'Please fill all mandatory fields.',
+	
+	'UI:CSVImportConfirmTitle' => 'Please confirm the operation',
+	'UI:CSVImportConfirmMessage' => 'Are you sure you want to do this?',
+	'UI:CSVImportError_items' => 'Errors: %1$d',
+	'UI:CSVImportCreated_items' => 'Created: %1$d',
+	'UI:CSVImportModified_items' => 'Modified: %1$d',
+	'UI:CSVImportUnchanged_items' => 'Unchanged: %1$d',
+	
 ));
 ?>
