@@ -820,7 +820,9 @@ EOF
 
 		if ($this->GetOutputFormat() == 'html')
 		{
+				$oKPI = new ExecutionKPI();
 				echo $sHtml;
+				$oKPI->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
 		}
 		else if ($this->GetOutputFormat() == 'pdf' && $this->IsOutputFormatAvailable('pdf') )
 		{
@@ -846,6 +848,7 @@ EOF
 			$oMPDF->Output($sOutputName, 'I');
 		}
 		MetaModel::RecordQueryTrace();
+		ExecutionKPI::ReportStats();
 	}
 
 	public function AddTabContainer($sTabContainer)

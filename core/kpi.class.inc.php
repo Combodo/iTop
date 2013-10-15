@@ -28,34 +28,170 @@ class ExecutionKPI
 {
 	static protected $m_bEnabled_Duration = false;
 	static protected $m_bEnabled_Memory = false;
+	static protected $m_sAllowedUser = '*';
 
-	static protected $m_aStats = array();
+	static protected $m_aStats = array(); // Recurrent operations
+	static protected $m_aExecData = array(); // One shot operations
 
 	protected $m_fStarted = null;
 	protected $m_iInitialMemory = null;
 
-	static public function EnableDuration()
+	static public function EnableDuration($iLevel)
 	{
-		self::$m_bEnabled_Duration = true;
+		if ($iLevel > 0)
+		{
+			self::$m_bEnabled_Duration = true;
+		}
 	}
 
-	static public function EnableMemory()
+	static public function EnableMemory($iLevel)
 	{
-		self::$m_bEnabled_Memory = true;
+		if ($iLevel > 0)
+		{
+			self::$m_bEnabled_Memory = true;
+		}
+	}
+
+	/**
+	 * @param string sUser A user login or * for all users	
+	 */	
+	static public function SetAllowedUser($sUser)
+	{
+		self::$m_sAllowedUser = $sUser;
 	}
 
 	static public function ReportStats()
 	{
+		if (self::$m_sAllowedUser != '*')
+		{
+			if (UserRights::GetUser() != self::$m_sAllowedUser)
+			{
+				return;
+			}
+		}
+
+		global $fItopStarted;
+		$sExecId = microtime(); // id to differentiate the hrefs!
+
+		$aBeginTimes = array();
+		foreach (self::$m_aExecData as $aOpStats)
+		{
+			$aBeginTimes[] = $aOpStats['time_begin'];
+		}
+		array_multisort($aBeginTimes, self::$m_aExecData);
+
+		$sTableStyle = 'background-color: #ccc; margin: 10px;';
+
+		self::Report("<hr/>");
+		self::Report("<div style=\"background-color: grey; padding: 10px;\">");
+		self::Report("<h3><a name=\"".md5($sExecId)."\">KPIs</a> - ".$_SERVER['REQUEST_URI']." (".$_SERVER['REQUEST_METHOD'].")</h3>");
+		self::Report("<p>".date('Y-m-d H:i:s', $fItopStarted)."</p>");
+		self::Report("<p>log_kpi_user_id: ".MetaModel::GetConfig()->Get('log_kpi_user_id')."</p>");
+		self::Report("<div>");
+		self::Report("<table border=\"1\" style=\"$sTableStyle\">");
+		self::Report("<thead>");
+		self::Report("   <th>Operation</th><th>Begin</th><th>End</th><th>Duration</th><th>Memory start</th><th>Memory end</th><th>Memory peak</th>");
+		self::Report("</thead>");
+		foreach (self::$m_aExecData as $aOpStats)
+		{
+			$sOperation = $aOpStats['op'];
+			$sBegin = $sEnd = $sDuration = $sMemBegin = $sMemEnd = $sMemPeak = '?';
+		
+			$sBegin = round($aOpStats['time_begin'], 3);
+			$sEnd = round($aOpStats['time_end'], 3);
+			$fDuration = $aOpStats['time_end'] - $aOpStats['time_begin'];
+			$sDuration = round($fDuration, 3);
+
+			if (isset($aOpStats['mem_begin']))
+			{
+				$sMemBegin = self::MemStr($aOpStats['mem_begin']);
+				$sMemEnd = self::MemStr($aOpStats['mem_end']);
+				if (isset($aOpStats['mem_peak']))
+				{
+					$sMemPeak = self::MemStr($aOpStats['mem_peak']);
+				}
+			}
+
+			self::Report("<tr>");
+			self::Report("   <td>$sOperation</td><td>$sBegin</td><td>$sEnd</td><td>$sDuration</td><td>$sMemBegin</td><td>$sMemEnd</td><td>$sMemPeak</td>");
+			self::Report("</tr>");
+		}
+		self::Report("</table>");
+		self::Report("</div>");
+
+		$aConsolidatedStats = array();
 		foreach (self::$m_aStats as $sOperation => $aOpStats)
 		{
-			echo "<h2>KPIs for $sOperation</h2>\n";
 			$fTotalOp = 0;
 			$iTotalOp = 0;
 			$fMinOp = null;
 			$fMaxOp = 0;
-			echo "<ul>\n";
+			$sMaxOpArguments = null;
 			foreach ($aOpStats as $sArguments => $aEvents)
 			{
+				foreach ($aEvents as $fDuration)
+				{
+					$fTotalOp += $fDuration;
+					$iTotalOp++;
+
+					$fMinOp = is_null($fMinOp) ? $fDuration : min($fMinOp, $fDuration);
+					if ($fDuration > $fMaxOp)
+					{
+						$sMaxOpArguments = $sArguments;
+						$fMaxOp = $fDuration;
+					}
+				}
+			}
+			$aConsolidatedStats[$sOperation] = array(
+				'count' => $iTotalOp,
+				'duration' => $fTotalOp,
+				'min' => $fMinOp,
+				'max' => $fMaxOp,
+				'avg' => $fTotalOp / $iTotalOp,
+				'max_args' => $sMaxOpArguments
+			);
+		}
+
+		self::Report("<div>");
+		self::Report("<table border=\"1\" style=\"$sTableStyle\">");
+		self::Report("<thead>");
+		self::Report("   <th>Operation</th><th>Count</th><th>Duration</th><th>Min</th><th>Max</th><th>Avg</th>");
+		self::Report("</thead>");
+		foreach ($aConsolidatedStats as $sOperation => $aOpStats)
+		{
+			$sOperation = '<a href="#'.md5($sExecId.$sOperation).'">'.$sOperation.'</a>';
+			$sCount = $aOpStats['count'];
+			$sDuration = round($aOpStats['duration'], 3);
+			$sMin = round($aOpStats['min'], 3);
+			$sMax = '<a href="#'.md5($sExecId.$aOpStats['max_args']).'">'.round($aOpStats['max'], 3).'</a>';
+			$sAvg = round($aOpStats['avg'], 3);
+
+			self::Report("<tr>");
+			self::Report("   <td>$sOperation</td><td>$sCount</td><td>$sDuration</td><td>$sMin</td><td>$sMax</td><td>$sAvg</td>");
+			self::Report("</tr>");
+		}
+		self::Report("</table>");
+		self::Report("</div>");
+
+		self::Report("</div>");
+
+		// Report operation details
+		foreach (self::$m_aStats as $sOperation => $aOpStats)
+		{
+			$sOperationHtml = '<a name="'.md5($sExecId.$sOperation).'">'.$sOperation.'</a>';
+			self::Report("<h4>$sOperationHtml</h4>");
+			self::Report("<p><a href=\"#".md5($sExecId)."\">Back to page stats</a></p>");
+			self::Report("<table border=\"1\" style=\"$sTableStyle\">");
+			self::Report("<thead>");
+			self::Report("   <th>Operation details</th><th>Count</th><th>Duration</th><th>Min</th><th>Max</th>");
+			self::Report("</thead>");
+			foreach ($aOpStats as $sArguments => $aEvents)
+			{
+				$sHtmlArguments = '<a name="'.md5($sExecId.$sArguments).'">'.$sArguments.'</a>';
+				if ($aConsolidatedStats[$sOperation]['max_args'] == $sArguments)
+				{
+					$sHtmlArguments = '<span style="color: red;">'.$sHtmlArguments.'</span>';
+				}
 				$fTotalInter = 0;
 				$fMinInter = null;
 				$fMaxInter = 0;
@@ -64,34 +200,17 @@ class ExecutionKPI
 					$fTotalInter += $fDuration;
 					$fMinInter = is_null($fMinInter) ? $fDuration : min($fMinInter, $fDuration);
 					$fMaxInter = max($fMaxInter, $fDuration);
-
-					$fMinOp = is_null($fMinOp) ? $fDuration : min($fMinOp, $fDuration);
-					$fMaxOp = max($fMaxOp, $fDuration);
 				}
-				$fTotalOp += $fTotalInter;
-				$iTotalOp++;
 
 				$iCountInter = count($aEvents);
-				$sTotalInter = round($fTotalInter, 3)."s";
-				if ($iCountInter > 1)
-				{
-					$sMinInter = round($fMinInter, 3)."s";
-					$sMaxInter = round($fMaxInter, 3)."s";
-					$sTimeDesc = "$sTotalInter (from $sMinInter to $sMaxInter) in $iCountInter times";
-				}
-				else
-				{
-					$sTimeDesc = "$sTotalInter";
-				}
-				echo "<li>Spent $sTimeDesc, on: <span style=\"font-size:60%\">$sArguments</span></li>\n";
+				$sTotalInter = round($fTotalInter, 3);
+				$sMinInter = round($fMinInter, 3);
+				$sMaxInter = round($fMaxInter, 3);
+				self::Report("<tr>");
+				self::Report("   <td>$sHtmlArguments</td><td>$iCountInter</td><td>$sTotalInter</td><td>$sMinInter</td><td>$sMaxInter</td>");
+				self::Report("</tr>");
 			}
-			echo "</ul>\n";
-			echo "<ul>Sumary for $sOperation\n";
-			echo "<li>Total: $iTotalOp (".round($fTotalOp, 3).")</li>\n";
-			echo "<li>Min: ".round($fMinOp, 3)."</li>\n";
-			echo "<li>Max: ".round($fMaxOp, 3)."</li>\n";
-			echo "<li>Avg: ".round($fTotalOp / $iTotalOp, 3)."</li>\n";
-			echo "</ul>\n";
+			self::Report("</table>");
 		}
 	}
 
@@ -105,25 +224,43 @@ class ExecutionKPI
 	//
 	public function ComputeAndReport($sOperationDesc)
 	{
+		global $fItopStarted;
+
+		$aNewEntry = null;
+
 		if (self::$m_bEnabled_Duration)
 		{
 			$fStopped = MyHelpers::getmicrotime();
-			$fDuration = $fStopped - $this->m_fStarted;
-			$this->Report($sOperationDesc.' / duration: '.round($fDuration, 3));
+			$aNewEntry = array(
+				'op' => $sOperationDesc,
+				'time_begin' => $this->m_fStarted - $fItopStarted,
+				'time_end' => $fStopped - $fItopStarted,
+			);
+			// Reset for the next operation (if the object is recycled)
+			$this->m_fStarted = $fStopped;
 		}
 
 		if (self::$m_bEnabled_Memory)
 		{
-			$iMemory = self::memory_get_usage();
-			$iMemoryUsed = $iMemory - $this->m_iInitialMemory;
-			$this->Report($sOperationDesc.' / memory: '.self::MemStr($iMemoryUsed).' (Total: '.self::MemStr($iMemory).')');
+			$iCurrentMemory = self::memory_get_usage();
+			if (is_null($aNewEntry))
+			{
+				$aNewEntry = array('op' => $sOperationDesc);
+			}
+			$aNewEntry['mem_begin'] = $this->m_iInitialMemory;
+			$aNewEntry['mem_end'] = $iCurrentMemory;
 			if (function_exists('memory_get_peak_usage'))
 			{
-				$iMemoryPeak = memory_get_peak_usage();
-				$this->Report($sOperationDesc.' / memory peak: '.self::MemStr($iMemoryPeak));
+				$aNewEntry['mem_peak'] = memory_get_peak_usage();
 			}
+			// Reset for the next operation (if the object is recycled)
+			$this->m_iInitialMemory = $iCurrentMemory;
 		}
 
+		if (!is_null($aNewEntry))
+		{
+			self::$m_aExecData[] = $aNewEntry;
+		}
 		$this->ResetCounters();
 	}
 
@@ -150,9 +287,11 @@ class ExecutionKPI
 		}
 	}
 
-	protected function Report($sText)
+	const HtmlReportFile = 'log/kpi.html';
+
+	static protected function Report($sText)
 	{
-		echo "$sText<br/>\n";
+		file_put_contents(APPROOT.self::HtmlReportFile, "$sText\n", FILE_APPEND | LOCK_EX);
 	}
 
 	static protected function MemStr($iMemory)
@@ -204,13 +343,3 @@ class ExecutionKPI
 	}
 }
 
-class ApplicationStartupKPI extends ExecutionKPI
-{
-	public function __construct()
-	{
-		global $fItopStarted;
-		$this->m_fStarted	= $fItopStarted;
-	}
-} 
-
-?>

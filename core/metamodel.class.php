@@ -4531,14 +4531,9 @@ abstract class MetaModel
 			self::$m_bLogWebService = false;
 		}
 
-		if (self::$m_oConfig->GetLogKPIDuration())
-		{
-			ExecutionKPI::EnableDuration();
-		}
-		if (self::$m_oConfig->GetLogKPIMemory())
-		{
-			ExecutionKPI::EnableMemory();
-		}
+		ExecutionKPI::EnableDuration(self::$m_oConfig->Get('log_kpi_duration'));
+		ExecutionKPI::EnableMemory(self::$m_oConfig->Get('log_kpi_memory'));
+		ExecutionKPI::SetAllowedUser(self::$m_oConfig->Get('log_kpi_user_id'));
 
 		self::$m_bTraceQueries = self::$m_oConfig->GetLogQueries();
 		self::$m_bIndentQueries = self::$m_oConfig->Get('query_indentation_enabled');

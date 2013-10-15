@@ -866,7 +866,6 @@ catch(ZZCoreException $e)
 	$oP->error("Error: '".$e->getHtmlDesc()."'");	
 }
 $oKPI->ComputeAndReport('Total execution');
-// too big (showing all queries) ExecutionKPI::ReportStats();
 //MetaModel::RecordQueryTrace();
 $oP->output();
 ?>

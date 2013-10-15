@@ -47,8 +47,6 @@ define ('DEFAULT_LOG_GLOBAL', true);
 define ('DEFAULT_LOG_NOTIFICATION', true);
 define ('DEFAULT_LOG_ISSUE', true);
 define ('DEFAULT_LOG_WEB_SERVICE', true);
-define ('DEFAULT_LOG_KPI_DURATION', false);
-define ('DEFAULT_LOG_KPI_MEMORY', false);
 define ('DEFAULT_LOG_QUERIES', false);
 
 define ('DEFAULT_QUERY_CACHE_ENABLED', true);
@@ -626,6 +624,33 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'log_kpi_duration' => array(
+			'type' => 'integer',
+			'description' => 'Level of logging for troubleshooting performance issues',
+			// examples... not used
+			'default' => 0,
+			'value' => 0,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'log_kpi_memory' => array(
+			'type' => 'integer',
+			'description' => 'Level of logging for troubleshooting memory limit issues',
+			// examples... not used
+			'default' => 0,
+			'value' => 0,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'log_kpi_user_id' => array(
+			'type' => 'string',
+			'description' => 'Limit the scope of users to the given user id (* means no limit)',
+			// examples... not used
+			'default' => '*',
+			'value' => '*',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)
@@ -684,8 +709,6 @@ class Config
 	protected $m_bLogNotification;
 	protected $m_bLogIssue;
 	protected $m_bLogWebService;
-	protected $m_bLogKPIDuration; // private setting
-	protected $m_bLogKPIMemory; // private setting
 	protected $m_bLogQueries; // private setting
 	protected $m_bQueryCacheEnabled; // private setting
 
@@ -795,8 +818,6 @@ class Config
 		$this->m_bLogNotification = DEFAULT_LOG_NOTIFICATION;
 		$this->m_bLogIssue = DEFAULT_LOG_ISSUE;
 		$this->m_bLogWebService = DEFAULT_LOG_WEB_SERVICE;
-		$this->m_bLogKPIDuration = DEFAULT_LOG_KPI_DURATION;
-		$this->m_bLogKPIDuration = DEFAULT_LOG_KPI_DURATION;
 		$this->m_iMinDisplayLimit = DEFAULT_MIN_DISPLAY_LIMIT;
 		$this->m_iMaxDisplayLimit = DEFAULT_MAX_DISPLAY_LIMIT;
 		$this->m_iStandardReloadInterval = DEFAULT_STANDARD_RELOAD_INTERVAL;
@@ -932,8 +953,6 @@ class Config
 		$this->m_bLogNotification = isset($MySettings['log_notification']) ? (bool) trim($MySettings['log_notification']) : DEFAULT_LOG_NOTIFICATION;
 		$this->m_bLogIssue = isset($MySettings['log_issue']) ? (bool) trim($MySettings['log_issue']) : DEFAULT_LOG_ISSUE;
 		$this->m_bLogWebService = isset($MySettings['log_web_service']) ? (bool) trim($MySettings['log_web_service']) : DEFAULT_LOG_WEB_SERVICE;
-		$this->m_bLogKPIDuration = isset($MySettings['log_kpi_duration']) ? (bool) trim($MySettings['log_kpi_duration']) : DEFAULT_LOG_KPI_DURATION;
-		$this->m_bLogKPIMemory = isset($MySettings['log_kpi_memory']) ? (bool) trim($MySettings['log_kpi_memory']) : DEFAULT_LOG_KPI_MEMORY;
 		$this->m_bLogQueries = isset($MySettings['log_queries']) ? (bool) trim($MySettings['log_queries']) : DEFAULT_LOG_QUERIES;
 		$this->m_bQueryCacheEnabled = isset($MySettings['query_cache_enabled']) ? (bool) trim($MySettings['query_cache_enabled']) : DEFAULT_QUERY_CACHE_ENABLED;
 
@@ -1070,16 +1089,6 @@ class Config
 	public function GetLogWebService()
 	{
 		return $this->m_bLogWebService;
-	}
-
-	public function GetLogKPIDuration()
-	{
-		return $this->m_bLogKPIDuration;
-	}
-
-	public function GetLogKPIMemory()
-	{
-		return $this->m_bLogKPIMemory;
 	}
 
 	public function GetLogQueries()

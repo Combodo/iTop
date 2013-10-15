@@ -374,8 +374,8 @@ try
 	require_once(APPROOT.'/application/startup.inc.php');
 	$operation = utils::ReadParam('operation', '');
 
-	$oKPI = new ApplicationStartupKPI();
-	$oKPI->ComputeAndReport('Load of data model and all includes');
+	$oKPI = new ExecutionKPI();
+	$oKPI->ComputeAndReport('Data model loaded');
 
 	$oKPI = new ExecutionKPI();
 
@@ -1650,10 +1650,6 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 	}
-	$oKPI->ComputeAndReport('GUI creation before output');
-
-	ExecutionKPI::ReportStats();
-
 	DisplayWelcomePopup($oP);
 	$oP->output();	
 }
