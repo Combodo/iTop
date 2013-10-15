@@ -194,6 +194,20 @@ class RunTimeEnvironment
 		// Build the list of installed module (get the latest installation)
 		//
 		$aInstallByModule = array(); // array of <module> => array ('installed' => timestamp, 'version' => <version>)
+		$iRootId = 0;
+		foreach ($aSelectInstall as $aInstall)
+		{
+			if (($aInstall['parent_id'] == 0) && ($aInstall['name'] != 'datamodel'))
+			{
+				// Root module, what is its ID ?
+				$iId = (int) $aInstall['id'];
+				if ($iId > $iRootId)
+				{
+					$iRootId = $iId;
+				}
+			}
+		}
+		
 		foreach ($aSelectInstall as $aInstall)
 		{
 			//$aInstall['comment']; // unsused
@@ -211,6 +225,11 @@ class RunTimeEnvironment
 			if ($aInstall['parent_id'] == 0)
 			{
 				$sModuleName = ROOT_MODULE;
+			}
+			else if($aInstall['parent_id'] != $iRootId)
+			{
+				// Skip all modules belonging to previous installations
+				continue;
 			}
 	
 			if (array_key_exists($sModuleName, $aInstallByModule))
