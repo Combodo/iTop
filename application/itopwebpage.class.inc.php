@@ -510,6 +510,11 @@ EOF
 		{
 			$sNorthPane .= $oExtensionInstance->GetNorthPaneHtml($this);
 		}
+
+		if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled())
+		{
+			$sNorthPane .= '<div id="admin-banner"><span style="padding:5px;">'.ExecutionKPI::GetDescription().'<span></div>';
+		}
 		
 		$sSouthPane = '';
 		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
@@ -609,12 +614,6 @@ EOF
 	
 		$sHtml .= "</head>\n";
 		$sHtml .= "<body>\n";
-
-
-
-
-
-
 
 		// Render the revision number
 		if (ITOP_REVISION == '$WCREV$')

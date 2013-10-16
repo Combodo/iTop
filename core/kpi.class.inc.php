@@ -60,15 +60,31 @@ class ExecutionKPI
 		self::$m_sAllowedUser = $sUser;
 	}
 
-	static public function ReportStats()
+	static public function IsEnabled()
 	{
-		if (self::$m_sAllowedUser != '*')
+		if (self::$m_bEnabled_Duration || self::$m_bEnabled_Memory)
 		{
-			if (UserRights::GetUser() != self::$m_sAllowedUser)
+			if ((self::$m_sAllowedUser == '*') || (UserRights::GetUser() == trim(self::$m_sAllowedUser)))
 			{
-				return;
+				return true;
 			}
 		}
+		return false;
+	}
+
+	static public function GetDescription()
+	{
+		$aFeatures = array();
+		if (self::$m_bEnabled_Duration) $aFeatures[] = 'Duration'; 
+		if (self::$m_bEnabled_Memory)   $aFeatures[] = 'Memory usage';
+		$sFeatures = implode(', ', $aFeatures);
+		$sFor = self::$m_sAllowedUser == '*' ? 'EVERYBODY' : "'".trim(self::$m_sAllowedUser)."'";
+		return "KPI logging is active for $sFor. Measures: $sFeatures";
+	}
+
+	static public function ReportStats()
+	{
+		if (!self::IsEnabled()) return;
 
 		global $fItopStarted;
 		$sExecId = microtime(); // id to differentiate the hrefs!
