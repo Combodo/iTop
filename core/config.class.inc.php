@@ -651,6 +651,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'max_linkset_output' => array(
+			'type' => 'integer',
+			'description' => 'Maximum number of items shown when getting a list of related items in an email, using the form $this->some_list$. 0 means no limit.',
+			'default' => 100,
+			'value' => 100,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)

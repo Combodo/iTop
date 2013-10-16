@@ -1899,20 +1899,46 @@ abstract class DBObject
 			$sClass = get_class($this);
 			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
-				$aScalarArgs[$sArgName.'->'.$sAttCode] = $this->Get($sAttCode);
-				if ($oAttDef->IsScalar())
+				if ($oAttDef instanceof AttributeCaseLog)
 				{
+					$oCaseLog = $this->Get($sAttCode);
+					$aScalarArgs[$sArgName.'->'.$sAttCode] = $oCaseLog->GetText();
+					$aScalarArgs[$sArgName.'->head('.$sAttCode.')'] = $oCaseLog->GetLatestEntry();
+				}
+				elseif ($oAttDef->IsScalar())
+				{
+					$aScalarArgs[$sArgName.'->'.$sAttCode] = $this->Get($sAttCode);
 					// #@# Note: This has been proven to be quite slow, this can slow down bulk load
 					$sAsHtml = $this->GetAsHtml($sAttCode);
 					$aScalarArgs[$sArgName.'->html('.$sAttCode.')'] = $sAsHtml;
 					$aScalarArgs[$sArgName.'->label('.$sAttCode.')'] = $this->GetEditValue($sAttCode); // "Nice" display value, but without HTML tags and entities
 				}
-				// Do something for case logs... quick N' dirty...
-				if ($aScalarArgs[$sArgName.'->'.$sAttCode] instanceof ormCaseLog)
+				elseif ($oAttDef->IsLinkSet())
 				{
-					$oCaseLog = $aScalarArgs[$sArgName.'->'.$sAttCode];
-					$aScalarArgs[$sArgName.'->'.$sAttCode] = $oCaseLog->GetText();
-					$aScalarArgs[$sArgName.'->head('.$sAttCode.')'] = $oCaseLog->GetLatestEntry();
+					$sRemoteName = $oAttDef->IsIndirect() ? $oAttDef->GetExtKeyToRemote().'_friendlyname' : 'friendlyname';
+
+					// Since we want to limit the number of item, it is not feasible to simply rely on Get() to build the link set
+					// $oLinkSet = $this->Get($sAttCode);
+					$sLinkedClass = $oAttDef->GetLinkedClass();
+					$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
+					$oSearch = DBObjectSearch::FromOQL("SELECT $sLinkedClass WHERE $sExtKeyToMe = :this");
+					$oLinkSet = new DBObjectSet($oSearch, array(), array('this' => $this->GetKey()));
+					$iLimit = MetaModel::GetConfig()->Get('max_linkset_output');
+					if ($iLimit > 0)
+					{
+						$oLinkSet->SetLimit($iLimit);
+					}
+					$aNames = $oLinkSet->GetColumnAsArray($sRemoteName);
+					if ($iLimit > 0)
+					{
+						$iTotal = $oLinkSet->Count();
+						if ($iTotal > count($aNames))
+						{
+							$aNames[] = '... '.Dict::Format('UI:TruncatedResults', count($aNames), $iTotal);
+						}
+					}
+					$sNames = implode("\n", $aNames);
+					$aScalarArgs[$sArgName.'->'.$sAttCode] = $sNames;
 				}
 			}
 
