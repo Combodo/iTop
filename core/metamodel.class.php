@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -670,6 +670,19 @@ abstract class MetaModel
 		}
 		return $aTables;
 	} 
+
+	final static public function DBGetIndexes($sClass)
+	{
+		self::_check_subclass($sClass);
+		if (isset(self::$m_aClassParams[$sClass]['indexes']))
+		{
+			return self::$m_aClassParams[$sClass]['indexes'];
+		}
+		else
+		{
+			return array();
+		}
+	}
 
 	final static public function DBGetKey($sClass)
 	{
@@ -3938,7 +3951,7 @@ abstract class MetaModel
 							$aCreateTableItems[$sTable][$sField] = $sFieldDefinition;
 							if ($bIndexNeeded)
 							{
-								$aCreateTableItems[$sTable][$sField.'_ix'] = "INDEX (`$sField`)";
+								$aCreateTableItems[$sTable][] = "INDEX (`$sField`)";
 							}
 						}
 						else
@@ -3946,7 +3959,7 @@ abstract class MetaModel
 							$aAlterTableItems[$sTable][$sField] = "ADD $sFieldDefinition";
 							if ($bIndexNeeded)
 							{
-								$aAlterTableItems[$sTable][$sField.'_ix'] = "ADD INDEX (`$sField`)";
+								$aAlterTableItems[$sTable][] = "ADD INDEX (`$sField`)";
 							}
 						}
 					}
@@ -3981,15 +3994,58 @@ abstract class MetaModel
 
 						// Create indexes (external keys only... so far)
 						//
-						if ($bIndexNeeded && !CMDBSource::HasIndex($sTable, $sField))
+						if ($bIndexNeeded && !CMDBSource::HasIndex($sTable, $sField, array($sField)))
 						{
 							$aErrors[$sClass][$sAttCode][] = "Foreign key '$sField' in table '$sTable' should have an index";
-							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD INDEX (`$sField`)";
-							$aAlterTableItems[$sTable][$sField.'_ix'] = "ADD INDEX (`$sField`)";
+							if (CMDBSource::HasIndex($sTable, $sField))
+							{
+								$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` DROP INDEX `$sField`, ADD INDEX (`$sField`)";
+								$aAlterTableItems[$sTable][] = "DROP INDEX `$sField`";
+								$aAlterTableItems[$sTable][] = "ADD INDEX (`$sField`)";
+							}
+							else
+							{
+								$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD INDEX (`$sField`)";
+								$aAlterTableItems[$sTable][] = "ADD INDEX (`$sField`)";
+							}
 						}
 					}
 				}
 			}
+			
+			// Check indexes
+			foreach (self::DBGetIndexes($sClass) as $aColumns)
+			{
+				$sIndexId = implode('_', $aColumns);
+
+				if(!CMDBSource::HasIndex($sTable, $sIndexId, $aColumns))
+				{
+					$sColumns = "`".implode("`, `", $aColumns)."`";
+					if (CMDBSource::HasIndex($sTable, $sIndexId))
+					{
+						$aErrors[$sClass]['*'][] = "Wrong index '$sIndexId' ($sColumns) in table '$sTable'";
+						$aSugFix[$sClass]['*'][] = "ALTER TABLE `$sTable` DROP INDEX `$sIndexId`, ADD INDEX `$sIndexId` ($sColumns)";
+					}
+					else
+					{
+						$aErrors[$sClass]['*'][] = "Missing index '$sIndexId' ($sColumns) in table '$sTable'";
+						$aSugFix[$sClass]['*'][] = "ALTER TABLE `$sTable` ADD INDEX `$sIndexId` ($sColumns)";
+					}
+					if (array_key_exists($sTable, $aCreateTable))
+					{
+						$aCreateTableItems[$sTable][] = "INDEX `$sIndexId` ($sColumns)";
+					}
+					else
+					{
+						if (CMDBSource::HasIndex($sTable, $sIndexId))
+						{
+							$aAlterTableItems[$sTable][] = "DROP INDEX `$sIndexId`";
+						}
+						$aAlterTableItems[$sTable][] = "ADD INDEX `$sIndexId` ($sColumns)";
+					}
+				}
+			}
+			
 			// Find out unused columns
 			//
 			foreach($aTableInfo['Fields'] as $sField => $aFieldData)

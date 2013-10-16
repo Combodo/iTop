@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -137,7 +137,10 @@ class EventNotification extends Event
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
 			"display_template" => "",
-			"order_by_default" => array('date' => false)
+			"order_by_default" => array('date' => false),
+			'indexes' => array(
+				array('object_id'),
+			)
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2011-2012 Combodo SARL
+// Copyright (C) 2011-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -654,7 +654,22 @@ EOF;
 				$aClassParams['order_by_default'] = "array(".implode(", ", $aSortColumns).")";
 			}
 		}
-	
+
+		if ($oIndexes = $oProperties->GetOptionalElement('indexes'))
+		{
+			$aIndexes = array();
+			foreach($oIndexes->getElementsByTagName('index') as $oIndex)
+			{
+				$sIndexId = $oIndex->getAttribute('id');
+				$oAttributes = $oIndex->GetUniqueElement('attributes');
+				foreach($oAttributes->getElementsByTagName('attribute') as $oAttribute)
+				{
+					$aIndexes[$sIndexId][] = $oAttribute->getAttribute('id');
+				}
+			}
+			$aClassParams['indexes'] = var_export($aIndexes, true);
+		}
+
 
 		// Finalize class params declaration
 		//

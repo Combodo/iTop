@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -45,6 +45,9 @@ class CMDBChangeOp extends DBObject
 			"db_table" => "priv_changeop",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "optype",
+			'indexes' => array(
+				array('objclass', 'objkey'),
+			)
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();

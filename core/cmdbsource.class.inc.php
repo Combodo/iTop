@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -480,14 +480,23 @@ class CMDBSource
 		return ($aFieldData["Type"]);
 	}
 
-	public static function HasIndex($sTable, $sField)
+	public static function HasIndex($sTable, $sIndexId, $aFields = null)
 	{
 		$aTableInfo = self::GetTableInfo($sTable);
 		if (empty($aTableInfo)) return false;
-		if (!array_key_exists($sField, $aTableInfo["Fields"])) return false;
-		$aFieldData = $aTableInfo["Fields"][$sField];
-		// $aFieldData could be 'PRI' for the primary key, or 'MUL', or ?
-		return (strlen($aFieldData["Key"]) > 0);
+		if (!array_key_exists($sIndexId, $aTableInfo['Indexes'])) return false;
+
+		if ($aFields == null)
+		{
+			// Just searching for the name
+			return true;
+		}
+
+		// Compare the columns
+		$sSearchedIndex = implode(',', $aFields);
+		$sExistingIndex = implode(',', $aTableInfo['Indexes'][$sIndexId]);
+
+		return ($sSearchedIndex == $sExistingIndex);
 	}
 
 	// Returns an array of (fieldname => array of field info)
@@ -536,6 +545,17 @@ class CMDBSource
 		{
 			// Table does not exist
 			self::$m_aTablesInfo[strtolower($sTableName)] = null;
+		}
+
+		if (!is_null(self::$m_aTablesInfo[strtolower($sTableName)]))
+		{
+			$aIndexes = self::QueryToArray("SHOW INDEXES FROM `$sTableName`");
+			$aMyIndexes = array();
+			foreach ($aIndexes as $aIndexColumn)
+			{
+				$aMyIndexes[$aIndexColumn['Key_name']][$aIndexColumn['Seq_in_index']-1] = $aIndexColumn['Column_name'];
+			}
+			self::$m_aTablesInfo[strtolower($sTableName)]["Indexes"] = $aMyIndexes;
 		}
 	}
 	//public static function EnumTables()

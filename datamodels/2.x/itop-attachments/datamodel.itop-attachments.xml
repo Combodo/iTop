@@ -35,6 +35,19 @@
             <attribute id=""/>
           </attributes>
         </reconciliation>
+        <indexes>
+          <index id="1">
+             <attributes>
+               <attribute id="temp_id"/>
+             </attributes>
+          </index>
+          <index id="2">
+             <attributes>
+               <attribute id="item_class"/>
+               <attribute id="item_id"/>
+             </attributes>
+          </index>
+        </indexes>
       </properties>
       <fields>
         <field id="expire" xsi:type="AttributeDateTime">
