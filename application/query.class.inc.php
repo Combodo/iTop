@@ -103,17 +103,25 @@ class QueryOQL extends Query
 				{
 					$sUrl .= '&arg_'.$sParam.'=["'.$sParam.'"]';
 				}
+
+				$oPage->p(Dict::S('UI:Query:UrlForExcel').':<br/><textarea cols="80" rows="3" READONLY>'.$sUrl.'</textarea>');
+
+				if (count($aParameters) == 0)
+				{
+					$oBlock = new DisplayBlock($oSearch, 'list');
+					$aExtraParams = array(
+						//'menu' => $sShowMenu,
+						'table_id' => 'query_preview_'.$this->getKey(),
+					);
+					$sBlockId = 'block_query_preview_'.$this->GetKey(); // make a unique id (edition occuring in the same DOM)
+					$oBlock->Display($oPage, $sBlockId, $aExtraParams);
+				}
 			}
 			catch (OQLException $e)
 			{
 				$sMessage = '<div class="message message_error" style="padding-left: 30px;"><div style="padding: 10px;">'.Dict::Format('UI:RunQuery:Error', $e->getHtmlDesc()).'</div></div>';
-			}
-
-			$oPage->p(Dict::S('UI:Query:UrlForExcel').':<br/><textarea cols="80" rows="3" READONLY>'.$sUrl.'</textarea>');
-			if (!is_null($sMessage))
-			{
 				$oPage->p($sMessage);
-			}		
+			}
 		}
 		return $aFieldsMap;
 	}
