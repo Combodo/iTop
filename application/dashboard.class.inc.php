@@ -733,7 +733,8 @@ EOF
 		foreach($aDashlets as $sDashletClass => $aDashletInfo)
 		{
 			$oSubForm = new DesignerForm();
-			$oDashlet = new $sDashletClass($this->oMetaModel, 0);
+			$oMetaModel = new ModelReflectionRuntime();
+			$oDashlet = new $sDashletClass($oMetaModel, 0);
 			$oDashlet->GetPropertiesFieldsFromOQL($oSubForm, $sOQL);
 			
 			$oSelectorField->AddSubForm($oSubForm, $aDashletInfo['label'], $aDashletInfo['class']);
