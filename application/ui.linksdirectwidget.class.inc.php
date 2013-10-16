@@ -46,14 +46,23 @@ class UILinksWidgetDirect
 		$oLinksetDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$this->sLinkedClass = $oLinksetDef->GetLinkedClass();
 		$sExtKeyToMe = $oLinksetDef->GetExtKeyToMe();
-		$aZList = MetaModel::FlattenZList(MetaModel::GetZListItems($this->sLinkedClass, 'list'));
+		switch($oLinksetDef->GetEditMode())
+		{
+			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
+			$aZList = MetaModel::FlattenZList(MetaModel::GetZListItems($this->sLinkedClass, 'details'));
+			break;
+			
+			default:
+			$aZList = MetaModel::FlattenZList(MetaModel::GetZListItems($this->sLinkedClass, 'list'));
+		}
 		foreach($aZList as $sLinkedAttCode)
 		{
 			if ($sLinkedAttCode != $sExtKeyToMe)
 			{
 				$oAttDef = MetaModel::GetAttributeDef($this->sLinkedClass, $sLinkedAttCode);
 				
-				if (!$oAttDef->IsExternalField() || ($oAttDef->GetKeyAttCode() != $sExtKeyToMe) )
+				if ((!$oAttDef->IsExternalField() || ($oAttDef->GetKeyAttCode() != $sExtKeyToMe)) &&
+					(!$oAttDef->IsLinkSet()) )
 				{
 					$this->aZlist[] = $sLinkedAttCode;
 				}
