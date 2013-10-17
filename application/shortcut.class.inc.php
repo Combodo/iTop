@@ -166,6 +166,8 @@ class ShortcutOQL extends Shortcut
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeOQL("oql", array("allowed_values"=>null, "sql"=>"oql", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("auto_reload", array("allowed_values"=>new ValueSetEnum('none,custom'), "sql"=>"auto_reload", "default_value"=>"none", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("auto_reload_sec", array("allowed_values"=>null, "sql"=>"auto_reload_sec", "default_value"=>60, "is_null_allowed"=>false, "depends_on"=>array())));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'context', 'oql')); // Attributes to be displayed for the complete details
@@ -178,6 +180,21 @@ class ShortcutOQL extends Shortcut
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
 		$oPage->set_title($this->Get('name'));
+
+		switch($this->Get('auto_reload'))
+		{
+		case 'custom':
+			$iRate = (int)$this->Get('auto_reload_sec');
+			if ($iRate > 0)
+			{
+				// Must a string otherwise it can be evaluated to 'true' and defaults to "standard" refresh rate!
+				$aExtraParams['auto_reload'] = (string)$iRate;
+			}
+			break;
+
+		default:
+		case 'none':
+		}
 
 		$bSearchPane = true;
 		$bSearchOpen = false;
@@ -215,7 +232,22 @@ class ShortcutOQL extends Shortcut
 		$oField = new DesignerTextField('name', Dict::S('Class:Shortcut/Attribute:name'), $sDefault);
 		$oField->SetMandatory(true);
 		$oForm->AddField($oField);
-				
+
+		/*
+		$oField = new DesignerComboField('auto_reload', Dict::S('Class:ShortcutOQL/Attribute:auto_reload'), 'none');
+		$oAttDef = MetaModel::GetAttributeDef(__class__, 'auto_reload');
+		$oField->SetAllowedValues($oAttDef->GetAllowedValues());
+		$oField->SetMandatory(true);
+		$oForm->AddField($oField);
+		*/
+		$oField = new DesignerBooleanField('auto_reload', Dict::S('Class:ShortcutOQL/Attribute:auto_reload'), false);
+		$oForm->AddField($oField);
+
+		$oField = new DesignerTextField('auto_reload_sec', Dict::S('Class:ShortcutOQL/Attribute:auto_reload_sec'), MetaModel::GetConfig()->GetStandardReloadInterval());
+		$oField->SetValidationPattern('^$|^0*([5-9]|[1-9][0-9]+)$'); // Can be empty, or a number > 4
+		$oField->SetMandatory(false);
+		$oForm->AddField($oField);
+
 		//$oField = new DesignerLongTextField('oql', Dict::S('Class:Shortcut/Attribute:oql'), $sOQL);
 		//$oField->SetMandatory();
 		$oField = new DesignerHiddenField('oql', '', $sOQL);
@@ -240,8 +272,17 @@ class ShortcutOQL extends Shortcut
 		$oAppContext = new ApplicationContext();
 		$sContext = $oAppContext->GetForLink();
 
+		$sRateTitle = addslashes(Dict::S('Class:ShortcutOQL/Attribute:auto_reload_sec+'));
+
 		$oPage->add_ready_script(
 <<<EOF
+
+$("#attr_auto_reload_sec").attr('title', '$sRateTitle');
+$("#attr_auto_reload_sec").prop('disabled', !$(this).is(':checked'));
+
+$('#attr_auto_reload').change( function(ev) {
+	$("#attr_auto_reload_sec").prop('disabled', !$(this).is(':checked'));
+} );
 
 function ShortcutCreationOK() 
 {

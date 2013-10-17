@@ -204,6 +204,11 @@ class DisplayBlock
 		$bAutoReload = false;
 		if (isset($aExtraParams['auto_reload']))
 		{
+			if ($aExtraParams['auto_reload'] === true)
+			{
+				// Note: does not work in the switch (case true) because a positive number evaluates to true!!!
+				$aExtraParams['auto_reload'] = 'standard';
+			}
 			switch($aExtraParams['auto_reload'])
 			{
 				case 'fast':
@@ -213,16 +218,15 @@ class DisplayBlock
 				
 				case 'standard':
 				case 'true':
-				case true:
 				$bAutoReload = true;
 				$iReloadInterval = MetaModel::GetConfig()->GetStandardReloadInterval()*1000;
 				break;
 				
 				default:
-				if (is_numeric($aExtraParams['auto_reload']))
+				if (is_numeric($aExtraParams['auto_reload']) && ($aExtraParams['auto_reload'] > 0))
 				{
 					$bAutoReload = true;
-					$iReloadInterval = $aExtraParams['auto_reload']*1000;
+					$iReloadInterval = max(5, $aExtraParams['auto_reload'])*1000;
 				}
 				else
 				{

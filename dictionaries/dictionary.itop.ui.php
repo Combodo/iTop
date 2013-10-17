@@ -1175,6 +1175,12 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Class:ShortcutOQL+' => '',
 	'Class:ShortcutOQL/Attribute:oql' => 'Query',
 	'Class:ShortcutOQL/Attribute:oql+' => 'OQL defining the list of objects to search for',
+	'Class:ShortcutOQL/Attribute:auto_reload' => 'Automatic refresh',
+	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Disabled',
+	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Custom rate',
+	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Automatic refresh interval (seconds)',
+	'Class:ShortcutOQL/Attribute:auto_reload_sec+' => 'The minimum allowed is 5 seconds',
+
 	'UI:FillAllMandatoryFields' => 'Please fill all mandatory fields.',
 	
 	'UI:CSVImportConfirmTitle' => 'Please confirm the operation',
