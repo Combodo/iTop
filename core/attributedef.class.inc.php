@@ -210,6 +210,7 @@ abstract class AttributeDefinition
 	public function IsExternalField() {return false;} 
 	public function IsWritable() {return false;} 
 	public function LoadInObject() {return true;}
+	public function AlwaysLoadInTables() {return $this->GetOptional('always_load_in_tables', false);}
 	public function GetValue($oHostObject){return null;} // must return the value if LoadInObject returns false
 	public function IsNullAllowed() {return true;} 
 	public function GetCode() {return $this->m_sCode;} 

@@ -75,7 +75,35 @@ class DataTable
 			$this->oSet->SetLimit($oCustomSettings->iDefaultPageSize);
 		}
 		$this->oSet->SetOrderBy($oCustomSettings->GetSortOrder());
-		
+
+		// Load only the requested columns
+		$aColumnsToLoad = array();
+		foreach($oCustomSettings->aColumns as $sAlias => $aColumnsInfo)
+		{
+			foreach($aColumnsInfo as $sAttCode => $aData)
+			{
+				if ($sAttCode != '_key_')
+				{
+					if ($aData['checked'])
+					{
+						$aColumnsToLoad[$sAlias][] = $sAttCode;
+					}
+					else
+					{
+						// See if this column is a must to load			
+						$sClass = $this->aClassAliases[$sAlias];
+						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+						if ($oAttDef->alwaysLoadInTables())
+						{
+							$aColumnsToLoad[$sAlias][] = $sAttCode;
+						}
+					}
+				}
+			}
+		}
+		$this->oSet->OptimizeColumnLoad($aColumnsToLoad);
+
+
 		$bToolkitMenu = true;
 		if (isset($aExtraParams['toolkit_menu']))
 		{

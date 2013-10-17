@@ -878,6 +878,7 @@ EOF;
 			$aParameters['height'] = $this->GetPropNumber($oField, 'height');
 			$aParameters['digits'] = $this->GetPropNumber($oField, 'digits');
 			$aParameters['decimals'] = $this->GetPropNumber($oField, 'decimals');
+			$aParameters['always_load_in_tables'] = $this->GetPropBoolean($oField, 'always_load_in_tables', false);
 			$sTrackingLevel = $oField->GetChildText('tracking_level');
 			if (!is_null($sTrackingLevel))
 			{

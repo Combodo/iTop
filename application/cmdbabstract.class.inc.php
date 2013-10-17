@@ -818,9 +818,6 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$sClassAlias = $oSet->GetClassAlias();
 		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
 		
-		// Load only the requested columns
-		$oSet->OptimizeColumnLoad(array($sClassAlias => $aList));
-		
 		$sTableId = isset($aExtraParams['table_id']) ? $aExtraParams['table_id'] : null;
 		$aClassAliases = array( $sClassAlias => $sClassName);
 		$oDataTable = new DataTable($iListId, $oSet, $aClassAliases, $sTableId);
@@ -920,16 +917,6 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				}
 			}						
 		}
-		// Load only the requested columns
-		$aAttToLoad = array(); // attributes to load
-		foreach($aAuthorizedClasses as $sAlias => $sClassName)
-		{
-			foreach($aList[$sAlias] as $sAttCode)
-			{
-				$aAttToLoad[$sAlias][] = $sAttCode;
-			}
-		}
-		$oSet->OptimizeColumnLoad($aAttToLoad);
 
 		$sSelectMode = 'none';
 				

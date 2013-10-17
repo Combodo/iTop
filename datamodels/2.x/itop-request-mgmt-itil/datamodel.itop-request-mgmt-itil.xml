@@ -37,6 +37,7 @@
       </properties>
       <fields>
         <field id="status" xsi:type="AttributeEnum">
+          <always_load_in_tables>true</always_load_in_tables>
           <values>
             <value>new</value>
             <value>waiting_for_approval</value>
@@ -188,6 +189,7 @@
           <goal/>
         </field>
         <field id="tto" xsi:type="AttributeStopWatch">
+          <always_load_in_tables>true</always_load_in_tables>
           <states>
             <state id="new"/>
             <state id="escalated_tto"/>
@@ -214,6 +216,7 @@
           </thresholds>
         </field>
         <field id="ttr" xsi:type="AttributeStopWatch">
+          <always_load_in_tables>true</always_load_in_tables>
           <states>
             <state id="new"/>
             <state id="escalated_tto"/>
