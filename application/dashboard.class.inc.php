@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -29,6 +29,8 @@ require_once(APPROOT.'core/modelreflection.class.inc.php');
 abstract class Dashboard
 {
 	protected $sTitle;
+	protected $bAutoReload;
+	protected $iAutoReloadSec;
 	protected $sLayoutClass;
 	protected $aWidgetsData;
 	protected $oDOMNode;
@@ -38,7 +40,10 @@ abstract class Dashboard
 	
 	public function __construct($sId)
 	{
+		$this->sTitle = '';
 		$this->sLayoutClass = 'DashboardLayoutOneCol';
+		$this->bAutoReload = false;
+		$this->iAutoReloadSec = MetaModel::GetConfig()->GetStandardReloadInterval();
 		$this->aCells = array();
 		$this->oDOMNode = null;
 		$this->sId = $sId;
@@ -76,6 +81,20 @@ abstract class Dashboard
 			$this->sTitle = '';
 		}
 		
+		$this->bAutoReload = false;
+		$this->iAutoReloadSec = MetaModel::GetConfig()->GetStandardReloadInterval();
+		if ($oAutoReloadNode = $this->oDOMNode->getElementsByTagName('auto_reload')->item(0))
+		{
+			if ($oAutoReloadEnabled = $oAutoReloadNode->getElementsByTagName('enabled')->item(0))
+			{
+				$this->bAutoReload = ($oAutoReloadEnabled->textContent == 'true');
+			}
+			if ($oAutoReloadInterval = $oAutoReloadNode->getElementsByTagName('interval')->item(0))
+			{
+				$this->iAutoReloadSec = max(5, (int)$oAutoReloadInterval->textContent);
+			}
+		}
+
 		if ($oCellsNode = $this->oDOMNode->getElementsByTagName('cells')->item(0))
 		{
 			$oCellsList = $oCellsNode->getElementsByTagName('cell');
@@ -173,6 +192,13 @@ abstract class Dashboard
 		$oNode = $oDoc->createElement('title', $this->sTitle);
 		$oDefinition->appendChild($oNode);
 
+		$oAutoReloadNode = $oDoc->createElement('auto_reload');
+		$oDefinition->appendChild($oAutoReloadNode);
+		$oNode = $oDoc->createElement('enabled', $this->bAutoReload ? 'true' : 'false');
+		$oAutoReloadNode->appendChild($oNode);
+		$oNode = $oDoc->createElement('interval', $this->iAutoReloadSec);
+		$oAutoReloadNode->appendChild($oNode);
+
 		$oCellsNode = $oDoc->createElement('cells');
 		$oDefinition->appendChild($oCellsNode);
 		
@@ -208,6 +234,8 @@ abstract class Dashboard
 	{
 		$this->sLayoutClass = $aParams['layout_class'];
 		$this->sTitle = $aParams['title'];
+		$this->bAutoReload = $aParams['auto_reload'] == 'true';
+		$this->iAutoReloadSec = max(5, (int) $aParams['auto_reload_sec']);
 		
 		foreach($aParams['cells'] as $aCell)
 		{
@@ -249,12 +277,32 @@ abstract class Dashboard
 	{
 		return $this->sTitle;
 	}
-	
+
 	public function SetTitle($sTitle)
 	{
 		$this->sTitle = $sTitle;
 	}
-		
+
+	public function GetAutoReload()
+	{
+		return $this->bAutoReload;
+	}
+
+	public function SetAutoReload($bAutoReload)
+	{
+		$this->bAutoReload = $bAutoReload;
+	}
+
+	public function GetAutoReloadInterval()
+	{
+		return $this->iAutoReloadSec;
+	}
+
+	public function SetAutoReloadInterval($iAutoReloadSec)
+	{
+		$this->iAutoReloadSec = max(5, (int)$iAutoReloadSec);
+	}
+
 	public function AddDashlet($oDashlet)
 	{
 		$sId = $this->GetNewDashletId();
@@ -305,12 +353,30 @@ abstract class Dashboard
 
 		$oField = new DesignerLongTextField('dashboard_title', Dict::S('UI:DashboardEdit:DashboardTitle'), $this->sTitle);
 		$oForm->AddField($oField);
+
+		$oField = new DesignerBooleanField('auto_reload', Dict::S('UI:DashboardEdit:AutoReload'), $this->bAutoReload);
+		$oForm->AddField($oField);
+
+		$oField = new DesignerTextField('auto_reload_sec', Dict::S('UI:DashboardEdit:AutoReloadSec'), $this->iAutoReloadSec);
+		$oField->SetValidationPattern('^$|^0*([5-9]|[1-9][0-9]+)$'); // Can be empty, or a number > 4
+		$oForm->AddField($oField);
+
 		$this->SetFormParams($oForm);
 		$oForm->RenderAsPropertySheet($oPage, false, '.itop-dashboard');	
-		
+
 		$oPage->add('</div>');
+
+		$sRateTitle = addslashes(Dict::S('UI:DashboardEdit:AutoReloadSec+'));
 		$oPage->add_ready_script(
 <<<EOF
+	// Note: the title gets deleted by the validation mechanism
+	$("#attr_auto_reload_sec").tooltip({items: 'input', content: '$sRateTitle'});
+	$("#attr_auto_reload_sec").prop('disabled', !$('#attr_auto_reload').is(':checked'));
+	
+	$('#attr_auto_reload').change( function(ev) {
+		$("#attr_auto_reload_sec").prop('disabled', !$(this).is(':checked'));
+	} );
+
 	$('#select_layout').buttonset();
 	$('#select_dashlet').droppable({
 		accept: '.dashlet',
@@ -477,37 +543,34 @@ class RuntimeDashboard extends Dashboard
 		}
 	}
 	
-	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
+	public function RenderEditionTools($oPage)
 	{
-		parent::Render($oPage, $bEditMode, $aExtraParams);
-		if (!$bEditMode)
+		$sEditMenu = "<td><span id=\"DashboardMenu\"><ul><li><img src=\"../images/edit.png\"><ul>";
+	
+		$aActions = array();
+		$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:Edit'), "return EditDashboard('{$this->sId}')");
+		$aActions[$oEdit->GetUID()] = $oEdit->GetMenuItem();
+
+		if ($this->bCustomized)
 		{
-			$sEditMenu = "<td><span id=\"DashboardMenu\"><ul><li><img src=\"../images/edit.png\"><ul>";
-		
-			$aActions = array();
-			$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:Edit'), "return EditDashboard('{$this->sId}')");
-			$aActions[$oEdit->GetUID()] = $oEdit->GetMenuItem();
+			$oRevert = new JSPopupMenuItem('UI:Dashboard:RevertConfirm', Dict::S('UI:Dashboard:Revert'),
+											"if (confirm('".addslashes(Dict::S('UI:Dashboard:RevertConfirm'))."')) return RevertDashboard('{$this->sId}'); else return false");
+			$aActions[$oRevert->GetUID()] = $oRevert->GetMenuItem();
+		}
+		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_DASHBOARD_ACTIONS, $this, $aActions);
+		$sEditMenu .= $oPage->RenderPopupMenuItems($aActions);
+				
 
-			if ($this->bCustomized)
-			{
-				$oRevert = new JSPopupMenuItem('UI:Dashboard:RevertConfirm', Dict::S('UI:Dashboard:Revert'),
-												"if (confirm('".addslashes(Dict::S('UI:Dashboard:RevertConfirm'))."')) return RevertDashboard('{$this->sId}'); else return false");
-				$aActions[$oRevert->GetUID()] = $oRevert->GetMenuItem();
-			}
-			utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_DASHBOARD_ACTIONS, $this, $aActions);
-			$sEditMenu .= $oPage->RenderPopupMenuItems($aActions);
-					
-
-			$sEditMenu = addslashes($sEditMenu);
-			//$sEditBtn = addslashes('<div style="display: inline-block; height: 55px; width:200px;vertical-align:center;line-height:60px;text-align:left;"><button onclick="EditDashboard(\''.$this->sId.'\');">Edit This Page</button></div>');
-			$oPage->add_ready_script(
+		$sEditMenu = addslashes($sEditMenu);
+		//$sEditBtn = addslashes('<div style="display: inline-block; height: 55px; width:200px;vertical-align:center;line-height:60px;text-align:left;"><button onclick="EditDashboard(\''.$this->sId.'\');">Edit This Page</button></div>');
+		$oPage->add_ready_script(
 <<<EOF
 	$('#logOffBtn').parent().before('$sEditMenu');
 	$('#DashboardMenu>ul').popupmenu();
 	
 EOF
-			);
-			$oPage->add_script(
+		);
+		$oPage->add_script(
 <<<EOF
 function EditDashboard(sId)
 {
@@ -530,8 +593,7 @@ function RevertDashboard(sId)
 	return false;
 }
 EOF
-			);
-		}
+		);
 	}
 
 	public function RenderProperties($oPage)
@@ -547,6 +609,18 @@ EOF
 	$('#row_attr_dashboard_title').property_field('option', {parent_selector: '.itop-dashboard', auto_apply: false, 'do_apply': function() {
 			var sTitle = $('#attr_dashboard_title').val();
 			$('.itop-dashboard').runtimedashboard('option', {title: sTitle});
+			return true;
+		}
+	});
+	$('#row_attr_auto_reload').property_field('option', {parent_selector: '.itop-dashboard', auto_apply: true, 'do_apply': function() {
+			var bAutoReload = $('#attr_auto_reload').is(':checked');
+			$('.itop-dashboard').runtimedashboard('option', {auto_reload: bAutoReload});
+			return true;
+		}
+	});
+	$('#row_attr_auto_reload_sec').property_field('option', {parent_selector: '.itop-dashboard', auto_apply: true, 'do_apply': function() {
+			var iAutoReloadSec = $('#attr_auto_reload_sec').val();
+			$('.itop-dashboard').runtimedashboard('option', {auto_reload_sec: iAutoReloadSec});
 			return true;
 		}
 	});
@@ -575,6 +649,8 @@ EOF
 		
 		$sId = addslashes($this->sId);
 		$sLayoutClass = addslashes($this->sLayoutClass);
+		$sAutoReload = $this->bAutoReload ? 'true' : 'false';
+		$sAutoReloadSec = (string) $this->iAutoReloadSec;
 		$sTitle = addslashes($this->sTitle);
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
 
@@ -627,6 +703,7 @@ $('#dashboard_editor').dialog({
 
 $('#dashboard_editor .ui-layout-center').runtimedashboard({
 	dashboard_id: '$sId', layout_class: '$sLayoutClass', title: '$sTitle',
+	auto_reload: $sAutoReload, auto_reload_sec: $sAutoReloadSec,
 	submit_to: '$sUrl', submit_parameters: {operation: 'save_dashboard'},
 	render_to: '$sUrl', render_parameters: {operation: 'render_dashboard'},
 	new_dashlet_parameters: {operation: 'new_dashlet'}

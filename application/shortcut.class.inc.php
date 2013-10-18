@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -277,8 +277,9 @@ class ShortcutOQL extends Shortcut
 		$oPage->add_ready_script(
 <<<EOF
 
-$("#attr_auto_reload_sec").attr('title', '$sRateTitle');
-$("#attr_auto_reload_sec").prop('disabled', !$(this).is(':checked'));
+// Note: the title gets deleted by the validation mechanism
+$("#attr_auto_reload_sec").tooltip({items: 'input', content: '$sRateTitle'});
+$("#attr_auto_reload_sec").prop('disabled', !$('#attr_auto_reload').is(':checked'));
 
 $('#attr_auto_reload').change( function(ev) {
 	$("#attr_auto_reload_sec").prop('disabled', !$(this).is(':checked'));

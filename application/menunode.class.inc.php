@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -879,8 +879,41 @@ class DashboardMenuNode extends MenuNode
 		$oDashboard = $this->GetDashboard();
 		if ($oDashboard != null)
 		{
+			$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $this->sMenuId);
+			$oPage->add('<div class="dashboard_contents" id="'.$sDivId.'">');
 			$oDashboard->Render($oPage, false, $aExtraParams);
-			
+			$oPage->add('</div>');
+			$oDashboard->RenderEditionTools($oPage);
+
+			if ($oDashboard->GetAutoReload())
+			{
+				$sId = $this->sMenuId;
+				$sExtraParams = json_encode($aExtraParams);
+				$iReloadInterval = 1000 * $oDashboard->GetAutoReloadInterval();
+				$oPage->add_script(
+<<<EOF
+					setInterval("ReloadDashboard('$sDivId');", $iReloadInterval);
+
+					function ReloadDashboard(sDivId)
+					{
+						var oExtraParams = $sExtraParams;
+						// Do not reload when a dialog box is active
+						if (!($('.ui-dialog:visible').length > 0))
+						{
+							$('.dashboard_contents#'+sDivId).block();
+							$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+							   { operation: 'reload_dashboard', dashboard_id: '$sId', extra_params: oExtraParams},
+							   function(data){
+								 $('.dashboard_contents#'+sDivId).html(data);
+								 $('.dashboard_contents#'+sDivId).unblock();
+								}
+							 );
+						}
+					}
+EOF
+				);
+			}
+
 			$bEdit = utils::ReadParam('edit', false);
 			if ($bEdit)
 			{

@@ -16,6 +16,8 @@ $(function()
 			dashboard_id: '',
 			layout_class: '',
 			title: '',
+			auto_reload: false,
+			auto_reload_sec: 300,
 			submit_to: 'index.php',
 			submit_parameters: {},
 			render_to: 'index.php',
@@ -92,6 +94,8 @@ $(function()
 			oState.dashboard_id = this.options.dashboard_id;
 			oState.layout_class = this.options.layout_class;
 			oState.title = this.options.title;
+			oState.auto_reload = this.options.auto_reload;
+			oState.auto_reload_sec = this.options.auto_reload_sec;
 			
 			return oState;
 		},
@@ -206,6 +210,8 @@ $(function()
 			dashboard_id: '',
 			layout_class: '',
 			title: '',
+			auto_reload: '',
+			auto_reload_sec: '',
 			submit_to: 'index.php',
 			submit_parameters: {},
 			render_to: 'index.php',
@@ -239,13 +245,22 @@ $(function()
 		// _setOptions is called with a hash of all options that are changing
 		_setOptions: function()
 		{
+			this.bRefreshNeeded = false;
+
 			this._superApply(arguments);
-			this._refresh();
+			if (this.bRefreshNeeded)
+			{
+				this._refresh();
+			}
 		},
 		// _setOption is called for each individual option that is changing
 		_setOption: function( key, value )
 		{
 			this._superApply(arguments);
+			if ((key != 'auto_reload') && (key != 'auto_reload_sec'))
+			{
+				this.bRefreshNeeded = true;
+			}
 		},
 		// called when created, and later when changing options
 		_refresh: function()

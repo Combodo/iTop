@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -1081,6 +1081,10 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	'UI:DashboardEdit:Title' => 'Dashboard Editor',
 	'UI:DashboardEdit:DashboardTitle' => 'Title',
+	'UI:DashboardEdit:AutoReload' => 'Automatic refresh',
+	'UI:DashboardEdit:AutoReloadSec' => 'Automatic refresh interval (seconds)',
+	'UI:DashboardEdit:AutoReloadSec+' => 'The minimum allowed is 5 seconds',
+
 	'UI:DashboardEdit:Layout' => 'Layout',
 	'UI:DashboardEdit:Properties' => 'Dashboard Properties',
 	'UI:DashboardEdit:Dashlets' => 'Available Dashlets',	

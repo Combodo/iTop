@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -784,7 +784,17 @@ try
 		{
 			$oExtensionInstance->OnFormCancel($sTempId);
 		}
-		
+		break;
+
+		case 'reload_dashboard':
+		$oPage->SetContentType('text/html');
+		$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
+		$aExtraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
+		ApplicationMenu::LoadAdditionalMenus();
+		$idx = ApplicationMenu::GetMenuIndexById($sDashboardId);
+		$oMenu = ApplicationMenu::GetMenuNode($idx);
+		$oDashboard = $oMenu->GetDashboard();
+		$oDashboard->Render($oPage, false, $aExtraParams);
 		break;
 		
 		case 'dashboard_editor':
@@ -879,6 +889,8 @@ try
 		$aParams = array();
 		$aParams['layout_class'] = utils::ReadParam('layout_class', '');
 		$aParams['title'] = utils::ReadParam('title', '', false, 'raw_data');
+		$aParams['auto_reload'] = utils::ReadParam('auto_reload', false);
+		$aParams['auto_reload_sec'] = utils::ReadParam('auto_reload_sec', 300);
 		$aParams['cells'] = utils::ReadParam('cells', array(), false, 'raw_data');
 		$oDashboard = new RuntimeDashboard($sDashboardId);
 		$oDashboard->FromParams($aParams);
@@ -910,6 +922,8 @@ EOF
 		$aParams['layout_class'] = utils::ReadParam('layout_class', '');
 		$aParams['title'] = utils::ReadParam('title', '', false, 'raw_data');
 		$aParams['cells'] = utils::ReadParam('cells', array(), false, 'raw_data');
+		$aParams['auto_reload'] = utils::ReadParam('auto_reload', false);
+		$aParams['auto_reload_sec'] = utils::ReadParam('auto_reload_sec', 300);
 		$oDashboard = new RuntimeDashboard($sDashboardId);
 		$oDashboard->FromParams($aParams);
 		$oDashboard->Render($oPage, true /* bEditMode */);
@@ -919,7 +933,7 @@ EOF
 		$sOQL = utils::ReadParam('oql', '', false, 'raw_data');
 		RuntimeDashboard::GetDashletCreationDlgFromOQL($oPage, $sOQL);
 		break;
-		
+
 		case 'add_dashlet':
 		$oForm = RuntimeDashboard::GetDashletCreationForm();
 		$aValues = $oForm->ReadParams();
