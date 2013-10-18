@@ -572,30 +572,17 @@
           <type>StimulusUserAction</type>
           <code><![CDATA[	public function UpdateParentTicketLog()
 	{
-		$sLog = utils::ReadPostedParam('attr_log', null,false,'raw_data');
-		if ( $sLog != null)
+		$oLog = $this->Get('log');
+		$sLog = $oLog->GetModifiedEntry();
+		if ($sLog != '')
 		{
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			$sUserString = CMDBChange::GetCurrentUserName();
-			$oMyChange->Set("userinfo", $sUserString);
-			$iChangeId = $oMyChange->DBInsert();
-			$sOQL = "SELECT Ticket WHERE id=:ticket";
-			$oParentTicketSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
-							array(),
-							array(
-								'ticket' => $this->Get('ticket_id'),
-								)
-							);
-			while($oTicket = $oParentTicketSet->Fetch())
+			$oTicket = MetaModel::GetObject('Ticket', $this->Get('ticket_id'), false);
+			if ($oTicket)
 			{
-				$oTicket->set('private_log',$sLog);
-				$oTicket->DBUpdateTracked($oMyChange);
+				$oTicket->Set('private_log', $sLog);
+				$oTicket->DBUpdate();
 			}
-
 		}
-		return true;
-
 	}]]></code>
         </method>
         <method id="OnUpdate">

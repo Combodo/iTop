@@ -1859,11 +1859,6 @@
           <code><![CDATA[	public function resolveChilds($sStimulusCode)
 	{
 				
-		$oMyChange = MetaModel::NewObject("CMDBChange");
-		$oMyChange->Set("date", time());
-		$sUserString = CMDBChange::GetCurrentUserName();
-		$oMyChange->Set("userinfo", $sUserString."(automatic resolution)");
-		$iChangeId = $oMyChange->DBInsert();
 		$sOQL = "SELECT UserRequest WHERE parent_request_id=:ticket";
 		$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
 						array(),
@@ -1882,7 +1877,7 @@
 				$oRequest->set('resolution_code',$this->Get('resolution_code'));
 				$oRequest->set('solution','Automatically resolved by request:[[UserRequest:'.$this->Get('ref').']]');
 				$oRequest->ApplyStimulus('ev_autoresolve');
-				$oRequest->DBUpdateTracked($oMyChange);
+				$oRequest->DBUpdate();
 			}
 		}
 		return true;
@@ -1895,14 +1890,10 @@
           <type>LifecycleAction</type>
           <code><![CDATA[	public function UpdateChildRequestLog()
 	{
-		$sLogPublic = utils::ReadPostedParam('attr_public_log', null,false,'raw_data');
-		if ( $sLogPublic != null)
+		$oLog = $this->Get('public_log');
+		$sLogPublic = $oLog->GetModifiedEntry();
+		if ($sLogPublic != '')
 		{
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			$sUserString = CMDBChange::GetCurrentUserName();
-			$oMyChange->Set("userinfo", $sUserString."(automatic update)");
-			$iChangeId = $oMyChange->DBInsert();
 			$sOQL = "SELECT UserRequest WHERE parent_request_id=:ticket";
 			$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
 							array(),
@@ -1913,18 +1904,14 @@
 			while($oRequest = $oChildRequestSet->Fetch())
 			{
 				$oRequest->set('public_log',$sLogPublic);
-				$oRequest->DBUpdateTracked($oMyChange);
+				$oRequest->DBUpdate();
 			}
 
 		}
-		$sLogPrivate = utils::ReadPostedParam('attr_private_log', null,false,'raw_data');
-		if ( $sLogPrivate != null)
+		$oLog = $this->Get('private_log');
+		$sLogPrivate = $oLog->GetModifiedEntry();
+		if ($sLogPrivate != '')
 		{
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			$sUserString = CMDBChange::GetCurrentUserName();
-			$oMyChange->Set("userinfo", $sUserString."(automatic update)");
-			$iChangeId = $oMyChange->DBInsert();
 			$sOQL = "SELECT UserRequest WHERE parent_request_id=:ticket";
 			$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
 							array(),
@@ -1935,7 +1922,7 @@
 			while($oRequest = $oChildRequestSet->Fetch())
 			{
 				$oRequest->set('private_log',$sLogPrivate);
-				$oRequest->DBUpdateTracked($oMyChange);
+				$oRequest->DBUpdate();
 			}
 		}
 		return true;
