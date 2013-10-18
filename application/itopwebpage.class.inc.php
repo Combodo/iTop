@@ -80,6 +80,15 @@ class iTopWebPage extends NiceWebPage
 		$this->add_linked_script('../js/jquery.multiselect.min.js');
 		$this->add_linked_script('../js/ajaxfileupload.js');
 		
+		$aMultiselectOptions = array(
+			'header' => true,
+			'checkAllText' => Dict::S('UI:SearchValue:CheckAll'),
+			'uncheckAllText' => Dict::S('UI:SearchValue:UncheckAll'),
+			'noneSelectedText' => Dict::S('UI:SearchValue:Any'),
+			'selectedText' => Dict::S('UI:SearchValue:NbSelected'),
+			'selectedList' => 1,
+		);
+		$sJSMultiselectOptions = json_encode($aMultiselectOptions);
 		$sSearchAny = addslashes(Dict::S('UI:SearchValue:Any'));
 		$sSearchNbSelected = addslashes(Dict::S('UI:SearchValue:NbSelected'));
 		$this->add_dict_entry('UI:FillAllMandatoryFields');
@@ -182,7 +191,7 @@ class iTopWebPage extends NiceWebPage
 			}
 		});
 		
-		$('.multiselect').multiselect({header: false, noneSelectedText: '$sSearchAny', selectedList: 1, selectedText:'$sSearchNbSelected'});
+		$('.multiselect').multiselect($sJSMultiselectOptions);
 		
 		$('.resizable').filter(':visible').resizable();
 	}
@@ -383,7 +392,7 @@ EOF
 		{
 			if ($('#rawOutput > div').html() != '')
 			{
-				$('#rawOutput').dialog( {autoOpen: true, modal:false});
+				$('#rawOutput').dialog( {autoOpen: true, modal:false, width: '80%'});
 			}
 		}
 		

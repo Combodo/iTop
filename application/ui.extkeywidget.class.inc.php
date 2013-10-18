@@ -207,7 +207,16 @@ class UIExtKeyWidget
 				$sHTMLValue .= "</select>\n";
 				if (($this->bSearchMode) && $bSearchMultiple)
 				{
-					$oPage->add_ready_script("$('.multiselect').multiselect({header: false, noneSelectedText: '".addslashes(Dict::S('UI:SearchValue:Any'))."', selectedList: 1, selectedText:'".addslashes(Dict::S('UI:SearchValue:NbSelected'))."'});");
+					$aOptions = array(
+						'header' => true,
+						'checkAllText' => Dict::S('UI:SearchValue:CheckAll'),
+						'uncheckAllText' => Dict::S('UI:SearchValue:UncheckAll'),
+						'noneSelectedText' => Dict::S('UI:SearchValue:Any'),
+						'selectedText' => Dict::S('UI:SearchValue:NbSelected'),
+						'selectedList' => 1,
+					);
+					$sJSOptions = json_encode($aOptions);
+					$oPage->add_ready_script("$('.multiselect').multiselect($sJSOptions);");
 				}
 				$oPage->add_ready_script(
 <<<EOF
