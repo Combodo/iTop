@@ -1189,6 +1189,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:CSVImportCreated_items' => 'Created: %1$d',
 	'UI:CSVImportModified_items' => 'Modified: %1$d',
 	'UI:CSVImportUnchanged_items' => 'Unchanged: %1$d',
-	
+
+	'UI:Button:Remove' => 'Remove',
+	'UI:AddAnExisting_Class' => 'Add objects of type %1$s...',
+	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s',
 ));
 ?>

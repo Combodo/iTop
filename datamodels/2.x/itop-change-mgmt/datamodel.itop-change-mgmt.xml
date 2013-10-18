@@ -108,28 +108,28 @@
         <field id="related_request_list" xsi:type="AttributeLinkedSet">
           <linked_class>UserRequest</linked_class>
           <ext_key_to_me>parent_change_id</ext_key_to_me>
-          <edit_mode>none</edit_mode>
+          <edit_mode>add_remove</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
         <field id="related_incident_list" xsi:type="AttributeLinkedSet">
           <linked_class>Incident</linked_class>
           <ext_key_to_me>parent_change_id</ext_key_to_me>
-          <edit_mode>none</edit_mode>
+          <edit_mode>add_remove</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
         <field id="related_problems_list" xsi:type="AttributeLinkedSet">
           <linked_class>Problem</linked_class>
           <ext_key_to_me>related_change_id</ext_key_to_me>
-          <edit_mode>none</edit_mode>
+          <edit_mode>add_remove</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
         <field id="child_changes_list" xsi:type="AttributeLinkedSet">
           <linked_class>Change</linked_class>
           <ext_key_to_me>parent_id</ext_key_to_me>
-          <edit_mode>none</edit_mode>
+          <edit_mode>add_remove</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>

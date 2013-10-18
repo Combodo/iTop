@@ -1201,24 +1201,39 @@ abstract class DBObject
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{
 			if (!$oAttDef->IsLinkSet()) continue;
-
+			
+			$oOriginalSet = $this->m_aOrigValues[$sAttCode];
+			if ($oOriginalSet != null)
+			{
+				$aOriginalList = $oOriginalSet->ToArray();
+			}
+			else
+			{
+				$aOriginalList = array();
+			}
+			
 			$oLinks = $this->Get($sAttCode);
 			$oLinks->Rewind();
 			while ($oLinkedObject = $oLinks->Fetch())
 			{
-				$oLinkedObject->Set($oAttDef->GetExtKeyToMe(), $this->m_iKey);
+				if (!array_key_exists($oLinkedObject->GetKey(), $aOriginalList))
+				{
+					// New object added to the set, make it point properly
+					$oLinkedObject->Set($oAttDef->GetExtKeyToMe(), $this->m_iKey);
+				}
 				if ($oLinkedObject->IsModified())
 				{
+					// Objects can be modified because:
+					// 1) They've just been added into the set, so their ExtKey is modified
+					// 2) They are about to be removed from the set BUT NOT deleted, their ExtKey has been reset
 					$oLinkedObject->DBWrite();
 				}
 			}
 
 			// Delete the objects that were initialy present and disappeared from the list
 			// (if any)
-			$oOriginalSet = $this->m_aOrigValues[$sAttCode];
-			if ($oOriginalSet != null)
+			if (count($aOriginalList) > 0)
 			{
-				$aOriginalList = $oOriginalSet->ToArray();
 				$aNewSet = $oLinks->ToArray();
 				
 				foreach($aOriginalList as $iId => $oObject)

@@ -425,6 +425,7 @@ EOF;
 			'add_only' => 'LINKSET_EDITMODE_ADDONLY',
 			'actions' => 'LINKSET_EDITMODE_ACTIONS',
 			'in_place' => 'LINKSET_EDITMODE_INPLACE',
+			'add_remove' => 'LINKSET_EDITMODE_ADDREMOVE',
 		);
 	
 		if (!array_key_exists($sEditMode, $aXmlToPHP))

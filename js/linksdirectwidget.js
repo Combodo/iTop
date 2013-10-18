@@ -16,8 +16,13 @@ $(function()
 			labels: { 'delete': 'Delete',
 				  	  modify: 'Modify...' , 
 				  	  creation_title: 'Creation of a new object...' , 
-					  create: 'Create...'
-					}
+					  create: 'Create...',
+					  add: 'Add...',
+					  remove: 'Remove',
+					  selection_title: 'Objects selection'
+					},
+			buttons: ['create', 'delete'],
+			oWizardHelper: null
 		},
 	
 		// the constructor
@@ -31,34 +36,49 @@ $(function()
 			
 			this.datatable = this.element.find('table.listResults');
 			
-			this.deleteBtn = $('<button type="button">' + this.options.labels['delete'] + '</button>');
-			this.modifyBtn = $('<button type="button">' + this.options.labels['modify'] + '</button>');
-			this.createBtn = $('<button type="button">' + this.options.labels['create'] + '</button>');
+			var aButtonsTypes = ['delete', 'remove', 'modify', 'add', 'create'];
+			this.oButtons = {};
+			for(k in aButtonsTypes)
+			{
+				this.oButtons[aButtonsTypes[k]] =  $('<button type="button">' + this.options.labels[aButtonsTypes[k]] + '</button>');
+			}
 			this.indicator = $('<span></span>');
 			this.inputToBeCreated = $('<input type="hidden" name="'+this.options.input_name+'_tbc" value="{}">');
 			this.toBeCreated = {};
 			this.inputToBeDeleted = $('<input type="hidden" name="'+this.options.input_name+'_tbd" value="[]">');
 			this.toBeDeleted = [];
+			this.inputToBeAdded = $('<input type="hidden" name="'+this.options.input_name+'_tba" value="[]">');
+			this.toBeAdded = [];
+			this.inputToBeRemoved = $('<input type="hidden" name="'+this.options.input_name+'_tbr" value="[]">');
+			this.toBeRemoved = [];
 			
 			
 			this.element
 				.after(this.inputToBeCreated)
 				.after(this.inputToBeDeleted)				
+				.after(this.inputToBeAdded)				
+				.after(this.inputToBeRemoved)				
 			 	.after('<span style="float:left">&nbsp;&nbsp;&nbsp;<img src="../images/tv-item-last.gif">&nbsp;&nbsp;&nbsp;')
-			 	.after(this.indicator).after(this.createBtn).after('&nbsp;&nbsp;&nbsp')
-			 	.after(this.modifyBtn).after('&nbsp;&nbsp;&nbsp')
-			 	.after(this.deleteBtn);
+			 	.after(this.indicator);
+			for(k in this.options.buttons)
+			{
+				this.element.after(this.oButtons[this.options.buttons[k]]).after('&nbsp;&nbsp;&nbsp;');
+			}
 			
 			this.element.find('.selectList'+this.id).bind('change', function() { me._updateButtons(); });
-			this.deleteBtn.click(function() {
+			this.oButtons['delete'].click(function() {
 				$('.selectList'+me.id+':checked', me.element).each( function() { me._deleteRow($(this)); });
 			});
-			this.createBtn.click(function() {
+			this.oButtons['create'].click(function() {
 				me._createRow();
 			});
-			
-			this.modifyBtn.hide(); //hidden for now since it's not yet implemented
-			
+			this.oButtons['remove'].click(function() {
+				$('.selectList'+me.id+':checked', me.element).each( function() { me._removeRow($(this)); });
+			});
+			this.oButtons['add'].click(function() {
+				me._selectToAdd();
+			});
+						
 			this._updateButtons();
 		},
 	
@@ -94,18 +114,21 @@ $(function()
 			switch(oChecked.length)
 			{
 				case 0:
-					this.deleteBtn.attr('disabled', 'disabled');
-					this.modifyBtn.attr('disabled', 'disabled');
+					this.oButtons['delete'].attr('disabled', 'disabled');
+					this.oButtons['remove'].attr('disabled', 'disabled');
+					this.oButtons['modify'].attr('disabled', 'disabled');
 				break;
 			
 				case 1:
-					this.deleteBtn.removeAttr('disabled');
-					this.modifyBtn.removeAttr('disabled');
+					this.oButtons['delete'].removeAttr('disabled');
+					this.oButtons['remove'].removeAttr('disabled');
+					this.oButtons['modify'].removeAttr('disabled');
 				break;
 				
 				default:
-					this.deleteBtn.removeAttr('disabled');
-					this.modifyBtn.attr('disabled', 'disabled');
+					this.oButtons['delete'].removeAttr('disabled');
+					this.oButtons['remove'].removeAttr('disabled');
+					this.oButtons['modify'].attr('disabled', 'disabled');
 				break;
 			}
 		},
@@ -122,7 +145,7 @@ $(function()
 		},
 		_createRow: function()
 		{
-			this.createBtn.attr('disabled', 'disabled');
+			this.oButtons['create'].attr('disabled', 'disabled');
 			this.indicator.html('<img src="../images/indicator.gif">');
 			oParams = this.options.submit_parameters;
 			oParams.operation = 'createObject';
@@ -147,8 +170,182 @@ $(function()
 					close: function() { me._onDlgClose(); }
 				});
 				me.indicator.html('');
-				me.createBtn.removeAttr('disabled');
+				me.oButtons['create'].removeAttr('disabled');
 				me._updateDlgSize();
+			});
+		},
+		_selectToAdd: function()
+		{
+			this.oButtons['add'].attr('disabled', 'disabled');
+			this.indicator.html('<img src="../images/indicator.gif">');
+			oParams = this.options.submit_parameters;
+			oParams.operation = 'selectObjectsToAdd';
+			oParams['class'] = this.options.class_name;
+			oParams.real_class = '';
+			oParams.att_code = this.options.att_code;
+			oParams.iInputId = this.id;
+			if (this.options.oWizardHelper)
+			{
+				this.options.oWizardHelper.UpdateWizard();
+				oParams.json = this.options.oWizardHelper.ToJSON();
+			}
+			var me = this;
+			$.post(this.options.submit_to, oParams, function(data){
+				me.oDlg = $('<div></div>');
+				$('body').append(me.oDlg);
+				me.oDlg.html(data);
+				me.oDlg.find('form').removeAttr('onsubmit').bind('submit', function() { me._onSearchToAdd(); return false; } );
+				me.oDlg.find('button.cancel').unbind('click').click( function() { me.oDlg.dialog('close'); } );
+				me.oDlg.find('button.ok').unbind('click').click( function() { me._onDoAdd(); } );
+				
+				me.oDlg.dialog({
+					title: me.options.labels['selection_title'],
+					modal: true,
+					width: 'auto',
+					height: 'auto',
+					position: { my: "center", at: "center", of: window },
+					close: function() { me._onDlgClose(); }
+				});
+				me.indicator.html('');
+				me.oButtons['add'].removeAttr('disabled');
+				me._onSearchToAdd();
+				me._updateDlgSize();
+			});
+		},
+		_onSearchToAdd: function()
+		{
+			var oParams = {};
+			// Gather the parameters from the search form
+			$('#SearchFormToAdd_'+this.id+' :input').each( function() {
+					if (this.name != '')
+					{
+						var val = $(this).val(); // supports multiselect as well
+						if (val !== null)
+						{
+							oParams[this.name] = val;					
+						}
+					}
+			});
+			// Gather the already linked target objects
+			oParams.aAlreadyLinked = new Array();
+			$('#'+this.id+' .listResults td input:checkbox').each(function(){
+					iKey = parseInt(this.value, 10); // Numbers are in base 10
+					oParams.aAlreadyLinked.push(iKey);
+				}
+			);			oParams.operation = 'searchObjectsToAdd2';
+			oParams['class'] = this.options.class_name;
+			oParams.real_class = '';
+			oParams.att_code = this.options.att_code;
+			oParams.iInputId = this.id;
+			if (this.options.oWizardHelper)
+			{
+				this.options.oWizardHelper.UpdateWizard();
+				oParams.json = this.options.oWizardHelper.ToJSON();
+			}
+			var me = this;
+			$('#SearchResultsToAdd_'+me.id).block();
+			$.post(this.options.submit_to, oParams, function(data) {
+				
+				$('#SearchResultsToAdd_'+me.id).html(data);
+				$('#SearchResultsToAdd_'+me.id+' .listResults').tableHover();
+				$('#count_'+me.id).change(function() {
+					var c = this.value;
+					me._onUpdateDlgButtons(c);
+				});
+				$('#SearchResultsToAdd_'+me.id).unblock();
+			});
+			//alert("C'est parti mon kiki !");
+			return false; // Stay on the page, no submit
+		},
+		_getSelection: function(sName)
+		{
+			// Gather the parameters from the search form
+			var oMap = {};
+			var oContext = $('#SearchResultsToAdd_'+this.id);
+			var selectionMode = $(':input[name=selectionMode]', oContext);
+			if (selectionMode.length > 0)
+			{
+				// Paginated table retrieve the mode and the exceptions
+				var sMode = selectionMode.val();
+				oMap['selectionMode'] = sMode;
+				$('#fs_SearchFormToAdd_'+this.id+' :input').each(
+						function(i)
+						{
+							oMap[this.name] = this.value;
+						}
+					);
+				$(':input[name^=storedSelection]', oContext).each(function() {
+					if (oMap[this.name] == undefined)
+					{
+						oMap[this.name] = new Array();
+					}
+					oMap[this.name].push(this.value);
+				});
+				// Retrieve the 'filter' definition
+				var table = $('#ResultsToAdd_'+this.id).find('table.listResults')[0];
+				oMap['filter'] = table.config.filter;
+				oMap['extra_params'] = table.config.extra_params;
+			}
+			// Normal table, retrieve all the checked check-boxes
+			$(':checked[name^=selectObject]', oContext).each(
+				function(i)
+				{
+					if ( (this.name != '') && ((this.type != 'checkbox') || (this.checked)) ) 
+					{
+						arrayExpr = /\[\]$/;
+						if (arrayExpr.test(this.name))
+						{
+							// Array
+							if (oMap[this.name] == undefined)
+							{
+								oMap[this.name] = new Array();
+							}
+							oMap[this.name].push(this.value);
+						}
+						else
+						{
+							oMap[this.name] = this.value;
+						}						
+					}
+				}
+			);
+			return oMap;
+		},
+		_onUpdateDlgButtons: function(iCount)
+		{
+			if (iCount > 0)
+			{
+				this.oDlg.find('button.ok').removeAttr('disabled');
+			}
+			else
+			{
+				this.oDlg.find('button.ok').attr('disabled', 'disabled');				
+			}
+		},
+		_onDoAdd:function()
+		{
+			var oParams = this._getSelection('selectObject');
+			this.oDlg.dialog('close');
+			oParams.operation = 'doAddObjects2';
+			oParams['class'] = this.options.class_name;
+			oParams.att_code = this.options.att_code;
+			oParams.iInputId = this.id;
+			var me = this;
+			$.post(this.options.submit_to, oParams, function(data) {
+				var oInserted = $(data);
+				oInserted.find('input:checkbox').each(function() {
+					var iKey = parseInt($(this).val(), 10); // Number in base 10
+					me.toBeAdded.push(iKey);
+					me.toBeRemoved = me._ArrayRemove(me.toBeRemoved, iKey);
+					me.toBeDeleted = me._ArrayRemove(me.toBeDeleted, iKey);
+				});
+				me.inputToBeAdded.val(JSON.stringify(me.toBeAdded));
+				me.inputToBeRemoved.val(JSON.stringify(me.toBeRemoved));
+				me.inputToBeDeleted.val(JSON.stringify(me.toBeDeleted));
+				me.datatable.find('tbody').append(data);
+				me._updateTable();
+				me.indicator.html('');
+				me.oButtons['add'].removeAttr('disabled');
 			});
 		},
 		subclassSelected: function()
@@ -204,14 +401,14 @@ $(function()
 				oParams.tempId = nextIdx;
 				var me = this;
 
-				this.createBtn.attr('disabled', 'disabled');
+				this.oButtons['create'].attr('disabled', 'disabled');
 				this.indicator.html('<img src="../images/indicator.gif">');
 
 				$.post(this.options.submit_to, oParams, function(data){
 					me.datatable.find('tbody').append(data);
 					me._updateTable();
 					me.indicator.html('');
-					me.createBtn.removeAttr('disabled');
+					me.oButtons['create'].removeAttr('disabled');
 				});
 			}
 		},
@@ -227,13 +424,22 @@ $(function()
 			if (iObjKey > 0)
 			{
 				// Existing objet: add it to the "to be deleted" list
-				this.toBeDeleted.push(iObjKey);
-				this.inputToBeDeleted.val(JSON.stringify(this.toBeDeleted));
+				// if it has not just been added now
+				if (this._InArray(this.toBeAdded, iObjKey))
+				{
+					this.toBeAdded = this._ArrayRemove(this.toBeAdded, iObjKey);
+					this.inputToBeAdded.val(JSON.stringify(this.toBeAdded));					
+				}
+				else
+				{
+					this.toBeDeleted.push(iObjKey);					
+					this.inputToBeDeleted.val(JSON.stringify(this.toBeDeleted));
+				}
 			}
 			else
 			{
 				// Object to be created, just remove it from the "to be created" list
-				this.toBeCreated[-iObjKey] = undefined;
+				this.toBeCreated = this._ArrayRemove(this.toBeCreated, iObjKey);
 				this.inputToBeCreated.val(JSON.stringify(this.toBeCreated));
 			}
 			// Now remove the row from the table
@@ -241,6 +447,61 @@ $(function()
 			oRow.remove();
 			this._updateButtons();
 			this._updateTable();
+		},
+		_removeRow: function(oCheckbox)
+		{
+			var iObjKey = parseInt(oCheckbox.val(), 10); // Number in base 10
+			
+			if (iObjKey > 0)
+			{
+				// Existing objet: add it to the "to be removed" list
+				// if it has not just been added now
+				if (this._InArray(this.toBeAdded, iObjKey))
+				{
+					this.toBeAdded = this._ArrayRemove(this.toBeAdded, iObjKey);
+					this.inputToBeAdded.val(JSON.stringify(this.toBeAdded));					
+				}
+				else
+				{
+					this.toBeRemoved.push(iObjKey);					
+					this.inputToBeRemoved.val(JSON.stringify(this.toBeRemoved));
+				}
+			}
+			else
+			{
+				// Object to be created, just remove it from the "to be created" list
+				this.toBeCreated = this._ArrayRemove(this.toBeCreated, iObjKey);
+				this.inputToBeCreated.val(JSON.stringify(this.toBeCreated));
+			}
+			// Now remove the row from the table
+			oRow = oCheckbox.closest('tr');
+			oRow.remove();
+			this._updateButtons();
+			this._updateTable();
+		},
+		_InArray: function(aArrayToSearch, needle)
+		{
+			aRes = [];
+			for(k in aArrayToSearch)
+			{
+				if (aArrayToSearch[k] == needle)
+				{
+					return true;
+				}
+			}
+			return false;
+		},
+		_ArrayRemove: function(aArrayToFilter, needle)
+		{
+			aRes = [];
+			for(k in aArrayToFilter)
+			{
+				if (aArrayToFilter[k] != needle)
+				{
+					aRes.push(aArrayToFilter[k]);
+				}
+			}
+			return aRes;
 		}
 	});	
 });

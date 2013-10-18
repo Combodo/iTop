@@ -285,7 +285,68 @@ try
 		$aValues = utils::ReadParam('values', array(), false, 'raw_data');
 		$oPage->SetContentType('text/html');
 		$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
-		$oPage->add($oWidget->GetRow($oPage, $sRealClass, $aValues, $iTempId));
+		$oPage->add($oWidget->GetRow($oPage, $sRealClass, $aValues, -$iTempId));
+		break;
+		
+		// ui.linksdirectwidget
+		case 'selectObjectsToAdd':
+		$oPage->SetContentType('text/html');
+		$sClass = utils::ReadParam('class', '', false, 'class');
+		$sJson = utils::ReadParam('json', '', false, 'raw_data');
+		$oObj = null;
+		if ($sJson != '')
+		{
+			$oWizardHelper = WizardHelper::FromJSON($sJson);
+			$oObj = $oWizardHelper->GetTargetObject();
+		}
+		$sRealClass = utils::ReadParam('real_class', '', false, 'class');
+		$sAttCode = utils::ReadParam('att_code', '');
+		$iInputId = utils::ReadParam('iInputId', '');
+		$iCurrObjectId =  utils::ReadParam('iObjId', 0);
+		$oPage->SetContentType('text/html');
+		$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
+		$oWidget->GetObjectsSelectionDlg($oPage, $oObj);
+		break;
+			
+		// ui.linksdirectwidget
+		case 'searchObjectsToAdd2':
+		$oPage->SetContentType('text/html');
+		$sClass = utils::ReadParam('class', '', false, 'class');
+		$sRealClass = utils::ReadParam('real_class', '', false, 'class');
+		$sAttCode = utils::ReadParam('att_code', '');
+		$iInputId = utils::ReadParam('iInputId', '');
+		$aAlreadyLinked =  utils::ReadParam('aAlreadyLinked', array());
+		$sJson = utils::ReadParam('json', '', false, 'raw_data');
+		$oObj = null;
+		if ($sJson != '')
+		{
+			$oWizardHelper = WizardHelper::FromJSON($sJson);
+			$oObj = $oWizardHelper->GetTargetObject();
+		}
+		$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
+		$oWidget->SearchObjectsToAdd($oPage, $sRealClass, $aAlreadyLinked, $oObj);
+		break;
+		
+		// ui.linksdirectwidget
+		case 'doAddObjects2':
+		$oPage->SetContentType('text/html');
+		$oPage->SetContentType('text/html');
+		$sClass = utils::ReadParam('class', '', false, 'class');
+		$sRealClass = utils::ReadParam('real_class', '', false, 'class');
+		$sAttCode = utils::ReadParam('att_code', '');
+		$iInputId = utils::ReadParam('iInputId', '');
+		$iCurrObjectId =  utils::ReadParam('iObjId', 0);
+		$sFilter = utils::ReadParam('filter', '');
+		if ($sFilter != '')
+		{
+			$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
+		}
+		else
+		{
+			$oFullSetFilter = new DBObjectSearch($sRemoteClass);		
+		}
+		$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
+		$oWidget->DoAddObjects($oPage, $oFullSetFilter);	
 		break;
 		
 		////////////////////////////////////////////////////////////
@@ -456,6 +517,8 @@ try
 		$oWidget->DoAddObjects($oPage, $oFullSetFilter, $oObj);	
 		break;
 			
+		////////////////////////////////////////////////////////////
+		
 		case 'wizard_helper_preview':
 		$oPage->SetContentType('text/html');
 		$sJson = utils::ReadParam('json_obj', '', false, 'raw_data');

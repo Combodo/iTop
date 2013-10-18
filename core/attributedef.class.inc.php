@@ -92,6 +92,7 @@ define('LINKSET_EDITMODE_NONE', 0); // The linkset cannot be edited at all from 
 define('LINKSET_EDITMODE_ADDONLY', 1); // The only possible action is to open a new window to create a new object
 define('LINKSET_EDITMODE_ACTIONS', 2); // Show the usual 'Actions' popup menu
 define('LINKSET_EDITMODE_INPLACE', 3); // The "linked" objects can be created/modified/deleted in place
+define('LINKSET_EDITMODE_ADDREMOVE', 4); // The "linked" objects can be added/removed in place
 
 
 /**

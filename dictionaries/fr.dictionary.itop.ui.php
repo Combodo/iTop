@@ -1025,5 +1025,9 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:CSVImportCreated_items' => 'Créations: %1$d',
 	'UI:CSVImportModified_items' => 'Modifications: %1$d',
 	'UI:CSVImportUnchanged_items' => 'Inchangés: %1$d',
+
+	'UI:Button:Remove' => 'Enlever',
+	'UI:AddAnExisting_Class' => 'Ajouter des objets de type %1$s...',
+	'UI:SelectionOf_Class' => 'Sélection d\'objets de type %1$s',
 ));
 ?>

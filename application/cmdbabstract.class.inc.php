@@ -2541,7 +2541,8 @@ EOF
 					$this->Set($sAttCode, $iValue);
 				}
 			}
-			else if (($oAttDef->GetEditClass() == 'LinkedSet') && !$oAttDef->IsIndirect() && ($oAttDef->GetEditMode() == LINKSET_EDITMODE_INPLACE))
+			else if (($oAttDef->GetEditClass() == 'LinkedSet') && !$oAttDef->IsIndirect() &&
+			          (($oAttDef->GetEditMode() == LINKSET_EDITMODE_INPLACE) || ($oAttDef->GetEditMode() == LINKSET_EDITMODE_ADDREMOVE)))
 			{
 				$oLinkset = $this->Get($sAttCode);
 				$sLinkedClass = $oLinkset->GetClass();
@@ -2557,13 +2558,16 @@ EOF
 					}
 					else
 					{
-						$aObjSet[] = $oLink;
+						if (!array_key_exists('to_be_removed', $value) || !in_array($oLink->GetKey(), $value['to_be_removed']))
+						{
+							$aObjSet[] = $oLink;
+						}
 					}
 				}
 
 				if (array_key_exists('to_be_created', $value) && (count($value['to_be_created']) > 0))
 				{
-					// Now handle the lniks to be created
+					// Now handle the links to be created
 					foreach($value['to_be_created'] as $aData)
 					{
 						$sSubClass = $aData['class'];
@@ -2578,7 +2582,35 @@ EOF
 						}
 					}
 				}
-
+				if (array_key_exists('to_be_added', $value) && (count($value['to_be_added']) > 0))
+				{
+					// Now handle the links to be added by making the remote object point to self
+					foreach($value['to_be_added'] as $iObjKey)
+					{
+						$oLink = MetaModel::GetObject($sLinkedClass, $iObjKey, false);
+						if ($oLink)
+						{
+							$aObjSet[] = $oLink;
+							$bModified = true;
+						}
+					}
+				}
+				if (array_key_exists('to_be_removed', $value) && (count($value['to_be_removed']) > 0))
+				{
+					// Now handle the links to be removed by making the remote object point to nothing
+					// Keep them in the set (modified), DBWriteLinks will handle them
+					foreach($value['to_be_removed'] as $iObjKey)
+					{
+						$oLink = MetaModel::GetObject($sLinkedClass, $iObjKey, false);
+						if ($oLink)
+						{
+							$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
+							$oLink->Set($sExtKeyToMe, null);
+							$aObjSet[] = $oLink;
+							$bModified = true;
+						}
+					}
+				}
 				if ($bModified)
 				{
 					$oNewSet = DBObjectSet::FromArray($oLinkset->GetClass(), $aObjSet);
@@ -2617,7 +2649,8 @@ EOF
 			{
 				$value = array('fcontents' => utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents'));
 			}
-			else if (($oAttDef->GetEditClass() == 'LinkedSet') && !$oAttDef->IsIndirect() && ($oAttDef->GetEditMode() == LINKSET_EDITMODE_INPLACE))
+			else if (($oAttDef->GetEditClass() == 'LinkedSet') && !$oAttDef->IsIndirect() &&
+			         (($oAttDef->GetEditMode() == LINKSET_EDITMODE_INPLACE) || ($oAttDef->GetEditMode() == LINKSET_EDITMODE_ADDREMOVE)) )
 			{
 				$aRawToBeCreated = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbc", '{}', 'raw_data'), true);
 				$aToBeCreated = array();
@@ -2637,7 +2670,9 @@ EOF
 				}
 				
 				$value = array('to_be_created' => $aToBeCreated, 
-							   'to_be_deleted' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbd", '[]', 'raw_data'), true) );
+							   'to_be_deleted' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbd", '[]', 'raw_data'), true), 
+							   'to_be_added' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tba", '[]', 'raw_data'), true),
+							   'to_be_removed' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbr", '[]', 'raw_data'), true) );
 			}
 			else
 			{
