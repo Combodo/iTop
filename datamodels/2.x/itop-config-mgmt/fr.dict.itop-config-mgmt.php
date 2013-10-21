@@ -1414,8 +1414,49 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Subnet/Attribute:ip+' => '',
 	'Class:Subnet/Attribute:ip_mask' => 'Masque IP',
 	'Class:Subnet/Attribute:ip_mask+' => '',
+	'Class:Subnet/Attribute:vlans_list' => 'VLANs',
+	'Class:Subnet/Attribute:vlans_list+' => '',
 ));
 
+//
+// Class: VLAN
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:VLAN' => 'VLAN',
+	'Class:VLAN+' => '',
+	'Class:VLAN/Attribute:vlan_tag' => 'VLAN Tag',
+	'Class:VLAN/Attribute:vlan_tag+' => '',
+	'Class:VLAN/Attribute:description' => 'Description',
+	'Class:VLAN/Attribute:description+' => '',
+	'Class:VLAN/Attribute:org_id' => 'Organisation',
+	'Class:VLAN/Attribute:org_id+' => '',
+	'Class:VLAN/Attribute:org_name' => 'Nom organisation',
+	'Class:VLAN/Attribute:org_name+' => 'Common name',
+	'Class:VLAN/Attribute:subnets_list' => 'Subnets',
+	'Class:VLAN/Attribute:subnets_list+' => '',
+	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Interfaces réseaux physiques',
+	'Class:VLAN/Attribute:physicalinterfaces_list+' => '',
+));
+
+//
+// Class: lnkSubnetToVLAN
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkSubnetToVLAN' => 'Lien Subnet / VLAN',
+	'Class:lnkSubnetToVLAN+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Subnet',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_ip' => 'Subnet IP',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_ip+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_name' => 'Nom Subnet',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_name+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:vlan_id' => 'VLAN',
+	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
+	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '',
+));
 //
 // Class: NetworkInterface
 //
@@ -1461,6 +1502,29 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Nom matériel',
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
+	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLANs',
+	'Class:PhysicalInterface/Attribute:vlans_list+' => '',
+));
+
+//
+// Class: lnkPhysicalInterfaceToVLAN
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkPhysicalInterfaceToVLAN' => 'Lien Interface réseau / VLAN',
+	'Class:lnkPhysicalInterfaceToVLAN+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Interface réseau',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name' => 'Nom interface réseau',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id' => 'Equipement',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name' => 'Nom équipement',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id' => 'VLAN',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '',
 ));
 
 //
