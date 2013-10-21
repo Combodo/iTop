@@ -3311,7 +3311,7 @@ abstract class MetaModel
 			{
 				if(!self::IsValidAttCode($sClass, $sAttCode))
 				{
-					$aErrors[$sClass][] = "Unkown attribute code '".$sAttCode."' for the name definition";
+					$aErrors[$sClass][] = "Unknown attribute code '".$sAttCode."' for the name definition";
 					$aSugFix[$sClass][] = "Expecting a value in ".implode(", ", self::GetAttributesList($sClass));
 				}
 			}				
@@ -3320,7 +3320,7 @@ abstract class MetaModel
 			{
 				if (!empty($sReconcKeyAttCode) && !self::IsValidAttCode($sClass, $sReconcKeyAttCode))
 				{
-					$aErrors[$sClass][] = "Unkown attribute code '".$sReconcKeyAttCode."' in the list of reconciliation keys";
+					$aErrors[$sClass][] = "Unknown attribute code '".$sReconcKeyAttCode."' in the list of reconciliation keys";
 					$aSugFix[$sClass][] = "Expecting a value in ".implode(", ", self::GetAttributesList($sClass));
 				}
 			}
@@ -3335,7 +3335,7 @@ abstract class MetaModel
 				{
 					if (!self::IsValidClass($oAttDef->GetTargetClass()))
 					{
-						$aErrors[$sClass][] = "Unkown class '".$oAttDef->GetTargetClass()."' for the external key '$sAttCode'";
+						$aErrors[$sClass][] = "Unknown class '".$oAttDef->GetTargetClass()."' for the external key '$sAttCode'";
 						$aSugFix[$sClass][] = "Expecting a value in {".implode(", ", self::GetClasses())."}";
 					}
 				}
@@ -3344,7 +3344,7 @@ abstract class MetaModel
 					$sKeyAttCode = $oAttDef->GetKeyAttCode();
 					if (!self::IsValidAttCode($sClass, $sKeyAttCode) || !self::IsValidKeyAttCode($sClass, $sKeyAttCode))
 					{
-						$aErrors[$sClass][] = "Unkown key attribute code '".$sKeyAttCode."' for the external field $sAttCode";
+						$aErrors[$sClass][] = "Unknown key attribute code '".$sKeyAttCode."' for the external field $sAttCode";
 						$aSugFix[$sClass][] = "Expecting a value in {".implode(", ", self::GetKeysList($sClass))."}";
 					}
 					else
@@ -3354,10 +3354,14 @@ abstract class MetaModel
 						$sExtAttCode = $oAttDef->GetExtAttCode();
 						if (!self::IsValidAttCode($sTargetClass, $sExtAttCode))
 						{
-							$aErrors[$sClass][] = "Unkown key attribute code '".$sExtAttCode."' for the external field $sAttCode";
+							$aErrors[$sClass][] = "Unknown key attribute code '".$sExtAttCode."' for the external field $sAttCode";
 							$aSugFix[$sClass][] = "Expecting a value in {".implode(", ", self::GetKeysList($sTargetClass))."}";
 						}
 					}
+				}
+				else if ($oAttDef->IsLinkSet())
+				{
+					// Do nothing...
 				}
 				else // standard attributes
 				{
@@ -3391,7 +3395,7 @@ abstract class MetaModel
 					{
 						if (!self::IsValidAttCode($sClass, $sDependOnAttCode))
 						{
-							$aErrors[$sClass][] = "Unkown attribute code '".$sDependOnAttCode."' in the list of prerequisite attributes";
+							$aErrors[$sClass][] = "Unknown attribute code '".$sDependOnAttCode."' in the list of prerequisite attributes";
 							$aSugFix[$sClass][] = "Expecting a value in ".implode(", ", self::GetAttributesList($sClass));
 						}
 					}
@@ -3418,7 +3422,7 @@ abstract class MetaModel
 				// Lifecycle - check that the state attribute does exist as an attribute
 				if (!self::IsValidAttCode($sClass, $sStateAttCode))
 				{
-					$aErrors[$sClass][] = "Unkown attribute code '".$sStateAttCode."' for the state definition";
+					$aErrors[$sClass][] = "Unknown attribute code '".$sStateAttCode."' for the state definition";
 					$aSugFix[$sClass][] = "Expecting a value in {".implode(", ", self::GetAttributesList($sClass))."}";
 				}
 				else
@@ -3492,7 +3496,7 @@ abstract class MetaModel
 				{
 					if (!self::IsValidAttCode($sClass, $sMyAttCode))
 					{
-						$aErrors[$sClass][] = "Unkown attribute code '".$sMyAttCode."' from ZList '$sListCode'";
+						$aErrors[$sClass][] = "Unknown attribute code '".$sMyAttCode."' from ZList '$sListCode'";
 						$aSugFix[$sClass][] = "Expecting a value in {".implode(", ", self::GetAttributesList($sClass))."}";
 					}
 				}

@@ -243,7 +243,21 @@ class UILinksWidgetDirect
 	public function GetObjectsSelectionDlg($oPage, $oCurrentObj)
 	{
 		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
-		$oFilter = new DBObjectSearch($this->sLinkedClass);
+		
+		$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
+		$valuesDef = $oLinksetDef->GetValuesDef();				
+		if ($valuesDef === null)
+		{
+			$oFilter = new DBObjectSearch($this->sLinkedClass);
+		}
+		else
+		{
+			if (!$valuesDef instanceof ValueSetObjects)
+			{
+				throw new Exception('Error: only ValueSetObjects are supported for "allowed_values" in AttributeLinkedSet ('.$this->sClass.'/'.$this->sAttCode.').');
+			}
+			$oFilter = DBObjectSearch::FromOQL($valuesDef->GetFilterExpression());
+		}
 		if ($oCurrentObj != null)
 		{
 			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
@@ -276,7 +290,21 @@ class UILinksWidgetDirect
 		{
 			$sRemoteClass = $this->sLinkedClass;
 		}
-		$oFilter = new DBObjectSearch($sRemoteClass);
+		$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
+		$valuesDef = $oLinksetDef->GetValuesDef();				
+		if ($valuesDef === null)
+		{
+			$oFilter = new DBObjectSearch($this->sLinkedClass);
+		}
+		else
+		{
+			if (!$valuesDef instanceof ValueSetObjects)
+			{
+				throw new Exception('Error: only ValueSetObjects are supported for "allowed_values" in AttributeLinkedSet ('.$this->sClass.'/'.$this->sAttCode.').');
+			}
+			$oFilter = DBObjectSearch::FromOQL($valuesDef->GetFilterExpression());
+		}
+		
 		if (($oCurrentObj != null) && MetaModel::IsSameFamilyBranch($sRemoteClass, $this->sClass))
 		{
 			// Prevent linking to self if the linked object is of the same family
@@ -290,7 +318,12 @@ class UILinksWidgetDirect
 		{
 			$oFilter->AddCondition('id', $aAlreadyLinked, 'NOTIN');
 		}
-		$oSet = new CMDBObjectSet($oFilter);
+		$aArgs = array();
+		if ($oCurrentObj != null)
+		{
+			$aArgs = $oCurrentObj->ToArgs('this');
+		}
+		$oFilter->SetInternalParams($aArgs);
 		$oBlock = new DisplayBlock($oFilter, 'list', false);
 		$oBlock->Display($oP, "ResultsToAdd_{$this->sInputid}", array('menu' => false, 'cssCount'=> '#count_'.$this->sInputid , 'selection_mode' => true, 'table_id' => 'add_'.$this->sInputid)); // Don't display the 'Actions' menu on the results
 	}

@@ -723,13 +723,21 @@ EOF;
 			{
 				$aParameters['linked_class'] = $this->GetPropString($oField, 'linked_class', '');
 				$aParameters['ext_key_to_me'] = $this->GetPropString($oField, 'ext_key_to_me', '');
-				$aParameters['allowed_values'] = 'null';
 				$aParameters['count_min'] = $this->GetPropNumber($oField, 'count_min', 0);
 				$aParameters['count_max'] = $this->GetPropNumber($oField, 'count_max', 0);
 				$sEditMode = $oField->GetChildText('edit_mode');
 				if (!is_null($sEditMode))
 				{
 					$aParameters['edit_mode'] = $this->EditModeToPHP($sEditMode);
+				}
+				if ($sOql = $oField->GetChildText('filter'))
+				{
+					$sEscapedOql = self::QuoteForPHP($sOql);
+					$aParameters['allowed_values'] = "new ValueSetObjects($sEscapedOql)";
+				}
+				else
+				{
+					$aParameters['allowed_values'] = 'null';
 				}
 				$aParameters['depends_on'] = $sDependencies;
 			}
