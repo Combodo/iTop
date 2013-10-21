@@ -107,7 +107,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:Problem:Overview+' => 'Vue d\'ensemble',
 	'Menu:NewProblem' => 'Nouveau problème',
 	'Menu:NewProblem+' => 'Nouveau problème',
-	'Menu:SearchProblems' => 'Rechercer des problèmes',
+	'Menu:SearchProblems' => 'Rechercher des problèmes',
 	'Menu:SearchProblems+' => 'Rechercher des problèmes',
 	'Menu:Problem:Shortcuts' => 'Raccourcis',
 	'Menu:Problem:MyProblems' => 'Mes problèmes',
