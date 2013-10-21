@@ -346,6 +346,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Details+' => 'Détails',
 	'UI:SearchValue:Any' => '* Indifférent *',
 	'UI:SearchValue:NbSelected' => '# sélectionné(e)s',
+	'UI:SearchValue:CheckAll' => 'Cocher',
+	'UI:SearchValue:UncheckAll' => 'Décocher',
 	'UI:SearchValue:Mixed' => '* Plusieurs *',
 	'UI:SelectOne' => '-- choisir une valeur --',
 	'UI:Login:Welcome' => 'Bienvenue dans iTop!',

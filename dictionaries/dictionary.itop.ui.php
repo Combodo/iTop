@@ -471,6 +471,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:SearchValue:Any' => '* Any *',
 	'UI:SearchValue:Mixed' => '* mixed *',
 	'UI:SearchValue:NbSelected' => '# selected',
+	'UI:SearchValue:CheckAll' => 'Check All',
+	'UI:SearchValue:UncheckAll' => 'Uncheck All',
 	'UI:SelectOne' => '-- select one --',
 	'UI:Login:Welcome' => 'Welcome to iTop!',
 	'UI:Login:IncorrectLoginPassword' => 'Incorrect login/password, please try again.',
