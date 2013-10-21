@@ -1878,9 +1878,6 @@
             <item id="start_date">
               <rank>50</rank>
             </item>
-            <item id="end_date">
-              <rank>60</rank>
-            </item>
             <item id="resolution_date">
               <rank>70</rank>
             </item>
