@@ -98,7 +98,7 @@
           <display_style>list</display_style>
         </field>
         <field id="service_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :this->org_id]]></filter>
+          <filter><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :this->org_id AND s.status != 'obsolete']]></filter>
           <dependencies>
             <attribute id="org_id"/>
           </dependencies>
@@ -112,7 +112,7 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="servicesubcategory_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT ServiceSubcategory WHERE service_id = :this->service_id AND request_type = 'incident']]></filter>
+          <filter><![CDATA[SELECT ServiceSubcategory WHERE service_id = :this->service_id AND request_type = 'incident' AND status != 'obsolete']]></filter>
           <dependencies>
             <attribute id="service_id"/>
           </dependencies>
