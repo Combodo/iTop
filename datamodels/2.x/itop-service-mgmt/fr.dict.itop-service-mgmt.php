@@ -489,6 +489,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:CustomerContract+' => 'Contrats clients',
 	'Menu:ServiceElement' => 'Eléments de service',
 	'Menu:ServiceElement+' => 'Eléments de service',
+	'Menu:ServiceSubcategory' => 'Sous catégories de service',
+	'Menu:ServiceSubcategory+' => 'Sous catégories de service',
 	'Menu:Service' => 'Services',
 	'Menu:Service+' => 'Services',
 	'Menu:SLA' => 'SLAs',
