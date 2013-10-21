@@ -53,7 +53,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Ticket/Attribute:description+' => '',
 	'Class:Ticket/Attribute:start_date' => 'Date de début',
 	'Class:Ticket/Attribute:start_date+' => '',
-	'Class:Ticket/Attribute:end_date' => 'Date de résolution',
+	'Class:Ticket/Attribute:end_date' => 'Date de fin',
 	'Class:Ticket/Attribute:end_date+' => '',
 	'Class:Ticket/Attribute:last_update' => 'Dernière mise à jour',
 	'Class:Ticket/Attribute:last_update+' => '',
