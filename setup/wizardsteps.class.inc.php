@@ -1258,6 +1258,7 @@ EOF
 		foreach($aAlternatives as $index => $aChoice)
 		{
 			$sChoiceId = $sParentId.self::$SEP.$index;
+			$aScores[$sChoiceId] = 0;
 			if ($sChoiceName == null)
 			{
 				$sChoiceName = $sChoiceId;
@@ -1284,7 +1285,6 @@ EOF
 			foreach($aAlternatives as $index => $aChoice)
 			{
 				$sChoiceId = $sParentId.self::$SEP.$index;
-				$aScores[$sChoiceId] = 0;
 				if ($sChoiceName == null)
 				{
 					$sChoiceName = $sChoiceId;
