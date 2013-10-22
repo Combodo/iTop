@@ -176,7 +176,7 @@ class iTopWebPage extends NiceWebPage
 		// when their href was beginning by #. Starting with 1.9, a <base> tag in the page
 		// is taken into account and causes "local" tabs to be considered as Ajax
 		// unless their URL is equal to the URL of the page...
-		$('div[id^=tabbedContent] ul li a').each(function() {
+		$('div[id^=tabbedContent] > ul > li > a').each(function() {
 			var sHash = location.hash;
 			var sCleanLocation = location.href.toString().replace(sHash, '').replace(/#$/, '');
 	    	$(this).attr("href", sCleanLocation+$(this).attr("href"));

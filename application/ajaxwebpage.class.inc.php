@@ -132,7 +132,7 @@ class ajax_page extends WebPage
 			// unless their URL is equal to the URL of the page...
 			if ($('base').length > 0)
 			{
-				$('div[id^=tabbedContent] ul li a').each(function() {
+				$('div[id^=tabbedContent] > ul > li > a').each(function() {
 					var sHash = location.hash;
 					var sCleanLocation = location.href.toString().replace(sHash, '').replace(/#$/, '');
 		    		$(this).attr("href", sCleanLocation+$(this).attr("href"));
