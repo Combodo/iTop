@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -3212,8 +3212,10 @@ EOF
 			}
 			utils::RemoveTransaction($sTransactionId);
 		}
+		$iPreviousTimeLimit = ini_get('max_execution_time');
 		foreach($aSelectedObj as $iId)
 		{
+			set_time_limit(5);
 			$oObj = MetaModel::GetObject($sClass, $iId);
 			$aErrors = $oObj->UpdateObjectFromPostedForm('');
 			$bResult = (count($aErrors) == 0);
@@ -3244,6 +3246,7 @@ EOF
 				$oObj->DBUpdate();
 			}
 		}
+		set_time_limit($iPreviousTimeLimit);
 		$oP->Table($aHeaders, $aRows);
 		if ($bPreview)
 		{

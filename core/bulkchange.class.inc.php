@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -788,8 +788,10 @@ class BulkChange
 		{
 			$aVisited = array();
 		}
+		$iPreviousTimeLimit = ini_get('max_execution_time');
 		foreach($this->m_aData as $iRow => $aRowData)
 		{
+			set_time_limit(5);
 			if (isset($aResult[$iRow]["__STATUS__"]))
 			{
 				// An issue at the earlier steps - skip the rest
@@ -908,11 +910,13 @@ class BulkChange
 				$iObj = $oObj->GetKey();
 				if (!in_array($iObj, $aVisited))
 				{
+					set_time_limit(5);
 					$iRow++;
 					$this->UpdateMissingObject($aResult, $iRow, $oObj, $oChange);
 				}
 			}
 		}
+		set_time_limit($iPreviousTimeLimit);
 
 		// Fill in the blanks - the result matrix is expected to be 100% complete
 		//

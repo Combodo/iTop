@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Algorithm to delete object(s) and maintain data integrity
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2013 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -107,10 +107,15 @@ class DeletionPlan
 			}
 		}
 
+		// Getting and setting time limit are not symetric:
+		// www.php.net/manual/fr/function.set-time-limit.php#72305
+		$iPreviousTimeLimit = ini_get('max_execution_time');
+
 		foreach($this->m_aToUpdate as $sClass => $aToUpdate)
 		{
 			foreach($aToUpdate as $iId => $aData)
 			{
+				set_time_limit(5);
 				$this->m_iToUpdate++;
 
 				$oObject = $aData['to_reset'];
@@ -134,9 +139,9 @@ class DeletionPlan
 						$this->m_bFoundSecurityIssue = true;
 					}
 				}
-
 			}
 		}
+		set_time_limit($iPreviousTimeLimit);
 	}
 
 	public function GetIssues()

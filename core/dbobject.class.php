@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -1742,6 +1742,10 @@ abstract class DBObject
 		}
 		else
 		{
+			// Getting and setting time limit are not symetric:
+			// www.php.net/manual/fr/function.set-time-limit.php#72305
+			$iPreviousTimeLimit = ini_get('max_execution_time');
+
 			foreach ($oDeletionPlan->ListDeletes() as $sClass => $aToDelete)
 			{
 				foreach ($aToDelete as $iId => $aData)
@@ -1753,6 +1757,7 @@ abstract class DBObject
 					// As a temporary fix: delete only the objects that are still to be deleted...
 					if ($oToDelete->m_bIsInDB)
 					{
+						set_time_limit(5);
 						$oToDelete->DBDeleteSingleObject();
 					}
 				}
@@ -1766,10 +1771,13 @@ abstract class DBObject
 					foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
 					{
 						$oToUpdate->Set($sRemoteExtKey, $aData['values'][$sRemoteExtKey]);
+						set_time_limit(5);
 						$oToUpdate->DBUpdate();
 					}
 				}
 			}
+
+			set_time_limit($iPreviousTimeLimit);
 		}
 
 		return $oDeletionPlan;
@@ -2236,10 +2244,17 @@ abstract class DBObject
 		$oDeletionPlan->SetDeletionIssues($this, $this->m_aDeleteIssues, $this->m_bSecurityIssue);
 	
 		$aDependentObjects = $this->GetReferencingObjects(true /* allow all data */);
+
+		// Getting and setting time limit are not symetric:
+		// www.php.net/manual/fr/function.set-time-limit.php#72305
+		$iPreviousTimeLimit = ini_get('max_execution_time');
+
 		foreach ($aDependentObjects as $sRemoteClass => $aPotentialDeletes)
 		{
 			foreach ($aPotentialDeletes as $sRemoteExtKey => $aData)
 			{
+				set_time_limit(5);
+
 				$oAttDef = $aData['attribute'];
 				$iDeletePropagationOption = $oAttDef->GetDeletionPropagationOption();
 				$oDepSet = $aData['objects'];
@@ -2269,6 +2284,7 @@ abstract class DBObject
 				}
 			}
 		}
+		set_time_limit($iPreviousTimeLimit);
 	}
 
 	/**
