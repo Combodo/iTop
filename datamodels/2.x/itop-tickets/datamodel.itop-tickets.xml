@@ -113,6 +113,7 @@
           <sql>last_update</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
         </field>
         <field id="close_date" xsi:type="AttributeDateTime">
           <sql>close_date</sql>
