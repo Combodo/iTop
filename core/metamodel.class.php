@@ -2093,7 +2093,16 @@ abstract class MetaModel
 		{
 			if (self::IsValidObject($value))
 			{
-				$aScalarArgs = array_merge($aScalarArgs, $value->ToArgs($sArgName));
+				if (strpos($sArgName, '->object()') === false)
+				{
+					// Lazy syntax - develop the object contextual parameters
+					$aScalarArgs = array_merge($aScalarArgs, $value->ToArgsForQuery($sArgName));
+				}
+				else
+				{
+					// Leave as is
+					$aScalarArgs[$sArgName] = $value;
+				}
 			}
 			else
 			{
@@ -2103,7 +2112,6 @@ abstract class MetaModel
 		// Add standard contextual arguments
 		//
 		$aScalarArgs['current_contact_id'] = UserRights::GetContactId();
-		
 		return $aScalarArgs;
 	}
 

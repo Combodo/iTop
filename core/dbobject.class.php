@@ -936,7 +936,7 @@ abstract class DBObject
 		}
 		elseif ($oAtt->IsScalar())
 		{
-			$aValues = $oAtt->GetAllowedValues($this->ToArgs());
+			$aValues = $oAtt->GetAllowedValues($this->ToArgsForQuery());
 			if (count($aValues) > 0)
 			{
 				if (!array_key_exists($toCheck, $aValues))
@@ -1901,20 +1901,31 @@ abstract class DBObject
 		$this->Set($sAttCode, $oSW);
 	}	 	
 
-	// Make standard context arguments
-	// Note: Needs to be reviewed because it is currently called once per attribute when an object is written (CheckToWrite / CheckValue)
-	//       Several options here:
-	//       1) cache the result
-	//       2) set only the object ref and resolve the values iif needed from contextual templates and queries (easy for the queries, not for the templates)
+	/*
+	* Create query parameters (SELECT ... WHERE service = :this->service_id)
+	* to be used with the APIs DBObjectSearch/DBObjectSet
+	* 		
+	* Starting 2.0.2 the parameters are computed on demand, at the lowest level,
+	* in VariableExpression::Render()		
+	*/	
+	public function ToArgsForQuery($sArgName = 'this')
+	{
+		return array($sArgName.'->object()' => $this);
+	}
+
+	/*
+	* Create template placeholders
+	* An improvement could be to compute the values on demand
+	* (i.e. interpret the template to determine the placeholders)		
+	*/
 	public function ToArgs($sArgName = 'this')
 	{
 		if (is_null($this->m_aAsArgs))
 		{
 			$oKPI = new ExecutionKPI();
-			$aScalarArgs = array();
+			$aScalarArgs = $this->ToArgsForQuery($sArgName);
 			$aScalarArgs[$sArgName] = $this->GetKey();
 			$aScalarArgs[$sArgName.'->id'] = $this->GetKey();
-			$aScalarArgs[$sArgName.'->object()'] = $this;
 			$aScalarArgs[$sArgName.'->hyperlink()'] = $this->GetHyperlink('iTopStandardURLMaker', false);
 			$aScalarArgs[$sArgName.'->hyperlink(portal)'] = $this->GetHyperlink('PortalURLMaker', false);
 			$aScalarArgs[$sArgName.'->name()'] = $this->GetName();
@@ -1940,12 +1951,7 @@ abstract class DBObject
 				{
 					$sRemoteName = $oAttDef->IsIndirect() ? $oAttDef->GetExtKeyToRemote().'_friendlyname' : 'friendlyname';
 
-					// Since we want to limit the number of item, it is not feasible to simply rely on Get() to build the link set
-					// $oLinkSet = $this->Get($sAttCode);
-					$sLinkedClass = $oAttDef->GetLinkedClass();
-					$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
-					$oSearch = DBObjectSearch::FromOQL("SELECT $sLinkedClass WHERE $sExtKeyToMe = :this");
-					$oLinkSet = new DBObjectSet($oSearch, array(), array('this' => $this->GetKey()));
+					$oLinkSet = $this->Get($sAttCode);
 					$iLimit = MetaModel::GetConfig()->Get('max_linkset_output');
 					if ($iLimit > 0)
 					{
@@ -2165,7 +2171,7 @@ abstract class DBObject
 			$iDepth = $bPropagate ? $iMaxDepth - 1 : 0;
 
 			$oFlt = DBObjectSearch::FromOQL($sQuery);
-			$oObjSet = new DBObjectSet($oFlt, array(), $this->ToArgs());
+			$oObjSet = new DBObjectSet($oFlt, array(), $this->ToArgsForQuery());
 			while ($oObj = $oObjSet->Fetch())
 			{
 				$sRootClass = MetaModel::GetRootClass(get_class($oObj));

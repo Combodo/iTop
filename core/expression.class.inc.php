@@ -611,7 +611,22 @@ class VariableExpression extends UnaryExpression
 		{
 			return CMDBSource::Quote($aArgs[$this->m_sName]);
 		}
-		elseif ($bRetrofitParams)
+		elseif (($iPos = strpos($this->m_sName, '->')) !== false)
+		{
+			$sParamName = substr($this->m_sName, 0, $iPos);
+			if (array_key_exists($sParamName.'->object()', $aArgs))
+			{
+				$sAttCode = substr($this->m_sName, $iPos + 2);
+				$oObj = $aArgs[$sParamName.'->object()'];
+				if ($sAttCode == 'id')
+				{
+					return CMDBSource::Quote($oObj->GetKey());
+				}
+				return CMDBSource::Quote($oObj->Get($sAttCode));
+			}
+		}
+
+		if ($bRetrofitParams)
 		{
 			$aArgs[$this->m_sName] = null;
 			return ':'.$this->m_sName;

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -758,7 +758,16 @@ class DBObjectSet
 		{
 			if (MetaModel::IsValidObject($value))
 			{
-				$aScalarArgs = array_merge($aScalarArgs, $value->ToArgs($sArgName));
+				if (strpos($sArgName, '->object()') === false)
+				{
+					// Lazy syntax - develop the object contextual parameters
+					$aScalarArgs = array_merge($aScalarArgs, $value->ToArgsForQuery($sArgName));
+				}
+				else
+				{
+					// Leave as is
+					$aScalarArgs[$sArgName] = $value;
+				}
 			}
 			else
 			{
