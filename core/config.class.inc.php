@@ -659,6 +659,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'demo_mode' => array(
+			'type' => 'bool',
+			'description' => 'Set to true to prevent users from changing passwords/languages',
+			'default' => false,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)

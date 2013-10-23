@@ -52,6 +52,14 @@ function DisplayPreferences($oP)
   	$aSortedlang = array();
   	foreach($aLanguages as $sCode => $aLang)
   	{
+		if (MetaModel::GetConfig()->Get('demo_mode'))
+		{
+			if ($sCode != Dict::GetUserLanguage())
+			{
+				// Demo mode: only the current user language is listed in the available choices
+				continue;
+			}
+		}
   		$aSortedlang[$aLang['description']] = $sCode;
   	}
   	ksort($aSortedlang);
