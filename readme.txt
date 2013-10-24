@@ -96,7 +96,7 @@ Flash version 8 or higher is required.
      - data
      - env-production
      - log
-3) Point your web browser to the URL corresponding to the directory where the files
+4) Point your web browser to the URL corresponding to the directory where the files
    have been unzipped and follow the indications on the screen.
   
 If you wish to re-launch the installation process (for example in order to install

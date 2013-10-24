@@ -26,6 +26,7 @@
 
 require_once('metamodel.class.php');
 require_once('deletionplan.class.inc.php');
+require_once('mutex.class.inc.php');
 
 
 /**

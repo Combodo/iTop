@@ -148,7 +148,22 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods/>
+      <methods>
+        <method id="DBInsertNoReload">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[    public function DBInsertNoReload()
+    {
+      $oMutex = new iTopMutex('ticket_insert');
+      $oMutex->Lock();
+      $iKey = parent::DBInsertNoReload();
+      $oMutex->Unlock();
+      return $iKey;
+    }
+        ]]></code>
+        </method>
+      </methods>
       <presentation>
         <details>
           <items>
