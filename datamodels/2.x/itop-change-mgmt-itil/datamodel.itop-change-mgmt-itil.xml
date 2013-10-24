@@ -936,15 +936,9 @@
           <type>Overload-DBObject</type>
           <code><![CDATA[	public function ComputeValues()
 	{
-		$sCurrRef = $this->Get('ref');
-		if (strlen($sCurrRef) == 0)
+		if ($this->IsNew())
 		{
-			$iKey = $this->GetKey();
-			if ($iKey < 0)
-			{
-				// Object not yet in the Database
-				$iKey = MetaModel::GetNextKey(get_class($this));
-			}
+			$iKey = MetaModel::GetNextKey(get_class($this));
 			$sName = sprintf('C-%06d', $iKey);
 			$this->Set('ref', $sName);
 		}
