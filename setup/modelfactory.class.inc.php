@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -400,6 +400,14 @@ class ModelFactory
 						$oNode->SetAttribute('_created_in', $sModuleName);
 					}
 				}
+				$oNodeList = $oXPath->query('/itop_design/constants/constant');
+				foreach($oNodeList as $oNode)
+				{
+					if ($oNode->getAttribute('_created_in') == '')
+					{
+						$oNode->SetAttribute('_created_in', $sModuleName);
+					}
+				}
 				$oNodeList = $oXPath->query('/itop_design/menus/menu');
 				foreach($oNodeList as $oNode)
 				{
@@ -752,9 +760,26 @@ $sHeader
 EOF
 		;
 	}
+
+	/**
+	 * List all constants from the DOM, for a given module
+	 * @param string $sModuleName
+	 * @param bool $bFlattenLayers
+	 * @throws Exception
+	 */
+	public function ListConstants($sModuleName, $bFlattenLayers = true)
+	{
+		$sXPath = "/itop_design/constants/constant[@_created_in='$sModuleName']";
+		if ($bFlattenLayers)
+		{
+			$sXPath = "/itop_design/constants/constant[@_created_in='$sModuleName' and (not(@_alteration) or @_alteration!='removed')]";
+		}
+		return $this->GetNodes($sXPath);
+	}
+
 	/**
 	 * List all classes from the DOM, for a given module
-	 * @param string $sModuleNale
+	 * @param string $sModuleName
 	 * @param bool $bFlattenLayers
 	 * @throws Exception
 	 */
@@ -1503,7 +1528,7 @@ class MFElement extends DOMElement
 	}
 
 	/**
-	 * For debugging purposes - but this is currently buggy: the whole document is rendered
+	 * For debugging purposes
 	 */
 	public function Dump($bReturnRes = false)
 	{

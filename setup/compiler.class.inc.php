@@ -153,6 +153,15 @@ class MFCompiler
 
 			$sCompiledCode = '';
 
+			$oConstants = $this->oFactory->ListConstants($sModuleName);
+			if ($oConstants->length > 0)
+			{
+				foreach($oConstants as $oConstant)
+				{
+					$sCompiledCode .= $this->CompileConstant($oConstant)."\n";
+				}
+			}
+
 			$oClasses = $this->oFactory->ListClasses($sModuleName);
 			$iClassCount = $oClasses->length;
 			if ($iClassCount == 0)
@@ -544,6 +553,58 @@ EOF;
 			$sRet = '"'.$sEscaped.'"';
 		}
 		return $sRet;
+	}
+
+	protected function CompileConstant($oConstant)
+	{
+		$sName = $oConstant->getAttribute('id');
+		$sType = $oConstant->getAttribute('xsi:type');
+		$sText = $oConstant->GetText(null);
+
+		switch ($sType)
+		{
+		case 'integer':
+			if (is_null($sText))
+			{
+				// No data given => null
+				$sScalar = 'null';
+			}
+			else
+			{
+				$sScalar = (string)(int)$sText;
+			}
+			break;
+		
+		case 'float':
+			if (is_null($sText))
+			{
+				// No data given => null
+				$sScalar = 'null';
+			}
+			else
+			{
+				$sScalar = (string)(float)$sText;
+			}
+			break;
+		
+		case 'bool':
+			if (is_null($sText))
+			{
+				// No data given => null
+				$sScalar = 'null';
+			}
+			else
+			{
+				$sScalar = ($sText == 'true') ? 'true' : 'false';
+			}
+			break;
+
+		case 'string':
+		default:
+			$sScalar = $this->QuoteForPHP($sText, true);
+		}
+		$sPHPDefine = "define('$sName', $sScalar);";
+		return $sPHPDefine;
 	}
 
 	protected function CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir, $oP)
