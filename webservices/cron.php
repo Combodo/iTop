@@ -40,27 +40,13 @@ if (!file_exists($sConfigFile))
 require_once(APPROOT.'/application/startup.inc.php');
 
 
-function LogError($oP, $sErrorMessage, $sSeverity = 'ERROR')
-{
-	$bModeCLI = utils::IsModeCLI();
-
-	if ($bModeCLI)
-	{
-		error_log(ITOP_APPLICATION." cron.php $sSeverity: ".$sErrorMessage);
-	}
-	else
-	{
-		$oP->p("$sSeverity: $sMessage");
-	}
-	
-}
 
 function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter = 'parameter')
 {
 	$sValue = utils::ReadParam($sParam, null, true /* Allow CLI */, $sSanitizationFilter);
 	if (is_null($sValue))
 	{
-		LogError($oP, "Missing argument '$sParam'");
+		$oP->p("ERROR: Missing argument '$sParam'\n");
 		UsageAndExit($oP);
 	}
 	return trim($sValue);
@@ -73,7 +59,7 @@ function UsageAndExit($oP)
 	if ($bModeCLI)
 	{
 		$oP->p("USAGE:\n");
-		$oP->p("php cron.php --auth_user=<login> --auth_pwd=<password> [--param_file=<file>] [--verbose=1] [--status_only=1]\n");		
+		$oP->p("php cron.php --auth_user=<login> --auth_pwd=<password> [--param_file=<file>] [--verbose=1] [--debug=1] [--status_only=1]\n");		
 	}
 	else
 	{
@@ -83,7 +69,7 @@ function UsageAndExit($oP)
 	exit -2;
 }
 
-function RunTask($oP, $oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
+function RunTask($oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
 {
 	try
 	{
@@ -125,7 +111,7 @@ function RunTask($oP, $oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit
 	}
 	catch(Exception $e)
 	{
-		LogError($oP, 'Processing failed, the following exception occured: '.$e->getMessage());
+		$sMessage = 'Processing failed, the following exception occured: '.$e->getMessage();
 	}
 	return $sMessage;	
 }
@@ -213,7 +199,7 @@ function CronExec($oP, $aProcesses, $bVerbose)
 				{
 					$oP->p(">> === ".$oNow->format('Y-m-d H:i:s').sprintf(" Starting:%-'=40s", ' '.$sTaskClass.' '));
 				}
-				$sMessage = RunTask($oP, $oProcess, $aTasks[$sTaskClass], $oNow, $iTimeLimit);
+				$sMessage = RunTask($oProcess, $aTasks[$sTaskClass], $oNow, $iTimeLimit);
 				if ($bVerbose)
 				{
 					if(!empty($sMessage))
@@ -305,7 +291,7 @@ if (utils::IsModeCLI())
 	}
 	else
 	{
-		LogError($oP, "Access wrong credentials ('$sAuthUser')");
+		$oP->p("Access wrong credentials ('$sAuthUser')");
 		$oP->output();
 		exit -1;
 	}
@@ -319,18 +305,10 @@ else
 
 if (!UserRights::IsAdministrator())
 {
-	LogError($oP, 'Access restricted to administrators');
-	$oP->output();
+	$oP->p("Access restricted to administrators");
+	$oP->Output();
 	exit -1;
 }
-
-if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
-{
-	LogError($oP, 'A database maintenance is ongoing (read-only mode even for admins)', 'WARNING');
-	$oP->output();
-	exit -1;
-}
-
 
 // Enumerate classes implementing BackgroundProcess
 //
@@ -351,6 +329,7 @@ foreach(get_declared_classes() as $sPHPClass)
 
 
 $bVerbose = utils::ReadParam('verbose', false, true /* Allow CLI */);
+$bDebug = utils::ReadParam('debug', false, true /* Allow CLI */);
 
 if ($bVerbose)
 {
@@ -369,39 +348,44 @@ if (utils::ReadParam('status_only', false, true /* Allow CLI */))
 	exit(0);
 }
 
-// Compute the name of a lock for mysql
-// The name is server-wide
-$oConfig = utils::GetConfig();
-$sLockName = 'itop.cron.'.$oConfig->GetDBName().'_'.$oConfig->GetDBSubname();
-
+require_once(APPROOT.'core/mutex.class.inc.php');
 $oP->p("Starting: ".time().' ('.date('Y-m-d H:i:s').')');
 
-// CAUTION: using GET_LOCK anytime on the same connexion will RELEASE the lock
-// Todo: invoke GET_LOCK from a dedicated session (encapsulate that into a mutex class)
-$res = CMDBSource::QueryToScalar("SELECT GET_LOCK('$sLockName', 1)");// timeout = 1 second (see also IS_FREE_LOCK)
-if (is_null($res))
+try
 {
-	LogError($oP, "Failed to acquire the lock '$sLockName'");
-}
-elseif ($res === '1')
-{
-	// The current session holds the lock
-	try
+	$oConfig = utils::GetConfig();
+	$oMutex = new iTopMutex('cron.'.$oConfig->GetDBName().'_'.$oConfig->GetDBSubname());
+	if ($oMutex->TryLock())
 	{
+		// Note: testing this now in case some of the background processes forces the read-only mode for a while
+		//       in that case it is better to exit with the check on reentrance (mutex)
+		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
+		{
+			$oP->p("A database maintenance is ongoing (read-only mode even for admins).");
+			$oP->Output();
+			exit -1;
+		}
+
 		CronExec($oP, $aProcesses, $bVerbose);
+
+		$oMutex->Unlock();
 	}
-	catch(Exception $e)
+	else
 	{
-		LogError($oP, $e->getMessage()."\n".$e->getTraceAsString());
+		// Exit silently
+		$oP->p("Already running...");
 	}
-	$res = CMDBSource::QueryToScalar("SELECT RELEASE_LOCK('$sLockName')");
 }
-else
+catch (Exception $e)
 {
-	// Lock already held by another session
-	// Exit silently
-	$oP->p("Already running...");
+	$oP->p("ERROR: '".$e->getMessage()."'");
+	if ($bDebug)
+	{
+		// Might contain verb parameters such a password...
+		$oP->p($e->getTraceAsString());
+	}
 }
+
 $oP->p("Exiting: ".time().' ('.date('Y-m-d H:i:s').')');
 
 $oP->Output();
