@@ -1417,42 +1417,40 @@
 		$sHilightClass = '';
 		switch($this->GetState())
 		{
-			case 'new':
-			case 'approved':
-			$iEscalationDeadline  = $this->Get('tto_escalation_deadline');
-			if ($iEscalationDeadline != null)
-			{
-				// A SLA is running
-				$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
-				$ratio = ($iEscalationDeadline - time())/($iEscalationDeadline - $iStartDate);
-				if ($ratio <= 0)
-				{
-					$sHilightClass = HILIGHT_CLASS_CRITICAL;
-				}
-				else if ($ratio <= 0.25)
-				{
-					$sHilightClass = HILIGHT_CLASS_WARNING;
-				}
-			}
-			break;
-
-			case 'assigned':
-			$iEscalationDeadline = $this->Get('ttr_escalation_deadline');
-			if ($iEscalationDeadline != null)
-			{
-				// A SLA is running
-				$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
-				$ratio = ($iEscalationDeadline - time())/($iEscalationDeadline - $iStartDate);
-				if ($ratio <= 0)
-				{
-					$sHilightClass = HILIGHT_CLASS_CRITICAL;
-				}
-				else if ($ratio <= 0.25)
-				{
-					$sHilightClass = HILIGHT_CLASS_WARNING;
-				}
-			}
-			break;			
+            case 'new':
+            case 'approved':
+            $iEscalationDeadline  = $this->Get('tto_escalation_deadline');
+            if ($iEscalationDeadline != null)
+            {
+                  // A SLA is running
+                  $oTTOStopWatch = $this->Get('tto');
+                  if ($oTTOStopWatch->IsThresholdPassed(100))
+                  {
+                    $sHilightClass = HILIGHT_CLASS_CRITICAL;
+                  }
+                  else if ($oTTOStopWatch->IsThresholdPassed(75))
+                  {
+                    $sHilightClass = HILIGHT_CLASS_WARNING;
+                  }
+            }
+            break;
+      
+            case 'assigned':
+            $iEscalationDeadline = $this->Get('ttr_escalation_deadline');
+            if ($iEscalationDeadline != null)
+            {
+                // A SLA is running
+                $oTTRStopWatch = $this->Get('ttr');
+                if ($oTTRStopWatch->IsThresholdPassed(100))
+                {
+                  $sHilightClass = HILIGHT_CLASS_CRITICAL;
+                }
+                else if ($oTTRStopWatch->IsThresholdPassed(75))
+                {
+                  $sHilightClass = HILIGHT_CLASS_WARNING;
+                }
+            }
+            break;		
 			
 			case 'escalated_tto':
 			case 'escalated_ttr':
