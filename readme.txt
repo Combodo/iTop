@@ -1,4 +1,4 @@
-iTop - version 2.0.1 - 22-May-2013
+iTop - version 2.0.2-beta - 29-Oct-2013
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -6,16 +6,16 @@ Readme file
 2.1. Requirements
 2.2. Install procedure
 2.3. CRON
-2.4. Upgrading from 2.0.0
+2.4. Upgrading from 2.0.x
 2.5. Migration from 1.x versions
 3.   FEATURES
-3.1. Changes since 2.0.0
+3.1. Changes since 2.0.1
 3.2. Known limitations
 3.3. Known issues
 
 1. ABOUT THIS RELEASE
    ==================
-Thank you for downloading the 16th packaged release of iTop.
+Thank you for downloading the 17th packaged release of iTop.
 This version is a maintenance release, with quite a few bug fixes and a few enhancements.
 
 The documentation about iTop is available as a Wiki: http://www.combodo.com/wiki
@@ -25,24 +25,21 @@ The source code of iTop can be found on SourceForge: https://sourceforge.net/p/i
 
 1.1 What's new?
     ---------------------------
-This version brings a number of bug fixes since 2.0.0 and a few enhancements, namely:
+This version brings a number of bug fixes since 2.0.1 and a few enhancements, namely:
 
-- CRON jobs are now scheduled according to their "periodicity", the status can be displayed using the "--status_only=1" flag
+- Modelization of VLANs on Subnet and Physical Interfaces
+- Brand new User Portal look and feel (no change in the behavior)
+- Forgot your password? Regain access to iTop without bothering an administrator
+- Automatic refresh of the lists in the dashboards, and for the shortcuts
+- Scalability: better support of large volumes of tickets, and in general with large volumes of data
 
-- A new REST/JSON web service API is available (documented at: http://www.combodo.com/wiki/doku.php?id=advancedtopics:rest_json)
+... and about 50 bug fixes!
 
-Users' Portal:
-- New "Portal power user" profile. Combined with the "Portal user" profile, this additional profile gives access, from the portal, to ALL the tickets of the customer
-- Reopen and Close are done in a separate dialog box where the user will input requested data
-- On closed tickets, the user satisfaction and comments are displayed
-
-The Spanish and Japanese localizations have been reviewed and completed thanks to Miguel Turrubiates and Shoji Seki.
-
-... and about 80 bug fixes!
-
-1.2 Should I upgrade to 2.0.1?
+1.2 Should I upgrade to 2.0.2?
     -------------------------------
 Considering that iTop 2.0.1 is fully compatible with iTop 2.0.0 and the number of bugs fixed, we recommend you to upgrade.
+
+Be aware that the User Portal appearance has significantly been changed.
 
 1.3 Special Thanks To:
     -----------------
@@ -125,15 +122,15 @@ The output will look as shown below:
 | ExecAsyncTask             | active  | 2013-03-28 10:32:27 | 2013-03-28 10:32:29 |     51 |   0.032 s |
 +---------------------------+---------+---------------------+---------------------+--------+-----------+
 
-2.4. Upgrading from 2.0.0
+2.4. Upgrading from 2.0.x
      --------------------
-The version 2.0.1 if fully compatible with 2.0.0. Due to the new database table used for storing the
-definition of cron jobs, you must run the setup when upgrading.
+The version 2.0.2 if fully compatible with 2.0.0 and 2.0.1. Due to few database changes,
+you must run the setup when upgrading (whatever the original version).
 
 If the location of mysql binaries is in the "path", the setup proposes to perform a full backup
 of iTop (database + configuration file) using mysqldump.
 
-Here is how to upgrade, step by step, a 2.0.0 instance of iTop:
+Here is how to upgrade, step by step, a 2.0.x instance of iTop:
 
 1) Do NOT overwrite the files from the previous version. Expand the content of the "web" directory of
    the new package into a new directory on the web server.
@@ -191,134 +188,142 @@ That's it.
 3. FEATURES
    ========
 
-3.1. Changes since 2.0.0
+3.1. Changes since 2.0.1
      -------------------
 
-This maintenance version consists mostly in bug fixes. There are only two enhancements:
-- CRON jobs are now scheduled according to their "periodicity"
-- A new REST/JSON web service API is available (documented at: http://www.combodo.com/wiki/doku.php?id=advancedtopics:rest_json)
+This maintenance version consists in a mix of bug fixes and enhancements.
 
-Bug fixes from Trac:
+Enhancements
 --------------------
-#732 Change password: exit after building the page in case of wrong "old" password
-#729 Backup fails on Windows IIS
-#728 The ticket's title is now an (external) attribute of the link between a ticket and a CI.
-#727 Prevent a crash in cron.php
-#726 Missing string in german dictionary
-#725 Specify a port for mySQL server
-#722 Document preview disappeared since 2.0 (not in 1.x)
-#723 Cron locking is too restrictive
-#721 Unmet dependencies not detected
-#717 Prevent flicker of unstyled content: make the pane visible only when their content is ready... + watchdog in case of error.
-#715 Group by day -> month+day, group by month -> year+month, months are shown as a localized label
-#713 URL format reviewed:
-- more formats allowed by default
-- aligned between the wiki formatting and the URL attribute
-- configurable globally with 'url_validation_pattern'
-- can be defined at the attribute level with tag validation_pattern
-#711 Audit error drill-down not working when zero error (requires to bookmark the link when there are some errors, then use it later when there is no error anymore)
-#710 Query phrase book "fields list" is too small
-#708 Cosmetics for the english dictionary
-#707 Make sure that DOCTYPE is the first statement of the page
-#705 Typo in the english dictionary
-#704 Preserve the content of a "linkedset" when changing the initial state of the object being created !
-#703 HTML entities not escaped in history tab
-#702 Ignoring the class when looking up for a polymorphic ext key
-#701 Portal customization : enabled the calendar widget for input of a date+time type of attribute (it was only available for pure DATE attributes)
-#693 Portal user cannot choose services linked via customer contract
-#699 Change the path for incident icon
-#698 SeparatorPopupMenuItem was not working.
-#697 Properly export NULL dates in "spreadsheet" format.
-#696 The message "Please fill all mandatory fields" can now be localized (done in English, French and German).
-#694 A module can now add a menu under a menu from another module
-#692 Allow to set a default value for AttributeDuration (was forced to 0 anytime)
-#691 Notifications were not sent at all if some recicipients had an empty address
-#690 XML export broken
-#689 Logoff / Change Pwd buttons not visible in the portal if the window is too small: now allow line wrapping...
-#688 When the autocomplete is activated, and the allowed values depend on another value, then it is possible to set a wrong value
-#687 Label for attribute Person: "name" was always shown in English (Last Name)
-#684 CSV import / reconciliation using an enum does not take the translation into account
-#683 Allow installation on a DB which names begins with numbers
-#682 Order notifications (last first).
-#680 Setup failing to display the check report when DOM extension not enabled (php-xml not installed on redhat distributions)
-#679 Improved the reporting in case of an error while loading a module: 1) the list of already loaded modules is given, 2) the full path of the searched node is given
-#677 Cosmetics in the german localization (and a few other languages): first header of the config mgmt overview
-#675 Error when drilling down on graph/pie/table with group by on a field that can be null (this case has been excluded)
-#674 request_type:servicerequest changed into service_request - added the DB update to allow an upgrade
-#674 Fix bug  TTO / TTR computation for Service request
-#673 Could not create a physical interface with default value for the speed (+ definitive corruption of the DB for the device on which the interface is being created!)
-#670 Fix for an XSS vulnerability issue.
-#666 Add reconciliation key for Software
-#664 Could not login after upgrade of an iTop 1.x with a DB prefix
-#663 Fix for emptying a directory which contains broken symbolic links
-#661 and #662 Could not create a user request (or ?) as soon as the autocomplete feature gets active
-#660 Warning raised with ZendServer (with APC cache enabled) causing the setup to fail
-#659 Exception handling producing notices, hence causing confusion
-#657 JavaScript error when modifying UserLDAP object with Sync
-#638 Limit rack according to location for PDU
-#634 Detection of HTTPS not working with nginx (iTop always considering the current connection as being secure)
-#626 Fixed missing translation in dictionaries (Tickets: "relations", and Contacts overview / count)
-#383 support negative numbers in OQL
-     also added support for MySQL bitwise operators (&, |, ^, <<, >>) and hexadecimal numbers (up to 64-bit).
+- Modelization of VLANs on Subnet and Physical Interfaces
+- Brand new User Portal look and feel (no change in the behavior)
+- Forgot your password? Regain access to iTop without bothering an administrator
+- Automatic refresh of the lists in the dashboards, and for the shortcuts
 
+Usability
+--------------------
+Added buttons to check/uncheck all options at once in multi selects inside search forms.
+Better UI to manage direct linksets: added the ability to provide the "reverse query" by specifying a '<filter>' tag on AttributeLinkedSet.
 
-Setup/installation fixes
-------------------------
-Compiler: typo preventing from setting the property 'min_autocomplete_chars' on an external key
-Better error reporting when loading a module fails.
-Sort the modules before processing them for dependencies, in order to obtain a predictable result independent from the order of the modules in the file system... hopefully... (should fix Trac#679)
-Data model alternate options were not properly checked when upgrading (especially when selecting ITIL tickets)
-Enable support of databases which name either is a reserved word or contains non-alphanumeric characters (i.e. itop-production).
-Added support for creating symbolic links via the toolkit
-Added more debug info in the setup.log about the detection of the previously installed modules
-Enhancement: the expression of dependencies between modules can now use a complex boolean expression with a combination of "logical or" (||) and "logical and" (&&) instead of just a module name.
-New internal flag for generating the delta: needed => define if not exists
-Compiler: added the capability to redefine icons in xml
-New way to compile the dictionaries, allowing for incremental modification via XML, also allows the filtering of the languages to install
-Proper reset of APC cache upon compilation !
-Experimental support of icon uploads...
+Scalability
+--------------------
+No time limit for long operations like: Bulk delete, CSV import (interactive) and Bulk modify
+Speedup the display of lists of tickets (large volumes)
+Speedup the display of object details (long history track) 
+For technical details: see tickets #783, #233 and #466
+
+JSON/REST API (new version: 1.1)
+--------------------------------
+#767 Reconciliations must be made on strict criteria
+#758 Key given in clear in the returned objects (incremented the API verion to 1.1)
++ core/create and core/update, allow to reset an external key (0)
 
 Data model fixes
 ----------------
-Correction to display IP address field for:
-  Physical Device
-  Network Device
-  Server
-  Storage System
-  NAS
-  Tape Library
-  SAN switch
-Fix an issue that prevented the creation of Logical Interfaces
-Add reconciliation keys for SLT in order to allow import for SLT having the same name
-Remove wrong dependency to service_id on parent_request_id (for ITIL tickets)
-Fixed typos in the sample data for the service subcategories
-Make icons transparent...
-All the overloads of DisplayBareProperties must return an array (otherwise a warning is issued and field validation will not work as expected)
-The ticket class must be abstract!
-Add "Employee number" to the list of possible reconciliation keys for the class Person.
-Missing localized label for some problem management menus, when the Known Error Management module is installed without the Problem Management module
+Add VLANs on Subnet and Physical Interfaces
+#800 No need to track that last update has changed each time the ticket gets updated (common to all types of tickets)
+Prevent Support agent to create ticket for obsolete Services and Service sub categories
+Remove duplicate display of attribute service provider
+#792 Duplicate entries in the parent/child tickets when updating the case log and applying a stimulus (e.g. Close the WO) at the same time.
+#805 Make sure tickets are named on their id (concurrent access was not taken into account)
+#804 tickets' highlighting is now based on the computation performed by the stopwatch, in order to support non 24x7 working hours
+#754 Prevent UserRequests to have themselves set as Parent Request (and same for Incidents)
+Modify Sample data for Service categories to set them to status "production" by default
+#768 Avoid to select obsolete service and service sub categories in the portal
+#789 Add up to 12 Digit for a IPInterface
+#755 Prevent modification of CIs and Contacts list for UserRequest and Incidents
+#742 Allow portal user to modify a ticket when it is pending
+#739 Prevent Support Agents from settings a UserRequest to status "Pending"
+#751 Check that class Logical Volume exists when checking dependencies of a Server + Add attribute Subnet name on Subnet element
+Moved definition of the delivery model of an organization from itop-config-mgmt to itop-service-mgmt module.
+New pattern accepting the new global Top Level Domains (gTLD)
+Allow "Support Agents" to put an Incident in "Pending" state.
+#747: protects against the non-existence of the UserRequest class (which is not always installed).
 
 
 Miscellaneous fixes
 -------------------
-Preserve POSted parameters on the login web page (useful when the session expires)
-More readable edition for AttributeDuration
-Properly record history of Hierarchical Keys
-Fix for supporting the CSV export of big audit results.
-Fix for making iUIPageExtension usable !
-Fixed transparent background issues on the icons at the top-right of the main iTop page...
-Allow printing lists fully expanded without the "pager" navigation. Also try to completely hide the main menu on the left when printing.
-Properly serialize Emails with binary Attachments. Previously asynchronous emails with binary attachements were not working (they were queued but never sent).
-Fix for the "Notifications" tab: use the polymorphism to let each trigger determine which object is "In Scope" and thus can potentially have notifications related to it
-User rights:
-- for link classes, if no grant has been given explicitely, then check if one of the remote class has a grant (mix of compile-time and run-time changes)
-- fixed an issue: when looking for a grant into the hierarchy, the most explicit declaration (aka the deepest class) must be found first -> reorder the parent classes (new flag on MetaModel::EnumParentClasses
-Prevent logoff problems depending on PHP's session.cache_limiter setting...
-- Enhancement: support for "target" in PopupMenuItems.. which was ignored before
-Fix for reconciliation by id (Advanced Mode) -reintegrated from branch 2.0
-Silently discard unknown attributes in object templates (in case some modules have not been installed)
-Fix the auto-resize (fit) of the dialog's content when picking up a value using the magnifier button on an external key.
-Cleanup of the log output. No need for such verbosity now that we are approaching the release.
+Localization: French and german (#562 and #760) have been reviewed.
+Compiler 
+- added "constants"
+- added brand management
+- safe compilation (works in a temporary directory, on success then move it into env-production)
+- possibility to introduce a delta (not in a module) at compile time
+- allow to set the flags enable_class/enable_action etc. for a TemplateMenuNode (already taken into account at runtime)
+- added indexes
+Added a demo mode (config: demo_mode = true). In that mode, logins get read-only (even for admins)
+#785 Share the results of a query phrase (preview of the results in the query details page -iif it has NO parameter)
+#783 Added the placeholder $this->xxx_list$ for emailing (names separated by a new line, truncated to 100 items)
+Reviewed the instrumentation to help in tuning the performance (added a message in the admin banner when logging is active + measure the impact of object reloads)
+#771: better display for "edit in place".
+#795 Issue when using the actual (id) value of an external key as a reconciliation field
+#741 Complete localization of the CSV import confirmation dialog
+#790 Only report as installed the modules from the previous installation, not all previous installations.
+#738 Adding a space at the end of the mailto: URL to make it better recognized by mail clients (namely Outlook)
+#791 Protect against single quotes in localized strings...
+#777 mandatory fields that are external keys are now displayed with a star before the arrow: ExtkeyName*->ReconciliationField. In import the old syntax is supported as well.
+#769 Title of pies and charts are not consistent with the title of other dashlets
+#794 Could not export the field friendlyname in format 'spreadsheet'
+#793 provide the default '=' and '!=' operators for all types of Computed Fields.
+#773 Display boolean values from the stop watches as yes/no (localized, like enums) + took the opportunity to enable the export in spreadsheet format
+#762 Remove wrong fields approval_date approval_comments  for  a Routine change
+Retrofit the useful DoPostRequest function which was used (and defined) in several extensions.
+Added support of different (sub)classes of notifications in the "Notifications" tab on an object.
+Fix for properly computing the default choices in case of upgrade...
+#745 Default menu is not computed correctly (depends on the customizations made to the menu -> order of declaration)
+The login web page must NOT be cached by the web browsers
+#774 Sort the enums in the selection drop-down box (search forms) -initially based on the declaration order
+#782: preview (as a tooltip) for image attachments.
+#784 Data sync: display the attribute code (as well as its label in the user language)
+#781 Plain text dashlet shown on one single line
+#779 It is possible to record a wrong OQL in the phrase book, but then it cannot be edited anymore!
+Internal: failed authentication to return error 401 instead of prompting the end-user (to be exploited by the ajax calls)
+Logoff: display the message in the user language (used to be 100% english)
+Generalized the option tracking_level to any kind of attributes. Defaults to 'all', can be set to 'none' to disable the change tracking on a single attribute (LinkSets still have the same allowed values: none, list, details and all).
+Protect the deletion of objects with very long friendly names
+Cosmetics on the login web page
+Allow for comparisons of the module's versions in the expression of dependencies. For example one can now say "itop-config-mgmt/>=2.0.2" for a dependency.
+Internal- ModelFactory: needed / define_if_not_exists were not equivalent
+#763 Could not use "configure this list" once a stop watch has been added to the list, which is a pitty because such attributes are not aimed at being displayed in lists!
+Fixed bug (wrong DB charset after invoking AnalyzeInstallation!)
+Load structural data for all selected modules indepently of:
+- the load of sample data
+- first install or upgrade
+Management of environments: the banner must be injected by the mean of iPageUIExtension
+Module installation information always loaded within the meta model
+Make the logo transparent (background removal)
+CRON:
+- report that CRON is already running BEFORE saying that the DB is read-only (re-entrance during an operation done in the background)
+- protection against re-entrance now relies on a bullet-proof mutex. Also added the option 'debug=1' to output the call stack in case an exception occurs (not always because of passwords being shown in the call stack)
+- reschedule at startup IIF the task is inactive or it is planned in the future
+- exit gracefully if iTop not yet installed
+- handle tasks scheduled at given date/time (as opposed to a task being executed more or less continuously).
+New mechanism: a module page can be accessed by the mean of a canonical URL (utils::GetAbsoluteUrlModulePage to build the proper URL)
+#752 Notifications sent several times (or too late) when MySQL is hosted on another server
+Setup: Source dir recorded with a trailing backslash under windows
+Restored the original behavior of itop-sla-computation (if present, then it becomes the default working hour computer)
+Improved the error reporting for the backup (in case mysqldump fails with a single error, then the error is displayed directly)
+New verb "AfterDatabaseSetup" for performing installation tasks after the completion of the DB creation (+predefined objects & admin account)
+#746 allow adding an AttributeBlob with is_null_allowed = true to an existing Data Model. (same issue fixed also for AttributeOneWayPassword).
+Properly handle nested forms in "PropertySheet" and "read-only" mode
+Bug fix: validation was broken when the first fields were not Ok.
+Export the content of the CaseLogs in "spreadsheet" format, with some tricks to preserve the formatting in Excel.
+Forms enhancements:
+- The current value of a field is automatically excluded from the forbidden values
+- Several levels of subforms can be nested, even when displaying as a property sheet
+- Sortables fields re-implemented based on a widget.
+- Specify forbidden values + message to explain the issue(toolip) (fiwed a bug on the previous implementation, causing a javascript error, hence a stopper regression due to missing event binds)
+- Dialog: specify an introduction message
+Protect against non existing reconciliation keys...
+Completed the move of dashboards from separate definition files (e.g. overview.xml) into data model files (8 dashboards were concerned on the model 2.x, 6 for the model 1.x)
+Re-position the popup menu each time the button is clicked, in case the button was moved...
+Make sure that tabs (and tab panels) are properly identified
+Removed the use of the obsolete $.browser property, since we don't care about IE 7 anyway.
+Upgrade to jQuery 1.10 and jQuery UI 1.10
+OQL normalization and dashlets have been made independent from the class MetaModel (adjusted the API)
+Added OQL normalization unit tests (to be run on a standard installation)
+#736 Could not delete objects unless you are authorized to bulk delete
+#734 Fixed a regression on reconciliation keys during CSV import.
 
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
@@ -327,7 +332,7 @@ Cleanup of the log output. No need for such verbosity now that we are approachin
 
 Suhosin can interfere with iTop. More information can be found here: http://www.combodo.com/wiki/doku.php?id=admin:suhosin
 Internet Explorer 6 is not supported (neither IE7 nor IE8 in compatibility mode)
-Tested with IE8 and IE9, Firefox 3.6 up to Firefox 16 and Chrome. Be aware that there are certain limitations when using IE8 in "security mode" (when running IE on a Windows 2008 Server for example)
+Tested with IE8 and IE9, Firefox 3.6 up to Firefox 24 and Chrome. Be aware that there are certain limitations when using IE8 in "security mode" (when running IE on a Windows 2008 Server for example)
 
 
 3.3. Known issues (https://sourceforge.net/apps/trac/itop/report/3)
@@ -345,9 +350,7 @@ Tested with IE8 and IE9, Firefox 3.6 up to Firefox 16 and Chrome. Be aware that 
 #381 	Deletion of dependencies could fail in a multi-org environment
 #241 	"status" is a free-text field when configuring a Trigger
 #358 	Multi-column queries sometimes returning an empty set
-#383 	OQL: negative integers not allowed (workaround: 0 - 1)
 #399 	Copy/paste from iTop's CaseLog looses tabs
 #343 	CKEditor (HTML Editor) not compatible with direct object creation on ExtKeys
 #350 	Object edition form: validation does not tell which field has a problem
-#317 	Edition of a Document - opens the second tab
-#730    Leaving temporary files when performing a backup of the data during installation
+#730  Leaving temporary files when performing a backup of the data during installation
