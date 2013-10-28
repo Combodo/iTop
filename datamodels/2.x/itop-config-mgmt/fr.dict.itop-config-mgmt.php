@@ -178,6 +178,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Document/Attribute:documenttype_id+' => '',
 	'Class:Document/Attribute:documenttype_name' => 'Nom type de document',
 	'Class:Document/Attribute:documenttype_name+' => '',
+	'Class:Document/Attribute:version' => 'Version',
+	'Class:Document/Attribute:version+' => '',
 	'Class:Document/Attribute:description' => 'Description',
 	'Class:Document/Attribute:description+' => '',
 	'Class:Document/Attribute:status' => 'Statut',

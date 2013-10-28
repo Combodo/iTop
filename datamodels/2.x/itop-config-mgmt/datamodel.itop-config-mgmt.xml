@@ -822,6 +822,11 @@
           <extkey_attcode>documenttype_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="version" xsi:type="AttributeString">
+          <sql>version</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
           <default_value/>
@@ -875,6 +880,9 @@
             </item>
             <item id="status">
               <rank>30</rank>
+            </item>
+            <item id="version">
+              <rank>35</rank>
             </item>
             <item id="documenttype_id">
               <rank>40</rank>
@@ -994,6 +1002,9 @@
             <item id="status">
               <rank>30</rank>
             </item>
+            <item id="version">
+              <rank>35</rank>
+            </item>
             <item id="documenttype_id">
               <rank>40</rank>
             </item>
@@ -1095,6 +1106,9 @@
             </item>
             <item id="status">
               <rank>30</rank>
+            </item>
+            <item id="version">
+              <rank>35</rank>
             </item>
             <item id="documenttype_id">
               <rank>40</rank>
@@ -1198,6 +1212,9 @@
             </item>
             <item id="status">
               <rank>30</rank>
+            </item>
+            <item id="version">
+              <rank>35</rank>
             </item>
             <item id="description">
               <rank>40</rank>

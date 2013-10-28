@@ -233,6 +233,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Document/Attribute:documenttype_id+' => '',
 	'Class:Document/Attribute:documenttype_name' => 'Document type name',
 	'Class:Document/Attribute:documenttype_name+' => '',
+	'Class:Document/Attribute:version' => 'Version',
+	'Class:Document/Attribute:version+' => '',
 	'Class:Document/Attribute:description' => 'Description',
 	'Class:Document/Attribute:description+' => '',
 	'Class:Document/Attribute:status' => 'Status',
