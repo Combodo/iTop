@@ -7,15 +7,16 @@
     <constant id="PORTAL_VALIDATE_SERVICECATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :org_id AND s.id = :id AND s.status != 'obsolete']]></constant>
     <constant id="PORTAL_VALIDATE_SERVICESUBCATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT ServiceSubcategory AS Sub JOIN Service AS Svc ON Sub.service_id = Svc.id WHERE Sub.id=:id AND Sub.status != 'obsolete']]></constant>
     <constant id="PORTAL_ALL_PARAMS" xsi:type="string" _delta="define"><![CDATA[from_service_id,org_id,caller_id,service_id,servicesubcategory_id,title,description,impact,emergency,moreinfo,caller_id,start_date,end_date,duration,impact_duration]]></constant>
-    <constant id="PORTAL_ATTCODE_LOG" xsi:type="string" _delta="define"><![CDATA[public_log]]></constant>
-    <constant id="PORTAL_ATTCODE_COMMENT" xsi:type="string" _delta="define"><![CDATA[user_comment]]></constant>
-    <constant id="PORTAL_REQUEST_FORM_ATTRIBUTES" xsi:type="string" _delta="define"><![CDATA[title,description,impact,urgency,public_log]]></constant>
-    <constant id="PORTAL_ATTCODE_TYPE" xsi:type="string" _delta="define"><![CDATA[request_type]]></constant>
     <constant id="PORTAL_SET_TYPE_FROM" xsi:type="string" _delta="define"><![CDATA[request_type]]></constant>
-    <constant id="PORTAL_TICKETS_LIST_ZLIST" xsi:type="string" _delta="define"><![CDATA[finalclass,title,start_date,status,servicesubcategory_id,priority,caller_id]]></constant>
+    <constant id="PORTAL_TYPE_TO_CLASS" xsi:type="string" _delta="define"><![CDATA[]]></constant>
+    <constant id="PORTAL_USERREQUEST_PUBLIC_LOG" xsi:type="string" _delta="define"><![CDATA[public_log]]></constant>
+    <constant id="PORTAL_USERREQUEST_USER_COMMENT" xsi:type="string" _delta="define"><![CDATA[user_comment]]></constant>
+    <constant id="PORTAL_USERREQUEST_FORM_ATTRIBUTES" xsi:type="string" _delta="define"><![CDATA[title,description,impact,urgency,public_log]]></constant>
+    <constant id="PORTAL_USERREQUEST_TYPE" xsi:type="string" _delta="define"><![CDATA[request_type]]></constant>
+    <constant id="PORTAL_USERREQUEST_LIST_ZLIST" xsi:type="string" _delta="define"><![CDATA[finalclass,title,start_date,status,servicesubcategory_id,priority,caller_id]]></constant>
     <constant id="PORTAL_TICKETS_SEARCH_CRITERIA" xsi:type="string" _delta="define"><![CDATA[ref,start_date,close_date,service_id,caller_id]]></constant>
-    <constant id="PORTAL_TICKETS_CLOSED_ZLIST" xsi:type="string" _delta="define"><![CDATA[title,start_date,close_date,servicesubcategory_id]]></constant>
-    <constant id="PORTAL_TICKET_DETAILS_ZLIST" xsi:type="string" _delta="define"><![CDATA[{"col:left":["ref","caller_id","servicesubcategory_id","title","description","solution"],"col:right":["status","priority","start_date","resolution_date","last_update","agent_id"]}]]></constant>
+    <constant id="PORTAL_USERREQUEST_CLOSED_ZLIST" xsi:type="string" _delta="define"><![CDATA[title,start_date,close_date,servicesubcategory_id]]></constant>
+    <constant id="PORTAL_USERREQUEST_DETAILS_ZLIST" xsi:type="string" _delta="define"><![CDATA[{"col:left":["ref","caller_id","servicesubcategory_id","title","description","solution"],"col:right":["status","priority","start_date","resolution_date","last_update","agent_id"]}]]></constant>
   </constants>
   <classes>
     <class id="UserRequest" _delta="define">

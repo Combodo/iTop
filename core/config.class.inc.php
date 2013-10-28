@@ -667,6 +667,15 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'portal_tickets' => array(
+			'type' => 'string',
+			'description' => 'CSV list of classes supported in the portal',
+			// examples... not used
+			'default' => 'UserRequest',
+			'value' => 'UserRequest',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)

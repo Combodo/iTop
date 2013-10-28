@@ -27,6 +27,91 @@ require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/nicewebpage.class.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 
+
+/**
+ * Helper to determine the supported types of tickets
+ */
+function GetTicketClasses()
+{
+	$aClasses = array();
+	foreach (explode(',', MetaModel::GetConfig()->Get('portal_tickets')) as $sRawClass)
+	{
+		$sRawClass = trim($sRawClass);
+		if (!MetaModel::IsValidClass($sRawClass))
+		{
+			throw new Exception("Class '$sRawClass' is not a valid class, please review your configuration (portal_tickets)");
+		}
+		if (!MetaModel::IsParentClass('Ticket', $sRawClass))
+		{
+			throw new Exception("Class '$sRawClass' does not inherit from Ticket, please review your configuration (portal_tickets)");
+		}
+		$aClasses[] = $sRawClass;
+	}
+	return $aClasses;
+} 
+
+/**
+ * Helper to get the relevant constant 
+ */
+function GetConstant($sClass, $sName)
+{
+	$sConstName = 'PORTAL_'.strtoupper($sClass).'_'.$sName;
+	if (defined($sConstName))
+	{
+		return constant($sConstName);
+	}
+	else
+	{
+		throw new Exception("Missing portal constant '$sConstName'");
+	}
+}
+
+/**
+ * Helper to determine the ticket class given the service subcategory
+ */
+function ComputeClass($iSubSvcId)
+{
+	$aClasses = GetTicketClasses();
+	if ((PORTAL_SET_TYPE_FROM == '') || (PORTAL_TYPE_TO_CLASS == ''))
+	{
+		// return the first enabled class
+		$sClass = reset($aClasses);
+	}
+	else
+	{
+		$oServiceSubcat = MetaModel::GetObject('ServiceSubcategory', $iSubSvcId, true, true /* allow all data*/);
+		$sTicketType = $oServiceSubcat->Get(PORTAL_SET_TYPE_FROM);
+		$aMapping = json_decode(PORTAL_TYPE_TO_CLASS, true);
+		if (!array_key_exists($sTicketType, $aMapping))
+		{
+			throw new Exception("Ticket type '$sTicketType' not found in the mapping (".implode(', ', array_keys($aMapping))."). Please contact your administrator.");
+		}
+		$sClass = $aMapping[$sTicketType];
+		if (!in_array($sClass, $aClasses))
+		{
+			throw new Exception("Service subcategory #$iSubSvcId has a ticket type ($sClass) that is not known by the portal, please contact your administrator.");
+		}
+	}
+	return $sClass;
+}
+
+/**
+ * Helper to limit the service categories depending on the current settings
+ */
+function RestrictSubcategories(&$oSearch)
+{
+	$aMapping = json_decode(PORTAL_TYPE_TO_CLASS, true);
+	foreach($aMapping as $sTicketType => $sClass)
+	{
+		if (!in_array($sClass, GetTicketClasses()))
+		{
+			// Exclude this value for the result set
+			$oSearch->AddCondition(PORTAL_SET_TYPE_FROM, $sTicketType, '!=');
+		}
+	}
+}
+ 
+
 /**
  * Displays the portal main menu
  * @param WebPage $oP The current web page
@@ -147,6 +232,7 @@ function SelectServiceSubCategory($oP, $oUserOrg, $iSvcId = null)
 	$iDefaultWizNext = 2;
 
 	$oSearch = DBObjectSearch::FromOQL(PORTAL_SERVICE_SUBCATEGORY_QUERY);
+	RestrictSubcategories($oSearch);
 	$oSearch->AllowAllData(); // In case the user has the rights on his org only
 	$oSet = new CMDBObjectSet($oSearch, array(), array('svc_id' => $iSvcId, 'org_id' => $oUserOrg->GetKey()));
 	if ($oSet->Count() == 1)
@@ -225,7 +311,17 @@ function SelectRequestTemplate($oP, $oUserOrg, $iSvcId = null, $iSubSvcId = null
 	$iDefaultTemplate = isset($aParameters['template_id']) ? $aParameters['template_id'] : 0;
 	if (MetaModel::IsValidClass('Template'))
 	{
-		$oSearch = DBObjectSearch::FromOQL(REQUEST_TEMPLATE_QUERY);
+		$sClass = ComputeClass($aParameters['servicesubcategory_id']);
+		try
+		{
+			$sOql = GetConstant($sClass, 'TEMPLATE_QUERY');
+		}
+		catch(Exception $e)
+		{
+			// Backward compatibility
+			$sOql = REQUEST_TEMPLATE_QUERY;
+		}
+		$oSearch = DBObjectSearch::FromOQL($sOql);
 		$oSearch->AllowAllData();
 		$oSet = new CMDBObjectSet($oSearch, array(), array(
 			'service_id' => $aParameters['service_id'],
@@ -293,7 +389,7 @@ function SelectRequestTemplate($oP, $oUserOrg, $iSvcId = null, $iSubSvcId = null
 }
 
 /**
- * Displays the form for the final step of the UserRequest creation
+ * Displays the form for the final step of the ticket creation
  * @param WebPage $oP The current web page for the form output
  * @param Organization $oUserOrg The organization of the current user
  * @param integer $iSvcId The identifier of the service (fall through when there is only one service)
@@ -303,12 +399,6 @@ function SelectRequestTemplate($oP, $oUserOrg, $iSvcId = null, $iSubSvcId = null
  */
 function RequestCreationForm($oP, $oUserOrg, $iSvcId = null, $iSubSvcId = null, $iTemplateId = null)
 {
-		$oP->add_script(
-<<<EOF
-		// Create the object once at the beginning of the page...
-		var oWizardHelper = new WizardHelper('UserRequest', '');
-EOF
-);
 	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS.',template_id');
 	if ($iSvcId != null)
 	{
@@ -323,9 +413,6 @@ EOF
 		$aParameters['template_id'] = $iTemplateId;
 	}
 	
-	// Example: $aList = array('title', 'description', 'impact', 'emergency');
-	$aList = explode(',', PORTAL_REQUEST_FORM_ATTRIBUTES);
-
 	$sDescription = '';
 	if (isset($aParameters['template_id']) && ($aParameters['template_id'] != 0))
 	{
@@ -352,16 +439,20 @@ EOF
 	$oServiceSubCategory = MetaModel::GetObject('ServiceSubcategory', $aParameters['servicesubcategory_id'], false, true /* allow all data*/);
 	if (is_object($oServiceCategory) && is_object($oServiceSubCategory))
 	{
-		$oRequest = new UserRequest();
+		$sClass = ComputeClass($oServiceSubCategory->GetKey());
+		$oRequest = MetaModel::NewObject($sClass);
 		$oRequest->Set('org_id', $oUserOrg->GetKey());
 		$oRequest->Set('caller_id', UserRights::GetContactId());
 		$oRequest->Set('service_id', $aParameters['service_id']);
 		$oRequest->Set('servicesubcategory_id', $aParameters['servicesubcategory_id']);
-		
-		$oAttDef = MetaModel::GetAttributeDef('UserRequest', 'service_id');
+
+		$oAttDef = MetaModel::GetAttributeDef($sClass, 'service_id');
 		$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $oServiceCategory->GetName());
-		$oAttDef = MetaModel::GetAttributeDef('UserRequest', 'servicesubcategory_id');
+
+		$oAttDef = MetaModel::GetAttributeDef($sClass, 'servicesubcategory_id');
 		$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $oServiceSubCategory->GetName());
+
+		$aList = explode(',', GetConstant($sClass, 'FORM_ATTRIBUTES'));
 
 		$iFlags = 0;
 		foreach($aList as $sAttCode)
@@ -377,7 +468,7 @@ EOF
 		foreach($aList as $sAttCode)
 		{
 			$value = '';
-			$oAttDef = MetaModel::GetAttributeDef(get_class($oRequest), $sAttCode);
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			$iFlags = $oRequest->GetAttributeFlags($sAttCode);
 			if (isset($aParameters[$sAttCode]))
 			{
@@ -387,11 +478,9 @@ EOF
 				
 			$sInputId = 'attr_'.$sAttCode;
 			$aFieldsMap[$sAttCode] = $sInputId;
-			$sValue = "<span id=\"field_{$sInputId}\">".$oRequest->GetFormElementForField($oP, get_class($oRequest), $sAttCode, $oAttDef, $value, '', 'attr_'.$sAttCode, '', $iFlags, $aArgs).'</span>';
+			$sValue = "<span id=\"field_{$sInputId}\">".$oRequest->GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $value, '', 'attr_'.$sAttCode, '', $iFlags, $aArgs).'</span>';
 			$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sValue);
 		}
-//		The log must be requested in the constant PORTAL_REQUEST_FORM_ATTRIBUTES
-//		$aDetails[] = array('label' => MetaModel::GetLabel('UserRequest', PORTAL_ATTCODE_LOG), 'value' => '<textarea id="attr_moreinfo" class="resizable ui-resizable" cols="40" rows="8" name="attr_moreinfo" title="" style="margin: 0px; resize: none; position: static; display: block; height: 145px; width: 339px;">'.$sDescription.'</textarea>');
 
 		if (!empty($aTemplateFields))
 		{
@@ -399,7 +488,7 @@ EOF
 			{
 				if (!in_array($sAttCode, $aList))
 				{
-					$sValue = $oField->GetFormElement($oP, get_class($oRequest));
+					$sValue = $oField->GetFormElement($oP, $sClass);
 					if ($oField->Get('input_type') == 'hidden')
 					{
 						$aHidden[] = $sValue;
@@ -412,6 +501,13 @@ EOF
 			}
 		}
 
+		$oP->add_script(
+<<<EOF
+// Create the object once at the beginning of the page...
+	var oWizardHelper = new WizardHelper('$sClass', '');
+EOF
+);
+
 		$oP->add_linked_script("../js/json.js");
 		$oP->add_linked_script("../js/forms-json-utils.js");
 		$oP->add_linked_script("../js/wizardhelper.js");
@@ -422,13 +518,28 @@ EOF
 		$oP->add("<div class=\"wizContainer\" id=\"form_request_description\">\n");
 		$oP->add("<h1 id=\"title_request_form\">".Dict::S('Portal:DescriptionOfTheRequest')."</h1>\n");
 		$oP->WizardFormStart('request_form', 4);
-		//$oP->add("<table>\n");
+
 		$oP->details($aDetails);
+
+		// Add hidden fields for known values, enabling dependant attributes to be computed correctly
+		//
+		foreach($oRequest->ListChanges() as $sAttCode => $value)
+		{
+			if (!in_array($sAttCode, $aList))
+			{
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+				if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
+				{
+					$sValue = htmlentities($oRequest->Get($sAttCode), ENT_QUOTES, 'UTF-8');
+					$oP->add("<input type=\"hidden\" id=\"attr_$sAttCode\" name=\"attr_$sAttCode\" value=\"$sValue\">");
+					$aFieldsMap[$sAttCode] = 'attr_'.$sAttCode;
+				}
+			}
+		}
 
 		$oAttPlugin = new AttachmentPlugIn();
 		$oAttPlugin->OnDisplayRelations($oRequest, $oP, true /* edit */);
 
-		$oP->DumpHiddenParams($aParameters, $aList);
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"create_request\">");
 		$oP->WizardFormButtons(BUTTON_BACK | BUTTON_FINISH | BUTTON_CANCEL); //Back button automatically discarded if on the first page
 		$oP->WizardFormEnd();
@@ -457,7 +568,7 @@ EOF
 }
 
 /**
- * Validate the parameters and create the UserRequest object (based on the page's POSTed parameters)
+ * Validate the parameters and create the ticket object (based on the page's POSTed parameters)
  * @param WebPage $oP The current web page for the  output
  * @param Organization $oUserOrg The organization of the current user
  * @return void
@@ -487,6 +598,7 @@ function DoCreateRequest($oP, $oUserOrg)
 	
 	// 2) Service Subcategory
 	$oSearch = DBObjectSearch::FromOQL(PORTAL_VALIDATE_SERVICESUBCATEGORY_QUERY);
+	RestrictSubcategories($oSearch);
 	$oSearch->AllowAllData(); // In case the user has the rights on his org only
 	$oSet = new CMDBObjectSet($oSearch, array(), array('service_id' => $aParameters['service_id'], 'id' =>$aParameters['servicesubcategory_id'],'org_id' => $oUserOrg->GetKey() ));
 	if ($oSet->Count() != 1)
@@ -496,27 +608,28 @@ function DoCreateRequest($oP, $oUserOrg)
 	}
 	$oServiceSubCategory = $oSet->Fetch();
 
-	$oRequest = new UserRequest();
+	$sClass = ComputeClass($oServiceSubCategory->GetKey());
+	$oRequest = MetaModel::NewObject($sClass);
 	$oRequest->Set('org_id', $oUserOrg->GetKey());
 	$oRequest->Set('caller_id', UserRights::GetContactId());
-	$aList = array('service_id', 'servicesubcategory_id', 'title', 'description', 'impact');
 	$oRequest->UpdateObjectFromPostedForm();
 	if (isset($aParameters['moreinfo']))
 	{
 		// There is a template, insert it into the description
-		$oRequest->Set(PORTAL_ATTCODE_LOG, $aParameters['moreinfo']);
+		$sLogAttCode = GetConstant($sClass, 'PUBLIC_LOG');
+		$oRequest->Set($sLogAttCode, $aParameters['moreinfo']);
 	}
 
-	if ((PORTAL_ATTCODE_TYPE != '') && (PORTAL_SET_TYPE_FROM != ''))
+	$sTypeAttCode = GetConstant($sClass, 'TYPE');
+	if (($sTypeAttCode != '') && (PORTAL_SET_TYPE_FROM != ''))
 	{
-		$oRequest->Set(PORTAL_ATTCODE_TYPE, $oServiceSubCategory->Get(PORTAL_SET_TYPE_FROM));
+		$oRequest->Set($sTypeAttCode, $oServiceSubCategory->Get(PORTAL_SET_TYPE_FROM));
 	}
-	if (MetaModel::IsValidAttCode('UserRequest', 'origin'))
+	if (MetaModel::IsValidAttCode($sClass, 'origin'))
 	{
 		$oRequest->Set('origin', 'portal');
 	}
 
-	/////$oP->DoUpdateObjectFromPostedForm($oObj);
 	$oAttPlugin = new AttachmentPlugIn();
 	$oAttPlugin->OnFormSubmit($oRequest);
 
@@ -526,7 +639,8 @@ function DoCreateRequest($oP, $oUserOrg)
 		if (isset($aParameters['template_id']))
 		{
 			$oTemplate = MetaModel::GetObject('Template', $aParameters['template_id']);
-			$oRequest->Set('public_log', $oTemplate->GetPostedValuesAsText($oRequest)."\n");
+			$sLogAttCode = GetConstant($sClass, 'PUBLIC_LOG');
+			$oRequest->Set($sLogAttCode, $oTemplate->GetPostedValuesAsText($oRequest)."\n");
 			$oRequest->DBInsertNoReload();
 			$oTemplate->RecordExtraDataFromPostedForm($oRequest);
 		}
@@ -534,7 +648,7 @@ function DoCreateRequest($oP, $oUserOrg)
 		{
 			$oRequest->DBInsertNoReload();
 		}
-		$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oRequest->GetName(), MetaModel::GetName(get_class($oRequest)))."</h1>\n");
+		$oP->add("<h1>".Dict::Format('UI:Title:Object_Of_Class_Created', $oRequest->GetName(), MetaModel::GetName($sClass))."</h1>\n");
 
 		//DisplayObject($oP, $oRequest, $oUserOrg);
 		ShowOngoingTickets($oP);
@@ -580,6 +694,47 @@ function CreateRequest(WebPage $oP, Organization $oUserOrg)
 }
 
 /**
+ * Helper to display lists (UserRequest, Incident, etc.)
+ * Adjust the presentation depending on the following cases:
+ * - no item at all
+ * - items of one class only
+ * - items of several classes    
+ */ 
+function DisplayRequestLists(WebPage $oP, $aClassToSet)
+{
+	$iNotEmpty = 0; // Count of types for which there are some items to display
+	foreach ($aClassToSet as $sClass => $oSet)
+	{
+		if ($oSet->Count() > 0)
+		{
+			$iNotEmpty++;
+		}
+	}
+	if ($iNotEmpty == 0)
+	{
+		$oP->p(Dict::S('Portal:NoOpenRequest'));
+	}
+	else
+	{
+		foreach ($aClassToSet as $sClass => $oSet)
+		{
+			if ($iNotEmpty > 1)
+			{
+				// Differentiate the sublists
+				$oP->add("<h2>".MetaModel::GetName($sClass)."</h2>\n");
+			}
+			if ($oSet->Count() > 0)
+			{
+				$sZList = GetConstant($sClass, 'LIST_ZLIST');
+				$aZList =  explode(',', $sZList);
+				$oP->DisplaySet($oSet, $aZList, Dict::S('Portal:NoOpenRequest'));
+			}
+		}
+	}
+}
+
+
+/**
  * Lists all the currently opened User Requests for the current user
  * @param WebPage $oP The current web page
  * @return void
@@ -588,16 +743,19 @@ function ListOpenRequests(WebPage $oP)
 {
 	$oUserOrg = GetUserOrg();
 
-	$sOQL = 'SELECT UserRequest WHERE org_id = :org_id AND status NOT IN ("closed", "resolved")';
-	$oSearch = DBObjectSearch::FromOQL($sOQL);
-	$iUser = UserRights::GetContactId();
-	if ($iUser > 0 && !IsPowerUser())
+	$aClassToSet = array();
+	foreach (GetTicketClasses() as $sClass)
 	{
-		$oSearch->AddCondition('caller_id', $iUser);
+		$sOQL = "SELECT $sClass WHERE org_id = :org_id AND status NOT IN ('closed', 'resolved')";
+		$oSearch = DBObjectSearch::FromOQL($sOQL);
+		$iUser = UserRights::GetContactId();
+		if ($iUser > 0 && !IsPowerUser())
+		{
+			$oSearch->AddCondition('caller_id', $iUser);
+		}
+		$aClassToSet[$sClass] = new CMDBObjectSet($oSearch, array(), array('org_id' => $oUserOrg->GetKey()));
 	}
-	$oSet = new CMDBObjectSet($oSearch, array(), array('org_id' => $oUserOrg->GetKey()));
-	$aZList =  explode(',', PORTAL_TICKETS_LIST_ZLIST);
-	$oP->DisplaySet($oSet, $aZList, Dict::S('Portal:NoOpenRequest'));
+	DisplayRequestLists($oP, $aClassToSet);
 }
 
 /**
@@ -609,16 +767,19 @@ function ListResolvedRequests(WebPage $oP)
 {
 	$oUserOrg = GetUserOrg();
 
-	$sOQL = 'SELECT UserRequest WHERE org_id = :org_id AND status = "resolved"';
-	$oSearch = DBObjectSearch::FromOQL($sOQL);
-	$iUser = UserRights::GetContactId();
-	if ($iUser > 0 && !IsPowerUser())
+	$aClassToSet = array();
+	foreach (GetTicketClasses() as $sClass)
 	{
-		$oSearch->AddCondition('caller_id', $iUser);
+		$sOQL = "SELECT $sClass WHERE org_id = :org_id AND status = 'resolved'";
+		$oSearch = DBObjectSearch::FromOQL($sOQL);
+		$iUser = UserRights::GetContactId();
+		if ($iUser > 0 && !IsPowerUser())
+		{
+			$oSearch->AddCondition('caller_id', $iUser);
+		}
+		$aClassToSet[$sClass] = new CMDBObjectSet($oSearch, array(), array('org_id' => $oUserOrg->GetKey()));
 	}
-	$oSet = new CMDBObjectSet($oSearch, array(), array('org_id' => $oUserOrg->GetKey()));
-	$aZList =  explode(',', PORTAL_TICKETS_LIST_ZLIST);
-	$oP->DisplaySet($oSet, $aZList, Dict::S('Portal:NoOpenRequest'));
+	DisplayRequestLists($oP, $aClassToSet);
 }
 
 /**
@@ -629,28 +790,32 @@ function ListResolvedRequests(WebPage $oP)
 function ListClosedTickets(WebPage $oP)
 {
 	$aAttSpecs = explode(',', PORTAL_TICKETS_SEARCH_CRITERIA);
-	$aZList =  explode(',', PORTAL_TICKETS_CLOSED_ZLIST);
-
-	$oP->DisplaySearchForm('UserRequest', $aAttSpecs, array('operation' => 'show_closed'), 'search_', false /* => not closed */);
+	$aClasses = GetTicketClasses();
+	$sMainClass = reset($aClasses);
+	$oP->DisplaySearchForm($sMainClass, $aAttSpecs, array('operation' => 'show_closed'), 'search_', false /* => not closed */);
 
 	$oUserOrg = GetUserOrg();
 
-	// UserRequest
-	$oSearch = $oP->PostedParamsToFilter('UserRequest', $aAttSpecs, 'search_');
-	if(is_null($oSearch))
-	{
-		$oSearch = new DBObjectSearch('UserRequest');
-	}
-	$oSearch->AddCondition('org_id', $oUserOrg->GetKey());
-	$oSearch->AddCondition('status', 'closed');
-	$iUser = UserRights::GetContactId();
-	if ($iUser > 0 && !IsPowerUser())
-	{
-		$oSearch->AddCondition('caller_id', $iUser);
-	}
-	$oSet1 = new CMDBObjectSet($oSearch);
 	$oP->add("<h1>".Dict::S('Portal:ClosedRequests')."</h1>\n");
-	$oP->DisplaySet($oSet1, $aZList, Dict::S('Portal:NoClosedRequest'));
+
+	$aClassToSet = array();
+	foreach (GetTicketClasses() as $sClass)
+	{
+		$oSearch = $oP->PostedParamsToFilter($sClass, $aAttSpecs, 'search_');
+		if(is_null($oSearch))
+		{
+			$oSearch = new DBObjectSearch($sClass);
+		}
+		$oSearch->AddCondition('org_id', $oUserOrg->GetKey());
+		$oSearch->AddCondition('status', 'closed');
+		$iUser = UserRights::GetContactId();
+		if ($iUser > 0 && !IsPowerUser())
+		{
+			$oSearch->AddCondition('caller_id', $iUser);
+		}
+		$aClassToSet[$sClass] = new CMDBObjectSet($oSearch);
+	}
+	DisplayRequestLists($oP, $aClassToSet);
 }
 
 
@@ -663,13 +828,12 @@ function ListClosedTickets(WebPage $oP)
  */
 function DisplayObject($oP, $oObj, $oUserOrg)
 {
-	switch(get_class($oObj))
+	if (in_array(get_class($oObj), GetTicketClasses()))
 	{
-		case 'UserRequest':
 		ShowDetailsRequest($oP, $oObj);
-		break;
-
-		default:
+	}
+	else
+	{
 		throw new Exception("The class ".get_class($oObj)." is not handled through the portal");
 	}
 }
@@ -683,6 +847,8 @@ function DisplayObject($oP, $oObj, $oUserOrg)
 function ShowDetailsRequest(WebPage $oP, $oObj)
 {	
 	$sClass = get_class($oObj);
+	$sLogAttCode = GetConstant($sClass, 'PUBLIC_LOG');
+	$sUserCommentAttCode = GetConstant($sClass, 'USER_COMMENT');
 
 	$bIsEscalateButton = false;
 	$bIsReopenButton = false;
@@ -698,7 +864,7 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 			case 'frozen':
 			case 'pending':
 			$aEditAtt = array(
-				PORTAL_ATTCODE_LOG => '????'
+				$sLogAttCode => '????'
 			);
 			$bEditAttachments = true;
 			// disabled - $bIsEscalateButton = true;
@@ -707,7 +873,7 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 			case 'escalated_tto':
 			case 'escalated_ttr':
 			$aEditAtt = array(
-				PORTAL_ATTCODE_LOG => '????'
+				$sLogAttCode => '????'
 			);
 			$bEditAttachments = true;
 			break;
@@ -717,10 +883,10 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 			if (array_key_exists('ev_reopen', MetaModel::EnumStimuli($sClass)))
 			{
 				$bIsReopenButton = true;
-				MakeStimulusForm($oP, $oObj, 'ev_reopen', array(PORTAL_ATTCODE_LOG));
+				MakeStimulusForm($oP, $oObj, 'ev_reopen', array($sLogAttCode));
 			}
 			$bIsCloseButton = true;
-			MakeStimulusForm($oP, $oObj, 'ev_close', array('user_satisfaction', PORTAL_ATTCODE_COMMENT));
+			MakeStimulusForm($oP, $oObj, 'ev_close', array('user_satisfaction', $sUserCommentAttCode));
 			break;
 	
 			case 'closed':
@@ -733,22 +899,13 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 // REFACTORISER LA MISE EN FORME
 	$oP->add("<h1 id=\"title_request_details\">".$oObj->GetIcon()."&nbsp;".Dict::Format('Portal:TitleRequestDetailsFor_Request', $oObj->GetName())."</h1>\n");
 
-	switch($sClass)
+	$aAttList = json_decode(GetConstant($sClass, 'DETAILS_ZLIST'), true);
+
+	switch($oObj->GetState())
 	{
-		case 'UserRequest':
-		$aAttList = json_decode(PORTAL_TICKET_DETAILS_ZLIST, true);
-
-		switch($oObj->GetState())
-		{
-			case 'closed':
-			$aAttList['centered'][] = 'user_satisfaction';
-			$aAttList['centered'][] = PORTAL_ATTCODE_COMMENT;
-		}
-		break;
-
-		default:
-		array('col:left'=> array('ref','service_id','servicesubcategory_id','title','description'),'col:right'=> array('status','start_date'));
-		break;
+		case 'closed':
+		$aAttList['centered'][] = 'user_satisfaction';
+		$aAttList['centered'][] = $sUserCommentAttCode;
 	}
 
 	// Remove the edited attribute from the shown attributes
@@ -841,7 +998,7 @@ EOF
 	}
 	foreach($aEditFields as $sAttCode => $aFieldSpec)
 	{
-		if ($sAttCode == PORTAL_ATTCODE_LOG)
+		if ($sAttCode == $sLogAttCode)
 		{
 			// Skip, the public log will be displayed below the buttons
 			continue;
@@ -881,17 +1038,17 @@ EOF
 
 	$oP->add('<tr>');
 	$oP->add('<td colspan="2" style="vertical-align:top;">');
-	if (isset($aEditFields[PORTAL_ATTCODE_LOG]))
+	if (isset($aEditFields[$sLogAttCode]))
 	{
 		$oP->add("<div class=\"edit_item\">");
-		$oP->add('<h1>'.$aEditFields[PORTAL_ATTCODE_LOG]['label'].'</h1>');
-		$oP->add($aEditFields[PORTAL_ATTCODE_LOG]['value']);
+		$oP->add('<h1>'.$aEditFields[$sLogAttCode]['label'].'</h1>');
+		$oP->add($aEditFields[$sLogAttCode]['value']);
 		$oP->add('</div>');
 	}
 	else
 	{
-		$oP->add('<h1>'.MetaModel::GetLabel($sClass, PORTAL_ATTCODE_LOG).'</h1>');
-		$oP->add($oObj->GetAsHTML(PORTAL_ATTCODE_LOG));
+		$oP->add('<h1>'.MetaModel::GetLabel($sClass, $sLogAttCode).'</h1>');
+		$oP->add($oObj->GetAsHTML($sLogAttCode));
 	}
 	$oP->add('</td>');
 	$oP->add('</tr>');
@@ -1031,7 +1188,9 @@ try
 
    ApplicationContext::SetUrlMakerClass('MyPortalURLMaker');
 
-	if (!class_exists('UserRequest'))
+	$aClasses = explode(',', MetaModel::GetConfig()->Get('portal_tickets'));
+	$sMainClass = trim(reset($aClasses));
+	if (!class_exists($sMainClass))
 	{
 		$oP = new WebPage(Dict::S('Portal:Title'));
 		$oP->p(dict::Format('Portal:NoRequestMgmt', UserRights::GetUserFriendlyName()));
@@ -1074,7 +1233,7 @@ try
 				case 'details':
 				$oP->set_title(Dict::S('Portal:TitleDetailsFor_Request'));
 				DisplayMainMenu($oP);
-				$oObj = $oP->FindObjectFromArgs(array('UserRequest'));
+				$oObj = $oP->FindObjectFromArgs(GetTicketClasses());
 				DisplayObject($oP, $oObj, $oUserOrg);
 				break;
 				
@@ -1083,16 +1242,12 @@ try
 				DisplayMainMenu($oP);
 				if (!MetaModel::DBIsReadOnly())
 				{
-					$oObj = $oP->FindObjectFromArgs(array('UserRequest'));
-					switch(get_class($oObj))
-					{
-					case 'UserRequest':
-						$aAttList = array(PORTAL_ATTCODE_LOG, 'user_satisfaction', PORTAL_ATTCODE_COMMENT);
-						break;
-		
-					default:
-						throw new Exception("Implementation issue: unexpected class '".get_class($oObj)."'");
-					}
+					$oObj = $oP->FindObjectFromArgs(GetTicketClasses());
+					$aAttList = array(
+						GetConstant(get_class($oObj), 'PUBLIC_LOG'),
+						'user_satisfaction',
+						GetConstant(get_class($oObj), 'USER_COMMENT')
+					);
 					try
 					{
 						$oP->DoUpdateObjectFromPostedForm($oObj, $aAttList);

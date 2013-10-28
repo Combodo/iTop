@@ -71,16 +71,16 @@ class MyPortalURLMaker implements iDBObjectURLMaker
 {
 	public static function MakeObjectURL($sClass, $iId)
 	{
-		switch($sClass)
+		if (strpos(MetaModel::GetConfig()->Get('portal_tickets'), $sClass) !== false)
 		{
-		case 'UserRequest':
 			$sAbsoluteUrl = utils::GetAbsoluteUrlAppRoot();
 			$sUrl = "{$sAbsoluteUrl}portal/index.php?operation=details&class=$sClass&id=$iId";
-			return $sUrl;
-
-		default:
-			return '';
 		}
+		else
+		{
+			$sUrl = '';
+		}
+		return $sUrl;
 	}
 }
 
