@@ -674,7 +674,7 @@ class Config
 			'default' => 'UserRequest',
 			'value' => 'UserRequest',
 			'source_of_value' => '',
-			'show_in_conf_sample' => false,
+			'show_in_conf_sample' => true,
 		),
 	);
 
