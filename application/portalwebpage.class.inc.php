@@ -64,6 +64,7 @@ class PortalWebPage extends NiceWebPage
 		$sAbsURLModulesRoot = addslashes(utils::GetAbsoluteUrlModulesRoot()); // Pass it to Javascript scripts
 		$oAppContext = new ApplicationContext();
 		$sAppContext = addslashes($oAppContext->GetForLink());
+		$this->add_dict_entry('UI:FillAllMandatoryFields');
 		if ($sAlternateStyleSheet != '')
 		{
 			$this->add_linked_stylesheet("../portal/$sAlternateStyleSheet/portal.css");
