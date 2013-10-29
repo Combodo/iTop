@@ -100,7 +100,7 @@ function ComputeClass($iSubSvcId)
  */
 function RestrictSubcategories(&$oSearch)
 {
-	$aMapping = json_decode(PORTAL_TYPE_TO_CLASS, true);
+	$aMapping = (PORTAL_TYPE_TO_CLASS == '') ? array() : json_decode(PORTAL_TYPE_TO_CLASS, true);
 	foreach($aMapping as $sTicketType => $sClass)
 	{
 		if (!in_array($sClass, GetTicketClasses()))
