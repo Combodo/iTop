@@ -590,6 +590,7 @@
           <group id="class:UserRequest">
             <actions>
               <action id="ev_close" xsi:type="stimulus">allow</action>
+              <action id="ev_reopen" xsi:type="stimulus">allow</action>
             </actions>
           </group>
           <group id="*">
