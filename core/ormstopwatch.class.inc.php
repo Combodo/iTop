@@ -66,7 +66,6 @@ class ormStopWatch
 	{
 		$this->aThresholds[$iPercent] = array(
 			'deadline' => $tDeadline, // unix time (seconds)
-			'passed' => $bPassed,
 			'triggered' => $bTriggered,
 			'overrun' => $iOverrun
 		);
@@ -122,14 +121,16 @@ class ormStopWatch
 	}
 	public function IsThresholdPassed($iPercent)
 	{
+		$bRet = false;
 		if (array_key_exists($iPercent, $this->aThresholds))
 		{
-			return $this->aThresholds[$iPercent]['passed'];
+			$aThresholdData = $this->aThresholds[$iPercent];
+			if (!is_null($aThresholdData['deadline']) && ($aThresholdData['deadline'] <= time()))
+			{
+				$bRet = true;
+			}
 		}
-		else
-		{
-			return false;
-		}
+		return $bRet;
 	}
 	public function IsThresholdTriggered($iPercent)
 	{
@@ -263,7 +264,6 @@ class ormStopWatch
 
 		foreach ($this->aThresholds as $iPercent => &$aThresholdData)
 		{
-			$aThresholdData['passed'] = false;
 			$aThresholdData['triggered'] = false;
 			$aThresholdData['deadline'] = null;
 			$aThresholdData['overrun'] = null;
@@ -322,14 +322,12 @@ class ormStopWatch
 			if (is_null($aThresholdData['deadline']) || ($aThresholdData['deadline'] > time()))
 			{
 				// The threshold is in the future, reset
-				$aThresholdData['passed'] = false;
 				$aThresholdData['triggered'] = false;
 				$aThresholdData['overrun'] = null;
 			}
 			else
 			{
 				// The new threshold is in the past
-				$aThresholdData['passed'] = true;
 				// Note: the overrun can be wrong, but the correct algorithm to compute
 				// the overrun of a deadline in the past requires that the ormStopWatch keeps track of all its history!!!
 			}
@@ -367,7 +365,6 @@ class ormStopWatch
 					$iOverrun = $this->ComputeDuration($oObject, $oAttDef, $aThresholdData['deadline'], time());
 					$aThresholdData['overrun'] = $iOverrun;
 				}
-				$aThresholdData['passed'] = true;
 			}
 			$aThresholdData['deadline'] = null;
 		}

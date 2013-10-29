@@ -1730,14 +1730,12 @@
 			if ($iEscalationDeadline != null)
 			{
 				// A SLA is running
-				$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
-	
-				$ratio = ($iEscalationDeadline - time())/($iEscalationDeadline - $iStartDate);
-				if ($ratio <= 0)
+				$oTTOStopWatch = $this->Get('tto');
+				if ($oTTOStopWatch->IsThresholdPassed(100))
 				{
 					$sIcon = self::MakeIconFromName('user-request-escalated.png');
 				}
-				else if ($ratio <= 0.25)
+				else if ($oTTOStopWatch->IsThresholdPassed(75))
 				{
 					$sIcon = self::MakeIconFromName('user-request-deadline.png');
 				}
@@ -1750,24 +1748,18 @@
 			if ($iEscalationDeadline != null)
 			{
 				// A SLA is running
-				$iStartDate = AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
-				$ratio = ($iEscalationDeadline - time())/($iEscalationDeadline - $iStartDate);
-				if ($ratio <= 0)
+				$oTTRStopWatch = $this->Get('ttr');
+				if ($oTTRStopWatch->IsThresholdPassed(100))
 				{
 					$sIcon = self::MakeIconFromName('user-request-escalated.png');
 				}
-				else if ($ratio <= 0.25)
+				else if ($oTTRStopWatch->IsThresholdPassed(75))
 				{
 					$sIcon = self::MakeIconFromName('user-request-deadline.png');
 				}
 			}
 			break;
 
-
-			
-
-
-			
 			default:
 			$sIcon = MetaModel::GetClassIcon(get_class($this), $bImgTag);
 		}
