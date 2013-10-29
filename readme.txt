@@ -196,7 +196,9 @@ This maintenance version consists in a mix of bug fixes and enhancements.
 Enhancements
 --------------------
 - Modelization of VLANs on Subnet and Physical Interfaces
-- Brand new User Portal look and feel (no change in the behavior)
+- User Portal:
+    * Brand new look and feel (no change in the behavior)
+    * Capability to manage both User Request and Incidents by setting portal_tickets to 'UserRequest,Incident' -see Portal/readme.txt
 - Forgot your password? Regain access to iTop without bothering an administrator
 - Automatic refresh of the lists in the dashboards, and for the shortcuts
 
@@ -218,9 +220,10 @@ JSON/REST API (new version: 1.1)
 #758 Key given in clear in the returned objects (incremented the API verion to 1.1)
 + core/create and core/update, allow to reset an external key (0)
 
-Data model fixes
-----------------
-Add VLANs on Subnet and Physical Interfaces
+Data model fixes/changes
+------------------------
+Added VLANs on Subnet and Physical Interfaces
+Added a version for Documents
 #800 No need to track that last update has changed each time the ticket gets updated (common to all types of tickets)
 Prevent Support agent to create ticket for obsolete Services and Service sub categories
 Remove duplicate display of attribute service provider
