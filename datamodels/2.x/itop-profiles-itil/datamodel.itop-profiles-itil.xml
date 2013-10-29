@@ -53,6 +53,9 @@
           <class id="NASFileSystem"/>
           <class id="LogicalVolume"/>
           <class id="Tape"/>
+          <class id="VLAN"/>
+          <class id="lnkPhysicalInterfaceToVLAN"/>
+          <class id="lnkSubnetToVLAN"/>
           <class id="lnkApplicationSolutionToBusinessProcess"/>
           <class id="lnkApplicationSolutionToFunctionalCI"/>
           <class id="lnkConnectableCIToNetworkDevice"/>
