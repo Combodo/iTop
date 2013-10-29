@@ -196,7 +196,7 @@ class LoginWebPage extends NiceWebPage
 		$this->add("<form method=\"post\">\n");
 		$this->add("<table>\n");
 		$this->add("<tr><td colspan=\"2\" class=\"center\"><label for=\"user\">".Dict::S('UI:Login:UserNamePrompt').":</label><input id=\"user\" type=\"text\" name=\"auth_user\" value=\"".htmlentities($sAuthUser, ENT_QUOTES, 'UTF-8')."\" /></td></tr>\n");
-		$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"><span class=\"btn_border\"><input type=\"button\" onClick=\"window.close();\" value=\"".Dict::S('UI:Button:Cancel')."\" /></span>&nbsp;&nbsp;<span class=\"btn_border\"><input type=\"submit\" value=\"".Dict::S('UI:Button:ResetPassword')."\" /></span></td></tr>\n");
+		$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"><span class=\"btn_border\"><input type=\"button\" onClick=\"window.close();\" value=\"".Dict::S('UI:Button:Cancel')."\" /></span>&nbsp;&nbsp;<span class=\"btn_border\"><input type=\"submit\" value=\"".Dict::S('UI:Login:ResetPassword')."\" /></span></td></tr>\n");
 		$this->add("</table>\n");
 		$this->add("<input type=\"hidden\" name=\"loginop\" value=\"forgot_pwd_go\" />\n");
 		$this->add("</form>\n");
