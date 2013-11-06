@@ -889,7 +889,7 @@ class utils
 	 * @return string The result of the POST request
 	 * @throws Exception
 	 */ 
-	static public function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null)
+	static public function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null, &$aResponseHeaders = null)
 	{
 		// $sOptionnalHeaders is a string containing additional HTTP headers that you would like to send in your request.
 	
@@ -927,6 +927,11 @@ class utils
 		if ($response === false)
 		{
 			throw new Exception("Problem reading data from $sUrl, $php_errormsg");
+		}
+		if (is_array($aResponseHeaders))
+		{
+			$aMeta = stream_get_meta_data($fp);
+			$aResponseHeaders = $aMeta['wrapper_data'];
 		}
 		return $response;
 	}
