@@ -255,12 +255,6 @@ class CMDBSource
 
 	public static function Query($sSQLQuery)
 	{
-		// Add info into the query as a comment, for easier error tracking
-	  	// disabled until we need it really!
-		//
-		//$aTraceInf['file'] = __FILE__;
-		// $sSQLQuery .= MyHelpers::MakeSQLComment($aTraceInf);
-	  
 		$oKPI = new ExecutionKPI();
 		$result = mysqli_query(self::$m_resDBLink, $sSQLQuery);
 		if (!$result) 
@@ -307,7 +301,9 @@ class CMDBSource
 
 	public static function QueryToScalar($sSql)
 	{
+		$oKPI = new ExecutionKPI();
 		$result = mysqli_query(self::$m_resDBLink, $sSql);
+		$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
 		if (!$result)
 		{
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
@@ -328,7 +324,9 @@ class CMDBSource
 	public static function QueryToArray($sSql)
 	{
 		$aData = array();
+		$oKPI = new ExecutionKPI();
 		$result = mysqli_query(self::$m_resDBLink, $sSql);
+		$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
 		if (!$result)
 		{
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));

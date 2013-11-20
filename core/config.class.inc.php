@@ -626,7 +626,7 @@ class Config
 		),
 		'log_kpi_duration' => array(
 			'type' => 'integer',
-			'description' => 'Level of logging for troubleshooting performance issues',
+			'description' => 'Level of logging for troubleshooting performance issues (1 to enable, 2 +blame callers)',
 			// examples... not used
 			'default' => 0,
 			'value' => 0,

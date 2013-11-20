@@ -28,6 +28,7 @@ class ExecutionKPI
 {
 	static protected $m_bEnabled_Duration = false;
 	static protected $m_bEnabled_Memory = false;
+	static protected $m_bBlameCaller = false;
 	static protected $m_sAllowedUser = '*';
 
 	static protected $m_aStats = array(); // Recurrent operations
@@ -41,6 +42,10 @@ class ExecutionKPI
 		if ($iLevel > 0)
 		{
 			self::$m_bEnabled_Duration = true;
+			if ($iLevel > 1)
+			{
+				self::$m_bBlameCaller = true;
+			}
 		}
 	}
 
@@ -145,8 +150,9 @@ class ExecutionKPI
 			$sMaxOpArguments = null;
 			foreach ($aOpStats as $sArguments => $aEvents)
 			{
-				foreach ($aEvents as $fDuration)
+				foreach ($aEvents as $aEventData)
 				{
+					$fDuration = $aEventData['time'];
 					$fTotalOp += $fDuration;
 					$iTotalOp++;
 
@@ -199,20 +205,38 @@ class ExecutionKPI
 			self::Report("<p><a href=\"#".md5($sExecId)."\">Back to page stats</a></p>");
 			self::Report("<table border=\"1\" style=\"$sTableStyle\">");
 			self::Report("<thead>");
-			self::Report("   <th>Operation details</th><th>Count</th><th>Duration</th><th>Min</th><th>Max</th>");
+			self::Report("   <th>Operation details (+ blame caller if log_kpi_duration = 2)</th><th>Count</th><th>Duration</th><th>Min</th><th>Max</th>");
 			self::Report("</thead>");
 			foreach ($aOpStats as $sArguments => $aEvents)
 			{
-				$sHtmlArguments = '<a name="'.md5($sExecId.$sArguments).'">'.$sArguments.'</a>';
+				$sHtmlArguments = '<a name="'.md5($sExecId.$sArguments).'"><div style="white-space: pre-wrap;">'.$sArguments.'</div></a>';
 				if ($aConsolidatedStats[$sOperation]['max_args'] == $sArguments)
 				{
 					$sHtmlArguments = '<span style="color: red;">'.$sHtmlArguments.'</span>';
 				}
+				if (isset($aEvents[0]['callers']))
+				{
+					$sHtmlArguments .= '<div style="padding: 10px;">';
+					$sHtmlArguments .= '<table border="1" bgcolor="#cfc">';
+					$sHtmlArguments .= '<tr><td colspan="2" bgcolor="#e9b96">Call stack for the <b>FIRST</b> caller</td></tr>';
+
+					foreach ($aEvents[0]['callers'] as $aCall)
+					{
+						$sHtmlArguments .= '<tr>';
+						$sHtmlArguments .= '<td>'.$aCall['Function'].'</td>';
+						$sHtmlArguments .= '<td>'.$aCall['File'].':'.$aCall['Line'].'</td>';
+						$sHtmlArguments .= '</tr>';
+					}
+					$sHtmlArguments .= '</table>';
+					$sHtmlArguments .= '</div>';
+				}
+
 				$fTotalInter = 0;
 				$fMinInter = null;
 				$fMaxInter = 0;
-				foreach ($aEvents as $fDuration)
+				foreach ($aEvents as $aEventData)
 				{
+					$fDuration = $aEventData['time'];
 					$fTotalInter += $fDuration;
 					$fMinInter = is_null($fMinInter) ? $fDuration : min($fMinInter, $fDuration);
 					$fMaxInter = max($fMaxInter, $fDuration);
@@ -286,7 +310,19 @@ class ExecutionKPI
 		{
 			$fStopped = MyHelpers::getmicrotime();
 			$fDuration = $fStopped - $this->m_fStarted;
-			self::$m_aStats[$sOperation][$sArguments][] = $fDuration;
+			if (self::$m_bBlameCaller)
+			{
+				self::$m_aStats[$sOperation][$sArguments][] = array(
+					'time' => $fDuration,
+					'callers' => MyHelpers::get_callstack(1),
+				);
+			}
+			else
+			{
+				self::$m_aStats[$sOperation][$sArguments][] = array(
+					'time' => $fDuration
+				);
+			}
 		}
 	}
 

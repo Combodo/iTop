@@ -219,7 +219,7 @@ class MyHelpers
 		}
 	}
 
-	public static function get_callstack_html($iLevelsToIgnore = 0, $aCallStack = null)
+	public static function get_callstack($iLevelsToIgnore = 0, $aCallStack = null)
 	{
 		if ($aCallStack == null) $aCallStack = debug_backtrace();
 		
@@ -231,6 +231,16 @@ class MyHelpers
 		{
 			$sLine = empty($aCallInfo['line']) ? "" : $aCallInfo['line'];
 			$sFile = empty($aCallInfo['file']) ? "" : $aCallInfo['file'];
+			if ($sFile != '')
+			{
+				$sFile = str_replace('\\', '/', $sFile);
+				$sAppRoot = str_replace('\\', '/', APPROOT);
+				$iPos = strpos($sFile, $sAppRoot);
+				if ($iPos !== false)
+				{
+					$sFile = substr($sFile, strlen($sAppRoot));
+				}
+			}
 			$sClass = empty($aCallInfo['class']) ? "" : $aCallInfo['class'];
 			$sType = empty($aCallInfo['type']) ? "" : $aCallInfo['type'];
 			$sFunction = empty($aCallInfo['function']) ? "" : $aCallInfo['function'];
@@ -259,11 +269,11 @@ class MyHelpers
 						$args .= $a;
 					break;
 						case 'string':
-						$a = Str::pure2html(self::beautifulstr($a, 1024, true, true));
+						$a = Str::pure2html(self::beautifulstr($a, 64, true, false));
 						$args .= "\"$a\"";
 						break;
 					case 'array':
-						$args .= 'Array('.count($a).')';
+						$args .= 'array('.count($a).')';
 						break;
 					case 'object':
 						$args .= 'Object('.get_class($a).')';
@@ -272,25 +282,42 @@ class MyHelpers
 						$args .= 'Resource('.strstr($a, '#').')';
 						break;
 					case 'boolean':
-						$args .= $a ? 'True' : 'False';
+						$args .= $a ? 'true' : 'false';
 						break;
 					case 'NULL':
-						$args .= 'Null';
+						$args .= 'null';
 						break;
 					default:
 						$args .= 'Unknown';
 					}
 				}
-				$sFunctionInfo = "$sClass $sType $sFunction($args)";
+				$sFunctionInfo = "$sClass$sType$sFunction($args)";
 			}
 			$aDigestCallStack[] = array('File'=>$sFile, 'Line'=>$sLine, 'Function'=>$sFunctionInfo);
 		}
+		return $aDigestCallStack;
+	}
+
+	public static function get_callstack_html($iLevelsToIgnore = 0, $aCallStack = null)
+	{
+		$aDigestCallStack = self::get_callstack($iLevelsToIgnore, $aCallStack);
 		return self::make_table_from_assoc_array($aDigestCallStack);
 	}
 
 	public static function dump_callstack($iLevelsToIgnore = 0, $aCallStack = null)
 	{
 		return self::get_callstack_html($iLevelsToIgnore, $aCallStack);
+	}
+
+	public static function get_callstack_text($iLevelsToIgnore = 0, $aCallStack = null)
+	{
+		$aDigestCallStack = self::get_callstack($iLevelsToIgnore, $aCallStack);
+		$aRes = array();
+		foreach ($aDigestCallStack as $aCall)
+		{
+			$aRes[] = $aCall['File'].' at '.$aCall['Line'].', '.$aCall['Function'];
+		}
+		return implode("\n", $aRes);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
