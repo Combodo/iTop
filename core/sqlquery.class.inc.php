@@ -488,8 +488,6 @@ class SQLQuery
 
 	private function privRenderSingleTable(&$aFrom, &$aFields, &$aGroupBy, &$aDelTables, &$aSetValues, &$aSelectedIdFields, $sCallerAlias = '', $aJoinData)
 	{
-		$aActualTableFields = CMDBSource::GetTableFieldsList($this->m_sTable);
-
 		$aTranslationTable[$this->m_sTable]['*'] = $this->m_sTableAlias;
 
 		// Handle the various kinds of join (or first table in the list)
