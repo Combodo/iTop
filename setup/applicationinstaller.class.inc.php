@@ -522,6 +522,7 @@ class ApplicationInstaller
 		$oConfig = new Config();
 
 		$aParamValues = array(
+			'mode' => $sMode, 
 			'db_server' => $sDBServer,
 			'db_user' => $sDBUser,
 			'db_pwd' => $sDBPwd,
@@ -592,6 +593,7 @@ class ApplicationInstaller
 		$oConfig = new Config();
 
 		$aParamValues = array(
+			'mode' => $sMode, 
 			'db_server' => $sDBServer,
 			'db_user' => $sDBUser,
 			'db_pwd' => $sDBPwd,
@@ -851,6 +853,7 @@ class ApplicationInstaller
 	protected static function DoCreateConfig($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModules, $sTargetEnvironment, $bOldAddon, $sSourceDir, $sPreviousConfigFile, $sDataModelVersion)
 	{	
 		$aParamValues = array(
+			'mode' => $sMode, 
 			'db_server' => $sDBServer,
 			'db_user' => $sDBUser,
 			'db_pwd' => $sDBPwd,
@@ -859,7 +862,7 @@ class ApplicationInstaller
 			'db_prefix' => $sDBPrefix,
 			'application_path' => $sUrl,
 			'language' => $sLanguage,
-			'selected_modules' => implode(',', $aSelectedModules), 
+			'selected_modules' => implode(',', $aSelectedModules),
 		);
 		
 		$bPreserveModuleSettings = false;
