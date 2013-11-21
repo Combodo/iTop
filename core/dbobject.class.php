@@ -973,7 +973,6 @@ abstract class DBObject
 	{
 		$this->DoComputeValues();
 
-		$this->m_aCheckIssues = array();
 		$aChanges = $this->ListChanges();
 
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
@@ -1028,6 +1027,8 @@ abstract class DBObject
 		}
 		if (is_null($this->m_bCheckStatus))
 		{
+			$this->m_aCheckIssues = array();
+
 			$oKPI = new ExecutionKPI();
 			$this->DoCheckToWrite();
 			$oKPI->ComputeStats('CheckToWrite', get_class($this));
