@@ -1435,17 +1435,21 @@ class MenuBlock extends DisplayBlock
 				if ((count($aStates) > 0) && (($iLimit == 0) || ($oSet->Count() < $iLimit)))
 				{
 					// Life cycle actions may be available... if all objects are in the same state
-					$oSet->Rewind();
-					$aStates = array();
-					while($oObj = $oSet->Fetch())
+					//
+					// Group by <state>
+					$oGroupByExp = new FieldExpression(MetaModel::GetStateAttributeCode($sClass), $this->m_oFilter->GetClassAlias());
+					$aGroupBy = array('__state__' => $oGroupByExp);
+					$aQueryParams = array();
+					if (isset($aExtraParams['query_params']))
 					{
-						$aStates[$oObj->GetState()] = $oObj->GetState();
+						$aQueryParams = $aExtraParams['query_params'];
 					}
-					$oSet->Rewind();
-					if (count($aStates) == 1)
+					$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy);
+					$aRes = CMDBSource::QueryToArray($sSql);
+					if (count($aRes) == 1)
 					{
 						// All objects are in the same state...
-						$sState = array_pop($aStates);
+						$sState = $aRes[0]['__state__'];
 						$aTransitions = Metamodel::EnumTransitions($sClass, $sState);
 						if (count($aTransitions))
 						{
@@ -1453,8 +1457,11 @@ class MenuBlock extends DisplayBlock
 							$aStimuli = Metamodel::EnumStimuli($sClass);
 							foreach($aTransitions as $sStimulusCode => $aTransitionDef)
 							{
-								$oChecker = new StimulusChecker($this->m_oFilter, $sState, $sStimulusCode);
-								$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? $oChecker->IsAllowed() : UR_ALLOWED_NO;
+								$oSet->Rewind();
+								// As soon as the user rights implementation will browse the object set,
+								// then we might consider using OptimizeColumnLoad() here
+								$iActionAllowed = UserRights::IsStimulusAllowed($sClass, $sStimulusCode, $oSet);
+								$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? $iActionAllowed : UR_ALLOWED_NO;
 								switch($iActionAllowed)
 								{
 									case UR_ALLOWED_YES:
