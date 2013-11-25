@@ -738,14 +738,8 @@ class DBObjectSet
 		{
 			foreach($aVals as $sCode => $oExpr)
 			{
-				if ($oExpr instanceof ScalarExpression)
-				{
-					$aConst[$sClassAlias][$sCode] = $oExpr->GetValue();
-				}
-				else //Variable
-				{
-					$aConst[$sClassAlias][$sCode] = $aScalarArgs[$oExpr->GetName()];
-				}
+				$oScalarExpr = $oExpr->GetAsScalar($aScalarArgs);
+				$aConst[$sClassAlias][$sCode] = $oScalarExpr->GetValue();
 			}
 		}
 		return $aConst;		

@@ -647,12 +647,29 @@ class VariableExpression extends UnaryExpression
 	
 	public function GetAsScalar($aArgs)
 	{
-		$value = '';
+		$value = null;
 		if (array_key_exists($this->m_sName, $aArgs))
 		{
 			$value = $aArgs[$this->m_sName];
 		}
-		else
+		elseif (($iPos = strpos($this->m_sName, '->')) !== false)
+		{
+			$sParamName = substr($this->m_sName, 0, $iPos);
+			if (array_key_exists($sParamName.'->object()', $aArgs))
+			{
+				$sAttCode = substr($this->m_sName, $iPos + 2);
+				$oObj = $aArgs[$sParamName.'->object()'];
+				if ($sAttCode == 'id')
+				{
+					$value = $oObj->GetKey();
+				}
+				else
+				{
+					$value = $oObj->Get($sAttCode);
+				}
+			}
+		}
+		if (is_null($value))
 		{
 			throw new MissingQueryArgument('Missing query argument', array('expecting'=>$this->m_sName, 'available'=>array_keys($aArgs)));
 		}
