@@ -779,6 +779,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:VirtualMachine/Attribute:cpu+' => '',
 	'Class:VirtualMachine/Attribute:ram' => 'RAM',
 	'Class:VirtualMachine/Attribute:ram+' => '',
+	'Class:VirtualMachine/Attribute:managementip' => 'Management-IP',
+	'Class:VirtualMachine/Attribute:managementip+' => '',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Netzwerk-Interfaces',
 	'Class:VirtualMachine/Attribute:logicalinterface_list+' => '',
 	'Class:LogicalVolume' => 'Logical Volume',

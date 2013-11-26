@@ -830,6 +830,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:WebApplication/Attribute:url+' => '',
 ));
 
+
 //
 // Class: VirtualDevice
 //
@@ -917,6 +918,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VirtualMachine/Attribute:cpu+' => '',
 	'Class:VirtualMachine/Attribute:ram' => 'RAM',
 	'Class:VirtualMachine/Attribute:ram+' => '',
+	'Class:VirtualMachine/Attribute:managementip' => 'IP',
+	'Class:VirtualMachine/Attribute:managementip+' => '',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Network Interfaces',
 	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'All the logical network interfaces',
 ));
@@ -1792,6 +1795,7 @@ Dict::Add('EN US', 'English', 'English', array(
 'Menu:Document' => 'Documents',
 'Menu:Document+' => 'All documents',
 'Menu:Location' => 'Locations',
+
 'Menu:Location+' => 'All locations',
 'Menu:ConfigManagementCI' => 'Configuration items',
 'Menu:ConfigManagementCI+' => 'Configuration items',

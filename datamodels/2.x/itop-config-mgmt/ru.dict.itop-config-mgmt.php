@@ -782,6 +782,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:VirtualMachine/Attribute:cpu+' => '',
 	'Class:VirtualMachine/Attribute:ram' => 'RAM~~',
 	'Class:VirtualMachine/Attribute:ram+' => '',
+	'Class:VirtualMachine/Attribute:managementip' => 'IP',
+	'Class:VirtualMachine/Attribute:managementip+' => '',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Network Interfaces~~',
 	'Class:VirtualMachine/Attribute:logicalinterface_list+' => '',
 	'Class:LogicalVolume' => 'Logical Volume~~',

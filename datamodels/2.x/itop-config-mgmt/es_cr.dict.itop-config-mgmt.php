@@ -915,6 +915,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:VirtualMachine/Attribute:cpu+' => 'CPU',
 	'Class:VirtualMachine/Attribute:ram' => 'RAM',
 	'Class:VirtualMachine/Attribute:ram+' => 'RAM',
+	'Class:VirtualMachine/Attribute:managementip' => 'IP',
+	'Class:VirtualMachine/Attribute:managementip+' => '',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Interfases de Red',
 	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Interfases de Red',
 ));

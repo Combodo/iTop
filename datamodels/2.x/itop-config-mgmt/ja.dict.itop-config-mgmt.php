@@ -856,6 +856,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:VirtualMachine/Attribute:osversion_name+' => '',
 	'Class:VirtualMachine/Attribute:oslicence_name' => 'OSライセンス名',
 	'Class:VirtualMachine/Attribute:oslicence_name+' => '',
+	'Class:VirtualMachine/Attribute:managementip' => '管理ip',
+	'Class:VirtualMachine/Attribute:managementip+' => '',
 	'Class:LogicalVolume/Attribute:storagesystem_name' => 'ストレージシステム名',
 	'Class:LogicalVolume/Attribute:storagesystem_name+' => '',
 	'Class:lnkServerToVolume/Attribute:volume_name' => 'ボリューム名',

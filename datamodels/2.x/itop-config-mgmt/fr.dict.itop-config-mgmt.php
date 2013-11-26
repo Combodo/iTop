@@ -862,6 +862,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VirtualMachine/Attribute:cpu+' => '',
 	'Class:VirtualMachine/Attribute:ram' => 'RAM',
 	'Class:VirtualMachine/Attribute:ram+' => '',
+	'Class:VirtualMachine/Attribute:managementip' => 'IP',
+	'Class:VirtualMachine/Attribute:managementip+' => '',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Interfaces réseaux',
 	'Class:VirtualMachine/Attribute:logicalinterface_list+' => '',
 ));
