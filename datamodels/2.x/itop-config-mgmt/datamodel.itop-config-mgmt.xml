@@ -8101,15 +8101,15 @@
           <class>DatabaseSchema</class>
         </dashlet>
         <dashlet id="12" xsi:type="DashletBadge">
-          <rank>7</rank>
+          <rank>8</rank>
           <class>WebApplication</class>
         </dashlet>
         <dashlet id="13" xsi:type="DashletBadge">
-          <rank>8</rank>
+          <rank>9</rank>
           <class>Patch</class>
         </dashlet>
         <dashlet id="14" xsi:type="DashletBadge">
-          <rank>9</rank>
+          <rank>10</rank>
           <class>Licence</class>
         </dashlet>
       </dashlets>
