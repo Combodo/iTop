@@ -232,7 +232,8 @@ $(function()
 					iKey = parseInt(this.value, 10); // Numbers are in base 10
 					oParams.aAlreadyLinked.push(iKey);
 				}
-			);			oParams.operation = 'searchObjectsToAdd2';
+			);
+			oParams.operation = 'searchObjectsToAdd2';
 			oParams['class'] = this.options.class_name;
 			oParams.real_class = '';
 			oParams.att_code = this.options.att_code;
@@ -325,11 +326,18 @@ $(function()
 		_onDoAdd:function()
 		{
 			var oParams = this._getSelection('selectObject');
-			this.oDlg.dialog('close');
 			oParams.operation = 'doAddObjects2';
 			oParams['class'] = this.options.class_name;
 			oParams.att_code = this.options.att_code;
 			oParams.iInputId = this.id;
+			
+			// Retrieve the 'filter' definition, BEFORE closing the dialog and destroying its contents
+			var table = $('#ResultsToAdd_'+this.id).find('table.listResults')[0];
+			oParams.filter = table.config.filter;
+			oParams.extra_params = table.config.extra_params;
+
+			this.oDlg.dialog('close');
+			
 			var me = this;
 			$.post(this.options.submit_to, oParams, function(data) {
 				var oInserted = $(data);

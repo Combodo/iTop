@@ -336,14 +336,27 @@ try
 		$sAttCode = utils::ReadParam('att_code', '');
 		$iInputId = utils::ReadParam('iInputId', '');
 		$iCurrObjectId =  utils::ReadParam('iObjId', 0);
-		$sFilter = utils::ReadParam('filter', '');
+		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 		if ($sFilter != '')
 		{
 			$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
 		}
 		else
 		{
-			$oFullSetFilter = new DBObjectSearch($sRemoteClass);		
+			$oLinksetDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			$valuesDef = $oLinksetDef->GetValuesDef();				
+			if ($valuesDef === null)
+			{
+				$oFullSetFilter = new DBObjectSearch($oLinksetDef->GetLinkedClass());
+			}
+			else
+			{
+				if (!$valuesDef instanceof ValueSetObjects)
+				{
+					throw new Exception('Error: only ValueSetObjects are supported for "allowed_values" in AttributeLinkedSet ('.$this->sClass.'/'.$this->sAttCode.').');
+				}
+				$oFullSetFilter = DBObjectSearch::FromOQL($valuesDef->GetFilterExpression());
+			}		
 		}
 		$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
 		$oWidget->DoAddObjects($oPage, $oFullSetFilter);	
