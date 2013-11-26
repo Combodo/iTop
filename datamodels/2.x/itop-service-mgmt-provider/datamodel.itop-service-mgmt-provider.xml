@@ -25,6 +25,20 @@
         </details>
       </presentation>
     </class>
+    <class id="Ticket">
+      <fields>     
+        <field id="team_id" xsi:type="AttributeExternalKey" _delta="redefine">
+          <filter><![CDATA[SELECT Team AS t JOIN lnkDeliveryModelToContact AS l1 ON l1.contact_id=t.id JOIN DeliveryModel AS dm ON l1.deliverymodel_id=dm.id JOIN Organization AS o ON o.deliverymodel_id=dm.id WHERE o.id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <sql>team_id</sql>
+          <target_class>Team</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+      </fields>
+    </class>
     <class id="Contract" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
