@@ -269,7 +269,7 @@ class UILinksWidgetDirect
 		$sHtml .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";
 		$sHtml .= "</div>\n";
 		$sHtml .= "<input type=\"hidden\" id=\"count_{$this->sInputid}\" value=\"0\"/>";
-		$sHtml .= "<button type=\"button\" class=\"cancel\">".Dict::S('UI:Button:Cancel')."</button>&nbsp;&nbsp;<button class=\"ok\" disabled=\"disabled\">".Dict::S('UI:Button:Add')."</button>";
+		$sHtml .= "<button type=\"button\" class=\"cancel\">".Dict::S('UI:Button:Cancel')."</button>&nbsp;&nbsp;<button type=\"button\" class=\"ok\" disabled=\"disabled\">".Dict::S('UI:Button:Add')."</button>";
 		$sHtml .= "</div>\n";
 		$sHtml .= "</form>\n";
 		$oPage->add($sHtml);
