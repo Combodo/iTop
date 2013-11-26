@@ -973,7 +973,8 @@ EOF
 		
 		case 'shortcut_list_dlg':
 		$sOQL = utils::ReadParam('oql', '', false, 'raw_data');
-		ShortcutOQL::GetCreationDlgFromOQL($oPage, $sOQL);
+		$sSourceTableId = utils::ReadParam('source_table_id', '', false, 'raw_data');
+		ShortcutOQL::GetCreationDlgFromOQL($oPage, $sOQL, $sSourceTableId);
 		break;
 		
 		case 'shortcut_list_create':
@@ -996,6 +997,8 @@ EOF
 			$oShortcut->Set("auto_reload", 'custom');
 		}
 		$iId = $oShortcut->DBInsertNoReload();
+
+		$oShortcut->CloneTableSettings($aValues['source_table_id']);
 
 		// Add the menu node in the right place
 		//

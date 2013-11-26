@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -292,13 +292,13 @@ EOF;
 	{
 		$sMenuTitle = Dict::S('UI:ConfigureThisList');
 		$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$this->iListId.'"><ul><li><img src="../images/toolkit_menu.png"><ul>';
-		
+
 		$oMenuItem1 = new JSPopupMenuItem('iTop::ConfigureList', $sMenuTitle, "$('#datatable_dlg_".$this->iListId."').dialog('open');");
 		$aActions = array(
 			$oMenuItem1->GetUID() => $oMenuItem1->GetMenuItem(),
 		);
 		$this->oSet->Rewind();
-		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $this->oSet, $aActions);
+		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $this->oSet, $aActions, $this->sTableId);
 		$this->oSet->Rewind();
 		$sHtml .= $oPage->RenderPopupMenuItems($aActions);
 		return $sHtml;
@@ -764,7 +764,7 @@ class DataTableSettings implements Serializable
 		}		
 	}
 	
-	static public function GetTableSettings($aClassAliases, $sTableId = null)
+	static public function GetTableSettings($aClassAliases, $sTableId = null, $bOnlyOnTable = false)
 	{
 		$pref = null;
 		$oSettings = new DataTableSettings($aClassAliases, $sTableId);
@@ -777,8 +777,11 @@ class DataTableSettings implements Serializable
 		
 		if ($pref == null)
 		{
-			// Try the global preferred values for this class / set of classes
-			$pref = appUserPreferences::GetPref($oSettings->GetPrefsKey(null), null);
+			if (!$bOnlyOnTable)
+			{
+				// Try the global preferred values for this class / set of classes
+				$pref = appUserPreferences::GetPref($oSettings->GetPrefsKey(null), null);
+			}
 			if ($pref == null)
 			{
 				// no such settings, use the default values provided by the data model
@@ -808,12 +811,13 @@ class DataTableSettings implements Serializable
 		return $aSortOrder;
 	}
 	
-	public function Save()
+	public function Save($sTargetTableId = null)
 	{
-		if ($this->sTableId == null) return false; // Cannot save, the table is not identified, use SaveAsDefault instead
+		$sSaveId = is_null($sTargetTableId) ? $this->sTableId : $sTargetTableId;
+		if ($sSaveId == null) return false; // Cannot save, the table is not identified, use SaveAsDefault instead
 		
 		$sSettings = $this->serialize();
-		appUserPreferences::SetPref($this->GetPrefsKey($this->sTableId), $sSettings);
+		appUserPreferences::SetPref($this->GetPrefsKey($sSaveId), $sSettings);
 		return true;
 	}
 

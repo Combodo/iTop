@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -766,10 +766,76 @@ class utils
 	}
 	
 	/**
-	 * Get the "Back" button to go out of the current environment
+	 * Merge standard menu items with plugin provided menus items
 	 */
-	public static function GetPopupMenuItems($oPage, $iMenuId, $param, &$aActions)
+	public static function GetPopupMenuItems($oPage, $iMenuId, $param, &$aActions, $sTableId = null)
 	{
+		// 1st - add standard built-in menu items
+		// 
+		switch($iMenuId)
+		{
+			case iPopupMenuExtension::MENU_OBJLIST_TOOLKIT:
+			// $param is a DBObjectSet
+			$oAppContext = new ApplicationContext();
+			$sContext = $oAppContext->GetForLink();
+			$sSourceTableId = is_null($sTableId) ? '' : $sTableId;
+			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($param->GetFilter()->GetClass());
+			$sOQL = addslashes($param->GetFilter()->ToOQL(true));
+			$sFilter = urlencode($param->GetFilter()->serialize());
+			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
+			$aResult = array(
+				new SeparatorPopupMenuItem(),
+				// Static menus: Email this page, CSV Export & Add to Dashboard
+				new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'), "mailto:?body=".urlencode($sUrl).' '), // Add an extra space to make it work in Outlook
+				new URLPopupMenuItem('UI:Menu:CSVExport', Dict::S('UI:Menu:CSVExport'), $sUrl."&format=csv"),
+				new JSPopupMenuItem('UI:Menu:AddToDashboard', Dict::S('UI:Menu:AddToDashboard'), "DashletCreationDlg('$sOQL')"),
+				new JSPopupMenuItem('UI:Menu:ShortcutList', Dict::S('UI:Menu:ShortcutList'), "ShortcutListDlg('$sOQL', '$sSourceTableId', '$sContext')"),
+			);
+			break;
+
+			case iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS:
+			// $param is a DBObject
+			$oObj = $param;
+			$oFilter = DBobjectSearch::FromOQL("SELECT ".get_class($oObj)." WHERE id=".$oObj->GetKey());
+			$sFilter = $oFilter->serialize();
+			$sUrl = ApplicationContext::MakeObjectUrl(get_class($oObj), $oObj->GetKey());
+			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage(get_class($oObj));
+			$oAppContext = new ApplicationContext();
+			$sContext = $oAppContext->GetForLink();
+			$aResult = array(
+				new SeparatorPopupMenuItem(),
+				// Static menus: Email this page & CSV Export
+				new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'), "mailto:?subject=".urlencode($oObj->GetRawName())."&body=".urlencode($sUrl).' '), // Add an extra space to make it work in Outlook
+				new URLPopupMenuItem('UI:Menu:CSVExport', Dict::S('UI:Menu:CSVExport'), utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".urlencode($sFilter)."&format=csv&{$sContext}"),
+			);
+			break;
+
+			case iPopupMenuExtension::MENU_DASHBOARD_ACTIONS:
+			// $param is a Dashboard
+			$oAppContext = new ApplicationContext();
+			$aParams = $oAppContext->GetAsHash();
+			$sMenuId = ApplicationMenu::GetActiveNodeId();
+			$sDlgTitle = addslashes(Dict::S('UI:ImportDashboardTitle'));
+			$sDlgText = addslashes(Dict::S('UI:ImportDashboardText'));
+			$sCloseBtn = addslashes(Dict::S('UI:Button:Cancel'));
+			$aResult = array(
+				new SeparatorPopupMenuItem(),
+				new URLPopupMenuItem('UI:ExportDashboard', Dict::S('UI:ExportDashBoard'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=export_dashboard&id='.$sMenuId),
+				new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sMenuId', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn' })"),
+			);
+			break;
+
+			default:
+			// Unknown type of menu, do nothing
+			$aResult = array();
+		}
+		foreach($aResult as $oMenuItem)
+		{
+			$aActions[$oMenuItem->GetUID()] = $oMenuItem->GetMenuItem();
+		}
+
+		// Invoke the plugins
+		//
 		foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
 		{
 			if (is_object($param) && !($param instanceof DBObject))

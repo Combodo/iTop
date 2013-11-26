@@ -361,9 +361,9 @@ function DashletCreationDlg(sOQL)
 	return false;
 }
 
-function ShortcutListDlg(sOQL, sContext)
+function ShortcutListDlg(sOQL, sSourceTableId, sContext)
 {
-	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?'+sContext, {operation: 'shortcut_list_dlg', oql: sOQL}, function(data){
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?'+sContext, {operation: 'shortcut_list_dlg', oql: sOQL, source_table_id: sSourceTableId}, function(data){
 		$('body').append(data);
 	});
 	return false;
