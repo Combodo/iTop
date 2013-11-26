@@ -966,7 +966,7 @@ EOF
 			$container_index++;
 		}
 		$sSelector = '#tabbedContent_'.$container_index.' > ul';
-		$this->add_ready_script("$('$sSelector').tabs('select', $tab_index);");
+		$this->add_ready_script("window.setTimeout(\"$('$sSelector').tabs('select', $tab_index);\", 100);"); // Let the time to the tabs widget to initialize
 	}
 
 	public function StartCollapsibleSection($sSectionLabel, $bOpen = false)
