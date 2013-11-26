@@ -215,8 +215,6 @@ class ShortcutOQL extends Shortcut
 		$oCustomSettings = DataTableSettings::GetTableSettings($oFilter->GetSelectedClasses(), $sSourceTableId, true /*dedicated settings only*/);
 		if (!is_null($oCustomSettings))
 		{
-			//$oTableSettings = new DataTableSettings($oFilter->GetSelectedClasses(), 'shortcut_'.$this->GetKey());
-			//$oTableSettings->unserialize($sSerializedSettings);
 			$oCustomSettings->Save('shortcut_'.$this->GetKey());
 		}
 	}
