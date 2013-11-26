@@ -106,6 +106,7 @@
           <target_class>Service</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
+	  <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="service_name" xsi:type="AttributeExternalField">
           <extkey_attcode>service_id</extkey_attcode>
@@ -120,6 +121,7 @@
           <target_class>ServiceSubcategory</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
+	  <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="servicesubcategory_name" xsi:type="AttributeExternalField">
           <extkey_attcode>servicesubcategory_id</extkey_attcode>

@@ -36,6 +36,7 @@
           <target_class>Team</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
+	  <allow_target_creation>false</allow_target_creation>
         </field>
       </fields>
     </class>

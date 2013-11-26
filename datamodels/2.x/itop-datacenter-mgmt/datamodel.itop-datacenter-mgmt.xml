@@ -769,6 +769,7 @@
           <target_class>Rack</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
+	  <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="rack_name" xsi:type="AttributeExternalField">
           <extkey_attcode>rack_id</extkey_attcode>
@@ -783,6 +784,8 @@
           <target_class>PowerConnection</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
+	  <allow_target_creation>false</allow_target_creation>
+	  <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="powerstart_name" xsi:type="AttributeExternalField">
           <extkey_attcode>powerstart_id</extkey_attcode>

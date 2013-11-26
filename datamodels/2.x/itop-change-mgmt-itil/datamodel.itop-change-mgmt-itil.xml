@@ -105,6 +105,7 @@
           <target_class>Person</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
+	  <allow_target_creation>false</allow_target_creation>
           <jointype/>
         </field>
         <field id="supervisor_email" xsi:type="AttributeExternalField">
@@ -133,6 +134,7 @@
           <target_class>Person</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
+	  <allow_target_creation>false</allow_target_creation>
           <jointype/>
         </field>
         <field id="manager_email" xsi:type="AttributeExternalField">

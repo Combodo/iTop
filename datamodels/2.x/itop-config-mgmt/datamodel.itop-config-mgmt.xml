@@ -486,6 +486,7 @@
           <target_class>Location</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
+	  <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="location_name" xsi:type="AttributeExternalField">
           <extkey_attcode>location_id</extkey_attcode>
@@ -1523,6 +1524,7 @@
           <target_class>Location</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
+	  <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="location_name" xsi:type="AttributeExternalField">
           <extkey_attcode>location_id</extkey_attcode>
@@ -1936,6 +1938,7 @@
           <target_class>Rack</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
+	  <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="rack_name" xsi:type="AttributeExternalField">
           <extkey_attcode>rack_id</extkey_attcode>
@@ -1950,6 +1953,7 @@
           <target_class>Enclosure</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
+	  <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="enclosure_name" xsi:type="AttributeExternalField">
           <extkey_attcode>enclosure_id</extkey_attcode>
@@ -1974,6 +1978,7 @@
           <target_class>PowerConnection</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
+	  <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="powerA_name" xsi:type="AttributeExternalField">
           <extkey_attcode>powerA_id</extkey_attcode>
@@ -1988,6 +1993,7 @@
           <target_class>PowerConnection</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
+	  <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="powerB_name" xsi:type="AttributeExternalField">
           <extkey_attcode>powerB_id</extkey_attcode>
@@ -3154,6 +3160,7 @@
           <target_class>FunctionalCI</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
+	  <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="system_name" xsi:type="AttributeExternalField">
           <extkey_attcode>system_id</extkey_attcode>
@@ -3179,6 +3186,7 @@
           <target_class>SoftwareLicence</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
+	  <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="softwarelicence_name" xsi:type="AttributeExternalField">
           <extkey_attcode>softwarelicence_id</extkey_attcode>
