@@ -43,9 +43,7 @@ class ResponseTicketSLT
 			}
 				
 			//echo "<p>Managing:".$sMetric."-".$this->Get('request_type')."-".$this->Get('importance')."</p>\n";
-			$sOQL = "SELECT SLT AS slt JOIN lnkSLAToSLT AS l1 ON l1.slt_id=slt.id JOIN SLA AS sla ON l1.sla_id=sla.id JOIN lnkCustomerContractToService AS l2 ON l2.sla_id=sla.id JOIN CustomerContract AS sc ON l2.customercontract_id=sc.id WHERE slt.metric = :metric AND l2.service_id = :service AND sc.org_id = :customer AND slt.request_type = :request_type AND slt.priority = :priority";
-		
-			$oSLTSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
+			$oSLTSet = new DBObjectSet(DBObjectSearch::FromOQL(RESPONSE_TICKET_SLT_QUERY),
 						array(),
 						array(
 							'metric' => $sMetric,
