@@ -53,7 +53,7 @@ class ItopWelcome extends ModuleHandlerAPI
 			$oAdminMenu = new MenuGroup('AdminTools', 80 /* fRank */);
 			new OQLMenuNode('UserAccountsMenu', 'SELECT User', $oAdminMenu->GetIndex(), 1 /* fRank */);
 			new OQLMenuNode('ProfilesMenu', 'SELECT URP_Profiles', $oAdminMenu->GetIndex(), 2 /* fRank */);
-			new TemplateMenuNode('NotificationsMenu', APPROOT.'application/templates/notifications_menu.html', $oAdminMenu->GetIndex(), 3 /* fRank */);
+			new WebPageMenuNode('NotificationsMenu', utils::GetAbsoluteUrlAppRoot().'pages/notifications.php', $oAdminMenu->GetIndex(), 3 /* fRank */);
 			new OQLMenuNode('AuditCategories', 'SELECT AuditCategory', $oAdminMenu->GetIndex(), 4 /* fRank */);
 			new WebPageMenuNode('RunQueriesMenu', utils::GetAbsoluteUrlAppRoot().'pages/run_query.php', $oAdminMenu->GetIndex(), 8 /* fRank */);
 			new OQLMenuNode('QueryMenu', 'SELECT Query', $oAdminMenu->GetIndex(), 8.5 /* fRank */);
