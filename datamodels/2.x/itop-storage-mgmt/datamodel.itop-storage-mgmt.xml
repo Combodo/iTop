@@ -68,6 +68,9 @@
             <item id="tickets_list">
               <rank>30</rank>
             </item>
+            <item id="applicationsolution_list">
+              <rank>35</rank>
+            </item>
             <item id="physicalinterface_list">
               <rank>40</rank>
             </item>
@@ -323,6 +326,9 @@
             <item id="tickets_list">
               <rank>30</rank>
             </item>
+            <item id="applicationsolution_list">
+              <rank>35</rank>
+            </item>
             <item id="physicalinterface_list">
               <rank>40</rank>
             </item>
@@ -575,7 +581,10 @@
               <rank>30</rank>
             </item>
             <item id="tickets_list">
-              <rank>40</rank>
+              <rank>45</rank>
+            </item>
+            <item id="applicationsolution_list">
+              <rank>35</rank>
             </item>
             <item id="physicalinterface_list">
               <rank>50</rank>
@@ -824,6 +833,9 @@
             </item>
             <item id="tickets_list">
               <rank>30</rank>
+            </item>
+            <item id="applicationsolution_list">
+              <rank>35</rank>
             </item>
             <item id="physicalinterface_list">
               <rank>40</rank>
