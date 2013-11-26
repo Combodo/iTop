@@ -261,7 +261,7 @@ class DisplayBlock
 			 );
 			 ');
 		}
-		if ($bAutoReload)
+		if (($bAutoReload) && ($this->m_sStyle != 'search')) // Search form do NOT auto-reload
 		{
 			$oPage->add_script('setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \''.$sFilter.'\', \"'.$sExtraParams.'\")", '.$iReloadInterval.');');
 		}
