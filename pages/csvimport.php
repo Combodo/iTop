@@ -613,9 +613,9 @@ EOF
 );
 		}
 		
-		$sErrors = addslashes(Dict::Format('UI:CSVImportError_items', $iUnchanged));
-		$sCreated = addslashes(Dict::Format('UI:CSVImportCreated_items', $iUnchanged));
-		$sModified = addslashes(Dict::Format('UI:CSVImportModified_items', $iUnchanged));
+		$sErrors = addslashes(Dict::Format('UI:CSVImportError_items', $iErrors));
+		$sCreated = addslashes(Dict::Format('UI:CSVImportCreated_items', $iCreated));
+		$sModified = addslashes(Dict::Format('UI:CSVImportModified_items', $iModified));
 		$sUnchanged = addslashes(Dict::Format('UI:CSVImportUnchanged_items', $iUnchanged));
 		$oPage->add_script(		
 <<< EOF
