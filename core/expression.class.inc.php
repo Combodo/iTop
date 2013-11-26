@@ -403,6 +403,11 @@ class ScalarExpression extends UnaryExpression
 		}
 		return $sRet;
 	}
+
+	public function GetAsScalar($aArgs)
+	{
+		return clone $this;
+	}
 }
 
 class TrueExpression extends ScalarExpression
