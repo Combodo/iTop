@@ -207,6 +207,14 @@ try
 
 		if ($bSaveAsDefaults)
 		{
+			if ($sTableId != null)
+			{
+				$oCurrSettings = DataTableSettings::GetTableSettings($aClassAliases, $sTableId, true /* bOnlyTable */ );
+				if ($oCurrSettings)
+				{
+					$oCurrSettings->ResetToDefault(false); // Reset this table to the defaults
+				}
+			}
 			$bRet = $oSettings->SaveAsDefault();
 		}
 		else

@@ -875,7 +875,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Display_X_ItemsPerPage' => '1ページに %1$s アイテムを表示',
 	'UI:UseSavetheSettings' => 'セッティングを保存',
 	'UI:OnlyForThisList' => 'このリストのみ',
-	'UI:ForAllLists' => '全てのリスト',
+	'UI:ForAllLists' => 'すべてのリストのデフォルト',
 	'UI:ExtKey_AsLink' => '%1$s (Link)',
 	'UI:ExtKey_AsFriendlyName' => '%1$s (Friendly Name)',
 	'UI:ExtField_AsRemoteField' => '%1$s (%2$s)',

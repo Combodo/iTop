@@ -900,7 +900,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Display_X_ItemsPerPage' => 'Afficher %1$s éléments par page',
 	'UI:UseSavetheSettings' => 'Enregistrer ces réglages',
 	'UI:OnlyForThisList' => 'Seulement pour cette liste',
-	'UI:ForAllLists' => 'Pour toutes les listes',
+	'UI:ForAllLists' => 'Défaut pour toutes les listes',
 	'UI:ExtKey_AsLink' => '%1$s (Lien)',
 	'UI:ExtKey_AsFriendlyName' => '%1$s (Nom)',
 	'UI:ExtField_AsRemoteField' => '%1$s (%2$s)',

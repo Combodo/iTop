@@ -869,7 +869,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Display_X_ItemsPerPage' => '%1$s Elemente pro Seite anzeigen',
 	'UI:UseSavetheSettings' => 'Einstellungen speichern',
 	'UI:OnlyForThisList' => 'Nur für diese Liste',
-	'UI:ForAllLists' => 'Für alle Listen',
+	'UI:ForAllLists' => 'Standard für alle Listen',
 	'UI:ExtKey_AsLink' => '%1$s (Link)',
 	'UI:ExtKey_AsFriendlyName' => '%1$s (Friendly Name)',
 	'UI:ExtField_AsRemoteField' => '%1$s (%2$s)',

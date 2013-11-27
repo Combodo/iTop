@@ -1057,7 +1057,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Display_X_ItemsPerPage' => 'Display %1$s items per page',
 	'UI:UseSavetheSettings' => 'Save the Settings',
 	'UI:OnlyForThisList' => 'Only for this list',
-	'UI:ForAllLists' => 'For all lists',
+	'UI:ForAllLists' => 'Default for all lists',
 	'UI:ExtKey_AsLink' => '%1$s (Link)',
 	'UI:ExtKey_AsFriendlyName' => '%1$s (Friendly Name)',
 	'UI:ExtField_AsRemoteField' => '%1$s (%2$s)',
