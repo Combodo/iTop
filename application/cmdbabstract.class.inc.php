@@ -1504,7 +1504,10 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		}
 		foreach($aExtraParams as $sName => $sValue)
 		{
-			$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"$sValue\" />\n";
+			if (is_scalar($sValue))
+			{
+				$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"$sValue\" />\n";
+			}
 		}
 		$sHtml .= "<input type=\"hidden\" name=\"class\" value=\"$sClassName\" />\n";
 		$sHtml .= "<input type=\"hidden\" name=\"dosearch\" value=\"1\" />\n";
@@ -1549,7 +1552,10 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$sHtml .= "<input type=\"hidden\" name=\"dosearch\" value=\"1\" />\n";
 		foreach($aExtraParams as $sName => $sValue)
 		{
-			$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"$sValue\" />\n";
+			if (is_scalar($sValue))
+			{
+				$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"$sValue\" />\n";
+			}
 		}
 		$sHtml .= "<input type=\"hidden\" name=\"operation\" value=\"search_oql\" />\n";
 		$sHtml .= $oAppContext->GetForForm();
@@ -2000,7 +2006,10 @@ EOF
 		$oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"$iTransactionId\">\n");
 		foreach($aExtraParams as $sName => $value)
 		{
-			$oPage->add("<input type=\"hidden\" name=\"$sName\" value=\"$value\">\n");
+			if (is_scalar($value))
+			{
+				$oPage->add("<input type=\"hidden\" name=\"$sName\" value=\"$value\">\n");
+			}
 		}
 		$oPage->add($oAppContext->GetForForm());
 		if ($sButtonsPosition != 'top')
