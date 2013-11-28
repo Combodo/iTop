@@ -2106,7 +2106,10 @@ abstract class MetaModel
 			}
 			else
 			{
-				$aScalarArgs[$sArgName] = (string) $value;
+				if (is_scalar($value))
+				{
+					$aScalarArgs[$sArgName] = (string) $value;
+				}
 			}
 		}
 		// Add standard contextual arguments
