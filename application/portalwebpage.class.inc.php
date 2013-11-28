@@ -558,7 +558,11 @@ EOF
 		$this->add("<p align=\"right\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Search')."\"></p>\n");
 		foreach($aExtraParams as $sName => $sValue)
 		{
-			$this->add("<input type=\"hidden\" name=\"$sName\" value=\"$sValue\" />\n");
+			// Note: use DumpHiddenParams() to transmit arrays as hidden params
+			if (is_scalar($sValue))
+			{
+				$this->add("<input type=\"hidden\" name=\"$sName\" value=\"$sValue\" />\n");
+			}
 		}
 	//	$this->add($oAppContext->GetForForm());
 		$this->add("</form>\n");

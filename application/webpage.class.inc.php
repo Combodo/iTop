@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -497,13 +497,16 @@ class WebPage implements Page
 	/**
 	 * Build a series of hidden field[s] from an array
 	 */
-	 // By Rom - je verrais bien une serie d'outils pour gerer des parametres que l'on retransmet entre pages d'un wizard...
-	 //          ptet deriver webpage en webwizard
 	public function add_input_hidden($sLabel, $aData)
 	{
-		foreach($aData as $sKey=>$sValue)
+		foreach($aData as $sKey => $sValue)
 		{
-			$this->add("<input type=\"hidden\" name=\"".$sLabel."[$sKey]\" value=\"$sValue\">");
+			// Note: protection added to protect against the Notice 'array to string conversion' that appeared with PHP 5.4
+			// (this function seems unused though!)
+			if (is_scalar($sValue))
+			{
+				$this->add("<input type=\"hidden\" name=\"".$sLabel."[$sKey]\" value=\"$sValue\">");
+			}
 		}
 	}
 
