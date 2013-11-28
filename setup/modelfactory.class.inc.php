@@ -1909,7 +1909,7 @@ class MFElement extends DOMElement
 		{
 			return $this->parentNode->IsClassNode();
 		}
-		elseif ($this->tagName == 'classes')
+		elseif (($this->tagName == 'classes') && ($this->parentNode->tagName == 'itop_design') ) // Beware: classes/class also exists in the group definition
 		{
 			return true;
 		}
