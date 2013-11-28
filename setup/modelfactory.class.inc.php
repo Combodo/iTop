@@ -265,7 +265,7 @@ class ModelFactory
 		//echo "Load $oSourceNode->tagName::".$oSourceNode->getAttribute('id')." (".$oSourceNode->getAttribute('_delta').")<br/>\n";
 		$oTarget = $this->oDOMDocument;
 
-		if (($oSourceNode->tagName == 'class') && ($oSourceNode->parentNode->tagName == 'classes'))
+		if (($oSourceNode->tagName == 'class') && ($oSourceNode->parentNode->tagName == 'classes') && ($oSourceNode->parentNode->parentNode->tagName == 'itop_design'))
 		{
 			if ($oSourceNode->getAttribute('_delta') == 'define')
 			{
