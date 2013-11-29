@@ -1102,11 +1102,10 @@ EOF
 		$oPage->SetContentType('text/html');
 
 		$sDialogTitle = addslashes(Dict::S('UI:About:Title'));
-		$sOkButtonLabel = addslashes(Dict::S('UI:Button:Ok'));
 		$oPage->add_ready_script(
 <<<EOF
 $('#about_box').dialog({
-	width: 800,
+	width: 700,
 	modal: true,
 	title: '$sDialogTitle',
 	close: function() { $(this).remove(); }
@@ -1168,16 +1167,24 @@ EOF
 		// Display
 		//
 		$oPage->add("<div id=\"about_box\">");
-		$oPage->p('iTop '.$sVersionString);
-		$oPage->p('Data model '.$sDataModelVersion);
-
-		$oPage->p('MySQL '.$sMySQLVersion);
-		$oPage->p('PHP '.$sPHPVersion);
+		$oPage->add('<div style="margin-left: 120px;">');
+		$oPage->add('<table>');
+		$oPage->add('<tr>');
+		$oPage->add('<td><a href="http://www.combodo.com" title="www.combodo.com" target="_blank" style="background: none;"><img src="../images/logo-combodo.png" style="float: right;"/></a></td>');
+		$oPage->add('<td style="padding-left: 20px;">');
+		$oPage->add($sVersionString.'<br/>');
+		$oPage->add(Dict::S('UI:About:DataModel').': '.$sDataModelVersion.'<br/>');
+		$oPage->add('MySQL: '.$sMySQLVersion.'<br/>');
+		$oPage->add('PHP: '.$sPHPVersion.'<br/>');
+		$oPage->add('</td>');
+		$oPage->add('</tr>');
+		$oPage->add('</table>');
+		$oPage->add("</div>");
 
 		$oPage->add("<div>");
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>'.Dict::S('UI:About:Licenses').'</legend>');
-		$oPage->add('<ul style="margin: 0;">');
+		$oPage->add('<ul style="margin: 0; font-size: smaller;">');
 		foreach($aLicenses as $index => $oLicense)
 		{
 			$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<a id="toggle_'.$index.'" class="CollapsibleLabel" style="cursor:pointer;">Details</a>)');
@@ -1191,14 +1198,14 @@ EOF
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>'.Dict::S('UI:About:Modules').'</legend>');
 		//$oPage->add(print_r($aAvailableModules, true));
-		$oPage->add("<div style=\"height: 150px; overflow: auto;\">");
+		$oPage->add("<div style=\"height: 150px; overflow: auto; font-size: smaller;\">");
 		$oPage->add('<ul style="margin: 0;">');
 		foreach ($aAvailableModules as $sModuleId => $aModuleData)
 		{
 			if ($sModuleId == '_Root_') continue;
 			if (!$aModuleData['visible']) continue;
 			if ($aModuleData['version_db'] == '') continue;
-			$oPage->add('<li>'.$aModuleData['label'].' '.$aModuleData['version_db'].'</li>');
+			$oPage->add('<li>'.$aModuleData['label'].' ('.$aModuleData['version_db'].')</li>');
 		}
 		$oPage->add('</ul>');
 		$oPage->add("</div>");
@@ -1208,9 +1215,11 @@ EOF
 		// MUST NOT be localized, as the information given here will be sent to the support
 		$oPage->add("<a id=\"collapse_support_details\" class=\"CollapsibleLabel\" href=\"#\">".Dict::S('UI:About:Support')."</a></br>\n");
 		$oPage->add("<div id=\"support_details\">");
-		$oPage->add('<textarea readonly style="width: 760px; height: 200px; font-size: smaller;">');
+		$oPage->add('<textarea readonly style="width: 660px; height: 150px; font-size: smaller;">');
 		$oPage->add("===== begin =====\n");
-		$oPage->add('iTopVersion: '.ITOP_VERSION.'.'.ITOP_REVISION.'.'.ITOP_BUILD_DATE."\n");
+		$oPage->add('iTopVersion: '.ITOP_VERSION."\n");
+		$oPage->add('iTopBuild: '.ITOP_REVISION."\n");
+		$oPage->add('iTopBuildDate: '.ITOP_BUILD_DATE."\n");
 		$oPage->add('DataModelVersion: '.$sDataModelVersion."\n");
 		$oPage->add('MySQLVersion: '.$sMySQLVersion."\n");
 		$oPage->add('PHPVersion: '. $sPHPVersion."\n");

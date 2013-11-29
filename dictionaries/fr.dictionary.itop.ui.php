@@ -1043,6 +1043,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 
 	'UI:AboutBox' => 'A propos d\'iTop...',
 	'UI:About:Title' => 'A propos d\'iTop',
+	'UI:About:DataModel' => 'Modèle de données',
 	'UI:About:Support' => 'Informations pour le support',
 	'UI:About:Licenses' => 'Licences',
 	'UI:About:Modules' => 'Modules installés',

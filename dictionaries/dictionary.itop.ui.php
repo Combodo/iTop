@@ -1202,6 +1202,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	'UI:AboutBox' => 'About iTop...',
 	'UI:About:Title' => 'About iTop',
+	'UI:About:DataModel' => 'Data model',
 	'UI:About:Support' => 'Support information',
 	'UI:About:Licenses' => 'Licenses',
 	'UI:About:Modules' => 'Installed modules',
