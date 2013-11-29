@@ -650,19 +650,11 @@ class WizStepLicense extends WizardStep
 		$this->oWizard->SaveParameter('accept_license', 'no');
 		return array('class' => 'WizStepDBParams', 'state' => '');
 	}
-	
+
 	public function Display(WebPage $oPage)
 	{
-		$aLicenses = array();
-		foreach (glob(APPROOT.'setup/licenses/*.xml') as $sFile)
-		{
-    		$oXml = simplexml_load_file($sFile);
-    		foreach($oXml->license as $oLicense)
-    		{
-    			$aLicenses[] = $oLicense;
-    		}
-		}
-		
+		$aLicenses = SetupUtils::GetLicenses();
+
 		$oPage->add('<h2>Licenses agreements for the components of '.ITOP_APPLICATION.'</h2>');
 		$oPage->add_style('div a.no-arrow { background:transparent; padding-left:0;}');
 		$oPage->add_style('.toggle { cursor:pointer; text-decoration:underline; color:#1C94C4; }');

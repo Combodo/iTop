@@ -99,6 +99,18 @@ class iTopWebPage extends NiceWebPage
 		{
 			$sInitClosed = 'initClosed: true,';
 		}
+
+		$this->add_script(
+<<<EOF
+function ShowAboutBox()
+{
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'about_box'}, function(data){
+		$('body').append(data);
+	});
+	return false;
+}
+EOF
+		);
 		
 		$this->m_sInitScript =
 <<< EOF
@@ -709,6 +721,10 @@ EOF
 				$aActions[$oChangePwd->GetUID()] = $oChangePwd->GetMenuItem();
 			}
 			utils::GetPopupMenuItems($this, iPopupMenuExtension::MENU_USER_ACTIONS, null, $aActions);
+
+			$oAbout = new JSPopupMenuItem('UI:AboutBox', Dict::S('UI:AboutBox'), 'return ShowAboutBox();');
+			$aActions[$oAbout->GetUID()] = $oAbout->GetMenuItem();
+
 			$sLogOffMenu .= $this->RenderPopupMenuItems($aActions);
 
 

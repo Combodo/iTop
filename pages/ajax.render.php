@@ -1098,6 +1098,158 @@ EOF
 		$oPage->add(json_encode($aResult));
 		break;
 		
+		case 'about_box':
+		$oPage->SetContentType('text/html');
+
+		$sDialogTitle = Dict::S('UI:About:Title');
+		$sOkButtonLabel = Dict::S('UI:Button:Ok');
+		$oPage->add_ready_script(
+<<<EOF
+$('#about_box').dialog({
+	width: 800,
+	modal: true,
+	title: '$sDialogTitle',
+	close: function() { $(this).remove(); }
+});
+$("#collapse_support_details").click(function() {
+	$("#support_details").slideToggle('normal');
+	$("#collapse_support_details").toggleClass('open');
+});
+$('#support_details').toggle();
+EOF
+		);
+		$sVersionString = Dict::Format('UI:iTopVersion:Long', ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
+		$sMySQLVersion = CMDBSource::GetDBVersion();
+		$sPHPVersion = phpversion();
+		$sOSVersion = PHP_OS;
+		$sWebServerVersion = $_SERVER["SERVER_SOFTWARE"];
+		$sModules = implode(', ', get_loaded_extensions());
+
+		// Get the datamodel directory
+		$oFilter = DBObjectSearch::FromOQL('SELECT ModuleInstallation WHERE name="datamodel"');
+		$oSet = new DBObjectSet($oFilter, array('installed' => false)); // Most recent first
+		$oLastInstall = $oSet->Fetch();
+		$sLastInstallDate = $oLastInstall->Get('installed');
+		$sDataModelVersion = $oLastInstall->Get('version');
+		$aDataModelInfo = json_decode($oLastInstall->Get('comment'), true);
+		$sDataModelSourceDir = $aDataModelInfo['source_dir'];
+
+		require_once(APPROOT.'setup/runtimeenv.class.inc.php');
+		$sCurrEnv = utils::GetCurrentEnvironment();
+		$oRuntimeEnv = new RunTimeEnvironment($sCurrEnv);
+		$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation(MetaModel::GetConfig(), array(APPROOT.$sDataModelSourceDir));
+
+		require_once(APPROOT.'setup/setuputils.class.inc.php');
+		$aLicenses = SetupUtils::GetLicenses();
+
+		$aItopSettings = array('cron_max_execution_time', 'timezone');
+		$aPHPSettings = array('memory_limit', 'max_execution_time', 'upload_max_filesize', 'post_max_size');
+		$aMySQLSettings = array('max_allowed_packet', 'key_buffer_size', 'query_cache_size');
+		$aMySQLStatuses = array('Key_read_requests', 'Key_reads');
+
+		if (extension_loaded('suhosin'))
+		{
+			$aPHPSettings[] = 'suhosin.post.max_vars';
+			$aPHPSettings[] = 'suhosin.get.max_value_length';
+		}
+
+		$aMySQLVars = array();
+		foreach (CMDBSource::QueryToArray('SHOW VARIABLES') as $aRow)
+		{
+			$aMySQLVars[$aRow['Variable_name']] = $aRow['Value'];
+		}
+
+		$aMySQLStats = array();
+		foreach (CMDBSource::QueryToArray('SHOW GLOBAL STATUS') as $aRow)
+		{
+			$aMySQLStats[$aRow['Variable_name']] = $aRow['Value'];
+		}
+
+		// Display
+		//
+		$oPage->add("<div id=\"about_box\">");
+		$oPage->p('iTop '.$sVersionString);
+		$oPage->p('Data model '.$sDataModelVersion);
+
+		$oPage->p('MySQL '.$sMySQLVersion);
+		$oPage->p('PHP '.$sPHPVersion);
+
+		$oPage->add("<div>");
+		$oPage->add('<fieldset>');
+		$oPage->add('<legend>'.Dict::S('UI:About:Licenses').'</legend>');
+		$oPage->add('<ul style="margin: 0;">');
+		foreach($aLicenses as $index => $oLicense)
+		{
+			$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<a id="toggle_'.$index.'" class="CollapsibleLabel" style="cursor:pointer;">Details</a>)');
+			$oPage->add('<div id="license_'.$index.'" class="license_text" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'</div>');
+			$oPage->add_ready_script('$("#toggle_'.$index.'").click( function() { $("#license_'.$index.'").slideToggle("normal"); } );');
+		}
+		$oPage->add('</ul>');
+		$oPage->add('</fieldset>');
+		$oPage->add("</div>");
+
+		$oPage->add('<fieldset>');
+		$oPage->add('<legend>'.Dict::S('UI:About:Modules').'</legend>');
+		//$oPage->add(print_r($aAvailableModules, true));
+		$oPage->add("<div style=\"height: 150px; overflow: auto;\">");
+		$oPage->add('<ul style="margin: 0;">');
+		foreach ($aAvailableModules as $sModuleId => $aModuleData)
+		{
+			if ($sModuleId == '_Root_') continue;
+			if (!$aModuleData['visible']) continue;
+			if ($aModuleData['version_db'] == '') continue;
+			$oPage->add('<li>'.$aModuleData['label'].' '.$aModuleData['version_db'].'</li>');
+		}
+		$oPage->add('</ul>');
+		$oPage->add("</div>");
+		$oPage->add('</fieldset>');
+
+
+		// MUST NOT be localized, as the information given here will be sent to the support
+		$oPage->add("<a id=\"collapse_support_details\" class=\"CollapsibleLabel\" href=\"#\">".Dict::S('UI:About:Support')."</a></br>\n");
+		$oPage->add("<div id=\"support_details\">");
+		$oPage->add('<textarea readonly style="width: 760px; height: 200px; font-size: smaller;">');
+		$oPage->add("===== begin =====\n");
+		$oPage->add('iTopVersion: '.ITOP_VERSION.'.'.ITOP_REVISION.'.'.ITOP_BUILD_DATE."\n");
+		$oPage->add('DataModelVersion: '.$sDataModelVersion."\n");
+		$oPage->add('MySQLVersion: '.$sMySQLVersion."\n");
+		$oPage->add('PHPVersion: '. $sPHPVersion."\n");
+		$oPage->add('OSVersion: '.$sOSVersion."\n");
+		$oPage->add('WebServerVersion: '.$sWebServerVersion."\n");
+		$oPage->add('PHPModules: '.$sModules."\n");
+		foreach ($aItopSettings as $siTopVar)
+		{
+			$oPage->add('ItopSetting/'.$siTopVar.': '.MetaModel::GetConfig()->Get($siTopVar)."\n");
+		}
+		foreach ($aPHPSettings as $sPHPVar)
+		{
+			$oPage->add('PHPSetting/'.$sPHPVar.': '.ini_get($sPHPVar)."\n");
+		}
+		foreach ($aMySQLSettings as $sMySQLVar)
+		{
+			$oPage->add('MySQLSetting/'.$sMySQLVar.': '.$aMySQLVars[$sMySQLVar]."\n");
+		}
+		foreach ($aMySQLStatuses as $sMySQLStatus)
+		{
+			$oPage->add('MySQLStatus/'.$sMySQLStatus.': '.$aMySQLStats[$sMySQLStatus]."\n");
+		}
+
+		$oPage->add('InstallDate: '.$sLastInstallDate."\n");
+		$oPage->add('InstallPath: '.APPROOT."\n");
+		foreach ($aAvailableModules as $sModuleId => $aModuleData)
+		{
+			if ($sModuleId == '_Root_') continue;
+			if ($aModuleData['version_db'] == '') continue;
+			$oPage->add('InstalledModule/'.$sModuleId.': '.$aModuleData['version_db']."\n");
+		}
+
+		$oPage->add('===== end =====');
+		$oPage->add('</textarea>');
+		$oPage->add("</div>");
+
+		$oPage->add("</div>");
+		break;
+		
 		default:
 		$oPage->p("Invalid query.");
 	}

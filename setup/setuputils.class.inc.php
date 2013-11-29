@@ -1394,7 +1394,25 @@ EOF
 		}
 		return false;
 	}
+
+	/**
+	 * Returns an array of xml nodes describing the licences	
+	 */	
+	static public function GetLicenses()
+	{
+		$aLicenses = array();
+		foreach (glob(APPROOT.'setup/licenses/*.xml') as $sFile)
+		{
+    		$oXml = simplexml_load_file($sFile);
+    		foreach($oXml->license as $oLicense)
+    		{
+    			$aLicenses[] = $oLicense;
+    		}
+		}
+		return $aLicenses;
+	}
 }
+
 /**
  * Helper class to write rules (as PHP expressions) in the 'auto_select' field of the 'module'
  */

@@ -1199,5 +1199,11 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Button:Remove' => 'Remove',
 	'UI:AddAnExisting_Class' => 'Add objects of type %1$s...',
 	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s',
+
+	'UI:AboutBox' => 'About iTop...',
+	'UI:About:Title' => 'About iTop',
+	'UI:About:Support' => 'Support information',
+	'UI:About:Licenses' => 'Licenses',
+	'UI:About:Modules' => 'Installed modules',
 ));
 ?>
