@@ -8138,7 +8138,7 @@
           <rank>2</rank>
           <class>Subnet</class>
         </dashlet>
-        <dashlet id="21" xsi:type="DashletBadge">
+        <dashlet id="vlan" xsi:type="DashletBadge">
           <rank>2.1</rank>
           <class>VLAN</class>
         </dashlet>
