@@ -41,17 +41,15 @@ class ResponseTicketSLT
 			{
 				$sRequestType = $oTicket->Get('request_type');
 			}
+			
+			$aArgs = $oTicket->ToArgs();
+			$aArgs['metric'] = $sMetric;
+			$aArgs['request_type'] = $sRequestType;
 				
 			//echo "<p>Managing:".$sMetric."-".$this->Get('request_type')."-".$this->Get('importance')."</p>\n";
 			$oSLTSet = new DBObjectSet(DBObjectSearch::FromOQL(RESPONSE_TICKET_SLT_QUERY),
 						array(),
-						array(
-							'metric' => $sMetric,
-							'service' => $oTicket->Get('service_id'),
-							'customer' => $oTicket->Get('org_id'),
-							'request_type' => $sRequestType,
-							'priority' => $oTicket->Get('priority'),
-							)
+						$aArgs
 						);
 
 			$iMinDuration = PHP_INT_MAX;
