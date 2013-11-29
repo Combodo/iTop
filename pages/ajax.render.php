@@ -1101,8 +1101,8 @@ EOF
 		case 'about_box':
 		$oPage->SetContentType('text/html');
 
-		$sDialogTitle = Dict::S('UI:About:Title');
-		$sOkButtonLabel = Dict::S('UI:Button:Ok');
+		$sDialogTitle = addslashes(Dict::S('UI:About:Title'));
+		$sOkButtonLabel = addslashes(Dict::S('UI:Button:Ok'));
 		$oPage->add_ready_script(
 <<<EOF
 $('#about_box').dialog({
