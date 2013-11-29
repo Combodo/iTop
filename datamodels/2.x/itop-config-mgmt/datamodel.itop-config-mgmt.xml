@@ -8274,10 +8274,6 @@
               <rank>6</rank>
               <class>NetworkDeviceType</class>
             </dashlet>
-            <dashlet id="8" xsi:type="DashletBadge">
-              <rank>7</rank>
-              <class>ContractType</class>
-            </dashlet>
             <dashlet id="9" xsi:type="DashletBadge">
               <rank>8</rank>
               <class>ContactType</class>

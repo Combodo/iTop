@@ -2391,5 +2391,19 @@
       <oql>SELECT DeliveryModel</oql>
       <do_search>1</do_search>
     </menu>
+    <menu id="Typology" xsi:type="DashboardMenuNode">
+      <definition>
+        <cells>
+          <cell id="0">
+            <dashlets>
+              <dashlet id="8" xsi:type="DashletBadge" _delta="define">
+                <rank>7</rank>
+                <class>ContractType</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
   </menus>
 </itop_design>
