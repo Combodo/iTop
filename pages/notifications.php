@@ -94,7 +94,7 @@ foreach($aActionClasses as $sActionClass)
 	$oFilter = new DBObjectSearch($sActionClass);
 	$aParams = array();
 	$oBlock = new DisplayBlock($oFilter, 'list', false, $aParams);
-	$oBlock->Display($oP, 'block_'.$iBlock, $aParams);
+	$oBlock->Display($oP, 'block_action_'.$iBlock, $aParams);
 	$iBlock++;
 }
 
