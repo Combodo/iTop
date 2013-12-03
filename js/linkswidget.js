@@ -301,11 +301,11 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			if (aMatches = this.name.match(re))
 			{
 				var idx = aMatches[1];
-				var index = aIndexes.indexOf(idx);
+				var index = jQuery.inArray(idx, aIndexes);
 				if (index == -1)
 				{
 					aIndexes.push(idx);
-					index = aIndexes.indexOf(idx);
+					index = jQuery.inArray(idx, aIndexes);
 					aValues[index] = {};
 				}
 				var value = $(this).val();
