@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -2843,7 +2843,15 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	
 
 	public function GetDefaultValue() {return 0;}
-	public function IsNullAllowed() {return $this->Get("is_null_allowed");}
+	public function IsNullAllowed()
+	{
+		if (MetaModel::GetConfig()->Get('disable_mandatory_ext_keys'))
+		{
+			return true;
+		}
+		return $this->Get("is_null_allowed");
+	}
+
 
 	public function GetBasicFilterOperators()
 	{

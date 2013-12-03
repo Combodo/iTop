@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -144,6 +144,14 @@ class Config
 			'description' => 'For developpers: format the SQL queries for human analysis',
 			'default' => false,
 			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'disable_mandatory_ext_keys' => array(
+			'type' => 'bool',
+			'description' => 'For developpers: allow every external keys to be undefined',
+			'default' => true,
+			'value' => true,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
