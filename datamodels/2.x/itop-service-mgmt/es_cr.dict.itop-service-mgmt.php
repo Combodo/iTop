@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,8 +20,9 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2013 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
 
 // Dictionnay conventions
@@ -145,8 +146,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Contract/Attribute:status/Value:obsolete+' => 'Obsoleto',
 	'Class:Contract/Attribute:status/Value:production' => 'Productivo',
 	'Class:Contract/Attribute:status/Value:production+' => 'Productivo',
-	'Class:Contract/Attribute:finalclass' => 'Tipo',
-	'Class:Contract/Attribute:finalclass+' => 'Tipo',
+	'Class:Contract/Attribute:finalclass' => 'Clase',
+	'Class:Contract/Attribute:finalclass+' => 'Clase',
 ));
 
 //
@@ -337,8 +338,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ServiceSubcategory/Attribute:service_id+' => 'Servicio',
 	'Class:ServiceSubcategory/Attribute:service_name' => 'Servicio',
 	'Class:ServiceSubcategory/Attribute:service_name+' => 'Servicio',
-	'Class:ServiceSubcategory/Attribute:request_type' => 'Tipo de Reportes',
-	'Class:ServiceSubcategory/Attribute:request_type+' => 'Tipo de Reportes',
+	'Class:ServiceSubcategory/Attribute:request_type' => 'Tipo de Reporte',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Tipo de Reporte',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Incidente',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'Incidente',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Requerimiento de Servicio',
@@ -393,8 +394,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:SLT/Attribute:priority/Value:3+' => 'Medio',
 	'Class:SLT/Attribute:priority/Value:4' => 'Bajo',
 	'Class:SLT/Attribute:priority/Value:4+' => 'Bajo',
-	'Class:SLT/Attribute:request_type' => 'Tipo de Reportes',
-	'Class:SLT/Attribute:request_type+' => 'Tipo de Reportes',
+	'Class:SLT/Attribute:request_type' => 'Tipo de Reporte',
+	'Class:SLT/Attribute:request_type+' => 'Tipo de Reporte',
 	'Class:SLT/Attribute:request_type/Value:incident' => 'Incidente',
 	'Class:SLT/Attribute:request_type/Value:incident+' => 'Incidente',
 	'Class:SLT/Attribute:request_type/Value:servicerequest' => 'Requerimiento de Servicio',

@@ -55,7 +55,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Ticket/Attribute:ci_list+' => 'I.C.s afectados por el incidente',
 	'Class:Ticket/Attribute:contact_list' => 'Contactos',
 	'Class:Ticket/Attribute:contact_list+' => 'Equipos y personas envueltas',
-	'Class:Ticket/Attribute:finalclass' => 'Tipo',
+	'Class:Ticket/Attribute:finalclass' => 'Clase',
 	'Class:Ticket/Attribute:finalclass+' => '',
 ));
 

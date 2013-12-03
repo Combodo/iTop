@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,8 +20,9 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2013 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
 
 // Dictionnay conventions
@@ -80,8 +81,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Ticket/Attribute:functionalcis_list+' => 'Elementos de Configuración',
 	'Class:Ticket/Attribute:workorders_list' => 'Ordenes de Trabajo',
 	'Class:Ticket/Attribute:workorders_list+' => 'Ordenes de Trabajo',
-	'Class:Ticket/Attribute:finalclass' => 'Tipo',
-	'Class:Ticket/Attribute:finalclass+' => 'Tipo',
+	'Class:Ticket/Attribute:finalclass' => 'Clase',
+	'Class:Ticket/Attribute:finalclass+' => 'Clase',
 ));
 
 

@@ -222,7 +222,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Contact/Attribute:ticket_list+' => 'Tiquetes relacionados con el contrato',
 	'Class:Contact/Attribute:team_list' => 'Equipos',
 	'Class:Contact/Attribute:team_list+' => 'Equipos a los que pertenece este contacto',
-	'Class:Contact/Attribute:finalclass' => 'Tipo',
+	'Class:Contact/Attribute:finalclass' => 'Clase',
 	'Class:Contact/Attribute:finalclass+' => '',
 ));
 
@@ -442,7 +442,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Software/Attribute:description+' => '',
 	'Class:Software/Attribute:instance_list' => 'Instalaciones',
 	'Class:Software/Attribute:instance_list+' => 'Instancias de este software',
-	'Class:Software/Attribute:finalclass' => 'Tipo',
+	'Class:Software/Attribute:finalclass' => 'Clase',
 	'Class:Software/Attribute:finalclass+' => '',
 ));
 
@@ -530,7 +530,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:FunctionalCI/Attribute:contract_list+' => 'Contratos soportando este I.C.s',
 	'Class:FunctionalCI/Attribute:ticket_list' => 'Tiquetes',
 	'Class:FunctionalCI/Attribute:ticket_list+' => 'Tiquetes relacionados con este I.C.s',
-	'Class:FunctionalCI/Attribute:finalclass' => 'Tipo',
+	'Class:FunctionalCI/Attribute:finalclass' => 'Clase',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 ));
 

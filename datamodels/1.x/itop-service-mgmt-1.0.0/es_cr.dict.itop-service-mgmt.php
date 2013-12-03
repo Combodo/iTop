@@ -106,7 +106,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Contract/Attribute:document_list+' => 'Documentos adjuntos al contrato',
 	'Class:Contract/Attribute:ci_list' => 'I.C.s',
 	'Class:Contract/Attribute:ci_list+' => 'I.C.s soportados por el contrato',
-	'Class:Contract/Attribute:finalclass' => 'Tipo',
+	'Class:Contract/Attribute:finalclass' => 'Clase',
 	'Class:Contract/Attribute:finalclass+' => '',
 ));
 

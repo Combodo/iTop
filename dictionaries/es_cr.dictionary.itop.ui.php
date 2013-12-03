@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -471,12 +471,36 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:SearchValue:Any' => '* Cualquiera *',
 	'UI:SearchValue:Mixed' => '* mezclado *',
 	'UI:SearchValue:NbSelected' => '# seleccionado',
+	'UI:SearchValue:CheckAll' => 'Seleccionar Todo',
+	'UI:SearchValue:UncheckAll' => 'Deseleccionar Todo',
 	'UI:SelectOne' => '-- Seleccione uno --',
-	'UI:Login:Welcome' => '¡Bienvenido a iTop!',
+	'UI:Login:Welcome' => 'Bienvenido a iTop',
 	'UI:Login:IncorrectLoginPassword' => 'Usuario/Contrase&ntilde;a incorrecto, por favor intente otra vez.',
 	'UI:Login:IdentifyYourself' => 'Identifiquese antes de continuar',
 	'UI:Login:UserNamePrompt' => 'Usuario   ',
 	'UI:Login:PasswordPrompt' => 'Contrase&ntilde;a',
+	'UI:Login:ForgotPwd' => '¿Olvidó su contrase&ntilde;a?',
+	'UI:Login:ForgotPwdForm' => 'Olvido de Contrase&ntilde;a',
+	'UI:Login:ForgotPwdForm+' => 'iTop puede enviarle un correo en el cual encontrará las instrucciones a seguir para restablecer su contrase&ntilde;a.',
+	'UI:Login:ResetPassword' => 'Enviar Ahora',
+	'UI:Login:ResetPwdFailed' => 'Error al enviar correo-e: %1$s',
+
+	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' no es un usuario válido',
+	'UI:ResetPwd-Error-NotPossible' => 'Cuentas externas no permiten restablecimiento de contrase&ntilde;a.',
+	'UI:ResetPwd-Error-FixedPwd' => 'La cuenta no permite restablecimiento de contrase&ntilde;a.',
+	'UI:ResetPwd-Error-NoContact' => 'La cuenta no está asociada a una persona.',
+	'UI:ResetPwd-Error-NoEmailAtt' => 'La cuenta no está asociada a una persona con correo electrónico. Por favor contacte al administrador.',
+	'UI:ResetPwd-Error-NoEmail' => 'Falta dirección de correo electrónico. Por favor contacte al administrador.',
+	'UI:ResetPwd-Error-Send' => 'Falla al envar un correo. Por favor contacte al administrador.',
+	'UI:ResetPwd-EmailSent' => 'Por favor verifique su buzón de correo y siga las instrucciones...',
+	'UI:ResetPwd-EmailSubject' => 'Restablecer contraseña de iTop',
+	'UI:ResetPwd-EmailBody' => '<body><p>Ha solicitado restablecer su contraseña en iTop.</p><p>Por favor de click en la siguiente liga: <a href="%1$s">proporcione una nueva contraseña</a></p>.',
+
+	'UI:ResetPwd-Title' => 'Restablecer Contrase&ntilde;a',
+	'UI:ResetPwd-Error-InvalidToken' => 'Lo siento, tal vez su contraseña ya ha sido cambiada, o ha recibido varios correos electrónicos. Por favor asegurese de haber dado click a la liga del último correo recibido.',
+	'UI:ResetPwd-Error-EnterPassword' => 'Contrase&ntilde;a Nueva para \'%1$s\'.',
+	'UI:ResetPwd-Ready' => 'La contraseña ha sido cambiada.',
+	'UI:ResetPwd-Login' => 'Click aquí para conectarse ',
 	'UI:Login:About' => '',
 	'UI:Login:ChangeYourPassword' => 'Cambie su Contrase&ntilde;a',
 	'UI:Login:OldPasswordPrompt' => 'Contrase&ntilde;a Actual',
@@ -518,7 +542,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:CSVImport:ObjectsWereAdded' => '%1$d objeto(s) fué agregado.',
 	'UI:CSVImport:ObjectsHadErrors' => '%1$d objeto(s) tuvo errores.',
 	'UI:Title:CSVImportStep2' => 'Paso 2 de 5: Opciones de Datos CSV',
-	'UI:Title:CSVImportStep3' => 'Paso 3 de 5: Mapeo de atos',
+	'UI:Title:CSVImportStep3' => 'Paso 3 de 5: Mapeo de Datos',
 	'UI:Title:CSVImportStep4' => 'Paso 4 de 5: Simular Importación',
 	'UI:Title:CSVImportStep5' => 'Paso 5 de 5: Importación Completada',
 	'UI:CSVImport:LinesNotImported' => 'Líneas que no pudieron ser cargadas:',
@@ -893,8 +917,8 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'Menu:RunQueriesMenu' => 'Ejecutar Consultas',
 	'Menu:RunQueriesMenu+' => 'Ejecutar Cualquier Consulta',
 	
-	'Menu:QueryMenu' => 'Query phrasebook',
-	'Menu:QueryMenu+' => 'Query phrasebook',
+	'Menu:QueryMenu' => 'Libreta de Consultas',
+	'Menu:QueryMenu+' => 'Libreta de Consultas',
 
 	'Menu:DataAdministration' => 'Administración de Datos',
 	'Menu:DataAdministration+' => 'Administración de Datos',
@@ -1058,6 +1082,9 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 
 	'UI:DashboardEdit:Title' => 'Editor de Panel del Control',
 	'UI:DashboardEdit:DashboardTitle' => 'Título',
+	'UI:DashboardEdit:AutoReload' => 'Actualización Automática',
+	'UI:DashboardEdit:AutoReloadSec' => 'Interválo de Actualización Automática (segundos)',
+	'UI:DashboardEdit:AutoReloadSec+' => 'El interválo mínimo es de 5 segundos',
 	'UI:DashboardEdit:Layout' => 'Distribución',
 	'UI:DashboardEdit:Properties' => 'Propiedades',
 	'UI:DashboardEdit:Dashlets' => 'Dashlets disponibles',	
@@ -1127,6 +1154,18 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'DayOfWeek-Friday' => 'Viernes',
 	'DayOfWeek-Saturday' => 'Sábado',
 
+	'Month-01' => 'Enero',
+	'Month-02' => 'Febrero',
+	'Month-03' => 'Marzo',
+	'Month-04' => 'Abril',
+	'Month-05' => 'Mayo',
+	'Month-06' => 'Junio',
+	'Month-07' => 'Julio',
+	'Month-08' => 'Agosto',
+	'Month-09' => 'Septiembre',
+	'Month-10' => 'Octubre',
+	'Month-11' => 'Noviembre',
+	'Month-12' => 'Diciembre',
 	'UI:Menu:ShortcutList' => 'Crear Acceso Rápido',
 	'UI:ShortcutRenameDlg:Title' => 'Renombrar Acceso Rápido',
 	'UI:ShortcutListDlg:Title' => 'Crear Acceso Rápido para la Lista',
@@ -1140,7 +1179,21 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'Class:ShortcutOQL+' => 'Resultado de Búsqueda de Acceso Rápido',
 	'Class:ShortcutOQL/Attribute:oql' => 'Consulta',
 	'Class:ShortcutOQL/Attribute:oql+' => 'OQL definiendo la lista de objetos a buscar',
-	'UI:FillAllMandatoryFields' => 'Por favor llenar los campos obligatorios.'
+	'Class:ShortcutOQL/Attribute:auto_reload' => 'Actualización Automática',
+	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Deshabilitado',
+	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Frecuencia configurable',
+	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Interválo de Actualización Automática (segundos)',
+	'Class:ShortcutOQL/Attribute:auto_reload_sec+' => 'El interválo mínimo es de 5 segundos',
+	'UI:FillAllMandatoryFields' => 'Por favor llenar los campos obligatorios.',
+	'UI:CSVImportConfirmTitle' => 'Por favor confirme la operación',
+	'UI:CSVImportConfirmMessage' => '¿Está seguro?',
+	'UI:CSVImportError_items' => 'Errores: %1$d',
+	'UI:CSVImportCreated_items' => 'Creados: %1$d',
+	'UI:CSVImportModified_items' => 'Modificados: %1$d',
+	'UI:CSVImportUnchanged_items' => 'Sin cambios: %1$d',
+	'UI:Button:Remove' => 'Remover',
+	'UI:AddAnExisting_Class' => 'Agregar objetos del tipo %1$s...',
+	'UI:SelectionOf_Class' => 'Selección de objetos del tipo %1$s',
 ));
 
 //
@@ -1205,5 +1258,88 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_Users/Attribute:language/Value:ES CR+' => 'Español',
 	'Class:URP_Users/Attribute:profile_list' => 'Perfiles',
 	'Class:URP_Users/Attribute:profile_list+' => 'Perfiles',
+));
+//
+// Class: BackgroundTask
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:BackgroundTask' => 'Tarea en Segundo Plano',
+	'Class:BackgroundTask+' => 'Tarea en Segundo Plano',
+	'Class:BackgroundTask/Attribute:class_name' => 'Nombre de Clase',
+	'Class:BackgroundTask/Attribute:class_name+' => 'Nombre corto para esta clase',
+	'Class:BackgroundTask/Attribute:first_run_date' => 'Primera Ejecución',
+	'Class:BackgroundTask/Attribute:first_run_date+' => 'Fecha de la Primera Ejecución',
+	'Class:BackgroundTask/Attribute:latest_run_date' => 'Última Ejecución',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => 'Fecha de la Última Ejecución',
+	'Class:BackgroundTask/Attribute:next_run_date' => 'Siguiente Ejecución',
+	'Class:BackgroundTask/Attribute:next_run_date+' => 'Fecha de la Siguiente Ejecución',
+	'Class:BackgroundTask/Attribute:total_exec_count' => 'Total de Ejecuciones',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => 'Contador del Total de Ejecuciones',
+	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Duración Última Ejecución',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => 'Duración de la Última Ejecución',
+	'Class:BackgroundTask/Attribute:min_run_duration' => 'Mínima Duración de Ejecución',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => 'Mínima Duración de Ejecución',
+	'Class:BackgroundTask/Attribute:max_run_duration' => 'Máxima Duración de Ejecución',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => 'Máxima Duración de Ejecución',
+	'Class:BackgroundTask/Attribute:average_run_duration' => 'Promedio Duración de Ejecución',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => 'Promedio Duración de Ejecución',
+	'Class:BackgroundTask/Attribute:running' => 'En Ejecución',
+	'Class:BackgroundTask/Attribute:running+' => 'Indicador de proceso en Ejecución',
+	'Class:BackgroundTask/Attribute:status' => 'Estatus',
+	'Class:BackgroundTask/Attribute:status+' => 'Estatus',
+));
+
+//
+// Class: UserDashboard 
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:UserDashboard' => 'Tablero de Usuario',
+	'Class:UserDashboard+' => 'Tablero de Usuario',
+	'Class:UserDashboard/Attribute:user_id' => 'Usuario',
+	'Class:UserDashboard/Attribute:user_id+' => 'Usuario',
+	'Class:UserDashboard/Attribute:menu_code' => 'Código de Menú',
+	'Class:UserDashboard/Attribute:menu_code+' => 'Código de Menú',
+	'Class:UserDashboard/Attribute:contents' => 'Contenidos',
+	'Class:UserDashboard/Attribute:contents+' => 'Contenidos',
+));
+
+//
+// Class: AsyncTask 
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:AsyncTask' => 'Tarea Asíncrona',
+	'Class:AsyncTask+' => 'Tarea Asíncrona',
+	'Class:AsyncTask/Attribute:created' => 'Creado',
+	'Class:AsyncTask/Attribute:created+' => 'Creado',
+	'Class:AsyncTask/Attribute:started' => 'Iniciado',
+	'Class:AsyncTask/Attribute:started+' => 'Iniciado',
+	'Class:AsyncTask/Attribute:planned' => 'Planeado',
+	'Class:AsyncTask/Attribute:planned+' => 'Planeado',
+	'Class:AsyncTask/Attribute:event_id' => 'Evento',
+	'Class:AsyncTask/Attribute:event_id+' => 'Evento',
+	'Class:AsyncTask/Attribute:finalclass' => 'Clase',
+	'Class:AsyncTask/Attribute:finalclass+' => 'Clase',
+));
+
+//
+// Class: DBProperty  
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:DBProperty' => 'Propiedad BD',
+	'Class:DBProperty+' => 'Propiedad de Base de Datos',
+	'Class:DBProperty/Attribute:name' => 'Nombre',
+	'Class:DBProperty/Attribute:name+' => 'Nombre',
+	'Class:DBProperty/Attribute:description' => 'Descripción',
+	'Class:DBProperty/Attribute:description+' => 'Descripción',
+	'Class:DBProperty/Attribute:value' => 'Valor',
+	'Class:DBProperty/Attribute:value+' => 'Valor',
+	'Class:DBProperty/Attribute:change_date' => 'Fecha de Cambio',
+	'Class:DBProperty/Attribute:change_date+' => 'Fecha de Cambio',
+	'Class:DBProperty/Attribute:change_comment' => 'Comentario Cambio',
+	'Class:DBProperty/Attribute:change_comment+' => 'Comentario del Cambio',
 ));
 ?>

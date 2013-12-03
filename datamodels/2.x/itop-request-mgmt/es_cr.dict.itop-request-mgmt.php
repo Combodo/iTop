@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,8 +20,9 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2013 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
@@ -101,8 +102,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest/Attribute:status/Value:resolved+' => 'Solucionado',
 	'Class:UserRequest/Attribute:status/Value:closed' => 'Cerrado',
 	'Class:UserRequest/Attribute:status/Value:closed+' => 'Cerrado',
-  'Class:UserRequest/Attribute:request_type' => 'Tipo de Reportes',
-	'Class:UserRequest/Attribute:request_type+' => 'Tipo de Reportes',
+  'Class:UserRequest/Attribute:request_type' => 'Tipo de Reporte',
+	'Class:UserRequest/Attribute:request_type+' => 'Tipo de Reporte',
 	'Class:UserRequest/Attribute:request_type/Value:incident' => 'Incidente',
 	'Class:UserRequest/Attribute:request_type/Value:incident+' => 'Incidente',
 	'Class:UserRequest/Attribute:request_type/Value:service_request' => 'Requerimiento de Servicio',
@@ -261,8 +262,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest/Stimulus:ev_autoclose+' => 'Cierre Automático',
 	'Class:UserRequest/Stimulus:ev_resolve' => 'Marcar como Solucionado',
 	'Class:UserRequest/Stimulus:ev_resolve+' => 'Marcar como Solucionado',
-	'Class:UserRequest/Stimulus:ev_close' => 'Cerrar este Requerimiento',
-	'Class:UserRequest/Stimulus:ev_close+' => 'Cerrar este Requerimiento',
+	'Class:UserRequest/Stimulus:ev_close' => 'Cerrar este Ticket',
+	'Class:UserRequest/Stimulus:ev_close+' => 'Cerrar este Ticket',
 	'Class:UserRequest/Stimulus:ev_reopen' => 'Reabrir',
 	'Class:UserRequest/Stimulus:ev_reopen+' => 'Reabrir',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Esperando Aprobación',

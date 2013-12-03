@@ -130,6 +130,8 @@ Operadores:<br/>
 	'Core:AttributeExternalKey' => 'Llave externa',
 	'Core:AttributeExternalKey+' => 'Llave external o foránea',
 
+	'Core:AttributeHierarchicalKey' => 'Llave jerárquica',
+	'Core:AttributeHierarchicalKey+' => 'Llave externa o foránea al padre',
 	'Core:AttributeExternalField' => 'Campo externo',
 	'Core:AttributeExternalField+' => 'Campo mapeado de una llave externa',
 
@@ -191,8 +193,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChangeOp/Attribute:objclass+' => 'Clase de Objeto',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'Id de Objeto',
 	'Class:CMDBChangeOp/Attribute:objkey+' => 'Id de Objeto',
-	'Class:CMDBChangeOp/Attribute:finalclass' => 'Tipo',
-	'Class:CMDBChangeOp/Attribute:finalclass+' => 'Tipo',
+	'Class:CMDBChangeOp/Attribute:finalclass' => 'Clase',
+	'Class:CMDBChangeOp/Attribute:finalclass+' => 'Clase',
 ));
 
 //
@@ -287,8 +289,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Event/Attribute:date+' => 'Fecha y Hora en que los Cambios fueron Regitrados',
 	'Class:Event/Attribute:userinfo' => 'Información de Usuario',
 	'Class:Event/Attribute:userinfo+' => 'Indentificación de la actividad que realizaba el usuario durante la cual se disparó este evento',
-	'Class:Event/Attribute:finalclass' => 'Tipo',
-	'Class:Event/Attribute:finalclass+' => 'Tipo',
+	'Class:Event/Attribute:finalclass' => 'Clase',
+	'Class:Event/Attribute:finalclass+' => 'Clase',
 ));
 
 //
@@ -409,8 +411,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Action/Attribute:status/Value:disabled+' => 'Inactivo',
 	'Class:Action/Attribute:trigger_list' => 'Disparadores Relacionados',
 	'Class:Action/Attribute:trigger_list+' => 'Disparadores Asociados a esta Acción',
-	'Class:Action/Attribute:finalclass' => 'Tipo',
-	'Class:Action/Attribute:finalclass+' => 'Tipo',
+	'Class:Action/Attribute:finalclass' => 'Clase',
+	'Class:Action/Attribute:finalclass+' => 'Clase',
 ));
 
 //
@@ -466,8 +468,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Trigger/Attribute:description+' => 'Descripción',
 	'Class:Trigger/Attribute:action_list' => 'Acciones',
 	'Class:Trigger/Attribute:action_list+' => 'Acciones realizadas cuando se activó el disparador',
-	'Class:Trigger/Attribute:finalclass' => 'Tipo',
-	'Class:Trigger/Attribute:finalclass+' => 'Tipo',
+	'Class:Trigger/Attribute:finalclass' => 'Clase',
+	'Class:Trigger/Attribute:finalclass+' => 'Clase',
 ));
 
 //
@@ -732,20 +734,20 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:SynchroLog/Attribute:status/Value:completed' => 'Completado',
 	'Class:SynchroLog/Attribute:status/Value:error' => 'Error',
 	'Class:SynchroLog/Attribute:status/Value:running' => 'Continua en Ejecución',
-	'Class:SynchroLog/Attribute:stats_nb_replica_seen' => 'Nb Replica Bista',
-	'Class:SynchroLog/Attribute:stats_nb_replica_total' => 'Nb Replica Total',
-	'Class:SynchroLog/Attribute:stats_nb_obj_deleted' => 'Nb Objetos Borrados',
-	'Class:SynchroLog/Attribute:stats_nb_obj_deleted_errors' => 'Nb de Errores durante el Borrado',
-	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted' => 'Nb Objetos Obsoletos',
-	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted_errors' => 'Nb de Errores durante la Obsolescencia',
-	'Class:SynchroLog/Attribute:stats_nb_obj_created' => 'Nb Objetos Creados',
-	'Class:SynchroLog/Attribute:stats_nb_obj_created_errors' => 'Nb o Errores durante la Creación',
-	'Class:SynchroLog/Attribute:stats_nb_obj_updated' => 'Nb Objetos Actualizados',
-	'Class:SynchroLog/Attribute:stats_nb_obj_updated_errors' => 'Nb Errores mientras se Actualizaba',
-	'Class:SynchroLog/Attribute:stats_nb_replica_reconciled_errors' => 'Nb de Errores durante Reconciliación',
-	'Class:SynchroLog/Attribute:stats_nb_replica_disappeared_no_action' => 'Nb Desapareció Replica',
-	'Class:SynchroLog/Attribute:stats_nb_obj_new_updated' => 'Nb Objetos Actualizados',
-	'Class:SynchroLog/Attribute:stats_nb_obj_new_unchanged' => 'Nb Objetos Sin Cambio',
+	'Class:SynchroLog/Attribute:stats_nb_replica_seen' => 'Num. Replica Vistos',
+	'Class:SynchroLog/Attribute:stats_nb_replica_total' => 'Num. Replica Total',
+	'Class:SynchroLog/Attribute:stats_nb_obj_deleted' => 'Num. Objetos Borrados',
+	'Class:SynchroLog/Attribute:stats_nb_obj_deleted_errors' => 'Num. de Errores durante el Borrado',
+	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted' => 'Num. Objetos Obsoletos',
+	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted_errors' => 'Num. de Errores durante la Obsolescencia',
+	'Class:SynchroLog/Attribute:stats_nb_obj_created' => 'Num. Objetos Creados',
+	'Class:SynchroLog/Attribute:stats_nb_obj_created_errors' => 'Num. Errores durante la Creación',
+	'Class:SynchroLog/Attribute:stats_nb_obj_updated' => 'Num. Objetos Actualizados',
+	'Class:SynchroLog/Attribute:stats_nb_obj_updated_errors' => 'Num. Errores mientras se Actualizaba',
+	'Class:SynchroLog/Attribute:stats_nb_replica_reconciled_errors' => 'Num. de Errores durante Reconciliación',
+	'Class:SynchroLog/Attribute:stats_nb_replica_disappeared_no_action' => 'Num. Desapareció Replica',
+	'Class:SynchroLog/Attribute:stats_nb_obj_new_updated' => 'Num. Objetos Actualizados',
+	'Class:SynchroLog/Attribute:stats_nb_obj_new_unchanged' => 'Num. Objetos Sin Cambio',
 	'Class:SynchroLog/Attribute:last_error' => 'Último Error',
 	'Class:SynchroLog/Attribute:traces' => 'Trazas',
 	'Class:SynchroReplica' => 'Replica de Sincronización',
@@ -766,7 +768,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:SynchroReplica/Attribute:info_last_modified' => 'Fecha Última Modificación',
 	'Class:appUserPreferences' => 'Preferencias de Usuario',
 	'Class:appUserPreferences/Attribute:userid' => 'Usuario',
-	'Class:appUserPreferences/Attribute:preferences' => 'Prefs',
+	'Class:appUserPreferences/Attribute:preferences' => 'Preferencias',
 	'Core:ExecProcess:Code1' => 'Comando equivocado o comando terminó con errores (ejem. nombre incorrecto de script)',
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)',
 ));

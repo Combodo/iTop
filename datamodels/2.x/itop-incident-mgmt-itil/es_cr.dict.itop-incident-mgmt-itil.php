@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,8 +20,9 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2013 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
@@ -208,14 +209,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Incident/Attribute:public_log+' => 'Bitácora Pública',
 	'Class:Incident/Attribute:user_satisfaction' => 'Satisfacción del Usuario',
 	'Class:Incident/Attribute:user_satisfaction+' => 'Satisfacción del Usuario',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:1' => 'Muy Satisfecho',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:1+' => 'Muy Satisfecho',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:2' => 'Satisfecho',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:2+' => 'Satisfecho',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:3' => 'Insatisfecho',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:3+' => 'Insatisfecha',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:4' => 'Muy Insatisfecho',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => 'Muy Insatisfecho',
+	'Class:Incident/Attribute:user_satisfaction/Value:1' => 'Muy Satisfecho',
+	'Class:Incident/Attribute:user_satisfaction/Value:1+' => 'Muy Satisfecho',
+	'Class:Incident/Attribute:user_satisfaction/Value:2' => 'Satisfecho',
+	'Class:Incident/Attribute:user_satisfaction/Value:2+' => 'Satisfecho',
+	'Class:Incident/Attribute:user_satisfaction/Value:3' => 'Insatisfecho',
+	'Class:Incident/Attribute:user_satisfaction/Value:3+' => 'Insatisfecha',
+	'Class:Incident/Attribute:user_satisfaction/Value:4' => 'Muy Insatisfecho',
+	'Class:Incident/Attribute:user_satisfaction/Value:4+' => 'Muy Insatisfecho',
 	'Class:Incident/Attribute:user_comment' => 'Comentarios del Usuario',
 	'Class:Incident/Attribute:user_comment+' => 'Comentarios del Usuario',
 	'Class:Incident/Attribute:parent_incident_id_friendlyname' => 'parent_incident_id_friendlyname',
@@ -234,8 +235,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Incident/Stimulus:ev_autoclose+' => 'Cierre Automático',
 	'Class:Incident/Stimulus:ev_resolve' => 'Marcar como Solucionado',
 	'Class:Incident/Stimulus:ev_resolve+' => 'Marcar como Solucionado',
-	'Class:Incident/Stimulus:ev_close' => 'Cerrar este Requerimiento',
-	'Class:Incident/Stimulus:ev_close+' => 'Cerrar este Requerimiento',
+	'Class:Incident/Stimulus:ev_close' => 'Cerrar este Ticket',
+	'Class:Incident/Stimulus:ev_close+' => 'Cerrar este Ticket',
 	'Class:Incident/Stimulus:ev_reopen' => 'Reabrir',
 	'Class:Incident/Stimulus:ev_reopen+' => 'Reabrir',
 ));

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,8 +20,9 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2013 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
 
 //////////////////////////////////////////////////////////////////////
@@ -94,6 +95,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Organization/Attribute:parent_id+' => 'Organización Padre',
 	'Class:Organization/Attribute:parent_name' => 'Organización Padre',
 	'Class:Organization/Attribute:parent_name+' => 'Nombre de la Organización Padre',
+	'Class:Organization/Attribute:deliverymodel_id' => 'Modelo de Entrega',
+	'Class:Organization/Attribute:deliverymodel_id+' => 'Modelo de Entrega',
+	'Class:Organization/Attribute:deliverymodel_name' => 'Nombre del Modelo de Entrega',
+	'Class:Organization/Attribute:deliverymodel_name+' => 'Nombre del Modelo de Entrega',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Organización Padre',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Organización Padre',
 ));
@@ -164,8 +169,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Contact/Attribute:function+' => 'Función',
 	'Class:Contact/Attribute:cis_list' => 'ECs',
 	'Class:Contact/Attribute:cis_list+' => 'Elementos de Configuración relacionados con el contacto',
-	'Class:Contact/Attribute:finalclass' => 'Tipo',
-	'Class:Contact/Attribute:finalclass+' => 'Tipo',
+	'Class:Contact/Attribute:finalclass' => 'Clase',
+	'Class:Contact/Attribute:finalclass+' => 'Clase',
 ));
 
 //
@@ -229,6 +234,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Document/Attribute:documenttype_id+' => 'Tipo de Documento',
 	'Class:Document/Attribute:documenttype_name' => 'Tipo de Documento',
 	'Class:Document/Attribute:documenttype_name+' => 'Tipo de Documento',
+	'Class:Document/Attribute:version' => 'Versión',
+	'Class:Document/Attribute:version+' => 'Versión',
 	'Class:Document/Attribute:description' => 'Descripción',
 	'Class:Document/Attribute:description+' => 'Descripción',
 	'Class:Document/Attribute:status' => 'Estatus',
@@ -321,8 +328,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:FunctionalCI/Attribute:softwares_list+' => 'Software',
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'Tickets relacionados con este EC',
-	'Class:FunctionalCI/Attribute:finalclass' => 'Tipo',
-	'Class:FunctionalCI/Attribute:finalclass+' => 'Tipo',
+	'Class:FunctionalCI/Attribute:finalclass' => 'Clase',
+	'Class:FunctionalCI/Attribute:finalclass+' => 'Clase',
 ));
 
 //
@@ -371,8 +378,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Rack' => 'Rack',
 	'Class:Rack+' => '',
-	'Class:Rack/Attribute:nb_u' => 'NB U',
-	'Class:Rack/Attribute:nb_u+' => 'NB U',
+	'Class:Rack/Attribute:nb_u' => 'Unidades de Rack',
+	'Class:Rack/Attribute:nb_u+' => 'Unidades de Rack',
 	'Class:Rack/Attribute:device_list' => 'Dispositivos',
 	'Class:Rack/Attribute:device_list+' => 'Dispositivos',
 	'Class:Rack/Attribute:enclosure_list' => 'Enclosures',
@@ -458,8 +465,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:DatacenterDevice/Attribute:enclosure_id+' => 'Enclosure',
 	'Class:DatacenterDevice/Attribute:enclosure_name' => 'Nombre Enclosure',
 	'Class:DatacenterDevice/Attribute:enclosure_name+' => 'Nombre Enclosure',
-	'Class:DatacenterDevice/Attribute:nb_u' => 'NB U',
-	'Class:DatacenterDevice/Attribute:nb_u+' => 'NB U',
+	'Class:DatacenterDevice/Attribute:nb_u' => 'Unidades de Rack',
+	'Class:DatacenterDevice/Attribute:nb_u+' => 'Unidades de Rack',
 	'Class:DatacenterDevice/Attribute:managementip' => 'IP',
 	'Class:DatacenterDevice/Attribute:managementip+' => 'IP',
 	'Class:DatacenterDevice/Attribute:powerA_id' => 'Fuente de Poder A',
@@ -661,8 +668,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Enclosure/Attribute:rack_id+' => 'Rack',
 	'Class:Enclosure/Attribute:rack_name' => 'Nombre Rack',
 	'Class:Enclosure/Attribute:rack_name+' => 'Nombre Rack',
-	'Class:Enclosure/Attribute:nb_u' => 'NB U',
-	'Class:Enclosure/Attribute:nb_u+' => 'NB U',
+	'Class:Enclosure/Attribute:nb_u' => 'Unidades de Rack',
+	'Class:Enclosure/Attribute:nb_u+' => 'Unidades de Rack',
 	'Class:Enclosure/Attribute:device_list' => 'Dispositivos',
 	'Class:Enclosure/Attribute:device_list+' => 'Dispositivos',
 ));
@@ -726,8 +733,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => 'Licencia de Software',
 	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Licencia de Software',
 	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => 'Licencia de Software',
-	'Class:SoftwareInstance/Attribute:path' => 'Parche',
-	'Class:SoftwareInstance/Attribute:path+' => 'Parche',
+	'Class:SoftwareInstance/Attribute:path' => 'Ruta',
+	'Class:SoftwareInstance/Attribute:path+' => 'Ruta',
 	'Class:SoftwareInstance/Attribute:status' => 'Estatus',
 	'Class:SoftwareInstance/Attribute:status+' => 'Estatus',
 	'Class:SoftwareInstance/Attribute:status/Value:active' => 'Activo',
@@ -944,8 +951,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:LogicalVolume/Attribute:storagesystem_name+' => 'Sistema de Almacenamiento',
 	'Class:LogicalVolume/Attribute:servers_list' => 'Servidores',
 	'Class:LogicalVolume/Attribute:servers_list+' => 'Servidores',
-	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Dispossitivos Virtuales',
-	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Dispossitivos Virtuales',
+	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Dispositivos Virtuales',
+	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Dispositivos Virtuales',
 ));
 
 //
@@ -1095,8 +1102,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Patch/Attribute:documents_list+' => 'Documentos',
 	'Class:Patch/Attribute:description' => 'Descripción',
 	'Class:Patch/Attribute:description+' => 'Descripción',
-	'Class:Patch/Attribute:finalclass' => 'Tipo',
-	'Class:Patch/Attribute:finalclass+' => 'Tipo',
+	'Class:Patch/Attribute:finalclass' => 'Clase',
+	'Class:Patch/Attribute:finalclass+' => 'Clase',
 ));
 
 //
@@ -1160,8 +1167,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Licence/Attribute:perpetual/Value:no+' => 'No',
 	'Class:Licence/Attribute:perpetual/Value:yes' => 'Si',
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'Si',
-	'Class:Licence/Attribute:finalclass' => 'Tipo',
-	'Class:Licence/Attribute:finalclass+' => 'Tipo',
+	'Class:Licence/Attribute:finalclass' => 'Clase',
+	'Class:Licence/Attribute:finalclass+' => 'Clase',
 ));
 
 //
@@ -1222,8 +1229,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Typology+' => 'Tipología',
 	'Class:Typology/Attribute:name' => 'Nombre',
 	'Class:Typology/Attribute:name+' => 'Nombre del Tipo',
-	'Class:Typology/Attribute:finalclass' => 'Tipo',
-	'Class:Typology/Attribute:finalclass+' => 'Tipo',
+	'Class:Typology/Attribute:finalclass' => 'Clase',
+	'Class:Typology/Attribute:finalclass+' => 'Clase',
 ));
 
 //
@@ -1335,7 +1342,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:NetworkDeviceType' => 'Dispositivo de Red',
+	'Class:NetworkDeviceType' => 'Tipo Dispositivo de Red',
 	'Class:NetworkDeviceType+' => 'Tipo de Dispositivo de Red',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Dispositivos de Red',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Dispositivos de Red',
@@ -1473,6 +1480,48 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Subnet/Attribute:ip+' => 'IP',
 	'Class:Subnet/Attribute:ip_mask' => 'Máscara de Red',
 	'Class:Subnet/Attribute:ip_mask+' => 'Máscara de Red',
+	'Class:Subnet/Attribute:vlans_list' => 'vLANs',
+	'Class:Subnet/Attribute:vlans_list+' => 'Virtual LANs',
+));
+
+//
+// Class: VLAN
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:VLAN' => 'vLAN',
+	'Class:VLAN+' => 'Red Virtual de Área Local',
+	'Class:VLAN/Attribute:vlan_tag' => 'Etiqueta vLAN',
+	'Class:VLAN/Attribute:vlan_tag+' => 'Etiqueta vLAN',
+	'Class:VLAN/Attribute:description' => 'Descripción',
+	'Class:VLAN/Attribute:description+' => 'Descripción',
+	'Class:VLAN/Attribute:org_id' => 'Organización',
+	'Class:VLAN/Attribute:org_id+' => 'Organización',
+	'Class:VLAN/Attribute:org_name' => 'Nombre de la Organización',
+	'Class:VLAN/Attribute:org_name+' => 'Nombre de la Organización',
+	'Class:VLAN/Attribute:subnets_list' => 'Subredes',
+	'Class:VLAN/Attribute:subnets_list+' => 'Subredes',
+	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Interfases Físicas de Red',
+	'Class:VLAN/Attribute:physicalinterfaces_list+' => 'Interfases Físicas de Red',
+));
+
+//
+// Class: lnkSubnetToVLAN
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkSubnetToVLAN' => 'Relación Subred / vLAN',
+	'Class:lnkSubnetToVLAN+' => 'Relación Subred / vLAN',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Subred',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => 'Subred',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_ip' => 'IP de Subred',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_ip+' => 'IP de Subred',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_name' => 'Nombre de Subred',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_name+' => 'Nombre de Subred',
+	'Class:lnkSubnetToVLAN/Attribute:vlan_id' => 'vLAN',
+	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => 'vLAN',
+	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'Etiqueta vLAN',
+	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => 'Etiqueta vLAN',
 ));
 
 //
@@ -1484,8 +1533,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:NetworkInterface+' => 'Interfaz de Red',
 	'Class:NetworkInterface/Attribute:name' => 'Nombre',
 	'Class:NetworkInterface/Attribute:name+' => 'Nombre de la Interfaz de Red',
-	'Class:NetworkInterface/Attribute:finalclass' => 'Tipo',
-	'Class:NetworkInterface/Attribute:finalclass+' => 'Tipo',
+	'Class:NetworkInterface/Attribute:finalclass' => 'Clase',
+	'Class:NetworkInterface/Attribute:finalclass+' => 'Clase',
 ));
 
 //
@@ -1520,6 +1569,29 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => 'Dispositivo',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Dispositivo',
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => 'Dispositivo',
+	'Class:PhysicalInterface/Attribute:vlans_list' => 'vLANs',
+	'Class:PhysicalInterface/Attribute:vlans_list+' => 'vLANS',
+));
+
+//
+// Class: lnkPhysicalInterfaceToVLAN
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkPhysicalInterfaceToVLAN' => 'Relación Interfaz Física / VLAN',
+	'Class:lnkPhysicalInterfaceToVLAN+' => 'Relación Interfaz Física / VLAN',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Interfaz Física',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => 'Interfaz Física',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name' => 'Nombre Interfaz Física',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name+' => 'Nombre Interfaz Física',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id' => 'Dispositivo',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id+' => 'Dispositivo',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name' => 'Nombre de Dispositivo',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name+' => 'Nombre de Dispositivo',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id' => 'vLAN',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => 'vLAN',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'Etiqueta VLAN',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => 'Etiqueta VLAN',
 ));
 
 //
@@ -1792,5 +1864,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 'Class:Subnet/Tab:FreeIPs' => 'IPs Libres',
 'Class:Subnet/Tab:FreeIPs-count' => 'IPs Libres: %1$s',
 'Class:Subnet/Tab:FreeIPs-explain' => 'Aquí está un extracto de 10 direcciones IP Libres',
+'Class:Document:PreviewTab' => 'Vista Previa',
 ));
 ?>
