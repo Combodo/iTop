@@ -1458,6 +1458,95 @@ abstract class DBObject
 		return $this->m_iKey;
 	}
 
+	protected function MakeInsertStatementSingleTable($aAuthorizedExtKeys, &$aStatements, $sTableClass)
+	{
+		$sTable = MetaModel::DBGetTable($sTableClass);
+		// Abstract classes or classes having no specific attribute do not have an associated table
+		if ($sTable == '') return;
+
+		$sClass = get_class($this);
+
+		// fields in first array, values in the second
+		$aFieldsToWrite = array();
+		$aValuesToWrite = array();
+		
+		if (!empty($this->m_iKey) && ($this->m_iKey >= 0))
+		{
+			// Add it to the list of fields to write
+			$aFieldsToWrite[] = '`'.MetaModel::DBGetKey($sTableClass).'`';
+			$aValuesToWrite[] = CMDBSource::Quote($this->m_iKey);
+		}
+
+		$aHierarchicalKeys = array();
+		foreach(MetaModel::ListAttributeDefs($sTableClass) as $sAttCode=>$oAttDef)
+		{
+			// Skip this attribute if not defined in this table
+			if (!MetaModel::IsAttributeOrigin($sTableClass, $sAttCode)) continue;
+			// Skip link set that can still be undefined though the object is 100% loaded
+			if ($oAttDef->IsLinkSet()) continue;
+
+			$value = $this->m_aCurrValues[$sAttCode];
+			if ($oAttDef->IsExternalKey())
+			{
+				$sTargetClass = $oAttDef->GetTargetClass();
+				if (is_array($aAuthorizedExtKeys))
+				{
+					if (!array_key_exists($sTargetClass, $aAuthorizedExtKeys) || !array_key_exists($value, $aAuthorizedExtKeys[$sTargetClass]))
+					{
+						$value = 0;
+					}
+				}
+			}
+			$aAttColumns = $oAttDef->GetSQLValues($value);
+			foreach($aAttColumns as $sColumn => $sValue)
+			{
+				$aFieldsToWrite[] = "`$sColumn`"; 
+				$aValuesToWrite[] = CMDBSource::Quote($sValue);
+			}
+			if ($oAttDef->IsHierarchicalKey())
+			{
+				$aHierarchicalKeys[$sAttCode] = $oAttDef;
+			}
+		}
+
+		if (count($aValuesToWrite) == 0) return false;
+
+		if (count($aHierarchicalKeys) > 0)
+		{
+			foreach($aHierarchicalKeys as $sAttCode => $oAttDef)
+			{
+				$aValues = MetaModel::HKInsertChildUnder($this->m_aCurrValues[$sAttCode], $oAttDef, $sTable);
+				$aFieldsToWrite[] = '`'.$oAttDef->GetSQLRight().'`';
+				$aValuesToWrite[] = $aValues[$oAttDef->GetSQLRight()];
+				$aFieldsToWrite[] = '`'.$oAttDef->GetSQLLeft().'`';
+				$aValuesToWrite[] = $aValues[$oAttDef->GetSQLLeft()];
+			}
+		}
+		$aStatements[] = "INSERT INTO `$sTable` (".join(",", $aFieldsToWrite).") VALUES (".join(", ", $aValuesToWrite).");";
+	}
+
+	public function MakeInsertStatements($aAuthorizedExtKeys, &$aStatements)
+	{
+		$sClass = get_class($this);
+		$sRootClass = MetaModel::GetRootClass($sClass);
+
+		// First query built upon on the root class, because the ID must be created first
+		$this->MakeInsertStatementSingleTable($aAuthorizedExtKeys, $aStatements, $sRootClass);
+
+		// Then do the leaf class, if different from the root class
+		if ($sClass != $sRootClass)
+		{
+			$this->MakeInsertStatementSingleTable($aAuthorizedExtKeys, $aStatements, $sClass);
+		}
+
+		// Then do the other classes
+		foreach(MetaModel::EnumParentClasses($sClass) as $sParentClass)
+		{
+			if ($sParentClass == $sRootClass) continue;
+			$this->MakeInsertStatementSingleTable($aAuthorizedExtKeys, $aStatements, $sParentClass);
+		}
+	}
+
 	public function DBInsert()
 	{
 		$this->DBInsertNoReload();
