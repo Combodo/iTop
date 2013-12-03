@@ -165,7 +165,7 @@ try
 		}
 		
 		// Load only the requested columns
-		$oSet = new DBObjectSet($oFilter, $aOrderBy, $aExtraParams['query_params'], null, $iEnd-$iStart, $iStart);
+		$oSet = new DBObjectSet($oFilter, $aOrderBy, $aExtraParams, null, $iEnd-$iStart, $iStart);
 		$oSet->OptimizeColumnLoad($aColumnsLoad);
 
 		$oDataTable = new DataTable($iListId, $oSet, $oSet->GetSelectedClasses());
