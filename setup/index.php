@@ -37,5 +37,24 @@ ini_set('max_execution_time', max(240, ini_get('max_execution_time')));
 ini_set('display_errors', true);
 ini_set('display_startup_errors', true);
 
+/////////////////////////////////////////////////////////////////////
+// Fake functions to protect the first run of the installer
+// in case the PHP JSON module is not installed...
+if (!function_exists('json_encode'))
+{
+	function json_encode($value, $options = null)
+	{
+		return '[]';
+	}
+}
+if (!function_exists('json_decode'))
+{
+	function json_decode($json, $assoc=null)
+	{
+		return array();
+	}
+}
+/////////////////////////////////////////////////////////////////////
+
 $oWizard = new WizardController('WizStepWelcome');
 $oWizard->Run();
