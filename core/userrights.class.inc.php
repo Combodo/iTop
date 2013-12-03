@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2013 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -66,6 +66,86 @@ abstract class UserRightsAddOnAPI
 	abstract public function IsAdministrator($oUser);
 	abstract public function IsPortalUser($oUser);
 	abstract public function FlushPrivileges();
+
+	/**
+	 *	...
+	 */
+	public function MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings = array(), $sAttCode = null)
+	{
+		if ($sAttCode == null)
+		{
+			$sAttCode = $this->GetOwnerOrganizationAttCode($sClass);
+		}
+		if (empty($sAttCode))
+		{
+			return $oFilter  = new DBObjectSearch($sClass);
+		}
+
+		$oExpression = new FieldExpression($sAttCode, $sClass);
+		$oFilter  = new DBObjectSearch($sClass);
+		$oListExpr = ListExpression::FromScalars($aAllowedOrgs);
+		
+		$oCondition = new BinaryExpression($oExpression, 'IN', $oListExpr);
+		$oFilter->AddConditionExpression($oCondition);
+
+		if ($this->HasSharing())
+		{
+			if (($sAttCode == 'id') && isset($aSettings['bSearchMode']) && $aSettings['bSearchMode'])
+			{
+				// Querying organizations (or derived)
+				// and the expected list of organizations will be used as a search criteria
+				// Therefore the query can also return organization having objects shared with the allowed organizations
+				//
+				// 1) build the list of organizations sharing something with the allowed organizations
+				// Organization <== sharing_org_id == SharedObject having org_id IN {user orgs}
+				$oShareSearch = new DBObjectSearch('SharedObject');
+				$oOrgField = new FieldExpression('org_id', 'SharedObject');
+				$oShareSearch->AddConditionExpression(new BinaryExpression($oOrgField, 'IN', $oListExpr));
+	
+				$oSearchSharers = new DBObjectSearch('Organization');
+				$oSearchSharers->AllowAllData();
+				$oSearchSharers->AddCondition_ReferencedBy($oShareSearch, 'sharing_org_id');
+				$aSharers = array();
+				foreach($oSearchSharers->ToDataArray(array('id')) as $aRow)
+				{
+					$aSharers[] = $aRow['id'];
+				}
+				// 2) Enlarge the overall results: ... OR id IN(id1, id2, id3)
+				if (count($aSharers) > 0)
+				{
+					$oSharersList = ListExpression::FromScalars($aSharers);
+					$oFilter->MergeConditionExpression(new BinaryExpression($oExpression, 'IN', $oSharersList));
+				}
+			}
+	
+			$aShareProperties = SharedObject::GetSharedClassProperties($sClass);
+			if ($aShareProperties)
+			{
+				$sShareClass = $aShareProperties['share_class'];
+				$sShareAttCode = $aShareProperties['attcode'];
+	
+				$oSearchShares = new DBObjectSearch($sShareClass);
+				$oSearchShares->AllowAllData();
+	
+				$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass('Organization');
+				$oOrgField = new FieldExpression('org_id', $sShareClass);
+				$oSearchShares->AddConditionExpression(new BinaryExpression($oOrgField, 'IN', $oListExpr));
+				$aShared = array();
+				foreach($oSearchShares->ToDataArray(array($sShareAttCode)) as $aRow)
+				{
+					$aShared[] = $aRow[$sShareAttCode];
+				}
+				if (count($aShared) > 0)
+				{
+					$oObjId = new FieldExpression('id', $sClass);
+					$oSharedIdList = ListExpression::FromScalars($aShared);
+					$oFilter->MergeConditionExpression(new BinaryExpression($oObjId, 'IN', $oSharedIdList));
+				}
+			}
+		} // if HasSharing
+
+		return $oFilter;
+	}
 }
 
 
@@ -712,6 +792,7 @@ class UserRights
 		}
 	}
 
+
 	public static function IsActionAllowed($sClass, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null, $oUser = null)
 	{
 		// When initializing, we need to let everything pass trough
@@ -917,6 +998,11 @@ class UserRights
 			$oUser = self::$m_aCacheUsers[$sAuthentication][$sLogin];
 		}
 		return $oUser;
+	}
+
+	public static function MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings = array(), $sAttCode = null)
+	{
+		return self::$m_oAddOn->MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings, $sAttCode);
 	}
 }
 
