@@ -1,4 +1,4 @@
-iTop - version 2.0.2-beta - 29-Oct-2013
+iTop - version 2.0.2 - 11-Dec-2013
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -15,7 +15,7 @@ Readme file
 
 1. ABOUT THIS RELEASE
    ==================
-Thank you for downloading the 17th packaged release of iTop.
+Thank you for downloading the 18th packaged release of iTop.
 This version is a maintenance release, with quite a few bug fixes and a few enhancements.
 
 The documentation about iTop is available as a Wiki: http://www.combodo.com/wiki
@@ -32,12 +32,13 @@ This version brings a number of bug fixes since 2.0.1 and a few enhancements, na
 - Forgot your password? Regain access to iTop without bothering an administrator
 - Automatic refresh of the lists in the dashboards, and for the shortcuts
 - Scalability: better support of large volumes of tickets, and in general with large volumes of data
+- An about box: displays information that will help your support provider (versions, installed modules, etc.)
 
-... and about 50 bug fixes!
+... and about 70 bug fixes!
 
 1.2 Should I upgrade to 2.0.2?
     -------------------------------
-Considering that iTop 2.0.1 is fully compatible with iTop 2.0.0 and the number of bugs fixed, we recommend you to upgrade.
+Considering that iTop 2.0.2 is fully compatible with iTop 2.0.x and the number of bugs fixed, we recommend you to upgrade.
 
 Be aware that the User Portal appearance has significantly been changed.
 
@@ -62,6 +63,7 @@ Antoine Coetsier for the CAS support and tests
 Vincenzo Todisco for his contribution to the enhancement of the webservices
 Stephan Rickauer, Tobias Glemser and Sabri Saleh for their consulting about iTop security
 Claudio Cesar Sanchez Tejeda for his contribution to bug fixes on the export and data synchronization
+Bruno Cornec for his support and contribution to the Linux packaging of iTop
 
 2. INSTALLATION
    ============
@@ -109,7 +111,7 @@ The following features will require the activation of CRON.PHP:
 
 More information into the Wiki: https://sourceforge.net/apps/mediawiki/itop/index.php?title=Cron.php
 
-New in 2.0.1: you can get a status of the cron "tasks" with the command:
+You can get a status of the cron "tasks" with the command:
 
 php cron.php --auth_user=admin_login --auth_pwd=admin_pwd --status_only=1
 
@@ -222,7 +224,7 @@ JSON/REST API (new version: 1.1)
 
 Data model fixes/changes
 ------------------------
-Added VLANs on Subnet and Physical Interfaces
+Added VLANs on Subnet and Physical Interfaces (user rights: Configuration Managers)
 Added a version for Documents
 #800 No need to track that last update has changed each time the ticket gets updated (common to all types of tickets)
 Prevent Support agent to create ticket for obsolete Services and Service sub categories
@@ -242,11 +244,19 @@ Moved definition of the delivery model of an organization from itop-config-mgmt 
 New pattern accepting the new global Top Level Domains (gTLD)
 Allow "Support Agents" to put an Incident in "Pending" state.
 #747: protects against the non-existence of the UserRequest class (which is not always installed).
+Allow Support Agents to perform "wait for approval" on a UserRequest ticket.
+#757 UserRequest to Problem/Change relation should be N:M, not 1:N
+#837 Remove [+] button on external keys where it's not meaningful
++ button had been removed for all ExternalKey having a complex filter defined
+#835 Remove dependency between ticket and Delivery model
+#834 Add IP for Virtual Machine
+#824 Change ranking in CI Overview dashboard
+#836 Adding linkset "applicationsolution_list" in details list
 
 
 Miscellaneous fixes
 -------------------
-Localization: French and german (#562 and #760) have been reviewed.
+Localization: French and German and Spanish (#832, #562 and #760) have been reviewed. 
 Compiler 
 - added "constants"
 - added brand management
@@ -327,6 +337,33 @@ OQL normalization and dashlets have been made independent from the class MetaMod
 Added OQL normalization unit tests (to be run on a standard installation)
 #736 Could not delete objects unless you are authorized to bulk delete
 #734 Fixed a regression on reconciliation keys during CSV import.
+Internal: API to build the SQL statements to (re)-create an object
+Internal: new setting to tweak the data model by allowing null for all external keys (use with care!)
+Module refactoring: Configuration management must not require the installation of a Service Management module
+NEW: About box, to list the installed modules and ease troubleshooting
+#849 fix for the special case of loading class tags into a hierarchy
+#816, #825 and #830: removed annoying Notices (array to string conversion) appearing with PHP >= 5.4
+#764 Saving settings as "Default for all lists" now works as expected
+#770 Preserve list configuration (if dedicated) when creating a shortcut
+#775 preserve the open/closed status of the search form during auto-reload... by not reloading the form at all!
+#841 properly select the current tab
+#839 Managing n:1 links asked to leave the page (under Chrome!)
+#838 the OQL query for getting the SLTs is now a constant defined in the XML
+#842 Internal: recode the notifications page to allow several types of actions
+#823: proper figures for the CSV import "confirmation" pie chart.
+#830 Regression introduced in the beta. Related to the management of query arguments
+#829 Corrupted pwd when attempting to create an account without any profile
+Extensibility: make sure that checks implemented in an overload of CheckToWrite will be seen when parent::CheckToWrite is invoked at the end of the overload
+Optimizations: when displaying a "short" list, made of objects having the same status, three additional queries were made (now just one Group By query is made)
+Got rid of an unnecessary query (responsible for 8% of the time spent in a standard iTop page!!!)
+#827 Default language given at setup not taken into account (login page always in english)
+Improved the KPI logging: setting log_kpi_duration to 2 will enable blaming of the FIRST caller (callstack entirely shown in the produced report)
+Improved version of DoPostRequest which optionally uses cURL to workaround PHP/OpenSSL bugs !
+Internal: Helper for HTTP POSTs: can return the headers if requested
+Fix for the validation of the forms in the portal. The (lack of) localization was breaking it!
+Portal with Incident tickets: added rights on Incident for Portal users
+Portal: service type mapping can be an empty string
+Show the new setting portal_tickets in the default config file
 
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
