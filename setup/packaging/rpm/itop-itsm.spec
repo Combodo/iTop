@@ -1,29 +1,29 @@
-%define webconfdir %{?_webconfdir:%{_sysconfdir}/httpd}
-%define logdir %{?_logdir:%{_var}/log}
+%define webconfdir %{?_webconfdir}%{!?_webconfdir:%{_sysconfdir}/httpd}
+%define logdir %{?_logdir}%{!?_logdir:%{_var}/log}
 
 Name: itop-itsm
 Version: 2.0.2
 Release: 1%{?dist}
-# Use a variable below
+# TODO: Use a variable below
 Summary: iTop: IT Operational Portal
-# Use a variable below	
+# TODO: Use a variable below
 Group: Applications/Databases 
 License: AGPLv3+
-URL: http://www.combodo.com/itop		
-Source0: iTop-2.0.2-beta-1416.zip
+URL: http://www.combodo.com/itop
+Source0: iTop-2.0.2-beta-1462.zip
 #Source4: install.sh
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-# Use a variable below
+# TODO: Use a variable below
 Requires: php >= 5.2.0, php-mysql, php-mcrypt, php-xml, php-cli, php-soap, graphviz
 #, php-pecl-apc
-# Use a variable below
+# TODO: Use a variable below
 BuildRequires: unzip
 
-# Use a variable below
+# TODO: Use a variable below
 %description
-iTop is an open source CMDB...
+iTop is an open source CMDB.
 
 %prep
 %setup -c %{name}
@@ -36,7 +36,7 @@ rm -rf %{buildroot}
 
 export _ITOP_NAME_=%{name}
 export _ITOP_SYSCONFDIR_=%{_sysconfdir}
-export _ITOP_WEBCONFDIR_=%{buildroot}/%{webconfdir}
+export _ITOP_WEBCONFDIR_=%{webconfdir}
 export _ITOP_VARDIR_=%{_var}
 export PREFIX=%{_prefix}
 export HEAD=%{buildroot}
@@ -55,11 +55,12 @@ rm -rf %{buildroot}
 %{_sysconfdir}/cron.d/%{name}
 %{_var}/lib/%{name}/approot.inc.php
 
-# Use a variable below
+# TODO: Use a variable below
 %defattr(-,apache,root,-)
 %dir %{_sysconfdir}/%{name}
 #%config(noreplace) %{_sysconfdir}/%{name}/production/cron.params
 %dir %{_sysconfdir}/%{name}/test
+%dir %{_sysconfdir}/%{name}/production
 %dir %{_sysconfdir}/%{name}/toolkit
 %dir %{logdir}/%{name}
 %dir %{_var}/lib/%{name}/env-production

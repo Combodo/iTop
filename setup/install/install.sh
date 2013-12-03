@@ -4,7 +4,7 @@
 #
 # $Id$
 #
-#set -x
+#set -v
 
 if [ "_$_ITOP_SYSCONFDIR_" = "_" ]; then
 	_ITOP_SYSCONFDIR_="/etc"
@@ -23,6 +23,8 @@ if [ "_$PREFIX" != "_" ]; then
 	subconf=$_ITOP_SYSCONFDIR_/$_ITOP_NAME_
 	var=${HEAD}$_ITOP_VARDIR_
 	subvar=$_ITOP_VARDIR_
+	webconf=${HEAD}$_ITOP_WEBCONFDIR_
+	subwebconf=$_ITOP_WEBCONFDIR_
 else
 	local=/usr/local
 	sublocal=$local
@@ -30,6 +32,8 @@ else
 	subconf=$conf
 	var=$local/$_ITOP_VARDIR_
 	subvar=$var
+	webconf=$local/$_ITOP_WEBCONFDIR_ 
+	subwebconf=$_ITOP_WEBCONFDIR_
 fi
 
 if [ "_$_ITOP_WEBCONFDIR_" = "_" ]; then
@@ -83,12 +87,13 @@ ln -s $subvar/lib/$_ITOP_NAME_/data data ;\
 
 
 if [ _"$HEAD" != _"" ]; then
-	install -m 755 -d $_ITOP_WEBCONFDIR_/conf.d $conf/../cron.d
+	echo Creating $webconf/conf.d and $conf/../cron.d directories
+	install -m 755 -d $webconf/conf.d $conf/../cron.d
 fi
 
 # Substitute variables for templates
-sed -e "s~_ITOP_NAME_~$_ITOP_NAME_~g" -e "s~_ITOP_SYSCONFDIR_~$conf~g" -e "s~_ITOP_DATADIR_~$sublocal/share~g" -e "s~_ITOP_LOGDIR_~$subvar/log~g" ./web/setup/install/apache.conf.tpl > $_ITOP_WEBCONFDIR_/conf.d/$_ITOP_NAME_.conf
-sed -e "s~_ITOP_NAME_~$_ITOP_NAME_~g" -e "s~_ITOP_SYSCONFDIR_~$conf~g" -e "s~_ITOP_DATADIR_~$sublocal/share~g" -e "s~_ITOP_LOGDIR_~$subvar/log~g" ./web/setup/install/cron.tpl > $conf/../cron.d/$_ITOP_NAME_
+sed -e "s~_ITOP_NAME_~$_ITOP_NAME_~g" -e "s~_ITOP_SYSCONFDIR_~$subconf~g" -e "s~_ITOP_DATADIR_~$sublocal/share~g" -e "s~_ITOP_LOGDIR_~$subvar/log~g" ./web/setup/install/apache.conf.tpl > $webconf/conf.d/$_ITOP_NAME_.conf
+sed -e "s~_ITOP_NAME_~$_ITOP_NAME_~g" -e "s~_ITOP_SYSCONFDIR_~$subconf~g" -e "s~_ITOP_DATADIR_~$sublocal/share~g" -e "s~_ITOP_LOGDIR_~$subvar/log~g" ./web/setup/install/cron.tpl > $conf/../cron.d/$_ITOP_NAME_
 chmod 644 $_ITOP_WEBCONFDIR_/conf.d/$_ITOP_NAME_.conf $conf/../cron.d/$_ITOP_NAME_
 
 exit 0
