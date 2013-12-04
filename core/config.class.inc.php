@@ -150,8 +150,8 @@ class Config
 		'disable_mandatory_ext_keys' => array(
 			'type' => 'bool',
 			'description' => 'For developpers: allow every external keys to be undefined',
-			'default' => true,
-			'value' => true,
+			'default' => false,
+			'value' => false,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
