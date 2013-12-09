@@ -209,17 +209,18 @@ class ShortcutOQL extends Shortcut
 			
 	}
 
-	public function CloneTableSettings($sSourceTableId)
+	public function CloneTableSettings($sTableSettings)
 	{
+		$aTableSettings = json_decode($sTableSettings, true);
+
 		$oFilter = DBObjectSearch::FromOQL($this->Get('oql'));
-		$oCustomSettings = DataTableSettings::GetTableSettings($oFilter->GetSelectedClasses(), $sSourceTableId, true /*dedicated settings only*/);
-		if (!is_null($oCustomSettings))
-		{
-			$oCustomSettings->Save('shortcut_'.$this->GetKey());
-		}
+		$oCustomSettings = new DataTableSettings($oFilter->GetSelectedClasses());
+		$oCustomSettings->iDefaultPageSize = $aTableSettings['iPageSize'];
+		$oCustomSettings->aColumns = $aTableSettings['oColumns'];
+		$oCustomSettings->Save('shortcut_'.$this->GetKey());
 	}
 
-	public static function GetCreationForm($sOQL = null, $sSourceTableId = null)
+	public static function GetCreationForm($sOQL = null, $sTableSettings = null)
 	{
 		$oForm = new DesignerForm();
 
@@ -261,17 +262,17 @@ class ShortcutOQL extends Shortcut
 		$oField = new DesignerHiddenField('oql', '', $sOQL);
 		$oForm->AddField($oField);
 
-		$oField = new DesignerHiddenField('source_table_id', '', $sSourceTableId);
+		$oField = new DesignerHiddenField('table_settings', '', $sTableSettings);
 		$oForm->AddField($oField);
 
 		return $oForm;
 	}
 
-	public static function GetCreationDlgFromOQL($oPage, $sOQL, $sSourceTableId)
+	public static function GetCreationDlgFromOQL($oPage, $sOQL, $sTableSettings)
 	{
 		$oPage->add('<div id="shortcut_creation_dlg">');
 
-		$oForm = self::GetCreationForm($sOQL, $sSourceTableId);
+		$oForm = self::GetCreationForm($sOQL, $sTableSettings);
 
 		$oForm->Render($oPage);
 		$oPage->add('</div>');

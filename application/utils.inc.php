@@ -768,7 +768,7 @@ class utils
 	/**
 	 * Merge standard menu items with plugin provided menus items
 	 */
-	public static function GetPopupMenuItems($oPage, $iMenuId, $param, &$aActions, $sTableId = null)
+	public static function GetPopupMenuItems($oPage, $iMenuId, $param, &$aActions, $sTableId = null, $sDataTableId = null)
 	{
 		// 1st - add standard built-in menu items
 		// 
@@ -778,7 +778,7 @@ class utils
 			// $param is a DBObjectSet
 			$oAppContext = new ApplicationContext();
 			$sContext = $oAppContext->GetForLink();
-			$sSourceTableId = is_null($sTableId) ? '' : $sTableId;
+			$sDataTableId = is_null($sDataTableId) ? '' : $sDataTableId;
 			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($param->GetFilter()->GetClass());
 			$sOQL = addslashes($param->GetFilter()->ToOQL(true));
 			$sFilter = urlencode($param->GetFilter()->serialize());
@@ -789,7 +789,7 @@ class utils
 				new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'), "mailto:?body=".urlencode($sUrl).' '), // Add an extra space to make it work in Outlook
 				new URLPopupMenuItem('UI:Menu:CSVExport', Dict::S('UI:Menu:CSVExport'), $sUrl."&format=csv"),
 				new JSPopupMenuItem('UI:Menu:AddToDashboard', Dict::S('UI:Menu:AddToDashboard'), "DashletCreationDlg('$sOQL')"),
-				new JSPopupMenuItem('UI:Menu:ShortcutList', Dict::S('UI:Menu:ShortcutList'), "ShortcutListDlg('$sOQL', '$sSourceTableId', '$sContext')"),
+				new JSPopupMenuItem('UI:Menu:ShortcutList', Dict::S('UI:Menu:ShortcutList'), "ShortcutListDlg('$sOQL', '$sDataTableId', '$sContext')"),
 			);
 			break;
 

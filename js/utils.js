@@ -361,9 +361,16 @@ function DashletCreationDlg(sOQL)
 	return false;
 }
 
-function ShortcutListDlg(sOQL, sSourceTableId, sContext)
+function ShortcutListDlg(sOQL, sDataTableId, sContext)
 {
-	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?'+sContext, {operation: 'shortcut_list_dlg', oql: sOQL, source_table_id: sSourceTableId}, function(data){
+	var sDataTableName = 'datatable_'+sDataTableId;
+	var oTableSettings = {
+		oColumns: $('#'+sDataTableName).datatable('option', 'oColumns'),
+		iPageSize: $('#'+sDataTableName).datatable('option', 'iPageSize')
+	};
+	var sTableSettings = JSON.stringify(oTableSettings);
+
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?'+sContext, {operation: 'shortcut_list_dlg', oql: sOQL, table_settings: sTableSettings}, function(data){
 		$('body').append(data);
 	});
 	return false;

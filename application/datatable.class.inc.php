@@ -298,7 +298,7 @@ EOF;
 			$oMenuItem1->GetUID() => $oMenuItem1->GetMenuItem(),
 		);
 		$this->oSet->Rewind();
-		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $this->oSet, $aActions, $this->sTableId);
+		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $this->oSet, $aActions, $this->sTableId, $this->iListId);
 		$this->oSet->Rewind();
 		$sHtml .= $oPage->RenderPopupMenuItems($aActions);
 		return $sHtml;
