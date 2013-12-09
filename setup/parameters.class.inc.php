@@ -68,8 +68,10 @@ abstract class Parameters
 		}
 		else
 		{
-			$oNode = $oRoot->ownerDocument->createElement($sNodeName, $data);
+			$oNode = $oRoot->ownerDocument->createElement($sNodeName);
 			$oRoot->appendChild($oNode);
+			$oTextNode = $oRoot->ownerDocument->createTextNode($data);
+			$oNode->appendChild($oTextNode);
 		}
 		return $oNode;
 	}
