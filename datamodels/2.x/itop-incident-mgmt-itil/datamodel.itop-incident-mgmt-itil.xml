@@ -287,7 +287,6 @@
           <target_attcode>ref</target_attcode>
         </field>
         <field id="parent_problem_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT Problem WHERE status != "closed"]]></filter>
           <sql>parent_problem_id</sql>
           <target_class>Problem</target_class>
           <is_null_allowed>true</is_null_allowed>
