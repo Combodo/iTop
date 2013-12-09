@@ -240,6 +240,38 @@ $(function()
 			// in 1.9 would use _super
 			this._superApply(arguments);
 		},
+		UpdateState: function( config )
+		{
+			var iPageSize = config.page_size;
+			if (iPageSize == -1)
+			{
+				iPageSize = 0;
+			}
+			this.options.iPageSize = iPageSize;
+
+			var iPos = 0;
+			for (alias in this.options.oColumns)
+			{
+				for (attcode in this.options.oColumns[alias])
+				{
+					this.options.oColumns[alias][attcode]['sort'] = 'none';
+					if (this.options.oColumns[alias][attcode]['checked'])
+					{
+						if (iPos == config.sort_index)
+						{
+							this.options.oColumns[alias][attcode]['sort'] = config.sort_order;
+						}
+						iPos++;
+					}
+				}
+			}
+
+			var sId = new String(this.element.attr('id'));
+			var sListId = sId.replace('datatable_', '');
+			var dlgElement = $('#datatable_dlg_'+sListId);
+			dlgElement.find('input[name=page_size]').val(iPageSize);
+			dlgElement.find(':itop-fieldsorter').fieldsorter('option', { fields: this.options.oColumns });
+		},
 		_saveDlgState: function()
 		{
 			this.originalState = {};

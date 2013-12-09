@@ -176,6 +176,15 @@ function sprintf(format, etc) {
 					s_col = s[0];
 					s_order = (s[1] == 0) ? 'asc' : 'desc';
 				}
+
+				var oDataTable = $(table).closest('table.itop-datatable');
+				var oConfig = {
+					sort_index: s_col,
+					sort_order: s_order,
+					page_size: table.config.selectedSize
+				};
+				oDataTable.datatable('UpdateState', oConfig);
+
 				$('#loading', table.config.container).html('<img src="../images/indicator.gif" />');
 				table.ajax_request = $.post(AddAppContext(GetAbsoluteUrlAppRoot()+"pages/ajax.render.php"),
 						{ operation: 'pagination',
