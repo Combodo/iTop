@@ -19,7 +19,8 @@ PORTAL_VALIDATE_SERVICESUBCATEGORY_QUERY: OQL to check the service again (securi
 PORTAL_ALL_PARAMS: parameters that the wizard will kindly propagate through its pages (mixing should not be a problem, default value could be cleaned a little...)
 PORTAL_SET_TYPE_FROM: attribute of the class ServiceSubcategory determining the request type
 PORTAL_TYPE_TO_CLASS: optional mapping from the request types to ticket classes
-PORTAL_TICKETS_SEARCH_CRITERIA: list of search criteria for closed tickets
+PORTAL_TICKETS_SEARCH_CRITERIA: comma separated list of search criteria (attcodes) for closed tickets
+PORTAL_TICKETS_SEARCH_FILTER_attcode: an OQL query to limit the list of values available in the search form (drop-down list). One define per entry in PORTAL_TICKETS_SEARCH_CRITERIA
 
 
 Caution: Hardcoded stuff

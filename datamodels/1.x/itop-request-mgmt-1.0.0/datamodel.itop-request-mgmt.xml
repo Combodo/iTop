@@ -17,6 +17,8 @@
     <constant id="PORTAL_TICKETS_SEARCH_CRITERIA" xsi:type="string" _delta="define"><![CDATA[ref,start_date,close_date,service_id,caller_id]]></constant>
     <constant id="PORTAL_USERREQUEST_CLOSED_ZLIST" xsi:type="string" _delta="define"><![CDATA[title,start_date,close_date,servicesubcategory_id]]></constant>
     <constant id="PORTAL_USERREQUEST_DETAILS_ZLIST" xsi:type="string" _delta="define"><![CDATA[{"col:left":["ref","caller_id","servicesubcategory_id","title","description","solution"],"col:right":["status","priority","start_date","resolution_date","last_update","agent_id"]}]]></constant>
+    <constant id="PORTAL_TICKETS_SEARCH_FILTER_service_id" xsi:type="string" _delta="define"><![CDATA[SELECT Service AS s JOIN SLA AS sla ON sla.service_id=s.id JOIN lnkContractToSLA AS ln ON ln.sla_id=sla.id JOIN CustomerContract AS cc ON ln.contract_id=cc.id WHERE cc.org_id = :org_id]]></constant>
+    <constant id="PORTAL_TICKETS_SEARCH_FILTER_caller_id" xsi:type="string" _delta="define"><![CDATA[SELECT Person WHERE org_id = :org_id]]></constant>
   </constants>
   <classes>
     <class id="UserRequest" _delta="define">

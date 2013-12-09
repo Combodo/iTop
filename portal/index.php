@@ -790,6 +790,15 @@ function ListResolvedRequests(WebPage $oP)
 function ListClosedTickets(WebPage $oP)
 {
 	$aAttSpecs = explode(',', PORTAL_TICKETS_SEARCH_CRITERIA);
+	// Remove the caller_id form the search criteria if the user is not a Portal Power User
+	// since the user is only allowed to see her/his own tickets
+	foreach($aAttSpecs as $idx => $sAttCode)
+	{
+		if (($sAttCode == 'caller_id') && !IsPowerUser())
+		{
+			unset($aAttSpecs[$idx]);
+		}
+	}
 	$aClasses = GetTicketClasses();
 	$sMainClass = reset($aClasses);
 	$oP->DisplaySearchForm($sMainClass, $aAttSpecs, array('operation' => 'show_closed'), 'search_', false /* => not closed */);

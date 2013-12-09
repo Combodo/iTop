@@ -430,8 +430,7 @@ EOF
 		}
 	}
 
-
-	protected function DisplaySearchField($sClass, $sAttSpec, $aExtraParams, $sPrefix, $sFieldName = null)
+	protected function DisplaySearchField($sClass, $sAttSpec, $aExtraParams, $sPrefix, $sFieldName = null, $aFilterParams = array())
 	{
 		if (is_null($sFieldName))
 		{
@@ -462,7 +461,7 @@ EOF
 			{
 				throw new Exception("Attribute specification '$sAttSpec', '$sAttCode' should be either a link set or an external key");
 			}
-			$this->DisplaySearchField($sTargetClass, $sSubSpec, $aExtraParams, $sPrefix, $sFieldName);
+			$this->DisplaySearchField($sTargetClass, $sSubSpec, $aExtraParams, $sPrefix, $sFieldName, $aFilterParams);
 		}
 		else
 		{
@@ -476,7 +475,22 @@ EOF
 			if ($oAttDef->IsExternalKey())
 			{
 				$sTargetClass = $oAttDef->GetTargetClass();
-				$oAllowedValues = new DBObjectSet(new DBObjectSearch($sTargetClass));
+				$sFilterDefName = 'PORTAL_TICKETS_SEARCH_FILTER_'.$sAttSpec;
+				if (defined($sFilterDefName))
+				{
+					try
+					{
+						$oAllowedValues = new DBObjectSet(DBObjectSearch::FromOQL(constant($sFilterDefName)), array(), $aFilterParams);
+					}
+					catch(OQLException $e)
+					{
+						throw new Exception("Incorrect filter '$sFilterDefName' for attribute '$sAttcode': ".$e->getMessage());
+					}
+				}
+				else
+				{
+					$oAllowedValues = new DBObjectSet(new DBObjectSearch($sTargetClass));
+				}
 		
 				$iFieldSize = $oAttDef->GetMaxSize();
 				$iMaxComboLength = $oAttDef->GetMaximumComboLength();
@@ -533,9 +547,30 @@ EOF
 		}
 	}
 	
+	/**
+	 * Get The organization of the current user (i.e. the organization of its contact)
+	 * @throws Exception
+	 */
+	function GetUserOrg()
+	{
+		$oOrg = null;
+		$iContactId = UserRights::GetContactId();
+		$oContact = MetaModel::GetObject('Contact', $iContactId, false); // false => Can fail
+		if (is_object($oContact))
+		{
+			$oOrg = MetaModel::GetObject('Organization', $oContact->Get('org_id'), false); // false => can fail
+		}
+		else
+		{
+			throw new Exception(Dict::S('Portal:ErrorNoContactForThisUser'));
+		}
+		return $oOrg;
+	}
 	
 	public function DisplaySearchForm($sClass, $aAttList, $aExtraParams, $sPrefix, $bClosed = true)
 	{
+		$oUserOrg = $this->GetUserOrg();
+		$aFilterParams = array('org_id' => $oUserOrg->GetKey(), 'contact_id' => UserRights::GetContactId());
 		$sCSSClass = ($bClosed) ? 'DrawerClosed' : '';
 		$this->add("<div id=\"ds_$sPrefix\" class=\"SearchDrawer $sCSSClass\">\n");
 		$this->add_ready_script(
@@ -552,7 +587,7 @@ EOF
 		foreach($aAttList as $sAttSpec)
 		{
 			//$oAppContext->Reset($sAttSpec); // Make sure the same parameter will not be passed twice
-			$this->DisplaySearchField($sClass, $sAttSpec, $aExtraParams, $sPrefix);
+			$this->DisplaySearchField($sClass, $sAttSpec, $aExtraParams, $sPrefix, null, $aFilterParams);
 		}
 		$this->add("</p>\n");
 		$this->add("<p align=\"right\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Search')."\"></p>\n");
@@ -758,7 +793,24 @@ EOF
 			}
 		}
 
-		$oObj = MetaModel::GetObject($sClass, $iId, false);
+		$sOQL = "SELECT $sClass WHERE org_id = :org_id";
+		$oSearch = DBObjectSearch::FromOQL($sOQL);
+		$iUser = UserRights::GetContactId();
+		if ($iUser > 0 && !IsPowerUser())
+		{
+			$oSearch->AddCondition('caller_id', $iUser);
+		}
+		$oSearch->AddCondition('id', $iId);
+		
+		$oContact = MetaModel::GetObject('Contact', $iUser, false); // false => Can fail
+		if (!is_object($oContact))
+		{
+			throw new Exception(Dict::S('Portal:ErrorNoContactForThisUser'));
+		}
+		
+		$oSet = new DBObjectSet($oSearch, array(), array('org_id' => $oContact->Get('org_id')));
+		
+		$oObj = $oSet->Fetch();
 		if (!is_object($oObj))
 		{
 			throw new Exception("Could not find the object $sClass/$iId");
