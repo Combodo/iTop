@@ -373,7 +373,7 @@ Portal security enhancements:
 #851 Ampersand (aka '&') not welcomed in the setup wizard
 PHP Mail transport to allow 100% of recipients in BCC (regression introduced in 2.0.1)
 Regression of 2.0.2 beta: Configure this list + discard all columns: the list cannot be loaded anymore (if saved)
-
+Setup: fixed issue when upgrading a DB (no install dir specified, thus no config file) and requesting a backup: the backup is created without the config file in it.
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
      -----------------

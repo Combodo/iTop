@@ -112,23 +112,26 @@ class DBBackup
 		$sDataFile = tempnam(SetupUtils::GetTmpDir(), 'itop-');
 		$this->LogInfo("Data file: '$sDataFile'");
 
+		$aContents = array();
+		$aContents[] = array(
+			'source' => $sDataFile,
+			'dest' => 'itop-dump.sql',
+		);
+
 		if (is_null($sSourceConfigFile))
 		{
 			$sSourceConfigFile = MetaModel::GetConfig()->GetLoadedFile();
 		}
+		if (!empty($sSourceConfigFile))
+		{
+			$aContents[] = array(
+				'source' => $sSourceConfigFile,
+				'dest' => 'config-itop.php',
+			);
+		}
 
 		$this->DoBackup($sDataFile);
 
-		$aContents = array(
-			array(
-				'source' => $sDataFile,
-				'dest' => 'itop-dump.sql',
-			),
-			array(
-				'source' => $sSourceConfigFile,
-				'dest' => 'config-itop.php',
-			),
-		);
 		$sDeltaFile = APPROOT.'data/'.utils::GetCurrentEnvironment().'.delta.xml';
 		if (file_exists($sDeltaFile))
 		{
