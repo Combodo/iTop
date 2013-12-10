@@ -363,6 +363,7 @@ Internal: Helper for HTTP POSTs: can return the headers if requested
 Fix for the validation of the forms in the portal. The (lack of) localization was breaking it!
 Portal with Incident tickets: added rights on Incident for Portal users
 Portal: service type mapping can be an empty string
+Portal: no need to propose the public log in the request creation form (the description is enough, and the public log can be updated later on when viewing the ticket)
 Show the new setting portal_tickets in the default config file
 #853: When a list is configured directly from the table (NOT from the Dialog box), then these settings are not kept neither when creating a shortcut nor when opening the "configure this list" dialog
 #756: allow incidents and user request to be linked to 'closed' problems.
@@ -371,6 +372,7 @@ Portal security enhancements:
 - add a define'd filter to filter the drop-down lists of the search form for searching closed tickets.
 #851 Ampersand (aka '&') not welcomed in the setup wizard
 PHP Mail transport to allow 100% of recipients in BCC (regression introduced in 2.0.1)
+Regression of 2.0.2 beta: Configure this list + discard all columns: the list cannot be loaded anymore (if saved)
 
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
