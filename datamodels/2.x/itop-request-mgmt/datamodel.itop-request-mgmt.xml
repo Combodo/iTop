@@ -11,7 +11,7 @@
     <constant id="PORTAL_TYPE_TO_CLASS" xsi:type="string" _delta="define"><![CDATA[]]></constant>
     <constant id="PORTAL_USERREQUEST_PUBLIC_LOG" xsi:type="string" _delta="define"><![CDATA[public_log]]></constant>
     <constant id="PORTAL_USERREQUEST_USER_COMMENT" xsi:type="string" _delta="define"><![CDATA[user_comment]]></constant>
-    <constant id="PORTAL_USERREQUEST_FORM_ATTRIBUTES" xsi:type="string" _delta="define"><![CDATA[title,description,impact,urgency,public_log]]></constant>
+    <constant id="PORTAL_USERREQUEST_FORM_ATTRIBUTES" xsi:type="string" _delta="define"><![CDATA[title,description,impact,urgency]]></constant>
     <constant id="PORTAL_USERREQUEST_TYPE" xsi:type="string" _delta="define"><![CDATA[request_type]]></constant>
     <constant id="PORTAL_USERREQUEST_LIST_ZLIST" xsi:type="string" _delta="define"><![CDATA[finalclass,title,start_date,status,servicesubcategory_id,priority,caller_id]]></constant>
     <constant id="PORTAL_TICKETS_SEARCH_CRITERIA" xsi:type="string" _delta="define"><![CDATA[ref,start_date,close_date,service_id,caller_id]]></constant>
