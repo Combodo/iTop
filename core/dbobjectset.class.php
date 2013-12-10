@@ -92,19 +92,22 @@ class DBObjectSet
 		{
 			// Complete the attribute list with the attribute codes
 			$aAttToLoadWithAttDef = array();
-			foreach($aAttToLoad as $sClassAlias => $aAttList)
+			foreach($this->m_oFilter->GetSelectedClasses() as $sClassAlias => $sClass)
 			{
-				$aSelectedClasses = $this->m_oFilter->GetSelectedClasses();
-				$sClass = $aSelectedClasses[$sClassAlias];
-				foreach($aAttList as $sAttToLoad)
+				$aAttToLoadWithAttDef[$sClassAlias] = array();
+				if (array_key_exists($sClassAlias, $aAttToLoad))
 				{
-					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad);
-					$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad] = $oAttDef;
-					if ($oAttDef->IsExternalKey())
+					$aAttList = $aAttToLoad[$sClassAlias];
+					foreach($aAttList as $sAttToLoad)
 					{
-						// Add the external key friendly name anytime
-						$oFriendlyNameAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad.'_friendlyname');
-						$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad.'_friendlyname'] = $oFriendlyNameAttDef;
+						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad);
+						$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad] = $oAttDef;
+						if ($oAttDef->IsExternalKey())
+						{
+							// Add the external key friendly name anytime
+							$oFriendlyNameAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad.'_friendlyname');
+							$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad.'_friendlyname'] = $oFriendlyNameAttDef;
+						}
 					}
 				}
 				// Add the friendly name anytime
@@ -112,7 +115,7 @@ class DBObjectSet
 				$aAttToLoadWithAttDef[$sClassAlias]['friendlyname'] = $oFriendlyNameAttDef;
 
 				// Make sure that the final class is requested anytime, whatever the specification (needed for object construction!)
-				if (!MetaModel::IsStandaloneClass($sClass) && !array_key_exists('finalclass', $aAttList))
+				if (!MetaModel::IsStandaloneClass($sClass) && !array_key_exists('finalclass', $aAttToLoadWithAttDef[$sClassAlias]))
 				{
 					$aAttToLoadWithAttDef[$sClassAlias]['finalclass'] = MetaModel::GetAttributeDef($sClass, 'finalclass');
 				}
