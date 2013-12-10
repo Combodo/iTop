@@ -343,6 +343,10 @@ class ModelFactory
 
 		case 'delete':
 			$oTargetNode = $oTargetParentNode->FindExistingChildNode($oSourceNode);
+			if($oTargetNode == null)
+			{
+				throw new Exception("Trying to delete node for {$oSourceNode->tagName} (id:".$oSourceNode->getAttribute('id').") under {$oTargetParentNode->tagName} (id:".$oTargetParentNode->getAttribute('id').'). but nothing found.');
+			}
 			$oTargetNode->Delete();
 			break;
 		}
