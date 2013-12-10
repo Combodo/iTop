@@ -169,10 +169,19 @@
           <type>Overload-DBObject</type>
           <code><![CDATA[    protected function DBInsertTracked_Internal($bDoNotReload = false)
     {
-      $oMutex = new iTopMutex('ticket_insert');
-      $oMutex->Lock();
+      // Beware !!!
+      // Compensate the fact that CMDBObject::DBInsertTracked_Internal does NOT call the derived version of DBInsertNoReload
+      // when performing an INsert with "no reload" but actually calls it (followed by Reload) when doing an Insert with reload !!
+      if ($bDoNotReload)
+      {
+          $oMutex = new iTopMutex('ticket_insert');
+          $oMutex->Lock();
+      }
       $ret = parent::DBInsertTracked_Internal($bDoNotReload);
-      $oMutex->Unlock();
+      if ($bDoNotReload)
+      {
+          $oMutex->Unlock();
+      }
       return $ret;
     }
         ]]></code>
