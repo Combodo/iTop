@@ -163,7 +163,21 @@
     }
         ]]></code>
         </method>
-      </methods>
+        <method id="DBInsertTracked_Internal">
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[    protected function DBInsertTracked_Internal($bDoNotReload = false)
+    {
+      $oMutex = new iTopMutex('ticket_insert');
+      $oMutex->Lock();
+      $ret = parent::DBInsertTracked_Internal($bDoNotReload);
+      $oMutex->Unlock();
+      return $ret;
+    }
+        ]]></code>
+        </method>
+       </methods>
       <presentation>
         <details>
           <items>
