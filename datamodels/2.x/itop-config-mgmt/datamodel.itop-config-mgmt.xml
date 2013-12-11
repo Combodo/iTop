@@ -1293,6 +1293,7 @@
             <attribute id="name"/>
             <attribute id="org_id"/>
             <attribute id="organization_name"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
       </properties>
@@ -1506,6 +1507,7 @@
             <attribute id="name"/>
             <attribute id="org_id"/>
             <attribute id="organization_name"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
       </properties>
@@ -3150,6 +3152,7 @@
             <attribute id="organization_name"/>
             <attribute id="system_id"/>
             <attribute id="system_name"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
       </properties>

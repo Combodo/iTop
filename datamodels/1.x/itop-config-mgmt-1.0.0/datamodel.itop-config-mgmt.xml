@@ -2122,6 +2122,7 @@
             <attribute id="name"/>
             <attribute id="org_id"/>
             <attribute id="owner_name"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
       </properties>
@@ -2311,6 +2312,7 @@
             <attribute id="device_name"/>
             <attribute id="org_id"/>
             <attribute id="owner_name"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
       </properties>
@@ -3232,6 +3234,7 @@
             <attribute id="name"/>
             <attribute id="org_id"/>
             <attribute id="owner_name"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
       </properties>
