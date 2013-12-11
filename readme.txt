@@ -256,7 +256,7 @@ Allow Support Agents to perform "wait for approval" on a UserRequest ticket.
 
 Miscellaneous fixes
 -------------------
-Localization: French and German and Spanish (#832, #562 and #760) have been reviewed. 
+Localization: French, German, Spanish and Portuguese (BR) have been reviewed. See #832, #562 and #760. 
 Compiler 
 - added "constants"
 - added brand management
