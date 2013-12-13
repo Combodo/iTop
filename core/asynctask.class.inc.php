@@ -34,7 +34,8 @@ class ExecAsyncTask implements iBackgroundProcess
 
 	public function Process($iTimeLimit)
 	{
-		$sOQL = "SELECT AsyncTask WHERE ISNULL(started) AND (ISNULL(planned) OR (planned < NOW()))";
+		$sNow = date('Y-m-d H:i:s');
+		$sOQL = "SELECT AsyncTask WHERE ISNULL(started) AND (ISNULL(planned) OR (planned < '$sNow'))";
 		$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array('created' => true) /* order by*/, array());
 		$iProcessed = 0;
 		while ((time() < $iTimeLimit) && ($oTask = $oSet->Fetch()))
@@ -42,10 +43,40 @@ class ExecAsyncTask implements iBackgroundProcess
 			$oTask->Set('started', time());
 			$oTask->DBUpdate();
 
-			$oTask->Process();
-			$iProcessed++;
+			try
+			{
+				$oTask->Process();
+				$iProcessed++;
 
-			$oTask->DBDelete();
+				$oTask->DBDelete();
+			}
+			catch(Exception $e)
+			{
+				$iRemaining = $oTask->Get('remaining_retries');
+				if ($iRemaining > 0)
+				{
+					$aRetries = MetaModel::GetConfig()->Get('async_task_retries', array());
+					if (is_array($aRetries) && array_key_exists(get_class($oTask), $aRetries))
+					{
+						$aConfig = $aRetries[get_class($oTask)];
+						$iRetryDelay = $aConfig['retry_delay'];
+					}
+					else
+					{
+						$iRetryDelay = 600;
+					}
+					IssueLog::Info('Failed to process async task #'.$oTask->GetKey().' - reason: '.$e->getMessage().' - remaining retries: '.$iRemaining.' - next retry in '.$iRetryDelay.'s');
+
+					$oTask->Set('remaining_retries', $iRemaining - 1);
+					$oTask->Set('started', null);
+					$oTask->Set('planned', time() + $iRetryDelay);
+					$oTask->DBUpdate();
+				}
+				else
+				{
+					IssueLog::Error('Failed to process async task #'.$oTask->GetKey().' - reason: '.$e->getMessage());
+				}
+			}
 		}
 		if ($iProcessed == $oSet->Count())
 		{
@@ -88,6 +119,8 @@ abstract class AsyncTask extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeDateTime("planned", array("allowed_values"=>null, "sql"=>"planned", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("event_id", array("targetclass"=>"Event", "jointype"=> "", "allowed_values"=>null, "sql"=>"event_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_SILENT, "depends_on"=>array())));
 
+		MetaModel::Init_AddAttribute(new AttributeInteger("remaining_retries", array("allowed_values"=>null, "sql"=>"remaining_retries", "default_value"=>0, "is_null_allowed"=>true, "depends_on"=>array())));
+
 		// Display lists
 //		MetaModel::Init_SetZListItems('details', array()); // Attributes to be displayed for the complete details
 //		MetaModel::Init_SetZListItems('list', array()); // Attributes to be displayed for a list
@@ -99,6 +132,14 @@ abstract class AsyncTask extends DBObject
   	protected function OnInsert()
 	{
 		$this->Set('created', time());
+
+		$aRetries = MetaModel::GetConfig()->Get('async_task_retries', array());
+		if (is_array($aRetries) && array_key_exists(get_class($this), $aRetries))
+		{
+			$aConfig = $aRetries[get_class($this)];
+			$iRetries = $aConfig['max_retries'];
+			$this->Set('remaining_retries', $iRetries);
+		}
 	}
 
    public function Process()
