@@ -332,6 +332,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'async_task_retries' => array(
+			'type' => 'array',
+			'description' => 'Automatic retries of asynchronous tasks in case of failure (per class)',
+			'default' => array('AsyncSendEmail' => array('max_retries' => 0, 'retry_delay' => 600)),
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'email_asynchronous' => array(
 			'type' => 'bool',
 			'description' => 'If set, the emails are sent off line, which requires cron.php to be activated. Exception: some features like the email test utility will force the serialized mode',
@@ -712,6 +720,8 @@ class Config
 		case 'float':
 			$value = (float) $value;
 			break;
+		case 'array':
+			break;
 		default:
 			throw new CoreException('Unknown type for setting', array('property' => $sPropCode, 'type' => $sType));
 		}
@@ -968,7 +978,14 @@ class Config
 		{
 			if ($this->IsProperty($sPropCode))
 			{
-				$value = trim($rawvalue);
+				if (is_string($rawvalue))
+				{
+					$value = trim($rawvalue);
+				}
+				else
+				{
+					$value = $rawvalue;
+				}
 				$this->Set($sPropCode, $value, $sConfigFile);
 			}
 		}
