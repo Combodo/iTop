@@ -2221,7 +2221,8 @@ class MFDocument extends DOMDocument
 	public function GetNodeById($sXPath, $sId, $oContextNode = null)
 	{
 		$oXPath = new DOMXPath($this);
-		$sXPath .= "[@id='$sId' and(not(@_alteration) or @_alteration!='removed')]";
+		$sQuotedId = self::XPathQuote($sId);
+		$sXPath .= "[@id=$sQuotedId and(not(@_alteration) or @_alteration!='removed')]";
 		
 		if (is_null($oContextNode))
 		{
@@ -2231,5 +2232,19 @@ class MFDocument extends DOMDocument
 		{
 			return $oXPath->query($sXPath, $oContextNode);
 		}
+	}
+
+	public static function XPathQuote($sValue)
+	{
+		if (strpos($sValue, '"') !== false)
+		{
+			$aParts = explode('"', $sValue);
+			$sRet = 'concat("'.implode('", \'"\', "', $aParts).'")';
+		}
+		else
+		{
+			$sRet = '"'.$sValue.'"';
+		}
+		return $sRet;
 	}
 }
