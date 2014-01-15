@@ -48,6 +48,65 @@ class ormCaseLog {
 		return $this->m_sLog;
 	}
 	
+	/**
+	 * Return a value that will be further JSON encoded	
+	 */	
+	public function GetForJSON()
+	{
+		$aEntries = array();
+		$iPos = 0;
+		for($index=count($this->m_aIndex)-1 ; $index >= 0 ; $index--)
+		{
+			$iPos += $this->m_aIndex[$index]['separator_length'];
+			$sTextEntry = substr($this->m_sLog, $iPos, $this->m_aIndex[$index]['text_length']);
+			$iPos += $this->m_aIndex[$index]['text_length'];
+
+			// Workaround: PHP < 5.3 cannot unserialize correctly DateTime objects,
+			// therefore we have changed the format. To preserve the compatibility with existing
+			// installations of iTop, both format are allowed:
+			//     the 'date' item is either a DateTime object, or a unix timestamp
+			if (is_int($this->m_aIndex[$index]['date']))
+			{
+				// Unix timestamp
+				$sDate = date(Dict::S('UI:CaseLog:DateFormat'),$this->m_aIndex[$index]['date']);
+			}
+			elseif (is_object($this->m_aIndex[$index]['date']))
+			{
+				if (version_compare(phpversion(), '5.3.0', '>='))
+				{
+					// DateTime
+					$sDate = $this->m_aIndex[$index]['date']->format(Dict::S('UI:CaseLog:DateFormat'));
+				}
+				else
+				{
+					// No Warning... but the date is unknown
+					$sDate = '';
+				}
+			}
+			$aEntries[] = array(
+				'date' => $sDate,
+				'user_login' => $this->m_aIndex[$index]['user_name'],
+				'message' => $sTextEntry
+			);
+		}
+
+		// Process the case of an eventual remainder (quick migration of AttributeText fields)
+		if ($iPos < (strlen($this->m_sLog) - 1))
+		{
+			$sTextEntry = substr($this->m_sLog, $iPos);
+
+			$aEntries[] = array(
+				'date' => '',
+				'user_login' => '',
+				'message' => $sTextEntry
+			);
+		}
+
+		// Order by ascending date
+		$aRet = array('entries' => array_reverse($aEntries));
+		return $aRet;
+	}
+	
 	public function GetIndex()
 	{
 		return $this->m_aIndex;

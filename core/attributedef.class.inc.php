@@ -2061,6 +2061,25 @@ class AttributeCaseLog extends AttributeLongText
 			return '';
 		}
 	}
+
+	/**
+	 * Helper to get a value that will be JSON encoded
+	 * The operation is the opposite to FromJSONToValue	 
+	 */	 	
+	public function GetForJSON($value)
+	{
+		return $value->GetForJSON();
+	}
+
+	/**
+	 * Helper to form a value, given JSON decoded data
+	 * The operation is the opposite to GetForJSON	 
+	 */	 	
+	public function FromJSONToValue($json)
+	{
+		// Passthrough: new text to append to the log
+		return $json;
+	}
 }
 
 /**
