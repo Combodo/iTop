@@ -2106,8 +2106,7 @@ class AttributeEmailAddress extends AttributeString
 {
 	public function GetValidationPattern()
 	{
-		// return "^([0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{2,9})$";
-		return "^[a-zA-Z0-9._&-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9-]{2,}$";
+		return $this->GetOptional('validation_pattern', '^'.utils::GetConfig()->Get('email_validation_pattern').'$');
 	}
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)

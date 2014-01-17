@@ -640,6 +640,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'email_validation_pattern' => array(
+			'type' => 'string',
+			'description' => 'Regular expression to validate/detect the format of an eMail address',
+			'default' => "[a-zA-Z0-9._&'-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9-]{2,}",
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 		'log_kpi_duration' => array(
 			'type' => 'integer',
 			'description' => 'Level of logging for troubleshooting performance issues (1 to enable, 2 +blame callers)',
