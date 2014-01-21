@@ -536,6 +536,10 @@ EOF
 				}
 			}
 		}
+		if (isset($aParameters['template_id']) && ($aParameters['template_id'] != 0))
+		{
+			$oP->add("<input type=\"hidden\" name=\"attr_template_id\" value=\"{$aParameters['template_id']}\">");
+		}
 
 		$oAttPlugin = new AttachmentPlugIn();
 		$oAttPlugin->OnDisplayRelations($oRequest, $oP, true /* edit */);
@@ -610,9 +614,11 @@ function DoCreateRequest($oP, $oUserOrg)
 
 	$sClass = ComputeClass($oServiceSubCategory->GetKey());
 	$oRequest = MetaModel::NewObject($sClass);
+	$aAttList = array_merge(explode(',', GetConstant($sClass, 'FORM_ATTRIBUTES')), array('service_id', 'servicesubcategory_id'));
+	$oRequest->UpdateObjectFromPostedForm('' /* form prefix */, $aAttList);
 	$oRequest->Set('org_id', $oUserOrg->GetKey());
 	$oRequest->Set('caller_id', UserRights::GetContactId());
-	$oRequest->UpdateObjectFromPostedForm();
+
 	if (isset($aParameters['moreinfo']))
 	{
 		// There is a template, insert it into the description
