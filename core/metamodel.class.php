@@ -5248,18 +5248,27 @@ abstract class MetaModel
 			$sEnvironment = MetaModel::GetEnvironmentId();
 		}
 		$aEntries = array();
-		$aCacheUserData = @apc_cache_info('user');
+		if (extension_loaded('apcu'))
+		{
+			// Beware: APCu behaves slightly differently from APC !!
+			$aCacheUserData = @apc_cache_info();
+		}
+		else
+		{
+			$aCacheUserData = @apc_cache_info('user');
+		}
 		if (is_array($aCacheUserData) && isset($aCacheUserData['cache_list']))
 		{ 
 			$sPrefix = 'itop-'.$sEnvironment.'-';
 	
 			foreach($aCacheUserData['cache_list'] as $i => $aEntry)
 			{
-				$sEntryKey = $aEntry['info'];
+				$sEntryKey = array_key_exists('info', $aEntry) ? $aEntry['info'] : $aEntry['key'];
 				if (strpos($sEntryKey, $sPrefix) === 0)
 				{
 					$sCleanKey = substr($sEntryKey, strlen($sPrefix));
 					$aEntries[$sCleanKey] = $aEntry;
+					$aEntries[$sCleanKey]['info'] = $sEntryKey;
 				}
 			}
 		}
