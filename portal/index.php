@@ -481,7 +481,7 @@ function RequestCreationForm($oP, $oUserOrg, $iSvcId = null, $iSubSvcId = null, 
 			$sValue = "<span id=\"field_{$sInputId}\">".$oRequest->GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $value, '', 'attr_'.$sAttCode, '', $iFlags, $aArgs).'</span>';
 			$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sValue);
 		}
-
+		$aHidden = array();
 		if (!empty($aTemplateFields))
 		{
 			foreach ($aTemplateFields as $sAttCode =>  $oField)
@@ -540,7 +540,7 @@ EOF
 		{
 			$oP->add("<input type=\"hidden\" name=\"attr_template_id\" value=\"{$aParameters['template_id']}\">");
 		}
-
+		$oP->add(implode("\n", $aHidden));
 		$oAttPlugin = new AttachmentPlugIn();
 		$oAttPlugin->OnDisplayRelations($oRequest, $oP, true /* edit */);
 
