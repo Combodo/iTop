@@ -810,6 +810,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Portal:AddAttachment' => ' Attachment hinzufügen',
 	'Portal:RemoveAttachment' => 'Attachment entfernen',
 	'Portal:Attachment_No_To_Ticket_Name' => 'Attachment #%1$d an %2$s (%3$s)',
+	'Portal:SelectRequestTemplate' => 'Wählen Sie eine Template für %1$s',
 	'Enum:Undefined' => 'Nicht definiert',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s Tage %2$s Stunden %3$s Minuten %4$s Sekunden',
 	'UI:ModifyAllPageTitle' => 'Alle modifizieren',

@@ -996,6 +996,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Portal:AddAttachment' => ' Add Attachment ',
 	'Portal:RemoveAttachment' => ' Remove Attachment ',
 	'Portal:Attachment_No_To_Ticket_Name' => 'Attachment #%1$d to %2$s (%3$s)',
+	'Portal:SelectRequestTemplate' => 'Select a template for %1$s',
 	'Enum:Undefined' => 'Undefined',	
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s Days %2$s Hours %3$s Minutes %4$s Seconds',
 	'UI:ModifyAllPageTitle' => 'Modify All',

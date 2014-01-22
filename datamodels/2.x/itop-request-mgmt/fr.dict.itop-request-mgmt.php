@@ -264,7 +264,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Portal:ShowServices' => 'Catalogue de service',
 	'Portal:SelectRequestType' => 'Sélectionnez un type de requête',
 	'Portal:SelectServiceElementFrom_Service' => 'Sélectionnez un élément de service pour %1$s',
-	'Portal:SelectRequestTemplate' => 'Sélectionnez un modèle de requête pour %1$s',
 	'Portal:ListServices' => 'Liste des services',
 	'Portal:TitleDetailsFor_Service' => 'Détail d\'un service',
 	'Portal:Button:CreateRequestFromService' => 'Créer une requête pour ce service',

@@ -250,7 +250,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Portal:ShowServices' => 'サービスカタログ',
 	'Portal:SelectRequestType' => '要求のタイプを選択',
 	'Portal:SelectServiceElementFrom_Service' => '%1$s のサービス要素を選択',
-	'Portal:SelectRequestTemplate' => 'Select a template for %1$s のテンプレートを選択',
 	'Portal:ListServices' => 'サービスのリスト',
 	'Portal:TitleDetailsFor_Service' => 'サービスの詳細',
 	'Portal:Button:CreateRequestFromService' => 'このサービスへの要求を作成',

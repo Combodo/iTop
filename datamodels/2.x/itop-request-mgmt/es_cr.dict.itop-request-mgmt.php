@@ -279,7 +279,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Portal:ShowServices' => 'Catálogo de Servicios',
 	'Portal:SelectRequestType' => 'Seleccione un Tipo de Solicitud',
 	'Portal:SelectServiceElementFrom_Service' => 'Seleccione un Elemento de Servicio para %1$s',
-	'Portal:SelectRequestTemplate' => 'Seleccione una Plantilla para %1$s',
 	'Portal:ListServices' => 'Lista de Servicios',
 	'Portal:TitleDetailsFor_Service' => 'Detalles para el Servicio',
 	'Portal:Button:CreateRequestFromService' => 'Crear una Solicitud para este Servicio',

@@ -816,6 +816,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Portal:AddAttachment' => ' 添付を追加 ',
 	'Portal:RemoveAttachment' => ' 添付を削除 ',
 	'Portal:Attachment_No_To_Ticket_Name' => '$2$s ($3$s)への添付 #%1$d',
+	'Portal:SelectRequestTemplate' => 'Select a template for %1$s のテンプレートを選択',
 	'Enum:Undefined' => '未定義',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s 日 %2$s 時 %3$s 分 %4$s 秒',
 	'UI:ModifyAllPageTitle' => '全てを修正',
