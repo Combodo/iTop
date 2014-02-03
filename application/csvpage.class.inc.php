@@ -50,6 +50,7 @@ class CSVPage extends WebPage
         if (class_exists('MetaModel'))
         {
             MetaModel::RecordQueryTrace();
+            ExecutionKPI::ReportStats();
         }
     }
 

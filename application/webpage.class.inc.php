@@ -491,6 +491,7 @@ class WebPage implements Page
         if (class_exists('MetaModel'))
         {
             MetaModel::RecordQueryTrace();
+            ExecutionKPI::ReportStats();
         }
     }
 
