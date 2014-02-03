@@ -125,6 +125,7 @@ if (!empty($sExpression))
 
 		// Check and adjust column names
 		//
+		$aAliasToFields = array();
 		foreach($aFields as $index => $sField)
 		{
 			if (preg_match('/^(.*)\.(.*)$/', $sField, $aMatches))
@@ -136,8 +137,11 @@ if (!empty($sExpression))
 			{
 				$sClassAlias = $oFilter->GetClassAlias();
 				$sAttCode = $sField;
+				// Disambiguate the class alias
 				$aFields[$index] = $sClassAlias.'.'.$sAttCode;
 			}
+			$aAliasToFields[$sClassAlias][] = $sAttCode;
+
 			$sClass = $oFilter->GetClassName($sClassAlias);
 			if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
 			{
@@ -161,6 +165,7 @@ if (!empty($sExpression))
 		if ($oFilter)
 		{
 			$oSet = new CMDBObjectSet($oFilter, array(), $aArgs);
+			$oSet->OptimizeColumnLoad($aAliasToFields);
 			switch($sFormat)
 			{
 				case 'html':
