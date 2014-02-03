@@ -400,16 +400,25 @@ abstract class DBObject
 			{
 				throw new CoreException("Unknown external key '$sExtKeyAttCode' for the class ".get_class($this));
 			}
-			$oKeyAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyAttCode);
-			$sRemoteClass = $oKeyAttDef->GetTargetClass();
-			$oRemoteObj = MetaModel::GetObject($sRemoteClass, $this->GetStrict($sExtKeyAttCode), false);
-			if (is_null($oRemoteObj))
+
+			$oExtFieldAtt = MetaModel::FindExternalField(get_class($this), $sExtKeyAttCode, $sRemoteAttCode);
+			if (!is_null($oExtFieldAtt))
 			{
-				return '';
+				return $this->GetStrict($oExtFieldAtt->GetCode());
 			}
 			else
 			{
-				return $oRemoteObj->Get($sRemoteAttCode);
+				$oKeyAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyAttCode);
+				$sRemoteClass = $oKeyAttDef->GetTargetClass();
+				$oRemoteObj = MetaModel::GetObject($sRemoteClass, $this->GetStrict($sExtKeyAttCode), false);
+				if (is_null($oRemoteObj))
+				{
+					return '';
+				}
+				else
+				{
+					return $oRemoteObj->Get($sRemoteAttCode);
+				}
 			}
 		}
 	}

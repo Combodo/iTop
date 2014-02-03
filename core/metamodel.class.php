@@ -871,15 +871,32 @@ abstract class MetaModel
 
 	final static public function GetExternalFields($sClass, $sKeyAttCode)
 	{
-		$aExtFields = array();
-		foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAtt)
+		static $aExtFields = array();
+		if (!isset($aExtFields[$sClass][$sKeyAttCode]))
 		{
-			if ($oAtt->IsExternalField() && ($oAtt->GetKeyAttCode() == $sKeyAttCode))
+			$aExtFields[$sClass][$sKeyAttCode] = array();
+			foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAtt)
 			{
-				$aExtFields[] = $oAtt;
+				if ($oAtt->IsExternalField() && ($oAtt->GetKeyAttCode() == $sKeyAttCode))
+				{
+					$aExtFields[$sClass][$sKeyAttCode][$oAtt->GetExtAttCode()] = $oAtt;
+				}
 			}
 		}
-		return $aExtFields;
+		return $aExtFields[$sClass][$sKeyAttCode];
+	}
+
+	final static public function FindExternalField($sClass, $sKeyAttCode, $sRemoteAttCode)
+	{
+		$aExtFields = self::GetExternalFields($sClass, $sKeyAttCode);
+		if (isset($aExtFields[$sRemoteAttCode]))
+		{
+			return $aExtFields[$sRemoteAttCode];
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	final static public function GetExtKeyFriends($sClass, $sExtKeyAttCode)
