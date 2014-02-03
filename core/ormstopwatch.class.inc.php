@@ -258,15 +258,20 @@ class ormStopWatch
 	public function Reset($oObject, $oAttDef)
 	{
 		$this->iTimeSpent = 0;
-		$this->iStarted = null;
-		$this->iLastStart = null;
 		$this->iStopped = null;
 
 		foreach ($this->aThresholds as $iPercent => &$aThresholdData)
 		{
 			$aThresholdData['triggered'] = false;
-			$aThresholdData['deadline'] = null;
 			$aThresholdData['overrun'] = null;
+		}
+
+		if (!is_null($this->iLastStart))
+		{
+			// Currently running... starting again from now!
+			$this->iStarted = time();
+			$this->iLastStart = time();
+			$this->ComputeDeadlines($oObject, $oAttDef);
 		}
 	}
 
