@@ -39,7 +39,10 @@ class CLIPage implements Page
         {
             MetaModel::RecordQueryTrace();
         }
-        ExecutionKPI::ReportStats();
+        if (class_exists('ExecutionKPI'))
+        {
+            ExecutionKPI::ReportStats();
+        }
     }
 
 	public function add($sText)
