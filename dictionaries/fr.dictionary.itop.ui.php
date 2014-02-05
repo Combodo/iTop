@@ -839,6 +839,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Portal:AddAttachment' => ' Ajouter une pièce jointe ',
 	'Portal:RemoveAttachment' => ' Enlever la pièce jointe ',
 	'Portal:Attachment_No_To_Ticket_Name' => 'Pièce jointe #%1$d à %2$s (%3$s)',
+	'Portal:SelectRequestTemplate' => 'Sélectionnez un modèle de requête pour %1$s',
 	'Enum:Undefined' => 'Non défini',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s J %2$s H %3$s min %4$s s',
 	'UI:ModifyAllPageTitle' => 'Modification par lots',

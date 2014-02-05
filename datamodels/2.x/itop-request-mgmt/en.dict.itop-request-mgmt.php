@@ -275,7 +275,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Portal:ShowServices' => 'Service catalogue',
 	'Portal:SelectRequestType' => 'Select a type of request',
 	'Portal:SelectServiceElementFrom_Service' => 'Select a service element for %1$s',
-	'Portal:SelectRequestTemplate' => 'Select a template for %1$s',
 	'Portal:ListServices' => 'List of services',
 	'Portal:TitleDetailsFor_Service' => 'Details for Service',
 	'Portal:Button:CreateRequestFromService' => 'Create a Request for this service',

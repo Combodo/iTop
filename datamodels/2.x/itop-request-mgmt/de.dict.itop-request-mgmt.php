@@ -253,7 +253,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:ShowServices' => 'Service-Katalog',
 	'Portal:SelectRequestType' => 'Wählen Sie den Typ der Anfrage',
 	'Portal:SelectServiceElementFrom_Service' => 'Wählen Sie ein Service-Element für %1$s',
-	'Portal:SelectRequestTemplate' => 'Wählen Sie eine Template für %1$s',
 	'Portal:ListServices' => 'Liste der Services',
 	'Portal:TitleDetailsFor_Service' => 'Details für Service',
 	'Portal:Button:CreateRequestFromService' => 'EIne Benutzeranfrage betreffend dieses Diensts erzeugen',
