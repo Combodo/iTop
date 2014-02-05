@@ -438,59 +438,70 @@ function sprintf(format, etc) {
 			
 			this.construct = function(settings) {
 				
-				return this.each(function() {	
-					
-					config = $.extend(this.config, $.tablesorterPager.defaults, settings);
+				return this.each(function() {
 
-					var table = this, pager = config.container;
+					try
+					{
+						config = $.extend(this.config, $.tablesorterPager.defaults, settings);
+
+						var table = this, pager = config.container;
 				
-					this.ajax_request = null;
+						this.ajax_request = null;
 					
-					config.selectedSize = parseInt($(".pagesize",pager).val());
-					setPageSize(table,config.selectedSize, false);
-					restoreParams(table, config);
-					
-					//$(this).trigger("appendCache"); // Load the data
-					//console.log($.tablesorterPager);
-					applySelection(table);
+						config.selectedSize = parseInt($(".pagesize",pager).val());
 
-					$('.gotopage',pager).click(function() {
-						var idx = $(this).attr('page');
-						table.config.page = idx;
-						moveToPage(table);
-					});
-
-					$(config.cssFirst,pager).click(function() {
-						moveToFirstPage(table);
-						return false;
-					});
-					$(config.cssNext,pager).click(function() {
-						moveToNextPage(table);
-						return false;
-					});
-					$(config.cssPrev,pager).click(function() {
-						moveToPrevPage(table);
-						return false;
-					});
-					$(config.cssLast,pager).click(function() {
-						moveToLastPage(table);
-						return false;
-					});
-					$(config.cssPageSize,pager).change(function() {
-						setPageSize(table,parseInt($(this).val()), true);
-						return false;
-					});
-					$(table).find(':checkbox.checkAll').removeAttr('onclick').click(function() {
-						return checkAll(table, pager, this.checked);
-					});
+						setPageSize(table,config.selectedSize, false);
+						restoreParams(table, config);
 					
-					$(table).bind('load_selection', function() {
-						loadSelection(table, pager);
+						//$(this).trigger("appendCache"); // Load the data
+						//console.log($.tablesorterPager);
 						applySelection(table);
-					});
-					$(table).bind('check_all', function() {
-						checkAll(table, pager, true);
-					});
+
+						$('.gotopage',pager).click(function() {
+							var idx = $(this).attr('page');
+							table.config.page = idx;
+							moveToPage(table);
+						});
+
+						$(config.cssFirst,pager).click(function() {
+							moveToFirstPage(table);
+							return false;
+						});
+						$(config.cssNext,pager).click(function() {
+							moveToNextPage(table);
+							return false;
+						});
+						$(config.cssPrev,pager).click(function() {
+							moveToPrevPage(table);
+							return false;
+						});
+						$(config.cssLast,pager).click(function() {
+							moveToLastPage(table);
+							return false;
+						});
+						$(config.cssPageSize,pager).change(function() {
+							setPageSize(table,parseInt($(this).val()), true);
+							return false;
+						});
+						$(table).find(':checkbox.checkAll').removeAttr('onclick').click(function() {
+							return checkAll(table, pager, this.checked);
+						});
+					
+						$(table).bind('load_selection', function() {
+							loadSelection(table, pager);
+							applySelection(table);
+						});
+						$(table).bind('check_all', function() {
+							checkAll(table, pager, true);
+						});
+					}
+					catch(err)
+					{
+						if (console && console.log)
+						{
+							console.log(err);
+						}
+					}
 				});
 			};
 		}
