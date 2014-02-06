@@ -1915,7 +1915,12 @@ class AttributeCaseLog extends AttributeLongText
 	// Facilitate things: allow the user to Set the value from a string
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (!($proposedValue instanceof ormCaseLog))
+		if ($proposedValue instanceof ormCaseLog)
+		{
+			// Passthrough
+			$ret = $proposedValue;
+		}
+		else
 		{
 			// Append the new value if an instance of the object is supplied
 			//
@@ -1937,13 +1942,21 @@ class AttributeCaseLog extends AttributeLongText
 			{
 				$oCaseLog = new ormCaseLog();
 			}
-			if (strlen($proposedValue) > 0)
+
+			if ($proposedValue instanceof stdClass)
 			{
-				$oCaseLog->AddLogEntry(parent::MakeRealValue($proposedValue, $oHostObj));
+				$oCaseLog->AddLogEntryFromJSON($proposedValue);
 			}
-			return $oCaseLog;
+			else
+			{
+				if (strlen($proposedValue) > 0)
+				{
+					$oCaseLog->AddLogEntry(parent::MakeRealValue($proposedValue, $oHostObj));
+				}
+			}
+			$ret = $oCaseLog;
 		}
-		return $proposedValue;
+		return $ret;
 	}
 
 	public function GetSQLExpressions($sPrefix = '')
@@ -2077,8 +2090,28 @@ class AttributeCaseLog extends AttributeLongText
 	 */	 	
 	public function FromJSONToValue($json)
 	{
-		// Passthrough: new text to append to the log
-		return $json;
+		if (is_string($json))
+		{
+			// Will be correctly handled in MakeRealValue
+			$ret = $json;
+		}
+		else
+		{
+			if (isset($json->add_item))
+			{
+				// Will be correctly handled in MakeRealValue
+				$ret = $json->add_item;
+				if (!isset($ret->message))
+				{
+					throw new Exception("Missing mandatory entry: 'message'");
+				}
+			}
+			else
+			{
+				$ret = ormCaseLog::FromJSON($json);
+			}
+		}
+		return $ret;
 	}
 }
 

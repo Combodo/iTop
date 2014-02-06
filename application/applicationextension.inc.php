@@ -944,7 +944,14 @@ class RestUtils
 		foreach ($aFields as $sAttCode => $value)
 		{
 			$realValue = self::MakeValue($sClass, $sAttCode, $value);
-			$oObject->Set($sAttCode, $realValue);
+			try
+			{
+				$oObject->Set($sAttCode, $realValue);
+			}
+			catch (Exception $e)
+			{
+				throw new Exception("$sAttCode: ".$e->getMessage(), $e->getCode());
+			}
 		}
 		return $oObject;
 	}
@@ -964,7 +971,14 @@ class RestUtils
 		foreach ($aFields as $sAttCode => $value)
 		{
 			$realValue = self::MakeValue($sClass, $sAttCode, $value);
-			$oObject->Set($sAttCode, $realValue);
+			try
+			{
+				$oObject->Set($sAttCode, $realValue);
+			}
+			catch (Exception $e)
+			{
+				throw new Exception("$sAttCode: ".$e->getMessage(), $e->getCode());
+			}
 		}
 		return $oObject;
 	}
