@@ -2365,6 +2365,15 @@ class AttributeEnum extends AttributeString
 		}
 	}
 
+	/**
+	 * Helper to get a value that will be JSON encoded
+	 * The operation is the opposite to FromJSONToValue	 
+	 */	 	
+	public function GetForJSON($value)
+	{
+		return $value;
+	}
+
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
 		$aRawValues = parent::GetAllowedValues($aArgs, $sContains);
