@@ -162,6 +162,10 @@ $(function()
 			}
 			this._refresh();
 		},
+		get_post_upload_to: function()
+		{
+			return this.options.post_upload_to;
+		},
 		_upload_dlg: function()
 		{
 			var me = this;
