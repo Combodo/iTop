@@ -111,6 +111,23 @@ function ShowAboutBox()
 }
 EOF
 		);
+
+		if (MetaModel::GetConfig()->Get('demo_mode'))
+		{
+			// Leave the pane opened
+			$sConfigureWestPane = '';
+		}
+		else
+		{
+			$sConfigureWestPane =
+<<<EOF
+				if (GetUserPreference('menu_pane', 'open') == 'closed')
+				{
+					myLayout.close('west');
+				}
+				myLayout.addPinBtn( "#tPinMenu", "west" );
+EOF;
+		}
 		
 		$this->m_sInitScript =
 <<< EOF
@@ -163,13 +180,9 @@ EOF
 					}
 		});
 		window.clearTimeout(iPaneVisWatchDog);
-		myLayout.addPinBtn( "#tPinMenu", "west" );
 		//myLayout.open( "west" );
 		$('.ui-layout-resizer-west .ui-layout-toggler').css({background: 'transparent'});
-		if (GetUserPreference('menu_pane', 'open') == 'closed')
-		{
-			myLayout.close('west');
-		}
+		$sConfigureWestPane
 		
 		$('#left-pane').layout({ resizable: false, spacing_open: 0, south: { size: 94 }, enableCursorHotkey: false });
 	
@@ -214,6 +227,7 @@ EOF
 	}
 EOF
 		;
+
 		$this->add_ready_script(
 <<< EOF
 	
@@ -790,7 +804,10 @@ EOF
 			$sHtml .= ' <div id="top-left"></div><div id="logo"><a href="'.htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8').'"><img src="'.$sDisplayIcon.'" title="'.htmlentities($sVersionString, ENT_QUOTES, 'UTF-8').'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
 			$sHtml .= ' </div>';
 			$sHtml .= ' <div class="header-menu">';
-			$sHtml .= '		<div class="icon ui-state-default ui-corner-all"><span id="tPinMenu" class="ui-icon ui-icon-pin-w">pin</span></div>';
+			if (!MetaModel::GetConfig()->Get('demo_mode'))
+			{
+				$sHtml .= '		<div class="icon ui-state-default ui-corner-all"><span id="tPinMenu" class="ui-icon ui-icon-pin-w">pin</span></div>';
+			}
 			$sHtml .= '		<div style="text-align:center;">'.self::FilterXSS($sForm).'</div>';
 			$sHtml .= ' </div>';
 			$sHtml .= ' </div>';
