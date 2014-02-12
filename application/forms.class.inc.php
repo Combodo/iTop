@@ -36,7 +36,8 @@ class DesignerForm
 	protected $aSubmitParams;
 	protected $sSubmitTo;
 	protected $bReadOnly;
-	protected $sSelectorClass;
+	protected $sHierarchyPath;   // Needed to manage the visibility of nested subform
+	protected $sHierarchyParent; // Needed to manage the visibility of nested subform
 	protected $bDisplayed;
 	
 	public function __construct()
@@ -50,7 +51,8 @@ class DesignerForm
 		$this->sFormId = 'form_'.rand();
 		$this->oParentForm = null;
 		$this->bReadOnly = false;
-		$this->sSelectorClass = '';
+		$this->sHierarchyPath = '';
+		$this->sHierarchyParent = '';
 		$this->StartFieldSet($this->sCurrentFieldSet);
 		$this->bDisplayed = true;
 	}
@@ -151,14 +153,36 @@ class DesignerForm
 		$this->aSubmitParams = $oParentForm->aSubmitParams;
 	}
 	
-	public function SetSelectorClass($sSelectorClass)
+	/**
+	 * Helper to handle subforms hide/show	
+	 */	
+	public function SetHierarchyPath($sHierarchy)
 	{
-		$this->sSelectorClass = $sSelectorClass;
+		$this->sHierarchyPath = $sHierarchy;
 	}
 	
-	public function GetSelectorClass()
+	/**
+	 * Helper to handle subforms hide/show	
+	 */	
+	public function GetHierarchyPath()
 	{
-		return $this->sSelectorClass;
+		return $this->sHierarchyPath;
+	}
+	
+	/**
+	 * Helper to handle subforms hide/show	
+	 */	
+	public function SetHierarchyParent($sHierarchy)
+	{
+		$this->sHierarchyParent = $sHierarchy;
+	}
+	
+	/**
+	 * Helper to handle subforms hide/show	
+	 */	
+	public function GetHierarchyParent()
+	{
+		return $this->sHierarchyParent;
 	}
 	
 	
@@ -1219,22 +1243,39 @@ class DesignerFormSelectorField extends DesignerFormField
 			$oSubForm->SetParentForm($this->oForm);
 			$oSubForm->CopySubmitParams($this->oForm);
 			$oSubForm->SetPrefix($this->oForm->GetPrefix().$sKey.'_');
-			$oSubForm->SetSelectorClass("subform_{$sId} {$sId}_{$sKey}");
 			
 			if ($sRenderMode == 'property')
 			{
+				// Note: Managing the visibility of nested subforms had several implications
+				// 1) Attributes are displayed in a table and we have to group them in as many tbodys as necessary to hide/show the various options depending on the current selection
+				// 2) It is not possible to nest tbody tags. Therefore, it is not possible to manage the visibility the same way as it is done for the dialog mode (using nested divs).
+				// The div hierarchy has been emulated by adding attributes to the tbody tags:
+				// - data-selector : uniquely identifies the DesignerFormSelectorField that has an impact on the visibility of the node
+				// - data-path : uniquely identifies the combination of users choices that must be made to show the node
+				// - data-state : records the state, depending on the user choice on the FormSelectorField just above the node, but indepentantly from the visibility in the page (can be visible in the form itself being in a hidden form)
+				// Then a series of actions are performed to hide and show the relevant nodes, depending on the user choice
+				$sSelector = $this->oForm->GetHierarchyPath().'/'.$this->sCode;
+				$oSubForm->SetHierarchyParent($sSelector);
+				$sPath = $this->oForm->GetHierarchyPath().'/'.$this->sCode.':'.$sKey;
+				$oSubForm->SetHierarchyPath($sPath);
+
 				$oSubForm->SetDisplayed($sKey == $this->defaultValue);
-				$sHtml .= "</tbody><tbody class=\"subform_{$sId} {$sId}_{$sKey}\" $sStyle>";
-				$sHtml .= $oSubForm->RenderAsPropertySheet($oP, true);	
-				$oParentForm = $this->oForm->GetParentForm();
-				if($oParentForm)
+				$sState = ($sKey == $this->defaultValue) ? 'visible' : 'hidden';
+				$sHtml .= "</tbody><tbody data-selector=\"$sSelector\" data-path=\"$sPath\" data-state=\"$sState\" $sStyle>";
+				$sHtml .= $oSubForm->RenderAsPropertySheet($oP, true);
+
+				$sState = $this->oForm->IsDisplayed() ? 'visible' : 'hidden';
+				if ($oParent = $this->oForm->GetParentForm())
 				{
-					$sHtml .= "</tbody><tbody class=\"".$oParentForm->GetSelectorClass()."\">";
+					$sParentSelector = $oParent->GetHierarchyParent();
+					$sParentPath = $oParent->GetHierarchyPath();
 				}
 				else
 				{
-					$sHtml .= "</tbody><tbody>";
+					$sParentSelector = '';
+					$sParentPath = '';
 				}
+				$sHtml .= "</tbody><tbody data-selector=\"$sParentSelector\" data-path=\"$sParentPath\" data-state=\"$sState\" $sStyle>";
 			}
 			else
 			{
@@ -1244,11 +1285,38 @@ class DesignerFormSelectorField extends DesignerFormField
 			}
 		}
 
-		$oP->add_ready_script(
+		if ($sRenderMode == 'property')
+		{
+			$sSelector = $this->oForm->GetHierarchyPath().'/'.$this->sCode;
+			$oP->add_ready_script(
+<<<EOF
+$('#$sId').bind('change reverted', function() {
+	// Mark all the direct children as hidden
+	$('tbody[data-selector="$sSelector"]').attr('data-state', 'hidden');
+	// Mark the selected one as visible
+	var sSelectedHierarchy = '$sSelector:'+this.value; 
+	$('tbody[data-path="'+sSelectedHierarchy+'"]').attr('data-state', 'visible');
+	
+	// Show all items behind the current one
+	$('tbody[data-path^="$sSelector"]').show();
+	// Hide items behind the current one as soon as it is behind a hidden node (or itself is marked as hidden) 
+	$('tbody[data-path^="$sSelector"][data-state="hidden"]').each(function(){
+		$(this).hide();
+		var sPath = $(this).attr('data-path');
+		$('tbody[data-path^="'+sPath+'/"]').hide();
+	});
+});
+EOF
+			);
+		}
+		else
+		{
+			$oP->add_ready_script(
 <<<EOF
 $('#$sId').bind('change reverted', function() {	$('.subform_{$sId}').hide(); $('.{$sId}_'+this.value).show(); } );
 EOF
-);
+			);
+		}
 		return array('label' => $this->sLabel, 'value' => $sHtml);
 	}
 
