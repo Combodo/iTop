@@ -56,6 +56,7 @@ SetupWebPage::AddModule(
 				LDAP_OPT_PROTOCOL_VERSION => 3,
 				LDAP_OPT_REFERRALS => 0,
 			),
+			'debug' => false,
 		),
 	)
 );

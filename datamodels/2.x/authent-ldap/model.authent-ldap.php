@@ -166,7 +166,7 @@ class UserLDAP extends UserInternal
 	
 	protected function LogMessage($sMessage, $aData = array())
 	{
-		if (MetaModel::IsLogEnabledIssue())
+		if (MetaModel::GetModuleSetting('authent-ldap', 'debug', false) && MetaModel::IsLogEnabledIssue())
 		{
 			if (MetaModel::IsValidClass('EventIssue'))
 			{
