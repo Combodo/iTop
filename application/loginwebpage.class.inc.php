@@ -105,6 +105,7 @@ class LoginWebPage extends NiceWebPage
 			case 'url':
 			$this->add_header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_VERSION));
 			$this->add_header('HTTP/1.0 401 Unauthorized');
+			$this->add_header('Content-type: text/html; charset=iso-8859-1');
 			// Note: displayed when the user will click on Cancel
 			$this->add('<p><strong>'.Dict::S('UI:Login:Error:AccessRestricted').'</strong></p>');
 			break;
@@ -420,6 +421,24 @@ EOF
 	}
 
 	/**
+	 * Guess if a string looks like an UTF-8 string based on some ranges of multi-bytes encoding
+	 * @param string $sString
+	 * @return bool True if the string contains some typical UTF-8 multi-byte sequences
+	 */
+	static function LooksLikeUTF8($sString)
+	{
+		return preg_match('%(?:
+        			[\xC2-\xDF][\x80-\xBF]             # non-overlong 2-byte
+        			|\xE0[\xA0-\xBF][\x80-\xBF]        # excluding overlongs
+        			|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2} # straight 3-byte
+        			|\xED[\x80-\x9F][\x80-\xBF]        # excluding surrogates
+        			|\xF0[\x90-\xBF][\x80-\xBF]{2}     # planes 1-3
+        			|[\xF1-\xF3][\x80-\xBF]{3}         # planes 4-15
+        			|\xF4[\x80-\x8F][\x80-\xBF]{2}     # plane 16
+        	)+%xs', $sString);
+	}
+
+	/**
 	 * Attempt a login
 	 * 	 	
 	 * @param int iOnExit What action to take if the user is not logged on (one of the class constants EXIT_...)
@@ -484,7 +503,22 @@ EOF
 					else if (isset($_SERVER['PHP_AUTH_USER']))
 					{
 						$sAuthUser = $_SERVER['PHP_AUTH_USER'];
+						// Unfortunately, the RFC is not clear about the encoding...
+						// IE and FF supply the user and password encoded in ISO-8859-1 whereas Chrome provides them encoded in UTF-8
+						// So let's try to guess if it's an UTF-8 string or not... fortunately all encodings share the same ASCII base
+						if (!self::LooksLikeUTF8($sAuthUser))
+						{
+							// Does not look like and UTF-8 string, try to convert it from iso-8859-1 to UTF-8
+							// Supposed to be harmless in case of a plain ASCII string...
+							$sAuthUser = iconv('iso-8859-1', 'utf-8', $sAuthUser);
+						}
 						$sAuthPwd = $_SERVER['PHP_AUTH_PW'];
+						if (!self::LooksLikeUTF8($sAuthPwd))
+						{
+							// Does not look like and UTF-8 string, try to convert it from iso-8859-1 to UTF-8
+							// Supposed to be harmless in case of a plain ASCII string...
+							$sAuthPwd = iconv('iso-8859-1', 'utf-8', $sAuthPwd);
+						}
 						$sLoginMode = 'basic';
 					}
 					break;
