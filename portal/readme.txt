@@ -41,6 +41,8 @@ PORTAL_<TICKET-CLASS>_TYPE: optional attribute to be set with the value of "requ
 PORTAL_<TICKET-CLASS>_LIST_ZLIST: list of attribute displayed in the lists (opened and resolved)
 PORTAL_<TICKET-CLASS>_CLOSED_ZLIST: list of attribute displayed in the list of closed tickets
 PORTAL_<TICKET-CLASS>_DETAILS_ZLIST: selection and presentation of attributes in the page that shows their details
+PORTAL_<TICKET-CLASS>_DISPLAY_QUERY: selection of displayable objects (use parameters contact->attcode to check things against the user/contact)
+PORTAL_<TICKET-CLASS>_DISPLAY_POWERUSER_QUERY: selection of displayable objects for power users (use parameters contact->attcode to check things against the user/contact)
 
 
 How to add a type of ticket (example: Incident)

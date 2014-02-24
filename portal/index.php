@@ -50,6 +50,46 @@ function GetTicketClasses()
 	return $aClasses;
 } 
 
+
+/**
+ * Helper to protect the portal against malicious usages
+ * Throws an exception if the current user is not allowed to view the object details  
+ */
+function ValidateObject($oObject)
+{
+	if (IsPowerUser())
+	{
+		$sValidationDefine = 'PORTAL_'.strtoupper(get_class($oObject)).'_DISPLAY_POWERUSER_QUERY';
+	}
+	else
+	{
+		$sValidationDefine = 'PORTAL_'.strtoupper(get_class($oObject)).'_DISPLAY_QUERY';
+	}
+	if (defined($sValidationDefine))
+	{
+		$sValidationOql = constant($sValidationDefine);
+		$oSearch = DBObjectSearch::FromOQL($sValidationOql);
+		$oSearch->AddCondition('id', $oObject->GetKey());
+
+		if ($iUser = UserRights::GetContactId())
+		{
+			$oContact = MetaModel::GetObject('Contact', $iUser);
+			$aArgs = $oContact->ToArgs('contact');
+		}
+		else
+		{
+			$aArgs = array();
+		}
+	
+		$oSet = new DBObjectSet($oSearch, array(), $aArgs);
+		if ($oSet->Count() == 0)
+		{
+			throw new SecurityException('You are not allowed to access the object '.get_class($oObject).'::'.$oObject->GetKey());
+		}
+	}
+}
+
+
 /**
  * Helper to get the relevant constant 
  */
@@ -1249,6 +1289,7 @@ try
 				$oP->set_title(Dict::S('Portal:TitleDetailsFor_Request'));
 				DisplayMainMenu($oP);
 				$oObj = $oP->FindObjectFromArgs(GetTicketClasses());
+				ValidateObject($oObj);
 				DisplayObject($oP, $oObj, $oUserOrg);
 				break;
 				
@@ -1258,6 +1299,7 @@ try
 				if (!MetaModel::DBIsReadOnly())
 				{
 					$oObj = $oP->FindObjectFromArgs(GetTicketClasses());
+					ValidateObject($oObj);
 					$aAttList = array(
 						GetConstant(get_class($oObj), 'PUBLIC_LOG'),
 						'user_satisfaction',

@@ -793,24 +793,7 @@ EOF
 			}
 		}
 
-		$sOQL = "SELECT $sClass WHERE org_id = :org_id";
-		$oSearch = DBObjectSearch::FromOQL($sOQL);
-		$iUser = UserRights::GetContactId();
-		if ($iUser > 0 && !IsPowerUser())
-		{
-			$oSearch->AddCondition('caller_id', $iUser);
-		}
-		$oSearch->AddCondition('id', $iId);
-		
-		$oContact = MetaModel::GetObject('Contact', $iUser, false); // false => Can fail
-		if (!is_object($oContact))
-		{
-			throw new Exception(Dict::S('Portal:ErrorNoContactForThisUser'));
-		}
-		
-		$oSet = new DBObjectSet($oSearch, array(), array('org_id' => $oContact->Get('org_id')));
-		
-		$oObj = $oSet->Fetch();
+		$oObj = MetaModel::GetObject($sClass, $iId, false);		
 		if (!is_object($oObj))
 		{
 			throw new Exception("Could not find the object $sClass/$iId");
