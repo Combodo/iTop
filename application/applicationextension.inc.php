@@ -582,6 +582,14 @@ class RestResult
 	 */
 	const INVALID_JSON = 4;
 	/**
+	 * Result: the parameter 'auth_user' is missing, authentication aborted
+	 */
+	const MISSING_AUTH_USER = 5;
+	/**
+	 * Result: the parameter 'auth_pwd' is missing, authentication aborted
+	 */
+	const MISSING_AUTH_PWD = 6;
+	/**
 	 * Result: no operation is available for the specified version
 	 */
 	const UNSUPPORTED_VERSION = 10;
