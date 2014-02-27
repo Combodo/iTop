@@ -48,6 +48,20 @@ class ormCaseLog {
 		return $this->m_sLog;
 	}
 	
+	public static function FromJSON($oJson)
+	{
+		if (!isset($oJson->items))
+		{
+			throw new Exception("Missing 'items' elements");
+		}
+		$oCaseLog = new ormCaseLog();
+		foreach($oJson->items as $oItem)
+		{
+			$oCaseLog->AddLogEntryFromJSON($oItem);
+		}
+		return $oCaseLog;
+	}
+
 	/**
 	 * Return a value that will be further JSON encoded	
 	 */	
@@ -86,6 +100,7 @@ class ormCaseLog {
 			$aEntries[] = array(
 				'date' => $sDate,
 				'user_login' => $this->m_aIndex[$index]['user_name'],
+				'user_id' => $this->m_aIndex[$index]['user_id'],
 				'message' => $sTextEntry
 			);
 		}
@@ -289,7 +304,62 @@ class ormCaseLog {
 		}
 		$this->m_bModified = true;
 	}
-	
+
+
+	public function AddLogEntryFromJSON($oJson)
+	{
+		$sText = isset($oJson->message) ? $oJson->message : '';
+
+		if (isset($oJson->user_id))
+		{
+			if (!UserRights::IsAdministrator())
+			{
+				throw new Exception("Only administrators can set the user id", RestResult::UNAUTHORIZED);
+			}
+			try
+			{
+				$oUser = RestUtils::FindObjectFromKey('User', $oJson->user_id);
+			}
+			catch(Exception $e)
+			{
+				throw new Exception('user_id: '.$e->getMessage(), $e->getCode());
+			}
+			$iUserId = $oUser->GetKey();
+			$sOnBehalfOf = $oUser->GetFriendlyName();
+		}
+		else
+		{
+			$iUserId = UserRights::GetUserId();
+			$sOnBehalfOf = UserRights::GetUserFriendlyName();
+		}
+		
+		if (isset($oJson->date))
+		{
+			$oDate = new DateTime($oJson->date);
+			$iDate = (int) $oDate->format('U');
+		}
+		else
+		{
+			$iDate = time();
+		}
+		$sDate = date(Dict::S('UI:CaseLog:DateFormat'), $iDate);
+
+		$sSeparator = sprintf(CASELOG_SEPARATOR, $sDate, $sOnBehalfOf, $iUserId);
+		$iSepLength = strlen($sSeparator);
+		$iTextlength = strlen($sText);
+		$this->m_sLog = $sSeparator.$sText.$this->m_sLog; // Latest entry printed first
+		$this->m_aIndex[] = array(
+			'user_name' => $sOnBehalfOf,	
+			'user_id' => $iUserId,	
+			'date' => $iDate,	
+			'text_length' => $iTextlength,	
+			'separator_length' => $iSepLength,	
+		);
+
+		$this->m_bModified = true;
+	}
+
+
 	public function GetModifiedEntry()
 	{
 		$sModifiedEntry = '';

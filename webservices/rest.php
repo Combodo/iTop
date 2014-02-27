@@ -96,7 +96,15 @@ try
 	utils::UseParamFile();
 
 	$sAuthUser = utils::ReadParam('auth_user', null, false, 'raw_data');
+	if ($sAuthUser === null)
+	{
+		throw new Exception("Missing parameter 'auth_user'", RestResult::MISSING_AUTH_USER);
+	}
 	$sAuthPwd = utils::ReadParam('auth_pwd', null, false, 'raw_data');
+	if ($sAuthPwd === null)
+	{
+		throw new Exception("Missing parameter 'auth_pwd'", RestResult::MISSING_AUTH_PWD);
+	}
 	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
 	{
 		UserRights::Login($sAuthUser); // Login & set the user's language

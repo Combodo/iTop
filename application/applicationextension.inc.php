@@ -581,6 +581,14 @@ class RestResult
 	 */
 	const INVALID_JSON = 4;
 	/**
+	 * Result: the parameter 'auth_user' is missing, authentication aborted
+	 */
+	const MISSING_AUTH_USER = 5;
+	/**
+	 * Result: the parameter 'auth_pwd' is missing, authentication aborted
+	 */
+	const MISSING_AUTH_PWD = 6;
+	/**
 	 * Result: no operation is available for the specified version
 	 */
 	const UNSUPPORTED_VERSION = 10;
@@ -944,7 +952,14 @@ class RestUtils
 		foreach ($aFields as $sAttCode => $value)
 		{
 			$realValue = self::MakeValue($sClass, $sAttCode, $value);
-			$oObject->Set($sAttCode, $realValue);
+			try
+			{
+				$oObject->Set($sAttCode, $realValue);
+			}
+			catch (Exception $e)
+			{
+				throw new Exception("$sAttCode: ".$e->getMessage(), $e->getCode());
+			}
 		}
 		return $oObject;
 	}
@@ -964,7 +979,14 @@ class RestUtils
 		foreach ($aFields as $sAttCode => $value)
 		{
 			$realValue = self::MakeValue($sClass, $sAttCode, $value);
-			$oObject->Set($sAttCode, $realValue);
+			try
+			{
+				$oObject->Set($sAttCode, $realValue);
+			}
+			catch (Exception $e)
+			{
+				throw new Exception("$sAttCode: ".$e->getMessage(), $e->getCode());
+			}
 		}
 		return $oObject;
 	}
