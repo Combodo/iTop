@@ -510,7 +510,8 @@ EOF
 				if (is_null($aAllowedValues))
 				{
 					// Any value is possible, display an input box
-					$this->add("<label>".MetaModel::GetFilterLabel($sClass, $sAttSpec).":</label>&nbsp;<input class=\"textSearch\" name=\"$sPrefix$sFieldName\" value=\"$sFilterValue\"/>\n");
+					$sSanitizedValue = htmlentities($sFilterValue, ENT_QUOTES, 'UTF-8');
+					$this->add("<label>".MetaModel::GetFilterLabel($sClass, $sAttSpec).":</label>&nbsp;<input class=\"textSearch\" name=\"$sPrefix$sFieldName\" value=\"$sSanitizedValue\"/>\n");
 				}
 				else
 				{
