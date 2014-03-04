@@ -2051,7 +2051,7 @@ abstract class DBObject
 				{
 					$sRemoteName = $oAttDef->IsIndirect() ? $oAttDef->GetExtKeyToRemote().'_friendlyname' : 'friendlyname';
 
-					$oLinkSet = $this->Get($sAttCode);
+					$oLinkSet = clone $this->Get($sAttCode); // Workaround/Safety net for Trac #887
 					$iLimit = MetaModel::GetConfig()->Get('max_linkset_output');
 					if ($iLimit > 0)
 					{

@@ -418,7 +418,7 @@ class DBObjectSet
 				CMDBSource::FreeResult($resQuery);
 				$this->m_iCount = $aRow['COUNT'];
 			}
-			return $this->m_iCount;
+			return $this->m_iCount; // WARNING this value can be wrong, see Trac #887
 		}
 	}
 
