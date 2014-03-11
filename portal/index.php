@@ -526,17 +526,14 @@ function RequestCreationForm($oP, $oUserOrg, $iSvcId = null, $iSubSvcId = null, 
 		{
 			foreach ($aTemplateFields as $sAttCode =>  $oField)
 			{
-				if (!in_array($sAttCode, $aList))
+				$sValue = $oField->GetFormElement($oP, $sClass);
+				if ($oField->Get('input_type') == 'hidden')
 				{
-					$sValue = $oField->GetFormElement($oP, $sClass);
-					if ($oField->Get('input_type') == 'hidden')
-					{
-						$aHidden[] = $sValue;
-					}
-					else
-					{
-						$aDetails[] = array('label' => $oField->GetAsHTML('label'), 'value' => $sValue);
-					}
+					$aHidden[] = $sValue;
+				}
+				else
+				{
+					$aDetails[] = array('label' => $oField->GetAsHTML('label'), 'value' => $sValue);
 				}
 			}
 		}
