@@ -936,6 +936,7 @@ EOF
 
 		case 'shortcut_delete_go':
 		$oSearch = new DBObjectSearch('Shortcut');
+		$oSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
 		$aShortcuts = utils::ReadMultipleSelection($oSearch);
 		foreach ($aShortcuts as $iShortcut)
 		{
