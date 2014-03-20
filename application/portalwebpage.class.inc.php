@@ -324,7 +324,7 @@ EOF
 
 				$sUniqueId = $sClass.$this->GetUniqueId();
 				$this->add("<div id=\"$sUniqueId\">\n"); // The id here MUST be the same as currentId, otherwise the pagination will be broken
-				cmdbAbstractObject::DisplaySet($this, $oSet, array('currentId' => $sUniqueId, 'menu' => false, 'zlist' => false, 'extra_fields' => implode(',', $aZList)));
+				cmdbAbstractObject::DisplaySet($this, $oSet, array('currentId' => $sUniqueId, 'menu' => false, 'toolkit_menu' => false, 'zlist' => false, 'extra_fields' => implode(',', $aZList)));
 				$this->add("</div>\n");
 			}
 			else
@@ -420,7 +420,7 @@ EOF
 			}
 			$oObjSearch->AddCondition_ReferencedBy($oLinkSet->GetFilter(), $sRemoteAttCode);
 
-			$aExtraParams = array('menu' => false, 'zlist' => false, 'extra_fields' => implode(',', $aZList));
+			$aExtraParams = array('menu' => false, 'toolkit_menu' => false, 'zlist' => false, 'extra_fields' => implode(',', $aZList));
 			$oBlock = new DisplayBlock($oObjSearch, 'list', false);
 			$oBlock->Display($this, 1, $aExtraParams);
 		}
