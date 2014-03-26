@@ -131,12 +131,12 @@ jQuery.extend(
 											jQuery.handleError(s, xml, null, e);
 										}									
 
-									}, 100)
+									}, 100);
 
-                xml = null
+                xml = null;
 
             }
-        }
+        };
         // Timeout checker
         if ( s.timeout > 0 ) 
 		{
