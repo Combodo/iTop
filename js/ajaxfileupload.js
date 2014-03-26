@@ -131,12 +131,12 @@ jQuery.extend(
 											jQuery.handleError(s, xml, null, e);
 										}									
 
-									}, 100)
+									}, 100);
 
-                xml = null
+                xml = null;
 
             }
-        }
+        };
         // Timeout checker
         if ( s.timeout > 0 ) 
 		{
@@ -197,7 +197,9 @@ jQuery.extend({
             s.error( xhr, status, e );
         // If we have some XML response text (e.g. from an AJAX call) then log it in the console
         else if(xhr.responseText)
-            console.log(xhr.responseText);
+	{
+            //console.log(xhr.responseText);
+	}
     }
 });
 
