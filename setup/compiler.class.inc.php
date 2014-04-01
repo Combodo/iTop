@@ -617,7 +617,11 @@ EOF;
 		$aClassParams = array();
 		$aClassParams['category'] = $this->GetPropString($oProperties, 'category', '');
 		$aClassParams['key_type'] = "'autoincrement'";
-	
+		if ((bool) $this->GetPropNumber($oProperties, 'is_link', 0))
+		{
+			$aClassParams['is_link'] = 'true';
+		}
+
 		if ($oNaming = $oProperties->GetOptionalElement('naming'))
 		{
 			$oNameAttributes = $oNaming->GetUniqueElement('attributes');
@@ -1462,6 +1466,8 @@ class ProfilesConfig
 
 	protected static \$aLINKTOCLASSES = $sLinkToClasses;
 
+	// Now replaced by MetaModel::GetLinkClasses (working with 1.x)
+	// This function could be deprecated
 	public static function GetLinkClasses()
 	{
 		return self::\$aLINKTOCLASSES;
