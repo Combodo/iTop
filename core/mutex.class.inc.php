@@ -31,12 +31,18 @@ class iTopMutex
 {
 	protected $sName;
 	protected $hDBLink;
+	static protected $aAcquiredLocks = array();
 
 	public function __construct($sName)
 	{
 		// Compute the name of a lock for mysql
 		// Note: the name is server-wide!!!
 		$this->sName = 'itop.'.$sName;
+		
+		if (!array_key_exists($this->sName, self::$aAcquiredLocks))
+		{
+			self::$aAcquiredLocks[$this->sName] = 0;
+		}
 
 		// It is a MUST to create a dedicated session each time a lock is required, because
 		// using GET_LOCK anytime on the same session will RELEASE the current and unique session lock (known issue)
@@ -55,17 +61,21 @@ class iTopMutex
 	 */	
 	public function Lock()
 	{
-		do
+		if (self::$aAcquiredLocks[$this->sName] == 0)
 		{
-			$res = $this->QueryToScalar("SELECT GET_LOCK('".$this->sName."', 3600)");
-			if (is_null($res))
+			do
 			{
-				throw new Exception("Failed to acquire the lock '".$this->sName."'");
+				$res = $this->QueryToScalar("SELECT GET_LOCK('".$this->sName."', 3600)");
+				if (is_null($res))
+				{
+					throw new Exception("Failed to acquire the lock '".$this->sName."'");
+				}
+				// $res === '1' means I hold the lock
+				// $res === '0' means it timed out
 			}
-			// $res === '1' means I hold the lock
-			// $res === '0' means it timed out
+			while ($res !== '1');
 		}
-		while ($res !== '1');
+		self::$aAcquiredLocks[$this->sName]++;
 	}
 
 	/**
@@ -74,6 +84,12 @@ class iTopMutex
 	 */	
 	public function TryLock()
 	{
+		if (self::$aAcquiredLocks[$this->sName] > 0)
+		{
+			self::$aAcquiredLocks[$this->sName]++;
+			return true;
+		}
+		
 		$res = $this->QueryToScalar("SELECT GET_LOCK('".$this->sName."', 0)");
 		if (is_null($res))
 		{
@@ -81,6 +97,10 @@ class iTopMutex
 		}
 		// $res === '1' means I hold the lock
 		// $res === '0' means it timed out
+		if ($res === '1')
+		{
+			self::$aAcquiredLocks[$this->sName]++;
+		}
 		return ($res === '1');
 	}
 
@@ -89,7 +109,13 @@ class iTopMutex
 	 */	
 	public function Unlock()
 	{
-		$res = $this->QueryToScalar("SELECT RELEASE_LOCK('".$this->sName."')");
+		if (self::$aAcquiredLocks[$this->sName] == 0) return; // Safety net
+		
+		if (self::$aAcquiredLocks[$this->sName] == 1)
+		{
+			$res = $this->QueryToScalar("SELECT RELEASE_LOCK('".$this->sName."')");
+		}
+		self::$aAcquiredLocks[$this->sName]--;
 	}
 
 
