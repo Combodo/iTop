@@ -178,7 +178,7 @@ class ModelReflectionRuntime extends ModelReflection
 		$aClasses = MetaModel::GetClasses($sCategories);
 		if ($bExcludeLinks)
 		{
-			$aExcluded = ProfilesConfig::GetLinkClasses(); // table computed at compile time
+			$aExcluded = MetaModel::GetLinkClasses();
 			$aRes = array();
 			foreach ($aClasses as $sClass)
 			{

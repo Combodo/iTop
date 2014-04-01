@@ -5138,6 +5138,12 @@ abstract class MetaModel
 		}
 		return $aResult;
 	}
+
+	/**
+	 * It is not recommended to use this function: call GetLinkClasses instead
+	 * Return classes having at least to external keys (thus too many classes as compared to GetLinkClasses)	 
+	 * The only difference with EnumLinkingClasses is the output format
+	 */	 	
 	public static function EnumLinksClasses()
 	{
 		// Returns a flat array of classes having at least two external keys
@@ -5160,6 +5166,11 @@ abstract class MetaModel
 		}
 		return $aResult;
 	}
+	/**
+	 * It is not recommended to use this function: call GetLinkClasses instead
+	 * Return classes having at least to external keys (thus too many classes as compared to GetLinkClasses)	 
+	 * The only difference with EnumLinksClasses is the output format
+	 */	 	
 	public static function EnumLinkingClasses($sClass = "")
 	{
 		// N-N links, array of sLinkClass => (array of sAttCode=>sClass)
@@ -5194,6 +5205,38 @@ abstract class MetaModel
 			}
 		}
 		return $aResult;
+	}
+
+	/**
+	 * This function has two siblings that will be soon deprecated:
+	 * EnumLinkingClasses and EnumLinkClasses
+	 * 	 
+	 * Using GetLinkClasses is the recommended way to determine if a class is
+	 * actually an N-N relation because it is based on the decision made by the
+	 * designer the data model
+	 */	 	
+	public static function GetLinkClasses()
+	{
+		$aRet = array();
+		foreach(self::GetClasses() as $sClass)
+		{
+			if (isset(self::$m_aClassParams[$sClass]["is_link"]))
+			{
+				if (self::$m_aClassParams[$sClass]["is_link"])
+				{
+					$aExtKeys = array();
+					foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+					{
+						if ($oAttDef->IsExternalKey())
+						{
+							$aExtKeys[$sAttCode] = $oAttDef->GetTargetClass();
+						}
+					}
+					$aRet[$sClass] = $aExtKeys;
+				}
+			}
+		}
+		return $aRet;
 	}
 
 	public static function GetLinkLabel($sLinkClass, $sAttCode)
