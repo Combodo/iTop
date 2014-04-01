@@ -203,6 +203,7 @@ $(function()
 					modal: true,
 					width: 'auto',
 					height: 'auto',
+					maxHeight: $(window).height() - 50,
 					position: { my: "center", at: "center", of: window },
 					close: function() { me._onDlgClose(); }
 				});

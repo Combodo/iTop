@@ -57,6 +57,7 @@ try
 		case 'pagination':
 		$oPage->SetContentType('text/html');
 		$extraParams = utils::ReadParam('extra_param', '', false, 'raw_data');
+		$aExtraParams = array();
 		if (is_array($extraParams))
 		{
 			$aExtraParams = $extraParams;
@@ -64,10 +65,13 @@ try
 		else
 		{
 			$sExtraParams = stripslashes($extraParams);
-			$aExtraParams = array();
 			if (!empty($sExtraParams))
 			{
-				$aExtraParams = json_decode(str_replace("'", '"', $sExtraParams), true /* associative array */);
+				$val = json_decode(str_replace("'", '"', $sExtraParams), true /* associative array */);
+				if ($val !== null)
+				{
+					$aExtraParams = $val;
+				}
 			}
 		}
 		if ($sEncoding == 'oql')
