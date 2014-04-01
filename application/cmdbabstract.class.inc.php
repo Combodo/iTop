@@ -286,6 +286,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			{
 				$sComment = (isset($aExtraParams['fieldsComments'][$sAttCode])) ? $aExtraParams['fieldsComments'][$sAttCode] : '';
 				$this->DisplayCaseLog($oPage, $sAttCode, $sComment, $sPrefix, $bEditMode);
+				$aFieldsMap[$sAttCode] = $this->m_iFormId.'_'.$sAttCode;
 			}
 		}
 
