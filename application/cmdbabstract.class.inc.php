@@ -2709,7 +2709,7 @@ EOF
 			$aFinalValues[$sAttCode] = $aValues[$sAttCode];
 		}
 		$this->UpdateObjectFromArray($aFinalValues);
-
+		
 		// Invoke extensions after the update of the object from the form
 		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 		{
@@ -3284,12 +3284,12 @@ EOF
 					{
 						foreach($value as $vKey => $vValue)
 						{
-							$oP->add("<input type=\"hidden\" name=\"{$sKey}[$vKey]\" value=\"$vValue\">\n");
+							$oP->add("<input type=\"hidden\" name=\"{$sKey}[$vKey]\" value=\"".htmlentities($vValue, ENT_QUOTES, 'UTF-8')."\">\n");
 						}
 					}
 					else
 					{
-						$oP->add("<input type=\"hidden\" name=\"$sKey\" value=\"$value\">\n");
+						$oP->add("<input type=\"hidden\" name=\"$sKey\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\">\n");
 					}
 				}
 			}
