@@ -74,7 +74,10 @@ class UserLocal extends UserInternal
 
 	public function CanChangePassword()
 	{
-		// For now everyone can change their password..
+		if (MetaModel::GetConfig()->Get('demo_mode'))
+		{
+			return false;
+		}
 		return true;
 	}
 
@@ -85,18 +88,47 @@ class UserLocal extends UserInternal
 		// Let's ask the password to compare the hashed values
 		if ($oPassword->CheckPassword($sOldPassword))
 		{
-			$this->Set('password', $sNewPassword);
-			$oChange = MetaModel::NewObject("CMDBChange");
-			$oChange->Set("date", time());
-			$sUserString = CMDBChange::GetCurrentUserName();
-			$oChange->Set("userinfo", $sUserString);
-			$oChange->DBInsert();
-			$this->DBUpdateTracked($oChange, true);
+			$this->SetPassword($sNewPassword);
 			return true;
 		}
 		return false;
 	}
+
+	/**
+	 * Use with care!
+	 */	 	
+	public function SetPassword($sNewPassword)
+	{
+		$this->Set('password', $sNewPassword);
+		$oChange = MetaModel::NewObject("CMDBChange");
+		$oChange->Set("date", time());
+		$sUserString = CMDBChange::GetCurrentUserName();
+		$oChange->Set("userinfo", $sUserString);
+		$oChange->DBInsert();
+		$this->DBUpdateTracked($oChange, true);
+	}
+
+	/**
+	 * Returns the set of flags (OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY...)
+	 * for the given attribute in the current state of the object
+	 * @param $sAttCode string $sAttCode The code of the attribute
+	 * @param $aReasons array To store the reasons why the attribute is read-only (info about the synchro replicas)
+	 * @param $sTargetState string The target state in which to evalutate the flags, if empty the current state will be used
+	 * @return integer Flags: the binary combination of the flags applicable to this attribute
+	 */	 	  	 	
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
+		$iFlags = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		if (MetaModel::GetConfig()->Get('demo_mode'))
+		{
+			if (strpos('contactid,login,language,password,profile_list,allowed_org_list', $sAttCode) !== false)
+			{
+				// contactid and allowed_org_list are disabled to make sure the portal remains accessible 
+				$aReasons[] = 'Sorry, this attribute is read-only in the demonstration mode!';
+				$iFlags |= OPT_ATT_READONLY;
+			}
+		}
+		return $iFlags;
+	}
 }
 
-
-?>

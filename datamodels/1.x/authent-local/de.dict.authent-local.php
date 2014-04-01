@@ -16,28 +16,12 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
- * Localized data
- *
- * @author      Stephan Rosenke <stephan.rosenke@itomig.de>
+ * @author	Stephan Rosenke <stephan.rosenke@itomig.de>
+ * @author 	David M. Gümbel <david.guembel@itomig.de>
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: UserLocal
-//
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserLocal' => 'iTop-Benutzer',
@@ -45,7 +29,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserLocal/Attribute:password' => 'Passwort',
 	'Class:UserLocal/Attribute:password+' => 'Benutzerpasswort',
 ));
-
-
-
 ?>
