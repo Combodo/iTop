@@ -1148,15 +1148,7 @@ function MakeStimulusForm(WebPage $oP, $oObj, $sStimulusCode, $aEditAtt)
 		$aArgs = array('this' => $oObj, 'formPrefix' => '');
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$sInputId = 'input_'.$sAttCode;
-		if (($sAttCode == 'user_satisfaction') || ($sAttCode == 'user_comment'))
-		{
-			$iFlags = OPT_ATT_MANDATORY;
-		}
-		else
-		{
-			$iFlags = 0;
-		}
-		$sHTMLValue = "<span id=\"field_{$sStimulusCode}_{$sInputId}\">".cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+		$sHTMLValue = "<span id=\"field_{$sStimulusCode}_{$sInputId}\">".cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', 0 /*$iFlags*/, $aArgs).'</span>';
 
 		$oP->add('<h1>'.MetaModel::GetLabel($sClass, $sAttCode).'</h1>');
 		$oP->add($sHTMLValue);
@@ -1254,7 +1246,6 @@ try
 	LoginWebPage::DoLogin(false /* bMustBeAdmin */, true /* IsAllowedToPortalUsers */); // Check user rights and prompt if needed
 
    ApplicationContext::SetUrlMakerClass('MyPortalURLMaker');
-	ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', UserRights::GetUserLanguage());
 
 	$aClasses = explode(',', MetaModel::GetConfig()->Get('portal_tickets'));
 	$sMainClass = trim(reset($aClasses));
