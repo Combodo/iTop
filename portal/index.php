@@ -915,6 +915,8 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 			case 'assigned':
 			case 'frozen':
 			case 'pending':
+			case 'dispatched':
+			case 'redispatched':
 			$aEditAtt = array(
 				$sLogAttCode => '????'
 			);
@@ -1175,6 +1177,11 @@ function RunStimulusDialog(sStimulusCode, sTitle, sOkButtonLabel)
 			$(this).dialog( "close" );
 		} },
 		],
+	});
+	// Start the validation
+	CheckFields(sStimulusCode+'_form', false);
+	$('#'+sStimulusCode+'_form').submit( function() {
+		return OnSubmit(sStimulusCode+'_form');
 	});
 }
 EOF
