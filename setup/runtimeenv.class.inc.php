@@ -466,11 +466,13 @@ class RunTimeEnvironment
 		$aData = array(
 			'source_dir' => $oConfig->Get('source_dir'),
 		);
+		$iInstallationTime = time(); // Make sure that all modules record the same installation time
 		$oInstallRec = new ModuleInstallation();
 		$oInstallRec->Set('name', DATAMODEL_MODULE);
 		$oInstallRec->Set('version', $sDataModelVersion);
 		$oInstallRec->Set('comment', json_encode($aData));
 		$oInstallRec->Set('parent_id', 0); // root module
+		$oInstallRec->Set('installed', $iInstallationTime);
 		$iMainItopRecord = $oInstallRec->DBInsertNoReload();
 		
 		// Record main installation
@@ -479,6 +481,7 @@ class RunTimeEnvironment
 		$oInstallRec->Set('version', ITOP_VERSION.'.'.ITOP_REVISION);
 		$oInstallRec->Set('comment', "Done by the setup program\nBuilt on ".ITOP_BUILD_DATE);
 		$oInstallRec->Set('parent_id', 0); // root module
+		$oInstallRec->Set('installed', $iInstallationTime);
 		$iMainItopRecord = $oInstallRec->DBInsertNoReload();
 	
 		
@@ -519,6 +522,7 @@ class RunTimeEnvironment
 			$oInstallRec->Set('version', $sVersion);
 			$oInstallRec->Set('comment', $sComment);
 			$oInstallRec->Set('parent_id', $iMainItopRecord);
+			$oInstallRec->Set('installed', $iInstallationTime);
 			$oInstallRec->DBInsertNoReload();
 		}
 		// Database is created, installation has been tracked into it
