@@ -259,6 +259,7 @@ class ormStopWatch
 	{
 		$this->iTimeSpent = 0;
 		$this->iStopped = null;
+		$this->iStarted = null;
 
 		foreach ($this->aThresholds as $iPercent => &$aThresholdData)
 		{
