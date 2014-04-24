@@ -450,7 +450,8 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	/** @ignore */
 	public function GetMenuItem()
 	{
-		return array ('label' => $this->GetLabel(), 'onclick' => $this->sJSCode, 'url' => '#');
+		// Note: the semicolumn is a must here!
+		return array ('label' => $this->GetLabel(), 'onclick' => $this->sJSCode.'; return false;', 'url' => '#');
 	}
 	
 	/** @ignore */
