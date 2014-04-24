@@ -318,12 +318,11 @@ class UILinksWidgetDirect
 		{
 			$oFilter->AddCondition('id', $aAlreadyLinked, 'NOTIN');
 		}
-		$aArgs = array();
 		if ($oCurrentObj != null)
 		{
-			$aArgs = $oCurrentObj->ToArgs('this');
+			$aArgs = array_merge($oCurrentObj->ToArgs('this'), $oFilter->GetInternalParams());
+			$oFilter->SetInternalParams($aArgs);
 		}
-		$oFilter->SetInternalParams($aArgs);
 		$oBlock = new DisplayBlock($oFilter, 'list', false);
 		$oBlock->Display($oP, "ResultsToAdd_{$this->sInputid}", array('menu' => false, 'cssCount'=> '#count_'.$this->sInputid , 'selection_mode' => true, 'table_id' => 'add_'.$this->sInputid)); // Don't display the 'Actions' menu on the results
 	}
