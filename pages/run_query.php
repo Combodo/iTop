@@ -131,9 +131,16 @@ try
 		{
 			$oFilter = DBObjectSearch::FromOQL($sExpression);
 		}
-		catch(OqlException $e)
+		catch(Exception $e)
 		{
-			$sSyntaxError = $e->getHtmlDesc();
+			if ($e instanceof OqlException)
+			{
+				$sSyntaxError = $e->getHtmlDesc();
+			}
+			else
+			{
+				$sSyntaxError = $e->getMessage();
+			}
 		}
 		
 		if ($oFilter)
@@ -159,7 +166,7 @@ try
 		}
 	}
 
-	$oP->add("<form method=\"get\">\n");
+	$oP->add("<form method=\"post\">\n");
 	$oP->add(Dict::S('UI:RunQuery:ExpressionToEvaluate')."<br/>\n");
 	$oP->add("<textarea cols=\"120\" rows=\"8\" name=\"expression\">".htmlentities($sExpression, ENT_QUOTES, 'UTF-8')."</textarea>\n");
 
@@ -193,21 +200,28 @@ try
 	}
 	elseif ($sSyntaxError)
 	{
-		$sWrongWord = $e->GetWrongWord();
-		$aSuggestedWords = $e->GetSuggestions();
-		if (count($aSuggestedWords) > 0)
+		if ($e instanceof OqlException)
 		{
-			$sSuggestedWord = OqlException::FindClosestString($sWrongWord, $aSuggestedWords);
-	
-			if (strlen($sSuggestedWord) > 0)
+			$sWrongWord = $e->GetWrongWord();
+			$aSuggestedWords = $e->GetSuggestions();
+			if (count($aSuggestedWords) > 0)
 			{
-				$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->GetIssue().' <em>'.$sWrongWord).'</em></b>');
-				$sBefore = substr($sExpression, 0, $e->GetColumn());
-				$sAfter = substr($sExpression, $e->GetColumn() + strlen($sWrongWord));
-				$sFixedExpression = $sBefore.$sSuggestedWord.$sAfter;
-				$sFixedExpressionHtml = $sBefore.'<span style="background-color:yellow">'.$sSuggestedWord.'</span>'.$sAfter;
-				$oP->p("Suggesting: $sFixedExpressionHtml");
-				$oP->add('<button onClick="$(\'textarea[name=expression]\').val(\''.htmlentities(addslashes($sFixedExpression)).'\');">Use this query</button>');
+				$sSuggestedWord = OqlException::FindClosestString($sWrongWord, $aSuggestedWords);
+		
+				if (strlen($sSuggestedWord) > 0)
+				{
+					$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->GetIssue().' <em>'.$sWrongWord).'</em></b>');
+					$sBefore = substr($sExpression, 0, $e->GetColumn());
+					$sAfter = substr($sExpression, $e->GetColumn() + strlen($sWrongWord));
+					$sFixedExpression = $sBefore.$sSuggestedWord.$sAfter;
+					$sFixedExpressionHtml = $sBefore.'<span style="background-color:yellow">'.$sSuggestedWord.'</span>'.$sAfter;
+					$oP->p("Suggesting: $sFixedExpressionHtml");
+					$oP->add('<button onClick="$(\'textarea[name=expression]\').val(\''.htmlentities(addslashes($sFixedExpression)).'\');">Use this query</button>');
+				}
+				else
+				{
+					$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getHtmlDesc()).'</b>');
+				}
 			}
 			else
 			{
@@ -216,7 +230,7 @@ try
 		}
 		else
 		{
-			$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getHtmlDesc()).'</b>');
+			$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getMessage()).'</b>');
 		}
 	}
 }
