@@ -784,6 +784,7 @@ class DisplayBlock
 				$sChecked = '';
 			}
 
+/*
 			$sCSVData = cmdbAbstractObject::GetSetAsCSV($this->m_oSet, array('fields_advanced' => $bAdvancedMode));
 			$sCharset = MetaModel::GetConfig()->Get('csv_file_default_charset');
 			if ($sCharset == 'UTF-8')
@@ -812,6 +813,8 @@ class DisplayBlock
 				$sCharsetNotice = '';
 			}
 
+*/
+			$sCharsetNotice = false;
 			$sHtml .= "<div>";
 			$sHtml .= '<table style="width:100%" class="transparent">';
 			$sHtml .= '<tr>';
@@ -827,9 +830,10 @@ class DisplayBlock
 			}
 			$sHtml .= "</div>";
 
-			$sHtml .= "<textarea style=\"width:95%;height:98%\">\n";
-			$sHtml .= htmlentities($sCSVData, ENT_QUOTES, 'UTF-8');
+			$sHtml .= "<div id=\"csv_content_loading\"><div style=\"width: 250px; height: 20px; background: url(../setup/orange-progress.gif); border: 1px #999 solid; margin-left:auto; margin-right: auto; text-align: center;\">".Dict::S('UI:Loading')."</div></div><textarea id=\"csv_content\" style=\"display:none;\">\n";
+			//$sHtml .= htmlentities($sCSVData, ENT_QUOTES, 'UTF-8');
 			$sHtml .= "</textarea>\n";
+			$oPage->add_ready_script("$.post('$sDownloadLink', {}, function(data) { $('#csv_content').html(data); $('#csv_content_loading').hide(); $('#csv_content').show();} );");
 			break;
 
 			case 'modify':
