@@ -191,7 +191,7 @@ class LoginWebPage extends NiceWebPage
 		$this->add("<p>".Dict::S('UI:Login:ForgotPwdForm+')."</p>\n");
 		if ($bFailedToReset)
 		{
-			$this->add("<p class=\"hilite\">".Dict::Format('UI:Login:ResetPwdFailed', $sFailureReason)."</p>\n");
+			$this->add("<p class=\"hilite\">".Dict::Format('UI:Login:ResetPwdFailed', htmlentities($sFailureReason, ENT_QUOTES, 'UTF-8'))."</p>\n");
 		}
 		$sAuthUser = utils::ReadParam('auth_user', '', true, 'raw_data');
 		$this->add("<form method=\"post\">\n");
