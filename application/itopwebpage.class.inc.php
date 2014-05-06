@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -30,25 +30,21 @@ require_once(APPROOT."/application/user.preferences.class.inc.php");
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
  */
-class iTopWebPage extends NiceWebPage
+class iTopWebPage extends NiceWebPage implements iTabbedPage
 {
 	private $m_sMenu;
 	//	private $m_currentOrganization;
-	private $m_aTabs;
-	private $m_sCurrentTabContainer;
-	private $m_sCurrentTab;
 	private $m_sMessage;
 	private $m_sInitScript;
+	protected $m_oTabs;
 
 	public function __construct($sTitle)
 	{
 		parent::__construct($sTitle);
+		$this->m_oTabs = new TabManager();
 
 		ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
 
-		$this->m_sCurrentTabContainer = '';
-		$this->m_sCurrentTab = '';
-		$this->m_aTabs = array();
 		$this->m_sMenu = "";
 		$this->m_sMessage = '';
 		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
@@ -203,16 +199,31 @@ EOF;
 		// unless their URL is equal to the URL of the page...
 		$('div[id^=tabbedContent] > ul > li > a').each(function() {
 			var sHash = location.hash;
-			var sCleanLocation = location.href.toString().replace(sHash, '').replace(/#$/, '');
-	    	$(this).attr("href", sCleanLocation+$(this).attr("href"));
+			var sHref = $(this).attr("href");
+			if (sHref.match(/^#/))
+			{
+				var sCleanLocation = location.href.toString().replace(sHash, '').replace(/#$/, '');
+				$(this).attr("href", sCleanLocation+$(this).attr("href"));
+			}
 		});
 
 		// Enable tabs on all tab widgets. The `event` property must be overridden so
 		// that the tabs aren't changed on click, and any custom event name can be
 		// specified. Note that if you define a callback for the 'select' event, it
 		// will be executed for the selected tab whenever the hash changes.
-		tabs.tabs({ event: 'change', 'show': function(event, ui) {
+		tabs.tabs({
+			event: 'change', 'show': function(event, ui) {
 				$('.resizable', ui.panel).resizable(); // Make resizable everything that claims to be resizable !
+			},
+			beforeLoad: function( event, ui ) {
+				if ( ui.tab.data('loaded') && (ui.tab.attr('data-cache') == 'true')) {
+					event.preventDefault();
+					return;
+				}
+				
+				ui.jqXHR.success(function() {
+					ui.tab.data( "loaded", true );
+				});
 			}
 		});
 		
@@ -551,7 +562,7 @@ EOF
 			$sNorthPane .= '<div id="admin-banner"><span style="padding:5px;">'.ExecutionKPI::GetDescription().'<span></div>';
 		}
 		
-		$sSouthPane = '';
+		$sSouthPane = '<p>Peak memory Usage: '.sprintf('%.3f MB', memory_get_peak_usage(true) / (1024*1024)).'</p>';
 		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
 		{
 			$sSouthPane .= $oExtensionInstance->GetSouthPaneHtml($this);
@@ -674,34 +685,7 @@ EOF
 			$sOnClick = " onclick=\"this.value='';this.onclick=null;\"";
 		}
 		// Render the tabs in the page (if any)
-		foreach($this->m_aTabs as $sTabContainerName => $m_aTabs)
-		{
-			$sTabs = '';
-			$container_index = 0;
-			if (count($m_aTabs) > 0)
-			{
-				$sTabs = "<!-- tabs -->\n<div id=\"tabbedContent_{$container_index}\" class=\"light\">\n";
-				$sTabs .= "<ul>\n";
-				// Display the unordered list that will be rendered as the tabs
-				$i = 0;
-				foreach($m_aTabs as $sTabName => $sTabContent)
-				{
-					$sTabs .= "<li><a href=\"#tab_{$container_index}$i\" class=\"tab\"><span>".htmlentities($sTabName, ENT_QUOTES, 'UTF-8')."</span></a></li>\n";
-					$i++;
-				}
-				$sTabs .= "</ul>\n";
-				// Now add the content of the tabs themselves
-				$i = 0;
-				foreach($m_aTabs as $sTabName => $sTabContent)
-				{
-					$sTabs .= "<div id=\"tab_{$container_index}$i\">".$sTabContent."</div>\n";
-					$i++;
-				}
-				$sTabs .= "</div>\n<!-- end of tabs-->\n";
-			}
-			$this->s_content = str_replace("\$Tabs:$sTabContainerName\$", $sTabs, $this->s_content);
-			$container_index++;
-		}
+		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content);
 
 		if ($this->GetOutputFormat() == 'html')
 		{
@@ -892,62 +876,51 @@ EOF
 		ExecutionKPI::ReportStats();
 	}
 
-	public function AddTabContainer($sTabContainer)
+	public function AddTabContainer($sTabContainer, $sPrefix = '')
 	{
-		$this->m_aTabs[$sTabContainer] = array();
-		$this->add("\$Tabs:$sTabContainer\$");
+		$this->add($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
 	}
 
 	public function AddToTab($sTabContainer, $sTabLabel, $sHtml)
 	{
-		if (!isset($this->m_aTabs[$sTabContainer][$sTabLabel]))
-		{
-			// Set the content of the tab
-			$this->m_aTabs[$sTabContainer][$sTabLabel] = $sHtml;
-		}
-		else
-		{
-			// Append to the content of the tab
-			$this->m_aTabs[$sTabContainer][$sTabLabel] .= $sHtml;
-		}
+		$this->add($this->m_oTabs->AddToTab($sTabContainer, $sTabLabel, $sHtml));
 	}
 
 	public function SetCurrentTabContainer($sTabContainer = '')
 	{
-		$sPreviousTabContainer = $this->m_sCurrentTabContainer;
-		$this->m_sCurrentTabContainer = $sTabContainer;
-		return $sPreviousTabContainer;
+		return $this->m_oTabs->SetCurrentTabContainer($sTabContainer);
 	}
 
 	public function SetCurrentTab($sTabLabel = '')
 	{
-		$sPreviousTab = $this->m_sCurrentTab;
-		$this->m_sCurrentTab = $sTabLabel;
-		return $sPreviousTab;
+		return $this->m_oTabs->SetCurrentTab($sTabLabel);
 	}
-
+	
+	/**
+	 * Add a tab which content will be loaded asynchronously via the supplied URL
+	 * 
+	 * Limitations:
+	 * Cross site scripting is not not allowed for security reasons. Use a normal tab with an IFRAME if you want to pull content from another server.
+	 * Static content cannot be added inside such tabs.
+	 * 
+	 * @param string $sTabLabel The (localised) label of the tab
+	 * @param string $sUrl The URL to load (on the same server)
+	 * @param boolean $bCache Whether or not to cache the content of the tab once it has been loaded. flase will cause the tab to be reloaded upon each activation.
+	 * @since 2.0.3
+	 */
+	public function AddAjaxTab($sTabLabel, $sUrl, $bCache = true)
+	{
+		$this->add($this->m_oTabs->AddAjaxTab($sTabLabel, $sUrl, $bCache));
+	}
+	
 	public function GetCurrentTab()
 	{
-		return $this->m_sCurrentTab;
+		return $this->m_oTabs->GetCurrentTab();
 	}
 
 	public function RemoveTab($sTabLabel, $sTabContainer = null)
 	{
-		if ($sTabContainer == null)
-		{
-			$sTabContainer = $this->m_sCurrentTabContainer;
-		}
-		if (isset($this->m_aTabs[$sTabContainer][$sTabLabel]))
-		{
-			// Delete the content of the tab
-			unset($this->m_aTabs[$sTabContainer][$sTabLabel]);
-				
-			// If we just removed the active tab, let's reset the active tab
-			if (($this->m_sCurrentTabContainer == $sTabContainer) &&  ($this->m_sCurrentTab == $sTabLabel))
-			{
-				$this->m_sCurrentTab = '';
-			}
-		}
+		$this->m_oTabs->RemoveTab($sTabLabel, $sTabContainer);
 	}
 
 	/**
@@ -956,20 +929,7 @@ EOF
 	 */
 	public function FindTab($sPattern, $sTabContainer = null)
 	{
-		$return = false;
-		if ($sTabContainer == null)
-		{
-			$sTabContainer = $this->m_sCurrentTabContainer;
-		}
-		foreach($this->m_aTabs[$sTabContainer] as $sTabLabel => $void)
-		{
-			if (preg_match($sPattern, $sTabLabel))
-			{
-				$result = $sTabLabel;
-				break;
-			}
-		}
-		return $result;
+		return $this->m_oTabs->FindTab($sPattern, $sTabContainer);
 	}
 
 	/**
@@ -980,26 +940,7 @@ EOF
 	 */
 	public function SelectTab($sTabContainer, $sTabLabel)
 	{
-		$container_index = 0;
-		$tab_index = 0;
-		foreach($this->m_aTabs as $sCurrentTabContainerName => $aTabs)
-		{
-			if ($sTabContainer == $sCurrentTabContainerName)
-			{
-				foreach($aTabs as $sCurrentTabLabel => $void)
-				{
-					if ($sCurrentTabLabel == $sTabLabel)
-					{
-						break;
-					}
-					$tab_index++;
-				}
-				break;
-			}
-			$container_index++;
-		}
-		$sSelector = '#tabbedContent_'.$container_index.' > ul';
-		$this->add_ready_script("window.setTimeout(\"$('$sSelector').tabs('select', $tab_index);\", 100);"); // Let the time to the tabs widget to initialize
+		$this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabLabel));
 	}
 
 	public function StartCollapsibleSection($sSectionLabel, $bOpen = false)
@@ -1033,9 +974,9 @@ EOF
 
 	public function add($sHtml)
 	{
-		if (!empty($this->m_sCurrentTabContainer) && !empty($this->m_sCurrentTab))
+		if (!empty($this->m_oTabs->GetCurrentTabContainer()) && !empty($this->m_oTabs->GetCurrentTab()))
 		{
-			$this->AddToTab($this->m_sCurrentTabContainer, $this->m_sCurrentTab, $sHtml);
+			$this->m_oTabs->AddToCurrentTab($sHtml);
 		}
 		else
 		{
@@ -1049,10 +990,13 @@ EOF
 	 */
 	public function start_capture()
 	{
-		if (!empty($this->m_sCurrentTabContainer) && !empty($this->m_sCurrentTab))
+		$sCurrentTabContainer = $this->m_oTabs->GetCurrentTabContainer();
+		$sCurrentTab = $this->m_oTabs->GetCurrentTab();
+		
+		if (!empty($sCurrentTabContainer) && !empty($sCurrentTab))
 		{
-			$iOffset = isset($this->m_aTabs[$this->m_sCurrentTabContainer][$this->m_sCurrentTab]) ? strlen($this->m_aTabs[$this->m_sCurrentTabContainer][$this->m_sCurrentTab]): 0;
-			return array('tc' => $this->m_sCurrentTabContainer, 'tab' => $this->m_sCurrentTab, 'offset' => $iOffset);
+			$iOffset = $this->m_oTabs->GetCurrentTabLength();
+			return array('tc' => $sCurrentTabContainer, 'tab' => $sCurrentTab, 'offset' => $iOffset);
 		}
 		else
 		{
@@ -1070,10 +1014,9 @@ EOF
 	{
 		if (is_array($offset))
 		{
-			if (isset($this->m_aTabs[$offset['tc']][$offset['tab']]))
+			if ($this->m_oTabs->TabExists($offset['tc'], $offset['tab']))
 			{
-				$sCaptured = substr($this->m_aTabs[$offset['tc']][$offset['tab']], $offset['offset']);
-				$this->m_aTabs[$offset['tc']][$offset['tab']] = substr($this->m_aTabs[$offset['tc']][$offset['tab']], 0, $offset['offset']);
+				$sCaptured = $this->m_oTabs->TruncateTab($offset['tc'], $offset['tab'], $offset['offset']);
 			}
 			else
 			{

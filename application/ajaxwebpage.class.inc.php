@@ -26,16 +26,14 @@
 
 require_once(APPROOT."/application/webpage.class.inc.php");
  
-class ajax_page extends WebPage
+class ajax_page extends WebPage implements iTabbedPage
 {
     /**
      * Jquery style ready script
      * @var Hash     
      */	  
 	protected $m_sReadyScript;
-	protected $m_sCurrentTab;
-	protected $m_sCurrentTabContainer;
-	protected $m_aTabs;
+	protected $m_oTabs;
 	private $m_sMenu; // If set, then the menu will be updated
 	
     /**
@@ -48,9 +46,7 @@ class ajax_page extends WebPage
         $this->m_sReadyScript = "";
 		//$this->add_header("Content-type: text/html; charset=utf-8");
 		$this->add_header("Cache-control: no-cache");
-		$this->m_sCurrentTabContainer = '';
-        $this->m_sCurrentTab = '';
-		$this->m_aTabs = array();
+		$this->m_oTabs = new TabManager();
 		$this->sContentType = 'text/html';
 		$this->sContentDisposition = 'inline';
 		$this->m_sMenu = "";
@@ -58,41 +54,69 @@ class ajax_page extends WebPage
 
 	public function AddTabContainer($sTabContainer, $sPrefix = '')
 	{
-		$this->m_aTabs[$sTabContainer] = array('content' =>'', 'prefix' => $sPrefix);
-		$this->add("\$Tabs:$sTabContainer\$");
+		$this->add($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
 	}
-	
+
 	public function AddToTab($sTabContainer, $sTabLabel, $sHtml)
 	{
-		if (!isset($this->m_aTabs[$sTabContainer]['content'][$sTabLabel]))
-		{
-			// Set the content of the tab
-			$this->m_aTabs[$sTabContainer]['content'][$sTabLabel] = $sHtml;
-		}
-		else
-		{
-			// Append to the content of the tab
-			$this->m_aTabs[$sTabContainer]['content'][$sTabLabel] .= $sHtml;
-		}
+		$this->add($this->m_oTabs->AddToTab($sTabContainer, $sTabLabel, $sHtml));
 	}
 
 	public function SetCurrentTabContainer($sTabContainer = '')
 	{
-		$sPreviousTabContainer = $this->m_sCurrentTabContainer;
-		$this->m_sCurrentTabContainer = $sTabContainer;
-		return $sPreviousTabContainer;
+		return $this->m_oTabs->SetCurrentTabContainer($sTabContainer);
 	}
 
 	public function SetCurrentTab($sTabLabel = '')
 	{
-		$sPreviousTab = $this->m_sCurrentTab;
-		$this->m_sCurrentTab = $sTabLabel;
-		return $sPreviousTab;
+		return $this->m_oTabs->SetCurrentTab($sTabLabel);
+	}
+	
+	/**
+	 * Add a tab which content will be loaded asynchronously via the supplied URL
+	 * 
+	 * Limitations:
+	 * Cross site scripting is not not allowed for security reasons. Use a normal tab with an IFRAME if you want to pull content from another server.
+	 * Static content cannot be added inside such tabs.
+	 * 
+	 * @param string $sTabLabel The (localised) label of the tab
+	 * @param string $sUrl The URL to load (on the same server)
+	 * @param boolean $bCache Whether or not to cache the content of the tab once it has been loaded. flase will cause the tab to be reloaded upon each activation.
+	 * @since 2.0.3
+	 */
+	public function AddAjaxTab($sTabLabel, $sUrl, $bCache = true)
+	{
+		$this->add($this->m_oTabs->AddAjaxTab($sTabLabel, $sUrl, $bCache));
 	}
 	
 	public function GetCurrentTab()
 	{
-		return $this->m_sCurrentTab;
+		return $this->m_oTabs->GetCurrentTab();
+	}
+
+	public function RemoveTab($sTabLabel, $sTabContainer = null)
+	{
+		$this->m_oTabs->RemoveTab($sTabLabel, $sTabContainer);
+	}
+
+	/**
+	 * Finds the tab whose title matches a given pattern
+	 * @return mixed The name of the tab as a string or false if not found
+	 */
+	public function FindTab($sPattern, $sTabContainer = null)
+	{
+		return $this->m_oTabs->FindTab($sPattern, $sTabContainer);
+	}
+
+	/**
+	 * Make the given tab the active one, as if it were clicked
+	 * DOES NOT WORK: apparently in the *old* version of jquery
+	 * that we are using this is not supported... TO DO upgrade
+	 * the whole jquery bundle...
+	 */
+	public function SelectTab($sTabContainer, $sTabLabel)
+	{
+		$this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabLabel));
 	}
 	
 	public function AddToMenu($sHtml)
@@ -118,7 +142,7 @@ class ajax_page extends WebPage
         {
             header($s_header);
         }
-		if (count($this->m_aTabs) > 0)
+		if ($this->m_oTabs->TabsContainerCount() > 0)
 		{
 			$this->add_ready_script(
 <<<EOF
@@ -173,36 +197,7 @@ EOF
 );
 		}
 		// Render the tabs in the page (if any)
-		foreach($this->m_aTabs as $sTabContainerName => $aTabContainer)
-		{
-			$sTabs = '';
-			$m_aTabs = $aTabContainer['content'];
-			$sPrefix = $aTabContainer['prefix'];
-			$container_index = 0;
-			if (count($m_aTabs) > 0)
-			{
-			  $sTabs = "<!-- tabs -->\n<div id=\"tabbedContent_{$sPrefix}{$sTabContainerName}\" class=\"light\">\n";
-			  $sTabs .= "<ul>\n";
-			  // Display the unordered list that will be rendered as the tabs
-	          $i = 0;
-			  foreach($m_aTabs as $sTabName => $sTabContent)
-			  {
-			      $sTabs .= "<li><a href=\"#tab_{$sPrefix}{$sTabContainerName}$i\" class=\"tab\"><span>".htmlentities($sTabName, ENT_QUOTES, 'UTF-8')."</span></a></li>\n";
-			      $i++;
-	          }
-			  $sTabs .= "</ul>\n";
-			  // Now add the content of the tabs themselves
-			  $i = 0;
-			  foreach($m_aTabs as $sTabName => $sTabContent)
-			  {
-			      $sTabs .= "<div id=\"tab_{$sPrefix}{$sTabContainerName}$i\">".$sTabContent."</div>\n";
-			      $i++;
-	          }
-			  $sTabs .= "</div>\n<!-- end of tabs-->\n";
-	        }
-			$this->s_content = str_replace("\$Tabs:$sTabContainerName\$", $sTabs, $this->s_content);
-			$container_index++;
-		}
+		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content);
 		
 		// Additional UI widgets to be activated inside the ajax fragment ??
     	if (($this->sContentType == 'text/html') && (preg_match('/class="date-pick"/', $this->s_content) || preg_match('/class="datetime-pick"/', $this->s_content)) )

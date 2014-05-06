@@ -718,4 +718,282 @@ class WebPage implements Page
 		}
 	}
 }
-?>
+
+
+interface iTabbedPage
+{
+	public function AddTabContainer($sTabContainer, $sPrefix = '');
+
+	public function AddToTab($sTabContainer, $sTabLabel, $sHtml);
+
+	public function SetCurrentTabContainer($sTabContainer = '');
+
+	public function SetCurrentTab($sTabLabel = '');
+	
+	/**
+	 * Add a tab which content will be loaded asynchronously via the supplied URL
+	 * 
+	 * Limitations:
+	 * Cross site scripting is not not allowed for security reasons. Use a normal tab with an IFRAME if you want to pull content from another server.
+	 * Static content cannot be added inside such tabs.
+	 * 
+	 * @param string $sTabLabel The (localised) label of the tab
+	 * @param string $sUrl The URL to load (on the same server)
+	 * @param boolean $bCache Whether or not to cache the content of the tab once it has been loaded. flase will cause the tab to be reloaded upon each activation.
+	 * @since 2.0.3
+	 */
+	public function AddAjaxTab($sTabLabel, $sUrl, $bCache = true);
+	
+	public function GetCurrentTab();
+
+	public function RemoveTab($sTabLabel, $sTabContainer = null);
+
+	/**
+	 * Finds the tab whose title matches a given pattern
+	 * @return mixed The name of the tab as a string or false if not found
+	 */
+	public function FindTab($sPattern, $sTabContainer = null);
+}
+
+/**
+ * Helper class to implement JQueryUI tabs inside a page
+ */
+class TabManager
+{
+	protected $m_aTabs;
+	protected $m_sCurrentTabContainer;
+	protected $m_sCurrentTab;
+	
+	public function __construct()
+	{
+		$this->m_aTabs = array();
+		$this->m_sCurrentTabContainer = '';
+		$this->m_sCurrentTab = '';
+	}
+	
+	public function AddTabContainer($sTabContainer, $sPrefix = '')
+	{
+		$this->m_aTabs[$sTabContainer] = array('prefix' => $sPrefix, 'tabs' => array());
+		return "\$Tabs:$sTabContainer\$";
+	}
+
+	public function AddToCurrentTab($sHtml)
+	{
+		$this->AddToTab($this->m_sCurrentTabContainer, $this->m_sCurrentTab, $sHtml);
+	}
+	
+	public function GetCurrentTabLength($sHtml)
+	{
+		$iLength = isset($this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html']) ? strlen($this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html']): 0;
+		return $iLength;
+	}
+	
+	public function TruncateTab($sTabContainer, $sTab, $iLength)
+	{
+		$this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html'] = substr($this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html'], 0, $iLength);	
+	}
+	
+	public function TabExists($sTabContainer, $sTab)
+	{
+		return isset($this->m_aTabs[$sTabContainer]['tabs'][$sTab]);
+	}
+	
+	public function TabsContainerCount()
+	{
+		return count($this->m_aTabs);
+	}
+	
+	public function AddToTab($sTabContainer, $sTabLabel, $sHtml)
+	{
+		if (!isset($this->m_aTabs[$sTabContainer]['tabs'][$sTabLabel]))
+		{
+			// Set the content of the tab
+			$this->m_aTabs[$sTabContainer]['tabs'][$sTabLabel] = array(
+				'type' => 'html',
+				'html' => $sHtml,
+			);
+		}
+		else
+		{
+			if ($this->m_aTabs[$sTabContainer]['tabs'][$sTabLabel]['type'] != 'html')
+			{
+				throw new Exception("Cannot add HTML content to the tab '$sTabLabel' of type '{$this->m_aTabs[$sTabContainer]['tabs'][$sTabLabel]['type']}'");
+			}
+			// Append to the content of the tab
+			$this->m_aTabs[$sTabContainer]['tabs'][$sTabLabel]['html'] .= $sHtml;
+		}
+		return ''; // Nothing to add to the page for now
+	}
+
+	public function SetCurrentTabContainer($sTabContainer = '')
+	{
+		$sPreviousTabContainer = $this->m_sCurrentTabContainer;
+		$this->m_sCurrentTabContainer = $sTabContainer;
+		return $sPreviousTabContainer;
+	}
+
+	public function SetCurrentTab($sTabLabel = '')
+	{
+		$sPreviousTab = $this->m_sCurrentTab;
+		$this->m_sCurrentTab = $sTabLabel;
+		return $sPreviousTab;
+	}
+	
+	/**
+	 * Add a tab which content will be loaded asynchronously via the supplied URL
+	 * 
+	 * Limitations:
+	 * Cross site scripting is not not allowed for security reasons. Use a normal tab with an IFRAME if you want to pull content from another server.
+	 * Static content cannot be added inside such tabs.
+	 * 
+	 * @param string $sTabLabel The (localised) label of the tab
+	 * @param string $sUrl The URL to load (on the same server)
+	 * @param boolean $bCache Whether or not to cache the content of the tab once it has been loaded. flase will cause the tab to be reloaded upon each activation.
+	 * @since 2.0.3
+	 */
+	public function AddAjaxTab($sTabLabel, $sUrl, $bCache = true)
+	{
+		// Set the content of the tab
+		$this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$sTabLabel] = array(
+			'type' => 'ajax',
+			'url' => $sUrl,
+			'cache' => $bCache,
+		);
+		return ''; // Nothing to add to the page for now
+	}
+	
+	
+	public function GetCurrentTabContainer()
+	{
+		return $this->m_sCurrentTabContainer;
+	}
+	
+	public function GetCurrentTab()
+	{
+		return $this->m_sCurrentTab;
+	}
+
+	public function RemoveTab($sTabLabel, $sTabContainer = null)
+	{
+		if ($sTabContainer == null)
+		{
+			$sTabContainer = $this->m_sCurrentTabContainer;
+		}
+		if (isset($this->m_aTabs[$sTabContainer]['tabs'][$sTabLabel]))
+		{
+			// Delete the content of the tab
+			unset($this->m_aTabs[$sTabContainer]['tabs'][$sTabLabel]);
+				
+			// If we just removed the active tab, let's reset the active tab
+			if (($this->m_sCurrentTabContainer == $sTabContainer) &&  ($this->m_sCurrentTab == $sTabLabel))
+			{
+				$this->m_sCurrentTab = '';
+			}
+		}
+	}
+
+	/**
+	 * Finds the tab whose title matches a given pattern
+	 * @return mixed The name of the tab as a string or false if not found
+	 */
+	public function FindTab($sPattern, $sTabContainer = null)
+	{
+		$return = false;
+		if ($sTabContainer == null)
+		{
+			$sTabContainer = $this->m_sCurrentTabContainer;
+		}
+		foreach($this->m_aTabs[$sTabContainer]['tabs'] as $sTabLabel => $void)
+		{
+			if (preg_match($sPattern, $sTabLabel))
+			{
+				$result = $sTabLabel;
+				break;
+			}
+		}
+		return $result;
+	}
+
+	/**
+	 * Make the given tab the active one, as if it were clicked
+	 * DOES NOT WORK: apparently in the *old* version of jquery
+	 * that we are using this is not supported... TO DO upgrade
+	 * the whole jquery bundle...
+	 */
+	public function SelectTab($sTabContainer, $sTabLabel)
+	{
+		$container_index = 0;
+		$tab_index = 0;
+		foreach($this->m_aTabs as $sCurrentTabContainerName => $aTabs)
+		{
+			if ($sTabContainer == $sCurrentTabContainerName)
+			{
+				foreach($aTabs['tabs'] as $sCurrentTabLabel => $void)
+				{
+					if ($sCurrentTabLabel == $sTabLabel)
+					{
+						break;
+					}
+					$tab_index++;
+				}
+				break;
+			}
+			$container_index++;
+		}
+		$sSelector = '#tabbedContent_'.$container_index.' > ul';
+		return "window.setTimeout(\"$('$sSelector').tabs('select', $tab_index);\", 100);"; // Let the time to the tabs widget to initialize
+	}
+	
+	public function RenderIntoContent($sContent)
+	{
+		// Render the tabs in the page (if any)
+		foreach($this->m_aTabs as $sTabContainerName => $aTabs)
+		{
+			$sTabs = '';
+			$sPrefix = $aTabs['prefix'];
+			$container_index = 0;
+			if (count($aTabs['tabs']) > 0)
+			{
+				$sTabs = "<!-- tabs -->\n<div id=\"tabbedContent_{$sPrefix}{$container_index}\" class=\"light\">\n";
+				$sTabs .= "<ul>\n";
+				// Display the unordered list that will be rendered as the tabs
+				$i = 0;
+				foreach($aTabs['tabs'] as $sTabName => $aTabData)
+				{
+					switch($aTabData['type'])
+					{
+						case 'ajax':
+						$sTabs .= "<li data-cache=\"".($aTabData['cache'] ? 'true' : 'false')."\"><a href=\"{$aTabData['url']}\" class=\"tab\"><span>".htmlentities($sTabName, ENT_QUOTES, 'UTF-8')."</span></a></li>\n";
+						break;
+						
+						case 'html':
+						default:
+						$sTabs .= "<li><a href=\"#tab_{$sPrefix}{$container_index}$i\" class=\"tab\"><span>".htmlentities($sTabName, ENT_QUOTES, 'UTF-8')."</span></a></li>\n";	
+					}
+					$i++;
+				}
+				$sTabs .= "</ul>\n";
+				// Now add the content of the tabs themselves
+				$i = 0;
+				foreach($aTabs['tabs'] as $sTabName => $aTabData)
+				{
+					switch($aTabData['type'])
+					{
+						case 'ajax':
+						// Nothing to add
+						break;
+						
+						case 'html':
+						default:
+						$sTabs .= "<div id=\"tab_{$sPrefix}{$container_index}$i\">".$aTabData['html']."</div>\n";	
+					}
+					$i++;
+				}
+				$sTabs .= "</div>\n<!-- end of tabs-->\n";
+			}
+			$sContent = str_replace("\$Tabs:$sTabContainerName\$", $sTabs, $sContent);
+			$container_index++;
+		}
+		return $sContent;
+	}
+}
