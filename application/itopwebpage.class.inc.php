@@ -562,7 +562,8 @@ EOF
 			$sNorthPane .= '<div id="admin-banner"><span style="padding:5px;">'.ExecutionKPI::GetDescription().'<span></div>';
 		}
 		
-		$sSouthPane = '<p>Peak memory Usage: '.sprintf('%.3f MB', memory_get_peak_usage(true) / (1024*1024)).'</p>';
+		//$sSouthPane = '<p>Peak memory Usage: '.sprintf('%.3f MB', memory_get_peak_usage(true) / (1024*1024)).'</p>';
+		$sSouthPane = '';
 		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
 		{
 			$sSouthPane .= $oExtensionInstance->GetSouthPaneHtml($this);
