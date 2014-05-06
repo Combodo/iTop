@@ -16,7 +16,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * Class dbObject: the root of persistent classes
  *
@@ -61,6 +60,7 @@ abstract class DBObject
 
 	private $m_bFullyLoaded = false; // Compound objects can be partially loaded
 	private $m_aLoadedAtt = array(); // Compound objects can be partially loaded, array of sAttCode
+	protected $m_aModifiedAtt = array(); // list of (potentially) modified sAttCodes
 	protected $m_oMasterReplicaSet = null; // Set of SynchroReplica related to this object
 
 	// Use the MetaModel::NewObject to build an object (do we have to force it?)
@@ -70,6 +70,7 @@ abstract class DBObject
 		{
 			$this->FromRow($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
 			$this->m_bFullyLoaded = $this->IsFullyLoaded();
+			$this->m_aModifiedAtt = array();
 			return;
 		}
 		// Creation of a brand new object
@@ -194,6 +195,7 @@ abstract class DBObject
 		}
 
 		$this->m_bFullyLoaded = true;
+		$this->m_aModifiedAtt = array();
 	}
 
 	protected function FromRow($aRow, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
@@ -304,6 +306,8 @@ abstract class DBObject
 			// Ignore it - this attribute is set upon object creation and that's it
 			return;
 		}
+		$this->m_aModifiedAtt[$sAttCode] = true;
+		
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 		if ($this->m_bIsInDB && !$this->m_bFullyLoaded && !$this->m_bDirty)
 		{
@@ -873,7 +877,11 @@ abstract class DBObject
 			}
 		}
 		$aReasons = array();
-		$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
+		$iSynchroFlags = 0;
+		if ($this->InSyncScope())
+		{
+			$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
+		}
 		return $iFlags | $iSynchroFlags; // Combine both sets of flags
 	}
 
@@ -1124,6 +1132,11 @@ abstract class DBObject
 			{
 				// The value was not set
 				$aDelta[$sAtt] = $proposedValue;
+			}
+			elseif(!array_key_exists($sAtt, $this->m_aModifiedAtt))
+			{
+				// This attCode was never set, canno tbe modified
+				continue;
 			}
 			elseif(is_object($proposedValue))
 			{
@@ -2455,9 +2468,6 @@ abstract class DBObject
 
 	public function InSyncScope()
 	{
-		return true;
-
-		// TODO - FINALIZE THIS OPTIMIZATION
 		//
 		// Optimization: cache the list of Data Sources and classes candidates for synchro
 		//
@@ -2470,12 +2480,18 @@ abstract class DBObject
 			while($oSource = $oSourceSet->Fetch())
 			{
 				$sTarget = $oSource->Get('scope_class');
-				$aSynchroClasses[] = $oSource;
+				$aSynchroClasses[] = $sTarget;
 			}
 		}
-		// to be continued...
+		
+		foreach($aSynchroClasses as $sClass)
+		{
+			if ($this instanceof $sClass)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
-
 }
 
-?>
