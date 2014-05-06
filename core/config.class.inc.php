@@ -700,6 +700,15 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'max_execution_time_per_loop' => array(
+			'type' => 'integer',
+			'description' => 'Maximum execution time requested, per loop, during bulk operations. Zero means no limit.',
+			// examples... not used
+			'default' => 30,
+			'value' => 30,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)

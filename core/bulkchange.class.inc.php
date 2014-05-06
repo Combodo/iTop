@@ -789,9 +789,10 @@ class BulkChange
 			$aVisited = array();
 		}
 		$iPreviousTimeLimit = ini_get('max_execution_time');
+		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		foreach($this->m_aData as $iRow => $aRowData)
 		{
-			set_time_limit(5);
+			set_time_limit($iLoopTimeLimit);
 			if (isset($aResult[$iRow]["__STATUS__"]))
 			{
 				// An issue at the earlier steps - skip the rest
@@ -910,7 +911,7 @@ class BulkChange
 				$iObj = $oObj->GetKey();
 				if (!in_array($iObj, $aVisited))
 				{
-					set_time_limit(5);
+					set_time_limit($iLoopTimeLimit);
 					$iRow++;
 					$this->UpdateMissingObject($aResult, $iRow, $oObj, $oChange);
 				}

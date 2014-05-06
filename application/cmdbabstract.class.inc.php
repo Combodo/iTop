@@ -3223,9 +3223,10 @@ EOF
 			utils::RemoveTransaction($sTransactionId);
 		}
 		$iPreviousTimeLimit = ini_get('max_execution_time');
+		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		foreach($aSelectedObj as $iId)
 		{
-			set_time_limit(5);
+			set_time_limit($iLoopTimeLimit);
 			$oObj = MetaModel::GetObject($sClass, $iId);
 			$aErrors = $oObj->UpdateObjectFromPostedForm('');
 			$bResult = (count($aErrors) == 0);

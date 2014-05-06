@@ -110,12 +110,12 @@ class DeletionPlan
 		// Getting and setting time limit are not symetric:
 		// www.php.net/manual/fr/function.set-time-limit.php#72305
 		$iPreviousTimeLimit = ini_get('max_execution_time');
-
+		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		foreach($this->m_aToUpdate as $sClass => $aToUpdate)
 		{
 			foreach($aToUpdate as $iId => $aData)
 			{
-				set_time_limit(5);
+				set_time_limit($iLoopTimeLimit);
 				$this->m_iToUpdate++;
 
 				$oObject = $aData['to_reset'];

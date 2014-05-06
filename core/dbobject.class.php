@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -1828,6 +1828,11 @@ abstract class DBObject
 	//
 	public function DBDelete(&$oDeletionPlan = null)
 	{
+		static $iLoopTimeLimit = null;
+		if ($iLoopTimeLimit == null)
+		{
+			$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
+		}
 		if (is_null($oDeletionPlan))
 		{
 			$oDeletionPlan = new DeletionPlan();
@@ -1857,7 +1862,7 @@ abstract class DBObject
 					// As a temporary fix: delete only the objects that are still to be deleted...
 					if ($oToDelete->m_bIsInDB)
 					{
-						set_time_limit(5);
+						set_time_limit($iLoopTimeLimit);
 						$oToDelete->DBDeleteSingleObject();
 					}
 				}
@@ -1871,7 +1876,7 @@ abstract class DBObject
 					foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
 					{
 						$oToUpdate->Set($sRemoteExtKey, $aData['values'][$sRemoteExtKey]);
-						set_time_limit(5);
+						set_time_limit($iLoopTimeLimit);
 						$oToUpdate->DBUpdate();
 					}
 				}
@@ -2326,6 +2331,11 @@ abstract class DBObject
 
 	private function MakeDeletionPlan(&$oDeletionPlan, $aVisited = array(), $iDeleteOption = null)
 	{
+		static $iLoopTimeLimit = null;
+		if ($iLoopTimeLimit == null)
+		{
+			$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
+		}
 		$sClass = get_class($this);
 		$iThisId = $this->GetKey();
 
@@ -2359,7 +2369,7 @@ abstract class DBObject
 		{
 			foreach ($aPotentialDeletes as $sRemoteExtKey => $aData)
 			{
-				set_time_limit(5);
+				set_time_limit($iLoopTimeLimit);
 
 				$oAttDef = $aData['attribute'];
 				$iDeletePropagationOption = $oAttDef->GetDeletionPropagationOption();
