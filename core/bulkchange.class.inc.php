@@ -260,6 +260,7 @@ class BulkChange
 	protected $m_aOnDisappear; // array of attcode => value, values to be set when an object gets out of scope (ignored if no scope has been defined)
 	protected $m_sDateFormat; // Date format specification, see utils::StringToTime()
 	protected $m_bLocalizedValues; // Values in the data set are localized (see AttributeEnum)
+	protected $m_aExtKeysMappingCache; // Cache for resolving external keys based on the given search criterias
 
 	public function __construct($sClass, $aData, $aAttList, $aExtKeys, $aReconcilKeys, $sSynchroScope = null, $aOnDisappear = null, $sDateFormat = null, $bLocalize = false)
 	{
@@ -272,6 +273,7 @@ class BulkChange
 		$this->m_aOnDisappear = $aOnDisappear;
 		$this->m_sDateFormat = $sDateFormat;
 		$this->m_bLocalizedValues = $bLocalize;
+		$this->m_aExtKeysMappingCache = array();
 	}
 
 	protected $m_bReportHtml = false;
@@ -365,6 +367,7 @@ class BulkChange
 			else
 			{
 				$oReconFilter = new CMDBSearchFilter($oExtKey->GetTargetClass());
+				$aCacheKeys = array();
 				foreach ($aKeyConfig as $sForeignAttCode => $iCol)
 				{
 					// The foreign attribute is one of our reconciliation key
@@ -377,24 +380,60 @@ class BulkChange
 						$oForeignAtt = MetaModel::GetAttributeDef($oExtKey->GetTargetClass(), $sForeignAttCode);
 						$value = $oForeignAtt->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
 					}
+					$aCacheKeys[] = $value;
 					$oReconFilter->AddCondition($sForeignAttCode, $value, '=');
 					$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
 				}
-				$oExtObjects = new CMDBObjectSet($oReconFilter);
-				switch($oExtObjects->Count())
+				$sCacheKey = implode('_|_', $aCacheKeys); // Unique key for this query...
+				$iCount = 0;
+				$iForeignKey = null;
+				$sOQL = '';
+				// TODO: check if *too long* keys can lead to collisions... and skip the cache in such a case...
+				if (!array_key_exists($sAttCode, $this->m_aExtKeysMappingCache))
 				{
-				case 0:
+					$this->m_aExtKeysMappingCache[$sAttCode] = array();
+				}
+				if (array_key_exists($sCacheKey, $this->m_aExtKeysMappingCache[$sAttCode]))
+				{
+					// Cache hit
+					$iCount = $this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey]['c'];
+					$iForeignKey = $this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey]['k'];
+					$sOQL = $this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey]['oql'];
+					// Record the hit
+					$this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey]['h']++;
+				}
+				else
+				{
+					// Cache miss, let's initialize it
+					$oExtObjects = new CMDBObjectSet($oReconFilter);
+					$iCount = $oExtObjects->Count();
+					if ($iCount == 1)
+					{
+						$oForeignObj = $oExtObjects->Fetch();
+						$iForeignKey = $oForeignObj->GetKey();
+					}
+					$this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey] = array(
+						'c' => $iCount,
+						'k' => $iForeignKey,
+						'oql' => $oReconFilter->ToOql(),
+						'h' => 0, // number of hits on this cache entry
+					);
+				}
+				switch($iCount)
+				{
+					case 0:
 					$aErrors[$sAttCode] = Dict::S('UI:CSVReport-Value-Issue-NotFound');
 					$aResults[$sAttCode]= new CellStatus_SearchIssue();
 					break;
-				case 1:
+					
+					case 1:
 					// Do change the external key attribute
-					$oForeignObj = $oExtObjects->Fetch();
-					$oTargetObj->Set($sAttCode, $oForeignObj->GetKey());
+					$oTargetObj->Set($sAttCode, $iForeignKey);
 					break;
-				default:
+					
+					default:
 					$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-FoundMany', $oExtObjects->Count());
-					$aResults[$sAttCode]= new CellStatus_Ambiguous($oTargetObj->Get($sAttCode), $oExtObjects->Count(), $oReconFilter->ToOql());
+					$aResults[$sAttCode]= new CellStatus_Ambiguous($oTargetObj->Get($sAttCode), $iCount, $sOQL);
 				}
 			}
 
