@@ -740,14 +740,14 @@ class TestMyBizModel extends TestBizModel
 		$oDelta = $oSet1->CreateDelta($oSet2);
 	
 		$oMerge = clone $oSet1;
-		$oMerge->Merge($oSet2);
-		$oMerge->Merge($oSet2);
+		$oAppend->Append($oSet2);
+		$oAppend->Append($oSet2);
 	
 		echo "Set1 - Found ".$oSet1->Count()." items.</br>\n";
 		echo "Set2 - Found ".$oSet2->Count()." items.</br>\n";
 		echo "Intersect - Found ".$oIntersect->Count()." items.</br>\n";
 		echo "Delta - Found ".$oDelta->Count()." items.</br>\n";
-		echo "Merge - Found ".$oMerge->Count()." items.</br>\n";
+		echo "Append - Found ".$oAppend->Count()." items.</br>\n";
 		//$this->show_list($oObjSet);
 	}
 	
