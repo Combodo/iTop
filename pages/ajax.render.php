@@ -1264,6 +1264,27 @@ EOF
 		$oPage->add("</div>");
 		break;
 		
+		case 'history':
+		$oPage->SetContentType('text/html');
+		$id = (int)utils::ReadParam('id', 0);
+		$iStart = (int)utils::ReadParam('start', 0);
+		$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length', '50'));
+		$oObj = MetaModel::GetObject($sClass, $id);
+		$oObj->DisplayBareHistory($oPage, false, $iCount, $iStart);
+		$oPage->add_ready_script("$('#history table.listResults').tableHover(); $('#history table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
+		break;
+
+		case 'history_from_filter':
+		$oPage->SetContentType('text/html');
+		$oHistoryFilter = CMDBSearchFilter::unserialize($sFilter);
+		$iStart = (int)utils::ReadParam('start', 0);
+		$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length', '50'));
+		$oBlock = new HistoryBlock($oHistoryFilter, 'table', false);
+		$oBlock->SetLimit($iCount, $iStart);
+		$oBlock->Display($oPage, 'history');
+		$oPage->add_ready_script("$('#history table.listResults').tableHover(); $('#history table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
+		break;
+				
 		default:
 		$oPage->p("Invalid query.");
 	}

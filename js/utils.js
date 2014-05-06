@@ -375,3 +375,13 @@ function ShortcutListDlg(sOQL, sDataTableId, sContext)
 	});
 	return false;
 }
+
+function DisplayHistory(sSelector, sFilter, iCount, iStart)
+{
+	$(sSelector).block();
+	var oParams = { operation: 'history_from_filter', filter: sFilter, start: iStart, count: iCount };
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
+			$(sSelector).html(data).unblock();
+		}
+	);
+}

@@ -1210,10 +1210,35 @@ EOF
  */
 class HistoryBlock extends DisplayBlock
 {
+	protected $iLimitCount;
+	protected $iLimitStart;
+	
+	public function __construct(DBObjectSearch $oFilter, $sStyle = 'list', $bAsynchronous = false, $aParams = array(), $oSet = null)
+	{
+		parent::__construct($oFilter, $sStyle, $bAsynchronous, $aParams, $oSet);
+		$this->iLimitStart = 0;
+		$this->iLimitCount = 0;
+	}
+	
+	public function SetLimit($iCount, $iStart = 0)
+	{
+		$this->iLimitStart = $iStart;
+		$this->iLimitCount = $iCount;
+	}
+	
 	public function GetRenderContent(WebPage $oPage, $aExtraParams = array(), $sId)
 	{
 		$sHtml = '';
+		$bTruncated = false;
 		$oSet = new CMDBObjectSet($this->m_oFilter, array('date'=>false));
+		if (($this->iLimitStart > 0) || ($this->iLimitCount > 0))
+		{
+			$oSet->SetLimit($this->iLimitCount, $this->iLimitStart);
+			if (($this->iLimitCount - $this->iLimitStart) < $oSet->Count())
+			{
+				$bTruncated = true;
+			}
+		}
 		$sHtml .= "<!-- filter: ".($this->m_oFilter->ToOQL())."-->\n";
 		switch($this->m_sStyle)
 		{
@@ -1239,7 +1264,21 @@ class HistoryBlock extends DisplayBlock
 
 			case 'table':
 			default:
-			$sHtml .= $this->GetHistoryTable($oPage, $oSet);		
+			if ($bTruncated)
+			{
+				$sFilter = $this->m_oFilter->serialize();
+				$sHtml .= '<div id="history_container"><p>';
+				$sHtml .= Dict::Format('UI:TruncatedResults', $this->iLimitCount, $oSet->Count());
+				$sHtml .= ' ';
+				$sHtml .= '<a href="#" onclick="DisplayHistory(\'#history_container\', \''.$sFilter.'\', 0, 0); return false;">'.Dict::S('UI:DisplayAll').'</a>';
+				$sHtml .= $this->GetHistoryTable($oPage, $oSet);
+				$sHtml .= '</p></div>';
+				$oPage->add_ready_script("$('#{$sId} table.listResults tr:last td').addClass('truncated');");
+			}
+			else
+			{
+				$sHtml .= $this->GetHistoryTable($oPage, $oSet);
+			}	
 
 		}
 		return $sHtml;

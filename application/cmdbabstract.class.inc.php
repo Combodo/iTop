@@ -255,14 +255,15 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		
 	}
 
-	function DisplayBareHistory(WebPage $oPage, $bEditMode = false)
+	function DisplayBareHistory(WebPage $oPage, $bEditMode = false, $iLimitCount = 0, $iLimitStart = 0)
 	{
 		// history block (with as a tab)
 		$oHistoryFilter = new DBObjectSearch('CMDBChangeOp');
 		$oHistoryFilter->AddCondition('objkey', $this->GetKey(), '=');
 		$oHistoryFilter->AddCondition('objclass', get_class($this), '=');
 		$oBlock = new HistoryBlock($oHistoryFilter, 'table', false);
-		$oBlock->Display($oPage, -1);
+		$oBlock->SetLimit($iLimitCount, $iLimitStart);
+		$oBlock->Display($oPage, 'history');
 	}
 
 	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
@@ -667,8 +668,9 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
 			$this->DisplayBareProperties($oPage, $bEditMode);
 			$this->DisplayBareRelations($oPage, $bEditMode);
-			$oPage->SetCurrentTab(Dict::S('UI:HistoryTab'));
-			$this->DisplayBareHistory($oPage, $bEditMode);
+			//$oPage->SetCurrentTab(Dict::S('UI:HistoryTab'));
+			//$this->DisplayBareHistory($oPage, $bEditMode);
+			$oPage->AddAjaxTab(Dict::S('UI:HistoryTab'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.get_class($this).'&id='.$this->GetKey());
 		}
 	}
 	
