@@ -975,7 +975,7 @@ EOF
 
 	public function add($sHtml)
 	{
-		if (!empty($this->m_oTabs->GetCurrentTabContainer()) && !empty($this->m_oTabs->GetCurrentTab()))
+		if (($this->m_oTabs->GetCurrentTabContainer() != '') && ($this->m_oTabs->GetCurrentTab() != ''))
 		{
 			$this->m_oTabs->AddToCurrentTab($sHtml);
 		}

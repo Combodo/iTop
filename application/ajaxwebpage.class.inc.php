@@ -297,7 +297,7 @@ EOF
 
     public function add($sHtml)
     {
-        if (!empty($this->m_sCurrentTabContainer) && !empty($this->m_sCurrentTab))
+        if (($this->m_oTabs->GetCurrentTabContainer() != '') && ($this->m_oTabs->GetCurrentTab() != ''))
         {
             $this->AddToTab($this->m_sCurrentTabContainer, $this->m_sCurrentTab, $sHtml);
         }
@@ -313,15 +313,18 @@ EOF
 	 */    
     public function start_capture()
     {
-        if (!empty($this->m_sCurrentTabContainer) && !empty($this->m_sCurrentTab))
-        {
-        	$iOffset = isset($this->m_aTabs[$this->m_sCurrentTabContainer]['content'][$this->m_sCurrentTab]) ? strlen($this->m_aTabs[$this->m_sCurrentTabContainer]['content'][$this->m_sCurrentTab]): 0;
-            return array('tc' => $this->m_sCurrentTabContainer, 'tab' => $this->m_sCurrentTab, 'offset' => $iOffset);
-        }
-        else
-        {
-            return parent::start_capture();
-        }
+    	$sCurrentTabContainer = $this->m_oTabs->GetCurrentTabContainer();
+		$sCurrentTab = $this->m_oTabs->GetCurrentTab();
+		
+		if (!empty($sCurrentTabContainer) && !empty($sCurrentTab))
+		{
+			$iOffset = $this->m_oTabs->GetCurrentTabLength();
+			return array('tc' => $sCurrentTabContainer, 'tab' => $sCurrentTab, 'offset' => $iOffset);
+		}
+		else
+		{
+			return parent::start_capture();
+		}
     }
 
     /**
@@ -332,23 +335,22 @@ EOF
      */    
     public function end_capture($offset)
     {
-    	if (is_array($offset))
-    	{
-    		if (isset($this->m_aTabs[$offset['tc']]['content'][$offset['tab']]))
-    		{
-		    	$sCaptured = substr($this->m_aTabs[$offset['tc']]['content'][$offset['tab']], $offset['offset']);
-		    	$this->m_aTabs[$offset['tc']]['content'][$offset['tab']] = substr($this->m_aTabs[$offset['tc']]['content'][$offset['tab']], 0, $offset['offset']);
-    		}
-    		else
-    		{
-    			$sCaptured = '';
-    		}
-    	}
-    	else
-    	{
-    		$sCaptured = parent::end_capture($offset);
-    	}
-    	return $sCaptured;
+		if (is_array($offset))
+		{
+			if ($this->m_oTabs->TabExists($offset['tc'], $offset['tab']))
+			{
+				$sCaptured = $this->m_oTabs->TruncateTab($offset['tc'], $offset['tab'], $offset['offset']);
+			}
+			else
+			{
+				$sCaptured = '';
+			}
+		}
+		else
+		{
+			$sCaptured = parent::end_capture($offset);
+		}
+		return $sCaptured;
     }
 
 	/**
