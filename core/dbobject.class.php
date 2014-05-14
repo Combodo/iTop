@@ -306,7 +306,6 @@ abstract class DBObject
 			// Ignore it - this attribute is set upon object creation and that's it
 			return;
 		}
-		$this->m_aModifiedAtt[$sAttCode] = true;
 		
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 		if ($this->m_bIsInDB && !$this->m_bFullyLoaded && !$this->m_bDirty)
@@ -375,6 +374,7 @@ abstract class DBObject
 		$realvalue = $oAttDef->MakeRealValue($value, $this);
 
 		$this->m_aCurrValues[$sAttCode] = $realvalue;
+		$this->m_aModifiedAtt[$sAttCode] = true;
 
 		// The object has changed, reset caches
 		$this->m_bCheckStatus = null;
