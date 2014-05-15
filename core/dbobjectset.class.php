@@ -101,6 +101,18 @@ class DBObjectSet
 		return $sRet;
 	}
 
+	public function __clone()
+	{
+		$this->m_oFilter = $this->m_oFilter->DeepClone();
+
+		$this->m_iNumTotalDBRows = null; // Total number of rows for the query without LIMIT. null if unknown yet
+		$this->m_iNumLoadedDBRows = 0; // Total number of rows LOADED in $this->m_oSQLResult via a SQL query. 0 by default
+		$this->m_bLoaded = false; // true when the filter has been used OR the set is built step by step (AddObject...)
+		$this->m_iCurrRow = 0;
+		$this->m_oSQLResult = null;
+	}
+
+
 	/**
 	 * Specify the subset of attributes to load (for each class of objects) before performing the SQL query for retrieving the rows from the DB
 	 * 
@@ -502,6 +514,7 @@ class DBObjectSet
 		{
 			// Free previous resultset if any
 			$this->m_oSQLResult->free();
+			$this->m_oSQLResult = null;
 		}
 		$this->m_iNumTotalDBRows = null;
 		
