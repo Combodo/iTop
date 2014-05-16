@@ -1350,6 +1350,7 @@ class MenuBlock extends DisplayBlock
 			$sContext = '&'.$sContext;
 		}
 		$sClass = $this->m_oFilter->GetClass();
+		$oReflectionClass = new ReflectionClass($sClass);
 		$oSet = new CMDBObjectSet($this->m_oFilter);
 		$sFilter = $this->m_oFilter->serialize();
 		$sFilterDesc = $this->m_oFilter->ToOql(true);
@@ -1369,7 +1370,7 @@ class MenuBlock extends DisplayBlock
 				$sDefault.= "&default[$sKey]=$sValue";
 			}
 		}
-		$bIsCreationAllowed =  (UserRights::IsActionAllowed($sClass, UR_ACTION_CREATE) == UR_ALLOWED_YES);
+		$bIsCreationAllowed =  (UserRights::IsActionAllowed($sClass, UR_ACTION_CREATE) == UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
 		switch($oSet->Count())
 		{
 			case 0:
@@ -1380,10 +1381,8 @@ class MenuBlock extends DisplayBlock
 			case 1:
 			$oObj = $oSet->Fetch();
 			$id = $oObj->GetKey();
-			$bIsModifyAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES);
+			$bIsModifyAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
 			$bIsDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet);
-			$bIsBulkModifyAllowed = (!MetaModel::IsAbstract($sClass)) && UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, $oSet);
-			$bIsBulkDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, $oSet);
 			// Just one object in the set, possible actions are "new / clone / modify and delete"
 			if (!isset($aExtraParams['link_attr']))
 			{
@@ -1449,8 +1448,8 @@ class MenuBlock extends DisplayBlock
 			default:
 			// Check rights
 			// New / Modify
-			$bIsModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet);
-			$bIsBulkModifyAllowed = (!MetaModel::IsAbstract($sClass)) && UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, $oSet);
+			$bIsModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
+			$bIsBulkModifyAllowed = (!MetaModel::IsAbstract($sClass)) && UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, $oSet) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
 			$bIsBulkDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, $oSet);
 			if (isset($aExtraParams['link_attr']))
 			{

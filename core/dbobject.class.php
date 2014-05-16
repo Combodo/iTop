@@ -17,6 +17,39 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
+ * All objects to be displayed in the application (either as a list or as details)
+ * must implement this interface.
+ */
+interface iDisplay
+{
+
+	/**
+	 * Maps the given context parameter name to the appropriate filter/search code for this class
+	 * @param string $sContextParam Name of the context parameter, i.e. 'org_id'
+	 * @return string Filter code, i.e. 'customer_id'
+	 */
+	public static function MapContextParam($sContextParam);
+	/**
+	 * This function returns a 'hilight' CSS class, used to hilight a given row in a table
+	 * There are currently (i.e defined in the CSS) 4 possible values HILIGHT_CLASS_CRITICAL,
+	 * HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE
+	 * To Be overridden by derived classes
+	 * @param void
+	 * @return String The desired higlight class for the object/row
+	 */
+	public function GetHilightClass();
+	/**
+	 * Returns the relative path to the page that handles the display of the object
+	 * @return string
+	 */
+	public static function GetUIPage();
+	/**
+	 * Displays the details of the object
+	 */
+	public function DisplayDetails(WebPage $oPage, $bEditMode = false);
+}
+
+/**
  * Class dbObject: the root of persistent classes
  *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
@@ -33,7 +66,7 @@ require_once('mutex.class.inc.php');
  *
  * @package     iTopORM
  */
-abstract class DBObject
+abstract class DBObject implements iDisplay
 {
 	private static $m_aMemoryObjectsByClass = array();
 
@@ -2493,5 +2526,37 @@ abstract class DBObject
 		}
 		return false;
 	}
+	/////////////////////////////////////////////////////////////////////////
+	//
+	// Experimental iDisplay implementation
+	//
+	/////////////////////////////////////////////////////////////////////////
+	
+	public static function MapContextParam($sContextParam)
+	{
+		return null;
+	}
+	
+	public function GetHilightClass()
+	{
+		return HILIGHT_CLASS_NONE;
+	}
+
+	public function DisplayDetails(WebPage $oPage, $bEditMode = false)
+	{
+		$oPage->add('<h1>'.MetaModel::GetName(get_class($this)).': '.$this->GetName().'</h1>');
+		$aValues = array();
+		$aList = MetaModel::FlattenZList(MetaModel::GetZListItems(get_class($this), 'details'));
+		if (empty($aList))
+		{
+			$aList = array_keys(MetaModel::ListAttributeDefs(get_class($this)));
+		}
+		foreach($aList as $sAttCode)
+		{
+			$aValues[$sAttCode] = array('label' => MetaModel::GetLabel(get_class($this), $sAttCode), 'value' => $this->GetAsHTML($sAttCode));
+		}
+		$oPage->details($aValues);
+	}
+	
 }
 
