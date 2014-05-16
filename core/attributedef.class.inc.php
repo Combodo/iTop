@@ -1293,6 +1293,14 @@ class AttributeBoolean extends AttributeInteger
 	{
 		return $sValue ? '1' : '0';
 	}
+	/**
+	 * Helper to get a value that will be JSON encoded
+	 * The operation is the opposite to FromJSONToValue	 
+	 */	 	
+	public function GetForJSON($value)
+	{
+		return $value ? '1' : '0';
+	}
 }
 
 /**
