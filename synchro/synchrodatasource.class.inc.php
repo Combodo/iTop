@@ -230,6 +230,7 @@ class SynchroDataSource extends cmdbAbstractObject
 		
 		$sSelectSynchroLog = 'SELECT SynchroLog WHERE sync_source_id = :source_id';
 		$oSetSynchroLog = new CMDBObjectSet(DBObjectSearch::FromOQL($sSelectSynchroLog), array('start_date' => false) /* order by*/, array('source_id' => $this->GetKey()));
+		$oSetSynchroLog->SetLimit(100); // Display only the 100 latest runs
 		
 		if ($oSetSynchroLog->Count() > 0)
 		{
