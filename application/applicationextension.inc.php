@@ -758,11 +758,15 @@ class RestUtils
 		$aCriteriaReport = array();
 		if (isset($oCriteria->finalclass))
 		{
-			$sClass = $oCriteria->finalclass;
-			if (!MetaModel::IsValidClass($sClass))
+			if (!MetaModel::IsValidClass($oCriteria->finalclass))
 			{
-				throw new Exception("finalclass: Unknown class '$sClass'");
+				throw new Exception("finalclass: Unknown class '".$oCriteria->finalclass."'");
 			}
+			if (!MetaModel::IsParentClass($sClass, $oCriteria->finalclass))
+			{
+				throw new Exception("finalclass: '".$oCriteria->finalclass."' is not a child class of '$sClass'");
+			}
+			$sClass = $oCriteria->finalclass;
 		}
 		$oSearch = new DBObjectSearch($sClass);
 		foreach ($oCriteria as $sAttCode => $value)
