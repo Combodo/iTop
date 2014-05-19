@@ -1097,7 +1097,7 @@ EOF;
 			$sParentClass = $oPhpParent->GetChildText('name', '');
 			if ($sParentClass == '')
 			{
-				throw new Exception("Failed to process class '".$oClass->getAttribute('id')."', from '$sRelativeDir':  missing required tag 'name' under 'php_parent'.");
+				throw new Exception("Failed to process class '".$oClass->getAttribute('id')."', missing required tag 'name' under 'php_parent'.");
 			}
 			$sIncludeFile = $oPhpParent->GetChildText('file', '');
 			if ($sIncludeFile != '')
