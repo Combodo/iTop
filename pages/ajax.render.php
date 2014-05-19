@@ -1141,7 +1141,7 @@ EOF
 		require_once(APPROOT.'setup/runtimeenv.class.inc.php');
 		$sCurrEnv = utils::GetCurrentEnvironment();
 		$oRuntimeEnv = new RunTimeEnvironment($sCurrEnv);
-		$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation(MetaModel::GetConfig(), array(APPROOT.$sDataModelSourceDir));
+		$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation(MetaModel::GetConfig(), array(APPROOT.$sDataModelSourceDir, APPROOT.'extensions'));
 
 		require_once(APPROOT.'setup/setuputils.class.inc.php');
 		$aLicenses = SetupUtils::GetLicenses();
