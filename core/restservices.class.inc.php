@@ -143,14 +143,34 @@ class RestResultWithObjects extends RestResult
 	 * @param int An error code (RestResult::OK is no issue has been found)
 	 * @param string $sMessage Description of the error if any, an empty string otherwise
 	 * @param DBObject $oObject The object being reported
-	 * @param array $aFields An array of attribute codes. List of the attributes to be reported.
+	 * @param array $aFieldSpec An array of class => attribute codes (Cf. RestUtils::GetFieldList). List of the attributes to be reported.
 	 * @return void
 	 */
-	public function AddObject($iCode, $sMessage, $oObject, $aFields)
+	public function AddObject($iCode, $sMessage, $oObject, $aFieldSpec = null)
 	{
-		$oObjRes = new ObjectResult(get_class($oObject), $oObject->GetKey());
+		$sClass = get_class($oObject);
+		$oObjRes = new ObjectResult($sClass, $oObject->GetKey());
 		$oObjRes->code = $iCode;
 		$oObjRes->message = $sMessage;
+
+		$aFields = null;
+		if (!is_null($aFieldSpec))
+		{
+			// Enum all classes in the hierarchy, starting with the current one
+			foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false) as $sRefClass)
+			{
+				if (array_key_exists($sRefClass, $aFieldSpec))
+				{
+					$aFields = $aFieldSpec[$sRefClass];
+					break;
+				}
+			}
+		}
+		if (is_null($aFields))
+		{
+			// No fieldspec given, or not found...
+			$aFields = array('id', 'friendlyname');
+		}
 
 		foreach ($aFields as $sAttCode)
 		{
@@ -388,7 +408,6 @@ class CoreServices implements iRestServiceProvider
 			$key = RestUtils::GetMandatoryParam($aParams, 'key');
 			$sRelation = RestUtils::GetMandatoryParam($aParams, 'relation');
 			$iMaxRecursionDepth = RestUtils::GetOptionalParam($aParams, 'depth', 20 /* = MAX_RECURSION_DEPTH */);
-			$aShowFields = array('id', 'friendlyname');
 	
 			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key);
 			$aIndexByClass = array();
@@ -397,7 +416,7 @@ class CoreServices implements iRestServiceProvider
 				$aRelated = array();
 				$aGraph = array();
 				$aIndexByClass[get_class($oObject)][$oObject->GetKey()] = null;
-				$oResult->AddObject(0, '', $oObject, $aShowFields);
+				$oResult->AddObject(0, '', $oObject);
 				$this->GetRelatedObjects($oObject, $sRelation, $iMaxRecursionDepth, $aRelated, $aGraph);
 	
 				foreach($aRelated as $sClass => $aObjects)
@@ -405,7 +424,7 @@ class CoreServices implements iRestServiceProvider
 					foreach($aObjects as $oRelatedObj)
 					{
 						$aIndexByClass[get_class($oRelatedObj)][$oRelatedObj->GetKey()] = null;
-						$oResult->AddObject(0, '', $oRelatedObj, $aShowFields);
+						$oResult->AddObject(0, '', $oRelatedObj);
 					}				
 				}
 				foreach($aGraph as $sSrcKey => $aDestinations)
@@ -503,7 +522,7 @@ class CoreServices implements iRestServiceProvider
 						$sPlanned = 'Must be deleted explicitely';
 					}
 				}
-				$oResult->AddObject($iCode, $sPlanned, $oToDelete, array('id', 'friendlyname'));
+				$oResult->AddObject($iCode, $sPlanned, $oToDelete);
 			}
 		}
 		foreach ($oDeletionPlan->ListUpdates() as $sRemoteClass => $aToUpdate)
@@ -521,7 +540,7 @@ class CoreServices implements iRestServiceProvider
 					$iCode = RestDelete::AUTO_UPDATE;
 					$sPlanned = 'Reset external keys: '.$aData['attributes_list'];
 				}
-				$oResult->AddObject($iCode, $sPlanned, $oToUpdate, array('id', 'friendlyname'));
+				$oResult->AddObject($iCode, $sPlanned, $oToUpdate);
 			}
 		}
 		

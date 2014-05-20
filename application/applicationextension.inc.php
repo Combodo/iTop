@@ -715,7 +715,7 @@ class RestUtils
 	 * @param string $sClass Name of the class
 	 * @param StdClass $oData Structured input data.
 	 * @param string $sParamName Name of the parameter to fetch from the input data
-	 * @return void
+	 * @return An array of class => list of attributes (see RestResultWithObjects::AddObject that uses it)
 	 * @throws Exception
 	 * @api
 	 */
@@ -727,7 +727,17 @@ class RestUtils
 		{
 			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
-				$aShowFields[] = $sAttCode;
+				$aShowFields[$sClass][] = $sAttCode;
+			}
+		}
+		elseif ($sFields == '*+')
+		{
+			foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sRefClass)
+			{
+				foreach (MetaModel::ListAttributeDefs($sRefClass) as $sAttCode => $oAttDef)
+				{
+					$aShowFields[$sRefClass][] = $sAttCode;
+				}
 			}
 		}
 		else
@@ -739,7 +749,7 @@ class RestUtils
 				{
 					throw new Exception("$sParamName: invalid attribute code '$sAttCode'");
 				}
-				$aShowFields[] = $sAttCode;
+				$aShowFields[$sClass][] = $sAttCode;
 			}
 		}
 		return $aShowFields;
