@@ -57,9 +57,10 @@ class ObjectResult
 	 * 	 
 	 * @param DBObject $oObject The object being reported
 	 * @param string $sAttCode The attribute code (must be valid)
+	 * @param boolean $bExtendedOutput Output all of the link set attributes ?
 	 * @return string A scalar representation of the value
 	 */
-	protected function MakeResultValue(DBObject $oObject, $sAttCode)
+	protected function MakeResultValue(DBObject $oObject, $sAttCode, $bExtendedOutput = false)
 	{
 		if ($sAttCode == 'id')
 		{
@@ -71,34 +72,32 @@ class ObjectResult
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			if ($oAttDef instanceof AttributeLinkedSet)
 			{
-				$value = array();
-
-				// Make the list of required attributes
-				// - Skip attributes pointing to the current object (redundant data)
-				// - Skip link sets refering to the current data (infinite recursion!)
-				$aRelevantAttributes = array();
-				$sLnkClass = $oAttDef->GetLinkedClass();
-				foreach (MetaModel::ListAttributeDefs($sLnkClass) as $sLnkAttCode => $oLnkAttDef)
-				{
-					// Skip any attribute of the link that points to the current object
-					//
-					if ($sLnkAttCode == $oAttDef->GetExtKeyToMe()) continue;
-					if (method_exists($oLnkAttDef, 'GetKeyAttCode'))
-					{
-						if ($oLnkAttDef->GetKeyAttCode() ==$oAttDef->GetExtKeyToMe()) continue;
-					}
-
-					$aRelevantAttributes[] = $sLnkAttCode;
-				}
-
 				// Iterate on the set and build an array of array of attcode=>value
 				$oSet = $oObject->Get($sAttCode);
+				$value = array();
 				while ($oLnk = $oSet->Fetch())
 				{
+					$sLnkRefClass = $bExtendedOutput ? get_class($oLnk) : $oAttDef->GetLinkedClass();
+
 					$aLnkValues = array();
-					foreach ($aRelevantAttributes as $sLnkAttCode)
+					foreach (MetaModel::ListAttributeDefs($sLnkRefClass) as $sLnkAttCode => $oLnkAttDef)
 					{
-						$aLnkValues[$sLnkAttCode] = $this->MakeResultValue($oLnk, $sLnkAttCode);
+						// Skip attributes pointing to the current object (redundant data)
+						if ($sLnkAttCode == $oAttDef->GetExtKeyToMe())
+						{
+							continue;
+						}
+						// Skip any attribute of the link that points to the current object
+						$oLnkAttDef = MetaModel::GetAttributeDef($sLnkRefClass, $sLnkAttCode);
+						if (method_exists($oLnkAttDef, 'GetKeyAttCode'))
+						{
+							if ($oLnkAttDef->GetKeyAttCode() == $oAttDef->GetExtKeyToMe())
+							{
+								continue;
+							}
+						}
+						
+						$aLnkValues[$sLnkAttCode] = $this->MakeResultValue($oLnk, $sLnkAttCode, $bExtendedOutput);
 					}
 					$value[] = $aLnkValues;
 				}
@@ -116,11 +115,12 @@ class ObjectResult
 	 * 	 
 	 * @param DBObject $oObject The object being reported
 	 * @param string $sAttCode The attribute code (must be valid)
+	 * @param boolean $bExtendedOutput Output all of the link set attributes ?
 	 * @return void
 	 */
-	public function AddField(DBObject $oObject, $sAttCode)
+	public function AddField(DBObject $oObject, $sAttCode, $bExtendedOutput = false)
 	{
-		$this->fields[$sAttCode] = $this->MakeResultValue($oObject, $sAttCode);
+		$this->fields[$sAttCode] = $this->MakeResultValue($oObject, $sAttCode, $bExtendedOutput);
 	}
 }
 
@@ -144,9 +144,10 @@ class RestResultWithObjects extends RestResult
 	 * @param string $sMessage Description of the error if any, an empty string otherwise
 	 * @param DBObject $oObject The object being reported
 	 * @param array $aFieldSpec An array of class => attribute codes (Cf. RestUtils::GetFieldList). List of the attributes to be reported.
+	 * @param boolean $bExtendedOutput Output all of the link set attributes ?
 	 * @return void
 	 */
-	public function AddObject($iCode, $sMessage, $oObject, $aFieldSpec = null)
+	public function AddObject($iCode, $sMessage, $oObject, $aFieldSpec = null, $bExtendedOutput = false)
 	{
 		$sClass = get_class($oObject);
 		$oObjRes = new ObjectResult($sClass, $oObject->GetKey());
@@ -174,7 +175,7 @@ class RestResultWithObjects extends RestResult
 
 		foreach ($aFields as $sAttCode)
 		{
-			$oObjRes->AddField($oObject, $sAttCode);
+			$oObjRes->AddField($oObject, $sAttCode, $bExtendedOutput);
 		}
 
 		$sObjKey = get_class($oObject).'::'.$oObject->GetKey();
@@ -305,11 +306,12 @@ class CoreServices implements iRestServiceProvider
 			$sClass = RestUtils::GetClass($aParams, 'class');
 			$aFields = RestUtils::GetMandatoryParam($aParams, 'fields');
 			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
+			$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
 	
 			$oObject = RestUtils::MakeObjectFromFields($sClass, $aFields);
 			$oObject->DBInsert();
 	
-			$oResult->AddObject(0, 'created', $oObject, $aShowFields);
+			$oResult->AddObject(0, 'created', $oObject, $aShowFields, $bExtendedOutput);
 			break;
 	
 		case 'core/update':
@@ -318,12 +320,13 @@ class CoreServices implements iRestServiceProvider
 			$key = RestUtils::GetMandatoryParam($aParams, 'key');
 			$aFields = RestUtils::GetMandatoryParam($aParams, 'fields');
 			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
+			$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
 	
 			$oObject = RestUtils::FindObjectFromKey($sClass, $key);
 			RestUtils::UpdateObjectFromFields($oObject, $aFields);
 			$oObject->DBUpdate();
 	
-			$oResult->AddObject(0, 'updated', $oObject, $aShowFields);
+			$oResult->AddObject(0, 'updated', $oObject, $aShowFields, $bExtendedOutput);
 			break;
 	
 		case 'core/apply_stimulus':
@@ -332,6 +335,7 @@ class CoreServices implements iRestServiceProvider
 			$key = RestUtils::GetMandatoryParam($aParams, 'key');
 			$aFields = RestUtils::GetMandatoryParam($aParams, 'fields');
 			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
+			$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
 			$sStimulus = RestUtils::GetMandatoryParam($aParams, 'stimulus');
 	
 			$oObject = RestUtils::FindObjectFromKey($sClass, $key);
@@ -367,7 +371,7 @@ class CoreServices implements iRestServiceProvider
 					if ($oObject->ApplyStimulus($sStimulus))
 					{
 						$oObject->DBUpdate();
-						$oResult->AddObject(0, 'updated', $oObject, $aShowFields);
+						$oResult->AddObject(0, 'updated', $oObject, $aShowFields, $bExtendedOutput);
 					}
 				}
 				else
@@ -383,11 +387,12 @@ class CoreServices implements iRestServiceProvider
 			$sClass = RestUtils::GetClass($aParams, 'class');
 			$key = RestUtils::GetMandatoryParam($aParams, 'key');
 			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
+			$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
 	
 			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key);
 			while ($oObject = $oObjectSet->Fetch())
 			{
-				$oResult->AddObject(0, '', $oObject, $aShowFields);
+				$oResult->AddObject(0, '', $oObject, $aShowFields, $bExtendedOutput);
 			}
 			$oResult->message = "Found: ".$oObjectSet->Count();
 			break;
