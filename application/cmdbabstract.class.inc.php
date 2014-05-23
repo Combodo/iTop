@@ -1571,7 +1571,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				$bMandatory = 'true';
 			}
 			$sValidationField = "<span class=\"form_validation\" id=\"v_{$iId}\"></span>";
-			$sHelpText = $oAttDef->GetHelpOnEdition();
+			$sHelpText = htmlentities($oAttDef->GetHelpOnEdition(), ENT_QUOTES, 'UTF-8');
 			$aEventsList = array();
 			switch($oAttDef->GetEditClass())
 			{
