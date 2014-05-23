@@ -1226,7 +1226,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 						else
 						{
 							$rawValue = $oObj->Get($sAttCodeEx);
-/*
+							// Due to custom formatting rules, empty friendlynames may be rendered as non-empty strings
+							// let's fix this and make sure we render an empty string if the key == 0
 							if ($oAttDef instanceof AttributeFriendlyName)
 							{
 								$sKeyAttCode = $oAttDef->GetKeyAttCode();
@@ -1238,7 +1239,6 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 									}
 								}
 							}
-*/
 							if ($bLocalize)
 							{
 								$outputValue = htmlentities($oFinalAttDef->GetEditValue($rawValue), ENT_QUOTES, 'UTF-8');

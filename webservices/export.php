@@ -152,6 +152,10 @@ if (!empty($sExpression))
 			{
 				$aAliasToFields[$sClassAlias][] = $oAttDef->GetParentAttCode();
 			}
+			else if($oAttDef instanceof AttributeFriendlyname)
+			{
+				$aAliasToFields[$sClassAlias][] = $oAttDef->GetKeyAttCode();
+			}
 		}
 
 		// Read query parameters
