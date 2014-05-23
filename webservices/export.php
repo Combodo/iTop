@@ -147,6 +147,11 @@ if (!empty($sExpression))
 			{
 				throw new CoreException("Invalid field specification $sField: $sAttCode is not a valid attribute for $sClass");
 			}
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			if ($oAttDef instanceof AttributeSubItem)
+			{
+				$aAliasToFields[$sClassAlias][] = $oAttDef->GetParentAttCode();
+			}
 		}
 
 		// Read query parameters
