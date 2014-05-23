@@ -61,6 +61,7 @@
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
@@ -95,23 +96,26 @@ try
 {
 	utils::UseParamFile();
 
-	$sAuthUser = utils::ReadParam('auth_user', null, false, 'raw_data');
-	if ($sAuthUser === null)
+	if (!LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN_FALSE))
 	{
-		throw new Exception("Missing parameter 'auth_user'", RestResult::MISSING_AUTH_USER);
-	}
-	$sAuthPwd = utils::ReadParam('auth_pwd', null, false, 'raw_data');
-	if ($sAuthPwd === null)
-	{
-		throw new Exception("Missing parameter 'auth_pwd'", RestResult::MISSING_AUTH_PWD);
-	}
-	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
-	{
-		UserRights::Login($sAuthUser); // Login & set the user's language
-	}
-	else
-	{
-		throw new Exception("Invalid login '$sAuthUser'", RestResult::UNAUTHORIZED);
+		$sAuthUser = utils::ReadParam('auth_user', null, false, 'raw_data');
+		if ($sAuthUser === null)
+		{
+			throw new Exception("Missing parameter 'auth_user'", RestResult::MISSING_AUTH_USER);
+		}
+		$sAuthPwd = utils::ReadParam('auth_pwd', null, false, 'raw_data');
+		if ($sAuthPwd === null)
+		{
+			throw new Exception("Missing parameter 'auth_pwd'", RestResult::MISSING_AUTH_PWD);
+		}
+		if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
+		{
+			UserRights::Login($sAuthUser); // Login & set the user's language
+		}
+		else
+		{
+			throw new Exception("Invalid login '$sAuthUser'", RestResult::UNAUTHORIZED);
+		}
 	}
 
 	$sVersion = utils::ReadParam('version', null, false, 'raw_data');
