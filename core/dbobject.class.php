@@ -2088,7 +2088,10 @@ abstract class DBObject implements iDisplay
 				{
 					$oCaseLog = $this->Get($sAttCode);
 					$aScalarArgs[$sArgName.'->'.$sAttCode] = $oCaseLog->GetText();
-					$aScalarArgs[$sArgName.'->head('.$sAttCode.')'] = $oCaseLog->GetLatestEntry();
+					$sHead = $oCaseLog->GetLatestEntry();
+					$aScalarArgs[$sArgName.'->head('.$sAttCode.')'] = $sHead;
+					$aScalarArgs[$sArgName.'->head_html('.$sAttCode.')'] = '<div class="caselog_entry">'.str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sHead, ENT_QUOTES, 'UTF-8')).'</div>';
+					$aScalarArgs[$sArgName.'->html('.$sAttCode.')'] = $oCaseLog->GetAsEmailHtml();
 				}
 				elseif ($oAttDef->IsScalar())
 				{
@@ -2119,6 +2122,7 @@ abstract class DBObject implements iDisplay
 					}
 					$sNames = implode("\n", $aNames);
 					$aScalarArgs[$sArgName.'->'.$sAttCode] = $sNames;
+					$aScalarArgs[$sArgName.'->html('.$sAttCode.')'] = '<ul><li>'.implode("</li><li>", $aNames).'</li></ul>';
 				}
 			}
 
