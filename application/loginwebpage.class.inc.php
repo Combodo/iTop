@@ -33,6 +33,7 @@ class LoginWebPage extends NiceWebPage
 {
 	const EXIT_PROMPT = 0;
 	const EXIT_HTTP_401 = 1;
+	const EXIT_RETURN_FALSE = 2;
 
 	protected static $sHandlerClass = __class__;
 	public static function RegisterHandler($sClass)
@@ -561,10 +562,16 @@ EOF
 				{
 					$sLoginMode = $aAllowedLoginTypes[0]; // First in the list...
 				}
-				if ($iOnExit == self::EXIT_HTTP_401)
+				if (($iOnExit == self::EXIT_HTTP_401) || ($sLoginMode == 'basic'))
 				{
-					header("HTTP/1.0 401 Unauthorized");
+					header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_VERSION));
+					header('HTTP/1.0 401 Unauthorized');
+					header('Content-type: text/html; charset=iso-8859-1');
 					exit;
+				}
+				else if($iOnExit == self::EXIT_RETURN_FALSE)
+				{
+					return false;
 				}
 				else
 				{
@@ -580,10 +587,16 @@ EOF
 				{
 					//echo "Check Credentials returned false for user $sAuthUser!";
 					self::ResetSession();
-					if ($iOnExit == self::EXIT_HTTP_401)
+					if (($iOnExit == self::EXIT_HTTP_401))
 					{
-						header("HTTP/1.0 401 Unauthorized");
+						header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_VERSION));
+						header('HTTP/1.0 401 Unauthorized');
+						header('Content-type: text/html; charset=iso-8859-1');
 						exit;
+					}
+					else if($iOnExit == self::EXIT_RETURN_FALSE)
+					{
+						return false;
 					}
 					else
 					{
@@ -612,6 +625,7 @@ EOF
 				}
 			}
 		}
+		return true;
 	}
 	
 	/**
@@ -718,7 +732,7 @@ EOF
 			$sMessage = Dict::S('UI:Login:PasswordChanged');
 		}
 		
-		self::Login($iOnExit);
+		$bRet = self::Login($iOnExit);
 
 		if ($bMustBeAdmin && !UserRights::IsAdministrator())
 		{	
@@ -730,6 +744,13 @@ EOF
 			exit;
 		}
 		call_user_func(array(self::$sHandlerClass, 'ChangeLocation'), $bIsAllowedToPortalUsers);
-		return $sMessage;
+		if ($iOnExit == self::EXIT_RETURN_FALSE)
+		{
+			return $bRet;
+		}
+		else
+		{
+			return $sMessage;
+		}
 	}	
 } // End of class
