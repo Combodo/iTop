@@ -1754,14 +1754,14 @@ class Config
 	/**
 	 * Pretty format a var_export'ed value so that (if possible) the identation is preserved on every line
 	 * @param mixed $value The value to export
-	 * @param string $sIdentation The string to use to indent the text
+	 * @param string $sIndentation The string to use to indent the text
 	 * @param bool $bForceIndentation Forces the identation (enven if it breaks/changes an eval, for example to ouput a value inside a comment)
 	 * @return string The indented export string
 	 */
-	protected static function PrettyVarExport($value, $sIdentation, $bForceIndentation = false)
+	protected static function PrettyVarExport($value, $sIndentation, $bForceIndentation = false)
 	{
 		$sExport = var_export($value, true);
-		$sNiceExport = trim(preg_replace("/^/m", "\t\t\t", $sExport));
+		$sNiceExport = str_replace(array("\r\n", "\n", "\r"), "\n".$sIndentation, trim($sExport));
 		if (!$bForceIndentation)
 		{
 			eval('$aImported='.$sNiceExport.';');
