@@ -718,6 +718,23 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'full_text_chunk_duration' => array(
+			'type' => 'integer',
+			'description' => 'Delay after which the results are displayed.',
+			// examples... not used
+			'default' => 2,
+			'value' => 2,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'full_text_accelerators' => array(
+			'type' => 'array',
+			'description' => 'Specifies classes to be searched at first (and the subset of data) when running the full text search.',
+			'default' => array(),
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)

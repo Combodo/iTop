@@ -633,6 +633,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:ObjectDoesNotExist' => 'Désolé cet objet n\'existe pas (où vous n\'êtes pas autorisé à l\'afficher).',
 	'UI:SearchResultsPageTitle' => 'iTop - Résultats de la recherche',
 	'UI:Search:NoSearch' => 'Rien à rechercher',
+	'UI:Search:Ongoing' => 'Recherche de "%1$s"',
+	'UI:Search:Enlarge' => 'Elargir la recherche',
 	'UI:FullTextSearchTitle_Text' => 'Résultats pour "%1$s" :',
 	'UI:Search:Count_ObjectsOf_Class_Found' => 'Trouvé %1$d objet(s) de type %2$s.',
 	'UI:Search:NoObjectFound' => 'Aucun objet trouvé.',

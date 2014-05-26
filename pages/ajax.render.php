@@ -1284,7 +1284,286 @@ EOF
 		$oBlock->Display($oPage, 'history');
 		$oPage->add_ready_script("$('#history table.listResults').tableHover(); $('#history table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
 		break;
+
+		case 'full_text_search':
+		$sFullText = trim(utils::ReadParam('text', '', false, 'raw_data'));
+		$iCount = utils::ReadParam('count', 0);
+		$iCurrentPos = utils::ReadParam('position', 0);
+		$iTune = utils::ReadParam('tune', 0);
+		if (empty($sFullText))
+		{
+			$oPage->p(Dict::S('UI:Search:NoSearch'));
+			break;
+		}
+
+		// Search in full text mode in all the classes
+		$aMatches = array();
+		$sClassName = '';
+		
+		// Check if a class name/label is supplied to limit the search
+		if (preg_match('/^(.+):(.+)$/', $sFullText, $aMatches))
+		{
+			$sClassName = $aMatches[1];
+			if (MetaModel::IsValidClass($sClassName))
+			{
+				$sFullText = $aMatches[2];
+			}
+			elseif ($sClassName = MetaModel::GetClassFromLabel($sClassName, false /* => not case sensitive */))
+			{
+				$sFullText = $aMatches[2];
+			}
+		}
+		
+		if (preg_match('/^"(.*)"$/', $sFullText, $aMatches))
+		{
+			// The text is surrounded by double-quotes, remove the quotes and treat it as one single expression
+			$aFullTextNeedles = array($aMatches[1]);
+		}
+		else
+		{
+			// Split the text on the blanks and treat this as a search for <word1> AND <word2> AND <word3>
+			$aFullTextNeedles = explode(' ', $sFullText);
+		}
+
+		// Build the ordered list of classes to search into
+		//
+		if (empty($sClassName))
+		{
+			$aSearchClasses = MetaModel::GetClasses('searchable');					
+		}
+		else
+		{
+			// Search is limited to a given class and its subclasses
+			$aSearchClasses = MetaModel::EnumChildClasses($sClassName, ENUM_CHILD_CLASSES_ALL);
+		}
+
+		$sMaxChunkDuration = MetaModel::GetConfig()->Get('full_text_chunk_duration');
+		$aAccelerators = MetaModel::GetConfig()->Get('full_text_accelerators');
+
+		foreach (array_reverse($aAccelerators) as $sClass => $aRestriction)
+		{
+			$iPos = array_search($sClass, $aSearchClasses);
+			if ($iPos !== false)
+			{
+				unset($aSearchClasses[$iPos]);
+			}
+			array_unshift($aSearchClasses, $aRestriction['query']);
+		}
+
+		$fStarted = microtime(true);
+		$iFoundInThisRound = 0;
+		for($iPos = $iCurrentPos; $iPos < count($aSearchClasses) ; $iPos++)
+		{
+			if ($iFoundInThisRound && (microtime(true) - $fStarted >= $sMaxChunkDuration))
+			{
+				break;
+			}
+
+			$sClassSpec = $aSearchClasses[$iPos];
+			if (substr($sClassSpec, 0, 7) == 'SELECT ')
+			{
+				$oFilter = DBObjectSearch::FromOQL($sClassSpec);
+				$sClassName = $oFilter->GetClass();
+				$sNeedleFormat = isset($aAccelerators[$sClassName]['needle']) ? $aAccelerators[$sClassName]['needle'] : '%$needle$%';
+				$sNeedle = str_replace('$needle$', $sFullText, $sNeedleFormat);
+				$aParams = array('needle' => $sNeedle);
+			}
+			else
+			{
+				$sClassName = $sClassSpec;
+				$oFilter = new DBObjectSearch($sClassName);
+				$aParams = array();
+
+				foreach($aFullTextNeedles as $sSearchText)
+				{
+					$oFilter->AddCondition_FullText($sSearchText);
+				}
+			}
+			// Skip abstract classes
+			if (MetaModel::IsAbstract($sClassName)) continue;
+
+			if ($iTune > 0)
+			{
+				$fStartedClass = microtime(true);
+			}
+			$oSet = new DBObjectSet($oFilter, array(), $aParams);
+			if (array_key_exists($sClassName, $aAccelerators))
+			{
+				$oSet->OptimizeColumnLoad(array($oFilter->GetClassAlias() => $aAccelerators[$sClassName]['attributes']));
+			}
+
+			$sFullTextJS = addslashes($sFullText);
+			$sEnlargeTheSearch =
+<<<EOF
+			$('.search-class-$sClassName button').attr('disabled', 'disabled');
+
+			$('.search-class-$sClassName h2').append('&nbsp;<img id="indicator" src="../images/indicator.gif">');
+			var oParams = {operation: 'full_text_search_enlarge', class: '$sClassName', text: '$sFullTextJS'};
+			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
+				$('.search-class-$sClassName').html(data);
+			});
+EOF
+;
+			if ($oSet->Count() > 0)
+			{
+				$aLeafs = array();
+				while($oObj = $oSet->Fetch())
+				{
+					if (get_class($oObj) == $sClassName)
+					{
+						$aLeafs[] = $oObj->GetKey();
+						$iFoundInThisRound ++; 
+					}
+				}
+				$oLeafsFilter = new DBObjectSearch($sClassName);
+				if (count($aLeafs) > 0)
+				{
+					$iCount += count($aLeafs);
+					$oPage->add("<div class=\"search-class-result search-class-$sClassName\">\n");
+					$oPage->add("<div class=\"page_header\">\n");
+					if (array_key_exists($sClassName, $aAccelerators))
+					{
+						$oPage->add("<h2>".MetaModel::GetClassIcon($sClassName)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aLeafs), Metamodel::GetName($sClassName))."&nbsp;<button onclick=\"".htmlentities($sEnlargeTheSearch, ENT_QUOTES, 'UTF-8')."\">".Dict::S('UI:Search:Enlarge')."</button></h2>\n");
+					}
+					else
+					{
+						$oPage->add("<h2>".MetaModel::GetClassIcon($sClassName)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aLeafs), Metamodel::GetName($sClassName))."</h2>\n");
+					}
+					$oPage->add("</div>\n");
+					$oLeafsFilter->AddCondition('id', $aLeafs, 'IN');
+					$oBlock = new DisplayBlock($oLeafsFilter, 'list', false);
+					$sBlockId = 'global_search_'.$sClassName;
+					$oPage->add('<div id="'.$sBlockId.'">');
+					$oBlock->RenderContent($oPage, array('table_id' => $sBlockId, 'currentId' => $sBlockId));
+					$oPage->add("</div>\n");
+					$oPage->add("</div>\n");
+					$oPage->p('&nbsp;'); // Some space ?
+				}
+			}
+			else if (array_key_exists($sClassName, $aAccelerators))
+			{
+				$oPage->add("<div class=\"search-class-result search-class-$sClassName\">\n");
+				$oPage->add("<div class=\"page_header\">\n");
+				$oPage->add("<h2>".MetaModel::GetClassIcon($sClassName)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', 0, Metamodel::GetName($sClassName))."&nbsp;<button onclick=\"".htmlentities($sEnlargeTheSearch, ENT_QUOTES, 'UTF-8')."\">".Dict::S('UI:Search:Enlarge')."</button></h2>\n");
+				$oPage->add("</div>\n");
+				$oPage->add("</div>\n");
+				$oPage->p('&nbsp;'); // Some space ?
+			}
+			if ($iTune > 0)
+			{
+				$fDurationClass = microtime(true) - $fStartedClass;
+				$oPage->add_script("oTimeStatistics.$sClassName = $fDurationClass;");
+			}
+		}
+		if ($iPos < count($aSearchClasses))
+		{
+			$sJSNeedle = addslashes($sFullText);
+			$oPage->add_ready_script(
+<<<EOF
+				var oParams = {operation: 'full_text_search', position: $iPos, text: '$sJSNeedle', count: $iCount, tune: $iTune};
+				$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
+					$('#full_text_results').append(data);
+				});
+EOF
+			);
+		}
+		else
+		{
+			// We're done
+			$oPage->add_ready_script(
+<<<EOF
+$('#full_text_indicator').hide();
+$('#full_text_progress,#full_text_progress_placeholder').hide(500);
+EOF
+			);
+
+			if ($iTune > 0)
+			{
+				$oPage->add_ready_script(
+<<<EOF
+				var sRes = '<h4>Search statistics (tune = 1)</h4><table>';
+				sRes += '<thead><tr><th>Class</th><th>Time</th></tr></thead>';
+				sRes += '<tbody>';
+				var fTotal = 0;
+				for (var sClass in oTimeStatistics)
+				{
+					fTotal = fTotal + oTimeStatistics[sClass];
+					fRounded = Math.round(oTimeStatistics[sClass] * 1000) / 1000;
+					sRes += '<tr><td>' + sClass + '</td><td>' + fRounded + '</td></tr>';
+				}
 				
+				fRoundedTotal = Math.round(fTotal * 1000) / 1000;
+				sRes += '<tr><td><b>Total</b></td><td><b>' + fRoundedTotal + '</b></td></tr>';
+				sRes += '</tbody>';
+				sRes += '</table>';
+				$('#full_text_results').append(sRes);
+EOF
+				);
+			}
+
+			if ($iCount == 0)
+			{
+				$sFullTextSummary = addslashes(Dict::S('UI:Search:NoObjectFound'));
+				$oPage->add_ready_script("$('#full_text_results').append('$sFullTextSummary');");
+			}
+		}
+		break;
+
+		case 'full_text_search_enlarge':
+		$sFullText = trim(utils::ReadParam('text', '', false, 'raw_data'));
+		$sClass = trim(utils::ReadParam('class', ''));
+		$iTune = utils::ReadParam('tune', 0);
+
+		if (preg_match('/^"(.*)"$/', $sFullText, $aMatches))
+		{
+			// The text is surrounded by double-quotes, remove the quotes and treat it as one single expression
+			$aFullTextNeedles = array($aMatches[1]);
+		}
+		else
+		{
+			// Split the text on the blanks and treat this as a search for <word1> AND <word2> AND <word3>
+			$aFullTextNeedles = explode(' ', $sFullText);
+		}
+
+		$oFilter = new DBObjectSearch($sClass);
+		foreach($aFullTextNeedles as $sSearchText)
+		{
+			$oFilter->AddCondition_FullText($sSearchText);
+		}
+		$oSet = new DBObjectSet($oFilter);
+		$oPage->add("<div class=\"page_header\">\n");
+		$oPage->add("<h2>".MetaModel::GetClassIcon($sClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', $oSet->Count(), Metamodel::GetName($sClass))."</h2>\n");
+		$oPage->add("</div>\n");
+		if ($oSet->Count() > 0)
+		{
+			$aLeafs = array();
+			while($oObj = $oSet->Fetch())
+			{
+				if (get_class($oObj) == $sClass)
+				{
+					$aLeafs[] = $oObj->GetKey();
+				}
+			}
+			$oLeafsFilter = new DBObjectSearch($sClass);
+			if (count($aLeafs) > 0)
+			{
+				$oLeafsFilter->AddCondition('id', $aLeafs, 'IN');
+				$oBlock = new DisplayBlock($oLeafsFilter, 'list', false);
+				$sBlockId = 'global_search_'.$sClass;
+				$oPage->add('<div id="'.$sBlockId.'">');
+				$oBlock->RenderContent($oPage, array('table_id' => $sBlockId, 'currentId' => $sBlockId));
+				$oPage->add('</div>');
+				$oPage->P('&nbsp;'); // Some space ?
+			}
+		}
+		$oPage->add_ready_script(
+<<<EOF
+$('#full_text_indicator').hide();
+$('#full_text_progress,#full_text_progress_placeholder').hide(500);
+EOF
+		);
+		break;
+
 		default:
 		$oPage->p("Invalid query.");
 	}
