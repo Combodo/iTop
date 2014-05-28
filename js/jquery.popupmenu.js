@@ -47,6 +47,7 @@ jQuery.fn.popupmenu = function ()
 						}
 					});
 				}
+				popupmenu.css('top', ''); // let the "position: absolute;" do its job, for better support of scrolling...
 				popupmenu.css('display', 'block');
 			}
 			else
