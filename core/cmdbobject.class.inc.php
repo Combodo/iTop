@@ -162,6 +162,21 @@ abstract class CMDBObject extends DBObject
 
 	protected function RecordObjCreation()
 	{
+		// Delete any existing change tracking about the current object (IDs can be reused due to InnoDb bug; see TRAC #886)
+		//
+		// 1 - remove the deletion record(s)
+		// Note that objclass contain the ROOT class
+		$oFilter = new DBObjectSearch('CMDBChangeOpDelete');
+		$oFilter->AddCondition('objclass', MetaModel::GetRootClass(get_class($this)), '=');
+		$oFilter->AddCondition('objkey', $this->GetKey(), '=');
+		MetaModel::PurgeData($oFilter);
+		// 2 - any other change tracking information left prior to 2.0.3 (when the purge of the history has been implemented in RecordObjDeletion
+		// In that case, objclass is the final class of the object
+		$oFilter = new DBObjectSearch('CMDBChangeOp');
+		$oFilter->AddCondition('objclass', get_class($this), '=');
+		$oFilter->AddCondition('objkey', $this->GetKey(), '=');
+		MetaModel::PurgeData($oFilter);
+
 		parent::RecordObjCreation();
 		$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpCreate");
 		$oMyChangeOp->Set("objclass", get_class($this));
@@ -171,6 +186,14 @@ abstract class CMDBObject extends DBObject
 
 	protected function RecordObjDeletion($objkey)
 	{
+		$sRootClass = MetaModel::GetRootClass(get_class($this));
+
+		// Delete any existing change tracking about the current object
+		$oFilter = new DBObjectSearch('CMDBChangeOp');
+		$oFilter->AddCondition('objclass', get_class($this), '=');
+		$oFilter->AddCondition('objkey', $objkey, '=');
+		MetaModel::PurgeData($oFilter);
+
 		parent::RecordObjDeletion($objkey);
 		$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpDelete");
 		$oMyChangeOp->Set("objclass", MetaModel::GetRootClass(get_class($this)));

@@ -5087,6 +5087,41 @@ abstract class MetaModel
 		}
 	}
 
+	/**
+	 * Helper to remove selected objects without calling any handler
+	 * Surpasses BulkDelete as it can handle abstract classes, but has the other limitation as it bypasses standard objects handlers 
+	 * 	 
+	 * @param string $oFilter Scope of objects to wipe out
+	 * @return The count of deleted objects
+	 */	 	
+	public static function PurgeData($oFilter)
+	{
+		$sTargetClass = $oFilter->GetClass();
+		$oSet = new DBObjectSet($oFilter);
+		$oSet->OptimizeColumnLoad(array($sTargetClass => array('finalclass')));
+		$aIdToClass = $oSet->GetColumnAsArray('finalclass', true);
+
+		$aIds = array_keys($aIdToClass);
+		if (count($aIds) > 0)
+		{
+			$aQuotedIds = CMDBSource::Quote($aIds);
+			$sIdList = implode(',', $aQuotedIds);
+			$aTargetClasses = array_merge(
+				self::EnumChildClasses($sTargetClass, ENUM_CHILD_CLASSES_ALL),
+				self::EnumParentClasses($sTargetClass, ENUM_PARENT_CLASSES_EXCLUDELEAF)
+			);
+			foreach ($aTargetClasses as $sSomeClass)
+			{
+				$sTable = MetaModel::DBGetTable($sSomeClass);
+				$sPKField = MetaModel::DBGetKey($sSomeClass);
+		
+				$sDeleteSQL = "DELETE FROM `$sTable` WHERE `$sPKField` IN ($sIdList)";
+				CMDBSource::DeleteFrom($sDeleteSQL);
+			}
+		}
+		return count($aIds);
+	}
+
 	// Links
 	//
 	//
