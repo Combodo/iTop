@@ -305,6 +305,39 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			{
 				$iFlags = $this->GetAttributeFlags($sAttCode);
 			}
+			// Adjust the flags according to user rights
+			if ($oAttDef->IsIndirect())
+			{
+				$sLinkedClass = $oAttDef->GetLinkedClass();
+				$oLinkingAttDef = 	MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
+				$sTargetClass = $oLinkingAttDef->GetTargetClass();
+				// n:n links => must be allowed to modify the linking class AND  read the target class in order to edit the linkedset
+				if (!UserRights::IsActionAllowed($sLinkedClass, UR_ACTION_MODIFY) || !UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ))
+				{
+					$iFlags |= OPT_ATT_READONLY;
+				}
+				// n:n links => must be allowed to read the linking class AND  the target class in order to display the linkedset
+				if (!UserRights::IsActionAllowed($sLinkedClass, UR_ACTION_READ) || !UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ))
+				{
+					$iFlags |= OPT_ATT_HIDDEN;
+				}
+			}
+			else
+			{
+				// 1:n links => must be allowed to modify the linked class in order to edit the linkedset
+				if (!UserRights::IsActionAllowed($oAttDef->GetLinkedClass(), UR_ACTION_MODIFY))
+				{
+					$iFlags |= OPT_ATT_READONLY;
+				}
+				// 1:n links => must be allowed to read the linked class in order to display the linkedset
+				if (!UserRights::IsActionAllowed($oAttDef->GetLinkedClass(), UR_ACTION_READ))
+				{
+					$iFlags |= OPT_ATT_HIDDEN;
+				}
+			}
+			// Non-readable/hidden linkedset... don't display anything
+			if ($iFlags & OPT_ATT_HIDDEN) continue;
+			
 			$bReadOnly = ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE));
 			if ($bEditMode && (!$bReadOnly))
 			{
