@@ -109,7 +109,7 @@ abstract class TriggerOnObject extends Trigger
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeClass("target_class", array("class_category"=>"bizmodel", "more_values"=>null, "sql"=>"target_class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeClass("target_class", array("class_category"=>"bizmodel", "more_values"=>"User,UserExternal,UserInternal,UserLDAP,UserLocal", "sql"=>"target_class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeOQL("filter", array("allowed_values"=>null, "sql"=>"filter", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists

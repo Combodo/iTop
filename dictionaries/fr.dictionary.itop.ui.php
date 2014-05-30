@@ -158,6 +158,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User/Attribute:allowed_org_list+' => 'L\'utilisateur a le droit de voir les données des organisations listées ici. Si aucune organisation n\'est spécifiée, alors aucune restriction ne s\'applique.',
 	'Class:User/Error:LoginMustBeUnique' => 'Le login doit être unique - "%1s" est déjà utilisé.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'L\'utilisateur doit avoir au moins un profil.',
+	'Class:UserInternal' => 'Utilisateur interne',
+	'Class:UserInternal+' => 'Utilisateur défini dans iTop',
 	'Class:URP_Dimensions' => 'Dimension',
 	'Class:URP_Dimensions+' => 'Dimension applicative (défini des silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Nom',

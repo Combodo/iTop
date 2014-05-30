@@ -382,9 +382,15 @@ class ValueSetEnumClasses extends ValueSetEnum
 	}
 
 	protected function LoadValues($aArgs)
-	{	
-		// First, get the additional values
+	{
+		// Call the parent to parse the additional values...
 		parent::LoadValues($aArgs);
+		
+		// Translate the labels of the additional values
+		foreach($this->m_aValues as $sClass => $void)
+		{
+			$this->m_aValues[$sClass] = MetaModel::GetName($sClass);
+		}
 
 		// Then, add the classes from the category definition
 		foreach (MetaModel::GetClasses($this->m_sCategories) as $sClass)

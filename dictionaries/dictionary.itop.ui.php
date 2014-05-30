@@ -134,6 +134,9 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'Class:User/Error:LoginMustBeUnique' => 'Login must be unique - "%1s" is already being used.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'At least one profile must be assigned to this user.',
+
+	'Class:UserInternal' => 'User Internal',
+	'Class:UserInternal+' => 'User defined within iTop',
 ));
 
 //
