@@ -53,7 +53,7 @@ abstract class Query extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'fields')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('description')); // Attributes to be displayed for a list
 		// Search criteria
-//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'fields')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 }
@@ -82,7 +82,7 @@ class QueryOQL extends Query
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'oql', 'fields')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('description')); // Attributes to be displayed for a list
 		// Search criteria
-//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'fields', 'oql')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 
