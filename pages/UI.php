@@ -528,90 +528,59 @@ try
 
 		case 'full_text': // Global "google-like" search
 			$sFullText = trim(utils::ReadParam('text', '', false, 'raw_data'));
+			$iTune = utils::ReadParam('tune', 0);
 			if (empty($sFullText))
 			{
 				$oP->p(Dict::S('UI:Search:NoSearch'));
 			}
 			else
 			{
-				$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
-				$oP->p("<h1>".Dict::Format('UI:FullTextSearchTitle_Text', htmlentities($sFullText, ENT_QUOTES, 'UTF-8'))."</h1>");
-				$iCount = 0;
-				$iBlock = 0;
-				// Search in full text mode in all the classes
-				$aMatches = array();
-				$sClassName = '';
-				
-				// Check if a class name/label is supplied to limit the search
-				if (preg_match('/^(.+):(.+)$/', $sFullText, $aMatches))
+				// Sanity check of the accelerators
+				$iErrors = 0;
+				$aAccelerators = MetaModel::GetConfig()->Get('full_text_accelerators');
+				foreach ($aAccelerators as $sClass => $aAccelerator)
 				{
-					$sClassName = $aMatches[1];
-					if (MetaModel::IsValidClass($sClassName))
+					try
 					{
-						$sFullText = $aMatches[2];
-					}
-					elseif ($sClassName = MetaModel::GetClassFromLabel($sClassName, false /* => not case sensitive */))
-					{
-						$sFullText = $aMatches[2];
-					}
-				}
-				
-				if (preg_match('/^"(.*)"$/', $sFullText, $aMatches))
-				{
-					// The text is surrounded by double-quotes, remove the quotes and treat it as one single expression
-					$aFullTextNeedles = array($aMatches[1]);
-				}
-				else
-				{
-					// Split the text on the blanks and treat this as a search for <word1> AND <word2> AND <word3>
-					$aFullTextNeedles = explode(' ', $sFullText);
-				}
-				
-				// Search is limited ot a given class, or not...
-				if (empty($sClassName))
-				{
-					$aSearchClasses = MetaModel::GetClasses('searchable');					
-				}
-				else
-				{
-					$aSearchClasses = MetaModel::EnumChildClasses($sClassName, ENUM_CHILD_CLASSES_ALL);
-				}
-			
-				foreach($aSearchClasses as $sClassName)
-				{
-					$oFilter = new DBObjectSearch($sClassName);
-					foreach($aFullTextNeedles as $sSearchText)
-					{
-						$oFilter->AddCondition_FullText($sSearchText);
-					}
-					$oSet = new DBObjectSet($oFilter);
-					if ($oSet->Count() > 0)
-					{
-						$aLeafs = array();
-						while($oObj = $oSet->Fetch())
+						$oSearch = DBObjectSearch::FromOQL($aAccelerator['query']);
+						if ($sClass != $oSearch->GetClass())
 						{
-							if (get_class($oObj) == $sClassName)
-							{
-								$aLeafs[] = $oObj->GetKey();
-							}
-						}
-						$oLeafsFilter = new DBObjectSearch($sClassName);
-						if (count($aLeafs) > 0)
-						{
-							$iCount += count($aLeafs);
-							$oP->add("<div class=\"page_header\">\n");
-							$oP->add("<h2>".MetaModel::GetClassIcon($sClassName)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aLeafs), Metamodel::GetName($sClassName))."</h2>\n");
-							$oP->add("</div>\n");
-							$oLeafsFilter->AddCondition('id', $aLeafs, 'IN');
-							$oBlock = new DisplayBlock($oLeafsFilter, 'list', false);
-							$oBlock->Display($oP, $iBlock++, array('table_id' => 'global_search'));
-							$oP->P('&nbsp;'); // Some space ?
+							$oP->p("Full text accelerator for class '$sClass': searched class mismatch (".$oSearch->GetClass().")");
+							$iErrors++;
 						}
 					}
+					catch (OqlException $e)
+					{
+						$oP->p("Full text accelerator for class '$sClass': ".$e->getHtmlDesc());
+						$iErrors++;
+					}
 				}
-				if ($iCount == 0)
+
+				if ($iErrors == 0)
 				{
-					$oP->p(Dict::S('UI:Search:NoObjectFound'));
+					$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
+					$oP->add("<div style=\"padding: 10px;\">\n");
+					$oP->add("<div class=\"header_message\" id=\"full_text_progress\" style=\"position: fixed; background-color: #cccccc; opacity: 0.7; padding: 1.5em;\">\n");
+					$oP->add('<img id="full_text_indicator" src="../images/indicator.gif">&nbsp;<span style="padding: 1.5em;">'.Dict::Format('UI:Search:Ongoing', htmlentities($sFullText, ENT_QUOTES, 'UTF-8')).'</span>');
+					$oP->add("</div>\n");
+					$oP->add("<div id=\"full_text_results\">\n");
+					$oP->add("<div id=\"full_text_progress_placeholder\" style=\"padding: 1.5em;\">&nbsp;</div>\n");
+					$oP->add("<h2>".Dict::Format('UI:FullTextSearchTitle_Text', htmlentities($sFullText, ENT_QUOTES, 'UTF-8'))."</h2>");
+					$oP->add("</div>\n");
+					$oP->add("</div>\n");
+					$sJSNeedle = addslashes($sFullText);
+					$oP->add_ready_script(
+<<<EOF
+						var oParams = {operation: 'full_text_search', position: 0, text: '$sJSNeedle', tune: $iTune};
+						$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
+							$('#full_text_results').append(data);
+						});
+EOF
+					);
+					if ($iTune > 0)
+					{
+						$oP->add_script("var oTimeStatistics = {};");
+					}
 				}
 			}	
 		break;
