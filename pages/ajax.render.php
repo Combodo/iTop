@@ -593,10 +593,18 @@ try
 					$value = $oObj->Get($sAttCode);
 					$displayValue = $oObj->GetEditValue($sAttCode);
 					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-					$iFlags = MetaModel::GetAttributeFlags($sClass, $oObj->GetState(), $sAttCode);
-					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, $displayValue, $sId, '', $iFlags, array('this' => $oObj, 'formPrefix' => $sFormPrefix));
-					// Make sure that we immediately validate the field when we reload it
-					$oPage->add_ready_script("$('#$sId').trigger('validate');");
+					if (!$oAttDef->IsWritable())
+					{
+						// Even non-writable fields (like AttributeExternal) can be refreshed 
+						$sHTMLValue = $oObj->GetAsHTML($sAttCode);
+					}
+					else
+					{
+						$iFlags = MetaModel::GetAttributeFlags($sClass, $oObj->GetState(), $sAttCode);
+						$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, $displayValue, $sId, '', $iFlags, array('this' => $oObj, 'formPrefix' => $sFormPrefix));
+						// Make sure that we immediately validate the field when we reload it
+						$oPage->add_ready_script("$('#$sId').trigger('validate');");
+					}
 					$oWizardHelper->SetAllowedValuesHtml($sAttCode, $sHTMLValue);
 				}
 			}

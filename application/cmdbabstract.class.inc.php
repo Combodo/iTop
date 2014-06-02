@@ -545,6 +545,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 						if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0))
 						{
+							$sInputId = $this->m_iFormId.'_'.$sAttCode;
 							if ($oAttDef->IsWritable())
 							{
 								if ($sStateAttCode == $sAttCode)
@@ -555,7 +556,6 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 								}
 								else
 								{				
-									$sInputId = $this->m_iFormId.'_'.$sAttCode;
 									if ($iFlags & OPT_ATT_HIDDEN)
 									{
 										// Attribute is hidden, add a hidden input
@@ -604,7 +604,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 							}
 							else
 							{
-								$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $this->GetAsHTML($sAttCode), 'comments' => $sComments, 'infos' => $sInfos);			
+								$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode)."</span>", 'comments' => $sComments, 'infos' => $sInfos);
+								$aFieldsMap[$sAttCode] = $sInputId;			
 							}
 						}
 						else

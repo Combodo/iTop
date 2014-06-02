@@ -3251,6 +3251,12 @@ class AttributeExternalField extends AttributeDefinition
 			throw new CoreException("Unexpected value for argument iType: '$iType'");
 		}
 	}
+	
+	public function GetPrerequisiteAttributes()
+	{
+		return array($this->Get("extkey_attcode"));
+	} 
+	
 
 	public function GetExtAttDef()
 	{
