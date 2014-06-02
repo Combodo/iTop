@@ -2510,18 +2510,16 @@ class AttributeDateTime extends AttributeDBField
 		return $iUnixSeconds;
 	}
 
-	// This has been done at the time when itop was using TIMESTAMP columns,
-	// now that iTop is using DATETIME columns, it seems possible to have IsNullAllowed returning false... later when this is needed
-	public function IsNullAllowed() {return true;}
 	public function GetDefaultValue()
 	{
 		$default = parent::GetDefaultValue();
 
-		if (!parent::IsNullAllowed())
+		if (!empty($default))
 		{
-			if (empty($default))
+			$iDate = strtotime($default);
+			if ($iDate !== false)
 			{
-				$default = date($this->GetDateFormat());
+				$default = date($this->GetDateFormat(), $iDate);
 			}
 		}
 

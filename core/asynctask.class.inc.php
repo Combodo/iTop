@@ -113,7 +113,7 @@ abstract class AsyncTask extends DBObject
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 //		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDateTime("created", array("allowed_values"=>null, "sql"=>"created", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("created", array("allowed_values"=>null, "sql"=>"created", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("started", array("allowed_values"=>null, "sql"=>"started", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		// planned... still not used - reserved for timer management
 		MetaModel::Init_AddAttribute(new AttributeDateTime("planned", array("allowed_values"=>null, "sql"=>"planned", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
