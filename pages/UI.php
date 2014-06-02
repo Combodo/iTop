@@ -1445,24 +1445,39 @@ EOF
 					}
 				}
 				
-				$oObj->UpdateObjectFromPostedForm('', array_keys($aExpectedAttributes), $sTargetState);
+				$oObj->UpdateObjectFromPostedForm('', array_keys($aExpectedAttributes), $sTargetState);				
 				
 				if (count($aErrors) == 0)
 				{
 					$sIssues = '';
-					try
+					$bApplyStimulus = true;
+					list($bRes, $aIssues) = $oObj->CheckToWrite(); // Check before trying to write the object
+					if ($bRes)
 					{
-						$sPreviousState = $oObj->GetState();
-						$bApplyStimulus = $oObj->ApplyStimulus($sStimulus); // will write the object in the DB
+						try
+						{
+							$bApplyStimulus = $oObj->ApplyStimulus($sStimulus); // will write the object in the DB
+						}
+						catch(CoreException $e)
+						{
+							// Rollback to the previous state... by reloading the object from the database and applying the modifications again
+							$oObj = MetaModel::GetObject(get_class($oObj), $oObj->GetKey());
+							$oObj->UpdateObjectFromPostedForm('', array_keys($aExpectedAttributes), $sTargetState);
+							$aData = $e->getContextData();
+							$sIssues = (array_key_exists('issues', $aData)) ? $aData['issues'] : 'Unknown error...';
+						}
 					}
-					catch(CoreException $e)
+					else
 					{
-						// Rollback to the previous state...
-						$oObj->Set(MetaModel::GetStateAttributeCode(get_class($oObj)), $sPreviousState);
-						$aData = $e->getContextData();
-						$sIssues = (array_key_exists('issues', $aData)) ? $aData['issues'] : 'Unknown error...';
+						$sIssues = implode(' ', $aIssues);
 					}
-					if ($sIssues != '')
+					
+					if (!$bApplyStimulus)
+					{
+						$sMessage = Dict::S('UI:FailedToApplyStimuli');
+						$sSeverity = 'error';								
+					}
+					else if ($sIssues != '')
 					{
 						$bDisplayDetails = false;
 						// Found issues, explain and give the user a second chance
