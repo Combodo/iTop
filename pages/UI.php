@@ -539,7 +539,7 @@ try
 
 				// Check if a class name/label is supplied to limit the search
 				$sClassName = '';
-				if (preg_match('/^([a-zA-Z]+):(.+)$/', $sFullText, $aMatches))
+				if (preg_match('/^([^\"]+):(.+)$/', $sFullText, $aMatches))
 				{
 					$sClassName = $aMatches[1];
 					if (MetaModel::IsValidClass($sClassName))
