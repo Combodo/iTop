@@ -621,7 +621,7 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public function GetTrackingLevel()
 	{
-		return $this->GetOptional('tracking_level', LINKSET_TRACKING_LIST);
+		return $this->GetOptional('tracking_level', MetaModel::GetConfig()->Get('tracking_level_linked_set_default'));
 	}
 
 	public function GetEditMode()
@@ -919,7 +919,7 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 
 	public function GetTrackingLevel()
 	{
-		return $this->GetOptional('tracking_level', LINKSET_TRACKING_ALL);
+		return $this->GetOptional('tracking_level', MetaModel::GetConfig()->Get('tracking_level_linked_set_indirect_default'));
 	}
 }
 

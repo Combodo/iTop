@@ -883,6 +883,9 @@ class ApplicationInstaller
 		else
 		{
 			$oConfig = new Config();
+			// To preserve backward compatibility while upgrading to 2.0.3 (when tracking_level_linked_set_default has been introduced)
+			// the default value on upgrade differs from the default value at first install
+			$oConfig->Set('tracking_level_linked_set_default', LINKSET_TRACKING_NONE, 'first_install');
 		}
 		
 		

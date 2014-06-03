@@ -35,6 +35,7 @@ define('ACCESS_READONLY', 0);
  */
 
 require_once('coreexception.class.inc.php');
+require_once('attributedef.class.inc.php'); // For the defines
 
 class ConfigException extends CoreException
 {
@@ -734,6 +735,22 @@ class Config
 			'value' => false,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
+		),
+		'tracking_level_linked_set_default' => array(
+			'type' => 'integer',
+			'description' => 'Default tracking level if not explicitely set at the attribute level, for AttributeLinkedSet (defaults to NONE in case of a fresh install, LIST otherwise - this to preserve backward compatibility while upgrading from a version older than 2.0.3 - see TRAC #936)',
+			'default' => LINKSET_TRACKING_LIST,
+			'value' => LINKSET_TRACKING_LIST,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'tracking_level_linked_set_indirect_default' => array(
+			'type' => 'integer',
+			'description' => 'Default tracking level if not explicitely set at the attribute level, for AttributeLinkedSetIndirect',
+			'default' => LINKSET_TRACKING_ALL,
+			'value' => LINKSET_TRACKING_ALL,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false, 
 		),
 	);
 
