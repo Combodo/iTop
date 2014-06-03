@@ -535,8 +535,46 @@ try
 			}
 			else
 			{
-				// Sanity check of the accelerators
 				$iErrors = 0;
+
+				// Check if a class name/label is supplied to limit the search
+				$sClassName = '';
+				if (preg_match('/^([a-zA-Z]+):(.+)$/', $sFullText, $aMatches))
+				{
+					$sClassName = $aMatches[1];
+					if (MetaModel::IsValidClass($sClassName))
+					{
+						$sFullText = trim($aMatches[2]);
+					}
+					elseif ($sClassName = MetaModel::GetClassFromLabel($sClassName, false /* => not case sensitive */))
+					{
+						$sFullText = trim($aMatches[2]);
+					}
+				}
+				
+				if (preg_match('/^"(.*)"$/', $sFullText, $aMatches))
+				{
+					// The text is surrounded by double-quotes, remove the quotes and treat it as one single expression
+					$aFullTextNeedles = array($aMatches[1]);
+				}
+				else
+				{
+					// Split the text on the blanks and treat this as a search for <word1> AND <word2> AND <word3>
+					$aFullTextNeedles = explode(' ', $sFullText);
+				}
+
+				// Check the needle length
+				$iMinLenth = MetaModel::GetConfig()->Get('full_text_needle_min');
+				foreach ($aFullTextNeedles as $sNeedle)
+				{
+					if (strlen($sNeedle) < $iMinLenth)
+					{
+						$oP->p(Dict::Format('UI:Search:NeedleTooShort', $sNeedle, $iMinLenth));
+						$iErrors++;
+					}
+				}
+
+				// Sanity check of the accelerators
 				$aAccelerators = MetaModel::GetConfig()->Get('full_text_accelerators');
 				foreach ($aAccelerators as $sClass => $aAccelerator)
 				{
@@ -568,10 +606,11 @@ try
 					$oP->add("<h2>".Dict::Format('UI:FullTextSearchTitle_Text', htmlentities($sFullText, ENT_QUOTES, 'UTF-8'))."</h2>");
 					$oP->add("</div>\n");
 					$oP->add("</div>\n");
-					$sJSNeedle = addslashes($sFullText);
+					$sJSClass = addslashes($sClassName);
+					$sJSNeedles = json_encode($aFullTextNeedles);
 					$oP->add_ready_script(
 <<<EOF
-						var oParams = {operation: 'full_text_search', position: 0, text: '$sJSNeedle', tune: $iTune};
+						var oParams = {operation: 'full_text_search', position: 0, 'class': '$sJSClass', needles: $sJSNeedles, tune: $iTune};
 						$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
 							$('#full_text_results').append(data);
 						});

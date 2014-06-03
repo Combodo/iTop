@@ -1294,7 +1294,9 @@ EOF
 		break;
 
 		case 'full_text_search':
-		$sFullText = trim(utils::ReadParam('text', '', false, 'raw_data'));
+		$aFullTextNeedles = utils::ReadParam('needles', array(), false, 'raw_data');
+		$sFullText = trim(implode(' ', $aFullTextNeedles));
+		$sClassName = utils::ReadParam('class', '');
 		$iCount = utils::ReadParam('count', 0);
 		$iCurrentPos = utils::ReadParam('position', 0);
 		$iTune = utils::ReadParam('tune', 0);
@@ -1306,32 +1308,6 @@ EOF
 
 		// Search in full text mode in all the classes
 		$aMatches = array();
-		$sClassName = '';
-		
-		// Check if a class name/label is supplied to limit the search
-		if (preg_match('/^(.+):(.+)$/', $sFullText, $aMatches))
-		{
-			$sClassName = $aMatches[1];
-			if (MetaModel::IsValidClass($sClassName))
-			{
-				$sFullText = $aMatches[2];
-			}
-			elseif ($sClassName = MetaModel::GetClassFromLabel($sClassName, false /* => not case sensitive */))
-			{
-				$sFullText = $aMatches[2];
-			}
-		}
-		
-		if (preg_match('/^"(.*)"$/', $sFullText, $aMatches))
-		{
-			// The text is surrounded by double-quotes, remove the quotes and treat it as one single expression
-			$aFullTextNeedles = array($aMatches[1]);
-		}
-		else
-		{
-			// Split the text on the blanks and treat this as a search for <word1> AND <word2> AND <word3>
-			$aFullTextNeedles = explode(' ', $sFullText);
-		}
 
 		// Build the ordered list of classes to search into
 		//

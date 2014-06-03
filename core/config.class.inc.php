@@ -736,6 +736,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'full_text_needle_min' => array(
+			'type' => 'integer',
+			'description' => 'Minimum size of the full text needle.',
+			'default' => 3,
+			'value' => 3,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'tracking_level_linked_set_default' => array(
 			'type' => 'integer',
 			'description' => 'Default tracking level if not explicitely set at the attribute level, for AttributeLinkedSet (defaults to NONE in case of a fresh install, LIST otherwise - this to preserve backward compatibility while upgrading from a version older than 2.0.3 - see TRAC #936)',
