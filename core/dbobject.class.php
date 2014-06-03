@@ -1652,142 +1652,161 @@ abstract class DBObject implements iDisplay
 			throw new CoreException("DBUpdate: could not update a newly created object, please call DBInsert instead");
 		}
 
-		// Stop watches
-		$sState = $this->GetState();
-		if ($sState != '')
+		// Protect against reentrance (e.g. cascading the update of ticket logs)
+		static $aUpdateReentrance = array();
+		$sKey = get_class($this).'::'.$this->GetKey();
+		if (array_key_exists($sKey, $aUpdateReentrance))
 		{
-			foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
+			return;
+		}
+		$aUpdateReentrance[$sKey] = true;
+
+		try
+		{
+			// Stop watches
+			$sState = $this->GetState();
+			if ($sState != '')
 			{
-				if ($oAttDef instanceof AttributeStopWatch)
+				foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
 				{
-					if (in_array($sState, $oAttDef->GetStates()))
+					if ($oAttDef instanceof AttributeStopWatch)
 					{
-						// Compute or recompute the deadlines
-						$oSW = $this->Get($sAttCode);
-						$oSW->ComputeDeadlines($this, $oAttDef);
-						$this->Set($sAttCode, $oSW);
+						if (in_array($sState, $oAttDef->GetStates()))
+						{
+							// Compute or recompute the deadlines
+							$oSW = $this->Get($sAttCode);
+							$oSW->ComputeDeadlines($this, $oAttDef);
+							$this->Set($sAttCode, $oSW);
+						}
 					}
 				}
 			}
-		}
 
-		$this->DoComputeValues();
-		$this->OnUpdate();
+			$this->DoComputeValues();
+			$this->OnUpdate();
 
-		$aChanges = $this->ListChanges();
-		if (count($aChanges) == 0)
-		{
-			// Attempting to update an unchanged object
-			return;
-		}
-
-		// Ultimate check - ensure DB integrity
-		list($bRes, $aIssues) = $this->CheckToWrite();
-		if (!$bRes)
-		{
-			$sIssues = implode(', ', $aIssues);
-			throw new CoreException("Object not following integrity rules", array('issues' => $sIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
-		}
-
-		// Save the original values (will be reset to the new values when the object get written to the DB)
-		$aOriginalValues = $this->m_aOrigValues;
-
-		$bHasANewExternalKeyValue = false;
-		$aHierarchicalKeys = array();
-		foreach($aChanges as $sAttCode => $valuecurr)
-		{
-			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-			if ($oAttDef->IsExternalKey()) $bHasANewExternalKeyValue = true;
-			if (!$oAttDef->IsDirectField()) unset($aChanges[$sAttCode]);
-			if ($oAttDef->IsHierarchicalKey())
+			$aChanges = $this->ListChanges();
+			if (count($aChanges) == 0)
 			{
-				$aHierarchicalKeys[$sAttCode] = $oAttDef;
+				// Attempting to update an unchanged object
+				unset($aUpdateReentrance[$sKey]);
+				return $this->m_iKey;
 			}
-		}
 
-		if (!MetaModel::DBIsReadOnly())
-		{
-			// Update the left & right indexes for each hierarchical key
-			foreach($aHierarchicalKeys as $sAttCode => $oAttDef)
+			// Ultimate check - ensure DB integrity
+			list($bRes, $aIssues) = $this->CheckToWrite();
+			if (!$bRes)
 			{
-				$sTable = $sTable = MetaModel::DBGetTable(get_class($this), $sAttCode);
-				$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` AS `right`, `".$oAttDef->GetSQLLeft()."` AS `left` FROM `$sTable` WHERE id=".$this->GetKey();
-				$aRes = CMDBSource::QueryToArray($sSQL);
-				$iMyLeft = $aRes[0]['left'];
-				$iMyRight = $aRes[0]['right'];
-				$iDelta =$iMyRight - $iMyLeft + 1;
-				MetaModel::HKTemporaryCutBranch($iMyLeft, $iMyRight, $oAttDef, $sTable);
-				
-				if ($aChanges[$sAttCode] == 0)
+				$sIssues = implode(', ', $aIssues);
+				throw new CoreException("Object not following integrity rules", array('issues' => $sIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
+			}
+
+			// Save the original values (will be reset to the new values when the object get written to the DB)
+			$aOriginalValues = $this->m_aOrigValues;
+
+			$bHasANewExternalKeyValue = false;
+			$aHierarchicalKeys = array();
+			foreach($aChanges as $sAttCode => $valuecurr)
+			{
+				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+				if ($oAttDef->IsExternalKey()) $bHasANewExternalKeyValue = true;
+				if (!$oAttDef->IsDirectField()) unset($aChanges[$sAttCode]);
+				if ($oAttDef->IsHierarchicalKey())
 				{
-					// No new parent, insert completely at the right of the tree
-					$sSQL = "SELECT max(`".$oAttDef->GetSQLRight()."`) AS max FROM `$sTable`";
+					$aHierarchicalKeys[$sAttCode] = $oAttDef;
+				}
+			}
+
+			if (!MetaModel::DBIsReadOnly())
+			{
+				// Update the left & right indexes for each hierarchical key
+				foreach($aHierarchicalKeys as $sAttCode => $oAttDef)
+				{
+					$sTable = $sTable = MetaModel::DBGetTable(get_class($this), $sAttCode);
+					$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` AS `right`, `".$oAttDef->GetSQLLeft()."` AS `left` FROM `$sTable` WHERE id=".$this->GetKey();
 					$aRes = CMDBSource::QueryToArray($sSQL);
-					if (count($aRes) == 0)
+					$iMyLeft = $aRes[0]['left'];
+					$iMyRight = $aRes[0]['right'];
+					$iDelta =$iMyRight - $iMyLeft + 1;
+					MetaModel::HKTemporaryCutBranch($iMyLeft, $iMyRight, $oAttDef, $sTable);
+					
+					if ($aChanges[$sAttCode] == 0)
 					{
-						$iNewLeft = 1;
+						// No new parent, insert completely at the right of the tree
+						$sSQL = "SELECT max(`".$oAttDef->GetSQLRight()."`) AS max FROM `$sTable`";
+						$aRes = CMDBSource::QueryToArray($sSQL);
+						if (count($aRes) == 0)
+						{
+							$iNewLeft = 1;
+						}
+						else
+						{
+							$iNewLeft = $aRes[0]['max']+1;
+						}
 					}
 					else
 					{
-						$iNewLeft = $aRes[0]['max']+1;
+						// Insert at the right of the specified parent
+						$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` FROM `$sTable` WHERE id=".((int)$aChanges[$sAttCode]);
+						$iNewLeft = CMDBSource::QueryToScalar($sSQL);
+					}
+
+					MetaModel::HKReplugBranch($iNewLeft, $iNewLeft + $iDelta - 1, $oAttDef, $sTable);
+
+					$aHKChanges = array();
+					$aHKChanges[$sAttCode] = $aChanges[$sAttCode];
+					$aHKChanges[$oAttDef->GetSQLLeft()] = $iNewLeft;
+					$aHKChanges[$oAttDef->GetSQLRight()] = $iNewLeft + $iDelta - 1;
+					$aChanges[$sAttCode] = $aHKChanges; // the 3 values will be stored by MakeUpdateQuery below
+				}
+				
+				// Update scalar attributes
+				if (count($aChanges) != 0)
+				{
+					$oFilter = new DBObjectSearch(get_class($this));
+					$oFilter->AddCondition('id', $this->m_iKey, '=');
+			
+					$sSQL = MetaModel::MakeUpdateQuery($oFilter, $aChanges);
+					CMDBSource::Query($sSQL);
+				}
+			}
+
+			$this->DBWriteLinks();
+			$this->m_bDirty = false;
+
+			$this->AfterUpdate();
+
+			// Reload to get the external attributes
+			if ($bHasANewExternalKeyValue)
+			{
+				$this->Reload();
+			}
+			else
+			{
+				// Reset original values although the object has not been reloaded
+				foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded)
+				{
+					if ($bLoaded)
+					{
+						$value = $this->m_aCurrValues[$sAttCode];
+						$this->m_aOrigValues[$sAttCode] = is_object($value) ? clone $value : $value;
 					}
 				}
-				else
-				{
-					// Insert at the right of the specified parent
-					$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` FROM `$sTable` WHERE id=".((int)$aChanges[$sAttCode]);
-					$iNewLeft = CMDBSource::QueryToScalar($sSQL);
-				}
-
-				MetaModel::HKReplugBranch($iNewLeft, $iNewLeft + $iDelta - 1, $oAttDef, $sTable);
-
-				$aHKChanges = array();
-				$aHKChanges[$sAttCode] = $aChanges[$sAttCode];
-				$aHKChanges[$oAttDef->GetSQLLeft()] = $iNewLeft;
-				$aHKChanges[$oAttDef->GetSQLRight()] = $iNewLeft + $iDelta - 1;
-				$aChanges[$sAttCode] = $aHKChanges; // the 3 values will be stored by MakeUpdateQuery below
-			}
 			
-			// Update scalar attributes
+			}
+
 			if (count($aChanges) != 0)
 			{
-				$oFilter = new DBObjectSearch(get_class($this));
-				$oFilter->AddCondition('id', $this->m_iKey, '=');
-		
-				$sSQL = MetaModel::MakeUpdateQuery($oFilter, $aChanges);
-				CMDBSource::Query($sSQL);
+				$this->RecordAttChanges($aChanges, $aOriginalValues);
 			}
 		}
-
-		$this->DBWriteLinks();
-		$this->m_bDirty = false;
-
-		$this->AfterUpdate();
-
-		// Reload to get the external attributes
-		if ($bHasANewExternalKeyValue)
+		catch (Exception $e)
 		{
-			$this->Reload();
-		}
-		else
-		{
-			// Reset original values although the object has not been reloaded
-			foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded)
-			{
-				if ($bLoaded)
-				{
-					$value = $this->m_aCurrValues[$sAttCode];
-					$this->m_aOrigValues[$sAttCode] = is_object($value) ? clone $value : $value;
-				}
-			}
-		
+			unset($aUpdateReentrance[$sKey]);
+			throw $e;
 		}
 
-		if (count($aChanges) != 0)
-		{
-			$this->RecordAttChanges($aChanges, $aOriginalValues);
-		}
-
+		unset($aUpdateReentrance[$sKey]);
 		return $this->m_iKey;
 	}
 	
