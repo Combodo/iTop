@@ -369,7 +369,7 @@ function SelectRequestTemplate($oP, $oUserOrg, $iSvcId = null, $iSubSvcId = null
 		));
 		if ($oSet->Count() == 0)
 		{
-			RequestCreationForm($oP, $oUserOrg, $aParameters['service_id'], $aParameters['servicesubcategory_id']);
+			RequestCreationForm($oP, $oUserOrg, $aParameters['service_id'], $aParameters['servicesubcategory_id'], 0);
 			return;
 		}
 		elseif ($oSet->Count() == 1)
