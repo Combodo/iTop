@@ -770,9 +770,15 @@ try
 		case 'download_document':
 		$id = utils::ReadParam('id', '');
 		$sField = utils::ReadParam('field', '');
+		$iCacheSec = (int) utils::ReadParam('cache', 0);
 		if (!empty($sClass) && !empty($id) && !empty($sField))
 		{
 			DownloadDocument($oPage, $sClass, $id, $sField, 'attachment');
+			if ($iCacheSec > 0)
+			{
+				$oPage->add_header("Expires: "); // Reset the value set in ajax_page
+				$oPage->add_header("Cache-Control: no-transform,public,max-age=$iCacheSec,s-maxage=$iCacheSec");
+			}
 		}
 		break;
 		
