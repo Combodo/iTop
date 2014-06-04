@@ -117,7 +117,18 @@ class ormDocument
 	{
 		return "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode\">".$this->GetFileName()."</a>\n";
 	}
-	
+
+	/**
+	 * Returns an URL to download a document like an image (uses HTTP caching)
+	 * @return string
+	 */	 	 	
+	public function GetDownloadURL($sClass, $Id, $sAttCode)
+	{
+		// Compute a signature to reset the cache anytime the data changes (this is acceptable if used only with icon files)
+		$sSignature = md5($this->GetData());
+		return utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
+	}
+
 	
 	public function IsPreviewAvailable()
 	{
