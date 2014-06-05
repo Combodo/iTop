@@ -826,6 +826,7 @@ EOF;
 				$aParameters['max_combo_length'] = $this->GetPropNumber($oField, 'max_combo_length');
 				$aParameters['min_autocomplete_chars'] = $this->GetPropNumber($oField, 'min_autocomplete_chars');
 				$aParameters['allow_target_creation'] = $this->GetPropBoolean($oField, 'allow_target_creation');
+				$aParameters['display_style'] = $this->GetPropString($oField, 'display_style', 'select');
 			}
 			elseif ($sAttType == 'AttributeHierarchicalKey')
 			{
