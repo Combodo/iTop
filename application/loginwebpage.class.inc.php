@@ -147,6 +147,8 @@ class LoginWebPage extends NiceWebPage
 			}
 			$this->add("</table>\n");
 			$this->add("<input type=\"hidden\" name=\"loginop\" value=\"login\" />\n");
+
+			$this->add_ready_script('$("#user").focus();');
 						
 			// Keep the OTHER parameters posted
 			foreach($_POST as $sPostedKey => $postedValue)
@@ -203,6 +205,8 @@ class LoginWebPage extends NiceWebPage
 		$this->add("<input type=\"hidden\" name=\"loginop\" value=\"forgot_pwd_go\" />\n");
 		$this->add("</form>\n");
 		$this->add("</div>\n");
+
+		$this->add_ready_script('$("#user").focus();');
 	}
 
 	protected function ForgotPwdGo()
