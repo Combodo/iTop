@@ -862,8 +862,9 @@ EOF
 		$oPage->add('</form>');
 		$oPage->add('</div>');
 		
-		$sAlertIncompleteMapping = Dict::S('UI:CSVImport:AlertIncompleteMapping');
-		$sAlertNoSearchCriteria = Dict::S('UI:CSVImport:AlertNoSearchCriteria');
+		$sAlertIncompleteMapping = addslashes(Dict::S('UI:CSVImport:AlertIncompleteMapping'));
+		$sAlertMultipleMapping = addslashes(Dict::S('UI:CSVImport:AlertMultipleMapping'));
+		$sAlertNoSearchCriteria = addslashes(Dict::S('UI:CSVImport:AlertNoSearchCriteria'));
 		
 		$oPage->add_ready_script(
 <<<EOF
@@ -963,10 +964,17 @@ EOF
 	
 	function CheckValues()
 	{
+		// Reset the highlight in case the check has already been executed with failure
+		$('select[name^=field]').each( function() {
+			$(this).parent().css({'border': '0'});
+		});
+
 		bResult = true;
 		bMappingOk = true;
+		bMultipleMapping = false;
 		bSearchOk = false;
 		$('select[name^=field]').each( function() {
+			$(this).parent().css({'border': '0'});
 			if ($(this).val() == '')
 			{
 				$(this).parent().css({'border': '2px #D81515 solid'});
@@ -975,7 +983,20 @@ EOF
 			}
 			else
 			{
-				$(this).parent().css({'border': '0'});
+				iOccurences = 0;
+				sRefValue = $(this).val();
+				$('select[name^=field]').each( function() {
+					if ($(this).val() == sRefValue)
+					{
+						iOccurences++;
+					}
+				});
+				if (iOccurences > 1)
+				{
+					$(this).parent().css({'border': '2px #D81515 solid'});
+					bResult = false; 
+					bMultipleMapping = true;
+				}
 			}
 		});
 		// At least one search field must be checked
@@ -985,6 +1006,10 @@ EOF
 		if (!bMappingOk)
 		{
 			alert("$sAlertIncompleteMapping");
+		}
+		if (bMultipleMapping)
+		{
+			alert("$sAlertMultipleMapping");
 		}
 		if (!bSearchOk)
 		{

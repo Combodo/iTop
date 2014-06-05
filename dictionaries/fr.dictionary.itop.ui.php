@@ -451,7 +451,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:CSVImport:HeaderFields' => 'Champs',
 	'UI:CSVImport:HeaderMappings' => 'Correspondance',
 	'UI:CSVImport:HeaderSearch' => 'Recherche ?',
-	'UI:CSVImport:AlertIncompleteMapping' => 'Veuillez choisir le correspondance de chacun des champs.',
+	'UI:CSVImport:AlertIncompleteMapping' => 'Veuillez choisir la correspondance pour chacun des champs.',
+	'UI:CSVImport:AlertMultipleMapping' => 'Veuillez vous assurer que chaque champ cible est sélectionné une seule fois.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Veuillez choisir au moins une clef de recherche.',
 	'UI:CSVImport:Encoding' => 'Encodage des caractères',
 

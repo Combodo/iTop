@@ -579,6 +579,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:CSVImport:HeaderMappings' => 'Mappings',
 	'UI:CSVImport:HeaderSearch' => 'Search?',
 	'UI:CSVImport:AlertIncompleteMapping' => 'Please select a mapping for every field.',
+	'UI:CSVImport:AlertMultipleMapping' => 'Please make sure that a target field is mapped only once.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Please select at least one search criteria',
 	'UI:CSVImport:Encoding' => 'Character encoding',	
 	'UI:UniversalSearchTitle' => 'iTop - Universal Search',
