@@ -1885,7 +1885,8 @@ abstract class DBObject implements iDisplay
 			$this->AfterDelete();
 
 			$this->m_bIsInDB = false;
-			$this->m_iKey = null;
+			// Fix for #926: do NOT reset m_iKey as it can be used to have it for reporting purposes (see the REST service to delete objects, reported as bug #926)
+			// Thought the key is not reset, using DBInsert or DBWrite will create an object having the same characteristics and a new ID. DBUpdate is protected
 		}
 	}
 
