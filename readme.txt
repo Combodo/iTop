@@ -38,8 +38,6 @@ This version brings a number of bug fixes since 2.0.2 and a few enhancements, na
     -------------------------------
 Considering that iTop 2.0.3 is fully compatible with iTop 2.0.x and the number of bugs fixed, we recommend you to upgrade.
 
-Be aware that the User Portal appearance has significantly been changed.
-
 1.3 Special Thanks To:
     -----------------
 Bruno Bonfils for his guidance about LDAP and authentication.
@@ -107,7 +105,7 @@ The following features will require the activation of CRON.PHP:
  - asynchronous emails. By default, this option is disabled. To enable it, set 'email_asynchronous' to 1 in the configuration file.
  - check ticket SLA. Tickets reaching the limits will be passed into Escalation TTO/TTR states.
 
-More information into the Wiki: https://sourceforge.net/apps/mediawiki/itop/index.php?title=Cron.php
+More information into the Wiki: https://wiki.openitop.org/doku.php?id=2_0_2:admin:cron
 
 You can get a status of the cron "tasks" with the command:
 
@@ -226,7 +224,7 @@ CSV export (from the toolkit menu) now displays an asynchronous page, to better 
 Code cleanup to implement the tabs handling (inside web pages) in one place. Added the ability to provide asynchronously loaded tabs (content must come from the same server).
 Use the object oriented verison of the MySQLi API which seems  free of memory leaks (compared to the procedural version of the same API).
 
-JSON/REST API (new version: 1.1)
+JSON/REST API (new version: 1.2)
 --------------------------------
 #926 Proper "report" data when performing a Delete operation
 #925 Added an option to output all the fields of the object found (not only the fields of the queried class), using "*+" for the list of queried fields
@@ -342,4 +340,4 @@ Tested with IE8 and IE9, Firefox 3.6 up to Firefox 24 and Chrome. Be aware that 
 #399 	Copy/paste from iTop's CaseLog looses tabs
 #343 	CKEditor (HTML Editor) not compatible with direct object creation on ExtKeys
 #350 	Object edition form: validation does not tell which field has a problem
-#730    Leaving temporary files when performing a backup of the data during installation
+#730  Leaving temporary files when performing a backup of the data during installation
