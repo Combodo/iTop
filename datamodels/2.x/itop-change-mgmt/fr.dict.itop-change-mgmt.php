@@ -94,6 +94,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Stimulus:ev_approve+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Fermer',
 	'Class:Change/Stimulus:ev_finish+' => '',
+	'Class:Change/Attribute:outage' => 'Interruption de service',
+	'Class:Change/Attribute:outage+' => '',
+	'Class:Change/Attribute:outage/Value:no' => 'Non',
+	'Class:Change/Attribute:outage/Value:no+' => '',
+	'Class:Change/Attribute:outage/Value:yes' => 'Oui',
+	'Class:Change/Attribute:outage/Value:yes+' => '',
 ));
 
 

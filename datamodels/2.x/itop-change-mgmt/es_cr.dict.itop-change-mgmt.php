@@ -133,6 +133,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Change/Stimulus:ev_approve+' => 'Aprobar',
 	'Class:Change/Stimulus:ev_finish' => 'Finalizar',
 	'Class:Change/Stimulus:ev_finish+' => 'Finalizar',
+	'Class:Change/Attribute:outage' => 'Falla',
+	'Class:Change/Attribute:outage+' => 'Falla',
+	'Class:Change/Attribute:outage/Value:no' => 'No',
+	'Class:Change/Attribute:outage/Value:no+' => 'No',
+	'Class:Change/Attribute:outage/Value:yes' => 'Si',
+	'Class:Change/Attribute:outage/Value:yes+' => 'Si',
 ));
 
 ?>

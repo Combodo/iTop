@@ -105,6 +105,15 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
+        <field id="outage" xsi:type="AttributeEnum">
+          <values>
+            <value>yes</value>
+            <value>no</value>
+          </values>
+          <sql>outage</sql>
+          <default_value>no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
         <field id="related_request_list" xsi:type="AttributeLinkedSet">
           <linked_class>UserRequest</linked_class>
           <ext_key_to_me>parent_change_id</ext_key_to_me>
@@ -187,6 +196,9 @@
               <attribute id="changemanager_id">
                 <hidden/>
               </attribute>
+              <attribute id="outage">
+                <hidden/>
+              </attribute>
             </flags>
             <transitions>
               <transition>
@@ -235,6 +247,9 @@
                 <read_only/>
               </attribute>
               <attribute id="approval_date">
+                <hidden/>
+              </attribute>
+              <attribute id="outage">
                 <hidden/>
               </attribute>
             </flags>
@@ -298,6 +313,10 @@
               </attribute>
               <attribute id="changemanager_id">
                 <mandatory/>
+              </attribute>
+              <attribute id="outage">
+                <mandatory/>
+                <must_prompt/>
               </attribute>
             </flags>
             <transitions>
@@ -383,6 +402,9 @@
               <attribute id="parent_id">
                 <read_only/>
               </attribute>
+              <attribute id="outage">
+                <read_only/>
+              </attribute>
             </flags>
             <transitions>
               <transition>
@@ -450,6 +472,9 @@
               </attribute>
               <attribute id="parent_id">
                 <normal/>
+              </attribute>
+              <attribute id="outage">
+                <read_only/>
               </attribute>
             </flags>
             <transitions>
@@ -521,6 +546,9 @@
                 <read_only/>
               </attribute>
               <attribute id="parent_id">
+                <read_only/>
+              </attribute>
+              <attribute id="outage">
                 <read_only/>
               </attribute>
             </flags>
@@ -751,6 +779,9 @@
                   <items>
                     <item id="category">
                       <rank>10</rank>
+                    </item>
+                    <item id="outage">
+                      <rank>15.1</rank>
                     </item>
                     <item id="reject_reason">
                       <rank>20</rank>

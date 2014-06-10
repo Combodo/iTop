@@ -110,5 +110,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Change/Attribute:related_incident_list+' => '',
 	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent Change Friendly Name',
 	'Class:Change/Attribute:parent_id_friendlyname+' => '',
+	'Class:Change/Attribute:outage' => 'Ausfall',
+	'Class:Change/Attribute:outage+' => '',
+	'Class:Change/Attribute:outage/Value:no' => 'Nein',
+	'Class:Change/Attribute:outage/Value:no+' => '',
+	'Class:Change/Attribute:outage/Value:yes' => 'Ja',
+	'Class:Change/Attribute:outage/Value:yes+' => '',
 ));
 ?>

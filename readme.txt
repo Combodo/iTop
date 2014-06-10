@@ -241,6 +241,7 @@ Data model fixes/changes
 #854 Flag Is null allowed not working on attributes Date and DateTime + the default value is now taken into account
 Fixed issue with 1.x datamodels: dashlets of type "badge" not working (preventing from editing an existing dashboard), since 2.0.2
 Aligned the authentication module with the one of 2.x, to enable the feature "Forgot password" for legacy data models
+Added the "outage" field to simple Change tickets, since it's already present in ITIL Changes.
 
 
 Notifications

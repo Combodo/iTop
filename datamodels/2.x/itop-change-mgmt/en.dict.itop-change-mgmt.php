@@ -132,6 +132,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Change/Stimulus:ev_approve+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Close',
 	'Class:Change/Stimulus:ev_finish+' => '',
+	'Class:Change/Attribute:outage' => 'Outage',
+	'Class:Change/Attribute:outage+' => '',
+	'Class:Change/Attribute:outage/Value:no' => 'No',
+	'Class:Change/Attribute:outage/Value:no+' => '',
+	'Class:Change/Attribute:outage/Value:yes' => 'Yes',
+	'Class:Change/Attribute:outage/Value:yes+' => '',
 ));
 
 ?>
