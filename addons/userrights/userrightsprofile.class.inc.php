@@ -210,6 +210,25 @@ class URP_Profiles extends UserRightsBaseClassGUI
 			$oLnk->DBDelete();
 		}
 	}
+
+	/**
+	 * Returns the set of flags (OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY...)
+	 * for the given attribute in the current state of the object
+	 * @param $sAttCode string $sAttCode The code of the attribute
+	 * @param $aReasons array To store the reasons why the attribute is read-only (info about the synchro replicas)
+	 * @param $sTargetState string The target state in which to evalutate the flags, if empty the current state will be used
+	 * @return integer Flags: the binary combination of the flags applicable to this attribute
+	 */	 	  	 	
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
+		$iFlags = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		if (MetaModel::GetConfig()->Get('demo_mode'))
+		{
+			$aReasons[] = 'Sorry, profiles are read-only in the demonstration mode!';
+			$iFlags |= OPT_ATT_READONLY;
+		}
+		return $iFlags;
+	}
 }
 
 
