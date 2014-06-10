@@ -225,6 +225,10 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 .btn_hidden {
 	display: none;
 }
+.drag_in {
+	-webkit-box-shadow:inset 0 0 10px 2px #1C94C4;
+	box-shadow:inset 0 0 10px 2px #1C94C4;
+}
 EOF
 		);
 		$oPage->add('<fieldset>');
@@ -352,7 +356,89 @@ EOF
 			$oPage->add('</span>');			
 			$oPage->add('<div style="clear:both"></div>');			
 			$sMaxUpload = $this->GetMaxUpload();
-			$oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file" onChange="ajaxFileUpload();"><span style="display:none;" id="attachment_loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUpload);
+//			$oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file" onChange="ajaxFileUpload();"><span style="display:none;" id="attachment_loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUpload);
+$oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file"><span style="display:none;" id="attachment_loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUpload);
+
+$oPage->add_linked_script('../js/jquery.iframe-transport.js');
+$oPage->add_linked_script('../js/jquery.fileupload.js');
+
+$oPage->add_ready_script(
+<<< EOF
+    $('#file').fileupload({
+		url: GetAbsoluteUrlModulesRoot()+'itop-attachments/ajax.attachment.php',
+		formData: { operation: 'add', temp_id: '$sTempId', obj_class: '$sClass' },
+        dataType: 'json',
+        done: function (e, data) {
+			if(typeof(data.result.error) != 'undefined')
+			{
+				if(data.result.error != '')
+				{
+					alert(data.result.error);
+				}
+				else
+				{
+					var sDownloadLink = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=download_document&class=Attachment&id='+data.result.att_id+'&field=contents';
+					$('#attachments').append('<div class="attachment" id="display_attachment_'+data.result.att_id+'"><a data-preview="'+data.result.preview+'" href="'+sDownloadLink+'"><img src="'+data.result.icon+'"><br/>'+data.result.msg+'<input id="attachment_'+data.att_id+'" type="hidden" name="attachments[]" value="'+data.result.att_id+'"/></a><br/><input type="button" class="btn_hidden" value="{$sDeleteBtn}" onClick="RemoveNewAttachment('+data.result.att_id+');"/></div>');
+					if($sIsDeleteEnabled)
+					{
+						$('#display_attachment_'+data.result.att_id).hover( function() { $(this).children(':button').toggleClass('btn_hidden'); } );
+					}
+					$('#attachment_plugin').trigger('add_attachment', [data.result.att_id, data.msg]);
+				}
+			}
+        },
+        start: function() {
+        	$('#attachment_loading').show();
+		},
+        stop: function() {
+        	$('#attachment_loading').hide();
+		}
+    });
+
+	$(document).bind('dragover', function (e) {
+		var bFiles = false;
+		
+console.log(e);
+		if (e.dataTransfer.types)
+		{
+			for (var i = 0; i < e.dataTransfer.types.length; i++)
+			{
+				if (e.dataTransfer.types[i] == "text/plain")
+				{
+					bFiles = false; // mozilla contains "Files" in the types list when dragging images inside the page, but it also contains "text/plain" before
+					break;
+				}
+				
+				if (e.dataTransfer.types[i] == "Files")
+				{
+					bFiles = true;
+					break;
+				}
+			}
+		}
+	
+		if (!bFiles) return; // Not dragging files
+		
+		var dropZone = $('#file').closest('fieldset');
+		if (!dropZone.is(':visible'))
+		{
+			// Hidden, but inside an inactive tab? Higlight the tab
+			var sTabId = dropZone.closest('.ui-tabs-panel').attr('aria-labelledby');
+			dropZone = $('#'+sTabId).closest('li');
+		}
+	    timeout = window.dropZoneTimeout;
+	    if (!timeout) {
+	        dropZone.addClass('drag_in');
+	    } else {
+	        clearTimeout(timeout);
+	    }
+	    window.dropZoneTimeout = setTimeout(function () {
+	        window.dropZoneTimeout = null;
+	        dropZone.removeClass('drag_in');
+	    }, 300);
+	});   
+EOF
+);
 			$oPage->p('<span style="display:none;" id="attachment_loading">Loading, please wait...</span>');
 			$oPage->p('<input type="hidden" id="attachment_plugin" name="attachment_plugin"/>');
 			$oPage->add('</fieldset>');
