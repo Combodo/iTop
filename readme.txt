@@ -207,6 +207,7 @@ Usability
 #878 Missing scrollbar in "linkset-direct" edition popup dialog
 #862 Popup menu misplaced when the window scrolls (e.g. when displaying large lists of results)
 #861 and #636 Set the focus on User Name in iTop Login Form
+Ticket's attachments can now be added by drag and drop (on browsers supporting HTML5 drag and drop). 
 
 
 Scalability / Performance
