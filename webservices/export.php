@@ -154,7 +154,11 @@ if (!empty($sExpression))
 			}
 			else if($oAttDef instanceof AttributeFriendlyname)
 			{
-				$aAliasToFields[$sClassAlias][] = $oAttDef->GetKeyAttCode();
+				$sKeyAttCode = $oAttDef->GetKeyAttCode();
+				if ($sKeyAttCode != 'id')
+				{
+					$aAliasToFields[$sClassAlias][] = $sKeyAttCode;
+				}
 			}
 		}
 
