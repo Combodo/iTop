@@ -1447,10 +1447,10 @@ EOF
 		}
 		if ($iPos < count($aSearchClasses))
 		{
-			$sJSNeedle = addslashes($sFullText);
+			$sJSNeedle = json_encode($aFullTextNeedles);
 			$oPage->add_ready_script(
 <<<EOF
-				var oParams = {operation: 'full_text_search', position: $iPos, text: '$sJSNeedle', count: $iCount, tune: $iTune};
+				var oParams = {operation: 'full_text_search', position: $iPos, needles: $sJSNeedle, count: $iCount, tune: $iTune};
 				$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
 					$('#full_text_results').append(data);
 				});
