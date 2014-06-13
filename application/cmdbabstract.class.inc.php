@@ -2494,6 +2494,12 @@ EOF
 						// Dependency is resolved, remove it
 						unset($aFields[$sFieldCode][$key]);
 					}
+					else if (!array_key_exists($sDependency, $aFields))
+					{
+						// The current fields depends on a field not present in the form
+						// let's ignore it (since it cannot change)
+						unset($aFields[$sFieldCode][$key]);						
+					}
 				}
 				if (count($aFields[$sFieldCode]) == 0)
 				{
@@ -2508,7 +2514,7 @@ EOF
 		
 		if (count($aFields) > 0)
 		{
-			$sMessage =  "Error: Circular dependencies between the fields (or field missing in ZList) ! <pre>".print_r($aFields, true)."</pre>";
+			$sMessage =  "Error: Circular dependencies between the fields! <pre>".print_r($aFields, true)."</pre>";
 			throw(new Exception($sMessage));
 		}
 		return $aResult;
