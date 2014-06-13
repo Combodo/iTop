@@ -398,7 +398,6 @@ $oPage->add_ready_script(
 	$(document).bind('dragover', function (e) {
 		var bFiles = false;
 		
-console.log(e);
 		if (e.dataTransfer.types)
 		{
 			for (var i = 0; i < e.dataTransfer.types.length; i++)
