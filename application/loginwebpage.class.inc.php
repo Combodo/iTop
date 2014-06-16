@@ -244,6 +244,11 @@ class LoginWebPage extends NiceWebPage
 
 			$oEmail = new Email();
 			$oEmail->SetRecipientTO($sTo);
+			$sFrom = MetaModel::GetConfig()->Get('forgot_password_from');
+			if ($sFrom == '')
+			{
+				$sFrom = $sTo;
+			}
 			$oEmail->SetRecipientFrom($sTo);
 			$oEmail->SetSubject(Dict::S('UI:ResetPwd-EmailSubject'));
 			$sResetUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=reset_pwd&auth_user='.urlencode($oUser->Get('login')).'&token='.urlencode($sToken);
