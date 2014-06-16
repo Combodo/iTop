@@ -548,6 +548,15 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'forgot_password_from' => array(
+			'type' => 'string',
+			'description' => 'Sender email address for the "forgot password" feature. If empty, defaults to the recipient\'s  email address.',
+			// examples... not used (nor 'description')
+			'default' => '',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'deadline_format' => array(
 			'type' => 'string',
 			'description' => 'The format used for displaying "deadline" attributes: any string with the following placeholders: $date$, $difference$',
