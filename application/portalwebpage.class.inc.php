@@ -480,7 +480,9 @@ EOF
 				{
 					try
 					{
-						$oAllowedValues = new DBObjectSet(DBObjectSearch::FromOQL(constant($sFilterDefName)), array(), $aFilterParams);
+						$oFitlerWithParams = DBObjectSearch::FromOQL(constant($sFilterDefName));
+						$sFilterOQL = $oFitlerWithParams->ToOQL(true, $aFilterParams);
+						$oAllowedValues = new DBObjectSet(DBObjectSearch::FromOQL($sFilterOQL), array(), $aFilterParams);
 					}
 					catch(OQLException $e)
 					{
