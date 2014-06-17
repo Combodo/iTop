@@ -339,11 +339,11 @@ function SelectRequestTemplate($oP, $oUserOrg, $iSvcId = null, $iSubSvcId = null
 {
 	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS.',template_id');
 
-	if ($iSvcId != null)
+	if (!is_null($iSvcId))
 	{
 		$aParameters['service_id'] = $iSvcId;
 	}
-	if ($iSubSvcId != null)
+	if (!is_null($iSubSvcId))
 	{
 		$aParameters['servicesubcategory_id'] = $iSubSvcId;
 	}
@@ -440,15 +440,15 @@ function SelectRequestTemplate($oP, $oUserOrg, $iSvcId = null, $iSubSvcId = null
 function RequestCreationForm($oP, $oUserOrg, $iSvcId = null, $iSubSvcId = null, $iTemplateId = null)
 {
 	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS.',template_id');
-	if ($iSvcId != null)
+	if (!is_null($iSvcId))
 	{
 		$aParameters['service_id'] = $iSvcId;
 	}
-	if ($iSubSvcId != null)
+	if (!is_null($iSubSvcId))
 	{
 		$aParameters['servicesubcategory_id'] = $iSubSvcId;
 	}
-	if ($iTemplateId != null)
+	if (!is_null($iTemplateId))
 	{
 		$aParameters['template_id'] = $iTemplateId;
 	}
