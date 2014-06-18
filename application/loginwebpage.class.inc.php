@@ -245,7 +245,7 @@ class LoginWebPage extends NiceWebPage
 			{
 				$sFrom = $sTo;
 			}
-			$oEmail->SetRecipientFrom($sTo);
+			$oEmail->SetRecipientFrom($sFrom);
 			$oEmail->SetSubject(Dict::S('UI:ResetPwd-EmailSubject'));
 			$sResetUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=reset_pwd&auth_user='.urlencode($oUser->Get('login')).'&token='.urlencode($sToken);
 			$oEmail->SetBody(Dict::Format('UI:ResetPwd-EmailBody', $sResetUrl));
