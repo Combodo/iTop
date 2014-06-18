@@ -31,14 +31,16 @@ class iTopMutex
 {
 	protected $sName;
 	protected $hDBLink;
-	static protected $aAcquiredLocks = array();
+	protected $bLocked; // Whether or not this instance of the Mutex is locked
+	static protected $aAcquiredLocks = array(); // Number of instances of the Mutex, having the lock, in this page
 
 	public function __construct($sName)
 	{
 		// Compute the name of a lock for mysql
 		// Note: the name is server-wide!!!
 		$this->sName = 'itop.'.$sName;
-		
+		$this->bLocked = false; // Not yet locked
+
 		if (!array_key_exists($this->sName, self::$aAcquiredLocks))
 		{
 			self::$aAcquiredLocks[$this->sName] = 0;
@@ -52,7 +54,10 @@ class iTopMutex
 
 	public function __destruct()
 	{
-		$this->Unlock();
+		if ($this->bLocked)
+		{
+			$this->Unlock();
+		}
 		mysqli_close($this->hDBLink);
 	}
 
@@ -61,6 +66,11 @@ class iTopMutex
 	 */	
 	public function Lock()
 	{
+		if ($this->bLocked)
+		{
+			// Lock already acquired
+			return;
+		}
 		if (self::$aAcquiredLocks[$this->sName] == 0)
 		{
 			do
@@ -75,6 +85,7 @@ class iTopMutex
 			}
 			while ($res !== '1');
 		}
+		$this->bLocked = true;
 		self::$aAcquiredLocks[$this->sName]++;
 	}
 
@@ -84,9 +95,14 @@ class iTopMutex
 	 */	
 	public function TryLock()
 	{
+		if ($this->bLocked)
+		{
+			return true; // Already acquired
+		}
 		if (self::$aAcquiredLocks[$this->sName] > 0)
 		{
 			self::$aAcquiredLocks[$this->sName]++;
+			$this->bLocked = true;
 			return true;
 		}
 		
@@ -99,6 +115,7 @@ class iTopMutex
 		// $res === '0' means it timed out
 		if ($res === '1')
 		{
+			$this->bLocked = true;
 			self::$aAcquiredLocks[$this->sName]++;
 		}
 		return ($res === '1');
@@ -109,12 +126,21 @@ class iTopMutex
 	 */	
 	public function Unlock()
 	{
-		if (self::$aAcquiredLocks[$this->sName] == 0) return; // Safety net
+		if (!$this->bLocked)
+		{
+			// ??? the lock is not acquired, exit
+	        return;	
+		}
+		if (self::$aAcquiredLocks[$this->sName] == 0)
+		{
+			return; // Safety net
+		}
 		
 		if (self::$aAcquiredLocks[$this->sName] == 1)
 		{
 			$res = $this->QueryToScalar("SELECT RELEASE_LOCK('".$this->sName."')");
 		}
+		$this->bLocked = false;
 		self::$aAcquiredLocks[$this->sName]--;
 	}
 
