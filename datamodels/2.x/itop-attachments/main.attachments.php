@@ -243,7 +243,7 @@ EOF
 			$sDeleteBtn = Dict::S('Attachments:DeleteBtn');
 			$oPage->add_script(
 <<<EOF
-	function RemoveNewAttachment(att_id)
+	function RemoveAttachment(att_id)
 	{
 		$('#attachment_'+att_id).attr('name', 'removed_attachments[]');
 		$('#display_attachment_'+att_id).hide();
@@ -287,7 +287,7 @@ EOF
 						else
 						{
 							var sDownloadLink = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=download_document&class=Attachment&id='+data.att_id+'&field=contents';
-							$('#attachments').append('<div class="attachment" id="display_attachment_'+data.att_id+'"><a data-preview="'+data.preview+'" href="'+sDownloadLink+'"><img src="'+data.icon+'"><br/>'+data.msg+'<input id="attachment_'+data.att_id+'" type="hidden" name="attachments[]" value="'+data.att_id+'"/></a><br/><input type="button" class="btn_hidden" value="{$sDeleteBtn}" onClick="RemoveNewAttachment('+data.att_id+');"/></div>');
+							$('#attachments').append('<div class="attachment" id="display_attachment_'+data.att_id+'"><a data-preview="'+data.preview+'" href="'+sDownloadLink+'"><img src="'+data.icon+'"><br/>'+data.msg+'<input id="attachment_'+data.att_id+'" type="hidden" name="attachments[]" value="'+data.att_id+'"/></a><br/><input type="button" class="btn_hidden" value="{$sDeleteBtn}" onClick="RemoveAttachment('+data.att_id+');"/></div>');
 							if($sIsDeleteEnabled)
 							{
 								$('#display_attachment_'+data.att_id).hover( function() { $(this).children(':button').toggleClass('btn_hidden'); } );
@@ -319,7 +319,7 @@ EOF
 				$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
 				$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
 				$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
-				$oPage->add('<div class="attachment" id="attachment_'.$iAttId.'"><a data-preview="'.$sPreview.'" href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="Delete" onClick="$(\'#attachment_'.$iAttId.'\').remove();"/>&nbsp;</div>');
+				$oPage->add('<div class="attachment" id="display_attachment_'.$iAttId.'"><a data-preview="'.$sPreview.'" href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input id="attachment_'.$iAttId.'" type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="Delete" onClick="RemoveAttachment('.$iAttId.');"/>&nbsp;</div>');
 			}
 			
 			// Suggested attachments are listed here but treated as temporary
@@ -347,7 +347,7 @@ EOF
 						$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
 						$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
 						$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
-						$oPage->add('<div class="attachment" id="display_attachment_'.$iAttId.'"><a data-preview="'.$sPreview.'" href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="Delete" onClick="RemoveNewAttachment('.$iAttId.');"/>&nbsp;</div>');
+						$oPage->add('<div class="attachment" id="display_attachment_'.$iAttId.'"><a data-preview="'.$sPreview.'" href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input id="attachment_'+data.result.att_id+'" type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="Delete" onClick="RemoveAttachment('.$iAttId.');"/>&nbsp;</div>');
 						$oPage->add_ready_script("$('#attachment_plugin').trigger('add_attachment', [$iAttId, '".addslashes($sFileName)."']);");
 					}
 				}
@@ -378,7 +378,7 @@ $oPage->add_ready_script(
 				else
 				{
 					var sDownloadLink = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=download_document&class=Attachment&id='+data.result.att_id+'&field=contents';
-					$('#attachments').append('<div class="attachment" id="display_attachment_'+data.result.att_id+'"><a data-preview="'+data.result.preview+'" href="'+sDownloadLink+'"><img src="'+data.result.icon+'"><br/>'+data.result.msg+'<input id="attachment_'+data.att_id+'" type="hidden" name="attachments[]" value="'+data.result.att_id+'"/></a><br/><input type="button" class="btn_hidden" value="{$sDeleteBtn}" onClick="RemoveNewAttachment('+data.result.att_id+');"/></div>');
+					$('#attachments').append('<div class="attachment" id="display_attachment_'+data.result.att_id+'"><a data-preview="'+data.result.preview+'" href="'+sDownloadLink+'"><img src="'+data.result.icon+'"><br/>'+data.result.msg+'<input id="attachment_'+data.result.att_id+'" type="hidden" name="attachments[]" value="'+data.result.att_id+'"/></a><br/><input type="button" class="btn_hidden" value="{$sDeleteBtn}" onClick="RemoveAttachment('+data.result.att_id+');"/></div>');
 					if($sIsDeleteEnabled)
 					{
 						$('#display_attachment_'+data.result.att_id).hover( function() { $(this).children(':button').toggleClass('btn_hidden'); } );
@@ -486,14 +486,15 @@ EOF
 		{
 			$aActions = array();
 			$aAttachmentIds = utils::ReadParam('attachments', array());
-
+			$aRemovedAttachmentIds = utils::ReadParam('removed_attachments', array());
+			
 			// Get all current attachments
 			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
 			$oSet = new DBObjectSet($oSearch, array(), array('class' => get_class($oObject), 'item_id' => $oObject->GetKey()));
 			while ($oAttachment = $oSet->Fetch())
 			{
 				// Remove attachments that are no longer attached to the current object
-				if (!in_array($oAttachment->GetKey(), $aAttachmentIds))
+				if (in_array($oAttachment->GetKey(), $aRemovedAttachmentIds))
 				{
 					$oAttachment->DBDelete();
 					$aActions[] = self::GetActionDescription($oAttachment, false /* false => deletion */);
@@ -504,7 +505,6 @@ EOF
 			$sTempId = session_id().'_'.$iTransactionId;
 			// The object is being created from a form, check if there are pending attachments
 			// for this object, but deleting the "new" ones that were already removed from the form
-			$aRemovedAttachmentIds = utils::ReadParam('removed_attachments', array());
 			$sOQL = 'SELECT Attachment WHERE temp_id = :temp_id';
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
 			foreach($aAttachmentIds as $iAttachmentId)
