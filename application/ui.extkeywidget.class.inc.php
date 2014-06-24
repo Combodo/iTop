@@ -557,6 +557,7 @@ EOF
 			$aSortedRoots = $aTree[$iRootId];
 			asort($aSortedRoots);
 			$oP->add("<ul>\n");
+			$fUniqueId = microtime(true);
 			foreach($aSortedRoots as $id => $sName)
 			{
 				if ($bSelect)
@@ -564,14 +565,14 @@ EOF
 					$sChecked = ($aNodes[$id]->GetKey() == $currValue) ? 'checked' : '';
 					if ($bMultiple)
 					{
-						$sSelect = '<input type="checkbox" value="'.$aNodes[$id]->GetKey().'" name="selectObject[]" '.$sChecked.'>&nbsp;';
+						$sSelect = '<input id="input_'.$fUniqueId.'_'.$aNodes[$id]->GetKey().'" type="checkbox" value="'.$aNodes[$id]->GetKey().'" name="selectObject[]" '.$sChecked.'>&nbsp;';
 					}
 					else
 					{
-						$sSelect = '<input type="radio" value="'.$aNodes[$id]->GetKey().'" name="selectObject" '.$sChecked.'>&nbsp;';
+						$sSelect = '<input id="input_'.$fUniqueId.'_'.$aNodes[$id]->GetKey().'" type="radio" value="'.$aNodes[$id]->GetKey().'" name="selectObject" '.$sChecked.'>&nbsp;';
 					}
 				}
-				$oP->add('<li>'.$sSelect.$aNodes[$id]->GetHyperlink());
+				$oP->add('<li>'.$sSelect.'<label for="input_'.$fUniqueId.'_'.$aNodes[$id]->GetKey().'">'.$aNodes[$id]->GetName().'</label>');
 				$this->DumpNodes($oP, $id, $aTree, $aNodes, $currValue);
 				$oP->add("</li>\n");
 			}
