@@ -546,6 +546,11 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					$('#'+me.id).trigger('extkeychange');
 					$('#'+me.id).trigger('change');
 				}
+				if ( $('#'+me.id).hasClass('multiselect'))
+				{
+					$('#'+me.id+' option').each(function() { this.selected = ($(this).attr('value') == iObjectId); });
+					$('#'+me.id).multiselect('refresh');
+				}
 				$('#label_'+me.id).focus();
 				me.ajax_request = null;
 			},
