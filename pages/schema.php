@@ -404,7 +404,6 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		$sType = $oAttDef->GetType().' ('.$oAttDef->GetTypeDesc().')';
 		$sOrigin = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
 		$sAllowedValues = "";
-		$oAllowedValuesDef = $oAttDef->GetValuesDef();
 		$sMoreInfo = "";
 
 		$aCols = array();
@@ -423,7 +422,17 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 			$sMoreInfo .= implode(', ', $aMoreInfo);
 		}
 
-		if (is_object($oAllowedValuesDef)) $sAllowedValues = $oAllowedValuesDef->GetValuesDescription();
+		if ($oAttDef instanceof AttributeEnum)
+		{
+			// Display localized values for the enum (which depend on the localization provided by the class)
+			$aLocalizedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, array());
+			$aDescription = array();
+			foreach($aLocalizedValues as $val => $sDisplay)
+			{
+				$aDescription[] = htmlentities("$val => ", ENT_QUOTES, 'UTF-8').$sDisplay;
+			}
+			$sAllowedValues = implode(', ', $aDescription);
+		}
 		else $sAllowedValues = '';
 
 		$aDetails[] = array('code' => $oAttDef->GetCode(), 'type' => $sType, 'origin' => $sOrigin, 'label' => $oAttDef->GetLabel(), 'description' => $sValue, 'values' => $sAllowedValues, 'moreinfo' => $sMoreInfo);
