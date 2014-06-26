@@ -1337,9 +1337,15 @@ EOF
 			{
 				unset($aSearchClasses[$iPos]);
 			}
-			array_unshift($aSearchClasses, $aRestriction['query']);
+			$bSkip = array_key_exists('skip', $aRestriction) ? $aRestriction['skip'] : false ;
+			if (!$bSkip)
+			{
+				// NOT skipped, add the class to the list of classes to search into
+				array_unshift($aSearchClasses, $aRestriction['query']);
+			}
 		}
 
+		$aSearchClasses = array_values($aSearchClasses); // renumbers the array starting from zero, removing the missing indexes
 		$fStarted = microtime(true);
 		$iFoundInThisRound = 0;
 		for($iPos = $iCurrentPos; $iPos < count($aSearchClasses) ; $iPos++)
@@ -1377,12 +1383,17 @@ EOF
 				$fStartedClass = microtime(true);
 			}
 			$oSet = new DBObjectSet($oFilter, array(), $aParams);
-			if (array_key_exists($sClassName, $aAccelerators))
+			if (array_key_exists($sClassName, $aAccelerators) && array_key_exists('attributes', $aAccelerators[$sClassName]))
 			{
 				$oSet->OptimizeColumnLoad(array($oFilter->GetClassAlias() => $aAccelerators[$sClassName]['attributes']));
 			}
 
 			$sFullTextJS = addslashes($sFullText);
+			$bEnableEnlarge = true;
+			if (array_key_exists($sClassName, $aAccelerators) && array_key_exists('enable_enlarge', $aAccelerators[$sClassName]))
+			{
+				$bEnableEnlarge = $aAccelerators[$sClassName]['enable_enlarge'];
+			}
 			$sEnlargeTheSearch =
 <<<EOF
 			$('.search-class-$sClassName button').attr('disabled', 'disabled');
@@ -1393,7 +1404,14 @@ EOF
 				$('.search-class-$sClassName').html(data);
 			});
 EOF
-;
+			;
+
+			
+			$sEnlargeButton = '';
+			if ($bEnableEnlarge)
+			{
+				$sEnlargeButton = "&nbsp;<button onclick=\"".htmlentities($sEnlargeTheSearch, ENT_QUOTES, 'UTF-8')."\">".Dict::S('UI:Search:Enlarge')."</button>";
+			}
 			if ($oSet->Count() > 0)
 			{
 				$aLeafs = array();
@@ -1413,7 +1431,7 @@ EOF
 					$oPage->add("<div class=\"page_header\">\n");
 					if (array_key_exists($sClassName, $aAccelerators))
 					{
-						$oPage->add("<h2>".MetaModel::GetClassIcon($sClassName)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aLeafs), Metamodel::GetName($sClassName))."&nbsp;<button onclick=\"".htmlentities($sEnlargeTheSearch, ENT_QUOTES, 'UTF-8')."\">".Dict::S('UI:Search:Enlarge')."</button></h2>\n");
+						$oPage->add("<h2>".MetaModel::GetClassIcon($sClassName)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aLeafs), Metamodel::GetName($sClassName)).$sEnlargeButton."</h2>\n");
 					}
 					else
 					{
@@ -1434,7 +1452,7 @@ EOF
 			{
 				$oPage->add("<div class=\"search-class-result search-class-$sClassName\">\n");
 				$oPage->add("<div class=\"page_header\">\n");
-				$oPage->add("<h2>".MetaModel::GetClassIcon($sClassName)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', 0, Metamodel::GetName($sClassName))."&nbsp;<button onclick=\"".htmlentities($sEnlargeTheSearch, ENT_QUOTES, 'UTF-8')."\">".Dict::S('UI:Search:Enlarge')."</button></h2>\n");
+				$oPage->add("<h2>".MetaModel::GetClassIcon($sClassName)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', 0, Metamodel::GetName($sClassName)).$sEnlargeButton."</h2>\n");
 				$oPage->add("</div>\n");
 				$oPage->add("</div>\n");
 				$oPage->p('&nbsp;'); // Some space ?

@@ -580,11 +580,15 @@ try
 				{
 					try
 					{
-						$oSearch = DBObjectSearch::FromOQL($aAccelerator['query']);
-						if ($sClass != $oSearch->GetClass())
+						$bSkip = array_key_exists('skip', $aAccelerator) ? $aAccelerator['skip'] : false;
+						if (!$bSkip)
 						{
-							$oP->p("Full text accelerator for class '$sClass': searched class mismatch (".$oSearch->GetClass().")");
-							$iErrors++;
+							$oSearch = DBObjectSearch::FromOQL($aAccelerator['query']);
+							if ($sClass != $oSearch->GetClass())
+							{
+								$oP->p("Full text accelerator for class '$sClass': searched class mismatch (".$oSearch->GetClass().")");
+								$iErrors++;
+							}
 						}
 					}
 					catch (OqlException $e)
