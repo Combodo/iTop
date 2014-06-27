@@ -1164,9 +1164,17 @@ function MakeStimulusForm(WebPage $oP, $oObj, $sStimulusCode, $aEditAtt)
 
 function RunStimulusDialog(sStimulusCode, sTitle, sOkButtonLabel)
 {
+	var sWidth = 'auto';
+	if (sStimulusCode == 'ev_reopen')
+	{
+		// Avoid having a dialog spanning the complete width of the window
+		// just because it contains a CaseLog entry
+		sWidth = '80%';
+	}
+				
 	$('#'+sStimulusCode+'_dialog').dialog({
 		height: 'auto',
-		width: 'auto',
+		width: sWidth,
 		modal: true,
 		title: sTitle,
 		buttons: [
@@ -1175,8 +1183,8 @@ function RunStimulusDialog(sStimulusCode, sTitle, sOkButtonLabel)
 		} },
 		{ text: "$sCancelButtonLabel", click: function() {
 			$(this).dialog( "close" );
-		} },
-		],
+		} }
+		]
 	});
 	// Start the validation
 	CheckFields(sStimulusCode+'_form', false);
