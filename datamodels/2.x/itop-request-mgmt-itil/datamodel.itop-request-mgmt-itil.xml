@@ -1667,14 +1667,6 @@
 		// Compute the priority of the ticket
 		$this->Set('priority', $this->ComputePriority());
 
-		if ($this->IsNew())
-		{
-			// Object not yet in the Database
-			$iKey = MetaModel::GetNextKey(get_class($this));
-			$sName = sprintf('R-%06d', $iKey);
-			$this->Set('ref', $sName);
-		}
-
 		return parent::ComputeValues();
 	}]]></code>
         </method>

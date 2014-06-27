@@ -504,13 +504,6 @@
 	{
 		// Compute the priority of the ticket
 		$this->Set('priority', $this->ComputePriority());
-
-		if ($this->IsNew())
-		{
-			$iKey = MetaModel::GetNextKey(get_class($this));
-			$sName = sprintf('P-%06d', $iKey);
-			$this->Set('ref', $sName);
-		}
 	}]]></code>
         </method>
         <method id="OnInsert">

@@ -932,20 +932,6 @@
 		$this->Set('last_update', time());
 	}]]></code>
         </method>
-        <method id="ComputeValues">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function ComputeValues()
-	{
-		if ($this->IsNew())
-		{
-			$iKey = MetaModel::GetNextKey(get_class($this));
-			$sName = sprintf('C-%06d', $iKey);
-			$this->Set('ref', $sName);
-		}
-	}]]></code>
-        </method>
         <method id="GetIcon">
           <comment>/**&#13;
 	 * Get the icon representing this object&#13;

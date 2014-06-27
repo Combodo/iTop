@@ -48,7 +48,7 @@
         <field id="ref" xsi:type="AttributeString">
           <sql>ref</sql>
           <default_value/>
-          <is_null_allowed>false</is_null_allowed>
+          <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="org_id" xsi:type="AttributeExternalKey">
           <sql>org_id</sql>
@@ -164,37 +164,53 @@
           <static>false</static>
           <access>public</access>
           <type>Overload-DBObject</type>
-          <code><![CDATA[    public function DBInsertNoReload()
+          <code><![CDATA[
+    public function DBInsertNoReload()
     {
-      $oMutex = new iTopMutex('ticket_insert');
-      $oMutex->Lock();
-      $iKey = parent::DBInsertNoReload();
-      $oMutex->Unlock();
-      return $iKey;
+          $oMutex = new iTopMutex('ticket_insert');
+          $oMutex->Lock();
+          $iNextId = MetaModel::GetNextKey(get_class($this));
+          $sRef = $this->MakeTicketRef($iNextId);
+          $this->Set('ref', $sRef);
+          $iKey = parent::DBInsertNoReload();
+          $oMutex->Unlock();
+          return $iKey;
     }
         ]]></code>
         </method>
-        <method id="DBInsertTracked_Internal">
+        <method id="MakeTicketRef">
           <static>false</static>
           <access>protected</access>
           <type>Overload-DBObject</type>
-          <code><![CDATA[    protected function DBInsertTracked_Internal($bDoNotReload = false)
-    {
-      // Beware !!!
-      // Compensate the fact that CMDBObject::DBInsertTracked_Internal does NOT call the derived version of DBInsertNoReload
-      // when performing an INsert with "no reload" but actually calls it (followed by Reload) when doing an Insert with reload !!
-      if ($bDoNotReload)
-      {
-          $oMutex = new iTopMutex('ticket_insert');
-          $oMutex->Lock();
-      }
-      $ret = parent::DBInsertTracked_Internal($bDoNotReload);
-      if ($bDoNotReload)
-      {
-          $oMutex->Unlock();
-      }
-      return $ret;
-    }
+          <code><![CDATA[
+        protected function MakeTicketRef($iNextId)
+        {
+                switch(get_class($this))
+                {
+                        case 'UserRequest':
+                        $sFormat = 'R-%06d';
+                        break;
+
+                        case 'Incident':
+                        $sFormat = 'I-%06d';
+                        break;
+
+                        case 'Change':
+                        case 'RoutineChange':
+                        case 'EmergencyChange':
+                        case 'NormalChange':
+                        $sFormat = 'C-%06d';
+                        break;
+
+                        case 'Problem':
+                        $sFormat = 'P-%06d';
+                        break;
+
+                        default:
+                        $sFormat = 'T-%06d';
+                }
+                return sprintf($sFormat, $iNextId);
+        }
         ]]></code>
         </method>
        </methods>
