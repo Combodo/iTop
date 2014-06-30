@@ -40,8 +40,24 @@ class ExecAsyncTask implements iBackgroundProcess
 		$iProcessed = 0;
 		while ((time() < $iTimeLimit) && ($oTask = $oSet->Fetch()))
 		{
-			$oTask->Set('started', time());
-			$oTask->DBUpdate();
+			try
+			{
+				$oTask->Set('started', time());
+				$oTask->DBUpdate();
+			}
+			catch(Exception $e)
+			{
+				// Corrupted task !! (for example: "Failed to reload object")
+				IssueLog::Error('Failed to process async task #'.$oTask->GetKey().' - reason: '.$e->getMessage().' - fatal error, deleting the task.');
+			   	if ($oTask->Get('event_id') != 0)
+			   	{
+			   		$oEventLog = MetaModel::GetObject('Event', $oTask->Get('event_id'));
+			   		$oEventLog->Set('message', 'Failed, corrupted data: '.$e->getMessage());
+			   		$oEventLog->DBUpdate();
+				}
+				$oTask->DBDelete();
+				continue; // end of processing for this task
+			}
 
 			try
 			{
