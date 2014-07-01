@@ -44,6 +44,9 @@ class CMDBChange extends DBObject
 			"db_table" => "priv_change",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
+			'indexes' => array(
+				array('origin'),
+			)
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
