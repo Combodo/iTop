@@ -780,7 +780,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:VirtualDevice' => 'Device Virtuel',
+	'Class:VirtualDevice' => 'Equipement Virtuel',
 	'Class:VirtualDevice+' => '',
 	'Class:VirtualDevice/Attribute:status' => 'Statut',
 	'Class:VirtualDevice/Attribute:status+' => '',
@@ -801,7 +801,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:VirtualHost' => 'Host Virtuel',
+	'Class:VirtualHost' => 'Hôte Virtuel',
 	'Class:VirtualHost+' => '',
 	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Machines virtuelles',
 	'Class:VirtualHost/Attribute:virtualmachine_list+' => '',

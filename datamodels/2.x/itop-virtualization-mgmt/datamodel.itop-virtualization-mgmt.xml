@@ -214,6 +214,9 @@
             <item id="org_id">
               <rank>20</rank>
             </item>
+            <item id="status">
+              <rank>25</rank>
+            </item>
             <item id="business_criticity">
               <rank>30</rank>
             </item>
@@ -363,6 +366,9 @@
             </item>
             <item id="org_id">
               <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>25</rank>
             </item>
             <item id="server_id">
               <rank>30</rank>
@@ -514,6 +520,9 @@
             </item>
             <item id="org_id">
               <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>25</rank>
             </item>
             <item id="business_criticity">
               <rank>30</rank>
