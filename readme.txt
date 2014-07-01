@@ -60,6 +60,7 @@ Vincenzo Todisco for his contribution to the enhancement of the webservices
 Stephan Rickauer, Tobias Glemser and Sabri Saleh for their consulting about iTop security
 Claudio Cesar Sanchez Tejeda for his contribution to bug fixes on the export and data synchronization
 Bruno Cornec for his support and contribution to the Linux packaging of iTop
+Jean-François Bilger for providing a fix for an unsuspected SQL bug
 
 2. INSTALLATION
    ============
