@@ -724,7 +724,8 @@ try
 			$sMoreInfo = CMDBChange::GetCurrentUserName().', Web Service (CSV)';
 		}
 		CMDBObject::SetTrackInfo($sMoreInfo);
-
+		CMDBObject::SetTrackOrigin('csv-import.php');
+		
 		$oMyChange = CMDBObject::GetCurrentChange();
 	}
 

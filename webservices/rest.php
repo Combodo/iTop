@@ -185,6 +185,7 @@ try
 		}
 		$oRS = $aOpToRestService[$sOperation]['service_provider'];
 	
+		CMDBObject::SetTrackOrigin('webservice-rest');
 		$oResult = $oRS->ExecOperation($sVersion, $sOperation, $aJsonData);
 	}
 }

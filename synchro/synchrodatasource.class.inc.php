@@ -2200,6 +2200,7 @@ class SynchroExecution
 		$this->m_oChange->Set("date", time());
 		$sUserString = CMDBChange::GetCurrentUserName();
 		$this->m_oChange->Set("userinfo", $sUserString.' '.Dict::S('Core:SyncDataExchangeComment'));
+		$this->m_oChange->Set("origin", 'synchro-data-source');
 		$iChangeId = $this->m_oChange->DBInsert();
 
 		// Start logging this execution (stats + protection against reentrance)

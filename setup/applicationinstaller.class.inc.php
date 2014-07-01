@@ -562,7 +562,7 @@ class ApplicationInstaller
 				SetupPage::log_info("Renaming '{$sDBPrefix}priv_internalUser' failed (already done in a previous upgrade?)"); 
 			}
 		}
-
+		
 		// Module specific actions (migrate the data)
 		//
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
@@ -581,6 +581,47 @@ class ApplicationInstaller
 		if(!$oProductionEnv->CreateDatabaseStructure(MetaModel::GetConfig(), $sMode))
 		{
 			throw new Exception("Failed to create/upgrade the database structure for environment '$sTargetEnvironment'");		
+		}
+		
+		// priv_change now has an 'origin' field to distinguish between the various input sources
+		// Let's initialize the field with 'interactive' for all records were it's null
+		// Then check if some records should hold a different value, based on a pattern matching in the userinfo field 
+		CMDBSource::SelectDB($sDBName);
+		try
+		{
+			$sCount = "SELECT COUNT(*) FROM `{$sDBPrefix}priv_change` WHERE `origin` IS NULL";
+			$iCount = (int)CMDBSource::QueryToScalar($sCount);
+			if ($iCount > 0)
+			{
+				SetupPage::log_info("Initializing '{$sDBPrefix}priv_change.origin' ($iCount records to update)"); 
+				
+				// By default all uninitialized values are considered as 'interactive'
+				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'interactive' WHERE `origin` IS NULL";
+				CMDBSource::Query($sInit);
+				
+				// CSV Import was identified by the comment at the end
+				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'csv-import.php' WHERE `userinfo` LIKE '%Web Service (CSV)'";
+				CMDBSource::Query($sInit);
+				
+				// CSV Import was identified by the comment at the end
+				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'csv-interactive' WHERE `userinfo` LIKE '%(CSV)' AND origin = 'interactive'";
+				CMDBSource::Query($sInit);
+				
+				// Syncho data sources were identified by the comment at the end (Yes: Synchronisation with a S!!)
+				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'synchro-data-source' WHERE `userinfo` LIKE '%(Synchronisation)'";
+				
+				CMDBSource::Query($sInit);
+				
+				SetupPage::log_info("Initialization of '{$sDBPrefix}priv_change.origin' completed."); 
+			}
+			else
+			{
+				SetupPage::log_info("'{$sDBPrefix}priv_change.origin' already initialized, nothing to do."); 
+			}
+		}
+		catch (Exception $e)
+		{
+			SetupPage::log_error("Initializing '{$sDBPrefix}priv_change.origin' failed: ".$e->getMessage()); 
 		}
 		SetupPage::log_info("Database Schema Successfully Updated for environment '$sTargetEnvironment'.");
 	}

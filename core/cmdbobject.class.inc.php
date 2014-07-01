@@ -93,7 +93,8 @@ abstract class CMDBObject extends DBObject
 	// Note: this value is static, but that could be changed because it is sometimes a real issue (see update of interfaces / connected_to
 	protected static $m_oCurrChange = null;
 	protected static $m_sInfo = null; // null => the information is built in a standard way
-
+	protected static $m_sOrigin = null; // null => the origin is 'interactive'
+	
 	/**
 	 * Specify another change (this is mainly for backward compatibility)
 	 */
@@ -135,6 +136,15 @@ abstract class CMDBObject extends DBObject
 	}
 
 	/**
+	 * Provides information about the origin of the change
+	 * @param $sOrigin String: one of: interactive, csv-interactive, csv-import.php, webservice-soap, webservice-rest, syncho-data-source, email-processing, custom-extension
+	 */	 	
+	public static function SetTrackOrigin($sOrigin)
+	{
+		self::$m_sOrigin = $sOrigin;
+	}
+	
+	/**
 	 * Get the additional information (defaulting to user name)
 	 */	 	
 	protected static function GetTrackInfo()
@@ -148,7 +158,22 @@ abstract class CMDBObject extends DBObject
 			return self::$m_sInfo;
 		}
 	}
-
+	
+	/**
+	 * Get the 'origin' information (defaulting to 'interactive')
+	 */	 	
+	protected static function GetTrackOrigin()
+	{
+		if (is_null(self::$m_sOrigin))
+		{
+			return 'interactive';
+		}
+		else
+		{
+			return self::$m_sOrigin;
+		}
+	}
+	
 	/**
 	 * Create a standard change record (done here 99% of the time, and nearly once per page)
 	 */	 	
@@ -157,6 +182,7 @@ abstract class CMDBObject extends DBObject
 		self::$m_oCurrChange = MetaModel::NewObject("CMDBChange");
 		self::$m_oCurrChange->Set("date", time());
 		self::$m_oCurrChange->Set("userinfo", self::GetTrackInfo());
+		self::$m_oCurrChange->Set("origin", self::GetTrackOrigin());
 		self::$m_oCurrChange->DBInsert();
 	}
 

@@ -75,6 +75,7 @@ else
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
+	CMDBObject::SetTrackOrigin('webservice-soap');
 	$oSoapServer->handle();
 }
 else

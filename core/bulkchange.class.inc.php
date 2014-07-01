@@ -1002,7 +1002,7 @@ class BulkChange
 
 		$oPage->p(Dict::S('UI:History:BulkImports+'));
 
-		$oBulkChangeSearch = DBObjectSearch::FromOQL("SELECT CMDBChange WHERE userinfo LIKE '%(CSV)'");
+		$oBulkChangeSearch = DBObjectSearch::FromOQL("SELECT CMDBChange WHERE origin IN ('csv-interactive', 'csv-import.php')");
 
 		$iQueryLimit = $bShowAll ? 0 : MetaModel::GetConfig()->GetMaxDisplayLimit() + 1;
 		$oBulkChanges = new DBObjectSet($oBulkChangeSearch, array('date' => false), array(), null, $iQueryLimit);
