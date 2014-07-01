@@ -462,7 +462,7 @@ class CMDBSource
 	public static function GetColumns($oResult)
 	{
 		$aNames = array();
-		for ($i = 0; $i < (($___mysqli_tmp = $oResult->num_fields) ? $___mysqli_tmp : 0) ; $i++)
+		for ($i = 0; $i < (($___mysqli_tmp = $oResult->field_count) ? $___mysqli_tmp : 0) ; $i++)
 		{
 			$meta = $oResult->fetch_field_direct($i);
 			if (!$meta)
