@@ -607,9 +607,20 @@ class ApplicationInstaller
 				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'csv-interactive' WHERE `userinfo` LIKE '%(CSV)' AND origin = 'interactive'";
 				CMDBSource::Query($sInit);
 				
-				// Syncho data sources were identified by the comment at the end (Yes: Synchronisation with a S!!)
-				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'synchro-data-source' WHERE `userinfo` LIKE '%(Synchronisation)'";
 				
+				// Syncho data sources were identified by the comment at the end
+				// Unfortunately the comment is localized, so we have to search for all possible patterns
+				$sCurrentLanguage = Dict::GetUserLanguage();
+				foreach(Dict::GetLanguages() as $sLangCode => $aLang)
+				{
+					Dict::SetUserLanguage($sLangCode);
+					$sSuffix = CMDBSource::Quote('%'.Dict::S('Core:SyncDataExchangeComment'));
+					$aSuffixes[$sSuffix] = true;
+				}
+				Dict::SetUserLanguage($sCurrentLanguage);
+				$sCondition = "`userinfo` LIKE ".implode(" OR `userinfo` LIKE ", array_keys($aSuffixes));
+
+				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'synchro-data-source' WHERE ($sCondition)"; 
 				CMDBSource::Query($sInit);
 				
 				SetupPage::log_info("Initialization of '{$sDBPrefix}priv_change.origin' completed."); 
