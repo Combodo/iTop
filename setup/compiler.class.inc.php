@@ -502,6 +502,19 @@ EOF;
 		}
 		return "'".$val."'";
 	}
+	
+	protected function GetMandatoryPropString($oNode, $sTag)
+	{
+		$val = $oNode->GetChildText($sTag);
+		if (!is_null($val) && ($val !== ''))
+		{
+			return "'".$val."'";
+		}
+		else
+		{
+			throw new DOMFormatException("missing (or empty) mandatory tag '$sTag' under the tag '".$oNode->nodeName."'");
+		}	
+	}
 
 	protected function GetPropBoolean($oNode, $sTag, $bDefault = null)
 	{
@@ -755,221 +768,228 @@ EOF;
 		$sAttributes = '';
 		foreach($this->oFactory->ListFields($oClass) as $oField)
 		{
-			// $oField
-			$sAttCode = $oField->getAttribute('id');
-			$sAttType = $oField->getAttribute('xsi:type');
-	
-			$aDependencies = array();
-			$oDependencies = $oField->GetOptionalElement('dependencies');
-			if (!is_null($oDependencies))
+			try
 			{
-				$oDepNodes = $oDependencies->getElementsByTagName('attribute');
-				foreach($oDepNodes as $oDepAttribute)
+				// $oField
+				$sAttCode = $oField->getAttribute('id');
+				$sAttType = $oField->getAttribute('xsi:type');
+		
+				$aDependencies = array();
+				$oDependencies = $oField->GetOptionalElement('dependencies');
+				if (!is_null($oDependencies))
 				{
-					$aDependencies[] = "'".$oDepAttribute->getAttribute('id')."'";
+					$oDepNodes = $oDependencies->getElementsByTagName('attribute');
+					foreach($oDepNodes as $oDepAttribute)
+					{
+						$aDependencies[] = "'".$oDepAttribute->getAttribute('id')."'";
+					}
 				}
-			}
-			$sDependencies = 'array('.implode(', ', $aDependencies).')';
-	
-			$aParameters = array();
-	
-			if ($sAttType == 'AttributeLinkedSetIndirect')
-			{
-				$aParameters['linked_class'] = $this->GetPropString($oField, 'linked_class', '');
-				$aParameters['ext_key_to_me'] = $this->GetPropString($oField, 'ext_key_to_me', '');
-				$aParameters['ext_key_to_remote'] = $this->GetPropString($oField, 'ext_key_to_remote', '');
-				$aParameters['allowed_values'] = 'null';
-				$aParameters['count_min'] = $this->GetPropNumber($oField, 'count_min', 0);
-				$aParameters['count_max'] = $this->GetPropNumber($oField, 'count_max', 0);
-				$aParameters['duplicates'] = $this->GetPropBoolean($oField, 'duplicates', false);
-				$aParameters['depends_on'] = $sDependencies;
-			}
-			elseif ($sAttType == 'AttributeLinkedSet')
-			{
-				$aParameters['linked_class'] = $this->GetPropString($oField, 'linked_class', '');
-				$aParameters['ext_key_to_me'] = $this->GetPropString($oField, 'ext_key_to_me', '');
-				$aParameters['count_min'] = $this->GetPropNumber($oField, 'count_min', 0);
-				$aParameters['count_max'] = $this->GetPropNumber($oField, 'count_max', 0);
-				$sEditMode = $oField->GetChildText('edit_mode');
-				if (!is_null($sEditMode))
+				$sDependencies = 'array('.implode(', ', $aDependencies).')';
+		
+				$aParameters = array();
+		
+				if ($sAttType == 'AttributeLinkedSetIndirect')
 				{
-					$aParameters['edit_mode'] = $this->EditModeToPHP($sEditMode);
+					$aParameters['linked_class'] = $this->GetMandatoryPropString($oField, 'linked_class', '');
+					$aParameters['ext_key_to_me'] = $this->GetMandatoryPropString($oField, 'ext_key_to_me', '');
+					$aParameters['ext_key_to_remote'] = $this->GetMandatoryPropString($oField, 'ext_key_to_remote', '');
+					$aParameters['allowed_values'] = 'null';
+					$aParameters['count_min'] = $this->GetPropNumber($oField, 'count_min', 0);
+					$aParameters['count_max'] = $this->GetPropNumber($oField, 'count_max', 0);
+					$aParameters['duplicates'] = $this->GetPropBoolean($oField, 'duplicates', false);
+					$aParameters['depends_on'] = $sDependencies;
 				}
-				if ($sOql = $oField->GetChildText('filter'))
+				elseif ($sAttType == 'AttributeLinkedSet')
 				{
-					$sEscapedOql = self::QuoteForPHP($sOql);
-					$aParameters['allowed_values'] = "new ValueSetObjects($sEscapedOql)";
+					$aParameters['linked_class'] = $this->GetMandatoryPropString($oField, 'linked_class', '');
+					$aParameters['ext_key_to_me'] = $this->GetMandatoryPropString($oField, 'ext_key_to_me', '');
+					$aParameters['count_min'] = $this->GetPropNumber($oField, 'count_min', 0);
+					$aParameters['count_max'] = $this->GetPropNumber($oField, 'count_max', 0);
+					$sEditMode = $oField->GetChildText('edit_mode');
+					if (!is_null($sEditMode))
+					{
+						$aParameters['edit_mode'] = $this->EditModeToPHP($sEditMode);
+					}
+					if ($sOql = $oField->GetChildText('filter'))
+					{
+						$sEscapedOql = self::QuoteForPHP($sOql);
+						$aParameters['allowed_values'] = "new ValueSetObjects($sEscapedOql)";
+					}
+					else
+					{
+						$aParameters['allowed_values'] = 'null';
+					}
+					$aParameters['depends_on'] = $sDependencies;
 				}
-				else
+				elseif ($sAttType == 'AttributeExternalKey')
+				{
+					$aParameters['targetclass'] = $this->GetPropString($oField, 'target_class', '');
+					// deprecated: $aParameters['jointype'] = 'null';
+					if ($sOql = $oField->GetChildText('filter'))
+					{
+						$sEscapedOql = self::QuoteForPHP($sOql);
+						$aParameters['allowed_values'] = "new ValueSetObjects($sEscapedOql)"; // or "new ValueSetObjects('SELECT xxxx')"
+					}
+					else
+					{
+						$aParameters['allowed_values'] = 'null'; // or "new ValueSetObjects('SELECT xxxx')"
+					}
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql', '');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['on_target_delete'] = $oField->GetChildText('on_target_delete');
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['max_combo_length'] = $this->GetPropNumber($oField, 'max_combo_length');
+					$aParameters['min_autocomplete_chars'] = $this->GetPropNumber($oField, 'min_autocomplete_chars');
+					$aParameters['allow_target_creation'] = $this->GetPropBoolean($oField, 'allow_target_creation');
+					$aParameters['display_style'] = $this->GetPropString($oField, 'display_style', 'select');
+				}
+				elseif ($sAttType == 'AttributeHierarchicalKey')
+				{
+					if ($sOql = $oField->GetChildText('filter'))
+					{
+						$sEscapedOql = self::QuoteForPHP($sOql);
+						$aParameters['allowed_values'] = "new ValueSetObjects($sEscapedOql)"; // or "new ValueSetObjects('SELECT xxxx')"
+					}
+					else
+					{
+						$aParameters['allowed_values'] = 'null'; // or "new ValueSetObjects('SELECT xxxx')"
+					}
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql', '');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['on_target_delete'] = $oField->GetChildText('on_target_delete');
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['max_combo_length'] = $this->GetPropNumber($oField, 'max_combo_length');
+					$aParameters['min_autocomplete_chars'] = $this->GetPropNumber($oField, 'min_autocomplete_chars');
+					$aParameters['allow_target_creation'] = $this->GetPropBoolean($oField, 'allow_target_creation');
+				}
+				elseif ($sAttType == 'AttributeExternalField')
 				{
 					$aParameters['allowed_values'] = 'null';
+					$aParameters['extkey_attcode'] = $this->GetMandatoryPropString($oField, 'extkey_attcode', '');
+					$aParameters['target_attcode'] = $this->GetMandatoryPropString($oField, 'target_attcode', '');
 				}
-				$aParameters['depends_on'] = $sDependencies;
-			}
-			elseif ($sAttType == 'AttributeExternalKey')
-			{
-				$aParameters['targetclass'] = $this->GetPropString($oField, 'target_class', '');
-				// deprecated: $aParameters['jointype'] = 'null';
-				if ($sOql = $oField->GetChildText('filter'))
+				elseif ($sAttType == 'AttributeURL')
 				{
-					$sEscapedOql = self::QuoteForPHP($sOql);
-					$aParameters['allowed_values'] = "new ValueSetObjects($sEscapedOql)"; // or "new ValueSetObjects('SELECT xxxx')"
+					$aParameters['target'] = $this->GetPropString($oField, 'target', '');
+					$aParameters['allowed_values'] = 'null';
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql', '');
+					$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
 				}
-				else
+				elseif ($sAttType == 'AttributeEnum')
 				{
-					$aParameters['allowed_values'] = 'null'; // or "new ValueSetObjects('SELECT xxxx')"
-				}
-				$aParameters['sql'] = $this->GetPropString($oField, 'sql', '');
-				$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
-				$aParameters['on_target_delete'] = $oField->GetChildText('on_target_delete');
-				$aParameters['depends_on'] = $sDependencies;
-				$aParameters['max_combo_length'] = $this->GetPropNumber($oField, 'max_combo_length');
-				$aParameters['min_autocomplete_chars'] = $this->GetPropNumber($oField, 'min_autocomplete_chars');
-				$aParameters['allow_target_creation'] = $this->GetPropBoolean($oField, 'allow_target_creation');
-				$aParameters['display_style'] = $this->GetPropString($oField, 'display_style', 'select');
-			}
-			elseif ($sAttType == 'AttributeHierarchicalKey')
-			{
-				if ($sOql = $oField->GetChildText('filter'))
-				{
-					$sEscapedOql = self::QuoteForPHP($sOql);
-					$aParameters['allowed_values'] = "new ValueSetObjects($sEscapedOql)"; // or "new ValueSetObjects('SELECT xxxx')"
-				}
-				else
-				{
-					$aParameters['allowed_values'] = 'null'; // or "new ValueSetObjects('SELECT xxxx')"
-				}
-				$aParameters['sql'] = $this->GetPropString($oField, 'sql', '');
-				$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
-				$aParameters['on_target_delete'] = $oField->GetChildText('on_target_delete');
-				$aParameters['depends_on'] = $sDependencies;
-				$aParameters['max_combo_length'] = $this->GetPropNumber($oField, 'max_combo_length');
-				$aParameters['min_autocomplete_chars'] = $this->GetPropNumber($oField, 'min_autocomplete_chars');
-				$aParameters['allow_target_creation'] = $this->GetPropBoolean($oField, 'allow_target_creation');
-			}
-			elseif ($sAttType == 'AttributeExternalField')
-			{
-				$aParameters['allowed_values'] = 'null';
-				$aParameters['extkey_attcode'] = $this->GetPropString($oField, 'extkey_attcode', '');
-				$aParameters['target_attcode'] = $this->GetPropString($oField, 'target_attcode', '');
-			}
-			elseif ($sAttType == 'AttributeURL')
-			{
-				$aParameters['target'] = $this->GetPropString($oField, 'target', '');
-				$aParameters['allowed_values'] = 'null';
-				$aParameters['sql'] = $this->GetPropString($oField, 'sql', '');
-				$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
-				$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
-				$aParameters['depends_on'] = $sDependencies;
-			}
-			elseif ($sAttType == 'AttributeEnum')
-			{
-				$oValues = $oField->GetUniqueElement('values');
-				$oValueNodes = $oValues->getElementsByTagName('value');
-				$aValues = array();
-				foreach($oValueNodes as $oValue)
-				{
-	//	new style...			$aValues[] = self::QuoteForPHP($oValue->textContent);
-					$aValues[] = $oValue->textContent;
-				}
-	//	new style... $sValues = 'array('.implode(', ', $aValues).')';
-				$sValues = '"'.implode(',', $aValues).'"';
-				$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
-				$aParameters['display_style'] = $this->GetPropString($oField, 'display_style', 'list');
-				$aParameters['sql'] = $this->GetPropString($oField, 'sql', '');
-				$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
-				$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
-				$aParameters['depends_on'] = $sDependencies;
-			}
-			elseif ($sAttType == 'AttributeBlob')
-			{
-				$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
-				$aParameters['depends_on'] = $sDependencies;
-			}
-			elseif ($sAttType == 'AttributeStopWatch')
-			{
-				$oStates = $oField->GetUniqueElement('states');
-				$oStateNodes = $oStates->getElementsByTagName('state');
-				$aStates = array();
-				foreach($oStateNodes as $oState)
-				{
-					$aStates[] = '"'.$oState->GetAttribute('id').'"';
-				}
-				$aParameters['states'] = 'array('.implode(', ', $aStates).')';
-
-				$aParameters['goal_computing'] = $this->GetPropString($oField, 'goal', 'DefaultMetricComputer'); // Optional, no deadline by default
-				$aParameters['working_time_computing'] = $this->GetPropString($oField, 'working_time', ''); // Blank (different than DefaultWorkingTimeComputer)
-
-				$oThresholds = $oField->GetUniqueElement('thresholds');
-				$oThresholdNodes = $oThresholds->getElementsByTagName('threshold');
-				$aThresholds = array();
-				foreach($oThresholdNodes as $oThreshold)
-				{
-					$iPercent = $this->GetPropNumber($oThreshold, 'percent');
-
-					$oActions = $oThreshold->GetUniqueElement('actions');
-					$oActionNodes = $oActions->getElementsByTagName('action');
-					$aActions = array();
-					foreach($oActionNodes as $oAction)
+					$oValues = $oField->GetUniqueElement('values');
+					$oValueNodes = $oValues->getElementsByTagName('value');
+					$aValues = array();
+					foreach($oValueNodes as $oValue)
 					{
-						$oParams = $oAction->GetOptionalElement('params');
-						$aActionParams = array();
-						if ($oParams)
-						{
-							$oParamNodes = $oParams->getElementsByTagName('param');
-							foreach($oParamNodes as $oParam)
-							{
-								$aActionParams[] = self::QuoteForPHP($oParam->textContent);
-							}
-						}
-						$sActionParams = 'array('.implode(', ', $aActionParams).')';
-						$sVerb = $this->GetPropString($oAction, 'verb');
-						$aActions[] = "array('verb' => $sVerb, 'params' => $sActionParams)";
+						//	new style... $aValues[] = self::QuoteForPHP($oValue->textContent);
+						$aValues[] = $oValue->textContent;
 					}
-					$sActions = 'array('.implode(', ', $aActions).')';
-					$aThresholds[] = $iPercent." => array('percent' => $iPercent, 'actions' => $sActions)";
+					//	new style... $sValues = 'array('.implode(', ', $aValues).')';
+					$sValues = '"'.implode(',', $aValues).'"';
+					$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
+					$aParameters['display_style'] = $this->GetPropString($oField, 'display_style', 'list');
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql', '');
+					$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
 				}
-				$aParameters['thresholds'] = 'array('.implode(', ', $aThresholds).')';
-			}
-			elseif ($sAttType == 'AttributeSubItem')
-			{
-				$aParameters['target_attcode'] = $this->GetPropString($oField, 'target_attcode');
-				$aParameters['item_code'] = $this->GetPropString($oField, 'item_code');
-			}
-			else
-			{
-				$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
-				$aParameters['sql'] = $this->GetPropString($oField, 'sql', '');
-				$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
-				$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
-				$aParameters['depends_on'] = $sDependencies;
-			}
-
-			// Optional parameters (more for historical reasons)
-			// Added if present...
-			//
-			$aParameters['validation_pattern'] = $this->GetPropString($oField, 'validation_pattern');
-			$aParameters['width'] = $this->GetPropNumber($oField, 'width');
-			$aParameters['height'] = $this->GetPropNumber($oField, 'height');
-			$aParameters['digits'] = $this->GetPropNumber($oField, 'digits');
-			$aParameters['decimals'] = $this->GetPropNumber($oField, 'decimals');
-			$aParameters['always_load_in_tables'] = $this->GetPropBoolean($oField, 'always_load_in_tables', false);
-			$sTrackingLevel = $oField->GetChildText('tracking_level');
-			if (!is_null($sTrackingLevel))
-			{
-				$aParameters['tracking_level'] = $this->TrackingLevelToPHP($sAttType, $sTrackingLevel);
-			}
-	
-			$aParams = array();
-			foreach($aParameters as $sKey => $sValue)
-			{
-				if (!is_null($sValue))
+				elseif ($sAttType == 'AttributeBlob')
 				{
-					$aParams[] = '"'.$sKey.'"=>'.$sValue;
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
 				}
+				elseif ($sAttType == 'AttributeStopWatch')
+				{
+					$oStates = $oField->GetUniqueElement('states');
+					$oStateNodes = $oStates->getElementsByTagName('state');
+					$aStates = array();
+					foreach($oStateNodes as $oState)
+					{
+						$aStates[] = '"'.$oState->GetAttribute('id').'"';
+					}
+					$aParameters['states'] = 'array('.implode(', ', $aStates).')';
+	
+					$aParameters['goal_computing'] = $this->GetPropString($oField, 'goal', 'DefaultMetricComputer'); // Optional, no deadline by default
+					$aParameters['working_time_computing'] = $this->GetPropString($oField, 'working_time', ''); // Blank (different than DefaultWorkingTimeComputer)
+	
+					$oThresholds = $oField->GetUniqueElement('thresholds');
+					$oThresholdNodes = $oThresholds->getElementsByTagName('threshold');
+					$aThresholds = array();
+					foreach($oThresholdNodes as $oThreshold)
+					{
+						$iPercent = $this->GetPropNumber($oThreshold, 'percent');
+	
+						$oActions = $oThreshold->GetUniqueElement('actions');
+						$oActionNodes = $oActions->getElementsByTagName('action');
+						$aActions = array();
+						foreach($oActionNodes as $oAction)
+						{
+							$oParams = $oAction->GetOptionalElement('params');
+							$aActionParams = array();
+							if ($oParams)
+							{
+								$oParamNodes = $oParams->getElementsByTagName('param');
+								foreach($oParamNodes as $oParam)
+								{
+									$aActionParams[] = self::QuoteForPHP($oParam->textContent);
+								}
+							}
+							$sActionParams = 'array('.implode(', ', $aActionParams).')';
+							$sVerb = $this->GetPropString($oAction, 'verb');
+							$aActions[] = "array('verb' => $sVerb, 'params' => $sActionParams)";
+						}
+						$sActions = 'array('.implode(', ', $aActions).')';
+						$aThresholds[] = $iPercent." => array('percent' => $iPercent, 'actions' => $sActions)";
+					}
+					$aParameters['thresholds'] = 'array('.implode(', ', $aThresholds).')';
+				}
+				elseif ($sAttType == 'AttributeSubItem')
+				{
+					$aParameters['target_attcode'] = $this->GetMandatoryPropString($oField, 'target_attcode');
+					$aParameters['item_code'] = $this->GetMandatoryPropString($oField, 'item_code');
+				}
+				else
+				{
+					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql', '');
+					$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+				}
+	
+				// Optional parameters (more for historical reasons)
+				// Added if present...
+				//
+				$aParameters['validation_pattern'] = $this->GetPropString($oField, 'validation_pattern');
+				$aParameters['width'] = $this->GetPropNumber($oField, 'width');
+				$aParameters['height'] = $this->GetPropNumber($oField, 'height');
+				$aParameters['digits'] = $this->GetPropNumber($oField, 'digits');
+				$aParameters['decimals'] = $this->GetPropNumber($oField, 'decimals');
+				$aParameters['always_load_in_tables'] = $this->GetPropBoolean($oField, 'always_load_in_tables', false);
+				$sTrackingLevel = $oField->GetChildText('tracking_level');
+				if (!is_null($sTrackingLevel))
+				{
+					$aParameters['tracking_level'] = $this->TrackingLevelToPHP($sAttType, $sTrackingLevel);
+				}
+		
+				$aParams = array();
+				foreach($aParameters as $sKey => $sValue)
+				{
+					if (!is_null($sValue))
+					{
+						$aParams[] = '"'.$sKey.'"=>'.$sValue;
+					}
+				}
+				$sParams = implode(', ', $aParams);
+				$sAttributes .= "		MetaModel::Init_AddAttribute(new $sAttType(\"$sAttCode\", array($sParams)));\n";
 			}
-			$sParams = implode(', ', $aParams);
-			$sAttributes .= "		MetaModel::Init_AddAttribute(new $sAttType(\"$sAttCode\", array($sParams)));\n";
+			catch(Exception $e)
+			{
+				throw new DOMFormatException("Field: '$sAttCode', (type: $sAttType), ".$e->getMessage());	
+			}
 		}
 	
 		// Lifecycle
