@@ -26,6 +26,7 @@ require_once(APPROOT.'setup/setuputils.class.inc.php');
 require_once(APPROOT.'setup/parameters.class.inc.php');
 require_once(APPROOT.'setup/applicationinstaller.class.inc.php');
 require_once(APPROOT.'setup/parameters.class.inc.php');
+require_once(APPROOT.'core/mutex.class.inc.php');
 
 /**
  * First step of the iTop Installation Wizard: Welcome screen
@@ -605,7 +606,22 @@ EOF
 	$('input[name=upgrade_type]').bind('click change', function() { WizardUpdateButtons(); });
 EOF
 			);	
-		}				
+
+			$oMutex = new iTopMutex(
+				'cron.'.$this->oWizard->GetParameter('db_name', '').'_'.$this->oWizard->GetParameter('db_prefix', ''),
+				$this->oWizard->GetParameter('db_server', ''),
+				$this->oWizard->GetParameter('db_user', ''),
+				$this->oWizard->GetParameter('db_pwd', '')
+			);
+			if ($oMutex->TryLock())
+			{
+				$oMutex->Unlock();
+			}
+			else
+			{
+				$oPage->p("<img src=\"../images/error.png\"/>&nbsp;An iTop CRON process is being executed on the target database. It is highly recommended to stop any iTop CRON process prior to running the setup program.");
+			}
+		}
 	}
 	
 	public function CanMoveForward()
@@ -1791,7 +1807,7 @@ EOF
 		$aInstallParams = $this->BuildConfig();
 		
 		$sMode = $aInstallParams['mode'];
-		
+
 		$sPreinstallationPhase = '';
 		
 		$sDestination = ITOP_APPLICATION.(($sMode == 'install') ? ' version '.ITOP_VERSION.' is about to be installed ' : ' is about to be upgraded ');

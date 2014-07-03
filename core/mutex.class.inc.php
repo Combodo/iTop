@@ -34,7 +34,7 @@ class iTopMutex
 	protected $bLocked; // Whether or not this instance of the Mutex is locked
 	static protected $aAcquiredLocks = array(); // Number of instances of the Mutex, having the lock, in this page
 
-	public function __construct($sName)
+	public function __construct($sName, $sDBHost = null, $sDBUser = null, $sDBPwd = null)
 	{
 		// Compute the name of a lock for mysql
 		// Note: the name is server-wide!!!
@@ -49,7 +49,10 @@ class iTopMutex
 		// It is a MUST to create a dedicated session each time a lock is required, because
 		// using GET_LOCK anytime on the same session will RELEASE the current and unique session lock (known issue)
 		$oConfig = utils::GetConfig();
-		$this->InitMySQLSession($oConfig->GetDBHost(), $oConfig->GetDBUser(), $oConfig->GetDBPwd());
+		$sDBHost = is_null($sDBHost) ? $oConfig->GetDBHost() : $sDBHost;
+		$sDBUser = is_null($sDBUser) ? $oConfig->GetDBUser() : $sDBUser;
+		$sDBPwd = is_null($sDBPwd) ? $oConfig->GetDBPwd() : $sDBPwd;
+		$this->InitMySQLSession($sDBHost, $sDBUser, $sDBPwd);
 	}
 
 	public function __destruct()
