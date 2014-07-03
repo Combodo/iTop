@@ -35,73 +35,26 @@ class ExecAsyncTask implements iBackgroundProcess
 	public function Process($iTimeLimit)
 	{
 		$sNow = date('Y-m-d H:i:s');
-		$sOQL = "SELECT AsyncTask WHERE ISNULL(started) AND (ISNULL(planned) OR (planned < '$sNow'))";
-		$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array('created' => true) /* order by*/, array());
+		// Criteria: planned, and expected to occur... ASAP or in the past
+		$sOQL = "SELECT AsyncTask WHERE (status = 'planned') AND (ISNULL(planned) OR (planned < '$sNow'))";
 		$iProcessed = 0;
-		while ((time() < $iTimeLimit) && ($oTask = $oSet->Fetch()))
+		while (time() < $iTimeLimit)
 		{
-			try
+			// Next one ?
+			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array('created' => true) /* order by*/, array(), null, 1 /* limit count */);
+			$oTask = $oSet->Fetch();
+			if (is_null($oTask))
 			{
-				$oTask->Set('started', time());
-				$oTask->DBUpdate();
+				// Nothing to be done
+				break;
 			}
-			catch(Exception $e)
+			$iProcessed++;
+			if ($oTask->Process())
 			{
-				// Corrupted task !! (for example: "Failed to reload object")
-				IssueLog::Error('Failed to process async task #'.$oTask->GetKey().' - reason: '.$e->getMessage().' - fatal error, deleting the task.');
-			   	if ($oTask->Get('event_id') != 0)
-			   	{
-			   		$oEventLog = MetaModel::GetObject('Event', $oTask->Get('event_id'));
-			   		$oEventLog->Set('message', 'Failed, corrupted data: '.$e->getMessage());
-			   		$oEventLog->DBUpdate();
-				}
-				$oTask->DBDelete();
-				continue; // end of processing for this task
-			}
-
-			try
-			{
-				$oTask->Process();
-				$iProcessed++;
-
 				$oTask->DBDelete();
 			}
-			catch(Exception $e)
-			{
-				$iRemaining = $oTask->Get('remaining_retries');
-				if ($iRemaining > 0)
-				{
-					$aRetries = MetaModel::GetConfig()->Get('async_task_retries', array());
-					if (is_array($aRetries) && array_key_exists(get_class($oTask), $aRetries))
-					{
-						$aConfig = $aRetries[get_class($oTask)];
-						$iRetryDelay = $aConfig['retry_delay'];
-					}
-					else
-					{
-						$iRetryDelay = 600;
-					}
-					IssueLog::Info('Failed to process async task #'.$oTask->GetKey().' - reason: '.$e->getMessage().' - remaining retries: '.$iRemaining.' - next retry in '.$iRetryDelay.'s');
-
-					$oTask->Set('remaining_retries', $iRemaining - 1);
-					$oTask->Set('started', null);
-					$oTask->Set('planned', time() + $iRetryDelay);
-					$oTask->DBUpdate();
-				}
-				else
-				{
-					IssueLog::Error('Failed to process async task #'.$oTask->GetKey().' - reason: '.$e->getMessage());
-				}
-			}
 		}
-		if ($iProcessed == $oSet->Count())
-		{
-			return "processed $iProcessed tasks";
-		}
-		else
-		{
-			return "processed $iProcessed tasks (remaining: ".($oSet->Count() - $iProcessed).")";
-		}
+		return "processed $iProcessed tasks";
 	}
 }
 
@@ -127,46 +80,141 @@ abstract class AsyncTask extends DBObject
 			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
-		//MetaModel::Init_InheritAttributes();
-//		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+
+		// Null is allowed to ease the migration from iTop 2.0.2 and earlier, when the status did not exist, and because the default value is not taken into account in the SQL definition
+		// The value is set from null to planned in the setup program
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('planned,running,idle,error'), "sql"=>"status", "default_value"=>"planned", "is_null_allowed"=>true, "depends_on"=>array())));
+
 		MetaModel::Init_AddAttribute(new AttributeDateTime("created", array("allowed_values"=>null, "sql"=>"created", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("started", array("allowed_values"=>null, "sql"=>"started", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
-		// planned... still not used - reserved for timer management
 		MetaModel::Init_AddAttribute(new AttributeDateTime("planned", array("allowed_values"=>null, "sql"=>"planned", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("event_id", array("targetclass"=>"Event", "jointype"=> "", "allowed_values"=>null, "sql"=>"event_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_SILENT, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeInteger("remaining_retries", array("allowed_values"=>null, "sql"=>"remaining_retries", "default_value"=>0, "is_null_allowed"=>true, "depends_on"=>array())));
+	}
 
-		// Display lists
-//		MetaModel::Init_SetZListItems('details', array()); // Attributes to be displayed for the complete details
-//		MetaModel::Init_SetZListItems('list', array()); // Attributes to be displayed for a list
-		// Search criteria
-//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+	/**
+	 * Every is fine
+	 */
+	const OK = 0;
+	/**
+	 * The task no longer exists
+	 */
+	const DELETED = 1;
+	/**
+	 * The task is already being executed
+	 */
+	const ALREADY_RUNNING = 2;
+
+	/**
+	 *	The current process requests the ownership on the task.
+	 *	In case the task can be accessed concurrently, this function can be overloaded to add a critical section.
+	 *	The function must not block the caller if another process is already owning the task	 
+	 *		 
+	 *	@return integer A code among OK/DELETED/ALREADY_RUNNING.	  	 
+	 */	
+	public function MarkAsRunning()
+	{
+		try
+		{
+			$this->Set('status', 'running');
+			$this->Set('started', time());
+			$this->DBUpdate();
+			return self::OK;
+		}
+		catch(Exception $e)
+		{
+			// Corrupted task !! (for example: "Failed to reload object")
+			IssueLog::Error('Failed to process async task #'.$this->GetKey().' - reason: '.$e->getMessage().' - fatal error, deleting the task.');
+		   	if ($this->Get('event_id') != 0)
+		   	{
+		   		$oEventLog = MetaModel::GetObject('Event', $this->Get('event_id'));
+		   		$oEventLog->Set('message', 'Failed, corrupted data: '.$e->getMessage());
+		   		$oEventLog->DBUpdate();
+			}
+			$this->DBDelete();
+			return self::DELETED;
+		}
+	}
+
+	public function GetRetryDelay()
+	{
+		$iRetryDelay = 600;
+		$aRetries = MetaModel::GetConfig()->Get('async_task_retries', array());
+		if (is_array($aRetries) && array_key_exists(get_class($this), $aRetries))
+		{
+			$aConfig = $aRetries[get_class($this)];
+			$iRetryDelay = $aConfig['retry_delay'];
+		}
+		return $iRetryDelay;
+	}
+
+	public function GetMaxRetries()
+	{
+		$iMaxRetries = 0;
+		$aRetries = MetaModel::GetConfig()->Get('async_task_retries', array());
+		if (is_array($aRetries) && array_key_exists(get_class($this), $aRetries))
+		{
+			$aConfig = $aRetries[get_class($this)];
+			$iMaxRetries = $aConfig['max_retries'];
+		}
 	}
 
   	protected function OnInsert()
 	{
 		$this->Set('created', time());
-
-		$aRetries = MetaModel::GetConfig()->Get('async_task_retries', array());
-		if (is_array($aRetries) && array_key_exists(get_class($this), $aRetries))
-		{
-			$aConfig = $aRetries[get_class($this)];
-			$iRetries = $aConfig['max_retries'];
-			$this->Set('remaining_retries', $iRetries);
-		}
+		$this->Set('remaining_retries', $this->GetMaxRetries());
 	}
 
-   public function Process()
+   /**
+    * @return boolean True if the task record can be deleted
+    */
+	public function Process()
    {
-   	$sStatus = $this->DoProcess();
-   	if ($this->Get('event_id') != 0)
-   	{
-   		$oEventLog = MetaModel::GetObject('Event', $this->Get('event_id'));
-   		$oEventLog->Set('message', $sStatus);
-   		$oEventLog->DBUpdate();
+		// By default: consider that the task is not completed
+		$bRet = false;
+
+		// Attempt to take the ownership
+		$iStatus = $this->MarkAsRunning();
+		if ($iStatus == self::OK)
+		{
+			try
+			{
+		   	$sStatus = $this->DoProcess();
+		   	if ($this->Get('event_id') != 0)
+		   	{
+		   		$oEventLog = MetaModel::GetObject('Event', $this->Get('event_id'));
+		   		$oEventLog->Set('message', $sStatus);
+		   		$oEventLog->DBUpdate();
+				}
+				$bRet = true;
+			}
+			catch(Exception $e)
+			{
+				$iRemaining = $this->Get('remaining_retries');
+				if ($iRemaining > 0)
+				{
+					$iRetryDelay = $this->GetRetryDelay();
+					IssueLog::Info('Failed to process async task #'.$this->GetKey().' - reason: '.$e->getMessage().' - remaining retries: '.$iRemaining.' - next retry in '.$iRetryDelay.'s');
+	
+					$this->Set('remaining_retries', $iRemaining - 1);
+					$this->Set('status', 'planned');
+					$this->Set('started', null);
+					$this->Set('planned', time() + $iRetryDelay);
+					$this->DBUpdate();
+				}
+				else
+				{
+					IssueLog::Error('Failed to process async task #'.$this->GetKey().' - reason: '.$e->getMessage());
+				}
+			}
 		}
+		else
+		{
+			// Already done or being handled by another process... skip...
+			$bRet = false;
+		}
+		return $bRet;
 	}
 
 	abstract public function DoProcess();

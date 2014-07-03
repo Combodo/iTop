@@ -634,6 +634,36 @@ class ApplicationInstaller
 		{
 			SetupPage::log_error("Initializing '{$sDBPrefix}priv_change.origin' failed: ".$e->getMessage()); 
 		}
+
+		// priv_async_task now has a 'status' field to distinguish between the various statuses rather than just relying on the date columns
+		// Let's initialize the field with 'planned' or 'error' for all records were it's null
+		CMDBSource::SelectDB($sDBName);
+		try
+		{
+			$sCount = "SELECT COUNT(*) FROM `{$sDBPrefix}priv_async_task` WHERE `status` IS NULL";
+			$iCount = (int)CMDBSource::QueryToScalar($sCount);
+			if ($iCount > 0)
+			{
+				SetupPage::log_info("Initializing '{$sDBPrefix}priv_async_task.status' ($iCount records to update)"); 
+				
+				$sInit = "UPDATE `{$sDBPrefix}priv_async_task` SET `status` = 'planned' WHERE (`status` IS NULL) AND (`started` IS NULL)";
+				CMDBSource::Query($sInit);
+
+				$sInit = "UPDATE `{$sDBPrefix}priv_async_task` SET `status` = 'error' WHERE (`status` IS NULL) AND (`started` IS NOT NULL)";
+				CMDBSource::Query($sInit);
+				
+				SetupPage::log_info("Initialization of '{$sDBPrefix}priv_async_task.status' completed."); 
+			}
+			else
+			{
+				SetupPage::log_info("'{$sDBPrefix}priv_async_task.status' already initialized, nothing to do."); 
+			}
+		}
+		catch (Exception $e)
+		{
+			SetupPage::log_error("Initializing '{$sDBPrefix}priv_async_task.status' failed: ".$e->getMessage()); 
+		}
+
 		SetupPage::log_info("Database Schema Successfully Updated for environment '$sTargetEnvironment'.");
 	}
 	
