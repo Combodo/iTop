@@ -788,9 +788,18 @@ class TabManager
 		return $iLength;
 	}
 	
+	/**
+	 * Truncates the given tab to the specifed length and returns the truncated part
+	 * @param string $sTabContainer The tab container in which to truncate the tab
+	 * @param string $sTab The name/identifier of the tab to truncate
+	 * @param integer $iLength The length/offset at which to truncate the tab
+	 * @return string The truncated part
+	 */
 	public function TruncateTab($sTabContainer, $sTab, $iLength)
 	{
-		$this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html'] = substr($this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html'], 0, $iLength);	
+		$sResult = substr($this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html'], $iLength);
+		$this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html'] = substr($this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html'], 0, $iLength);
+		return $sResult;	
 	}
 	
 	public function TabExists($sTabContainer, $sTab)
