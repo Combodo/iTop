@@ -216,6 +216,7 @@ EOF;
 				$('.resizable', ui.panel).resizable(); // Make resizable everything that claims to be resizable !
 			},
 			beforeLoad: function( event, ui ) {
+				ui.panel.html('<div><img src="../images/indicator.gif"></div>');
 				if ( ui.tab.data('loaded') && (ui.tab.attr('data-cache') == 'true')) {
 					event.preventDefault();
 					return;
