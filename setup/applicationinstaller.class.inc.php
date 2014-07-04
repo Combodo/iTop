@@ -573,7 +573,7 @@ class ApplicationInstaller
 				
 				$sOrphanCount = "SELECT COUNT(c.id) FROM `{$sDBPrefix}priv_change` AS c left join `{$sDBPrefix}priv_changeop` AS o ON c.id = o.changeid WHERE o.id IS NULL";
 				$iOrphanCount = (int)CMDBSource::QueryToScalar($sOrphanCount);
-				SetupPage::log_info("There are $iOrphanCount useless records in {$sDBPrefix}priv_change (".sprintf('%.2f', ($iOrphanCount/$iTotalCount))."%)");
+				SetupPage::log_info("There are $iOrphanCount useless records in {$sDBPrefix}priv_change (".sprintf('%.2f', ((100.0*$iOrphanCount)/$iTotalCount))."%)");
 				if ($iOrphanCount > 0)
 				{
 					SetupPage::log_info("Removing the orphan records...");
