@@ -47,6 +47,11 @@
                <attribute id="item_id"/>
              </attributes>
           </index>
+          <index id="3">
+             <attributes>
+               <attribute id="item_org_id"/>
+             </attributes>
+          </index>
         </indexes>
       </properties>
       <fields>
