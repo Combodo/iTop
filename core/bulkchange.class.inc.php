@@ -1000,17 +1000,17 @@ class BulkChange
 			$oPage->add('<div id="'.$sAjaxDivId.'">');
 		}
 
-		$oPage->p(Dict::S('UI:History:BulkImports+'));
+		$oPage->p(Dict::S('UI:History:BulkImports+').' <span id="csv_history_reload"></span>');
 
 		$oBulkChangeSearch = DBObjectSearch::FromOQL("SELECT CMDBChange WHERE origin IN ('csv-interactive', 'csv-import.php')");
 
-		$iQueryLimit = $bShowAll ? 0 : MetaModel::GetConfig()->GetMaxDisplayLimit() + 1;
+		$iQueryLimit = $bShowAll ? 0 : appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
 		$oBulkChanges = new DBObjectSet($oBulkChangeSearch, array('date' => false), array(), null, $iQueryLimit);
 
 		$oAppContext = new ApplicationContext();
 
 		$bLimitExceeded = false;
-		if ($oBulkChanges->Count() > MetaModel::GetConfig()->GetMaxDisplayLimit())
+		if ($oBulkChanges->Count() > (appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit())))
 		{
 			$bLimitExceeded = true;
 			if (!$bShowAll)
@@ -1068,7 +1068,6 @@ class BulkChange
 			{
 				$aDetails[] = array('date' => $sDate, 'user' => $sUser, 'class' => $sClass, 'created' => $iCreated, 'modified' => $iModified);
 			}
-
 		}
 
 		$aConfig = array( 'date' => array('label' => Dict::S('UI:History:Date'), 'description' => Dict::S('UI:History:Date+')),
@@ -1088,7 +1087,7 @@ class BulkChange
 			else
 			{
 				// Truncated list
-				$iMinDisplayLimit = MetaModel::GetConfig()->GetMinDisplayLimit();
+				$iMinDisplayLimit = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
 				$sCollapsedLabel = Dict::Format('UI:TruncatedResults', $iMinDisplayLimit, $oBulkChanges->Count());
 				$sLinkLabel = Dict::S('UI:DisplayAll');
 				$oPage->add('<p>'.$sCollapsedLabel.'&nbsp;&nbsp;<a class="truncated" onclick="OnTruncatedHistoryToggle(true);">'.$sLinkLabel.'</p>');
@@ -1106,6 +1105,7 @@ EOF
 <<<EOF
 	function OnTruncatedHistoryToggle(bShowAll)
 	{
+		$('#csv_history_reload').html('<img src="../images/indicator.gif"/>');
 		$.get(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?{$sAppContext}', {operation: 'displayCSVHistory', showall: bShowAll}, function(data)
 			{
 				$('#$sAjaxDivId').html(data);
