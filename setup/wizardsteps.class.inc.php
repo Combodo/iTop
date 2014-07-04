@@ -66,6 +66,15 @@ class WizStepWelcome extends WizardStep
 		$sMiscOptions = $this->oWizard->GetParameter('misc_options', json_encode($aMiscOptions));
 		$this->oWizard->SetParameter('misc_options', $sMiscOptions);
 		
+		$oPage->add("<!--[if lt IE 8]><div id=\"old_ie\"></div><![endif]-->");
+		$oPage->add_ready_script(
+<<<EOF
+		if ($('#old_ie').length > 0)
+		{
+			alert("Internet Explorer version 7 or older is NOT supported! (Check that IE is not running in compatibility mode)");
+		}
+EOF
+		);
 		$oPage->add('<h1>'.ITOP_APPLICATION.' Installation Wizard</h1>');
 		$aResults = SetupUtils::CheckPHPVersion($oPage);
 		$this->bCanMoveForward = true;
