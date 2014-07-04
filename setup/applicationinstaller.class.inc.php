@@ -561,6 +561,36 @@ class ApplicationInstaller
 			{
 				SetupPage::log_info("Renaming '{$sDBPrefix}priv_internalUser' failed (already done in a previous upgrade?)"); 
 			}
+			
+			// let's remove the records in priv_change which have no counterpart in priv_changeop
+			SetupPage::log_info("Cleanup of '{$sDBPrefix}priv_change' to remove orphan records"); 
+			CMDBSource::SelectDB($sDBName);
+			try
+			{
+				$sTotalCount = "SELECT COUNT(*) FROM `{$sDBPrefix}priv_change`";
+				$iTotalCount = (int)CMDBSource::QueryToScalar($sTotalCount);
+				SetupPage::log_info("There is a total of $iTotalCount records in {$sDBPrefix}priv_change.");
+				
+				$sOrphanCount = "SELECT COUNT(c.id) FROM `{$sDBPrefix}priv_change` AS c left join `{$sDBPrefix}priv_changeop` AS o ON c.id = o.changeid WHERE o.id IS NULL";
+				$iOrphanCount = (int)CMDBSource::QueryToScalar($sOrphanCount);
+				SetupPage::log_info("There are $iOrphanCount useless records in {$sDBPrefix}priv_change (".sprintf('%.2f', ($iOrphanCount/$iTotalCount))."%)");
+				if ($iOrphanCount > 0)
+				{
+					SetupPage::log_info("Removing the orphan records...");
+					$sCleanup = "DELETE FROM `{$sDBPrefix}priv_change` USING `{$sDBPrefix}priv_change` LEFT JOIN `{$sDBPrefix}priv_changeop` ON `{$sDBPrefix}priv_change`.id = `{$sDBPrefix}priv_changeop`.changeid WHERE `{$sDBPrefix}priv_changeop`.id IS NULL;";
+					CMDBSource::Query($sCleanup);
+					SetupPage::log_info("Cleanup completed successfully.");
+				}
+				else
+				{
+					SetupPage::log_info("Ok, nothing to cleanup.");
+				}
+			}
+			catch (Exception $e)
+			{
+				SetupPage::log_info("Cleanup of orphan records in `{$sDBPrefix}priv_change` failed: ".$e->getMessage()); 
+			}
+			
 		}
 		
 		// Module specific actions (migrate the data)
