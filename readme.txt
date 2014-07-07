@@ -1,4 +1,4 @@
-iTop - version 2.0.3-beta - 13-Jun-2014
+iTop - version 2.0.3 - 14-Jul-2014
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -15,10 +15,10 @@ Readme file
 
 1. ABOUT THIS RELEASE
    ==================
-Thank you for downloading the 18th packaged release of iTop.
+Thank you for downloading the 19th packaged release of iTop.
 This version is a maintenance release, with quite a few bug fixes and a few enhancements.
 
-The documentation about iTop is available as a Wiki: http://www.combodo.com/wiki
+The documentation about iTop is available as a Wiki: https://wiki.openitop.org/
 
 iTop is released under the AGPL (v3) license. (Check license.txt in this directory).
 The source code of iTop can be found on SourceForge: https://sourceforge.net/p/itop/code/
@@ -32,11 +32,13 @@ This version brings a number of bug fixes since 2.0.2 and a few enhancements, na
 - Conditional notifications
 - Usability: faster display of an object's details
 
-... and about 50 bug fixes!
+... and about 60 bug fixes!
 
 1.2 Should I upgrade to 2.0.3?
     -------------------------------
 Considering that iTop 2.0.3 is fully compatible with iTop 2.0.x and the number of bugs fixed, we recommend you to upgrade.
+Anyhow, prior to taking that decision, we encourage you to have a look at the migration notes:
+https://wiki.openitop.org/doku.php?id=2_0_3:admin:installing_itop
 
 1.3 Special Thanks To:
     -----------------
@@ -208,6 +210,9 @@ Usability
 #878 Missing scrollbar in "linkset-direct" edition popup dialog
 #862 Popup menu misplaced when the window scrolls (e.g. when displaying large lists of results)
 #861 and #636 Set the focus on User Name in iTop Login Form
+#940 "Close" and "Reopen" buttons were not working on IE (due to extra commas at the end of JS lists)
+#892 Confusion when using a hierarchical list in a search form
+#916 Hierarchical selector: clicking on the label now has the same effect as clicking on the radio button itself. (The label is no longer an hyperlink)
 Ticket's attachments can now be added by drag and drop (on browsers supporting HTML5 drag and drop). 
 
 
@@ -225,6 +230,10 @@ CSV export (from the toolkit menu) now displays an asynchronous page, to better 
 - Also renamed Merge to Append since it's really what it does (seems to be used only in the tests)
 Code cleanup to implement the tabs handling (inside web pages) in one place. Added the ability to provide asynchronously loaded tabs (content must come from the same server).
 Use the object oriented verison of the MySQLi API which seems  free of memory leaks (compared to the procedural version of the same API).
+#944 Speed-up the display of CSV import history. IF the feature is enabled, the CSV import history is:
+1) Displayed asynchronously
+2) Based on a specific 'origin' enum fields instead of parsing the userinfo comment
+Cleanup of unused records in the change tracking table 'priv_change'. Depending on the installed modules and the usage you have made of iTop, this cleanup can drastically reduce the size of you backups.
 
 JSON/REST API (new version: 1.2)
 --------------------------------
@@ -244,6 +253,7 @@ Data model fixes/changes
 Fixed issue with 1.x datamodels: dashlets of type "badge" not working (preventing from editing an existing dashboard), since 2.0.2
 Aligned the authentication module with the one of 2.x, to enable the feature "Forgot password" for legacy data models
 Added the "outage" field to simple Change tickets, since it's already present in ITIL Changes.
+Added the (missing) field status to the details of VirtualDevice, Hypervisor and Farm.
 
 
 Notifications
@@ -280,6 +290,11 @@ Miscellaneous fixes
 #870 When a user deletes all her/his shortcuts at once, this was deleting all the shortcuts for all users.
 #859 About box: also list the modules installed from the extensions folder
 #731 Full text search requires a string of at least three characters (configurable: full_text_needle_min)
+#954 Stricter validation of mandatory tags/values during compilation.
+#953 Protect the background processing against corrupted (incomplete) objects.
+#906 iTop gets locked with OnInsert plugin. Better way to handle the lock in order to prevent duplicates in the numbering of Tickets. Note that the iTopMutex now supports re-entrance inside the same PHP page.
+#927 Detect IE7 (or compatibility mode) and warn the user that the application cannot be used with such browsers.
+#951 Properly display localized values for ENUMs in the data model view.
 Completed the Portuguese translation (Brazil), provided in december... (by Marco Tulio?) - modules updated: attachments, change, incident, request and request/ITIL, service for providers
 Portal + templates: Bug fix = when the user selects a template, then go back to select a service for which no template applies, he still gets the tempate fields in the final form.
 Added a helper function to get an icon stored as an ormDocument: ormDocument::GetDownloadURL
@@ -314,6 +329,13 @@ Dictionary string for the portal should not depend on a module
 - Make sure that unwanted parameters cannot be set when creating the ticket
 Record the very same installation time for all modules.
 Asynchronous emails: added a retry mechanism useful in case your SMTP server restricts the number of emails that can be sent over a period of time (usage: broadcasting a newsletter). The mechanism is not specific to sending email as it is implemented at the AsyncTask level.
+Better handling of the user's configured display limit for displaying the CSV import history.
+Reworked the asynchronous mechanism to ease its extension (added a "status", preset by the setup)
+Protect attachments against concurrent edition of a ticket.
+Removed warnings occuring when configuring a list
+Added a warning when upgrading the application while a CRON is being executed on the same DB
+Added an index on "item_org_id" to speed-up the setup and the silo on organizations.
+Add the ability to supply a default "from" email address for the "forgot password" feature, instead of using the same address as for the "to".
 
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
@@ -343,4 +365,4 @@ Tested with IE8 and IE9, Firefox 3.6 up to Firefox 24 and Chrome. Be aware that 
 #399 	Copy/paste from iTop's CaseLog looses tabs
 #343 	CKEditor (HTML Editor) not compatible with direct object creation on ExtKeys
 #350 	Object edition form: validation does not tell which field has a problem
-#730  Leaving temporary files when performing a backup of the data during installation
+#730 	Leaving temporary files when performing a backup of the data during installation
