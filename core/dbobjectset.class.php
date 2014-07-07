@@ -1111,7 +1111,10 @@ class DBObjectSet
 			}
 			else
 			{
-				$aScalarArgs[$sArgName] = (string) $value;
+				if (array_key_exists($sArgName, $aScalarArgs))
+				{
+					$aScalarArgs[$sArgName] = (string) $value;
+				}
 			}
 		}
 		$aScalarArgs['current_contact_id'] = UserRights::GetContactId();
