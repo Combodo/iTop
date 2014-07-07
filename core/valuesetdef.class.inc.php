@@ -389,13 +389,27 @@ class ValueSetEnumClasses extends ValueSetEnum
 		// Translate the labels of the additional values
 		foreach($this->m_aValues as $sClass => $void)
 		{
-			$this->m_aValues[$sClass] = MetaModel::GetName($sClass);
+			if (MetaModel::IsValidClass($sClass))
+			{
+				$this->m_aValues[$sClass] = MetaModel::GetName($sClass);
+			}
+			else
+			{
+				unset($this->m_aValues[$sClass]);
+			}
 		}
 
 		// Then, add the classes from the category definition
 		foreach (MetaModel::GetClasses($this->m_sCategories) as $sClass)
 		{
-			$this->m_aValues[$sClass] = MetaModel::GetName($sClass);
+			if (MetaModel::IsValidClass($sClass))
+			{
+				$this->m_aValues[$sClass] = MetaModel::GetName($sClass);
+			}
+			else
+			{
+				unset($this->m_aValues[$sClass]);
+			}
 		}
 
 		return true;
