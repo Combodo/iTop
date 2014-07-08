@@ -33,8 +33,15 @@ class LoginWebPage extends NiceWebPage
 {
 	const EXIT_PROMPT = 0;
 	const EXIT_HTTP_401 = 1;
-	const EXIT_RETURN_FALSE = 2;
-
+	const EXIT_RETURN = 2;
+	
+	const EXIT_CODE_OK = 0;
+	const EXIT_CODE_MISSINGLOGIN = 1;
+	const EXIT_CODE_MISSINGPASSWORD = 2;
+	const EXIT_CODE_WRONGCREDENTIALS = 3;
+	const EXIT_CODE_MUSTBEADMIN = 4;
+	const EXIT_CODE_PORTALUSERNOTAUTHORIZED = 5;
+	
 	protected static $sHandlerClass = __class__;
 	public static function RegisterHandler($sClass)
 	{
@@ -452,6 +459,7 @@ EOF
 	 * Attempt a login
 	 * 	 	
 	 * @param int iOnExit What action to take if the user is not logged on (one of the class constants EXIT_...)
+	 * @return int One of the class constants EXIT_CODE_...
 	 */	
 	protected static function Login($iOnExit)
 	{
@@ -468,7 +476,7 @@ EOF
 			//echo "User: ".$_SESSION['auth_user']."\n";
 			// Already authentified
 			UserRights::Login($_SESSION['auth_user']); // Login & set the user's language
-			return true;
+			return self::EXIT_CODE_OK;
 		}
 		else
 		{
@@ -495,8 +503,8 @@ EOF
 					case 'form':
 					// iTop standard mode: form based authentication
 					$sAuthUser = utils::ReadPostedParam('auth_user', '', false, 'raw_data');
-					$sAuthPwd = utils::ReadPostedParam('auth_pwd', '', false, 'raw_data');
-					if ($sAuthUser != '')
+					$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, false, 'raw_data');
+					if (($sAuthUser != '') && ($sAuthPwd !== null))
 					{
 						$sLoginMode = 'form';
 					}
@@ -550,7 +558,7 @@ EOF
 					// Credentials passed directly in the url
 					$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
 					$sAuthPwd = utils::ReadParam('auth_pwd', null, false, 'raw_data');
-					if (($sAuthUser != '') && ($sAuthPwd != null))
+					if (($sAuthUser != '') && ($sAuthPwd !== null))
 					{
 						$sLoginMode = 'url';
 					}		
@@ -578,9 +586,16 @@ EOF
 					header('Content-type: text/html; charset=iso-8859-1');
 					exit;
 				}
-				else if($iOnExit == self::EXIT_RETURN_FALSE)
+				else if($iOnExit == self::EXIT_RETURN)
 				{
-					return false;
+					if (($sAuthUser !== '') && ($sAuthPwd === null))
+					{
+						return self::EXIT_CODE_MISSINGPASSWORD;
+					}
+					else
+					{
+						return self::EXIT_CODE_MISSINGLOGIN;
+					}
 				}
 				else
 				{
@@ -596,16 +611,16 @@ EOF
 				{
 					//echo "Check Credentials returned false for user $sAuthUser!";
 					self::ResetSession();
-					if (($iOnExit == self::EXIT_HTTP_401))
+					if (($iOnExit == self::EXIT_HTTP_401) || ($sLoginMode == 'basic'))
 					{
 						header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_VERSION));
 						header('HTTP/1.0 401 Unauthorized');
 						header('Content-type: text/html; charset=iso-8859-1');
 						exit;
 					}
-					else if($iOnExit == self::EXIT_RETURN_FALSE)
+					else if($iOnExit == self::EXIT_RETURN)
 					{
-						return false;
+						return self::EXIT_CODE_WRONGCREDENTIALS;
 					}
 					else
 					{
@@ -634,19 +649,31 @@ EOF
 				}
 			}
 		}
-		return true;
+		return self::EXIT_CODE_OK;
 	}
 	
 	/**
 	 * Overridable: depending on the user, head toward a dedicated portal
 	 * @param bool $bIsAllowedToPortalUsers Whether or not the current page is considered as part of the portal
+	 * @param int $iOnExit How to complete the call: redirect or return a code
 	 */	 
-	protected static function ChangeLocation($bIsAllowedToPortalUsers)
+	protected static function ChangeLocation($bIsAllowedToPortalUsers, $iOnExit = self::EXIT_PROMPT)
 	{
 		if ( (!$bIsAllowedToPortalUsers) && (UserRights::IsPortalUser()))
 		{
-			// No rights to be here, redirect to the portal
-			header('Location: '.utils::GetAbsoluteUrlAppRoot().'portal/index.php');
+			if ($iOnExit == self::EXIT_RETURN)
+			{
+				return self::EXIT_CODE_PORTALUSERNOTAUTHORIZED;
+			}
+			else
+			{
+				// No rights to be here, redirect to the portal
+				header('Location: '.utils::GetAbsoluteUrlAppRoot().'portal/index.php');
+			}
+		}
+		else
+		{
+			return self::EXIT_CODE_OK;
 		}
 	}
 
@@ -741,21 +768,31 @@ EOF
 			$sMessage = Dict::S('UI:Login:PasswordChanged');
 		}
 		
-		$bRet = self::Login($iOnExit);
+		$iRet = self::Login($iOnExit);
 
-		if ($bMustBeAdmin && !UserRights::IsAdministrator())
-		{	
-			require_once(APPROOT.'/setup/setuppage.class.inc.php');
-			$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
-			$oP->add("<h1>".Dict::S('UI:Login:Error:AccessAdmin')."</h1>\n");	
-			$oP->p("<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a>");
-			$oP->output();
-			exit;
-		}
-		call_user_func(array(self::$sHandlerClass, 'ChangeLocation'), $bIsAllowedToPortalUsers);
-		if ($iOnExit == self::EXIT_RETURN_FALSE)
+		if ($iRet == self::EXIT_CODE_OK)
 		{
-			return $bRet;
+			if ($bMustBeAdmin && !UserRights::IsAdministrator())
+			{
+				if ($iOnExit == self::EXIT_RETURN)
+				{
+					return self::EXIT_CODE_MUSTBEADMIN;
+				}
+				else
+				{
+					require_once(APPROOT.'/setup/setuppage.class.inc.php');
+					$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
+					$oP->add("<h1>".Dict::S('UI:Login:Error:AccessAdmin')."</h1>\n");	
+					$oP->p("<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a>");
+					$oP->output();
+					exit;
+				}
+			}
+			$iRet = call_user_func(array(self::$sHandlerClass, 'ChangeLocation'), $bIsAllowedToPortalUsers, $iOnExit);
+		}
+		if ($iOnExit == self::EXIT_RETURN)
+		{
+			return $iRet;
 		}
 		else
 		{

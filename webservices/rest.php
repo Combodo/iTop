@@ -96,25 +96,29 @@ try
 {
 	utils::UseParamFile();
 
-	if (!LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN_FALSE))
+	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN);
+	if ($iRet != LoginWebPage::EXIT_CODE_OK)
 	{
-		$sAuthUser = utils::ReadParam('auth_user', null, false, 'raw_data');
-		if ($sAuthUser === null)
+		switch($iRet)
 		{
+			case LoginWebPage::EXIT_CODE_MISSINGLOGIN:
 			throw new Exception("Missing parameter 'auth_user'", RestResult::MISSING_AUTH_USER);
-		}
-		$sAuthPwd = utils::ReadParam('auth_pwd', null, false, 'raw_data');
-		if ($sAuthPwd === null)
-		{
+			break;
+			
+			case LoginWebPage::EXIT_CODE_MISSINGPASSWORD:
 			throw new Exception("Missing parameter 'auth_pwd'", RestResult::MISSING_AUTH_PWD);
-		}
-		if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
-		{
-			UserRights::Login($sAuthUser); // Login & set the user's language
-		}
-		else
-		{
-			throw new Exception("Invalid login '$sAuthUser'", RestResult::UNAUTHORIZED);
+			break;
+			
+			case LoginWebPage::EXIT_CODE_WRONGCREDENTIALS:
+			throw new Exception("Invalid login", RestResult::UNAUTHORIZED);
+			break;
+			
+			case LoginWebPage::EXIT_CODE_PORTALUSERNOTAUTHORIZED:
+			throw new Exception("Portal user is not allowed", RestResult::UNAUTHORIZED);
+			break;
+			
+			default:
+			throw new Exception("Unknown authentication error (retCode=$iRet)", RestResult::UNAUTHORIZED);
 		}
 	}
 
