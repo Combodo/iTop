@@ -1111,7 +1111,7 @@ class DBObjectSet
 			}
 			else
 			{
-				if (array_key_exists($sArgName, $aScalarArgs))
+				if (!is_array($value)) // Sometimes ExtraParams contains a mix (like defaults[]) so non scalar parameters are ignored
 				{
 					$aScalarArgs[$sArgName] = (string) $value;
 				}
