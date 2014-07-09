@@ -1181,6 +1181,16 @@ class CharConcatWSExpression extends CharConcatExpression
 		$sSep = CMDBSource::Quote($this->m_separator);
 		return "CAST(CONCAT_WS($sSep, ".implode(', ', $aRes).") AS CHAR)";
 	}
+
+	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
+	{
+		$aRes = array();
+		foreach ($this->m_aExpressions as $oExpr)
+		{
+			$aRes[] = $oExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
+		}
+		return new CharConcatWSExpression($this->m_separator, $aRes);
+	}
 }
 
 
