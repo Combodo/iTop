@@ -1326,22 +1326,50 @@ EOF
 			// Search is limited to a given class and its subclasses
 			$aSearchClasses = MetaModel::EnumChildClasses($sClassName, ENUM_CHILD_CLASSES_ALL);
 		}
+		// Skip abstract classes, since we search in all the child classes anyway
+		foreach($aSearchClasses as $idx => $sClass)
+		{
+			if (MetaModel::IsAbstract($sClass))
+			{
+				unset($aSearchClasses[$idx]);
+			}
+		}
 
 		$sMaxChunkDuration = MetaModel::GetConfig()->Get('full_text_chunk_duration');
 		$aAccelerators = MetaModel::GetConfig()->Get('full_text_accelerators');
 
 		foreach (array_reverse($aAccelerators) as $sClass => $aRestriction)
 		{
+			$bSkip = false;
 			$iPos = array_search($sClass, $aSearchClasses);
 			if ($iPos !== false)
 			{
 				unset($aSearchClasses[$iPos]);
 			}
-			$bSkip = array_key_exists('skip', $aRestriction) ? $aRestriction['skip'] : false ;
+			else
+			{
+				$bSkip = true;
+			}
+			$bSkip |= array_key_exists('skip', $aRestriction) ? $aRestriction['skip'] : false ;
+			if (!in_array($sClass, $aSearchClasses))
+			if ($sClass == $sClassName)
+			{
+				// Class explicitely requested, do NOT skip it
+				// beware: there may not be a 'query' defined for a skipped class !
+				$bSkip = false;
+			}
 			if (!$bSkip)
 			{
 				// NOT skipped, add the class to the list of classes to search into
-				array_unshift($aSearchClasses, $aRestriction['query']);
+				if (array_key_exists('query', $aRestriction))
+				{
+					array_unshift($aSearchClasses, $aRestriction['query']);
+				}
+				else
+				{
+					// No accelerator query
+					array_unshift($aSearchClasses, $sClassName);
+				}
 			}
 		}
 
@@ -1389,10 +1417,10 @@ EOF
 			}
 
 			$sFullTextJS = addslashes($sFullText);
-			$bEnableEnlarge = true;
+			$bEnableEnlarge =  array_key_exists($sClassName, $aAccelerators) && array_key_exists('query', $aAccelerators[$sClassName]);
 			if (array_key_exists($sClassName, $aAccelerators) && array_key_exists('enable_enlarge', $aAccelerators[$sClassName]))
 			{
-				$bEnableEnlarge = $aAccelerators[$sClassName]['enable_enlarge'];
+				$bEnableEnlarge &= $aAccelerators[$sClassName]['enable_enlarge'];
 			}
 			$sEnlargeTheSearch =
 <<<EOF
@@ -1512,7 +1540,7 @@ EOF
 			if ($iCount == 0)
 			{
 				$sFullTextSummary = addslashes(Dict::S('UI:Search:NoObjectFound'));
-				$oPage->add_ready_script("$('#full_text_results').append('$sFullTextSummary');");
+				$oPage->add_ready_script("$('#full_text_results').append('<div id=\"no_object_found\">$sFullTextSummary</div>');");
 			}
 		}
 		break;
@@ -1562,6 +1590,8 @@ EOF
 				$oBlock->RenderContent($oPage, array('table_id' => $sBlockId, 'currentId' => $sBlockId));
 				$oPage->add('</div>');
 				$oPage->P('&nbsp;'); // Some space ?
+				// Hide "no object found"
+				$oPage->add_ready_script('$("#no_object_found").hide();');
 			}
 		}
 		$oPage->add_ready_script(
