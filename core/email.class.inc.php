@@ -321,6 +321,11 @@ class EMail
 	public function GetRecipientTO($bAsString = false)
 	{
 		$aRes = $this->m_oMessage->getTo();
+		if ($aRes === false)
+		{
+			// There is no "To" header field
+			$aRes = array();
+		}
 		if ($bAsString)
 		{
 			$aStrings = array();
