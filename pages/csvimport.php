@@ -993,7 +993,7 @@ EOF
 						iOccurences++;
 					}
 				});
-				if (iOccurences > 1)
+				if ((iOccurences > 1) && (sRefValue != ':none:'))
 				{
 					$(this).parent().css({'border': '2px #D81515 solid'});
 					bResult = false; 
