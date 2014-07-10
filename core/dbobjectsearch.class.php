@@ -72,11 +72,11 @@ class DBObjectSearch
 	}
 
 	/**
-	 * Perform a deep clone (as opposed to "clone" which does copy a reference to the underlying objects
+	 * Perform a deep clone (as opposed to "clone" which does copy a reference to the underlying objects)
 	 **/	 	
 	public function DeepClone()
 	{
-		return unserialize(serialize($this));
+		return unserialize(serialize($this)); // Beware this serializes/unserializes the search and its parameters as well
 	}
 
 	public function AllowAllData() {$this->m_bAllowAllData = true;}
