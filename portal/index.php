@@ -902,50 +902,54 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 	$sLogAttCode = GetConstant($sClass, 'PUBLIC_LOG');
 	$sUserCommentAttCode = GetConstant($sClass, 'USER_COMMENT');
 
-	$bIsEscalateButton = false;
 	$bIsReopenButton = false;
 	$bIsCloseButton = false;
+	$bIsEscalateButton = false;
 	$bEditAttachments = false;
 	$aEditAtt = array(); // List of attributes editable in the main form
 	if (!MetaModel::DBIsReadOnly())
 	{
 		switch($oObj->GetState())
-		{
-			case 'new':
-			case 'assigned':
-			case 'frozen':
-			case 'pending':
-			case 'dispatched':
-			case 'redispatched':
-			$aEditAtt = array(
-				$sLogAttCode => '????'
-			);
-			$bEditAttachments = true;
-			// disabled - $bIsEscalateButton = true;
-			break;
-	
-			case 'escalated_tto':
-			case 'escalated_ttr':
-			$aEditAtt = array(
-				$sLogAttCode => '????'
-			);
-			$bEditAttachments = true;
-			break;
-	
+		{						
 			case 'resolved':
 			$aEditAtt = array();
-			if (array_key_exists('ev_reopen', MetaModel::EnumStimuli($sClass)))
+			$aTransitions = $oObj->EnumTransitions();
+			$oSet = DBObjectSet::FromObject($oObj);
+			// Add the "Reopen" button if this is valid action
+			if (array_key_exists('ev_reopen', $aTransitions) && UserRights::IsStimulusAllowed($sClass, 'ev_reopen', $oSet))
 			{
 				$bIsReopenButton = true;
 				MakeStimulusForm($oP, $oObj, 'ev_reopen', array($sLogAttCode));
 			}
-			$bIsCloseButton = true;
-			MakeStimulusForm($oP, $oObj, 'ev_close', array('user_satisfaction', $sUserCommentAttCode));
+			// Add the "Close" button if this is valid action
+			if (array_key_exists('ev_close', $aTransitions) && UserRights::IsStimulusAllowed($sClass, 'ev_close', $oSet))
+			{
+				$bIsCloseButton = true;
+				MakeStimulusForm($oP, $oObj, 'ev_close', array('user_satisfaction', $sUserCommentAttCode));
+			}
 			break;
 	
 			case 'closed':
-			case 'closure_requested':
+			// By convention 'closed' is the final state of a ticket and nothing can be done in such a state
+			break;
+
 			default:
+			// In all other states, the only possible action is to update the ticket (both the case log and the attachments)
+			// This update is possible only if the case log field is not read-only or hidden in the current state
+			$iFlags = $oObj->GetAttributeFlags($sLogAttCode);
+			$bReadOnly = (($iFlags & (OPT_ATT_READONLY | OPT_ATT_HIDDEN)) != 0);
+			if ($bReadOnly)
+			{
+				$aEditAtt = array();
+				$bEditAttachments = false;				
+			}
+			else
+			{
+				$aEditAtt = array(
+					$sLogAttCode => '????'
+				);
+				$bEditAttachments = true;
+			}
 			break;
 		}
 	}
