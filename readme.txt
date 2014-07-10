@@ -1,4 +1,4 @@
-iTop - version 2.0.3 - 14-Jul-2014
+iTop - version 2.0.3 - 15-Jul-2014
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -249,7 +249,6 @@ Bug fix: the JSON value for an enum should be the raw value, not its translated 
 
 Data model fixes/changes
 ------------------------
-#854 Flag Is null allowed not working on attributes Date and DateTime + the default value is now taken into account
 Fixed issue with 1.x datamodels: dashlets of type "badge" not working (preventing from editing an existing dashboard), since 2.0.2
 Aligned the authentication module with the one of 2.x, to enable the feature "Forgot password" for legacy data models
 Added the "outage" field to simple Change tickets, since it's already present in ITIL Changes.
@@ -295,6 +294,7 @@ Miscellaneous fixes
 #906 iTop gets locked with OnInsert plugin. Better way to handle the lock in order to prevent duplicates in the numbering of Tickets. Note that the iTopMutex now supports re-entrance inside the same PHP page.
 #927 Detect IE7 (or compatibility mode) and warn the user that the application cannot be used with such browsers.
 #951 Properly display localized values for ENUMs in the data model view.
+#955 Translated the label "Open Requests" in the welcome menu
 Completed the Portuguese translation (Brazil), provided in december... (by Marco Tulio?) - modules updated: attachments, change, incident, request and request/ITIL, service for providers
 Portal + templates: Bug fix = when the user selects a template, then go back to select a service for which no template applies, he still gets the tempate fields in the final form.
 Added a helper function to get an icon stored as an ormDocument: ormDocument::GetDownloadURL
@@ -336,6 +336,8 @@ Removed warnings occuring when configuring a list
 Added a warning when upgrading the application while a CRON is being executed on the same DB
 Added an index on "item_org_id" to speed-up the setup and the silo on organizations.
 Add the ability to supply a default "from" email address for the "forgot password" feature, instead of using the same address as for the "to".
+"Portal Users" are not allowed to use the REST/JSON webservices. This case is now properly handled with a specific message.
+Full text search returning irrelevant results (e.g: search on "Location:Bordeauxactive")
 
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
