@@ -286,6 +286,10 @@ class CoreServices implements iRestServiceProvider
 				'verb' => 'core/get_related',
 				'description' => 'Get related objects through the specified relation'
 			);
+			$aOps[] = array(
+				'verb' => 'core/check_credentials',
+				'description' => 'Check user credentials'
+			);
 		}
 		return $aOps;
 	}
@@ -455,6 +459,21 @@ class CoreServices implements iRestServiceProvider
 			}
 			break;
 			
+		case 'core/check_credentials':
+			$oResult = new RestResult();
+			$sUser = RestUtils::GetMandatoryParam($aParams, 'user');
+			$sPassword = RestUtils::GetMandatoryParam($aParams, 'password');
+
+			if (UserRights::CheckCredentials($sUser, $sPassword) !== true)
+			{
+				$oResult->authorized = false;
+			}
+			else
+			{
+				$oResult->authorized = true;
+			}
+			break;
+	
 		default:
 			// unknown operation: handled at a higher level
 		}
