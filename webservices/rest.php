@@ -96,7 +96,7 @@ try
 {
 	utils::UseParamFile();
 
-	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN);
+	$iRet = LoginWebPage::DoLogin(false, true, LoginWebPage::EXIT_RETURN);
 	if ($iRet != LoginWebPage::EXIT_CODE_OK)
 	{
 		switch($iRet)
