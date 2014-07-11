@@ -184,10 +184,13 @@ class EMail
 
 		$oMailer = Swift_Mailer::newInstance($oTransport);
 
-		$iSent = $oMailer->send($this->m_oMessage);
+		$aFailedRecipients = array();
+		$iSent = $oMailer->send($this->m_oMessage, $aFailedRecipients);
 		if ($iSent === 0)
 		{
-			$aIssues = array('No valid recipient for this message.');
+			// Beware: it seems that $aFailedRecipients sometimes contains the recipients that actually received the message !!!
+			IssueLog::Warning('Email sending failed: Some recipients were invalid, aFailedRecipients contains: '.implode(', ', $aFailedRecipients));
+			$aIssues = array('Some recipients were invalid.');
 			return EMAIL_SEND_ERROR;
 		}
 		else
@@ -321,7 +324,7 @@ class EMail
 	public function GetRecipientTO($bAsString = false)
 	{
 		$aRes = $this->m_oMessage->getTo();
-		if ($aRes === false)
+		if ($aRes === null)
 		{
 			// There is no "To" header field
 			$aRes = array();

@@ -595,7 +595,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
         if ($this->_headers->has($field)) {
             return $this->_headers->get($field)->getFieldBodyModel();
         }
-        return false;
+        return null; // Returning null is equivalent to no return, but is easier to read!!
     }
 
     /**
