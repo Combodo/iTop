@@ -243,6 +243,7 @@ JSON/REST API (new version: 1.2)
 #891 Better error reporting when either the parameter auth_user or auth_pwd are missing.
 #877 More flexibility on case log updates (in particular, it is now possible to write the entire case log), remains compatible with the previous API
 #869 API was not outputing case log attributes (not in a structured way)
+New verb: core/check_credentials to implement single sign-on solutions
 Properly handle external and basic authentication methods for REST web services.
 Proper output of boolean values in JSON.
 Bug fix: the JSON value for an enum should be the raw value, not its translated label.
