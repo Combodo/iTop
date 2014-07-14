@@ -2,7 +2,7 @@
 %define logdir %{?_logdir}%{!?_logdir:%{_var}/log}
 
 Name: itop-itsm
-Version: 2.0.2
+Version: 2.0.3
 Release: 1%{?dist}
 # TODO: Use a variable below
 Summary: iTop: IT Operational Portal
@@ -10,13 +10,14 @@ Summary: iTop: IT Operational Portal
 Group: Applications/Databases 
 License: AGPLv3+
 URL: http://www.combodo.com/itop
-Source0: iTop-2.0.2-beta-1462.zip
+#TODO Adjust the line below to the actual name of the "upstream" zip package
+Source0: iTop-2.0.3-1920.zip
 #Source4: install.sh
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # TODO: Use a variable below
-Requires: php >= 5.2.0, php-mysql, php-mcrypt, php-xml, php-cli, php-soap, graphviz
+Requires: php >= 5.2.0, php-mysql, php-mcrypt, php-xml, php-cli, php-soap, php-ldap, graphviz
 #, php-pecl-apc
 # TODO: Use a variable below
 BuildRequires: unzip
@@ -70,5 +71,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 14 2014 Denis Flaven <denis.flaven@combodo.com>
+- Support of Apache 2.4
+- Packaging of iTop 2.0.3
 * Mon Aug 05 2013 Denis Flaven <denis.flaven@combodo.com>
 - ver 1.0
