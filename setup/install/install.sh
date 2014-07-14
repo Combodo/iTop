@@ -94,6 +94,6 @@ fi
 # Substitute variables for templates
 sed -e "s~_ITOP_NAME_~$_ITOP_NAME_~g" -e "s~_ITOP_SYSCONFDIR_~$subconf~g" -e "s~_ITOP_DATADIR_~$sublocal/share~g" -e "s~_ITOP_LOGDIR_~$subvar/log~g" ./web/setup/install/apache.conf.tpl > $webconf/conf.d/$_ITOP_NAME_.conf
 sed -e "s~_ITOP_NAME_~$_ITOP_NAME_~g" -e "s~_ITOP_SYSCONFDIR_~$subconf~g" -e "s~_ITOP_DATADIR_~$sublocal/share~g" -e "s~_ITOP_LOGDIR_~$subvar/log~g" ./web/setup/install/cron.tpl > $conf/../cron.d/$_ITOP_NAME_
-chmod 644 $_ITOP_WEBCONFDIR_/conf.d/$_ITOP_NAME_.conf $conf/../cron.d/$_ITOP_NAME_
+chmod 644 $webconf/conf.d/$_ITOP_NAME_.conf $conf/../cron.d/$_ITOP_NAME_
 
 exit 0
