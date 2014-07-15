@@ -75,6 +75,9 @@ install -m 755 -d $_ITOP_DATADIR_ $_ITOP_LOGDIR_ "$_ITOP_VARLIBDIR_/data"
 echo "Copying files ..."
 cp -a ./web/* $_ITOP_DATADIR_
 
+echo "Fixing line endings in LICENSE and README files"
+sed -i -e "s/\r$//g" ./LICENSE ./README
+
 echo "Creating symlinks..."
 (cd $_ITOP_DATADIR_ ; \
 ln -s $subconf conf ;\
@@ -87,13 +90,14 @@ ln -s $subvar/lib/$_ITOP_NAME_/data data ;\
 
 
 if [ _"$HEAD" != _"" ]; then
-	echo Creating $webconf/conf.d and $conf/../cron.d directories
-	install -m 755 -d $webconf/conf.d $conf/../cron.d
+	echo Creating $webconf/conf.d, $conf/../cron.d and $conf/../logrotate.d directories
+	install -m 755 -d $webconf/conf.d $conf/../cron.d $conf/../logrotate.d
 fi
 
 # Substitute variables for templates
 sed -e "s~_ITOP_NAME_~$_ITOP_NAME_~g" -e "s~_ITOP_SYSCONFDIR_~$subconf~g" -e "s~_ITOP_DATADIR_~$sublocal/share~g" -e "s~_ITOP_LOGDIR_~$subvar/log~g" ./web/setup/install/apache.conf.tpl > $webconf/conf.d/$_ITOP_NAME_.conf
 sed -e "s~_ITOP_NAME_~$_ITOP_NAME_~g" -e "s~_ITOP_SYSCONFDIR_~$subconf~g" -e "s~_ITOP_DATADIR_~$sublocal/share~g" -e "s~_ITOP_LOGDIR_~$subvar/log~g" ./web/setup/install/cron.tpl > $conf/../cron.d/$_ITOP_NAME_
-chmod 644 $webconf/conf.d/$_ITOP_NAME_.conf $conf/../cron.d/$_ITOP_NAME_
+sed -e "s~_ITOP_NAME_~$_ITOP_NAME_~g" -e "s~_ITOP_SYSCONFDIR_~$subconf~g" -e "s~_ITOP_DATADIR_~$sublocal/share~g" -e "s~_ITOP_LOGDIR_~$subvar/log~g" ./web/setup/install/logrotate.tpl > $conf/../logrotate.d/$_ITOP_NAME_
+chmod 644 $webconf/conf.d/$_ITOP_NAME_.conf $conf/../cron.d/$_ITOP_NAME_ $conf/../logrotate.d/$_ITOP_NAME_
 
 exit 0

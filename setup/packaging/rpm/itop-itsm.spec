@@ -11,7 +11,7 @@ Group: Applications/Databases
 License: AGPLv3+
 URL: http://www.combodo.com/itop
 #TODO Adjust the line below to the actual name of the "upstream" zip package
-Source0: iTop-2.0.3-1920.zip
+Source0: iTop-2.0.3-1916.zip
 #Source4: install.sh
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -54,6 +54,7 @@ rm -rf %{buildroot}
 %{_datadir}/*
 %{webconfdir}/conf.d/%{name}.conf
 %{_sysconfdir}/cron.d/%{name}
+%{_sysconfdir}/logrotate.d/%{name}
 %{_var}/lib/%{name}/approot.inc.php
 
 # TODO: Use a variable below
@@ -71,6 +72,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 15 2014 Denis Flaven <denis.flaven@combodo.com>
+- Added use of logrotate for cron.log and error.log, thanks to Igor Gnatenko
+- Fixed the line endings on README and LICENSE
 * Mon Jul 14 2014 Denis Flaven <denis.flaven@combodo.com>
 - Support of Apache 2.4
 - Packaging of iTop 2.0.3
