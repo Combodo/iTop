@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -14,7 +14,16 @@
 //   along with this program; if not, write to the Free Software
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-SetupWebPage::AddModule(
+/**
+ * Module providing advanced CIs for modeling storage: SAN, Volumes...
+ *
+ * @author      Erwan Taloc <erwan.taloc@combodo.com>
+ * @author      Romain Quetiez <romain.quetiez@combodo.com>
+ * @author      Denis Flaven <denis.flaven@combodo.com>
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+ 
+ SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-storage-mgmt/2.0.0',
 	array(

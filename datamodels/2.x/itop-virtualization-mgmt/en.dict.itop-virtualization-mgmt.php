@@ -20,7 +20,7 @@
  * @author      Erwan Taloc <erwan.taloc@combodo.com>
  * @author      Romain Quetiez <romain.quetiez@combodo.com>
  * @author      Denis Flaven <denis.flaven@combodo.com>
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 Dict::Add('EN US', 'English', 'English', array(
