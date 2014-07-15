@@ -1,49 +1,40 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @author	Vladimir Shilov <shilow@ukr.net>
-
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
+ * 
+ * @author   Vladimir Kunin <v.b.kunin@gmail.com>
+ * @license   http://opensource.org/licenses/AGPL-3.0
+ *
+ * 
+ * Инструкция по установке
+ * 
+ * Процесс установки заключается в замене имеющихся локализационных файлов полученными и последующем запуске процедуры обновления iTop для перекомпиляции кода.
+ * 	1. Скопируйте с заменой два полученных файла из "itop-rus/dictionaries" в "путь/до/вашего/itop/dictionaries".
+ * 	2. Скопируйте с заменой полученные файлы "itop-rus/datamodels/2.x/название-модуля/ru.dict.название-модуля.php" в "путь/до/вашего/itop/datamodels/2.x/название-модуля".
+ *  3. Перейдите по адресу "http://адрес/вашего/itop/setup", при этом файл "путь/до/вашего/itop/conf/production/config-itop.php" должен быть доступен для записи.
+ *  4. На второй странице установщика выберите "Upgrade an existing iTop instance" и следуйте дальнейшим инструкциям установщика.
+ *
+ * Ответы на вопросы по установке и использованию переводов, а также на любые другие вопросы по iTop всегда можно получить на сайте сообщества iTop по-русски http://community.itop-itsm.ru.
+ *
  */
 
+
+//////////////////////////////////////////////////////////////////////
+// Classes in 'gui'
+//////////////////////////////////////////////////////////////////////
+//
+
+//////////////////////////////////////////////////////////////////////
+// Classes in 'application'
+//////////////////////////////////////////////////////////////////////
+//
+
+//
+// Class: AuditCategory
+//
+
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:QueryOQL' => 'OQL Query~~',
-	'Class:QueryOQL+' => '',
-	'Class:QueryOQL/Attribute:oql' => 'Выражение~~',
-	'Class:QueryOQL/Attribute:oql+' => '',
-	'Class:AuditRule' => 'Правило аудита',
-	'Class:AuditRule+' => 'Правило для проверки данной категории аудита',
-	'Class:AuditRule/Attribute:name' => 'Название правила',
-	'Class:AuditRule/Attribute:name+' => 'Краткое название этого правила',
-	'Class:AuditRule/Attribute:description' => 'Описание правила аудита',
-	'Class:AuditRule/Attribute:description+' => 'Полное описание этого правила аудита',
-	'Class:AuditRule/Attribute:query' => 'Запрос на исполнение',
-	'Class:AuditRule/Attribute:query+' => 'OQL выражение на исполнение',
-	'Class:AuditRule/Attribute:valid_flag' => 'Действительные объекты?',
-	'Class:AuditRule/Attribute:valid_flag+' => 'Истина, если правило возвращает действительный объект, иначе ложь',
-	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'ложь',
-	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'ложь',
-	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'истина',
-	'Class:AuditRule/Attribute:valid_flag/Value:true+' => 'истина',
-	'Class:AuditRule/Attribute:category_id' => 'Категория',
-	'Class:AuditRule/Attribute:category_id+' => 'Категория этого правила',
 	'Class:AuditCategory' => 'Категория аудита',
 	'Class:AuditCategory+' => 'Раздел внутри общего аудита',
 	'Class:AuditCategory/Attribute:name' => 'Название категории',
@@ -54,40 +45,63 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:AuditCategory/Attribute:definition_set+' => 'OQL выражение, определяющее набор объектов для проверки',
 	'Class:AuditCategory/Attribute:rules_list' => 'Правила аудита',
 	'Class:AuditCategory/Attribute:rules_list+' => 'Правила аудита для этой категории',
-	'Class:URP_Profiles' => 'Профиль',
-	'Class:URP_Profiles+' => 'Пользовательский профиль',
-	'Class:URP_Profiles/Attribute:name' => 'Название',
-	'Class:URP_Profiles/Attribute:name+' => 'метка',
-	'Class:URP_Profiles/Attribute:description' => 'Описание',
-	'Class:URP_Profiles/Attribute:description+' => 'однострочное описание',
-	'Class:URP_Profiles/Attribute:user_list' => 'Пользователи',
-	'Class:URP_Profiles/Attribute:user_list+' => 'лица, имеющие эту роль',
-	'Class:URP_UserProfile' => 'Пользователь в профиль',
-	'Class:URP_UserProfile+' => 'профили пользователей',
-	'Class:URP_UserProfile/Attribute:userid' => 'Пользователь',
-	'Class:URP_UserProfile/Attribute:userid+' => 'учетная запись пользователя',
-	'Class:URP_UserProfile/Attribute:profileid' => 'Профиль',
-	'Class:URP_UserProfile/Attribute:profileid+' => 'использование профиля',
-	'Class:URP_UserProfile/Attribute:reason' => 'Причина',
-	'Class:URP_UserProfile/Attribute:reason+' => 'объяснение, почему этому человеку назначена эта роль',
-	'Class:URP_UserOrg' => 'Организации пользователя',
-	'Class:URP_UserOrg+' => 'Разрешённые организации',
-	'Class:URP_UserOrg/Attribute:userid' => 'Пользователь',
-	'Class:URP_UserOrg/Attribute:userid+' => 'учетная запись пользователя',
-	'Class:URP_UserOrg/Attribute:allowed_org_id' => 'Организация',
-	'Class:URP_UserOrg/Attribute:allowed_org_id+' => 'Разрешённая организация',
-	'Class:URP_UserOrg/Attribute:reason' => 'Причина',
-	'Class:URP_UserOrg/Attribute:reason+' => 'объяснение, почему этот человек имеет право видеть данные, принадлежащие к этой организации',
+));
+
+//
+// Class: AuditRule
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:AuditRule' => 'Правило аудита',
+	'Class:AuditRule+' => 'Правило для проверки данной категории аудита',
+	'Class:AuditRule/Attribute:name' => 'Название правила',
+	'Class:AuditRule/Attribute:name+' => 'Краткое название этого правила',
+	'Class:AuditRule/Attribute:description' => 'Описание правила аудита',
+	'Class:AuditRule/Attribute:description+' => 'Полное описание этого правила аудита',
+	'Class:AuditRule/Attribute:query' => 'Запрос на исполнение',
+	'Class:AuditRule/Attribute:query+' => 'OQL выражение на исполнение',
+	'Class:AuditRule/Attribute:valid_flag' => 'Действительные объекты?',
+	'Class:AuditRule/Attribute:valid_flag+' => 'Истина, если правило возвращает действительный объект, иначе ложь',
+	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'истина',
+	'Class:AuditRule/Attribute:valid_flag/Value:true+' => 'истина',
+	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'ложь',
+	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'ложь',
+	'Class:AuditRule/Attribute:category_id' => 'Категория',
+	'Class:AuditRule/Attribute:category_id+' => 'Категория этого правила',
 	'Class:AuditRule/Attribute:category_name' => 'Категория',
 	'Class:AuditRule/Attribute:category_name+' => 'Название категории для этого правила',
-	'Class:Query' => 'Query~~',
-	'Class:Query+' => '',
+));
+
+//
+// Class: QueryOQL
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:Query' => 'Запрос',
+	'Class:Query+' => 'Запрос - это набор данных, определенных динамическим путем',
 	'Class:Query/Attribute:name' => 'Имя~~',
-	'Class:Query/Attribute:name+' => '',
+	'Class:Query/Attribute:name+' => 'Идентифицирует запрос',
 	'Class:Query/Attribute:description' => 'Расшифровка~~',
-	'Class:Query/Attribute:description+' => '',
+	'Class:Query/Attribute:description+' => 'Длинное описание запроса (назначение, использование и т.д.)',
 	'Class:Query/Attribute:fields' => 'Значения~~',
-	'Class:Query/Attribute:fields+' => '',
+	'Class:Query/Attribute:fields+' => 'Список атрибутов для экспорта, разделённых запятыми (или alias.attribute)',
+
+	'Class:QueryOQL' => 'OQL запрос',
+	'Class:QueryOQL+' => 'Запрос, основанный на OQL (Object Query Language)',
+	'Class:QueryOQL/Attribute:oql' => 'Выражение',
+	'Class:QueryOQL/Attribute:oql+' => 'OQL Выражение',
+));
+
+//////////////////////////////////////////////////////////////////////
+// Classes in 'addon/userrights'
+//////////////////////////////////////////////////////////////////////
+//
+
+//
+// Class: User
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:User' => 'Пользователь',
 	'Class:User+' => 'Пользовательский логин',
 	'Class:User/Attribute:finalclass' => 'Тип счёта',
@@ -98,8 +112,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:User/Attribute:last_name+' => 'Фамилия соответсвующего контакта',
 	'Class:User/Attribute:first_name' => 'Имя',
 	'Class:User/Attribute:first_name+' => 'Имя соответсвующего контакта',
-	'Class:User/Attribute:email' => 'e-mail',
-	'Class:User/Attribute:email+' => 'e-mail соответсвующего контакта',
+	'Class:User/Attribute:email' => 'email',
+	'Class:User/Attribute:email+' => 'email соответсвующего контакта',
 	'Class:User/Attribute:login' => 'Логин',
 	'Class:User/Attribute:login+' => 'строка идентификации пользователя',
 	'Class:User/Attribute:language' => 'Язык',
@@ -109,12 +123,34 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:User/Attribute:language/Value:FR FR' => 'Французский',
 	'Class:User/Attribute:language/Value:FR FR+' => 'Французский (Франция)',
 	'Class:User/Attribute:profile_list' => 'Профили',
-	'Class:User/Attribute:profile_list+' => 'Роли, предоставление прав этому человеку',
+	'Class:User/Attribute:profile_list+' => 'Роли, предоставляющие права этому пользователю',
 	'Class:User/Attribute:allowed_org_list' => 'Разрешённые организации',
-	'Class:User/Attribute:allowed_org_list+' => 'Пользователь может видеть данные только указанных ниже организации. Оставьте поле пустым, для доступа ко всем данным.',
-	'Class:User/Attribute:allowed_org_list+' => 'Пользователь может видеть данные только указанных ниже организации. Оставьте поле пустым, для доступа ко всем данным.',
+	'Class:User/Attribute:allowed_org_list+' => 'Пользователь может видеть данные только указанных ниже организации. Оставьте поле пустым для доступа ко всем данным.',
+
 	'Class:User/Error:LoginMustBeUnique' => 'Логин должен быть уникальным - "%1s" уже используется.',
-	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'По крайней мере, один профиль должен быть отнесен к этому пользователю.',
+	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Как минимум один профиль должен быть назначен данному пользователю.',
+));
+
+//
+// Class: URP_Profiles
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:URP_Profiles' => 'Профиль',
+	'Class:URP_Profiles+' => 'Пользовательский профиль',
+	'Class:URP_Profiles/Attribute:name' => 'Название',
+	'Class:URP_Profiles/Attribute:name+' => 'метка',
+	'Class:URP_Profiles/Attribute:description' => 'Описание',
+	'Class:URP_Profiles/Attribute:description+' => 'однострочное описание',
+	'Class:URP_Profiles/Attribute:user_list' => 'Пользователи',
+	'Class:URP_Profiles/Attribute:user_list+' => 'лица, имеющие эту роль',
+));
+
+//
+// Class: URP_Dimensions
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_Dimensions' => 'размерность',
 	'Class:URP_Dimensions+' => 'применение размерности (определение силосов)',
 	'Class:URP_Dimensions/Attribute:name' => 'Название',
@@ -123,14 +159,52 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_Dimensions/Attribute:description+' => 'краткое описание',
 	'Class:URP_Dimensions/Attribute:type' => 'Тип',
 	'Class:URP_Dimensions/Attribute:type+' => 'имя класса или типа данных (проекционный блок)',
+));
+
+//
+// Class: URP_UserProfile
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:URP_UserProfile' => 'Пользователь в профиль',
+	'Class:URP_UserProfile+' => 'профили пользователей',
+	'Class:URP_UserProfile/Attribute:userid' => 'Пользователь',
+	'Class:URP_UserProfile/Attribute:userid+' => 'учетная запись пользователя',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Логин',
 	'Class:URP_UserProfile/Attribute:userlogin+' => 'Логин пользователя',
+	'Class:URP_UserProfile/Attribute:profileid' => 'Профиль',
+	'Class:URP_UserProfile/Attribute:profileid+' => 'использование профиля',
 	'Class:URP_UserProfile/Attribute:profile' => 'Профиль',
 	'Class:URP_UserProfile/Attribute:profile+' => 'Название профиля',
+	'Class:URP_UserProfile/Attribute:reason' => 'Причина',
+	'Class:URP_UserProfile/Attribute:reason+' => 'объяснение, почему этому человеку назначена эта роль',
+));
+
+//
+// Class: URP_UserOrg
+//
+
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:URP_UserOrg' => 'Организации пользователя',
+	'Class:URP_UserOrg+' => 'Разрешённые организации',
+	'Class:URP_UserOrg/Attribute:userid' => 'Пользователь',
+	'Class:URP_UserOrg/Attribute:userid+' => 'учетная запись пользователя',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Логин',
 	'Class:URP_UserOrg/Attribute:userlogin+' => 'Логин пользователя',
+	'Class:URP_UserOrg/Attribute:allowed_org_id' => 'Организация',
+	'Class:URP_UserOrg/Attribute:allowed_org_id+' => 'Разрешённая организация',
 	'Class:URP_UserOrg/Attribute:allowed_org_name' => 'Организация',
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Разрешённая организация',
+	'Class:URP_UserOrg/Attribute:reason' => 'Причина',
+	'Class:URP_UserOrg/Attribute:reason+' => 'объяснение, почему этот человек имеет право видеть данные, принадлежащие к этой организации',
+));
+
+//
+// Class: URP_ProfileProjection
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_ProfileProjection' => 'проэктирование профилей',
 	'Class:URP_ProfileProjection+' => 'проэктирование профилей',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Размерность',
@@ -145,6 +219,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL выражение (используя $user) | константа |  | +атрибут кода',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Атрибут',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Целевой атрибут кода (необязательный)',
+));
+
+//
+// Class: URP_ClassProjection
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_ClassProjection' => 'прожктирование классов',
 	'Class:URP_ClassProjection+' => 'прожктирование классов',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Размерность',
@@ -157,6 +238,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL выражение (используя $this) | константа |  | +атрибут кода',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Атрибут',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Целевой атрибут кода (необязательный)',
+));
+
+//
+// Class: URP_ActionGrant
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_ActionGrant' => 'действие разрешений',
 	'Class:URP_ActionGrant+' => 'разрешения на классы',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Профиль',
@@ -173,6 +261,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'нет',
 	'Class:URP_ActionGrant/Attribute:action' => 'Действие',
 	'Class:URP_ActionGrant/Attribute:action+' => 'действие выполняемое на данном классе',
+));
+
+//
+// Class: URP_StimulusGrant
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_StimulusGrant' => 'разрешения стимулов',
 	'Class:URP_StimulusGrant+' => 'разрешения на стимулы в жизненном цикле объекта',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Профиль',
@@ -189,19 +284,34 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'нет',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Стимулы',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'код стимулов',
+));
+
+//
+// Class: URP_AttributeGrant
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_AttributeGrant' => 'разрешения атрибутов',
 	'Class:URP_AttributeGrant+' => 'разрешения на уровне атрибутов',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Действие предоставления',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'действие предоставления',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Атрибут',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'Код атрибута',
-	'BooleanLabel:yes' => 'да',
-	'BooleanLabel:no' => 'нет',
+));
+
+//
+// String from the User Interface: menu, messages, buttons, etc...
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'BooleanLabel:yes' => 'yes',
+	'BooleanLabel:no' => 'no',
 	'Menu:WelcomeMenu' => 'Добро пожаловать',
 	'Menu:WelcomeMenu+' => 'Добро пожаловать в iTop',
 	'Menu:WelcomeMenuPage' => 'Добро пожаловать',
 	'Menu:WelcomeMenuPage+' => 'Добро пожаловать в iTop',
 	'UI:WelcomeMenu:Title' => 'Добро пожаловать в iTop',
+
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop является порталом оперативного централизованного управления IT инфраструктурой с открытым исходным кодом.</p>
 <ul>Он включает:
 <li>A complete CMDB (Configuration management database) to document and manage the IT inventory.</li>
@@ -212,6 +322,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 <li>Панели для быстрого обзора IT.</li>
 </ul>
 <p>Все модули могут быть настроены, шаг за шагом, независмо друг от друга.</p>',
+
 	'UI:WelcomeMenu:RightBlock' => '<p>iTop ориентирован на предоставления сервисов, он позволяет IT специалистам легко управляться с несколькими заказчиками или организациями.
 <ul>iTop обеспечивает многофункциональный набор бизнес-процессов, которые:
 <li>Повышают эффективность управления IT</li> 
@@ -241,15 +352,15 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Button:Search' => ' Поиск ',
 	'UI:Button:Query' => ' Запрос ',
 	'UI:Button:Ok' => 'Ok',
-	'UI:Button:Save' => 'Сохранить~~',
+	'UI:Button:Save' => 'Сохранить',
 	'UI:Button:Cancel' => 'Отмена',
 	'UI:Button:Apply' => 'Применить',
 	'UI:Button:Back' => ' << Назад ',
-	'UI:Button:Restart' => ' |<< Перезапустить ~~',
+	'UI:Button:Restart' => ' |<< Перезапустить ',
 	'UI:Button:Next' => ' Вперёд >> ',
-	'UI:Button:Finish' => ' Конец ',
+	'UI:Button:Finish' => ' Завершить ',
 	'UI:Button:DoImport' => ' Выполнить импорт ! ',
-	'UI:Button:Done' => ' Сделать ',
+	'UI:Button:Done' => ' Готово ',
 	'UI:Button:SimulateImport' => ' Эмулировать импорт ',
 	'UI:Button:Test' => 'Тестировать!',
 	'UI:Button:Evaluate' => ' Оценка ',
@@ -261,8 +372,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Button:FilterList' => ' Фильтр... ',
 	'UI:Button:Create' => ' Создать ',
 	'UI:Button:Delete' => ' Удалить ! ',
+	'UI:Button:Rename' => ' Переименовать...',
 	'UI:Button:ChangePassword' => ' Сменить пароль ',
 	'UI:Button:ResetPassword' => ' Сбросить пароль ',
+	
 	'UI:SearchToggle' => 'Поиск',
 	'UI:ClickToCreateNew' => 'Создать: %1$s',
 	'UI:SearchFor_Class' => 'Поиск: %1$s',
@@ -281,6 +394,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Error:CannotWriteToTmp_Dir' => ' Невозможно записать временный файл на диск. upload_tmp_dir = "%1$s".',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'Загрузка остановлена по расширению. (Имя файла = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'Загрузка файла не удалась по неизвестной причине. (Код ошибки = "%1$s").',
+	
 	'UI:Error:1ParametersMissing' => 'Ошибка: следующий параметр должен быть указан для этой операции: %1$s.',
 	'UI:Error:2ParametersMissing' => 'Ошибка: следующие параметры должен быть указан для этой операции: %1$s и %2$s.',
 	'UI:Error:3ParametersMissing' => 'Ошибка: следующие параметры должен быть указан для этой операции: %1$s, %2$s и %3$s.',
@@ -296,6 +410,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Error:ObjectAlreadyCloned' => 'Ошибка: объект уже клонирован!',
 	'UI:Error:ObjectAlreadyCreated' => 'Ошибка: объект уже создан!',
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Ошибка: недействительный стимул "%1$s" на объекте %2$s в состоянии "%3$s".',
+	
+	
 	'UI:GroupBy:Count' => 'Счётчик',
 	'UI:GroupBy:Count+' => 'Количество элементов',
 	'UI:CountOfObjects' => '%1$d объектов соответствует критериям.',
@@ -305,7 +421,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:HistoryTab' => 'История',
 	'UI:NotificationsTab' => 'Оповещения',
 	'UI:History:BulkImports' => 'История~~',
-	'UI:History:BulkImports+' => '',
+	'UI:History:BulkImports+' => 'List of CSV imports (latest import first)',
 	'UI:History:BulkImportDetails' => 'Changes resulting from the CSV import performed on %1$s (by %2$s)~~',
 	'UI:History:Date' => 'Дата',
 	'UI:History:Date+' => 'Дата изменения',
@@ -314,21 +430,22 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:History:Changes' => 'Изменения',
 	'UI:History:Changes+' => 'Изменения, внесенные в объект',
 	'UI:History:StatsCreations' => 'Создан~~',
-	'UI:History:StatsCreations+' => '',
+	'UI:History:StatsCreations+' => 'Count of objects created',
 	'UI:History:StatsModifs' => 'Изменен~~',
-	'UI:History:StatsModifs+' => '',
+	'UI:History:StatsModifs+' => 'Count of objects modified',
 	'UI:History:StatsDeletes' => 'Удален~~',
-	'UI:History:StatsDeletes+' => '',
+	'UI:History:StatsDeletes+' => 'Count of objects deleted',
 	'UI:Loading' => 'Загрузка...',
 	'UI:Menu:Actions' => 'Действия',
 	'UI:Menu:OtherActions' => 'Другие Действия',
 	'UI:Menu:New' => 'Новый...',
 	'UI:Menu:Add' => 'Добавить...',
 	'UI:Menu:Manage' => 'Управление...',
-	'UI:Menu:EMail' => 'eMail',
-	'UI:Menu:CSVExport' => 'Экспорт CSV',
+	'UI:Menu:EMail' => 'Отправить ссылку по email',
+	'UI:Menu:CSVExport' => 'Экспорт в CSV',
 	'UI:Menu:Modify' => 'Изменить...',
 	'UI:Menu:Delete' => 'Удалить...',
+	'UI:Menu:Manage' => 'Управление...',
 	'UI:Menu:BulkDelete' => 'Удалить...',
 	'UI:UndefinedObject' => 'неопределённый',
 	'UI:Document:OpenInNewWindow:Download' => 'Открыть в новом окне: %1$s, Загрузка: %2$s',
@@ -348,14 +465,39 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Details+' => 'Подробности',
 	'UI:SearchValue:Any' => '* Любой *',
 	'UI:SearchValue:Mixed' => '* смешанный *',
-	'UI:SearchValue:NbSelected' => '# выбрано~~',
+	'UI:SearchValue:NbSelected' => '# выбрано',
+	'UI:SearchValue:CheckAll' => 'Отметить все',
+	'UI:SearchValue:UncheckAll' => 'Сбросить',
 	'UI:SelectOne' => '-- выбрать --',
 	'UI:Login:Welcome' => 'Добро пожаловать в iTop!',
 	'UI:Login:IncorrectLoginPassword' => 'Неправильный логин/пароль. Пожалуйста, попробуйте еще раз.',
-	'UI:Login:IdentifyYourself' => 'Представтесть, прежде чем продолжить',
+	'UI:Login:IdentifyYourself' => 'Представьтесь, прежде чем продолжить',
 	'UI:Login:UserNamePrompt' => 'Имя пользователя',
 	'UI:Login:PasswordPrompt' => 'Пароль',
-	'UI:Login:About' => '~~',
+	'UI:Login:ForgotPwd' => 'Забыли пароль?',
+	'UI:Login:ForgotPwdForm' => 'Восстановление пароля',
+	'UI:Login:ForgotPwdForm+' => 'Введите свой логин для входа в систему и нажмите "Отправить". iTop отправит email с инструкциями по восстановлению пароля на ваш электронный адрес.',
+	'UI:Login:ResetPassword' => 'Отправить',
+	'UI:Login:ResetPwdFailed' => 'Не удалось оптравить email: %1$s',
+
+	'UI:ResetPwd-Error-WrongLogin' => 'аккаунт с логином "%1$s" не найден',
+	'UI:ResetPwd-Error-NotPossible' => 'external accounts do not allow password reset.',
+	'UI:ResetPwd-Error-FixedPwd' => 'the account does not allow password reset.',
+	'UI:ResetPwd-Error-NoContact' => 'данный аккаунт не связан с персоной.',
+	'UI:ResetPwd-Error-NoEmailAtt' => 'the account is not associated to a person having an email attribute. Please Contact your administrator.',
+	'UI:ResetPwd-Error-NoEmail' => 'missing an email address. Please Contact your administrator.',
+	'UI:ResetPwd-Error-Send' => 'email transport technical issue. Please Contact your administrator.',
+	'UI:ResetPwd-EmailSent' => 'Пожалуйста, проверьте свой почтовый ящик и следуйте инструкциям.',
+	'UI:ResetPwd-EmailSubject' => 'Reset your iTop password',
+	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your iTop password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.',
+
+	'UI:ResetPwd-Title' => 'Reset password',
+	'UI:ResetPwd-Error-InvalidToken' => 'Sorry, either the password has already been reset, or you have received several emails. Please make sure that you use the link provided in the very last email received.',
+	'UI:ResetPwd-Error-EnterPassword' => 'Enter a new password for the account \'%1$s\'.',
+	'UI:ResetPwd-Ready' => 'The password has been changed.',
+	'UI:ResetPwd-Login' => 'Click here to login...',
+
+	'UI:Login:About' => '',
 	'UI:Login:ChangeYourPassword' => 'Изменение пароля',
 	'UI:Login:OldPasswordPrompt' => 'Старый пароль',
 	'UI:Login:NewPasswordPrompt' => 'Новый пароль',
@@ -365,12 +507,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:LogOff:ThankYou' => 'Спасибо за использование iTop',
 	'UI:LogOff:ClickHereToLoginAgain' => 'Нажмите здесь, чтобы снова войти...',
 	'UI:ChangePwdMenu' => 'Изменить пароль...',
-	'UI:Login:PasswordChanged' => 'Пароль успешно установлен !~~',
+	'UI:Login:PasswordChanged' => 'Пароль успешно изменён!',
 	'UI:AccessRO-All' => 'Только чтение~~',
 	'UI:AccessRO-Users' => 'Только чтение для конечных пользователей~~',
 	'UI:ApplicationEnvironment' => 'Application environment: %1$s~~',
 	'UI:Login:RetypePwdDoesNotMatch' => 'Пароли не совпадают',
-	'UI:Button:Login' => 'Введите iTop',
+	'UI:Button:Login' => 'Войти',
 	'UI:Login:Error:AccessRestricted' => 'Доступ к iTop ограничен. Пожалуйста, свяжитесь с администратором iTop.',
 	'UI:Login:Error:AccessAdmin' => 'Доступ ограничен для лиц с административными привилегиями. Пожалуйста, свяжитесь с администратором iTop.',
 	'UI:CSVImport:MappingSelectOne' => '-- выбрать один --',
@@ -395,10 +537,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:CSVImport:ObjectsWereModified' => '%1$d объект(ы) изменён.',
 	'UI:CSVImport:ObjectsWereAdded' => '%1$d объект(ы) был добавлен.',
 	'UI:CSVImport:ObjectsHadErrors' => '%1$d объект(ы) содержит ошибки.',
-	'UI:Title:CSVImportStep2' => 'Step 2 of 5: Опции данных CSV',
-	'UI:Title:CSVImportStep3' => 'Step 3 of 5: Распределение данных',
-	'UI:Title:CSVImportStep4' => 'Step 4 of 5: Симуляция импорта',
-	'UI:Title:CSVImportStep5' => 'Step 5 of 5: Импорт завершён',
+	'UI:Title:CSVImportStep2' => 'Шаг 2 из 5: Опции данных CSV',
+	'UI:Title:CSVImportStep3' => 'Шаг 3 из 5: Распределение данных',
+	'UI:Title:CSVImportStep4' => 'Шаг 4 из 5: Симуляция импорта',
+	'UI:Title:CSVImportStep5' => 'Шаг 5 из 5: Импорт завершён',
 	'UI:CSVImport:LinesNotImported' => 'Строки небыли загружены:',
 	'UI:CSVImport:LinesNotImported+' => 'Следующие строки не были импортированы, потому что они содержат ошибки',
 	'UI:CSVImport:SeparatorComma+' => ', (запятая)',
@@ -422,20 +564,22 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:CSVImport:CommentsAndHeader' => 'Коментарии и заголовок',
 	'UI:CSVImport:SelectClass' => 'Выбор класса импорта:',
 	'UI:CSVImport:AdvancedMode' => 'Расширенный режим',
-	'UI:CSVImport:AdvancedMode+' => 'В расширенном режиме "id" (первичный ключ) объекта может быть использован для обновления и переименования объектов.Однако колонка "id" (if present) может быть использовать только как критерий поиска и не модет быть совмещена с любым другим критерием поиска.',
+	'UI:CSVImport:AdvancedMode+' => 'In advanced mode the "id" (primary key) of the objects can be used to update and rename objects.' .
+									'However the column "id" (if present) can only be used as a search criteria and can not be combined with any other search criteria.',
 	'UI:CSVImport:SelectAClassFirst' => 'Для настройки рапределения, в первую очередь выберите класс.',
 	'UI:CSVImport:HeaderFields' => 'Поля',
 	'UI:CSVImport:HeaderMappings' => 'Распределение',
 	'UI:CSVImport:HeaderSearch' => 'Поиск?',
 	'UI:CSVImport:AlertIncompleteMapping' => 'Необходимо выбрать распределение для каждой ячейки.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Необходимо выбрать, по крайней мере один критерий',
-	'UI:CSVImport:Encoding' => 'Кодировка символов',
+	'UI:CSVImport:Encoding' => 'Кодировка символов',	
 	'UI:UniversalSearchTitle' => 'iTop - Универсальный поиск',
 	'UI:UniversalSearch:Error' => 'Ошибка: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Выбор класса для поиска: ',
+
 	'UI:CSVReport-Value-Modified' => 'Изменен~~',
-	'UI:CSVReport-Value-SetIssue' => 'Не может быть изменен - reason: %1$s~~',
-	'UI:CSVReport-Value-ChangeIssue' => 'Не может быть изменен %1$s - reason: %2$s~~',
+	'UI:CSVReport-Value-SetIssue' => 'Не может быть изменен - причина: %1$s~~',
+	'UI:CSVReport-Value-ChangeIssue' => 'Не может быть изменен %1$s - причина: %2$s~~',
 	'UI:CSVReport-Value-NoMatch' => 'Нет совпадений',
 	'UI:CSVReport-Value-Missing' => 'Отсутствует обязательное значение',
 	'UI:CSVReport-Value-Ambiguous' => 'Ambiguous: найдено %1$s объектов~~',
@@ -458,6 +602,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:CSVReport-Row-Issue-Reconciliation' => 'Невозможно согласовать',
 	'UI:CSVReport-Row-Issue-Ambiguous' => 'Согласование спорное',
 	'UI:CSVReport-Row-Issue-Internal' => 'Внутренняя ошибка: %1$s, %2$s~~',
+
 	'UI:CSVReport-Icon-Unchanged' => 'Неизмен.',
 	'UI:CSVReport-Icon-Modified' => 'Измен.',
 	'UI:CSVReport-Icon-Missing' => 'Упущен.',
@@ -472,10 +617,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:CSVReport-Stats-Errors' => '%1$.0f %% загруженных объектов имеют ошибки. Проигнорированы.',
 	'UI:CSVReport-Stats-Created' => '%1$.0f %% загруженных объектов были созданы.',
 	'UI:CSVReport-Stats-Modified' => '%1$.0f %% загруженных объектов были изменены.',
+
 	'UI:CSVExport:AdvancedMode' => 'Расширенный режим',
-	'UI:CSVExport:AdvancedMode+' => '',
+	'UI:CSVExport:AdvancedMode+' => 'In advanced mode, several columns are added to the export: the id of the object, the id of external keys and their reconciliation attributes.',
 	'UI:CSVExport:LostChars' => 'Проблема кодировки',
-	'UI:CSVExport:LostChars+' => '',
+	'UI:CSVExport:LostChars+' => 'The downloaded file will be encoded into %1$s. iTop has detected some characters that are not compatible with this format. Those characters will either be replaced by a substitute (e.g. accentuated chars losing the accent), or they will be discarded. You can copy/paste the data from your web browser. Alternatively, you can contact your administrator to change the encoding (See parameter \'csv_file_default_charset\').',
+
 	'UI:Audit:Title' => 'iTop - Аудит CMDB',
 	'UI:Audit:InteractiveAudit' => 'Интерактивный аудит',
 	'UI:Audit:HeaderAuditRule' => 'Правило аудита',
@@ -484,6 +631,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Audit:PercentageOk' => '% Ok',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL ошибка в правиле %1$s: %2$s.~~',
 	'UI:Audit:ErrorIn_Category_Reason' => 'OQL ошибка в категории %1$s: %2$s.~~',
+
 	'UI:RunQuery:Title' => 'iTop - Оценка запросов OQL',
 	'UI:RunQuery:QueryExamples' => 'Примеры запросов',
 	'UI:RunQuery:HeaderPurpose' => 'Цель',
@@ -514,6 +662,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Schema:Label' => 'Метка',
 	'UI:Schema:Label+' => 'Метка атрибута',
 	'UI:Schema:Type' => 'Тип',
+	
 	'UI:Schema:Type+' => 'Тип данных атрибута',
 	'UI:Schema:Origin' => 'Происхождение',
 	'UI:Schema:Origin+' => 'Базовый класс, в котором этот атрибут определен',
@@ -555,15 +704,16 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Schema:LifeCycleAttributeMustPrompt' => 'Пользователю будет предложено изменить значение',
 	'UI:Schema:LifeCycleEmptyList' => 'пустой список',
 	'UI:LinksWidget:Autocomplete+' => 'Введите первые 3 символа...',
-	'UI:Edit:TestQuery' => 'Test query~~',
+	'UI:Edit:TestQuery' => 'Проверить запрос',
 	'UI:Combo:SelectValue' => '--- выбор значения ---',
 	'UI:Label:SelectedObjects' => 'Выбранные объекты: ',
 	'UI:Label:AvailableObjects' => 'Доступные объекты: ',
 	'UI:Link_Class_Attributes' => '%1$s атрибуты',
+	'UI:SelectAllToggle+' => 'Выбрать всё / Отменить всё',
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Добавить %1$s объекты связанные с %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Добавть %1$s объекты для связи с %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Управление %1$s объектами связанными с %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Добавить %1$ss...',
+	'UI:AddLinkedObjectsOf_Class' => 'Добавить %1$s...',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Удалить выбранные объекты',
 	'UI:Message:EmptyList:UseAdd' => 'Список пуст, используте кнопку "Добавить ...", для добавения новых элементов.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Используйте форму поиска выше для поиска объектов, которые будут добавлены.',
@@ -594,7 +744,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Delete:CannotUpdateBecause_Issue' => 'Должно быть автоматически обновлено, но: %1$s',
 	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'будет автоматически обновлено (сброс: %1$s)',
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d объектов/связей ссылаются(связаны?) %2$s',
-	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d объектов/связей ссылаются на объекты, которые будут удалены',
+	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d объектов/связей ссылаются на объекты, которые будут удалены',	
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'Для обеспечения целостности базы данных, необходимо устранить все связи',
 	'UI:Delete:Consequence+' => 'Что будет сделано',
 	'UI:Delete:SorryDeletionNotAllowed' => 'К сожалению, вы не можете удалить этот объект, см. подробное объяснение выше',
@@ -611,9 +761,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%1$d объект(ы) класса %2$s найдено.',
 	'UI:Search:NoObjectFound' => 'Объекты не найдены.',
 	'UI:ModificationPageTitle_Object_Class' => 'iTop - %1$s - %2$s модификации',
-	'UI:ModificationTitle_Class_Object' => 'Модификации %1$s: <span class=\"hilite\">%2$s</span>',
+	'UI:ModificationTitle_Class_Object' => 'Модификации %1$s: <span class=\\"hilite\\">%2$s</span>',
 	'UI:ClonePageTitle_Object_Class' => 'iTop - Клон %1$s - %2$s модификация',
-	'UI:CloneTitle_Class_Object' => 'Клон %1$s: <span class=\"hilite\">%2$s</span>',
+	'UI:CloneTitle_Class_Object' => 'Клон %1$s: <span class=\\"hilite\\">%2$s</span>',
 	'UI:CreationPageTitle_Class' => 'iTop - Создание нового %1$s ',
 	'UI:CreationTitle_Class' => 'Создание нового %1$s',
 	'UI:SelectTheTypeOf_Class_ToCreate' => 'Выбор типа %1$s для создания:',
@@ -629,7 +779,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:SystemIntrusion' => 'Доступ запрещён. Вы пытаетесь выполнить неразрешённую операцию.',
 	'UI:FatalErrorMessage' => 'Фатальная ошибка, iTop не может продолжать.',
 	'UI:Error_Details' => 'Ошибка: %1$s.',
-	'UI:PageTitle:ClassProjections' => 'iTop управление пользователями - проектирование классов',
+
+	'UI:PageTitle:ClassProjections'	=> 'iTop управление пользователями - проектирование классов',
 	'UI:PageTitle:ProfileProjections' => 'iTop управление пользователями - проектирование профилей',
 	'UI:UserManagement:Class' => 'Классs',
 	'UI:UserManagement:Class+' => 'Класс объектов',
@@ -642,7 +793,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:UserManagement:Profile+' => 'Профиль, указанный в проектировании',
 	'UI:UserManagement:Action:Read' => 'Чтение',
 	'UI:UserManagement:Action:Read+' => 'Чтение/отображение объектов',
-	'UI:UserManagement:Action:Modify' => 'Modify',
+	'UI:UserManagement:Action:Modify' => 'Изменить',
 	'UI:UserManagement:Action:Modify+' => 'Создание и редактирование (изменение) объектов',
 	'UI:UserManagement:Action:Delete' => 'Удаление',
 	'UI:UserManagement:Action:Delete+' => 'Удаление объектов',
@@ -668,9 +819,11 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:UserManagement:GrantMatrix' => 'Матрица разрешений',
 	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Связь между %1$s и %2$s',
 	'UI:UserManagement:LinkBetween_User_And_Org' => 'Связь между %1$s и %2$s',
+	
 	'Menu:AdminTools' => 'Инструменты админа',
 	'Menu:AdminTools+' => 'Административные инструменты',
 	'Menu:AdminTools?' => 'Инструменты доступны только для пользователей, имеющих профиль администратора',
+
 	'UI:ChangeManagementMenu' => 'Управление изменениями',
 	'UI:ChangeManagementMenu+' => 'Управление изменениями',
 	'UI:ChangeManagementMenu:Title' => 'Обзор изменений',
@@ -678,41 +831,52 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Изменения по статутсу',
 	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Изменения по рабочей группе',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Не назначенные изменения',
+
 	'UI:ConfigurationManagementMenu' => 'Управление конфигурациями',
 	'UI:ConfigurationManagementMenu+' => 'Управление конфигурациями',
 	'UI:ConfigurationManagementMenu:Title' => 'Обзор инфраструктуры',
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Объекты инфраструктуры по типу',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Объекты инфраструктуры по статусу',
-	'UI:ConfigMgmtMenuOverview:Title' => 'Панель управления конфигурациями',
-	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Элементы конфигурации по статусу',
-	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Элементы конфигурации по типу',
-	'UI:RequestMgmtMenuOverview:Title' => 'Панель управления запросами',
-	'UI-RequestManagementOverview-RequestByService' => 'Пользовательские запросы по сервису',
-	'UI-RequestManagementOverview-RequestByPriority' => 'Пользовательские запросы по приоритету',
-	'UI-RequestManagementOverview-RequestUnassigned' => 'Пользовательские запросы не назначенные не на один агент',
-	'UI:IncidentMgmtMenuOverview:Title' => 'Панель управления инцидентами',
-	'UI-IncidentManagementOverview-IncidentByService' => 'Инциденты по сервису',
-	'UI-IncidentManagementOverview-IncidentByPriority' => 'Инциденты по приоритету',
-	'UI-IncidentManagementOverview-IncidentUnassigned' => 'Инциденты не назначенные не на один агент',
-	'UI:ChangeMgmtMenuOverview:Title' => 'Панель управления изменениями',
-	'UI-ChangeManagementOverview-ChangeByType' => 'Изменения по типу',
-	'UI-ChangeManagementOverview-ChangeUnassigned' => 'Изменения не назначенные не на один агент',
-	'UI-ChangeManagementOverview-ChangeWithOutage' => 'Отключения в связи с изменениями',
-	'UI:ServiceMgmtMenuOverview:Title' => 'Панель управления сервисами',
-	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Договора с клиентами, которые будут обновлены в течении 30 дней',
-	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Договора с провайдерами, которые будут обновлены в течении 30 дней',
+
+'UI:ConfigMgmtMenuOverview:Title' => 'Панель управления конфигурациями',
+'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Элементы конфигурации по статусу',
+'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Элементы конфигурации по типу',
+
+'UI:RequestMgmtMenuOverview:Title' => 'Панель управления запросами',
+'UI-RequestManagementOverview-RequestByService' => 'Пользовательские запросы по сервису',
+'UI-RequestManagementOverview-RequestByPriority' => 'Пользовательские запросы по приоритету',
+'UI-RequestManagementOverview-RequestUnassigned' => 'Пользовательские запросы не назначенные не на один агент',
+
+'UI:IncidentMgmtMenuOverview:Title' => 'Панель управления инцидентами',
+'UI-IncidentManagementOverview-IncidentByService' => 'Инциденты по сервису',
+'UI-IncidentManagementOverview-IncidentByPriority' => 'Инциденты по приоритету',
+'UI-IncidentManagementOverview-IncidentUnassigned' => 'Инциденты не назначенные не на один агент',
+
+'UI:ChangeMgmtMenuOverview:Title' => 'Панель управления изменениями',
+'UI-ChangeManagementOverview-ChangeByType' => 'Изменения по типу',
+'UI-ChangeManagementOverview-ChangeUnassigned' => 'Изменения не назначенные не на один агент',
+'UI-ChangeManagementOverview-ChangeWithOutage' => 'Отключения в связи с изменениями',
+
+'UI:ServiceMgmtMenuOverview:Title' => 'Панель управления сервисами',
+'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Договора с клиентами, которые будут обновлены в течении 30 дней',
+'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Договора с провайдерами, которые будут обновлены в течении 30 дней',
+
 	'UI:ContactsMenu' => 'Договора',
 	'UI:ContactsMenu+' => 'Договора',
 	'UI:ContactsMenu:Title' => 'Обзор договоров',
 	'UI-ContactsMenu-ContactsByLocation' => 'Договора по размещению',
 	'UI-ContactsMenu-ContactsByType' => 'Договора по типу',
 	'UI-ContactsMenu-ContactsByStatus' => 'Договора по статусу',
+
 	'Menu:CSVImportMenu' => 'Импорт CSV',
 	'Menu:CSVImportMenu+' => 'Пакетное создание или обновление',
+	
 	'Menu:DataModelMenu' => 'Модель данных',
 	'Menu:DataModelMenu+' => 'Обзор модели данных',
+	
 	'Menu:ExportMenu' => 'Экспорт',
 	'Menu:ExportMenu+' => 'Экспорт результатов любого запроса в HTML, CSV или XML',
+	
 	'Menu:NotificationsMenu' => 'Уведомления',
 	'Menu:NotificationsMenu+' => 'Конфигурация уведомлений',
 	'UI:NotificationsMenu:Title' => 'Конфигурация <span class="hilite">Уведомлений</span>',
@@ -739,39 +903,51 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:NotificationsMenu:OnStateLeave' => 'При выходе объекта из заданного состояния',
 	'UI:NotificationsMenu:Actions' => 'Действия',
 	'UI:NotificationsMenu:AvailableActions' => 'Доступные действия',
+	
 	'Menu:AuditCategories' => 'Категории аудита',
 	'Menu:AuditCategories+' => 'Категории аудита',
 	'Menu:Notifications:Title' => 'Категории аудита',
+	
 	'Menu:RunQueriesMenu' => 'Выполнение запросов',
 	'Menu:RunQueriesMenu+' => 'Выполнение любых запросов',
-	'Menu:QueryMenu' => 'Query phrasebook~~',
-	'Menu:QueryMenu+' => '',
+	
+	'Menu:QueryMenu' => 'Книга запросов',
+	'Menu:QueryMenu+' => 'Query phrasebook',
+	
 	'Menu:DataAdministration' => 'Административные данные',
 	'Menu:DataAdministration+' => 'Административные данные',
+	
 	'Menu:UniversalSearchMenu' => 'Универсальный поиск',
 	'Menu:UniversalSearchMenu+' => 'Поиск чего угодно...',
+	
 	'Menu:ApplicationLogMenu' => 'Логгирование приложения',
 	'Menu:ApplicationLogMenu+' => 'Логгирование приложения',
 	'Menu:ApplicationLogMenu:Title' => 'Логгирование приложения',
+
 	'Menu:UserManagementMenu' => 'Управление пользователями',
 	'Menu:UserManagementMenu+' => 'Управление пользователями',
+
 	'Menu:ProfilesMenu' => 'Профили',
 	'Menu:ProfilesMenu+' => 'Профили',
 	'Menu:ProfilesMenu:Title' => 'Профили',
+
 	'Menu:UserAccountsMenu' => 'Учетные записи пользователей',
 	'Menu:UserAccountsMenu+' => 'Учетные записи пользователей',
-	'Menu:UserAccountsMenu:Title' => 'Учетные записи пользователей',
+	'Menu:UserAccountsMenu:Title' => 'Учетные записи пользователей',	
+
 	'UI:iTopVersion:Short' => 'iTop версия %1$s',
 	'UI:iTopVersion:Long' => 'iTop версия %1$s-%2$s основан на %3$s',
 	'UI:PropertiesTab' => 'Свойства',
+
 	'UI:OpenDocumentInNewWindow_' => 'Открыть этот документ в новом окне: %1$s',
 	'UI:DownloadDocument_' => 'Скачать этот документ: %1$s',
 	'UI:Document:NoPreview' => 'Не доступен предварительный просомтр для документов данного типа',
 	'UI:Download-CSV' => 'Загрузка %1$s~~',
+
 	'UI:DeadlineMissedBy_duration' => 'Пропущен %1$s',
-	'UI:Deadline_LessThan1Min' => '< 1 мин',
-	'UI:Deadline_Minutes' => '%1$d мин',
-	'UI:Deadline_Hours_Minutes' => '%1$dч %2$dмин',
+	'UI:Deadline_LessThan1Min' => '< 1 мин',		
+	'UI:Deadline_Minutes' => '%1$d мин',			
+	'UI:Deadline_Hours_Minutes' => '%1$dч %2$dмин',			
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dд %2$dч %3$dмин',
 	'UI:Help' => 'Помощь',
 	'UI:PasswordConfirm' => '(Подтвердить)',
@@ -781,19 +957,21 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:RelationshipList' => 'Список',
 	'UI:OperationCancelled' => 'Операция отменена',
 	'UI:ElementsDisplayed' => 'Фильтрация',
+
 	'Portal:Title' => 'Пользовательский iTop портал',
-	'Portal:NoRequestMgmt' => 'Уважаемый %1$s, you have been redirected to this page because your account is configured with the profile \'Portal user\'. Unfortunately, iTop has not been installed with the feature \'Request Management\'. Please contact your administrator.~~',
+	'Portal:NoRequestMgmt' => 'Уважаемый %1$s, Вы были перенаправлены на потрал, потому что Ваш аккаунт содержить профиль \'Portal user\'. К сожалению, iTop не содержит модуля \'Request Management\'. Пожалуйста, свяжитель с системным администратором.',
 	'Portal:Refresh' => 'Обновить',
 	'Portal:Back' => 'Назад',
-	'Portal:WelcomeUserOrg' => 'Welcome %1$s, from %2$s',
+	'Portal:WelcomeUserOrg' => 'Добро пожаловать %1$s, из %2$s',
+	'Portal:TitleDetailsFor_Request' => 'Details for request',
 	'Portal:ShowOngoing' => 'Показать открытые запросы',
 	'Portal:ShowClosed' => 'Показать закрытые запросы',
 	'Portal:CreateNewRequest' => 'Создать новый запрос',
 	'Portal:ChangeMyPassword' => 'Изменить мой пароль',
 	'Portal:Disconnect' => 'Отключить',
 	'Portal:OpenRequests' => 'Мои открытые запросы',
-	'Portal:ClosedRequests' => 'My closed requests',
-	'Portal:ResolvedRequests' => 'Мои решённые запросы',
+	'Portal:ClosedRequests'  => 'Мои закрытые запросы',
+	'Portal:ResolvedRequests'  => 'Мои решённые запросы',
 	'Portal:SelectService' => 'Выбери сервис из каталога:',
 	'Portal:PleaseSelectOneService' => 'Необходимо выбрать хотя-бы один сервис',
 	'Portal:SelectSubcategoryFrom_Service' => 'Выбери под-категорию для сервиса %1$s:',
@@ -811,19 +989,19 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Portal:AddAttachment' => 'Добавить вложения',
 	'Portal:RemoveAttachment' => ' Удалить вложения',
 	'Portal:Attachment_No_To_Ticket_Name' => 'Вложение #%1$d to %2$s (%3$s)~~',
-	'Enum:Undefined' => 'Неопределён',
+	'Enum:Undefined' => 'Неопределён',	
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s Days %2$s час %3$s мин %4$s сек~~',
 	'UI:ModifyAllPageTitle' => 'Изменить все',
-	'UI:Modify_N_ObjectsOf_Class' => 'Modifying %1$d objects of class %2$s~~',
-	'UI:Modify_M_ObjectsOf_Class_OutOf_N' => 'Modifying %1$d objects of class %2$s out of %3$d~~',
+	'UI:Modify_N_ObjectsOf_Class' => 'Изменение %1$d объектов класса %2$s~~',
+	'UI:Modify_M_ObjectsOf_Class_OutOf_N' => 'Изменение %1$d объектов класса %2$s из %3$d~~',
 	'UI:Menu:ModifyAll' => 'Изменить...~~',
 	'UI:Button:ModifyAll' => 'Изменить все~~',
 	'UI:Button:PreviewModifications' => 'Предпросмотр изменений >>~~',
 	'UI:ModifiedObject' => 'Объект изменен',
 	'UI:BulkModifyStatus' => 'Операция',
-	'UI:BulkModifyStatus+' => '',
-	'UI:BulkModifyErrors' => 'Ошибки (if any)~~',
-	'UI:BulkModifyErrors+' => '',
+	'UI:BulkModifyStatus+' => 'Status of the operation',
+	'UI:BulkModifyErrors' => 'Ошибки (если есть)~~',
+	'UI:BulkModifyErrors+' => 'Errors preventing the modification',	
 	'UI:BulkModifyStatusOk' => 'Ok~~',
 	'UI:BulkModifyStatusError' => 'Ошибка',
 	'UI:BulkModifyStatusModified' => 'Изменен',
@@ -842,72 +1020,86 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:ActionNotAllowed' => 'You are not allowed to perform this action on these objects.~~',
 	'UI:BulkAction:NoObjectSelected' => 'Please select at least one object to perform this operation~~',
 	'UI:AttemptingToChangeASlaveAttribute_Name' => 'The field %1$s is not writable because it is mastered by the data synchronization. Value remains unchanged.~~',
-	'UI:Pagination:HeaderSelection' => 'Всего: %1$s objects (%2$s objects selected).~~',
-	'UI:Pagination:HeaderNoSelection' => 'Всего: %1$s objects.~~',
+	'UI:Pagination:HeaderSelection' => 'Всего: %1$s элементов (%2$s элементов выделено).',
+	'UI:Pagination:HeaderNoSelection' => 'Всего: %1$s элементов',
 	'UI:Pagination:PageSize' => '%1$s объектов на страницу',
 	'UI:Pagination:PagesLabel' => 'Страницы:~~',
 	'UI:Pagination:All' => 'Все',
-	'UI:HierarchyOf_Class' => 'Hierarchy of %1$s~~',
+	'UI:HierarchyOf_Class' => 'Иерархия по: %1$s~~',
 	'UI:Preferences' => 'Дополнительно...~~',
-	'UI:FavoriteOrganizations' => 'Избранные',
-	'UI:FavoriteOrganizations+' => '',
+	'UI:FavoriteOrganizations' => 'Избранные организации',
+	'UI:FavoriteOrganizations+' => 'Check in the list below the organizations that you want to see in the drop-down menu for a quick access. '.
+								   'Note that this is not a security setting, objects from any organization are still visible and can be accessed by selecting "All Organizations" in the drop-down list.',
 	'UI:FavoriteLanguage' => 'Язык пользовательского интерфейса',
-	'UI:Favorites:SelectYourLanguage' => 'Select your preferred language~~',
+	'UI:Favorites:SelectYourLanguage' => 'Выберите Ваш язык',
 	'UI:FavoriteOtherSettings' => 'Другие настройки',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Default length for lists:  %1$s items per page~~',
-	'UI:NavigateAwayConfirmationMessage' => 'Any modification will be discarded.~~',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Длина списка по-умолчанию: %1$s элементов на страницу.',
+	'UI:NavigateAwayConfirmationMessage' => 'Все изменения будут отмененыт.',
 	'UI:CancelConfirmationMessage' => 'Настройки НЕ будут сохранены. Продолжить?',
 	'UI:AutoApplyConfirmationMessage' => 'Некоторые изменения не вступили в силу.Хотите что бы iТop применил их немедленно?~~',
 	'UI:Create_Class_InState' => 'Create the %1$s in state: ~~',
 	'UI:OrderByHint_Values' => 'Sort order: %1$s~~',
-	'UI:Menu:AddToDashboard' => 'Add To Dashboard...~~',
+	'UI:Menu:AddToDashboard' => 'Добавить на панель...',
 	'UI:Button:Refresh' => 'Обновить',
-	'UI:ConfigureThisList' => 'Configure This List...~~',
-	'UI:ListConfigurationTitle' => 'List Configuration~~',
-	'UI:ColumnsAndSortOrder' => 'Columns and sort order:~~',
+
+	'UI:ConfigureThisList' => 'Настроить список...',
+	'UI:ListConfigurationTitle' => 'Настройка списка',
+	'UI:ColumnsAndSortOrder' => 'Колонки и порядок сортировки:',
 	'UI:UseDefaultSettings' => 'Использовать настройки по умолчанию',
 	'UI:UseSpecificSettings' => 'Использовать эти настройки:',
-	'UI:Display_X_ItemsPerPage' => 'Display %1$s items per page~~',
+	'UI:Display_X_ItemsPerPage' => 'Показывать %1$s элементов на странице',
 	'UI:UseSavetheSettings' => 'Сохранить настройки',
-	'UI:OnlyForThisList' => 'Only for this list~~',
-	'UI:ForAllLists' => 'For all lists~~',
+	'UI:OnlyForThisList' => 'Только для текущего списка',
+	'UI:ForAllLists' => 'Для всех списков',
 	'UI:ExtKey_AsLink' => '%1$s (Link)~~',
 	'UI:ExtKey_AsFriendlyName' => '%1$s (Friendly Name)~~',
 	'UI:ExtField_AsRemoteField' => '%1$s (%2$s)~~',
 	'UI:Button:MoveUp' => 'Вверх',
 	'UI:Button:MoveDown' => 'Вниз',
+
 	'UI:OQL:UnknownClassAndFix' => 'Unknown class "%1$s". You may try "%2$s" instead.~~',
 	'UI:OQL:UnknownClassNoFix' => 'Unknown class "%1$s"~~',
-	'UI:Dashboard:Edit' => 'Редактировать страницу...~~',
-	'UI:Dashboard:Revert' => 'Вернуть оригинальную версию...~~',
-	'UI:Dashboard:RevertConfirm' => 'Every changes made to the original version will be lost. Please confirm that you want to do this.~~',
+
+	'UI:Dashboard:Edit' => 'Редактировать дашборд...',
+	'UI:Dashboard:Revert' => 'Вернуть оригинальную версию...',
+	'UI:Dashboard:RevertConfirm' => 'Будет возвращена оригинальная версия дашборда. Все изменения будут утеряны. Хотите продолжить?',
 	'UI:ExportDashBoard' => 'Экспорт',
 	'UI:ImportDashBoard' => 'Импорт',
-	'UI:ImportDashboardTitle' => 'Import From a File~~',
-	'UI:ImportDashboardText' => 'Select a dashboard file to import:~~',
-	'UI:DashletCreation:Title' => 'Create a new Dashlet~~',
-	'UI:DashletCreation:Dashboard' => 'Dashboard~~',
-	'UI:DashletCreation:DashletType' => 'Dashlet Type~~',
-	'UI:DashletCreation:EditNow' => 'Edit the Dashboard~~',
-	'UI:DashboardEdit:Title' => 'Dashboard Editor~~',
+	'UI:ImportDashboardTitle' => 'Импорт из файла',
+	'UI:ImportDashboardText' => 'Выберите файл дашборда для импорта:',
+
+	'UI:DashletCreation:Title' => 'Создать новую панель',
+	'UI:DashletCreation:Dashboard' => 'Приборная панель',
+	'UI:DashletCreation:DashletType' => 'Тип панели',
+	'UI:DashletCreation:EditNow' => 'Редактировать панель',
+
+	'UI:DashboardEdit:Title' => 'Редактор дашборда',
 	'UI:DashboardEdit:DashboardTitle' => 'Заголовок',
-	'UI:DashboardEdit:Layout' => 'Слой',
-	'UI:DashboardEdit:Properties' => 'Dashboard Properties~~',
-	'UI:DashboardEdit:Dashlets' => 'Available Dashlets~~',
-	'UI:DashboardEdit:DashletProperties' => 'Dashlet Properties~~',
-	'UI:Form:Property' => 'Свойства',
+	'UI:DashboardEdit:AutoReload' => 'Обновлять автоматически',
+	'UI:DashboardEdit:AutoReloadSec' => 'Интервал обновления (секунды)',
+	'UI:DashboardEdit:AutoReloadSec+' => 'Минимальный интервал 5 секунд',
+
+	'UI:DashboardEdit:Layout' => 'Макет',
+	'UI:DashboardEdit:Properties' => 'Свойства дашборда',
+	'UI:DashboardEdit:Dashlets' => 'Доступные дашлеты',	
+	'UI:DashboardEdit:DashletProperties' => 'Свойства дашлета',	
+
+	'UI:Form:Property' => 'Свойство',
 	'UI:Form:Value' => 'Значение',
+
 	'UI:DashletPlainText:Label' => 'Текст',
-	'UI:DashletPlainText:Description' => 'Plain text (no formatting)~~',
+	'UI:DashletPlainText:Description' => 'Текст (без форматирования)',
 	'UI:DashletPlainText:Prop-Text' => 'Текст',
-	'UI:DashletPlainText:Prop-Text:Default' => 'Please enter some text here...~~',
-	'UI:DashletObjectList:Label' => 'Object list~~',
-	'UI:DashletObjectList:Description' => 'Object list dashlet~~',
+	'UI:DashletPlainText:Prop-Text:Default' => 'Введите текст...',
+
+	'UI:DashletObjectList:Label' => 'Список объектов',
+	'UI:DashletObjectList:Description' => 'Список объектов',
 	'UI:DashletObjectList:Prop-Title' => 'Заголовок',
-	'UI:DashletObjectList:Prop-Query' => 'Query~~',
+	'UI:DashletObjectList:Prop-Query' => 'Запрос',
 	'UI:DashletObjectList:Prop-Menu' => 'Меню',
+
 	'UI:DashletGroupBy:Prop-Title' => 'Заголовок',
-	'UI:DashletGroupBy:Prop-Query' => 'Query~~',
+	'UI:DashletGroupBy:Prop-Query' => 'Запрос',
 	'UI:DashletGroupBy:Prop-Style' => 'Стиль',
 	'UI:DashletGroupBy:Prop-GroupBy' => 'Группировка',
 	'UI:DashletGroupBy:Prop-GroupBy:Hour' => 'Hour of %1$s (0-23)~~',
@@ -918,31 +1110,36 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (month)~~',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (day of week)~~',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (day of month)~~',
-	'UI:DashletGroupBy:MissingGroupBy' => 'Please select the field on which the objects will be grouped together~~',
-	'UI:DashletGroupByPie:Label' => 'Pie Chart~~',
-	'UI:DashletGroupByPie:Description' => 'Pie Chart~~',
-	'UI:DashletGroupByBars:Label' => 'Bar Chart~~',
-	'UI:DashletGroupByBars:Description' => 'Bar Chart~~',
-	'UI:DashletGroupByTable:Label' => 'Group By (table)~~',
-	'UI:DashletGroupByTable:Description' => 'List (Grouped by a field)~~',
-	'UI:DashletHeaderStatic:Label' => 'Header~~',
+	'UI:DashletGroupBy:MissingGroupBy' => 'Пожалуйста, выберите поле по которому объекты будут сгруппированы',
+
+	'UI:DashletGroupByPie:Label' => 'Круговая диаграмма',
+	'UI:DashletGroupByPie:Description' => 'Круговая диаграмма',
+	'UI:DashletGroupByBars:Label' => 'Столбчатая диаграмма',
+	'UI:DashletGroupByBars:Description' => 'Столбчатая диаграмма',
+	'UI:DashletGroupByTable:Label' => 'Группировка (таблица)',
+	'UI:DashletGroupByTable:Description' => 'Список (сгруппированный по полю)',
+
+	'UI:DashletHeaderStatic:Label' => 'Заголовок',
 	'UI:DashletHeaderStatic:Description' => 'Displays an horizontal separator~~',
-	'UI:DashletHeaderStatic:Prop-Title' => 'Title~~',
-	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Contacts~~',
-	'UI:DashletHeaderStatic:Prop-Icon' => 'Icon~~',
-	'UI:DashletHeaderDynamic:Label' => 'Header with statistics~~',
-	'UI:DashletHeaderDynamic:Description' => 'Header with stats (grouped by...)~~',
+	'UI:DashletHeaderStatic:Prop-Title' => 'Заголовок',
+	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Контакты',
+	'UI:DashletHeaderStatic:Prop-Icon' => 'Иконка',
+
+	'UI:DashletHeaderDynamic:Label' => 'Заголовок со статистикой',
+	'UI:DashletHeaderDynamic:Description' => 'Заголовок со статистикой (группировать по ...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Заголовок',
 	'UI:DashletHeaderDynamic:Prop-Title:Default' => 'Контакты',
-	'UI:DashletHeaderDynamic:Prop-Icon' => 'Icon~~',
-	'UI:DashletHeaderDynamic:Prop-Subtitle' => 'Subtitle~~',
+	'UI:DashletHeaderDynamic:Prop-Icon' => 'Иконка',
+	'UI:DashletHeaderDynamic:Prop-Subtitle' => 'Подзаголовок',
 	'UI:DashletHeaderDynamic:Prop-Subtitle:Default' => 'Контакты',
-	'UI:DashletHeaderDynamic:Prop-Query' => 'Query~~',
-	'UI:DashletHeaderDynamic:Prop-GroupBy' => 'Group by~~',
-	'UI:DashletHeaderDynamic:Prop-Values' => 'Values~~',
-	'UI:DashletBadge:Label' => 'Badge~~',
-	'UI:DashletBadge:Description' => 'Object Icon with new/search~~',
-	'UI:DashletBadge:Prop-Class' => 'Class~~',
+	'UI:DashletHeaderDynamic:Prop-Query' => 'Запрос',
+	'UI:DashletHeaderDynamic:Prop-GroupBy' => 'Группировать по',
+	'UI:DashletHeaderDynamic:Prop-Values' => 'Значения',
+
+	'UI:DashletBadge:Label' => 'Значок',
+	'UI:DashletBadge:Description' => 'Иконка объекта с возможностью создания и поиска',
+	'UI:DashletBadge:Prop-Class' => 'Класс',
+
 	'DayOfWeek-Sunday' => 'Воскресенье',
 	'DayOfWeek-Monday' => 'Понедельник',
 	'DayOfWeek-Tuesday' => 'Вторник',
@@ -950,5 +1147,56 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'DayOfWeek-Thursday' => 'Четверг',
 	'DayOfWeek-Friday' => 'Пятница',
 	'DayOfWeek-Saturday' => 'Суббота',
+	'Month-01' => 'Январь',
+	'Month-02' => 'Февраль',
+	'Month-03' => 'Март',
+	'Month-04' => 'Апрель',
+	'Month-05' => 'Май',
+	'Month-06' => 'Июнь',
+	'Month-07' => 'Июль',
+	'Month-08' => 'Август',
+	'Month-09' => 'Сентябрь',
+	'Month-10' => 'Октябрь',
+	'Month-11' => 'Ноябрь',
+	'Month-12' => 'Декабрь',
+
+	'UI:Menu:ShortcutList' => 'Добавить в избранное...',
+	'UI:ShortcutRenameDlg:Title' => 'Переименовать ссылку',
+	'UI:ShortcutListDlg:Title' => 'Добавить в избранное ссылку на список',
+	'UI:ShortcutDelete:Confirm' => 'Подтвердите удаление ссылки (ссылок).',
+	'Menu:MyShortcuts' => 'Избранное',
+	'Class:Shortcut' => 'Ссылка',
+	'Class:Shortcut+' => '',
+	'Class:Shortcut/Attribute:name' => 'Название',
+	'Class:Shortcut/Attribute:name+' => 'Label used in the menu and page title',
+	'Class:ShortcutOQL' => 'Search result shortcut~~',
+	'Class:ShortcutOQL+' => '',
+	'Class:ShortcutOQL/Attribute:oql' => 'Запрос',
+	'Class:ShortcutOQL/Attribute:oql+' => 'OQL defining the list of objects to search for',
+	'Class:ShortcutOQL/Attribute:auto_reload' => 'Automatic refresh',
+	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Disabled',
+	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Custom rate',
+	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Automatic refresh interval (seconds)',
+	'Class:ShortcutOQL/Attribute:auto_reload_sec+' => 'The minimum allowed is 5 seconds',
+
+	'UI:FillAllMandatoryFields' => 'Пожалуйста, заполните все обязательные поля.',
+	
+	'UI:CSVImportConfirmTitle' => 'Please confirm the operation',
+	'UI:CSVImportConfirmMessage' => 'Are you sure you want to do this?',
+	'UI:CSVImportError_items' => 'Errors: %1$d',
+	'UI:CSVImportCreated_items' => 'Created: %1$d',
+	'UI:CSVImportModified_items' => 'Modified: %1$d',
+	'UI:CSVImportUnchanged_items' => 'Unchanged: %1$d',
+
+	'UI:Button:Remove' => 'Remove',
+	'UI:AddAnExisting_Class' => 'Add objects of type %1$s...',
+	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s',
+
+	'UI:AboutBox' => 'Об этом iTop...',
+	'UI:About:Title' => 'Об этом iTop',
+	'UI:About:DataModel' => 'Модель данных',
+	'UI:About:Support' => 'Информация для технической поддержки',
+	'UI:About:Licenses' => 'Лицензии',
+	'UI:About:Modules' => 'Установленные модули',
 ));
 ?>

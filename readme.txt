@@ -50,7 +50,7 @@ Everaldo Coelho and the Oxygen Team for their wonderful icons.
 The JQuery team and all the jQuery plugins authors for developing such a powerful library.
 Phil Eddies for the numerous feedbacks provided, and the first implementation of CKEdit
 Marco Tulio and Bruno Cassaro for the Portuguese (Brazilian) translation
-Vladimir Shilov and Shamil Khamit for the Russian translation
+Vladimir Kunin, Vladimir Shilov and Shamil Khamit for the Russian translation
 Izzet Sirin for the Turkish translation
 Deng Lixin for the Chinese translation
 Marialaura Colantoni for the Italian translation

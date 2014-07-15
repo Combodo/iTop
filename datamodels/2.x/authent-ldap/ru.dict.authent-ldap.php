@@ -1,32 +1,45 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @author	Vladimir Shilov <shilow@ukr.net>
-
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
+ * 
+ * @author   Vladimir Kunin <v.b.kunin@gmail.com>
+ * @license   http://opensource.org/licenses/AGPL-3.0
+ *
+ * 
+ * Инструкция по установке
+ * 
+ * Процесс установки заключается в замене имеющихся локализационных файлов полученными и последующем запуске процедуры обновления iTop для перекомпиляции кода.
+ * 	1. Скопируйте с заменой два полученных файла из "itop-rus/dictionaries" в "путь/до/вашего/itop/dictionaries".
+ * 	2. Скопируйте с заменой полученные файлы "itop-rus/datamodels/2.x/название-модуля/ru.dict.название-модуля.php" в "путь/до/вашего/itop/datamodels/2.x/название-модуля".
+ *  3. Перейдите по адресу "http://адрес/вашего/itop/setup", при этом файл "путь/до/вашего/itop/conf/production/config-itop.php" должен быть доступен для записи.
+ *  4. На второй странице установщика выберите "Upgrade an existing iTop instance" и следуйте дальнейшим инструкциям установщика.
+ *
+ * Ответы на вопросы по установке и использованию переводов, а также на любые другие вопросы по iTop всегда можно получить на сайте сообщества iTop по-русски http://community.itop-itsm.ru.
+ *
  */
+
+// Dictionnay conventions
+// Class:<class_name>
+// Class:<class_name>+
+// Class:<class_name>/Attribute:<attribute_code>
+// Class:<class_name>/Attribute:<attribute_code>+
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
+// Class:<class_name>/Stimulus:<stimulus_code>
+// Class:<class_name>/Stimulus:<stimulus_code>+
+
+//
+// Class: UserLDAP
+//
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:UserLDAP' => 'Пользователь LDAP',
-	'Class:UserLDAP+' => 'Пользователь аутентифицированный в LDAP',
+	'Class:UserLDAP+' => 'Пользователь, аутентифицированный в LDAP',
 	'Class:UserLDAP/Attribute:password' => 'Пароль',
-	'Class:UserLDAP/Attribute:password+' => 'строка аутентификации пользователя',
+	'Class:UserLDAP/Attribute:password+' => 'Строка аутентификации пользователя',
 ));
+
+
+
 ?>
