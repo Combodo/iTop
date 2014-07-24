@@ -215,6 +215,9 @@ class ModelFactory
 		$this->oMenus = $this->oDOMDocument->CreateElement('menus');
 		$this->oRoot->AppendChild($this->oMenus);
 		
+		$this->oCombodo = $this->oDOMDocument->CreateElement('combodo');
+		$this->oRoot->AppendChild($this->oCombodo);
+		
 		foreach($aRootNodeExtensions as $sElementName)
 		{
 			$oElement = $this->oDOMDocument->CreateElement($sElementName);
@@ -428,7 +431,17 @@ class ModelFactory
 						$oUserRightsNode->SetAttribute('_created_in', $sModuleName);
 					}
 				}
-	
+				// Adjust the XML to transparently add an id (=stimulus) on all life-cycle transitions
+				// which don't already have one
+				$oNodeList = $oXPath->query('/itop_design/classes//class/lifecycle/states/state/transitions/transition/stimulus');	
+				foreach($oNodeList as $oNode)
+				{
+					if ($oNode->parentNode->getAttribute('id') == '')
+					{
+						$oNode->parentNode->SetAttribute('id', $oNode->textContent);
+					}
+				}
+				
 				$oDeltaRoot = $oDocument->childNodes->item(0);
 				$this->LoadDelta($oDocument, $oDeltaRoot, $this->oDOMDocument);
 			}
