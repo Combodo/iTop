@@ -201,7 +201,7 @@
               </attribute>
             </flags>
             <transitions>
-              <transition>
+              <transition id="ev_assign">
                 <stimulus>ev_assign</stimulus>
                 <target>assigned</target>
                 <actions/>
@@ -254,7 +254,7 @@
               </attribute>
             </flags>
             <transitions>
-              <transition>
+              <transition id="ev_plan">
                 <stimulus>ev_plan</stimulus>
                 <target>planned</target>
                 <actions/>
@@ -320,12 +320,12 @@
               </attribute>
             </flags>
             <transitions>
-              <transition>
+              <transition id="ev_reject">
                 <stimulus>ev_reject</stimulus>
                 <target>rejected</target>
                 <actions/>
               </transition>
-              <transition>
+              <transition id="ev_approve">
                 <stimulus>ev_approve</stimulus>
                 <target>approved</target>
                 <actions>
@@ -407,7 +407,7 @@
               </attribute>
             </flags>
             <transitions>
-              <transition>
+              <transition id="ev_reopen">
                 <stimulus>ev_reopen</stimulus>
                 <target>assigned</target>
                 <actions/>
@@ -478,7 +478,7 @@
               </attribute>
             </flags>
             <transitions>
-              <transition>
+              <transition id="ev_finish">
                 <stimulus>ev_finish</stimulus>
                 <target>closed</target>
                 <actions>

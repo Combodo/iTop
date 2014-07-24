@@ -218,7 +218,7 @@
               </attribute>
             </flags>
             <transitions>
-              <transition>
+              <transition id="ev_assign">
                 <stimulus>ev_assign</stimulus>
                 <target>assigned</target>
                 <actions>
@@ -271,12 +271,12 @@
               </attribute>
             </flags>
             <transitions>
-              <transition>
+              <transition id="ev_reassign">
                 <stimulus>ev_reassign</stimulus>
                 <target>assigned</target>
                 <actions/>
               </transition>
-              <transition>
+              <transition id="ev_resolve">
                 <stimulus>ev_resolve</stimulus>
                 <target>resolved</target>
                 <actions>
@@ -345,12 +345,12 @@
               </attribute>
             </flags>
             <transitions>
-              <transition>
+              <transition id="ev_reassign">
                 <stimulus>ev_reassign</stimulus>
                 <target>assigned</target>
                 <actions/>
               </transition>
-              <transition>
+              <transition id="ev_close">
                 <stimulus>ev_close</stimulus>
                 <target>closed</target>
                 <actions>

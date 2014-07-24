@@ -452,7 +452,7 @@
               </attribute>
             </flags>
             <transitions>
-              <transition>
+              <transition id="ev_assign">
                 <stimulus>ev_assign</stimulus>
                 <target>assigned</target>
                 <actions>
@@ -461,12 +461,12 @@
                   </action>
                 </actions>
               </transition>
-              <transition>
+              <transition id="ev_timeout">
                 <stimulus>ev_timeout</stimulus>
                 <target>escalated_tto</target>
                 <actions/>
               </transition>
-              <transition>
+              <transition id="ev_autoresolve">
                 <stimulus>ev_autoresolve</stimulus>
                 <target>resolved</target>
                 <actions>
@@ -559,7 +559,7 @@
               </attribute>
             </flags>
             <transitions>
-              <transition>
+              <transition id="ev_assign">
                 <stimulus>ev_assign</stimulus>
                 <target>assigned</target>
                 <actions>
@@ -645,7 +645,7 @@
               </attribute>
             </flags>
             <transitions>
-              <transition>
+              <transition id="ev_pending">
                 <stimulus>ev_pending</stimulus>
                 <target>pending</target>
                 <actions>
@@ -654,7 +654,7 @@
                   </action>
                 </actions>
               </transition>
-              <transition>
+              <transition id="ev_resolve">
                 <stimulus>ev_resolve</stimulus>
                 <target>resolved</target>
                 <actions>
@@ -666,17 +666,17 @@
                   </action>
                 </actions>
               </transition>
-              <transition>
+              <transition id="ev_reassign">
                 <stimulus>ev_reassign</stimulus>
                 <target>assigned</target>
                 <actions/>
               </transition>
-              <transition>
+              <transition id="ev_timeout">
                 <stimulus>ev_timeout</stimulus>
                 <target>escalated_ttr</target>
                 <actions/>
               </transition>
-              <transition>
+              <transition id="ev_autoresolve">
                 <stimulus>ev_autoresolve</stimulus>
                 <target>resolved</target>
                 <actions>
@@ -763,7 +763,7 @@
               </attribute>
             </flags>
             <transitions>
-              <transition>
+              <transition id="ev_pending">
                 <stimulus>ev_pending</stimulus>
                 <target>pending</target>
                 <actions>
@@ -772,7 +772,7 @@
                   </action>
                 </actions>
               </transition>
-              <transition>
+              <transition id="ev_resolve">
                 <stimulus>ev_resolve</stimulus>
                 <target>resolved</target>
                 <actions>
@@ -784,12 +784,12 @@
                   </action>
                 </actions>
               </transition>
-              <transition>
+              <transition id="ev_reassign">
                 <stimulus>ev_reassign</stimulus>
                 <target>assigned</target>
                 <actions/>
               </transition>
-              <transition>
+              <transition id="ev_autoresolve">
                 <stimulus>ev_autoresolve</stimulus>
                 <target>resolved</target>
                 <actions>
@@ -877,13 +877,13 @@
               </attribute>
             </flags>
             <transitions>
-              <transition>
+              <transition id="ev_assign">
                 <stimulus>ev_assign</stimulus>
                 <target>assigned</target>
                 <actions>
                 </actions>
               </transition>
-              <transition>
+              <transition id="ev_autoresolve">
                 <stimulus>ev_autoresolve</stimulus>
                 <target>resolved</target>
                 <actions>
@@ -1015,7 +1015,7 @@
               </attribute>
             </flags>
             <transitions>
-              <transition>
+              <transition id="ev_close">
                 <stimulus>ev_close</stimulus>
                 <target>closed</target>
                 <actions>
@@ -1024,13 +1024,13 @@
                   </action>
                 </actions>
               </transition>
-              <transition>
+              <transition id="ev_reopen">
                 <stimulus>ev_reopen</stimulus>
                 <target>assigned</target>
                 <actions>
                 </actions>
               </transition>
-              <transition>
+              <transition id="ev_autoresolve">
                 <stimulus>ev_autoresolve</stimulus>
                 <target>resolved</target>
                 <actions>
