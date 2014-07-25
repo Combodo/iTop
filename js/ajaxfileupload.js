@@ -29,7 +29,7 @@ jQuery.extend(
 		var fileId = 'jUploadFile' + id;
 		var form = jQuery('<form  action="" method="POST" name="' + formId + '" id="' + formId + '" enctype="multipart/form-data"></form>');	
 		var oldElement = jQuery('#' + fileElementId);
-		var newElement = jQuery(oldElement).clone();
+		var newElement = jQuery(oldElement).clone(true);
 		jQuery(oldElement).attr('id', fileId);
 		jQuery(oldElement).before(newElement);
 		jQuery(oldElement).appendTo(form);
