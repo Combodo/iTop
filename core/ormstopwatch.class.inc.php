@@ -62,12 +62,13 @@ class ormStopWatch
 		return (string) $this->iTimeSpent;
 	}
 
-	public function DefineThreshold($iPercent, $tDeadline = null, $bPassed = false, $bTriggered = false, $iOverrun = null)
+	public function DefineThreshold($iPercent, $tDeadline = null, $bPassed = false, $bTriggered = false, $iOverrun = null, $aHighlightDef = null)
 	{
 		$this->aThresholds[$iPercent] = array(
 			'deadline' => $tDeadline, // unix time (seconds)
 			'triggered' => $bTriggered,
-			'overrun' => $iOverrun
+			'overrun' => $iOverrun,
+			'highlight' => $aHighlightDef, // array('code' => string, 'persistent' => boolean)
 		);
 	}
 
@@ -142,6 +143,30 @@ class ormStopWatch
 		{
 			return false;
 		}
+	}
+	
+	public function GetHighlightCode()
+	{
+		$sCode = '';
+		// Process the thresholds in ascending order
+		$aPercents = array();
+		foreach($this->aThresholds as $iPercent => $aDefs)
+		{
+			$aPercents[] = $iPercent;
+		}
+		sort($aPercents, SORT_NUMERIC);
+		foreach($aPercents as $iPercent)
+		{
+			$aDefs = $this->aThresholds[$iPercent];
+			if (array_key_exists('highlight', $aDefs) && is_array($aDefs['highlight']) && $this->IsThresholdPassed($iPercent))
+			{
+				if (($aDefs['highlight']['persistent'] == true) || (($aDefs['highlight']['persistent'] == false) && !is_null($this->iLastStart)))
+				{
+					$sCode = $aDefs['highlight']['code'];
+				}
+			}
+		}
+		return $sCode;
 	}
 
 	public function GetAsHTML($oAttDef, $oHostObject = null)
@@ -424,9 +449,44 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 							{
 								$sVerb = $aActionData['verb'];
 								$aParams = $aActionData['params'];
-								$sParams = implode(', ', $aParams);
+								$aValues = array();
+								foreach($aParams as $def)
+								{
+									if (is_string($def))
+									{
+										// Old method (pre-2.0.4) non typed parameters
+										$aValues[] = $def;
+									}
+									else // if(is_array($def))
+									{
+										$sParamType = array_key_exists('type', $def) ? $def['type'] : 'string';
+										switch($sParamType)
+										{
+											case 'int':
+												$value = (int)$def['value'];
+												break;
+										
+											case 'float':
+												$value = (float)$def['value'];
+												break;
+										
+											case 'bool':
+												$value = (bool)$def['value'];
+												break;
+										
+											case 'reference':
+												$value = ${$def['value']};
+												break;
+										
+											case 'string':
+											default:
+												$value = (string)$def['value'];
+										}
+										$aValues[] = $value;
+									}
+								}
 								$aCallSpec = array($oObj, $sVerb);
-								call_user_func_array($aCallSpec, $aParams);
+								call_user_func_array($aCallSpec, $aValues);
 							}
 
 							// Mark the threshold as "triggered"

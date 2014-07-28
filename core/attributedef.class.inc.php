@@ -3717,7 +3717,7 @@ class AttributeStopWatch extends AttributeDefinition
 		);
 
 		$aThresholds = array();
-		foreach ($this->ListThresholds() as $iThreshold => $aFoo)
+		foreach ($this->ListThresholds() as $iThreshold => $aDefinition)
 		{
 			$sThPrefix = '_'.$iThreshold;
 			$value->DefineThreshold(
@@ -3725,7 +3725,8 @@ class AttributeStopWatch extends AttributeDefinition
 				self::DateToSeconds($aCols[$sPrefix.$sThPrefix.'_deadline']),
 				(bool)($aCols[$sPrefix.$sThPrefix.'_passed'] == 1),
 				(bool)($aCols[$sPrefix.$sThPrefix.'_triggered'] == 1),
-				$aCols[$sPrefix.$sThPrefix.'_overrun']
+				$aCols[$sPrefix.$sThPrefix.'_overrun'],
+				array_key_exists('highlight', $aDefinition) ? $aDefinition['highlight'] : null
 			);
 		}
 

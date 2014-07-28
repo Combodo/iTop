@@ -188,11 +188,19 @@
           <thresholds>
             <threshold>
               <percent>75</percent>
+              <highlight>
+                <code>warning</code>
+                <persistent>false</persistent>
+              </highlight> 
               <actions>
 		</actions>
             </threshold>
             <threshold>
               <percent>100</percent>
+              <highlight>
+                <code>critical</code>
+                <persistent>false</persistent>
+              </highlight> 
               <actions>
                 <action>
                   <verb>ApplyStimulus</verb>
@@ -217,11 +225,19 @@
           <thresholds>
             <threshold>
               <percent>75</percent>
+              <highlight>
+                <code>warning</code>
+                <persistent>false</persistent>
+              </highlight> 
               <actions>
 		</actions>
             </threshold>
             <threshold>
               <percent>100</percent>
+              <highlight>
+                <code>critical</code>
+                <persistent>false</persistent>
+              </highlight> 
               <actions>
                 <action>
                   <verb>ApplyStimulus</verb>
@@ -357,6 +373,23 @@
         </field>
       </fields>
       <lifecycle>
+        <highlight_scale>
+          <item id="warning">
+            <rank>1</rank>
+            <color>HIGHLIGHT_CLASS_WARNING</color>
+            <icon>images/incident-deadline.png</icon>
+          </item>
+          <item id="critical">
+            <rank>2</rank>
+            <color>HIGHLIGHT_CLASS_CRITICAL</color>
+            <icon>images/incident-escalated.png</icon>
+          </item>
+          <item id="closed">
+            <rank>3</rank>
+            <color>HIGHLIGHT_CLASS_NONE</color>
+            <icon>images/incident-closed.png</icon>
+          </item>
+        </highlight_scale>
         <attribute>status</attribute>
         <stimuli>
           <stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
@@ -481,6 +514,9 @@
             </transitions>
           </state>
           <state id="escalated_tto">
+            <highlight>
+              <code>critical</code>
+            </highlight> 
             <flags>
               <attribute id="ref">
                 <read_only/>
@@ -691,6 +727,9 @@
             </transitions>
           </state>
           <state id="escalated_ttr">
+            <highlight>
+              <code>critical</code>
+            </highlight> 
             <flags>
               <attribute id="ref">
                 <read_only/>
@@ -898,6 +937,9 @@
             </transitions>
           </state>
           <state id="resolved">
+            <highlight>
+              <code>closed</code>
+            </highlight> 
             <flags>
               <attribute id="ref">
                 <read_only/>
@@ -1045,6 +1087,9 @@
             </transitions>
           </state>
           <state id="closed">
+            <highlight>
+              <code>closed</code>
+            </highlight> 
             <flags>
               <attribute id="ref">
                 <read_only/>
@@ -1308,148 +1353,6 @@
 				self::DisplaySet($oPage, $oKnownErrorSet, array ('menu' => false));
 			}
 		}
-	}]]></code>
-        </method>
-        <method id="GetIcon">
-          <comment>/**&#13;
-	 * Get the icon representing this object&#13;
-	 * @param boolean $bImgTag If true the result is a full IMG tag (or an emtpy string if no icon is defined)&#13;
-	 * @return string Either the full IMG tag ($bImgTag == true) or just the path to the icon file&#13;
-	 */</comment>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function GetIcon($bImgTag = true)
-	{
-		$sStatus = $this->Get('status');
-		switch($this->GetState())
-		{
-
-			case 'escalated_tto':
-			case 'escalated_ttr':
-			$sIcon = self::MakeIconFromName('incident-escalated.png');
-			break;
-			
-			case 'resolved':
-			case 'closed':
-			$sIcon = self::MakeIconFromName('incident-closed.png');
-			break;
-
-			case 'new':
-			case 'approved':
-			$sIcon = self::MakeIconFromName('incident.png');
-			$iEscalationDeadline = $this->Get('tto_escalation_deadline');
-			if ($iEscalationDeadline != null)
-			{
-				// A SLA is running
-				$oTTOStopWatch = $this->Get('tto');
-				if ($oTTOStopWatch->IsThresholdPassed(100))
-				{
-					$sIcon = self::MakeIconFromName('incident-escalated.png');
-				}
-				else if ($oTTOStopWatch->IsThresholdPassed(75))
-				{
-					$sIcon = self::MakeIconFromName('incident-deadline.png');
-				}
-			}
-			break;
-			
-			case 'assigned':
-			$sIcon = self::MakeIconFromName('incident.png');
-			$iEscalationDeadline = $this->Get('ttr_escalation_deadline');
-			if ($iEscalationDeadline != null)
-			{
-				// A SLA is running
-				$oTTRStopWatch = $this->Get('ttr');
-				if ($oTTRStopWatch->IsThresholdPassed(100))
-				{
-					$sIcon = self::MakeIconFromName('incident-escalated.png');
-				}
-				else if ($oTTRStopWatch->IsThresholdPassed(75))
-				{
-					$sIcon = self::MakeIconFromName('incident-deadline.png');
-				}
-			}
-			break;
-
-			default:
-			$sIcon = MetaModel::GetClassIcon(get_class($this), $bImgTag);
-		}
-		return $sIcon;
-	}]]></code>
-        </method>
-        <method id="MakeIconFromName">
-          <static>true</static>
-          <access>protected</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	protected static function MakeIconFromName($sIconName, $bImgTag = true)
-	{
-		$sIcon = '';
-		if ($sIconName != '')
-		{
-			$sPath = '../env-'.utils::GetCurrentEnvironment().'/itop-incident-mgmt-itil/images/'.$sIconName;
-			if ($bImgTag)
-			{
-				$sIcon = "<img src=\"$sPath\" style=\"vertical-align:middle;\"/>";
-			}
-			else
-			{
-				$sIcon  = $sPath;
-			}
-		}
-		return $sIcon;
-	}]]></code>
-        </method>
-        <method id="GetHilightClass">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-iDisplay</type>
-          <code><![CDATA[	public function GetHilightClass()
-	{
-		$sHilightClass = '';
-		switch($this->GetState())
-		{
-            case 'new':
-            case 'approved':
-            $iEscalationDeadline  = $this->Get('tto_escalation_deadline');
-            if ($iEscalationDeadline != null)
-            {
-                  // A SLA is running
-                  $oTTOStopWatch = $this->Get('tto');
-                  if ($oTTOStopWatch->IsThresholdPassed(100))
-                  {
-                    $sHilightClass = HILIGHT_CLASS_CRITICAL;
-                  }
-                  else if ($oTTOStopWatch->IsThresholdPassed(75))
-                  {
-                    $sHilightClass = HILIGHT_CLASS_WARNING;
-                  }
-            }
-            break;
-      
-            case 'assigned':
-            $iEscalationDeadline = $this->Get('ttr_escalation_deadline');
-            if ($iEscalationDeadline != null)
-            {
-                // A SLA is running
-                $oTTRStopWatch = $this->Get('ttr');
-                if ($oTTRStopWatch->IsThresholdPassed(100))
-                {
-                  $sHilightClass = HILIGHT_CLASS_CRITICAL;
-                }
-                else if ($oTTRStopWatch->IsThresholdPassed(75))
-                {
-                  $sHilightClass = HILIGHT_CLASS_WARNING;
-                }
-            }
-            break;		
-			
-			case 'escalated_tto':
-			case 'escalated_ttr':
-			$sHilightClass = HILIGHT_CLASS_CRITICAL;
-			break;
-		}
-		return $sHilightClass;
 	}]]></code>
         </method>
         <method id="resolveChilds">

@@ -2460,7 +2460,7 @@ EOF
 	{
 		// Possible return values are:
 		// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE	
-		$current = HILIGHT_CLASS_NONE; // Not hilighted by default
+		$current = parent::GetHilightClass(); // Default computation
 
 		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
 		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)

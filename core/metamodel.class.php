@@ -279,6 +279,7 @@ abstract class MetaModel
 	private static $m_aChildClasses = array(); // array of ("classname" => array of "childclass")
 
 	private static $m_aClassParams = array(); // array of ("classname" => array of class information)
+	private static $m_aHighlightScales = array(); // array of ("classname" => array of highlightscale information)
 
 	static public function GetParentPersistentClass($sRefClass)
 	{
@@ -1908,6 +1909,50 @@ abstract class MetaModel
 		self::$m_aTransitions[$sTargetClass][$sStateCode] = array();
 	}
 
+	public static function Init_DefineHighlightScale($aHighlightScale)
+	{
+		$sTargetClass = self::GetCallersPHPClass("Init");
+		self::$m_aHighlightScales[$sTargetClass] = $aHighlightScale;
+	}
+	
+	public static function GetHighlightScale($sTargetClass)
+	{
+		$aScale = array();
+		$aParentScale = array();
+		$sParentClass = self::GetParentPersistentClass($sTargetClass);
+		if (!empty($sParentClass))
+		{
+			// inherit the scale from the parent class
+			$aParentScale = self::GetHighlightScale($sParentClass);
+		}
+		if (array_key_exists($sTargetClass, self::$m_aHighlightScales))
+		{
+			$aScale = self::$m_aHighlightScales[$sTargetClass];
+		}
+		return array_merge($aParentScale, $aScale); // Merge both arrays, the values from the last one have precedence
+	}
+	
+	public static function GetHighlightCode($sTargetClass, $sStateCode)
+	{
+		$sCode = '';
+		if ( array_key_exists($sTargetClass, self::$m_aStates)
+			 && array_key_exists($sStateCode, self::$m_aStates[$sTargetClass])
+			 && array_key_exists('highlight', self::$m_aStates[$sTargetClass][$sStateCode]) )
+		{
+			$sCode = self::$m_aStates[$sTargetClass][$sStateCode]['highlight']['code'];
+		}
+		else
+		{
+			// Check the parent's definition
+			$sParentClass = self::GetParentPersistentClass($sTargetClass);
+			if (!empty($sParentClass))
+			{
+				$sCode = self::GetHighlightCode($sParentClass, $sStateCode);
+			}
+		}
+		return $sCode;
+	}
+	
 	public static function Init_OverloadStateAttribute($sStateCode, $sAttCode, $iFlags)
 	{
 		// Warning: this is not sufficient: the flags have to be copied to the states that are inheriting from this state
@@ -3386,6 +3431,33 @@ abstract class MetaModel
 				{
 					// Do nothing...
 				}
+				else if ($oAttDef instanceof AttributeStopWatch)
+				{
+					$aThresholds = $oAttDef->ListThresholds();
+					if (is_array($aThresholds))
+					{
+						foreach($aThresholds as $iPercent => $aDef)
+						{
+							if (array_key_exists('highlight', $aDef))
+							{
+								if(!array_key_exists('code', $aDef['highlight']))
+								{
+									$aErrors[$sClass][] = "The 'code' element is missing for the 'highlight' property of the $iPercent% threshold in the attribute: '$sAttCode'.";
+									$aSugFix[$sClass][] = "Add a 'code' entry specifying the value of the highlight code for this threshold.";
+								}
+								else
+								{
+									$aScale = self::GetHighlightScale($sClass);
+									if (!array_key_exists($aDef['highlight']['code'], $aScale))
+									{
+										$aErrors[$sClass][] = "'{$aDef['highlight']['code']}' is not a valid value for the 'code' element of the $iPercent% threshold in the attribute: '$sAttCode'.";
+										$aSugFix[$sClass][] = "The possible highlight codes for this class are: ".implode(', ', array_keys($aScale)).".";
+									}
+								}
+							}
+						}						
+					}
+				}
 				else // standard attributes
 				{
 					// Check that the default values definition is a valid object!
@@ -3483,17 +3555,46 @@ abstract class MetaModel
 						}
 					}
 	
-					// Lifcycle - check that the action handlers are defined
+					// Lifecycle - check that the action handlers are defined
 					foreach (self::EnumStates($sClass) as $sStateCode => $aStateDef)
 					{
 						foreach(self::EnumTransitions($sClass, $sStateCode) as $sStimulusCode => $aTransitionDef)
 						{
-							foreach ($aTransitionDef['actions'] as $sActionHandler)
+							foreach ($aTransitionDef['actions'] as $actionHandler)
 							{
-								if (!method_exists($sClass, $sActionHandler))
+								if (is_string($actionHandler))
 								{
-									$aErrors[$sClass][] = "Unknown function '$sActionHandler' in transition [$sStateCode/$sStimulusCode] for state attribute '$sStateAttCode'";
-									$aSugFix[$sClass][] = "Specify a function which prototype is in the form [public function $sActionHandler(\$sStimulusCode){return true;}]";
+									if (!method_exists($sClass, $actionHandler))
+									{
+										$aErrors[$sClass][] = "Unknown function '$sActionHandler' in transition [$sStateCode/$sStimulusCode] for state attribute '$sStateAttCode'";
+										$aSugFix[$sClass][] = "Specify a function which prototype is in the form [public function $sActionHandler(\$sStimulusCode){return true;}]";
+									}
+								}
+								else // if(is_array($actionHandler))
+								{
+									$sActionHandler = $actionHandler['verb'];
+									if (!method_exists($sClass, $sActionHandler))
+									{
+										$aErrors[$sClass][] = "Unknown function '$sActionHandler' in transition [$sStateCode/$sStimulusCode] for state attribute '$sStateAttCode'";
+										$aSugFix[$sClass][] = "Specify a function which prototype is in the form [public function $sActionHandler(...){return true;}]";
+									}
+								}
+							}
+						}
+						if (array_key_exists('highlight', $aStateDef))
+						{
+							if(!array_key_exists('code', $aStateDef['highlight']))
+							{
+								$aErrors[$sClass][] = "The 'code' element is missing for the 'highlight' property of state: '$sStateCode'.";
+								$aSugFix[$sClass][] = "Add a 'code' entry specifying the value of the highlight code for this state.";
+							}
+							else
+							{
+								$aScale = self::GetHighlightScale($sClass);
+								if (!array_key_exists($aStateDef['highlight']['code'], $aScale))
+								{
+									$aErrors[$sClass][] = "'{$aStateDef['highlight']['code']}' is not a valid value for the 'code' element in the 'highlight' property of state: '$sStateCode'.";
+									$aSugFix[$sClass][] = "The possible highlight codes for this class are: ".implode(', ', array_keys($aScale)).".";
 								}
 							}
 						}
@@ -4718,6 +4819,7 @@ abstract class MetaModel
 				self::$m_aStates = $result['m_aStates'];
 				self::$m_aStimuli = $result['m_aStimuli'];
 				self::$m_aTransitions = $result['m_aTransitions'];
+				self::$m_aHighlightScales = $result['m_aHighlightScales'];
 			}
 			$oKPI->ComputeAndReport('Metamodel APC (fetch + read)');
 		}
@@ -4754,6 +4856,7 @@ abstract class MetaModel
 				$aCache['m_aStates'] = self::$m_aStates; // array of ("classname" => array of "statecode"=>array('label'=>..., attribute_inherit=> attribute_list=>...))
 				$aCache['m_aStimuli'] = self::$m_aStimuli; // array of ("classname" => array of ("stimuluscode"=>array('label'=>...)))
 				$aCache['m_aTransitions'] = self::$m_aTransitions; // array of ("classname" => array of ("statcode_from"=>array of ("stimuluscode" => array('target_state'=>..., 'actions'=>array of handlers procs, 'user_restriction'=>TBD)))
+				$aCache['m_aHighlightScales'] = self::$m_aHighlightScales; // array of ("classname" => array of higlightcodes)))
 				apc_store($sOqlAPCCacheId, $aCache);
 				$oKPI->ComputeAndReport('Metamodel APC (store)');
 			}

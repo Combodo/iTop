@@ -922,6 +922,15 @@ EOF;
 					{
 						$iPercent = $this->GetPropNumber($oThreshold, 'percent');
 	
+						$oHighlight = $oThreshold->GetUniqueElement('highlight', false);
+						$sHighlight = '';
+						if($oHighlight)
+						{
+							$sCode  = $oHighlight->GetChildText('code');
+							$bPersistent =  $this->GetPropBoolean($oHighlight, 'persistent', false);
+							$sHighlight = "'highlight' => array('code' => '$sCode', 'persistent' => ".($bPersistent ? 'true' : 'false')."), ";
+						}
+						
 						$oActions = $oThreshold->GetUniqueElement('actions');
 						$oActionNodes = $oActions->getElementsByTagName('action');
 						$aActions = array();
@@ -934,7 +943,12 @@ EOF;
 								$oParamNodes = $oParams->getElementsByTagName('param');
 								foreach($oParamNodes as $oParam)
 								{
-									$aActionParams[] = self::QuoteForPHP($oParam->textContent);
+									$sParamType = $oParam->getAttribute('xsi:type');
+									if ($sParamType == '')
+									{
+										$sParamType = 'string';
+									}
+									$aActionParams[] = "array('type' => '$sParamType', 'value' => '".self::QuoteForPHP($oParam->textContent)."')";
 								}
 							}
 							$sActionParams = 'array('.implode(', ', $aActionParams).')';
@@ -942,7 +956,7 @@ EOF;
 							$aActions[] = "array('verb' => $sVerb, 'params' => $sActionParams)";
 						}
 						$sActions = 'array('.implode(', ', $aActions).')';
-						$aThresholds[] = $iPercent." => array('percent' => $iPercent, 'actions' => $sActions)";
+						$aThresholds[] = $iPercent." => array('percent' => $iPercent, $sHighlight 'actions' => $sActions)";
 					}
 					$aParameters['thresholds'] = 'array('.implode(', ', $aThresholds).')';
 				}
@@ -995,6 +1009,7 @@ EOF;
 		// Lifecycle
 		//
 		$sLifecycle = '';
+		$sHighlightScale = '';
 		if ($oLifecycle)
 		{
 			$sLifecycle .= "\t\t// Lifecycle (status attribute: $sStateAttCode)\n";
@@ -1008,7 +1023,57 @@ EOF;
 	
 				$sLifecycle .= "		MetaModel::Init_DefineStimulus(new ".$sStimulusClass."(\"".$sStimulus."\", array()));\n";
 			}
-	
+			$oHighlightScale = $oLifecycle->GetUniqueElement('highlight_scale', false);
+			if ($oHighlightScale)
+			{
+				$sHighlightScale = "\t\t// Higlight Scale\n";
+				$sHighlightScale .= "		MetaModel::Init_DefineHighlightScale( array(\n";
+				
+				$this->CompileFiles($oHighlightScale, $sTempTargetDir.'/'.$sModuleRelativeDir, $sFinalTargetDir.'/'.$sModuleRelativeDir, '');
+				
+				foreach ($oHighlightScale->getElementsByTagName('item') as $oItem)
+				{
+					$sItemCode = $oItem->getAttribute('id');
+					$fRank = (float)$oItem->GetChildText('rank');
+					$sColor = $oItem->GetChildText('color');
+					if (($sIcon = $oItem->GetChildText('icon')) && (strlen($sIcon) > 0))
+					{
+						$sIcon = $sModuleRelativeDir.'/'.$sIcon;
+						$sIcon = "utils::GetAbsoluteUrlModulesRoot().'$sIcon'";
+					}
+					switch($sColor)
+					{
+						// Known PHP constants: keep the literal value as-is
+						case 'HILIGHT_CLASS_CRITICAL':
+						case 'HIGHLIGHT_CLASS_CRITICAL':
+						$sColor = 'HILIGHT_CLASS_CRITICAL';
+						break;
+						
+						case 'HILIGHT_CLASS_OK':
+						case 'HIGHLIGHT_CLASS_OK':
+						$sColor = 'HILIGHT_CLASS_OK';
+						break;
+						
+						case 'HIGHLIGHT_CLASS_WARNING':
+						case 'HILIGHT_CLASS_WARNING':
+						$sColor = 'HILIGHT_CLASS_WARNING';
+						break;
+						
+						case 'HIGHLIGHT_CLASS_NONE':
+						case 'HILIGHT_CLASS_NONE':
+						$sColor = 'HILIGHT_CLASS_NONE';
+						break;
+						
+						default:
+						// Future extension, specify your own color??
+						$sColor = "'".addslashes($sColor)."'";
+					}
+					$sHighlightScale .= "		    '$sItemCode' => array('rank' => $fRank, 'color' => $sColor, 'icon' => $sIcon),\n";
+					
+				}
+				$sHighlightScale .= "		));\n";
+			}
+					
 			$oStates = $oLifecycle->GetUniqueElement('states');
 			foreach ($oStates->getElementsByTagName('state') as $oState)
 			{
@@ -1028,7 +1093,20 @@ EOF;
 				$sLifecycle .= "		MetaModel::Init_DefineState(\n";
 				$sLifecycle .= "			\"".$sState."\",\n";
 				$sLifecycle .= "			array(\n";
-				$sLifecycle .= "				\"attribute_inherit\" => '',\n";
+				$sAttributeInherit = '';
+				//$sAttributeInherit = $oState->GetChildText('inherit_flags', ''); // Seems easy but think about the consequences when applying a delta
+				$sLifecycle .= "				\"attribute_inherit\" => '$sAttributeInherit',\n";
+				$oHighlight = $oState->GetUniqueElement('highlight', false);
+				if ($oHighlight)
+				{
+					$sCode = $oHighlight->GetChildText('code', '');
+					if ($sCode != '')
+					{
+						$sLifecycle .= "				'highlight' => array('code' => '$sCode'),\n";
+					}
+					
+				}
+				
 				$sLifecycle .= "				\"attribute_list\" => array(\n";
 
 				$oFlags = $oState->GetUniqueElement('flags');
@@ -1061,7 +1139,28 @@ EOF;
 					foreach ($oActions->getElementsByTagName('action') as $oAction)
 					{
 						$sVerb = $oAction->GetChildText('verb');
-						$aVerbs[] = "'$sVerb'";
+						$oParams = $oAction->GetOptionalElement('params');
+						$aActionParams = array();
+						if ($oParams)
+						{
+							$oParamNodes = $oParams->getElementsByTagName('param');
+							foreach($oParamNodes as $oParam)
+							{
+								$sParamType = $oParam->getAttribute('xsi:type');
+								if ($sParamType == '')
+								{
+									$sParamType = 'string';
+								}
+								$aActionParams[] = "array('type' => '$sType', 'value' => '".self::QuoteForPHP($oParam->textContent)."')";
+							}
+						}
+						else
+						{
+							// Old (pre 2.0.4) format, when no parameter is specified, assume 1 parameter: reference sStimulusCode
+							$aActionParams[] = "array('type' => 'reference', 'value' => 'sStimulusCode')";
+						}
+						$sActionParams = 'array('.implode(', ', $aActionParams).')';
+						$aVerbs[] = "array('verb' => '$sVerb', 'params' => $sActionParams)";
 					}
 					$sActions = implode(', ', $aVerbs);
 					$sLifecycle .= "		MetaModel::Init_DefineTransition(\"$sState\", \"$sStimulus\", array(\"target_state\"=>\"$sTargetState\", \"actions\"=>array($sActions), \"user_restriction\"=>null));\n";
@@ -1158,6 +1257,7 @@ $sClassParams
 		MetaModel::Init_InheritAttributes();
 $sAttributes
 $sLifecycle
+$sHighlightScale
 $sZlists
 	}
 

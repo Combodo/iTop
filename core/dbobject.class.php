@@ -95,6 +95,7 @@ abstract class DBObject implements iDisplay
 	private $m_aLoadedAtt = array(); // Compound objects can be partially loaded, array of sAttCode
 	protected $m_aModifiedAtt = array(); // list of (potentially) modified sAttCodes
 	protected $m_oMasterReplicaSet = null; // Set of SynchroReplica related to this object
+	protected $m_sHighlightCode = null;
 
 	// Use the MetaModel::NewObject to build an object (do we have to force it?)
 	public function __construct($aRow = null, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
@@ -557,6 +558,64 @@ abstract class DBObject implements iDisplay
 	{
 		return $this->m_aExtendedData;
 	}
+	
+	/**
+	 * Set the HighlightCode if the given code has a greater rank than the current HilightCode
+	 * @param string $sCode
+	 * @return void
+	 */
+	protected function SetHighlightCode($sCode)
+	{
+		$aHighlightScale = MetaModel::GetHighlightScale(get_class($this));
+		$fCurrentRank = 0.0;
+		if (($this->m_sHighlightCode !== null) && array_key_exists($this->m_sHighlightCode, $aHighlightScale))
+		{
+			$fCurrentRank = $aHighlightScale[$this->m_sHighlightCode]['rank'];
+		}
+				
+		if (array_key_exists($sCode, $aHighlightScale))
+		{
+			$fRank = $aHighlightScale[$sCode]['rank'];
+			if ($fRank > $fCurrentRank)
+			{
+				$this->m_sHighlightCode = $sCode;
+			}
+		}
+	}
+	
+	/**
+	 * Get the current HighlightCode
+	 * @return string The Hightlight code (null if none set, meaning rank = 0)
+	 */
+	protected function GetHighlightCode()
+	{
+		return $this->m_sHighlightCode;
+	}
+	
+	protected function ComputeHighlightCode()
+	{
+		// First if the state defines a HiglightCode, apply it
+		$sState = $this->GetState();
+		if ($sState != '')
+		{
+			$sCode = MetaModel::GetHighlightCode(get_class($this), $sState);
+			$this->SetHighlightCode($sCode);
+		}
+		// The check for each StopWatch if a HighlightCode is effective
+		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
+		{
+			if ($oAttDef instanceof AttributeStopWatch)
+			{
+				$oStopWatch = $this->Get($sAttCode);
+				$sCode = $oStopWatch->GetHighlightCode();
+				if ($sCode !== '')
+				{
+					$this->SetHighlightCode($sCode);
+				}
+			}
+		}
+		return $this->GetHighlightCode();
+	}
 
 	/**
 	 * Updates the value of an external field by (re)loading the object
@@ -785,10 +844,27 @@ abstract class DBObject implements iDisplay
 	/**
 	 * Get the icon representing this object
 	 * @param boolean $bImgTag If true the result is a full IMG tag (or an emtpy string if no icon is defined)
-	 * @return string Either the full IMG tag ($bImgTag == true) or just the path to the icon file
+	 * @return string Either the full IMG tag ($bImgTag == true) or just the URL to the icon file
 	 */
 	public function GetIcon($bImgTag = true)
 	{
+		$sCode = $this->ComputeHighlightCode();
+		if($sCode != '')
+		{
+			$aHighlightScale = MetaModel::GetHighlightScale(get_class($this));
+			if (array_key_exists($sCode, $aHighlightScale))
+			{
+				$sIconUrl = $aHighlightScale[$sCode]['icon'];
+				if($bImgTag)
+				{
+					return "<img src=\"$sIconUrl\" style=\"vertical-align:middle\"/>";
+				}
+				else
+				{
+					return $sIconUrl;
+				}
+			}
+		}		
 		return MetaModel::GetClassIcon(get_class($this), $bImgTag);
 	}
 
@@ -1998,17 +2074,55 @@ abstract class DBObject implements iDisplay
 		//    array('target_state'=>..., 'actions'=>array of handlers procs, 'user_restriction'=>TBD
 
 		$bSuccess = true;
-		foreach ($aTransitionDef['actions'] as $sActionHandler)
+		foreach ($aTransitionDef['actions'] as $actionHandler)
 		{
-			// std PHP spec
-			$aActionCallSpec = array($this, $sActionHandler);
-
-			if (!is_callable($aActionCallSpec))
+			if (is_string($actionHandler))
 			{
-				throw new CoreException("Unable to call action: ".get_class($this)."::$sActionHandler");
-				return;
+				// Old (pre-2.0.4) action definition without any parameter
+				$aActionCallSpec = array($this, $sActionHandler);
+	
+				if (!is_callable($aActionCallSpec))
+				{
+					throw new CoreException("Unable to call action: ".get_class($this)."::$sActionHandler");
+					return;
+				}
+				$bRet = call_user_func($aActionCallSpec, $sStimulusCode);
 			}
-			$bRet = call_user_func($aActionCallSpec, $sStimulusCode);
+			else // if (is_array($actionHandler))
+			{
+				// New syntax: 'verb' and typed parameters
+				$sAction = $actionHandler['verb'];
+				$aParams = array();
+				foreach($actionHandler['params'] as $aDefinition)
+				{
+					$sParamType = array_key_exists('type', $aDefinition) ? $aDefinition['type'] : 'string';
+					switch($sParamType)
+					{
+						case 'int':
+						$value = (int)$aDefinition['value'];
+						break;
+						
+						case 'float':
+						$value = (float)$aDefinition['value'];
+						break;
+						
+						case 'bool':
+						$value = (bool)$aDefinition['value'];
+						break;
+						
+						case 'reference':
+						$value = ${$aDefinition['value']};
+						break;
+						
+						case 'string':
+						default:
+						$value = (string)$aDefinition['value'];
+					}
+					$aParams[] = $value;
+				}
+				$aCallSpec = array($this, $sAction);
+				$bRet = call_user_func_array($aCallSpec, $aParams);
+			}
 			// if one call fails, the whole is considered as failed
 			if (!$bRet) $bSuccess = false;
 		}
@@ -2563,6 +2677,15 @@ abstract class DBObject implements iDisplay
 	
 	public function GetHilightClass()
 	{
+		$sCode = $this->ComputeHighlightCode();
+		if($sCode != '')
+		{
+			$aHighlightScale = MetaModel::GetHighlightScale(get_class($this));
+			if (array_key_exists($sCode, $aHighlightScale))
+			{
+				return $aHighlightScale[$sCode]['color'];
+			}
+		}
 		return HILIGHT_CLASS_NONE;
 	}
 
