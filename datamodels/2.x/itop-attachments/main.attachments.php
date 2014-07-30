@@ -353,7 +353,7 @@ EOF
 			$oPage->add('<div style="clear:both"></div>');			
 			$sMaxUpload = $this->GetMaxUpload();
 			$oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file"><span style="display:none;" id="attachment_loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUpload);
-			$oPage->add_ready_script('$("#file").on("change", function() {ajaxFileUpload();});'); // Workaround for a Chrome 36 bug causing multiple (12!) times the same upload. See http://www.redmine.org/issues/17151
+			$oPage->add_ready_script('$("#file").off("change.itop-attachments").on("change.itop-attachments", function() {ajaxFileUpload();});'); // Workaround for a Chrome 36 bug causing multiple (12!) times the same upload. See http://www.redmine.org/issues/17151
 			$oPage->p('<span style="display:none;" id="attachment_loading">Loading, please wait...</span>');
 			$oPage->p('<input type="hidden" id="attachment_plugin" name="attachment_plugin"/>');
 			$oPage->add('</fieldset>');
