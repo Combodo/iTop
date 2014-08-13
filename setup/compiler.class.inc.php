@@ -1093,8 +1093,7 @@ EOF;
 				$sLifecycle .= "		MetaModel::Init_DefineState(\n";
 				$sLifecycle .= "			\"".$sState."\",\n";
 				$sLifecycle .= "			array(\n";
-				$sAttributeInherit = '';
-				//$sAttributeInherit = $oState->GetChildText('inherit_flags', ''); // Seems easy but think about the consequences when applying a delta
+				$sAttributeInherit = $oState->GetChildText('inherit_flags_from', '');
 				$sLifecycle .= "				\"attribute_inherit\" => '$sAttributeInherit',\n";
 				$oHighlight = $oState->GetUniqueElement('highlight', false);
 				if ($oHighlight)
