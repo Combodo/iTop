@@ -215,8 +215,8 @@ class ModelFactory
 		$this->oMenus = $this->oDOMDocument->CreateElement('menus');
 		$this->oRoot->AppendChild($this->oMenus);
 		
-		$this->oCombodo = $this->oDOMDocument->CreateElement('combodo');
-		$this->oRoot->AppendChild($this->oCombodo);
+		$this->oMeta = $this->oDOMDocument->CreateElement('meta');
+		$this->oRoot->AppendChild($this->oMeta);
 		
 		foreach($aRootNodeExtensions as $sElementName)
 		{
