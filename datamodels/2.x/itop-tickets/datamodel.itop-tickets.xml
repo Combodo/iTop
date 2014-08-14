@@ -637,6 +637,8 @@
           <static>false</static>
           <access>public</access>
           <type>StimulusUserAction</type>
+          <arguments>
+          </arguments>
           <code><![CDATA[	public function UpdateParentTicketLog()
 	{
 		$oLog = $this->Get('log');
@@ -741,4 +743,67 @@
       </presentation>
     </class>
   </classes>
+  <meta>
+    <classes>
+      <class id="cmdbAbstractObject" _delta="define">
+        <methods>
+          <method id="Set">
+            <arguments>
+              <argument>
+                <label>Field Code</label>
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <description>The field to set, in the current object</description>
+              </argument>
+              <argument>
+                <label>Value</label>
+                <type>string</type>
+                <mandatory>true</mandatory>
+                <description>The value to set</description>
+              </argument>
+            </arguments>
+          </method>
+          <method id="SetCurrentDate">
+            <arguments>
+              <argument>
+                <label>Field Code</label>
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <description>The field, in the current object, to set to
+                  the current date</description>
+              </argument>
+            </arguments>
+          </method>
+          <method id="Reset">
+            <arguments>
+              <argument>
+                <label>Field Code</label>
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <description>The field, in the current object, to reset
+                  to its default value</description>
+              </argument>
+            </arguments>
+          </method>
+          <method id="Copy">
+            <arguments>
+              <argument>
+                <label>Destination</label>
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <description>The field, in the current object, to set</description>
+              </argument>
+              <argument>
+                <label>Source</label>
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <description>The field, in the current object, to get
+                  the value from</description>
+              </argument>
+            </arguments>
+          </method>
+        </methods>
+      </class>
+    </classes>
+  </meta>
 </itop_design>
