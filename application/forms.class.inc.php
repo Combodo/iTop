@@ -220,7 +220,14 @@ class DesignerForm
 					$sFieldId = $this->GetFieldId($oField->GetCode());
 					$sValidation = $this->GetValidationArea($oField->GetCode(), '<span title="Apply" class="ui-icon ui-icon-circle-check"/>');
 					$sValidationFields = '</td><td class="prop_icon prop_apply">'.$sValidation.'</td><td  class="prop_icon prop_cancel"><span title="Revert" class="ui-icon ui-icon-circle-close"/></td></tr>';
-					$sReturn .= '<tr id="row_'.$sFieldId.'"><td class="prop_label">'.$aRow['label'].'</td><td class="prop_value">'.$aRow['value'];
+					if (is_null($aRow['label']))
+					{
+						$sReturn .= '<tr id="row_'.$sFieldId.'"><td class="prop_value" colspan="2">'.$aRow['value'];
+					}
+					else
+					{
+						$sReturn .= '<tr id="row_'.$sFieldId.'"><td class="prop_label">'.$aRow['label'].'</td><td class="prop_value">'.$aRow['value'];
+					}
 					if (!($oField instanceof DesignerFormSelectorField))
 					{
 						$sReturn .= $sValidationFields;
@@ -455,6 +462,11 @@ class DesignerTabularForm extends DesignerForm
 	public function AddRow($aRow)
 	{
 		$this->aTable[] = $aRow;
+	}
+
+	public function RenderAsPropertySheet($oP, $bReturnHTML = false, $sNotifyParentSelector = null)
+	{
+		return $this->Render($oP, $bReturnHTML);
 	}
 	
 	public function Render($oP, $bReturnHTML = false)
@@ -993,7 +1005,6 @@ class DesignerBooleanField extends DesignerFormField
 	}
 }
 
-
 class DesignerHiddenField extends DesignerFormField
 {
 	public function __construct($sCode, $sLabel = '', $defaultValue = '')
@@ -1265,8 +1276,10 @@ class DesignerFormSelectorField extends DesignerFormField
 				$sHtml .= $oSubForm->RenderAsPropertySheet($oP, true);
 
 				$sState = $this->oForm->IsDisplayed() ? 'visible' : 'hidden';
+				$sParentStyle = '';
 				if ($oParent = $this->oForm->GetParentForm())
 				{
+					$sParentStyle = ($oParent->IsDisplayed()) ? '' : 'style="display:none"';
 					$sParentSelector = $oParent->GetHierarchyParent();
 					$sParentPath = $oParent->GetHierarchyPath();
 				}
@@ -1275,7 +1288,8 @@ class DesignerFormSelectorField extends DesignerFormField
 					$sParentSelector = '';
 					$sParentPath = '';
 				}
-				$sHtml .= "</tbody><tbody data-selector=\"$sParentSelector\" data-path=\"$sParentPath\" data-state=\"$sState\" $sStyle>";
+				
+				$sHtml .= "</tbody><tbody data-selector=\"$sParentSelector\" data-path=\"$sParentPath\" data-state=\"$sState\" $sParentStyle>";
 			}
 			else
 			{
@@ -1364,4 +1378,110 @@ class DesignerSubFormField extends DesignerFormField
 	}
 }
 
-?>
+class DesignerStaticTextField extends DesignerFormField
+{
+	public function __construct($sCode, $sLabel = '', $defaultValue = '')
+	{
+		parent::__construct($sCode, $sLabel, $defaultValue);
+	}
+
+	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
+	{
+		return array('label' => $this->sLabel, 'value' => $this->defaultValue);
+	}
+}
+
+class DesignerButtonsField extends DesignerFormField
+{
+	protected $aButtons;
+	
+	public function __construct($sCode, $sLabel = null)
+	{
+		parent::__construct($sCode, $sLabel, null);
+		$this->aButtons = array('left' => array(), 'center' => array(), 'right' => array());
+	}
+
+	public function AddButton($sPos, DesignerButtonsFieldCtrl $oButton)
+	{
+		$this->aButtons[$sPos][] = $oButton;
+	}
+	
+	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
+	{
+		$sHtml = '<table style="width:100%"><tbody><tr>';
+		foreach($this->aButtons as $sPos => $aButtons)
+		{
+			$aBtns = array();
+			foreach($aButtons as $oButton)
+			{
+				$aBtns[] = $oButton->Render($oP, $sFormId, $sRenderMode);
+			}
+			$sHtml .= '<td style="text-align:'.$sPos.'; ">'.implode(' ', $aBtns)."</td>";
+		}
+		$sHtml .= '</tr></tbody></table>';
+		return array('label' => $this->sLabel, 'value' => $sHtml);
+	}
+}
+
+/**
+ * A button to add to a DesignerButtonsField
+ *
+ */
+abstract class DesignerButtonsFieldCtrl
+{
+	protected $sId;
+	public function __construct($sId)
+	{
+		$this->sId = $sId;
+	}
+	abstract public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog');
+}
+
+class DesignerButtonCtrl extends DesignerButtonsFieldCtrl
+{
+	protected $sLabel;
+	protected $sJSAction;
+	
+	public function __construct($sId, $sLabel, $sJSAction)
+	{
+		parent::__construct($sId);
+		$this->sLabel = $sLabel;
+		$this->sJSAction = $sJSAction;
+	}
+
+	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
+	{
+		$sAction = htmlentities($this->sJSAction, ENT_QUOTES, 'UTF-8');
+		return '<button id="'.$this->sId.'" type="button" onclick="'.$sAction.'">'.$this->sLabel.'</button>';
+	}
+}
+
+class DesignerSelectCtrl extends DesignerButtonsFieldCtrl
+{
+	protected $aValues;
+	protected $defaultValue;
+	protected $sJSAction;
+	
+	public function __construct($sId, $sLabel, $aValues, $defaultValue, $sJSAction)
+	{
+		parent::__construct($sId);
+		$this->sLabel = $sLabel;
+		$this->aValues = $aValues;
+		$this->defaultValue = $defaultValue;
+		$this->sJSAction = $sJSAction;
+		
+	}
+	
+	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
+	{
+		$sAction = htmlentities($this->sJSAction, ENT_QUOTES, 'UTF-8');
+		$sHtml = '<span>'.$this->sLabel.'&nbsp;<select id="'.$this->sId.'" onchange="'.$sAction.'">';
+		foreach($this->aValues as $value => $sLabel)
+		{
+			$sSelected = ($value == $this->defaultValue) ?  'selected' : '';
+			$sHtml .= '<option value="'.htmlentities($value).'"'.$sSelected.'>'.$sLabel.'</option>';
+		}
+		$sHtml .= '</select></span>';
+		return $sHtml;
+	}	
+}
