@@ -91,6 +91,9 @@ abstract class AsyncTask extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("event_id", array("targetclass"=>"Event", "jointype"=> "", "allowed_values"=>null, "sql"=>"event_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_SILENT, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeInteger("remaining_retries", array("allowed_values"=>null, "sql"=>"remaining_retries", "default_value"=>0, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("last_error_code", array("allowed_values"=>null, "sql"=>"last_error_code", "default_value"=>0, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("last_error", array("allowed_values"=>null, "sql"=>"last_error", "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("last_attempt", array("allowed_values"=>null, "sql"=>"last_attempt", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 	}
 
 	/**
@@ -126,18 +129,18 @@ abstract class AsyncTask extends DBObject
 		{
 			// Corrupted task !! (for example: "Failed to reload object")
 			IssueLog::Error('Failed to process async task #'.$this->GetKey().' - reason: '.$e->getMessage().' - fatal error, deleting the task.');
-		   	if ($this->Get('event_id') != 0)
-		   	{
-		   		$oEventLog = MetaModel::GetObject('Event', $this->Get('event_id'));
-		   		$oEventLog->Set('message', 'Failed, corrupted data: '.$e->getMessage());
-		   		$oEventLog->DBUpdate();
+	   	if ($this->Get('event_id') != 0)
+	   	{
+	   		$oEventLog = MetaModel::GetObject('Event', $this->Get('event_id'));
+	   		$oEventLog->Set('message', 'Failed, corrupted data: '.$e->getMessage());
+	   		$oEventLog->DBUpdate();
 			}
 			$this->DBDelete();
 			return self::DELETED;
 		}
 	}
 
-	public function GetRetryDelay()
+	public function GetRetryDelay($iErrorCode = null)
 	{
 		$iRetryDelay = 600;
 		$aRetries = MetaModel::GetConfig()->Get('async_task_retries', array());
@@ -149,7 +152,7 @@ abstract class AsyncTask extends DBObject
 		return $iRetryDelay;
 	}
 
-	public function GetMaxRetries()
+	public function GetMaxRetries($iErrorCode = null)
 	{
 		$iMaxRetries = 0;
 		$aRetries = MetaModel::GetConfig()->Get('async_task_retries', array());
@@ -160,10 +163,16 @@ abstract class AsyncTask extends DBObject
 		}
 	}
 
+	/**
+	 * Override to notify people that a task cannot be performed
+	 */
+	protected function OnDefinitiveFailure()
+	{
+	}
+
   	protected function OnInsert()
 	{
 		$this->Set('created', time());
-		$this->Set('remaining_retries', $this->GetMaxRetries());
 	}
 
    /**
@@ -191,22 +200,39 @@ abstract class AsyncTask extends DBObject
 			}
 			catch(Exception $e)
 			{
+				$iErrorCode = $e->getCode();
+
+				if ($this->Get('last_attempt') == '')
+				{
+					// First attempt
+					$this->Set('remaining_retries', $this->GetMaxRetries($iErrorCode));
+				}
+
+				$this->Set('last_error', $e->getMessage());
+				$this->Set('last_error_code', $iErrorCode);
+				$this->Set('last_attempt', time());
+
 				$iRemaining = $this->Get('remaining_retries');
 				if ($iRemaining > 0)
 				{
-					$iRetryDelay = $this->GetRetryDelay();
+					$iRetryDelay = $this->GetRetryDelay($iErrorCode);
 					IssueLog::Info('Failed to process async task #'.$this->GetKey().' - reason: '.$e->getMessage().' - remaining retries: '.$iRemaining.' - next retry in '.$iRetryDelay.'s');
 	
 					$this->Set('remaining_retries', $iRemaining - 1);
 					$this->Set('status', 'planned');
 					$this->Set('started', null);
 					$this->Set('planned', time() + $iRetryDelay);
-					$this->DBUpdate();
 				}
 				else
 				{
 					IssueLog::Error('Failed to process async task #'.$this->GetKey().' - reason: '.$e->getMessage());
+
+					$this->Set('status', 'error');
+					$this->Set('started', null);
+					$this->Set('planned', null);
+					$this->OnDefinitiveFailure();
 				}
+				$this->DBUpdate();
 			}
 		}
 		else
@@ -217,7 +243,18 @@ abstract class AsyncTask extends DBObject
 		return $bRet;
 	}
 
+	/**
+	 * Throws an exception (message and code)
+	 */	 	
 	abstract public function DoProcess();
+
+	/**
+	 * Describes the error codes that DoProcess can return by the mean of exceptions	
+	 */	
+	static public function EnumErrorCodes()
+	{
+		return array();
+	}
 }
 
 /**
