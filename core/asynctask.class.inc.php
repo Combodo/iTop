@@ -200,39 +200,7 @@ abstract class AsyncTask extends DBObject
 			}
 			catch(Exception $e)
 			{
-				$iErrorCode = $e->getCode();
-
-				if ($this->Get('last_attempt') == '')
-				{
-					// First attempt
-					$this->Set('remaining_retries', $this->GetMaxRetries($iErrorCode));
-				}
-
-				$this->Set('last_error', $e->getMessage());
-				$this->Set('last_error_code', $iErrorCode);
-				$this->Set('last_attempt', time());
-
-				$iRemaining = $this->Get('remaining_retries');
-				if ($iRemaining > 0)
-				{
-					$iRetryDelay = $this->GetRetryDelay($iErrorCode);
-					IssueLog::Info('Failed to process async task #'.$this->GetKey().' - reason: '.$e->getMessage().' - remaining retries: '.$iRemaining.' - next retry in '.$iRetryDelay.'s');
-	
-					$this->Set('remaining_retries', $iRemaining - 1);
-					$this->Set('status', 'planned');
-					$this->Set('started', null);
-					$this->Set('planned', time() + $iRetryDelay);
-				}
-				else
-				{
-					IssueLog::Error('Failed to process async task #'.$this->GetKey().' - reason: '.$e->getMessage());
-
-					$this->Set('status', 'error');
-					$this->Set('started', null);
-					$this->Set('planned', null);
-					$this->OnDefinitiveFailure();
-				}
-				$this->DBUpdate();
+				$this->HandleError($e->getMessage(), $e->getCode());
 			}
 		}
 		else
@@ -241,6 +209,44 @@ abstract class AsyncTask extends DBObject
 			$bRet = false;
 		}
 		return $bRet;
+	}
+
+	/**
+	 * Overridable to extend the behavior in case of error (logging)
+	 */
+	protected function HandleError($sErrorMessage, $iErrorCode)
+	{
+		if ($this->Get('last_attempt') == '')
+		{
+			// First attempt
+			$this->Set('remaining_retries', $this->GetMaxRetries($iErrorCode));
+		}
+
+		$this->Set('last_error', $sErrorMessage);
+		$this->Set('last_error_code', $iErrorCode); // Note: can be ZERO !!!
+		$this->Set('last_attempt', time());
+
+		$iRemaining = $this->Get('remaining_retries');
+		if ($iRemaining > 0)
+		{
+			$iRetryDelay = $this->GetRetryDelay($iErrorCode);
+			IssueLog::Info('Failed to process async task #'.$this->GetKey().' - reason: '.$sErrorMessage.' - remaining retries: '.$iRemaining.' - next retry in '.$iRetryDelay.'s');
+
+			$this->Set('remaining_retries', $iRemaining - 1);
+			$this->Set('status', 'planned');
+			$this->Set('started', null);
+			$this->Set('planned', time() + $iRetryDelay);
+		}
+		else
+		{
+			IssueLog::Error('Failed to process async task #'.$this->GetKey().' - reason: '.$sErrorMessage);
+
+			$this->Set('status', 'error');
+			$this->Set('started', null);
+			$this->Set('planned', null);
+			$this->OnDefinitiveFailure();
+		}
+		$this->DBUpdate();
 	}
 
 	/**
