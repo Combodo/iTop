@@ -506,11 +506,19 @@ abstract class DashletGroupBy extends Dashlet
 		$sGroupBy = $this->aProperties['group_by'];
 		$sStyle = $this->aProperties['style'];
 
-		// First perform the query - if the OQL is not ok, it will generate an exception : no need to go further 
-		$oQuery = $this->oModelReflection->GetQuery($sQuery);
-		$sClass = $oQuery->GetClass();
-		$sClassAlias = $oQuery->GetClassAlias();
-
+		// First perform the query - if the OQL is not ok, it will generate an exception : no need to go further
+		try
+		{
+			$oQuery = $this->oModelReflection->GetQuery($sQuery);
+			$sClass = $oQuery->GetClass();
+			$sClassAlias = $oQuery->GetClassAlias();
+		}
+		catch(Exception $e)
+		{
+			// Invalid query, let the user edit the dashlet/dashboard anyhow
+			$sClass = '';
+			$sClassAlias = '';
+		}
 		// Check groupby... it can be wrong at this stage
 		if (preg_match('/^(.*):(.*)$/', $sGroupBy, $aMatches))
 		{
