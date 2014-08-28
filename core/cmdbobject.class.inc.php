@@ -455,12 +455,10 @@ abstract class CMDBObject extends DBObject
 	{
 		if ($bDoNotReload)
 		{
-IssueLog::Info('CMDBObject::DBInsertTracked_Internal(true)');
 			$ret = $this->DBInsertNoReload();
 		}
 		else
 		{
-IssueLog::Info('CMDBObject::DBInsertTracked_Internal(false)');
 			$ret = $this>DBInsert();
 		}
 		return $ret;
