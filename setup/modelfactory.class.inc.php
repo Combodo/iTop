@@ -442,6 +442,17 @@ class ModelFactory
 					}
 				}
 				
+				// Adjust the XML to transparently add an id (=type:<type>) on all allowed actions (profiles)
+				// which don't already have one
+				$oNodeList = $oXPath->query('/itop_design/user_rights/profiles/profile/groups/group/actions/action');	
+				foreach($oNodeList as $oNode)
+				{
+					if ($oNode->getAttribute('id') == '')
+					{
+						$oNode->SetAttribute('id', 'type:'.$oNode->getAttribute('xsi:type'));
+					}
+				}
+				
 				$oDeltaRoot = $oDocument->childNodes->item(0);
 				$this->LoadDelta($oDocument, $oDeltaRoot, $this->oDOMDocument);
 			}
