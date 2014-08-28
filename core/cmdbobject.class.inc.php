@@ -428,38 +428,40 @@ abstract class CMDBObject extends DBObject
 	}
 
 
-	public function DBInsert()
-	{
-		return $this->DBInsertTracked_Internal();
-	}
-
 	public function DBInsertTracked(CMDBChange $oChange, $bSkipStrongSecurity = null)
 	{
 		self::SetCurrentChange($oChange);
 		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
-
 		$ret = $this->DBInsertTracked_Internal();
 		return $ret;
 	}
-
+	
 	public function DBInsertTrackedNoReload(CMDBChange $oChange, $bSkipStrongSecurity = null)
 	{
 		self::SetCurrentChange($oChange);
 		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
-
 		$ret = $this->DBInsertTracked_Internal(true);
 		return $ret;
 	}
-
+	
+	/**
+	 * To Be Obsoleted: DO NOT rely on an overload of this method since
+	 * DBInsertTracked (resp. DBInsertTrackedNoReload) may call directly
+	 * DBInsert (resp. DBInsertNoReload) in future versions of iTop.
+	 * @param bool $bDoNotReload
+	 * @return integer Identifier of the created object
+	 */
 	protected function DBInsertTracked_Internal($bDoNotReload = false)
 	{
 		if ($bDoNotReload)
 		{
-			$ret = parent::DBInsertNoReload();
+IssueLog::Info('CMDBObject::DBInsertTracked_Internal(true)');
+			$ret = $this->DBInsertNoReload();
 		}
 		else
 		{
-			$ret = parent::DBInsert();
+IssueLog::Info('CMDBObject::DBInsertTracked_Internal(false)');
+			$ret = $this>DBInsert();
 		}
 		return $ret;
 	}
