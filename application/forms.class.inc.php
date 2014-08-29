@@ -254,7 +254,7 @@ EOF
 			$sReturn .= '</table>';
 			$sReturn .= $sHiddenFields;
 			$sReturn .= '</form>';
-			$sReturn .= '<div id="prop_submit_result"/>'; // for the return of the submit operation
+			$sReturn .= '<div id="prop_submit_result"></div>'; // for the return of the submit operation
 		}
 		else
 		{
