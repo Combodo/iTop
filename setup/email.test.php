@@ -76,7 +76,7 @@ function CheckEmailSetting($oP)
 			$oP->info("The SMTP port is not defined. Please add the 'smtp_port' directive into $sPhpIniFile");
 			$bRet = false;
 		}
-		else if ($iSmtpPort = 25)
+		else if ($iSmtpPort == 25)
 		{
 			$oP->info("Your SMTP port is configured to the default value: 25. You might want to set or change the 'smtp_port' directive into $sPhpIniFile");
 		}
