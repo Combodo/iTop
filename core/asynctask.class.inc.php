@@ -120,10 +120,17 @@ abstract class AsyncTask extends DBObject
 	{
 		try
 		{
-			$this->Set('status', 'running');
-			$this->Set('started', time());
-			$this->DBUpdate();
-			return self::OK;
+			if ($this->Get('status') == 'running')
+			{
+				return self::ALREADY_RUNNING;
+			}
+			else
+			{
+				$this->Set('status', 'running');
+				$this->Set('started', time());
+				$this->DBUpdate();
+				return self::OK;
+			}
 		}
 		catch(Exception $e)
 		{
