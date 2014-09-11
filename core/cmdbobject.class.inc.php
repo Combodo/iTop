@@ -459,7 +459,7 @@ abstract class CMDBObject extends DBObject
 		}
 		else
 		{
-			$ret = $this>DBInsert();
+			$ret = $this->DBInsert();
 		}
 		return $ret;
 	}
