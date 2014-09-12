@@ -301,12 +301,14 @@ class BinaryExpression extends Expression
 			}
 			else
 			{
-				$aResult = array_merge($this->m_oRightExpr->ListConstantFields(), $this->m_oLeftExpr->ListConstantFields()) ;
+				// Strictly, this should be removed
+				$aResult = array_merge_recursive($this->m_oRightExpr->ListConstantFields(), $this->m_oLeftExpr->ListConstantFields());
 			}
 		}
 		else
 		{
-			$aResult = array_merge($this->m_oRightExpr->ListConstantFields(), $this->m_oLeftExpr->ListConstantFields()) ;
+			// Strictly, this should be done only for the AND operator
+			$aResult = array_merge_recursive($this->m_oRightExpr->ListConstantFields(), $this->m_oLeftExpr->ListConstantFields());
 		}
 		return $aResult;
 	}
