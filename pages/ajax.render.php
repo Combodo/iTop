@@ -834,6 +834,7 @@ try
 		$oMenu = ApplicationMenu::GetMenuNode($idx);
 		$oDashboard = $oMenu->GetDashboard();
 		$oDashboard->Render($oPage, false, $aExtraParams);
+		$oPage->add_ready_script("$('.dashboard_contents table.listResults').tableHover(); $('.dashboard_contents table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
 		break;
 		
 		case 'dashboard_editor':
