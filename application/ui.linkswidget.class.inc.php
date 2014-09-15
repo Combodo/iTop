@@ -239,7 +239,7 @@ EOF
 	 */
 	protected function DisplayFormTable(WebPage $oP, $aConfig, $aData)
 	{
-		$sHtml = '';
+		$sHtml = "<input type=\"hidden\" name=\"attr_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"\">";
 		$sHtml .= "<table class=\"listResults\">\n";
 		// Header
 		$sHtml .= "<thead>\n";
@@ -263,7 +263,7 @@ EOF
 		{
 			$sHtml .= $this->DisplayFormRow($oP, $aConfig, $aRow, $iRowId);
 		}		
-		$sHtml .= "<tr $sEmptyRowStyle id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_empty_row\"><td colspan=\"".count($aConfig)."\" style=\"text-align:center;\">".Dict::S('UI:Message:EmptyList:UseAdd')."<input type=\"hidden\" name=\"attr_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"\"></td></tr>";
+		$sHtml .= "<tr $sEmptyRowStyle id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_empty_row\"><td colspan=\"".count($aConfig)."\" style=\"text-align:center;\">".Dict::S('UI:Message:EmptyList:UseAdd')."</td></tr>";
 		$sHtml .= "</tbody>\n";
 		
 		// Footer
