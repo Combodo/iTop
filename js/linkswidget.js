@@ -242,7 +242,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				if (data != '')
 				{
 					$('#'+me.id+'_empty_row').hide();
-					$('#linkedset_'+me.id+' .listResults tbody').append(data);
+					$('#linkedset_'+me.id+' .listResults tbody').prepend(data);
 					$('#linkedset_'+me.id+' .listResults').trigger('update');
 					$('#linkedset_'+me.id+' .listResults').tableHover();
 					$('#linkedset_'+me.id+' .listResults').trigger('update').trigger("applyWidgets"); // table is already sortable, just refresh it
