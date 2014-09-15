@@ -259,11 +259,11 @@ EOF
 			$sEmptyRowStyle = 'style="display:none;"';
 		}
 
-		$sHtml .= "<tr $sEmptyRowStyle id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_empty_row\"><td colspan=\"".count($aConfig)."\" style=\"text-align:center;\">".Dict::S('UI:Message:EmptyList:UseAdd')."<input type=\"hidden\" name=\"attr_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"\"></td></td>";
 		foreach($aData as $iRowId => $aRow)
 		{
 			$sHtml .= $this->DisplayFormRow($oP, $aConfig, $aRow, $iRowId);
 		}		
+		$sHtml .= "<tr $sEmptyRowStyle id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_empty_row\"><td colspan=\"".count($aConfig)."\" style=\"text-align:center;\">".Dict::S('UI:Message:EmptyList:UseAdd')."<input type=\"hidden\" name=\"attr_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"\"></td></tr>";
 		$sHtml .= "</tbody>\n";
 		
 		// Footer
