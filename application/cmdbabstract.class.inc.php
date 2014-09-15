@@ -1433,20 +1433,24 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			}
 
 			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sFilterCode);
-			if ($oAttDef->IsExternalKey())
+			if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
 			{
-				$sTargetClass = $oAttDef->GetTargetClass();
+				$oKeyAttDef = $oAttDef->GetFinalAttDef();
+				$sKeyAttClass = $oKeyAttDef->GetHostClass();
+				$sKeyAttCode = $oKeyAttDef->GetCode();
+
+				$sTargetClass = $oKeyAttDef->GetTargetClass();
 				$oSearch = new DBObjectSearch($sTargetClass);
 				$oSearch->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
 				$oAllowedValues = new DBObjectSet($oSearch);
 
-				$iFieldSize = $oAttDef->GetMaxSize();
-				$iMaxComboLength = $oAttDef->GetMaximumComboLength();
-				$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;";
+				$iFieldSize = $oKeyAttDef->GetMaxSize();
+				$iMaxComboLength = $oKeyAttDef->GetMaximumComboLength();
+				$sHtml .= "<label>".MetaModel::GetFilterLabel($sKeyAttClass, $sKeyAttCode).":</label>&nbsp;";
 				$aExtKeyParams = $aExtraParams;
-				$aExtKeyParams['iFieldSize'] = $oAttDef->GetMaxSize();
-				$aExtKeyParams['iMinChars'] = $oAttDef->GetMinAutoCompleteChars();
-				$sHtml .= UIExtKeyWidget::DisplayFromAttCode($oPage, $sFilterCode, $sClassName, $oAttDef->GetLabel(), $oAllowedValues, $sFilterValue, $sSearchFormId.'search_'.$sFilterCode, false, $sFilterCode, '', $aExtKeyParams, true);
+				$aExtKeyParams['iFieldSize'] = $oKeyAttDef->GetMaxSize();
+				$aExtKeyParams['iMinChars'] = $oKeyAttDef->GetMinAutoCompleteChars();
+				$sHtml .= UIExtKeyWidget::DisplayFromAttCode($oPage, $sKeyAttCode, $sKeyAttClass, $oAttDef->GetLabel(), $oAllowedValues, $sFilterValue, $sSearchFormId.'search_'.$sFilterCode, false, $sFilterCode, '', $aExtKeyParams, true);
 			}
 			else
 			{
