@@ -551,6 +551,7 @@ EOF;
 		$oPage->add_ready_script(
 <<<EOF
 var oTable = $('#{$this->iListId} table.listResults');
+oTable.tableHover();
 oTable.tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList']} ).tablesorterPager({container: $('#pager{$this->iListId}'), totalRows:$iCount, size: $iPageSize, filter: '$sOQL', extra_params: '$sExtraParams', select_mode: '$sSelectModeJS', displayKey: $sDisplayKey, columns: $sJSColumns, class_aliases: $sJSClassAliases $sCssCount});
 EOF
 		);
