@@ -654,7 +654,11 @@ class DBObjectSet
 		else
 		{
 			// Pick the row from the objects added *in memory*
-			$oRetObj = $this->m_aAddedObjects[$this->m_iCurrRow - $this->m_iNumLoadedDBRows][$sRequestedClassAlias];
+			$aRetObjects = array();
+			foreach ($this->m_oFilter->GetSelectedClasses() as $sClassAlias => $sClass)
+			{
+				$aRetObjects[$sClassAlias] = $this->m_aAddedObjects[$this->m_iCurrRow - $this->m_iNumLoadedDBRows][$sClassAlias];
+			}
 		}
 		$this->m_iCurrRow++;
 		return $aRetObjects;
