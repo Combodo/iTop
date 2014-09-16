@@ -468,7 +468,8 @@ EOF
 			}
 		}
 		$sPreviewNotAvailable = addslashes(Dict::S('Attachments:PreviewNotAvailable'));
-		$oPage->add_ready_script("$(document).tooltip({ items: '.attachment a',  position: { my: 'left top', at: 'right top', using: function( position, feedback ) { $( this ).css( position ); }}, content: function() { if ($(this).attr('data-preview') == 'true') { return('<img style=\"max-width:290px\" src=\"'+$(this).attr('href')+'\"></img>');} else { return '$sPreviewNotAvailable'; }}});");
+		$iMaxWidth = MetaModel::GetModuleSetting('itop-attachments', 'preview_max_width', 290);
+		$oPage->add_ready_script("$(document).tooltip({ items: '.attachment a',  position: { my: 'left top', at: 'right top', using: function( position, feedback ) { $( this ).css( position ); }}, content: function() { if ($(this).attr('data-preview') == 'true') { return('<img style=\"max-width:{$iMaxWidth}px\" src=\"'+$(this).attr('href')+'\"></img>');} else { return '$sPreviewNotAvailable'; }}});");
 	}
 
 	protected static function UpdateAttachments($oObject, $oChange = null)

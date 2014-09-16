@@ -64,6 +64,7 @@ SetupWebPage::AddModule(
 		'settings' => array(
 			'allowed_classes' => array('Ticket'), // List of classes for which to manage "Attachments"
 			'position' => 'relations', // Where to display the attachments: relations | properties
+			'preview_max_width' => 290,
 		),
 	)
 );
