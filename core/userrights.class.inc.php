@@ -238,6 +238,10 @@ abstract class User extends cmdbAbstractObject
 			{
 				$sNewLogin = $aChanges['login'];
 				$oSearch = DBObjectSearch::FromOQL_AllData("SELECT User WHERE login = :newlogin");
+				if (!$this->IsNew())
+				{
+					$oSearch->AddCondition('id', $this->GetKey(), '!=');
+				}
 				$oSet = new DBObjectSet($oSearch, array(), array('newlogin' => $sNewLogin));
 				if ($oSet->Count() > 0)
 				{
@@ -251,7 +255,6 @@ abstract class User extends cmdbAbstractObject
 		{
 			$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:AtLeastOneProfileIsNeeded');
 		}
-		
 	}
 
 	function GetGrantAsHtml($sClass, $iAction)
