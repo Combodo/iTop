@@ -2167,6 +2167,10 @@ abstract class MetaModel
 				{
 					$aScalarArgs[$sArgName] = (string) $value;
 				}
+				elseif (is_null($value))
+				{
+					$aScalarArgs[$sArgName] = null;
+				}
 			}
 		}
 		// Add standard contextual arguments
