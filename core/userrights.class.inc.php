@@ -234,12 +234,15 @@ abstract class User extends cmdbAbstractObject
 		$aChanges = $this->ListChanges();
 		if (array_key_exists('login', $aChanges))
 		{
-			$sNewLogin = $aChanges['login'];
-			$oSearch = DBObjectSearch::FromOQL_AllData("SELECT User WHERE login = :newlogin");
-			$oSet = new DBObjectSet($oSearch, array(), array('newlogin' => $sNewLogin));
-			if ($oSet->Count() > 0)
+			if (strcasecmp($this->Get('login'), $this->GetOriginal('login')) !== 0)
 			{
-				$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:LoginMustBeUnique', $sNewLogin);
+				$sNewLogin = $aChanges['login'];
+				$oSearch = DBObjectSearch::FromOQL_AllData("SELECT User WHERE login = :newlogin");
+				$oSet = new DBObjectSet($oSearch, array(), array('newlogin' => $sNewLogin));
+				if ($oSet->Count() > 0)
+				{
+					$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:LoginMustBeUnique', $sNewLogin);
+				}
 			}
 		}
 		// Check that this user has at least one profile assigned
