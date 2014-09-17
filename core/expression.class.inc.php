@@ -299,13 +299,8 @@ class BinaryExpression extends Expression
 			{
 				$aResult[$this->m_oRightExpr->GetParent()][$this->m_oRightExpr->GetName()] = $this->m_oLeftExpr;
 			}
-			else
-			{
-				// Strictly, this should be removed
-				$aResult = array_merge_recursive($this->m_oRightExpr->ListConstantFields(), $this->m_oLeftExpr->ListConstantFields());
-			}
 		}
-		else
+		else if ($this->m_sOperator == 'AND')
 		{
 			// Strictly, this should be done only for the AND operator
 			$aResult = array_merge_recursive($this->m_oRightExpr->ListConstantFields(), $this->m_oLeftExpr->ListConstantFields());
