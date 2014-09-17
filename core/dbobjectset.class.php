@@ -741,8 +741,11 @@ class DBObjectSet
 		{
 			foreach($aVals as $sCode => $oExpr)
 			{
-				$oScalarExpr = $oExpr->GetAsScalar($aScalarArgs);
-				$aConst[$sClassAlias][$sCode] = $oScalarExpr->GetValue();
+				if (is_object($oExpr)) // Array_merge_recursive creates an array when the same key is present multiple times... ignore them
+				{
+					$oScalarExpr = $oExpr->GetAsScalar($aScalarArgs);
+					$aConst[$sClassAlias][$sCode] = $oScalarExpr->GetValue();
+				}
 			}
 		}
 		return $aConst;		
