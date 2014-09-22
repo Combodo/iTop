@@ -106,7 +106,7 @@ class MFCompiler
 		//
 		$aMenuNodes = array();
 		$aMenusByModule = array();
-		foreach ($this->oFactory->ListActiveChildNodes('menus', 'menu') as $oMenuNode)
+		foreach ($this->oFactory->GetNodes('menus/menu') as $oMenuNode)
 		{
 			$sMenuId = $oMenuNode->getAttribute('id');
 			$aMenuNodes[$sMenuId] = $oMenuNode;
@@ -320,7 +320,7 @@ EOF;
 			mkdir($sDictDir, 0777, true);
 		}
 
-		$oDictionaries = $this->oFactory->ListActiveChildNodes('dictionaries', 'dictionary');
+		$oDictionaries = $this->oFactory->GetNodes('dictionaries/dictionary');
 		foreach($oDictionaries as $oDictionaryNode)
 		{
 			$this->CompileDictionary($oDictionaryNode, $sTempTargetDir, $sFinalTargetDir);

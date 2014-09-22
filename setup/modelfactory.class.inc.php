@@ -262,7 +262,7 @@ class ModelFactory
 	 * To progressively replace LoadModule
 	 * @param xxx xxx
 	 */
-	public function LoadDelta(DOMDocument $oDeltaDoc, $oSourceNode, $oTargetParentNode)
+	public function LoadDelta($oSourceNode, $oTargetParentNode)
 	{
 		if (!$oSourceNode instanceof DOMElement) return;
 		//echo "Load $oSourceNode->tagName::".$oSourceNode->getAttribute('id')." (".$oSourceNode->getAttribute('_delta').")<br/>\n";
@@ -312,13 +312,13 @@ class ModelFactory
 			foreach($oSourceNode->childNodes as $oSourceChild)
 			{
 				// Continue deeper
-				$this->LoadDelta($oDeltaDoc, $oSourceChild, $oTargetNode);
+				$this->LoadDelta($oSourceChild, $oTargetNode);
 			}			
 			break;
 
 		case 'define_if_not_exists':
-			$oExistingNode = $oTargetParentNode->FindExistingChildNode($oSourceNode);
-			if ($oExistingNode == null)
+			$oExistingNode = $oTargetParentNode->_FindChildNode($oSourceNode);
+			if ( ($oExistingNode == null) || ($oExistingNode->getAttribute('_alteration') == 'removed') )
 			{
 				// Same as 'define' below
 				$oTargetNode = $oTarget->ImportNode($oSourceNode, true);
@@ -345,8 +345,8 @@ class ModelFactory
 			break;
 
 		case 'delete':
-			$oTargetNode = $oTargetParentNode->FindExistingChildNode($oSourceNode);
-			if($oTargetNode == null)
+			$oTargetNode = $oTargetParentNode->_FindChildNode($oSourceNode);
+			if ( ($oTargetNode == null) || ($oTargetNode->getAttribute('_alteration') == 'removed') )
 			{
 				throw new Exception("Trying to delete node for {$oSourceNode->tagName} (id:".$oSourceNode->getAttribute('id').") under {$oTargetParentNode->tagName} (id:".$oTargetParentNode->getAttribute('id').'). but nothing found.');
 			}
@@ -453,8 +453,18 @@ class ModelFactory
 					}
 				}
 				
+				// Adjust the XML to transparently add an id (=value) on all values of an enum which don't already have one.
+				// This enables altering an enum for just adding/removing one value, intead of redefining the whole list of values.
+				$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
+				foreach($oNodeList as $oNode)
+				{
+					if ($oNode->getAttribute('id') == '')
+					{
+						$oNode->SetAttribute('id', $oNode->textContent);
+					}
+				}				
 				$oDeltaRoot = $oDocument->childNodes->item(0);
-				$this->LoadDelta($oDocument, $oDeltaRoot, $this->oDOMDocument);
+				$this->LoadDelta($oDeltaRoot, $this->oDOMDocument);
 			}
 			
 			$aDictionaries = $oModule->GetDictionaryFiles();
@@ -1224,7 +1234,7 @@ EOF
 	
 	public function ListChanges()
 	{
-		return $this->GetNodes('//*[@_alteration or @_old_id]');
+		return $this->oDOMDocument->GetNodes('//*[@_alteration or @_old_id]', null, false /* not safe */);
 	}
 
 
@@ -1464,7 +1474,7 @@ EOF;
 			//$oDeltaDoc->Dump();
 			//$this->oDOMDocument->Dump();
 			$oDeltaRoot = $oDeltaDoc->childNodes->item(0);
-			$this->LoadDelta($oDeltaDoc, $oDeltaRoot, $this->oDOMDocument);
+			$this->LoadDelta($oDeltaRoot, $this->oDOMDocument);
 			//$oRoot->Dump();
 			$sDOMRebuilt = $oRoot->Dump(true);
 		}
@@ -1515,12 +1525,6 @@ EOF;
 	{
 		return $this->oDOMDocument->GetNodes($sXPath, $oContextNode);
 	}
-
-	public function ListActiveChildNodes($sContextXPath, $sTagName)
-	{
-		$oContextPath = $this->oRoot->GetNodes($sContextXPath)->item(0);
-		return $oContextPath->ListActiveChildNodes($sTagName);
-	}
 }
 
 
@@ -1547,7 +1551,7 @@ class MFElement extends DOMElement
 	{
 		return $this->ownerDocument->GetNodes($sXPath, $this);
 	}
-
+	
 	/**
 	 * Extracts some nodes from the DOM (active nodes only !!!)
 	 * @param string $sXPath A XPath expression
@@ -1588,7 +1592,7 @@ class MFElement extends DOMElement
 		$oNode = null;
 		foreach($this->childNodes as $oChildNode)
 		{
-			if ($oChildNode->nodeName == $sTagName)
+			if (($oChildNode->nodeName == $sTagName) && (($oChildNode->getAttribute('_alteration') != 'removed')))
 			{
 				$oNode = $oChildNode;
 				break;
@@ -1742,7 +1746,7 @@ class MFElement extends DOMElement
 	/**
 	 * Helper to remove child nodes	
 	 */	
-	public function DeleteChildren()
+	protected function DeleteChildren()
 	{
 		while (isset($this->firstChild))
 		{
@@ -1755,23 +1759,26 @@ class MFElement extends DOMElement
 	} 
 
 	/**
-	 * Find the child node matching the given node
+	 * Find the child node matching the given node.
+	 * UNSAFE: may return nodes marked as _alteration="removed"
+	 * A method with the same signature MUST exist in MFDocument for the recursion to work fine
 	 * @param MFElement $oRefNode The node to search for
-	 * @param bool      $sSearchId substitutes to the value of the 'id' attribute 
+	 * @param string    $sSearchId substitutes to the value of the 'id' attribute 
 	 */	
-	public function FindExistingChildNode(MFElement $oRefNode, $sSearchId = null)
+	public function _FindChildNode(MFElement $oRefNode, $sSearchId = null)
 	{
-		return self::FindNode($this, $oRefNode, $sSearchId);
+		return self::_FindNode($this, $oRefNode, $sSearchId);
 	}
 	
 	/**
-	 * Seems to work fine (and is about 10 times faster than above) EXCEPT for menus !!!!
-	 * @param unknown_type $oParent
-	 * @param unknown_type $oRefNode
-	 * @param unknown_type $sSearchId
+	 * Find the child node matching the given node under the specified parent.
+	 * UNSAFE: may return nodes marked as _alteration="removed"
+	 * @param DOMNode $oParent
+	 * @param MFElement $oRefNode
+	 * @param string $sSearchId
 	 * @throws Exception
 	 */
-	public static function FindNode(DOMNode $oParent, MFElement $oRefNode, $sSearchId = null)
+	public static function _FindNode(DOMNode $oParent, MFElement $oRefNode, $sSearchId = null)
 	{
 		$oRes = null;
 		if ($oParent instanceof DOMDocument)
@@ -1806,13 +1813,6 @@ class MFElement extends DOMElement
 		}
 		return $oRes;
 	}
-	
-	public function ListActiveChildNodes($sTagName)
-	{
-		$sXPath = $sTagName."[not(@_alteration) or @_alteration!='removed']";
-		return $this->GetNodes($sXPath);
-	}
-
 
 	/**
 	 * Check if the current node is under a node 'added' or 'altered'
@@ -1841,7 +1841,7 @@ class MFElement extends DOMElement
 		// First: cleanup any flag behind the new node
 		$oNode->ApplyChanges();
 	
-		$oExisting = $this->FindExistingChildNode($oNode);
+		$oExisting = $this->_FindChildNode($oNode);
 		if ($oExisting)
 		{
 			if ($oExisting->getAttribute('_alteration') != 'removed')
@@ -1871,7 +1871,7 @@ class MFElement extends DOMElement
 		// First: cleanup any flag behind the new node
 		$oNode->ApplyChanges();
 
-		$oExisting = $this->FindExistingChildNode($oNode, $sSearchId);
+		$oExisting = $this->_FindChildNode($oNode, $sSearchId);
 		if (!$oExisting)
 		{
 			throw new Exception("Attempting to modify a non existing node: $oNode->tagName (id: ".$oNode->getAttribute('id').")");
@@ -1902,7 +1902,7 @@ class MFElement extends DOMElement
 		// First: cleanup any flag behind the new node
 		$oNode->ApplyChanges();
 
-		$oExisting = $this->FindExistingChildNode($oNode, $sSearchId);
+		$oExisting = $this->_FindChildNode($oNode, $sSearchId);
 		if ($oExisting)
 		{
 			$sPrevFlag = $oExisting->getAttribute('_alteration');
@@ -2016,7 +2016,7 @@ class MFElement extends DOMElement
 	 */
 	public function MergeInto($oContainer, $sSearchId, $bMustExist)
 	{
-		$oTargetNode = $oContainer->FindExistingChildNode($this, $sSearchId);
+		$oTargetNode = $oContainer->_FindChildNode($this, $sSearchId);
 		if ($oTargetNode)
 		{
 			if ($oTargetNode->getAttribute('_alteration') == 'removed')
@@ -2111,7 +2111,7 @@ class MFElement extends DOMElement
 	public function ListChanges()
 	{
 		// Note: omitting the dot will make the query be global to the whole document!!!
-		return $this->GetNodes('.//*[@_alteration or @_old_id]');
+		return $this->ownerDocument->GetNodes('.//*[@_alteration or @_old_id]', $this, false);
 	}
 
 	/**
@@ -2218,12 +2218,13 @@ class MFDocument extends DOMDocument
 
 	/**
 	 * Find the child node matching the given node
+	 * A method with the same signature MUST exist in MFElement for the recursion to work fine
 	 * @param MFElement $oRefNode The node to search for
-	 * @param bool      $sSearchId substitutes to the value of the 'id' attribute 
+	 * @param string    $sSearchId substitutes to the value of the 'id' attribute 
 	 */	
-	public function FindExistingChildNode(MFElement $oRefNode, $sSearchId = null)
+	public function _FindChildNode(MFElement $oRefNode, $sSearchId = null)
 	{
-		return MFElement::FindNode($this, $oRefNode, $sSearchId);
+		return MFElement::_FindNode($this, $oRefNode, $sSearchId);
 	}
 
 	/**
@@ -2231,18 +2232,23 @@ class MFDocument extends DOMDocument
 	 * @param string $sXPath A XPath expression
 	 * @return DOMNodeList
 	 */
-	public function GetNodes($sXPath, $oContextNode = null)
+	public function GetNodes($sXPath, $oContextNode = null, $bSafe = true)
 	{
 		$oXPath = new DOMXPath($this);
+		if ($bSafe)
+		{
+			$sXPath .= "[not(@_alteration) or @_alteration!='removed']";
+		}
 		
 		if (is_null($oContextNode))
 		{
-			return $oXPath->query($sXPath);
+			$oResult = $oXPath->query($sXPath);
 		}
 		else
 		{
-			return $oXPath->query($sXPath, $oContextNode);
+			$oResult = $oXPath->query($sXPath, $oContextNode);
 		}
+		return $oResult;
 	}
 	
 	public function GetNodeById($sXPath, $sId, $oContextNode = null)
