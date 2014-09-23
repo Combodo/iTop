@@ -668,9 +668,9 @@ class ModelFactory
 	 * @throws Exception
 	 * @return bool True if the class exists, false otherwise
 	 */
-	protected function ClassNameExists($sClassName, $bFlattenLayers = true)
+	protected function ClassNameExists($sClassName)
 	{
-		return !is_null($this->GetClass($sClassName, $bFlattenLayers));
+		return !is_null($this->GetClass($sClassName));
 	}
 
 	/**
@@ -717,60 +717,6 @@ class ModelFactory
 		}
 	}
 	
-	/**
-	 * Remove a class from the DOM
-	 * @param string $sClass
-	 * @throws Exception
-	 */
-	public function RemoveClass($sClass)
-	{
-		$oClassNode = $this->GetClass($sClass);
-		if ($oClassNode == null)
-		{
-			throw new Exception("ModelFactory::RemoveClass: Cannot remove the non existing class $sClass");
-		}
-
-		// Note: the child classes are removed entirely
-		$oClassNode->Delete();
-	}
-
-	/**
-	 * Modify a class within the DOM
-	 * @param string $sMenuId
-	 * @param DOMNode $oMenuNode
-	 * @throws Exception
-	 */
-	public function AlterClass($sClassName, DOMNode $oClassNode)
-	{
-		$sOriginalName = $sClassName;
-		if ($this->ClassNameExists($sClassName))
-		{
-			$oDestNode = self::$aLoadedClasses[$sClassName];
-		}
-		else
-		{
-			$sOriginalName = $oClassNode->getAttribute('_original_name');
-			if ($this->ClassNameExists($sOriginalName))
-			{
-				// Class was renamed !
-				$oDestNode = self::$aLoadedClasses[$sOriginalName];
-			}
-			else
-			{
-				throw new Exception("ModelFactory::AddClass: Cannot alter the non-existing class $sClassName / $sOriginalName");
-			}
-		}
-		$this->_priv_AlterNode($oDestNode, $oClassNode);
-		$sClassName = $oDestNode->getAttribute('id');
-		if ($sOriginalName != $sClassName)
-		{
-			unset(self::$aLoadedClasses[$sOriginalName]);
-			self::$aLoadedClasses[$sClassName] = $oDestNode;
-		}
-		$this->_priv_SetFlag($oDestNode, 'modified');
-	}
-
-	
 	public function GetClassXMLTemplate($sName, $sIcon)
 	{
 		$sHeader = '<?'.'xml version="1.0" encoding="utf-8"?'.'>';
@@ -802,76 +748,44 @@ EOF
 	/**
 	 * List all constants from the DOM, for a given module
 	 * @param string $sModuleName
-	 * @param bool $bFlattenLayers
 	 * @throws Exception
 	 */
-	public function ListConstants($sModuleName, $bFlattenLayers = true)
+	public function ListConstants($sModuleName)
 	{
-		$sXPath = "/itop_design/constants/constant[@_created_in='$sModuleName']";
-		if ($bFlattenLayers)
-		{
-			$sXPath = "/itop_design/constants/constant[@_created_in='$sModuleName' and (not(@_alteration) or @_alteration!='removed')]";
-		}
-		return $this->GetNodes($sXPath);
+		return $this->GetNodes("/itop_design/constants/constant[@_created_in='$sModuleName']");
 	}
 
 	/**
 	 * List all classes from the DOM, for a given module
 	 * @param string $sModuleName
-	 * @param bool $bFlattenLayers
 	 * @throws Exception
 	 */
-	public function ListClasses($sModuleName, $bFlattenLayers = true)
+	public function ListClasses($sModuleName)
 	{
-		$sXPath = "/itop_design/classes//class[@_created_in='$sModuleName']";
-		if ($bFlattenLayers)
-		{
-			$sXPath = "/itop_design/classes//class[@_created_in='$sModuleName' and (not(@_alteration) or @_alteration!='removed')]";
-		}
-		return $this->GetNodes($sXPath);
+		return $this->GetNodes("/itop_design/classes//class[@_created_in='$sModuleName']");
 	}
 		
 	/**
 	 * List all classes from the DOM
-	 * @param bool $bFlattenLayers
 	 * @throws Exception
 	 */
-	public function ListAllClasses($bFlattenLayers = true)
+	public function ListAllClasses()
 	{
-		$sXPath = "/itop_design/classes//class";
-		if ($bFlattenLayers)
-		{
-			$sXPath = "/itop_design/classes//class[not(@_alteration) or @_alteration!='removed']";
-		}
-		return $this->GetNodes($sXPath);
+		return $this->GetNodes("/itop_design/classes//class");
 	}
 	
 	/**
 	 * List top level (non abstract) classes having child classes
-	 * @param bool $bFlattenLayers
 	 * @throws Exception
 	 */
-	public function ListRootClasses($bFlattenLayers = true)
+	public function ListRootClasses()
 	{
-		$sXPath = "/itop_design/classes/class/class/class/..";
-		if ($bFlattenLayers)
-		{
-			$sXPath = "/itop_design/classes/class/class[not(@_alteration) or @_alteration!='removed']/class[not(@_alteration) or @_alteration!='removed']/..";
-		}
-		return $this->GetNodes($sXPath);
+		return $this->GetNodes("/itop_design/classes/class/class[class]");
 	}
 
-	public function GetClass($sClassName, $bFlattenLayers = true)
+	public function GetClass($sClassName)
 	{
 		$oClassNode = $this->GetNodes("/itop_design/classes//class[@id='$sClassName']")->item(0);
-		if (($oClassNode != null) && ($bFlattenLayers))
-		{
-			$sOperation = $oClassNode->getAttribute('_alteration');
-			if ($sOperation == 'removed')
-			{
-				$oClassNode = null;
-			}
-		}
 		return $oClassNode;
 	}
 	
@@ -883,324 +797,54 @@ EOF
 		return $oWKClass;	
 	}
 	
-	public function GetChildClasses($oClassNode, $bFlattenLayers = true)
+	public function GetChildClasses($oClassNode)
 	{
-		$sXPath = "class";
-		if ($bFlattenLayers)
-		{
-			$sXPath = "class[(@_operation!='removed')]";
-		}
-		return $this->GetNodes($sXPath, $oClassNode);
+		return $this->GetNodes("class", $oClassNode);
 	}
 		
 	
-	public function GetField($sClassName, $sAttCode, $bFlattenLayers = true)
+	public function GetField($sClassName, $sAttCode)
 	{
 		if (!$this->ClassNameExists($sClassName))
 		{
 			return null;
 		}
 		$oClassNode = self::$aLoadedClasses[$sClassName];
-		if ($bFlattenLayers)
-		{
-			$sOperation = $oClassNode->getAttribute('_operation');
-			if ($sOperation == 'removed')
-			{
-				$oClassNode = null;
-			}
-		}
-		$sXPath = "fields/field[@id='$sAttCode']";
-		if ($bFlattenLayers)
-		{
-			$sXPath = "fields/field[(@id='$sAttCode' and (not(@_operation) or @_operation!='removed'))]";
-		}
-		$oFieldNode = $this->GetNodes($sXPath, $oClassNode)->item(0);
+		$oFieldNode = $this->GetNodes("fields/field[@id='$sAttCode']", $oClassNode)->item(0);
 		if (($oFieldNode == null) && ($sParentClass = $oClassNode->GetChildText('parent')))
 		{
-			return $this->GetField($sParentClass, $sAttCode, $bFlattenLayers);
+			return $this->GetField($sParentClass, $sAttCode);
 		}
 		return $oFieldNode;
 	}
 		
 	/**
 	 * List all classes from the DOM
-	 * @param bool $bFlattenLayers
 	 * @throws Exception
 	 */
-	public function ListFields(DOMNode $oClassNode, $bFlattenLayers = true)
+	public function ListFields(DOMNode $oClassNode)
 	{
-		$sXPath = "fields/field";
-		if ($bFlattenLayers)
-		{
-			$sXPath = "fields/field[not(@_alteration) or @_alteration!='removed']";
-		}
-		return $this->GetNodes($sXPath, $oClassNode);
-	}
-	
-	public function AddField(DOMNode $oClassNode, $sFieldCode, $sFieldType, $sSQL, $defaultValue, $bIsNullAllowed, $aExtraParams)
-	{
-		$oNewField = $this->oDOMDocument->createElement('field');
-		$oNewField->setAttribute('id', $sFieldCode);
-		$this->_priv_AlterField($oNewField, $sFieldType, $sSQL, $defaultValue, $bIsNullAllowed, $aExtraParams);
-		$oFields = $oClassNode->getElementsByTagName('fields')->item(0);
-		$oFields->AppendChild($oNewField);
-		$this->_priv_SetFlag($oNewField, 'added');
-	}
-	
-	public function RemoveField(DOMNode $oClassNode, $sFieldCode)
-	{
-		$sXPath = "fields/field[@id='$sFieldCode']";
-		$oFieldNodes = $this->GetNodes($sXPath, $oClassNode);
-		if (is_object($oFieldNodes) && (is_object($oFieldNodes->item(0))))
-		{
-			$oFieldNode = $oFieldNodes->item(0);
-			$sOpCode = $oFieldNode->getAttribute('_operation');
-			if ($oFieldNode->getAttribute('_operation') == 'added')
-			{
-				$oFieldNode->parentNode->removeChild($oFieldNode);
-			}
-			else
-			{
-				$this->_priv_SetFlag($oFieldNode, 'removed');
-			}
-		}
-	}
-	
-	public function AlterField(DOMNode $oClassNode, $sFieldCode, $sFieldType, $sSQL, $defaultValue, $bIsNullAllowed, $aExtraParams)
-	{
-		$sXPath = "fields/field[@id='$sFieldCode']";
-		$oFieldNodes = $this->GetNodes($sXPath, $oClassNode);
-		if (is_object($oFieldNodes) && (is_object($oFieldNodes->item(0))))
-		{
-			$oFieldNode = $oFieldNodes->item(0);
-			//@@TODO: if the field was 'added' => then let it as 'added'
-			$sOpCode = $oFieldNode->getAttribute('_operation');
-			switch($sOpCode)
-			{
-				case 'added':
-				case 'modified':
-				// added or modified, let it as it is
-				break;
-				
-				default:
-				$this->_priv_SetFlag($oFieldNodes->item(0), 'modified');
-			}
-			$this->_priv_AlterField($oFieldNodes->item(0), $sFieldType, $sSQL, $defaultValue, $bIsNullAllowed, $aExtraParams);
-		}
-	}
-
-	protected function _priv_AlterField(DOMNode $oFieldNode, $sFieldType, $sSQL, $defaultValue, $bIsNullAllowed, $aExtraParams)
-	{
-		switch($sFieldType)
-		{			
-			case 'Blob':
-			case 'Boolean':
-			case 'CaseLog':
-			case 'Deadline':
-			case 'Duration':
-			case 'EmailAddress':
-			case 'EncryptedString':
-			case 'HTML':
-			case 'IPAddress':
-			case 'LongText':
-			case 'OQL':
-			case 'OneWayPassword':
-			case 'Password':
-			case 'Percentage':
-			case 'String':
-			case 'Text':
-			case 'Text':
-			case 'TemplateHTML':
-			case 'TemplateString':
-			case 'TemplateText':
-			case 'URL':
-			case 'Date':
-			case 'DateTime':
-			case 'Decimal':
-			case 'Integer':
-			break;	
-			
-			case 'ExternalKey':
-			$this->_priv_AddFieldAttribute($oFieldNode, 'target_class', $aExtraParams);
-			// Fall through
-			case 'HierarchicalKey':
-			$this->_priv_AddFieldAttribute($oFieldNode, 'on_target_delete', $aExtraParams);
-			$this->_priv_AddFieldAttribute($oFieldNode, 'filter', $aExtraParams);
-			break;
-
-			case 'ExternalField':
-			$this->_priv_AddFieldAttribute($oFieldNode, 'extkey_attcode', $aExtraParams);
-			$this->_priv_AddFieldAttribute($oFieldNode, 'target_attcode', $aExtraParams);
-			break;
-				
-			case 'Enum':
-			$this->_priv_SetFieldValues($oFieldNode, $aExtraParams);
-			break;
-			
-			case 'LinkedSetIndirect':
-			$this->_priv_AddFieldAttribute($oFieldNode, 'ext_key_to_remote', $aExtraParams);
-			// Fall through
-			case 'LinkedSet':
-			$this->_priv_AddFieldAttribute($oFieldNode, 'linked_class', $aExtraParams);
-			$this->_priv_AddFieldAttribute($oFieldNode, 'ext_key_to_me', $aExtraParams);
-			$this->_priv_AddFieldAttribute($oFieldNode, 'count_min', $aExtraParams);
-			$this->_priv_AddFieldAttribute($oFieldNode, 'count_max', $aExtraParams);
-			break;
-			
-			default:
-			throw(new Exception('Unsupported type of field: '.$sFieldType));
-		}
-		$this->_priv_SetFieldDependencies($oFieldNode, $aExtraParams);
-		$oFieldNode->setAttribute('type', $sFieldType);
-		$oFieldNode->setAttribute('sql', $sSQL);
-		$oFieldNode->setAttribute('default_value', $defaultValue);
-		$oFieldNode->setAttribute('is_null_alllowed', $bIsNullAllowed ? 'true' : 'false');
-	}
-	
-	protected function _priv_AddFieldAttribute(DOMNode $oFieldNode, $sAttributeCode, $aExtraParams, $bMandatory = false)
-	{
-		$value = array_key_exists($sAttributeCode, $aExtraParams) ? $aExtraParams[$sAttributeCode] : '';
-		if (($value == '') && (!$bMandatory)) return;
-		$oFieldNode->setAttribute($sAttributeCode, $value);
-	}
-	
-	protected function _priv_SetFieldDependencies($oFieldNode, $aExtraParams)
-	{
-		$aDeps = array_key_exists('dependencies', $aExtraParams) ? $aExtraParams['dependencies'] : '';
-		$oDependencies = $oFieldNode->getElementsByTagName('dependencies')->item(0);
-
-		// No dependencies before, and no dependencies to add, exit
-		if (($oDependencies == null) && ($aDeps == '')) return;
-		
-		// Remove the previous dependencies
-		$oFieldNode->removeChild($oDependencies);
-		// If no dependencies, exit
-		if ($aDeps == '') return;
-
-		// Build the new list of dependencies
-		$oDependencies = $this->oDOMDocument->createElement('dependencies');
-
-		foreach($aDeps as $sAttCode)
-		{
-			$oDep = $this->oDOMDocument->createElement('attribute');
-			$oDep->setAttribute('id', $sAttCode);
-			$oDependencies->addChild($oDep);
-		}
-		$oFieldNode->addChild($oDependencies);
-	}
-	
-	protected function _priv_SetFieldValues($oFieldNode, $aExtraParams)
-	{
-		$aVals = array_key_exists('values', $aExtraParams) ? $aExtraParams['values'] : '';
-		$oValues = $oFieldNode->getElementsByTagName('values')->item(0);
-
-		// No dependencies before, and no dependencies to add, exit
-		if (($oValues == null) && ($aVals == '')) return;
-		
-		// Remove the previous dependencies
-		$oFieldNode->removeChild($oValues);
-		// If no dependencies, exit
-		if ($aVals == '') return;
-
-		// Build the new list of dependencies
-		$oValues = $this->oDOMDocument->createElement('values');
-
-		foreach($aVals as $sValue)
-		{
-			$oVal = $this->oDOMDocument->createElement('value', $sValue);
-			$oValues->appendChild($oVal);
-		}
-		$oFieldNode->appendChild($oValues);
-	}
-
-	public function SetPresentation(DOMNode $oClassNode, $sPresentationCode, $aPresentation)
-	{
-		$oPresentation = $oClassNode->getElementsByTagName('presentation')->item(0);
-		if (!is_object($oPresentation))
-		{
-			$oPresentation = $this->oDOMDocument->createElement('presentation');
-			$oClassNode->appendChild($oPresentation);
-		}
-		$oZlist = $oPresentation->getElementsByTagName($sPresentationCode)->item(0);
-		if (is_object($oZlist))
-		{
-			// Remove the previous Zlist
-			$oPresentation->removeChild($oZlist);
-		}
-		// Create the ZList anew
-		$oZlist = $this->oDOMDocument->createElement($sPresentationCode);
-		$oPresentation->appendChild($oZlist);
-		$this->AddZListItem($oZlist, $aPresentation);
-		$this->_priv_SetFlag($oZlist, 'replaced');
-	}
-
-	protected function AddZListItem($oXMLNode, $value)
-	{
-		if (is_array($value))
-		{
-			$oXmlItems = $this->oDOMDocument->CreateElement('items');
-			$oXMLNode->appendChild($oXmlItems);
-			
-			foreach($value as $key => $item)
-			{
-				$oXmlItem = $this->oDOMDocument->CreateElement('item');
-				$oXmlItems->appendChild($oXmlItem);
-	
-				if (is_string($key))
-				{
-					$oXmlItem->SetAttribute('key', $key);
-				}
-				$this->AddZListItem($oXmlItem, $item);
-			}
-		}
-		else
-		{
-			$oXmlText = $this->oDOMDocument->CreateTextNode((string) $value);
-			$oXMLNode->appendChild($oXmlText);
-		}
+		return $this->GetNodes("fields/field", $oClassNode);
 	}
 	
 	/**
 	 * List all transitions from a given state
 	 * @param DOMNode $oStateNode The state
-	 * @param bool $bFlattenLayers
 	 * @throws Exception
 	 */
-	public function ListTransitions(DOMNode $oStateNode, $bFlattenLayers = true)
+	public function ListTransitions(DOMNode $oStateNode)
 	{
-		$sXPath = "transitions/transition";
-		if ($bFlattenLayers)
-		{
-			//$sXPath = "transitions/transition[@_operation!='removed']";
-		}
-		return $this->GetNodes($sXPath, $oStateNode);
+		return $this->GetNodes("transitions/transition", $oStateNode);
 	}
 		
 	/**
 	 * List all states of a given class
 	 * @param DOMNode $oClassNode The class
-	 * @param bool $bFlattenLayers
 	 * @throws Exception
 	 */
-	public function ListStates(DOMNode $oClassNode, $bFlattenLayers = true)
+	public function ListStates(DOMNode $oClassNode)
 	{
-		$sXPath = "lifecycle/states/state";
-		if ($bFlattenLayers)
-		{
-			//$sXPath = "lifecycle/states/state[@_operation!='removed']";
-		}
-		return $this->GetNodes($sXPath, $oClassNode);
-	}
-		
-	/**
-	 * List Zlists from the DOM for a given class
-	 * @param bool $bFlattenLayers
-	 * @throws Exception
-	 */
-	public function ListZLists(DOMNode $oClassNode, $bFlattenLayers = true)
-	{
-		// Not yet implemented !!!
-		return array();
+		return $this->GetNodes("lifecycle/states/state", $oClassNode);
 	}
 		
 	public function ApplyChanges()
