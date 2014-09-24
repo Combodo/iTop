@@ -1472,7 +1472,7 @@ EOF;
 					if (($sAttType == 'AttributeExternalKey') || ($sAttType == 'AttributeHierarchicalKey'))
 					{
 						$sOnTargetDel = $oField->GetChildText('on_target_delete');
-						if ($sOnTargetDel == 'DEL_AUTO')
+						if (($sOnTargetDel == 'DEL_AUTO') || ($sOnTargetDel == 'DEL_SILENT'))
 						{
 							$sTargetClass = $oField->GetChildText('target_class');
 							$aLinkToClasses[$oClass->getAttribute('id')][] = $sTargetClass;
