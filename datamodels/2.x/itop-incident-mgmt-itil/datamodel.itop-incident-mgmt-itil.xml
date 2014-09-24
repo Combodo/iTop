@@ -1963,10 +1963,6 @@
           <group id="Incident" _delta="define">
             <actions>
               <action xsi:type="write">allow</action>
-            </actions>
-          </group>
-          <group id="class:Incident" _delta="define">
-            <actions>
               <action id="ev_close" xsi:type="stimulus">allow</action>
               <action id="ev_reopen" xsi:type="stimulus">allow</action>
             </actions>

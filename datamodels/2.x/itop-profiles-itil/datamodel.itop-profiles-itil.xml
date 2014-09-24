@@ -8,17 +8,11 @@
           <class id="Organization"/>
           <class id="Location"/>
           <class id="Contact"/>
-          <class id="Person"/>
-          <class id="Team"/>
-          <class id="lnkPersonToTeam"/>
         </classes>
       </group>
       <group id="Documentation" _delta="define">
         <classes>
           <class id="Document"/>
-          <class id="WebDoc"/>
-          <class id="Note"/>
-          <class id="FileDoc"/>
         </classes>
       </group>
       <group id="Configuration" _delta="define">
@@ -27,76 +21,30 @@
           <class id="Subnet"/>
           <class id="Patch"/>
           <class id="Software"/>
-          <class id="Application"/>
-          <class id="DBServer"/>
-          <class id="lnkPatchToCI"/>
           <class id="FunctionalCI"/>
-          <class id="SoftwareInstance"/>
-          <class id="DBServerInstance"/>
-          <class id="ApplicationInstance"/>
-          <class id="DatabaseInstance"/>
-          <class id="ApplicationSolution"/>
-          <class id="BusinessProcess"/>
-          <class id="ConnectableCI"/>
           <class id="NetworkInterface"/>
-          <class id="Device"/>
-          <class id="PC"/>
-          <class id="MobileCI"/>
-          <class id="MobilePhone"/>
-          <class id="InfrastructureCI"/>
-          <class id="NetworkDevice"/>
-          <class id="Server"/>
-          <class id="Printer"/>
           <class id="Group"/>
-          <class id="lnkDocumentToLicence"/>
           <class id="Typology"/>
           <class id="NASFileSystem"/>
           <class id="LogicalVolume"/>
           <class id="Tape"/>
           <class id="VLAN"/>
-          <class id="lnkPhysicalInterfaceToVLAN"/>
-          <class id="lnkSubnetToVLAN"/>
-          <class id="lnkApplicationSolutionToBusinessProcess"/>
-          <class id="lnkApplicationSolutionToFunctionalCI"/>
-          <class id="lnkConnectableCIToNetworkDevice"/>
-          <class id="lnkContactToFunctionalCI"/>
-          <class id="lnkDocumentToFunctionalCI"/>
-          <class id="lnkDocumentToLicence"/>
-          <class id="lnkDocumentToPatch"/>
-          <class id="lnkDocumentToSoftware"/>
-          <class id="lnkFunctionalCIToOSPatch"/>
-          <class id="lnkGroupToCI"/>
-          <class id="lnkSanToDatacenterDevice"/>
-          <class id="lnkServerToVolume"/>
-          <class id="lnkVirtualDeviceToVolume"/>
-          <class id="lnkSoftwareInstanceToSoftwarePatch"/>
         </classes>
       </group>
       <group id="Incident" _delta="define">
         <classes>
-          <class id="lnkTicketToDoc"/>
-          <class id="lnkTicketToContact"/>
-          <class id="lnkTicketToCI"/>
           <class id="Incident"/>
-          <class id="lnkTicketToIncident"/>
         </classes>
       </group>
       <group id="Problem" _delta="define">
         <classes>
-          <class id="lnkTicketToDoc"/>
-          <class id="lnkTicketToContact"/>
-          <class id="lnkTicketToCI"/>
           <class id="Problem"/>
         </classes>
       </group>
       <group id="Change" _delta="define">
         <classes>
-          <class id="lnkTicketToDoc"/>
-          <class id="lnkTicketToContact"/>
-          <class id="lnkTicketToCI"/>
           <class id="Change"/>
           <class id="RoutineChange"/>
-          <class id="ApprovedChange"/>
           <class id="NormalChange"/>
           <class id="EmergencyChange"/>
         </classes>
@@ -106,107 +54,44 @@
           <class id="Contract"/>
           <class id="ProviderContract"/>
           <class id="CustomerContract"/>
-          <class id="lnkCustomerContractToProviderContract"/>
-          <class id="lnkCustomerContractToFunctionalCI"/>
           <class id="ServiceFamily"/>
           <class id="Service"/>
           <class id="ServiceSubcategory"/>
           <class id="SLA"/>
           <class id="SLT"/>
           <class id="DeliveryModel"/>
-          <class id="lnkContactToContract"/>
-          <class id="lnkContactToService"/>
-          <class id="lnkContractToDocument"/>
-          <class id="lnkCustomerContractToService"/>
-          <class id="lnkDeliveryModelToContact"/>
-          <class id="lnkDocumentToService"/>
-          <class id="lnkFunctionalCIToProviderContract"/>
-          <class id="lnkFunctionalCIToService"/>
-          <class id="lnkProviderContractToService"/>
-          <class id="lnkSLAToSLT"/>
         </classes>
       </group>
-      <group id="Call" _delta="define">
+      <group id="UserRequest" _delta="define">
         <classes>
           <class id="UserRequest"/>
-          <class id="lnkFunctionalCIToTicket"/>
-          <class id="lnkContactToTicket"/>
         </classes>
       </group>
       <group id="KnownError" _delta="define">
         <classes>
           <class id="KnownError"/>
-          <class id="lnkErrorToFunctionalCI"/>
-          <class id="lnkDocumentToError"/>
           <class id="FAQ"/>
          <class id="FAQCategory"/>
         </classes>
       </group>
-      <group id="LnkTickets" _delta="define">
+      <group id="Ticketing" _delta="define">
         <classes>
           <class id="lnkFunctionalCIToTicket"/>
           <class id="lnkContactToTicket"/>
           <class id="WorkOrder"/>
         </classes>
       </group>
-      <group id="LnkServices" _delta="define">
-        <classes>
-          <class id="lnkContactToContract"/>
-          <class id="lnkContactToService"/>
-          <class id="lnkContractToDocument"/>
-          <class id="lnkCustomerContractToService"/>
-          <class id="lnkDeliveryModelToContact"/>
-          <class id="lnkDocumentToService"/>
-          <class id="lnkFunctionalCIToProviderContract"/>
-          <class id="lnkFunctionalCIToService"/>
-          <class id="lnkProviderContractToService"/>
-          <class id="lnkSLAToSLT"/>
-        </classes>
-      </group>
-      <group id="LnkKnownErrors" _delta="define">
-        <classes>
-          <class id="lnkErrorToFunctionalCI"/>
-          <class id="lnkDocumentToError"/>
-        </classes>
-      </group>
-      <group id="Portal user - write" _delta="define">
-        <classes>
-          <class id="FileDoc"/>
-          <class id="lnkTicketToDoc"/>
-          <class id="UserRequest"/>
-        </classes>
-      </group>
-      <group id="Portal user - delete" _delta="define">
-        <classes>
-          <class id="lnkTicketToDoc"/>
-        </classes>
-      </group>
-      <group id="class:UserRequest" _delta="define">
-        <classes>
-          <class id="UserRequest"/>
-        </classes>
-      </group>
-      <group id="class:Incident" _delta="define">
-        <classes>
-          <class id="Incident"/>
-        </classes>
-      </group>
-      <group id="class:Problem" _delta="define">
-        <classes>
-          <class id="Problem"/>
-        </classes>
-      </group>
-      <group id="class:NormalChange" _delta="define">
+      <group id="NormalChange" _delta="define">
         <classes>
           <class id="NormalChange"/>
         </classes>
       </group>
-      <group id="class:EmergencyChange" _delta="define">
+      <group id="EmergencyChange" _delta="define">
         <classes>
           <class id="EmergencyChange"/>
         </classes>
       </group>
-      <group id="class:RoutineChange" _delta="define">
+      <group id="RoutineChange" _delta="define">
         <classes>
           <class id="RoutineChange"/>
         </classes>
@@ -250,33 +135,25 @@
         <name>Service Desk Agent</name>
         <description>Person in charge of creating incident reports</description>
         <groups>
-          <group id="Incident">
-            <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-            </actions>
-          </group>
-          <group id="Call">
-            <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-            </actions>
-          </group>
-          <group id="LnkTickets">
+          <group id="Ticketing">
             <actions>
               <action xsi:type="delete">allow</action>
-             <action xsi:type="write">allow</action>
+              <action xsi:type="write">allow</action>
               <action xsi:type="bulk write">allow</action>
               <action id="ev_close" xsi:type="stimulus">allow</action>
             </actions>
           </group>
-          <group id="class:Incident">
+          <group id="Incident">
             <actions>
+              <action xsi:type="write">allow</action>
+              <action xsi:type="bulk write">allow</action>
               <action id="ev_assign" xsi:type="stimulus">allow</action>
             </actions>
           </group>
-          <group id="class:UserRequest">
+          <group id="UserRequest">
             <actions>
+              <action xsi:type="write">allow</action>
+              <action xsi:type="bulk write">allow</action>
               <action id="ev_assign" xsi:type="stimulus">allow</action>
             </actions>
           </group>
@@ -292,28 +169,18 @@
         <name>Support Agent</name>
         <description>Person analyzing and solving the current incidents</description>
         <groups>
-          <group id="Incident">
-            <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-            </actions>
-          </group>
-          <group id="Call">
-            <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-            </actions>
-          </group>
-          <group id="LnkTickets">
+          <group id="Ticketing">
             <actions>
               <action xsi:type="delete">allow</action>
-             <action xsi:type="write">allow</action>
+              <action xsi:type="write">allow</action>
               <action xsi:type="bulk write">allow</action>
               <action id="ev_close" xsi:type="stimulus">allow</action>
             </actions>
           </group>
-          <group id="class:Incident">
+          <group id="Incident">
             <actions>
+              <action xsi:type="write">allow</action>
+              <action xsi:type="bulk write">allow</action>
               <action id="ev_assign" xsi:type="stimulus">allow</action>
               <action id="ev_reassign" xsi:type="stimulus">allow</action>
               <action id="ev_resolve" xsi:type="stimulus">allow</action>
@@ -321,8 +188,10 @@
               <action id="ev_pending" xsi:type="stimulus">allow</action>
             </actions>
           </group>
-          <group id="class:UserRequest">
+          <group id="UserRequest">
             <actions>
+              <action xsi:type="write">allow</action>
+              <action xsi:type="bulk write">allow</action>
               <action id="ev_assign" xsi:type="stimulus">allow</action>
               <action id="ev_reassign" xsi:type="stimulus">allow</action>
               <action id="ev_resolve" xsi:type="stimulus">allow</action>
@@ -343,12 +212,6 @@
         <name>Problem Manager</name>
         <description>Person analyzing and solving the current problems</description>
         <groups>
-          <group id="Problem">
-            <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-            </actions>
-          </group>
           <group id="KnownError">
             <actions>
               <action xsi:type="write">allow</action>
@@ -356,21 +219,18 @@
               <action xsi:type="delete">allow</action>
             </actions>
           </group>
-          <group id="LnkTickets">
+          <group id="Ticketing">
             <actions>
               <action xsi:type="delete">allow</action>
-             <action xsi:type="write">allow</action>
+              <action xsi:type="write">allow</action>
               <action xsi:type="bulk write">allow</action>
               <action id="ev_close" xsi:type="stimulus">allow</action>
             </actions>
           </group>
-          <group id="LnkKnownErrors">
+          <group id="Problem">
             <actions>
-              <action xsi:type="delete">allow</action>
-            </actions>
-          </group>
-          <group id="class:Problem">
-            <actions>
+              <action xsi:type="write">allow</action>
+              <action xsi:type="bulk write">allow</action>
               <action id="ev_assign" xsi:type="stimulus">allow</action>
               <action id="ev_reassign" xsi:type="stimulus">allow</action>
               <action id="ev_resolve" xsi:type="stimulus">allow</action>
@@ -399,15 +259,15 @@
               <action id="ev_finish" xsi:type="stimulus">allow</action>
             </actions>
           </group>
-          <group id="LnkTickets">
+          <group id="Ticketing">
             <actions>
               <action xsi:type="delete">allow</action>
-             <action xsi:type="write">allow</action>
+              <action xsi:type="write">allow</action>
               <action xsi:type="bulk write">allow</action>
               <action id="ev_close" xsi:type="stimulus">allow</action>
             </actions>
           </group>
-          <group id="class:NormalChange">
+          <group id="NormalChange">
             <actions>
               <action id="ev_plan" xsi:type="stimulus">allow</action>
               <action id="ev_replan" xsi:type="stimulus">allow</action>
@@ -415,7 +275,7 @@
               <action id="ev_monitor" xsi:type="stimulus">allow</action>
             </actions>
           </group>
-          <group id="class:EmergencyChange">
+          <group id="EmergencyChange">
             <actions>
               <action id="ev_plan" xsi:type="stimulus">allow</action>
               <action id="ev_replan" xsi:type="stimulus">allow</action>
@@ -423,7 +283,7 @@
               <action id="ev_monitor" xsi:type="stimulus">allow</action>
             </actions>
           </group>
-          <group id="class:RoutineChange">
+          <group id="RoutineChange">
             <actions>
               <action id="ev_plan" xsi:type="stimulus">allow</action>
               <action id="ev_replan" xsi:type="stimulus">allow</action>
@@ -452,15 +312,15 @@
               <action id="ev_finish" xsi:type="stimulus">allow</action>
             </actions>
           </group>
-          <group id="LnkTickets">
+          <group id="Ticketing">
             <actions>
               <action xsi:type="delete">allow</action>
-             <action xsi:type="write">allow</action>
+              <action xsi:type="write">allow</action>
               <action xsi:type="bulk write">allow</action>
               <action id="ev_close" xsi:type="stimulus">allow</action>
             </actions>
           </group>
-          <group id="class:NormalChange">
+          <group id="NormalChange">
             <actions>
               <action id="ev_validate" xsi:type="stimulus">allow</action>
               <action id="ev_reject" xsi:type="stimulus">allow</action>
@@ -469,14 +329,14 @@
               <action id="ev_finish" xsi:type="stimulus">allow</action>
             </actions>
           </group>
-          <group id="class:EmergencyChange">
+          <group id="EmergencyChange">
             <actions>
               <action id="ev_assign" xsi:type="stimulus">allow</action>
               <action id="ev_reopen" xsi:type="stimulus">allow</action>
               <action id="ev_finish" xsi:type="stimulus">allow</action>
             </actions>
           </group>
-          <group id="class:RoutineChange">
+          <group id="RoutineChange">
             <actions>
               <action id="ev_assign" xsi:type="stimulus">allow</action>
               <action id="ev_reopen" xsi:type="stimulus">allow</action>
@@ -503,27 +363,27 @@
               <action id="ev_reject" xsi:type="stimulus">allow</action>
             </actions>
           </group>
-          <group id="LnkTickets">
+          <group id="Ticketing">
             <actions>
               <action xsi:type="delete">allow</action>
-             <action xsi:type="write">allow</action>
+              <action xsi:type="write">allow</action>
               <action xsi:type="bulk write">allow</action>
               <action id="ev_close" xsi:type="stimulus">allow</action>
             </actions>
           </group>
-          <group id="class:NormalChange">
+          <group id="NormalChange">
             <actions>
               <action id="ev_approve" xsi:type="stimulus">allow</action>
               <action id="ev_notapprove" xsi:type="stimulus">allow</action>
             </actions>
           </group>
-          <group id="class:EmergencyChange">
+          <group id="EmergencyChange">
             <actions>
               <action id="ev_approve" xsi:type="stimulus">allow</action>
               <action id="ev_notapprove" xsi:type="stimulus">allow</action>
             </actions>
           </group>
-          <group id="class:RoutineChange">
+          <group id="RoutineChange">
             <actions/>
           </group>
           <group id="*">
@@ -542,11 +402,6 @@
             <actions>
               <action xsi:type="write">allow</action>
               <action xsi:type="bulk write">allow</action>
-              <action xsi:type="delete">allow</action>
-            </actions>
-          </group>
-          <group id="LnkServices">
-            <actions>
               <action xsi:type="delete">allow</action>
             </actions>
           </group>
@@ -581,18 +436,9 @@
         <name>Portal user</name>
         <description>Has the rights to access to the user portal. People having this profile will not be allowed to access the standard application, they will be automatically redirected to the user portal.</description>
         <groups>
-          <group id="Portal user - write">
+          <group id="UserRequest">
             <actions>
               <action xsi:type="write">allow</action>
-            </actions>
-          </group>
-          <group id="Portal user - delete">
-            <actions>
-              <action xsi:type="delete">allow</action>
-            </actions>
-          </group>
-          <group id="class:UserRequest">
-            <actions>
               <action id="ev_close" xsi:type="stimulus">allow</action>
               <action id="ev_reopen" xsi:type="stimulus">allow</action>
             </actions>
