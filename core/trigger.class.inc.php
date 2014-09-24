@@ -342,6 +342,7 @@ class lnkTriggerAction extends cmdbAbstractObject
 			"db_key_field" => "link_id",
 			"db_finalclass_field" => "",
 			"display_template" => "",
+			"is_link" => true,
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("action_id", array("targetclass"=>"Action", "jointype"=> '', "allowed_values"=>null, "sql"=>"action_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));

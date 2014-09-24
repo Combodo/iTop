@@ -4,6 +4,7 @@
     <class id="lnkVirtualDeviceToVolume" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
+        <is_link>1</is_link>
         <category>bizmodel,configmgmt</category>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
