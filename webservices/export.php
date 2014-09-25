@@ -223,15 +223,15 @@ if (!empty($sExpression))
 				case 'csv':
 				$oP = new CSVPage("iTop - Export");
 				$sFields = implode(',', $aFields);
-				$sCSVData = cmdbAbstractObject::GetSetAsCSV($oSet, array('fields' => $sFields, 'fields_advanced' => $bFieldsAdvanced, 'localize_values' => $bLocalize));
 				$sCharset = MetaModel::GetConfig()->Get('csv_file_default_charset');
+				$sCSVData = cmdbAbstractObject::GetSetAsCSV($oSet, array('fields' => $sFields, 'fields_advanced' => $bFieldsAdvanced, 'localize_values' => $bLocalize), $sCharset);
 				if ($sCharset == 'UTF-8')
 				{
-					$sOutputData = UTF8_BOM.iconv('UTF-8', 'UTF-8//IGNORE//TRANSLIT', $sCSVData);
+					$sOutputData = UTF8_BOM.$sCSVData;
 				}
 				else
 				{
-					$sOutputData = iconv('UTF-8', $sCharset.'//IGNORE//TRANSLIT', $sCSVData);
+					$sOutputData = $sCSVData;
 				}
 				if ($sFileName == '')
 				{

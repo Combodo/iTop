@@ -941,12 +941,12 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		return $oDataTable->Display($oPage, $oSettings, $bDisplayMenu, $sSelectMode, $bViewLink, $aExtraParams);
 	}
 	
-	static function DisplaySetAsCSV(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
+	static function DisplaySetAsCSV(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array(), $sCharset = 'UTF-8')
 	{
-		$oPage->add(self::GetSetAsCSV($oSet, $aParams));
+		$oPage->add(self::GetSetAsCSV($oSet, $aParams, $sCharset));
 	}
 	
-	static function GetSetAsCSV(DBObjectSet $oSet, $aParams = array())
+	static function GetSetAsCSV(DBObjectSet $oSet, $aParams = array(), $sCharset = 'UTF-8')
 	{
 		$sSeparator = isset($aParams['separator']) ? $aParams['separator'] : ','; // default separator is comma
 		$sTextQualifier = isset($aParams['text_qualifier']) ? $aParams['text_qualifier'] : '"'; // default text qualifier is double quote
@@ -1064,7 +1064,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 					else
 					{
 						$value = $oObj->Get($sAttCodeEx);
-						$aRow[] = $oAttDef->GetAsCSV($value, $sSeparator, $sTextQualifier, $oObj, $bLocalize);
+						$sCSVValue = $oAttDef->GetAsCSV($value, $sSeparator, $sTextQualifier, $oObj, $bLocalize);
+						$aRow[] = iconv('UTF-8', $sCharset.'//IGNORE//TRANSLIT', $sCSVValue);
 					}
 				}
 			}
