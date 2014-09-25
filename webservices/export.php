@@ -223,7 +223,7 @@ if (!empty($sExpression))
 				case 'csv':
 				$oP = new CSVPage("iTop - Export");
 				$sFields = implode(',', $aFields);
-				$sCharset = MetaModel::GetConfig()->Get('csv_file_default_charset');
+				$sCharset = utils::ReadParam('charset', MetaModel::GetConfig()->Get('csv_file_default_charset'), true /* Allow CLI */, 'raw_data');
 				$sCSVData = cmdbAbstractObject::GetSetAsCSV($oSet, array('fields' => $sFields, 'fields_advanced' => $bFieldsAdvanced, 'localize_values' => $bLocalize), $sCharset);
 				if ($sCharset == 'UTF-8')
 				{

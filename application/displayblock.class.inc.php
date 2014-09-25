@@ -772,6 +772,7 @@ class DisplayBlock
 
 			$sCsvFile = strtolower($this->m_oFilter->GetClass()).'.csv'; 
 			$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?expression='.urlencode($this->m_oFilter->ToOQL(true)).'&format=csv&filename='.urlencode($sCsvFile);
+			$sAjaxLink = $sDownloadLink.'&charset=UTF-8';
 			$sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($this->m_oFilter->serialize()).'&format=csv';
 			if ($bAdvancedMode)
 			{
@@ -833,7 +834,7 @@ class DisplayBlock
 			$sHtml .= "<div id=\"csv_content_loading\"><div style=\"width: 250px; height: 20px; background: url(../setup/orange-progress.gif); border: 1px #999 solid; margin-left:auto; margin-right: auto; text-align: center;\">".Dict::S('UI:Loading')."</div></div><textarea id=\"csv_content\" style=\"display:none;\">\n";
 			//$sHtml .= htmlentities($sCSVData, ENT_QUOTES, 'UTF-8');
 			$sHtml .= "</textarea>\n";
-			$oPage->add_ready_script("$.post('$sDownloadLink', {}, function(data) { $('#csv_content').html(data); $('#csv_content_loading').hide(); $('#csv_content').show();} );");
+			$oPage->add_ready_script("$.post('$sAjaxLink', {}, function(data) { $('#csv_content').html(data); $('#csv_content_loading').hide(); $('#csv_content').show();} );");
 			break;
 
 			case 'modify':
