@@ -10,12 +10,13 @@ $(function()
 		{
 			parent_selector: null,
 			field_id: '',
+			get_field_value: null,
+			equals: null,
 			submit_to: 'index.php',
 			submit_parameters: {operation: 'async_action'},
 			do_apply: null,
 			do_cancel: null,
 			auto_apply: false
-			
 		},
 	
 		// the constructor
@@ -83,7 +84,11 @@ $(function()
 		_on_change: function()
 		{
 			var new_value = this._get_field_value();
-			if (new_value != this.value)
+			if (this._equals(new_value, this.value))
+			{
+				this.bModified = false;
+			}
+			else
 			{
 				this.bModified = true;
 				if (this.options.auto_apply)
@@ -91,22 +96,36 @@ $(function()
 					this._do_apply();
 				}
 			}
+			this._refresh();
+		},
+		_equals: function( value1, value2 )
+		{
+			if (this.options.equals === null)
+			{
+				return value1 == value2;
+			}
 			else
 			{
-				this.bModified = false;
+				return this.options.equals(value1, value2);
 			}
-			this._refresh();
 		},
 		_get_field_value: function()
 		{
-			var oField = $('#'+this.options.field_id);
-			if (oField.attr('type') == 'checkbox')
+			if (this.options.get_field_value === null)
 			{
-				return (oField.attr('checked') == 'checked');
+				var oField = $('#'+this.options.field_id);
+				if (oField.attr('type') == 'checkbox')
+				{
+					return (oField.attr('checked') == 'checked');
+				}
+				else
+				{
+					return oField.val();				
+				}
 			}
 			else
 			{
-				return oField.val();				
+				return this.options.get_field_value();
 			}			
 		},
 		_get_committed_value: function()

@@ -234,9 +234,11 @@ class DesignerForm
 					}
 					$sNotifyParentSelectorJS = is_null($sNotifyParentSelector) ? 'null' : "'".addslashes($sNotifyParentSelector)."'";
 					$sAutoApply = $oField->IsAutoApply() ? 'true' : 'false';
+					$sHandlerEquals = $oField->GetHandlerEquals();
+					$sHandlerGetValue = $oField->GetHandlerGetValue();
 					$this->AddReadyScript(
 <<<EOF
-$('#row_$sFieldId').property_field({parent_selector: $sNotifyParentSelectorJS, field_id: '$sFieldId', auto_apply: $sAutoApply, value: '', submit_to: '$sActionUrl', submit_parameters: $sJSSubmitParams });
+$('#row_$sFieldId').property_field({parent_selector: $sNotifyParentSelectorJS, field_id: '$sFieldId', equals: $sHandlerEquals, get_field_value: $sHandlerGetValue, auto_apply: $sAutoApply, value: '', submit_to: '$sActionUrl', submit_parameters: $sJSSubmitParams });
 EOF
 					);
 				}
@@ -669,6 +671,16 @@ class DesignerFormField
 	public function AddCSSClass($sCSSClass)
 	{
 		$this->aCSSClasses[] = $sCSSClass;
+	}
+
+	public function GetHandlerEquals()
+	{
+		return 'null';
+	}
+
+	public function GetHandlerGetValue()
+	{
+		return 'null';
 	}
 }
 
