@@ -772,7 +772,6 @@ class DisplayBlock
 
 			$sCsvFile = strtolower($this->m_oFilter->GetClass()).'.csv'; 
 			$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?expression='.urlencode($this->m_oFilter->ToOQL(true)).'&format=csv&filename='.urlencode($sCsvFile);
-			$sAjaxLink = $sDownloadLink.'&charset=UTF-8';
 			$sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($this->m_oFilter->serialize()).'&format=csv';
 			if ($bAdvancedMode)
 			{
@@ -784,7 +783,8 @@ class DisplayBlock
 				$sLinkToToggle = $sLinkToToggle.'&advanced=1';
 				$sChecked = '';
 			}
-
+			$sAjaxLink = $sDownloadLink.'&charset=UTF-8'; // Includes &fields_advanced=1 if in advanced mode
+				
 /*
 			$sCSVData = cmdbAbstractObject::GetSetAsCSV($this->m_oSet, array('fields_advanced' => $bAdvancedMode));
 			$sCharset = MetaModel::GetConfig()->Get('csv_file_default_charset');
