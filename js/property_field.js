@@ -225,7 +225,7 @@ $(function()
 		},
 		_is_visible: function()
 		{
-			return this.element.parent().is(':visible');
+			return this.element.is(':visible');
 		}
 	});
 });
@@ -326,7 +326,6 @@ function ReadFormParams(sFormId)
 				{
 					oMap[sName] = $(this).val();
 				}
-				
 			}
 		}
 	});
@@ -368,4 +367,43 @@ function SubmitForm(sFormId, onSubmitResult)
 		// TODO: better error reporting !!!
 		alert('Please fill all the fields before continuing...');
 	}
+}
+
+function RemoveSubForm(sId, sUrl, oParams)
+{
+	$.post(sUrl, oParams, function(data) {
+		$('body').append(data);
+	});
+}
+
+function AddSubForm(sId, sUrl, oParams)
+{
+	var aIndexes = JSON.parse($('#'+sId).val());
+	var iLast = aIndexes[aIndexes.length - 1];
+	var iNewIdx = 1 + iLast;
+	oParams.new_index = iNewIdx;
+	
+	$.post(sUrl, oParams, function(data) {
+		$('body').append(data);
+	});
+}
+
+function InitFormSelectorField(sId, sSelector)
+{
+	$('#'+sId).bind('change reverted init', function() {
+		// Mark all the direct children as hidden
+		$('tr[data-selector="'+sSelector+'"]').attr('data-state', 'hidden');
+		// Mark the selected one as visible
+		var sSelectedHierarchy = sSelector+'-'+this.value; 
+		$('tr[data-path="'+sSelectedHierarchy+'"]').attr('data-state', 'visible');
+					
+		// Show all items behind the current one
+		$('tr[data-path^="'+sSelector+'"]').show();
+		// Hide items behind the current one as soon as it is behind a hidden node (or itself is marked as hidden) 
+		$('tr[data-path^="'+sSelector+'"][data-state="hidden"]').each(function() {
+			$(this).hide();
+			var sPath = $(this).attr('data-path');
+			$('tr[data-path^="'+sPath+'/"]').hide();
+		});			
+	}).trigger('init'); // initial refresh
 }

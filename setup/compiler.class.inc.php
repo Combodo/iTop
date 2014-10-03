@@ -920,7 +920,7 @@ EOF;
 					$aThresholds = array();
 					foreach($oThresholdNodes as $oThreshold)
 					{
-						$iPercent = $this->GetPropNumber($oThreshold, 'percent');
+						$iPercent = (int)$oThreshold->getAttribute('id');
 	
 						$oHighlight = $oThreshold->GetUniqueElement('highlight', false);
 						$sHighlight = '';
@@ -1130,7 +1130,7 @@ EOF;
 				$oTransitions = $oState->GetUniqueElement('transitions');
 				foreach ($oTransitions->getElementsByTagName('transition') as $oTransition)
 				{
-					$sStimulus = $oTransition->GetChildText('stimulus');
+					$sStimulus = $oTransition->getAttribute('id');
 					$sTargetState = $oTransition->GetChildText('target');
 	
 					$oActions = $oTransition->GetUniqueElement('actions');

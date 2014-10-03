@@ -38,7 +38,10 @@ class DesignerForm
 	protected $bReadOnly;
 	protected $sHierarchyPath;   // Needed to manage the visibility of nested subform
 	protected $sHierarchyParent; // Needed to manage the visibility of nested subform
+	protected $sHierarchySelector; // Needed to manage the visibility of nested subform
 	protected $bDisplayed;
+	protected $aDefaultValues;
+	protected $sFieldsSuffix;
 	
 	public function __construct()
 	{
@@ -47,14 +50,17 @@ class DesignerForm
 		$this->sScript = '';
 		$this->sReadyScript = '';
 		$this->sFormPrefix = '';
+		$this->sFieldsSuffix = '';
 		$this->sParamsContainer = '';
 		$this->sFormId = 'form_'.rand();
 		$this->oParentForm = null;
 		$this->bReadOnly = false;
 		$this->sHierarchyPath = '';
 		$this->sHierarchyParent = '';
+		$this->sHierarchySelector = '';
 		$this->StartFieldSet($this->sCurrentFieldSet);
 		$this->bDisplayed = true;
+		$this->aDefaultvalues = array();
 	}
 	
 	public function AddField(DesignerFormField $oField)
@@ -140,6 +146,11 @@ class DesignerForm
 			$oP->add($sReturn);
 		}
 	}
+	
+	public function GetFieldSets()
+	{
+		return $this->aFieldSets;
+	}
 
 	public function SetSubmitParams($sSubmitToUrl, $aSubmitParams)
 	{
@@ -151,6 +162,11 @@ class DesignerForm
 	{
 		$this->sSubmitTo = $oParentForm->sSubmitTo;
 		$this->aSubmitParams = $oParentForm->aSubmitParams;
+	}
+	
+	public function GetSubmitParams()
+	{
+		return array( 'url' => $this->sSubmitTo, 'params' => $this->aSubmitParams);
 	}
 	
 	/**
@@ -168,7 +184,7 @@ class DesignerForm
 	{
 		return $this->sHierarchyPath;
 	}
-	
+		
 	/**
 	 * Helper to handle subforms hide/show	
 	 */	
@@ -208,7 +224,7 @@ class DesignerForm
 			$aDetails = array();
 			if ($sLabel != '')
 			{
-				$sReturn .= '<tr><th colspan="4">'.$sLabel.'</th></tr>';
+				$sReturn .= $this->StartRow().'<th colspan="4">'.$sLabel.'</th>'.$this->EndRow();
 			}
 
 
@@ -219,16 +235,19 @@ class DesignerForm
 				{
 					$sFieldId = $this->GetFieldId($oField->GetCode());
 					$sValidation = $this->GetValidationArea($oField->GetCode(), '<span title="Apply" class="ui-icon ui-icon-circle-check"/>');
-					$sValidationFields = '</td><td class="prop_icon prop_apply">'.$sValidation.'</td><td  class="prop_icon prop_cancel"><span title="Revert" class="ui-icon ui-icon-circle-close"/></td></tr>';
+					$sValidationFields = '</td><td class="prop_icon prop_apply">'.$sValidation.'</td><td  class="prop_icon prop_cancel"><span title="Revert" class="ui-icon ui-icon-circle-close"/></td>'.$this->EndRow();
+					
+					$sPath = $this->GetHierarchyPath().'/'.$oField->GetCode();
+					
 					if (is_null($aRow['label']))
 					{
-						$sReturn .= '<tr id="row_'.$sFieldId.'"><td class="prop_value" colspan="2">'.$aRow['value'];
+						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_value" colspan="2">'.$aRow['value'];
 					}
 					else
 					{
-						$sReturn .= '<tr id="row_'.$sFieldId.'"><td class="prop_label">'.$aRow['label'].'</td><td class="prop_value">'.$aRow['value'];
+						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_label">'.$aRow['label'].'</td><td class="prop_value">'.$aRow['value'];
 					}
-					if (!($oField instanceof DesignerFormSelectorField))
+					if (!($oField instanceof DesignerFormSelectorField) && !($oField instanceof DesignerMultipleSubFormField))
 					{
 						$sReturn .= $sValidationFields;
 					}
@@ -296,7 +315,22 @@ EOF
 		{
 			$oP->add($sReturn);
 		}
-	}	
+	}
+	
+	public function StartRow($sFieldId = null)
+	{
+		if ($sFieldId != null)
+		{
+			return '<tr id="row_'.$sFieldId.'" data-path="'.$this->GetHierarchyPath().'" data-selector="'.$this->GetHierarchyParent().'">';
+		}
+		return '<tr data-path="'.$this->GetHierarchyPath().'" data-selector="'.$this->GetHierarchyParent().'">';
+	}
+	
+	public function EndRow()
+	{
+		return '</tr>';
+	}
+	
 	public function RenderAsDialog($oPage, $sDialogId, $sDialogTitle, $iDialogWidth, $sOkButtonLabel, $sIntroduction = null)
 	{
 		$sDialogTitle = addslashes($sDialogTitle);
@@ -353,9 +387,29 @@ EOF
 	
 	public function GetPrefix()
 	{
-		return $this->sFormPrefix;
+		$sPrefix = '';	
+		if ($this->oParentForm != null)
+		{
+			$sPrefix = $this->oParentForm->GetPrefix();
+		}
+		return $sPrefix.$this->sFormPrefix;
+	}
+
+	public function SetSuffix($sSuffix)
+	{
+		$this->sFieldsSuffix = $sSuffix;
 	}
 	
+	public function GetSuffix()
+	{
+		$sSuffix = '';
+		if ($this->oParentForm != null)
+		{
+			$sSuffix = $this->oParentForm->GetSuffix();
+		}
+		return $sSuffix.$this->sFieldsSuffix;
+	}
+		
 	public function SetReadOnly($bReadOnly = true)
 	{
 		$this->bReadOnly = $bReadOnly;
@@ -395,6 +449,25 @@ EOF
 		$this->oParentForm = $oParentForm;
 	}
 	
+	public function SetDefaultValues($aDefaultValues)
+	{
+		if (!is_array($aDefaultValues)) return;
+		
+		foreach($this->aFieldSets as $sLabel => $aFields)
+		{
+			foreach($aFields as $oField)
+			{
+				$oField->SetDefaultValueFrom($aDefaultValues);
+			}
+		}
+	}
+	
+	public function GetDefaultValues()
+	{
+		return $this->aDefaultValues;
+	}
+	
+	
 	public function GetParentForm()
 	{
 		return $this->oParentForm;
@@ -429,17 +502,17 @@ EOF
 	
 	public function GetFieldId($sCode)
 	{
-		return $this->sFormPrefix.'attr_'.$sCode;
+		return $this->GetPrefix().'attr_'.$sCode;
 	}
 	
 	public function GetFieldName($sCode)
 	{
-		return 'attr_'.$sCode;
+		return 'attr_'.$sCode.$this->GetSuffix();
 	}
 	
 	public function GetParamName($sCode)
 	{
-		return 'attr_'.$sCode;
+		return 'attr_'.$sCode.$this->GetSuffix();
 	}
 	
 	public function GetValidationArea($sCode, $sContent = '')
@@ -449,6 +522,21 @@ EOF
 	public function GetAsyncActionClass()
 	{
 		return $this->sAsyncActionClass;
+	}
+	
+	public function FindField($sFieldCode)
+	{
+		$oFoundField = false;
+		foreach($this->aFieldSets as $sLabel => $aFields)
+		{
+			foreach($aFields as $oField)
+			{
+				$oFoundField = $oField->FindField($sFieldCode);
+				if ($oFoundField !== false) break;
+			}
+			if ($oFoundField !== false) break;
+		}
+		return $oFoundField;		
 	}
 }
 
@@ -629,6 +717,11 @@ class DesignerFormField
 		return $this->bDisplayed;
 	}
 
+	public function GetFieldId()
+	{
+		return $this->oForm->GetFieldId($this->sCode);
+	}
+	
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
@@ -671,6 +764,26 @@ class DesignerFormField
 	public function AddCSSClass($sCSSClass)
 	{
 		$this->aCSSClasses[] = $sCSSClass;
+	}
+	
+	/**
+	 * A way to set/change the default value after constructing the field
+	 */
+	public function SetDefaultValueFrom($aAllDefaultValue)
+	{
+		if (array_key_exists($this->GetCode(), $aAllDefaultValue))
+		{
+			$this->defaultValue = $aAllDefaultValue[$this->GetCode()];
+		}
+	}
+	
+	public function FindField($sFieldCode)
+	{
+		if ($this->sCode == $sFieldCode)
+		{
+			return $this;
+		}
+		return false;
 	}
 
 	public function GetHandlerEquals()
@@ -747,6 +860,7 @@ class DesignerTextField extends DesignerFormField
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
+		
 		$sName = $this->oForm->GetFieldName($this->sCode);
 		if ($this->IsReadOnly())
 		{
@@ -872,7 +986,6 @@ class DesignerComboField extends DesignerFormField
 	
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
 	{
-
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
 		$sChecked = $this->defaultValue ? 'checked' : '';
@@ -1215,6 +1328,8 @@ class DesignerFormSelectorField extends DesignerFormField
 		$sName = $this->oForm->GetFieldName($this->sCode);
 		$sReadOnly = $this->IsReadOnly() ? 'disabled="disabled"' :  '';
 		
+		$this->aCSSClasses[] = 'formSelector';
+		
 		$sCSSClasses = '';
 		if (count($this->aCSSClasses) > 0)
 		{
@@ -1228,9 +1343,9 @@ class DesignerFormSelectorField extends DesignerFormField
 			$aHiddenValues = array();
 			$sDisplayValue = '';
 			$sHiddenValue = '';
-			foreach($this->aSubForms as $sKey => $aFormData)
+			foreach($this->aSubForms as $iKey => $aFormData)
 			{
-				if ($sKey == $this->defaultValue)
+				if ($iKey == $this->defaultValue) // Default value is actually the index
 				{
 					$sDisplayValue = htmlentities($aFormData['label'], ENT_QUOTES, 'UTF-8');
 					$sHiddenValue = "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\"/>";
@@ -1244,11 +1359,11 @@ class DesignerFormSelectorField extends DesignerFormField
 			
 			
 			$sHtml = "<select $sCSSClasses id=\"$sId\" name=\"$sName\" $sReadOnly>";
-			foreach($this->aSubForms as $sKey => $aFormData)
+			foreach($this->aSubForms as $iKey => $aFormData)
 			{
 				$sDisplayValue = htmlentities($aFormData['label'], ENT_QUOTES, 'UTF-8');;
-				$sSelected = ($sKey == $this->defaultValue) ? 'selected' : '';
-				$sHtml .= "<option value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\" $sSelected>".$sDisplayValue."</option>";
+				$sSelected = ($iKey == $this->defaultValue) ? 'selected' : '';
+				$sHtml .= "<option value=\"$iKey\" $sSelected>".$sDisplayValue."</option>";
 			}
 			$sHtml .= "</select>";
 		}
@@ -1277,14 +1392,14 @@ class DesignerFormSelectorField extends DesignerFormField
 				// - data-path : uniquely identifies the combination of users choices that must be made to show the node
 				// - data-state : records the state, depending on the user choice on the FormSelectorField just above the node, but indepentantly from the visibility in the page (can be visible in the form itself being in a hidden form)
 				// Then a series of actions are performed to hide and show the relevant nodes, depending on the user choice
-				$sSelector = $this->oForm->GetHierarchyPath().'/'.$this->sCode;
+				$sSelector = $this->oForm->GetHierarchyPath().'/'.$this->sCode.$this->oForm->GetSuffix();
 				$oSubForm->SetHierarchyParent($sSelector);
-				$sPath = $this->oForm->GetHierarchyPath().'/'.$this->sCode.':'.$sKey;
+				$sPath = $this->oForm->GetHierarchyPath().'/'.$this->sCode.$this->oForm->GetSuffix().'-'.$sKey;
 				$oSubForm->SetHierarchyPath($sPath);
 
 				$oSubForm->SetDisplayed($sKey == $this->defaultValue);
 				$sState = ($sKey == $this->defaultValue) ? 'visible' : 'hidden';
-				$sHtml .= "</tbody><tbody data-selector=\"$sSelector\" data-path=\"$sPath\" data-state=\"$sState\" $sStyle>";
+				//$sHtml .= "</tbody><tbody data-selector=\"$sSelector\" data-path=\"$sPath\" data-state=\"$sState\" $sStyle>";
 				$sHtml .= $oSubForm->RenderAsPropertySheet($oP, true);
 
 				$sState = $this->oForm->IsDisplayed() ? 'visible' : 'hidden';
@@ -1301,7 +1416,7 @@ class DesignerFormSelectorField extends DesignerFormField
 					$sParentPath = '';
 				}
 				
-				$sHtml .= "</tbody><tbody data-selector=\"$sParentSelector\" data-path=\"$sParentPath\" data-state=\"$sState\" $sParentStyle>";
+				//$sHtml .= "</tbody><tbody data-selector=\"$sParentSelector\" data-path=\"$sParentPath\" data-state=\"$sState\" $sParentStyle>";
 			}
 			else
 			{
@@ -1313,27 +1428,8 @@ class DesignerFormSelectorField extends DesignerFormField
 
 		if ($sRenderMode == 'property')
 		{
-			$sSelector = $this->oForm->GetHierarchyPath().'/'.$this->sCode;
-			$oP->add_ready_script(
-<<<EOF
-$('#$sId').bind('change reverted', function() {
-	// Mark all the direct children as hidden
-	$('tbody[data-selector="$sSelector"]').attr('data-state', 'hidden');
-	// Mark the selected one as visible
-	var sSelectedHierarchy = '$sSelector:'+this.value; 
-	$('tbody[data-path="'+sSelectedHierarchy+'"]').attr('data-state', 'visible');
-	
-	// Show all items behind the current one
-	$('tbody[data-path^="$sSelector"]').show();
-	// Hide items behind the current one as soon as it is behind a hidden node (or itself is marked as hidden) 
-	$('tbody[data-path^="$sSelector"][data-state="hidden"]').each(function(){
-		$(this).hide();
-		var sPath = $(this).attr('data-path');
-		$('tbody[data-path^="'+sPath+'/"]').hide();
-	});
-});
-EOF
-			);
+			$sSelector = $this->oForm->GetHierarchyPath().'/'.$this->sCode.$this->oForm->GetSuffix();
+			$oP->add_ready_script("InitFormSelectorField('$sId', '$sSelector');");
 		}
 		else
 		{
@@ -1355,6 +1451,44 @@ EOF
 		$this->aSubForms[$sKey]['form']->SetPrefix($this->oForm->GetPrefix().$sKey.'_');
 		$this->aSubForms[$sKey]['form']->SetParentForm($this->oForm);
 		$this->aSubForms[$sKey]['form']->ReadParams($aValues);
+	}
+	
+	public function SetDefaultValueFrom($aAllDefaultValues)
+	{
+		if (array_key_exists($this->GetCode(), $aAllDefaultValues))
+		{
+			$selectedValue = $aAllDefaultValues[$this->GetCode()];
+			foreach($this->aSubForms as $iKey => $aFormData)
+			{
+				$sId = $this->oForm->GetFieldId($this->sCode);
+				if ($selectedValue == $aFormData['value'])
+				{
+					$this->defaultValue =$iKey;
+					$aDefaultValues = $this->oForm->GetDefaultValues();
+					$oSubForm = $aFormData['form'];
+					$oSubForm->SetDefaultValues($aAllDefaultValues);
+				}
+			}		
+		}
+	}
+	
+	public function FindField($sFieldCode)
+	{
+		$oField = parent::FindField($sFieldCode);
+		if ($oField === false)
+		{
+			// Look in the subforms
+			foreach($this->aSubForms as $sKey => $aFormData)
+			{
+				$oSubForm = $aFormData['form'];
+				$oField = $oSubForm->FindField($sFieldCode);
+				if ($oField !== false)
+				{
+					break;
+				}
+			}
+		}
+		return $oField;
 	}
 }
 
@@ -1388,7 +1522,20 @@ class DesignerSubFormField extends DesignerFormField
 		$this->oSubForm->SetParentForm($this->oForm);
 		$this->oSubForm->ReadParams($aValues);
 	}
+	
+	public function FindField($sFieldCode)
+	{
+		$oField = parent::FindField($sFieldCode);
+		if ($oField === false)
+		{
+			// Look in the subform
+			$oField = $this->oSubForm->FindField($sFieldCode);
+		}
+		return $oField;
+	}
 }
+
+
 
 class DesignerStaticTextField extends DesignerFormField
 {
@@ -1403,97 +1550,3 @@ class DesignerStaticTextField extends DesignerFormField
 	}
 }
 
-class DesignerButtonsField extends DesignerFormField
-{
-	protected $aButtons;
-	
-	public function __construct($sCode, $sLabel = null)
-	{
-		parent::__construct($sCode, $sLabel, null);
-		$this->aButtons = array('left' => array(), 'center' => array(), 'right' => array());
-	}
-
-	public function AddButton($sPos, DesignerButtonsFieldCtrl $oButton)
-	{
-		$this->aButtons[$sPos][] = $oButton;
-	}
-	
-	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
-	{
-		$sHtml = '<table style="width:100%"><tbody><tr>';
-		foreach($this->aButtons as $sPos => $aButtons)
-		{
-			$aBtns = array();
-			foreach($aButtons as $oButton)
-			{
-				$aBtns[] = $oButton->Render($oP, $sFormId, $sRenderMode);
-			}
-			$sHtml .= '<td style="text-align:'.$sPos.'; ">'.implode(' ', $aBtns)."</td>";
-		}
-		$sHtml .= '</tr></tbody></table>';
-		return array('label' => $this->sLabel, 'value' => $sHtml);
-	}
-}
-
-/**
- * A button to add to a DesignerButtonsField
- *
- */
-abstract class DesignerButtonsFieldCtrl
-{
-	protected $sId;
-	public function __construct($sId)
-	{
-		$this->sId = $sId;
-	}
-	abstract public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog');
-}
-
-class DesignerButtonCtrl extends DesignerButtonsFieldCtrl
-{
-	protected $sLabel;
-	protected $sJSAction;
-	
-	public function __construct($sId, $sLabel, $sJSAction)
-	{
-		parent::__construct($sId);
-		$this->sLabel = $sLabel;
-		$this->sJSAction = $sJSAction;
-	}
-
-	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
-	{
-		$sAction = htmlentities($this->sJSAction, ENT_QUOTES, 'UTF-8');
-		return '<button id="'.$this->sId.'" type="button" onclick="'.$sAction.'">'.$this->sLabel.'</button>';
-	}
-}
-
-class DesignerSelectCtrl extends DesignerButtonsFieldCtrl
-{
-	protected $aValues;
-	protected $defaultValue;
-	protected $sJSAction;
-	
-	public function __construct($sId, $sLabel, $aValues, $defaultValue, $sJSAction)
-	{
-		parent::__construct($sId);
-		$this->sLabel = $sLabel;
-		$this->aValues = $aValues;
-		$this->defaultValue = $defaultValue;
-		$this->sJSAction = $sJSAction;
-		
-	}
-	
-	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
-	{
-		$sAction = htmlentities($this->sJSAction, ENT_QUOTES, 'UTF-8');
-		$sHtml = '<span>'.$this->sLabel.'&nbsp;<select id="'.$this->sId.'" onchange="'.$sAction.'">';
-		foreach($this->aValues as $value => $sLabel)
-		{
-			$sSelected = ($value == $this->defaultValue) ?  'selected' : '';
-			$sHtml .= '<option value="'.htmlentities($value).'"'.$sSelected.'>'.$sLabel.'</option>';
-		}
-		$sHtml .= '</select></span>';
-		return $sHtml;
-	}	
-}

@@ -431,38 +431,9 @@ class ModelFactory
 						$oUserRightsNode->SetAttribute('_created_in', $sModuleName);
 					}
 				}
-				// Adjust the XML to transparently add an id (=stimulus) on all life-cycle transitions
-				// which don't already have one
-				$oNodeList = $oXPath->query('/itop_design/classes//class/lifecycle/states/state/transitions/transition/stimulus');	
-				foreach($oNodeList as $oNode)
-				{
-					if ($oNode->parentNode->getAttribute('id') == '')
-					{
-						$oNode->parentNode->SetAttribute('id', $oNode->textContent);
-					}
-				}
 				
-				// Adjust the XML to transparently add an id (=type:<type>) on all allowed actions (profiles)
-				// which don't already have one
-				$oNodeList = $oXPath->query('/itop_design/user_rights/profiles/profile/groups/group/actions/action');	
-				foreach($oNodeList as $oNode)
-				{
-					if ($oNode->getAttribute('id') == '')
-					{
-						$oNode->SetAttribute('id', 'type:'.$oNode->getAttribute('xsi:type'));
-					}
-				}
+				self::UpgradeDocument($oDocument);
 				
-				// Adjust the XML to transparently add an id (=value) on all values of an enum which don't already have one.
-				// This enables altering an enum for just adding/removing one value, intead of redefining the whole list of values.
-				$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
-				foreach($oNodeList as $oNode)
-				{
-					if ($oNode->getAttribute('id') == '')
-					{
-						$oNode->SetAttribute('id', $oNode->textContent);
-					}
-				}				
 				$oDeltaRoot = $oDocument->childNodes->item(0);
 				$this->LoadDelta($oDeltaRoot, $this->oDOMDocument);
 			}
@@ -540,6 +511,57 @@ class ModelFactory
 				$aLoadedModuleNames[] = $oModule->GetName();
 			}
 			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(',', $aLoadedModuleNames));
+		}
+	}
+	
+	/**
+	 * Make adjustements to the DOM to migrate it to the latest version
+	 * @param DOMDocument $oDocument
+	 */
+	public static function UpgradeDocument(DOMDocument $oDocument)
+	{
+		// Adjust the XML to transparently add an id (=stimulus) on all life-cycle transitions
+		// which don't already have one
+		$oXPath = new DOMXPath($oDocument);
+		$oNodeList = $oXPath->query('/itop_design/classes//class/lifecycle/states/state/transitions/transition/stimulus');
+		foreach ($oNodeList as $oNode)
+		{
+			if ($oNode->parentNode->getAttribute('id') == '')
+			{
+				$oNode->parentNode->SetAttribute('id', $oNode->textContent);
+				$oNode->parentNode->removeChild($oNode);
+			}
+		}
+		
+		// Adjust the XML to transparently add an id (=percent) on all thresholds of stopwatches
+		// which don't already have one
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeStopWatch']/thresholds/threshold/percent");
+		foreach ($oNodeList as $oNode)
+		{
+			$oNode->parentNode->SetAttribute('id', $oNode->textContent);
+			$oNode->parentNode->removeChild($oNode);
+		}
+		
+		// Adjust the XML to transparently add an id (=type:<type>) on all allowed actions (profiles)
+		// which don't already have one
+		$oNodeList = $oXPath->query('/itop_design/user_rights/profiles/profile/groups/group/actions/action');
+		foreach ($oNodeList as $oNode)
+		{
+			if ($oNode->getAttribute('id') == '')
+			{
+				$oNode->SetAttribute('id', 'type:' . $oNode->getAttribute('xsi:type'));
+			}
+		}
+		
+		// Adjust the XML to transparently add an id (=value) on all values of an enum which don't already have one.
+		// This enables altering an enum for just adding/removing one value, intead of redefining the whole list of values.
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
+		foreach ($oNodeList as $oNode)
+		{
+			if ($oNode->getAttribute('id') == '')
+			{
+				$oNode->SetAttribute('id', $oNode->textContent);
+			}
 		}
 	}
 

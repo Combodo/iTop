@@ -3426,12 +3426,69 @@ class AttributeBlob extends AttributeDefinition
 	}
 
 
-	// Facilitate things: allow the user to Set the value from a string
+	// Facilitate things: allow administrators to upload a document
+	// from a CSV by specifying its path/URL
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (!is_object($proposedValue))
 		{
-			return new ormDocument($proposedValue, 'text/plain');
+			if (file_exists($proposedValue) && UserRights::IsAdministrator())
+			{
+				$sContent = file_get_contents($proposedValue);
+				$sExtension = strtolower(pathinfo($proposedValue, PATHINFO_EXTENSION));
+				$sMimeType = "application/x-octoet-stream";
+				$aKnownExtensions = array(
+						'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+						'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+						'potx' => 'application/vnd.openxmlformats-officedocument.presentationml.template',
+						'ppsx' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+						'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+						'sldx' => 'application/vnd.openxmlformats-officedocument.presentationml.slide',
+						'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+						'dotx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+						'xlam' => 'application/vnd.ms-excel.addin.macroEnabled.12',
+						'xlsb' => 'application/vnd.ms-excel.sheet.binary.macroEnabled.12.xlsx',
+						'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+						'potx' => 'application/vnd.openxmlformats-officedocument.presentationml.template',
+						'ppsx' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+						'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+						'sldx' => 'application/vnd.openxmlformats-officedocument.presentationml.slide',
+						'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+						'dotx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+						'xlam' => 'application/vnd.ms-excel.addin.macroEnabled.12',
+						'xlsb' => 'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
+						'jpg' => 'image/jpeg',
+						'jpeg' => 'image/jpeg',
+						'gif' => 'image/gif',
+						'png' => 'image/png',
+						'pdf' => 'application/pdf',
+						'doc' => 'application/msword',
+						'dot' => 'application/msword',
+						'xls' => 'application/vnd.ms-excel',
+						'ppt' => 'application/vnd.ms-powerpoint',
+						'vsd' => 'application/x-visio',
+						'vdx' => 'application/visio.drawing', 
+						'odt' => 'application/vnd.oasis.opendocument.text',
+						'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+						'odp' => 'application/vnd.oasis.opendocument.presentation',
+						'zip' => 'application/zip',
+						'txt' => 'text/plain',
+						'htm' => 'text/html',
+						'html' => 'text/html', 
+						'exe' => 'application/octet-stream'
+					);
+
+				if (!array_key_exists($sExtension, $aKnownExtensions) && extension_loaded('fileinfo'))
+				{
+					$finfo = new finfo(FILEINFO_MIME);
+					$sMimeType = $finfo->file($proposedValue);
+				}
+				return new ormDocument($sContent, $sMimeType);			
+			}
+			else
+			{
+				return new ormDocument($proposedValue, 'text/plain');
+			}
 		}
 		return $proposedValue;
 	}
