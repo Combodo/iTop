@@ -1512,7 +1512,7 @@ class MFElement extends DOMElement
 		{
 			if ($oExisting->getAttribute('_alteration') != 'removed')
 			{
-				throw new Exception("Attempting to add a node that already exists: $oNode->tagName (id: ".$oNode->getAttribute('id')."");
+				throw new Exception("Attempting to add a node that already exists: $oNode->tagName (id: ".$oNode->getAttribute('id').")");
 			}
 			$oExisting->ReplaceWith($oNode);
 			$sFlag = 'replaced';
