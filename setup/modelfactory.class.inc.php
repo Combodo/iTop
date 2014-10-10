@@ -532,7 +532,7 @@ class ModelFactory
 				$oNode->parentNode->removeChild($oNode);
 			}
 		}
-		
+
 		// Adjust the XML to transparently add an id (=percent) on all thresholds of stopwatches
 		// which don't already have one
 		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeStopWatch']/thresholds/threshold/percent");
@@ -541,18 +541,24 @@ class ModelFactory
 			$oNode->parentNode->SetAttribute('id', $oNode->textContent);
 			$oNode->parentNode->removeChild($oNode);
 		}
-		
-		// Adjust the XML to transparently add an id (=type:<type>) on all allowed actions (profiles)
+
+		// Adjust the XML to transparently add an id (=action:<type>) on all allowed actions (profiles)
 		// which don't already have one
 		$oNodeList = $oXPath->query('/itop_design/user_rights/profiles/profile/groups/group/actions/action');
 		foreach ($oNodeList as $oNode)
 		{
 			if ($oNode->getAttribute('id') == '')
 			{
-				$oNode->SetAttribute('id', 'type:' . $oNode->getAttribute('xsi:type'));
+				$oNode->SetAttribute('id', 'action:' . $oNode->getAttribute('xsi:type'));
+				$oNode->removeAttribute('xsi:type');
+			}
+			elseif ($oNode->getAttribute('xsi:type') == 'stimulus')
+			{
+				$oNode->SetAttribute('id', 'stimulus:' . $oNode->getAttribute('id'));
+				$oNode->removeAttribute('xsi:type');
 			}
 		}
-		
+
 		// Adjust the XML to transparently add an id (=value) on all values of an enum which don't already have one.
 		// This enables altering an enum for just adding/removing one value, intead of redefining the whole list of values.
 		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
