@@ -25,6 +25,7 @@
 
 
 require_once(APPROOT.'setup/moduleinstaller.class.inc.php');
+require_once(APPROOT.'setup/itopdesignformat.class.inc.php');
 
  /**
  * ModelFactoryModule: the representation of a Module (i.e. element that can be selected during the setup)
@@ -200,6 +201,7 @@ class ModelFactory
 		$this->oDOMDocument = new MFDocument();
 		$this->oRoot = $this->oDOMDocument->CreateElement('itop_design');
 		$this->oRoot->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
+		$this->oRoot->setAttribute('version', ITOP_DESIGN_LATEST_VERSION);
 		$this->oDOMDocument->AppendChild($this->oRoot);
 		$this->oModules = $this->oDOMDocument->CreateElement('loaded_modules');
 		$this->oRoot->AppendChild($this->oModules);
@@ -432,7 +434,9 @@ class ModelFactory
 					}
 				}
 				
-				self::UpgradeDocument($oDocument);
+				$oFormat = new iTopDesignFormat($oDocument);
+				$aErrorLog = array();
+				if (!$oFormat->Upgrade($aErrorLog)) throw new Exception("Cannot load module $sModuleName, failed to upgrade to datamodel format of: $sXmlFile. Reason(s): ".implode("\n", $aErrorLog));
 				
 				$oDeltaRoot = $oDocument->childNodes->item(0);
 				$this->LoadDelta($oDeltaRoot, $this->oDOMDocument);
@@ -511,63 +515,6 @@ class ModelFactory
 				$aLoadedModuleNames[] = $oModule->GetName();
 			}
 			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(',', $aLoadedModuleNames));
-		}
-	}
-	
-	/**
-	 * Make adjustements to the DOM to migrate it to the latest version
-	 * @param DOMDocument $oDocument
-	 */
-	public static function UpgradeDocument(DOMDocument $oDocument)
-	{
-		// Adjust the XML to transparently add an id (=stimulus) on all life-cycle transitions
-		// which don't already have one
-		$oXPath = new DOMXPath($oDocument);
-		$oNodeList = $oXPath->query('/itop_design/classes//class/lifecycle/states/state/transitions/transition/stimulus');
-		foreach ($oNodeList as $oNode)
-		{
-			if ($oNode->parentNode->getAttribute('id') == '')
-			{
-				$oNode->parentNode->SetAttribute('id', $oNode->textContent);
-				$oNode->parentNode->removeChild($oNode);
-			}
-		}
-
-		// Adjust the XML to transparently add an id (=percent) on all thresholds of stopwatches
-		// which don't already have one
-		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeStopWatch']/thresholds/threshold/percent");
-		foreach ($oNodeList as $oNode)
-		{
-			$oNode->parentNode->SetAttribute('id', $oNode->textContent);
-			$oNode->parentNode->removeChild($oNode);
-		}
-
-		// Adjust the XML to transparently add an id (=action:<type>) on all allowed actions (profiles)
-		// which don't already have one
-		$oNodeList = $oXPath->query('/itop_design/user_rights/profiles/profile/groups/group/actions/action');
-		foreach ($oNodeList as $oNode)
-		{
-			if ($oNode->getAttribute('id') == '')
-			{
-				$oNode->SetAttribute('id', 'action:' . $oNode->getAttribute('xsi:type'));
-				$oNode->removeAttribute('xsi:type');
-			}
-			elseif ($oNode->getAttribute('xsi:type') == 'stimulus')
-			{
-				$oNode->SetAttribute('id', 'stimulus:' . $oNode->getAttribute('id'));
-				$oNode->removeAttribute('xsi:type');
-			}
-		}
-
-		// Adjust the XML to transparently add an id (=value) on all values of an enum which don't already have one.
-		// This enables altering an enum for just adding/removing one value, intead of redefining the whole list of values.
-		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
-		foreach ($oNodeList as $oNode)
-		{
-			if ($oNode->getAttribute('id') == '')
-			{
-				$oNode->SetAttribute('id', $oNode->textContent);
-			}
 		}
 	}
 
@@ -1866,6 +1813,7 @@ class MFDocument extends DOMDocument
 		{
 			$oRootNode = $this->createElement('itop_design'); // make sure that the document is not empty
 			$oRootNode->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
+			$oRootNode->setAttribute('version', ITOP_DESIGN_LATEST_VERSION);
 			$this->appendChild($oRootNode);
 		}
 		return parent::saveXML();
