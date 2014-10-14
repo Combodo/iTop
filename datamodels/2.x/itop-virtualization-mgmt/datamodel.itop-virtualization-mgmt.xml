@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
   <classes>
     <class id="VirtualDevice" _delta="define">
       <parent>FunctionalCI</parent>
@@ -30,10 +30,10 @@
       <fields>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value>production</value>
-            <value>implementation</value>
-            <value>stock</value>
-            <value>obsolete</value>
+            <value id="production">production</value>
+            <value id="implementation">implementation</value>
+            <value id="stock">stock</value>
+            <value id="obsolete">obsolete</value>
           </values>
           <sql>status</sql>
           <default_value>production</default_value>
@@ -967,35 +967,35 @@
         </list>
       </presentation>
     </class>
-</classes>
-<menus>
-  <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
-    <definition>
-      <cells>
-        <cell id="1" _delta="define">
-          <rank>1</rank>
-          <dashlets>
-            <dashlet id="38" xsi:type="DashletHeaderStatic">
-              <rank>0</rank>
-              <title>Menu:ConfigManagement:virtualization</title>
-              <icon>itop-virtualization-mgmt/images/hypervisor-sw.png</icon>
-            </dashlet>
-            <dashlet id="39" xsi:type="DashletBadge">
-              <rank>1</rank>
-              <class>Farm</class>
-            </dashlet>
-            <dashlet id="40" xsi:type="DashletBadge">
-              <rank>2</rank>
-              <class>Hypervisor</class>
-            </dashlet>
-            <dashlet id="41" xsi:type="DashletBadge">
-              <rank>3</rank>
-              <class>VirtualMachine</class>
-            </dashlet>
-          </dashlets>
-        </cell>
-      </cells>
-    </definition>
-  </menu>
-</menus>
+  </classes>
+  <menus>
+    <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
+      <definition>
+        <cells>
+          <cell id="1" _delta="define">
+            <rank>1</rank>
+            <dashlets>
+              <dashlet id="38" xsi:type="DashletHeaderStatic">
+                <rank>0</rank>
+                <title>Menu:ConfigManagement:virtualization</title>
+                <icon>itop-virtualization-mgmt/images/hypervisor-sw.png</icon>
+              </dashlet>
+              <dashlet id="39" xsi:type="DashletBadge">
+                <rank>1</rank>
+                <class>Farm</class>
+              </dashlet>
+              <dashlet id="40" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>Hypervisor</class>
+              </dashlet>
+              <dashlet id="41" xsi:type="DashletBadge">
+                <rank>3</rank>
+                <class>VirtualMachine</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+  </menus>
 </itop_design>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
   <classes>
-<class id="TelephonyCI" _delta="define">
+    <class id="TelephonyCI" _delta="define">
       <parent>PhysicalDevice</parent>
       <properties>
         <category>bizmodel,searchable</category>
@@ -860,8 +860,8 @@
         </field>
         <field id="type" xsi:type="AttributeEnum">
           <values>
-            <value>laptop</value>
-            <value>desktop</value>
+            <value id="laptop">laptop</value>
+            <value id="desktop">desktop</value>
           </values>
           <sql>type</sql>
           <default_value/>
@@ -1242,7 +1242,6 @@
         </list>
       </presentation>
     </class>
-
     <class id="Peripheral" _delta="define">
       <parent>PhysicalDevice</parent>
       <properties>
@@ -1396,51 +1395,51 @@
         </list>
       </presentation>
     </class>
-</classes>
-<menus>
-  <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
-    <definition>
-      <cells>
-        <cell id="2" _delta="define">
-          <rank>2</rank>
-          <dashlets>
-            <dashlet id="25" xsi:type="DashletHeaderStatic">
-              <rank>0</rank>
-              <title>Menu:ConfigManagement:EndUsers</title>
-              <icon>itop-config-mgmt/images/team.png</icon>
-            </dashlet>
-            <dashlet id="26" xsi:type="DashletBadge">
-              <rank>1</rank>
-              <class>PC</class>
-            </dashlet>
-            <dashlet id="27" xsi:type="DashletBadge">
-              <rank>2</rank>
-              <class>Phone</class>
-            </dashlet>
-            <dashlet id="28" xsi:type="DashletBadge">
-              <rank>3</rank>
-              <class>IPPhone</class>
-            </dashlet>
-            <dashlet id="29" xsi:type="DashletBadge">
-              <rank>4</rank>
-              <class>MobilePhone</class>
-            </dashlet>
-            <dashlet id="30" xsi:type="DashletBadge">
-              <rank>5</rank>
-              <class>Tablet</class>
-            </dashlet>
-            <dashlet id="31" xsi:type="DashletBadge">
-              <rank>6</rank>
-              <class>Printer</class>
-            </dashlet>
-            <dashlet id="32" xsi:type="DashletBadge">
-              <rank>7</rank>
-              <class>Peripheral</class>
-            </dashlet>
-          </dashlets>
-        </cell>
-      </cells>
-    </definition>
-  </menu>
-</menus>
+  </classes>
+  <menus>
+    <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
+      <definition>
+        <cells>
+          <cell id="2" _delta="define">
+            <rank>2</rank>
+            <dashlets>
+              <dashlet id="25" xsi:type="DashletHeaderStatic">
+                <rank>0</rank>
+                <title>Menu:ConfigManagement:EndUsers</title>
+                <icon>itop-config-mgmt/images/team.png</icon>
+              </dashlet>
+              <dashlet id="26" xsi:type="DashletBadge">
+                <rank>1</rank>
+                <class>PC</class>
+              </dashlet>
+              <dashlet id="27" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>Phone</class>
+              </dashlet>
+              <dashlet id="28" xsi:type="DashletBadge">
+                <rank>3</rank>
+                <class>IPPhone</class>
+              </dashlet>
+              <dashlet id="29" xsi:type="DashletBadge">
+                <rank>4</rank>
+                <class>MobilePhone</class>
+              </dashlet>
+              <dashlet id="30" xsi:type="DashletBadge">
+                <rank>5</rank>
+                <class>Tablet</class>
+              </dashlet>
+              <dashlet id="31" xsi:type="DashletBadge">
+                <rank>6</rank>
+                <class>Printer</class>
+              </dashlet>
+              <dashlet id="32" xsi:type="DashletBadge">
+                <rank>7</rank>
+                <class>Peripheral</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+  </menus>
 </itop_design>

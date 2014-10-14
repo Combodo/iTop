@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
   <classes>
     <class id="Problem" _delta="define">
       <parent>Ticket</parent>
@@ -38,10 +38,10 @@
       <fields>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value>new</value>
-            <value>assigned</value>
-            <value>resolved</value>
-            <value>closed</value>
+            <value id="new">new</value>
+            <value id="assigned">assigned</value>
+            <value id="resolved">resolved</value>
+            <value id="closed">closed</value>
           </values>
           <sql>status</sql>
           <default_value>new</default_value>
@@ -57,7 +57,7 @@
           <target_class>Service</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-	  <allow_target_creation>false</allow_target_creation>
+          <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="service_name" xsi:type="AttributeExternalField">
           <extkey_attcode>service_id</extkey_attcode>
@@ -72,7 +72,7 @@
           <target_class>ServiceSubcategory</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-	  <allow_target_creation>false</allow_target_creation>
+          <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="servicesubcategory_name" xsi:type="AttributeExternalField">
           <extkey_attcode>servicesubcategory_id</extkey_attcode>
@@ -85,9 +85,9 @@
         </field>
         <field id="impact" xsi:type="AttributeEnum">
           <values>
-            <value>1</value>
-            <value>2</value>
-            <value>3</value>
+            <value id="1">1</value>
+            <value id="2">2</value>
+            <value id="3">3</value>
           </values>
           <sql>impact</sql>
           <default_value>1</default_value>
@@ -96,10 +96,10 @@
         </field>
         <field id="urgency" xsi:type="AttributeEnum">
           <values>
-            <value>1</value>
-            <value>2</value>
-            <value>3</value>
-            <value>4</value>
+            <value id="1">1</value>
+            <value id="2">2</value>
+            <value id="3">3</value>
+            <value id="4">4</value>
           </values>
           <sql>urgency</sql>
           <default_value>1</default_value>
@@ -108,10 +108,10 @@
         </field>
         <field id="priority" xsi:type="AttributeEnum">
           <values>
-            <value>1</value>
-            <value>2</value>
-            <value>3</value>
-            <value>4</value>
+            <value id="1">1</value>
+            <value id="2">2</value>
+            <value id="3">3</value>
+            <value id="4">4</value>
           </values>
           <sql>priority</sql>
           <default_value>1</default_value>
@@ -219,7 +219,6 @@
             </flags>
             <transitions>
               <transition id="ev_assign">
-                <stimulus>ev_assign</stimulus>
                 <target>assigned</target>
                 <actions>
                   <action>
@@ -230,13 +229,9 @@
             </transitions>
           </state>
           <state id="assigned">
+            <inherit_flags_from>new</inherit_flags_from>
             <flags>
-              <attribute id="ref">
-                <read_only/>
-              </attribute>
-              <attribute id="org_id">
-                <normal/>
-              </attribute>
+              <attribute id="title"/>
               <attribute id="team_id">
                 <mandatory/>
                 <must_prompt/>
@@ -245,39 +240,22 @@
                 <mandatory/>
                 <must_prompt/>
               </attribute>
-              <attribute id="title">
-                <normal/>
-              </attribute>
-              <attribute id="description">
-                <normal/>
-              </attribute>
-              <attribute id="start_date">
-                <read_only/>
-              </attribute>
-              <attribute id="last_update">
-                <read_only/>
-              </attribute>
-              <attribute id="close_date">
-                <hidden/>
-              </attribute>
-              <attribute id="priority">
-                <read_only/>
-              </attribute>
               <attribute id="assignment_date">
                 <read_only/>
               </attribute>
-              <attribute id="resolution_date">
-                <hidden/>
-              </attribute>
+              <attribute id="service_id"/>
+              <attribute id="servicesubcategory_id"/>
+              <attribute id="product"/>
+              <attribute id="impact"/>
+              <attribute id="urgency"/>
+              <attribute id="related_change_id"/>
             </flags>
             <transitions>
               <transition id="ev_reassign">
-                <stimulus>ev_reassign</stimulus>
                 <target>assigned</target>
                 <actions/>
               </transition>
               <transition id="ev_resolve">
-                <stimulus>ev_resolve</stimulus>
                 <target>resolved</target>
                 <actions>
                   <action>
@@ -288,36 +266,10 @@
             </transitions>
           </state>
           <state id="resolved">
+            <inherit_flags_from>assigned</inherit_flags_from>
             <flags>
-              <attribute id="ref">
-                <read_only/>
-              </attribute>
-              <attribute id="org_id">
-                <read_only/>
-              </attribute>
-              <attribute id="team_id">
-                <read_only/>
-              </attribute>
-              <attribute id="agent_id">
-                <read_only/>
-              </attribute>
               <attribute id="caller_id">
                 <read_only/>
-              </attribute>
-              <attribute id="title">
-                <read_only/>
-              </attribute>
-              <attribute id="description">
-                <read_only/>
-              </attribute>
-              <attribute id="start_date">
-                <read_only/>
-              </attribute>
-              <attribute id="last_update">
-                <read_only/>
-              </attribute>
-              <attribute id="close_date">
-                <hidden/>
               </attribute>
               <attribute id="service_id">
                 <mandatory/>
@@ -334,24 +286,28 @@
               <attribute id="urgency">
                 <read_only/>
               </attribute>
-              <attribute id="priority">
+              <attribute id="org_id">
                 <read_only/>
               </attribute>
-              <attribute id="assignment_date">
+              <attribute id="team_id">
                 <read_only/>
               </attribute>
-              <attribute id="resolution_date">
-                <hidden/>
+              <attribute id="agent_id">
+                <read_only/>
+              </attribute>
+              <attribute id="title">
+                <read_only/>
+              </attribute>
+              <attribute id="description">
+                <read_only/>
               </attribute>
             </flags>
             <transitions>
               <transition id="ev_reassign">
-                <stimulus>ev_reassign</stimulus>
                 <target>assigned</target>
                 <actions/>
               </transition>
               <transition id="ev_close">
-                <stimulus>ev_close</stimulus>
                 <target>closed</target>
                 <actions>
                   <action>
@@ -362,38 +318,15 @@
             </transitions>
           </state>
           <state id="closed">
+            <inherit_flags_from>resolved</inherit_flags_from>
             <flags>
-              <attribute id="ref">
+              <attribute id="private_log">
                 <read_only/>
               </attribute>
-              <attribute id="org_id">
-                <read_only/>
-              </attribute>
-              <attribute id="team_id">
-                <read_only/>
-              </attribute>
-              <attribute id="agent_id">
-                <read_only/>
-              </attribute>
-              <attribute id="caller_id">
-                <read_only/>
-              </attribute>
-              <attribute id="title">
-                <read_only/>
-              </attribute>
-              <attribute id="description">
-                <read_only/>
-              </attribute>
-              <attribute id="start_date">
-                <read_only/>
-              </attribute>
-              <attribute id="last_update">
+              <attribute id="related_change_id">
                 <read_only/>
               </attribute>
               <attribute id="close_date">
-                <read_only/>
-              </attribute>
-              <attribute id="private_log">
                 <read_only/>
               </attribute>
               <attribute id="service_id">
@@ -403,24 +336,6 @@
                 <read_only/>
               </attribute>
               <attribute id="product">
-                <read_only/>
-              </attribute>
-              <attribute id="impact">
-                <read_only/>
-              </attribute>
-              <attribute id="urgency">
-                <read_only/>
-              </attribute>
-              <attribute id="priority">
-                <read_only/>
-              </attribute>
-              <attribute id="assignment_date">
-                <read_only/>
-              </attribute>
-              <attribute id="resolution_date">
-                <hidden/>
-              </attribute>
-              <attribute id="related_change_id">
                 <read_only/>
               </attribute>
             </flags>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
-   <constants>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
+  <constants>
     <constant id="PORTAL_TYPE_TO_CLASS" xsi:type="string" _delta="redefine"><![CDATA[{"service_request":"UserRequest","incident":"Incident"}]]></constant>
     <constant id="PORTAL_INCIDENT_PUBLIC_LOG" xsi:type="string" _delta="define"><![CDATA[public_log]]></constant>
     <constant id="PORTAL_INCIDENT_USER_COMMENT" xsi:type="string" _delta="define"><![CDATA[user_comment]]></constant>
@@ -51,13 +51,13 @@
         <field id="status" xsi:type="AttributeEnum">
           <always_load_in_tables>true</always_load_in_tables>
           <values>
-            <value>new</value>
-            <value>assigned</value>
-            <value>pending</value>
-            <value>escalated_tto</value>
-            <value>escalated_ttr</value>
-            <value>resolved</value>
-            <value>closed</value>
+            <value id="new">new</value>
+            <value id="assigned">assigned</value>
+            <value id="pending">pending</value>
+            <value id="escalated_tto">escalated_tto</value>
+            <value id="escalated_ttr">escalated_ttr</value>
+            <value id="resolved">resolved</value>
+            <value id="closed">closed</value>
           </values>
           <sql>status</sql>
           <default_value>new</default_value>
@@ -66,9 +66,9 @@
         </field>
         <field id="impact" xsi:type="AttributeEnum">
           <values>
-            <value>1</value>
-            <value>2</value>
-            <value>3</value>
+            <value id="1">1</value>
+            <value id="2">2</value>
+            <value id="3">3</value>
           </values>
           <sql>impact</sql>
           <default_value>1</default_value>
@@ -77,10 +77,10 @@
         </field>
         <field id="priority" xsi:type="AttributeEnum">
           <values>
-            <value>1</value>
-            <value>2</value>
-            <value>3</value>
-            <value>4</value>
+            <value id="1">1</value>
+            <value id="2">2</value>
+            <value id="3">3</value>
+            <value id="4">4</value>
           </values>
           <sql>priority</sql>
           <default_value>4</default_value>
@@ -88,10 +88,10 @@
         </field>
         <field id="urgency" xsi:type="AttributeEnum">
           <values>
-            <value>1</value>
-            <value>2</value>
-            <value>3</value>
-            <value>4</value>
+            <value id="1">1</value>
+            <value id="2">2</value>
+            <value id="3">3</value>
+            <value id="4">4</value>
           </values>
           <sql>urgency</sql>
           <default_value>4</default_value>
@@ -99,10 +99,10 @@
         </field>
         <field id="origin" xsi:type="AttributeEnum">
           <values>
-            <value>mail</value>
-            <value>phone</value>
-            <value>portal</value>
-            <value>monitoring</value>
+            <value id="mail">mail</value>
+            <value id="phone">phone</value>
+            <value id="portal">portal</value>
+            <value id="monitoring">monitoring</value>
           </values>
           <sql>origin</sql>
           <default_value>phone</default_value>
@@ -118,7 +118,7 @@
           <target_class>Service</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-	  <allow_target_creation>false</allow_target_creation>
+          <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="service_name" xsi:type="AttributeExternalField">
           <extkey_attcode>service_id</extkey_attcode>
@@ -133,7 +133,7 @@
           <target_class>ServiceSubcategory</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-	  <allow_target_creation>false</allow_target_creation>
+          <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="servicesubcategory_name" xsi:type="AttributeExternalField">
           <extkey_attcode>servicesubcategory_id</extkey_attcode>
@@ -141,8 +141,8 @@
         </field>
         <field id="escalation_flag" xsi:type="AttributeEnum">
           <values>
-            <value>yes</value>
-            <value>no</value>
+            <value id="yes">yes</value>
+            <value id="no">no</value>
           </values>
           <sql>escalation_flag</sql>
           <default_value>no</default_value>
@@ -186,21 +186,19 @@
           <working_time/>
           <goal>ResponseTicketTTO</goal>
           <thresholds>
-            <threshold>
-              <percent>75</percent>
+            <threshold id="75">
               <highlight>
                 <code>warning</code>
                 <persistent>false</persistent>
-              </highlight> 
+              </highlight>
               <actions>
 		</actions>
             </threshold>
-            <threshold>
-              <percent>100</percent>
+            <threshold id="100">
               <highlight>
                 <code>critical</code>
                 <persistent>false</persistent>
-              </highlight> 
+              </highlight>
               <actions>
                 <action>
                   <verb>ApplyStimulus</verb>
@@ -223,21 +221,19 @@
           <working_time/>
           <goal>ResponseTicketTTR</goal>
           <thresholds>
-            <threshold>
-              <percent>75</percent>
+            <threshold id="75">
               <highlight>
                 <code>warning</code>
                 <persistent>false</persistent>
-              </highlight> 
+              </highlight>
               <actions>
 		</actions>
             </threshold>
-            <threshold>
-              <percent>100</percent>
+            <threshold id="100">
               <highlight>
                 <code>critical</code>
                 <persistent>false</persistent>
-              </highlight> 
+              </highlight>
               <actions>
                 <action>
                   <verb>ApplyStimulus</verb>
@@ -280,13 +276,13 @@
         </field>
         <field id="resolution_code" xsi:type="AttributeEnum">
           <values>
-            <value>assistance</value>
-            <value>other</value>
-            <value>software patch</value>
-            <value>training</value>
-            <value>hardware repair</value>
-            <value>system update</value>
-            <value>bug fixed</value>
+            <value id="assistance">assistance</value>
+            <value id="other">other</value>
+            <value id="software patch">software patch</value>
+            <value id="training">training</value>
+            <value id="hardware repair">hardware repair</value>
+            <value id="system update">system update</value>
+            <value id="bug fixed">bug fixed</value>
           </values>
           <sql>resolution_code</sql>
           <default_value>assistance</default_value>
@@ -356,10 +352,10 @@
         </field>
         <field id="user_satisfaction" xsi:type="AttributeEnum">
           <values>
-            <value>1</value>
-            <value>2</value>
-            <value>3</value>
-            <value>4</value>
+            <value id="1">1</value>
+            <value id="2">2</value>
+            <value id="3">3</value>
+            <value id="4">4</value>
           </values>
           <sql>user_satisfaction</sql>
           <default_value>1</default_value>
@@ -486,7 +482,6 @@
             </flags>
             <transitions>
               <transition id="ev_assign">
-                <stimulus>ev_assign</stimulus>
                 <target>assigned</target>
                 <actions>
                   <action>
@@ -495,12 +490,10 @@
                 </actions>
               </transition>
               <transition id="ev_timeout">
-                <stimulus>ev_timeout</stimulus>
                 <target>escalated_tto</target>
                 <actions/>
               </transition>
               <transition id="ev_autoresolve">
-                <stimulus>ev_autoresolve</stimulus>
                 <target>resolved</target>
                 <actions>
                   <action>
@@ -516,87 +509,13 @@
           <state id="escalated_tto">
             <highlight>
               <code>critical</code>
-            </highlight> 
+            </highlight>
+            <inherit_flags_from>new</inherit_flags_from>
             <flags>
-              <attribute id="ref">
-                <read_only/>
-              </attribute>
-              <attribute id="org_id">
-                <mandatory/>
-              </attribute>
-              <attribute id="caller_id">
-                <mandatory/>
-              </attribute>
-              <attribute id="agent_id">
-                <hidden/>
-              </attribute>
-              <attribute id="priority">
-                <read_only/>
-              </attribute>
-              <attribute id="start_date">
-                <read_only/>
-              </attribute>
-              <attribute id="last_update">
-                <read_only/>
-              </attribute>
-              <attribute id="close_date">
-                <hidden/>
-              </attribute>
-              <attribute id="escalation_flag">
-                <hidden/>
-              </attribute>
-              <attribute id="escalation_reason">
-                <hidden/>
-              </attribute>
-              <attribute id="assignment_date">
-                <hidden/>
-              </attribute>
-              <attribute id="resolution_date">
-                <hidden/>
-              </attribute>
-              <attribute id="last_pending_date">
-                <hidden/>
-              </attribute>
-              <attribute id="time_spent">
-                <hidden/>
-              </attribute>
-              <attribute id="resolution_code">
-                <hidden/>
-              </attribute>
-              <attribute id="solution">
-                <hidden/>
-              </attribute>
-              <attribute id="pending_reason">
-                <hidden/>
-              </attribute>
-              <attribute id="user_satisfaction">
-                <hidden/>
-              </attribute>
-              <attribute id="user_comment">
-                <hidden/>
-              </attribute>
-              <attribute id="tto_escalation_deadline">
-                <read_only/>
-              </attribute>
-              <attribute id="sla_tto_passed">
-                <hidden/>
-              </attribute>
-              <attribute id="sla_tto_over">
-                <hidden/>
-              </attribute>
-              <attribute id="sla_ttr_passed">
-                <hidden/>
-              </attribute>
-              <attribute id="ttr_escalation_deadline">
-                <hidden/>
-              </attribute>
-              <attribute id="sla_ttr_over">
-                <hidden/>
-              </attribute>
+              <attribute id="team_id"/>
             </flags>
             <transitions>
               <transition id="ev_assign">
-                <stimulus>ev_assign</stimulus>
                 <target>assigned</target>
                 <actions>
                   <action>
@@ -607,13 +526,8 @@
             </transitions>
           </state>
           <state id="assigned">
+            <inherit_flags_from>new</inherit_flags_from>
             <flags>
-              <attribute id="ref">
-                <read_only/>
-              </attribute>
-              <attribute id="org_id">
-                <mandatory/>
-              </attribute>
               <attribute id="team_id">
                 <mandatory/>
                 <must_prompt/>
@@ -622,44 +536,8 @@
                 <mandatory/>
                 <must_prompt/>
               </attribute>
-              <attribute id="priority">
-                <read_only/>
-              </attribute>
-              <attribute id="start_date">
-                <read_only/>
-              </attribute>
-              <attribute id="last_update">
-                <read_only/>
-              </attribute>
-              <attribute id="close_date">
-                <hidden/>
-              </attribute>
               <attribute id="assignment_date">
                 <read_only/>
-              </attribute>
-              <attribute id="resolution_date">
-                <hidden/>
-              </attribute>
-              <attribute id="last_pending_date">
-                <hidden/>
-              </attribute>
-              <attribute id="time_spent">
-                <hidden/>
-              </attribute>
-              <attribute id="resolution_code">
-                <hidden/>
-              </attribute>
-              <attribute id="solution">
-                <hidden/>
-              </attribute>
-              <attribute id="pending_reason">
-                <hidden/>
-              </attribute>
-              <attribute id="user_satisfaction">
-                <hidden/>
-              </attribute>
-              <attribute id="user_comment">
-                <hidden/>
               </attribute>
               <attribute id="tto_escalation_deadline">
                 <hidden/>
@@ -670,19 +548,15 @@
               <attribute id="sla_tto_over">
                 <read_only/>
               </attribute>
-              <attribute id="sla_ttr_passed">
-                <hidden/>
-              </attribute>
               <attribute id="ttr_escalation_deadline">
                 <read_only/>
               </attribute>
-              <attribute id="sla_ttr_over">
-                <hidden/>
-              </attribute>
+              <attribute id="caller_id"/>
+              <attribute id="escalation_flag"/>
+              <attribute id="escalation_reason"/>
             </flags>
             <transitions>
               <transition id="ev_pending">
-                <stimulus>ev_pending</stimulus>
                 <target>pending</target>
                 <actions>
                   <action>
@@ -691,7 +565,6 @@
                 </actions>
               </transition>
               <transition id="ev_resolve">
-                <stimulus>ev_resolve</stimulus>
                 <target>resolved</target>
                 <actions>
                   <action>
@@ -703,17 +576,14 @@
                 </actions>
               </transition>
               <transition id="ev_reassign">
-                <stimulus>ev_reassign</stimulus>
                 <target>assigned</target>
                 <actions/>
               </transition>
               <transition id="ev_timeout">
-                <stimulus>ev_timeout</stimulus>
                 <target>escalated_ttr</target>
                 <actions/>
               </transition>
               <transition id="ev_autoresolve">
-                <stimulus>ev_autoresolve</stimulus>
                 <target>resolved</target>
                 <actions>
                   <action>
@@ -729,81 +599,11 @@
           <state id="escalated_ttr">
             <highlight>
               <code>critical</code>
-            </highlight> 
-            <flags>
-              <attribute id="ref">
-                <read_only/>
-              </attribute>
-              <attribute id="org_id">
-                <mandatory/>
-              </attribute>
-              <attribute id="team_id">
-                <mandatory/>
-              </attribute>
-              <attribute id="agent_id">
-                <mandatory/>
-              </attribute>
-              <attribute id="priority">
-                <read_only/>
-              </attribute>
-              <attribute id="start_date">
-                <read_only/>
-              </attribute>
-              <attribute id="last_update">
-                <read_only/>
-              </attribute>
-              <attribute id="close_date">
-                <hidden/>
-              </attribute>
-              <attribute id="assignment_date">
-                <read_only/>
-              </attribute>
-              <attribute id="resolution_date">
-                <hidden/>
-              </attribute>
-              <attribute id="last_pending_date">
-                <hidden/>
-              </attribute>
-              <attribute id="time_spent">
-                <hidden/>
-              </attribute>
-              <attribute id="resolution_code">
-                <hidden/>
-              </attribute>
-              <attribute id="solution">
-                <hidden/>
-              </attribute>
-              <attribute id="pending_reason">
-                <hidden/>
-              </attribute>
-              <attribute id="user_satisfaction">
-                <hidden/>
-              </attribute>
-              <attribute id="user_comment">
-                <hidden/>
-              </attribute>
-              <attribute id="tto_escalation_deadline">
-                <hidden/>
-              </attribute>
-              <attribute id="sla_tto_passed">
-                <read_only/>
-              </attribute>
-              <attribute id="sla_tto_over">
-                <read_only/>
-              </attribute>
-              <attribute id="sla_ttr_passed">
-                <hidden/>
-              </attribute>
-              <attribute id="ttr_escalation_deadline">
-                <read_only/>
-              </attribute>
-              <attribute id="sla_ttr_over">
-                <hidden/>
-              </attribute>
-            </flags>
+            </highlight>
+            <inherit_flags_from>assigned</inherit_flags_from>
+            <flags/>
             <transitions>
               <transition id="ev_pending">
-                <stimulus>ev_pending</stimulus>
                 <target>pending</target>
                 <actions>
                   <action>
@@ -812,7 +612,6 @@
                 </actions>
               </transition>
               <transition id="ev_resolve">
-                <stimulus>ev_resolve</stimulus>
                 <target>resolved</target>
                 <actions>
                   <action>
@@ -824,12 +623,10 @@
                 </actions>
               </transition>
               <transition id="ev_reassign">
-                <stimulus>ev_reassign</stimulus>
                 <target>assigned</target>
                 <actions/>
               </transition>
               <transition id="ev_autoresolve">
-                <stimulus>ev_autoresolve</stimulus>
                 <target>resolved</target>
                 <actions>
                   <action>
@@ -843,42 +640,10 @@
             </transitions>
           </state>
           <state id="pending">
+            <inherit_flags_from>assigned</inherit_flags_from>
             <flags>
-              <attribute id="ref">
-                <read_only/>
-              </attribute>
-              <attribute id="org_id">
-                <mandatory/>
-              </attribute>
-              <attribute id="team_id">
-                <mandatory/>
-              </attribute>
-              <attribute id="agent_id">
-                <mandatory/>
-              </attribute>
-              <attribute id="priority">
-                <read_only/>
-              </attribute>
-              <attribute id="start_date">
-                <read_only/>
-              </attribute>
-              <attribute id="last_update">
-                <read_only/>
-              </attribute>
-              <attribute id="close_date">
-                <hidden/>
-              </attribute>
-              <attribute id="assignment_date">
-                <read_only/>
-              </attribute>
-              <attribute id="resolution_date">
-                <hidden/>
-              </attribute>
               <attribute id="last_pending_date">
                 <read_only/>
-              </attribute>
-              <attribute id="tto_escalation_deadline">
-                <hidden/>
               </attribute>
               <attribute id="ttr_escalation_deadline">
                 <hidden/>
@@ -889,41 +654,18 @@
               <attribute id="sla_tto_over">
                 <hidden/>
               </attribute>
-              <attribute id="sla_ttr_passed">
-                <hidden/>
-              </attribute>
-              <attribute id="sla_ttr_over">
-                <hidden/>
-              </attribute>
-              <attribute id="time_spent">
-                <hidden/>
-              </attribute>
-              <attribute id="resolution_code">
-                <hidden/>
-              </attribute>
-              <attribute id="solution">
-                <hidden/>
-              </attribute>
               <attribute id="pending_reason">
                 <mandatory/>
                 <must_prompt/>
               </attribute>
-              <attribute id="user_satisfaction">
-                <hidden/>
-              </attribute>
-              <attribute id="user_comment">
-                <hidden/>
-              </attribute>
             </flags>
             <transitions>
               <transition id="ev_assign">
-                <stimulus>ev_assign</stimulus>
                 <target>assigned</target>
                 <actions>
                 </actions>
               </transition>
               <transition id="ev_autoresolve">
-                <stimulus>ev_autoresolve</stimulus>
                 <target>resolved</target>
                 <actions>
                   <action>
@@ -939,46 +681,21 @@
           <state id="resolved">
             <highlight>
               <code>closed</code>
-            </highlight> 
+            </highlight>
+            <inherit_flags_from>assigned</inherit_flags_from>
             <flags>
-              <attribute id="ref">
-                <read_only/>
-              </attribute>
-              <attribute id="org_id">
-                <read_only/>
-              </attribute>
               <attribute id="caller_id">
                 <read_only/>
               </attribute>
               <attribute id="origin">
                 <read_only/>
               </attribute>
-              <attribute id="team_id">
-                <read_only/>
-              </attribute>
-              <attribute id="agent_id">
-                <read_only/>
-              </attribute>
-              <attribute id="start_date">
-                <read_only/>
-              </attribute>
-              <attribute id="last_update">
-                <read_only/>
-              </attribute>
-              <attribute id="private_log">
-                <normal/>
-              </attribute>
+              <attribute id="private_log"/>
               <attribute id="impact">
                 <read_only/>
               </attribute>
               <attribute id="urgency">
                 <read_only/>
-              </attribute>
-              <attribute id="priority">
-                <read_only/>
-              </attribute>
-              <attribute id="close_date">
-                <hidden/>
               </attribute>
               <attribute id="service_id">
                 <mandatory/>
@@ -992,35 +709,6 @@
               </attribute>
               <attribute id="escalation_reason">
                 <read_only/>
-              </attribute>
-              <attribute id="assignment_date">
-                <read_only/>
-              </attribute>
-              <attribute id="resolution_date">
-                <read_only/>
-              </attribute>
-              <attribute id="last_pending_date">
-                <hidden/>
-              </attribute>
-              <attribute id="time_spent">
-                <read_only/>
-              </attribute>
-              <attribute id="resolution_code">
-                <mandatory/>
-                <must_prompt/>
-              </attribute>
-              <attribute id="solution">
-                <mandatory/>
-                <must_prompt/>
-              </attribute>
-              <attribute id="pending_reason">
-                <read_only/>
-              </attribute>
-              <attribute id="user_satisfaction">
-                <hidden/>
-              </attribute>
-              <attribute id="user_comment">
-                <hidden/>
               </attribute>
               <attribute id="parent_incident_id">
                 <read_only/>
@@ -1037,13 +725,30 @@
               <attribute id="description">
                 <read_only/>
               </attribute>
-              <attribute id="tto_escalation_deadline">
-                <hidden/>
-              </attribute>
-              <attribute id="sla_tto_passed">
+              <attribute id="org_id">
                 <read_only/>
               </attribute>
-              <attribute id="sla_tto_over">
+              <attribute id="team_id">
+                <read_only/>
+              </attribute>
+              <attribute id="agent_id">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_date">
+                <read_only/>
+              </attribute>
+              <attribute id="time_spent">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_code">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="solution">
+                <mandatory/>
+                <must_prompt/>
+              </attribute>
+              <attribute id="pending_reason">
                 <read_only/>
               </attribute>
               <attribute id="sla_ttr_passed">
@@ -1058,7 +763,6 @@
             </flags>
             <transitions>
               <transition id="ev_close">
-                <stimulus>ev_close</stimulus>
                 <target>closed</target>
                 <actions>
                   <action>
@@ -1067,13 +771,11 @@
                 </actions>
               </transition>
               <transition id="ev_reopen">
-                <stimulus>ev_reopen</stimulus>
                 <target>assigned</target>
                 <actions>
                 </actions>
               </transition>
               <transition id="ev_autoresolve">
-                <stimulus>ev_autoresolve</stimulus>
                 <target>resolved</target>
                 <actions>
                   <action>
@@ -1089,42 +791,19 @@
           <state id="closed">
             <highlight>
               <code>closed</code>
-            </highlight> 
+            </highlight>
+            <inherit_flags_from>resolved</inherit_flags_from>
             <flags>
-              <attribute id="ref">
+              <attribute id="public_log">
                 <read_only/>
               </attribute>
-              <attribute id="org_id">
+              <attribute id="functionalcis_list">
                 <read_only/>
               </attribute>
-              <attribute id="caller_id">
-                <read_only/>
-              </attribute>
-              <attribute id="origin">
-                <read_only/>
-              </attribute>
-              <attribute id="team_id">
-                <read_only/>
-              </attribute>
-              <attribute id="agent_id">
-                <read_only/>
-              </attribute>
-              <attribute id="start_date">
-                <read_only/>
-              </attribute>
-              <attribute id="last_update">
+              <attribute id="contacts_list">
                 <read_only/>
               </attribute>
               <attribute id="private_log">
-                <read_only/>
-              </attribute>
-              <attribute id="impact">
-                <read_only/>
-              </attribute>
-              <attribute id="urgency">
-                <read_only/>
-              </attribute>
-              <attribute id="priority">
                 <read_only/>
               </attribute>
               <attribute id="service_id">
@@ -1133,25 +812,7 @@
               <attribute id="servicesubcategory_id">
                 <read_only/>
               </attribute>
-              <attribute id="escalation_flag">
-                <read_only/>
-              </attribute>
-              <attribute id="escalation_reason">
-                <read_only/>
-              </attribute>
-              <attribute id="assignment_date">
-                <read_only/>
-              </attribute>
-              <attribute id="resolution_date">
-                <read_only/>
-              </attribute>
               <attribute id="close_date">
-                <read_only/>
-              </attribute>
-              <attribute id="last_pending_date">
-                <hidden/>
-              </attribute>
-              <attribute id="time_spent">
                 <read_only/>
               </attribute>
               <attribute id="resolution_code">
@@ -1162,8 +823,6 @@
               </attribute>
               <attribute id="pending_reason">
                 <read_only/>
-              </attribute>
-              <attribute id="public_log">
                 <read_only/>
               </attribute>
               <attribute id="user_satisfaction">
@@ -1171,48 +830,6 @@
               </attribute>
               <attribute id="user_comment">
                 <must_prompt/>
-              </attribute>
-              <attribute id="pending_reason">
-                <read_only/>
-              </attribute>
-              <attribute id="parent_incident_id">
-                <read_only/>
-              </attribute>
-              <attribute id="parent_change_id">
-                <read_only/>
-              </attribute>
-              <attribute id="parent_problem_id">
-                <read_only/>
-              </attribute>
-              <attribute id="title">
-                <read_only/>
-              </attribute>
-              <attribute id="description">
-                <read_only/>
-              </attribute>
-              <attribute id="tto_escalation_deadline">
-                <hidden/>
-              </attribute>
-              <attribute id="sla_tto_passed">
-                <read_only/>
-              </attribute>
-              <attribute id="sla_tto_over">
-                <read_only/>
-              </attribute>
-              <attribute id="sla_ttr_passed">
-                <read_only/>
-              </attribute>
-              <attribute id="ttr_escalation_deadline">
-                <hidden/>
-              </attribute>
-              <attribute id="sla_ttr_over">
-                <read_only/>
-              </attribute>
-              <attribute id="functionalcis_list">
-                <read_only/>
-              </attribute>
-              <attribute id="contacts_list">
-                <read_only/>
               </attribute>
             </flags>
             <transitions/>
@@ -1962,9 +1579,9 @@
         <groups>
           <group id="Incident" _delta="define">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action id="ev_close" xsi:type="stimulus">allow</action>
-              <action id="ev_reopen" xsi:type="stimulus">allow</action>
+              <action id="action:write">allow</action>
+              <action id="stimulus:ev_close">allow</action>
+              <action id="stimulus:ev_reopen">allow</action>
             </actions>
           </group>
         </groups>

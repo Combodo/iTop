@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
   <classes>
     <class id="Organization">
       <fields>
@@ -18,7 +18,7 @@
       <presentation>
         <details>
           <items>
-            <item id="deliverymodel_id"  _delta="define">
+            <item id="deliverymodel_id" _delta="define">
               <rank>50</rank>
             </item>
           </items>
@@ -26,7 +26,7 @@
       </presentation>
     </class>
     <class id="Ticket">
-      <fields>     
+      <fields>
         <field id="team_id" xsi:type="AttributeExternalKey" _delta="redefine">
           <filter><![CDATA[SELECT Team AS t JOIN lnkDeliveryModelToContact AS l1 ON l1.contact_id=t.id JOIN DeliveryModel AS dm ON l1.deliverymodel_id=dm.id JOIN Organization AS o ON o.deliverymodel_id=dm.id WHERE o.id = :this->org_id]]></filter>
           <dependencies>
@@ -36,7 +36,7 @@
           <target_class>Team</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-	  <allow_target_creation>false</allow_target_creation>
+          <allow_target_creation>false</allow_target_creation>
         </field>
       </fields>
     </class>
@@ -123,8 +123,8 @@
         </field>
         <field id="cost_currency" xsi:type="AttributeEnum">
           <values>
-            <value>dollars</value>
-            <value>euros</value>
+            <value id="dollars">dollars</value>
+            <value id="euros">euros</value>
           </values>
           <sql>cost_currency</sql>
           <default_value/>
@@ -163,9 +163,9 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value>production</value>
-            <value>implementation</value>
-            <value>obsolete</value>
+            <value id="production">production</value>
+            <value id="implementation">implementation</value>
+            <value id="obsolete">obsolete</value>
           </values>
           <sql>status</sql>
           <default_value/>
@@ -1042,9 +1042,9 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value>production</value>
-            <value>implementation</value>
-            <value>obsolete</value>
+            <value id="production">production</value>
+            <value id="implementation">implementation</value>
+            <value id="obsolete">obsolete</value>
           </values>
           <sql>status</sql>
           <default_value/>
@@ -1378,8 +1378,8 @@
         </field>
         <field id="request_type" xsi:type="AttributeEnum">
           <values>
-            <value>incident</value>
-            <value>service_request</value>
+            <value id="incident">incident</value>
+            <value id="service_request">service_request</value>
           </values>
           <sql>request_type</sql>
           <default_value>incident</default_value>
@@ -1388,9 +1388,9 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value>production</value>
-            <value>implementation</value>
-            <value>obsolete</value>
+            <value id="production">production</value>
+            <value id="implementation">implementation</value>
+            <value id="obsolete">obsolete</value>
           </values>
           <sql>status</sql>
           <default_value/>
@@ -1605,10 +1605,10 @@
         </field>
         <field id="priority" xsi:type="AttributeEnum">
           <values>
-            <value>1</value>
-            <value>2</value>
-            <value>3</value>
-            <value>4</value>
+            <value id="1">1</value>
+            <value id="2">2</value>
+            <value id="3">3</value>
+            <value id="4">4</value>
           </values>
           <sql>priority</sql>
           <default_value/>
@@ -1617,8 +1617,8 @@
         </field>
         <field id="request_type" xsi:type="AttributeEnum">
           <values>
-            <value>service_request</value>
-            <value>incident</value>
+            <value id="service_request">service_request</value>
+            <value id="incident">incident</value>
           </values>
           <sql>request_type</sql>
           <default_value/>
@@ -1627,8 +1627,8 @@
         </field>
         <field id="metric" xsi:type="AttributeEnum">
           <values>
-            <value>tto</value>
-            <value>ttr</value>
+            <value id="tto">tto</value>
+            <value id="ttr">ttr</value>
           </values>
           <sql>metric</sql>
           <default_value/>
@@ -1642,8 +1642,8 @@
         </field>
         <field id="unit" xsi:type="AttributeEnum">
           <values>
-            <value>hours</value>
-            <value>minutes</value>
+            <value id="hours">hours</value>
+            <value id="minutes">minutes</value>
           </values>
           <sql>unit</sql>
           <default_value/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
   <classes/>
   <user_rights>
     <groups>
@@ -71,7 +71,7 @@
         <classes>
           <class id="KnownError"/>
           <class id="FAQ"/>
-         <class id="FAQCategory"/>
+          <class id="FAQCategory"/>
         </classes>
       </group>
       <group id="Ticketing" _delta="define">
@@ -104,29 +104,29 @@
         <groups>
           <group id="General">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action xsi:type="delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
             </actions>
           </group>
           <group id="Documentation">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action xsi:type="delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
             </actions>
           </group>
           <group id="Configuration">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action xsi:type="delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
             </actions>
           </group>
           <group id="*">
             <actions>
-              <action xsi:type="read">allow</action>
-              <action xsi:type="bulk read">allow</action>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
             </actions>
           </group>
         </groups>
@@ -137,30 +137,30 @@
         <groups>
           <group id="Ticketing">
             <actions>
-              <action xsi:type="delete">allow</action>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action id="ev_close" xsi:type="stimulus">allow</action>
+              <action id="action:delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="stimulus:ev_close">allow</action>
             </actions>
           </group>
           <group id="Incident">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action id="ev_assign" xsi:type="stimulus">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="stimulus:ev_assign">allow</action>
             </actions>
           </group>
           <group id="UserRequest">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action id="ev_assign" xsi:type="stimulus">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="stimulus:ev_assign">allow</action>
             </actions>
           </group>
           <group id="*">
             <actions>
-              <action xsi:type="read">allow</action>
-              <action xsi:type="bulk read">allow</action>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
             </actions>
           </group>
         </groups>
@@ -171,39 +171,39 @@
         <groups>
           <group id="Ticketing">
             <actions>
-              <action xsi:type="delete">allow</action>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action id="ev_close" xsi:type="stimulus">allow</action>
+              <action id="action:delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="stimulus:ev_close">allow</action>
             </actions>
           </group>
           <group id="Incident">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action id="ev_assign" xsi:type="stimulus">allow</action>
-              <action id="ev_reassign" xsi:type="stimulus">allow</action>
-              <action id="ev_resolve" xsi:type="stimulus">allow</action>
-              <action id="ev_close" xsi:type="stimulus">allow</action>
-              <action id="ev_pending" xsi:type="stimulus">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="stimulus:ev_assign">allow</action>
+              <action id="stimulus:ev_reassign">allow</action>
+              <action id="stimulus:ev_resolve">allow</action>
+              <action id="stimulus:ev_close">allow</action>
+              <action id="stimulus:ev_pending">allow</action>
             </actions>
           </group>
           <group id="UserRequest">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action id="ev_assign" xsi:type="stimulus">allow</action>
-              <action id="ev_reassign" xsi:type="stimulus">allow</action>
-              <action id="ev_resolve" xsi:type="stimulus">allow</action>
-              <action id="ev_close" xsi:type="stimulus">allow</action>
-              <action id="ev_pending" xsi:type="stimulus">allow</action>
-              <action id="ev_wait_for_approval" xsi:type="stimulus">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="stimulus:ev_assign">allow</action>
+              <action id="stimulus:ev_reassign">allow</action>
+              <action id="stimulus:ev_resolve">allow</action>
+              <action id="stimulus:ev_close">allow</action>
+              <action id="stimulus:ev_pending">allow</action>
+              <action id="stimulus:ev_wait_for_approval">allow</action>
             </actions>
           </group>
           <group id="*">
             <actions>
-              <action xsi:type="read">allow</action>
-              <action xsi:type="bulk read">allow</action>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
             </actions>
           </group>
         </groups>
@@ -214,33 +214,33 @@
         <groups>
           <group id="KnownError">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action xsi:type="delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
             </actions>
           </group>
           <group id="Ticketing">
             <actions>
-              <action xsi:type="delete">allow</action>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action id="ev_close" xsi:type="stimulus">allow</action>
+              <action id="action:delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="stimulus:ev_close">allow</action>
             </actions>
           </group>
           <group id="Problem">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action id="ev_assign" xsi:type="stimulus">allow</action>
-              <action id="ev_reassign" xsi:type="stimulus">allow</action>
-              <action id="ev_resolve" xsi:type="stimulus">allow</action>
-              <action id="ev_close" xsi:type="stimulus">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="stimulus:ev_assign">allow</action>
+              <action id="stimulus:ev_reassign">allow</action>
+              <action id="stimulus:ev_resolve">allow</action>
+              <action id="stimulus:ev_close">allow</action>
             </actions>
           </group>
           <group id="*">
             <actions>
-              <action xsi:type="read">allow</action>
-              <action xsi:type="bulk read">allow</action>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
             </actions>
           </group>
         </groups>
@@ -251,50 +251,50 @@
         <groups>
           <group id="Change">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action id="ev_assign" xsi:type="stimulus">allow</action>
-              <action id="ev_plan" xsi:type="stimulus">allow</action>
-              <action id="ev_reopen" xsi:type="stimulus">allow</action>
-              <action id="ev_finish" xsi:type="stimulus">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="stimulus:ev_assign">allow</action>
+              <action id="stimulus:ev_plan">allow</action>
+              <action id="stimulus:ev_reopen">allow</action>
+              <action id="stimulus:ev_finish">allow</action>
             </actions>
           </group>
           <group id="Ticketing">
             <actions>
-              <action xsi:type="delete">allow</action>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action id="ev_close" xsi:type="stimulus">allow</action>
+              <action id="action:delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="stimulus:ev_close">allow</action>
             </actions>
           </group>
           <group id="NormalChange">
             <actions>
-              <action id="ev_plan" xsi:type="stimulus">allow</action>
-              <action id="ev_replan" xsi:type="stimulus">allow</action>
-              <action id="ev_implement" xsi:type="stimulus">allow</action>
-              <action id="ev_monitor" xsi:type="stimulus">allow</action>
+              <action id="stimulus:ev_plan">allow</action>
+              <action id="stimulus:ev_replan">allow</action>
+              <action id="stimulus:ev_implement">allow</action>
+              <action id="stimulus:ev_monitor">allow</action>
             </actions>
           </group>
           <group id="EmergencyChange">
             <actions>
-              <action id="ev_plan" xsi:type="stimulus">allow</action>
-              <action id="ev_replan" xsi:type="stimulus">allow</action>
-              <action id="ev_implement" xsi:type="stimulus">allow</action>
-              <action id="ev_monitor" xsi:type="stimulus">allow</action>
+              <action id="stimulus:ev_plan">allow</action>
+              <action id="stimulus:ev_replan">allow</action>
+              <action id="stimulus:ev_implement">allow</action>
+              <action id="stimulus:ev_monitor">allow</action>
             </actions>
           </group>
           <group id="RoutineChange">
             <actions>
-              <action id="ev_plan" xsi:type="stimulus">allow</action>
-              <action id="ev_replan" xsi:type="stimulus">allow</action>
-              <action id="ev_implement" xsi:type="stimulus">allow</action>
-              <action id="ev_monitor" xsi:type="stimulus">allow</action>
+              <action id="stimulus:ev_plan">allow</action>
+              <action id="stimulus:ev_replan">allow</action>
+              <action id="stimulus:ev_implement">allow</action>
+              <action id="stimulus:ev_monitor">allow</action>
             </actions>
           </group>
           <group id="*">
             <actions>
-              <action xsi:type="read">allow</action>
-              <action xsi:type="bulk read">allow</action>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
             </actions>
           </group>
         </groups>
@@ -305,48 +305,48 @@
         <groups>
           <group id="Change">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action id="ev_assign" xsi:type="stimulus">allow</action>
-              <action id="ev_reopen" xsi:type="stimulus">allow</action>
-              <action id="ev_finish" xsi:type="stimulus">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="stimulus:ev_assign">allow</action>
+              <action id="stimulus:ev_reopen">allow</action>
+              <action id="stimulus:ev_finish">allow</action>
             </actions>
           </group>
           <group id="Ticketing">
             <actions>
-              <action xsi:type="delete">allow</action>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action id="ev_close" xsi:type="stimulus">allow</action>
+              <action id="action:delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="stimulus:ev_close">allow</action>
             </actions>
           </group>
           <group id="NormalChange">
             <actions>
-              <action id="ev_validate" xsi:type="stimulus">allow</action>
-              <action id="ev_reject" xsi:type="stimulus">allow</action>
-              <action id="ev_assign" xsi:type="stimulus">allow</action>
-              <action id="ev_reopen" xsi:type="stimulus">allow</action>
-              <action id="ev_finish" xsi:type="stimulus">allow</action>
+              <action id="stimulus:ev_validate">allow</action>
+              <action id="stimulus:ev_reject">allow</action>
+              <action id="stimulus:ev_assign">allow</action>
+              <action id="stimulus:ev_reopen">allow</action>
+              <action id="stimulus:ev_finish">allow</action>
             </actions>
           </group>
           <group id="EmergencyChange">
             <actions>
-              <action id="ev_assign" xsi:type="stimulus">allow</action>
-              <action id="ev_reopen" xsi:type="stimulus">allow</action>
-              <action id="ev_finish" xsi:type="stimulus">allow</action>
+              <action id="stimulus:ev_assign">allow</action>
+              <action id="stimulus:ev_reopen">allow</action>
+              <action id="stimulus:ev_finish">allow</action>
             </actions>
           </group>
           <group id="RoutineChange">
             <actions>
-              <action id="ev_assign" xsi:type="stimulus">allow</action>
-              <action id="ev_reopen" xsi:type="stimulus">allow</action>
-              <action id="ev_finish" xsi:type="stimulus">allow</action>
+              <action id="stimulus:ev_assign">allow</action>
+              <action id="stimulus:ev_reopen">allow</action>
+              <action id="stimulus:ev_finish">allow</action>
             </actions>
           </group>
           <group id="*">
             <actions>
-              <action xsi:type="read">allow</action>
-              <action xsi:type="bulk read">allow</action>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
             </actions>
           </group>
         </groups>
@@ -357,30 +357,30 @@
         <groups>
           <group id="Change">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action id="ev_approve" xsi:type="stimulus">allow</action>
-              <action id="ev_reject" xsi:type="stimulus">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="stimulus:ev_approve">allow</action>
+              <action id="stimulus:ev_reject">allow</action>
             </actions>
           </group>
           <group id="Ticketing">
             <actions>
-              <action xsi:type="delete">allow</action>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action id="ev_close" xsi:type="stimulus">allow</action>
+              <action id="action:delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="stimulus:ev_close">allow</action>
             </actions>
           </group>
           <group id="NormalChange">
             <actions>
-              <action id="ev_approve" xsi:type="stimulus">allow</action>
-              <action id="ev_notapprove" xsi:type="stimulus">allow</action>
+              <action id="stimulus:ev_approve">allow</action>
+              <action id="stimulus:ev_notapprove">allow</action>
             </actions>
           </group>
           <group id="EmergencyChange">
             <actions>
-              <action id="ev_approve" xsi:type="stimulus">allow</action>
-              <action id="ev_notapprove" xsi:type="stimulus">allow</action>
+              <action id="stimulus:ev_approve">allow</action>
+              <action id="stimulus:ev_notapprove">allow</action>
             </actions>
           </group>
           <group id="RoutineChange">
@@ -388,8 +388,8 @@
           </group>
           <group id="*">
             <actions>
-              <action xsi:type="read">allow</action>
-              <action xsi:type="bulk read">allow</action>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
             </actions>
           </group>
         </groups>
@@ -400,15 +400,15 @@
         <groups>
           <group id="Service">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action xsi:type="delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
             </actions>
           </group>
           <group id="*">
             <actions>
-              <action xsi:type="read">allow</action>
-              <action xsi:type="bulk read">allow</action>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
             </actions>
           </group>
         </groups>
@@ -419,15 +419,15 @@
         <groups>
           <group id="Documentation">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action xsi:type="delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
             </actions>
           </group>
           <group id="*">
             <actions>
-              <action xsi:type="read">allow</action>
-              <action xsi:type="bulk read">allow</action>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
             </actions>
           </group>
         </groups>
@@ -438,15 +438,15 @@
         <groups>
           <group id="UserRequest">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action id="ev_close" xsi:type="stimulus">allow</action>
-              <action id="ev_reopen" xsi:type="stimulus">allow</action>
+              <action id="action:write">allow</action>
+              <action id="stimulus:ev_close">allow</action>
+              <action id="stimulus:ev_reopen">allow</action>
             </actions>
           </group>
           <group id="*">
             <actions>
-              <action xsi:type="read">allow</action>
-              <action xsi:type="bulk read">allow</action>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
             </actions>
           </group>
         </groups>

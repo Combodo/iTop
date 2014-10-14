@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
   <classes>
     <class id="Organization" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -44,8 +44,8 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value>active</value>
-            <value>inactive</value>
+            <value id="active">active</value>
+            <value id="inactive">inactive</value>
           </values>
           <sql>status</sql>
           <default_value>active</default_value>
@@ -144,8 +144,8 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value>active</value>
-            <value>inactive</value>
+            <value id="active">active</value>
+            <value id="inactive">inactive</value>
           </values>
           <sql>status</sql>
           <default_value>active</default_value>
@@ -307,8 +307,8 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value>active</value>
-            <value>inactive</value>
+            <value id="active">active</value>
+            <value id="inactive">inactive</value>
           </values>
           <sql>status</sql>
           <default_value>active</default_value>
@@ -337,8 +337,8 @@
         </field>
         <field id="notify" xsi:type="AttributeEnum">
           <values>
-            <value>yes</value>
-            <value>no</value>
+            <value id="yes">yes</value>
+            <value id="no">no</value>
           </values>
           <sql>notify</sql>
           <default_value>yes</default_value>
@@ -486,7 +486,7 @@
           <target_class>Location</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-	  <allow_target_creation>false</allow_target_creation>
+          <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="location_name" xsi:type="AttributeExternalField">
           <extkey_attcode>location_id</extkey_attcode>
@@ -835,9 +835,9 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value>draft</value>
-            <value>published</value>
-            <value>obsolete</value>
+            <value id="draft">draft</value>
+            <value id="published">published</value>
+            <value id="obsolete">obsolete</value>
           </values>
           <sql>status</sql>
           <default_value/>
@@ -972,7 +972,7 @@
           <static>false</static>
           <access>public</access>
           <type>Overload-cmdbAbstractObject</type>
-        <comment><![CDATA[/**
+          <comment><![CDATA[/**
 	 * Overload the display of the properties to add a tab (the first one)
 	 * with the preview of the document
 	 */
@@ -1320,9 +1320,9 @@
         </field>
         <field id="business_criticity" xsi:type="AttributeEnum">
           <values>
-            <value>high</value>
-            <value>medium</value>
-            <value>low</value>
+            <value id="high">high</value>
+            <value id="medium">medium</value>
+            <value id="low">low</value>
           </values>
           <sql>business_criticity</sql>
           <default_value>low</default_value>
@@ -1526,7 +1526,7 @@
           <target_class>Location</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-	  <allow_target_creation>false</allow_target_creation>
+          <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="location_name" xsi:type="AttributeExternalField">
           <extkey_attcode>location_id</extkey_attcode>
@@ -1534,10 +1534,10 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value>production</value>
-            <value>implementation</value>
-            <value>stock</value>
-            <value>obsolete</value>
+            <value id="production">production</value>
+            <value id="implementation">implementation</value>
+            <value id="stock">stock</value>
+            <value id="obsolete">obsolete</value>
           </values>
           <sql>status</sql>
           <default_value>production</default_value>
@@ -1708,8 +1708,6 @@
         </list>
       </presentation>
     </class>
-
-    
     <class id="ConnectableCI" _delta="define">
       <parent>PhysicalDevice</parent>
       <properties>
@@ -1940,7 +1938,7 @@
           <target_class>Rack</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-	  <allow_target_creation>false</allow_target_creation>
+          <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="rack_name" xsi:type="AttributeExternalField">
           <extkey_attcode>rack_id</extkey_attcode>
@@ -1955,7 +1953,7 @@
           <target_class>Enclosure</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-	  <allow_target_creation>false</allow_target_creation>
+          <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="enclosure_name" xsi:type="AttributeExternalField">
           <extkey_attcode>enclosure_id</extkey_attcode>
@@ -1980,7 +1978,7 @@
           <target_class>PowerConnection</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-	  <allow_target_creation>false</allow_target_creation>
+          <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="powerA_name" xsi:type="AttributeExternalField">
           <extkey_attcode>powerA_id</extkey_attcode>
@@ -1995,7 +1993,7 @@
           <target_class>PowerConnection</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-	  <allow_target_creation>false</allow_target_creation>
+          <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="powerB_name" xsi:type="AttributeExternalField">
           <extkey_attcode>powerB_id</extkey_attcode>
@@ -2835,8 +2833,6 @@
         </list>
       </presentation>
     </class>
-
-
     <class id="ApplicationSolution" _delta="define">
       <parent>FunctionalCI</parent>
       <properties>
@@ -2881,8 +2877,8 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value>active</value>
-            <value>inactive</value>
+            <value id="active">active</value>
+            <value id="inactive">inactive</value>
           </values>
           <sql>status</sql>
           <default_value>active</default_value>
@@ -3030,8 +3026,8 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value>active</value>
-            <value>inactive</value>
+            <value id="active">active</value>
+            <value id="inactive">inactive</value>
           </values>
           <sql>status</sql>
           <default_value>active</default_value>
@@ -3163,7 +3159,7 @@
           <target_class>FunctionalCI</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-	  <allow_target_creation>false</allow_target_creation>
+          <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="system_name" xsi:type="AttributeExternalField">
           <extkey_attcode>system_id</extkey_attcode>
@@ -3189,7 +3185,7 @@
           <target_class>SoftwareLicence</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-	  <allow_target_creation>false</allow_target_creation>
+          <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="softwarelicence_name" xsi:type="AttributeExternalField">
           <extkey_attcode>softwarelicence_id</extkey_attcode>
@@ -3202,8 +3198,8 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value>active</value>
-            <value>inactive</value>
+            <value id="active">active</value>
+            <value id="inactive">inactive</value>
           </values>
           <sql>status</sql>
           <default_value/>
@@ -4501,11 +4497,11 @@
         </field>
         <field id="type" xsi:type="AttributeEnum">
           <values>
-            <value>Middleware</value>
-            <value>DBServer</value>
-            <value>PCSoftware</value>
-            <value>OtherSoftware</value>
-            <value>WebServer</value>
+            <value id="Middleware">Middleware</value>
+            <value id="DBServer">DBServer</value>
+            <value id="PCSoftware">PCSoftware</value>
+            <value id="OtherSoftware">OtherSoftware</value>
+            <value id="WebServer">WebServer</value>
           </values>
           <sql>type</sql>
           <default_value/>
@@ -4926,8 +4922,8 @@
         </field>
         <field id="perpetual" xsi:type="AttributeEnum">
           <values>
-            <value>yes</value>
-            <value>no</value>
+            <value id="yes">yes</value>
+            <value id="no">no</value>
           </values>
           <sql>perpetual</sql>
           <default_value>no</default_value>
@@ -5736,24 +5732,24 @@
         </field>
         <field id="type" xsi:type="AttributeEnum">
           <values>
-            <value>NetworkDevice</value>
-            <value>Server</value>
-            <value>SANSwitch</value>
-            <value>StorageSystem</value>
-            <value>Rack</value>
-            <value>Enclosure</value>
-            <value>PC</value>
-            <value>Tablet</value>
-            <value>Telephone</value>
-            <value>MobilePhone</value>
-            <value>Printer</value>
-            <value>DiskArray</value>
-            <value>NAS</value>
-            <value>TapeLibrary</value>
-            <value>IPPhone</value>
-            <value>Peripheral</value>
-            <value>PowerSource</value>
-            <value>PDU</value>
+            <value id="NetworkDevice">NetworkDevice</value>
+            <value id="Server">Server</value>
+            <value id="SANSwitch">SANSwitch</value>
+            <value id="StorageSystem">StorageSystem</value>
+            <value id="Rack">Rack</value>
+            <value id="Enclosure">Enclosure</value>
+            <value id="PC">PC</value>
+            <value id="Tablet">Tablet</value>
+            <value id="Telephone">Telephone</value>
+            <value id="MobilePhone">MobilePhone</value>
+            <value id="Printer">Printer</value>
+            <value id="DiskArray">DiskArray</value>
+            <value id="NAS">NAS</value>
+            <value id="TapeLibrary">TapeLibrary</value>
+            <value id="IPPhone">IPPhone</value>
+            <value id="Peripheral">Peripheral</value>
+            <value id="PowerSource">PowerSource</value>
+            <value id="PDU">PDU</value>
           </values>
           <sql>type</sql>
           <default_value/>
@@ -6817,8 +6813,6 @@
         </list>
       </presentation>
     </class>
-
-
     <class id="NetworkInterface" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
@@ -6874,7 +6868,6 @@
         </list>
       </presentation>
     </class>
-
     <class id="IPInterface" _delta="define">
       <parent>NetworkInterface</parent>
       <properties>
@@ -7214,7 +7207,6 @@
         </list>
       </presentation>
     </class>
-
     <class id="lnkConnectableCIToNetworkDevice" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
@@ -7274,8 +7266,8 @@
         </field>
         <field id="connection_type" xsi:type="AttributeEnum">
           <values>
-            <value>uplink</value>
-            <value>downlink</value>
+            <value id="uplink">uplink</value>
+            <value id="downlink">downlink</value>
           </values>
           <sql>type</sql>
           <default_value>downlink</default_value>
@@ -7815,9 +7807,9 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value>production</value>
-            <value>implementation</value>
-            <value>obsolete</value>
+            <value id="production">production</value>
+            <value id="implementation">implementation</value>
+            <value id="obsolete">obsolete</value>
           </values>
           <sql>status</sql>
           <default_value>implementation</default_value>
@@ -8053,146 +8045,146 @@
       <rank>1</rank>
       <parent>ConfigManagement</parent>
       <definition>
-  <layout>DashboardLayoutOneCol</layout>
-  <title></title>
-  <cells>
-    <cell id="0">
-      <rank>0</rank>
-      <dashlets>
-        <dashlet id="1" xsi:type="DashletHeaderStatic">
-          <rank>0</rank>
-          <title>Menu:ConfigManagement:AllDevices</title>
-          <icon>itop-config-mgmt/images/server.png</icon>
-          <subtitle>Menu_ConfigManagement_AllDevices</subtitle>
-        </dashlet>
-        <dashlet id="2" xsi:type="DashletBadge">
-          <rank>3</rank>
-          <class>Server</class>
-        </dashlet>
-        <dashlet id="3" xsi:type="DashletBadge">
-          <rank>4</rank>
-          <class>NetworkDevice</class>
-        </dashlet>
-      </dashlets>
-    </cell>
-    <cell id="3">
-      <rank>3</rank>
-      <dashlets>
-        <dashlet id="4" xsi:type="DashletHeaderStatic">
-          <rank>0</rank>
-          <title>Menu:ConfigManagement:SWAndApps</title>
-          <icon>itop-config-mgmt/images/application.png</icon>
-        </dashlet>
-        <dashlet id="5" xsi:type="DashletBadge">
-          <rank>1</rank>
-          <class>Middleware</class>
-        </dashlet>
-        <dashlet id="6" xsi:type="DashletBadge">
-          <rank>2</rank>
-          <class>DBServer</class>
-        </dashlet>
-        <dashlet id="7" xsi:type="DashletBadge">
-          <rank>3</rank>
-          <class>WebServer</class>
-        </dashlet>
-        <dashlet id="8" xsi:type="DashletBadge">
-          <rank>4</rank>
-          <class>PCSoftware</class>
-        </dashlet>
-        <dashlet id="9" xsi:type="DashletBadge">
-          <rank>5</rank>
-          <class>OtherSoftware</class>
-        </dashlet>
-        <dashlet id="10" xsi:type="DashletBadge">
-          <rank>6</rank>
-          <class>MiddlewareInstance</class>
-        </dashlet>
-        <dashlet id="11" xsi:type="DashletBadge">
-          <rank>7</rank>
-          <class>DatabaseSchema</class>
-        </dashlet>
-        <dashlet id="12" xsi:type="DashletBadge">
-          <rank>8</rank>
-          <class>WebApplication</class>
-        </dashlet>
-        <dashlet id="13" xsi:type="DashletBadge">
-          <rank>9</rank>
-          <class>Patch</class>
-        </dashlet>
-        <dashlet id="14" xsi:type="DashletBadge">
-          <rank>10</rank>
-          <class>Licence</class>
-        </dashlet>
-      </dashlets>
-    </cell>
-    <cell id="4">
-      <rank>4</rank>
-      <dashlets>
-        <dashlet id="15" xsi:type="DashletHeaderStatic">
-          <rank>0</rank>
-          <title>Menu:ConfigManagement:Misc</title>
-          <icon>itop-config-mgmt/images/subnet.png</icon>
-        </dashlet>
-        <dashlet id="16" xsi:type="DashletBadge">
-          <rank>1</rank>
-          <class>NetworkInterface</class>
-        </dashlet>
-        <dashlet id="17" xsi:type="DashletBadge">
-          <rank>2</rank>
-          <class>Subnet</class>
-        </dashlet>
-        <dashlet id="vlan" xsi:type="DashletBadge">
-          <rank>2.1</rank>
-          <class>VLAN</class>
-        </dashlet>
-        <dashlet id="18" xsi:type="DashletBadge">
-          <rank>4</rank>
-          <class>BusinessProcess</class>
-        </dashlet>
-        <dashlet id="19" xsi:type="DashletBadge">
-          <rank>5</rank>
-          <class>ApplicationSolution</class>
-        </dashlet>
-        <dashlet id="20" xsi:type="DashletBadge">
-          <rank>6</rank>
-          <class>Group</class>
-        </dashlet>
-      </dashlets>
-    </cell>
-  </cells>
+        <layout>DashboardLayoutOneCol</layout>
+        <title/>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="1" xsi:type="DashletHeaderStatic">
+                <rank>0</rank>
+                <title>Menu:ConfigManagement:AllDevices</title>
+                <icon>itop-config-mgmt/images/server.png</icon>
+                <subtitle>Menu_ConfigManagement_AllDevices</subtitle>
+              </dashlet>
+              <dashlet id="2" xsi:type="DashletBadge">
+                <rank>3</rank>
+                <class>Server</class>
+              </dashlet>
+              <dashlet id="3" xsi:type="DashletBadge">
+                <rank>4</rank>
+                <class>NetworkDevice</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="3">
+            <rank>3</rank>
+            <dashlets>
+              <dashlet id="4" xsi:type="DashletHeaderStatic">
+                <rank>0</rank>
+                <title>Menu:ConfigManagement:SWAndApps</title>
+                <icon>itop-config-mgmt/images/application.png</icon>
+              </dashlet>
+              <dashlet id="5" xsi:type="DashletBadge">
+                <rank>1</rank>
+                <class>Middleware</class>
+              </dashlet>
+              <dashlet id="6" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>DBServer</class>
+              </dashlet>
+              <dashlet id="7" xsi:type="DashletBadge">
+                <rank>3</rank>
+                <class>WebServer</class>
+              </dashlet>
+              <dashlet id="8" xsi:type="DashletBadge">
+                <rank>4</rank>
+                <class>PCSoftware</class>
+              </dashlet>
+              <dashlet id="9" xsi:type="DashletBadge">
+                <rank>5</rank>
+                <class>OtherSoftware</class>
+              </dashlet>
+              <dashlet id="10" xsi:type="DashletBadge">
+                <rank>6</rank>
+                <class>MiddlewareInstance</class>
+              </dashlet>
+              <dashlet id="11" xsi:type="DashletBadge">
+                <rank>7</rank>
+                <class>DatabaseSchema</class>
+              </dashlet>
+              <dashlet id="12" xsi:type="DashletBadge">
+                <rank>8</rank>
+                <class>WebApplication</class>
+              </dashlet>
+              <dashlet id="13" xsi:type="DashletBadge">
+                <rank>9</rank>
+                <class>Patch</class>
+              </dashlet>
+              <dashlet id="14" xsi:type="DashletBadge">
+                <rank>10</rank>
+                <class>Licence</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="4">
+            <rank>4</rank>
+            <dashlets>
+              <dashlet id="15" xsi:type="DashletHeaderStatic">
+                <rank>0</rank>
+                <title>Menu:ConfigManagement:Misc</title>
+                <icon>itop-config-mgmt/images/subnet.png</icon>
+              </dashlet>
+              <dashlet id="16" xsi:type="DashletBadge">
+                <rank>1</rank>
+                <class>NetworkInterface</class>
+              </dashlet>
+              <dashlet id="17" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>Subnet</class>
+              </dashlet>
+              <dashlet id="vlan" xsi:type="DashletBadge">
+                <rank>2.1</rank>
+                <class>VLAN</class>
+              </dashlet>
+              <dashlet id="18" xsi:type="DashletBadge">
+                <rank>4</rank>
+                <class>BusinessProcess</class>
+              </dashlet>
+              <dashlet id="19" xsi:type="DashletBadge">
+                <rank>5</rank>
+                <class>ApplicationSolution</class>
+              </dashlet>
+              <dashlet id="20" xsi:type="DashletBadge">
+                <rank>6</rank>
+                <class>Group</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
       </definition>
     </menu>
     <menu id="Contact" xsi:type="DashboardMenuNode" _delta="define">
       <rank>2</rank>
       <parent>ConfigManagement</parent>
       <definition>
-  <layout>DashboardLayoutOneCol</layout>
-  <title></title>
-  <cells>
-    <cell id="0">
-      <rank>0</rank>
-      <dashlets>
-        <dashlet id="1" xsi:type="DashletHeaderDynamic">
-          <rank>1</rank>
-          <title>Menu:Contact</title>
-          <icon>itop-config-mgmt/images/team.png</icon>
-          <subtitle>Menu:Contact:Count</subtitle>
-          <query>SELECT Contact</query>
-          <group_by>status</group_by>
-          <values>active,inactive</values>
-        </dashlet>
-        <dashlet id="2" xsi:type="DashletBadge">
-          <rank>2</rank>
-          <class>Team</class>
-        </dashlet>
-        <dashlet id="3" xsi:type="DashletBadge">
-          <rank>3</rank>
-          <class>Person</class>
-        </dashlet>
-      </dashlets>
-    </cell>
-  </cells>
-  </definition>
+        <layout>DashboardLayoutOneCol</layout>
+        <title/>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="1" xsi:type="DashletHeaderDynamic">
+                <rank>1</rank>
+                <title>Menu:Contact</title>
+                <icon>itop-config-mgmt/images/team.png</icon>
+                <subtitle>Menu:Contact:Count</subtitle>
+                <query>SELECT Contact</query>
+                <group_by>status</group_by>
+                <values>active,inactive</values>
+              </dashlet>
+              <dashlet id="2" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>Team</class>
+              </dashlet>
+              <dashlet id="3" xsi:type="DashletBadge">
+                <rank>3</rank>
+                <class>Person</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
     </menu>
     <menu id="NewContact" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>3</rank>
@@ -8238,57 +8230,57 @@
       <oql>SELECT Group</oql>
       <do_search>1</do_search>
     </menu>
-  <menu id="Typology" xsi:type="DashboardMenuNode" _delta="define">
-    <rank>80</rank>
-    <parent>Catalogs</parent>
-    <definition>
-      <layout>DashboardLayoutOneCol</layout>
-      <title>Menu:ConfigManagement:Typology</title>
-      <cells>
-        <cell id="0">
-          <rank>0</rank>
-          <dashlets>
-            <dashlet id="1" xsi:type="DashletHeaderStatic">
-              <rank>0</rank>
-              <title>Menu:ConfigManagement:Typology</title>
-              <icon>itop-config-mgmt/images/typology.png</icon>
-            </dashlet>
-            <dashlet id="2" xsi:type="DashletBadge">
-              <rank>1</rank>
-              <class>Brand</class>
-            </dashlet>
-            <dashlet id="3" xsi:type="DashletBadge">
-              <rank>2</rank>
-              <class>Model</class>
-            </dashlet>
-            <dashlet id="4" xsi:type="DashletBadge">
-              <rank>3</rank>
-              <class>OSFamily</class>
-            </dashlet>
-            <dashlet id="5" xsi:type="DashletBadge">
-              <rank>4</rank>
-              <class>OSVersion</class>
-            </dashlet>
-            <dashlet id="6" xsi:type="DashletBadge">
-              <rank>5</rank>
-              <class>IOSVersion</class>
-            </dashlet>
-            <dashlet id="7" xsi:type="DashletBadge">
-              <rank>6</rank>
-              <class>NetworkDeviceType</class>
-            </dashlet>
-            <dashlet id="9" xsi:type="DashletBadge">
-              <rank>8</rank>
-              <class>ContactType</class>
-            </dashlet>
-            <dashlet id="10" xsi:type="DashletBadge">
-              <rank>9</rank>
-              <class>DocumentType</class>
-            </dashlet>
-          </dashlets>
-        </cell>
-      </cells>
-    </definition>
-  </menu>
+    <menu id="Typology" xsi:type="DashboardMenuNode" _delta="define">
+      <rank>80</rank>
+      <parent>Catalogs</parent>
+      <definition>
+        <layout>DashboardLayoutOneCol</layout>
+        <title>Menu:ConfigManagement:Typology</title>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="1" xsi:type="DashletHeaderStatic">
+                <rank>0</rank>
+                <title>Menu:ConfigManagement:Typology</title>
+                <icon>itop-config-mgmt/images/typology.png</icon>
+              </dashlet>
+              <dashlet id="2" xsi:type="DashletBadge">
+                <rank>1</rank>
+                <class>Brand</class>
+              </dashlet>
+              <dashlet id="3" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>Model</class>
+              </dashlet>
+              <dashlet id="4" xsi:type="DashletBadge">
+                <rank>3</rank>
+                <class>OSFamily</class>
+              </dashlet>
+              <dashlet id="5" xsi:type="DashletBadge">
+                <rank>4</rank>
+                <class>OSVersion</class>
+              </dashlet>
+              <dashlet id="6" xsi:type="DashletBadge">
+                <rank>5</rank>
+                <class>IOSVersion</class>
+              </dashlet>
+              <dashlet id="7" xsi:type="DashletBadge">
+                <rank>6</rank>
+                <class>NetworkDeviceType</class>
+              </dashlet>
+              <dashlet id="9" xsi:type="DashletBadge">
+                <rank>8</rank>
+                <class>ContactType</class>
+              </dashlet>
+              <dashlet id="10" xsi:type="DashletBadge">
+                <rank>9</rank>
+                <class>DocumentType</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
   </menus>
 </itop_design>

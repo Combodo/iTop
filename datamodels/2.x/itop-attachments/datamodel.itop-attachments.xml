@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
   <classes>
     <class id="Attachment" _delta="define">
       <parent>DBObject</parent>
@@ -37,20 +37,20 @@
         </reconciliation>
         <indexes>
           <index id="1">
-             <attributes>
-               <attribute id="temp_id"/>
-             </attributes>
+            <attributes>
+              <attribute id="temp_id"/>
+            </attributes>
           </index>
           <index id="2">
-             <attributes>
-               <attribute id="item_class"/>
-               <attribute id="item_id"/>
-             </attributes>
+            <attributes>
+              <attribute id="item_class"/>
+              <attribute id="item_id"/>
+            </attributes>
           </index>
           <index id="3">
-             <attributes>
-               <attribute id="item_org_id"/>
-             </attributes>
+            <attributes>
+              <attribute id="item_org_id"/>
+            </attributes>
           </index>
         </indexes>
       </properties>

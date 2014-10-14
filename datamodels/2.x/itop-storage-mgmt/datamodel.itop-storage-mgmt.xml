@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
   <classes>
     <class id="StorageSystem" _delta="define">
       <parent>DatacenterDevice</parent>
@@ -1757,48 +1757,47 @@
         </list>
       </presentation>
     </class>
-</classes>
-<menus>
+  </classes>
+  <menus>
     <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
       <rank>1</rank>
       <parent>ConfigManagement</parent>
       <definition>
-  <layout>DashboardLayoutOneCol</layout>
-  <title></title>
-  <cells>
-    <cell id="0" _delta="must_exist">
-      <rank>0</rank>
-      <dashlets>
-        <dashlet id="33" xsi:type="DashletBadge" _delta="define">
-          <rank>5</rank>
-          <class>StorageSystem</class>
-        </dashlet>
-        <dashlet id="34" xsi:type="DashletBadge" _delta="define">
-          <rank>6</rank>
-          <class>SANSwitch</class>
-        </dashlet>
-        <dashlet id="35" xsi:type="DashletBadge" _delta="define">
-          <rank>7</rank>
-          <class>NAS</class>
-        </dashlet>
-        <dashlet id="36" xsi:type="DashletBadge" _delta="define">
-          <rank>8</rank>
-          <class>TapeLibrary</class>
-        </dashlet>
-      </dashlets>
-    </cell>
-    <cell id="4" _delta="must_exist">
-      <rank>4</rank>
-      <dashlets>
-        <dashlet id="37" xsi:type="DashletBadge" _delta="define">
-          <rank>3</rank>
-          <class>LogicalVolume</class>
-        </dashlet>
-      </dashlets>
-    </cell>
-
-    </cells>
-    </definition>
+        <layout>DashboardLayoutOneCol</layout>
+        <title/>
+        <cells>
+          <cell id="0" _delta="must_exist">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="33" xsi:type="DashletBadge" _delta="define">
+                <rank>5</rank>
+                <class>StorageSystem</class>
+              </dashlet>
+              <dashlet id="34" xsi:type="DashletBadge" _delta="define">
+                <rank>6</rank>
+                <class>SANSwitch</class>
+              </dashlet>
+              <dashlet id="35" xsi:type="DashletBadge" _delta="define">
+                <rank>7</rank>
+                <class>NAS</class>
+              </dashlet>
+              <dashlet id="36" xsi:type="DashletBadge" _delta="define">
+                <rank>8</rank>
+                <class>TapeLibrary</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="4" _delta="must_exist">
+            <rank>4</rank>
+            <dashlets>
+              <dashlet id="37" xsi:type="DashletBadge" _delta="define">
+                <rank>3</rank>
+                <class>LogicalVolume</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
     </menu>
- </menus>
+  </menus>
 </itop_design>

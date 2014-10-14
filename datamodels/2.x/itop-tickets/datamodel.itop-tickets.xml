@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
   <constants>
     <constant id="RESPONSE_TICKET_SLT_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT SLT AS slt JOIN lnkSLAToSLT AS l1 ON l1.slt_id=slt.id JOIN SLA AS sla ON l1.sla_id=sla.id JOIN lnkCustomerContractToService AS l2 ON l2.sla_id=sla.id JOIN CustomerContract AS sc ON l2.customercontract_id=sc.id WHERE slt.metric = :metric AND l2.service_id = :this->service_id AND sc.org_id = :this->org_id AND slt.request_type = :request_type AND slt.priority = :this->priority]]></constant>
     <constant id="PORTAL_POWER_USER_PROFILE" xsi:type="string" _delta="define"><![CDATA[Portal power user]]></constant>
@@ -93,7 +93,7 @@
           <target_class>Person</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
-	  <allow_target_creation>false</allow_target_creation>
+          <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="agent_name" xsi:type="AttributeExternalField">
           <extkey_attcode>agent_id</extkey_attcode>
@@ -213,7 +213,7 @@
         }
         ]]></code>
         </method>
-       </methods>
+      </methods>
       <presentation>
         <details>
           <items>
@@ -545,8 +545,8 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value>open</value>
-            <value>closed</value>
+            <value id="open">open</value>
+            <value id="closed">closed</value>
           </values>
           <sql>status</sql>
           <default_value>open</default_value>
@@ -588,7 +588,7 @@
           <target_class>Person</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-	  <allow_target_creation>false</allow_target_creation>
+          <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="agent_email" xsi:type="AttributeExternalField">
           <extkey_attcode>agent_id</extkey_attcode>
@@ -620,7 +620,6 @@
             <flags/>
             <transitions>
               <transition id="ev_close">
-                <stimulus>ev_close</stimulus>
                 <target>closed</target>
                 <actions/>
               </transition>
