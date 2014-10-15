@@ -1075,10 +1075,56 @@ EOF;
 			}
 					
 			$oStates = $oLifecycle->GetUniqueElement('states');
+			$aStatesDependencies = array();
+			$aStates = array();
 			foreach ($oStates->getElementsByTagName('state') as $oState)
 			{
-				$sState = $oState->getAttribute('id');
-	
+				$aStatesDependencies[$oState->getAttribute('id')] = $oState->GetChildText('inherit_flags_from', '');
+				$aStates[$oState->getAttribute('id')] = $oState;
+			}
+			$aStatesOrder = array();
+			while (count($aStatesOrder) < count($aStatesDependencies))
+			{
+				$iResolved = 0;
+				foreach($aStatesDependencies as $sState => $sInheritFrom)
+				{
+					if (is_null($sInheritFrom))
+					{
+						// Already recorded as resolved
+						continue;
+					}
+					elseif ($sInheritFrom == '')
+					{
+						// Resolved
+						$aStatesOrder[$sState] = $sInheritFrom;
+						$aStatesDependencies[$sState] = null;
+						$iResolved++;
+					}
+					elseif (isset($aStatesOrder[$sInheritFrom]))
+					{
+						// Resolved
+						$aStatesOrder[$sState] = $sInheritFrom;
+						$aStatesDependencies[$sState] = null;
+						$iResolved++;
+					}
+				}
+				if ($iResolved == 0)
+				{
+					// No change on this loop -> there are unmet dependencies
+					$aRemainingDeps = array();
+					foreach($aStatesDependencies as $sState => $sParentState)
+					{
+						if (strlen($sParentState) > 0)
+						{
+							$aRemainingDeps[] = $sState.' ('.$sParentState.')';
+						}
+					}
+					throw new DOMFormatException("Could not solve inheritance for states: ".implode(', ', $aRemainingDeps));
+				}
+			}
+			foreach ($aStatesOrder as $sState => $foo)
+			{
+				$oState = $aStates[$sState];
 				$oInitialStatePath = $oState->GetOptionalElement('initial_state_path');
 				if ($oInitialStatePath)
 				{
@@ -1532,7 +1578,17 @@ EOF;
 				foreach($oActions->getElementsByTagName('action') as $oAction)
 				{
 					$sAction = $oAction->getAttribute("id");
-					$sType = $oAction->getAttribute("xsi:type");
+					if (strpos($sAction, 'action:') === 0)
+					{
+						$sType = 'action';
+						$sActionCode = substr($sAction, strlen('action:'));
+						$sActionCode = $aActionsInShort[$sActionCode];
+					}
+					else
+					{
+						$sType = 'stimulus';
+						$sActionCode = substr($sAction, strlen('stimulus:'));
+					}
 					$sGrant = $oAction->GetText();
 					$bGrant = ($sGrant == 'allow');
 					
@@ -1548,14 +1604,13 @@ EOF;
 					{
 						if ($sType == 'stimulus')
 						{
-							$this->CumulateGrant($aGrants, $iProfile.'_'.$sClass.'_s_'.$sAction, $bGrant);
-							$this->CumulateGrant($aGrants, $iProfile.'_'.$sClass.'+_s_'.$sAction, $bGrant); // subclasses inherit this grant
+							$this->CumulateGrant($aGrants, $iProfile.'_'.$sClass.'_s_'.$sActionCode, $bGrant);
+							$this->CumulateGrant($aGrants, $iProfile.'_'.$sClass.'+_s_'.$sActionCode, $bGrant); // subclasses inherit this grant
 						}
 						else
 						{
-							$sAction = $aActionsInShort[$sType];
-							$this->CumulateGrant($aGrants, $iProfile.'_'.$sClass.'_'.$sAction, $bGrant);
-							$this->CumulateGrant($aGrants, $iProfile.'_'.$sClass.'+_'.$sAction, $bGrant); // subclasses inherit this grant
+							$this->CumulateGrant($aGrants, $iProfile.'_'.$sClass.'_'.$sActionCode, $bGrant);
+							$this->CumulateGrant($aGrants, $iProfile.'_'.$sClass.'+_'.$sActionCode, $bGrant); // subclasses inherit this grant
 						}
 					}
 				}
