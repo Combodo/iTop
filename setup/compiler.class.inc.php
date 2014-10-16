@@ -1650,6 +1650,8 @@ class ProfilesConfig
 
 	public static function GetProfileActionGrant(\$iProfileId, \$sClass, \$sAction)
 	{
+		\$bLegacyBehavior = MetaModel::GetConfig()->Get('user_rights_legacy');
+
 		// Search for a grant, stoping if any deny is encountered (allowance implies the verification of all paths)
 		\$bAllow = null;
 
@@ -1659,6 +1661,7 @@ class ProfilesConfig
 		if (isset(self::\$aGRANTS[\$sGrantKey]))
 		{
 			\$bAllow = self::\$aGRANTS[\$sGrantKey];
+			if (\$bLegacyBehavior) return \$bAllow;
 			if (!\$bAllow) return false;
 		}
 
@@ -1670,6 +1673,7 @@ class ProfilesConfig
 			if (isset(self::\$aGRANTS[\$sGrantKey]))
 			{
 				\$bAllow = self::\$aGRANTS[\$sGrantKey];
+				if (\$bLegacyBehavior) return \$bAllow;
 				if (!\$bAllow) return false;
 			}
 		}
@@ -1680,6 +1684,7 @@ class ProfilesConfig
 		if (!is_null(\$bGrant))
 		{
 			\$bAllow = \$bGrant;
+			if (\$bLegacyBehavior) return \$bAllow;
 			if (!\$bAllow) return false;
 		}
 
@@ -1689,6 +1694,7 @@ class ProfilesConfig
 		if (isset(self::\$aGRANTS[\$sGrantKey]))
 		{
 			\$bAllow = self::\$aGRANTS[\$sGrantKey];
+			if (\$bLegacyBehavior) return \$bAllow;
 			if (!\$bAllow) return false;
 		}
 

@@ -769,6 +769,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false, 
 		),
+		'user_rights_legacy' => array(
+			'type' => 'bool',
+			'description' => 'Set to true to restore the buggy algorithm for the computation of user rights (within the same profile, ALLOW on the class itself has precedence on DENY of a parent class)',
+			'default' => false,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)
