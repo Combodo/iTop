@@ -1650,15 +1650,16 @@ class ProfilesConfig
 
 	public static function GetProfileActionGrant(\$iProfileId, \$sClass, \$sAction)
 	{
-		// Search for a grant, starting from the most explicit declaration,
-		// then searching for less and less explicit declaration
+		// Search for a grant, stoping if any deny is encountered (allowance implies the verification of all paths)
+		\$bAllow = null;
 
 		// 1 - The class itself
 		// 
 		\$sGrantKey = \$iProfileId.'_'.\$sClass.'_'.\$sAction;
 		if (isset(self::\$aGRANTS[\$sGrantKey]))
 		{
-			return self::\$aGRANTS[\$sGrantKey];
+			\$bAllow = self::\$aGRANTS[\$sGrantKey];
+			if (!\$bAllow) return false;
 		}
 
 		// 2 - The parent classes, up to the root class
@@ -1668,12 +1669,58 @@ class ProfilesConfig
 			\$sGrantKey = \$iProfileId.'_'.\$sParent.'+_'.\$sAction;
 			if (isset(self::\$aGRANTS[\$sGrantKey]))
 			{
-				return self::\$aGRANTS[\$sGrantKey];
+				\$bAllow = self::\$aGRANTS[\$sGrantKey];
+				if (!\$bAllow) return false;
 			}
 		}
 
-		// 3 - The related classes (if the current is an N-N link with AUTO_DEL)
+		// 3 - The related classes (if the current is an N-N link with DEL_AUTO/DEL_SILENT)
 		//
+		\$bGrant = self::GetLinkActionGrant(\$iProfileId, \$sClass, \$sAction);
+		if (!is_null(\$bGrant))
+		{
+			\$bAllow = \$bGrant;
+			if (!\$bAllow) return false;
+		}
+
+		// 4 - All
+		// 
+		\$sGrantKey = \$iProfileId.'_*_'.\$sAction;
+		if (isset(self::\$aGRANTS[\$sGrantKey]))
+		{
+			\$bAllow = self::\$aGRANTS[\$sGrantKey];
+			if (!\$bAllow) return false;
+		}
+
+		// null or true
+		return \$bAllow;
+	}	
+
+	public static function GetProfileStimulusGrant(\$iProfileId, \$sClass, \$sStimulus)
+	{
+		\$sGrantKey = \$iProfileId.'_'.\$sClass.'_s_'.\$sStimulus;
+		if (isset(self::\$aGRANTS[\$sGrantKey]))
+		{
+			return self::\$aGRANTS[\$sGrantKey];
+		}
+		\$sGrantKey = \$iProfileId.'_*_s_'.\$sStimulus;
+		if (isset(self::\$aGRANTS[\$sGrantKey]))
+		{
+			return self::\$aGRANTS[\$sGrantKey];
+		}
+		return null;
+	}
+
+	// returns an array of id => array of column => php value(so-called "real value")
+	public static function GetProfilesValues()
+	{
+		return self::\$aPROFILES;
+	}
+
+	// Propagate the rights on classes onto the links themselves (the external keys must have DEL_AUTO or DEL_SILENT
+	//
+	protected static function GetLinkActionGrant(\$iProfileId, \$sClass, \$sAction)
+	{
 		if (array_key_exists(\$sClass, self::\$aLINKTOCLASSES))
 		{
 			// Get the grant for the remote classes. The resulting grant is:
@@ -1714,38 +1761,7 @@ class ProfilesConfig
 				return false;
 			}
 		}
-
-		// 4 - All
-		// 
-		\$sGrantKey = \$iProfileId.'_*_'.\$sAction;
-		if (isset(self::\$aGRANTS[\$sGrantKey]))
-		{
-			return self::\$aGRANTS[\$sGrantKey];
-		}
-
-		// Still undefined for this class
 		return null;
-	}	
-
-	public static function GetProfileStimulusGrant(\$iProfileId, \$sClass, \$sStimulus)
-	{
-		\$sGrantKey = \$iProfileId.'_'.\$sClass.'_s_'.\$sStimulus;
-		if (isset(self::\$aGRANTS[\$sGrantKey]))
-		{
-			return self::\$aGRANTS[\$sGrantKey];
-		}
-		\$sGrantKey = \$iProfileId.'_*_s_'.\$sStimulus;
-		if (isset(self::\$aGRANTS[\$sGrantKey]))
-		{
-			return self::\$aGRANTS[\$sGrantKey];
-		}
-		return null;
-	}
-
-	// returns an array of id => array of column => php value(so-called "real value")
-	public static function GetProfilesValues()
-	{
-		return self::\$aPROFILES;
 	}
 }
 
