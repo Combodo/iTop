@@ -957,6 +957,7 @@ class DesignerComboField extends DesignerFormField
 	protected $aAllowedValues;
 	protected $bMultipleSelection;
 	protected $bOtherChoices;
+	protected $sNullLabel;
 	
 	public function __construct($sCode, $sLabel = '', $defaultValue = '')
 	{
@@ -964,6 +965,7 @@ class DesignerComboField extends DesignerFormField
 		$this->aAllowedValues = array();
 		$this->bMultipleSelection = false;
 		$this->bOtherChoices = false;
+		$this->sNullLabel = Dict::S('UI:SelectOne');
 
 		$this->bAutoApply = true;
 	}
@@ -982,7 +984,14 @@ class DesignerComboField extends DesignerFormField
 	{
 		$this->bOtherChoices = $bOtherChoices;
 	}
-	
+
+	/**
+	 * An empty label will disable the default empty value
+	 */	 	
+	public function SetNullLabel($sLabel)
+	{
+		$this->sNullLabel = $sLabel;
+	}
 	
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
 	{
@@ -1030,7 +1039,10 @@ class DesignerComboField extends DesignerFormField
 			else
 			{
 				$sHtml = "<select $sCSSClasses id=\"$sId\" name=\"$sName\">";
-				$sHtml .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>";
+				if ($this->sNullLabel != '')
+				{
+					$sHtml .= "<option value=\"\">".$this->sNullLabel."</option>";
+				}
 			}
 			foreach($this->aAllowedValues as $sKey => $sDisplayValue)
 			{
