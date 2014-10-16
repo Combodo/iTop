@@ -79,7 +79,7 @@ class CMDBSource
 				// Override the default port
 				$sServer = $aConnectInfo[0];
 				$iPort = (int)$aConnectInfo[1];
-				self::$m_oMysqli = new mysqli(self::$m_sDBHost, self::$m_sDBUser, self::$m_sDBPwd, '', $iPort);
+				self::$m_oMysqli = new mysqli($sServer, self::$m_sDBUser, self::$m_sDBPwd, '', $iPort);
 			}
 			else
 			{
