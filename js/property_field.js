@@ -32,7 +32,9 @@ $(function()
 			
 			if (this.options.field_id != '')
 			{
-				$('#'+this.options.field_id).bind('change.itop-property-field', function() { me._on_change(); });
+				// In case there is an hidden input having the same id (somewhere else in the page), the change event does not occur unless the input loses the focus
+				// To reduce the impact, let's handle keyup as well
+				$('#'+this.options.field_id, this.element).bind('change.itop-property-field keyup.itop-property-field', function() { me._on_change(); });
 				this.value = this._get_field_value();
 			}
 			this.element.find(".prop_apply").bind('click.itop-property-field', function() { me._do_apply(); });
@@ -113,7 +115,7 @@ $(function()
 		{
 			if (this.options.get_field_value === null)
 			{
-				var oField = $('#'+this.options.field_id);
+				var oField = $('#'+this.options.field_id, this.element);
 				if (oField.attr('type') == 'checkbox')
 				{
 					return (oField.attr('checked') == 'checked');
@@ -130,7 +132,7 @@ $(function()
 		},
 		_get_committed_value: function()
 		{
-			return { name: $('#'+this.options.field_id).attr('name'), value: this.value };
+			return { name: $('#'+this.options.field_id, this.element).attr('name'), value: this.value };
 		},
 		_do_apply: function()
 		{
@@ -153,7 +155,7 @@ $(function()
 			{
 				// Validate the field
 				sFormId = this.element.closest('form').attr('id');
-				var oField = $('#'+this.options.field_id);
+				var oField = $('#'+this.options.field_id, this.element);
 				oField.trigger('validate');
 				if ( $.inArray(this.options.field_id, oFormValidation[sFormId]) == -1)
 				{
@@ -175,7 +177,7 @@ $(function()
 			else
 			{
 				this.bModified = false;
-				var oField = $('#'+this.options.field_id);
+				var oField = $('#'+this.options.field_id, this.element);
 				if (oField.attr('type') == 'checkbox')
 				{
 					if (this.value)
@@ -215,7 +217,7 @@ $(function()
 			});
 			oPostedData = this.options.submit_parameters;
 			oPostedData.params = oData;
-			oPostedData.params.updated = [ $('#'+this.options.field_id).attr('name') ]; // only one field updated in this case
+			oPostedData.params.updated = [ $('#'+this.options.field_id, this.element).attr('name') ]; // only one field updated in this case
 			oPostedData.params.previous_values = {};
 			oPostedData.params.previous_values[oPostedData.params.updated] = this.previous_value; // pass also the previous value(s)		
 			$.post(this.options.submit_to, oPostedData, function(data)
