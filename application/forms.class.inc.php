@@ -333,6 +333,8 @@ EOF
 	
 	public function RenderAsDialog($oPage, $sDialogId, $sDialogTitle, $iDialogWidth, $sOkButtonLabel, $sIntroduction = null)
 	{
+		$this->SetPrefix('dlg_'); // To make sure that the controls have different IDs that the property sheet which may be displayed at the same time
+		
 		$sDialogTitle = addslashes($sDialogTitle);
 		$sOkButtonLabel = addslashes($sOkButtonLabel);
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
@@ -1360,7 +1362,7 @@ class DesignerFormSelectorField extends DesignerFormField
 				if ($iKey == $this->defaultValue) // Default value is actually the index
 				{
 					$sDisplayValue = htmlentities($aFormData['label'], ENT_QUOTES, 'UTF-8');
-					$sHiddenValue = "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\"/>";
+					$sHiddenValue = "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($iKey, ENT_QUOTES, 'UTF-8')."\"/>";
 					break;
 				}
 			}
