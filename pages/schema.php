@@ -211,7 +211,24 @@ function DisplayLifecycle($oPage, $sClass)
 				$sTargetStateLabel = MetaModel::GetStateLabel($sClass, $aTransitionDef['target_state']);
 				if (count($aTransitionDef['actions']) > 0)
 				{
-					$sActions = " <em>(".implode(', ', $aTransitionDef['actions']).")</em>";
+					$aActionsDesc = array();
+					foreach ($aTransitionDef['actions'] as $actionHandler)
+					{
+						if (is_string($actionHandler))
+						{
+							$aActionsDesc[] = $actionHandler;
+						}
+						else
+						{
+							$aParamsDesc = array();
+							foreach ($actionHandler['params'] as $aParamData)
+							{
+								$aParamsDesc[] = $aParamData['type'].':'.$aParamData['value'];
+							}
+							$aActionsDesc[] = $actionHandler['verb'].'('.implode(', ', $aParamsDesc).')';
+						}
+					}
+					$sActions = " <em>(".implode(', ', $aActionsDesc).")</em>";
 				}
 				else
 				{
