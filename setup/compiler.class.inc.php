@@ -116,14 +116,27 @@ class MFCompiler
 		}
 
 		// Determine the target module (exactly one!) for USER RIGHTS
-		//
+		// This used to be based solely on the module which created the user_rights node first
+		// Unfortunately, our sample extension was delivered with the xml structure, resulting in the new module to be the recipient of the compilation
+		// Then model.itop-profiles-itil would not exist... resulting in an error after the compilation (and the actual product of the compiler would never be included
+		// The bullet proof implementation would be to compile in a separate directory as it has been done with the dictionaries... that's another story
+		$aModules = $this->oFactory->GetLoadedModules();
 		$sUserRightsModule = '';
-		$oUserRightsNode = $this->oFactory->GetNodes('user_rights')->item(0);
-		if ($oUserRightsNode)
+		foreach($aModules as $foo => $oModule)
 		{
-			$sUserRightsModule = $oUserRightsNode->getAttribute('_created_in');
-			$this->Log("User Rights module found: $sUserRightsModule");
+			if ($oModule->GetName() == 'itop-profiles-itil')
+			{
+				$sUserRightsModule = 'itop-profiles-itil';
+				break;
+			}
 		}
+		$oUserRightsNode = $this->oFactory->GetNodes('user_rights')->item(0);
+		if ($oUserRightsNode && ($sUserRightsModule == ''))
+		{
+			// Legacy algorithm (itop <= 2.0.3)
+			$sUserRightsModule = $oUserRightsNode->getAttribute('_created_in');
+		}
+		$this->Log("User Rights module found: '$sUserRightsModule'");
 
 		// List root classes
 		//

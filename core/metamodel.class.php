@@ -4922,7 +4922,15 @@ abstract class MetaModel
 		if (!file_exists($sFile))
 		{
 			$sConfigFile = self::$m_oConfig->GetLoadedFile();
-			throw new CoreException('Wrong filename in configuration file', array('file' => $sConfigFile, 'module' => $sModuleType, 'filename' => $sFile));
+			if (strlen($sConfigFile) > 0)
+			{
+				throw new CoreException('Include: wrong file name in configuration file', array('config file' => $sConfigFile, 'section' => $sModuleType, 'filename' => $sFile));
+			}
+			else
+			{
+				// The configuration is in memory only
+				throw new CoreException('Include: wrong file name in configuration file (in memory)', array('section' => $sModuleType, 'filename' => $sFile));
+			}
 		}
 
 		// Note: We do not expect the modules to output characters while loading them.
