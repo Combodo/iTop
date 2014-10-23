@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -225,9 +225,8 @@ EOF
 EOF
 			);
 		}	
-        $s_captured_output = ob_get_contents();
-        ob_end_clean();
-        if (($this->sContentType == 'text/html') &&  ($this->sContentDisposition == 'inline'))
+        $s_captured_output = $this->ob_get_clean_safe();
+		  if (($this->sContentType == 'text/html') &&  ($this->sContentDisposition == 'inline'))
         {
         	// inline content != attachment && html => filter all scripts for malicious XSS scripts
         	echo self::FilterXSS($this->s_content);
@@ -393,4 +392,3 @@ EOF
 	}
 }
 
-?>

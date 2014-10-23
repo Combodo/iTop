@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -68,6 +68,7 @@ class WebPage implements Page
 	protected $sContentType;
 	protected $sContentDisposition;
 	protected $sContentFileName;
+	protected $bTrashUnexpectedOutput;
 	protected $s_sOutputFormat;
 	protected $a_OutputOptions;
 	    
@@ -88,6 +89,7 @@ class WebPage implements Page
         $this->sContentType = '';
         $this->sContentDisposition = '';
         $this->sContentFileName = '';
+		$this->bTrashUnexpectedOutput = false;
 		$this->s_OutputFormat = utils::ReadParam('output_format', 'html');
 		$this->a_OutputOptions = array();
         ob_start(); // Start capturing the output
@@ -392,22 +394,55 @@ class WebPage implements Page
 	}
 	
 	/**
-	 * Discard unexpected output data
+	 * Discard unexpected output data (such as PHP warnings)
 	 * This is a MUST when the Page output is DATA (download of a document, download CSV export, download ...)
 	 */	
 	public function TrashUnexpectedOutput()
 	{
-		// This protection is redundant with a protection implemented in MetaModel::IncludeModule
-		// which detects such issues while loading module files
-		// Here, the purpose is to detect and discard characters produced by the code execution (echo)
-		$sPreviousContent = ob_get_clean();
-		if (trim($sPreviousContent) != '')
+		$this->bTrashUnexpectedOutput = true;
+	}
+
+	/**
+	 * Read the output buffer and deal with its contents:
+	 * - trash unexpected output if the flag has been set
+	 * - report unexpected behaviors such as the output buffering being stopped
+	 * 
+	 * Possible improvement: I've noticed that several output buffers are stacked,
+	 * if they are not empty, the output will be corrupted. The solution would
+	 * consist in unstacking all of them (and concatenate the contents).	 	 
+	 */
+	protected function ob_get_clean_safe()
+	{
+		$sOutput = ob_get_contents();
+		if ($sOutput === false)
 		{
-			if (Utils::GetConfig() && Utils::GetConfig()->Get('debug_report_spurious_chars'))
+			$sMsg = "Design/integration issue: No output buffer. Some piece of code has called ob_get_clean() or ob_end_clean() without calling ob_start()";
+			if ($this->bTrashUnexpectedOutput)
 			{
-				IssueLog::Error("Output already started before downloading file:\nContent was:'$sPreviousContent'\n");
+				IssueLog::Error($sMsg);
+				$sOutput = '';
+			}
+			else
+			{
+				$sOutput = $sMsg;
 			}
 		}
+		else
+		{
+			ob_end_clean(); // on some versions of PHP doing so when the output buffering is stopped can cause a notice
+			if ($this->bTrashUnexpectedOutput)
+			{
+				if (trim($sOutput) != '')
+				{
+					if (Utils::GetConfig() && Utils::GetConfig()->Get('debug_report_spurious_chars'))
+					{
+						IssueLog::Error("Trashing unexpected output:'$s_captured_output'\n");
+					}
+				}
+				$sOutput = '';
+			}
+		}
+		return $sOutput;
 	}
 
 	/**
@@ -419,8 +454,8 @@ class WebPage implements Page
         {
             header($s_header);
         }
-        $s_captured_output = ob_get_contents();
-        ob_end_clean();
+
+        $s_captured_output = $this->ob_get_clean_safe();
         echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
         echo "<html>\n";
         echo "<head>\n";

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -39,7 +39,11 @@ class CSVPage extends WebPage
 
     public function output()
     {
-		$this->add_header("Content-Length: ".strlen(trim($this->s_content)));
+			$this->add_header("Content-Length: ".strlen(trim($this->s_content)));
+
+			// Get the unexpected output but do nothing with it
+			$sTrash = $this->ob_get_clean_safe();
+
         foreach($this->a_headers as $s_header)
         {
             header($s_header);
@@ -105,4 +109,3 @@ class CSVPage extends WebPage
 	}
 }
 
-?>

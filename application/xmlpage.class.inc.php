@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -51,6 +51,9 @@ class XMLPage extends WebPage
 	{
 		if (!$this->m_bPassThrough)
 		{
+			// Get the unexpected output but do nothing with it
+			$sTrash = $this->ob_get_clean_safe();
+					
 			$this->s_content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n".trim($this->s_content);
 			$this->add_header("Content-Length: ".strlen($this->s_content));
 			foreach($this->a_headers as $s_header)
@@ -79,8 +82,7 @@ class XMLPage extends WebPage
 			}
 			else
 			{
-				$s_captured_output = ob_get_contents();
-				ob_end_clean();
+				$s_captured_output = $this->ob_get_clean_safe();
 				foreach($this->a_headers as $s_header)
 				{
 					header($s_header);
@@ -101,13 +103,4 @@ class XMLPage extends WebPage
 	public function table($aConfig, $aData, $aParams = array())
 	{
 	}
-
-	public function TrashUnexpectedOutput()
-	{
-		if (!$this->m_bPassThrough)
-		{
-			parent::TrashUnexpectedOutput();
-		}
-	}
 }
-?>
