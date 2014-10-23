@@ -204,14 +204,18 @@ class MFCompiler
 			}
 			else
 			{
+				$sMenuCreationClass = 'MenuCreation_'.preg_replace('/[^A-Za-z0-9_]/', '_', $sModuleName);
 				$sCompiledCode .=
 <<<EOF
 
 //
 // Menus
 //
-
-global \$__comp_menus__; // ensure that the global variable is indeed global !
+class $sMenuCreationClass extends ModuleHandlerAPI
+{
+	public static function OnMenuCreation()
+	{
+		global \$__comp_menus__; // ensure that the global variable is indeed global !
 
 EOF;
 				// Preliminary: determine parent menus not defined within the current module
@@ -229,6 +233,8 @@ EOF;
 					$aMenusToLoad[] = $sMenuId;
 				}
 				$aMenusToLoad = array_unique($aMenusToLoad);
+				$aMenusForAll = array();
+				$aMenusForAdmins = array();
 				foreach($aMenusToLoad as $sMenuId)
 				{
 					$oMenuNode = $aMenuNodes[$sMenuId];
@@ -249,13 +255,41 @@ EOF;
 					}
 					try
 					{
-						$sCompiledCode .= $this->CompileMenu($oMenuNode, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
+						$aMenuLines = $this->CompileMenu($oMenuNode, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
 					}
 					catch (DOMFormatException $e)
 					{
 						throw new Exception("Failed to process menu '$sMenuId', from '$sModuleRootDir': ".$e->getMessage());
 					}
+					if ($oMenuNode->GetChildText('enable_admin_only') == '1')
+					{
+						$aMenusForAdmins = array_merge($aMenusForAdmins, $aMenuLines);
+					}
+					else
+					{
+						$aMenusForAll = array_merge($aMenusForAll, $aMenuLines);
+					}
 				}
+				$sIndent = "\t\t";
+				foreach ($aMenusForAll as $sPHPLine)
+				{
+					$sCompiledCode .= $sIndent.$sPHPLine."\n";
+				}
+				if (count($aMenusForAdmins) > 0)
+				{
+					$sCompiledCode .= $sIndent."if (UserRights::IsAdministrator())\n";
+					$sCompiledCode .= $sIndent."{\n";
+					foreach ($aMenusForAdmins as $sPHPLine)
+					{
+						$sCompiledCode .= $sIndent."\t".$sPHPLine."\n";
+					}
+					$sCompiledCode .= $sIndent."}\n";
+				}
+				$sCompiledCode .=
+<<<EOF
+	}
+} // class $sMenuCreationClass
+EOF;
 			}
 
 			// User rights
@@ -1451,35 +1485,13 @@ EOF;
 			}
 		}
 
-		$sIndent = '';
 		$aPHPMenu = array("\$__comp_menus__['$sMenuId'] = $sNewMenu");
 		if ($sAutoReload = $oMenu->GetChildText('auto_reload'))
 		{
 			$sAutoReload = self::QuoteForPHP($sAutoReload);
 			$aPHPMenu[] = "\$__comp_menus__['$sMenuId']->SetParameters(array('auto_reload' => $sAutoReload));";
 		}
-
-		$sAdminOnly = $oMenu->GetChildText('enable_admin_only');
-		if ($sAdminOnly && ($sAdminOnly == '1'))
-		{
-			$sPHP = $sIndent."if (UserRights::IsAdministrator())\n";
-			$sPHP .= $sIndent."{\n";
-			foreach($aPHPMenu as $sPHPLine)
-			{
-				$sPHP .= $sIndent."   $sPHPLine\n";
-			}
-			$sPHP .= $sIndent."}\n";
-		}
-		else
-		{
-			$sPHP = '';
-			foreach($aPHPMenu as $sPHPLine)
-			{
-				$sPHP .= $sIndent.$sPHPLine."\n";
-			}
-		}
-
-		return $sPHP;
+		return $aPHPMenu;
 	} // function CompileMenu
 
 	/**
