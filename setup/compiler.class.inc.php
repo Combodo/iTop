@@ -1894,8 +1894,11 @@ EOF;
 			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'login_logo', 'login-logo');
 			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'portal_logo', 'portal-logo');
 
-			// Cleanup the images directory (made by CompileFiles)
-			SetupUtils::rrmdir($sTempTargetDir.'/branding/images');
+			// Cleanup the images directory (eventually made by CompileFiles)
+			if (file_exists($sTempTargetDir.'/branding/images'))
+			{
+				SetupUtils::rrmdir($sTempTargetDir.'/branding/images');
+			}
 		}
 	}
 }
