@@ -1576,7 +1576,7 @@
               </dashlet>
             </dashlets>
           </cell>
-          <cell id="1">
+          <cell id="11">
             <rank>2</rank>
             <dashlets>
               <dashlet id="3" xsi:type="DashletGroupByTable">
