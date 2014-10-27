@@ -1854,7 +1854,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			$aDependencies = MetaModel::GetDependentAttributes($sClass, $sAttCode); // List of attributes that depend on the current one
 			if (count($aDependencies) > 0)
 			{
-				$oPage->add_ready_script("$('#$iId').bind('change', function(evt, sFormId) { return oWizardHelper{$sFormPrefix}.UpdateDependentFields(['".implode("','", $aDependencies)."']) } );\n"); // Bind to a custom event: validate
+				// Unbind first to avoid duplicate event handlers in case of reload of the whole (or part of the) form
+				$oPage->add_ready_script("$('#$iId').unbind('change.dependencies').bind('change.dependencies', function(evt, sFormId) { return oWizardHelper{$sFormPrefix}.UpdateDependentFields(['".implode("','", $aDependencies)."']) } );\n"); // Bind to a custom event: validate
 			}
 		}
 		return "<div>{$sHTMLValue}</div>";
