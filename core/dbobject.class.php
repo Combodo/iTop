@@ -94,7 +94,7 @@ abstract class DBObject implements iDisplay
 	private $m_bFullyLoaded = false; // Compound objects can be partially loaded
 	private $m_aLoadedAtt = array(); // Compound objects can be partially loaded, array of sAttCode
 	protected $m_aModifiedAtt = array(); // list of (potentially) modified sAttCodes
-	protected $m_oMasterReplicaSet = null; // Set of SynchroReplica related to this object
+	protected $m_aSynchroData = null; // Set of Synch data related to this object
 	protected $m_sHighlightCode = null;
 
 	// Use the MetaModel::NewObject to build an object (do we have to force it?)
@@ -1178,48 +1178,45 @@ abstract class DBObject implements iDisplay
 
 		if ($this->InSyncScope())
 		{
-			$oReplicaSet = $this->GetMasterReplica();
-			if ($oReplicaSet->Count() > 0)
+
+			foreach ($this->GetSynchroData() as $iSourceId => $aSourceData)
 			{
-				while($aData = $oReplicaSet->FetchAssoc())
+				foreach ($aSourceData['replica'] as $oReplica)
 				{
-					$oDataSource = $aData['datasource'];
-					$oReplica = $aData['replica'];
-
 					$oDeletionPlan->AddToDelete($oReplica, DEL_SILENT);
+				}
+				$oDataSource = $aSourceData['source'];
+				if ($oDataSource->GetKey() == SynchroExecution::GetCurrentTaskId())
+				{
+					// The current task has the right to delete the object
+					continue;
+				}
+				$oReplica = reset($aSourceData['replica']); // Take the first one
+				if ($oReplica->Get('status_dest_creator') != 1)
+				{
+					// The object is not owned by the task
+					continue;
+				}
 
-					if ($oDataSource->GetKey() == SynchroExecution::GetCurrentTaskId())
-					{
-						// The current task has the right to delete the object
-						continue;
-					}
-					
-					if ($oReplica->Get('status_dest_creator') != 1)
-					{
-						// The object is not owned by the task
-						continue;
-					}
+				$sLink = $oDataSource->GetName();
+				$sUserDeletePolicy = $oDataSource->Get('user_delete_policy');
+				switch($sUserDeletePolicy)
+				{
+				case 'nobody':
+					$this->m_aDeleteIssues[] = Dict::Format('Core:Synchro:TheObjectCannotBeDeletedByUser_Source', $sLink);
+					break;
 
-					$sLink = $oDataSource->GetName();
-					$sUserDeletePolicy = $oDataSource->Get('user_delete_policy');
-					switch($sUserDeletePolicy)
+				case 'administrators':
+					if (!UserRights::IsAdministrator())
 					{
-					case 'nobody':
 						$this->m_aDeleteIssues[] = Dict::Format('Core:Synchro:TheObjectCannotBeDeletedByUser_Source', $sLink);
-						break;
-
-					case 'administrators':
-						if (!UserRights::IsAdministrator())
-						{
-							$this->m_aDeleteIssues[] = Dict::Format('Core:Synchro:TheObjectCannotBeDeletedByUser_Source', $sLink);
-						}
-						break;
-
-					case 'everybody':
-					default:
-						// Ok
-						break;
 					}
+					break;
+
+				case 'everybody':
+				default:
+					// Ok
+					break;
 				}
 			}
 		}
@@ -2588,45 +2585,77 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * WILL DEPRECATED SOON
+	 * Caching relying on an object set is not efficient since 2.0.3
+	 * Use GetSynchroData instead
+	 * 	 
 	 * Get all the synchro replica related to this object
 	 * @param none
 	 * @return DBObjectSet Set with two columns: R=SynchroReplica S=SynchroDataSource
 	 */
 	public function GetMasterReplica()
 	{
-		if ($this->m_oMasterReplicaSet == null)
+		$sOQL = "SELECT replica,datasource FROM SynchroReplica AS replica JOIN SynchroDataSource AS datasource ON replica.sync_source_id=datasource.id WHERE replica.dest_class = :dest_class AND replica.dest_id = :dest_id";
+		$oReplicaSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array() /* order by*/, array('dest_class' => get_class($this), 'dest_id' => $this->GetKey()));
+		return $oReplicaSet;
+	}
+
+	/**
+	 * Get all the synchro data related to this object
+	 * @param none
+	 * @return array of data_source_id => array
+	 * 	'source' => $oSource,
+	 * 	'attributes' => array of $oSynchroAttribute
+	 * 	'replica' => array of $oReplica (though only one should exist, misuse of the data sync can have this consequence)
+	 */
+	public function GetSynchroData()
+	{
+		if ($this->m_aSynchroData == null)
 		{
-			//$aParentClasses = MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL);
-			//$sClassesList = "'".implode("','", $aParentClasses)."'";
 			$sOQL = "SELECT replica,datasource FROM SynchroReplica AS replica JOIN SynchroDataSource AS datasource ON replica.sync_source_id=datasource.id WHERE replica.dest_class = :dest_class AND replica.dest_id = :dest_id";
 			$oReplicaSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array() /* order by*/, array('dest_class' => get_class($this), 'dest_id' => $this->GetKey()));
-			$this->m_oMasterReplicaSet = $oReplicaSet;
+			$this->m_aSynchroData = array();
+			while($aData = $oReplicaSet->FetchAssoc())
+			{
+				$iSourceId = $aData['datasource']->GetKey();
+				if (!array_key_exists($iSourceId, $this->m_aSynchroData))
+				{
+					$aAttributes = array();
+					$oAttrSet = $aData['datasource']->Get('attribute_list');
+					while($oSyncAttr = $oAttrSet->Fetch())
+					{
+						$aAttributes[$oSyncAttr->Get('attcode')] = $oSyncAttr;
+					}
+					$this->m_aSynchroData[$iSourceId] = array(
+						'source' => $aData['datasource'],
+						'attributes' => $aAttributes,
+						'replica' => array()
+					);
+				}
+				// Assumption: $aData['datasource'] will not be null because the data source id is always set...
+				$this->m_aSynchroData[$iSourceId]['replica'][] = $aData['replica'];
+			}
 		}
-		else
-		{
-			$this->m_oMasterReplicaSet->Rewind();		
-		}
-		return $this->m_oMasterReplicaSet;
+		return $this->m_aSynchroData;
 	}
 	
 	public function GetSynchroReplicaFlags($sAttCode, &$aReason)
 	{
 		$iFlags = OPT_ATT_NORMAL;
-		$oSet = $this->GetMasterReplica();
-		while($aData = $oSet->FetchAssoc())
+		foreach ($this->GetSynchroData() as $iSourceId => $aSourceData)
 		{
-			if ($aData['datasource']->GetKey() == SynchroExecution::GetCurrentTaskId())
+			if ($iSourceId == SynchroExecution::GetCurrentTaskId())
 			{
 				// Ignore the current task (check to write => ok)
 				continue;
 			}
-			// Assumption: $aData['datasource'] will not be null because the data source id is always set...
-			$oReplica = $aData['replica'];
-			$oSource = $aData['datasource'];
-			$oAttrSet = $oSource->Get('attribute_list');
-			while($oSyncAttr = $oAttrSet->Fetch())
+			// Assumption: one replica - take the first one!
+			$oReplica = reset($aSourceData['replica']);
+			$oSource = $aSourceData['source'];
+			if (array_key_exists($sAttCode, $aSourceData['attributes']))
 			{
-				if (($oSyncAttr->Get('attcode') == $sAttCode) && ($oSyncAttr->Get('update') == 1) && ($oSyncAttr->Get('update_policy') == 'master_locked'))
+				$oSyncAttr = $aSourceData['attributes'][$sAttCode];
+				if (($oSyncAttr->Get('update') == 1) && ($oSyncAttr->Get('update_policy') == 'master_locked'))
 				{
 					$iFlags |= OPT_ATT_SLAVE;
 					$sUrl = $oSource->GetApplicationUrl($this, $oReplica);

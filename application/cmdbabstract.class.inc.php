@@ -125,27 +125,29 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	
 		// Master data sources
 		$sSynchroIcon = '';
-		$oReplicaSet = $this->GetMasterReplica();
 		$bSynchronized = false;
 		$oCreatorTask = null;
 		$bCanBeDeletedByTask = false;
 		$bCanBeDeletedByUser = true;
 		$aMasterSources = array();
-		if ($oReplicaSet->Count() > 0)
+		$aSyncData = $this->GetSynchroData();
+		if (count($aSyncData) > 0)
 		{
 			$bSynchronized = true;
-			while($aData = $oReplicaSet->FetchAssoc())
+			foreach ($aSyncData as $iSourceId => $aSourceData)
 			{
-				// Assumption: $aData['datasource'] will not be null because the data source id is always set...
-				$sApplicationURL = $aData['datasource']->GetApplicationUrl($this, $aData['replica']);
-				$sLink = $aData['datasource']->GetName();
+				$oDataSource = $aSourceData['source'];
+				$oReplica = reset($aSourceData['replica']); // Take the first one!
+
+				$sApplicationURL = $oDataSource->GetApplicationUrl($this, $oReplica);
+				$sLink = $oDataSource->GetName();
 				if (!empty($sApplicationURL))
 				{
-					$sLink = "<a href=\"$sApplicationURL\" target=\"_blank\">".$aData['datasource']->GetName()."</a>";
+					$sLink = "<a href=\"$sApplicationURL\" target=\"_blank\">".$oDataSource->GetName()."</a>";
 				}
-				if ($aData['replica']->Get('status_dest_creator') == 1)
+				if ($oReplica->Get('status_dest_creator') == 1)
 				{
-					$oCreatorTask = $aData['datasource'];
+					$oCreatorTask = $oDataSource;
 					$bCreatedByTask = true;
 				}
 				else
@@ -154,12 +156,12 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				}
 				if ($bCreatedByTask)
 				{
-					$sDeletePolicy = $aData['datasource']->Get('delete_policy');
+					$sDeletePolicy = $oDataSource->Get('delete_policy');
 					if (($sDeletePolicy == 'delete') || ($sDeletePolicy == 'update_then_delete'))
 					{
 						$bCanBeDeletedByTask = true;
 					}
-					$sUserDeletePolicy = $aData['datasource']->Get('user_delete_policy');
+					$sUserDeletePolicy = $oDataSource->Get('user_delete_policy');
 					if ($sUserDeletePolicy == 'nobody')
 					{
 						$bCanBeDeletedByUser = false;
@@ -172,9 +174,9 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 					{
 					}
 				}
-				$aMasterSources[$aData['datasource']->GetKey()]['datasource'] = $aData['datasource'];
-				$aMasterSources[$aData['datasource']->GetKey()]['url'] = $sLink;
-				$aMasterSources[$aData['datasource']->GetKey()]['last_synchro'] = $aData['replica']->Get('status_last_seen');
+				$aMasterSources[$iSourceId]['datasource'] = $oDataSource;
+				$aMasterSources[$iSourceId]['url'] = $sLink;
+				$aMasterSources[$iSourceId]['last_synchro'] = $oReplica->Get('status_last_seen');
 			}
 
 			if (is_object($oCreatorTask))
@@ -1402,6 +1404,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$sHtml .= "<p>\n";
 		$aFilterCriteria = $oSet->GetFilter()->GetCriteria();
 		$aMapCriteria = array();
+		// Todo: Investigate... The search criteria is an expression, i.e. a tree!
+		//     I wonder if that code could work... cleanup required/recommended
 		foreach($aFilterCriteria as $aCriteria)
 		{
 			$aMapCriteria[$aCriteria['filtercode']][] = array('value' => $aCriteria['value'], 'opcode' => $aCriteria['opcode']);
@@ -1429,6 +1433,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 						$sFilterValue = $aMapCriteria[$sFilterCode][0]['value'];
 						$sFilterOpCode = $aMapCriteria[$sFilterCode][0]['opcode'];
 					}
+					// Todo: Investigate...
 					if ($sFilterCode != 'company')
 					{
 						$oUnlimitedFilter->AddCondition($sFilterCode, $sFilterValue, $sFilterOpCode);
