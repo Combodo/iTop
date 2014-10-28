@@ -130,6 +130,10 @@ class ormStopWatch
 			{
 				$bRet = true;
 			}
+			if (isset($aThresholdData['overrun']) && ($aThresholdData['overrun'] > 0))
+			{
+				$bRet = true;
+			}
 		}
 		return $bRet;
 	}
@@ -160,6 +164,7 @@ class ormStopWatch
 			$aDefs = $this->aThresholds[$iPercent];
 			if (array_key_exists('highlight', $aDefs) && is_array($aDefs['highlight']) && $this->IsThresholdPassed($iPercent))
 			{
+				// If persistant or SW running...
 				if (($aDefs['highlight']['persistent'] == true) || (($aDefs['highlight']['persistent'] == false) && !is_null($this->iLastStart)))
 				{
 					$sCode = $aDefs['highlight']['code'];

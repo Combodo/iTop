@@ -262,7 +262,7 @@
         </field>
         <field id="sla_tto_passed" xsi:type="AttributeSubItem">
           <target_attcode>tto</target_attcode>
-          <item_code>100_triggered</item_code>
+          <item_code>100_passed</item_code>
         </field>
         <field id="sla_tto_over" xsi:type="AttributeSubItem">
           <target_attcode>tto</target_attcode>
@@ -274,7 +274,7 @@
         </field>
         <field id="sla_ttr_passed" xsi:type="AttributeSubItem">
           <target_attcode>ttr</target_attcode>
-          <item_code>100_triggered</item_code>
+          <item_code>100_passed</item_code>
         </field>
         <field id="sla_ttr_over" xsi:type="AttributeSubItem">
           <target_attcode>ttr</target_attcode>
