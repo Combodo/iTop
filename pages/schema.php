@@ -450,7 +450,14 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 			}
 			$sAllowedValues = implode(', ', $aDescription);
 		}
-		else $sAllowedValues = '';
+		elseif (is_object($oAllowedValuesDef = $oAttDef->GetValuesDef()))
+		{
+			$sAllowedValues = $oAllowedValuesDef->GetValuesDescription();
+		}
+		else
+		{
+			$sAllowedValues = '';
+		}
 
 		$aDetails[] = array('code' => $oAttDef->GetCode(), 'type' => $sType, 'origin' => $sOrigin, 'label' => $oAttDef->GetLabel(), 'description' => $sValue, 'values' => $sAllowedValues, 'moreinfo' => $sMoreInfo);
 	}
