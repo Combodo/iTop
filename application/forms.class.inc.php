@@ -351,7 +351,7 @@ EOF
 <<<EOF
 $('#$sDialogId').dialog({
 		height: 'auto',
-		width: 500,
+		width: $iDialogWidth,
 		modal: true,
 		title: '$sDialogTitle',
 		buttons: [
@@ -813,7 +813,7 @@ class DesignerLabelField extends DesignerFormField
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
-		return array('label' => $this->sLabel, 'value' => $sDescription);
+		return array('label' => $this->sLabel, 'value' => $this->sDescription);
 	}
 	
 	public function ReadParam(&$aValues)
