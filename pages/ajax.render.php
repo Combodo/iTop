@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -120,16 +120,16 @@ try
 								if ($aNameSpec[0] == '%1$s')
 								{
 									// The name is made of a single column, let's sort according to the sort algorithm for this column
-									$aOrderBy[$aNameSpec[1][0]] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+									$aOrderBy[$sAlias.'.'.$aNameSpec[1][0]] = (utils::ReadParam('sort_order', 'asc') == 'asc');
 								}
 								else
 								{
-									$aOrderBy['friendlyname'] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+									$aOrderBy[$sAlias.'.'.'friendlyname'] = (utils::ReadParam('sort_order', 'asc') == 'asc');
 								}
 							}
 							else
 							{
-								$aOrderBy['friendlyname'] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+								$aOrderBy[$sAlias.'.'.'friendlyname'] = (utils::ReadParam('sort_order', 'asc') == 'asc');
 							}
 						}
 					}
@@ -155,7 +155,7 @@ try
 							{
 								$sSortCol = $sAttCode;
 							}
-							$aOrderBy[$sSortCol] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+							$aOrderBy[$sAlias.'.'.$sSortCol] = (utils::ReadParam('sort_order', 'asc') == 'asc');
 						}
 					}
 					$iSortIndex++;

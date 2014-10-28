@@ -48,7 +48,7 @@ class DBObjectSet
 	 * Create a new set based on a Search definition.
 	 * 
 	 * @param DBObjectSearch $oFilter The search filter defining the objects which are part of the set (multiple columns/objects per row are supported)
-	 * @param hash $aOrderBy
+	 * @param hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
 	 * @param hash $aArgs Values to substitute for the search/query parameters (if any). Format: param_name => value
 	 * @param hash $aExtendedDataSpec
 	 * @param int $iLimitCount Maximum number of rows to load (i.e. equivalent to MySQL's LIMIT start, count)
@@ -1156,5 +1156,3 @@ function HashCountComparison($a, $b) // Sort descending on 'count'
     }
     return ($a['count'] > $b['count']) ? -1 : 1;
 }
-
-?>

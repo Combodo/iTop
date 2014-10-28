@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -2218,6 +2218,9 @@ abstract class MetaModel
 	}
 
 
+	/**
+	 * @param hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
+	 */	
 	public static function MakeSelectQuery(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false)
 	{
 		// Check the order by specification, and prefix with the class alias
@@ -2228,32 +2231,44 @@ abstract class MetaModel
 		$aOrderSpec = array();
 		foreach ($aOrderBy as $sFieldAlias => $bAscending)
 		{
-			if ($sFieldAlias != 'id')
-			{
-				MyHelpers::CheckValueInArray('field name in ORDER BY spec', $sFieldAlias, self::GetAttributesList($sClass));
-			}
 			if (!is_bool($bAscending))
 			{
 				throw new CoreException("Wrong direction in ORDER BY spec, found '$bAscending' and expecting a boolean value");
 			}
-			
-			if (self::IsValidAttCode($sClass, $sFieldAlias))
+
+			$iDotPos = strpos($sFieldAlias, '.');
+			if ($iDotPos === false)
 			{
-				$oAttDef = self::GetAttributeDef($sClass, $sFieldAlias);
-				foreach($oAttDef->GetOrderBySQLExpressions($sClassAlias) as $sSQLExpression)
+				$sAttClass = $sClass;
+				$sAttClassAlias = $sClassAlias;
+				$sAttCode = $sFieldAlias;
+			}
+			else
+			{
+				$sAttClassAlias = substr($sFieldAlias, 0, $iDotPos);
+				$sAttClass = $oFilter->GetClassName($sAttClassAlias);
+				$sAttCode = substr($sFieldAlias, $iDotPos + 1);
+			}
+
+			if ($sAttCode != 'id')
+			{
+				MyHelpers::CheckValueInArray('field name in ORDER BY spec', $sAttCode, self::GetAttributesList($sAttClass));
+
+				$oAttDef = self::GetAttributeDef($sAttClass, $sAttCode);
+				foreach($oAttDef->GetOrderBySQLExpressions($sAttClassAlias) as $sSQLExpression)
 				{
 					$aOrderSpec[$sSQLExpression] = $bAscending;
 				}
 			}
 			else
 			{
-				$aOrderSpec['`'.$sClassAlias.$sFieldAlias.'`'] = $bAscending;
+				$aOrderSpec['`'.$sAttClassAlias.$sAttCode.'`'] = $bAscending;
 			}
 
 			// Make sure that the columns used for sorting are present in the loaded columns
-			if (!is_null($aAttToLoad) && !isset($aAttToLoad[$sClassAlias][$sFieldAlias]))
+			if (!is_null($aAttToLoad) && !isset($aAttToLoad[$sAttClassAlias][$sAttCode]))
 			{
-				$aAttToLoad[$sClassAlias][$sFieldAlias] = MetaModel::GetAttributeDef($sClass, $sFieldAlias);
+				$aAttToLoad[$sAttClassAlias][$sAttCode] = MetaModel::GetAttributeDef($sAttClass, $sAttCode);
 			}			
 		}
 
@@ -5509,5 +5524,3 @@ MetaModel::RegisterZList("preview", array("description"=>"All attributes visible
 
 MetaModel::RegisterZList("standard_search", array("description"=>"List of criteria for the standard search", "type"=>"filters"));
 MetaModel::RegisterZList("advanced_search", array("description"=>"List of criteria for the advanced search", "type"=>"filters"));
-
-?>

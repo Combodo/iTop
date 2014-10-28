@@ -100,6 +100,9 @@ class ValueSetObjects extends ValueSetDefinition
 	private $m_bAllowAllData;
 	private $m_aModifierProperties;
 
+	/**
+	 * @param hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
+	 */	
 	public function __construct($sFilterExp, $sValueAttCode = '', $aOrderBy = array(), $bAllowAllData = false, $aModifierProperties = array())
 	{
 		$this->m_sContains = '';
@@ -415,5 +418,3 @@ class ValueSetEnumClasses extends ValueSetEnum
 		return true;
 	}
 }
-
-?>

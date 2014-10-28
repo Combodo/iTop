@@ -972,6 +972,9 @@ class DBObjectSearch
 
 	// Alternative to object mapping: the data are transfered directly into an array
 	// This is 10 times faster than creating a set of objects, and makes sense when optimization is required
+	/**
+	 * @param hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
+	 */	
 	public function ToDataArray($aColumns = array(), $aOrderBy = array(), $aArgs = array())
 	{
 		$sSQL = MetaModel::MakeSelectQuery($this, $aOrderBy, $aArgs);
