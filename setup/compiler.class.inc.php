@@ -974,8 +974,8 @@ EOF;
 						if($oHighlight)
 						{
 							$sCode  = $oHighlight->GetChildText('code');
-							$bPersistent =  $this->GetPropBoolean($oHighlight, 'persistent', false);
-							$sHighlight = "'highlight' => array('code' => '$sCode', 'persistent' => ".($bPersistent ? 'true' : 'false')."), ";
+							$sPersistent =  $this->GetPropBoolean($oHighlight, 'persistent', false);
+							$sHighlight = "'highlight' => array('code' => '$sCode', 'persistent' => $sPersistent), ";
 						}
 						
 						$oActions = $oThreshold->GetUniqueElement('actions');
@@ -995,7 +995,7 @@ EOF;
 									{
 										$sParamType = 'string';
 									}
-									$aActionParams[] = "array('type' => '$sParamType', 'value' => '".self::QuoteForPHP($oParam->textContent)."')";
+									$aActionParams[] = "array('type' => '$sParamType', 'value' => ".self::QuoteForPHP($oParam->textContent).")";
 								}
 							}
 							$sActionParams = 'array('.implode(', ', $aActionParams).')';
@@ -1243,7 +1243,7 @@ EOF;
 								{
 									$sParamType = 'string';
 								}
-								$aActionParams[] = "array('type' => '$sType', 'value' => '".self::QuoteForPHP($oParam->textContent)."')";
+								$aActionParams[] = "array('type' => '$sType', 'value' => ".self::QuoteForPHP($oParam->textContent).")";
 							}
 						}
 						else
