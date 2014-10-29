@@ -7381,13 +7381,13 @@
           <type>Overload-cmdbAbstractObject</type>
           <code><![CDATA[	protected function DeleteConnectedNetworkDevice()
 	{
-		$iNetworkDeviceID = $this->Get('networkdevice_id');
-		$iDeviceID = $this->Get('connectableci_id');
-
-		$oDevice = MetaModel::GetObject('ConnectableCI', $this->Get('connectableci_id'));
-
-		$sOQL = "SELECT  lnkConnectableCIToNetworkDevice WHERE connectableci_id = :device AND networkdevice_id = :network AND network_port = :nwport AND device_port = :devport";
-		$oConnectionSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
+		// The device might be already deleted (reentrance in the current procedure when both device are NETWORK devices!)
+		$oDevice = MetaModel::GetObject('ConnectableCI', $this->Get('connectableci_id'), false);
+		if (is_object($oDevice) && (get_class($oDevice) == 'NetworkDevice'))
+		{
+			// Track and delete the counterpart link
+			$sOQL = "SELECT  lnkConnectableCIToNetworkDevice WHERE connectableci_id = :device AND networkdevice_id = :network AND network_port = :nwport AND device_port = :devport";
+			$oConnectionSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
 							array(),
 							array(
 								'network' => $this->Get('connectableci_id'),
@@ -7395,27 +7395,13 @@
 								'devport' => $this->Get('network_port'),
 								'nwport' => $this->Get('device_port'),
 								)
-		);	
-		$iAlreadyExist = $oConnectionSet->count();
-		if ((get_class($oDevice) == 'NetworkDevice') && ($iAlreadyExist != 0))
-		{
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			if (UserRights::IsImpersonated())
+			);
+			// There should be one link - do it in a safe manner anyway
+			while ($oConnection = $oConnectionSet->Fetch())
 			{
-				$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
+				$oConnection->DBDelete();	
 			}
-			else
-			{
-				$sUserString = UserRights::GetUser();
-			}
-			$oMyChange->Set("userinfo", $sUserString);
-			$iChangeId = $oMyChange->DBInsert();
-			$oConnection = $oConnectionSet->Fetch();
-			$oConnection->DBDeleteTracked($oMyChange);	
-
-		}
-
+		}	
 	}]]></code>
         </method>
         <method id="AfterInsert">
