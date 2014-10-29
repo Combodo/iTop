@@ -834,6 +834,7 @@ EOF
 	public function CheckDBConsistency($bDiagnostics, $bVerbose, $oChange = null)
 	{
 		$bFixNeeded = false;
+		$bTriggerRebuildNeeded = false;
 		$aMissingFields = array();
 		$oAttributeSet = $this->Get('attribute_list');
 		$aAttributes = array();
@@ -855,19 +856,10 @@ EOF
 				$bFixNeeded = true;
 				if (!$bDiagnostics)
 				{
-					if ($oChange == null)
-					{
-						$oChange = MetaModel::NewObject("CMDBChange");
-						$oChange->Set("date", time());
-						$sUserString = CMDBChange::GetCurrentUserName();
-						$oChange->Set("userinfo", $sUserString);
-						$oChange->DBInsert();	
-					}
 					// Fix the issue
-					$oAttribute->DBDeleteTracked($oChange);
+					$oAttribute->DBDelete();
 				}
 			}
-
 		}
 
 		$sTable = $this->GetDataTable();
@@ -884,17 +876,9 @@ EOF
 				}
 				if (!$bDiagnostics)
 				{
-					if ($oChange == null)
-					{
-						$oChange = MetaModel::NewObject("CMDBChange");
-						$oChange->Set("date", time());
-						$sUserString = CMDBChange::GetCurrentUserName();
-						$oChange->Set("userinfo", $sUserString);
-						$oChange->DBInsert();	
-					}
 					// Fix the issue
 					$oAttribute = $this->CreateSynchroAtt($sAttCode);
-					$oAttribute->DBInsertTracked($oChange);
+					$oAttribute->DBInsert();
 				}
 			}
 			else
@@ -934,15 +918,43 @@ EOF
 					}
 					if ($bOneColIsMissing)
 					{
+						$bTriggerRebuildNeeded = true;
 						$aMissingFields[] = $sAttCode;
 					}
 				}
 			}
 		}
-		if ($bFixNeeded && (count($aMissingFields) > 0))
-		{
-			$aRepairQueries = array();
 
+		$sDBName = MetaModel::GetConfig()->GetDBName();
+		try
+		{
+			// Note: as per the MySQL documentation, using information_schema behaves exactly like SHOW TRIGGERS (user privileges)
+			//       and this is in fact the recommended way for better portability
+			$iTriggerCount = CMDBSource::QueryToScalar("select count(*) from information_schema.triggers where EVENT_OBJECT_SCHEMA='$sDBName' and EVENT_OBJECT_TABLE='$sTable'");
+		}
+		catch (Exception $e)
+		{
+			if ($bVerbose)
+			{
+				echo "Failed to investigate on the synchro triggers (skipping the check): ".$e->getMessage().".\n";
+			}
+			// Ignore this error: consider that the trigger are there
+			$iTriggerCount = 3;
+		}
+		if ($iTriggerCount < 3)
+		{
+			$bFixNeeded = true;
+			$bTriggerRebuildNeeded = true;
+			if ($bVerbose)
+			{
+				echo "Missing trigger(s) for the data synchro task ".$this->GetName()." (table {$sTable}).\n";
+			}
+		}
+
+		$aRepairQueries = array();
+
+		if (count($aMissingFields) > 0)
+		{
 			// The structure of the table needs adjusting
 			$aColumns = $this->GetSQLColumns($aMissingFields);
 			$aFieldDefs = array();
@@ -963,39 +975,54 @@ EOF
 				$aRepairQueries[] = "ALTER TABLE `$sTable` ADD (".implode(',', $aFieldDefs).");";
 			}
 
-			// The triggers as well must be adjusted
-			$aTriggersDefs = $this->GetTriggersDefinition();
-			$aRepairQueries[] = "DROP TRIGGER IF EXISTS `{$sTable}_bi`;";
-			$aRepairQueries[] = $aTriggersDefs['bi'];
-			$aRepairQueries[] = "DROP TRIGGER IF EXISTS `{$sTable}_bu`;";
-			$aRepairQueries[] = $aTriggersDefs['bu'];
-			$aRepairQueries[] = "DROP TRIGGER IF EXISTS `{$sTable}_ad`;";
-			$aRepairQueries[] = $aTriggersDefs['ad'];
-			
 			if ($bDiagnostics)
 			{
-				if  ($bVerbose)
+				if ($bVerbose)
 				{
-					// Report the issue
 					echo "The structure of the table $sTable for the data synchro task ".$this->GetName()." (".$this->GetKey().") must be altered (missing or incorrect fields: ".implode(',', $aMissingFields).").\n";
-					echo "The trigger {$sTable}_bi, {$sTable}_bu, {$sTable}_ad for the data synchro task ".$this->GetName()." (".$this->GetKey().") must be re-created.\n";
-					echo implode("\n", $aRepairQueries)."\n";
-				}
-			}
-			else
-			{
-				// Fix the issue
-				foreach($aRepairQueries as $sSQL)
-				{
-					CMDBSource::Query($sSQL);
-					if ($bVerbose)
-					{
-						echo "$sSQL\n";
-					}
 				}
 			}
 		}
 
+		// Repair the triggers
+		// Must be done after updating the columns because MySQL does check the validity of the query found into the procedure!
+		if ($bTriggerRebuildNeeded)
+		{
+			// The triggers as well must be adjusted
+			$aTriggersDefs = $this->GetTriggersDefinition();
+			$aTriggerRepair = array();
+			$aTriggerRepair[] = "DROP TRIGGER IF EXISTS `{$sTable}_bi`;";
+			$aTriggerRepair[] = $aTriggersDefs['bi'];
+			$aTriggerRepair[] = "DROP TRIGGER IF EXISTS `{$sTable}_bu`;";
+			$aTriggerRepair[] = $aTriggersDefs['bu'];
+			$aTriggerRepair[] = "DROP TRIGGER IF EXISTS `{$sTable}_ad`;";
+			$aTriggerRepair[] = $aTriggersDefs['ad'];
+			
+			if ($bDiagnostics)
+			{
+				if ($bVerbose)
+				{
+					echo "The triggers {$sTable}_bi, {$sTable}_bu, {$sTable}_ad for the data synchro task ".$this->GetName()." (".$this->GetKey().") must be re-created.\n";
+					echo implode("\n", $aTriggerRepair)."\n";
+				}
+			}
+			$aRepairQueries = array_merge($aRepairQueries, $aTriggerRepair); // The order matters!
+		}
+
+		// Execute the repair statements
+		//
+		if (!$bDiagnostics && (count($aRepairQueries) > 0))
+		{
+			// Fix the issue
+			foreach($aRepairQueries as $sSQL)
+			{
+				CMDBSource::Query($sSQL);
+				if ($bVerbose)
+				{
+					echo "$sSQL\n";
+				}
+			}
+		}
 		return $bFixNeeded;
 	}
 
