@@ -435,8 +435,6 @@ $(function()
 			var dlgHeight = this.oDlg.height();
 			$('.wizContainer', this.oDlg).height(dlgHeight - 20);
 			$('#SearchResultsToAdd_'+this.id).height(dlgHeight - 50 - searchHeight);
-			
-console.log('Dlg Height:'+dlgHeight+', Search height: '+searchHeight+', Remaining Height'+(dlgHeight - 50 - searchHeight));
 		},
 		_deleteRow: function(oCheckbox)
 		{
