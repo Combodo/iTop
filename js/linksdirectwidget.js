@@ -139,7 +139,7 @@ $(function()
 			this.datatable.tableHover();
 			this.datatable.find('.selectList'+this.id).bind('change', function() { me._updateButtons(); });
 		},
-		_updateDlgSize: function()
+		_updateDlgPosition: function()
 		{
 			this.oDlg.dialog('option', { position: { my: "center", at: "center", of: window }});
 		},
@@ -171,7 +171,7 @@ $(function()
 				});
 				me.indicator.html('');
 				me.oButtons['create'].removeAttr('disabled');
-				me._updateDlgSize();
+				me._updateDlgPosition();
 			});
 		},
 		_selectToAdd: function()
@@ -197,20 +197,23 @@ $(function()
 				me.oDlg.find('form').removeAttr('onsubmit').bind('submit', function() { me._onSearchToAdd(); return false; } );
 				me.oDlg.find('button.cancel').unbind('click').click( function() { me.oDlg.dialog('close'); } );
 				me.oDlg.find('button.ok').unbind('click').click( function() { me._onDoAdd(); } );
+				$('#SearchFormToAdd_'+me.id).resize(function() { me._onSearchDlgUpdateSize(); });
 				
 				me.oDlg.dialog({
 					title: me.options.labels['selection_title'],
 					modal: true,
-					width: 'auto',
-					height: 'auto',
+					width: $(window).width()*0.8,
+					height: $(window).height()*0.8,
 					maxHeight: $(window).height() - 50,
 					position: { my: "center", at: "center", of: window },
-					close: function() { me._onDlgClose(); }
+					close: function() { me._onDlgClose(); },
+					resizeStop: function() { me._onSearchDlgUpdateSize(); }
 				});
 				me.indicator.html('');
 				me.oButtons['add'].removeAttr('disabled');
 				me._onSearchToAdd();
-				me._updateDlgSize();
+				me._updateDlgPosition();
+				me._onSearchDlgUpdateSize();
 			});
 		},
 		_onSearchToAdd: function()
@@ -255,8 +258,8 @@ $(function()
 					me._onUpdateDlgButtons(c);
 				});
 				$('#SearchResultsToAdd_'+me.id).unblock();
+				me._onSearchDlgUpdateSize();
 			});
-			//alert("C'est parti mon kiki !");
 			return false; // Stay on the page, no submit
 		},
 		_getSelection: function(sName)
@@ -373,7 +376,7 @@ $(function()
 				me.oDlg.html(data);
 				me.oDlg.find('form').removeAttr('onsubmit').bind('submit', function() { me._onCreateRow(); return false; } );
 				me.oDlg.find('button.cancel').unbind('click').click( function() { me.oDlg.dialog('close'); } );
-				me._updateDlgSize();				
+				me._updateDlgPosition();				
 			});
 		},
 		_onCreateRow: function()
@@ -425,6 +428,15 @@ $(function()
 		{
 			this.oDlg.remove();
 			this.oDlg = null;
+		},
+		_onSearchDlgUpdateSize: function()
+		{
+			var searchHeight = $('#SearchFormToAdd_'+this.id).outerHeight();
+			var dlgHeight = this.oDlg.height();
+			$('.wizContainer', this.oDlg).height(dlgHeight - 20);
+			$('#SearchResultsToAdd_'+this.id).height(dlgHeight - 50 - searchHeight);
+			
+console.log('Dlg Height:'+dlgHeight+', Search height: '+searchHeight+', Remaining Height'+(dlgHeight - 50 - searchHeight));
 		},
 		_deleteRow: function(oCheckbox)
 		{
