@@ -7282,13 +7282,11 @@
           <type>Overload-cmdbAbstractObject</type>
           <code><![CDATA[	protected function AddConnectedNetworkDevice()
 	{
-		$iNetworkDeviceID = $this->Get('networkdevice_id');
-		$iDeviceID = $this->Get('connectableci_id');
 		$oDevice = MetaModel::GetObject('ConnectableCI', $this->Get('connectableci_id'));
-
-		$sOQL = "SELECT  lnkConnectableCIToNetworkDevice WHERE connectableci_id = :device AND networkdevice_id = :network AND network_port = :nwport AND device_port = :devport";
-			
-		$oConnectionSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
+		if (is_object($oDevice) && (get_class($oDevice) == 'NetworkDevice'))
+		{
+			$sOQL = "SELECT  lnkConnectableCIToNetworkDevice WHERE connectableci_id = :device AND networkdevice_id = :network AND network_port = :nwport AND device_port = :devport";
+			$oConnectionSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
 							array(),
 							array(
 								'network' => $this->Get('connectableci_id'),
@@ -7296,36 +7294,21 @@
 								'devport' => $this->Get('network_port'),
 								'nwport' => $this->Get('device_port'),
 								)
-		);	
-		$iAlreadyExist = $oConnectionSet->count();
-		if ((get_class($oDevice) == 'NetworkDevice') && ($iAlreadyExist == 0))
-		{
-			$sLink = $this->Get('connection_type');
-			$sConnLink = ($sLink == 'uplink') ? 'downlink' : 'uplink';
-
-			$oNewLink = new lnkConnectableCIToNetworkDevice();
-			$oNewLink->Set('networkdevice_id', $this->Get('connectableci_id'));
-			$oNewLink->Set('connectableci_id', $this->Get('networkdevice_id'));
-			$oNewLink->Set('network_port', $this->Get('device_port'));
-			$oNewLink->Set('device_port', $this->Get('network_port'));
-			$oNewLink->Set('connection_type', $sConnLink);
-
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			if (UserRights::IsImpersonated())
+			);	
+			if ($oConnectionSet->Count() == 0)
 			{
-				$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
-			}
-			else
-			{
-				$sUserString = UserRights::GetUser();
-			}
-			$oMyChange->Set("userinfo", $sUserString);
-			$iChangeId = $oMyChange->DBInsert();
-			$oNewLink->DBInsertTracked($oMyChange);	
+				$sLink = $this->Get('connection_type');
+				$sConnLink = ($sLink == 'uplink') ? 'downlink' : 'uplink';
 
+				$oNewLink = new lnkConnectableCIToNetworkDevice();
+				$oNewLink->Set('networkdevice_id', $this->Get('connectableci_id'));
+				$oNewLink->Set('connectableci_id', $this->Get('networkdevice_id'));
+				$oNewLink->Set('network_port', $this->Get('device_port'));
+				$oNewLink->Set('device_port', $this->Get('network_port'));
+				$oNewLink->Set('connection_type', $sConnLink);
+				$oNewLink->DBInsert();	
+			}
 		}
-
 	}]]></code>
         </method>
         <method id="UpdateConnectedNetworkDevice">
@@ -7334,45 +7317,32 @@
           <type>Overload-cmdbAbstractObject</type>
           <code><![CDATA[	protected function UpdateConnectedNetworkDevice()
 	{
-		$iNetworkDeviceID = $this->Get('networkdevice_id');
-		$iDeviceID = $this->Get('connectableci_id');
 		$oDevice = MetaModel::GetObject('ConnectableCI', $this->Get('connectableci_id'));
-
-		$sOQL = "SELECT  lnkConnectableCIToNetworkDevice WHERE connectableci_id = :device AND networkdevice_id = :network AND network_port = :nwport AND device_port = :devport";
-		$oConnectionSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
+		if (is_object($oDevice) && (get_class($oDevice) == 'NetworkDevice'))
+		{
+			// Note: in case a port has been changed, search with the original values
+			$sOQL = "SELECT  lnkConnectableCIToNetworkDevice WHERE connectableci_id = :device AND networkdevice_id = :network AND network_port = :nwport AND device_port = :devport";
+			$oConnectionSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
 							array(),
 							array(
 								'network' => $this->Get('connectableci_id'),
 								'device' => $this->Get('networkdevice_id'),
-								'devport' => $this->Get('network_port'),
-								'nwport' => $this->Get('device_port'),
+								'devport' => $this->GetOriginal('network_port'),
+								'nwport' => $this->GetOriginal('device_port'),
 								)
-		);	
-		$iAlreadyExist = $oConnectionSet->count();
-		if ((get_class($oDevice) == 'NetworkDevice') && ($iAlreadyExist != 0))
-		{
-
+			);	
 			$sLink = $this->Get('connection_type');
 			$sConnLink = ($sLink == 'uplink') ? 'downlink' : 'uplink';
 
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			if (UserRights::IsImpersonated())
+			// There should be one link - do it in a safe manner anyway
+			while ($oConnection = $oConnectionSet->Fetch())
 			{
-				$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUser(), UserRights::GetUser());
+				$oConnection->Set('connection_type', $sConnLink);
+				$oConnection->Set('network_port', $this->Get('device_port'));
+				$oConnection->Set('device_port', $this->Get('network_port'));
+				$oConnection->DBUpdate();	
 			}
-			else
-			{
-				$sUserString = UserRights::GetUser();
-			}
-			$oMyChange->Set("userinfo", $sUserString);
-			$iChangeId = $oMyChange->DBInsert();
-			$oConnection = $oConnectionSet->Fetch();
-			$oConnection->Set('connection_type', $sConnLink);
-			$oConnection->DBUpdateTracked($oMyChange);	
-
 		}
-
 	}]]></code>
         </method>
         <method id="DeleteConnectedNetworkDevice">
