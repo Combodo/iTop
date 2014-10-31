@@ -777,6 +777,22 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'xlsx_exporter_cleanup_old_files_delay' => array(
+			'type' => 'int',
+			'description' => 'Delay (in seconds) for which to let the exported XLSX files on the server so that the user who initiated the export can download the result',
+			'default' => 86400,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'xlsx_exporter_memory_limit' => array(
+			'type' => 'string',
+			'description' => 'Memory limit to use when (interactively) exporting data to Excel',
+			'default' => '2048M', // Huuuuuuge 2GB!
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),		
 	);
 
 	public function IsProperty($sPropCode)

@@ -1057,5 +1057,16 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:About:Support' => 'Informations pour le support',
 	'UI:About:Licenses' => 'Licences',
 	'UI:About:Modules' => 'Modules installés',
+	
+	'ExcelExporter:ExportMenu' => 'Exporter pour Excel...',
+	'ExcelExporter:ExportDialogTitle' => 'Export au format Excel',
+	'ExcelExporter:ExportButton' => 'Exporter',
+	'ExcelExporter:DownloadButton' => 'Télécharger %1$s',
+	'ExcelExporter:RetrievingData' => 'Récupération des données...',
+	'ExcelExporter:BuildingExcelFile' => 'Construction du fichier Excel...',
+	'ExcelExporter:Done' => 'Terminé.',
+	'ExcelExport:AutoDownload' => 'Téléchargement automatique dès que le fichier est prêt',
+	'ExcelExport:PreparingExport' => 'Préparation de l\'export...',
+	'ExcelExport:Statistics' => 'Statistiques',	
 ));
 ?>

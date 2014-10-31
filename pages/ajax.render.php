@@ -32,6 +32,7 @@ require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
 require_once(APPROOT.'/application/ui.extkeywidget.class.inc.php');
 require_once(APPROOT.'/application/datatable.class.inc.php');
+require_once(APPROOT.'/application/excelexporter.class.inc.php');
 
 try
 {
@@ -1607,6 +1608,119 @@ $('#full_text_progress,#full_text_progress_placeholder').hide(500);
 EOF
 		);
 		break;
+
+		case 'xlsx_export_dialog':
+		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
+		$oPage->SetContentType('text/html');
+		$oPage->add(
+<<<EOF
+<style>
+ .ui-progressbar {
+	position: relative;
+}
+.progress-label {
+	position: absolute;
+	left: 50%;
+	top: 1px;
+	font-size: 11pt;
+}
+.download-form button {
+	display:block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 2em;
+}
+.ui-progressbar-value {
+	background: url(../setup/orange-progress.gif);
+}
+.progress-bar {
+	height: 20px;
+}
+.statistics > div {
+	padding-left: 16px;
+	cursor: pointer;
+	font-size: 10pt;
+	background: url(../images/minus.gif) 0 2px no-repeat;
+}				
+.statistics > div.closed {
+	padding-left: 16px;
+	background: url(../images/plus.gif) 0 2px no-repeat;
+}
+				
+.statistics .closed .stats-data {
+	display: none;
+}
+.stats-data td {
+	padding-right: 5px;
+}
+</style>				
+EOF
+		);
+		$oPage->add('<div id="XlsxExportDlg">');
+		$oPage->add('<div class="export-options">');
+		$oPage->add('<p><input type="checkbox" id="export-advanced-mode"/>&nbsp;<label for="export-advanced-mode">'.Dict::S('UI:CSVImport:AdvancedMode').'</label></p>');
+		$oPage->add('<p style="font-size:10pt;margin-left:2em;margin-top:-0.5em;padding-bottom:1em;">'.Dict::S('UI:CSVImport:AdvancedMode+').'</p>');
+		$oPage->add('<p><input type="checkbox" id="export-auto-download" checked="checked"/>&nbsp;<label for="export-auto-download">'.Dict::S('ExcelExport:AutoDownload').'</label></p>');
+		$oPage->add('</div>');
+		$oPage->add('<div class="progress"><p class="status-message">'.Dict::S('ExcelExport:PreparingExport').'</p><div class="progress-bar"><div class="progress-label"></div></div></div>');
+		$oPage->add('<div class="statistics"><div class="stats-toggle closed">'.Dict::S('ExcelExport:Statistics').'<div class="stats-data"></div></div></div>');
+		$oPage->add('</div>');
+		$aLabels = array(
+			'dialog_title' => Dict::S('ExcelExporter:ExportDialogTitle'),
+			'cancel_button' => Dict::S('UI:Button:Cancel'),
+			'export_button' => Dict::S('ExcelExporter:ExportButton'),
+			'download_button' => Dict::Format('ExcelExporter:DownloadButton', 'export.xlsx'), //TODO: better name for the file (based on the class of the filter??)
+ 		);
+		$sJSLabels = json_encode($aLabels);
+		$sFilter = addslashes($sFilter);
+		$sJSPageUrl = addslashes(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php');
+		$oPage->add_ready_script("$('#XlsxExportDlg').xlsxexporter({filter: '$sFilter', labels: $sJSLabels, ajax_page_url: '$sJSPageUrl'});");
+		break;
+		
+		case 'xlsx_start':
+		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
+		$bAdvanced = (utils::ReadParam('advanced', 'false') == 'true');
+		$oSearch = DBObjectSearch::unserialize($sFilter);
+		
+		$oExcelExporter = new ExcelExporter();
+		$oExcelExporter->SetObjectList($oSearch);
+		//$oExcelExporter->SetChunkSize(10); //Only for testing
+		$oExcelExporter->SetAdvancedMode($bAdvanced);
+		$sToken = $oExcelExporter->SaveState();
+		$oPage->add(json_encode(array('status' => 'ok', 'token' => $sToken)));
+		break;
+		
+		case 'xlsx_run':
+		$sMemoryLimit = MetaModel::GetConfig()->Get('xlsx_exporter_memory_limit');
+		ini_set('memory_limit', $sMemoryLimit);
+		ini_set('max_execution_time', max(300, ini_get('max_execution_time'))); // At least 5 minutes
+					
+		$sToken = utils::ReadParam('token', '', false, 'raw_data');
+		$oExcelExporter = new ExcelExporter($sToken);
+		$aStatus = $oExcelExporter->Run();
+		$aResults = array('status' => $aStatus['code'], 'percentage' =>  $aStatus['percentage'], 'message' =>  $aStatus['message']);
+		if ($aStatus['code'] == 'done')
+		{
+			$aResults['statistics'] = $oExcelExporter->GetStatistics('html');
+		}
+		$oPage->add(json_encode($aResults));
+		break;
+		
+		case 'xlsx_download':
+		$sToken = utils::ReadParam('token', '', false, 'raw_data');
+		$oPage->SetContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		$oPage->SetContentDisposition('attachment', 'export.xlsx');
+		$sFileContent = ExcelExporter::GetExcelFileFromToken($sToken);
+		$oPage->add($sFileContent);
+		ExcelExporter::CleanupFromToken($sToken);
+		break;
+		
+		case 'xlsx_abort':
+		// Stop & cleanup an export...
+		$sToken = utils::ReadParam('token', '', false, 'raw_data');
+		ExcelExporter::CleanupFromToken($sToken);
+		break;		
+		
 
 		default:
 		$oPage->p("Invalid query.");

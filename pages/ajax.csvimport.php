@@ -418,6 +418,7 @@ EOF
 
 		case 'get_csv_template':
 		$sClassName = utils::ReadParam('class_name');
+		$sFormat = utils::ReadParam('format', 'csv');
 		if (MetaModel::IsValidClass($sClassName))
 		{
 			$oSearch = new DBObjectSearch($sClassName);
@@ -429,17 +430,37 @@ EOF
 			$sDisposition = utils::ReadParam('disposition', 'inline');
 			if ($sDisposition == 'attachment')
 			{
-				$oPage = new CSVPage("");
-				$oPage->add_header("Content-type: text/csv; charset=utf-8");
-				$oPage->add_header("Content-disposition: attachment; filename=\"{$sClassDisplayName}.csv\"");
-				$oPage->no_cache();		
-				$oPage->add($sResult);	
+				switch($sFormat)
+				{
+					case 'xlsx':
+					$oPage = new ajax_page("");
+					$oPage->SetContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+					$oPage->SetContentDisposition('attachment', $sClassDisplayName.'.xlsx');
+					require_once(APPROOT.'/application/excelexporter.class.inc.php');
+					$writer = new XLSXWriter();
+					$writer->setAuthor(UserRights::GetUserFriendlyName());
+					$aHeaders = array( 0 => explode(',', $sResult)); // comma is the default separator
+					$writer->writeSheet($aHeaders, $sClassDisplayName, array());
+					$oPage->add($writer->writeToString());
+					break;
+				
+					case 'csv':
+					default:
+					$oPage = new CSVPage("");
+					$oPage->add_header("Content-type: text/csv; charset=utf-8");
+					$oPage->add_header("Content-disposition: attachment; filename=\"{$sClassDisplayName}.csv\"");
+					$oPage->no_cache();		
+					$oPage->add($sResult);
+				}
 			}
 			else
 			{
 				$oPage = new ajax_page("");
 				$oPage->no_cache();
-				$oPage->add('<p style="text-align:center"><a style="text-decoration:none" href="'.utils::GetAbsoluteUrlAppRoot().'pages/ajax.csvimport.php?operation=get_csv_template&disposition=attachment&class_name='.$sClassName.'"><img border="0" src="../images/csv.png"><br/>'.$sClassDisplayName.'.csv</a></p>');		
+				$oPage->add('<p style="text-align:center">');
+				$oPage->add('<div style="display:inline-block;margin:0.5em;"><a style="text-decoration:none" href="'.utils::GetAbsoluteUrlAppRoot().'pages/ajax.csvimport.php?operation=get_csv_template&disposition=attachment&class_name='.$sClassName.'"><img border="0" src="../images/csv.png"><br/>'.$sClassDisplayName.'.csv</a></div>');		
+				$oPage->add('<div style="display:inline-block;margin:0.5em;"><a style="text-decoration:none" href="'.utils::GetAbsoluteUrlAppRoot().'pages/ajax.csvimport.php?operation=get_csv_template&disposition=attachment&format=xlsx&class_name='.$sClassName.'"><img border="0" src="../images/xlsx.png"><br/>'.$sClassDisplayName.'.xlsx</a></div>');		
+				$oPage->add('</p>');		
 				$oPage->add('<p><textarea rows="5" cols="100">'.$sResult.'</textarea></p>');
 			}		
 		}

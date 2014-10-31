@@ -1217,5 +1217,16 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:About:Support' => 'Support information',
 	'UI:About:Licenses' => 'Licenses',
 	'UI:About:Modules' => 'Installed modules',
+	
+	'ExcelExporter:ExportMenu' => 'Excel Export...',
+	'ExcelExporter:ExportDialogTitle' => 'Excel Export',
+	'ExcelExporter:ExportButton' => 'Export',
+	'ExcelExporter:DownloadButton' => 'Download %1$s',
+	'ExcelExporter:RetrievingData' => 'Retrieving data...',
+	'ExcelExporter:BuildingExcelFile' => 'Building the Excel file...',
+	'ExcelExporter:Done' => 'Done.',
+	'ExcelExport:AutoDownload' => 'Start the download automatically when the export is ready',
+	'ExcelExport:PreparingExport' => 'Preparing the export...',
+	'ExcelExport:Statistics' => 'Statistics',
 ));
 ?>

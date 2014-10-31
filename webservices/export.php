@@ -28,9 +28,11 @@ if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/nicewebpage.class.inc.php');
+require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'/application/csvpage.class.inc.php');
 require_once(APPROOT.'/application/xmlpage.class.inc.php');
 require_once(APPROOT.'/application/clipage.class.inc.php');
+require_once(APPROOT.'/application/excelexporter.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 
@@ -264,6 +266,32 @@ if (!empty($sExpression))
 				cmdbAbstractObject::DisplaySetAsXML($oP, $oSet, array('localize_values' => $bLocalize));
 				break;
 				
+				case 'xlsx':
+				$oP = new ajax_page('');
+				$oExporter = new ExcelExporter();
+				$oExporter->SetObjectList($oFilter);
+				
+				// Run the export by chunk of 1000 objects to limit memory usage
+				$oExporter->SetChunkSize(1000);
+				do
+				{
+					$aStatus = $oExporter->Run(); // process one chunk
+				}
+				while( ($aStatus['code'] != 'done') && ($aStatus['code'] != 'error'));
+				
+				if ($aStatus['code'] == 'done')
+				{
+					$oP->SetContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+					$oP->SetContentDisposition('attachment', $oFilter->GetClass().'.xlsx');
+					$oP->add(file_get_contents($oExporter->GetExcelFilePath()));
+					$oExporter->Cleanup();
+				}
+				else
+				{
+					$oP->add('Error, xlsx export failed: '.$aStatus['message']);
+				}
+				break;
+				
 				default:
 				$oP = new WebPage("iTop - Export");
 				$oP->add("Unsupported format '$sFormat'. Possible values are: html, csv, spreadsheet or xml.");
@@ -301,7 +329,7 @@ if (!$oP)
 	$oP->p(" * expression: an OQL expression (URL encoded if needed)");
 	$oP->p(" * query: (alternative to 'expression') the id of an entry from the query phrasebook");
 	$oP->p(" * arg_xxx: (needed if the query has parameters) the value of the parameter 'xxx'");
-	$oP->p(" * format: (optional, default is html) the desired output format. Can be one of 'html', 'spreadsheet', 'csv' or 'xml'");
+	$oP->p(" * format: (optional, default is html) the desired output format. Can be one of 'html', 'spreadsheet', 'csv', 'xlsx' or 'xml'");
 	$oP->p(" * fields: (optional, no effect on XML format) list of fields (attribute codes, or alias.attcode) separated by a coma");
 	$oP->p(" * fields_advanced: (optional, no effect on XML/HTML formats ; ignored is fields is specified) If set to 1, the default list of fields will include the external keys and their reconciliation keys");
 	$oP->p(" * filename: (optional, no effect in CLI mode) if set then the results will be downloaded as a file");

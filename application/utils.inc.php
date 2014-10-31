@@ -783,11 +783,16 @@ class utils
 			$sOQL = addslashes($param->GetFilter()->ToOQL(true));
 			$sFilter = urlencode($param->GetFilter()->serialize());
 			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/xlsx-export.js');
+			$sXlsxFilter = $param->GetFilter()->serialize();
+			$sXlsxJSFilter = addslashes($sXlsxFilter);
+			
 			$aResult = array(
 				new SeparatorPopupMenuItem(),
 				// Static menus: Email this page, CSV Export & Add to Dashboard
 				new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'), "mailto:?body=".urlencode($sUrl).' '), // Add an extra space to make it work in Outlook
 				new URLPopupMenuItem('UI:Menu:CSVExport', Dict::S('UI:Menu:CSVExport'), $sUrl."&format=csv"),
+				new JSPopupMenuItem('xlsx-export', Dict::S('ExcelExporter:ExportMenu'), "XlsxExportDialog('$sXlsxJSFilter');", array()),
 				new JSPopupMenuItem('UI:Menu:AddToDashboard', Dict::S('UI:Menu:AddToDashboard'), "DashletCreationDlg('$sOQL')"),
 				new JSPopupMenuItem('UI:Menu:ShortcutList', Dict::S('UI:Menu:ShortcutList'), "ShortcutListDlg('$sOQL', '$sDataTableId', '$sContext')"),
 			);
@@ -802,11 +807,15 @@ class utils
 			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage(get_class($oObj));
 			$oAppContext = new ApplicationContext();
 			$sContext = $oAppContext->GetForLink();
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/xlsx-export.js');
+			$sXlsxFilter = $param->GetFilter()->serialize();
+			$sXlsxJSFilter = addslashes($sXlsxFilter);
 			$aResult = array(
 				new SeparatorPopupMenuItem(),
 				// Static menus: Email this page & CSV Export
 				new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'), "mailto:?subject=".urlencode($oObj->GetRawName())."&body=".urlencode($sUrl).' '), // Add an extra space to make it work in Outlook
 				new URLPopupMenuItem('UI:Menu:CSVExport', Dict::S('UI:Menu:CSVExport'), utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".urlencode($sFilter)."&format=csv&{$sContext}"),
+				new JSPopupMenuItem('xlsx-export', Dict::S('ExcelExporter:ExportMenu'), "XlsxExportDialog('$sXlsxJSFilter');", array()),
 			);
 			break;
 
