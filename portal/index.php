@@ -1144,7 +1144,22 @@ function MakeStimulusForm(WebPage $oP, $oObj, $sStimulusCode, $aEditAtt)
 	$oP->add("<input type=\"hidden\" name=\"id\" value=\"".$oObj->GetKey()."\">");
 	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"update_request\">");
 	$oP->add("<input type=\"hidden\" id=\"stimulus_to_apply\" name=\"apply_stimulus\" value=\"$sStimulusCode\">\n");
-	
+
+	$aTransitions = $oObj->EnumTransitions();
+	$aStimuli = MetaModel::EnumStimuli($sClass);
+	if (!isset($aTransitions[$sStimulusCode]))
+	{
+		// Invalid stimulus
+		throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulusCode, $oObj->GetName(), $oObj->GetStateLabel()));
+	}
+
+	// Compute the attribute flags in the target state
+	$aTransition = $aTransitions[$sStimulusCode];
+	$sTargetState = $aTransition['target_state'];
+	$aTargetStates = MetaModel::EnumStates($sClass);
+	$aTargetState = $aTargetStates[$sTargetState];
+	$aExpectedAttributes = $aTargetState['attribute_list'];
+
 	foreach($aEditAtt as $sAttCode)
 	{
 		$sValue = $oObj->Get($sAttCode);
@@ -1152,7 +1167,8 @@ function MakeStimulusForm(WebPage $oP, $oObj, $sStimulusCode, $aEditAtt)
 		$aArgs = array('this' => $oObj, 'formPrefix' => '');
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$sInputId = 'input_'.$sAttCode;
-		$sHTMLValue = "<span id=\"field_{$sStimulusCode}_{$sInputId}\">".cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', 0 /*$iFlags*/, $aArgs).'</span>';
+		$iFlags = array_key_exists($sAttCode, $aExpectedAttributes) ? $aExpectedAttributes[$sAttCode] : 0;
+		$sHTMLValue = "<span id=\"field_{$sStimulusCode}_{$sInputId}\">".cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
 
 		$oP->add('<h1>'.MetaModel::GetLabel($sClass, $sAttCode).'</h1>');
 		$oP->add($sHTMLValue);
