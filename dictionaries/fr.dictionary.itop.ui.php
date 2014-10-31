@@ -1036,6 +1036,9 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Class:ShortcutOQL/Attribute:auto_reload_sec+' => 'Le minimum permis est de 5 secondes',
 
 	'UI:FillAllMandatoryFields' => 'Veuillez remplir tous les champs obligatoires.',
+	'UI:ValueMustBeSet' => 'Veuillez spécifier une valeur pour ce champ',
+	'UI:ValueMustBeChanged' => 'Veuillez modifier la valeur de ce champ',
+	'UI:ValueInvalidFormat' => 'Format invalide',
 	
 	'UI:CSVImportConfirmTitle' => 'Veuillez confirmer cette opération',
 	'UI:CSVImportConfirmMessage' => 'Etes-vous sûr(e) de vouloir faire cela ?',

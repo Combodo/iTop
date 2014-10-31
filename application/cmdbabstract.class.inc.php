@@ -1854,7 +1854,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				{
 					$sNullValue = "'$sNullValue'"; // Add quotes to turn this into a JS string if it's not a number
 				}
-				$oPage->add_ready_script("$('#$iId').bind('".implode(' ', $aEventsList)."', function(evt, sFormId) { return ValidateField('$iId', '$sPattern', $bMandatory, sFormId, $sNullValue) } );\n"); // Bind to a custom event: validate
+				$sOriginalValue = ($iFlags & OPT_ATT_MUSTCHANGE) ? "'".addslashes($value)."'" : 'undefined';
+				$oPage->add_ready_script("$('#$iId').bind('".implode(' ', $aEventsList)."', function(evt, sFormId) { return ValidateField('$iId', '$sPattern', $bMandatory, sFormId, $sNullValue, $sOriginalValue) } );\n"); // Bind to a custom event: validate
 			}
 			$aDependencies = MetaModel::GetDependentAttributes($sClass, $sAttCode); // List of attributes that depend on the current one
 			if (count($aDependencies) > 0)
@@ -1863,6 +1864,9 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				$oPage->add_ready_script("$('#$iId').unbind('change.dependencies').bind('change.dependencies', function(evt, sFormId) { return oWizardHelper{$sFormPrefix}.UpdateDependentFields(['".implode("','", $aDependencies)."']) } );\n"); // Bind to a custom event: validate
 			}
 		}
+		$oPage->add_dict_entry('UI:ValueMustBeSet');
+		$oPage->add_dict_entry('UI:ValueMustBeChanged');
+		$oPage->add_dict_entry('UI:ValueInvalidFormat');
 		return "<div>{$sHTMLValue}</div>";
 	}
 

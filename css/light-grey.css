@@ -1416,3 +1416,7 @@ div.ui-dialog-header {
     padding-bottom: 10px;
     padding-top: 7px;
 }
+.form_field_error {
+	border: 1px solid #933;
+	background: #fcc;
+}

@@ -457,7 +457,7 @@
                 <hidden/>
               </attribute>
               <attribute id="agent_id">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="agent_email">
                 <hidden/>
@@ -466,13 +466,13 @@
                 <mandatory/>
               </attribute>
               <attribute id="supervisor_id">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="manager_group_id">
                 <mandatory/>
               </attribute>
               <attribute id="manager_id">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="outage">
                 <hidden/>
@@ -1488,7 +1488,7 @@
                 <hidden/>
               </attribute>
               <attribute id="agent_id">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="agent_email">
                 <hidden/>
@@ -1497,13 +1497,13 @@
                 <mandatory/>
               </attribute>
               <attribute id="supervisor_id">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="manager_group_id">
                 <mandatory/>
               </attribute>
               <attribute id="manager_id">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="outage">
                 <hidden/>
@@ -2465,7 +2465,7 @@
                 <hidden/>
               </attribute>
               <attribute id="agent_id">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="agent_email">
                 <hidden/>
@@ -2474,13 +2474,13 @@
                 <mandatory/>
               </attribute>
               <attribute id="supervisor_id">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="manager_group_id">
                 <mandatory/>
               </attribute>
               <attribute id="manager_id">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="outage">
                 <hidden/>
@@ -3471,7 +3471,7 @@
                 <hidden/>
               </attribute>
               <attribute id="agent_id">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="agent_email">
                 <hidden/>
@@ -3480,13 +3480,13 @@
                 <mandatory/>
               </attribute>
               <attribute id="supervisor_id">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="manager_group_id">
                 <mandatory/>
               </attribute>
               <attribute id="manager_id">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="outage">
                 <hidden/>
@@ -4547,7 +4547,7 @@
                 <hidden/>
               </attribute>
               <attribute id="agent_id">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="agent_email">
                 <hidden/>
@@ -4556,13 +4556,13 @@
                 <mandatory/>
               </attribute>
               <attribute id="supervisor_id">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="manager_group_id">
                 <mandatory/>
               </attribute>
               <attribute id="manager_id">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="outage">
                 <hidden/>

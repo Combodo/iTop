@@ -1196,7 +1196,10 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Class:ShortcutOQL/Attribute:auto_reload_sec+' => 'The minimum allowed is 5 seconds',
 
 	'UI:FillAllMandatoryFields' => 'Please fill all mandatory fields.',
-	
+	'UI:ValueMustBeSet' => 'Please specify a value',
+	'UI:ValueMustBeChanged' => 'Please change the value',
+	'UI:ValueInvalidFormat' => 'Invalid format',
+
 	'UI:CSVImportConfirmTitle' => 'Please confirm the operation',
 	'UI:CSVImportConfirmMessage' => 'Are you sure you want to do this?',
 	'UI:CSVImportError_items' => 'Errors: %1$d',

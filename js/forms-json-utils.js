@@ -146,7 +146,7 @@ function CheckFields(sFormId, bDisplayAlert)
 	return (oFormErrors['err_'+sFormId] == 0); // If no error, submit the form
 }
 
-function ReportFieldValidationStatus(sFieldId, sFormId, bValid)
+function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 {
 	if (bValid)
 	{
@@ -163,13 +163,21 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid)
 			oFormErrors['input_'+sFormId] = sFieldId;
 		}
 		// Visual feedback
-		$('#v_'+sFieldId).html('<img src="../images/validation_error.png" style="vertical-align:middle"/>');
+		$('#v_'+sFieldId).html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip="'+sExplain+'"/>');
+		$('#v_'+sFieldId).tooltip({
+			items: 'span',
+			tooltipClass: 'form_field_error',
+			content: function() {
+				return $(this).find('img').attr('data-tooltip'); // As opposed to the default 'content' handler, do not escape the contents of 'title'
+			}
+		});
 	}
 }
 
-function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
+function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue)
 {
 	var bValid = true;
+	var sExplain = '';
 	if ($('#'+sFieldId).attr('disabled'))
 	{
 		bValid = true; // disabled fields are not checked
@@ -185,6 +193,19 @@ function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
 		else if (bMandatory && (currentVal == nullValue))
 		{
 			bValid = false;
+			sExplain = Dict.S('UI:ValueMustBeSet');
+		}
+		else if ((originalValue != undefined) && (currentVal == originalValue))
+		{
+			bValid = false;
+			if (originalValue == nullValue)
+			{
+				sExplain = Dict.S('UI:ValueMustBeSet');
+			}
+			else
+			{
+				sExplain = Dict.S('UI:ValueMustBeChanged');
+			}
 		}
 		else if (currentVal == nullValue)
 		{
@@ -196,9 +217,10 @@ function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
 			re = new RegExp(sPattern);
 			//console.log('Validating field: '+sFieldId + ' current value: '+currentVal + ' pattern: '+sPattern );
 			bValid = re.test(currentVal);
+			sExplain = Dict.S('UI:ValueInvalidFormat');
 		}
 	}
-	ReportFieldValidationStatus(sFieldId, sFormId, bValid);
+	ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain);
 	//console.log('Form: '+sFormId+' Validating field: '+sFieldId + ' current value: '+currentVal+' pattern: '+sPattern+' result: '+bValid );
 	return true; // Do not stop propagation ??
 }
@@ -229,7 +251,7 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
 		bValid = true;
 	}
 
-	ReportFieldValidationStatus(sFieldId, sFormId, bValid);
+	ReportFieldValidationStatus(sFieldId, sFormId, bValid, '');
 
 	setTimeout(function(){ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue);}, 500);
 }
@@ -321,7 +343,7 @@ function ValidateCaseLogField(sFieldId, bMandatory, sFormId)
 			}
 		}
 	}
-	ReportFieldValidationStatus(sFieldId, sFormId, bValid);
+	ReportFieldValidationStatus(sFieldId, sFormId, bValid, '');
 	return bValid;
 }
 // Manage a 'duration' field

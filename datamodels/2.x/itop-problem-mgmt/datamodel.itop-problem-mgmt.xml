@@ -169,7 +169,7 @@
                 <read_only/>
               </attribute>
               <attribute id="org_id">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="team_id">
                 <hidden/>
@@ -178,7 +178,7 @@
                 <hidden/>
               </attribute>
               <attribute id="description">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="start_date">
                 <read_only/>
@@ -199,10 +199,10 @@
                 <normal/>
               </attribute>
               <attribute id="impact">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="urgency">
-                <must_change/>
+                <must_prompt/>
               </attribute>
               <attribute id="priority">
                 <read_only/>
