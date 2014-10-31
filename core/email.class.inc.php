@@ -177,6 +177,15 @@ class EMail
 			}
 			break;
 
+		case 'Null':
+			$oTransport = Swift_NullTransport::newInstance();
+			break;
+		
+		case 'LogFile':
+			$oTransport = Swift_LogFileTransport::newInstance();
+			$oTransport->setLogFile(APPROOT.'log/mail.log');
+			break;
+			
 		case 'PHPMail':
 		default:
 			$oTransport = Swift_MailTransport::newInstance();
@@ -396,4 +405,75 @@ class EMail
 
 }
 
-?>
+/////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Extension to SwiftMailer: "debug" transport that pretends messages have been sent,
+ * but just log them to a file.
+ *
+ * @package Swift
+ * @author  Denis Flaven
+ */
+class Swift_Transport_LogFileTransport extends Swift_Transport_NullTransport
+{
+	protected $sLogFile;
+	
+	/**
+	 * Sends the given message.
+	 *
+	 * @param Swift_Mime_Message $message
+	 * @param string[]           $failedRecipients An array of failures by-reference
+	 *
+	 * @return int     The number of sent emails
+	 */
+	public function send(Swift_Mime_Message $message, &$failedRecipients = null)
+	{
+		$hFile = @fopen($this->sLogFile, 'a');
+		if ($hFile)
+		{
+			$sTxt = "================== ".date('Y-m-d H:i:s')." ==================\n";
+			$sTxt .= $message->toString()."\n";
+		
+			@fwrite($hFile, $sTxt);
+			@fclose($hFile);
+		}
+		
+		return parent::send($message, $failedRecipients);
+	}
+	
+	public function setLogFile($sFilename)
+	{
+		$this->sLogFile = $sFilename;
+	}
+}
+
+/**
+ * Pretends messages have been sent, but just log them to a file.
+ *
+ * @package Swift
+ * @author  Denis Flaven
+ */
+class Swift_LogFileTransport extends Swift_Transport_LogFileTransport
+{
+	/**
+	 * Create a new LogFileTransport.
+	 */
+	public function __construct()
+	{
+		call_user_func_array(
+		array($this, 'Swift_Transport_LogFileTransport::__construct'),
+		Swift_DependencyContainer::getInstance()
+		->createDependenciesFor('transport.null')
+		);
+	}
+
+	/**
+	 * Create a new LogFileTransport instance.
+	 *
+	 * @return Swift_LogFileTransport
+	 */
+	public static function newInstance()
+	{
+		return new self();
+	}
+}

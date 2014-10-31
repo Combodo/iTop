@@ -32,6 +32,11 @@ require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/core/email.class.inc.php');
 require_once('./setuppage.class.inc.php');
 
+require_once(APPROOT.'/application/startup.inc.php');
+
+require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be admin)
+
 $sOperation = Utils::ReadParam('operation', 'step1');
 $oP = new SetupPage('iTop email test utility');
 
@@ -52,57 +57,101 @@ function CheckEmailSetting($oP)
 		$sPhpIniFile = 'php.ini';
 	}
 
-	$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
-	if ($bIsWindows)
-	{	
-		$sSmtpServer = ini_get('SMTP');
-		if (empty($sSmtpServer))
-		{
-			$oP->error("The SMTP server is not defined. Please add the 'SMTP' directive into $sPhpIniFile");
-			$bRet = false;
-		}
-		else if (strcasecmp($sSmtpServer, 'localhost') == 0)
-		{
-			$oP->warning("Your SMTP server is configured to 'localhost'. You might want to set or change the 'SMTP' directive into $sPhpIniFile");
-		}
-		else
-		{
-			$oP->info("Your SMTP server: <strong>$sSmtpServer</strong>. To change this value, modify the 'SMTP' directive into $sPhpIniFile");
-		}
-
-		$iSmtpPort = (int) ini_get('smtp_port');
-		if (empty($iSmtpPort))
-		{
-			$oP->info("The SMTP port is not defined. Please add the 'smtp_port' directive into $sPhpIniFile");
-			$bRet = false;
-		}
-		else if ($iSmtpPort == 25)
-		{
-			$oP->info("Your SMTP port is configured to the default value: 25. You might want to set or change the 'smtp_port' directive into $sPhpIniFile");
-		}
-		else
-		{
-			$oP->info("Your SMTP port is configured to $iSmtpPort. You might want to set or change the 'smtp_port' directive into $sPhpIniFile");
-		}
-	}
-	else
+	$sTransport = MetaModel::GetConfig()->Get('email_transport');
+	switch($sTransport)
 	{
-		// Not a windows system
-		$sSendMail = ini_get('sendmail_path');
-		if (empty($sSendMail))
-		{
-			$oP->error("The command to send mail is not defined. Please add the 'sendmail_path' directive into $sPhpIniFile. A recommended setting is <em>sendmail_path=sendmail -t -i</em>");
-			$bRet = false;
+		case 'PHPMail':
+		$oP->info("iTop is configured to use PHP's <a style=\"background:transparent;padding:0;color:#000;text-decoration:underline;\" href=\"http://www.php.net/manual/en/function.mail.php\" target=\"_blank\">mail</a> function to send emails.");
+		$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
+		if ($bIsWindows)
+		{	
+			$sSmtpServer = ini_get('SMTP');
+			if (empty($sSmtpServer))
+			{
+				$oP->error("The SMTP server is not defined. Please add the 'SMTP' directive into $sPhpIniFile");
+				$bRet = false;
+			}
+			else if (strcasecmp($sSmtpServer, 'localhost') == 0)
+			{
+				$oP->warning("Your SMTP server is configured to 'localhost'. You might want to set or change the 'SMTP' directive into $sPhpIniFile");
+			}
+			else
+			{
+				$oP->info("Your SMTP server: <strong>$sSmtpServer</strong>. To change this value, modify the 'SMTP' directive into $sPhpIniFile");
+			}
+	
+			$iSmtpPort = (int) ini_get('smtp_port');
+			if (empty($iSmtpPort))
+			{
+				$oP->info("The SMTP port is not defined. Please add the 'smtp_port' directive into $sPhpIniFile");
+				$bRet = false;
+			}
+			else if ($iSmtpPort == 25)
+			{
+				$oP->info("Your SMTP port is configured to the default value: 25. You might want to set or change the 'smtp_port' directive into $sPhpIniFile");
+			}
+			else
+			{
+				$oP->info("Your SMTP port is configured to $iSmtpPort. You might want to set or change the 'smtp_port' directive into $sPhpIniFile");
+			}
 		}
 		else
 		{
-			$oP->info("The command to send mail: <strong>$sSendMail</strong>. To change this value, modify the 'sendmail_path' directive into $sPhpIniFile");
+			// Not a windows system
+			$sSendMail = ini_get('sendmail_path');
+			if (empty($sSendMail))
+			{
+				$oP->error("The command to send mail is not defined. Please add the 'sendmail_path' directive into $sPhpIniFile. A recommended setting is <em>sendmail_path=sendmail -t -i</em>");
+				$bRet = false;
+			}
+			else
+			{
+				$oP->info("The command to send mail is: <strong>$sSendMail</strong>. To change this value, modify the 'sendmail_path' directive into $sPhpIniFile");
+			}
 		}
+		break;
+		
+		case 'SMTP':
+		$oP->info("iTop is configured to use the <b>SMTP</b> transport.");
+		$sHost = MetaModel::GetConfig()->Get('email_transport_smtp.host');
+		$sPort = MetaModel::GetConfig()->Get('email_transport_smtp.port');
+		$sEncryption = MetaModel::GetConfig()->Get('email_transport_smtp.encryption');
+		$sDisplayEncryption = empty($sEncryption) ? '<em>no encryption</em> ' : $sEncryption;
+		$sUserName = MetaModel::GetConfig()->Get('email_transport_smtp.username');
+		$sDisplayUserName = empty($sUserName) ? '<em>no user</em> ' : $sUserName;
+		$sPassword = MetaModel::GetConfig()->Get('email_transport_smtp.password');
+		$sDisplayPassword = empty($sPassword) ? '<em>no password</em> ' : str_repeat('*', strlen($sPassword));
+		$oP->info("SMTP configuration (from config-itop.php): host: $sHost, port: $sPort, user: $sDisplayUserName, password: $sDisplayPassword, encryption: $sDisplayEncryption.");
+		if (($sHost == 'localhost') && ($sPort == '25') && ($sUserName == '') && ($sPassword == '') )
+		{
+			$oP->warning("The default settings may not be suitable for your environment. You may want to ajust these values by editing iTop's configuration file (".APPROOT."conf/production/config-itop.php).");
+		}
+		break;
+		
+		case 'Null':
+		$oP->warning("iTop is configured to use the <b>Null</b> transport: emails sending will have no effect.");
+		$bRet = false;
+		break;
+		
+		case 'LogFile':
+		$oP->warning("iTop is configured to use the <b>LogFile</b> transport: emails will <em>not</em> be sent but logged to the file: '".APPROOT."/log/mail.log'.");
+		$bRet = true;
+		break;
+		
+		default:
+		$oP->error("Unknown transport '$sTransport' configured.");
+		$bRet = false;
 	}
 	if ($bRet)
 	{
 		$oP->ok("PHP settings are ok to proceed with a test of the email");
 	}
+	$bConfigAsync = MetaModel::GetConfig()->Get('email_asynchronous');
+	if ($bConfigAsync)
+	{
+		$oP->warning("iTop is configured to send emails <em>asynchronously</em>. Make sure that cron.php is scheduled to run in the background, otherwise regular emails will <em>not</em> be sent. For the purpose of this test, the email will be sent <em>synchronously</em>.");
+	}
+	
 	return $bRet;
 }
 
@@ -122,12 +171,12 @@ function DisplayStep1(SetupPage $oP)
 		$oP->add("<h2>Try to send an email</h2>\n");
 		$oP->add("<form method=\"post\" onSubmit=\"return DoSubmit('Sending an email...', 10)\">\n");
 		// Form goes here
-		$oP->add("<fieldset><legend>Test configuration</legend>\n");
+		$oP->add("<fieldset><legend>Test recipient</legend>\n");
 		$aForm = array();
 		$aForm[] = array(
 			'label' => "To$sRedStar:",
 			'input' => "<input id=\"to\" type=\"text\" name=\"to\" value=\"\">",
-			'help' => ' pure email address (john.foo@worldcompany.com)',
+			'help' => ' email address (e.g. john.foo@worldcompany.com)',
 		);
 		$aForm[] = array(
 			'label' => "From:",
@@ -137,7 +186,11 @@ function DisplayStep1(SetupPage $oP)
 		$oP->form($aForm);
 		$oP->add("</fieldset>\n");
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
-		$oP->add("<button type=\"submit\">Next >></button>\n");
+		$oP->add("<div>\n");
+		$oP->add("<button style=\"float:left\" type=\"button\" onclick=\"window.location.reload()\">Refresh</button>\n");
+		$oP->add("<button style=\"float:right\" type=\"submit\">Next >></button>\n");
+		$oP->add("<div style=\"clear:both;\"></div>\n");
+		$oP->add("</div>\n");
 		$oP->add("</form>\n");
 	}
 }
@@ -163,7 +216,16 @@ function DisplayStep2(SetupPage $oP, $sFrom, $sTo)
 	switch ($iRes)
 	{
 		case EMAIL_SEND_OK:
-			$oP->ok("The email has been sent, you may now check that the email will arrive...");
+			$sTransport = MetaModel::GetConfig()->Get('email_transport');
+			if ($sTransport == 'LogFile')
+			{
+				$oP->ok("The email has been logged into the file ".APPROOT."/log/mail.log.");
+			}
+			else
+			{
+				$oP->ok("The email has been sent, check your inbox for the incoming mail...");
+			}
+			$oP->add("<button onClick=\"window.history.back();\"><< Back</button>\n");
 			break;
 
 		case EMAIL_SEND_PENDING:
