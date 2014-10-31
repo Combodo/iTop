@@ -3079,7 +3079,7 @@ EOF
 
 				// Attribute is read-only
 				$sHTMLValue = $this->GetAsHTML($sAttCode);
-				$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/>';
+				$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->GetEditValue($sAttCode), ENT_QUOTES, 'UTF-8').'"/>';
 				$aFieldsMap[$sAttCode] = $sInputId;
 				$sComment .= $sSynchroIcon;
 			}
@@ -3256,7 +3256,11 @@ EOF
 							$currValue = $aKeys[0]; // The only value is the first key
 							//echo "<p>current value for $sAttCode : $currValue</p>";
 							$oDummyObj->Set($sAttCode, $currValue);
-							$aComments[$sAttCode] = '<input type="checkbox" checked id="enable_'.$iFormId.'_'.$sAttCode.'"  onClick="ToogleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
+							$aComments[$sAttCode] = '';
+							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass))
+							{
+								$aComments[$sAttCode] .= '<input type="checkbox" checked id="enable_'.$iFormId.'_'.$sAttCode.'"  onClick="ToogleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
+							}
 							$aComments[$sAttCode] .= '<div class="mono_value">1</div>';
 						}
 						else
@@ -3283,7 +3287,11 @@ EOF
 							$sReadyScript .= "$('#multi_values_$sAttCode').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );";
 	
 							$oDummyObj->Set($sAttCode, null);
-							$aComments[$sAttCode] = '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToogleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
+							$aComments[$sAttCode] = '';
+							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass))
+							{
+								$aComments[$sAttCode] .= '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToogleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
+							}
 							$aComments[$sAttCode] .= '<div class="multi_values" id="multi_values_'.$sAttCode.'">'.$iCount.'</div>';
 						}
 						$sReadyScript .=  'ToogleField('.(($iCount == 1) ? 'true': 'false').', \''.$iFormId.'_'.$sAttCode.'\');'."\n";
