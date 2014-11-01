@@ -808,8 +808,7 @@ class utils
 			$oAppContext = new ApplicationContext();
 			$sContext = $oAppContext->GetForLink();
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/xlsx-export.js');
-			$sXlsxFilter = $param->GetFilter()->serialize();
-			$sXlsxJSFilter = addslashes($sXlsxFilter);
+			$sXlsxJSFilter = addslashes($sFilter);
 			$aResult = array(
 				new SeparatorPopupMenuItem(),
 				// Static menus: Email this page & CSV Export
