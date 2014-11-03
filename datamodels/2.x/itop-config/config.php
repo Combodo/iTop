@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2013 Combodo SARL
+// Copyright (C) 2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -101,7 +101,13 @@ try
 
 	$oP->add("<h1>".Dict::S('config-edit-title')."</h1>");
 
-	$oP->add_style(
+	if (MetaModel::GetConfig()->Get('demo_mode'))
+	{
+		$oP->add("<div class=\"header_message message_info\">Sorry, iTop is in <b>demonstration mode</b>: the configuration file cannot be edited.</div>");
+	}
+	else
+	{
+		$oP->add_style(
 <<<EOF
 textarea {
 	-webkit-box-sizing: border-box;
@@ -116,58 +122,58 @@ textarea {
 	margin-left: 20px;
 }
 EOF
-	);
-
-	$sConfigFile = APPROOT.'conf/'.utils::GetCurrentEnvironment().'/config-itop.php';
-
-	if ($sOperation == 'save')
-	{
-		$sConfig = utils::ReadParam('new_config', '', false, 'raw_data');
-		$sOrginalConfig = utils::ReadParam('prev_config', '', false, 'raw_data');
-		if ($sConfig == $sOrginalConfig)
+		);
+	
+		$sConfigFile = APPROOT.'conf/'.utils::GetCurrentEnvironment().'/config-itop.php';
+	
+		if ($sOperation == 'save')
 		{
-			$oP->add('<div id="save_result" class="header_message">'.Dict::S('config-no-change').'</div>');
+			$sConfig = utils::ReadParam('new_config', '', false, 'raw_data');
+			$sOrginalConfig = utils::ReadParam('prev_config', '', false, 'raw_data');
+			if ($sConfig == $sOrginalConfig)
+			{
+				$oP->add('<div id="save_result" class="header_message">'.Dict::S('config-no-change').'</div>');
+			}
+			else
+			{
+				try
+				{
+					TestConfig($sConfig, $oP); // throws exceptions
+		
+					@chmod($sConfigFile, 0770); // Allow overwriting the file
+					file_put_contents($sConfigFile, $sConfig);
+					@chmod($sConfigFile, 0444); // Read-only
+		
+					$oP->p('<div id="save_result" class="header_message message_ok">'.Dict::S('Successfully recorded.').'</div>');
+					$sOrginalConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
+				}
+				catch (Exception $e)
+				{
+					$oP->p('<div id="save_result" class="header_message message_error">'.$e->getMessage().'</div>');
+				}
+			}
 		}
 		else
 		{
-			try
-			{
-				TestConfig($sConfig, $oP); // throws exceptions
-	
-				@chmod($sConfigFile, 0770); // Allow overwriting the file
-				file_put_contents($sConfigFile, $sConfig);
-				@chmod($sConfigFile, 0444); // Read-only
-	
-				$oP->p('<div id="save_result" class="header_message message_ok">'.Dict::S('Successfully recorded.').'</div>');
-				$sOrginalConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
-			}
-			catch (Exception $e)
-			{
-				$oP->p('<div id="save_result" class="header_message message_error">'.$e->getMessage().'</div>');
-			}
+			$sConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
+			$sOrginalConfig = $sConfig;
 		}
-	}
-	else
-	{
-		$sConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
-		$sOrginalConfig = $sConfig;
-	}
-
-	$sConfigEscaped = htmlentities($sConfig, ENT_QUOTES, 'UTF-8');
-	$sOriginalConfigEscaped = htmlentities($sOrginalConfig, ENT_QUOTES, 'UTF-8');
-	$oP->p(Dict::S('config-edit-intro'));
-	$oP->add("<form method=\"POST\">");
-	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"save\">");
-	$oP->add("<input type=\"submit\" value=\"".Dict::S('config-apply')."\"><button onclick=\"ResetConfig(); return false;\">".Dict::S('config-cancel')."</button>");
-	$oP->add("<span class=\"current_line\">".Dict::Format('config-current-line', "<span class=\"line_number\"></span>")."</span>");
-	$oP->add("<input type=\"hidden\" id=\"prev_config\" name=\"prev_config\" value=\"$sOriginalConfigEscaped\">");
-	$oP->add("<textarea id =\"new_config\" name=\"new_config\" onkeyup=\"UpdateLineNumber();\" onmouseup=\"UpdateLineNumber();\">$sConfigEscaped</textarea>");
-	$oP->add("<input type=\"submit\" value=\"".Dict::S('config-apply')."\"><button onclick=\"ResetConfig(); return false;\">".Dict::S('config-cancel')."</button>");
-	$oP->add("<span class=\"current_line\">".Dict::Format('config-current-line', "<span class=\"line_number\"></span>")."</span>");
-	$oP->add("</form>");
-
-	$sConfirmCancel = addslashes(Dict::S('config-confirm-cancel'));
-	$oP->add_script(
+	
+		$sConfigEscaped = htmlentities($sConfig, ENT_QUOTES, 'UTF-8');
+		$sOriginalConfigEscaped = htmlentities($sOrginalConfig, ENT_QUOTES, 'UTF-8');
+		$oP->p(Dict::S('config-edit-intro'));
+		$oP->add("<form method=\"POST\">");
+		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"save\">");
+		$oP->add("<input type=\"submit\" value=\"".Dict::S('config-apply')."\"><button onclick=\"ResetConfig(); return false;\">".Dict::S('config-cancel')."</button>");
+		$oP->add("<span class=\"current_line\">".Dict::Format('config-current-line', "<span class=\"line_number\"></span>")."</span>");
+		$oP->add("<input type=\"hidden\" id=\"prev_config\" name=\"prev_config\" value=\"$sOriginalConfigEscaped\">");
+		$oP->add("<textarea id =\"new_config\" name=\"new_config\" onkeyup=\"UpdateLineNumber();\" onmouseup=\"UpdateLineNumber();\">$sConfigEscaped</textarea>");
+		$oP->add("<input type=\"submit\" value=\"".Dict::S('config-apply')."\"><button onclick=\"ResetConfig(); return false;\">".Dict::S('config-cancel')."</button>");
+		$oP->add("<span class=\"current_line\">".Dict::Format('config-current-line', "<span class=\"line_number\"></span>")."</span>");
+		$oP->add("</form>");
+	
+		$sConfirmCancel = addslashes(Dict::S('config-confirm-cancel'));
+		$oP->add_script(
 <<<EOF
 function UpdateLineNumber()
 {
@@ -206,7 +212,8 @@ function setCursorPos(input, start, end) {
     }
 }
 EOF
-	);
+		);
+	}
 }
 catch(Exception $e)
 {
@@ -214,4 +221,3 @@ catch(Exception $e)
 }
 
 $oP->output();
-?>
