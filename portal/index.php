@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -60,7 +60,8 @@ function ValidateObject($oObject)
 	if (IsPowerUser())
 	{
 		$sValidationDefine = 'PORTAL_'.strtoupper(get_class($oObject)).'_DISPLAY_POWERUSER_QUERY';
-	} else
+	}
+	else
 	{
 		$sValidationDefine = 'PORTAL_'.strtoupper(get_class($oObject)).'_DISPLAY_QUERY';
 	}
@@ -161,17 +162,10 @@ function DisplayMainMenu(WebPage $oP)
 	$oP->AddMenuButton('showongoing', 'Portal:ShowOngoing', '../portal/index.php?operation=show_ongoing');
 	$oP->AddMenuButton('newrequest', 'Portal:CreateNewRequest', '../portal/index.php?operation=create_request');
 	$oP->AddMenuButton('showclosed', 'Portal:ShowClosed', '../portal/index.php?operation=show_closed');
-	$oP->AddMenuButton('showtoapprove', 'Portal:ShowToApprove', '../portal/index.php?operation=show_toapprove');
-
-	if (isKeyUser()) {
-	   $oP->AddMenuButton('showtoresolve', 'Portal:ShowToResolve', '../portal/index.php?operation=show_toresolve');
-	}
-/* THEBEN
- 	if (UserRights::CanChangePassword())
+	if (UserRights::CanChangePassword())
 	{
 		$oP->AddMenuButton('change_pwd', 'Portal:ChangeMyPassword', '../portal/index.php?loginop=change_pwd');
-	}  */
-	
+	}
 }
 
 /**
@@ -190,48 +184,6 @@ function ShowOngoingTickets(WebPage $oP)
 	$oP->add("<h1 id=\"#resolved_requests\">".Dict::S('Portal:ResolvedRequests')."</h1>\n");
 	ListResolvedRequests($oP);
 	$oP->add("</div>\n");
-	
-	$oP->add("<div id=\"#requests_to_approve\">\n");
-	$oP->add("<h1 id=\"#title_requests_to_approve\">".Dict::S('Portal:RequestsToApprove')."</h1>\n");
-	ListRequestsToApprove($oP);
-	$oP->add("</div>\n");
-	
-	if (isKeyUser()) {
-	$oP->add("<div id=\"open_requests\">\n");
-	$oP->add("<h1 id=\"title_requests_to_resolve\">".Dict::S('Portal:RequestsToResolve')."</h1>\n");
-	ListRequestsToResolve($oP);
-	$oP->add("</div>\n");
-	}
-}
-
-/**
- * Displays the tickets which need approval by mysel
- * @param WebPage $oP The current web page
- * @return void
- */
-// =========================== THEBEN ==================================
-function ShowTicketsToApprove(WebPage $oP)
-{
-	$oP->add("<div id=\"open_requests\">\n");
-	$oP->add("<h1 id=\"title_open_requests\">".Dict::S('Portal:RequestsToApprove')."</h1>\n");
-	ListRequestsToApprove($oP);
-	$oP->add("</div>\n");
-
-}
-
-/**
- * Displays the tickets which need approval by mysel
- * @param WebPage $oP The current web page
- * @return void
- */
-// =========================== THEBEN ==================================
-function ShowTicketsToResolve(WebPage $oP)
-{
-	$oP->add("<div id=\"open_requests\">\n");
-	$oP->add("<h1 id=\"title_requests_to_resolve\">".Dict::S('Portal:RequestsToResolve')."</h1>\n");
-	ListRequestsToResolve($oP);
-	$oP->add("</div>\n");
-
 }
 
 /**
@@ -245,6 +197,134 @@ function ShowClosedTickets(WebPage $oP)
 	//$oP->add("<h1 id=\"#closed_tickets\">".Dict::S('Portal:ListClosedTickets')."</h1>\n");
 	ListClosedTickets($oP);
 	$oP->add("</div>\n");
+}
+
+/**
+ * Displays the form to select a Service Category Id (among the valid ones for the specified user Organization)
+ * @param WebPage $oP Web page for the form output
+ * @param Organization $oUserOrg The organization of the current user
+ * @return void
+ */
+function SelectServiceCategory($oP, $oUserOrg)
+{
+	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS.',template_id');
+	
+	$oSearch = DBObjectSearch::FromOQL(PORTAL_SERVICECATEGORY_QUERY);
+	$oSearch->AllowAllData(); // In case the user has the rights on his org only
+	$oSet = new CMDBObjectSet($oSearch, array(), array('org_id' => $oUserOrg->GetKey()));
+	if ($oSet->Count() == 1)
+	{
+		$oService = $oSet->Fetch();
+		$iSvcCategory = $oService->GetKey();
+		// Only one Category, skip this step in the wizard
+		SelectServiceSubCategory($oP, $oUserOrg, $iSvcCategory);
+	}
+	else
+	{
+		$oP->add("<div class=\"wizContainer\" id=\"form_select_service\">\n");
+		$oP->WizardFormStart('request_wizard', 1);
+
+		$oP->add("<h1 id=\"select_category\">".Dict::S('Portal:SelectService')."</h1>\n");
+		$oP->add("<table>\n");
+		while($oService = $oSet->Fetch())
+		{
+			$id = $oService->GetKey();
+			$sChecked = "";
+			if (isset($aParameters['service_id']) && ($id == $aParameters['service_id']))
+			{
+				$sChecked = "checked";
+			}
+			$oP->p("<tr><td style=\"vertical-align:top\"><p><input name=\"attr_service_id\" $sChecked type=\"radio\" id=\"service_$id\" value=\"$id\"></p></td><td style=\"vertical-align:top\"><p><b><label for=\"service_$id\">".$oService->GetName()."</label></b></p>");
+			$oP->p("<p>".$oService->GetAsHTML('description')."</p></td></tr>");		
+		}
+		$oP->add("</table>\n");	
+	
+		$oP->DumpHiddenParams($aParameters, array('service_id'));
+		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"create_request\">");
+		$oP->WizardFormButtons(BUTTON_NEXT | BUTTON_CANCEL); // NO back button since it's the first step of the Wizard
+		$oP->WizardFormEnd();
+		$oP->WizardCheckSelectionOnSubmit(Dict::S('Portal:PleaseSelectOneService'));
+		$oP->add("</div>\n");
+	}
+}
+
+/**
+ * Displays the form to select a Service Subcategory Id (among the valid ones for the specified user Organization)
+ * and based on the page's parameter 'service_id'
+ * @param WebPage $oP Web page for the form output
+ * @param Organization $oUserOrg The organization of the current user
+ * @param $iSvcId Id of the selected service in case of pass-through (when there is only one service)
+ * @return void
+ */
+function SelectServiceSubCategory($oP, $oUserOrg, $iSvcId = null)
+{
+	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS.',template_id');
+	if ($iSvcId == null)
+	{
+		$iSvcId = $aParameters['service_id'];
+	}
+	else
+	{
+		$aParameters['service_id'] = $iSvcId;
+	}
+	$iDefaultSubSvcId = isset($aParameters['servicesubcategory_id']) ? $aParameters['servicesubcategory_id'] : 0;
+
+	$iDefaultWizNext = 2;
+
+	$oSearch = DBObjectSearch::FromOQL(PORTAL_SERVICE_SUBCATEGORY_QUERY);
+	RestrictSubcategories($oSearch);
+	$oSearch->AllowAllData(); // In case the user has the rights on his org only
+	$oSet = new CMDBObjectSet($oSearch, array(), array('svc_id' => $iSvcId, 'org_id' => $oUserOrg->GetKey()));
+	if ($oSet->Count() == 1)
+	{
+		// Only one sub service, skip this step of the wizard
+		$oSubService = $oSet->Fetch();
+		$iSubSvdId = $oSubService->GetKey();
+		SelectRequestTemplate($oP, $oUserOrg, $iSvcId, $iSubSvdId);
+	}
+	else
+	{
+		$oServiceCategory = MetaModel::GetObject('Service', $iSvcId, false, true /* allow all data*/);
+		if (is_object($oServiceCategory))
+		{
+			$oP->add("<div class=\"wizContainer\" id=\"form_select_servicesubcategory\">\n");
+			$oP->add("<h1 id=\"select_subcategory\">".Dict::Format('Portal:SelectSubcategoryFrom_Service', $oServiceCategory->GetName())."</h1>\n");
+			$oP->WizardFormStart('request_wizard', $iDefaultWizNext);
+			$oP->add("<table>\n");
+			while($oSubService = $oSet->Fetch())
+			{
+				$id = $oSubService->GetKey();
+				$sChecked = "";
+				if ($id == $iDefaultSubSvcId)
+				{
+					$sChecked = "checked";
+				}
+	
+				$oP->add("<tr>");
+	
+				$oP->add("<td style=\"vertical-align:top\">");
+				$oP->add("<p><input name=\"attr_servicesubcategory_id\" $sChecked type=\"radio\" id=\"servicesubcategory_$id\" value=\"$id\"></p>");
+				$oP->add("</td>");
+	
+				$oP->add("<td style=\"vertical-align:top\">");
+				$oP->add("<p><b><label for=\"servicesubcategory_$id\">".$oSubService->GetName()."</label></b></p>");
+				$oP->add("<p>".$oSubService->GetAsHTML('description')."</p>");
+				$oP->add("</td>");
+				$oP->add("</tr>");
+			}
+			$oP->add("</table>\n");	
+			$oP->DumpHiddenParams($aParameters, array('servicesubcategory_id'));
+			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"create_request\">");
+			$oP->WizardFormButtons(BUTTON_BACK | BUTTON_NEXT | BUTTON_CANCEL); //Back button automatically discarded if on the first page
+			$oP->WizardFormEnd();
+			$oP->WizardCheckSelectionOnSubmit(Dict::S('Portal:PleaseSelectAServiceSubCategory'));
+			$oP->add("</div>\n");
+		}
+		else
+		{
+			$oP->p("Error: Invalid Service: id = $iSvcId");
+		}
+	}
 }
 
 /**
@@ -357,9 +437,21 @@ function SelectRequestTemplate($oP, $oUserOrg, $iSvcId = null, $iSubSvcId = null
  * @param integer $iTemplateId The identifier of the template (fall through when there is only one template)
  * @return void
  */
-function RequestCreationForm($oP, $oUserOrg)
+function RequestCreationForm($oP, $oUserOrg, $iSvcId = null, $iSubSvcId = null, $iTemplateId = null)
 {
 	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS.',template_id');
+	if (!is_null($iSvcId))
+	{
+		$aParameters['service_id'] = $iSvcId;
+	}
+	if (!is_null($iSubSvcId))
+	{
+		$aParameters['servicesubcategory_id'] = $iSubSvcId;
+	}
+	if (!is_null($iTemplateId))
+	{
+		$aParameters['template_id'] = $iTemplateId;
+	}
 	
 	$sDescription = '';
 	if (isset($aParameters['template_id']) && ($aParameters['template_id'] != 0))
@@ -383,33 +475,25 @@ function RequestCreationForm($oP, $oUserOrg)
 		}
 	}
 
-	//$oServiceCategory = MetaModel::GetObject('Service', $aParameters['service_id'], false, true /* allow all data*/);
-	//$oServiceSubCategory = MetaModel::GetObject('ServiceSubcategory', $aParameters['servicesubcategory_id'], false, true /* allow all data*/);
-	//if (is_object($oServiceCategory) && is_object($oServiceSubCategory))
+	$oServiceCategory = MetaModel::GetObject('Service', $aParameters['service_id'], false, true /* allow all data*/);
+	$oServiceSubCategory = MetaModel::GetObject('ServiceSubcategory', $aParameters['servicesubcategory_id'], false, true /* allow all data*/);
+	if (is_object($oServiceCategory) && is_object($oServiceSubCategory))
 	{
-		$sClass = "UserRequest"; // ComputeClass($oServiceSubCategory->GetKey());
+		$sClass = ComputeClass($oServiceSubCategory->GetKey());
 		$oRequest = MetaModel::NewObject($sClass);
 		$oRequest->Set('org_id', $oUserOrg->GetKey());
-	 	$oRequest->Set('caller_id', UserRights::GetContactId());
-//	    $oRequest->Set('service_id', $aParameters['service_id']);
-//	    $oRequest->Set('servicesubcategory_id', $aParameters['servicesubcategory_id']);
+		$oRequest->Set('caller_id', UserRights::GetContactId());
+		$oRequest->Set('service_id', $aParameters['service_id']);
+		$oRequest->Set('servicesubcategory_id', $aParameters['servicesubcategory_id']);
 
-/*		$oAttDef = MetaModel::GetAttributeDef($sClass, 'service_id');
+		$oAttDef = MetaModel::GetAttributeDef($sClass, 'service_id');
 		$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $oServiceCategory->GetName());
 
 		$oAttDef = MetaModel::GetAttributeDef($sClass, 'servicesubcategory_id');
 		$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $oServiceSubCategory->GetName());
 
-*/
 		$aList = explode(',', GetConstant($sClass, 'FORM_ATTRIBUTES'));
-		
-		IssueLog::info("aList, FORM_ATTRIBUTES=".print_r($aList,true));
-		// TODO
-	/*	echo "<select name='userCharacters' id='userCharacter'>";
-		echo "<option value='1'>Kid Wonder</option>";
-		echo "<option value='3'>Oriel</option>";
-		echo "</select>";  */
-		
+
 		$iFlags = 0;
 		foreach($aList as $sAttCode)
 		{
@@ -423,10 +507,8 @@ function RequestCreationForm($oP, $oUserOrg)
 		$aFieldsMap = array();
 		foreach($aList as $sAttCode)
 		{
-			IssueLog::Info("sAttCode=".$sAttCode);
 			$value = '';
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			IssueLog::Info("oAttDef=".print_r($oAttDef,true));
 			$iFlags = $oRequest->GetAttributeFlags($sAttCode);
 			if (isset($aParameters[$sAttCode]))
 			{
@@ -435,10 +517,8 @@ function RequestCreationForm($oP, $oUserOrg)
 			$aArgs = array('this' => $oRequest);
 				
 			$sInputId = 'attr_'.$sAttCode;
-			IssueLog::Info("sInputId=".$sInputId);
 			$aFieldsMap[$sAttCode] = $sInputId;
 			$sValue = "<span id=\"field_{$sInputId}\">".$oRequest->GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $value, '', 'attr_'.$sAttCode, '', $iFlags, $aArgs).'</span>';
-			IssueLog::Info("sValue=".$sValue);
 			$aDetails[] = array('label' => $oAttDef->GetLabel(), 'value' => $sValue);
 		}
 		$aHidden = array();
@@ -447,7 +527,6 @@ function RequestCreationForm($oP, $oUserOrg)
 			foreach ($aTemplateFields as $sAttCode =>  $oField)
 			{
 				$sValue = $oField->GetFormElement($oP, $sClass);
-				
 				if ($oField->Get('input_type') == 'hidden')
 				{
 					$aHidden[] = $sValue;
@@ -475,14 +554,14 @@ EOF
 		$oP->add_linked_script("../js/jquery.blockUI.js");
 		$oP->add("<div class=\"wizContainer\" id=\"form_request_description\">\n");
 		$oP->add("<h1 id=\"title_request_form\">".Dict::S('Portal:DescriptionOfTheRequest')."</h1>\n");
-		$oP->WizardFormStart('request_form', 1);
+		$oP->WizardFormStart('request_form', 4);
 
 		$oP->details($aDetails);
 
 		// Add hidden fields for known values, enabling dependant attributes to be computed correctly
 		//
 		foreach($oRequest->ListChanges() as $sAttCode => $value)
-		{   
+		{
 			if (!in_array($sAttCode, $aList))
 			{
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
@@ -508,7 +587,7 @@ EOF
 		$oP->add("</div>\n");
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);
-        // IssueLog::Info("sJsonFieldsMap=".$sJsonFieldsMap);
+
 		$oP->add_ready_script(
 <<<EOF
 		oWizardHelper.SetFieldsMap($sJsonFieldsMap);
@@ -522,11 +601,11 @@ EOF
 EOF
 );
 	}
-//	else
-//	{
+	else
+	{
 		// User not authorized to use this service ?
 		//ShowOngoingTickets($oP);
-//	}
+	}
 }
 
 /**
@@ -536,7 +615,7 @@ EOF
  * @return void
  */
 function DoCreateRequest($oP, $oUserOrg)
-{   IssueLog::Info("DoCreateRequest");
+{
 	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS.',template_id');
 	$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 	if (!utils::IsTransactionValid($sTransactionId))
@@ -634,8 +713,8 @@ function CreateRequest(WebPage $oP, Organization $oUserOrg)
 {
 	switch($oP->GetWizardStep())
 	{
-//		case 0:
-/*		default:
+		case 0:
+		default:
 		SelectServiceCategory($oP, $oUserOrg);
 		break;
 		
@@ -645,13 +724,13 @@ function CreateRequest(WebPage $oP, Organization $oUserOrg)
 
 		case 2:
 		SelectRequestTemplate($oP, $oUserOrg);
-		break;  */
+		break;
 		
-		case 0:
+		case 3:
 		RequestCreationForm($oP, $oUserOrg);
 		break;
 
-		case 1:
+		case 4:
 		DoCreateRequest($oP, $oUserOrg);
 		break;
 	}
@@ -747,54 +826,6 @@ function ListResolvedRequests(WebPage $oP)
 }
 
 /**
- * Lists all the currently resolved (not yet closed) User Requests for the current user
- * @param WebPage $oP The current web page
- * @return void
- */
-// ========================= THEBEN ===================================
-function ListRequestsToApprove(WebPage $oP)
-{
-	$oUserOrg = GetUserOrg();
-
-	$aClassToSet = array();
-	foreach (GetTicketClasses() as $sClass)
-	{
-		$sOQL = "SELECT $sClass WHERE org_id = :org_id AND status = 'waiting_for_approval'";
-		$oSearch = DBObjectSearch::FromOQL($sOQL);
-		$iUser = UserRights::GetContactId();
-		
-		$oSearch->AddCondition('approver_id', $iUser);
-
-		$aClassToSet[$sClass] = new CMDBObjectSet($oSearch, array(), array('org_id' => $oUserOrg->GetKey()));
-	}
-	DisplayRequestLists($oP, $aClassToSet);
-}
-
-/**
- * Lists all the currently resolved (not yet closed) User Requests for the current user
- * @param WebPage $oP The current web page
- * @return void
- */
-// ========================= THEBEN ===================================
-function ListRequestsToResolve(WebPage $oP)
-{
-	$oUserOrg = GetUserOrg();
-
-	$aClassToSet = array();
-	foreach (GetTicketClasses() as $sClass)
-	{
-		$sOQL = "SELECT $sClass WHERE org_id = :org_id AND status = 'assigned'";
-		$oSearch = DBObjectSearch::FromOQL($sOQL);
-		$iUser = UserRights::GetContactId();
-
-		$oSearch->AddCondition('agent_id', $iUser);
-
-		$aClassToSet[$sClass] = new CMDBObjectSet($oSearch, array(), array('org_id' => $oUserOrg->GetKey()));
-	}
-	DisplayRequestLists($oP, $aClassToSet);
-}
-
-/**
  * Lists all the currently closed tickets
  * @param WebPage $oP The current web page
  * @return void
@@ -865,8 +896,6 @@ function DisplayObject($oP, $oObj, $oUserOrg)
  * @param Object $oObj The target object
  * @return void
  */
-//============= THEBEN ============= ApproveButton === ResolveButton ===============
-
 function ShowDetailsRequest(WebPage $oP, $oObj)
 {	
 	$sClass = get_class($oObj);
@@ -876,10 +905,6 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 	$bIsReopenButton = false;
 	$bIsCloseButton = false;
 	$bIsEscalateButton = false;
-	$bIsApproveButton = false;  
-	$bIsRejectButton = false; 
-	$bIsResolveButton = false; 
-	
 	$bEditAttachments = false;
 	$aEditAtt = array(); // List of attributes editable in the main form
 	if (!MetaModel::DBIsReadOnly())
@@ -898,66 +923,16 @@ function ShowDetailsRequest(WebPage $oP, $oObj)
 			}
 			// Add the "Close" button if this is valid action
 			if (array_key_exists('ev_close', $aTransitions) && UserRights::IsStimulusAllowed($sClass, 'ev_close', $oSet))
-			{   if (($oObj->Get('caller_id') == UserRights::GetContactId()) 
-			         || IsPowerUSer()) { 
-				  // I can only close a ticket if I'm the caller or a power user
-					$bIsCloseButton = true;
-					MakeStimulusForm($oP, $oObj, 'ev_close', array('user_satisfaction', $sUserCommentAttCode));
-			    }
-			    IssueLog::Info('caller_id='.$oObj->Get('caller_id')." user-id=".UserRights::GetContactId());
+			{
+				$bIsCloseButton = true;
+				MakeStimulusForm($oP, $oObj, 'ev_close', array('user_satisfaction', $sUserCommentAttCode));
 			}
 			break;
-			
-			case 'waiting_for_approval':
-				$aEditAtt = array();
-				$aTransitions = $oObj->EnumTransitions();
-				$oSet = DBObjectSet::FromObject($oObj);
-				// Add the "Approve" button if this is valid action
-				if (array_key_exists('ev_approve', $aTransitions)) //TODO check if current user is approver && UserRights::IsStimulusAllowed($sClass, 'ev_reopen', $oSet))
-				{
-					$bIsApproveButton = true;
-					MakeStimulusForm($oP, $oObj, 'ev_approve', array($sLogAttCode));
-				}
-				// Add the "Reject" button if this is valid action
-				if (array_key_exists('ev_reject', $aTransitions)) // TODO check if current user is approve && UserRights::IsStimulusAllowed($sClass, 'ev_close', $oSet))
-				{
-					$bIsRejectButton = true;
-					MakeStimulusForm($oP, $oObj, 'ev_reject', array($sLogAttCode) ); //array('user_satisfaction', $sUserCommentAttCode));
-				}
-				break;
 	
 			case 'closed':
 			// By convention 'closed' is the final state of a ticket and nothing can be done in such a state
 			break;
 
-			case 'assigned':
-				
-				$iFlags = $oObj->GetAttributeFlags($sLogAttCode);
-				$bReadOnly = (($iFlags & (OPT_ATT_READONLY | OPT_ATT_HIDDEN)) != 0);
-				if ($bReadOnly)
-				{
-					$aEditAtt = array();
-					$bEditAttachments = false;
-				}
-				else
-				{
-					$aEditAtt = array(
-								$sLogAttCode => '????'
-						);
-					$bEditAttachments = true;
-				}
-				if (isKeyUser()) {
-					$aTransitions = $oObj->EnumTransitions();
-					$oSet = DBObjectSet::FromObject($oObj);
-					// Add the "Resolver" button if this is valid action
-					if (array_key_exists('ev_resolve', $aTransitions)) //TODO check if current user is approver && UserRights::IsStimulusAllowed($sClass, 'ev_reopen', $oSet))
-					{
-						$bIsResolveButton = true;
-						MakeStimulusForm($oP, $oObj, 'ev_resolve', array($sLogAttCode));
-					}		
-				} 
-				break;
-				
 			default:
 			// In all other states, the only possible action is to update the ticket (both the case log and the attachments)
 			// This update is possible only if the case log field is not read-only or hidden in the current state
@@ -1098,32 +1073,6 @@ EOF
 		$sOk = addslashes(Dict::S('UI:Button:Ok'));
 		$oP->p('<input type="button" onClick="RunStimulusDialog(\''.$sStimulusCode.'\', \''.$sTitle.'\', \''.$sOk.'\');" value="'.$sTitle.'...">');
 	}
-	
-	if($bIsApproveButton)
-	{
-		$sStimulusCode = 'ev_approve';
-		$sTitle = addslashes(Dict::S('Portal:Button:ApproveTicket'));
-		$sOk = addslashes(Dict::S('UI:Button:Ok'));
-		$oP->p('<input type="button" onClick="RunStimulusDialog(\''.$sStimulusCode.'\', \''.$sTitle.'\', \''.$sOk.'\');" value="'.$sTitle.'...">');		
-	}
-	
-	if($bIsRejectButton)
-	{
-		$sStimulusCode = 'ev_reject';
-		$sTitle = addslashes(Dict::S('Portal:Button:RejectTicket'));
-		$sOk = addslashes(Dict::S('UI:Button:Ok'));
-		$oP->p('<input type="button" onClick="RunStimulusDialog(\''.$sStimulusCode.'\', \''.$sTitle.'\', \''.$sOk.'\');" value="'.$sTitle.'...">');
-	}
-	
-	if($bIsResolveButton)
-	{
-		$sStimulusCode = 'ev_resolve';
-		$sTitle = addslashes(Dict::S('Portal:Button:ResolveTicket'));
-		$sOk = addslashes(Dict::S('UI:Button:Ok'));
-		$oP->p('<input type="button" onClick="RunStimulusDialog(\''.$sStimulusCode.'\', \''.$sTitle.'\', \''.$sOk.'\');" value="'.$sTitle.'...">');
-	}
-	
-	
 	if($bIsCloseButton)
 	{
 		$sStimulusCode = 'ev_close';
@@ -1308,26 +1257,6 @@ function IsPowerUSer()
 	return $bRes;
 }
 
-/**
- * Determine if the current user can be considered as being a portal key user
- * (can update tickets where he is agent and can resolve them)
- */
-function IsKeyUSer()
-{
-	$iUserID = UserRights::GetUserId();
-	$sOQLprofile = "SELECT URP_Profiles AS p JOIN URP_UserProfile AS up ON up.profileid=p.id WHERE up.userid = :user AND p.name = :profile";
-	$oProfileSet = new DBObjectSet(
-			DBObjectSearch::FromOQL($sOQLprofile),
-			array(),
-			array(
-					'user' => $iUserID,
-					'profile' => 'PORTAL_KEY_USER_PROFILE',
-			)
-	);
-	$bRes = ($oProfileSet->count() > 0);
-	return $bRes;
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Main program
@@ -1344,7 +1273,7 @@ try
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(false /* bMustBeAdmin */, true /* IsAllowedToPortalUsers */); // Check user rights and prompt if needed
 
-    ApplicationContext::SetUrlMakerClass('MyPortalURLMaker');
+   ApplicationContext::SetUrlMakerClass('MyPortalURLMaker');
 
 	$aClasses = explode(',', MetaModel::GetConfig()->Get('portal_tickets'));
 	$sMainClass = trim(reset($aClasses));
@@ -1359,11 +1288,9 @@ try
 	
 		$sCode = $oUserOrg->Get('code');
 		$sAlternateStylesheet = '';
-        //IssueLog::Info("org code of user=".$sCode);
 		if (@file_exists("./$sCode/portal.css"))
 		{
 			$sAlternateStylesheet = "$sCode";
-                        IssueLog::Info("using Alt Stylesheet: ".$sAlternateStylesheet);
 		}
 	
 		$oP = new PortalWebPage(Dict::S('Portal:Title'), $sAlternateStylesheet);
@@ -1422,27 +1349,12 @@ try
 					DisplayObject($oP, $oObj, $oUserOrg);
 				}
 				break;
-				
-				// =================== THEBEN ===========================
-				case 'show_toapprove':
-				$oP->set_title(Dict::S('Portal:ShowToApprove'));
-				DisplayMainMenu($oP);
-				ShowTicketsToApprove($oP);
-				break;
-				
-				// =================== THEBEN ===========================
-				case 'show_toresolve':
-					$oP->set_title(Dict::S('Portal:ShowToResolve'));
-					DisplayMainMenu($oP);
-					ShowTicketsToResolve($oP);
-					break;
-				
+	
 				case 'show_ongoing':
 				default:
 				$oP->set_title(Dict::S('Portal:ShowOngoing'));
 				DisplayMainMenu($oP);
 				ShowOngoingTickets($oP);
-				break;
 			} 
 		}
 	}
