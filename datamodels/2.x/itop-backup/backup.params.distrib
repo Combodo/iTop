@@ -1,0 +1,54 @@
+# Parameters file for backup.php and check-backup.php
+#
+# Usage:
+# backup.php --param_file=<this file>[,<another one>]
+# or
+# http://.../itop-backup/backup.php?param_file=<this file>[,<another one>]
+#
+# If a parameter is given both in the file and in the arguments,
+# then the value given as argument is retained
+#
+# Note: most of the default values provided here should work fine
+#       if you have created sample data with the setup program
+
+# MySQL coming with Easy PHP (Windows)
+mysql_bindir = C:\Program Files\EasyPHP-5.3.6.0\mysql\bin
+
+
+# Authentication
+auth_user = admin
+auth_pwd = admin
+
+# Target file - path and filename (optional)
+#
+# Formatting rules:
+# %Y-%m-%d => 2011-01-25... see PHP documentation of strftime()
+# Placeholders:
+#    __HOST__      MySQL server
+#    __DB__        Database name
+#    __SUBNAME__   Tables prefix
+# 
+backup_file = /var/log/__DB__-%Y-%m-%d
+	
+# Check thresholds (check-backup.php)
+#
+check_size_min = 20000 # bytes
+check_size_reduction_max = 10 # percentage
+
+# Ticket creation (check-backup.php)
+#
+# If the backup has failed, a ticket will be created
+# This process relies on the SOAP service "CreateIncident"
+#
+# Root URL of an instance of iTop, into which the ticket will be created
+check_ticket_itop = http://localhost/myiTop 
+# Any of the above paramaters are mandatory
+check_ticket_login = admin # must have the right to create an Incident Ticket
+check_ticket_pwd = admin
+check_ticket_title = Backup check failed
+check_ticket_customer = Demo
+check_ticket_service = Computers and peripherals
+check_ticket_service_subcategory = Repair
+check_ticket_workgroup = Hardware support
+check_ticket_impacted_server = dbserver1.demo.com
+	
