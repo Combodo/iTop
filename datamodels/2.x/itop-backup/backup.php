@@ -184,6 +184,10 @@ if ($bSimulate)
 {
 	$oP->p("Simulate: would create file '$sZipArchiveFile'");
 }
+elseif (MetaModel::GetConfig()->Get('demo_mode'))
+{
+	$oP->p("Sorry, iTop is in demonstration mode: the feature is disabled");
+}
 else
 {
 	$oBackup->CreateZip($sZipArchiveFile);

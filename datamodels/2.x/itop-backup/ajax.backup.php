@@ -46,15 +46,22 @@ try
 		$oPage->no_cache();
 		$oPage->SetContentType('text/html');
 
-		try
+		if (utils::GetConfig()->Get('demo_mode'))
 		{
-			set_time_limit(0);
-			$oBB = new BackupExec(APPROOT.'data/backups/manual/', 0 /*iRetentionCount*/);
-			$sRes = $oBB->Process(time() + 36000); // 10 hours to complete should be sufficient!
+			$oPage->add("<div data-error-stimulus=\"Error\">Sorry, iTop is in <b>demonstration mode</b>: the feature is disabled.</div>");
 		}
-		catch (Exception $e)
+		else
 		{
-			$oPage->p('Error: '.$e->getMessage());
+			try
+			{
+				set_time_limit(0);
+				$oBB = new BackupExec(APPROOT.'data/backups/manual/', 0 /*iRetentionCount*/);
+				$sRes = $oBB->Process(time() + 36000); // 10 hours to complete should be sufficient!
+			}
+			catch (Exception $e)
+			{
+				$oPage->p('Error: '.$e->getMessage());
+			}
 		}
 		$oPage->output();
 		break;
@@ -104,39 +111,46 @@ EOF
 		$oPage->no_cache();
 		$oPage->SetContentType('text/html');
 
-		$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
-		$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
-		$oRestoreMutex->Lock();
-		try
+		if (utils::GetConfig()->Get('demo_mode'))
 		{
-			set_time_limit(0);
-
-			// Get the file and destroy the token (single usage)
-			$sToken = utils::ReadParam('token', '', false, 'raw_data');
-			$sTokenFile = APPROOT.'/data/restore.'.$sToken.'.tok';
-			$sFile = file_get_contents($sTokenFile);
-			unlink($sTokenFile);
-
-			$sMySQLBinDir = utils::ReadParam('mysql_bindir', '', false, 'raw_data');
-			$sDBHost = utils::ReadParam('db_host', '', false, 'raw_data');
-			$sDBUser = utils::ReadParam('db_user', '', false, 'raw_data');
-			$sDBPwd = utils::ReadParam('db_pwd', '', false, 'raw_data');
-			$sDBName = utils::ReadParam('db_name', '', false, 'raw_data');
-			$sDBSubName = utils::ReadParam('db_subname', '', false, 'raw_data');
-
-			$oDBRS = new DBRestore($sDBHost, $sDBUser, $sDBPwd, $sDBName, $sDBSubName);
-			$oDBRS->SetMySQLBinDir($sMySQLBinDir);
-
-			$sBackupDir = APPROOT.'data/backups/';
-			$sBackupFile = $sBackupDir.$sFile;
-			$sRes = $oDBRS->RestoreFromZip($sBackupFile, $sEnvironment);
-
-			$oRestoreMutex->Unlock();
+			$oPage->add("<div data-error-stimulus=\"Error\">Sorry, iTop is in <b>demonstration mode</b>: the feature is disabled.</div>");
 		}
-		catch (Exception $e)
+		else
 		{
-			$oRestoreMutex->Unlock();
-			$oPage->p('Error: '.$e->getMessage());
+			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
+			$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
+			$oRestoreMutex->Lock();
+			try
+			{
+				set_time_limit(0);
+	
+				// Get the file and destroy the token (single usage)
+				$sToken = utils::ReadParam('token', '', false, 'raw_data');
+				$sTokenFile = APPROOT.'/data/restore.'.$sToken.'.tok';
+				$sFile = file_get_contents($sTokenFile);
+				unlink($sTokenFile);
+	
+				$sMySQLBinDir = utils::ReadParam('mysql_bindir', '', false, 'raw_data');
+				$sDBHost = utils::ReadParam('db_host', '', false, 'raw_data');
+				$sDBUser = utils::ReadParam('db_user', '', false, 'raw_data');
+				$sDBPwd = utils::ReadParam('db_pwd', '', false, 'raw_data');
+				$sDBName = utils::ReadParam('db_name', '', false, 'raw_data');
+				$sDBSubName = utils::ReadParam('db_subname', '', false, 'raw_data');
+	
+				$oDBRS = new DBRestore($sDBHost, $sDBUser, $sDBPwd, $sDBName, $sDBSubName);
+				$oDBRS->SetMySQLBinDir($sMySQLBinDir);
+	
+				$sBackupDir = APPROOT.'data/backups/';
+				$sBackupFile = $sBackupDir.$sFile;
+				$sRes = $oDBRS->RestoreFromZip($sBackupFile, $sEnvironment);
+	
+				$oRestoreMutex->Unlock();
+			}
+			catch (Exception $e)
+			{
+				$oRestoreMutex->Unlock();
+				$oPage->p('Error: '.$e->getMessage());
+			}
 		}
 		$oPage->output();
 		break;
@@ -146,6 +160,10 @@ EOF
 		require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 		LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be admin)
 
+		if (utils::GetConfig()->Get('demo_mode'))
+		{
+			throw new Exception('iTop is in demonstration mode: the feature is disabled');
+		}
 		$sFile = utils::ReadParam('file', '', false, 'raw_data');
 		$oBackup = new DBBackupScheduled();
 		$sBackupDir = APPROOT.'data/backups/';

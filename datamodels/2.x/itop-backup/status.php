@@ -50,6 +50,11 @@ try
 {
 	$oP->add("<h1>".Dict::S('bkp-status-title')."</h1>");
 
+	if (MetaModel::GetConfig()->Get('demo_mode'))
+	{
+		$oP->add("<div class=\"header_message message_info\">iTop is in <b>demonstration mode</b>: the feature is disabled.</div>");
+	}
+
 	$sImgOk = '<img src="../images/validation_ok.png"> ';
 	$sImgError = '<img src="../images/validation_error.png"> ';
 
@@ -181,8 +186,15 @@ try
 	{
 		$sFileName = basename($sBackupFile);
 		$sFilePath = 'auto/'.$sFileName;
-		$sAjax = utils::GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php', array('operation' => 'download', 'file' => $sFilePath));
-		$sName = "<a href=\"$sAjax\">".$sFileName.'</a>';
+		if (MetaModel::GetConfig()->Get('demo_mode'))
+		{
+			$sName = $sFileName;
+		}
+		else
+		{
+			$sAjax = utils::GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php', array('operation' => 'download', 'file' => $sFilePath));
+			$sName = "<a href=\"$sAjax\">".$sFileName.'</a>';
+		}
 		$sSize = SetupUtils::HumanReadableSize(filesize($sBackupFile));
 		$sConfirmRestore = addslashes(Dict::Format('bkp-confirm-restore', $sFileName));
 		$sFileEscaped = addslashes($sFilePath);
@@ -222,8 +234,15 @@ try
 	{
 		$sFileName = basename($sBackupFile);
 		$sFilePath = 'manual/'.$sFileName;
-		$sAjax = utils::GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php', array('operation' => 'download', 'file' => $sFilePath));
-		$sName = "<a href=\"$sAjax\">".$sFileName.'</a>';
+		if (MetaModel::GetConfig()->Get('demo_mode'))
+		{
+			$sName = $sFileName;
+		}
+		else
+		{
+			$sAjax = utils::GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php', array('operation' => 'download', 'file' => $sFilePath));
+			$sName = "<a href=\"$sAjax\">".$sFileName.'</a>';
+		}
 		$sSize = SetupUtils::HumanReadableSize(filesize($sBackupFile));
 		$sConfirmRestore = addslashes(Dict::Format('bkp-confirm-restore', $sFileName));
 		$sFileEscaped = addslashes($sFilePath);
@@ -376,6 +395,11 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 }
 EOF
 	);
+
+	if (MetaModel::GetConfig()->Get('demo_mode'))
+	{
+		$oP->add_ready_script("$('button').attr('disabled', 'disabled').attr('title', 'Disabled in demonstration mode')");
+	}
 }
 catch(Exception $e)
 {
