@@ -1,4 +1,4 @@
-iTop - version 2.0.3 - 15-Jul-2014
+﻿iTop - version 2.1.0 Beta - 12-Nov-2014
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -9,13 +9,13 @@ Readme file
 2.4. Upgrading from 2.0.x
 2.5. Migration from 1.x versions
 3.   FEATURES
-3.1. Changes since 2.0.2
+3.1. Changes since 2.0.3
 3.2. Known limitations
 3.3. Known issues
 
 1. ABOUT THIS RELEASE
    ==================
-Thank you for downloading the 19th packaged release of iTop.
+Thank you for downloading the 20th packaged release of iTop.
 This version is a maintenance release, with quite a few bug fixes and a few enhancements.
 
 The documentation about iTop is available as a Wiki: https://wiki.openitop.org/
@@ -25,20 +25,19 @@ The source code of iTop can be found on SourceForge: https://sourceforge.net/p/i
 
 1.1 What's new?
     ---------------------------
-This version brings a number of bug fixes since 2.0.2 and a few enhancements, namely:
+This version brings a number of bug fixes since 2.0.3 and a few enhancements, namely:
 
-- Scalability: better support of large volumes of objects, with much less memory usage
-- Cleanup of the REST/JSON API, a few rough corners have been rounded
-- Conditional notifications
-- Usability: faster display of an object's details
+- A rudimentary configuration file editor (for administrators)
+- Automated data backups, and manual backup/restore
+- Excel exports
 
 ... and about 60 bug fixes!
 
-1.2 Should I upgrade to 2.0.3?
+1.2 Should I upgrade to 2.1.0?
     -------------------------------
-Considering that iTop 2.0.3 is fully compatible with iTop 2.0.x and the number of bugs fixed, we recommend you to upgrade.
+Considering that iTop 2.1.0 is fully compatible with iTop 2.0.x and the number of bugs fixed, we recommend you to upgrade.
 Anyhow, prior to taking that decision, we encourage you to have a look at the migration notes:
-https://wiki.openitop.org/doku.php?id=2_0_3:admin:installing_itop
+https://wiki.openitop.org/doku.php?id=2_1_0:admin:203_to_210_migration_notes
 
 1.3 Special Thanks To:
     -----------------
@@ -108,7 +107,7 @@ The following features will require the activation of CRON.PHP:
  - asynchronous emails. By default, this option is disabled. To enable it, set 'email_asynchronous' to 1 in the configuration file.
  - check ticket SLA. Tickets reaching the limits will be passed into Escalation TTO/TTR states.
 
-More information into the Wiki: https://wiki.openitop.org/doku.php?id=2_0_2:admin:cron
+More information into the Wiki: https://wiki.openitop.org/doku.php?id=2_0_3:admin:cron
 
 You can get a status of the cron "tasks" with the command:
 
@@ -125,8 +124,9 @@ The output will look as shown below:
 
 2.4. Upgrading from 2.0.x
      --------------------
-The version 2.0.3 if fully compatible with 2.0.0, 2.0.1 and 2.0.2. Due to few database changes,
-you must run the setup when upgrading (whatever the original version).
+The version 2.1.0 if fully compatible with 2.0.0, 2.0.1, 2.0.2 and 2.0.3. Due to few database changes,
+and new modules that have to be installed, you must run the setup when upgrading (whatever the original
+version).
 
 If the location of mysql binaries is in the "path", the setup proposes to perform a full backup
 of iTop (database + configuration file) using mysqldump.
@@ -189,156 +189,112 @@ That's it.
 3. FEATURES
    ========
 
-3.1. Changes since 2.0.2
+3.1. Changes since 2.0.3
      -------------------
 
-This maintenance version consists in a mix of bug fixes and enhancements.
+This version consists in three new features and bug fixes.
 
-Enhancements
+
+Configuration editor
 --------------------
-Memory consumption by the application has been drastically reduced.
+This is a way for administrators to edit the configuration file from the iTop UI, with their iTop credentials.
+
+
+Automated backups
+-----------------
+Performs automated backups. The scheduling can be configured, and it handles a rotation.
+A dedicated page provide administrators with a status report and allows for performing manual backups
+and restores.
+
+
+Excel exports
+-------------
+In addition to the existing CSV export features, it is now possible to generate an Excel file directly,
+from any list of objects.
+
 
 Usability
 --------------------
-#934 Support the <display_style> option for ExternalKeys: horizontal and vertical radio buttons groups are now supported
-#933 Search form for Query Phrasebook items. If you implement your own menus (equivalent to itop-welcome-itil module), make sure that you update the menu definition to show the search form at the top.
-#929 Speed up the full text search (mostly from the end user perspective, requires a custom configuration)
-#930 AttributeExternalFields displayed in a form are automatically refreshed when their "parent" field is modified...
-#909 Faster display for the "details" of an object:
-     - object's history is only loaded when the "History" tab is clicked
-     - by default the history display is truncated to the 'max_history_length' (= 50) latest modifications
-#878 Missing scrollbar in "linkset-direct" edition popup dialog
-#862 Popup menu misplaced when the window scrolls (e.g. when displaying large lists of results)
-#861 and #636 Set the focus on User Name in iTop Login Form
-#940 "Close" and "Reopen" buttons were not working on IE (due to extra commas at the end of JS lists)
-#892 Confusion when using a hierarchical list in a search form
-#916 Hierarchical selector: clicking on the label now has the same effect as clicking on the radio button itself. (The label is no longer an hyperlink)
-Ticket's attachments can now be added by drag and drop (on browsers supporting HTML5 drag and drop). 
+#1011 Proper resizing of the dialog box for managing 1:n links.
+#974 prevent multiple javascript refresh when reloading the "initial state" of a ticket.
 
 
 Scalability / Performance
 -------------------------
-#867 (and #907 as a dup') De-harcode set_time_limit (per loop) in lengthy operations. Default value is 30 seconds (per loop), configurable via the new parameter "max_execution_time_per_loop", instead of 5 seconds previously.
-Compatibility with APCu (For PHP 5.5+), since it is slightly different from APC.
-Two experimental perf. enhancements:
-- maintain list the attributes (potentially) modified to speed-up ListChanges() by avoiding a systematic comparison between the content of linkedsets.
-- cache the list of SynchroDataSources and use this in InSyncScope() to avoid searching in the SynchroReplicas when it's not needed...
-Depending on the configuration, these optimizations may speed-up the CSV import by up to 40% !!
-Experimental perf. enhancement: cache the foreign keys to use when importing object to avoid searching for the same object several times during a given import. Seem to speed up the imports by 7 to 10%.
-CSV export (from the toolkit menu) now displays an asynchronous page, to better cope with a huge number of objects (> 10000)
-- Memory optimization: no longer store all DBObjects in memory while browsng through a Set, but pull them one by one from the MySQL client buffer as needed.
-- Also renamed Merge to Append since it's really what it does (seems to be used only in the tests)
-Code cleanup to implement the tabs handling (inside web pages) in one place. Added the ability to provide asynchronously loaded tabs (content must come from the same server).
-Use the object oriented verison of the MySQLi API which seems  free of memory leaks (compared to the procedural version of the same API).
-#944 Speed-up the display of CSV import history. IF the feature is enabled, the CSV import history is:
-1) Displayed asynchronously
-2) Based on a specific 'origin' enum fields instead of parsing the userinfo comment
-Cleanup of unused records in the change tracking table 'priv_change'. Depending on the installed modules and the usage you have made of iTop, this cleanup can drastically reduce the size of you backups.
-
-JSON/REST API (new version: 1.2)
---------------------------------
-#926 Proper "report" data when performing a Delete operation
-#925 Added an option to output all the fields of the object found (not only the fields of the queried class), using "*+" for the list of queried fields
-#897 Improved the error reporting when an external key is specified with a final class that is not a subclass of the class of the external key
-#891 Better error reporting when either the parameter auth_user or auth_pwd are missing.
-#877 More flexibility on case log updates (in particular, it is now possible to write the entire case log), remains compatible with the previous API
-#869 API was not outputing case log attributes (not in a structured way)
-New verb: core/check_credentials to implement single sign-on solutions
-Properly handle external and basic authentication methods for REST web services.
-Proper output of boolean values in JSON.
-Bug fix: the JSON value for an enum should be the raw value, not its translated label.
-
-Data model fixes/changes
-------------------------
-Fixed issue with 1.x datamodels: dashlets of type "badge" not working (preventing from editing an existing dashboard), since 2.0.2
-Aligned the authentication module with the one of 2.x, to enable the feature "Forgot password" for legacy data models
-Added the "outage" field to simple Change tickets, since it's already present in ITIL Changes.
-Added the (missing) field status to the details of VirtualDevice, Hypervisor and Farm.
+#965 Since 2.0.3, for each synchronized object, around 100 queries are performed (2 are required), and this is multiplied by the number of duplicate replicas (then resulting in a significant slowdown).
 
 
 Notifications
 -------------
-#901 Added the attribute "filter" to the triggers, to define conditional notifications
-#872 Support notifications for the creation of a new user. Also fix the translation of the "Additional values" in ValueSetEnumClasses.
-#856 allow asynchronous emails to have an empty 'to' recipient... (not used anyway)
-#483 Added placeholders for the notifications: html(caselog), head_html(caselog), html(linkset). The HTML can be customized. Fixes the issue about lines being wrapped in a curious way (root cause: swift mailer).
+#998 Accurately check the configured mail transport and report information accordingly in the email.test page.
+Add two "debug" transports for Swift mailer: Null and LogFile which are useful for staging environments where one does not want to send real emails.
+#978 Email test utility always reporting "default SMTP port"
 
 
 Miscellaneous fixes
 -------------------
-#943 Fix for supporting drop-down lists/auto-completes based on a parametrized query in the portal.
-#936 Tune the default (i.e. implicit) tracking level on link sets (and disable tracking on 1-N links, for fresh installations)
-#935 Better support of CheckToWrite() in object's transitions, improved by checking the data sooner for a consistent workflow.
-#931 Management of n:n links can be broken in case of insufficient user rights. Side effect: attribute_linkedset with the flag OPT_ATT_HIDDEN are now completely hidden (the tab is not displayed at all).
-#928 Setup crashing if async_retries is configured
-#923 prevent XSS injection in forgot password page.
-#919 Circular references between tickets (parent/child). Protect the framework against infinite recursions on cascaded updates (done at the DBUpdate level). 
-#918 TTO/TTR status "passed" gets reset when the stop watch is stopped (using the status "triggered" instead)
-#913 Error when searching for child requests and no organization is specified. Still, I could not figure out WHY IT WAS WORKING WHEN AN ORG IS SELECTED as a search filter!
-#905 The toolkit menu was visible in the portal for Administrators (but it was not usable). It is now hidden in any case.
-#896 XSS injection on the portal (any search form)
-#890 Dispatch the defines in the proper modules to make sure that the portal works with all possible combinations of tickets.
-#888 Security on the portal incompatible with customizations (regression introduced in 2.0.2), now requires to define PORTAL_USERREQUEST_DISPLAY_QUERY and PORTAL_USERREQUEST_DISPLAY_POWERUSER_QUERY
-#887 Short term fix for preventing ToArgs to alter the content of an object...
-#886 Delete change history so that if an ID is reused the history starts from scratch (and cleanup most of the data as soon as the object is deleted)
-#881 Paginated list in popup dialog is broken
-     - Missing scrollbar in the popup when using the [+] button
-#876 Upgrade finishes with error "Cannot reload object id = -1" (root cause: DB in read-only mode, see config/access_mode)
-#875 Could not use OQL queries with a double quote in the condition
-#873 Allow the character % in the path of an URL (requires the edition of the config file when upgrading)
-#871 eMail validation pattern was too strict: now fully configurable (globally and per attribute).
-#870 When a user deletes all her/his shortcuts at once, this was deleting all the shortcuts for all users.
-#859 About box: also list the modules installed from the extensions folder
-#731 Full text search requires a string of at least three characters (configurable: full_text_needle_min)
-#954 Stricter validation of mandatory tags/values during compilation.
-#953 Protect the background processing against corrupted (incomplete) objects.
-#906 iTop gets locked with OnInsert plugin. Better way to handle the lock in order to prevent duplicates in the numbering of Tickets. Note that the iTopMutex now supports re-entrance inside the same PHP page.
-#927 Detect IE7 (or compatibility mode) and warn the user that the application cannot be used with such browsers.
-#951 Properly display localized values for ENUMs in the data model view.
-#955 Translated the label "Open Requests" in the welcome menu
-Completed the Portuguese translation (Brazil), provided in december... (by Marco Tulio?) - modules updated: attachments, change, incident, request and request/ITIL, service for providers
-Portal + templates: Bug fix = when the user selects a template, then go back to select a service for which no template applies, he still gets the tempate fields in the final form.
-Added a helper function to get an icon stored as an ormDocument: ormDocument::GetDownloadURL
-Full text search shortcuts: allow the use of class names containing underscores and numbers (e.g. Processus métier: écarissage)
-Properly optimize the columns to load, when subitems are requested.
-Allow the use of any character into the help text on an attribute (usefull to explain a constraint implemented as a regular expression for instance.) Reminder: the text is given as a dictionary entry named like "Class:<class>/Attribute:<attcode>?"
-Fixed a compiler error message (wrong syntax when using a PHP class to implement the class methods)
-Limit the display of the status to the latest 100 runs of the synchro data source.
-Implement the iDisplay interface on any class derived from DBObject, but also limit the possible actions on such objects (disable edition)
-Code cleanup to implement the tabs handling (inside web pages) in one place. Added the ability to provide asynchronously loaded tabs (content must come from the same server).
-Run Query enhancements
-- Properly catch *all* exceptions and redisplay the entered OQL statement every time
-- Post the form to force its refresh (i.e. running the query again) even if the query did not change
-Better handling of the default choices in the setup, in case of upgrade (for some specific configurations of the installation wizard).
-Object's edition: keep track of what was typed in the case log fields when reloading the form (for example with a different "initial state")
-Protect Bulk Modify against XSS injection!
-Bug fix : missing semicolons were causing an error with IE9.
-Finalized the French translation for some types of "Triggers"
-Templates processing aligned with "templates-base" 2.1.1: allow template fields with the same name the attribute code of the curent object.
-Make the Basic Authentication (login_mode=basic) work with non-ASCII characters (in the username as well as in the password), though this may depend on the browser...
-Add a new flag "debug" (false by default)  to turn off the debug traces of the 'authent-ldap' module since the traces contain potentially sensitive information in clear text.
-Demo mode: disable the pin button on the left pane (and keeps it open and resizable)
-Fix for Plugins: if a page uses set_base then JS popup menu items were reloading the page. Still, set_base should not be used!
-Enabled KPI tracing for the export page
-Optimization: map the extended attribute code to the corresponding external field when this if possible (ex: org_id->name to org_name); this reduces the number of queries, in particular when using the "export CSV" menu on a list.
-Optimize the queries for the export page
-Resetting the stop watch...do clean the first start date when it is not running!
-Allow to reset a running stop watch (without stopping it!)
-Preserve "hidden" template fields.
-Dictionary string for the portal should not depend on a module
-- Put back support of templates
-- Make sure that unwanted parameters cannot be set when creating the ticket
-Record the very same installation time for all modules.
-Asynchronous emails: added a retry mechanism useful in case your SMTP server restricts the number of emails that can be sent over a period of time (usage: broadcasting a newsletter). The mechanism is not specific to sending email as it is implemented at the AsyncTask level.
-Better handling of the user's configured display limit for displaying the CSV import history.
-Reworked the asynchronous mechanism to ease its extension (added a "status", preset by the setup)
-Protect attachments against concurrent edition of a ticket.
-Removed warnings occuring when configuring a list
-Added a warning when upgrading the application while a CRON is being executed on the same DB
-Added an index on "item_org_id" to speed-up the setup and the silo on organizations.
-Add the ability to supply a default "from" email address for the "forgot password" feature, instead of using the same address as for the "to".
-"Portal Users" are not allowed to use the REST/JSON webservices. This case is now properly handled with a specific message.
-Full text search returning irrelevant results (e.g: search on "Location:Bordeauxactive")
+Portal: handle mandatory attributes in Reopen/Close dialogs
+#1000 Implemented the behavior for the flag OPT_ATT_MUSTCHANGE, and took the opportunity to add a feedback when a field is mandatory OR when the format is wrong
+#1012 Losing half of the connection when changing a port (connections between network devices). I took the opportunity to simplify the connection management as it was initiated in change [3388].
+#1008 Error when deleting a Network Device connected to another Network Device (does not happen if the other end is another type of "ConnectedDevice")
+#1007 Unexpected change of the case log when doing massive update of a User Request (+ hide the checkbox for the status because it makes no sense)
+#979 Data synchro: recover the DB triggers (backup/restore)
+Fixed regression introduced in iTop 2.0.3, in the data model view: could not see the OQL constraints on external keys
+#995 Make sure that tto/ttr passed gets set even if the CRON has not been run (and as soon as some overrun has been counted)
+#983 Sortering not possible on multi-column queries
+#969 XML: the menu option enable_admin_only hides the menu for everyone
+#970 and #650 Corrupted attachements. Reworked the cleanup of undesired output, to protect it against the case when the output buffer is unfortunately closed. On the other hand, I found out that several output buffer can be stacked. Thus the protection could be further improved (difficulty: that can be web server dependent).
+#993 The about box does not show up when the directory extensions is missing
+Fixed the support of a non-default port for MySQL, thanks to theBigOne!
+#968 Interactive CSV Export truncated or missing characters (since 2.0.3)
+#991 CSV export truncated (system dependent, since 2.0) due to a bug in iconv, the workaround is to do little by little
+Dehardcoded the size of the attachments preview
+#988 Could not change the case of a login
+#778 Issue on list sort order when editing an element (N-N link tabs)
+#986 Search form: handle indirect external keys
+#987 Usage login prevents from user deletion
+#932 Search form should be prefilled when running a search "shortcut" - very little progress: fixed the case when several criteria are given
+#985 Shortcut auto refresh degrading table cosmetics
+#984 Dashboard auto refresh degrading table functionalities like sorting
+#976: make sure that we do not bypass the method that computes the reference for newly created tickets.
+Protect dashboards against invalid queries in "grouped by" dashlets.
+Legacy user rights management: allow the deletion of a profile in one step (it was nearly impossible because of the numerous related records, mainly of type URP_ActionGrant, for which iTop was requesting a manual deletion)
+
+
+Extending the data model
+------------------------
+#972 Incomprehensible error message during setup, with a sample extension provided by Combodo! (empty user rights tag)
+#971 XML: could not specify an icon as a path to a file
+User rights: deny on a parent class must give DENY even if the class is explicitely ALLOW on the same profile (that was already working if the rules are given on several profiles). Added a config flag to force the legacy algorithm (user_rights_legacy, defaulting to false)
+
+Improved the XML format, changing from 1.0 to 1.1
+- The change is ascendant compatible (automatically converted into 1.1 by ModelFactory) and thus sould be transparent: could may leave your extensions unchanged if you do not need to benefit from the new format
+- Added <inherit_flags_from> to inherit the flags from another state
+- Added an id on the user rights profile/actions to allow a finer granularity for the deltas.
+- New concept: HighlightScale to avoid overloading methods GetIcon and GetHilightClass...
+- Added an id on the transitions to allow a finer granularity for the deltas.
+
+Internals
+----------------------
+Protected the property fields against the collision of ids within the same page (even if that is a bug, make it work not too bad!)
+Forms: drop-down box default value label could be changed (or this entry could be entirely removed)
+Form fields: added callbacks ('equals' and 'get_field_value') to allow the implementation of enhanced form fields
+Code cleanup: reworked the user rights data model, while strictly preserving the current functionality (checked using the tool dump_profiles.php, with simple to full ITIL configurations). Class groups have been renamed/merged/removed. This is documented in the migration notes (wiki).
+lnkVirtualDeviceToVolume and lnkTriggerAction are link classes and should be declared as such
+Transmission of user rights along N-N links: must work both with DEL_AUTO and DEL_SILENT external keys (found with a code review, DEL_SILENT is still rarely used)
+Rework of the ModelFactory API to make it simpler and safer.
+#989 Developper issue: query arguments having a null value are dismissed
+Bug fix: FetchAssoc was broken when dealing with in-memory sets.
+Improved the processing of background task to enable more advanced functionalities like queuing
+Support of more sophisticated forms layout...
+Declaration of generic methods which can be run on tickets.
+
+Packaging
+-----------------------
+#960 [RPM Packaging] Adjust line endings in READ and LICENSE files
+#962 [RPM Packaging] Added the use of logrotate for cron.log and error.log
+#959 Fixing licensing mismatches for compatibility with the Fedora licensing policy (the modification only affects comments) .
+
 
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
