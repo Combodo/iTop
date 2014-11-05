@@ -33,7 +33,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Relation:impacts/Description' => 'Elements impacted by',
 	'Relation:impacts/VerbUp' => 'Impact...',
 	'Relation:impacts/VerbDown' => 'Elements impacted by...',
-	'Relation:depends on/Description' => 'Elements this element depends on',
+	'Relation:depends on/Description' => 'Elements impacting',
 	'Relation:depends on/VerbUp' => 'Depends on...',
 	'Relation:depends on/VerbDown' => 'Impacts...',
 ));

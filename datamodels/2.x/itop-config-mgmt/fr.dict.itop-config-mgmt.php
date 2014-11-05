@@ -1817,7 +1817,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Relation:impacts/Description' => 'Eléments impactés par',
 	'Relation:impacts/VerbUp' => 'Impacte...',
 	'Relation:impacts/VerbDown' => 'Dépend de...',
-	'Relation:depends on/Description' => 'Eléments dont dépend cet élément',
+	'Relation:depends on/Description' => 'Eléments dont dépend',
 	'Relation:depends on/VerbUp' => 'Dépend de...',
 	'Relation:depends on/VerbDown' => 'Impacte...',
 	'Menu:ConfigManagement:Typology' => 'Configuration des typologies',
