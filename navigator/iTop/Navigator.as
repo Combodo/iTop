@@ -14,6 +14,8 @@
 	// The main canvas
 	public class Navigator extends MovieClip
 	{
+		public var DEBUG:Boolean = false;
+		protected var CURRENT_VERSION:String = 'v. 2.0.6';
 		protected var m_oLoader:URLLoader;
 		protected var m_aNodes:Object;
 		protected var m_aLinks:Array;
@@ -33,21 +35,29 @@
 		// Constants
 		protected var m_RADIUS = 150;
 		protected var m_Q = 0.9; // Electrostatic forces coeff
-		protected var m_K = 1.0; // Elastic forces coeff
+		protected var m_K = 1; // Elastic forces coeff
 		protected var m_Kf = 0.7; // Fluid friction coeff
 		protected var m_Ks = 30; // Solid friction coeff
+		protected var m_KsLowFriction = 10; // Solid friction coeff
+		protected var m_KsHighFriction = 30; // Solid friction coeff
 		protected var m_deltaT = 0.1; // Interval of time between updates
 		protected var m_MAX_ITEMS_PER_ROW = 8;
-		protected var m_FOCUS_DELAY_COUNTDOWN = 30; // 30 images to zoom & pan correctly
+		protected var m_FOCUS_DELAY_COUNTDOWN; // Number of images to zoom & pan correctly
 		protected var m_fZoom:Number;
+		protected var m_iIterations:int = 0;
+		public var m_bComputationNeeded = true;
+		public var m_bAutoPanAndZoom = true;
+		public var m_bHighFrictionMode = false;
+		protected var m_iNbNodes:int = 0;
 		
 		// Constructor
 		public function Navigator()
 		{
-			m_aLinks = new Array();
-			m_aNodes = new Array();
+			m_aLinks = [];
+			m_aNodes = [];
 			m_sExclude = '';
 			m_fZoom = 1;
+			m_Ks = m_KsLowFriction;
 			m_oLoader = null;
 			initParameters();
 			var success = true;
@@ -83,15 +93,21 @@
 		
 		function Reset()
 		{
-			m_aLinks = new Array();
+			m_aLinks = [];
 			for (var i:String in m_aNodes)
 			{
 				m_oCanvas.removeChild(m_aNodes[i]);
 			}
-			m_aNodes = new Array();
+			m_aNodes = [];
+			m_bAutoPanAndZoom = true;
+			m_bHighFrictionMode = false;
+			m_iIterations = 0;
+			m_iNbNodes = 0;
+			m_bComputationNeeded = true;
 			removeEventListener(Event.ENTER_FRAME, drawLines);
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDown)  
 			stage.removeEventListener(MouseEvent.MOUSE_UP, mouseReleased);
+			stage.removeEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler);
 		}
 		
 		function DoFilter(sExcludeList:String):void
@@ -104,7 +120,9 @@
 		protected function initParameters():void
 		{
 			
-			m_sDataUrl = ReadParam('xmlUrl', 'http://localhost:81/pages/xml.navigator.php?operation=relation');
+			m_sDataUrl = ReadParam('xmlUrl', 'c:\\temp\\test.xml');
+			//m_sDataUrl = ReadParam('xmlUrl', 'c:\\temp\\test2.xml');
+			//m_sDataUrl = ReadParam('xmlUrl', 'c:\\temp\\navigator.xml');
 			m_sDetailsUrl = ReadParam('drillUrl', 'http://localhost/pages/UI.php?operation=details');
 			m_sRelation = ReadParam('relation', 'impacts');
 			m_sObjClass = ReadParam('obj_class', 'DBServerInstance');
@@ -114,6 +132,7 @@
 		
 		function initGraphics(event:Event):void
 		{
+			stage.align = 'left';
 			m_oCanvas = new NavigatorCanvas(); // All drawings will occur here
 			addChild(m_oCanvas); 
 			m_oCanvas.scaleX = m_fZoom;
@@ -122,26 +141,54 @@
 			removeEventListener(Event.ENTER_FRAME,initGraphics);
 			m_oZoomSlider.value = 100;
 			m_oZoomSlider.addEventListener(SliderEvent.CHANGE, onZoomChange);
+			m_oVersion.text = CURRENT_VERSION;
 		}
 		function mouseDown(event:MouseEvent):void 
 		{ 
 			trace("Click in canvas");
 			if (!m_bChildDragging)
 			{
+				m_bAutoPanAndZoom = false;
 				m_oCanvas.startDrag(); 
 			}
-		} 
+		}
 		
 		function mouseReleased(event:MouseEvent):void 
 		{ 
 			if (!m_bChildDragging)
 			{
-				m_oCanvas.stopDrag(); 
+				m_oCanvas.stopDrag();
+				trace('Canvas.x = '+m_oCanvas.x+', Canvas.y = '+m_oCanvas.y); 
 			}
 		}
 		
+		function mouseWheelHandler(event:MouseEvent):void
+		{
+        	trace("mouseWheelHandler delta: " + event.delta);
+			var newZoomLevel:Number = m_fZoom;
+			if (event.delta > 0)
+			{
+				newZoomLevel += 0.05;
+				if (newZoomLevel < 1.0)
+				{
+					SetZoomLevel(newZoomLevel);
+					m_oZoomSlider.value = Math.round(100*newZoomLevel);
+				}
+			}
+			else
+			{
+				newZoomLevel -= 0.05;
+				if (newZoomLevel > 0.0)
+				{
+					SetZoomLevel(newZoomLevel);
+					m_oZoomSlider.value = Math.round(100*newZoomLevel);
+				}
+			}
+    	}
+		
 		function onZoomChange(event:SliderEvent):void
-		{ 
+		{
+			m_bAutoPanAndZoom = false;
     		SetZoomLevel(event.value/100);
 		}
 		
@@ -190,10 +237,18 @@
 				//trace("===========================");
 				parseXMLData(null, myXML, 0, 0);
 				m_sTitle.text = decodeEntities(myXML.attribute("title").toString());
-				m_oZoomSlider.enabled = true;
+
+
+				// Initial positions computation
+				for(var i=0; i<10; i++)
+				{
+					UpdatePositions();
+				}
+				UpdatePanAndZoom(1);
 				addEventListener(Event.ENTER_FRAME, drawLines);
 				stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown)  
 				stage.addEventListener(MouseEvent.MOUSE_UP, mouseReleased);
+				stage.addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler);
 				//trace('======= Initial Posistions =========');
 				//DumpPositions();
 			}
@@ -215,6 +270,8 @@
 				{
 					m_oPreloader.visible = false;
 				}
+				m_oZoomSlider.enabled = true;
+				m_oVersion.visible = false;
 			}
 		}
 
@@ -263,7 +320,7 @@
 			var iId = oXMLData.@id;
 			var sLabel:String = decodeEntities(oXMLData.@name);
 			var sIcon:String = oXMLData.@icon;
-			var oDetails:Object = new Object;
+			var oDetails:Object = {};
 			var sZlist:String = oXMLData.@zlist;
 			
 			var oNode:GraphNode = GetNode(sClass+'/'+iId);
@@ -287,7 +344,13 @@
 					//}
 				}
 				oNode = new GraphNode(this, oPt, sClass, sClassName, iId, sLabel, sIcon, sParentKey, m_fZoom, oDetails);
+				if (oParent == null)
+				{
+					// this is the root node, higlight it
+					oNode.MarkAsRoot();
+				}
 				this.m_aNodes[oNode.GetKey()] = oNode; //Keep it referenced
+				m_iNbNodes++;
 				if (oParent == null)
 				{
 					m_oRootNode = oNode;
@@ -437,30 +500,77 @@
 		{
 			var color:uint = 0x666666;
 			m_oCanvas.graphics.clear();
-			m_oCanvas.graphics.lineStyle(2,0x666666,100);
-			UpdatePositions();
-			for (var index:String in m_aLinks)
-			{
-    			var oStartNode:GraphNode = GetNode(m_aLinks[index].GetStart());
-				var oEndNode = GetNode(m_aLinks[index].GetEnd());
-				m_oCanvas.graphics.moveTo(oStartNode.x, oStartNode.y);
-				m_oCanvas.graphics.lineTo(oEndNode.x, oEndNode.y);
-				var oMiddlePoint:Point = new Point((oEndNode.x+oStartNode.x)/2, (oEndNode.y+oStartNode.y)/2);
-				drawArrow(oMiddlePoint, oEndNode.x - oStartNode.x, oEndNode.y - oStartNode.y, color);
-			}
-
-			if (this.m_FOCUS_DELAY_COUNTDOWN > 0)
-			{
-				this.m_FOCUS_DELAY_COUNTDOWN--;
-				trace('FOCUS_DELAY:'+this.m_FOCUS_DELAY_COUNTDOWN);
-				UpdatePanAndZoom(m_FOCUS_DELAY_COUNTDOWN / 30);
-			}
-			else if (this.m_FOCUS_DELAY_COUNTDOWN == 0)
+			
+			if (m_bHighFrictionMode)
 			{
 				// Increase the friction so that manually manipulating objects gets easier
 				trace("More friction now...");
-				m_Ks = 5*m_Ks; // 5 times more friction
-				this.m_FOCUS_DELAY_COUNTDOWN--;
+				m_Ks = m_KsHighFriction; // 5 times more friction
+			}
+			else
+			{
+				m_Ks = m_KsLowFriction;
+			}			
+			
+			if (DEBUG)
+			{
+				m_oCanvas.graphics.lineStyle(2,0xff3333,100,false,"normal",CapsStyle.ROUND);
+				
+				var sceneRect:Rectangle = null;
+				for(var i:String in this.m_aNodes)
+				{
+					if (sceneRect == null)
+					{
+						sceneRect = GetNode(i).getBounds(m_oCanvas);
+					}
+					else
+					{
+						sceneRect = sceneRect.union(GetNode(i).getBounds(m_oCanvas));
+					}
+				}
+				if (sceneRect != null)
+				{
+					/*
+					m_oCanvas.graphics.lineStyle(2,0xff0000,100,false,"normal",CapsStyle.ROUND);
+
+					m_oCanvas.graphics.moveTo(-500, 0);
+					m_oCanvas.graphics.lineTo(500, 0);
+
+					m_oCanvas.graphics.moveTo(0, -500);
+					m_oCanvas.graphics.lineTo(0, 500);
+
+					m_oCanvas.graphics.moveTo(sceneRect.x, sceneRect.y);
+					m_oCanvas.graphics.lineTo(sceneRect.x + sceneRect.width, sceneRect.y);
+					m_oCanvas.graphics.lineTo(sceneRect.x + sceneRect.width, sceneRect.y + sceneRect.height);
+					m_oCanvas.graphics.lineTo(sceneRect.x, sceneRect.y + sceneRect.height);
+					m_oCanvas.graphics.lineTo(sceneRect.x, sceneRect.y);
+					*/
+				}
+			}
+			
+			m_oCanvas.graphics.lineStyle(2,0x666666,100);
+			UpdatePositions();
+			if (m_bAutoPanAndZoom)
+			{
+				UpdatePanAndZoom(1);
+			}
+			
+			for (var index:String in m_aLinks)
+			{
+				
+    			var oStartNode:GraphNode = GetNode(m_aLinks[index].GetStart());
+				var oEndNode = GetNode(m_aLinks[index].GetEnd());
+				
+				m_oCanvas.graphics.moveTo(oStartNode.x, oStartNode.y);
+				m_oCanvas.graphics.lineTo(oEndNode.x, oEndNode.y);
+				
+				if (DEBUG)
+				{
+					m_oCanvas.graphics.drawCircle(oStartNode.x, oStartNode.y, 5);
+					m_oCanvas.graphics.drawCircle(oEndNode.x, oEndNode.y, 5);
+				}
+				var oMiddlePoint:Point = new Point((oEndNode.x+oStartNode.x)/2, (oEndNode.y+oStartNode.y)/2);
+				drawArrow(oMiddlePoint, oEndNode.x - oStartNode.x, oEndNode.y - oStartNode.y, color);
 			}
 		}
 		function drawArrow(oPt:Point, dx:Number, dy:Number, color:uint):void
@@ -493,7 +603,7 @@
 		
 		public function ComputeElectrostaticForces():Array
 		{
-			var aForces:Array = new Array;
+			var aForces:Array = [];
 			//trace('====== BEGIN ComputeElectrostaticForces() =======');
 			
 			for (var i:String in this.m_aNodes)
@@ -510,7 +620,6 @@
 						var dx:Number = oRemoteNode.x - oCurrentNode.x;
 						var dy:Number = oRemoteNode.y - oCurrentNode.y;
 						var d2:Number = (dx*dx + dy*dy) / (this.m_RADIUS * this.m_RADIUS);
-						var d:Number = Math.sqrt(d2);
 						var Fx:Number = 0;
 						var Fy:Number = 0;
 						if (d2 < 0.05)
@@ -554,7 +663,7 @@
 		function ComputeElasticForces()
 		{
 			//trace('====== BEGIN ComputeElasticForces() =======');
-			var aForces:Array = new Array;
+			var aForces:Array = [];
 		
 			for (var i:String in this.m_aNodes)
 			{
@@ -562,9 +671,11 @@
 				aForces[i].FxTotal = 0;
 				aForces[i].FyTotal = 0;
 			}
+			
 			// Elastic forces: each link applies a force proportional to its length (F = - K * x)
 			for(i in this.m_aLinks)
 			{
+				trace(i);
     			var oStartNode:GraphNode = GetNode(m_aLinks[i].GetStart());
 				var oEndNode = GetNode(m_aLinks[i].GetEnd());
 				var dx = oStartNode.x - oEndNode.x;
@@ -572,10 +683,12 @@
 				//d = Math.sqrt(dx*dx + dy*dy);
 				//Fx = -K * d * dx / d;
 				//Fy = -K * d * dy / d;
-				// Links with more weight attached are more rigid !
-				//weightCoeff = (aWeights[aLinks[l].start] + aWeights[aLinks[l].end])/2;
+				//var Fy = -m_K * d * dy / d;
+				// Which can be simplified as:
 				var Fx = -this.m_K * dx;
 				var Fy = -this.m_K * dy;
+				// Links with more weight attached are more rigid !
+				//weightCoeff = (aWeights[aLinks[l].start] + aWeights[aLinks[l].end])/2;
 				aForces[oStartNode.GetKey()].FxTotal += Fx;
 				aForces[oStartNode.GetKey()].FyTotal += Fy;
 				aForces[oEndNode.GetKey()].FxTotal -= Fx;
@@ -602,11 +715,26 @@
 		 */		 		
 		function UpdatePositions()
 		{
+			if (!m_bComputationNeeded)
+			{
+				trace('Nothing is moving, halting the computation, deltaT='+m_deltaT);
+				return; // everything is still, no need to recompute
+			}
 			//trace('====== BEGIN UpdatePositions() =======');
 			var aElasticForces:Array = ComputeElasticForces();
 			var aElectrostaticForces:Array = ComputeElectrostaticForces();
-			//DrawForces(aElectrostaticForces, 0xcc0000);
-			//DrawForces(aElectrostaticForces, 0x0000cc);
+			if (DEBUG)
+			{
+				DrawForces(aElasticForces, 0xcc0000);
+				DrawForces(aElectrostaticForces, 0x0000cc);
+			}
+			var Ks2:Number = this.m_Ks*this.m_Ks;
+			var nbNodes:int = 0;
+			var dxMax:Number = 0;
+			var dyMax:Number = 0;
+			var maxAccel2 = 50000.0/(m_fZoom*m_fZoom);
+			m_bComputationNeeded = false; // Needed only if something is still moving
+			var nextDeltaT = m_deltaT;
 			for (var i:String in this.m_aNodes)
 			{
 				var oNode:GraphNode = GetNode(i);
@@ -625,16 +753,38 @@
 					}
 					else
 					{
+						var Ax = this.m_deltaT*Fx;
+						var Ay =  this.m_deltaT*Fy;
+						if ((Ax * Ax + Ay *Ay) > maxAccel2)
+						{
+							nextDeltaT = m_deltaT*0.95; // Slow down for the next pass
+						}
 						oNode.m_speed_x = oNode.m_speed_x*this.m_Kf + this.m_deltaT*Fx;
 						oNode.m_speed_y = oNode.m_speed_y*this.m_Kf + this.m_deltaT*Fy;
-						var dx:Number = oNode.m_speed_x * this.m_deltaT;
-						var dy:Number = oNode.m_speed_y * this.m_deltaT;
-						oNode.x = Math.round(oNode.x + dx);
-						oNode.y = Math.round(oNode.y + dy);
+						
+						var dx:int = oNode.m_speed_x * this.m_deltaT;
+						var dy:int = oNode.m_speed_y * this.m_deltaT;
+						dxMax = Math.max(dxMax, dx);
+						dyMax = Math.max(dyMax, dy);
+						if ((dx*m_fZoom > 1) || (dx*m_fZoom > 1))
+						{
+							// visibly moving by more than 1 px
+							oNode.x = oNode.x + dx;
+							oNode.y = oNode.y + dy;
+							m_bComputationNeeded = true;
+						}
 						//trace('object '+i+' moves (Force: Fx='+Fx+', Fy='+Fy+')! ');
 					}
 				}
+				else
+				{
+					 m_bComputationNeeded = true;
+				}
+				nbNodes++;
 			}
+			m_deltaT = nextDeltaT;
+			trace('Iteration: '+(m_iIterations)+', '+nbNodes+' nodes processed. Max displacement dx='+dxMax+', dy='+dyMax);
+			m_iIterations++;
 			//trace('======= Updated Positions =========');
 			//DumpPositions();
 			//trace('====== END UpdatePositions() =======');
@@ -649,8 +799,8 @@
 				m_oCanvas.graphics.lineStyle(2,color,100,false,"normal",CapsStyle.ROUND);
 				m_oCanvas.graphics.moveTo(oNode.x, oNode.y);
 				var oEndPoint:Point = new Point;
-				oEndPoint.x = Math.round(oNode.x + oForce.FxTotal);
-				oEndPoint.y = Math.round(oNode.y + oForce.FyTotal);
+				oEndPoint.x = oNode.x + oForce.FxTotal;
+				oEndPoint.y = oNode.y + oForce.FyTotal;
 				m_oCanvas.graphics.lineTo(oEndPoint.x, oEndPoint.y);
 				drawArrow(oEndPoint, oForce.FxTotal, oForce.FyTotal, color);
 				//trace('Drawinf vector '+i+': (x='+oNode.x+', y='+oNode.y+') to (x='+oEndPoint.x+', y='+oEndPoint.y+')');
@@ -676,27 +826,22 @@
 				var idealZoomLevel:Number = 1;
 				trace('Stage dimensions: width:'+stage.stageWidth+' height:'+stage.stageHeight);
 				
-				if ((sceneRect.width > stage.stageWidth) || (sceneRect.height > (stage.stageHeight - 50)))
-				{
-					var wRatio:Number = stage.stageWidth / sceneRect.width;
-					var hRatio:Number = (stage.stageHeight - 50) / sceneRect.height;
-					idealZoomLevel = Math.min(wRatio, hRatio);
-					SetZoomLevel(idealZoomLevel);
-					m_oZoomSlider.value = Math.round(100*idealZoomLevel);
-		
-				}
+				var wRatio:Number = stage.stageWidth / sceneRect.width;
+				var hRatio:Number = (stage.stageHeight - 50) / sceneRect.height;
+				idealZoomLevel = Math.min(Math.min(wRatio, hRatio), 1);
+				SetZoomLevel(idealZoomLevel);
+				m_oZoomSlider.value = Math.round(100*idealZoomLevel);
+
 				var xOffset:Number = 0;
-				var yOffset:Number = 50;
-				if (stage.stageWidth > sceneRect.width)
-				{
-					xOffset = (stage.stageWidth-sceneRect.width)/2
-				}
-				if (stage.stageHeight > sceneRect.height)
-				{
-					yOffset = 50 + (stage.stageHeight-50-sceneRect.height)/2
-				}
-				m_oCanvas.x = xOffset-sceneRect.x;
-				m_oCanvas.y = yOffset-sceneRect.y;
+				var yOffset:Number = 0;
+				var newWidth:Number = sceneRect.width * idealZoomLevel;
+				var newHeight:Number = sceneRect.height * idealZoomLevel;
+				
+				xOffset = stage.stageWidth/2 - newWidth/2 - sceneRect.x*idealZoomLevel;
+				yOffset = 50 + stage.stageHeight/2 - newHeight/2 - sceneRect.y*idealZoomLevel; 
+				
+				m_oCanvas.x = xOffset;
+				m_oCanvas.y = yOffset;
 				
 				trace('Scene bounding rect: x:'+sceneRect.x+' y:'+sceneRect.y+' width:'+sceneRect.width+' height:'+sceneRect.height+' zoomLevel:'+idealZoomLevel);
 			}

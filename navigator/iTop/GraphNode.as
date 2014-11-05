@@ -5,7 +5,8 @@
 	import flash.net.*;
 	import flash.events.*;
 	import flash.text.*; 
-	import flash.xml.*; 
+	import flash.xml.*;
+	import flash.filters.*;
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuItem;
 	import iTop.ToolTip;
@@ -17,11 +18,12 @@
 		private var m_oIcon:Loader;
 		private var m_sClass:String;
 		private var m_sClassName:String;
-		private var m_iId:Number;
+		private var m_iId:int;
 		private var m_sParentKey:String;
 		private var m_oToolTip:ToolTip;
 		private var m_fZoom:Number;
 		private var m_oParent:Navigator;
+		private var m_bRoot:Boolean;
 		private static const ROUND:Number = 20;
 		private static const PADDING:Number = 5;
 		public var m_speed_x:Number = 0;
@@ -36,6 +38,7 @@
 			m_sClass = sClass;
 			m_sClassName = sClassName;
 			m_iId = iId;
+			m_bRoot = false;
 			m_sLabel.autoSize = TextFieldAutoSize.LEFT;
 			m_sLabel.multiline = false;
 			m_sLabel.text = sLabel;
@@ -59,12 +62,16 @@
 			m_oToolTip.scaleY = 1 / m_fZoom;
 			m_oParent = oParent;
 			
-			var myURL:URLRequest = new URLRequest(sIconPath);
-			m_oIcon = new Loader();
-			m_oIcon.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
-			m_oIcon.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onLoadError);
-			m_oIcon.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
-			m_oIcon.load(myURL);
+			if (!m_oParent.DEBUG)
+			{
+				var myURL:URLRequest = new URLRequest(sIconPath);
+				m_oIcon = new Loader();
+				m_oIcon.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
+				m_oIcon.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onLoadError);
+				m_oIcon.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
+				m_oIcon.load(myURL);
+			}
+		
 			//addChild(m_oIcon);
 			addEventListener(MouseEvent.MOUSE_DOWN, mouseDown)  
 			addEventListener(MouseEvent.MOUSE_UP, mouseReleased); 
@@ -77,6 +84,22 @@
             oContextMenu.customItems.push(oCMI);
             this.contextMenu = oContextMenu;
 
+		}
+		
+		public function MarkAsRoot()
+		{
+			m_bRoot = true;
+			SetGlowFilter();
+		}
+		
+		protected function SetGlowFilter()
+		{
+			var glow:GlowFilter = new GlowFilter();
+			glow.color = 0x3333FF;
+			glow.blurX = 15;
+			glow.blurY = 15;
+			glow.inner = false;
+			filters = [glow];
 		}
 		
 		public function GetKey()
@@ -115,8 +138,19 @@
 		{
 			trace("Click in Node");
 			m_oParent.m_bChildDragging = true;
+			m_oParent.m_bAutoPanAndZoom = false;
+			m_oParent.m_bHighFrictionMode = true;
+			m_oParent.m_bComputationNeeded = true;
 			m_bInDrag = true;
-			m_oToolTip.timer.stop(); // Don't show the tooltip while dragging
+			var shadow:DropShadowFilter = new DropShadowFilter(); 
+			shadow.distance = 5; 
+			shadow.angle = 45;
+			shadow.alpha = 0.5;
+			filters = [shadow];
+			if  ((m_oToolTip) && (m_oToolTip.timer))
+			{
+				m_oToolTip.timer.stop(); // Don't show the tooltip while dragging
+			}
 			startDrag(); 
 		} 
 		
@@ -125,6 +159,14 @@
 			m_bInDrag = false;
 			stopDrag(); 
 			m_oParent.m_bChildDragging = false;
+			if (m_bRoot)
+			{
+				SetGlowFilter(); // Apply the glow filter
+			}
+			else
+			{
+				filters = []; // Remove the drop shadow
+			}
 		}
 
 		public function mouseOver( e:MouseEvent ):void
