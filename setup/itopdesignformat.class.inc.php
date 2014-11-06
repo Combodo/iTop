@@ -163,6 +163,11 @@ class iTopDesignFormat
 		else
 		{
 			$sVersion = $oNodeList->item(0)->getAttribute('version');
+			if ($sVersion == '')
+			{
+				// Originaly, the information was missing: default to 1.0
+				$sVersion = '1.0';
+			}
 			$this->LogInfo("Converting from $sVersion to $sTargetVersion");
 			$this->DoConvert($sVersion, $sTargetVersion, $oFactory);
 			if ($this->bStatus)
