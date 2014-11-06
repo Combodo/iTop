@@ -138,6 +138,7 @@ EOF
 		if (!$this->bCanMoveForward)
 		{
 			$oPage->p('Sorry, the installation cannot continue. Please fix the errors and reload this page to launch the installation again.');
+			$oPage->p('<button type="button" onclick="window.location.reload()">Reload</button>');
 		}
 	}
 	
