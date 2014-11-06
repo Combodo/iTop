@@ -428,6 +428,10 @@ EOF;
 				$aFlags[] = $sFlag;
 			}
 		}
+		if (empty($aFlags))
+		{
+			$aFlags[] = 'OPT_ATT_NORMAL'; // When no flag is defined, reset the state to "normal"	
+		}
 		$sRes = implode(' | ', $aFlags);
 		return $sRes;
 	}
