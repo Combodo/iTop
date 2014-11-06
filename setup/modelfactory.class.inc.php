@@ -435,8 +435,11 @@ class ModelFactory
 				}
 				
 				$oFormat = new iTopDesignFormat($oDocument);
-				$aErrorLog = array();
-				if (!$oFormat->Upgrade($aErrorLog)) throw new Exception("Cannot load module $sModuleName, failed to upgrade to datamodel format of: $sXmlFile. Reason(s): ".implode("\n", $aErrorLog));
+				if (!$oFormat->Convert())
+				{
+					$sError = implode(', ', $oFormat->GetErrors());
+					throw new Exception("Cannot load module $sModuleName, failed to upgrade to datamodel format of: $sXmlFile. Reason(s): $sError");
+				}
 				
 				$oDeltaRoot = $oDocument->childNodes->item(0);
 				$this->LoadDelta($oDeltaRoot, $this->oDOMDocument);
@@ -1900,4 +1903,17 @@ class MFDocument extends DOMDocument
 		}
 		return $sRet;
 	}
+
+	/**
+	 * An alternative to getNodePath, that gives the id of nodes instead of the position within the children	
+	 */	
+	public static function GetItopNodePath($oNode)
+	{
+		if ($oNode instanceof DOMDocument) return '';
+	
+		$sId = $oNode->getAttribute('id');
+		$sNodeDesc = ($sId != '') ? $oNode->nodeName.'['.$sId.']' : $oNode->nodeName;
+		return self::GetItopNodePath($oNode->parentNode).'/'.$sNodeDesc;
+	}	 	
+
 }

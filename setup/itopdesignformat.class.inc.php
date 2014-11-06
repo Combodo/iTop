@@ -24,27 +24,48 @@
  * 
  * $oDocument = new DOMDocument();
  * $oDocument->load($sXMLFile);
- * $aLog = array();
  * $oFormat = new iTopDesignFormat($oDocument);
- * if ($oFormat->Upgrade($aLog))
+ * if ($oFormat->Convert())
  * {
  *     $oDocument->save($sXMLFile);
  * }
  * else
  * {
- *     echo "Error, failed to upgrade the format, reason(s):\n".implode("\n", $aLog);
+ *     echo "Error, failed to upgrade the format, reason(s):\n".implode("\n", $oFormat->GetErrors());
  * }
  */
  
- define('ITOP_DESIGN_LATEST_VERSION', '1.1');
+define('ITOP_DESIGN_LATEST_VERSION', '1.1');
  
 class iTopDesignFormat
 {
+	protected static $aVersions = array(
+		'1.0' => array(
+			'previous' => null,
+			'go_to_previous' => null,
+			'next' => '1.1',
+			'go_to_next' => 'From10To11',
+		),
+		'1.1' => array(
+			'previous' => '1.0',
+			'go_to_previous' => 'From11To10',
+			'next' => null,
+			'go_to_next' => null,
+		),
+	);
+
 	/**
 	 * The Document to work on
 	 * @var DOMDocument
 	 */
 	protected $oDocument;
+
+	/**
+	 * The log for the ongoing operation
+	 * @var DOMDocument
+	 */
+	protected $aLog;
+	protected $bStatus;
 	
 	/**
 	 * Creation from a loaded DOMDocument
@@ -54,56 +75,170 @@ class iTopDesignFormat
 	{
 		$this->oDocument = $oDocument;
 	}
-	
+
+	/**
+	 * Helper to fill the log structure
+	 * @param string $sMessage The error description
+	 */
+	protected function LogError($sMessage)
+	{
+		$this->aLog[] = array(
+			'severity' => 'Error',
+			'msg' => $sMessage
+		);
+		$this->bStatus = false;
+	}
+
+	/**
+	 * Helper to fill the log structure
+	 * @param string $sMessage The message
+	 */
+	protected function LogInfo($sMessage)
+	{
+		$this->aLog[] = array(
+			'severity' => 'Info',
+			'msg' => $sMessage
+		);
+	}
+
+	/**
+	 * Get all the errors in one single line
+	 */
+	public function GetErrors()
+	{
+		$aErrors = array();
+		foreach ($this->aLog as $aLogEntry)
+		{
+			if ($aLogEntry['severity'] == 'Error')
+			{
+				$aErrors[] = $aLogEntry['msg'];
+			}
+		}
+		return $aErrors;
+	}
+
+	/**
+	 * Get the whole log
+	 */
+	public function GetLog()
+	{
+		return $this->aLog;
+	}
+
+	/**
+	 * Test the conversion without altering the DOM
+	 * 	 
+	 * @param string $sTargetVersion The desired version (or the latest possible version if not specified)
+	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the whole data model)
+	 * @return bool True on success	 
+	 */
+	public function CheckConvert($sTargetVersion = ITOP_DESIGN_LATEST_VERSION, $oFactory = null)
+	{
+		// Clone the document
+		$this->oDocument = $this->oDocument->cloneNode(true);		
+		return $this->Convert($sTargetVersion, $oFactory);
+	}
+
 	/**
 	 * Make adjustements to the DOM to migrate it to the specified version (default is latest)
 	 * For now only the conversion from version 1.0 to 1.1 is supported.
-	 * @param Array $aLog Array (as a reference) to gather the log results (errors, etc)
+	 * 	 
 	 * @param string $sTargetVersion The desired version (or the latest possible version if not specified)
+	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the whole data model)
+	 * @return bool True on success, False if errors have been encountered (still the DOM may be altered!)
 	 */
-	public function Upgrade(&$aLog, $sTargetVersion = ITOP_DESIGN_LATEST_VERSION)
+	public function Convert($sTargetVersion = ITOP_DESIGN_LATEST_VERSION, $oFactory = null)
 	{
+		$this->aLog = array();
+		$this->bStatus = true;
+
 		$oXPath = new DOMXPath($this->oDocument);
 		// Retrieve the version number
 		$oNodeList = $oXPath->query('/itop_design');
 		if ($oNodeList->length == 0)
 		{
 			// Hmm, not an iTop Data Model file...
-			$aLog[] = "File format, no root <itop_design> tag found";
-			return false;
+			$this->LogError('File format, no root <itop_design> tag found');
 		}
 		else
 		{
 			$sVersion = $oNodeList->item(0)->getAttribute('version');
-			switch($sVersion)
+			$this->LogInfo("Converting from $sVersion to $sTargetVersion");
+			$this->DoConvert($sVersion, $sTargetVersion, $oFactory);
+			if ($this->bStatus)
 			{
-				case '': // No version, assume 1.0 !!
-				case '1.0':
-				$bRet = $this->From10To11();
-				if ($bRet)
-				{
-					// Update the version number
-					$oNodeList->item(0)->setAttribute('version', '1.1');
-				}
-				return true;
-				break;
-				
-				case '1.1':
-				return true; // Nothing to do, the document is already at the most recent version
-				break;
-				
-				default:
-				$aLog[] = "Unknown format version: $sVersion";
-				return false; // unknown versions are not supported
+				// Update the version number
+				$oNodeList->item(0)->setAttribute('version', $sTargetVersion);
 			}
 		}
+		return $this->bStatus;
+	}
+
+
+
+	/**
+	 * Does the conversion, eventually in a recursive manner
+	 * 	 
+	 * @param string $sFrom The source format version
+	 * @param string $sTo The desired format version
+	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the whole data model)
+	 * @return bool True on success	 
+	 */
+	protected function DoConvert($sFrom, $sTo, $oFactory = null)
+	{
+		if ($sFrom == $sTo)
+		{
+			return;
+		}
+		if (!array_key_exists($sFrom, self::$aVersions))
+		{
+			$this->LogError("Unknown source format version: $sFrom");
+			return;
+		}
+		if (!array_key_exists($sTo, self::$aVersions))
+		{
+			$this->LogError("Unknown target format version: $sTo");
+			return; // unknown versions are not supported
+		}
+		
+		$aVersionIds = array_keys(self::$aVersions);
+		$iFrom = array_search($sFrom, $aVersionIds);
+		$iTo = array_search($sTo, $aVersionIds);
+		if ($iFrom < $iTo)
+		{
+			// This is an upgrade
+			$sIntermediate = self::$aVersions[$sFrom]['next'];
+			$sTransform = self::$aVersions[$sFrom]['go_to_next'];
+			$this->LogInfo("Upgrading from $sFrom to $sIntermediate ($sTransform)");
+		}
+		else
+		{
+			// This is a downgrade
+			$sIntermediate = self::$aVersions[$sFrom]['previous'];
+			$sTransform = self::$aVersions[$sFrom]['go_to_previous'];
+			$this->LogInfo("Downgrading from $sFrom to $sIntermediate ($sTransform)");
+		}
+		// Transform to the intermediate format
+		$aCallSpec = array($this, $sTransform);
+		try
+		{
+			call_user_func($aCallSpec, $oFactory);
+
+			// Recurse
+			$this->DoConvert($sIntermediate, $sTo, $oFactory);
+		}
+		catch (Exception $e)
+		{
+			$this->LogError($e->getMessage());
+		}
+		return;
 	}
 
 	/**
 	 * Upgrade the format from version 1.0 to 1.1
-	 * @return boolean true on success, false otherwise
+	 * @return void (Errors are logged)
 	 */
-	protected function From10To11()
+	protected function From10To11($oFactory)
 	{
 		// Adjust the XML to transparently add an id (=stimulus) on all life-cycle transitions
 		// which don't already have one
@@ -151,10 +286,77 @@ class iTopDesignFormat
 				$oNode->SetAttribute('id', $oNode->textContent);
 			}
 		}
-		
-		return true;
 	}
 	
+	/**
+	 * Downgrade the format from version 1.1 to 1.0
+	 * @return void (Errors are logged)
+	 */
+	protected function From11To10($oFactory)
+	{
+		// Move the id down to a stimulus node on all life-cycle transitions
+		$oXPath = new DOMXPath($this->oDocument);
+		$oNodeList = $oXPath->query('/itop_design/classes//class/lifecycle/states/state/transitions/transition[@id]');
+		foreach ($oNodeList as $oNode)
+		{
+			if ($oXPath->query('descendant-or-self::*[@_delta or @_rename_from]', $oNode)->length > 0)
+			{
+				$this->LogError('Alterations have been defined under the node: '.MFDocument::GetItopNodePath($oNode));
+			}
+			$oStimulus = $oNode->ownerDocument->createElement('stimulus', $oNode->getAttribute('id'));
+			$oNode->appendChild($oStimulus);
+			$oNode->removeAttribute('id');
+		}
+		
+		// Move the id down to a percent node on all thresholds
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeStopWatch']/thresholds/threshold[@id]");
+		foreach ($oNodeList as $oNode)
+		{
+			if ($oXPath->query('descendant-or-self::*[@_delta or @_rename_from]', $oNode)->length > 0)
+			{
+				$this->LogError('Alterations have been defined under the node: '.MFDocument::GetItopNodePath($oNode));
+			}
+			$oStimulus = $oNode->ownerDocument->createElement('percent', $oNode->getAttribute('id'));
+			$oNode->appendChild($oStimulus);
+			$oNode->removeAttribute('id');
+		}
+		
+		// Restore the type and id on profile/actions 
+		$oNodeList = $oXPath->query('/itop_design/user_rights/profiles/profile/groups/group/actions/action');
+		foreach ($oNodeList as $oNode)
+		{
+			if ($oXPath->query('descendant-or-self::*[@_delta or @_rename_from]', $oNode)->length > 0)
+			{
+				$this->LogError('Alterations have been defined under the node: '.MFDocument::GetItopNodePath($oNode));
+			}
+			if (substr($oNode->getAttribute('id'), 0, strlen('action')) == 'action')
+			{
+				// The id has the form 'action:<action_code>'
+				$sActionCode = substr($oNode->getAttribute('id'), strlen('action:'));
+				$oNode->removeAttribute('id');
+				$oNode->setAttribute('xsi:type', $sActionCode);
+			}
+			else
+			{
+				// The id has the form 'stimulus:<stimulus_code>'
+				$sStimulusCode = substr($oNode->getAttribute('id'), strlen('stimulus:'));
+				$oNode->setAttribute('id', $sStimulusCode);
+				$oNode->setAttribute('xsi:type', 'stimulus');
+			}
+		}
+		
+		// Remove the id on all enum values
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value[@id]");
+		foreach ($oNodeList as $oNode)
+		{
+			if ($oXPath->query('descendant-or-self::*[@_delta or @_rename_from]', $oNode)->length > 0)
+			{
+				$this->LogError('Alterations have been defined under the node: '.MFDocument::GetItopNodePath($oNode));
+			}
+			$oNode->removeAttribute('id');
+		}
+	}
+
 	/**
 	 * Delete a node from the DOM and make sure to also remove the immediately following line break (DOMText), if any.
 	 * This prevents generating empty lines in the middle of the XML
