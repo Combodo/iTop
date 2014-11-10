@@ -499,7 +499,7 @@
                 <hidden/>
               </attribute>
               <attribute id="tto_escalation_deadline">
-                <readonly/>
+                <read_only/>
               </attribute>
               <attribute id="sla_tto_passed">
                 <hidden/>
@@ -589,9 +589,15 @@
               <attribute id="tto_escalation_deadline">
                 <hidden/>
               </attribute>
-              <attribute id="sla_tto_passed"/>
-              <attribute id="sla_tto_over"/>
-              <attribute id="ttr_escalation_deadline"/>
+              <attribute id="sla_tto_passed">
+                <read_only/>
+              </attribute>
+              <attribute id="sla_tto_over">
+                <read_only/>
+              </attribute>
+              <attribute id="ttr_escalation_deadline">
+                <read_only/>
+              </attribute>
               <attribute id="caller_id"/>
               <attribute id="escalation_flag"/>
               <attribute id="escalation_reason"/>
@@ -855,11 +861,15 @@
               <attribute id="pending_reason">
                 <read_only/>
               </attribute>
-              <attribute id="sla_ttr_passed"/>
+              <attribute id="sla_ttr_passed">
+                <read_only/>
+              </attribute>
               <attribute id="ttr_escalation_deadline">
                 <hidden/>
               </attribute>
-              <attribute id="sla_ttr_over"/>
+              <attribute id="sla_ttr_over">
+                <read_only/>
+              </attribute>
             </flags>
             <transitions>
               <transition id="ev_close">
@@ -930,18 +940,6 @@
               </attribute>
               <attribute id="user_comment">
                 <must_prompt/>
-              </attribute>
-              <attribute id="sla_tto_passed">
-                <read_only/>
-              </attribute>
-              <attribute id="sla_tto_over">
-                <read_only/>
-              </attribute>
-              <attribute id="sla_ttr_passed">
-                <read_only/>
-              </attribute>
-              <attribute id="sla_ttr_over">
-                <read_only/>
               </attribute>
             </flags>
             <transitions/>
