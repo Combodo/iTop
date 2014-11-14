@@ -459,6 +459,59 @@ class RunTimeEnvironment
 		}
 		return true;
 	}
+
+	public function UpdatePredefinedObjects()
+	{
+		// Constant classes (e.g. User profiles)
+		//
+		foreach (MetaModel::GetClasses() as $sClass)
+		{
+			$aPredefinedObjects = call_user_func(array(
+				$sClass,
+				'GetPredefinedObjects'
+			));
+			if ($aPredefinedObjects != null)
+			{
+				$this->log_info("$sClass::GetPredefinedObjects() returned " . count($aPredefinedObjects) . " elements.");
+				
+				// Create/Delete/Update objects of this class,
+				// according to the given constant values
+				//
+				$aDBIds = array();
+				$oAll = new DBObjectSet(new DBObjectSearch($sClass));
+				while ($oObj = $oAll->Fetch())
+				{
+					if (array_key_exists($oObj->GetKey(), $aPredefinedObjects))
+					{
+						$aObjValues = $aPredefinedObjects[$oObj->GetKey()];
+						foreach ($aObjValues as $sAttCode => $value)
+						{
+							$oObj->Set($sAttCode, $value);
+						}
+						$oObj->DBUpdate();
+						$aDBIds[$oObj->GetKey()] = true;
+					}
+					else
+					{
+						$oObj->DBDelete();
+					}
+				}
+				foreach ($aPredefinedObjects as $iRefId => $aObjValues)
+				{
+					if (! array_key_exists($iRefId, $aDBIds))
+					{
+						$oNewObj = MetaModel::NewObject($sClass);
+						$oNewObj->SetKey($iRefId);
+						foreach ($aObjValues as $sAttCode => $value)
+						{
+							$oNewObj->Set($sAttCode, $value);
+						}
+						$oNewObj->DBInsert();
+					}
+				}
+			}
+		}
+	}
 	
 	public function RecordInstallation(Config $oConfig, $sDataModelVersion, $aSelectedModules, $sModulesRelativePath)
 	{
