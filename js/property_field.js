@@ -267,7 +267,7 @@ function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId, aForbidden
 	{
 		$('#v_'+sFieldId).addClass('ui-state-error');
 		iFieldIdPos = jQuery.inArray(sFieldId, oFormValidation[sFormId]);
-		if (iFieldPos == -1)
+		if (iFieldIdPos == -1)
 		{
 			oFormValidation[sFormId].push(sFieldId);			
 		}
