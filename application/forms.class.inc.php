@@ -1205,14 +1205,19 @@ class DesignerIconSelectionField extends DesignerFormField
 		$sPostUploadTo = ($this->sUploadUrl == null) ? 'null' : "'{$this->sUploadUrl}'";
 		if (!$this->IsReadOnly())
 		{
+			$sValue = "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"{$this->defaultValue}\"/>";
 			$oP->add_ready_script(
 <<<EOF
 	$('#$sId').icon_select({current_idx: $idx, items: $sJSItems, post_upload_to: $sPostUploadTo});
 EOF
 			);
 		}
+		else
+		{
+			$sValue = '<img src="'.$this->MakeFileUrl($this->defaultValue).'" />';
+		}
 		$sReadOnly = $this->IsReadOnly() ? 'disabled' : '';
-		return array('label' =>$this->sLabel, 'value' => "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"{$this->defaultValue}\"/>");
+		return array('label' => $this->sLabel, 'value' => $sValue);
 	}
 }
 
