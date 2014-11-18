@@ -82,6 +82,25 @@ class ormStopWatch
 		return $this->iTimeSpent;
 	}
 
+	/**
+	 * Get the working elapsed time since the start of the stop watch
+	 * even if it is currently running
+	 * @param oAttDef	AttributeDefinition Attribute hosting the stop watch
+	 */
+	public function GetElapsedTime($oAttDef)
+	{
+		if (is_null($this->iLastStart))
+		{
+			return $this->GetTimeSpent();
+		}
+		else
+		{
+			$iElapsed = $this->ComputeDuration($this, $oAttDef, $this->iLastStart, time());
+			return $this->iTimeSpent + $iElapsed;
+		}
+	}
+
+
 	public function GetStartDate()
 	{
 		return $this->iStarted;
