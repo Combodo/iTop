@@ -213,7 +213,7 @@
         }
         ]]></code>
         </method>
-      </methods>
+     </methods>
       <presentation>
         <details>
           <items>
@@ -769,6 +769,40 @@
                 <mandatory>true</mandatory>
                 <description>The field, in the current object, to set to
                   the current date</description>
+              </argument>
+            </arguments>
+          </method>
+          <method id="SetCurrentUser">
+            <arguments>
+              <argument>
+                <label>Field Code</label>
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <description>The field, in the current object, to set to
+                  the current logged in user</description>
+              </argument>
+            </arguments>
+          </method>
+          <method id="SetElapsedTime">
+            <arguments>
+              <argument>
+                <label>Field Code</label>
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <description>The field, in the current object, to set to
+                  the time elapsed since the date given by the reference field</description>
+              </argument>
+              <argument>
+                <label>Reference Field Code</label>
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <description>The reference date or date/time</description>
+              </argument>
+              <argument>
+                <label>Working hours</label>
+                <type>attcode</type>
+                <mandatory>false</mandatory>
+                <description>Leave empty to rely on the standard working hours scheme, or set to "DefaultWorkingTimeComputer" to force a 24x7 scheme</description>
               </argument>
             </arguments>
           </method>

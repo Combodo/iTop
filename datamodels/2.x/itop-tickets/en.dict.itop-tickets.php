@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -179,13 +179,5 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Ticket:SLA' => 'SLA report',
 	'WorkOrder:Details' => 'Details',
 	'WorkOrder:Moreinfo' => 'More information',
-
+	'Tickets:ResolvedFrom' => 'Automatically resolved from %1$s'
 ));
-
-
-
-
-
-
-
-?>

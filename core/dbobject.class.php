@@ -338,7 +338,7 @@ abstract class DBObject implements iDisplay
 		if ($sAttCode == 'finalclass')
 		{
 			// Ignore it - this attribute is set upon object creation and that's it
-			return;
+			return false;
 		}
 		
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
@@ -416,6 +416,9 @@ abstract class DBObject implements iDisplay
 
 		// Make sure we do not reload it anymore... before saving it
 		$this->RegisterAsDirty();
+
+		// This function is eligible as a lifecycle action: returning true upon success is a must
+		return true;
 	}
 
 	public function GetLabel($sAttCode)
@@ -2075,7 +2078,7 @@ abstract class DBObject implements iDisplay
 		{
 			if (is_string($actionHandler))
 			{
-				// Old (pre-2.0.4) action definition without any parameter
+				// Old (pre-2.1.0) action definition without any parameter
 				$aActionCallSpec = array($this, $sActionHandler);
 	
 				if (!is_callable($aActionCallSpec))
@@ -2182,6 +2185,70 @@ abstract class DBObject implements iDisplay
 		$oSW->Reset($this, $oAttDef);
 		$this->Set($sAttCode, $oSW);
 	}	 	
+
+	/**
+	 * Lifecycle action: Recover the default value (aka when an object is being created)
+	 */	 	
+	public function Reset($sAttCode)
+	{
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		$this->Set($sAttCode, $oAttDef->GetDefaultValue());
+		return true;
+	}
+
+	/**
+	 * Lifecycle action: Copy an attribute to another
+	 */	 	
+	public function Copy($sDestAttCode, $sSourceAttCode)
+	{
+		$this->Set($sDestAttCode, $this->Get($sSourceAttCode));
+		return true;
+	}
+
+	/**
+	 * Lifecycle action: Set the current date/time for the given attribute
+	 */	 	
+	public function SetCurrentDate($sAttCode)
+	{
+		$this->Set($sAttCode, time());
+		return true;
+	}
+
+	/**
+	 * Lifecycle action: Set the current logged in user for the given attribute
+	 */	 	
+	public function SetCurrentUser($sAttCode)
+	{
+		$this->Set($sAttCode, UserRights::GetUserId());
+		return true;
+	}
+
+	/**
+	 * Lifecycle action: Set the time elapsed since a reference point
+	 */	 	
+	public function SetElapsedTime($sAttCode, $sRefAttCode, $sWorkingTimeComputer = null)
+	{
+		if (is_null($sWorkingTimeComputer))
+		{
+			$sWorkingTimeComputer = class_exists('SLAComputation') ? 'SLAComputation' : 'DefaultWorkingTimeComputer';
+		}
+		$oComputer = new $sWorkingTimeComputer();
+		$aCallSpec = array($oComputer, 'GetOpenDuration');
+		if (!is_callable($aCallSpec))
+		{
+			throw new CoreException("Unknown class/verb '$sWorkingTimeComputer/GetOpenDuration'");
+		}
+
+		$iStartTime = AttributeDateTime::GetAsUnixSeconds($this->Get($sRefAttCode));
+		$oStartDate = new DateTime('@'.$iStartTime); // setTimestamp not available in PHP 5.2
+		$oEndDate = new DateTime(); // now
+		$iElapsed = call_user_func($aCallSpec, $this, $oStartDate, $oEndDate);
+
+		$this->Set($sAttCode, $iElapsed);
+		return true;
+	}
+
+
 
 	/*
 	* Create query parameters (SELECT ... WHERE service = :this->service_id)

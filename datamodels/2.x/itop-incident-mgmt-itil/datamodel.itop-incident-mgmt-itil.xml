@@ -485,7 +485,10 @@
                 <target>assigned</target>
                 <actions>
                   <action>
-                    <verb>SetAssignedDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">assignment_date</param>
+                    </params>
                   </action>
                 </actions>
               </transition>
@@ -497,10 +500,22 @@
                 <target>resolved</target>
                 <actions>
                   <action>
-                    <verb>SetResolveDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">resolution_date</param>
+                    </params>
                   </action>
                   <action>
-                    <verb>resolveChilds</verb>
+                    <verb>SetElapsedTime</verb>
+                    <params>
+                      <param xsi:type="string">time_spent</param>
+                      <param xsi:type="string">start_date</param>
+                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
+                    </params>
+                  </action>
+                  <action>
+                    <verb>ResolveChildTickets</verb>
+                    <params/>
                   </action>
                 </actions>
               </transition>
@@ -560,7 +575,10 @@
                 <target>pending</target>
                 <actions>
                   <action>
-                    <verb>SetLastPendingDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">last_pending_date</param>
+                    </params>
                   </action>
                 </actions>
               </transition>
@@ -568,10 +586,22 @@
                 <target>resolved</target>
                 <actions>
                   <action>
-                    <verb>SetResolveDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">resolution_date</param>
+                    </params>
                   </action>
                   <action>
-                    <verb>resolveChilds</verb>
+                    <verb>SetElapsedTime</verb>
+                    <params>
+                      <param xsi:type="string">time_spent</param>
+                      <param xsi:type="string">start_date</param>
+                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
+                    </params>
+                  </action>
+                  <action>
+                    <verb>ResolveChildTickets</verb>
+                    <params/>
                   </action>
                 </actions>
               </transition>
@@ -587,10 +617,22 @@
                 <target>resolved</target>
                 <actions>
                   <action>
-                    <verb>SetResolveDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">resolution_date</param>
+                    </params>
                   </action>
                   <action>
-                    <verb>resolveChilds</verb>
+                    <verb>SetElapsedTime</verb>
+                    <params>
+                      <param xsi:type="string">time_spent</param>
+                      <param xsi:type="string">start_date</param>
+                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
+                    </params>
+                  </action>
+                  <action>
+                    <verb>ResolveChildTickets</verb>
+                    <params/>
                   </action>
                 </actions>
               </transition>
@@ -607,7 +649,10 @@
                 <target>pending</target>
                 <actions>
                   <action>
-                    <verb>SetLastPendingDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">last_pending_date</param>
+                    </params>
                   </action>
                 </actions>
               </transition>
@@ -615,10 +660,22 @@
                 <target>resolved</target>
                 <actions>
                   <action>
-                    <verb>SetResolveDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">resolution_date</param>
+                    </params>
                   </action>
                   <action>
-                    <verb>resolveChilds</verb>
+                    <verb>SetElapsedTime</verb>
+                    <params>
+                      <param xsi:type="string">time_spent</param>
+                      <param xsi:type="string">start_date</param>
+                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
+                    </params>
+                  </action>
+                  <action>
+                    <verb>ResolveChildTickets</verb>
+                    <params/>
                   </action>
                 </actions>
               </transition>
@@ -630,10 +687,22 @@
                 <target>resolved</target>
                 <actions>
                   <action>
-                    <verb>SetResolveDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">resolution_date</param>
+                    </params>
                   </action>
                   <action>
-                    <verb>resolveChilds</verb>
+                    <verb>SetElapsedTime</verb>
+                    <params>
+                      <param xsi:type="string">time_spent</param>
+                      <param xsi:type="string">start_date</param>
+                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
+                    </params>
+                  </action>
+                  <action>
+                    <verb>ResolveChildTickets</verb>
+                    <params/>
                   </action>
                 </actions>
               </transition>
@@ -669,10 +738,22 @@
                 <target>resolved</target>
                 <actions>
                   <action>
-                    <verb>SetResolveDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">resolution_date</param>
+                    </params>
                   </action>
                   <action>
-                    <verb>resolveChilds</verb>
+                    <verb>SetElapsedTime</verb>
+                    <params>
+                      <param xsi:type="string">time_spent</param>
+                      <param xsi:type="string">start_date</param>
+                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
+                    </params>
+                  </action>
+                  <action>
+                    <verb>ResolveChildTickets</verb>
+                    <params/>
                   </action>
                 </actions>
               </transition>
@@ -766,7 +847,10 @@
                 <target>closed</target>
                 <actions>
                   <action>
-                    <verb>SetClosureDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">close_date</param>
+                    </params>
                   </action>
                 </actions>
               </transition>
@@ -779,10 +863,22 @@
                 <target>resolved</target>
                 <actions>
                   <action>
-                    <verb>SetResolveDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">resolution_date</param>
+                    </params>
                   </action>
                   <action>
-                    <verb>resolveChilds</verb>
+                    <verb>SetElapsedTime</verb>
+                    <params>
+                      <param xsi:type="string">time_spent</param>
+                      <param xsi:type="string">start_date</param>
+                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
+                    </params>
+                  </action>
+                  <action>
+                    <verb>ResolveChildTickets</verb>
+                    <params/>
                   </action>
                 </actions>
               </transition>
@@ -838,6 +934,10 @@
       </lifecycle>
       <methods>
         <method id="SetAssignedDate">
+          <comment><![CDATA[/**
+	 * To be deprecated: use SetCurrentDate() instead
+	 * @return void
+	 */]]></comment>
           <static>false</static>
           <access>public</access>
           <type>LifecycleAction</type>
@@ -848,6 +948,10 @@
 	}]]></code>
         </method>
         <method id="SetLastPendingDate">
+          <comment><![CDATA[/**
+	 * To be deprecated: use SetCurrentDate() instead
+	 * @return void
+	 */]]></comment>
           <static>false</static>
           <access>public</access>
           <type>LifecycleAction</type>
@@ -858,6 +962,10 @@
 	}]]></code>
         </method>
         <method id="SetResolveDate">
+          <comment><![CDATA[/**
+	 * To be deprecated: use SetCurrentDate() and SetElapsedTime() instead
+	 * @return void
+	 */]]></comment>
           <static>false</static>
           <access>public</access>
           <type>LifecycleAction</type>
@@ -870,6 +978,10 @@
 	}]]></code>
         </method>
         <method id="SetClosureDate">
+          <comment><![CDATA[/**
+	 * To be deprecated: use SetCurrentDate() instead
+	 * @return void
+	 */]]></comment>
           <static>false</static>
           <access>public</access>
           <type>LifecycleAction</type>
@@ -973,20 +1085,17 @@
 	}]]></code>
         </method>
         <method id="resolveChilds">
+          <comment><![CDATA[/**
+	 * To be deprecated: use ResolveChildTickets() instead
+	 */]]></comment>
           <static>false</static>
           <access>public</access>
           <type>LifecycleAction</type>
           <code><![CDATA[	public function resolveChilds($sStimulusCode)
 	{
-				
-		$oMyChange = MetaModel::NewObject("CMDBChange");
-		$oMyChange->Set("date", time());
-		$sUserString = CMDBChange::GetCurrentUserName();
-		$oMyChange->Set("userinfo", $sUserString."(automatic resolution)");
-		$iChangeId = $oMyChange->DBInsert();
         if (MetaModel::IsValidClass('UserRequest'))
         {
-    		$sOQL = "SELECT UserRequest WHERE parent_request_id=:ticket";
+    		$sOQL = "SELECT UserRequest WHERE parent_incident_id=:ticket";
     		$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
     						array(),
     						array(
@@ -1005,7 +1114,7 @@
     				$oRequest->set('resolution_code',$this->Get('resolution_code'));
     				$oRequest->set('solution','Automatically resolved by incident:[[Incident:'.$this->Get('ref').']]');
     				$oRequest->ApplyStimulus('ev_autoresolve');
-    				$oRequest->DBUpdateTracked($oMyChange);
+    				$oRequest->DBUpdate();
     			}
     		}
         }
@@ -1029,11 +1138,68 @@
 				$oIncident->set('resolution_code',$this->Get('resolution_code'));
 				$oIncident->set('solution','Automatically resolved by incident:[[Incident:'.$this->Get('ref').']]');
 				$oIncident->ApplyStimulus('ev_autoresolve');
-				$oIncident->DBUpdateTracked($oMyChange);
+				$oIncident->DBUpdate();
 			}
 		}
 		return true;
 
+	}]]></code>
+        </method>
+        <method id="ResolveChildTickets">
+          <comment><![CDATA[/**
+	 * Cascade the resolution to child User Request and Incidents
+	 * @return true (returning false would stop the ongoing transition)
+	 */]]></comment>
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <arguments>
+          </arguments>
+          <code><![CDATA[	public function ResolveChildTickets()
+	{
+		if (MetaModel::IsValidClass('UserRequest'))
+		{
+			// Automatically resolve child requests
+			$sOQL = "SELECT UserRequest WHERE parent_incident_id = :ticket AND status != 'resolved'";
+			$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ticket' => $this->GetKey()));
+			while($oRequest = $oChildRequestSet->Fetch())
+			{
+				$oRequest->ResolveFrom($this);
+			}
+		}
+
+		// Automatically resolve child incidents
+		$sOQL = "SELECT Incident WHERE parent_incident_id = :ticket AND status != 'resolved'";
+		$oChildIncidentSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ticket' => $this->GetKey()));
+		while($oIncident = $oChildIncidentSet->Fetch())
+		{
+			$oIncident->ResolveFrom($this);
+		}
+		return true;
+	}]]></code>
+        </method>
+         <method id="ResolveFrom">
+          <comment><![CDATA[/**
+	 * Resolve the ticket from another resolved ticket
+	 * @return void
+	 */]]></comment>
+          <static>false</static>
+          <access>public</access>
+          <type>Internal</type>
+          <code><![CDATA[	public function ResolveFrom($oParentTicket)
+	{
+		if ($this->Get('status') != 'resolved')
+		{
+			$this->Set('servicesubcategory_id', $oParentTicket->Get('servicesubcategory_id'));
+			$this->Set('service_id', $oParentTicket->Get('service_id'));		
+			$this->Set('team_id', $oParentTicket->Get('team_id'));
+			$this->Set('agent_id', $oParentTicket->Get('agent_id'));	
+			$this->Set('resolution_code', $oParentTicket->Get('resolution_code'));
+			$sParent = '[['.get_class($oParentTicket).':'.$oParentTicket->Get('ref').']]';
+			$this->Set('solution', Dict::Format('Tickets:ResolvedFrom', $sParent, MetaModel::GetName(get_class($oParentTicket))));
+			$this->ApplyStimulus('ev_autoresolve');
+			$this->DBUpdate();
+		}
 	}]]></code>
         </method>
         <method id="UpdateChildRequestLog">

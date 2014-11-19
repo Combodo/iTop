@@ -280,10 +280,16 @@
                 <target>approved</target>
                 <actions>
                   <action>
-                    <verb>SetApprovalDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">approval_date</param>
+                    </params>
                   </action>
                   <action>
-                    <verb>ResetRejectReason</verb>
+                    <verb>Reset</verb>
+                    <params>
+                      <param xsi:type="string">reject_reason</param>
+                    </params>
                   </action>
                 </actions>
               </transition>
@@ -408,7 +414,10 @@
                 <target>closed</target>
                 <actions>
                   <action>
-                    <verb>SetClosureDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">close_date</param>
+                    </params>
                   </action>
                 </actions>
               </transition>
@@ -445,6 +454,10 @@
       </lifecycle>
       <methods>
         <method id="SetApprovalDate">
+          <comment><![CDATA[/**
+	 * To be deprecated: use SetCurrentDate() instead
+	 * @return void
+	 */]]></comment>
           <static>false</static>
           <access>public</access>
           <type>LifecycleAction</type>
@@ -455,6 +468,10 @@
 	}]]></code>
         </method>
         <method id="ResetRejectReason">
+          <comment><![CDATA[/**
+	 * To be deprecated: use SetCurrentDate() instead
+	 * @return void
+	 */]]></comment>
           <static>false</static>
           <access>public</access>
           <type>LifecycleAction</type>
@@ -465,6 +482,10 @@
 	}]]></code>
         </method>
         <method id="SetClosureDate">
+          <comment><![CDATA[/**
+	 * To be deprecated: use SetCurrentDate() instead
+	 * @return void
+	 */]]></comment>
           <static>false</static>
           <access>public</access>
           <type>LifecycleAction</type>

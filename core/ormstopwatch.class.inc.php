@@ -478,7 +478,7 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 								{
 									if (is_string($def))
 									{
-										// Old method (pre-2.0.4) non typed parameters
+										// Old method (pre-2.1.0) non typed parameters
 										$aValues[] = $def;
 									}
 									else // if(is_array($def))

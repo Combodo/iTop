@@ -259,7 +259,10 @@
                 <target>resolved</target>
                 <actions>
                   <action>
-                    <verb>SetResolveDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">resolution_date</param>
+                    </params>
                   </action>
                 </actions>
               </transition>
@@ -311,7 +314,10 @@
                 <target>closed</target>
                 <actions>
                   <action>
-                    <verb>SetClosureDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">close_date</param>
+                    </params>
                   </action>
                 </actions>
               </transition>
@@ -345,6 +351,10 @@
       </lifecycle>
       <methods>
         <method id="SetAssignedDate">
+          <comment><![CDATA[/**
+	 * To be deprecated: use SetCurrentDate() instead
+	 * @return void
+	 */]]></comment>
           <static>false</static>
           <access>public</access>
           <type>LifecycleAction</type>
@@ -355,6 +365,10 @@
         }]]></code>
         </method>
         <method id="SetResolveDate">
+          <comment><![CDATA[/**
+	 * To be deprecated: use SetCurrentDate() instead
+	 * @return void
+	 */]]></comment>
           <static>false</static>
           <access>public</access>
           <type>LifecycleAction</type>
@@ -365,6 +379,10 @@
         }]]></code>
         </method>
         <method id="SetClosureDate">
+          <comment><![CDATA[/**
+	 * To be deprecated: use SetCurrentDate() instead
+	 * @return void
+	 */]]></comment>
           <static>false</static>
           <access>public</access>
           <type>LifecycleAction</type>

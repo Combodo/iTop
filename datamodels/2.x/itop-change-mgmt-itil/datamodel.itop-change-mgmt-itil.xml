@@ -902,6 +902,10 @@
       </lifecycle>
       <methods>
         <method id="SetClosureDate">
+          <comment><![CDATA[/**
+	 * To be deprecated: use SetCurrentDate() instead
+	 * @return void
+	 */]]></comment>
           <static>false</static>
           <access>public</access>
           <type>StimulusUserAction</type>
@@ -912,6 +916,10 @@
 	}]]></code>
         </method>
         <method id="ResetRejectReason">
+          <comment><![CDATA[/**
+	 * To be deprecated: use SetCurrentDate() instead
+	 * @return void
+	 */]]></comment>
           <static>false</static>
           <access>public</access>
           <type>LifecycleAction</type>
@@ -1679,7 +1687,10 @@
                 <target>closed</target>
                 <actions>
                   <action>
-                    <verb>SetClosureDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">close_date</param>
+                    </params>
                   </action>
                 </actions>
               </transition>
@@ -1713,7 +1724,10 @@
                 <target>closed</target>
                 <actions>
                   <action>
-                    <verb>SetClosureDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">close_date</param>
+                    </params>
                   </action>
                 </actions>
               </transition>
@@ -3099,7 +3113,10 @@
                 <target>validated</target>
                 <actions>
                   <action>
-                    <verb>ResetRejectReason</verb>
+                    <verb>Reset</verb>
+                    <params>
+                      <param xsi:type="string">reason</param>
+                    </params>
                   </action>
                 </actions>
               </transition>
@@ -3236,7 +3253,10 @@
                 <target>approved</target>
                 <actions>
                   <action>
-                    <verb>ResetRejectReason</verb>
+                    <verb>Reset</verb>
+                    <params>
+                      <param xsi:type="string">reason</param>
+                    </params>
                   </action>
                 </actions>
               </transition>
@@ -3336,7 +3356,10 @@
                 <target>closed</target>
                 <actions>
                   <action>
-                    <verb>SetClosureDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">close_date</param>
+                    </params>
                   </action>
                 </actions>
               </transition>
@@ -3369,7 +3392,10 @@
                 <target>closed</target>
                 <actions>
                   <action>
-                    <verb>SetClosureDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">close_date</param>
+                    </params>
                   </action>
                 </actions>
               </transition>
@@ -3985,7 +4011,10 @@
                 <target>approved</target>
                 <actions>
                   <action>
-                    <verb>ResetRejectReason</verb>
+                    <verb>Reset</verb>
+                    <params>
+                      <param xsi:type="string">reason</param>
+                    </params>
                   </action>
                 </actions>
               </transition>
@@ -4085,7 +4114,10 @@
                 <target>closed</target>
                 <actions>
                   <action>
-                    <verb>SetClosureDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">close_date</param>
+                    </params>
                   </action>
                 </actions>
               </transition>
@@ -4119,7 +4151,10 @@
                 <target>closed</target>
                 <actions>
                   <action>
-                    <verb>SetClosureDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="string">close_date</param>
+                    </params>
                   </action>
                 </actions>
               </transition>

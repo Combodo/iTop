@@ -1247,12 +1247,12 @@ EOF;
 								{
 									$sParamType = 'string';
 								}
-								$aActionParams[] = "array('type' => '$sType', 'value' => ".self::QuoteForPHP($oParam->textContent).")";
+								$aActionParams[] = "array('type' => '$sParamType', 'value' => ".self::QuoteForPHP($oParam->textContent).")";
 							}
 						}
 						else
 						{
-							// Old (pre 2.0.4) format, when no parameter is specified, assume 1 parameter: reference sStimulusCode
+							// Old (pre 2.1.0) format, when no parameter is specified, assume 1 parameter: reference sStimulusCode
 							$aActionParams[] = "array('type' => 'reference', 'value' => 'sStimulusCode')";
 						}
 						$sActionParams = 'array('.implode(', ', $aActionParams).')';

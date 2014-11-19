@@ -130,7 +130,7 @@ class appUserPreferences extends DBObject
 	/**
 	 * Call this function if the user has changed (like when doing a logoff...)
 	 */
-	static public function Reset()
+	static public function ResetPreferences()
 	{
 		self::$oUserPrefs = null;
 	}

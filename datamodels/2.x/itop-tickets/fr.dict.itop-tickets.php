@@ -164,6 +164,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Ticket:SLA' => 'Rapport SLA',
 	'WorkOrder:Details' => 'Détails',
 	'WorkOrder:Moreinfo' => 'Informations complémentaires',
-
+	'Tickets:ResolvedFrom' => 'Résolu via %1$s'
 ));
-?>
