@@ -747,13 +747,13 @@
         <methods>
           <method id="Set">
             <arguments>
-              <argument>
+              <argument id="1">
                 <label>Field Code</label>
                 <type>attcode</type>
                 <mandatory>true</mandatory>
                 <description>The field to set, in the current object</description>
               </argument>
-              <argument>
+              <argument id="2">
                 <label>Value</label>
                 <type>string</type>
                 <mandatory>true</mandatory>
@@ -763,7 +763,7 @@
           </method>
           <method id="SetCurrentDate">
             <arguments>
-              <argument>
+              <argument id="1">
                 <label>Field Code</label>
                 <type>attcode</type>
                 <mandatory>true</mandatory>
@@ -774,7 +774,7 @@
           </method>
           <method id="SetCurrentUser">
             <arguments>
-              <argument>
+              <argument id="1">
                 <label>Field Code</label>
                 <type>attcode</type>
                 <mandatory>true</mandatory>
@@ -785,22 +785,22 @@
           </method>
           <method id="SetElapsedTime">
             <arguments>
-              <argument>
+              <argument id="1">
                 <label>Field Code</label>
                 <type>attcode</type>
                 <mandatory>true</mandatory>
                 <description>The field, in the current object, to set to
                   the time elapsed since the date given by the reference field</description>
               </argument>
-              <argument>
+              <argument id="2">
                 <label>Reference Field Code</label>
                 <type>attcode</type>
                 <mandatory>true</mandatory>
                 <description>The reference date or date/time</description>
               </argument>
-              <argument>
+              <argument id="3">
                 <label>Working hours</label>
-                <type>attcode</type>
+                <type>string</type>
                 <mandatory>false</mandatory>
                 <description>Leave empty to rely on the standard working hours scheme, or set to "DefaultWorkingTimeComputer" to force a 24x7 scheme</description>
               </argument>
@@ -808,7 +808,7 @@
           </method>
           <method id="Reset">
             <arguments>
-              <argument>
+              <argument id="1">
                 <label>Field Code</label>
                 <type>attcode</type>
                 <mandatory>true</mandatory>
@@ -819,13 +819,13 @@
           </method>
           <method id="Copy">
             <arguments>
-              <argument>
+              <argument id="1">
                 <label>Destination</label>
                 <type>attcode</type>
                 <mandatory>true</mandatory>
                 <description>The field, in the current object, to set</description>
               </argument>
-              <argument>
+              <argument id="2">
                 <label>Source</label>
                 <type>attcode</type>
                 <mandatory>true</mandatory>
