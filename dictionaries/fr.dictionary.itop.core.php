@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -646,5 +646,7 @@ Opérateurs :<br/>
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sj %2$dh %3$dmin %4$ds',
+	'Core:ExplainWTC:ElapsedTime' => 'Temps écoulé (enregistré dans "%1$s")',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Temps écoulé pour "%1$s"',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Date/heure de butée pour "%1$s" à %2$d%%'
 ));
-?>

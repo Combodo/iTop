@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -77,7 +77,16 @@ class SLAComputation implements iWorkingTimeComputer
 	 */
 	public function GetDeadline($oObject, $iDuration, DateTime $oStartDate)
 	{
-		return self::$m_oAddOn->GetDeadline($oObject, $iDuration, $oStartDate);
+		if (class_exists('WorkingTimeRecorder'))
+		{
+			WorkingTimeRecorder::Trace(WorkingTimeRecorder::TRACE_DEBUG, __class__.'::'.__function__);
+		}
+		$oEndDate = self::$m_oAddOn->GetDeadline($oObject, $iDuration, $oStartDate);
+		if (class_exists('WorkingTimeRecorder'))
+		{
+			WorkingTimeRecorder::SetValues($oStartDate->format('U'), $oEndDate->format('U'), $iDuration, WorkingTimeRecorder::COMPUTED_END);
+		}
+		return $oEndDate;
 	}
 
 	/**
@@ -89,7 +98,16 @@ class SLAComputation implements iWorkingTimeComputer
 	 */
 	public function GetOpenDuration($oObject, DateTime $oStartDate, DateTime $oEndDate)
 	{
-		return self::$m_oAddOn->GetOpenDuration($oObject, $oStartDate, $oEndDate);
+		if (class_exists('WorkingTimeRecorder'))
+		{
+			WorkingTimeRecorder::Trace(WorkingTimeRecorder::TRACE_DEBUG, __class__.'::'.__function__);
+		}
+		$iDuration = self::$m_oAddOn->GetOpenDuration($oObject, $oStartDate, $oEndDate);
+		if (class_exists('WorkingTimeRecorder'))
+		{
+			WorkingTimeRecorder::SetValues($oStartDate->format('U'), $oEndDate->format('U'), $iDuration, WorkingTimeRecorder::COMPUTED_DURATION);
+		}
+		return $iDuration;
 	}
 }
 
@@ -119,6 +137,10 @@ class SLAComputationAddOnAPI
 	 */
 	public static function GetDeadline($oTicket, $iDuration, DateTime $oStartDate)
 	{
+		if (class_exists('WorkingTimeRecorder'))
+		{
+			WorkingTimeRecorder::Trace(WorkingTimeRecorder::TRACE_DEBUG, __class__.'::'.__function__);
+		}
 		// Default implementation: 24x7, no holidays: to compute the deadline, just add
 		// the specified duration to the given date/time
 		$oResult = clone $oStartDate;
@@ -135,6 +157,10 @@ class SLAComputationAddOnAPI
 	 */
 	public static function GetOpenDuration($oTicket, DateTime $oStartDate, DateTime $oEndDate)
 	{
+		if (class_exists('WorkingTimeRecorder'))
+		{
+			WorkingTimeRecorder::Trace(WorkingTimeRecorder::TRACE_DEBUG, __class__.'::'.__function__);
+		}
 		return abs($oEndDate->format('U') - $oStartDate->format('U'));
 	}
 }

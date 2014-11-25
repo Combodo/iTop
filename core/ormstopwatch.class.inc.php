@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -358,8 +358,9 @@ class ormStopWatch
 			// Currently stopped - do nothing
 			return false;
 		}
-		
+
 		$iDurationGoal = $this->ComputeGoal($oObject, $oAttDef);
+		$iComputationRefTime = time();
 		foreach ($this->aThresholds as $iPercent => &$aThresholdData)
 		{
 			if (is_null($iDurationGoal))
@@ -370,9 +371,20 @@ class ormStopWatch
 			else
 			{
 				$iThresholdDuration = round($iPercent * $iDurationGoal / 100);
+
+				if (class_exists('WorkingTimeRecorder'))
+				{
+					$sClass = get_class($oObject);
+					$sAttCode = $oAttDef->GetCode();
+					WorkingTimeRecorder::Start($oObject, $iComputationRefTime, "ormStopWatch-Deadline-$iPercent-$sAttCode", 'Core:ExplainWTC:StopWatch-Deadline', array("Class:$sClass/Attribute:$sAttCode", $iPercent));
+				}
 				$aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $this->iLastStart, $iThresholdDuration - $this->iTimeSpent);
 				// OR $aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $this->iStarted, $iThresholdDuration);
 
+				if (class_exists('WorkingTimeRecorder'))
+				{
+					WorkingTimeRecorder::End();
+				}
 			}
 			if (is_null($aThresholdData['deadline']) || ($aThresholdData['deadline'] > time()))
 			{
@@ -402,8 +414,18 @@ class ormStopWatch
 			return false;
 		}
 
+		if (class_exists('WorkingTimeRecorder'))
+		{
+			$sClass = get_class($oObject);
+			$sAttCode = $oAttDef->GetCode();
+			WorkingTimeRecorder::Start($oObject, time(), "ormStopWatch-TimeSpent-$sAttCode", 'Core:ExplainWTC:StopWatch-TimeSpent', array("Class:$sClass/Attribute:$sAttCode"), true /*cumulative*/);
+		}
 		$iElapsed = $this->ComputeDuration($oObject, $oAttDef, $this->iLastStart, time());
 		$this->iTimeSpent = $this->iTimeSpent + $iElapsed;
+		if (class_exists('WorkingTimeRecorder'))
+		{
+			WorkingTimeRecorder::End();
+		}
 
 		foreach ($this->aThresholds as $iPercent => &$aThresholdData)
 		{

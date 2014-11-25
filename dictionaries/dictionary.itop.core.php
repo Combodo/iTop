@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -777,16 +777,15 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'Prefs',
 	'Core:ExecProcess:Code1' => 'Wrong command or command finished with errors (e.g. wrong script name)',
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)',
-));
 
-//
-// Attribute Duration
-//
-Dict::Add('EN US', 'English', 'English', array(
+	// Attribute Duration
 	'Core:Duration_Seconds'	=> '%1$ds',	
 	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',	
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',		
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',		
-));
 
-?>
+	// Explain working time computing
+	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as "%1$s")',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for "%1$s"',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for "%1$s" at %2$d%%'
+));

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -96,11 +96,19 @@ class DefaultWorkingTimeComputer implements iWorkingTimeComputer
 	 */
 	public function GetDeadline($oObject, $iDuration, DateTime $oStartDate)
 	{
+		if (class_exists('WorkingTimeRecorder'))
+		{
+			WorkingTimeRecorder::Trace(WorkingTimeRecorder::TRACE_DEBUG, __class__.'::'.__function__);
+		}
 		//echo "GetDeadline - default: ".$oStartDate->format('Y-m-d H:i:s')." + $iDuration<br/>\n";
 		// Default implementation: 24x7, no holidays: to compute the deadline, just add
 		// the specified duration to the given date/time
 		$oResult = clone $oStartDate;
 		$oResult->modify('+'.$iDuration.' seconds');
+		if (class_exists('WorkingTimeRecorder'))
+		{
+			WorkingTimeRecorder::SetValues($oStartDate->format('U'), $oResult->format('U'), $iDuration, WorkingTimeRecorder::COMPUTED_END);
+		}
 		return $oResult;
 	}
 	
@@ -113,8 +121,17 @@ class DefaultWorkingTimeComputer implements iWorkingTimeComputer
 	 */
 	public function GetOpenDuration($oObject, DateTime $oStartDate, DateTime $oEndDate)
 	{
+		if (class_exists('WorkingTimeRecorder'))
+		{
+			WorkingTimeRecorder::Trace(WorkingTimeRecorder::TRACE_DEBUG, __class__.'::'.__function__);
+		}
 		//echo "GetOpenDuration - default: ".$oStartDate->format('Y-m-d H:i:s')." to ".$oEndDate->format('Y-m-d H:i:s')."<br/>\n";
-		return abs($oEndDate->format('U') - $oStartDate->format('U'));
+		$iDuration = abs($oEndDate->format('U') - $oStartDate->format('U'));
+		if (class_exists('WorkingTimeRecorder'))
+		{
+			WorkingTimeRecorder::SetValues($oStartDate->format('U'), $oEndDate->format('U'), $iDuration, WorkingTimeRecorder::COMPUTED_DURATION);
+		}
+		return $iDuration;
 	}
 }
 
