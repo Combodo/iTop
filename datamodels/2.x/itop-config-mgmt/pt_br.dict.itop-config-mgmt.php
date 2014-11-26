@@ -1322,8 +1322,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Model/Attribute:type/Value:Tablet+' => 'Tablet',
 	'Class:Model/Attribute:type/Value:TapeLibrary' => 'Tape Library',
 	'Class:Model/Attribute:type/Value:TapeLibrary+' => 'Tape Library',
-	'Class:Model/Attribute:type/Value:Telephone' => 'Telefone',
-	'Class:Model/Attribute:type/Value:Telephone+' => 'Telefone',
+	'Class:Model/Attribute:type/Value:Phone' => 'Telefone',
+	'Class:Model/Attribute:type/Value:Phone+' => 'Telefone',
 	'Class:Model/Attribute:physicaldevices_list' => 'Dispositivo físico',
 	'Class:Model/Attribute:physicaldevices_list+' => 'Todos os dispositivos físicos correspondentes a esse modelo',
 ));

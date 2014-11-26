@@ -1331,8 +1331,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Model/Attribute:type/Value:Tablet+' => 'Tableta',
 	'Class:Model/Attribute:type/Value:TapeLibrary' => 'Librería de Cinta',
 	'Class:Model/Attribute:type/Value:TapeLibrary+' => 'Librería de Cinta',
-	'Class:Model/Attribute:type/Value:Telephone' => 'Teléfono',
-	'Class:Model/Attribute:type/Value:Telephone+' => 'Teléfono',
+	'Class:Model/Attribute:type/Value:Phone' => 'Teléfono',
+	'Class:Model/Attribute:type/Value:Phone+' => 'Teléfono',
 	'Class:Model/Attribute:physicaldevices_list' => 'Dispositivo Físico',
 	'Class:Model/Attribute:physicaldevices_list+' => 'Dispositivo Físico',
 ));

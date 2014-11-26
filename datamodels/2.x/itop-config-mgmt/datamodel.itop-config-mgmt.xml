@@ -5740,7 +5740,7 @@
             <value id="Enclosure">Enclosure</value>
             <value id="PC">PC</value>
             <value id="Tablet">Tablet</value>
-            <value id="Telephone">Telephone</value>
+            <value id="Phone">Phone</value>
             <value id="MobilePhone">MobilePhone</value>
             <value id="Printer">Printer</value>
             <value id="DiskArray">DiskArray</value>

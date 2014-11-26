@@ -1269,8 +1269,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Model/Attribute:type/Value:Tablet+' => 'Tablette',
 	'Class:Model/Attribute:type/Value:TapeLibrary' => 'Bandothèque',
 	'Class:Model/Attribute:type/Value:TapeLibrary+' => 'Bandothèque',
-	'Class:Model/Attribute:type/Value:Telephone' => 'Téléphone',
-	'Class:Model/Attribute:type/Value:Telephone+' => 'Téléphone',
+	'Class:Model/Attribute:type/Value:Phone' => 'Téléphone',
+	'Class:Model/Attribute:type/Value:Phone+' => 'Téléphone',
 	'Class:Model/Attribute:physicaldevices_list' => 'Matériels',
 	'Class:Model/Attribute:physicaldevices_list+' => '',
 ));

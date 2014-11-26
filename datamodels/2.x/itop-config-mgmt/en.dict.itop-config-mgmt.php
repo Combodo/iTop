@@ -1327,8 +1327,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Model/Attribute:type/Value:Tablet+' => 'Tablet',
 	'Class:Model/Attribute:type/Value:TapeLibrary' => 'Tape Library',
 	'Class:Model/Attribute:type/Value:TapeLibrary+' => 'Tape Library',
-	'Class:Model/Attribute:type/Value:Telephone' => 'Telephone',
-	'Class:Model/Attribute:type/Value:Telephone+' => 'Telephone',
+	'Class:Model/Attribute:type/Value:Phone' => 'Telephone',
+	'Class:Model/Attribute:type/Value:Phone+' => 'Telephone',
 	'Class:Model/Attribute:physicaldevices_list' => 'Physical devices',
 	'Class:Model/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this model',
 ));

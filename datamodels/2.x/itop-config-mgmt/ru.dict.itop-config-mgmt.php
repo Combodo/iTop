@@ -1322,8 +1322,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Model/Attribute:type/Value:Tablet+' => 'Планшет',
 	'Class:Model/Attribute:type/Value:TapeLibrary' => 'Ленточная библиотека',
 	'Class:Model/Attribute:type/Value:TapeLibrary+' => 'Ленточная библиотека',
-	'Class:Model/Attribute:type/Value:Telephone' => 'Телефон',
-	'Class:Model/Attribute:type/Value:Telephone+' => 'Телефон',
+	'Class:Model/Attribute:type/Value:Phone' => 'Телефон',
+	'Class:Model/Attribute:type/Value:Phone+' => 'Телефон',
 	'Class:Model/Attribute:physicaldevices_list' => 'Устройства',
 	'Class:Model/Attribute:physicaldevices_list+' => 'Устройства',
 ));
