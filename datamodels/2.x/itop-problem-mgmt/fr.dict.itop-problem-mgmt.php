@@ -88,6 +88,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Problem/Attribute:knownerrors_list+' => '',
 	'Class:Problem/Attribute:related_request_list' => 'Requêtes liées',
 	'Class:Problem/Attribute:related_request_list+' => '',
+	'Class:Problem/Attribute:related_incident_list' => 'Incidents liés',
+	'Class:Problem/Attribute:related_incident_list+' => '',
 	'Class:Problem/Stimulus:ev_assign' => 'Assigner',
 	'Class:Problem/Stimulus:ev_assign+' => '',
 	'Class:Problem/Stimulus:ev_reassign' => 'Réaassigner',

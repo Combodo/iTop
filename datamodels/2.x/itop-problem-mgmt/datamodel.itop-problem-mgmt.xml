@@ -153,6 +153,13 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
+        <field id="related_incident_list" xsi:type="AttributeLinkedSet">
+          <linked_class>Incident</linked_class>
+          <ext_key_to_me>parent_problem_id</ext_key_to_me>
+          <edit_mode>add_remove</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
       </fields>
       <lifecycle>
         <attribute>status</attribute>
@@ -475,6 +482,9 @@
               <rank>40</rank>
             </item>
             <item id="related_request_list">
+              <rank>50</rank>
+            </item>
+            <item id="related_incident_list">
               <rank>50</rank>
             </item>
             <item id="col:col1">

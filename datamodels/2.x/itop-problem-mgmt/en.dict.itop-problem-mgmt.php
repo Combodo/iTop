@@ -143,6 +143,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Problem/Attribute:knownerrors_list+' => 'All the known errors that are linked to this problem',
 	'Class:Problem/Attribute:related_request_list' => 'Related requests',
 	'Class:Problem/Attribute:related_request_list+' => 'All the requests that are related to this problem',
+	'Class:Problem/Attribute:related_incident_list' => 'Related incidents',
+	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem',
 	'Class:Problem/Stimulus:ev_assign' => 'Assign',
 	'Class:Problem/Stimulus:ev_assign+' => '',
 	'Class:Problem/Stimulus:ev_reassign' => 'Reassign',
