@@ -1439,7 +1439,7 @@
             <item id="request_type">
               <rank>50</rank>
             </item>
-            <item id="service_provider">
+            <item id="service_org_id">
               <rank>60</rank>
             </item>
           </items>
