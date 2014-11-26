@@ -213,10 +213,18 @@
           <goal>ResponseTicketTTO</goal>
           <thresholds>
             <threshold id="75">
+              <highlight>
+                <code>warning</code>
+                <persistent>false</persistent>
+              </highlight>
               <actions>
 		</actions>
             </threshold>
             <threshold id="100">
+              <highlight>
+                <code>critical</code>
+                <persistent>false</persistent>
+              </highlight>
               <actions>
                 <action>
                   <verb>ApplyStimulus</verb>
@@ -241,10 +249,18 @@
           <goal>ResponseTicketTTR</goal>
           <thresholds>
             <threshold id="75">
+              <highlight>
+                <code>warning</code>
+                <persistent>false</persistent>
+              </highlight>
               <actions>
 		</actions>
             </threshold>
             <threshold id="100">
+              <highlight>
+                <code>critical</code>
+                <persistent>false</persistent>
+              </highlight>
               <actions>
                 <action>
                   <verb>ApplyStimulus</verb>

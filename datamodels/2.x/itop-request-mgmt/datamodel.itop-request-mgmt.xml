@@ -255,7 +255,7 @@
           <thresholds>
             <threshold id="75">
               <highlight>
-                <code>critical</code>
+                <code>warning</code>
                 <persistent>false</persistent>
               </highlight>
               <actions>
