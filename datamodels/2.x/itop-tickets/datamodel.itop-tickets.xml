@@ -836,6 +836,20 @@
           </method>
         </methods>
       </class>
+      <class id="ResponseTicketTTO" _delta="define">
+        <interfaces>
+          <interface id="iMetricComputer">
+            <label>Time To Own</label>
+          </interface>
+        </interfaces>
+      </class>
+      <class id="ResponseTicketTTR" _delta="define">
+        <interfaces>
+          <interface id="iMetricComputer">
+             <label>Time To Resolve</label>
+          </interface>
+        </interfaces>
+      </class>
     </classes>
   </meta>
 </itop_design>
