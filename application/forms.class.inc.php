@@ -108,7 +108,7 @@ class DesignerForm
 				$aRow = $oField->Render($oP, $sFormId);
 				if ($oField->IsVisible())
 				{
-					$sValidation = '&nbsp;<span class="prop_apply">'.$this->GetValidationArea($oField->GetCode()).'</span>';
+					$sValidation = '&nbsp;<span class="prop_apply">'.$this->GetValidationArea($oField->GetFieldId()).'</span>';
 					$sField = $aRow['value'].$sValidation;
 					$aDetails[] = array('label' => $aRow['label'], 'value' => $sField);
 				}
@@ -234,7 +234,7 @@ class DesignerForm
 				if ($oField->IsVisible())
 				{
 					$sFieldId = $this->GetFieldId($oField->GetCode());
-					$sValidation = $this->GetValidationArea($oField->GetCode(), '<span title="Apply" class="ui-icon ui-icon-circle-check"/>');
+					$sValidation = $this->GetValidationArea($sFieldId, '<span title="Apply" class="ui-icon ui-icon-circle-check"/>');
 					$sValidationFields = '</td><td class="prop_icon prop_apply">'.$sValidation.'</td><td  class="prop_icon prop_cancel"><span title="Revert" class="ui-icon ui-icon-circle-close"/></td>'.$this->EndRow();
 					
 					$sPath = $this->GetHierarchyPath().'/'.$oField->GetCode();
@@ -517,9 +517,9 @@ EOF
 		return 'attr_'.$sCode.$this->GetSuffix();
 	}
 	
-	public function GetValidationArea($sCode, $sContent = '')
+	public function GetValidationArea($sId, $sContent = '')
 	{
-		return "<span style=\"display:inline-block;width:20px;\" id=\"v_{$this->sFormPrefix}attr_$sCode\"><span class=\"ui-icon ui-icon-alert\"></span>$sContent</span>";
+		return "<span style=\"display:inline-block;width:20px;\" id=\"v_{$sId}\"><span class=\"ui-icon ui-icon-alert\"></span>$sContent</span>";
 	}
 	public function GetAsyncActionClass()
 	{
