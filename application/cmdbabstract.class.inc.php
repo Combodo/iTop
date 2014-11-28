@@ -1854,7 +1854,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				{
 					$sNullValue = "'$sNullValue'"; // Add quotes to turn this into a JS string if it's not a number
 				}
-				$sOriginalValue = ($iFlags & OPT_ATT_MUSTCHANGE) ? "'".addslashes($value)."'" : 'undefined';
+				$sOriginalValue = ($iFlags & OPT_ATT_MUSTCHANGE) ? json_encode($value) : 'undefined';
 				$oPage->add_ready_script("$('#$iId').bind('".implode(' ', $aEventsList)."', function(evt, sFormId) { return ValidateField('$iId', '$sPattern', $bMandatory, sFormId, $sNullValue, $sOriginalValue) } );\n"); // Bind to a custom event: validate
 			}
 			$aDependencies = MetaModel::GetDependentAttributes($sClass, $sAttCode); // List of attributes that depend on the current one
