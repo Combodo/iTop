@@ -2159,7 +2159,7 @@
         <field id="customers_list" xsi:type="AttributeLinkedSet">
           <linked_class>Organization</linked_class>
           <ext_key_to_me>deliverymodel_id</ext_key_to_me>
-          <edit_mode>none</edit_mode>
+          <edit_mode>add_remove</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
