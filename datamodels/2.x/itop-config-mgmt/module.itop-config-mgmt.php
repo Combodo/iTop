@@ -89,6 +89,7 @@ if (!class_exists('ConfigMgmtInstaller'))
 				self::RenameEnumValueInDB('Software', 'type', 'Webserver', 'WebServer');
 				self::RenameEnumValueInDB('Model', 'type', 'SANswitch', 'SANSwitch');
 				self::RenameEnumValueInDB('Model', 'type', 'IpPhone', 'IPPhone');
+				self::RenameEnumValueInDB('Model', 'type', 'Telephone', 'Phone');
 				self::RenameClassInDB('DBserver', 'DBServer');
 				self::RenameClassInDB('OSfamily', 'OSFamily');
 				self::RenameClassInDB('OSversion', 'OSVersion');
