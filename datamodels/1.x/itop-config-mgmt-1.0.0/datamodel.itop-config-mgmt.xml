@@ -17,7 +17,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -116,7 +115,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -289,7 +287,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field>finalclass</db_final_class_field>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -487,7 +484,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="first_name"/>
             <attribute id="name"/>
@@ -626,7 +622,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -745,7 +740,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="team_id"/>
           </attributes>
@@ -865,7 +859,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field>finalclass</db_final_class_field>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -1031,7 +1024,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -1140,7 +1132,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -1248,7 +1239,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -1371,7 +1361,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -1540,7 +1529,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s / %2$s</format>
           <attributes>
             <attribute id="ip"/>
             <attribute id="ip_mask"/>
@@ -1700,7 +1688,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -1821,7 +1808,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field>finalclass</db_final_class_field>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -1887,7 +1873,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -1952,7 +1937,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -2018,7 +2002,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="patch_id"/>
           </attributes>
@@ -2110,7 +2093,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field>finalclass</db_final_class_field>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -2297,7 +2279,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s - %2$s</format>
           <attributes>
             <attribute id="name"/>
             <attribute id="device_id_friendlyname"/>
@@ -2496,7 +2477,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s - %2$s</format>
           <attributes>
             <attribute id="name"/>
             <attribute id="device_id_friendlyname"/>
@@ -2645,7 +2625,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s - %2$s</format>
           <attributes>
             <attribute id="name"/>
             <attribute id="device_id_friendlyname"/>
@@ -2785,7 +2764,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s - %2$s</format>
           <attributes>
             <attribute id="name"/>
             <attribute id="db_server_instance_id_friendlyname"/>
@@ -2945,7 +2923,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -3092,7 +3069,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -3222,7 +3198,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -3373,7 +3348,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s - %2$s</format>
           <attributes>
             <attribute id="device_id_friendlyname"/>
             <attribute id="name"/>
@@ -3737,7 +3711,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -3905,7 +3878,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -4097,7 +4069,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -4220,7 +4191,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -4374,7 +4344,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -4562,7 +4531,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -4772,7 +4740,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -4993,7 +4960,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -5201,7 +5167,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -5345,7 +5310,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="group_id"/>
           </attributes>
@@ -5452,7 +5416,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="ci_id"/>
           </attributes>
@@ -5565,7 +5528,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="ci_id"/>
           </attributes>
@@ -5682,7 +5644,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="solution_id"/>
           </attributes>
@@ -5789,7 +5750,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="solution_id"/>
           </attributes>

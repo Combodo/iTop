@@ -17,7 +17,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="ref"/>
           </attributes>
@@ -1205,7 +1204,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="ref"/>
           </attributes>
@@ -2166,7 +2164,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="ref"/>
           </attributes>
@@ -3124,7 +3121,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="ref"/>
           </attributes>
@@ -4246,7 +4242,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="ref"/>
           </attributes>

@@ -56,7 +56,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field>finalclass</db_final_class_field>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -299,7 +298,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -348,7 +346,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -493,7 +490,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -667,7 +663,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="contract_id"/>
             <attribute id="contact_id"/>
@@ -749,7 +744,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="contract_id"/>
             <attribute id="document_id"/>
@@ -831,7 +825,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="providercontract_id"/>
             <attribute id="functionalci_id"/>
@@ -912,7 +905,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -978,7 +970,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -1168,7 +1159,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="service_id"/>
             <attribute id="document_id"/>
@@ -1250,7 +1240,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="service_id"/>
             <attribute id="contact_id"/>
@@ -1331,7 +1320,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -1472,7 +1460,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -1581,7 +1568,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -1729,7 +1715,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="sla_id"/>
             <attribute id="slt_id"/>
@@ -1851,7 +1836,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="customercontract_id"/>
             <attribute id="service_id"/>
@@ -1949,7 +1933,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="service_id"/>
             <attribute id="providercontract_id"/>
@@ -2031,7 +2014,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="service_id"/>
             <attribute id="functionalci_id"/>
@@ -2112,7 +2094,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -2218,7 +2199,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="deliverymodel_id"/>
             <attribute id="contact_id"/>

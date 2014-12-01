@@ -14,7 +14,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -225,7 +224,6 @@
         <db_key_field>link_id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>lnkErrorToFunctionalCI</format>
           <attributes/>
         </naming>
         <display_template/>
@@ -318,7 +316,6 @@
         <db_key_field>link_id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="link_type"/>
           </attributes>
@@ -399,7 +396,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="title"/>
           </attributes>
@@ -517,7 +513,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
