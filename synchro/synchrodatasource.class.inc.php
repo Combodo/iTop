@@ -640,6 +640,14 @@ EOF
 				$this->Set('attribute_list', $oAttributeSet);
 			}
 		}
+		else
+		{
+			$sDataTable = $this->Get('database_table_name');
+			if (empty($sDataTable))
+			{
+				$this->Set('database_table_name', $this->ComputeDataTableName());
+			}
+		}
 	}
 	public function DoCheckToWrite()
 	{
@@ -761,6 +769,14 @@ EOF
 		{
 			CMDBSource::Query($sTriggerSQL);
 		}
+		
+		$sDataTable = $this->Get('database_table_name');
+		if (empty($sDataTable))
+		{
+			$this->Set('database_table_name', $this->ComputeDataTableName());
+			$this->DBUpdate();
+		}
+		
 	}
 
 	/**
