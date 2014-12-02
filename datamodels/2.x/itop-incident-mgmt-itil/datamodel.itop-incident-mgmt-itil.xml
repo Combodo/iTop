@@ -1036,7 +1036,11 @@
                                         4 => 4,
                         ),
                 );
-                $iPriority = $aPriorities[(int)$this->Get('impact')][(int)$this->Get('urgency')];
+                $iPriority = 1;
+                if (isset($aPriorities[(int)$this->Get('impact')][(int)$this->Get('urgency')]))
+                {
+                        $iPriority = $aPriorities[(int)$this->Get('impact')][(int)$this->Get('urgency')];
+                }
                 return $iPriority;              
         }]]></code>
         </method>
