@@ -765,6 +765,7 @@ class DisplayBlock
 			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($this->m_oFilter->serialize());
 			$sHtml .= '<h1>'.Dict::S(str_replace('_', ':', $sTitle)).'</h1>';
 			$sHtml .= '<a class="summary" href="'.$sHyperlink.'">'.Dict::Format(str_replace('_', ':', $sLabel), $iCount).'</a>';
+			$sHtml .= '<div style="clear:both;"></div>';
 			break;
 			
 			case 'csv':
