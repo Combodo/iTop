@@ -237,7 +237,7 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 			$sAttName = $oAttDef->GetLabel();
 			$sNewValue = $this->Get('newvalue');
 			$sOldValue = $this->Get('oldvalue');
-			$sResult = $oAttDef->GetAsHTMLForHistory($sOldValue, $sNewValue);
+			$sResult = $oAttDef->DescribeChangeAsHTML($sOldValue, $sNewValue);
 		}
 		return $sResult;
 	}

@@ -480,6 +480,14 @@ abstract class AttributeDefinition
 		return (string)$sValue;
 	}
 
+	/**
+	 * Override to differentiate a value displayed in the UI or in the history
+	 */	
+	public function GetAsHTMLForHistory($sValue, $oHostObject = null, $bLocalize = true)
+	{
+		return $this->GetAsHTML($sValue, $oHostObject, $bLocalize);
+	}
+
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
 		$oValSetDef = $this->GetValuesDef();
@@ -487,15 +495,18 @@ abstract class AttributeDefinition
 		return $oValSetDef->GetValues($aArgs, $sContains);
 	}
 
-	public function GetAsHTMLForHistory($sOldValue, $sNewValue, $sLabel = null)
+	/**
+	 * Explain the change of the attribute (history)
+	 */	
+	public function DescribeChangeAsHTML($sOldValue, $sNewValue, $sLabel = null)
 	{
 		if (is_null($sLabel))
 		{
 			$sLabel = $this->GetLabel();
 		}
 
-		$sNewValueHtml = $this->GetAsHTML($sNewValue);
-		$sOldValueHtml = $this->GetAsHTML($sOldValue);
+		$sNewValueHtml = $this->GetAsHTMLForHistory($sNewValue);
+		$sOldValueHtml = $this->GetAsHTMLForHistory($sOldValue);
 
 		if($this->IsExternalKey())
 		{
@@ -3981,19 +3992,17 @@ class AttributeStopWatch extends AttributeDefinition
 		return Dict::S('BooleanLabel:'.$sDictKey, 'def:'.$sDictKey);
 	}
 
-	public function GetSubItemAsHTMLForHistory($sItemCode, $sOldValue, $sNewValue, $sLabel)
+	public function GetSubItemAsHTMLForHistory($sItemCode, $sValue)
 	{
 		switch($sItemCode)
 		{
 		case 'timespent':
-			$sHtmlOld = (int)$sOldValue ? AttributeDuration::FormatDuration($sOldValue) : null;
-			$sHtmlNew = (int)$sNewValue ? AttributeDuration::FormatDuration($sNewValue) : null;
+			$sHtml = (int)$sValue ? Str::pure2html(AttributeDuration::FormatDuration($sValue)) : null;
 			break;
 		case 'started':
 		case 'laststart':
 		case 'stopped':
-			$sHtmlOld = (int)$sOldValue ? date(self::GetDateFormat(), (int)$sOldValue) : null;
-			$sHtmlNew = (int)$sNewValue ? date(self::GetDateFormat(), (int)$sNewValue) : null;
+			$sHtml = (int)$sValue ? date(self::GetDateFormat(), (int)$sValue) : null;
 			break;
 
 		default:
@@ -4007,26 +4016,21 @@ class AttributeStopWatch extends AttributeDefinition
 					switch($sThresholdCode)
 					{
 					case 'deadline':
-						$sHtmlOld = (int)$sOldValue ? date(self::GetDateFormat(true /*full*/), (int)$sOldValue) : null;
-						$sHtmlNew = (int)$sNewValue ? date(self::GetDateFormat(true /*full*/), (int)$sNewValue) : null;
+						$sHtml = (int)$sValue ? date(self::GetDateFormat(true /*full*/), (int)$sValue) : null;
 						break;
 					case 'passed':
-						$sHtmlOld = $this->GetBooleanLabel((int)$sOldValue);
-						$sHtmlNew = $this->GetBooleanLabel((int)$sNewValue);
+						$sHtml = $this->GetBooleanLabel((int)$sValue);
 						break;
 					case 'triggered':
-						$sHtmlOld = $this->GetBooleanLabel((int)$sOldValue);
-						$sHtmlNew = $this->GetBooleanLabel((int)$sNewValue);
+						$sHtml = $this->GetBooleanLabel((int)$sValue);
 						break;
 					case 'overrun':
-						$sHtmlOld = (int)$sOldValue > 0 ? AttributeDuration::FormatDuration((int)$sOldValue) : '';
-						$sHtmlNew = (int)$sNewValue > 0 ? AttributeDuration::FormatDuration((int)$sNewValue) : '';
+						$sHtml = (int)$sValue > 0 ? Str::pure2html(AttributeDuration::FormatDuration((int)$sValue)) : '';
 					}
 				}
 			}
 		}
-		$sRes = parent::GetAsHTMLForHistory($sHtmlOld, $sHtmlNew, $sLabel);
-		return $sRes;
+		return $sHtml;
 	}
 
 	static protected function GetDateFormat($bFull = false)
@@ -4341,6 +4345,13 @@ class AttributeSubItem extends AttributeDefinition
 		return $res;
 	}
 
+	public function GetAsHTMLForHistory($value, $oHostObject = null, $bLocalize = true)
+	{
+		$oParent = $this->GetTargetAttDef();
+		$res = $oParent->GetSubItemAsHTMLForHistory($this->Get('item_code'), $value);
+		return $res;
+	}
+
 	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
 	{
 		$oParent = $this->GetTargetAttDef();
@@ -4353,15 +4364,6 @@ class AttributeSubItem extends AttributeDefinition
 		$oParent = $this->GetTargetAttDef();
 		$res = $oParent->GetSubItemAsXML($this->Get('item_code'), $value);
 		return $res;
-	}
-
-	public function GetAsHTMLForHistory($sOldValue, $sNewValue, $sLabel = null)
-	{
-		$sLabel = $this->GetLabel();
-
-		$oParent = $this->GetTargetAttDef();
-		$sValue = $oParent->GetSubItemAsHTMLForHistory($this->Get('item_code'), $sOldValue, $sNewValue, $sLabel);
-		return $sValue;
 	}
 
 	/**
@@ -4923,7 +4925,7 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 	}
 
 	// Do not display friendly names in the history of change
-	public function GetAsHTMLForHistory($sOldValue, $sNewValue, $sLabel = null)
+	public function DescribeChangeAsHTML($sOldValue, $sNewValue, $sLabel = null)
 	{
 		return '';
 	}
