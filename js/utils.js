@@ -115,22 +115,31 @@ function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams)
 	// Check if the user is not editing the list properties right now
 	var bDialogOpen = false;
 	var oDataTable = $('#'+divId+' :itop-datatable');
+	var bIsDataTable = false;
 	if (oDataTable.length > 0)
 	{
 		bDialogOpen = oDataTable.datatable('IsDialogOpen');
+		bIsDataTable = true;
 	}
 	if (!bDialogOpen)
 	{
-		$('#'+divId).block();
-		
-		$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?style='+sStyle,
-		   { operation: 'ajax', filter: sSerializedFilter, extra_params: sExtraParams },
-		   function(data){
-			 $('#'+divId).empty();
-			 $('#'+divId).append(data);
-			 $('#'+divId).removeClass('loading');
-			}
-		 );
+		if (bIsDataTable)
+		{
+			oDataTable.datatable('DoRefresh');
+		}
+		else
+		{
+			$('#'+divId).block();
+			
+			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?style='+sStyle,
+			   { operation: 'ajax', filter: sSerializedFilter, extra_params: sExtraParams },
+			   function(data){
+				 $('#'+divId).empty();
+				 $('#'+divId).append(data);
+				 $('#'+divId).removeClass('loading');
+				}
+			 );
+		}
 	}
 }
 

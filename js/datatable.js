@@ -61,6 +61,7 @@ $(function()
 			oParams.class_aliases = this.options.oClassAliases;
 			oParams.columns = this.options.oColumns;
 			var iSortCol = 0;
+			var aCurrentSort = [];
 			for(var k1 in oParams.columns) //Aliases
 			{
 				for(var k2 in oParams.columns[k1]) //Attribute codes
@@ -69,17 +70,18 @@ $(function()
 					{
 						oParams.sort_col = iSortCol;
 						oParams.sort_order = oParams.columns[k1][k2].sort;
+						aCurrentSort.push([iSortCol, (oParams.columns[k1][k2].sort == 'asc') ? 0 : 1]);
 						break; //TODO make this more generic, Sort on just one column for now
 					}
 					iSortCol++;
 				}
 				break; //TODO: DBObjectSet supports only sorting on the first alias of the set
-			}
-			
+			}			
 			var sId = new String(this.element.attr('id'));
 			var sListId = sId.replace('datatable_', '');
 			oParams.list_id = sListId;
 			var me = this;
+			this.element.block();
 			$.post(this.options.sRenderUrl, oParams, function(data) {
 				// Nasty workaround to clear the pager's state for paginated lists !!!
 				// See jquery.tablesorter.pager.js / saveParams / restoreParams
@@ -90,6 +92,9 @@ $(function()
 				// End of workaround
 
 				me.element.find('.datacontents').html(data);
+				// restore the sort order on columns
+				me.element.find('table.listResults').trigger('fakesorton', [aCurrentSort]);
+				me.element.unblock();
 			}, 'html' );
 			
 		},
@@ -305,6 +310,10 @@ $(function()
 			var oDlgOpen = $('#datatable_dlg_'+sListId+' :visible');
 			
 			return (oDlgOpen.length > 0);
+		},
+		DoRefresh: function()
+		{
+			this._refresh();
 		},
 		GetMultipleSelectionParams: function()
 		{
