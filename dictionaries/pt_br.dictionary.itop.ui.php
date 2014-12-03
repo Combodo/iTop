@@ -1084,7 +1084,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:DashboardEdit:DashboardTitle' => 'Título',
 	'UI:DashboardEdit:AutoReload' => 'Atualizar automaticamente',
 	'UI:DashboardEdit:AutoReloadSec' => 'Intervalo atualização automática (segundos)',
-	'UI:DashboardEdit:AutoReloadSec+' => 'O mínimo permitido é 5 segundos',
+	'UI:DashboardEdit:AutoReloadSec+' => 'O mínimo permitido é %1$d segundos',
 
 	'UI:DashboardEdit:Layout' => 'Layout',
 	'UI:DashboardEdit:Properties' => 'Propriedades',
@@ -1184,7 +1184,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Desabilitado',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Avaliar',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Intervalo atualização automática (segundos)',
-	'Class:ShortcutOQL/Attribute:auto_reload_sec+' => 'O mínimo permitido é 5 sgundos',
+	'Class:ShortcutOQL/Attribute:auto_reload_sec/tip' => 'O mínimo permitido é %1$d sgundos',
 
 	'UI:FillAllMandatoryFields' => 'Por favor, preencha todos os campos obrigatórios.',
 	'UI:CSVImportConfirmTitle' => 'Por favor, confirme a operação',

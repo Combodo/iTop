@@ -1086,7 +1086,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:DashboardEdit:DashboardTitle' => 'Title',
 	'UI:DashboardEdit:AutoReload' => 'Automatic refresh',
 	'UI:DashboardEdit:AutoReloadSec' => 'Automatic refresh interval (seconds)',
-	'UI:DashboardEdit:AutoReloadSec+' => 'The minimum allowed is 5 seconds',
+	'UI:DashboardEdit:AutoReloadSec+' => 'The minimum allowed is %1$d seconds',
 
 	'UI:DashboardEdit:Layout' => 'Layout',
 	'UI:DashboardEdit:Properties' => 'Dashboard Properties',
@@ -1186,7 +1186,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Disabled',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Custom rate',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Automatic refresh interval (seconds)',
-	'Class:ShortcutOQL/Attribute:auto_reload_sec+' => 'The minimum allowed is 5 seconds',
+	'Class:ShortcutOQL/Attribute:auto_reload_sec/tip' => 'The minimum allowed is %1$d seconds',
 
 	'UI:FillAllMandatoryFields' => 'Please fill all mandatory fields.',
 	

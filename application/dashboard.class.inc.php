@@ -91,7 +91,7 @@ abstract class Dashboard
 			}
 			if ($oAutoReloadInterval = $oAutoReloadNode->getElementsByTagName('interval')->item(0))
 			{
-				$this->iAutoReloadSec = max(5, (int)$oAutoReloadInterval->textContent);
+				$this->iAutoReloadSec = max(MetaModel::GetConfig()->Get('min_reload_interval'), (int)$oAutoReloadInterval->textContent);
 			}
 		}
 
@@ -235,7 +235,7 @@ abstract class Dashboard
 		$this->sLayoutClass = $aParams['layout_class'];
 		$this->sTitle = $aParams['title'];
 		$this->bAutoReload = $aParams['auto_reload'] == 'true';
-		$this->iAutoReloadSec = max(5, (int) $aParams['auto_reload_sec']);
+		$this->iAutoReloadSec = max(MetaModel::GetConfig()->Get('min_reload_interval'), (int) $aParams['auto_reload_sec']);
 		
 		foreach($aParams['cells'] as $aCell)
 		{
@@ -300,7 +300,7 @@ abstract class Dashboard
 
 	public function SetAutoReloadInterval($iAutoReloadSec)
 	{
-		$this->iAutoReloadSec = max(5, (int)$iAutoReloadSec);
+		$this->iAutoReloadSec = max(MetaModel::GetConfig()->Get('min_reload_interval'), (int)$iAutoReloadSec);
 	}
 
 	public function AddDashlet($oDashlet)
@@ -357,16 +357,17 @@ abstract class Dashboard
 		$oField = new DesignerBooleanField('auto_reload', Dict::S('UI:DashboardEdit:AutoReload'), $this->bAutoReload);
 		$oForm->AddField($oField);
 
-		$oField = new DesignerTextField('auto_reload_sec', Dict::S('UI:DashboardEdit:AutoReloadSec'), $this->iAutoReloadSec);
-		$oField->SetValidationPattern('^$|^0*([5-9]|[1-9][0-9]+)$'); // Can be empty, or a number > 4
+		$oField = new DesignerIntegerField('auto_reload_sec', Dict::S('UI:DashboardEdit:AutoReloadSec'), $this->iAutoReloadSec);
+		$oField->SetBoundaries(MetaModel::GetConfig()->Get('min_reload_interval'), null); // no upper limit
 		$oForm->AddField($oField);
+
 
 		$this->SetFormParams($oForm);
 		$oForm->RenderAsPropertySheet($oPage, false, '.itop-dashboard');	
 
 		$oPage->add('</div>');
 
-		$sRateTitle = addslashes(Dict::S('UI:DashboardEdit:AutoReloadSec+'));
+		$sRateTitle = addslashes(Dict::Format('UI:DashboardEdit:AutoReloadSec+', MetaModel::GetConfig()->Get('min_reload_interval')));
 		$oPage->add_ready_script(
 <<<EOF
 	// Note: the title gets deleted by the validation mechanism
