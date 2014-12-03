@@ -1,4 +1,8 @@
-﻿iTop - version 2.1.0 Beta - 12-Nov-2014
+============================================
+WARNING - THIS IS NOT AN OFFICIAL RELEASE!!!
+TO BE USED FOR INTERNAL PURPOSES ONLY!
+============================================
+iTop - version 2.1.0 Beta3 - ??-Dec-2014
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -31,7 +35,7 @@ This version brings a number of bug fixes since 2.0.3 and a few enhancements, na
 - Automated data backups, and manual backup/restore
 - Excel exports
 
-... and about 60 bug fixes!
+... and about 80 bug fixes!
 
 1.2 Should I upgrade to 2.1.0?
     -------------------------------
@@ -216,12 +220,18 @@ from any list of objects.
 Usability
 --------------------
 #1011 Proper resizing of the dialog box for managing 1:n links.
-#974 prevent multiple javascript refresh when reloading the "initial state" of a ticket.
+#974  Prevent multiple javascript refresh when reloading the "initial state" of a ticket.
+#985  Preserve the displayed sort order when refreshing a table.
+#1016 Record the displayed value of the database_table_name field in the database. This happens:
+ - when creating a new Synchro Data Source
+ - when modifying an "old" Synchro Data Source for which the field was empty.
 
 
 Scalability / Performance
 -------------------------
-#965 Since 2.0.3, for each synchronized object, around 100 queries are performed (2 are required), and this is multiplied by the number of duplicate replicas (then resulting in a significant slowdown).
+#965  Since 2.0.3, for each synchronized object, around 100 queries are performed (2 are required), and this is multiplied by the number of duplicate replicas (then resulting in a significant slowdown).
+#1020 Restrict dashboard/shortcut refresh interval (new parameter: min_reload_interval)
+#1028 Speed up the display of history and object creation (regression since 2.0.3). Beware, conversion time at setup can be long if the history table is big.
 
 
 Notifications
@@ -259,6 +269,19 @@ Dehardcoded the size of the attachments preview
 #976: make sure that we do not bypass the method that computes the reference for newly created tickets.
 Protect dashboards against invalid queries in "grouped by" dashlets.
 Legacy user rights management: allow the deletion of a profile in one step (it was nearly impossible because of the numerous related records, mainly of type URP_ActionGrant, for which iTop was requesting a manual deletion)
+#1026 CSV import of tickets with impact = '', issuing a Notice
+#1021 Better alignment of multiple header dashlets in the same cell.
+#1027 CSV import failing abruptely in case of ambiguous reconciliation on an external key. Regression introduced in 2.0.3.
+#1030 Missing values in the history tab (TTO/TTR) (since 2.0.2) There is no data loss: changes were correctly made and all the changes already recorded will be correctly displayed with the current fix.
+#975  Modified the enumerated list for model type in order to manage Phone CIs
+Allow linkage of organization to a Delivery model, directly from the tab "Customers"
+More meta information about the interfaces.
+Replaced provider_name by provider_id in the search form of service-subcategories
+Reviewed the french translation
+Added a tab to link a problem to incidents
+Missing translation for the tab "related requests"
+#1022 Do cascade the resolution of an incident to its child requests
+Prevent the JS validation (on focus) to create multiple entries for the same field, since it breaks the validation.
 
 
 Extending the data model
@@ -266,6 +289,7 @@ Extending the data model
 #972 Incomprehensible error message during setup, with a sample extension provided by Combodo! (empty user rights tag)
 #971 XML: could not specify an icon as a path to a file
 User rights: deny on a parent class must give DENY even if the class is explicitely ALLOW on the same profile (that was already working if the rules are given on several profiles). Added a config flag to force the legacy algorithm (user_rights_legacy, defaulting to false)
+#1029 Got rid of tags <format> that were not used at all and that were really misleading extension developers
 
 Improved the XML format, changing from 1.0 to 1.1
 - The change is ascendant compatible (automatically converted into 1.1 by ModelFactory) and thus sould be transparent: could may leave your extensions unchanged if you do not need to benefit from the new format
@@ -273,6 +297,8 @@ Improved the XML format, changing from 1.0 to 1.1
 - Added an id on the user rights profile/actions to allow a finer granularity for the deltas.
 - New concept: HighlightScale to avoid overloading methods GetIcon and GetHilightClass...
 - Added an id on the transitions to allow a finer granularity for the deltas.
+- Rework of the lifecycle/actions to ease the extensibility (Generic handlers replacing the specific ones: Rest, Copy, SetCurrentDate, SetCurrentUser, SetElapsedTime)
+
 
 Internals
 ----------------------
@@ -288,6 +314,12 @@ Bug fix: FetchAssoc was broken when dealing with in-memory sets.
 Improved the processing of background task to enable more advanced functionalities like queuing
 Support of more sophisticated forms layout...
 Declaration of generic methods which can be run on tickets.
+Enhanced reporting during the setup: all the queries (create table / alter table) are now logged into "setup.log" along with their execution time.
+Proper handling of the validation of subforms...
+Instrumented the code to ease the troubleshooting of the computing of working hours
+New function: ormStopWatch::GetElapsedTime to compute the cumulated elapsed time on a stop watch still running -not used yet (but tested!)
+Read-only mode for icon selector widget: display at least the icon.
+Predefined objects are now handled by RuntimeEnvironment
 
 Packaging
 -----------------------
@@ -325,3 +357,4 @@ Tested with IE8 and IE9, Firefox 3.6 up to Firefox 24 and Chrome. Be aware that 
 #343 	CKEditor (HTML Editor) not compatible with direct object creation on ExtKeys
 #350 	Object edition form: validation does not tell which field has a problem
 #730 	Leaving temporary files when performing a backup of the data during installation
+#1034	Excel export on the command-line ignoring the list of fields
