@@ -254,8 +254,8 @@ class ShortcutOQL extends Shortcut
 		$oField = new DesignerBooleanField('auto_reload', Dict::S('Class:ShortcutOQL/Attribute:auto_reload'), false);
 		$oForm->AddField($oField);
 
-		$oField = new DesignerTextField('auto_reload_sec', Dict::S('Class:ShortcutOQL/Attribute:auto_reload_sec'), MetaModel::GetConfig()->GetStandardReloadInterval());
-		$oField->SetValidationPattern('^$|^0*([5-9]|[1-9][0-9]+)$'); // Can be empty, or a number > 4
+		$oField = new DesignerIntegerField('auto_reload_sec', Dict::S('Class:ShortcutOQL/Attribute:auto_reload_sec'), MetaModel::GetConfig()->GetStandardReloadInterval());
+		$oField->SetBoundaries(MetaModel::GetConfig()->Get('min_reload_interval'), null); // no upper limit
 		$oField->SetMandatory(false);
 		$oForm->AddField($oField);
 
@@ -284,7 +284,7 @@ class ShortcutOQL extends Shortcut
 		$oAppContext = new ApplicationContext();
 		$sContext = $oAppContext->GetForLink();
 
-		$sRateTitle = addslashes(Dict::S('Class:ShortcutOQL/Attribute:auto_reload_sec+'));
+		$sRateTitle = addslashes(Dict::Format('Class:ShortcutOQL/Attribute:auto_reload_sec/tip', MetaModel::GetConfig()->Get('min_reload_interval')));
 
 		$oPage->add_ready_script(
 <<<EOF

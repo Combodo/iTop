@@ -1020,7 +1020,7 @@ EOF
 		$iAutoReload = (int)$aValues['auto_reload_sec'];
 		if (($aValues['auto_reload']) && ($iAutoReload > 0))
 		{
-			$oShortcut->Set("auto_reload_sec", max(5, $iAutoReload));
+			$oShortcut->Set("auto_reload_sec", max(MetaModel::GetConfig()->Get('min_reload_interval'), $iAutoReload));
 			$oShortcut->Set("auto_reload", 'custom');
 		}
 		$iId = $oShortcut->DBInsertNoReload();
