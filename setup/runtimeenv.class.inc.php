@@ -47,6 +47,18 @@ class RunTimeEnvironment
 	}
 
 	/**
+	 * Callback function for logging the queries run by the setup.
+	 * According to the documentation the function must be defined before passing it to call_user_func...
+	 * @param string $sQuery
+	 * @param float $fDuration
+	 * @return void
+	 */
+	public function LogQueryCallback($sQuery, $fDuration)
+	{
+		$this->log_info(sprintf('%.3fs - query: %s ', $fDuration, $sQuery));
+	}
+	
+	/**
 	 * Helper function to initialize the ORM and load the data model
 	 * from the given file
 	 * @param $oConfig object The configuration (volatile, not necessarily already on disk)
@@ -411,7 +423,7 @@ class RunTimeEnvironment
 		{
 			if (!MetaModel::DBExists(/* bMustBeComplete */ false))
 			{
-				MetaModel::DBCreate();
+				MetaModel::DBCreate(array($this, 'LogQueryCallback'));
 				$this->log_ok("Database structure successfully created.");
 			}
 			else
@@ -430,7 +442,7 @@ class RunTimeEnvironment
 		{
 			if (MetaModel::DBExists(/* bMustBeComplete */ false))
 			{
-				MetaModel::DBCreate();
+				MetaModel::DBCreate(array($this, 'LogQueryCallback'));
 				$this->log_ok("Database structure successfully updated.");
 	
 				// Check (and update only if it seems needed) the hierarchical keys

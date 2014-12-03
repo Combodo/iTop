@@ -3801,7 +3801,7 @@ abstract class MetaModel
 	}
 
 
-	public static function DBCreate()
+	public static function DBCreate($aCallback = null)
 	{
 		// Note: we have to check if the DB does exist, because we may share the DB
 		//       with other applications (in which case the DB does exist, not the tables with the given prefix)
@@ -3809,18 +3809,24 @@ abstract class MetaModel
 		{
 			CMDBSource::CreateDB(self::$m_sDBName);
 		}
-		self::DBCreateTables();
+		self::DBCreateTables($aCallback);
 		self::DBCreateViews();
 	}
 
-	protected static function DBCreateTables()
+	protected static function DBCreateTables($aCallback = null)
 	{
 		list($aErrors, $aSugFix, $aCondensedQueries) = self::DBCheckFormat();
 
 		//$sSQL = implode('; ', $aCondensedQueries); Does not work - multiple queries not allowed
 		foreach($aCondensedQueries as $sQuery)
 		{
+			$fStart = microtime(true);
 			CMDBSource::CreateTable($sQuery);
+			$fDuration = microtime(true) - $fStart;
+			if ($aCallback != null)
+			{
+				call_user_func($aCallback, $sQuery, $fDuration);
+			}
 		}
 	}
 
