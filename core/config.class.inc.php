@@ -792,7 +792,15 @@ class Config
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
-		),		
+		),
+		'min_reload_interval' => array(
+			'type' => 'integer',
+			'description' => 'Minimum refresh interval (seconds) for dashboards, shortcuts, etc. Even if the interval is set programmatically, it is forced to that minimum',
+			'default' => 5, // In iTop 2.0.3, this was the hardcoded value
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)

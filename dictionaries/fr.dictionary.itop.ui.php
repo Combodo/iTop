@@ -934,7 +934,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:DashboardEdit:DashboardTitle' => 'Titre',
 	'UI:DashboardEdit:AutoReload' => 'Réactualisation automatique',
 	'UI:DashboardEdit:AutoReloadSec' => 'Réactualisation toutes les (secondes)',
-	'UI:DashboardEdit:AutoReloadSec+' => 'Le minimum permis est de 5 secondes',
+	'UI:DashboardEdit:AutoReloadSec+' => 'Le minimum permis est de %1$d secondes',
 	'UI:DashboardEdit:Layout' => 'Mise en page',
 	'UI:DashboardEdit:Properties' => 'Propriétés du tableau de bord',
 	'UI:DashboardEdit:Dashlets' => 'Indicateurs',	
@@ -1033,7 +1033,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Désactivée',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Personnalisée',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Réactualisation toutes les (secondes)',
-	'Class:ShortcutOQL/Attribute:auto_reload_sec+' => 'Le minimum permis est de 5 secondes',
+	'Class:ShortcutOQL/Attribute:auto_reload_sec/tip' => 'Le minimum permis est de %1$d secondes',
 
 	'UI:FillAllMandatoryFields' => 'Veuillez remplir tous les champs obligatoires.',
 	'UI:ValueMustBeSet' => 'Veuillez spécifier une valeur pour ce champ',

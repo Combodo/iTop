@@ -297,6 +297,77 @@ function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId, aForbidden
 	}
 }
 
+function ValidateInteger(sFieldId, bMandatory, sFormId, iMin, iMax, sExplainFormat)
+{
+	var currentVal = $('#'+sFieldId).val();
+	var bValid = true;
+	var sMessage = null;
+	
+	if (bMandatory && (currentVal == ''))
+	{
+		bValid = false;
+	}
+
+	re = new RegExp('^$|^-?[0-9]+$');
+	bValid = re.test(currentVal);
+
+	if (bValid && (currentVal != ''))
+	{
+		// It is a valid number, let's check the boundaries
+		var iValue = parseInt(currentVal, 10);
+	
+		if ((iMin != null) && (iValue < iMin))
+		{
+			bValid = false;
+		}
+	
+		if ((iMax != null) && (iValue > iMax))
+		{
+			bValid = false;
+		}
+
+		if (!bValid && (sExplainFormat != undefined))
+		{
+			sMessage = sExplainFormat;
+		}
+	}
+
+	if (oFormValidation[sFormId] == undefined) oFormValidation[sFormId] = [];
+	if (!bValid)
+	{
+		$('#v_'+sFieldId).addClass('ui-state-error');
+		iFieldIdPos = jQuery.inArray(sFieldId, oFormValidation[sFormId]);
+		if (iFieldIdPos == -1)
+		{
+			oFormValidation[sFormId].push(sFieldId);			
+		}
+		if (sMessage)
+		{
+			$('#'+sFieldId).attr('title', sMessage).tooltip();
+			if ($('#'+sFieldId).is(":focus"))
+			{
+				$('#'+sFieldId).tooltip('open');
+			}
+		}
+	}
+	else
+	{
+		$('#v_'+sFieldId).removeClass('ui-state-error');
+		if ($('#'+sFieldId).data('uiTooltip'))
+		{
+			$('#'+sFieldId).tooltip('close');
+		}
+		$('#'+sFieldId).removeAttr('title');
+		// Remove the element from the array 
+		iFieldIdPos = jQuery.inArray(sFieldId, oFormValidation[sFormId]);
+		if (iFieldIdPos > -1)
+		{
+			oFormValidation[sFormId].splice(iFieldIdPos, 1);			
+		}
+	}
+}
+
+
 function ValidateForm(sFormId, bValidateAll)
 {
 	oFormValidation[sFormId] = [];

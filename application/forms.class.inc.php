@@ -954,6 +954,74 @@ EOF
 	}
 }
 
+class DesignerIntegerField extends DesignerFormField
+{
+	protected $iMin; // Lower boundary, inclusive
+	protected $iMax; // Higher boundary, inclusive
+
+	public function __construct($sCode, $sLabel = '', $defaultValue = '')
+	{
+		parent::__construct($sCode, $sLabel, $defaultValue);
+		$this->iMin = 0; // Positive integer is the default
+		$this->iMax = null;
+	}
+
+	public function SetBoundaries($iMin = null, $iMax = null)
+	{
+		$this->iMin = $iMin;
+		$this->iMax = $iMax;
+	}
+	
+	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
+	{
+		$sId = $this->oForm->GetFieldId($this->sCode);
+		
+		$sName = $this->oForm->GetFieldName($this->sCode);
+		if ($this->IsReadOnly())
+		{
+			$sHtmlValue = "<span>".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\"/></span>";
+		}
+		else
+		{
+			$sMin = json_encode($this->iMin);
+			$sMax = json_encode($this->iMax);
+			$sMandatory = $this->bMandatory ? 'true' :  'false';
+			$oP->add_ready_script(
+<<<EOF
+$('#$sId').bind('change keyup validate', function() { ValidateInteger('$sId', $sMandatory, '$sFormId', $sMin, $sMax); } );
+{
+	var myTimer = null;
+	$('#$sId').bind('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
+}
+EOF
+			);
+			$sCSSClasses = '';
+			if (count($this->aCSSClasses) > 0)
+			{
+				$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
+			}
+			$sHtmlValue = "<input type=\"text\" $sCSSClasses id=\"$sId\" name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\">";
+		}
+		return array('label' => $this->sLabel, 'value' => $sHtmlValue);
+	}
+
+	public function ReadParam(&$aValues)
+	{
+		parent::ReadParam($aValues);
+
+		if (!is_null($this->iMin) && ($aValues[$this->sCode] < $this->iMin))
+		{
+			// Reject the value...
+			$aValues[$this->sCode] = $this->defaultValue;
+		}
+		if (!is_null($this->iMax) && ($aValues[$this->sCode] > $this->iMax))
+		{
+			// Reject the value...
+			$aValues[$this->sCode] = $this->defaultValue;
+		}
+	}
+}
+
 class DesignerComboField extends DesignerFormField
 {
 	protected $aAllowedValues;

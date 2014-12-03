@@ -226,7 +226,7 @@ class DisplayBlock
 				if (is_numeric($aExtraParams['auto_reload']) && ($aExtraParams['auto_reload'] > 0))
 				{
 					$bAutoReload = true;
-					$iReloadInterval = max(5, $aExtraParams['auto_reload'])*1000;
+					$iReloadInterval = max(MetaModel::GetConfig()->Get('min_reload_interval'), $aExtraParams['auto_reload'])*1000;
 				}
 				else
 				{

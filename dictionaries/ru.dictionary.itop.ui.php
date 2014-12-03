@@ -1077,7 +1077,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:DashboardEdit:DashboardTitle' => 'Заголовок',
 	'UI:DashboardEdit:AutoReload' => 'Обновлять автоматически',
 	'UI:DashboardEdit:AutoReloadSec' => 'Интервал обновления (секунды)',
-	'UI:DashboardEdit:AutoReloadSec+' => 'Минимальный интервал 5 секунд',
+	'UI:DashboardEdit:AutoReloadSec+' => 'Минимальный интервал %1$d секунд',
 
 	'UI:DashboardEdit:Layout' => 'Макет',
 	'UI:DashboardEdit:Properties' => 'Свойства дашборда',
@@ -1177,7 +1177,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Disabled',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Custom rate',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Automatic refresh interval (seconds)',
-	'Class:ShortcutOQL/Attribute:auto_reload_sec+' => 'The minimum allowed is 5 seconds',
+	'Class:ShortcutOQL/Attribute:auto_reload_sec/tip' => 'The minimum allowed is %1$d seconds',
 
 	'UI:FillAllMandatoryFields' => 'Пожалуйста, заполните все обязательные поля.',
 	
