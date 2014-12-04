@@ -624,8 +624,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:Synchro:NeverRun' => 'Este sincronismo nunca foi executado. Sem registo ainda.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'A última sincronização terminou em %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'A sincronização começou em %1$s ainda está em execução...',
-	'Menu:DataSources' => 'Fontes de dados de sincronização',
-	'Menu:DataSources+' => 'Todas fontes de dados de sincronização',
+	'Menu:DataSources' => 'Fontes de dados de sincronização', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => 'Todas fontes de dados de sincronização', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Ignoradas (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => 'Desaparecido (%1$s)',
 	'Core:Synchro:label_repl_existing' => 'Saindo (%1$s)',

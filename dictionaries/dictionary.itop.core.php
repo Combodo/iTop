@@ -628,8 +628,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:Synchro:NeverRun' => 'This synchro was never run. No log yet.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'The latest synchronization ended on %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'The synchronization started on %1$s is still running...',
-	'Menu:DataSources' => 'Synchronization Data Sources',
-	'Menu:DataSources+' => 'All Synchronization Data Sources',
+	'Menu:DataSources' => 'Synchronization Data Sources', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => 'All Synchronization Data Sources', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Ignored (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => 'Disappeared (%1$s)',
 	'Core:Synchro:label_repl_existing' => 'Existing (%1$s)',

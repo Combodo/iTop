@@ -426,8 +426,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Core:Synchro:NeverRun' => 'Ez a szinkronizáció még soha nem futott. Nincs még napló bejegyzés.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'Az utolsó szinkronizáció lefutásának időpontja: %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Az szinkronizáció elindut %1$s, de még fut.',
-	'Menu:DataSources' => 'Szinkronizált adatforrások',
-	'Menu:DataSources+' => '',
+	'Menu:DataSources' => 'Szinkronizált adatforrások', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Figyelmen kívül hagyott (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => 'Elveszett (%1$s)',
 	'Core:Synchro:label_repl_existing' => 'Létező (%1$s)',

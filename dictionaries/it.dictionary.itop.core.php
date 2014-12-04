@@ -595,8 +595,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Core:Synchro:NeverRun' => 'Questa sincronizzazione non è mai stata eseguita. Nessun Log ancora...',
 	'Core:Synchro:SynchroEndedOn_Date' => 'L\'ultima sincronizzazione si è conclusa il %1$s.~~',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'La sincronizzazione è iniziata il %1$s è ancora in esecuzione...~~',
-	'Menu:DataSources' => 'Sorgente di sincronizzazione dei dati',
-	'Menu:DataSources+' => '',
+	'Menu:DataSources' => 'Sorgente di sincronizzazione dei dati', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Ignorato(%1$s)',
 	'Core:Synchro:label_repl_disappeared' => 'Scomparso (%1$s)',
 	'Core:Synchro:label_repl_existing' => 'Esistente (%1$s)',

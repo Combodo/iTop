@@ -1085,6 +1085,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:Typology+' => 'トポロジー構成',
 	'Menu:Software' => 'ソフトウエアカタログ',
 	'Menu:Software+' => 'ソフトウエアカタログ',
+	'Menu:OSVersion' => 'OS バージョン',
+	'Menu:OSVersion+' => '',
 	'UI_WelcomeMenu_AllConfigItems' => 'サマリー',
 	'Menu:ConfigManagement:Typology' => '分類構成',
 	'Server:baseinfo' => '基本情報',

@@ -311,10 +311,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'BooleanLabel:yes' => 'si',
 	'BooleanLabel:no' => 'no',
-	'Menu:WelcomeMenu' => 'Bienvenido',
-	'Menu:WelcomeMenu+' => 'Bienvenido a iTop',
-	'Menu:WelcomeMenuPage' => 'Bienvenido',
-	'Menu:WelcomeMenuPage+' => 'Bienvenido a iTop',
+	'Menu:WelcomeMenu' => 'Bienvenido', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => 'Bienvenido a iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage' => 'Bienvenido', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage+' => 'Bienvenido a iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => 'Bienvenido a iTop',
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop es un completo portal de administración de servicios de TI basado en código abierto.</p>
@@ -824,9 +824,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Vinculo entre %1$s y %2$s',
 	'UI:UserManagement:LinkBetween_User_And_Org' => 'Vínculo entre %1$s y %2$s',
 	
-	'Menu:AdminTools' => 'Herramientas Administrativas',
-	'Menu:AdminTools+' => 'Herramientas Administrativas',
-	'Menu:AdminTools?' => 'Herramientas accesibles sólo a usuarios con Perfil de administrador',
+	'Menu:AdminTools' => 'Herramientas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools+' => 'Herramientas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools?' => 'Herramientas accesibles sólo a usuarios con Perfil de administrador', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:ChangeManagementMenu' => 'Control de Cambios',
 	'UI:ChangeManagementMenu+' => 'Control de Cambios',
@@ -872,17 +872,17 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI-ContactsMenu-ContactsByType' => 'Contactos por Tipo',
 	'UI-ContactsMenu-ContactsByStatus' => 'Contactos por Estatus',
 
-	'Menu:CSVImportMenu' => 'Importar CSV',
-	'Menu:CSVImportMenu+' => 'Creación o Actualización Másiva',
+	'Menu:CSVImportMenu' => 'Importar CSV', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu+' => 'Creación o Actualización Másiva', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:DataModelMenu' => 'Modelo de Datos',
-	'Menu:DataModelMenu+' => 'Resumen del Modelo de Datos',
+	'Menu:DataModelMenu' => 'Modelo de Datos', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => 'Resumen del Modelo de Datos', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:ExportMenu' => 'Exportar',
-	'Menu:ExportMenu+' => 'Exportar los Resultados de Cualquier Consulta en HTML, CSV o XML',
+	'Menu:ExportMenu' => 'Exportar', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu+' => 'Exportar los Resultados de Cualquier Consulta en HTML, CSV o XML', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:NotificationsMenu' => 'Notificaciones',
-	'Menu:NotificationsMenu+' => 'Configuración de las Notificaciones',
+	'Menu:NotificationsMenu' => 'Notificaciones', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu+' => 'Configuración de las Notificaciones', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Configuración de las <span class="hilite">Notificaciones</span>',
 	'UI:NotificationsMenu:Help' => 'Ayuda',
 	'UI:NotificationsMenu:HelpContent' => '<p>En iTop las notificaciones son completamente personalizables. Están basadas en dos conjuntos de objetos: <i>Disparadores y Acciones</i>.</p>
@@ -910,36 +910,32 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:NotificationsMenu:Actions' => 'Acciones',
 	'UI:NotificationsMenu:AvailableActions' => 'Acciones Disponibles',
 
-	'Menu:AuditCategories' => 'Auditar Categorías',
-	'Menu:AuditCategories+' => 'Auditar Categorías',
-	'Menu:Notifications:Title' => 'Auditar Categorías',
+	'Menu:AuditCategories' => 'Auditar Categorías', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+' => 'Auditar Categorías', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => 'Auditar Categorías', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:RunQueriesMenu' => 'Ejecutar Consultas',
-	'Menu:RunQueriesMenu+' => 'Ejecutar Cualquier Consulta',
+	'Menu:RunQueriesMenu' => 'Ejecutar Consultas', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => 'Ejecutar Cualquier Consulta', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:QueryMenu' => 'Libreta de Consultas',
-	'Menu:QueryMenu+' => 'Libreta de Consultas',
+	'Menu:QueryMenu' => 'Libreta de Consultas', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => 'Libreta de Consultas', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataAdministration' => 'Administración de Datos',
-	'Menu:DataAdministration+' => 'Administración de Datos',
+	'Menu:DataAdministration' => 'Administración de Datos', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => 'Administración de Datos', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:UniversalSearchMenu' => 'Búsqueda Universal',
-	'Menu:UniversalSearchMenu+' => 'Buscar cualquier cosa',
+	'Menu:UniversalSearchMenu' => 'Búsqueda Universal', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => 'Buscar cualquier cosa', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:ApplicationLogMenu' => 'Bitácoras de la Aplicación',
-	'Menu:ApplicationLogMenu+' => 'Bitácoras de la Aplicación',
-	'Menu:ApplicationLogMenu:Title' => 'Bitácoras de la Aplicación',
+	'Menu:UserManagementMenu' => 'Administración de Usuarios', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => 'Administración de Usuarios', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'Administración de Usuarios',
-	'Menu:UserManagementMenu+' => 'Administración de Usuarios',
+	'Menu:ProfilesMenu' => 'Perfiles', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+' => 'Perfiles', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Perfiles', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ProfilesMenu' => 'Perfiles',
-	'Menu:ProfilesMenu+' => 'Perfiles',
-	'Menu:ProfilesMenu:Title' => 'Perfiles',
-
-	'Menu:UserAccountsMenu' => 'Cuentas de Usuario',
-	'Menu:UserAccountsMenu+' => 'Cuentas de Usuario',
-	'Menu:UserAccountsMenu:Title' => 'Cuentas de Usuario',	
+	'Menu:UserAccountsMenu' => 'Cuentas de Usuario', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Cuentas de Usuario', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Cuentas de Usuario', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => 'iTop versión %1$s',
 	'UI:iTopVersion:Long' => 'iTop versión %1$s-%2$s compilada en %3$s',
@@ -1171,7 +1167,7 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:ShortcutRenameDlg:Title' => 'Renombrar Acceso Rápido',
 	'UI:ShortcutListDlg:Title' => 'Crear Acceso Rápido para la Lista',
 	'UI:ShortcutDelete:Confirm' => 'Por favor conforme que desea Eliminar el/los Acceso(s) Rápido(s)',
-	'Menu:MyShortcuts' => 'Mis Accesos Rápidos',
+	'Menu:MyShortcuts' => 'Mis Accesos Rápidos', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'Acceso Rápido',
 	'Class:Shortcut+' => 'Acceso Rápido',
 	'Class:Shortcut/Attribute:name' => 'Nombre',

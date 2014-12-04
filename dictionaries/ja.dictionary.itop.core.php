@@ -481,8 +481,8 @@ Operators:<br/>
 	'Core:Synchro:NeverRun' => 'この同期は実行されたことがありません。ログはありません。',
 	'Core:Synchro:SynchroEndedOn_Date' => '最後の同期は %1$s に終了しました。',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => '同期は %1$s に始まり、現在実行中です。',
-	'Menu:DataSources' => '同期データソース',
-	'Menu:DataSources+' => '全ての同期データソース',
+	'Menu:DataSources' => '同期データソース', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => '全ての同期データソース', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => '無視 (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => '消えた (%1$s)',
 	'Core:Synchro:label_repl_existing' => '存在 (%1$s)',
@@ -553,8 +553,6 @@ Operators:<br/>
 	'Class:Licence/Attribute:perpetual/Value:no+' => '',
 	'Class:Licence/Attribute:perpetual/Value:yes' => 'はい',
 	'Class:Licence/Attribute:perpetual/Value:yes+' => '',
-	'Menu:OSVersion' => 'OS バージョン',
-	'Menu:OSVersion+' => '',
 	'Class:Subnet/Tab:IPUsage' => 'IP 利用',
 	'Class:Subnet/Tab:IPUsage-explain' => 'インターフェースは、レンジ: <em>%1$s</em> から <em>%2$s</em>の中のIPを持っています。',
 	'Class:Subnet/Tab:FreeIPs' => 'フリーなIP',

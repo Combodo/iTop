@@ -291,10 +291,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'BooleanLabel:yes' => '是',
 	'BooleanLabel:no' => '否',
-	'Menu:WelcomeMenu' => '欢迎',
-	'Menu:WelcomeMenu+' => '欢迎来到iTop',
-	'Menu:WelcomeMenuPage' => '欢迎',
-	'Menu:WelcomeMenuPage+' => '欢迎来到iTop',
+	'Menu:WelcomeMenu' => '欢迎', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => '欢迎来到iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage' => '欢迎', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage+' => '欢迎来到iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => '欢迎来到iTop',
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop 是完全的, 开发源码的, IT 操作门户.</p>
@@ -709,9 +709,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:UserManagement:LinkBetween_User_And_Profile' => '链接 %1$s 和 %2$s',
 	'UI:UserManagement:LinkBetween_User_And_Org' => '链接 %1$s 和 %2$s',
 	
-	'Menu:AdminTools' => '管理工具',
-	'Menu:AdminTools+' => '管理工具',
-	'Menu:AdminTools?' => '具有系统管理员简档的用户才能获得的工具',
+	'Menu:AdminTools' => '管理工具', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools+' => '管理工具', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools?' => '具有系统管理员简档的用户才能获得的工具', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:ChangeManagementMenu' => '变更管理',
 	'UI:ChangeManagementMenu+' => '变更管理',
@@ -757,17 +757,17 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI-ContactsMenu-ContactsByType' => '按类别划分联系人',
 	'UI-ContactsMenu-ContactsByStatus' => '按状态划分联系人',
 
-	'Menu:CSVImportMenu' => 'CSV 导入',
-	'Menu:CSVImportMenu+' => '大批量创建或修改',
+	'Menu:CSVImportMenu' => 'CSV 导入', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu+' => '大批量创建或修改', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:DataModelMenu' => '数据模型',
-	'Menu:DataModelMenu+' => '数据模型概览',
+	'Menu:DataModelMenu' => '数据模型', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => '数据模型概览', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:ExportMenu' => '导出',
-	'Menu:ExportMenu+' => '以HTML, CSV or XML格式导出任何查询的结果',
+	'Menu:ExportMenu' => '导出', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu+' => '以HTML, CSV or XML格式导出任何查询的结果', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:NotificationsMenu' => '通知',
-	'Menu:NotificationsMenu+' => '通知的配置',
+	'Menu:NotificationsMenu' => '通知', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu+' => '通知的配置', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => '配置 <span class="hilite">通知</span>',
 	'UI:NotificationsMenu:Help' => '帮助',
 	'UI:NotificationsMenu:HelpContent' => '<p>在 iTop 中, 通知可以被完全客户化定制. 它们是基于两个对象集: <i>触发器和动作</i>.</p>
@@ -793,33 +793,29 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:NotificationsMenu:Actions' => '动作',
 	'UI:NotificationsMenu:AvailableActions' => '有效的动作',
 	
-	'Menu:AuditCategories' => '审计类目',
-	'Menu:AuditCategories+' => '审计类目',
-	'Menu:Notifications:Title' => '审计类目',
+	'Menu:AuditCategories' => '审计类目', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+' => '审计类目', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => '审计类目', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:RunQueriesMenu' => '运行查询',
-	'Menu:RunQueriesMenu+' => '运行任何查询',
+	'Menu:RunQueriesMenu' => '运行查询', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => '运行任何查询', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:DataAdministration' => '数据管理',
-	'Menu:DataAdministration+' => '数据管理',
+	'Menu:DataAdministration' => '数据管理', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => '数据管理', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:UniversalSearchMenu' => '通用搜索',
-	'Menu:UniversalSearchMenu+' => '搜索所有...',
+	'Menu:UniversalSearchMenu' => '通用搜索', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => '搜索所有...', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:ApplicationLogMenu' => 'Log de l\'application',
-	'Menu:ApplicationLogMenu+' => 'Log de l\'application',
-	'Menu:ApplicationLogMenu:Title' => 'Log de l\'application',
+	'Menu:UserManagementMenu' => '用户管理', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => '用户管理', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => '用户管理',
-	'Menu:UserManagementMenu+' => '用户管理',
+	'Menu:ProfilesMenu' => '简档', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+' => '简档', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => '简档', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ProfilesMenu' => '简档',
-	'Menu:ProfilesMenu+' => '简档',
-	'Menu:ProfilesMenu:Title' => '简档',
-
-	'Menu:UserAccountsMenu' => '用户帐户',
-	'Menu:UserAccountsMenu+' => '用户帐户',
-	'Menu:UserAccountsMenu:Title' => '用户帐户',	
+	'Menu:UserAccountsMenu' => '用户帐户', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => '用户帐户', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => '用户帐户',	 // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => 'iTop version %1$s',
 	'UI:iTopVersion:Long' => 'iTop version %1$s-%2$s built on %3$s',

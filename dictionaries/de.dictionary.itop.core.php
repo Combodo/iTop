@@ -477,8 +477,8 @@ Operatoren:<br/>
 	'Core:Synchro:NeverRun' => 'Synchronisation noch nicht erfolgt. Kein Protokoll verfügbar.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'Die letzte Synchronisation endete um %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Die Synchronisation, die um %1$s gestartet wurde, läuft noch ...',
-	'Menu:DataSources' => 'Datenquellen für die Synchronisation',
-	'Menu:DataSources+' => 'Alle Datenquellen für die Synchronisation',
+	'Menu:DataSources' => 'Datenquellen für die Synchronisation', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => 'Alle Datenquellen für die Synchronisation', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Ignoriert (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => 'Verschwunden (%1$s)',
 	'Core:Synchro:label_repl_existing' => 'Vorhanden (%1$s)',

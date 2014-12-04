@@ -292,10 +292,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'BooleanLabel:yes' => 'evet',
 	'BooleanLabel:no' => 'hayır',
-	'Menu:WelcomeMenu' => 'Hoşgeldiniz',
-	'Menu:WelcomeMenu+' => 'iTop\'a Hoşgeldiniz',
-	'Menu:WelcomeMenuPage' => 'Hoşgeldiniz',
-	'Menu:WelcomeMenuPage+' => 'iTop\'a Hoşgeldiniz',
+	'Menu:WelcomeMenu' => 'Hoşgeldiniz', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => 'iTop\'a Hoşgeldiniz', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage' => 'Hoşgeldiniz', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage+' => 'iTop\'a Hoşgeldiniz', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => 'iTop\'a Hoşgeldiniz',
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop açık kaynak Bilişim İşlem Potalıdır.</p>
@@ -710,9 +710,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:UserManagement:LinkBetween_User_And_Profile' => '%1$s ve %2$s arasındaki ilişki',
 	'UI:UserManagement:LinkBetween_User_And_Org' => '%1$s ve %2$s arasındaki ilişki',
 
-	'Menu:AdminTools' => 'Yönetim Araçları',
-	'Menu:AdminTools+' => 'Yönetim Araçları',
-	'Menu:AdminTools?' => 'Yönetici profiline izin verilen araçlar',
+	'Menu:AdminTools' => 'Yönetim Araçları', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools+' => 'Yönetim Araçları', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools?' => 'Yönetici profiline izin verilen araçlar', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:ChangeManagementMenu' => 'Değişiklik Yönetimi',
 	'UI:ChangeManagementMenu+' => 'Değişiklik Yönetimi',
@@ -758,17 +758,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI-ContactsMenu-ContactsByType' => 'Tipine göre irtibatlar',
 	'UI-ContactsMenu-ContactsByStatus' => 'Durumuna göre irtibatlar',
 
-	'Menu:CSVImportMenu' => 'CSV dışardan al',
-	'Menu:CSVImportMenu+' => 'Çoklu yaratım veya güncelleme',
+	'Menu:CSVImportMenu' => 'CSV dışardan al', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu+' => 'Çoklu yaratım veya güncelleme', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Veri Modeli',
-	'Menu:DataModelMenu+' => 'Veri Modeli Özeti',
+	'Menu:DataModelMenu' => 'Veri Modeli', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => 'Veri Modeli Özeti', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ExportMenu' => 'Dışarı ver',
-	'Menu:ExportMenu+' => 'Sorgu sonucunu HTML, CSV veya XML olarak dışarı aktar',
+	'Menu:ExportMenu' => 'Dışarı ver', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu+' => 'Sorgu sonucunu HTML, CSV veya XML olarak dışarı aktar', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:NotificationsMenu' => 'Uyarılar',
-	'Menu:NotificationsMenu+' => 'Uyarıların yapılandırılması',
+	'Menu:NotificationsMenu' => 'Uyarılar', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu+' => 'Uyarıların yapılandırılması', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => '<span class="hilite">Uyarıların</span> yapılandırılması',
 	'UI:NotificationsMenu:Help' => 'Yardım',
 	'UI:NotificationsMenu:HelpContent' => '<p>In iTop uyarı mekanizması ihtiyaca göre uyarlanabilir. Uyarılar iki tip nesne üzerine kurulmuştur: <i>tetikleme (triggers) ve işlemler (actions)</i>.</p>
@@ -794,33 +794,29 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:NotificationsMenu:Actions' => 'İşlemler',
 	'UI:NotificationsMenu:AvailableActions' => 'Kullanılabilir işlemler',
 
-	'Menu:AuditCategories' => 'Denetleme Kategorileri',
-	'Menu:AuditCategories+' => 'Denetleme Kategorileri',
-	'Menu:Notifications:Title' => 'Denetleme Kategorileri',
+	'Menu:AuditCategories' => 'Denetleme Kategorileri', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+' => 'Denetleme Kategorileri', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => 'Denetleme Kategorileri', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:RunQueriesMenu' => 'Sorgu çalıştır',
-	'Menu:RunQueriesMenu+' => 'Sorgu çalıştır',
+	'Menu:RunQueriesMenu' => 'Sorgu çalıştır', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => 'Sorgu çalıştır', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataAdministration' => 'Veri Yönetimi',
-	'Menu:DataAdministration+' => 'Veri Yönetimi',
+	'Menu:DataAdministration' => 'Veri Yönetimi', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => 'Veri Yönetimi', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UniversalSearchMenu' => 'Genel sorgu',
-	'Menu:UniversalSearchMenu+' => 'Herhangi bir arama...',
+	'Menu:UniversalSearchMenu' => 'Genel sorgu', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => 'Herhangi bir arama...', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ApplicationLogMenu' => 'Uygulama olay kayıtları',
-	'Menu:ApplicationLogMenu+' => 'Uygulama olay kayıtları',
-	'Menu:ApplicationLogMenu:Title' => 'Uygulama olay kayıtları',
+	'Menu:UserManagementMenu' => 'Kullanıcı Yönetimi', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => 'Kullanıcı Yönetimi', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'Kullanıcı Yönetimi',
-	'Menu:UserManagementMenu+' => 'Kullanıcı Yönetimi',
+	'Menu:ProfilesMenu' => 'Profiller', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+' => 'Profiller', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profiller', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ProfilesMenu' => 'Profiller',
-	'Menu:ProfilesMenu+' => 'Profiller',
-	'Menu:ProfilesMenu:Title' => 'Profiller',
-
-	'Menu:UserAccountsMenu' => 'Kullanıcı Hesapları',
-	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları',
-	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları',
+	'Menu:UserAccountsMenu' => 'Kullanıcı Hesapları', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => 'iTop versiyonu %1$s',
 	'UI:iTopVersion:Long' => 'iTop  %3$s tarihli versiyonu %1$s-%2$s',

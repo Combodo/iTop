@@ -306,10 +306,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'BooleanLabel:yes' => 'yes',
 	'BooleanLabel:no' => 'no',
-	'Menu:WelcomeMenu' => 'Добро пожаловать',
-	'Menu:WelcomeMenu+' => 'Добро пожаловать в iTop',
-	'Menu:WelcomeMenuPage' => 'Добро пожаловать',
-	'Menu:WelcomeMenuPage+' => 'Добро пожаловать в iTop',
+	'Menu:WelcomeMenu' => 'Добро пожаловать', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => 'Добро пожаловать в iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage' => 'Добро пожаловать', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage+' => 'Добро пожаловать в iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => 'Добро пожаловать в iTop',
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop является порталом оперативного централизованного управления IT инфраструктурой с открытым исходным кодом.</p>
@@ -820,9 +820,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Связь между %1$s и %2$s',
 	'UI:UserManagement:LinkBetween_User_And_Org' => 'Связь между %1$s и %2$s',
 	
-	'Menu:AdminTools' => 'Инструменты админа',
-	'Menu:AdminTools+' => 'Административные инструменты',
-	'Menu:AdminTools?' => 'Инструменты доступны только для пользователей, имеющих профиль администратора',
+	'Menu:AdminTools' => 'Инструменты админа', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools+' => 'Административные инструменты', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools?' => 'Инструменты доступны только для пользователей, имеющих профиль администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:ChangeManagementMenu' => 'Управление изменениями',
 	'UI:ChangeManagementMenu+' => 'Управление изменениями',
@@ -868,17 +868,17 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI-ContactsMenu-ContactsByType' => 'Договора по типу',
 	'UI-ContactsMenu-ContactsByStatus' => 'Договора по статусу',
 
-	'Menu:CSVImportMenu' => 'Импорт CSV',
-	'Menu:CSVImportMenu+' => 'Пакетное создание или обновление',
+	'Menu:CSVImportMenu' => 'Импорт CSV', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu+' => 'Пакетное создание или обновление', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:DataModelMenu' => 'Модель данных',
-	'Menu:DataModelMenu+' => 'Обзор модели данных',
+	'Menu:DataModelMenu' => 'Модель данных', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => 'Обзор модели данных', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:ExportMenu' => 'Экспорт',
-	'Menu:ExportMenu+' => 'Экспорт результатов любого запроса в HTML, CSV или XML',
+	'Menu:ExportMenu' => 'Экспорт', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu+' => 'Экспорт результатов любого запроса в HTML, CSV или XML', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:NotificationsMenu' => 'Уведомления',
-	'Menu:NotificationsMenu+' => 'Конфигурация уведомлений',
+	'Menu:NotificationsMenu' => 'Уведомления', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu+' => 'Конфигурация уведомлений', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Конфигурация <span class="hilite">Уведомлений</span>',
 	'UI:NotificationsMenu:Help' => 'Помощь',
 	'UI:NotificationsMenu:HelpContent' => '<p>В iTop уведомления полностью настраиваемые. Они основаны на двух наборах объектов: <i>триггеры</i> и <i>действия</i>.</p>
@@ -904,36 +904,32 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:NotificationsMenu:Actions' => 'Действия',
 	'UI:NotificationsMenu:AvailableActions' => 'Доступные действия',
 	
-	'Menu:AuditCategories' => 'Категории аудита',
-	'Menu:AuditCategories+' => 'Категории аудита',
-	'Menu:Notifications:Title' => 'Категории аудита',
+	'Menu:AuditCategories' => 'Категории аудита', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+' => 'Категории аудита', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => 'Категории аудита', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:RunQueriesMenu' => 'Выполнение запросов',
-	'Menu:RunQueriesMenu+' => 'Выполнение любых запросов',
+	'Menu:RunQueriesMenu' => 'Выполнение запросов', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => 'Выполнение любых запросов', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:QueryMenu' => 'Книга запросов',
-	'Menu:QueryMenu+' => 'Query phrasebook',
+	'Menu:QueryMenu' => 'Книга запросов', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => 'Query phrasebook', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:DataAdministration' => 'Административные данные',
-	'Menu:DataAdministration+' => 'Административные данные',
+	'Menu:DataAdministration' => 'Административные данные', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => 'Административные данные', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:UniversalSearchMenu' => 'Универсальный поиск',
-	'Menu:UniversalSearchMenu+' => 'Поиск чего угодно...',
+	'Menu:UniversalSearchMenu' => 'Универсальный поиск', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => 'Поиск чего угодно...', // Duplicated into itop-welcome-itil (will be removed from here...)
 	
-	'Menu:ApplicationLogMenu' => 'Логгирование приложения',
-	'Menu:ApplicationLogMenu+' => 'Логгирование приложения',
-	'Menu:ApplicationLogMenu:Title' => 'Логгирование приложения',
+	'Menu:UserManagementMenu' => 'Управление пользователями', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => 'Управление пользователями', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'Управление пользователями',
-	'Menu:UserManagementMenu+' => 'Управление пользователями',
+	'Menu:ProfilesMenu' => 'Профили', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+' => 'Профили', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Профили', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ProfilesMenu' => 'Профили',
-	'Menu:ProfilesMenu+' => 'Профили',
-	'Menu:ProfilesMenu:Title' => 'Профили',
-
-	'Menu:UserAccountsMenu' => 'Учетные записи пользователей',
-	'Menu:UserAccountsMenu+' => 'Учетные записи пользователей',
-	'Menu:UserAccountsMenu:Title' => 'Учетные записи пользователей',	
+	'Menu:UserAccountsMenu' => 'Учетные записи пользователей', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Учетные записи пользователей', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Учетные записи пользователей',	 // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => 'iTop версия %1$s',
 	'UI:iTopVersion:Long' => 'iTop версия %1$s-%2$s основан на %3$s',
@@ -1164,7 +1160,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:ShortcutRenameDlg:Title' => 'Переименовать ссылку',
 	'UI:ShortcutListDlg:Title' => 'Добавить в избранное ссылку на список',
 	'UI:ShortcutDelete:Confirm' => 'Подтвердите удаление ссылки (ссылок).',
-	'Menu:MyShortcuts' => 'Избранное',
+	'Menu:MyShortcuts' => 'Избранное', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'Ссылка',
 	'Class:Shortcut+' => '',
 	'Class:Shortcut/Attribute:name' => 'Название',
