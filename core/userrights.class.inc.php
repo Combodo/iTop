@@ -347,6 +347,29 @@ abstract class User extends cmdbAbstractObject
 			}					
 		}
 	}
+	
+  	public function CheckToDelete(&$oDeletionPlan)
+  	{
+  		if (MetaModel::GetConfig()->Get('demo_mode'))
+		{
+			// Users deletion is NOT allowed in demo mode
+			$oDeletionPlan->AddToDelete($this, null);
+			$oDeletionPlan->SetDeletionIssues($this, array('deletion not allowed in demo mode.'), true);
+			$oDeletionPlan->ComputeResults();
+			return false;
+		}
+		return parent::CheckToDelete($oDeletionPlan);
+  	} 
+	
+	protected function DBDeleteSingleObject()
+	{
+		if (MetaModel::GetConfig()->Get('demo_mode'))
+		{
+			// Users deletion is NOT allowed in demo mode
+			return;
+		}
+		parent::DBDeleteSingleObject();
+	}
 }
 
 /**

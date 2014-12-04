@@ -271,6 +271,19 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 	{
 		return Dict::Format('UI:UserManagement:LinkBetween_User_And_Profile', $this->Get('userlogin'), $this->Get('profile'));
 	}
+
+	public function CheckToDelete(&$oDeletionPlan)
+	{
+		if (MetaModel::GetConfig()->Get('demo_mode'))
+		{
+			// Users deletion is NOT allowed in demo mode
+			$oDeletionPlan->AddToDelete($this, null);
+			$oDeletionPlan->SetDeletionIssues($this, array('deletion not allowed in demo mode.'), true);
+			$oDeletionPlan->ComputeResults();
+			return false;
+		}
+		return parent::CheckToDelete($oDeletionPlan);
+	}
 }
 
 class URP_UserOrg extends UserRightsBaseClassGUI

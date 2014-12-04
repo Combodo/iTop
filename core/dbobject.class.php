@@ -1226,7 +1226,7 @@ abstract class DBObject implements iDisplay
 		}
 	}
 
-  	final public function CheckToDelete(&$oDeletionPlan)
+  	public function CheckToDelete(&$oDeletionPlan)
   	{
 		$this->MakeDeletionPlan($oDeletionPlan);
 		$oDeletionPlan->ComputeResults();
