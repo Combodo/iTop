@@ -1687,7 +1687,7 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">close_date</param>
+                      <param xsi:type="attcode">close_date</param>
                     </params>
                   </action>
                 </actions>
@@ -1724,7 +1724,7 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">close_date</param>
+                      <param xsi:type="attcode">close_date</param>
                     </params>
                   </action>
                 </actions>
@@ -3111,7 +3111,7 @@
                   <action>
                     <verb>Reset</verb>
                     <params>
-                      <param xsi:type="string">reason</param>
+                      <param xsi:type="attcode">reason</param>
                     </params>
                   </action>
                 </actions>
@@ -3251,7 +3251,7 @@
                   <action>
                     <verb>Reset</verb>
                     <params>
-                      <param xsi:type="string">reason</param>
+                      <param xsi:type="attcode">reason</param>
                     </params>
                   </action>
                 </actions>
@@ -3354,7 +3354,7 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">close_date</param>
+                      <param xsi:type="attcode">close_date</param>
                     </params>
                   </action>
                 </actions>
@@ -3390,7 +3390,7 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">close_date</param>
+                      <param xsi:type="attcode">close_date</param>
                     </params>
                   </action>
                 </actions>
@@ -4008,7 +4008,7 @@
                   <action>
                     <verb>Reset</verb>
                     <params>
-                      <param xsi:type="string">reason</param>
+                      <param xsi:type="attcode">reason</param>
                     </params>
                   </action>
                 </actions>
@@ -4111,7 +4111,7 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">close_date</param>
+                      <param xsi:type="attcode">close_date</param>
                     </params>
                   </action>
                 </actions>
@@ -4148,7 +4148,7 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">close_date</param>
+                      <param xsi:type="attcode">close_date</param>
                     </params>
                   </action>
                 </actions>

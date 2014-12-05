@@ -267,7 +267,7 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">resolution_date</param>
+                      <param xsi:type="attcode">resolution_date</param>
                     </params>
                   </action>
                 </actions>
@@ -322,7 +322,7 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">close_date</param>
+                      <param xsi:type="attcode">close_date</param>
                     </params>
                   </action>
                 </actions>

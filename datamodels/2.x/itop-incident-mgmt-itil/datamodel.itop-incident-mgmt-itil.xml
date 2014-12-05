@@ -486,7 +486,7 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">assignment_date</param>
+                      <param xsi:type="attcode">assignment_date</param>
                     </params>
                   </action>
                 </actions>
@@ -501,14 +501,14 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">resolution_date</param>
+                      <param xsi:type="attcode">resolution_date</param>
                     </params>
                   </action>
                   <action>
                     <verb>SetElapsedTime</verb>
                     <params>
-                      <param xsi:type="string">time_spent</param>
-                      <param xsi:type="string">start_date</param>
+                      <param xsi:type="attcode">time_spent</param>
+                      <param xsi:type="attcode">start_date</param>
                       <param xsi:type="string">DefaultWorkingTimeComputer</param>
                     </params>
                   </action>
@@ -576,7 +576,7 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">last_pending_date</param>
+                      <param xsi:type="attcode">last_pending_date</param>
                     </params>
                   </action>
                 </actions>
@@ -587,14 +587,14 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">resolution_date</param>
+                      <param xsi:type="attcode">resolution_date</param>
                     </params>
                   </action>
                   <action>
                     <verb>SetElapsedTime</verb>
                     <params>
-                      <param xsi:type="string">time_spent</param>
-                      <param xsi:type="string">start_date</param>
+                      <param xsi:type="attcode">time_spent</param>
+                      <param xsi:type="attcode">start_date</param>
                       <param xsi:type="string">DefaultWorkingTimeComputer</param>
                     </params>
                   </action>
@@ -618,14 +618,14 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">resolution_date</param>
+                      <param xsi:type="attcode">resolution_date</param>
                     </params>
                   </action>
                   <action>
                     <verb>SetElapsedTime</verb>
                     <params>
-                      <param xsi:type="string">time_spent</param>
-                      <param xsi:type="string">start_date</param>
+                      <param xsi:type="attcode">time_spent</param>
+                      <param xsi:type="attcode">start_date</param>
                       <param xsi:type="string">DefaultWorkingTimeComputer</param>
                     </params>
                   </action>
@@ -650,7 +650,7 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">last_pending_date</param>
+                      <param xsi:type="attcode">last_pending_date</param>
                     </params>
                   </action>
                 </actions>
@@ -661,14 +661,14 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">resolution_date</param>
+                      <param xsi:type="attcode">resolution_date</param>
                     </params>
                   </action>
                   <action>
                     <verb>SetElapsedTime</verb>
                     <params>
-                      <param xsi:type="string">time_spent</param>
-                      <param xsi:type="string">start_date</param>
+                      <param xsi:type="attcode">time_spent</param>
+                      <param xsi:type="attcode">start_date</param>
                       <param xsi:type="string">DefaultWorkingTimeComputer</param>
                     </params>
                   </action>
@@ -688,14 +688,14 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">resolution_date</param>
+                      <param xsi:type="attcode">resolution_date</param>
                     </params>
                   </action>
                   <action>
                     <verb>SetElapsedTime</verb>
                     <params>
-                      <param xsi:type="string">time_spent</param>
-                      <param xsi:type="string">start_date</param>
+                      <param xsi:type="attcode">time_spent</param>
+                      <param xsi:type="attcode">start_date</param>
                       <param xsi:type="string">DefaultWorkingTimeComputer</param>
                     </params>
                   </action>
@@ -739,14 +739,14 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">resolution_date</param>
+                      <param xsi:type="attcode">resolution_date</param>
                     </params>
                   </action>
                   <action>
                     <verb>SetElapsedTime</verb>
                     <params>
-                      <param xsi:type="string">time_spent</param>
-                      <param xsi:type="string">start_date</param>
+                      <param xsi:type="attcode">time_spent</param>
+                      <param xsi:type="attcode">start_date</param>
                       <param xsi:type="string">DefaultWorkingTimeComputer</param>
                     </params>
                   </action>
@@ -848,7 +848,7 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">close_date</param>
+                      <param xsi:type="attcode">close_date</param>
                     </params>
                   </action>
                 </actions>
@@ -864,14 +864,14 @@
                   <action>
                     <verb>SetCurrentDate</verb>
                     <params>
-                      <param xsi:type="string">resolution_date</param>
+                      <param xsi:type="attcode">resolution_date</param>
                     </params>
                   </action>
                   <action>
                     <verb>SetElapsedTime</verb>
                     <params>
-                      <param xsi:type="string">time_spent</param>
-                      <param xsi:type="string">start_date</param>
+                      <param xsi:type="attcode">time_spent</param>
+                      <param xsi:type="attcode">start_date</param>
                       <param xsi:type="string">DefaultWorkingTimeComputer</param>
                     </params>
                   </action>
