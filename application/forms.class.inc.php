@@ -358,6 +358,10 @@ $('#$sDialogId').dialog({
 		{ text: "$sOkButtonLabel", click: function() {
 			var oForm = $(this).closest('.ui-dialog').find('form');
 			oForm.submit();
+			if (AnimateDlgButtons)
+			{
+				AnimateDlgButtons(this);
+			}
 		} },
 		{ text: "$sCancelButtonLabel", click: function() { KillAllMenus(); $(this).dialog( "close" ); $(this).remove(); } },
 		],
