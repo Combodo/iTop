@@ -1993,7 +1993,7 @@ class AttributeCaseLog extends AttributeLongText
 
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
-		if (!isset($aCols[$sPrefix]))
+		if (!array_key_exists($sPrefix, $aCols))
 		{
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
