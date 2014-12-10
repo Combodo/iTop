@@ -23,7 +23,7 @@ SetupWebPage::AddModule(
 	array(
 		// Identification
 		//
-		'label' => 'Tickets attachments',
+		'label' => 'Tickets Attachments',
 		'category' => 'business',
 
 		// Setup

@@ -7,7 +7,7 @@ SetupWebPage::AddModule(
 	array(
 		// Identification
 		//
-		'label' => 'Service Management (services, SLAs, contracts) for Service providers',
+		'label' => 'Service Management for Service Providers',
 		'category' => 'business',
 
 		// Setup

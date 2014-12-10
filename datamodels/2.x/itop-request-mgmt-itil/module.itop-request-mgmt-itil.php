@@ -7,7 +7,7 @@ SetupWebPage::AddModule(
 	array(
 		// Identification
 		//
-		'label' => 'User request management ITIL V3',
+		'label' => 'User request Management ITIL',
 		'category' => 'business',
 
 		// Setup

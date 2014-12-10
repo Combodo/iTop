@@ -29,7 +29,7 @@ SetupWebPage::AddModule(
 	array(
 		// Identification
 		//
-		'label' => 'End User Devices management',
+		'label' => 'End-user Devices Management',
 		'category' => 'business',
 
 		// Setup

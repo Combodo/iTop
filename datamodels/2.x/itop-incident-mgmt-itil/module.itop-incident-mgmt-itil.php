@@ -7,7 +7,7 @@ SetupWebPage::AddModule(
 	array(
 		// Identification
 		//
-		'label' => 'Incident Management ITIL V3',
+		'label' => 'Incident Management ITIL',
 		'category' => 'business',
 
 		// Setup
