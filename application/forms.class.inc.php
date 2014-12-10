@@ -255,9 +255,21 @@ class DesignerForm
 					$sAutoApply = $oField->IsAutoApply() ? 'true' : 'false';
 					$sHandlerEquals = $oField->GetHandlerEquals();
 					$sHandlerGetValue = $oField->GetHandlerGetValue();
+					
+					$sWidgetClass = $oField->GetWidgetClass();
+					$sJSExtraParams = '';
+					if (count($oField->GetWidgetExtraParams()) > 0)
+					{
+						$aExtraParams = array();
+						foreach($oField->GetWidgetExtraParams() as $key=> $value)
+						{
+							$aExtraParams[] = "'$key': ".json_encode($value);
+						}
+						$sJSExtraParams = ', '.implode(', ', $aExtraParams);						
+					}
 					$this->AddReadyScript(
 <<<EOF
-$('#row_$sFieldId').property_field({parent_selector: $sNotifyParentSelectorJS, field_id: '$sFieldId', equals: $sHandlerEquals, get_field_value: $sHandlerGetValue, auto_apply: $sAutoApply, value: '', submit_to: '$sActionUrl', submit_parameters: $sJSSubmitParams });
+$('#row_$sFieldId').$sWidgetClass({parent_selector: $sNotifyParentSelectorJS, field_id: '$sFieldId', equals: $sHandlerEquals, get_field_value: $sHandlerGetValue, auto_apply: $sAutoApply, value: '', submit_to: '$sActionUrl', submit_parameters: $sJSSubmitParams $sJSExtraParams });
 EOF
 					);
 				}
@@ -664,6 +676,7 @@ class DesignerFormField
 	protected $bAutoApply;
 	protected $aCSSClasses;
 	protected $bDisplayed;
+	protected $aWidgetExtraParams;
 	
 	public function __construct($sCode, $sLabel, $defaultValue)
 	{
@@ -675,6 +688,7 @@ class DesignerFormField
 		$this->bAutoApply = false;
 		$this->aCSSClasses = array();
 		$this->bDisplayed = true;
+		$this->aWidgetExtraParams = array();
 	}
 	
 	public function GetCode()
@@ -726,6 +740,16 @@ class DesignerFormField
 	public function GetFieldId()
 	{
 		return $this->oForm->GetFieldId($this->sCode);
+	}
+	
+	public function GetWidgetClass()
+	{
+		return 'property_field';
+	}
+	
+	public function GetWidgetExtraParams()
+	{
+		return $this->aWidgetExtraParams;
 	}
 	
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
@@ -1402,6 +1426,11 @@ class DesignerFormSelectorField extends DesignerFormField
 		$this->aSubForms = array();
 	}
 	
+	public function GetWidgetClass()
+	{
+		return 'selector_property_field';
+	}
+	
 	public function AddSubForm($oSubForm, $sLabel, $sValue)
 	{
 		$idx = count($this->aSubForms);
@@ -1519,8 +1548,8 @@ class DesignerFormSelectorField extends DesignerFormField
 
 		if ($sRenderMode == 'property')
 		{
+			$this->aWidgetExtraParams['data_selector'] = $sSelector;
 			$sSelector = $this->oForm->GetHierarchyPath().'/'.$this->sCode.$this->oForm->GetSuffix();
-			$oP->add_ready_script("InitFormSelectorField('$sId', '$sSelector');");
 		}
 		else
 		{

@@ -16,7 +16,8 @@ $(function()
 			submit_parameters: {operation: 'async_action'},
 			do_apply: null,
 			do_cancel: null,
-			auto_apply: false
+			auto_apply: false,
+			can_apply: true
 		},
 	
 		// the constructor
@@ -49,7 +50,14 @@ $(function()
 			if (this.bModified)
 			{
 				this.element.addClass("itop-property-field-modified");
-				this.element.find(".prop_icon span.ui-icon-circle-check").css({visibility: ''});
+				if (this.options.can_apply)
+				{
+					this.element.find(".prop_icon span.ui-icon-circle-check").css({visibility: ''});					
+				}
+				else
+				{
+					this.element.find(".prop_icon span.ui-icon-circle-check").css({visibility: 'hidden'});
+				}
 				this.element.find(".prop_icon span.ui-icon-circle-close").css({visibility: ''});
 			}
 			else
@@ -93,12 +101,16 @@ $(function()
 			else
 			{
 				this.bModified = true;
-				if (this.options.auto_apply)
+				if (this.options.auto_apply && this.options.can_apply)
 				{
 					this._do_apply();
 				}
 			}
 			this._refresh();
+			if (this.options.parent_selector)
+			{
+				$(this.options.parent_selector).trigger('subitem_changed');
+			}
 		},
 		_equals: function( value1, value2 )
 		{
@@ -130,9 +142,17 @@ $(function()
 				return this.options.get_field_value();
 			}			
 		},
+		get_field_name: function()
+		{
+			return $('#'+this.options.field_id, this.element).attr('name');
+		},
 		_get_committed_value: function()
 		{
 			return { name: $('#'+this.options.field_id, this.element).attr('name'), value: this.value };
+		},
+		_get_current_value: function()
+		{
+			return { name: $('#'+this.options.field_id, this.element).attr('name'), value: this._get_field_value() };
 		},
 		_do_apply: function()
 		{
@@ -196,6 +216,10 @@ $(function()
 				this._refresh();
 				oField.trigger('reverted', {type: 'designer', previous_value: this.value });
 				oField.trigger('validate');
+				if (this.options.parent_selector)
+				{
+					$(this.options.parent_selector).trigger('subitem_changed');
+				}
 			}
 		},
 		_do_submit: function()
@@ -228,6 +252,190 @@ $(function()
 		_is_visible: function()
 		{
 			return this.element.is(':visible');
+		},
+		mark_as_applied: function()
+		{
+			this.bModified = false;
+			this.previous_value = this.value;
+			this.value = this._get_field_value();
+			this._refresh();
+		},
+		validate: function()
+		{
+			var oField = $('#'+this.options.field_id, this.element);
+			oField.trigger('validate');
+		}
+	});
+});
+
+
+$(function()
+{
+	// the widget definition, where "itop" is the namespace,
+	// "selector_property_field" the widget name
+	$.widget( "itop.selector_property_field", $.itop.property_field,
+	{
+		// default options
+		options:
+		{
+			parent_selector: null,
+			field_id: '',
+			get_field_value: null,
+			equals: null,
+			submit_to: 'index.php',
+			submit_parameters: {operation: 'async_action'},
+			do_apply: null,
+			do_cancel: null,
+			auto_apply: false,
+			can_apply: true,
+			data_selector: ''
+		},
+	
+		// the constructor
+		_create: function()
+		{	
+			var me = this;
+			this._superApply();
+						
+			this.element
+				.addClass( "itop-selector-property-field" );
+			
+			$('#'+this.options.field_id).bind('reverted init', function() {
+					me._update_subform();
+				}).trigger('init'); // initial refresh
+			
+			this.element.bind('subitem_changed', function() {
+				me._on_subitem_changed();
+			});
+		},
+		_update_subform: function()
+		{
+			var sSelector = this.options.data_selector;
+			var me = this;
+			
+			// Mark all the direct children as hidden
+			$('tr[data-selector="'+sSelector+'"]').attr('data-state', 'hidden');
+			// Mark the selected one as visible
+			var sSelectedHierarchy = sSelector+'-'+$('#'+this.options.field_id).val(); 
+			$('tr[data-path="'+sSelectedHierarchy+'"]').attr('data-state', 'visible');
+						
+			// Show all items behind the current one
+			$('tr[data-path^="'+sSelector+'"]').show();
+			// Hide items behind the current one as soon as it is behind a hidden node (or itself is marked as hidden) 
+			$('tr[data-path^="'+sSelector+'"][data-state="hidden"]').each(function() {
+				$(this).hide();
+				var sPath = $(this).attr('data-path');
+				$('tr[data-path^="'+sPath+'/"]').hide();
+			});
+
+			$('tr[data-path^="'+sSelector+'"]').each(function() {
+				if($(this).is(':visible'))
+				{
+					var oPropField = $(this).closest('.itop-property-field');
+					oPropField.property_field('option', {can_apply: !me.bModified, parent_selector: '#'+me.element.attr('id') });
+					oPropField.property_field('validate');
+				}
+			});	
+		},
+		// events bound via _bind are removed automatically
+		// revert other modifications here
+		_destroy: function()
+		{
+			this.element.removeClass( "itop-selector-property-field" );
+			this._superApply();
+		},
+		_on_change: function()
+		{
+			var new_value = this._get_field_value();
+			if (this._equals(new_value, this.value))
+			{
+				this.bModified = false;
+			}
+			else
+			{
+				this.bModified = true;
+			}
+			
+			this._update_subform();
+					
+			if (this.options.auto_apply && this.options.can_apply)
+			{
+				this._do_apply();
+			}
+			this._on_subitem_changed(); // initial validation
+			this._refresh();
+		},
+		_do_apply: function()
+		{
+			this._superApply();
+			this._update_subform();
+		},
+		_do_submit: function()
+		{
+			var oData = {};
+			this.element.closest('form').find(':input[type=hidden]').each(function()
+			{
+				// Hidden form fields
+				oData[$(this).attr('name')] = $(this).val();
+			});
+
+			var sSelector = this.options.data_selector;
+			var me = this;
+			var aUpdated = [];
+			$('tr[data-path^="'+sSelector+'"]').each(function() {
+				if($(this).is(':visible'))
+				{
+					var sName = $(this).closest('.itop-property-field').property_field('mark_as_applied').property_field('get_field_name');
+					if (typeof sName == 'string')
+					{
+						aUpdated.push(sName);						
+					}
+				}
+			});				
+			this.element.closest('form').find('.itop-property-field').each(function()
+			{
+				var oWidget = $(this).data('itopProperty_field');
+				if (!oWidget)
+				{
+					// try the form selector widget
+					oWidget = $(this).data('itopSelector_property_field');
+				}
+				if (oWidget && oWidget._is_visible())
+				{
+					var oVal = oWidget._get_committed_value();
+					oData[oVal.name] = oVal.value;
+				}
+			});
+
+			var oPostedData = this.options.submit_parameters;
+			var sName = $('#'+this.options.field_id, this.element).attr('name');
+			oPostedData.params = oData;
+			oPostedData.params.updated = [];
+			aUpdated.push(sName); // several fields updated in this case
+			oPostedData.params.updated = aUpdated;
+			oPostedData.params.previous_values = {};
+			oPostedData.params.previous_values[sName] = this.previous_value; // pass also the previous value(s)		
+			
+			$.post(this.options.submit_to, oPostedData, function(data)
+			{
+				$('#prop_submit_result').html(data);
+			});
+		},
+		_on_subitem_changed : function()
+		{
+			sFormId = this.element.closest('form').attr('id');
+			oFormValidation[sFormId] = [];
+			this.options.can_apply = true;
+			var sSelector = this.options.data_selector
+			$('tr[data-path^="'+sSelector+'"]').each(function() {
+				if($(this).is(':visible'))
+				{
+					var oPropField = $(this).closest('.itop-property-field');
+					oPropField.property_field('validate');
+				}
+			});
+			this.options.can_apply = (oFormValidation[sFormId].length == 0); // apply allowed only if no error
+			this._refresh();
 		}
 	});
 });
@@ -465,22 +673,3 @@ function AddSubForm(sId, sUrl, oParams)
 	});
 }
 
-function InitFormSelectorField(sId, sSelector)
-{
-	$('#'+sId).bind('change reverted init', function() {
-		// Mark all the direct children as hidden
-		$('tr[data-selector="'+sSelector+'"]').attr('data-state', 'hidden');
-		// Mark the selected one as visible
-		var sSelectedHierarchy = sSelector+'-'+this.value; 
-		$('tr[data-path="'+sSelectedHierarchy+'"]').attr('data-state', 'visible');
-					
-		// Show all items behind the current one
-		$('tr[data-path^="'+sSelector+'"]').show();
-		// Hide items behind the current one as soon as it is behind a hidden node (or itself is marked as hidden) 
-		$('tr[data-path^="'+sSelector+'"][data-state="hidden"]').each(function() {
-			$(this).hide();
-			var sPath = $(this).attr('data-path');
-			$('tr[data-path^="'+sPath+'/"]').hide();
-		});			
-	}).trigger('init'); // initial refresh
-}
