@@ -1548,8 +1548,8 @@ class DesignerFormSelectorField extends DesignerFormField
 
 		if ($sRenderMode == 'property')
 		{
-			$this->aWidgetExtraParams['data_selector'] = $sSelector;
 			$sSelector = $this->oForm->GetHierarchyPath().'/'.$this->sCode.$this->oForm->GetSuffix();
+			$this->aWidgetExtraParams['data_selector'] = $sSelector;
 		}
 		else
 		{
