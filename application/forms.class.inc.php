@@ -84,15 +84,14 @@ class DesignerForm
 	
 	public function Render($oP, $bReturnHTML = false)
 	{
+		$sFormId = $this->GetFormId();
 		if ($this->oParentForm == null)
 		{
-			$sFormId = $this->sFormId;
 			$sReturn = '<form id="'.$sFormId.'">';
 		}
 		else
 		{
 			$sReturn = '';
-			$sFormId = $this->oParentForm->sFormId;
 		}
 		$sHiddenFields = '';
 		foreach($this->aFieldSets as $sLabel => $aFields)
@@ -207,17 +206,14 @@ class DesignerForm
 		$sReturn = '';		
 		$sActionUrl = addslashes($this->sSubmitTo);
 		$sJSSubmitParams = json_encode($this->aSubmitParams);
+		$sFormId = $this->GetFormId();
 		if ($this->oParentForm == null)
 		{
-			$sFormId = $this->sFormId;
 			$sReturn = '<form id="'.$sFormId.'" onsubmit="return false;">';
 			$sReturn .= '<table class="prop_table">';
 			$sReturn .= '<thead><tr><th class="prop_header">'.Dict::S('UI:Form:Property').'</th><th class="prop_header">'.Dict::S('UI:Form:Value').'</th><th colspan="2" class="prop_header">&nbsp;</th></tr></thead><tbody>';
 		}
-		else
-		{
-			$sFormId = $this->oParentForm->sFormId;
-		}
+
 		$sHiddenFields = '';
 		foreach($this->aFieldSets as $sLabel => $aFields)
 		{
@@ -372,7 +368,11 @@ $('#$sDialogId').dialog({
 			oForm.submit();
 			if (AnimateDlgButtons)
 			{
-				AnimateDlgButtons(this);
+				sFormId = oForm.attr('id');
+				if (oFormValidation[sFormId].length == 0)
+				{
+					AnimateDlgButtons(this);
+				}
 			}
 		} },
 		{ text: "$sCancelButtonLabel", click: function() { KillAllMenus(); $(this).dialog( "close" ); $(this).remove(); } },
@@ -489,6 +489,15 @@ EOF
 	public function GetParentForm()
 	{
 		return $this->oParentForm;
+	}
+	
+	public function GetFormId()
+	{
+		if ($this->oParentForm)
+		{
+			$this->oParentForm->GetFormId();
+		}
+		return $this->sFormId;
 	}
 	
 	public function SetDisplayed($bDisplayed)
@@ -912,7 +921,7 @@ class DesignerTextField extends DesignerFormField
 			$sMandatory = $this->bMandatory ? 'true' :  'false';
 			$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern', '$sFormId', $sForbiddenValues, '$sExplainForbiddenValues'); } );
+$('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern', $(this).closest('form').attr('id'), $sForbiddenValues, '$sExplainForbiddenValues'); } );
 {
 	var myTimer = null;
 	$('#$sId').bind('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
@@ -966,7 +975,7 @@ class DesignerLongTextField extends DesignerTextField
 		$sReadOnly = $this->IsReadOnly() ? 'readonly' :  '';
 		$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern', '$sFormId', $sForbiddenValues, '$sExplainForbiddenValues'); } );
+$('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern',  $(this).closest('form').attr('id'), $sForbiddenValues, '$sExplainForbiddenValues'); } );
 {
 	var myTimer = null;
 	$('#$sId').bind('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
@@ -1016,7 +1025,7 @@ class DesignerIntegerField extends DesignerFormField
 			$sMandatory = $this->bMandatory ? 'true' :  'false';
 			$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change keyup validate', function() { ValidateInteger('$sId', $sMandatory, '$sFormId', $sMin, $sMax); } );
+$('#$sId').bind('change keyup validate', function() { ValidateInteger('$sId', $sMandatory,  $(this).closest('form').attr('id'), $sMin, $sMax); } );
 {
 	var myTimer = null;
 	$('#$sId').bind('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
@@ -1163,7 +1172,7 @@ class DesignerComboField extends DesignerFormField
 			}
 			$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change validate', function() { ValidateWithPattern('$sId', $sMandatory, '', '$sFormId', null, null); } );
+$('#$sId').bind('change validate', function() { ValidateWithPattern('$sId', $sMandatory, '',  $(this).closest('form').attr('id'), null, null); } );
 EOF
 			);
 		}
