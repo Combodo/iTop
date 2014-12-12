@@ -943,9 +943,23 @@ EOF
 	}
 
 	/**
-	 * Get the text/XML version of the delta
+	 * Set the value for a given trace attribute
+	 * See MFElement::SetTrace to enable/disable change traces	 
 	 */	
-	public function GetDelta($aNodesToIgnore = array(), $aAttributes = null)
+	public function SetTraceValue($sAttribute, $sPreviousValue, $sNewValue)
+	{
+		// Search into the deleted node as well!
+		$oNodeSet = $this->oDOMDocument->GetNodes("//*[@$sAttribute='$sPreviousValue']", null, false);
+		foreach($oNodeSet as $oTouchedNode)
+		{
+			$oTouchedNode->setAttribute($sAttribute, $sNewValue);
+		}
+	}
+
+	/**
+	 * Get the document version of the delta
+	 */	
+	public function GetDeltaDocument($aNodesToIgnore = array(), $aAttributes = null)
 	{
 		$oDelta = new MFDocument();
 		foreach($this->ListChanges() as $oAlteredNode)
@@ -957,7 +971,14 @@ EOF
 			$oNodesToRemove = $oDelta->GetNodes($sXPath);
 			foreach($oNodesToRemove as $oNode)
 			{
-				$oNode->parentNode->removeChild($oNode);
+				if ($oNode instanceof DOMAttr)
+				{
+					$oNode->ownerElement->removeAttributeNode($oNode);
+				}
+				else
+				{
+					$oNode->parentNode->removeChild($oNode);
+				}
 			}
 		}
 		if ($aAttributes != null)
@@ -967,6 +988,15 @@ EOF
 				$oDelta->documentElement->setAttribute($sAttribute, $value);
 			}
 		}
+		return $oDelta;
+	}
+
+	/**
+	 * Get the text/XML version of the delta
+	 */	
+	public function GetDelta($aNodesToIgnore = array(), $aAttributes = null)
+	{
+		$oDelta = $this->GetDeltaDocument($aNodesToIgnore, $aAttributes);
 		return $oDelta->saveXML();
 	}
 	
@@ -1452,7 +1482,32 @@ class MFElement extends DOMElement
 		}
 		return false;
 	}
-	
+
+
+	static $aTraceAttributes = null;
+	/**
+	 * Enable/disable the trace on changed nodes
+	 * 
+	 *@param aAttributes array Array of attributes (key => value) to be added onto any changed node	 	 
+	 */
+	static public function SetTrace($aAttributes = null)
+	{
+		self::$aTraceAttributes = $aAttributes;
+	}
+
+	/**
+	 * Mark the node as touched (if tracing is active)	
+	 */	
+	public function AddTrace()
+	{
+		if (!is_null(self::$aTraceAttributes))
+		{
+			foreach (self::$aTraceAttributes as $sAttribute => $value)
+			{
+				$this->setAttribute($sAttribute, $value);
+			}
+		}
+	}
 
 	/**
 	 * Add a node and set the flags that will be used to compute the delta
@@ -1460,9 +1515,10 @@ class MFElement extends DOMElement
 	 */	
 	public function AddChildNode(MFElement $oNode)
 	{
-		// First: cleanup any flag behind the new node
+		// First: cleanup any flag behind the new node, and eventually add trace data
 		$oNode->ApplyChanges();
-	
+		$oNode->AddTrace();
+
 		$oExisting = $this->_FindChildNode($oNode);
 		if ($oExisting)
 		{
@@ -1490,8 +1546,9 @@ class MFElement extends DOMElement
 	 */	
 	public function RedefineChildNode(MFElement $oNode, $sSearchId = null)
 	{
-		// First: cleanup any flag behind the new node
+		// First: cleanup any flag behind the new node, and eventually add trace data
 		$oNode->ApplyChanges();
+		$oNode->AddTrace();
 
 		$oExisting = $this->_FindChildNode($oNode, $sSearchId);
 		if (!$oExisting)
@@ -1521,8 +1578,9 @@ class MFElement extends DOMElement
 	 */	
 	public function SetChildNode(MFElement $oNode, $sSearchId = null)
 	{
-		// First: cleanup any flag behind the new node
+		// First: cleanup any flag behind the new node, and eventually add trace data
 		$oNode->ApplyChanges();
+		$oNode->AddTrace();
 
 		$oExisting = $this->_FindChildNode($oNode, $sSearchId);
 		if ($oExisting)
@@ -1621,6 +1679,9 @@ class MFElement extends DOMElement
 		{
 			$this->setAttribute('_alteration', $sFlag);
 			$this->DeleteChildren();
+
+			// Add trace data
+			$this->AddTrace();
 		}
 		else
 		{
@@ -1688,6 +1749,9 @@ class MFElement extends DOMElement
 			}
 		}
 		$this->setAttribute('id', $sId);
+
+		// Leave a trace of this change
+		$this->AddTrace();
 	}
 
 	/**
