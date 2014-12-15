@@ -256,10 +256,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Service+' => '',
 	'Class:Service/Attribute:name' => 'Name',
 	'Class:Service/Attribute:name+' => '',
-	'Class:Service/Attribute:org_id' => 'Organization',
+	'Class:Service/Attribute:org_id' => 'Provider',
 	'Class:Service/Attribute:org_id+' => '',
-	'Class:Service/Attribute:organization_name' => 'Name',
-	'Class:Service/Attribute:organization_name+' => 'Common name',
+	'Class:Service/Attribute:organization_name' => 'Provider Name',
+	'Class:Service/Attribute:organization_name+' => '',
 	'Class:Service/Attribute:description' => 'Description',
 	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:documents_list' => 'Documents',
@@ -343,6 +343,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'incident',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'service request',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'service request',
+	'Class:ServiceSubcategory/Attribute:service_provider' => 'Provider Name',
+	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Provider',
 ));
 
 //

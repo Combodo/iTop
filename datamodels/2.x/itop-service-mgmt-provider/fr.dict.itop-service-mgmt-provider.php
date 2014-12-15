@@ -202,8 +202,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Service/Attribute:name+' => '',
 	'Class:Service/Attribute:org_id' => 'Fournisseur',
 	'Class:Service/Attribute:org_id+' => '',
-	'Class:Service/Attribute:organization_name' => 'Nom fournisseur',
-	'Class:Service/Attribute:organization_name+' => 'Nom commun',
+	'Class:Service/Attribute:organization_name' => 'Nom du fournisseur',
+	'Class:Service/Attribute:organization_name+' => '',
 	'Class:Service/Attribute:description' => 'Description',
 	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:documents_list' => 'Documents',
@@ -287,6 +287,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'incident',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'demande de service',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'demande de service',
+	'Class:ServiceSubcategory/Attribute:service_provider' => 'Nom du fournisseur',
+	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Fournisseur',
 ));
 
 //
