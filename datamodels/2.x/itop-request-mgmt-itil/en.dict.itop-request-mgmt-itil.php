@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -261,8 +261,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Wait for approval',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself',
+
+	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info',
 ));
-
-
-
-?>

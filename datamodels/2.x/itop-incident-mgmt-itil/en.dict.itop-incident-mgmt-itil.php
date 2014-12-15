@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -237,7 +237,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Re-open',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Cannot assign the Parent incident to the incident itself',
+
+	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
+	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info',
 ));
-
-
-?>

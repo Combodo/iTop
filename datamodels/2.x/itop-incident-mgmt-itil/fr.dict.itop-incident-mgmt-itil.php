@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -218,5 +218,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Incidents ouverts par statut',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Incidents ouverts par agent',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Incidents ouverts par client',
+
+	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets (résoudre les tickets fils)',
+	'Class:Incident/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution du ticket (ev_autoresolve) vers les requêtes et incidents fils, et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution',
 ));
-?>

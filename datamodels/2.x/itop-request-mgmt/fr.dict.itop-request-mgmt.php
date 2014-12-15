@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -280,5 +280,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Portal:SelectLanguage' => "Changer ma langue",
 	'Portal:LanguageChangedTo_Lang' => 'Langue changée en',
 	'Portal:ChooseYourFavoriteLanguage' => 'Choisissez votre langue',
+
+	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets (résoudre les tickets fils)',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution de la demande (ev_autoresolve), et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution',
 ));
-?>

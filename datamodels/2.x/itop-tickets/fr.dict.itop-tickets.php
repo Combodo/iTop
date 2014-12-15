@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -164,5 +164,42 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Ticket:SLA' => 'Rapport SLA',
 	'WorkOrder:Details' => 'Détails',
 	'WorkOrder:Moreinfo' => 'Informations complémentaires',
-	'Tickets:ResolvedFrom' => 'Résolu via %1$s'
+	'Tickets:ResolvedFrom' => 'Résolu via %1$s',
+
+	'Class:cmdbAbstractObject/Method:Set' => 'Set (initialiser)',
+	'Class:cmdbAbstractObject/Method:Set+' => 'Initialiser un champ avec une valeur statique',
+	'Class:cmdbAbstractObject/Method:Set/Param:1' => 'Champ Cible',
+	'Class:cmdbAbstractObject/Method:Set/Param:1+' => 'Le champ à initialiser, dans l\'objet courant',
+	'Class:cmdbAbstractObject/Method:Set/Param:2' => 'Valeur',
+	'Class:cmdbAbstractObject/Method:Set/Param:2+' => 'La valeur statique',
+	'Class:cmdbAbstractObject/Method:SetCurrentDate' => 'SetCurrentDate (initialiser à la date courante)',
+	'Class:cmdbAbstractObject/Method:SetCurrentDate+' => 'Initialiser un champ avec la date et l\'heure courants',
+	'Class:cmdbAbstractObject/Method:SetCurrentDate/Param:1' => 'Champ Cible',
+	'Class:cmdbAbstractObject/Method:SetCurrentDate/Param:1+' => 'Le champ à initialiser, dans l\'objet courant',
+	'Class:cmdbAbstractObject/Method:SetCurrentUser' => 'SetCurrentUser (initialiser à l\'utilisateur courant)',
+	'Class:cmdbAbstractObject/Method:SetCurrentUser+' => 'Initialiser un champ avec l\'utilisateur qui est en train d\'effectuer une action sur l\'objet',
+	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1' => 'Champ Cible',
+	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1+' => 'Le champ à initialiser, dans l\'objet courant',
+	'Class:cmdbAbstractObject/Method:SetElapsedTime' => 'SetElapsedTime (initialiser avec le temps passé)',
+	'Class:cmdbAbstractObject/Method:SetElapsedTime+' => 'Initialiser un champ avec le temps passé (en secondes) depuis une date donnée par un autre champ',
+	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:1' => 'Champ Cible',
+	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:1+' => 'Le champ à initialiser, dans l\'objet courant',
+	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:2' => 'Champ de Référence',
+	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:2+' => 'Le champ qui doit contenir la date de début',
+	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3' => 'Jours et Heures Ouvrés',
+	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3+' => 'Laisser ce champ vide pour bénéficier de la gestion des fenêtres de couverture, ou saisir "DefaultWorkingTimeComputer" pour passer en mode 24h/24 7j/7',
+	'Class:cmdbAbstractObject/Method:Reset' => 'Reset (réinitialiser)',
+	'Class:cmdbAbstractObject/Method:Reset+' => 'Réinitialiser un champ à sa valeur par défaut',
+	'Class:cmdbAbstractObject/Method:Reset/Param:1' => 'Champ Cible',
+	'Class:cmdbAbstractObject/Method:Reset/Param:1+' => 'Le champ à réinitialiser, dans l\'objet courant',
+	'Class:cmdbAbstractObject/Method:Copy' => 'Copy (copier)',
+	'Class:cmdbAbstractObject/Method:Copy+' => 'Copier la valeur depuis un champ vers un autre champ',
+	'Class:cmdbAbstractObject/Method:Copy/Param:1' => 'Champ Cible',
+	'Class:cmdbAbstractObject/Method:Copy/Param:1+' => 'Le champ à initialiser, dans l\'objet courant',
+	'Class:cmdbAbstractObject/Method:Copy/Param:2' => 'Champ Source',
+	'Class:cmdbAbstractObject/Method:Copy/Param:2+' => 'Le champ dans lequel on va lire la valeur, dans l\'objet courant',
+	'Class:ResponseTicketTT0/Interface:iMetricComputer' => 'Time To Own',
+	'Class:ResponseTicketTT0/Interface:iMetricComputer+' => 'Time To Own',
+	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve',
+	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Time To Resolve',
 ));

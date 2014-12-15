@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -290,6 +290,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Portal:SelectLanguage' => "Change you language",
 	'Portal:LanguageChangedTo_Lang' => 'Language changed to',
 	'Portal:ChooseYourFavoriteLanguage' => 'Choose your favorite language',
-));
 
-?>
+	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info',
+));

@@ -744,89 +744,64 @@
           <method id="Set">
             <arguments>
               <argument id="1">
-                <label>Field Code</label>
                 <type>attcode</type>
                 <mandatory>true</mandatory>
-                <description>The field to set, in the current object</description>
               </argument>
               <argument id="2">
-                <label>Value</label>
                 <type>string</type>
                 <mandatory>true</mandatory>
-                <description>The value to set</description>
               </argument>
             </arguments>
           </method>
           <method id="SetCurrentDate">
             <arguments>
               <argument id="1">
-                <label>Field Code</label>
                 <type>attcode</type>
                 <mandatory>true</mandatory>
-                <description>The field, in the current object, to set to
-                  the current date</description>
               </argument>
             </arguments>
           </method>
           <method id="SetCurrentUser">
             <arguments>
               <argument id="1">
-                <label>Field Code</label>
                 <type>attcode</type>
                 <mandatory>true</mandatory>
-                <description>The field, in the current object, to set to
-                  the current logged in user</description>
               </argument>
             </arguments>
           </method>
           <method id="SetElapsedTime">
             <arguments>
               <argument id="1">
-                <label>Field Code</label>
                 <type>attcode</type>
                 <mandatory>true</mandatory>
-                <description>The field, in the current object, to set to
-                  the time elapsed since the date given by the reference field</description>
               </argument>
               <argument id="2">
-                <label>Reference Field Code</label>
                 <type>attcode</type>
                 <mandatory>true</mandatory>
-                <description>The reference date or date/time</description>
               </argument>
               <argument id="3">
-                <label>Working hours</label>
                 <type>string</type>
                 <mandatory>false</mandatory>
-                <description>Leave empty to rely on the standard working hours scheme, or set to "DefaultWorkingTimeComputer" to force a 24x7 scheme</description>
               </argument>
             </arguments>
           </method>
           <method id="Reset">
             <arguments>
               <argument id="1">
-                <label>Field Code</label>
                 <type>attcode</type>
                 <mandatory>true</mandatory>
-                <description>The field, in the current object, to reset
-                  to its default value</description>
               </argument>
             </arguments>
           </method>
           <method id="Copy">
             <arguments>
               <argument id="1">
-                <label>Destination</label>
                 <type>attcode</type>
                 <mandatory>true</mandatory>
-                <description>The field, in the current object, to set</description>
               </argument>
               <argument id="2">
-                <label>Source</label>
                 <type>attcode</type>
                 <mandatory>true</mandatory>
-                <description>The field, in the current object, to get
-                  the value from</description>
               </argument>
             </arguments>
           </method>
@@ -834,16 +809,12 @@
       </class>
       <class id="ResponseTicketTTO" _delta="define">
         <interfaces>
-          <interface id="iMetricComputer">
-            <label>Time To Own</label>
-          </interface>
+          <interface id="iMetricComputer"/>
         </interfaces>
       </class>
       <class id="ResponseTicketTTR" _delta="define">
         <interfaces>
-          <interface id="iMetricComputer">
-             <label>Time To Resolve</label>
-          </interface>
+          <interface id="iMetricComputer"/>
         </interfaces>
       </class>
     </classes>
