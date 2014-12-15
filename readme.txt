@@ -1,4 +1,4 @@
-============================================
+﻿============================================
 WARNING - THIS IS NOT AN OFFICIAL RELEASE!!!
 TO BE USED FOR INTERNAL PURPOSES ONLY!
 ============================================
@@ -286,6 +286,7 @@ Missing translation for the tab "related requests"
 Prevent the JS validation (on focus) to create multiple entries for the same field, since it breaks the validation.
 #1039 Prevent concurrent executions of either synchro_import.php or synchro_exec.php for a given data source, since it would lead to unpredictable results.
 #1037 Refresh "priority" when either "impact" or "urgency" changes.
+#1038 Duplicate column name (service name) when importing service subcategories
 
 
 Extending the data model
