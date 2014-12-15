@@ -2,7 +2,7 @@
 WARNING - THIS IS NOT AN OFFICIAL RELEASE!!!
 TO BE USED FOR INTERNAL PURPOSES ONLY!
 ============================================
-iTop - version 2.1.0 Beta3 - ??-Dec-2014
+iTop - version 2.1.0 - 16-Dec-2014
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -284,6 +284,8 @@ Added a tab to link a problem to incidents
 Missing translation for the tab "related requests"
 #1022 Do cascade the resolution of an incident to its child requests
 Prevent the JS validation (on focus) to create multiple entries for the same field, since it breaks the validation.
+#1039 Prevent concurrent executions of either synchro_import.php or synchro_exec.php for a given data source, since it would lead to unpredictable results.
+#1037 Refresh "priority" when either "impact" or "urgency" changes.
 
 
 Extending the data model
@@ -292,6 +294,7 @@ Extending the data model
 #971 XML: could not specify an icon as a path to a file
 User rights: deny on a parent class must give DENY even if the class is explicitely ALLOW on the same profile (that was already working if the rules are given on several profiles). Added a config flag to force the legacy algorithm (user_rights_legacy, defaulting to false)
 #1029 Got rid of tags <format> that were not used at all and that were really misleading extension developers
+#1032 When adding a case log, existing objects could not be displayed anymore!
 
 Improved the XML format, changing from 1.0 to 1.1
 - The change is ascendant compatible (automatically converted into 1.1 by ModelFactory) and thus sould be transparent: could may leave your extensions unchanged if you do not need to benefit from the new format
@@ -307,21 +310,28 @@ Internals
 Protected the property fields against the collision of ids within the same page (even if that is a bug, make it work not too bad!)
 Forms: drop-down box default value label could be changed (or this entry could be entirely removed)
 Form fields: added callbacks ('equals' and 'get_field_value') to allow the implementation of enhanced form fields
-Code cleanup: reworked the user rights data model, while strictly preserving the current functionality (checked using the tool dump_profiles.php, with simple to full ITIL configurations). Class groups have been renamed/merged/removed. This is documented in the migration notes (wiki).
+The FormSelectorField now has its own widget to properly cope with its "subfields" in "property sheet" mode.
+Support of more sophisticated forms layout...
+Proper handling of the validation of subforms...
+Read-only mode for icon selector widget: display at least the icon.
 lnkVirtualDeviceToVolume and lnkTriggerAction are link classes and should be declared as such
 Transmission of user rights along N-N links: must work both with DEL_AUTO and DEL_SILENT external keys (found with a code review, DEL_SILENT is still rarely used)
 Rework of the ModelFactory API to make it simpler and safer.
+Instrumented Model Factory with means to keep track of touched nodes
 #989 Developper issue: query arguments having a null value are dismissed
 Bug fix: FetchAssoc was broken when dealing with in-memory sets.
 Improved the processing of background task to enable more advanced functionalities like queuing
-Support of more sophisticated forms layout...
 Declaration of generic methods which can be run on tickets.
 Enhanced reporting during the setup: all the queries (create table / alter table) are now logged into "setup.log" along with their execution time.
-Proper handling of the validation of subforms...
 Instrumented the code to ease the troubleshooting of the computing of working hours
 New function: ormStopWatch::GetElapsedTime to compute the cumulated elapsed time on a stop watch still running -not used yet (but tested!)
-Read-only mode for icon selector widget: display at least the icon.
 Predefined objects are now handled by RuntimeEnvironment
+Support for some (optional) feedback during submit.
+Support for some (optional) feedback during uploads.
+Rework of the user rights data model, while strictly preserving the current functionality (checked using the tool dump_profiles.php, with simple to full ITIL configurations). Class groups have been renamed/merged/removed. This is documented in the migration notes (wiki).
+Rework of the dictionaries: moved menu related entries to the module itop-welcome-itil (which does create most of those menus), while preserving the original copy of the entries so as to be compatible with customizations made with a copy of an older version of itop-welcome-itil
+Cosmetics on the module names (consistency)
+Demo mode: prevent the deletion of Users...
 
 Packaging
 -----------------------
