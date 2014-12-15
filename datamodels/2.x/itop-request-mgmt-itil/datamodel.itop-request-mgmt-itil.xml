@@ -92,6 +92,10 @@
             <value id="3">3</value>
             <value id="4">4</value>
           </values>
+          <dependencies>
+            <attribute id="impact"/>
+            <attribute id="urgency"/>
+          </dependencies>
           <sql>priority</sql>
           <default_value>4</default_value>
           <is_null_allowed>false</is_null_allowed>
