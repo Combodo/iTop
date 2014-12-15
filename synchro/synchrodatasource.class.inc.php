@@ -2414,10 +2414,14 @@ class SynchroExecution
 		$this->PrepareLogs();
 
 		self::$m_oCurrentTask = $this->m_oDataSource;
+
+		$oMutex = new iTopMutex('synchro_process_'.$this->m_oDataSource->GetKey().'_'.$oConfig->GetDBName().'_'.$oConfig->GetDBSubname());
 		try
 		{
+			$oMutex->Lock();
 			$this->DoSynchronize();
-
+			$oMutex->Unlock();
+				
 			$this->m_oStatLog->Set('end_date', time());
 			$this->m_oStatLog->Set('status', 'completed');
 			$this->m_oStatLog->DBUpdateTracked($this->m_oChange);
@@ -2459,6 +2463,7 @@ class SynchroExecution
 		}
 		catch (SynchroExceptionNotStarted $e)
 		{
+			$oMutex->Unlock();
 			// Set information for reporting... but delete the object in DB
 			$this->m_oStatLog->Set('end_date', time());
 			$this->m_oStatLog->Set('status', 'error');
@@ -2468,6 +2473,7 @@ class SynchroExecution
 		}
 		catch (Exception $e)
 		{
+			$oMutex->Unlock();
 			$this->m_oStatLog->Set('end_date', time());
 			$this->m_oStatLog->Set('status', 'error');
 			$this->m_oStatLog->Set('last_error', $e->getMessage());

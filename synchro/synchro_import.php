@@ -468,8 +468,10 @@ try
 	   // Prepare insert columns
 		$sInsertColumns = '`'.implode('`, `', $aInputColumns).'`';
 	
-	   foreach($aData as $iRow => $aRow)
-	   {
+		$oMutex = new iTopMutex('synchro_import_'.$oDataSource->GetKey().'_'.$oConfig->GetDBName().'_'.$oConfig->GetDBSubname());
+		$oMutex->Lock();
+		foreach($aData as $iRow => $aRow)
+	  	{
 	      $sReconciliationCondition = "`primary_key` = ".CMDBSource::Quote($aRow[$iPrimaryKeyCol]);
 			$sSelect = "SELECT COUNT(*) FROM `$sTable` WHERE $sReconciliationCondition"; 
 			$aRes = CMDBSource::QueryToArray($sSelect);
@@ -597,7 +599,8 @@ try
 				$oP->add("$iRow: Error - Failed to reconcile, found $iCount rows having '$sReconciliationCondition'\n");
 			}
 		}
-	
+		$oMutex->Unlock();
+		
 		if (($sOutput == "summary") || ($sOutput == 'details'))
 		{
 			$oP->add_comment("Data Source: ".$iDataSourceId);
