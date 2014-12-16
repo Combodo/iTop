@@ -2415,7 +2415,7 @@ class SynchroExecution
 
 		self::$m_oCurrentTask = $this->m_oDataSource;
 
-		$oMutex = new iTopMutex('synchro_process_'.$this->m_oDataSource->GetKey().'_'.$oConfig->GetDBName().'_'.$oConfig->GetDBSubname());
+		$oMutex = new iTopMutex('synchro_process_'.$this->m_oDataSource->GetKey().'_'.MetaModel::GetConfig()->GetDBName().'_'.MetaModel::GetConfig()->GetDBSubname());
 		try
 		{
 			$oMutex->Lock();

@@ -468,7 +468,7 @@ try
 	   // Prepare insert columns
 		$sInsertColumns = '`'.implode('`, `', $aInputColumns).'`';
 	
-		$oMutex = new iTopMutex('synchro_import_'.$oDataSource->GetKey().'_'.$oConfig->GetDBName().'_'.$oConfig->GetDBSubname());
+		$oMutex = new iTopMutex('synchro_import_'.$oDataSource->GetKey().'_'.MetaModel::GetConfig()->GetDBName().'_'.MetaModel::GetConfig()->GetDBSubname());
 		$oMutex->Lock();
 		foreach($aData as $iRow => $aRow)
 	  	{
