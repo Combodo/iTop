@@ -287,6 +287,7 @@ Prevent the JS validation (on focus) to create multiple entries for the same fie
 #1039 Prevent concurrent executions of either synchro_import.php or synchro_exec.php for a given data source, since it would lead to unpredictable results.
 #1037 Refresh "priority" when either "impact" or "urgency" changes.
 #1038 Duplicate column name (service name) when importing service subcategories
+#1040 The graphical display of "impact/depends on" is not consistent with the "list" tab
 
 
 Extending the data model

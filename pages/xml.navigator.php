@@ -32,8 +32,6 @@ require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
 
-define('MAX_RECURSION_DEPTH', 20);
-
 /**
  * Fills the given XML node with te details of the specified object
  */ 
@@ -65,10 +63,11 @@ $G_aCachedObjects = array();
 function GetRelatedObjectsAsXml(DBObject $oObj, $sRelationName, &$oLinks, &$oXmlDoc, &$oXmlNode, $iDepth = 0, $aExcludedClasses)
 {
 	global $G_aCachedObjects;
+	$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
 	$aResults = array();
 	$bAddLinks = false;
 
-	if ($iDepth > MAX_RECURSION_DEPTH) return;
+	if ($iDepth > ($iMaxRecursionDepth - 1)) return;
 
 	$sIdxKey = get_class($oObj).':'.$oObj->GetKey();
 	if (!array_key_exists($sIdxKey, $G_aCachedObjects))
@@ -90,7 +89,7 @@ function GetRelatedObjectsAsXml(DBObject $oObj, $sRelationName, &$oLinks, &$oXml
 			{
 				if (in_array(get_class($oTargetObj), $aExcludedClasses))
 				{
-					GetRelatedObjectsAsXml($oTargetObj, $sRelationName, $oLinks, $oXmlDoc, $oXmlNode, $iDepth++, $aExcludedClasses);
+					GetRelatedObjectsAsXml($oTargetObj, $sRelationName, $oLinks, $oXmlDoc, $oXmlNode, $iDepth+1, $aExcludedClasses);
 				}
 				else
 				{
@@ -106,7 +105,7 @@ function GetRelatedObjectsAsXml(DBObject $oObj, $sRelationName, &$oLinks, &$oXml
 					AddNodeDetails($oLinkedNode, $oTargetObj);
 					$oSubLinks = $oXmlDoc->CreateElement('links');
 					// Recurse
-					GetRelatedObjectsAsXml($oTargetObj, $sRelationName, $oSubLinks, $oXmlDoc, $oLinkedNode, $iDepth++, $aExcludedClasses);
+					GetRelatedObjectsAsXml($oTargetObj, $sRelationName, $oSubLinks, $oXmlDoc, $oLinkedNode, $iDepth+1, $aExcludedClasses);
 					$oLinkingNode->AppendChild($oLinkedNode);
 					$oLinks->AppendChild($oLinkingNode);
 					$bAddLinks = true;
@@ -161,7 +160,8 @@ try
 			$oPage->SetContentType('text/html');	
 			$oObj = MetaModel::GetObject($sClass, $id, true /* object must exist */);
 			$aResults = array();
-			$oObj->GetRelatedObjects($sRelation, MAX_RECURSION_DEPTH /* iMaxDepth */, $aResults);
+			$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
+			$oObj->GetRelatedObjects($sRelation, $iMaxRecursionDepth /* iMaxDepth */, $aResults);
 
 			$iBlock = 1; // Zero is not a valid blockid
 			foreach($aResults as $sClass => $aObjects)

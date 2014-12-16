@@ -1532,7 +1532,8 @@ EOF
 
 		$aResults = array();
 		$oObj = MetaModel::GetObject($sClass, $id);
-		$oObj->GetRelatedObjects($sRelation, 20 /* iMaxDepth */, $aResults);
+		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
+		$oObj->GetRelatedObjects($sRelation, $iMaxRecursionDepth /* iMaxDepth */, $aResults);
 		
 		$oP->AddTabContainer('Navigator');
 		$oP->SetCurrentTabContainer('Navigator');

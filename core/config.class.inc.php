@@ -801,6 +801,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'relations_max_depth' => array(
+			'type' => 'integer',
+			'description' => 'Maximum number of successive levels (depth) to explore when displaying the impact/depends on relations.',
+			'default' => 20, // In iTop 2.0.3, this was the hardcoded value
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)
