@@ -1,8 +1,4 @@
-﻿============================================
-WARNING - THIS IS NOT AN OFFICIAL RELEASE!!!
-TO BE USED FOR INTERNAL PURPOSES ONLY!
-============================================
-iTop - version 2.1.0 - 16-Dec-2014
+﻿iTop - version 2.1.0 - 16-Dec-2014
 Readme file
 
 1.   ABOUT THIS RELEASE
