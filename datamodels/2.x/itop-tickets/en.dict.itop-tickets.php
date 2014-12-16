@@ -213,8 +213,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:cmdbAbstractObject/Method:Copy/Param:1+' => 'The field to set, in the current object',
 	'Class:cmdbAbstractObject/Method:Copy/Param:2' => 'Source Field',
 	'Class:cmdbAbstractObject/Method:Copy/Param:2+' => 'The field to get the value from, in the current object',
-	'Class:ResponseTicketTT0/Interface:iMetricComputer' => 'Time To Own',
-	'Class:ResponseTicketTT0/Interface:iMetricComputer+' => 'Time To Own',
+	'Class:ResponseTicketTTO/Interface:iMetricComputer' => 'Time To Own',
+	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve',
-	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Time To Resolve',
+	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR',
 ));
