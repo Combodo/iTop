@@ -1092,6 +1092,10 @@ EOF;
 						$sIcon = $sModuleRelativeDir.'/'.$sIcon;
 						$sIcon = "utils::GetAbsoluteUrlModulesRoot().'$sIcon'";
 					}
+					else
+					{
+						$sIcon = "''";
+					}
 					switch($sColor)
 					{
 						// Known PHP constants: keep the literal value as-is
