@@ -228,7 +228,10 @@
                 <target>assigned</target>
                 <actions>
                   <action>
-                    <verb>SetAssignedDate</verb>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="attcode">assignment_date</param>
+                    </params>
                   </action>
                 </actions>
               </transition>
