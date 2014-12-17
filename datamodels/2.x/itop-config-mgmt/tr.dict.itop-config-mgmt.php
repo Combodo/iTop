@@ -990,10 +990,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+'Menu:DataAdministration' => 'Veri Yönetimi',
+'Menu:DataAdministration+' => 'Veri Yönetimi',
 'Menu:Catalogs' => 'Kataloglar',
 'Menu:Catalogs+' => 'Veri tipleri',
 'Menu:Audit' => 'Denetleme',
 'Menu:Audit+' => 'Denetleme',
+'Menu:CSVImport' => 'CSV dışardan al',
+'Menu:CSVImport+' => 'Çoklu yaratım veya güncelleme',
 'Menu:Organization' => 'Kurumlar',
 'Menu:Organization+' => 'Tüm Kurumlar',
 'Menu:Application' => 'Uygulamalar',

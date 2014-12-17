@@ -7916,6 +7916,11 @@
       <enable_permission>UR_ALLOWED_YES</enable_permission>
       <enable_stimulus/>
     </menu>
+    <menu id="CSVImport" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>10</rank>
+      <parent>DataAdministration</parent>
+      <url>$pages/csvimport.php</url>
+    </menu>
     <menu id="Audit" xsi:type="WebPageMenuNode" _delta="define">
       <rank>33</rank>
       <parent>DataAdministration</parent>

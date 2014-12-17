@@ -1717,10 +1717,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 
 Dict::Add('FR FR', 'French', 'Français', array(
+	'Menu:DataAdministration' => 'Administration des données',
+	'Menu:DataAdministration+' => 'Administration des données',
 	'Menu:Catalogs' => 'Catalogues',
 	'Menu:Catalogs+' => 'Types de données',
 	'Menu:Audit' => 'Audit',
 	'Menu:Audit+' => 'Audit',
+	'Menu:CSVImport' => 'Import CSV',
+	'Menu:CSVImport+' => 'Import ou mise à jour en masse',
 	'Menu:Organization' => 'Organisations',
 	'Menu:Organization+' => 'Toutes les organisations',
 	'Menu:Application' => 'Logiciels',

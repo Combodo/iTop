@@ -1768,10 +1768,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+'Menu:DataAdministration' => 'Administración de Datos',
+'Menu:DataAdministration+' => 'Administración de Datos',
 'Menu:Catalogs' => 'Catálogos',
 'Menu:Catalogs+' => 'Tipos de Datos',
 'Menu:Audit' => 'Auditoría',
 'Menu:Audit+' => 'Auditoría',
+'Menu:CSVImport' => 'Importar CSV',
+'Menu:CSVImport+' => 'Creación o Actualización Másiva',
 'Menu:Organization' => 'Organizaciones',
 'Menu:Organization+' => 'Organizaciones',
 'Menu:Application' => 'Aplicaciones',

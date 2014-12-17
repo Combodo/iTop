@@ -992,10 +992,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+'Menu:DataAdministration' => '数据管理',
+'Menu:DataAdministration+' => '数据管理',
 'Menu:Catalogs' => '目录',
 'Menu:Catalogs+' => '数据类别',
 'Menu:Audit' => '审计',
 'Menu:Audit+' => '审计',
+'Menu:CSVImport' => 'CSV 导入',
+'Menu:CSVImport+' => '大批量创建或修改',
 'Menu:Organization' => '组织',
 'Menu:Organization+' => '所有组织',
 'Menu:Application' => '应用程序',

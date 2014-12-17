@@ -1770,10 +1770,14 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
+'Menu:DataAdministration' => 'Data administration',
+'Menu:DataAdministration+' => 'Data administration',
 'Menu:Catalogs' => 'Catalogs',
 'Menu:Catalogs+' => 'Data types',
 'Menu:Audit' => 'Audit',
 'Menu:Audit+' => 'Audit',
+'Menu:CSVImport' => 'CSV import',
+'Menu:CSVImport+' => 'Bulk creation or update',
 'Menu:Organization' => 'Organizations',
 'Menu:Organization+' => 'All organizations',
 'Menu:Application' => 'Applications',

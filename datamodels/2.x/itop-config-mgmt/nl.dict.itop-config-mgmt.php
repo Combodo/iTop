@@ -1771,10 +1771,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Menu:DataAdministration' => 'Data administratie',
+	'Menu:DataAdministration+' => 'Data administratie',
 	'Menu:Catalogs' => 'Catalogus',
 	'Menu:Catalogs+' => 'Data typen',
 	'Menu:Audit' => 'Audit',
 	'Menu:Audit+' => 'Audit',
+	'Menu:CSVImport' => 'CSV import',
+	'Menu:CSVImport+' => 'Grootschalige aanmaak of update',
 	'Menu:Organization' => 'Organisaties',
 	'Menu:Organization+' => 'Alle organisaties',
 	'Menu:Application' => 'Applicaties',

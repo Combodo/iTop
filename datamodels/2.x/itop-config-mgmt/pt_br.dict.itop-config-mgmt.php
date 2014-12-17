@@ -1764,17 +1764,20 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+'Menu:DataAdministration' => 'Administração Dados',
+'Menu:DataAdministration+' => 'Administração Dados',
 'Menu:Catalogs' => 'Catálogos',
 'Menu:Catalogs+' => 'Tipos dados',
 'Menu:Audit' => 'Auditoria',
 'Menu:Audit+' => 'Auditoria',
+'Menu:CSVImport' => 'Importar CSV',
+'Menu:CSVImport+' => 'Criação ou atualização em massa',
 'Menu:Organization' => 'Organizações',
 'Menu:Organization+' => 'Todas organizações',
 'Menu:Application' => 'Applicações',
 'Menu:Application+' => 'Todas aplicações',
 'Menu:DBServer' => 'Serviços Banco de Dados',
 'Menu:DBServer+' => 'Serviços Banco de Dados',
-'Menu:Audit' => 'Auditoria',
 'Menu:ConfigManagement' => 'Gerenciamento Configurações',
 'Menu:ConfigManagement+' => 'Gerenciamento Configurações',
 'Menu:ConfigManagementOverview' => 'Visão geral',

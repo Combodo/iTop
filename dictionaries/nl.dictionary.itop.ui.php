@@ -883,9 +883,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-ContactsMenu-ContactsByType' => 'Contacten aan de hand van type',
 	'UI-ContactsMenu-ContactsByStatus' => 'Contacten aan de hand van status',
 
-	'Menu:CSVImportMenu' => 'CSV import',
-	'Menu:CSVImportMenu+' => 'Grootschalige aanmaak of update',
-	
 	'Menu:DataModelMenu' => 'Data Model',
 	'Menu:DataModelMenu+' => 'Overzicht van het Data Model',
 	
@@ -929,9 +926,6 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	
 	'Menu:QueryMenu' => 'Query phrasebook',
 	'Menu:QueryMenu+' => 'Query phrasebook',
-	
-	'Menu:DataAdministration' => 'Data administratie',
-	'Menu:DataAdministration+' => 'Data administratie',
 	
 	'Menu:UniversalSearchMenu' => 'Universele Zoekopdracht',
 	'Menu:UniversalSearchMenu+' => 'Zoek naar alles...',

@@ -1765,10 +1765,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
+'Menu:DataAdministration' => 'Административные данные',
+'Menu:DataAdministration+' => 'Административные данные',
 'Menu:Catalogs' => 'Каталоги',
 'Menu:Catalogs+' => 'Каталоги',
 'Menu:Audit' => 'Аудит',
 'Menu:Audit+' => 'Аудит',
+'Menu:CSVImport' => 'Импорт CSV',
+'Menu:CSVImport+' => 'Пакетное создание или обновление',
 'Menu:Organization' => 'Организации',
 'Menu:Organization+' => 'Все организации',
 'Menu:Application' => 'Приложения',
