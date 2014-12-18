@@ -1,4 +1,4 @@
-﻿iTop - version 2.1.0 - 16-Dec-2014
+iTop - version 2.1.0 - 16-Dec-2014
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -293,6 +293,8 @@ Extending the data model
 User rights: deny on a parent class must give DENY even if the class is explicitely ALLOW on the same profile (that was already working if the rules are given on several profiles). Added a config flag to force the legacy algorithm (user_rights_legacy, defaulting to false)
 #1029 Got rid of tags <format> that were not used at all and that were really misleading extension developers
 #1032 When adding a case log, existing objects could not be displayed anymore!
+Advanced customization: a stop watch can be started in the past (incident ticket created from an alarm)
+
 
 Improved the XML format, changing from 1.0 to 1.1
 - The change is ascendant compatible (automatically converted into 1.1 by ModelFactory) and thus sould be transparent: could may leave your extensions unchanged if you do not need to benefit from the new format
@@ -301,7 +303,6 @@ Improved the XML format, changing from 1.0 to 1.1
 - New concept: HighlightScale to avoid overloading methods GetIcon and GetHilightClass...
 - Added an id on the transitions to allow a finer granularity for the deltas.
 - Rework of the lifecycle/actions to ease the extensibility (Generic handlers replacing the specific ones: Rest, Copy, SetCurrentDate, SetCurrentUser, SetElapsedTime)
-
 
 Internals
 ----------------------

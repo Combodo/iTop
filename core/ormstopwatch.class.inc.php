@@ -330,7 +330,7 @@ class ormStopWatch
 	 * It is the responsibility of the caller to compute the deadlines
 	 * (to avoid computing twice for the same result) 	 
 	 */	 	 	
-	public function Start($oObject, $oAttDef)
+	public function Start($oObject, $oAttDef, $iNow = null)
 	{
 		if (!is_null($this->iLastStart))
 		{
@@ -338,11 +338,16 @@ class ormStopWatch
 			return false;
 		}
 
+		if (is_null($iNow))
+		{
+			$iNow = time();
+		}
+
 		if (is_null($this->iStarted))
 		{
-			$this->iStarted = time();
+			$this->iStarted = $iNow;
 		}
-		$this->iLastStart = time();
+		$this->iLastStart = $iNow;
 		$this->iStopped = null;
 
 		return true;
