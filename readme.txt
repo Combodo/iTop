@@ -30,7 +30,8 @@ This version brings a number of bug fixes since 2.0.3 and a few enhancements, na
 - A rudimentary configuration file editor (for administrators)
 - Automated data backups, and manual backup/restore
 - Excel exports
-- Dutch translation contributed by Remie Malik from Linprofs (www.linprofs.com)
+- Dutch localization contributed by Remie Malik from Linprofs (www.linprofs.com)
+- Danish localization contributed by Erik Bøg
 
 ... and about 80 bug fixes!
 
@@ -63,7 +64,8 @@ Stephan Rickauer, Tobias Glemser and Sabri Saleh for their consulting about iTop
 Claudio Cesar Sanchez Tejeda for his contribution to bug fixes on the export and data synchronization
 Bruno Cornec for his support and contribution to the Linux packaging of iTop
 Jean-François Bilger for providing a fix for an unsuspected SQL bug
-Remie Malik from Linprofs for the Dutch translation 
+Remie Malik from Linprofs for the Dutch translation
+Erik Bøg for the Danish translation
 
 2. INSTALLATION
    ============
