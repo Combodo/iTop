@@ -1522,7 +1522,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		{
 			if (is_scalar($sValue))
 			{
-				$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"$sValue\" />\n";
+				$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"".htmlentities($sValue, ENT_QUOTES, 'UTF-8')."\" />\n";
 			}
 		}
 		$sHtml .= "<input type=\"hidden\" name=\"class\" value=\"$sClassName\" />\n";

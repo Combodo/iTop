@@ -259,7 +259,7 @@ EOF
 			$sHTMLValue .= "<img id=\"mini_search_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_search.gif\" onClick=\"oACWidget_{$this->iId}.Search();\"/>&nbsp;";
 	
 			// another hidden input to store & pass the object's Id
-			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"$value\" />\n";
+			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" />\n";
 
 			$JSSearchMode = $this->bSearchMode ? 'true' : 'false';	
 			// Scripts to start the autocomplete and bind some events to it

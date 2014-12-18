@@ -1,4 +1,4 @@
-iTop - version 2.1.0 - 16-Dec-2014
+iTop - version 2.1.0 - 18-Dec-2014
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -284,6 +284,7 @@ Prevent the JS validation (on focus) to create multiple entries for the same fie
 #1037 Refresh "priority" when either "impact" or "urgency" changes.
 #1038 Duplicate column name (service name) when importing service subcategories
 #1040 The graphical display of "impact/depends on" is not consistent with the "list" tab
+#1041 Protect against XSS injections
 
 
 Extending the data model

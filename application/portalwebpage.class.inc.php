@@ -826,7 +826,7 @@ EOF
 		}
 
 		$sStepHistory = implode(',', $aPreviousSteps);
-		$this->add("<input type=\"hidden\" id=\"step_history\" name=\"step_history\" value=\"$sStepHistory\">");
+		$this->add("<input type=\"hidden\" id=\"step_history\" name=\"step_history\" value=\"".htmlentities($sStepHistory, ENT_QUOTES, 'UTF-8')."\">");
 
 		if (!is_null($sNextStep))
 		{		
