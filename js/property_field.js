@@ -225,6 +225,7 @@ $(function()
 		_do_submit: function()
 		{
 			var oData = {};
+			var me = this;
 			this.element.closest('form').find(':input[type=hidden]').each(function()
 			{
 				// Hidden form fields
@@ -232,7 +233,7 @@ $(function()
 			});
 			this.element.closest('form').find('.itop-property-field').each(function()
 			{
-				var oWidget = $(this).data('itopProperty_field');
+				var oWidget = me._get_widget($(this));
 				if (oWidget && oWidget._is_visible())
 				{
 					var oVal = oWidget._get_committed_value();
@@ -264,6 +265,15 @@ $(function()
 		{
 			var oField = $('#'+this.options.field_id, this.element);
 			oField.trigger('validate');
+		},
+		_get_widget: function(element)
+		{
+			var oWidget = element.property_field('instance');
+			if (oWidget == undefined)
+			{
+				oWidget = element.selector_property_field('instance');
+			}
+			return oWidget;
 		}
 	});
 });
@@ -331,9 +341,12 @@ $(function()
 			$('tr[data-path^="'+sSelector+'"]').each(function() {
 				if($(this).is(':visible'))
 				{
-					var oPropField = $(this).closest('.itop-property-field');
-					oPropField.property_field('option', {can_apply: !me.bModified, parent_selector: '#'+me.element.attr('id') });
-					oPropField.property_field('validate');
+					var oWidget = me._get_widget($(this).closest('.itop-property-field'));
+					if (oWidget)
+					{
+						oWidget._setOptions({can_apply: !me.bModified, parent_selector: '#'+me.element.attr('id') });
+						oWidget.validate();
+					}
 				}
 			});	
 		},
@@ -385,21 +398,21 @@ $(function()
 			$('tr[data-path^="'+sSelector+'"]').each(function() {
 				if($(this).is(':visible'))
 				{
-					var sName = $(this).closest('.itop-property-field').property_field('mark_as_applied').property_field('get_field_name');
-					if (typeof sName == 'string')
+					var oWidget = me._get_widget($(this).closest('.itop-property-field'));
+					if (oWidget)
 					{
-						aUpdated.push(sName);						
+						oWidget.mark_as_applied();
+						sName = oWidget.get_field_name();
+						if (typeof sName == 'string')
+						{
+							aUpdated.push(sName);						
+						}
 					}
 				}
 			});				
 			this.element.closest('form').find('.itop-property-field').each(function()
 			{
-				var oWidget = $(this).data('itopProperty_field');
-				if (!oWidget)
-				{
-					// try the form selector widget
-					oWidget = $(this).data('itopSelector_property_field');
-				}
+				var oWidget = me._get_widget($(this));
 				if (oWidget && oWidget._is_visible())
 				{
 					var oVal = oWidget._get_committed_value();
@@ -426,12 +439,16 @@ $(function()
 			sFormId = this.element.closest('form').attr('id');
 			oFormValidation[sFormId] = [];
 			this.options.can_apply = true;
-			var sSelector = this.options.data_selector
+			var sSelector = this.options.data_selector;
+			var me = this;
 			$('tr[data-path^="'+sSelector+'"]').each(function() {
 				if($(this).is(':visible'))
 				{
-					var oPropField = $(this).closest('.itop-property-field');
-					oPropField.property_field('validate');
+					var oWidget = me._get_widget($(this).closest('.itop-property-field'));
+					if (oWidget)
+					{
+						oWidget.validate();
+					}
 				}
 			});
 			this.options.can_apply = (oFormValidation[sFormId].length == 0); // apply allowed only if no error
