@@ -344,8 +344,15 @@ $(function()
 					var oWidget = me._get_widget($(this).closest('.itop-property-field'));
 					if (oWidget)
 					{
-						oWidget._setOptions({can_apply: !me.bModified, parent_selector: '#'+me.element.attr('id') });
-						oWidget.validate();
+						try
+						{
+							oWidget._setOptions({can_apply: !me.bModified, parent_selector: '#'+me.element.attr('id') });
+							oWidget.validate();							
+						}
+						catch(e)
+						{
+							// Do nothing, form in read-only mode
+						}
 					}
 				}
 			});	
