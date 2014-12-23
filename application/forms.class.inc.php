@@ -972,8 +972,14 @@ class DesignerLongTextField extends DesignerTextField
 			$sExplainForbiddenValues = 'null';
 		}
 		$sMandatory = $this->bMandatory ? 'true' :  'false';
-		$sReadOnly = $this->IsReadOnly() ? 'readonly' :  '';
-		$oP->add_ready_script(
+		$sCSSClasses = '';
+		if (count($this->aCSSClasses) > 0)
+		{
+			$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
+		}
+		if (!$this->IsReadOnly())
+		{
+			$oP->add_ready_script(
 <<<EOF
 $('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern',  $(this).closest('form').attr('id'), $sForbiddenValues, '$sExplainForbiddenValues'); } );
 {
@@ -981,13 +987,14 @@ $('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId'
 	$('#$sId').bind('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
 }
 EOF
-);
-		$sCSSClasses = '';
-		if (count($this->aCSSClasses) > 0)
-		{
-			$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
+			);
+			$sValue = "<textarea $sCSSClasses id=\"$sId\" name=\"$sName\">".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."</textarea>";
 		}
-		return array('label' => $this->sLabel, 'value' => "<textarea $sCSSClasses id=\"$sId\" $sReadOnly name=\"$sName\">".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."</textarea>");
+		else
+		{
+			$sValue = "<div $sCSSClasses id=\"$sId\">".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."</div>";
+		}
+		return array('label' => $this->sLabel, 'value' => $sValue);
 	}
 }
 
@@ -1065,6 +1072,7 @@ class DesignerComboField extends DesignerFormField
 	protected $bMultipleSelection;
 	protected $bOtherChoices;
 	protected $sNullLabel;
+	protected $bSorted;
 	
 	public function __construct($sCode, $sLabel = '', $defaultValue = '')
 	{
@@ -1075,6 +1083,7 @@ class DesignerComboField extends DesignerFormField
 		$this->sNullLabel = Dict::S('UI:SelectOne');
 
 		$this->bAutoApply = true;
+		$this->bSorted = true; // Sorted by default
 	}
 	
 	public function SetAllowedValues($aAllowedValues)
@@ -1100,6 +1109,16 @@ class DesignerComboField extends DesignerFormField
 		$this->sNullLabel = $sLabel;
 	}
 	
+	public function IsSorted()
+	{
+		return $this->bSorted;
+	}
+	
+	public function SetSorted($bSorted)
+	{
+		$this->bSorted = $bSorted;
+	}
+	
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
@@ -1107,6 +1126,10 @@ class DesignerComboField extends DesignerFormField
 		$sChecked = $this->defaultValue ? 'checked' : '';
 		$sMandatory = $this->bMandatory ? 'true' :  'false';
 		$sReadOnly = $this->IsReadOnly() ? 'disabled="disabled"' :  '';
+		if ($this->IsSorted())
+		{
+			asort($this->aAllowedValues);
+		}
 		$sCSSClasses = '';
 		if (count($this->aCSSClasses) > 0)
 		{
@@ -1428,13 +1451,37 @@ class DesignerFormSelectorField extends DesignerFormField
 {
 	protected $aSubForms;
 	protected $defaultRealValue; // What's stored as default value is actually the index
+	protected $bSorted;
+	
 	public function __construct($sCode, $sLabel = '', $defaultValue = '')
 	{
 		parent::__construct($sCode, $sLabel, 0);
 		$this->defaultRealValue = $defaultValue;
 		$this->aSubForms = array();
+		$this->bSorted = true;
+	}
+
+	public function IsSorted()
+	{
+		return $this->bSorted;
 	}
 	
+	public function SetSorted($bSorted)
+	{
+		$this->bSorted = $bSorted;
+	}
+	
+	/**
+	 * Callback for sorting an array of $aFormData based ont he labels of the subforms
+	 * @param unknown $aItem1
+	 * @param unknown $aItem2
+	 * @return number
+	 */
+	static function SortOnFormLabel($aItem1, $aItem2)
+	{
+		return strcasecmp($aItem1['label'], $aItem2['label']);
+	}
+		
 	public function GetWidgetClass()
 	{
 		return 'selector_property_field';
@@ -1465,6 +1512,10 @@ class DesignerFormSelectorField extends DesignerFormField
 			$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
 		}
 
+		if ($this->IsSorted())
+		{
+			uasort($this->aSubForms, array(get_class($this), 'SortOnFormLabel'));
+		}
 		
 		if ($this->IsReadOnly())
 		{
