@@ -268,10 +268,10 @@ $(function()
 		},
 		_get_widget: function(element)
 		{
-			var oWidget = element.property_field('instance');
+			var oWidget = element.data('itopProperty_field');
 			if (oWidget == undefined)
 			{
-				oWidget = element.selector_property_field('instance');
+				oWidget = element.data('itopSelector_property_field');
 			}
 			return oWidget;
 		}
