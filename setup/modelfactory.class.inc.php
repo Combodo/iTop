@@ -934,19 +934,21 @@ EOF
 		$sAlteration = $oNode->getAttribute('_alteration');
 		if ($oNode->IsClassNode() && ($sAlteration != ''))
 		{
-			// Deep clone
+			// Handle the moved classes
+			//
+			// Import the whole root node
 			$oNodeClone = $oTargetDoc->importNode($oNode->cloneNode(true), true);
 			$oParentClone->appendChild($oNodeClone);
 			$this->SetDeltaFlags($oNodeClone);
 
-			// Handle the moved classes
+			// Handle the moved classes found under the root node (or the root node itself)
 			foreach($oNodeClone->GetNodes("descendant-or-self::class[@id]", false) as $oClassNode)
 			{
 				if (array_key_exists($oClassNode->getAttribute('id'), $aMovedClasses))
 				{
 					if ($sAlteration == 'removed')
 					{
-						// Remove that node
+						// Remove that node: this specification will be overriden by the 'replaced' spec (see below)
 						$oClassNode->parentNode->removeChild($oClassNode);
 					}
 					else
@@ -1011,10 +1013,10 @@ EOF
 	{
 		$oDelta = new MFDocument();
 
-		// Handle classes moved from one parent to another (could be done by deleting a class, then create it under another parent)
+		// Handle classes moved from one parent to another
 		// This will be done in two steps:
-		// 1) Identify the moved classes
-		// 2) When importing <class> nodes into the delta
+		// 1) Identify the moved classes (marked as deleted under the original parent, and created under the new parent)
+		// 2) When importing those "moved" classes into the delta (see ImportNodeAndPathDelta), extract them from the hierarchy (the alteration can be done at an upper level in the hierarchy) and mark them as "modified" 
 		$aMovedClasses = array();
 		foreach($this->GetNodes("/itop_design/classes//class/class[@_alteration='removed']", null, false) as $oNode)
 		{
