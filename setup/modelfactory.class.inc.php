@@ -272,11 +272,10 @@ class ModelFactory
 
 		if (($oSourceNode->tagName == 'class') && ($oSourceNode->parentNode->tagName == 'classes') && ($oSourceNode->parentNode->parentNode->tagName == 'itop_design'))
 		{
+			$sParentId = $oSourceNode->GetChildText('parent');
 			if ($oSourceNode->getAttribute('_delta') == 'define')
 			{
 				// This tag is organized in hierarchy: determine the real parent node (as a subnode of the current node)
-				$sParentId = $oSourceNode->GetChildText('parent');
-				
 				$oTargetParentNode = $oTarget->GetNodeById('/itop_design/classes//class', $sParentId)->item(0);
 	
 				if (!$oTargetParentNode)
@@ -298,6 +297,13 @@ class ModelFactory
 				else
 				{
 					$oTargetParentNode = $oTargetNode->parentNode;
+					if (($oSourceNode->getAttribute('_delta') == 'redefine') && ($oTargetParentNode->getAttribute('id') != $sParentId))
+					{
+						// A class that has moved <=> deletion and creation elsewhere
+						$oTargetParentNode = $oTarget->GetNodeById('/itop_design/classes//class', $sParentId)->item(0);
+						$oTargetNode->Delete();
+						$oSourceNode->setAttribute('_delta', 'define');
+					}
 				}				
 								
 			}
@@ -861,18 +867,55 @@ EOF
 
 
 	/**
+	 * Import the node into the delta	
+	 */
+	protected function SetDeltaFlags($oNodeClone)
+	{
+		$sAlteration = $oNodeClone->getAttribute('_alteration');
+		$oNodeClone->removeAttribute('_alteration');
+		if ($oNodeClone->hasAttribute('_old_id'))
+		{
+			$oNodeClone->setAttribute('_rename_from', $oNodeClone->getAttribute('_old_id'));
+			$oNodeClone->removeAttribute('_old_id');
+		}
+		switch ($sAlteration)
+		{
+		case '':
+			if ($oNodeClone->hasAttribute('id'))
+			{
+				$oNodeClone->setAttribute('_delta', 'must_exist');
+			}
+			break;
+		case 'added':
+			$oNodeClone->setAttribute('_delta', 'define');
+			break;
+		case 'replaced':
+			$oNodeClone->setAttribute('_delta', 'redefine');
+			break;
+		case 'removed':
+			$oNodeClone->setAttribute('_delta', 'delete');
+			break;
+		case 'needed':
+			$oNodeClone->setAttribute('_delta', 'define_if_not_exists');
+			break;
+		}
+		return $oNodeClone;
+	}
+
+	/**
 	 * Create path for the delta
+	 * @param Array       aMovedClasses The classes that have been moved in the hierarchy (deleted + created elsewhere)	 	 
 	 * @param DOMDocument oTargetDoc  Where to attach the top of the hierarchy
 	 * @param MFElement   oNode       The node to import with its path	 	 
 	 */
-	protected function ImportNodeAndPathDelta($oTargetDoc, $oNode)
+	protected function ImportNodeAndPathDelta($aMovedClasses, $oTargetDoc, $oNode)
 	{
 		// Preliminary: skip the parent if this node is organized hierarchically into the DOM
 		// Only class nodes are organized this way
 		$oParent = $oNode->parentNode;
-		if ($oNode->tagName == 'class')
+		if ($oNode->IsClassNode())
 		{
-			while (($oParent instanceof DOMElement) && ($oParent->tagName == $oNode->tagName) && $oParent->hasAttribute('id'))
+			while (($oParent instanceof DOMElement) && ($oParent->IsClassNode()))
 			{
 				$oParent = $oParent->parentNode;
 			}
@@ -880,64 +923,69 @@ EOF
 		// Recursively create the path for the parent
 		if ($oParent instanceof DOMElement)
 		{
-			$oParentClone = $this->ImportNodeAndPathDelta($oTargetDoc, $oParent);
+			$oParentClone = $this->ImportNodeAndPathDelta($aMovedClasses, $oTargetDoc, $oParent);
 		}
 		else
 		{
 			// We've reached the top let's add the node into the root recipient
 			$oParentClone = $oTargetDoc;
 		}
-		// Look for the node into the parent node
-		// Note: this is an identified weakness of the algorithm,
-		//       because for each node modified, and each node of its path
-		//       we will have to lookup for the existing entry
-		//       Anyhow, this loop is quite quick to execute because in the delta
-		//       the number of nodes is limited
-		$oNodeClone = null;
-		foreach ($oParentClone->childNodes as $oChild)
+
+		$sAlteration = $oNode->getAttribute('_alteration');
+		if ($oNode->IsClassNode() && ($sAlteration != ''))
 		{
-			if (($oChild instanceof DOMElement) && ($oChild->tagName == $oNode->tagName))
-			{
-				if (!$oNode->hasAttribute('id') || ($oNode->getAttribute('id') == $oChild->getAttribute('id')))
-				{
-					$oNodeClone = $oChild;
-					break;
-				}
-			}
-		} 
-		if (!$oNodeClone)
-		{
-			$sAlteration = $oNode->getAttribute('_alteration');
-			$bCopyContents = ($sAlteration == 'replaced') || ($sAlteration == 'added') || ($sAlteration == 'needed');
-			$oNodeClone = $oTargetDoc->importNode($oNode->cloneNode($bCopyContents), $bCopyContents);
-			$oNodeClone->removeAttribute('_alteration');
-			if ($oNodeClone->hasAttribute('_old_id'))
-			{
-				$oNodeClone->setAttribute('_rename_from', $oNodeClone->getAttribute('_old_id'));
-				$oNodeClone->removeAttribute('_old_id');
-			}
-			switch ($sAlteration)
-			{
-			case '':
-				if ($oNodeClone->hasAttribute('id'))
-				{
-					$oNodeClone->setAttribute('_delta', 'must_exist');
-				}
-				break;
-			case 'added':
-				$oNodeClone->setAttribute('_delta', 'define');
-				break;
-			case 'replaced':
-				$oNodeClone->setAttribute('_delta', 'redefine');
-				break;
-			case 'removed':
-				$oNodeClone->setAttribute('_delta', 'delete');
-				break;
-			case 'needed':
-				$oNodeClone->setAttribute('_delta', 'define_if_not_exists');
-				break;
-			}
+			// Deep clone
+			$oNodeClone = $oTargetDoc->importNode($oNode->cloneNode(true), true);
 			$oParentClone->appendChild($oNodeClone);
+			$this->SetDeltaFlags($oNodeClone);
+
+			// Handle the moved classes
+			foreach($oNodeClone->GetNodes("descendant-or-self::class[@id]", false) as $oClassNode)
+			{
+				if (array_key_exists($oClassNode->getAttribute('id'), $aMovedClasses))
+				{
+					if ($sAlteration == 'removed')
+					{
+						// Remove that node
+						$oClassNode->parentNode->removeChild($oClassNode);
+					}
+					else
+					{
+						// Move the class at the root, with the flag 'modified'
+						$oParentClone->appendChild($oClassNode);
+						$oClassNode->setAttribute('_alteration', 'replaced');
+						$this->SetDeltaFlags($oClassNode);
+					}
+				}
+			}
+		}
+		else
+		{
+			// Look for the node into the parent node
+			// Note: this is an identified weakness of the algorithm,
+			//       because for each node modified, and each node of its path
+			//       we will have to lookup for the existing entry
+			//       Anyhow, this loop is quite quick to execute because in the delta
+			//       the number of nodes is limited
+			$oNodeClone = null;
+			foreach ($oParentClone->childNodes as $oChild)
+			{
+				if (($oChild instanceof DOMElement) && ($oChild->tagName == $oNode->tagName))
+				{
+					if (!$oNode->hasAttribute('id') || ($oNode->getAttribute('id') == $oChild->getAttribute('id')))
+					{
+						$oNodeClone = $oChild;
+						break;
+					}
+				}
+			}
+			if (!$oNodeClone)
+			{
+				$bCopyContents = ($sAlteration == 'replaced') || ($sAlteration == 'added') || ($sAlteration == 'needed');
+				$oNodeClone = $oTargetDoc->importNode($oNode->cloneNode($bCopyContents), $bCopyContents);
+				$this->SetDeltaFlags($oNodeClone);
+				$oParentClone->appendChild($oNodeClone);
+			}
 		}
 		return $oNodeClone;
 	}
@@ -962,9 +1010,24 @@ EOF
 	public function GetDeltaDocument($aNodesToIgnore = array(), $aAttributes = null)
 	{
 		$oDelta = new MFDocument();
+
+		// Handle classes moved from one parent to another (could be done by deleting a class, then create it under another parent)
+		// This will be done in two steps:
+		// 1) Identify the moved classes
+		// 2) When importing <class> nodes into the delta
+		$aMovedClasses = array();
+		foreach($this->GetNodes("/itop_design/classes//class/class[@_alteration='removed']", null, false) as $oNode)
+		{
+			$sId = $oNode->getAttribute('id');
+			if ($this->GetNodes("/itop_design/classes//class/class[@id='$sId']/properties", null, false)->length > 0)
+			{
+				$aMovedClasses[$sId] = true;
+			}
+		}
+
 		foreach($this->ListChanges() as $oAlteredNode)
 		{
-			$this->ImportNodeAndPathDelta($oDelta, $oAlteredNode);
+			$this->ImportNodeAndPathDelta($aMovedClasses, $oDelta, $oAlteredNode);
 		}
 		foreach($aNodesToIgnore as $sXPath)
 		{
@@ -1173,9 +1236,9 @@ EOF;
 	 * @param string $sXPath A XPath expression
 	 * @return DOMNodeList
 	 */
-	public function GetNodes($sXPath, $oContextNode = null)
+	public function GetNodes($sXPath, $oContextNode = null, $bSafe = true)
 	{
-		return $this->oDOMDocument->GetNodes($sXPath, $oContextNode);
+		return $this->oDOMDocument->GetNodes($sXPath, $oContextNode, $bSafe);
 	}
 }
 
@@ -1199,9 +1262,9 @@ class MFElement extends DOMElement
 	 * @param string $sXPath A XPath expression
 	 * @return DOMNodeList
 	 */
-	public function GetNodes($sXPath)
+	public function GetNodes($sXPath, $bSafe = true)
 	{
-		return $this->ownerDocument->GetNodes($sXPath, $this);
+		return $this->ownerDocument->GetNodes($sXPath, $this, $bSafe);
 	}
 	
 	/**
@@ -1614,15 +1677,15 @@ class MFElement extends DOMElement
 	/**
 	 * Check that the current node is actually a class node, under classes
 	 */	
-	protected function IsClassNode()
+	public function IsClassNode()
 	{
 		if ($this->tagName == 'class')
 		{
+			if (($this->parentNode->tagName == 'classes') && ($this->parentNode->parentNode->tagName == 'itop_design') ) // Beware: classes/class also exists in the group definition
+			{
+				return true;
+			}
 			return $this->parentNode->IsClassNode();
-		}
-		elseif (($this->tagName == 'classes') && ($this->parentNode->tagName == 'itop_design') ) // Beware: classes/class also exists in the group definition
-		{
-			return true;
 		}
 		else
 		{
