@@ -69,7 +69,7 @@ abstract class QueryReflection
 	/**
 	 * Throws an exception in case of an invalid syntax
 	 */
-	abstract public function __construct($sOQL);
+	abstract public function __construct($sOQL, ModelReflection $oModelReflection);
 
 	abstract public function GetClass();
 	abstract public function GetClassAlias();
@@ -222,7 +222,7 @@ class ModelReflectionRuntime extends ModelReflection
 
 	public function GetQuery($sOQL)
 	{
-		return new QueryReflectionRuntime($sOQL);
+		return new QueryReflectionRuntime($sOQL, $this);
 	}
 
 	public function DictString($sStringCode, $sDefault = null, $bUserLanguageOnly = false)
@@ -244,7 +244,7 @@ class QueryReflectionRuntime extends QueryReflection
 	/**
 	 *	throws an exception in case of a wrong syntax
 	 */
-	public function __construct($sOQL)
+	public function __construct($sOQL, ModelReflection $oModelReflection)
 	{
 		$this->oFilter = DBObjectSearch::FromOQL($sOQL);
 	}
