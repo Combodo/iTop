@@ -1339,7 +1339,7 @@ class MFElement extends DOMElement
 		$sText = null;
 		foreach($this->childNodes as $oChildNode)
 		{
-			if ($oChildNode instanceof DOMCharacterData) // Base class of DOMText and DOMCdataSection
+			if ($oChildNode instanceof DOMText)
 			{
 				if (is_null($sText)) $sText = '';
 				$sText .= $oChildNode->wholeText;
