@@ -844,6 +844,8 @@ abstract class DBObject implements iDisplay
 			throw new CoreException("Changing the key ({$this->m_iKey} to $iNewKey) on an object (class {".get_class($this).") wich already exists in the Database");
 		}
 		$this->m_iKey = $iNewKey;
+		// Invalidate the argument cache
+		$this->m_aAsArgs = null;
 	}
 	/**
 	 * Get the icon representing this object
@@ -1488,6 +1490,8 @@ abstract class DBObject implements iDisplay
 		{
 			// Take the autonumber
 			$this->m_iKey = $iNewKey;
+			// Invalidate the argument cache
+			$this->m_aAsArgs = null;
 		}
 		return $this->m_iKey;
 	}
@@ -2291,6 +2295,10 @@ abstract class DBObject implements iDisplay
 	{
 		if (is_null($this->m_aAsArgs))
 		{
+			$this->m_aAsArgs = array();
+		}
+		if (!array_key_exists($sArgName, $this->m_aAsArgs))
+		{
 			$oKPI = new ExecutionKPI();
 			$aScalarArgs = $this->ToArgsForQuery($sArgName);
 			$aScalarArgs[$sArgName] = $this->GetKey();
@@ -2343,11 +2351,10 @@ abstract class DBObject implements iDisplay
 					$aScalarArgs[$sArgName.'->html('.$sAttCode.')'] = '<ul><li>'.implode("</li><li>", $aNames).'</li></ul>';
 				}
 			}
-
-			$this->m_aAsArgs = $aScalarArgs;
+			$this->m_aAsArgs[$sArgName] = $aScalarArgs;
 			$oKPI->ComputeStats('ToArgs', get_class($this));
 		}
-		return $this->m_aAsArgs;
+		return $this->m_aAsArgs[$sArgName];
 	}
 
 	// To be optionaly overloaded
