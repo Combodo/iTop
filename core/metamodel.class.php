@@ -840,6 +840,10 @@ abstract class MetaModel
 	final static public function GetAttributeDef($sClass, $sAttCode)
 	{
 		self::_check_subclass($sClass);
+		if (!isset(self::$m_aAttribDefs[$sClass][$sAttCode]))
+		{
+			throw new Exception("Unknown attribute $sAttCode from class $sClass");
+		}
 		return self::$m_aAttribDefs[$sClass][$sAttCode];
 	}
 
