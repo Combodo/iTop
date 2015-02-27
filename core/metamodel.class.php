@@ -5420,7 +5420,7 @@ abstract class MetaModel
 	/**
 	 * Replaces all the parameters by the values passed in the hash array
 	 */
-	static public function ApplyParams($aInput, $aParams)
+	static public function ApplyParams($sInput, $aParams)
 	{
 		// Declare magic parameters
 		$aParams['APP_URL'] = utils::GetAbsoluteUrlAppRoot();
@@ -5431,12 +5431,43 @@ abstract class MetaModel
 		foreach($aParams as $sSearch => $replace)
 		{
 			// Some environment parameters are objects, we just need scalars
-			if (is_object($replace)) continue;
+			if (is_object($replace))
+			{
+				$iPos = strpos($sSearch, '->object()');
+				if ($iPos !== false)
+				{
+					// Expand the parameters for the object
+					$sName = substr($sSearch, 0, $iPos);
+					if (preg_match_all('/\\$'.$sName.'->([^\\$]+)\\$/', $sInput, $aMatches))
+					{
+						foreach($aMatches[1] as $sPlaceholderAttCode)
+						{
+							try
+							{
+								$sReplacement = $replace->GetForTemplate($sPlaceholderAttCode);
+								if ($sReplacement !== null)
+								{
+									$aReplacements[] = $sReplacement;
+									$aSearches[] = '$'.$sName.'->'.$sPlaceholderAttCode.'$';
+								}
+							}
+							catch(Exception $e)
+							{
+								// No replacement will occur
+							}
+						}
+					}
+				}
+				else
+				{
+					continue; // Ignore this non-scalar value
+				}
+			}
 
 			$aSearches[] = '$'.$sSearch.'$';
 			$aReplacements[] = (string) $replace;
 		}
-		return str_replace($aSearches, $aReplacements, $aInput);
+		return str_replace($aSearches, $aReplacements, $sInput);
 	}
 
 	/**

@@ -487,6 +487,35 @@ abstract class AttributeDefinition
 	{
 		return $this->GetAsHTML($sValue, $oHostObject, $bLocalize);
 	}
+	
+	/**
+	 * Get various representations of the value, for insertion into a template (e.g. in Notifications)
+	 * @param $value mixed The current value of the field
+	 * @param $sVerb string The verb specifying the representation of the value
+	 * @param $oHostObject DBObject The object
+	 * @param $bLocalize bool Whether or not to localize the value
+	 */
+	public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
+	{
+		if ($this->IsScalar())
+		{
+			switch ($sVerb)
+			{
+				case '':
+				return $value;
+				
+				case 'html':
+				return $this->GetAsHtml($value, $oHostObject, $bLocalize);
+				
+				case 'label':
+				return $this->GetEditValue($value);
+				
+				default:
+				throw new Exception("Unknown verb '$sVerb' for attribute ".$this->GetCode().' in class '.get_class($oHostObj));
+			}
+		}
+		return null;
+	}
 
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
@@ -729,6 +758,46 @@ class AttributeLinkedSet extends AttributeDefinition
 		$sRes = str_replace($sTextQualifier, $sTextQualifier.$sTextQualifier, $sRes);
 		$sRes = $sTextQualifier.$sRes.$sTextQualifier;
 		return $sRes;
+	}
+
+	/**
+	 * Get various representations of the value, for insertion into a template (e.g. in Notifications)
+	 * @param $value mixed The current value of the field
+	 * @param $sVerb string The verb specifying the representation of the value
+	 * @param $oHostObject DBObject The object
+	 * @param $bLocalize bool Whether or not to localize the value
+	 */
+	public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
+	{
+		$sRemoteName = $this->IsIndirect() ? $this->GetExtKeyToRemote().'_friendlyname' : 'friendlyname';
+		
+		$oLinkSet = clone $value; // Workaround/Safety net for Trac #887
+		$iLimit = MetaModel::GetConfig()->Get('max_linkset_output');
+		if ($iLimit > 0)
+		{
+			$oLinkSet->SetLimit($iLimit);
+		}
+		$aNames = $oLinkSet->GetColumnAsArray($sRemoteName);
+		if ($iLimit > 0)
+		{
+			$iTotal = $oLinkSet->Count();
+			if ($iTotal > count($aNames))
+			{
+				$aNames[] = '... '.Dict::Format('UI:TruncatedResults', count($aNames), $iTotal);
+			}
+		}
+		
+		switch($sVerb)
+		{
+			case '':
+			return implode("\n", $aNames);
+					
+			case 'html':
+			return '<ul><li>'.implode("</li><li>", $aNames).'</li></ul>';
+			
+			default:
+			throw new Exception("Unknown verb '$sVerb' for attribute ".$this->GetCode().' in class '.get_class($oHostObj));	
+		}
 	}
 
 	public function DuplicatesAllowed() {return false;} // No duplicates for 1:n links, never
@@ -2094,6 +2163,35 @@ class AttributeCaseLog extends AttributeLongText
 		}
 	}
 
+
+	/**
+	 * Get various representations of the value, for insertion into a template (e.g. in Notifications)
+	 * @param $value mixed The current value of the field
+	 * @param $sVerb string The verb specifying the representation of the value
+	 * @param $oHostObject DBObject The object
+	 * @param $bLocalize bool Whether or not to localize the value
+	 */
+	public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
+	{
+		switch($sVerb)
+		{
+			case '':
+			return $value->GetText();
+			
+			case 'head':
+			return $value->GetLatestEntry();
+
+			case 'head_html':
+			return '<div class="caselog_entry">'.str_replace( array( "\r\n", "\n", "\r"), "<br/>", htmlentities($value->GetLatestEntry(), ENT_QUOTES, 'UTF-8')).'</div>';
+			
+			case 'html':
+			return $value->GetAsEmailHtml();
+	
+			default:
+			throw new Exception("Unknown verb '$sVerb' for attribute ".$this->GetCode().' in class '.get_class($oHostObj));	
+		}
+	}
+	
 	/**
 	 * Helper to get a value that will be JSON encoded
 	 * The operation is the opposite to FromJSONToValue	 

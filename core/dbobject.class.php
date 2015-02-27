@@ -89,8 +89,6 @@ abstract class DBObject implements iDisplay
 	protected $m_aCheckIssues = null;
 	protected $m_aDeleteIssues = null;
 
-	protected $m_aAsArgs = null; // The current object as a standard argument (cache)
-
 	private $m_bFullyLoaded = false; // Compound objects can be partially loaded
 	private $m_aLoadedAtt = array(); // Compound objects can be partially loaded, array of sAttCode
 	protected $m_aModifiedAtt = array(); // list of (potentially) modified sAttCodes
@@ -413,7 +411,6 @@ abstract class DBObject implements iDisplay
 
 		// The object has changed, reset caches
 		$this->m_bCheckStatus = null;
-		$this->m_aAsArgs = null;
 
 		// Make sure we do not reload it anymore... before saving it
 		$this->RegisterAsDirty();
@@ -844,8 +841,6 @@ abstract class DBObject implements iDisplay
 			throw new CoreException("Changing the key ({$this->m_iKey} to $iNewKey) on an object (class {".get_class($this).") wich already exists in the Database");
 		}
 		$this->m_iKey = $iNewKey;
-		// Invalidate the argument cache
-		$this->m_aAsArgs = null;
 	}
 	/**
 	 * Get the icon representing this object
@@ -1490,8 +1485,6 @@ abstract class DBObject implements iDisplay
 		{
 			// Take the autonumber
 			$this->m_iKey = $iNewKey;
-			// Invalidate the argument cache
-			$this->m_aAsArgs = null;
 		}
 		return $this->m_iKey;
 	}
@@ -1574,9 +1567,6 @@ abstract class DBObject implements iDisplay
 		$this->DBWriteLinks();
 		$this->m_bIsInDB = true;
 		$this->m_bDirty = false;
-		
-		// Arg cache invalidated (in particular, it needs the object key -could be improved later)
-		$this->m_aAsArgs = null;
 
 		$this->AfterInsert();
 
@@ -2274,87 +2264,94 @@ abstract class DBObject implements iDisplay
 
 
 
-	/*
-	* Create query parameters (SELECT ... WHERE service = :this->service_id)
-	* to be used with the APIs DBObjectSearch/DBObjectSet
-	* 		
-	* Starting 2.0.2 the parameters are computed on demand, at the lowest level,
-	* in VariableExpression::Render()		
-	*/	
+   	/**
+	 * Create query parameters (SELECT ... WHERE service = :this->service_id)
+	 * to be used with the APIs DBObjectSearch/DBObjectSet
+	 * 		
+	 * Starting 2.0.2 the parameters are computed on demand, at the lowest level,
+	 * in VariableExpression::Render()		
+	 */	
 	public function ToArgsForQuery($sArgName = 'this')
 	{
 		return array($sArgName.'->object()' => $this);
 	}
 
-	/*
-	* Create template placeholders
-	* An improvement could be to compute the values on demand
-	* (i.e. interpret the template to determine the placeholders)		
-	*/
+	/**
+ 	 * Create template placeholders: now equivalent to ToArgsForQuery since the actual
+	 * template placeholders are computed on demand.	
+	 */
 	public function ToArgs($sArgName = 'this')
 	{
-		if (is_null($this->m_aAsArgs))
-		{
-			$this->m_aAsArgs = array();
-		}
-		if (!array_key_exists($sArgName, $this->m_aAsArgs))
-		{
-			$oKPI = new ExecutionKPI();
-			$aScalarArgs = $this->ToArgsForQuery($sArgName);
-			$aScalarArgs[$sArgName] = $this->GetKey();
-			$aScalarArgs[$sArgName.'->id'] = $this->GetKey();
-			$aScalarArgs[$sArgName.'->hyperlink()'] = $this->GetHyperlink('iTopStandardURLMaker', false);
-			$aScalarArgs[$sArgName.'->hyperlink(portal)'] = $this->GetHyperlink('PortalURLMaker', false);
-			$aScalarArgs[$sArgName.'->name()'] = $this->GetName();
+		return $this->ToArgsForQuery($sArgName);
+	}
 
-			$sClass = get_class($this);
-			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+	public function GetForTemplate($sPlaceholderAttCode)
+	{
+		$ret = null;
+		if (($iPos = strpos($sPlaceholderAttCode, '->')) !== false)
+		{
+			$sExtKeyAttCode = substr($sPlaceholderAttCode, 0, $iPos);
+			$sRemoteAttCode = substr($sPlaceholderAttCode, $iPos + 2);
+			if (!MetaModel::IsValidAttCode(get_class($this), $sExtKeyAttCode))
 			{
-				if ($oAttDef instanceof AttributeCaseLog)
-				{
-					$oCaseLog = $this->Get($sAttCode);
-					$aScalarArgs[$sArgName.'->'.$sAttCode] = $oCaseLog->GetText();
-					$sHead = $oCaseLog->GetLatestEntry();
-					$aScalarArgs[$sArgName.'->head('.$sAttCode.')'] = $sHead;
-					$aScalarArgs[$sArgName.'->head_html('.$sAttCode.')'] = '<div class="caselog_entry">'.str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sHead, ENT_QUOTES, 'UTF-8')).'</div>';
-					$aScalarArgs[$sArgName.'->html('.$sAttCode.')'] = $oCaseLog->GetAsEmailHtml();
-				}
-				elseif ($oAttDef->IsScalar())
-				{
-					$aScalarArgs[$sArgName.'->'.$sAttCode] = $this->Get($sAttCode);
-					// #@# Note: This has been proven to be quite slow, this can slow down bulk load
-					$sAsHtml = $this->GetAsHtml($sAttCode);
-					$aScalarArgs[$sArgName.'->html('.$sAttCode.')'] = $sAsHtml;
-					$aScalarArgs[$sArgName.'->label('.$sAttCode.')'] = $this->GetEditValue($sAttCode); // "Nice" display value, but without HTML tags and entities
-				}
-				elseif ($oAttDef->IsLinkSet())
-				{
-					$sRemoteName = $oAttDef->IsIndirect() ? $oAttDef->GetExtKeyToRemote().'_friendlyname' : 'friendlyname';
-
-					$oLinkSet = clone $this->Get($sAttCode); // Workaround/Safety net for Trac #887
-					$iLimit = MetaModel::GetConfig()->Get('max_linkset_output');
-					if ($iLimit > 0)
-					{
-						$oLinkSet->SetLimit($iLimit);
-					}
-					$aNames = $oLinkSet->GetColumnAsArray($sRemoteName);
-					if ($iLimit > 0)
-					{
-						$iTotal = $oLinkSet->Count();
-						if ($iTotal > count($aNames))
-						{
-							$aNames[] = '... '.Dict::Format('UI:TruncatedResults', count($aNames), $iTotal);
-						}
-					}
-					$sNames = implode("\n", $aNames);
-					$aScalarArgs[$sArgName.'->'.$sAttCode] = $sNames;
-					$aScalarArgs[$sArgName.'->html('.$sAttCode.')'] = '<ul><li>'.implode("</li><li>", $aNames).'</li></ul>';
-				}
+				throw new CoreException("Unknown attribute '$sExtKeyAttCode' for the class ".get_class($this));
 			}
-			$this->m_aAsArgs[$sArgName] = $aScalarArgs;
-			$oKPI->ComputeStats('ToArgs', get_class($this));
+			
+			$oKeyAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyAttCode);
+			if (!$oKeyAttDef instanceof AttributeExternalKey)
+			{
+				throw new CoreException("'$sExtKeyAttCode' is not an external key of the class ".get_class($this));
+			}
+			$sRemoteClass = $oKeyAttDef->GetTargetClass();
+			$oRemoteObj = MetaModel::GetObject($sRemoteClass, $this->GetStrict($sExtKeyAttCode), false);
+			if (is_null($oRemoteObj))
+			{
+				$ret = Dict::S('UI:UndefinedObject');
+			}
+			else
+			{
+				// Recurse
+				$ret  = $oRemoteObj->GetForTemplate($sRemoteAttCode);
+			}
 		}
-		return $this->m_aAsArgs[$sArgName];
+		else 
+		{
+			switch($sPlaceholderAttCode)
+			{
+				case 'id':
+				$ret = $this->GetKey();
+				break;
+				
+				case 'hyperlink()':
+				$ret = $this->GetHyperlink('iTopStandardURLMaker', false);
+				break;
+
+				case 'hyperlink(portal)':
+				$ret = $this->GetHyperlink('PortalURLMaker', false);
+				break;
+				
+				case 'name()':
+				$ret = $this->GetName();
+				break;
+
+				default:
+				if (preg_match('/^([^(]+)\\((.+)\\)$/', $sPlaceholderAttCode, $aMatches))
+				{
+					$sVerb = $aMatches[1];
+					$sAttCode = $aMatches[2];
+				}
+				else
+				{
+					$sVerb = '';
+					$sAttCode = $sPlaceholderAttCode;
+				}
+				
+				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+				$ret = $oAttDef->GetForTemplate($this->Get($sAttCode), $sVerb, $this);
+			}
+
+		}
+		return $ret;
 	}
 
 	// To be optionaly overloaded
