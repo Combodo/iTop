@@ -1570,7 +1570,7 @@ class DashletBadge extends Dashlet
 		$oPage->add('<p>');
 		$oPage->add('   <a>'.Dict::Format('UI:ClickToCreateNew', $sClassLabel).'</a>');
 		$oPage->add('   <br/>');
-		$oPage->add('   <a>Search for Server objects</a>');
+		$oPage->add('   <a>'.Dict::Format('UI:SearchFor_Class', $sClassLabel).'</a>');
 		$oPage->add('</p>');
 		$oPage->add('</div>');
 
