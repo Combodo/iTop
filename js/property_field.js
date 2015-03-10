@@ -466,7 +466,7 @@ $(function()
 
 var oFormValidation = {};
 
-function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId, aForbiddenValues, sExplainForbiddenValues)
+function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId, aForbiddenValues)
 {
 	var currentVal = $('#'+sFieldId).val();
 	var bValid = true;
@@ -485,11 +485,14 @@ function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId, aForbidden
 	{
 		for(var i in aForbiddenValues)
 		{
-			if (aForbiddenValues[i] == currentVal)
+			for(j in aForbiddenValues[i].values)
 			{
-				bValid = false;
-				sMessage = sExplainForbiddenValues;
-				break;
+				if (aForbiddenValues[i].values[j] == currentVal)
+				{
+					bValid = false;
+					sMessage = aForbiddenValues[i].message;
+					break;	
+				}
 			}
 		}
 	}
