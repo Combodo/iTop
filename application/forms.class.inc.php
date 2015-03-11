@@ -1537,9 +1537,10 @@ class DesignerFormSelectorField extends DesignerFormField
 			$sHtml = "<select $sCSSClasses id=\"$sId\" name=\"$sName\" $sReadOnly>";
 			foreach($this->aSubForms as $iKey => $aFormData)
 			{
-				$sDisplayValue = htmlentities($aFormData['label'], ENT_QUOTES, 'UTF-8');;
+				$sDisplayValue = htmlentities($aFormData['label'], ENT_QUOTES, 'UTF-8');
+				$sValue = htmlentities($aFormData['value'], ENT_QUOTES, 'UTF-8');
 				$sSelected = ($iKey == $this->defaultValue) ? 'selected' : '';
-				$sHtml .= "<option value=\"$iKey\" $sSelected>".$sDisplayValue."</option>";
+				$sHtml .= "<option data-value=\"$sValue\" value=\"$iKey\" $sSelected>".$sDisplayValue."</option>";
 			}
 			$sHtml .= "</select>";
 		}
