@@ -883,7 +883,7 @@ class DesignerTextField extends DesignerFormField
 	{
 		$aForbiddenValues = $aValues;
 		
-		$iDefaultKey = array_search($this->defaultValue, $this->aForbiddenValues);
+		$iDefaultKey = array_search($this->defaultValue, $aForbiddenValues);
 		if ($iDefaultKey !== false)
 		{
 			// The default (current) value is always allowed...
