@@ -625,7 +625,7 @@ function ReadFormParams(sFormId)
 {
 	var oMap = { };
 	$('#'+sFormId+' :input').each( function() {
-		if ($(this).parent().is(':visible'))
+		if ($(this).parent().is(':visible') && !$(this).prop('disabled'))
 		{
 			var sName = $(this).attr('name');
 			if (sName && sName != '')
