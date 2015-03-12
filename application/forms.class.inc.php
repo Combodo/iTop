@@ -960,12 +960,10 @@ class DesignerLongTextField extends DesignerTextField
 		if (is_array($this->aForbiddenValues))
 		{
 			$sForbiddenValues = json_encode($this->aForbiddenValues);
-			$sExplainForbiddenValues = addslashes($this->sExplainForbiddenValues);
 		}
 		else
 		{
-			$sForbiddenValues = 'null';
-			$sExplainForbiddenValues = 'null';
+			$sForbiddenValues = '[]'; //Empty JS array
 		}
 		$sMandatory = $this->bMandatory ? 'true' :  'false';
 		$sCSSClasses = '';
@@ -977,7 +975,7 @@ class DesignerLongTextField extends DesignerTextField
 		{
 			$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern',  $(this).closest('form').attr('id'), $sForbiddenValues, '$sExplainForbiddenValues'); } );
+$('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern',  $(this).closest('form').attr('id'), $sForbiddenValues); } );
 {
 	var myTimer = null;
 	$('#$sId').bind('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
