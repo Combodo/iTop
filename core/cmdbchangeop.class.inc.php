@@ -55,7 +55,7 @@ class CMDBChangeOp extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("date", array("allowed_values"=>null, "extkey_attcode"=>"change", "target_attcode"=>"date")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("userinfo", array("allowed_values"=>null, "extkey_attcode"=>"change", "target_attcode"=>"userinfo")));
 		MetaModel::Init_AddAttribute(new AttributeString("objclass", array("allowed_values"=>null, "sql"=>"objclass", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeInteger("objkey", array("allowed_values"=>null, "sql"=>"objkey", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeObjectKey("objkey", array("allowed_values"=>null, "class_attcode"=>"objclass", "sql"=>"objkey", "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_SetZListItems('details', array('change', 'date', 'userinfo')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('change', 'date', 'userinfo')); // Attributes to be displayed for the complete details

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2014 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -2856,6 +2856,17 @@ abstract class MetaModel
 				$sForeignClassAlias = $oForeignFilter->GetFirstJoinedClassAlias();
 				$oBuild->m_oQBExpressions->PushJoinField(new FieldExpression($sForeignKeyAttCode, $sForeignClassAlias));
 
+				if ($oForeignKeyAttDef instanceof AttributeObjectKey)
+				{
+					$sClassAttCode = $oForeignKeyAttDef->Get('class_attcode');
+
+					// Add the condition: `$sForeignClassAlias`.$sClassAttCode IN (subclasses of $sClass')
+					$oClassListExpr = ListExpression::FromScalars(self::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL));
+					$oClassExpr = new FieldExpression($sClassAttCode, $sForeignClassAlias);
+					$oClassRestriction = new BinaryExpression($oClassExpr, 'IN', $oClassListExpr);
+					$oBuild->m_oQBExpressions->AddCondition($oClassRestriction);
+				}
+
 				$oSelectForeign = self::MakeQuery($oBuild, $oForeignFilter, $aAttToLoad);
 
 				$oJoinExpr = $oBuild->m_oQBExpressions->PopJoinField();
@@ -3108,6 +3119,16 @@ abstract class MetaModel
 							$sLocalKeyField = current($aCols); // get the first column for an external key
 			
 							self::DbgTrace("External key $sKeyAttCode, Join on $sLocalKeyField = $sExternalKeyField");
+							if ($oKeyAttDef instanceof AttributeObjectKey)
+							{
+								$sClassAttCode = $oKeyAttDef->Get('class_attcode');
+
+								// Add the condition: `$sTargetAlias`.$sClassAttCode IN (subclasses of $sKeyClass')
+								$oClassListExpr = ListExpression::FromScalars(self::EnumChildClasses($sKeyClass, ENUM_CHILD_CLASSES_ALL));
+								$oClassExpr = new FieldExpression($sClassAttCode, $sTargetAlias);
+								$oClassRestriction = new BinaryExpression($oClassExpr, 'IN', $oClassListExpr);
+								$oBuild->m_oQBExpressions->AddCondition($oClassRestriction);
+							}
 							if ($oKeyAttDef->IsNullAllowed())
 							{
 								$oSelectBase->AddLeftJoin($oSelectExtKey, $sLocalKeyField, $sExternalKeyField, $sExternalKeyTable);

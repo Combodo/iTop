@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2014 Combodo SARL
+// Copyright (C) 2014-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -35,7 +35,7 @@
  * }
  */
  
-define('ITOP_DESIGN_LATEST_VERSION', '1.1');
+define('ITOP_DESIGN_LATEST_VERSION', '1.2');
  
 class iTopDesignFormat
 {
@@ -49,6 +49,12 @@ class iTopDesignFormat
 		'1.1' => array(
 			'previous' => '1.0',
 			'go_to_previous' => 'From11To10',
+			'next' => '1.2',
+			'go_to_next' => 'From11To12',
+		),
+		'1.2' => array(
+			'previous' => '1.1',
+			'go_to_previous' => 'From12To11',
 			'next' => null,
 			'go_to_next' => null,
 		),
@@ -359,6 +365,31 @@ class iTopDesignFormat
 				$this->LogError('Alterations have been defined under the node: '.MFDocument::GetItopNodePath($oNode));
 			}
 			$oNode->removeAttribute('id');
+		}
+	}
+
+	/**
+	 * Upgrade the format from version 1.1 to 1.2
+	 * @return void (Errors are logged)
+	 */
+	protected function From11To12($oFactory)
+	{
+		// Do nothing
+	}
+
+	/**
+	 * Downgrade the format from version 1.2 to 1.1
+	 * @return void (Errors are logged)
+	 */
+	protected function From12To11($oFactory)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+		// Transform ObjectKey attributes into Integer
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeObjectKey']");
+		foreach ($oNodeList as $oNode)
+		{
+			$oNode->setAttribute('xsi:type', 'AttributeInteger');
+			// The property class_attcode is left there (doing no harm)
 		}
 	}
 

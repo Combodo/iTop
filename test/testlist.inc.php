@@ -367,6 +367,11 @@ class TestOQLNormalization extends TestBizModel
 			'SELECT p, l FROM Person AS p JOIN Location AS l ON p.location_id = l.id' => true,
 			'SELECT foo FROM Person AS p JOIN Location AS l ON p.location_id = l.id' => false,
 			'SELECT p, foo FROM Person AS p JOIN Location AS l ON p.location_id = l.id' => false,
+
+			// Joins based on AttributeObjectKey
+			//
+			'SELECT Attachment AS a JOIN UserRequest AS r ON a.item_id = r.id' => true,
+			'SELECT UserRequest AS r JOIN Attachment AS a ON a.item_id = r.id' => true,
 		);
 
 		$iErrors = 0;

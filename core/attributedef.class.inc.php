@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -1194,6 +1194,61 @@ class AttributeInteger extends AttributeDBField
 	{
 		assert(is_numeric($value) || is_null($value));
 		return $value; // supposed to be an int
+	}
+}
+
+/**
+ * An external key for which the class is defined as the value of another attribute 
+ *
+ * @package     iTopORM
+ */
+class AttributeObjectKey extends AttributeDBFieldVoid
+{
+	static public function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array('class_attcode', 'is_null_allowed'));
+	}
+
+	public function GetEditClass() {return "String";}
+	protected function GetSQLCol() {return "INT(11)";}
+
+	public function GetDefaultValue() {return 0;}
+	public function IsNullAllowed()
+	{
+		return $this->Get("is_null_allowed");
+	}
+
+
+	public function GetBasicFilterOperators()
+	{
+		return parent::GetBasicFilterOperators();
+	}
+	public function GetBasicFilterLooseOperator()
+	{
+		return parent::GetBasicFilterLooseOperator();
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		return parent::GetBasicFilterSQLExpr($sOpCode, $value);
+	} 
+
+	public function GetNullValue()
+	{
+		return 0;
+	} 
+
+	public function IsNull($proposedValue)
+	{
+		return ($proposedValue == 0);
+	} 
+
+	public function MakeRealValue($proposedValue, $oHostObj)
+	{
+		if (is_null($proposedValue)) return 0;
+		if ($proposedValue === '') return 0;
+		if (MetaModel::IsValidObject($proposedValue)) return $proposedValue->GetKey();
+		return (int)$proposedValue;
 	}
 }
 

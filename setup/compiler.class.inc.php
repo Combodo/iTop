@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2011-2013 Combodo SARL
+// Copyright (C) 2011-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -841,9 +841,9 @@ EOF;
 		
 				if ($sAttType == 'AttributeLinkedSetIndirect')
 				{
-					$aParameters['linked_class'] = $this->GetMandatoryPropString($oField, 'linked_class', '');
-					$aParameters['ext_key_to_me'] = $this->GetMandatoryPropString($oField, 'ext_key_to_me', '');
-					$aParameters['ext_key_to_remote'] = $this->GetMandatoryPropString($oField, 'ext_key_to_remote', '');
+					$aParameters['linked_class'] = $this->GetMandatoryPropString($oField, 'linked_class');
+					$aParameters['ext_key_to_me'] = $this->GetMandatoryPropString($oField, 'ext_key_to_me');
+					$aParameters['ext_key_to_remote'] = $this->GetMandatoryPropString($oField, 'ext_key_to_remote');
 					$aParameters['allowed_values'] = 'null';
 					$aParameters['count_min'] = $this->GetPropNumber($oField, 'count_min', 0);
 					$aParameters['count_max'] = $this->GetPropNumber($oField, 'count_max', 0);
@@ -852,8 +852,8 @@ EOF;
 				}
 				elseif ($sAttType == 'AttributeLinkedSet')
 				{
-					$aParameters['linked_class'] = $this->GetMandatoryPropString($oField, 'linked_class', '');
-					$aParameters['ext_key_to_me'] = $this->GetMandatoryPropString($oField, 'ext_key_to_me', '');
+					$aParameters['linked_class'] = $this->GetMandatoryPropString($oField, 'linked_class');
+					$aParameters['ext_key_to_me'] = $this->GetMandatoryPropString($oField, 'ext_key_to_me');
 					$aParameters['count_min'] = $this->GetPropNumber($oField, 'count_min', 0);
 					$aParameters['count_max'] = $this->GetPropNumber($oField, 'count_max', 0);
 					$sEditMode = $oField->GetChildText('edit_mode');
@@ -885,7 +885,7 @@ EOF;
 					{
 						$aParameters['allowed_values'] = 'null'; // or "new ValueSetObjects('SELECT xxxx')"
 					}
-					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql', '');
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
 					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
 					$aParameters['on_target_delete'] = $oField->GetChildText('on_target_delete');
 					$aParameters['depends_on'] = $sDependencies;
@@ -893,6 +893,14 @@ EOF;
 					$aParameters['min_autocomplete_chars'] = $this->GetPropNumber($oField, 'min_autocomplete_chars');
 					$aParameters['allow_target_creation'] = $this->GetPropBoolean($oField, 'allow_target_creation');
 					$aParameters['display_style'] = $this->GetPropString($oField, 'display_style', 'select');
+				}
+				elseif ($sAttType == 'AttributeObjectKey')
+				{
+					$aParameters['class_attcode'] = $this->GetMandatoryPropString($oField, 'class_attcode');
+					$aParameters['allowed_values'] = 'null';
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
 				}
 				elseif ($sAttType == 'AttributeHierarchicalKey')
 				{
@@ -905,7 +913,7 @@ EOF;
 					{
 						$aParameters['allowed_values'] = 'null'; // or "new ValueSetObjects('SELECT xxxx')"
 					}
-					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql', '');
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
 					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
 					$aParameters['on_target_delete'] = $oField->GetChildText('on_target_delete');
 					$aParameters['depends_on'] = $sDependencies;
@@ -1019,7 +1027,7 @@ EOF;
 				else
 				{
 					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
-					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql', '');
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
 					$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
 					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
 					$aParameters['depends_on'] = $sDependencies;
