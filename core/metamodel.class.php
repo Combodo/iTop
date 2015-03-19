@@ -3098,6 +3098,23 @@ abstract class MetaModel
 //echo "<p><b>ExtAttr2: $sTargetAlias.$sAttCode to $sKeyClassAlias.$sRemoteAttExpr (class: $sKeyClass)</b></p>\n";
 								}
 							}
+
+							if ($oKeyAttDef instanceof AttributeObjectKey)
+							{
+								// Add the condition: `$sTargetAlias`.$sClassAttCode IN (subclasses of $sKeyClass')
+								$sClassAttCode = $oKeyAttDef->Get('class_attcode');
+								$oClassAttDef = self::GetAttributeDef($sTargetClass, $sClassAttCode);
+								foreach ($oClassAttDef->GetSQLExpressions() as $sColID => $sSQLExpr)
+								{
+									$aTranslateNow[$sTargetAlias][$sClassAttCode.$sColId] = new FieldExpressionResolved($sSQLExpr, $sTableAlias);
+								}
+
+								$oClassListExpr = ListExpression::FromScalars(self::EnumChildClasses($sKeyClass, ENUM_CHILD_CLASSES_ALL));
+								$oClassExpr = new FieldExpression($sClassAttCode, $sTargetAlias);
+								$oClassRestriction = new BinaryExpression($oClassExpr, 'IN', $oClassListExpr);
+								$oBuild->m_oQBExpressions->AddCondition($oClassRestriction);
+							}
+
 							// Translate prior to recursing
 							//
 //echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oBuild->m_oQBExpressions, true)."\n".print_r($aTranslateNow, true)."</pre></p>\n";
@@ -3119,16 +3136,6 @@ abstract class MetaModel
 							$sLocalKeyField = current($aCols); // get the first column for an external key
 			
 							self::DbgTrace("External key $sKeyAttCode, Join on $sLocalKeyField = $sExternalKeyField");
-							if ($oKeyAttDef instanceof AttributeObjectKey)
-							{
-								$sClassAttCode = $oKeyAttDef->Get('class_attcode');
-
-								// Add the condition: `$sTargetAlias`.$sClassAttCode IN (subclasses of $sKeyClass')
-								$oClassListExpr = ListExpression::FromScalars(self::EnumChildClasses($sKeyClass, ENUM_CHILD_CLASSES_ALL));
-								$oClassExpr = new FieldExpression($sClassAttCode, $sTargetAlias);
-								$oClassRestriction = new BinaryExpression($oClassExpr, 'IN', $oClassListExpr);
-								$oBuild->m_oQBExpressions->AddCondition($oClassRestriction);
-							}
 							if ($oKeyAttDef->IsNullAllowed())
 							{
 								$oSelectBase->AddLeftJoin($oSelectExtKey, $sLocalKeyField, $sExternalKeyField, $sExternalKeyTable);
