@@ -440,7 +440,6 @@ EOF
 );
 			$oPage->p('<span style="display:none;" id="attachment_loading">Loading, please wait...</span>');
 			$oPage->p('<input type="hidden" id="attachment_plugin" name="attachment_plugin"/>');
-			$oPage->add('</fieldset>');
 			if ($this->m_bDeleteEnabled)
 			{
 				$oPage->add_ready_script('$(".attachment").hover( function() {$(this).children(":button").toggleClass("btn_hidden"); } );');
@@ -466,7 +465,9 @@ EOF
 					$oPage->add('<div class="attachment" id="attachment_'.$iAttId.'"><a data-preview="'.$sPreview.'" href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'</a><input type="hidden" name="attachments[]" value="'.$iAttId.'"/><br/>&nbsp;&nbsp;</div>');
 				}
 			}
+			$oPage->add('</span>');
 		}
+		$oPage->add('</fieldset>');
 		$sPreviewNotAvailable = addslashes(Dict::S('Attachments:PreviewNotAvailable'));
 		$iMaxWidth = MetaModel::GetModuleSetting('itop-attachments', 'preview_max_width', 290);
 		$oPage->add_ready_script("$(document).tooltip({ items: '.attachment a',  position: { my: 'left top', at: 'right top', using: function( position, feedback ) { $( this ).css( position ); }}, content: function() { if ($(this).attr('data-preview') == 'true') { return('<img style=\"max-width:{$iMaxWidth}px\" src=\"'+$(this).attr('href')+'\"></img>');} else { return '$sPreviewNotAvailable'; }}});");
