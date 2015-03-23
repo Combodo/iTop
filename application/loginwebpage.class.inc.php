@@ -25,6 +25,7 @@
  */
 
 require_once(APPROOT."/application/nicewebpage.class.inc.php");
+require_once(APPROOT.'/application/portaldispatcher.class.inc.php');
 /**
  * Web page used for displaying the login form
  */
@@ -428,6 +429,7 @@ EOF
 		// Unset all of the session variables.
 		unset($_SESSION['auth_user']);
 		unset($_SESSION['login_mode']);
+		unset($_SESSION['profile_list']);
 		// If it's desired to kill the session, also delete the session cookie.
 		// Note: This will destroy the session, and not just the session data!
 	}
@@ -654,12 +656,22 @@ EOF
 	
 	/**
 	 * Overridable: depending on the user, head toward a dedicated portal
-	 * @param bool $bIsAllowedToPortalUsers Whether or not the current page is considered as part of the portal
+	 * @param string|null $sRequestedPortalId
 	 * @param int $iOnExit How to complete the call: redirect or return a code
 	 */	 
-	protected static function ChangeLocation($bIsAllowedToPortalUsers, $iOnExit = self::EXIT_PROMPT)
+	protected static function ChangeLocation($sRequestedPortalId = null, $iOnExit = self::EXIT_PROMPT)
 	{
-		if ( (!$bIsAllowedToPortalUsers) && (UserRights::IsPortalUser()))
+		$fStart = microtime(true);
+		$ret = call_user_func(array(self::$sHandlerClass, 'Dispatch'), $sRequestedPortalId);
+		if ($ret === true)
+		{
+			return self::EXIT_CODE_OK;
+		}
+		else if($ret === false)
+		{
+			throw new Exception('Nowhere to go??');
+		}
+		else
 		{
 			if ($iOnExit == self::EXIT_RETURN)
 			{
@@ -668,16 +680,11 @@ EOF
 			else
 			{
 				// No rights to be here, redirect to the portal
-				header('Location: '.utils::GetAbsoluteUrlAppRoot().'portal/index.php');
+				header('Location: '.$ret);
 			}
 		}
-		else
-		{
-			return self::EXIT_CODE_OK;
-		}
 	}
-
-
+	
 	/**
 	 * Check if the user is already authentified, if yes, then performs some additional validations:
 	 * - if $bMustBeAdmin is true, then the user must be an administrator, otherwise an error is displayed
@@ -688,9 +695,56 @@ EOF
 	 */
 	static function DoLogin($bMustBeAdmin = false, $bIsAllowedToPortalUsers = false, $iOnExit = self::EXIT_PROMPT)
 	{
-		$sMessage  = ''; // In case we need to return a message to the calling web page
+		$sRequestedPortalId = $bIsAllowedToPortalUsers ? 'legacy_portal' : 'backoffice';
+		return self::DoLoginEx($sRequestedPortalId, $bMustBeAdmin, $iOnExit);
+	}
+	
+	/**
+	 * Check if the user is already authentified, if yes, then performs some additional validations to redirect towards the desired "portal"
+	 * @param string|null $sRequestedPortalId The requested "portal" interface, null for any
+	 * @param bool $bMustBeAdmin Whether or not the user must be an admin to access the current page
+	 * @param int iOnExit What action to take if the user is not logged on (one of the class constants EXIT_...)
+	 */
+	static function DoLoginEx($sRequestedPortalId = null, $bMustBeAdmin = false, $iOnExit = self::EXIT_PROMPT)
+	{
 		$operation = utils::ReadParam('loginop', '');
-
+	
+		$sMessage = self::HandleOperations($operation); // May exit directly
+	
+		$iRet = self::Login($iOnExit);
+	
+		if ($iRet == self::EXIT_CODE_OK)
+		{
+			if ($bMustBeAdmin && !UserRights::IsAdministrator())
+			{
+				if ($iOnExit == self::EXIT_RETURN)
+				{
+					return self::EXIT_CODE_MUSTBEADMIN;
+				}
+				else
+				{
+					require_once(APPROOT.'/setup/setuppage.class.inc.php');
+					$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
+					$oP->add("<h1>".Dict::S('UI:Login:Error:AccessAdmin')."</h1>\n");
+					$oP->p("<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a>");
+					$oP->output();
+					exit;
+				}
+			}
+			$iRet = call_user_func(array(self::$sHandlerClass, 'ChangeLocation'), $sRequestedPortalId, $iOnExit);
+		}
+		if ($iOnExit == self::EXIT_RETURN)
+		{
+			return $iRet;
+		}
+		else
+		{
+			return $sMessage;
+		}
+	}	
+	protected static function HandleOperations($operation)
+	{
+		$sMessage = ''; // most of the operations never return, but some can return a message to be displayed
 		if ($operation == 'logoff')
 		{
 			if (isset($_SESSION['login_mode']))
@@ -714,7 +768,7 @@ EOF
 			$oPage->DisplayLoginForm( $sLoginMode, false /* not a failed attempt */);
 			$oPage->output();
 			exit;
-		}		
+		}
 		else if ($operation == 'forgot_pwd')
 		{
 			$oPage = self::NewLoginWebPage();
@@ -767,36 +821,54 @@ EOF
 			}
 			$sMessage = Dict::S('UI:Login:PasswordChanged');
 		}
+		return $sMessage;
+	}
+	
+	protected static function Dispatch($sRequestedPortalId)
+	{
+		if ($sRequestedPortalId === null) return true; // allowed to any portal => return true
 		
-		$iRet = self::Login($iOnExit);
-
-		if ($iRet == self::EXIT_CODE_OK)
+		$aPortalsConf = PortalDispatcherData::GetData();
+		$aDispatchers = array();
+		foreach($aPortalsConf as $sPortalId => $aConf)
 		{
-			if ($bMustBeAdmin && !UserRights::IsAdministrator())
+			$sHandlerClass = $aConf['handler'];
+			$aDispatchers[$sPortalId] = new $sHandlerClass($sPortalId);
+		}
+		
+		if (array_key_exists($sRequestedPortalId, $aDispatchers) && $aDispatchers[$sRequestedPortalId]->IsUserAllowed())
+		{
+			return true;
+		}
+		foreach($aDispatchers as $sPortalId => $oDispatcher)
+		{
+			if ($oDispatcher->IsUserAllowed()) return $oDispatcher->GetUrl();
+		}
+		return false; // nothing matched !!
+	}
+	
+	public static function GetAllowedPortals()
+	{
+		$aAllowedPortals = array();
+		$aPortalsConf = PortalDispatcherData::GetData();
+		$aDispatchers = array();
+		foreach($aPortalsConf as $sPortalId => $aConf)
+		{
+			$sHandlerClass = $aConf['handler'];
+			$aDispatchers[$sPortalId] = new $sHandlerClass($sPortalId);
+		}
+		
+		foreach($aDispatchers as $sPortalId => $oDispatcher)
+		{
+			if ($oDispatcher->IsUserAllowed())
 			{
-				if ($iOnExit == self::EXIT_RETURN)
-				{
-					return self::EXIT_CODE_MUSTBEADMIN;
-				}
-				else
-				{
-					require_once(APPROOT.'/setup/setuppage.class.inc.php');
-					$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
-					$oP->add("<h1>".Dict::S('UI:Login:Error:AccessAdmin')."</h1>\n");	
-					$oP->p("<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a>");
-					$oP->output();
-					exit;
-				}
+				$aAllowedPortals[] = array(
+					'id' => $sPortalId,
+					'label' => $oDispatcher->GetLabel(),
+					'url' => $oDispatcher->GetUrl(),
+				);
 			}
-			$iRet = call_user_func(array(self::$sHandlerClass, 'ChangeLocation'), $bIsAllowedToPortalUsers, $iOnExit);
 		}
-		if ($iOnExit == self::EXIT_RETURN)
-		{
-			return $iRet;
-		}
-		else
-		{
-			return $sMessage;
-		}
-	}	
+		return $aAllowedPortals;
+	}
 } // End of class

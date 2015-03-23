@@ -1224,5 +1224,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'ExcelExport:AutoDownload' => 'Start the download automatically when the export is ready',
 	'ExcelExport:PreparingExport' => 'Preparing the export...',
 	'ExcelExport:Statistics' => 'Statistics',
+	'portal:legacy_portal' => 'End-User Portal',
+	'portal:backoffice' => 'iTop Back-Office User Interface',
 ));
 ?>

@@ -32,12 +32,14 @@ class MFCompiler
 
 	protected $aRootClasses;
 	protected $aLog;
+	protected $sMainPHPCode; // Code that goes into core/main.php
 
 	public function __construct($oModelFactory)
 	{
 		$this->oFactory = $oModelFactory;
 
 		$this->aLog = array();
+		$this->sMainPHPCode = '<'.'?'."php\n";
 	}
 
 	protected function Log($sText)
@@ -377,7 +379,16 @@ EOF;
 		//
 		$oBrandingNode = $this->oFactory->GetNodes('branding')->item(0);
 		$this->CompileBranding($oBrandingNode, $sTempTargetDir, $sFinalTargetDir);
-
+		
+		// Compile the portals
+		$oPortalsNode = $this->oFactory->GetNodes('/itop_design/portals')->item(0);
+		$this->CompilePortals($oPortalsNode, $sTempTargetDir, $sFinalTargetDir);
+		
+		// Write core/main.php
+		SetupUtils::builddir($sTempTargetDir.'/core');
+		$sPHPFile = $sTempTargetDir.'/core/main.php';
+		file_put_contents($sPHPFile, $this->sMainPHPCode);
+		
 	} // DoCompile()
 
 	/**
@@ -1928,6 +1939,60 @@ EOF;
 				SetupUtils::rrmdir($sTempTargetDir.'/branding/images');
 			}
 		}
+	}
+
+	protected function CompilePortals($oPortalsNode, $sTempTargetDir, $sFinalTargetDir)
+	{
+		if ($oPortalsNode)
+		{
+			// Create some static PHP data in <env-xxx>/core/main.php
+			$oPortals = $oPortalsNode->GetNodes('portal');
+			$aPortalsConfig = array();
+			foreach($oPortals as $oPortal)
+			{
+				$sPortalId = $oPortal->getAttribute('id');
+				$aPortalsConfig[$sPortalId] = array();
+				$aPortalsConfig[$sPortalId]['rank'] = (float)$oPortal->GetChildText('rank', 0);
+				$aPortalsConfig[$sPortalId]['handler']  = $oPortal->GetChildText('handler', 'PortalDispatcher');
+				$aPortalsConfig[$sPortalId]['url']  = $oPortal->GetChildText('url', 'portal/index.php');
+				$oAllow = $oPortal->GetOptionalElement('allow');
+				$aPortalsConfig[$sPortalId]['allow'] = array();
+				if ($oAllow)
+				{
+					foreach($oAllow->GetNodes('profile') as $oProfile)
+					{
+						$aPortalsConfig[$sPortalId]['allow'][] = $oProfile->getAttribute('id');
+					}
+				}
+				$oDeny = $oPortal->GetOptionalElement('deny');
+				$aPortalsConfig[$sPortalId]['deny'] = array();
+				if ($oDeny)
+				{
+					foreach($oDeny->GetNodes('profile') as $oProfile)
+					{
+						$aPortalsConfig[$sPortalId]['deny'][] = $oProfile->getAttribute('id');
+					}
+				}	
+			}
+			
+			uasort($aPortalsConfig, array(get_class($this), 'SortOnRank'));
+			
+			$this->sMainPHPCode .= "class PortalDispatcherData\n";
+			$this->sMainPHPCode .= "{\n";
+			$this->sMainPHPCode .= "\tprotected static \$aData = ".str_replace("\n", "\n\t", var_export($aPortalsConfig, true)).";\n\n";
+			$this->sMainPHPCode .= "\tpublic static function GetData(\$sPortalId = null)\n";
+			$this->sMainPHPCode .= "\t{\n";
+			$this->sMainPHPCode .= "\t\tif (\$sPortalId === null) return self::\$aData;\n";
+			$this->sMainPHPCode .= "\t\tif (!array_key_exists(\$sPortalId, self::\$aData)) return array();\n";
+			$this->sMainPHPCode .= "\t\treturn self::\$aData[\$sPortalId];\n";
+			$this->sMainPHPCode .= "\t}\n";
+			$this->sMainPHPCode .= "}\n";
+		}
+	}
+	
+	public static function SortOnRank($aConf1, $aConf2)
+	{
+		return ($aConf1['rank'] < $aConf2['rank']) ? -1 : 1;
 	}
 }
 

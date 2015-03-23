@@ -335,6 +335,19 @@ class RunTimeEnvironment
 		// Do load the required modules
 		//
 		$oFactory = new ModelFactory($aDirsToCompile);
+		$sDeltaFile = APPROOT.'core/datamodel.core.xml';
+		if (file_exists($sDeltaFile))
+		{
+			$oCoreModule = new MFCoreModule('core', 'Core Module', $sDeltaFile);
+			$aRet[] = $oCoreModule;
+		}
+		$sDeltaFile = APPROOT.'application/datamodel.application.xml';
+		if (file_exists($sDeltaFile))
+		{
+			$oApplicationModule = new MFCoreModule('application', 'Application Module', $sDeltaFile);
+			$aRet[] = $oApplicationModule;
+		}
+		
 		$aModules = $oFactory->FindModules();
 		foreach($aModules as $foo => $oModule)
 		{

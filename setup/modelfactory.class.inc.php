@@ -172,6 +172,40 @@ class MFDeltaModule extends MFModule
 }
 
 /**
+ * MFDeltaModule: an optional module, made of a single file
+ * @package ModelFactory
+ */
+class MFCoreModule extends MFModule
+{
+	public function __construct($sName, $sLabel, $sDeltaFile)
+	{
+		$this->sId = $sName;
+
+		$this->sName = $sName;
+		$this->sVersion = '1.0';
+
+		$this->sRootDir = '';
+		$this->sLabel = $sLabel;
+		$this->aDataModels = array($sDeltaFile);
+	}
+	
+	public function GetRootDir()
+	{
+		return '';
+	}
+
+	public function GetModuleDir()
+	{
+		return '';
+	}
+
+	public function GetDictionaryFiles()
+	{
+		return array();
+	}
+}
+
+/**
  * ModelFactory: the class that manages the in-memory representation of the XML MetaModel
  * @package ModelFactory
  */

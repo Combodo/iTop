@@ -465,6 +465,20 @@ class ApplicationInstaller
 		}
 
 		$oFactory = new ModelFactory($aDirsToScan);
+		
+		$sDeltaFile = APPROOT.'core/datamodel.core.xml';
+		if (file_exists($sDeltaFile))
+		{
+			$oCoreModule = new MFCoreModule('core', 'Core Module', $sDeltaFile);
+			$oFactory->LoadModule($oCoreModule);
+		}
+		$sDeltaFile = APPROOT.'application/datamodel.application.xml';
+		if (file_exists($sDeltaFile))
+		{
+			$oApplicationModule = new MFCoreModule('application', 'Application Module', $sDeltaFile);
+			$oFactory->LoadModule($oApplicationModule);
+		}
+		
 		$aModules = $oFactory->FindModules();
 
 		foreach($aModules as $foo => $oModule)

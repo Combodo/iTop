@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design>
+  <portals>
+    <portal id="legacy_portal" _delta="define">
+      <url>portal/index.php</url>
+      <rank>1.0</rank>
+      <handler/>
+      <allow>
+      </allow>
+      <deny/>
+    </portal>
+    <portal id="backoffice" _delta="define">
+      <url>pages/UI.php</url>
+      <rank>2.0</rank>
+      <handler/>
+      <allow/>
+      <deny>
+        <profile id="Portal user"/>
+      </deny>
+    </portal>
+  </portals>
+</itop_design>

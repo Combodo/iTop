@@ -1065,5 +1065,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'ExcelExport:AutoDownload' => 'Téléchargement automatique dès que le fichier est prêt',
 	'ExcelExport:PreparingExport' => 'Préparation de l\'export...',
 	'ExcelExport:Statistics' => 'Statistiques',	
+	'portal:legacy_portal' => 'Portail Utilisateurs',
+	'portal:backoffice' => 'Console iTop',
 ));
 ?>

@@ -1730,7 +1730,7 @@ class Config
 			$this->SetDBName($sDBName);
 			$this->SetDBSubname($aParamValues['db_prefix']);
 		}
-	
+		
 		if (!is_null($sModulesDir))
 		{
 			if (isset($aParamValues['selected_modules']))
@@ -1746,6 +1746,10 @@ class Config
 			$oEmptyConfig = new Config('dummy_file', false); // Do NOT load any config file, just set the default values
 			$aAddOns = $oEmptyConfig->GetAddOns();
 			$aAppModules = $oEmptyConfig->GetAppModules();
+			if (file_exists(APPROOT.$sModulesDir.'/core/main.php'))
+			{
+				$aAppModules[] = $sModulesDir.'/core/main.php';
+			}
 			$aDataModels = $oEmptyConfig->GetDataModels();
 			$aWebServiceCategories = $oEmptyConfig->GetWebServiceCategories();
 			$aDictionaries = $oEmptyConfig->GetDictionaries();
