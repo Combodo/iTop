@@ -384,7 +384,7 @@ class ormCaseLog {
 	}
 
 
-	public function AddLogEntryFromJSON($oJson)
+	public function AddLogEntryFromJSON($oJson, $bCheckUserId = true)
 	{
 		$sText = isset($oJson->message) ? $oJson->message : '';
 
@@ -394,16 +394,24 @@ class ormCaseLog {
 			{
 				throw new Exception("Only administrators can set the user id", RestResult::UNAUTHORIZED);
 			}
-			try
+			if ($bCheckUserId)
 			{
-				$oUser = RestUtils::FindObjectFromKey('User', $oJson->user_id);
+				try
+				{
+					$oUser = RestUtils::FindObjectFromKey('User', $oJson->user_id);
+				}
+				catch(Exception $e)
+				{
+					throw new Exception('user_id: '.$e->getMessage(), $e->getCode());
+				}
+				$iUserId = $oUser->GetKey();
+				$sOnBehalfOf = $oUser->GetFriendlyName();
 			}
-			catch(Exception $e)
+			else
 			{
-				throw new Exception('user_id: '.$e->getMessage(), $e->getCode());
+				$iUserId = $oJson->user_id;
+				$sOnBehalfOf = $oJson->user_login;
 			}
-			$iUserId = $oUser->GetKey();
-			$sOnBehalfOf = $oUser->GetFriendlyName();
 		}
 		else
 		{
