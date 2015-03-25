@@ -1150,9 +1150,20 @@ class Config
 		{
 			return $this->m_aModuleSettings[$sModule][$sProperty];
 		}
-		return $defaultvalue;
+		// Fall back to the predefined XML parameter, if any
+		return $this->GetModuleParameter($sModule, $sProperty, $defaultvalue);
 	}
 
+	public function GetModuleParameter($sModule, $sProperty, $defaultvalue = null)
+	{
+		$aAllParams = ModulesXMLParameters::GetData($sModule);
+		if(array_key_exists($sProperty, $aAllParams))
+		{
+			return $aAllParams[$sProperty];
+		}
+		return $defaultvalue;
+	}
+	
 	public function SetModuleSetting($sModule, $sProperty, $value)
 	{
 		$this->m_aModuleSettings[$sModule][$sProperty] = $value;

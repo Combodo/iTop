@@ -2080,3 +2080,240 @@ class MFDocument extends DOMDocument
 	}	 	
 
 }
+
+/**
+ * Helper class manage parameters stored as XML nodes
+ * to be converted to a PHP structure during compilation
+ * Values can be either a hash, an array, a string, a boolean, an int or a float
+ */
+class MFParameters
+{
+	protected $aData = null;
+
+	public function __construct(DOMNode $oNode)
+	{
+		$this->aData = array();
+		$this->LoadFromDOM($oNode);
+	}
+
+	public function Get($sCode, $default = '')
+	{
+		if (array_key_exists($sCode, $this->aData))
+		{
+			return $this->aData[$sCode];
+		}
+		return $default;
+	}
+
+	public function GetAll()
+	{
+		return $this->aData;
+	}
+
+	public function LoadFromDOM(DOMNode $oNode)
+	{
+		$this->aData = array();
+		foreach($oNode->childNodes as $oChildNode)
+		{
+			if ($oChildNode instanceof DOMElement)
+			{
+				$this->aData[$oChildNode->nodeName] = $this->ReadElement($oChildNode);
+			}
+		}
+	}
+
+	protected function ReadElement(DOMNode $oNode)
+	{
+		if ($oNode instanceof DOMElement)
+		{
+			$sDefaultNodeType = ($this->HasChildNodes($oNode)) ? 'hash' : 'string';
+			$sNodeType = $oNode->getAttribute('type');
+			if ($sNodeType == '')
+			{
+				$sNodeType = $sDefaultNodeType;
+			}
+
+			switch($sNodeType)
+			{
+				case 'array':
+					$value = array();
+					// Treat the current element as zero based array, child tag names are NOT meaningful
+					$sFirstTagName = null;
+					foreach($oNode->childNodes as $oChildElement)
+					{
+						if ($oChildElement instanceof DOMElement)
+						{
+							if ($sFirstTagName == null)
+							{
+								$sFirstTagName = $oChildElement->nodeName;
+							}
+							else if ($sFirstTagName != $oChildElement->nodeName)
+							{
+								throw new Exception("Invalid Parameters: mixed tags ('$sFirstTagName' and '".$oChildElement->nodeName."') inside array '".$oNode->nodeName."'");
+							}
+							$val = $this->ReadElement($oChildElement);
+							$idx = (string)$oChildElement->getAttribute('id'); // Don't cast into float, since floats are converted to int (i.e. truncated) when used as hash indexes (cf: http://php.net/manual/en/language.types.array.php)
+							if ($idx !== '')
+							{
+								$value[$idx] = $val;
+							}
+							else
+							{
+								// No specific Id, just push the value at the end of the array
+								$value[] = $val;
+							}
+						}
+					}
+					ksort($value, SORT_NUMERIC);
+					break;
+						
+				case 'hash':
+					$value = array();
+					// Treat the current element as a hash, child tag names are keys
+					foreach($oNode->childNodes as $oChildElement)
+					{
+						if ($oChildElement instanceof DOMElement)
+						{
+							if (array_key_exists($oChildElement->nodeName, $value))
+							{
+								throw new Exception("Invalid Parameters file: duplicate tags '".$oChildElement->nodeName."' inside hash '".$oNode->nodeName."'");
+							}
+							$val = $this->ReadElement($oChildElement);
+							$value[$oChildElement->nodeName] = $val;
+						}
+					}
+					break;
+						
+				case 'int':
+				case 'integer':
+					$value = (int)$this->GetText($oNode);
+					break;
+						
+				case 'bool':
+				case 'boolean':
+					if (($this->GetText($oNode) == 'true') || ($this->GetText($oNode) == 1))
+					{
+						$value = true;
+					}
+					else
+					{
+						$value = false;
+					}
+					break;
+						
+				case 'string':
+				default:
+					$value = str_replace('\n', "\n", (string)$this->GetText($oNode));
+			}
+		}
+		else if ($oNode instanceof DOMText)
+		{
+			$value = $oNode->wholeText;
+		}
+		return $value;
+	}
+
+	protected function GetAttribute($sAttName, $oNode, $sDefaultValue)
+	{
+		$sRet = $sDefaultValue;
+
+		foreach($oNode->attributes as $oAttribute)
+		{
+			if ($oAttribute->nodeName == $sAttName)
+			{
+				$sRet = $oAttribute->nodeValue;
+				break;
+			}
+		}
+		return $sRet;
+	}
+
+	/**
+	 * Returns the TEXT of the current node (possibly from several subnodes)
+	 */
+	public function GetText($oNode, $sDefault = null)
+	{
+		$sText = null;
+		foreach($oNode->childNodes as $oChildNode)
+		{
+			if ($oChildNode instanceof DOMText)
+			{
+				if (is_null($sText)) $sText = '';
+				$sText .= $oChildNode->wholeText;
+			}
+		}
+		if (is_null($sText))
+		{
+			return $sDefault;
+		}
+		else
+		{
+			return $sText;
+		}
+	}
+	/**
+	 * Check if a node as child nodes (apart from text nodes)
+	 */
+	public function HasChildNodes($oNode)
+	{
+		if ($oNode instanceof DOMElement)
+		{
+			foreach($oNode->childNodes as $oChildNode)
+			{
+				if ($oChildNode instanceof DOMElement)
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	function Merge(XMLParameters $oTask)
+	{
+		$this->aData = $this->array_merge_recursive_distinct($this->aData, $oTask->aData);
+	}
+
+	/**
+	 * array_merge_recursive does indeed merge arrays, but it converts values with duplicate
+	 * keys to arrays rather than overwriting the value in the first array with the duplicate
+	 * value in the second array, as array_merge does. I.e., with array_merge_recursive,
+	 * this happens (documented behavior):
+	 *
+	 * array_merge_recursive(array('key' => 'org value'), array('key' => 'new value'));
+	 *     => array('key' => array('org value', 'new value'));
+	 *
+	 * array_merge_recursive_distinct does not change the datatypes of the values in the arrays.
+	 * Matching keys' values in the second array overwrite those in the first array, as is the
+	 * case with array_merge, i.e.:
+	 *
+	 * array_merge_recursive_distinct(array('key' => 'org value'), array('key' => 'new value'));
+	 *     => array('key' => array('new value'));
+	 *
+	 * Parameters are passed by reference, though only for performance reasons. They're not
+	 * altered by this function.
+	 *
+	 * @param array $array1
+	 * @param array $array2
+	 * @return array
+	 * @author Daniel <daniel (at) danielsmedegaardbuus (dot) dk>
+	 * @author Gabriel Sobrinho <gabriel (dot) sobrinho (at) gmail (dot) com>
+	 */
+	protected function array_merge_recursive_distinct ( array &$array1, array &$array2 )
+	{
+		$merged = $array1;
+
+		foreach ( $array2 as $key => &$value )
+		{
+			if ( is_array ( $value ) && isset ( $merged [$key] ) && is_array ( $merged [$key] ) )
+			{
+				$merged [$key] = $this->array_merge_recursive_distinct ( $merged [$key], $value );
+			}
+			else
+			{
+				$merged [$key] = $value;
+			}
+		}
+
+		return $merged;
+	}
+}
