@@ -1332,7 +1332,88 @@ EOF;
 				$sMethods .= "\n\n".$sMethodCode."\n";
 			}		
 		}
-	
+
+		// Relations
+		//
+		$oRelations = $oClass->GetOptionalElement('relations');
+		if ($oRelations)
+		{
+			$aRelations = array();
+			foreach($oRelations->childNodes as $oRelation)
+			{
+				if ($oRelation->tagName != 'relation') continue;
+
+				$sRelationId = $oRelation->getAttribute('id');
+
+				$oNeighbours = $oRelation->GetUniqueElement('neighbours');
+				foreach($oNeighbours->childNodes as $oNeighbour)
+				{
+					if ($oNeighbour->tagName != 'neighbour') continue;
+					$sNeighbourId = $oNeighbour->getAttribute('id');
+
+					if (($oNeighbour->GetChildText('query') == '') && ($oNeighbour->GetChildText('attribute') == ''))
+					{
+						throw new DOMFormatException("Relation '$sRelationId': either a query or an attribute must be specified");
+					}
+					if (($oNeighbour->GetChildText('query') != '') && ($oNeighbour->GetChildText('attribute') != ''))
+					{
+						throw new DOMFormatException("Relation '$sRelationId': both a query and and attribute have been specified... which one should be used?");
+					}
+					$aData = array(
+						'_legacy_' => false,
+						'sDefinedInClass' => $sClass,
+						'sNeighbour' => $sNeighbourId,
+						'sQuery' => $oNeighbour->GetChildText('query'),
+						'sAttribute' => $oNeighbour->GetChildText('attribute'),
+					);
+
+					$oReverse = $oNeighbour->GetOptionalElement('reverse');
+					if ($oReverse)
+					{
+						$aData['sReverseClass'] = $oReverse->GetChildText('source_class');
+						$aData['sReverseRelation'] = $oReverse->GetChildText('relation');
+						$aData['sReverseNeighbour'] = $oReverse->GetChildText('neighbour');
+					}
+
+					$oRedundancy = $oNeighbour->GetOptionalElement('redundancy');
+					if ($oRedundancy)
+					{
+						$oEnabled = $oRedundancy->GetUniqueElement('enabled');
+						$aData['bEnabledValue'] = ($oEnabled->GetChildText('value', 'false') == 'true');
+						$aData['sEnabledMode'] = $oEnabled->GetChildText('mode', 'fixed');
+						$oThreshold = $oRedundancy->GetUniqueElement('threshold');
+						$aData['iThresholdValue'] = (int) $oThreshold->GetChildText('value', 1);
+						$aData['sThresholdMode'] = $oThreshold->GetChildText('mode', 'fixed');
+					}
+
+					$aRelations[$sRelationId][$sNeighbourId] = $aData;
+				}
+			}
+
+			$sMethods .= "\tpublic static function GetRelationQueriesEx(\$sRelCode)\n";
+			$sMethods .= "\t{\n";
+			$sMethods .= "\t\tswitch (\$sRelCode)\n";
+			$sMethods .= "\t\t{\n";
+			foreach ($aRelations as $sRelationId => $aRelationData)
+			{
+				$sMethods .= "\t\tcase '$sRelationId':\n";
+				$sMethods .= "\t\t\t\$aRels = array(\n";
+				foreach ($aRelationData as $sNeighbourId => $aData)
+				{
+					//$sData = str_replace("\n", "\n\t\t\t\t", var_export($aData, true));
+					$sData = var_export($aData, true);
+					$sMethods .= "\t\t\t\t'$sNeighbourId' => $sData,\n";
+				}
+				$sMethods .= "\t\t\t);\n";
+				$sMethods .= "\t\t\treturn array_merge(\$aRels, parent::GetRelationQueriesEx(\$sRelCode));\n\n";
+			}
+			$sMethods .= "\t\tdefault:\n";
+			$sMethods .= "\t\t\treturn parent::GetRelationQueries(\$sRelCode);\n";
+			$sMethods .= "\t\t}\n";
+			$sMethods .= "\t}\n";
+		}
+
+
 		// Let's make the whole class declaration
 		//
 		$sPHP = "\n\n$sCodeComment\n";

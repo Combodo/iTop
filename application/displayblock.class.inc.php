@@ -1418,7 +1418,7 @@ class MenuBlock extends DisplayBlock
 					$this->AddMenuSeparator($aActions);
 					foreach($aRelations as $sRelationCode)
 					{
-						$aActions[$sRelationCode] = array ('label' => MetaModel::GetRelationVerbUp($sRelationCode), 'url' => "{$sRootUrl}pages/$sUIPage?operation=swf_navigator&relation=$sRelationCode&class=$sClass&id=$id{$sContext}");
+						$aActions[$sRelationCode] = array ('label' => MetaModel::GetRelationLabel($sRelationCode), 'url' => "{$sRootUrl}pages/$sUIPage?operation=swf_navigator&relation=$sRelationCode&class=$sClass&id=$id{$sContext}");
 					}
 				}
 				/*

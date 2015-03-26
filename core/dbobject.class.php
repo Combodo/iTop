@@ -2531,41 +2531,66 @@ abstract class DBObject implements iDisplay
 	}
 
 	// Return an empty set for the parent of all
+	// May be overloaded.
+	// Anyhow, this way of implementing the relations suffers limitations (not handling the redundancy)
+	// and you should consider defining those things in XML.
 	public static function GetRelationQueries($sRelCode)
 	{
 		return array();
 	}
 	
+	// Reserved: do not overload
+	public static function GetRelationQueriesEx($sRelCode)
+	{
+		return array();
+	}
+
 	public function GetRelatedObjects($sRelCode, $iMaxDepth = 99, &$aResults = array())
 	{
 		foreach (MetaModel::EnumRelationQueries(get_class($this), $sRelCode) as $sDummy => $aQueryInfo)
 		{
 			MetaModel::DbgTrace("object=".$this->GetKey().", depth=$iMaxDepth, rel=".$aQueryInfo["sQuery"]);
 			$sQuery = $aQueryInfo["sQuery"];
-			$bPropagate = $aQueryInfo["bPropagate"];
-			$iDistance = $aQueryInfo["iDistance"];
+			//$bPropagate = $aQueryInfo["bPropagate"];
+			//$iDepth = $bPropagate ? $iMaxDepth - 1 : 0;
+			$iDepth = $iMaxDepth - 1;
 
-			$iDepth = $bPropagate ? $iMaxDepth - 1 : 0;
-
-			$oFlt = DBObjectSearch::FromOQL($sQuery);
-			$oObjSet = new DBObjectSet($oFlt, array(), $this->ToArgsForQuery());
-			while ($oObj = $oObjSet->Fetch())
+			// Note: the loop over the result set has been written in an unusual way for error reporting purposes
+			// In the case of a wrong query parameter name, the error occurs on the first call to Fetch,
+			// thus we need to have this first call into the try/catch, but
+			// we do NOT want to nest the try/catch for the error message to be clear
+			try
 			{
-				$sRootClass = MetaModel::GetRootClass(get_class($oObj));
-				$sObjKey = $oObj->GetKey();
-				if (array_key_exists($sRootClass, $aResults))
+				$oFlt = DBObjectSearch::FromOQL($sQuery);
+				$oObjSet = new DBObjectSet($oFlt, array(), $this->ToArgsForQuery());
+				$oObj = $oObjSet->Fetch();
+			}
+			catch (Exception $e)
+			{
+				$sClassOfDefinition = $aQueryInfo['_legacy_'] ? get_class($this).'(or a parent)::GetRelationQueries()' : $aQueryInfo['sDefinedInClass'];
+				throw new Exception("Wrong query for the relation $sRelCode/$sClassOfDefinition/{$aQueryInfo['sNeighbour']}: ".$e->getMessage());
+			}
+			if ($oObj)
+			{
+				do
 				{
-					if (array_key_exists($sObjKey, $aResults[$sRootClass]))
+					$sRootClass = MetaModel::GetRootClass(get_class($oObj));
+					$sObjKey = $oObj->GetKey();
+					if (array_key_exists($sRootClass, $aResults))
 					{
-						continue; // already visited, skip
+						if (array_key_exists($sObjKey, $aResults[$sRootClass]))
+						{
+							continue; // already visited, skip
+						}
+					}
+	
+					$aResults[$sRootClass][$sObjKey] = $oObj;
+					if ($iDepth > 0)
+					{
+						$oObj->GetRelatedObjects($sRelCode, $iDepth, $aResults);
 					}
 				}
-
-				$aResults[$sRootClass][$sObjKey] = $oObj;
-				if ($iDepth > 0)
-				{
-					$oObj->GetRelatedObjects($sRelCode, $iDepth, $aResults);
-				}
+				while ($oObj = $oObjSet->Fetch());
 			}
 		}
 		return $aResults;

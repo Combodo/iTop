@@ -341,8 +341,7 @@ function DisplayClassesList($oPage, $sContext)
 		$oPage->add("<li>".MakeRelationHLink($sRelCode, $sContext)."\n");
 		$oPage->add("<ul>\n");
 		$oPage->add("<li>Description: ".htmlentities(MetaModel::GetRelationDescription($sRelCode), ENT_QUOTES, 'UTF-8')."</li>\n");
-		$oPage->add("<li>Verb up: ".htmlentities(MetaModel::GetRelationVerbUp($sRelCode), ENT_QUOTES, 'UTF-8')."</li>\n");
-		$oPage->add("<li>Verb down: ".htmlentities(MetaModel::GetRelationVerbDown($sRelCode), ENT_QUOTES, 'UTF-8')."</li>\n");
+		$oPage->add("<li>Label: ".htmlentities(MetaModel::GetRelationLabel($sRelCode), ENT_QUOTES, 'UTF-8')."</li>\n");
 		$oPage->add("</ul>\n");
 		$oPage->add("</li>\n");
 	}
@@ -517,11 +516,9 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 function DisplayRelationDetails($oPage, $sRelCode, $sContext)
 {
 	$sDesc = MetaModel::GetRelationDescription($sRelCode);
-	$sVerbDown = MetaModel::GetRelationVerbDown($sRelCode);
-	$sVerbUp = MetaModel::GetRelationVerbUp($sRelCode);
+	$sLabel = MetaModel::GetRelationLabel($sRelCode);
 	$oPage->add("<h1>".Dict::Format('UI:Schema:Relation_Code_Description', $sRelCode, $sDesc)."</h1>");
-	$oPage->p(Dict::Format('UI:Schema:RelationDown_Description', $sVerbDown));
-	$oPage->p(Dict::Format('UI:Schema:RelationUp_Description', $sVerbUp));
+	$oPage->p(Dict::Format('UI:Schema:RelationUp_Description', $sLabel));
 
 	$oPage->add("<ul id=\"RelationshipDetails\" class=\"treeview\">\n");
 	foreach(MetaModel::GetClasses() as $sClass)
@@ -533,8 +530,9 @@ function DisplayRelationDetails($oPage, $sRelCode, $sContext)
 			$oPage->add("<ul>\n");
 			foreach ($aRelQueries as $sRelKey => $aQuery)
 			{
-				$sQuery = $aQuery['sQuery'];
-				$iDistance = $aQuery['iDistance'];
+				$sQuery = isset($aQuery['sQuery']) ? $aQuery['sQuery'] : '';
+				$sAttribute = isset($aQuery['sAttribute']) ? $aQuery['sAttribute'] : '';
+				/*
 				if ($aQuery['bPropagate'])
 				{
 					$oPage->add("<li>".Dict::Format('UI:Schema:RelationPropagates', $sRelKey, $iDistance, $sQuery)."</li>\n");
@@ -543,6 +541,13 @@ function DisplayRelationDetails($oPage, $sRelCode, $sContext)
 				{
 					$oPage->add("<li>".Dict::Format('UI:Schema:RelationDoesNotPropagate', $sRelKey, $iDistance, $sQuery)."</li>\n");
 				}
+				*/
+				$sLabel = (strlen($sQuery) > 0) ? $sQuery : $sAttribute;
+				if ($aQuery['_legacy_'])
+				{
+					$sLabel .= ' (<b>Old style specification</b>: it is recommended to upgrade to XML)';
+				}
+				$oPage->add("<li>".$sLabel."</li>\n");
 			}
 			$oPage->add("</ul>\n");
 			$oPage->add("</li>\n");

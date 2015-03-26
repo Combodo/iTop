@@ -1124,31 +1124,77 @@ abstract class MetaModel
 		return $aResult;
 	}
 
-	public static function EnumRelationProperties($sRelCode)
-	{
-		MyHelpers::CheckKeyInArray('relation code', $sRelCode, self::$m_aRelationInfos);
-		return self::$m_aRelationInfos[$sRelCode];
-	}
-
 	final static public function GetRelationDescription($sRelCode)
 	{
 		return Dict::S("Relation:$sRelCode/Description");
 	}
 
-	final static public function GetRelationVerbUp($sRelCode)
+	final static public function GetRelationLabel($sRelCode)
 	{
 		return Dict::S("Relation:$sRelCode/VerbUp");
-	}
-
-	final static public function GetRelationVerbDown($sRelCode)
-	{
-		return Dict::S("Relation:$sRelCode/VerbDown");
 	}
 
 	public static function EnumRelationQueries($sClass, $sRelCode)
 	{
 		MyHelpers::CheckKeyInArray('relation code', $sRelCode, self::$m_aRelationInfos);
-		return call_user_func_array(array($sClass, 'GetRelationQueries'), array($sRelCode));
+
+		$aNeighbours = call_user_func_array(array($sClass, 'GetRelationQueriesEx'), array($sRelCode));
+
+		// Translate attributes into queries (new style of spec only)
+		foreach($aNeighbours as $trash => &$aNeighbourData)
+		{
+			try
+			{
+				if (strlen($aNeighbourData['sQuery']) == 0)
+				{
+					$oAttDef = self::GetAttributeDef($sClass, $aNeighbourData['sAttribute']);
+					if ($oAttDef instanceof AttributeExternalKey)
+					{
+						$sTargetClass = $oAttDef->GetTargetClass();
+						$aNeighbourData['sQuery'] = 'SELECT '.$sTargetClass.' AS o WHERE o.id = :this->'.$aNeighbourData['sAttribute'];
+					}
+					elseif ($oAttDef instanceof AttributeLinkedSet)
+					{
+						$sLinkedClass = $oAttDef->GetLinkedClass();
+						$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
+						if ($oAttDef->IsIndirect())
+						{
+							$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
+							$oRemoteAttDef = self::GetAttributeDef($sLinkedClass, $sExtKeyToRemote);
+							$sRemoteClass = $oRemoteAttDef->GetTargetClass();
+	
+							$aNeighbourData['sQuery'] = "SELECT $sRemoteClass AS o JOIN $sLinkedClass AS lnk ON lnk.$sExtKeyToRemote = o.id WHERE lnk.$sExtKeyToMe = :this->id";
+						}
+						else
+						{
+							$aNeighbourData['sQuery'] = "SELECT $sLinkedClass AS o WHERE o.$sExtKeyToMe = :this->id";
+						}
+					}
+					else
+					{
+						throw new Exception("Unexpected attribute type for '{$aNeighbourData['sAttribute']}'. Expecting a link set or external key.");
+					}
+				}
+			}
+			catch (Exception $e)
+			{
+				$sClassOfDefinition = $aNeighbourData['_legacy_'] ? $sClass.'(or a parent)::GetRelationQueries()' : $aNeighbourData['sDefinedInClass'];
+				throw new Exception("Wrong definition for the relation $sRelCode/$sClassOfDefinition/{$aNeighbourData['sNeighbour']}: ".$e->getMessage());
+			}
+		}
+
+		// Merge legacy and new specs
+		$aLegacy = call_user_func_array(array($sClass, 'GetRelationQueries'), array($sRelCode));
+		foreach($aLegacy as $sId => $aLegacyEntry)
+		{
+			$aLegacyEntry['_legacy_'] = true;
+			$aNeighbours[] = array(
+				'_legacy_' => true,
+				'sQuery' => $aLegacyEntry['sQuery'],
+				'sNeighbour' => $sId
+			);
+		}
+		return $aNeighbours;
 	}
 
 	//
