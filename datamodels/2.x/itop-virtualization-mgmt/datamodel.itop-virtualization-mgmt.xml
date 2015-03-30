@@ -236,7 +236,7 @@
         <relation id="impacts">
           <neighbours>
             <neighbour id="virtualmachine">
-              <query>SELECT VirtualMachine WHERE virtualhost_id = :this-&gt;id</query>
+              <attribute>virtualmachine_list</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -382,14 +382,14 @@
         <relation id="impacts">
           <neighbours>
             <neighbour id="farm">
-              <query>SELECT Farm WHERE id = :this-&gt;farm_id</query>
+              <attribute>farm_id</attribute>
             </neighbour>
           </neighbours>
         </relation>
         <relation id="depends on">
           <neighbours>
             <neighbour id="server">
-              <query>SELECT Server WHERE id = :this-&gt;server_id</query>
+              <attribute>server_id</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -515,9 +515,9 @@
       <relations>
         <relation id="depends on">
           <neighbours>
-            <neighbour id="Hypervisor">
-              <query>SELECT Hypervisor WHERE farm_id = :this-&gt;id</query>
-            </neighbour>
+            <neighbour id="hypervisor">
+              <attribute>hypervisor_list</attribute>
+           </neighbour>
           </neighbours>
         </relation>
       </relations>
@@ -755,7 +755,7 @@
         <relation id="depends on">
           <neighbours>
             <neighbour id="virtualhost">
-              <query>SELECT VirtualHost WHERE id = :this-&gt;virtualhost_id</query>
+              <attribute>virtualhost_id</attribute>
             </neighbour>
           </neighbours>
         </relation>

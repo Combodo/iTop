@@ -239,7 +239,7 @@
         <relation id="impacts">
           <neighbours>
             <neighbour id="logicalvolume">
-              <query>SELECT LogicalVolume WHERE storagesystem_id = :this-&gt;id</query>
+              <attribute>logicalvolume_list</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -481,7 +481,7 @@
         <relation id="impacts">
           <neighbours>
             <neighbour id="datacenterdevice">
-              <query>SELECT DatacenterDevice AS dc JOIN lnkSanToDatacenterDevice AS l1 ON l1.datacenterdevice_id = dc.id WHERE l1.san_id = :this-&gt;id</query>
+              <attribute>datacenterdevice_list</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -722,7 +722,7 @@
         <relation id="impacts">
           <neighbours>
             <neighbour id="tape">
-              <query>SELECT Tape  WHERE tapelibrary_id= :this-&gt;id</query>
+              <attribute>tapes_list</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -963,7 +963,7 @@
         <relation id="impacts">
           <neighbours>
             <neighbour id="nasfilesystem">
-              <query>SELECT NASFileSystem WHERE nas_id = :this-&gt;id</query>
+              <attribute>nasfilesystem_list</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -1062,7 +1062,7 @@
         <relation id="depends on">
           <neighbours>
             <neighbour id="tapelibrary">
-              <query>SELECT TapeLibrary  WHERE id = :this-&gt;tapelibrary_id</query>
+              <attribute>tapelibrary_id</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -1175,7 +1175,7 @@
         <relation id="depends on">
           <neighbours>
             <neighbour id="nas">
-              <query>SELECT NAS  WHERE id = :this-&gt;nas_id</query>
+              <attribute>nas_id</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -1433,14 +1433,14 @@
         <relation id="impacts">
           <neighbours>
             <neighbour id="server">
-              <query>SELECT Server AS s JOIN lnkServerToVolume AS l1 ON l1.server_id=s.id  WHERE l1.volume_id = :this-&gt;id</query>
+              <attribute>servers_list</attribute>
             </neighbour>
           </neighbours>
         </relation>
         <relation id="depends on">
           <neighbours>
-            <neighbour id="sotragesystem">
-              <query>SELECT StorageSystem AS storage WHERE storage.id = :this-&gt;storagesystem_id</query>
+            <neighbour id="storagesystem">
+              <attribute>storagesystem_id</attribute>
             </neighbour>
           </neighbours>
         </relation>

@@ -369,8 +369,8 @@
       <relations>
         <relation id="impacts">
           <neighbours>
-            <neighbour id="DatacenterDevice">
-              <query>SELECT DatacenterDevice WHERE enclosure_id = :this-&gt;id</query>
+            <neighbour id="datacenterdevice">
+              <attribute>device_list</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -530,7 +530,7 @@
       <relations>
         <relation id="impacts">
           <neighbours>
-            <neighbour id="DatacenterDevice">
+            <neighbour id="datacenterdevice">
               <query>SELECT DatacenterDevice WHERE powerA_id = :this-&gt;id OR powerB_id = :this-&gt;id</query>
             </neighbour>
             <neighbour id="pdu">
@@ -899,7 +899,7 @@
         <relation id="depends on">
           <neighbours>
             <neighbour id="powerconnection">
-              <query>SELECT PowerConnection WHERE id = :this-&gt;powerstart_id</query>
+              <attribute>powerstart_id</attribute>
             </neighbour>
           </neighbours>
         </relation>

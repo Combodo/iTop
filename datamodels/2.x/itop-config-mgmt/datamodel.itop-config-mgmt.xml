@@ -1456,13 +1456,13 @@
         <relation id="impacts">
           <neighbours>
             <neighbour id="contact">
-              <query>SELECT Contact AS c JOIN lnkContactToFunctionalCI AS l1 ON l1.contact_id = c.id WHERE l1.functionalci_id = :this-&gt;id</query>
+              <attribute>contacts_list</attribute>
             </neighbour>
-            <neighbour id="solution">
-              <query>SELECT ApplicationSolution AS s JOIN lnkApplicationSolutionToFunctionalCI AS l1 ON l1.applicationsolution_id = s.id WHERE l1.functionalci_id = :this-&gt;id</query>
+            <neighbour id="applicationsolution">
+              <attribute>applicationsolution_list</attribute>
             </neighbour>
-            <neighbour id="SoftwareInstances">
-              <query>SELECT SoftwareInstance AS s  WHERE s.system_id = :this-&gt;id</query>
+            <neighbour id="softwareinstance">
+              <attribute>softwares_list</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -1857,7 +1857,7 @@
       <relations>
         <relation id="depends on">
           <neighbours>
-            <neighbour id="connected_network">
+            <neighbour id="networkdevice">
               <query>SELECT NetworkDevice AS nw JOIN lnkConnectableCIToNetworkDevice AS l1 ON l1.networkdevice_id = nw.id WHERE l1.connectableci_id = :this-&gt;id AND l1.connection_type='downlink'</query>
             </neighbour>
           </neighbours>
@@ -2386,7 +2386,7 @@
       <relations>
         <relation id="impacts">
           <neighbours>
-            <neighbour id="device">
+            <neighbour id="connectableci">
               <query>SELECT ConnectableCI AS d JOIN lnkConnectableCIToNetworkDevice AS l1 ON l1.connectableci_id = d.id WHERE l1.networkdevice_id = :this-&gt;id AND l1.connection_type='downlink'</query>
             </neighbour>
           </neighbours>
@@ -2825,15 +2825,15 @@
       <relations>
         <relation id="impacts">
           <neighbours>
-            <neighbour id="process">
-              <query>SELECT BusinessProcess AS p JOIN lnkApplicationSolutionToBusinessProcess AS l1 ON l1.businessprocess_id = p.id WHERE l1.applicationsolution_id = :this-&gt;id</query>
+            <neighbour id="businessprocess">
+              <attribute>businessprocess_list</attribute>
             </neighbour>
           </neighbours>
         </relation>
         <relation id="depends on">
           <neighbours>
-            <neighbour id="solution">
-              <query>SELECT FunctionalCI AS ci JOIN lnkApplicationSolutionToFunctionalCI AS l1 ON l1.functionalci_id = ci.id WHERE l1.applicationsolution_id = :this-&gt;id</query>
+            <neighbour id="functionalci">
+              <attribute>functionalcis_list</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -2952,8 +2952,8 @@
       <relations>
         <relation id="depends on">
           <neighbours>
-            <neighbour id="solution">
-              <query>SELECT ApplicationSolution AS app JOIN lnkApplicationSolutionToBusinessProcess AS l1 ON l1.applicationsolution_id = app.id WHERE l1.businessprocess_id = :this-&gt;id</query>
+            <neighbour id="applicationsolution">
+              <attribute>applicationsolutions_list</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -3126,7 +3126,7 @@
       <relations>
         <relation id="depends on">
           <neighbours>
-            <neighbour id="FunctionalCI">
+            <neighbour id="functionalci">
               <query>SELECT FunctionalCI AS s JOIN SoftwareInstance AS app ON app.system_id = s.id WHERE app.id = :this-&gt;id</query>
             </neighbour>
           </neighbours>
@@ -3262,8 +3262,8 @@
       <relations>
         <relation id="impacts">
           <neighbours>
-            <neighbour id="MiddlewareInstance">
-              <query>SELECT MiddlewareInstance AS mi WHERE middleware_id = :this-&gt;id</query>
+            <neighbour id="middlewareinstance">
+              <attribute>middlewareinstance_list</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -3398,8 +3398,8 @@
       <relations>
         <relation id="impacts">
           <neighbours>
-            <neighbour id="DatabaseSchema">
-              <query>SELECT DatabaseSchema AS db WHERE dbserver_id = :this-&gt;id</query>
+            <neighbour id="databaseschema">
+              <attribute>dbschema_list</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -3534,8 +3534,8 @@
       <relations>
         <relation id="impacts">
           <neighbours>
-            <neighbour id="WebApplication">
-              <query>SELECT WebApplication AS db WHERE webserver_id = :this-&gt;id</query>
+            <neighbour id="webapplication">
+              <attribute>webapp_list</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -3886,8 +3886,8 @@
       <relations>
         <relation id="depends on">
           <neighbours>
-            <neighbour id="Middleware">
-              <query>SELECT Middleware WHERE id = :this-&gt;middleware_id</query>
+            <neighbour id="middleware">
+              <attribute>middleware_id</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -4004,8 +4004,8 @@
       <relations>
         <relation id="depends on">
           <neighbours>
-            <neighbour id="DBServer">
-              <query>SELECT DBServer WHERE id = :this-&gt;dbserver_id</query>
+            <neighbour id="dbserver">
+              <attribute>dbserver_id</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -4131,8 +4131,8 @@
       <relations>
         <relation id="depends on">
           <neighbours>
-            <neighbour id="WebServer">
-              <query>SELECT WebServer WHERE id = :this-&gt;webserver_id</query>
+            <neighbour id="webserver">
+              <attribute>webserver_id</attribute>
             </neighbour>
           </neighbours>
         </relation>
