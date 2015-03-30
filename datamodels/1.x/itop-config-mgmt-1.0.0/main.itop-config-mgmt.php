@@ -17,8 +17,8 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 
-MetaModel::RegisterRelation("impacts", array("description"=>"Objects impacted by", "verb_down"=>"impacts", "verb_up"=>"depends on"));
-MetaModel::RegisterRelation("depends on", array("description"=>"That impacts ", "verb_down"=>"depends on", "verb_up"=>"impacts"));
+MetaModel::RegisterRelation('impacts');
+MetaModel::RegisterRelation('depends on');
 
 // Starting with iTop 1.2 you can restrict the list of organizations displayed in the drop-down list
 // by specifying a query as shown below. Note that this is NOT a security settings, since the
