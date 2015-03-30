@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2">
   <classes>
     <class id="Rack" _delta="define">
       <parent>PhysicalDevice</parent>
@@ -231,27 +231,7 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
-	{
-		switch ($sRelCode)
-		{
-		case "impacts":
-			$aRels = array(
-				"DatacenterDevice" => array("sQuery"=>"SELECT DatacenterDevice WHERE enclosure_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-		default:
-			return parent::GetRelationQueries($sRelCode);
-		}
-	}]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -386,6 +366,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="DatacenterDevice">
+              <query>SELECT DatacenterDevice WHERE enclosure_id = :this-&gt;id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="PowerConnection" _delta="define">
       <parent>PhysicalDevice</parent>
@@ -412,35 +401,7 @@
         </reconciliation>
       </properties>
       <fields/>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
-	{
-		switch ($sRelCode)
-		{
-			case "impacts":
-			$aRels = array(
-				"DatacenterDevice" => array("sQuery"=>"SELECT DatacenterDevice WHERE powerA_id = :this->id OR powerB_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-				"pdu" => array("sQuery"=>"SELECT PDU WHERE powerstart_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			case 'depends on':
-			$aRels = array(
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			default:
-			return parent::GetRelationQueries($sRelCode);			
-		}
-	}]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -566,6 +527,18 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="DatacenterDevice">
+              <query>SELECT DatacenterDevice WHERE powerA_id = :this-&gt;id OR powerB_id = :this-&gt;id</query>
+            </neighbour>
+            <neighbour id="pdu">
+              <query>SELECT PDU WHERE powerstart_id = :this-&gt;id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="PowerSource" _delta="define">
       <parent>PowerConnection</parent>
@@ -787,34 +760,7 @@
           <target_attcode>name</target_attcode>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
-	{
-		switch ($sRelCode)
-		{
-			case "impacts":
-			$aRels = array(
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			case 'depends on':
-			$aRels = array(
-				"powerconnection" => array("sQuery"=>"SELECT PowerConnection WHERE id = :this->powerstart_id", "bPropagate"=>true, "iDistance"=>10),
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			default:
-			return parent::GetRelationQueries($sRelCode);			
-		}
-	}]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -949,6 +895,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="depends on">
+          <neighbours>
+            <neighbour id="powerconnection">
+              <query>SELECT PowerConnection WHERE id = :this-&gt;powerstart_id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
   </classes>
   <menus>

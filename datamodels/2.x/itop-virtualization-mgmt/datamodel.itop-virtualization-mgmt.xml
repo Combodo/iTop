@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2">
   <classes>
     <class id="VirtualDevice" _delta="define">
       <parent>FunctionalCI</parent>
@@ -48,31 +48,7 @@
           <duplicates/>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
-  {
-    switch ($sRelCode)
-    {
-      case 'depends on':
-      $aRels = array(
-      );
-      if (class_exists('LogicalVolume'))
-      {
-        $aRels["logicalvolume"] = array("sQuery"=>"SELECT LogicalVolume AS lv JOIN lnkVirtualDeviceToVolume AS l1 ON l1.volume_id=lv.id  WHERE l1.virtualdevice_id = :this->id", "bPropagate"=>true, "iDistance"=>5);
-      }
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-      
-      default:
-      return parent::GetRelationQueries($sRelCode);     
-    }
-  }]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -181,28 +157,7 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
-  {
-    switch ($sRelCode)
-    {
-      case "impacts":
-      $aRels = array(
-        "virtualmachine" => array("sQuery"=>"SELECT VirtualMachine WHERE virtualhost_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-      );
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-      
-      default:
-      return parent::GetRelationQueries($sRelCode);     
-    }
-  }]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -277,6 +232,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="virtualmachine">
+              <query>SELECT VirtualMachine WHERE virtualhost_id = :this-&gt;id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="Hypervisor" _delta="define">
       <parent>VirtualHost</parent>
@@ -324,37 +288,7 @@
           <target_attcode>name</target_attcode>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
-  {
-    switch ($sRelCode)
-    {
-      case "impacts":
-      $aRels = array(
-        "farm" => array("sQuery"=>"SELECT Farm WHERE id = :this->farm_id", "bPropagate"=>true, "iDistance"=>10),
-
-      );
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-      
-      case 'depends on':
-      $aRels = array(
-        "server" => array("sQuery"=>"SELECT Server WHERE id = :this->server_id", "bPropagate"=>true, "iDistance"=>10),
-      
-      );
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-      
-      default:
-      return parent::GetRelationQueries($sRelCode);     
-    }
-  }]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -444,6 +378,22 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="farm">
+              <query>SELECT Farm WHERE id = :this-&gt;farm_id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+        <relation id="depends on">
+          <neighbours>
+            <neighbour id="server">
+              <query>SELECT Server WHERE id = :this-&gt;server_id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="Farm" _delta="define">
       <parent>VirtualHost</parent>
@@ -478,36 +428,7 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
-  {
-    switch ($sRelCode)
-    {
-      case "impacts":
-      $aRels = array(
-
-      );
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-      
-      case 'depends on':
-      $aRels = array(
-        "Hypervisor" => array("sQuery"=>"SELECT Hypervisor WHERE farm_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-      
-      );
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-      
-      default:
-      return parent::GetRelationQueries($sRelCode);     
-    }
-  }]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -591,6 +512,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="depends on">
+          <neighbours>
+            <neighbour id="Hypervisor">
+              <query>SELECT Hypervisor WHERE farm_id = :this-&gt;id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="VirtualMachine" _delta="define">
       <parent>VirtualDevice</parent>
@@ -688,36 +618,7 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
-  {
-    switch ($sRelCode)
-    {
-      case "impacts":
-      $aRels = array(
-
-      );
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-      
-      case 'depends on':
-      $aRels = array(
-        "virtualhost" => array("sQuery"=>"SELECT VirtualHost WHERE id = :this->virtualhost_id", "bPropagate"=>true, "iDistance"=>10),
-      
-      );
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-      
-      default:
-      return parent::GetRelationQueries($sRelCode);     
-    }
-  }]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -850,6 +751,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="depends on">
+          <neighbours>
+            <neighbour id="virtualhost">
+              <query>SELECT VirtualHost WHERE id = :this-&gt;virtualhost_id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="LogicalInterface" _delta="define">
       <parent>IPInterface</parent>

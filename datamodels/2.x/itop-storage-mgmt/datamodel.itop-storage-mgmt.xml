@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2">
   <classes>
     <class id="StorageSystem" _delta="define">
       <parent>DatacenterDevice</parent>
@@ -34,27 +34,7 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
-  {
-    switch ($sRelCode)
-    {
-    case "impacts":
-      $aRels = array(
-        "logicalvolume" => array("sQuery"=>"SELECT LogicalVolume WHERE storagesystem_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-      );
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-    default:
-      return parent::GetRelationQueries($sRelCode);
-    }
-  }]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -255,6 +235,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="logicalvolume">
+              <query>SELECT LogicalVolume WHERE storagesystem_id = :this-&gt;id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="SANSwitch" _delta="define">
       <parent>DatacenterDevice</parent>
@@ -290,28 +279,7 @@
           <duplicates/>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
-  {
-    switch ($sRelCode)
-    {
-    case "impacts":
-      $aRels = array(
-        "datacenterdevice" => array("sQuery"=>"SELECT DatacenterDevice AS dc JOIN lnkSanToDatacenterDevice AS l1 ON l1.datacenterdevice_id = dc.id WHERE l1.san_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-
-      );
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-    default:
-      return parent::GetRelationQueries($sRelCode);
-    }
-  }]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -509,6 +477,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="datacenterdevice">
+              <query>SELECT DatacenterDevice AS dc JOIN lnkSanToDatacenterDevice AS l1 ON l1.datacenterdevice_id = dc.id WHERE l1.san_id = :this-&gt;id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="TapeLibrary" _delta="define">
       <parent>DatacenterDevice</parent>
@@ -543,28 +520,7 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
-  {
-    switch ($sRelCode)
-    {
-    case "impacts":
-      $aRels = array(
-        "tape" => array("sQuery"=>"SELECT Tape  WHERE tapelibrary_id= :this->id", "bPropagate"=>true, "iDistance"=>10),
-
-      );
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-    default:
-      return parent::GetRelationQueries($sRelCode);
-    }
-  }]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -762,6 +718,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="tape">
+              <query>SELECT Tape  WHERE tapelibrary_id= :this-&gt;id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="NAS" _delta="define">
       <parent>DatacenterDevice</parent>
@@ -796,28 +761,7 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
-  {
-    switch ($sRelCode)
-    {
-    case "impacts":
-      $aRels = array(
-        "nasfilesystem" => array("sQuery"=>"SELECT NASFileSystem WHERE nas_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-
-      );
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-    default:
-      return parent::GetRelationQueries($sRelCode);
-    }
-  }]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -1015,6 +959,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="nasfilesystem">
+              <query>SELECT NASFileSystem WHERE nas_id = :this-&gt;id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="Tape" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -1066,35 +1019,7 @@
           <target_attcode>name</target_attcode>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
-  {
-    switch ($sRelCode)
-    {
-      case "impacts":
-      $aRels = array(
-
-      );
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-      
-      case 'depends on':
-      $aRels = array(
-        "tapelibrary" => array("sQuery"=>"SELECT TapeLibrary  WHERE id = :this->tapelibrary_id", "bPropagate"=>true, "iDistance"=>5), 
-      );
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-      
-      default:
-      return parent::GetRelationQueries($sRelCode);     
-    }
-  }]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -1133,6 +1058,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="depends on">
+          <neighbours>
+            <neighbour id="tapelibrary">
+              <query>SELECT TapeLibrary  WHERE id = :this-&gt;tapelibrary_id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="NASFileSystem" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -1189,35 +1123,7 @@
           <target_attcode>name</target_attcode>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
-  {
-    switch ($sRelCode)
-    {
-      case "impacts":
-      $aRels = array(
-
-      );
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-      
-      case 'depends on':
-      $aRels = array(
-        "nas" => array("sQuery"=>"SELECT NAS  WHERE id = :this->nas_id", "bPropagate"=>true, "iDistance"=>5), 
-      );
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-      
-      default:
-      return parent::GetRelationQueries($sRelCode);     
-    }
-  }]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -1265,6 +1171,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="depends on">
+          <neighbours>
+            <neighbour id="nas">
+              <query>SELECT NAS  WHERE id = :this-&gt;nas_id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="FiberChannelInterface" _delta="define">
       <parent>NetworkInterface</parent>
@@ -1451,40 +1366,7 @@
           <duplicates/>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[ public static function GetRelationQueries($sRelCode)
-  {
-    switch ($sRelCode)
-    {
-      case "impacts":
-      $aRels = array(
-        // Actually this should be limited to the Software instances based on a DBServer Application type...
-        "server" => array("sQuery"=>"SELECT Server AS s JOIN lnkServerToVolume AS l1 ON l1.server_id=s.id  WHERE l1.volume_id = :this->id", "bPropagate"=>true, "iDistance"=>5),  
-      );
-      if (class_exists('VirtualDevice'))
-      {
-        $aRels["virtualdevice"] = array("sQuery"=>"SELECT VirtualDevice AS vd JOIN lnkVirtualDeviceToVolume AS l1 ON l1.virtualdevice_id=vd.id  WHERE l1.volume_id = :this->id", "bPropagate"=>true, "iDistance"=>5);
-      }
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-      
-      case 'depends on':
-      $aRels = array(
-        "sotragesystem" => array("sQuery"=>"SELECT StorageSystem AS storage WHERE storage.id = :this->storagesystem_id", "bPropagate"=>true, "iDistance"=>5),  
-      );
-      return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-      break;
-      
-      default:
-      return parent::GetRelationQueries($sRelCode);     
-    }
-  }]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -1547,6 +1429,22 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="server">
+              <query>SELECT Server AS s JOIN lnkServerToVolume AS l1 ON l1.server_id=s.id  WHERE l1.volume_id = :this-&gt;id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+        <relation id="depends on">
+          <neighbours>
+            <neighbour id="sotragesystem">
+              <query>SELECT StorageSystem AS storage WHERE storage.id = :this-&gt;storagesystem_id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="lnkServerToVolume" _delta="define">
       <parent>cmdbAbstractObject</parent>

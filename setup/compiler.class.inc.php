@@ -1461,7 +1461,7 @@ EOF;
 				$sMethods .= "\t\t\treturn array_merge(\$aRels, parent::GetRelationQueriesEx(\$sRelCode));\n\n";
 			}
 			$sMethods .= "\t\tdefault:\n";
-			$sMethods .= "\t\t\treturn parent::GetRelationQueries(\$sRelCode);\n";
+			$sMethods .= "\t\t\treturn parent::GetRelationQueriesEx(\$sRelCode);\n";
 			$sMethods .= "\t\t}\n";
 			$sMethods .= "\t}\n";
 		}

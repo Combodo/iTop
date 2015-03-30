@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2">
   <classes>
     <class id="Organization" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -1380,29 +1380,7 @@
           <duplicates/>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
-	{
-		switch ($sRelCode)
-		{
-		case "impacts":
-			$aRels = array(
-				"contact" => array("sQuery"=>"SELECT Contact AS c JOIN lnkContactToFunctionalCI AS l1 ON l1.contact_id = c.id WHERE l1.functionalci_id = :this->id", "bPropagate"=>true, "iDistance"=>3),
-				"solution" => array("sQuery"=>"SELECT ApplicationSolution AS s JOIN lnkApplicationSolutionToFunctionalCI AS l1 ON l1.applicationsolution_id = s.id WHERE l1.functionalci_id = :this->id", "bPropagate"=>true, "iDistance"=>2),
-				"SoftwareInstances" => array("sQuery"=>"SELECT SoftwareInstance AS s  WHERE s.system_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-		default:
-			return parent::GetRelationQueries($sRelCode);
-		}
-	}]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -1474,6 +1452,21 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="contact">
+              <query>SELECT Contact AS c JOIN lnkContactToFunctionalCI AS l1 ON l1.contact_id = c.id WHERE l1.functionalci_id = :this-&gt;id</query>
+            </neighbour>
+            <neighbour id="solution">
+              <query>SELECT ApplicationSolution AS s JOIN lnkApplicationSolutionToFunctionalCI AS l1 ON l1.applicationsolution_id = s.id WHERE l1.functionalci_id = :this-&gt;id</query>
+            </neighbour>
+            <neighbour id="SoftwareInstances">
+              <query>SELECT SoftwareInstance AS s  WHERE s.system_id = :this-&gt;id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="PhysicalDevice" _delta="define">
       <parent>FunctionalCI</parent>
@@ -1738,36 +1731,7 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
-	{
-		switch ($sRelCode)
-		{
-		case "impacts":
-			$aRels = array(
-
-
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-
-			case "depends on":
-			$aRels = array(
-				"connected_network" => array("sQuery"=>"SELECT NetworkDevice AS nw JOIN lnkConnectableCIToNetworkDevice AS l1 ON l1.networkdevice_id = nw.id WHERE l1.connectableci_id = :this->id AND l1.connection_type='downlink'", "bPropagate"=>true, "iDistance"=>10),
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-
-		default:
-			return parent::GetRelationQueries($sRelCode);
-		}
-	}]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -1890,6 +1854,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="depends on">
+          <neighbours>
+            <neighbour id="connected_network">
+              <query>SELECT NetworkDevice AS nw JOIN lnkConnectableCIToNetworkDevice AS l1 ON l1.networkdevice_id = nw.id WHERE l1.connectableci_id = :this-&gt;id AND l1.connection_type='downlink'</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="DatacenterDevice" _delta="define">
       <parent>ConnectableCI</parent>
@@ -2002,46 +1975,7 @@
           <duplicates/>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
-	{
-		switch ($sRelCode)
-		{
-		case "depends on":
-            $aRels = array();
-            if (class_exists('Enclosure'))
-            {
-              $aRels['Enclosure'] = array("sQuery"=>"SELECT Enclosure WHERE id = :this->enclosure_id", "bPropagate"=>true, "iDistance"=>10);
-            }
-            if (class_exists('SANSwitch'))
-            {
-              $aRels['SANSwitch'] = array("sQuery"=>"SELECT SANSwitch AS san JOIN lnkSanToDatacenterDevice AS l1 ON l1.san_id = san.id WHERE l1.datacenterdevice_id = :this->id", "bPropagate"=>true, "iDistance"=>10);
-            }
-            if (class_exists('PowerConnection'))
-            {
-              $aRels['PowerA'] = array(
-                 "sQuery"=>"SELECT PowerConnection WHERE id = :this->powerA_id",
-					  "bPropagate"=>true,
-                 "iDistance"=>10
-              );
-              $aRels['PowerB'] = array(
-                 "sQuery"=>"SELECT PowerConnection WHERE id = :this->powerB_id",
-					  "bPropagate"=>true,
-                 "iDistance"=>10
-              );
-            }
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-		default:
-			return parent::GetRelationQueries($sRelCode);
-		}
-	}]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -2248,37 +2182,7 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
-	{
-		switch ($sRelCode)
-		{
-		case "impacts":
-			$aRels = array(
-				"device" => array("sQuery"=>"SELECT ConnectableCI AS d JOIN lnkConnectableCIToNetworkDevice AS l1 ON l1.connectableci_id = d.id WHERE l1.networkdevice_id = :this->id AND l1.connection_type='downlink'", "bPropagate"=>true, "iDistance"=>1),
-
-
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-
-			case "depends on":
-			$aRels = array(
-		//		"connected_network" => array("sQuery"=>"SELECT NetworkDevice AS nw JOIN lnkConnectableCIToNetworkDevice AS l1 ON l1.networkdevice_id = nw.id WHERE l1.connectableci_id = :this->id AND l1.connection_type='uplink'", "bPropagate"=>true, "iDistance"=>10),
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-
-		default:
-			return parent::GetRelationQueries($sRelCode);
-		}
-	}]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -2479,6 +2383,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="device">
+              <query>SELECT ConnectableCI AS d JOIN lnkConnectableCIToNetworkDevice AS l1 ON l1.connectableci_id = d.id WHERE l1.networkdevice_id = :this-&gt;id AND l1.connection_type='downlink'</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="Server" _delta="define">
       <parent>DatacenterDevice</parent>
@@ -2562,43 +2475,7 @@
           <duplicates/>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
-	{
-		switch ($sRelCode)
-		{
-		case "impacts":
-			$aRels = array();
-			if (class_exists('Hypervisor'))
-			{
-				$aRels = array(
-					"device" => array("sQuery"=>"SELECT Hypervisor WHERE server_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-			         );
-			}
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-
-		case "depends on":
-            		$aRels = array();
-            		if (class_exists('LogicalVolume'))
-            		{
-				$aRels = array(
-					"volume" => array("sQuery"=>"SELECT LogicalVolume AS v JOIN lnkServerToVolume AS l1 ON l1.volume_id=v.id WHERE l1.server_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-				);
-			}
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-
-		default:
-			return parent::GetRelationQueries($sRelCode);
-		}
-	}]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -2870,35 +2747,7 @@
           <display_style>list</display_style>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
-	{
-		switch ($sRelCode)
-		{
-			case "impacts":
-			$aRels = array(
-				"process" => array("sQuery"=>"SELECT BusinessProcess AS p JOIN lnkApplicationSolutionToBusinessProcess AS l1 ON l1.businessprocess_id = p.id WHERE l1.applicationsolution_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			case "depends on":
-			$aRels = array(
-				"solution" => array("sQuery"=>"SELECT FunctionalCI AS ci JOIN lnkApplicationSolutionToFunctionalCI AS l1 ON l1.functionalci_id = ci.id WHERE l1.applicationsolution_id = :this->id", "bPropagate"=>true, "iDistance"=>2),
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-						
-			default:
-			return parent::GetRelationQueries($sRelCode);			
-		}
-	}]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -2973,6 +2822,22 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="process">
+              <query>SELECT BusinessProcess AS p JOIN lnkApplicationSolutionToBusinessProcess AS l1 ON l1.businessprocess_id = p.id WHERE l1.applicationsolution_id = :this-&gt;id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+        <relation id="depends on">
+          <neighbours>
+            <neighbour id="solution">
+              <query>SELECT FunctionalCI AS ci JOIN lnkApplicationSolutionToFunctionalCI AS l1 ON l1.functionalci_id = ci.id WHERE l1.applicationsolution_id = :this-&gt;id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="BusinessProcess" _delta="define">
       <parent>FunctionalCI</parent>
@@ -3018,28 +2883,7 @@
           <display_style>list</display_style>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
-	{
-		switch ($sRelCode)
-		{
-			case "depends on":
-			$aRels = array(
-				"solution" => array("sQuery"=>"SELECT ApplicationSolution AS app JOIN lnkApplicationSolutionToBusinessProcess AS l1 ON l1.applicationsolution_id = app.id WHERE l1.businessprocess_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			default:
-			return parent::GetRelationQueries($sRelCode);			
-		}
-	}]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -3105,6 +2949,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="depends on">
+          <neighbours>
+            <neighbour id="solution">
+              <query>SELECT ApplicationSolution AS app JOIN lnkApplicationSolutionToBusinessProcess AS l1 ON l1.applicationsolution_id = app.id WHERE l1.businessprocess_id = :this-&gt;id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="SoftwareInstance" _delta="define">
       <parent>FunctionalCI</parent>
@@ -3189,36 +3042,7 @@
           <display_style>list</display_style>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
-	{
-		switch ($sRelCode)
-		{
-			case "impacts":
-			$aRels = array(
-				// Actually this should be limited to the Software instances based on a DBServer Application type...
-
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			case 'depends on':
-			$aRels = array(
-				"FunctionalCI" => array("sQuery"=>"SELECT FunctionalCI AS s JOIN SoftwareInstance AS app ON app.system_id = s.id WHERE app.id = :this->id", "bPropagate"=>true, "iDistance"=>10),			
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			default:
-			return parent::GetRelationQueries($sRelCode);			
-		}
-	}]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -3299,6 +3123,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="depends on">
+          <neighbours>
+            <neighbour id="FunctionalCI">
+              <query>SELECT FunctionalCI AS s JOIN SoftwareInstance AS app ON app.system_id = s.id WHERE app.id = :this-&gt;id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="Middleware" _delta="define">
       <parent>SoftwareInstance</parent>
@@ -3336,35 +3169,7 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
-	{
-		switch ($sRelCode)
-		{
-			case "impacts":
-			$aRels = array(
-				"MiddlewareInstance" => array("sQuery"=>"SELECT MiddlewareInstance AS mi WHERE middleware_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			case 'depends on':
-			$aRels = array(
-			
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			default:
-			return parent::GetRelationQueries($sRelCode);			
-		}
-	}]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -3454,6 +3259,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="MiddlewareInstance">
+              <query>SELECT MiddlewareInstance AS mi WHERE middleware_id = :this-&gt;id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="DBServer" _delta="define">
       <parent>SoftwareInstance</parent>
@@ -3491,35 +3305,7 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
-	{
-		switch ($sRelCode)
-		{
-			case "impacts":
-			$aRels = array(
-				"DatabaseSchema" => array("sQuery"=>"SELECT DatabaseSchema AS db WHERE dbserver_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			case 'depends on':
-			$aRels = array(
-			
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			default:
-			return parent::GetRelationQueries($sRelCode);			
-		}
-	}]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -3609,6 +3395,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="DatabaseSchema">
+              <query>SELECT DatabaseSchema AS db WHERE dbserver_id = :this-&gt;id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="WebServer" _delta="define">
       <parent>SoftwareInstance</parent>
@@ -3646,35 +3441,7 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
-	{
-		switch ($sRelCode)
-		{
-			case "impacts":
-			$aRels = array(
-				"WebApplication" => array("sQuery"=>"SELECT WebApplication AS db WHERE webserver_id = :this->id", "bPropagate"=>true, "iDistance"=>10),
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			case 'depends on':
-			$aRels = array(
-			
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			default:
-			return parent::GetRelationQueries($sRelCode);			
-		}
-	}]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -3764,6 +3531,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="WebApplication">
+              <query>SELECT WebApplication AS db WHERE webserver_id = :this-&gt;id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="PCSoftware" _delta="define">
       <parent>SoftwareInstance</parent>
@@ -4035,35 +3811,7 @@
           <target_attcode>name</target_attcode>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
-	{
-		switch ($sRelCode)
-		{
-			case "impacts":
-			$aRels = array(
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			case 'depends on':
-			$aRels = array(
-				"Middleware" => array("sQuery"=>"SELECT Middleware WHERE id = :this->middleware_id", "bPropagate"=>true, "iDistance"=>10),
-			
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			default:
-			return parent::GetRelationQueries($sRelCode);			
-		}
-	}]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -4135,6 +3883,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="depends on">
+          <neighbours>
+            <neighbour id="Middleware">
+              <query>SELECT Middleware WHERE id = :this-&gt;middleware_id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="DatabaseSchema" _delta="define">
       <parent>FunctionalCI</parent>
@@ -4172,35 +3929,7 @@
           <target_attcode>name</target_attcode>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
-	{
-		switch ($sRelCode)
-		{
-			case "impacts":
-			$aRels = array(
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			case 'depends on':
-			$aRels = array(
-				"DBServer" => array("sQuery"=>"SELECT DBServer WHERE id = :this->dbserver_id", "bPropagate"=>true, "iDistance"=>10),
-			
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			default:
-			return parent::GetRelationQueries($sRelCode);			
-		}
-	}]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -4272,6 +4001,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="depends on">
+          <neighbours>
+            <neighbour id="DBServer">
+              <query>SELECT DBServer WHERE id = :this-&gt;dbserver_id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="WebApplication" _delta="define">
       <parent>FunctionalCI</parent>
@@ -4315,35 +4053,7 @@
           <target>_blank</target>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode)
-	{
-		switch ($sRelCode)
-		{
-			case "impacts":
-			$aRels = array(
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			case 'depends on':
-			$aRels = array(
-				"WebServer" => array("sQuery"=>"SELECT WebServer WHERE id = :this->webserver_id", "bPropagate"=>true, "iDistance"=>10),
-			
-			);
-			return array_merge($aRels, parent::GetRelationQueries($sRelCode));
-			break;
-			
-			default:
-			return parent::GetRelationQueries($sRelCode);			
-		}
-	}]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -4418,6 +4128,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="depends on">
+          <neighbours>
+            <neighbour id="WebServer">
+              <query>SELECT WebServer WHERE id = :this-&gt;webserver_id</query>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="Software" _delta="define">
       <parent>cmdbAbstractObject</parent>
