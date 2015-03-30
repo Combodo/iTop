@@ -97,6 +97,18 @@ class iTopDesignFormat
 
 	/**
 	 * Helper to fill the log structure
+	 * @param string $sMessage The error description
+	 */
+	protected function LogWarning($sMessage)
+	{
+		$this->aLog[] = array(
+			'severity' => 'Warning',
+			'msg' => $sMessage
+		);
+	}
+
+	/**
+	 * Helper to fill the log structure
 	 * @param string $sMessage The message
 	 */
 	protected function LogInfo($sMessage)
@@ -108,7 +120,7 @@ class iTopDesignFormat
 	}
 
 	/**
-	 * Get all the errors in one single line
+	 * Get all the errors in one single array
 	 */
 	public function GetErrors()
 	{
@@ -124,12 +136,40 @@ class iTopDesignFormat
 	}
 
 	/**
+	 * Get all the warnings in one single array
+	 */
+	public function GetWarnings()
+	{
+		$aErrors = array();
+		foreach ($this->aLog as $aLogEntry)
+		{
+			if ($aLogEntry['severity'] == 'Warning')
+			{
+				$aErrors[] = $aLogEntry['msg'];
+			}
+		}
+		return $aErrors;
+	}
+
+	/**
 	 * Get the whole log
 	 */
 	public function GetLog()
 	{
 		return $this->aLog;
 	}
+
+	/**
+	 * An alternative to getNodePath, that gives the id of nodes instead of the position within the children	
+	 */	
+	public static function GetItopNodePath($oNode)
+	{
+		if ($oNode instanceof DOMDocument) return '';
+	
+		$sId = $oNode->getAttribute('id');
+		$sNodeDesc = ($sId != '') ? $oNode->nodeName.'['.$sId.']' : $oNode->nodeName;
+		return self::GetItopNodePath($oNode->parentNode).'/'.$sNodeDesc;
+	}	 	
 
 	/**
 	 * Test the conversion without altering the DOM
@@ -312,7 +352,7 @@ class iTopDesignFormat
 		{
 			if ($oXPath->query('descendant-or-self::*[@_delta or @_rename_from]', $oNode)->length > 0)
 			{
-				$this->LogError('Alterations have been defined under the node: '.MFDocument::GetItopNodePath($oNode));
+				$this->LogError('Alterations have been defined under the node: '.self::GetItopNodePath($oNode));
 			}
 			$oStimulus = $oNode->ownerDocument->createElement('stimulus', $oNode->getAttribute('id'));
 			$oNode->appendChild($oStimulus);
@@ -325,7 +365,7 @@ class iTopDesignFormat
 		{
 			if ($oXPath->query('descendant-or-self::*[@_delta or @_rename_from]', $oNode)->length > 0)
 			{
-				$this->LogError('Alterations have been defined under the node: '.MFDocument::GetItopNodePath($oNode));
+				$this->LogError('Alterations have been defined under the node: '.self::GetItopNodePath($oNode));
 			}
 			$oStimulus = $oNode->ownerDocument->createElement('percent', $oNode->getAttribute('id'));
 			$oNode->appendChild($oStimulus);
@@ -338,7 +378,7 @@ class iTopDesignFormat
 		{
 			if ($oXPath->query('descendant-or-self::*[@_delta or @_rename_from]', $oNode)->length > 0)
 			{
-				$this->LogError('Alterations have been defined under the node: '.MFDocument::GetItopNodePath($oNode));
+				$this->LogError('Alterations have been defined under the node: '.self::GetItopNodePath($oNode));
 			}
 			if (substr($oNode->getAttribute('id'), 0, strlen('action')) == 'action')
 			{
@@ -362,7 +402,7 @@ class iTopDesignFormat
 		{
 			if ($oXPath->query('descendant-or-self::*[@_delta or @_rename_from]', $oNode)->length > 0)
 			{
-				$this->LogError('Alterations have been defined under the node: '.MFDocument::GetItopNodePath($oNode));
+				$this->LogError('Alterations have been defined under the node: '.self::GetItopNodePath($oNode));
 			}
 			$oNode->removeAttribute('id');
 		}
@@ -374,7 +414,6 @@ class iTopDesignFormat
 	 */
 	protected function From11To12($oFactory)
 	{
-		// Do nothing
 	}
 
 	/**
@@ -384,12 +423,44 @@ class iTopDesignFormat
 	protected function From12To11($oFactory)
 	{
 		$oXPath = new DOMXPath($this->oDocument);
+
 		// Transform ObjectKey attributes into Integer
+		//
 		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeObjectKey']");
 		foreach ($oNodeList as $oNode)
 		{
 			$oNode->setAttribute('xsi:type', 'AttributeInteger');
 			// The property class_attcode is left there (doing no harm)
+			$this->LogWarning('The attribute '.self::GetItopNodePath($oNode), ' has been degraded into an integer attribute. Any OQL query using this attribute will fail.');
+		}
+
+		// Later: transform the relations into code (iif defined as an SQL query)
+		$oNodeList = $oXPath->query('/itop_design/classes//class/relations');
+		foreach ($oNodeList as $oNode)
+		{
+			$this->LogWarning('The relations defined in '.self::GetItopNodePath($oNode). ' will be lost.');
+			$this->DeleteNode($oNode);
+		}
+
+		$oNodeList = $oXPath->query('/itop_design/portal');
+		foreach ($oNodeList as $oNode)
+		{
+			$this->LogWarning('Portal definition will be lost.');
+			$this->DeleteNode($oNode);
+		}
+
+		$oNodeList = $oXPath->query('/itop_design/module_parameters');
+		foreach ($oNodeList as $oNode)
+		{
+			$this->LogWarning('Module parameters will be lost.');
+			$this->DeleteNode($oNode);
+		}
+
+		$oNodeList = $oXPath->query('/itop_design/snippets');
+		foreach ($oNodeList as $oNode)
+		{
+			$this->LogWarning('Code snippets will be lost.');
+			$this->DeleteNode($oNode);
 		}
 	}
 
