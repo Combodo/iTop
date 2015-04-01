@@ -323,6 +323,11 @@ class RunTimeEnvironment
 		{
 			$aDirsToCompile[] = APPROOT.'extensions';
 		}
+		$sExtraDir = APPROOT.'data/'.$this->sTargetEnv.'-modules/';
+		if (is_dir($sExtraDir))
+		{
+			$aDirsToCompile[] = $sExtraDir;
+		}
 		
 		$aRet = array();
 
@@ -352,9 +357,11 @@ class RunTimeEnvironment
 		foreach($aModules as $foo => $oModule)
 		{
 			$sModule = $oModule->GetName();
-			if (array_key_exists($sModule, $aAvailableModules))
+			$sModuleRootDir = $oModule->GetRootDir();
+			$bIsExtra = (strpos($sModuleRootDir, $sExtraDir) !== false);
+			if (array_key_exists($sModule, $aAvailableModules)) 
 			{
-				if ($aAvailableModules[$sModule]['version_db'] != '')
+				if (($aAvailableModules[$sModule]['version_db'] != '') ||  $bIsExtra) //Extra modules are always selected
 				{
 					$aRet[] = $oModule;
 				}
@@ -371,6 +378,14 @@ class RunTimeEnvironment
 		return $aRet;
 	}
 
+	/**
+	 * Compile the data model by imitating the given environment
+	 * The list of modules to be installed in the target environment is:
+	 *  - the list of modules present in the "source_dir" (defined by the source environment) which are marked as "installed" in the source environment's database
+	 *  - plus the list of modules present in the "extra" directory of the target environment: data/<target_environment>-modules/
+	 * @param string $sSourceEnv The name of the source environment to 'imitate'
+	 * @param bool $bUseSymLinks Whether to create symbolic links instead of copies
+	 */
 	public function CompileFrom($sSourceEnv, $bUseSymLinks = false)
 	{
 		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
@@ -538,8 +553,14 @@ class RunTimeEnvironment
 		}
 	}
 	
-	public function RecordInstallation(Config $oConfig, $sDataModelVersion, $aSelectedModules, $sModulesRelativePath)
+	public function RecordInstallation(Config $oConfig, $sDataModelVersion, $aSelectedModules, $sModulesRelativePath, $sShortComment = null)
 	{
+		if ($sShortComment === null)
+		{
+			$sShortComment = 'Done by the setup program';
+		}
+		$sMainComment = $sShortComment."\nBuilt on ".ITOP_BUILD_DATE;
+		
 		// Record datamodel version
 		$aData = array(
 			'source_dir' => $oConfig->Get('source_dir'),
@@ -557,7 +578,7 @@ class RunTimeEnvironment
 		$oInstallRec = new ModuleInstallation();
 		$oInstallRec->Set('name', ITOP_APPLICATION);
 		$oInstallRec->Set('version', ITOP_VERSION.'.'.ITOP_REVISION);
-		$oInstallRec->Set('comment', "Done by the setup program\nBuilt on ".ITOP_BUILD_DATE);
+		$oInstallRec->Set('comment', $sMainComment);
 		$oInstallRec->Set('parent_id', 0); // root module
 		$oInstallRec->Set('installed', $iInstallationTime);
 		$iMainItopRecord = $oInstallRec->DBInsertNoReload();
@@ -572,7 +593,7 @@ class RunTimeEnvironment
 			$sName = $sModuleId;
 			$sVersion = $aModuleData['version_code'];
 			$aComments = array();
-			$aComments[] = 'Done by the setup program';
+			$aComments[] = $sShortComment;
 			if ($aModuleData['mandatory'])
 			{
 				$aComments[] = 'Mandatory';
@@ -696,5 +717,17 @@ class RunTimeEnvironment
 	protected function log_ok($sText)
 	{
 		SetupPage::log_ok($sText);
+	}
+	
+	public function GetCurrentDataModelVersion()
+	{
+		$oSearch = DBObjectSearch::FromOQL("SELECT ModuleInstallation WHERE name='".DATAMODEL_MODULE."'");
+		$oSet = new DBObjectSet($oSearch, array(), array('installed' => false));
+		$oLatestDM = $oSet->Fetch();
+		if ($oLatestDM == null)
+		{
+			return '0.0.0';
+		}
+		return $oLatestDM->Get('version');
 	}
 } // End of class

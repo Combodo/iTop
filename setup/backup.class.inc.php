@@ -15,6 +15,69 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Handles adding directories into a Zip archive
+ */
+class ZipArchiveEx extends ZipArchive
+{
+	public function addDir($sDir, $sZipDir = '')
+	{
+		if (is_dir($sDir))
+		{
+			if ($dh = opendir($sDir))
+			{
+				// Add the directory
+				if (!empty($sZipDir)) $this->addEmptyDir($sZipDir);
+					
+				// Loop through all the files
+				while (($sFile = readdir($dh)) !== false)
+				{
+					// If it's a folder, run the function again!
+					if (!is_file($sDir.$sFile))
+					{
+						// Skip parent and root directories
+						if (($sFile !== ".") && ($sFile !== ".."))
+						{
+							$this->addDir($sDir.$sFile."/", $sZipDir.$sFile."/");
+						}
+					}
+					else
+					{
+						// Add the files
+						$this->addFile($sDir.$sFile, $sZipDir.$sFile);
+					}
+				}
+			}
+		}
+	}
+	/**
+	 * Extract a whole directory from the archive.
+	 * Usage: $oZip->extractDirTo('/var/www/html/itop/data', '/production-modules/')
+	 * @param string $sDestinationDir
+	 * @param string $sZipDir Must start and end with a slash !!
+	 * @return boolean
+	 */
+	public function extractDirTo($sDestinationDir, $sZipDir)
+	{
+		$aFiles = array();
+		for($i = 0; $i < $this->numFiles; $i++)
+		{
+			$sEntry = $this->getNameIndex($i);
+			//Use strpos() to check if the entry name contains the directory we want to extract
+			if (strpos($sEntry, $sZipDir) === 0)
+			{
+				//Add the entry to our array if it in in our desired directory
+				$aFiles[] = $sEntry;
+			}
+		}
+		// Extract only the selcted files
+		if ((count($aFiles)  > 0) && ($this->extractTo($sDestinationDir, $aFiles) === true)) 
+		{
+			return true;
+		}
+		return false;
+	}
+} // class ZipArchiveEx
 
 
 class BackupException extends Exception
@@ -140,6 +203,15 @@ class DBBackup
 				'dest' => 'delta.xml',
 			);
 		}
+		$sExtraDir = APPROOT.'data/'.utils::GetCurrentEnvironment().'-modules/';
+		if (is_dir($sExtraDir))
+		{
+			$aContents[] = array(
+				'source' => $sExtraDir,
+				'dest' => utils::GetCurrentEnvironment().'-modules/',
+			);
+		}
+		
 		$this->DoZip($aContents, $sZipFile);
 		// Windows/IIS: the data file has been created by the spawned process...
 		//   trying to delete it will issue a warning, itself stopping the setup abruptely
@@ -249,7 +321,7 @@ class DBBackup
 		foreach ($aFiles as $aFile)
 		{
 			$sFile = $aFile['source'];
-			if (!is_file($sFile))
+			if (!is_file($sFile) && !is_dir($sFile))
 			{
 				throw new BackupException("File '$sFile' does not exist or could not be read");
 			}
@@ -258,13 +330,20 @@ class DBBackup
 		$sZipDir = dirname($sZipArchiveFile);
 		SetupUtils::builddir($sZipDir);
 	
-		$oZip = new ZipArchive();
+		$oZip = new ZipArchiveEx();
 		$res = $oZip->open($sZipArchiveFile, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 		if ($res === TRUE)
 		{
 			foreach ($aFiles as $aFile)
 			{
-				$oZip->addFile($aFile['source'], $aFile['dest']);
+				if (is_dir($aFile['source']))
+				{
+					$oZip->addDir($aFile['source'], $aFile['dest']);
+				}
+				else
+				{
+					$oZip->addFile($aFile['source'], $aFile['dest']);
+				}
 			}
 			if ($oZip->close())
 			{

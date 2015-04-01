@@ -1824,6 +1824,13 @@ class SynchroReplica extends DBObject implements iDisplay
 	 */	
 	protected function UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, &$oStatLog, $sStatsCode, $sStatsCodeError)
 	{
+if (!is_object($oDestObj))
+{
+	IssueLog::Error('About to update a NON object in UpdateObjectFromReplica. Replica_id = '.$this->GetKey().' $oDestObj = '.var_export($oDestObj, true));
+	IssueLog::Error(MyHelpers::get_callstack_text());
+	return false;
+}
+
 		$aValueTrace = array();
 		$bModified = false;
 		try

@@ -440,6 +440,12 @@ class ApplicationInstaller
 			// if the extensions dir exists, scan it for additional modules as well
 			$aDirsToScan[] = $sExtensionsPath;
 		}
+		$sExtraPath = APPROOT.'/data/'.$sEnvironment.'-modules/';
+		if (is_dir($sExtraPath))
+		{
+			// if the extra dir exists, scan it for additional modules as well
+			$aDirsToScan[] = $sExtraPath;
+		}
 		$sTargetPath = APPROOT.$sTargetDir;
 		if (!is_dir($sSourcePath))
 		{

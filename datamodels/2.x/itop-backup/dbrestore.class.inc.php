@@ -92,7 +92,7 @@ class DBRestore extends DBBackup
 	{
 		$this->LogInfo("Starting restore of ".basename($sZipFile));
 
-		$oZip = new ZipArchive();
+		$oZip = new ZipArchiveEx();
 		$res = $oZip->open($sZipFile);
 
 		// Load the database
@@ -117,6 +117,15 @@ class DBRestore extends DBBackup
 		{
 			@unlink($sDeltaFile);
 		}
+		if (is_dir(APPROOT.'data/production-modules/'))
+		{
+			SetupUtils::rrmdir(APPROOT.'data/production-modules/');
+		}
+		if ($oZip->locateName('production-modules/') !== false)
+		{
+			$oZip->extractDirTo(APPROOT.'data/', 'production-modules/');
+		}
+
 		$sConfigFile = APPROOT.'conf/'.$sEnvironment.'/config-itop.php';
 		@chmod($sConfigFile, 0770); // Allow overwriting the file
 		$oZip->extractTo(APPROOT.'conf/'.$sEnvironment, 'config-itop.php');

@@ -1742,17 +1742,19 @@ class Config
 			$this->SetDBSubname($aParamValues['db_prefix']);
 		}
 		
+		$this->UpdateIncludes($sModulesDir, $aSelectedModules);
+	}
+
+	/**
+	 * Helper function to rebuild the default configuration and the list of includes from a directory and a list of selected modules
+	 * @param string $sModulesDir The relative path to the directory to scan for modules (typically the 'env-xxx' directory resulting from the compilation)
+	 * @param array $aSelectedModules An array of selected modules' identifiers. If null all modules found will be considered as installed
+	 * @throws Exception
+	 */
+	public function UpdateIncludes($sModulesDir, $aSelectedModules = null)
+	{
 		if (!is_null($sModulesDir))
-		{
-			if (isset($aParamValues['selected_modules']))
-			{
-				$aSelectedModules = explode(',', $aParamValues['selected_modules']);
-			}
-			else
-			{
-				$aSelectedModules = null;
-			}
-	
+		{	
 			// Initialize the arrays below with default values for the application...
 			$oEmptyConfig = new Config('dummy_file', false); // Do NOT load any config file, just set the default values
 			$aAddOns = $oEmptyConfig->GetAddOns();
@@ -1766,11 +1768,11 @@ class Config
 			$aDictionaries = $oEmptyConfig->GetDictionaries();
 			// Merge the values with the ones provided by the modules
 			// Make sure when don't load the same file twice...
-	
+			
 			$aModules = ModuleDiscovery::GetAvailableModules(array(APPROOT.$sModulesDir));
-			foreach($aModules as $sModuleId => $aModuleInfo)
+			foreach ($aModules as $sModuleId => $aModuleInfo)
 			{
-				list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+				list ($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
 				if (is_null($aSelectedModules) || in_array($sModuleName, $aSelectedModules))
 				{
 					if (isset($aModuleInfo['datamodel']))
@@ -1783,10 +1785,10 @@ class Config
 					}
 					if (isset($aModuleInfo['settings']))
 					{
-						list($sName, $sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
-						foreach($aModuleInfo['settings'] as $sProperty => $value)
+						list ($sName, $sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+						foreach ($aModuleInfo['settings'] as $sProperty => $value)
 						{
-							if ($bPreserveModuleSettings && isset($this->m_aModuleSettings[$sName][$sProperty]))
+							if (isset($this->m_aModuleSettings[$sName][$sProperty]))
 							{
 								// Do nothing keep the original value
 							}
@@ -1807,7 +1809,7 @@ class Config
 						{
 							throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not derived from 'ModuleInstallerAPI' - Module: ".$aModuleInfo['label']);
 						}
-						$aCallSpec = array($sModuleInstallerClass, 'BeforeWritingConfig');
+						$aCallSpec = array($sModuleInstallerClass,'BeforeWritingConfig');
 						call_user_func_array($aCallSpec, array($this));
 					}
 				}
@@ -1816,16 +1818,13 @@ class Config
 			$this->SetAppModules($aAppModules);
 			$this->SetDataModels($aDataModels);
 			$this->SetWebServiceCategories($aWebServiceCategories);
-
+			
 			// Scan dictionaries
 			//
-			if (!is_null($sModulesDir))
+			foreach (glob(APPROOT.$sModulesDir.'/dictionaries/*.dict.php') as $sFilePath)
 			{
-				foreach(glob(APPROOT.$sModulesDir.'/dictionaries/*.dict.php') as $sFilePath)
-				{
-					$sFile = basename($sFilePath);
-					$aDictionaries[] = $sModulesDir.'/dictionaries/'.$sFile;
-				}
+				$sFile = basename($sFilePath);
+				$aDictionaries[] = $sModulesDir.'/dictionaries/'.$sFile;
 			}
 			$this->SetDictionaries($aDictionaries);
 		}

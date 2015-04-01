@@ -1162,6 +1162,11 @@ EOF
 		{
 			$aSearchDirs[] = APPROOT.'extensions';
 		}
+		$sExtraDir = APPROOT.'data/'.$sCurrEnv.'-modules/';
+		if (file_exists($sExtraDir))
+		{
+			$aSearchDirs[] = $sExtraDir;
+		}
 		$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation(MetaModel::GetConfig(), $aSearchDirs);
 
 		require_once(APPROOT.'setup/setuputils.class.inc.php');

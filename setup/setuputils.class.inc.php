@@ -1123,12 +1123,31 @@ EOF
 		{
 			$aDirsToScan[] = APPROOT.'extensions';
 		}
+		if (is_dir(APPROOT.'data'))
+		{
+			$aDirsToScan[] = APPROOT.'extensions';
+		}
 		if (is_dir($oWizard->GetParameter('copy_extensions_from')))
 		{
 			$aDirsToScan[] = $oWizard->GetParameter('copy_extensions_from');
 		}
+		$sExtraDir = APPROOT.'data/production-modules/';
+		if (is_dir($sExtraDir))
+		{
+			$aDirsToScan[] = $sExtraDir;
+		}
 		$oProductionEnv = new RunTimeEnvironment();
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $aDirsToScan, $bAbortOnMissingDependency, $aModulesToLoad);
+		
+		foreach($aAvailableModules as $key => $aModule)
+		{
+			$bIsExtra = (array_key_exists('root_dir', $aModule) && (strpos($aModule['root_dir'], $sExtraDir) !== false)); // Some modules (root, datamodel) have no 'root_dir'
+			if ($bIsExtra)
+			{
+				// Modules in data/production-modules/ are considered as mandatory and always installed
+				$aAvailableModules[$key]['visible'] = false;
+			}
+		}
 
 		return $aAvailableModules;
 	}

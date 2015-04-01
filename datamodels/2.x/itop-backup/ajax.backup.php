@@ -24,7 +24,7 @@
  */
 
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
-require_once(__DIR__.'/../../approot.inc.php');
+if (!defined('APPROOT')) require_once(__DIR__.'/../../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
@@ -127,6 +127,10 @@ EOF
 				// Get the file and destroy the token (single usage)
 				$sToken = utils::ReadParam('token', '', false, 'raw_data');
 				$sTokenFile = APPROOT.'/data/restore.'.$sToken.'.tok';
+				if (!is_file($sTokenFile))
+				{
+					throw new Exception("Error: missing token file: '$sTokenFile'");
+				}
 				$sFile = file_get_contents($sTokenFile);
 				unlink($sTokenFile);
 	

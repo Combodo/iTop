@@ -25,7 +25,7 @@
  */
 
 require_once('itopsoaptypes.class.inc.php');
-$sItopRoot = 'http'.(utils::IsConnectionSecure() ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/..';
+$sItopRoot = 'https://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/..';
 $sWsdlUri = $sItopRoot.'/webservices/itop.wsdl.php';
 //$sWsdlUri .= '?service_category=';
 
@@ -58,19 +58,19 @@ try
 		'HW found shutdown', /* description */
 		null, /* caller */
 		new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* customer */
-		new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'NW Management'))), /* service */
+		new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* service */
 		new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Troubleshooting'))), /* service subcategory */
 		'', /* product */
-		new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'NW support'))), /* workgroup */
+		new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Network support'))), /* workgroup */
 		array(
 			new SOAPLinkCreationSpec(
-				'Device',
-				array(new SOAPSearchCondition('name', 'switch01')),
+				'NetworkDevice',
+				array(new SOAPSearchCondition('name', 'Switch1')),
 				array()
 			),
 			new SOAPLinkCreationSpec(
 				'Server',
-				array(new SOAPSearchCondition('name', 'dbserver1.demo.com')),
+				array(new SOAPSearchCondition('name', 'Server1')),
 				array()
 			),
 		), /* impacted cis */
