@@ -426,7 +426,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Relation:impacts/Description' => 'Elemente betroffen von ...',
 	'Relation:impacts/VerbUp' => 'Auswirkung ...',
 	'Relation:impacts/VerbDown' => 'Elemente betroffen von ...',
-	'Relation:depends on/Description' => 'Elemente, die von diesem Element abhängen',
+	'Relation:depends on/Description' => 'Elemente, von denen dieses Element abhängt.',
 	'Relation:depends on/VerbUp' => 'Hängt ab von ...',
 	'Relation:depends on/VerbDown' => 'Wirkt auf ...',
 	'Class:Organization/Attribute:parent_name' => 'Name der Mutterfirma',
