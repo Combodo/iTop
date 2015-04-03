@@ -46,6 +46,8 @@ require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/setup/setuppage.class.inc.php');
 require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
 
+ini_set('max_execution_time', max(3600, ini_get('max_execution_time'))); // Under Windows SQL/backup operations are part of the timeout and require extra time
+
 $sMemoryLimit = trim(ini_get('memory_limit'));
 if (empty($sMemoryLimit))
 {
