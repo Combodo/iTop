@@ -164,6 +164,7 @@ class UIExtKeyWidget
 				break;
 
 				case 'select':
+				case 'list':
 				default:
 				$sSelectMode = 'true';
 				
@@ -302,7 +303,7 @@ EOF
 EOF
 );
 		}
-		if ($sDisplayStyle == 'select')
+		if (($sDisplayStyle == 'select') || ($sDisplayStyle == 'list'))
 		{
 			$sHTMLValue .= "<span id=\"v_{$this->iId}\"></span>";
 		}
