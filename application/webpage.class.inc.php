@@ -938,11 +938,11 @@ class TabManager
 
 	/**
 	 * Finds the tab whose title matches a given pattern
-	 * @return mixed The name of the tab as a string or false if not found
+	 * @return mixed The actual name of the tab (as a string) or false if not found
 	 */
 	public function FindTab($sPattern, $sTabContainer = null)
 	{
-		$return = false;
+		$result = false;
 		if ($sTabContainer == null)
 		{
 			$sTabContainer = $this->m_sCurrentTabContainer;
