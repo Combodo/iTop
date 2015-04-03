@@ -185,7 +185,8 @@ if (!empty($sExpression))
 			{
 				case 'html':
 				$oP = new NiceWebPage("iTop - Export");
-
+				$oP->add_style('body { overflow: auto; }'); // Show scroll bars if needed
+				
 				// Integration within MS-Excel web queries + HTTPS + IIS:
 				// MS-IIS set these header values with no-cache... while Excel fails to do the job if using HTTPS
 				// Then the fix is to force the reset of header values Pragma and Cache-control 
