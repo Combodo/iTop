@@ -38,7 +38,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'bkp-status-backups-manual' => 'Manuelle Backups',
 	'bkp-status-backups-none' => 'Kein Backup vorhanden',
 	'bkp-next-backup' => 'Das nächste Backup wird am <b>%1$s</b> (%2$s) um %3$s durchgeführt',
-	'bkp-button-backup-now' => 'Backup läuft!',
+	'bkp-button-backup-now' => 'Starte Backup',
 	'bkp-button-restore-now' => 'Wiederherstellen!',
 	'bkp-confirm-backup' => 'Bitte bestätigen sie, dass sie jetzt ein Backup erstellen wollen now.',
 	'bkp-confirm-restore' => 'Bitte bestätigen sie, dass sie mit Backup %1$s eine Wiederherstellung durchführen wollen.',
