@@ -1742,6 +1742,14 @@ class Config
 			$this->SetDBSubname($aParamValues['db_prefix']);
 		}
 		
+		if (isset($aParamValues['selected_modules']))
+		{
+			$aSelectedModules = explode(',', $aParamValues['selected_modules']);
+		}
+		else
+		{
+			$aSelectedModules = null;
+		}		
 		$this->UpdateIncludes($sModulesDir, $aSelectedModules);
 	}
 
