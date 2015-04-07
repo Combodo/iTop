@@ -90,6 +90,8 @@ class PortalWebPage extends NiceWebPage
 		$this->add_linked_script("../js/jquery.qtip-1.0.min.js");
 		$this->add_linked_script('../js/jquery.multiselect.min.js');
 		$this->add_linked_script("../js/ajaxfileupload.js");
+		$this->add_linked_script("../js/ckeditor/ckeditor.js");
+		$this->add_linked_script("../js/ckeditor/adapters/jquery.js");
 		$this->add_ready_script(
 <<<EOF
 try
@@ -231,6 +233,20 @@ EOF
 		var next_step = $('input[id=next_step]');
 		next_step.val(sStep);
 	}
+		
+	// For disabling the CKEditor at init time when the corresponding textarea is disabled !
+	CKEDITOR.plugins.add( 'disabler',
+	{
+		init : function( editor )
+		{
+			editor.on( 'instanceReady', function(e)
+			{
+				e.removeListener();
+				$('#'+ editor.name).trigger('update');
+			});
+		}
+		
+	});
 EOF
 );
 
