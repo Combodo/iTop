@@ -66,7 +66,7 @@ else
 	$sRawFile = WebServicesBase::GetWSDLContents();
 }
 
-$sServerURI = 'http'.(utils::IsConnectionSecure() ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/soapserver.php';
+$sServerURI = utils::GetAbsoluteUrlAppRoot().'webservices/soapserver.php';
 if (isset($_REQUEST['service_category']) && (!empty($_REQUEST['service_category'])))
 {
 	$sServerURI .= "?service_category=".$_REQUEST['service_category'];

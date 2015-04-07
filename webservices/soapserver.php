@@ -32,10 +32,10 @@ require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
 // this file is generated dynamically with location = here
-$sWsdlUri = 'http'.(utils::IsConnectionSecure() ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../webservices/itop.wsdl.php';
+$sWsdlUri = utils::GetAbsoluteUrlAppRoot().'webservices/itop.wsdl.php';
 if (isset($_REQUEST['service_category']) && (!empty($_REQUEST['service_category'])))
 {
-	$sWsdlUri .= "soapserver.php?service_category=".$_REQUEST['service_category'];
+	$sWsdlUri .= "?service_category=".$_REQUEST['service_category'];
 }
 
 
@@ -99,7 +99,7 @@ else
 		if (is_subclass_of($sPHPClass, 'WebServicesBase'))
 		{
 			$sServiceCategory = $sPHPClass;
-			$sSoapServerUri = 'http'.(utils::IsConnectionSecure() ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../webservices/soapserver.php';
+			$sSoapServerUri = utils::GetAbsoluteUrlAppRoot().'webservices/soapserver.php';
 			$sSoapServerUri .= "?service_category=$sServiceCategory";
 			echo "<li><a href=\"$sSoapServerUri\">$sServiceCategory</a></li>\n";
 		}
