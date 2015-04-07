@@ -149,7 +149,7 @@ function DisplayDetails($oP, $sClass, $oObj, $id)
  * @param $sBaseClass string The base class for the search (can be different from the actual class of the results)
  * @param $sFormat string The format to use for the output: csv or html
  */
-function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', $sFormat = '')
+function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', $sFormat = '', $bDoSearch = true)
 {
 	if ($bSearchForm)
 	{
@@ -161,17 +161,20 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
 		$oBlock = new DisplayBlock($oFilter, 'search', false /* Asynchronous */, $aParams);
 		$oBlock->Display($oP, 0);
 	}
-	if (strtolower($sFormat) == 'csv')
+	if ($bDoSearch)
 	{
-		$oBlock = new DisplayBlock($oFilter, 'csv', false);
-		$oBlock->Display($oP, 1);
-		// Adjust the size of the Textarea containing the CSV to fit almost all the remaining space
-		$oP->add_ready_script(" $('#1>textarea').height($('#1').parent().height() - $('#0').outerHeight() - 30).width( $('#1').parent().width() - 20);"); // adjust the size of the block
-	}
-	else
-	{
-		$oBlock = new DisplayBlock($oFilter, 'list', false);
-		$oBlock->Display($oP, 1);
+		if (strtolower($sFormat) == 'csv')
+		{
+			$oBlock = new DisplayBlock($oFilter, 'csv', false);
+			$oBlock->Display($oP, 1);
+			// Adjust the size of the Textarea containing the CSV to fit almost all the remaining space
+			$oP->add_ready_script(" $('#1>textarea').height($('#1').parent().height() - $('#0').outerHeight() - 30).width( $('#1').parent().width() - 20);"); // adjust the size of the block
+		}
+		else
+		{
+			$oBlock = new DisplayBlock($oFilter, 'list', false);
+			$oBlock->Display($oP, 1);
+		}
 	}
 }
 
@@ -496,16 +499,17 @@ try
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'search_form': // Search form
-			$sClass = utils::ReadParam('class', '', false, 'class');
-			$sFormat = utils::ReadParam('format', 'html');
-			$bSearchForm = utils::ReadParam('search_form', true);
-			if (empty($sClass))
-			{
-				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
-			}
-			$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
-			$oFilter =  new DBObjectSearch($sClass);
-		DisplaySearchSet($oP, $oFilter, $bSearchForm, '' /* sBaseClass */, $sFormat);
+		$sClass = utils::ReadParam('class', '', false, 'class');
+		$sFormat = utils::ReadParam('format', 'html');
+		$bSearchForm = utils::ReadParam('search_form', true);
+		$bDoSearch = utils::ReadParam('do_search', true);
+		if (empty($sClass))
+		{
+			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
+		}
+		$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
+		$oFilter =  new DBObjectSearch($sClass);
+		DisplaySearchSet($oP, $oFilter, $bSearchForm, '' /* sBaseClass */, $sFormat, $bDoSearch);
 		break;
 		
 		///////////////////////////////////////////////////////////////////////////////////////////
