@@ -1420,29 +1420,30 @@ EOF;
 					if ($oNeighbour->tagName != 'neighbour') continue;
 					$sNeighbourId = $oNeighbour->getAttribute('id');
 
-					if (($oNeighbour->GetChildText('query') == '') && ($oNeighbour->GetChildText('attribute') == ''))
+					if (($oNeighbour->GetChildText('query_down') != '') && ($oNeighbour->GetChildText('query_up') == ''))
 					{
-						throw new DOMFormatException("Relation '$sRelationId': either a query or an attribute must be specified");
+						throw new DOMFormatException("Relation '$sRelationId/$sNeighbourId': missing the query_up specification");
 					}
-					if (($oNeighbour->GetChildText('query') != '') && ($oNeighbour->GetChildText('attribute') != ''))
+					if (($oNeighbour->GetChildText('query_up') != '') && ($oNeighbour->GetChildText('query_down') == ''))
 					{
-						throw new DOMFormatException("Relation '$sRelationId': both a query and and attribute have been specified... which one should be used?");
+						throw new DOMFormatException("Relation '$sRelationId/$sNeighbourId': missing the query_down specification");
+					}
+					if (($oNeighbour->GetChildText('query_down') == '') && ($oNeighbour->GetChildText('attribute') == ''))
+					{
+						throw new DOMFormatException("Relation '$sRelationId/$sNeighbourId': either a query or an attribute must be specified");
+					}
+					if (($oNeighbour->GetChildText('query_down') != '') && ($oNeighbour->GetChildText('attribute') != ''))
+					{
+						throw new DOMFormatException("Relation '$sRelationId/$sNeighbourId': both a query and and attribute have been specified... which one should be used?");
 					}
 					$aData = array(
 						'_legacy_' => false,
 						'sDefinedInClass' => $sClass,
 						'sNeighbour' => $sNeighbourId,
-						'sQuery' => $oNeighbour->GetChildText('query'),
+						'sQueryDown' => $oNeighbour->GetChildText('query_down'),
+						'sQueryUp' => $oNeighbour->GetChildText('query_up'),
 						'sAttribute' => $oNeighbour->GetChildText('attribute'),
 					);
-
-					$oReverse = $oNeighbour->GetOptionalElement('reverse');
-					if ($oReverse)
-					{
-						$aData['sReverseClass'] = $oReverse->GetChildText('source_class');
-						$aData['sReverseRelation'] = $oReverse->GetChildText('relation');
-						$aData['sReverseNeighbour'] = $oReverse->GetChildText('neighbour');
-					}
 
 					$oRedundancy = $oNeighbour->GetOptionalElement('redundancy');
 					if ($oRedundancy)

@@ -26,11 +26,11 @@
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Relation:impacts/Description' => 'Элементы, на которые влияет',
-	'Relation:impacts/VerbUp' => 'Влияние...',
-	'Relation:impacts/VerbDown' => 'Элементы, на которые влияет...',
+	'Relation:impacts/DownStream' => 'Влияние...',
+	'Relation:impacts/UpStream' => 'Элементы, на которые влияет...',
 	'Relation:depends on/Description' => 'Элементы, от которых зависит',
-	'Relation:depends on/VerbUp' => 'Зависимость...',
-	'Relation:depends on/VerbDown' => 'Влияние...',
+	'Relation:depends on/DownStream' => 'Зависимость...',
+	'Relation:depends on/UpStream' => 'Влияние...',
 ));
 
 

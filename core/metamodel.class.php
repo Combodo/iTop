@@ -1112,15 +1112,35 @@ abstract class MetaModel
 			$aClassRelations = array();
 			foreach($aResult as $sRelCode)
 			{	
-				$aQueries = self::EnumRelationQueries($sClass, $sRelCode);
-				if (count($aQueries) > 0)
+				$aQueriesDown = self::EnumRelationQueries($sClass, $sRelCode);
+				if (count($aQueriesDown) > 0)
 				{
 					$aClassRelations[] = $sRelCode;
 				}
+				// Temporary patch: until the impact analysis GUI gets rewritten,
+				// let's consider that "depends on" is equivalent to "impacts/up"
+				// The current patch has been implemented in DBObject and MetaModel
+				if ($sRelCode == 'impacts')
+				{
+					$aQueriesUp = self::EnumRelationQueries($sClass, 'impacts', false);
+					if (count($aQueriesUp) > 0)
+					{
+						$aClassRelations[] = 'depends on';
+					}
+				}
 			}
-			return $aClassRelations;
+
+ 			return $aClassRelations;
 		}
-		
+
+		// Temporary patch: until the impact analysis GUI gets rewritten,
+		// let's consider that "depends on" is equivalent to "impacts/up"
+		// The current patch has been implemented in DBObject and MetaModel
+		if (in_array('impacts', $aResult))
+		{
+			$aResult[] = 'depends on';
+		}
+
 		return $aResult;
 	}
 
@@ -1131,70 +1151,242 @@ abstract class MetaModel
 
 	final static public function GetRelationLabel($sRelCode)
 	{
-		return Dict::S("Relation:$sRelCode/VerbUp");
+		// The legacy convention is confusing with regard to the way we have conceptualized the relations:
+		// In the former representation, the main stream was named after "up"
+		// Now, the relation from A to B says that something is transmitted from A to B, thus going DOWNstream as described in a petri net.
+		$sKey = "Relation:$sRelCode/DownStream";
+		$sLegacy = Dict::S("Relation:$sRelCode/VerbUp", $sKey);
+		$sRet = Dict::S($sKey, $sLegacy);
+		return $sRet;
 	}
 
-	public static function EnumRelationQueries($sClass, $sRelCode)
+
+	protected static function ComputeRelationQueries($sRelCode)
 	{
-		MyHelpers::CheckKeyInArray('relation code', $sRelCode, self::$m_aRelationInfos);
-
-		$aNeighbours = call_user_func_array(array($sClass, 'GetRelationQueriesEx'), array($sRelCode));
-
-		// Translate attributes into queries (new style of spec only)
-		foreach($aNeighbours as $trash => &$aNeighbourData)
+		$bHasLegacy = false;
+		$aQueries = array();
+		foreach (self::GetClasses() as $sClass)
 		{
-			try
+			$aQueries[$sClass]['down'] = array();
+			if (!array_key_exists('up', $aQueries[$sClass]))
 			{
-				if (strlen($aNeighbourData['sQuery']) == 0)
-				{
-					$oAttDef = self::GetAttributeDef($sClass, $aNeighbourData['sAttribute']);
-					if ($oAttDef instanceof AttributeExternalKey)
-					{
-						$sTargetClass = $oAttDef->GetTargetClass();
-						$aNeighbourData['sQuery'] = 'SELECT '.$sTargetClass.' AS o WHERE o.id = :this->'.$aNeighbourData['sAttribute'];
-					}
-					elseif ($oAttDef instanceof AttributeLinkedSet)
-					{
-						$sLinkedClass = $oAttDef->GetLinkedClass();
-						$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
-						if ($oAttDef->IsIndirect())
-						{
-							$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
-							$oRemoteAttDef = self::GetAttributeDef($sLinkedClass, $sExtKeyToRemote);
-							$sRemoteClass = $oRemoteAttDef->GetTargetClass();
+				$aQueries[$sClass]['up'] = array();
+			}
+
+			$aNeighboursDown = call_user_func_array(array($sClass, 'GetRelationQueriesEx'), array($sRelCode));
 	
-							$aNeighbourData['sQuery'] = "SELECT $sRemoteClass AS o JOIN $sLinkedClass AS lnk ON lnk.$sExtKeyToRemote = o.id WHERE lnk.$sExtKeyToMe = :this->id";
+			// Translate attributes into queries (new style of spec only)
+			foreach($aNeighboursDown as $sNeighbourId => $aNeighbourData)
+			{
+				$aNeighbourData['sFromClass'] = $aNeighbourData['sDefinedInClass'];
+				try
+				{
+					if (strlen($aNeighbourData['sQueryDown']) == 0)
+					{
+						$oAttDef = self::GetAttributeDef($sClass, $aNeighbourData['sAttribute']);
+						if ($oAttDef instanceof AttributeExternalKey)
+						{
+							$sTargetClass = $oAttDef->GetTargetClass();
+							$aNeighbourData['sToClass'] = $sTargetClass;
+							$aNeighbourData['sQueryDown'] = 'SELECT '.$sTargetClass.' AS o WHERE o.id = :this->'.$aNeighbourData['sAttribute'];
+							$aNeighbourData['sQueryUp'] = 'SELECT '.$sClass.' AS o WHERE o.'.$aNeighbourData['sAttribute'].' = :this->id';
+						}
+						elseif ($oAttDef instanceof AttributeLinkedSet)
+						{
+							$sLinkedClass = $oAttDef->GetLinkedClass();
+							$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
+							if ($oAttDef->IsIndirect())
+							{
+								$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
+								$oRemoteAttDef = self::GetAttributeDef($sLinkedClass, $sExtKeyToRemote);
+								$sRemoteClass = $oRemoteAttDef->GetTargetClass();
+		
+								$aNeighbourData['sToClass'] = $sRemoteClass;
+								$aNeighbourData['sQueryDown'] = "SELECT $sRemoteClass AS o JOIN $sLinkedClass AS lnk ON lnk.$sExtKeyToRemote = o.id WHERE lnk.$sExtKeyToMe = :this->id";
+								$aNeighbourData['sQueryUp'] = "SELECT $sClass AS o JOIN $sLinkedClass AS lnk ON lnk.$sExtKeyToMe = o.id WHERE lnk.$sExtKeyToRemote = :this->id";
+							}
+							else
+							{
+								$aNeighbourData['sToClass'] = $sLinkedClass;
+								$aNeighbourData['sQueryDown'] = "SELECT $sLinkedClass AS o WHERE o.$sExtKeyToMe = :this->id";
+								$aNeighbourData['sQueryUp'] = "SELECT $sClass AS o WHERE o.id = :this->$sExtKeyToMe";
+							}
 						}
 						else
 						{
-							$aNeighbourData['sQuery'] = "SELECT $sLinkedClass AS o WHERE o.$sExtKeyToMe = :this->id";
+							throw new Exception("Unexpected attribute type for '{$aNeighbourData['sAttribute']}'. Expecting a link set or external key.");
 						}
 					}
 					else
 					{
-						throw new Exception("Unexpected attribute type for '{$aNeighbourData['sAttribute']}'. Expecting a link set or external key.");
+						$oSearch = DBObjectSearch::FromOQL($aNeighbourData['sQueryDown']);
+						$aNeighbourData['sToClass'] = $oSearch->GetClass();
+					}
+				}
+				catch (Exception $e)
+				{
+					throw new Exception("Wrong definition for the relation $sRelCode/{$aNeighbourData['sDefinedInClass']}/{$aNeighbourData['sNeighbour']}: ".$e->getMessage());
+				}
+
+				$sArrowId = $aNeighbourData['sDefinedInClass'].'_'.$sNeighbourId;
+				$aQueries[$sClass]['down'][$sArrowId] = $aNeighbourData;
+
+				// Compute the reverse index
+				if ($aNeighbourData['sDefinedInClass'] == $sClass)
+				{
+					$sFromClass = $aNeighbourData['sFromClass'];
+					$sToClass = $aNeighbourData['sToClass'];
+					foreach (self::EnumChildClasses($sToClass, ENUM_CHILD_CLASSES_ALL) as $sSubClass)
+					{
+						$aQueries[$sSubClass]['up'][$sArrowId] = $aNeighbourData;
 					}
 				}
 			}
-			catch (Exception $e)
+
+			// Read legacy definitions
+			// The up/down queries have to be reconcilied, which can only be done later when all the classes have been browsed
+			//
+			// The keys used to store a query (up or down) into the array are built differently between the modern and legacy made data:
+			// Modern way: aQueries[sClass]['up'|'down'][sArrowId], where sArrowId is made of the source class + neighbour id (XML def)
+			// Legacy way: aQueries[sClass]['up'|'down'][sRemoteClass]
+			// The modern way does allow for several arrows between two classes
+			// The legacy way aims at simplifying the transformation (reconciliation between up and down)
+			if ($sRelCode == 'impacts')
 			{
-				$sClassOfDefinition = $aNeighbourData['_legacy_'] ? $sClass.'(or a parent)::GetRelationQueries()' : $aNeighbourData['sDefinedInClass'];
-				throw new Exception("Wrong definition for the relation $sRelCode/$sClassOfDefinition/{$aNeighbourData['sNeighbour']}: ".$e->getMessage());
+				$sRevertCode = 'depends on';
+
+				$aLegacy = call_user_func_array(array($sClass, 'GetRelationQueries'), array($sRelCode));
+				foreach($aLegacy as $sId => $aLegacyEntry)
+				{
+					$bHasLegacy = true;
+					
+					$oFilter = DBObjectSearch::FromOQL($aLegacyEntry['sQuery']);
+					$sRemoteClass = $oFilter->GetClass();
+
+					// Determine wether the query is inherited from a parent or not
+					$bInherited = false;
+					foreach (self::EnumParentClasses($sClass) as $sParent)
+					{
+						if (!isset($aQueries[$sParent]['down'][$sRemoteClass])) continue;
+						if ($aLegacyEntry['sQuery'] == $aQueries[$sParent]['down'][$sRemoteClass]['sQueryDown'])
+						{
+							$bInherited = true;
+							$aQueries[$sClass]['down'][$sRemoteClass] = $aQueries[$sParent]['down'][$sRemoteClass];
+							break;
+						}
+					}
+
+					if (!$bInherited)
+					{
+						$aQueries[$sClass]['down'][$sRemoteClass] = array(
+							'_legacy_' => true,
+							'sDefinedInClass' => $sClass,
+							'sFromClass' => $sClass,
+							'sToClass' => $sRemoteClass,
+							'sQueryDown' => $aLegacyEntry['sQuery'],
+							'sNeighbour' => $sRemoteClass // Normalize the neighbour id
+						);
+					}
+				}
+
+				$aLegacy = call_user_func_array(array($sClass, 'GetRelationQueries'), array($sRevertCode));
+				foreach($aLegacy as $sId => $aLegacyEntry)
+				{
+					$bHasLegacy = true;
+
+					$oFilter = DBObjectSearch::FromOQL($aLegacyEntry['sQuery']);
+					$sRemoteClass = $oFilter->GetClass();
+
+					// Determine wether the query is inherited from a parent or not
+					$bInherited = false;
+					foreach (self::EnumParentClasses($sClass) as $sParent)
+					{
+						if (!isset($aQueries[$sParent]['up'][$sRemoteClass])) continue;
+						if ($aLegacyEntry['sQuery'] == $aQueries[$sParent]['up'][$sRemoteClass]['sQueryUp'])
+						{
+							$bInherited = true;
+							$aQueries[$sClass]['up'][$sRemoteClass] = $aQueries[$sParent]['up'][$sRemoteClass];
+							break;
+						}
+					}
+
+					if (!$bInherited)
+					{
+						$aQueries[$sClass]['up'][$sRemoteClass] = array(
+							'_legacy_' => true,
+							'sDefinedInClass' => $sRemoteClass,
+							'sFromClass' => $sRemoteClass,
+							'sToClass' => $sClass,
+							'sQueryUp' => $aLegacyEntry['sQuery'],
+							'sNeighbour' => $sClass// Normalize the neighbour id
+						);
+					}
+				}
+			}
+			else
+			{
+				// Cannot take the legacy system into account... simply ignore it
+			}
+		} // foreach class
+
+		// Perform the up/down reconciliation for the legacy definitions
+		if ($bHasLegacy)
+		{
+			foreach (self::GetClasses() as $sClass)
+			{
+				// Foreach "up" legacy query, update its "down" counterpart
+				if (isset($aQueries[$sClass]['up']))
+				{
+					foreach ($aQueries[$sClass]['up'] as $sNeighbourId => $aNeighbourData)
+					{
+						if (!$aNeighbourData['_legacy_']) continue; // Skip modern definitions
+
+						$sLocalClass = $aNeighbourData['sToClass'];
+						foreach (self::EnumChildClasses($aNeighbourData['sFromClass'], ENUM_CHILD_CLASSES_ALL) as $sRemoteClass)
+						{
+							if (isset($aQueries[$sRemoteClass]['down'][$sLocalClass]))
+							{
+								$aQueries[$sRemoteClass]['down'][$sLocalClass]['sQueryUp'] = $aNeighbourData['sQueryUp'];
+							}
+							else
+							{
+								throw new Exception("Legacy definition of the relation '$sRelCode/$sRevertCode', defined on $sLocalClass (relation: $sRevertCode, inherited to $sClass), missing the counterpart query on class $sRemoteClass ($sRelCode)");
+							}
+						}
+					}
+				}
+				// Foreach "down" legacy query, update its "up" counterpart
+				foreach ($aQueries[$sClass]['down'] as $sNeighbourId => $aNeighbourData)
+				{
+					if (!$aNeighbourData['_legacy_']) continue; // Skip modern definitions
+
+					$sLocalClass = $aNeighbourData['sFromClass'];
+					foreach (self::EnumChildClasses($aNeighbourData['sToClass'], ENUM_CHILD_CLASSES_ALL) as $sRemoteClass)
+					{
+						$aQueries[$sRemoteClass]['up'][$sLocalClass]['sQueryDown'] = $aNeighbourData['sQueryDown'];
+					}
+				}
 			}
 		}
+		return $aQueries;
+	}
 
-		// Merge legacy and new specs
-		$aLegacy = call_user_func_array(array($sClass, 'GetRelationQueries'), array($sRelCode));
-		foreach($aLegacy as $sId => $aLegacyEntry)
+	public static function EnumRelationQueries($sClass, $sRelCode, $bDown = true)
+	{
+		static $aQueries = array();
+		if (!isset($aQueries[$sRelCode]))
 		{
-			$aLegacyEntry['_legacy_'] = true;
-			$aNeighbours[] = array(
-				'_legacy_' => true,
-				'sQuery' => $aLegacyEntry['sQuery'],
-				'sNeighbour' => $sId
-			);
+			$aQueries[$sRelCode] = self::ComputeRelationQueries($sRelCode);
 		}
-		return $aNeighbours;
+		$sDirection = $bDown ? 'down' : 'up';
+		if (isset($aQueries[$sRelCode][$sClass][$sDirection]))
+		{
+			return $aQueries[$sRelCode][$sClass][$sDirection];
+		}
+		else
+		{
+			return array();
+		}
 	}
 
 	//

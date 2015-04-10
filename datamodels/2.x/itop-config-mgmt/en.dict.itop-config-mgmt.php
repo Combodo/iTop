@@ -31,11 +31,11 @@
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Relation:impacts/Description' => 'Elements impacted by',
-	'Relation:impacts/VerbUp' => 'Impact...',
-	'Relation:impacts/VerbDown' => 'Elements impacted by...',
+	'Relation:impacts/DownStream' => 'Impact...',
+	'Relation:impacts/UpStream' => 'Elements impacted by...',
 	'Relation:depends on/Description' => 'Elements impacting',
-	'Relation:depends on/VerbUp' => 'Depends on...',
-	'Relation:depends on/VerbDown' => 'Impacts...',
+	'Relation:depends on/DownStream' => 'Depends on...',
+	'Relation:depends on/UpStream' => 'Impacts...',
 ));
 
 

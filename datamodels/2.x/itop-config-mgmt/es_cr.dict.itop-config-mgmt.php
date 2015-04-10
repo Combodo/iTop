@@ -32,11 +32,11 @@
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Relation:impacts/Description' => 'Elementos Impactados por',
-	'Relation:impacts/VerbUp' => 'Impacto...',
-	'Relation:impacts/VerbDown' => 'Elementos Impactados por...',
+	'Relation:impacts/DownStream' => 'Impacto...',
+	'Relation:impacts/UpStream' => 'Elementos Impactados por...',
 	'Relation:depends on/Description' => 'Elementos de los cuales depende',
-	'Relation:depends on/VerbUp' => 'Depende de...',
-	'Relation:depends on/VerbDown' => 'Impactos...',
+	'Relation:depends on/DownStream' => 'Depende de...',
+	'Relation:depends on/UpStream' => 'Impactos...',
 ));
 
 

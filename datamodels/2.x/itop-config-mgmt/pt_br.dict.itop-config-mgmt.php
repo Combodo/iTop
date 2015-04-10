@@ -31,11 +31,11 @@
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Relation:impacts/Description' => 'Elementos impactados por',
-	'Relation:impacts/VerbUp' => 'Impacto...',
-	'Relation:impacts/VerbDown' => 'Elementos impactados por...',
+	'Relation:impacts/DownStream' => 'Impacto...',
+	'Relation:impacts/UpStream' => 'Elementos impactados por...',
 	'Relation:depends on/Description' => 'Elementos estes, que dependem deste elemento',
-	'Relation:depends on/VerbUp' => 'Depende de...',
-	'Relation:depends on/VerbDown' => 'Impactos...',
+	'Relation:depends on/DownStream' => 'Depende de...',
+	'Relation:depends on/UpStream' => 'Impactos...',
 ));
 
 

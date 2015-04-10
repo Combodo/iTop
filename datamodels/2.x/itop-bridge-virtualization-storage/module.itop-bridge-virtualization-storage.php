@@ -13,6 +13,8 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
+			'itop-storage-mgmt/2.1.0',
+			'itop-virtualization-mgmt/2.1.0',
 		),
 		'mandatory' => false,
 		'visible' => true, // To prevent auto-install but shall not be listed in the install wizard

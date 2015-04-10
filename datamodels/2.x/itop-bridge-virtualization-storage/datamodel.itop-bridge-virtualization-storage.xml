@@ -90,5 +90,16 @@
         </list>
       </presentation>
     </class>
+    <class id="LogicalVolume">
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="VirtualDevice" _delta="define">
+              <attribute>virtualdevices_list</attribute>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+    </class>
   </classes>
 </itop_design>

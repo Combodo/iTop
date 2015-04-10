@@ -34,11 +34,11 @@
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Relation:impacts/Description' => 'Elementen hebben impact op',
-	'Relation:impacts/VerbUp' => 'Impact...',
-	'Relation:impacts/VerbDown' => 'Elementen...',
+	'Relation:impacts/DownStream' => 'Impact...',
+	'Relation:impacts/UpStream' => 'Elementen...',
 	'Relation:depends on/Description' => 'Elementen waarvan dit element afhankelijk van is',
-	'Relation:depends on/VerbUp' => 'Is afhankelijk van...',
-	'Relation:depends on/VerbDown' => 'Impacts...',
+	'Relation:depends on/DownStream' => 'Is afhankelijk van...',
+	'Relation:depends on/UpStream' => 'Impacts...',
 ));
 
 

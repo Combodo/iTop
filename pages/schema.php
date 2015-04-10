@@ -530,7 +530,8 @@ function DisplayRelationDetails($oPage, $sRelCode, $sContext)
 			$oPage->add("<ul>\n");
 			foreach ($aRelQueries as $sRelKey => $aQuery)
 			{
-				$sQuery = isset($aQuery['sQuery']) ? $aQuery['sQuery'] : '';
+				$sQueryDown = isset($aQuery['sQueryDown']) ? $aQuery['sQueryDown'] : '';
+				$sQueryUp = isset($aQuery['sQueryUp']) ? $aQuery['sQueryUp'] : '';
 				$sAttribute = isset($aQuery['sAttribute']) ? $aQuery['sAttribute'] : '';
 				/*
 				if ($aQuery['bPropagate'])
@@ -542,7 +543,7 @@ function DisplayRelationDetails($oPage, $sRelCode, $sContext)
 					$oPage->add("<li>".Dict::Format('UI:Schema:RelationDoesNotPropagate', $sRelKey, $iDistance, $sQuery)."</li>\n");
 				}
 				*/
-				$sLabel = (strlen($sQuery) > 0) ? $sQuery : $sAttribute;
+				$sLabel = (strlen($sQueryDown) > 0) ? $sQueryDown : $sAttribute;
 				if ($aQuery['_legacy_'])
 				{
 					$sLabel .= ' (<b>Old style specification</b>: it is recommended to upgrade to XML)';

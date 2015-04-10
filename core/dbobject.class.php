@@ -2547,10 +2547,20 @@ abstract class DBObject implements iDisplay
 
 	public function GetRelatedObjects($sRelCode, $iMaxDepth = 99, &$aResults = array())
 	{
-		foreach (MetaModel::EnumRelationQueries(get_class($this), $sRelCode) as $sDummy => $aQueryInfo)
+		// Temporary patch: until the impact analysis GUI gets rewritten,
+		// let's consider that "depends on" is equivalent to "impacts/up"
+		// The current patch has been implemented in DBObject and MetaModel
+		$sHackedRelCode = $sRelCode;
+		$bDown = true;
+		if ($sRelCode == 'depends on')
 		{
-			MetaModel::DbgTrace("object=".$this->GetKey().", depth=$iMaxDepth, rel=".$aQueryInfo["sQuery"]);
-			$sQuery = $aQueryInfo["sQuery"];
+			$sHackedRelCode = 'impacts';
+			$bDown = false;
+		}
+		foreach (MetaModel::EnumRelationQueries(get_class($this), $sHackedRelCode, $bDown) as $sDummy => $aQueryInfo)
+		{
+			MetaModel::DbgTrace("object=".$this->GetKey().", depth=$iMaxDepth, rel=".$aQueryInfo['sQueryDown']);
+			$sQuery = $bDown ? $aQueryInfo['sQueryDown'] : $aQueryInfo['sQueryUp'];
 			//$bPropagate = $aQueryInfo["bPropagate"];
 			//$iDepth = $bPropagate ? $iMaxDepth - 1 : 0;
 			$iDepth = $iMaxDepth - 1;

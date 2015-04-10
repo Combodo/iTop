@@ -235,6 +235,18 @@
           </items>
         </list>
       </presentation>
+      <methods>
+        <method id="GetRelationQueries">
+          <comment>/**
+	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
+	 * in case an extension attempts to redefine this function...	 
+	 */</comment>
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
+        </method>
+      </methods>
       <relations>
         <relation id="impacts">
           <neighbours>
@@ -477,6 +489,18 @@
           </items>
         </list>
       </presentation>
+      <methods>
+        <method id="GetRelationQueries">
+          <comment>/**
+	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
+	 * in case an extension attempts to redefine this function...	 
+	 */</comment>
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
+        </method>
+      </methods>
       <relations>
         <relation id="impacts">
           <neighbours>
@@ -718,6 +742,18 @@
           </items>
         </list>
       </presentation>
+      <methods>
+        <method id="GetRelationQueries">
+          <comment>/**
+	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
+	 * in case an extension attempts to redefine this function...	 
+	 */</comment>
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
+        </method>
+      </methods>
       <relations>
         <relation id="impacts">
           <neighbours>
@@ -959,6 +995,18 @@
           </items>
         </list>
       </presentation>
+      <methods>
+        <method id="GetRelationQueries">
+          <comment>/**
+	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
+	 * in case an extension attempts to redefine this function...	 
+	 */</comment>
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
+        </method>
+      </methods>
       <relations>
         <relation id="impacts">
           <neighbours>
@@ -1058,15 +1106,18 @@
           </items>
         </list>
       </presentation>
-      <relations>
-        <relation id="depends on">
-          <neighbours>
-            <neighbour id="tapelibrary">
-              <attribute>tapelibrary_id</attribute>
-            </neighbour>
-          </neighbours>
-        </relation>
-      </relations>
+      <methods>
+        <method id="GetRelationQueries">
+          <comment>/**
+	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
+	 * in case an extension attempts to redefine this function...	 
+	 */</comment>
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
+        </method>
+      </methods>
     </class>
     <class id="NASFileSystem" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -1171,15 +1222,18 @@
           </items>
         </list>
       </presentation>
-      <relations>
-        <relation id="depends on">
-          <neighbours>
-            <neighbour id="nas">
-              <attribute>nas_id</attribute>
-            </neighbour>
-          </neighbours>
-        </relation>
-      </relations>
+      <methods>
+        <method id="GetRelationQueries">
+          <comment>/**
+	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
+	 * in case an extension attempts to redefine this function...	 
+	 */</comment>
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
+        </method>
+      </methods>
     </class>
     <class id="FiberChannelInterface" _delta="define">
       <parent>NetworkInterface</parent>
@@ -1429,18 +1483,23 @@
           </items>
         </list>
       </presentation>
+      <methods>
+        <method id="GetRelationQueries">
+          <comment>/**
+	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
+	 * in case an extension attempts to redefine this function...	 
+	 */</comment>
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
+        </method>
+      </methods>
       <relations>
         <relation id="impacts">
           <neighbours>
             <neighbour id="server">
               <attribute>servers_list</attribute>
-            </neighbour>
-          </neighbours>
-        </relation>
-        <relation id="depends on">
-          <neighbours>
-            <neighbour id="storagesystem">
-              <attribute>storagesystem_id</attribute>
             </neighbour>
           </neighbours>
         </relation>

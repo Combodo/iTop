@@ -531,10 +531,12 @@
         <relation id="impacts">
           <neighbours>
             <neighbour id="datacenterdevice">
-              <query>SELECT DatacenterDevice WHERE powerA_id = :this-&gt;id OR powerB_id = :this-&gt;id</query>
+              <query_down>SELECT DatacenterDevice WHERE powerA_id = :this-&gt;id OR powerB_id = :this-&gt;id</query_down>
+              <query_up>SELECT PowerConnection WHERE id = :this-&gt;powerA_id OR id = :this-&gt;powerB_id</query_up>
             </neighbour>
             <neighbour id="pdu">
-              <query>SELECT PDU WHERE powerstart_id = :this-&gt;id</query>
+              <query_down>SELECT PDU WHERE powerstart_id = :this-&gt;id</query_down>
+              <query_up>SELECT PowerConnection WHERE id = :this-&gt;powerstart_id</query_up>
             </neighbour>
           </neighbours>
         </relation>
@@ -895,15 +897,18 @@
           </items>
         </list>
       </presentation>
-      <relations>
-        <relation id="depends on">
-          <neighbours>
-            <neighbour id="powerconnection">
-              <attribute>powerstart_id</attribute>
-            </neighbour>
-          </neighbours>
-        </relation>
-      </relations>
+      <methods>
+        <method id="GetRelationQueries">
+          <comment>/**
+	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
+	 * in case an extension attempts to redefine this function...	 
+	 */</comment>
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
+        </method>
+      </methods>
     </class>
   </classes>
   <menus>

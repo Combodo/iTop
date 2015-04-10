@@ -232,6 +232,18 @@
           </items>
         </list>
       </presentation>
+      <methods>
+        <method id="GetRelationQueries">
+          <comment>/**
+	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
+	 * in case an extension attempts to redefine this function...	 
+	 */</comment>
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
+        </method>
+      </methods>
       <relations>
         <relation id="impacts">
           <neighbours>
@@ -378,18 +390,23 @@
           </items>
         </list>
       </presentation>
+      <methods>
+        <method id="GetRelationQueries">
+          <comment>/**
+	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
+	 * in case an extension attempts to redefine this function...	 
+	 */</comment>
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
+        </method>
+      </methods>
       <relations>
         <relation id="impacts">
           <neighbours>
             <neighbour id="farm">
               <attribute>farm_id</attribute>
-            </neighbour>
-          </neighbours>
-        </relation>
-        <relation id="depends on">
-          <neighbours>
-            <neighbour id="server">
-              <attribute>server_id</attribute>
             </neighbour>
           </neighbours>
         </relation>
@@ -512,15 +529,18 @@
           </items>
         </list>
       </presentation>
-      <relations>
-        <relation id="depends on">
-          <neighbours>
-            <neighbour id="hypervisor">
-              <attribute>hypervisor_list</attribute>
-           </neighbour>
-          </neighbours>
-        </relation>
-      </relations>
+      <methods>
+        <method id="GetRelationQueries">
+          <comment>/**
+	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
+	 * in case an extension attempts to redefine this function...	 
+	 */</comment>
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
+        </method>
+      </methods>
     </class>
     <class id="VirtualMachine" _delta="define">
       <parent>VirtualDevice</parent>
@@ -751,15 +771,18 @@
           </items>
         </list>
       </presentation>
-      <relations>
-        <relation id="depends on">
-          <neighbours>
-            <neighbour id="virtualhost">
-              <attribute>virtualhost_id</attribute>
-            </neighbour>
-          </neighbours>
-        </relation>
-      </relations>
+      <methods>
+        <method id="GetRelationQueries">
+          <comment>/**
+	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
+	 * in case an extension attempts to redefine this function...	 
+	 */</comment>
+          <static>true</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
+        </method>
+      </methods>
     </class>
     <class id="LogicalInterface" _delta="define">
       <parent>IPInterface</parent>
