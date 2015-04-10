@@ -63,6 +63,7 @@ $G_aCachedObjects = array();
 function GetRelatedObjectsAsXml(DBObject $oObj, $sRelationName, &$oLinks, &$oXmlDoc, &$oXmlNode, $iDepth = 0, $aExcludedClasses)
 {
 	global $G_aCachedObjects;
+
 	$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
 	$aResults = array();
 	$bAddLinks = false;
@@ -196,6 +197,7 @@ try
 		
 			$oXmlRoot->SetAttribute('position', 'left');
 			$oXmlRoot->SetAttribute('title', MetaModel::GetRelationDescription($sRelation).' '. htmlspecialchars($oObj->GetRawName()));
+IssueLog::Info(__function__." Rel: $sRelation");
 			GetRelatedObjectsAsXml($oObj, $sRelation, $oLinks, $oXmlDoc, $oXmlNode, 0, $aExcludedClasses);
 			
 			$oXmlRoot->AppendChild($oXmlNode);
