@@ -2545,6 +2545,9 @@ abstract class DBObject implements iDisplay
 		return array();
 	}
 
+	/**
+	 * Will be deprecated soon - use MetaModel::GetRelatedObjectsDown/Up instead to take redundancy into account
+	 */
 	public function GetRelatedObjects($sRelCode, $iMaxDepth = 99, &$aResults = array())
 	{
 		// Temporary patch: until the impact analysis GUI gets rewritten,

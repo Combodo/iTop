@@ -967,12 +967,7 @@ class DBObjectSet
 	}
 
 	/**
-	 * Compute the "RelatedObjects" (for the given relation, as defined by MetaModel::GetRelatedObjects) for a whole set of DBObjects
-	 * 
-	 * @param string $sRelCode The code of the relation to use for the computation
-	 * @param int $iMaxDepth Teh maximum recursion depth
-	 * 
-	 * @return Array An array containg all the "related" objects
+	 * Will be deprecated soon - use MetaModel::GetRelatedObjectsDown/Up instead to take redundancy into account
 	 */
 	public function GetRelatedObjects($sRelCode, $iMaxDepth = 99)
 	{
@@ -996,7 +991,7 @@ class DBObjectSet
 		}
 		return $aRelatedObjs;
 	}
-	
+
 	/**
 	 * Builds an object that contains the values that are common to all the objects
 	 * in the set. If for a given attribute, objects in the set have various values

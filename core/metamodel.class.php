@@ -1389,6 +1389,32 @@ abstract class MetaModel
 		}
 	}
 
+	/**
+	 * Compute the "RelatedObjects" (for the given relation, as defined by MetaModel::GetRelatedObjects) for a whole set of DBObjects
+	 * 
+	 * @param string $sRelCode The code of the relation to use for the computation
+	 * @param array $asourceObjects The objects to start with
+	 * @param int $iMaxDepth
+	 * @param boolean $bEnableReduncancy
+	 * 
+	 * @return RelationGraph The graph of all the related objects
+	 */
+	static public function GetRelatedObjectsDown($sRelCode, $aSourceObjects, $iMaxDepth = 99, $bEnableRedundancy = true)
+	{
+		$oGraph = new RelationGraph();
+		foreach ($aSourceObjects as $oObject)
+		{
+			$oSourceNode = new RelationObjectNode($oGraph, $oObject);
+			$oSourceNode->SetProperty('source', true);
+		}
+		$aSourceNodes = $oGraph->_GetNodes();
+		foreach ($aSourceNodes as $oSourceNode)
+		{
+			$oGraph->AddRelatedObjectsDown($sRelCode, $oSourceNode, $iMaxDepth, $bEnableRedundancy);
+		}
+		return $oGraph;
+	}
+
 	//
 	// Object lifecycle model
 	//
