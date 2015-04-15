@@ -1390,7 +1390,7 @@ abstract class MetaModel
 	}
 
 	/**
-	 * Compute the "RelatedObjects" (for the given relation, as defined by MetaModel::GetRelatedObjects) for a whole set of DBObjects
+	 * Compute the "RelatedObjects" for a whole set of DBObjects
 	 * 
 	 * @param string $sRelCode The code of the relation to use for the computation
 	 * @param array $asourceObjects The objects to start with
@@ -1404,14 +1404,30 @@ abstract class MetaModel
 		$oGraph = new RelationGraph();
 		foreach ($aSourceObjects as $oObject)
 		{
-			$oSourceNode = new RelationObjectNode($oGraph, $oObject);
-			$oSourceNode->SetProperty('source', true);
+			$oGraph->AddSourceObject($oObject);
 		}
-		$aSourceNodes = $oGraph->_GetNodes();
-		foreach ($aSourceNodes as $oSourceNode)
+		$oGraph->ComputeRelatedObjectsDown($sRelCode, $iMaxDepth, $bEnableRedundancy);
+		return $oGraph;
+	}
+
+	/**
+	 * Compute the "RelatedObjects" in the reverse way
+	 * 
+	 * @param string $sRelCode The code of the relation to use for the computation
+	 * @param array $asourceObjects The objects to start with
+	 * @param int $iMaxDepth
+	 * @param boolean $bEnableReduncancy
+	 * 
+	 * @return RelationGraph The graph of all the related objects
+	 */
+	static public function GetRelatedObjectsUp($sRelCode, $aSourceObjects, $iMaxDepth = 99, $bEnableRedundancy = true)
+	{
+		$oGraph = new RelationGraph();
+		foreach ($aSourceObjects as $oObject)
 		{
-			$oGraph->AddRelatedObjectsDown($sRelCode, $oSourceNode, $iMaxDepth, $bEnableRedundancy);
+			$oGraph->AddSinkObject($oObject);
 		}
+		$oGraph->ComputeRelatedObjectsUp($sRelCode, $iMaxDepth, $bEnableRedundancy);
 		return $oGraph;
 	}
 

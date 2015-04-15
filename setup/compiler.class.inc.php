@@ -1449,11 +1449,12 @@ EOF;
 					if ($oRedundancy)
 					{
 						$oEnabled = $oRedundancy->GetUniqueElement('enabled');
-						$aData['bEnabledValue'] = ($oEnabled->GetChildText('value', 'false') == 'true');
-						$aData['sEnabledMode'] = $oEnabled->GetChildText('mode', 'fixed');
-						$oThreshold = $oRedundancy->GetUniqueElement('threshold');
-						$aData['iThresholdValue'] = (int) $oThreshold->GetChildText('value', 1);
-						$aData['sThresholdMode'] = $oThreshold->GetChildText('mode', 'fixed');
+						$aData['bRedundancyEnabledValue'] = ($oEnabled->GetChildText('value', 'false') == 'true');
+						$aData['sRedundancyEnabledMode'] = $oEnabled->GetChildText('mode', 'fixed');
+						$oMinUp = $oRedundancy->GetUniqueElement('min_up');
+						$aData['sRedundancyMinUpType'] = $oMinUp->GetChildText('type', 'count');
+						$aData['iRedundancyMinUpValue'] = (int) $oMinUp->GetChildText('value', 1);
+						$aData['sRedundancyMinUpMode'] = $oMinUp->GetChildText('mode', 'fixed');
 					}
 
 					$aRelations[$sRelationId][$sNeighbourId] = $aData;

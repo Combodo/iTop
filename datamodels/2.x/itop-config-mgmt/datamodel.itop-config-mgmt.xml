@@ -1472,6 +1472,17 @@
             </neighbour>
             <neighbour id="applicationsolution">
               <attribute>applicationsolution_list</attribute>
+              <redundancy>
+                <enabled>
+                  <value>false</value>
+                  <mode>user</mode>
+                </enabled>
+                <min_up>
+                  <type>count</type>
+                  <value>1</value>
+                  <mode>user</mode>
+                </min_up>
+              </redundancy>
             </neighbour>
             <neighbour id="softwareinstance">
               <attribute>softwares_list</attribute>

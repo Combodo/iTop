@@ -407,6 +407,17 @@
           <neighbours>
             <neighbour id="farm">
               <attribute>farm_id</attribute>
+              <redundancy>
+                <enabled>
+                  <value>true</value>
+                  <mode>user</mode>
+                </enabled>
+                <min_up>
+                  <type>count</type>
+                  <value>1</value>
+                  <mode>user</mode>
+                </min_up>
+              </redundancy>
             </neighbour>
           </neighbours>
         </relation>

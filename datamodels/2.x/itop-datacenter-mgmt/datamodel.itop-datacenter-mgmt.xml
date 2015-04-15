@@ -533,6 +533,17 @@
             <neighbour id="datacenterdevice">
               <query_down>SELECT DatacenterDevice WHERE powerA_id = :this-&gt;id OR powerB_id = :this-&gt;id</query_down>
               <query_up>SELECT PowerConnection WHERE id = :this-&gt;powerA_id OR id = :this-&gt;powerB_id</query_up>
+              <redundancy>
+                <enabled>
+                  <value>true</value>
+                  <mode>fixed</mode>
+                </enabled>
+                <min_up>
+                  <type>count</type>
+                  <value>1</value>
+                  <mode>fixed</mode>
+                </min_up>
+              </redundancy>
             </neighbour>
             <neighbour id="pdu">
               <query_down>SELECT PDU WHERE powerstart_id = :this-&gt;id</query_down>

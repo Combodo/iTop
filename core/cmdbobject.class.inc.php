@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -63,6 +63,7 @@ require_once('dbobjectset.class.php');
 require_once('backgroundprocess.inc.php');
 require_once('asynctask.class.inc.php');
 require_once('dbproperty.class.inc.php');
+require_once('redundancysettings.class.inc.php');
 
 // db change tracking data model
 require_once('cmdbchange.class.inc.php');
