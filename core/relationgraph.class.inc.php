@@ -96,9 +96,10 @@ class RelationObjectNode extends GraphNode
  */
 class RelationRedundancyNode extends GraphNode
 {
-	public function __construct($oGraph, $sId, $fThreshold)
+	public function __construct($oGraph, $sId, $iMinUp, $fThreshold)
 	{
 		parent::__construct($oGraph, $sId);
+		$this->SetProperty('min_up', $iMinUp);
 		$this->SetProperty('threshold', $fThreshold);
 		$this->SetProperty('reach_count', 0);
 	}
@@ -355,8 +356,9 @@ class RelationGraph extends SimpleGraph
 					throw new Exception("Wrong query (upstream) for the relation $sRelCode/{$aQueryInfo['sDefinedInClass']}/{$aQueryInfo['sNeighbour']}: ".$e->getMessage());
 				}
 	
-				$fThreshold = $this->GetRedundancyThreshold($sRelCode, $aQueryInfo, $oToNode, $iCount);
-				$oRedundancyNode = new RelationRedundancyNode($this, $sId, $fThreshold);
+				$iMinUp = $this->GetRedundancyMinUp($sRelCode, $aQueryInfo, $oToNode, $iCount);
+				$fThreshold = max(0, $iCount - $iMinUp);
+				$oRedundancyNode = new RelationRedundancyNode($this, $sId, $iMinUp, $fThreshold);
 				new RelationEdge($this, $oRedundancyNode, $oToNode);
 	
 				while ($oUpperObj = $oObjSet->Fetch())
@@ -398,20 +400,20 @@ class RelationGraph extends SimpleGraph
 	/**
 	 * Helper to determine the redundancy threshold, given the count of objects upstream 	
 	 */	
-	protected function GetRedundancyThreshold($sRelCode, $aQueryInfo, $oToNode, $iUpstreamObjects)
+	protected function GetRedundancyMinUp($sRelCode, $aQueryInfo, $oToNode, $iUpstreamObjects)
 	{
-		$fThreshold = $iUpstreamObjects;
+		$iMinUp = 0;
 		if (isset($aQueryInfo['sRedundancyMinUpMode']))
 		{
 			if ($aQueryInfo['sRedundancyMinUpMode'] == 'fixed')
 			{
 				if ($aQueryInfo['sRedundancyMinUpType'] == 'count')
 				{
-					$fThreshold = $iUpstreamObjects - $aQueryInfo['iRedundancyMinUpValue'];
+					$iMinUp = $aQueryInfo['iRedundancyMinUpValue'];
 				}
 				else // 'percent' assumed
 				{
-					$fThreshold = $iUpstreamObjects - ($iUpstreamObjects * $aQueryInfo['iRedundancyMinUpValue'] / 100);
+					$iMinUp = $iUpstreamObjects * $aQueryInfo['iRedundancyMinUpValue'] / 100;
 				}
 			}
 			elseif ($aQueryInfo['sRedundancyMinUpMode'] == 'user')
@@ -419,15 +421,15 @@ class RelationGraph extends SimpleGraph
 				$oUserSettings = $this->FindRedundancyUserSettings($sRelCode, $aQueryInfo, $oToNode);
 				if ($oUserSettings->Get('min_up_type') == 'count')
 				{
-					$fThreshold = $iUpstreamObjects - $oUserSettings->Get('min_up_count');
+					$iMinUp = $oUserSettings->Get('min_up_count');
 				}
 				else
 				{
-					$fThreshold = $iUpstreamObjects - ($iUpstreamObjects * $oUserSettings->Get('min_up_percent') / 100);
+					$iMinUp = $iUpstreamObjects * $oUserSettings->Get('min_up_percent') / 100;
 				}
 			}
 		}
-		return max(0, $fThreshold);
+		return $iMinUp;
 	}
 
 	/**
