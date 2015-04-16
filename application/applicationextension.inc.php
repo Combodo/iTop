@@ -783,6 +783,10 @@ class RestUtils
 		{
 			$realValue = self::MakeValue($sClass, $sAttCode, $value);
 			$oSearch->AddCondition($sAttCode, $realValue, '=');
+			if (is_object($value) || is_array($value))
+			{
+				$value = json_encode($value);
+			}
 			$aCriteriaReport[] = "$sAttCode: $value ($realValue)";
 		}
 		$oSet = new DBObjectSet($oSearch);
