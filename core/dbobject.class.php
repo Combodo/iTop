@@ -2082,12 +2082,12 @@ abstract class DBObject implements iDisplay
 		{
 			if (is_string($actionHandler))
 			{
-				// Old (pre-2.1.0) action definition without any parameter
-				$aActionCallSpec = array($this, $sActionHandler);
+				// Old (pre-2.1.0 modules) action definition without any parameter
+				$aActionCallSpec = array($this, $actionHandler);
 	
 				if (!is_callable($aActionCallSpec))
 				{
-					throw new CoreException("Unable to call action: ".get_class($this)."::$sActionHandler");
+					throw new CoreException("Unable to call action: ".get_class($this)."::$actionHandler");
 					return;
 				}
 				$bRet = call_user_func($aActionCallSpec, $sStimulusCode);
