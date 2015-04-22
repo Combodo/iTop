@@ -382,17 +382,12 @@ class RelationGraph extends SimpleGraph
 	protected function IsRedundancyEnabled($sRelCode, $aQueryInfo, $oToNode)
 	{
 		$bRet = false;
-		if (isset($aQueryInfo['sRedundancyEnabledMode']))
+		$oToObject = $oToNode->GetProperty('object');
+		$oRedundancyAttDef = $this->FindRedundancyAttribute($sRelCode, $aQueryInfo, get_class($oToObject));
+		if ($oRedundancyAttDef)
 		{
-			if ($aQueryInfo['sRedundancyEnabledMode'] == 'fixed')
-			{
-				$bRet = $aQueryInfo['bRedundancyEnabledValue'];
-			}
-			elseif ($aQueryInfo['sRedundancyEnabledMode'] == 'user')
-			{
-				$oUserSettings = $this->FindRedundancyUserSettings($sRelCode, $aQueryInfo, $oToNode);
-				$bRet = $oUserSettings->Get('enabled');
-			}
+			$sValue = $oToObject->Get($oRedundancyAttDef->GetCode());
+			$bRet = $oRedundancyAttDef->IsEnabled($sValue);
 		}
 		return $bRet;
 	}
@@ -403,52 +398,44 @@ class RelationGraph extends SimpleGraph
 	protected function GetRedundancyMinUp($sRelCode, $aQueryInfo, $oToNode, $iUpstreamObjects)
 	{
 		$iMinUp = 0;
-		if (isset($aQueryInfo['sRedundancyMinUpMode']))
+
+		$oToObject = $oToNode->GetProperty('object');
+		$oRedundancyAttDef = $this->FindRedundancyAttribute($sRelCode, $aQueryInfo, get_class($oToObject));
+		if ($oRedundancyAttDef)
 		{
-			if ($aQueryInfo['sRedundancyMinUpMode'] == 'fixed')
+			$sValue = $oToObject->Get($oRedundancyAttDef->GetCode());
+			if ($oRedundancyAttDef->GetMinUpType($sValue) == 'count')
 			{
-				if ($aQueryInfo['sRedundancyMinUpType'] == 'count')
-				{
-					$iMinUp = $aQueryInfo['iRedundancyMinUpValue'];
-				}
-				else // 'percent' assumed
-				{
-					$iMinUp = $iUpstreamObjects * $aQueryInfo['iRedundancyMinUpValue'] / 100;
-				}
+				$iMinUp = $oRedundancyAttDef->GetMinUpValue($sValue);
 			}
-			elseif ($aQueryInfo['sRedundancyMinUpMode'] == 'user')
+			else
 			{
-				$oUserSettings = $this->FindRedundancyUserSettings($sRelCode, $aQueryInfo, $oToNode);
-				if ($oUserSettings->Get('min_up_type') == 'count')
-				{
-					$iMinUp = $oUserSettings->Get('min_up_count');
-				}
-				else
-				{
-					$iMinUp = $iUpstreamObjects * $oUserSettings->Get('min_up_percent') / 100;
-				}
+				$iMinUp = $iUpstreamObjects * $oRedundancyAttDef->GetMinUpValue($sValue) / 100;
 			}
 		}
 		return $iMinUp;
 	}
 
 	/**
-	 * Helper to search for and cache the reduncancy user settings (could be an object NOT recorded in the DB)	
+	 * Helper to search for the redundancy attribute	
 	 */	
-	protected function FindRedundancyUserSettings($sRelCode, $aQueryInfo, $oToNode)
+	protected function FindRedundancyAttribute($sRelCode, $aQueryInfo, $sClass)
 	{
-		$sNeighbourKey = $sRelCode.'/'.$aQueryInfo['sFromClass'].'/'.$aQueryInfo['sNeighbour'];
-		if (isset($this->aRedundancySettings[$sNeighbourKey][$oToNode->GetId()]))
+		$oRet = null;
+		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 		{
-			// Cache hit
-			$oUserSettings = $this->aRedundancySettings[$sNeighbourKey][$oToNode->GetId()];
+			if ($oAttDef instanceof AttributeRedundancySettings)
+			{
+				if ($oAttDef->Get('relation_code') == $sRelCode)
+				{
+					if ($oAttDef->Get('neighbour_id') == $aQueryInfo['sNeighbour'])
+					{
+						$oRet = $oAttDef;
+						break;
+					}
+				}
+			}
 		}
-		else
-		{
-			// Cache miss: build the entry
-			$oUserSettings = RedundancySettings::GetSettings($sRelCode, $aQueryInfo, $oToNode->GetProperty('object'));
-			$this->aRedundancySettings[$sNeighbourKey][$oToNode->GetId()] = $oUserSettings;
-		}
-		return $oUserSettings;
+		return $oRet;
 	}
 }

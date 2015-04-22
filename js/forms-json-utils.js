@@ -346,6 +346,57 @@ function ValidateCaseLogField(sFieldId, bMandatory, sFormId)
 	ReportFieldValidationStatus(sFieldId, sFormId, bValid, '');
 	return bValid;
 }
+
+// Validate the inputs depending on the current setting
+function ValidateRedundancySettings(sFieldId, sFormId)
+{
+	var bValid = true;
+	var sExplain = '';
+
+	$('#'+sFieldId+' :input[type="radio"]:checked').parent().find(':input[type="string"]').each(function (){
+		var sValue = $(this).val().trim();
+		if (sValue == '')
+		{
+			bValid = false;
+			sExplain = Dict.S('UI:ValueMustBeSet');
+		}
+		else
+		{
+			// There is something... check if it is a number
+			re = new RegExp('^[0-9]+$');
+			bValid = re.test(sValue);
+			if (bValid)
+			{
+				var iValue = parseInt(sValue , 10);
+				if ($(this).hasClass('redundancy-min-up-percent'))
+				{
+					// A percentage
+					if ((iValue < 0) || (iValue > 100))
+					{
+						bValid = false;
+					}
+				}
+				else if ($(this).hasClass('redundancy-min-up-count'))
+				{
+					// A count
+					if (iValue < 0)
+					{
+						bValid = false;
+					}
+				}
+
+			}
+			if (!bValid)
+			{
+				sExplain = Dict.S('UI:ValueInvalidFormat');
+			}
+		}
+	});
+
+	ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain);
+	return bValid;
+}
+
 // Manage a 'duration' field
 function UpdateDuration(iId)
 {

@@ -1472,17 +1472,6 @@
             </neighbour>
             <neighbour id="applicationsolution">
               <attribute>applicationsolution_list</attribute>
-              <redundancy>
-                <enabled>
-                  <value>false</value>
-                  <mode>user</mode>
-                </enabled>
-                <min_up>
-                  <type>count</type>
-                  <value>1</value>
-                  <mode>user</mode>
-                </min_up>
-              </redundancy>
             </neighbour>
             <neighbour id="softwareinstance">
               <attribute>softwares_list</attribute>
@@ -2000,6 +1989,17 @@
           <ext_key_to_remote>san_id</ext_key_to_remote>
           <duplicates/>
         </field>
+        <field id="redundancy" xsi:type="AttributeRedundancySettings">
+          <sql>redundancy</sql>
+          <relation_code>impacts</relation_code>
+          <from_class>PowerConnection</from_class>
+          <neighbour_id>datacenterdevice</neighbour_id>
+          <enabled>true</enabled>
+          <enabled_mode>fixed</enabled_mode>
+          <min_up>1</min_up>
+          <min_up_type>count</min_up_type>
+          <min_up_mode>fixed</min_up_mode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -2316,7 +2316,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:Server:power">
                   <rank>20</rank>
                   <items>
                     <item id="powerA_id">
@@ -2325,8 +2325,16 @@
                     <item id="powerB_id">
                       <rank>20</rank>
                     </item>
-                    <item id="description">
+                    <item id="redundancy">
                       <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <rank>30</rank>
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
                     </item>
                   </items>
                 </item>
@@ -2640,7 +2648,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:Server:power">
                   <rank>20</rank>
                   <items>
                     <item id="powerA_id">
@@ -2649,8 +2657,16 @@
                     <item id="powerB_id">
                       <rank>20</rank>
                     </item>
-                    <item id="description">
+                    <item id="redundancy">
                       <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <rank>30</rank>
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
                     </item>
                   </items>
                 </item>
@@ -2806,6 +2822,17 @@
           <default_value>active</default_value>
           <is_null_allowed>true</is_null_allowed>
           <display_style>list</display_style>
+        </field>
+        <field id="redundancy" xsi:type="AttributeRedundancySettings">
+          <sql>redundancy</sql>
+          <relation_code>impacts</relation_code>
+          <from_class>FunctionalCI</from_class>
+          <neighbour_id>applicationsolution</neighbour_id>
+          <enabled>false</enabled>
+          <enabled_mode>user</enabled_mode>
+          <min_up>1</min_up>
+          <min_up_mode>user</min_up_mode>
+          <min_up_type>count</min_up_type>
         </field>
       </fields>
       <methods/>

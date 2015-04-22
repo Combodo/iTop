@@ -4402,7 +4402,17 @@ abstract class MetaModel
 					$aTableInfo['Fields'][$sField]['used'] = true;
 
 					$bIndexNeeded = $oAttDef->RequiresIndex();
-					$sFieldDefinition = "`$sField` ".($oAttDef->IsNullAllowed() ? "$sDBFieldType NULL" : "$sDBFieldType NOT NULL");
+					// Note: This fix deals only with the case when the field is MISSING
+					// it won't deal with the case when the field gets modified
+					if ($oAttDef->IsNullAllowed())
+					{
+						$sFieldDefinition = "`$sField` $sDBFieldType NULL";
+					}
+					else
+					{
+						$aDefaults = $oAttDef->GetSQLValues($oAttDef->GetDefaultValue());
+						$sFieldDefinition = "`$sField` $sDBFieldType NOT NULL DEFAULT ".CMDBSource::Quote($aDefaults[$sField]);
+					}
 					if (!CMDBSource::IsField($sTable, $sField))
 					{
 						$aErrors[$sClass][$sAttCode][] = "field '$sField' could not be found in table '$sTable'";

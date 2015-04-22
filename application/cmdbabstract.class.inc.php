@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -247,7 +247,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				$oExtensionInstance->OnDisplayProperties($this, $oPage, $bEditMode);
 			}
 		}
-		
+
 		// Special case to display the case log, if any...
 		// WARNING: if you modify the loop below, also check the corresponding code in UpdateObject and DisplayModifyForm
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
@@ -275,6 +275,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 
 	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
+		$aRedundancySettings = $this->FindVisibleRedundancySettings();
+
 		// Related objects: display all the linkset attributes, each as a separate tab
 		// In the order described by the 'display' ZList
 		$aList = $this->FlattenZList(MetaModel::GetZListItems(get_class($this), 'details'));
@@ -340,6 +342,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			// Non-readable/hidden linkedset... don't display anything
 			if ($iFlags & OPT_ATT_HIDDEN) continue;
 			
+			$aArgs = array('this' => $this);
 			$bReadOnly = ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE));
 			if ($bEditMode && (!$bReadOnly))
 			{
@@ -359,7 +362,6 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 
 				$oValue = $this->Get($sAttCode);
 				$sDisplayValue = ''; // not used
-				$aArgs = array('this' => $this);
 				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $oValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
 				$this->AddToFieldsMap($sAttCode,  $sInputId);
 				$oPage->add($sHTMLValue);
@@ -410,6 +412,29 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription());
 				$oBlock = new DisplayBlock($this->Get($sAttCode)->GetFilter(), 'list', false);
 				$oBlock->Display($oPage, 'rel_'.$sAttCode, $aParams);
+			}
+			if (array_key_exists($sAttCode, $aRedundancySettings))
+			{
+				foreach ($aRedundancySettings[$sAttCode] as $oRedundancyAttDef)
+				{
+					$sRedundancyAttCode = $oRedundancyAttDef->GetCode();
+					$sValue = $this->Get($sRedundancyAttCode);
+					$iRedundancyFlags = $this->GetFormAttributeFlags($sRedundancyAttCode);
+					$bRedundancyReadOnly = ($iRedundancyFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE));
+
+					$oPage->add('<fieldset>');
+					$oPage->add('<legend>'.$oRedundancyAttDef->GetLabel().'</legend>');
+					if ($bEditMode && (!$bRedundancyReadOnly))
+					{
+						$sInputId = $this->m_iFormId.'_'.$sRedundancyAttCode;
+						$oPage->add("<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sRedundancyAttCode, $oRedundancyAttDef, $sValue, '', $sInputId, '', $iFlags, $aArgs).'</span>');
+					}
+					else
+					{
+						$oPage->add($oRedundancyAttDef->GetDisplayForm($sValue, $oPage, false, $this->m_iFormId));
+					}
+					$oPage->add('</fieldset>');
+				}
 			}
 		}
 		$oPage->SetCurrentTab('');
@@ -527,18 +552,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 
 						$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '&nbsp;';
 						$sInfos = '&nbsp;';
-						if ($this->IsNew())
-						{
-							$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
-						}
-						else
-						{
-							$iFlags = $this->GetAttributeFlags($sAttCode);
-						}
-						if (($iFlags & OPT_ATT_MANDATORY) && $this->IsNew())
-						{
-							$iFlags = $iFlags & ~OPT_ATT_READONLY; // Mandatory fields cannot be read-only when creating an object
-						}
+						$iFlags = $this->GetFormAttributeFlags($sAttCode);
 						if (array_key_exists($sAttCode, $aExtraFlags))
 						{
 							// the caller may override some flags if needed
@@ -1796,6 +1810,20 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 					$sHTMLValue .= "<!-- iFlags: $iFlags bMandatory: $bMandatory -->\n";
 					break;
 					
+				case 'RedundancySetting':
+					$sHTMLValue = '<table>';
+					$sHTMLValue .= '<tr>';
+					$sHTMLValue .= '<td>';
+					$sHTMLValue .= '<div id="'.$iId.'">';
+					$sHTMLValue .= $oAttDef->GetDisplayForm($value, $oPage, true);
+					$sHTMLValue .= '</div>';
+					$sHTMLValue .= '</td>';
+					$sHTMLValue .= '<td>'.$sValidationField.'</td>';
+					$sHTMLValue .= '</tr>';
+					$sHTMLValue .= '</table>';
+					$oPage->add_ready_script("$('#$iId :input').bind('keyup change validate', function(evt, sFormId) { return ValidateRedundancySettings('$iId',sFormId); } );"); // Custom validation function
+					break;
+
 				case 'String':
 				default:
 					$aEventsList[] ='validate';
@@ -2633,6 +2661,26 @@ EOF
 	}
 
 	/**
+	 * Compute the attribute flags depending on the object state
+	 */	
+	public function GetFormAttributeFlags($sAttCode)
+	{
+		if ($this->IsNew())
+		{
+			$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
+		}
+		else
+		{
+			$iFlags = $this->GetAttributeFlags($sAttCode);
+		}
+		if (($iFlags & OPT_ATT_MANDATORY) && $this->IsNew())
+		{
+			$iFlags = $iFlags & ~OPT_ATT_READONLY; // Mandatory fields cannot be read-only when creating an object
+		}
+		return $iFlags;
+	}
+
+	/**
 	 * Updates the object from a flat array of values
 	 * @param string $aValues array of attcode => scalar or array (N-N links)
 	 * @return void
@@ -2825,6 +2873,10 @@ EOF
 			if ($oAttDef->GetEditClass() == 'Document')
 			{
 				$value = array('fcontents' => utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents'));
+			}
+			elseif ($oAttDef->GetEditClass() == 'RedundancySetting')
+			{
+				$value = $oAttDef->ReadValueFromPostedForm($sFormPrefix);
 			}
 			else if (($oAttDef->GetEditClass() == 'LinkedSet') && !$oAttDef->IsIndirect() &&
 			         (($oAttDef->GetEditMode() == LINKSET_EDITMODE_INPLACE) || ($oAttDef->GetEditMode() == LINKSET_EDITMODE_ADDREMOVE)) )
@@ -3748,5 +3800,34 @@ EOF
 			}
 		}
 	}
+
+	/**
+	 * Find redundancy settings that can be viewed and modified in a tab
+	 * Settings are distributed to the corresponding link set attribute so as to be shown in the relevant tab	 
+	 */	 	
+	protected function FindVisibleRedundancySettings()
+	{
+		$aRet = array();
+		foreach (MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
+		{
+			if ($oAttDef instanceof AttributeRedundancySettings)
+			{
+				if ($oAttDef->IsVisible())
+				{
+					$aQueryInfo = $oAttDef->GetRelationQueryData();
+					if (isset($aQueryInfo['sAttribute']))
+					{
+						$oUpperAttDef = MetaModel::GetAttributeDef($aQueryInfo['sFromClass'], $aQueryInfo['sAttribute']);
+						$oHostAttDef = $oUpperAttDef->GetMirrorLinkAttribute();
+						if ($oHostAttDef)
+						{
+							$sHostAttCode = $oHostAttDef->GetCode();
+							$aRet[$sHostAttCode][] = $oAttDef;
+						}
+					}
+				}
+			}
+		}	
+		return $aRet;
+	}
 }
-?>

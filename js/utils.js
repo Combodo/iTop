@@ -279,10 +279,14 @@ function ToogleField(value, field_id)
 	if (value)
 	{
 		$('#'+field_id).removeAttr('disabled');
+		// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
+		$('#'+field_id+' :input').removeAttr('disabled');
 	}
 	else
 	{
 		$('#'+field_id).attr('disabled', 'disabled');
+		// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
+		$('#'+field_id+' :input').attr('disabled', 'disabled');
 	}
 	$('#'+field_id).trigger('update');
 	$('#'+field_id).trigger('validate');

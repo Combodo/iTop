@@ -63,7 +63,6 @@ require_once('dbobjectset.class.php');
 require_once('backgroundprocess.inc.php');
 require_once('asynctask.class.inc.php');
 require_once('dbproperty.class.inc.php');
-require_once('redundancysettings.class.inc.php');
 
 // db change tracking data model
 require_once('cmdbchange.class.inc.php');

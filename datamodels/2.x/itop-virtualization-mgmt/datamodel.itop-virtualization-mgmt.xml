@@ -407,17 +407,6 @@
           <neighbours>
             <neighbour id="farm">
               <attribute>farm_id</attribute>
-              <redundancy>
-                <enabled>
-                  <value>true</value>
-                  <mode>user</mode>
-                </enabled>
-                <min_up>
-                  <type>count</type>
-                  <value>1</value>
-                  <mode>user</mode>
-                </min_up>
-              </redundancy>
             </neighbour>
           </neighbours>
         </relation>
@@ -454,6 +443,17 @@
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
+        </field>
+        <field id="redundancy" xsi:type="AttributeRedundancySettings">
+          <sql>redundancy</sql>
+          <relation_code>impacts</relation_code>
+          <from_class>Hypervisor</from_class>
+          <neighbour_id>farm</neighbour_id>
+          <enabled>true</enabled>
+          <enabled_mode>user</enabled_mode>
+          <min_up>1</min_up>
+          <min_up_type>count</min_up_type>
+          <min_up_mode>user</min_up_mode>
         </field>
       </fields>
       <methods/>

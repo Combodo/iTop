@@ -670,6 +670,16 @@ EOF;
 		return $val == 'true' ? 'true' : 'false';
 	}
 
+	protected function GetMandatoryPropBoolean($oNode, $sTag)
+	{
+		$val = $oNode->GetChildText($sTag);
+		if (is_null($val))
+		{
+			throw new DOMFormatException("missing (or empty) mandatory tag '$sTag' under the tag '".$oNode->nodeName."'");
+		}
+		return $val == 'true' ? 'true' : 'false';
+	}
+
 	protected function GetPropNumber($oNode, $sTag, $nDefault = null)
 	{
 		$val = $oNode->GetChildText($sTag);
@@ -683,6 +693,16 @@ EOF;
 			{
 				$val = $nDefault;
 			}
+		}
+		return (string)$val;
+	}
+
+	protected function GetMandatoryPropNumber($oNode, $sTag)
+	{
+		$val = $oNode->GetChildText($sTag);
+		if (is_null($val))
+		{
+			throw new DOMFormatException("missing (or empty) mandatory tag '$sTag' under the tag '".$oNode->nodeName."'");
 		}
 		return (string)$val;
 	}
@@ -1110,6 +1130,18 @@ EOF;
 					$aParameters['target_attcode'] = $this->GetMandatoryPropString($oField, 'target_attcode');
 					$aParameters['item_code'] = $this->GetMandatoryPropString($oField, 'item_code');
 				}
+				elseif ($sAttType == 'AttributeRedundancySettings')
+				{
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+					$aParameters['relation_code'] = $this->GetMandatoryPropString($oField, 'relation_code');
+					$aParameters['from_class'] = $this->GetMandatoryPropString($oField, 'from_class');
+					$aParameters['neighbour_id'] = $this->GetMandatoryPropString($oField, 'neighbour_id');
+					$aParameters['enabled'] = $this->GetMandatoryPropBoolean($oField, 'enabled');
+					$aParameters['enabled_mode'] = $this->GetMandatoryPropString($oField, 'enabled_mode');
+					$aParameters['min_up'] = $this->GetMandatoryPropNumber($oField, 'min_up');
+					$aParameters['min_up_mode'] = $this->GetMandatoryPropString($oField, 'min_up_mode');
+					$aParameters['min_up_type'] = $this->GetMandatoryPropString($oField, 'min_up_type');
+				}
 				else
 				{
 					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
@@ -1436,7 +1468,7 @@ EOF;
 					{
 						throw new DOMFormatException("Relation '$sRelationId/$sNeighbourId': both a query and and attribute have been specified... which one should be used?");
 					}
-					$aData = array(
+					$aRelations[$sRelationId][$sNeighbourId] = array(
 						'_legacy_' => false,
 						'sDefinedInClass' => $sClass,
 						'sNeighbour' => $sNeighbourId,
@@ -1444,20 +1476,6 @@ EOF;
 						'sQueryUp' => $oNeighbour->GetChildText('query_up'),
 						'sAttribute' => $oNeighbour->GetChildText('attribute'),
 					);
-
-					$oRedundancy = $oNeighbour->GetOptionalElement('redundancy');
-					if ($oRedundancy)
-					{
-						$oEnabled = $oRedundancy->GetUniqueElement('enabled');
-						$aData['bRedundancyEnabledValue'] = ($oEnabled->GetChildText('value', 'false') == 'true');
-						$aData['sRedundancyEnabledMode'] = $oEnabled->GetChildText('mode', 'fixed');
-						$oMinUp = $oRedundancy->GetUniqueElement('min_up');
-						$aData['sRedundancyMinUpType'] = $oMinUp->GetChildText('type', 'count');
-						$aData['iRedundancyMinUpValue'] = (int) $oMinUp->GetChildText('value', 1);
-						$aData['sRedundancyMinUpMode'] = $oMinUp->GetChildText('mode', 'fixed');
-					}
-
-					$aRelations[$sRelationId][$sNeighbourId] = $aData;
 				}
 			}
 

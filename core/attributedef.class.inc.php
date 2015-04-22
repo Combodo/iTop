@@ -215,6 +215,7 @@ abstract class AttributeDefinition
 	public function GetValue($oHostObject){return null;} // must return the value if LoadInObject returns false
 	public function IsNullAllowed() {return true;} 
 	public function GetCode() {return $this->m_sCode;} 
+	public function GetMirrorLinkAttribute() {return null;}
 
 	/**
 	 * Helper to browse the hierarchy of classes, searching for a label
@@ -979,6 +980,17 @@ class AttributeLinkedSet extends AttributeDefinition
 		// Both values are Object sets
 		return $val1->HasSameContents($val2);
 	}
+
+	/**
+	 * Find the corresponding "link" attribute on the target class
+	 * 	 
+	 * @return string The attribute code on the target class, or null if none has been found
+	 */
+	public function GetMirrorLinkAttribute()
+	{
+		$oRemoteAtt = MetaModel::GetAttributeDef($this->GetLinkedClass(), $this->GetExtKeyToMe());
+		return $oRemoteAtt;
+	}
 }
 
 /**
@@ -1000,6 +1012,28 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 	public function GetTrackingLevel()
 	{
 		return $this->GetOptional('tracking_level', MetaModel::GetConfig()->Get('tracking_level_linked_set_indirect_default'));
+	}
+
+	/**
+	 * Find the corresponding "link" attribute on the target class
+	 * 	 
+	 * @return string The attribute code on the target class, or null if none has been found
+	 */
+	public function GetMirrorLinkAttribute()
+	{
+		$oRet = null;
+		$oExtKeyToRemote = MetaModel::GetAttributeDef($this->GetLinkedClass(), $this->GetExtKeyToRemote());
+		$sRemoteClass = $oExtKeyToRemote->GetTargetClass();
+		foreach (MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef)
+		{
+			if (!$oRemoteAttDef instanceof AttributeLinkedSetIndirect) continue;
+			if ($oRemoteAttDef->GetLinkedClass() != $this->GetLinkedClass()) continue;
+			if ($oRemoteAttDef->GetExtKeyToMe() != $this->GetExtKeyToRemote()) continue;
+			if ($oRemoteAttDef->GetExtKeyToRemote() != $this->GetExtKeyToMe()) continue;
+			$oRet = $oRemoteAttDef;
+			break;
+		}
+		return $oRet;
 	}
 }
 
@@ -3171,6 +3205,26 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	{
 		return $this->GetOptional('allow_target_creation', MetaModel::GetConfig()->Get('allow_target_creation'));
 	}
+
+	/**
+	 * Find the corresponding "link" attribute on the target class
+	 * 	 
+	 * @return string The attribute code on the target class, or null if none has been found
+	 */
+	public function GetMirrorLinkAttribute()
+	{
+		$oRet = null;
+		$sRemoteClass = $this->GetTargetClass();
+		foreach (MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef)
+		{
+			if (!$oRemoteAttDef->IsLinkSet()) continue;
+			if (!is_subclass_of($this->GetHostClass(), $oRemoteAttDef->GetLinkedClass()) && $oRemoteAttDef->GetLinkedClass() != $this->GetHostClass()) continue;
+			if ($oRemoteAttDef->GetExtKeyToMe() != $this->GetCode()) continue;
+			$oRet = $oRemoteAttDef;
+			break;
+		}
+		return $oRet;
+	}
 }
 
 /**
@@ -3294,6 +3348,16 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		}
 		$oSet = $oValSetDef->ToObjectSet($aArgs, $sContains);
 		return $oSet;
+	}
+
+	/**
+	 * Find the corresponding "link" attribute on the target class
+	 * 	 
+	 * @return string The attribute code on the target class, or null if none has been found
+	 */
+	public function GetMirrorLinkAttribute()
+	{
+		return null;
 	}
 }
 
@@ -5107,4 +5171,391 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 	} 
 }
 
-?>
+/**
+ * Holds the setting for the redundancy on a specific relation
+ * Its value is a string, containing either:
+ * - 'disabled'
+ * - 'n', where n is a positive integer value giving the minimum count of items upstream
+ * - 'n%', where n is a positive integer value, giving the minimum as a percentage of the total count of items upstream
+ *
+ * @package     iTopORM
+ */
+class AttributeRedundancySettings extends AttributeDBField
+{
+	static public function ListExpectedParams()
+	{
+		return array('sql', 'relation_code', 'from_class', 'neighbour_id', 'enabled', 'enabled_mode', 'min_up', 'min_up_type', 'min_up_mode');
+	}
+
+	public function GetValuesDef() {return null;} 
+	public function GetPrerequisiteAttributes() {return array();} 
+
+	public function GetEditClass() {return "RedundancySetting";}
+	protected function GetSQLCol() {return "VARCHAR(20)";}
+
+
+	public function GetValidationPattern()
+	{
+		return "^[0-9]{1,3}|[0-9]{1,2}%|disabled$";
+	}
+
+	public function GetMaxSize()
+	{
+		return 20;
+	}
+
+	public function GetDefaultValue($aArgs = array())
+	{
+		$sRet = 'disabled';
+		if ($this->Get('enabled'))
+		{
+			if ($this->Get('min_up_type') == 'count')
+			{
+				$sRet = (string) $this->Get('min_up');
+			}
+			else // percent
+			{
+				$sRet = $this->Get('min_up').'%';
+			}
+		}
+		return $sRet;
+	}
+
+	public function IsNullAllowed()
+	{
+		return false;
+	} 
+
+	public function GetNullValue()
+	{
+		return '';
+	} 
+
+	public function IsNull($proposedValue)
+	{
+		return ($proposedValue == '');
+	} 
+
+	public function MakeRealValue($proposedValue, $oHostObj)
+	{
+		if (is_null($proposedValue)) return '';
+		return (string)$proposedValue;
+	}
+
+	public function ScalarToSQL($value)
+	{
+		if (!is_string($value))
+		{
+			throw new CoreException('Expected the attribute value to be a string', array('found_type' => gettype($value), 'value' => $value, 'class' => $this->GetHostClass(), 'attribute' => $this->GetCode()));
+		}
+		return $value;
+	}
+
+	public function GetRelationQueryData()
+	{
+		foreach (MetaModel::EnumRelationQueries($this->GetHostClass(), $this->Get('relation_code'), false) as $sDummy => $aQueryInfo)
+		{
+			if ($aQueryInfo['sFromClass'] == $this->Get('from_class'))
+			{
+				if ($aQueryInfo['sNeighbour'] == $this->Get('neighbour_id'))
+				{
+					return $aQueryInfo;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Find the user option label
+	 * @param user option : disabled|cout|percent	 	
+	 */	
+	public function GetUserOptionFormat($sUserOption, $sDefault = null)
+	{
+		$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/'.$sUserOption, null, true /*user lang*/);
+		if (is_null($sLabel))
+		{
+			// If no default value is specified, let's define the most relevant one for developping purposes
+			if (is_null($sDefault))
+			{
+				$sDefault = str_replace('_', ' ', $this->m_sCode.':'.$sUserOption.'(%1$s)');
+			}
+			// Browse the hierarchy again, accepting default (english) translations
+			$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/'.$sUserOption, $sDefault, false);
+		}
+		return $sLabel;
+	}
+
+	/**
+	 * Override to display the value in the GUI
+	 */	
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+	{
+		$sCurrentOption = $this->GetCurrentOption($sValue);
+		$sClass = $oHostObject ? get_class($oHostObject) : $this->m_sHostClass;
+		return sprintf($this->GetUserOptionFormat($sCurrentOption), $this->GetMinUpValue($sValue), MetaModel::GetName($sClass));
+	}
+
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	{
+		$sFrom = array("\r\n", $sTextQualifier);
+		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
+		return $sTextQualifier.$sEscaped.$sTextQualifier;
+	}
+
+	/**
+	 * Helper to interpret the value, given the current settings and string representation of the attribute	
+	 */	
+	public function IsEnabled($sValue)
+	{
+		if ($this->get('enabled_mode') == 'fixed')
+		{
+			$bRet = $this->get('enabled');
+		}
+		else
+		{
+			$bRet = ($sValue != 'disabled');
+		}
+		return $bRet;
+	}
+
+	/**
+	 * Helper to interpret the value, given the current settings and string representation of the attribute	
+	 */	
+	public function GetMinUpType($sValue)
+	{
+		if ($this->get('min_up_mode') == 'fixed')
+		{
+			$sRet = $this->get('min_up_type');
+		}
+		else
+		{
+			$sRet = 'count';
+			if (substr(trim($sValue), -1, 1) == '%')
+			{
+				$sRet = 'percent';
+			}
+		}
+		return $sRet;
+	}
+
+	/**
+	 * Helper to interpret the value, given the current settings and string representation of the attribute	
+	 */	
+	public function GetMinUpValue($sValue)
+	{
+		if ($this->get('min_up_mode') == 'fixed')
+		{
+			$iRet = (int) $this->Get('min_up');
+		}
+		else
+		{
+			$sRefValue = $sValue;
+			if (substr(trim($sValue), -1, 1) == '%')
+			{
+				$sRefValue = substr(trim($sValue), 0, -1);
+			}
+			$iRet = (int) trim($sRefValue);
+		}
+		return $iRet;
+	}
+
+	/**
+	 * Helper to determine if the redundancy can be viewed/edited by the end-user
+	 */	
+	public function IsVisible()
+	{
+		$bRet = false;
+		if ($this->Get('enabled_mode') == 'fixed')
+		{
+			$bRet = $this->Get('enabled');
+		}
+		elseif ($this->Get('enabled_mode') == 'user')
+		{
+			$bRet = true;
+		}
+		return $bRet;
+	}
+
+	public function IsWritable()
+	{
+		if (($this->Get('enabled_mode') == 'fixed') && ($this->Get('min_up_mode') == 'fixed'))
+		{
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns an HTML form that can be read by ReadValueFromPostedForm
+	 */	
+	public function GetDisplayForm($sCurrentValue, $oPage, $bEditMode = false, $sFormPrefix = '')
+	{
+		$sRet = '';
+		$aUserOptions = $this->GetUserOptions($sCurrentValue);
+		if (count($aUserOptions) < 2)
+		{
+			$bEditOption = false;
+		}
+		else
+		{
+			$bEditOption = $bEditMode;
+		}
+		$sCurrentOption = $this->GetCurrentOption($sCurrentValue);
+		foreach($aUserOptions as $sUserOption)
+		{
+			$bSelected = ($sUserOption == $sCurrentOption);
+			$sRet .= '<div>';
+			$sRet .= $this->GetDisplayOption($sCurrentValue, $oPage, $sFormPrefix, $bEditOption, $sUserOption, $bSelected);
+			$sRet .= '</div>';
+		}
+		return $sRet;
+	}
+
+	const USER_OPTION_DISABLED = 'disabled';
+	const USER_OPTION_ENABLED_COUNT = 'count';
+	const USER_OPTION_ENABLED_PERCENT = 'percent';
+
+	/**
+	 * Depending on the xxx_mode parameters, build the list of options that are allowed to the end-user
+	 */	 	
+	protected function GetUserOptions($sValue)
+	{
+		$aRet = array();
+		if ($this->Get('enabled_mode') == 'user')
+		{
+			$aRet[] = self::USER_OPTION_DISABLED;
+		}
+		
+		if ($this->Get('min_up_mode') == 'user')
+		{
+			$aRet[] = self::USER_OPTION_ENABLED_COUNT;
+			$aRet[] = self::USER_OPTION_ENABLED_PERCENT;
+		}
+		else
+		{
+			if ($this->GetMinUpType($sValue) == 'count')
+			{
+				$aRet[] = self::USER_OPTION_ENABLED_COUNT;
+			}
+			else
+			{
+				$aRet[] = self::USER_OPTION_ENABLED_PERCENT;
+			}
+		}
+		return $aRet;
+	}
+
+	/**
+	 * Convert the string representation into one of the existing options	
+	 */	
+	protected function GetCurrentOption($sValue)
+	{
+		$sRet = self::USER_OPTION_DISABLED;
+		if ($this->IsEnabled($sValue))
+		{
+			if ($this->GetMinUpType($sValue) == 'count')
+			{
+				$sRet = self::USER_OPTION_ENABLED_COUNT;
+			}
+			else
+			{
+				$sRet = self::USER_OPTION_ENABLED_PERCENT;
+			}
+		}
+		return $sRet;
+	}
+
+	/**
+	 * Display an option (form, or current value)
+	 */	 	
+	protected function GetDisplayOption($sCurrentValue, $oPage, $sFormPrefix, $bEditMode, $sUserOption, $bSelected = true)
+	{
+		$sRet = '';
+
+		$iCurrentValue = $this->GetMinUpValue($sCurrentValue);
+		if ($bEditMode)
+		{
+			$sHtmlNamesPrefix = 'rddcy_'.$this->Get('relation_code').'_'.$this->Get('from_class').'_'.$this->Get('neighbour_id');
+			switch ($sUserOption)
+			{
+			case self::USER_OPTION_DISABLED:
+				$sValue = ''; // Empty placeholder
+				break;
+	
+			case self::USER_OPTION_ENABLED_COUNT:
+				if ($bEditMode)
+				{
+					$sName = $sHtmlNamesPrefix.'_min_up_count';
+					$sEditValue = $bSelected ? $iCurrentValue : '';
+					$sValue = '<input class="redundancy-min-up-count" type="string" size="3" name="'.$sName.'" value="'.$sEditValue.'">';
+					// To fix an issue on Firefox: focus set to the option (because the input is within the label for the option)
+					$oPage->add_ready_script("\$('[name=\"$sName\"]').click(function(){var me=this; setTimeout(function(){\$(me).focus();}, 100);});");
+				}
+				else
+				{
+					$sValue = $iCurrentValue;
+				}
+				break;
+	
+			case self::USER_OPTION_ENABLED_PERCENT:
+				if ($bEditMode)
+				{
+					$sName = $sHtmlNamesPrefix.'_min_up_percent';
+					$sEditValue = $bSelected ? $iCurrentValue : '';
+					$sValue = '<input class="redundancy-min-up-percent" type="string" size="3" name="'.$sName.'" value="'.$sEditValue.'">';
+					// To fix an issue on Firefox: focus set to the option (because the input is within the label for the option)
+					$oPage->add_ready_script("\$('[name=\"$sName\"]').click(function(){var me=this; setTimeout(function(){\$(me).focus();}, 100);});");
+				}
+				else
+				{
+					$sValue = $iCurrentValue;
+				}
+				break;
+			}
+			$sLabel = sprintf($this->GetUserOptionFormat($sUserOption), $sValue, MetaModel::GetName($this->GetHostClass()));
+
+			$sOptionName = $sHtmlNamesPrefix.'_user_option';
+			$sOptionId = $sOptionName.'_'.$sUserOption;
+			$sChecked = $bSelected ? 'checked' : '';
+			$sRet = '<input type="radio" name="'.$sOptionName.'" id="'.$sOptionId.'" value="'.$sUserOption.'"'.$sChecked.'> <label for="'.$sOptionId.'">'.$sLabel.'</label>';
+		}
+		else
+		{
+			// Read-only: display only the currently selected option
+			if ($bSelected)
+			{
+				$sRet = sprintf($this->GetUserOptionFormat($sUserOption), $iCurrentValue, MetaModel::GetName($this->GetHostClass()));
+			}
+		}
+		return $sRet;
+	}
+
+	/**
+	 * Makes the string representation out of the values given by the form defined in GetDisplayForm	
+	 */	
+	public function ReadValueFromPostedForm($sFormPrefix)
+	{
+		$sHtmlNamesPrefix = 'rddcy_'.$this->Get('relation_code').'_'.$this->Get('from_class').'_'.$this->Get('neighbour_id');
+
+		$iMinUpCount = (int) utils::ReadPostedParam($sHtmlNamesPrefix.'_min_up_count', null, 'raw_data');
+		$iMinUpPercent = (int) utils::ReadPostedParam($sHtmlNamesPrefix.'_min_up_percent', null, 'raw_data');
+		$sSelectedOption = utils::ReadPostedParam($sHtmlNamesPrefix.'_user_option', null, 'raw_data');
+		switch ($sSelectedOption)
+		{
+		case self::USER_OPTION_ENABLED_COUNT:
+			$sRet = $iMinUpCount;
+			break;
+
+		case self::USER_OPTION_ENABLED_PERCENT:
+			$sRet = $iMinUpPercent.'%';
+			break;
+
+		case self::USER_OPTION_DISABLED:
+		default:
+			$sRet = 'disabled';
+			break;
+		}
+		return $sRet;
+	}
+}
