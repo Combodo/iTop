@@ -431,14 +431,23 @@ class iTopDesignFormat
 		{
 			$oNode->setAttribute('xsi:type', 'AttributeInteger');
 			// The property class_attcode is left there (doing no harm)
-			$this->LogWarning('The attribute '.self::GetItopNodePath($oNode), ' has been degraded into an integer attribute. Any OQL query using this attribute will fail.');
+			$this->LogWarning('The attribute '.self::GetItopNodePath($oNode).' has been degraded into an integer attribute. Any OQL query using this attribute will fail.');
+		}
+
+		// Remove Redundancy settings attributes (no redundancy could be defined in the previous format)
+		//
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeRedundancySettings']");
+		foreach ($oNodeList as $oNode)
+		{
+			$this->LogWarning('The attribute '.self::GetItopNodePath($oNode).' is of no use and must be removed.');
+			$this->DeleteNode($oNode);
 		}
 
 		// Later: transform the relations into code (iif defined as an SQL query)
 		$oNodeList = $oXPath->query('/itop_design/classes//class/relations');
 		foreach ($oNodeList as $oNode)
 		{
-			$this->LogWarning('The relations defined in '.self::GetItopNodePath($oNode). ' will be lost.');
+			$this->LogWarning('The relations defined in '.self::GetItopNodePath($oNode).' will be lost.');
 			$this->DeleteNode($oNode);
 		}
 
