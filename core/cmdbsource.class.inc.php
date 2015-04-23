@@ -541,6 +541,29 @@ class CMDBSource
 		return ($aFieldData["Type"]);
 	}
 
+	public static function GetFieldSpec($sTable, $sField)
+	{
+		$aTableInfo = self::GetTableInfo($sTable);
+		if (empty($aTableInfo)) return false;
+		if (!array_key_exists($sField, $aTableInfo["Fields"])) return false;
+		$aFieldData = $aTableInfo["Fields"][$sField];
+		$sRet = $aFieldData["Type"];
+		if ($aFieldData["Null"] == 'NO')
+		{
+			$sRet .= ' NOT NULL';
+		}
+		if (is_numeric($aFieldData["Default"]))
+		{
+			$default = $aFieldData["Default"] + 0; // Coerce to a numeric variable
+			$sRet .= ' DEFAULT '.self::Quote($default);
+		}
+		elseif (is_string($aFieldData["Default"]) == 'string')
+		{
+			$sRet .= ' DEFAULT '.self::Quote($aFieldData["Default"]);
+		}
+		return $sRet;
+	}
+
 	public static function HasIndex($sTable, $sIndexId, $aFields = null)
 	{
 		$aTableInfo = self::GetTableInfo($sTable);

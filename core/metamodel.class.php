@@ -4453,23 +4453,14 @@ abstract class MetaModel
 				// Skip this attribute if not originaly defined in this class
 				if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass) continue;
 
-				foreach($oAttDef->GetSQLColumns() as $sField => $sDBFieldType)
+				foreach($oAttDef->GetSQLColumns(true) as $sField => $sDBFieldSpec)
 				{
 					// Keep track of columns used by iTop
 					$aTableInfo['Fields'][$sField]['used'] = true;
 
 					$bIndexNeeded = $oAttDef->RequiresIndex();
-					// Note: This fix deals only with the case when the field is MISSING
-					// it won't deal with the case when the field gets modified
-					if ($oAttDef->IsNullAllowed())
-					{
-						$sFieldDefinition = "`$sField` $sDBFieldType NULL";
-					}
-					else
-					{
-						$aDefaults = $oAttDef->GetSQLValues($oAttDef->GetDefaultValue());
-						$sFieldDefinition = "`$sField` $sDBFieldType NOT NULL DEFAULT ".CMDBSource::Quote($aDefaults[$sField]);
-					}
+
+					$sFieldDefinition = "`$sField` $sDBFieldSpec";
 					if (!CMDBSource::IsField($sTable, $sField))
 					{
 						$aErrors[$sClass][$sAttCode][] = "field '$sField' could not be found in table '$sTable'";
@@ -4500,23 +4491,11 @@ abstract class MetaModel
 						// The field already exists, does it have the relevant properties?
 						//
 						$bToBeChanged = false;
-						if ($oAttDef->IsNullAllowed() != CMDBSource::IsNullAllowed($sTable, $sField))
+						$sActualFieldSpec = CMDBSource::GetFieldSpec($sTable, $sField);
+						if (strcasecmp($sDBFieldSpec, $sActualFieldSpec) != 0)
 						{
 							$bToBeChanged  = true;
-							if ($oAttDef->IsNullAllowed())
-							{
-								$aErrors[$sClass][$sAttCode][] = "field '$sField' in table '$sTable' could be NULL";
-							}
-							else
-							{
-								$aErrors[$sClass][$sAttCode][] = "field '$sField' in table '$sTable' could NOT be NULL";
-							}
-						}
-						$sActualFieldType = CMDBSource::GetFieldType($sTable, $sField);
-						if (strcasecmp($sDBFieldType, $sActualFieldType) != 0)
-						{
-							$bToBeChanged  = true;
-							$aErrors[$sClass][$sAttCode][] = "field '$sField' in table '$sTable' has a wrong type: found '$sActualFieldType' while expecting '$sDBFieldType'";
+							$aErrors[$sClass][$sAttCode][] = "field '$sField' in table '$sTable' has a wrong type: found '$sActualFieldSpec' while expecting '$sDBFieldSpec'";
 						} 
 						if ($bToBeChanged)
 						{

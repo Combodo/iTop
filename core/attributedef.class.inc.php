@@ -363,7 +363,7 @@ abstract class AttributeDefinition
 
 	public function GetSQLExpressions($sPrefix = '') {return array();} // returns suffix/expression pairs (1 in most of the cases), for READING (Select)
 	public function FromSQLToValue($aCols, $sPrefix = '') {return null;} // returns a value out of suffix/value pairs, for SELECT result interpretation
-	public function GetSQLColumns() {return array();} // returns column/spec pairs (1 in most of the cases), for STRUCTURING (DB creation)
+	public function GetSQLColumns($bFullSpec = false) {return array();} // returns column/spec pairs (1 in most of the cases), for STRUCTURING (DB creation)
 	public function GetSQLValues($value) {return array();} // returns column/value pairs (1 in most of the cases), for WRITING (Insert, Update)
 	public function RequiresIndex() {return false;}
 
@@ -1050,7 +1050,32 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	}
 
 	// To be overriden, used in GetSQLColumns
-	protected function GetSQLCol() {return "VARCHAR(255)";}
+	protected function GetSQLCol($bFullSpec = false)
+	{
+		return "VARCHAR(255)".($bFullSpec ? $this->GetSQLColSpec() : '');
+	}
+	protected function GetSQLColSpec()
+	{
+		$default = $this->ScalarToSQL($this->GetDefaultValue());
+		if (is_null($default))
+		{
+			$sRet = '';
+		}
+		else
+		{
+			if (is_numeric($default))
+			{
+				// Though it is a string in PHP, it will be considered as a numeric value in MySQL
+				// Then it must not be quoted here, to preserve the compatibility with the value returned by CMDBSource::GetFieldSpec
+				$sRet = " NOT NULL DEFAULT $default";
+			}
+			else
+			{
+				$sRet = " NOT NULL DEFAULT ".CMDBSource::Quote($default);
+			}
+		}
+		return $sRet;
+	}
 
 	public function GetEditClass() {return "String";}
 	
@@ -1087,10 +1112,10 @@ class AttributeDBFieldVoid extends AttributeDefinition
 		return $aValues;
 	}
 
-	public function GetSQLColumns()
+	public function GetSQLColumns($bFullSpec = false)
 	{
 		$aColumns = array();
-		$aColumns[$this->Get("sql")] = $this->GetSQLCol();
+		$aColumns[$this->Get("sql")] = $this->GetSQLCol($bFullSpec);
 		return $aColumns;
 	}
 
@@ -1152,7 +1177,7 @@ class AttributeInteger extends AttributeDBField
 	}
 
 	public function GetEditClass() {return "String";}
-	protected function GetSQLCol() {return "INT(11)";}
+	protected function GetSQLCol($bFullSpec = false) {return "INT(11)".($bFullSpec ? $this->GetSQLColSpec() : '');}
 	
 	public function GetValidationPattern()
 	{
@@ -1244,7 +1269,7 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 	}
 
 	public function GetEditClass() {return "String";}
-	protected function GetSQLCol() {return "INT(11)";}
+	protected function GetSQLCol($bFullSpec = false) {return "INT(11)".($bFullSpec ? " NOT NULL DEFAULT 0" : "");}
 
 	public function GetDefaultValue() {return 0;}
 	public function IsNullAllowed()
@@ -1338,7 +1363,10 @@ class AttributeDecimal extends AttributeDBField
 	}
 
 	public function GetEditClass() {return "String";}
-	protected function GetSQLCol() {return "DECIMAL(".$this->Get('digits').",".$this->Get('decimals').")";}
+	protected function GetSQLCol($bFullSpec = false)
+	{
+		return "DECIMAL(".$this->Get('digits').",".$this->Get('decimals').")".($bFullSpec ? $this->GetSQLColSpec() : '');
+	}
 	
 	public function GetValidationPattern()
 	{
@@ -1434,7 +1462,7 @@ class AttributeBoolean extends AttributeInteger
 	}
 
 	public function GetEditClass() {return "Integer";}
-	protected function GetSQLCol() {return "TINYINT(1)";}
+	protected function GetSQLCol($bFullSpec = false) {return "TINYINT(1)".($bFullSpec ? $this->GetSQLColSpec() : '');}
 	
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
@@ -1486,7 +1514,7 @@ class AttributeString extends AttributeDBField
 	}
 
 	public function GetEditClass() {return "String";}
-	protected function GetSQLCol() {return "VARCHAR(255)";}
+	protected function GetSQLCol($bFullSpec = false) {return "VARCHAR(255)".($bFullSpec ? $this->GetSQLColSpec() : '');}
 
 	public function GetValidationPattern()
 	{
@@ -1765,7 +1793,7 @@ class AttributePassword extends AttributeString
 	}
 
 	public function GetEditClass() {return "Password";}
-	protected function GetSQLCol() {return "VARCHAR(64)";}
+	protected function GetSQLCol($bFullSpec = false) {return "VARCHAR(64)".($bFullSpec ? $this->GetSQLColSpec() : '');}
 
 	public function GetMaxSize()
 	{
@@ -1829,7 +1857,7 @@ class AttributeEncryptedString extends AttributeString
 	}
 	
 
-	protected function GetSQLCol() {return "TINYBLOB";}	
+	protected function GetSQLCol($bFullSpec = false) {return "TINYBLOB".($bFullSpec ? " NOT NULL" : "");}	
 
 	public function GetMaxSize()
 	{
@@ -1889,7 +1917,7 @@ define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)\]\]/U');
 class AttributeText extends AttributeString
 {
 	public function GetEditClass() {return "Text";}
-	protected function GetSQLCol() {return "TEXT";}
+	protected function GetSQLCol($bFullSpec = false) {return "TEXT".($bFullSpec ? " NOT NULL" : "");}
 
 	public function GetMaxSize()
 	{
@@ -2035,7 +2063,7 @@ class AttributeText extends AttributeString
  */
 class AttributeLongText extends AttributeText
 {
-	protected function GetSQLCol() {return "LONGTEXT";}
+	protected function GetSQLCol($bFullSpec = false) {return "LONGTEXT".($bFullSpec ? " NOT NULL" : "");}
 
 	public function GetMaxSize()
 	{
@@ -2193,7 +2221,7 @@ class AttributeCaseLog extends AttributeLongText
 		return $aValues;
 	}
 
-	public function GetSQLColumns()
+	public function GetSQLColumns($bFullSpec = false)
 	{
 		$aColumns = array();
 		$aColumns[$this->GetCode()] = 'LONGTEXT'; // 2^32 (4 Gb)
@@ -2433,7 +2461,7 @@ class AttributeEnum extends AttributeString
 	}
 
 	public function GetEditClass() {return "String";}
-	protected function GetSQLCol()
+	protected function GetSQLCol($bFullSpec = false)
 	{
 		$oValDef = $this->GetValuesDef();
 		if ($oValDef)
@@ -2450,11 +2478,11 @@ class AttributeEnum extends AttributeString
 			// In particular, I had to remove unnecessary spaces to
 			// make sure that this string will match the field type returned by the DB
 			// (used to perform a comparison between the current DB format and the data model)
-			return "ENUM(".implode(",", $aValues).")";
+			return "ENUM(".implode(",", $aValues).")".($bFullSpec ? $this->GetSQLColSpec() : '');
 		}
 		else
 		{
-			return "VARCHAR(255)"; // ENUM() is not an allowed syntax!
+			return "VARCHAR(255)".($bFullSpec ? " NOT NULL DEFAULT ''" : ""); // ENUM() is not an allowed syntax!
 		}
 	}
 
@@ -2700,7 +2728,7 @@ class AttributeDateTime extends AttributeDBField
 
 	public function GetEditClass() {return "DateTime";}
 
-	protected function GetSQLCol() {return "DATETIME";}
+	protected function GetSQLCol($bFullSpec = false) {return "DATETIME";}
 	public static function GetAsUnixSeconds($value)
 	{
 		$oDeadlineDateTime = new DateTime($value);
@@ -2917,7 +2945,7 @@ class AttributeDateTime extends AttributeDBField
 class AttributeDuration extends AttributeInteger
 {
 	public function GetEditClass() {return "Duration";}
-	protected function GetSQLCol() {return "INT(11) UNSIGNED";}
+	protected function GetSQLCol($bFullSpec = false) {return "INT(11) UNSIGNED";}
 
 	public function GetNullValue() {return '0';}
 
@@ -3003,7 +3031,7 @@ class AttributeDate extends AttributeDateTime
 	}
 
 	public function GetEditClass() {return "Date";}
-	protected function GetSQLCol() {return "DATE";}
+	protected function GetSQLCol($bFullSpec = false) {return "DATE";}
 
 	public function GetValidationPattern()
 	{
@@ -3095,7 +3123,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	}
 
 	public function GetEditClass() {return "ExtKey";}
-	protected function GetSQLCol() {return "INT(11)";}
+	protected function GetSQLCol($bFullSpec = false) {return "INT(11)".($bFullSpec ? " NOT NULL DEFAULT 0" : "");}
 	public function RequiresIndex()
 	{
 		return true;
@@ -3276,12 +3304,12 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		return parent::GetBasicFilterLooseOperator();
 	}
 
-	public function GetSQLColumns()
+	public function GetSQLColumns($bFullSpec = false)
 	{
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'INT(11)';
-		$aColumns[$this->GetSQLLeft()] = 'INT(11)';
-		$aColumns[$this->GetSQLRight()] = 'INT(11)';
+		$aColumns[$this->GetCode()] = 'INT(11)'.($bFullSpec ? ' NOT NULL DEFAULT 0' : '');
+		$aColumns[$this->GetSQLLeft()] = 'INT(11)'.($bFullSpec ? ' NOT NULL DEFAULT 0' : '');
+		$aColumns[$this->GetSQLRight()] = 'INT(11)'.($bFullSpec ? ' NOT NULL DEFAULT 0' : '');
 		return $aColumns;
 	}
 	public function GetSQLRight()
@@ -3381,11 +3409,11 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->GetFinalAttDef(); 
 	}
 
-	protected function GetSQLCol()
+	protected function GetSQLCol($bFullSpec = false)
 	{
 		// throw new CoreException("external attribute: does it make any sense to request its type ?");  
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->GetSQLCol(); 
+		return $oExtAttDef->GetSQLCol($bFullSpec); 
 	}
 
 	public function GetSQLExpressions($sPrefix = '')
@@ -3787,7 +3815,7 @@ class AttributeBlob extends AttributeDefinition
 		return $aValues;
 	}
 
-	public function GetSQLColumns()
+	public function GetSQLColumns($bFullSpec = false)
 	{
 		$aColumns = array();
 		$aColumns[$this->GetCode().'_data'] = 'LONGBLOB'; // 2^32 (4 Gb)
@@ -4048,7 +4076,7 @@ class AttributeStopWatch extends AttributeDefinition
 		return $aValues;
 	}
 
-	public function GetSQLColumns()
+	public function GetSQLColumns($bFullSpec = false)
 	{
 		$aColumns = array();
 		$aColumns[$this->GetCode().'_timespent'] = 'INT(11) UNSIGNED';
@@ -4505,7 +4533,7 @@ class AttributeSubItem extends AttributeDefinition
 	{
 	}
 
-	public function GetSQLColumns()
+	public function GetSQLColumns($bFullSpec = false)
 	{
 		return array();
 	}
@@ -4680,7 +4708,7 @@ class AttributeOneWayPassword extends AttributeDefinition
 		return $aValues;
 	}
 
-	public function GetSQLColumns()
+	public function GetSQLColumns($bFullSpec = false)
 	{
 		$aColumns = array();
 		$aColumns[$this->GetCode().'_hash'] = 'TINYBLOB';
@@ -4752,7 +4780,7 @@ class AttributeOneWayPassword extends AttributeDefinition
 class AttributeTable extends AttributeDBField
 {
 	public function GetEditClass() {return "Table";}
-	protected function GetSQLCol() {return "LONGTEXT";}
+	protected function GetSQLCol($bFullSpec = false) {return "LONGTEXT".($bFullSpec ? " NOT NULL" : "");}
 
 	public function GetMaxSize()
 	{
@@ -5006,7 +5034,7 @@ class AttributeComputedFieldVoid extends AttributeDefinition
 		return array();
 	}
 
-	public function GetSQLColumns()
+	public function GetSQLColumns($bFullSpec = false)
 	{
 		return array();
 	}
@@ -5101,7 +5129,7 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 	} 
 
 	// n/a, the friendly name is made of a complex expression (see GetNameSpec)
-	protected function GetSQLCol() {return "";}	
+	protected function GetSQLCol($bFullSpec = false) {return "";}	
 
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
@@ -5191,7 +5219,10 @@ class AttributeRedundancySettings extends AttributeDBField
 	public function GetPrerequisiteAttributes() {return array();} 
 
 	public function GetEditClass() {return "RedundancySetting";}
-	protected function GetSQLCol() {return "VARCHAR(20)";}
+	protected function GetSQLCol($bFullSpec = false)
+	{
+		return "VARCHAR(20)".($bFullSpec ? $this->GetSQLColSpec() : '');
+	}
 
 
 	public function GetValidationPattern()
