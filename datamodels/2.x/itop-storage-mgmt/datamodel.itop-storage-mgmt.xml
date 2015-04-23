@@ -34,7 +34,6 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -299,7 +298,6 @@
           <duplicates/>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -560,7 +558,6 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -821,7 +818,6 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -1099,7 +1095,6 @@
           <target_attcode>name</target_attcode>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -1206,7 +1201,6 @@
           <target_attcode>name</target_attcode>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -1452,7 +1446,6 @@
           <duplicates/>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>

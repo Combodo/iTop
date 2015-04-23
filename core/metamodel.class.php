@@ -1183,11 +1183,11 @@ abstract class MetaModel
 	{
 		if ($bDown)
 		{
-			// The legacy convention is confusing with regard to the way we have conceptualized the relations:
-			// In the former representation, the main stream was named after "up"
-			// Now, the relation from A to B says that something is transmitted from A to B, thus going DOWNstream as described in a petri net.
-			$sKey = "Relation:$sRelCode/DownStream";
-			$sLegacy = Dict::S("Relation:$sRelCode/VerbUp", $sKey);
+		// The legacy convention is confusing with regard to the way we have conceptualized the relations:
+		// In the former representation, the main stream was named after "up"
+		// Now, the relation from A to B says that something is transmitted from A to B, thus going DOWNstream as described in a petri net.
+		$sKey = "Relation:$sRelCode/DownStream";
+		$sLegacy = Dict::S("Relation:$sRelCode/VerbUp", $sKey);
 		}
 		else
 		{
@@ -1265,17 +1265,25 @@ abstract class MetaModel
 					throw new Exception("Wrong definition for the relation $sRelCode/{$aNeighbourData['sDefinedInClass']}/{$aNeighbourData['sNeighbour']}: ".$e->getMessage());
 				}
 
+				if ($aNeighbourData['sDirection'] == 'down')
+				{
+					$aNeighbourData['sQueryUp'] = null;
+				}
+
 				$sArrowId = $aNeighbourData['sDefinedInClass'].'_'.$sNeighbourId;
 				$aQueries[$sClass]['down'][$sArrowId] = $aNeighbourData;
 
 				// Compute the reverse index
 				if ($aNeighbourData['sDefinedInClass'] == $sClass)
 				{
-					$sFromClass = $aNeighbourData['sFromClass'];
-					$sToClass = $aNeighbourData['sToClass'];
-					foreach (self::EnumChildClasses($sToClass, ENUM_CHILD_CLASSES_ALL) as $sSubClass)
+					if ($aNeighbourData['sDirection'] == 'both')
 					{
-						$aQueries[$sSubClass]['up'][$sArrowId] = $aNeighbourData;
+						$sFromClass = $aNeighbourData['sFromClass'];
+						$sToClass = $aNeighbourData['sToClass'];
+						foreach (self::EnumChildClasses($sToClass, ENUM_CHILD_CLASSES_ALL) as $sSubClass)
+						{
+							$aQueries[$sSubClass]['up'][$sArrowId] = $aNeighbourData;
+						}
 					}
 				}
 			}
@@ -1320,7 +1328,9 @@ abstract class MetaModel
 							'sDefinedInClass' => $sClass,
 							'sFromClass' => $sClass,
 							'sToClass' => $sRemoteClass,
+							'sDirection' => 'down',
 							'sQueryDown' => $aLegacyEntry['sQuery'],
+							'sQueryUp' => null,
 							'sNeighbour' => $sRemoteClass // Normalize the neighbour id
 						);
 					}
@@ -1354,6 +1364,8 @@ abstract class MetaModel
 							'sDefinedInClass' => $sRemoteClass,
 							'sFromClass' => $sRemoteClass,
 							'sToClass' => $sClass,
+							'sDirection' => 'both',
+							'sQueryDown' => null,
 							'sQueryUp' => $aLegacyEntry['sQuery'],
 							'sNeighbour' => $sClass// Normalize the neighbour id
 						);
@@ -1388,6 +1400,7 @@ abstract class MetaModel
 							if (isset($aQueries[$sRemoteClass]['down'][$sLocalClass]))
 							{
 								$aQueries[$sRemoteClass]['down'][$sLocalClass]['sQueryUp'] = $aNeighbourData['sQueryUp'];
+								$aQueries[$sRemoteClass]['down'][$sLocalClass]['sDirection'] = 'both';
 							}
 							else
 							{
@@ -1396,7 +1409,7 @@ abstract class MetaModel
 						}
 					}
 				}
-				// Foreach "down" legacy query, update its "up" counterpart
+				// Foreach "down" legacy query, update its "up" counterpart (if any)
 				foreach ($aQueries[$sClass]['down'] as $sNeighbourId => $aNeighbourData)
 				{
 					if (!$aNeighbourData['_legacy_']) continue; // Skip modern definitions
@@ -1404,7 +1417,10 @@ abstract class MetaModel
 					$sLocalClass = $aNeighbourData['sFromClass'];
 					foreach (self::EnumChildClasses($aNeighbourData['sToClass'], ENUM_CHILD_CLASSES_ALL) as $sRemoteClass)
 					{
-						//$aQueries[$sRemoteClass]['up'][$sLocalClass]['sQueryDown'] = $aNeighbourData['sQueryDown'];
+						if (isset($aQueries[$sRemoteClass]['up'][$sLocalClass]))
+						{
+							$aQueries[$sRemoteClass]['up'][$sLocalClass]['sQueryDown'] = $aNeighbourData['sQueryDown'];
+						}
 					}
 				}
 			}

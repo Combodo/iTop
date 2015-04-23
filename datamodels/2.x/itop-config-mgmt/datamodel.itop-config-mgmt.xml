@@ -1380,7 +1380,6 @@
           <duplicates/>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -1469,6 +1468,7 @@
           <neighbours>
             <neighbour id="contact">
               <attribute>contacts_list</attribute>
+              <direction>down</direction>
             </neighbour>
             <neighbour id="applicationsolution">
               <attribute>applicationsolution_list</attribute>
@@ -1743,7 +1743,6 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -2208,7 +2207,6 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -2522,7 +2520,6 @@
           <duplicates/>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -2835,7 +2832,6 @@
           <min_up_type>count</min_up_type>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -2976,7 +2972,6 @@
           <display_style>list</display_style>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -3138,7 +3133,6 @@
           <display_style>list</display_style>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -3268,7 +3262,6 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -3416,7 +3409,6 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -3564,7 +3556,6 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -3946,7 +3937,6 @@
           <target_attcode>name</target_attcode>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -4067,7 +4057,6 @@
           <target_attcode>name</target_attcode>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>
@@ -4194,7 +4183,6 @@
           <target>_blank</target>
         </field>
       </fields>
-      <methods/>
       <presentation>
         <details>
           <items>

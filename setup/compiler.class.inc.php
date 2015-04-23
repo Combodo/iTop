@@ -1452,29 +1452,43 @@ EOF;
 					if ($oNeighbour->tagName != 'neighbour') continue;
 					$sNeighbourId = $oNeighbour->getAttribute('id');
 
-					if (($oNeighbour->GetChildText('query_down') != '') && ($oNeighbour->GetChildText('query_up') == ''))
-					{
-						throw new DOMFormatException("Relation '$sRelationId/$sNeighbourId': missing the query_up specification");
-					}
-					if (($oNeighbour->GetChildText('query_up') != '') && ($oNeighbour->GetChildText('query_down') == ''))
-					{
-						throw new DOMFormatException("Relation '$sRelationId/$sNeighbourId': missing the query_down specification");
-					}
-					if (($oNeighbour->GetChildText('query_down') == '') && ($oNeighbour->GetChildText('attribute') == ''))
+					$sDirection = $oNeighbour->GetChildText('direction', 'both');
+					$sAttribute = $oNeighbour->GetChildText('attribute');
+					$sQueryDown = $oNeighbour->GetChildText('query_down');
+					$sQueryUp = $oNeighbour->GetChildText('query_up');
+
+					if (($sQueryDown == '') && ($sAttribute == ''))
 					{
 						throw new DOMFormatException("Relation '$sRelationId/$sNeighbourId': either a query or an attribute must be specified");
 					}
-					if (($oNeighbour->GetChildText('query_down') != '') && ($oNeighbour->GetChildText('attribute') != ''))
+					if (($sQueryDown != '') && ($sAttribute != ''))
 					{
 						throw new DOMFormatException("Relation '$sRelationId/$sNeighbourId': both a query and and attribute have been specified... which one should be used?");
 					}
+
+					if ($sDirection == 'both')
+					{
+						if (($sAttribute == '') && ($sQueryUp == ''))
+						{
+							throw new DOMFormatException("Relation '$sRelationId/$sNeighbourId': missing the query_up specification");
+						}
+					}
+					elseif ($sDirection == 'down')
+					{
+						// Ok
+					}
+					else
+					{
+						throw new DOMFormatException("Relation '$sRelationId/$sNeighbourId': unknown direction ($sDirection), expecting 'both' or 'down'");
+					}
 					$aRelations[$sRelationId][$sNeighbourId] = array(
 						'_legacy_' => false,
+						'sDirection' => $sDirection,
 						'sDefinedInClass' => $sClass,
 						'sNeighbour' => $sNeighbourId,
-						'sQueryDown' => $oNeighbour->GetChildText('query_down'),
-						'sQueryUp' => $oNeighbour->GetChildText('query_up'),
-						'sAttribute' => $oNeighbour->GetChildText('attribute'),
+						'sQueryDown' => $sQueryDown,
+						'sQueryUp' => $sQueryUp,
+						'sAttribute' => $sAttribute,
 					);
 				}
 			}
