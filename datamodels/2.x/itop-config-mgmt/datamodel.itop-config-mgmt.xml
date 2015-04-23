@@ -2758,16 +2758,6 @@
           <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
         </method>
       </methods>
-      <relations>
-        <relation id="impacts">
-          <neighbours>
-            <neighbour id="hypervisor">
-              <query_down>SELECT Hypervisor AS o WHERE o.server_id = :this-&gt;id</query_down>
-              <query_up>SELECT Server AS o WHERE o.id = :this-&gt;server_id</query_up>
-            </neighbour>
-          </neighbours>
-        </relation>
-      </relations>
     </class>
     <class id="ApplicationSolution" _delta="define">
       <parent>FunctionalCI</parent>
