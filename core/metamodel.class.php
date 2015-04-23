@@ -231,6 +231,7 @@ abstract class MetaModel
 	}
 
 	private static $m_oConfig = null;
+	protected static $m_aModulesParameters = array();
 
 	private static $m_bSkipCheckToWrite = false;
 	private static $m_bSkipCheckExtKeys = false;
@@ -1102,6 +1103,11 @@ abstract class MetaModel
 	//
 	private static $m_aRelationInfos = array(); // array of ("relcode" => various info on the list, common to every classes)
 
+	/**
+	 * TO BE DEPRECATED: use EnumRelationsEx instead
+	 * @param string $sClass
+	 * @return multitype:string unknown |Ambigous <string, multitype:>
+	 */
 	public static function EnumRelations($sClass = '')
 	{
 		$aResult = array_keys(self::$m_aRelationInfos);
@@ -1144,22 +1150,53 @@ abstract class MetaModel
 		return $aResult;
 	}
 
+	public static function EnumRelationsEx($sClass)
+	{
+		$aRelationInfo = array_keys(self::$m_aRelationInfos);
+		// Return only the relations that have a meaning (i.e. for which at least one query is defined)
+		// for the specified class
+		$aClassRelations = array();
+		foreach($aRelationInfo as $sRelCode)
+		{
+			$aQueriesDown = self::EnumRelationQueries($sClass, $sRelCode, true /* Down */);
+			if (count($aQueriesDown) > 0)
+			{
+				$aClassRelations[$sRelCode]['down'] = self::GetRelationLabel($sRelCode, true);
+			}
+				
+			$aQueriesUp = self::EnumRelationQueries($sClass, $sRelCode, false /* Up */);
+			if (count($aQueriesUp) > 0)
+			{
+				$aClassRelations[$sRelCode]['up'] = self::GetRelationLabel($sRelCode, false);
+			}
+		}
+	
+		return $aClassRelations;
+	}
+	
 	final static public function GetRelationDescription($sRelCode)
 	{
 		return Dict::S("Relation:$sRelCode/Description");
 	}
 
-	final static public function GetRelationLabel($sRelCode)
+	final static public function GetRelationLabel($sRelCode, $bDown = true)
 	{
-		// The legacy convention is confusing with regard to the way we have conceptualized the relations:
-		// In the former representation, the main stream was named after "up"
-		// Now, the relation from A to B says that something is transmitted from A to B, thus going DOWNstream as described in a petri net.
-		$sKey = "Relation:$sRelCode/DownStream";
-		$sLegacy = Dict::S("Relation:$sRelCode/VerbUp", $sKey);
+		if ($bDown)
+		{
+			// The legacy convention is confusing with regard to the way we have conceptualized the relations:
+			// In the former representation, the main stream was named after "up"
+			// Now, the relation from A to B says that something is transmitted from A to B, thus going DOWNstream as described in a petri net.
+			$sKey = "Relation:$sRelCode/DownStream";
+			$sLegacy = Dict::S("Relation:$sRelCode/VerbUp", $sKey);
+		}
+		else
+		{
+			$sKey = "Relation:$sRelCode/UpStream";
+			$sLegacy = Dict::S("Relation:$sRelCode/VerbDown", $sKey);
+		}
 		$sRet = Dict::S($sKey, $sLegacy);
 		return $sRet;
 	}
-
 
 	protected static function ComputeRelationQueries($sRelCode)
 	{
@@ -1339,6 +1376,10 @@ abstract class MetaModel
 				{
 					foreach ($aQueries[$sClass]['up'] as $sNeighbourId => $aNeighbourData)
 					{
+						if (!array_key_exists('_legacy_', $aNeighbourData))
+						{
+							continue;
+						}
 						if (!$aNeighbourData['_legacy_']) continue; // Skip modern definitions
 
 						$sLocalClass = $aNeighbourData['sToClass'];
@@ -1363,7 +1404,7 @@ abstract class MetaModel
 					$sLocalClass = $aNeighbourData['sFromClass'];
 					foreach (self::EnumChildClasses($aNeighbourData['sToClass'], ENUM_CHILD_CLASSES_ALL) as $sRemoteClass)
 					{
-						$aQueries[$sRemoteClass]['up'][$sLocalClass]['sQueryDown'] = $aNeighbourData['sQueryDown'];
+						//$aQueries[$sRemoteClass]['up'][$sLocalClass]['sQueryDown'] = $aNeighbourData['sQueryDown'];
 					}
 				}
 			}
@@ -5227,6 +5268,20 @@ abstract class MetaModel
 		return self::$m_oConfig->GetModuleSetting($sModule, $sProperty, $defaultvalue);
 	}
 
+	public static function GetModuleParameter($sModule, $sProperty, $defaultvalue = null)
+	{
+		$value = $defaultvalue;
+		if (!array_key_exists($sModule, self::$m_aModulesParameters))
+		{
+			
+		}
+		if (!self::$m_aModulesParameters[$sModule] == null)
+		{
+			$value = self::$m_aModulesParameters[$sModule]->Get($sProperty, $defaultvalue);
+		}
+		return $value;
+	}
+	
 	public static function GetConfig()
 	{
 		return self::$m_oConfig;

@@ -239,7 +239,7 @@ function DisplayNavigatorListTab($oP, $aResults, $sRelation, $oObj)
 	$oP->add("</div>");
 }
 
-function DisplayNavigatorGraphicsTab($oP, $aResults, $sClass, $id, $sRelation, $oAppContext)
+function DisplayNavigatorGraphicsTab($oP, $aResults, $oRelGraph, $sClass, $id, $sRelation, $oAppContext, $bDirectionDown)
 {
 	$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
 
@@ -273,42 +273,23 @@ EOF
 	$oP->add("</div>\n");
 	$oP->add("<div class=\"HRDrawer\"></div>\n");
 	$oP->add("<div id=\"dh_flash\" class=\"DrawerHandle\">".Dict::S('UI:ElementsDisplayed')."</div>\n");
+	
+	$sDirection = utils::ReadParam('d', 'horizontal');
+	$iGroupingThreshold = utils::ReadParam('g', 5);
 		
-	$width = 1000;
-	$height = 700;
-	$sDrillUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&'.$oAppContext->GetForLink();
-	$sParams = "pWidth=$width&pHeight=$height&drillUrl=".urlencode($sDrillUrl)."&displayController=false&xmlUrl=".urlencode("./xml.navigator.php")."&obj_class=$sClass&obj_id=$id&relation=$sRelation";
-		
-	$oP->add("<div style=\"z-index:1;background:white;width:100%;height:{$height}px\"><object style=\"z-index:2\" classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0\" width=\"100%\" height=\"$height\" id=\"navigator\" align=\"middle\">
-	<param name=\"allowScriptAccess\" value=\"always\" />
-	<param name=\"allowFullScreen\" value=\"false\" />
-	<param name=\"FlashVars\" value=\"$sParams\" />
-	<param name=\"wmode\" value=\"transparent\"> 
-	<param name=\"movie\" value=\"../navigator/navigator.swf\" /><param name=\"quality\" value=\"high\" /><param name=\"bgcolor\" value=\"#ffffff\" />
-	<embed src=\"../navigator/navigator.swf\" wmode=\"transparent\" flashVars=\"$sParams\" quality=\"high\" bgcolor=\"#ffffff\" width=\"100%\" height=\"$height\" name=\"navigator\" align=\"middle\" swliveconnect=\"true\" allowScriptAccess=\"always\" allowFullScreen=\"false\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.adobe.com/go/getflashplayer\" />
-	</object></div>\n");
+	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
+	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
+	$oGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, $bDirectionDown);
+	$oGraph->InitFromGraphviz();
+	$oGraph->RenderAsRaphael($oP);
+	$oP->p('<a target="_blank" href="'.utils::GetAbsoluteUrlAppRoot().'/pages/ajax.render.php?operation=relation_pdf&relation='.$sRelation.'&direction='.($bDirectionDown ? 'down' : 'up').'&class='.$sClass.'&id='.$id.'">'.Dict::S('UI:GraphAsPDF').'</a>');
+	
 	$oP->add_script(
 <<<EOF
-function getFlashMovieObject(movieName)
-{
-  if (window.document[movieName]) 
-  {
-      return window.document[movieName];
-  }
-  if (navigator.appName.indexOf("Microsoft Internet")==-1)
-  {
-    if (document.embeds && document.embeds[movieName])
-      return document.embeds[movieName]; 
-  }
-  else // if (navigator.appName.indexOf("Microsoft Internet")!=-1)
-  {
-    return document.getElementById(movieName);
-  }
-}	
+			
 	function DoReload()
 	{
 		$('#ReloadMovieBtn').button('disable');
-		var oMovie = getFlashMovieObject('navigator');
 		try
 		{
 			var aExcluded = [];
@@ -318,8 +299,7 @@ function getFlashMovieObject(movieName)
 					aExcluded.push($(this).val());
 				}
 			} );
-			oMovie.Filter(aExcluded.join(','));
-		//oMovie.SetVariable("/:message", "foo");
+			alert('Not yet implemented');
 		}
 		catch(err)
 		{
@@ -352,8 +332,7 @@ EOF
 			ajax_request = $.get(GetAbsoluteUrlAppRoot()+'pages/xml.navigator.php', { 'class': sClass, id: iId, relation: sRelation, format: 'html' },
 					function(data)
 					{
-						$('#impacted_objects').empty();
-						$('#impacted_objects').append(data);
+						alert('Not yet implemented');
 						$('#impacted_objects').unblock();
 					}
 			);
@@ -1530,14 +1509,47 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 		
 		case 'swf_navigator': // Graphical display of the relations "impact" / "depends on"
+		require_once(APPROOT.'core/simplegraph.class.inc.php');
+		require_once(APPROOT.'core/relationgraph.class.inc.php');
+		require_once(APPROOT.'core/displayablegraph.class.inc.php');
 		$sClass = utils::ReadParam('class', '', false, 'class');
 		$id = utils::ReadParam('id', 0);
 		$sRelation = utils::ReadParam('relation', 'impact');
+		$sDirection = utils::ReadParam('direction', 'down');
 
-		$aResults = array();
 		$oObj = MetaModel::GetObject($sClass, $id);
 		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
-		$oObj->GetRelatedObjects($sRelation, $iMaxRecursionDepth /* iMaxDepth */, $aResults);
+		$aSourceObjects = array($oObj);
+		if ($sRelation == 'depends on')
+		{
+			$sRelation = 'impacts';
+			$sDirection = 'up';
+		}
+		if ($sDirection == 'up')
+		{
+			$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+		}
+		else
+		{
+			$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+		}
+		
+
+		$aResults = array();
+		$oIterator = new RelationTypeIterator($oRelGraph, 'Node');
+		foreach($oIterator as $oNode)
+		{
+			$oObj = $oNode->GetProperty('object'); // Some nodes (Redundancy Nodes) do not contain an object
+			if ($oObj)
+			{
+				$sObjClass  = get_class($oObj);
+				if (!array_key_exists($sClass, $aResults))
+				{
+					$aResults[$sObjClass] = array();
+				}
+				$aResults[$sObjClass][] = $oObj;
+			}
+		}
 		
 		$oP->AddTabContainer('Navigator');
 		$oP->SetCurrentTabContainer('Navigator');
@@ -1546,11 +1558,11 @@ EOF
 		if ($sFirstTab == 'list')
 		{
 			DisplayNavigatorListTab($oP, $aResults, $sRelation, $oObj);
-			DisplayNavigatorGraphicsTab($oP, $aResults, $sClass, $id, $sRelation, $oAppContext);
+			DisplayNavigatorGraphicsTab($oP, $aResults, $oRelGraph, $sClass, $id, $sRelation, $oAppContext, ($sDirection == 'down'));
 		}
 		else
 		{
-			DisplayNavigatorGraphicsTab($oP, $aResults, $sClass, $id, $sRelation, $oAppContext);
+			DisplayNavigatorGraphicsTab($oP, $aResults, $oRelGraph, $sClass, $id, $sRelation, $oAppContext, ($sDirection == 'down'));
 			DisplayNavigatorListTab($oP, $aResults, $sRelation, $oObj);
 		}
 

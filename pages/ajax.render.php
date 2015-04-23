@@ -1724,7 +1724,42 @@ EOF
 		// Stop & cleanup an export...
 		$sToken = utils::ReadParam('token', '', false, 'raw_data');
 		ExcelExporter::CleanupFromToken($sToken);
-		break;		
+		break;
+
+		case 'relation_pdf':
+		require_once(APPROOT.'core/simplegraph.class.inc.php');
+		require_once(APPROOT.'core/relationgraph.class.inc.php');
+		require_once(APPROOT.'core/displayablegraph.class.inc.php');
+		$sClass = utils::ReadParam('class', '', false, 'class');
+		$id = utils::ReadParam('id', 0);
+		$sRelation = utils::ReadParam('relation', 'impact');
+		$sDirection = utils::ReadParam('direction', 'down');
+		
+		$iGroupingThreshold = utils::ReadParam('g', 5);
+		$sPageFormat = utils::ReadParam('p', 'A4');
+		$sPageOrientation = utils::ReadParam('o', 'L');
+		$sTitle = utils::ReadParam('title', '', false, 'raw_data');
+		
+		$oObj = MetaModel::GetObject($sClass, $id);
+		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
+		$aSourceObjects = array($oObj);
+		if ($sDirection == 'up')
+		{
+			$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+		}
+		else
+		{
+			$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+		}
+		
+
+		$oGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
+		$oGraph->InitFromGraphviz();
+		$oGraph->RenderAsPDF($oPage, $sTitle, $sPageFormat, $sPageOrientation);
+		
+		$oPage->SetContentType('application/pdf');
+		$oPage->SetContentDisposition('inline', 'iTop.pdf');
+		break;
 		
 
 		default:

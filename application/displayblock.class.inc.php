@@ -1412,13 +1412,20 @@ class MenuBlock extends DisplayBlock
 					}
 				}
 				// Relations...
-				$aRelations = MetaModel::EnumRelations($sClass);
+				$aRelations = MetaModel::EnumRelationsEx($sClass);
 				if (count($aRelations))
 				{
 					$this->AddMenuSeparator($aActions);
-					foreach($aRelations as $sRelationCode)
+					foreach($aRelations as $sRelationCode => $aRelationInfo)
 					{
-						$aActions[$sRelationCode] = array ('label' => MetaModel::GetRelationLabel($sRelationCode), 'url' => "{$sRootUrl}pages/$sUIPage?operation=swf_navigator&relation=$sRelationCode&class=$sClass&id=$id{$sContext}");
+						if (array_key_exists('down', $aRelationInfo))
+						{
+							$aActions[$sRelationCode.'_down'] = array ('label' => $aRelationInfo['down'], 'url' => "{$sRootUrl}pages/$sUIPage?operation=swf_navigator&relation=$sRelationCode&direction=down&class=$sClass&id=$id{$sContext}");
+						}
+						if (array_key_exists('up', $aRelationInfo))
+						{
+							$aActions[$sRelationCode.'_up'] = array ('label' => $aRelationInfo['up'], 'url' => "{$sRootUrl}pages/$sUIPage?operation=swf_navigator&relation=$sRelationCode&direction=up&class=$sClass&id=$id{$sContext}");
+						}
 					}
 				}
 				/*
