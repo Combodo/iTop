@@ -3692,7 +3692,7 @@ class AttributeBlob extends AttributeDefinition
 			{
 				$sContent = file_get_contents($proposedValue);
 				$sExtension = strtolower(pathinfo($proposedValue, PATHINFO_EXTENSION));
-				$sMimeType = "application/x-octoet-stream";
+				$sMimeType = "application/x-octet-stream";
 				$aKnownExtensions = array(
 						'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 						'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
