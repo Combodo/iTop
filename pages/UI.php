@@ -284,7 +284,7 @@ EOF
 	try
 	{
 		$oGraph->InitFromGraphviz();
-	
+		$sExportAsPdfURL = '';
 		if (extension_loaded('gd'))
 		{
 			$sExportAsPdfURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_pdf&relation='.$sRelation.'&direction='.($bDirectionDown ? 'down' : 'up').'&class='.$sClass.'&id='.$id;
