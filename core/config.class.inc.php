@@ -1156,12 +1156,16 @@ class Config
 
 	public function GetModuleParameter($sModule, $sProperty, $defaultvalue = null)
 	{
-		$aAllParams = ModulesXMLParameters::GetData($sModule);
-		if(array_key_exists($sProperty, $aAllParams))
+		$ret = $defaultvalue;
+		if (class_exists('ModulesXMLParameters'))
 		{
-			return $aAllParams[$sProperty];
+			$aAllParams = ModulesXMLParameters::GetData($sModule);
+			if(array_key_exists($sProperty, $aAllParams))
+			{
+				$ret = $aAllParams[$sProperty];
+			}
 		}
-		return $defaultvalue;
+		return $ret;
 	}
 	
 	public function SetModuleSetting($sModule, $sProperty, $value)
