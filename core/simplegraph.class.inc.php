@@ -536,8 +536,6 @@ EOF
 				$sHtml .= "<p><b>Error:</b></p>";
 				$sHtml .= "<p>The command: <pre>$CommandLine</pre> returned $iRetCode</p>";
 				$sHtml .= "<p>The output of the command is:<pre>\n".implode("\n", $aOutput)."</pre></p>";
-				$sHtml .= "<hr>";
-				$sHtml .= "<p>Content of the '".basename($sDotFilePath)."' file:<pre>\n$sDotDescription</pre>";
 			}
 			else
 			{

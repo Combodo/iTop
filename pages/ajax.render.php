@@ -1739,6 +1739,12 @@ EOF
 		$sPageFormat = utils::ReadParam('p', 'A4');
 		$sPageOrientation = utils::ReadParam('o', 'L');
 		$sTitle = utils::ReadParam('title', '', false, 'raw_data');
+		$sPositions = utils::ReadParam('positions', null, false, 'raw_data');
+		$aPositions = null;
+		if ($sPositions != null)
+		{
+			$aPositions = json_decode($sPositions, true);
+		}
 		
 		$oObj = MetaModel::GetObject($sClass, $id);
 		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
@@ -1755,6 +1761,10 @@ EOF
 
 		$oGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
 		$oGraph->InitFromGraphviz();
+		if ($aPositions != null)
+		{
+			$oGraph->UpdatePositions($aPositions);
+		}
 		$oGraph->RenderAsPDF($oPage, $sTitle, $sPageFormat, $sPageOrientation);
 		
 		$oPage->SetContentType('application/pdf');

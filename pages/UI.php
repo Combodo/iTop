@@ -243,9 +243,10 @@ function DisplayNavigatorGraphicsTab($oP, $aResults, $oRelGraph, $sClass, $id, $
 {
 	$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
 
-	$oP->add("<div id=\"ds_flash\" class=\"SearchDrawer\">\n");
+	$oP->add("<div id=\"ds_flash\" class=\"SearchDrawer\" style=\"display:none;\">\n");
 	$oP->add_ready_script(
 <<<EOF
+	$( "#tabbedContent_0" ).tabs({ heightStyle: "fill" });
 	$("#dh_flash").click( function() {
 		$("#ds_flash").slideToggle('normal', function() { $("#ds_flash").parent().resize(); } );
 		$("#dh_flash").toggleClass('open');
@@ -280,10 +281,25 @@ EOF
 	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
 	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
 	$oGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, $bDirectionDown);
-	$oGraph->InitFromGraphviz();
-	$oGraph->RenderAsRaphael($oP);
-	$oP->p('<a target="_blank" href="'.utils::GetAbsoluteUrlAppRoot().'/pages/ajax.render.php?operation=relation_pdf&relation='.$sRelation.'&direction='.($bDirectionDown ? 'down' : 'up').'&class='.$sClass.'&id='.$id.'">'.Dict::S('UI:GraphAsPDF').'</a>');
+	try
+	{
+		$oGraph->InitFromGraphviz();
 	
+		if (extension_loaded('gd'))
+		{
+			$sExportAsPdfURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_pdf&relation='.$sRelation.'&direction='.($bDirectionDown ? 'down' : 'up').'&class='.$sClass.'&id='.$id;
+		}
+		$oAppcontext = new ApplicationContext();
+		$sContext = $oAppContext->GetForLink();
+		$sDrillDownURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class=%1$s&id=%2$s&'.$sContext;
+		$sExportAsDocumentURL = '';
+		
+		$oGraph->RenderAsRaphael($oP, null, $sExportAsPdfURL, $sExportAsDocumentURL, $sDrillDownURL);
+	}
+	catch(Exception $e)
+	{
+		$oP->add('<div>'.$e->getMessage().'</div>');
+	}
 	$oP->add_script(
 <<<EOF
 			

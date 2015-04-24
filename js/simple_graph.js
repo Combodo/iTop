@@ -18,7 +18,10 @@ $(function()
 			ymin: 0,
 			ymax: 0,
 			align: 'center',
-			'vertical-align': 'middle'
+			'vertical-align': 'middle',
+			export_as_pdf_url: '',
+			export_as_document_url: '',
+			drill_down_url: '',
 		},
 	
 		// the constructor
@@ -31,13 +34,13 @@ $(function()
 			this.xOffset = 0;
 			this.yOffset = 0;
 			this.iTextHeight = 12;
-			//this.element.height(this.element.parent().height());
-			this.oPaper = Raphael(this.element.get(0), this.element.width(), this.element.height());
 			
 			this.auto_scale();
+			this.oPaper = Raphael(this.element.get(0), this.element.width(), this.element.height());
 
 			this.element
-			.addClass('itop-simple-graph');
+			.addClass('itop-simple-graph')
+			.addClass('graph');
 			
 			this._create_toolkit_menu();
 		},
@@ -53,9 +56,11 @@ $(function()
 		{
 			var sId = this.element.attr('id');
 			this.element
-			.removeClass('itop-simple-graph');
+			.removeClass('itop-simple-graph')
+			.removeClass('graph');
 			
 			$('#tk_graph'+sId).remove();
+			$('#graph_'+sId+'_export_as_pdf').remove();
 			
 		},
 		// _setOptions is called with a hash of all options that are changing
@@ -242,6 +247,18 @@ $(function()
 		auto_scale: function()
 		{
 			var fMaxZoom = 1.5;
+			var maxHeight = this.element.parent().height();
+			// Compute the available height
+			var element = this.element;
+			this.element.parent().children().each(function() {
+				if($(this).is(':visible') && !$(this).hasClass('graph') && ($(this).attr('id') != element.attr('id')))
+				{
+					maxHeight = maxHeight - $(this).height();
+				}
+			});
+			
+			this.element.height(maxHeight - 20);
+			
 			iMargin = 10;
 			xmin = this.options.xmin - iMargin;
 			xmax = this.options.xmax + iMargin;
@@ -295,14 +312,21 @@ $(function()
 		_create_toolkit_menu: function()
 		{
 			var sPopupMenuId = 'tk_graph'+this.element.attr('id');
-			var sHtml = '<div class="itop_popup toolkit_menu" style="font-size: 12px;" id="'+sPopupMenuId+'"><ul><li><img src="../images/toolkit_menu.png"><ul>';
-			sHtml += '<li><a href="#" id="'+sPopupMenuId+'_pdf">Export as PDF</a></li>';
-			sHtml += '<li><a href="#" id="'+sPopupMenuId+'_document">Export as document...</a></li>';
+			var sHtml = '<div class="itop_popup toolkit_menu graph" style="font-size: 12px;" id="'+sPopupMenuId+'"><ul><li><img src="../images/toolkit_menu.png"><ul>';
+			if (this.options.export_as_pdf_url != '')
+			{
+				sHtml += '<li><a href="#" id="'+sPopupMenuId+'_pdf">Export as PDF...</a></li>';			
+			}
+			if (this.options.export_as_document_url != '')
+			{
+				sHtml += '<li><a href="#" id="'+sPopupMenuId+'_document">Export as document...</a></li>';
+			}
 			sHtml += '<li><a href="#" id="'+sPopupMenuId+'_reload">Refresh</a></li>';
 			sHtml += '</ul></li></ul></div>';
 			
 			this.element.before(sHtml);
 			$('#'+sPopupMenuId).popupmenu();
+			
 			
 			var me = this;
 			$('#'+sPopupMenuId+'_pdf').click(function() { me.export_as_pdf(); });
@@ -312,7 +336,31 @@ $(function()
 		},
 		export_as_pdf: function()
 		{
-			alert('Export as PDF: not yet implemented');
+			var oPositions = {};
+			for(k in this.aNodes)
+			{
+				oPositions[this.aNodes[k].id] = {x: this.aNodes[k].x, y: this.aNodes[k].y };
+			}
+			var sHtmlForm = '<div id="PDFExportDlg'+this.element.attr('id')+'"><form id="graph_'+this.element.attr('id')+'_export_as_pdf" target="_blank" action="'+this.options.export_as_pdf_url+'" method="post">';
+			sHtmlForm += '<input type="hidden" name="positions" value="">';
+			sHtmlForm += '<table>';
+			sHtmlForm += '<tr><td>Page format:</td><td><select name="p"><option value="A3">A3</option><option value="A4" selected>A4</option><option value="Letter">Letter</option></select></td></tr>';
+			sHtmlForm += '<tr><td>Page orientation:</td><td><select name="o"><option value="L" selected>Landscape</option><option value="P">Portrait</select></td></tr>';
+			sHtmlForm += '<table>';
+			sHtmlForm += '</form></div>';
+			
+			$('body').append(sHtmlForm);
+			$('#graph_'+this.element.attr('id')+'_export_as_pdf input[name="positions"]').val(JSON.stringify(oPositions));
+			var me = this;
+			$('#PDFExportDlg'+this.element.attr('id')).dialog({
+				modal: true,
+				title: 'PDF format options',
+				buttons: [
+				          {text: 'Cancel', click: function() { $(this).dialog('close');} },
+				          {text: 'Export', click: function() { $('#graph_'+me.element.attr('id')+'_export_as_pdf').submit(); $(this).dialog('close');} },
+				]
+			});
+			//$('#graph_'+this.element.attr('id')+'_export_as_pdf').submit();
 		},
 		export_as_document: function()
 		{

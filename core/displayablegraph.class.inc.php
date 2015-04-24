@@ -99,7 +99,7 @@ class DisplayableNode extends GraphNode
 		return $aNode;
 	}
 	
-	public function RenderAsPDF(TCPDF $oPdf, $fScale)
+	public function RenderAsPDF(TCPDF $oPdf, DisplayableGraph $oGraph, $fScale)
 	{
 		$Alpha = 1.0;
 		$oPdf->SetFillColor(200, 200, 200);
@@ -121,28 +121,18 @@ class DisplayableNode extends GraphNode
 		
 		if (!$this->GetProperty('is_reached'))
 		{
-			if (function_exists('imagecreatefrompng'))
+			$sTempImageName = $this->CreateWhiteIcon($oGraph, $sIconPath);
+			if ($sTempImageName != null)
 			{
-				$im = imagecreatefrompng($sIconPath);
-				
-				if($im && imagefilter($im, IMG_FILTER_COLORIZE, 255, 255, 255))
-				{
-					$sTempImageName = APPROOT.'data/tmp-'.basename($sIconPath);
-					imagesavealpha($im, true);
-					imagepng($im, $sTempImageName);
-					imagedestroy($im);
-					$oPdf->Image($sTempImageName, ($this->x - 16)*$fScale, ($this->y - 16)*$fScale, 32*$fScale, 32*$fScale);
-				}
+				$oPdf->Image($sTempImageName, ($this->x - 16)*$fScale, ($this->y - 16)*$fScale, 32*$fScale, 32*$fScale, 'PNG');
 			}
 			$Alpha = 0.4;
 			$oPdf->setAlpha($Alpha);
 		}
 		
 		$oPdf->Image($sIconPath, ($this->x - 16)*$fScale, ($this->y - 16)*$fScale, 32*$fScale, 32*$fScale);
-		//$oPdf->Image(APPROOT.'images/blank-100x100.png', ($this->x - 16)*$fScale, ($this->y - 16)*$fScale, 32*$fScale, 32*$fScale, '', '', '', false, 300, '', false, $mask);
-		//Image($file, $x='', $y='', $w=0, $h=0, $type='', $link='', $align='', $resize=false, $dpi=300, $palign='', $ismask=false, $imgmask=false, $border=0, $fitbox=false, $hidden=false, $fitonpage=false, $alt=false, $altimgs=array())
 		
-		$oPdf->SetFont('Helvetica', '', 24 * $fScale, '', true);
+		$oPdf->SetFont('dejavusans', '', 24 * $fScale, '', true);
 		$width = $oPdf->GetStringWidth($this->GetProperty('label'));
 		$height = $oPdf->GetStringHeight(1000, $this->GetProperty('label'));
 		$oPdf->setAlpha(0.6 * $Alpha);
@@ -154,7 +144,66 @@ class DisplayableNode extends GraphNode
 		$oPdf->Text($this->x*$fScale - $width/2, ($this->y + 18)*$fScale, $this->GetProperty('label'));
 	}
 	
-	public function GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp = false, $bDirectionDown = true)
+	/**
+	 * Create a "whitened" version of the icon (retaining the transparency) to be used a background for masking the underlying lines
+	 * @param string $sIconFile The path to the file containing the icon
+	 * @return NULL|string The path to a temporary file containing the white version of the icon
+	 */
+	protected function CreateWhiteIcon(DisplayableGraph $oGraph, $sIconFile)
+	{
+		$aInfo = getimagesize($sIconFile);
+		
+		$im = null;
+		switch($aInfo['mime'])
+		{
+			case 'image/png':
+			if (function_exists('imagecreatefrompng'))
+			{
+				$im = imagecreatefrompng($sIconFile);
+			}
+			break;
+			
+			case 'image/gif':
+			if (function_exists('imagecreatefromgif'))
+			{
+				$im = imagecreatefromgif($sIconFile);
+			}
+			break;
+			
+			case 'image/jpeg':
+			case 'image/jpg':
+			if (function_exists('imagecreatefromjpeg'))
+			{
+				$im = imagecreatefromjpeg($sIconFile);
+			}
+			break;
+			
+			default:
+			return null;
+			
+		}
+		if($im && imagefilter($im, IMG_FILTER_COLORIZE, 255, 255, 255))
+		{
+			$sTempImageName = $oGraph->GetTempImageName();
+			imagesavealpha($im, true);
+			imagepng($im, $sTempImageName);
+			imagedestroy($im);
+			return $sTempImageName;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	/**
+	 * Group together (as a special kind of nodes) all the similar neighbours of the current node
+	 * @param DisplayableGraph $oGraph
+	 * @param int $iThresholdCount
+	 * @param boolean $bDirectionUp
+	 * @param boolean $bDirectionDown
+	 */
+	public function GroupSimilarNeighbours(DisplayableGraph $oGraph, $iThresholdCount, $bDirectionUp = false, $bDirectionDown = true)
 	{
 //echo "<p>".$this->GetProperty('label').":</p>";
 		
@@ -284,7 +333,7 @@ class DisplayableRedundancyNode extends DisplayableNode
 		return $aNode;
 	}
 
-	public function RenderAsPDF(TCPDF $oPdf, $fScale)
+	public function RenderAsPDF(TCPDF $oPdf, DisplayableGraph $oGraph, $fScale)
 	{
 		$oPdf->SetAlpha(1);
 		$oPdf->SetFillColor(200, 0, 0);
@@ -292,22 +341,22 @@ class DisplayableRedundancyNode extends DisplayableNode
 		$oPdf->Circle($this->x*$fScale, $this->y*$fScale, 16*$fScale, 0, 360, 'DF');
 
 		$oPdf->SetTextColor(255, 255, 255);
-		$oPdf->SetFont('Helvetica', '', 28 * $fScale, '', true);
+		$oPdf->SetFont('dejavusans', '', 28 * $fScale, '', true);
 		$sLabel  = (string)$this->GetProperty('label');
-		$width = $oPdf->GetStringWidth($sLabel, 'Helvetica', 'B', 24*$fScale);
+		$width = $oPdf->GetStringWidth($sLabel, 'dejavusans', 'B', 24*$fScale);
 		$height = $oPdf->GetStringHeight(1000, $sLabel);
 		$xPos = (float)$this->x*$fScale - $width/2;
 		$yPos = (float)$this->y*$fScale - $height/2;
-//		$oPdf->Rect($xPos, $yPos, $width, $height, 'D');
-//		$oPdf->Text($xPos, $yPos, $sLabel);
 		
 		$oPdf->SetXY(($this->x - 16)*$fScale, ($this->y - 16)*$fScale);
 		
-		// text on center
 		$oPdf->Cell(32*$fScale, 32*$fScale, $sLabel, 0, 0, 'C', 0, '', 0, false, 'T', 'C');
 	}
 	
-	public function GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp = false, $bDirectionDown = true)
+	/**
+	 * @see DisplayableNode::GroupSimilarNeighbours()
+	 */
+	public function GroupSimilarNeighbours(DisplayableGraph $oGraph, $iThresholdCount, $bDirectionUp = false, $bDirectionDown = true)
 	{
 		parent::GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
 		
@@ -381,7 +430,7 @@ class DisplayableRedundancyNode extends DisplayableNode
 
 class DisplayableEdge extends GraphEdge
 {
-	public function RenderAsPDF(TCPDF $oPdf, $fScale)
+	public function RenderAsPDF(TCPDF $oPdf, DisplayableGraph $oGraph, $fScale)
 	{
 		$xStart = $this->GetSourceNode()->x * $fScale;
 		$yStart = $this->GetSourceNode()->y * $fScale;
@@ -446,7 +495,7 @@ class DisplayableGroupNode extends DisplayableNode
 		return $aNode;
 	}
 	
-	public function RenderAsPDF(TCPDF $oPdf, $fScale)
+	public function RenderAsPDF(TCPDF $oPdf, DisplayableGraph $oGraph, $fScale)
 	{
 		$bReached = $this->GetProperty('is_reached');
 		$oPdf->SetFillColor(255, 255, 255);
@@ -476,17 +525,41 @@ class DisplayableGroupNode extends DisplayableNode
 		$oPdf->Image($sIconPath, ($this->x - 17)*$fScale, ($this->y - 17)*$fScale, 16*$fScale, 16*$fScale);
 		$oPdf->Image($sIconPath, ($this->x + 1)*$fScale, ($this->y - 17)*$fScale, 16*$fScale, 16*$fScale);
 		$oPdf->Image($sIconPath, ($this->x -8)*$fScale, ($this->y +1)*$fScale, 16*$fScale, 16*$fScale);
-		$oPdf->SetFont('Helvetica', '', 24 * $fScale, '', true);
+		$oPdf->SetFont('dejavusans', '', 24 * $fScale, '', true);
 		$width = $oPdf->GetStringWidth($this->GetProperty('label'));
 		$oPdf->SetTextColor(0, 0, 0);
 		$oPdf->Text($this->x*$fScale - $width/2, ($this->y + 25)*$fScale, $this->GetProperty('label'));
 	}
 }
 
-
+/**
+ * A Graph that can be displayed interactively using Raphael JS or saved as a PDF document
+ */
 class DisplayableGraph extends SimpleGraph
 {
 	protected $sDirection;
+	protected $aTempImages;
+	
+	public function __construct()
+	{
+		parent::__construct();
+		$this->aTempImages = array();
+	}
+	
+	public function GetTempImageName()
+	{
+		$sNewTempName = tempnam(APPROOT.'data', 'img-');
+		$this->aTempImages[] = $sNewTempName;
+		return $sNewTempName;
+	}
+	
+	public function __destruct()
+	{
+		foreach($this->aTempImages as $sTempFile)
+		{
+			@unlink($sTempFile);
+		}
+	}
 	
 	public static function FromRelationGraph(RelationGraph $oGraph, $iGroupingThreshold = 20, $bDirectionDown = true)
 	{
@@ -600,34 +673,13 @@ class DisplayableGraph extends SimpleGraph
 		return $oNewGraph;
 	}
 	
-	public function InitOnGrid()
-	{
-		$iDist = 125;
-		$aAllNodes = $this->_GetNodes();
-		$iSide = ceil(sqrt(count($aAllNodes)));
-		$xPos = 0;
-		$yPos = 0;
-		$idx = 0;
-		foreach($aAllNodes as $oNode)
-		{
-			$xPos += $iDist;
-			if (($idx % $iSide) == 0)
-			{
-				$xPos = 0;
-				$yPos += $iDist;
-			}
-			
-			$oNode->x = $xPos;
-			$oNode->y = $yPos;
-			
-			$idx++;
-		}
-		
-	}
-	
 	public function InitFromGraphviz()
 	{
 		$sDot = $this->DumpAsXDot();
+		if (strpos($sDot, 'digraph') === false)
+		{
+			throw new Exception($sDot);
+		}
 		$sDot = preg_replace('/.*label=.*,/', '', $sDot); // Get rid of label lines since they may contain weird characters than can break the split and pattern matching below
 		
 		$aChunks = explode(";", $sDot);
@@ -650,150 +702,6 @@ class DisplayableGraph extends SimpleGraph
 			{
 				//echo "<p>No match</p>";
 			}
-		}
-	}
-	
-	public function BruteForceLayout($iNbTicks, $sDirection = 'horizontal')
-	{
-		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		$this->sDirection = $sDirection;
-		$this->InitForces();
-		for($i=0; $i<$iNbTicks; $i++)
-		{
-			set_time_limit($iLoopTimeLimit);
-			$this->Tick();
-		}
-	}
-	
-	protected function InitForces()
-	{
-		$oIterator = new RelationTypeIterator($this, 'Node');
-		$i = 0;
-		foreach($oIterator as $sId => $oNode)
-		{
-			$oNode->SetProperty('ax', 0);
-			$oNode->SetProperty('ay', 0);
-			$oNode->SetProperty('vx', 0);
-			$oNode->SetProperty('vy', 0);
-			$i++;
-		}
-	}
-	
-	protected function ComputeAcceleration()
-	{
-		$oIterator = new RelationTypeIterator($this, 'Node');
-		foreach($oIterator as  $idx => $oNode)
-		{
-			$sNodeId = $oNode->GetId();
-			
-			$fx = 0;
-			$fy = 0;
-			$K = 0.6;
-			$Q = 0.3;
-			
-			if ($oNode->GetProperty('source'))
-			{
-				switch($this->sDirection)
-				{
-					case 'horizontal':
-						$fx -= 30;
-						break;
-							
-					case 'vertical':
-						$fy -= 30;
-						break;
-							
-					default:
-						// No gravity
-				}				
-			}
-			else
-			{
-				switch($this->sDirection)
-				{
-					case 'horizontal':
-					$fx += 30;
-					break;
-					
-					case 'vertical':
-					$fy += 30;
-					break;
-					
-					default:
-					// No gravity
-				}
-			}
-			
-//echo "<p>ComputeAcceleration - $sNodeId</p>\n";
-				
-			$oIter2 = new RelationTypeIterator($this, 'Edge');
-			foreach($oIter2 as $sEdgeId => $oEdge)
-			{
-				$oSource = $oEdge->GetSourceNode();
-				$oSink = $oEdge->GetSinkNode();
-				
-//echo "<p>$sEdgeId ".$oSource->GetId()." -> ".$oSink->GetId()."</p>\n";
-				
-				if ($oSource->GetId() === $sNodeId)
-				{
-					$fx += -$K * ($oSource->x - $oSink->x);
-					$fy += -$K * ($oSource->y - $oSink->y);
-//echo "<p>$sEdgeId Sink - F($fx, $fy)</p>\n";
-				}
-				else if ($oSink->GetId() === $sNodeId)
-				{
-					$fx += -$K * ($oSink->x - $oSource->x);
-					$fy += -$K * ($oSink->y - $oSource->y);
-//echo "<p>$sEdgeId Source - F($fx, $fy)</p>\n";
-				}
-				// Else do nothing for this node, it's not connected via this edge
-			}
-			$oIter3 = new RelationTypeIterator($this, 'Node');
-			foreach($oIter3 as $idx2 => $oOtherNode)
-			{
-				$sOtherId = $oOtherNode->GetId();
-				if ($sOtherId !== $sNodeId)
-				{
-					$d2 = $oOtherNode->Distance2($oNode) / (60*60);
-					if ($d2 < 15)
-					{
-						$dfx = 	-$Q * ($oOtherNode->x - $oNode->x) / $d2;
-						$dfy = 	-$Q * ($oOtherNode->y - $oNode->y) / $d2;
-						
-						$fx += $dfx;
-						$fy += $dfy;
-					}
-					
-//echo "<p>Electrostatic: $sOtherId d2: $d2 F($dfx, $dfy)</p>\n";
-
-				}
-			}
-//echo "<p>total forces: $sNodeId d2: $d2 F($fx, $fy)</p>\n";
-			$oNode->SetProperty('ax', $fx);
-			$oNode->SetProperty('ay', $fy);
-		}		
-	}
-	
-	protected function Tick()
-	{
-		$dt = 0.1;
-		$attenuation = 0.8;
-		$M = 1;
-		
-		$this->ComputeAcceleration();
-		
-		$oIterator = new RelationTypeIterator($this, 'Node');
-		foreach($oIterator as $sId => $oNode)
-		{
-			$vx = $attenuation * $oNode->GetProperty('vx') + $M * $oNode->GetProperty('ax');
-			$vy = $attenuation * $oNode->GetProperty('vy') + $M * $oNode->GetProperty('ay');
-			
-			$oNode->x += $dt * $vx;
-			$oNode->y += $dt * $vy;
-
-			$oNode->SetProperty('vx', $vx);
-			$oNode->SetProperty('vy', $vy);
-//echo "<p>$sId - V($vx, $vy)</p>\n";
 		}
 	}
 	
@@ -835,7 +743,20 @@ class DisplayableGraph extends SimpleGraph
 		}		
 	}
 	
-	function RenderAsRaphael(WebPage $oP, $sId = null, $bContinue = false)
+	public function UpdatePositions($aPositions)
+	{
+		foreach($aPositions as $sNodeId => $aPos)
+		{
+			$oNode = $this->GetNode($sNodeId);
+			if ($oNode != null)
+			{
+				$oNode->x = $aPos['x'];
+				$oNode->y = $aPos['y'];
+			}
+		}
+	}
+	
+	function RenderAsRaphael(WebPage $oP, $sId = null, $sExportAsPdfURL, $sExportAsDocumentURL, $sDrillDownURL)
 	{
 		if ($sId == null)
 		{
@@ -843,7 +764,16 @@ class DisplayableGraph extends SimpleGraph
 		}
 		$aBB = $this->GetBoundingBox();
 		$oP->add('<div id="'.$sId.'" class="simple-graph"></div>');
-		$oP->add_ready_script("var oGraph = $('#$sId').simple_graph({xmin: {$aBB['xmin']}, xmax: {$aBB['xmax']}, ymin: {$aBB['ymin']}, ymax: {$aBB['ymax']} });");
+		$aParams = array(
+			'xmin' => $aBB['xmin'],
+			'xmax' => $aBB['xmax'],
+			'ymin' => $aBB['ymin'],
+			'ymax' => $aBB['ymax'],
+			'export_as_pdf_url' => $sExportAsPdfURL,
+			'export_as_document_url' => $sExportAsDocumentURL,
+			'drill_down_url' => $sDrillDownURL,
+		);
+		$oP->add_ready_script("var oGraph = $('#$sId').simple_graph(".json_encode($aParams).");");
 		
 		$oIterator = new RelationTypeIterator($this, 'Node');
 		foreach($oIterator as $sId => $oNode)
@@ -894,7 +824,8 @@ class DisplayableGraph extends SimpleGraph
 		$oPdf->AddPage();
 		
 		$aBB = $this->GetBoundingBox();
-		//$this->Translate(-$aBB['xmin'], -$aBB['ymin']);
+		$this->Translate(-$aBB['xmin'], -$aBB['ymin']);
+		
 		if ($sPageOrientation == 'P')
 		{
 			// Portrait mode
@@ -923,13 +854,13 @@ class DisplayableGraph extends SimpleGraph
 		$oIterator = new RelationTypeIterator($this, 'Edge');
 		foreach($oIterator as $sId => $oEdge)
 		{
-			$oEdge->RenderAsPDF($oPdf, $fScale);
+			$oEdge->RenderAsPDF($oPdf, $this, $fScale);
 		}
 
 		$oIterator = new RelationTypeIterator($this, 'Node');
 		foreach($oIterator as $sId => $oNode)
 		{
-			$oNode->RenderAsPDF($oPdf, $fScale);
+			$oNode->RenderAsPDF($oPdf, $this, $fScale);
 		}
 		
 		$oP->add($oPdf->Output('iTop.pdf', 'S'));	

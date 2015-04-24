@@ -87,7 +87,8 @@ class SetupUtils
 		
 		$aMandatoryExtensions = array('mysqli', 'iconv', 'simplexml', 'soap', 'hash', 'json', 'session', 'pcre', 'dom', 'zip');
 		$aOptionalExtensions = array('mcrypt' => 'Strong encryption will not be used.',
-									 'ldap' => 'LDAP authentication will be disabled.');
+									 'ldap' => 'LDAP authentication will be disabled.',
+									 'gd' => 'PDF export of impact/dependency diagrams will be disabled');
 		asort($aMandatoryExtensions); // Sort the list to look clean !
 		ksort($aOptionalExtensions); // Sort the list to look clean !
 		$aExtensionsOk = array();
