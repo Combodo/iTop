@@ -1474,8 +1474,7 @@ EOF
 							// Rollback to the previous state... by reloading the object from the database and applying the modifications again
 							$oObj = MetaModel::GetObject(get_class($oObj), $oObj->GetKey());
 							$oObj->UpdateObjectFromPostedForm('', array_keys($aExpectedAttributes), $sTargetState);
-							$aData = $e->getContextData();
-							$sIssues = (array_key_exists('issues', $aData)) ? $aData['issues'] : 'Unknown error...';
+							$sIssues = $e->getMessage();
 						}
 					}
 					else
