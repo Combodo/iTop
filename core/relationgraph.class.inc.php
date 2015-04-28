@@ -77,15 +77,15 @@ class RelationObjectNode extends GraphNode
 	/**
 	 * Recursively mark the objects nodes as reached, unless we get stopped by a redundancy node
 	 */	 	
-	public function ReachDown()
+	public function ReachDown($sProperty, $value)
 	{
-		if (!$this->GetProperty('is_reached', false))
+		if (is_null($this->GetProperty($sProperty)))
 		{
-			$this->SetProperty('is_reached', true);
+			$this->SetProperty($sProperty, $value);
 			foreach ($this->GetOutgoingEdges() as $oOutgoingEdge)
 			{
 				// Recurse
-				$oOutgoingEdge->GetSinkNode()->ReachDown();
+				$oOutgoingEdge->GetSinkNode()->ReachDown($sProperty, $value);
 			}
 		}
 	}
@@ -101,7 +101,6 @@ class RelationRedundancyNode extends GraphNode
 		parent::__construct($oGraph, $sId);
 		$this->SetProperty('min_up', $iMinUp);
 		$this->SetProperty('threshold', $fThreshold);
-		$this->SetProperty('reach_count', 0);
 	}
 
 	/**
@@ -125,16 +124,16 @@ class RelationRedundancyNode extends GraphNode
 	/**
 	 * Recursively mark the objects nodes as reached, unless we get stopped by a redundancy node
 	 */	 	
-	public function ReachDown()
+	public function ReachDown($sProperty, $value)
 	{
-		$this->SetProperty('reach_count', $this->GetProperty('reach_count', 0) + 1);
-		if ($this->GetProperty('reach_count') > $this->GetProperty('threshold'))
+		$this->SetProperty($sProperty.'_count', $this->GetProperty($sProperty.'_count', 0) + 1);
+		if ($this->GetProperty($sProperty.'_count') > $this->GetProperty('threshold'))
 		{
 			// Looping... though there should be only ONE SINGLE outgoing edge
 			foreach ($this->GetOutgoingEdges() as $oOutgoingEdge)
 			{
 				// Recurse
-				$oOutgoingEdge->GetSinkNode()->ReachDown();
+				$oOutgoingEdge->GetSinkNode()->ReachDown($sProperty, $value);
 			}
 		}
 	}
@@ -214,7 +213,7 @@ class RelationGraph extends SimpleGraph
 		// Determine the reached nodes
 		foreach ($this->aSourceNodes as $oSourceNode)
 		{
-			$oSourceNode->ReachDown();
+			$oSourceNode->ReachDown('is_reached', true);
 			//echo "<h5>After reaching from {$oSourceNode->GetId()}</h5>\n".$this->DumpAsHtmlImage()."<br/>\n";
 		}
 	}
