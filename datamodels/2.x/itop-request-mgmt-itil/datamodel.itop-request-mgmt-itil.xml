@@ -1374,13 +1374,16 @@
         {
             if($oNode instanceof RelationObjectNode)
             {
-                $oObj = $oNode->GetProperty('object');
-                $sRootClass = MetaModel::GetRootClass(get_class($oObj));
-                if (!array_key_exists($sRootClass, $aComputed))
+                if ($oNode->GetProperty('is_reached') && (!$oNode->GetProperty('source')))
                 {
-                    $aComputed[$sRootClass] = array();
+                    $oObj = $oNode->GetProperty('object');
+                    $sRootClass = MetaModel::GetRootClass(get_class($oObj));
+                    if (!array_key_exists($sRootClass, $aComputed))
+                    {
+                        $aComputed[$sRootClass] = array();
+                    }
+                    $aComputed[$sRootClass][$oObj->GetKey()] = $oObj;
                 }
-                $aComputed[$sRootClass][$oObj->GetKey()] = $oObj;
             }
         }
 

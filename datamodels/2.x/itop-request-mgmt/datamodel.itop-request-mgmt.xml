@@ -1376,7 +1376,7 @@
         {
             if($oNode instanceof RelationObjectNode)
             {
-                if ($oNode->GetProperty('is_reached'))
+                if ($oNode->GetProperty('is_reached') && (!$oNode->GetProperty('source')))
                 {
                     $oObj = $oNode->GetProperty('object');
                     $sRootClass = MetaModel::GetRootClass(get_class($oObj));
