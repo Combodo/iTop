@@ -2546,7 +2546,7 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * Will be deprecated soon - use MetaModel::GetRelatedObjectsDown/Up instead to take redundancy into account
+	 * Will be deprecated soon - use GetRelatedObjectsDown/Up instead to take redundancy into account
 	 */
 	public function GetRelatedObjects($sRelCode, $iMaxDepth = 99, &$aResults = array())
 	{
@@ -2608,7 +2608,43 @@ abstract class DBObject implements iDisplay
 		}
 		return $aResults;
 	}
-
+	
+	/**
+	 * Compute the "RelatedObjects" (forward or "down" direction) for the object
+	 * for the specified relation
+	 *
+	 * @param string $sRelCode The code of the relation to use for the computation
+	 * @param int $iMaxDepth Maximum recursion depth
+	 * @param boolean $bEnableReduncancy Whether or not to take into account the redundancy
+	 *
+	 * @return RelationGraph The graph of all the related objects
+	 */
+	public function GetRelatedObjectsDown($sRelCode, $iMaxDepth = 99, $bEnableRedundancy = true)
+	{
+		$oGraph = new RelationGraph();
+		$oGraph->AddSourceObject($this);
+		$oGraph->ComputeRelatedObjectsDown($sRelCode, $iMaxDepth, $bEnableRedundancy);
+		return $oGraph;
+	}
+	
+	/**
+	 * Compute the "RelatedObjects" (reverse or "up" direction) for the object
+	 * for the specified relation
+	 *
+	 * @param string $sRelCode The code of the relation to use for the computation
+	 * @param int $iMaxDepth Maximum recursion depth
+	 * @param boolean $bEnableReduncancy Whether or not to take into account the redundancy
+	 *
+	 * @return RelationGraph The graph of all the related objects
+	 */
+	public function GetRelatedObjectsUp($sRelCode, $iMaxDepth = 99, $bEnableRedundancy = true)
+	{
+		$oGraph = new RelationGraph();
+		$oGraph->AddSourceObject($this);
+		$oGraph->ComputeRelatedObjectsUp($sRelCode, $iMaxDepth, $bEnableRedundancy);
+		return $oGraph;
+	}
+	
 	public function GetReferencingObjects($bAllowAllData = false)
 	{
 		$aDependentObjects = array();

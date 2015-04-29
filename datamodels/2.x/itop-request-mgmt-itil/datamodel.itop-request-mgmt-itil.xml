@@ -1368,7 +1368,21 @@
 
 		$oImpactedInfras = DBObjectSet::FromLinkSet($this, 'functionalcis_list', 'functionalci_id');
 
-		$aComputed = $oImpactedInfras->GetRelatedObjects('impacts', 10);
+        $oGraph = $oImpactedInfras->GetRelatedObjectsDown('impacts',10, true /* bEnableRedundancy */);
+        $oIterator = new RelationTypeIterator($oGraph, 'Node');
+        foreach($oIterator as $oNode)
+        {
+            if($oNode instanceof RelationObjectNode)
+            {
+                $oObj = $oNode->GetProperty('object');
+                $sRootClass = MetaModel::GetRootClass(get_class($oObj));
+                if (!array_key_exists($sRootClass, $aComputed))
+                {
+                    $aComputed[$sRootClass] = array();
+                }
+                $aComputed[$sRootClass][$oObj->GetKey()] = $oObj;
+            }
+        }
 
 		if (isset($aComputed['FunctionalCI']) && is_array($aComputed['FunctionalCI']))
 		{

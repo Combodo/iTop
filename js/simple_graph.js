@@ -43,6 +43,7 @@ $(function()
 			.addClass('graph');
 			
 			this._create_toolkit_menu();
+			this._build_context_menus();
 		},
 	
 		// called when created, and later when changing options
@@ -134,13 +135,13 @@ $(function()
 				oNode.aElements.push(this.oPaper.image(oNode.icon_url, xPos - iWidth * this.fZoom/2, yPos - iHeight * this.fZoom/2, iWidth*this.fZoom, iHeight*this.fZoom).attr(oNode.icon_attr));
 				var oText = this.oPaper.text( xPos, yPos, oNode.label);
 				oText.attr(oNode.text_attr);
-				oText.transform('s'+this.fZoom);
+				oText.transform('S'+this.fZoom);
 				var oBB = oText.getBBox();
 				var dy = iHeight/2*this.fZoom + oBB.height/2;
 				oText.remove();
 				oText = this.oPaper.text( xPos, yPos + dy, oNode.label);
 				oText.attr(oNode.text_attr);
-				oText.transform('s'+this.fZoom);
+				oText.transform('S'+this.fZoom);
 				oNode.aElements.push(oText);
 				oNode.aElements.push(this.oPaper.rect( xPos - oBB.width/2 -2, yPos - oBB.height/2 + dy, oBB.width +4, oBB.height).attr({fill: '#fff', stroke: '#fff', opacity: 0.9}).toBack());
 				break;
@@ -158,6 +159,7 @@ $(function()
 			for(k in oNode.aElements)
 			{
 				var sNodeId = oNode.id;
+				$(oNode.aElements[k].node).attr({'data-type': oNode.shape, 'data-id': oNode.id} ).attr('class', 'popupMenuTarget');
 				oNode.aElements[k].drag(function(dx, dy, x, y, event) { me._move(sNodeId, dx, dy, x, y, event); }, function(x, y, event) { me._drag_start(sNodeId, x, y, event); }, function (event) { me._drag_end(sNodeId, event); });
 			}
 		},
@@ -309,6 +311,16 @@ $(function()
 			oEdge.aElements = [];
 			this.aEdges.push(oEdge);
 		},
+		show_group: function(sGroupId)
+		{
+			// Activate the 3rd tab
+			this.element.closest('.ui-tabs').tabs("option", "active", 2);
+			// Scroll into view the group
+			if ($('#'+sGroupId).length > 0)
+			{
+				$('#'+sGroupId)[0].scrollIntoView();				
+			}
+		},
 		_create_toolkit_menu: function()
 		{
 			var sPopupMenuId = 'tk_graph'+this.element.attr('id');
@@ -332,6 +344,63 @@ $(function()
 			$('#'+sPopupMenuId+'_pdf').click(function() { me.export_as_pdf(); });
 			$('#'+sPopupMenuId+'_document').click(function() { me.export_as_document(); });
 			$('#'+sPopupMenuId+'_reload').click(function() { me.reload(); });
+			
+		},
+		_build_context_menus: function()
+		{
+			var sId = this.element.attr('id');
+			var me = this;
+			
+			$.contextMenu({
+			    selector: '#'+sId+' .popupMenuTarget',  
+		        build: function(trigger, e) {
+		            // this callback is executed every time the menu is to be shown
+		            // its results are destroyed every time the menu is hidden
+		            // e is the original contextmenu event, containing e.pageX and e.pageY (amongst other data)
+		        	var sType = trigger.attr('data-type');
+		        	var sNodeId = trigger.attr('data-id');
+		        	var oNode = me._find_node(sNodeId);
+		        	
+		        	/*
+		        	var sObjName = trigger.attr('data-class');
+		        	var sIndex = trigger.attr('data-index');
+		        	var originalEvent = e;
+		        	var bHasItems = false;
+		        	*/
+		        	var oResult = {callback: null, items: {}};
+		        	switch(sType)
+		        	{
+		        		case 'group':
+		        		var sGroupIndex = oNode.group_index;
+		        		oResult = {
+	        				callback: function(key, options) {
+	        					var me = $('.itop-simple-graph').data('itopSimple_graph'); // need a live value
+	        					me.show_group('relation_group_'+sGroupIndex);
+	        				},
+	        				items: { 'show': {name: 'Show group' } }
+	        			};
+						break;
+						
+		        		case 'icon':
+			        	var sObjClass = oNode.obj_class;
+		        		var sObjKey = oNode.obj_key;
+		        		oResult = {
+	        				callback: function(key, options) {
+	        					var me = $('.itop-simple-graph').data('itopSimple_graph'); // need a live value
+	        					var sURL = me.options.drill_down_url.replace('%1$s', sObjClass).replace('%2$s', sObjKey);
+	        					window.location.href = sURL;
+	        				},
+	        				items: { 'details': {name: 'Show Details' } }
+	        			};
+		        		break;
+		        		
+		        		default:
+						oResult = false; // No context menu
+		        	
+		        	}
+		        	return oResult;
+		        }
+			});
 			
 		},
 		export_as_pdf: function()

@@ -224,11 +224,11 @@ function DisplayNavigatorListTab($oP, $aResults, $sRelation, $oObj)
 {
 	$oP->SetCurrentTab(Dict::S('UI:RelationshipList'));
 	$oP->add("<div id=\"impacted_objects\" style=\"width:100%;background-color:#fff;padding:10px;\">");
+	$oP->add("<h1>".MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName()."</h1>\n");
 	$iBlock = 1; // Zero is not a valid blockid
 	foreach($aResults as $sListClass => $aObjects)
 	{
 		$oSet = CMDBObjectSet::FromArray($sListClass, $aObjects);
-		$oP->add("<h1>".MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName()."</h1>\n");
 		$oP->add("<div class=\"page_header\">\n");
 		$oP->add("<h2>".MetaModel::GetClassIcon($sListClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aObjects), Metamodel::GetName($sListClass))."</h2>\n");
 		$oP->add("</div>\n");
@@ -239,7 +239,30 @@ function DisplayNavigatorListTab($oP, $aResults, $sRelation, $oObj)
 	$oP->add("</div>");
 }
 
-function DisplayNavigatorGraphicsTab($oP, $aResults, $oRelGraph, $sClass, $id, $sRelation, $oAppContext, $bDirectionDown)
+function DisplayNavigatorGroupTab($oP, $aGroups, $sRelation, $oObj)
+{
+	if (count($aGroups) > 0)
+	{
+		$oP->SetCurrentTab(Dict::S('UI:RelationGroups'));
+		$oP->add("<div id=\"impacted_groupss\" style=\"width:100%;background-color:#fff;padding:10px;\">");
+		$iBlock = 1; // Zero is not a valid blockid
+		foreach($aGroups as $idx => $aObjects)
+		{
+			$sListClass = get_class(current($aObjects));
+			$oSet = CMDBObjectSet::FromArray($sListClass, $aObjects);
+			$oP->add("<h1>".Dict::Format('UI:RelationGroupNumber_N', (1+$idx))."</h1>\n");
+			$oP->add("<div id=\"relation_group_$idx\" class=\"page_header\">\n");
+			$oP->add("<h2>".MetaModel::GetClassIcon($sListClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aObjects), Metamodel::GetName($sListClass))."</h2>\n");
+			$oP->add("</div>\n");
+			$oBlock = DisplayBlock::FromObjectSet($oSet, 'list');
+			$oBlock->Display($oP, 'group_'.$iBlock++);
+			$oP->p('&nbsp;'); // Some space ?
+		}
+		$oP->add("</div>");
+	}
+}
+
+function DisplayNavigatorGraphicsTab($oP, $aResults, $oDisplayGraph, $sClass, $id, $sRelation, $oAppContext, $bDirectionDown)
 {
 	$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
 
@@ -279,11 +302,12 @@ EOF
 	$iGroupingThreshold = utils::ReadParam('g', 5);
 		
 	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
+	$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
+	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
 	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
-	$oGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, $bDirectionDown);
 	try
 	{
-		$oGraph->InitFromGraphviz();
+		$oDisplayGraph->InitFromGraphviz();
 		$sExportAsPdfURL = '';
 		if (extension_loaded('gd'))
 		{
@@ -294,7 +318,7 @@ EOF
 		$sDrillDownURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class=%1$s&id=%2$s&'.$sContext;
 		$sExportAsDocumentURL = '';
 		
-		$oGraph->RenderAsRaphael($oP, null, $sExportAsPdfURL, $sExportAsDocumentURL, $sDrillDownURL);
+		$oDisplayGraph->RenderAsRaphael($oP, null, $sExportAsPdfURL, $sExportAsDocumentURL, $sDrillDownURL);
 	}
 	catch(Exception $e)
 	{
@@ -1531,7 +1555,8 @@ EOF
 		$id = utils::ReadParam('id', 0);
 		$sRelation = utils::ReadParam('relation', 'impact');
 		$sDirection = utils::ReadParam('direction', 'down');
-
+		$iGroupingThreshold = utils::ReadParam('g', 5);
+		
 		$oObj = MetaModel::GetObject($sClass, $id);
 		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
 		$aSourceObjects = array($oObj);
@@ -1551,10 +1576,12 @@ EOF
 		
 
 		$aResults = array();
+		$aGroups = array();
+		$iGroupIdx = 0;
 		$oIterator = new RelationTypeIterator($oRelGraph, 'Node');
 		foreach($oIterator as $oNode)
 		{
-			$oObj = $oNode->GetProperty('object'); // Some nodes (Redundancy Nodes) do not contain an object
+			$oObj = $oNode->GetProperty('object'); // Some nodes (Redundancy Nodes and Group) do not contain an object
 			if ($oObj)
 			{
 				$sObjClass  = get_class($oObj);
@@ -1565,6 +1592,19 @@ EOF
 				$aResults[$sObjClass][] = $oObj;
 			}
 		}
+
+		$oDisplayGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
+		
+		$oIterator = new RelationTypeIterator($oDisplayGraph, 'Node');
+		foreach($oIterator as $oNode)
+		{
+			if ($oNode instanceof DisplayableGroupNode)
+			{
+				$aGroups[] = $oNode->GetObjects();
+				$oNode->SetProperty('group_index', $iGroupIdx);
+				$iGroupIdx++;
+			}
+		}		
 		
 		$oP->AddTabContainer('Navigator');
 		$oP->SetCurrentTabContainer('Navigator');
@@ -1573,12 +1613,14 @@ EOF
 		if ($sFirstTab == 'list')
 		{
 			DisplayNavigatorListTab($oP, $aResults, $sRelation, $oObj);
-			DisplayNavigatorGraphicsTab($oP, $aResults, $oRelGraph, $sClass, $id, $sRelation, $oAppContext, ($sDirection == 'down'));
+			DisplayNavigatorGraphicsTab($oP, $aResults, $oDisplayGraph, $sClass, $id, $sRelation, $oAppContext, ($sDirection == 'down'));
+			DisplayNavigatorGroupTab($oP, $aGroups, $sRelation, $oObj);
 		}
 		else
 		{
-			DisplayNavigatorGraphicsTab($oP, $aResults, $oRelGraph, $sClass, $id, $sRelation, $oAppContext, ($sDirection == 'down'));
+			DisplayNavigatorGraphicsTab($oP, $aResults, $oDisplayGraph, $sClass, $id, $sRelation, $oAppContext, ($sDirection == 'down'));
 			DisplayNavigatorListTab($oP, $aResults, $sRelation, $oObj);
+			DisplayNavigatorGroupTab($oP, $aGroups, $sRelation, $oObj);
 		}
 
 		$oP->SetCurrentTab('');

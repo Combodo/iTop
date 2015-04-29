@@ -88,6 +88,8 @@ class DisplayableNode extends GraphNode
 		$aNode['icon_url'] = $this->GetIconURL();
 		$aNode['width'] = 32;
 		$aNode['source'] = ($this->GetProperty('source') == true);
+		$aNode['obj_class'] = get_class($this->GetProperty('object'));
+		$aNode['obj_key'] = $this->GetProperty('object')->GetKey();
 		$aNode['sink'] = ($this->GetProperty('sink') == true);
 		$aNode['x'] = $this->x;
 		$aNode['y']= $this->y;
@@ -291,6 +293,7 @@ class DisplayableNode extends GraphNode
 							if ($oGraph->GetNode($oNode->GetId()))
 							{
 								$oGraph->_RemoveNode($oNode);
+								$oNewNode->AddObject($oNode->GetProperty('object'));
 							}
 						}
 						$oNewNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
@@ -412,6 +415,7 @@ class DisplayableRedundancyNode extends DisplayableNode
 							}
 //echo "<p>Replacing ".$oNode->GetId().' by '.$oNewNode->GetId()."\n";
 							$oGraph->_RemoveNode($oNode);
+							$oNewNode->AddObject($oNode->GetProperty('object'));
 						}
 						//$oNewNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
 					}
@@ -471,6 +475,24 @@ class DisplayableEdge extends GraphEdge
 
 class DisplayableGroupNode extends DisplayableNode
 {
+	protected $aObjects;
+	
+	public function __construct(SimpleGraph $oGraph, $sId, $x = 0, $y = 0)
+	{
+		parent::__construct($oGraph, $sId, $x, $y);
+		$this->aObjects = array();
+	}
+	
+	public function AddObject(DBObject $oObj)
+	{
+		$this->aObjects[$oObj->GetKey()] = $oObj;
+	}
+	
+	public function GetObjects()
+	{
+		return $this->aObjects;
+	}
+	
 	public function GetWidth()
 	{
 		return 50;
@@ -487,6 +509,7 @@ class DisplayableGroupNode extends DisplayableNode
 		$aNode['y']= $this->y;
 		$aNode['label'] = $this->GetLabel();
 		$aNode['id'] = $this->GetId();
+		$aNode['group_index'] = $this->GetProperty('group_index'); // if supplied
 		$fDiscOpacity = ($this->GetProperty('is_reached') ? 1 : 0.2);
 		$fTextOpacity = ($this->GetProperty('is_reached') ? 1 : 0.4);
 		$aNode['icon_attr'] = array('opacity' => $fTextOpacity);
@@ -583,6 +606,7 @@ class DisplayableGraph extends SimpleGraph
 				}
 				$oObj = $oNode->GetProperty('object');
 				$oNewNode->SetProperty('class', get_class($oObj));
+				$oNewNode->SetProperty('object', $oObj);
 				$oNewNode->SetProperty('icon_url', $oObj->GetIcon(false));
 				$oNewNode->SetProperty('label', $oObj->GetRawName());
 				$oNewNode->SetProperty('is_reached', $bDirectionDown ? $oNode->GetProperty('is_reached') : true); // When going "up" is_reached does not matter

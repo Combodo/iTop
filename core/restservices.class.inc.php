@@ -417,30 +417,108 @@ class CoreServices implements iRestServiceProvider
 			$key = RestUtils::GetMandatoryParam($aParams, 'key');
 			$sRelation = RestUtils::GetMandatoryParam($aParams, 'relation');
 			$iMaxRecursionDepth = RestUtils::GetOptionalParam($aParams, 'depth', 20 /* = MAX_RECURSION_DEPTH */);
+			$sDirection = RestUtils::GetOptionalParam($aParams, 'direction', null);
+			$bEnableRedundancy = RestUtils::GetOptionalParam($aParams, 'redundancy', false);
+			$bReverse = false;
+			
+			if (is_null($sDirection) && ($sRelation == 'depends on'))
+			{
+				// Legacy behavior, consider "depends on" as a forward relation
+				$sRelation = 'impacts';
+				$sDirection = 'up'; 
+				$bReverse = true; // emulate the legacy behavior by returning the edges
+			}
+			else if(is_null($sDirection))
+			{
+				$sDirection = 'down';
+			}
 	
 			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key);
-			$aIndexByClass = array();
-			while ($oObject = $oObjectSet->Fetch())
+			if ($sDirection == 'down')
 			{
-				$aRelated = array();
-				$aGraph = array();
-				$aIndexByClass[get_class($oObject)][$oObject->GetKey()] = null;
-				$oResult->AddObject(0, '', $oObject);
-				$this->GetRelatedObjects($oObject, $sRelation, $iMaxRecursionDepth, $aRelated, $aGraph);
-	
-				foreach($aRelated as $sClass => $aObjects)
+				$oRelationGraph = $oObjectSet->GetRelatedObjectsDown($sRelation, $iMaxRecursionDepth, $bEnableRedundancy);
+			}
+			else if ($sDirection == 'up')
+			{
+				$oRelationGraph = $oObjectSet->GetRelatedObjectsUp($sRelation, $iMaxRecursionDepth, $bEnableRedundancy);
+			}
+			else
+			{
+				$oResult->code = RestResult::INTERNAL_ERROR;
+				$oResult->message = "Invalid value: '$sDirection' for the parameter 'direction'. Valid values are 'up' and 'down'";
+				return $oResult;
+				
+			}
+			
+			if ($bEnableRedundancy)
+			{
+				// Remove the redundancy nodes from the output
+				$oIterator = new RelationTypeIterator($oRelationGraph, 'Node');
+				foreach($oIterator as $oNode)
 				{
-					foreach($aObjects as $oRelatedObj)
+					if ($oNode instanceof RelationRedundancyNode)
 					{
-						$aIndexByClass[get_class($oRelatedObj)][$oRelatedObj->GetKey()] = null;
-						$oResult->AddObject(0, '', $oRelatedObj);
-					}				
+						$oRelationGraph->FilterNode($oNode);
+					}
 				}
-				foreach($aGraph as $sSrcKey => $aDestinations)
+			}
+			
+			$aIndexByClass = array();
+			$oIterator = new RelationTypeIterator($oRelationGraph);
+			foreach($oIterator as $oElement)
+			{
+				if ($oElement instanceof RelationObjectNode)
 				{
-					foreach ($aDestinations as $sDestKey)
+					$oObject = $oElement->GetProperty('object');
+					if ($oObject)
 					{
-						$oResult->AddRelation($sSrcKey, $sDestKey);
+						if ($bEnableRedundancy)
+						{
+							// Add only the "reached" objects
+							if ($oElement->GetProperty('is_reached'))
+							{
+								$aIndexByClass[get_class($oObject)][$oObject->GetKey()] = null;
+								$oResult->AddObject(0, '', $oObject);
+							}
+						}
+						else
+						{
+							$aIndexByClass[get_class($oObject)][$oObject->GetKey()] = null;
+							$oResult->AddObject(0, '', $oObject);
+						}
+					}
+				}
+				else if ($oElement instanceof RelationEdge)
+				{
+					$oSrcObj = $oElement->GetSourceNode()->GetProperty('object');
+					$oDestObj = $oElement->GetSinkNode()->GetProperty('object');
+					$sSrcKey = get_class($oSrcObj).'::'.$oSrcObj->GetKey();
+					$sDestKey = get_class($oDestObj).'::'.$oDestObj->GetKey();
+					if ($bEnableRedundancy)
+					{
+						// Add only the edges where both source and destination are "reached"
+						if ($oElement->GetSourceNode()->GetProperty('is_reached') && $oElement->GetSinkNode()->GetProperty('is_reached'))
+						{
+							if ($bReverse)
+							{
+								$oResult->AddRelation($sDestKey, $sSrcKey);
+							}
+							else
+							{
+								$oResult->AddRelation($sSrcKey, $sDestKey);
+							}
+						}
+					}
+					else
+					{
+						if ($bReverse)
+						{
+							$oResult->AddRelation($sDestKey, $sSrcKey);
+						}
+						else
+						{
+							$oResult->AddRelation($sSrcKey, $sDestKey);
+						}
 					}
 				}
 			}
@@ -604,40 +682,6 @@ class CoreServices implements iRestServiceProvider
 		else
 		{
 			$oResult->message = $sRes;
-		}
-	}
-	
-	/**
-	 * Helper function to get the related objects up to the given depth along with the "graph" of the relation
-	 * @param DBObject $oObject Starting point of the computation
-	 * @param string $sRelation Code of the relation (i.e; 'impact', 'depends on'...)
-	 * @param integer $iMaxRecursionDepth Maximum level of recursion
-	 * @param Hash $aRelated Two dimensions hash of the already related objects: array( 'class' => array(key => ))
-	 * @param Hash	$aGraph Hash array for the topology of the relation: source => related: array('class:key' => array( DBObjects ))
-	 * @param integer $iRecursionDepth Current level of recursion
-	 */
-	protected function GetRelatedObjects(DBObject $oObject, $sRelation, $iMaxRecursionDepth, &$aRelated, &$aGraph, $iRecursionDepth = 1)
-	{
-		// Avoid loops
-		if ((array_key_exists(get_class($oObject), $aRelated)) && (array_key_exists($oObject->GetKey(), $aRelated[get_class($oObject)]))) return;
-		// Stop at maximum recursion level
-		if ($iRecursionDepth > $iMaxRecursionDepth) return;
-		
-		$sSrcKey = get_class($oObject).'::'.$oObject->GetKey();
-		$aNewRelated = array();
-		$oObject->GetRelatedObjects($sRelation, 1, $aNewRelated);
-		foreach($aNewRelated as $sClass => $aObjects)
-		{
-			if (!array_key_exists($sSrcKey, $aGraph))
-			{
-				$aGraph[$sSrcKey] = array();
-			}
-			foreach($aObjects as $oRelatedObject)
-			{
-				$aRelated[$sClass][$oRelatedObject->GetKey()] = $oRelatedObject;
-				$aGraph[$sSrcKey][] = get_class($oRelatedObject).'::'.$oRelatedObject->GetKey();
-				$this->GetRelatedObjects($oRelatedObject, $sRelation, $iMaxRecursionDepth, $aRelated, $aGraph, $iRecursionDepth+1);
-			}
 		}
 	}
 }

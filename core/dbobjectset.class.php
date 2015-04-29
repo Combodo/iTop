@@ -993,6 +993,50 @@ class DBObjectSet
 	}
 
 	/**
+	 * Compute the "RelatedObjects" (forward or "down" direction) for the set
+	 * for the specified relation
+	 *
+	 * @param string $sRelCode The code of the relation to use for the computation
+	 * @param int $iMaxDepth Maximum recursion depth
+	 * @param boolean $bEnableReduncancy Whether or not to take into account the redundancy
+	 *
+	 * @return RelationGraph The graph of all the related objects
+	 */
+	public function GetRelatedObjectsDown($sRelCode, $iMaxDepth = 99, $bEnableRedundancy = true)
+	{
+		$oGraph = new RelationGraph();
+		$this->Rewind();
+		while($oObj = $this->Fetch())
+		{
+			$oGraph->AddSourceObject($oObj);
+		}
+		$oGraph->ComputeRelatedObjectsDown($sRelCode, $iMaxDepth, $bEnableRedundancy);
+		return $oGraph;
+	}
+	
+	/**
+	 * Compute the "RelatedObjects" (reverse or "up" direction) for the set
+	 * for the specified relation
+	 *
+	 * @param string $sRelCode The code of the relation to use for the computation
+	 * @param int $iMaxDepth Maximum recursion depth
+	 * @param boolean $bEnableReduncancy Whether or not to take into account the redundancy
+	 *
+	 * @return RelationGraph The graph of all the related objects
+	 */
+	public function GetRelatedObjectsUp($sRelCode, $iMaxDepth = 99, $bEnableRedundancy = true)
+	{
+		$oGraph = new RelationGraph();
+		$this->Rewind();
+		while($oObj = $this->Fetch())
+		{
+			$oGraph->AddSinkObject($oObj);
+		}
+		$oGraph->ComputeRelatedObjectsUp($sRelCode, $iMaxDepth, $bEnableRedundancy);
+		return $oGraph;
+	}
+	
+	/**
 	 * Builds an object that contains the values that are common to all the objects
 	 * in the set. If for a given attribute, objects in the set have various values
 	 * then the resulting object will contain null for this value.
