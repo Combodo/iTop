@@ -1067,11 +1067,11 @@ class AttributeDBFieldVoid extends AttributeDefinition
 			{
 				// Though it is a string in PHP, it will be considered as a numeric value in MySQL
 				// Then it must not be quoted here, to preserve the compatibility with the value returned by CMDBSource::GetFieldSpec
-				$sRet = " NOT NULL DEFAULT $default";
+				$sRet = " DEFAULT $default";
 			}
 			else
 			{
-				$sRet = " NOT NULL DEFAULT ".CMDBSource::Quote($default);
+				$sRet = " DEFAULT ".CMDBSource::Quote($default);
 			}
 		}
 		return $sRet;
@@ -1269,7 +1269,7 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 	}
 
 	public function GetEditClass() {return "String";}
-	protected function GetSQLCol($bFullSpec = false) {return "INT(11)".($bFullSpec ? " NOT NULL DEFAULT 0" : "");}
+	protected function GetSQLCol($bFullSpec = false) {return "INT(11)".($bFullSpec ? " DEFAULT 0" : "");}
 
 	public function GetDefaultValue() {return 0;}
 	public function IsNullAllowed()
@@ -1857,7 +1857,7 @@ class AttributeEncryptedString extends AttributeString
 	}
 	
 
-	protected function GetSQLCol($bFullSpec = false) {return "TINYBLOB".($bFullSpec ? " NOT NULL" : "");}	
+	protected function GetSQLCol($bFullSpec = false) {return "TINYBLOB";}	
 
 	public function GetMaxSize()
 	{
@@ -1917,7 +1917,7 @@ define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)\]\]/U');
 class AttributeText extends AttributeString
 {
 	public function GetEditClass() {return "Text";}
-	protected function GetSQLCol($bFullSpec = false) {return "TEXT".($bFullSpec ? " NOT NULL" : "");}
+	protected function GetSQLCol($bFullSpec = false) {return "TEXT";}
 
 	public function GetMaxSize()
 	{
@@ -2063,7 +2063,7 @@ class AttributeText extends AttributeString
  */
 class AttributeLongText extends AttributeText
 {
-	protected function GetSQLCol($bFullSpec = false) {return "LONGTEXT".($bFullSpec ? " NOT NULL" : "");}
+	protected function GetSQLCol($bFullSpec = false) {return "LONGTEXT";}
 
 	public function GetMaxSize()
 	{
@@ -2482,7 +2482,7 @@ class AttributeEnum extends AttributeString
 		}
 		else
 		{
-			return "VARCHAR(255)".($bFullSpec ? " NOT NULL DEFAULT ''" : ""); // ENUM() is not an allowed syntax!
+			return "VARCHAR(255)".($bFullSpec ? " DEFAULT ''" : ""); // ENUM() is not an allowed syntax!
 		}
 	}
 
@@ -3123,7 +3123,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	}
 
 	public function GetEditClass() {return "ExtKey";}
-	protected function GetSQLCol($bFullSpec = false) {return "INT(11)".($bFullSpec ? " NOT NULL DEFAULT 0" : "");}
+	protected function GetSQLCol($bFullSpec = false) {return "INT(11)".($bFullSpec ? " DEFAULT 0" : "");}
 	public function RequiresIndex()
 	{
 		return true;
@@ -3307,9 +3307,9 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 	public function GetSQLColumns($bFullSpec = false)
 	{
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'INT(11)'.($bFullSpec ? ' NOT NULL DEFAULT 0' : '');
-		$aColumns[$this->GetSQLLeft()] = 'INT(11)'.($bFullSpec ? ' NOT NULL DEFAULT 0' : '');
-		$aColumns[$this->GetSQLRight()] = 'INT(11)'.($bFullSpec ? ' NOT NULL DEFAULT 0' : '');
+		$aColumns[$this->GetCode()] = 'INT(11)'.($bFullSpec ? ' DEFAULT 0' : '');
+		$aColumns[$this->GetSQLLeft()] = 'INT(11)'.($bFullSpec ? ' DEFAULT 0' : '');
+		$aColumns[$this->GetSQLRight()] = 'INT(11)'.($bFullSpec ? ' DEFAULT 0' : '');
 		return $aColumns;
 	}
 	public function GetSQLRight()
@@ -4780,7 +4780,7 @@ class AttributeOneWayPassword extends AttributeDefinition
 class AttributeTable extends AttributeDBField
 {
 	public function GetEditClass() {return "Table";}
-	protected function GetSQLCol($bFullSpec = false) {return "LONGTEXT".($bFullSpec ? " NOT NULL" : "");}
+	protected function GetSQLCol($bFullSpec = false) {return "LONGTEXT";}
 
 	public function GetMaxSize()
 	{
