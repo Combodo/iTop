@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2014 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -52,7 +52,7 @@ interface iDisplay
 /**
  * Class dbObject: the root of persistent classes
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1332,6 +1332,7 @@ abstract class DBObject implements iDisplay
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{
 			if (!$oAttDef->IsLinkSet()) continue;
+			if (!array_key_exists($sAttCode, $this->m_aModifiedAtt)) continue;
 			
 			$oOriginalSet = $this->m_aOrigValues[$sAttCode];
 			if ($oOriginalSet != null)
