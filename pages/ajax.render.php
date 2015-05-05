@@ -1740,6 +1740,7 @@ EOF
 		$sPageOrientation = utils::ReadParam('o', 'L');
 		$sTitle = utils::ReadParam('title', '', false, 'raw_data');
 		$sPositions = utils::ReadParam('positions', null, false, 'raw_data');
+		$aExcluded = utils::ReadParam('excluded', array(), false, 'raw_data');
 		$aPositions = null;
 		if ($sPositions != null)
 		{
@@ -1758,7 +1759,20 @@ EOF
 			$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth);
 		}
 		
-
+		// Remove excluded classes from the graph
+		if (count($aExcluded) > 0)
+		{
+			$oIterator = new RelationTypeIterator($oRelGraph, 'Node');
+			foreach($oIterator as $oNode)
+			{
+				$oObj = $oNode->GetProperty('object');
+				if ($oObj && in_array(get_class($oObj), $aExcluded))
+				{
+					$oRelGraph->FilterNode($oNode);
+				}
+			}
+		}
+		
 		$oGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
 		$oGraph->InitFromGraphviz();
 		if ($aPositions != null)
@@ -1771,7 +1785,59 @@ EOF
 		$oPage->SetContentDisposition('inline', 'iTop.pdf');
 		break;
 		
-
+		case 'relation_json':
+		require_once(APPROOT.'core/simplegraph.class.inc.php');
+		require_once(APPROOT.'core/relationgraph.class.inc.php');
+		require_once(APPROOT.'core/displayablegraph.class.inc.php');
+		$sClass = utils::ReadParam('class', '', false, 'class');
+		$id = utils::ReadParam('id', 0);
+		$sRelation = utils::ReadParam('relation', 'impact');
+		$sDirection = utils::ReadParam('direction', 'down');
+		$iGroupingThreshold = utils::ReadParam('g', 5);
+		$sPositions = utils::ReadParam('positions', null, false, 'raw_data');
+		$aExcluded = utils::ReadParam('excluded', array(), false, 'raw_data');
+		$aPositions = null;
+		if ($sPositions != null)
+		{
+			$aPositions = json_decode($sPositions, true);
+		}
+		
+		$oObj = MetaModel::GetObject($sClass, $id);
+		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
+		$aSourceObjects = array($oObj);
+		if ($sDirection == 'up')
+		{
+			$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+		}
+		else
+		{
+			$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+		}
+		
+		// Remove excluded classes from the graph
+		if (count($aExcluded) > 0)
+		{
+			$oIterator = new RelationTypeIterator($oRelGraph, 'Node');
+			foreach($oIterator as $oNode)
+			{
+				$oObj = $oNode->GetProperty('object');
+				if ($oObj && in_array(get_class($oObj), $aExcluded))
+				{
+					$oRelGraph->FilterNode($oNode);
+				}
+			}
+		}
+		
+		$oGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
+		$oGraph->InitFromGraphviz();
+		if ($aPositions != null)
+		{
+			$oGraph->UpdatePositions($aPositions);
+		}
+		$oPage->add($oGraph->GetAsJSON());
+		$oPage->SetContentType('application/json');
+		break;
+		
 		default:
 		$oPage->p("Invalid query.");
 	}

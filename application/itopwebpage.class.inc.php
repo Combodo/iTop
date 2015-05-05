@@ -171,6 +171,7 @@ EOF;
 									var innerWidth = $(this).innerWidth() - 10;
 									$(this).find('.item').width(innerWidth);
 								});
+								$('.panel-resized').trigger('resized');
 						}
 				
 					}
@@ -217,7 +218,7 @@ EOF;
 			},
 			beforeLoad: function( event, ui ) {
 				if ( ui.tab.data('loaded') && (ui.tab.attr('data-cache') == 'true')) {
-					event.preventDefault();
+					event.defaultPrevented = true;
 					return;
 				}
 				ui.panel.html('<div><img src="../images/indicator.gif"></div>');
@@ -292,6 +293,21 @@ EOF
 		// Get the index of this tab.
 		var idx = $(this).parent().prevAll().length;
 		
+		// Set the state!
+		state[ id ] = idx;
+		$.bbq.pushState( state );
+	});
+	
+	// refresh the hash when the tab is changed (from a JS script)
+	$('body').on( 'tabsactivate', '.ui-tabs', function(event, ui) {
+		var state = {};
+			
+		// Get the id of this tab widget.
+		var id = $(ui.newTab).closest( 'div[id^=tabbedContent]' ).attr( 'id' );
+		
+		// Get the index of this tab.
+		var idx = $(ui.newTab).prevAll().length;
+			
 		// Set the state!
 		state[ id ] = idx;
 		$.bbq.pushState( state );

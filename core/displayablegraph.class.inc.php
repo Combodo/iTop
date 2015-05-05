@@ -584,6 +584,13 @@ class DisplayableGraph extends SimpleGraph
 		}
 	}
 	
+	/**
+	 * Build a DisplayableGraph from a RelationGraph
+	 * @param RelationGraph $oGraph
+	 * @param number $iGroupingThreshold
+	 * @param string $bDirectionDown
+	 * @return DisplayableGraph
+	 */
 	public static function FromRelationGraph(RelationGraph $oGraph, $iGroupingThreshold = 20, $bDirectionDown = true)
 	{
 		$oNewGraph = new DisplayableGraph();
@@ -697,6 +704,11 @@ class DisplayableGraph extends SimpleGraph
 		return $oNewGraph;
 	}
 	
+	/**
+	 * Initializes the positions by rendering using Graphviz in xdot format
+	 * and parsing the output.
+	 * @throws Exception
+	 */
 	public function InitFromGraphviz()
 	{
 		$sDot = $this->DumpAsXDot();
@@ -780,22 +792,45 @@ class DisplayableGraph extends SimpleGraph
 		}
 	}
 	
+	/**
+	 * Renders as a suite of Javascript instructions to display the graph using the simple_graph widget
+	 * @param WebPage $oP
+	 * @param string $sId
+	 * @param string $sExportAsPdfURL
+	 * @param string $sExportAsDocumentURL
+	 * @param string $sDrillDownURL
+	 */
 	function RenderAsRaphael(WebPage $oP, $sId = null, $sExportAsPdfURL, $sExportAsDocumentURL, $sDrillDownURL)
 	{
 		if ($sId == null)
 		{
 			$sId = 'graph';
 		}
-		$aBB = $this->GetBoundingBox();
 		$oP->add('<div id="'.$sId.'" class="simple-graph"></div>');
 		$aParams = array(
-			'xmin' => $aBB['xmin'],
-			'xmax' => $aBB['xmax'],
-			'ymin' => $aBB['ymin'],
-			'ymax' => $aBB['ymax'],
-			'export_as_pdf_url' => $sExportAsPdfURL,
-			'export_as_document_url' => $sExportAsDocumentURL,
-			'drill_down_url' => $sDrillDownURL,
+			'export_as_pdf' => array('url' => $sExportAsPdfURL, 'label' => Dict::S('UI:Relation:ExportAsPDF')),
+			'export_as_document' => array('url' => $sExportAsDocumentURL, 'label' => Dict::S('UI:Relation:ExportAsDocument')),
+			'drill_down' => array('url' => $sDrillDownURL, 'label' => Dict::S('UI:Relation:DrillDown')),
+			'labels' => array(
+				'export_pdf_title' => Dict::S('UI:Relation:PDFExportOptions'),
+				'export' => Dict::S('UI:Relation:PDFExportOptions'),
+				'cancel' => Dict::S('UI:Button:Cancel'),
+			),
+			'page_format' => array(
+				'label' => Dict::S('UI:Relation:PDFExportPageFormat'),
+				'values' => array(
+					'A3' => Dict::S('UI:PageFormat_A3'),
+					'A4' => Dict::S('UI:PageFormat_A4'),
+					'Letter' => Dict::S('UI:PageFormat_Letter'),
+				),
+			),
+			'page_orientation' => array(
+				'label' => Dict::S('UI:Relation:PDFExportPageOrientation'),
+				'values' => array(
+					'P' => Dict::S('UI:PageOrientation_Portrait'),
+					'L' => Dict::S('UI:PageOrientation_Landscape'),
+				),
+			),
 		);
 		$oP->add_ready_script("var oGraph = $('#$sId').simple_graph(".json_encode($aParams).");");
 		
@@ -822,6 +857,47 @@ class DisplayableGraph extends SimpleGraph
 		$oP->add_ready_script("oGraph.simple_graph('draw');");
 	}
 
+	/**
+	 * Renders as JSON string suitable for loading into the simple_graph widget
+	 */
+	function GetAsJSON()
+	{
+		$aData = array('nodes' => array(), 'edges' => array());
+		$iGroupIdx = 0;
+		$oIterator = new RelationTypeIterator($this, 'Node');
+		foreach($oIterator as $sId => $oNode)
+		{
+			if ($oNode instanceof DisplayableGroupNode)
+			{
+				$aGroups[] = $oNode->GetObjects();
+				$oNode->SetProperty('group_index', $iGroupIdx);
+				$iGroupIdx++;
+			}
+			$aData['nodes'][] = $oNode->GetForRaphael();
+		}
+		
+		$oIterator = new RelationTypeIterator($this, 'Edge');
+		foreach($oIterator as $sId => $oEdge)
+		{
+			$aEdge = array();
+			$aEdge['id'] = $oEdge->GetId();
+			$aEdge['source_node_id'] = $oEdge->GetSourceNode()->GetId();
+			$aEdge['sink_node_id'] = $oEdge->GetSinkNode()->GetId();
+			$fOpacity = ($oEdge->GetSinkNode()->GetProperty('is_reached') && $oEdge->GetSourceNode()->GetProperty('is_reached') ? 1 : 0.2);
+			$aEdge['attr'] = array('opacity' => $fOpacity, 'stroke' => '#000');
+			$aData['edges'][] = $aEdge;
+		}
+	
+		return json_encode($aData);
+	}
+	
+	/**
+	 * Renders the graph as a PDF file
+	 * @param WebPage $oP The page for the ouput of the PDF
+	 * @param string $sTitle The title of the PDF
+	 * @param string $sPageFormat The page format: A4, A3, Letter...
+	 * @param string $sPageOrientation The orientation of the page (L = Landscape, P = Portrait)
+	 */
 	function RenderAsPDF(WebPage $oP, $sTitle = 'Untitled', $sPageFormat = 'A4', $sPageOrientation = 'P')
 	{
 		require_once(APPROOT.'lib/tcpdf/tcpdf.php');

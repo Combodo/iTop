@@ -13,15 +13,16 @@ $(function()
 		// default options
 		options:
 		{
-			xmin: 0,
-			xmax: 0,
-			ymin: 0,
-			ymax: 0,
 			align: 'center',
 			'vertical-align': 'middle',
-			export_as_pdf_url: '',
-			export_as_document_url: '',
-			drill_down_url: '',
+			source_url: null,
+			export_as_pdf: null,
+			page_format: { label: 'Page Format:', values: { A3: 'A3', A4: 'A4', Letter: 'Letter' }, 'default': 'A4'},
+			page_orientation: { label: 'Page Orientation:', values: { P: 'Portait', L: 'Landscape' }, 'default': 'L' },
+			labels: { export_pdf_title: 'PDF Export Options', cancel: 'Cancel', 'export': 'Export' },
+			export_as_document: null,
+			drill_down: null,
+			excluded: []
 		},
 	
 		// the constructor
@@ -35,17 +36,21 @@ $(function()
 			this.yOffset = 0;
 			this.iTextHeight = 12;
 			
-			this.auto_scale();
 			this.oPaper = Raphael(this.element.get(0), this.element.width(), this.element.height());
 
 			this.element
+			.addClass('panel-resized')
 			.addClass('itop-simple-graph')
 			.addClass('graph');
 			
 			this._create_toolkit_menu();
 			this._build_context_menus();
+			$(window).bind('resized', function() { var that = me; window.setTimeout(function() { that._on_resize(); }, 50); } );
+			if (this.options.source_url != null)
+			{
+				this.load_from_url(this.options.source_url);
+			}
 		},
-	
 		// called when created, and later when changing options
 		_refresh: function()
 		{
@@ -76,13 +81,17 @@ $(function()
 		},
 		draw: function()
 		{
+			this._updateBBox();
+			this.auto_scale();
 			this.oPaper.clear();
 			for(var k in this.aNodes)
 			{
+				this.aNodes[k].aElements = [];
 				this._draw_node(this.aNodes[k]);
 			}
 			for(var k in this.aEdges)
 			{
+				this.aEdges[k].aElements = [];
 				this._draw_edge(this.aEdges[k]);
 			}
 		},
@@ -90,6 +99,7 @@ $(function()
 		{
 			var iWidth = oNode.width;
 			var iHeight = 32;
+			var iFontSize = 10;
 			var xPos = Math.round(oNode.x * this.fZoom + this.xOffset);
 			var yPos = Math.round(oNode.y * this.fZoom + this.yOffset);
 			oNode.tx = 0;
@@ -99,8 +109,9 @@ $(function()
 				case 'disc':
 				oNode.aElements.push(this.oPaper.circle(xPos, yPos, iWidth*this.fZoom / 2).attr(oNode.disc_attr));
 				var oText = this.oPaper.text(xPos, yPos, oNode.label);
+				oNode.text_attr['font-size'] = iFontSize * this.fZoom;
 				oText.attr(oNode.text_attr);
-				oText.transform('s'+this.fZoom);
+				//oText.transform('s'+this.fZoom);
 				oNode.aElements.push(oText);
 				break;
 					
@@ -113,14 +124,15 @@ $(function()
 				oNode.aElements.push(this.oPaper.image(oNode.icon_url, xIcon + 18*this.fZoom, yIcon, 16*this.fZoom, 16*this.fZoom).attr(oNode.icon_attr));
 				oNode.aElements.push(this.oPaper.image(oNode.icon_url, xIcon + 9*this.fZoom, yIcon + 18*this.fZoom, 16*this.fZoom, 16*this.fZoom).attr(oNode.icon_attr));
 				var oText = this.oPaper.text(xPos, yPos +2, oNode.label);
+				oNode.text_attr['font-size'] = iFontSize * this.fZoom;
 				oText.attr(oNode.text_attr);
-				oText.transform('s'+this.fZoom);
+				//oText.transform('s'+this.fZoom);
 				var oBB = oText.getBBox();
 				var dy = iHeight/2*this.fZoom + oBB.height/2;
 				oText.remove();
 				oText = this.oPaper.text(xPos, yPos +dy +2, oNode.label);
 				oText.attr(oNode.text_attr);
-				oText.transform('s'+this.fZoom);
+				//oText.transform('s'+this.fZoom);
 				oNode.aElements.push(oText);
 				oNode.aElements.push(this.oPaper.rect( xPos - oBB.width/2 -2, yPos - oBB.height/2 + dy, oBB.width +4, oBB.height).attr({fill: '#fff', stroke: '#fff', opacity: 0.9}));
 				oText.toFront();
@@ -134,14 +146,15 @@ $(function()
 				}
 				oNode.aElements.push(this.oPaper.image(oNode.icon_url, xPos - iWidth * this.fZoom/2, yPos - iHeight * this.fZoom/2, iWidth*this.fZoom, iHeight*this.fZoom).attr(oNode.icon_attr));
 				var oText = this.oPaper.text( xPos, yPos, oNode.label);
+				oNode.text_attr['font-size'] = iFontSize * this.fZoom;
 				oText.attr(oNode.text_attr);
-				oText.transform('S'+this.fZoom);
+				//oText.transform('S'+this.fZoom);
 				var oBB = oText.getBBox();
 				var dy = iHeight/2*this.fZoom + oBB.height/2;
 				oText.remove();
 				oText = this.oPaper.text( xPos, yPos + dy, oNode.label);
 				oText.attr(oNode.text_attr);
-				oText.transform('S'+this.fZoom);
+				//oText.transform('S'+this.fZoom);
 				oNode.aElements.push(oText);
 				oNode.aElements.push(this.oPaper.rect( xPos - oBB.width/2 -2, yPos - oBB.height/2 + dy, oBB.width +4, oBB.height).attr({fill: '#fff', stroke: '#fff', opacity: 0.9}).toBack());
 				break;
@@ -201,6 +214,21 @@ $(function()
 			oNode.ty += (oNode.y - oNode.yOrig) * this.fZoom;
 			oNode.xOrig = oNode.x;
 			oNode.yOrig = oNode.y;
+			this._updateBBox();
+		},
+		_updateBBox: function()
+		{
+			this.options.xmin = 9999;
+			this.options.xmax = -9999;
+			this.options.ymin = 9999;
+			this.options.ymax = -9999;
+			for(var k in this.aNodes)
+			{
+				this.options.xmin = Math.min(this.aNodes[k].x + this.aNodes[k].tx, this.options.xmin);
+				this.options.xmax = Math.max(this.aNodes[k].x + this.aNodes[k].tx, this.options.xmax);
+				this.options.ymin = Math.min(this.aNodes[k].y + this.aNodes[k].ty, this.options.ymin);
+				this.options.ymax = Math.max(this.aNodes[k].y + this.aNodes[k].ty, this.options.ymax);
+			}
 		},
 		_get_edge_path: function(oEdge)
 		{
@@ -281,7 +309,7 @@ $(function()
 				break;
 				
 				case 'center':
-				this.xOffset = (this.element.width() - (xmax - xmin) * this.fZoom) / 2;
+				this.xOffset = -xmin * this.fZoom + (this.element.width() - (xmax - xmin) * this.fZoom) / 2;
 				break;			
 			}
 			switch(this.options['vertical-align'])
@@ -295,15 +323,15 @@ $(function()
 				break;
 				
 				case 'middle':
-				this.yOffset = (this.element.height() - (ymax - ymin + this.iTextHeight) * this.fZoom) / 2;
+				this.yOffset = -ymin * this.fZoom + (this.element.height() - (ymax - ymin + this.iTextHeight) * this.fZoom) / 2;
 				break;			
-			}
-			
-			
+			}			
 		},
 		add_node: function(oNode)
 		{
 			oNode.aElements = [];
+			oNode.tx = 0;
+			oNode.ty = 0;
 			this.aNodes.push(oNode);
 		},
 		add_edge: function(oEdge)
@@ -325,15 +353,15 @@ $(function()
 		{
 			var sPopupMenuId = 'tk_graph'+this.element.attr('id');
 			var sHtml = '<div class="itop_popup toolkit_menu graph" style="font-size: 12px;" id="'+sPopupMenuId+'"><ul><li><img src="../images/toolkit_menu.png"><ul>';
-			if (this.options.export_as_pdf_url != '')
+			if (this.options.export_as_pdf != null)
 			{
-				sHtml += '<li><a href="#" id="'+sPopupMenuId+'_pdf">Export as PDF...</a></li>';			
+				sHtml += '<li><a href="#" id="'+sPopupMenuId+'_pdf">'+this.options.export_as_pdf.label+'</a></li>';			
 			}
-			if (this.options.export_as_document_url != '')
+			if (this.options.export_as_document != null)
 			{
-				sHtml += '<li><a href="#" id="'+sPopupMenuId+'_document">Export as document...</a></li>';
+				sHtml += '<li><a href="#" id="'+sPopupMenuId+'_document">'+this.options.export_as_document.label+'</a></li>';
 			}
-			sHtml += '<li><a href="#" id="'+sPopupMenuId+'_reload">Refresh</a></li>';
+			//sHtml += '<li><a href="#" id="'+sPopupMenuId+'_reload">Refresh</a></li>';
 			sHtml += '</ul></li></ul></div>';
 			
 			this.element.before(sHtml);
@@ -377,7 +405,7 @@ $(function()
 	        					var me = $('.itop-simple-graph').data('itopSimple_graph'); // need a live value
 	        					me.show_group('relation_group_'+sGroupIndex);
 	        				},
-	        				items: { 'show': {name: 'Show group' } }
+	        				items: { 'show': {name: me.options.drill_down.label } }
 	        			};
 						break;
 						
@@ -387,16 +415,15 @@ $(function()
 		        		oResult = {
 	        				callback: function(key, options) {
 	        					var me = $('.itop-simple-graph').data('itopSimple_graph'); // need a live value
-	        					var sURL = me.options.drill_down_url.replace('%1$s', sObjClass).replace('%2$s', sObjKey);
+	        					var sURL = me.options.drill_down.url.replace('%1$s', sObjClass).replace('%2$s', sObjKey);
 	        					window.location.href = sURL;
 	        				},
-	        				items: { 'details': {name: 'Show Details' } }
+	        				items: { 'details': {name: me.options.drill_down.label } }
 	        			};
 		        		break;
 		        		
 		        		default:
 						oResult = false; // No context menu
-		        	
 		        	}
 		        	return oResult;
 		        }
@@ -410,11 +437,27 @@ $(function()
 			{
 				oPositions[this.aNodes[k].id] = {x: this.aNodes[k].x, y: this.aNodes[k].y };
 			}
-			var sHtmlForm = '<div id="PDFExportDlg'+this.element.attr('id')+'"><form id="graph_'+this.element.attr('id')+'_export_as_pdf" target="_blank" action="'+this.options.export_as_pdf_url+'" method="post">';
+			var sHtmlForm = '<div id="PDFExportDlg'+this.element.attr('id')+'"><form id="graph_'+this.element.attr('id')+'_export_as_pdf" target="_blank" action="'+this.options.export_as_pdf.url+'" method="post">';
 			sHtmlForm += '<input type="hidden" name="positions" value="">';
+			for(k in this.options.excluded)
+			{
+				sHtmlForm += '<input type="hidden" name="excluded[]" value="'+this.options.excluded[k]+'">';				
+			}
 			sHtmlForm += '<table>';
-			sHtmlForm += '<tr><td>Page format:</td><td><select name="p"><option value="A3">A3</option><option value="A4" selected>A4</option><option value="Letter">Letter</option></select></td></tr>';
-			sHtmlForm += '<tr><td>Page orientation:</td><td><select name="o"><option value="L" selected>Landscape</option><option value="P">Portrait</select></td></tr>';
+			sHtmlForm += '<tr><td>'+this.options.page_format.label+'</td><td><select name="p">';
+			for(k in this.options.page_format.values)
+			{
+				var sSelected = (k == this.options.page_format['default']) ? ' selected' : '';
+				sHtmlForm += '<option value="'+k+'"'+sSelected+'>'+this.options.page_format.values[k]+'</option>';
+			}
+			sHtmlForm += '</select></td></tr>';
+			sHtmlForm += '<tr><td>'+this.options.page_orientation.label+'</td><td><select name="o">';
+			for(k in this.options.page_orientation.values)
+			{
+				var sSelected = (k == this.options.page_orientation['default']) ? ' selected' : '';
+				sHtmlForm += '<option value="'+k+'"'+sSelected+'>'+this.options.page_orientation.values[k]+'</option>';
+			}
+			sHtmlForm += '</select></td></tr>';
 			sHtmlForm += '<table>';
 			sHtmlForm += '</form></div>';
 			
@@ -423,13 +466,48 @@ $(function()
 			var me = this;
 			$('#PDFExportDlg'+this.element.attr('id')).dialog({
 				modal: true,
-				title: 'PDF format options',
+				title: this.options.labels.export_pdf_title,
+				close: function() { $(this).remove(); },
 				buttons: [
-				          {text: 'Cancel', click: function() { $(this).dialog('close');} },
-				          {text: 'Export', click: function() { $('#graph_'+me.element.attr('id')+'_export_as_pdf').submit(); $(this).dialog('close');} },
+				          {text: this.options.labels['cancel'], click: function() { $(this).dialog('close');} },
+				          {text: this.options.labels['export'], click: function() { $('#graph_'+me.element.attr('id')+'_export_as_pdf').submit(); $(this).dialog('close');} },
 				]
 			});
 			//$('#graph_'+this.element.attr('id')+'_export_as_pdf').submit();
+		},
+		_on_resize: function()
+		{
+			this.element.closest('.ui-tabs').tabs({ heightStyle: "fill" });
+			this.auto_scale();
+			this.oPaper.setSize(this.element.width(), this.element.height());
+			this.draw();
+		},
+		load: function(oData)
+		{
+			this.aNodes = [];
+			this.aEdges = [];
+			for(k in oData.nodes)
+			{
+				this.add_node(oData.nodes[k]);
+			}
+			for(k in oData.edges)
+			{
+				this.add_edge(oData.edges[k]);
+			}
+			this._updateBBox();
+			this.auto_scale();
+			this.oPaper.setSize(this.element.width(), this.element.height());
+			this.draw();
+		},
+		load_from_url: function(sUrl)
+		{
+			this.options.load_from_url = sUrl;
+			var me = this;
+			this.element.closest('.ui-tabs').tabs({ heightStyle: "fill" });
+			this.oPaper.rect(0, 0, this.element.width(), this.element.height()).attr({fill: '#000', opacity: 0.4, 'stroke-width': 0});
+			$.post(sUrl, {excluded: this.options.excluded }, function(data) {
+				me.load(data);
+			}, 'json');
 		},
 		export_as_document: function()
 		{
@@ -437,7 +515,7 @@ $(function()
 		},
 		reload: function()
 		{
-			alert('Reload: not yet implemented');
+			this.load_from_url(this.options.load_from_url);
 		}
 	});	
 });

@@ -311,14 +311,43 @@ EOF
 		$sExportAsPdfURL = '';
 		if (extension_loaded('gd'))
 		{
-			$sExportAsPdfURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_pdf&relation='.$sRelation.'&direction='.($bDirectionDown ? 'down' : 'up').'&class='.$sClass.'&id='.$id;
+			$sExportAsPdfURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_pdf&relation='.$sRelation.'&direction='.($bDirectionDown ? 'down' : 'up').'&class='.$sClass.'&id='.$id.'&g='.$iGroupingThreshold;
 		}
 		$oAppcontext = new ApplicationContext();
 		$sContext = $oAppContext->GetForLink();
 		$sDrillDownURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class=%1$s&id=%2$s&'.$sContext;
 		$sExportAsDocumentURL = '';
+		$sLoadFromURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_json&relation='.$sRelation.'&direction='.($bDirectionDown ? 'down' : 'up').'&class='.$sClass.'&id='.$id.'&g='.$iGroupingThreshold;
 		
-		$oDisplayGraph->RenderAsRaphael($oP, null, $sExportAsPdfURL, $sExportAsDocumentURL, $sDrillDownURL);
+		$sId = 'graph';
+		$oP->add('<div id="'.$sId.'" class="simple-graph"></div>');
+		$aParams = array(
+			'source_url' => $sLoadFromURL,
+			'export_as_pdf' => array('url' => $sExportAsPdfURL, 'label' => Dict::S('UI:Relation:ExportAsPDF')),
+			//'export_as_document' => array('url' => $sExportAsDocumentURL, 'label' => Dict::S('UI:Relation:ExportAsDocument')),
+			'drill_down' => array('url' => $sDrillDownURL, 'label' => Dict::S('UI:Relation:DrillDown')),
+			'labels' => array(
+				'export_pdf_title' => Dict::S('UI:Relation:PDFExportOptions'),
+				'export' => Dict::S('UI:Button:Export'),
+				'cancel' => Dict::S('UI:Button:Cancel'),
+			),
+			'page_format' => array(
+				'label' => Dict::S('UI:Relation:PDFExportPageFormat'),
+				'values' => array(
+					'A3' => Dict::S('UI:PageFormat_A3'),
+					'A4' => Dict::S('UI:PageFormat_A4'),
+					'Letter' => Dict::S('UI:PageFormat_Letter'),
+				),
+			),
+			'page_orientation' => array(
+				'label' => Dict::S('UI:Relation:PDFExportPageOrientation'),
+				'values' => array(
+					'P' => Dict::S('UI:PageOrientation_Portrait'),
+					'L' => Dict::S('UI:PageOrientation_Landscape'),
+				),
+			),
+		);
+		$oP->add_ready_script("$('#$sId').simple_graph(".json_encode($aParams).");");
 	}
 	catch(Exception $e)
 	{
@@ -334,12 +363,13 @@ EOF
 		{
 			var aExcluded = [];
 			$('input[name^=excluded]').each( function() {
-				if (!$(this).attr('checked'))
+				if (!$(this).prop('checked'))
 				{
 					aExcluded.push($(this).val());
 				}
 			} );
-			alert('Not yet implemented');
+			$('#graph').simple_graph('option', {excluded: aExcluded});
+			$('#graph').simple_graph('reload');
 		}
 		catch(err)
 		{
