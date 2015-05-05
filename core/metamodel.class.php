@@ -1227,7 +1227,7 @@ abstract class MetaModel
 							$sTargetClass = $oAttDef->GetTargetClass();
 							$aNeighbourData['sToClass'] = $sTargetClass;
 							$aNeighbourData['sQueryDown'] = 'SELECT '.$sTargetClass.' AS o WHERE o.id = :this->'.$aNeighbourData['sAttribute'];
-							$aNeighbourData['sQueryUp'] = 'SELECT '.$sClass.' AS o WHERE o.'.$aNeighbourData['sAttribute'].' = :this->id';
+							$aNeighbourData['sQueryUp'] = 'SELECT '.$aNeighbourData['sFromClass'].' AS o WHERE o.'.$aNeighbourData['sAttribute'].' = :this->id';
 						}
 						elseif ($oAttDef instanceof AttributeLinkedSet)
 						{
@@ -1241,13 +1241,13 @@ abstract class MetaModel
 		
 								$aNeighbourData['sToClass'] = $sRemoteClass;
 								$aNeighbourData['sQueryDown'] = "SELECT $sRemoteClass AS o JOIN $sLinkedClass AS lnk ON lnk.$sExtKeyToRemote = o.id WHERE lnk.$sExtKeyToMe = :this->id";
-								$aNeighbourData['sQueryUp'] = "SELECT $sClass AS o JOIN $sLinkedClass AS lnk ON lnk.$sExtKeyToMe = o.id WHERE lnk.$sExtKeyToRemote = :this->id";
+								$aNeighbourData['sQueryUp'] = "SELECT ".$aNeighbourData['sFromClass']." AS o JOIN $sLinkedClass AS lnk ON lnk.$sExtKeyToMe = o.id WHERE lnk.$sExtKeyToRemote = :this->id";
 							}
 							else
 							{
 								$aNeighbourData['sToClass'] = $sLinkedClass;
 								$aNeighbourData['sQueryDown'] = "SELECT $sLinkedClass AS o WHERE o.$sExtKeyToMe = :this->id";
-								$aNeighbourData['sQueryUp'] = "SELECT $sClass AS o WHERE o.id = :this->$sExtKeyToMe";
+								$aNeighbourData['sQueryUp'] = "SELECT ".$aNeighbourData['sFromClass']." AS o WHERE o.id = :this->$sExtKeyToMe";
 							}
 						}
 						else
