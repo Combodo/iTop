@@ -73,6 +73,7 @@ class DisplayBlock
 	{
 		$oDummyFilter = new DBObjectSearch($oSet->GetClass());
 		$aKeys = array();
+		$oSet->OptimizeColumnLoad(array('id')); // No need to load all the columns just to get the id
 		while($oObject = $oSet->Fetch())
 		{
 			$aKeys[] = $oObject->GetKey();	
