@@ -330,6 +330,9 @@ EOF
 				'export_pdf_title' => Dict::S('UI:Relation:PDFExportOptions'),
 				'export' => Dict::S('UI:Button:Export'),
 				'cancel' => Dict::S('UI:Button:Cancel'),
+				'title' => Dict::S('UI:RelationOption:Title'),
+				'include_list' => Dict::S('UI:RelationOption:IncludeList'),
+				'comments' => Dict::S('UI:RelationOption:Comments'),
 			),
 			'page_format' => array(
 				'label' => Dict::S('UI:Relation:PDFExportPageFormat'),
@@ -1615,7 +1618,7 @@ EOF
 			if ($oObj)
 			{
 				$sObjClass  = get_class($oObj);
-				if (!array_key_exists($sClass, $aResults))
+				if (!array_key_exists($sObjClass, $aResults))
 				{
 					$aResults[$sObjClass] = array();
 				}

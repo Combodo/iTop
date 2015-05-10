@@ -19,7 +19,7 @@ $(function()
 			export_as_pdf: null,
 			page_format: { label: 'Page Format:', values: { A3: 'A3', A4: 'A4', Letter: 'Letter' }, 'default': 'A4'},
 			page_orientation: { label: 'Page Orientation:', values: { P: 'Portait', L: 'Landscape' }, 'default': 'L' },
-			labels: { export_pdf_title: 'PDF Export Options', cancel: 'Cancel', 'export': 'Export' },
+			labels: { export_pdf_title: 'PDF Export Options', cancel: 'Cancel', 'export': 'Export', title: 'Document Title', include_list: 'Include the list of objects', comments: 'Comments' },
 			export_as_document: null,
 			drill_down: null,
 			excluded: []
@@ -458,6 +458,9 @@ $(function()
 				sHtmlForm += '<option value="'+k+'"'+sSelected+'>'+this.options.page_orientation.values[k]+'</option>';
 			}
 			sHtmlForm += '</select></td></tr>';
+			sHtmlForm += '<tr><td>'+this.options.labels.title+'</td><td><input name="title"  style="width: 20em;"/></td></tr>';
+			sHtmlForm += '<tr><td>'+this.options.labels.comments+'</td><td><textarea style="width: 20em; height:5em;" name="comments"/></textarea></td></tr>';
+			sHtmlForm += '<tr><td colspan=2><input type="checkbox" checked id="include_list_checkbox" name="include_list" value="1"><label for="include_list_checkbox">&nbsp;'+this.options.labels.include_list+'</label></td></tr>';
 			sHtmlForm += '<table>';
 			sHtmlForm += '</form></div>';
 			
@@ -465,6 +468,7 @@ $(function()
 			$('#graph_'+this.element.attr('id')+'_export_as_pdf input[name="positions"]').val(JSON.stringify(oPositions));
 			var me = this;
 			$('#PDFExportDlg'+this.element.attr('id')).dialog({
+				width: 'auto',
 				modal: true,
 				title: this.options.labels.export_pdf_title,
 				close: function() { $(this).remove(); },

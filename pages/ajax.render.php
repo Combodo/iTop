@@ -28,6 +28,7 @@ require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
+require_once(APPROOT.'/application/pdfpage.class.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
 require_once(APPROOT.'/application/ui.extkeywidget.class.inc.php');
@@ -1731,7 +1732,7 @@ EOF
 		require_once(APPROOT.'core/relationgraph.class.inc.php');
 		require_once(APPROOT.'core/displayablegraph.class.inc.php');
 		$sClass = utils::ReadParam('class', '', false, 'class');
-		$id = utils::ReadParam('id', 0);
+		$id = (int)utils::ReadParam('id', 0);
 		$sRelation = utils::ReadParam('relation', 'impact');
 		$sDirection = utils::ReadParam('direction', 'down');
 		
@@ -1741,6 +1742,8 @@ EOF
 		$sTitle = utils::ReadParam('title', '', false, 'raw_data');
 		$sPositions = utils::ReadParam('positions', null, false, 'raw_data');
 		$aExcluded = utils::ReadParam('excluded', array(), false, 'raw_data');
+		$bIncludeList = (bool)utils::ReadParam('include_list', false);
+		$sComments = utils::ReadParam('comments', '', false, 'raw_data');
 		$aPositions = null;
 		if ($sPositions != null)
 		{
@@ -1773,16 +1776,88 @@ EOF
 			}
 		}
 		
+		$oPage = new PDFPage($sTitle, $sPageFormat, $sPageOrientation);
+		
 		$oGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
 		$oGraph->InitFromGraphviz();
 		if ($aPositions != null)
 		{
 			$oGraph->UpdatePositions($aPositions);
 		}
-		$oGraph->RenderAsPDF($oPage, $sTitle, $sPageFormat, $sPageOrientation);
-		
-		$oPage->SetContentType('application/pdf');
-		$oPage->SetContentDisposition('inline', 'iTop.pdf');
+		$iGroupIdx = 0;
+		$aGroups = array();
+		$oIterator = new RelationTypeIterator($oGraph, 'Node');
+		foreach($oIterator as $oNode)
+		{
+			if ($oNode instanceof DisplayableGroupNode)
+			{
+				$aGroups[] = $oNode->GetObjects();
+				$oNode->SetProperty('group_index', $iGroupIdx);
+				$iGroupIdx++;
+			}
+		}
+		// First page is the graph
+		$oGraph->RenderAsPDF($oPage, $sComments);
+		/*
+		// Experimental QR code at the bottom left of the page...
+		$sUrl = "r=$sRelation&d=$sDirection&c=$sClass&id=$id";
+		$oPdf = $oPage->get_tcpdf();
+		$aMargins = $oPdf->getMargins();
+		$oPdf->write2DBarcode($sUrl, 'QRCODE,H', $aMargins['left'], $oPdf->getPageHeight() - $aMargins['bottom'] - 35, 25, 25, array(), 'N');
+		*/
+		if ($bIncludeList)
+		{
+			// Then the lists of objects (one table per finalclass)
+			$aResults = array();
+			$oIterator = new RelationTypeIterator($oRelGraph, 'Node');
+			foreach($oIterator as $oNode)
+			{
+				$oObj = $oNode->GetProperty('object'); // Some nodes (Redundancy Nodes and Group) do not contain an object
+				if ($oObj)
+				{
+					$sObjClass  = get_class($oObj);
+					if (!array_key_exists($sObjClass, $aResults))
+					{
+						$aResults[$sObjClass] = array();
+					}
+					$aResults[$sObjClass][] = $oObj;
+				}
+			}
+			
+			$oPage->get_tcpdf()->AddPage();
+			$oPage->add('<div class="page_header"><h1>'.Dict::S('UI:RelationshipList').'</h1></div>');
+			$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
+			foreach($aResults as $sListClass => $aObjects)
+			{
+				set_time_limit($iLoopTimeLimit);
+				$oSet = CMDBObjectSet::FromArray($sListClass, $aObjects);
+				$sHtml = "<div class=\"page_header\">\n";
+				$sHtml .= "<table class=\"section\"><tr><td>".MetaModel::GetClassIcon($sListClass, true, 'width: 24px; height: 24px;')." ".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', $oSet->Count(), Metamodel::GetName($sListClass))."</td></tr></table>\n";
+				$sHtml .= "</div>\n";
+				$oPage->add($sHtml);
+				cmdbAbstractObject::DisplaySet($oPage, $oSet);
+				$oPage->p(''); // Some space
+			}
+			
+			// Then the content of the groups (one table per group)
+			if (count($aGroups) > 0)
+			{
+				$oPage->get_tcpdf()->AddPage();
+				$oPage->add('<div class="page_header"><h1>'.Dict::S('UI:RelationGroups').'</h1></div>');
+				foreach($aGroups as $idx => $aObjects)
+				{
+					set_time_limit($iLoopTimeLimit);
+					$sListClass = get_class(current($aObjects));
+					$oSet = CMDBObjectSet::FromArray($sListClass, $aObjects);
+					$sHtml = "<div class=\"page_header\">\n";
+					$sHtml .= "<table class=\"section\"><tr><td>".MetaModel::GetClassIcon($sListClass, true, 'width: 24px; height: 24px;')." ".Dict::Format('UI:RelationGroupNumber_N', (1+$idx))."</td></tr></table>\n";
+					$sHtml .= "</div>\n";
+					$oPage->add($sHtml);
+					cmdbAbstractObject::DisplaySet($oPage, $oSet);
+					$oPage->p(''); // Some space
+				}
+			}
+		}
 		break;
 		
 		case 'relation_json':

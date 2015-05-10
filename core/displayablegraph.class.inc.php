@@ -892,55 +892,49 @@ class DisplayableGraph extends SimpleGraph
 	}
 	
 	/**
-	 * Renders the graph as a PDF file
-	 * @param WebPage $oP The page for the ouput of the PDF
-	 * @param string $sTitle The title of the PDF
-	 * @param string $sPageFormat The page format: A4, A3, Letter...
-	 * @param string $sPageOrientation The orientation of the page (L = Landscape, P = Portrait)
+	 * Renders the graph in a PDF document: centered in the current page
+	 * @param PDFPage $oPage The PDFPage representing the PDF document to draw into
+	 * @param string $sComments An optional comment to  display next to the graph (HTML entities will be escaped, \n replaced by <br/>)
+	 * @param float $xMin Left coordinate of the bounding box to display the graph
+	 * @param float $xMax Right coordinate of the bounding box to display the graph
+	 * @param float $yMin Top coordinate of the bounding box to display the graph
+	 * @param float $yMax Bottom coordinate of the bounding box to display the graph
 	 */
-	function RenderAsPDF(WebPage $oP, $sTitle = 'Untitled', $sPageFormat = 'A4', $sPageOrientation = 'P')
+	function RenderAsPDF(PDFPage $oPage, $sComments = '', $xMin = -1, $xMax = -1, $yMin = -1, $yMax = -1)
 	{
-		require_once(APPROOT.'lib/tcpdf/tcpdf.php');
-		$oPdf = new TCPDF($sPageOrientation, 'mm', $sPageFormat, true, 'UTF-8', false);
-		
-		// set document information
-		$oPdf->SetCreator(PDF_CREATOR);
-		$oPdf->SetAuthor('iTop');
-		$oPdf->SetTitle($sTitle);
-		
-		$oPdf->setFontSubsetting(true);
-		
-		// Set font
-		// dejavusans is a UTF-8 Unicode font, if you only need to
-		// print standard ASCII chars, you can use core fonts like
-		// helvetica or times to reduce file size.
-		$oPdf->SetFont('dejavusans', '', 14, '', true);
-		
-		// set auto page breaks
-		$oPdf->SetAutoPageBreak(false);
-		
-		// Add a page
-		// This method has several options, check the source code documentation for more information.
-		$oPdf->AddPage();
-		
+		$oPdf = $oPage->get_tcpdf();
+				
 		$aBB = $this->GetBoundingBox();
 		$this->Translate(-$aBB['xmin'], -$aBB['ymin']);
 		
-		if ($sPageOrientation == 'P')
+		$aMargins = $oPdf->getMargins();
+		
+		if ($xMin == -1)
 		{
-			// Portrait mode
-			$fHMargin = 10; // mm
-			$fVMargin = 15; // mm
+			$xMin = $aMargins['left'];
 		}
-		else
+		if ($xMax == -1)
 		{
-			// Landscape mode
-			$fHMargin = 15; // mm
-			$fVMargin = 10; // mm
+			$xMax =  $oPdf->getPageWidth() - $aMargins['right'];
+		}
+		if ($yMin == -1)
+		{
+			$yMin = $aMargins['top'];
+		}
+		if ($yMax == -1)
+		{
+			$yMax = $oPdf->getPageHeight() - $aMargins['bottom'];
 		}
 		
-		$fPageW = $oPdf->getPageWidth() - 2 * $fHMargin;
-		$fPageH = $oPdf->getPageHeight() - 2 * $fVMargin;
+		$fBreakMargin = $oPdf->getBreakMargin();
+		$oPdf->SetAutoPageBreak(false);
+		$fKeyWidth = $this->RenderKey($oPdf, $sComments, $xMin, $yMin, $xMax, $yMax);
+		$xMin += + $fKeyWidth;
+		
+		//$oPdf->Rect($xMin, $yMin, $xMax - $xMin, $yMax - $yMin, 'D', array(), array(225, 225, 225));
+		
+		$fPageW = $xMax - $xMin;
+		$fPageH = $yMax - $yMin;
 		
 		$w = $aBB['xmax'] - $aBB['xmin']; 
 		$h = $aBB['ymax'] - $aBB['ymin'] + 10; // Extra space for the labels which may appear "below" the icons
@@ -949,21 +943,70 @@ class DisplayableGraph extends SimpleGraph
 		$dx = ($fPageW - $fScale * $w) / 2;
 		$dy = ($fPageH - $fScale * $h) / 2;
 		
-		$this->Translate(($fHMargin + $dx)/$fScale, ($fVMargin + $dy)/$fScale);
-		
+		$this->Translate(($xMin + $dx)/$fScale, ($yMin + $dy)/$fScale);
+
 		$oIterator = new RelationTypeIterator($this, 'Edge');
+		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		foreach($oIterator as $sId => $oEdge)
 		{
+			set_time_limit($iLoopTimeLimit);
 			$oEdge->RenderAsPDF($oPdf, $this, $fScale);
 		}
 
 		$oIterator = new RelationTypeIterator($this, 'Node');
 		foreach($oIterator as $sId => $oNode)
 		{
+			set_time_limit($iLoopTimeLimit);
 			$oNode->RenderAsPDF($oPdf, $this, $fScale);
 		}
-		
-		$oP->add($oPdf->Output('iTop.pdf', 'S'));	
+		$oIterator = new RelationTypeIterator($this, 'Node');
+		$oPdf->SetAutoPageBreak(true, $fBreakMargin);
+		$oPdf->SetAlpha(1);
 	}
 	
+	protected function RenderKey(TCPDF $oPdf, $sComments, $xMin, $yMin, $xMax, $yMax)
+	{
+		$oIterator = new RelationTypeIterator($this, 'Node');
+		$fMaxWidth = max($oPdf->GetStringWidth(Dict::S('UI:Relation:Key')) - 6, $oPdf->GetStringWidth(Dict::S('UI:Relation:Comments')) - 6);
+		$aClasses = array();
+		$aIcons = array();
+		$oPdf->SetFont('dejavusans', '', 8, '', true);
+		foreach($oIterator as $sId => $oNode)
+		{
+			if ($sClass = $oNode->GetProperty('class'))
+			{
+				if (!array_key_exists($sClass, $aClasses))
+				{
+					$sClassLabel = MetaModel::GetName($sClass);
+					$width = $oPdf->GetStringWidth($sClassLabel);
+					$fMaxWidth = max($width, $fMaxWidth);
+					$aClasses[$sClass] = $sClassLabel;
+					$sIconUrl = $oNode->GetProperty('icon_url');
+					$sIconPath = str_replace(utils::GetAbsoluteUrlModulesRoot(), APPROOT.'env-production/', $sIconUrl);
+					$aIcons[$sClass] = $sIconPath;
+				}
+			}
+		}
+		$oPdf->SetXY($xMin + 1, $yMin +1);
+		$yPos = $yMin + 1;
+		$oPdf->SetFillColor(225, 225, 225);
+		$oPdf->Cell(7 + $fMaxWidth, 7, Dict::S('UI:Relation:Key'), 0 /* border */, 1 /* ln */, 'C', true /* fill */);
+		$yPos += 8;
+		foreach($aClasses as $sClass => $sLabel)
+		{
+			$oPdf->SetX($xMin + 7);
+			$oPdf->Cell(0, 8, $sLabel, 0 /* border */, 1 /* ln */);
+			$oPdf->Image($aIcons[$sClass], $xMin+1, $yPos, 6, 6);
+			$yPos += 8; 
+		}
+		$oPdf->Rect($xMin, $yMin, $fMaxWidth+9, $yPos - $yMin, 'D');
+		$oPdf->Rect($xMin, $yPos, $fMaxWidth+9, $yMax - $yPos, 'D');
+		$yPos +=1;
+		$oPdf->SetXY($xMin + 1, $yPos);
+		$oPdf->Cell(7 + $fMaxWidth, 7, Dict::S('UI:Relation:Comments'), 0 /* border */, 1 /* ln */, 'C', true /* fill */);
+		$yPos += 8;
+		$oPdf->SetX($xMin);
+		$oPdf->writeHTMLCell(8 + $fMaxWidth, $yMax - $yPos, $xMin, $yPos, '<p>'.str_replace("\n", '<br/>', htmlentities($sComments, ENT_QUOTES, 'UTF-8')).'</p>', 0 /* border */, 1 /* ln */);
+		return $fMaxWidth + 10;
+	}
 }

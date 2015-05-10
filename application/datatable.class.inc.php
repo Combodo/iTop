@@ -606,6 +606,34 @@ EOF
 	}
 }
 
+/**
+ * Simplified version of the data table with less "decoration" (and no paging)
+ * which is optimized for printing
+ */
+class PrintableDataTable extends DataTable
+{
+	public function GetAsHTML(WebPage $oPage, $iPageSize, $iDefaultPageSize, $iPageIndex, $aColumns, $bActionsMenu, $bToolkitMenu, $sSelectMode, $bViewLink, $aExtraParams)
+	{
+		return $this->GetHTMLTable($oPage, $aColumns, $sSelectMode, -1, $bViewLink, $aExtraParams);
+	}
+	
+	public function GetHTMLTable(WebPage $oPage, $aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams)
+	{
+		$iNbPages = ($iPageSize < 1) ? 1 : ceil($this->iNbObjects / $iPageSize);
+		if ($iPageSize < 1)
+		{
+			$iPageSize = -1; // convention: no pagination
+		}
+		$aAttribs = $this->GetHTMLTableConfig($aColumns, $sSelectMode, $bViewLink);
+	
+		$aValues = $this->GetHTMLTableValues($aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams);
+	
+		$sHtml = $oPage->GetTable($aAttribs, $aValues);
+		
+		return $sHtml;
+	}
+}
+
 class DataTableSettings implements Serializable
 {
 	public $aClassAliases;

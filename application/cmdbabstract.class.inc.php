@@ -705,7 +705,45 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	
 	public static function DisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
-		$oPage->add(self::GetDisplaySet($oPage, $oSet, $aExtraParams));
+		if ($oPage->is_pdf())
+		{
+			$oPage->add(self::DisplaySetForPrinting($oPage, $oSet, $aExtraParams));
+		}
+		else
+		{
+			$oPage->add(self::GetDisplaySet($oPage, $oSet, $aExtraParams));
+		}
+	}
+	
+	/**
+	 * Simplifed version of GetDisplaySet() with less "decoration" around the table (and no paging)
+	 * that fits better into a printed document (like a PDF)
+	 * @param PDFPage $oPage
+	 * @param DBObjectSet $oSet
+	 * @param hash $aExtraParams
+	 * @return string The HTML representation of the table
+	 */
+	public static function DisplaySetForPrinting(PDFPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
+	{
+		$iListId = empty($aExtraParams['currentId']) ? $oPage->GetUniqueId() : $aExtraParams['currentId'];
+		$sTableId = isset($aExtraParams['table_id']) ? $aExtraParams['table_id'] : null;
+		
+		$bViewLink = true;
+		$sSelectMode = 'none';
+		$iListId = $sTableId;
+		$sClassAlias = $oSet->GetClassAlias();
+		$sClassName = $oSet->GetClass();
+		$sZListName = 'list';
+		$aClassAliases = array( $sClassAlias => $sClassName);
+		$aList = cmdbAbstractObject::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
+	
+		$oDataTable = new PrintableDataTable($iListId, $oSet, $aClassAliases, $sTableId);
+		$oSettings = DataTableSettings::GetDataModelSettings($aClassAliases, $bViewLink, array($sClassAlias => $aList));
+		$oSettings->iDefaultPageSize = 0;
+		$oSettings->aSortOrder = MetaModel::GetOrderByDefault($sClassName);
+	
+		return $oDataTable->Display($oPage, $oSettings, false /* $bDisplayMenu */, $sSelectMode, $bViewLink, $aExtraParams);
+	
 	}
 
 	/**
