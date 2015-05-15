@@ -29,8 +29,8 @@ class iTopPDF extends TCPDF
 		$aMargins = $this->getMargins();
 		
 		// Display the title (centered)
-		$this->SetY(0);
-		$this->MultiCell($this->getPageWidth() - $aMargins['left'] - $aMargins['right'] - $iPageNumberWidth, 15, $this->sDocumentTitle, 0, 'C', false, 0 /* $ln */, '', '', true, 0, false, true, 15, 'M' /* $valign */);
+		$this->SetXY($aMargins['left'] + $iPageNumberWidth, 0);
+		$this->MultiCell($this->getPageWidth() - $aMargins['left'] - $aMargins['right'] - 2*$iPageNumberWidth, 15, $this->sDocumentTitle, 0, 'C', false, 0 /* $ln */, '', '', true, 0, false, true, 15, 'M' /* $valign */);
 		$this->SetFont('dejavusans', '', 10);
 		
 		// Display the page number (right aligned)

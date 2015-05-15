@@ -777,6 +777,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:RelationGroups' => 'Gruppen',
 	'UI:RelationGroupNumber_N' => 'Gruppe #%1$d~~',
 	'UI:Relation:ExportAsPDF' => 'Export as PDF...~~',
+	'UI:RelationOption:GroupingThreshold' => 'Grouping threshold~~',
 	'UI:Relation:ExportAsDocument' => 'Export as Document...~~',
 	'UI:Relation:DrillDown' => 'Details...~~',
 	'UI:Relation:PDFExportOptions' => 'PDF Export Options~~',

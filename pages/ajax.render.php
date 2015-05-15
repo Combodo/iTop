@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2014 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -1731,9 +1731,7 @@ EOF
 		require_once(APPROOT.'core/simplegraph.class.inc.php');
 		require_once(APPROOT.'core/relationgraph.class.inc.php');
 		require_once(APPROOT.'core/displayablegraph.class.inc.php');
-		$sClass = utils::ReadParam('class', '', false, 'class');
-		$id = (int)utils::ReadParam('id', 0);
-		$sRelation = utils::ReadParam('relation', 'impact');
+		$sRelation = utils::ReadParam('relation', 'impacts');
 		$sDirection = utils::ReadParam('direction', 'down');
 		
 		$iGroupingThreshold = utils::ReadParam('g', 5);
@@ -1741,7 +1739,7 @@ EOF
 		$sPageOrientation = utils::ReadParam('o', 'L');
 		$sTitle = utils::ReadParam('title', '', false, 'raw_data');
 		$sPositions = utils::ReadParam('positions', null, false, 'raw_data');
-		$aExcluded = utils::ReadParam('excluded', array(), false, 'raw_data');
+		$aExcludedClasses = utils::ReadParam('excluded_classes', array(), false, 'raw_data');
 		$bIncludeList = (bool)utils::ReadParam('include_list', false);
 		$sComments = utils::ReadParam('comments', '', false, 'raw_data');
 		$aPositions = null;
@@ -1750,26 +1748,52 @@ EOF
 			$aPositions = json_decode($sPositions, true);
 		}
 		
-		$oObj = MetaModel::GetObject($sClass, $id);
+		// Get the list of source objects
+		$aSources = utils::ReadParam('sources', array(), false, 'raw_data');
+		$aSourceObjects = array();
+		foreach($aSources as $sClass => $aIDs)
+		{
+			$oSearch = new DBObjectSearch($sClass);
+			$oSearch->AddCondition('id', $aIDs, 'IN');
+			$oSet = new DBObjectSet($oSearch);
+			while($oObj = $oSet->Fetch())
+			{
+				$aSourceObjects[] = $oObj;
+			}
+		}
+		
+		// Get the list of excluded objects
+		$aExcluded = utils::ReadParam('excluded', array(), false, 'raw_data');
+		$aExcludedObjects = array();
+		foreach($aExcluded as $sClass => $aIDs)
+		{
+			$oSearch = new DBObjectSearch($sClass);
+			$oSearch->AddCondition('id', $aIDs, 'IN');
+			$oSet = new DBObjectSet($oSearch);
+			while($oObj = $oSet->Fetch())
+			{
+				$aExcludedObjects[] = $oObj;
+			}
+		}
+		
 		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
-		$aSourceObjects = array($oObj);
 		if ($sDirection == 'up')
 		{
 			$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);
 		}
 		else
 		{
-			$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+			$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aExcludedObjects);
 		}
 		
 		// Remove excluded classes from the graph
-		if (count($aExcluded) > 0)
+		if (count($aExcludedClasses) > 0)
 		{
 			$oIterator = new RelationTypeIterator($oRelGraph, 'Node');
 			foreach($oIterator as $oNode)
 			{
 				$oObj = $oNode->GetProperty('object');
-				if ($oObj && in_array(get_class($oObj), $aExcluded))
+				if ($oObj && in_array(get_class($oObj), $aExcludedClasses))
 				{
 					$oRelGraph->FilterNode($oNode);
 				}
@@ -1798,13 +1822,7 @@ EOF
 		}
 		// First page is the graph
 		$oGraph->RenderAsPDF($oPage, $sComments);
-		/*
-		// Experimental QR code at the bottom left of the page...
-		$sUrl = "r=$sRelation&d=$sDirection&c=$sClass&id=$id";
-		$oPdf = $oPage->get_tcpdf();
-		$aMargins = $oPdf->getMargins();
-		$oPdf->write2DBarcode($sUrl, 'QRCODE,H', $aMargins['left'], $oPdf->getPageHeight() - $aMargins['bottom'] - 35, 25, 25, array(), 'N');
-		*/
+
 		if ($bIncludeList)
 		{
 			// Then the lists of objects (one table per finalclass)
@@ -1864,39 +1882,64 @@ EOF
 		require_once(APPROOT.'core/simplegraph.class.inc.php');
 		require_once(APPROOT.'core/relationgraph.class.inc.php');
 		require_once(APPROOT.'core/displayablegraph.class.inc.php');
-		$sClass = utils::ReadParam('class', '', false, 'class');
-		$id = utils::ReadParam('id', 0);
-		$sRelation = utils::ReadParam('relation', 'impact');
+		$sRelation = utils::ReadParam('relation', 'impacts');
 		$sDirection = utils::ReadParam('direction', 'down');
 		$iGroupingThreshold = utils::ReadParam('g', 5);
 		$sPositions = utils::ReadParam('positions', null, false, 'raw_data');
-		$aExcluded = utils::ReadParam('excluded', array(), false, 'raw_data');
+		$aExcludedClasses = utils::ReadParam('excluded_classes', array(), false, 'raw_data');
 		$aPositions = null;
 		if ($sPositions != null)
 		{
 			$aPositions = json_decode($sPositions, true);
 		}
 		
-		$oObj = MetaModel::GetObject($sClass, $id);
+			// Get the list of source objects
+		$aSources = utils::ReadParam('sources', array(), false, 'raw_data');
+		$aSourceObjects = array();
+		foreach($aSources as $sClass => $aIDs)
+		{
+			$oSearch = new DBObjectSearch($sClass);
+			$oSearch->AddCondition('id', $aIDs, 'IN');
+			$oSet = new DBObjectSet($oSearch);
+			while($oObj = $oSet->Fetch())
+			{
+				$aSourceObjects[] = $oObj;
+			}
+		}
+		
+		// Get the list of excluded objects
+		$aExcluded = utils::ReadParam('excluded', array(), false, 'raw_data');
+		$aExcludedObjects = array();
+		foreach($aExcluded as $sClass => $aIDs)
+		{
+			$oSearch = new DBObjectSearch($sClass);
+			$oSearch->AddCondition('id', $aIDs, 'IN');
+			$oSet = new DBObjectSet($oSearch);
+			while($oObj = $oSet->Fetch())
+			{
+				$aExcludedObjects[] = $oObj;
+			}
+		}
+		
+		// Compute the graph
 		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
-		$aSourceObjects = array($oObj);
 		if ($sDirection == 'up')
 		{
 			$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);
 		}
 		else
 		{
-			$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+			$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aExcludedObjects);
 		}
 		
 		// Remove excluded classes from the graph
-		if (count($aExcluded) > 0)
+		if (count($aExcludedClasses) > 0)
 		{
 			$oIterator = new RelationTypeIterator($oRelGraph, 'Node');
 			foreach($oIterator as $oNode)
 			{
 				$oObj = $oNode->GetProperty('object');
-				if ($oObj && in_array(get_class($oObj), $aExcluded))
+				if ($oObj && in_array(get_class($oObj), $aExcludedClasses))
 				{
 					$oRelGraph->FilterNode($oNode);
 				}
@@ -1911,6 +1954,57 @@ EOF
 		}
 		$oPage->add($oGraph->GetAsJSON());
 		$oPage->SetContentType('application/json');
+		break;
+		
+		case 'ticket_impact':
+		require_once(APPROOT.'core/simplegraph.class.inc.php');
+		require_once(APPROOT.'core/relationgraph.class.inc.php');
+		require_once(APPROOT.'core/displayablegraph.class.inc.php');
+		$sRelation = utils::ReadParam('relation', 'impacts');
+		$sDirection = utils::ReadParam('direction', 'down');
+		$iGroupingThreshold = utils::ReadParam('g', 5);
+		$sClass = utils::ReadParam('class', '', false, 'class');
+		$sAttCode = utils::ReadParam('attcode', 'functionalcis_list');
+		$sImpactAttCode = utils::ReadParam('impact_attcode', 'impact_code');
+		$sImpactAttCodeValue = utils::ReadParam('impact_attcode_value', 'manual');
+		$iId = (int)utils::ReadParam('id', 0, false, 'integer');
+		
+		// Get the list of source objects
+		$oTicket = MetaModel::GetObject($sClass, $iId);
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
+		$oExtKeyToRemote = MetaModel::GetAttributeDef($oAttDef->GetLinkedClass(), $sExtKeyToRemote);
+		$sRemoteClass = $oExtKeyToRemote->GetTargetClass();
+		$oSet = $oTicket->Get($sAttCode);
+		$aSourceObjects = array();
+		$aExcludedObjects = array();
+		while($oLnk = $oSet->Fetch())
+		{
+			if ($oLnk->Get($sImpactAttCode) == 'manual')
+			{
+				$aSourceObjects[] = MetaModel::GetObject($sRemoteClass, $oLnk->Get($sExtKeyToRemote));
+			}
+			if ($oLnk->Get($sImpactAttCode) == 'not_impacted')
+			{
+				$aExcludedObjects[] = MetaModel::GetObject($sRemoteClass, $oLnk->Get($sExtKeyToRemote));
+			}
+		}
+		
+		// Compute the graph
+		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
+		if ($sDirection == 'up')
+		{
+			$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+		}
+		else
+		{
+			$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth, $aExcludedObjects);
+		}
+		
+		$aResults = $oRelGraph->GetObjectsByClass();
+		$oGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
+		$oAppContext = new ApplicationContext();
+		$oGraph->Display($oPage, $aResults, $sRelation, $oAppContext, $aExcludedObjects);		
 		break;
 		
 		default:

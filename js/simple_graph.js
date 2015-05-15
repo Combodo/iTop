@@ -16,13 +16,24 @@ $(function()
 			align: 'center',
 			'vertical-align': 'middle',
 			source_url: null,
+			sources: {},
+			excluded: {},
 			export_as_pdf: null,
 			page_format: { label: 'Page Format:', values: { A3: 'A3', A4: 'A4', Letter: 'Letter' }, 'default': 'A4'},
 			page_orientation: { label: 'Page Orientation:', values: { P: 'Portait', L: 'Landscape' }, 'default': 'L' },
-			labels: { export_pdf_title: 'PDF Export Options', cancel: 'Cancel', 'export': 'Export', title: 'Document Title', include_list: 'Include the list of objects', comments: 'Comments' },
+			labels: {
+				export_pdf_title: 'PDF Export Options',
+				cancel: 'Cancel', 'export': 'Export',
+				title: 'Document Title',
+				include_list: 'Include the list of objects',
+				comments: 'Comments',
+				grouping_threshold: 'Grouping Threshold',
+				refresh: 'Refresh'
+			},
 			export_as_document: null,
 			drill_down: null,
-			excluded: []
+			grouping_threshold: 10,
+			excluded_classes: []
 		},
 	
 		// the constructor
@@ -352,7 +363,10 @@ $(function()
 		_create_toolkit_menu: function()
 		{
 			var sPopupMenuId = 'tk_graph'+this.element.attr('id');
-			var sHtml = '<div class="itop_popup toolkit_menu graph" style="font-size: 12px;" id="'+sPopupMenuId+'"><ul><li><img src="../images/toolkit_menu.png"><ul>';
+			var sHtml = '<div class="graph_config">';
+			var sId = this.element.attr('id');
+			sHtml += this.options.labels.grouping_threshold+'&nbsp;<input type="text" name="g" value="'+this.options.grouping_threshold+'" id="'+sId+'_grouping_threshold" size="2">&nbsp;<button type="button" id="'+sId+'_refresh_btn">'+this.options.labels.refresh+'</button>';
+			sHtml += '<div class="itop_popup toolkit_menu graph" style="font-size: 12px;" id="'+sPopupMenuId+'"><ul><li><img src="../images/toolkit_menu.png"><ul>';
 			if (this.options.export_as_pdf != null)
 			{
 				sHtml += '<li><a href="#" id="'+sPopupMenuId+'_pdf">'+this.options.export_as_pdf.label+'</a></li>';			
@@ -363,16 +377,17 @@ $(function()
 			}
 			//sHtml += '<li><a href="#" id="'+sPopupMenuId+'_reload">Refresh</a></li>';
 			sHtml += '</ul></li></ul></div>';
+			sHtml += '</div>';
 			
 			this.element.before(sHtml);
-			$('#'+sPopupMenuId).popupmenu();
+			$('#'+sPopupMenuId+'>ul').popupmenu();
 			
 			
 			var me = this;
 			$('#'+sPopupMenuId+'_pdf').click(function() { me.export_as_pdf(); });
 			$('#'+sPopupMenuId+'_document').click(function() { me.export_as_document(); });
-			$('#'+sPopupMenuId+'_reload').click(function() { me.reload(); });
-			
+			$('#'+sId+'_grouping_threshold').spinner({ min: 2});
+			$('#'+sId+'_refresh_btn').button().click(function() { me.reload(); });
 		},
 		_build_context_menus: function()
 		{
@@ -400,13 +415,16 @@ $(function()
 		        	{
 		        		case 'group':
 		        		var sGroupIndex = oNode.group_index;
-		        		oResult = {
-	        				callback: function(key, options) {
-	        					var me = $('.itop-simple-graph').data('itopSimple_graph'); // need a live value
-	        					me.show_group('relation_group_'+sGroupIndex);
-	        				},
-	        				items: { 'show': {name: me.options.drill_down.label } }
-	        			};
+		        		if( $('#relation_group_'+sGroupIndex).length > 0)
+		        		{
+			        		oResult = {
+			        				callback: function(key, options) {
+			        					var me = $('.itop-simple-graph').data('itopSimple_graph'); // need a live value
+			        					me.show_group('relation_group_'+sGroupIndex);
+			        				},
+			        				items: { 'show': {name: me.options.drill_down.label } }
+			        			};		        			
+		        		}
 						break;
 						
 		        		case 'icon':
@@ -438,10 +456,25 @@ $(function()
 				oPositions[this.aNodes[k].id] = {x: this.aNodes[k].x, y: this.aNodes[k].y };
 			}
 			var sHtmlForm = '<div id="PDFExportDlg'+this.element.attr('id')+'"><form id="graph_'+this.element.attr('id')+'_export_as_pdf" target="_blank" action="'+this.options.export_as_pdf.url+'" method="post">';
+			sHtmlForm += '<input type="hidden" name="g" value="'+this.options.grouping_threshold+'">';
 			sHtmlForm += '<input type="hidden" name="positions" value="">';
-			for(k in this.options.excluded)
+			for(k in this.options.excluded_classes)
 			{
-				sHtmlForm += '<input type="hidden" name="excluded[]" value="'+this.options.excluded[k]+'">';				
+				sHtmlForm += '<input type="hidden" name="excluded_classes[]" value="'+this.options.excluded_classes[k]+'">';				
+			}
+			for(var k1 in this.options.sources)
+			{
+				for(var k2 in this.options.sources[k1])
+				{
+					sHtmlForm += '<input type="hidden" name="sources['+k1+'][]" value="'+this.options.sources[k1][k2]+'">';									
+				}
+			}
+			for(var k1 in this.options.excluded)
+			{
+				for(var k2 in this.options.excluded[k1])
+				{
+					sHtmlForm += '<input type="hidden" name="excluded['+k1+'][]" value="'+this.options.excluded[k1][k2]+'">';									
+				}
 			}
 			sHtmlForm += '<table>';
 			sHtmlForm += '<tr><td>'+this.options.page_format.label+'</td><td><select name="p">';
@@ -507,9 +540,16 @@ $(function()
 		{
 			this.options.load_from_url = sUrl;
 			var me = this;
+			var sId = this.element.attr('id');
+			this.options.grouping_threshold = $('#'+sId+'_grouping_threshold').val();
+			if (this.options.grouping_threshold < 2)
+			{
+				this.options.grouping_threshold = 2;
+				$('#'+sId+'_grouping_threshold').val(this.options.grouping_threshold);
+			}
 			this.element.closest('.ui-tabs').tabs({ heightStyle: "fill" });
 			this.oPaper.rect(0, 0, this.element.width(), this.element.height()).attr({fill: '#000', opacity: 0.4, 'stroke-width': 0});
-			$.post(sUrl, {excluded: this.options.excluded }, function(data) {
+			$.post(sUrl, {excluded_classes: this.options.excluded_classes, g: this.options.grouping_threshold, sources: this.options.sources, excluded: this.options.excluded }, function(data) {
 				me.load(data);
 			}, 'json');
 		},

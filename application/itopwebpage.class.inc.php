@@ -218,7 +218,7 @@ EOF;
 			},
 			beforeLoad: function( event, ui ) {
 				if ( ui.tab.data('loaded') && (ui.tab.attr('data-cache') == 'true')) {
-					event.defaultPrevented = true;
+					event.preventDefault();
 					return;
 				}
 				ui.panel.html('<div><img src="../images/indicator.gif"></div>');
@@ -867,26 +867,29 @@ EOF
 		}
 		else if ($this->GetOutputFormat() == 'pdf' && $this->IsOutputFormatAvailable('pdf') )
 		{
-			require_once(APPROOT.'lib/MPDF/mpdf.php');
-			$oMPDF = new mPDF('c');
-			$oMPDF->mirroMargins = false;
-			if ($this->a_base['href'] != '')
+			if (@is_readable(APPROOT.'lib/MPDF/mpdf.php'))
 			{
-					$oMPDF->setBasePath($this->a_base['href']); // Seems that the <BASE> tag is not recognized by mPDF...
+				require_once(APPROOT.'lib/MPDF/mpdf.php');
+				$oMPDF = new mPDF('c');
+				$oMPDF->mirroMargins = false;
+				if ($this->a_base['href'] != '')
+				{
+						$oMPDF->setBasePath($this->a_base['href']); // Seems that the <BASE> tag is not recognized by mPDF...
+				}
+				$oMPDF->showWatermarkText = true;
+				if ($this->GetOutputOption('pdf', 'template_path'))
+				{
+						$oMPDF->setImportUse(); // Allow templates
+						$oMPDF->SetDocTemplate ($this->GetOutputOption('pdf', 'template_path'), 1);
+				}
+				$oMPDF->WriteHTML($sHtml);
+				$sOutputName = $this->s_title.'.pdf';
+				if ($this->GetOutputOption('pdf', 'output_name'))
+				{
+					$sOutputName = $this->GetOutputOption('pdf', 'output_name');
+				}
+				$oMPDF->Output($sOutputName, 'I');
 			}
-			$oMPDF->showWatermarkText = true;
-			if ($this->GetOutputOption('pdf', 'template_path'))
-			{
-					$oMPDF->setImportUse(); // Allow templates
-					$oMPDF->SetDocTemplate ($this->GetOutputOption('pdf', 'template_path'), 1);
-			}
-			$oMPDF->WriteHTML($sHtml);
-			$sOutputName = $this->s_title.'.pdf';
-			if ($this->GetOutputOption('pdf', 'output_name'))
-			{
-				$sOutputName = $this->GetOutputOption('pdf', 'output_name');
-			}
-			$oMPDF->Output($sOutputName, 'I');
 		}
 		MetaModel::RecordQueryTrace();
 		ExecutionKPI::ReportStats();

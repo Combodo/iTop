@@ -82,6 +82,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Ticket/Attribute:workorders_list+' => 'All the work orders for this ticket',
 	'Class:Ticket/Attribute:finalclass' => 'Type',
 	'Class:Ticket/Attribute:finalclass+' => '',
+	'Ticket:ImpactAnalysis' => 'Impact Analysis',
 ));
 
 
@@ -100,8 +101,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkContactToTicket/Attribute:contact_id+' => '',
 	'Class:lnkContactToTicket/Attribute:contact_email' => 'Contact Email',
 	'Class:lnkContactToTicket/Attribute:contact_email+' => '',
-	'Class:lnkContactToTicket/Attribute:role' => 'Role',
+	'Class:lnkContactToTicket/Attribute:role' => 'Role (text)',
 	'Class:lnkContactToTicket/Attribute:role+' => '',
+	'Class:lnkContactToTicket/Attribute:role_code' => 'Role',
+	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Added manually',
+	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Computed',
+	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Do not notify',
 ));
 
 //
@@ -119,8 +124,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'CI Name',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Impact',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Impact (text)',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact+' => '',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => 'Impact',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Added manually',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Computed',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Not impacted',
 ));
 
 

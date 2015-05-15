@@ -1454,17 +1454,18 @@ abstract class MetaModel
 	 * @param array $asourceObjects The objects to start with
 	 * @param int $iMaxDepth
 	 * @param boolean $bEnableReduncancy
+	 * @param array $aUnreachable Array of objects to be considered as 'unreachable'
 	 * 
 	 * @return RelationGraph The graph of all the related objects
 	 */
-	static public function GetRelatedObjectsDown($sRelCode, $aSourceObjects, $iMaxDepth = 99, $bEnableRedundancy = true)
+	static public function GetRelatedObjectsDown($sRelCode, $aSourceObjects, $iMaxDepth = 99, $bEnableRedundancy = true, $aUnreachable = array())
 	{
 		$oGraph = new RelationGraph();
 		foreach ($aSourceObjects as $oObject)
 		{
 			$oGraph->AddSourceObject($oObject);
 		}
-		$oGraph->ComputeRelatedObjectsDown($sRelCode, $iMaxDepth, $bEnableRedundancy);
+		$oGraph->ComputeRelatedObjectsDown($sRelCode, $iMaxDepth, $bEnableRedundancy, $aUnreachable);
 		return $oGraph;
 	}
 

@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__,
-	'itop-tickets/2.1.0',
+	'itop-tickets/2.2.0',
 	array(
 		// Identification
 		//
@@ -22,8 +22,8 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-tickets.php',
 			'main.itop-tickets.php',
+			'model.itop-tickets.php',
 		),
 		'data.struct' => array(
 	//		'data.struct.ta-actions.xml',

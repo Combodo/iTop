@@ -127,4 +127,124 @@ class ResponseTicketTTR extends ResponseTicketSLT implements iMetricComputer
 	}
 }
 
+
+class _Ticket extends cmdbAbstractObject
+{
+
+	public function UpdateImpactedItems()
+	{
+		$oContactsSet = $this->Get('contacts_list');
+		$oCIsSet = $this->Get('functionalcis_list');
+		
+		$aCIsToImpactCode = array();
+		$aSources = array();
+		$aExcluded = array();
+		
+		$oCIsSet->Rewind();
+		while ($oLink = $oCIsSet->Fetch())
+		{
+			$iKey = $oLink->Get('functionalci_id');
+			$aCIsToImpactCode[$iKey] = $oLink->Get('impact_code');
+			if ($oLink->Get('impact_code') == 'manual')
+			{
+				$oObj = MetaModel::GetObject('FunctionalCI', $iKey);
+				$aSources[$iKey] = $oObj;
+			}
+			else if ($oLink->Get('impact_code') == 'not_impacted')
+			{
+				$oObj = MetaModel::GetObject('FunctionalCI', $iKey);
+				$aExcluded[$iKey] = $oObj;
+			}
+		}
+		
+		$aContactsToRoleCode = array();
+		$oContactsSet->Rewind();
+		while ($oLink = $oContactsSet->Fetch())
+		{
+			$iKey = $oLink->Get('contact_id');
+			$aContactsToRoleCode[$iKey] = $oLink->Get('role_code');
+			if ($oLink->Get('role_code') == 'do_not_notify')
+			{
+				$oObj = MetaModel::GetObject('Contact', $iKey);
+				$aExcluded[$iKey] = $oObj;
+			}
+		}
+		
+		$oNewCIsSet = DBObjectSet::FromScratch('lnkFunctionalCIToTicket');
+		foreach($aCIsToImpactCode as $iKey => $sImpactCode)
+		{
+			if ($sImpactCode != 'computed')
+			{
+				$oNewLink = new lnkFunctionalCIToTicket();
+				$oNewLink->Set('functionalci_id', $iKey);
+				$oNewLink->Set('impact_code', $sImpactCode);
+				$oNewCIsSet->AddObject($oNewLink);				
+			}
+		}
+		
+		$oNewContactsSet = DBObjectSet::FromScratch('lnkContactToTicket');
+		foreach($aContactsToRoleCode as $iKey => $sImpactCode)
+		{
+			if ($sImpactCode != 'computed')
+			{
+				$oNewLink = new lnkContactToTicket();
+				$oNewLink->Set('contact_id', $iKey);
+				$oNewLink->Set('role_code', $sImpactCode);
+				$oNewContactsSet->AddObject($oNewLink);
+			}
+		}
+		
+		$oContactsSet = DBObjectSet::FromScratch('lnkContactToTicket');
+		$oGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, 10, true /* bEnableRedundancy */, $aExcluded);
+		$oIterator = new RelationTypeIterator($oGraph, 'Node');
+		foreach ($oIterator as $oNode)
+		{
+			if ( ($oNode instanceof RelationObjectNode) && ($oNode->GetProperty('is_reached')) && (!$oNode->GetProperty('source')))
+			{
+				$oObj = $oNode->GetProperty('object');
+				$iKey = $oObj->GetKey();
+				$sRootClass = MetaModel::GetRootClass(get_class($oObj));
+				switch ($sRootClass)
+				{
+					case 'FunctionalCI':
+					// Only link FunctionalCIs which are not already linked to the ticket
+					if (!array_key_exists($iKey, $aCIsToImpactCode) || ($aCIsToImpactCode[$iKey] != 'not_impacted'))
+					{
+						$oNewLink = new lnkFunctionalCIToTicket();
+						$oNewLink->Set('functionalci_id', $iKey);
+						$oNewLink->Set('impact_code', 'computed');
+						$oNewCIsSet->AddObject($oNewLink);
+					}
+					break;
+					
+					case 'Contact':
+					// Only link Contacts which are not already linked to the ticket
+					if (!array_key_exists($iKey, $aContactsToRoleCode) || ($aCIsToImpactCode[$iKey] != 'do_not_notify'))
+					{
+						$oNewLink = new lnkContactToTicket();
+						$oNewLink->Set('contact_id', $iKey);
+						$oNewLink->Set('role_code', 'computed');
+						$oNewContactsSet->AddObject($oNewLink);
+					}
+					break;
+				}
+			}
+		}
+		$this->Set('functionalcis_list', $oNewCIsSet);
+		$this->Set('contacts_list', $oNewContactsSet);
+	}
+	
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	{
+		parent::DisplayBareRelations($oPage, $bEditMode);
+		if (!$bEditMode)
+		{
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
+			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
+			$oPage->AddAjaxTab(Dict::S('Ticket:ImpactAnalysis'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=ticket_impact&class='.get_class($this).'&id='.$this->GetKey(), true);
+		}
+	}
+}
 ?>

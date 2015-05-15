@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -262,163 +262,11 @@ function DisplayNavigatorGroupTab($oP, $aGroups, $sRelation, $oObj)
 	}
 }
 
-function DisplayNavigatorGraphicsTab($oP, $aResults, $oDisplayGraph, $sClass, $id, $sRelation, $oAppContext, $bDirectionDown)
-{
-	$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
-
-	$oP->add("<div id=\"ds_flash\" class=\"SearchDrawer\" style=\"display:none;\">\n");
-	$oP->add_ready_script(
-<<<EOF
-	$( "#tabbedContent_0" ).tabs({ heightStyle: "fill" });
-	$("#dh_flash").click( function() {
-		$("#ds_flash").slideToggle('normal', function() { $("#ds_flash").parent().resize(); } );
-		$("#dh_flash").toggleClass('open');
-	});
-EOF
-	);
-	$aSortedElements = array();
-	foreach($aResults as $sClassIdx => $aObjects)
-	{
-		foreach($aObjects as $oCurrObj)
-		{
-			$sSubClass = get_class($oCurrObj);
-			$aSortedElements[$sSubClass] = MetaModel::GetName($sSubClass);
-		}
-	}
-		
-	asort($aSortedElements);
-	$idx = 0;
-	foreach($aSortedElements as $sSubClass => $sClassName)
-	{
-		$oP->add("<span style=\"padding-right:2em; white-space:nowrap;\"><input type=\"checkbox\" id=\"exclude_$idx\" name=\"excluded[]\" value=\"$sSubClass\" checked onChange=\"$('#ReloadMovieBtn').button('enable')\"><label for=\"exclude_$idx\">&nbsp;".MetaModel::GetClassIcon($sSubClass)."&nbsp;$sClassName</label></span> ");
-		$idx++;	
-	}
-	$oP->add("<p style=\"text-align:right\"><button type=\"button\" id=\"ReloadMovieBtn\" onClick=\"DoReload()\">".Dict::S('UI:Button:Refresh')."</button></p>");
-	$oP->add("</div>\n");
-	$oP->add("<div class=\"HRDrawer\"></div>\n");
-	$oP->add("<div id=\"dh_flash\" class=\"DrawerHandle\">".Dict::S('UI:ElementsDisplayed')."</div>\n");
-	
-	$sDirection = utils::ReadParam('d', 'horizontal');
-	$iGroupingThreshold = utils::ReadParam('g', 5);
-		
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
-	$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
-	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
-	try
-	{
-		$oDisplayGraph->InitFromGraphviz();
-		$sExportAsPdfURL = '';
-		if (extension_loaded('gd'))
-		{
-			$sExportAsPdfURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_pdf&relation='.$sRelation.'&direction='.($bDirectionDown ? 'down' : 'up').'&class='.$sClass.'&id='.$id.'&g='.$iGroupingThreshold;
-		}
-		$oAppcontext = new ApplicationContext();
-		$sContext = $oAppContext->GetForLink();
-		$sDrillDownURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class=%1$s&id=%2$s&'.$sContext;
-		$sExportAsDocumentURL = '';
-		$sLoadFromURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_json&relation='.$sRelation.'&direction='.($bDirectionDown ? 'down' : 'up').'&class='.$sClass.'&id='.$id.'&g='.$iGroupingThreshold;
-		
-		$sId = 'graph';
-		$oP->add('<div id="'.$sId.'" class="simple-graph"></div>');
-		$aParams = array(
-			'source_url' => $sLoadFromURL,
-			'export_as_pdf' => array('url' => $sExportAsPdfURL, 'label' => Dict::S('UI:Relation:ExportAsPDF')),
-			//'export_as_document' => array('url' => $sExportAsDocumentURL, 'label' => Dict::S('UI:Relation:ExportAsDocument')),
-			'drill_down' => array('url' => $sDrillDownURL, 'label' => Dict::S('UI:Relation:DrillDown')),
-			'labels' => array(
-				'export_pdf_title' => Dict::S('UI:Relation:PDFExportOptions'),
-				'export' => Dict::S('UI:Button:Export'),
-				'cancel' => Dict::S('UI:Button:Cancel'),
-				'title' => Dict::S('UI:RelationOption:Title'),
-				'include_list' => Dict::S('UI:RelationOption:IncludeList'),
-				'comments' => Dict::S('UI:RelationOption:Comments'),
-			),
-			'page_format' => array(
-				'label' => Dict::S('UI:Relation:PDFExportPageFormat'),
-				'values' => array(
-					'A3' => Dict::S('UI:PageFormat_A3'),
-					'A4' => Dict::S('UI:PageFormat_A4'),
-					'Letter' => Dict::S('UI:PageFormat_Letter'),
-				),
-			),
-			'page_orientation' => array(
-				'label' => Dict::S('UI:Relation:PDFExportPageOrientation'),
-				'values' => array(
-					'P' => Dict::S('UI:PageOrientation_Portrait'),
-					'L' => Dict::S('UI:PageOrientation_Landscape'),
-				),
-			),
-		);
-		$oP->add_ready_script("$('#$sId').simple_graph(".json_encode($aParams).");");
-	}
-	catch(Exception $e)
-	{
-		$oP->add('<div>'.$e->getMessage().'</div>');
-	}
-	$oP->add_script(
-<<<EOF
-			
-	function DoReload()
-	{
-		$('#ReloadMovieBtn').button('disable');
-		try
-		{
-			var aExcluded = [];
-			$('input[name^=excluded]').each( function() {
-				if (!$(this).prop('checked'))
-				{
-					aExcluded.push($(this).val());
-				}
-			} );
-			$('#graph').simple_graph('option', {excluded: aExcluded});
-			$('#graph').simple_graph('reload');
-		}
-		catch(err)
-		{
-			alert(err);
-		}
-	}
-EOF
-);
-	$oP->add_ready_script(
-<<<EOF
-	var ajax_request = null;
-
-	$('#ReloadMovieBtn').button().button('disable');
-	
-	function UpdateImpactedObjects(sClass, iId, sRelation)
-	{
-		var class_name = sClass; //$('select[name=class_name]').val();
-		if (class_name != '')
-		{
-			$('#impacted_objects').block();
-	
-			// Make sure that we cancel any pending request before issuing another
-			// since responses may arrive in arbitrary order
-			if (ajax_request != null)
-			{
-				ajax_request.abort();
-				ajax_request = null;
-			}
-	
-			ajax_request = $.get(GetAbsoluteUrlAppRoot()+'pages/xml.navigator.php', { 'class': sClass, id: iId, relation: sRelation, format: 'html' },
-					function(data)
-					{
-						alert('Not yet implemented');
-						$('#impacted_objects').unblock();
-					}
-			);
-		}
-	}
-EOF
-	);
-}
 /***********************************************************************************
  * 
- * Main user interface page, starts here
+ * Main user interface page starts here
  *
- * ***********************************************************************************/
+ ***********************************************************************************/
 try
 {
 	require_once('../approot.inc.php');
@@ -1608,26 +1456,11 @@ EOF
 		}
 		
 
-		$aResults = array();
-		$aGroups = array();
-		$iGroupIdx = 0;
-		$oIterator = new RelationTypeIterator($oRelGraph, 'Node');
-		foreach($oIterator as $oNode)
-		{
-			$oObj = $oNode->GetProperty('object'); // Some nodes (Redundancy Nodes and Group) do not contain an object
-			if ($oObj)
-			{
-				$sObjClass  = get_class($oObj);
-				if (!array_key_exists($sObjClass, $aResults))
-				{
-					$aResults[$sObjClass] = array();
-				}
-				$aResults[$sObjClass][] = $oObj;
-			}
-		}
-
+		$aResults = $oRelGraph->GetObjectsByClass();
 		$oDisplayGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
 		
+		$aGroups = array();
+		$iGroupIdx = 0;
 		$oIterator = new RelationTypeIterator($oDisplayGraph, 'Node');
 		foreach($oIterator as $oNode)
 		{
@@ -1646,12 +1479,14 @@ EOF
 		if ($sFirstTab == 'list')
 		{
 			DisplayNavigatorListTab($oP, $aResults, $sRelation, $oObj);
-			DisplayNavigatorGraphicsTab($oP, $aResults, $oDisplayGraph, $sClass, $id, $sRelation, $oAppContext, ($sDirection == 'down'));
+			$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
+			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, ($sDirection == 'down'));
 			DisplayNavigatorGroupTab($oP, $aGroups, $sRelation, $oObj);
 		}
 		else
 		{
-			DisplayNavigatorGraphicsTab($oP, $aResults, $oDisplayGraph, $sClass, $id, $sRelation, $oAppContext, ($sDirection == 'down'));
+			$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
+			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, ($sDirection == 'down'));
 			DisplayNavigatorListTab($oP, $aResults, $sRelation, $oObj);
 			DisplayNavigatorGroupTab($oP, $aGroups, $sRelation, $oObj);
 		}

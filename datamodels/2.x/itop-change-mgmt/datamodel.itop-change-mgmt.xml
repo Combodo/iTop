@@ -498,35 +498,11 @@
           <static>false</static>
           <access>protected</access>
           <type>Overload-DBObject</type>
-          <code><![CDATA[	protected function OnInsert()
+          <code><![CDATA[
+    protected function OnInsert()
 	{
-		$oToNotify = $this->Get('contacts_list');
-		$oToImpact = $this->Get('functionalcis_list');
-
-		$oImpactedInfras = DBObjectSet::FromLinkSet($this, 'functionalcis_list', 'functionalci_id');
-	
-		$aComputed = $oImpactedInfras->GetRelatedObjects('impacts', 10);
-	
-		if (isset($aComputed['FunctionalCI']) && is_array($aComputed['FunctionalCI']))
-		{
-			foreach($aComputed['FunctionalCI'] as $iKey => $oObject)
-			{
-				$oNewLink = new lnkFunctionalCIToTicket();
-				$oNewLink->Set('functionalci_id', $iKey);
-				$oToImpact->AddObject($oNewLink);
-			}
-		}
-		if (isset($aComputed['Contact']) && is_array($aComputed['Contact']))
-		{
-			foreach($aComputed['Contact'] as $iKey => $oObject)
-			{
-				$oNewLink = new lnkContactToTicket();
-				$oNewLink->Set('contact_id', $iKey);
-				$oNewLink->Set('role', 'contact automatically computed');
-				$oToNotify->AddObject($oNewLink);
-			}
-		}
-
+        parent::OnInsert();
+        $this->UpdateImpactedItems();
 		$this->Set('creation_date', time());
 		$this->Set('last_update', time());
 	}]]></code>
@@ -535,8 +511,15 @@
           <static>false</static>
           <access>protected</access>
           <type>Overload-DBObject</type>
-          <code><![CDATA[	protected function OnUpdate()
+          <code><![CDATA[
+    protected function OnUpdate()
 	{
+        parent::OnUpdate();
+        $aChanges = $this->ListChanges();
+        if (array_key_exists('functionalcis_list', $aChanges))
+        {
+            $this->UpdateImpactedItems();
+        }
 		$this->Set('last_update', time());
 	}]]></code>
         </method>

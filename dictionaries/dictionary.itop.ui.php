@@ -970,6 +970,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ElementsDisplayed' => 'Filtering',
 	'UI:RelationGroupNumber_N' => 'Group #%1$d',
 	'UI:Relation:ExportAsPDF' => 'Export as PDF...',
+	'UI:RelationOption:GroupingThreshold' => 'Grouping threshold',
 	'UI:Relation:ExportAsDocument' => 'Export as Document...',
 	'UI:Relation:DrillDown' => 'Details...',
 	'UI:Relation:PDFExportOptions' => 'PDF Export Options',

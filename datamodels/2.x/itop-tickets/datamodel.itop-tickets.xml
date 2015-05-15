@@ -17,6 +17,7 @@
   <classes>
     <class id="Ticket" _delta="define">
       <parent>cmdbAbstractObject</parent>
+       <php_parent><name>_Ticket</name></php_parent>
       <properties>
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
@@ -366,6 +367,17 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
+        <field id="role_code" xsi:type="AttributeEnum">
+          <values>
+            <value id="manual">manual</value>
+            <value id="computed">computed</value>
+            <value id="do_not_notify">do_not_notify</value>
+          </values>
+          <sql>impact_code</sql>
+          <default_value>manual</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -377,7 +389,7 @@
             <item id="contact_id">
               <rank>20</rank>
             </item>
-            <item id="role">
+            <item id="role_code">
               <rank>30</rank>
             </item>
           </items>
@@ -390,7 +402,7 @@
             <item id="contact_id">
               <rank>20</rank>
             </item>
-            <item id="role">
+            <item id="role_code">
               <rank>30</rank>
             </item>
           </items>
@@ -403,7 +415,7 @@
             <item id="contact_id">
               <rank>20</rank>
             </item>
-            <item id="role">
+            <item id="role_code">
               <rank>30</rank>
             </item>
           </items>
@@ -465,6 +477,17 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
+        <field id="impact_code" xsi:type="AttributeEnum">
+          <values>
+            <value id="manual">manual</value>
+            <value id="computed">computed</value>
+            <value id="not_impacted">not_impacted</value>
+          </values>
+          <sql>impact_code</sql>
+          <default_value>manual</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -476,7 +499,7 @@
             <item id="functionalci_id">
               <rank>20</rank>
             </item>
-            <item id="impact">
+            <item id="impact_code">
               <rank>30</rank>
             </item>
           </items>
@@ -489,7 +512,7 @@
             <item id="functionalci_id">
               <rank>20</rank>
             </item>
-            <item id="impact">
+            <item id="impact_code">
               <rank>30</rank>
             </item>
           </items>
@@ -502,7 +525,7 @@
             <item id="functionalci_id">
               <rank>20</rank>
             </item>
-            <item id="impact">
+            <item id="impact_code">
               <rank>30</rank>
             </item>
           </items>

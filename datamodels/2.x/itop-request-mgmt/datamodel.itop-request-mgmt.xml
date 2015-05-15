@@ -1363,62 +1363,23 @@
           <static>false</static>
           <access>public</access>
           <type>LifecycleAction</type>
-          <code><![CDATA[	public function ComputeImpactedItems()
+          <code><![CDATA[
+    public function ComputeImpactedItems()
 	{
-		$oToNotify = $this->Get('contacts_list');
-		$oToImpact = $this->Get('functionalcis_list');
-
-		$oImpactedInfras = DBObjectSet::FromLinkSet($this, 'functionalcis_list', 'functionalci_id');
-
-        $oGraph = $oImpactedInfras->GetRelatedObjectsDown('impacts',10, true /* bEnableRedundancy */);
-        $oIterator = new RelationTypeIterator($oGraph, 'Node');
-        foreach($oIterator as $oNode)
-        {
-            if($oNode instanceof RelationObjectNode)
-            {
-                if ($oNode->GetProperty('is_reached') && (!$oNode->GetProperty('source')))
-                {
-                    $oObj = $oNode->GetProperty('object');
-                    $sRootClass = MetaModel::GetRootClass(get_class($oObj));
-                    if (!array_key_exists($sRootClass, $aComputed))
-                    {
-                        $aComputed[$sRootClass] = array();
-                    }
-                    $aComputed[$sRootClass][$oObj->GetKey()] = $oObj;
-                }
-            }
-        }
-        
-		if (isset($aComputed['FunctionalCI']) && is_array($aComputed['FunctionalCI']))
-		{
-			foreach($aComputed['FunctionalCI'] as $iKey => $oObject)
-			{
-				$oNewLink = new lnkFunctionalCIToTicket();
-				$oNewLink->Set('functionalci_id', $iKey);
-				$oNewLink->Set('impact', 'potentially impacted (automatically computed)');
-				$oToImpact->AddObject($oNewLink);
-			}
-		}
-		if (isset($aComputed['Contact']) && is_array($aComputed['Contact']))
-		{
-			foreach($aComputed['Contact'] as $iKey => $oObject)
-			{
-				$oNewLink = new lnkContactToTicket();
-				$oNewLink->Set('contact_id', $iKey);
-				$oNewLink->Set('role', 'contact automatically computed');
-				$oToNotify->AddObject($oNewLink);
-			}
-		}
-		parent::OnInsert();
+        // This method is kept for backward compatibility
+        // in case a delta redefines it, but you may call
+        // UpdateImpactedItems directly
+		$this->UpdateImpactedItems();
 	}]]></code>
         </method>
         <method id="OnInsert">
           <static>false</static>
           <access>protected</access>
           <type>Overload-DBObject</type>
-          <code><![CDATA[	protected function OnInsert()
-
+          <code><![CDATA[
+    protected function OnInsert()
 	{
+        parent::OnInsert();
 		$this->ComputeImpactedItems();
 		$this->Set('last_update', time());
 		$this->Set('start_date', time());
@@ -1428,8 +1389,15 @@
           <static>false</static>
           <access>protected</access>
           <type>Overload-DBObject</type>
-          <code><![CDATA[	protected function OnUpdate()
+          <code><![CDATA[
+   	protected function OnUpdate()
 	{
+        parent::OnUpdate();
+        $aChanges = $this->ListChanges();
+        if (array_key_exists('functionalcis_list', $aChanges))
+        {
+            $this->UpdateImpactedItems();
+        }
 		$this->Set('last_update', time());
 		$this->UpdateChildRequestLog();
 	}]]></code>

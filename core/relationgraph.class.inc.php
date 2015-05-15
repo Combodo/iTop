@@ -75,11 +75,11 @@ class RelationObjectNode extends GraphNode
 	}
 
 	/**
-	 * Recursively mark the objects nodes as reached, unless we get stopped by a redundancy node
+	 * Recursively mark the objects nodes as reached, unless we get stopped by a redundancy node or a 'not allowed' node
 	 */	 	
 	public function ReachDown($sProperty, $value)
 	{
-		if (is_null($this->GetProperty($sProperty)))
+		if (is_null($this->GetProperty($sProperty)) && ($this->GetProperty($sProperty.'_allowed') !== false))
 		{
 			$this->SetProperty($sProperty, $value);
 			foreach ($this->GetOutgoingEdges() as $oOutgoingEdge)
@@ -201,7 +201,7 @@ class RelationGraph extends SimpleGraph
 	/**
 	 * Build the graph downstream, and mark the nodes that can be reached from the source node
 	 */	 	
-	public function ComputeRelatedObjectsDown($sRelCode, $iMaxDepth, $bEnableRedundancy)
+	public function ComputeRelatedObjectsDown($sRelCode, $iMaxDepth, $bEnableRedundancy, $aUnreachableObjects = array())
 	{
 		//echo "<h5>Sources only...</h5>\n".$this->DumpAsHtmlImage()."<br/>\n";
 		// Build the graph out of the sources
@@ -210,6 +210,21 @@ class RelationGraph extends SimpleGraph
 			$this->AddRelatedObjects($sRelCode, true, $oSourceNode, $iMaxDepth, $bEnableRedundancy);
 			//echo "<h5>After processing of {$oSourceNode->GetId()}</h5>\n".$this->DumpAsHtmlImage()."<br/>\n";
 		}
+		
+		// Mark the unreachable nodes
+		foreach ($aUnreachableObjects as $oObj)
+		{
+			$sNodeId = RelationObjectNode::MakeId($oObj);
+			$oNode = $this->GetNode($sNodeId);
+			if($oNode)
+			{
+				$oNode->SetProperty('is_reached_allowed', false);
+			}
+			else
+			{
+			}
+		}
+		
 		// Determine the reached nodes
 		foreach ($this->aSourceNodes as $oSourceNode)
 		{
@@ -437,4 +452,28 @@ class RelationGraph extends SimpleGraph
 		}
 		return $oRet;
 	}
+	
+	/**
+	 * Get the objects referenced by the graph as a hash array: 'class' => array of objects
+	 * @return Ambigous <multitype:multitype: , unknown>
+	 */
+	public function GetObjectsByClass()
+	{
+		$aResults = array();
+		$oIterator = new RelationTypeIterator($this, 'Node');
+		foreach($oIterator as $oNode)
+		{
+			$oObj = $oNode->GetProperty('object'); // Some nodes (Redundancy Nodes and Group) do not contain an object
+			if ($oObj)
+			{
+				$sObjClass  = get_class($oObj);
+				if (!array_key_exists($sObjClass, $aResults))
+				{
+					$aResults[$sObjClass] = array();
+				}
+				$aResults[$sObjClass][] = $oObj;
+			}
+		}
+		return $aResults;		
+	}	
 }

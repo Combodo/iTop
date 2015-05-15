@@ -69,6 +69,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Ticket/Attribute:workorders_list+' => '',
 	'Class:Ticket/Attribute:finalclass' => 'Type',
 	'Class:Ticket/Attribute:finalclass+' => '',
+	'Ticket:ImpactAnalysis' => 'Analyse d\'Impact',
 ));
 
 
@@ -87,8 +88,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkContactToTicket/Attribute:contact_id+' => '',
 	'Class:lnkContactToTicket/Attribute:contact_email' => 'Email Contact',
 	'Class:lnkContactToTicket/Attribute:contact_email+' => '',
-	'Class:lnkContactToTicket/Attribute:role' => 'Rôle',
+	'Class:lnkContactToTicket/Attribute:role' => 'Rôle (texte)',
 	'Class:lnkContactToTicket/Attribute:role+' => '',
+	'Class:lnkContactToTicket/Attribute:role_code' => 'Rôle',
+	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Ajouté manuellement',
+	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Calculé',
+	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Ne pas notifier',
 ));
 
 //
@@ -106,8 +111,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'Nom CI',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Impact',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Impact (texte)',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact+' => '',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => 'Impact',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Ajouté manuellement',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Calculé',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Non impacté',
 ));
 
 

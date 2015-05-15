@@ -560,13 +560,17 @@ class DisplayableGroupNode extends DisplayableNode
  */
 class DisplayableGraph extends SimpleGraph
 {
-	protected $sDirection;
+	protected $bDirectionDown;
 	protected $aTempImages;
+	protected $aSourceObjects;
+	protected $aSinkObjects;
 	
 	public function __construct()
 	{
 		parent::__construct();
 		$this->aTempImages = array();
+		$this->aSourceObjects = array();
+		$this->aSinkObjects = array();
 	}
 	
 	public function GetTempImageName()
@@ -594,6 +598,7 @@ class DisplayableGraph extends SimpleGraph
 	public static function FromRelationGraph(RelationGraph $oGraph, $iGroupingThreshold = 20, $bDirectionDown = true)
 	{
 		$oNewGraph = new DisplayableGraph();
+		$oNewGraph->bDirectionDown = $bDirectionDown;
 		
 		$oNodesIter = new RelationTypeIterator($oGraph, 'Node');
 		foreach($oNodesIter as $oNode)
@@ -603,16 +608,27 @@ class DisplayableGraph extends SimpleGraph
 				case 'RelationObjectNode':				
 				$oNewNode = new DisplayableNode($oNewGraph, $oNode->GetId(), 0, 0);
 				
+				$oObj = $oNode->GetProperty('object');
+				$sClass = get_class($oObj);
 				if ($oNode->GetProperty('source'))
 				{
+					if (!array_key_exists($sClass, $oNewGraph->aSourceObjects))
+					{
+						$oNewGraph->aSourceObjects[$sClass] = array();
+					}
+					$oNewGraph->aSourceObjects[$sClass][] = $oObj->GetKey();
 					$oNewNode->SetProperty('source', true);
 				}
 				if ($oNode->GetProperty('sink'))
 				{
+					if (!array_key_exists($sClass, $oNewGraph->aSinkObjects))
+					{
+						$oNewGraph->aSinkObjects[$sClass] = array();
+					}
+					$oNewGraph->aSinkObjects[$sClass][] = $oObj->GetKey();
 					$oNewNode->SetProperty('sink', true);
 				}
-				$oObj = $oNode->GetProperty('object');
-				$oNewNode->SetProperty('class', get_class($oObj));
+				$oNewNode->SetProperty('class', $sClass);
 				$oNewNode->SetProperty('object', $oObj);
 				$oNewNode->SetProperty('icon_url', $oObj->GetIcon(false));
 				$oNewNode->SetProperty('label', $oObj->GetRawName());
@@ -791,71 +807,6 @@ class DisplayableGraph extends SimpleGraph
 			}
 		}
 	}
-	
-	/**
-	 * Renders as a suite of Javascript instructions to display the graph using the simple_graph widget
-	 * @param WebPage $oP
-	 * @param string $sId
-	 * @param string $sExportAsPdfURL
-	 * @param string $sExportAsDocumentURL
-	 * @param string $sDrillDownURL
-	 */
-	function RenderAsRaphael(WebPage $oP, $sId = null, $sExportAsPdfURL, $sExportAsDocumentURL, $sDrillDownURL)
-	{
-		if ($sId == null)
-		{
-			$sId = 'graph';
-		}
-		$oP->add('<div id="'.$sId.'" class="simple-graph"></div>');
-		$aParams = array(
-			'export_as_pdf' => array('url' => $sExportAsPdfURL, 'label' => Dict::S('UI:Relation:ExportAsPDF')),
-			'export_as_document' => array('url' => $sExportAsDocumentURL, 'label' => Dict::S('UI:Relation:ExportAsDocument')),
-			'drill_down' => array('url' => $sDrillDownURL, 'label' => Dict::S('UI:Relation:DrillDown')),
-			'labels' => array(
-				'export_pdf_title' => Dict::S('UI:Relation:PDFExportOptions'),
-				'export' => Dict::S('UI:Relation:PDFExportOptions'),
-				'cancel' => Dict::S('UI:Button:Cancel'),
-			),
-			'page_format' => array(
-				'label' => Dict::S('UI:Relation:PDFExportPageFormat'),
-				'values' => array(
-					'A3' => Dict::S('UI:PageFormat_A3'),
-					'A4' => Dict::S('UI:PageFormat_A4'),
-					'Letter' => Dict::S('UI:PageFormat_Letter'),
-				),
-			),
-			'page_orientation' => array(
-				'label' => Dict::S('UI:Relation:PDFExportPageOrientation'),
-				'values' => array(
-					'P' => Dict::S('UI:PageOrientation_Portrait'),
-					'L' => Dict::S('UI:PageOrientation_Landscape'),
-				),
-			),
-		);
-		$oP->add_ready_script("var oGraph = $('#$sId').simple_graph(".json_encode($aParams).");");
-		
-		$oIterator = new RelationTypeIterator($this, 'Node');
-		foreach($oIterator as $sId => $oNode)
-		{
-			$aNode = $oNode->GetForRaphael();
-			$sJSNode = json_encode($aNode);
-			$oP->add_ready_script("oGraph.simple_graph('add_node', $sJSNode);");
-		}
-		$oIterator = new RelationTypeIterator($this, 'Edge');
-		foreach($oIterator as $sId => $oEdge)
-		{
-			$aEdge = array();
-			$aEdge['id'] = $oEdge->GetId();
-			$aEdge['source_node_id'] = $oEdge->GetSourceNode()->GetId();
-			$aEdge['sink_node_id'] = $oEdge->GetSinkNode()->GetId();
-			$fOpacity = ($oEdge->GetSinkNode()->GetProperty('is_reached') && $oEdge->GetSourceNode()->GetProperty('is_reached') ? 1 : 0.2);
-			$aEdge['attr'] = array('opacity' => $fOpacity, 'stroke' => '#000');
-			$sJSEdge = json_encode($aEdge);
-			$oP->add_ready_script("oGraph.simple_graph('add_edge', $sJSEdge);");
-		}
-		
-		$oP->add_ready_script("oGraph.simple_graph('draw');");
-	}
 
 	/**
 	 * Renders as JSON string suitable for loading into the simple_graph widget
@@ -964,13 +915,26 @@ class DisplayableGraph extends SimpleGraph
 		$oPdf->SetAlpha(1);
 	}
 	
+	/**
+	 * Renders (in PDF) the key (legend) of the graphics vertically to the left of the specified zone (xmin,ymin, xmax,ymax). Returns the width used by the legend.
+	 * @param TCPDF $oPdf
+	 * @param string $sComments
+	 * @param float $xMin
+	 * @param float $yMin
+	 * @param float $xMax
+	 * @param float $yMax
+	 * @return number The width used by the legend
+	 */
 	protected function RenderKey(TCPDF $oPdf, $sComments, $xMin, $yMin, $xMax, $yMax)
 	{
+		$fFontSize = 7; // in mm
+		$fIconSize = 6; // in mm
+		$fPadding = 1;	// in mm
 		$oIterator = new RelationTypeIterator($this, 'Node');
-		$fMaxWidth = max($oPdf->GetStringWidth(Dict::S('UI:Relation:Key')) - 6, $oPdf->GetStringWidth(Dict::S('UI:Relation:Comments')) - 6);
+		$fMaxWidth = max($oPdf->GetStringWidth(Dict::S('UI:Relation:Key')) - $fIconSize, $oPdf->GetStringWidth(Dict::S('UI:Relation:Comments')) - $fIconSize);
 		$aClasses = array();
 		$aIcons = array();
-		$oPdf->SetFont('dejavusans', '', 8, '', true);
+		$oPdf->SetFont('dejavusans', '', $fFontSize, '', true);
 		foreach($oIterator as $sId => $oNode)
 		{
 			if ($sClass = $oNode->GetProperty('class'))
@@ -987,26 +951,169 @@ class DisplayableGraph extends SimpleGraph
 				}
 			}
 		}
-		$oPdf->SetXY($xMin + 1, $yMin +1);
-		$yPos = $yMin + 1;
+		$oPdf->SetXY($xMin + $fPadding, $yMin + $fPadding);
+		$yPos = $yMin + $fPadding;
 		$oPdf->SetFillColor(225, 225, 225);
-		$oPdf->Cell(7 + $fMaxWidth, 7, Dict::S('UI:Relation:Key'), 0 /* border */, 1 /* ln */, 'C', true /* fill */);
-		$yPos += 8;
+		$oPdf->Cell($fIconSize + $fPadding + $fMaxWidth, $fIconSize + $fPadding, Dict::S('UI:Relation:Key'), 0 /* border */, 1 /* ln */, 'C', true /* fill */);
+		$yPos += $fIconSize + 2*$fPadding;
 		foreach($aClasses as $sClass => $sLabel)
 		{
-			$oPdf->SetX($xMin + 7);
-			$oPdf->Cell(0, 8, $sLabel, 0 /* border */, 1 /* ln */);
-			$oPdf->Image($aIcons[$sClass], $xMin+1, $yPos, 6, 6);
-			$yPos += 8; 
+			$oPdf->SetX($xMin + $fIconSize + $fPadding);
+			$oPdf->Cell(0, $fIconSize + 2*$fPadding, $sLabel, 0 /* border */, 1 /* ln */);
+			$oPdf->Image($aIcons[$sClass], $xMin+1, $yPos, $fIconSize, $fIconSize);
+			$yPos += $fIconSize + 2*$fPadding; 
 		}
-		$oPdf->Rect($xMin, $yMin, $fMaxWidth+9, $yPos - $yMin, 'D');
-		$oPdf->Rect($xMin, $yPos, $fMaxWidth+9, $yMax - $yPos, 'D');
+		$oPdf->Rect($xMin, $yMin, $fMaxWidth + $fIconSize + 3*$fPadding, $yPos - $yMin, 'D');
+		$oPdf->Rect($xMin, $yPos, $fMaxWidth + $fIconSize + 3*$fPadding, $yMax - $yPos, 'D');
 		$yPos +=1;
-		$oPdf->SetXY($xMin + 1, $yPos);
-		$oPdf->Cell(7 + $fMaxWidth, 7, Dict::S('UI:Relation:Comments'), 0 /* border */, 1 /* ln */, 'C', true /* fill */);
-		$yPos += 8;
+		$oPdf->SetXY($xMin + $fPadding, $yPos);
+		$oPdf->Cell($fIconSize + $fPadding + $fMaxWidth, $fIconSize + $fPadding, Dict::S('UI:Relation:Comments'), 0 /* border */, 1 /* ln */, 'C', true /* fill */);
+		$yPos += $fIconSize + 2*$fPadding;
 		$oPdf->SetX($xMin);
-		$oPdf->writeHTMLCell(8 + $fMaxWidth, $yMax - $yPos, $xMin, $yPos, '<p>'.str_replace("\n", '<br/>', htmlentities($sComments, ENT_QUOTES, 'UTF-8')).'</p>', 0 /* border */, 1 /* ln */);
-		return $fMaxWidth + 10;
+		$oPdf->writeHTMLCell($fIconSize + 2*$fPadding + $fMaxWidth, $yMax - $yPos, $xMin, $yPos, '<p>'.str_replace("\n", '<br/>', htmlentities($sComments, ENT_QUOTES, 'UTF-8')).'</p>', 0 /* border */, 1 /* ln */);
+		return $fMaxWidth + $fIconSize + 4*$fPadding;
 	}
+	
+	/**
+	 * Display the graph inside the given page, with the "filter" drawer above it
+	 * @param WebPage $oP
+	 * @param hash $aResults
+	 * @param string $sRelation
+	 * @param ApplicationContext $oAppContext
+	 * @param array $aExcludedObjects
+	 */
+	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects)
+	{	
+		$aExcludedByClass = array();
+		foreach($aExcludedObjects as $oObj)
+		{
+			if (!array_key_exists(get_class($oObj), $aExcludedByClass))
+			{
+				$aExcludedByClass[get_class($oObj)] = array();
+			}
+			$aExcludedByClass[get_class($oObj)][] = $oObj->GetKey();
+		}
+		$oP->add("<div id=\"ds_flash\" class=\"SearchDrawer\" style=\"display:none;\">\n");
+		$oP->add_ready_script(
+<<<EOF
+	$( "#tabbedContent_0" ).tabs({ heightStyle: "fill" });
+	$("#dh_flash").click( function() {
+		$("#ds_flash").slideToggle('normal', function() { $("#ds_flash").parent().resize(); } );
+		$("#dh_flash").toggleClass('open');
+	});
+    $('#ReloadMovieBtn').button().button('disable');
+EOF
+		);
+		$aSortedElements = array();
+		foreach($aResults as $sClassIdx => $aObjects)
+		{
+			foreach($aObjects as $oCurrObj)
+			{
+				$sSubClass = get_class($oCurrObj);
+				$aSortedElements[$sSubClass] = MetaModel::GetName($sSubClass);
+			}
+		}
+	
+		asort($aSortedElements);
+		$idx = 0;
+		foreach($aSortedElements as $sSubClass => $sClassName)
+		{
+			$oP->add("<span style=\"padding-right:2em; white-space:nowrap;\"><input type=\"checkbox\" id=\"exclude_$idx\" name=\"excluded[]\" value=\"$sSubClass\" checked onChange=\"$('#ReloadMovieBtn').button('enable')\"><label for=\"exclude_$idx\">&nbsp;".MetaModel::GetClassIcon($sSubClass)."&nbsp;$sClassName</label></span> ");
+			$idx++;
+		}
+		$oP->add("<p style=\"text-align:right\"><button type=\"button\" id=\"ReloadMovieBtn\" onClick=\"DoReload()\">".Dict::S('UI:Button:Refresh')."</button></p>");
+		$oP->add("</div>\n");
+		$oP->add("<div class=\"HRDrawer\"></div>\n");
+		$oP->add("<div id=\"dh_flash\" class=\"DrawerHandle\">".Dict::S('UI:ElementsDisplayed')."</div>\n");
+	
+		$sDirection = utils::ReadParam('d', 'horizontal');
+		$iGroupingThreshold = utils::ReadParam('g', 5);
+	
+		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
+		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
+		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
+		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
+		try
+		{
+			$this->InitFromGraphviz();
+			$sExportAsPdfURL = '';
+			if (extension_loaded('gd'))
+			{
+				$sExportAsPdfURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_pdf&relation='.$sRelation.'&direction='.($this->bDirectionDown ? 'down' : 'up');
+			}
+			$oAppcontext = new ApplicationContext();
+			$sContext = $oAppContext->GetForLink();
+			$sDrillDownURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class=%1$s&id=%2$s&'.$sContext;
+			$sExportAsDocumentURL = '';
+			$sLoadFromURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_json&relation='.$sRelation.'&direction='.($this->bDirectionDown ? 'down' : 'up');
+	
+			$sId = 'graph';
+			$oP->add('<div id="'.$sId.'" class="simple-graph"></div>');
+			$aParams = array(
+				'source_url' => $sLoadFromURL,
+				'sources' => ($this->bDirectionDown ? $this->aSourceObjects : $this->aSinkObjects),
+				'excluded' => $aExcludedByClass,
+				'grouping_threshold' => $iGroupingThreshold,
+				'export_as_pdf' => array('url' => $sExportAsPdfURL, 'label' => Dict::S('UI:Relation:ExportAsPDF')),
+				//'export_as_document' => array('url' => $sExportAsDocumentURL, 'label' => Dict::S('UI:Relation:ExportAsDocument')),
+				'drill_down' => array('url' => $sDrillDownURL, 'label' => Dict::S('UI:Relation:DrillDown')),
+				'labels' => array(
+					'export_pdf_title' => Dict::S('UI:Relation:PDFExportOptions'),
+					'export' => Dict::S('UI:Button:Export'),
+					'cancel' => Dict::S('UI:Button:Cancel'),
+					'title' => Dict::S('UI:RelationOption:Title'),
+					'include_list' => Dict::S('UI:RelationOption:IncludeList'),
+					'comments' => Dict::S('UI:RelationOption:Comments'),
+					'grouping_threshold' => Dict::S('UI:RelationOption:GroupingThreshold'),
+					'refresh' => Dict::S('UI:Button:Refresh'),
+				),
+				'page_format' => array(
+					'label' => Dict::S('UI:Relation:PDFExportPageFormat'),
+					'values' => array(
+						'A3' => Dict::S('UI:PageFormat_A3'),
+						'A4' => Dict::S('UI:PageFormat_A4'),
+						'Letter' => Dict::S('UI:PageFormat_Letter'),
+					),
+				),
+				'page_orientation' => array(
+					'label' => Dict::S('UI:Relation:PDFExportPageOrientation'),
+					'values' => array(
+						'P' => Dict::S('UI:PageOrientation_Portrait'),
+						'L' => Dict::S('UI:PageOrientation_Landscape'),
+					),
+				),
+			);
+			$oP->add_ready_script("$('#$sId').simple_graph(".json_encode($aParams).");");
+		}
+		catch(Exception $e)
+		{
+			$oP->add('<div>'.$e->getMessage().'</div>');
+		}
+		$oP->add_script(
+<<<EOF
+		
+	function DoReload()
+	{
+		$('#ReloadMovieBtn').button('disable');
+		try
+		{
+			var aExcluded = [];
+			$('input[name^=excluded]').each( function() {
+				if (!$(this).prop('checked'))
+				{
+					aExcluded.push($(this).val());
+				}
+			} );
+			$('#graph').simple_graph('option', {excluded_classes: aExcluded});
+			$('#graph').simple_graph('reload');
+		}
+		catch(err)
+		{
+			alert(err);
+		}
+	}
+EOF
+		);
+	}
+	
 }
