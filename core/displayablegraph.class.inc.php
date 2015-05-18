@@ -982,7 +982,7 @@ class DisplayableGraph extends SimpleGraph
 	 * @param ApplicationContext $oAppContext
 	 * @param array $aExcludedObjects
 	 */
-	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects)
+	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects = array())
 	{	
 		$aExcludedByClass = array();
 		foreach($aExcludedObjects as $oObj)
