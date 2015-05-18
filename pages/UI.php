@@ -1480,13 +1480,13 @@ EOF
 		{
 			DisplayNavigatorListTab($oP, $aResults, $sRelation, $oObj);
 			$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
-			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, ($sDirection == 'down'));
+			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext);
 			DisplayNavigatorGroupTab($oP, $aGroups, $sRelation, $oObj);
 		}
 		else
 		{
 			$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
-			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, ($sDirection == 'down'));
+			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext);
 			DisplayNavigatorListTab($oP, $aResults, $sRelation, $oObj);
 			DisplayNavigatorGroupTab($oP, $aGroups, $sRelation, $oObj);
 		}
