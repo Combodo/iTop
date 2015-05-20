@@ -33,7 +33,9 @@ $(function()
 			export_as_document: null,
 			drill_down: null,
 			grouping_threshold: 10,
-			excluded_classes: []
+			excluded_classes: [],
+			attachment_obj_class: null,
+			attachment_obj_key: null
 		},
 	
 		// the constructor
@@ -371,9 +373,9 @@ $(function()
 			{
 				sHtml += '<li><a href="#" id="'+sPopupMenuId+'_pdf">'+this.options.export_as_pdf.label+'</a></li>';			
 			}
-			if (this.options.export_as_document != null)
+			if (this.options.export_as_attachment != null)
 			{
-				sHtml += '<li><a href="#" id="'+sPopupMenuId+'_document">'+this.options.export_as_document.label+'</a></li>';
+				sHtml += '<li><a href="#" id="'+sPopupMenuId+'_attachment">'+this.options.export_as_attachment.label+'</a></li>';
 			}
 			//sHtml += '<li><a href="#" id="'+sPopupMenuId+'_reload">Refresh</a></li>';
 			sHtml += '</ul></li></ul></div>';
@@ -385,7 +387,7 @@ $(function()
 			
 			var me = this;
 			$('#'+sPopupMenuId+'_pdf').click(function() { me.export_as_pdf(); });
-			$('#'+sPopupMenuId+'_document').click(function() { me.export_as_document(); });
+			$('#'+sPopupMenuId+'_attachment').click(function() { me.export_as_attachment(); });
 			$('#'+sId+'_grouping_threshold').spinner({ min: 2});
 			$('#'+sId+'_refresh_btn').button().click(function() { me.reload(); });
 		},
@@ -450,12 +452,16 @@ $(function()
 		},
 		export_as_pdf: function()
 		{
+			this._export_dlg(this.options.labels.export_pdf_title, this.options.export_as_pdf.url, 'download_pdf');
+		},
+		_export_dlg: function(sTitle, sSubmitUrl, sOperation)
+		{
 			var oPositions = {};
 			for(k in this.aNodes)
 			{
 				oPositions[this.aNodes[k].id] = {x: this.aNodes[k].x, y: this.aNodes[k].y };
 			}
-			var sHtmlForm = '<div id="PDFExportDlg'+this.element.attr('id')+'"><form id="graph_'+this.element.attr('id')+'_export_as_pdf" target="_blank" action="'+this.options.export_as_pdf.url+'" method="post">';
+			var sHtmlForm = '<div id="GraphExportDlg'+this.element.attr('id')+'"><form id="graph_'+this.element.attr('id')+'_export_dlg" target="_blank" action="'+sSubmitUrl+'" method="post">';
 			sHtmlForm += '<input type="hidden" name="g" value="'+this.options.grouping_threshold+'">';
 			sHtmlForm += '<input type="hidden" name="positions" value="">';
 			for(k in this.options.excluded_classes)
@@ -476,6 +482,11 @@ $(function()
 					sHtmlForm += '<input type="hidden" name="excluded['+k1+'][]" value="'+this.options.excluded[k1][k2]+'">';									
 				}
 			}
+			if (sOperation == 'attachment')
+			{
+				sHtmlForm += '<input type="hidden" name="obj_class" value="'+this.options.export_as_attachment.obj_class+'">';									
+				sHtmlForm += '<input type="hidden" name="obj_key" value="'+this.options.export_as_attachment.obj_key+'">';								
+			}
 			sHtmlForm += '<table>';
 			sHtmlForm += '<tr><td>'+this.options.page_format.label+'</td><td><select name="p">';
 			for(k in this.options.page_format.values)
@@ -491,26 +502,29 @@ $(function()
 				sHtmlForm += '<option value="'+k+'"'+sSelected+'>'+this.options.page_orientation.values[k]+'</option>';
 			}
 			sHtmlForm += '</select></td></tr>';
-			sHtmlForm += '<tr><td>'+this.options.labels.title+'</td><td><input name="title"  style="width: 20em;"/></td></tr>';
+			sHtmlForm += '<tr><td>'+this.options.labels.title+'</td><td><input name="title" value="'+this.options.labels.untitled+'" style="width: 20em;"/></td></tr>';
 			sHtmlForm += '<tr><td>'+this.options.labels.comments+'</td><td><textarea style="width: 20em; height:5em;" name="comments"/></textarea></td></tr>';
 			sHtmlForm += '<tr><td colspan=2><input type="checkbox" checked id="include_list_checkbox" name="include_list" value="1"><label for="include_list_checkbox">&nbsp;'+this.options.labels.include_list+'</label></td></tr>';
 			sHtmlForm += '<table>';
 			sHtmlForm += '</form></div>';
 			
 			$('body').append(sHtmlForm);
-			$('#graph_'+this.element.attr('id')+'_export_as_pdf input[name="positions"]').val(JSON.stringify(oPositions));
+			$('#graph_'+this.element.attr('id')+'_export_dlg input[name="positions"]').val(JSON.stringify(oPositions));
 			var me = this;
-			$('#PDFExportDlg'+this.element.attr('id')).dialog({
+			if (sOperation == 'attachment')
+			{
+				$('#GraphExportDlg'+this.element.attr('id')+' form').submit(function() { return me._on_export_as_attachment(); });
+			}
+			$('#GraphExportDlg'+this.element.attr('id')).dialog({
 				width: 'auto',
 				modal: true,
-				title: this.options.labels.export_pdf_title,
+				title: sTitle,
 				close: function() { $(this).remove(); },
 				buttons: [
 				          {text: this.options.labels['cancel'], click: function() { $(this).dialog('close');} },
-				          {text: this.options.labels['export'], click: function() { $('#graph_'+me.element.attr('id')+'_export_as_pdf').submit(); $(this).dialog('close');} },
+				          {text: this.options.labels['export'], click: function() { $('#graph_'+me.element.attr('id')+'_export_dlg').submit(); $(this).dialog('close');} },
 				]
-			});
-			//$('#graph_'+this.element.attr('id')+'_export_as_pdf').submit();
+			});			
 		},
 		_on_resize: function()
 		{
@@ -553,9 +567,54 @@ $(function()
 				me.load(data);
 			}, 'json');
 		},
-		export_as_document: function()
+		export_as_attachment: function()
 		{
-			alert('Export as document: not yet implemented');
+			this._export_dlg(this.options.labels.export_as_attachment_title, this.options.export_as_attachment.url, 'attachment');
+		},
+		_on_export_as_attachment: function()
+		{
+			var oParams = {};
+			var oPositions = {};
+			var jForm = $('#GraphExportDlg'+this.element.attr('id')+' form');
+			for(k in this.aNodes)
+			{
+				oPositions[this.aNodes[k].id] = {x: this.aNodes[k].x, y: this.aNodes[k].y };
+			}
+			oParams.positions = JSON.stringify(oPositions);
+			oParams.sources = this.options.sources;
+			oParams.excluded_classes = this.options.excluded_classes;
+			oParams.title = jForm.find(':input[name="title"]').val();
+			oParams.comments = jForm.find(':input[name="comments"]').val();
+			oParams.include_list = jForm.find(':input[name="include_list"]:checked').length;
+			oParams.o = jForm.find(':input[name="o"]').val();
+			oParams.p = jForm.find(':input[name="p"]').val();
+			oParams.obj_class = this.options.export_as_attachment.obj_class;
+			oParams.obj_key = this.options.export_as_attachment.obj_key;
+			var sUrl = jForm.attr('action');
+			var sTitle = oParams.title;
+			var jPanel = $('#attachments').closest('.ui-tabs-panel');
+			var jTab = null;
+			var sTabText = null;
+			if (jPanel.length  > 0)
+			{
+				var sTabId = jPanel.attr('id');
+				jTab = $('li[aria-controls='+sTabId+']');
+				sTabText = jTab.find('span').html();
+				jTab.find('span').html(sTabText+' <img style="vertical-align:bottom" src="../images/indicator.gif">');
+			}
+			$.post(sUrl, oParams, function(data) {
+				var sDownloadLink = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=download_document&class=Attachment&id='+data.att_id+'&field=contents';
+				var sIcon = GetAbsoluteUrlModulesRoot()+'itop-attachments/icons/pdf.png';
+				$('#attachments').append('<div class="attachment" id="display_attachment_'+data.att_id+'"><a data-preview="false" href="'+sDownloadLink+'"><img src="'+sIcon+'"><br/>'+sTitle+'.pdf<input id="attachment_'+data.att_id+'" type="hidden" name="attachments[]" value="'+data.att_id+'"/></a><br/><input type="button" class="btn_hidden" value="{$sDeleteBtn}" onClick="RemoveAttachment('+data.att_id+');"/></div>');
+				if (jTab != null)
+				{
+					var re = /^([^(]+)\(([0-9]+)\)(.*)$/;
+					var aParts = re.exec(sTabText);
+					var iPrevCount = parseInt(aParts[2], 10);
+					jTab.find('span').html(aParts[1]+'('+(1 + iPrevCount)+')'+aParts[3]);
+				}
+			}, 'json');
+			return false;
 		},
 		reload: function()
 		{

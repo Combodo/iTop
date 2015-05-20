@@ -1728,13 +1728,14 @@ EOF
 		break;
 
 		case 'relation_pdf':
+		case 'relation_attachment':
 		require_once(APPROOT.'core/simplegraph.class.inc.php');
 		require_once(APPROOT.'core/relationgraph.class.inc.php');
 		require_once(APPROOT.'core/displayablegraph.class.inc.php');
 		$sRelation = utils::ReadParam('relation', 'impacts');
 		$sDirection = utils::ReadParam('direction', 'down');
 		
-		$iGroupingThreshold = utils::ReadParam('g', 5);
+		$iGroupingThreshold = utils::ReadParam('g', 5, false, 'integer');
 		$sPageFormat = utils::ReadParam('p', 'A4');
 		$sPageOrientation = utils::ReadParam('o', 'L');
 		$sTitle = utils::ReadParam('title', '', false, 'raw_data');
@@ -1876,6 +1877,26 @@ EOF
 				}
 			}
 		}
+		if ($operation == 'relation_attachment')
+		{
+			$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
+			$iObjKey = (int)utils::ReadParam('obj_key', 0, false, 'integer');
+				
+			// Save the generated PDF as an attachment
+			$sPDF = $oPage->get_pdf();
+			$oPage = new ajax_page('');
+			$oAttachment = new Attachment();
+			$oAttachment->Set('item_class', $sObjClass);
+			$oAttachment->Set('item_id', $iObjKey);
+			$oDoc = new ormDocument($sPDF, 'application/pdf', $sTitle.'.pdf');
+			$oAttachment->Set('contents', $oDoc);
+			$iAttachmentId = $oAttachment->DBInsert();
+			$aRet = array(
+				'status' => 'ok',
+				'att_id' => $iAttachmentId,
+			);
+			$oPage->add(json_encode($aRet));
+		}
 		break;
 		
 		case 'relation_json':
@@ -2004,7 +2025,7 @@ EOF
 		$aResults = $oRelGraph->GetObjectsByClass();
 		$oGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
 		$oAppContext = new ApplicationContext();
-		$oGraph->Display($oPage, $aResults, $sRelation, $oAppContext, $aExcludedObjects);		
+		$oGraph->Display($oPage, $aResults, $sRelation, $oAppContext, $aExcludedObjects, $sClass, $iId);		
 		break;
 		
 		default:

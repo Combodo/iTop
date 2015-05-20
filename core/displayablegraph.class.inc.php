@@ -879,8 +879,11 @@ class DisplayableGraph extends SimpleGraph
 		
 		$fBreakMargin = $oPdf->getBreakMargin();
 		$oPdf->SetAutoPageBreak(false);
-		$fKeyWidth = $this->RenderKey($oPdf, $sComments, $xMin, $yMin, $xMax, $yMax);
-		$xMin += + $fKeyWidth;
+		$aRemainingArea = $this->RenderKey($oPdf, $sComments, $xMin, $yMin, $xMax, $yMax);
+		$xMin = $aRemainingArea['xmin'];
+		$xMax = $aRemainingArea['xmax'];
+		$yMin = $aRemainingArea['ymin'];
+		$yMax = $aRemainingArea['ymax'];
 		
 		//$oPdf->Rect($xMin, $yMin, $xMax - $xMin, $yMax - $yMin, 'D', array(), array(225, 225, 225));
 		
@@ -916,14 +919,15 @@ class DisplayableGraph extends SimpleGraph
 	}
 	
 	/**
-	 * Renders (in PDF) the key (legend) of the graphics vertically to the left of the specified zone (xmin,ymin, xmax,ymax). Returns the width used by the legend.
+	 * Renders (in PDF) the key (legend) of the graphics vertically to the left of the specified zone (xmin,ymin, xmax,ymax),
+	 * and the comment (if any) at the bottom of the page. Returns the position of remaining area.
 	 * @param TCPDF $oPdf
 	 * @param string $sComments
 	 * @param float $xMin
 	 * @param float $yMin
 	 * @param float $xMax
 	 * @param float $yMax
-	 * @return number The width used by the legend
+	 * @return hash An array ('xmin' => , 'xmax' => ,'ymin' => , 'ymax' => ) of the remaining available area to paint the graph
 	 */
 	protected function RenderKey(TCPDF $oPdf, $sComments, $xMin, $yMin, $xMax, $yMax)
 	{
@@ -963,15 +967,24 @@ class DisplayableGraph extends SimpleGraph
 			$oPdf->Image($aIcons[$sClass], $xMin+1, $yPos, $fIconSize, $fIconSize);
 			$yPos += $fIconSize + 2*$fPadding; 
 		}
-		$oPdf->Rect($xMin, $yMin, $fMaxWidth + $fIconSize + 3*$fPadding, $yPos - $yMin, 'D');
-		$oPdf->Rect($xMin, $yPos, $fMaxWidth + $fIconSize + 3*$fPadding, $yMax - $yPos, 'D');
-		$yPos +=1;
-		$oPdf->SetXY($xMin + $fPadding, $yPos);
-		$oPdf->Cell($fIconSize + $fPadding + $fMaxWidth, $fIconSize + $fPadding, Dict::S('UI:Relation:Comments'), 0 /* border */, 1 /* ln */, 'C', true /* fill */);
-		$yPos += $fIconSize + 2*$fPadding;
-		$oPdf->SetX($xMin);
-		$oPdf->writeHTMLCell($fIconSize + 2*$fPadding + $fMaxWidth, $yMax - $yPos, $xMin, $yPos, '<p>'.str_replace("\n", '<br/>', htmlentities($sComments, ENT_QUOTES, 'UTF-8')).'</p>', 0 /* border */, 1 /* ln */);
-		return $fMaxWidth + $fIconSize + 4*$fPadding;
+		$oPdf->Rect($xMin, $yMin, $fMaxWidth + $fIconSize + 3*$fPadding, $yMax - $yMin, 'D');
+		
+		if ($sComments != '')
+		{
+			// Draw the comment text (surrounded by a rectangle)
+			$xPos = $xMin + $fMaxWidth + $fIconSize + 4*$fPadding;
+			$w = $xMax - $xPos - 2*$fPadding;
+			$iNbLines = 1;
+			$sText = '<p>'.str_replace("\n", '<br/>', htmlentities($sComments, ENT_QUOTES, 'UTF-8'), $iNbLines).'</p>';
+			$fLineHeight = $oPdf->getStringHeight($w, $sText);
+			$h = (1+$iNbLines) * $fLineHeight;
+			$yPos = $yMax - 2*$fPadding - $h;
+			$oPdf->writeHTMLCell($w, $h, $xPos + $fPadding, $yPos + $fPadding, $sText, 0 /* border */, 1 /* ln */);
+			$oPdf->Rect($xPos, $yPos, $w + 2*$fPadding, $h + 2*$fPadding, 'D');
+			$yMax = $yPos - $fPadding;
+		}
+		
+		return array('xmin' => $fMaxWidth + $fIconSize + 4*$fPadding, 'xmax' => $xMax, 'ymin' => $yMin, 'ymax' => $yMax);
 	}
 	
 	/**
@@ -982,7 +995,7 @@ class DisplayableGraph extends SimpleGraph
 	 * @param ApplicationContext $oAppContext
 	 * @param array $aExcludedObjects
 	 */
-	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects = array())
+	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects = array(), $sObjClass = null, $iObjKey = null)
 	{	
 		$aExcludedByClass = array();
 		foreach($aExcludedObjects as $oObj)
@@ -1037,15 +1050,21 @@ EOF
 		{
 			$this->InitFromGraphviz();
 			$sExportAsPdfURL = '';
-			if (extension_loaded('gd'))
-			{
-				$sExportAsPdfURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_pdf&relation='.$sRelation.'&direction='.($this->bDirectionDown ? 'down' : 'up');
-			}
+			$sExportAsPdfURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_pdf&relation='.$sRelation.'&direction='.($this->bDirectionDown ? 'down' : 'up');
 			$oAppcontext = new ApplicationContext();
 			$sContext = $oAppContext->GetForLink();
 			$sDrillDownURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class=%1$s&id=%2$s&'.$sContext;
-			$sExportAsDocumentURL = '';
+			$sExportAsDocumentURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_attachment&relation='.$sRelation.'&direction='.($this->bDirectionDown ? 'down' : 'up');
 			$sLoadFromURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_json&relation='.$sRelation.'&direction='.($this->bDirectionDown ? 'down' : 'up');
+			$sAttachmentExportTitle = '';
+			if (($sObjClass != null) && ($iObjKey != null))
+			{
+				$oTargetObj = MetaModel::GetObject($sObjClass, $iObjKey, false);
+				if ($oTargetObj)
+				{
+					$sAttachmentExportTitle = Dict::Format('UI:Relation:AttachmentExportOptions_Name', $oTargetObj->GetName());
+				}
+			}
 	
 			$sId = 'graph';
 			$oP->add('<div id="'.$sId.'" class="simple-graph"></div>');
@@ -1055,13 +1074,15 @@ EOF
 				'excluded' => $aExcludedByClass,
 				'grouping_threshold' => $iGroupingThreshold,
 				'export_as_pdf' => array('url' => $sExportAsPdfURL, 'label' => Dict::S('UI:Relation:ExportAsPDF')),
-				//'export_as_document' => array('url' => $sExportAsDocumentURL, 'label' => Dict::S('UI:Relation:ExportAsDocument')),
+				'export_as_attachment' => array('url' => $sExportAsDocumentURL, 'label' => Dict::S('UI:Relation:ExportAsAttachment'), 'obj_class' => $sObjClass, 'obj_key' => $iObjKey),
 				'drill_down' => array('url' => $sDrillDownURL, 'label' => Dict::S('UI:Relation:DrillDown')),
 				'labels' => array(
 					'export_pdf_title' => Dict::S('UI:Relation:PDFExportOptions'),
+					'export_as_attachment_title' => $sAttachmentExportTitle,
 					'export' => Dict::S('UI:Button:Export'),
 					'cancel' => Dict::S('UI:Button:Cancel'),
 					'title' => Dict::S('UI:RelationOption:Title'),
+					'untitled' => Dict::S('UI:RelationOption:Untitled'),
 					'include_list' => Dict::S('UI:RelationOption:IncludeList'),
 					'comments' => Dict::S('UI:RelationOption:Comments'),
 					'grouping_threshold' => Dict::S('UI:RelationOption:GroupingThreshold'),
@@ -1083,6 +1104,17 @@ EOF
 					),
 				),
 			);
+					if (!extension_loaded('gd'))
+			{
+				// PDF export requires GD
+				unset($aParams['export_as_pdf']);
+			}
+			if (!extension_loaded('gd') || is_null($sObjClass) || is_null($iObjKey))
+			{
+				// PDF export requires GD AND a valid objclass/objkey couple
+				unset($aParams['export_as_pdf']);
+				unset($aParams['export_as_attachment']);
+			}
 			$oP->add_ready_script("$('#$sId').simple_graph(".json_encode($aParams).");");
 		}
 		catch(Exception $e)

@@ -187,4 +187,10 @@ EOF
         $this->flush();
 		echo $this->oPdf->Output($this->s_title.'.pdf', 'S');
 	}
+	
+	public function get_pdf()
+	{
+		$this->flush();
+		return $this->oPdf->Output($this->s_title.'.pdf', 'S');
+	}
 }

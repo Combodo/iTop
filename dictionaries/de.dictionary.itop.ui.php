@@ -781,6 +781,8 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Relation:ExportAsDocument' => 'Export as Document...~~',
 	'UI:Relation:DrillDown' => 'Details...~~',
 	'UI:Relation:PDFExportOptions' => 'PDF Export Options~~',
+	'UI:Relation:AttachmentExportOptions_Name' => 'Options for Attachment to %1$s~~',
+	'UI:RelationOption:Untitled' => 'Untitled~~',
 	'UI:Relation:Key' => 'Key~~',
 	'UI:Relation:Comments' => 'Comments~~',
 	'UI:RelationOption:Title' => 'Title~~',
