@@ -1458,12 +1458,16 @@ abstract class MetaModel
 	 * 
 	 * @return RelationGraph The graph of all the related objects
 	 */
-	static public function GetRelatedObjectsDown($sRelCode, $aSourceObjects, $iMaxDepth = 99, $bEnableRedundancy = true, $aUnreachable = array())
+	static public function GetRelatedObjectsDown($sRelCode, $aSourceObjects, $iMaxDepth = 99, $bEnableRedundancy = true, $aUnreachable = array(), $aContexts = array())
 	{
 		$oGraph = new RelationGraph();
 		foreach ($aSourceObjects as $oObject)
 		{
 			$oGraph->AddSourceObject($oObject);
+		}
+		foreach($aContexts as $key => $sOQL)
+		{
+			$oGraph->AddContextQuery($key, $sOQL);
 		}
 		$oGraph->ComputeRelatedObjectsDown($sRelCode, $iMaxDepth, $bEnableRedundancy, $aUnreachable);
 		return $oGraph;
@@ -1479,12 +1483,16 @@ abstract class MetaModel
 	 * 
 	 * @return RelationGraph The graph of all the related objects
 	 */
-	static public function GetRelatedObjectsUp($sRelCode, $aSourceObjects, $iMaxDepth = 99, $bEnableRedundancy = true)
+	static public function GetRelatedObjectsUp($sRelCode, $aSourceObjects, $iMaxDepth = 99, $bEnableRedundancy = true, $aContexts = array())
 	{
 		$oGraph = new RelationGraph();
 		foreach ($aSourceObjects as $oObject)
 		{
 			$oGraph->AddSinkObject($oObject);
+		}
+		foreach($aContexts as $key => $sOQL)
+		{
+			$oGraph->AddContextQuery($key, $sOQL);
 		}
 		$oGraph->ComputeRelatedObjectsUp($sRelCode, $iMaxDepth, $bEnableRedundancy);
 		return $oGraph;

@@ -58,6 +58,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:UserRequest:MyWorkOrders' => 'Work orders assigned to me',
 	'Menu:UserRequest:MyWorkOrders+' => 'All work orders assigned to me',
 	'Class:Problem:KnownProblemList' => 'Known problems',
+	'Tickets:Related:OpenIncidents' => 'Open incidents',
 ));
 
 // Dictionnay conventions

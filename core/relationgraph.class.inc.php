@@ -169,6 +169,7 @@ class RelationGraph extends SimpleGraph
 	protected $aSourceNodes; // Index of source nodes (for a quicker access)
 	protected $aSinkNodes; // Index of sink nodes (for a quicker access)
 	protected $aRedundancySettings; // Cache of user settings
+	protected $aContextSearches; // Context ("knowing that") stored as a hash array 'class' => DBObjectSearch
 
 	public function __construct()
 	{
@@ -176,6 +177,7 @@ class RelationGraph extends SimpleGraph
 		$this->aSourceNodes = array();
 		$this->aSinkNodes = array();
 		$this->aRedundancySettings = array();
+		$this->aContextSearches = array();
 	}
 
 	/**
@@ -196,6 +198,74 @@ class RelationGraph extends SimpleGraph
 		$oSinkNode = new RelationObjectNode($this, $oObject);
 		$oSinkNode->SetProperty('sink', true);
 		$this->aSinkNodes[$oSinkNode->GetId()] = $oSinkNode;
+	}
+	
+	/**
+	 * Add a 'context' OQL query, specifying extra objects to be marked as 'is_reached'
+	 * even though they are not part of the sources.
+	 * @param string $sOQL The OQL query defining the context objects 
+	 */
+	public function AddContextQuery($key, $sOQL)
+	{
+		if ($sOQL === '') return;
+		
+		$oSearch = DBObjectSearch::FromOQL($sOQL);
+		$aAliases = $oSearch->GetSelectedClasses();
+		if (count($aAliases) < 2 )
+		{
+			IssueLog::Error("Invalid context query '$sOQL'. A context query must contain at least two columns.");
+			throw new Exception("Invalid context query '$sOQL'. A context query must contain at least two columns. Columns: ".implode(', ', $aAliases).'. ');
+		}
+		$aAliasNames = array_keys($aAliases);
+		$sClassAlias = $oSearch->GetClassAlias();
+		$oCondition = new BinaryExpression(new FieldExpression('id', $aAliasNames[0]), '=', new VariableExpression('id'));
+		$oSearch->AddConditionExpression($oCondition);
+		
+		$sClass = $oSearch->GetClass();
+		if (!array_key_exists($sClass, $this->aContextSearches))
+		{
+			$this->aContextSearches[$sClass] = array();
+		}
+		$this->aContextSearches[$sClass][] = array('key' => $key, 'search' => $oSearch);
+	}
+	
+	/**
+	 * Determines if the given DBObject is part of a 'context'
+	 * @param DBObject $oObj
+	 * @return boolean
+	 */
+	public function IsPartOfContext(DBObject $oObj, &$aRootCauses)
+	{
+		$bRet = false;
+		$sFinalClass = get_class($oObj);
+		$aParentClasses = MetaModel::EnumParentClasses($sFinalClass, ENUM_PARENT_CLASSES_ALL);
+		
+		foreach($aParentClasses as $sClass)
+		{
+			if (array_key_exists($sClass, $this->aContextSearches))
+			{
+				foreach($this->aContextSearches[$sClass] as $aContextQuery)
+				{
+					$aAliases = $aContextQuery['search']->GetSelectedClasses();
+					$aAliasNames = array_keys($aAliases);
+					$sRootCauseAlias = $aAliasNames[1]; // 1st column (=0) = object, second column = root cause
+					$oSet = new DBObjectSet($aContextQuery['search'], array(), array('id' => $oObj->GetKey()));
+					while($aRow = $oSet->FetchAssoc())
+					{
+						if (!is_null($aRow[$sRootCauseAlias]))
+						{
+							if (!array_key_exists($aContextQuery['key'], $aRootCauses))
+							{
+								$aRootCauses[$aContextQuery['key']] = array();
+							}
+							$aRootCauses[$aContextQuery['key']][] = $aRow[$sRootCauseAlias];
+							$bRet = true;
+						}
+					}
+				}
+			}
+		}
+		return $bRet;
 	}
 
 	/**
@@ -220,9 +290,6 @@ class RelationGraph extends SimpleGraph
 			{
 				$oNode->SetProperty('is_reached_allowed', false);
 			}
-			else
-			{
-			}
 		}
 		
 		// Determine the reached nodes
@@ -230,6 +297,19 @@ class RelationGraph extends SimpleGraph
 		{
 			$oSourceNode->ReachDown('is_reached', true);
 			//echo "<h5>After reaching from {$oSourceNode->GetId()}</h5>\n".$this->DumpAsHtmlImage()."<br/>\n";
+		}
+		
+		// Mark also the "context" nodes as reached and record the "root causes" for each node
+		$oIterator = new RelationTypeIterator($this, 'Node');
+		foreach($oIterator as $oNode)
+		{
+			$oObj = $oNode->GetProperty('object');
+			$aRootCauses = array();
+			if (!is_null($oObj) && $this->IsPartOfContext($oObj, $aRootCauses))
+			{
+				$oNode->SetProperty('context_root_causes', $aRootCauses);
+				$oNode->ReachDown('is_reached', true);
+			}	
 		}
 	}
 
@@ -244,6 +324,19 @@ class RelationGraph extends SimpleGraph
 		{
 			$this->AddRelatedObjects($sRelCode, false, $oSinkNode, $iMaxDepth, $bEnableRedundancy);
 			//echo "<h5>After processing of {$oSinkNode->GetId()}</h5>\n".$this->DumpAsHtmlImage()."<br/>\n";
+		}
+		
+		// Mark also the "context" nodes as reached and record the "root causes" for each node
+		$oIterator = new RelationTypeIterator($this, 'Node');
+		foreach($oIterator as $oNode)
+		{
+			$oObj = $oNode->GetProperty('object');
+			$aRootCauses = array();
+			if (!is_null($oObj) && $this->IsPartOfContext($oObj, $aRootCauses))
+			{
+				$oNode->SetProperty('context_root_causes', $aRootCauses);
+				$oNode->ReachDown('is_reached', true);
+			}	
 		}
 	}
 

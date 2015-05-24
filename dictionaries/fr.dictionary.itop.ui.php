@@ -814,6 +814,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:RelationGroupNumber_N' => 'Groupe n°%1$d',
 	'UI:Relation:ExportAsPDF' => 'Exporter en PDF...',
 	'UI:RelationOption:GroupingThreshold' => 'Seuil de groupage',
+	'UI:Relation:AdditionalContextInfo' => 'Infos complémentaires de contexte',
+	'UI:Relation:NoneSelected' => 'Aucune',
 	'UI:Relation:ExportAsAttachment' => 'Exporter comme une Pièce Jointe...',
 	'UI:Relation:DrillDown' => 'Détails...',
 	'UI:Relation:PDFExportOptions' => 'Options de l\'export en PDF',

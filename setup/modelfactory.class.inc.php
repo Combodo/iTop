@@ -2152,16 +2152,8 @@ class MFParameters
 								throw new Exception("Invalid Parameters: mixed tags ('$sFirstTagName' and '".$oChildElement->nodeName."') inside array '".$oNode->nodeName."'");
 							}
 							$val = $this->ReadElement($oChildElement);
-							$idx = (string)$oChildElement->getAttribute('id'); // Don't cast into float, since floats are converted to int (i.e. truncated) when used as hash indexes (cf: http://php.net/manual/en/language.types.array.php)
-							if ($idx !== '')
-							{
-								$value[$idx] = $val;
-							}
-							else
-							{
-								// No specific Id, just push the value at the end of the array
-								$value[] = $val;
-							}
+							// No specific Id, just push the value at the end of the array
+							$value[] = $val;
 						}
 					}
 					ksort($value, SORT_NUMERIC);

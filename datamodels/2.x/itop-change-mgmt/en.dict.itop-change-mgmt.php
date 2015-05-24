@@ -46,6 +46,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI-ChangeManagementOverview-Last-7-days' => 'Number of changes for the last 7 days',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes by domain for the last 7 days',
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes by status for the last 7 days',
+	'Tickets:Related:OpenChanges' => 'Open changes',
+	'Tickets:Related:RecentChanges' => 'Recent changes',
 ));
 
 // Dictionnay conventions

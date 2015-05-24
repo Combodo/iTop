@@ -1439,6 +1439,7 @@ EOF
 		$iGroupingThreshold = utils::ReadParam('g', 5);
 		
 		$oObj = MetaModel::GetObject($sClass, $id);
+		$sRootClass = MetaModel::GetRootClass($sClass);
 		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
 		$aSourceObjects = array($oObj);
 		if ($sRelation == 'depends on')
@@ -1476,17 +1477,35 @@ EOF
 		$oP->SetCurrentTabContainer('Navigator');
 		
 		$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
+		$sContextKey = "itop-config-mgmt/relation_context/$sRootClass/$sRelation/$sDirection";
+		
+		// Check if the current object supports Attachments, similar to AttachmentPlugin::IsTargetObject
+		$sClassForAttachment = null;
+		$iIdForAttachment = null;
+		if (class_exists('Attachment'))
+		{
+			$aAllowedClasses = MetaModel::GetModuleSetting('itop-attachments', 'allowed_classes', array('Ticket'));
+			foreach($aAllowedClasses as $sAllowedClass)
+			{
+				if ($oObj instanceof $sAllowedClass)
+				{
+					$iIdForAttachment = $id;
+					$sClassForAttachment = $sClass;
+				}
+			}
+		}
+		// Display the tabs
 		if ($sFirstTab == 'list')
 		{
 			DisplayNavigatorListTab($oP, $aResults, $sRelation, $oObj);
 			$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
-			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext);
+			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj));
 			DisplayNavigatorGroupTab($oP, $aGroups, $sRelation, $oObj);
 		}
 		else
 		{
 			$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
-			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext);
+			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj));
 			DisplayNavigatorListTab($oP, $aResults, $sRelation, $oObj);
 			DisplayNavigatorGroupTab($oP, $aGroups, $sRelation, $oObj);
 		}

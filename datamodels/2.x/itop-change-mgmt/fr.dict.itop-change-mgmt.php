@@ -125,8 +125,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changements par domaine',
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changements par statut',
 	'UI:ChangeMgmtMenuOverview:Title' => 'Tableau de bord des changements pour les 7 derniers jours',
-
-
-
+	'Tickets:Related:OpenChanges' => 'Changements en cours',
+	'Tickets:Related:RecentChanges' => 'Changements récents',
 ));
 ?>

@@ -1743,6 +1743,8 @@ EOF
 		$aExcludedClasses = utils::ReadParam('excluded_classes', array(), false, 'raw_data');
 		$bIncludeList = (bool)utils::ReadParam('include_list', false);
 		$sComments = utils::ReadParam('comments', '', false, 'raw_data');
+		$aContexts = utils::ReadParam('contexts', array(), false, 'raw_data');
+		$sContextKey = utils::ReadParam('context_key', array(), false, 'raw_data');
 		$aPositions = null;
 		if ($sPositions != null)
 		{
@@ -1780,11 +1782,11 @@ EOF
 		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
 		if ($sDirection == 'up')
 		{
-			$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+			$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aContexts);
 		}
 		else
 		{
-			$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aExcludedObjects);
+			$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aExcludedObjects, $aContexts);
 		}
 		
 		// Remove excluded classes from the graph
@@ -1809,20 +1811,18 @@ EOF
 		{
 			$oGraph->UpdatePositions($aPositions);
 		}
-		$iGroupIdx = 0;
+
 		$aGroups = array();
 		$oIterator = new RelationTypeIterator($oGraph, 'Node');
 		foreach($oIterator as $oNode)
 		{
 			if ($oNode instanceof DisplayableGroupNode)
 			{
-				$aGroups[] = $oNode->GetObjects();
-				$oNode->SetProperty('group_index', $iGroupIdx);
-				$iGroupIdx++;
+				$aGroups[$oNode->GetProperty('group_index')] = $oNode->GetObjects();
 			}
 		}
 		// First page is the graph
-		$oGraph->RenderAsPDF($oPage, $sComments);
+		$oGraph->RenderAsPDF($oPage, $sComments, $sContextKey);
 
 		if ($bIncludeList)
 		{
@@ -1908,6 +1908,8 @@ EOF
 		$iGroupingThreshold = utils::ReadParam('g', 5);
 		$sPositions = utils::ReadParam('positions', null, false, 'raw_data');
 		$aExcludedClasses = utils::ReadParam('excluded_classes', array(), false, 'raw_data');
+		$aContexts = utils::ReadParam('contexts', array(), false, 'raw_data');
+		$sContextKey = utils::ReadParam('context_key', array(), false, 'raw_data');
 		$aPositions = null;
 		if ($sPositions != null)
 		{
@@ -1946,11 +1948,11 @@ EOF
 		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
 		if ($sDirection == 'up')
 		{
-			$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+			$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aContexts);
 		}
 		else
 		{
-			$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aExcludedObjects);
+			$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aExcludedObjects, $aContexts);
 		}
 		
 		// Remove excluded classes from the graph
@@ -1973,7 +1975,7 @@ EOF
 		{
 			$oGraph->UpdatePositions($aPositions);
 		}
-		$oPage->add($oGraph->GetAsJSON());
+		$oPage->add($oGraph->GetAsJSON($sContextKey));
 		$oPage->SetContentType('application/json');
 		break;
 		
@@ -2024,8 +2026,10 @@ EOF
 		
 		$aResults = $oRelGraph->GetObjectsByClass();
 		$oGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
+		
+		$sContextKey = 'itop-tickets/relation_context/'.$sClass.'/'.$sRelation.'/'.$sDirection;		
 		$oAppContext = new ApplicationContext();
-		$oGraph->Display($oPage, $aResults, $sRelation, $oAppContext, $aExcludedObjects, $sClass, $iId);		
+		$oGraph->Display($oPage, $aResults, $sRelation, $oAppContext, $aExcludedObjects, $sClass, $iId, $sContextKey, array('this' => $oTicket));		
 		break;
 		
 		default:

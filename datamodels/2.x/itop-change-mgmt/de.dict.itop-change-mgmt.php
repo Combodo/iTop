@@ -102,6 +102,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI-ChangeManagementOverview-Last-7-days' => 'Zahl der Changes in den letzten sieben Tagen',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes der letzten sieben Tage nach Typ',
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes der letzten sieben Tage nach Status',
+	'Tickets:Related:OpenChanges' => 'Open changes~~',
+	'Tickets:Related:RecentChanges' => 'Recent changes~~',
 	'Class:Change/Attribute:changemanager_email' => 'Change Manager Email',
 	'Class:Change/Attribute:changemanager_email+' => '',
 	'Class:Change/Attribute:parent_name' => 'Parent Change ref',

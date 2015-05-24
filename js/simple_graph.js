@@ -28,14 +28,21 @@ $(function()
 				include_list: 'Include the list of objects',
 				comments: 'Comments',
 				grouping_threshold: 'Grouping Threshold',
-				refresh: 'Refresh'
+				additional_context_info: 'Additional Context Info',
+				refresh: 'Refresh',
+				check_all: 'Check All',
+				uncheck_all: 'Uncheck All',
+				none_selected: 'None',
+				nb_selected: '# selected',
 			},
 			export_as_document: null,
 			drill_down: null,
 			grouping_threshold: 10,
 			excluded_classes: [],
 			attachment_obj_class: null,
-			attachment_obj_key: null
+			attachment_obj_key: null,
+			additional_contexts: [],
+			context_key: ''
 		},
 	
 		// the constructor
@@ -107,6 +114,7 @@ $(function()
 				this.aEdges[k].aElements = [];
 				this._draw_edge(this.aEdges[k]);
 			}
+			this._make_tooltips();
 		},
 		_draw_node: function(oNode)
 		{
@@ -158,6 +166,19 @@ $(function()
 					oNode.aElements.push(this.oPaper.image(oNode.icon_url, xPos - iWidth * this.fZoom/2, yPos - iHeight * this.fZoom/2, iWidth*this.fZoom, iHeight*this.fZoom).colorShift('#fff', 1));					
 				}
 				oNode.aElements.push(this.oPaper.image(oNode.icon_url, xPos - iWidth * this.fZoom/2, yPos - iHeight * this.fZoom/2, iWidth*this.fZoom, iHeight*this.fZoom).attr(oNode.icon_attr));
+				
+				var idx = 0;
+				for(var i in oNode.context_icons)
+				{
+					var sgn = 2*(idx % 2) -1; // Suite: -1, 1, -1, 1, -1, 1, -1, etc.
+					var coef = Math.floor((1+idx)/2) * sgn; // Suite: 0, 1, -1, 2, -2, 3, -3, etc.
+					var alpha = coef*Math.PI/4 - Math.PI/2;						
+					var x = xPos + Math.cos(alpha) * 1.25*iWidth * this.fZoom / 2;
+					var y = yPos + Math.sin(alpha) * 1.25*iWidth * this.fZoom / 2;
+					var l = iWidth/3 * this.fZoom;
+					oNode.aElements.push(this.oPaper.image(oNode.context_icons[i], x - l/2, y - l/2, l , l).attr(oNode.icon_attr));
+					idx++;
+				}
 				var oText = this.oPaper.text( xPos, yPos, oNode.label);
 				oNode.text_attr['font-size'] = iFontSize * this.fZoom;
 				oText.attr(oNode.text_attr);
@@ -186,7 +207,18 @@ $(function()
 			{
 				var sNodeId = oNode.id;
 				$(oNode.aElements[k].node).attr({'data-type': oNode.shape, 'data-id': oNode.id} ).attr('class', 'popupMenuTarget');
-				oNode.aElements[k].drag(function(dx, dy, x, y, event) { me._move(sNodeId, dx, dy, x, y, event); }, function(x, y, event) { me._drag_start(sNodeId, x, y, event); }, function (event) { me._drag_end(sNodeId, event); });
+				oNode.aElements[k].drag(
+					function(dx, dy, x, y, event) {
+						clearTimeout($(this.node).data('openTimeoutId'));
+						me._move(sNodeId, dx, dy, x, y, event);
+					},
+					function(x, y, event) { 
+						me._drag_start(sNodeId, x, y, event);
+					},
+					function (event) {
+						me._drag_end(sNodeId, event);
+					}
+				);
 			}
 		},
 		_move: function(sNodeId, dx, dy, x, y, event)
@@ -367,7 +399,17 @@ $(function()
 			var sPopupMenuId = 'tk_graph'+this.element.attr('id');
 			var sHtml = '<div class="graph_config">';
 			var sId = this.element.attr('id');
-			sHtml += this.options.labels.grouping_threshold+'&nbsp;<input type="text" name="g" value="'+this.options.grouping_threshold+'" id="'+sId+'_grouping_threshold" size="2">&nbsp;<button type="button" id="'+sId+'_refresh_btn">'+this.options.labels.refresh+'</button>';
+			sHtml += this.options.labels.grouping_threshold+'&nbsp;<input type="text" name="g" value="'+this.options.grouping_threshold+'" id="'+sId+'_grouping_threshold" size="2">';
+			if (this.options.additional_contexts.length > 0)
+			{
+				sHtml += '&nbsp;'+this.options.labels.additional_context_info+' <select id="'+sId+'_contexts" name="contexts" class="multiselect" multiple size="1">';
+				for(var k in this.options.additional_contexts)
+				{
+					sHtml += '<option value="'+k+'" selected>'+this.options.additional_contexts[k].label+'</option>';
+				}
+				sHtml += '</select>'
+			}
+			sHtml += '&nbsp;<button type="button" id="'+sId+'_refresh_btn">'+this.options.labels.refresh+'</button>';
 			sHtml += '<div class="itop_popup toolkit_menu graph" style="font-size: 12px;" id="'+sPopupMenuId+'"><ul><li><img src="../images/toolkit_menu.png"><ul>';
 			if (this.options.export_as_pdf != null)
 			{
@@ -389,6 +431,7 @@ $(function()
 			$('#'+sPopupMenuId+'_pdf').click(function() { me.export_as_pdf(); });
 			$('#'+sPopupMenuId+'_attachment').click(function() { me.export_as_attachment(); });
 			$('#'+sId+'_grouping_threshold').spinner({ min: 2});
+			$('#'+sId+'_contexts').multiselect({header: true, checkAllText: this.options.labels.check_all, uncheckAllText: this.options.labels.uncheck_all, noneSelectedText: this.options.labels.none_selected, selectedText: this.options.labels.nb_selected, selectedList: 1});
 			$('#'+sId+'_refresh_btn').button().click(function() { me.reload(); });
 		},
 		_build_context_menus: function()
@@ -456,6 +499,8 @@ $(function()
 		},
 		_export_dlg: function(sTitle, sSubmitUrl, sOperation)
 		{
+			var sId = this.element.attr('id');
+			var me = this;
 			var oPositions = {};
 			for(k in this.aNodes)
 			{
@@ -463,6 +508,11 @@ $(function()
 			}
 			var sHtmlForm = '<div id="GraphExportDlg'+this.element.attr('id')+'"><form id="graph_'+this.element.attr('id')+'_export_dlg" target="_blank" action="'+sSubmitUrl+'" method="post">';
 			sHtmlForm += '<input type="hidden" name="g" value="'+this.options.grouping_threshold+'">';
+			sHtmlForm += '<input type="hidden" name="context_key" value="'+this.options.context_key+'">';
+			$('#'+sId+'_contexts').multiselect('getChecked').each(function() {
+				sHtmlForm += '<input type="hidden" name="contexts['+$(this).val()+']" value="'+me.options.additional_contexts[$(this).val()].oql+'">';				
+			});
+
 			sHtmlForm += '<input type="hidden" name="positions" value="">';
 			for(k in this.options.excluded_classes)
 			{
@@ -561,9 +611,12 @@ $(function()
 				this.options.grouping_threshold = 2;
 				$('#'+sId+'_grouping_threshold').val(this.options.grouping_threshold);
 			}
+			var aContexts = [];
+			$('#'+sId+'_contexts').multiselect('getChecked').each(function() { aContexts[$(this).val()] = me.options.additional_contexts[$(this).val()].oql; });
 			this.element.closest('.ui-tabs').tabs({ heightStyle: "fill" });
+			this._close_all_tooltips();
 			this.oPaper.rect(0, 0, this.element.width(), this.element.height()).attr({fill: '#000', opacity: 0.4, 'stroke-width': 0});
-			$.post(sUrl, {excluded_classes: this.options.excluded_classes, g: this.options.grouping_threshold, sources: this.options.sources, excluded: this.options.excluded }, function(data) {
+			$.post(sUrl, {excluded_classes: this.options.excluded_classes, g: this.options.grouping_threshold, sources: this.options.sources, excluded: this.options.excluded, contexts: aContexts, context_key: this.options.context_key }, function(data) {
 				me.load(data);
 			}, 'json');
 		},
@@ -619,6 +672,79 @@ $(function()
 		reload: function()
 		{
 			this.load_from_url(this.options.load_from_url);
+		},
+		_make_tooltips: function()
+		{
+			var me  = this;
+			$( ".popupMenuTarget" ).tooltip({
+				content: function() {
+					var sDataId = $(this).attr('data-id');
+					var sTooltipContent = '<div class="tooltip-close-button" data-id="'+sDataId+'" style="display:inline-block; float:right; cursor:pointer; padding-left:0.25em;">×</div>';
+					sTooltipContent += me._get_tooltip_content(sDataId);
+					return sTooltipContent;
+				},
+				items: '.popupMenuTarget',
+				position: {
+					my: "center bottom-10",
+					at: "center  top",					
+					using: function( position, feedback ) { 
+						$(this).css( position );  
+						$( "<div>" )
+						.addClass( "arrow" )
+						.addClass( feedback.vertical )
+						.addClass( feedback.horizontal )
+						.appendTo( this );
+						}
+				}
+			})
+			.off( "mouseover mouseout" )
+			.on( "mouseover", function(event){
+				event.stopImmediatePropagation();
+				var jMe = $(this);
+				$(this).data('openTimeoutId', setTimeout(function() {
+					var sDataId = jMe.attr('data-id');
+					if ($('.tooltip-close-button[data-id="'+sDataId+'"]').length == 0)
+					{
+						jMe.tooltip('open');						
+					}
+				}, 500));					
+			})
+			.on( "mouseout", function(event){
+				event.stopImmediatePropagation();
+				clearTimeout($(this).data('openTimeoutId'));					
+			});
+			/* Happens at every on_drag_end !!!
+			.on( "click", function(){
+				var sDataId = $(this).attr('data-id');
+				if ($('.tooltip-close-button[data-id="'+sDataId+'"]').length == 0)
+				{
+					$(this).tooltip( 'open' );							 
+				}
+				else
+				{
+					$(this).tooltip( 'close' );							 						
+				}           
+				$( this ).unbind( "mouseleave" );
+				return false;	
+			 });
+			*/
+			$('body').on('click', '.tooltip-close-button', function() {
+				var sDataId = $(this).attr('data-id');
+				$('.popupMenuTarget[data-id="'+sDataId+'"]').tooltip('close');
+			});
+		},
+		_get_tooltip_content: function(sNodeId)
+		{
+			var oNode = this._find_node(sNodeId);
+			if (oNode !== null)
+			{
+				return oNode.tooltip;
+			}
+			return '<p>Node Id:'+sNodeId+'</p>';
+		},
+		_close_all_tooltips: function()
+		{
+			this.element.find('.popupMenuTarget').tooltip('close');
 		}
 	});	
 });

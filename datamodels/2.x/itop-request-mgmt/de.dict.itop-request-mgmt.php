@@ -268,5 +268,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:SelectLanguage' => 'Ändern Sie Ihre Spracheinstellung',
 	'Portal:LanguageChangedTo_Lang' => 'Spracheinstellung geändert auf: ',
 	'Portal:ChooseYourFavoriteLanguage' => 'WÄhlen Sie Ihre bevorzugte Sprache',
+	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
 ));
 ?>
