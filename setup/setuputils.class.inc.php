@@ -50,7 +50,7 @@ class CheckResult
 
 class SetupUtils
 {
-	const PHP_MIN_VERSION = '5.2.0';
+	const PHP_MIN_VERSION = '5.3.0';
 	const MYSQL_MIN_VERSION = '5.0.0';
 	const MIN_MEMORY_LIMIT = 33554432; // = 32*1024*1024 Beware: Computations are not allowed in defining constants
 	const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;
