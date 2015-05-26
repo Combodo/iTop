@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -781,7 +781,7 @@ class RestUtils
 		$oSearch = new DBObjectSearch($sClass);
 		foreach ($oCriteria as $sAttCode => $value)
 		{
-			$realValue = self::MakeValue($sClass, $sAttCode, $value);
+			$realValue = static::MakeValue($sClass, $sAttCode, $value);
 			$oSearch->AddCondition($sAttCode, $realValue, '=');
 			if (is_object($value) || is_array($value))
 			{
@@ -818,7 +818,7 @@ class RestUtils
 	{
 		if (is_object($key))
 		{
-			$res = self::FindObjectFromCriteria($sClass, $key);
+			$res = static::FindObjectFromCriteria($sClass, $key);
 		}
 		elseif (is_numeric($key))
 		{
@@ -882,7 +882,7 @@ class RestUtils
 			$oSearch = new DBObjectSearch($sClass);
 			foreach ($key as $sAttCode => $value)
 			{
-				$realValue = self::MakeValue($sClass, $sAttCode, $value);
+				$realValue = static::MakeValue($sClass, $sAttCode, $value);
 				$oSearch->AddCondition($sAttCode, $realValue, '=');
 			}
 		}
@@ -926,7 +926,7 @@ class RestUtils
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			if ($oAttDef instanceof AttributeExternalKey)
 			{
-				$oExtKeyObject = self::FindObjectFromKey($oAttDef->GetTargetClass(), $value, true /* allow null */);
+				$oExtKeyObject = static::FindObjectFromKey($oAttDef->GetTargetClass(), $value, true /* allow null */);
 				$value = ($oExtKeyObject != null) ? $oExtKeyObject->GetKey() : 0;
 			}
 			elseif ($oAttDef instanceof AttributeLinkedSet)
@@ -939,7 +939,7 @@ class RestUtils
 				$aLinks = array();
 				foreach($value as $oValues)
 				{
-					$oLnk = self::MakeObjectFromFields($sLnkClass, $oValues);
+					$oLnk = static::MakeObjectFromFields($sLnkClass, $oValues);
 					$aLinks[] = $oLnk;
 				}
 				$value = DBObjectSet::FromArray($sLnkClass, $aLinks);
@@ -970,7 +970,7 @@ class RestUtils
 		$oObject = MetaModel::NewObject($sClass);
 		foreach ($aFields as $sAttCode => $value)
 		{
-			$realValue = self::MakeValue($sClass, $sAttCode, $value);
+			$realValue = static::MakeValue($sClass, $sAttCode, $value);
 			try
 			{
 				$oObject->Set($sAttCode, $realValue);
@@ -997,7 +997,7 @@ class RestUtils
 		$sClass = get_class($oObject);
 		foreach ($aFields as $sAttCode => $value)
 		{
-			$realValue = self::MakeValue($sClass, $sAttCode, $value);
+			$realValue = static::MakeValue($sClass, $sAttCode, $value);
 			try
 			{
 				$oObject->Set($sAttCode, $realValue);
