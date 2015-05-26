@@ -1860,11 +1860,7 @@
             </down>
           </impacts>
         </UserRequest>
-      </relation_context>
-    </parameters>
-    <parameters id="itop-config-mgmt">
-      <relation_context>
-        <FunctionalCI>
+        <Change>
           <impacts>
             <down>
               <items type="array">
@@ -1875,10 +1871,27 @@
                 </item>
               </items>
             </down>
+          </impacts>
+        </Change>
+      </relation_context>
+    </parameters>
+    <parameters id="itop-config-mgmt">
+      <relation_context>
+        <FunctionalCI>
+          <impacts>
+            <down>
+              <items type="array">
+                <item id="open_incidents" _delta="define">
+                  <oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
+                  <dict>Tickets:Related:OpenIncidents</dict>
+                  <icon>itop-request-mgmt/images/incident-red.png</icon>
+                </item>
+              </items>
+            </down>
             <up>
               <items type="array">
                 <item id="open_incidents" _delta="define">
-                  <oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted') AND (R.id != :this->id)]]></oql>
+                  <oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
                   <icon>itop-request-mgmt/images/incident-red.png</icon>
                 </item>

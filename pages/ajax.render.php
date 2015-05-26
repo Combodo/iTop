@@ -1744,7 +1744,7 @@ EOF
 		$bIncludeList = (bool)utils::ReadParam('include_list', false);
 		$sComments = utils::ReadParam('comments', '', false, 'raw_data');
 		$aContexts = utils::ReadParam('contexts', array(), false, 'raw_data');
-		$sContextKey = utils::ReadParam('context_key', array(), false, 'raw_data');
+		$sContextKey = utils::ReadParam('context_key', '', false, 'raw_data');
 		$aPositions = null;
 		if ($sPositions != null)
 		{

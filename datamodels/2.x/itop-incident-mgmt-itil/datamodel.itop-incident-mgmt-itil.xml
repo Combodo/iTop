@@ -1764,6 +1764,19 @@
   <module_parameters>
     <parameters id="itop-tickets">
       <relation_context>
+        <UserRequest>
+          <impacts>
+            <down>
+              <items type="array">
+                <item id="open_incidents" _delta="define">
+                  <oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted') AND (I.id != :this->id)]]></oql>
+                  <dict>Tickets:Related:OpenIncidents</dict>
+                  <icon>itop-request-mgmt/images/incident-red.png</icon>
+                </item>
+              </items>
+            </down>
+          </impacts>
+        </UserRequest>
         <Incident>
           <impacts>
             <down>
@@ -1777,11 +1790,7 @@
             </down>
           </impacts>
         </Incident>
-      </relation_context>
-    </parameters>
-    <parameters id="itop-config-mgmt">
-      <relation_context>
-        <FunctionalCI>
+        <Change>
           <impacts>
             <down>
               <items type="array">
@@ -1792,10 +1801,27 @@
                 </item>
               </items>
             </down>
+          </impacts>
+        </Change>
+      </relation_context>
+    </parameters>
+    <parameters id="itop-config-mgmt">
+      <relation_context>
+        <FunctionalCI>
+          <impacts>
+            <down>
+              <items type="array">
+                <item id="open_incidents" _delta="define">
+                  <oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted')]]></oql>
+                  <dict>Tickets:Related:OpenIncidents</dict>
+                  <icon>itop-request-mgmt/images/incident-red.png</icon>
+                </item>
+              </items>
+            </down>
             <up>
               <items type="array">
                 <item id="open_incidents" _delta="define">
-                  <oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted') AND (I.id != :this->id)]]></oql>
+                  <oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted')]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
                   <icon>itop-request-mgmt/images/incident-red.png</icon>
                 </item>

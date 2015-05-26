@@ -448,6 +448,7 @@ $(function()
 		        	var sType = trigger.attr('data-type');
 		        	var sNodeId = trigger.attr('data-id');
 		        	var oNode = me._find_node(sNodeId);
+		        	clearTimeout(trigger.data('openTimeoutId'));
 		        	
 		        	/*
 		        	var sObjName = trigger.attr('data-class');
@@ -643,6 +644,12 @@ $(function()
 			oParams.p = jForm.find(':input[name="p"]').val();
 			oParams.obj_class = this.options.export_as_attachment.obj_class;
 			oParams.obj_key = this.options.export_as_attachment.obj_key;
+			oParams.contexts = [];
+			var me = this;
+			$('#'+this.element.attr('id')+'_contexts').multiselect('getChecked').each(function() {
+				oParams.contexts[$(this).val()] = me.options.additional_contexts[$(this).val()].oql;				
+			});
+			oParams.context_key = this.options.context_key;
 			var sUrl = jForm.attr('action');
 			var sTitle = oParams.title;
 			var jPanel = $('#attachments').closest('.ui-tabs-panel');

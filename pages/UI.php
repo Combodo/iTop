@@ -1439,7 +1439,6 @@ EOF
 		$iGroupingThreshold = utils::ReadParam('g', 5);
 		
 		$oObj = MetaModel::GetObject($sClass, $id);
-		$sRootClass = MetaModel::GetRootClass($sClass);
 		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
 		$aSourceObjects = array($oObj);
 		if ($sRelation == 'depends on')
@@ -1477,7 +1476,7 @@ EOF
 		$oP->SetCurrentTabContainer('Navigator');
 		
 		$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
-		$sContextKey = "itop-config-mgmt/relation_context/$sRootClass/$sRelation/$sDirection";
+		$sContextKey = "itop-config-mgmt/relation_context/$sClass/$sRelation/$sDirection";
 		
 		// Check if the current object supports Attachments, similar to AttachmentPlugin::IsTargetObject
 		$sClassForAttachment = null;

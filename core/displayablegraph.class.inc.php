@@ -235,8 +235,6 @@ class DisplayableNode extends GraphNode
 	 */
 	public function GroupSimilarNeighbours(DisplayableGraph $oGraph, $iThresholdCount, $bDirectionUp = false, $bDirectionDown = true)
 	{
-//echo "<p>".$this->GetProperty('label').":</p>";
-		
 		if ($this->GetProperty('grouped') === true) return;
 		$this->SetProperty('grouped', true);
 			
@@ -270,9 +268,7 @@ class DisplayableNode extends GraphNode
 					{
 						$aNodesPerClass[$sClass][$sKey]['nodes'][$oNode->GetId()] = $oNode;
 						$aNodesPerClass[$sClass][$sKey]['count'] += (int)$oNode->GetProperty('count', 1);
-//echo "<p>New count: ".$aNodesPerClass[$sClass][$sKey]['count']."</p>";
 					}
-						
 				}
 				else
 				{
@@ -284,16 +280,14 @@ class DisplayableNode extends GraphNode
 			{
 				foreach($aDefs as $sStatus => $aGroupProps)
 				{
-//echo "<p>$sClass/$sStatus: {$aGroupProps['count']} object(s), actually: ".count($aGroupProps['nodes'])."</p>";
 					if (count($aGroupProps['nodes']) >= $iThresholdCount)
 					{
-						$oNewNode = new DisplayableGroupNode($oGraph, $this->GetId().'::'.$sClass);
+						$oNewNode = new DisplayableGroupNode($oGraph, $this->GetId().'::'.(($sStatus == 'reached') ? '_reached': ''));
 						$oNewNode->SetProperty('label', 'x'.$aGroupProps['count']);
 						$oNewNode->SetProperty('icon_url', $aGroupProps['icon_url']);
 						$oNewNode->SetProperty('class', $sClass);
 						$oNewNode->SetProperty('is_reached', ($sStatus == 'reached'));
 						$oNewNode->SetProperty('count', $aGroupProps['count']);
-						//$oNewNode->SetProperty('grouped', true);
 						
 						$oIncomingEdge = new DisplayableEdge($oGraph, $this->GetId().'-'.$oNewNode->GetId(), $this, $oNewNode);
 										
@@ -349,7 +343,6 @@ class DisplayableNode extends GraphNode
 		{
 			foreach($aContextRootCauses as $key => $aObjects)
 			{
-				//$sHtml .= print_r($aContextDefs, true);
 				$aContext = $aContextDefs[$key];
 				$aRootCauses = array();
 				foreach($aObjects as $oRootCause)
@@ -458,7 +451,6 @@ class DisplayableRedundancyNode extends DisplayableNode
 			{
 				foreach($aDefs as $sStatus => $aNodes)
 				{
-//echo "<p>".$this->GetId().' has '.count($aNodes)." neighbours of class $sClass in status $sStatus\n";
 					if (count($aNodes) >= $iThresholdCount)
 					{
 						$oNewNode = new DisplayableGroupNode($oGraph, '-'.$this->GetId().'::'.$sClass.'/'.$sStatus);
@@ -482,7 +474,6 @@ class DisplayableRedundancyNode extends DisplayableNode
 									$oNewEdge = new DisplayableEdge($oGraph, '-'.$oEdge->GetId().'::'.$sClass.'/'.$sStatus, $oNewNode, $oEdge->GetSinkNode());
 								}
 							}
-//echo "<p>Replacing ".$oNode->GetId().' by '.$oNewNode->GetId()."\n";
 							$oGraph->_RemoveNode($oNode);
 							$oNewNode->AddObject($oNode->GetProperty('object'));
 						}
@@ -503,10 +494,10 @@ class DisplayableRedundancyNode extends DisplayableNode
 	public function GetTooltip($aContextDefs)
 	{
 		$sHtml = '';
-		$sHtml .= "Redundancy<hr>";
+		$sHtml .= Dict::S('UI:RelationTooltip:Redundancy')."<hr>";
 		$sHtml .= '<table><tbody>';
-		$sHtml .= "<tr><td># Items Impacted:&nbsp;</td><td>".$this->GetProperty('is_reached_count')."&nbsp;/&nbsp;".($this->GetProperty('min_up') + $this->GetProperty('threshold'))."</td></tr>";
-		$sHtml .= "<tr><td>Critical Threshold:&nbsp;</td><td>".$this->GetProperty('threshold')."&nbsp;/&nbsp;".($this->GetProperty('min_up') + $this->GetProperty('threshold'))."</td></tr>";
+		$sHtml .= "<tr><td>".Dict::Format('UI:RelationTooltip:ImpactedItems_N_of_M' , $this->GetProperty('is_reached_count'), $this->GetProperty('min_up') + $this->GetProperty('threshold'))."</td></tr>";
+		$sHtml .= "<tr><td>".Dict::Format('UI:RelationTooltip:CriticalThreshold_N_of_M' , $this->GetProperty('threshold'), $this->GetProperty('min_up') + $this->GetProperty('threshold'))."</td></tr>";
 		$sHtml .= '</tbody></table>';
 		return $sHtml;		
 	}
@@ -839,7 +830,6 @@ class DisplayableGraph extends SimpleGraph
 		$aChunks = explode(";", $sDot);
 		foreach($aChunks as $sChunk)
 		{
-			//echo "<p>$sChunk</p>";
 			if(preg_match('/"([^"]+)".+pos="([0-9\\.]+),([0-9\\.]+)"/ms', $sChunk, $aMatches))
 			{
 				$sId = $aMatches[1];
@@ -849,12 +839,6 @@ class DisplayableGraph extends SimpleGraph
 				$oNode = $this->GetNode($sId);
 				$oNode->x = (float)$xPos;
 				$oNode->y = (float)$yPos;
-				
-				//echo "<p>$sId at $xPos,$yPos</p>";
-			}
-			else
-			{
-				//echo "<p>No match</p>";
 			}
 		}
 	}
@@ -985,7 +969,7 @@ class DisplayableGraph extends SimpleGraph
 		
 		$fBreakMargin = $oPdf->getBreakMargin();
 		$oPdf->SetAutoPageBreak(false);
-		$aRemainingArea = $this->RenderKey($oPdf, $sComments, $xMin, $yMin, $xMax, $yMax);
+		$aRemainingArea = $this->RenderKey($oPdf, $sComments, $xMin, $yMin, $xMax, $yMax, $aContextDefs);
 		$xMin = $aRemainingArea['xmin'];
 		$xMax = $aRemainingArea['xmax'];
 		$yMin = $aRemainingArea['ymin'];
@@ -1033,9 +1017,10 @@ class DisplayableGraph extends SimpleGraph
 	 * @param float $yMin
 	 * @param float $xMax
 	 * @param float $yMax
+	 * @param hash $aContextDefs
 	 * @return hash An array ('xmin' => , 'xmax' => ,'ymin' => , 'ymax' => ) of the remaining available area to paint the graph
 	 */
-	protected function RenderKey(TCPDF $oPdf, $sComments, $xMin, $yMin, $xMax, $yMax)
+	protected function RenderKey(TCPDF $oPdf, $sComments, $xMin, $yMin, $xMax, $yMax, $aContextDefs)
 	{
 		$fFontSize = 7; // in mm
 		$fIconSize = 6; // in mm
@@ -1044,6 +1029,8 @@ class DisplayableGraph extends SimpleGraph
 		$fMaxWidth = max($oPdf->GetStringWidth(Dict::S('UI:Relation:Key')) - $fIconSize, $oPdf->GetStringWidth(Dict::S('UI:Relation:Comments')) - $fIconSize);
 		$aClasses = array();
 		$aIcons = array();
+		$aContexts = array();
+		$aContextIcons = array();
 		$oPdf->SetFont('dejavusans', '', $fFontSize, '', true);
 		foreach($oIterator as $sId => $oNode)
 		{
@@ -1060,6 +1047,15 @@ class DisplayableGraph extends SimpleGraph
 					$aIcons[$sClass] = $sIconPath;
 				}
 			}
+			$aContextRootCauses = $oNode->GetProperty('context_root_causes');
+			if (!is_null($aContextRootCauses))
+			{
+				foreach($aContextRootCauses as $key => $aObjects)
+				{
+					$aContexts[$key] = Dict::S($aContextDefs[$key]['dict']);
+					$aContextIcons[$key] = APPROOT.'env-'.utils::GetCurrentEnvironment().'/'.$aContextDefs[$key]['icon'];
+				}
+			}
 		}
 		$oPdf->SetXY($xMin + $fPadding, $yMin + $fPadding);
 		$yPos = $yMin + $fPadding;
@@ -1072,6 +1068,13 @@ class DisplayableGraph extends SimpleGraph
 			$oPdf->Cell(0, $fIconSize + 2*$fPadding, $sLabel, 0 /* border */, 1 /* ln */);
 			$oPdf->Image($aIcons[$sClass], $xMin+1, $yPos, $fIconSize, $fIconSize);
 			$yPos += $fIconSize + 2*$fPadding; 
+		}
+		foreach($aContexts as $key => $sLabel)
+		{
+			$oPdf->SetX($xMin + $fIconSize + $fPadding);
+			$oPdf->Cell(0, $fIconSize + 2*$fPadding, $sLabel, 0 /* border */, 1 /* ln */);
+			$oPdf->Image($aContextIcons[$key], $xMin+1+$fIconSize*0.125, $yPos+$fIconSize*0.125, $fIconSize*0.75, $fIconSize*0.75);
+			$yPos += $fIconSize + 2*$fPadding;
 		}
 		$oPdf->Rect($xMin, $yMin, $fMaxWidth + $fIconSize + 3*$fPadding, $yMax - $yMin, 'D');
 		
@@ -1093,20 +1096,29 @@ class DisplayableGraph extends SimpleGraph
 		return array('xmin' => $fMaxWidth + $fIconSize + 4*$fPadding, 'xmax' => $xMax, 'ymin' => $yMin, 'ymax' => $yMax);
 	}
 	
-	//itop-tickets/relation_context/UserRequest/impacts/down
 	/**
-	 * 
+	 * Get the context definitions from the parameters / configuration. The format of the "key" string is:
+	 * <module>/relation_context/<class>/<relation>/<direction>
+	 * The values will be retrieved for the given class and all its parents and merged together as a single array.
+	 * Entries with an invalid query are removed from the list.
 	 * @param string $sContextKey The key to fetch the queries in the configuration. Example: itop-tickets/relation_context/UserRequest/impacts/down
+	 * @param bool $bDevelopParams Whether or not to substitute the parameters inside the queries with the supplied "context params"
+	 * @param array $aContextParams Arguments for the queries (via ToArgs()) if $bDevelopParams == true
+	 * @return multitype:multitype:string
 	 */
 	public function GetContextDefinitions($sContextKey, $bDevelopParams = true, $aContextParams = array())
 	{
 		$aLevels = explode('/', $sContextKey);
+		$sLeafClass = $aLevels[2];
+		
 		$aRelationContext = MetaModel::GetConfig()->GetModuleSetting($aLevels[0], $aLevels[1], array());
 		$aContextDefs = array();
-		if (isset($aRelationContext[$aLevels[2]][$aLevels[3]][$aLevels[4]]['items']))
+		foreach(MetaModel::EnumParentClasses($sLeafClass, ENUM_PARENT_CLASSES_ALL) as $sClass)
 		{
-			$aContextDefs = $aRelationContext[$aLevels[2]][$aLevels[3]][$aLevels[4]]['items'];
-
+			if (isset($aRelationContext[$sClass][$aLevels[3]][$aLevels[4]]['items']))
+			{
+				$aContextDefs = array_merge($aContextDefs, $aRelationContext[$sClass][$aLevels[3]][$aLevels[4]]['items']);
+			}
 		}
 		
 		// Check if the queries are valid
