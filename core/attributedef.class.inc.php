@@ -962,6 +962,106 @@ class AttributeLinkedSet extends AttributeDefinition
 		return $oSet;
 	}
 
+	/**
+	 * Helper to get a value that will be JSON encoded
+	 * The operation is the opposite to FromJSONToValue	 
+	 */	 	
+	public function GetForJSON($value)
+	{
+		$aRet = array();
+		if (is_object($value) && ($value instanceof DBObjectSet))
+		{
+			$value->Rewind();
+			while ($oObj = $value->Fetch())
+			{
+				$sObjClass = get_class($oObj);
+				// Show only relevant information (hide the external key to the current object)
+				$aAttributes = array();
+				foreach(MetaModel::ListAttributeDefs($sObjClass) as $sAttCode => $oAttDef)
+				{
+					if ($sAttCode == 'finalclass')
+					{
+						if ($sObjClass == $this->GetLinkedClass())
+						{
+							// Simplify the output if the exact class could be determined implicitely 
+							continue;
+						}
+					}
+					if ($sAttCode == $this->GetExtKeyToMe()) continue;
+					if ($oAttDef->IsExternalField()) continue;
+					if (!$oAttDef->IsDirectField()) continue;
+					if (!$oAttDef->IsScalar()) continue;
+					$attValue = $oObj->Get($sAttCode);
+					$aAttributes[$sAttCode] = $oAttDef->GetForJSON($attValue);
+				}
+				$aRet[] = $aAttributes;
+			}
+		}
+		return $aRet;
+	}
+
+	/**
+	 * Helper to form a value, given JSON decoded data
+	 * The operation is the opposite to GetForJSON	 
+	 */	 	
+	public function FromJSONToValue($json)
+	{
+		$sTargetClass = $this->Get('linked_class');
+
+		$aLinks = array();
+		foreach($json as $aValues)
+		{
+			if (isset($aValues['finalclass']))
+			{
+				$sLinkClass = $aValues['finalclass'];
+				if (!is_subclass_of($sLinkClass, $sTargetClass))
+				{
+					throw new CoreException('Wrong class for link attribute specification', array('requested_class' => $sLinkClass, 'expected_class' => $sTargetClass));
+				}
+			}
+			elseif (MetaModel::IsAbstract($sTargetClass))
+			{
+					throw new CoreException('Missing finalclass for link attribute specification');
+			}
+			else
+			{
+				$sLinkClass = $sTargetClass;
+			}
+
+			$oLink = MetaModel::NewObject($sLinkClass);
+			foreach ($aValues as $sAttCode => $sValue)
+			{
+				$oLink->Set($sAttCode, $sValue);
+			}
+
+			// Check (roughly) if such a link is valid
+			$aErrors = array();
+			foreach(MetaModel::ListAttributeDefs($sTargetClass) as $sAttCode => $oAttDef)
+			{
+				if ($oAttDef->IsExternalKey())
+				{
+					if (($oAttDef->GetTargetClass() == $this->GetHostClass()) || (is_subclass_of($this->GetHostClass(), $oAttDef->GetTargetClass())))
+					{
+						continue; // Don't check the key to self
+					}
+				}
+				
+				if ($oAttDef->IsWritable() && $oAttDef->IsNull($oLink->Get($sAttCode)) && !$oAttDef->IsNullAllowed())
+				{
+					$aErrors[] = $sAttCode;
+				}
+			}
+			if (count($aErrors) > 0)
+			{
+				throw new CoreException("Missing value for mandatory attribute(s): ".implode(', ', $aErrors));
+			}
+
+			$aLinks[] = $oLink;
+		}
+		$oSet = DBObjectSet::FromArray($sTargetClass, $aLinks);
+		return $oSet;
+	}
+
 	public function Equals($val1, $val2)
 	{
 		if ($val1 === $val2) return true;
