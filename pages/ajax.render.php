@@ -1732,8 +1732,7 @@ catch (Exception $e)
 {
 	// note: transform to cope with XSS attacks
 	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
-	echo "<p>Debug trace: <pre>".$e->getTraceAsString()."</pre></p>\n";
-	IssueLog::Error($e->getMessage());
+	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString()); // Do NOT display the call stack since it may contain sensitive information
 }
 
 
