@@ -1,0 +1,285 @@
+<?php
+require_once 'PHP/LexerGenerator/Regex/Parser.php';
+class PHP_LexerGenerator_Regex_Lexer
+{
+    const MATCHSTART = PHP_LexerGenerator_Regex_Parser::MATCHSTART;
+    const MATCHEND = PHP_LexerGenerator_Regex_Parser::MATCHEND;
+    const CONTROLCHAR = PHP_LexerGenerator_Regex_Parser::CONTROLCHAR;
+    const OPENCHARCLASS = PHP_LexerGenerator_Regex_Parser::OPENCHARCLASS;
+    const FULLSTOP = PHP_LexerGenerator_Regex_Parser::FULLSTOP;
+    const TEXT = PHP_LexerGenerator_Regex_Parser::TEXT;
+    const BACKREFERENCE = PHP_LexerGenerator_Regex_Parser::BACKREFERENCE;
+    const OPENASSERTION = PHP_LexerGenerator_Regex_Parser::OPENASSERTION;
+    const COULDBEBACKREF = PHP_LexerGenerator_Regex_Parser::COULDBEBACKREF;
+    const NEGATE = PHP_LexerGenerator_Regex_Parser::NEGATE;
+    const HYPHEN = PHP_LexerGenerator_Regex_Parser::HYPHEN;
+    const CLOSECHARCLASS = PHP_LexerGenerator_Regex_Parser::CLOSECHARCLASS;
+    const BAR = PHP_LexerGenerator_Regex_Parser::BAR;
+    const MULTIPLIER = PHP_LexerGenerator_Regex_Parser::MULTIPLIER;
+    const INTERNALOPTIONS = PHP_LexerGenerator_Regex_Parser::INTERNALOPTIONS;
+    const COLON = PHP_LexerGenerator_Regex_Parser::COLON;
+    const OPENPAREN = PHP_LexerGenerator_Regex_Parser::OPENPAREN;
+    const CLOSEPAREN = PHP_LexerGenerator_Regex_Parser::CLOSEPAREN;
+    const PATTERNNAME = PHP_LexerGenerator_Regex_Parser::PATTERNNAME;
+    const POSITIVELOOKBEHIND = PHP_LexerGenerator_Regex_Parser::POSITIVELOOKBEHIND;
+    const NEGATIVELOOKBEHIND = PHP_LexerGenerator_Regex_Parser::NEGATIVELOOKBEHIND;
+    const POSITIVELOOKAHEAD = PHP_LexerGenerator_Regex_Parser::POSITIVELOOKAHEAD;
+    const NEGATIVELOOKAHEAD = PHP_LexerGenerator_Regex_Parser::NEGATIVELOOKAHEAD;
+    const ONCEONLY = PHP_LexerGenerator_Regex_Parser::ONCEONLY;
+    const COMMENT = PHP_LexerGenerator_Regex_Parser::COMMENT;
+    const RECUR = PHP_LexerGenerator_Regex_Parser::RECUR;
+    const ESCAPEDBACKSLASH = PHP_LexerGenerator_Regex_Parser::ESCAPEDBACKSLASH;
+    private $input;
+    private $N;
+    public $token;
+    public $value;
+    public $line;
+
+    function __construct($data)
+    {
+        $this->input = $data;
+        $this->N = 0;
+    }
+
+    function reset($data, $line)
+    {
+        $this->input = $data;
+        $this->N = 0;
+        // passed in from parent parser
+        $this->line = $line;
+        $this->yybegin(self::INITIAL);
+    }
+
+/*!lex2php
+%input {$this->input}
+%counter {$this->N}
+%token {$this->token}
+%value {$this->value}
+%line {$this->line}
+NONESCAPE = /[^[\\^$.|()?*+{}]+/
+NONESCAPECHARCLASS = /[^\-\\]/
+ESCAPEDTHING = /\\[][{}*.^$|?()+]/
+ESCAPEDCHARCLASSTHING = /\\[]\.\-\^]/
+MULTIPLIER = /\*\?|\+\?|[*?+]|\{[0-9]+\}|\{[0-9]+,\}|\{[0-9]+,[0-9]+\}/
+STRINGCHAR = /\\[frnt]|\\x[0-9a-fA-F][0-9a-fA-F]?|\\[0-7][0-7][0-7]|\\x\{[0-9a-fA-F]+\}/
+CONTROLCHAR = /\\[abBGcedDsSwW0C]|\\c\\/
+COULDBEBACKREF = /\\[0-9][0-9]/
+CHARCLASSCONTROLCHAR = /\\[bacedDsSwW0C]|\\c\\|\\x\{[0-9a-fA-F]+\}|\\[0-7][0-7][0-7]|\\x[0-9a-fA-F][0-9a-fA-F]?/
+SUBJECTEND = /\\[zZ]/
+BACKREF = /\\[1-9]/
+UNICODESTUFF = /\\p\{\^?..?\}|\\P\{..?\}|\\X/
+PROPERTYCODES = /C[cfnos]?|L[lmotu]?|M[cen]?|N[dlo]?|P[cdefios]?|S[ckmo]?|Z[lps]?/
+SIMPLEPROPERTYCODES = /[CLMNPSZ]/
+INTERNALOPTIONS = /[imsxUX]+-[imsxUX]+|[imsxUX]+|-[imsxUX]+/
+ANYTHING = /./
+PATTERNNAME = /[^>]+/
+COMMENT = /#[^)]+/
+HYPHEN = /-(?!])/
+*/
+/*!lex2php
+%statename INITIAL
+"\\\\" {
+    $this->token = self::ESCAPEDBACKSLASH;
+}
+NONESCAPE {
+    $this->token = self::TEXT;
+}
+ESCAPEDTHING {
+    $this->token = self::CONTROLCHAR;
+}
+"[" {
+    $this->token = self::OPENCHARCLASS;
+    $this->yybegin(self::CHARACTERCLASSSTART);
+}
+"|" {
+    $this->token = self::BAR;
+}
+STRINGCHAR {
+    $this->token = self::TEXT;
+}
+COULDBEBACKREF {
+    $this->token = self::COULDBEBACKREF;
+}
+CONTROLCHAR {
+    $this->token = self::CONTROLCHAR;
+}
+"^" {
+    $this->token = self::MATCHSTART;
+}
+"\\A" {
+    $this->token = self::MATCHSTART;
+}
+")" {
+    $this->token = self::CLOSEPAREN;
+    $this->yybegin(self::INITIAL);
+}
+"$" {
+    $this->token = self::MATCHEND;
+}
+MULTIPLIER {
+    $this->token = self::MULTIPLIER;
+}
+SUBJECTEND {
+    $this->token = self::MATCHEND;
+}
+"(?" {
+    $this->token = self::OPENASSERTION;
+    $this->yybegin(self::ASSERTION);
+}
+"(" {
+    $this->token = self::OPENPAREN;
+}
+"." {
+    $this->token = self::FULLSTOP;
+}
+BACKREF {
+    $this->token = self::BACKREFERENCE;
+}
+UNICODESTUFF {
+    $this->token = self::CONTROLCHAR;
+}
+"\\p{" PROPERTYCODES "}" {
+    $this->token = self::CONTROLCHAR;
+}
+"\\p{^" PROPERTYCODES "}" {
+    $this->token = self::CONTROLCHAR;
+}
+"\\p" SIMPLEPROPERTYCODES {
+    $this->token = self::CONTROLCHAR;
+}
+"\\" {
+    return false;
+}
+*/
+/*!lex2php
+%statename CHARACTERCLASSSTART
+"^" {
+    $this->token = self::NEGATE;
+}
+"]" {
+    $this->yybegin(self::CHARACTERCLASS);
+    $this->token = self::TEXT;
+}
+ANYTHING {
+    $this->yybegin(self::CHARACTERCLASS);
+    return true;
+}
+*/
+/*!lex2php
+%statename CHARACTERCLASS
+"\\\\" {
+    $this->token = self::ESCAPEDBACKSLASH;
+}
+"]" {
+    $this->yybegin(self::INITIAL);
+    $this->token = self::CLOSECHARCLASS;
+}
+STRINGCHAR {
+    $this->token = self::TEXT;
+}
+CHARCLASSCONTROLCHAR {
+    $this->token = self::TEXT;
+}
+COULDBEBACKREF {
+    $this->token = self::COULDBEBACKREF;
+}
+BACKREF {
+    $this->token = self::BACKREFERENCE;
+}
+ESCAPEDCHARCLASSTHING {
+    $this->token = self::TEXT;
+}
+HYPHEN {
+    $this->token = self::HYPHEN;
+    $this->yybegin(self::RANGE);
+}
+NONESCAPECHARCLASS {
+    $this->token = self::TEXT;
+}
+"\\" {
+    return false; // ignore escaping of normal text
+}
+ANYTHING {
+    $this->token = self::TEXT;
+}
+*/
+/*!lex2php
+%statename RANGE
+"\\\\" {
+    $this->token = self::ESCAPEDBACKSLASH;
+}
+"\\]" {
+    $this->token = self::TEXT;
+    $this->yybegin(self::CHARACTERCLASS);
+}
+CHARCLASSCONTROLCHAR {
+    $this->token = self::TEXT;
+    $this->yybegin(self::CHARACTERCLASS);
+}
+COULDBEBACKREF {
+    $this->token = self::COULDBEBACKREF;
+}
+BACKREF {
+    $this->token = self::BACKREFERENCE;
+}
+NONESCAPECHARCLASS {
+    $this->token = self::TEXT;
+    $this->yybegin(self::CHARACTERCLASS);
+}
+"\\" {
+    return false; // ignore escaping of normal text
+}
+*/
+/*!lex2php
+%statename ASSERTION
+INTERNALOPTIONS {
+    $this->token = self::INTERNALOPTIONS;
+}
+":" {
+    $this->token = self::COLON;
+    $this->yybegin(self::INITIAL);
+}
+")" {
+    $this->token = self::CLOSEPAREN;
+    $this->yybegin(self::INITIAL);
+}
+"P<" PATTERNNAME ">" {
+    $this->token = self::PATTERNNAME;
+    $this->yybegin(self::INITIAL);
+}
+"<=" {
+    $this->token = self::POSITIVELOOKBEHIND;
+    $this->yybegin(self::INITIAL);
+}
+"<!" {
+    $this->token = self::NEGATIVELOOKBEHIND;
+    $this->yybegin(self::INITIAL);
+}
+"=" {
+    $this->token = self::POSITIVELOOKAHEAD;
+    $this->yybegin(self::INITIAL);
+}
+"!" {
+    $this->token = self::NEGATIVELOOKAHEAD;
+    $this->yybegin(self::INITIAL);
+}
+">" {
+    $this->token = self::ONCEONLY;
+    $this->yybegin(self::INITIAL);
+}
+"(?" {
+    $this->token = self::OPENASSERTION;
+}
+COMMENT {
+    $this->token = self::COMMENT;
+    $this->yybegin(self::INITIAL);
+}
+"R" {
+    $this->token = self::RECUR;
+}
+ANYTHING {
+    $this->yybegin(self::INITIAL);
+    return true;
+}
+*/
+}

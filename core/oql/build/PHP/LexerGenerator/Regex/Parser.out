@@ -1,0 +1,2568 @@
+State 0:
+          start ::= * pattern
+          pattern ::= * MATCHSTART basic_pattern MATCHEND
+          pattern ::= * MATCHSTART basic_pattern
+          pattern ::= * basic_pattern MATCHEND
+          pattern ::= * basic_pattern
+          pattern ::= * pattern BAR pattern
+          basic_pattern ::= * basic_text
+          basic_pattern ::= * character_class
+          basic_pattern ::= * assertion
+          basic_pattern ::= * grouping
+          basic_pattern ::= * lookahead
+          basic_pattern ::= * lookbehind
+          basic_pattern ::= * subpattern
+          basic_pattern ::= * onceonly
+          basic_pattern ::= * comment
+          basic_pattern ::= * recur
+          basic_pattern ::= * conditional
+          basic_pattern ::= * basic_pattern basic_text
+          basic_pattern ::= * basic_pattern character_class
+          basic_pattern ::= * basic_pattern assertion
+          basic_pattern ::= * basic_pattern grouping
+          basic_pattern ::= * basic_pattern lookahead
+          basic_pattern ::= * basic_pattern lookbehind
+          basic_pattern ::= * basic_pattern subpattern
+          basic_pattern ::= * basic_pattern onceonly
+          basic_pattern ::= * basic_pattern comment
+          basic_pattern ::= * basic_pattern recur
+          basic_pattern ::= * basic_pattern conditional
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          basic_text ::= * TEXT
+          basic_text ::= * TEXT MULTIPLIER
+          basic_text ::= * FULLSTOP
+          basic_text ::= * FULLSTOP MULTIPLIER
+          basic_text ::= * CONTROLCHAR
+          basic_text ::= * CONTROLCHAR MULTIPLIER
+          basic_text ::= * ESCAPEDBACKSLASH
+          basic_text ::= * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * BACKREFERENCE
+          basic_text ::= * BACKREFERENCE MULTIPLIER
+          basic_text ::= * COULDBEBACKREF
+          basic_text ::= * COULDBEBACKREF MULTIPLIER
+          basic_text ::= * basic_text TEXT
+          basic_text ::= * basic_text TEXT MULTIPLIER
+          basic_text ::= * basic_text FULLSTOP
+          basic_text ::= * basic_text FULLSTOP MULTIPLIER
+          basic_text ::= * basic_text CONTROLCHAR
+          basic_text ::= * basic_text CONTROLCHAR MULTIPLIER
+          basic_text ::= * basic_text ESCAPEDBACKSLASH
+          basic_text ::= * basic_text ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * basic_text BACKREFERENCE
+          basic_text ::= * basic_text BACKREFERENCE MULTIPLIER
+          basic_text ::= * basic_text COULDBEBACKREF
+          basic_text ::= * basic_text COULDBEBACKREF MULTIPLIER
+          assertion ::= * OPENASSERTION INTERNALOPTIONS CLOSEPAREN
+          assertion ::= * OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= * OPENASSERTION ONCEONLY pattern CLOSEPAREN
+          comment ::= * OPENASSERTION COMMENT CLOSEPAREN
+          recur ::= * OPENASSERTION RECUR CLOSEPAREN
+
+                     OPENPAREN shift  9
+                 OPENASSERTION shift  17
+                    MATCHSTART shift  14
+                 OPENCHARCLASS shift  18
+                          TEXT shift  52
+              ESCAPEDBACKSLASH shift  43
+                 BACKREFERENCE shift  44
+                COULDBEBACKREF shift  57
+                   CONTROLCHAR shift  42
+                      FULLSTOP shift  41
+                         start accept
+                       pattern shift  45
+                 basic_pattern shift  15
+                    basic_text shift  23
+               character_class shift  104
+                     assertion shift  106
+                      grouping shift  107
+                     lookahead shift  109
+                    lookbehind shift  108
+                    subpattern shift  118
+                      onceonly shift  119
+                       comment shift  129
+                         recur shift  128
+                   conditional shift  130
+
+State 1:
+          pattern ::= * MATCHSTART basic_pattern MATCHEND
+          pattern ::= * MATCHSTART basic_pattern
+          pattern ::= * basic_pattern MATCHEND
+          pattern ::= * basic_pattern
+          pattern ::= * pattern BAR pattern
+          basic_pattern ::= * basic_text
+          basic_pattern ::= * character_class
+          basic_pattern ::= * assertion
+          basic_pattern ::= * grouping
+          basic_pattern ::= * lookahead
+          basic_pattern ::= * lookbehind
+          basic_pattern ::= * subpattern
+          basic_pattern ::= * onceonly
+          basic_pattern ::= * comment
+          basic_pattern ::= * recur
+          basic_pattern ::= * conditional
+          basic_pattern ::= * basic_pattern basic_text
+          basic_pattern ::= * basic_pattern character_class
+          basic_pattern ::= * basic_pattern assertion
+          basic_pattern ::= * basic_pattern grouping
+          basic_pattern ::= * basic_pattern lookahead
+          basic_pattern ::= * basic_pattern lookbehind
+          basic_pattern ::= * basic_pattern subpattern
+          basic_pattern ::= * basic_pattern onceonly
+          basic_pattern ::= * basic_pattern comment
+          basic_pattern ::= * basic_pattern recur
+          basic_pattern ::= * basic_pattern conditional
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          basic_text ::= * TEXT
+          basic_text ::= * TEXT MULTIPLIER
+          basic_text ::= * FULLSTOP
+          basic_text ::= * FULLSTOP MULTIPLIER
+          basic_text ::= * CONTROLCHAR
+          basic_text ::= * CONTROLCHAR MULTIPLIER
+          basic_text ::= * ESCAPEDBACKSLASH
+          basic_text ::= * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * BACKREFERENCE
+          basic_text ::= * BACKREFERENCE MULTIPLIER
+          basic_text ::= * COULDBEBACKREF
+          basic_text ::= * COULDBEBACKREF MULTIPLIER
+          basic_text ::= * basic_text TEXT
+          basic_text ::= * basic_text TEXT MULTIPLIER
+          basic_text ::= * basic_text FULLSTOP
+          basic_text ::= * basic_text FULLSTOP MULTIPLIER
+          basic_text ::= * basic_text CONTROLCHAR
+          basic_text ::= * basic_text CONTROLCHAR MULTIPLIER
+          basic_text ::= * basic_text ESCAPEDBACKSLASH
+          basic_text ::= * basic_text ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * basic_text BACKREFERENCE
+          basic_text ::= * basic_text BACKREFERENCE MULTIPLIER
+          basic_text ::= * basic_text COULDBEBACKREF
+          basic_text ::= * basic_text COULDBEBACKREF MULTIPLIER
+          assertion ::= * OPENASSERTION INTERNALOPTIONS CLOSEPAREN
+          assertion ::= * OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= OPENASSERTION NEGATIVELOOKAHEAD * pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= * OPENASSERTION ONCEONLY pattern CLOSEPAREN
+          comment ::= * OPENASSERTION COMMENT CLOSEPAREN
+          recur ::= * OPENASSERTION RECUR CLOSEPAREN
+
+                     OPENPAREN shift  9
+                 OPENASSERTION shift  17
+                    MATCHSTART shift  14
+                 OPENCHARCLASS shift  18
+                          TEXT shift  52
+              ESCAPEDBACKSLASH shift  43
+                 BACKREFERENCE shift  44
+                COULDBEBACKREF shift  57
+                   CONTROLCHAR shift  42
+                      FULLSTOP shift  41
+                       pattern shift  37
+                 basic_pattern shift  15
+                    basic_text shift  23
+               character_class shift  104
+                     assertion shift  106
+                      grouping shift  107
+                     lookahead shift  109
+                    lookbehind shift  108
+                    subpattern shift  118
+                      onceonly shift  119
+                       comment shift  129
+                         recur shift  128
+                   conditional shift  130
+
+State 2:
+          pattern ::= * MATCHSTART basic_pattern MATCHEND
+          pattern ::= * MATCHSTART basic_pattern
+          pattern ::= * basic_pattern MATCHEND
+          pattern ::= * basic_pattern
+          pattern ::= * pattern BAR pattern
+          basic_pattern ::= * basic_text
+          basic_pattern ::= * character_class
+          basic_pattern ::= * assertion
+          basic_pattern ::= * grouping
+          basic_pattern ::= * lookahead
+          basic_pattern ::= * lookbehind
+          basic_pattern ::= * subpattern
+          basic_pattern ::= * onceonly
+          basic_pattern ::= * comment
+          basic_pattern ::= * recur
+          basic_pattern ::= * conditional
+          basic_pattern ::= * basic_pattern basic_text
+          basic_pattern ::= * basic_pattern character_class
+          basic_pattern ::= * basic_pattern assertion
+          basic_pattern ::= * basic_pattern grouping
+          basic_pattern ::= * basic_pattern lookahead
+          basic_pattern ::= * basic_pattern lookbehind
+          basic_pattern ::= * basic_pattern subpattern
+          basic_pattern ::= * basic_pattern onceonly
+          basic_pattern ::= * basic_pattern comment
+          basic_pattern ::= * basic_pattern recur
+          basic_pattern ::= * basic_pattern conditional
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          basic_text ::= * TEXT
+          basic_text ::= * TEXT MULTIPLIER
+          basic_text ::= * FULLSTOP
+          basic_text ::= * FULLSTOP MULTIPLIER
+          basic_text ::= * CONTROLCHAR
+          basic_text ::= * CONTROLCHAR MULTIPLIER
+          basic_text ::= * ESCAPEDBACKSLASH
+          basic_text ::= * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * BACKREFERENCE
+          basic_text ::= * BACKREFERENCE MULTIPLIER
+          basic_text ::= * COULDBEBACKREF
+          basic_text ::= * COULDBEBACKREF MULTIPLIER
+          basic_text ::= * basic_text TEXT
+          basic_text ::= * basic_text TEXT MULTIPLIER
+          basic_text ::= * basic_text FULLSTOP
+          basic_text ::= * basic_text FULLSTOP MULTIPLIER
+          basic_text ::= * basic_text CONTROLCHAR
+          basic_text ::= * basic_text CONTROLCHAR MULTIPLIER
+          basic_text ::= * basic_text ESCAPEDBACKSLASH
+          basic_text ::= * basic_text ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * basic_text BACKREFERENCE
+          basic_text ::= * basic_text BACKREFERENCE MULTIPLIER
+          basic_text ::= * basic_text COULDBEBACKREF
+          basic_text ::= * basic_text COULDBEBACKREF MULTIPLIER
+          assertion ::= * OPENASSERTION INTERNALOPTIONS CLOSEPAREN
+          assertion ::= * OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN
+          grouping ::= OPENASSERTION COLON * pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER
+          grouping ::= OPENASSERTION COLON * pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= * OPENASSERTION ONCEONLY pattern CLOSEPAREN
+          comment ::= * OPENASSERTION COMMENT CLOSEPAREN
+          recur ::= * OPENASSERTION RECUR CLOSEPAREN
+
+                     OPENPAREN shift  9
+                 OPENASSERTION shift  17
+                    MATCHSTART shift  14
+                 OPENCHARCLASS shift  18
+                          TEXT shift  52
+              ESCAPEDBACKSLASH shift  43
+                 BACKREFERENCE shift  44
+                COULDBEBACKREF shift  57
+                   CONTROLCHAR shift  42
+                      FULLSTOP shift  41
+                       pattern shift  30
+                 basic_pattern shift  15
+                    basic_text shift  23
+               character_class shift  104
+                     assertion shift  106
+                      grouping shift  107
+                     lookahead shift  109
+                    lookbehind shift  108
+                    subpattern shift  118
+                      onceonly shift  119
+                       comment shift  129
+                         recur shift  128
+                   conditional shift  130
+
+State 3:
+          pattern ::= * MATCHSTART basic_pattern MATCHEND
+          pattern ::= * MATCHSTART basic_pattern
+          pattern ::= * basic_pattern MATCHEND
+          pattern ::= * basic_pattern
+          pattern ::= * pattern BAR pattern
+          basic_pattern ::= * basic_text
+          basic_pattern ::= * character_class
+          basic_pattern ::= * assertion
+          basic_pattern ::= * grouping
+          basic_pattern ::= * lookahead
+          basic_pattern ::= * lookbehind
+          basic_pattern ::= * subpattern
+          basic_pattern ::= * onceonly
+          basic_pattern ::= * comment
+          basic_pattern ::= * recur
+          basic_pattern ::= * conditional
+          basic_pattern ::= * basic_pattern basic_text
+          basic_pattern ::= * basic_pattern character_class
+          basic_pattern ::= * basic_pattern assertion
+          basic_pattern ::= * basic_pattern grouping
+          basic_pattern ::= * basic_pattern lookahead
+          basic_pattern ::= * basic_pattern lookbehind
+          basic_pattern ::= * basic_pattern subpattern
+          basic_pattern ::= * basic_pattern onceonly
+          basic_pattern ::= * basic_pattern comment
+          basic_pattern ::= * basic_pattern recur
+          basic_pattern ::= * basic_pattern conditional
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          basic_text ::= * TEXT
+          basic_text ::= * TEXT MULTIPLIER
+          basic_text ::= * FULLSTOP
+          basic_text ::= * FULLSTOP MULTIPLIER
+          basic_text ::= * CONTROLCHAR
+          basic_text ::= * CONTROLCHAR MULTIPLIER
+          basic_text ::= * ESCAPEDBACKSLASH
+          basic_text ::= * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * BACKREFERENCE
+          basic_text ::= * BACKREFERENCE MULTIPLIER
+          basic_text ::= * COULDBEBACKREF
+          basic_text ::= * COULDBEBACKREF MULTIPLIER
+          basic_text ::= * basic_text TEXT
+          basic_text ::= * basic_text TEXT MULTIPLIER
+          basic_text ::= * basic_text FULLSTOP
+          basic_text ::= * basic_text FULLSTOP MULTIPLIER
+          basic_text ::= * basic_text CONTROLCHAR
+          basic_text ::= * basic_text CONTROLCHAR MULTIPLIER
+          basic_text ::= * basic_text ESCAPEDBACKSLASH
+          basic_text ::= * basic_text ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * basic_text BACKREFERENCE
+          basic_text ::= * basic_text BACKREFERENCE MULTIPLIER
+          basic_text ::= * basic_text COULDBEBACKREF
+          basic_text ::= * basic_text COULDBEBACKREF MULTIPLIER
+          assertion ::= * OPENASSERTION INTERNALOPTIONS CLOSEPAREN
+          assertion ::= * OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= OPENASSERTION OPENPAREN TEXT CLOSEPAREN * pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= OPENASSERTION OPENPAREN TEXT CLOSEPAREN * pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= * OPENASSERTION ONCEONLY pattern CLOSEPAREN
+          comment ::= * OPENASSERTION COMMENT CLOSEPAREN
+          recur ::= * OPENASSERTION RECUR CLOSEPAREN
+
+                     OPENPAREN shift  9
+                 OPENASSERTION shift  17
+                    MATCHSTART shift  14
+                 OPENCHARCLASS shift  18
+                          TEXT shift  52
+              ESCAPEDBACKSLASH shift  43
+                 BACKREFERENCE shift  44
+                COULDBEBACKREF shift  57
+                   CONTROLCHAR shift  42
+                      FULLSTOP shift  41
+                       pattern shift  33
+                 basic_pattern shift  15
+                    basic_text shift  23
+               character_class shift  104
+                     assertion shift  106
+                      grouping shift  107
+                     lookahead shift  109
+                    lookbehind shift  108
+                    subpattern shift  118
+                      onceonly shift  119
+                       comment shift  129
+                         recur shift  128
+                   conditional shift  130
+
+State 4:
+          pattern ::= * MATCHSTART basic_pattern MATCHEND
+          pattern ::= * MATCHSTART basic_pattern
+          pattern ::= * basic_pattern MATCHEND
+          pattern ::= * basic_pattern
+          pattern ::= * pattern BAR pattern
+          basic_pattern ::= * basic_text
+          basic_pattern ::= * character_class
+          basic_pattern ::= * assertion
+          basic_pattern ::= * grouping
+          basic_pattern ::= * lookahead
+          basic_pattern ::= * lookbehind
+          basic_pattern ::= * subpattern
+          basic_pattern ::= * onceonly
+          basic_pattern ::= * comment
+          basic_pattern ::= * recur
+          basic_pattern ::= * conditional
+          basic_pattern ::= * basic_pattern basic_text
+          basic_pattern ::= * basic_pattern character_class
+          basic_pattern ::= * basic_pattern assertion
+          basic_pattern ::= * basic_pattern grouping
+          basic_pattern ::= * basic_pattern lookahead
+          basic_pattern ::= * basic_pattern lookbehind
+          basic_pattern ::= * basic_pattern subpattern
+          basic_pattern ::= * basic_pattern onceonly
+          basic_pattern ::= * basic_pattern comment
+          basic_pattern ::= * basic_pattern recur
+          basic_pattern ::= * basic_pattern conditional
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          basic_text ::= * TEXT
+          basic_text ::= * TEXT MULTIPLIER
+          basic_text ::= * FULLSTOP
+          basic_text ::= * FULLSTOP MULTIPLIER
+          basic_text ::= * CONTROLCHAR
+          basic_text ::= * CONTROLCHAR MULTIPLIER
+          basic_text ::= * ESCAPEDBACKSLASH
+          basic_text ::= * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * BACKREFERENCE
+          basic_text ::= * BACKREFERENCE MULTIPLIER
+          basic_text ::= * COULDBEBACKREF
+          basic_text ::= * COULDBEBACKREF MULTIPLIER
+          basic_text ::= * basic_text TEXT
+          basic_text ::= * basic_text TEXT MULTIPLIER
+          basic_text ::= * basic_text FULLSTOP
+          basic_text ::= * basic_text FULLSTOP MULTIPLIER
+          basic_text ::= * basic_text CONTROLCHAR
+          basic_text ::= * basic_text CONTROLCHAR MULTIPLIER
+          basic_text ::= * basic_text ESCAPEDBACKSLASH
+          basic_text ::= * basic_text ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * basic_text BACKREFERENCE
+          basic_text ::= * basic_text BACKREFERENCE MULTIPLIER
+          basic_text ::= * basic_text COULDBEBACKREF
+          basic_text ::= * basic_text COULDBEBACKREF MULTIPLIER
+          assertion ::= * OPENASSERTION INTERNALOPTIONS CLOSEPAREN
+          assertion ::= * OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= OPENASSERTION NEGATIVELOOKBEHIND * pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= * OPENASSERTION ONCEONLY pattern CLOSEPAREN
+          comment ::= * OPENASSERTION COMMENT CLOSEPAREN
+          recur ::= * OPENASSERTION RECUR CLOSEPAREN
+
+                     OPENPAREN shift  9
+                 OPENASSERTION shift  17
+                    MATCHSTART shift  14
+                 OPENCHARCLASS shift  18
+                          TEXT shift  52
+              ESCAPEDBACKSLASH shift  43
+                 BACKREFERENCE shift  44
+                COULDBEBACKREF shift  57
+                   CONTROLCHAR shift  42
+                      FULLSTOP shift  41
+                       pattern shift  34
+                 basic_pattern shift  15
+                    basic_text shift  23
+               character_class shift  104
+                     assertion shift  106
+                      grouping shift  107
+                     lookahead shift  109
+                    lookbehind shift  108
+                    subpattern shift  118
+                      onceonly shift  119
+                       comment shift  129
+                         recur shift  128
+                   conditional shift  130
+
+State 5:
+          pattern ::= * MATCHSTART basic_pattern MATCHEND
+          pattern ::= * MATCHSTART basic_pattern
+          pattern ::= * basic_pattern MATCHEND
+          pattern ::= * basic_pattern
+          pattern ::= * pattern BAR pattern
+          basic_pattern ::= * basic_text
+          basic_pattern ::= * character_class
+          basic_pattern ::= * assertion
+          basic_pattern ::= * grouping
+          basic_pattern ::= * lookahead
+          basic_pattern ::= * lookbehind
+          basic_pattern ::= * subpattern
+          basic_pattern ::= * onceonly
+          basic_pattern ::= * comment
+          basic_pattern ::= * recur
+          basic_pattern ::= * conditional
+          basic_pattern ::= * basic_pattern basic_text
+          basic_pattern ::= * basic_pattern character_class
+          basic_pattern ::= * basic_pattern assertion
+          basic_pattern ::= * basic_pattern grouping
+          basic_pattern ::= * basic_pattern lookahead
+          basic_pattern ::= * basic_pattern lookbehind
+          basic_pattern ::= * basic_pattern subpattern
+          basic_pattern ::= * basic_pattern onceonly
+          basic_pattern ::= * basic_pattern comment
+          basic_pattern ::= * basic_pattern recur
+          basic_pattern ::= * basic_pattern conditional
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          basic_text ::= * TEXT
+          basic_text ::= * TEXT MULTIPLIER
+          basic_text ::= * FULLSTOP
+          basic_text ::= * FULLSTOP MULTIPLIER
+          basic_text ::= * CONTROLCHAR
+          basic_text ::= * CONTROLCHAR MULTIPLIER
+          basic_text ::= * ESCAPEDBACKSLASH
+          basic_text ::= * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * BACKREFERENCE
+          basic_text ::= * BACKREFERENCE MULTIPLIER
+          basic_text ::= * COULDBEBACKREF
+          basic_text ::= * COULDBEBACKREF MULTIPLIER
+          basic_text ::= * basic_text TEXT
+          basic_text ::= * basic_text TEXT MULTIPLIER
+          basic_text ::= * basic_text FULLSTOP
+          basic_text ::= * basic_text FULLSTOP MULTIPLIER
+          basic_text ::= * basic_text CONTROLCHAR
+          basic_text ::= * basic_text CONTROLCHAR MULTIPLIER
+          basic_text ::= * basic_text ESCAPEDBACKSLASH
+          basic_text ::= * basic_text ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * basic_text BACKREFERENCE
+          basic_text ::= * basic_text BACKREFERENCE MULTIPLIER
+          basic_text ::= * basic_text COULDBEBACKREF
+          basic_text ::= * basic_text COULDBEBACKREF MULTIPLIER
+          assertion ::= * OPENASSERTION INTERNALOPTIONS CLOSEPAREN
+          assertion ::= * OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= OPENASSERTION POSITIVELOOKAHEAD * pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= * OPENASSERTION ONCEONLY pattern CLOSEPAREN
+          comment ::= * OPENASSERTION COMMENT CLOSEPAREN
+          recur ::= * OPENASSERTION RECUR CLOSEPAREN
+
+                     OPENPAREN shift  9
+                 OPENASSERTION shift  17
+                    MATCHSTART shift  14
+                 OPENCHARCLASS shift  18
+                          TEXT shift  52
+              ESCAPEDBACKSLASH shift  43
+                 BACKREFERENCE shift  44
+                COULDBEBACKREF shift  57
+                   CONTROLCHAR shift  42
+                      FULLSTOP shift  41
+                       pattern shift  40
+                 basic_pattern shift  15
+                    basic_text shift  23
+               character_class shift  104
+                     assertion shift  106
+                      grouping shift  107
+                     lookahead shift  109
+                    lookbehind shift  108
+                    subpattern shift  118
+                      onceonly shift  119
+                       comment shift  129
+                         recur shift  128
+                   conditional shift  130
+
+State 6:
+          pattern ::= * MATCHSTART basic_pattern MATCHEND
+          pattern ::= * MATCHSTART basic_pattern
+          pattern ::= * basic_pattern MATCHEND
+          pattern ::= * basic_pattern
+          pattern ::= * pattern BAR pattern
+          basic_pattern ::= * basic_text
+          basic_pattern ::= * character_class
+          basic_pattern ::= * assertion
+          basic_pattern ::= * grouping
+          basic_pattern ::= * lookahead
+          basic_pattern ::= * lookbehind
+          basic_pattern ::= * subpattern
+          basic_pattern ::= * onceonly
+          basic_pattern ::= * comment
+          basic_pattern ::= * recur
+          basic_pattern ::= * conditional
+          basic_pattern ::= * basic_pattern basic_text
+          basic_pattern ::= * basic_pattern character_class
+          basic_pattern ::= * basic_pattern assertion
+          basic_pattern ::= * basic_pattern grouping
+          basic_pattern ::= * basic_pattern lookahead
+          basic_pattern ::= * basic_pattern lookbehind
+          basic_pattern ::= * basic_pattern subpattern
+          basic_pattern ::= * basic_pattern onceonly
+          basic_pattern ::= * basic_pattern comment
+          basic_pattern ::= * basic_pattern recur
+          basic_pattern ::= * basic_pattern conditional
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          basic_text ::= * TEXT
+          basic_text ::= * TEXT MULTIPLIER
+          basic_text ::= * FULLSTOP
+          basic_text ::= * FULLSTOP MULTIPLIER
+          basic_text ::= * CONTROLCHAR
+          basic_text ::= * CONTROLCHAR MULTIPLIER
+          basic_text ::= * ESCAPEDBACKSLASH
+          basic_text ::= * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * BACKREFERENCE
+          basic_text ::= * BACKREFERENCE MULTIPLIER
+          basic_text ::= * COULDBEBACKREF
+          basic_text ::= * COULDBEBACKREF MULTIPLIER
+          basic_text ::= * basic_text TEXT
+          basic_text ::= * basic_text TEXT MULTIPLIER
+          basic_text ::= * basic_text FULLSTOP
+          basic_text ::= * basic_text FULLSTOP MULTIPLIER
+          basic_text ::= * basic_text CONTROLCHAR
+          basic_text ::= * basic_text CONTROLCHAR MULTIPLIER
+          basic_text ::= * basic_text ESCAPEDBACKSLASH
+          basic_text ::= * basic_text ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * basic_text BACKREFERENCE
+          basic_text ::= * basic_text BACKREFERENCE MULTIPLIER
+          basic_text ::= * basic_text COULDBEBACKREF
+          basic_text ::= * basic_text COULDBEBACKREF MULTIPLIER
+          assertion ::= * OPENASSERTION INTERNALOPTIONS CLOSEPAREN
+          assertion ::= * OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN
+          assertion ::= OPENASSERTION INTERNALOPTIONS COLON * pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= * OPENASSERTION ONCEONLY pattern CLOSEPAREN
+          comment ::= * OPENASSERTION COMMENT CLOSEPAREN
+          recur ::= * OPENASSERTION RECUR CLOSEPAREN
+
+                     OPENPAREN shift  9
+                 OPENASSERTION shift  17
+                    MATCHSTART shift  14
+                 OPENCHARCLASS shift  18
+                          TEXT shift  52
+              ESCAPEDBACKSLASH shift  43
+                 BACKREFERENCE shift  44
+                COULDBEBACKREF shift  57
+                   CONTROLCHAR shift  42
+                      FULLSTOP shift  41
+                       pattern shift  25
+                 basic_pattern shift  15
+                    basic_text shift  23
+               character_class shift  104
+                     assertion shift  106
+                      grouping shift  107
+                     lookahead shift  109
+                    lookbehind shift  108
+                    subpattern shift  118
+                      onceonly shift  119
+                       comment shift  129
+                         recur shift  128
+                   conditional shift  130
+
+State 7:
+          pattern ::= * MATCHSTART basic_pattern MATCHEND
+          pattern ::= * MATCHSTART basic_pattern
+          pattern ::= * basic_pattern MATCHEND
+          pattern ::= * basic_pattern
+          pattern ::= * pattern BAR pattern
+          basic_pattern ::= * basic_text
+          basic_pattern ::= * character_class
+          basic_pattern ::= * assertion
+          basic_pattern ::= * grouping
+          basic_pattern ::= * lookahead
+          basic_pattern ::= * lookbehind
+          basic_pattern ::= * subpattern
+          basic_pattern ::= * onceonly
+          basic_pattern ::= * comment
+          basic_pattern ::= * recur
+          basic_pattern ::= * conditional
+          basic_pattern ::= * basic_pattern basic_text
+          basic_pattern ::= * basic_pattern character_class
+          basic_pattern ::= * basic_pattern assertion
+          basic_pattern ::= * basic_pattern grouping
+          basic_pattern ::= * basic_pattern lookahead
+          basic_pattern ::= * basic_pattern lookbehind
+          basic_pattern ::= * basic_pattern subpattern
+          basic_pattern ::= * basic_pattern onceonly
+          basic_pattern ::= * basic_pattern comment
+          basic_pattern ::= * basic_pattern recur
+          basic_pattern ::= * basic_pattern conditional
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          basic_text ::= * TEXT
+          basic_text ::= * TEXT MULTIPLIER
+          basic_text ::= * FULLSTOP
+          basic_text ::= * FULLSTOP MULTIPLIER
+          basic_text ::= * CONTROLCHAR
+          basic_text ::= * CONTROLCHAR MULTIPLIER
+          basic_text ::= * ESCAPEDBACKSLASH
+          basic_text ::= * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * BACKREFERENCE
+          basic_text ::= * BACKREFERENCE MULTIPLIER
+          basic_text ::= * COULDBEBACKREF
+          basic_text ::= * COULDBEBACKREF MULTIPLIER
+          basic_text ::= * basic_text TEXT
+          basic_text ::= * basic_text TEXT MULTIPLIER
+          basic_text ::= * basic_text FULLSTOP
+          basic_text ::= * basic_text FULLSTOP MULTIPLIER
+          basic_text ::= * basic_text CONTROLCHAR
+          basic_text ::= * basic_text CONTROLCHAR MULTIPLIER
+          basic_text ::= * basic_text ESCAPEDBACKSLASH
+          basic_text ::= * basic_text ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * basic_text BACKREFERENCE
+          basic_text ::= * basic_text BACKREFERENCE MULTIPLIER
+          basic_text ::= * basic_text COULDBEBACKREF
+          basic_text ::= * basic_text COULDBEBACKREF MULTIPLIER
+          assertion ::= * OPENASSERTION INTERNALOPTIONS CLOSEPAREN
+          assertion ::= * OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN
+          conditional ::= OPENASSERTION lookahead * pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= OPENASSERTION lookahead * pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= * OPENASSERTION ONCEONLY pattern CLOSEPAREN
+          comment ::= * OPENASSERTION COMMENT CLOSEPAREN
+          recur ::= * OPENASSERTION RECUR CLOSEPAREN
+
+                     OPENPAREN shift  9
+                 OPENASSERTION shift  17
+                    MATCHSTART shift  14
+                 OPENCHARCLASS shift  18
+                          TEXT shift  52
+              ESCAPEDBACKSLASH shift  43
+                 BACKREFERENCE shift  44
+                COULDBEBACKREF shift  57
+                   CONTROLCHAR shift  42
+                      FULLSTOP shift  41
+                       pattern shift  39
+                 basic_pattern shift  15
+                    basic_text shift  23
+               character_class shift  104
+                     assertion shift  106
+                      grouping shift  107
+                     lookahead shift  109
+                    lookbehind shift  108
+                    subpattern shift  118
+                      onceonly shift  119
+                       comment shift  129
+                         recur shift  128
+                   conditional shift  130
+
+State 8:
+          pattern ::= * MATCHSTART basic_pattern MATCHEND
+          pattern ::= * MATCHSTART basic_pattern
+          pattern ::= * basic_pattern MATCHEND
+          pattern ::= * basic_pattern
+          pattern ::= * pattern BAR pattern
+          basic_pattern ::= * basic_text
+          basic_pattern ::= * character_class
+          basic_pattern ::= * assertion
+          basic_pattern ::= * grouping
+          basic_pattern ::= * lookahead
+          basic_pattern ::= * lookbehind
+          basic_pattern ::= * subpattern
+          basic_pattern ::= * onceonly
+          basic_pattern ::= * comment
+          basic_pattern ::= * recur
+          basic_pattern ::= * conditional
+          basic_pattern ::= * basic_pattern basic_text
+          basic_pattern ::= * basic_pattern character_class
+          basic_pattern ::= * basic_pattern assertion
+          basic_pattern ::= * basic_pattern grouping
+          basic_pattern ::= * basic_pattern lookahead
+          basic_pattern ::= * basic_pattern lookbehind
+          basic_pattern ::= * basic_pattern subpattern
+          basic_pattern ::= * basic_pattern onceonly
+          basic_pattern ::= * basic_pattern comment
+          basic_pattern ::= * basic_pattern recur
+          basic_pattern ::= * basic_pattern conditional
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          basic_text ::= * TEXT
+          basic_text ::= * TEXT MULTIPLIER
+          basic_text ::= * FULLSTOP
+          basic_text ::= * FULLSTOP MULTIPLIER
+          basic_text ::= * CONTROLCHAR
+          basic_text ::= * CONTROLCHAR MULTIPLIER
+          basic_text ::= * ESCAPEDBACKSLASH
+          basic_text ::= * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * BACKREFERENCE
+          basic_text ::= * BACKREFERENCE MULTIPLIER
+          basic_text ::= * COULDBEBACKREF
+          basic_text ::= * COULDBEBACKREF MULTIPLIER
+          basic_text ::= * basic_text TEXT
+          basic_text ::= * basic_text TEXT MULTIPLIER
+          basic_text ::= * basic_text FULLSTOP
+          basic_text ::= * basic_text FULLSTOP MULTIPLIER
+          basic_text ::= * basic_text CONTROLCHAR
+          basic_text ::= * basic_text CONTROLCHAR MULTIPLIER
+          basic_text ::= * basic_text ESCAPEDBACKSLASH
+          basic_text ::= * basic_text ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * basic_text BACKREFERENCE
+          basic_text ::= * basic_text BACKREFERENCE MULTIPLIER
+          basic_text ::= * basic_text COULDBEBACKREF
+          basic_text ::= * basic_text COULDBEBACKREF MULTIPLIER
+          assertion ::= * OPENASSERTION INTERNALOPTIONS CLOSEPAREN
+          assertion ::= * OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN
+          conditional ::= OPENASSERTION lookbehind * pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER
+          conditional ::= OPENASSERTION lookbehind * pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= * OPENASSERTION ONCEONLY pattern CLOSEPAREN
+          comment ::= * OPENASSERTION COMMENT CLOSEPAREN
+          recur ::= * OPENASSERTION RECUR CLOSEPAREN
+
+                     OPENPAREN shift  9
+                 OPENASSERTION shift  17
+                    MATCHSTART shift  14
+                 OPENCHARCLASS shift  18
+                          TEXT shift  52
+              ESCAPEDBACKSLASH shift  43
+                 BACKREFERENCE shift  44
+                COULDBEBACKREF shift  57
+                   CONTROLCHAR shift  42
+                      FULLSTOP shift  41
+                       pattern shift  32
+                 basic_pattern shift  15
+                    basic_text shift  23
+               character_class shift  104
+                     assertion shift  106
+                      grouping shift  107
+                     lookahead shift  109
+                    lookbehind shift  108
+                    subpattern shift  118
+                      onceonly shift  119
+                       comment shift  129
+                         recur shift  128
+                   conditional shift  130
+
+State 9:
+          pattern ::= * MATCHSTART basic_pattern MATCHEND
+          pattern ::= * MATCHSTART basic_pattern
+          pattern ::= * basic_pattern MATCHEND
+          pattern ::= * basic_pattern
+          pattern ::= * pattern BAR pattern
+          basic_pattern ::= * basic_text
+          basic_pattern ::= * character_class
+          basic_pattern ::= * assertion
+          basic_pattern ::= * grouping
+          basic_pattern ::= * lookahead
+          basic_pattern ::= * lookbehind
+          basic_pattern ::= * subpattern
+          basic_pattern ::= * onceonly
+          basic_pattern ::= * comment
+          basic_pattern ::= * recur
+          basic_pattern ::= * conditional
+          basic_pattern ::= * basic_pattern basic_text
+          basic_pattern ::= * basic_pattern character_class
+          basic_pattern ::= * basic_pattern assertion
+          basic_pattern ::= * basic_pattern grouping
+          basic_pattern ::= * basic_pattern lookahead
+          basic_pattern ::= * basic_pattern lookbehind
+          basic_pattern ::= * basic_pattern subpattern
+          basic_pattern ::= * basic_pattern onceonly
+          basic_pattern ::= * basic_pattern comment
+          basic_pattern ::= * basic_pattern recur
+          basic_pattern ::= * basic_pattern conditional
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          basic_text ::= * TEXT
+          basic_text ::= * TEXT MULTIPLIER
+          basic_text ::= * FULLSTOP
+          basic_text ::= * FULLSTOP MULTIPLIER
+          basic_text ::= * CONTROLCHAR
+          basic_text ::= * CONTROLCHAR MULTIPLIER
+          basic_text ::= * ESCAPEDBACKSLASH
+          basic_text ::= * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * BACKREFERENCE
+          basic_text ::= * BACKREFERENCE MULTIPLIER
+          basic_text ::= * COULDBEBACKREF
+          basic_text ::= * COULDBEBACKREF MULTIPLIER
+          basic_text ::= * basic_text TEXT
+          basic_text ::= * basic_text TEXT MULTIPLIER
+          basic_text ::= * basic_text FULLSTOP
+          basic_text ::= * basic_text FULLSTOP MULTIPLIER
+          basic_text ::= * basic_text CONTROLCHAR
+          basic_text ::= * basic_text CONTROLCHAR MULTIPLIER
+          basic_text ::= * basic_text ESCAPEDBACKSLASH
+          basic_text ::= * basic_text ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * basic_text BACKREFERENCE
+          basic_text ::= * basic_text BACKREFERENCE MULTIPLIER
+          basic_text ::= * basic_text COULDBEBACKREF
+          basic_text ::= * basic_text COULDBEBACKREF MULTIPLIER
+          assertion ::= * OPENASSERTION INTERNALOPTIONS CLOSEPAREN
+          assertion ::= * OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN
+          subpattern ::= OPENPAREN * pattern CLOSEPAREN
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= OPENPAREN * pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= * OPENASSERTION ONCEONLY pattern CLOSEPAREN
+          comment ::= * OPENASSERTION COMMENT CLOSEPAREN
+          recur ::= * OPENASSERTION RECUR CLOSEPAREN
+
+                     OPENPAREN shift  9
+                 OPENASSERTION shift  17
+                    MATCHSTART shift  14
+                 OPENCHARCLASS shift  18
+                          TEXT shift  52
+              ESCAPEDBACKSLASH shift  43
+                 BACKREFERENCE shift  44
+                COULDBEBACKREF shift  57
+                   CONTROLCHAR shift  42
+                      FULLSTOP shift  41
+                       pattern shift  28
+                 basic_pattern shift  15
+                    basic_text shift  23
+               character_class shift  104
+                     assertion shift  106
+                      grouping shift  107
+                     lookahead shift  109
+                    lookbehind shift  108
+                    subpattern shift  118
+                      onceonly shift  119
+                       comment shift  129
+                         recur shift  128
+                   conditional shift  130
+
+State 10:
+          pattern ::= * MATCHSTART basic_pattern MATCHEND
+          pattern ::= * MATCHSTART basic_pattern
+          pattern ::= * basic_pattern MATCHEND
+          pattern ::= * basic_pattern
+          pattern ::= * pattern BAR pattern
+          basic_pattern ::= * basic_text
+          basic_pattern ::= * character_class
+          basic_pattern ::= * assertion
+          basic_pattern ::= * grouping
+          basic_pattern ::= * lookahead
+          basic_pattern ::= * lookbehind
+          basic_pattern ::= * subpattern
+          basic_pattern ::= * onceonly
+          basic_pattern ::= * comment
+          basic_pattern ::= * recur
+          basic_pattern ::= * conditional
+          basic_pattern ::= * basic_pattern basic_text
+          basic_pattern ::= * basic_pattern character_class
+          basic_pattern ::= * basic_pattern assertion
+          basic_pattern ::= * basic_pattern grouping
+          basic_pattern ::= * basic_pattern lookahead
+          basic_pattern ::= * basic_pattern lookbehind
+          basic_pattern ::= * basic_pattern subpattern
+          basic_pattern ::= * basic_pattern onceonly
+          basic_pattern ::= * basic_pattern comment
+          basic_pattern ::= * basic_pattern recur
+          basic_pattern ::= * basic_pattern conditional
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          basic_text ::= * TEXT
+          basic_text ::= * TEXT MULTIPLIER
+          basic_text ::= * FULLSTOP
+          basic_text ::= * FULLSTOP MULTIPLIER
+          basic_text ::= * CONTROLCHAR
+          basic_text ::= * CONTROLCHAR MULTIPLIER
+          basic_text ::= * ESCAPEDBACKSLASH
+          basic_text ::= * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * BACKREFERENCE
+          basic_text ::= * BACKREFERENCE MULTIPLIER
+          basic_text ::= * COULDBEBACKREF
+          basic_text ::= * COULDBEBACKREF MULTIPLIER
+          basic_text ::= * basic_text TEXT
+          basic_text ::= * basic_text TEXT MULTIPLIER
+          basic_text ::= * basic_text FULLSTOP
+          basic_text ::= * basic_text FULLSTOP MULTIPLIER
+          basic_text ::= * basic_text CONTROLCHAR
+          basic_text ::= * basic_text CONTROLCHAR MULTIPLIER
+          basic_text ::= * basic_text ESCAPEDBACKSLASH
+          basic_text ::= * basic_text ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * basic_text BACKREFERENCE
+          basic_text ::= * basic_text BACKREFERENCE MULTIPLIER
+          basic_text ::= * basic_text COULDBEBACKREF
+          basic_text ::= * basic_text COULDBEBACKREF MULTIPLIER
+          assertion ::= * OPENASSERTION INTERNALOPTIONS CLOSEPAREN
+          assertion ::= * OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= OPENASSERTION PATTERNNAME * pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= OPENASSERTION PATTERNNAME * pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= * OPENASSERTION ONCEONLY pattern CLOSEPAREN
+          comment ::= * OPENASSERTION COMMENT CLOSEPAREN
+          recur ::= * OPENASSERTION RECUR CLOSEPAREN
+
+                     OPENPAREN shift  9
+                 OPENASSERTION shift  17
+                    MATCHSTART shift  14
+                 OPENCHARCLASS shift  18
+                          TEXT shift  52
+              ESCAPEDBACKSLASH shift  43
+                 BACKREFERENCE shift  44
+                COULDBEBACKREF shift  57
+                   CONTROLCHAR shift  42
+                      FULLSTOP shift  41
+                       pattern shift  35
+                 basic_pattern shift  15
+                    basic_text shift  23
+               character_class shift  104
+                     assertion shift  106
+                      grouping shift  107
+                     lookahead shift  109
+                    lookbehind shift  108
+                    subpattern shift  118
+                      onceonly shift  119
+                       comment shift  129
+                         recur shift  128
+                   conditional shift  130
+
+State 11:
+          pattern ::= * MATCHSTART basic_pattern MATCHEND
+          pattern ::= * MATCHSTART basic_pattern
+          pattern ::= * basic_pattern MATCHEND
+          pattern ::= * basic_pattern
+          pattern ::= * pattern BAR pattern
+          basic_pattern ::= * basic_text
+          basic_pattern ::= * character_class
+          basic_pattern ::= * assertion
+          basic_pattern ::= * grouping
+          basic_pattern ::= * lookahead
+          basic_pattern ::= * lookbehind
+          basic_pattern ::= * subpattern
+          basic_pattern ::= * onceonly
+          basic_pattern ::= * comment
+          basic_pattern ::= * recur
+          basic_pattern ::= * conditional
+          basic_pattern ::= * basic_pattern basic_text
+          basic_pattern ::= * basic_pattern character_class
+          basic_pattern ::= * basic_pattern assertion
+          basic_pattern ::= * basic_pattern grouping
+          basic_pattern ::= * basic_pattern lookahead
+          basic_pattern ::= * basic_pattern lookbehind
+          basic_pattern ::= * basic_pattern subpattern
+          basic_pattern ::= * basic_pattern onceonly
+          basic_pattern ::= * basic_pattern comment
+          basic_pattern ::= * basic_pattern recur
+          basic_pattern ::= * basic_pattern conditional
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          basic_text ::= * TEXT
+          basic_text ::= * TEXT MULTIPLIER
+          basic_text ::= * FULLSTOP
+          basic_text ::= * FULLSTOP MULTIPLIER
+          basic_text ::= * CONTROLCHAR
+          basic_text ::= * CONTROLCHAR MULTIPLIER
+          basic_text ::= * ESCAPEDBACKSLASH
+          basic_text ::= * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * BACKREFERENCE
+          basic_text ::= * BACKREFERENCE MULTIPLIER
+          basic_text ::= * COULDBEBACKREF
+          basic_text ::= * COULDBEBACKREF MULTIPLIER
+          basic_text ::= * basic_text TEXT
+          basic_text ::= * basic_text TEXT MULTIPLIER
+          basic_text ::= * basic_text FULLSTOP
+          basic_text ::= * basic_text FULLSTOP MULTIPLIER
+          basic_text ::= * basic_text CONTROLCHAR
+          basic_text ::= * basic_text CONTROLCHAR MULTIPLIER
+          basic_text ::= * basic_text ESCAPEDBACKSLASH
+          basic_text ::= * basic_text ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * basic_text BACKREFERENCE
+          basic_text ::= * basic_text BACKREFERENCE MULTIPLIER
+          basic_text ::= * basic_text COULDBEBACKREF
+          basic_text ::= * basic_text COULDBEBACKREF MULTIPLIER
+          assertion ::= * OPENASSERTION INTERNALOPTIONS CLOSEPAREN
+          assertion ::= * OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= OPENASSERTION POSITIVELOOKBEHIND * pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= * OPENASSERTION ONCEONLY pattern CLOSEPAREN
+          comment ::= * OPENASSERTION COMMENT CLOSEPAREN
+          recur ::= * OPENASSERTION RECUR CLOSEPAREN
+
+                     OPENPAREN shift  9
+                 OPENASSERTION shift  17
+                    MATCHSTART shift  14
+                 OPENCHARCLASS shift  18
+                          TEXT shift  52
+              ESCAPEDBACKSLASH shift  43
+                 BACKREFERENCE shift  44
+                COULDBEBACKREF shift  57
+                   CONTROLCHAR shift  42
+                      FULLSTOP shift  41
+                       pattern shift  38
+                 basic_pattern shift  15
+                    basic_text shift  23
+               character_class shift  104
+                     assertion shift  106
+                      grouping shift  107
+                     lookahead shift  109
+                    lookbehind shift  108
+                    subpattern shift  118
+                      onceonly shift  119
+                       comment shift  129
+                         recur shift  128
+                   conditional shift  130
+
+State 12:
+          pattern ::= * MATCHSTART basic_pattern MATCHEND
+          pattern ::= * MATCHSTART basic_pattern
+          pattern ::= * basic_pattern MATCHEND
+          pattern ::= * basic_pattern
+          pattern ::= * pattern BAR pattern
+          pattern ::= pattern BAR * pattern
+          basic_pattern ::= * basic_text
+          basic_pattern ::= * character_class
+          basic_pattern ::= * assertion
+          basic_pattern ::= * grouping
+          basic_pattern ::= * lookahead
+          basic_pattern ::= * lookbehind
+          basic_pattern ::= * subpattern
+          basic_pattern ::= * onceonly
+          basic_pattern ::= * comment
+          basic_pattern ::= * recur
+          basic_pattern ::= * conditional
+          basic_pattern ::= * basic_pattern basic_text
+          basic_pattern ::= * basic_pattern character_class
+          basic_pattern ::= * basic_pattern assertion
+          basic_pattern ::= * basic_pattern grouping
+          basic_pattern ::= * basic_pattern lookahead
+          basic_pattern ::= * basic_pattern lookbehind
+          basic_pattern ::= * basic_pattern subpattern
+          basic_pattern ::= * basic_pattern onceonly
+          basic_pattern ::= * basic_pattern comment
+          basic_pattern ::= * basic_pattern recur
+          basic_pattern ::= * basic_pattern conditional
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          basic_text ::= * TEXT
+          basic_text ::= * TEXT MULTIPLIER
+          basic_text ::= * FULLSTOP
+          basic_text ::= * FULLSTOP MULTIPLIER
+          basic_text ::= * CONTROLCHAR
+          basic_text ::= * CONTROLCHAR MULTIPLIER
+          basic_text ::= * ESCAPEDBACKSLASH
+          basic_text ::= * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * BACKREFERENCE
+          basic_text ::= * BACKREFERENCE MULTIPLIER
+          basic_text ::= * COULDBEBACKREF
+          basic_text ::= * COULDBEBACKREF MULTIPLIER
+          basic_text ::= * basic_text TEXT
+          basic_text ::= * basic_text TEXT MULTIPLIER
+          basic_text ::= * basic_text FULLSTOP
+          basic_text ::= * basic_text FULLSTOP MULTIPLIER
+          basic_text ::= * basic_text CONTROLCHAR
+          basic_text ::= * basic_text CONTROLCHAR MULTIPLIER
+          basic_text ::= * basic_text ESCAPEDBACKSLASH
+          basic_text ::= * basic_text ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * basic_text BACKREFERENCE
+          basic_text ::= * basic_text BACKREFERENCE MULTIPLIER
+          basic_text ::= * basic_text COULDBEBACKREF
+          basic_text ::= * basic_text COULDBEBACKREF MULTIPLIER
+          assertion ::= * OPENASSERTION INTERNALOPTIONS CLOSEPAREN
+          assertion ::= * OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= * OPENASSERTION ONCEONLY pattern CLOSEPAREN
+          comment ::= * OPENASSERTION COMMENT CLOSEPAREN
+          recur ::= * OPENASSERTION RECUR CLOSEPAREN
+
+                     OPENPAREN shift  9
+                 OPENASSERTION shift  17
+                    MATCHSTART shift  14
+                 OPENCHARCLASS shift  18
+                          TEXT shift  52
+              ESCAPEDBACKSLASH shift  43
+                 BACKREFERENCE shift  44
+                COULDBEBACKREF shift  57
+                   CONTROLCHAR shift  42
+                      FULLSTOP shift  41
+                       pattern shift  92
+                 basic_pattern shift  15
+                    basic_text shift  23
+               character_class shift  104
+                     assertion shift  106
+                      grouping shift  107
+                     lookahead shift  109
+                    lookbehind shift  108
+                    subpattern shift  118
+                      onceonly shift  119
+                       comment shift  129
+                         recur shift  128
+                   conditional shift  130
+
+State 13:
+          pattern ::= * MATCHSTART basic_pattern MATCHEND
+          pattern ::= * MATCHSTART basic_pattern
+          pattern ::= * basic_pattern MATCHEND
+          pattern ::= * basic_pattern
+          pattern ::= * pattern BAR pattern
+          basic_pattern ::= * basic_text
+          basic_pattern ::= * character_class
+          basic_pattern ::= * assertion
+          basic_pattern ::= * grouping
+          basic_pattern ::= * lookahead
+          basic_pattern ::= * lookbehind
+          basic_pattern ::= * subpattern
+          basic_pattern ::= * onceonly
+          basic_pattern ::= * comment
+          basic_pattern ::= * recur
+          basic_pattern ::= * conditional
+          basic_pattern ::= * basic_pattern basic_text
+          basic_pattern ::= * basic_pattern character_class
+          basic_pattern ::= * basic_pattern assertion
+          basic_pattern ::= * basic_pattern grouping
+          basic_pattern ::= * basic_pattern lookahead
+          basic_pattern ::= * basic_pattern lookbehind
+          basic_pattern ::= * basic_pattern subpattern
+          basic_pattern ::= * basic_pattern onceonly
+          basic_pattern ::= * basic_pattern comment
+          basic_pattern ::= * basic_pattern recur
+          basic_pattern ::= * basic_pattern conditional
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          basic_text ::= * TEXT
+          basic_text ::= * TEXT MULTIPLIER
+          basic_text ::= * FULLSTOP
+          basic_text ::= * FULLSTOP MULTIPLIER
+          basic_text ::= * CONTROLCHAR
+          basic_text ::= * CONTROLCHAR MULTIPLIER
+          basic_text ::= * ESCAPEDBACKSLASH
+          basic_text ::= * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * BACKREFERENCE
+          basic_text ::= * BACKREFERENCE MULTIPLIER
+          basic_text ::= * COULDBEBACKREF
+          basic_text ::= * COULDBEBACKREF MULTIPLIER
+          basic_text ::= * basic_text TEXT
+          basic_text ::= * basic_text TEXT MULTIPLIER
+          basic_text ::= * basic_text FULLSTOP
+          basic_text ::= * basic_text FULLSTOP MULTIPLIER
+          basic_text ::= * basic_text CONTROLCHAR
+          basic_text ::= * basic_text CONTROLCHAR MULTIPLIER
+          basic_text ::= * basic_text ESCAPEDBACKSLASH
+          basic_text ::= * basic_text ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * basic_text BACKREFERENCE
+          basic_text ::= * basic_text BACKREFERENCE MULTIPLIER
+          basic_text ::= * basic_text COULDBEBACKREF
+          basic_text ::= * basic_text COULDBEBACKREF MULTIPLIER
+          assertion ::= * OPENASSERTION INTERNALOPTIONS CLOSEPAREN
+          assertion ::= * OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= * OPENASSERTION ONCEONLY pattern CLOSEPAREN
+          onceonly ::= OPENASSERTION ONCEONLY * pattern CLOSEPAREN
+          comment ::= * OPENASSERTION COMMENT CLOSEPAREN
+          recur ::= * OPENASSERTION RECUR CLOSEPAREN
+
+                     OPENPAREN shift  9
+                 OPENASSERTION shift  17
+                    MATCHSTART shift  14
+                 OPENCHARCLASS shift  18
+                          TEXT shift  52
+              ESCAPEDBACKSLASH shift  43
+                 BACKREFERENCE shift  44
+                COULDBEBACKREF shift  57
+                   CONTROLCHAR shift  42
+                      FULLSTOP shift  41
+                       pattern shift  36
+                 basic_pattern shift  15
+                    basic_text shift  23
+               character_class shift  104
+                     assertion shift  106
+                      grouping shift  107
+                     lookahead shift  109
+                    lookbehind shift  108
+                    subpattern shift  118
+                      onceonly shift  119
+                       comment shift  129
+                         recur shift  128
+                   conditional shift  130
+
+State 14:
+          pattern ::= MATCHSTART * basic_pattern MATCHEND
+          pattern ::= MATCHSTART * basic_pattern
+          basic_pattern ::= * basic_text
+          basic_pattern ::= * character_class
+          basic_pattern ::= * assertion
+          basic_pattern ::= * grouping
+          basic_pattern ::= * lookahead
+          basic_pattern ::= * lookbehind
+          basic_pattern ::= * subpattern
+          basic_pattern ::= * onceonly
+          basic_pattern ::= * comment
+          basic_pattern ::= * recur
+          basic_pattern ::= * conditional
+          basic_pattern ::= * basic_pattern basic_text
+          basic_pattern ::= * basic_pattern character_class
+          basic_pattern ::= * basic_pattern assertion
+          basic_pattern ::= * basic_pattern grouping
+          basic_pattern ::= * basic_pattern lookahead
+          basic_pattern ::= * basic_pattern lookbehind
+          basic_pattern ::= * basic_pattern subpattern
+          basic_pattern ::= * basic_pattern onceonly
+          basic_pattern ::= * basic_pattern comment
+          basic_pattern ::= * basic_pattern recur
+          basic_pattern ::= * basic_pattern conditional
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          basic_text ::= * TEXT
+          basic_text ::= * TEXT MULTIPLIER
+          basic_text ::= * FULLSTOP
+          basic_text ::= * FULLSTOP MULTIPLIER
+          basic_text ::= * CONTROLCHAR
+          basic_text ::= * CONTROLCHAR MULTIPLIER
+          basic_text ::= * ESCAPEDBACKSLASH
+          basic_text ::= * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * BACKREFERENCE
+          basic_text ::= * BACKREFERENCE MULTIPLIER
+          basic_text ::= * COULDBEBACKREF
+          basic_text ::= * COULDBEBACKREF MULTIPLIER
+          basic_text ::= * basic_text TEXT
+          basic_text ::= * basic_text TEXT MULTIPLIER
+          basic_text ::= * basic_text FULLSTOP
+          basic_text ::= * basic_text FULLSTOP MULTIPLIER
+          basic_text ::= * basic_text CONTROLCHAR
+          basic_text ::= * basic_text CONTROLCHAR MULTIPLIER
+          basic_text ::= * basic_text ESCAPEDBACKSLASH
+          basic_text ::= * basic_text ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * basic_text BACKREFERENCE
+          basic_text ::= * basic_text BACKREFERENCE MULTIPLIER
+          basic_text ::= * basic_text COULDBEBACKREF
+          basic_text ::= * basic_text COULDBEBACKREF MULTIPLIER
+          assertion ::= * OPENASSERTION INTERNALOPTIONS CLOSEPAREN
+          assertion ::= * OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= * OPENASSERTION ONCEONLY pattern CLOSEPAREN
+          comment ::= * OPENASSERTION COMMENT CLOSEPAREN
+          recur ::= * OPENASSERTION RECUR CLOSEPAREN
+
+                     OPENPAREN shift  9
+                 OPENASSERTION shift  17
+                 OPENCHARCLASS shift  18
+                          TEXT shift  52
+              ESCAPEDBACKSLASH shift  43
+                 BACKREFERENCE shift  44
+                COULDBEBACKREF shift  57
+                   CONTROLCHAR shift  42
+                      FULLSTOP shift  41
+                 basic_pattern shift  16
+                    basic_text shift  23
+               character_class shift  104
+                     assertion shift  106
+                      grouping shift  107
+                     lookahead shift  109
+                    lookbehind shift  108
+                    subpattern shift  118
+                      onceonly shift  119
+                       comment shift  129
+                         recur shift  128
+                   conditional shift  130
+
+State 15:
+          pattern ::= basic_pattern * MATCHEND
+      (4) pattern ::= basic_pattern *
+          basic_pattern ::= basic_pattern * basic_text
+          basic_pattern ::= basic_pattern * character_class
+          basic_pattern ::= basic_pattern * assertion
+          basic_pattern ::= basic_pattern * grouping
+          basic_pattern ::= basic_pattern * lookahead
+          basic_pattern ::= basic_pattern * lookbehind
+          basic_pattern ::= basic_pattern * subpattern
+          basic_pattern ::= basic_pattern * onceonly
+          basic_pattern ::= basic_pattern * comment
+          basic_pattern ::= basic_pattern * recur
+          basic_pattern ::= basic_pattern * conditional
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          basic_text ::= * TEXT
+          basic_text ::= * TEXT MULTIPLIER
+          basic_text ::= * FULLSTOP
+          basic_text ::= * FULLSTOP MULTIPLIER
+          basic_text ::= * CONTROLCHAR
+          basic_text ::= * CONTROLCHAR MULTIPLIER
+          basic_text ::= * ESCAPEDBACKSLASH
+          basic_text ::= * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * BACKREFERENCE
+          basic_text ::= * BACKREFERENCE MULTIPLIER
+          basic_text ::= * COULDBEBACKREF
+          basic_text ::= * COULDBEBACKREF MULTIPLIER
+          basic_text ::= * basic_text TEXT
+          basic_text ::= * basic_text TEXT MULTIPLIER
+          basic_text ::= * basic_text FULLSTOP
+          basic_text ::= * basic_text FULLSTOP MULTIPLIER
+          basic_text ::= * basic_text CONTROLCHAR
+          basic_text ::= * basic_text CONTROLCHAR MULTIPLIER
+          basic_text ::= * basic_text ESCAPEDBACKSLASH
+          basic_text ::= * basic_text ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * basic_text BACKREFERENCE
+          basic_text ::= * basic_text BACKREFERENCE MULTIPLIER
+          basic_text ::= * basic_text COULDBEBACKREF
+          basic_text ::= * basic_text COULDBEBACKREF MULTIPLIER
+          assertion ::= * OPENASSERTION INTERNALOPTIONS CLOSEPAREN
+          assertion ::= * OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= * OPENASSERTION ONCEONLY pattern CLOSEPAREN
+          comment ::= * OPENASSERTION COMMENT CLOSEPAREN
+          recur ::= * OPENASSERTION RECUR CLOSEPAREN
+
+                     OPENPAREN shift  9
+                 OPENASSERTION shift  17
+                      MATCHEND shift  117
+                 OPENCHARCLASS shift  18
+                          TEXT shift  52
+              ESCAPEDBACKSLASH shift  43
+                 BACKREFERENCE shift  44
+                COULDBEBACKREF shift  57
+                   CONTROLCHAR shift  42
+                      FULLSTOP shift  41
+                    basic_text shift  22
+               character_class shift  72
+                     assertion shift  76
+                      grouping shift  85
+                     lookahead shift  84
+                    lookbehind shift  82
+                    subpattern shift  81
+                      onceonly shift  80
+                       comment shift  97
+                         recur shift  134
+                   conditional shift  125
+                     {default} reduce 4
+
+State 16:
+          pattern ::= MATCHSTART basic_pattern * MATCHEND
+      (2) pattern ::= MATCHSTART basic_pattern *
+          basic_pattern ::= basic_pattern * basic_text
+          basic_pattern ::= basic_pattern * character_class
+          basic_pattern ::= basic_pattern * assertion
+          basic_pattern ::= basic_pattern * grouping
+          basic_pattern ::= basic_pattern * lookahead
+          basic_pattern ::= basic_pattern * lookbehind
+          basic_pattern ::= basic_pattern * subpattern
+          basic_pattern ::= basic_pattern * onceonly
+          basic_pattern ::= basic_pattern * comment
+          basic_pattern ::= basic_pattern * recur
+          basic_pattern ::= basic_pattern * conditional
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= * OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= * OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          basic_text ::= * TEXT
+          basic_text ::= * TEXT MULTIPLIER
+          basic_text ::= * FULLSTOP
+          basic_text ::= * FULLSTOP MULTIPLIER
+          basic_text ::= * CONTROLCHAR
+          basic_text ::= * CONTROLCHAR MULTIPLIER
+          basic_text ::= * ESCAPEDBACKSLASH
+          basic_text ::= * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * BACKREFERENCE
+          basic_text ::= * BACKREFERENCE MULTIPLIER
+          basic_text ::= * COULDBEBACKREF
+          basic_text ::= * COULDBEBACKREF MULTIPLIER
+          basic_text ::= * basic_text TEXT
+          basic_text ::= * basic_text TEXT MULTIPLIER
+          basic_text ::= * basic_text FULLSTOP
+          basic_text ::= * basic_text FULLSTOP MULTIPLIER
+          basic_text ::= * basic_text CONTROLCHAR
+          basic_text ::= * basic_text CONTROLCHAR MULTIPLIER
+          basic_text ::= * basic_text ESCAPEDBACKSLASH
+          basic_text ::= * basic_text ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= * basic_text BACKREFERENCE
+          basic_text ::= * basic_text BACKREFERENCE MULTIPLIER
+          basic_text ::= * basic_text COULDBEBACKREF
+          basic_text ::= * basic_text COULDBEBACKREF MULTIPLIER
+          assertion ::= * OPENASSERTION INTERNALOPTIONS CLOSEPAREN
+          assertion ::= * OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN
+          grouping ::= * OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN
+          conditional ::= * OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= * OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN
+          subpattern ::= * OPENPAREN pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= * OPENASSERTION ONCEONLY pattern CLOSEPAREN
+          comment ::= * OPENASSERTION COMMENT CLOSEPAREN
+          recur ::= * OPENASSERTION RECUR CLOSEPAREN
+
+                     OPENPAREN shift  9
+                 OPENASSERTION shift  17
+                      MATCHEND shift  91
+                 OPENCHARCLASS shift  18
+                          TEXT shift  52
+              ESCAPEDBACKSLASH shift  43
+                 BACKREFERENCE shift  44
+                COULDBEBACKREF shift  57
+                   CONTROLCHAR shift  42
+                      FULLSTOP shift  41
+                    basic_text shift  22
+               character_class shift  72
+                     assertion shift  76
+                      grouping shift  85
+                     lookahead shift  84
+                    lookbehind shift  82
+                    subpattern shift  81
+                      onceonly shift  80
+                       comment shift  97
+                         recur shift  134
+                   conditional shift  125
+                     {default} reduce 2
+
+State 17:
+          assertion ::= OPENASSERTION * INTERNALOPTIONS CLOSEPAREN
+          assertion ::= OPENASSERTION * INTERNALOPTIONS COLON pattern CLOSEPAREN
+          grouping ::= OPENASSERTION * COLON pattern CLOSEPAREN
+          grouping ::= OPENASSERTION * COLON pattern CLOSEPAREN MULTIPLIER
+          conditional ::= OPENASSERTION * OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= OPENASSERTION * OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN
+          conditional ::= OPENASSERTION * lookahead pattern CLOSEPAREN
+          conditional ::= OPENASSERTION * lookahead pattern CLOSEPAREN MULTIPLIER
+          conditional ::= OPENASSERTION * lookbehind pattern CLOSEPAREN
+          conditional ::= OPENASSERTION * lookbehind pattern CLOSEPAREN MULTIPLIER
+          lookahead ::= * OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= OPENASSERTION * POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= * OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= OPENASSERTION * NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= OPENASSERTION * POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= * OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= OPENASSERTION * NEGATIVELOOKBEHIND pattern CLOSEPAREN
+          subpattern ::= OPENASSERTION * PATTERNNAME pattern CLOSEPAREN
+          subpattern ::= OPENASSERTION * PATTERNNAME pattern CLOSEPAREN MULTIPLIER
+          onceonly ::= OPENASSERTION * ONCEONLY pattern CLOSEPAREN
+          comment ::= OPENASSERTION * COMMENT CLOSEPAREN
+          recur ::= OPENASSERTION * RECUR CLOSEPAREN
+
+                     OPENPAREN shift  54
+                 OPENASSERTION shift  24
+               INTERNALOPTIONS shift  26
+                         COLON shift  2
+             POSITIVELOOKAHEAD shift  5
+             NEGATIVELOOKAHEAD shift  1
+            POSITIVELOOKBEHIND shift  11
+            NEGATIVELOOKBEHIND shift  4
+                   PATTERNNAME shift  10
+                      ONCEONLY shift  13
+                       COMMENT shift  49
+                         RECUR shift  50
+                     lookahead shift  7
+                    lookbehind shift  8
+
+State 18:
+          character_class ::= OPENCHARCLASS * character_class_contents CLOSECHARCLASS
+          character_class ::= OPENCHARCLASS * NEGATE character_class_contents CLOSECHARCLASS
+          character_class ::= OPENCHARCLASS * character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class ::= OPENCHARCLASS * NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class_contents ::= * TEXT
+          character_class_contents ::= * ESCAPEDBACKSLASH
+          character_class_contents ::= * ESCAPEDBACKSLASH HYPHEN TEXT
+          character_class_contents ::= * TEXT HYPHEN TEXT
+          character_class_contents ::= * TEXT HYPHEN ESCAPEDBACKSLASH
+          character_class_contents ::= * BACKREFERENCE
+          character_class_contents ::= * COULDBEBACKREF
+          character_class_contents ::= * character_class_contents CONTROLCHAR
+          character_class_contents ::= * character_class_contents ESCAPEDBACKSLASH
+          character_class_contents ::= * character_class_contents TEXT
+          character_class_contents ::= * character_class_contents ESCAPEDBACKSLASH HYPHEN CONTROLCHAR
+          character_class_contents ::= * character_class_contents ESCAPEDBACKSLASH HYPHEN TEXT
+          character_class_contents ::= * character_class_contents TEXT HYPHEN ESCAPEDBACKSLASH
+          character_class_contents ::= * character_class_contents TEXT HYPHEN TEXT
+          character_class_contents ::= * character_class_contents BACKREFERENCE
+          character_class_contents ::= * character_class_contents COULDBEBACKREF
+
+                        NEGATE shift  19
+                          TEXT shift  67
+              ESCAPEDBACKSLASH shift  69
+                 BACKREFERENCE shift  101
+                COULDBEBACKREF shift  87
+      character_class_contents shift  20
+
+State 19:
+          character_class ::= OPENCHARCLASS NEGATE * character_class_contents CLOSECHARCLASS
+          character_class ::= OPENCHARCLASS NEGATE * character_class_contents CLOSECHARCLASS MULTIPLIER
+          character_class_contents ::= * TEXT
+          character_class_contents ::= * ESCAPEDBACKSLASH
+          character_class_contents ::= * ESCAPEDBACKSLASH HYPHEN TEXT
+          character_class_contents ::= * TEXT HYPHEN TEXT
+          character_class_contents ::= * TEXT HYPHEN ESCAPEDBACKSLASH
+          character_class_contents ::= * BACKREFERENCE
+          character_class_contents ::= * COULDBEBACKREF
+          character_class_contents ::= * character_class_contents CONTROLCHAR
+          character_class_contents ::= * character_class_contents ESCAPEDBACKSLASH
+          character_class_contents ::= * character_class_contents TEXT
+          character_class_contents ::= * character_class_contents ESCAPEDBACKSLASH HYPHEN CONTROLCHAR
+          character_class_contents ::= * character_class_contents ESCAPEDBACKSLASH HYPHEN TEXT
+          character_class_contents ::= * character_class_contents TEXT HYPHEN ESCAPEDBACKSLASH
+          character_class_contents ::= * character_class_contents TEXT HYPHEN TEXT
+          character_class_contents ::= * character_class_contents BACKREFERENCE
+          character_class_contents ::= * character_class_contents COULDBEBACKREF
+
+                          TEXT shift  67
+              ESCAPEDBACKSLASH shift  69
+                 BACKREFERENCE shift  101
+                COULDBEBACKREF shift  87
+      character_class_contents shift  21
+
+State 20:
+          character_class ::= OPENCHARCLASS character_class_contents * CLOSECHARCLASS
+          character_class ::= OPENCHARCLASS character_class_contents * CLOSECHARCLASS MULTIPLIER
+          character_class_contents ::= character_class_contents * CONTROLCHAR
+          character_class_contents ::= character_class_contents * ESCAPEDBACKSLASH
+          character_class_contents ::= character_class_contents * TEXT
+          character_class_contents ::= character_class_contents * ESCAPEDBACKSLASH HYPHEN CONTROLCHAR
+          character_class_contents ::= character_class_contents * ESCAPEDBACKSLASH HYPHEN TEXT
+          character_class_contents ::= character_class_contents * TEXT HYPHEN ESCAPEDBACKSLASH
+          character_class_contents ::= character_class_contents * TEXT HYPHEN TEXT
+          character_class_contents ::= character_class_contents * BACKREFERENCE
+          character_class_contents ::= character_class_contents * COULDBEBACKREF
+
+                CLOSECHARCLASS shift  59
+                          TEXT shift  60
+              ESCAPEDBACKSLASH shift  68
+                 BACKREFERENCE shift  111
+                COULDBEBACKREF shift  116
+                   CONTROLCHAR shift  122
+
+State 21:
+          character_class ::= OPENCHARCLASS NEGATE character_class_contents * CLOSECHARCLASS
+          character_class ::= OPENCHARCLASS NEGATE character_class_contents * CLOSECHARCLASS MULTIPLIER
+          character_class_contents ::= character_class_contents * CONTROLCHAR
+          character_class_contents ::= character_class_contents * ESCAPEDBACKSLASH
+          character_class_contents ::= character_class_contents * TEXT
+          character_class_contents ::= character_class_contents * ESCAPEDBACKSLASH HYPHEN CONTROLCHAR
+          character_class_contents ::= character_class_contents * ESCAPEDBACKSLASH HYPHEN TEXT
+          character_class_contents ::= character_class_contents * TEXT HYPHEN ESCAPEDBACKSLASH
+          character_class_contents ::= character_class_contents * TEXT HYPHEN TEXT
+          character_class_contents ::= character_class_contents * BACKREFERENCE
+          character_class_contents ::= character_class_contents * COULDBEBACKREF
+
+                CLOSECHARCLASS shift  61
+                          TEXT shift  60
+              ESCAPEDBACKSLASH shift  68
+                 BACKREFERENCE shift  111
+                COULDBEBACKREF shift  116
+                   CONTROLCHAR shift  122
+
+State 22:
+     (17) basic_pattern ::= basic_pattern basic_text *
+          basic_text ::= basic_text * TEXT
+          basic_text ::= basic_text * TEXT MULTIPLIER
+          basic_text ::= basic_text * FULLSTOP
+          basic_text ::= basic_text * FULLSTOP MULTIPLIER
+          basic_text ::= basic_text * CONTROLCHAR
+          basic_text ::= basic_text * CONTROLCHAR MULTIPLIER
+          basic_text ::= basic_text * ESCAPEDBACKSLASH
+          basic_text ::= basic_text * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= basic_text * BACKREFERENCE
+          basic_text ::= basic_text * BACKREFERENCE MULTIPLIER
+          basic_text ::= basic_text * COULDBEBACKREF
+          basic_text ::= basic_text * COULDBEBACKREF MULTIPLIER
+
+                          TEXT shift  64
+                          TEXT reduce 17  ** Parsing conflict **
+              ESCAPEDBACKSLASH shift  63
+              ESCAPEDBACKSLASH reduce 17  ** Parsing conflict **
+                 BACKREFERENCE shift  62
+                 BACKREFERENCE reduce 17  ** Parsing conflict **
+                COULDBEBACKREF shift  58
+                COULDBEBACKREF reduce 17  ** Parsing conflict **
+                   CONTROLCHAR shift  66
+                   CONTROLCHAR reduce 17  ** Parsing conflict **
+                      FULLSTOP shift  65
+                      FULLSTOP reduce 17  ** Parsing conflict **
+                     {default} reduce 17
+
+State 23:
+      (6) basic_pattern ::= basic_text *
+          basic_text ::= basic_text * TEXT
+          basic_text ::= basic_text * TEXT MULTIPLIER
+          basic_text ::= basic_text * FULLSTOP
+          basic_text ::= basic_text * FULLSTOP MULTIPLIER
+          basic_text ::= basic_text * CONTROLCHAR
+          basic_text ::= basic_text * CONTROLCHAR MULTIPLIER
+          basic_text ::= basic_text * ESCAPEDBACKSLASH
+          basic_text ::= basic_text * ESCAPEDBACKSLASH MULTIPLIER
+          basic_text ::= basic_text * BACKREFERENCE
+          basic_text ::= basic_text * BACKREFERENCE MULTIPLIER
+          basic_text ::= basic_text * COULDBEBACKREF
+          basic_text ::= basic_text * COULDBEBACKREF MULTIPLIER
+
+                          TEXT shift  64
+                          TEXT reduce 6   ** Parsing conflict **
+              ESCAPEDBACKSLASH shift  63
+              ESCAPEDBACKSLASH reduce 6   ** Parsing conflict **
+                 BACKREFERENCE shift  62
+                 BACKREFERENCE reduce 6   ** Parsing conflict **
+                COULDBEBACKREF shift  58
+                COULDBEBACKREF reduce 6   ** Parsing conflict **
+                   CONTROLCHAR shift  66
+                   CONTROLCHAR reduce 6   ** Parsing conflict **
+                      FULLSTOP shift  65
+                      FULLSTOP reduce 6   ** Parsing conflict **
+                     {default} reduce 6
+
+State 24:
+          lookahead ::= OPENASSERTION * POSITIVELOOKAHEAD pattern CLOSEPAREN
+          lookahead ::= OPENASSERTION * NEGATIVELOOKAHEAD pattern CLOSEPAREN
+          lookbehind ::= OPENASSERTION * POSITIVELOOKBEHIND pattern CLOSEPAREN
+          lookbehind ::= OPENASSERTION * NEGATIVELOOKBEHIND pattern CLOSEPAREN
+
+             POSITIVELOOKAHEAD shift  5
+             NEGATIVELOOKAHEAD shift  1
+            POSITIVELOOKBEHIND shift  11
+            NEGATIVELOOKBEHIND shift  4
+
+State 25:
+          pattern ::= pattern * BAR pattern
+          assertion ::= OPENASSERTION INTERNALOPTIONS COLON pattern * CLOSEPAREN
+
+                           BAR shift  12
+                    CLOSEPAREN shift  133
+
+State 26:
+          assertion ::= OPENASSERTION INTERNALOPTIONS * CLOSEPAREN
+          assertion ::= OPENASSERTION INTERNALOPTIONS * COLON pattern CLOSEPAREN
+
+                    CLOSEPAREN shift  112
+                         COLON shift  6
+
+State 27:
+          character_class_contents ::= character_class_contents TEXT HYPHEN * ESCAPEDBACKSLASH
+          character_class_contents ::= character_class_contents TEXT HYPHEN * TEXT
+
+                          TEXT shift  105
+              ESCAPEDBACKSLASH shift  131
+
+State 28:
+          pattern ::= pattern * BAR pattern
+          subpattern ::= OPENPAREN pattern * CLOSEPAREN
+          subpattern ::= OPENPAREN pattern * CLOSEPAREN MULTIPLIER
+
+                           BAR shift  12
+                    CLOSEPAREN shift  56
+
+State 29:
+          character_class_contents ::= TEXT HYPHEN * TEXT
+          character_class_contents ::= TEXT HYPHEN * ESCAPEDBACKSLASH
+
+                          TEXT shift  113
+              ESCAPEDBACKSLASH shift  124
+
+State 30:
+          pattern ::= pattern * BAR pattern
+          grouping ::= OPENASSERTION COLON pattern * CLOSEPAREN
+          grouping ::= OPENASSERTION COLON pattern * CLOSEPAREN MULTIPLIER
+
+                           BAR shift  12
+                    CLOSEPAREN shift  53
+
+State 31:
+          character_class_contents ::= character_class_contents ESCAPEDBACKSLASH HYPHEN * CONTROLCHAR
+          character_class_contents ::= character_class_contents ESCAPEDBACKSLASH HYPHEN * TEXT
+
+                          TEXT shift  127
+                   CONTROLCHAR shift  126
+
+State 32:
+          pattern ::= pattern * BAR pattern
+          conditional ::= OPENASSERTION lookbehind pattern * CLOSEPAREN
+          conditional ::= OPENASSERTION lookbehind pattern * CLOSEPAREN MULTIPLIER
+
+                           BAR shift  12
+                    CLOSEPAREN shift  47
+
+State 33:
+          pattern ::= pattern * BAR pattern
+          conditional ::= OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern * CLOSEPAREN MULTIPLIER
+          conditional ::= OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern * CLOSEPAREN
+
+                           BAR shift  12
+                    CLOSEPAREN shift  46
+
+State 34:
+          pattern ::= pattern * BAR pattern
+          lookbehind ::= OPENASSERTION NEGATIVELOOKBEHIND pattern * CLOSEPAREN
+
+                           BAR shift  12
+                    CLOSEPAREN shift  98
+
+State 35:
+          pattern ::= pattern * BAR pattern
+          subpattern ::= OPENASSERTION PATTERNNAME pattern * CLOSEPAREN
+          subpattern ::= OPENASSERTION PATTERNNAME pattern * CLOSEPAREN MULTIPLIER
+
+                           BAR shift  12
+                    CLOSEPAREN shift  48
+
+State 36:
+          pattern ::= pattern * BAR pattern
+          onceonly ::= OPENASSERTION ONCEONLY pattern * CLOSEPAREN
+
+                           BAR shift  12
+                    CLOSEPAREN shift  88
+
+State 37:
+          pattern ::= pattern * BAR pattern
+          lookahead ::= OPENASSERTION NEGATIVELOOKAHEAD pattern * CLOSEPAREN
+
+                           BAR shift  12
+                    CLOSEPAREN shift  77
+
+State 38:
+          pattern ::= pattern * BAR pattern
+          lookbehind ::= OPENASSERTION POSITIVELOOKBEHIND pattern * CLOSEPAREN
+
+                           BAR shift  12
+                    CLOSEPAREN shift  102
+
+State 39:
+          pattern ::= pattern * BAR pattern
+          conditional ::= OPENASSERTION lookahead pattern * CLOSEPAREN
+          conditional ::= OPENASSERTION lookahead pattern * CLOSEPAREN MULTIPLIER
+
+                           BAR shift  12
+                    CLOSEPAREN shift  51
+
+State 40:
+          pattern ::= pattern * BAR pattern
+          lookahead ::= OPENASSERTION POSITIVELOOKAHEAD pattern * CLOSEPAREN
+
+                           BAR shift  12
+                    CLOSEPAREN shift  71
+
+State 41:
+     (50) basic_text ::= FULLSTOP *
+          basic_text ::= FULLSTOP * MULTIPLIER
+
+                    MULTIPLIER shift  94
+                     {default} reduce 50
+
+State 42:
+     (52) basic_text ::= CONTROLCHAR *
+          basic_text ::= CONTROLCHAR * MULTIPLIER
+
+                    MULTIPLIER shift  96
+                     {default} reduce 52
+
+State 43:
+     (54) basic_text ::= ESCAPEDBACKSLASH *
+          basic_text ::= ESCAPEDBACKSLASH * MULTIPLIER
+
+                    MULTIPLIER shift  75
+                     {default} reduce 54
+
+State 44:
+     (56) basic_text ::= BACKREFERENCE *
+          basic_text ::= BACKREFERENCE * MULTIPLIER
+
+                    MULTIPLIER shift  132
+                     {default} reduce 56
+
+State 45:
+      (0) start ::= pattern *
+          pattern ::= pattern * BAR pattern
+
+                           BAR shift  12
+                     {default} reduce 0
+
+State 46:
+          conditional ::= OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN * MULTIPLIER
+     (77) conditional ::= OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN *
+
+                    MULTIPLIER shift  103
+                     {default} reduce 77
+
+State 47:
+     (80) conditional ::= OPENASSERTION lookbehind pattern CLOSEPAREN *
+          conditional ::= OPENASSERTION lookbehind pattern CLOSEPAREN * MULTIPLIER
+
+                    MULTIPLIER shift  78
+                     {default} reduce 80
+
+State 48:
+     (86) subpattern ::= OPENASSERTION PATTERNNAME pattern CLOSEPAREN *
+          subpattern ::= OPENASSERTION PATTERNNAME pattern CLOSEPAREN * MULTIPLIER
+
+                    MULTIPLIER shift  95
+                     {default} reduce 86
+
+State 49:
+          comment ::= OPENASSERTION COMMENT * CLOSEPAREN
+
+                    CLOSEPAREN shift  90
+
+State 50:
+          recur ::= OPENASSERTION RECUR * CLOSEPAREN
+
+                    CLOSEPAREN shift  93
+
+State 51:
+     (78) conditional ::= OPENASSERTION lookahead pattern CLOSEPAREN *
+          conditional ::= OPENASSERTION lookahead pattern CLOSEPAREN * MULTIPLIER
+
+                    MULTIPLIER shift  79
+                     {default} reduce 78
+
+State 52:
+     (48) basic_text ::= TEXT *
+          basic_text ::= TEXT * MULTIPLIER
+
+                    MULTIPLIER shift  120
+                     {default} reduce 48
+
+State 53:
+     (74) grouping ::= OPENASSERTION COLON pattern CLOSEPAREN *
+          grouping ::= OPENASSERTION COLON pattern CLOSEPAREN * MULTIPLIER
+
+                    MULTIPLIER shift  121
+                     {default} reduce 74
+
+State 54:
+          conditional ::= OPENASSERTION OPENPAREN * TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= OPENASSERTION OPENPAREN * TEXT CLOSEPAREN pattern CLOSEPAREN
+
+                          TEXT shift  55
+
+State 55:
+          conditional ::= OPENASSERTION OPENPAREN TEXT * CLOSEPAREN pattern CLOSEPAREN MULTIPLIER
+          conditional ::= OPENASSERTION OPENPAREN TEXT * CLOSEPAREN pattern CLOSEPAREN
+
+                    CLOSEPAREN shift  3
+
+State 56:
+     (88) subpattern ::= OPENPAREN pattern CLOSEPAREN *
+          subpattern ::= OPENPAREN pattern CLOSEPAREN * MULTIPLIER
+
+                    MULTIPLIER shift  110
+                     {default} reduce 88
+
+State 57:
+     (58) basic_text ::= COULDBEBACKREF *
+          basic_text ::= COULDBEBACKREF * MULTIPLIER
+
+                    MULTIPLIER shift  114
+                     {default} reduce 58
+
+State 58:
+     (70) basic_text ::= basic_text COULDBEBACKREF *
+          basic_text ::= basic_text COULDBEBACKREF * MULTIPLIER
+
+                    MULTIPLIER shift  74
+                     {default} reduce 70
+
+State 59:
+     (28) character_class ::= OPENCHARCLASS character_class_contents CLOSECHARCLASS *
+          character_class ::= OPENCHARCLASS character_class_contents CLOSECHARCLASS * MULTIPLIER
+
+                    MULTIPLIER shift  123
+                     {default} reduce 28
+
+State 60:
+     (41) character_class_contents ::= character_class_contents TEXT *
+          character_class_contents ::= character_class_contents TEXT * HYPHEN ESCAPEDBACKSLASH
+          character_class_contents ::= character_class_contents TEXT * HYPHEN TEXT
+
+                        HYPHEN shift  27
+                     {default} reduce 41
+
+State 61:
+     (29) character_class ::= OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS *
+          character_class ::= OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS * MULTIPLIER
+
+                    MULTIPLIER shift  115
+                     {default} reduce 29
+
+State 62:
+     (68) basic_text ::= basic_text BACKREFERENCE *
+          basic_text ::= basic_text BACKREFERENCE * MULTIPLIER
+
+                    MULTIPLIER shift  73
+                     {default} reduce 68
+
+State 63:
+     (66) basic_text ::= basic_text ESCAPEDBACKSLASH *
+          basic_text ::= basic_text ESCAPEDBACKSLASH * MULTIPLIER
+
+                    MULTIPLIER shift  86
+                     {default} reduce 66
+
+State 64:
+     (60) basic_text ::= basic_text TEXT *
+          basic_text ::= basic_text TEXT * MULTIPLIER
+
+                    MULTIPLIER shift  89
+                     {default} reduce 60
+
+State 65:
+     (62) basic_text ::= basic_text FULLSTOP *
+          basic_text ::= basic_text FULLSTOP * MULTIPLIER
+
+                    MULTIPLIER shift  100
+                     {default} reduce 62
+
+State 66:
+     (64) basic_text ::= basic_text CONTROLCHAR *
+          basic_text ::= basic_text CONTROLCHAR * MULTIPLIER
+
+                    MULTIPLIER shift  99
+                     {default} reduce 64
+
+State 67:
+     (32) character_class_contents ::= TEXT *
+          character_class_contents ::= TEXT * HYPHEN TEXT
+          character_class_contents ::= TEXT * HYPHEN ESCAPEDBACKSLASH
+
+                        HYPHEN shift  29
+                     {default} reduce 32
+
+State 68:
+     (40) character_class_contents ::= character_class_contents ESCAPEDBACKSLASH *
+          character_class_contents ::= character_class_contents ESCAPEDBACKSLASH * HYPHEN CONTROLCHAR
+          character_class_contents ::= character_class_contents ESCAPEDBACKSLASH * HYPHEN TEXT
+
+                        HYPHEN shift  31
+                     {default} reduce 40
+
+State 69:
+     (33) character_class_contents ::= ESCAPEDBACKSLASH *
+          character_class_contents ::= ESCAPEDBACKSLASH * HYPHEN TEXT
+
+                        HYPHEN shift  70
+                     {default} reduce 33
+
+State 70:
+          character_class_contents ::= ESCAPEDBACKSLASH HYPHEN * TEXT
+
+                          TEXT shift  83
+
+State 71:
+     (82) lookahead ::= OPENASSERTION POSITIVELOOKAHEAD pattern CLOSEPAREN *
+
+                     {default} reduce 82
+
+State 72:
+     (18) basic_pattern ::= basic_pattern character_class *
+
+                     {default} reduce 18
+
+State 73:
+     (69) basic_text ::= basic_text BACKREFERENCE MULTIPLIER *
+
+                     {default} reduce 69
+
+State 74:
+     (71) basic_text ::= basic_text COULDBEBACKREF MULTIPLIER *
+
+                     {default} reduce 71
+
+State 75:
+     (55) basic_text ::= ESCAPEDBACKSLASH MULTIPLIER *
+
+                     {default} reduce 55
+
+State 76:
+     (19) basic_pattern ::= basic_pattern assertion *
+
+                     {default} reduce 19
+
+State 77:
+     (83) lookahead ::= OPENASSERTION NEGATIVELOOKAHEAD pattern CLOSEPAREN *
+
+                     {default} reduce 83
+
+State 78:
+     (81) conditional ::= OPENASSERTION lookbehind pattern CLOSEPAREN MULTIPLIER *
+
+                     {default} reduce 81
+
+State 79:
+     (79) conditional ::= OPENASSERTION lookahead pattern CLOSEPAREN MULTIPLIER *
+
+                     {default} reduce 79
+
+State 80:
+     (24) basic_pattern ::= basic_pattern onceonly *
+
+                     {default} reduce 24
+
+State 81:
+     (23) basic_pattern ::= basic_pattern subpattern *
+
+                     {default} reduce 23
+
+State 82:
+     (22) basic_pattern ::= basic_pattern lookbehind *
+
+                     {default} reduce 22
+
+State 83:
+     (34) character_class_contents ::= ESCAPEDBACKSLASH HYPHEN TEXT *
+
+                     {default} reduce 34
+
+State 84:
+     (21) basic_pattern ::= basic_pattern lookahead *
+
+                     {default} reduce 21
+
+State 85:
+     (20) basic_pattern ::= basic_pattern grouping *
+
+                     {default} reduce 20
+
+State 86:
+     (67) basic_text ::= basic_text ESCAPEDBACKSLASH MULTIPLIER *
+
+                     {default} reduce 67
+
+State 87:
+     (38) character_class_contents ::= COULDBEBACKREF *
+
+                     {default} reduce 38
+
+State 88:
+     (90) onceonly ::= OPENASSERTION ONCEONLY pattern CLOSEPAREN *
+
+                     {default} reduce 90
+
+State 89:
+     (61) basic_text ::= basic_text TEXT MULTIPLIER *
+
+                     {default} reduce 61
+
+State 90:
+     (91) comment ::= OPENASSERTION COMMENT CLOSEPAREN *
+
+                     {default} reduce 91
+
+State 91:
+      (1) pattern ::= MATCHSTART basic_pattern MATCHEND *
+
+                     {default} reduce 1
+
+State 92:
+          pattern ::= pattern * BAR pattern
+      (5) pattern ::= pattern BAR pattern *
+
+                     {default} reduce 5
+
+State 93:
+     (92) recur ::= OPENASSERTION RECUR CLOSEPAREN *
+
+                     {default} reduce 92
+
+State 94:
+     (51) basic_text ::= FULLSTOP MULTIPLIER *
+
+                     {default} reduce 51
+
+State 95:
+     (87) subpattern ::= OPENASSERTION PATTERNNAME pattern CLOSEPAREN MULTIPLIER *
+
+                     {default} reduce 87
+
+State 96:
+     (53) basic_text ::= CONTROLCHAR MULTIPLIER *
+
+                     {default} reduce 53
+
+State 97:
+     (25) basic_pattern ::= basic_pattern comment *
+
+                     {default} reduce 25
+
+State 98:
+     (85) lookbehind ::= OPENASSERTION NEGATIVELOOKBEHIND pattern CLOSEPAREN *
+
+                     {default} reduce 85
+
+State 99:
+     (65) basic_text ::= basic_text CONTROLCHAR MULTIPLIER *
+
+                     {default} reduce 65
+
+State 100:
+     (63) basic_text ::= basic_text FULLSTOP MULTIPLIER *
+
+                     {default} reduce 63
+
+State 101:
+     (37) character_class_contents ::= BACKREFERENCE *
+
+                     {default} reduce 37
+
+State 102:
+     (84) lookbehind ::= OPENASSERTION POSITIVELOOKBEHIND pattern CLOSEPAREN *
+
+                     {default} reduce 84
+
+State 103:
+     (76) conditional ::= OPENASSERTION OPENPAREN TEXT CLOSEPAREN pattern CLOSEPAREN MULTIPLIER *
+
+                     {default} reduce 76
+
+State 104:
+      (7) basic_pattern ::= character_class *
+
+                     {default} reduce 7
+
+State 105:
+     (45) character_class_contents ::= character_class_contents TEXT HYPHEN TEXT *
+
+                     {default} reduce 45
+
+State 106:
+      (8) basic_pattern ::= assertion *
+
+                     {default} reduce 8
+
+State 107:
+      (9) basic_pattern ::= grouping *
+
+                     {default} reduce 9
+
+State 108:
+     (11) basic_pattern ::= lookbehind *
+
+                     {default} reduce 11
+
+State 109:
+     (10) basic_pattern ::= lookahead *
+
+                     {default} reduce 10
+
+State 110:
+     (89) subpattern ::= OPENPAREN pattern CLOSEPAREN MULTIPLIER *
+
+                     {default} reduce 89
+
+State 111:
+     (46) character_class_contents ::= character_class_contents BACKREFERENCE *
+
+                     {default} reduce 46
+
+State 112:
+     (72) assertion ::= OPENASSERTION INTERNALOPTIONS CLOSEPAREN *
+
+                     {default} reduce 72
+
+State 113:
+     (35) character_class_contents ::= TEXT HYPHEN TEXT *
+
+                     {default} reduce 35
+
+State 114:
+     (59) basic_text ::= COULDBEBACKREF MULTIPLIER *
+
+                     {default} reduce 59
+
+State 115:
+     (31) character_class ::= OPENCHARCLASS NEGATE character_class_contents CLOSECHARCLASS MULTIPLIER *
+
+                     {default} reduce 31
+
+State 116:
+     (47) character_class_contents ::= character_class_contents COULDBEBACKREF *
+
+                     {default} reduce 47
+
+State 117:
+      (3) pattern ::= basic_pattern MATCHEND *
+
+                     {default} reduce 3
+
+State 118:
+     (12) basic_pattern ::= subpattern *
+
+                     {default} reduce 12
+
+State 119:
+     (13) basic_pattern ::= onceonly *
+
+                     {default} reduce 13
+
+State 120:
+     (49) basic_text ::= TEXT MULTIPLIER *
+
+                     {default} reduce 49
+
+State 121:
+     (75) grouping ::= OPENASSERTION COLON pattern CLOSEPAREN MULTIPLIER *
+
+                     {default} reduce 75
+
+State 122:
+     (39) character_class_contents ::= character_class_contents CONTROLCHAR *
+
+                     {default} reduce 39
+
+State 123:
+     (30) character_class ::= OPENCHARCLASS character_class_contents CLOSECHARCLASS MULTIPLIER *
+
+                     {default} reduce 30
+
+State 124:
+     (36) character_class_contents ::= TEXT HYPHEN ESCAPEDBACKSLASH *
+
+                     {default} reduce 36
+
+State 125:
+     (27) basic_pattern ::= basic_pattern conditional *
+
+                     {default} reduce 27
+
+State 126:
+     (42) character_class_contents ::= character_class_contents ESCAPEDBACKSLASH HYPHEN CONTROLCHAR *
+
+                     {default} reduce 42
+
+State 127:
+     (43) character_class_contents ::= character_class_contents ESCAPEDBACKSLASH HYPHEN TEXT *
+
+                     {default} reduce 43
+
+State 128:
+     (15) basic_pattern ::= recur *
+
+                     {default} reduce 15
+
+State 129:
+     (14) basic_pattern ::= comment *
+
+                     {default} reduce 14
+
+State 130:
+     (16) basic_pattern ::= conditional *
+
+                     {default} reduce 16
+
+State 131:
+     (44) character_class_contents ::= character_class_contents TEXT HYPHEN ESCAPEDBACKSLASH *
+
+                     {default} reduce 44
+
+State 132:
+     (57) basic_text ::= BACKREFERENCE MULTIPLIER *
+
+                     {default} reduce 57
+
+State 133:
+     (73) assertion ::= OPENASSERTION INTERNALOPTIONS COLON pattern CLOSEPAREN *
+
+                     {default} reduce 73
+
+State 134:
+     (26) basic_pattern ::= basic_pattern recur *
+
+                     {default} reduce 26
+
