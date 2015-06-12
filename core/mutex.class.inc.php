@@ -37,8 +37,19 @@ class iTopMutex
 	public function __construct($sName, $sDBHost = null, $sDBUser = null, $sDBPwd = null)
 	{
 		// Compute the name of a lock for mysql
-		// Note: the name is server-wide!!!
+		// Note: names are server-wide!!! So let's make the name specific to this iTop instance
+		$oConfig = utils::GetConfig(); // Will return an empty config when called during the setup
+		$sDBName = $oConfig->GetDBName();
+		$sDBSubname = $oConfig->GetDBSubname();
 		$this->sName = 'itop.'.$sName;
+		if (substr($sName, -strlen($sDBName.$sDBSubname)) != $sDBName.$sDBSubname)
+		{
+			// If the name supplied already ends with the expected suffix
+			// don't add it twice, since the setup may try to detect an already
+			// running cron job by its mutex, without knowing if the config already exists or not
+			$this->sName .= $sDBName.$sDBSubname;
+		}
+		
 		$this->bLocked = false; // Not yet locked
 
 		if (!array_key_exists($this->sName, self::$aAcquiredLocks))
@@ -48,7 +59,6 @@ class iTopMutex
 
 		// It is a MUST to create a dedicated session each time a lock is required, because
 		// using GET_LOCK anytime on the same session will RELEASE the current and unique session lock (known issue)
-		$oConfig = utils::GetConfig();
 		$sDBHost = is_null($sDBHost) ? $oConfig->GetDBHost() : $sDBHost;
 		$sDBUser = is_null($sDBUser) ? $oConfig->GetDBUser() : $sDBUser;
 		$sDBPwd = is_null($sDBPwd) ? $oConfig->GetDBPwd() : $sDBPwd;
