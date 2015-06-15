@@ -618,7 +618,7 @@ EOF
 			);	
 
 			$oMutex = new iTopMutex(
-				'cron.'.$this->oWizard->GetParameter('db_name', '').'_'.$this->oWizard->GetParameter('db_prefix', ''),
+				'cron'.$this->oWizard->GetParameter('db_name', '').$this->oWizard->GetParameter('db_prefix', ''),
 				$this->oWizard->GetParameter('db_server', ''),
 				$this->oWizard->GetParameter('db_user', ''),
 				$this->oWizard->GetParameter('db_pwd', '')

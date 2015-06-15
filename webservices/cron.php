@@ -354,7 +354,7 @@ $oP->p("Starting: ".time().' ('.date('Y-m-d H:i:s').')');
 try
 {
 	$oConfig = utils::GetConfig();
-	$oMutex = new iTopMutex('cron.'.$oConfig->GetDBName().'_'.$oConfig->GetDBSubname());
+	$oMutex = new iTopMutex('cron');
 	if ($oMutex->TryLock())
 	{
 		// Note: testing this now in case some of the background processes forces the read-only mode for a while
