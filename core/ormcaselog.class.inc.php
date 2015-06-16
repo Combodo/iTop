@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@ define('CASELOG_SEPARATOR', "\n".'========== %1$s : %2$s (%3$d) ============'."\
 /**
  * Class to store a "case log" in a structured way, keeping track of its successive entries
  *  
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class ormCaseLog {
@@ -394,7 +394,7 @@ class ormCaseLog {
 			{
 				throw new Exception("Only administrators can set the user id", RestResult::UNAUTHORIZED);
 			}
-			if ($bCheckUserId)
+			if ($bCheckUserId && ($oJson->user_id != 0))
 			{
 				try
 				{
