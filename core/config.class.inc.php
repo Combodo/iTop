@@ -809,6 +809,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'transaction_storage' => array(
+			'type' => 'string',
+			'description' => 'The type of mechanism to use for storing the unique identifiers for transactions (Session|File).',
+			'default' => 'Session',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)
