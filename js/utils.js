@@ -210,10 +210,33 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext)
 					}
 				}
 		   }
+		   FixSearchFormsDisposition();
 		   oDiv.unblock();
 		   oDiv.parent().resize(); // Inform the parent that the form has just been (potentially) resized
 	   }
 	 );
+}
+
+function FixSearchFormsDisposition()
+{
+	// Fix search forms
+	$('.SearchDrawer').each(function() {
+		var colWidth = 0;
+		var labelWidth = 0;
+		$('label:visible', $(this)).each( function() {
+			var l = $(this).parent().width() - $(this).width();
+			colWidth = Math.max(l, colWidth);
+			labelWidth = Math.max($(this).width(), labelWidth);
+		});
+		$('label:visible', $(this)).each( function() {
+			if($(this).data('resized') != true)
+			{
+				$(this).parent().width(colWidth + labelWidth);
+				$(this).width(labelWidth).css({display: 'inline-block'}).data('resized', true);					
+			}
+		});		
+	});
+
 }
 
 /**
@@ -384,6 +407,33 @@ function ShortcutListDlg(sOQL, sDataTableId, sContext)
 	var sTableSettings = JSON.stringify(oTableSettings);
 
 	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?'+sContext, {operation: 'shortcut_list_dlg', oql: sOQL, table_settings: sTableSettings}, function(data){
+		$('body').append(data);
+	});
+	return false;
+}
+
+function ExportListDlg(sOQL, sDataTableId, sFormat, sDlgTitle)
+{
+	var sDataTableName = 'datatable_'+sDataTableId;
+	var oColumns = $('#'+sDataTableName).datatable('option', 'oColumns');
+	var aFields = [];
+	for(var j in oColumns)
+	{
+		for(var k in oColumns[j])
+		{
+			if (oColumns[j][k].checked)
+			{
+				var sCode = oColumns[j][k].code;
+				if (sCode == '_key_')
+				{
+					sCode = 'id';
+				}
+				aFields.push(j+'.'+sCode);
+			}
+		}
+	}
+
+	$.post(GetAbsoluteUrlAppRoot()+'webservices/export-v2.php', {interactive: 1, advanced: 1, mode: 'dialog', format: sFormat, expression: sOQL, suggested_fields: aFields.join(','), dialog_title: sDlgTitle}, function(data) {
 		$('body').append(data);
 	});
 	return false;

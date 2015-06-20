@@ -787,16 +787,36 @@ function ListOpenRequests(WebPage $oP)
 	$oUserOrg = GetUserOrg();
 
 	$aClassToSet = array();
+	$iUser = UserRights::GetContactId();
+	$oContact = MetaModel::GetObject('Contact', UserRights::GetContactId());
 	foreach (GetTicketClasses() as $sClass)
 	{
-		$sOQL = "SELECT $sClass WHERE org_id = :org_id AND status NOT IN ('closed', 'resolved')";
-		$oSearch = DBObjectSearch::FromOQL($sOQL);
-		$iUser = UserRights::GetContactId();
-		if ($iUser > 0 && !IsPowerUser())
+		if (IsPowerUser())
 		{
-			$oSearch->AddCondition('caller_id', $iUser);
+			$sValidationDefine = 'PORTAL_'.strtoupper($sClass).'_DISPLAY_POWERUSER_QUERY';
 		}
-		$aClassToSet[$sClass] = new CMDBObjectSet($oSearch, array(), array('org_id' => $oUserOrg->GetKey()));
+		else
+		{
+			$sValidationDefine = 'PORTAL_'.strtoupper($sClass).'_DISPLAY_QUERY';
+		}
+		if (defined($sValidationDefine))
+		{
+			$sOQL = constant($sValidationDefine);
+			$oSearch = DBObjectSearch::FromOQL($sOQL);
+			$sOQLCondition = $oSearch->GetClassAlias().".status NOT IN ('closed', 'resolved')";
+			$oExpr = Expression::FromOQL($sOQLCondition);
+			$oSearch->AddConditionExpression($oExpr);
+		}
+		else
+		{
+			$sOQL = "SELECT $sClass WHERE org_id = :org_id AND status NOT IN ('closed', 'resolved')";
+			$oSearch = DBObjectSearch::FromOQL($sOQL);
+			if ($iUser > 0 && !IsPowerUser())
+			{
+				$oSearch->AddCondition('caller_id', $iUser);
+			}
+		}
+		$aClassToSet[$sClass] = new CMDBObjectSet($oSearch, array(), array('org_id' => $oUserOrg->GetKey(), 'caller_id' => $iUser, 'contact' => $oContact));
 	}
 	DisplayRequestLists($oP, $aClassToSet);
 }

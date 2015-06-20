@@ -94,7 +94,7 @@ class NiceWebPage extends WebPage
 	$("table.listResults").tableHover(); // hover tables
 EOF
 		);
-		$this->add_linked_stylesheet("../css/light-grey.css");
+		$this->add_saas("css/light-grey.scss");
 
 		$this->m_sRootUrl = $this->GetAbsoluteUrlAppRoot();
      	$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
