@@ -601,6 +601,7 @@ try
 				if ($iErrors == 0)
 				{
 					$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
+					$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/xlsx-export.js'); // Since the results are loaded asynchronously they don't do this on their own
 					$oP->add("<div style=\"padding: 10px;\">\n");
 					$oP->add("<div class=\"header_message\" id=\"full_text_progress\" style=\"position: fixed; background-color: #cccccc; opacity: 0.7; padding: 1.5em;\">\n");
 					$oP->add('<img id="full_text_indicator" src="../images/indicator.gif">&nbsp;<span style="padding: 1.5em;">'.Dict::Format('UI:Search:Ongoing', htmlentities($sFullText, ENT_QUOTES, 'UTF-8')).'</span>');
