@@ -74,7 +74,7 @@ class PDFBulkExport extends HTMLBulkExport
 		}
 		asort($aLabels);
 
-		$sHtml = '<select name="'.$sName.'"/>';
+		$sHtml = '<select name="'.$sName.'">';
 		foreach($aLabels as $sVal => $sLabel)
 		{
 			$sSelected = ($sVal == $sCurrentValue) ? 'selected' : '';

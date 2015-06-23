@@ -436,7 +436,20 @@ function ExportListDlg(sOQL, sDataTableId, sFormat, sDlgTitle)
 		}
 	}
 	
-	$.post(GetAbsoluteUrlAppRoot()+'webservices/export-v2.php', {interactive: 1, advanced: 1, mode: 'dialog', format: sFormat, expression: sOQL, suggested_fields: aFields.join(','), dialog_title: sDlgTitle}, function(data) {
+	var oParams = {
+			interactive: 1,
+			mode: 'dialog',
+			expression: sOQL,
+			suggested_fields: aFields.join(','),
+			dialog_title: sDlgTitle
+	};
+	
+	if (sFormat !== null)
+	{
+		oParams.format = sFormat;
+	}
+	
+	$.post(GetAbsoluteUrlAppRoot()+'webservices/export-v2.php', oParams, function(data) {
 		$('body').append(data);
 	});
 	return false;
