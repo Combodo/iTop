@@ -45,7 +45,7 @@ class XMLBulkExport extends BulkExport
 				$oP->add('<fieldset><legend>'.Dict::S('Core:BulkExport:XMLOptions').'</legend>');
 				$oP->add('<table>');
 				$oP->add('<tr>');
-				$oP->add('<td><input type="checkbox" id="xml_no_localize" name="no_localize" value="1"'.$sChecked.'><label for="xml_no_localize"> '.Dict::S('Core:BulkExport:XMLNoLocalize').'</label></td>');
+				$oP->add('<td><input type="checkbox" id="xml_no_localize" name="no_localize" value="1"'.$sChecked.'><label for="xml_no_localize"> '.Dict::S('Core:BulkExport:OptionNoLocalize').'</label></td>');
 				$oP->add('</tr>');
 				$oP->add('</table>');
 				$oP->add('</fieldset>');
