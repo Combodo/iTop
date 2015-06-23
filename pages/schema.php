@@ -234,7 +234,7 @@ function DisplayLifecycle($oPage, $sClass)
 				{
 					$sActions = "";
 				}
-				$oPage->add("<li><span style=\"color:red;font-weight=bold;\">$sStimulusLabel</span> =&gt; $sTargetStateLabel $sActions</li>\n");
+				$oPage->add("<li><span title=\"code: $sStimulusCode\" style=\"color:red;font-weight=bold;\">$sStimulusLabel</span> =&gt; $sTargetStateLabel $sActions</li>\n");
 			}
 			$oPage->add("</ul>\n");
 		}
