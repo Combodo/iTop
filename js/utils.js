@@ -414,29 +414,213 @@ function ShortcutListDlg(sOQL, sDataTableId, sContext)
 
 function ExportListDlg(sOQL, sDataTableId, sFormat, sDlgTitle)
 {
-	var sDataTableName = 'datatable_'+sDataTableId;
-	var oColumns = $('#'+sDataTableName).datatable('option', 'oColumns');
 	var aFields = [];
-	for(var j in oColumns)
+	if (sDataTableId != '')
 	{
-		for(var k in oColumns[j])
+		var sDataTableName = 'datatable_'+sDataTableId;
+		var oColumns = $('#'+sDataTableName).datatable('option', 'oColumns');
+		for(var j in oColumns)
 		{
-			if (oColumns[j][k].checked)
+			for(var k in oColumns[j])
 			{
-				var sCode = oColumns[j][k].code;
-				if (sCode == '_key_')
+				if (oColumns[j][k].checked)
 				{
-					sCode = 'id';
+					var sCode = oColumns[j][k].code;
+					if (sCode == '_key_')
+					{
+						sCode = 'id';
+					}
+					aFields.push(j+'.'+sCode);
 				}
-				aFields.push(j+'.'+sCode);
 			}
 		}
 	}
-
+	
 	$.post(GetAbsoluteUrlAppRoot()+'webservices/export-v2.php', {interactive: 1, advanced: 1, mode: 'dialog', format: sFormat, expression: sOQL, suggested_fields: aFields.join(','), dialog_title: sDlgTitle}, function(data) {
 		$('body').append(data);
 	});
 	return false;
+}
+
+function ExportToggleFormat(sFormat)
+{
+	$('.form_part').hide();
+	for(k in window.aFormParts[sFormat])
+	{
+		$('#form_part_'+window.aFormParts[sFormat][k]).show().trigger('form-part-activate');
+	}	 
+}
+		
+function ExportStartExport()
+{
+	var oParams = {};
+	$('.form_part:visible :input').each(function() {
+		if (this.name != '')
+		{
+			if ((this.type == 'radio') || (this.type == 'checkbox'))
+			{
+				if (this.checked)
+				{
+					oParams[this.name] = $(this).val();
+				}
+			}
+			else
+			{
+				oParams[this.name] = $(this).val();
+			}
+		}
+	});
+	$('#export-form').hide();
+	$('#export-feedback').show();
+	oParams.operation = 'export_build';
+	oParams.format = $('#export-form :input[name=format]').val();
+	var sQueryMode = $(':input[name=query_mode]:checked').val();
+	if($(':input[name=query_mode]:checked').length > 0)
+	{
+		if (sQueryMode == 'oql')
+		{
+			oParams.expression = $('#export-form :input[name=expression]').val();
+		}
+		else
+		{	
+			oParams.query = $('#export-form :input[name=query]').val();
+		}
+	}
+	else
+	{
+		oParams.expression = $('#export-form :input[name=expression]').val();
+		oParams.query = $('#export-form :input[name=query]').val();		
+	}
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
+		ExportRun(data);
+	}, 'json');
+}
+		
+function ExportRun(data)
+{
+	switch(data.code)
+	{
+		case 'run':
+		// Continue
+		$('.export-progress-bar').progressbar({value: data.percentage });
+		$('.export-message').html(data.message); 
+		oParams = {};
+		oParams.token = data.token;
+		var sDataState = $('#export-form').attr('data-state');
+		if (sDataState == 'cancelled')
+		{
+			oParams.operation = 'export_cancel';
+		}
+		else
+		{
+			oParams.operation = 'export_build';
+		}
+		
+		$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
+			ExportRun(data);
+		},
+		'json');
+		break;
+
+		case 'done':
+		$('#export-btn').hide();
+		sMessage = '<a href="'+GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=export_download&token='+data.token+'" target="_blank">'+data.message+'</a>'; 
+		$('.export-message').html(sMessage);
+		$('.export-progress-bar').hide();
+		$('#export-btn').hide();
+		$('#export-form').attr('data-state', 'done');
+		if(data.text_result != undefined)
+		{
+			if (data.mime_type == 'text/html')
+			{
+				$('#export_content').parent().html(data.text_result);
+				$('#export_text_result').show();
+				$('#export_text_result .listResults').tableHover();
+				$('#export_text_result .listResults').tablesorter( { widgets: ['myZebra']} );
+			}
+			else
+			{
+				if ($('#export_text_result').closest('ui-dialog').length == 0)
+				{
+					// not inside a dialog box, adjust the height... approximately
+					var jPane = $('#export_text_result').closest('.ui-layout-content');
+					var iTotalHeight = jPane.height();
+					jPane.children(':visible').each(function() {
+						if ($(this).attr('id') != '')
+						{
+							iTotalHeight -= $(this).height();
+						}
+					});
+					$('#export_content').height(iTotalHeight - 80);
+				}
+				$('#export_content').val(data.text_result);
+				$('#export_text_result').show();
+			}
+		}
+		$('#export-dlg-submit').button('option', 'label', Dict.S('UI:Button:Done')).button('enable');
+		break;
+		
+		case 'error':
+		$('#export-form').attr('data-state', 'error');
+		$('.export-progress-bar').progressbar({value: data.percentage });
+		$('.export-message').html(data.message); 
+		$('#export-dlg-submit').button('option', 'label', Dict.S('UI:Button:Done')).button('enable');
+		$('#export-btn').hide();
+		default:
+	}
+}
+		
+function ExportInitButton(sSelector)
+{
+	$(sSelector).on('click', function() {
+		var sDataState = $('#export-form').attr('data-state');
+		switch(sDataState)
+		{
+			case 'not-yet-started':
+			$('.form_part:visible').each(function() {
+		 		$('#export-form').data('validation_messages', []);
+				var ret = $(this).trigger('validate');
+			});
+			var aMessages = $('#export-form').data('validation_messages');
+		
+			if(aMessages.length > 0)
+			{
+				alert(aMessages.join(''));
+				return;
+			}
+			if ($(this).hasClass('ui-button'))
+			{
+				$(this).button('option', 'label', Dict.S('UI:Button:Cancel'));
+			}
+			else
+			{
+				$(this).html(Dict.S('UI:Button:Cancel'));
+			}
+			$('#export-form').attr('data-state', 'running');
+			ExportStartExport();
+			break;
+		
+			case 'running':
+			if ($(this).hasClass('ui-button'))
+			{
+				$(this).button('disable');
+			}
+			else
+			{
+				$(this).attr('disabled', 'disabled');
+			}
+			$('#export-form').attr('data-state', 'cancelled');
+			break;
+		
+			case 'done':
+			case 'error':
+			$('#interactive_export_dlg').dialog('close');			
+			break;
+		
+			default:
+			// Do nothing
+		}
+	});
 }
 
 function DisplayHistory(sSelector, sFilter, iCount, iStart)

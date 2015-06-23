@@ -450,7 +450,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Menu:Add' => 'Add...',
 	'UI:Menu:Manage' => 'Manage...',
 	'UI:Menu:EMail' => 'eMail',
-	'UI:Menu:CSVExport' => 'CSV Export',
+	'UI:Menu:CSVExport' => 'CSV Export...',
 	'UI:Menu:Modify' => 'Modify...',
 	'UI:Menu:Delete' => 'Delete...',
 	'UI:Menu:Manage' => 'Manage...',

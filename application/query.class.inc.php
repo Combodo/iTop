@@ -92,7 +92,7 @@ class QueryOQL extends Query
 		
 		if (!$bEditMode)
 		{
-			$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?format=spreadsheet&login_mode=basic&query='.$this->GetKey();
+			$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?format=spreadsheet&login_mode=basic&query='.$this->GetKey();
 			$sOql = $this->Get('oql');
 			$sMessage = null;
 			try

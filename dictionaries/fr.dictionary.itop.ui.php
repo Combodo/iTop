@@ -326,7 +326,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Menu:Add' => 'Ajouter...',
 	'UI:Menu:Manage' => 'Gérer...',
 	'UI:Menu:EMail' => 'Envoyer par eMail',
-	'UI:Menu:CSVExport' => 'Exporter en CSV',
+	'UI:Menu:CSVExport' => 'Exporter en CSV...',
 	'UI:Menu:Modify' => 'Modifier...',
 	'UI:Menu:Delete' => 'Supprimer...',
 	'UI:Menu:BulkDelete' => 'Supprimer...',

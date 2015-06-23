@@ -446,7 +446,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Menu:Add' => 'Adicionar...',
 	'UI:Menu:Manage' => 'Gerenciar...',
 	'UI:Menu:EMail' => 'eMail',
-	'UI:Menu:CSVExport' => 'Exportar CSV',
+	'UI:Menu:CSVExport' => 'Exportar CSV...',
 	'UI:Menu:Modify' => 'Modificar...',
 	'UI:Menu:Delete' => 'Excluir...',
 	'UI:Menu:Manage' => 'Gerenciar...',

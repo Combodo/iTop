@@ -443,7 +443,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Menu:Add' => 'Aggiungi...',
 	'UI:Menu:Manage' => 'Gestischi...',
 	'UI:Menu:EMail' => 'eMail',
-	'UI:Menu:CSVExport' => 'CSV Export',
+	'UI:Menu:CSVExport' => 'CSV Export...',
 	'UI:Menu:Modify' => 'Modifica...',
 	'UI:Menu:Delete' => 'Cancella...',
 	'UI:Menu:Manage' => 'Gestisci...',

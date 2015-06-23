@@ -957,6 +957,7 @@ class Config
 			'core/event.class.inc.php',
 			'core/action.class.inc.php',
 			'core/trigger.class.inc.php',
+			'core/bulkexport.class.inc.php',
 			'synchro/synchrodatasource.class.inc.php',
 			'core/backgroundtask.class.inc.php',
 		);

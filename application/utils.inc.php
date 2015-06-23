@@ -487,19 +487,23 @@ class utils
      */                   
 	static public function GetAbsoluteUrlAppRoot()
 	{
-		$sUrl = self::GetConfig()->Get('app_root_url');
-		if (strpos($sUrl, SERVER_NAME_PLACEHOLDER) > -1)
+		static $sUrl = null;
+		if ($sUrl === null)
 		{
-			if (isset($_SERVER['SERVER_NAME']))
+			$sUrl = self::GetConfig()->Get('app_root_url');
+			if (strpos($sUrl, SERVER_NAME_PLACEHOLDER) > -1)
 			{
-				$sServerName = $_SERVER['SERVER_NAME'];
+				if (isset($_SERVER['SERVER_NAME']))
+				{
+					$sServerName = $_SERVER['SERVER_NAME'];
+				}
+				else
+				{
+					// CLI mode ?
+					$sServerName = php_uname('n');
+				}
+				$sUrl = str_replace(SERVER_NAME_PLACEHOLDER, $sServerName, $sUrl);
 			}
-			else
-			{
-				// CLI mode ?
-				$sServerName = php_uname('n');
-			}
-			$sUrl = str_replace(SERVER_NAME_PLACEHOLDER, $sServerName, $sUrl);
 		}
 		return $sUrl;
 	}
@@ -783,16 +787,16 @@ class utils
 			$sOQL = addslashes($param->GetFilter()->ToOQL(true));
 			$sFilter = urlencode($param->GetFilter()->serialize());
 			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/xlsx-export.js');
-			$sXlsxFilter = $param->GetFilter()->serialize();
-			$sXlsxJSFilter = addslashes($sXlsxFilter);
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
+			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
 			
 			$aResult = array(
 				new SeparatorPopupMenuItem(),
 				// Static menus: Email this page, CSV Export & Add to Dashboard
 				new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'), "mailto:?body=".urlencode($sUrl).' '), // Add an extra space to make it work in Outlook
-				new URLPopupMenuItem('UI:Menu:CSVExport', Dict::S('UI:Menu:CSVExport'), $sUrl."&format=csv"),
-				new JSPopupMenuItem('xlsx-export', Dict::S('ExcelExporter:ExportMenu'), "XlsxExportDialog('$sXlsxJSFilter');", array()),
+				new JSPopupMenuItem('UI:Menu:CSVExport', Dict::S('UI:Menu:CSVExport'), "ExportListDlg('$sOQL', '$sDataTableId', 'csv', ".json_encode(Dict::S('UI:Menu:CSVExport')).")"),
+				new JSPopupMenuItem('UI:Menu:ExportXLSX', Dict::S('ExcelExporter:ExportMenu'), "ExportListDlg('$sOQL', '$sDataTableId', 'xlsx', ".json_encode(Dict::S('ExcelExporter:ExportMenu')).")"),
 				new JSPopupMenuItem('UI:Menu:AddToDashboard', Dict::S('UI:Menu:AddToDashboard'), "DashletCreationDlg('$sOQL')"),
 				new JSPopupMenuItem('UI:Menu:ShortcutList', Dict::S('UI:Menu:ShortcutList'), "ShortcutListDlg('$sOQL', '$sDataTableId', '$sContext')"),
 			);
@@ -801,20 +805,26 @@ class utils
 			case iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS:
 			// $param is a DBObject
 			$oObj = $param;
-			$oFilter = DBobjectSearch::FromOQL("SELECT ".get_class($oObj)." WHERE id=".$oObj->GetKey());
+			$sOQL = "SELECT ".get_class($oObj)." WHERE id=".$oObj->GetKey();
+			$oFilter = DBObjectSearch::FromOQL($sOQL);
 			$sFilter = $oFilter->serialize();
 			$sUrl = ApplicationContext::MakeObjectUrl(get_class($oObj), $oObj->GetKey());
 			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage(get_class($oObj));
 			$oAppContext = new ApplicationContext();
 			$sContext = $oAppContext->GetForLink();
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/xlsx-export.js');
-			$sXlsxJSFilter = addslashes($sFilter);
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
+			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
+			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
+			
 			$aResult = array(
 				new SeparatorPopupMenuItem(),
 				// Static menus: Email this page & CSV Export
 				new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'), "mailto:?subject=".urlencode($oObj->GetRawName())."&body=".urlencode($sUrl).' '), // Add an extra space to make it work in Outlook
-				new URLPopupMenuItem('UI:Menu:CSVExport', Dict::S('UI:Menu:CSVExport'), utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".urlencode($sFilter)."&format=csv&{$sContext}"),
-				new JSPopupMenuItem('xlsx-export', Dict::S('ExcelExporter:ExportMenu'), "XlsxExportDialog('$sXlsxJSFilter');", array()),
+				new JSPopupMenuItem('UI:Menu:CSVExport', Dict::S('UI:Menu:CSVExport'), "ExportListDlg('$sOQL', '', 'csv', ".json_encode(Dict::S('UI:Menu:CSVExport')).")"),
+				new JSPopupMenuItem('UI:Menu:ExportXLSX', Dict::S('ExcelExporter:ExportMenu'), "ExportListDlg('$sOQL', '', 'xlsx', ".json_encode(Dict::S('ExcelExporter:ExportMenu')).")"),
 			);
 			break;
 

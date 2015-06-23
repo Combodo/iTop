@@ -325,7 +325,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Menu:Add' => 'Hinzufügen...',
 	'UI:Menu:Manage' => 'Verwalten...',
 	'UI:Menu:EMail' => 'eMail',
-	'UI:Menu:CSVExport' => 'CSV-Export',
+	'UI:Menu:CSVExport' => 'CSV-Export...',
 	'UI:Menu:Modify' => 'Modifizieren...',
 	'UI:Menu:Delete' => 'Löschen...',
 	'UI:Menu:BulkDelete' => 'Löschen...',

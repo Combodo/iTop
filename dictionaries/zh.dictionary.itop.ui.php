@@ -415,7 +415,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Menu:Add' => '添加...',
 	'UI:Menu:Manage' => '管理...',
 	'UI:Menu:EMail' => 'eMail',
-	'UI:Menu:CSVExport' => 'CSV 导出',
+	'UI:Menu:CSVExport' => 'CSV 导出...',
 	'UI:Menu:Modify' => '修改...',
 	'UI:Menu:Delete' => '删除...',
 	'UI:Menu:Manage' => '管理...',

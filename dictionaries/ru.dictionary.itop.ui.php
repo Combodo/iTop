@@ -442,7 +442,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Menu:Add' => 'Добавить...',
 	'UI:Menu:Manage' => 'Управление...',
 	'UI:Menu:EMail' => 'Отправить ссылку по email',
-	'UI:Menu:CSVExport' => 'Экспорт в CSV',
+	'UI:Menu:CSVExport' => 'Экспорт в CSV...',
 	'UI:Menu:Modify' => 'Изменить...',
 	'UI:Menu:Delete' => 'Удалить...',
 	'UI:Menu:Manage' => 'Управление...',

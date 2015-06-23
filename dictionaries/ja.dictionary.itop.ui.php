@@ -328,7 +328,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Menu:Add' => '追加...',
 	'UI:Menu:Manage' => '管理...',
 	'UI:Menu:EMail' => 'Eメール',
-	'UI:Menu:CSVExport' => 'CSVエクスポート',
+	'UI:Menu:CSVExport' => 'CSVエクスポート...',
 	'UI:Menu:Modify' => '修正...',
 	'UI:Menu:Delete' => '削除...',
 	'UI:Menu:BulkDelete' => '削除...',

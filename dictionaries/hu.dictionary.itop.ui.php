@@ -312,7 +312,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Menu:Add' => 'Hozzáad...',
 	'UI:Menu:Manage' => 'Kezel...',
 	'UI:Menu:EMail' => 'e-mail',
-	'UI:Menu:CSVExport' => 'CSV export',
+	'UI:Menu:CSVExport' => 'CSV export...',
 	'UI:Menu:Modify' => 'Módosít...',
 	'UI:Menu:Delete' => 'Töröl...',
 	'UI:Menu:BulkDelete' => 'Töröl...',

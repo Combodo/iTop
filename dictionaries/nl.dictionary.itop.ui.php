@@ -453,7 +453,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Menu:Add' => 'Voeg toe...',
 	'UI:Menu:Manage' => 'Manage...',
 	'UI:Menu:EMail' => 'eMail',
-	'UI:Menu:CSVExport' => 'CSV Export',
+	'UI:Menu:CSVExport' => 'CSV Export...',
 	'UI:Menu:Modify' => 'Bewerk...',
 	'UI:Menu:Delete' => 'Verwijder...',
 	'UI:Menu:Manage' => 'Manage...',

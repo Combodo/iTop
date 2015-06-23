@@ -2032,6 +2032,118 @@ EOF
 		$oGraph->Display($oPage, $aResults, $sRelation, $oAppContext, $aExcludedObjects, $sClass, $iId, $sContextKey, array('this' => $oTicket));		
 		break;
 		
+		case 'export_build':
+		try
+		{
+			$token = utils::ReadParam('token', null);
+			$aResult = array('code' => 'error', 'percentage' => 100, 'message' => "Export not found for token: '$token'"); // Fallback error, just in case
+			$data = '';
+			if ($token === null)
+			{
+				$sFormat = utils::ReadParam('format', '');
+				$sExpression = utils::ReadParam('expression', null, false, 'raw_data');
+				$iQueryId = utils::ReadParam('query', null);
+				if ($sExpression === null)
+				{
+					$oQuerySearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', array('query_id' => $iQueryId));
+					$oQueries = new DBObjectSet($oQuerySearch);
+					if ($oQueries->Count() > 0)
+					{
+						$oQuery = $oQueries->Fetch();
+						$sExpression = $oQuery->Get('oql');
+					}
+					else
+					{
+						$aResult = array('code' => 'error', 'percentage' => 100, 'message' => "Invalid query phrasebook identifier: '$iQueryId'");
+					}
+				}
+				if($sExpression !== null)
+				{ 
+					$oSearch = DBObjectSearch::FromOQL($sExpression);
+					$oExporter = BulkExport::FindExporter($sFormat, $oSearch);
+					$oExporter->SetObjectList($oSearch);
+					$oExporter->SetFormat($sFormat);
+					$oExporter->SetChunkSize(EXPORTER_DEFAULT_CHUNK_SIZE);
+					$oExporter->ReadParameters();
+				}
+				
+				// First pass, generate the headers
+				$data .= $oExporter->GetHeader();
+			}
+			else
+			{
+				$oExporter = BulkExport::FindExporterFromToken($token);
+			}
+			
+			if ($oExporter)
+			{
+				$data .= $oExporter->GetNextChunk($aResult);
+				if ($aResult['code'] != 'done')
+				{
+					$oExporter->AppendToTmpFile($data);
+					$aResult['token'] = $oExporter->SaveState();
+				}
+				else
+				{
+					// Last pass
+					$data .= $oExporter->GetFooter();
+					$oExporter->AppendToTmpFile($data);
+					$aResult['token'] = $oExporter->SaveState();
+					if (substr($oExporter->GetMimeType(), 0, 5) == 'text/')
+					{
+						$aResult['text_result'] = file_get_contents($oExporter->GetTmpFilePath());
+						$aResult['mime_type'] = $oExporter->GetMimeType();
+					}
+					$aResult['message'] = Dict::Format('Core:BulkExport:ClickHereToDownload_FileName', $oExporter->GetDownloadFileName());
+				}
+			}
+			$oPage->add(json_encode($aResult));
+		}
+		catch(BulkExportException $e)
+		{
+			$aResult = array('code' => 'error', 'percentage' => 100, 'message' => $e->GetLocalizedMessage());
+			$oPage->add(json_encode($aResult));
+		}
+		catch(Exception $e)
+		{
+			$aResult = array('code' => 'error', 'percentage' => 100, 'message' => $e->getMessage());
+			$oPage->add(json_encode($aResult));
+		}
+		break;
+		
+		case 'export_download':
+		$token = utils::ReadParam('token', null);
+		if ($token !== null)
+		{
+			$oExporter = BulkExport::FindExporterFromToken($token);
+			if ($oExporter)
+			{
+				$sMimeType = $oExporter->GetMimeType();
+				if (substr($sMimeType, 0, 5) == 'text/')
+				{
+					$sMimeType .= ';charset=utf-8';
+				}
+				$oPage->SetContentType($sMimeType);
+				$oPage->SetContentDisposition('attachment', $oExporter->GetDownloadFileName());
+				$oPage->add(file_get_contents($oExporter->GetTmpFilePath()));
+			}
+		}
+		break;
+		
+		case 'export_cancel':
+		$token = utils::ReadParam('token', null);
+		if ($token !== null)
+		{
+			$oExporter = BulkExport::FindExporterFromToken($token);
+			if ($oExporter)
+			{
+				$oExporter->Cleanup();
+			}
+		}
+		$aResult = array('code' => 'error', 'percentage' => 100, 'message' => Dict::S('Core:BulkExport:ExportCancelledByUser'));
+		$oPage->add(json_encode($aResult));
+		break;
+				
 		default:
 		$oPage->p("Invalid query.");
 	}
@@ -2042,8 +2154,7 @@ catch (Exception $e)
 {
 	// note: transform to cope with XSS attacks
 	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
-	echo "<p>Debug trace: <pre>".$e->getTraceAsString()."</pre></p>\n";
-	IssueLog::Error($e->getMessage());
+	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }
 
 

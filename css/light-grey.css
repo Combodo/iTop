@@ -1943,3 +1943,28 @@ div.ui-dialog-header {
 }
 
 
+table.export_parameters td {
+  padding-right: 2em;
+}
+
+
+.table_preview > table {
+  border-collapse: collapse;
+}
+
+
+.table_preview > table > tbody > tr > td, .table_preview > table > thead > tr > th {
+  border: 1px #555555 solid;
+  min-height: 1em;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+  font-size: 10pt;
+}
+
+
+.table_preview .nodragtable-sortable li {
+  border: 1px #555555 solid;
+  font-size: 10pt;
+}
+
+

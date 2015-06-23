@@ -447,7 +447,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Menu:Add' => 'Agregar',
 	'UI:Menu:Manage' => 'Administrar',
 	'UI:Menu:EMail' => 'Enviar por Correo Electrónico',
-	'UI:Menu:CSVExport' => 'Exportar a CSV',
+	'UI:Menu:CSVExport' => 'Exportar a CSV...',
 	'UI:Menu:Modify' => 'Modificar',
 	'UI:Menu:Delete' => 'Borrar',
 	'UI:Menu:Manage' => 'Administrar',

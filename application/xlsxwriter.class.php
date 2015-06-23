@@ -79,7 +79,7 @@ Class XLSXWriter
 	}
 
 	
-	public function writeSheet(array $data, $sheet_name='', array $header_types=array() )
+	public function writeSheet(array $data, $sheet_name='', array $header_types=array(), array $header_row=array() )
 	{
 		$data = empty($data) ? array( array('') ) : $data;
 		
@@ -95,7 +95,10 @@ Class XLSXWriter
 
 		$tabselected = count($this->sheets_meta)==1 ? 'true' : 'false';//only first sheet is selected
 		$cell_formats_arr = empty($header_types) ? array_fill(0, $column_count, 'string') : array_values($header_types);
-		$header_row = empty($header_types) ? array() : array_keys($header_types);
+		if (empty($header_row) && !empty($header_types))
+		{
+			$header_row = empty($header_types) ? array() : array_keys($header_types);
+		}
 
 		$fd = fopen($sheet_filename, "w+");
 		if ($fd===false) { self::log("write failed in ".__CLASS__."::".__FUNCTION__."."); return; }
