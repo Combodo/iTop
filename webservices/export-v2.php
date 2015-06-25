@@ -490,6 +490,7 @@ function DoExport(Page $oP, BulkExport $oExporter, $bInteractive = false)
 	
 	if ($aStatus['code'] == 'error')
 	{
+		$oExporter->Cleanup();
 		ReportErrorAndExit("Export failed: '{$aStatus['message']}'");
 	}
 	else
@@ -500,6 +501,7 @@ function DoExport(Page $oP, BulkExport $oExporter, $bInteractive = false)
 		$oExporter->Cleanup();
 	}
 }
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
