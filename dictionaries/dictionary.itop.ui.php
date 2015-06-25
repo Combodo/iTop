@@ -1240,6 +1240,11 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:About:Licenses' => 'Licenses',
 	'UI:About:Modules' => 'Installed modules',
 	
+	'UI:DisconnectedDlgMessage' => 'You are disconnected. You must identify yourself to continue using the application.',
+	'UI:DisconnectedDlgTitle' => 'Warning!',
+	'UI:LoginAgain' => 'Login again',
+	'UI:StayOnThePage' => 'Stay on this page',
+	
 	'ExcelExporter:ExportMenu' => 'Excel Export...',
 	'ExcelExporter:ExportDialogTitle' => 'Excel Export',
 	'ExcelExporter:ExportButton' => 'Export',

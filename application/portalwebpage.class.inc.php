@@ -92,6 +92,12 @@ class PortalWebPage extends NiceWebPage
 		$this->add_linked_script("../js/ajaxfileupload.js");
 		$this->add_linked_script("../js/ckeditor/ckeditor.js");
 		$this->add_linked_script("../js/ckeditor/adapters/jquery.js");
+
+		$sJSDisconnectedMessage = json_encode(Dict::S('UI:DisconnectedDlgMessage'));
+		$sJSTitle = json_encode(Dict::S('UI:DisconnectedDlgTitle'));
+		$sJSLoginAgain = json_encode(Dict::S('UI:LoginAgain'));
+		$sJSStayOnThePage = json_encode(Dict::S('UI:StayOnThePage'));
+		
 		$this->add_ready_script(
 <<<EOF
 try
@@ -154,6 +160,25 @@ try
 
 	//$('.resizable').resizable(); // Make resizable everything that claims to be resizable !
 	$('.caselog_header').click( function () { $(this).toggleClass('open').next('.caselog_entry').toggle(); });
+			
+	$(document).ajaxSend(function(event, jqxhr, options) {
+		jqxhr.setRequestHeader('X-Combodo-Ajax', 'true');
+	});
+	$(document).ajaxError(function(event, jqxhr, options) {
+		if (jqxhr.status == 401)
+		{
+			$('<div>'+$sJSDisconnectedMessage+'</div>').dialog({
+				modal:true,
+				title: $sJSTitle,
+				close: function() { $(this).remove(); },
+				minWidth: 400,
+				buttons: [
+				{ text: $sJSLoginAgain, click: function() { window.location.href= GetAbsoluteUrlAppRoot()+'pages/UI.php' } },
+				{ text: $sJSStayOnThePage, click: function() { $(this).dialog('close'); } }
+				]
+			});
+		}
+	});
 }
 catch(err)
 {

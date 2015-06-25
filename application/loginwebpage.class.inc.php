@@ -581,6 +581,13 @@ EOF
 				{
 					$sLoginMode = $aAllowedLoginTypes[0]; // First in the list...
 				}
+				if (array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER))
+				{
+					// X-Combodo-Ajax is a special header automatically added to all ajax requests
+					// Let's reply that we're currently logged-out
+					header('HTTP/1.0 401 Unauthorized');
+					exit;
+				}
 				if (($iOnExit == self::EXIT_HTTP_401) || ($sLoginMode == 'basic'))
 				{
 					header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_VERSION));

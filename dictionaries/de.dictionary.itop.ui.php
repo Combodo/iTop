@@ -987,5 +987,9 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Month-11' => 'November',
 	'Month-12' => 'Dezember',
 	'UI:FillAllMandatoryFields' => 'Bitte füllen Sie alle Pflichtfelder',
+	'UI:DisconnectedDlgMessage' => 'You are disconnected. You must identify yourself to continue using the application.~~',
+	'UI:DisconnectedDlgTitle' => 'Warning!~~',
+	'UI:LoginAgain' => 'Login again~~',
+	'UI:StayOnThePage' => 'Stay on this page~~',	
 ));
 ?>

@@ -1082,6 +1082,11 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:About:Licenses' => 'Licences',
 	'UI:About:Modules' => 'Modules installés',
 	
+	'UI:DisconnectedDlgMessage' => 'Vous êtes déconnecté(e). Vous devez vous identifier pour pouvoir continuer à utiliser l\'application.',
+	'UI:DisconnectedDlgTitle' => 'Attention !',
+	'UI:LoginAgain' => 'S\'identifier',
+	'UI:StayOnThePage' => 'Rester sur cette page',
+		
 	'ExcelExporter:ExportMenu' => 'Exporter pour Excel...',
 	'ExcelExporter:ExportDialogTitle' => 'Export au format Excel',
 	'ExcelExporter:ExportButton' => 'Exporter',
