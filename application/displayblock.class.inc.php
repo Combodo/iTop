@@ -1384,8 +1384,20 @@ class MenuBlock extends DisplayBlock
 			case 1:
 			$oObj = $oSet->Fetch();
 			$id = $oObj->GetKey();
-			$bIsModifyAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
-			$bIsDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet);
+			$bLocked = false;
+			if (MetaModel::GetConfig()->Get('concurrent_lock_enabled'))
+			{
+				$aLockInfo = iTopOwnershipLock::IsLocked(get_class($oObj), $id);
+				if ($aLockInfo['locked'])
+				{
+					$bLocked = true;
+					//$this->AddMenuSeparator($aActions);
+					//$aActions['concurrent_lock_unlock'] = array ('label' => Dict::S('UI:Menu:ReleaseConcurrentLock'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=kill_lock&class=$sClass&id=$id{$sContext}");
+				}
+			}
+			$bRawModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
+			$bIsModifyAllowed = !$bLocked && $bRawModifiedAllowed;
+			$bIsDeleteAllowed = !$bLocked && UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet);
 			// Just one object in the set, possible actions are "new / clone / modify and delete"
 			if (!isset($aExtraParams['link_attr']))
 			{
@@ -1393,22 +1405,25 @@ class MenuBlock extends DisplayBlock
 				if ($bIsCreationAllowed) { $aActions['UI:Menu:New'] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}"); }
 				if ($bIsDeleteAllowed) { $aActions['UI:Menu:Delete'] = array ('label' => Dict::S('UI:Menu:Delete'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=delete&class=$sClass&id=$id{$sContext}"); }
 				// Transitions / Stimuli
-				$aTransitions = $oObj->EnumTransitions();
-				if (count($aTransitions))
+				if (!$bLocked)
 				{
-					$this->AddMenuSeparator($aActions);
-					$aStimuli = Metamodel::EnumStimuli(get_class($oObj));
-					foreach($aTransitions as $sStimulusCode => $aTransitionDef)
+					$aTransitions = $oObj->EnumTransitions();
+					if (count($aTransitions))
 					{
-						$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass, $sStimulusCode, $oSet) : UR_ALLOWED_NO;
-						switch($iActionAllowed)
+						$this->AddMenuSeparator($aActions);
+						$aStimuli = Metamodel::EnumStimuli(get_class($oObj));
+						foreach($aTransitions as $sStimulusCode => $aTransitionDef)
 						{
-							case UR_ALLOWED_YES:
-							$aActions[$sStimulusCode] = array('label' => $aStimuli[$sStimulusCode]->GetLabel(), 'url' => "{$sRootUrl}pages/UI.php?operation=stimulus&stimulus=$sStimulusCode&class=$sClass&id=$id{$sContext}");
-							break;
-							
-							default:
-							// Do nothing
+							$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass, $sStimulusCode, $oSet) : UR_ALLOWED_NO;
+							switch($iActionAllowed)
+							{
+								case UR_ALLOWED_YES:
+								$aActions[$sStimulusCode] = array('label' => $aStimuli[$sStimulusCode]->GetLabel(), 'url' => "{$sRootUrl}pages/UI.php?operation=stimulus&stimulus=$sStimulusCode&class=$sClass&id=$id{$sContext}");
+								break;
+								
+								default:
+								// Do nothing
+							}
 						}
 					}
 				}
@@ -1427,6 +1442,38 @@ class MenuBlock extends DisplayBlock
 						{
 							$aActions[$sRelationCode.'_up'] = array ('label' => $aRelationInfo['up'], 'url' => "{$sRootUrl}pages/$sUIPage?operation=swf_navigator&relation=$sRelationCode&direction=up&class=$sClass&id=$id{$sContext}");
 						}
+					}
+				}
+				if ($bLocked && $bRawModifiedAllowed)
+				{
+					// Add a special menu to kill the lock, but only to allowed users who can also modify this object
+					$aAllowedProfiles = MetaModel::GetConfig()->Get('concurrent_lock_override_profiles');
+					$bCanKill = false;
+				
+					$oUser = UserRights::GetUserObject();
+					$aUserProfiles = array();
+					if (!is_null($oUser))
+					{
+						$oProfileSet = $oUser->Get('profile_list');
+						while ($oProfile = $oProfileSet->Fetch())
+						{
+							$aUserProfiles[$oProfile->Get('profile')] = true;
+						}
+					}
+	
+					foreach($aAllowedProfiles as $sProfile)
+					{
+						if (array_key_exists($sProfile, $aUserProfiles))
+						{	
+							$bCanKill = true;
+							break;
+						}
+					}
+					
+					if ($bCanKill)
+					{		
+						$this->AddMenuSeparator($aActions);
+						$aActions['concurrent_lock_unlock'] = array ('label' => Dict::S('UI:Menu:KillConcurrentLock'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=kill_lock&class=$sClass&id=$id{$sContext}");
 					}
 				}
 				/*

@@ -357,6 +357,13 @@ try
 				}				
 			}
 		break;
+		
+		case 'release_lock_and_details':
+		$sClass = utils::ReadParam('class', '');
+		$id = utils::ReadParam('id', '');
+		$oObj = MetaModel::GetObject($sClass, $id);
+		cmdbAbstractObject::ReloadAndDisplay($oP, $oObj, array('operation' => 'details'));
+		break;
 	
 		///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -540,7 +547,6 @@ EOF
 
 		case 'modify': // Form to modify an object
 			$sClass = utils::ReadParam('class', '', false, 'class');
-			$sClassLabel = MetaModel::GetName($sClass);
 			$id = utils::ReadParam('id', '');
 			if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
 			{
@@ -562,14 +568,7 @@ EOF
 					throw new SecurityException('User not allowed to modify this object', array('class' => $sClass, 'id' => $id));
 				}
 				// Note: code duplicated to the case 'apply_modify' when a data integrity issue has been found
-				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-				$oP->add("<div class=\"page_header\">\n");
-				$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
-				$oP->add("</div>\n");
-
-				$oP->add("<div class=\"wizContainer\">\n");
-				$oObj->DisplayModifyForm($oP);
-				$oP->add("</div>\n");
+				$oObj->DisplayModifyForm($oP, array('wizard_container' => 1)); // wizard_container: Display the blue borders and the title above the form
 			}
 		break;
 	
@@ -792,20 +791,14 @@ EOF
 						$bDisplayDetails = false;
 						// Found issues, explain and give the user a second chance
 						//
-						$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-						$oP->add("<div class=\"page_header\">\n");
-						$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
-						$oP->add("</div>\n");
-						$oP->add("<div class=\"wizContainer\">\n");
-						$oObj->DisplayModifyForm($oP);
-						$oP->add("</div>\n");
+						$oObj->DisplayModifyForm($oP, array('wizard_container' => true), $sToken); // wizard_container: display the wizard border and the title
 						$sIssueDesc = Dict::Format('UI:ObjectCouldNotBeWritten', implode(', ', $aIssues));
 						$oP->add_ready_script("alert('".addslashes($sIssueDesc)."');");
 					}
 				}
 			}
 			if ($bDisplayDetails)
-			{
+			{	
 				$oObj = MetaModel::GetObject(get_class($oObj), $oObj->GetKey()); //Workaround: reload the object so that the linkedset are displayed properly
 				$sNextAction = utils::ReadPostedParam('next_action', '');
 				if (!empty($sNextAction))
@@ -816,6 +809,18 @@ EOF
 				{
 					// Nothing more to do
 					ReloadAndDisplay($oP, $oObj, 'update', $sMessage, $sSeverity);
+				}
+				
+				$bLockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
+				if ($bLockEnabled)
+				{
+					// Release the concurrent lock, if any
+					$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, false, 'raw_data');
+					if ($sOwnershipToken !== null)
+					{
+						// We're done, let's release the lock
+						iTopOwnershipLock::ReleaseLock(get_class($oObj), $oObj->GetKey(), $sOwnershipToken);
+					}
 				}
 			}
 		break;
@@ -1514,6 +1519,16 @@ EOF
 		}
 
 		$oP->SetCurrentTab('');
+		break;
+		
+		///////////////////////////////////////////////////////////////////////////////////////////
+		
+		case 'kill_lock':
+		$sClass = utils::ReadParam('class', '');
+		$id = utils::ReadParam('id', '');
+		iTopOwnershipLock::KillLock($sClass, $id);
+		$oObj = MetaModel::GetObject($sClass, $id);
+		ReloadAndDisplay($oP, $oObj, 'concurrent_lock_killed', Dict::S('UI:ConcurrentLockKilled'), 'info');
 		break;
 		
 		///////////////////////////////////////////////////////////////////////////////////////////

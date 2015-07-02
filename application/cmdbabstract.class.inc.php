@@ -32,6 +32,8 @@ define('HILIGHT_CLASS_WARNING', 'orange');
 define('HILIGHT_CLASS_OK', 'green');
 define('HILIGHT_CLASS_NONE', '');
 
+define('MIN_WATCHDOG_INTERVAL', 15); // Minimum interval for the watchdog: 15s
+
 require_once(APPROOT.'/core/cmdbobject.class.inc.php');
 require_once(APPROOT.'/application/applicationextension.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
@@ -59,6 +61,39 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	public static function GetUIPage()
 	{
 		return 'UI.php';
+	}
+	
+	function ReloadAndDisplay($oPage, $oObj, $aParams)
+	{
+		$oAppContext = new ApplicationContext();
+		// Reload the page to let the "calling" page execute its 'onunload' method.
+		// Note 1: The redirection MUST NOT be made via an HTTP "header" since onunload is only called when the actual content of the DOM
+		// is replaced by some other content. So the "bouncing" page must provide some content (in our case a script making the redirection).
+		// Note 2: make sure that the URL below is different from the one of the "Modify" button, otherwise the button will have no effect. This is why we add "&a=1" at the end !!!
+		// Note 3: we use the toggle of a flag in the sessionStorage object to prevent an infinite loop of reloads in case the object is actually locked by another window
+		$sSessionStorageKey = get_class($oObj).'_'.$oObj->GetKey();
+		$sParams = '';
+		foreach($aParams as $sName => $value)
+		{
+			$sParams .= $sName.'='.urlencode($value).'&'; // Always add a trailing &
+		}
+		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/'.$oObj->GetUIPage().'?'.$sParams.'class='.get_class($oObj).'&id='.$oObj->getKey().'&'.$oAppContext->GetForLink().'&a=1';
+		$oPage->add_script(
+<<<EOF
+	if (!sessionStorage.getItem('$sSessionStorageKey'))
+	{
+		sessionStorage.setItem('$sSessionStorageKey', 1);
+		window.location.href= "$sUrl";
+	}
+	else
+	{
+		sessionStorage.removeItem('$sSessionStorageKey');
+	}
+EOF
+		);
+
+		$oObj->Reload();
+		$oObj->DisplayDetails($oPage, false);
 	}
 
 	/**
@@ -90,7 +125,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 				'message' => $sMessage
 			);
 		}
-	}	 	 	 	
+	}
 
 	function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
 	{
@@ -98,25 +133,39 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		//
 		
 		// Is there a message for this object ??
+		$aMessages = array();
+		$aRanks = array();
+		if (MetaModel::GetConfig()->Get('concurrent_lock_enabled'))
+		{
+			$aLockInfo = iTopOwnershipLock::IsLocked(get_class($this), $this->GetKey());
+			if ($aLockInfo['locked'])
+			{
+				$aRanks[] = 0;
+				$sName =  $aLockInfo['owner']->GetName();
+				if ($aLockInfo['owner']->Get('contactid') != 0)
+				{
+					$sName .= ' ('.$aLockInfo['owner']->Get('contactid_friendlyname').')';
+				}
+				$aResult['message'] = Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName);			$aMessages[] = "<div class=\"header_message message_error\">".Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName)."</div>";
+			}
+		}
 		$sMessageKey = get_class($this).'::'.$this->GetKey();
 		if (array_key_exists('obj_messages', $_SESSION) && array_key_exists($sMessageKey, $_SESSION['obj_messages']))
 		{
-			$aMessages = array();
-			$aRanks = array();
 			foreach ($_SESSION['obj_messages'][$sMessageKey] as $sMessageId => $aMessageData)
 			{
 				$sMsgClass = 'message_'.$aMessageData['severity'];
 				$aMessages[] = "<div class=\"header_message $sMsgClass\">".$aMessageData['message']."</div>";
 				$aRanks[] = $aMessageData['rank'];
 			}
-			array_multisort($aRanks, $aMessages);
-			foreach ($aMessages as $sMessage)
-			{
-				$oPage->add($sMessage);
-			}
 			unset($_SESSION['obj_messages'][$sMessageKey]);
 		}
-		
+		array_multisort($aRanks, $aMessages);
+		foreach ($aMessages as $sMessage)
+		{
+			$oPage->add($sMessage);
+		}
+				
 		// action menu
 		$oSingletonFilter = new DBObjectSearch(get_class($this));
 		$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
@@ -1938,6 +1987,53 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 
 	public function DisplayModifyForm(WebPage $oPage, $aExtraParams = array())
 	{
+		$sOwnershipToken = null;
+		$iKey = $this->GetKey();
+		$sClass = get_class($this);
+		if ($iKey > 0)
+		{
+			// The concurrent access lock makes sense only for already existing objects
+			$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
+			if ($LockEnabled) 
+			{
+				$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, false, 'raw_data');
+				if ($sOwnershipToken !== null)
+				{
+					// We're probably inside something like "apply_modify" where the validation failed and we must prompt the user again to edit the object
+					// let's extend our lock
+					$aLockInfo = iTopOwnershipLock::ExtendLock($sClass, $iKey, $sOwnershipToken);
+					$sOwnershipDate = $aLockInfo['acquired'];
+				}
+				else
+				{
+					$aLockInfo = iTopOwnershipLock::AcquireLock($sClass, $iKey);
+					if ($aLockInfo['success'])
+					{
+						$sOwnershipToken = $aLockInfo['token'];
+						$sOwnershipDate = $aLockInfo['acquired'];
+					}
+					else
+					{
+						$oOwner = $aLockInfo['lock']->GetOwner();
+						// If the object is locked by the current user, it's worth trying again, since
+						// the lock may be released by 'onunload' which is called AFTER loading the current page.
+						//$bTryAgain = $oOwner->GetKey() == UserRights::GetUserId();
+						self::ReloadAndDisplay($oPage, $this, array('operation' => 'modify'));
+						return;
+					}
+				}
+			}
+		}
+		
+		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container'])
+		{			
+			$sClassLabel = MetaModel::GetName($sClass);
+			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
+			$oPage->add("<div class=\"page_header\">\n");
+			$oPage->add("<h1>".$this->GetIcon()."&nbsp;".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $this->GetName())."</h1>\n");
+			$oPage->add("</div>\n");
+			$oPage->add("<div class=\"wizContainer\">\n");
+		}
 		self::$iGlobalFormId++;
 		$this->aFieldsMap = array();
 		$sPrefix = '';
@@ -1948,10 +2044,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		$aFieldsComments = (isset($aExtraParams['fieldsComments'])) ? $aExtraParams['fieldsComments'] : array();
 		
 		$this->m_iFormId = $sPrefix.self::$iGlobalFormId;
-		$sClass = get_class($this);
 		$oAppContext = new ApplicationContext();
 		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-		$iKey = $this->GetKey();
 		$aDetails = array();
 		$aFieldsMap = array();
 		if (!isset($aExtraParams['action']))
@@ -2052,9 +2146,10 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		}
 
 		$sConfirmationMessage = addslashes(Dict::S('UI:NavigateAwayConfirmationMessage'));
+		$sJSToken = json_encode($sOwnershipToken);
 		$oPage->add_ready_script(
 <<<EOF
-	$(window).unload(function() { return OnUnload('$iTransactionId') } );
+	$(window).unload(function() { return OnUnload('$iTransactionId', '$sClass', $iKey, $sJSToken) } );
 	window.onbeforeunload = function() {
 		if (!window.bInSubmit && !window.bInCancel)
 		{
@@ -2098,6 +2193,10 @@ EOF
 				$oPage->add("<input type=\"hidden\" name=\"$sName\" value=\"$value\">\n");
 			}
 		}
+		if ($sOwnershipToken !== null)
+		{
+			$oPage->add("<input type=\"hidden\" name=\"ownership_token\" value=\"".htmlentities($sOwnershipToken, ENT_QUOTES, 'UTF-8')."\">\n");
+		}
 		$oPage->add($oAppContext->GetForForm());
 		if ($sButtonsPosition != 'top')
 		{
@@ -2111,18 +2210,26 @@ EOF
 		$oPage->add_ready_script("$('#form_{$this->m_iFormId} button.cancel').click( function() { BackToDetails('$sClass', $iKey, '$sDefaultUrl')} );");
 		$oPage->add("</form>\n");
 		
+		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container'])
+		{
+			$oPage->add("</div>\n");
+		}
+		
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);
 		$sState = $this->GetState();
-
+		$sSessionStorageKey = $sClass.'_'.$iKey;
+		
 		$oPage->add_script(
 <<<EOF
+		sessionStorage.removeItem('$sSessionStorageKey');
+		
 		// Create the object once at the beginning of the page...
 		var oWizardHelper$sPrefix = new WizardHelper('$sClass', '$sPrefix', '$sState');
 		oWizardHelper$sPrefix.SetFieldsMap($sJsonFieldsMap);
 		oWizardHelper$sPrefix.SetFieldsCount($iFieldsCount);
 EOF
-);
+		);
 		$oPage->add_ready_script(
 <<<EOF
 		oWizardHelper$sPrefix.UpdateWizard();
@@ -2130,7 +2237,27 @@ EOF
 		CheckFields('form_{$this->m_iFormId}', false);
 
 EOF
-);
+		);
+		if ($sOwnershipToken !== null)
+		{
+			$this->GetOwnershipJSHandler($oPage, $sOwnershipToken);
+		}
+		else
+		{
+			// Probably a new object (or no concurrent lock), let's add a watchdog so that the session is kept open while editing
+			$iInterval = MetaModel::GetConfig()->Get('concurrent_lock_expiration_delay') * 1000 / 2;
+			if ($iInterval > 0)
+			{
+				$iInterval = max(MIN_WATCHDOG_INTERVAL*1000, $iInterval); // Minimum interval for the watchdog is MIN_WATCHDOG_INTERVAL
+				$oPage->add_ready_script(
+<<<EOF
+				window.setInterval(function() {
+					$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'watchdog'});
+				}, $iInterval);
+EOF
+				);
+			}			
+		}
 	}
 
 	public static function DisplayCreationForm(WebPage $oPage, $sClass, $oObjectToClone = null, $aArgs = array(), $aExtraParams = array())
@@ -2209,12 +2336,35 @@ EOF
 	public function DisplayStimulusForm(WebPage $oPage, $sStimulus)
 	{
 		$sClass = get_class($this);
+		$iKey = $this->GetKey();
 		$aTransitions = $this->EnumTransitions();
 		$aStimuli = MetaModel::EnumStimuli($sClass);
 		if (!isset($aTransitions[$sStimulus]))
 		{
 			// Invalid stimulus
 			throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulus, $this->GetName(), $this->GetStateLabel()));
+		}
+		// Check for concurrent access lock
+		$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
+		$sOwnershipToken = null;
+		if ($LockEnabled) 
+		{
+			$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, false, 'raw_data');
+			$aLockInfo = iTopOwnershipLock::AcquireLock($sClass, $iKey);
+			if ($aLockInfo['success'])
+			{
+				$sOwnershipToken = $aLockInfo['token'];
+				$sOwnershipDate = $aLockInfo['acquired'];
+			}
+			else
+			{
+				$oOwner = $aLockInfo['lock']->GetOwner();
+				// If the object is locked by the current user, it's worth trying again, since
+				// the lock may be released by 'onunload' which is called AFTER loading the current page.
+				//$bTryAgain = $oOwner->GetKey() == UserRights::GetUserId();
+				self::ReloadAndDisplay($oPage, $this, array('operation' => 'stimulus', 'stimulus' => $sStimulus));
+				return;
+			}
 		}
 		$sActionLabel = $aStimuli[$sStimulus]->GetLabel();
 		$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
@@ -2304,10 +2454,15 @@ EOF
 		$oPage->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
 		$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"apply_stimulus\">\n");
 		$oPage->add("<input type=\"hidden\" name=\"stimulus\" value=\"$sStimulus\">\n");
-		$oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
+		$iTransactionId = utils::GetNewTransactionId();
+		$oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".$iTransactionId."\">\n");
+		if ($sOwnershipToken !== null)
+		{
+			$oPage->add("<input type=\"hidden\" name=\"ownership_token\" value=\"".htmlentities($sOwnershipToken, ENT_QUOTES, 'UTF-8')."\">\n");
+		}
 		$oAppContext = new ApplicationContext();
 		$oPage->add($oAppContext->GetForForm());
-		$oPage->add("<button type=\"button\" class=\"action\" onClick=\"BackToDetails('$sClass', ".$this->GetKey().")\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
+		$oPage->add("<button type=\"button\" class=\"action cancel\" onClick=\"BackToDetails('$sClass', ".$this->GetKey().")\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
 		$oPage->add("<button type=\"submit\" class=\"action\"><span>$sActionLabel</span></button>\n");
 		$oPage->add("</form>\n");
 		$oPage->add("</div>\n");
@@ -2330,12 +2485,19 @@ EOF
 		oWizardHelper.SetFieldsCount($iFieldsCount);
 EOF
 		);
+		$sJSToken = json_encode($sOwnershipToken);
 		$oPage->add_ready_script(
 <<<EOF
 		// Starts the validation when the page is ready
 		CheckFields('apply_stimulus', false);
+		$(window).unload(function() { return OnUnload('$iTransactionId', '$sClass', $iKey, $sJSToken) } );
 EOF
-		);		
+		);
+		
+		if ($sOwnershipToken !== null)
+		{
+			$this->GetOwnershipJSHandler($oPage, $sOwnershipToken);
+		}	
 	}
 
 	public static function ProcessZlist($aList, $aDetails, $sCurrentTab, $sCurrentCol, $sCurrentSet)
@@ -3867,5 +4029,46 @@ EOF
 			}
 		}	
 		return $aRet;
+	}
+
+	/**
+	 * Generates the javascript code handle the "watchdog" associated with the concurrent access locking mechanism
+	 * @param Webpage $oPage
+	 * @param string $sOwnershipToken
+	 */
+	protected function GetOwnershipJSHandler($oPage, $sOwnershipToken)
+	{
+		$iInterval = max(MIN_WATCHDOG_INTERVAL, MetaModel::GetConfig()->Get('concurrent_lock_expiration_delay')) * 1000 / 2; // Minimum interval for the watchdog is MIN_WATCHDOG_INTERVAL
+		$sJSClass = json_encode(get_class($this));
+		$iKey = (int) $this->GetKey();
+		$sJSToken = json_encode($sOwnershipToken);
+		$sJSTitle = json_encode(Dict::S('UI:DisconnectedDlgTitle'));
+		$sJSOk = json_encode(Dict::S('UI:Button:Ok'));
+		$oPage->add_ready_script(
+<<<EOF
+		window.setInterval(function() {
+			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'extend_lock', obj_class: $sJSClass, obj_key: $iKey, token: $sJSToken }, function(data) {
+				if (!data.status)
+				{
+					if ($('.lock_owned').length == 0)
+					{
+						$('.ui-layout-content').prepend('<div class="header_message message_error lock_owned">'+data.message+'</div>');
+						$('<div>'+data.popup_message+'</div>').dialog({title: $sJSTitle, modal: true, autoOpen: true, buttons:[ {text: $sJSOk, click: function() { $(this).dialog('close'); } }], close: function() { $(this).remove(); }});
+					}
+					$('.wizContainer form button.action:not(.cancel)').attr('disabled', 'disabled');
+				}
+				else if ((data.operation == 'lost') || (data.operation == 'expired'))
+				{
+					if ($('.lock_owned').length == 0)
+					{
+						$('.ui-layout-content').prepend('<div class="header_message message_error lock_owned">'+data.message+'</div>');
+						$('<div>'+data.popup_message+'</div>').dialog({title: $sJSTitle, modal: true, autoOpen: true, buttons:[ {text: $sJSOk, click: function() { $(this).dialog('close'); } }], close: function() { $(this).remove(); }});
+					}
+					$('.wizContainer form button.action:not(.cancel)').attr('disabled', 'disabled');
+				}
+			}, 'json');
+		}, $iInterval);
+EOF
+		);
 	}
 }

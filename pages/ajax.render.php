@@ -825,6 +825,13 @@ try
 		{
 			$oExtensionInstance->OnFormCancel($sTempId);
 		}
+		$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
+		$iObjKey = (int)utils::ReadParam('obj_key', 0, false, 'integer');
+		$sToken = utils::ReadParam('token', 0, false, 'raw_data');
+		if (($sObjClass != '') && ($iObjKey != 0) && ($sToken != ''))
+		{
+			$bReleaseLock = iTopOwnershipLock::ReleaseLock($sObjClass, $iObjKey, $sToken);
+		}
 		break;
 
 		case 'reload_dashboard':
@@ -2142,6 +2149,36 @@ EOF
 		}
 		$aResult = array('code' => 'error', 'percentage' => 100, 'message' => Dict::S('Core:BulkExport:ExportCancelledByUser'));
 		$oPage->add(json_encode($aResult));
+		break;
+		
+		case 'extend_lock':
+		$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
+		$iObjKey = (int)utils::ReadParam('obj_key', 0, false, 'integer');
+		$sToken = utils::ReadParam('token', 0, false, 'raw_data');
+		$aResult = iTopOwnershipLock::ExtendLock($sObjClass, $iObjKey, $sToken);
+		if (!$aResult['status'])
+		{
+			if ($aResult['operation'] == 'lost')
+			{
+				$sName =  $aResult['owner']->GetName();
+				if ($aResult['owner']->Get('contactid') != 0)
+				{
+					$sName .= ' ('.$aResult['owner']->Get('contactid_friendlyname').')';
+				}
+				$aResult['message'] = Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName);
+				$aResult['popup_message'] = Dict::Format('UI:CurrentObjectIsLockedBy_User_Explanation',  $sName);
+			}
+			else if ($aResult['operation'] == 'expired')
+			{
+				$aResult['message'] = Dict::S('UI:CurrentObjectLockExpired');
+				$aResult['popup_message'] = Dict::S('UI:CurrentObjectLockExpired_Explanation');
+			}
+		}
+		$oPage->add(json_encode($aResult));
+		break;
+		
+		case 'watchdog':
+		$oPage->add('ok'); // Better for debugging...
 		break;
 				
 		default:

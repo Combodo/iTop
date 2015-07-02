@@ -444,7 +444,7 @@ EOF
 			window.bInCancel = true;
 			if (id > 0)
 			{
-				window.location.href = AddAppContext(GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=details&class='+sClass+'&id='+id);
+				window.location.href = AddAppContext(GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=release_lock_and_details&class='+sClass+'&id='+id);
 			}
 			else
 			{
@@ -452,7 +452,6 @@ EOF
 			}
 		}
 
-		
 		function BackToList(sClass)
 		{
 			window.location.href = AddAppContext(GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=search_oql&oql_class='+sClass+'&oql_clause=WHERE id=0');
@@ -758,7 +757,7 @@ EOF
 				
 			if (utils::CanLogOff())
 			{
-				$oLogOff = new URLPopupMenuItem('UI:LogOffMenu', Dict::S('UI:LogOffMenu'), utils::GetAbsoluteUrlAppRoot().'pages/logoff.php');
+				$oLogOff = new URLPopupMenuItem('UI:LogOffMenu', Dict::S('UI:LogOffMenu'), utils::GetAbsoluteUrlAppRoot().'pages/logoff.php?operation=do_logoff');
 				$aActions[$oLogOff->GetUID()] = $oLogOff->GetMenuItem();
 			}
 			if (UserRights::CanChangePassword())

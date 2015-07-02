@@ -337,7 +337,7 @@ EOF
 		$sMenu = '';
 		if ($this->m_bEnableDisconnectButton)
 		{
-			$this->AddMenuButton('logoff', 'Portal:Disconnect', utils::GetAbsoluteUrlAppRoot().'pages/logoff.php'); // This menu is always present and is the last one
+			$this->AddMenuButton('logoff', 'Portal:Disconnect', utils::GetAbsoluteUrlAppRoot().'pages/logoff.php?operation=do_logoff'); // This menu is always present and is the last one
 		}
 		foreach($this->m_aMenuButtons as $aMenuItem)
 		{
@@ -795,6 +795,17 @@ EOF
 			}
 	
 			$this->p("<h1>".Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName())."</h1>\n");
+		}
+		$bLockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
+		if ($bLockEnabled)
+		{
+			// Release the concurrent lock, if any
+			$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, false, 'raw_data');
+			if ($sOwnershipToken !== null)
+			{
+				// We're done, let's release the lock
+				iTopOwnershipLock::ReleaseLock(get_class($oObj), $oObj->GetKey(), $sOwnershipToken);
+			}
 		}
 	}
 

@@ -90,14 +90,17 @@ function ActivateStep(iTargetStep)
 	//$('#wizStep'+(iTargetStep)).block({ message: null });
 }
 
-function OnUnload(sTransactionId)
+function OnUnload(sTransactionId, sObjClass, iObjKey, sToken)
 {
 	if (!window.bInSubmit)
 	{
 		// If it's not a submit, then it's a "cancel" (Pressing the Cancel button, closing the window, using the back button...)
-		$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'on_form_cancel', transaction_id: sTransactionId }, function()
-		{
-			// Do nothing for now...
+		// IMPORTANT: the ajax request MUST BE synchronous to be executed in this context
+		$.ajax({
+			url: GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+			async: false,
+			method: 'POST',
+			data: {operation: 'on_form_cancel', transaction_id: sTransactionId, obj_class: sObjClass, obj_key: iObjKey, token: sToken }
 		});
 	}
 }

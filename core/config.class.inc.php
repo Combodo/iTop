@@ -777,14 +777,6 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'xlsx_exporter_cleanup_old_files_delay' => array(
-			'type' => 'int',
-			'description' => 'Delay (in seconds) for which to let the exported XLSX files on the server so that the user who initiated the export can download the result',
-			'default' => 86400,
-			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		),
 		'xlsx_exporter_memory_limit' => array(
 			'type' => 'string',
 			'description' => 'Memory limit to use when (interactively) exporting data to Excel',
@@ -817,6 +809,30 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'concurrent_lock_enabled' => array(
+			'type' => 'bool',
+			'description' => 'Whether or not to activate the locking mechanism in order to prevent concurrent edition of the same object.',
+			'default' => true,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'concurrent_lock_expiration_delay' => array(
+			'type' => 'integer',
+			'description' => 'Delay (in seconds) for a concurrent lock to expire',
+			'default' => 120,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		), 
+		'concurrent_lock_override_profiles' => array(
+			'type' => 'array',
+			'description' => 'The list of profiles allowed to "kill" a lock',
+			'default' => array('Administrator'),
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		), 
 	);
 
 	public function IsProperty($sPropCode)
@@ -958,6 +974,7 @@ class Config
 			'core/action.class.inc.php',
 			'core/trigger.class.inc.php',
 			'core/bulkexport.class.inc.php',
+			'core/ownershiplock.class.inc.php',
 			'synchro/synchrodatasource.class.inc.php',
 			'core/backgroundtask.class.inc.php',
 		);

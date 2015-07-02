@@ -1099,5 +1099,12 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'ExcelExport:Statistics' => 'Statistiques',	
 	'portal:legacy_portal' => 'Portail Utilisateurs',
 	'portal:backoffice' => 'Console iTop',
+
+	'UI:CurrentObjectIsLockedBy_User' => 'L\'objet est verrouillé car il est en train d\'être modifié par %1$s.',
+	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'L\'objet est en train d\'être modifié par %1$s. Vos modifications ne peuvent pas être acceptées car elles risquent d\'être écrasées.',
+	'UI:CurrentObjectLockExpired' => 'Le verrouillage interdisant les modifications concurrentes à expiré.',
+	'UI:CurrentObjectLockExpired_Explanation' => 'Le verrouillage interdisant les modifications concurrentes à expiré. Vos modifications ne peuvent pas être acceptées car d\'autres utilisateurs peuvent modifier cet objet.',
+	'UI:ConcurrentLockKilled' => 'Le verrouillage en édition de l\'objet courant a été supprimé.',
+	'UI:Menu:KillConcurrentLock' => 'Supprimer le verrouillage !',
 ));
 ?>
