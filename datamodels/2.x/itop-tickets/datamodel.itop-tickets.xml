@@ -818,6 +818,22 @@
               </argument>
             </arguments>
           </method>
+          <method id="SetCurrentPerson">
+            <arguments>
+              <argument id="1">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeExternalKey"/>
+                    <type id="AttributeInteger"/>
+                    <type id="AttributeString"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+            </arguments>
+          </method>
           <method id="SetElapsedTime">
             <arguments>
               <argument id="1">

@@ -2224,7 +2224,56 @@ abstract class DBObject implements iDisplay
 	 */	 	
 	public function SetCurrentUser($sAttCode)
 	{
-		$this->Set($sAttCode, UserRights::GetUserId());
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		if ($oAttDef instanceof AttributeString)
+		{
+			// Note: the user friendly name is the contact friendly name if a contact is attached to the logged in user
+			$this->Set($sAttCode, UserRights::GetUserFriendlyName());
+		}
+		else
+		{
+			if ($oAttDef->IsExternalKey())
+			{
+				if ($oAttDef->GetTargetClass() != 'User')
+				{
+					throw new Exception("SetCurrentUser: the attribute $sAttCode must be an external key to 'User', found '".$oAttDef->GetTargetClass()."'");
+				}
+			}
+			$this->Set($sAttCode, UserRights::GetUserId());
+		}
+		return true;
+	}
+
+	/**
+	 * Lifecycle action: Set the current logged in CONTACT for the given attribute
+	 */	 	
+	public function SetCurrentPerson($sAttCode)
+	{
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		if ($oAttDef instanceof AttributeString)
+		{
+			$iPerson = UserRights::GetContactId();
+			if ($iPerson == 0)
+			{
+				$this->Set($sAttCode, '');
+			}
+			else
+			{
+				$oPerson = MetaModel::GetObject('Person', $iPerson);
+				$this->Set($sAttCode, $oPerson->Get('friendlyname'));
+			}
+		}
+		else
+		{
+			if ($oAttDef->IsExternalKey())
+			{
+				if (!MetaModel::IsParentClass($oAttDef->GetTargetClass(), 'Person'))
+				{
+					throw new Exception("SetCurrentContact: the attribute $sAttCode must be an external key to 'Person' or any other class above 'Person', found '".$oAttDef->GetTargetClass()."'");
+				}
+			}
+			$this->Set($sAttCode, UserRights::GetContactId());
+		}
 		return true;
 	}
 
