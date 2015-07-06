@@ -53,9 +53,8 @@ class DBObjectSearch
 	public function __construct($sClass, $sClassAlias = null)
 	{
 		if (is_null($sClassAlias)) $sClassAlias = $sClass;
-		assert('is_string($sClass)');
-		assert('MetaModel::IsValidClass($sClass)'); // #@# could do better than an assert, or at least give the caller's reference
-		// => idee d'un assert avec call stack (autre utilisation = echec sur query SQL)
+		if(!is_string($sClass)) throw new Exception('DBObjectSearch::__construct called with a non-string parameter: $sClass = '.print_r($sClass, true));
+		if(!MetaModel::IsValidClass($sClass)) throw new Exception('DBObjectSearch::__construct called for an invalid class: "'.$sClass.'"');
 
 		$this->m_aSelectedClasses = array($sClassAlias => $sClass);
 		$this->m_aClasses = array($sClassAlias => $sClass);
@@ -449,7 +448,7 @@ class DBObjectSearch
 
 	public function AddCondition($sFilterCode, $value, $sOpCode = null)
 	{
-		MyHelpers::CheckKeyInArray('filter code', $sFilterCode, MetaModel::GetClassFilterDefs($this->GetClass()));
+		MyHelpers::CheckKeyInArray('filter code in class: '.$this->GetClass(), $sFilterCode, MetaModel::GetClassFilterDefs($this->GetClass()));
 		$oFilterDef = MetaModel::GetClassFilterDef($this->GetClass(), $sFilterCode);
 
 		$oField = new FieldExpression($sFilterCode, $this->GetClassAlias());
