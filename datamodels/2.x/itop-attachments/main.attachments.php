@@ -250,6 +250,7 @@ EOF
 		$('#attachment_plugin').trigger('remove_attachment', [att_id]);
 		return false; // Do not submit the form !
 	}
+				
 	function ajaxFileUpload()
 	{
 		//starting setting some animation when the ajax starts and completes
@@ -368,6 +369,7 @@ $oPage->add_ready_script(
 		url: GetAbsoluteUrlModulesRoot()+'itop-attachments/ajax.attachment.php',
 		formData: { operation: 'add', temp_id: '$sTempId', obj_class: '$sClass' },
         dataType: 'json',
+		pasteZone: null, // Don't accept files via Chrome's copy/paste
         done: function (e, data) {
 			if(typeof(data.result.error) != 'undefined')
 			{
