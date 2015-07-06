@@ -1345,14 +1345,19 @@ EOF
 
 class RunTimeIconSelectionField extends DesignerIconSelectionField
 {
+	static $aAllIcons = array();
+	
 	public function __construct($sCode, $sLabel = '', $defaultValue = '')
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
 
-		$aAllIcons = self::FindIconsOnDisk(APPROOT.'env-'.utils::GetCurrentEnvironment());
-		ksort($aAllIcons);
+		if (count(self::$aAllIcons) == 0)
+		{
+			self::$aAllIcons = self::FindIconsOnDisk(APPROOT.'env-'.utils::GetCurrentEnvironment());
+			ksort(self::$aAllIcons);
+		}
 		$aValues = array();
-		foreach($aAllIcons as $sFilePath)
+		foreach(self::$aAllIcons as $sFilePath)
 		{
 			$aValues[] = array('value' => $sFilePath, 'label' => basename($sFilePath), 'icon' => utils::GetAbsoluteUrlModulesRoot().$sFilePath);
 		}
