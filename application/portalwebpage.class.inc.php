@@ -97,6 +97,11 @@ class PortalWebPage extends NiceWebPage
 		$sJSTitle = json_encode(Dict::S('UI:DisconnectedDlgTitle'));
 		$sJSLoginAgain = json_encode(Dict::S('UI:LoginAgain'));
 		$sJSStayOnThePage = json_encode(Dict::S('UI:StayOnThePage'));
+		$sJSDaysMin = json_encode(array(Dict::S('DayOfWeek-Sunday-Min'), Dict::S('DayOfWeek-Monday-Min'), Dict::S('DayOfWeek-Tuesday-Min'), Dict::S('DayOfWeek-Wednesday-Min'),
+										Dict::S('DayOfWeek-Thursday-Min'), Dict::S('DayOfWeek-Friday-Min'), Dict::S('DayOfWeek-Saturday-Min')));
+		$sJSMonthsShort = json_encode(array(Dict::S('Month-01-Short'), Dict::S('Month-02-Short'), Dict::S('Month-03-Short'), Dict::S('Month-04-Short'), Dict::S('Month-05-Short'), Dict::S('Month-06-Short'),
+											Dict::S('Month-07-Short'), Dict::S('Month-08-Short'), Dict::S('Month-09-Short'), Dict::S('Month-10-Short'), Dict::S('Month-11-Short'), Dict::S('Month-12-Short')));
+		$iFirstDayOfWeek = (int) Dict::S('Calendar-FirstDayOfWeek');
 		
 		$this->add_ready_script(
 <<<EOF
@@ -139,14 +144,17 @@ try
 	});
 		
 	$(".date-pick").datepicker({
-			showOn: 'button',
-			buttonImage: '../images/calendar.png',
-			buttonImageOnly: true,
-			dateFormat: 'yy-mm-dd',
-			constrainInput: false,
-			changeMonth: true,
-			changeYear: true
-		});
+		showOn: 'button',
+		buttonImage: '../images/calendar.png',
+		buttonImageOnly: true,
+		dateFormat: 'yy-mm-dd',
+		constrainInput: false,
+		changeMonth: true,
+		changeYear: true,
+		dayNamesMin: $sJSDaysMin,
+		monthNamesShort: $sJSMonthsShort,
+		firstDay: $iFirstDayOfWeek		
+	});
 
 	$(".datetime-pick").datepicker({
 		showOn: 'button',
@@ -155,8 +163,11 @@ try
 		dateFormat: 'yy-mm-dd 00:00:00',
 		constrainInput: false,
 		changeMonth: true,
-		changeYear: true
-		});
+		changeYear: true,
+		dayNamesMin: $sJSDaysMin,
+		monthNamesShort: $sJSMonthsShort,
+		firstDay: $iFirstDayOfWeek
+	});
 
 	//$('.resizable').resizable(); // Make resizable everything that claims to be resizable !
 	$('.caselog_header').click( function () { $(this).toggleClass('open').next('.caselog_entry').toggle(); });

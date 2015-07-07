@@ -1197,7 +1197,29 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Month-10' => 'October',
 	'Month-11' => 'November',
 	'Month-12' => 'December',
-
+	
+	// Short version for the DatePicker
+	'DayOfWeek-Sunday-Min' => 'Su',
+	'DayOfWeek-Monday-Min' => 'Mo',
+	'DayOfWeek-Tuesday-Min' => 'Tu',
+	'DayOfWeek-Wednesday-Min' => 'We',
+	'DayOfWeek-Thursday-Min' => 'Th',
+	'DayOfWeek-Friday-Min' => 'Fr',
+	'DayOfWeek-Saturday-Min' => 'Sa',
+	'Month-01-Short' => 'Jan',
+	'Month-02-Short' => 'Feb',
+	'Month-03-Short' => 'Mar',
+	'Month-04-Short' => 'Apr',
+	'Month-05-Short' => 'May',
+	'Month-06-Short' => 'Jun',
+	'Month-07-Short' => 'Jul',
+	'Month-08-Short' => 'Aug',
+	'Month-09-Short' => 'Sep',
+	'Month-10-Short' => 'Oct',
+	'Month-11-Short' => 'Nov',
+	'Month-12-Short' => 'Dec',
+	'Calendar-FirstDayOfWeek' => 0, // 0 = Sunday, 1 = Monday, etc...
+	
 	'UI:Menu:ShortcutList' => 'Create a Shortcut...',
 	'UI:ShortcutRenameDlg:Title' => 'Rename the shortcut',
 	'UI:ShortcutListDlg:Title' => 'Create a shortcut for the list',

@@ -53,7 +53,10 @@ if ($sPage == '')
 }
 $sPage = basename($sPage); // protect against ../.. ...
 
-$sEnvironment = utils::ReadParam('exec_env', 'production');
+session_name('itop-'.md5(APPROOT));
+session_start();
+$sEnvironment = utils::ReadParam('exec_env', utils::GetCurrentEnvironment());
+session_write_close();
 
 $sTargetPage = APPROOT.'env-'.$sEnvironment.'/'.$sModule.'/'.$sPage;
 

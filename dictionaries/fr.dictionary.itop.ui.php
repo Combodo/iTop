@@ -1040,6 +1040,28 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Month-11' => 'Novembre',
 	'Month-12' => 'Décembre',
 
+	// Short version for the DatePicker
+	'DayOfWeek-Sunday-Min' => 'Di',
+	'DayOfWeek-Monday-Min' => 'Lu',
+	'DayOfWeek-Tuesday-Min' => 'Ma',
+	'DayOfWeek-Wednesday-Min' => 'Me',
+	'DayOfWeek-Thursday-Min' => 'Je',
+	'DayOfWeek-Friday-Min' => 'Ve',
+	'DayOfWeek-Saturday-Min' => 'Sa',
+	'Month-01-Short' => 'Jan',
+	'Month-02-Short' => 'Fév',
+	'Month-03-Short' => 'Mar',
+	'Month-04-Short' => 'Avr',
+	'Month-05-Short' => 'Mai',
+	'Month-06-Short' => 'Juin',
+	'Month-07-Short' => 'Juil',
+	'Month-08-Short' => 'Août',
+	'Month-09-Short' => 'Sept',
+	'Month-10-Short' => 'Oct',
+	'Month-11-Short' => 'Nov',
+	'Month-12-Short' => 'Déc',
+	'Calendar-FirstDayOfWeek' => 1, // 0 = Sunday, 1 = Monday, etc...
+
 	'UI:Menu:ShortcutList' => 'Créer un Raccourci...',
 	'UI:ShortcutListDlg:Title' => 'Créer un raccourci pour la liste',
 	'UI:ShortcutRenameDlg:Title' => 'Renommer le raccourci',
@@ -1103,7 +1125,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:CurrentObjectIsLockedBy_User' => 'L\'objet est verrouillé car il est en train d\'être modifié par %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'L\'objet est en train d\'être modifié par %1$s. Vos modifications ne peuvent pas être acceptées car elles risquent d\'être écrasées.',
 	'UI:CurrentObjectLockExpired' => 'Le verrouillage interdisant les modifications concurrentes a expiré.',
-	'UI:CurrentObjectLockExpired_Explanation' => 'Le verrouillage interdisant les modifications concurrentes à expiré. Vos modifications ne peuvent pas être acceptées car d\'autres utilisateurs peuvent modifier cet objet.',
+	'UI:CurrentObjectLockExpired_Explanation' => 'Le verrouillage interdisant les modifications concurrentes a expiré. Vos modifications ne peuvent pas être acceptées car d\'autres utilisateurs peuvent modifier cet objet.',
 	'UI:ConcurrentLockKilled' => 'Le verrouillage en édition de l\'objet courant a été supprimé.',
 	'UI:Menu:KillConcurrentLock' => 'Supprimer le verrouillage !',
 ));
