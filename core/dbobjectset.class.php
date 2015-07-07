@@ -837,74 +837,16 @@ class DBObjectSet
 	 * Compare two sets of objects to determine if their content is identical or not.
 	 * 
 	 * Limitation:
-	 * Works only on objects written to the DB, since we rely on their identifiers
+	 * Works only for sets of 1 column (i.e. one class of object selected)
 	 * 
 	 * @param DBObjectSet $oObjectSet
+	 * @param array $aExcludeColumns The list of columns to exclude frop the comparison
 	 * @return boolean True if the sets are identical, false otherwise
 	 */
-	public function HasSameContents(DBObjectSet $oObjectSet)
-	{
-		if ($this->GetRootClass() != $oObjectSet->GetRootClass())
-		{
-			return false;
-		}
-		if ($this->Count() != $oObjectSet->Count())
-		{
-			return false;
-		}
-		
-		$aId2Row = array();
-		$bRet = true;
-		$iCurrPos = $this->m_iCurrRow; // Save the cursor
-		$idx = 0;
-		
-		// Optimization: we retain the first $iMaxObjects objects in memory
-		// to speed up the comparison of small sets (see below: $oObject->Equals($oSibling))
-		$iMaxObjects = 20;
-		$aCachedObjects = array();
-		while($oObj = $this->Fetch())
-		{
-			$aId2Row[$oObj->GetKey()] = $idx;
-			if ($idx <= $iMaxObjects)
-			{
-				$aCachedObjects[$idx] = $oObj;
-			}
-			$idx++;
-		}
-		
-		$oObjectSet->Rewind();
-		while ($oObject = $oObjectSet->Fetch())
-		{
-			$iObjectKey = $oObject->GetKey();
-			if ($iObjectKey < 0)
-			{
-				$bRet = false;
-				break;
-			}
-			if (!array_key_exists($iObjectKey, $aId2Row))
-			{
-				$bRet = false;
-				break;
-			}
-			$iRow = $aId2Row[$iObjectKey];
-			if (array_key_exists($iRow, $aCachedObjects))
-			{ 
-				// Cache hit
-				$oSibling = $aCachedObjects[$iRow];
-			}
-			else
-			{
-				// Go fetch it from the DB, unless it's an object added in-memory
-				$oSibling = $this->GetObjectAt($iRow);
-			}
-			if (!$oObject->Equals($oSibling))
-			{
-				$bRet = false;
-				break;
-			}
-		}
-		$this->Seek($iCurrPos); // Restore the cursor
-		return $bRet;
+	public function HasSameContents(DBObjectSet $oObjectSet, $aExcludeColumns = array())
+	{	
+		$oComparator = new DBObjectSetComparator($this, $oObjectSet, $aExcludeColumns);
+		return $oComparator->SetsAreEquivalent();
 	}
 
 	protected function GetObjectAt($iIndex)
@@ -1194,4 +1136,212 @@ function HashCountComparison($a, $b) // Sort descending on 'count'
         return 0;
     }
     return ($a['count'] > $b['count']) ? -1 : 1;
+}
+
+/**
+ * Helper class to compare the content of two DBObjectSets based on the fingerprints of the contained objects
+ * When computing the actual differences, the algorithm tries to preserve as much as possible the existing
+ * objects (i.e. prefers 'modified' to 'removed' + 'added')
+ * 
+ * LIMITATION: only DBObjectSets with one column (i.e. one class of object selected) are supported
+ */
+class DBObjectSetComparator
+{
+	protected $aFingerprints1;
+	protected $aFingerprints2;
+	protected $aIDs1;
+	protected $aIDs2;
+	protected $aExcludedColumns;
+	protected $oSet1;
+	protected $oSet2;
+	protected $sAdditionalKeyColumn;
+	protected $aAdditionalKeys;
+	
+	/**
+	 * Initializes the comparator
+	 * @param DBObjectSet $oSet1 The first set of objects to compare, or null
+	 * @param DBObjectSet $oSet2 The second set of objects to compare, or null
+	 * @param array $aExcludedColumns The list of columns (= attribute codes) to exclude from the comparison
+	 * @param string $sAdditionalKeyColumn The attribute code of an additional column to be considered as a key indentifying the object (useful for n:n links)
+	 */
+	public function __construct($oSet1, $oSet2, $aExcludedColumns = array(), $sAdditionalKeyColumn = null)
+	{
+		$this->aFingerprints1 = null;
+		$this->aFingerprints2 = null;
+		$this->aIDs1 = array();
+		$this->aIDs2 = array();
+		$this->aExcludedColumns = $aExcludedColumns;
+		$this->sAdditionalKeyColumn = $sAdditionalKeyColumn;
+		$this->aAdditionalKeys = null;
+		$this->oSet1 = $oSet1;
+		$this->oSet2 = $oSet2;		
+	}
+	
+	/**
+	 * Builds the lists of fingerprints and initializes internal structures, if it was not already done
+	 */
+	protected function ComputeFingerprints()
+	{
+		if ($this->aFingerprints1 === null)
+		{
+			$this->aFingerprints1 = array();
+			$this->aFingerprints2 = array();
+			$this->aAdditionalKeys = array();
+			
+			if ($this->oSet1 !== null)
+			{
+				$aAliases = $this->oSet1->GetSelectedClasses();
+				if (count($aAliases) > 1) throw new Exception('DBObjectSetComparator does not support Sets with more than one column. $oSet1: ('.print_r($aAliases, true).')');
+				
+				$this->oSet1->Rewind();
+				while($oObj = $this->oSet1->Fetch())
+				{
+					$sFingerprint = $oObj->Fingerprint($this->aExcludedColumns);
+					$this->aFingerprints1[$sFingerprint] = $oObj;
+					if (!$oObj->IsNew())
+					{
+						$this->aIDs1[$oObj->GetKey()] = $oObj;
+					}
+				}
+				$this->oSet1->Rewind();
+			}
+				
+			if ($this->oSet2 !== null)
+			{
+				$aAliases = $this->oSet2->GetSelectedClasses();
+				if (count($aAliases) > 1) throw new Exception('DBObjectSetComparator does not support Sets with more than one column. $oSet2: ('.print_r($aAliases, true).')');
+				
+				$this->oSet2->Rewind();
+				while($oObj = $this->oSet2->Fetch())
+				{
+					$sFingerprint = $oObj->Fingerprint($this->aExcludedColumns);
+					$this->aFingerprints2[$sFingerprint] = $oObj;
+					if (!$oObj->IsNew())
+					{
+						$this->aIDs2[$oObj->GetKey()] = $oObj;
+					}
+					
+					if ($this->sAdditionalKeyColumn !== null)
+					{
+						$this->aAdditionalKeys[$oObj->Get($this->sAdditionalKeyColumn)] = $oObj;
+					}
+				}
+				$this->oSet2->Rewind();
+			}
+		}
+	}
+	
+	/**
+	 * Tells if the sets are equivalent or not. Returns as soon as the first difference is found.
+	 * @return boolean true if the set have an equivalent content, false otherwise
+	 */
+	public function SetsAreEquivalent()
+	{
+		if (($this->oSet1 === null) && ($this->oSet2 === null))
+		{
+			// Both sets are empty, they are equal
+			return true;
+		}
+		else if (($this->oSet1 === null) || ($this->oSet2 === null))
+		{
+			// one of them is empty, they are different
+			return false;
+		}
+		
+		if (($this->oSet1->GetRootClass() != $this->oSet2->GetRootClass()) || ($this->oSet1->Count() != $this->oSet2->Count())) return false;
+		
+		$this->ComputeFingerprints();
+		
+		// Check that all objects in Set1 are also in Set2
+		foreach($this->aFingerprints1 as $sFingerprint => $oObj)
+		{
+			if (!array_key_exists($sFingerprint, $this->aFingerprints2))
+			{
+				return false;
+			}
+		}
+		
+		// Vice versa
+		// Check that all objects in Set2 are also in Set1
+		foreach($this->aFingerprints2 as $sFingerprint => $oObj)
+		{
+			if (!array_key_exists($sFingerprint, $this->aFingerprints1))
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Get the list of differences between the two sets.
+	 * Returns a hash: 'added' => DBObject(s), 'removed' => DBObject(s), 'modified' => DBObjects(s)
+	 * @return Ambigous <int:DBObject: , unknown>
+	 */
+	public function GetDifferences()
+	{
+		$aResult = array('added' => array(), 'removed' => array(), 'modified' => array());
+		$this->ComputeFingerprints();
+		
+		// Check that all objects in Set1 are also in Set2
+		foreach($this->aFingerprints1 as $sFingerprint => $oObj)
+		{
+			if (array_key_exists($oObj->GetKey(), $this->aIDs2) && ($this->aIDs2[$oObj->GetKey()]->IsModified()))
+			{
+				// The very same object exists in both set, but was modified since its load
+				$aResult['modified'][$oObj->GetKey()] = $this->aIDs2[$oObj->GetKey()];
+			}
+			else if (($this->sAdditionalKeyColumn !== null) && array_key_exists($oObj->Get($this->sAdditionalKeyColumn), $this->aAdditionalKeys))
+			{
+				// Special case for n:n links where the link is recreated between the very same 2 objects, but some of its attributes are modified
+				// Let's consider this as a "modification" instead of "deletion" + "creation" in order to have a "clean" history for the objects
+				$oDestObj = $this->aAdditionalKeys[$oObj->Get($this->sAdditionalKeyColumn)];
+				$oCloneObj = $this->CopyFrom($oObj, $oDestObj);
+				$aResult['modified'][$oObj->GetKey()] = $oCloneObj;
+				// Mark this as processed, so that the pass on aFingerprints2 below ignores this object
+				$sNewFingerprint = $oDestObj->Fingerprint($this->aExcludedColumns);
+				$this->aFingerprints2[$sNewFingerprint] = $oCloneObj;
+			}
+			else if (!array_key_exists($sFingerprint, $this->aFingerprints2))
+			{
+				$aResult['removed'][] = $oObj;
+			}
+		}
+		
+		// Vice versa
+		// Check that all objects in Set2 are also in Set1
+		foreach($this->aFingerprints2 as $sFingerprint => $oObj)
+		{
+			if (array_key_exists($oObj->GetKey(), $this->aIDs1) && ($oObj->IsModified()))
+			{
+				// Already marked as modified above
+				//$aResult['modified'][$oObj->GetKey()] = $oObj;
+			}
+			else if (!array_key_exists($sFingerprint, $this->aFingerprints1) && $oObj->IsNew())
+			{
+				$aResult['added'][] = $oObj;
+			}
+		}
+		return $aResult;
+	}
+	
+	/**
+	 * Helpr to clone (in memory) an object and to apply to it the values taken from a second object
+	 * @param DBObject $oObjToClone
+	 * @param DBObject $oObjWithValues
+	 * @return DBObject The modified clone
+	 */
+	protected function CopyFrom($oObjToClone, $oObjWithValues)
+	{
+		$oObj = MetaModel::GetObject(get_class($oObjToClone), $oObjToClone->GetKey());
+		foreach(MetaModel::ListAttributeDefs(get_class($oObj)) as $sAttCode => $oAttDef)
+		{
+			if (!in_array($sAttCode, $this->aExcludedColumns) && $oAttDef->IsWritable())
+			{
+				$oObj->Set($sAttCode, $oObjWithValues->Get($sAttCode));
+			}
+		}
+		return $oObj;
+	}
 }

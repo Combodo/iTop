@@ -621,6 +621,27 @@ abstract class AttributeDefinition
 		$oNewCondition = new BinaryExpression($oField, $sSQLOperator, $oRightExpr);
 		return $oNewCondition;
 	}
+	
+	/**
+	 * Tells if an attribute is part of the unique fingerprint of the object (used for comparing two objects)
+	 * All attributes which value is not based on a value from the object itself (like ExternalFields or LinkedSet)
+	 * must be excluded from the object's signature
+	 * @return boolean
+	 */
+	public function IsPartOfFingerprint()
+	{
+		return true;
+	}
+	
+	/**
+	 * The part of the current attribute in the object's signature, for the supplied value
+	 * @param unknown $value The value of this attribute for the object
+	 * @return string The "signature" for this field/attribute
+	 */
+	public function Fingerprint($value)
+	{
+		return (string)$value;
+	}
 }
 
 /**
@@ -1078,7 +1099,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		}
 
 		// Both values are Object sets
-		return $val1->HasSameContents($val2);
+		return $val1->HasSameContents($val2, array($this->GetExtKeyToMe()));
 	}
 
 	/**
@@ -1091,6 +1112,8 @@ class AttributeLinkedSet extends AttributeDefinition
 		$oRemoteAtt = MetaModel::GetAttributeDef($this->GetLinkedClass(), $this->GetExtKeyToMe());
 		return $oRemoteAtt;
 	}
+	
+	public function IsPartOfFingerprint() { return false; }
 }
 
 /**
@@ -1918,6 +1941,8 @@ class AttributePassword extends AttributeString
 			return '******';
 		}
 	}
+	
+	public function IsPartOfFingerprint() { return false; } // Cannot reliably compare two encrypted passwords since the same password will be encrypted in diffferent manners depending on the random 'salt'
 }
 
 /**
@@ -2446,6 +2471,16 @@ class AttributeCaseLog extends AttributeLongText
 			}
 		}
 		return $ret;
+	}
+	
+	public function Fingerprint($value)
+	{
+		$sFingerprint = '';
+		if ($value instanceOf ormCaseLog)
+		{
+			$sFingerprint = $value->GetText();
+		}
+		return $sFingerprint;
 	}
 }
 
@@ -3720,6 +3755,8 @@ class AttributeExternalField extends AttributeDefinition
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->GetAsCSV($value, $sSeparator, $sTestQualifier, null, $bLocalize);
 	}
+	
+	public function IsPartOfFingerprint() { return false; }
 }
 
 /**
@@ -4004,6 +4041,16 @@ class AttributeBlob extends AttributeDefinition
 		}
 		return $value;
 	}
+	
+	public function Fingerprint($value)
+	{
+		$sFingerprint = '';
+		if ($value instanceOf ormDocument)
+		{
+			$sFingerprint = md5($value->GetData());
+		}
+		return $sFingerprint;		
+	}
 }
 
 /**
@@ -4248,6 +4295,16 @@ class AttributeStopWatch extends AttributeDefinition
 	public function ListThresholds()
 	{
 		return $this->Get('thresholds');
+	}
+	
+	public function Fingerprint($value)
+	{
+		$sFingerprint = '';
+		if (is_object($value))
+		{
+			$sFingerprint = $value->GetAsHTML($this);
+		}
+		return $sFingerprint;
 	}
 
 	/**
@@ -4720,6 +4777,8 @@ class AttributeSubItem extends AttributeDefinition
 		$res = $oParent->GetSubItemAsEditValue($this->Get('item_code'), $value);
 		return $res;
 	}
+	
+	public function IsPartOfFingerprint() { return false; }
 }
 
 /**
@@ -5165,7 +5224,9 @@ class AttributeComputedFieldVoid extends AttributeDefinition
 		default:
 			return $this->GetSQLExpr()." = $sQValue";
 		}
-	} 
+	}
+
+	public function IsPartOfFingerprint() { return false; }
 }
 
 /**
@@ -5296,7 +5357,9 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 		default:
 			return $this->GetSQLExpr()." LIKE $sQValue";
 		}
-	} 
+	}
+	
+	public function IsPartOfFingerprint() { return false; }
 }
 
 /**

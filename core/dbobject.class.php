@@ -91,7 +91,8 @@ abstract class DBObject implements iDisplay
 
 	private $m_bFullyLoaded = false; // Compound objects can be partially loaded
 	private $m_aLoadedAtt = array(); // Compound objects can be partially loaded, array of sAttCode
-	protected $m_aModifiedAtt = array(); // list of (potentially) modified sAttCodes
+	protected $m_aTouchedAtt = array(); // list of (potentially) modified sAttCodes
+	protected $m_aModifiedAtt = array(); // real modification status: for each attCode can be: unset => don't know, true => modified, false => not modified (the same value as the original value was set)
 	protected $m_aSynchroData = null; // Set of Synch data related to this object
 	protected $m_sHighlightCode = null;
 	protected $m_aCallbacks = array();
@@ -103,6 +104,7 @@ abstract class DBObject implements iDisplay
 		{
 			$this->FromRow($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
 			$this->m_bFullyLoaded = $this->IsFullyLoaded();
+			$this->m_aTouchedAtt = array();
 			$this->m_aModifiedAtt = array();
 			return;
 		}
@@ -228,6 +230,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->m_bFullyLoaded = true;
+		$this->m_aTouchedAtt = array();
 		$this->m_aModifiedAtt = array();
 	}
 
@@ -407,8 +410,9 @@ abstract class DBObject implements iDisplay
 		$realvalue = $oAttDef->MakeRealValue($value, $this);
 
 		$this->m_aCurrValues[$sAttCode] = $realvalue;
-		$this->m_aModifiedAtt[$sAttCode] = true;
-
+		$this->m_aTouchedAtt[$sAttCode] = true;
+		unset($this->m_aModifiedAtt[$sAttCode]);
+		
 		// The object has changed, reset caches
 		$this->m_bCheckStatus = null;
 
@@ -1240,18 +1244,29 @@ abstract class DBObject implements iDisplay
 				// The value was not set
 				$aDelta[$sAtt] = $proposedValue;
 			}
-			elseif(!array_key_exists($sAtt, $this->m_aModifiedAtt))
+			elseif(!array_key_exists($sAtt, $this->m_aTouchedAtt) || (array_key_exists($sAtt, $this->m_aModifiedAtt) && $this->m_aModifiedAtt[$sAtt] == false))
 			{
-				// This attCode was never set, canno tbe modified
+				// This attCode was never set, cannot be modified
+				// or the same value - as the original value - was set, and has been verified as equivalent to the original value
 				continue;
+			}
+			else if (array_key_exists($sAtt, $this->m_aModifiedAtt) && $this->m_aModifiedAtt[$sAtt] == true)
+			{
+				// We already know that the value is really modified
+				$aDelta[$sAtt] = $proposedValue;
 			}
 			elseif(is_object($proposedValue))
 			{
-				$oLinkAttDef = MetaModel::GetAttributeDef(get_class($this), $sAtt);
+				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAtt);
 				// The value is an object, the comparison is not strict
-				if (!$oLinkAttDef->Equals($proposedValue, $this->m_aOrigValues[$sAtt]))
+				if (!$oAttDef->Equals($proposedValue, $this->m_aOrigValues[$sAtt]))
 				{
 					$aDelta[$sAtt] = $proposedValue;
+					$this->m_aModifiedAtt[$sAtt] = true; // Really modified
+				}
+				else
+				{
+					$this->m_aModifiedAtt[$sAtt] = false; // Not really modified
 				}
 			}
 			else
@@ -1264,6 +1279,11 @@ abstract class DBObject implements iDisplay
 					//var_dump($proposedValue);
 					//echo "</pre>\n";
 					$aDelta[$sAtt] = $proposedValue;
+					$this->m_aModifiedAtt[$sAtt] = true; // Really modified
+				}
+				else
+				{
+					$this->m_aModifiedAtt[$sAtt] = false; // Not really modified
 				}
 			}
 		}
@@ -1332,49 +1352,44 @@ abstract class DBObject implements iDisplay
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{
 			if (!$oAttDef->IsLinkSet()) continue;
-			if (!array_key_exists($sAttCode, $this->m_aModifiedAtt)) continue;
-			
-			$oOriginalSet = $this->m_aOrigValues[$sAttCode];
-			if ($oOriginalSet != null)
-			{
-				$aOriginalList = $oOriginalSet->ToArray();
-			}
-			else
-			{
-				$aOriginalList = array();
-			}
-			
-			$oLinks = $this->Get($sAttCode);
-			$oLinks->Rewind();
-			while ($oLinkedObject = $oLinks->Fetch())
-			{
-				if (!array_key_exists($oLinkedObject->GetKey(), $aOriginalList))
-				{
-					// New object added to the set, make it point properly
-					$oLinkedObject->Set($oAttDef->GetExtKeyToMe(), $this->m_iKey);
-				}
-				if ($oLinkedObject->IsModified())
-				{
-					// Objects can be modified because:
-					// 1) They've just been added into the set, so their ExtKey is modified
-					// 2) They are about to be removed from the set BUT NOT deleted, their ExtKey has been reset
-					$oLinkedObject->DBWrite();
-				}
-			}
-
-			// Delete the objects that were initialy present and disappeared from the list
-			// (if any)
-			if (count($aOriginalList) > 0)
-			{
-				$aNewSet = $oLinks->ToArray();
+			if (!array_key_exists($sAttCode, $this->m_aTouchedAtt)) continue;
+			if (array_key_exists($sAttCode, $this->m_aModifiedAtt) && ($this->m_aModifiedAtt[$sAttCode] == false)) continue;
 				
-				foreach($aOriginalList as $iId => $oObject)
+			$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
+			$sAdditionalKey = null;
+			if ($oAttDef->IsIndirect())
+			{
+				$sAdditionalKey = $oAttDef->GetExtKeyToRemote();
+			}
+			$oComparator = new DBObjectSetComparator($this->m_aOrigValues[$sAttCode], $this->Get($sAttCode), array($sExtKeyToMe), $sAdditionalKey);
+			$aChanges = $oComparator->GetDifferences();
+			
+			foreach($aChanges['added'] as $oLink)
+			{
+				// Make sure that the objects in the set point to "this"
+				$oLink->Set($oAttDef->GetExtKeyToMe(), $this->m_iKey);
+				$id = $oLink->DBWrite();
+			}
+			
+			foreach($aChanges['modified'] as $oLink)
+			{
+				// Make sure that the objects in the set point to "this"
+				$oLink->Set($oAttDef->GetExtKeyToMe(), $this->m_iKey);
+				$oLink->DBWrite();
+			}
+			
+			foreach($aChanges['removed'] as $oLink)
+			{
+				// Objects can be removed from the set because:
+				// 1) They should no longer exist
+				// 2) They are about to be removed from the set BUT NOT deleted, their ExtKey has been reset
+				if ($oLink->IsModified() && ($oLink->Get($sExtKeyToMe) != $this->m_iKey))
 				{
-					if (!array_key_exists($iId, $aNewSet))
-					{
-						// It disappeared from the list
-						$oObject->DBDelete();
-					}
+					$oLink->DBWrite();
+				}
+				else
+				{
+					$oLink->DBDelete();
 				}
 			}
 		}
@@ -2970,6 +2985,28 @@ abstract class DBObject implements iDisplay
 			'callback' => $callback,
 			'params' => $aParameters
 		);
+	}
+
+	/**
+	 * Computes a text-like fingerprint identifying the content of the object
+	 * but excluding the specified columns
+	 * @param $aExcludedColumns array The list of columns to exclude
+	 * @return string
+	 */
+	public function Fingerprint($aExcludedColumns = array())
+	{
+		$sFingerprint = '';
+		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
+		{
+			if (!in_array($sAttCode, $aExcludedColumns))
+			{
+				if ($oAttDef->IsPartOfFingerprint())
+				{
+					$sFingerprint .= chr(0).$oAttDef->Fingerprint($this->Get($sAttCode));
+				}
+			}
+		}
+		return $sFingerprint;
 	}
 }
 
