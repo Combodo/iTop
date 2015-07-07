@@ -96,7 +96,7 @@ try
 {
 	utils::UseParamFile();
 
-	$iRet = LoginWebPage::DoLogin(false, true, LoginWebPage::EXIT_RETURN);
+	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN); // Starting with iTop 2.2.0 portal users are no longer allowed to access the REST/JSON API
 	if ($iRet != LoginWebPage::EXIT_CODE_OK)
 	{
 		switch($iRet)
