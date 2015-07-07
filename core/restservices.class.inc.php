@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2013 Combodo SARL
+// Copyright (C) 2013-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -257,10 +257,13 @@ class CoreServices implements iRestServiceProvider
 	 */
 	public function ListOperations($sVersion)
 	{
+		// 1.3 - iTop 2.2.0, Verb 'get_related': added the options 'redundancy' and 'direction' to take into account the redundancy in the impact analysis
+		// 1.2 - was documented in the wiki but never released ! Same as 1.3
 		// 1.1 - In the reply, objects have a 'key' entry so that it is no more necessary to split class::key programmaticaly
+		// 1.0 - Initial implementation in iTop 2.0.1
 		//
 		$aOps = array();
-		if (in_array($sVersion, array('1.0', '1.1'))) 
+		if (in_array($sVersion, array('1.0', '1.1', '1.2', '1.3'))) 
 		{
 			$aOps[] = array(
 				'verb' => 'core/create',
