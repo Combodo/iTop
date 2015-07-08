@@ -90,6 +90,7 @@ function DisplayEvents($aEvents, $sTitle)
 // Main
 ///////////////////////////////////////////////////////////////////////////////
 
+date_default_timezone_set('Europe/Paris');
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
@@ -97,6 +98,7 @@ require_once('./test.class.inc.php');
 require_once('./testlist.inc.php');
 
 require_once(APPROOT.'/core/cmdbobject.class.inc.php');
+
 
 $sTodo = utils::ReadParam("todo", "");
 if ($sTodo == '')

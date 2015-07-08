@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Associated with the metamodel -> MakeQuery/MakeQuerySingleTable
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -29,10 +29,11 @@ class QueryBuilderContext
 	protected $m_aClassAliases;
 	protected $m_aTableAliases;
 	protected $m_aModifierProperties;
+	protected $m_aSelectedClasses;
 
 	public $m_oQBExpressions;
 
-	public function __construct($oFilter, $aModifierProperties, $aGroupByExpr = null)
+	public function __construct($oFilter, $aModifierProperties, $aGroupByExpr = null, $aSelectedClasses = null)
 	{
 		$this->m_oRootFilter = $oFilter;
 		$this->m_oQBExpressions = new QueryBuilderExpressions($oFilter, $aGroupByExpr);
@@ -41,6 +42,15 @@ class QueryBuilderContext
 		$this->m_aTableAliases = array();
 
 		$this->m_aModifierProperties = $aModifierProperties;
+		if (is_null($aSelectedClasses))
+		{
+			$this->m_aSelectedClasses = $oFilter->GetSelectedClasses();
+		}
+		else
+		{
+			// For the unions, the selected classes can be upper in the hierarchy (lowest common ancestor)
+			$this->m_aSelectedClasses = $aSelectedClasses;
+		}
 	}
 
 	public function GetRootFilter()
@@ -69,6 +79,9 @@ class QueryBuilderContext
 			return array();
 		}
 	}
-}
 
-?>
+	public function GetSelectedClass($sAlias)
+	{
+		return $this->m_aSelectedClasses[$sAlias];
+	}
+}

@@ -20,7 +20,7 @@
 /**
  * Main page of iTop
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -144,7 +144,7 @@ function DisplayDetails($oP, $sClass, $oObj, $id)
 /**
  * Displays the result of a search request
  * @param $oP WebPage Web page for the output
- * @param $oFilter DBObjectSearch The search of objects to display
+ * @param $oFilter DBSearch The search of objects to display
  * @param $bSearchForm boolean Whether or not to display the search form at the top the page
  * @param $sBaseClass string The base class for the search (can be different from the actual class of the results)
  * @param $sFormat string The format to use for the output: csv or html
@@ -182,7 +182,7 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
  * Displays a form (checkboxes) to select the objects for which to apply a given action
  * Only the objects for which the action is valid can be checked. By default all valid objects are checked
  * @param $oP WebPage The page for output
- * @param $oFilter DBObjectSearch The filter that defines the list of objects
+ * @param $oFilter DBSearch The filter that defines the list of objects
   * @param $sNextOperation string The next operation (code) to be executed when the form is submitted
  * @param $oChecker ActionChecker The helper class/instance used to check for which object the action is valid
  * @return none

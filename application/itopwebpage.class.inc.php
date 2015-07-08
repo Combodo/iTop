@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2014 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Class iTopWebPage
  *
- * @copyright   Copyright (C) 2010-2013 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -933,7 +933,7 @@ EOF
 				$oMPDF->Output($sOutputName, 'I');
 			}
 		}
-		MetaModel::RecordQueryTrace();
+		DBSearch::RecordQueryTrace();
 		ExecutionKPI::ReportStats();
 	}
 

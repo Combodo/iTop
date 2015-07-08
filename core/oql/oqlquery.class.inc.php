@@ -20,7 +20,7 @@
 /**
  * Classes defined for lexical analyze (see oql-parser.y)
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -266,23 +266,18 @@ class IntervalOqlExpression extends IntervalExpression implements CheckableExpre
 
 abstract class OqlQuery
 {
-	protected $m_aJoins; // array of OqlJoinSpec
-	protected $m_oCondition; // condition tree (expressions)
-
-	public function __construct($oCondition = null, $aJoins = null)
+	public function __construct()
 	{
-		$this->m_aJoins = $aJoins;
-		$this->m_oCondition = $oCondition;
 	}
 
-	public function GetJoins()
-	{
-		return $this->m_aJoins;
-	}
-	public function GetCondition()
-	{
-		return $this->m_oCondition;
-	}
+	/**
+	 * Check the validity of the expression with regard to the data model
+	 * and the query in which it is used
+	 * 	 	 
+	 * @param ModelReflection $oModelReflection MetaModel to consider	 	
+	 * @throws OqlNormalizeException
+	 */	 	
+	abstract public function Check(ModelReflection $oModelReflection, $sSourceQuery);
 }
 
 class OqlObjectQuery extends OqlQuery
@@ -290,13 +285,18 @@ class OqlObjectQuery extends OqlQuery
 	protected $m_aSelect; // array of selected classes
 	protected $m_oClass;
 	protected $m_oClassAlias;
+	protected $m_aJoins; // array of OqlJoinSpec
+	protected $m_oCondition; // condition tree (expressions)
 
 	public function __construct($oClass, $oClassAlias, $oCondition = null, $aJoins = null, $aSelect = null)
 	{
 		$this->m_aSelect = $aSelect;
 		$this->m_oClass = $oClass;
 		$this->m_oClassAlias = $oClassAlias;
-		parent::__construct($oCondition, $aJoins);
+		$this->m_aJoins = $aJoins;
+		$this->m_oCondition = $oCondition;
+
+		parent::__construct();
 	}
 
 	public function GetSelectedClasses()
@@ -319,6 +319,15 @@ class OqlObjectQuery extends OqlQuery
 	public function GetClassAliasDetails()
 	{
 		return $this->m_oClassAlias;
+	}
+
+	public function GetJoins()
+	{
+		return $this->m_aJoins;
+	}
+	public function GetCondition()
+	{
+		return $this->m_oCondition;
 	}
 
 	/**
@@ -459,7 +468,6 @@ class OqlObjectQuery extends OqlQuery
 
 		// Check the select information
 		//
-		$aSelected = array();
 		foreach ($this->GetSelectedClasses() as $oClassDetails)
 		{
 			$sClassToSelect = $oClassDetails->GetValue();
@@ -467,7 +475,6 @@ class OqlObjectQuery extends OqlQuery
 			{
 				throw new OqlNormalizeException('Unknown class [alias]', $sSourceQuery, $oClassDetails, array_keys($aAliases));
 			}
-			$aSelected[$sClassToSelect] = $aAliases[$sClassToSelect];
 		}
 
 		// Check the condition tree
@@ -477,6 +484,128 @@ class OqlObjectQuery extends OqlQuery
 			$this->m_oCondition->Check($oModelReflection, $aAliases, $sSourceQuery);
 		}
 	}
+
+	/**
+	 * Make the relevant DBSearch instance (FromOQL)
+	 */	 	
+	public function ToDBSearch($sQuery)
+	{
+		$sClass = $this->GetClass();
+		$sClassAlias = $this->GetClassAlias();
+
+		$oSearch = new DBObjectSearch($sClass, $sClassAlias);
+		$oSearch->InitFromOqlQuery($this, $sQuery);
+		return $oSearch;
+	}
 }
 
-?>
+class OqlUnionQuery extends OqlQuery
+{
+	protected $aQueries;
+
+	public function __construct(OqlObjectQuery $oLeftQuery, OqlQuery $oRightQueryOrUnion)
+	{
+		$this->aQueries[] = $oLeftQuery;
+		if ($oRightQueryOrUnion instanceof OqlUnionQuery)
+		{
+			foreach ($oRightQueryOrUnion->GetQueries() as $oSingleQuery)
+			{
+				$this->aQueries[] = $oSingleQuery;
+			}
+		}
+		else
+		{
+			$this->aQueries[] = $oRightQueryOrUnion;
+		}
+	}
+	
+	public function GetQueries()
+	{
+		return $this->aQueries;
+	}
+
+	/**
+	 * Check the validity of the expression with regard to the data model
+	 * and the query in which it is used
+	 * 	 	 
+	 * @param ModelReflection $oModelReflection MetaModel to consider	 	
+	 * @throws OqlNormalizeException
+	 */	 	
+	public function Check(ModelReflection $oModelReflection, $sSourceQuery)
+	{
+		$aColumnToClasses = array();
+		foreach ($this->aQueries as $iQuery => $oQuery)
+		{
+			$oQuery->Check($oModelReflection, $sSourceQuery);
+
+			$aAliasToClass = array($oQuery->GetClassAlias() => $oQuery->GetClass());
+			$aJoinSpecs = $oQuery->GetJoins();
+			if (is_array($aJoinSpecs))
+			{
+				foreach ($aJoinSpecs as $oJoinSpec)
+				{
+					$aAliasToClass[$oJoinSpec->GetClassAlias()] = $oJoinSpec->GetClass();
+				}
+			}
+
+			$aSelectedClasses = $oQuery->GetSelectedClasses();
+			if ($iQuery != 0)
+			{
+				if (count($aSelectedClasses) < count($aColumnToClasses))
+				{
+					$oLastClass = end($aSelectedClasses);
+					throw new OqlNormalizeException('Too few selected classes in the subquery', $sSourceQuery, $oLastClass);
+				}
+				if (count($aSelectedClasses) > count($aColumnToClasses))
+				{
+					$oLastClass = end($aSelectedClasses);
+					throw new OqlNormalizeException('Too many selected classes in the subquery', $sSourceQuery, $oLastClass);
+				}
+			}
+			foreach ($aSelectedClasses as $iColumn => $oClassDetails)
+			{
+				$sAlias = $oClassDetails->GetValue();
+				$sClass = $aAliasToClass[$sAlias];
+				$aColumnToClasses[$iColumn][] = array(
+					'alias' => $sAlias,
+					'class' => $sClass,
+					'class_name' => $oClassDetails,
+				);
+			}
+		}
+		foreach ($aColumnToClasses as $iColumn => $aClasses)
+		{
+			foreach ($aClasses as $iQuery => $aData)
+			{
+				if ($iQuery == 0)
+				{
+					// Establish the reference
+					$sRootClass = MetaModel::GetRootClass($aData['class']);
+				}
+				else
+				{
+					if (MetaModel::GetRootClass($aData['class']) != $sRootClass)
+					{
+						$aSubclasses = MetaModel::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_ALL);
+						throw new OqlNormalizeException('Incompatible classes: could not find a common ancestor', $sSourceQuery, $aData['class_name'], $aSubclasses);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Make the relevant DBSearch instance (FromOQL)
+	 */	 	
+	public function ToDBSearch($sQuery)
+	{
+		$aSearches = array();
+		foreach ($this->aQueries as $oQuery)
+		{
+			$aSearches[] = $oQuery->ToDBSearch($sQuery);
+		}
+
+		$oSearch = new DBUnionSearch($aSearches);
+		return $oSearch;
+	}
+}

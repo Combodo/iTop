@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Core test list
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -46,7 +46,7 @@ class TestSQLQuery extends TestScenarioOnDB
 
 	protected function DoExecute()
 	{
-		$oQuery = new SQLQuery(
+		$oQuery = new SQLObjectQuery(
 			$sTable = 'myTable',
 			$sTableAlias = 'myTableAlias',
 			$aFields = array('column1'=>new FieldExpression('column1', 'myTableAlias'), 'column2'=>new FieldExpression('column2', 'myTableAlias')),
@@ -56,7 +56,7 @@ class TestSQLQuery extends TestScenarioOnDB
 		);
 		$oQuery->AddCondition(Expression::FromOQL('DATE(NOW() - 1200 * 2) > \'2008-07-31\''));
 
-		$oSubQuery1 = new SQLQuery(
+		$oSubQuery1 = new SQLObjectQuery(
 			$sTable = 'myTable1',
 			$sTableAlias = 'myTable1Alias',
 			$aFields = array('column1_1'=>new FieldExpression('column1', 'myTableAlias'), 'column1_2'=>new FieldExpression('column1', 'myTableAlias')),
@@ -65,7 +65,7 @@ class TestSQLQuery extends TestScenarioOnDB
 			$aValues = array()
 		);
 
-		$oSubQuery2 = new SQLQuery(
+		$oSubQuery2 = new SQLObjectQuery(
 			$sTable = 'myTable2',
 			$sTableAlias = 'myTable2Alias',
 			$aFields = array('column2_1'=>new FieldExpression('column2', 'myTableAlias'), 'column2_2'=>new FieldExpression('column2', 'myTableAlias')),
@@ -231,6 +231,14 @@ class TestOQLParser extends TestFunction
 			'SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id NOT BELOW B.id WHERE A.col1 = 2 AND B.id = 3' => true,
 			'SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id NOT BELOW STRICT B.id WHERE A.col1 = 2 AND B.id = 3' => true,
 			'SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id = B.id WHERE A.col1 BELOW 2 AND B.id = 3' => false,
+
+			// Unions
+			//
+			'SELECT A UNION SELECT B' => true,
+			'SELECT A WHERE A.b = "sdf" UNION SELECT B WHERE B.a = "sfde"' => true,
+			'SELECT A UNION SELECT B UNION SELECT C' => true,
+			'SELECT A UNION SELECT B UNION SELECT C UNION SELECT D' => true,
+			'SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id NOT BELOW B.id WHERE A.col1 = 2 AND B.id = 3 UNION SELECT Device JOIN Site ON Device.site = Site.id JOIN Country ON Site.location = Country.id' => true,
 		);
 
 		$iErrors = 0;
@@ -622,9 +630,9 @@ class TestMyBizModel extends TestBizModel
 		$oMyChange->Set("userinfo", "test_setattribute / Made by robot #".rand(1,100));
 		$iChangeId = $oMyChange->DBInsert();
 	
-		//MetaModel::StartDebugQuery();
+		//DBSearch::StartDebugQuery();
 		$team->DBUpdateTracked($oMyChange);
-		//MetaModel::StopDebugQuery();
+		//DBSearch::StopDebugQuery();
 	
 		echo "<h4>Check the modified team</h4>";
 		$oTeam = MetaModel::GetObject("cmdbTeam", "2");
@@ -954,7 +962,7 @@ class TestQueriesOnFarm extends MyFarm
 		try
 		{
 			//$oOql = new OqlInterpreter($sQuery);
-			//$oTrash = $oOql->ParseObjectQuery();
+			//$oTrash = $oOql->ParseQuery();
 			//self::DumpVariable($oTrash, true);
 			$oMyFilter = DBObjectSearch::FromOQL($sQuery);
 		}
@@ -991,17 +999,17 @@ class TestQueriesOnFarm extends MyFarm
 		
 		//echo "<p>first pass<p>\n";
 		//self::DumpVariable($oMyFilter, true);
-		$sQuery1 = MetaModel::MakeSelectQuery($oMyFilter);
+		$sQuery1 = $oMyFilter->MakeSelectQuery();
 		//echo "<p>second pass<p>\n";
 		//self::DumpVariable($oMyFilter, true);
-		//$sQuery1 = MetaModel::MakeSelectQuery($oMyFilter);
+		//$sQuery1 = $oMyFilter->MakeSelectQuery();
 		
 		$sSerialize = $oMyFilter->serialize();
 		echo "<p>Serialized:$sSerialize</p>\n";
 		$oFilter2 = DBObjectSearch::unserialize($sSerialize);
 		try
 		{
-			$sQuery2 = MetaModel::MakeSelectQuery($oFilter2);
+			$sQuery2 = $oMyFilter2->MakeSelectQuery();
 		}
 		catch (Exception $e)
 		{
@@ -1282,7 +1290,7 @@ class TestItopEfficiency extends TestBizModel
 		$fStart = MyHelpers::getmicrotime();
 		for($i=0 ; $i < COUNT_BENCHMARK ; $i++)
 		{
-			$sSQL = MetaModel::MakeSelectQuery($oFilter);
+			$sSQL = $oFilter->MakeSelectQuery();
 		}
 		$fDuration = MyHelpers::getmicrotime() - $fStart;
 		$fBuildDuration = $fDuration / COUNT_BENCHMARK;
@@ -1399,7 +1407,7 @@ class TestQueries extends TestBizModel
 		$fParsingDuration = MyHelpers::getmicrotime() - $fStart;
 
 		$fStart = MyHelpers::getmicrotime();
-		$sSQL = MetaModel::MakeSelectQuery($oFilter);
+		$sSQL = $oFilter->MakeSelectQuery();
 		$fBuildDuration = MyHelpers::getmicrotime() - $fStart;
 
 		$fStart = MyHelpers::getmicrotime();
@@ -1570,7 +1578,7 @@ $oSearch->AddCondition_PointingTo($oOrgSearch, "org_id");
 			print_r($oSearch);
 			echo "</pre>";
 
-			$sSQL = MetaModel::MakeSelectQuery($oSearch);
+			$sSQL = $oSearch->MakeSelectQuery();
 			$res = CMDBSource::Query($sSQL);
 			foreach (CMDBSource::ExplainQuery($sSQL) as $aRow)
 			{

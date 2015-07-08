@@ -1,0 +1,432 @@
+<?php
+// Copyright (C) 2015 Combodo SARL
+//
+//   This file is part of iTop.
+//
+//   iTop is free software; you can redistribute it and/or modify	
+//   it under the terms of the GNU Affero General Public License as published by
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   iTop is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU Affero General Public License for more details.
+//
+//   You should have received a copy of the GNU Affero General Public License
+//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
+
+/**
+ * A union of DBObjectSearches 
+ *
+ * @copyright   Copyright (C) 2015 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+ 
+class DBUnionSearch extends DBSearch
+{
+	protected $aSearches; // source queries
+	protected $aSelectedClasses; // alias => classes (lowest common ancestors) computed at construction
+
+	public function __construct($aSearches)
+	{
+		if (count ($aSearches) == 0)
+		{
+			throw new CoreException('A DBUnionSearch must be made of at least one search');
+		}
+
+		$this->aSearches = array();
+		foreach ($aSearches as $oSearch)
+		{
+			if ($oSearch instanceof DBUnionSearch)
+			{
+				foreach ($oSearch->aSearches as $oSubSearch)
+				{
+					$this->aSearches[] = $oSubSearch->DeepClone();
+				}
+			}
+			else
+			{
+				$this->aSearches[] = $oSearch->DeepClone();
+			}
+		}
+
+		// 1 - Collect all the column/classes
+		$aColumnToClasses = array();
+		foreach ($this->aSearches as $iPos => $oSearch)
+		{
+			$aSelected = array_values($oSearch->GetSelectedClasses());
+
+			if ($iPos != 0)
+			{
+				if (count($aSelected) < count($aColumnToClasses))
+				{
+					throw new Exception('Too few selected classes in the subquery #'.($iPos+1));
+				}
+				if (count($aSelected) > count($aColumnToClasses))
+				{
+					throw new Exception('Too many selected classes in the subquery #'.($iPos+1));
+				}
+			}
+
+			foreach ($aSelected as $iColumn => $sClass)
+			{
+				$aColumnToClasses[$iColumn][] = $sClass;
+			}
+		}
+
+		// 2 - Build the index column => alias
+		$oFirstSearch = $this->aSearches[0];
+		$aColumnToAlias = array_keys($oFirstSearch->GetSelectedClasses());
+
+		// 3 - Compute alias => lowest common ancestor
+		$this->aSelectedClasses = array();
+		foreach ($aColumnToClasses as $iColumn => $aClasses)
+		{
+			$sAlias = $aColumnToAlias[$iColumn];
+			$sAncestor = MetaModel::GetLowestCommonAncestor($aClasses);
+			if (is_null($sAncestor))
+			{
+				throw new Exception('Could not find a common ancestor for the column '.($iColumn+1).' (Classes: '.implode(', ', $aClasses).')');
+			}
+			$this->aSelectedClasses[$sAlias] = $sAncestor;
+		}
+	}
+
+	public function GetSearches()
+	{
+		return $this->aSearches;
+	}
+
+	/**
+	 * Limited to the selected classes
+	 */	 	
+	public function GetClassName($sAlias)
+	{
+		if (array_key_exists($sAlias, $this->aSelectedClasses))
+		{
+			return $this->aSelectedClasses[$sAlias];
+		}
+		else
+		{
+			throw new CoreException("Invalid class alias '$sAlias'");
+		}
+	}
+
+	public function GetClass()
+	{
+		return reset($this->aSelectedClasses);
+	}
+
+	public function GetClassAlias()
+	{
+		reset($this->aSelectedClasses);
+		return key($this->aSelectedClasses);
+	}
+
+
+	/**
+	 * Change the class (only subclasses are supported as of now, because the conditions must fit the new class)
+	 * Defaults to the first selected class
+	 * Only the selected classes can be changed
+	 */	 	
+	public function ChangeClass($sNewClass, $sAlias = null)
+	{
+		if (is_null($sAlias))
+		{
+			$sAlias = $this->GetClassAlias();
+		}
+		elseif (!array_key_exists($sAlias, $this->aSelectedClasses))
+		{
+			// discard silently - necessary when recursing (??? copied from DBObjectSearch)
+			return;
+		}
+
+		// 1 - identify the impacted column
+		$iColumn = array_search($sAlias, array_keys($this->aSelectedClasses));
+
+		// 2 - change for each search
+		foreach ($this->aSearches as $oSearch)
+		{
+			$aSearchAliases = array_keys($oSearch->GetSelectedClasses());
+			$sSearchAlias = $aSearchAliases[$iColumn];
+			$oSearch->ChangeClass($sNewClass, $sSearchAlias);
+		}
+
+		// 3 - record the change
+		$this->aSelectedClasses[$sAlias] = $sNewClass;
+	}
+
+	public function GetSelectedClasses()
+	{
+		return $this->aSelectedClasses;
+	}
+
+	public function IsAny()
+	{
+		$bIsAny = true;
+		foreach ($this->aSearches as $oSearch)
+		{
+			if (!$oSearch->IsAny())
+			{
+				$bIsAny = false;
+				break;
+			}
+		}
+		return $bIsAny;
+	}
+
+	public function ResetCondition()
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->ResetCondition();
+		}
+	}
+
+	public function MergeConditionExpression($oExpression)
+	{
+		$aAliases = array_keys($this->aSelectedClasses);
+		foreach ($this->aSearches as $iSearchIndex => $oSearch)
+		{
+			$oClonedExpression = $oExpression->DeepClone();
+			if ($iSearchIndex != 0)
+			{
+				foreach (array_keys($oSearch->GetSelectedClasses()) as $iColumn => $sSearchAlias)
+				{
+					$oClonedExpression->RenameAlias($aAliases[$iColumn], $sSearchAlias);
+				}
+			}
+			$oSearch->MergeConditionExpression($oClonedExpression);
+		}
+	}
+
+	public function AddConditionExpression($oExpression)
+	{
+		$aAliases = array_keys($this->aSelectedClasses);
+		foreach ($this->aSearches as $iSearchIndex => $oSearch)
+		{
+			$oClonedExpression = $oExpression->DeepClone();
+			if ($iSearchIndex != 0)
+			{
+				foreach (array_keys($oSearch->GetSelectedClasses()) as $iColumn => $sSearchAlias)
+				{
+					$oClonedExpression->RenameAlias($aAliases[$iColumn], $sSearchAlias);
+				}
+			}
+			$oSearch->AddConditionExpression($oClonedExpression);
+		}
+	}
+
+  	public function AddNameCondition($sName)
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->AddNameCondition($sName);
+		}
+	}
+
+	public function AddCondition($sFilterCode, $value, $sOpCode = null)
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->AddCondition($sFilterCode, $value, $sOpCode);
+		}
+	}
+
+	/**
+	 * Specify a condition on external keys or link sets
+	 * @param sAttSpec Can be either an attribute code or extkey->[sAttSpec] or linkset->[sAttSpec] and so on, recursively
+	 *                 Example: infra_list->ci_id->location_id->country	 
+	 * @param value The value to match (can be an array => IN(val1, val2...)
+	 * @return void
+	 */
+	public function AddConditionAdvanced($sAttSpec, $value)
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->AddConditionAdvanced($sAttSpec, $value);
+		}
+	}
+
+	public function AddCondition_FullText($sFullText)
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->AddCondition_FullText($sFullText);
+		}
+	}
+
+	public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS)
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->AddCondition_PointingTo($oFilter, $sExtKeyAttCode, $iOperatorCode);
+		}
+	}
+
+	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode)
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->AddCondition_ReferencedBy($oFilter, $sForeignExtKeyAttCode);
+		}
+	}
+
+	public function Intersect(DBSearch $oFilter)
+	{
+		$aSearches = array();
+		foreach ($this->aSearches as $oSearch)
+		{
+			$aSearches[] = $oSearch->Intersect($oFilter);
+		}
+		return new DBUnionSearch($aSearches);
+	}
+
+	public function SetInternalParams($aParams)
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->SetInternalParams($aParams);
+		}
+	}
+
+	public function GetInternalParams()
+	{
+		$aParams = array();
+		foreach ($this->aSearches as $oSearch)
+		{
+			$aParams = array_merge($oSearch->GetInternalParams(), $aParams);
+		}
+		return $aParams;
+	}
+
+	public function GetQueryParams()
+	{
+		$aParams = array();
+		foreach ($this->aSearches as $oSearch)
+		{
+			$aParams = array_merge($oSearch->GetQueryParams(), $aParams);
+		}
+		return $aParams;
+	}
+
+	public function ListConstantFields()
+	{
+		// Somewhat complex to implement for unions, for a poor benefit
+		return array();
+	}
+
+	/**
+	 * Turn the parameters (:xxx) into scalar values in order to easily
+	 * serialize a search
+	 */
+	public function ApplyParameters($aArgs)
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->ApplyParameters($aArgs);
+		}
+	}
+
+	/**
+	 * Overloads for query building
+	 */ 
+	public function ToOQL($bDevelopParams = false, $aContextParams = null)
+	{
+		$aSubQueries = array();
+		foreach ($this->aSearches as $oSearch)
+		{
+			$aSubQueries[] = $oSearch->ToOQL($bDevelopParams, $aContextParams);
+		}
+		$sRet = implode(' UNION ', $aSubQueries);
+		return $sRet;
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+	//
+	// Construction of the SQL queries
+	//
+	////////////////////////////////////////////////////////////////////////////
+
+	public function MakeDeleteQuery($aArgs = array())
+	{
+		throw new Exception('MakeDeleteQuery is not implemented for the unions!');
+	}
+
+	public function MakeUpdateQuery($aValues, $aArgs = array())
+	{
+		throw new Exception('MakeUpdateQuery is not implemented for the unions!');
+	}
+
+	protected function MakeSQLQuery($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr = null, $aSelectedClasses = null)
+	{
+		if (count($this->aSearches) == 1)
+		{
+			return $this->aSearches[0]->MakeSQLQuery($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr);
+		}
+
+		$aSQLQueries = array();
+		$aAliases = array_keys($this->aSelectedClasses);
+		foreach ($this->aSearches as $iSearch => $oSearch)
+		{
+			$aSearchAliases = array_keys($oSearch->GetSelectedClasses());
+
+			// The selected classes from the query build perspective are the lowest common ancestors amongst the various queries
+			// (used when it comes to determine which attributes must be selected)
+			$aSearchSelectedClasses = array();
+			foreach ($aSearchAliases as $iColumn => $sSearchAlias)
+			{
+				$sAlias = $aAliases[$iColumn];
+				$aSearchSelectedClasses[$sSearchAlias] = $this->aSelectedClasses[$sAlias];
+			}
+
+			if (is_null($aAttToLoad))
+			{
+				$aQueryAttToLoad = null;
+			}
+			else
+			{
+					// (Eventually) Transform the aliases
+				$aQueryAttToLoad = array();
+				foreach ($aAttToLoad as $sAlias => $aAttributes)
+				{
+					$iColumn = array_search($sAlias, $aAliases);
+					$sQueryAlias = ($iColumn === false) ? $sAlias : $aSearchAliases[$iColumn];
+					$aQueryAttToLoad[$sQueryAlias] = $aAttributes;
+				}
+			}
+
+			if (is_null($aGroupByExpr))
+			{
+				$aQueryGroupByExpr = null;
+			}
+			else
+			{
+				// Clone (and eventually transform) the group by expressions
+				$aQueryGroupByExpr = array();
+				$aTranslationData = array();
+				$aQueryColumns = array_keys($oSearch->GetSelectedClasses());
+				foreach ($aAliases as $iColumn => $sAlias)
+				{
+					$sQueryAlias = $aQueryColumns[$iColumn];
+					$aTranslationData[$sAlias]['*'] = $sQueryAlias;
+					$aQueryGroupByExpr[$sAlias.'id'] = new FieldExpression('id', $sQueryAlias);
+				}
+				foreach ($aGroupByExpr as $sExpressionAlias => $oExpression)
+				{
+					$aQueryGroupByExpr[$sExpressionAlias] = $oExpression->Translate($aTranslationData, false, false);
+				}
+			}
+			$oSubQuery = $oSearch->MakeSQLQuery($aQueryAttToLoad, false, $aModifierProperties, $aQueryGroupByExpr, $aSearchSelectedClasses);
+			$aSQLQueries[] = $oSubQuery;
+		}
+
+		$oSQLQuery = new SQLUnionQuery($aSQLQueries, $aGroupByExpr);
+		//MyHelpers::var_dump_html($oSQLQuery, true);
+		//MyHelpers::var_dump_html($oSQLQuery->RenderSelect(), true);
+		if (self::$m_bDebugQuery) $oSQLQuery->DisplayHtml();
+		return $oSQLQuery;
+	}
+}

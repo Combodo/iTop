@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * General definition of an expression tree (could be OQL, SQL or whatever) 
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -30,6 +30,14 @@ class MissingQueryArgument extends CoreException
 
 abstract class Expression
 {
+	/**
+	 * Perform a deep clone (as opposed to "clone" which does copy a reference to the underlying objects)
+	 **/	 	
+	public function DeepClone()
+	{
+		return unserialize(serialize($this));
+	}
+
 	// recursive translation of identifiers
 	abstract public function GetUnresolvedFields($sAlias, &$aUnresolved);
 	abstract public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true);
@@ -95,11 +103,12 @@ abstract class Expression
 	}
 	
 	abstract public function RenameParam($sOldName, $sNewName);
+	abstract public function RenameAlias($sOldName, $sNewName);
 
 	/**
 	 * Make the most relevant label, given the value of the expression
 	 * 	 
-	 * @param DBObjectSearch oFilter The context in which this expression has been used	 	
+	 * @param DBSearch oFilter The context in which this expression has been used	 	
 	 * @param string sValue The value returned by the query, for this expression	 	
 	 * @param string sDefault The default value if no relevant label could be computed	 	
 	 * @return The label
@@ -158,6 +167,11 @@ class SQLExpression extends Expression
 	}
 	
 	public function RenameParam($sOldName, $sNewName)
+	{
+		// Do nothing, since there is nothing to rename
+	}
+
+	public function RenameAlias($sOldName, $sNewName)
 	{
 		// Do nothing, since there is nothing to rename
 	}
@@ -313,6 +327,12 @@ class BinaryExpression extends Expression
 		$this->GetLeftExpr()->RenameParam($sOldName, $sNewName);
 		$this->GetRightExpr()->RenameParam($sOldName, $sNewName);
 	}
+
+	public function RenameAlias($sOldName, $sNewName)
+	{
+		$this->GetLeftExpr()->RenameAlias($sOldName, $sNewName);
+		$this->GetRightExpr()->RenameAlias($sOldName, $sNewName);
+	}
 }
 
 
@@ -373,6 +393,11 @@ class UnaryExpression extends Expression
 	{
 		// Do nothing
 		// really ? what about :param{$iParamIndex} ??
+	}
+
+	public function RenameAlias($sOldName, $sNewName)
+	{
+		// Do nothing
 	}
 }
 
@@ -526,7 +551,7 @@ class FieldExpression extends UnaryExpression
 	/**
 	 * Make the most relevant label, given the value of the expression
 	 * 	 
-	 * @param DBObjectSearch oFilter The context in which this expression has been used	 	
+	 * @param DBSearch oFilter The context in which this expression has been used	 	
 	 * @param string sValue The value returned by the query, for this expression	 	
 	 * @param string sDefault The default value if no relevant label could be computed	 	
 	 * @return The label
@@ -567,6 +592,14 @@ class FieldExpression extends UnaryExpression
 			}
 		}
 		return $sRes;
+	}
+
+	public function RenameAlias($sOldName, $sNewName)
+	{
+		if ($this->m_sParent == $sOldName)
+		{
+			$this->m_sParent = $sNewName;
+		}
 	}
 }
 
@@ -792,6 +825,15 @@ class ListExpression extends Expression
 			$this->m_aExpressions[$key] = $oExpr->RenameParam($sOldName, $sNewName);
 		}
 	}	
+
+	public function RenameAlias($sOldName, $sNewName)
+	{
+		$aRes = array();
+		foreach ($this->m_aExpressions as $key => $oExpr)
+		{
+			$oExpr->RenameAlias($sOldName, $sNewName);
+		}
+	}	
 }
 
 
@@ -826,7 +868,7 @@ class FunctionExpression extends Expression
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
 		$aRes = array();
-		foreach ($this->m_aArgs as $oExpr)
+		foreach ($this->m_aArgs as $iPos => $oExpr)
 		{
 			$aRes[] = $oExpr->Render($aArgs, $bRetrofitParams);
 		}
@@ -903,10 +945,18 @@ class FunctionExpression extends Expression
 		}
 	}
 
+	public function RenameAlias($sOldName, $sNewName)
+	{
+		foreach ($this->m_aArgs as $key => $oExpr)
+		{
+			$oExpr->RenameAlias($sOldName, $sNewName);
+		}
+	}
+
 	/**
 	 * Make the most relevant label, given the value of the expression
 	 * 	 
-	 * @param DBObjectSearch oFilter The context in which this expression has been used	 	
+	 * @param DBSearch oFilter The context in which this expression has been used	 	
 	 * @param string sValue The value returned by the query, for this expression	 	
 	 * @param string sDefault The default value if no relevant label could be computed	 	
 	 * @return The label
@@ -1048,6 +1098,11 @@ class IntervalExpression extends Expression
 	{
 		$this->m_oValue->RenameParam($sOldName, $sNewName);
 	}	
+
+	public function RenameAlias($sOldName, $sNewName)
+	{
+		$this->m_oValue->RenameAlias($sOldName, $sNewName);
+	}	
 }
 
 class CharConcatExpression extends Expression
@@ -1150,6 +1205,14 @@ class CharConcatExpression extends Expression
 		foreach ($this->m_aExpressions as $key => $oExpr)
 		{
 			$this->m_aExpressions[$key] = $oExpr->RenameParam($sOldName, $sNewName);
+		}
+	}	
+
+	public function RenameAlias($sOldName, $sNewName)
+	{
+		foreach ($this->m_aExpressions as $key => $oExpr)
+		{
+			$oExpr->RenameAlias($sOldName, $sNewName);
 		}
 	}	
 }

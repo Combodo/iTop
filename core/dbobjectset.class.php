@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2014 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Object set management
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -47,14 +47,14 @@ class DBObjectSet
 	/**
 	 * Create a new set based on a Search definition.
 	 * 
-	 * @param DBObjectSearch $oFilter The search filter defining the objects which are part of the set (multiple columns/objects per row are supported)
+	 * @param DBSearch $oFilter The search filter defining the objects which are part of the set (multiple columns/objects per row are supported)
 	 * @param hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
 	 * @param hash $aArgs Values to substitute for the search/query parameters (if any). Format: param_name => value
 	 * @param hash $aExtendedDataSpec
 	 * @param int $iLimitCount Maximum number of rows to load (i.e. equivalent to MySQL's LIMIT start, count)
 	 * @param int $iLimitStart Index of the first row to load (i.e. equivalent to MySQL's LIMIT start, count)
 	 */
-	public function __construct(DBObjectSearch $oFilter, $aOrderBy = array(), $aArgs = array(), $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0)
+	public function __construct(DBSearch $oFilter, $aOrderBy = array(), $aArgs = array(), $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0)
 	{
 		$this->m_oFilter = $oFilter->DeepClone();
 		$this->m_aAddedIds = array();
@@ -86,7 +86,7 @@ class DBObjectSet
 		$sRet = '';
 		$this->Rewind();
 		$sRet .= "Set (".$this->m_oFilter->ToOQL().")<br/>\n";
-		$sRet .= "Query: <pre style=\"font-size: smaller; display:inline;\">".MetaModel::MakeSelectQuery($this->m_oFilter, array()).")</pre>\n";
+		$sRet .= "Query: <pre style=\"font-size: smaller; display:inline;\">".$this->m_oFilter->MakeSelectQuery().")</pre>\n";
 		
 		$sRet .= $this->Count()." records<br/>\n";
 		if ($this->Count() > 0)
@@ -353,7 +353,7 @@ class DBObjectSet
 	}
 
 	/**
-	 * Retrieve the DBObjectSearch corresponding to the objects present in this set
+	 * Retrieve the DBSearch corresponding to the objects present in this set
 	 * 
 	 * Limitation:
 	 * This method will NOT work for sets with several columns (i.e. several objects per row)
@@ -513,11 +513,11 @@ class DBObjectSet
 
 		if ($this->m_iLimitCount > 0)
 		{
-			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->GetRealSortOrder(), $this->m_aArgs, $this->m_aAttToLoad, $this->m_aExtendedDataSpec, $this->m_iLimitCount, $this->m_iLimitStart);
+			$sSQL = $this->m_oFilter->MakeSelectQuery($this->GetRealSortOrder(), $this->m_aArgs, $this->m_aAttToLoad, $this->m_aExtendedDataSpec, $this->m_iLimitCount, $this->m_iLimitStart);
 		}
 		else
 		{
-			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, $this->GetRealSortOrder(), $this->m_aArgs, $this->m_aAttToLoad, $this->m_aExtendedDataSpec);
+			$sSQL = $this->m_oFilter->MakeSelectQuery($this->GetRealSortOrder(), $this->m_aArgs, $this->m_aAttToLoad, $this->m_aExtendedDataSpec);
 		}
 		
 		if (is_object($this->m_oSQLResult))
@@ -549,7 +549,7 @@ class DBObjectSet
 	{
 		if (is_null($this->m_iNumTotalDBRows))
 		{
-			$sSQL = MetaModel::MakeSelectQuery($this->m_oFilter, array(), $this->m_aArgs, null, null, 0, 0, true);
+			$sSQL = $this->m_oFilter->MakeSelectQuery(array(), $this->m_aArgs, null, null, 0, 0, true);
 			$resQuery = CMDBSource::Query($sSQL);
 			if (!$resQuery) return 0;
 	

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Wrapper to execute the parser, lexical analyzer and normalization of an OQL query
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -83,10 +83,10 @@ class OqlInterpreter
 		return $res;
 	}
 
-	public function ParseObjectQuery()
+	public function ParseQuery()
 	{
 		$oRes = $this->Parse();
-		if (!$oRes instanceof OqlObjectQuery)
+		if (!$oRes instanceof OqlQuery)
 		{
 			throw new OQLException('Expecting an OQL query', $this->m_sQuery, 0, 0, get_class($oRes));
 		}

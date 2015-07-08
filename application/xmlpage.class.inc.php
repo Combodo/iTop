@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2014 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Class XMLPage
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -62,9 +62,9 @@ class XMLPage extends WebPage
 			}
 			echo $this->s_content;
 		}
-		if (class_exists('MetaModel'))
+		if (class_exists('DBSearch'))
 		{
-			MetaModel::RecordQueryTrace();
+			DBSearch::RecordQueryTrace();
 		}
 	}
 

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Core automated tests - basics
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -33,12 +33,14 @@ require_once(APPROOT.'/core/MyHelpers.class.inc.php');
 require_once(APPROOT.'/core/expression.class.inc.php');
 require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 require_once(APPROOT.'/core/sqlquery.class.inc.php');
+require_once(APPROOT.'/core/sqlobjectquery.class.inc.php');
+require_once(APPROOT.'/core/sqlunionquery.class.inc.php');
 
 require_once(APPROOT.'/core/log.class.inc.php');
 require_once(APPROOT.'/core/kpi.class.inc.php');
 
 require_once(APPROOT.'/core/dbobject.class.php');
-require_once(APPROOT.'/core/dbobjectsearch.class.php');
+require_once(APPROOT.'/core/dbsearch.class.php');
 require_once(APPROOT.'/core/dbobjectset.class.php');
 
 require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
@@ -508,10 +510,10 @@ abstract class TestBizModel extends TestHandler
 		echo MyHelpers::make_table_from_assoc_array($aData);
 	}
 
-	static protected function search_and_show_list(DBObjectSearch $oMyFilter)
+	static protected function search_and_show_list(DBSearch $oMyFilter)
 	{
 		$oObjSet = new CMDBObjectSet($oMyFilter);
-		echo $oMyFilter->__DescribeHTML()."' - Found ".$oObjSet->Count()." items.</br>\n";
+		echo $oMyFilter->ToOQL()."' - Found ".$oObjSet->Count()." items.</br>\n";
 		self::show_list($oObjSet);
 	}
 

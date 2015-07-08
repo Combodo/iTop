@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * DisplayBlock and derived class
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -50,7 +50,7 @@ class DisplayBlock
 	protected $m_aParams;
 	protected $m_oSet;
 	
-	public function __construct(DBObjectSearch $oFilter, $sStyle = 'list', $bAsynchronous = false, $aParams = array(), $oSet = null)
+	public function __construct(DBSearch $oFilter, $sStyle = 'list', $bAsynchronous = false, $aParams = array(), $oSet = null)
 	{
 		$this->m_oFilter = $oFilter->DeepClone();
 		$this->m_aConditions = array();
@@ -407,7 +407,7 @@ class DisplayBlock
 
 				$aGroupBy = array();
 				$aGroupBy['grouped_by_1'] = $oGroupByExp;
-				$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy, true);
+				$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true);
 				$aRes = CMDBSource::QueryToArray($sSql);
 
 				$aGroupBy = array();
@@ -911,7 +911,7 @@ EOF
 
 				$aGroupBy = array();
 				$aGroupBy['grouped_by_1'] = $oGroupByExp;
-				$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy, true);
+				$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true);
 				$aRes = CMDBSource::QueryToArray($sSql);
 
 				$aGroupBy = array();
@@ -986,7 +986,7 @@ EOF
 	
 					$aGroupBy = array();
 					$aGroupBy['grouped_by_1'] = $oGroupByExp;
-					$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy, true);
+					$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true);
 					$aRes = CMDBSource::QueryToArray($sSql);
 	
 					$aGroupBy = array();
@@ -1068,7 +1068,7 @@ EOF
 					$aGroupBy = array();
 					$aGroupBy['grouped_by_1'] = $oGroupByExp;
 
-					$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy, true);
+					$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true);
 					$aRes = CMDBSource::QueryToArray($sSql);
 	
 					$aGroupBy = array();
@@ -1128,7 +1128,7 @@ EOF
 	}
 	
 	/**
-	 * Add a condition (restriction) to the current DBObjectSearch on which the display block is based
+	 * Add a condition (restriction) to the current DBSearch on which the display block is based
 	 * taking into account the hierarchical keys for which the condition is based on the 'below' operator
 	 */
 	protected function AddCondition($sFilterCode, $condition, $sOpCode = null)
@@ -1216,7 +1216,7 @@ class HistoryBlock extends DisplayBlock
 	protected $iLimitCount;
 	protected $iLimitStart;
 	
-	public function __construct(DBObjectSearch $oFilter, $sStyle = 'list', $bAsynchronous = false, $aParams = array(), $oSet = null)
+	public function __construct(DBSearch $oFilter, $sStyle = 'list', $bAsynchronous = false, $aParams = array(), $oSet = null)
 	{
 		parent::__construct($oFilter, $sStyle, $bAsynchronous, $aParams, $oSet);
 		$this->iLimitStart = 0;
@@ -1543,7 +1543,7 @@ class MenuBlock extends DisplayBlock
 					{
 						$aQueryParams = $aExtraParams['query_params'];
 					}
-					$sSql = MetaModel::MakeGroupByQuery($this->m_oFilter, $aQueryParams, $aGroupBy);
+					$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy);
 					$aRes = CMDBSource::QueryToArray($sSql);
 					if (count($aRes) == 1)
 					{

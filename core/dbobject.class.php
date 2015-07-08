@@ -1862,7 +1862,7 @@ abstract class DBObject implements iDisplay
 					$oFilter = new DBObjectSearch(get_class($this));
 					$oFilter->AddCondition('id', $this->m_iKey, '=');
 			
-					$sSQL = MetaModel::MakeUpdateQuery($oFilter, $aChanges);
+					$sSQL = $oFilter->MakeUpdateQuery($aChanges);
 					CMDBSource::Query($sSQL);
 				}
 			}
@@ -2627,7 +2627,6 @@ abstract class DBObject implements iDisplay
 		}
 		foreach (MetaModel::EnumRelationQueries(get_class($this), $sHackedRelCode, $bDown) as $sDummy => $aQueryInfo)
 		{
-			MetaModel::DbgTrace("object=".$this->GetKey().", depth=$iMaxDepth, rel=".$aQueryInfo['sQueryDown']);
 			$sQuery = $bDown ? $aQueryInfo['sQueryDown'] : $aQueryInfo['sQueryUp'];
 			//$bPropagate = $aQueryInfo["bPropagate"];
 			//$iDepth = $bPropagate ? $iMaxDepth - 1 : 0;

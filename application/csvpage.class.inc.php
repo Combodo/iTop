@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2014 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * Simple web page with no includes or fancy formatting, useful to generateXML documents
  * The page adds the content-type text/XML and the encoding into the headers
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -51,9 +51,9 @@ class CSVPage extends WebPage
         echo trim($this->s_content);
         echo "\n";
 
-        if (class_exists('MetaModel'))
+        if (class_exists('DBSearch'))
         {
-            MetaModel::RecordQueryTrace();
+            DBSearch::RecordQueryTrace();
         }
         if (class_exists('ExecutionKPI'))
         {

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
 /**
  * OQL syntax analyzer, to be used prior to run the lexical analyzer
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -80,6 +80,7 @@ class OQLLexerRaw
 %line    $this->line
 %matchlongest 1
 whitespace = /[ \t\n\r]+/
+union      = "UNION"
 select     = "SELECT"
 from       = "FROM"
 as_alias   = "AS"
@@ -175,6 +176,9 @@ dot       = "."
 /*!lex2php
 whitespace {
 	return false;
+}
+union {
+	$this->token = OQLParser::UNION;
 }
 select {
 	$this->token = OQLParser::SELECT;

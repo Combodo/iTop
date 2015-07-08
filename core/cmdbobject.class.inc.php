@@ -20,7 +20,7 @@
 /**
  * Class cmdbObject
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -50,6 +50,8 @@ require_once('expression.class.inc.php');
 
 require_once('cmdbsource.class.inc.php');
 require_once('sqlquery.class.inc.php');
+require_once('sqlobjectquery.class.inc.php');
+require_once('sqlunionquery.class.inc.php');
 require_once('oql/oqlquery.class.inc.php');
 require_once('oql/oqlexception.class.inc.php');
 require_once('oql/oql-parser.php');
@@ -57,7 +59,7 @@ require_once('oql/oql-lexer.php');
 require_once('oql/oqlinterpreter.class.inc.php');
 
 require_once('dbobject.class.php');
-require_once('dbobjectsearch.class.php');
+require_once('dbsearch.class.php');
 require_once('dbobjectset.class.php');
 
 require_once('backgroundprocess.inc.php');
@@ -522,18 +524,18 @@ abstract class CMDBObject extends DBObject
 		return $ret;
 	}
 
-	public static function BulkUpdate(DBObjectSearch $oFilter, array $aValues)
+	public static function BulkUpdate(DBSearch $oFilter, array $aValues)
 	{
 		return $this->BulkUpdateTracked_Internal($oFilter, $aValues);
 	}
 
-	public static function BulkUpdateTracked(CMDBChange $oChange, DBObjectSearch $oFilter, array $aValues)
+	public static function BulkUpdateTracked(CMDBChange $oChange, DBSearch $oFilter, array $aValues)
 	{
 		self::SetCurrentChange($oChange);
 		$this->BulkUpdateTracked_Internal($oFilter, $aValues);
 	}
 
-	protected static function BulkUpdateTracked_Internal(DBObjectSearch $oFilter, array $aValues)
+	protected static function BulkUpdateTracked_Internal(DBSearch $oFilter, array $aValues)
 	{
 		// $aValues is an array of $sAttCode => $value
 

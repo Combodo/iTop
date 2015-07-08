@@ -866,6 +866,6 @@ catch(ZZCoreException $e)
 	$oP->error("Error: '".$e->getHtmlDesc()."'");	
 }
 $oKPI->ComputeAndReport('Total execution');
-//MetaModel::RecordQueryTrace();
+//DBSearch::RecordQueryTrace();
 $oP->output();
 ?>

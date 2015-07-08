@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,13 +19,13 @@
 /**
  * Execute and shows the data quality audit
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 /**
  * Adds the context parameters to the audit query
  */
-function FilterByContext(DBObjectSearch &$oFilter, ApplicationContext $oAppContext)
+function FilterByContext(DBSearch &$oFilter, ApplicationContext $oAppContext)
 {
 	$sObjClass = $oFilter->GetClass();		
 	$aContextParams = $oAppContext->GetNames();
@@ -93,8 +93,7 @@ function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext)
 	if ($oRule->Get('valid_flag') == 'false')
 	{
 		// The query returns directly the invalid elements
-		$oFilter = $oRuleFilter;
-		$oFilter->MergeWith($oDefinitionFilter);
+		$oFilter = $oRuleFilter->Intersect($oDefinitionFilter);
 	}
 	else
 	{

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2014 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
  * Simple web page with no includes, header or fancy formatting, useful to
  * generate HTML fragments when called by an AJAX method
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -278,9 +278,9 @@ EOF
         	echo self::FilterXSS($s_captured_output);
         }
 
-        if (class_exists('MetaModel'))
+        if (class_exists('DBSearch'))
         {
-            MetaModel::RecordQueryTrace();
+            DBSearch::RecordQueryTrace();
         }
     }
 

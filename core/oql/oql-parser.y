@@ -26,8 +26,16 @@ TODO : solve the 2 remaining shift-reduce conflicts (JOIN)
 throw new OQLParserException($this->m_sSourceQuery, $this->m_iLine, $this->m_iCol, $this->tokenName($yymajor), $TOKEN);
 }
 
+result ::= union(X). { $this->my_result = X; }
 result ::= query(X). { $this->my_result = X; }
 result ::= condition(X). { $this->my_result = X; }
+
+union(A) ::= query(X) UNION query(Y). {
+	A = new OqlUnionQuery(X, Y);
+}
+union(A) ::= query(X) UNION union(Y). {
+	A = new OqlUnionQuery(X, Y);
+}
 
 query(A) ::= SELECT class_name(X) join_statement(J) where_statement(W). {
 	A = new OqlObjectQuery(X, X, W, J, array(X));

@@ -147,7 +147,7 @@ abstract class BulkExport
 	/**
 	 * Find the first class capable of exporting the data in the given format
 	 * @param string $sFormat The lowercase format (e.g. html, csv, spreadsheet, xlsx, xml, json, pdf...)
-	 * @param DBObjectSearch $oSearch The search/filter defining the set of objects to export or null when listing the supported formats
+	 * @param DBSearch $oSearch The search/filter defining the set of objects to export or null when listing the supported formats
 	 * @return iBulkExport|NULL
 	 */
 	static public function FindExporter($sFormatCode, $oSearch = null)
@@ -251,7 +251,7 @@ abstract class BulkExport
 	 * (non-PHPdoc)
 	 * @see iBulkExport::SetObjectList()
 	 */
-	public function SetObjectList(DBObjectSearch $oSearch)
+	public function SetObjectList(DBSearch $oSearch)
 	{
 		$this->oSearch = $oSearch;
 	}

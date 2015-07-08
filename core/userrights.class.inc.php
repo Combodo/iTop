@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * User rights management API
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1045,7 +1045,7 @@ class ActionChecker
 	var $iAllowedCount = null;
 	var $aAllowedIDs = null;
 	
-	public function __construct(DBObjectSearch $oFilter, $iActionCode)
+	public function __construct(DBSearch $oFilter, $iActionCode)
 	{
 		$this->oFilter = $oFilter;
 		$this->iActionCode = $iActionCode;
@@ -1125,7 +1125,7 @@ class StimulusChecker extends ActionChecker
 {
 	var $sState = null;
 	
-	public function __construct(DBObjectSearch $oFilter, $sState, $iStimulusCode)
+	public function __construct(DBSearch $oFilter, $sState, $iStimulusCode)
 	{
 		parent::__construct($oFilter, $iStimulusCode);
 		$this->sState = $sState;

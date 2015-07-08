@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Manage a runtime environment
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -78,8 +78,10 @@ class RunTimeEnvironment
 		require_once(APPROOT.'/core/expression.class.inc.php');
 		require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 		require_once(APPROOT.'/core/sqlquery.class.inc.php');
+		require_once(APPROOT.'/core/sqlobjectquery.class.inc.php');
+		require_once(APPROOT.'/core/sqlunionquery.class.inc.php');
 		require_once(APPROOT.'/core/dbobject.class.php');
-		require_once(APPROOT.'/core/dbobjectsearch.class.php');
+		require_once(APPROOT.'/core/dbsearch.class.php');
 		require_once(APPROOT.'/core/dbobjectset.class.php');
 		require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
 		require_once(APPROOT.'/core/userrights.class.inc.php');

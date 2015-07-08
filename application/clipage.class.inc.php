@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * CLI page 
  * The page adds the content-type text/XML and the encoding into the headers
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -35,9 +35,9 @@ class CLIPage implements Page
 
     public function output()
     {
-        if (class_exists('MetaModel'))
+        if (class_exists('DBSearch'))
         {
-            MetaModel::RecordQueryTrace();
+            DBSearch::RecordQueryTrace();
         }
         if (class_exists('ExecutionKPI'))
         {

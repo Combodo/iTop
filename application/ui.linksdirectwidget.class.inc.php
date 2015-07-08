@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Class UILinksWidgetDirect
  *  
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */ 
 
@@ -382,7 +382,7 @@ class UILinksWidgetDirect
 	/**
 	 * Initializes the default search parameters based on 1) a 'current' object and 2) the silos defined by the context
 	 * @param DBObject $oSourceObj
-	 * @param DBObjectSearch $oSearch
+	 * @param DBSearch $oSearch
 	 */
 	protected function SetSearchDefaultFromContext($oSourceObj, &$oSearch)
 	{

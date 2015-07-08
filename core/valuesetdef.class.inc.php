@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Value set definitions (from a fixed list or from a query, etc.)
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -119,7 +119,7 @@ class ValueSetObjects extends ValueSetDefinition
 		$this->m_aModifierProperties[$sPluginClass][$sProperty] = $value;
 	}
 
-	public function AddCondition(DBObjectSearch $oFilter)
+	public function AddCondition(DBSearch $oFilter)
 	{
 		$this->m_aExtraConditions[] = $oFilter;		
 	}
@@ -136,7 +136,7 @@ class ValueSetObjects extends ValueSetDefinition
 		}
 		foreach($this->m_aExtraConditions as $oExtraFilter)
 		{
-			$oFilter->MergeWith($oExtraFilter);
+			$oFilter = $oFilter->Intersect($oExtraFilter);
 		}
 		foreach($this->m_aModifierProperties as $sPluginClass => $aProperties)
 		{
@@ -178,7 +178,7 @@ class ValueSetObjects extends ValueSetDefinition
 		if (!$oFilter) return false;
 		foreach($this->m_aExtraConditions as $oExtraFilter)
 		{
-			$oFilter->MergeWith($oExtraFilter);
+			$oFilter = $oFilter->Intersect($oExtraFilter);
 		}
 		foreach($this->m_aModifierProperties as $sPluginClass => $aProperties)
 		{

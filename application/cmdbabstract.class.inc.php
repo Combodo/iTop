@@ -21,7 +21,7 @@
  * Abstract class that implements some common and useful methods for displaying
  * the objects
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1503,10 +1503,12 @@ EOF
 		$sHtml .= "<h2>".Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)."</h2>\n";
 		$index = 0;
 		$sHtml .= "<p>\n";
-		$aFilterCriteria = $oSet->GetFilter()->GetCriteria();
+		//$aFilterCriteria = $oSet->GetFilter()->GetCriteria();
 		$aMapCriteria = array();
 		// Todo: Investigate... The search criteria is an expression, i.e. a tree!
 		//     I wonder if that code could work... cleanup required/recommended
+		// Temporary fix (unions do fail with this)
+		$aFilterCriteria = array();
 		foreach($aFilterCriteria as $aCriteria)
 		{
 			$aMapCriteria[$aCriteria['filtercode']][] = array('value' => $aCriteria['value'], 'opcode' => $aCriteria['opcode']);
@@ -3196,7 +3198,7 @@ EOF
 		return $res;
 	}
 
-	protected static function BulkUpdateTracked_Internal(DBObjectSearch $oFilter, array $aValues)
+	protected static function BulkUpdateTracked_Internal(DBSearch $oFilter, array $aValues)
 	{
 		// Todo - invoke the extension
 		return parent::BulkUpdateTracked_Internal($oFilter, $aValues);

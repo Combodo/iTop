@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Replay the query log made when log_queries = 1
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -104,7 +104,7 @@ class QueryLogEntry
 			{
 				for($i = 0 ; $i < $iRepeat ; $i++)
 				{
-					$this->sSql = MetaModel::MakeSelectQuery($this->oFilter, $this->aOrderBy, $this->aArgs, $this->aAttToLoad, $this->aExtendedDataSpec, $this->iLimitCount, $this->iLimitStart, $this->bGetCount);
+					$this->sSql = $this->oFilter->MakeSelectQuery($this->aOrderBy, $this->aArgs, $this->aAttToLoad, $this->aExtendedDataSpec, $this->iLimitCount, $this->iLimitStart, $this->bGetCount);
 				}
 			}
 			catch(Exception $e)
@@ -130,7 +130,7 @@ class QueryLogEntry
 			{
 				for($i = 0 ; $i < $iRepeat ; $i++)
 				{
-					$this->sSql = MetaModel::MakeGroupByQuery($this->oFilter, $this->aArgs, $this->aGroupByExpr);
+					$this->sSql = $this->oFilter->MakeGroupByQuery($this->aArgs, $this->aGroupByExpr);
 				}
 			}
 			catch(Exception $e)

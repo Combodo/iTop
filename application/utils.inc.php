@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Static class utils
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -334,7 +334,7 @@ class utils
 	
 	/**
 	 * Interprets the results posted by a normal or paginated list (in multiple selection mode)
-	 * @param $oFullSetFilter DBObjectSearch The criteria defining the whole sets of objects being selected
+	 * @param $oFullSetFilter DBSearch The criteria defining the whole sets of objects being selected
 	 * @return Array An arry of object IDs corresponding to the objects selected in the set
 	 */	
 	public static function ReadMultipleSelection($oFullSetFilter)
