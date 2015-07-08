@@ -1403,10 +1403,11 @@ abstract class MetaModel
 								$aQueries[$sRemoteClass]['down'][$sLocalClass]['sQueryUp'] = $aNeighbourData['sQueryUp'];
 								$aQueries[$sRemoteClass]['down'][$sLocalClass]['sDirection'] = 'both';
 							}
-							else
-							{
-								throw new Exception("Legacy definition of the relation '$sRelCode/$sRevertCode', defined on $sLocalClass (relation: $sRevertCode, inherited to $sClass), missing the counterpart query on class $sRemoteClass ($sRelCode)");
-							}
+							// Be silent in order to transparently support legacy data models where the counterpart query does not always exist
+							//else
+							//{
+							//	throw new Exception("Legacy definition of the relation '$sRelCode/$sRevertCode', defined on $sLocalClass (relation: $sRevertCode, inherited to $sClass), missing the counterpart query on class $sRemoteClass ($sRelCode)");
+							//}
 						}
 					}
 				}

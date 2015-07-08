@@ -269,10 +269,10 @@ $(function()
 			this.options.ymax = -9999;
 			for(var k in this.aNodes)
 			{
-				this.options.xmin = Math.min(this.aNodes[k].x + this.aNodes[k].tx, this.options.xmin);
-				this.options.xmax = Math.max(this.aNodes[k].x + this.aNodes[k].tx, this.options.xmax);
-				this.options.ymin = Math.min(this.aNodes[k].y + this.aNodes[k].ty, this.options.ymin);
-				this.options.ymax = Math.max(this.aNodes[k].y + this.aNodes[k].ty, this.options.ymax);
+				this.options.xmin = Math.min(this.aNodes[k].x + this.aNodes[k].tx - this.aNodes[k].width/2, this.options.xmin);
+				this.options.xmax = Math.max(this.aNodes[k].x + this.aNodes[k].tx + this.aNodes[k].width/2, this.options.xmax);
+				this.options.ymin = Math.min(this.aNodes[k].y + this.aNodes[k].ty - this.aNodes[k].width/2, this.options.ymin);
+				this.options.ymax = Math.max(this.aNodes[k].y + this.aNodes[k].ty + this.aNodes[k].width/2, this.options.ymax);
 			}
 		},
 		_get_edge_path: function(oEdge)
@@ -617,8 +617,10 @@ $(function()
 			this.element.closest('.ui-tabs').tabs({ heightStyle: "fill" });
 			this._close_all_tooltips();
 			this.oPaper.rect(0, 0, this.element.width(), this.element.height()).attr({fill: '#000', opacity: 0.4, 'stroke-width': 0});
+			$('#'+sId+'_refresh_btn').button('disable'); 
 			$.post(sUrl, {excluded_classes: this.options.excluded_classes, g: this.options.grouping_threshold, sources: this.options.sources, excluded: this.options.excluded, contexts: aContexts, context_key: this.options.context_key }, function(data) {
 				me.load(data);
+				$('#'+sId+'_refresh_btn').button('enable');
 			}, 'json');
 		},
 		export_as_attachment: function()
@@ -665,13 +667,22 @@ $(function()
 			$.post(sUrl, oParams, function(data) {
 				var sDownloadLink = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=download_document&class=Attachment&id='+data.att_id+'&field=contents';
 				var sIcon = GetAbsoluteUrlModulesRoot()+'itop-attachments/icons/pdf.png';
-				$('#attachments').append('<div class="attachment" id="display_attachment_'+data.att_id+'"><a data-preview="false" href="'+sDownloadLink+'"><img src="'+sIcon+'"><br/>'+sTitle+'.pdf<input id="attachment_'+data.att_id+'" type="hidden" name="attachments[]" value="'+data.att_id+'"/></a><br/><input type="button" class="btn_hidden" value="{$sDeleteBtn}" onClick="RemoveAttachment('+data.att_id+');"/></div>');
 				if (jTab != null)
 				{
 					var re = /^([^(]+)\(([0-9]+)\)(.*)$/;
 					var aParts = re.exec(sTabText);
-					var iPrevCount = parseInt(aParts[2], 10);
-					jTab.find('span').html(aParts[1]+'('+(1 + iPrevCount)+')'+aParts[3]);
+					if (aParts == null)
+					{
+						// First attachment
+						$('#attachments').html('<div class="attachment" id="display_attachment_'+data.att_id+'"><a data-preview="false" href="'+sDownloadLink+'"><img src="'+sIcon+'"><br/>'+sTitle+'.pdf<input id="attachment_'+data.att_id+'" type="hidden" name="attachments[]" value="'+data.att_id+'"/></a><br/><input type="button" class="btn_hidden" value="{$sDeleteBtn}" onClick="RemoveAttachment('+data.att_id+');"/></div>');
+						jTab.find('span').html(sTabText +' (1)');
+					}
+					else
+					{
+						$('#attachments').append('<div class="attachment" id="display_attachment_'+data.att_id+'"><a data-preview="false" href="'+sDownloadLink+'"><img src="'+sIcon+'"><br/>'+sTitle+'.pdf<input id="attachment_'+data.att_id+'" type="hidden" name="attachments[]" value="'+data.att_id+'"/></a><br/><input type="button" class="btn_hidden" value="{$sDeleteBtn}" onClick="RemoveAttachment('+data.att_id+');"/></div>');
+						var iPrevCount = parseInt(aParts[2], 10);
+						jTab.find('span').html(aParts[1]+'('+(1 + iPrevCount)+')'+aParts[3]);						
+					}
 				}
 			}, 'json');
 			return false;
@@ -691,15 +702,15 @@ $(function()
 					return sTooltipContent;
 				},
 				items: '.popupMenuTarget',
+				tooltipClass: 'tooltip-simple-graph',
 				position: {
 					my: "center bottom-10",
-					at: "center  top",					
+					at: "center  top",	
 					using: function( position, feedback ) { 
 						$(this).css( position );  
 						$( "<div>" )
 						.addClass( "arrow" )
 						.addClass( feedback.vertical )
-						.addClass( feedback.horizontal )
 						.appendTo( this );
 						}
 				}
@@ -738,6 +749,11 @@ $(function()
 			$('body').on('click', '.tooltip-close-button', function() {
 				var sDataId = $(this).attr('data-id');
 				$('.popupMenuTarget[data-id="'+sDataId+'"]').tooltip('close');
+			});
+			this.element.on("click", ":not(.tooltip-simple-graph *,.tooltip-simple-graph)", function(){
+				$('.popupMenuTarget').each(function (i) {  
+					$(this).tooltip("close"); 
+				});
 			});
 		},
 		_get_tooltip_content: function(sNodeId)

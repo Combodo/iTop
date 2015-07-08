@@ -48,7 +48,7 @@ class RelationObjectNode extends GraphNode
 	/**
 	 * Formatting for GraphViz
 	 */	 	
-	public function GetDotAttributes()
+	public function GetDotAttributes($bNoLabel = false)
 	{
 		$sDot = parent::GetDotAttributes();
 		if ($this->GetProperty('developped', false))
@@ -114,7 +114,7 @@ class RelationRedundancyNode extends GraphNode
 	/**
 	 * Formatting for GraphViz
 	 */	 	
-	public function GetDotAttributes()
+	public function GetDotAttributes($bNoLabel = false)
 	{
 		$sDisplayThreshold = sprintf('%.1f', $this->GetProperty('threshold'));
 		$sDot = 'shape=doublecircle,fillcolor=indianred,fontcolor=papayawhip,label="'.$sDisplayThreshold.'"';

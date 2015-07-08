@@ -282,22 +282,45 @@ class DisplayableNode extends GraphNode
 				{
 					if (count($aGroupProps['nodes']) >= $iThresholdCount)
 					{
-						$oNewNode = new DisplayableGroupNode($oGraph, $this->GetId().'::'.(($sStatus == 'reached') ? '_reached': ''));
-						$oNewNode->SetProperty('label', 'x'.$aGroupProps['count']);
-						$oNewNode->SetProperty('icon_url', $aGroupProps['icon_url']);
-						$oNewNode->SetProperty('class', $sClass);
-						$oNewNode->SetProperty('is_reached', ($sStatus == 'reached'));
-						$oNewNode->SetProperty('count', $aGroupProps['count']);
+						$sNewId = $this->GetId().'::'.(($sStatus == 'reached') ? '_reached': '');
+						$oNewNode = $oGraph->GetNode($sNewId);
+						if ($oNewNode == null)
+						{
+							$oNewNode = new DisplayableGroupNode($oGraph, $sNewId);
+							$oNewNode->SetProperty('label', 'x'.$aGroupProps['count']);
+							$oNewNode->SetProperty('icon_url', $aGroupProps['icon_url']);
+							$oNewNode->SetProperty('class', $sClass);
+							$oNewNode->SetProperty('is_reached', ($sStatus == 'reached'));
+							$oNewNode->SetProperty('count', $aGroupProps['count']);
+						}
+						else
+						{
+							$oNewNode->SetProperty('count', $oNewNode->GetProperty('count')+$aGroupProps['count']);
+						}
 						
-						$oIncomingEdge = new DisplayableEdge($oGraph, $this->GetId().'-'.$oNewNode->GetId(), $this, $oNewNode);
-										
+						try
+						{
+							$oIncomingEdge = new DisplayableEdge($oGraph, $this->GetId().'-'.$oNewNode->GetId(), $this, $oNewNode);
+						}
+						catch(Exception $e)
+						{
+							// Ignore this redundant egde
+						}				
+						
 						foreach($aGroupProps['nodes'] as $oNode)
 						{
 							foreach($oNode->GetIncomingEdges() as $oEdge)
 							{
 								if ($oEdge->GetSourceNode()->GetId() !== $this->GetId())
 								{
-									$oNewEdge = new DisplayableEdge($oGraph, $oEdge->GetId().'::'.$sClass, $oEdge->GetSourceNode(), $oNewNode);
+									try
+									{
+										$oNewEdge = new DisplayableEdge($oGraph, $oEdge->GetId().'::'.$sClass, $oEdge->GetSourceNode(), $oNewNode);
+									}
+									catch(Exception $e)
+									{
+										// ignore this edge
+									}
 								}
 							}
 							foreach($oNode->GetOutgoingEdges() as $oEdge)
@@ -825,7 +848,6 @@ class DisplayableGraph extends SimpleGraph
 		{
 			throw new Exception($sDot);
 		}
-		$sDot = preg_replace('/.*label=.*,/', '', $sDot); // Get rid of label lines since they may contain weird characters than can break the split and pattern matching below
 		
 		$aChunks = explode(";", $sDot);
 		foreach($aChunks as $sChunk)
@@ -975,7 +997,7 @@ class DisplayableGraph extends SimpleGraph
 		$yMin = $aRemainingArea['ymin'];
 		$yMax = $aRemainingArea['ymax'];
 		
-		//$oPdf->Rect($xMin, $yMin, $xMax - $xMin, $yMax - $yMin, 'D', array(), array(225, 225, 225));
+		//$oPdf->Rect($xMin, $yMin, $xMax - $xMin, $yMax - $yMin, 'D', array(), array(225, 50, 50));
 		
 		$fPageW = $xMax - $xMin;
 		$fPageH = $yMax - $yMin;
@@ -1093,7 +1115,7 @@ class DisplayableGraph extends SimpleGraph
 			$yMax = $yPos - $fPadding;
 		}
 		
-		return array('xmin' => $fMaxWidth + $fIconSize + 4*$fPadding, 'xmax' => $xMax, 'ymin' => $yMin, 'ymax' => $yMax);
+		return array('xmin' => $xMin + $fMaxWidth + $fIconSize + 4*$fPadding, 'xmax' => $xMax, 'ymin' => $yMin, 'ymax' => $yMax);
 	}
 	
 	/**

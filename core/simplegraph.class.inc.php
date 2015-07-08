@@ -128,10 +128,14 @@ class GraphNode extends GraphElement
 		$oGraph->_AddNode($this);
 	}
 	
-	public function GetDotAttributes()
+	public function GetDotAttributes($bNoLabel = false)
 	{
-		$sLabel = addslashes($this->GetProperty('label', $this->GetId()));
-		$sDot = 'label="'.$sLabel.'"';
+		$sDot = '';
+		if (!$bNoLabel)
+		{
+			$sLabel = addslashes($this->GetProperty('label', $this->GetId()));
+			$sDot = 'label="'.$sLabel.'"';
+		}
 		return $sDot;
 	}
 
@@ -264,10 +268,14 @@ class GraphEdge extends GraphElement
 		return $this->oSinkNode;
 	}
 
-	public function GetDotAttributes()
+	public function GetDotAttributes($bNoLabel = false)
 	{
-		$sLabel = addslashes($this->GetProperty('label', ''));
-		$sDot = 'label="'.$sLabel.'"';
+		$sDot = '';
+		if (!$bNoLabel)
+		{
+			$sLabel = addslashes($this->GetProperty('label', ''));
+			$sDot = 'label="'.$sLabel.'"';
+		}
 		return $sDot;
 	}
 }
@@ -443,9 +451,10 @@ class SimpleGraph
 
 	/**
 	 * Get the description of the graph as a text string in the graphviz 'dot' language
+	 * @param $bNoLabel bool Whether or not to include the labels in the dot file
 	 * @return string
 	 */
-	public function GetDotDescription()
+	public function GetDotDescription($bNoLabel = false)
 	{
 		$sDot =
 <<<EOF
@@ -464,12 +473,12 @@ EOF
 		
 		foreach($oIterator as $key => $oNode)
 		{
-			$sDot .= "\t\"".$oNode->GetId()."\" [ ".$oNode->GetDotAttributes()." ];\n";
+			$sDot .= "\t\"".$oNode->GetId()."\" [ ".$oNode->GetDotAttributes($bNoLabel)." ];\n";
 			if (count($oNode->GetOutgoingEdges()) > 0)
 			{
 				foreach($oNode->GetOutgoingEdges() as $oEdge)
 				{
-					$sDot .= "\t\"".$oNode->GetId()."\" -> \"".$oEdge->GetSinkNode()->GetId()."\" [ ".$oEdge->GetDotAttributes()." ];\n";
+					$sDot .= "\t\"".$oNode->GetId()."\" -> \"".$oEdge->GetSinkNode()->GetId()."\" [ ".$oEdge->GetDotAttributes($bNoLabel)." ];\n";
 				}
 			}
 		}
@@ -556,7 +565,7 @@ EOF
 				@mkdir(APPROOT."data/tmp");
 			}
 			$sXdotFilePath = tempnam(APPROOT."data/tmp", 'xdot-');
-			$sDotDescription = $this->GetDotDescription();
+			$sDotDescription = $this->GetDotDescription(true); // true => don't put (localized) labels in the file, since it makes it harder to parse
 			$sDotFilePath = tempnam(APPROOT."data/tmp", 'dot-');
 	
 			$rFile = @fopen($sDotFilePath, "w");
@@ -572,13 +581,14 @@ EOF
 				$sHtml .= "<p><b>Error:</b></p>";
 				$sHtml .= "<p>The command: <pre>$CommandLine</pre> returned $iRetCode</p>";
 				$sHtml .= "<p>The output of the command is:<pre>\n".implode("\n", $aOutput)."</pre></p>";
+				IssueLog::Error($sHtml);
 			}
 			else
 			{
 				$sHtml = '<pre>'.file_get_contents($sXdotFilePath).'</pre>';
-				@unlink($sImageFilePath);
+				@unlink($sXdotFilePath);
 			}
-			@unlink($sXdotFilePath);
+			@unlink($sDotFilePath);
 		}
 		else
 		{
