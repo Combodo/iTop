@@ -2839,7 +2839,7 @@ abstract class DBObject implements iDisplay
 	 */
 	public function GetSynchroData()
 	{
-		if ($this->m_aSynchroData == null)
+		if (is_null($this->m_aSynchroData))
 		{
 			$sOQL = "SELECT replica,datasource FROM SynchroReplica AS replica JOIN SynchroDataSource AS datasource ON replica.sync_source_id=datasource.id WHERE replica.dest_class = :dest_class AND replica.dest_id = :dest_id";
 			$oReplicaSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array() /* order by*/, array('dest_class' => get_class($this), 'dest_id' => $this->GetKey()));
