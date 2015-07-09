@@ -237,7 +237,7 @@ class DBObjectSet
 		// let's create one search definition corresponding only to the first column
 		$sClass = reset($aClasses);
 		$sAlias = key($aClasses);
-		$oFilter = new CMDBSearchFilter($sClass, $sAlias);
+		$oFilter = new DBObjectSearch($sClass, $sAlias);
 
 		$oRetSet = new self($oFilter);
 		$oRetSet->m_bLoaded = true; // no DB load

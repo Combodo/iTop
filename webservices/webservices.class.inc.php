@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Implementation of iTop SOAP services
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -364,7 +364,7 @@ abstract class WebServicesBase
 		}
 
 		$sKeyClass = $oExtKey->GetTargetClass();
-		$oReconFilter = new CMDBSearchFilter($sKeyClass);
+		$oReconFilter = new DBObjectSearch($sKeyClass);
 		foreach ($aExtKeyDesc as $sForeignAttCode => $value)
 		{
 			if (!MetaModel::IsValidFilterCode($sKeyClass, $sForeignAttCode))
@@ -443,7 +443,7 @@ abstract class WebServicesBase
 				$oRes->LogError("Parameter $sParamName: '$sTargetClass' is not a child class of '$sLinkedClass'");
 				continue; // skip
 			}
-			$oReconFilter = new CMDBSearchFilter($sTargetClass);
+			$oReconFilter = new DBObjectSearch($sTargetClass);
 			$aCIStringDesc = array();
 			foreach ($aItemData['search'] as $sAttCode => $value)
 			{

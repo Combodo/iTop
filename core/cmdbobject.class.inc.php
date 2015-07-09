@@ -582,7 +582,7 @@ class CMDBObjectSet extends DBObjectSet
 	
 	static public function FromScratch($sClass)
 	{
-		$oFilter = new CMDBSearchFilter($sClass);
+		$oFilter = new DBObjectSearch($sClass);
 		$oFilter->AddConditionExpression(new FalseExpression());
 		$oRetSet = new self($oFilter);
 		// NOTE: THIS DOES NOT WORK IF m_bLoaded is private in the base class (and you will not get any error message)
@@ -606,7 +606,7 @@ class CMDBObjectSet extends DBObjectSet
 		// let's create one search definition
 		$sClass = reset($aClasses);
 		$sAlias = key($aClasses);
-		$oFilter = new CMDBSearchFilter($sClass, $sAlias);
+		$oFilter = new DBObjectSearch($sClass, $sAlias);
 
 		$oRetSet = new CMDBObjectSet($oFilter);
 		$oRetSet->m_bLoaded = true; // no DB load
@@ -618,16 +618,3 @@ class CMDBObjectSet extends DBObjectSet
 		return $oRetSet;
 	} 
 }
-
-/**
- * TODO: investigate how to get rid of this class that was made to workaround some language limitation... or a poor design!
- *
- * @package     iTopORM
- */
-class CMDBSearchFilter extends DBObjectSearch
-{
-	// this is the public interface (?)
-}
-
-
-?>

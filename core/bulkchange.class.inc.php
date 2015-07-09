@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Bulk change facility (common to interactive and batch usages)
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -295,7 +295,7 @@ class BulkChange
 	protected function ResolveExternalKey($aRowData, $sAttCode, &$aResults)
 	{
 		$oExtKey = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
-		$oReconFilter = new CMDBSearchFilter($oExtKey->GetTargetClass());
+		$oReconFilter = new DBObjectSearch($oExtKey->GetTargetClass());
 		foreach ($this->m_aExtKeys[$sAttCode] as $sForeignAttCode => $iCol)
 		{
 			if ($sForeignAttCode == 'id')
@@ -366,7 +366,7 @@ class BulkChange
 			}
 			else
 			{
-				$oReconFilter = new CMDBSearchFilter($oExtKey->GetTargetClass());
+				$oReconFilter = new DBObjectSearch($oExtKey->GetTargetClass());
 				$aCacheKeys = array();
 				foreach ($aKeyConfig as $sForeignAttCode => $iCol)
 				{
@@ -839,7 +839,7 @@ class BulkChange
 			}
 			try
 			{
-				$oReconciliationFilter = new CMDBSearchFilter($this->m_sClass);
+				$oReconciliationFilter = new DBObjectSearch($this->m_sClass);
 				$bSkipQuery = false;
 				foreach($this->m_aReconcilKeys as $sAttCode)
 				{

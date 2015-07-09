@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Analytical search
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -85,17 +85,17 @@ try
 		// Second part: advanced search form:
 		if (!empty($sFilter))
 		{
-			$oFilter = CMDBSearchFilter::unserialize($sFilter);
+			$oFilter = DBSearch::unserialize($sFilter);
 		}
 		else if (!empty($sClass))
 		{
-			$oFilter = new CMDBSearchFilter($sClass);
+			$oFilter = new DBObjectSearch($sClass);
 		}
 	}
 }
 catch (CoreException $e)
 {
-	$oFilter = new CMDBSearchFilter($sClass);
+	$oFilter = new DBObjectSearch($sClass);
 	$oP->P("<b>".Dict::Format('UI:UniversalSearch:Error', $e->getHtmlDesc())."</b>");
 }
 

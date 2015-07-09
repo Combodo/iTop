@@ -245,7 +245,7 @@ try
 		case 'audit':
 		default:
 		$oP->add('<div class="page_header"><h1>'.Dict::S('UI:Audit:InteractiveAudit').'</h1><img style="margin-top: -20px; margin-right: 10px; float: right;" src="../images/clean.png"/></div>');
-		$oAuditFilter = new CMDBSearchFilter('AuditCategory');
+		$oAuditFilter = new DBObjectSearch('AuditCategory');
 		$oCategoriesSet = new DBObjectSet($oAuditFilter);
 		$oP->add("<table style=\"margin-top: 1em; padding: 0px; border-top: 3px solid #f6f6f1; border-left: 3px solid #f6f6f1; border-bottom: 3px solid #e6e6e1;	border-right: 3px solid #e6e6e1;\">\n");
 		$oP->add("<tr><td>\n");
@@ -271,7 +271,7 @@ try
 				$aResults = array();
 				$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
 				$iCount = $oDefinitionSet->Count();
-				$oRulesFilter = new CMDBSearchFilter('AuditRule');
+				$oRulesFilter = new DBObjectSearch('AuditRule');
 				$oRulesFilter->AddCondition('category_id', $oAuditCategory->GetKey(), '=');
 				$oRulesSet = new DBObjectSet($oRulesFilter);
 				while($oAuditRule = $oRulesSet->fetch() )

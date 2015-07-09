@@ -20,7 +20,7 @@
 /**
  * Typology for the attributes
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -930,7 +930,7 @@ class AttributeLinkedSet extends AttributeDefinition
 			{
 				$oKeyAttDef = MetaModel::GetAttributeDef($sTargetClass, $sKeyAttCode);
 				$sKeyClass = $oKeyAttDef->GetTargetClass();
-				$oExtKeyFilter = new CMDBSearchFilter($sKeyClass);
+				$oExtKeyFilter = new DBObjectSearch($sKeyClass);
 				$aReconciliationDesc = array();
 				foreach($aReconciliation as $sRemoteAttCode => $sValue)
 				{

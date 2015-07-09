@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * data generator
  * helps the consultants in creating dummy data sets, for various test purposes (validation, usability, scalability) 
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -267,7 +267,7 @@ class cmdbDataGenerator
 	function GenerateKey($sClass, $aFilterCriteria)
 	{
 		$retKey = null;
-		$oFilter = new CMDBSearchFilter($sClass);
+		$oFilter = new DBObjectSearch($sClass);
 		foreach($aFilterCriteria as $sFilterCode => $filterValue)
 		{
 			$oFilter->AddCondition($sFilterCode, $filterValue, '=');
@@ -346,7 +346,7 @@ class cmdbDataGenerator
 	 */
 	protected function OrganizationExists($sCode)
 	{
-		$oFilter = new CMDBSearchFilter('bizOrganization');
+		$oFilter = new DBObjectSearch('Organization');
 		$oFilter->AddCondition('code', $sCode, '=');
 		$oSet = new CMDBObjectSet($oFilter);
 		return ($oSet->Count() > 0);
@@ -361,7 +361,7 @@ class cmdbDataGenerator
 	protected function GetOrganization($sId)
 	{
 		$oOrg = null;
-		$oFilter = new CMDBSearchFilter('bizOrganization');
+		$oFilter = new DBObjectSearch('Organization');
 		$oFilter->AddCondition('id', $sId, '=');
 		$oSet = new CMDBObjectSet($oFilter);
 		if ($oSet->Count() > 0)

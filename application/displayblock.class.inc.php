@@ -180,11 +180,11 @@ class DisplayBlock
 		switch($sEncoding)
 		{
 			case 'text/serialize':
-			$oFilter = CMDBSearchFilter::unserialize($sITopData);
+			$oFilter = DBSearch::unserialize($sITopData);
 			break;
 			
 			case 'text/oql':
-			$oFilter = CMDBSearchFilter::FromOQL($sITopData);
+			$oFilter = DBSearch::FromOQL($sITopData);
 			break;
 		}
 		return new $sBlockClass($oFilter, $sBlockType, $bAsynchronous, $aParams);		

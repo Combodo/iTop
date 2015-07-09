@@ -421,7 +421,7 @@ try
 		
 		///////////////////////////////////////////////////////////////////////////////////////////
 
-		case 'search': // Serialized CMDBSearchFilter
+		case 'search': // Serialized DBSearch
 			$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 			$sFormat = utils::ReadParam('format', '');
 			$bSearchForm = utils::ReadParam('search_form', true);
@@ -431,7 +431,7 @@ try
 			}
 			$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
 			// TO DO: limit the search filter by the user context
-			$oFilter = CMDBSearchFilter::unserialize($sFilter); // TO DO : check that the filter is valid
+			$oFilter = DBSearch::unserialize($sFilter); // TO DO : check that the filter is valid
 			DisplaySearchSet($oP, $oFilter, $bSearchForm, '' /* sBaseClass */, $sFormat);
 		break;
 	
@@ -836,7 +836,7 @@ EOF
 			$oP->set_title(Dict::S('UI:BulkDeletePageTitle'));
 			$oP->add("<h1>".Dict::S('UI:BulkDeleteTitle')."</h1>\n");
 			// TO DO: limit the search filter by the user context
-			$oFilter = CMDBSearchFilter::unserialize($sFilter); // TO DO : check that the filter is valid
+			$oFilter = DBSearch::unserialize($sFilter); // TO DO : check that the filter is valid
 			$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_DELETE);
 			DisplayMultipleSelectionForm($oP, $oFilter, 'bulk_delete', $oChecker);
 		break;

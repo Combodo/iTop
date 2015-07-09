@@ -20,7 +20,7 @@
 /**
  * Handles various ajax requests
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -78,11 +78,11 @@ try
 		}
 		if ($sEncoding == 'oql')
 		{
-			$oFilter = CMDBSearchFilter::FromOQL($sFilter);
+			$oFilter = DBSearch::FromOQL($sFilter);
 		}
 		else
 		{
-			$oFilter = CMDBSearchFilter::unserialize($sFilter);
+			$oFilter = DBSearch::unserialize($sFilter);
 		}
 		$iStart = utils::ReadParam('start',0);
 		$iEnd = utils::ReadParam('end',1);
@@ -651,11 +651,11 @@ try
 			$_REQUEST['c'] = $aContext;
 			if ($sEncoding == 'oql')
 			{
-				$oFilter = CMDBSearchFilter::FromOQL($sFilter);
+				$oFilter = DBSearch::FromOQL($sFilter);
 			}
 			else
 			{
-				$oFilter = CMDBSearchFilter::unserialize($sFilter);
+				$oFilter = DBSearch::unserialize($sFilter);
 			}
 			$oDisplayBlock = new DisplayBlock($oFilter, $sStyle, false);
 			$aExtraParams['display_limit'] = true;
@@ -690,11 +690,11 @@ try
 		{
 			if ($sEncoding == 'oql')
 			{
-				$oFilter = CMDBSearchFilter::FromOQL($sFilter);
+				$oFilter = DBSearch::FromOQL($sFilter);
 			}
 			else
 			{
-				$oFilter = CMDBSearchFilter::unserialize($sFilter);
+				$oFilter = DBSearch::unserialize($sFilter);
 			}
 			$oDisplayBlock = new DisplayBlock($oFilter, 'pie_chart_ajax', false);
 			$oDisplayBlock->RenderContent($oPage, array('group_by' => $sGroupBy));
@@ -717,7 +717,7 @@ try
 		$aParams = utils::ReadParam('params', array(), false, 'raw_data');
 		if ($sFilter != '')
 		{
-			$oFilter = CMDBSearchFilter::unserialize($sFilter);
+			$oFilter = DBSearch::unserialize($sFilter);
 			$oDisplayBlock = new DisplayBlock($oFilter, 'open_flash_chart_ajax', false);
 			$oDisplayBlock->RenderContent($oPage, $aParams);
 		}
@@ -760,7 +760,7 @@ try
 	
 		case 'combo_options':
 		$oPage->SetContentType('text/html');
-		$oFilter = CMDBSearchFilter::FromOQL($sFilter);
+		$oFilter = DBSearch::FromOQL($sFilter);
 		$oSet = new CMDBObjectSet($oFilter);
 		while( $oObj = $oSet->fetch())
 		{
@@ -1310,7 +1310,7 @@ EOF
 
 		case 'history_from_filter':
 		$oPage->SetContentType('text/html');
-		$oHistoryFilter = CMDBSearchFilter::unserialize($sFilter);
+		$oHistoryFilter = DBSearch::unserialize($sFilter);
 		$iStart = (int)utils::ReadParam('start', 0);
 		$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length', '50'));
 		$oBlock = new HistoryBlock($oHistoryFilter, 'table', false);
