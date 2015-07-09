@@ -1503,16 +1503,7 @@ EOF
 		$sHtml .= "<h2>".Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)."</h2>\n";
 		$index = 0;
 		$sHtml .= "<p>\n";
-		//$aFilterCriteria = $oSet->GetFilter()->GetCriteria();
 		$aMapCriteria = array();
-		// Todo: Investigate... The search criteria is an expression, i.e. a tree!
-		//     I wonder if that code could work... cleanup required/recommended
-		// Temporary fix (unions do fail with this)
-		$aFilterCriteria = array();
-		foreach($aFilterCriteria as $aCriteria)
-		{
-			$aMapCriteria[$aCriteria['filtercode']][] = array('value' => $aCriteria['value'], 'opcode' => $aCriteria['opcode']);
-		}
 		$aList = MetaModel::GetZListItems($sClassName, 'standard_search');
 		$aConsts = $oSet->ListConstantFields(); // Some fields are constants based on the query/context
 		$sClassAlias = $oSet->GetFilter()->GetClassAlias();
