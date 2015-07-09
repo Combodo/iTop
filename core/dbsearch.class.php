@@ -178,36 +178,63 @@ abstract class DBSearch
 		if (empty($sQuery)) return null;
 
 		// Query caching
+		$sQueryId = md5($sQuery);
 		$bOQLCacheEnabled = true;
-		if ($bOQLCacheEnabled && array_key_exists($sQuery, self::$m_aOQLQueries))
+		if ($bOQLCacheEnabled)
 		{
-			// hit!
-			$oClone = self::$m_aOQLQueries[$sQuery]->DeepClone();
-			if (!is_null($aParams))
+			if (array_key_exists($sQueryId, self::$m_aOQLQueries))
 			{
-				$oClone->SetInternalParams($aParams);
+				// hit!
+				$oResultFilter = self::$m_aOQLQueries[$sQueryId]->DeepClone();
 			}
-			return $oClone;
+			elseif (self::$m_bUseAPCCache)
+			{
+				// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
+				//
+				$sAPCCacheId = 'itop-'.MetaModel::GetEnvironmentId().'-dbsearch-cache-'.$sQueryId;
+				$oKPI = new ExecutionKPI();
+				$result = apc_fetch($sAPCCacheId);
+				$oKPI->ComputeStats('Search APC (fetch)', $sQuery);
+	
+				if (is_object($result))
+				{
+					$oResultFilter = $result;
+					self::$m_aOQLQueries[$sQueryId] = $oResultFilter->DeepClone();
+				}
+			}
 		}
 
-		$oOql = new OqlInterpreter($sQuery);
-		$oOqlQuery = $oOql->ParseQuery();
+		if (!isset($oResultFilter))
+		{
+			$oKPI = new ExecutionKPI();
 
-		$oMetaModel = new ModelReflectionRuntime();
-		$oOqlQuery->Check($oMetaModel, $sQuery); // Exceptions thrown in case of issue
+			$oOql = new OqlInterpreter($sQuery);
+			$oOqlQuery = $oOql->ParseQuery();
+	
+			$oMetaModel = new ModelReflectionRuntime();
+			$oOqlQuery->Check($oMetaModel, $sQuery); // Exceptions thrown in case of issue
+	
+			$oResultFilter = $oOqlQuery->ToDBSearch($sQuery);
 
-		$oResultFilter = $oOqlQuery->ToDBSearch($sQuery);
+			$oKPI->ComputeStats('Parse OQL', $sQuery);
+	
+			if ($bOQLCacheEnabled)
+			{
+				self::$m_aOQLQueries[$sQueryId] = $oResultFilter->DeepClone();
+
+				if (self::$m_bUseAPCCache)
+				{
+					$oKPI = new ExecutionKPI();
+					apc_store($sAPCCacheId, $oResultFilter, self::$m_iQueryCacheTTL);
+					$oKPI->ComputeStats('Search APC (store)', $sQueryId);
+				}
+			}
+		}
 
 		if (!is_null($aParams))
 		{
 			$oResultFilter->SetInternalParams($aParams);
 		}
-
-		if ($bOQLCacheEnabled)
-		{
-			self::$m_aOQLQueries[$sQuery] = $oResultFilter->DeepClone();
-		}
-
 		return $oResultFilter;
 	}
 
