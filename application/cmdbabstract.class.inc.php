@@ -63,7 +63,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		return 'UI.php';
 	}
 	
-	function ReloadAndDisplay($oPage, $oObj, $aParams)
+	public static function ReloadAndDisplay($oPage, $oObj, $aParams)
 	{
 		$oAppContext = new ApplicationContext();
 		// Reload the page to let the "calling" page execute its 'onunload' method.
