@@ -36,11 +36,10 @@ $(function()
 			this.element.parent().bind('validate', function() { me.validate(); });
 			
 			this.aSelected = [];
-			var sContent = '';
 			
 			for(var i in this.options.fields)
 			{
-				sContent += '<fieldset><legend>'+this._format(this.options.labels.columns_selection, i)+'</legend>';
+				var sContent = '<fieldset><legend>'+this._format(this.options.labels.columns_selection, i)+'</legend>';
 				sContent += '<div style="text-align:right"><button class="check_all" type="button">'+this.options.labels.check_all+'</button>&nbsp;<button class="uncheck_all" type="button">'+this.options.labels.uncheck_all+'</button></div>';
 				for(var j in this.options.fields[i])
 				{
@@ -409,6 +408,7 @@ $(function()
 					return sTooltipContent;
 				},
 				items: '.tfs_advanced',
+				tooltipClass: 'tooltip-tfs',
 				position: {
 					my: "center bottom-10",
 					at: "center  top",					
@@ -458,6 +458,9 @@ $(function()
 				var sDataId = $(this).attr('data-attcode');
 				$('#'+me.sId+' .tfs_advanced[data-attcode="'+sDataId+'"]').tooltip('close');
 			});
+			this.element.parent().on("click", ":not(.tooltip-tfs *,.tooltip-tfs)", function(){
+				me.close_all_tooltips();
+			});
 		},
 		_get_tooltip_content: function(sDataAttCode)
 		{
@@ -505,9 +508,11 @@ $(function()
 			}
 			return sContent;
 		},
-		_close_all_tooltips: function()
+		close_all_tooltips: function()
 		{
-			this.element.find('.tfs_item').tooltip('close');
+			$('.tfs_advanced').each(function (i) {  
+				$(this).tooltip("close"); 
+			});
 		}
 	});	
 });

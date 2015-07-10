@@ -582,4 +582,7 @@ Operatoren:<br/>
 	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:~~',
 	'Core:BulkExportMessageEmptyOQL' => 'Please enter a valid OQL query.~~',
 	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Please select a valid phrasebook entry.~~',	
+	'Core:BulkExportQueryPlaceholder' => 'Type an OQL query here...~~',
+	'Core:BulkExportCanRunNonInteractive' => 'Click here to run the export in non-interactive mode.~~',
+	'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.~~',
 ));

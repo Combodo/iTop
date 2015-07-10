@@ -1128,5 +1128,6 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:CurrentObjectLockExpired_Explanation' => 'Le verrouillage interdisant les modifications concurrentes a expiré. Vos modifications ne peuvent pas être acceptées car d\'autres utilisateurs peuvent modifier cet objet.',
 	'UI:ConcurrentLockKilled' => 'Le verrouillage en édition de l\'objet courant a été supprimé.',
 	'UI:Menu:KillConcurrentLock' => 'Supprimer le verrouillage !',
+	
+	'UI:Menu:ExportPDF' => 'Exporter en PDF...',
 ));
-?>

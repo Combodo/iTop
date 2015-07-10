@@ -728,7 +728,42 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public function GetAsXML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		return "Sorry, no yet implemented";
+		if (is_object($sValue) && ($sValue instanceof DBObjectSet))
+		{
+			$sValue->Rewind();
+			$sRes = "<Set>\n";
+			while ($oObj = $sValue->Fetch())
+			{
+				$sObjClass = get_class($oObj);
+				$sRes .= "<$sObjClass id=\"".$oObj->GetKey()."\">\n";
+				// Show only relevant information (hide the external key to the current object)
+				$aAttributes = array();
+				foreach(MetaModel::ListAttributeDefs($sObjClass) as $sAttCode => $oAttDef)
+				{
+					if ($sAttCode == 'finalclass')
+					{
+						if ($sObjClass == $this->GetLinkedClass())
+						{
+							// Simplify the output if the exact class could be determined implicitely
+							continue;
+						}
+					}
+					if ($sAttCode == $this->GetExtKeyToMe()) continue;
+					if ($oAttDef->IsExternalField()) continue;
+					if (!$oAttDef->IsDirectField()) continue;
+					if (!$oAttDef->IsScalar()) continue;
+					$sAttValue = $oObj->GetAsXML($sAttCode, $bLocalize);
+					$sRes .= "<$sAttCode>$sAttValue</$sAttCode>\n";
+				}
+				$sRes .= "</$sObjClass>\n";
+			}
+			$sRes .= "</Set>\n";
+		}
+		else
+		{
+			$sRes = '';
+		}
+		return $sRes;
 	}
 
 	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
@@ -761,7 +796,7 @@ class AttributeLinkedSet extends AttributeDefinition
 					if ($oAttDef->IsExternalField()) continue;
 					if (!$oAttDef->IsDirectField()) continue;
 					if (!$oAttDef->IsScalar()) continue;
-					$sAttValue = $oObj->GetAsCSV($sAttCode, $sSepValue, '');
+					$sAttValue = $oObj->GetAsCSV($sAttCode, $sSepValue, '', $bLocalize);
 					if (strlen($sAttValue) > 0)
 					{
 						$sAttributeData = str_replace($sAttributeQualifier, $sAttributeQualifier.$sAttributeQualifier, $sAttCode.$sSepValue.$sAttValue);
@@ -897,7 +932,8 @@ class AttributeLinkedSet extends AttributeDefinition
 					{
 						throw new CoreException('Wrong attribute code for link attribute specification', array('class' => $sTargetClass, 'attcode' => $sAttCode));
 					}
-					$aValues[$sAttCode] = $sValue;
+					$oAttDef = MetaModel::GetAttributeDef($sTargetClass, $sAttCode);
+					$aValues[$sAttCode] = $oAttDef->MakeValueFromString($sValue, $bLocalizedValue, $sSepItem, $sSepAttribute, $sSepValue, $sAttributeQualifier);
 				}
 			}
 
@@ -4530,6 +4566,10 @@ class AttributeStopWatch extends AttributeDefinition
 					switch($sThresholdCode)
 					{
 					case 'deadline':
+						if ($value != '')
+						{
+							$sRet = $sTextQualifier.date(self::GetDateFormat(true /*full*/), $value).$sTextQualifier;
+						}
 						break;
 
 					case 'passed':

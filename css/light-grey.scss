@@ -1450,7 +1450,6 @@ table.export_parameters td {
 	padding-right: 0.25em;
 	font-size: 10pt;
 }
-.table_preview .nodragtable-sortable li {
-	border: 1px $grey-color solid;
-	font-size: 10pt;
+.table_preview .drag-handle {
+	cursor: move;	
 }

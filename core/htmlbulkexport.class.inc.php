@@ -56,12 +56,22 @@ class HTMLBulkExport extends TabularBulkExport
 
 	public function GetHeader()
 	{
+        $sData = '';
+		
 		$oSet = new DBObjectSet($this->oSearch);
 		$this->aStatusInfo['status'] = 'running';
 		$this->aStatusInfo['position'] = 0;
 		$this->aStatusInfo['total'] = $oSet->Count();
 
 		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
+		foreach($aSelectedClasses as $sAlias => $sClassName)
+		{
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ, $oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS))
+			{
+				$aAuthorizedClasses[$sAlias] = $sClassName;
+			}
+		}
+		$aAliases = array_keys($aAuthorizedClasses);
 		$aData = array();
 		foreach($this->aStatusInfo['fields'] as $sExtendedAttCode)
 		{
@@ -72,12 +82,13 @@ class HTMLBulkExport extends TabularBulkExport
 			}
 			else
 			{
-				$sAlias = reset($aSelectedClasses);
+				
+				$sAlias = reset($aAliases);
 				$sAttCode = $sExtendedAttCode;
 			}
-			if (!array_key_exists($sAlias, $aSelectedClasses))
+			if (!in_array($sAlias, $aAliases))
 			{
-				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", array_keys($aSelectedClasses))."'");
+				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", $aAliases)."'");
 			}
 			$sClass = $aSelectedClasses[$sAlias];
 				
@@ -106,7 +117,7 @@ class HTMLBulkExport extends TabularBulkExport
 					}
 			}
 		}
-		$sData = "<table class=\"listResults\">\n";
+		$sData .= "<table class=\"listResults\">\n";
 		$sData .= "<thead>\n";
 		$sData .= "<tr>\n";
 		foreach($aData as $sLabel)
@@ -126,6 +137,7 @@ class HTMLBulkExport extends TabularBulkExport
 
 		$oSet = new DBObjectSet($this->oSearch);
 		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
+		$aAliases = array_keys($aSelectedClasses);
 		$oSet->SetLimit($this->iChunkSize, $this->aStatusInfo['position']);
 
 		$aAliasByField = array();
@@ -141,13 +153,13 @@ class HTMLBulkExport extends TabularBulkExport
 			}
 			else
 			{
-				$sAlias = reset($aSelectedClasses);
+				$sAlias = reset($aAliases);
 				$sAttCode = $sExtendedAttCode;
 			}
 				
-			if (!array_key_exists($sAlias, $aSelectedClasses))
+			if (!in_array($sAlias, $aAliases))
 			{
-				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", array_keys($aSelectedClasses))."'");
+				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", $aAliases)."'");
 			}
 				
 			if (!array_key_exists($sAlias, $aColumnsToLoad))
@@ -170,7 +182,7 @@ class HTMLBulkExport extends TabularBulkExport
 		while($aRow = $oSet->FetchAssoc())
 		{
 			set_time_limit($iLoopTimeLimit);
-			$sFirstAlias = reset($aSelectedClasses);
+			$sFirstAlias = reset($aAliases);
 			$sHilightClass = $aRow[$sFirstAlias]->GetHilightClass();
 			if ($sHilightClass != '')
 			{
@@ -222,7 +234,6 @@ class HTMLBulkExport extends TabularBulkExport
 	{
 		$sData = "</tbody>\n";
 		$sData .= "</table>\n";
-
 		return $sData;
 	}
 

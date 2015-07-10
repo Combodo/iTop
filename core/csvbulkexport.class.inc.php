@@ -57,6 +57,26 @@ class CSVBulkExport extends TabularBulkExport
 		$this->aStatusInfo['charset'] = strtoupper(utils::ReadParam('character-set', 'UTF-8', true, 'raw_data'));
 	}
 
+
+	protected function SuggestField($aAliases, $sClass, $sAlias, $sAttCode)
+	{
+		switch($sAttCode)
+		{
+			case 'id': // replace 'id' by 'friendlyname'
+				$sAttCode = 'friendlyname';
+				break;
+					
+			default:
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+				if ($oAttDef instanceof AttributeExternalKey)
+				{
+					$sAttCode .= '_friendlyname';
+				}
+		}
+
+		return parent::SuggestField($aAliases, $sClass, $sAlias, $sAttCode);
+	}
+
 	public function EnumFormParts()
 	{
 		return array_merge(parent::EnumFormParts(), array('csv_options' => array('separator', 'character-set', 'text-qualifier', 'no_localize') ,'interactive_fields_csv' => array('interactive_fields_csv')));
@@ -153,6 +173,7 @@ class CSVBulkExport extends TabularBulkExport
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
 		}
+		$aAliases = array_keys($aAuthorizedClasses);
 		$aData = array();
 		foreach($this->aStatusInfo['fields'] as $sExtendedAttCode)
 		{
@@ -163,46 +184,47 @@ class CSVBulkExport extends TabularBulkExport
 			}
 			else
 			{
-				$sAlias = reset($aAuthorizedClasses);
+				$sAlias = reset($aAliases);
 				$sAttCode = $sExtendedAttCode;
 			}
-			if (!array_key_exists($sAlias, $aAuthorizedClasses))
+			if (!in_array($sAlias, $aAliases))
 			{
-				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", array_keys($aAuthorizedClasses))."'");
+				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", $aAliases)."'");
 			}
 			$sClass = $aAuthorizedClasses[$sAlias];
 				
-			if ($this->aStatusInfo['localize'])
+			switch($sAttCode)
 			{
-				switch($sAttCode)
+				case 'id':
+				$sLabel = 'id';
+				break;
+						
+				default:
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+				if ($oAttDef instanceof AttributeExternalField)
 				{
-					case 'id':
-						if (count($aAuthorizedClasses) > 1)
-						{
-							$aData[] = $sAlias.'.id';
-						}
-						else
-						{
-							$aData[] = 'id';
-						}
-						break;
-							
-					default:
-						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-						$sLabel = $this->aStatusInfo['localize'] ? $oAttDef->GetLabel() : $sAttCode;
-						if (count($aAuthorizedClasses) > 1)
-						{
-							$aData[] = $sAlias.'.'.$sLabel;
-						}
-						else
-						{
-							$aData[] = $sLabel;
-						}
+					if ($this->aStatusInfo['localize'])
+					{
+						$sStar = $oAttDef->IsNullAllowed() ? '' : '*';
+						$sLabel = $oAttDef->GetKeyAttDef()->GetLabel().$sStar.'->'.$oAttDef->GetExtAttDef()->GetLabel();
+					}
+					else
+					{
+						$sLabel =  $oAttDef->GetKeyAttDef()->GetCode().'->'.$oAttDef->GetExtAttDef()->GetCode();
+					}						
 				}
+				else
+				{
+					$sLabel = $this->aStatusInfo['localize'] ? $oAttDef->GetLabel() : $sAttCode;
+				}
+			}
+			if (count($aAuthorizedClasses) > 1)
+			{
+				$aData[] = $sAlias.'.'.$sLabel;
 			}
 			else
 			{
-				$aData[] = $sExtendedAttCode;
+				$aData[] = $sLabel;
 			}
 		}
 		$sFrom = array("\r\n", $this->aStatusInfo['text_qualifier']);
@@ -239,6 +261,7 @@ class CSVBulkExport extends TabularBulkExport
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
 		}
+		$aAliases = array_keys($aAuthorizedClasses);
 		$oSet->SetLimit($this->iChunkSize, $this->aStatusInfo['position']);
 
 		$aAliasByField = array();
@@ -254,13 +277,13 @@ class CSVBulkExport extends TabularBulkExport
 			}
 			else
 			{
-				$sAlias = reset($aAuthorizedClasses);
+				$sAlias = reset($aAliases);
 				$sAttCode = $sExtendedAttCode;
 			}
 				
-			if (!array_key_exists($sAlias, $aAuthorizedClasses))
+			if (!in_array($sAlias, $aAliases))
 			{
-				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", array_keys($aAuthorizedClasses))."'");
+				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", $aAliases)."'");
 			}
 				
 			if (!array_key_exists($sAlias, $aColumnsToLoad))

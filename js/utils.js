@@ -483,6 +483,7 @@ function ExportStartExport()
 			}
 		}
 	});
+	$(':itop-tabularfieldsselector:visible').tabularfieldsselector('close_all_tooltips');
 	$('#export-form').hide();
 	$('#export-feedback').show();
 	oParams.operation = 'export_build';

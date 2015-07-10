@@ -133,13 +133,10 @@ class XMLBulkExport extends BulkExport
 					}
 					else
 					{
-						if ($oAttDef->IsWritable())
+						if ($oAttDef->IsWritable() )
 						{
-							if (!$oAttDef->IsLinkSet())
-							{
-								$sValue = $oObj->GetAsXML($sAttCode, $bLocalize);
-								$sData .= "<$sAttCode>$sValue</$sAttCode>\n";
-							}
+							$sValue = $oObj->GetAsXML($sAttCode, $bLocalize);
+							$sData .= "<$sAttCode>$sValue</$sAttCode>\n";
 						}
 					}
 				}

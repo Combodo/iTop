@@ -1286,5 +1286,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.',
 	'UI:Menu:KillConcurrentLock' => 'Kill the Concurrent Modification Lock !',
+	
+	'UI:Menu:ExportPDF' => 'Export as PDF...',
 ));
 ?>

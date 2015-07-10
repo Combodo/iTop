@@ -1962,9 +1962,8 @@ table.export_parameters td {
 }
 
 
-.table_preview .nodragtable-sortable li {
-  border: 1px #555555 solid;
-  font-size: 10pt;
+.table_preview .drag-handle {
+  cursor: move;
 }
 
 

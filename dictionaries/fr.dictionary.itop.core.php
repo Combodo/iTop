@@ -689,7 +689,10 @@ Opérateurs :<br/>
 	'Core:BulkExport:OptionNoLocalize' => 'Ne pas traduire les valeurs (pour les champs de type "Enum")',
 	'Core:BulkExport:ScopeDefinition' => 'Définition des objets à exporter',
 	'Core:BulkExportLabelOQLExpression' => 'Requête OQL:',
-	'Core:BulkExportLabelPhrasebookEntry' => 'Entrée dans le livre des requêtes:',
+	'Core:BulkExportLabelPhrasebookEntry' => 'Entrée du livre des requêtes:',
 	'Core:BulkExportMessageEmptyOQL' => 'Veuillez saisir une requête OQL valide.',
 	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Veuillez sélectionner une entrée dans le livre des requêtes.',
+	'Core:BulkExportQueryPlaceholder' => 'Saisissez une requête OQL...',
+	'Core:BulkExportCanRunNonInteractive' => 'Cliquez ici pour exécuter l\'export en mode non-interactif.',
+	'Core:BulkExportLegacyExport' => 'Cliquez ici pour exécuter l\'ancienne version de l\'export.',
 ));

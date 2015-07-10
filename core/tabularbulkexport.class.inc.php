@@ -266,18 +266,6 @@ EOF
 		return true; //$oAttDef->IsScalar();
 	}
 
-	/**
-	 * Tells if the specified field is part of the "advanced" fields
-	 * @param unknown $sClass
-	 * @param unknown $sAttCode
-	 * @param AttributeDefinition $oAttDef Can be null when $sAttCode == 'id'
-	 * @return boolean
-	 */
-	protected function IsAdvancedValidField($sClass, $sAttCode, $oAttDef = null)
-	{
-		return (($sAttCode == 'id') || ($oAttDef instanceof AttributeExternalKey));
-	}
-
 	protected function GetSampleData(DBObject $oObj, $sAttCode)
 	{
 		if ($oObj == null) return '';
@@ -306,10 +294,14 @@ EOF
 			if ($oQueries->Count() > 0)
 			{
 				$oQuery = $oQueries->Fetch();
-				$sFields = trim($oQuery->Get('fields'));
-				if ($sFields === '')
+				if (($sFields === null) || ($sFields === ''))
 				{
-					throw new BulkExportMissingParameterException('fields');
+					// No 'fields' parameter supplied, take the fields from the query phrasebook definition
+					$sFields = trim($oQuery->Get('fields'));
+					if ($sFields === '')
+					{
+						throw new BulkExportMissingParameterException('fields');
+					}
 				}
 			}
 			else
@@ -318,6 +310,12 @@ EOF
 			}
 		}
 
-		$this->aStatusInfo['fields'] = explode(',', $sFields);
+		$aFields = explode(',', $sFields);
+		$this->aStatusInfo['fields'] = array();
+		foreach($aFields as $sField)
+		{
+			// Trim the values since it's too temping to write: fields=name, first_name, org_name instead of fields=name,first_name,org_name
+			$this->aStatusInfo['fields'][] = trim($sField);
+		}
 	}
 }

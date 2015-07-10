@@ -102,6 +102,14 @@ class ExcelBulkExport extends TabularBulkExport
 		$this->aStatusInfo['total'] = $oSet->Count();
 
 		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
+		foreach($aSelectedClasses as $sAlias => $sClassName)
+		{
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ, $oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS))
+			{
+				$aAuthorizedClasses[$sAlias] = $sClassName;
+			}
+		}
+		$aAliases = array_keys($aAuthorizedClasses);
 		$aTableHeaders = array();
 		foreach($this->aStatusInfo['fields'] as $sExtendedAttCode)
 		{
@@ -112,12 +120,12 @@ class ExcelBulkExport extends TabularBulkExport
 			}
 			else
 			{
-				$sAlias = reset($aSelectedClasses);
+				$sAlias = reset($aAliases);
 				$sAttCode = $sExtendedAttCode;
 			}
-			if (!array_key_exists($sAlias, $aSelectedClasses))
+			if (!in_array($sAlias, $aAliases))
 			{
-				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", array_keys($aSelectedClasses))."'");
+				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", $aAliases)."'");
 			}
 			$sClass = $aSelectedClasses[$sAlias];
 
@@ -170,6 +178,7 @@ class ExcelBulkExport extends TabularBulkExport
 		$hFile = fopen($this->aStatusInfo['tmp_file'], 'ab');
 		$oSet = new DBObjectSet($this->oSearch);
 		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
+		$aAliases = array_keys($aSelectedClasses);
 		$oSet->SetLimit($this->iChunkSize, $this->aStatusInfo['position']);
 
 		$aAliasByField = array();
@@ -185,13 +194,13 @@ class ExcelBulkExport extends TabularBulkExport
 			}
 			else
 			{
-				$sAlias = reset($aSelectedClasses);
+				$sAlias = reset($aAliases);
 				$sAttCode = $sExtendedAttCode;
 			}
 
-			if (!array_key_exists($sAlias, $aSelectedClasses))
+			if (!in_array($sAlias, $aAliases))
 			{
-				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", array_keys($aSelectedClasses))."'");
+				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", $aAliases)."'");
 			}
 
 			if (!array_key_exists($sAlias, $aColumnsToLoad))
@@ -224,7 +233,22 @@ class ExcelBulkExport extends TabularBulkExport
 						break;
 							
 					default:
-						$sField = $aRow[$aAttCode['alias']]->Get($aAttCode['attcode']);
+					$value = $aRow[$aAttCode['alias']]->Get($aAttCode['attcode']);
+					if ($value instanceOf ormCaseLog)
+					{
+						// Extract the case log as text and remove the "===" which make Excel think that the cell contains a formula the next time you edit it!
+						$sField = trim(preg_replace('/========== ([^=]+) ============/', '********** $1 ************', $value->GetText()));
+					}
+					else if ($value instanceOf DBObjectSet)
+					{
+						$oAttDef = MetaModel::GetAttributeDef(get_class($aRow[$aAttCode['alias']]), $aAttCode['attcode']);
+						$sField =  $oAttDef->GetAsCSV($value, '', '', $aRow[$aAttCode['alias']]);
+					}
+					else
+					{
+						$oAttDef = MetaModel::GetAttributeDef(get_class($aRow[$aAttCode['alias']]), $aAttCode['attcode']);
+						$sField =  $oAttDef->GetEditValue($value, $aRow[$aAttCode['alias']]);
+					}
 				}
 				$aData[] = $sField;
 			}

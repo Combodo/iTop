@@ -123,7 +123,7 @@ function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExcep
 	$oP->add('<table style="width:100%" class="export_parameters">');
 	$sExpressionHint = empty($sExceptionMessage) ? '' : '<tr><td colspan="2">'.htmlentities($sExceptionMessage, ENT_QUOTES, 'UTF-8').'</td></tr>';
 	$oP->add('<tr><td class="column-label"><span style="white-space: nowrap;"><input type="radio" name="query_mode" value="oql" id="radio_oql" checked><label for="radio_oql">'.Dict::S('Core:BulkExportLabelOQLExpression').'</label></span></td>');
-	$oP->add('<td><textarea style="width:100%" cols="70" rows="8" name="expression" id="textarea_oql" placeholder="SELECT Server">'.htmlentities($sExpression, ENT_QUOTES, 'UTF-8').'</textarea></td></tr>');
+	$oP->add('<td><textarea style="width:100%" cols="70" rows="8" name="expression" id="textarea_oql" placeholder="'.Dict::S('Core:BulkExportQueryPlaceholder').'">'.htmlentities($sExpression, ENT_QUOTES, 'UTF-8').'</textarea></td></tr>');
 	$oP->add($sExpressionHint);
 	$oP->add('<tr><td class="column-label"><span style="white-space: nowrap;"><input type="radio" name="query_mode" value="phrasebook" id="radio_phrasebook"><label for="radio_phrasebook">'.Dict::S('Core:BulkExportLabelPhrasebookEntry').'</label></span></td>');
 	$oP->add('<td><select name="query" id="select_phrasebook">');
@@ -139,6 +139,8 @@ function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExcep
 	$oP->add('</table>');
 	$oP->add('</form>');
 	$oP->add('</fieldset>');
+	$oP->p('<a target="_blank" href="'.utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php">'.Dict::S('Core:BulkExportCanRunNonInteractive').'</a>');
+	$oP->p('<a target="_blank" href="'.utils::GetAbsoluteUrlAppRoot().'webservices/export.php">'.Dict::S('Core:BulkExportLegacyExport').'</a>');
 	$sJSEmptyOQL = json_encode(Dict::S('Core:BulkExportMessageEmptyOQL'));
 	$sJSEmptyQueryId = json_encode(Dict::S('Core:BulkExportMessageEmptyPhrasebookEntry'));
 	
@@ -232,12 +234,14 @@ function DisplayForm(WebPage $oP, $sAction = '', $sExpression = '', $sQueryId = 
 	if ($sFormat == null)
 	{
 		// No specific format chosen
+		$sDefaultFormat = utils::ReadParam('format', 'xlsx');
 		$oP->add('<p>'.Dict::S('Core:BulkExport:ExportFormatPrompt').' <select name="format" id="format_selector">');
 		$aSupportedFormats = BulkExport::FindSupportedFormats();
 		asort($aSupportedFormats);
 		foreach($aSupportedFormats as $sFormatCode => $sLabel)
 		{
-			$oP->add('<option value="'.$sFormatCode.'">'.htmlentities($sLabel, ENT_QUOTES, 'UTF-8').'</option>');
+			$sSelected = ($sFormatCode == $sDefaultFormat) ? 'selected' : '';
+			$oP->add('<option value="'.$sFormatCode.'" '.$sSelected.'>'.htmlentities($sLabel, ENT_QUOTES, 'UTF-8').'</option>');
 			$oExporter = BulkExport::FindExporter($sFormatCode);
 			$oExporter->SetObjectList($oExportSearch);
 			$aParts = $oExporter->EnumFormParts();
@@ -319,7 +323,7 @@ function InteractiveShell($sExpression, $sQueryId, $sFormat, $sFileName, $sMode)
 			modal: true,
 			width: '80%',
 			title: $sJSTitle,
-			close: function() { $(this).remove(); },
+			close: function() { $('#export-form').attr('data-state', 'cancelled'); $(this).remove(); },
 			buttons: [
 				{text: $sExportBtnLabel, id: 'export-dlg-submit', click: function() {} }
 			]
@@ -345,10 +349,7 @@ EOF
 			{
 				$oQuery = $oQueries->Fetch();
 				$sExpression = $oQuery->Get('oql');
-				if (strlen($sFields) == 0)
-				{
-					$sFields = trim($oQuery->Get('fields'));
-				}
+				$sFields = trim($oQuery->Get('fields'));
 			}
 			else
 			{
@@ -396,6 +397,14 @@ EOF
 	$oP->output();	
 }
 
+/**
+ * Checks the parameters and returns the appropriate exporter (if any)
+ * @param string $sExpression The OQL query to export or null
+ * @param string $sQueryId The entry in the query phrasebook if $sExpression is null
+ * @param string $sFormat The code of export format: csv, pdf, html, xlsx
+ * @throws MissingQueryArgument
+ * @return Ambigous <iBulkExport, NULL>
+ */
 function CheckParameters($sExpression, $sQueryId, $sFormat)
 {
 	$oExporter  = null;	
@@ -660,7 +669,18 @@ try
 	else 
 	{
 		$oExporter = CheckParameters($sExpression, $sQueryId, $sFormat);
-		$oP = new WebPage('iTop export');
+		$sMimeType = $oExporter->GetMimeType();
+		if ($sMimeType == 'text/html')
+		{
+			$oP = new NiceWebPage('iTop export');
+			$oP->add_style("body { overflow: auto; }");
+			$oP->add_ready_script("$('table.listResults').tablesorter({widgets: ['MyZebra']});");
+		}
+		else
+		{
+			$oP = new ajax_page('iTop export');
+			$oP->SetContentType($oExporter->GetMimeType());
+		}
 		DoExport($oP, $oExporter, false);
 		$oP->output();
 	}
@@ -675,6 +695,7 @@ catch (BulkExportMissingParameterException $e)
 catch (Exception $e)
 {
 	$oP = new WebPage('iTop Export');
-	$oP->add($e->getMessage()."<br/>".$e->getTraceAsString());
+	$oP->add('Error: '.$e->getMessage());
+	IssueLog::Error($e->getMessage()."\n".$e->getTraceAsString());
 	$oP->output();
 }
