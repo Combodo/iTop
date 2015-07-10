@@ -1415,6 +1415,17 @@ EOF
 						$sMessage = Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
 						$sSeverity = 'ok';
 						utils::RemoveTransaction($sTransactionId);
+						$bLockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
+						if ($bLockEnabled)
+						{
+							// Release the concurrent lock, if any
+							$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, false, 'raw_data');
+							if ($sOwnershipToken !== null)
+							{
+								// We're done, let's release the lock
+								iTopOwnershipLock::ReleaseLock(get_class($oObj), $oObj->GetKey(), $sOwnershipToken);
+							}
+						}
 					}
 				}
 				else
