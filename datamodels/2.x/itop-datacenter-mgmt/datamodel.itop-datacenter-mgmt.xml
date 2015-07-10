@@ -96,9 +96,6 @@
             <item id="documents_list">
               <rank>160</rank>
             </item>
-            <item id="tickets_list">
-              <rank>170</rank>
-            </item>
             <item id="enclosure_list">
               <rank>180</rank>
             </item>
@@ -296,9 +293,6 @@
             </item>
             <item id="documents_list">
               <rank>170</rank>
-            </item>
-            <item id="tickets_list">
-              <rank>180</rank>
             </item>
             <item id="device_list">
               <rank>190</rank>
@@ -649,9 +643,6 @@
             <item id="documents_list">
               <rank>160</rank>
             </item>
-            <item id="tickets_list">
-              <rank>170</rank>
-            </item>
             <item id="providercontracts_list">
               <rank>180</rank>
             </item>
@@ -837,9 +828,6 @@
             </item>
             <item id="documents_list">
               <rank>170</rank>
-            </item>
-            <item id="tickets_list">
-              <rank>180</rank>
             </item>
             <item id="providercontracts_list">
               <rank>190</rank>

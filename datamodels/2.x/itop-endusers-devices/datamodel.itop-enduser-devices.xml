@@ -230,9 +230,6 @@
             <item id="documents_list">
               <rank>160</rank>
             </item>
-            <item id="tickets_list">
-              <rank>170</rank>
-            </item>
             <item id="providercontracts_list">
               <rank>180</rank>
             </item>
@@ -402,9 +399,6 @@
             <item id="documents_list">
               <rank>180</rank>
             </item>
-            <item id="tickets_list">
-              <rank>190</rank>
-            </item>
             <item id="providercontracts_list">
               <rank>200</rank>
             </item>
@@ -563,9 +557,6 @@
             <item id="documents_list">
               <rank>160</rank>
             </item>
-            <item id="tickets_list">
-              <rank>170</rank>
-            </item>
             <item id="providercontracts_list">
               <rank>180</rank>
             </item>
@@ -711,9 +702,6 @@
             </item>
             <item id="contacts_list">
               <rank>140</rank>
-            </item>
-            <item id="tickets_list">
-              <rank>150</rank>
             </item>
             <item id="documents_list">
               <rank>160</rank>
@@ -875,9 +863,6 @@
             </item>
             <item id="documents_list">
               <rank>20</rank>
-            </item>
-            <item id="tickets_list">
-              <rank>30</rank>
             </item>
             <item id="physicalinterface_list">
               <rank>40</rank>
@@ -1081,9 +1066,6 @@
             </item>
             <item id="documents_list">
               <rank>20</rank>
-            </item>
-            <item id="tickets_list">
-              <rank>30</rank>
             </item>
             <item id="physicalinterface_list">
               <rank>40</rank>
@@ -1308,9 +1290,6 @@
             </item>
             <item id="documents_list">
               <rank>150</rank>
-            </item>
-            <item id="tickets_list">
-              <rank>160</rank>
             </item>
             <item id="providercontracts_list">
               <rank>170</rank>

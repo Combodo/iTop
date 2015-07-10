@@ -1404,9 +1404,6 @@
             <item id="documents_list">
               <rank>70</rank>
             </item>
-            <item id="tickets_list">
-              <rank>80</rank>
-            </item>
             <item id="applicationsolution_list">
               <rank>90</rank>
             </item>
@@ -1461,6 +1458,60 @@
           <access>public</access>
           <type>Overload-DBObject</type>
           <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
+        </method>
+        <method id="DisplayBareRelations">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-cmdbAbstractObject</type>
+          <code><![CDATA[	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	{
+		parent::DisplayBareRelations($oPage, $bEditMode);
+
+		$sTicketListAttCode = 'tickets_list';
+
+		if (MetaModel::IsValidAttCode(get_class($this), $sTicketListAttCode))
+		{
+			// Display one list per leaf class (the only way to display the status as of now)
+
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sTicketListAttCode);
+			$sLnkClass = $oAttDef->GetLinkedClass();
+			$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
+			$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
+
+			$iTotal = 0;
+			$aSearches = array();
+
+			foreach (MetaModel::EnumChildClasses('Ticket') as $sSubClass)
+			{
+				if (!MetaModel::HasChildrenClasses($sSubClass))
+				{
+					$sStateAttCode = MetaModel::GetStateAttributeCode($sSubClass);
+					if ($sStateAttCode != '')
+					{
+						$oSearch = DBSearch::FromOQL("SELECT $sSubClass AS t JOIN $sLnkClass AS lnk ON lnk.$sExtKeyToRemote = t.id WHERE $sExtKeyToMe = :myself AND $sStateAttCode NOT IN ('rejected', 'resolved', 'closed')", array('myself' => $this->GetKey()));
+						$aSearches[$sSubClass] = $oSearch;
+
+						$oSet = new DBObjectSet($oSearch);
+						$iTotal += $oSet->Count();
+					}
+				}
+			}
+
+			$sCount = ($iTotal > 0) ? ' ('.$iTotal.')' : '';
+			$oPage->SetCurrentTab(Dict::S('Class:FunctionalCI/Tab:OpenedTickets').$sCount);
+
+			foreach ($aSearches as $sSubClass => $oSearch)
+			{
+				$sBlockId = __class__.'_opened_'.$sSubClass;
+		
+				$oPage->add('<fieldset>');
+				$oPage->add('<legend>'.MetaModel::GetName($sSubClass).'</legend>');
+				$oBlock = new DisplayBlock($oSearch, 'list', false);
+				$oBlock->Display($oPage, $sBlockId, array('menu' => false));
+				$oPage->add('</fieldset>');
+			}
+		}
+	}]]></code>
         </method>
       </methods>
       <relations>
@@ -1626,9 +1677,6 @@
             </item>
             <item id="documents_list">
               <rank>150</rank>
-            </item>
-            <item id="tickets_list">
-              <rank>160</rank>
             </item>
           </items>
         </details>
@@ -2216,9 +2264,6 @@
             <item id="documents_list">
               <rank>20</rank>
             </item>
-            <item id="tickets_list">
-              <rank>30</rank>
-            </item>
             <item id="applicationsolution_list">
               <rank>35</rank>
             </item>
@@ -2531,9 +2576,6 @@
             </item>
             <item id="documents_list">
               <rank>30</rank>
-            </item>
-            <item id="tickets_list">
-              <rank>40</rank>
             </item>
             <item id="applicationsolution_list">
               <rank>45</rank>
@@ -2849,9 +2891,6 @@
             <item id="documents_list">
               <rank>80</rank>
             </item>
-            <item id="tickets_list">
-              <rank>90</rank>
-            </item>
             <item id="functionalcis_list">
               <rank>100</rank>
             </item>
@@ -2988,9 +3027,6 @@
             </item>
             <item id="documents_list">
               <rank>80</rank>
-            </item>
-            <item id="tickets_list">
-              <rank>90</rank>
             </item>
             <item id="applicationsolutions_list">
               <rank>100</rank>
@@ -3291,9 +3327,6 @@
             <item id="documents_list">
               <rank>120</rank>
             </item>
-            <item id="tickets_list">
-              <rank>130</rank>
-            </item>
             <item id="applicationsolution_list">
               <rank>140</rank>
             </item>
@@ -3437,9 +3470,6 @@
             </item>
             <item id="documents_list">
               <rank>120</rank>
-            </item>
-            <item id="tickets_list">
-              <rank>130</rank>
             </item>
             <item id="applicationsolution_list">
               <rank>140</rank>
@@ -3585,9 +3615,6 @@
             <item id="documents_list">
               <rank>120</rank>
             </item>
-            <item id="tickets_list">
-              <rank>130</rank>
-            </item>
             <item id="applicationsolution_list">
               <rank>140</rank>
             </item>
@@ -3725,9 +3752,6 @@
             <item id="documents_list">
               <rank>120</rank>
             </item>
-            <item id="tickets_list">
-              <rank>130</rank>
-            </item>
             <item id="applicationsolution_list">
               <rank>140</rank>
             </item>
@@ -3841,9 +3865,6 @@
             <item id="documents_list">
               <rank>120</rank>
             </item>
-            <item id="tickets_list">
-              <rank>130</rank>
-            </item>
             <item id="applicationsolution_list">
               <rank>140</rank>
             </item>
@@ -3953,9 +3974,6 @@
             </item>
             <item id="documents_list">
               <rank>80</rank>
-            </item>
-            <item id="tickets_list">
-              <rank>90</rank>
             </item>
             <item id="applicationsolution_list">
               <rank>100</rank>
@@ -4073,9 +4091,6 @@
             </item>
             <item id="documents_list">
               <rank>80</rank>
-            </item>
-            <item id="tickets_list">
-              <rank>90</rank>
             </item>
             <item id="applicationsolution_list">
               <rank>100</rank>
@@ -4202,9 +4217,6 @@
             </item>
             <item id="documents_list">
               <rank>90</rank>
-            </item>
-            <item id="tickets_list">
-              <rank>100</rank>
             </item>
             <item id="applicationsolution_list">
               <rank>110</rank>

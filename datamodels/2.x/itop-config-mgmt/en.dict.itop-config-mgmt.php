@@ -329,6 +329,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item',
 	'Class:FunctionalCI/Attribute:finalclass' => 'CI Type',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
+	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets',
 ));
 
 //

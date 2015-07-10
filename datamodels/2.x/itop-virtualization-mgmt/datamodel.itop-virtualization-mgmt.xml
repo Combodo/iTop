@@ -332,9 +332,6 @@
             <item id="documents_list">
               <rank>90</rank>
             </item>
-            <item id="tickets_list">
-              <rank>100</rank>
-            </item>
             <item id="applicationsolution_list">
               <rank>110</rank>
             </item>
@@ -480,9 +477,6 @@
             </item>
             <item id="documents_list">
               <rank>70</rank>
-            </item>
-            <item id="tickets_list">
-              <rank>80</rank>
             </item>
             <item id="applicationsolution_list">
               <rank>90</rank>
@@ -657,9 +651,6 @@
             </item>
             <item id="documents_list">
               <rank>30</rank>
-            </item>
-            <item id="tickets_list">
-              <rank>40</rank>
             </item>
             <item id="applicationsolution_list">
               <rank>45</rank>

@@ -274,6 +274,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FunctionalCI/Attribute:tickets_list+' => '',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Type de CI',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
+	'Class:FunctionalCI/Tab:OpenedTickets' => 'Tickets en cours',
 ));
 
 //
