@@ -286,7 +286,13 @@ class WebPage implements Page
     			file_put_contents($sCssPath, $sCss);
     		}
     	}
-    	$sCSSUrl = utils::GetAbsoluteUrlAppRoot().$sCssRelPath;
+    	$sRootUrl =  utils::GetAbsoluteUrlAppRoot();
+    	if ($sRootUrl === '')
+    	{
+    		// We're running the setup of the first install...
+    		$sRootUrl = '../';
+    	}
+    	$sCSSUrl = $sRootUrl.$sCssRelPath;
     	$this->add_linked_stylesheet($sCSSUrl);
     }
 	/**
