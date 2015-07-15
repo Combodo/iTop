@@ -1,4 +1,4 @@
-iTop - version 2.2.0 Beta - 15-July-2015
+iTop - version 2.2.0 Beta - 16-July-2015
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -16,7 +16,7 @@ Readme file
 1. ABOUT THIS RELEASE
    ==================
 Thank you for downloading the 21st packaged release of iTop.
-This version is a major release, with quite a few bug significative enhancements.
+This version is a major release, with quite a few bug fixes and significative enhancements.
 
 The documentation about iTop is available as a Wiki: https://wiki.openitop.org/
 
@@ -27,17 +27,18 @@ The source code of iTop can be found on SourceForge: https://sourceforge.net/p/i
     ---------------------------
 This version brings a number of expected enhancements, namely:
 
-- An new engine to compute and display impact analysis
+- An new engine to compute and display impact analysis (requires Graphviz on the server, but no longer depends on Flash)
 - A complete rework of the exports
-- A lock for objects being modified by an agent
-- A few optimizations (APC cache required)
+- A lock to prevent the concurrent modification of the same object by different agents
+- A few performance optimizations (APC/APCu required on the server to benefit from them)
 - Enhancements to customizations that can be performed in XML
 
 ... and about 25 bug fixes
 
 1.2 Should I upgrade to 2.2.0 beta?
     -------------------------------
-Considering that iTop 2.2.0 is fully compatible with iTop 2.0.x and the number of bugs fixed, we recommend you to upgrade.
+This version is a beta quality version, and thus is NOT recommended for production.
+If you want to test drive the new features, we recommend that you install it in a "staging" environment.
 Anyhow, prior to taking that decision, we encourage you to have a look at the migration notes:
 https://wiki.openitop.org/doku.php?id=2_1_0:admin:210_to_220_migration_notes
 
@@ -81,9 +82,9 @@ PHP 5.3: Apache, IIS, nginx...
 
 End-user configuration:
 Although iTop should work with most modern web browsers, the application has been
-tested mostly with Firefox 3+, IE8, IE9, Safari 5 and Chrome. iTop was designed for
+tested mostly with Firefox 36+, IE9+, Safari 5 and Chrome. iTop was designed for
 at least a 1024x768 screen resolution. For the graphical view of the impact analysis,
-Flash version 8 or higher is required.
+Flash version 8 or higher is required for some charts.
 
 2.2. Install procedure
      -----------------
@@ -198,57 +199,61 @@ That's it.
 
 Modernizations
 --------------------
-New look
+New look: a little bit "flatter" and more modern, but still quite similar to previous versions of iTop for a smooth migration 
 The 'zip' extension is now mandatory to install iTop, since the code relies on the ZipArchive class for the Excel export and the scheduled backup.
-iTop now requires PH 5.3 or higher.
+iTop now requires PH 5.3.0 or higher (instead of PHP 5.2).
+For the display of the impact analysis, Graphviz is required on the server.
 
 
 Impact analysis
 -----------------
-Takes the redundancy into account (configurable on power sources or on the farms)
-View from the ticket
-The view from the CI takes into account the active tickets and is exportable in PDF (can be attached to the CI)
-The view has been improved and better supports high volumes of data
-Can be customized in XML, still backward compatible with definition made by the mean of methods
+Takes the redundancy into account (On "Power Sources" and on "Farms")
+An new "Impact analysis" tab is now available on tickets, to show the exact impact of a given ticket (can be exported in PDF and attached to the ticket)
+The graphical view no longer depends on Flash, takes into account the active tickets and is exportable in PDF
+The display has been improved and better supports high volumes of data by automatically grouping similar objects
+The impact analysis can now be customized in XML, but remains backwards compatible with definitions made by the mean of PHP methods
 
 
 Exports
 -------------
-Bulk Export redesign, addressing the tickets:
+The bulk export has been completely redesigned:
+- interactive choice of the columns to export (and their order) as well as all the format specific options
+- support for high volumes of data for the interactive export
+- the same export engine" is used for interactive or scripted exports
+- new PDF format
+The following enhancements/bugs were addressed:
 #1071 Bulk Read access rights
 #1034 List of fields for Excel export
 #772 Some attributes not exportedvia export.php
-Main features:
-- list and order of the fields taken into account
-- interactive mode to specify all the parameters interactively (including the list and the order of fields)
-- same behavior for all the formats: html, CSV, spreadsheet, XML
-- new PDF export
-
 
 Locking
 -------------
+A new locking mechanism has been introduced to prevent the concurrent interactive modification of the same object (for example a User Request ticket)
+by two agents (or by the same agent in two different tabs of her/his browser). In case of troubles, an administrator can however bypass this lock.
 
+Note: The locking mechanism can be completely disabled to go back to the previous behavior. (via the configuration parameter: concurrent_lock_enabled)
 
 OQL syntax
 --------------------
-1) UNION
+1) The OQL language now supports UNION statements:
 SELECT Server WHERE cpu = '...' UNION SELECT PC
-Unions support polymorphism and can be used anywhere in the application.
+Unions support polymorphism: you can use UNION on as many OQL queries as needed as long as the selected classes have a common ancestor.
+Unions  can be used anywhere in the application where an OQL query is expected.
+
 2) JOIN ... ON objkey = id
 Allow JOIN on a objclass/objkey pair of attributes
-Enables queries on the synchronized objects (SynchroReplica::dest_id changed into an attribute of type AttributeObjectKey),
-or with change tracking logs.
+Enables queries on the synchronized objects (SynchroReplica::dest_id was changed into an attribute of type AttributeObjectKey), or with change tracking logs.
 
 
 Scalability / Performance
 -------------------------
-Optimization: improved the OQL cache:
+Optimization: improvement to the OQL cache:
 - take benefit of the APC cache (if present)
-- memory indexation could fail in case of long queries (query id based on a md5)
-- added kpi measure on the OQL parsing
+- memory indexation may have failed in case of long queries (query id based on a md5)
+- added a kpi measure on the OQL parsing
 Optimization: when displaying an object details, do not check data synchro for each and every attribute (the cache did exist but was inoperant)
-Performance optimization: cache the result of the disk scan looking for icons for dashboards
-Optimization of DisplayBlock::FromObjectSet, load only the needed column!
+Performance optimization: cache the result of the disk scan looking for icons for dashboards (speeds up the welcome page !)
+Optimization of DisplayBlock::FromObjectSet, load only the needed column(s)!
 
 
 Miscellaneous fixes
@@ -352,4 +357,3 @@ Tested with IE8 and IE9, Firefox 3.6 up to Firefox 24 and Chrome. Be aware that 
 #343 	CKEditor (HTML Editor) not compatible with direct object creation on ExtKeys
 #350 	Object edition form: validation does not tell which field has a problem
 #730 	Leaving temporary files when performing a backup of the data during installation
-#1034	Excel export on the command-line ignoring the list of fields
