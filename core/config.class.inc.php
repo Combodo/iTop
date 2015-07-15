@@ -162,7 +162,7 @@ class Config
 			'default' => '/usr/bin/dot',
 			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => false,
+			'show_in_conf_sample' => true,
 		),
 		'php_path' => array(
 			'type' => 'string',
@@ -1749,6 +1749,10 @@ class Config
 		if (isset($aParamValues['application_path']))
 		{
 			$this->Set('app_root_url', $aParamValues['application_path']);
+		}
+		if (isset($aParamValues['graphviz_path']))
+		{
+			$this->Set('graphviz_path', $aParamValues['graphviz_path']);
 		}
 		if (isset($aParamValues['mode']) && isset($aParamValues['language']))
 		{

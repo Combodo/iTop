@@ -434,6 +434,55 @@ class SetupUtils
 	}
 
 	/**
+	 * Check that graphviz can be launched
+	 * @param string $GraphvizPath The path where graphviz' dot program is installed
+	 * @return CheckResult The result of the check
+	 */
+	static function CheckGraphviz($sGraphvizPath)
+	{
+		$oResult = null;
+		SetupPage::log('Info - CheckGraphviz');
+	
+		// availability of exec()
+		//
+		$aDisabled = explode(', ', ini_get('disable_functions'));
+		SetupPage::log('Info - PHP functions disabled: '.implode(', ', $aDisabled));
+		if (in_array('exec', $aDisabled))
+		{
+			$aResult[] = new CheckResult(CheckResult::ERROR, "The PHP exec() function has been disabled on this server");
+		}
+	
+		// availability of dot / dot.exe
+		if (empty($sGraphvizPath))
+		{
+			$sGraphvizPath = 'dot';
+		}
+		$sCommand = "$sGraphvizPath -V 2>&1";
+	
+		$aOutput = array();
+		$iRetCode = 0;
+		exec($sCommand, $aOutput, $iRetCode);
+		if ($iRetCode == 0)
+		{
+			$oResult = new CheckResult(CheckResult::INFO, "dot is present: ".$aOutput[0]);
+		}
+		elseif ($iRetCode == 1)
+		{
+			$oResult = new CheckResult(CheckResult::WARNING, "dot could not be found: ".implode(' ', $aOutput)." - Please make sure it is installed and in the path.");
+		}
+		else
+		{
+			$oResult = new CheckResult(CheckResult::WARNING, "dot could not be executed (retcode=$iRetCode): Please make sure it is installed and in the path");
+		}
+		foreach($aOutput as $sLine)
+		{
+			SetupPage::log('Info - '.$sGraphvizPath.' -V said: '.$sLine);
+		}
+	
+		return $oResult;
+	}
+			
+	/**
 	 * Helper function to retrieve the system's temporary directory
 	 * Emulates sys_get_temp_dir if neeed (PHP < 5.2.1)
 	 * @return string Path to the system's temp directory
@@ -710,6 +759,7 @@ class SetupUtils
 				'db_pwd' => $oPrevConf->GetDBPwd(),
 				'db_name' => $oPrevConf->GetDBName(),
 				'db_prefix' => $oPrevConf->GetDBSubname(),
+				'graphviz_path' => $oPrevConf->Get('graphviz_path'),
 			);
 		}
 		
@@ -997,7 +1047,7 @@ EOF
 				{
 					$aWarnings[] = $oCheck->sLabel;
 				}
-								}
+			}
 			if (count($aErrors) > 0)
 			{
 				$oPage->add_ready_script('$("#wiz_form").data("db_connection", "error");');

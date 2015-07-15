@@ -84,7 +84,7 @@ body {
 }
 
 h1 {
-	color: #1C94C4;
+	color: #555555;
 	font-size: 16pt;
 }
 h2 {

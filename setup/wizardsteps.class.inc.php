@@ -219,6 +219,7 @@ class WizStepInstallOrUpgrade extends WizardStep
 				$sDBPwd = $aPreviousInstance['db_pwd'];
 				$sDBName = $aPreviousInstance['db_name'];
 				$sDBPrefix = $aPreviousInstance['db_prefix'];
+				$this->oWizard->SaveParameter('graphviz_path', $aPreviousInstance['graphviz_path']);
 				$sStyle = '';
 				$sPreviousVersionDir = APPROOT;
 			}
@@ -918,6 +919,7 @@ class WizStepMiscParams extends WizardStep
 	{
 		$this->oWizard->SaveParameter('default_language', '');
 		$this->oWizard->SaveParameter('application_url', '');
+		$this->oWizard->SaveParameter('graphviz_path', '');
 		$this->oWizard->SaveParameter('sample_data', 'yes');
 		return array('class' => 'WizStepModulesChoice', 'state' => 'start_install');
 	}
@@ -926,6 +928,8 @@ class WizStepMiscParams extends WizardStep
 	{
 		$sDefaultLanguage = $this->oWizard->GetParameter('default_language', $this->oWizard->GetParameter('admin_language'));
 		$sApplicationURL = $this->oWizard->GetParameter('application_url', utils::GetDefaultUrlAppRoot());
+		$sDefaultGraphvizPath = (strtolower(substr(PHP_OS, 0, 3)) === 'win') ? 'C:\\Program Files\\Graphviz\\bin\\dot.exe' : '/usr/bin/dot';
+		$sGraphvizPath = $this->oWizard->GetParameter('graphviz_path', $sDefaultGraphvizPath);
 		$sSampleData = $this->oWizard->GetParameter('sample_data', 'yes');
 		$oPage->add('<h2>Additional parameters</h2>');
 		$oPage->add('<fieldset>');
@@ -946,6 +950,14 @@ class WizStepMiscParams extends WizardStep
 		$oPage->add('</table>');
 		$oPage->add('</fieldset>');
 		$oPage->add('<fieldset>');
+		$oPage->add('<legend>Path to Graphviz\' dot application</legend>');
+		$oPage->add('<table>');
+		$oPage->add('<tr><td>Path: </td><td><input id="graphviz_path" name="graphviz_path" type="text" size="35" maxlength="1024" value="'.htmlentities($sGraphvizPath, ENT_QUOTES, 'UTF-8').'"><span id="v_graphviz_path"/></td><tr>');
+		$oPage->add('<tr><td colspan="2"><a href="http://www.graphviz.org" target="_blank">Graphviz</a> is required to display the impact analysis graph (i.e. impacts / depends on).</td><tr>');
+		$oPage->add('<tr><td colspan="2"><span id="graphviz_status"></span></td><tr>');
+		$oPage->add('</table>');
+		$oPage->add('</fieldset>');
+		$oPage->add('<fieldset>');
 		$oPage->add('<legend>Sample Data</legend>');
 		$sChecked = ($sSampleData == 'yes') ? ' checked ' : '';
 		$oPage->p('<input id="sample_data_yes" name="sample_data" type="radio" value="yes"'.$sChecked.'><label for="sample_data_yes">&nbsp;I am installing a <b>demo or test</b> instance, populate the database with some demo data.');
@@ -955,10 +967,52 @@ class WizStepMiscParams extends WizardStep
 		$oPage->add_ready_script(
 <<<EOF
 		$('#application_url').bind('change keyup', function() { WizardUpdateButtons(); } );
+		$('#graphviz_path').bind('change keyup init', function() { WizardUpdateButtons();  WizardAsyncAction('check_graphviz', { graphviz_path: $('#graphviz_path').val() }); } ).trigger('init');
+		$('#btn_next').click(function() {
+			bRet = true;
+			if ($(this).attr('data-graphviz') != 'ok')
+			{
+				bRet = confirm('The impact analysis will not be displayed properly. Are you sure you want to continue?');
+			}
+			return bRet;
+		});
 EOF
 		);
 	}
 	
+	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
+	{
+		switch($sCode)
+		{			
+			case 'check_graphviz':
+			$sGraphvizPath = $aParameters['graphviz_path'];
+			$oCheck = SetupUtils::CheckGraphviz($sGraphvizPath);
+			$sMessage = json_encode($oCheck->sLabel);
+			switch($oCheck->iSeverity)
+			{
+				case CheckResult::INFO:
+				$sStatus = 'ok';
+				$sMessage = json_encode('<img src="../images/validation_ok.png">&nbsp;'.$oCheck->sLabel);
+				
+				break;
+				
+				default:
+				case CheckResult::ERROR:
+				case CheckResult::WARNING:
+				$sStatus = 'ko';
+				$sMessage = json_encode('<img src="../images/error.png">&nbsp;'.$oCheck->sLabel);
+				
+			}
+			$oPage->add_ready_script(
+<<<EOF
+	$("#graphviz_status").html($sMessage);
+	$('#btn_next').attr('data-graphviz', '$sStatus');
+EOF
+			);
+			break;
+		}
+	}
+		
 	/**
 	 * Tells whether the "Next" button should be enabled interactively
 	 * @return string A piece of javascript code returning either true or false
@@ -975,6 +1029,16 @@ EOF
 	else
 	{
 		$("#v_application_url").html('');
+	}
+	bGraphviz = ($('#graphviz_path').val() != '');
+	if (!bGraphviz)
+	{
+		// Does not prevent to move forward
+		$("#v_graphviz_path").html('<img src="../images/validation_error.png" title="Impact analysis will not display properly"/>');
+	}
+	else
+	{
+		$("#v_graphviz_path").html('');
 	}
 	return bRet;
 EOF
@@ -1000,12 +1064,15 @@ class WizStepUpgradeMiscParams extends WizardStep
 	public function ProcessParams($bMoveForward = true)
 	{
 		$this->oWizard->SaveParameter('application_url', '');
+		$this->oWizard->SaveParameter('graphviz_path', '');
 		return array('class' => 'WizStepModulesChoice', 'state' => 'start_upgrade');
 	}
 	
 	public function Display(WebPage $oPage)
 	{
 		$sApplicationURL = $this->oWizard->GetParameter('application_url', utils::GetDefaultUrlAppRoot());
+		$sDefaultGraphvizPath = (strtolower(substr(PHP_OS, 0, 3)) === 'win') ? 'C:\\Program Files\\Graphviz\\bin\\dot.exe' : '/usr/bin/dot';
+		$sGraphvizPath = $this->oWizard->GetParameter('graphviz_path', $sDefaultGraphvizPath);
 		$oPage->add('<h2>Additional parameters</h2>');
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>Application URL</legend>');
@@ -1014,13 +1081,63 @@ class WizStepUpgradeMiscParams extends WizardStep
 		$oPage->add('<tr><td colspan="2">Change the value above if the end-users will be accessing the application by another path due to a specific configuration of the web server.</td><tr>');
 		$oPage->add('</table>');
 		$oPage->add('</fieldset>');
+		$oPage->add('<fieldset>');
+		$oPage->add('<legend>Path to Graphviz\' dot application</legend>');
+		$oPage->add('<table>');
+		$oPage->add('<tr><td>Path: </td><td><input id="graphviz_path" name="graphviz_path" type="text" size="35" maxlength="1024" value="'.htmlentities($sGraphvizPath, ENT_QUOTES, 'UTF-8').'"><span id="v_graphviz_path"/></td><tr>');
+		$oPage->add('<tr><td colspan="2"><a href="http://www.graphviz.org" target="_blank">Graphviz</a> is required to display the impact analysis graph (i.e. impacts / depends on).</td><tr>');
+		$oPage->add('<tr><td colspan="2"><span id="graphviz_status"></span></td><tr>');
+		$oPage->add('</table>');
+		$oPage->add('</fieldset>');
 		$oPage->add_ready_script(
 <<<EOF
 		$('#application_url').bind('change keyup', function() { WizardUpdateButtons(); } );
+		$('#graphviz_path').bind('change keyup init', function() { WizardUpdateButtons();  WizardAsyncAction('check_graphviz', { graphviz_path: $('#graphviz_path').val() }); } ).trigger('init');
+		$('#btn_next').click(function() {
+			bRet = true;
+			if ($(this).attr('data-graphviz') != 'ok')
+			{
+				bRet = confirm('The impact analysis will not be displayed properly. Are you sure you want to continue?');
+			}
+			return bRet;
+		});
 EOF
 		);
 	}
 	
+	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
+	{
+		switch($sCode)
+		{			
+			case 'check_graphviz':
+			$sGraphvizPath = $aParameters['graphviz_path'];
+			$oCheck = SetupUtils::CheckGraphviz($sGraphvizPath);
+			$sMessage = json_encode($oCheck->sLabel);
+			switch($oCheck->iSeverity)
+			{
+				case CheckResult::INFO:
+				$sStatus = 'ok';
+				$sMessage = json_encode('<img src="../images/validation_ok.png">&nbsp;'.$oCheck->sLabel);
+				
+				break;
+				
+				default:
+				case CheckResult::ERROR:
+				case CheckResult::WARNING:
+				$sStatus = 'ko';
+				$sMessage = json_encode('<img src="../images/error.png">&nbsp;'.$oCheck->sLabel);
+				
+			}
+			$oPage->add_ready_script(
+<<<EOF
+	$("#graphviz_status").html($sMessage);
+	$('#btn_next').attr('data-graphviz', '$sStatus');
+EOF
+			);
+			break;
+		}
+	}
+
 	/**
 	 * Tells whether the "Next" button should be enabled interactively
 	 * @return string A piece of javascript code returning either true or false
@@ -1037,6 +1154,16 @@ EOF
 	else
 	{
 		$("#v_application_url").html('');
+	}
+	bGraphviz = ($('#graphviz_path').val() != '');
+	if (!bGraphviz)
+	{
+		// Does not prevent to move forward
+		$("#v_graphviz_path").html('<img src="../images/validation_error.png" title="Impact analysis will not display properly"/>');
+	}
+	else
+	{
+		$("#v_graphviz_path").html('');
 	}
 	return bRet;
 EOF
@@ -1864,6 +1991,7 @@ EOF
 		}
 		
 		$oPage->add('<li>URL to access the application: '.$aInstallParams['url'].'</li>');
+		$oPage->add('<li>Graphviz\' dot path: '.$aInstallParams['graphviz_path'].'</li>');
 		if ($aInstallParams['sample_data'] == 'yes')
 		{
 			$oPage->add('<li>Sample data will be loaded into the database.</li>');
@@ -2027,6 +2155,7 @@ EOF
 				'prefix' => $this->oWizard->GetParameter('db_prefix'),
 			),
 			'url' => $this->oWizard->GetParameter('application_url'),
+			'graphviz_path' => $this->oWizard->GetParameter('graphviz_path'),
 			'admin_account' => array (
 				'user' => $this->oWizard->GetParameter('admin_user'),
 				'pwd' => $this->oWizard->GetParameter('admin_pwd'),

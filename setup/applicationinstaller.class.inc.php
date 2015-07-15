@@ -329,6 +329,7 @@ class ApplicationInstaller
 				$sDBName = $aDBParams['name'];
 				$sDBPrefix = $aDBParams['prefix'];
 				$sUrl = $this->oParams->Get('url', '');
+				$sGraphvizPath = $this->oParams->Get('graphviz_path', '');
 				$sLanguage = $this->oParams->Get('language', '');
 				$aSelectedModules = $this->oParams->Get('selected_modules', array());
 				$bOldAddon = $this->oParams->Get('old_addon', false);
@@ -336,7 +337,7 @@ class ApplicationInstaller
 				$sPreviousConfigFile = $this->oParams->Get('previous_configuration_file', '');
 				$sDataModelVersion = $this->oParams->Get('datamodel_version', '0.0.0');
 								
-				self::DoCreateConfig($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModules, $sTargetEnvironment, $bOldAddon, $sSourceDir, $sPreviousConfigFile, $sDataModelVersion);
+				self::DoCreateConfig($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModules, $sTargetEnvironment, $bOldAddon, $sSourceDir, $sPreviousConfigFile, $sDataModelVersion, $sGraphvizPath);
 				
 				$aResult = array(
 					'status' => self::INFO,
@@ -937,7 +938,7 @@ class ApplicationInstaller
 	    SetupPage::log_info("ending data load session");
 	}
 	
-	protected static function DoCreateConfig($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModules, $sTargetEnvironment, $bOldAddon, $sSourceDir, $sPreviousConfigFile, $sDataModelVersion)
+	protected static function DoCreateConfig($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModules, $sTargetEnvironment, $bOldAddon, $sSourceDir, $sPreviousConfigFile, $sDataModelVersion, $sGraphvizPath)
 	{	
 		$aParamValues = array(
 			'mode' => $sMode, 
@@ -949,6 +950,7 @@ class ApplicationInstaller
 			'db_prefix' => $sDBPrefix,
 			'application_path' => $sUrl,
 			'language' => $sLanguage,
+			'graphviz_path' => $sGraphvizPath,
 			'selected_modules' => implode(',', $aSelectedModules),
 		);
 		
