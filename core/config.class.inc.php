@@ -817,6 +817,46 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'transactions_enabled' => array(
+			'type' => 'bool',
+			'description' => 'Whether or not the whole mechanism to prevent multiple submissions of a page is enabled.',
+			'default' => true,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'log_transactions' => array(
+			'type' => 'bool',
+			'description' => 'Whether or not to enable the debug log for the transactions.',
+			'default' => false,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'concurrent_lock_enabled' => array(
+			'type' => 'bool',
+			'description' => 'Whether or not to activate the locking mechanism in order to prevent concurrent edition of the same object.',
+			'default' => true,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'concurrent_lock_expiration_delay' => array(
+			'type' => 'integer',
+			'description' => 'Delay (in seconds) for a concurrent lock to expire',
+			'default' => 120,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		), 
+		'concurrent_lock_override_profiles' => array(
+			'type' => 'array',
+			'description' => 'The list of profiles allowed to "kill" a lock',
+			'default' => array('Administrator'),
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		), 
 	);
 
 	public function IsProperty($sPropCode)
