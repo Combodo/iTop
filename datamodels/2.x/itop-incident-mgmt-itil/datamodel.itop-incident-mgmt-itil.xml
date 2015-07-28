@@ -1307,34 +1307,10 @@
           <type>LifecycleAction</type>
           <code><![CDATA[	public function ComputeImpactedItems()
 	{
-		$oToNotify = $this->Get('contacts_list');
-		$oToImpact = $this->Get('functionalcis_list');
-
-		$oImpactedInfras = DBObjectSet::FromLinkSet($this, 'functionalcis_list', 'functionalci_id');
-
-		$aComputed = $oImpactedInfras->GetRelatedObjects('impacts', 10);
-
-		if (isset($aComputed['FunctionalCI']) && is_array($aComputed['FunctionalCI']))
-		{
-			foreach($aComputed['FunctionalCI'] as $iKey => $oObject)
-			{
-				$oNewLink = new lnkFunctionalCIToTicket();
-				$oNewLink->Set('functionalci_id', $iKey);
-				$oNewLink->Set('impact', 'potentially impacted (automatically computed)');
-				$oToImpact->AddObject($oNewLink);
-			}
-		}
-		if (isset($aComputed['Contact']) && is_array($aComputed['Contact']))
-		{
-			foreach($aComputed['Contact'] as $iKey => $oObject)
-			{
-				$oNewLink = new lnkContactToTicket();
-				$oNewLink->Set('contact_id', $iKey);
-				$oNewLink->Set('role', 'contact automatically computed');
-				$oToNotify->AddObject($oNewLink);
-			}
-		}
-		parent::OnInsert();
+        // This method is kept for backward compatibility
+        // in case a delta redefines it, but you may call
+        // UpdateImpactedItems directly
+		$this->UpdateImpactedItems();
 	}]]></code>
         </method>
         <method id="OnInsert">
@@ -1344,6 +1320,7 @@
           <code><![CDATA[	protected function OnInsert()
 
 	{
+        parent::OnInsert();    
 		$this->ComputeImpactedItems();
 		$this->Set('last_update', time());
 		$this->Set('start_date', time());
@@ -1355,6 +1332,12 @@
           <type>Overload-DBObject</type>
           <code><![CDATA[	protected function OnUpdate()
 	{
+        parent::OnUpdate(); 
+        $aChanges = $this->ListChanges();
+        if (array_key_exists('functionalcis_list', $aChanges))
+        {
+            $this->UpdateImpactedItems();
+        }
 		$this->Set('last_update', time());
 		$this->UpdateChildRequestLog();
 		$this->UpdateChildIncidentLog();
@@ -1771,7 +1754,7 @@
                 <item id="open_incidents" _delta="define">
                   <oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted') AND (I.id != :this->id)]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-request-mgmt/images/incident-red.png</icon>
+                  <icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
                 </item>
               </items>
             </down>
@@ -1784,7 +1767,7 @@
                 <item id="open_incidents" _delta="define">
                   <oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted') AND (I.id != :this->id)]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-request-mgmt/images/incident-red.png</icon>
+                  <icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
                 </item>
               </items>
             </down>
@@ -1797,7 +1780,7 @@
                 <item id="open_incidents" _delta="define">
                   <oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted') AND (I.id != :this->id)]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-request-mgmt/images/incident-red.png</icon>
+                  <icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
                 </item>
               </items>
             </down>
@@ -1814,7 +1797,7 @@
                 <item id="open_incidents" _delta="define">
                   <oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted')]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-request-mgmt/images/incident-red.png</icon>
+                  <icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
                 </item>
               </items>
             </down>
@@ -1823,7 +1806,7 @@
                 <item id="open_incidents" _delta="define">
                   <oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted')]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-request-mgmt/images/incident-red.png</icon>
+                  <icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
                 </item>
               </items>
             </up>
