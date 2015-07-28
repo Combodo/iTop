@@ -538,6 +538,7 @@ class ModelFactory
 						}
 						else 
 						{
+							$oXmlEntry->setAttribute('_alteration', 'added');
 							$oXmlEntries->appendChild($oXmlEntry);
 						}
 						$this->aDictKeys[$sLanguageCode][$sCode] = true;
