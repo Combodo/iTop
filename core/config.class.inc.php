@@ -1503,6 +1503,8 @@ class Config
 		$aSettings['log_notification'] = $this->m_bLogNotification;
 		$aSettings['log_issue'] = $this->m_bLogIssue;
 		$aSettings['log_web_service'] = $this->m_bLogWebService;
+		$aSettings['log_queries'] = $this->m_bLogQueries;
+		$aSettings['query_cache_enabled'] = $this->m_bQueryCacheEnabled;
 		$aSettings['min_display_limit'] = $this->m_iMinDisplayLimit;
 		$aSettings['max_display_limit'] = $this->m_iMaxDisplayLimit;
 		$aSettings['standard_reload_interval'] = $this->m_iStandardReloadInterval;
@@ -1510,6 +1512,7 @@ class Config
 		$aSettings['secure_connection_required'] = $this->m_bSecureConnectionRequired;
 		$aSettings['default_language'] = $this->m_sDefaultLanguage;
 		$aSettings['allowed_login_types'] = $this->m_sAllowedLoginTypes;
+		$aSettings['ext_auth_variable'] = $this->m_sExtAuthVariable;
 		$aSettings['encryption_key'] = $this->m_sEncryptionKey;
 		$aSettings['csv_import_charsets'] = $this->m_aCharsets;
 
@@ -1575,6 +1578,8 @@ class Config
 				'log_notification' => $this->m_bLogNotification,
 				'log_issue' => $this->m_bLogIssue,
 				'log_web_service' => $this->m_bLogWebService,
+				'log_queries' => $this->m_bLogQueries,
+				'query_cache_enabled' => $this->m_bQueryCacheEnabled,
 				'secure_connection_required' => $this->m_bSecureConnectionRequired,
 			);
 			foreach($aBoolValues as $sKey => $bValue)
@@ -1613,6 +1618,7 @@ class Config
 				'db_collation' => $this->m_sDBCollation,
 				'default_language' => $this->m_sDefaultLanguage,
 				'allowed_login_types' => $this->m_sAllowedLoginTypes,
+				'ext_auth_variable' => $this->m_sExtAuthVariable,
 				'encryption_key' => $this->m_sEncryptionKey,
 				'csv_import_charsets' => $this->m_aCharsets,
 			);
