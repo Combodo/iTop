@@ -37,6 +37,11 @@ class privUITransaction
 	 */
 	public static function GetNewTransactionId()
 	{
+		$bTransactionsEnabled = MetaModel::GetConfig()->Get('transactions_enabled');
+		if (!$bTransactionsEnabled)
+		{
+			return 'notransactions'; // Any value will do
+		}
 		$sClass = 'privUITransaction'.MetaModel::GetConfig()->Get('transaction_storage');
 		if (!class_exists($sClass, false))
 		{
@@ -57,6 +62,11 @@ class privUITransaction
 	 */
 	public static function IsTransactionValid($id, $bRemoveTransaction = true)
 	{
+		$bTransactionsEnabled = MetaModel::GetConfig()->Get('transactions_enabled');
+		if (!$bTransactionsEnabled)
+		{
+			return true; // All values are valid
+		}
 		$sClass = 'privUITransaction'.MetaModel::GetConfig()->Get('transaction_storage');
 		if (!class_exists($sClass, false))
 		{
@@ -73,6 +83,11 @@ class privUITransaction
 	 */
 	public static function RemoveTransaction($id)
 	{
+		$bTransactionsEnabled = MetaModel::GetConfig()->Get('transactions_enabled');
+		if (!$bTransactionsEnabled)
+		{
+			return; // Nothing to do
+		}
 		$sClass = 'privUITransaction'.MetaModel::GetConfig()->Get('transaction_storage');
 		if (!class_exists($sClass, false))
 		{
@@ -191,7 +206,7 @@ class privUITransactionFile
 			throw new Exception('The directory "'.APPROOT.'data/transactions" must be writable to the application.');
 		}
 		self::CleanupOldTransactions();
-		$id = basename(tempnam(APPROOT.'data/transactions', substr(UserRights::GetUser(), 0, 10).'-'));
+		$id = basename(tempnam(APPROOT.'data/transactions', self::GetUserPrefix()));
 		self::Info('GetNewTransactionId: Created transaction: '.$id);
 
 		return (string)$id;
@@ -286,13 +301,20 @@ class privUITransactionFile
 	{
 		clearstatcache();
 		$aResult = array();
-		$aTransactions = glob(APPROOT.'data/transactions/'.UserRights::GetUser().'-*');
+		$aTransactions = glob(APPROOT.'data/transactions/'.self::GetUserPrefix().'*');
 		foreach($aTransactions as $sFileName)
 		{
-			$aResult[] = date('Y-m-d H:i:s', filectime($sFileName)).' - '.basename($sFileName);
+			$aResult[] = date('Y-m-d H:i:s', filemtime($sFileName)).' - '.basename($sFileName);
 		}
 		sort($aResult);
 		return $aResult;
+	}
+
+	protected static function GetUserPrefix()
+	{
+		$sPrefix = substr(UserRights::GetUser(), 0, 10);
+		$sPrefix = preg_replace('/[^a-zA-Z0-9-_]/', '_', $sPrefix);
+		return $sPrefix.'-';
 	}
 
 	protected static function Info($sText)
@@ -312,6 +334,9 @@ class privUITransactionFile
 	
 	protected static function Write($sText)
 	{
+		$bLogEnabled = MetaModel::GetConfig()->Get('log_transactions');
+		if ($bLogEnabled)
+		{
 		$hLogFile = @fopen(APPROOT.'log/transactions.log', 'a');
 		if ($hLogFile !== false)
 		{
@@ -321,6 +346,7 @@ class privUITransactionFile
 			fflush($hLogFile);
 			flock($hLogFile, LOCK_UN);
 			fclose($hLogFile);
+			}
 		}
 	}
 }

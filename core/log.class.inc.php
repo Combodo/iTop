@@ -59,8 +59,11 @@ class FileLog
 		$hLogFile = @fopen($this->m_sFile, 'a');
 		if ($hLogFile !== false)
 		{
+			flock($hLogFile, LOCK_EX);
 			$sDate = date('Y-m-d H:i:s');
 			fwrite($hLogFile, "$sDate | $sText\n");
+			fflush($hLogFile);
+			flock($hLogFile, LOCK_UN);
 			fclose($hLogFile);
 		}
 	}
