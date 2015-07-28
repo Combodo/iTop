@@ -457,7 +457,7 @@ class SetupUtils
 		{
 			$sGraphvizPath = 'dot';
 		}
-		$sCommand = "$sGraphvizPath -V 2>&1";
+		$sCommand = "\"$sGraphvizPath\" -V 2>&1";
 	
 		$aOutput = array();
 		$iRetCode = 0;
