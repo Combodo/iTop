@@ -3079,7 +3079,7 @@ abstract class MetaModel
 									$sExtAttCode = $oAtt->GetExtAttCode();
 									// Translate mainclass.extfield => remoteclassalias.remotefieldcode
 									$oRemoteAttDef = self::GetAttributeDef($sKeyClass, $sExtAttCode);
-									foreach ($oRemoteAttDef->GetSQLExpressions() as $sColID => $sRemoteAttExpr)
+									foreach ($oRemoteAttDef->GetSQLExpressions() as $sColId => $sRemoteAttExpr)
 									{
 										$aTranslateNow[$sTargetAlias][$sAttCode.$sColId] = new FieldExpression($sExtAttCode, $sKeyClassAlias);
 //echo "<p><b>aTranslateNow[$sTargetAlias][$sAttCode.$sColId] = new FieldExpression($sExtAttCode, $sKeyClassAlias);</b></p>\n";
