@@ -1494,7 +1494,7 @@ class DBObjectSearch extends DBSearch
 									$sExtAttCode = $oAtt->GetExtAttCode();
 									// Translate mainclass.extfield => remoteclassalias.remotefieldcode
 									$oRemoteAttDef = MetaModel::GetAttributeDef($sKeyClass, $sExtAttCode);
-									foreach ($oRemoteAttDef->GetSQLExpressions() as $sColID => $sRemoteAttExpr)
+									foreach ($oRemoteAttDef->GetSQLExpressions() as $sColId => $sRemoteAttExpr)
 									{
 										$aTranslateNow[$sTargetAlias][$sAttCode.$sColId] = new FieldExpression($sExtAttCode, $sKeyClassAlias);
 //echo "<p><b>aTranslateNow[$sTargetAlias][$sAttCode.$sColId] = new FieldExpression($sExtAttCode, $sKeyClassAlias);</b></p>\n";
@@ -1508,7 +1508,7 @@ class DBObjectSearch extends DBSearch
 								// Add the condition: `$sTargetAlias`.$sClassAttCode IN (subclasses of $sKeyClass')
 								$sClassAttCode = $oKeyAttDef->Get('class_attcode');
 								$oClassAttDef = MetaModel::GetAttributeDef($sTargetClass, $sClassAttCode);
-								foreach ($oClassAttDef->GetSQLExpressions() as $sColID => $sSQLExpr)
+								foreach ($oClassAttDef->GetSQLExpressions() as $sColId => $sSQLExpr)
 								{
 									$aTranslateNow[$sTargetAlias][$sClassAttCode.$sColId] = new FieldExpressionResolved($sSQLExpr, $sTableAlias);
 								}
