@@ -1,4 +1,4 @@
-iTop - version 2.2.0 Beta - 16-July-2015
+iTop - version 2.2.0 Beta - 28-July-2015
 Readme file
 
 1.   ABOUT THIS RELEASE
