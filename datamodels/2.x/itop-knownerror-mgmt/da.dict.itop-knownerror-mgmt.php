@@ -122,5 +122,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:FAQCategory+' => '',
 	'Menu:FAQ' => 'FAQs',
 	'Menu:FAQ+' => '',
+	'Menu:ProblemManagement' => 'Problem Management',
+	'Menu:ProblemManagement+' => 'Problem Management',
+	'Menu:Problem:Shortcuts' => 'Genvej',
 ));
 ?>

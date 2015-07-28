@@ -132,6 +132,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Change/Stimulus:ev_approve+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Fechar',
 	'Class:Change/Stimulus:ev_finish+' => '',
+	'Tickets:Related:OpenChanges' => 'Open changes~~',
+	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
+	'Class:Change/Attribute:outage' => 'Outage',
+	'Class:Change/Attribute:outage/Value:no' => 'Não',
+	'Class:Change/Attribute:outage/Value:yes' => 'Sim',
 ));
 
 ?>

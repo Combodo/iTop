@@ -284,4 +284,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets (résoudre les tickets fils)',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution de la demande (ev_autoresolve), et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution',
+	'Class:UserRequest:KnownErrorList' => 'Erreurs connues',
 ));

@@ -118,5 +118,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Change/Attribute:outage/Value:no+' => '',
 	'Class:Change/Attribute:outage/Value:yes' => 'Ja',
 	'Class:Change/Attribute:outage/Value:yes+' => '',
+	'Class:Change/Attribute:related_problems_list' => 'Verwandte Probleme',
+	'Class:Change/Attribute:related_problems_list+' => '',
 ));
 ?>

@@ -52,4 +52,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:UserAccountsMenu' => 'Account utente',
 	'Menu:UserAccountsMenu+' => '',
 	'Menu:UserAccountsMenu:Title' => 'Account utente',
+	'Menu:QueryMenu' => 'Query phrasebook~~',
+	'Menu:QueryMenu+' => 'Query phrasebook~~',
+	'Menu:MyShortcuts' => 'My Shortcuts~~',
 ));

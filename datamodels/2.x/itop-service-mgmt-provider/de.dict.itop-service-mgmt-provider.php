@@ -226,8 +226,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Verträge nach Service-Level',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Verträge nach Status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Verträge, die in weniger als 30 Tagen auslaufen',
-	'Menu:ServiceType' => 'Service-Typen',
-	'Menu:ServiceType+' => '',
 	'Menu:ProviderContract' => 'Provider-Verträge',
 	'Menu:ProviderContract+' => '',
 	'Menu:CustomerContract' => 'Kunden-Verträge',
@@ -346,5 +344,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkDeliveryModelToContact/Attribute:contact_name+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Rollenname',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
+	'Class:ServiceSubcategory/Attribute:service_provider' => 'Provider Name~~',
+	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Provider~~',
 ));
 ?>

@@ -47,8 +47,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracten met status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracten die in minder dan 30 dagen eindigen',
 	
-	'Menu:ServiceType' => 'Dienst Types',
-	'Menu:ServiceType+' => 'Dienst Types',
 	'Menu:ProviderContract' => 'Leveranciers contracten',
 	'Menu:ProviderContract+' => 'Leveranciers contracten',
 	'Menu:CustomerContract' => 'Klant contracten',
@@ -529,6 +527,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Rol naam',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
+	'Class:CustomerContract/Attribute:functionalcis_list' => 'CIs~~',
+	'Class:CustomerContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this contract~~',
+	'Class:CustomerContract/Attribute:providercontracts_list' => 'Provider contracts~~',
+	'Class:CustomerContract/Attribute:providercontracts_list+' => 'All the provider contracts to deliver the services for this contract (underpinning contract)~~',
+	'Class:ServiceSubcategory/Attribute:service_provider' => 'Provider Name~~',
+	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Provider~~',
 ));
 
 ?>

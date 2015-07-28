@@ -225,8 +225,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'サービスレベル別の契約',
 	'UI-ServiceManagementMenu-ContractsByStatus' => '状態別の契約',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30日以内に終わる契約',
-	'Menu:ServiceType' => 'サービスタイプ',
-	'Menu:ServiceType+' => '',
 	'Menu:ProviderContract' => 'プロバイダー契約',
 	'Menu:ProviderContract+' => '',
 	'Menu:CustomerContract' => '顧客契約',
@@ -343,5 +341,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkDeliveryModelToContact/Attribute:contact_name+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => '役割名',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
+	'Class:ServiceSubcategory/Attribute:service_provider' => 'Provider Name~~',
+	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Provider~~',
 ));
 ?>

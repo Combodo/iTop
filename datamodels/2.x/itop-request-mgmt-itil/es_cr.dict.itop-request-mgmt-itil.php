@@ -263,6 +263,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest/Stimulus:ev_reopen+' => 'Reabrir',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Esperando Aprobación',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => 'Esperando Aprobación',
+	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself~~',
+	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
 ));
 
 

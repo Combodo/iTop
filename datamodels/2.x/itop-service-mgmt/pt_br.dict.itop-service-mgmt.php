@@ -44,8 +44,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratos por estado',
 'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratos finalizando em menos de 30 dias',
 
-'Menu:ServiceType' => 'Tipos serviços',
-'Menu:ServiceType+' => 'Tipos serviços',
 'Menu:ProviderContract' => 'Contratos Provedor(as)',
 'Menu:ProviderContract+' => 'Contratos Provedor(as)',
 'Menu:CustomerContract' => 'Contratos Clientes',

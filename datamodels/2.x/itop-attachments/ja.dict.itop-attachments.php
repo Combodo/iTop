@@ -34,5 +34,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Attachment:Max_Mo' => '(最大ファイルサイズ: %1$s MB)',
 	'Attachment:Max_Ko' => '(最大ファイルサイズ: %1$s KB)',
 	'Attachments:NoAttachment' => '添付はありません。',
+	'Attachments:PreviewNotAvailable' => 'Preview not available for this type of attachment.~~',
 ));
 ?>

@@ -227,8 +227,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'サービスレベル別契約',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'ステータス別契約',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30日以内に終了する契約',
-	'Menu:ServiceType' => 'サービスタイプ',
-	'Menu:ServiceType+' => 'サービスタイプ',
 	'Menu:ProviderContract' => 'プロバイダー契約',
 	'Menu:ProviderContract+' => 'プロバイダー契約',
 	'Menu:CustomerContract' => '顧客契約',

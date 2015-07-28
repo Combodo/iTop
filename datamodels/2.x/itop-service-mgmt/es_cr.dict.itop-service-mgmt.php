@@ -45,8 +45,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratos por Estatus',
 'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratos Finalizando en menos de 30 días',
 
-'Menu:ServiceType' => 'Tipos de Servicios',
-'Menu:ServiceType+' => 'Tipos de Servicios',
 'Menu:ProviderContract' => 'Contratos con Proveedores',
 'Menu:ProviderContract+' => 'Contratos con Proveedores',
 'Menu:CustomerContract' => 'Acuerdos con Clientes',
@@ -528,6 +526,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => 'Rol',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Rol',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => 'Rol',
+	'Class:Contract/Attribute:cost_currency/Value:euros' => 'Euros~~',
+	'Class:SLT/Attribute:request_type/Value:service_request' => 'service request~~',
+	'Class:SLT/Attribute:request_type/Value:service_request+' => 'service request~~',
 ));
 
 

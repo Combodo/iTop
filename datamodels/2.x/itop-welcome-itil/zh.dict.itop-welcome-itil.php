@@ -50,4 +50,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:UserAccountsMenu' => '用户帐户',
 	'Menu:UserAccountsMenu+' => '用户帐户',
 	'Menu:UserAccountsMenu:Title' => '用户帐户',
+	'Menu:DataSources' => 'Synchronization Data Sources~~',
+	'Menu:DataSources+' => 'All Synchronization Data Sources~~',
+	'Menu:QueryMenu' => 'Query phrasebook~~',
+	'Menu:QueryMenu+' => 'Query phrasebook~~',
+	'Menu:MyShortcuts' => 'My Shortcuts~~',
 ));

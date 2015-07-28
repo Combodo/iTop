@@ -109,5 +109,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Change/Attribute:related_incident_list+' => '',
 	'Class:Change/Attribute:parent_id_friendlyname' => '親変更フレンドリー名',
 	'Class:Change/Attribute:parent_id_friendlyname+' => '',
+	'Tickets:Related:OpenChanges' => 'Open changes~~',
+	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
+	'Class:Change/Attribute:related_problems_list' => '関連問題',
+	'Class:Change/Attribute:related_problems_list+' => '',
+	'Class:Change/Attribute:outage' => '停止',
+	'Class:Change/Attribute:outage/Value:no' => 'いいえ',
+	'Class:Change/Attribute:outage/Value:yes' => 'はい',
 ));
 ?>

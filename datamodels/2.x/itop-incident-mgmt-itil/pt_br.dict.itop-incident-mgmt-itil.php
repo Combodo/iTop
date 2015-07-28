@@ -41,10 +41,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:Incident:EscalatedIncidents+' => 'Incidentes escalados',
 	'Menu:Incident:OpenIncidents' => 'Todos incidentes abertos',
 	'Menu:Incident:OpenIncidents+' => 'Todos incidentes abertos',
-	'Menu:Incident:UnassignedIncidents' => 'Incidentes ainda não atribuídos',
-	'Menu:Incident:UnassignedIncidents+' => 'Incidentes ainda não atribuídos',
-	'Menu:Incident:HelpdeskIncidents' => 'Incidentes atribuídos a nível 2',
-	'Menu:Incident:HelpdeskIncidents+' => 'Incidentes atribuídos a nível 2',
 	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => 'Últimos 14 dias por incidente prioridade',
 	'UI-IncidentManagementOverview-Last-14-days' => 'Últimos 14 dias por incidente prioridade',
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Incidentes abertos por estado',
@@ -239,6 +235,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Re-abrir',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Não é possível atribuir o incidente principal ao próprio incidente',
+	'Class:Incident/Attribute:related_request_list' => 'Child requests~~',
+	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
+	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
+	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
 ));
 
 

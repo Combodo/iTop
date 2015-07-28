@@ -41,10 +41,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:Incident:EscalatedIncidents+' => 'Escalated incidents',
 	'Menu:Incident:OpenIncidents' => 'All open incidents',
 	'Menu:Incident:OpenIncidents+' => 'All open incidents',
-	'Menu:Incident:UnassignedIncidents' => 'Incidents not yet assigned',
-	'Menu:Incident:UnassignedIncidents+' => 'Incidents not yet assigned',
-	'Menu:Incident:HelpdeskIncidents' => 'Incidents assigned to Level2',
-	'Menu:Incident:HelpdeskIncidents+' => 'Incidents assigned to Level2',
 	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => 'Last 14 days incident per priority',
 	'UI-IncidentManagementOverview-Last-14-days' => 'Last 14 days number of incidents',
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Open incidents by status',
@@ -240,4 +236,5 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info',
+	'Tickets:Related:OpenIncidents' => 'Open incidents',
 ));

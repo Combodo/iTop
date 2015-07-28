@@ -44,8 +44,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratos por status',
 'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratos terminando em menos de 30 dias',
 
-'Menu:ServiceType' => 'Tipos serviços',
-'Menu:ServiceType+' => 'Tipos serviços',
 'Menu:ProviderContract' => 'Contratos Provedores(as)',
 'Menu:ProviderContract+' => 'Contratos Provedores(as)',
 'Menu:CustomerContract' => 'Contratos Clientes',
@@ -526,6 +524,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Nome regra',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
+	'Class:ServiceSubcategory/Attribute:service_provider' => 'Provider Name~~',
+	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Provider~~',
 ));
 
 ?>

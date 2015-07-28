@@ -54,4 +54,5 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:UserAccountsMenu' => 'Benutzerkonten',
 	'Menu:UserAccountsMenu+' => 'Benutzerkonten',
 	'Menu:UserAccountsMenu:Title' => 'Benutzerkonten',
+	'Menu:MyShortcuts' => 'Meine Links',
 ));

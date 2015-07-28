@@ -113,5 +113,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Problem/Attribute:servicesubcategory_name+' => '',
 	'Class:Problem/Attribute:related_change_ref' => '関連する変更参照',
 	'Class:Problem/Attribute:related_change_ref+' => '',
+	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
+	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
 ));
 ?>

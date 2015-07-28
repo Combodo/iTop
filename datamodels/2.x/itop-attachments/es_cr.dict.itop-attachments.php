@@ -40,5 +40,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Attachments:NoAttachment' => 'No hay Anexo. ',
 	'Class:Attachment' => 'Anexo',
 	'Class:Attachment+' => 'Anexo',
+  	'Attachments:PreviewNotAvailable' => 'Preview not available for this type of attachment.~~',
   ));
 ?>

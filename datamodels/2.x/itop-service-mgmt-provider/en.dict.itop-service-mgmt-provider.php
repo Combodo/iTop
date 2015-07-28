@@ -44,8 +44,6 @@ Dict::Add('EN US', 'English', 'English', array(
 'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracts by status',
 'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less then 30 days',
 
-'Menu:ServiceType' => 'Service Types',
-'Menu:ServiceType+' => 'Service Types',
 'Menu:ProviderContract' => 'Provider contracts',
 'Menu:ProviderContract+' => 'Provider contracts',
 'Menu:CustomerContract' => 'Customer contracts',

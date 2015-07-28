@@ -241,5 +241,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:EmergencyChange/Stimulus:ev_validate+' => '',
 	'Class:EmergencyChange/Stimulus:ev_reject' => '却下',
 	'Class:EmergencyChange/Stimulus:ev_reject+' => '',
+	'Class:Change/Attribute:related_incident_list' => '関連するインシデント',
+	'Class:Change/Attribute:related_incident_list+' => '',
+	'Tickets:Related:OpenChanges' => 'Open changes~~',
+	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
 ));
 ?>

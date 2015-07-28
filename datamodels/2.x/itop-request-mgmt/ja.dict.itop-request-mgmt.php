@@ -265,5 +265,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Portal:SelectLanguage' => '言語変更',
 	'Portal:LanguageChangedTo_Lang' => '言語を変更',
 	'Portal:ChooseYourFavoriteLanguage' => 'お好みの言語を選択ください',
+	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
+	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself~~',
+	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
 ));
 ?>

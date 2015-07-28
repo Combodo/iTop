@@ -31,8 +31,8 @@
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Relation:impacts/Description' => 'Elements impacted by',
-	'Relation:impacts/DownStream' => 'Impact...',
-	'Relation:impacts/UpStream' => 'Elements impacted by...',
+	'Relation:impacts/DownStream' => 'Impacts...',
+	'Relation:impacts/UpStream' => 'Depends on......',
 	'Relation:depends on/Description' => 'Elements impacting',
 	'Relation:depends on/DownStream' => 'Depends on...',
 	'Relation:depends on/UpStream' => 'Impacts...',

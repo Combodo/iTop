@@ -192,10 +192,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:Incident:EscalatedIncidents+' => '',
 	'Menu:Incident:OpenIncidents' => 'Alle åbne Incidents',
 	'Menu:Incident:OpenIncidents+' => '',
-	'Menu:Incident:UnassignedIncidents' => 'Ikke tildelte Incidents',
-	'Menu:Incident:UnassignedIncidents+' => '',
-	'Menu:Incident:HelpdeskIncidents' => 'Level2 tildelte Incidents',
-	'Menu:Incident:HelpdeskIncidents+' => '',
 	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => 'Incidents de sidste 14 dage efter prioritet',
 	'UI-IncidentManagementOverview-Last-14-days' => 'Antal Incidents de sidste 14 dage',
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Åbne Incidents efter status',
@@ -213,5 +209,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Incident/Attribute:parent_change_ref+' => '',
 	'Class:Incident/Attribute:parent_incident_id_friendlyname' => 'Parent-Incident-Friendly Name',
 	'Class:Incident/Attribute:parent_incident_id_friendlyname+' => '',
+	'Class:Incident/Attribute:related_request_list' => 'Child requests~~',
+	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Cannot assign the Parent incident to the incident itself~~',
+	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
+	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
+	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
 ));
 ?>

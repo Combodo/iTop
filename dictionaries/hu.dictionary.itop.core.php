@@ -480,5 +480,113 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Core:Duration_Minutes_Seconds' => '%1$sdmin %2$sds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$sdh %2$sdmin %3$sds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$sdh %3$sdmin %4$ds',
+	'Core:DeletedObjectLabel' => '%1s (deleted)~~',
+	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)~~',
+	'Core:UnknownObjectLabel' => 'Object not found (class: %1$s, id: %2$d)~~',
+	'Core:UnknownObjectTip' => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.~~',
+	'Core:AttributeDateTime?SmartSearch' => '
+<p>
+	Date format:<br/>
+	<b>yyyy-mm-dd hh:mm:ss</b><br/>
+	Example: 2011-07-19 18:40:00
+</p>
+<p>
+Operators:<br/>
+	<b>&gt;</b><em>date</em><br/>
+	<b>&lt;</b><em>date</em><br/>
+	<b>[</b><em>date</em>,<em>date</em><b>]</b>
+</p>
+<p>
+If the time is omitted, it defaults to 00:00:00
+</p>~~',
+	'Core:AttributeDate?SmartSearch' => '
+<p>
+	Date format:<br/>
+	<b>yyyy-mm-dd</b><br/>
+	Example: 2011-07-19
+</p>
+<p>
+Operators:<br/>
+	<b>&gt;</b><em>date</em><br/>
+	<b>&lt;</b><em>date</em><br/>
+	<b>[</b><em>date</em>,<em>date</em><b>]</b>
+</p>~~',
+	'Core:AttributeHierarchicalKey' => 'Hierarchical Key~~',
+	'Core:AttributeHierarchicalKey+' => 'External (or foreign) key to the parent~~',
+	'Core:AttributeFriendlyName' => 'Friendly name~~',
+	'Core:AttributeFriendlyName+' => 'Attribute created automatically ; the friendly name is computed after several attributes~~',
+	'Core:FriendlyName-Label' => 'Friendly name~~',
+	'Core:FriendlyName-Description' => 'Friendly name~~',
+	'Change:LinkSet:Added' => 'added %1$s~~',
+	'Change:LinkSet:Removed' => 'removed %1$s~~',
+	'Change:LinkSet:Modified' => 'modified %1$s~~',
+	'Class:EventNotificationEmail/Attribute:attachments' => 'Attachments~~',
+	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
+	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
+	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class \"%1$s\"~~',
+	'Class:TriggerOnPortalUpdate' => 'Trigger (when updated from the portal)~~',
+	'Class:TriggerOnPortalUpdate+' => 'Trigger on a end-user\'s update from the portal~~',
+	'Class:TriggerOnThresholdReached' => 'Trigger (on threshold)~~',
+	'Class:TriggerOnThresholdReached+' => 'Trigger on Stop-Watch threshold reached~~',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stop watch~~',
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Threshold~~',
+	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Contact to notify~~',
+	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contact to notify in case of error~~',
+	'Class:SynchroDataSource/Attribute:database_table_name' => 'Data table~~',
+	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Name of the table to store the synchronization data. If left empty, a default name will be computed.~~',
+	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'The table %1$s already exists in the database. Please use another name for the synchro data table.~~',
+	'Core:SyncSplitModeCLIOnly' => 'The synchronization can be executed in chunks only if run in mode CLI~~',
+	'Core:Synchro:ListReplicas_AllReplicas_Errors_Warnings' => '%1$s replicas, %2$s error(s), %3$s warning(s).~~',
+	'Core:SynchroReplica:TargetObject' => 'Synchronized Object: %1$s~~',
+	'Class:SynchroReplica/Attribute:status_last_warning' => 'Warnings~~',
+	'Core:ExecProcess:Code1' => 'Wrong command or command finished with errors (e.g. wrong script name)~~',
+	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)~~',
+	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as \"%1$s\")~~',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for \"%1$s\"~~',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for \"%1$s\" at %2$d%%~~',
+	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter \"%1$s\"~~',
+	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \"query\". There is no Query Phrasebook corresponding to the id: \"%1$s\".~~',
+	'Core:BulkExport:ExportFormatPrompt' => 'Export format:~~',
+	'Core:BulkExport:Identifier' => 'Identifier~~',
+	'Core:BulkExport:Friendlyname' => 'Full name~~',
+	'Core:BulkExportOf_Class' => '%1$s Export~~',
+	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click here to download %1$s~~',
+	'Core:BulkExport:ExportResult' => 'Result of the export:~~',
+	'Core:BulkExport:RetrievingData' => 'Retrieving data...~~',
+	'Core:BulkExport:HTMLFormat' => 'Web Page (*.html)~~',
+	'Core:BulkExport:CSVFormat' => 'Comma Separated Values (*.csv)~~',
+	'Core:BulkExport:XLSXFormat' => 'Excel 2007 or newer (*.xlsx)~~',
+	'Core:BulkExport:PDFFormat' => 'PDF Document (*.pdf)~~',
+	'Core:BulkExport:DragAndDropHelp' => 'Drag and drop the columns\' headers to arrange the columns. Preview of %1$s lines. Total number of lines to export: %2$s.~~',
+	'Core:BulkExport:EmptyPreview' => 'Select the columns to be exported from the list above~~',
+	'Core:BulkExport:ColumnsOrder' => 'Columns order~~',
+	'Core:BulkExport:AvailableColumnsFrom_Class' => 'Available columns from %1$s~~',
+	'Core:BulkExport:NoFieldSelected' => 'Select at least one column to be exported~~',
+	'Core:BulkExport:CheckAll' => 'Check All~~',
+	'Core:BulkExport:UncheckAll' => 'Uncheck All~~',
+	'Core:BulkExport:ExportCancelledByUser' => 'Export cancelled by the user~~',
+	'Core:BulkExport:CSVOptions' => 'CSV Options~~',
+	'Core:BulkExport:CSVLocalization' => 'Localization~~',
+	'Core:BulkExport:PDFOptions' => 'PDF Options~~',
+	'Core:BulkExport:PDFPageSize' => 'Page Size:~~',
+	'Core:BulkExport:PageSize-A4' => 'A4~~',
+	'Core:BulkExport:PageSize-A3' => 'A3~~',
+	'Core:BulkExport:PageSize-Letter' => 'Letter~~',
+	'Core:BulkExport:PDFPageOrientation' => 'Page Orientation:~~',
+	'Core:BulkExport:PageOrientation-L' => 'Landscape~~',
+	'Core:BulkExport:PageOrientation-P' => 'Portrait~~',
+	'Core:BulkExport:XMLFormat' => 'XML file (*.xml)~~',
+	'Core:BulkExport:XMLOptions' => 'XML Options~~',
+	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML format (*.html)~~',
+	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options~~',
+	'Core:BulkExport:OptionNoLocalize' => 'Do not localize the values (for Enumerated fields)~~',
+	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export~~',
+	'Core:BulkExportLabelOQLExpression' => 'OQL Query:~~',
+	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:~~',
+	'Core:BulkExportMessageEmptyOQL' => 'Please enter a valid OQL query.~~',
+	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Please select a valid phrasebook entry.~~',
+	'Core:BulkExportQueryPlaceholder' => 'Type an OQL query here...~~',
+	'Core:BulkExportCanRunNonInteractive' => 'Click here to run the export in non-interactive mode.~~',
+	'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.~~',
 ));
 ?>

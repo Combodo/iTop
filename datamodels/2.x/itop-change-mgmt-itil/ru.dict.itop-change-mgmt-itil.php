@@ -287,6 +287,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Закончить',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
+	'Tickets:Related:OpenChanges' => 'Open changes~~',
+	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
 ));
 
 ?>

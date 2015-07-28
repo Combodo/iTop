@@ -293,6 +293,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:SelectLanguage' => 'Verander je Taal',
 	'Portal:LanguageChangedTo_Lang' => 'Taal veranderd naar',
 	'Portal:ChooseYourFavoriteLanguage' => 'Kies je favoriete taal',
+	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
+	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
 ));
 
 ?>

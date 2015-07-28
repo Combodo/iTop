@@ -268,5 +268,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Portal:SelectLanguage' => 'Skift sprogindstilling',
 	'Portal:LanguageChangedTo_Lang' => 'Sprogindstilling ændres til: ',
 	'Portal:ChooseYourFavoriteLanguage' => 'Vælg dit foretrukne sprog',
+	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
+	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself~~',
+	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
 ));
 ?>

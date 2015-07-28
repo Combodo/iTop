@@ -42,10 +42,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:Incident:EscalatedIncidents+' => 'Incidentes Escalados',
 	'Menu:Incident:OpenIncidents' => 'Incidentes Abiertos',
 	'Menu:Incident:OpenIncidents+' => 'Incidentes Abiertos',
-	'Menu:Incident:UnassignedIncidents' => 'Incidentes sin Asignación',
-	'Menu:Incident:UnassignedIncidents+' => 'Incidentes sin Asignación',
-	'Menu:Incident:HelpdeskIncidents' => 'Incidentes Asignados a un Nivel 2',
-	'Menu:Incident:HelpdeskIncidents+' => 'Incidentes Asignados a un Nivel 2',
 	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => 'Incidentes por Prioridad de los Últimos 14 días',
 	'UI-IncidentManagementOverview-Last-14-days' => 'Número de Incidentes de los Últimos 14 días',
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Incidentes Abiertos por Estatus',
@@ -239,6 +235,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Incident/Stimulus:ev_close+' => 'Cerrar este Ticket',
 	'Class:Incident/Stimulus:ev_reopen' => 'Reabrir',
 	'Class:Incident/Stimulus:ev_reopen+' => 'Reabrir',
+	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Cannot assign the Parent incident to the incident itself~~',
+	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
+	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
+	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
 ));
 
 

@@ -127,5 +127,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:ChangeMgmtMenuOverview:Title' => 'Tableau de bord des changements pour les 7 derniers jours',
 	'Tickets:Related:OpenChanges' => 'Changements en cours',
 	'Tickets:Related:RecentChanges' => 'Changements récents (72h)',
+	'Menu:WaitingAcceptance' => 'Changements en attente d\'approbation',
 ));
 ?>

@@ -115,5 +115,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Problem/Attribute:servicesubcategory_name+' => '',
 	'Class:Problem/Attribute:related_change_ref' => 'Ref',
 	'Class:Problem/Attribute:related_change_ref+' => '',
+	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
+	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
 ));
 ?>

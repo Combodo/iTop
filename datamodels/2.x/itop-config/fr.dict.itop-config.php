@@ -17,5 +17,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'config-no-change' => 'Aucun changement : le fichier n\'a pas été altéré.',
 	'config-parse-error' => 'Ligne %2$d: %1$s.<br/>Le fichier n\'a PAS été modifié.',
 	'config-current-line' => 'Ligne en édition : %1$s',
+	'config-apply' => 'Enregistrer',
+	'config-cancel' => 'Annuler (restaurer)',
 ));
 ?>

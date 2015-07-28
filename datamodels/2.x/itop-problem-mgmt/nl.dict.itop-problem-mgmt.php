@@ -163,6 +163,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Sluit',
 	'Class:Problem/Stimulus:ev_close+' => '',
+	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
+	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
 ));
 
 ?>

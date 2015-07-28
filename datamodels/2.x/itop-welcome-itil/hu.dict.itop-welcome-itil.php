@@ -52,4 +52,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:UserAccountsMenu' => 'Felhasználói fiókok',
 	'Menu:UserAccountsMenu+' => '',
 	'Menu:UserAccountsMenu:Title' => 'Felhasználói fiókok',
+	'Menu:QueryMenu' => 'Query phrasebook~~',
+	'Menu:QueryMenu+' => 'Query phrasebook~~',
+	'Menu:MyShortcuts' => 'My Shortcuts~~',
 ));

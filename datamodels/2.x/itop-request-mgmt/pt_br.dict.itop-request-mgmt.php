@@ -291,6 +291,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:SelectLanguage' => "Alterar sua linguagem",
 	'Portal:LanguageChangedTo_Lang' => 'Linguagem alterada para',
 	'Portal:ChooseYourFavoriteLanguage' => 'Escolha sua linguagem favorita',
+	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
+	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
 ));
 
 ?>

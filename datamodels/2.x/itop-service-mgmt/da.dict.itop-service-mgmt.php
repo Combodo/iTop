@@ -354,5 +354,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkDeliveryModelToContact/Attribute:contact_name+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Rolle navn',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'Kontrakter efter status',
+	'Class:Organization/Attribute:deliverymodel_id' => 'Leverings model',
+	'Class:Organization/Attribute:deliverymodel_name' => 'Leverings model navn',
 ));
 ?>

@@ -190,10 +190,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:Incident:EscalatedIncidents+' => 'エスカレーションされたインシデント',
 	'Menu:Incident:OpenIncidents' => '全オープンインシデント',
 	'Menu:Incident:OpenIncidents+' => '全オープンインシデント',
-	'Menu:Incident:UnassignedIncidents' => '未割り当てインシデント',
-	'Menu:Incident:UnassignedIncidents+' => '未割り当てインシデント',
-	'Menu:Incident:HelpdeskIncidents' => 'レベル2へ割り当てられたインシデント',
-	'Menu:Incident:HelpdeskIncidents+' => 'レベル2へ割り当てられたインシデント',
 	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => '最近14日の優先度別インシデント',
 	'UI-IncidentManagementOverview-Last-14-days' => '最近14日のインシデント数',
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => '状態別オープンインシデント',
@@ -211,5 +207,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Incident/Attribute:parent_change_ref+' => '',
 	'Class:Incident/Attribute:parent_incident_id_friendlyname' => '親インシデント名',
 	'Class:Incident/Attribute:parent_incident_id_friendlyname+' => '',
+	'Class:Incident/Attribute:related_request_list' => 'Child requests~~',
+	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Cannot assign the Parent incident to the incident itself~~',
+	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
+	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
+	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
 ));
 ?>

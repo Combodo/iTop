@@ -50,4 +50,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:UserAccountsMenu' => 'Kullanıcı Hesapları',
 	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları',
 	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları',
+	'Menu:DataSources' => 'Synchronization Data Sources~~',
+	'Menu:DataSources+' => 'All Synchronization Data Sources~~',
+	'Menu:QueryMenu' => 'Query phrasebook~~',
+	'Menu:QueryMenu+' => 'Query phrasebook~~',
+	'Menu:MyShortcuts' => 'My Shortcuts~~',
 ));

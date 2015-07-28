@@ -37,5 +37,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Attachment:Max_Mo' => '(Tamanho máximo arquivo: %1$s Mb)',
 	'Attachment:Max_Ko' => '(Tamanho máximo arquivo: %1$s Kb)',
 	'Attachments:NoAttachment' => 'Nenhum anexo. ',
+	'Attachments:PreviewNotAvailable' => 'Preview not available for this type of attachment.~~',
 ));
 ?>

@@ -152,6 +152,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
         'Class:Problem/Stimulus:ev_resolve+' => 'Solucionar',
         'Class:Problem/Stimulus:ev_close' => 'Cerrar',
         'Class:Problem/Stimulus:ev_close+' => 'Cerrar',
+	'Class:Problem/Attribute:urgency/Value:4' => 'low~~',
+	'Class:Problem/Attribute:urgency/Value:4+' => 'low~~',
+	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
+	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
 ));
 
 ?>

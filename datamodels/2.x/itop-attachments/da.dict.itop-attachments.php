@@ -36,5 +36,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Attachment:Max_Mo' => '(Maksimal størrelse: %1$s MB)',
 	'Attachment:Max_Ko' => '(Maksimal størrelse: %1$s KB)',
 	'Attachments:NoAttachment' => 'Intet vedhæftet. ',
+	'Attachments:PreviewNotAvailable' => 'Preview not available for this type of attachment.~~',
 ));
 ?>

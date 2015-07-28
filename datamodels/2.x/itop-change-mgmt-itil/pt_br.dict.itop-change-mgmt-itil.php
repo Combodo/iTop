@@ -292,6 +292,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Finalizar',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
+	'Tickets:Related:OpenChanges' => 'Open changes~~',
+	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
 ));
 
 ?>

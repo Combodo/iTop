@@ -1857,5 +1857,15 @@ Dict::Add('FR FR', 'French', 'Français', array(
 'Class:Subnet/Tab:FreeIPs-count' => 'IP disponibles: %1$s',
 'Class:Subnet/Tab:FreeIPs-explain' => 'Voici un échantillon de dix addresses IP disponibles',
 'Class:Document:PreviewTab' => 'Aperçu',
+	'Class:Organization/Attribute:deliverymodel_id' => 'Modèle de support',
+	'Class:Organization/Attribute:deliverymodel_name' => 'Nom modèle de support',
+	'Class:Person/Attribute:name' => 'Nom',
+	'Class:Model/Attribute:type/Value:DiskArray' => 'Baie de disques',
+	'Class:Model/Attribute:type/Value:DiskArray+' => 'Baie de disques',
+	'Class:Subnet/Attribute:subnet_name' => 'Nom de subnet',
+	'Class:IPInterface/Attribute:comment' => 'Commentaire',
+	'Menu:ConfigManagement:virtualization' => 'Virtualisation',
+	'Menu:ConfigManagement:EndUsers' => 'Périphériques utilisateurs',
+	'UI_WelcomeMenu_AllConfigItems' => 'Résumé',
 ));
 ?>

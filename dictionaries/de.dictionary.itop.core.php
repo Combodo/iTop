@@ -585,4 +585,13 @@ Operatoren:<br/>
 	'Core:BulkExportQueryPlaceholder' => 'Type an OQL query here...~~',
 	'Core:BulkExportCanRunNonInteractive' => 'Click here to run the export in non-interactive mode.~~',
 	'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.~~',
+	'Core:AttributeHierarchicalKey' => 'Hierarchical Key~~',
+	'Core:AttributeHierarchicalKey+' => 'External (or foreign) key to the parent~~',
+	'Class:EventNotificationEmail/Attribute:attachments' => 'Attachments~~',
+	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
+	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
+	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class \"%1$s\"~~',
+	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as \"%1$s\")~~',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for \"%1$s\"~~',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for \"%1$s\" at %2$d%%~~',
 ));

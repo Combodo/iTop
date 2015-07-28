@@ -223,8 +223,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Kontrakter efter Service Level',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Kontrakter efter Status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Kontrakter som udløber om mindre end 30 dage',
-	'Menu:ServiceType' => 'Ydelsestype',
-	'Menu:ServiceType+' => '',
 	'Menu:ProviderContract' => 'Leverandørkontrakter',
 	'Menu:ProviderContract+' => '',
 	'Menu:CustomerContract' => 'Kundekontrakter',
@@ -343,5 +341,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkDeliveryModelToContact/Attribute:contact_name+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Rolle navn',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
+	'Class:Organization/Attribute:deliverymodel_id' => 'Leverings model',
+	'Class:Organization/Attribute:deliverymodel_name' => 'Leverings model navn',
+	'Class:ServiceSubcategory/Attribute:service_provider' => 'Provider Name~~',
+	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Provider~~',
 ));
 ?>

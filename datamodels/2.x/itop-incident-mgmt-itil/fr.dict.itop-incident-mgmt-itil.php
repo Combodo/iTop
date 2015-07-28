@@ -221,4 +221,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets (résoudre les tickets fils)',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution du ticket (ev_autoresolve) vers les requêtes et incidents fils, et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution',
+	'Class:Incident/Attribute:user_satisfaction/Value:1' => 'Très satisfait',
+	'Class:Incident/Attribute:user_satisfaction/Value:1+' => 'Très satisfait',
+	'Class:Incident/Attribute:user_satisfaction/Value:2' => 'Plutôt satisfait',
+	'Class:Incident/Attribute:user_satisfaction/Value:2+' => 'Plutôt satisfait',
+	'Class:Incident/Attribute:user_satisfaction/Value:3' => 'Plutôt mécontent',
+	'Class:Incident/Attribute:user_satisfaction/Value:3+' => 'Plutôt mécontent',
+	'Class:Incident/Attribute:user_satisfaction/Value:4' => 'Très mécontent',
+	'Class:Incident/Attribute:user_satisfaction/Value:4+' => 'Très mécontent',
+	'Tickets:Related:OpenIncidents' => 'Open incidents',
 ));

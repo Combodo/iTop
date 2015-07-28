@@ -27,7 +27,7 @@
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Relation:impacts/Description' => 'Элементы, на которые влияет',
 	'Relation:impacts/DownStream' => 'Влияние...',
-	'Relation:impacts/UpStream' => 'Элементы, на которые влияет...',
+	'Relation:impacts/UpStream' => 'Зависимость...',
 	'Relation:depends on/Description' => 'Элементы, от которых зависит',
 	'Relation:depends on/DownStream' => 'Зависимость...',
 	'Relation:depends on/UpStream' => 'Влияние...',
@@ -1867,5 +1867,19 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 'Class:Subnet/Tab:FreeIPs-count' => 'Free IPs: %1$s',
 'Class:Subnet/Tab:FreeIPs-explain' => 'Here is an extract of 10 free IP addresses',
 'Class:Document:PreviewTab' => 'Preview',
+	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets~~',
+	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundancy~~',
+	'Class:DatacenterDevice/Attribute:redundancy/count' => 'The device is up if at least one power connection (A or B) is up~~',
+	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'The device is up if all its power connections are up~~',
+	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'The device is up if at least %1$s %% of its power connections are up~~',
+	'Class:ApplicationSolution/Attribute:redundancy' => 'Impact analysis: configuration of the redundancy~~',
+	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'The solution is up is all CIs are up~~',
+	'Class:ApplicationSolution/Attribute:redundancy/count' => 'The solution is up if at least %1$s CI(s) is(are) up~~',
+	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'The solution is up if at least %1$s %% of the CIs are up~~',
+	'Class:Farm/Attribute:redundancy' => 'High availability~~',
+	'Class:Farm/Attribute:redundancy/disabled' => 'The farm is up if all the hypervisors are up~~',
+	'Class:Farm/Attribute:redundancy/count' => 'The farm is up if at least %1$s hypervisor(s) is(are) up~~',
+	'Class:Farm/Attribute:redundancy/percent' => 'The farm is up if at least %1$s %% of the hypervisors are up~~',
+	'Server:power' => 'Power supply~~',
 ));
 ?>

@@ -499,5 +499,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:SLT+' => 'Objectifs de niveau de service (SLT)',
 	'Menu:DeliveryModel' => 'Modèles de support',
 	'Menu:DeliveryModel+' => 'Modèles de support',
+	'Menu:Procedure' => 'Catalogue des procédures',
+	'Menu:Procedure+' => 'Catalogue des procédures',
 ));
 ?>

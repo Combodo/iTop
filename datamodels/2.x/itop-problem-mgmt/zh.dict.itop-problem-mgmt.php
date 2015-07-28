@@ -164,6 +164,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => '关闭',
 	'Class:Problem/Stimulus:ev_close+' => '',
+	'Class:Problem/Attribute:urgency/Value:4' => 'low~~',
+	'Class:Problem/Attribute:urgency/Value:4+' => 'low~~',
+	'Class:Problem/Attribute:priority/Value:4' => 'Low~~',
+	'Class:Problem/Attribute:priority/Value:4+' => 'Low~~',
+	'Class:Problem/Attribute:related_request_list' => 'Related requests~~',
+	'Class:Problem/Attribute:related_request_list+' => 'All the requests that are related to this problem~~',
+	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
+	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
 ));
 
 ?>

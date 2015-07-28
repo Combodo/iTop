@@ -111,5 +111,12 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Change/Attribute:related_incident_list+' => '',
 	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent Change Friendly Name',
 	'Class:Change/Attribute:parent_id_friendlyname+' => '',
+	'Tickets:Related:OpenChanges' => 'Open changes~~',
+	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
+	'Class:Change/Attribute:related_problems_list' => 'Relaterede problemer',
+	'Class:Change/Attribute:related_problems_list+' => '',
+	'Class:Change/Attribute:outage' => 'Nedetid',
+	'Class:Change/Attribute:outage/Value:no' => 'Nej',
+	'Class:Change/Attribute:outage/Value:yes' => 'Ja',
 ));
 ?>

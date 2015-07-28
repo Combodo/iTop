@@ -39,8 +39,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 'UI-ServiceManagementMenu-ContractsByStatus' => 'Договоры по статусу',
 'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Договоры, оканчивающиеся в течение 30-ти дней',
 
-'Menu:ServiceType' => 'Типы услуг',
-'Menu:ServiceType+' => 'Типы услуг',
 'Menu:ProviderContract' => 'Договоры с поставщиками',
 'Menu:ProviderContract+' => 'Договоры с поставщиками',
 'Menu:CustomerContract' => 'Договоры с заказчиками',

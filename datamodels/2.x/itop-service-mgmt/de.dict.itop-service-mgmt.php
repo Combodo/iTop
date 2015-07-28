@@ -229,8 +229,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Verträge nach Service Level',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Verträge nach Status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Verträge, die in weniger als 30 Tagen enden',
-	'Menu:ServiceType' => 'Service Typen',
-	'Menu:ServiceType+' => 'Service Typen',
 	'Menu:ProviderContract' => 'Provider-Verträge',
 	'Menu:ProviderContract+' => 'Provider-Verträge',
 	'Menu:CustomerContract' => 'Kundenverträge',

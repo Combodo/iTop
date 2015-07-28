@@ -46,8 +46,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracten per service level',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracten met status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracten die in minder dan 30 dagen eindigen',
-	'Menu:ServiceType' => 'Dienst Types',
-	'Menu:ServiceType+' => 'Dienst Types',
 	'Menu:ProviderContract' => 'Leveranciers contracten',
 	'Menu:ProviderContract+' => 'Leveranciers contracten',
 	'Menu:CustomerContract' => 'Klant contracten',

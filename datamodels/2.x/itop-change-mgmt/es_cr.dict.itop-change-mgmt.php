@@ -139,6 +139,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Change/Attribute:outage/Value:no+' => 'No',
 	'Class:Change/Attribute:outage/Value:yes' => 'Si',
 	'Class:Change/Attribute:outage/Value:yes+' => 'Si',
+	'Tickets:Related:OpenChanges' => 'Open changes~~',
+	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
 ));
 
 ?>

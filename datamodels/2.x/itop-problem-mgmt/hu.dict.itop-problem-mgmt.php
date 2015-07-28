@@ -125,5 +125,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Problem/Attribute:agent_email+' => '',
 	'Class:Problem/Attribute:related_change_ref' => 'Referencia',
 	'Class:Problem/Attribute:related_change_ref+' => '',
+	'Class:Problem/Attribute:urgency/Value:4' => 'low~~',
+	'Class:Problem/Attribute:urgency/Value:4+' => 'low~~',
+	'Class:Problem/Attribute:priority/Value:4' => 'Low~~',
+	'Class:Problem/Attribute:priority/Value:4+' => 'Low~~',
+	'Class:Problem/Attribute:related_request_list' => 'Related requests~~',
+	'Class:Problem/Attribute:related_request_list+' => 'All the requests that are related to this problem~~',
+	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
+	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
 ));
 ?>

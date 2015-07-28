@@ -141,6 +141,8 @@ Dict::Add('NL NL', "Dutch", "Nederlands", array(
 	'Class:Change/Attribute:outage/Value:no+' => '',
 	'Class:Change/Attribute:outage/Value:yes' => 'Yes',
 	'Class:Change/Attribute:outage/Value:yes+' => '',
+	'Tickets:Related:OpenChanges' => 'Open changes~~',
+	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
 ));
 
 ?>
