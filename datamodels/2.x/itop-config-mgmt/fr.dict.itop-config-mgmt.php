@@ -578,7 +578,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PowerSource' => 'Arrivée électrique',
 	'Class:PowerSource+' => '',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
-	'Class:PowerSourcel/Attribute:pdus_list+' => '',
+	'Class:PowerSource/Attribute:pdus_list+' => '',
 ));
 
 //
