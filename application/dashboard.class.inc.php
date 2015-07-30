@@ -312,7 +312,7 @@ abstract class Dashboard
 	
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$oPage->add('<h1>'.Dict::S($this->sTitle).'</h1>');
+		$oPage->add('<h1>'.htmlentities(Dict::S($this->sTitle), ENT_QUOTES, 'UTF-8', false).'</h1>');
 		$oLayout = new $this->sLayoutClass;
 		$oLayout->Render($oPage, $this->aCells, $bEditMode, $aExtraParams);
 		if (!$bEditMode)
