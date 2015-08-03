@@ -2656,6 +2656,22 @@ class AttributeEnum extends AttributeString
 			return "VARCHAR(255)".($bFullSpec ? " DEFAULT ''" : ""); // ENUM() is not an allowed syntax!
 		}
 	}
+	
+	protected function GetSQLColSpec()
+	{
+		$default = $this->ScalarToSQL($this->GetDefaultValue());
+		if (is_null($default))
+		{
+			$sRet = '';
+		}
+		else
+		{
+			// ENUMs values are strings so the default value must be a string as well,
+			// otherwise MySQL interprets the number as the zero-based index of the value in the list (i.e. the nth value in the list)
+			$sRet = " DEFAULT ".CMDBSource::Quote($default);
+		}
+		return $sRet;
+	}
 
 	public function ScalarToSQL($value)
 	{
