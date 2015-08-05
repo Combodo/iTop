@@ -817,6 +817,22 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'transactions_enabled' => array(
+			'type' => 'bool',
+			'description' => 'Whether or not the whole mechanism to prevent multiple submissions of a page is enabled.',
+			'default' => true,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'log_transactions' => array(
+			'type' => 'bool',
+			'description' => 'Whether or not to enable the debug log for the transactions.',
+			'default' => false,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)
