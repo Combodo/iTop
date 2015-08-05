@@ -37,6 +37,11 @@ class privUITransaction
 	 */
 	public static function GetNewTransactionId()
 	{
+		$bTransactionsEnabled = MetaModel::GetConfig()->Get('transactions_enabled');
+		if (!$bTransactionsEnabled)
+		{
+			return 'notransactions'; // Any value will do
+		}
 		$sClass = 'privUITransaction'.MetaModel::GetConfig()->Get('transaction_storage');
 		if (!class_exists($sClass, false))
 		{
@@ -57,6 +62,11 @@ class privUITransaction
 	 */
 	public static function IsTransactionValid($id, $bRemoveTransaction = true)
 	{
+		$bTransactionsEnabled = MetaModel::GetConfig()->Get('transactions_enabled');
+		if (!$bTransactionsEnabled)
+		{
+			return true; // All values are valid
+		}
 		$sClass = 'privUITransaction'.MetaModel::GetConfig()->Get('transaction_storage');
 		if (!class_exists($sClass, false))
 		{
@@ -73,6 +83,11 @@ class privUITransaction
 	 */
 	public static function RemoveTransaction($id)
 	{
+		$bTransactionsEnabled = MetaModel::GetConfig()->Get('transactions_enabled');
+		if (!$bTransactionsEnabled)
+		{
+			return; // Nothing to do
+		}
 		$sClass = 'privUITransaction'.MetaModel::GetConfig()->Get('transaction_storage');
 		if (!class_exists($sClass, false))
 		{
@@ -191,8 +206,8 @@ class privUITransactionFile
 			throw new Exception('The directory "'.APPROOT.'data/transactions" must be writable to the application.');
 		}
 		self::CleanupOldTransactions();
-		$id = basename(tempnam(APPROOT.'data/transactions', substr(UserRights::GetUser(), 0, 10).'-'));
-		IssueLog::Info('GetNewTransactionId: Created transaction: '.$id);
+		$id = basename(tempnam(APPROOT.'data/transactions', self::GetUserPrefix()));
+		self::Info('GetNewTransactionId: Created transaction: '.$id);
 
 		return (string)$id;
 	}
@@ -207,25 +222,27 @@ class privUITransactionFile
 	 */
 	public static function IsTransactionValid($id, $bRemoveTransaction = true)
 	{
-		$bResult = file_exists(APPROOT.'data/transactions/'.$id);
+		$sFilepath = APPROOT.'data/transactions/'.$id;
+		clearstatcache(true, $sFilepath);
+		$bResult = file_exists($sFilepath);
 		if ($bResult)
 		{
 			if ($bRemoveTransaction)
 			{
-				$bResult = @unlink(APPROOT.'data/transactions/'.$id);
-				if (!$bSuccess)
+				$bResult = @unlink($sFilepath);
+				if (!$bResult)
 				{
-					IssueLog::Error('IsTransactionValid: FAILED to remove transaction '.$id);
+					self::Error('IsTransactionValid: FAILED to remove transaction '.$id);
 				}
 				else
 				{
-					IssueLog::Info('IsTransactionValid: Removed transaction: '.$id);
+					self::Info('IsTransactionValid: OK. Removed transaction: '.$id);
 				}
 			}
 		}
 		else
 		{
-			IssueLog::Info("IsTransactionValid: Transaction '$id' not found. Pending transactions for this user:\n".implode("\n", self::GetPendingTransactions()));
+			self::Info("IsTransactionValid: Transaction '$id' not found. Pending transactions for this user:\n".implode("\n", self::GetPendingTransactions()));
 		}
 		return $bResult;
 	}
@@ -238,31 +255,40 @@ class privUITransactionFile
 	public static function RemoveTransaction($id)
 	{
 		$bSuccess = true;
-		if(!file_exists(APPROOT.'data/transactions/'.$id))
+		$sFilepath = APPROOT.'data/transactions/'.$id;
+		clearstatcache(true, $sFilepath);
+		if(!file_exists($sFilepath))
 		{
 			$bSuccess = false;
-			IssueLog::Info("RemoveTransaction: Transaction '$id' not found. Pending transactions for this user:\n".implode("\n", self::GetPendingTransactions()));
+			self::Error("RemoveTransaction: Transaction '$id' not found. Pending transactions for this user:\n".implode("\n", self::GetPendingTransactions()));
 		}
-		$bSuccess = @unlink(APPROOT.'data/transactions/'.$id);
+		$bSuccess = @unlink($sFilepath);
 		if (!$bSuccess)
 		{
-			IssueLog::Error('RemoveTransaction: FAILED to remove transaction '.$id);
+			self::Error('RemoveTransaction: FAILED to remove transaction '.$id);
+		}
+		else
+		{
+			self::Info('RemoveTransaction: OK '.$id);
 		}
 		return $bSuccess;
 	}
 
 	/**
 	 * Cleanup old transactions which have been pending since more than 24 hours
+	 * Use filemtime instead of filectime since filectime may be affected by operations on the directory (like changing the access rights)
 	 */
 	protected static function CleanupOldTransactions()
 	{
 		$iLimit = time() - 24*3600;
+		clearstatcache();
 		$aTransactions = glob(APPROOT.'data/transactions/*-*');
 		foreach($aTransactions as $sFileName)
 		{
-			if (filectime($sFileName) < $iLimit)
+			if (filemtime($sFileName) < $iLimit)
 			{
 				@unlink($sFileName);
+				self::Info('CleanupOldTransactions: Deleted transaction: '.$sFileName);
 			}
 		}
 	}
@@ -275,14 +301,52 @@ class privUITransactionFile
 	{
 		clearstatcache();
 		$aResult = array();
-		$aTransactions = glob(APPROOT.'data/transactions/'.UserRights::GetUser().'-*');
+		$aTransactions = glob(APPROOT.'data/transactions/'.self::GetUserPrefix().'*');
 		foreach($aTransactions as $sFileName)
 		{
-			$aResult[] = date('Y-m-d H:i:s', filectime($sFileName)).' - '.basename($sFileName);
+			$aResult[] = date('Y-m-d H:i:s', filemtime($sFileName)).' - '.basename($sFileName);
 		}
 		sort($aResult);
 		return $aResult;
 	}
 
-}
+	protected static function GetUserPrefix()
+	{
+		$sPrefix = substr(UserRights::GetUser(), 0, 10);
+		$sPrefix = preg_replace('/[^a-zA-Z0-9-_]/', '_', $sPrefix);
+		return $sPrefix.'-';
+	}
 
+	protected static function Info($sText)
+	{
+		self::Write('Info | '.$sText);
+	}
+
+	protected static function Warning($sText)
+	{
+		self::Write('Warning | '.$sText);
+	}
+			
+	protected static function Error($sText)
+	{
+		self::Write('Error | '.$sText);
+	}
+	
+	protected static function Write($sText)
+	{
+		$bLogEnabled = MetaModel::GetConfig()->Get('log_transactions');
+		if ($bLogEnabled)
+		{
+		$hLogFile = @fopen(APPROOT.'log/transactions.log', 'a');
+		if ($hLogFile !== false)
+		{
+			flock($hLogFile, LOCK_EX);
+			$sDate = date('Y-m-d H:i:s');
+			fwrite($hLogFile, "$sDate | $sText\n");
+			fflush($hLogFile);
+			flock($hLogFile, LOCK_UN);
+			fclose($hLogFile);
+			}
+		}
+	}
+}
