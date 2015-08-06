@@ -158,9 +158,9 @@ abstract class TriggerOnObject extends Trigger
 	public function DoActivate($aContextArgs)
 	{
 		$bGo = true;
-		if (isset($aContextArgs['this->id']))
+		if (isset($aContextArgs['this->object()']))
 		{
-			$bGo = $this->IsTargetObject($aContextArgs['this->id']);
+			$bGo = $this->IsTargetObject($aContextArgs['this->object()']->GetKey());
 		}
 		if ($bGo)
 		{
