@@ -1901,7 +1901,7 @@ div.ui-dialog-header {
 }
 
 
-.arrow {
+.ui-tooltip .arrow {
   width: 70px;
   height: 16px;
   overflow: hidden;
@@ -1912,18 +1912,18 @@ div.ui-dialog-header {
 }
 
 
-.arrow.top {
+.ui-tooltip .arrow.top {
   top: -16px;
   bottom: auto;
 }
 
 
-.arrow.left {
+.ui-tooltip .arrow.left {
   left: 20%;
 }
 
 
-.arrow:after {
+.ui-tooltip .arrow:after {
   content: "";
   position: absolute;
   left: 20px;
@@ -1937,7 +1937,7 @@ div.ui-dialog-header {
 }
 
 
-.arrow.top:after {
+.ui-tooltip .arrow.top:after {
   bottom: -20px;
   top: auto;
 }
