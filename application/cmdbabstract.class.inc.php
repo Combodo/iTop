@@ -2043,7 +2043,7 @@ EOF
 		$aFieldsMap = array();
 		if (!isset($aExtraParams['action']))
 		{
-			$sFormAction = $_SERVER['SCRIPT_NAME']; // No parameter in the URL, the only parameter will be the ones passed through the form
+			$sFormAction = utils::GetAbsoluteUrlAppRoot().'pages/'.$this->GetUIPage(); // No parameter in the URL, the only parameter will be the ones passed through the form
 		}
 		else
 		{
@@ -3672,7 +3672,7 @@ EOF
 		$oP->Table($aHeaders, $aRows);
 		if ($bPreview)
 		{
-			$sFormAction = $_SERVER['SCRIPT_NAME']; // No parameter in the URL, the only parameter will be the ones passed through the form
+			$sFormAction = utils::GetAbsoluteUrlAppRoot().'pages/UI.php'; // No parameter in the URL, the only parameter will be the ones passed through the form
 			// Form to submit:
 			$oP->add("<form method=\"post\" action=\"$sFormAction\" enctype=\"multipart/form-data\">\n");
 			$aDefaults = utils::ReadParam('default', array());
