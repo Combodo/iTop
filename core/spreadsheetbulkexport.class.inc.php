@@ -91,7 +91,7 @@ class SpreadsheetBulkExport extends TabularBulkExport
 			}
 			else
 			{
-				$sAlias = reset($aSelectedClasses);
+				$sAlias = $this->oSearch->GetClassAlias();
 				$sAttCode = $sExtendedAttCode;
 			}
 			if (!array_key_exists($sAlias, $aSelectedClasses))
@@ -175,7 +175,7 @@ class SpreadsheetBulkExport extends TabularBulkExport
 			}
 			else
 			{
-				$sAlias = reset($aSelectedClasses);
+				$sAlias = $this->oSearch->GetClassAlias();
 				$sAttCode = $sExtendedAttCode;
 			}
 
