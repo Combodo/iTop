@@ -111,15 +111,28 @@ class ModuleDiscovery
 	}
 
 	/**
-	 *	
+	 * Get the list of "discovered" modules, ordered based on their (inter) dependencies	
 	 * @param bool  $bAbortOnMissingDependency ...
 	 * @param hash $aModulesToLoad List of modules to search for, defaults to all if ommitted
 	 */	 
 	protected static function GetModules($bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
 		// Order the modules to take into account their inter-dependencies
+		return self::OrderModulesByDependencies(self::$m_aModules, $bAbortOnMissingDependency, $aModulesToLoad);
+	}
+	
+	/**
+	 * Arrange an list of modules, based on their (inter) dependencies
+	 * @param hash $aModules The list of modules to process: 'id' => $aModuleInfo
+	 * @param bool  $bAbortOnMissingDependency ...
+	 * @param hash $aModulesToLoad List of modules to search for, defaults to all if ommitted
+	 * @return hash
+	 */	 
+	public static function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
+	{
+		// Order the modules to take into account their inter-dependencies
 		$aDependencies = array();
-		foreach(self::$m_aModules as $sId => $aModule)
+		foreach($aModules as $sId => $aModule)
 		{
 			list($sModuleName, $sModuleVersion) = self::GetModuleName($sId);
 			if (is_null($aModulesToLoad) || in_array($sModuleName, $aModulesToLoad))
@@ -130,7 +143,7 @@ class ModuleDiscovery
 		ksort($aDependencies);
 		$aOrderedModules = array();
 		$iLoopCount = 1;
-		while(($iLoopCount < count(self::$m_aModules)) && (count($aDependencies) > 0) )
+		while(($iLoopCount < count($aModules)) && (count($aDependencies) > 0) )
 		{
 			foreach($aDependencies as $sId => $aRemainingDeps)
 			{
@@ -155,7 +168,7 @@ class ModuleDiscovery
 			$aModuleDeps = array();			
 			foreach($aDependencies as $sId => $aDeps)
 			{
-				$aModule = self::$m_aModules[$sId];
+				$aModule = $aModules[$sId];
 				$aModuleDeps[] = "{$aModule['label']} (id: $sId) depends on ".implode(' + ', $aDeps);
 			}
 			$sMessage = "The following modules have unmet dependencies: ".implode(', ', $aModuleDeps);
@@ -165,11 +178,72 @@ class ModuleDiscovery
 		$aResult = array();
 		foreach($aOrderedModules as $sId)
 		{
-			$aResult[$sId] = self::$m_aModules[$sId];
+			$aResult[$sId] = $aModules[$sId];
 		}
 		return $aResult;
 	}
+
+	/**
+	 * Remove the duplicate modules (i.e. modules with the same name but with a different version) from the supplied list of modules
+	 * @param hash $aModules
+	 * @return hash The ordered a duplicate-free list of modules
+	 */
+	public static function RemoveDuplicateModules($aModules)
+	{
+		$aRes = array();
+		$aIndex = array();
+		foreach($aModules as $sModuleId => $aModuleInfo)
+		{
+			if (preg_match('|^([^/]+)/(.*)$|', $sModuleId, $aMatches))
+			{
+				$sModuleName = $aMatches[1];
+				$sModuleVersion = $aMatches[2];
+			}
+			else
+			{
+				// No version number found, assume 1.0.0
+				$sModuleName = str_replace('/', '', $sModuleId);
+				$sModuleVersion = '1.0.0';
+			}
+			// The last version encountered has precedence
+			$aIndex[$sModuleName] = $sModuleVersion;
+		}
 	
+		foreach($aModules as $sModuleId => $aModuleInfo)
+		{
+			if (preg_match('|^([^/]+)/(.*)$|', $sModuleId, $aMatches))
+			{
+				$sModuleName = $aMatches[1];
+				$sModuleVersion = $aMatches[2];
+			}
+			else
+			{
+				// No version number found, assume 1.0.0
+				$sModuleName = str_replace('/', '', $sModuleId);
+				$sModuleVersion = '1.0.0';
+			}
+			if ($aIndex[$sModuleName] == $sModuleVersion)
+			{
+				// Ok, this this the last (or only) version of this module in the list, keep it
+				$aRes[$sModuleId] = $aModuleInfo;
+			}
+			else
+			{
+				if(version_compare($sModuleVersion, $aIndex[$sModuleName], '<'))
+				{
+					SetupPage::log_info("Module $sModuleId will be upgraded to $sModuleName/{$aIndex[$sModuleName]}.");
+				}
+				else
+				{
+					SetupPage::log_warning("Module $sModuleId will be DOWNGRADED to $sModuleName/{$aIndex[$sModuleName]} since the older version is to be loaded AFTER the more recent version.");
+				}
+			}
+		}
+		// If needed re-arrange the list ot take care of inter dependencies
+		$aRes = self::OrderModulesByDependencies($aRes, true);
+		return $aRes;
+	}
+		
 	protected static function DependencyIsResolved($sDepString, $aOrderedModules)
 	{
 		$bResult = false;
