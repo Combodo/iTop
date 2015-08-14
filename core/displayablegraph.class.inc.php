@@ -1273,6 +1273,8 @@ EOF
 					'none_selected' => Dict::S('UI:Relation:NoneSelected'),
 					'nb_selected' => Dict::S('UI:SearchValue:NbSelected'),
 					'additional_context_info' => Dict::S('UI:Relation:AdditionalContextInfo'),
+					'zoom' => Dict::S('UI:Relation:Zoom'),
+					'loading' => Dict::S('UI:Loading'),
 				),
 				'page_format' => array(
 					'label' => Dict::S('UI:Relation:PDFExportPageFormat'),

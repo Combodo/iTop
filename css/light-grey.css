@@ -1967,3 +1967,23 @@ table.export_parameters td {
 }
 
 
+.graph_zoom {
+  display: inline-block;
+  float: right;
+  margin-right: 2em;
+}
+
+
+.graph_zoom_slider {
+  display: inline-block;
+  width: 10em;
+}
+
+
+.graph_zoom_minus, .graph_zoom_plus {
+  display: inline-block;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+

@@ -1453,3 +1453,17 @@ table.export_parameters td {
 .table_preview .drag-handle {
 	cursor: move;	
 }
+.graph_zoom {
+	display: inline-block;
+	float: right;
+	margin-right: 2em;
+}
+.graph_zoom_slider {
+	display: inline-block;
+	width: 10em;
+}
+.graph_zoom_plus, .graph_zoom_minus {
+	display: inline-block;
+	margin-left: 1em;
+	margin-right: 1em;
+} 

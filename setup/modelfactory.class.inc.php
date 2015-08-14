@@ -1108,6 +1108,7 @@ EOF
 	public function FindModules()
 	{
 		$aAvailableModules = ModuleDiscovery::GetAvailableModules($this->aRootDirs);
+		$aAvailableModules = ModuleDiscovery::RemoveDuplicateModules($aAvailableModules);
 		$aResult = array();
 		foreach($aAvailableModules as $sId => $aModule)
 		{

@@ -865,6 +865,7 @@ EOF
 			else
 			{
 				// Old field remaining
+				$bTriggerRebuildNeeded = true;
 				if ($bVerbose)
 				{
 					echo "Irrelevant field description for the field '$sAttCode', for the data synchro task ".$this->GetName()." (".$this->GetKey()."), will be removed.\n";
@@ -885,6 +886,7 @@ EOF
 			{
 				$bFixNeeded = true;
 				$aMissingFields[] = $sAttCode;
+				$bTriggerRebuildNeeded = true;
 				// New field missing...
 				if ($bVerbose)
 				{

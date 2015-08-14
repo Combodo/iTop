@@ -973,6 +973,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:RelationOption:GroupingThreshold' => 'Grouping threshold',
 	'UI:Relation:AdditionalContextInfo' => 'Additional context info',
 	'UI:Relation:NoneSelected' => 'None',
+	'UI:Relation:Zoom' => 'Zoom',
 	'UI:Relation:ExportAsAttachment' => 'Export as Attachment...',
 	'UI:Relation:DrillDown' => 'Details...',
 	'UI:Relation:PDFExportOptions' => 'PDF Export Options',

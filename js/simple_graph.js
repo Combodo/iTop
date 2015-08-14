@@ -34,6 +34,8 @@ $(function()
 				uncheck_all: 'Uncheck All',
 				none_selected: 'None',
 				nb_selected: '# selected',
+				zoom: 'Zoom',
+				loading: 'Loading...'
 			},
 			export_as_document: null,
 			drill_down: null,
@@ -54,9 +56,13 @@ $(function()
 			this.fZoom = 1.0;
 			this.xOffset = 0;
 			this.yOffset = 0;
+			this.xPan = 0;
+			this.yPan = 0;
 			this.iTextHeight = 12;
+			this.fSliderZoom = 1.0;
+			this.bInUpdateSliderZoom = false;
 			
-			this.oPaper = Raphael(this.element.get(0), this.element.width(), this.element.height());
+			this.oPaper = Raphael(this.element.get(0), 16*this.element.width(), 16*this.element.height());
 
 			this.element
 			.addClass('panel-resized')
@@ -66,6 +72,9 @@ $(function()
 			this._create_toolkit_menu();
 			this._build_context_menus();
 			$(window).bind('resized', function() { var that = me; window.setTimeout(function() { that._on_resize(); }, 50); } );
+			this.element.bind('mousewheel', function(event, delta, deltaX, deltaY) {
+			    return me._on_mousewheel(event, delta, deltaX, deltaY);
+			});
 			if (this.options.source_url != null)
 			{
 				this.load_from_url(this.options.source_url);
@@ -104,6 +113,8 @@ $(function()
 			this._updateBBox();
 			this.auto_scale();
 			this.oPaper.clear();
+			this._reset
+			this.oPaper.setViewBox(this.xPan, this.yPan, this.element.width(),  this.element.height(), false);
 			for(var k in this.aNodes)
 			{
 				this.aNodes[k].aElements = [];
@@ -114,6 +125,12 @@ $(function()
 				this.aEdges[k].aElements = [];
 				this._draw_edge(this.aEdges[k]);
 			}
+			var me = this;
+			this.oBackground = this.oPaper
+			.rect(-10000, -10000, 20000, 20000)
+			.attr({fill: '#fff', opacity: 0, cursor: 'move'})
+			.toBack()
+			.drag(function(dx, dy, x, y, event) { me._on_background_move(dx, dy, x, y, event); }, function(x, y, event) { me._on_background_drag_start(x, y, event); }, function (event) { me._on_background_drag_end(event); });
 			this._make_tooltips();
 		},
 		_draw_node: function(oNode)
@@ -121,35 +138,36 @@ $(function()
 			var iWidth = oNode.width;
 			var iHeight = 32;
 			var iFontSize = 10;
-			var xPos = Math.round(oNode.x * this.fZoom + this.xOffset);
-			var yPos = Math.round(oNode.y * this.fZoom + this.yOffset);
+			var fTotalZoom = this.fZoom * this.fSliderZoom;
+			var xPos = Math.round(oNode.x * fTotalZoom + this.xOffset);
+			var yPos = Math.round(oNode.y * fTotalZoom + this.yOffset);
 			oNode.tx = 0;
 			oNode.ty = 0;
 			switch(oNode.shape)
 			{
 				case 'disc':
-				oNode.aElements.push(this.oPaper.circle(xPos, yPos, iWidth*this.fZoom / 2).attr(oNode.disc_attr));
+				oNode.aElements.push(this.oPaper.circle(xPos, yPos, iWidth*fTotalZoom / 2).attr(oNode.disc_attr));
 				var oText = this.oPaper.text(xPos, yPos, oNode.label);
-				oNode.text_attr['font-size'] = iFontSize * this.fZoom;
+				oNode.text_attr['font-size'] = iFontSize * fTotalZoom;
 				oText.attr(oNode.text_attr);
 				//oText.transform('s'+this.fZoom);
 				oNode.aElements.push(oText);
 				break;
 					
 				case 'group':
-				oNode.aElements.push(this.oPaper.circle(xPos, yPos, iWidth*this.fZoom / 2).attr({fill: '#fff', 'stroke-width':0}));
-				oNode.aElements.push(this.oPaper.circle(xPos, yPos, iWidth*this.fZoom / 2).attr(oNode.disc_attr));
-				var xIcon = xPos - 18 * this.fZoom;
-				var yIcon = yPos - 18 * this.fZoom;
-				oNode.aElements.push(this.oPaper.image(oNode.icon_url, xIcon, yIcon, 16*this.fZoom, 16*this.fZoom).attr(oNode.icon_attr));
-				oNode.aElements.push(this.oPaper.image(oNode.icon_url, xIcon + 18*this.fZoom, yIcon, 16*this.fZoom, 16*this.fZoom).attr(oNode.icon_attr));
-				oNode.aElements.push(this.oPaper.image(oNode.icon_url, xIcon + 9*this.fZoom, yIcon + 18*this.fZoom, 16*this.fZoom, 16*this.fZoom).attr(oNode.icon_attr));
+				oNode.aElements.push(this.oPaper.circle(xPos, yPos, iWidth*fTotalZoom / 2).attr({fill: '#fff', 'stroke-width':0}));
+				oNode.aElements.push(this.oPaper.circle(xPos, yPos, iWidth*fTotalZoom / 2).attr(oNode.disc_attr));
+				var xIcon = xPos - 18 * fTotalZoom;
+				var yIcon = yPos - 18 * fTotalZoom;
+				oNode.aElements.push(this.oPaper.image(oNode.icon_url, xIcon, yIcon, 16*fTotalZoom, 16*fTotalZoom).attr(oNode.icon_attr));
+				oNode.aElements.push(this.oPaper.image(oNode.icon_url, xIcon + 18*fTotalZoom, yIcon, 16*fTotalZoom, 16*fTotalZoom).attr(oNode.icon_attr));
+				oNode.aElements.push(this.oPaper.image(oNode.icon_url, xIcon + 9*fTotalZoom, yIcon + 18*fTotalZoom, 16*fTotalZoom, 16*fTotalZoom).attr(oNode.icon_attr));
 				var oText = this.oPaper.text(xPos, yPos +2, oNode.label);
-				oNode.text_attr['font-size'] = iFontSize * this.fZoom;
+				oNode.text_attr['font-size'] = iFontSize * fTotalZoom;
 				oText.attr(oNode.text_attr);
 				//oText.transform('s'+this.fZoom);
 				var oBB = oText.getBBox();
-				var dy = iHeight/2*this.fZoom + oBB.height/2;
+				var dy = iHeight/2*fTotalZoom + oBB.height/2;
 				oText.remove();
 				oText = this.oPaper.text(xPos, yPos +dy +2, oNode.label);
 				oText.attr(oNode.text_attr);
@@ -163,9 +181,9 @@ $(function()
 				if(Raphael.svg)
 				{
 					// the colorShift plugin works only in SVG
-					oNode.aElements.push(this.oPaper.image(oNode.icon_url, xPos - iWidth * this.fZoom/2, yPos - iHeight * this.fZoom/2, iWidth*this.fZoom, iHeight*this.fZoom).colorShift('#fff', 1));					
+					oNode.aElements.push(this.oPaper.image(oNode.icon_url, xPos - iWidth * fTotalZoom/2, yPos - iHeight * fTotalZoom/2, iWidth*fTotalZoom, iHeight*fTotalZoom).colorShift('#fff', 1));					
 				}
-				oNode.aElements.push(this.oPaper.image(oNode.icon_url, xPos - iWidth * this.fZoom/2, yPos - iHeight * this.fZoom/2, iWidth*this.fZoom, iHeight*this.fZoom).attr(oNode.icon_attr));
+				oNode.aElements.push(this.oPaper.image(oNode.icon_url, xPos - iWidth * fTotalZoom/2, yPos - iHeight * fTotalZoom/2, iWidth*fTotalZoom, iHeight*fTotalZoom).attr(oNode.icon_attr));
 				
 				var idx = 0;
 				for(var i in oNode.context_icons)
@@ -173,33 +191,33 @@ $(function()
 					var sgn = 2*(idx % 2) -1; // Suite: -1, 1, -1, 1, -1, 1, -1, etc.
 					var coef = Math.floor((1+idx)/2) * sgn; // Suite: 0, 1, -1, 2, -2, 3, -3, etc.
 					var alpha = coef*Math.PI/4 - Math.PI/2;						
-					var x = xPos + Math.cos(alpha) * 1.25*iWidth * this.fZoom / 2;
-					var y = yPos + Math.sin(alpha) * 1.25*iWidth * this.fZoom / 2;
-					var l = iWidth/3 * this.fZoom;
+					var x = xPos + Math.cos(alpha) * 1.25*iWidth * fTotalZoom / 2;
+					var y = yPos + Math.sin(alpha) * 1.25*iWidth * fTotalZoom / 2;
+					var l = iWidth/3 * fTotalZoom;
 					oNode.aElements.push(this.oPaper.image(oNode.context_icons[i], x - l/2, y - l/2, l , l).attr(oNode.icon_attr));
 					idx++;
 				}
 				var oText = this.oPaper.text( xPos, yPos, oNode.label);
-				oNode.text_attr['font-size'] = iFontSize * this.fZoom;
+				oNode.text_attr['font-size'] = iFontSize * fTotalZoom;
 				oText.attr(oNode.text_attr);
-				//oText.transform('S'+this.fZoom);
+				//oText.transform('S'+fTotalZoom);
 				var oBB = oText.getBBox();
-				var dy = iHeight/2*this.fZoom + oBB.height/2;
+				var dy = iHeight/2*fTotalZoom + oBB.height/2;
 				oText.remove();
 				oText = this.oPaper.text( xPos, yPos + dy, oNode.label);
 				oText.attr(oNode.text_attr);
-				//oText.transform('S'+this.fZoom);
+				//oText.transform('S'+fTotalZoom);
 				oNode.aElements.push(oText);
 				oNode.aElements.push(this.oPaper.rect( xPos - oBB.width/2 -2, yPos - oBB.height/2 + dy, oBB.width +4, oBB.height).attr({fill: '#fff', stroke: '#fff', opacity: 0.9}).toBack());
 				break;
 			}
 			if (oNode.source)
 			{
-				oNode.aElements.push(this.oPaper.circle(xPos, yPos, 1.25*iWidth*this.fZoom / 2).attr({stroke: '#c33', 'stroke-width': 3*this.fZoom }).toBack());
+				oNode.aElements.push(this.oPaper.circle(xPos, yPos, 1.25*iWidth*fTotalZoom / 2).attr({stroke: '#c33', 'stroke-width': 3*fTotalZoom }).toBack());
 			}
 			if (oNode.sink)
 			{
-				oNode.aElements.push(this.oPaper.circle(xPos, yPos, 1.25*iWidth*this.fZoom / 2).attr({stroke: '#33c', 'stroke-width': 3*this.fZoom }).toBack());
+				oNode.aElements.push(this.oPaper.circle(xPos, yPos, 1.25*iWidth*fTotalZoom / 2).attr({stroke: '#33c', 'stroke-width': 3*fTotalZoom }).toBack());
 			}
 			
 			var me = this;
@@ -223,8 +241,9 @@ $(function()
 		},
 		_move: function(sNodeId, dx, dy, x, y, event)
 		{
-			var origDx = dx / this.fZoom;
-			var origDy = dy / this.fZoom;
+			var fTotalZoom = this.fZoom * this.fSliderZoom;
+			var origDx = dx / fTotalZoom;
+			var origDy = dy / fTotalZoom;
 			
 			var oNode = this._find_node(sNodeId);
 			oNode.x = oNode.xOrig + origDx;
@@ -254,9 +273,10 @@ $(function()
 		},
 		_drag_end: function(sNodeId, event)
 		{
+			var fTotalZoom = this.fZoom * this.fSliderZoom;
 			var oNode = this._find_node(sNodeId);
-			oNode.tx += (oNode.x - oNode.xOrig) * this.fZoom;
-			oNode.ty += (oNode.y - oNode.yOrig) * this.fZoom;
+			oNode.tx += (oNode.x - oNode.xOrig) * fTotalZoom;
+			oNode.ty += (oNode.y - oNode.yOrig) * fTotalZoom;
 			oNode.xOrig = oNode.x;
 			oNode.yOrig = oNode.y;
 			this._updateBBox();
@@ -277,16 +297,17 @@ $(function()
 		},
 		_get_edge_path: function(oEdge)
 		{
+			var fTotalZoom = this.fZoom * this.fSliderZoom;
 			var oStart = this._find_node(oEdge.source_node_id);
 			var oEnd = this._find_node(oEdge.sink_node_id);
 			var iArrowSize = 5;
 			
 			if ((oStart == null) || (oEnd == null)) return '';
 			
-			var xStart = Math.round(oStart.x * this.fZoom + this.xOffset);
-			var yStart = Math.round(oStart.y * this.fZoom + this.yOffset);
-			var xEnd = Math.round(oEnd.x * this.fZoom + this.xOffset);
-			var yEnd = Math.round(oEnd.y  * this.fZoom + this.yOffset);
+			var xStart = Math.round(oStart.x * fTotalZoom + this.xOffset);
+			var yStart = Math.round(oStart.y * fTotalZoom + this.yOffset);
+			var xEnd = Math.round(oEnd.x * fTotalZoom + this.xOffset);
+			var yEnd = Math.round(oEnd.y  * fTotalZoom + this.yOffset);
 
 			var sPath = Raphael.format('M{0},{1}L{2},{3}', xStart, yStart, xEnd, yEnd);
 			var vx = (xEnd - xStart);
@@ -296,15 +317,16 @@ $(function()
 			vy = vy / l;
 			var ux = -vy;
 			var uy = vx;
-			var lPos = Math.max(l/2, l - 40*this.fZoom);
+			var lPos = Math.max(l/2, l - 40*fTotalZoom);
 			var xArrow = xStart + vx * lPos;
 			var yArrow = yStart + vy * lPos;
-			sPath += Raphael.format('M{0},{1}l{2},{3}M{4},{5}l{6},{7}', xArrow, yArrow, this.fZoom * iArrowSize *(-vx + ux),  this.fZoom * iArrowSize *(-vy + uy), xArrow, yArrow, this.fZoom * iArrowSize *(-vx - ux),  this.fZoom * iArrowSize *(-vy - uy));
+			sPath += Raphael.format('M{0},{1}l{2},{3}M{4},{5}l{6},{7}', xArrow, yArrow, fTotalZoom * iArrowSize *(-vx + ux),  fTotalZoom * iArrowSize *(-vy + uy), xArrow, yArrow, fTotalZoom * iArrowSize *(-vx - ux),  fTotalZoom * iArrowSize *(-vy - uy));
 			return sPath;
 		},
 		_draw_edge: function(oEdge)
 		{
-			var fStrokeSize = Math.max(1, 2 * this.fZoom);			
+			var fTotalZoom = this.fZoom * this.fSliderZoom;
+			var fStrokeSize = Math.max(1, 2 * fTotalZoom);			
 			var sPath = this._get_edge_path(oEdge);
 			var oAttr = $.extend(oEdge.attr);
 			oAttr['stroke-linecap'] = 'round';
@@ -421,7 +443,13 @@ $(function()
 			}
 			//sHtml += '<li><a href="#" id="'+sPopupMenuId+'_reload">Refresh</a></li>';
 			sHtml += '</ul></li></ul></div>';
+			sHtml += '<span class="graph_zoom"><span>'+this.options.labels.zoom+'</span>';
+			sHtml += '<div id="'+sId+'_zoom_minus" class="graph_zoom_minus ui-icon ui-icon-circle-minus"></div>';
+			sHtml += '<div id="'+sId+'_zoom" class="graph_zoom_slider"></div>';
+			sHtml += '<div id="'+sId+'_zoom_plus" class="graph_zoom_plus ui-icon ui-icon-circle-plus"></div>';
+			sHtml += '</span>';
 			sHtml += '</div>';
+
 			
 			this.element.before(sHtml);
 			$('#'+sPopupMenuId+'>ul').popupmenu();
@@ -431,6 +459,9 @@ $(function()
 			$('#'+sPopupMenuId+'_pdf').click(function() { me.export_as_pdf(); });
 			$('#'+sPopupMenuId+'_attachment').click(function() { me.export_as_attachment(); });
 			$('#'+sId+'_grouping_threshold').spinner({ min: 2});
+			$('#'+sId+'_zoom').slider({ min: 0, max: 5, value: 1, step: 0.25, change: function() { me._on_zoom_change( $(this).slider('value')); } });
+			$('#'+sId+'_zoom_plus').click(function() { $('#'+sId+'_zoom').slider('value', 0.25 + $('#'+sId+'_zoom').slider('value')); return false; });
+			$('#'+sId+'_zoom_minus').click(function() { $('#'+sId+'_zoom').slider('value', $('#'+sId+'_zoom').slider('value') - 0.25); return false; });
 			$('#'+sId+'_contexts').multiselect({header: true, checkAllText: this.options.labels.check_all, uncheckAllText: this.options.labels.uncheck_all, noneSelectedText: this.options.labels.none_selected, selectedText: this.options.labels.nb_selected, selectedList: 1});
 			$('#'+sId+'_refresh_btn').button().click(function() { me.reload(); });
 		},
@@ -577,15 +608,44 @@ $(function()
 				]
 			});			
 		},
+		_on_zoom_change: function(sliderValue)
+		{
+			if(!this.bInUpdateSliderZoom)
+			{
+				var Z0 = this.fSliderZoom;
+				var X = this.xOffset - this.element.width()/2;
+				var Y = this.yOffset - this.element.height()/2; 
+
+				this.fSliderZoom = Math.pow(2 , (sliderValue - 1));
+				
+				var Z1 = this.fSliderZoom = Math.pow(2 , (sliderValue - 1));
+				var dx = X * (1 - Z1/Z0);
+				var dy = Y * (1 - Z1/Z0);
+				this.xPan += dx;
+				this.yPan += dy;
+				this._close_all_tooltips();
+				this.oPaper.setViewBox(this.xPan, this.yPan, this.element.width(),  this.element.height(), false);
+				this.draw();				
+			}
+		},
+		_on_mousewheel: function(event, delta, deltaX, deltaY)
+		{
+			var fStep = 0.25*delta;
+			var sId = this.element.attr('id');
+			$('#'+sId+'_zoom').slider('value', fStep + $('#'+sId+'_zoom').slider('value'));
+		},
 		_on_resize: function()
 		{
 			this.element.closest('.ui-tabs').tabs({ heightStyle: "fill" });
 			this.auto_scale();
 			this.oPaper.setSize(this.element.width(), this.element.height());
+			this._close_all_tooltips();
 			this.draw();
 		},
 		load: function(oData)
 		{
+			var me = this;
+			var sId = this.element.attr('id');
 			this.aNodes = [];
 			this.aEdges = [];
 			for(k in oData.nodes)
@@ -599,7 +659,19 @@ $(function()
 			this._updateBBox();
 			this.auto_scale();
 			this.oPaper.setSize(this.element.width(), this.element.height());
+			this._reset_pan_and_zoom();
 			this.draw();
+		},
+		_reset_pan_and_zoom: function()
+		{
+			this.xPan = 0;
+			this.yPan = 0;
+			var sId = this.element.attr('id');
+			this.bInUpdateSliderZoom = true;
+			$('#'+sId+'_zoom').slider('value', 1);
+			this.fSliderZoom = 1.0;
+			this.bInUpdateSliderZoom = false;
+			this.oPaper.setViewBox(this.xPan, this.yPan, this.element.width(),  this.element.height(), false);
 		},
 		load_from_url: function(sUrl)
 		{
@@ -616,7 +688,11 @@ $(function()
 			$('#'+sId+'_contexts').multiselect('getChecked').each(function() { aContexts[$(this).val()] = me.options.additional_contexts[$(this).val()].oql; });
 			this.element.closest('.ui-tabs').tabs({ heightStyle: "fill" });
 			this._close_all_tooltips();
-			this.oPaper.rect(0, 0, this.element.width(), this.element.height()).attr({fill: '#000', opacity: 0.4, 'stroke-width': 0});
+			this.oPaper.rect(this.xPan, this.yPan, this.element.width(), this.element.height()).attr({fill: '#000', opacity: 0.4, 'stroke-width': 0});
+			this.oPaper.rect(this.xPan + this.element.width()/2 - 100, this.yPan + this.element.height()/2 - 10, 200, 20)
+			.attr({fill: 'url(../setup/orange-progress.gif)', stroke: '#000', 'stroke-width': 1});
+			this.oPaper.text(this.xPan + this.element.width()/2, this.yPan + this.element.height()/2 - 20, this.options.labels.loading);
+			
 			$('#'+sId+'_refresh_btn').button('disable'); 
 			$.post(sUrl, {excluded_classes: this.options.excluded_classes, g: this.options.grouping_threshold, sources: this.options.sources, excluded: this.options.excluded, contexts: aContexts, context_key: this.options.context_key }, function(data) {
 				me.load(data);
@@ -719,13 +795,14 @@ $(function()
 			.on( "mouseover", function(event){
 				event.stopImmediatePropagation();
 				var jMe = $(this);
-				$(this).data('openTimeoutId', setTimeout(function() {
+				jMe.data('openTimeoutId', setTimeout(function() {
 					var sDataId = jMe.attr('data-id');
 					if ($('.tooltip-close-button[data-id="'+sDataId+'"]').length == 0)
 					{
+						jMe.data('openTimeoutId', 0);
 						jMe.tooltip('open');						
 					}
-				}, 500));					
+				}, 1000));					
 			})
 			.on( "mouseout", function(event){
 				event.stopImmediatePropagation();
@@ -751,7 +828,9 @@ $(function()
 				$('.popupMenuTarget[data-id="'+sDataId+'"]').tooltip('close');
 			});
 			this.element.on("click", ":not(.tooltip-simple-graph *,.tooltip-simple-graph)", function(){
-				$('.popupMenuTarget').each(function (i) {  
+				$('.popupMenuTarget').each(function (i) {
+					clearTimeout($(this).data('openTimeoutId'));
+					$(this).data('openTimeoutId', 0);
 					$(this).tooltip("close"); 
 				});
 			});
@@ -767,7 +846,38 @@ $(function()
 		},
 		_close_all_tooltips: function()
 		{
-			this.element.find('.popupMenuTarget').tooltip('close');
-		}
+			this.element.find('.popupMenuTarget').each(function() {
+				clearTimeout($(this).data('openTimeoutId'));
+				$(this).data('openTimeoutId', 0);
+				$(this).tooltip('close');
+			});
+		},
+		_on_background_drag_start: function(x, y, event)
+		{
+			this.bDragging = true;
+			this.xDrag = 0;
+			this.yDrag = 0;
+			//this._close_all_tooltips();
+		},
+		_on_background_move: function(dx, dy, x, y, event)
+		{
+			if (this.bDragging)
+			{
+				this.xDrag = dx;
+				this.yDrag = dy;
+				this.oPaper.setViewBox(this.xPan - this.xDrag, this.yPan - this.yDrag, this.element.width(),  this.element.height(), false);
+			}
+		},	
+		_on_background_drag_end: function(event)
+		{
+			if (this.bDragging)
+			{
+				this.xPan -= this.xDrag;
+				this.yPan -= this.yDrag;
+				this.xDrag = 0;
+				this.yDrag = 0;
+				this.bDragging = false;
+			}
+		},
 	});	
 });
