@@ -244,7 +244,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
 	'Class:Change/Attribute:related_incident_list' => 'Verwandte Incidents',
 	'Class:Change/Attribute:related_incident_list+' => '',
-	'Tickets:Related:OpenChanges' => 'Open changes~~',
-	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
+	'Tickets:Related:OpenChanges' => 'Offene Changes',
+	'Tickets:Related:RecentChanges' => 'Kürzlich erfolgte Changes (72h)',
 ));
 ?>

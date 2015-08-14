@@ -25,7 +25,7 @@
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserLocal' => 'iTop-Benutzer',
-	'Class:UserLocal+' => 'Benutzer von iTop authentifiziert',
+	'Class:UserLocal+' => 'Benutzer, von iTop authentifiziert',
 	'Class:UserLocal/Attribute:password' => 'Passwort',
 	'Class:UserLocal/Attribute:password+' => 'Benutzerpasswort',
 ));

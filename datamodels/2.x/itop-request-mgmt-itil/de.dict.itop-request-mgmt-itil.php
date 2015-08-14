@@ -241,9 +241,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => 'Parent-Benutzeranfrage-Id-Friendly Name',
 	'Class:UserRequest/Attribute:parent_request_id_friendlyname+' => '',
-	'Class:UserRequest/Attribute:parent_incident_id' => 'Parent incident~~',
-	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself~~',
-	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
-	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
-));
+	'Class:UserRequest/Attribute:parent_incident_id' => 'Parent-Incident',
+	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Kann Ticket nicht als eigenes Parent-Ticket verwenden',
+	'Class:UserRequest/Method:ResolveChildTickets' => 'Kind-Tickets lösen',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
+	));
 ?>

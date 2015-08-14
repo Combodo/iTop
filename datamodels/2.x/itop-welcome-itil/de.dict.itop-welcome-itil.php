@@ -17,6 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
+ * @author		 David M. Gümbel <david.guembel@itomig.de>
  * @copyright   Copyright (C) 2010-2014 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -54,5 +55,5 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:UserAccountsMenu' => 'Benutzerkonten',
 	'Menu:UserAccountsMenu+' => 'Benutzerkonten',
 	'Menu:UserAccountsMenu:Title' => 'Benutzerkonten',
-	'Menu:MyShortcuts' => 'Meine Links',
+	'Menu:MyShortcuts' => 'Meine Shortcuts',
 ));

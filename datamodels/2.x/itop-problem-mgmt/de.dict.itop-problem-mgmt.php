@@ -18,6 +18,7 @@
 
 /**
  * @author	Stephan Rosenke <stephan.rosenke@itomig.de>
+ * @author 	David M. Gümbel <david.guembel@itomig.de> 
 
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
@@ -115,7 +116,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Problem/Attribute:servicesubcategory_name+' => '',
 	'Class:Problem/Attribute:related_change_ref' => 'Ref',
 	'Class:Problem/Attribute:related_change_ref+' => '',
-	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
-	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
+	'Class:Problem/Attribute:related_incident_list' => 'Verknüpfte Incidents',
+	'Class:Problem/Attribute:related_incident_list+' => 'Alle Incidents, die mit diesem Problem verknüpft sind',
 ));
 ?>

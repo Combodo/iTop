@@ -344,7 +344,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkDeliveryModelToContact/Attribute:contact_name+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Rollenname',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
-	'Class:ServiceSubcategory/Attribute:service_provider' => 'Provider Name~~',
-	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Provider~~',
+	'Class:ServiceSubcategory/Attribute:service_provider' => 'Provider-Name',
+	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Provider',
 ));
 ?>

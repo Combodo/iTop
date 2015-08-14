@@ -21,6 +21,7 @@
  * Localized data
  *
  * @author      Stephan Rosenke <stephan.rosenke@itomig.de>
+ * @author      David M. Gümbel <david.guembel@itomig.de>
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
