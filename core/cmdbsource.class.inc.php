@@ -554,8 +554,16 @@ class CMDBSource
 		}
 		if (is_numeric($aFieldData["Default"]))
 		{
-			$default = $aFieldData["Default"] + 0; // Coerce to a numeric variable
-			$sRet .= ' DEFAULT '.self::Quote($default);
+			if (strtolower(substr($aFieldData["Type"], 0, 5)) == 'enum(')
+			{
+				// Force quotes to match the column declaration statement
+				$sRet .= ' DEFAULT '.self::Quote($aFieldData["Default"], true);
+			}
+			else
+			{
+				$default = $aFieldData["Default"] + 0; // Coerce to a numeric variable
+				$sRet .= ' DEFAULT '.self::Quote($default);
+			}
 		}
 		elseif (is_string($aFieldData["Default"]) == 'string')
 		{
