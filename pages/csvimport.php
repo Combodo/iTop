@@ -1313,23 +1313,6 @@ EOF
 	 */
 	function Welcome(iTopWebPage $oPage)
 	{
-		// Encodings supported:
-		// ICONV_CODE => Display Name
-		// Each iconv installation supports different encodings
-		// Some reasonably common and useful encodnings are listed here
-		$aPossibleEncodings = array(
-			'UTF-8' => 'Unicode (UTF-8)',
-			'ISO-8859-1' => 'Western (ISO-8859-1)',
-			'WINDOWS-1251' => 'Cyrilic (Windows 1251)',
-			'WINDOWS-1252' => 'Western (Windows 1252)',
-			'ISO-8859-15' => 'Western (ISO-8859-15)',
-		);
-		// Some more encodings can be specified in the config file
-		$aExtraCharsets = MetaModel::GetConfig()->GetCSVImportCharsets();
-		
-		$aPossibleEncodings = array_merge($aPossibleEncodings, $aExtraCharsets);
-		asort($aPossibleEncodings);
-	
 		$sSynchroScope = utils::ReadParam('synchro_scope', '', false, 'raw_data');
 		if (!empty($sSynchroScope))
 		{
@@ -1365,7 +1348,8 @@ EOF
 				'<p><input type="file" name="csvdata"/></p>';
 				
 		$sFileLoadHtml .= '<p>'.Dict::S('UI:CSVImport:Encoding').': ';
-		$sFileLoadHtml .= '<select name="encoding" style="font-family:Arial,Helvetica,Sans-serif"/>'; // IE 8 has some troubles if the font is different
+		$sFileLoadHtml .= '<select name="encoding" style="font-family:Arial,Helvetica,Sans-serif">'; // IE 8 has some troubles if the font is different
+		$aPossibleEncodings = utils::GetPossibleEncodings(MetaModel::GetConfig()->GetCSVImportCharsets());
 		foreach($aPossibleEncodings as $sIconvCode => $sDisplayName )
 		{
 			$sSelected  = '';

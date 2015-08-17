@@ -1090,5 +1090,28 @@ class utils
 		}
 		return $response;
 	}
+
+	/**
+	 * Get a standard list of character sets
+	 *	 
+ 	 * @param array $aAdditionalEncodings Additional values
+	 * @return array of iconv code => english label, sorted by label
+	 */
+	public static function GetPossibleEncodings($aAdditionalEncodings = array())
+	{
+		// Encodings supported:
+		// ICONV_CODE => Display Name
+		// Each iconv installation supports different encodings
+		// Some reasonably common and useful encodings are listed here
+		$aPossibleEncodings = array(
+			'UTF-8' => 'Unicode (UTF-8)',
+			'ISO-8859-1' => 'Western (ISO-8859-1)',
+			'WINDOWS-1251' => 'Cyrilic (Windows 1251)',
+			'WINDOWS-1252' => 'Western (Windows 1252)',
+			'ISO-8859-15' => 'Western (ISO-8859-15)',
+		);
+		$aPossibleEncodings = array_merge($aPossibleEncodings, $aAdditionalEncodings);
+		asort($aPossibleEncodings);
+		return $aPossibleEncodings;
+	}
 }
-?>

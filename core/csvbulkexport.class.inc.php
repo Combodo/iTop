@@ -30,7 +30,7 @@ class CSVBulkExport extends TabularBulkExport
 		$oP->p(" * csv format options:");
 		$oP->p(" *\tfields: (mandatory) the comma separated list of field codes to export (e.g: name,org_id,service_name...).");
 		$oP->p(" *\tseparator: (optional) character to be used as the separator (default is ',').");
-		$oP->p(" *\tcharacter-set: (optional) character set for encoding the result (default is 'UTF-8').");
+		$oP->p(" *\tcharset: (optional) character set for encoding the result (default is 'UTF-8').");
 		$oP->p(" *\ttext-qualifier: (optional) character to be used around text strings (default is '\"').");
 		$oP->p(" *\tno_localize: set to 1 to retrieve non-localized values (for instance for ENUM values). Default is 0 (= localized values)");
 	}
@@ -54,7 +54,7 @@ class CSVBulkExport extends TabularBulkExport
 			$this->aStatusInfo['text_qualifier'] = utils::ReadParam('other-text-qualifier', '"', true, 'raw_data');
 		}
 		$this->aStatusInfo['localize'] = !((bool)utils::ReadParam('no_localize', 0, true, 'integer'));
-		$this->aStatusInfo['charset'] = strtoupper(utils::ReadParam('character-set', 'UTF-8', true, 'raw_data'));
+		$this->aStatusInfo['charset'] = strtoupper(utils::ReadParam('charset', 'UTF-8', true, 'raw_data'));
 	}
 
 
@@ -79,7 +79,7 @@ class CSVBulkExport extends TabularBulkExport
 
 	public function EnumFormParts()
 	{
-		return array_merge(parent::EnumFormParts(), array('csv_options' => array('separator', 'character-set', 'text-qualifier', 'no_localize') ,'interactive_fields_csv' => array('interactive_fields_csv')));
+		return array_merge(parent::EnumFormParts(), array('csv_options' => array('separator', 'charset', 'text-qualifier', 'no_localize') ,'interactive_fields_csv' => array('interactive_fields_csv')));
 	}
 
 	public function DisplayFormPart(WebPage $oP, $sPartId)
@@ -141,6 +141,22 @@ class CSVBulkExport extends TabularBulkExport
 				$oP->add('</td><td style="vertical-align:top">');
 				$oP->add('<h3>'.Dict::S('Core:BulkExport:CSVLocalization').'</h3>');
 				$oP->add('<input type="checkbox" id="csv_no_localize" name="no_localize" value="1"'.$sChecked.'><label for="csv_no_localize"> '.Dict::S('Core:BulkExport:OptionNoLocalize').'</label>');
+				$oP->add('<br/>');
+				$oP->add('<br/>');
+				$oP->add(Dict::S('UI:CSVImport:Encoding').': <select name="charset" style="font-family:Arial,Helvetica,Sans-serif">'); // IE 8 has some troubles if the font is different
+				$aPossibleEncodings = utils::GetPossibleEncodings(MetaModel::GetConfig()->GetCSVImportCharsets());
+				$sDefaultEncoding = MetaModel::GetConfig()->Get('csv_file_default_charset');
+				foreach($aPossibleEncodings as $sIconvCode => $sDisplayName )
+				{
+					$sSelected  = '';
+					if ($sIconvCode == $sDefaultEncoding)
+					{
+						$sSelected = ' selected';
+					}
+					$oP->add('<option value="'.$sIconvCode.'"'.$sSelected.'>'.$sDisplayName.'</option>');
+				}
+				$oP->add('</select>');
+
 				$oP->add('</td></tr></table>');
 				
 				$oP->add('</fieldset>');
@@ -201,16 +217,18 @@ class CSVBulkExport extends TabularBulkExport
 						
 				default:
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-				if ($oAttDef instanceof AttributeExternalField)
+				if (($oAttDef instanceof AttributeExternalField) || (($oAttDef instanceof AttributeFriendlyName) && ($oAttDef->GetKeyAttCode() != 'id')))
 				{
+					$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $oAttDef->GetKeyAttCode());
+					$oExtAttDef = MetaModel::GetAttributeDef($oKeyAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
 					if ($this->aStatusInfo['localize'])
 					{
 						$sStar = $oAttDef->IsNullAllowed() ? '' : '*';
-						$sLabel = $oAttDef->GetKeyAttDef()->GetLabel().$sStar.'->'.$oAttDef->GetExtAttDef()->GetLabel();
+						$sLabel = $oKeyAttDef->GetLabel().$sStar.'->'.$oExtAttDef->GetLabel();
 					}
 					else
 					{
-						$sLabel =  $oAttDef->GetKeyAttDef()->GetCode().'->'.$oAttDef->GetExtAttDef()->GetCode();
+						$sLabel =  $oKeyAttDef->GetCode().'->'.$oExtAttDef->GetCode();
 					}						
 				}
 				else
