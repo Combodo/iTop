@@ -850,21 +850,24 @@ class DisplayBlock
 			break;
 			
 			case 'search':
-			$sStyle = (isset($aExtraParams['open']) && ($aExtraParams['open'] == 'true')) ? 'SearchDrawer' : 'SearchDrawer DrawerClosed';
-			$sHtml .= "<div id=\"ds_$sId\" class=\"$sStyle\">\n";
-			$oPage->add_ready_script(
+			if (!$oPage->IsPrintableVersion())
+			{
+				$sStyle = (isset($aExtraParams['open']) && ($aExtraParams['open'] == 'true')) ? 'SearchDrawer' : 'SearchDrawer DrawerClosed';
+				$sHtml .= "<div id=\"ds_$sId\" class=\"$sStyle\">\n";
+				$oPage->add_ready_script(
 <<<EOF
-	$("#dh_$sId").click( function() {
-		$("#ds_$sId").slideToggle('normal', function() { $("#ds_$sId").parent().resize(); FixSearchFormsDisposition(); } );
-		$("#dh_$sId").toggleClass('open');
-	});
+		$("#dh_$sId").click( function() {
+			$("#ds_$sId").slideToggle('normal', function() { $("#ds_$sId").parent().resize(); FixSearchFormsDisposition(); } );
+			$("#dh_$sId").toggleClass('open');
+		});
 EOF
-			);
-			$aExtraParams['currentId'] = $sId;
-			$sHtml .= cmdbAbstractObject::GetSearchForm($oPage, $this->m_oSet, $aExtraParams);
-	 		$sHtml .= "</div>\n";
-	 		$sHtml .= "<div class=\"HRDrawer\"></div>\n";
-	 		$sHtml .= "<div id=\"dh_$sId\" class=\"DrawerHandle\">".Dict::S('UI:SearchToggle')."</div>\n";
+				);
+				$aExtraParams['currentId'] = $sId;
+				$sHtml .= cmdbAbstractObject::GetSearchForm($oPage, $this->m_oSet, $aExtraParams);
+		 		$sHtml .= "</div>\n";
+		 		$sHtml .= "<div class=\"HRDrawer\"></div>\n";
+		 		$sHtml .= "<div id=\"dh_$sId\" class=\"DrawerHandle\">".Dict::S('UI:SearchToggle')."</div>\n";
+		 	}
 			break;
 			
 			case 'open_flash_chart':
@@ -1234,12 +1237,15 @@ class HistoryBlock extends DisplayBlock
 		$sHtml = '';
 		$bTruncated = false;
 		$oSet = new CMDBObjectSet($this->m_oFilter, array('date'=>false));
-		if (($this->iLimitStart > 0) || ($this->iLimitCount > 0))
+		if (!$oPage->IsPrintableVersion())
 		{
-			$oSet->SetLimit($this->iLimitCount, $this->iLimitStart);
-			if (($this->iLimitCount - $this->iLimitStart) < $oSet->Count())
+			if (($this->iLimitStart > 0) || ($this->iLimitCount > 0))
 			{
-				$bTruncated = true;
+				$oSet->SetLimit($this->iLimitCount, $this->iLimitStart);
+				if (($this->iLimitCount - $this->iLimitStart) < $oSet->Count())
+				{
+					$bTruncated = true;
+				}
 			}
 		}
 		$sHtml .= "<!-- filter: ".($this->m_oFilter->ToOQL())."-->\n";
@@ -1643,16 +1649,19 @@ class MenuBlock extends DisplayBlock
 			$aShortcutActions = array();
 		}
 		
-		if (count($aFavoriteActions) > 0)
+		if (!$oPage->IsPrintableVersion())
 		{
-			$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:OtherActions')."\n<ul>\n";
+			if (count($aFavoriteActions) > 0)
+			{
+				$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:OtherActions')."\n<ul>\n";
+			}
+			else
+			{
+				$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:Actions')."\n<ul>\n";
+			}
+	
+			$sHtml .= $oPage->RenderPopupMenuItems($aActions, $aFavoriteActions);
 		}
-		else
-		{
-			$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:Actions')."\n<ul>\n";
-		}
-
-		$sHtml .= $oPage->RenderPopupMenuItems($aActions, $aFavoriteActions);
 
 		static $bPopupScript = false;
 		if (!$bPopupScript)

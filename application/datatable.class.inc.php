@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * Data Table to display a set of objects in a tabular manner in HTML
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -290,17 +290,24 @@ EOF;
 	
 	protected function GetToolkitMenu(WebPage $oPage, $aExtraParams)
 	{
-		$sMenuTitle = Dict::S('UI:ConfigureThisList');
-		$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$this->iListId.'"><ul><li><img src="../images/toolkit_menu.png"><ul>';
-
-		$oMenuItem1 = new JSPopupMenuItem('iTop::ConfigureList', $sMenuTitle, "$('#datatable_dlg_".$this->iListId."').dialog('open');");
-		$aActions = array(
-			$oMenuItem1->GetUID() => $oMenuItem1->GetMenuItem(),
-		);
-		$this->oSet->Rewind();
-		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $this->oSet, $aActions, $this->sTableId, $this->iListId);
-		$this->oSet->Rewind();
-		$sHtml .= $oPage->RenderPopupMenuItems($aActions);
+		if (!$oPage->IsPrintableVersion())
+		{
+			$sMenuTitle = Dict::S('UI:ConfigureThisList');
+			$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$this->iListId.'"><ul><li><img src="../images/toolkit_menu.png"><ul>';
+	
+			$oMenuItem1 = new JSPopupMenuItem('iTop::ConfigureList', $sMenuTitle, "$('#datatable_dlg_".$this->iListId."').dialog('open');");
+			$aActions = array(
+				$oMenuItem1->GetUID() => $oMenuItem1->GetMenuItem(),
+			);
+			$this->oSet->Rewind();
+			utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $this->oSet, $aActions, $this->sTableId, $this->iListId);
+			$this->oSet->Rewind();
+			$sHtml .= $oPage->RenderPopupMenuItems($aActions);
+		}
+		else
+		{
+			$sHtml = '';
+		}
 		return $sHtml;
 	}
 	

@@ -19,6 +19,11 @@ body {
 	overflow: hidden;	/* Remove scroll bars on browser window */
 }
 
+body.printable-version {
+	margin:1.5em;
+	overflow:auto;
+}
+
 /* to prevent flicker, hide the pane's content until it's ready */
 .ui-layout-center, .ui-layout-north, .ui-layout-south {
     display: none;
@@ -1466,4 +1471,24 @@ table.export_parameters td {
 	display: inline-block;
 	margin-left: 1em;
 	margin-right: 1em;
-} 
+}
+div.explain-printable {
+	border: 5px solid $complement-color;
+	background: $complement-light;
+	color: #000;
+	padding: 10px;
+	margin: 0;
+	font-size: 12px;
+}
+
+.hideable-chapter {
+	cursor: pointer;
+}
+
+.hideable-chapter.strikethrough span.ui-tabs-anchor {
+	text-decoration: line-through;
+}
+
+.strikethrough {
+	text-decoration: line-through;
+}

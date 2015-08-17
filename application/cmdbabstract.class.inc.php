@@ -132,143 +132,158 @@ EOF
 		// Standard Header with name, actions menu and history block
 		//
 		
-		// Is there a message for this object ??
-		$aMessages = array();
-		$aRanks = array();
-		if (MetaModel::GetConfig()->Get('concurrent_lock_enabled'))
+		if (!$oPage->IsPrintableVersion())
 		{
-			$aLockInfo = iTopOwnershipLock::IsLocked(get_class($this), $this->GetKey());
-			if ($aLockInfo['locked'])
+			// Is there a message for this object ??
+			$aMessages = array();
+			$aRanks = array();
+			if (MetaModel::GetConfig()->Get('concurrent_lock_enabled'))
 			{
-				$aRanks[] = 0;
-				$sName =  $aLockInfo['owner']->GetName();
-				if ($aLockInfo['owner']->Get('contactid') != 0)
+				$aLockInfo = iTopOwnershipLock::IsLocked(get_class($this), $this->GetKey());
+				if ($aLockInfo['locked'])
 				{
-					$sName .= ' ('.$aLockInfo['owner']->Get('contactid_friendlyname').')';
+					$aRanks[] = 0;
+					$sName =  $aLockInfo['owner']->GetName();
+					if ($aLockInfo['owner']->Get('contactid') != 0)
+					{
+						$sName .= ' ('.$aLockInfo['owner']->Get('contactid_friendlyname').')';
+					}
+					$aResult['message'] = Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName);			$aMessages[] = "<div class=\"header_message message_error\">".Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName)."</div>";
 				}
-				$aResult['message'] = Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName);			$aMessages[] = "<div class=\"header_message message_error\">".Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName)."</div>";
 			}
-		}
-		$sMessageKey = get_class($this).'::'.$this->GetKey();
-		if (array_key_exists('obj_messages', $_SESSION) && array_key_exists($sMessageKey, $_SESSION['obj_messages']))
-		{
-			foreach ($_SESSION['obj_messages'][$sMessageKey] as $sMessageId => $aMessageData)
+			$sMessageKey = get_class($this).'::'.$this->GetKey();
+			if (array_key_exists('obj_messages', $_SESSION) && array_key_exists($sMessageKey, $_SESSION['obj_messages']))
 			{
-				$sMsgClass = 'message_'.$aMessageData['severity'];
-				$aMessages[] = "<div class=\"header_message $sMsgClass\">".$aMessageData['message']."</div>";
-				$aRanks[] = $aMessageData['rank'];
+				foreach ($_SESSION['obj_messages'][$sMessageKey] as $sMessageId => $aMessageData)
+				{
+					$sMsgClass = 'message_'.$aMessageData['severity'];
+					$aMessages[] = "<div class=\"header_message $sMsgClass\">".$aMessageData['message']."</div>";
+					$aRanks[] = $aMessageData['rank'];
+				}
+				unset($_SESSION['obj_messages'][$sMessageKey]);
 			}
-			unset($_SESSION['obj_messages'][$sMessageKey]);
-		}
-		array_multisort($aRanks, $aMessages);
-		foreach ($aMessages as $sMessage)
-		{
-			$oPage->add($sMessage);
+			array_multisort($aRanks, $aMessages);
+			foreach ($aMessages as $sMessage)
+			{
+				$oPage->add($sMessage);
+			}
 		}
 				
-		// action menu
-		$oSingletonFilter = new DBObjectSearch(get_class($this));
-		$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
-		$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-		$oBlock->Display($oPage, -1);
-	
-		// Master data sources
-		$sSynchroIcon = '';
-		$bSynchronized = false;
-		$oCreatorTask = null;
-		$bCanBeDeletedByTask = false;
-		$bCanBeDeletedByUser = true;
-		$aMasterSources = array();
-		$aSyncData = $this->GetSynchroData();
-		if (count($aSyncData) > 0)
+		if (!$oPage->IsPrintableVersion())
 		{
-			$bSynchronized = true;
-			foreach ($aSyncData as $iSourceId => $aSourceData)
-			{
-				$oDataSource = $aSourceData['source'];
-				$oReplica = reset($aSourceData['replica']); // Take the first one!
-
-				$sApplicationURL = $oDataSource->GetApplicationUrl($this, $oReplica);
-				$sLink = $oDataSource->GetName();
-				if (!empty($sApplicationURL))
-				{
-					$sLink = "<a href=\"$sApplicationURL\" target=\"_blank\">".$oDataSource->GetName()."</a>";
-				}
-				if ($oReplica->Get('status_dest_creator') == 1)
-				{
-					$oCreatorTask = $oDataSource;
-					$bCreatedByTask = true;
-				}
-				else
-				{
-					$bCreatedByTask = false;
-				}
-				if ($bCreatedByTask)
-				{
-					$sDeletePolicy = $oDataSource->Get('delete_policy');
-					if (($sDeletePolicy == 'delete') || ($sDeletePolicy == 'update_then_delete'))
-					{
-						$bCanBeDeletedByTask = true;
-					}
-					$sUserDeletePolicy = $oDataSource->Get('user_delete_policy');
-					if ($sUserDeletePolicy == 'nobody')
-					{
-						$bCanBeDeletedByUser = false;
-					}
-					elseif (($sUserDeletePolicy == 'administrators') && !UserRights::IsAdministrator())
-					{
-						$bCanBeDeletedByUser = false;
-					}
-					else // everybody...
-					{
-					}
-				}
-				$aMasterSources[$iSourceId]['datasource'] = $oDataSource;
-				$aMasterSources[$iSourceId]['url'] = $sLink;
-				$aMasterSources[$iSourceId]['last_synchro'] = $oReplica->Get('status_last_seen');
-			}
-
-			if (is_object($oCreatorTask))
-			{
-				$sTaskUrl = $aMasterSources[$oCreatorTask->GetKey()]['url'];
-				if (!$bCanBeDeletedByUser)
-				{
-					$sTip = "<p>".Dict::Format('Core:Synchro:TheObjectCannotBeDeletedByUser_Source', $sTaskUrl)."</p>";
-				}
-				else
-				{
-					$sTip = "<p>".Dict::Format('Core:Synchro:TheObjectWasCreatedBy_Source', $sTaskUrl)."</p>";
-				}
-				if ($bCanBeDeletedByTask)
-				{
-					$sTip .= "<p>".Dict::Format('Core:Synchro:TheObjectCanBeDeletedBy_Source', $sTaskUrl)."</p>";
-				}
-			}
-			else
-			{
-				$sTip = "<p>".Dict::S('Core:Synchro:ThisObjectIsSynchronized')."</p>";
-			}
-
-			$sTip .= "<p><b>".Dict::S('Core:Synchro:ListOfDataSources')."</b></p>";
-			foreach($aMasterSources as $aStruct)
-			{
-				$oDataSource = $aStruct['datasource'];
-				$sLink = $aStruct['url'];
-				$sTip .= "<p style=\"white-space:nowrap\">".$oDataSource->GetIcon(true, 'style="vertical-align:middle"')."&nbsp;$sLink<br/>";
-				$sTip .= Dict::S('Core:Synchro:LastSynchro').'<br/>'.$aStruct['last_synchro']."</p>";
-			}
-			$sSynchroIcon = '&nbsp;<img style="vertical-align:middle;" id="synchro_icon" src="../images/locked.png"/>';
-			$sTip = addslashes($sTip);
-			$oPage->add_ready_script("$('#synchro_icon').qtip( { content: '$sTip', show: 'mouseover', hide: { fixed: true }, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
+			// action menu
+			$oSingletonFilter = new DBObjectSearch(get_class($this));
+			$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
+			$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
+			$oBlock->Display($oPage, -1);
 		}
-	
+
 		$oPage->add("<div class=\"page_header\"><h1>".$this->GetIcon()."&nbsp;\n");
-		$sRefreshIcon = '';
-		if ($_SERVER['REQUEST_METHOD'] == 'GET')
+		if (!$oPage->IsPrintableVersion() && ($_SERVER['REQUEST_METHOD'] == 'GET'))
 		{
-			$sRefreshIcon = '<img src="../images/reload.png" style="cursor:pointer;vertical-align:middle;margin-left:1em;" onclick="window.location.reload();" title="'.htmlentities(Dict::S('UI:Button:Refresh'), ENT_QUOTES, 'UTF-8').'"/>';
+			$aIcons[] = '<img src="../images/reload.png" style="cursor:pointer;vertical-align:middle;margin-left:1em;" onclick="window.location.reload();" title="'.htmlentities(Dict::S('UI:Button:Refresh'), ENT_QUOTES, 'UTF-8').'"/>';
 		}
-		$oPage->add(MetaModel::GetName(get_class($this)).": <span class=\"hilite\">".$this->GetName()."</span>$sRefreshIcon $sSynchroIcon</h1>\n");
+		if (!$oPage->IsPrintableVersion())
+		{
+			$sPrintableUrl = ApplicationContext::MakeObjectUrl(get_class($this), $this->GetKey()).'&printable=1';
+			//$sPrintModeIcon = '<img src="../images/printableversion.png" style="cursor:pointer;vertical-align:middle;margin-left:1em;" onclick="window.open(\''.$sPrintableUrl.'\', \'printable_version\', \'toolbar=yes,scrollbar=yes\')" title="'.htmlentities(Dict::S('UI:Button:PrintableVersion'), ENT_QUOTES, 'UTF-8').'"/>';
+			$aIcons[] = '<a href="'.$sPrintableUrl.'" target="_blank"><img src="../images/printableversion.png" style="cursor:pointer;vertical-align:middle;margin-left:1em;" title="'.htmlentities(Dict::S('UI:Button:PrintableVersion'), ENT_QUOTES, 'UTF-8').'"/></a>';
+		}
+
+		// Master data sources
+		$bSynchronized = false;
+		if (!$oPage->IsPrintableVersion())
+		{
+			$oCreatorTask = null;
+			$bCanBeDeletedByTask = false;
+			$bCanBeDeletedByUser = true;
+			$aMasterSources = array();
+			$aSyncData = $this->GetSynchroData();
+			if (count($aSyncData) > 0)
+			{
+				$bSynchronized = true;
+				foreach ($aSyncData as $iSourceId => $aSourceData)
+				{
+					$oDataSource = $aSourceData['source'];
+					$oReplica = reset($aSourceData['replica']); // Take the first one!
+	
+					$sApplicationURL = $oDataSource->GetApplicationUrl($this, $oReplica);
+					$sLink = $oDataSource->GetName();
+					if (!empty($sApplicationURL))
+					{
+						$sLink = "<a href=\"$sApplicationURL\" target=\"_blank\">".$oDataSource->GetName()."</a>";
+					}
+					if ($oReplica->Get('status_dest_creator') == 1)
+					{
+						$oCreatorTask = $oDataSource;
+						$bCreatedByTask = true;
+					}
+					else
+					{
+						$bCreatedByTask = false;
+					}
+					if ($bCreatedByTask)
+					{
+						$sDeletePolicy = $oDataSource->Get('delete_policy');
+						if (($sDeletePolicy == 'delete') || ($sDeletePolicy == 'update_then_delete'))
+						{
+							$bCanBeDeletedByTask = true;
+						}
+						$sUserDeletePolicy = $oDataSource->Get('user_delete_policy');
+						if ($sUserDeletePolicy == 'nobody')
+						{
+							$bCanBeDeletedByUser = false;
+						}
+						elseif (($sUserDeletePolicy == 'administrators') && !UserRights::IsAdministrator())
+						{
+							$bCanBeDeletedByUser = false;
+						}
+						else // everybody...
+						{
+						}
+					}
+					$aMasterSources[$iSourceId]['datasource'] = $oDataSource;
+					$aMasterSources[$iSourceId]['url'] = $sLink;
+					$aMasterSources[$iSourceId]['last_synchro'] = $oReplica->Get('status_last_seen');
+				}
+	
+				if (is_object($oCreatorTask))
+				{
+					$sTaskUrl = $aMasterSources[$oCreatorTask->GetKey()]['url'];
+					if (!$bCanBeDeletedByUser)
+					{
+						$sTip = "<p>".Dict::Format('Core:Synchro:TheObjectCannotBeDeletedByUser_Source', $sTaskUrl)."</p>";
+					}
+					else
+					{
+						$sTip = "<p>".Dict::Format('Core:Synchro:TheObjectWasCreatedBy_Source', $sTaskUrl)."</p>";
+					}
+					if ($bCanBeDeletedByTask)
+					{
+						$sTip .= "<p>".Dict::Format('Core:Synchro:TheObjectCanBeDeletedBy_Source', $sTaskUrl)."</p>";
+					}
+				}
+				else
+				{
+					$sTip = "<p>".Dict::S('Core:Synchro:ThisObjectIsSynchronized')."</p>";
+				}
+	
+				$sTip .= "<p><b>".Dict::S('Core:Synchro:ListOfDataSources')."</b></p>";
+				foreach($aMasterSources as $aStruct)
+				{
+					$oDataSource = $aStruct['datasource'];
+					$sLink = $aStruct['url'];
+					$sTip .= "<p style=\"white-space:nowrap\">".$oDataSource->GetIcon(true, 'style="vertical-align:middle"')."&nbsp;$sLink<br/>";
+					$sTip .= Dict::S('Core:Synchro:LastSynchro').'<br/>'.$aStruct['last_synchro']."</p>";
+				}
+				$aIcons[] = '&nbsp;<img style="vertical-align:middle;" id="synchro_icon" src="../images/locked.png"/>';
+				$sTip = addslashes($sTip);
+				$oPage->add_ready_script("$('#synchro_icon').qtip( { content: '$sTip', show: 'mouseover', hide: { fixed: true }, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
+			}
+		}
+	
+		$sIcons = implode(' ', $aIcons);
+		$oPage->add(MetaModel::GetName(get_class($this)).": <span class=\"hilite\">".$this->GetName()."</span>$sIcons</h1>\n");
 		$oPage->add("</div>\n");
 		
 	}

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Class NiceWebPage
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -33,9 +33,9 @@ class NiceWebPage extends WebPage
 	var $m_aReadyScripts;
 	var $m_sRootUrl;
 	
-    public function __construct($s_title)
+    public function __construct($s_title, $bPrintable = false)
     {
-        parent::__construct($s_title);
+        parent::__construct($s_title, $bPrintable);
 		$this->m_aReadyScripts = array();
 		$this->add_linked_script("../js/jquery-1.10.0.min.js");
 		$this->add_linked_script("../js/jquery-migrate-1.2.1.min.js"); // Needed since many other plugins still rely on oldies like $.browser

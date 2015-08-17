@@ -38,9 +38,9 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	private $m_sInitScript;
 	protected $m_oTabs;
 
-	public function __construct($sTitle)
+	public function __construct($sTitle, $bPrintable = false)
 	{
-		parent::__construct($sTitle);
+		parent::__construct($sTitle, $bPrintable);
 		$this->m_oTabs = new TabManager();
 
 		ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
@@ -82,7 +82,15 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_dict_entry('UI:FillAllMandatoryFields');
 		$this->add_dict_entry('UI:Button:Cancel');
 		$this->add_dict_entry('UI:Button:Done');
-		
+
+		if (!$this->IsPrintableVersion())
+		{
+			$this->PrepareLayout();
+		}
+	}
+
+	protected function PrepareLayout()
+	{
 		$bForceMenuPane = utils::ReadParam('force_menu_pane', null);
 		$sInitClosed = '';
 		if (($bForceMenuPane !== null) && ($bForceMenuPane == 0))
@@ -612,6 +620,9 @@ EOF
 		{
 			$sSouthPane .= $oExtensionInstance->GetSouthPaneHtml($this);
 		}
+
+		// Render the tabs in the page (if any)
+		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
 		
 		// Put here the 'ready scripts' that must be executed after all others
 		$aMultiselectOptions = array(
@@ -689,7 +700,35 @@ EOF
 					}
 					$sHtml .= "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
 			}
-			$this->add_script("var iPaneVisWatchDog  = window.setTimeout('FixPaneVis()',5000);\n\$(document).ready(function() {\n{$this->m_sInitScript};\nwindow.setTimeout('onDelayedReady()',10)\n});");
+			if (!$this->IsPrintableVersion())
+			{
+				$this->add_script("var iPaneVisWatchDog  = window.setTimeout('FixPaneVis()',5000);");
+			}
+			$this->add_script("\$(document).ready(function() {\n{$this->m_sInitScript};\nwindow.setTimeout('onDelayedReady()',10)\n});");
+			if ($this->IsPrintableVersion())
+			{
+				$this->add_ready_script(
+<<<EOF
+var sHiddeableChapters = '<div class="light ui-tabs ui-widget ui-widget-content ui-corner-all">';
+sHiddeableChapters += '<ul role="tablist" class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">';
+for (sId in oHiddeableChapters)
+{
+	sHiddeableChapters += '<li tabindex="-1" role="tab" class="ui-state-default ui-corner-top hideable-chapter" chapter-id="'+sId+'"><span class="tab ui-tabs-anchor">' + oHiddeableChapters[sId] + '</span></li>';
+	//alert(oHiddeableChapters[sId]);
+}
+sHiddeableChapters += '</ul></div>';
+$('#hiddeable_chapters').html(sHiddeableChapters);
+$('.hideable-chapter').click(function(){
+	var sChapterId = $(this).attr('chapter-id');
+	$('#'+sChapterId).toggle();
+	$(this).toggleClass('strikethrough');
+});
+$('legend').css('cursor', 'pointer').click(function(){
+		$(this).parent('fieldset').toggleClass('not-printable strikethrough');
+	});
+EOF
+				);
+			}
 			if (count($this->m_aReadyScripts)>0)
 			{
 				$this->add_script("\nonDelayedReady = function() {\n".implode("\n", $this->m_aReadyScripts)."\n}\n");
@@ -718,7 +757,20 @@ EOF
 		$sHtml .= "<link rel=\"shortcut icon\" href=\"".utils::GetAbsoluteUrlAppRoot()."images/favicon.ico\" />\n";
 	
 		$sHtml .= "</head>\n";
-		$sHtml .= "<body>\n";
+		$sBodyClass = "";
+		if ($this->IsPrintableVersion())
+		{
+			$sBodyClass = 'printable-version';
+		}
+		$sHtml .= "<body class=\"$sBodyClass\">\n";
+		if ($this->IsPrintableVersion())
+		{
+			$sHtml .= "<div class=\"explain-printable not-printable\">";
+			$sHtml .= '<p>'.Dict::S('UI:ExplainPrintable').'</p>';
+			$sHtml .= "<div id=\"hiddeable_chapters\"></div>";
+			$sHtml .= '<button onclick="window.print()">'.htmlentities(Dict::S('UI:Button:GoPrint'), ENT_QUOTES, 'UTF-8').'</button>';
+			$sHtml .= "</div>";
+		}
 
 		// Render the revision number
 		if (ITOP_REVISION == '$WCREV$')
@@ -743,10 +795,14 @@ EOF
 			$sText = Dict::S("UI:YourSearch");
 			$sOnClick = " onclick=\"this.value='';this.onclick=null;\"";
 		}
-		// Render the tabs in the page (if any)
-		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content);
 
-		if ($this->GetOutputFormat() == 'html')
+		if ($this->IsPrintableVersion())
+		{
+			$sHtml .= ' <!-- Beginning of page content -->';
+			$sHtml .= self::FilterXSS($this->s_content);
+			$sHtml .= ' <!-- End of page content -->';
+		}
+		elseif ($this->GetOutputFormat() == 'html')
 		{
 			$oAppContext = new ApplicationContext();
 			

@@ -1,4 +1,5 @@
 @CHARSET "UTF-8";
+.not-printable { display:none; }
 span.ui-layout-resizer { display: none; }
 #header-logo { display: none; }
 #logo { display: none; }
@@ -8,8 +9,17 @@ div.footer { display:none; }
 #inner_menu { display: none; }
 div.actions_button { display:none; }
 div.itop_popup { display:none; }
-div.HRDrawer { display:none; }
-div.DrawerHandle { display:none; }
 a.tab { display:none; }
 div.itop-tab { border: #ccc 1px solid; margin-top: 1em; padding-bottom:1em; }
-#combodo_logo { display:none; };
+#combodo_logo { display:none; }
+div.graph_config { display:none; }
+h2.printable-tab-title {
+	border-bottom: 2px solid;
+	page-break-after: avoid;
+}
+div#tabbedContent_0 { border:none; }
+p a, td a, p a:hover, td a:hover {
+	padding-left: 0;
+	background: transparent;
+}
+body { margin:none; }

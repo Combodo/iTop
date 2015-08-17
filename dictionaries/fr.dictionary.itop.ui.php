@@ -923,6 +923,9 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:OrderByHint_Values' => 'Ordre de tri: %1$s',
 	'UI:Menu:AddToDashboard' => 'Ajouter au Tableau de Bord...',
 	'UI:Button:Refresh' => 'Rafraîchir',
+	'UI:Button:PrintableVersion' => 'Version imprimable',
+	'UI:Button:GoPrint' => 'Imprimer...',
+	'UI:ExplainPrintable' => 'Cliquez sur les chapitres ou les éléments que vous voulez exclure de l\'impression. Cet en-tête, ainsi que les éléments de contrôle qui pourraient apparaitre dans cette page, ne seront pas imprimés. Il est recommandé d\'utiliser la fonction "Aperçu avant impression" de votre navigateur pour voir le rendu exact avant de lancer l\'impression.',
 
 	'UI:ConfigureThisList' => 'Configurer Cette Liste...',
 	'UI:ListConfigurationTitle' => 'Configuration de la liste',

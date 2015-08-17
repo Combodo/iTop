@@ -276,6 +276,7 @@ try
 
 	require_once(APPROOT.'/application/startup.inc.php');
 	$operation = utils::ReadParam('operation', '');
+	$bPrintable = (utils::ReadParam('printable', 0) == '1');
 
 	$oKPI = new ExecutionKPI();
 	$oKPI->ComputeAndReport('Data model loaded');
@@ -288,8 +289,9 @@ try
 
 	$oKPI->ComputeAndReport('User login');
 
-	$oP = new iTopWebPage(Dict::S('UI:WelcomeToITop'));
+	$oP = new iTopWebPage(Dict::S('UI:WelcomeToITop'), $bPrintable);
 	$oP->SetMessage($sLoginMessage);
+
 
 	// All the following actions use advanced forms that require more javascript to be loaded
 	switch($operation)

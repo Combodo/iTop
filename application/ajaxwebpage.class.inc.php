@@ -42,7 +42,10 @@ class ajax_page extends WebPage implements iTabbedPage
      */	  
 	function __construct($s_title)
     {
-        parent::__construct($s_title);
+		$sPrintable = utils::ReadParam('printable', '0');
+		$bPrintable = ($sPrintable == '1');
+
+        parent::__construct($s_title, $bPrintable);
         $this->m_sReadyScript = "";
 		//$this->add_header("Content-type: text/html; charset=utf-8");
 		$this->add_header("Cache-control: no-cache");
@@ -197,7 +200,7 @@ EOF
 );
 		}
 		// Render the tabs in the page (if any)
-		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content);
+		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
 		
 		// Additional UI widgets to be activated inside the ajax fragment ??
     	if (($this->sContentType == 'text/html') && (preg_match('/class="date-pick"/', $this->s_content) || preg_match('/class="datetime-pick"/', $this->s_content)) )

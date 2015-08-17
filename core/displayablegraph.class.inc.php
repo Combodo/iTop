@@ -1181,6 +1181,7 @@ class DisplayableGraph extends SimpleGraph
 			}
 			$aExcludedByClass[get_class($oObj)][] = $oObj->GetKey();
 		}
+		$oP->add("<div class=\"not-printable\">\n");
 		$oP->add("<div id=\"ds_flash\" class=\"SearchDrawer\" style=\"display:none;\">\n");
 		$oP->add_ready_script(
 <<<EOF
@@ -1213,6 +1214,7 @@ EOF
 		$oP->add("</div>\n");
 		$oP->add("<div class=\"HRDrawer\"></div>\n");
 		$oP->add("<div id=\"dh_flash\" class=\"DrawerHandle\">".Dict::S('UI:ElementsDisplayed')."</div>\n");
+	 	$oP->add("</div>\n"); // class="not-printable"
 
 		$aAdditionalContexts = array();
 		foreach($aContextDefs as $sKey => $aDefinition)
@@ -1248,7 +1250,13 @@ EOF
 			}
 	
 			$sId = 'graph';
-			$oP->add('<div id="'.$sId.'" class="simple-graph"></div>');
+			$sStyle = '';
+			if ($oP->IsPrintableVersion())
+			{
+				// Optimize for printing on A4/Letter vertically
+				$sStyle = 'max-width: 17cm; margin-left:auto; margin-right:auto;';
+			}
+			$oP->add('<div id="'.$sId.'" class="simple-graph" style="'.$sStyle.'"></div>');
 			$aParams = array(
 				'source_url' => $sLoadFromURL,
 				'sources' => ($this->bDirectionDown ? $this->aSourceObjects : $this->aSinkObjects),

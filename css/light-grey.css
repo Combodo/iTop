@@ -19,6 +19,12 @@ body {
 }
 
 
+body.printable-version {
+  margin: 1.5em;
+  overflow: auto;
+}
+
+
 /*
  * to prevent flicker, hide the pane's content until it's ready
  */
@@ -1984,6 +1990,31 @@ table.export_parameters td {
   display: inline-block;
   margin-left: 1em;
   margin-right: 1em;
+}
+
+
+div.explain-printable {
+  border: 5px solid #1c94c4;
+  background: #d6e8ef;
+  color: black;
+  padding: 10px;
+  margin: 0;
+  font-size: 12px;
+}
+
+
+.hideable-chapter {
+  cursor: pointer;
+}
+
+
+.hideable-chapter.strikethrough span.ui-tabs-anchor {
+  text-decoration: line-through;
+}
+
+
+.strikethrough {
+  text-decoration: line-through;
 }
 
 

@@ -71,8 +71,9 @@ class WebPage implements Page
 	protected $bTrashUnexpectedOutput;
 	protected $s_sOutputFormat;
 	protected $a_OutputOptions;
+	protected $bPrintable;
 	    
-    public function __construct($s_title)
+    public function __construct($s_title, $bPrintable = false)
     {
         $this->s_title = $s_title;
         $this->s_content = "";
@@ -92,6 +93,7 @@ class WebPage implements Page
 		$this->bTrashUnexpectedOutput = false;
 		$this->s_OutputFormat = utils::ReadParam('output_format', 'html');
 		$this->a_OutputOptions = array();
+		$this->bPrintable = $bPrintable;
         ob_start(); // Start capturing the output
     }
 	
@@ -687,7 +689,16 @@ class WebPage implements Page
 		}
 		return $bResult;
 	}
-	
+
+	/**
+	 * Check whether the output must be printable (using print.css, for sure!)
+	 * @return bool ...
+	 */
+	public function IsPrintableVersion()
+	{
+		return $this->bPrintable;
+	}
+
 	/** 
 	 * Retrieves the value of a named output option for the given format
 	 * @param string $sFormat The format: html or pdf
@@ -724,32 +735,34 @@ class WebPage implements Page
 	{
 		$sPrevUrl = '';
 		$sHtml = '';
-		foreach ($aActions as $aAction)
+		if (!$this->IsPrintableVersion())
 		{
-			$sClass = isset($aAction['class']) ? " class=\"{$aAction['class']}\"" : "";
-			$sOnClick = isset($aAction['onclick']) ? ' onclick="'.htmlspecialchars($aAction['onclick'], ENT_QUOTES, "UTF-8").'"' : '';
-			$sTarget = isset($aAction['target']) ? " target=\"{$aAction['target']}\"" : "";
-			if (empty($aAction['url']))
+			foreach ($aActions as $aAction)
 			{
-				if ($sPrevUrl != '') // Don't output consecutively two separators...
+				$sClass = isset($aAction['class']) ? " class=\"{$aAction['class']}\"" : "";
+				$sOnClick = isset($aAction['onclick']) ? ' onclick="'.htmlspecialchars($aAction['onclick'], ENT_QUOTES, "UTF-8").'"' : '';
+				$sTarget = isset($aAction['target']) ? " target=\"{$aAction['target']}\"" : "";
+				if (empty($aAction['url']))
 				{
-					$sHtml .= "<li>{$aAction['label']}</li>";			
+					if ($sPrevUrl != '') // Don't output consecutively two separators...
+					{
+						$sHtml .= "<li>{$aAction['label']}</li>";			
+					}
+					$sPrevUrl = '';
 				}
-				$sPrevUrl = '';
+				else
+				{
+					$sHtml .= "<li><a $sTarget href=\"{$aAction['url']}\"$sClass $sOnClick>{$aAction['label']}</a></li>";
+					$sPrevUrl = $aAction['url'];
+				}
 			}
-			else
+			$sHtml .= "</ul></li></ul></div>";
+			foreach(array_reverse($aFavoriteActions) as $aAction)
 			{
-				$sHtml .= "<li><a $sTarget href=\"{$aAction['url']}\"$sClass $sOnClick>{$aAction['label']}</a></li>";
-				$sPrevUrl = $aAction['url'];
+				$sTarget = isset($aAction['target']) ? " target=\"{$aAction['target']}\"" : "";
+				$sHtml .= "<div class=\"actions_button\"><a $sTarget href='{$aAction['url']}'>{$aAction['label']}</a></div>";			
 			}
-		}
-		$sHtml .= "</ul></li></ul></div>";
-		foreach(array_reverse($aFavoriteActions) as $aAction)
-		{
-			$sTarget = isset($aAction['target']) ? " target=\"{$aAction['target']}\"" : "";
-			$sHtml .= "<div class=\"actions_button\"><a $sTarget href='{$aAction['url']}'>{$aAction['label']}</a></div>";			
-		}
-		
+		}		
 		return $sHtml;
 	}
 
@@ -1023,7 +1036,7 @@ class TabManager
 		return "window.setTimeout(\"$('$sSelector').tabs('select', $tab_index);\", 100);"; // Let the time to the tabs widget to initialize
 	}
 	
-	public function RenderIntoContent($sContent)
+	public function RenderIntoContent($sContent, WebPage $oPage)
 	{
 		// Render the tabs in the page (if any)
 		foreach($this->m_aTabs as $sTabContainerName => $aTabs)
@@ -1033,42 +1046,86 @@ class TabManager
 			$container_index = 0;
 			if (count($aTabs['tabs']) > 0)
 			{
-				$sTabs = "<!-- tabs -->\n<div id=\"tabbedContent_{$sPrefix}{$container_index}\" class=\"light\">\n";
-				$sTabs .= "<ul>\n";
-				// Display the unordered list that will be rendered as the tabs
-				$i = 0;
-				foreach($aTabs['tabs'] as $sTabName => $aTabData)
+				if ($oPage->IsPrintableVersion())
 				{
-					switch($aTabData['type'])
+					$oPage->add_ready_script(
+<<< EOF
+oHiddeableChapters = {};
+EOF
+					);
+					$sTabs = "<!-- tabs -->\n<div id=\"tabbedContent_{$sPrefix}{$container_index}\" class=\"light\">\n";
+					$i = 0;
+					foreach($aTabs['tabs'] as $sTabName => $aTabData)
 					{
-						case 'ajax':
-						$sTabs .= "<li data-cache=\"".($aTabData['cache'] ? 'true' : 'false')."\"><a href=\"{$aTabData['url']}\" class=\"tab\"><span>".htmlentities($sTabName, ENT_QUOTES, 'UTF-8')."</span></a></li>\n";
-						break;
-						
-						case 'html':
-						default:
-						$sTabs .= "<li><a href=\"#tab_{$sPrefix}{$container_index}$i\" class=\"tab\"><span>".htmlentities($sTabName, ENT_QUOTES, 'UTF-8')."</span></a></li>\n";	
+						$sTabNameEsc = addslashes($sTabName);
+						$sTabId = "tab_{$sPrefix}{$container_index}$i";
+						switch($aTabData['type'])
+						{
+							case 'ajax':
+							$sTabHtml = '';
+							$sUrl = $aTabData['url'];	
+							$oPage->add_ready_script(
+<<< EOF
+$.post('$sUrl', {printable: '1'}, function(data){
+	$('#$sTabId > .printable-tab-content').append(data);
+});
+EOF
+							);
+							break;
+							
+							case 'html':
+							default:
+							$sTabHtml = $aTabData['html'];
+						}
+						$sTabs .= "<div class=\"printable-tab\" id=\"$sTabId\"><h2 class=\"printable-tab-title\">".htmlentities($sTabName, ENT_QUOTES, 'UTF-8')."</h2><div class=\"printable-tab-content\">".$sTabHtml."</div></div>\n";	
+						$oPage->add_ready_script(
+<<< EOF
+oHiddeableChapters['$sTabId'] = '$sTabNameEsc';
+EOF
+						);
+						$i++;
 					}
-					$i++;
+					$sTabs .= "</div>\n<!-- end of tabs-->\n";
 				}
-				$sTabs .= "</ul>\n";
-				// Now add the content of the tabs themselves
-				$i = 0;
-				foreach($aTabs['tabs'] as $sTabName => $aTabData)
+				else
 				{
-					switch($aTabData['type'])
+					$sTabs = "<!-- tabs -->\n<div id=\"tabbedContent_{$sPrefix}{$container_index}\" class=\"light\">\n";
+					$sTabs .= "<ul>\n";
+					// Display the unordered list that will be rendered as the tabs
+					$i = 0;
+					foreach($aTabs['tabs'] as $sTabName => $aTabData)
 					{
-						case 'ajax':
-						// Nothing to add
-						break;
-						
-						case 'html':
-						default:
-						$sTabs .= "<div id=\"tab_{$sPrefix}{$container_index}$i\">".$aTabData['html']."</div>\n";	
+						switch($aTabData['type'])
+						{
+							case 'ajax':
+							$sTabs .= "<li data-cache=\"".($aTabData['cache'] ? 'true' : 'false')."\"><a href=\"{$aTabData['url']}\" class=\"tab\"><span>".htmlentities($sTabName, ENT_QUOTES, 'UTF-8')."</span></a></li>\n";
+							break;
+							
+							case 'html':
+							default:
+							$sTabs .= "<li><a href=\"#tab_{$sPrefix}{$container_index}$i\" class=\"tab\"><span>".htmlentities($sTabName, ENT_QUOTES, 'UTF-8')."</span></a></li>\n";	
+						}
+						$i++;
 					}
-					$i++;
+					$sTabs .= "</ul>\n";
+					// Now add the content of the tabs themselves
+					$i = 0;
+					foreach($aTabs['tabs'] as $sTabName => $aTabData)
+					{
+						switch($aTabData['type'])
+						{
+							case 'ajax':
+							// Nothing to add
+							break;
+							
+							case 'html':
+							default:
+							$sTabs .= "<div id=\"tab_{$sPrefix}{$container_index}$i\">".$aTabData['html']."</div>\n";	
+						}
+						$i++;
+					}
+					$sTabs .= "</div>\n<!-- end of tabs-->\n";
 				}
-				$sTabs .= "</div>\n<!-- end of tabs-->\n";
 			}
 			$sContent = str_replace("\$Tabs:$sTabContainerName\$", $sTabs, $sContent);
 			$container_index++;

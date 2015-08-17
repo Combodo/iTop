@@ -1079,6 +1079,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:OrderByHint_Values' => 'Sort order: %1$s',
 	'UI:Menu:AddToDashboard' => 'Add To Dashboard...',
 	'UI:Button:Refresh' => 'Refresh',
+	'UI:Button:PrintableVersion' => 'Printable version',
+	'UI:Button:GoPrint' => 'Print...',
+	'UI:ExplainPrintable' => 'Click onto the chapters or items that you want to exclude from the print. This header and other tuning controls will not be printed. It is highly recommended to use the "pint preview" feature provided by your browser, before proceeding.',
 
 	'UI:ConfigureThisList' => 'Configure This List...',
 	'UI:ListConfigurationTitle' => 'List Configuration',

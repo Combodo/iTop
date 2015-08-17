@@ -217,6 +217,8 @@ class ormCaseLog {
 	 */	 	
 	public function GetAsHTML(WebPage $oP = null, $bEditMode = false, $aTransfoHandler = null)
 	{
+		$bPrintableVersion = (utils::ReadParam('printable', '0') == '1');
+
 		$sHtml = '<table style="width:100%;table-layout:fixed"><tr><td>'; // Use table-layout:fixed to force the with to be independent from the actual content
 		$iPos = 0;
 		$aIndex = $this->m_aIndex;
@@ -228,7 +230,7 @@ class ormCaseLog {
 		}
 		for($index=count($aIndex)-1 ; $index >= 0 ; $index--)
 		{
-			if ($index < count($aIndex) - CASELOG_VISIBLE_ITEMS)
+			if (!$bPrintableVersion && ($index < count($aIndex) - CASELOG_VISIBLE_ITEMS))
 			{
 				$sOpen = '';
 				$sDisplay = 'style="display:none;"';
@@ -296,7 +298,7 @@ class ormCaseLog {
 			}
 			else
 			{
-				if (count($this->m_aIndex) - CASELOG_VISIBLE_ITEMS > 0)
+				if (!$bPrintableVersion && (count($this->m_aIndex) - CASELOG_VISIBLE_ITEMS > 0))
 				{
 					$sOpen = '';
 					$sDisplay = 'style="display:none;"';
