@@ -5386,6 +5386,14 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 		return Str::pure2html((string)$sValue);
 	}
 
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	{
+		$sFrom = array("\r\n", $sTextQualifier);
+		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
+		return $sTextQualifier.$sEscaped.$sTextQualifier;
+	}
+
 	// Do not display friendly names in the history of change
 	public function DescribeChangeAsHTML($sOldValue, $sNewValue, $sLabel = null)
 	{
