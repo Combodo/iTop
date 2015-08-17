@@ -788,7 +788,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \"query\". There is no Query Phrasebook corresponding to the id: \"%1$s\".~~',
 	'Core:BulkExport:ExportFormatPrompt' => 'Export format:~~',
 	'Core:BulkExport:Identifier' => 'Identifier~~',
-	'Core:BulkExport:Friendlyname' => 'Full name~~',
 	'Core:BulkExportOf_Class' => '%1$s Export~~',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click here to download %1$s~~',
 	'Core:BulkExport:ExportResult' => 'Result of the export:~~',

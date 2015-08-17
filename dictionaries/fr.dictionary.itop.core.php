@@ -501,8 +501,8 @@ Opérateurs :<br/>
 	'Core:AttributeFriendlyName' => 'Nom usuel (convivial)',
 	'Core:AttributeFriendlyName+' => 'Attribut créé automatiquement ; sa valeur est calculée d\'après d\'autres attributs',
 
-	'Core:FriendlyName-Label' => 'Nom',
-	'Core:FriendlyName-Description' => 'Nom usuel',
+	'Core:FriendlyName-Label' => 'Nom complet',
+	'Core:FriendlyName-Description' => 'Nom complet',
 
 	'Change:ObjectCreated' => 'Elément créé',
 	'Change:ObjectDeleted' => 'Elément effacé',
@@ -654,7 +654,6 @@ Opérateurs :<br/>
 	'Core:BulkExport:InvalidParameter_Query' => 'Valeur incorrecte pour le paramètre "query". Il n\'existe aucune entrée dans le livre des requêtes pour l\'identifiant: "%1$s"',
 	'Core:BulkExport:ExportFormatPrompt' => 'Format d\'export:',
 	'Core:BulkExport:Identifier' => 'Identifiant',
-	'Core:BulkExport:Friendlyname' => 'Nom complet',
 	'Core:BulkExportOf_Class' => 'Export de: %1$s',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Cliquez ici pour télécharger %1$s',
 	'Core:BulkExport:ExportResult' => 'Résultat de l\'export:',

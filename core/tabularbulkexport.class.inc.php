@@ -100,7 +100,7 @@ abstract class TabularBulkExport extends BulkExport
 			case 'AttributeExternalKey':
 			case 'AttributeHierarchicalKey':
 				$aResult[] = array('code' => $sAttCode, 'unique_label' => $oAttDef->GetLabel(), 'label' => Dict::S('Core:BulkExport:Identifier'), 'attdef' => $oAttDef);
-				$aResult[] = array('code' =>  $sAttCode.'_friendlyname', 'unique_label' => $oAttDef->GetLabel().'->'.Dict::S('Core:BulkExport:Friendlyname'), 'label' => Dict::S('Core:BulkExport:Friendlyname'), 'attdef' => MetaModel::GetAttributeDef($sClass, $sAttCode.'_friendlyname'));
+				$aResult[] = array('code' =>  $sAttCode.'_friendlyname', 'unique_label' => $oAttDef->GetLabel().'->'.Dict::S('Core:FriendlyName-Label'), 'label' => Dict::S('Core:FriendlyName-Label'), 'attdef' => MetaModel::GetAttributeDef($sClass, $sAttCode.'_friendlyname'));
 
 				foreach(MetaModel::ListAttributeDefs($sClass) as $sSubAttCode => $oSubAttDef)
 				{
@@ -159,7 +159,7 @@ abstract class TabularBulkExport extends BulkExport
 			{
 				$aAllFields[] = array('code' =>  $sShortAlias.'id', 'unique_label' => $sShortAlias.Dict::S('Core:BulkExport:Identifier'), 'label' => $sShortAlias.'id', 'subattr' => array(
 					array('code' =>  $sShortAlias.'id', 'unique_label' => $sShortAlias.Dict::S('Core:BulkExport:Identifier'), 'label' => $sShortAlias.'id'),
-					array('code' =>  $sShortAlias.'friendlyname', 'unique_label' => $sShortAlias.Dict::S('Core:BulkExport:Friendlyname'), 'label' => $sShortAlias.Dict::S('Core:BulkExport:Friendlyname')),
+					array('code' =>  $sShortAlias.'friendlyname', 'unique_label' => $sShortAlias.Dict::S('Core:FriendlyName-Label'), 'label' => $sShortAlias.Dict::S('Core:FriendlyName-Label')),
 				));
 			}
 			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)

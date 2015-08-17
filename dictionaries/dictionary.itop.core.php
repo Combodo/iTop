@@ -154,8 +154,8 @@ Operators:<br/>
 	'Core:AttributeFriendlyName' => 'Friendly name',
 	'Core:AttributeFriendlyName+' => 'Attribute created automatically ; the friendly name is computed after several attributes',
 
-	'Core:FriendlyName-Label' => 'Friendly name',
-	'Core:FriendlyName-Description' => 'Friendly name',
+	'Core:FriendlyName-Label' => 'Full name',
+	'Core:FriendlyName-Description' => 'Full name',
 ));
 
 
@@ -794,7 +794,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter "query". There is no Query Phrasebook corresponding to the id: "%1$s".',
 	'Core:BulkExport:ExportFormatPrompt' => 'Export format:',
 	'Core:BulkExport:Identifier' => 'Identifier',
-	'Core:BulkExport:Friendlyname' => 'Full name',
 	'Core:BulkExportOf_Class' => '%1$s Export',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click here to download %1$s',
 	'Core:BulkExport:ExportResult' => 'Result of the export:',
