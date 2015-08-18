@@ -1303,8 +1303,9 @@ class CAS_SelfRegister implements iSelfRegister
 		}
 		else
 		{
-			// No membership required, anybody will pass
-			$bFound = true;
+			// No membership: no way to create the user that should exist prior to authentication
+			phpCAS::log("User ".phpCAS::getUser().": missing user account in iTop (or iTop badly configured, Cf setting cas_memberof)");
+			$bFound = false;
 		}
 		
 		if (!$bFound)
