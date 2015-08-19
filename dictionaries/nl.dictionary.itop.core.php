@@ -362,7 +362,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 ));
 
 //
-// Class: EventWebService
+// Classes: EventWebService and EventRestService
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
@@ -380,6 +380,20 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventWebService/Attribute:log_error+' => 'Resultaat errorlog',
 	'Class:EventWebService/Attribute:data' => 'Data',
 	'Class:EventWebService/Attribute:data+' => 'Result data',
+	'Class:EventRestService' => 'REST/JSON call~~',
+	'Class:EventRestService+' => 'Trace of a REST/JSON service call~~',
+	'Class:EventRestService/Attribute:operation' => 'Operation~~',
+	'Class:EventRestService/Attribute:operation+' => 'Argument \'operation\'~~',
+	'Class:EventRestService/Attribute:version' => 'Version~~',
+	'Class:EventRestService/Attribute:version+' => 'Argument \'version\'~~',
+	'Class:EventRestService/Attribute:json_input' => 'Input~~',
+	'Class:EventRestService/Attribute:json_input+' => 'Argument \'json_data\'~~',
+	'Class:EventRestService/Attribute:code' => 'Code~~',
+	'Class:EventRestService/Attribute:code+' => 'Result code~~',
+	'Class:EventRestService/Attribute:json_output' => 'Response~~',
+	'Class:EventRestService/Attribute:json_output+' => 'HTTP response (json)~~',
+	'Class:EventRestService/Attribute:provider' => 'Provider~~',
+	'Class:EventRestService/Attribute:provider+' => 'PHP class implementing the expected operation~~',
 ));
 
 //

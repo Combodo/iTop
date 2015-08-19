@@ -277,6 +277,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'log_rest_service' => array(
+			'type' => 'bool',
+			'description' => 'Log the usage of the REST/JSON service',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'synchro_trace' => array(
 			'type' => 'string',
 			'description' => 'Synchronization details: none, display, save (includes \'display\')',

@@ -423,6 +423,17 @@ abstract class DBObject implements iDisplay
 		return true;
 	}
 
+	public function SetTrim($sAttCode, $sValue)
+	{
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		$iMaxSize = $oAttDef->GetMaxSize();
+		if ($iMaxSize && (strlen($sValue) > $iMaxSize))
+		{
+			$sValue = substr($sValue, 0, $iMaxSize);
+		}
+		$this->Set($sAttCode, $sValue);
+	}
+
 	public function GetLabel($sAttCode)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);

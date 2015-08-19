@@ -92,6 +92,10 @@ class RestResultListOperations extends RestResult
 //
 $oP = new ajax_page('rest');
 
+$sVersion = utils::ReadParam('version', null, false, 'raw_data');
+$sOperation = utils::ReadParam('operation', null);
+$sJsonString = utils::ReadParam('json_data', null, false, 'raw_data');
+$sProvider = '';
 try
 {
 	utils::UseParamFile();
@@ -122,13 +126,11 @@ try
 		}
 	}
 
-	$sVersion = utils::ReadParam('version', null, false, 'raw_data');
 	if ($sVersion == null)
 	{
 		throw new Exception("Missing parameter 'version' (e.g. '1.0')", RestResult::MISSING_VERSION);
 	}
 	
-	$sJsonString = utils::ReadParam('json_data', null, false, 'raw_data');
 	if ($sJsonString == null)
 	{
 		throw new Exception("Missing parameter 'json_data", RestResult::MISSING_JSON);
@@ -188,6 +190,7 @@ try
 			throw new Exception("Unknown verb '$sOperation' in version '$sVersion'", RestResult::UNKNOWN_OPERATION);
 		}
 		$oRS = $aOpToRestService[$sOperation]['service_provider'];
+		$sProvider = get_class($oRS);
 	
 		CMDBObject::SetTrackOrigin('webservice-rest');
 		$oResult = $oRS->ExecOperation($sVersion, $sOperation, $aJsonData);
@@ -209,18 +212,42 @@ catch(Exception $e)
 
 // Output the results
 //
+$sResponse = json_encode($oResult);
+
 $oP->add_header('Access-Control-Allow-Origin: *');
 
 $sCallback = utils::ReadParam('callback', null);
 if ($sCallback == null)
 {
 	$oP->SetContentType('application/json');
-	$oP->add(json_encode($oResult));
+	$oP->add($sResponse);
 }
 else
 {
 	$oP->SetContentType('application/javascript');
-	$oP->add($sCallback.'('.json_encode($oResult).')');
+	$oP->add($sCallback.'('.$sResponse.')');
 }
 $oP->Output();
-?>
+
+// Log usage
+//
+if (MetaModel::GetConfig()->Get('log_rest_service'))
+{
+	$oLog = new EventRestService();
+	$oLog->SetTrim('userinfo', UserRights::GetUser());
+	$oLog->Set('version', $sVersion);
+	$oLog->Set('operation', $sOperation);
+	$oLog->SetTrim('json_input', $sJsonString);
+
+	$oLog->Set('provider', $sProvider);
+	$sMessage = $oResult->message;
+	if (empty($oResult->message))
+	{
+		$sMessage = 'Ok';
+	}
+	$oLog->SetTrim('message', $sMessage);
+	$oLog->Set('code', $oResult->code);
+	$oLog->SetTrim('json_output', $sResponse);
+
+	$oLog->DBInsertNoReload();
+}

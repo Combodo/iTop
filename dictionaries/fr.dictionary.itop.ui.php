@@ -359,7 +359,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Login:PasswordPrompt' => 'Mot de passe',
 	'UI:Login:ForgotPwd' => 'Mot de passe oublié ?',
 	'UI:Login:ForgotPwdForm' => 'Mot de passe oublié',
-	'UI:Login:ForgotPwdForm+' => 'Vous pouvez demander à saisir d\'un nouveau mot de passe. Vous allez recevoir un email et vous pourrez suivre les instructions.',
+	'UI:Login:ForgotPwdForm+' => 'Vous pouvez demander à saisir un nouveau mot de passe. Vous allez recevoir un email et vous pourrez suivre les instructions.',
 	'UI:Login:ResetPassword' => 'Envoyer le message',
 	'UI:Login:ResetPwdFailed' => 'Impossible de vous faire parvenir le message: %1$s',
 
