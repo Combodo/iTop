@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,13 +21,15 @@
  * UI wdiget for displaying and editing one-way encrypted passwords
  *
  * @author      Phil Eddies
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @author      Romain Quetiez
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 class UIHTMLEditorWidget 
 {
 	protected $m_iId;
+	protected $m_oAttDef;
 	protected $m_sAttCode;
 	protected $m_sNameSuffix;
 	protected $m_sFieldPrefix;
@@ -36,10 +38,11 @@ class UIHTMLEditorWidget
 	protected $m_sValue;
 	protected $m_sMandatory;
 	
-	public function __construct($iInputId, $sAttCode, $sNameSuffix, $sFieldPrefix, $sHelpText, $sValidationField, $sValue, $sMandatory)
+	public function __construct($iInputId, $oAttDef, $sNameSuffix, $sFieldPrefix, $sHelpText, $sValidationField, $sValue, $sMandatory)
 	{
 		$this->m_iId = $iInputId;
-		$this->m_sAttCode = $sAttCode;
+		$this->m_oAttDef = $oAttDef;
+		$this->m_sAttCode = $oAttDef->GetCode();
 		$this->m_sNameSuffix = $sNameSuffix;
 		$this->m_sHelpText = $sHelpText;
 		$this->m_sValidationField = $sValidationField;
@@ -68,8 +71,24 @@ class UIHTMLEditorWidget
 		// To change the default settings of the editor,
 		// a) edit the file /js/ckeditor/config.js
 		// b) or override some of the configuration settings, using the second parameter of ckeditor()
+		$aConfig = array();
 		$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
-		$oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, { language : '$sLanguage' , contentsLanguage : '$sLanguage', extraPlugins: 'disabler' });"); // Transform $iId into a CKEdit
+		$aConfig['language'] = $sLanguage;
+		$aConfig['contentsLanguage'] = $sLanguage;
+		$aConfig['extraPlugins'] = 'disabler';
+		$sWidthSpec = addslashes(trim($this->m_oAttDef->GetWidth()));
+		if ($sWidthSpec != '')
+		{
+			$aConfig['width'] = $sWidthSpec;
+		}
+		$sHeightSpec = addslashes(trim($this->m_oAttDef->GetHeight()));
+		if ($sHeightSpec != '')
+		{
+			$aConfig['height'] = $sHeightSpec;
+		}
+		$sConfigJS = json_encode($aConfig);
+
+		$oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
 
 		// Please read...
 		// ValidateCKEditField triggers a timer... calling itself indefinitely

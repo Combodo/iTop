@@ -1155,8 +1155,8 @@ EOF;
 				// Added if present...
 				//
 				$aParameters['validation_pattern'] = $this->GetPropString($oField, 'validation_pattern');
-				$aParameters['width'] = $this->GetPropNumber($oField, 'width');
-				$aParameters['height'] = $this->GetPropNumber($oField, 'height');
+				$aParameters['width'] = $this->GetPropString($oField, 'width');
+				$aParameters['height'] = $this->GetPropString($oField, 'height');
 				$aParameters['digits'] = $this->GetPropNumber($oField, 'digits');
 				$aParameters['decimals'] = $this->GetPropNumber($oField, 'decimals');
 				$aParameters['always_load_in_tables'] = $this->GetPropBoolean($oField, 'always_load_in_tables', false);
