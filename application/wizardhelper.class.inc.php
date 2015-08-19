@@ -113,8 +113,16 @@ class WizardHelper
 				{
 					// For external keys: load the target object so that external fields
 					// get filled too
-					$oTargetObj = MetaModel::GetObject($oAttDef->GetTargetClass(), $value);
-					$oObj->Set($sAttCode, $oTargetObj);
+					$oTargetObj = MetaModel::GetObject($oAttDef->GetTargetClass(), $value, false);
+					if ($oTargetObj)
+					{
+						$oObj->Set($sAttCode, $oTargetObj);
+					}
+					else
+					{
+						// May happen for security reasons (portal, see ticket #1074)
+						$oObj->Set($sAttCode, $value);
+					}
 				}
 				else
 				{
