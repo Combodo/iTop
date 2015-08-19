@@ -2400,11 +2400,10 @@ EOF
 		$iFieldIndex = 0;
 		$aFieldsMap = array();
 
-		$aDetailsList =$this->FlattenZList(MetaModel::GetZListItems($sClass, 'details'));
 		// Order the fields based on their dependencies, set the fields for which there is only one possible value
 		// and perform this in the order of dependencies to avoid dead-ends
 		$aDeps = array();
-		foreach($aDetailsList as $sAttCode)
+		foreach(MetaModel::GetAttributesList($sClass) as $sAttCode)
 		{
 			$aDeps[$sAttCode] = MetaModel::GetPrequisiteAttributes($sClass, $sAttCode);
 		}
