@@ -769,25 +769,18 @@ EOF
 	
 	public static function DisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
-		if ($oPage->is_pdf())
-		{
-			$oPage->add(self::DisplaySetForPrinting($oPage, $oSet, $aExtraParams));
-		}
-		else
-		{
-			$oPage->add(self::GetDisplaySet($oPage, $oSet, $aExtraParams));
-		}
+		$oPage->add(self::GetDisplaySet($oPage, $oSet, $aExtraParams));
 	}
 	
 	/**
 	 * Simplifed version of GetDisplaySet() with less "decoration" around the table (and no paging)
-	 * that fits better into a printed document (like a PDF)
-	 * @param PDFPage $oPage
+	 * that fits better into a printed document (like a PDF or a printable view)
+	 * @param WebPage $oPage
 	 * @param DBObjectSet $oSet
 	 * @param hash $aExtraParams
 	 * @return string The HTML representation of the table
 	 */
-	public static function DisplaySetForPrinting(PDFPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
+	public static function GetDisplaySetForPrinting(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
 		$iListId = empty($aExtraParams['currentId']) ? $oPage->GetUniqueId() : $aExtraParams['currentId'];
 		$sTableId = isset($aExtraParams['table_id']) ? $aExtraParams['table_id'] : null;
@@ -819,6 +812,11 @@ EOF
 	 */	
 	public static function GetDisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
+		if ($oPage->IsPrintableVersion() || $oPage->is_pdf())
+		{
+			return self::GetDisplaySetForPrinting($oPage, $oSet, $aExtraParams);
+		}
+
 		if (empty($aExtraParams['currentId']))
 		{
 			$iListId = $oPage->GetUniqueId(); // Works only if not in an Ajax page !!
