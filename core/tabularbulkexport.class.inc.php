@@ -40,7 +40,6 @@ abstract class TabularBulkExport extends BulkExport
 				$sSuggestedFields = utils::ReadParam('suggested_fields', null, true, 'raw_data');
 				if (($sSuggestedFields !== null) && ($sSuggestedFields !== ''))
 				{
-//IssueLog::Info(__function__.' Suggesting fields: '.$sSuggestedFields);
 					$aSuggestedFields = explode(',', $sSuggestedFields);
 					$sFields = implode(',', $this->SuggestFields($aSuggestedFields));
 				}
@@ -101,41 +100,7 @@ abstract class TabularBulkExport extends BulkExport
 			case 'AttributeExternalKey':
 			case 'AttributeHierarchicalKey':
 				$aResult[] = array('code' => $sAttCode, 'unique_label' => $oAttDef->GetLabel(), 'label' => Dict::S('Core:BulkExport:Identifier'), 'attdef' => $oAttDef);
-
-				$bAddFriendlyName = true;
-
-				$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-				$sRemoteClass = $oKeyAttDef->GetTargetClass();
-				$sFriendlyNameAttCode = MetaModel::GetFriendlyNameAttributeCode($sRemoteClass);
-				if (!is_null($sFriendlyNameAttCode))
-				{
-					// The friendly name is made of a single attribute, check if that attribute is present as an external field
-					foreach(MetaModel::ListAttributeDefs($sClass) as $sSubAttCode => $oSubAttDef)
-					{
-						if ($oSubAttDef instanceof AttributeExternalField)
-						{
-							if (($oSubAttDef->GetKeyAttCode() == $sAttCode) && ($oSubAttDef->GetExtAttCode() == $sFriendlyNameAttCode))
-							{
-								$bAddFriendlyName = false;
-							}
-						}
-					}
-				}
-				if ($bAddFriendlyName)
-				{
-					$aResult[] = array('code' =>  $sAttCode.'_friendlyname', 'unique_label' => $oAttDef->GetLabel().'->'.Dict::S('Core:FriendlyName-Label'), 'label' => Dict::S('Core:FriendlyName-Label'), 'attdef' => MetaModel::GetAttributeDef($sClass, $sAttCode.'_friendlyname'));
-				}
-
-				// NOT WORKING !!!!!!!!!
-				// NOT WORKING !!!!!!!!!
-				// NOT WORKING !!!!!!!!!
-				// Add the reconciliation keys
-				foreach(MetaModel::GetReconcKeys($sRemoteClass) as $sRemoteAttCode)
-			  	{
-					$oRemoteAttDef = MetaModel::GetAttributeDef($sRemoteClass, $sRemoteAttCode);
-					$aResult[] = array('code' =>  $sAttCode.'->'.$sRemoteAttCode, 'unique_label' => $oAttDef->GetLabel().'->'.$oRemoteAttDef->GetLabel(), 'label' => $oRemoteAttDef->GetLabel(), 'attdef' => $oRemoteAttDef);
-			  	}
-
+				$aResult[] = array('code' =>  $sAttCode.'_friendlyname', 'unique_label' => $oAttDef->GetLabel().'->'.Dict::S('Core:FriendlyName-Label'), 'label' => Dict::S('Core:FriendlyName-Label'), 'attdef' => MetaModel::GetAttributeDef($sClass, $sAttCode.'_friendlyname'));
 
 				foreach(MetaModel::ListAttributeDefs($sClass) as $sSubAttCode => $oSubAttDef)
 				{
@@ -192,21 +157,10 @@ abstract class TabularBulkExport extends BulkExport
 			}
 			if ($this->IsValidField($sClass, 'id'))
 			{
-				$sFriendlyNameAttCode = MetaModel::GetFriendlyNameAttributeCode($sClass);
-				if (is_null($sFriendlyNameAttCode))
-				{
-					// The friendly name is made of several attribute
-					$aSubAttr = array(
-						array('code' =>  $sShortAlias.'id', 'unique_label' => $sShortAlias.Dict::S('Core:BulkExport:Identifier'), 'label' => $sShortAlias.'id'),
-						array('code' =>  $sShortAlias.'friendlyname', 'unique_label' => $sShortAlias.Dict::S('Core:FriendlyName-Label'), 'label' => $sShortAlias.Dict::S('Core:FriendlyName-Label')),
-					);
-				}
-				else
-				{
-					// The friendly name has no added value
-					$aSubAttr = array();
-				}
-				$aAllFields[] = array('code' =>  $sShortAlias.'id', 'unique_label' => $sShortAlias.Dict::S('Core:BulkExport:Identifier'), 'label' => $sShortAlias.'id', 'subattr' => $aSubAttr);
+				$aAllFields[] = array('code' =>  $sShortAlias.'id', 'unique_label' => $sShortAlias.Dict::S('Core:BulkExport:Identifier'), 'label' => $sShortAlias.'id', 'subattr' => array(
+					array('code' =>  $sShortAlias.'id', 'unique_label' => $sShortAlias.Dict::S('Core:BulkExport:Identifier'), 'label' => $sShortAlias.'id'),
+					array('code' =>  $sShortAlias.'friendlyname', 'unique_label' => $sShortAlias.Dict::S('Core:FriendlyName-Label'), 'label' => $sShortAlias.Dict::S('Core:FriendlyName-Label')),
+				));
 			}
 			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
@@ -242,7 +196,6 @@ abstract class TabularBulkExport extends BulkExport
 
 		$oP->add('<div id="'.$sWidgetId.'"></div>');
 		$JSAllFields = json_encode($aAllFieldsByAlias);
-//IssueLog::Info('JSAllFields='.print_r($aAllFieldsByAlias, true));
 		$oSet = new DBObjectSet($this->oSearch);
 		$iCount = $oSet->Count();
 		$iPreviewLimit = 3;
