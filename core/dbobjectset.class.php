@@ -1318,7 +1318,7 @@ class DBObjectSetComparator
 				// Already marked as modified above
 				//$aResult['modified'][$oObj->GetKey()] = $oObj;
 			}
-			else if (!array_key_exists($sFingerprint, $this->aFingerprints1) && $oObj->IsNew())
+			else if (!array_key_exists($sFingerprint, $this->aFingerprints1))
 			{
 				$aResult['added'][] = $oObj;
 			}

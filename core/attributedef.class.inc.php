@@ -1135,7 +1135,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		}
 
 		// Both values are Object sets
-		return $val1->HasSameContents($val2, array($this->GetExtKeyToMe()));
+		return $val1->HasSameContents($val2);
 	}
 
 	/**

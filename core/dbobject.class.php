@@ -1384,24 +1384,13 @@ abstract class DBObject implements iDisplay
 			
 			foreach($aChanges['modified'] as $oLink)
 			{
-				// Make sure that the objects in the set point to "this"
-				$oLink->Set($oAttDef->GetExtKeyToMe(), $this->m_iKey);
+				// Objects in the set either remain attached or have been detached -> leave the link as is
 				$oLink->DBWrite();
 			}
 			
 			foreach($aChanges['removed'] as $oLink)
 			{
-				// Objects can be removed from the set because:
-				// 1) They should no longer exist
-				// 2) They are about to be removed from the set BUT NOT deleted, their ExtKey has been reset
-				if ($oLink->IsModified() && ($oLink->Get($sExtKeyToMe) != $this->m_iKey))
-				{
-					$oLink->DBWrite();
-				}
-				else
-				{
-					$oLink->DBDelete();
-				}
+				$oLink->DBDelete();
 			}
 		}
 	}
