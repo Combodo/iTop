@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -22,7 +22,7 @@
  * Application internal events
  * There is also a file log 
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -92,7 +92,18 @@ class QueryOQL extends Query
 		
 		if (!$bEditMode)
 		{
-			$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?format=spreadsheet&login_mode=basic&query='.$this->GetKey();
+			$sFields = trim($this->Get('fields'));
+			$bExportV1Recommended = ($sFields == '');
+			if ($bExportV1Recommended)
+			{
+				$oFieldAttDef = MetaModel::GetAttributeDef('QueryOQL', 'fields');
+				$oPage->add('<div class="message message_error" style="padding-left: 30px;"><div style="padding: 10px;">'.Dict::Format('UI:Query:UrlV1', $oFieldAttDef->GetLabel()).'</div></div>');
+				$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?format=spreadsheet&login_mode=basic&query='.$this->GetKey();
+			}
+			else 
+			{
+				$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?format=spreadsheet&login_mode=basic&query='.$this->GetKey();
+			}
 			$sOql = $this->Get('oql');
 			$sMessage = null;
 			try
