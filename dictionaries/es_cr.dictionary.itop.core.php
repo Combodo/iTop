@@ -836,6 +836,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML format (*.html)~~',
 	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options~~',
 	'Core:BulkExport:OptionNoLocalize' => 'Do not localize the values (for Enumerated fields)~~',
+	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
 	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export~~',
 	'Core:BulkExportLabelOQLExpression' => 'OQL Query:~~',
 	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:~~',

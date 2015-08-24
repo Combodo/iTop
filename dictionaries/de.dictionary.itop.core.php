@@ -590,6 +590,7 @@ Operatoren:<br/>
 	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML (*.html)',
 	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet-Optionen',
 	'Core:BulkExport:OptionNoLocalize' => 'Werte von Aufzählungsfeldern nicht lokalisieren',
+	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
 	'Core:BulkExport:ScopeDefinition' => 'Definition der zu exportierenden Objekte',
 	'Core:BulkExportLabelOQLExpression' => 'OQL-Abfrage',
 	'Core:BulkExportLabelPhrasebookEntry' => 'Query-Bibliotheks-Eintrag:',

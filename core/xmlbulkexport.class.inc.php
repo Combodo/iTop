@@ -41,11 +41,15 @@ class XMLBulkExport extends BulkExport
 		switch($sPartId)
 		{
 			case 'xml_options':
-				$sChecked = (utils::ReadParam('no_localize', 0) == 1) ? ' checked ' : '';
+				$sNoLocalizeChecked = (utils::ReadParam('no_localize', 0) == 1) ? ' checked ' : '';
+				$sLinksetChecked = (utils::ReadParam('linksets', 0) == 1) ? ' checked ' : '';
 				$oP->add('<fieldset><legend>'.Dict::S('Core:BulkExport:XMLOptions').'</legend>');
 				$oP->add('<table>');
 				$oP->add('<tr>');
-				$oP->add('<td><input type="checkbox" id="xml_no_localize" name="no_localize" value="1"'.$sChecked.'><label for="xml_no_localize"> '.Dict::S('Core:BulkExport:OptionNoLocalize').'</label></td>');
+				$oP->add('<td><input type="checkbox" id="xml_no_localize" name="no_localize" value="1"'.$sNoLocalizeChecked.'><label for="xml_no_localize"> '.Dict::S('Core:BulkExport:OptionNoLocalize').'</label></td>');
+				$oP->add('</tr>');
+				$oP->add('<tr>');
+				$oP->add('<td><input type="checkbox" id="xml_linksets" name="linksets" value="1"'.$sLinksetChecked.'><label for="xml_linksets"> '.Dict::S('Core:BulkExport:OptionLinkSets').'</label></td>');
 				$oP->add('</tr>');
 				$oP->add('</table>');
 				$oP->add('</fieldset>');
@@ -61,6 +65,7 @@ class XMLBulkExport extends BulkExport
 		parent::ReadParameters();
 	
 		$this->aStatusInfo['localize'] = (utils::ReadParam('no_localize', 0) != 1);
+		$this->aStatusInfo['linksets'] = (utils::ReadParam('linksets', 0) == 1);
 	}
 	
 	protected function GetSampleData($oObj, $sAttCode)
@@ -135,6 +140,12 @@ class XMLBulkExport extends BulkExport
 				}
 				foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode=>$oAttDef)
 				{
+					if ($oAttDef->IsLinkSet() && !$this->aStatusInfo['linksets'])
+					{
+						// Skip link sets
+						continue;
+					}
+
 					if (is_null($oObj))
 					{
 						$sData .= "<$sAttCode>null</$sAttCode>\n";

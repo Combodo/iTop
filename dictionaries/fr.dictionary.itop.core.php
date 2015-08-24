@@ -700,6 +700,7 @@ Opérateurs :<br/>
 	'Core:BulkExport:SpreadsheetFormat' => 'Format HTML pour Excel (*.html)',
 	'Core:BulkExport:SpreadsheetOptions' => 'Options du format HTML pour Excel',
 	'Core:BulkExport:OptionNoLocalize' => 'Ne pas traduire les valeurs (pour les champs de type "Enum")',
+	'Core:BulkExport:OptionLinkSets' => 'Inclure les objets liés',
 	'Core:BulkExport:ScopeDefinition' => 'Définition des objets à exporter',
 	'Core:BulkExportLabelOQLExpression' => 'Requête OQL:',
 	'Core:BulkExportLabelPhrasebookEntry' => 'Entrée du livre des requêtes:',

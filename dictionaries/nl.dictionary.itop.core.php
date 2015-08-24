@@ -844,6 +844,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:BulkExport:XMLOptions' => 'XML Options~~',
 	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML format (*.html)~~',
 	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options~~',
+	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
 	'Core:BulkExport:OptionNoLocalize' => 'Do not localize the values (for Enumerated fields)~~',
 	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export~~',
 	'Core:BulkExportLabelOQLExpression' => 'OQL Query:~~',
