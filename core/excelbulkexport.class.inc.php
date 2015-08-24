@@ -225,29 +225,33 @@ class ExcelBulkExport extends TabularBulkExport
 			$aData = array();
 			foreach($aAliasByField as $aAttCode)
 			{
+				$oObj = $aRow[$aAttCode['alias']];
 				$sField = '';
-				switch($aAttCode['attcode'])
+				if ($oObj)
 				{
-					case 'id':
-						$sField = $aRow[$aAttCode['alias']]->GetKey();
-						break;
-							
-					default:
-					$value = $aRow[$aAttCode['alias']]->Get($aAttCode['attcode']);
-					if ($value instanceOf ormCaseLog)
+					switch($aAttCode['attcode'])
 					{
-						// Extract the case log as text and remove the "===" which make Excel think that the cell contains a formula the next time you edit it!
-						$sField = trim(preg_replace('/========== ([^=]+) ============/', '********** $1 ************', $value->GetText()));
-					}
-					else if ($value instanceOf DBObjectSet)
-					{
-						$oAttDef = MetaModel::GetAttributeDef(get_class($aRow[$aAttCode['alias']]), $aAttCode['attcode']);
-						$sField =  $oAttDef->GetAsCSV($value, '', '', $aRow[$aAttCode['alias']]);
-					}
-					else
-					{
-						$oAttDef = MetaModel::GetAttributeDef(get_class($aRow[$aAttCode['alias']]), $aAttCode['attcode']);
-						$sField =  $oAttDef->GetEditValue($value, $aRow[$aAttCode['alias']]);
+						case 'id':
+							$sField = $oObj->GetKey();
+							break;
+								
+						default:
+						$value = $oObj->Get($aAttCode['attcode']);
+						if ($value instanceOf ormCaseLog)
+						{
+							// Extract the case log as text and remove the "===" which make Excel think that the cell contains a formula the next time you edit it!
+							$sField = trim(preg_replace('/========== ([^=]+) ============/', '********** $1 ************', $value->GetText()));
+						}
+						else if ($value instanceOf DBObjectSet)
+						{
+							$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $aAttCode['attcode']);
+							$sField =  $oAttDef->GetAsCSV($value, '', '', $oObj);
+						}
+						else
+						{
+							$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $aAttCode['attcode']);
+							$sField =  $oAttDef->GetEditValue($value, $oObj);
+						}
 					}
 				}
 				$aData[] = $sField;

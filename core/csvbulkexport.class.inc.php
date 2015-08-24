@@ -168,9 +168,17 @@ class CSVBulkExport extends TabularBulkExport
 		}
 	}
 
-	protected function GetSampleData(DBObject $oObj, $sAttCode)
+	protected function GetSampleData($oObj, $sAttCode)
 	{
-		return trim($oObj->GetAsCSV($sAttCode), '"');
+		if ($oObj)
+		{
+			$sRet = trim($oObj->GetAsCSV($sAttCode), '"');
+		}
+		else
+		{
+			$sRet = '';
+		}
+		return $sRet;
 	}
 
 	public function GetHeader()
@@ -340,16 +348,16 @@ class CSVBulkExport extends TabularBulkExport
 						default:
 							$sField = $oObj->GetAsCSV($aAttCode['attcode'], $this->aStatusInfo['separator'], $this->aStatusInfo['text_qualifier'], $this->aStatusInfo['localize']);
 					}
-					if ($this->aStatusInfo['charset'] != 'UTF-8')
-					{
-						// Note: due to bugs in the glibc library it's safer to call iconv on the smallest possible string
-						// and thus to convert field by field and not the whole row or file at once (see ticket #991)
-						$aData[] = iconv('UTF-8', $this->aStatusInfo['charset'].'//IGNORE//TRANSLIT', $sField);
-					}
-					else
-					{
-						$aData[] = $sField;
-					}
+				}
+				if ($this->aStatusInfo['charset'] != 'UTF-8')
+				{
+					// Note: due to bugs in the glibc library it's safer to call iconv on the smallest possible string
+					// and thus to convert field by field and not the whole row or file at once (see ticket #991)
+					$aData[] = iconv('UTF-8', $this->aStatusInfo['charset'].'//IGNORE//TRANSLIT', $sField);
+				}
+				else
+				{
+					$aData[] = $sField;
 				}
 			}
 			$sData .= implode($this->aStatusInfo['separator'], $aData)."\n";

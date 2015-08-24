@@ -158,8 +158,63 @@ $aOperations = array(
 		'depth' => 4, // max recursion depth
 	),
 );
+$aOperations = array(
+	array(
+		'operation' => 'core/create', // operation code
+		'comment' => 'Automatic creation of attachment blah blah...', // comment recorded in the change tracking log
+		'class' => 'Attachment',
+		'output_fields' => 'id, friendlyname', // list of fields to show in the results (* or a,b,c)
+		// Values for the object to create
+		'fields' => array(
+			'item_class' => 'UserRequest',
+			'item_id' => 1,
+			'item_org_id' => 3,
+			'contents' => array(
+				'data' => 'iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAIAAAC0tAIdAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACmSURBVChTfZHRDYMwDESzQ2fqhHx3C3ao+MkW/WlnaFxfzk7sEnE6JHJ+NgaKZN2zLHVN2ssfkae0Da7FQ5PRk/ve4Hcx19Ie6CEGuh/6vMgNhwanHVUNbt73lUDbYJ+6pg8b3+m2RehsVPdMXyvQY+OVkB+Rrv64lUjb3nq+aCA6v4leRqtfaIgimr53atBy9PlfUhoh3fFCNDmErv9FWR6ylBL5AREbmHBnFj5lAAAAAElFTkSuQmCC',
+				'filename' => 'myself.png',
+				'mimetype' => 'image/png'
+			),
+		),
+	),
+	array(
+		'operation' => 'core/get', // operation code
+		'class' => 'Attachment',
+		'key' => 'SELECT Attachment',
+		'output_fields' => '*',
+	)
+);
+$aOperations = array(
+	array(
+		'operation' => 'core/get', // operation code
+		'class' => 'PhysicalDevice',
+		'key' => 'SELECT PhysicalDevice WHERE id < 3',
+		'output_fields' => '*+', // list of fields to show in the results (* or a,b,c)
+	),
+);
+$aOperations = array(
+	array(
+		'operation' => 'core/create', // operation code
+		'comment' => 'Synchronization from blah...', // comment recorded in the change tracking log
+		'class' => 'UserRequest',
+		'output_fields' => 'id, friendlyname', // list of fields to show in the results (* or a,b,c)
+		// Values for the object to create
+		'fields' => array(
+			'org_id' => "SELECT Organization WHERE name = 'Demo'",
+			'caller_id' => array('name' => 'monet', 'first_name' => 'claude'),
+			'title' => 'issue blah',
+			'description' => 'something happened'
+		),
+	),
+);
+$aXXXOperations = array(
+	array(
+		'operation' => 'core/check_credentials', // operation code
+		'user' => 'admin',
+		'password' => 'admin',
+	),
+);
 
-if (true)
+if (false)
 {
 	echo "Please edit the sample script and configure the server URL";
 	exit;

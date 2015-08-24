@@ -63,9 +63,17 @@ class XMLBulkExport extends BulkExport
 		$this->aStatusInfo['localize'] = (utils::ReadParam('no_localize', 0) != 1);
 	}
 	
-	protected function GetSampleData(DBObject $oObj, $sAttCode)
+	protected function GetSampleData($oObj, $sAttCode)
 	{
-		return $oObj->GetAsXML($sAttCode);
+		if ($oObj)
+		{
+			$sRet = $oObj->GetAsXML($sAttCode);
+		}
+		else
+		{
+			$sRet = '';
+		}
+		return $sRet;
 	}
 
 	public function GetHeader()

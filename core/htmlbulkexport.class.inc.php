@@ -49,9 +49,17 @@ class HTMLBulkExport extends TabularBulkExport
 		}
 	}
 
-	protected function GetSampleData(DBObject $oObj, $sAttCode)
+	protected function GetSampleData($oObj, $sAttCode)
 	{
-		return $oObj->GetAsHTML($sAttCode);
+		if ($oObj)
+		{
+			$sRet = $oObj->GetAsHTML($sAttCode);
+		}
+		else
+		{
+			$sRet = '';
+		}
+		return $sRet;
 	}
 
 	public function GetHeader()
@@ -183,7 +191,12 @@ class HTMLBulkExport extends TabularBulkExport
 		{
 			set_time_limit($iLoopTimeLimit);
 			$sFirstAlias = reset($aAliases);
-			$sHilightClass = $aRow[$sFirstAlias]->GetHilightClass();
+			$oMainObj = $aRow[$sFirstAlias];
+			$sHilightClass = '';
+			if ($oMainObj)
+			{
+				$sHilightClass = $aRow[$sFirstAlias]->GetHilightClass();
+			}
 			if ($sHilightClass != '')
 			{
 				$sData .= "<tr class=\"$sHilightClass\">";
@@ -194,15 +207,19 @@ class HTMLBulkExport extends TabularBulkExport
 			}
 			foreach($aAliasByField as $aAttCode)
 			{
+				$oObj = $aRow[$aAttCode['alias']];
 				$sField = '';
-				switch($aAttCode['attcode'])
+				if ($oObj)
 				{
-					case 'id':
-						$sField = $aRow[$aAttCode['alias']]->GetHyperlink();
-						break;
-							
-					default:
-						$sField = $aRow[$aAttCode['alias']]->GetAsHtml($aAttCode['attcode']);
+					switch($aAttCode['attcode'])
+					{
+						case 'id':
+							$sField = $aRow[$aAttCode['alias']]->GetHyperlink();
+							break;
+								
+						default:
+							$sField = $aRow[$aAttCode['alias']]->GetAsHtml($aAttCode['attcode']);
+					}
 				}
 				$sValue = ($sField === '') ? '&nbsp;' : $sField;
 				$sData .= "<td>$sValue</td>";

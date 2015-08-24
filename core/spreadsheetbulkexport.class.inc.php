@@ -68,9 +68,17 @@ class SpreadsheetBulkExport extends TabularBulkExport
 		$this->aStatusInfo['localize'] = (utils::ReadParam('no_localize', 0) != 1);
 	}	
 	
-	protected function GetSampleData(DBObject $oObj, $sAttCode)
+	protected function GetSampleData($oObj, $sAttCode)
 	{
-		return $oObj->GetAsHTML($sAttCode);
+		if ($oObj)
+		{
+			$sRet = $oObj->GetAsHTML($sAttCode);
+		}
+		else
+		{
+			$sRet = '';
+		}
+		return $sRet;
 	}
 
 	public function GetHeader()
