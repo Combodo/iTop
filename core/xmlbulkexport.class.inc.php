@@ -28,7 +28,8 @@ class XMLBulkExport extends BulkExport
 	public function DisplayUsage(Page $oP)
 	{
 		$oP->p(" * xml format options:");
-		$oP->p(" *\tThere are no options for the XML format.");
+		$oP->p(" *\tno_localize: set to 1 to retrieve non-localized values (for instance for ENUM values). Default is 0 (= localized values)");
+		$oP->p(" *\tlinksets: set to 1 to retrieve links to related objects (1-N or N-N relations). Default is 0 (= only scalar fields)");
 	}
 
 	public function EnumFormParts()
@@ -86,7 +87,7 @@ class XMLBulkExport extends BulkExport
 		$oSet = new DBObjectSet($this->oSearch);
 		$this->aStatusInfo['position'] = 0;
 		$this->aStatusInfo['total'] = $oSet->Count();
-		$sData = "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Set>\n";
+		$sData = "<"."?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n<Set>\n";
 		return $sData;
 	}
 
@@ -105,16 +106,39 @@ class XMLBulkExport extends BulkExport
 		
 		$aClasses = $this->oSearch->GetSelectedClasses();
 		$aAuthorizedClasses = array();
+		$aClass2Attributes = array();
 		foreach($aClasses as $sAlias => $sClassName)
 		{
 			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ, $oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS))
 			{
 				$aAuthorizedClasses[$sAlias] = $sClassName;
+				$aAttributes = array();
+				foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode=>$oAttDef)
+				{
+					if ($oAttDef->IsLinkSet() && !$this->aStatusInfo['linksets'])
+					{
+						continue;
+					}
+					if (!$oAttDef->IsWritable())
+					{
+						continue;
+					}
+					$aAttributes[$sAttCode] = $oAttDef;
+					if ($oAttDef->IsExternalKey())
+					{
+						foreach(MetaModel::ListAttributeDefs($sClassName) as $sSubAttCode=>$oSubAttDef)
+						{
+							if ($oSubAttDef->IsExternalField() && ($oSubAttDef->GetKeyAttCode() == $sAttCode))
+							{
+								$aAttributes[$sAttCode.'_friendlyname'] = MetaModel::GetAttributeDef($sClassName, $sAttCode.'_friendlyname');
+								$aAttributes[$sSubAttCode] = $oSubAttDef;
+							}
+						}
+					}
+				}
+				$aClass2Attributes[$sAlias] = $aAttributes;
 			}
 		}
-		$aAttribs = array();
-		$aList = array();
-		$aList[$sAlias] = MetaModel::GetZListItems($sClassName, 'details');
 		
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
@@ -138,25 +162,16 @@ class XMLBulkExport extends BulkExport
 					$sClassName = get_class($oObj);
 					$sData .= "<$sClassName alias=\"$sAlias\" id=\"".$oObj->GetKey()."\">\n";
 				}
-				foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode=>$oAttDef)
+				foreach($aClass2Attributes[$sAlias] as $sAttCode=>$oAttDef)
 				{
-					if ($oAttDef->IsLinkSet() && !$this->aStatusInfo['linksets'])
-					{
-						// Skip link sets
-						continue;
-					}
-
 					if (is_null($oObj))
 					{
 						$sData .= "<$sAttCode>null</$sAttCode>\n";
 					}
 					else
 					{
-						if ($oAttDef->IsWritable() )
-						{
-							$sValue = $oObj->GetAsXML($sAttCode, $bLocalize);
-							$sData .= "<$sAttCode>$sValue</$sAttCode>\n";
-						}
+						$sValue = $oObj->GetAsXML($sAttCode, $bLocalize);
+						$sData .= "<$sAttCode>$sValue</$sAttCode>\n";
 					}
 				}
 				$sData .= "</$sClassName>\n";

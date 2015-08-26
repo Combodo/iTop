@@ -749,8 +749,9 @@ class AttributeLinkedSet extends AttributeDefinition
 						}
 					}
 					if ($sAttCode == $this->GetExtKeyToMe()) continue;
-					if ($oAttDef->IsExternalField()) continue;
-					if (!$oAttDef->IsDirectField()) continue;
+					if ($oAttDef->IsExternalField() && ($oAttDef->GetKeyAttCode() == $this->GetExtKeyToMe())) continue;
+					if (($oAttDef instanceof AttributeFriendlyName) && ($oAttDef->GetKeyAttCode() == $this->GetExtKeyToMe())) continue;
+					if (($oAttDef instanceof AttributeFriendlyName) && ($oAttDef->GetKeyAttCode() == 'id')) continue;
 					if (!$oAttDef->IsScalar()) continue;
 					$sAttValue = $oObj->GetAsXML($sAttCode, $bLocalize);
 					$sRes .= "<$sAttCode>$sAttValue</$sAttCode>\n";
