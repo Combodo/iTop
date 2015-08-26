@@ -115,13 +115,23 @@ class HTMLBulkExport extends TabularBulkExport
 
 				default:
 					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-					if (count($aSelectedClasses) > 1)
+					if (($oAttDef instanceof AttributeExternalField) || (($oAttDef instanceof AttributeFriendlyName) && ($oAttDef->GetKeyAttCode() != 'id')))
 					{
-						$aData[] = $sAlias.'.'.$oAttDef->GetLabel();
+						$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $oAttDef->GetKeyAttCode());
+						$oExtAttDef = MetaModel::GetAttributeDef($oKeyAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
+						$sLabel =  $oKeyAttDef->GetLabel().'->'.$oExtAttDef->GetLabel();
 					}
 					else
 					{
-						$aData[] = $oAttDef->GetLabel();
+						$sLabel = $oAttDef->GetLabel();
+					}
+					if (count($aSelectedClasses) > 1)
+					{
+						$aData[] = $sAlias.'.'.$sLabel;
+					}
+					else
+					{
+						$aData[] = $sLabel;
 					}
 			}
 		}

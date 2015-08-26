@@ -123,7 +123,23 @@ class SpreadsheetBulkExport extends TabularBulkExport
 
 				default:
 					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-					$sColLabel = $this->aStatusInfo['localize'] ? MetaModel::GetLabel($sClass, $sAttCode) : $sAttCode;
+					if (($oAttDef instanceof AttributeExternalField) || (($oAttDef instanceof AttributeFriendlyName) && ($oAttDef->GetKeyAttCode() != 'id')))
+					{
+						$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $oAttDef->GetKeyAttCode());
+						$oExtAttDef = MetaModel::GetAttributeDef($oKeyAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
+						if ($this->aStatusInfo['localize'])
+						{
+							$sColLabel = $oKeyAttDef->GetLabel().'->'.$oExtAttDef->GetLabel();
+						}
+						else
+						{
+							$sColLabel = $oKeyAttDef->GetCode().'->'.$oExtAttDef->GetCode();
+						}
+					}
+					else
+					{
+						$sColLabel = $this->aStatusInfo['localize'] ? $oAttDef->GetLabel() : $sAttCode;
+					}
 					$oFinalAttDef = $oAttDef->GetFinalAttDef();
 					if (get_class($oFinalAttDef) == 'AttributeDateTime')
 					{

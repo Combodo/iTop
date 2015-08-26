@@ -149,10 +149,22 @@ class ExcelBulkExport extends TabularBulkExport
 					{
 						$sType = 'datetime';
 					}
-					$sLabel = $sAttCode;
-					if ($this->aStatusInfo['localize'])
+					if (($oAttDef instanceof AttributeExternalField) || (($oAttDef instanceof AttributeFriendlyName) && ($oAttDef->GetKeyAttCode() != 'id')))
 					{
-						$sLabel = $oAttDef->GetLabel();
+						$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $oAttDef->GetKeyAttCode());
+						$oExtAttDef = MetaModel::GetAttributeDef($oKeyAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
+						if ($this->aStatusInfo['localize'])
+						{
+							$sLabel =  $oKeyAttDef->GetLabel().'->'.$oExtAttDef->GetLabel();
+						}
+						else
+						{
+							$sLabel =  $oKeyAttDef->GetCode().'->'.$oExtAttDef->GetCode();
+						}
+					}
+					else
+					{
+						$sLabel = $this->aStatusInfo['localize'] ? $oAttDef->GetLabel() : $sAttCode;
 					}
 						
 					$aTableHeaders[] = array('label' => $sFullAlias.$sLabel, 'type' => $sType);
