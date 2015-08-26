@@ -1431,7 +1431,7 @@ class MFElement extends DOMElement
 						if (array_key_exists($key, $res))
 						{
 							// Houston!
-							throw new DOMFormatException("Tag ".$oItem->getNodePath().", id '$key' already used!!!");
+							throw new DOMFormatException("Tag ".MFDocument::GetItopNodePath($oItem).", id '$key' already used!!!");
 						}
 						$res[$key] = $oItem->GetNodeAsArrayOfItems();
 					}
