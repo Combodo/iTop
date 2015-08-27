@@ -590,7 +590,7 @@ if (utils::IsModeCLI())
 			}
 		}
 		$oSearch->SetInternalParams($aArgs);
-		
+
 		$sFormat = utils::ReadParam('format', 'html', true /* Allow CLI */, 'raw_data');
 		$oExporter = BulkExport::FindExporter($sFormat);
 		if ($oExporter == null)
@@ -650,9 +650,6 @@ if (utils::IsModeCLI())
 try
 {
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
-	
-	ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
 	
 	// Main parameters
 	$sExpression = utils::ReadParam('expression', null, true /* Allow CLI */, 'raw_data');
@@ -661,6 +658,11 @@ try
 	$sFileName = utils::ReadParam('filename', '', true, 'string');
 	$bInteractive = utils::ReadParam('interactive', false);
 	$sMode = utils::ReadParam('mode', '');
+
+	$bMustBeAdmin = $bInteractive;
+	LoginWebPage::DoLogin($bMustBeAdmin); // Check user rights and prompt if needed
+
+	ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
 	
 	if ($bInteractive)
 	{
