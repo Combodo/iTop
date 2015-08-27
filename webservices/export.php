@@ -176,6 +176,13 @@ if (!empty($sExpression))
 			}
 		}
 		$oFilter->SetInternalParams($aArgs);
+		foreach ($oFilter->GetSelectedClasses() as $sAlias => $sClass)
+		{
+			if ((UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_READ) && UR_ALLOWED_YES) == 0)
+			{
+				throw new Exception("The current user does not have permission for exporting data of class $sClass");
+			}
+		}
 
 		if ($oFilter)
 		{
