@@ -1243,7 +1243,7 @@ class DBObjectSearch extends DBSearch
 		self::DbgTrace("Main (=leaf) class, call MakeSQLObjectQuerySingleTable()");
 		if (MetaModel::HasTable($sClass))
 		{
-			$oSelectBase = $this->MakeSQLObjectQuerySingleTable($oBuild, $sClass, $aExtKeys, $aValues);
+			$oSelectBase = $this->MakeSQLObjectQuerySingleTable($oBuild, $aAttToLoad, $sClass, $aExtKeys, $aValues);
 		}
 		else
 		{
@@ -1261,7 +1261,7 @@ class DBObjectSearch extends DBSearch
 			if (!MetaModel::HasTable($sParentClass)) continue;
 
 			self::DbgTrace("Parent class: $sParentClass... let's call MakeSQLObjectQuerySingleTable()");
-			$oSelectParentTable = $this->MakeSQLObjectQuerySingleTable($oBuild, $sParentClass, $aExtKeys, $aValues);
+			$oSelectParentTable = $this->MakeSQLObjectQuerySingleTable($oBuild, $aAttToLoad, $sParentClass, $aExtKeys, $aValues);
 			if (is_null($oSelectBase))
 			{
 				$oSelectBase = $oSelectParentTable;
@@ -1313,7 +1313,7 @@ class DBObjectSearch extends DBSearch
 		foreach ($aFNJoinAlias as $sSubClass => $sSubClassAlias)
 		{
 			$oSubClassFilter = new DBObjectSearch($sSubClass, $sSubClassAlias);
-			$oSelectFN = $oSubClassFilter->MakeSQLObjectQuerySingleTable($oBuild, $sSubClass, $aExtKeys, array());
+			$oSelectFN = $oSubClassFilter->MakeSQLObjectQuerySingleTable($oBuild, $aAttToLoad, $sSubClass, $aExtKeys, array());
 			$oSelectBase->AddLeftJoin($oSelectFN, $sKeyField, MetaModel::DBGetKey($sSubClass));
 		}
 
@@ -1325,7 +1325,7 @@ class DBObjectSearch extends DBSearch
 		return $oSelectBase;
 	}
 
-	protected function MakeSQLObjectQuerySingleTable(&$oBuild, $sTableClass, $aExtKeys, $aValues)
+	protected function MakeSQLObjectQuerySingleTable(&$oBuild, $aAttToLoad, $sTableClass, $aExtKeys, $aValues)
 	{
 		// $aExtKeys is an array of sTableClass => array of (sAttCode (keys) => array of sAttCode (fields))
 //echo "MakeSQLObjectQuery($sTableClass)-liste des clefs externes($sTableClass): <pre>".print_r($aExtKeys, true)."</pre><br/>\n";
@@ -1530,7 +1530,7 @@ class DBObjectSearch extends DBSearch
 							$oBuild->m_oQBExpressions->PushJoinField(new FieldExpression('id', $sKeyClassAlias));
 			
 //echo "<p>Recursive MakeSQLObjectQuery ".__LINE__.": <pre>\n".print_r($oBuild->GetRootFilter()->GetSelectedClasses(), true)."</pre></p>\n";
-							$oSelectExtKey = $oExtFilter->MakeSQLObjectQuery($oBuild);
+							$oSelectExtKey = $oExtFilter->MakeSQLObjectQuery($oBuild, $aAttToLoad);
 			
 							$oJoinExpr = $oBuild->m_oQBExpressions->PopJoinField();
 							$sExternalKeyTable = $oJoinExpr->GetParent();
