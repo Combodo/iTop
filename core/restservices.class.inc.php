@@ -314,11 +314,23 @@ class CoreServices implements iRestServiceProvider
 			$aFields = RestUtils::GetMandatoryParam($aParams, 'fields');
 			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
 			$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
-	
-			$oObject = RestUtils::MakeObjectFromFields($sClass, $aFields);
-			$oObject->DBInsert();
-	
-			$oResult->AddObject(0, 'created', $oObject, $aShowFields, $bExtendedOutput);
+
+			if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) != UR_ALLOWED_YES)
+			{
+				$oResult->code = RestResult::UNAUTHORIZED;
+				$oResult->message = "The current user does not have enough permissions for creating data of class $sClass";
+			}
+			elseif (UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY) != UR_ALLOWED_YES)
+			{
+				$oResult->code = RestResult::UNAUTHORIZED;
+				$oResult->message = "The current user does not have enough permissions for massively creating data of class $sClass";
+			}
+			else
+			{
+				$oObject = RestUtils::MakeObjectFromFields($sClass, $aFields);
+				$oObject->DBInsert();
+				$oResult->AddObject(0, 'created', $oObject, $aShowFields, $bExtendedOutput);
+			}
 			break;
 	
 		case 'core/update':
@@ -329,11 +341,25 @@ class CoreServices implements iRestServiceProvider
 			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
 			$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
 	
-			$oObject = RestUtils::FindObjectFromKey($sClass, $key);
-			RestUtils::UpdateObjectFromFields($oObject, $aFields);
-			$oObject->DBUpdate();
-	
-			$oResult->AddObject(0, 'updated', $oObject, $aShowFields, $bExtendedOutput);
+			// Note: the target class cannot be based on the result of FindObjectFromKey, because in case the user does not have read access, that function already fails with msg 'Nothing found'
+			$sTargetClass = RestUtils::GetObjectSetFromKey($sClass, $key)->GetFilter()->GetClass();
+			if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_MODIFY) != UR_ALLOWED_YES)
+			{
+				$oResult->code = RestResult::UNAUTHORIZED;
+				$oResult->message = "The current user does not have enough permissions for modifying data of class $sTargetClass";
+			}
+			elseif (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_MODIFY) != UR_ALLOWED_YES)
+			{
+				$oResult->code = RestResult::UNAUTHORIZED;
+				$oResult->message = "The current user does not have enough permissions for massively modifying data of class $sTargetClass";
+			}
+			else
+			{
+				$oObject = RestUtils::FindObjectFromKey($sClass, $key);
+				RestUtils::UpdateObjectFromFields($oObject, $aFields);
+				$oObject->DBUpdate();
+				$oResult->AddObject(0, 'updated', $oObject, $aShowFields, $bExtendedOutput);
+			}
 			break;
 	
 		case 'core/apply_stimulus':
@@ -345,47 +371,62 @@ class CoreServices implements iRestServiceProvider
 			$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
 			$sStimulus = RestUtils::GetMandatoryParam($aParams, 'stimulus');
 	
-			$oObject = RestUtils::FindObjectFromKey($sClass, $key);
-			RestUtils::UpdateObjectFromFields($oObject, $aFields);
-		
-			$aTransitions = $oObject->EnumTransitions();
-			$aStimuli = MetaModel::EnumStimuli(get_class($oObject));
-			if (!isset($aTransitions[$sStimulus]))
+			// Note: the target class cannot be based on the result of FindObjectFromKey, because in case the user does not have read access, that function already fails with msg 'Nothing found'
+			$sTargetClass = RestUtils::GetObjectSetFromKey($sClass, $key)->GetFilter()->GetClass();
+			if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_MODIFY) != UR_ALLOWED_YES)
 			{
-				// Invalid stimulus
-				$oResult->code = RestResult::INTERNAL_ERROR;
-				$oResult->message = "Invalid stimulus: '$sStimulus' on the object ".$oObject->GetName()." in state '".$oObject->GetState()."'";
+				$oResult->code = RestResult::UNAUTHORIZED;
+				$oResult->message = "The current user does not have enough permissions for modifying data of class $sTargetClass";
+			}
+			elseif (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_BULK_MODIFY) != UR_ALLOWED_YES)
+			{
+				$oResult->code = RestResult::UNAUTHORIZED;
+				$oResult->message = "The current user does not have enough permissions for massively modifying data of class $sTargetClass";
 			}
 			else
 			{
-				$aTransition = $aTransitions[$sStimulus];
-				$sTargetState = $aTransition['target_state'];
-				$aStates = MetaModel::EnumStates($sClass);
-				$aTargetStateDef = $aStates[$sTargetState];
-				$aExpectedAttributes = $aTargetStateDef['attribute_list'];
-				
-				$aMissingMandatory = array();
-				foreach($aExpectedAttributes as $sAttCode => $iExpectCode)
+				$oObject = RestUtils::FindObjectFromKey($sClass, $key);
+				RestUtils::UpdateObjectFromFields($oObject, $aFields);
+			
+				$aTransitions = $oObject->EnumTransitions();
+				$aStimuli = MetaModel::EnumStimuli(get_class($oObject));
+				if (!isset($aTransitions[$sStimulus]))
 				{
-					if ( ($iExpectCode & OPT_ATT_MANDATORY) && ($oObject->Get($sAttCode) == ''))
-					{
-						$aMissingMandatory[] = $sAttCode;
-					}
-				}				
-				if (count($aMissingMandatory) == 0)
-				{
-					// If all the mandatory fields are already present, just apply the transition silently...
-					if ($oObject->ApplyStimulus($sStimulus))
-					{
-						$oObject->DBUpdate();
-						$oResult->AddObject(0, 'updated', $oObject, $aShowFields, $bExtendedOutput);
-					}
+					// Invalid stimulus
+					$oResult->code = RestResult::INTERNAL_ERROR;
+					$oResult->message = "Invalid stimulus: '$sStimulus' on the object ".$oObject->GetName()." in state '".$oObject->GetState()."'";
 				}
 				else
 				{
-					// Missing mandatory attributes for the transition
-					$oResult->code = RestResult::INTERNAL_ERROR;
-					$oResult->message = 'Missing mandatory attribute(s) for applying the stimulus: '.implode(', ', $aMissingMandatory).'.';
+					$aTransition = $aTransitions[$sStimulus];
+					$sTargetState = $aTransition['target_state'];
+					$aStates = MetaModel::EnumStates($sClass);
+					$aTargetStateDef = $aStates[$sTargetState];
+					$aExpectedAttributes = $aTargetStateDef['attribute_list'];
+					
+					$aMissingMandatory = array();
+					foreach($aExpectedAttributes as $sAttCode => $iExpectCode)
+					{
+						if ( ($iExpectCode & OPT_ATT_MANDATORY) && ($oObject->Get($sAttCode) == ''))
+						{
+							$aMissingMandatory[] = $sAttCode;
+						}
+					}				
+					if (count($aMissingMandatory) == 0)
+					{
+						// If all the mandatory fields are already present, just apply the transition silently...
+						if ($oObject->ApplyStimulus($sStimulus))
+						{
+							$oObject->DBUpdate();
+							$oResult->AddObject(0, 'updated', $oObject, $aShowFields, $bExtendedOutput);
+						}
+					}
+					else
+					{
+						// Missing mandatory attributes for the transition
+						$oResult->code = RestResult::INTERNAL_ERROR;
+						$oResult->message = 'Missing mandatory attribute(s) for applying the stimulus: '.implode(', ', $aMissingMandatory).'.';
+					}
 				}
 			}	
 			break;
@@ -395,13 +436,28 @@ class CoreServices implements iRestServiceProvider
 			$key = RestUtils::GetMandatoryParam($aParams, 'key');
 			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
 			$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
-	
+
 			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key);
-			while ($oObject = $oObjectSet->Fetch())
+			$sTargetClass = $oObjectSet->GetFilter()->GetClass();
+	
+			if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ) != UR_ALLOWED_YES)
 			{
-				$oResult->AddObject(0, '', $oObject, $aShowFields, $bExtendedOutput);
+				$oResult->code = RestResult::UNAUTHORIZED;
+				$oResult->message = "The current user does not have enough permissions for reading data of class $sTargetClass";
 			}
-			$oResult->message = "Found: ".$oObjectSet->Count();
+			elseif (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_BULK_READ) != UR_ALLOWED_YES)
+			{
+				$oResult->code = RestResult::UNAUTHORIZED;
+				$oResult->message = "The current user does not have enough permissions for exporting data of class $sTargetClass";
+			}
+			else
+			{
+				while ($oObject = $oObjectSet->Fetch())
+				{
+					$oResult->AddObject(0, '', $oObject, $aShowFields, $bExtendedOutput);
+				}
+				$oResult->message = "Found: ".$oObjectSet->Count();
+			}
 			break;
 
 		case 'core/delete':
@@ -410,8 +466,23 @@ class CoreServices implements iRestServiceProvider
 			$bSimulate = RestUtils::GetOptionalParam($aParams, 'simulate', false);
 	
 			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key);
-			$aObjects = $oObjectSet->ToArray();
-			$this->DeleteObjects($oResult, $aObjects, $bSimulate);
+			$sTargetClass = $oObjectSet->GetFilter()->GetClass();
+	
+			if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_DELETE) != UR_ALLOWED_YES)
+			{
+				$oResult->code = RestResult::UNAUTHORIZED;
+				$oResult->message = "The current user does not have enough permissions for deleting data of class $sTargetClass";
+			}
+			elseif (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_DELETE) != UR_ALLOWED_YES)
+			{
+				$oResult->code = RestResult::UNAUTHORIZED;
+				$oResult->message = "The current user does not have enough permissions for massively deleting data of class $sTargetClass";
+			}
+			else
+			{
+				$aObjects = $oObjectSet->ToArray();
+				$this->DeleteObjects($oResult, $aObjects, $bSimulate);
+			}
 			break;
 
 		case 'core/get_related':
@@ -423,7 +494,7 @@ class CoreServices implements iRestServiceProvider
 			$sDirection = RestUtils::GetOptionalParam($aParams, 'direction', null);
 			$bEnableRedundancy = RestUtils::GetOptionalParam($aParams, 'redundancy', false);
 			$bReverse = false;
-			
+
 			if (is_null($sDirection) && ($sRelation == 'depends on'))
 			{
 				// Legacy behavior, consider "depends on" as a forward relation
@@ -525,14 +596,30 @@ class CoreServices implements iRestServiceProvider
 					}
 				}
 			}
+
 			if (count($aIndexByClass) > 0)
 			{
 				$aStats = array();
+				$aUnauthorizedClasses = array();
 				foreach ($aIndexByClass as $sClass => $aIds)
 				{
+					if (UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_READ) != UR_ALLOWED_YES)
+					{
+						$aUnauthorizedClasses[$sClass] = true;
+					}
 					$aStats[] = $sClass.'= '.count($aIds);
 				}
-				$oResult->message = "Scope: ".$oObjectSet->Count()."; Related objects: ".implode(', ', $aStats);
+				if (count($aUnauthorizedClasses) > 0)
+				{
+					$sClasses = implode(', ', array_keys($aUnauthorizedClasses));
+					$oResult = new RestResult();
+					$oResult->code = RestResult::UNAUTHORIZED;
+					$oResult->message = "The current user does not have enough permissions for exporting data of class(es): $sClasses";
+				}
+				else
+				{
+					$oResult->message = "Scope: ".$oObjectSet->Count()."; Related objects: ".implode(', ', $aStats);
+				}
 			}
 			else
 			{
