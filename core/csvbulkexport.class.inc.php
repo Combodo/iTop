@@ -53,7 +53,7 @@ class CSVBulkExport extends TabularBulkExport
 		{
 			$this->aStatusInfo['text_qualifier'] = utils::ReadParam('other-text-qualifier', '"', true, 'raw_data');
 		}
-		$this->aStatusInfo['localize'] = !((bool)utils::ReadParam('no_localize', 0, true, 'integer'));
+
 		$this->aStatusInfo['charset'] = strtoupper(utils::ReadParam('charset', 'UTF-8', true, 'raw_data'));
 	}
 
@@ -188,70 +188,10 @@ class CSVBulkExport extends TabularBulkExport
 		$this->aStatusInfo['position'] = 0;
 		$this->aStatusInfo['total'] = $oSet->Count();
 
-		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
-		$aAuthorizedClasses = array();
-		foreach($aSelectedClasses as $sAlias => $sClassName)
-		{
-			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ, $oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS))
-			{
-				$aAuthorizedClasses[$sAlias] = $sClassName;
-			}
-		}
-		$aAliases = array_keys($aAuthorizedClasses);
 		$aData = array();
-		foreach($this->aStatusInfo['fields'] as $sExtendedAttCode)
+		foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
 		{
-			if (preg_match('/^([^\.]+)\.(.+)$/', $sExtendedAttCode, $aMatches))
-			{
-				$sAlias = $aMatches[1];
-				$sAttCode = $aMatches[2];
-			}
-			else
-			{
-				$sAlias = reset($aAliases);
-				$sAttCode = $sExtendedAttCode;
-			}
-			if (!in_array($sAlias, $aAliases))
-			{
-				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", $aAliases)."'");
-			}
-			$sClass = $aAuthorizedClasses[$sAlias];
-				
-			switch($sAttCode)
-			{
-				case 'id':
-				$sLabel = 'id';
-				break;
-						
-				default:
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-				if (($oAttDef instanceof AttributeExternalField) || (($oAttDef instanceof AttributeFriendlyName) && ($oAttDef->GetKeyAttCode() != 'id')))
-				{
-					$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $oAttDef->GetKeyAttCode());
-					$oExtAttDef = MetaModel::GetAttributeDef($oKeyAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
-					if ($this->aStatusInfo['localize'])
-					{
-						$sStar = $oAttDef->IsNullAllowed() ? '' : '*';
-						$sLabel = $oKeyAttDef->GetLabel().$sStar.'->'.$oExtAttDef->GetLabel();
-					}
-					else
-					{
-						$sLabel =  $oKeyAttDef->GetCode().'->'.$oExtAttDef->GetCode();
-					}						
-				}
-				else
-				{
-					$sLabel = $this->aStatusInfo['localize'] ? $oAttDef->GetLabel() : $sAttCode;
-				}
-			}
-			if (count($aAuthorizedClasses) > 1)
-			{
-				$aData[] = $sAlias.'.'.$sLabel;
-			}
-			else
-			{
-				$aData[] = $sLabel;
-			}
+			$aData[] = $aFieldSpec['sColLabel'];
 		}
 		$sFrom = array("\r\n", $this->aStatusInfo['text_qualifier']);
 		$sTo = array("\n", $this->aStatusInfo['text_qualifier'].$this->aStatusInfo['text_qualifier']);
@@ -278,75 +218,34 @@ class CSVBulkExport extends TabularBulkExport
 		$iPercentage = 0;
 
 		$oSet = new DBObjectSet($this->oSearch);
-		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
-		$aAuthorizedClasses = array();
-		foreach($aSelectedClasses as $sAlias => $sClassName)
-		{
-			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ, $oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS))
-			{
-				$aAuthorizedClasses[$sAlias] = $sClassName;
-			}
-		}
-		$aAliases = array_keys($aAuthorizedClasses);
 		$oSet->SetLimit($this->iChunkSize, $this->aStatusInfo['position']);
-
-		$aAliasByField = array();
-		$aColumnsToLoad = array();
-
-		// Prepare the list of aliases / columns to load
-		foreach($this->aStatusInfo['fields'] as $sExtendedAttCode)
-		{
-			if (preg_match('/^([^\.]+)\.(.+)$/', $sExtendedAttCode, $aMatches))
-			{
-				$sAlias = $aMatches[1];
-				$sAttCode = $aMatches[2];
-			}
-			else
-			{
-				$sAlias = reset($aAliases);
-				$sAttCode = $sExtendedAttCode;
-			}
-				
-			if (!in_array($sAlias, $aAliases))
-			{
-				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", $aAliases)."'");
-			}
-				
-			if (!array_key_exists($sAlias, $aColumnsToLoad))
-			{
-				$aColumnsToLoad[$sAlias] = array();
-			}
-			if ($sAttCode != 'id')
-			{
-				// id is not a real attribute code and, moreover, is always loaded
-				$aColumnsToLoad[$sAlias][] = $sAttCode;
-			}
-			$aAliasByField[$sExtendedAttCode] = array('alias' => $sAlias, 'attcode' => $sAttCode);
-		}
+		$this->OptimizeColumnLoad($oSet);
 
 		$iCount = 0;
 		$sData = '';
-		$oSet->OptimizeColumnLoad($aColumnsToLoad);
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		while($aRow = $oSet->FetchAssoc())
 		{
 			set_time_limit($iLoopTimeLimit);
 			$aData = array();
-			foreach($aAliasByField as $aAttCode)
+			foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
 			{
+				$sAlias = $aFieldSpec['sAlias'];
+				$sAttCode = $aFieldSpec['sAttCode'];
+
 				$sField = '';
-				$oObj = $aRow[$aAttCode['alias']];
+				$oObj = $aRow[$sAlias];
 				if ($oObj != null)
 				{
-					switch($aAttCode['attcode'])
+					switch($sAttCode)
 					{
 						case 'id':
 							$sField = $oObj->GetKey();
 							break;
 								
 						default:
-							$sField = $oObj->GetAsCSV($aAttCode['attcode'], $this->aStatusInfo['separator'], $this->aStatusInfo['text_qualifier'], $this->aStatusInfo['localize']);
+							$sField = $oObj->GetAsCSV($sAttCode, $this->aStatusInfo['separator'], $this->aStatusInfo['text_qualifier'], $this->bLocalizeOutput);
 					}
 				}
 				if ($this->aStatusInfo['charset'] != 'UTF-8')

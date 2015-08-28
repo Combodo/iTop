@@ -133,6 +133,7 @@ abstract class BulkExport
 	protected $aStatusInfo;
 	protected $oBulkExportResult;
 	protected $sTmpFile;
+	protected $bLocalizeOutput;
 	
 	public function __construct()
 	{
@@ -142,6 +143,7 @@ abstract class BulkExport
 		$this->aStatusInfo = array();
 		$this->oBulkExportResult = null;
 		$this->sTmpFile = '';
+		$this->bLocalizeOutput = false;
 	}
 		
 	/**
@@ -331,7 +333,7 @@ abstract class BulkExport
 	}
 	public function ReadParameters()
 	{
-		
+		$this->bLocalizeOutput = !((bool)utils::ReadParam('no_localize', 0, true, 'integer'));
 	}
 	
 	public function GetResultAsHtml()

@@ -65,7 +65,6 @@ class XMLBulkExport extends BulkExport
 	{
 		parent::ReadParameters();
 	
-		$this->aStatusInfo['localize'] = (utils::ReadParam('no_localize', 0) != 1);
 		$this->aStatusInfo['linksets'] = (utils::ReadParam('linksets', 0) == 1);
 	}
 	
@@ -84,6 +83,15 @@ class XMLBulkExport extends BulkExport
 
 	public function GetHeader()
 	{
+		// Check permissions
+		foreach($this->oSearch->GetSelectedClasses() as $sAlias => $sClass)
+		{
+			if (UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_READ) != UR_ALLOWED_YES)
+			{
+				throw new Exception("You do not have enough permissions to bulk read data of class '$sClass' (alias: $sAlias)");
+			}
+		}
+
 		$oSet = new DBObjectSet($this->oSearch);
 		$this->aStatusInfo['position'] = 0;
 		$this->aStatusInfo['total'] = $oSet->Count();
@@ -101,8 +109,6 @@ class XMLBulkExport extends BulkExport
 		
 		$oSet = new DBObjectSet($this->oSearch);
 		$oSet->SetLimit($this->iChunkSize, $this->aStatusInfo['position']);
-		
-		$bLocalize = $this->aStatusInfo['localize'];
 		
 		$aClasses = $this->oSearch->GetSelectedClasses();
 		$aAuthorizedClasses = array();
@@ -170,7 +176,7 @@ class XMLBulkExport extends BulkExport
 					}
 					else
 					{
-						$sValue = $oObj->GetAsXML($sAttCode, $bLocalize);
+						$sValue = $oObj->GetAsXML($sAttCode, $this->bLocalizeOutput);
 						$sData .= "<$sAttCode>$sValue</$sAttCode>\n";
 					}
 				}

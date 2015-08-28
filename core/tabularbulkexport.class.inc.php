@@ -310,12 +310,113 @@ EOF
 			}
 		}
 
+		// Interpret (and check) the list of fields
+		//
+		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
+		$aAliases = array_keys($aSelectedClasses);
+		$aAuthorizedClasses = array();
+		foreach($aSelectedClasses as $sAlias => $sClassName)
+		{
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ) == UR_ALLOWED_YES)
+			{
+				$aAuthorizedClasses[$sAlias] = $sClassName;
+			}
+		}
 		$aFields = explode(',', $sFields);
 		$this->aStatusInfo['fields'] = array();
-		foreach($aFields as $sField)
+		foreach($aFields as $sFieldSpec)
 		{
-			// Trim the values since it's too temping to write: fields=name, first_name, org_name instead of fields=name,first_name,org_name
-			$this->aStatusInfo['fields'][] = trim($sField);
+			// Trim the values since it's natural to write: fields=name, first_name, org_name instead of fields=name,first_name,org_name
+			$sExtendedAttCode = trim($sFieldSpec);
+
+			if (preg_match('/^([^\.]+)\.(.+)$/', $sExtendedAttCode, $aMatches))
+			{
+				$sAlias = $aMatches[1];
+				$sAttCode = $aMatches[2];
+			}
+			else
+			{
+				$sAlias = reset($aAliases);
+				$sAttCode = $sExtendedAttCode;
+			}
+			if (!array_key_exists($sAlias, $aSelectedClasses))
+			{
+				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", $aAliases)."'");
+			}
+			$sClass = $aSelectedClasses[$sAlias];
+			if (!array_key_exists($sAlias, $aAuthorizedClasses))
+			{
+				throw new Exception("You do not have enough permissions to bulk read data of class '$sClass' (alias: $sAlias)");
+			}
+				
+			switch($sAttCode)
+			{
+				case 'id':
+				$sLabel = 'id';
+				$oAttDef = null;
+				break;
+						
+				default:
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+				if (($oAttDef instanceof AttributeExternalField) || (($oAttDef instanceof AttributeFriendlyName) && ($oAttDef->GetKeyAttCode() != 'id')))
+				{
+					$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $oAttDef->GetKeyAttCode());
+					$oExtAttDef = MetaModel::GetAttributeDef($oKeyAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
+					if ($this->bLocalizeOutput)
+					{
+						$sLabel = $oKeyAttDef->GetLabel().'->'.$oExtAttDef->GetLabel();
+					}
+					else
+					{
+						$sLabel =  $oKeyAttDef->GetCode().'->'.$oExtAttDef->GetCode();
+					}						
+				}
+				else
+				{
+					$sLabel = $this->bLocalizeOutput ? $oAttDef->GetLabel() : $sAttCode;
+				}
+			}
+			if (count($aAuthorizedClasses) > 1)
+			{
+				$sColLabel = $sAlias.'.'.$sLabel;
+			}
+			else
+			{
+				$sColLabel = $sLabel;
+			}
+			$this->aStatusInfo['fields'][] = array(
+				'sFieldSpec' => $sExtendedAttCode,
+				'sAlias' => $sAlias,
+				'sClass' => $sClass,
+				'sAttCode' => $sAttCode,
+				'sLabel' => $sLabel,
+				'sColLabel' => $sColLabel
+			);
 		}
 	}
+
+	/**
+	 * Prepare the given object set with the list of fields as read into $this->aStatusInfo['fields']
+	 */
+	protected function OptimizeColumnLoad(DBObjectSet $oSet)
+	{
+		$aColumnsToLoad = array();
+
+		foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
+		{
+			$sAlias = $aFieldSpec['sAlias'];
+			$sAttCode = $aFieldSpec['sAttCode'];
+				
+			if (!array_key_exists($sAlias, $aColumnsToLoad))
+			{
+				$aColumnsToLoad[$sAlias] = array();
+			}
+			if ($sAttCode != 'id')
+			{
+				// id is not a real attribute code and, moreover, is always loaded
+				$aColumnsToLoad[$sAlias][] = $sAttCode;
+			}
+		}
+		$oSet->OptimizeColumnLoad($aColumnsToLoad);
+	}	 	
 }

@@ -61,13 +61,6 @@ class SpreadsheetBulkExport extends TabularBulkExport
 		}
 	}
 	
-	public function ReadParameters()
-	{
-		parent::ReadParameters();
-	
-		$this->aStatusInfo['localize'] = (utils::ReadParam('no_localize', 0) != 1);
-	}	
-	
 	protected function GetSampleData($oObj, $sAttCode)
 	{
 		if ($oObj)
@@ -88,83 +81,23 @@ class SpreadsheetBulkExport extends TabularBulkExport
 		$this->aStatusInfo['position'] = 0;
 		$this->aStatusInfo['total'] = $oSet->Count();
 
-		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
 		$aData = array();
-		foreach($this->aStatusInfo['fields'] as $sExtendedAttCode)
+		foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
 		{
-			if (preg_match('/^([^\.]+)\.(.+)$/', $sExtendedAttCode, $aMatches))
+			$sColLabel = $aFieldSpec['sColLabel'];
+			if ($aFieldSpec['sAttCode'] != 'id')
 			{
-				$sAlias = $aMatches[1];
-				$sAttCode = $aMatches[2];
-			}
-			else
-			{
-				$sAlias = $this->oSearch->GetClassAlias();
-				$sAttCode = $sExtendedAttCode;
-			}
-			if (!array_key_exists($sAlias, $aSelectedClasses))
-			{
-				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", array_keys($aSelectedClasses))."'");
-			}
-			$sClass = $aSelectedClasses[$sAlias];
-
-			switch($sAttCode)
-			{
-				case 'id':
-					if (count($aSelectedClasses) > 1)
-					{
-						$aData[] = $sAlias.'.id'; //@@@
-					}
-					else
-					{
-						$aData[] = 'id'; //@@@
-					}
-					break;
-
-				default:
-					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-					if (($oAttDef instanceof AttributeExternalField) || (($oAttDef instanceof AttributeFriendlyName) && ($oAttDef->GetKeyAttCode() != 'id')))
-					{
-						$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $oAttDef->GetKeyAttCode());
-						$oExtAttDef = MetaModel::GetAttributeDef($oKeyAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
-						if ($this->aStatusInfo['localize'])
-						{
-							$sColLabel = $oKeyAttDef->GetLabel().'->'.$oExtAttDef->GetLabel();
-						}
-						else
-						{
-							$sColLabel = $oKeyAttDef->GetCode().'->'.$oExtAttDef->GetCode();
-						}
-					}
-					else
-					{
-						$sColLabel = $this->aStatusInfo['localize'] ? $oAttDef->GetLabel() : $sAttCode;
-					}
-					$oFinalAttDef = $oAttDef->GetFinalAttDef();
-					if (get_class($oFinalAttDef) == 'AttributeDateTime')
-					{
-						if (count($aSelectedClasses) > 1)
-						{
-							$aData[] = $sAlias.'.'.$sColLabel.' ('.Dict::S('UI:SplitDateTime-Date').')';
-							$aData[] = $sAlias.'.'.$sColLabel.' ('.Dict::S('UI:SplitDateTime-Time').')';
-						}
-						else
-						{
-							$aData[] = $sColLabel.' ('.Dict::S('UI:SplitDateTime-Date').')';
-							$aData[] = $sColLabel.' ('.Dict::S('UI:SplitDateTime-Time').')';
-						}
-					}
-					else
-					{
-						if (count($aSelectedClasses) > 1)
-						{
-							$aData[] = $sAlias.'.'.$sColLabel;
-						}
-						else
-						{
-							$aData[] = $sColLabel;
-						}
-					}
+				$oAttDef = MetaModel::GetAttributeDef($aFieldSpec['sClass'], $aFieldSpec['sAttCode']);
+				$oFinalAttDef = $oAttDef->GetFinalAttDef();
+				if (get_class($oFinalAttDef) == 'AttributeDateTime')
+				{
+					$aData[] = $sColLabel.' ('.Dict::S('UI:SplitDateTime-Date').')';
+					$aData[] = $sColLabel.' ('.Dict::S('UI:SplitDateTime-Time').')';
+				}
+				else
+				{
+					$aData[] = $sColLabel;
+				}
 			}
 		}
 		$sData = "<table border=\"1\">\n";
@@ -183,46 +116,11 @@ class SpreadsheetBulkExport extends TabularBulkExport
 		$iPercentage = 0;
 
 		$oSet = new DBObjectSet($this->oSearch);
-		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
 		$oSet->SetLimit($this->iChunkSize, $this->aStatusInfo['position']);
-
-		$aAliasByField = array();
-		$aColumnsToLoad = array();
-
-		// Prepare the list of aliases / columns to load
-		foreach($this->aStatusInfo['fields'] as $sExtendedAttCode)
-		{
-			if (preg_match('/^([^\.]+)\.(.+)$/', $sExtendedAttCode, $aMatches))
-			{
-				$sAlias = $aMatches[1];
-				$sAttCode = $aMatches[2];
-			}
-			else
-			{
-				$sAlias = $this->oSearch->GetClassAlias();
-				$sAttCode = $sExtendedAttCode;
-			}
-
-			if (!array_key_exists($sAlias, $aSelectedClasses))
-			{
-				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", array_keys($aSelectedClasses))."'");
-			}
-
-			if (!array_key_exists($sAlias, $aColumnsToLoad))
-			{
-				$aColumnsToLoad[$sAlias] = array();
-			}
-			if ($sAttCode != 'id')
-			{
-				// id is not a real attribute code and, moreover, is always loaded
-				$aColumnsToLoad[$sAlias][] = $sAttCode;
-			}
-			$aAliasByField[$sExtendedAttCode] = array('alias' => $sAlias, 'attcode' => $sAttCode);
-		}
+		$this->OptimizeColumnLoad($oSet);
 
 		$iCount = 0;
 		$sData = '';
-		$oSet->OptimizeColumnLoad($aColumnsToLoad);
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		while($aRow = $oSet->FetchAssoc())
@@ -230,17 +128,20 @@ class SpreadsheetBulkExport extends TabularBulkExport
 			set_time_limit($iLoopTimeLimit);
 
 			$sData .= "<tr>";
-			foreach($aAliasByField as $aAttCode)
+			foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
 			{
+				$sAlias = $aFieldSpec['sAlias'];
+				$sAttCode = $aFieldSpec['sAttCode'];
+
 				$sField = '';
-				$oObj = $aRow[$aAttCode['alias']];
+				$oObj = $aRow[$sAlias];
 				if ($oObj == null)
 				{
 					$sData .= "<td x:str>$sField</td>";
 					continue;
 				}
 				
-				switch($aAttCode['attcode'])
+				switch($sAttCode)
 				{
 					case 'id':
 					$sField = $oObj->GetName();
@@ -248,25 +149,25 @@ class SpreadsheetBulkExport extends TabularBulkExport
 					break;
 							
 					default:
-					$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $aAttCode['attcode']);
+					$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
 					$oFinalAttDef = $oAttDef->GetFinalAttDef();
 					if (get_class($oFinalAttDef) == 'AttributeDateTime')
 					{
-						$iDate = AttributeDateTime::GetAsUnixSeconds($oObj->Get($aAttCode['attcode']));
+						$iDate = AttributeDateTime::GetAsUnixSeconds($oObj->Get($sAttCode));
 						$sData .= '<td>'.date('Y-m-d', $iDate).'</td>'; // Add the first column directly
 						$sField = date('H:i:s', $iDate); // Will add the second column below
 						$sData .= "<td>$sField</td>";
 					}
 					else if($oAttDef instanceof AttributeCaseLog)
 					{
-						$rawValue = $oObj->Get($aAttCode['attcode']);
+						$rawValue = $oObj->Get($sAttCode);
 						$sField = str_replace("\n", "<br/>", htmlentities($rawValue->__toString(), ENT_QUOTES, 'UTF-8'));
 						// Trick for Excel: treat the content as text even if it begins with an equal sign
 						$sData .= "<td x:str>$sField</td>";
 					}
 					else
 					{
-						$rawValue = $oObj->Get($aAttCode['attcode']);
+						$rawValue = $oObj->Get($sAttCode);
 						// Due to custom formatting rules, empty friendlynames may be rendered as non-empty strings
 						// let's fix this and make sure we render an empty string if the key == 0
 						if ($oAttDef instanceof AttributeFriendlyName)
@@ -280,7 +181,7 @@ class SpreadsheetBulkExport extends TabularBulkExport
 								}
 							}
 						}
-						if ($this->aStatusInfo['localize'])
+						if ($this->bLocalizeOutput)
 						{
 							$sField = htmlentities($oFinalAttDef->GetEditValue($rawValue), ENT_QUOTES, 'UTF-8');
 						}

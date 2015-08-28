@@ -64,83 +64,19 @@ class HTMLBulkExport extends TabularBulkExport
 
 	public function GetHeader()
 	{
-        $sData = '';
+		$sData = '';
 		
 		$oSet = new DBObjectSet($this->oSearch);
 		$this->aStatusInfo['status'] = 'running';
 		$this->aStatusInfo['position'] = 0;
 		$this->aStatusInfo['total'] = $oSet->Count();
 
-		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
-		foreach($aSelectedClasses as $sAlias => $sClassName)
-		{
-			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ, $oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS))
-			{
-				$aAuthorizedClasses[$sAlias] = $sClassName;
-			}
-		}
-		$aAliases = array_keys($aAuthorizedClasses);
-		$aData = array();
-		foreach($this->aStatusInfo['fields'] as $sExtendedAttCode)
-		{
-			if (preg_match('/^([^\.]+)\.(.+)$/', $sExtendedAttCode, $aMatches))
-			{
-				$sAlias = $aMatches[1];
-				$sAttCode = $aMatches[2];
-			}
-			else
-			{
-				
-				$sAlias = reset($aAliases);
-				$sAttCode = $sExtendedAttCode;
-			}
-			if (!in_array($sAlias, $aAliases))
-			{
-				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", $aAliases)."'");
-			}
-			$sClass = $aSelectedClasses[$sAlias];
-				
-			switch($sAttCode)
-			{
-				case 'id':
-					if (count($aSelectedClasses) > 1)
-					{
-						$aData[] = $sAlias.'.id'; //@@@
-					}
-					else
-					{
-						$aData[] = 'id'; //@@@
-					}
-					break;
-
-				default:
-					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-					if (($oAttDef instanceof AttributeExternalField) || (($oAttDef instanceof AttributeFriendlyName) && ($oAttDef->GetKeyAttCode() != 'id')))
-					{
-						$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $oAttDef->GetKeyAttCode());
-						$oExtAttDef = MetaModel::GetAttributeDef($oKeyAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
-						$sLabel =  $oKeyAttDef->GetLabel().'->'.$oExtAttDef->GetLabel();
-					}
-					else
-					{
-						$sLabel = $oAttDef->GetLabel();
-					}
-					if (count($aSelectedClasses) > 1)
-					{
-						$aData[] = $sAlias.'.'.$sLabel;
-					}
-					else
-					{
-						$aData[] = $sLabel;
-					}
-			}
-		}
 		$sData .= "<table class=\"listResults\">\n";
 		$sData .= "<thead>\n";
 		$sData .= "<tr>\n";
-		foreach($aData as $sLabel)
+		foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
 		{
-			$sData .= "<th>".$sLabel."</th>\n";
+			$sData .= "<th>".$aFieldSpec['sColLabel']."</th>\n";
 		}
 		$sData .= "</tr>\n";
 		$sData .= "</thead>\n";
@@ -154,53 +90,18 @@ class HTMLBulkExport extends TabularBulkExport
 		$iPercentage = 0;
 
 		$oSet = new DBObjectSet($this->oSearch);
-		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
-		$aAliases = array_keys($aSelectedClasses);
 		$oSet->SetLimit($this->iChunkSize, $this->aStatusInfo['position']);
+		$this->OptimizeColumnLoad($oSet);
 
-		$aAliasByField = array();
-		$aColumnsToLoad = array();
-
-		// Prepare the list of aliases / columns to load
-		foreach($this->aStatusInfo['fields'] as $sExtendedAttCode)
-		{
-			if (preg_match('/^([^\.]+)\.(.+)$/', $sExtendedAttCode, $aMatches))
-			{
-				$sAlias = $aMatches[1];
-				$sAttCode = $aMatches[2];
-			}
-			else
-			{
-				$sAlias = reset($aAliases);
-				$sAttCode = $sExtendedAttCode;
-			}
-				
-			if (!in_array($sAlias, $aAliases))
-			{
-				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", $aAliases)."'");
-			}
-				
-			if (!array_key_exists($sAlias, $aColumnsToLoad))
-			{
-				$aColumnsToLoad[$sAlias] = array();
-			}
-			if ($sAttCode != 'id')
-			{
-				// id is not a real attribute code and, moreover, is always loaded
-				$aColumnsToLoad[$sAlias][] = $sAttCode;
-			}
-			$aAliasByField[$sExtendedAttCode] = array('alias' => $sAlias, 'attcode' => $sAttCode);
-		}
+		$sFirstAlias = $this->oSearch->GetClassAlias();
 
 		$iCount = 0;
 		$sData = '';
-		$oSet->OptimizeColumnLoad($aColumnsToLoad);
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		while($aRow = $oSet->FetchAssoc())
 		{
 			set_time_limit($iLoopTimeLimit);
-			$sFirstAlias = reset($aAliases);
 			$oMainObj = $aRow[$sFirstAlias];
 			$sHilightClass = '';
 			if ($oMainObj)
@@ -215,20 +116,23 @@ class HTMLBulkExport extends TabularBulkExport
 			{
 				$sData .= "<tr>";
 			}
-			foreach($aAliasByField as $aAttCode)
+			foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
 			{
-				$oObj = $aRow[$aAttCode['alias']];
+				$sAlias = $aFieldSpec['sAlias'];
+				$sAttCode = $aFieldSpec['sAttCode'];
+
+				$oObj = $aRow[$sAlias];
 				$sField = '';
 				if ($oObj)
 				{
-					switch($aAttCode['attcode'])
+					switch($sAttCode)
 					{
 						case 'id':
-							$sField = $aRow[$aAttCode['alias']]->GetHyperlink();
+							$sField = $aRow[$sAlias]->GetHyperlink();
 							break;
 								
 						default:
-							$sField = $aRow[$aAttCode['alias']]->GetAsHtml($aAttCode['attcode']);
+							$sField = $aRow[$sAlias]->GetAsHtml($sAttCode);
 					}
 				}
 				$sValue = ($sField === '') ? '&nbsp;' : $sField;

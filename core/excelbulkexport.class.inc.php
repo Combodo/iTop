@@ -67,13 +67,6 @@ class ExcelBulkExport extends TabularBulkExport
 		}
 	}
 
-	public function ReadParameters()
-	{
-		parent::ReadParameters();
-		$this->aStatusInfo['localize'] = !((bool)utils::ReadParam('no_localize', 0, true, 'integer'));
-	}
-
-
 	protected function SuggestField($aAliases, $sClass, $sAlias, $sAttCode)
 	{
 		switch($sAttCode)
@@ -101,74 +94,27 @@ class ExcelBulkExport extends TabularBulkExport
 		$this->aStatusInfo['position'] = 0;
 		$this->aStatusInfo['total'] = $oSet->Count();
 
-		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
-		foreach($aSelectedClasses as $sAlias => $sClassName)
+		foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
 		{
-			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ, $oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS))
-			{
-				$aAuthorizedClasses[$sAlias] = $sClassName;
-			}
-		}
-		$aAliases = array_keys($aAuthorizedClasses);
-		$aTableHeaders = array();
-		foreach($this->aStatusInfo['fields'] as $sExtendedAttCode)
-		{
-			if (preg_match('/^([^\.]+)\.(.+)$/', $sExtendedAttCode, $aMatches))
-			{
-				$sAlias = $aMatches[1];
-				$sAttCode = $aMatches[2];
-			}
-			else
-			{
-				$sAlias = reset($aAliases);
-				$sAttCode = $sExtendedAttCode;
-			}
-			if (!in_array($sAlias, $aAliases))
-			{
-				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", $aAliases)."'");
-			}
-			$sClass = $aSelectedClasses[$sAlias];
-
-			$sFullAlias = '';
-			if (count($aSelectedClasses) > 1)
-			{
-				$sFullAlias = $sAlias.'.';
-			}
+			$sExtendedAttCode = $aFieldSpec['sFieldSpec'];
+			$sAttCode = $aFieldSpec['sAttCode'];
+			$sColLabel = $aFieldSpec['sColLabel'];
 				
 			switch($sAttCode)
 			{
 				case 'id':
-					$aTableHeaders[] = array('label' => $sFullAlias.'id', 'type' => '0');
-
+					$sType = '0';
 					break;
 
 				default:
-					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+					$oAttDef = MetaModel::GetAttributeDef($aFieldSpec['sClass'], $aFieldSpec['sAttCode']);
 					$sType = 'string';
 					if($oAttDef instanceof AttributeDateTime)
 					{
 						$sType = 'datetime';
 					}
-					if (($oAttDef instanceof AttributeExternalField) || (($oAttDef instanceof AttributeFriendlyName) && ($oAttDef->GetKeyAttCode() != 'id')))
-					{
-						$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $oAttDef->GetKeyAttCode());
-						$oExtAttDef = MetaModel::GetAttributeDef($oKeyAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
-						if ($this->aStatusInfo['localize'])
-						{
-							$sLabel =  $oKeyAttDef->GetLabel().'->'.$oExtAttDef->GetLabel();
-						}
-						else
-						{
-							$sLabel =  $oKeyAttDef->GetCode().'->'.$oExtAttDef->GetCode();
-						}
-					}
-					else
-					{
-						$sLabel = $this->aStatusInfo['localize'] ? $oAttDef->GetLabel() : $sAttCode;
-					}
-						
-					$aTableHeaders[] = array('label' => $sFullAlias.$sLabel, 'type' => $sType);
 			}
+			$aTableHeaders[] = array('label' => $sColLabel, 'type' => $sType);
 		}
 
 		$sRow = json_encode($aTableHeaders);
@@ -188,67 +134,35 @@ class ExcelBulkExport extends TabularBulkExport
 		$iPercentage = 0;
 
 		$hFile = fopen($this->aStatusInfo['tmp_file'], 'ab');
+
 		$oSet = new DBObjectSet($this->oSearch);
-		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
-		$aAliases = array_keys($aSelectedClasses);
 		$oSet->SetLimit($this->iChunkSize, $this->aStatusInfo['position']);
-
-		$aAliasByField = array();
-		$aColumnsToLoad = array();
-
-		// Prepare the list of aliases / columns to load
-		foreach($this->aStatusInfo['fields'] as $sExtendedAttCode)
-		{
-			if (preg_match('/^([^\.]+)\.(.+)$/', $sExtendedAttCode, $aMatches))
-			{
-				$sAlias = $aMatches[1];
-				$sAttCode = $aMatches[2];
-			}
-			else
-			{
-				$sAlias = reset($aAliases);
-				$sAttCode = $sExtendedAttCode;
-			}
-
-			if (!in_array($sAlias, $aAliases))
-			{
-				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", $aAliases)."'");
-			}
-
-			if (!array_key_exists($sAlias, $aColumnsToLoad))
-			{
-				$aColumnsToLoad[$sAlias] = array();
-			}
-			if ($sAttCode != 'id')
-			{
-				// id is not a real attribute code and, moreover, is always loaded
-				$aColumnsToLoad[$sAlias][] = $sAttCode;
-			}
-			$aAliasByField[$sExtendedAttCode] = array('alias' => $sAlias, 'attcode' => $sAttCode);
-		}
+		$this->OptimizeColumnLoad($oSet);
 
 		$iCount = 0;
-		$oSet->OptimizeColumnLoad($aColumnsToLoad);
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		while($aRow = $oSet->FetchAssoc())
 		{
 			set_time_limit($iLoopTimeLimit);
 			$aData = array();
-			foreach($aAliasByField as $aAttCode)
+			foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
 			{
-				$oObj = $aRow[$aAttCode['alias']];
+				$sAlias = $aFieldSpec['sAlias'];
+				$sAttCode = $aFieldSpec['sAttCode'];
+
+				$oObj = $aRow[$sAlias];
 				$sField = '';
 				if ($oObj)
 				{
-					switch($aAttCode['attcode'])
+					switch($sAttCode)
 					{
 						case 'id':
 							$sField = $oObj->GetKey();
 							break;
 								
 						default:
-						$value = $oObj->Get($aAttCode['attcode']);
+						$value = $oObj->Get($sAttCode);
 						if ($value instanceOf ormCaseLog)
 						{
 							// Extract the case log as text and remove the "===" which make Excel think that the cell contains a formula the next time you edit it!
@@ -256,12 +170,12 @@ class ExcelBulkExport extends TabularBulkExport
 						}
 						else if ($value instanceOf DBObjectSet)
 						{
-							$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $aAttCode['attcode']);
+							$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
 							$sField =  $oAttDef->GetAsCSV($value, '', '', $oObj);
 						}
 						else
 						{
-							$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $aAttCode['attcode']);
+							$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
 							$sField =  $oAttDef->GetEditValue($value, $oObj);
 						}
 					}
