@@ -12,6 +12,7 @@ class PortalDispatcher
 	
 	public function IsUserAllowed()
 	{
+		$bRet = true;
 		if (array_key_exists('profile_list', $_SESSION))
 		{
 			$aProfiles = $_SESSION['profile_list'];
@@ -35,15 +36,21 @@ class PortalDispatcher
 				return false;
 			}
 		}
+		// If there are some "allow" profiles, then by default the result is false
+		// since the user must have at least one of the profiles to be allowed
+		if (count($this->aData['allow']) > 0)
+		{
+			$bRet = false;
+		}
 		foreach($this->aData['allow'] as $sAllowProfile)
 		{
-			// if one required profile is missing, it's enough => return false
-			if (!in_array($sAllowProfile, $aProfiles))
+			// If one "allow" profile is present, it's enough => return true
+			if (in_array($sAllowProfile, $aProfiles))
 			{
-				return false;
+				return true;
 			}
 		}
-		return true;
+		return $bRet;
 	}
 	
 	public function GetURL()
