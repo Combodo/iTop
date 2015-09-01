@@ -728,11 +728,22 @@ abstract class MetaModel
 	final static public function GetAttributeDef($sClass, $sAttCode)
 	{
 		self::_check_subclass($sClass);
-		if (!isset(self::$m_aAttribDefs[$sClass][$sAttCode]))
+		if (isset(self::$m_aAttribDefs[$sClass][$sAttCode]))
+		{
+			return self::$m_aAttribDefs[$sClass][$sAttCode];
+		}
+		elseif (($iPos = strpos($sAttCode, '->')) !== false)
+		{
+			$sExtKeyAttCode = substr($sAttCode, 0, $iPos);
+			$sRemoteAttCode = substr($sAttCode, $iPos + 2);
+			$oKeyAttDef = self::GetAttributeDef($sClass, $sExtKeyAttCode);
+			$sRemoteClass = $oKeyAttDef->GetTargetClass();
+			return self::GetAttributeDef($sRemoteClass, $sRemoteAttCode);
+		}
+		else
 		{
 			throw new Exception("Unknown attribute $sAttCode from class $sClass");
 		}
-		return self::$m_aAttribDefs[$sClass][$sAttCode];
 	}
 
 	final static public function GetExternalKeys($sClass)
@@ -841,25 +852,7 @@ abstract class MetaModel
 	public static function GetLabel($sClass, $sAttCodeEx, $bShowMandatory = false)
 	{
 		$sLabel = '';
-		if (preg_match('/(.+)->(.+)/', $sAttCodeEx, $aMatches) > 0)
-		{
-			$sAttribute = $aMatches[1];
-			$sField = $aMatches[2];
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttribute);
-			$sMandatory = ($bShowMandatory && !$oAttDef->IsNullAllowed()) ? '*' : '';
-			if ($oAttDef->IsExternalKey())
-			{
-				$sTargetClass = $oAttDef->GetTargetClass();
-				$oTargetAttDef = MetaModel::GetAttributeDef($sTargetClass, $sField);
-				$sLabel = $oAttDef->GetLabel().$sMandatory.'->'.$oTargetAttDef->GetLabel();
-			}
-			else
-			{
-				// Let's return something displayable... but this should never happen!
-				$sLabel = $oAttDef->GetLabel().$sMandatory.'->'.$aMatches[2];
-			}
-		}
-		else
+		if (($iPos = strpos($sAttCodeEx, '->')) === false)
 		{
 			if ($sAttCodeEx == 'id')
 			{
@@ -867,10 +860,19 @@ abstract class MetaModel
 			}
 			else
 			{
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCodeEx);
+				$oAttDef = self::GetAttributeDef($sClass, $sAttCodeEx);
 				$sMandatory = ($bShowMandatory && !$oAttDef->IsNullAllowed()) ? '*' : '';
 				$sLabel = $oAttDef->GetLabel().$sMandatory;
 			}
+		}
+		else
+		{
+			$sExtKeyAttCode = substr($sAttCodeEx, 0, $iPos);
+			$sRemoteAttCode = substr($sAttCodeEx, $iPos + 2);
+			$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $sExtKeyAttCode);
+			$sRemoteClass = $oKeyAttDef->GetTargetClass();
+			// Recurse
+			$sLabel = self::GetLabel($sClass, $sExtKeyAttCode).'->'.self::GetLabel($sRemoteClass, $sRemoteAttCode);
 		}
 		return $sLabel;
 	}

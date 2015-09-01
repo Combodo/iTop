@@ -349,32 +349,20 @@ EOF
 				throw new Exception("You do not have enough permissions to bulk read data of class '$sClass' (alias: $sAlias)");
 			}
 				
-			switch($sAttCode)
+			if ($this->bLocalizeOutput)
 			{
-				case 'id':
-				$sLabel = 'id';
-				$oAttDef = null;
-				break;
-						
-				default:
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-				if (($oAttDef instanceof AttributeExternalField) || (($oAttDef instanceof AttributeFriendlyName) && ($oAttDef->GetKeyAttCode() != 'id')))
+				try
 				{
-					$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $oAttDef->GetKeyAttCode());
-					$oExtAttDef = MetaModel::GetAttributeDef($oKeyAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
-					if ($this->bLocalizeOutput)
-					{
-						$sLabel = $oKeyAttDef->GetLabel().'->'.$oExtAttDef->GetLabel();
-					}
-					else
-					{
-						$sLabel =  $oKeyAttDef->GetCode().'->'.$oExtAttDef->GetCode();
-					}						
+					$sLabel = MetaModel::GetLabel($sClass, $sAttCode);
 				}
-				else
+				catch (Exception $e)
 				{
-					$sLabel = $this->bLocalizeOutput ? $oAttDef->GetLabel() : $sAttCode;
+					throw new Exception("Wrong field specification '$sFieldSpec': ".$e->getMessage());
 				}
+			}
+			else
+			{
+				$sLabel = $sAttCode;
 			}
 			if (count($aAuthorizedClasses) > 1)
 			{
@@ -404,6 +392,7 @@ EOF
 
 		foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
 		{
+			$sClass = $aFieldSpec['sClass'];
 			$sAlias = $aFieldSpec['sAlias'];
 			$sAttCode = $aFieldSpec['sAttCode'];
 				
@@ -411,12 +400,47 @@ EOF
 			{
 				$aColumnsToLoad[$sAlias] = array();
 			}
+			// id is not a real attribute code and, moreover, is always loaded
 			if ($sAttCode != 'id')
 			{
-				// id is not a real attribute code and, moreover, is always loaded
-				$aColumnsToLoad[$sAlias][] = $sAttCode;
+				// Extended attributes are not recognized by DBObjectSet::OptimizeColumnLoad
+				if (($iPos = strpos($sAttCode, '->')) === false)
+				{
+					$aColumnsToLoad[$sAlias][] = $sAttCode;
+					$sClass = '???';
+				}
+				else
+				{
+					$sExtKeyAttCode = substr($sAttCode, 0, $iPos);
+					$sRemoteAttCode = substr($sAttCode, $iPos + 2);
+
+					// Load the external key to avoid an object reload!
+					$aColumnsToLoad[$sAlias][] = $sExtKeyAttCode;
+
+					// Load the external field (if any) to avoid getting the remote object (see DBObject::Get that does the same)
+					$oExtFieldAtt = MetaModel::FindExternalField($sClass, $sExtKeyAttCode, $sRemoteAttCode);
+					if (!is_null($oExtFieldAtt))
+					{
+						$aColumnsToLoad[$sAlias][] = $oExtFieldAtt->GetCode();
+					}
+				}
 			}
 		}
+
+		// Add "always loaded attributes"
+		//
+		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
+		foreach ($aSelectedClasses as $sAlias => $sClass)
+		{
+			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+			{
+				if ($oAttDef->AlwaysLoadInTables())
+				{
+					$aColumnsToLoad[$sAlias][] = $sAttCode;
+				}
+			}
+		}
+
 		$oSet->OptimizeColumnLoad($aColumnsToLoad);
 	}	 	
 }
