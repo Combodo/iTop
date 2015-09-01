@@ -260,7 +260,7 @@ EOF
 	{
 		var form = $('FORM');
 		form.unbind('submit'); // De-activate validation
-		window.location.href = '?operation=';
+		window.location.href = window.location.href.replace(/[&?]operation=[^&]*/, '');
 		return false;
 	}
 
