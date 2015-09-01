@@ -1771,6 +1771,11 @@ EOF
 				$aSourceObjects[] = $oObj;
 			}
 		}
+		$sSourceClass = '*';
+		if (count($aSourceObjects) == 1)
+		{
+			$sSourceClass = get_class($aSourceObjects[0]);
+		}
 		
 		// Get the list of excluded objects
 		$aExcluded = utils::ReadParam('excluded', array(), false, 'raw_data');
@@ -1856,13 +1861,13 @@ EOF
 			$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 			foreach($aResults as $sListClass => $aObjects)
 			{
-				set_time_limit($iLoopTimeLimit);
+				set_time_limit($iLoopTimeLimit*count($aObjects));
 				$oSet = CMDBObjectSet::FromArray($sListClass, $aObjects);
 				$sHtml = "<div class=\"page_header\">\n";
 				$sHtml .= "<table class=\"section\"><tr><td>".MetaModel::GetClassIcon($sListClass, true, 'width: 24px; height: 24px;')." ".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', $oSet->Count(), Metamodel::GetName($sListClass))."</td></tr></table>\n";
 				$sHtml .= "</div>\n";
 				$oPage->add($sHtml);
-				cmdbAbstractObject::DisplaySet($oPage, $oSet);
+				cmdbAbstractObject::DisplaySet($oPage, $oSet, array('table_id' => $sSourceClass.'_'.$sRelation.'_'.$sDirection.'_'.$sListClass));
 				$oPage->p(''); // Some space
 			}
 			
@@ -1873,7 +1878,7 @@ EOF
 				$oPage->add('<div class="page_header"><h1>'.Dict::S('UI:RelationGroups').'</h1></div>');
 				foreach($aGroups as $idx => $aObjects)
 				{
-					set_time_limit($iLoopTimeLimit);
+					set_time_limit($iLoopTimeLimit*count($aObjects));
 					$sListClass = get_class(current($aObjects));
 					$oSet = CMDBObjectSet::FromArray($sListClass, $aObjects);
 					$sHtml = "<div class=\"page_header\">\n";

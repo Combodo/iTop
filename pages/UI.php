@@ -220,11 +220,16 @@ function DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker,
 		$oP->add_ready_script("$('#1 table.listResults').trigger('check_all');");
 }
 
-function DisplayNavigatorListTab($oP, $aResults, $sRelation, $oObj)
+function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 {
 	$oP->SetCurrentTab(Dict::S('UI:RelationshipList'));
 	$oP->add("<div id=\"impacted_objects\" style=\"width:100%;background-color:#fff;padding:10px;\">");
-	$oP->add("<h1>".MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName()."</h1>\n");
+	$sOldRelation = $sRelation;
+	if (($sRelation == 'impacts') && ($sDirection == 'up'))
+	{
+		$sOldRelation = 'depends on';
+	}
+	$oP->add("<h1>".MetaModel::GetRelationDescription($sOldRelation).' '.$oObj->GetName()."</h1>\n");
 	$iBlock = 1; // Zero is not a valid blockid
 	foreach($aResults as $sListClass => $aObjects)
 	{
@@ -233,7 +238,7 @@ function DisplayNavigatorListTab($oP, $aResults, $sRelation, $oObj)
 		$oP->add("<h2>".MetaModel::GetClassIcon($sListClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aObjects), Metamodel::GetName($sListClass))."</h2>\n");
 		$oP->add("</div>\n");
 		$oBlock = DisplayBlock::FromObjectSet($oSet, 'list');
-		$oBlock->Display($oP, $iBlock++);
+		$oBlock->Display($oP, $iBlock++, array('table_id' => get_class($oObj).'_'.$sRelation.'_'.$sDirection.'_'.$sListClass));
 		$oP->P('&nbsp;'); // Some space ?				
 	}
 	$oP->add("</div>");
@@ -244,7 +249,7 @@ function DisplayNavigatorGroupTab($oP, $aGroups, $sRelation, $oObj)
 	if (count($aGroups) > 0)
 	{
 		$oP->SetCurrentTab(Dict::S('UI:RelationGroups'));
-		$oP->add("<div id=\"impacted_groupss\" style=\"width:100%;background-color:#fff;padding:10px;\">");
+		$oP->add("<div id=\"impacted_groups\" style=\"width:100%;background-color:#fff;padding:10px;\">");
 		$iBlock = 1; // Zero is not a valid blockid
 		foreach($aGroups as $idx => $aObjects)
 		{
@@ -1518,7 +1523,7 @@ EOF
 		// Display the tabs
 		if ($sFirstTab == 'list')
 		{
-			DisplayNavigatorListTab($oP, $aResults, $sRelation, $oObj);
+			DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
 			$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
 			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj));
 			DisplayNavigatorGroupTab($oP, $aGroups, $sRelation, $oObj);
@@ -1527,7 +1532,7 @@ EOF
 		{
 			$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
 			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj));
-			DisplayNavigatorListTab($oP, $aResults, $sRelation, $oObj);
+			DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
 			DisplayNavigatorGroupTab($oP, $aGroups, $sRelation, $oObj);
 		}
 

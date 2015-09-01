@@ -385,6 +385,8 @@ class RelationGraph extends SimpleGraph
 				$oObjectNode->SetProperty('developped', true);
 	
 				$oObject = $oObjectNode->GetProperty('object');
+				$iPreviousTimeLimit = ini_get('max_execution_time');
+				$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 				foreach (MetaModel::EnumRelationQueries(get_class($oObject), $sRelCode, $bDown) as $sDummy => $aQueryInfo)
 				{
 	 				$sQuery = $bDown ? $aQueryInfo['sQueryDown'] : $aQueryInfo['sQueryUp'];
@@ -403,6 +405,8 @@ class RelationGraph extends SimpleGraph
 					{
 						do
 						{
+							set_time_limit($iLoopTimeLimit);
+							
 							$sObjectRef = 	RelationObjectNode::MakeId($oRelatedObj);
 							$oRelatedNode = $this->GetNode($sObjectRef);
 							if (is_null($oRelatedNode))
@@ -426,11 +430,11 @@ class RelationGraph extends SimpleGraph
 							}
 							// Recurse
 							$this->AddRelatedObjects($sRelCode, $bDown, $oRelatedNode, $iMaxDepth - 1, $bEnableRedundancy);
-	
 						}
 						while ($oRelatedObj = $oObjSet->Fetch());
 					}
 				}
+				set_time_limit($iPreviousTimeLimit);
 			}
 		}
 	}

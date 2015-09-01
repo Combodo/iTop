@@ -702,10 +702,13 @@ class DisplayableGraph extends SimpleGraph
 	{
 		$oNewGraph = new DisplayableGraph();
 		$oNewGraph->bDirectionDown = $bDirectionDown;
+		$iPreviousTimeLimit = ini_get('max_execution_time');
+		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		
 		$oNodesIter = new RelationTypeIterator($oGraph, 'Node');
 		foreach($oNodesIter as $oNode)
 		{
+			set_time_limit($iLoopTimeLimit);
 			switch(get_class($oNode))
 			{
 				case 'RelationObjectNode':				
@@ -753,6 +756,7 @@ class DisplayableGraph extends SimpleGraph
 		$oEdgesIter = new RelationTypeIterator($oGraph, 'Edge');
 		foreach($oEdgesIter as $oEdge)
 		{
+			set_time_limit($iLoopTimeLimit);
 			$oSourceNode = $oNewGraph->GetNode($oEdge->GetSourceNode()->GetId());
 			$oSinkNode = $oNewGraph->GetNode($oEdge->GetSinkNode()->GetId());
 			$oNewEdge = new DisplayableEdge($oNewGraph, $oEdge->GetId(), $oSourceNode, $oSinkNode);
@@ -763,6 +767,7 @@ class DisplayableGraph extends SimpleGraph
 		$aEdgeKeys = array();
 		foreach($oEdgesIter as $oEdge)
 		{
+			set_time_limit($iLoopTimeLimit);
 			$sSourceId =  $oEdge->GetSourceNode()->GetId();
 			$sSinkId = $oEdge->GetSinkNode()->GetId();
 			if ($sSourceId == $sSinkId)
@@ -788,6 +793,7 @@ class DisplayableGraph extends SimpleGraph
 		$oNodesIter = new RelationTypeIterator($oNewGraph, 'Node');
 		foreach($oNodesIter as $oNode)
 		{
+			set_time_limit($iLoopTimeLimit);
 			if ($oNode->GetProperty('source'))
 			{
 				$oNode->GroupSimilarNeighbours($oNewGraph, $iGroupingThreshold, true, true);
@@ -798,6 +804,7 @@ class DisplayableGraph extends SimpleGraph
 		$iGroupIdx = 0;
 		foreach($oIterator as $oNode)
 		{
+			set_time_limit($iLoopTimeLimit);
 			if ($oNode instanceof DisplayableGroupNode)
 			{
 				$aGroups[] = $oNode->GetObjects();
@@ -811,6 +818,7 @@ class DisplayableGraph extends SimpleGraph
 		$aEdgeKeys = array();
 		foreach($oEdgesIter as $oEdge)
 		{
+			set_time_limit($iLoopTimeLimit);
 			$sSourceId =  $oEdge->GetSourceNode()->GetId();
 			$sSinkId = $oEdge->GetSinkNode()->GetId();
 			if ($sSourceId == $sSinkId)
@@ -832,7 +840,8 @@ class DisplayableGraph extends SimpleGraph
 				}
 			}
 		}
-
+		set_time_limit($iPreviousTimeLimit);
+		
 		return $oNewGraph;
 	}
 	
