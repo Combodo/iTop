@@ -4136,6 +4136,12 @@ class AttributeStopWatch extends AttributeDefinition
 		return $this->Get('states');
 	}
 
+	public function AlwaysLoadInTables()
+	{
+		// Each and every stop watch is accessed for computing the highlight code (DBObject::GetHighlightCode())
+		return true;
+	}
+
 	/**
 	 * Construct a brand new (but configured) stop watch
 	 */	 	
