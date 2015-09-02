@@ -4524,12 +4524,12 @@
             <down>
               <items type="array">
                 <item id="open_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id)]]></oql>
+                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id)]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
                   <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
                 </item>
                 <item id="recent_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.status NOT IN ('closed')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id) AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
+                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id) AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
                   <icon>itop-change-mgmt-itil/images/change-done.png</icon>
                 </item>
@@ -4542,12 +4542,12 @@
             <down>
               <items type="array">
                 <item id="open_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id)]]></oql>
+                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id)]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
                   <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
                 </item>
                 <item id="recent_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.status NOT IN ('closed')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id) AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
+                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id) AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
                   <icon>itop-change-mgmt-itil/images/change-done.png</icon>
                 </item>
@@ -4560,12 +4560,12 @@
             <down>
               <items type="array">
                 <item id="open_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id)]]></oql>
+                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id)]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
                   <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
                 </item>
                 <item id="recent_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.status NOT IN ('closed')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id) AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
+                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id) AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
                   <icon>itop-change-mgmt-itil/images/change-done.png</icon>
                 </item>
@@ -4582,12 +4582,12 @@
             <down>
               <items type="array">
                 <item id="open_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted')]]></oql>
+                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted')]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
                   <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
                 </item>
                 <item id="recent_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.status IN ('closed')) AND (L.impact_code != 'not_impacted') AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
+                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status IN ('closed')) AND (L.impact_code != 'not_impacted') AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
                   <icon>itop-change-mgmt-itil/images/change-done.png</icon>
                 </item>
@@ -4596,12 +4596,12 @@
             <up>
               <items type="array">
                 <item id="open_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted')]]></oql>
+                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted')]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
                   <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
                 </item>
                 <item id="recent_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.status IN ('closed')) AND (L.impact_code != 'not_impacted') AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
+                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status IN ('closed')) AND (L.impact_code != 'not_impacted') AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
                   <icon>itop-change-mgmt-itil/images/change-done.png</icon>
                 </item>

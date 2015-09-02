@@ -226,6 +226,16 @@ class DisplayableNode extends GraphNode
 		}
 	}
 	
+	public function GetObjectCount()
+	{
+		return 1;
+	}
+	
+	public function GetObjectClass()
+	{
+		return is_object($this->GetProperty('object', null)) ? get_class($this->GetProperty('object', null)) : null;
+	}
+	
 	/**
 	 * Group together (as a special kind of nodes) all the similar neighbours of the current node
 	 * @param DisplayableGraph $oGraph
@@ -244,11 +254,10 @@ class DisplayableNode extends GraphNode
 			foreach($this->GetOutgoingEdges() as $oEdge)
 			{
 				$oNode = $oEdge->GetSinkNode();
-				
-				if ($oNode->GetProperty('class') !== null)
+				$sClass = $oNode->GetObjectClass();
+				if ($sClass !== null)
 				{
-					$sClass = $oNode->GetProperty('class');
-					if (($sClass!== null) && (!array_key_exists($sClass, $aNodesPerClass)))
+					if (!array_key_exists($sClass, $aNodesPerClass))
 					{
 						$aNodesPerClass[$sClass] = array(
 							'reached' => array(
@@ -267,7 +276,7 @@ class DisplayableNode extends GraphNode
 					if (!array_key_exists($oNode->GetId(), $aNodesPerClass[$sClass][$sKey]['nodes']))
 					{
 						$aNodesPerClass[$sClass][$sKey]['nodes'][$oNode->GetId()] = $oNode;
-						$aNodesPerClass[$sClass][$sKey]['count'] += (int)$oNode->GetProperty('count', 1);
+						$aNodesPerClass[$sClass][$sKey]['count'] += $oNode->GetObjectCount();
 					}
 				}
 				else
@@ -275,14 +284,13 @@ class DisplayableNode extends GraphNode
 					$oNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
 				}
 			}
-			
 			foreach($aNodesPerClass as $sClass => $aDefs)
 			{
 				foreach($aDefs as $sStatus => $aGroupProps)
 				{
 					if (count($aGroupProps['nodes']) >= $iThresholdCount)
 					{
-						$sNewId = $this->GetId().'::'.(($sStatus == 'reached') ? '_reached': '');
+						$sNewId = $this->GetId().'::'.$sClass.'/'.(($sStatus == 'reached') ? '_reached': '');
 						$oNewNode = $oGraph->GetNode($sNewId);
 						if ($oNewNode == null)
 						{
@@ -292,10 +300,6 @@ class DisplayableNode extends GraphNode
 							$oNewNode->SetProperty('class', $sClass);
 							$oNewNode->SetProperty('is_reached', ($sStatus == 'reached'));
 							$oNewNode->SetProperty('count', $aGroupProps['count']);
-						}
-						else
-						{
-							$oNewNode->SetProperty('count', $oNewNode->GetProperty('count')+$aGroupProps['count']);
 						}
 						
 						try
@@ -338,7 +342,18 @@ class DisplayableNode extends GraphNode
 							if ($oGraph->GetNode($oNode->GetId()))
 							{
 								$oGraph->_RemoveNode($oNode);
-								$oNewNode->AddObject($oNode->GetProperty('object'));
+								if ($oNode instanceof DisplayableGroupNode)
+								{
+									// Copy all the objects of the previous group into the new group
+									foreach($oNode->GetObjects() as $oObj)
+									{
+										$oNewNode->AddObject($oObj);
+									}
+								}
+								else
+								{
+									$oNewNode->AddObject($oNode->GetProperty('object'));
+								}								
 							}
 						}
 						$oNewNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
@@ -384,6 +399,30 @@ class DisplayableNode extends GraphNode
 		}
 		$sHtml .= '</tbody></table>';
 		return $sHtml;		
+	}
+	
+	/**
+	 * Get the description of the node in "dot" language
+	 * Used to generate the positions in the graph, but we'd better use fake label
+	 * just to retain the space used by the node, without compromising the parsing
+	 * of the result which may occur when using the real labels (with possible weird characters in the middle)
+	 */
+	public function GetDotAttributes($bNoLabel = false)
+	{
+		$sDot = '';
+		if ($bNoLabel)
+		{
+			// simulate a fake label with the approximate same size as the true label
+			$sLabel = str_repeat('x',strlen($this->GetProperty('label', $this->GetId())));
+			$sDot = 'label="'.$sLabel.'"';
+		}
+		else
+		{
+			// actual label
+			$sLabel = addslashes($this->GetProperty('label', $this->GetId()));
+			$sDot = 'label="'.$sLabel.'"';
+		}
+		return $sDot;
 	}
 }
 
@@ -455,9 +494,9 @@ class DisplayableRedundancyNode extends DisplayableNode
 			{
 				$oNode = $oEdge->GetSourceNode();
 		
-				if (($oNode->GetProperty('class') !== null) && (!$oNode->GetProperty('is_reached')))
+				if (($oNode->GetObjectClass() !== null) && (!$oNode->GetProperty('is_reached')))
 				{
-					$sClass = $oNode->GetProperty('class');
+					$sClass = $oNode->GetObjectClass();
 					if (!array_key_exists($sClass, $aNodesPerClass))
 					{
 						$aNodesPerClass[$sClass] = array('reached' => array(), 'not_reached' => array());
@@ -524,6 +563,17 @@ class DisplayableRedundancyNode extends DisplayableNode
 		$sHtml .= '</tbody></table>';
 		return $sHtml;		
 	}
+	
+
+	public function GetObjectCount()
+	{
+		return 0;
+	}
+
+	public function GetObjectClass()
+	{
+		return null;
+	}
 }
 
 class DisplayableEdge extends GraphEdge
@@ -579,6 +629,11 @@ class DisplayableGroupNode extends DisplayableNode
 	
 	public function AddObject(DBObject $oObj)
 	{
+		$sPrevClass = $this->GetObjectClass();
+		if (($sPrevClass !== null) && (get_class($oObj) !== $sPrevClass))
+		{
+			throw new Exception("Error: adding an object of class '".get_class($oObj)."' to a group of '$sPrevClass' objects.");
+		}
 		$this->aObjects[$oObj->GetKey()] = $oObj;
 	}
 	
@@ -653,8 +708,23 @@ class DisplayableGroupNode extends DisplayableNode
 	{
 		$sHtml = '';
 		$iGroupIdx = $this->GetProperty('group_index');
-		$sHtml .= Dict::Format('UI:RelationGroupNumber_N', (1+$iGroupIdx));
+		$sHtml .= '<a href="#" onclick="$(\'.itop-simple-graph\').simple_graph(\'show_group\', \'relation_group_'.$iGroupIdx.'\');">'.Dict::Format('UI:RelationGroupNumber_N', (1+$iGroupIdx))."</a>";
+		$sHtml .= '<hr/>';
+		$sHtml .= '<table><tbody><tr>';
+		$sHtml .= '<td style="vertical-align:top;padding-right: 0.5em;"><img src="'.$this->GetProperty('icon_url').'"></td><td style="vertical-align:top">'.MetaModel::GetName($this->GetObjectClass()).'<br/>';
+		$sHtml .= Dict::Format('UI_CountOfObjectsShort', $this->GetObjectCount()).'</td>';
+		$sHtml .= '</tr></tbody></table>';
 		return $sHtml;
+	}
+
+	public function GetObjectCount()
+	{
+		return count($this->aObjects);
+	}
+
+	public function GetObjectClass()
+	{
+		return ($this->GetObjectCount() > 0) ? get_class(reset($this->aObjects)) : null;
 	}
 }
 
@@ -734,7 +804,6 @@ class DisplayableGraph extends SimpleGraph
 					$oNewGraph->aSinkObjects[$sClass][] = $oObj->GetKey();
 					$oNewNode->SetProperty('sink', true);
 				}
-				$oNewNode->SetProperty('class', $sClass);
 				$oNewNode->SetProperty('object', $oObj);
 				$oNewNode->SetProperty('icon_url', $oObj->GetIcon(false));
 				$oNewNode->SetProperty('label', $oObj->GetRawName());
@@ -1065,7 +1134,7 @@ class DisplayableGraph extends SimpleGraph
 		$oPdf->SetFont('dejavusans', '', $fFontSize, '', true);
 		foreach($oIterator as $sId => $oNode)
 		{
-			if ($sClass = $oNode->GetProperty('class'))
+			if ($sClass = $oNode->GetObjectClass())
 			{
 				if (!array_key_exists($sClass, $aClasses))
 				{

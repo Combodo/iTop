@@ -408,6 +408,7 @@ $(function()
 		},
 		show_group: function(sGroupId)
 		{
+			this._close_all_tooltips();
 			// Activate the 3rd tab
 			this.element.closest('.ui-tabs').tabs("option", "active", 2);
 			// Scroll into view the group
