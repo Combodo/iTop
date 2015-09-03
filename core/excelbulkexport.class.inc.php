@@ -67,7 +67,7 @@ class ExcelBulkExport extends TabularBulkExport
 		}
 	}
 
-	protected function SuggestField($aAliases, $sClass, $sAlias, $sAttCode)
+	protected function SuggestField($sClass, $sAttCode)
 	{
 		switch($sAttCode)
 		{
@@ -83,7 +83,41 @@ class ExcelBulkExport extends TabularBulkExport
 				}
 		}
 
-		return parent::SuggestField($aAliases, $sClass, $sAlias, $sAttCode);
+		return parent::SuggestField($sClass, $sAttCode);
+	}
+
+	protected function GetSampleData($oObj, $sAttCode)
+	{
+		return '<div class="text-preview">'.htmlentities($this->GetValue($oObj, $sAttCode), ENT_QUOTES, 'UTF-8').'</div>';
+	}
+
+	protected function GetValue($oObj, $sAttCode)
+	{
+		switch($sAttCode)
+		{
+			case 'id':
+				$sRet = $oObj->GetKey();
+				break;
+					
+			default:
+			$value = $oObj->Get($sAttCode);
+			if ($value instanceOf ormCaseLog)
+			{
+				// Extract the case log as text and remove the "===" which make Excel think that the cell contains a formula the next time you edit it!
+				$sRet = trim(preg_replace('/========== ([^=]+) ============/', '********** $1 ************', $value->GetText()));
+			}
+			else if ($value instanceOf DBObjectSet)
+			{
+				$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+				$sRet = $oAttDef->GetAsCSV($value, '', '', $oObj);
+			}
+			else
+			{
+				$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+				$sRet = $oAttDef->GetEditValue($value, $oObj);
+			}
+		}
+		return $sRet;
 	}
 
 	public function GetHeader()
@@ -155,30 +189,7 @@ class ExcelBulkExport extends TabularBulkExport
 				$sField = '';
 				if ($oObj)
 				{
-					switch($sAttCode)
-					{
-						case 'id':
-							$sField = $oObj->GetKey();
-							break;
-								
-						default:
-						$value = $oObj->Get($sAttCode);
-						if ($value instanceOf ormCaseLog)
-						{
-							// Extract the case log as text and remove the "===" which make Excel think that the cell contains a formula the next time you edit it!
-							$sField = trim(preg_replace('/========== ([^=]+) ============/', '********** $1 ************', $value->GetText()));
-						}
-						else if ($value instanceOf DBObjectSet)
-						{
-							$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
-							$sField =  $oAttDef->GetAsCSV($value, '', '', $oObj);
-						}
-						else
-						{
-							$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
-							$sField =  $oAttDef->GetEditValue($value, $oObj);
-						}
-					}
+					$sField = $this->GetValue($oObj, $sAttCode);
 				}
 				$aData[] = $sField;
 			}

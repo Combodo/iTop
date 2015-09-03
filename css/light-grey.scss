@@ -1445,8 +1445,12 @@ div.ui-dialog-header {
 table.export_parameters td {
 	padding-right: 2em;
 }
+
 .table_preview > table {
 	border-collapse: collapse;
+	max-height: 150px;
+	overflow: auto;
+	display: block;
 }
 .table_preview > table > thead > tr > th, .table_preview > table > tbody > tr > td {
 	border: 1px $grey-color solid;
@@ -1455,8 +1459,14 @@ table.export_parameters td {
 	padding-right: 0.25em;
 	font-size: 10pt;
 }
+.table_preview > table > tbody > tr > td {
+	vertical-align: top;
+}
 .table_preview .drag-handle {
 	cursor: move;	
+}
+.table_preview div.text-preview {
+	white-space: pre-wrap;
 }
 .graph_zoom {
 	display: inline-block;

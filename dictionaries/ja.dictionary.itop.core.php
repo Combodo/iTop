@@ -583,7 +583,6 @@ Operators:<br/>
 	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter \"%1$s\"~~',
 	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \"query\". There is no Query Phrasebook corresponding to the id: \"%1$s\".~~',
 	'Core:BulkExport:ExportFormatPrompt' => 'Export format:~~',
-	'Core:BulkExport:Identifier' => 'Identifier~~',
 	'Core:BulkExportOf_Class' => '%1$s Export~~',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click here to download %1$s~~',
 	'Core:BulkExport:ExportResult' => 'Result of the export:~~',

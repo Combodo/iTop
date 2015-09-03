@@ -489,6 +489,7 @@ function CheckParameters($sExpression, $sQueryId, $sFormat)
 
 function DoExport(Page $oP, BulkExport $oExporter, $bInteractive = false)
 {
+	$oExporter->SetHttpHeaders($oP);
 	$exportResult = $oExporter->GetHeader();
 	$aStatus = array();
 	do

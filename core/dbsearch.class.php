@@ -392,7 +392,7 @@ abstract class DBSearch
 			$sRes = $oSQLQuery->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount, $bBeautifulSQL);
 			if ($sClassAlias == '_itop_')
 			{
-				echo $sRes."<br/>\n";
+				IssueLog::Info('SQL Query (_itop_): '.$sRes);
 			}
 		}
 		catch (MissingQueryArgument $e)

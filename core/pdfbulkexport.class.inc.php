@@ -124,6 +124,9 @@ class PDFBulkExport extends HTMLBulkExport
 		$sData = parent::GetFooter();
 
 		$oPage = new PDFPage(Dict::Format('Core:BulkExportOf_Class', MetaModel::GetName($this->oSearch->GetClass())), $this->aStatusInfo['page_size'], $this->aStatusInfo['page_orientation']);
+		$oPDF = $oPage->get_tcpdf();
+		$oPDF->SetFont('dejavusans', '', 8, '', true);
+
 		$oPage->add(file_get_contents($this->aStatusInfo['tmp_file']));
 		$oPage->add($sData);
 

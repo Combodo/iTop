@@ -51,13 +51,31 @@ class HTMLBulkExport extends TabularBulkExport
 
 	protected function GetSampleData($oObj, $sAttCode)
 	{
-		if ($oObj)
+		return $this->GetValue($oObj, $sAttCode);
+	}
+
+	protected function GetValue($oObj, $sAttCode)
+	{
+		switch($sAttCode)
 		{
-			$sRet = $oObj->GetAsHTML($sAttCode);
-		}
-		else
-		{
-			$sRet = '';
+			case 'id':
+				$sRet = $oObj->GetHyperlink();
+				break;
+					
+			default:
+				$value = $oObj->Get($sAttCode);
+				if ($value instanceof ormCaseLog)
+				{
+					$sRet = $value->GetAsSimpleHtml();
+				}
+				elseif ($value instanceof ormStopWatch)
+				{
+					$sRet = $value->GetTimeSpent();
+				}
+				else
+				{
+					$sRet = $oObj->GetAsHtml($sAttCode);
+				}
 		}
 		return $sRet;
 	}
@@ -125,15 +143,7 @@ class HTMLBulkExport extends TabularBulkExport
 				$sField = '';
 				if ($oObj)
 				{
-					switch($sAttCode)
-					{
-						case 'id':
-							$sField = $aRow[$sAlias]->GetHyperlink();
-							break;
-								
-						default:
-							$sField = $aRow[$sAlias]->GetAsHtml($sAttCode);
-					}
+					$sField = $this->GetValue($oObj, $sAttCode);
 				}
 				$sValue = ($sField === '') ? '&nbsp;' : $sField;
 				$sData .= "<td>$sValue</td>";

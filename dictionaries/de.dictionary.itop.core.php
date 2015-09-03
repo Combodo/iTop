@@ -558,7 +558,6 @@ Operatoren:<br/>
 	'Core:BulkExport:MissingParameter_Param' => 'Fehlender Parameter "%1$s"',
 	'Core:BulkExport:InvalidParameter_Query' => 'ungültiger Wert für den Paramter "query". Es gibt keinen Eintrag in der Query-Bibliothek, der zu der id "%1$s" korrespondiert.',
 	'Core:BulkExport:ExportFormatPrompt' => 'Exportformat:',
-	'Core:BulkExport:Identifier' => 'Identifikator',
 	'Core:BulkExportOf_Class' => '%1$s-Export',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Klicken Sie hier um %1$s herunterzuladen',
 	'Core:BulkExport:ExportResult' => 'Ergebnis ses Exportvorgangs:',

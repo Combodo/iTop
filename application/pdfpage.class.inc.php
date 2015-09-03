@@ -102,9 +102,11 @@ class PDFPage extends WebPage
 	{
 		$this->add_style(
 <<<EOF
+table {
+	padding: 2pt;
+}
 table.listResults td {
 	border: 0.5pt solid #000 ;
-	padding: 0.5pt;
 }
 table.listResults th {
 	background-color: #eee;

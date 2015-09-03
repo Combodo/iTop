@@ -70,14 +70,7 @@ class XMLBulkExport extends BulkExport
 	
 	protected function GetSampleData($oObj, $sAttCode)
 	{
-		if ($oObj)
-		{
-			$sRet = $oObj->GetAsXML($sAttCode);
-		}
-		else
-		{
-			$sRet = '';
-		}
+		$sRet = ($sAttCode == 'id') ? $oObj->GetKey() : $oObj->GetAsXML($sAttCode);
 		return $sRet;
 	}
 

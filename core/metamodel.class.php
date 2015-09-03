@@ -429,6 +429,25 @@ abstract class MetaModel
 		return $oNameExpr;
 	}
 
+	/**
+	 * Returns the friendly name IIF it is equivalent to a single attribute	
+	 */	
+	final static public function GetFriendlyNameAttributeCode($sClass)
+	{
+		$aNameSpec = self::GetNameSpec($sClass);
+		$sFormat = trim($aNameSpec[0]);
+		$aAttributes = $aNameSpec[1];                                                     
+		if (($sFormat != '') && ($sFormat != '%1$s'))
+		{
+			return null;
+		}
+		if (count($aAttributes) > 1)
+		{
+			return null;
+		}
+		return reset($aAttributes);
+	}
+
 	final static public function GetStateAttributeCode($sClass)
 	{
 		self::_check_subclass($sClass);	

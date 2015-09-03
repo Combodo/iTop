@@ -63,15 +63,55 @@ class SpreadsheetBulkExport extends TabularBulkExport
 	
 	protected function GetSampleData($oObj, $sAttCode)
 	{
-		if ($oObj)
+		return $this->GetValue($oObj, $sAttCode);
+	}
+
+	protected function GetValue($oObj, $sAttCode)
+	{
+		switch($sAttCode)
 		{
-			$sRet = $oObj->GetAsHTML($sAttCode);
+			case 'id':
+				$sRet = $oObj->GetKey();
+				break;
+					
+			default:
+				$value = $oObj->Get($sAttCode);
+				$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+				if ($value instanceof ormCaseLog)
+				{
+					$sRet = str_replace("\n", "<br/>", htmlentities($value->__toString(), ENT_QUOTES, 'UTF-8'));
+				}
+				elseif ($value instanceof ormStopWatch)
+				{
+					$sRet = $value->GetTimeSpent();
+				}
+				elseif ($oAttDef instanceof AttributeString)
+				{
+					$sRet = $oObj->GetAsHTML($sAttCode);
+				}
+				else
+				{
+					if ($this->bLocalizeOutput)
+					{
+						$sRet = htmlentities($oObj->GetEditValue(), ENT_QUOTES, 'UTF-8');
+					}
+					else
+					{
+						$sRet = htmlentities($value, ENT_QUOTES, 'UTF-8');
+					}
+				}
 		}
-		else
-		{
-			$sRet = '';
-		}
+
 		return $sRet;
+	}
+
+	public function SetHttpHeaders(WebPage $oPage)
+	{
+		// Integration within MS-Excel web queries + HTTPS + IIS:
+		// MS-IIS set these header values with no-cache... while Excel fails to do the job if using HTTPS
+		// Then the fix is to force the reset of header values Pragma and Cache-control 
+		$oPage->add_header("Pragma:", true);
+		$oPage->add_header("Cache-control:", true);
 	}
 
 	public function GetHeader()
@@ -99,8 +139,14 @@ class SpreadsheetBulkExport extends TabularBulkExport
 					$aData[] = $sColLabel;
 				}
 			}
+			else
+			{
+				$aData[] = $sColLabel;
+			}
 		}
-		$sData = "<table border=\"1\">\n";
+		$sData = '';
+		$sData .= '<style>table br {mso-data-placement:same-cell;}</style>'; // Trick for Excel: keep line breaks inside the same cell !
+		$sData .= "<table border=\"1\">\n";
 		$sData .= "<tr>\n";
 		foreach($aData as $sLabel)
 		{
@@ -137,14 +183,14 @@ class SpreadsheetBulkExport extends TabularBulkExport
 				$oObj = $aRow[$sAlias];
 				if ($oObj == null)
 				{
-					$sData .= "<td x:str>$sField</td>";
+					$sData .= "<td x:str></td>";
 					continue;
 				}
 				
 				switch($sAttCode)
 				{
 					case 'id':
-					$sField = $oObj->GetName();
+					$sField = $oObj->GetKey();
 					$sData .= "<td>$sField</td>";
 					break;
 							
@@ -165,22 +211,14 @@ class SpreadsheetBulkExport extends TabularBulkExport
 						// Trick for Excel: treat the content as text even if it begins with an equal sign
 						$sData .= "<td x:str>$sField</td>";
 					}
+					else if($oAttDef instanceof AttributeString)
+					{
+						$sField = $oObj->GetAsHTML($sAttCode);
+						$sData .= "<td x:str>$sField</td>";
+					}
 					else
 					{
 						$rawValue = $oObj->Get($sAttCode);
-						// Due to custom formatting rules, empty friendlynames may be rendered as non-empty strings
-						// let's fix this and make sure we render an empty string if the key == 0
-						if ($oAttDef instanceof AttributeFriendlyName)
-						{
-							$sKeyAttCode = $oAttDef->GetKeyAttCode();
-							if ($sKeyAttCode != 'id')
-							{
-								if ($oObj->Get($sKeyAttCode) == 0)
-								{
-									$sValue = '';
-								}
-							}
-						}
 						if ($this->bLocalizeOutput)
 						{
 							$sField = htmlentities($oFinalAttDef->GetEditValue($rawValue), ENT_QUOTES, 'UTF-8');

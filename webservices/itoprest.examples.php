@@ -185,10 +185,15 @@ $aOperations = array(
 );
 $aOperations = array(
 	array(
-		'operation' => 'core/get', // operation code
-		'class' => 'PhysicalDevice',
-		'key' => 'SELECT PhysicalDevice WHERE id < 3',
-		'output_fields' => '*+', // list of fields to show in the results (* or a,b,c)
+		'operation' => 'core/update', // operation code
+		'comment' => 'Synchronization from blah...', // comment recorded in the change tracking log
+		'class' => 'Server',
+		'key' => 'SELECT Server WHERE name="Server1"',
+		'output_fields' => 'id, friendlyname, description', // list of fields to show in the results (* or a,b,c)
+		// Values for the object to create
+		'fields' => array(
+			'description' => 'Issue #'.time(),
+		),
 	),
 );
 $aOperations = array(
@@ -213,6 +218,15 @@ $aXXXOperations = array(
 		'password' => 'admin',
 	),
 );
+$aOperations = array(
+	array(
+		'operation' => 'core/delete', // operation code
+		'comment' => 'Cleanup for synchro with...', // comment recorded in the change tracking log
+		'class' => 'Server',
+		'key' => 'SELECT Server',
+		'simulate' => false,
+	),
+);
 
 if (false)
 {
@@ -225,8 +239,11 @@ else
 }
 
 $aData = array();
-$aData['auth_user'] = 'admin';
-$aData['auth_pwd'] = 'admin';
+$aData['auth_user'] = 'no-export';
+$aData['auth_pwd'] = 'no-export';
+//$aData['auth_user'] = 'admin';
+//$aData['auth_pwd'] = 'admin';
+
 
 foreach ($aOperations as $iOp => $aOperation)
 {

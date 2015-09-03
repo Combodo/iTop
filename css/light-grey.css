@@ -1956,6 +1956,9 @@ table.export_parameters td {
 
 .table_preview > table {
   border-collapse: collapse;
+  max-height: 150px;
+  overflow: auto;
+  display: block;
 }
 
 
@@ -1968,8 +1971,18 @@ table.export_parameters td {
 }
 
 
+.table_preview > table > tbody > tr > td {
+  vertical-align: top;
+}
+
+
 .table_preview .drag-handle {
   cursor: move;
+}
+
+
+.table_preview div.text-preview {
+  white-space: pre-wrap;
 }
 
 

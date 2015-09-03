@@ -281,9 +281,13 @@ abstract class BulkExport
 		return array(); // return array('csv' => Dict::S('UI:ExportFormatCSV'));
 	}
 	
+
+	public function SetHttpHeaders(WebPage $oPage)
+	{
+	}
+
 	public function GetHeader()
 	{
-		
 	}
 	abstract public function GetNextChunk(&$aStatus);
 	public function GetFooter()

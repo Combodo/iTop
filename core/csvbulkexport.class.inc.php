@@ -58,7 +58,7 @@ class CSVBulkExport extends TabularBulkExport
 	}
 
 
-	protected function SuggestField($aAliases, $sClass, $sAlias, $sAttCode)
+	protected function SuggestField($sClass, $sAttCode)
 	{
 		switch($sAttCode)
 		{
@@ -74,7 +74,7 @@ class CSVBulkExport extends TabularBulkExport
 				}
 		}
 
-		return parent::SuggestField($aAliases, $sClass, $sAlias, $sAttCode);
+		return parent::SuggestField($sClass, $sAttCode);
 	}
 
 	public function EnumFormParts()
@@ -170,13 +170,19 @@ class CSVBulkExport extends TabularBulkExport
 
 	protected function GetSampleData($oObj, $sAttCode)
 	{
-		if ($oObj)
+		return '<div class="text-preview">'.htmlentities($this->GetValue($oObj, $sAttCode), ENT_QUOTES, 'UTF-8').'</div>';
+	}
+
+	protected function GetValue($oObj, $sAttCode)
+	{
+		switch($sAttCode)
 		{
-			$sRet = trim($oObj->GetAsCSV($sAttCode), '"');
-		}
-		else
-		{
-			$sRet = '';
+			case 'id':
+				$sRet = $oObj->GetKey();
+				break;
+					
+			default:
+				$sRet = trim($oObj->GetAsCSV($sAttCode), '"');
 		}
 		return $sRet;
 	}
