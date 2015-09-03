@@ -244,27 +244,14 @@ function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 	$oP->add("</div>");
 }
 
-function DisplayNavigatorGroupTab($oP, $aGroups, $sRelation, $oObj)
+function DisplayNavigatorGroupTab($oP)
 {
-	if (count($aGroups) > 0)
-	{
-		$oP->SetCurrentTab(Dict::S('UI:RelationGroups'));
-		$oP->add("<div id=\"impacted_groups\" style=\"width:100%;background-color:#fff;padding:10px;\">");
-		$iBlock = 1; // Zero is not a valid blockid
-		foreach($aGroups as $idx => $aObjects)
-		{
-			$sListClass = get_class(current($aObjects));
-			$oSet = CMDBObjectSet::FromArray($sListClass, $aObjects);
-			$oP->add("<h1>".Dict::Format('UI:RelationGroupNumber_N', (1+$idx))."</h1>\n");
-			$oP->add("<div id=\"relation_group_$idx\" class=\"page_header\">\n");
-			$oP->add("<h2>".MetaModel::GetClassIcon($sListClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aObjects), Metamodel::GetName($sListClass))."</h2>\n");
-			$oP->add("</div>\n");
-			$oBlock = DisplayBlock::FromObjectSet($oSet, 'list');
-			$oBlock->Display($oP, 'group_'.$iBlock++);
-			$oP->p('&nbsp;'); // Some space ?
-		}
-		$oP->add("</div>");
-	}
+	$oP->SetCurrentTab(Dict::S('UI:RelationGroups'));
+	$oP->add("<div id=\"impacted_groups\" style=\"width:100%;background-color:#fff;padding:10px;\">");
+	/*
+	 * Content is rendered asynchronously via pages/ajax.render.php?operation=relation_groups
+	*/
+	$oP->add("</div>");
 }
 
 /***********************************************************************************
@@ -1468,6 +1455,9 @@ EOF
 		$oObj = MetaModel::GetObject($sClass, $id);
 		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
 		$aSourceObjects = array($oObj);
+		
+		$oP->set_title(MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName());
+		
 		if ($sRelation == 'depends on')
 		{
 			$sRelation = 'impacts';
@@ -1484,20 +1474,7 @@ EOF
 		
 
 		$aResults = $oRelGraph->GetObjectsByClass();
-		$oDisplayGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
-		
-		$aGroups = array();
-		$iGroupIdx = 0;
-		$oIterator = new RelationTypeIterator($oDisplayGraph, 'Node');
-		foreach($oIterator as $oNode)
-		{
-			if ($oNode instanceof DisplayableGroupNode)
-			{
-				$aGroups[] = $oNode->GetObjects();
-				$oNode->SetProperty('group_index', $iGroupIdx);
-				$iGroupIdx++;
-			}
-		}		
+		$oDisplayGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));		
 		
 		$oP->AddTabContainer('Navigator');
 		$oP->SetCurrentTabContainer('Navigator');
@@ -1526,14 +1503,14 @@ EOF
 			DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
 			$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
 			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj));
-			DisplayNavigatorGroupTab($oP, $aGroups, $sRelation, $oObj);
+			DisplayNavigatorGroupTab($oP);
 		}
 		else
 		{
 			$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
 			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj));
 			DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
-			DisplayNavigatorGroupTab($oP, $aGroups, $sRelation, $oObj);
+			DisplayNavigatorGroupTab($oP);
 		}
 
 		$oP->SetCurrentTab('');
@@ -1622,7 +1599,7 @@ catch(Exception $e)
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
-	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));	
+	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));		
 	$oP->output();
 
 	if (MetaModel::IsLogEnabledIssue())

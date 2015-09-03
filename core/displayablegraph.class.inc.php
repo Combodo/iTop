@@ -1001,14 +1001,27 @@ class DisplayableGraph extends SimpleGraph
 	{
 		$aContextDefs = $this->GetContextDefinitions($sContextKey, false);
 		
-		$aData = array('nodes' => array(), 'edges' => array());
+		$aData = array('nodes' => array(), 'edges' => array(), 'groups' => array());
 		$iGroupIdx = 0;
 		$oIterator = new RelationTypeIterator($this, 'Node');
 		foreach($oIterator as $sId => $oNode)
 		{
 			if ($oNode instanceof DisplayableGroupNode)
 			{
-				$aGroups[] = $oNode->GetObjects();
+				// The contents of the "Groups" tab will be rendered
+				// using a separate ajax call, since the content of
+				// the page is made of a mix of HTML / CSS / JS which
+				// cannot be conveyed easily in the JSON structure
+				// So we just pass a list of groups, each being defined by a class and a list of keys
+				// in order to avoid redoing the impact computation which is expensive
+				$aObjects = $oNode->GetObjects();
+				$aKeys = array();
+				foreach($aObjects as $oObj)
+				{
+					$sClass = get_class($oObj);
+					$aKeys[] = $oObj->GetKey();
+				}
+				$aData['groups'][$iGroupIdx] = array('class' => $sClass, 'keys' => $aKeys);
 				$oNode->SetProperty('group_index', $iGroupIdx);
 				$iGroupIdx++;
 			}

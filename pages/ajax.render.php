@@ -1992,6 +1992,24 @@ EOF
 		$oPage->SetContentType('application/json');
 		break;
 		
+		case 'relation_groups':
+		$aGroups = utils::ReadParam('groups');
+		$iBlock = 1; // Zero is not a valid blockid
+		foreach($aGroups as $idx => $aDefinition)
+		{
+			$sListClass = $aDefinition['class'];
+			$oSearch = new DBObjectSearch($sListClass);
+			$oSearch->AddCondition('id', $aDefinition['keys'], 'IN');		
+			$oPage->add("<h1>".Dict::Format('UI:RelationGroupNumber_N', (1+$idx))."</h1>\n");
+			$oPage->add("<div id=\"relation_group_$idx\" class=\"page_header\">\n");
+			$oPage->add("<h2>".MetaModel::GetClassIcon($sListClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aDefinition['keys']), Metamodel::GetName($sListClass))."</h2>\n");
+			$oPage->add("</div>\n");
+			$oBlock = new DisplayBlock($oSearch, 'list');
+			$oBlock->Display($oPage, 'group_'.$iBlock++);
+			$oPage->p('&nbsp;'); // Some space ?
+		}
+		break;
+		
 		case 'ticket_impact':
 		require_once(APPROOT.'core/simplegraph.class.inc.php');
 		require_once(APPROOT.'core/relationgraph.class.inc.php');

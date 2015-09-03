@@ -61,6 +61,7 @@ $(function()
 			this.iTextHeight = 12;
 			this.fSliderZoom = 1.0;
 			this.bInUpdateSliderZoom = false;
+			this.bRedrawNeeded = false;
 			
 			this.oPaper = Raphael(this.element.get(0), 16*this.element.width(), 16*this.element.height());
 
@@ -71,6 +72,17 @@ $(function()
 			
 			this._create_toolkit_menu();
 			this._build_context_menus();
+			this.sTabId = null;
+			var jTabPanel = this.element.closest('.ui-tabs-panel');
+			if (jTabPanel.length > 0)
+			{
+				// We are inside a tab, find out which one and hook its activation
+				this.sTabId = jTabPanel.attr('id');
+				var jTabs = this.element.closest('.ui-tabs');
+				jTabs.on( "tabsactivate", function( event, ui ) {
+					me._on_tabs_activate(ui);
+				});					
+			}
 			$(window).bind('resized', function() { var that = me; window.setTimeout(function() { that._on_resize(); }, 50); } );
 			this.element.bind('mousewheel', function(event, delta, deltaX, deltaY) {
 			    return me._on_mousewheel(event, delta, deltaX, deltaY);
@@ -341,9 +353,8 @@ $(function()
 			}
 			return null;
 		},
-		auto_scale: function()
+		adjust_height: function()
 		{
-			var fMaxZoom = 1.5;
 			var maxHeight = this.element.parent().height();
 			// Compute the available height
 			var element = this.element;
@@ -355,6 +366,12 @@ $(function()
 			});
 			
 			this.element.height(maxHeight - 20);
+			this.oPaper.setSize(this.element.width(), this.element.height());
+		},
+		auto_scale: function()
+		{
+			var fMaxZoom = 1.5;
+			this.adjust_height();
 			
 			iMargin = 10;
 			xmin = this.options.xmin - iMargin;
@@ -639,9 +656,23 @@ $(function()
 		{
 			this.element.closest('.ui-tabs').tabs({ heightStyle: "fill" });
 			this.auto_scale();
-			this.oPaper.setSize(this.element.width(), this.element.height());
 			this._close_all_tooltips();
 			this.draw();
+		},
+		_on_tabs_activate: function(ui)
+		{
+			if (ui.newPanel.selector == ('#'+this.sTabId))
+			{
+				if (this.bRedrawNeeded)
+				{
+					this._updateBBox();
+					this.auto_scale();
+					this.oPaper.setSize(this.element.width(), this.element.height());
+					this._reset_pan_and_zoom();
+					this.draw();
+					bRedrawNeeded = false;
+				}
+			}
 		},
 		load: function(oData)
 		{
@@ -657,11 +688,43 @@ $(function()
 			{
 				this.add_edge(oData.edges[k]);
 			}
-			this._updateBBox();
-			this.auto_scale();
-			this.oPaper.setSize(this.element.width(), this.element.height());
-			this._reset_pan_and_zoom();
-			this.draw();
+			if (oData.groups)
+			{
+				this.refresh_groups(oData.groups);
+			}
+			if (this.element.is(':visible'))
+			{
+				this._updateBBox();
+				this.auto_scale();
+				this._reset_pan_and_zoom();
+				this.draw();
+			}
+			else
+			{
+				this.bRedrawNeeded = true;
+			}
+		},
+		refresh_groups: function(aGroups)
+		{
+			if ($('#impacted_groups').length > 0)
+			{
+				
+				// The "Groups" tab is present, refresh it
+				if (aGroups.length == 0)
+				{
+					this.element.closest('.ui-tabs').tabs("disable", 2);
+					$('#impacted_groups').html('');
+				}
+				else
+				{
+					this.element.closest('.ui-tabs').tabs("enable", 2);
+					$('#impacted_groups').html('<img src="../images/indicator.gif">');
+					var sUrl = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php';
+					$.post(sUrl, { operation: 'relation_groups', groups: aGroups }, function(data) {
+						$('#impacted_groups').html(data);
+					});
+				}
+			}
 		},
 		_reset_pan_and_zoom: function()
 		{
@@ -688,11 +751,12 @@ $(function()
 			var aContexts = [];
 			$('#'+sId+'_contexts').multiselect('getChecked').each(function() { aContexts[$(this).val()] = me.options.additional_contexts[$(this).val()].oql; });
 			this.element.closest('.ui-tabs').tabs({ heightStyle: "fill" });
+			this.adjust_height();
 			this._close_all_tooltips();
 			this.oPaper.rect(this.xPan, this.yPan, this.element.width(), this.element.height()).attr({fill: '#000', opacity: 0.4, 'stroke-width': 0});
 			this.oPaper.rect(this.xPan + this.element.width()/2 - 100, this.yPan + this.element.height()/2 - 10, 200, 20)
 			.attr({fill: 'url(../setup/orange-progress.gif)', stroke: '#000', 'stroke-width': 1});
-			this.oPaper.text(this.xPan + this.element.width()/2, this.yPan + this.element.height()/2 - 20, this.options.labels.loading);
+			this.oPaper.text(this.xPan + this.element.width()/2, this.yPan + this.element.height()/2 - 20, this.options.labels.loading);			
 			
 			$('#'+sId+'_refresh_btn').button('disable'); 
 			$.post(sUrl, {excluded_classes: this.options.excluded_classes, g: this.options.grouping_threshold, sources: this.options.sources, excluded: this.options.excluded, contexts: aContexts, context_key: this.options.context_key }, function(data) {
