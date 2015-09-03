@@ -999,7 +999,7 @@ class DisplayableGraph extends SimpleGraph
 	 */
 	function GetAsJSON($sContextKey)
 	{
-		$aContextDefs = $this->GetContextDefinitions($sContextKey, false);
+		$aContextDefs = static::GetContextDefinitions($sContextKey, false);
 		
 		$aData = array('nodes' => array(), 'edges' => array(), 'groups' => array());
 		$iGroupIdx = 0;
@@ -1055,7 +1055,7 @@ class DisplayableGraph extends SimpleGraph
 	 */
 	function RenderAsPDF(PDFPage $oPage, $sComments = '', $sContextKey, $xMin = -1, $xMax = -1, $yMin = -1, $yMax = -1)
 	{
-		$aContextDefs = $this->GetContextDefinitions($sContextKey, false); // No need to develop the parameters
+		$aContextDefs = static::GetContextDefinitions($sContextKey, false); // No need to develop the parameters
 		$oPdf = $oPage->get_tcpdf();
 				
 		$aBB = $this->GetBoundingBox();
@@ -1219,7 +1219,7 @@ class DisplayableGraph extends SimpleGraph
 	 * @param array $aContextParams Arguments for the queries (via ToArgs()) if $bDevelopParams == true
 	 * @return multitype:multitype:string
 	 */
-	public function GetContextDefinitions($sContextKey, $bDevelopParams = true, $aContextParams = array())
+	public static function GetContextDefinitions($sContextKey, $bDevelopParams = true, $aContextParams = array())
 	{
 		$aLevels = explode('/', $sContextKey);
 		$sLeafClass = $aLevels[2];
@@ -1246,6 +1246,7 @@ class DisplayableGraph extends SimpleGraph
 			}
 			catch(Exception $e)
 			{
+				IssueLog::Warning('Invalid OQL query: '.$sOQL.' in the parameter '.$sContextKey);
 				unset($aContextDefs[$sKey]);
 			}
 		}
@@ -1262,7 +1263,7 @@ class DisplayableGraph extends SimpleGraph
 	 */
 	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects = array(), $sObjClass = null, $iObjKey = null, $sContextKey, $aContextParams = array())
 	{	
-		$aContextDefs = $this->GetContextDefinitions($sContextKey, true, $aContextParams);
+		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
 		$aExcludedByClass = array();
 		foreach($aExcludedObjects as $oObj)
 		{
@@ -1310,7 +1311,7 @@ EOF
 		$aAdditionalContexts = array();
 		foreach($aContextDefs as $sKey => $aDefinition)
 		{
-			$aAdditionalContexts[] = array('key' => $sKey, 'label' => Dict::S($aDefinition['dict']), 'oql' => $aDefinition['oql']);
+			$aAdditionalContexts[] = array('key' => $sKey, 'label' => Dict::S($aDefinition['dict']), 'oql' => $aDefinition['oql'], 'default' => (array_key_exists('default', $aDefinition)  && ($aDefinition['default'] == 'yes')));
 		}
 		
 		$sDirection = utils::ReadParam('d', 'horizontal');

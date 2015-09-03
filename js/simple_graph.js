@@ -445,7 +445,8 @@ $(function()
 				sHtml += '&nbsp;'+this.options.labels.additional_context_info+' <select id="'+sId+'_contexts" name="contexts" class="multiselect" multiple size="1">';
 				for(var k in this.options.additional_contexts)
 				{
-					sHtml += '<option value="'+k+'" selected>'+this.options.additional_contexts[k].label+'</option>';
+					sSelected = (this.options.additional_contexts[k]['default']) ? 'selected' : '';
+					sHtml += '<option value="'+k+'" '+sSelected+'>'+this.options.additional_contexts[k].label+'</option>';
 				}
 				sHtml += '</select>'
 			}

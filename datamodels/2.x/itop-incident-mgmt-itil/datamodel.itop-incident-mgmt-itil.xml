@@ -1755,6 +1755,7 @@
                   <oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted') AND (I.id != :this->id)]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
                   <icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+                  <default>yes</default>
                 </item>
               </items>
             </down>
@@ -1768,6 +1769,7 @@
                   <oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted') AND (I.id != :this->id)]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
                   <icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+                  <default>yes</default>
                 </item>
               </items>
             </down>
@@ -1781,6 +1783,7 @@
                   <oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted') AND (I.id != :this->id)]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
                   <icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+                  <default>yes</default>
                 </item>
               </items>
             </down>
@@ -1798,6 +1801,7 @@
                   <oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted')]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
                   <icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+                  <default>yes</default>
                 </item>
               </items>
             </down>
@@ -1807,6 +1811,7 @@
                   <oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted')]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
                   <icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+                  <default>yes</default>
                 </item>
               </items>
             </up>

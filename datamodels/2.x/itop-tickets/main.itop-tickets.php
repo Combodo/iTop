@@ -133,6 +133,7 @@ class _Ticket extends cmdbAbstractObject
 
 	public function UpdateImpactedItems()
 	{
+		require_once(APPROOT.'core/displayablegraph.class.inc.php');
 		$oContactsSet = $this->Get('contacts_list');
 		$oCIsSet = $this->Get('functionalcis_list');
 		
@@ -195,11 +196,24 @@ class _Ticket extends cmdbAbstractObject
 		}
 		
 		$oContactsSet = DBObjectSet::FromScratch('lnkContactToTicket');
-		$oGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, 10, true /* bEnableRedundancy */, $aExcluded);
+		
+		$sContextKey = 'itop-tickets/relation_context/'.get_class($this).'/impacts/down';
+		$aContextDefs = DisplayableGraph::GetContextDefinitions($sContextKey, true, array('this' => $this));
+		$aDefaultContexts = array();
+		foreach($aContextDefs as $sKey => $aDefinition)
+		{
+			// Add the default context queries to the computation
+			if (array_key_exists('default', $aDefinition) && ($aDefinition['default'] == 'yes'))
+			{
+				$aDefaultContexts[] = $aDefinition['oql'];
+			}
+		}
+		
+		$oGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, 10, true /* bEnableRedundancy */, $aExcluded, $aDefaultContexts);
 		$oIterator = new RelationTypeIterator($oGraph, 'Node');
 		foreach ($oIterator as $oNode)
 		{
-			if ( ($oNode instanceof RelationObjectNode) && ($oNode->GetProperty('is_reached')) && (!$oNode->GetProperty('source')))
+			if ( ($oNode instanceof RelationObjectNode) && ($oNode->GetProperty('is_reached')) && (!$oNode->GetProperty('source')) && ($oNode->GetProperty('context_root_causes', null) == null) )
 			{
 				$oObj = $oNode->GetProperty('object');
 				$iKey = $oObj->GetKey();
@@ -237,7 +251,8 @@ class _Ticket extends cmdbAbstractObject
 	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
-		if (!$bEditMode)
+		// Display the impact analysis for tickets not in 'closed' or 'resolved' status... and not in edition
+		if ((!$bEditMode) && (!in_array($this->Get('status'), array('resolved', 'closed'))))
 		{
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
 			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
