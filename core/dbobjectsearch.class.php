@@ -630,7 +630,7 @@ class DBObjectSearch extends DBSearch
 			}
 
 			$aAliasTranslation = array();
-			$oLeftFilter->MergeWith_InNamespace($oRightFilter, $oRet->m_aClasses, $aAliasTranslation);
+			$oLeftFilter->MergeWith_InNamespace($oRightFilter, $oLeftFilter->m_aClasses, $aAliasTranslation);
 			$oLeftFilter->TransferConditionExpression($oRightFilter, $aAliasTranslation);
 			$aSearches[] = $oLeftFilter;
 		}
