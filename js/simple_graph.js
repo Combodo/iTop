@@ -84,6 +84,7 @@ $(function()
 				});					
 			}
 			$(window).bind('resized', function() { var that = me; window.setTimeout(function() { that._on_resize(); }, 50); } );
+			$('#dh_flash').bind('toggle_complete', function() { var that = me; window.setTimeout(function() { that._on_resize(); }, 50); } );
 			this.element.bind('mousewheel', function(event, delta, deltaX, deltaY) {
 			    return me._on_mousewheel(event, delta, deltaX, deltaY);
 			});
@@ -158,7 +159,20 @@ $(function()
 			switch(oNode.shape)
 			{
 				case 'disc':
-				oNode.aElements.push(this.oPaper.circle(xPos, yPos, iWidth*fTotalZoom / 2).attr(oNode.disc_attr));
+				oScaledAttr = {};
+				for(k in oNode.disc_attr)
+				{
+					value = oNode.disc_attr[k]
+					switch(k)
+					{
+						// Scalable attributes
+						case 'stroke-width':
+						value = value * fTotalZoom;
+						break;
+					}
+					oScaledAttr[k] = value;
+				}
+				oNode.aElements.push(this.oPaper.circle(xPos, yPos, iWidth*fTotalZoom / 2).attr(oScaledAttr));
 				var oText = this.oPaper.text(xPos, yPos, oNode.label);
 				oNode.text_attr['font-size'] = iFontSize * fTotalZoom;
 				oText.attr(oNode.text_attr);
@@ -168,7 +182,20 @@ $(function()
 					
 				case 'group':
 				oNode.aElements.push(this.oPaper.circle(xPos, yPos, iWidth*fTotalZoom / 2).attr({fill: '#fff', 'stroke-width':0}));
-				oNode.aElements.push(this.oPaper.circle(xPos, yPos, iWidth*fTotalZoom / 2).attr(oNode.disc_attr));
+				oScaledAttr = {};
+				for(k in oNode.disc_attr)
+				{
+					value = oNode.disc_attr[k]
+					switch(k)
+					{
+						// Scalable attributes
+						case 'stroke-width':
+						value = value * fTotalZoom;
+						break;
+					}
+					oScaledAttr[k] = value;
+				}
+				oNode.aElements.push(this.oPaper.circle(xPos, yPos, iWidth*fTotalZoom / 2).attr(oScaledAttr));
 				var xIcon = xPos - 18 * fTotalZoom;
 				var yIcon = yPos - 18 * fTotalZoom;
 				oNode.aElements.push(this.oPaper.image(oNode.icon_url, xIcon, yIcon, 16*fTotalZoom, 16*fTotalZoom).attr(oNode.icon_attr));

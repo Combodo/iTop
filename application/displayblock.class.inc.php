@@ -857,7 +857,7 @@ class DisplayBlock
 				$oPage->add_ready_script(
 <<<EOF
 		$("#dh_$sId").click( function() {
-			$("#ds_$sId").slideToggle('normal', function() { $("#ds_$sId").parent().resize(); FixSearchFormsDisposition(); } );
+			$("#ds_$sId").slideToggle('normal', function() { $("#ds_$sId").parent().resize(); FixSearchFormsDisposition();  $("#dh_$sId").trigger('toggle_complete'); } );
 			$("#dh_$sId").toggleClass('open');
 		});
 EOF

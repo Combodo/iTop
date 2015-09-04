@@ -446,7 +446,7 @@ class DisplayableRedundancyNode extends DisplayableNode
 		$aNode['id'] = $this->GetId();	
 		$fDiscOpacity = ($this->GetProperty('is_reached') ? 1 : 0.2);
 		$sColor = ($this->GetProperty('is_reached_count') > $this->GetProperty('threshold')) ? '#c33' : '#999';
-		$aNode['disc_attr'] = array('stroke-width' => 3, 'stroke' => '#000', 'fill' => $sColor, 'opacity' => $fDiscOpacity);
+		$aNode['disc_attr'] = array('stroke-width' => 2, 'stroke' => '#000', 'fill' => $sColor, 'opacity' => $fDiscOpacity);
 		$fTextOpacity = ($this->GetProperty('is_reached') ? 1 : 0.4);
 		$aNode['text_attr'] = array('fill' => '#fff', 'opacity' => $fTextOpacity);
 		$aNode['tooltip'] = $this->GetTooltip($aContextDefs);
@@ -662,7 +662,7 @@ class DisplayableGroupNode extends DisplayableNode
 		$fDiscOpacity = ($this->GetProperty('is_reached') ? 1 : 0.2);
 		$fTextOpacity = ($this->GetProperty('is_reached') ? 1 : 0.4);
 		$aNode['icon_attr'] = array('opacity' => $fTextOpacity);
-		$aNode['disc_attr'] = array('stroke-width' => 3, 'stroke' => '#000', 'fill' => '#fff', 'opacity' => $fDiscOpacity);
+		$aNode['disc_attr'] = array('stroke-width' => 2, 'stroke' => '#000', 'fill' => '#fff', 'opacity' => $fDiscOpacity);
 		$aNode['text_attr'] = array('fill' => '#000', 'opacity' => $fTextOpacity);
 		$aNode['tooltip'] = $this->GetTooltip($aContextDefs);
 		return $aNode;
@@ -876,9 +876,17 @@ class DisplayableGraph extends SimpleGraph
 			set_time_limit($iLoopTimeLimit);
 			if ($oNode instanceof DisplayableGroupNode)
 			{
-				$aGroups[] = $oNode->GetObjects();
-				$oNode->SetProperty('group_index', $iGroupIdx);
-				$iGroupIdx++;
+				if ($oNode->GetObjectCount() == 0)
+				{
+					// Remove emtpry groups
+					$oNewGraph->_RemoveNode($oNode);
+				}
+				else
+				{
+					$aGroups[] = $oNode->GetObjects();
+					$oNode->SetProperty('group_index', $iGroupIdx);
+					$iGroupIdx++;
+				}
 			}
 		}
 		
@@ -1279,7 +1287,7 @@ class DisplayableGraph extends SimpleGraph
 <<<EOF
 	$( "#tabbedContent_0" ).tabs({ heightStyle: "fill" });
 	$("#dh_flash").click( function() {
-		$("#ds_flash").slideToggle('normal', function() { $("#ds_flash").parent().resize(); } );
+		$("#ds_flash").slideToggle('normal', function() { $("#ds_flash").parent().resize(); $("#dh_flash").trigger('toggle_complete'); } );
 		$("#dh_flash").toggleClass('open');
 	});
     $('#ReloadMovieBtn').button().button('disable');
