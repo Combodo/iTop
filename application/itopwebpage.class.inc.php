@@ -459,12 +459,17 @@ EOF
 			window.history.back();
 		}
 		
-		function BackToDetails(sClass, id, sDefaultUrl)
+		function BackToDetails(sClass, id, sDefaultUrl, sOwnershipToken)
 		{
 			window.bInCancel = true;
 			if (id > 0)
 			{
-				window.location.href = AddAppContext(GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=release_lock_and_details&class='+sClass+'&id='+id);
+				sToken = '';
+				if (sOwnershipToken != undefined)
+				{
+					sToken = '&token='+sOwnershipToken;
+				}
+				window.location.href = AddAppContext(GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=release_lock_and_details&class='+sClass+'&id='+id+sToken);
 			}
 			else
 			{

@@ -275,7 +275,7 @@ EOF
 		$this->DisplayFormTable($oP, $this->m_aTableConfig, $aForm);
 		$oP->add("<span style=\"float:left;\">&nbsp;&nbsp;&nbsp;<img src=\"../images/tv-item-last.gif\">&nbsp;&nbsp;<input id=\"btnRemove\" type=\"button\" value=\"".Dict::S('UI:RemoveLinkedObjectsOf_Class')."\" onClick=\"RemoveSelected();\" >");
 		$oP->add("&nbsp;&nbsp;&nbsp;<input id=\"btnAdd\" type=\"button\" value=\"".Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->m_sLinkedClass))."\" onClick=\"AddObjects();\"></span>\n");
-		$oP->add("<span style=\"float:right;\"><input id=\"btnCancel\" type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"BackToDetails('".$sTargetClass."', ".$this->m_iObjectId.");\">");
+		$oP->add("<span style=\"float:right;\"><input id=\"btnCancel\" type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"BackToDetails('".$sTargetClass."', ".$this->m_iObjectId.", '', '');\">");
 		$oP->add("&nbsp;&nbsp;&nbsp;<input id=\"btnOk\" type=\"submit\" value=\"".Dict::S('UI:Button:Ok')."\"></span>\n");
 		$oP->add("<span style=\"clear:both;\"><p>&nbsp;</p></span>\n");
 		$oP->add("</div>\n");

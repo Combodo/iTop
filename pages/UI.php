@@ -356,6 +356,11 @@ try
 		$sClass = utils::ReadParam('class', '');
 		$id = utils::ReadParam('id', '');
 		$oObj = MetaModel::GetObject($sClass, $id);
+		$sToken = utils::ReadParam('token', '');
+		if ($sToken != '')
+		{
+			iTopOwnershipLock::ReleaseLock($sClass, $id, $sToken);
+		}
 		cmdbAbstractObject::ReloadAndDisplay($oP, $oObj, array('operation' => 'details'));
 		break;
 	
