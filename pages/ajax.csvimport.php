@@ -119,7 +119,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 		// A star character at the end can be used to indicate a mandatory field
 		$sFieldName = $aMatches[1].'->'.$aMatches[2];
 	}
-	if ($sFieldName == 'id')
+	if (($sFieldName == 'id') || ($sFieldName == Dict::S('UI:CSVImport:idField')))
 	{
 		$sFieldCode = 'id';
 	}
@@ -132,7 +132,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 		$sStar = '';
 		if ($oAttDef->IsExternalKey())
 		{
-			if ( ($sFieldName == $oAttDef->GetLabel()) || ($sFieldName == $sAttCode))
+			if (($sFieldName == $oAttDef->GetLabel()) || ($sFieldName == $sAttCode))
 			{
 				$sFieldCode = $sAttCode;
 			}
@@ -152,19 +152,25 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 				if (MetaModel::IsReconcKey($sTargetClass, $sTargetAttCode))
 				{
 					$bExtKey = $oTargetAttDef->IsExternalKey();
-					$sSuffix = '';
+					$aSignatures = array();
+					$aSignatures[] = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel();
+					$aSignatures[] = $sAttCode.'->'.$sTargetAttCode;
 					if ($bExtKey)
 					{
-						$sSuffix = '->id';
+						$aSignatures[] = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel().'->id';
+						$aSignatures[] = $sAttCode.'->'.$sTargetAttCode.'->id';
 					}
 					if ($bAdvancedMode || !$bExtKey)
 					{
 					
 						// When not in advanced mode do not allow to use reconciliation keys (on external keys) if they are themselves external keys !
 						$aChoices[$sAttCode.'->'.$sTargetAttCode] = MetaModel::GetLabel($sClassName, $sAttCode.'->'.$sTargetAttCode, true);
-						if ((strcasecmp($sFieldName, $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel().$sSuffix) == 0) || (strcasecmp($sFieldName, ($sAttCode.'->'.$sTargetAttCode.$sSuffix)) == 0) )
+						foreach ($aSignatures as $sSignature)
 						{
-							$sFieldCode = $sAttCode.'->'.$sTargetAttCode;
+							if (strcasecmp($sFieldName, $sSignature) == 0)
+							{
+								$sFieldCode = $sAttCode.'->'.$sTargetAttCode;
+							}
 						}
 					}
 				}
