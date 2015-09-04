@@ -1038,6 +1038,8 @@ class Config
 		$this->m_sExtAuthVariable = DEFAULT_EXT_AUTH_VARIABLE;
 		$this->m_sEncryptionKey = DEFAULT_ENCRYPTION_KEY;
 		$this->m_aCharsets = array();
+		$this->m_bLogQueries = DEFAULT_LOG_QUERIES;
+		$this->m_bQueryCacheEnabled = DEFAULT_QUERY_CACHE_ENABLED;
 		
 		$this->m_aModuleSettings = array();
 
