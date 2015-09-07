@@ -1553,7 +1553,7 @@ class DBObjectSearch extends DBSearch
 					elseif(MetaModel::GetAttributeOrigin($sKeyClass, $sKeyAttCode) == $sTableClass)
 					{
 						$oBuild->m_oQBExpressions->PushJoinField(new FieldExpression($sKeyAttCode, $sKeyClassAlias));
-						$oSelectExtKey = $oExtFilter->MakeSQLObjectQuery($oBuild);
+						$oSelectExtKey = $oExtFilter->MakeSQLObjectQuery($oBuild, $aAttToLoad);
 						$oJoinExpr = $oBuild->m_oQBExpressions->PopJoinField();
 						$sExternalKeyTable = $oJoinExpr->GetParent();
 						$sExternalKeyField = $oJoinExpr->GetName();
