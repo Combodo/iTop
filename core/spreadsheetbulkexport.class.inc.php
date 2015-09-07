@@ -213,7 +213,7 @@ class SpreadsheetBulkExport extends TabularBulkExport
 					}
 					else if($oAttDef instanceof AttributeString)
 					{
-						$sField = $oObj->GetAsHTML($sAttCode);
+						$sField = $oObj->GetAsHTML($sAttCode, $this->bLocalizeOutput);
 						$sData .= "<td x:str>$sField</td>";
 					}
 					else
