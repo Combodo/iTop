@@ -1912,7 +1912,48 @@ class AttributeFinalClass extends AttributeString
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		if (empty($sValue)) return '';
+		if ($bLocalize)
+		{
+			return MetaModel::GetName($sValue);
+		}
+		else
+		{
+			return $sValue;
+		}
+	}
+
+	// Because this is sometimes used to get a localized/string version of an attribute...
+	public function GetEditValue($sValue, $oHostObj = null)
+	{
+		if (empty($sValue)) return '';
 		return MetaModel::GetName($sValue);
+	}
+
+ 	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	{
+		if ($bLocalize && $value != '')
+		{
+			$sRawValue = MetaModel::GetName($value);
+		}
+		else
+		{
+			$sRawValue = $value;
+		}
+		return parent::GetAsCSV($sRawValue, $sSeparator, $sTextQualifier, null, false);
+	}
+
+	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
+	{
+		if (empty($value)) return '';
+		if ($bLocalize)
+		{
+			$sRawValue = MetaModel::GetName($value);
+		}
+		else
+		{
+			$sRawValue = $value;
+		}
+		return Str::pure2xml($sRawValue);
 	}
 
 	public function GetBasicFilterLooseOperator()
