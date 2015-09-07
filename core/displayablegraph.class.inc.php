@@ -1229,33 +1229,47 @@ class DisplayableGraph extends SimpleGraph
 	 */
 	public static function GetContextDefinitions($sContextKey, $bDevelopParams = true, $aContextParams = array())
 	{
-		$aLevels = explode('/', $sContextKey);
-		$sLeafClass = $aLevels[2];
-		
-		$aRelationContext = MetaModel::GetConfig()->GetModuleSetting($aLevels[0], $aLevels[1], array());
 		$aContextDefs = array();
-		foreach(MetaModel::EnumParentClasses($sLeafClass, ENUM_PARENT_CLASSES_ALL) as $sClass)
+		$aLevels = explode('/', $sContextKey);
+		if (count($aLevels) < 5)
 		{
-			if (isset($aRelationContext[$sClass][$aLevels[3]][$aLevels[4]]['items']))
-			{
-				$aContextDefs = array_merge($aContextDefs, $aRelationContext[$sClass][$aLevels[3]][$aLevels[4]]['items']);
-			}
+			IssueLog::Warning("GetContextDefinitions: invalid 'sContextKey' = '$sContextKey'. 5 levels of / are expected !");
 		}
-		
-		// Check if the queries are valid
-		foreach($aContextDefs as $sKey => $sDefs)
+		else
 		{
-			$sOQL = $aContextDefs[$sKey]['oql'];
-			try
+			$sLeafClass = $aLevels[2];
+			
+			if (!MetaModel::IsValidClass($sLeafClass))
 			{
-				// Expand the parameters. If anything goes wrong, then the query is considered as invalid and removed from the list
-				$oSearch = DBObjectSearch::FromOQL($sOQL);
-				$aContextDefs[$sKey]['oql'] = $oSearch->ToOQL($bDevelopParams, $aContextParams);
+				IssueLog::Warning("GetContextDefinitions: invalid 'sLeafClass' = '$sLeafClass'. A valid class name is expected in 3rd position inside '$sContextKey' !");
 			}
-			catch(Exception $e)
+			else
 			{
-				IssueLog::Warning('Invalid OQL query: '.$sOQL.' in the parameter '.$sContextKey);
-				unset($aContextDefs[$sKey]);
+				$aRelationContext = MetaModel::GetConfig()->GetModuleSetting($aLevels[0], $aLevels[1], array());
+				foreach(MetaModel::EnumParentClasses($sLeafClass, ENUM_PARENT_CLASSES_ALL) as $sClass)
+				{
+					if (isset($aRelationContext[$sClass][$aLevels[3]][$aLevels[4]]['items']))
+					{
+						$aContextDefs = array_merge($aContextDefs, $aRelationContext[$sClass][$aLevels[3]][$aLevels[4]]['items']);
+					}
+				}
+				
+				// Check if the queries are valid
+				foreach($aContextDefs as $sKey => $sDefs)
+				{
+					$sOQL = $aContextDefs[$sKey]['oql'];
+					try
+					{
+						// Expand the parameters. If anything goes wrong, then the query is considered as invalid and removed from the list
+						$oSearch = DBObjectSearch::FromOQL($sOQL);
+						$aContextDefs[$sKey]['oql'] = $oSearch->ToOQL($bDevelopParams, $aContextParams);
+					}
+					catch(Exception $e)
+					{
+						IssueLog::Warning('Invalid OQL query: '.$sOQL.' in the parameter '.$sContextKey);
+						unset($aContextDefs[$sKey]);
+					}
+				}
 			}
 		}
 		return $aContextDefs;
