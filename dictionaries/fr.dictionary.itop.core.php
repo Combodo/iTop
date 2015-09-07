@@ -667,7 +667,7 @@ Opérateurs :<br/>
 	'Core:BulkExport:MissingParameter_Param' => 'Il manque le paramètre "%1$s"',
 	'Core:BulkExport:InvalidParameter_Query' => 'Valeur incorrecte pour le paramètre "query". Il n\'existe aucune entrée dans le livre des requêtes pour l\'identifiant: "%1$s"',
 	'Core:BulkExport:ExportFormatPrompt' => 'Format d\'export:',
-	'Core:BulkExportOf_Class' => 'Export de: %1$s',
+	'Core:BulkExportOf_Class' => 'Export de %1$s',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Cliquez ici pour télécharger %1$s',
 	'Core:BulkExport:ExportResult' => 'Résultat de l\'export:',
 	'Core:BulkExport:RetrievingData' => 'Récupération des données...',
