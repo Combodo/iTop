@@ -506,7 +506,12 @@ function DoExport(WebPage $oP, BulkExport $oExporter, $bInteractive = false)
 	else
 	{
 		$exportResult .= $oExporter->GetFooter();
-		$oP->SetContentType($oExporter->GetMimeType());
+		$sMimeType = $oExporter->GetMimeType();
+		if (substr($sMimeType, 0, 5) == 'text/')
+		{
+			$sMimeType .= ';charset='.strtolower($oExporter->GetCharacterSet());
+		}
+		$oP->SetContentType($sMimeType);
 		$oP->SetContentDisposition('attachment', $oExporter->GetDownloadFileName());
 		$oP->add($exportResult);
 		$oExporter->Cleanup();
@@ -661,8 +666,7 @@ try
 	$bInteractive = utils::ReadParam('interactive', false);
 	$sMode = utils::ReadParam('mode', '');
 
-	$bMustBeAdmin = $bInteractive;
-	LoginWebPage::DoLogin($bMustBeAdmin); // Check user rights and prompt if needed
+	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 	ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
 	

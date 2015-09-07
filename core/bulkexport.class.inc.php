@@ -356,6 +356,10 @@ abstract class BulkExport
 	{
 		
 	}
+	public function GetCharacterSet()
+	{
+		return 'UTF-8';
+	}
 	
 	public function GetStatistics()
 	{

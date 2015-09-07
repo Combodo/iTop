@@ -2122,7 +2122,16 @@ EOF
 					$aResult['token'] = $oExporter->SaveState();
 					if (substr($oExporter->GetMimeType(), 0, 5) == 'text/')
 					{
-						$aResult['text_result'] = file_get_contents($oExporter->GetTmpFilePath());
+						// Result must be encoded in UTF-8 to be passed as part of a JSON structure
+						$sCharset = $oExporter->GetCharacterSet();
+						if (strtoupper($sCharset) != 'UTF-8')
+						{
+							$aResult['text_result'] = iconv($sCharset, 'UTF-8', file_get_contents($oExporter->GetTmpFilePath()));
+						}
+						else
+						{
+							$aResult['text_result'] = file_get_contents($oExporter->GetTmpFilePath());
+						}
 						$aResult['mime_type'] = $oExporter->GetMimeType();
 					}
 					$aResult['message'] = Dict::Format('Core:BulkExport:ClickHereToDownload_FileName', $oExporter->GetDownloadFileName());
@@ -2152,7 +2161,7 @@ EOF
 				$sMimeType = $oExporter->GetMimeType();
 				if (substr($sMimeType, 0, 5) == 'text/')
 				{
-					$sMimeType .= ';charset=utf-8';
+					$sMimeType .= ';charset='.strtolower($oExporter->GetCharacterSet());
 				}
 				$oPage->SetContentType($sMimeType);
 				$oPage->SetContentDisposition('attachment', $oExporter->GetDownloadFileName());

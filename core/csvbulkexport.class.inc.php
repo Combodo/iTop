@@ -302,5 +302,9 @@ class CSVBulkExport extends TabularBulkExport
 	{
 		return 'csv';
 	}
+	public function GetCharacterSet()
+	{
+		return $this->aStatusInfo['charset'];
+	}
 
 }
