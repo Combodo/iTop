@@ -1816,6 +1816,7 @@ EOF
 		}
 		
 		$oPage = new PDFPage($sTitle, $sPageFormat, $sPageOrientation);
+		$oPage->SetContentDisposition('attachment', $sTitle.'.pdf');
 		
 		$oGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
 		$oGraph->InitFromGraphviz();

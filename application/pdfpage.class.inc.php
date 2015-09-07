@@ -89,7 +89,6 @@ class PDFPage extends WebPage
 		// Add a page, we're ready to start
 		$this->oPdf->AddPage();
 		
-		$this->SetContentType('application/pdf');
 		$this->SetContentDisposition('inline', $s_title.'.pdf');
 		$this->SetDefaultStyle();
 		
@@ -174,10 +173,7 @@ EOF
 	 */
 	public function output()
 	{
-	    if (!empty($this->sContentType))
-    	{
-			$this->add_header('Content-type: '.$this->sContentType);
-    	}
+		$this->add_header('Content-type: application/x-pdf');
     	if (!empty($this->sContentDisposition))
     	{
 			$this->add_header('Content-Disposition: '.$this->sContentDisposition.'; filename="'.$this->sContentFileName.'"');
