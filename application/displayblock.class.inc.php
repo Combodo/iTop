@@ -1379,7 +1379,7 @@ class MenuBlock extends DisplayBlock
 				$sDefault.= "&default[$sKey]=$sValue";
 			}
 		}
-		$bIsCreationAllowed =  (UserRights::IsActionAllowed($sClass, UR_ACTION_CREATE) == UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
+		$bIsCreationAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_CREATE) == UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
 		switch($oSet->Count())
 		{
 			case 0:
@@ -1389,121 +1389,131 @@ class MenuBlock extends DisplayBlock
 			
 			case 1:
 			$oObj = $oSet->Fetch();
-			$id = $oObj->GetKey();
-			$bLocked = false;
-			if (MetaModel::GetConfig()->Get('concurrent_lock_enabled'))
+			if (is_null($oObj))
 			{
-				$aLockInfo = iTopOwnershipLock::IsLocked(get_class($oObj), $id);
-				if ($aLockInfo['locked'])
+				if (!isset($aExtraParams['link_attr']))
 				{
-					$bLocked = true;
-					//$this->AddMenuSeparator($aActions);
-					//$aActions['concurrent_lock_unlock'] = array ('label' => Dict::S('UI:Menu:ReleaseConcurrentLock'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=kill_lock&class=$sClass&id=$id{$sContext}");
+					if ($bIsCreationAllowed) { $aActions['UI:Menu:New'] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}"); }
 				}
 			}
-			$bRawModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
-			$bIsModifyAllowed = !$bLocked && $bRawModifiedAllowed;
-			$bIsDeleteAllowed = !$bLocked && UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet);
-			// Just one object in the set, possible actions are "new / clone / modify and delete"
-			if (!isset($aExtraParams['link_attr']))
+			else
 			{
-				if ($bIsModifyAllowed) { $aActions['UI:Menu:Modify'] = array ('label' => Dict::S('UI:Menu:Modify'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=modify&class=$sClass&id=$id{$sContext}#"); }
-				if ($bIsCreationAllowed) { $aActions['UI:Menu:New'] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}"); }
-				if ($bIsDeleteAllowed) { $aActions['UI:Menu:Delete'] = array ('label' => Dict::S('UI:Menu:Delete'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=delete&class=$sClass&id=$id{$sContext}"); }
-				// Transitions / Stimuli
-				if (!$bLocked)
+				$id = $oObj->GetKey();
+				$bLocked = false;
+				if (MetaModel::GetConfig()->Get('concurrent_lock_enabled'))
 				{
-					$aTransitions = $oObj->EnumTransitions();
-					if (count($aTransitions))
+					$aLockInfo = iTopOwnershipLock::IsLocked(get_class($oObj), $id);
+					if ($aLockInfo['locked'])
 					{
-						$this->AddMenuSeparator($aActions);
-						$aStimuli = Metamodel::EnumStimuli(get_class($oObj));
-						foreach($aTransitions as $sStimulusCode => $aTransitionDef)
+						$bLocked = true;
+						//$this->AddMenuSeparator($aActions);
+						//$aActions['concurrent_lock_unlock'] = array ('label' => Dict::S('UI:Menu:ReleaseConcurrentLock'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=kill_lock&class=$sClass&id=$id{$sContext}");
+					}
+				}
+				$bRawModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
+				$bIsModifyAllowed = !$bLocked && $bRawModifiedAllowed;
+				$bIsDeleteAllowed = !$bLocked && UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet);
+				// Just one object in the set, possible actions are "new / clone / modify and delete"
+				if (!isset($aExtraParams['link_attr']))
+				{
+					if ($bIsModifyAllowed) { $aActions['UI:Menu:Modify'] = array ('label' => Dict::S('UI:Menu:Modify'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=modify&class=$sClass&id=$id{$sContext}#"); }
+					if ($bIsCreationAllowed) { $aActions['UI:Menu:New'] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}"); }
+					if ($bIsDeleteAllowed) { $aActions['UI:Menu:Delete'] = array ('label' => Dict::S('UI:Menu:Delete'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=delete&class=$sClass&id=$id{$sContext}"); }
+					// Transitions / Stimuli
+					if (!$bLocked)
+					{
+						$aTransitions = $oObj->EnumTransitions();
+						if (count($aTransitions))
 						{
-							$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass, $sStimulusCode, $oSet) : UR_ALLOWED_NO;
-							switch($iActionAllowed)
+							$this->AddMenuSeparator($aActions);
+							$aStimuli = Metamodel::EnumStimuli(get_class($oObj));
+							foreach($aTransitions as $sStimulusCode => $aTransitionDef)
 							{
-								case UR_ALLOWED_YES:
-								$aActions[$sStimulusCode] = array('label' => $aStimuli[$sStimulusCode]->GetLabel(), 'url' => "{$sRootUrl}pages/UI.php?operation=stimulus&stimulus=$sStimulusCode&class=$sClass&id=$id{$sContext}");
-								break;
-								
-								default:
-								// Do nothing
+								$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass, $sStimulusCode, $oSet) : UR_ALLOWED_NO;
+								switch($iActionAllowed)
+								{
+									case UR_ALLOWED_YES:
+									$aActions[$sStimulusCode] = array('label' => $aStimuli[$sStimulusCode]->GetLabel(), 'url' => "{$sRootUrl}pages/UI.php?operation=stimulus&stimulus=$sStimulusCode&class=$sClass&id=$id{$sContext}");
+									break;
+									
+									default:
+									// Do nothing
+								}
 							}
 						}
 					}
-				}
-				// Relations...
-				$aRelations = MetaModel::EnumRelationsEx($sClass);
-				if (count($aRelations))
-				{
-					$this->AddMenuSeparator($aActions);
-					foreach($aRelations as $sRelationCode => $aRelationInfo)
+					// Relations...
+					$aRelations = MetaModel::EnumRelationsEx($sClass);
+					if (count($aRelations))
 					{
-						if (array_key_exists('down', $aRelationInfo))
-						{
-							$aActions[$sRelationCode.'_down'] = array ('label' => $aRelationInfo['down'], 'url' => "{$sRootUrl}pages/$sUIPage?operation=swf_navigator&relation=$sRelationCode&direction=down&class=$sClass&id=$id{$sContext}");
-						}
-						if (array_key_exists('up', $aRelationInfo))
-						{
-							$aActions[$sRelationCode.'_up'] = array ('label' => $aRelationInfo['up'], 'url' => "{$sRootUrl}pages/$sUIPage?operation=swf_navigator&relation=$sRelationCode&direction=up&class=$sClass&id=$id{$sContext}");
-						}
-					}
-				}
-				if ($bLocked && $bRawModifiedAllowed)
-				{
-					// Add a special menu to kill the lock, but only to allowed users who can also modify this object
-					$aAllowedProfiles = MetaModel::GetConfig()->Get('concurrent_lock_override_profiles');
-					$bCanKill = false;
-				
-					$oUser = UserRights::GetUserObject();
-					$aUserProfiles = array();
-					if (!is_null($oUser))
-					{
-						$oProfileSet = $oUser->Get('profile_list');
-						while ($oProfile = $oProfileSet->Fetch())
-						{
-							$aUserProfiles[$oProfile->Get('profile')] = true;
-						}
-					}
-	
-					foreach($aAllowedProfiles as $sProfile)
-					{
-						if (array_key_exists($sProfile, $aUserProfiles))
-						{	
-							$bCanKill = true;
-							break;
-						}
-					}
-					
-					if ($bCanKill)
-					{		
 						$this->AddMenuSeparator($aActions);
-						$aActions['concurrent_lock_unlock'] = array ('label' => Dict::S('UI:Menu:KillConcurrentLock'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=kill_lock&class=$sClass&id=$id{$sContext}");
+						foreach($aRelations as $sRelationCode => $aRelationInfo)
+						{
+							if (array_key_exists('down', $aRelationInfo))
+							{
+								$aActions[$sRelationCode.'_down'] = array ('label' => $aRelationInfo['down'], 'url' => "{$sRootUrl}pages/$sUIPage?operation=swf_navigator&relation=$sRelationCode&direction=down&class=$sClass&id=$id{$sContext}");
+							}
+							if (array_key_exists('up', $aRelationInfo))
+							{
+								$aActions[$sRelationCode.'_up'] = array ('label' => $aRelationInfo['up'], 'url' => "{$sRootUrl}pages/$sUIPage?operation=swf_navigator&relation=$sRelationCode&direction=up&class=$sClass&id=$id{$sContext}");
+							}
+						}
 					}
+					if ($bLocked && $bRawModifiedAllowed)
+					{
+						// Add a special menu to kill the lock, but only to allowed users who can also modify this object
+						$aAllowedProfiles = MetaModel::GetConfig()->Get('concurrent_lock_override_profiles');
+						$bCanKill = false;
+					
+						$oUser = UserRights::GetUserObject();
+						$aUserProfiles = array();
+						if (!is_null($oUser))
+						{
+							$oProfileSet = $oUser->Get('profile_list');
+							while ($oProfile = $oProfileSet->Fetch())
+							{
+								$aUserProfiles[$oProfile->Get('profile')] = true;
+							}
+						}
+		
+						foreach($aAllowedProfiles as $sProfile)
+						{
+							if (array_key_exists($sProfile, $aUserProfiles))
+							{	
+								$bCanKill = true;
+								break;
+							}
+						}
+						
+						if ($bCanKill)
+						{		
+							$this->AddMenuSeparator($aActions);
+							$aActions['concurrent_lock_unlock'] = array ('label' => Dict::S('UI:Menu:KillConcurrentLock'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=kill_lock&class=$sClass&id=$id{$sContext}");
+						}
+					}
+					/*
+					$this->AddMenuSeparator($aActions);
+					// Static menus: Email this page & CSV Export
+					$sUrl = ApplicationContext::MakeObjectUrl($sClass, $id);
+					$aActions['UI:Menu:EMail'] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".urlencode($oObj->GetRawName())."&body=".urlencode($sUrl));
+					$aActions['UI:Menu:CSVExport'] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=search&filter=".urlencode($sFilter)."&format=csv{$sContext}");
+					// The style tells us whether the menu is displayed on a list of one object, or on the details of the given object 
+					if ($this->m_sStyle == 'list')
+					{
+						// Actions specific to the list
+						$sOQL = addslashes($sFilterDesc);
+						$aActions['UI:Menu:AddToDashboard'] = array ('label' => Dict::S('UI:Menu:AddToDashboard'), 'url' => "#", 'onclick' => "return DashletCreationDlg('$sOQL')");
+					}
+					*/
 				}
-				/*
 				$this->AddMenuSeparator($aActions);
-				// Static menus: Email this page & CSV Export
-				$sUrl = ApplicationContext::MakeObjectUrl($sClass, $id);
-				$aActions['UI:Menu:EMail'] = array ('label' => Dict::S('UI:Menu:EMail'), 'url' => "mailto:?subject=".urlencode($oObj->GetRawName())."&body=".urlencode($sUrl));
-				$aActions['UI:Menu:CSVExport'] = array ('label' => Dict::S('UI:Menu:CSVExport'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=search&filter=".urlencode($sFilter)."&format=csv{$sContext}");
-				// The style tells us whether the menu is displayed on a list of one object, or on the details of the given object 
-				if ($this->m_sStyle == 'list')
+				foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 				{
-					// Actions specific to the list
-					$sOQL = addslashes($sFilterDesc);
-					$aActions['UI:Menu:AddToDashboard'] = array ('label' => Dict::S('UI:Menu:AddToDashboard'), 'url' => "#", 'onclick' => "return DashletCreationDlg('$sOQL')");
-				}
-				*/
-			}
-			$this->AddMenuSeparator($aActions);
-			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
-			{
-				$oSet->Rewind();
-				foreach($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $sUrl)
-				{
-					$aActions[$sLabel] = array ('label' => $sLabel, 'url' => $sUrl);
+					$oSet->Rewind();
+					foreach($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $sUrl)
+					{
+						$aActions[$sLabel] = array ('label' => $sLabel, 'url' => $sUrl);
+					}
 				}
 			}
 			break;
