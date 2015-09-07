@@ -487,7 +487,7 @@ function CheckParameters($sExpression, $sQueryId, $sFormat)
 	return $oExporter;
 }
 
-function DoExport(Page $oP, BulkExport $oExporter, $bInteractive = false)
+function DoExport(WebPage $oP, BulkExport $oExporter, $bInteractive = false)
 {
 	$oExporter->SetHttpHeaders($oP);
 	$exportResult = $oExporter->GetHeader();
@@ -507,6 +507,7 @@ function DoExport(Page $oP, BulkExport $oExporter, $bInteractive = false)
 	{
 		$exportResult .= $oExporter->GetFooter();
 		$oP->SetContentType($oExporter->GetMimeType());
+		$oP->SetContentDisposition('attachment', $oExporter->GetDownloadFileName());
 		$oP->add($exportResult);
 		$oExporter->Cleanup();
 	}
