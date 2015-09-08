@@ -4065,6 +4065,8 @@ EOF
 		$oPage->add_ready_script(
 <<<EOF
 		window.setInterval(function() {
+			if (window.bInSubmit || window.bInCancel) return;
+			
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'extend_lock', obj_class: $sJSClass, obj_key: $iKey, token: $sJSToken }, function(data) {
 				if (!data.status)
 				{
