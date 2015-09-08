@@ -1259,7 +1259,7 @@ class CAS_SelfRegister implements iSelfRegister
 								break;
 							}
 						}
-						else if ($sPattern == $sGroupName)
+						else if ($sCASPattern == $sGroupName)
 						{
 							$bIsMember = true;
 							break;
