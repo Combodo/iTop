@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2014 Combodo SARL
+// Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * DB Server abstraction
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -336,7 +336,7 @@ class CMDBSource
 		catch(mysqli_sql_exception $e)
 		{
 			$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
-			MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
+			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
 		}
 		$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
 		if ($oResult === false)
@@ -368,7 +368,7 @@ class CMDBSource
 		catch(mysqli_sql_exception $e)
 		{
 			$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
-			MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
+			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
 		}
 		$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
 		if ($oResult === false)
@@ -404,7 +404,7 @@ class CMDBSource
 		}
 		catch(mysqli_sql_exception $e)
 		{
-			MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
+			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
 		}
 		if ($oResult === false)
 		{
@@ -430,7 +430,7 @@ class CMDBSource
 		}
 		catch(mysqli_sql_exception $e)
 		{
-			MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
+			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
 		}
 		if ($oResult === false)
 		{
