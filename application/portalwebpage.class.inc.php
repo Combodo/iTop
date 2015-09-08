@@ -88,7 +88,7 @@ class PortalWebPage extends NiceWebPage
 		$this->add_linked_script("../js/forms-json-utils.js");
 		$this->add_linked_script("../js/swfobject.js");
 		$this->add_linked_script("../js/jquery.qtip-1.0.min.js");
-		$this->add_linked_script('../js/jquery.multiselect.min.js');
+		$this->add_linked_script('../js/jquery.multiselect.js');
 		$this->add_linked_script("../js/ajaxfileupload.js");
 		$this->add_linked_script("../js/ckeditor/ckeditor.js");
 		$this->add_linked_script("../js/ckeditor/adapters/jquery.js");

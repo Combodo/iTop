@@ -73,7 +73,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script('../js/g.pie.js');
 		$this->add_linked_script('../js/g.dot.js');
 		$this->add_linked_script('../js/charts.js');
-		$this->add_linked_script('../js/jquery.multiselect.min.js');
+		$this->add_linked_script('../js/jquery.multiselect.js');
 		$this->add_linked_script('../js/ajaxfileupload.js');
 		$this->add_linked_script('../js/jquery.mousewheel.js');
 		
@@ -727,6 +727,11 @@ $('.hideable-chapter').click(function(){
 	var sChapterId = $(this).attr('chapter-id');
 	$('#'+sChapterId).toggle();
 	$(this).toggleClass('strikethrough');
+});
+$('fieldset').each(function() {
+	var jLegend = $(this).find('legend');
+	jLegend.remove();
+	$(this).wrapInner('<span></span>').prepend(jLegend);
 });
 $('legend').css('cursor', 'pointer').click(function(){
 		$(this).parent('fieldset').toggleClass('not-printable strikethrough');

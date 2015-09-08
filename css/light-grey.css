@@ -2021,13 +2021,41 @@ div.explain-printable {
 }
 
 
-.hideable-chapter.strikethrough span.ui-tabs-anchor {
+#hiddeable_chapters .ui-tabs .ui-tabs-nav li.hideable-chapter span {
+  padding-left: 20px;
+  background: url(../images/eye-open-555.png) 2px center no-repeat;
+}
+
+
+#hiddeable_chapters .ui-tabs .ui-tabs-nav li.hideable-chapter.strikethrough span {
   text-decoration: line-through;
+  background: url(../images/eye-closed-555.png) 2px center no-repeat;
+}
+
+
+.printable-version legend {
+  padding-left: 26px;
+  background: #1c94c4 url(../images/eye-open-fff.png) 8px center no-repeat;
+}
+
+
+.printable-version .strikethrough legend {
+  background: #1c94c4 url(../images/eye-closed-fff.png) 8px center no-repeat;
+}
+
+
+.printable-version fieldset.strikethrough span {
+  display: none;
 }
 
 
 .strikethrough {
   text-decoration: line-through;
+}
+
+
+select.multiselect {
+  max-width: 150px;
 }
 
 
