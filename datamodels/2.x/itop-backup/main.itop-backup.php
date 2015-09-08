@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2014 Combodo SARL
+// Copyright (C) 2014-2015 Combodo SARL
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ class BackupHandler extends ModuleHandlerAPI
 {
 	public static function OnMetaModelStarted()
 	{
-
 		try
 		{
 			$oBackupMutex = new iTopMutex('backup.'.utils::GetCurrentEnvironment());
@@ -48,13 +47,14 @@ class BackupHandler extends ModuleHandlerAPI
 			}
 			else
 			{
+				IssueLog::Info(__class__.'::'.__function__.' A user is trying to use iTop while a restore is running. The requested page is in read-only mode.');
 				MetaModel::GetConfig()->Set('access_mode', ACCESS_READONLY, 'itop-backup');
 				MetaModel::GetConfig()->Set('access_message', ' - '.dict::S('bkp-restore-running'), 'itop-backup');
 			}
 		}
 		catch(Exception $e)
 		{
-			
+			IssueLog::Error(__class__.'::'.__function__.' Failed to check if a backup/restore is running: '.$e->getMessage());
 		}
 	}
 }

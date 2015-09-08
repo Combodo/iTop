@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2014 Combodo SARL
+// Copyright (C) 2013-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Backup from an interactive session
  *
- * @copyright   Copyright (C) 2013 Combodo SARL
+ * @copyright   Copyright (C) 2013-215 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -119,7 +119,9 @@ EOF
 		{
 			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
 			$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
+			IssueLog::Info("Backup Restore - Acquiring the LOCK 'restore.$sEnvironment'");
 			$oRestoreMutex->Lock();
+			IssueLog::Info('Backup Restore - LOCK acquired, executing...');
 			try
 			{
 				set_time_limit(0);
@@ -148,6 +150,7 @@ EOF
 				$sBackupFile = $sBackupDir.$sFile;
 				$sRes = $oDBRS->RestoreFromZip($sBackupFile, $sEnvironment);
 	
+				IssueLog::Info('Backup Restore - Done, releasing the LOCK');
 				$oRestoreMutex->Unlock();
 			}
 			catch (Exception $e)
