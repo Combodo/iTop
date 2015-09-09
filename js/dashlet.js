@@ -130,6 +130,7 @@ $(function()
 			$('#dashlet_properties_'+iDashletId).remove();
 			this.element.remove();
 			$('#event_bus').trigger('dashlet-removed', {'dashlet_id': iDashletId, 'dashlet_class': sDashletClass, 'container': oContainer});
+			$('.itop-dashboard').trigger('mark_as_modified');
 		}
 	});	
 });

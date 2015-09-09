@@ -39,6 +39,10 @@ $(function()
 			this.ajax_div = $('<div></div>');
 			this.element.after(this.ajax_div);
 			this._make_draggable();
+			
+			// Make sure we don't click on something we'll regret
+			$('.itop-dashboard').on('click', 'a', function(e) { e.preventDefault(); });
+
 		},
 	
 		// called when created, and later when changing options
@@ -318,7 +322,13 @@ $(function()
 			$.post(this.options.render_to, oParams, function(data){
 				me.ajax_div.html(data);
 				me.add_dashlet_finalize(options, sDashletId, sDashletClass);
+				me.mark_as_modified();
 			});
+		},
+		on_dashlet_moved: function(oDashlet, oReceiver, bRefresh)
+		{
+			this._superApply(arguments);
+			this.mark_as_modified();
 		}
 	});	
 });

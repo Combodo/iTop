@@ -340,7 +340,7 @@ a.small_action {
   padding-left: 5px;
   padding-top: 2px;
   padding-bottom: 2px;
-  background: url(../images/actions_left.png) no-repeat left;
+  background: #e87c1e url(../images/actions_left.png) no-repeat left;
 }
 
 
@@ -593,7 +593,7 @@ div.actions_menu > ul {
  */
 
   padding-left: 5px;
-  background: url(../images/actions_left.png) no-repeat top left;
+  background: #e87c1e url(../images/actions_left.png) no-repeat top left;
   cursor: pointer;
   margin: 0;
 }
@@ -1484,7 +1484,7 @@ img.first, img.last, img.next, img.prev {
 
 div.actions_button {
   float: right;
-  background: url("../images/actions_left.png") no-repeat scroll left top transparent;
+  background: #e87c1e url("../images/actions_left.png") no-repeat scroll left top transparent;
   padding-left: 5px;
   margin-top: 0;
   margin-right: 10px;
@@ -1519,6 +1519,11 @@ select#org_id {
  */
 .itop-dashboard {
   background-color: white;
+}
+
+
+.itop-dashboard a {
+  cursor: not-allowed;
 }
 
 

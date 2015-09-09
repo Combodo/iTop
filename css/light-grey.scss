@@ -272,7 +272,7 @@ a.small_action {
 	padding-left: 5px;
 	padding-top: 2px;
 	padding-bottom: 2px;
-	background: url(../images/actions_left.png) no-repeat left;
+	background: $highlight-color url(../images/actions_left.png) no-repeat left;
 }
 .actions_details span{
 	background: url(../images/actions_right.png) no-repeat right;
@@ -450,7 +450,7 @@ div.actions_menu > ul {
 	display:block;
 	nowidth:70px; /* Nasty work-around for IE... en attendant mieux */
 	padding-left: 5px;
-	background: url(../images/actions_left.png) no-repeat top left;
+	background: $highlight-color url(../images/actions_left.png) no-repeat top left;
 	cursor: pointer;
 	margin: 0;
 }
@@ -1105,7 +1105,7 @@ img.prev, img.first, img.next, img.last {
 }
 div.actions_button {
 	float:right;
-	background: url("../images/actions_left.png") no-repeat scroll left top transparent;
+	background: $highlight-color url("../images/actions_left.png") no-repeat scroll left top transparent;
 	padding-left: 5px;
 	margin-top: 0;
 	margin-right: 10px;
@@ -1133,6 +1133,9 @@ select#org_id {
 /*********** Dashboards ***********/
 .itop-dashboard {
 	background-color: #fff;
+}
+.itop-dashboard a {
+	cursor: unquote("not-allowed");
 }
 .dragHover {
 	background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png);
