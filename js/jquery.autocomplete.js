@@ -321,7 +321,7 @@ $.Autocompleter = function(input, options) {
 							$input.val( words.join(options.multipleSeparator) + (words.length ? options.multipleSeparator : "") );
 						}
 						else {
-							$input.val( "" );
+							//$input.val( "" );
 							$input.trigger("result", null);
 						}
 					}
