@@ -781,6 +781,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:RelationOption:GroupingThreshold' => 'Grouping threshold~~',
 	'UI:Relation:AdditionalContextInfo' => 'Additional context info~~',
 	'UI:Relation:NoneSelected' => 'Nichts~~',
+	'UI:Relation:Zoom' => 'Zoom',
 	'UI:Relation:ExportAsDocument' => 'Export as Document...~~',
 	'UI:Relation:DrillDown' => 'Details...~~',
 	'UI:Relation:PDFExportOptions' => 'PDF Export Options~~',
@@ -1023,6 +1024,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Menu:KillConcurrentLock' => 'Sperre für simultane Änderungen löschen! ',
 	
 	'UI:Menu:ExportPDF' => 'Als PDF exportieren... ',
+	'UI:Menu:PrintableVersion' => 'Druckversion',
 	'Class:UserInternal' => 'Interner Benutzer',
 	'Class:UserInternal+' => 'Benutzer, der innerhalb iTop definiert wird',
 	'UI:Button:Rename' => 'Umbenennen... ',

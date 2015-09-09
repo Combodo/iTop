@@ -924,10 +924,9 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:OrderByHint_Values' => 'Ordre de tri: %1$s',
 	'UI:Menu:AddToDashboard' => 'Ajouter au Tableau de Bord...',
 	'UI:Button:Refresh' => 'Rafraîchir',
-	'UI:Button:PrintableVersion' => 'Version imprimable',
 	'UI:Button:GoPrint' => 'Imprimer...',
-	'UI:ExplainPrintable' => 'Cliquez sur les chapitres ou les éléments que vous voulez exclure de l\'impression. Cet en-tête, ainsi que les éléments de contrôle qui pourraient apparaitre dans cette page, ne seront pas imprimés. Il est recommandé d\'utiliser la fonction "Aperçu avant impression" de votre navigateur pour voir le rendu exact avant de lancer l\'impression.',
-
+	'UI:ExplainPrintable' => 'Cliquez sur les icones %1$s pour cacher des éléments lors de l\'impression.<br/>Utilisez la fonction "Aperçu avant impression" de votre navigateur pour prévisualiser avant d\'imprimer.<br/>Note: cet en-tête ainsi que les icones %1$s ne seront pas imprimés.',
+	
 	'UI:ConfigureThisList' => 'Configurer Cette Liste...',
 	'UI:ListConfigurationTitle' => 'Configuration de la liste',
 	'UI:ColumnsAndSortOrder' => 'Colonnes et ordre de tri:',
@@ -1135,4 +1134,5 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Menu:KillConcurrentLock' => 'Supprimer le verrouillage !',
 	
 	'UI:Menu:ExportPDF' => 'Exporter en PDF...',
+	'UI:Menu:PrintableVersion' => 'Version imprimable',
 ));

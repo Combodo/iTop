@@ -1080,9 +1080,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:OrderByHint_Values' => 'Sort order: %1$s',
 	'UI:Menu:AddToDashboard' => 'Add To Dashboard...',
 	'UI:Button:Refresh' => 'Refresh',
-	'UI:Button:PrintableVersion' => 'Printable version',
 	'UI:Button:GoPrint' => 'Print...',
-	'UI:ExplainPrintable' => 'Click onto the chapters or items that you want to exclude from the print. This header and other tuning controls will not be printed. It is highly recommended to use the "print preview" feature provided by your browser, before proceeding.',
+	'UI:ExplainPrintable' => 'Click onto the %1$s icon to hide items from the print.<br/>Use the "print preview" feature of your browser to preview before printing.<br/>Note: this header and the other tuning controls will not be printed.',
 
 	'UI:ConfigureThisList' => 'Configure This List...',
 	'UI:ListConfigurationTitle' => 'List Configuration',
@@ -1293,5 +1292,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Menu:KillConcurrentLock' => 'Kill the Concurrent Modification Lock !',
 	
 	'UI:Menu:ExportPDF' => 'Export as PDF...',
+	'UI:Menu:PrintableVersion' => 'Printer friendly version',
 ));
 ?>

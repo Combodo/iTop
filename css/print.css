@@ -14,7 +14,6 @@ div.itop-tab { border: #ccc 1px solid; margin-top: 1em; padding-bottom:1em; }
 #combodo_logo { display:none; }
 div.graph_config { display:none; }
 h2.printable-tab-title {
-	border-bottom: 2px solid;
 	page-break-after: avoid;
 }
 div#tabbedContent_0 { border:none; }
@@ -23,3 +22,7 @@ p a, .ui-widget-content td a, p a:hover, .ui-widget-content td a:hover {
 	background: transparent;
 }
 body { margin:none; }
+.printable-tab {
+	-webkit-region-break-inside: avoid;
+	page-break-inside: avoid;
+}

@@ -1297,9 +1297,17 @@ class DisplayableGraph extends SimpleGraph
 		}
 		$oP->add("<div class=\"not-printable\">\n");
 		$oP->add("<div id=\"ds_flash\" class=\"SearchDrawer\" style=\"display:none;\">\n");
-		$oP->add_ready_script(
+		if (!$oP->IsPrintableVersion())
+		{
+			$oP->add_ready_script(
 <<<EOF
 	$( "#tabbedContent_0" ).tabs({ heightStyle: "fill" });
+EOF
+			);
+		}
+		
+		$oP->add_ready_script(
+<<<EOF
 	$("#dh_flash").click( function() {
 		$("#ds_flash").slideToggle('normal', function() { $("#ds_flash").parent().resize(); $("#dh_flash").trigger('toggle_complete'); } );
 		$("#dh_flash").toggleClass('open');
@@ -1368,7 +1376,8 @@ EOF
 			if ($oP->IsPrintableVersion())
 			{
 				// Optimize for printing on A4/Letter vertically
-				$sStyle = 'max-width: 17cm; margin-left:auto; margin-right:auto;';
+				$sStyle = 'margin-left:auto; margin-right:auto;';
+				$oP->add_ready_script("$('.simple-graph').width(18/2.54*96).resizable({ stop: function() { $(window).trigger('resized'); }});"); // Default width about 18 cm, since most browsers assume 96 dpi
 			}
 			$oP->add('<div id="'.$sId.'" class="simple-graph" style="'.$sStyle.'"></div>');
 			$aParams = array(

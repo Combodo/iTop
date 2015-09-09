@@ -1426,5 +1426,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.~~',
 	'UI:Menu:KillConcurrentLock' => 'Kill the Concurrent Modification Lock !~~',
 	'UI:Menu:ExportPDF' => 'Export as PDF...~~',
+	'UI:Menu:PrintableVersion' => 'Versión imprimible',
 ));
 ?>

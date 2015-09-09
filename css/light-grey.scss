@@ -1516,6 +1516,9 @@ div.explain-printable {
 .printable-version fieldset.strikethrough span {
 	display: none;
 }
+h2.printable-tab-title {
+	border-bottom: 2px solid;
+}
 .strikethrough {
 	text-decoration: line-through;
 }

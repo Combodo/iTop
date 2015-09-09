@@ -776,9 +776,11 @@ EOF
 		if ($this->IsPrintableVersion())
 		{
 			$sHtml .= "<div class=\"explain-printable not-printable\">";
-			$sHtml .= '<p>'.Dict::S('UI:ExplainPrintable').'</p>';
+			$sHtml .= '<p>'.Dict::Format('UI:ExplainPrintable', '<img src="../images/eye-open-555.png" style="vertical-align:middle">').'</p>';
 			$sHtml .= "<div id=\"hiddeable_chapters\"></div>";
 			$sHtml .= '<button onclick="window.print()">'.htmlentities(Dict::S('UI:Button:GoPrint'), ENT_QUOTES, 'UTF-8').'</button>';
+			$sHtml .= '&nbsp;';
+			$sHtml .= '<button onclick="window.close()">'.htmlentities(Dict::S('UI:Button:Cancel'), ENT_QUOTES, 'UTF-8').'</button>';
 			$sHtml .= "</div>";
 		}
 

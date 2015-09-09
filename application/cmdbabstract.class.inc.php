@@ -183,12 +183,6 @@ EOF
 		{
 			$aIcons[] = '<img src="../images/reload.png" style="cursor:pointer;vertical-align:middle;margin-left:1em;" onclick="window.location.reload();" title="'.htmlentities(Dict::S('UI:Button:Refresh'), ENT_QUOTES, 'UTF-8').'"/>';
 		}
-		if (!$oPage->IsPrintableVersion())
-		{
-			$sPrintableUrl = ApplicationContext::MakeObjectUrl(get_class($this), $this->GetKey()).'&printable=1';
-			//$sPrintModeIcon = '<img src="../images/printableversion.png" style="cursor:pointer;vertical-align:middle;margin-left:1em;" onclick="window.open(\''.$sPrintableUrl.'\', \'printable_version\', \'toolbar=yes,scrollbar=yes\')" title="'.htmlentities(Dict::S('UI:Button:PrintableVersion'), ENT_QUOTES, 'UTF-8').'"/>';
-			$aIcons[] = '<a href="'.$sPrintableUrl.'" target="_blank"><img src="../images/printableversion.png" style="cursor:pointer;vertical-align:middle;margin-left:1em;" title="'.htmlentities(Dict::S('UI:Button:PrintableVersion'), ENT_QUOTES, 'UTF-8').'"/></a>';
-		}
 
 		// Master data sources
 		$bSynchronized = false;
