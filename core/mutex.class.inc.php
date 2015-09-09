@@ -133,7 +133,9 @@ class iTopMutex
 		}
 		if (($res !== '1') && ($res !== '0'))
 		{
-			IssueLog::Error('GET_LOCK('.$this->sName.', 0) returned: '.var_export($res, true).'. Expected values are: 0, 1 or null !!');
+			$sMsg = 'GET_LOCK('.$this->sName.', 0) returned: '.var_export($res, true).'. Expected values are: 0, 1 or null';
+			IssueLog::Error($sMsg);
+			throw new Exception($sMsg);
 		}
 		return ($res !== '0');
 	}
