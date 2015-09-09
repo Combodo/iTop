@@ -1105,16 +1105,16 @@ img.prev, img.first, img.next, img.last {
 }
 div.actions_button {
 	float:right;
-	background: $highlight-color url("../images/actions_left.png") no-repeat scroll left top transparent;
+	background: $highlight-color url("../images/actions_left.png") no-repeat scroll left top;
 	padding-left: 5px;
 	margin-top: 0;
 	margin-right: 10px;
-	height:17px;
+	height:19px;
 	vertical-align: middle;
 }
 
 div.actions_button a, .actions_button a:hover, .actions_button a:visited {
-	background:url(../images/actions_bkg.png) no-repeat scroll right top transparent;
+	background: $highlight-color  url(../images/actions_bkg.png) no-repeat scroll right top;
 	color:#fff;
 	padding-right: 8px;
 	cursor:pointer;
@@ -1123,7 +1123,7 @@ div.actions_button a, .actions_button a:hover, .actions_button a:visited {
 	font-weight: bold;
 	padding-left: 4px;
 	text-decoration: none;
-	height:17px;
+	height:19px;
 	line-height: 17px;
 	display: block;
 }
