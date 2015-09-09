@@ -1368,6 +1368,7 @@
           <linked_class>SoftwareInstance</linked_class>
           <ext_key_to_me>system_id</ext_key_to_me>
           <edit_mode>in_place</edit_mode>
+          <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
@@ -1787,6 +1788,7 @@
           <linked_class>PhysicalInterface</linked_class>
           <ext_key_to_me>connectableci_id</ext_key_to_me>
           <edit_mode>in_place</edit_mode>
+          <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
@@ -2025,6 +2027,7 @@
           <linked_class>FiberChannelInterface</linked_class>
           <ext_key_to_me>datacenterdevice_id</ext_key_to_me>
           <edit_mode>in_place</edit_mode>
+          <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
@@ -3284,6 +3287,7 @@
           <linked_class>MiddlewareInstance</linked_class>
           <ext_key_to_me>middleware_id</ext_key_to_me>
           <edit_mode>in_place</edit_mode>
+          <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
@@ -3428,6 +3432,7 @@
           <linked_class>DatabaseSchema</linked_class>
           <ext_key_to_me>dbserver_id</ext_key_to_me>
           <edit_mode>in_place</edit_mode>
+          <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
@@ -3572,6 +3577,7 @@
           <linked_class>WebApplication</linked_class>
           <ext_key_to_me>webserver_id</ext_key_to_me>
           <edit_mode>in_place</edit_mode>
+          <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>

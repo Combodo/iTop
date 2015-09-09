@@ -30,6 +30,7 @@
           <linked_class>LogicalVolume</linked_class>
           <ext_key_to_me>storagesystem_id</ext_key_to_me>
           <edit_mode>in_place</edit_mode>
+          <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
@@ -548,6 +549,7 @@
           <linked_class>Tape</linked_class>
           <ext_key_to_me>tapelibrary_id</ext_key_to_me>
           <edit_mode>in_place</edit_mode>
+          <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
@@ -805,6 +807,7 @@
           <linked_class>NASFileSystem</linked_class>
           <ext_key_to_me>nas_id</ext_key_to_me>
           <edit_mode>in_place</edit_mode>
+          <tracking_level>all</tracking_level>
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
