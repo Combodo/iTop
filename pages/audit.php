@@ -310,11 +310,10 @@ try
 						}
 					}
 					$aResults[] = $aRow;
-					$iTotalErrors = count($aObjectsWithErrors);
-					$sOverallPercentOk = ($iCount == 0) ? '100.00' : sprintf('%.2f', 100.0 * (($iCount - $iTotalErrors) / $iCount));
-					$sClass = GetReportColor($iCount, $iTotalErrors);
-		
 				}
+				$iTotalErrors = count($aObjectsWithErrors);
+				$sOverallPercentOk = ($iCount == 0) ? '100.00' : sprintf('%.2f', 100.0 * (($iCount - $iTotalErrors) / $iCount));
+				$sClass = GetReportColor($iCount, $iTotalErrors);
 			}
 			catch(Exception $e)
 			{
@@ -326,6 +325,10 @@ try
 				$sMessage = Dict::Format('UI:Audit:ErrorIn_Category_Reason', $oAuditCategory->GetHyperlink(), $e->getMessage());
 				$oP->p("<img style=\"vertical-align:middle\" src=\"../images/stop-mid.png\"/>&nbsp;".$sMessage);
 				$aResults[] = $aRow;					
+
+				$sClass = 'red';
+				$iTotalErrors = 'n/a';
+				$sOverallPercentOk = '';
 			}
 			$oP->add("<tr>\n");
 			$oP->add("<th><img src=\"../images/minus.gif\"></th><th class=\"alignLeft\">".$oAuditCategory->GetName()."</th><th class=\"alignRight\">$iCount</th><th class=\"alignRight\">$iTotalErrors</th><th class=\"alignRight $sClass\">$sOverallPercentOk %</th>\n");
