@@ -143,6 +143,33 @@ function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams)
 	}
 }
 
+function SaveGroupBySortOrder(sTableId, aValues)
+{
+	var sDashboardId = $('#'+sTableId).closest('.dashboard_contents').attr('id');
+	var sPrefKey = 'GroupBy_'+sDashboardId+'_'+sTableId;
+	if (aValues.length != 0)
+	{
+		$sValue = JSON.stringify(aValues);
+		if (GetUserPreference(sPrefKey, null) != $sValue)
+		{
+			SetUserPreference(sPrefKey, $sValue, true);			
+		}
+	}
+}
+
+function LoadGroupBySortOrder(sTableId)
+{
+	var sDashboardId = $('#'+sTableId).closest('.dashboard_contents').attr('id');
+	var sPrefKey = 'GroupBy_'+sDashboardId+'_'+sTableId;
+	var sValues = GetUserPreference(sPrefKey, null);
+	if (sValues != null)
+	{
+		aValues = JSON.parse(sValues);
+		window.setTimeout(function () { $('#'+sTableId+' table.listResults').trigger('sorton', [aValues]); }, 50);
+	}
+	
+}
+
 /**
  * Update the display and value of a file input widget when the user picks a new file
  */ 
@@ -372,7 +399,7 @@ function PropagateCheckBox(bCurrValue, aFieldsList, bCheck)
 
 function FixTableSorter(table)
 {
-	if ($('th.header', table).length == 0)
+	if (table[0].config == undefined)
 	{
 		// Table is not sort-able, let's fix it
 		var checkbox = (table.find('th:first :checkbox').length > 0);

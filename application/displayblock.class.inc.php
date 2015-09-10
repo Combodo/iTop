@@ -446,6 +446,8 @@ class DisplayBlock
 				$sFormat = isset($aExtraParams['format']) ? $aExtraParams['format'] : 'UI:Pagination:HeaderNoSelection';
 				$sHtml .= $oPage->GetP(Dict::Format($sFormat, $iTotalCount));
 				$sHtml .= $oPage->GetTable($aAttribs, $aData);
+				
+				$oPage->add_ready_script("LoadGroupBySortOrder('$sId');\n$('#{$sId} table.listResults').unbind('sortEnd.group_by').bind('sortEnd.group_by', function() { SaveGroupBySortOrder('$sId', $(this)[0].config.sortList); })");
 			}
 			else
 			{
