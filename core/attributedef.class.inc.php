@@ -1135,8 +1135,18 @@ class AttributeLinkedSet extends AttributeDefinition
 			return false;
 		}
 
-		// Both values are Object sets
-		return $val1->HasSameContents($val2);
+		// Note: maintain this algorithm so as to make sure it is strictly equivalent to the one used within DBObject::DBWriteLinks()
+		$sExtKeyToMe = $this->GetExtKeyToMe();
+		$sAdditionalKey = null;
+		if ($this->IsIndirect() && !$this->DuplicatesAllowed())
+		{
+			$sAdditionalKey = $this->GetExtKeyToRemote();
+		}
+		$oComparator = new DBObjectSetComparator($val1, $val2, array($sExtKeyToMe), $sAdditionalKey);
+		$aChanges = $oComparator->GetDifferences();
+
+		$bAreEquivalent = (count($aChanges['added']) == 0) && (count($aChanges['removed']) == 0) && (count($aChanges['modified']) == 0);
+		return $bAreEquivalent;
 	}
 
 	/**

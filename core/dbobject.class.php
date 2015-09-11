@@ -1366,9 +1366,10 @@ abstract class DBObject implements iDisplay
 			if (!array_key_exists($sAttCode, $this->m_aTouchedAtt)) continue;
 			if (array_key_exists($sAttCode, $this->m_aModifiedAtt) && ($this->m_aModifiedAtt[$sAttCode] == false)) continue;
 				
+			// Note: any change to this algorithm must be reproduced into the implementation of AttributeLinkSet::Equals()
 			$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
 			$sAdditionalKey = null;
-			if ($oAttDef->IsIndirect())
+			if ($oAttDef->IsIndirect() && !$oAttDef->DuplicatesAllowed())
 			{
 				$sAdditionalKey = $oAttDef->GetExtKeyToRemote();
 			}
