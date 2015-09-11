@@ -412,7 +412,7 @@ class ormStopWatch
 	/**
 	 * Stop counting if not already done
 	 */	 	 	
-	public function Stop($oObject, $oAttDef)
+	public function Stop($oObject, $oAttDef, $iNow = null)
 	{
 		if (is_null($this->iLastStart))
 		{
@@ -420,13 +420,18 @@ class ormStopWatch
 			return false;
 		}
 
+		if (is_null($iNow))
+		{
+			$iNow = time();
+		}
+
 		if (class_exists('WorkingTimeRecorder'))
 		{
 			$sClass = get_class($oObject);
 			$sAttCode = $oAttDef->GetCode();
-			WorkingTimeRecorder::Start($oObject, time(), "ormStopWatch-TimeSpent-$sAttCode", 'Core:ExplainWTC:StopWatch-TimeSpent', array("Class:$sClass/Attribute:$sAttCode"), true /*cumulative*/);
+			WorkingTimeRecorder::Start($oObject, $iNow, "ormStopWatch-TimeSpent-$sAttCode", 'Core:ExplainWTC:StopWatch-TimeSpent', array("Class:$sClass/Attribute:$sAttCode"), true /*cumulative*/);
 		}
-		$iElapsed = $this->ComputeDuration($oObject, $oAttDef, $this->iLastStart, time());
+		$iElapsed = $this->ComputeDuration($oObject, $oAttDef, $this->iLastStart, $iNow);
 		$this->iTimeSpent = $this->iTimeSpent + $iElapsed;
 		if (class_exists('WorkingTimeRecorder'))
 		{
@@ -435,7 +440,7 @@ class ormStopWatch
 
 		foreach ($this->aThresholds as $iPercent => &$aThresholdData)
 		{
-			if (!is_null($aThresholdData['deadline']) && (time() > $aThresholdData['deadline']))
+			if (!is_null($aThresholdData['deadline']) && ($iNow > $aThresholdData['deadline']))
 			{
 				if ($aThresholdData['overrun'] > 0)
 				{
@@ -445,7 +450,7 @@ class ormStopWatch
 				else
 				{
 					// First stop after the deadline has been passed
-					$iOverrun = $this->ComputeDuration($oObject, $oAttDef, $aThresholdData['deadline'], time());
+					$iOverrun = $this->ComputeDuration($oObject, $oAttDef, $aThresholdData['deadline'], $iNow);
 					$aThresholdData['overrun'] = $iOverrun;
 				}
 			}
@@ -453,7 +458,7 @@ class ormStopWatch
 		}
 
 		$this->iLastStart = null;
-		$this->iStopped = time();
+		$this->iStopped = $iNow;
 
 		return true;
 	}
