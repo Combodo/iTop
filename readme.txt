@@ -359,3 +359,4 @@ Tested with IE8 and IE9, Firefox 3.6 up to Firefox 24 and Chrome. Be aware that 
 #730 	Leaving temporary files when performing a backup of the data during installation
 #1145   Two connections between a connectable CI and a network device must have different ports
 #1146   History not reflecting a modification of the connection between a connectable CI and a network device
+#1147   Identical links not always modified as expected
