@@ -24,6 +24,43 @@
  */
 
 
+class TestBeHappy extends TestHandler // TestFunctionInOut, TestBizModel...
+{
+	static public function GetName()
+	{
+		return 'Be happy!';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Sample test with success';
+	}
+
+	protected function DoExecute()
+	{
+		echo "<p>Am I happy?</p>";
+		echo "<p>Yes, I am!</p>";
+	}
+}
+class TestBeSad extends TestHandler
+{
+	static public function GetName()
+	{
+		return 'Be sad...';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Sample test with failure';
+	}
+
+	protected function DoExecute()
+	{
+		echo "Am I happy?";
+		throw new Exception('jamais content');
+	}
+}
+
 class TestSQLQuery extends TestScenarioOnDB
 {
 	static public function GetName() {return 'SQLQuery';}
@@ -3560,4 +3597,589 @@ class TestEmailAsynchronous extends TestBizModel
 	}
 }
 
-?>
+class TestLinkSetRecording_NN_WithDuplicates extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Linkset N-N having duplicated allowed (Connectable CI to Network Device)';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Simulate CSV/data synchro type of recording. Check the values and the history. Lots of issues there: #1145, #1146 and #1147';
+	}
+
+	protected function DoExecute()
+	{
+		CMDBSource::Query('START TRANSACTION');
+		//CMDBSource::Query('ROLLBACK'); automatique !
+		
+		////////////////////////////////////////////////////////////////////////////////
+		// Set the stage
+		//
+		$oServer = MetaModel::NewObject('Server');
+		$oServer->Set('name', 'unit test linkset');
+		$oServer->Set('org_id', 3);
+		$oServer->DBInsert();
+		$iServer = $oServer->GetKey();
+		
+		$oTypes = new DBObjectSet(DBObjectSearch::FromOQL('SELECT NetworkDeviceType WHERE name = "Router"'));
+		$oType = $oTypes->fetch();
+		
+		$oDevice = MetaModel::NewObject('NetworkDevice');
+		$oDevice->Set('name', 'test device A');
+		$oDevice->Set('org_id', 3);
+		$oDevice->Set('networkdevicetype_id', $oType->GetKey());
+		$oDevice->DBInsert();
+		$iDev1 = $oDevice->GetKey();
+		
+		$oDevice = MetaModel::NewObject('NetworkDevice');
+		$oDevice->Set('name', 'test device B');
+		$oDevice->Set('org_id', 3);
+		$oDevice->Set('networkdevicetype_id', $oType->GetKey());
+		$oDevice->DBInsert();
+		$iDev2 = $oDevice->GetKey();
+		
+		
+		////////////////////////////////////////////////////////////////////////////////
+		// Scenarii
+		//
+		$aScenarii = array(
+			array(
+				'description' => 'Add the first item',
+				'links' => array(
+					array(
+						'networkdevice_id' => $iDev1,
+						'connectableci_id' => $iServer,
+						'network_port' => '',
+						'device_port' => '',
+					),
+				),
+				'expected-res' => array (
+			 		"$iDev1, test device A, unit test linkset, , , downlink, test device A",
+				),
+				'history_added' => 1,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Modify the unique item',
+				'links' => array(
+					array(
+						'networkdevice_id' => $iDev1,
+						'connectableci_id' => $iServer,
+						'network_port' => 'devTagada',
+						'device_port' => '',
+					),
+				),
+				'expected-res' => array (
+			 		"$iDev1, test device A, unit test linkset, devTagada, , downlink, test device A",
+				),
+				'history_added' => 1,
+				'history_removed' => 1,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Modify again the original item and add a second item',
+				'links' => array(
+					array(
+						'networkdevice_id' => $iDev1,
+						'connectableci_id' => $iServer,
+						'network_port' => '',
+						'device_port' => '',
+					),
+					array(
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => '',
+						'device_port' => '',
+					),
+				),
+				'expected-res' => array (
+			 		"$iDev1, test device A, unit test linkset, , , downlink, test device A",
+			 		"$iDev2, test device B, unit test linkset, , , downlink, test device B",
+				),
+				'history_added' => 2,
+				'history_removed' => 1,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'No change, the links are added in the reverse order',
+				'links' => array(
+					array(
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => '',
+						'device_port' => '',
+					),
+					array(
+						'networkdevice_id' => $iDev1,
+						'connectableci_id' => $iServer,
+						'network_port' => '',
+						'device_port' => '',
+					),
+				),
+				'expected-res' => array (
+			 		"$iDev1, test device A, unit test linkset, , , downlink, test device A",
+			 		"$iDev2, test device B, unit test linkset, , , downlink, test device B",
+				),
+				'history_added' => 0,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Removing A',
+				'links' => array(
+					array(
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => '',
+						'device_port' => '',
+					),
+				),
+				'expected-res' => array (
+			 		"$iDev2, test device B, unit test linkset, , , downlink, test device B",
+				),
+				'history_added' => 0,
+				'history_removed' => 1,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Adding B again (duplicate!)',
+				'links' => array(
+					array(
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => 'port_123',
+						'device_port' => '',
+					),
+					array(
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => 'port_456',
+						'device_port' => '',
+					),
+				),
+				'expected-res' => array (
+			 		"$iDev2, test device B, unit test linkset, port_123, , downlink, test device B",
+			 		"$iDev2, test device B, unit test linkset, port_456, , downlink, test device B",
+				),
+				'history_added' => 2,
+				'history_removed' => 1,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Remove all',
+				'links' => array(
+				),
+				'expected-res' => array (
+				),
+				'history_added' => 0,
+				'history_removed' => 2,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Device B twice (same characteristics) - known issue #1145',
+				'links' => array(
+					array(
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => '',
+						'device_port' => '',
+					),
+					array(
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => '',
+						'device_port' => '',
+					),
+				),
+				'expected-res' => array (
+			 		"$iDev2, test device B, unit test linkset, portX, , downlink, test device B",
+			 		"$iDev2, test device B, unit test linkset, portX, , downlink, test device B",
+				),
+				'history_added' => 1,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),
+		);
+		
+		foreach ($aScenarii as $aScenario)
+		{
+			echo "<h4>".$aScenario['description']."</h4>\n";
+		
+			$oChange = MetaModel::NewObject("CMDBChange");
+			$oChange->Set("date", time());
+			$oChange->Set("userinfo", CMDBChange::GetCurrentUserName());
+			$oChange->Set("origin", 'custom-extension');
+			$oChange->DBInsert();
+			CMDBObject::SetCurrentChange($oChange);
+			$iChange = $oChange->GetKey();
+			
+			// Prepare set
+			$oLinkset = DBObjectSet::FromScratch('lnkConnectableCIToNetworkDevice');
+			foreach ($aScenario['links'] as $aLinkData)
+			{
+				$oLink1 = MetaModel::NewObject('lnkConnectableCIToNetworkDevice');
+				foreach ($aLinkData as $sAttCode => $value)
+				{
+					$oLink1->Set($sAttCode, $value);
+				}
+				$oLinkset->AddObject($oLink1);
+			}
+			
+			// Write
+			$oServer = MetaModel::GetObject('Server', $iServer);
+			$oServer->Set('networkdevice_list', $oLinkset);
+			$oServer->DBWrite();
+			
+			// Check Results
+			$bFoundIssue = false;
+			$oServer = MetaModel::GetObject('Server', $iServer);
+			$oLinkset = $oServer->Get('networkdevice_list');
+			
+			$aRes = $this->StandardizedDump($oLinkset, 'connectableci_id');
+			$sRes = var_export($aRes, true);
+			echo "Found: <pre>".$sRes."</pre>\n";
+		
+			$sExpectedRes = var_export($aScenario['expected-res'], true);
+			if ($sRes != $sExpectedRes)
+			{
+				$bFoundIssue = true;
+				echo "NOT COMPLIANT!!! Expecting: <pre>".$sExpectedRes."</pre>\n";
+			}
+			
+			// Check History
+			$aQueryParams = array('change' => $iChange, 'objclass' => get_class($oServer), 'objkey' => $oServer->GetKey());
+			
+			$oAdded = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'added'"), array(), $aQueryParams);
+			echo "added: ".$oAdded->Count()."<br/>\n";
+			if ($aScenario['history_added'] != $oAdded->Count())
+			{
+				$bFoundIssue = true;
+				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_added']."<br/>\n";
+			}
+		
+			$oRemoved = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'removed'"), array(), $aQueryParams);
+			echo "removed: ".$oRemoved->Count()."<br/>\n";
+			if ($aScenario['history_removed'] != $oRemoved->Count())
+			{
+				$bFoundIssue = true;
+				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_removed']."<br/>\n";
+			}
+		
+			$oModified = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksTune WHERE objclass = :objclass AND objkey = :objkey AND change = :change"), array(), $aQueryParams);
+			echo "modified: ".$oModified->Count()."<br/>\n";
+			if ($aScenario['history_modified'] != $oModified->Count())
+			{
+				$bFoundIssue = true;
+				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_modified']."<br/>\n";
+			}
+		
+			if ($bFoundIssue)
+			{
+				throw new Exception('Stopping on failed scenario');
+			}
+		}
+	}
+
+	protected function StandardizedDump($oSet, $sAttPrefixToIgnore)
+	{
+		if (!$oSet->m_bLoaded) $oSet->Load();
+		$oSet->Rewind();
+	
+		$aRet = array();
+		while($oObject = $oSet->Fetch())
+		{
+			$aValues = array();
+			foreach(MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef)
+			{
+				if ($sAttCode == 'friendlyname') continue;
+				if (substr($sAttCode, 0, strlen($sAttPrefixToIgnore)) == $sAttPrefixToIgnore) continue;
+				if ($oAttDef->IsScalar())
+				{
+					$aValues[] = $oObject->Get($sAttCode);
+				}
+			}
+			$aRet[] = implode(', ', $aValues);
+		}
+		sort($aRet);
+		return $aRet;
+	}
+}
+
+class TestLinkSetRecording_NN_NoDuplicates extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Linksets N-N in general (99% of them)';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Simulate CSV/data synchro type of recording. Check the values and the history.';
+	}
+
+	protected function DoExecute()
+	{
+		CMDBSource::Query('START TRANSACTION');
+		//CMDBSource::Query('ROLLBACK'); automatique !
+		
+		////////////////////////////////////////////////////////////////////////////////
+		// Set the stage
+		//
+		$oTeam = MetaModel::NewObject('Team');
+		$oTeam->Set('name', 'unit test linkset');
+		$oTeam->Set('org_id', 3);
+		$oTeam->DBInsert();
+		$iTeam = $oTeam->GetKey();
+		
+		$oPerson = MetaModel::NewObject('Person');
+		$oPerson->Set('name', 'test person A');
+		$oPerson->Set('first_name', 'totoche');
+		$oPerson->Set('org_id', 3);
+		$oPerson->DBInsert();
+		$iPerson1 = $oPerson->GetKey();
+		
+		$oPerson = MetaModel::NewObject('Person');
+		$oPerson->Set('name', 'test Person B');
+		$oPerson->Set('first_name', 'totoche');
+		$oPerson->Set('org_id', 3);
+		$oPerson->DBInsert();
+		$iPerson2 = $oPerson->GetKey();
+		
+		$oTypes = new DBObjectSet(DBSearch::FromOQL('SELECT ContactType WHERE name="Manager"'));
+		$iRole = $oTypes->Fetch();
+
+		////////////////////////////////////////////////////////////////////////////////
+		// Scenarii
+		//
+		$aScenarii = array(
+			array(
+				'description' => 'Add the first item',
+				'links' => array(
+					array(
+						'person_id' => $iPerson1,
+						'team_id' => $iTeam,
+						'role_id' => 0,
+					),
+				),
+				'expected-res' => array (
+			 		"unit test linkset, $iPerson1, test person A, 0, , totoche test person A, ",
+				),
+				'history_added' => 1,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Modify the unique item',
+				'links' => array(
+					array(
+						'person_id' => $iPerson1,
+						'team_id' => $iTeam,
+						'role_id' => $iRole,
+					),
+				),
+				'expected-res' => array (
+			 		"unit test linkset, $iPerson1, test person A, $iRole, Manager, totoche test person A, ",
+				),
+				'history_added' => 0,
+				'history_removed' => 0,
+				'history_modified' => 1,
+			),
+			array(
+				'description' => 'Modify again the original item and add a second item',
+				'links' => array(
+					array(
+						'person_id' => $iPerson1,
+						'team_id' => $iTeam,
+						'role_id' => 0,
+					),
+					array(
+						'person_id' => $iPerson2,
+						'team_id' => $iTeam,
+						'role_id' => 0,
+					),
+				),
+				'expected-res' => array (
+			 		"unit test linkset, $iPerson1, test person A, 0, , totoche test person A, ",
+			 		"unit test linkset, $iPerson2, test person A, 0, , totoche test person A, ",
+				),
+				'history_added' => 1,
+				'history_removed' => 0,
+				'history_modified' => 1,
+			),
+			array(
+				'description' => 'No change, the links are added in the reverse order',
+				'links' => array(
+					array(
+						'person_id' => $iPerson2,
+						'team_id' => $iTeam,
+						'role_id' => 0,
+					),
+					array(
+						'person_id' => $iPerson1,
+						'team_id' => $iTeam,
+						'role_id' => 0,
+					),
+				),
+				'expected-res' => array (
+			 		"unit test linkset, $iPerson1, test person A, 0, , totoche test person A, ",
+			 		"unit test linkset, $iPerson2, test person A, 0, , totoche test person A, ",
+				),
+				'history_added' => 0,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Removing A',
+				'links' => array(
+					array(
+						'person_id' => $iPerson2,
+						'team_id' => $iTeam,
+						'role_id' => 0,
+					),
+				),
+				'expected-res' => array (
+			 		"unit test linkset, $iPerson2, test person A, 0, , totoche test person A, ",
+				),
+				'history_added' => 0,
+				'history_removed' => 1,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Adding B again (duplicate!)',
+				'links' => array(
+					array(
+						'person_id' => $iPerson2,
+						'team_id' => $iTeam,
+						'role_id' => 0,
+					),
+					array(
+						'person_id' => $iPerson2,
+						'team_id' => $iTeam,
+						'role_id' => 0,
+					),
+				),
+				'expected-res' => array (
+			 		"unit test linkset, $iPerson2, test person A, 0, , totoche test person A, ",
+				),
+				'history_added' => 0,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Remove all',
+				'links' => array(
+				),
+				'expected-res' => array (
+				),
+				'history_added' => 0,
+				'history_removed' => 1,
+				'history_modified' => 0,
+			),
+		);
+		
+		foreach ($aScenarii as $aScenario)
+		{
+			echo "<h4>".$aScenario['description']."</h4>\n";
+		
+			$oChange = MetaModel::NewObject("CMDBChange");
+			$oChange->Set("date", time());
+			$oChange->Set("userinfo", CMDBChange::GetCurrentUserName());
+			$oChange->Set("origin", 'custom-extension');
+			$oChange->DBInsert();
+			CMDBObject::SetCurrentChange($oChange);
+			$iChange = $oChange->GetKey();
+			
+			// Prepare set
+			$oLinkset = DBObjectSet::FromScratch('lnkPersonToTeam');
+			foreach ($aScenario['links'] as $aLinkData)
+			{
+				$oLink1 = MetaModel::NewObject('lnkPersonToTeam');
+				foreach ($aLinkData as $sAttCode => $value)
+				{
+					$oLink1->Set($sAttCode, $value);
+				}
+				$oLinkset->AddObject($oLink1);
+			}
+			
+			// Write
+			$oTeam = MetaModel::GetObject('Team', $iTeam);
+			$oTeam->Set('persons_list', $oLinkset);
+			$oTeam->DBWrite();
+			
+			// Check Results
+			$bFoundIssue = false;
+			$oTeam = MetaModel::GetObject('Team', $iTeam);
+			$oLinkset = $oTeam->Get('persons_list');
+			
+			$aRes = $this->StandardizedDump($oLinkset, 'team_id');
+			$sRes = var_export($aRes, true);
+			echo "Found: <pre>".$sRes."</pre>\n";
+		
+			$sExpectedRes = var_export($aScenario['expected-res'], true);
+			if ($sRes != $sExpectedRes)
+			{
+				$bFoundIssue = true;
+				echo "NOT COMPLIANT!!! Expecting: <pre>".$sExpectedRes."</pre>\n";
+			}
+			
+			// Check History
+			$aQueryParams = array('change' => $iChange, 'objclass' => get_class($oTeam), 'objkey' => $oTeam->GetKey());
+			
+			$oAdded = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'added'"), array(), $aQueryParams);
+			echo "added: ".$oAdded->Count()."<br/>\n";
+			if ($aScenario['history_added'] != $oAdded->Count())
+			{
+				$bFoundIssue = true;
+				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_added']."<br/>\n";
+			}
+		
+			$oRemoved = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'removed'"), array(), $aQueryParams);
+			echo "removed: ".$oRemoved->Count()."<br/>\n";
+			if ($aScenario['history_removed'] != $oRemoved->Count())
+			{
+				$bFoundIssue = true;
+				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_removed']."<br/>\n";
+			}
+		
+			$oModified = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksTune WHERE objclass = :objclass AND objkey = :objkey AND change = :change"), array(), $aQueryParams);
+			echo "modified: ".$oModified->Count()."<br/>\n";
+			if ($aScenario['history_modified'] != $oModified->Count())
+			{
+				$bFoundIssue = true;
+				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_modified']."<br/>\n";
+			}
+		
+			if ($bFoundIssue)
+			{
+				throw new Exception('Stopping on failed scenario');
+			}
+		}
+	}
+
+	protected function StandardizedDump($oSet, $sAttPrefixToIgnore)
+	{
+		if (!$oSet->m_bLoaded) $oSet->Load();
+		$oSet->Rewind();
+	
+		$aRet = array();
+		while($oObject = $oSet->Fetch())
+		{
+			$aValues = array();
+			foreach(MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef)
+			{
+				if ($sAttCode == 'friendlyname') continue;
+				if (substr($sAttCode, 0, strlen($sAttPrefixToIgnore)) == $sAttPrefixToIgnore) continue;
+				if ($oAttDef->IsScalar())
+				{
+					$aValues[] = $oObject->Get($sAttCode);
+				}
+			}
+			$aRet[] = implode(', ', $aValues);
+		}
+		sort($aRet);
+		return $aRet;
+	}
+}
