@@ -570,7 +570,7 @@ EOF
 										array('iFieldSize' => 20, 'iMinChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'), 'sDefaultValue' => Dict::S('UI:AllOrganizations')),
 										null, 'select', false /* bSearchMultiple */);
 			$this->add_ready_script('$("#org_id").bind("extkeychange", function() { $("#SiloSelection form").submit(); } )');
-			$this->add_ready_script("$('#label_org_id').click( function() { $(this).val(''); $('#org_id').val(''); return true; } );\n");
+			$this->add_ready_script("$('#label_org_id').click( function() { if ($('#org_id').val() == '') { $(this).val(''); } } );\n");
 			// Add other dimensions/context information to this form
 			$oAppContext->Reset('org_id'); // org_id is handled above and we want to be able to change it here !
 			$oAppContext->Reset('menu'); // don't pass the menu, since a menu may expect more parameters
