@@ -798,14 +798,10 @@ EOF
 
 		// Render the text of the global search form
 		$sText = htmlentities(utils::ReadParam('text', '', false, 'raw_data'), ENT_QUOTES, 'UTF-8');
-		$sOnClick = "";
+		$sOnClick = " onclick=\"if ($('#global-search-input').val() != '') { $('#global-search form').submit();  } \"";
 		if (empty($sText))
 		{
-			// if no search text is supplied then
-			// 1) the search text is filled with "your search"
-			// 2) clicking on it will erase it
 			$sText = Dict::S("UI:YourSearch");
-			$sOnClick = " onclick=\"this.value='';this.onclick=null;\"";
 		}
 
 		if ($this->IsPrintableVersion())
@@ -828,7 +824,7 @@ EOF
 			{
 				$sLogonMessage = Dict::Format('UI:LoggedAsMessage', $sUserName);
 			}
-			$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><img src=\"../images/onOffBtn.png\"><ul>";
+			$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><img src=\"../images/on-off-menu.png\"><ul>";
 			$sLogOffMenu .= "<li><span>$sLogonMessage</span></li>\n";
 			$aActions = array();
 
@@ -938,10 +934,10 @@ EOF
 			$sHtml .= '<div class="ui-layout-center">';
 			$sHtml .= ' <div id="top-bar" style="width:100%">';
 			$sHtml .= self::FilterXSS($sApplicationBanner);
-			$sHtml .= '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><table><tr><td></td><td id="g-search-input"><input type="text" name="text" value="'.$sText.'"'.$sOnClick.'/></td>';
-			$sHtml .= '<td><input type="image" src="../images/searchBtn.png"/></a></td>';
-			$sHtml .= '<td><a style="background:transparent;" href="'.$sOnlineHelpUrl.'" target="_blank"><img style="border:0;padding-left:20px;padding-right:10px;" title="'.Dict::S('UI:Help').'" src="../images/help.png"/></td>';
-			$sHtml .= '<td style="padding-right:20px;padding-left:10px;">'.self::FilterXSS($sLogOffMenu).'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
+			$sHtml .= '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><table><tr><td></td><td><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="'.$sText.'"></input><div '.$sOnClick.' id="global-search-image"></div></div></td>';
+			//$sHtml .= '<td><input type="image" src="../images/searchBtn.png"/></a></td>';
+			$sHtml .= '<td><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank"><img title="'.Dict::S('UI:Help').'" src="../images/help.png"/></td>';
+			$sHtml .= '<td>'.self::FilterXSS($sLogOffMenu).'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
 			//echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
 			$sHtml .= ' </div>';
 			$sHtml .= ' <div class="ui-layout-content" style="overflow:auto;">';

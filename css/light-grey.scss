@@ -472,7 +472,8 @@ div.actions_menu > ul > li {
 	list-style: none;
 	vertical-align: middle;
 	margin: 0;
-	padding: 0;
+	padding-left: 10px;
+	padding-right: 10px;
 	cursor: pointer;
 }
 #logOffBtn > ul {
@@ -481,7 +482,6 @@ div.actions_menu > ul > li {
 	margin: 0;
 	padding: 0;
 	height: 25px;
-	noline-height: 25px;
 }
 	
 .itop_popup li a, #logOffBtn li a {
@@ -653,6 +653,7 @@ input.dp-applied {
 .SearchDrawer label {
 	background: $complement-light;
 	color: #000;
+	text-align: right;
 }
 .SearchDrawer h1 {
 	color: #000;
@@ -868,13 +869,8 @@ div#logo div {
 #global-search {
 	height: 55px;
 	float: right;
-	background: url(../images/banner-search.png) no-repeat;
-	nopadding-top: 15px;
 	text-align: right;
 	overflow-y: hidden;
-}
-#global-search > form div {
-	padding-left: 4px;
 }
 #global-search table, #global-search tr td,  #global-search tr {
 	padding: 0;
@@ -885,17 +881,40 @@ div#logo div {
 	overflow-y: hidden;
 	vertical-align: middle;
 }
-#global-search > form input[type="text"] {
-	border: 0;
+#global-search-area {
+	line-height: 55px;
+}
+#global-search-input {
+	vertical-align: middle;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	border: 1px #CCC solid;
 	height: 18px;
 	width: 180px;
-	padding-top: 4;
-	background: transparent;
+	padding: 3px;
+	background: #fff;
+	display: inline-block;
 }
-#global-search > form tr td#g-search-input {
-	padding-top: 3px;
-	padding-left: 3px;
+#global-search-image {
+	vertical-align: middle;
+	background: url(../images/search.png) center center no-repeat;
+	display:inline-block;
+	width: 28px;
+	height: 30px;
+	margin-left: -8px;
+	cursor: pointer;
+}
+#help-link img {
+	padding: 0;
+	border: 0;
+}
+#help-link {
+	padding: 0;
+	border: 0;
 	background: transparent;
+	margin-left: 15px;
+	margin-right: 10px;
 }
 div.icon {
 	width: 20px;
@@ -1055,7 +1074,7 @@ span.form_validation {
 table.details {
   border-collapse: collapse;
   noborder-bottom: 2px #fff solid;
-  width:100%;
+  nowidth:100%;
 }
 table.details>tbody>tr>td {
 	border-bottom: 2px #ddd solid;
@@ -1308,8 +1327,8 @@ a.summary,  a.summary:hover {
 	z-index: 999;
 }
 #DashboardMenu li ul li a:hover{
-	background: #D81515;
-	color: #fff;
+	background: $popup-menu-highlight-color;
+	color: $popup-menu-text-higlight-color;
 	font-weight: bold;
 	list-style: none;
 }

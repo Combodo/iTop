@@ -1402,13 +1402,16 @@ class MenuBlock extends DisplayBlock
 			else
 			{
 				$id = $oObj->GetKey();
-				if ($_SERVER['REQUEST_METHOD'] == 'GET')
+				if (utils::ReadParam('operation') == 'details')
 				{
-					$sRefreshAction = "window.location.reload();";
-				}
-				else
-				{
-					$sRefreshAction = "window.location.href='".ApplicationContext::MakeObjectUrl(get_class($oObj), $id)."';";
+					if ($_SERVER['REQUEST_METHOD'] == 'GET')
+					{
+						$sRefreshAction = "window.location.reload();";
+					}
+					else
+					{
+						$sRefreshAction = "window.location.href='".ApplicationContext::MakeObjectUrl(get_class($oObj), $id)."';";
+					}
 				}
 				
 				$bLocked = false;

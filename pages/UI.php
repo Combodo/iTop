@@ -511,7 +511,6 @@ try
 				if ($iErrors == 0)
 				{
 					$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
-					$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/xlsx-export.js');
 					$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
 					$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
 					$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');					

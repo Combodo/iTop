@@ -548,7 +548,7 @@ class RuntimeDashboard extends Dashboard
 	{
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
-		$sEditMenu = "<td><span id=\"DashboardMenu\"><ul><li><img src=\"../images/edit.png\"><ul>";
+		$sEditMenu = "<td><span id=\"DashboardMenu\"><ul><li><img src=\"../images/pencil-menu.png\"><ul>";
 	
 		$aActions = array();
 		$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:Edit'), "return EditDashboard('{$this->sId}')");
