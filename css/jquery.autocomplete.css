@@ -17,6 +17,8 @@
 .ac_results li {
 	margin: 0px;
 	padding: 2px 5px;
+	white-space: nowrap;
+	padding-right: 20px; /* Space for the scrollbar */ 
 	cursor: default;
 	display: block;
 	/* 

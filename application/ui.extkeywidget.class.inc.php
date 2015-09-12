@@ -253,11 +253,11 @@ EOF
 				$sDisplayValue = $this->GetObjectName($value);
 			}
 			$iMinChars = isset($aArgs['iMinChars']) ? $aArgs['iMinChars'] : 3; //@@@ $this->oAttDef->GetMinAutoCompleteChars();
-			$iFieldSize = isset($aArgs['iFieldSize']) ? $aArgs['iFieldSize'] : 30; //@@@ $this->oAttDef->GetMaxSize();
+			$iFieldSize = isset($aArgs['iFieldSize']) ? $aArgs['iFieldSize'] : 20; //@@@ $this->oAttDef->GetMaxSize();
 	
 			// the input for the auto-complete
 			$sHTMLValue = "<input count=\"".$oAllowedValues->Count()."\" type=\"text\" id=\"label_$this->iId\" size=\"$iFieldSize\" value=\"$sDisplayValue\"/>&nbsp;";
-			$sHTMLValue .= "<img id=\"mini_search_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_search.gif\" onClick=\"oACWidget_{$this->iId}.Search();\"/>&nbsp;";
+			$sHTMLValue .= "<img id=\"mini_search_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_search.gif\" onClick=\"oACWidget_{$this->iId}.Search();\"/>";
 	
 			// another hidden input to store & pass the object's Id
 			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" />\n";

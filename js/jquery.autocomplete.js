@@ -671,7 +671,7 @@ $.Autocompleter.Select = function (options, input, select, config) {
 				continue;
 			// Escape dangerous characters to prevent XSS vulnerabilities
 			formatted = formatted.replace('&', '&amp;').replace('"', '&quot;').replace('>', '&gt;').replace('<', '&lt;');
-			var li = $("<li/>").html( options.highlight(formatted, term) ).addClass(i%2 == 0 ? "ac_even" : "ac_odd").appendTo(list)[0];
+			var li = $("<li/>").html( options.highlight(formatted, term) ).addClass('ac_item').addClass(i%2 == 0 ? "ac_even" : "ac_odd").appendTo(list)[0];
 			$.data(li, "ac_data", data[i]);
 		}
 		listItems = list.find("li");
@@ -725,7 +725,7 @@ $.Autocompleter.Select = function (options, input, select, config) {
 		show: function() {
 			var offset = $(input).offset();
 			element.css({
-				width: typeof options.width == "string" || options.width > 0 ? options.width : $(input).width(),
+				'min-width': typeof options.width == "string" || options.width > 0 ? options.width : $(input).width(),
 				top: offset.top + input.offsetHeight,
 				left: offset.left
 			}).show();
