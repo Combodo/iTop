@@ -135,6 +135,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 					me.UpdateButtons(c);
 				});
 				FixSearchFormsDisposition();
+				me.UpdateSizes(null, null);
 				$(sSearchAreaId).unblock();		
 			},
 			'html'
