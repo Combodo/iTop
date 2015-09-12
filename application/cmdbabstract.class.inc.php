@@ -179,13 +179,10 @@ EOF
 		}
 
 		$oPage->add("<div class=\"page_header\"><h1>".$this->GetIcon()."&nbsp;\n");
-		if (!$oPage->IsPrintableVersion() && ($_SERVER['REQUEST_METHOD'] == 'GET'))
-		{
-			$aIcons[] = '<img src="../images/reload.png" style="cursor:pointer;vertical-align:middle;margin-left:1em;" onclick="window.location.reload();" title="'.htmlentities(Dict::S('UI:Button:Refresh'), ENT_QUOTES, 'UTF-8').'"/>';
-		}
 
 		// Master data sources
 		$bSynchronized = false;
+		$aIcons = array();
 		if (!$oPage->IsPrintableVersion())
 		{
 			$oCreatorTask = null;

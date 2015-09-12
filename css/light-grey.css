@@ -2069,3 +2069,12 @@ select.multiselect {
 }
 
 
+span.refresh-button {
+  display: inline-block;
+  width: 21px;
+  height: 18px;
+  cursor: pointer;
+  background: transparent url(../images/refresh-fff.png) left center no-repeat;
+}
+
+

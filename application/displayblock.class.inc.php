@@ -1382,6 +1382,7 @@ class MenuBlock extends DisplayBlock
 			}
 		}
 		$bIsCreationAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_CREATE) == UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
+		$sRefreshAction = '';
 		switch($oSet->Count())
 		{
 			case 0:
@@ -1401,6 +1402,15 @@ class MenuBlock extends DisplayBlock
 			else
 			{
 				$id = $oObj->GetKey();
+				if ($_SERVER['REQUEST_METHOD'] == 'GET')
+				{
+					$sRefreshAction = "window.location.reload();";
+				}
+				else
+				{
+					$sRefreshAction = "window.location.href='".ApplicationContext::MakeObjectUrl(get_class($oObj), $id)."';";
+				}
+				
 				$bLocked = false;
 				if (MetaModel::GetConfig()->Get('concurrent_lock_enabled'))
 				{
@@ -1671,8 +1681,12 @@ class MenuBlock extends DisplayBlock
 			{
 				$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:Actions')."\n<ul>\n";
 			}
-	
+				
 			$sHtml .= $oPage->RenderPopupMenuItems($aActions, $aFavoriteActions);
+			if (!$oPage->IsPrintableVersion() && ($sRefreshAction!=''))
+			{
+				$sHtml .= "<div class=\"actions_button\" title=\"".htmlentities(Dict::S('UI:Button:Refresh'), ENT_QUOTES, 'UTF-8')."\"><span class=\"refresh-button\" onclick=\"$sRefreshAction\"></span></div>";
+			}
 		}
 
 		static $bPopupScript = false;

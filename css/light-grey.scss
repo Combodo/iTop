@@ -302,7 +302,6 @@ input.textSearch {
 	border: 1px solid #7f9db9;
 	background: #fff url(../images/ac-background.gif) no-repeat right;
 }
-
 /* By Rom */
 .csvimport_createobj {
     color: #AA0000;
@@ -1524,4 +1523,11 @@ h2.printable-tab-title {
 }
 select.multiselect {
 	max-width: 150px;
+}
+span.refresh-button {
+	display: inline-block;
+	width: 21px;
+	height: 18px;
+	cursor: pointer;
+	background: transparent url(../images/refresh-fff.png) left center no-repeat;
 }
