@@ -1270,7 +1270,7 @@ abstract class DBObject implements iDisplay
 			{
 				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAtt);
 				// The value is an object, the comparison is not strict
-				if (!$oAttDef->Equals($proposedValue, $this->m_aOrigValues[$sAtt]))
+				if (!$oAttDef->Equals($this->m_aOrigValues[$sAtt], $proposedValue))
 				{
 					$aDelta[$sAtt] = $proposedValue;
 					$this->m_aModifiedAtt[$sAtt] = true; // Really modified

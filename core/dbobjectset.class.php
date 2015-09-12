@@ -1140,10 +1140,13 @@ function HashCountComparison($a, $b) // Sort descending on 'count'
 
 /**
  * Helper class to compare the content of two DBObjectSets based on the fingerprints of the contained objects
- * When computing the actual differences, the algorithm tries to preserve as much as possible the existing
+ * The FIRST SET MUST BE LOADED FROM THE DATABASE, the second one can be a set of objects in memory
+ * When computing the actual differences, the algorithm tries to preserve as much as possible the EXISTING
  * objects (i.e. prefers 'modified' to 'removed' + 'added')
  * 
- * LIMITATION: only DBObjectSets with one column (i.e. one class of object selected) are supported
+ * LIMITATIONS:
+ *  - only DBObjectSets with one column (i.e. one class of object selected) are supported
+ *  - the first set must be the one loaded from the database
  */
 class DBObjectSetComparator
 {
@@ -1275,7 +1278,8 @@ class DBObjectSetComparator
 	}
 	
 	/**
-	 * Get the list of differences between the two sets.
+	 * Get the list of differences between the two sets. In ordeer to write back into the database only the minimum changes
+	 * THE FIRST SET MUST BE THE ONE LOADED FROM THE DATABASE
 	 * Returns a hash: 'added' => DBObject(s), 'removed' => DBObject(s), 'modified' => DBObjects(s)
 	 * @return Ambigous <int:DBObject: , unknown>
 	 */
@@ -1287,6 +1291,8 @@ class DBObjectSetComparator
 		// Check that all objects in Set1 are also in Set2
 		foreach($this->aFingerprints1 as $sFingerprint => $oObj)
 		{
+			// Beware: the elements from the first set MUST come from the database, otherwise the result will be irrelevant
+			if ($oObj->IsNew()) throw new Exception('Cannot compute differences when elements from the first set are NOT in the database');
 			if (array_key_exists($oObj->GetKey(), $this->aIDs2) && ($this->aIDs2[$oObj->GetKey()]->IsModified()))
 			{
 				// The very same object exists in both set, but was modified since its load
