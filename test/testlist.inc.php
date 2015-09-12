@@ -3728,6 +3728,30 @@ class TestLinkSetRecording_NN_WithDuplicates extends TestBizModel
 				'history_modified' => 0,
 			),
 			array(
+				'description' => 'Change on attribute on both links at the same time',
+				'links' => array(
+					array(
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => 'PortDev B',
+						'device_port' => '',
+					),
+					array(
+						'networkdevice_id' => $iDev1,
+						'connectableci_id' => $iServer,
+						'network_port' => 'PortDev A',
+						'device_port' => '',
+					),
+				),
+				'expected-res' => array (
+			 		"$iDev1, test device A, unit test linkset, PortDev A, , downlink, test device A",
+			 		"$iDev2, test device B, unit test linkset, PortDev B, , downlink, test device B",
+				),
+				'history_added' => 0,
+				'history_removed' => 0,
+				'history_modified' => 2,
+			),
+			array(
 				'description' => 'Removing A',
 				'links' => array(
 					array(
@@ -3784,13 +3808,13 @@ class TestLinkSetRecording_NN_WithDuplicates extends TestBizModel
 					array(
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
-						'network_port' => '',
+						'network_port' => 'portX',
 						'device_port' => '',
 					),
 					array(
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
-						'network_port' => '',
+						'network_port' => 'portX',
 						'device_port' => '',
 					),
 				),
@@ -3942,14 +3966,14 @@ class TestLinkSetRecording_NN_NoDuplicates extends TestBizModel
 		$iPerson1 = $oPerson->GetKey();
 		
 		$oPerson = MetaModel::NewObject('Person');
-		$oPerson->Set('name', 'test Person B');
+		$oPerson->Set('name', 'test person B');
 		$oPerson->Set('first_name', 'totoche');
 		$oPerson->Set('org_id', 3);
 		$oPerson->DBInsert();
 		$iPerson2 = $oPerson->GetKey();
 		
 		$oTypes = new DBObjectSet(DBSearch::FromOQL('SELECT ContactType WHERE name="Manager"'));
-		$iRole = $oTypes->Fetch();
+		$iRole = $oTypes->Fetch()->GetKey();
 
 		////////////////////////////////////////////////////////////////////////////////
 		// Scenarii
@@ -3981,7 +4005,7 @@ class TestLinkSetRecording_NN_NoDuplicates extends TestBizModel
 					),
 				),
 				'expected-res' => array (
-			 		"unit test linkset, $iPerson1, test person A, $iRole, Manager, totoche test person A, ",
+			 		"unit test linkset, $iPerson1, test person A, $iRole, Manager, totoche test person A, Manager",
 				),
 				'history_added' => 0,
 				'history_removed' => 0,
@@ -4003,7 +4027,7 @@ class TestLinkSetRecording_NN_NoDuplicates extends TestBizModel
 				),
 				'expected-res' => array (
 			 		"unit test linkset, $iPerson1, test person A, 0, , totoche test person A, ",
-			 		"unit test linkset, $iPerson2, test person A, 0, , totoche test person A, ",
+			 		"unit test linkset, $iPerson2, test person B, 0, , totoche test person B, ",
 				),
 				'history_added' => 1,
 				'history_removed' => 0,
@@ -4025,7 +4049,7 @@ class TestLinkSetRecording_NN_NoDuplicates extends TestBizModel
 				),
 				'expected-res' => array (
 			 		"unit test linkset, $iPerson1, test person A, 0, , totoche test person A, ",
-			 		"unit test linkset, $iPerson2, test person A, 0, , totoche test person A, ",
+			 		"unit test linkset, $iPerson2, test person B, 0, , totoche test person B, ",
 				),
 				'history_added' => 0,
 				'history_removed' => 0,
@@ -4041,7 +4065,7 @@ class TestLinkSetRecording_NN_NoDuplicates extends TestBizModel
 					),
 				),
 				'expected-res' => array (
-			 		"unit test linkset, $iPerson2, test person A, 0, , totoche test person A, ",
+			 		"unit test linkset, $iPerson2, test person B, 0, , totoche test person B, ",
 				),
 				'history_added' => 0,
 				'history_removed' => 1,
@@ -4062,7 +4086,7 @@ class TestLinkSetRecording_NN_NoDuplicates extends TestBizModel
 					),
 				),
 				'expected-res' => array (
-			 		"unit test linkset, $iPerson2, test person A, 0, , totoche test person A, ",
+			 		"unit test linkset, $iPerson2, test person B, 0, , totoche test person B, ",
 				),
 				'history_added' => 0,
 				'history_removed' => 0,
