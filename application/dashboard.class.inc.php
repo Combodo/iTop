@@ -546,6 +546,8 @@ class RuntimeDashboard extends Dashboard
 	
 	public function RenderEditionTools($oPage)
 	{
+		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
+		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
 		$sEditMenu = "<td><span id=\"DashboardMenu\"><ul><li><img src=\"../images/edit.png\"><ul>";
 	
 		$aActions = array();

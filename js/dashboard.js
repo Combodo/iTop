@@ -381,7 +381,30 @@ $(function()
 				me.element.dialog('close');
 				//me.onClose();
 			};
-			$('#'+this.options.file_id).bind('change', function() { me._doUpload(); } );
+			$('#'+this.options.file_id).fileupload({
+				url: me.options.submit_to+'&id='+me.options.dashboard_id,
+		        dataType: 'json',
+				pasteZone: null, // Don't accept files via Chrome's copy/paste
+		        done: function (e, data) {
+					if(typeof(data.result.error) != 'undefined')
+					{
+						if(data.result.error != '')
+						{
+							alert(data.result.error);
+							me.element.dialog('close');
+						}
+						else
+						{
+							me.element.dialog('close');
+							location.reload();
+						}
+					}
+		        },
+		        start: function() {
+		        	$('#'+me.options.file_id).prop('disabled', true);
+		        }
+		    });
+		    
 			this.element
 			.addClass('itop-dashboard_upload_dlg')
 			.dialog({
@@ -421,40 +444,6 @@ $(function()
 		_onClose: function()
 		{
 			this.element.remove();
-		},
-		_doUpload: function()
-		{
-			var me = this;
-			$.ajaxFileUpload
-			(
-				{
-					url: me.options.submit_to+'&id='+me.options.dashboard_id, 
-					secureuri:false,
-					fileElementId: me.options.file_id,
-					dataType: 'json',
-					success: function (data, status)
-					{
-						if(typeof(data.error) != 'undefined')
-						{
-							if(data.error != '')
-							{
-								alert(data.error);
-								me.element.dialog('close');
-							}
-							else
-							{
-								me.element.dialog('close');
-								location.reload();
-							}
-						}
-					},
-					error: function (data, status, e)
-					{
-						alert(e);
-						me.element.dialog('close');
-					}
-				}
-			);			
 		}
 	});
 });

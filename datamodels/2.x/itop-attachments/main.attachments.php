@@ -250,65 +250,6 @@ EOF
 		$('#attachment_plugin').trigger('remove_attachment', [att_id]);
 		return false; // Do not submit the form !
 	}
-				
-	function ajaxFileUpload()
-	{
-		//starting setting some animation when the ajax starts and completes
-		$("#attachment_loading").ajaxStart(function(){
-			$(this).show();
-		}).ajaxComplete(function(){
-			$(this).hide();
-		});
-		
-		/*
-			prepareing ajax file upload
-			url: the url of script file handling the uploaded files
-                        fileElementId: the file type of input element id and it will be the index of  \$_FILES Array()
-			dataType: it support json, xml
-			secureuri:use secure protocol
-			success: call back function when the ajax complete
-			error: callback function when the ajax failed
-			
-                */
-		$.ajaxFileUpload
-		(
-			{
-				url: GetAbsoluteUrlModulesRoot()+'itop-attachments/ajax.attachment.php?obj_class={$sClass}&temp_id={$sTempId}&operation=add', 
-				secureuri:false,
-				fileElementId:'file',
-				dataType: 'json',
-				success: function (data, status)
-				{
-					if(typeof(data.error) != 'undefined')
-					{
-						if(data.error != '')
-						{
-							alert(data.error);
-						}
-						else
-						{
-							var sDownloadLink = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=download_document&class=Attachment&id='+data.att_id+'&field=contents';
-							$('#attachments').append('<div class="attachment" id="display_attachment_'+data.att_id+'"><a data-preview="'+data.preview+'" href="'+sDownloadLink+'"><img src="'+data.icon+'"><br/>'+data.msg+'<input id="attachment_'+data.att_id+'" type="hidden" name="attachments[]" value="'+data.att_id+'"/></a><br/><input type="button" class="btn_hidden" value="{$sDeleteBtn}" onClick="RemoveAttachment('+data.att_id+');"/></div>');
-							if($sIsDeleteEnabled)
-							{
-								$('#display_attachment_'+data.att_id).hover( function() { $(this).children(':button').toggleClass('btn_hidden'); } );
-							}
-							$('#attachment_plugin').trigger('add_attachment', [data.att_id, data.msg]);
-							
-							//alert(data.msg);
-						}
-					}
-				},
-				error: function (data, status, e)
-				{
-					alert(e);
-				}
-			}
-		)
-		
-		return false;
-
-	}
 EOF
 );
 			$oPage->add('<span id="attachments">');
@@ -357,11 +298,10 @@ EOF
 			$oPage->add('</span>');			
 			$oPage->add('<div style="clear:both"></div>');			
 			$sMaxUpload = $this->GetMaxUpload();
-//			$oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file" onChange="ajaxFileUpload();"><span style="display:none;" id="attachment_loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUpload);
-$oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file"><span style="display:none;" id="attachment_loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUpload);
-
-$oPage->add_linked_script('../js/jquery.iframe-transport.js');
-$oPage->add_linked_script('../js/jquery.fileupload.js');
+			$oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file"><span style="display:none;" id="attachment_loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUpload);
+			
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
 
 $oPage->add_ready_script(
 <<< EOF
@@ -399,14 +339,13 @@ $oPage->add_ready_script(
 
 	$(document).bind('dragover', function (e) {
 		var bFiles = false;
-		
-		if (e.dataTransfer.types)
+		if (e.dataTransfer && e.dataTransfer.types)
 		{
 			for (var i = 0; i < e.dataTransfer.types.length; i++)
 			{
-				if (e.dataTransfer.types[i] == "text/plain")
+				if (e.dataTransfer.types[i] == "application/x-moz-nativeimage")
 				{
-					bFiles = false; // mozilla contains "Files" in the types list when dragging images inside the page, but it also contains "text/plain" before
+					bFiles = false; // mozilla contains "Files" in the types list when dragging images inside the page, but it also contains "application/x-moz-nativeimage" before
 					break;
 				}
 				
