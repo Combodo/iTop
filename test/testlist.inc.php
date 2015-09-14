@@ -3747,9 +3747,9 @@ class TestLinkSetRecording_NN_WithDuplicates extends TestBizModel
 			 		"$iDev1, test device A, unit test linkset, PortDev A, , downlink, test device A",
 			 		"$iDev2, test device B, unit test linkset, PortDev B, , downlink, test device B",
 				),
-				'history_added' => 0,
-				'history_removed' => 0,
-				'history_modified' => 2,
+				'history_added' => 2,
+				'history_removed' => 2,
+				'history_modified' => 0,
 			),
 			array(
 				'description' => 'Removing A',
@@ -3757,19 +3757,19 @@ class TestLinkSetRecording_NN_WithDuplicates extends TestBizModel
 					array(
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
-						'network_port' => '',
+						'network_port' => 'PortDev B',
 						'device_port' => '',
 					),
 				),
 				'expected-res' => array (
-			 		"$iDev2, test device B, unit test linkset, , , downlink, test device B",
+			 		"$iDev2, test device B, unit test linkset, PortDev B, , downlink, test device B",
 				),
 				'history_added' => 0,
 				'history_removed' => 1,
 				'history_modified' => 0,
 			),
 			array(
-				'description' => 'Adding B again (duplicate!)',
+				'description' => 'Adding B again - with a different port (duplicate!)',
 				'links' => array(
 					array(
 						'networkdevice_id' => $iDev2,
@@ -3793,13 +3793,83 @@ class TestLinkSetRecording_NN_WithDuplicates extends TestBizModel
 				'history_modified' => 0,
 			),
 			array(
+				'description' => 'No change (creating a set with the reloaded links, like in the UI)',
+				'links' => array(
+					array(
+						'id' => "SELECT lnkConnectableCIToNetworkDevice WHERE networkdevice_id = $iDev2 AND connectableci_id = $iServer AND network_port = 'port_123'",
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => 'port_123',
+						'device_port' => '',
+					),
+					array(
+						'id' => "SELECT lnkConnectableCIToNetworkDevice WHERE networkdevice_id = $iDev2 AND connectableci_id = $iServer AND network_port = 'port_456'",
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => 'port_456',
+						'device_port' => '',
+					),
+				),
+				'expected-res' => array (
+					"$iDev2, test device B, unit test linkset, port_123, , downlink, test device B",
+					"$iDev2, test device B, unit test linkset, port_456, , downlink, test device B",
+				),
+				'history_added' => 0,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Change an attribute on one link (based on reloaded links, like in the UI)',
+				'links' => array(
+					array(
+						'id' => "SELECT lnkConnectableCIToNetworkDevice WHERE networkdevice_id = $iDev2 AND connectableci_id = $iServer AND network_port = 'port_123'",
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => 'port_123_modified',
+						'device_port' => '',
+					),
+					array(
+						'id' => "SELECT lnkConnectableCIToNetworkDevice WHERE networkdevice_id = $iDev2 AND connectableci_id = $iServer AND network_port = 'port_456'",
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => 'port_456',
+						'device_port' => '',
+					),
+				),
+				'expected-res' => array (
+					"$iDev2, test device B, unit test linkset, port_123_modified, , downlink, test device B",
+					"$iDev2, test device B, unit test linkset, port_456, , downlink, test device B",
+				),
+				'history_added' => 0,
+				'history_removed' => 0,
+				'history_modified' => 1,
+			),
+			array(
+				'description' => 'Remove the second link (set based on reloaded links, like in the UI)',
+				'links' => array(
+					array(
+						'id' => "SELECT lnkConnectableCIToNetworkDevice WHERE networkdevice_id = $iDev2 AND connectableci_id = $iServer AND network_port = 'port_123_modified'",
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => 'port_123_modified',
+						'device_port' => '',
+					),
+				),
+				'expected-res' => array (
+					"$iDev2, test device B, unit test linkset, port_123_modified, , downlink, test device B",
+				),
+				'history_added' => 0,
+				'history_removed' => 1,
+				'history_modified' => 0,
+			),
+			array(
 				'description' => 'Remove all',
 				'links' => array(
 				),
 				'expected-res' => array (
 				),
 				'history_added' => 0,
-				'history_removed' => 2,
+				'history_removed' => 1,
 				'history_modified' => 0,
 			),
 			array(
@@ -3844,14 +3914,25 @@ class TestLinkSetRecording_NN_WithDuplicates extends TestBizModel
 			$oLinkset = DBObjectSet::FromScratch('lnkConnectableCIToNetworkDevice');
 			foreach ($aScenario['links'] as $aLinkData)
 			{
-				$oLink1 = MetaModel::NewObject('lnkConnectableCIToNetworkDevice');
+				if (array_key_exists('id', $aLinkData))
+				{
+					$sOQL = $aLinkData['id'];
+					$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL));
+					$oLink1 = $oSet->Fetch();
+					if (!is_object($oLink1)) throw new Exception('Failed to find the lnkConnectableCIToNetworkDevice: '.$sOQL);
+				}
+				else
+				{
+					$oLink1 = MetaModel::NewObject('lnkConnectableCIToNetworkDevice');
+				}
 				foreach ($aLinkData as $sAttCode => $value)
 				{
+					if ($sAttCode == 'id') continue;
 					$oLink1->Set($sAttCode, $value);
 				}
 				$oLinkset->AddObject($oLink1);
 			}
-			
+						
 			// Write
 			$oServer = MetaModel::GetObject('Server', $iServer);
 			$oServer->Set('networkdevice_list', $oLinkset);
@@ -4102,6 +4183,62 @@ class TestLinkSetRecording_NN_NoDuplicates extends TestBizModel
 				'history_removed' => 1,
 				'history_modified' => 0,
 			),
+			array(
+				'description' => 'Add the first item (again)',
+				'links' => array(
+					array(
+						'person_id' => $iPerson1,
+						'team_id' => $iTeam,
+						'role_id' => 0,
+					),
+				),
+				'expected-res' => array (
+			 		"unit test linkset, $iPerson1, test person A, 0, , totoche test person A, ",
+				),
+				'history_added' => 1,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Set the role (based on reloaded links, like in the UI)',
+				'links' => array(
+					array(
+						'id' => "SELECT lnkPersonToTeam WHERE person_id=$iPerson1 AND team_id=$iTeam",
+						'person_id' => $iPerson1,
+						'team_id' => $iTeam,
+						'role_id' => $iRole,
+					),
+				),
+				'expected-res' => array (
+			 		"unit test linkset, $iPerson1, test person A, 14, Manager, totoche test person A, Manager",
+				),
+				'history_added' => 0,
+				'history_removed' => 0,
+				'history_modified' => 1,
+			),
+			array(
+				'description' => 'Clear the role and add another person with a role (based on reloaded links, like in the UI)',
+				'links' => array(
+					array(
+						'id' => "SELECT lnkPersonToTeam WHERE person_id=$iPerson1 AND team_id=$iTeam",
+						'person_id' => $iPerson1,
+						'team_id' => $iTeam,
+						'role_id' => 0,
+					),
+					array(
+						'person_id' => $iPerson2,
+						'team_id' => $iTeam,
+						'role_id' => $iRole,
+					),
+				),
+				'expected-res' => array (
+			 		"unit test linkset, $iPerson1, test person A, 0, , totoche test person A, ",
+			 		"unit test linkset, $iPerson2, test person B, 14, Manager, totoche test person B, Manager",
+				),
+				'history_added' => 1,
+				'history_removed' => 0,
+				'history_modified' => 1,
+			),
 		);
 		
 		foreach ($aScenarii as $aScenario)
@@ -4120,9 +4257,20 @@ class TestLinkSetRecording_NN_NoDuplicates extends TestBizModel
 			$oLinkset = DBObjectSet::FromScratch('lnkPersonToTeam');
 			foreach ($aScenario['links'] as $aLinkData)
 			{
-				$oLink1 = MetaModel::NewObject('lnkPersonToTeam');
+				if (array_key_exists('id', $aLinkData))
+				{
+					$sOQL = $aLinkData['id'];
+					$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL));
+					$oLink1 = $oSet->Fetch();
+					if (!is_object($oLink1)) throw new Exception('Failed to find the lnkPersonToTeam: '.$sOQL);
+				}
+				else
+				{
+					$oLink1 = MetaModel::NewObject('lnkPersonToTeam');
+				}
 				foreach ($aLinkData as $sAttCode => $value)
 				{
+					if ($sAttCode == 'id') continue;
 					$oLink1->Set($sAttCode, $value);
 				}
 				$oLinkset->AddObject($oLink1);
@@ -4188,6 +4336,479 @@ class TestLinkSetRecording_NN_NoDuplicates extends TestBizModel
 		if (!$oSet->m_bLoaded) $oSet->Load();
 		$oSet->Rewind();
 	
+		$aRet = array();
+		while($oObject = $oSet->Fetch())
+		{
+			$aValues = array();
+			foreach(MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef)
+			{
+				if ($sAttCode == 'friendlyname') continue;
+				if (substr($sAttCode, 0, strlen($sAttPrefixToIgnore)) == $sAttPrefixToIgnore) continue;
+				if ($oAttDef->IsScalar())
+				{
+					$aValues[] = $oObject->Get($sAttCode);
+				}
+			}
+			$aRet[] = implode(', ', $aValues);
+		}
+		sort($aRet);
+		return $aRet;
+	}
+}
+
+class TestLinkSetRecording_1N extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Linkset 1-N (Network Interface vs Server: Edit in-place)';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Simulate CSV/data synchro type of recording. Check the values and the history.';
+	}
+
+	protected function DoExecute()
+	{
+		CMDBSource::Query('START TRANSACTION');
+		//CMDBSource::Query('ROLLBACK'); automatique !
+
+		////////////////////////////////////////////////////////////////////////////////
+		// Set the stage
+		//
+		$oServer = MetaModel::NewObject('Server');
+		$oServer->Set('name', 'unit test linkset');
+		$oServer->Set('org_id', 3);
+		$oServer->DBInsert();
+		$iServer = $oServer->GetKey();
+
+		////////////////////////////////////////////////////////////////////////////////
+		// Scenarii
+		//
+		$aScenarii = array(
+			array(
+				'description' => 'Add the first interface',
+				'interfaces' => array(
+					array(
+					'connectableci_id' => $iServer,
+					'name' => 'eth0',
+					'speed' => '1000.00',
+					),
+				),
+				'expected-res' => array (
+					"eth0, , , , , , 1000.00, $iServer, unit test linkset, PhysicalInterface, unit test linkset, Server",
+				),
+				'history_added' => 1,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Add a second interface',
+				'interfaces' => array(
+					array(
+					'connectableci_id' => $iServer,
+					'name' => 'eth0',
+					'speed' => '1000.00',
+					),
+					array(
+					'connectableci_id' => $iServer,
+					'name' => 'eth1',
+					'speed' => '1000.00',
+					),
+				),
+				'expected-res' => array (
+					"eth0, , , , , , 1000.00, $iServer, unit test linkset, PhysicalInterface, unit test linkset, Server",
+					"eth1, , , , , , 1000.00, $iServer, unit test linkset, PhysicalInterface, unit test linkset, Server",
+				),
+				'history_added' => 1,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Change the speed of an interface',
+				'interfaces' => array(
+					array(
+					'connectableci_id' => $iServer,
+					'name' => 'eth0',
+					'speed' => '100.00',
+					),
+					array(
+					'connectableci_id' => $iServer,
+					'name' => 'eth1',
+					'speed' => '1000.00',
+					),
+				),
+				'expected-res' => array (
+					"eth0, , , , , , 100.00, $iServer, unit test linkset, PhysicalInterface, unit test linkset, Server",
+					"eth1, , , , , , 1000.00, $iServer, unit test linkset, PhysicalInterface, unit test linkset, Server",
+				),
+				'history_added' => 1,
+				'history_removed' => 1,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Change the name of an interface',
+				'interfaces' => array(
+					array(
+					'connectableci_id' => $iServer,
+					'name' => 'eth0-renamed',
+					'speed' => '1000.00',
+					),
+					array(
+					'connectableci_id' => $iServer,
+					'name' => 'eth1',
+					'speed' => '1000.00',
+					),
+				),
+				'expected-res' => array (
+					"eth0-renamed, , , , , , 1000.00, $iServer, unit test linkset, PhysicalInterface, unit test linkset, Server",
+					"eth1, , , , , , 1000.00, $iServer, unit test linkset, PhysicalInterface, unit test linkset, Server",
+				),
+				'history_added' => 1,
+				'history_removed' => 1,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Remove all interfaces',
+				'interfaces' => array(
+				),
+				'expected-res' => array (
+				),
+				'history_added' => 0,
+				'history_removed' => 2,
+				'history_modified' => 0,
+			),
+		);
+
+		foreach ($aScenarii as $aScenario)
+		{
+			echo "<h4>".$aScenario['description']."</h4>\n";
+
+			$oChange = MetaModel::NewObject("CMDBChange");
+			$oChange->Set("date", time());
+			$oChange->Set("userinfo", CMDBChange::GetCurrentUserName());
+			$oChange->Set("origin", 'custom-extension');
+			$oChange->DBInsert();
+			CMDBObject::SetCurrentChange($oChange);
+			$iChange = $oChange->GetKey();
+				
+			// Prepare set
+			$oLinkset = DBObjectSet::FromScratch('PhysicalInterface');
+			foreach ($aScenario['interfaces'] as $aIntfData)
+			{
+				$oInterface = MetaModel::NewObject('PhysicalInterface');
+				foreach ($aIntfData as $sAttCode => $value)
+				{
+					$oInterface->Set($sAttCode, $value);
+				}
+				$oLinkset->AddObject($oInterface);
+			}
+				
+			// Write
+			$oServer = MetaModel::GetObject('Server', $iServer);
+			$oServer->Set('physicalinterface_list', $oLinkset);
+			$oServer->DBWrite();
+				
+			// Check Results
+			$bFoundIssue = false;
+			$oServer = MetaModel::GetObject('Server', $iServer);
+			$oLinkset = $oServer->Get('physicalinterface_list');
+				
+			$aRes = $this->StandardizedDump($oLinkset, 'zzz');
+			$sRes = var_export($aRes, true);
+			echo "Found: <pre>".$sRes."</pre>\n";
+
+			$sExpectedRes = var_export($aScenario['expected-res'], true);
+			if ($sRes != $sExpectedRes)
+			{
+				$bFoundIssue = true;
+				echo "NOT COMPLIANT!!! Expecting: <pre>".$sExpectedRes."</pre>\n";
+			}
+				
+			// Check History
+			$aQueryParams = array('change' => $iChange, 'objclass' => get_class($oServer), 'objkey' => $oServer->GetKey());
+				
+			$oAdded = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'added'"), array(), $aQueryParams);
+			echo "added: ".$oAdded->Count()."<br/>\n";
+			if ($aScenario['history_added'] != $oAdded->Count())
+			{
+				$bFoundIssue = true;
+				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_added']."<br/>\n";
+			}
+
+			$oRemoved = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'removed'"), array(), $aQueryParams);
+			echo "removed: ".$oRemoved->Count()."<br/>\n";
+			if ($aScenario['history_removed'] != $oRemoved->Count())
+			{
+				$bFoundIssue = true;
+				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_removed']."<br/>\n";
+			}
+
+			$oModified = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksTune WHERE objclass = :objclass AND objkey = :objkey AND change = :change"), array(), $aQueryParams);
+			echo "modified: ".$oModified->Count()."<br/>\n";
+			if ($aScenario['history_modified'] != $oModified->Count())
+			{
+				$bFoundIssue = true;
+				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_modified']."<br/>\n";
+			}
+
+			if ($bFoundIssue)
+			{
+				throw new Exception('Stopping on failed scenario');
+			}
+		}
+	}
+
+	protected function StandardizedDump($oSet, $sAttPrefixToIgnore)
+	{
+		if (!$oSet->m_bLoaded) $oSet->Load();
+		$oSet->Rewind();
+
+		$aRet = array();
+		while($oObject = $oSet->Fetch())
+		{
+			$aValues = array();
+			foreach(MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef)
+			{
+				if ($sAttCode == 'friendlyname') continue;
+				if (substr($sAttCode, 0, strlen($sAttPrefixToIgnore)) == $sAttPrefixToIgnore) continue;
+				if ($oAttDef->IsScalar())
+				{
+					$aValues[] = $oObject->Get($sAttCode);
+				}
+			}
+			$aRet[] = implode(', ', $aValues);
+		}
+		sort($aRet);
+		return $aRet;
+	}
+}
+
+
+class TestLinkSetRecording_1NAdd_Remove extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Linkset 1-N (Delivery Model vs Organization: Edit Add/Remove)';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Simulate CSV/data synchro type of recording. Check the values and the history.';
+	}
+
+	protected function DoExecute()
+	{
+		CMDBSource::Query('START TRANSACTION');
+		//CMDBSource::Query('ROLLBACK'); automatique !
+
+		////////////////////////////////////////////////////////////////////////////////
+		// Set the stage
+		//
+		$oProvider = new Organization();
+		$oProvider->Set('name', 'Test-Provider1');
+		$oProvider->DBInsert();
+		$iProvider = $oProvider->GetKey();
+		
+		$oDM1 = new DeliveryModel();
+		$oDM1->Set('name', 'Test-DM-1');
+		$oDM1->Set('org_id', $iProvider);
+		$oDM1->DBInsert();
+		$iDM1 = $oDM1->GetKey();
+
+		$oDM2 = new DeliveryModel();
+		$oDM2->Set('name', 'Test-DM-2');
+		$oDM2->Set('org_id', $iProvider);
+		$oDM2->DBInsert();
+		$iDM2 = $oDM2->GetKey();
+
+		////////////////////////////////////////////////////////////////////////////////
+		// Scenarii
+		//
+		$aScenarii = array(
+			array(
+				'description' => 'Add the first customer',
+				'organizations' => array(
+					array(
+						'deliverymodel_id' => $iDM1,
+						'name' => 'Test-Customer-1',
+						),
+					),
+				'expected-res' => array (
+					"Test-Customer-1, , active, 0, , $iDM1, Test-DM-1, , Test-DM-1",
+				),
+				'history_added' => 0,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),	
+			array(
+				'description' => 'Remove the customer by loading an empty set',
+				'organizations' => array(
+					),
+				'expected-res' => array (
+				),
+				'history_added' => 0,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),	
+			array(
+				'description' => 'Create two customers at once',
+				'organizations' => array(
+					array(
+						'deliverymodel_id' => $iDM1,
+						'name' => 'Test-Customer-1',
+					),
+					array(
+						'deliverymodel_id' => $iDM1,
+						'name' => 'Test-Customer-2',
+					),
+				),
+				'expected-res' => array (
+					"Test-Customer-1, , active, 0, , $iDM1, Test-DM-1, , Test-DM-1",
+					"Test-Customer-2, , active, 0, , $iDM1, Test-DM-1, , Test-DM-1",
+				),
+				'history_added' => 0,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),	
+			array(
+				'description' => 'Move Customer-1 to the second Delivery Model',
+				'organizations' => array(
+					array(
+						'id' => "SELECT Organization WHERE name='Test-Customer-1'",
+						'deliverymodel_id' => $iDM2,
+						'name' => 'Test-Customer-1',
+					),
+					array(
+						'deliverymodel_id' => $iDM1,
+						'name' => 'Test-Customer-2',
+					),
+				),
+				'expected-res' => array (
+					"Test-Customer-2, , active, 0, , $iDM1, Test-DM-1, , Test-DM-1",
+				),
+				'history_added' => 0,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),	
+			array(
+				'description' => 'Move Customer-1 back to the first Delivery Model and reset Customer-2 (no Delivery Model)',
+				'organizations' => array(
+					array(
+						'id' => "SELECT Organization WHERE name='Test-Customer-1'",
+						'deliverymodel_id' => $iDM1,
+						'name' => 'Test-Customer-1',
+					),
+					array(
+						'id' => "SELECT Organization WHERE name='Test-Customer-2'",
+						'deliverymodel_id' => 0,
+						'name' => 'Test-Customer-2',
+					),
+				),
+				'expected-res' => array (
+					"Test-Customer-1, , active, 0, , $iDM1, Test-DM-1, , Test-DM-1",
+				),
+				'history_added' => 0,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),	
+		);
+
+		foreach ($aScenarii as $aScenario)
+		{
+			echo "<h4>".$aScenario['description']."</h4>\n";
+
+			$oChange = MetaModel::NewObject("CMDBChange");
+			$oChange->Set("date", time());
+			$oChange->Set("userinfo", CMDBChange::GetCurrentUserName());
+			$oChange->Set("origin", 'custom-extension');
+			$oChange->DBInsert();
+			CMDBObject::SetCurrentChange($oChange);
+			$iChange = $oChange->GetKey();
+
+			// Prepare set
+			$oLinkset = DBObjectSet::FromScratch('Organization');
+			foreach ($aScenario['organizations'] as $aOrgData)
+			{
+				if (array_key_exists('id', $aOrgData))
+				{
+					$sOQL = $aOrgData['id'];
+					$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL));
+					$oOrg = $oSet->Fetch();
+					if (!is_object($oOrg)) throw new Exception('Failed to find the Organization: '.$sOQL);
+				}
+				else
+				{
+					$oOrg = MetaModel::NewObject('Organization');
+				}
+				foreach ($aOrgData as $sAttCode => $value)
+				{
+					if ($sAttCode == 'id') continue;
+					$oOrg->Set($sAttCode, $value);
+				}
+				$oLinkset->AddObject($oOrg);
+			}
+
+			// Write
+			$oDM = MetaModel::GetObject('DeliveryModel', $iDM1);
+			$oDM->Set('customers_list', $oLinkset);
+			$oDM->DBWrite();
+
+			// Check Results
+			$bFoundIssue = false;
+			$oDM = MetaModel::GetObject('DeliveryModel', $iDM1);
+			$oLinkset = $oDM->Get('customers_list');
+
+			$aRes = $this->StandardizedDump($oLinkset, 'zzz');
+			$sRes = var_export($aRes, true);
+			echo "Found: <pre>".$sRes."</pre>\n";
+
+			$sExpectedRes = var_export($aScenario['expected-res'], true);
+			if ($sRes != $sExpectedRes)
+			{
+				$bFoundIssue = true;
+				echo "NOT COMPLIANT!!! Expecting: <pre>".$sExpectedRes."</pre>\n";
+			}
+
+			// Check History
+			$aQueryParams = array('change' => $iChange, 'objclass' => get_class($oDM), 'objkey' => $oDM->GetKey());
+
+			$oAdded = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'added'"), array(), $aQueryParams);
+			echo "added: ".$oAdded->Count()."<br/>\n";
+			if ($aScenario['history_added'] != $oAdded->Count())
+			{
+				$bFoundIssue = true;
+				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_added']."<br/>\n";
+			}
+
+			$oRemoved = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'removed'"), array(), $aQueryParams);
+			echo "removed: ".$oRemoved->Count()."<br/>\n";
+			if ($aScenario['history_removed'] != $oRemoved->Count())
+			{
+				$bFoundIssue = true;
+				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_removed']."<br/>\n";
+			}
+
+			$oModified = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksTune WHERE objclass = :objclass AND objkey = :objkey AND change = :change"), array(), $aQueryParams);
+			echo "modified: ".$oModified->Count()."<br/>\n";
+			if ($aScenario['history_modified'] != $oModified->Count())
+			{
+				$bFoundIssue = true;
+				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_modified']."<br/>\n";
+			}
+
+			if ($bFoundIssue)
+			{
+				throw new Exception('Stopping on failed scenario');
+			}
+		}
+	}
+
+	protected function StandardizedDump($oSet, $sAttPrefixToIgnore)
+	{
+		if (!$oSet->m_bLoaded) $oSet->Load();
+		$oSet->Rewind();
+
 		$aRet = array();
 		while($oObject = $oSet->Fetch())
 		{
