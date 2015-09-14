@@ -229,6 +229,10 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 	-webkit-box-shadow:inset 0 0 10px 2px #1C94C4;
 	box-shadow:inset 0 0 10px 2px #1C94C4;
 }
+#history .attachment-history-added {
+	padding: 0;
+	float: none;
+}
 EOF
 		);
 		$oPage->add('<fieldset>');
@@ -440,7 +444,7 @@ EOF
 				if (in_array($oAttachment->GetKey(), $aRemovedAttachmentIds))
 				{
 					$oAttachment->DBDelete();
-					$aActions[] = self::GetActionDescription($oAttachment, false /* false => deletion */);
+					$aActions[] = self::GetActionChangeOp($oAttachment, false /* false => deletion */);
 				}
 			}			
 
@@ -466,7 +470,7 @@ EOF
 						$oAttachment->Set('temp_id', '');
 						$oAttachment->DBUpdate();
 						// temporary attachment confirmed, list it in the history
-						$aActions[] = self::GetActionDescription($oAttachment, true /* true => creation */);
+						$aActions[] = self::GetActionChangeOp($oAttachment, true /* true => creation */);
 					}
 				}
 			}
@@ -481,9 +485,9 @@ EOF
 					$oChange->Set("userinfo", $sUserString);
 					$iChangeId = $oChange->DBInsert();							
 				}
-				foreach($aActions as $sActionDescription)
+				foreach($aActions as $oChangeOp)
 				{
-					self::RecordHistory($oChange, $oObject, $sActionDescription);
+					self::RecordHistory($oChange, $oObject, $oChangeOp);
 				}
 				self::$m_bIsModified = true;
 			}
@@ -567,31 +571,134 @@ EOF
 	}
 	
 	/////////////////////////////////////////////////////////////////////////
-	private static function RecordHistory(CMDBChange $oChange, $oTargetObject, $sDescription)
+	private static function RecordHistory(CMDBChange $oChange, $oTargetObject, $oMyChangeOp)
 	{
-		$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpPlugin");
 		$oMyChangeOp->Set("change", $oChange->GetKey());
 		$oMyChangeOp->Set("objclass", get_class($oTargetObject));
 		$oMyChangeOp->Set("objkey", $oTargetObject->GetKey());
-		$oMyChangeOp->Set("description", $sDescription);
 		$iId = $oMyChangeOp->DBInsertNoReload();
 	}
 
 	/////////////////////////////////////////////////////////////////////////
-	private static function GetActionDescription($oAttachment, $bCreate = true)
+	private static function GetActionChangeOp($oAttachment, $bCreate = true)
 	{
 		$oBlob = $oAttachment->Get('contents');
 		$sFileName = $oBlob->GetFileName();
 		if ($bCreate)
 		{
-			$sDescription = Dict::Format('Attachments:History_File_Added', $sFileName);
+			$oChangeOp = new CMDBChangeOpAttachmentAdded();
+			$oChangeOp->Set('attachment_class', 'Attachment');
+			$oChangeOp->Set('attachment_key', $oAttachment->GetKey());
+			$oChangeOp->Set('filename', $sFileName);
 		}
 		else
 		{
-			$sDescription = Dict::Format('Attachments:History_File_Removed', $sFileName);
+			$oChangeOp = new CMDBChangeOpAttachmentRemoved();
+			$oChangeOp->Set('filename', $sFileName);
 		}
-		return $sDescription;
+		return $oChangeOp;
 	}	
 }
 
-?>
+/**
+ * Record the modification of a caselog (text)
+ * since the caselog itself stores the history
+ * of its entries, there is no need to duplicate
+ * the text here
+ *
+ * @package     iTopORM
+ */
+class CMDBChangeOpAttachmentAdded extends CMDBChangeOp
+{
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "core/cmdb",
+			"key_type" => "",
+			"name_attcode" => "change",
+			"state_attcode" => "",
+			"reconc_keys" => array(),
+			"db_table" => "priv_changeop_attachment_added",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeString("attachment_class", array("allowed_values"=>null, "sql"=>"attachment_class", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeObjectKey("attachment_key", array("allowed_values"=>null, "class_attcode"=>"attachment_class", "sql"=>"attachment_key", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("filename", array("allowed_values"=>null, "sql"=>"filename", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('attachment_class', 'attachment_key')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('attachment_class', 'attachment_key')); // Attributes to be displayed for a list
+	}
+	
+	/**
+	 * Describe (as a text string) the modifications corresponding to this change
+	 */	 
+	public function GetDescription()
+	{
+		// Temporary, until we change the options of GetDescription() -needs a more global revision
+		$bIsHtml = true;
+		
+		$sResult = '';
+		$sTargetObjectClass = $this->Get('attachment_class');
+		$iTargetObjectKey = $this->Get('attachment_key');
+		$sFilename = htmlentities($this->Get('filename'), ENT_QUOTES, 'UTF-8');
+		$oTargetSearch = new DBObjectSearch($sTargetObjectClass);
+		$oTargetSearch->AddCondition('id', $iTargetObjectKey, '=');
+
+		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
+		if ($oMonoObjectSet->Count() > 0)
+		{
+			$oAttachment = $oMonoObjectSet->Fetch();
+			$oDoc = $oAttachment->Get('contents');
+			$sPreview = $oDoc->IsPreviewAvailable() ? 'data-preview="true"' : '';
+			$sResult = Dict::Format('Attachments:History_File_Added', '<span class="attachment-history-added attachment"><a '.$sPreview.' target="_blank" href="'.$oDoc->GetDownloadURL($sTargetObjectClass, $iTargetObjectKey, 'contents').'">'.$sFilename.'</a></span>');
+		}
+		else
+		{
+			$sResult = Dict::Format('Attachments:History_File_Added', '<span class="attachment-history-deleted">'.$sFilename.'</span>');
+		}
+		return $sResult;
+	}
+}
+	
+class CMDBChangeOpAttachmentRemoved extends CMDBChangeOp
+{
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "core/cmdb",
+			"key_type" => "",
+			"name_attcode" => "change",
+			"state_attcode" => "",
+			"reconc_keys" => array(),
+			"db_table" => "priv_changeop_attachment_removed",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeString("filename", array("allowed_values"=>null, "sql"=>"filename", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('filename')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('filename')); // Attributes to be displayed for a list
+	}
+
+	/**
+	 * Describe (as a text string) the modifications corresponding to this change
+	 */
+	public function GetDescription()
+	{
+		// Temporary, until we change the options of GetDescription() -needs a more global revision
+		$bIsHtml = true;
+
+		$sResult = Dict::Format('Attachments:History_File_Removed', '<span class="attachment-history-deleted">'.htmlentities($this->Get('filename'), ENT_QUOTES, 'UTF-8').'</span>');
+		return $sResult;
+	}
+}
+
