@@ -416,7 +416,7 @@ Operatoren:<br/>
 	'Change:Text_AppendedTo_AttName' => '%1$s zugefügt an %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modifiziert, vorheriger Wert: %2$s',
 	'Change:AttName_Changed' => '%1$s modifiziert',
-	'Change:AttName_EntryAdded' => '%1$s modifiziert, neuer Eintrag hinzugefügt.',
+	'Change:AttName_EntryAdded' => '%1$s modifiziert, neuer Eintrag hinzugefügt: %2$s',
 	'Change:LinkSet:Added' => 'hinzugefügt: %1$s',
 	'Change:LinkSet:Removed' => 'entfernt: %1$s',
 	'Change:LinkSet:Modified' => 'modifizert: %1$s',

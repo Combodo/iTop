@@ -1550,3 +1550,30 @@ span.refresh-button {
 	cursor: pointer;
 	background: transparent url(../images/refresh-fff.png) left center no-repeat;
 }
+.case-log-history-entry-end {
+	display: none;	
+}
+.expanded .case-log-history-entry-end {
+	display: inline;	
+}
+.case-log-history-entry-more {
+	display: inline;
+}
+.expanded .case-log-history-entry-more {
+	display: none;
+}
+.case-log-history-entry .case-log-history-entry-toggle {
+	display: inline-block;
+	float: none;
+	pointer: cursor;
+	vertical-align: bottom;
+}
+.printable-tab .case-log-history-entry-end {
+	display: inline;	
+}
+.printable-tab .case-log-history-entry-more {
+	display: none;
+}
+.printable-tab .case-log-history-entry .case-log-history-entry-toggle {
+	display: none;
+}

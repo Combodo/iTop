@@ -244,7 +244,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Change:Text_AppendedTo_AttName' => '%1$s добавлено к %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s изменено, предыдущее значение: %2$s',
 	'Change:AttName_Changed' => '%1$s изменено',
-	'Change:AttName_EntryAdded' => '%1$s изменено, добавлено новое значение.',
+	'Change:AttName_EntryAdded' => '%1$s изменено, добавлено новое значение: %2$s',
 	'Change:LinkSet:Added' => 'добавлен %1$s~~',
 	'Change:LinkSet:Removed' => 'удален %1$s~~',
 	'Change:LinkSet:Modified' => 'изменен %1$s~~',

@@ -420,7 +420,7 @@ Operators:<br/>
 	'Change:Text_AppendedTo_AttName' => '%1$sを%2$sに追加しました',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$sを変更しました。更新前の値: %2$s',
 	'Change:AttName_Changed' => '%1$sを変更しました',
-	'Change:AttName_EntryAdded' => '%1$s は、修正されました。新しいエントリーが追加されました。',
+	'Change:AttName_EntryAdded' => '%1$s は、修正されました。新しいエントリーが追加されました。: %2$s',
 	'Change:LinkSet:Added' => '追加されました %1$s',
 	'Change:LinkSet:Removed' => '削除されました %1$s',
 	'Change:LinkSet:Modified' => '修正されました %1$s',

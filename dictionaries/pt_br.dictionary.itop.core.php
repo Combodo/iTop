@@ -249,7 +249,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Change:Text_AppendedTo_AttName' => '%1$s anexado ao %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modificado, valor anterior: %2$s',
 	'Change:AttName_Changed' => '%1$s modificado',
-	'Change:AttName_EntryAdded' => '%1$s modificado, nova entrada adicionada.',
+	'Change:AttName_EntryAdded' => '%1$s modificado, nova entrada adicionada: %2$s',
 	'Change:LinkSet:Added' => 'adicionado %1$s',
 	'Change:LinkSet:Removed' => 'excluído %1$s',
 	'Change:LinkSet:Modified' => 'modificado %1$s',

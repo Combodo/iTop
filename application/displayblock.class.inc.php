@@ -1290,7 +1290,7 @@ class HistoryBlock extends DisplayBlock
 			{
 				$sHtml .= $this->GetHistoryTable($oPage, $oSet);
 			}	
-
+			$oPage->add_ready_script("$('.case-log-history-entry-toggle').on('click', function () { $(this).closest('.case-log-history-entry').toggleClass('expanded');});");
 		}
 		return $sHtml;
 	}

@@ -249,7 +249,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Change:Text_AppendedTo_AttName' => '%1$s appended to %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modified, previous value: %2$s',
 	'Change:AttName_Changed' => '%1$s modified',
-	'Change:AttName_EntryAdded' => '%1$s modified, new entry added.',
+	'Change:AttName_EntryAdded' => '%1$s modified, new entry added: %2$s',
 	'Change:LinkSet:Added' => 'added %1$s',
 	'Change:LinkSet:Removed' => 'removed %1$s',
 	'Change:LinkSet:Modified' => 'modified %1$s',

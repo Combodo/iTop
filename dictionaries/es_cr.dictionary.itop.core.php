@@ -248,7 +248,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Change:Text_AppendedTo_AttName' => '%1$s agregado a %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s cambiado, valor anterior: %2$s',
 	'Change:AttName_Changed' => '%1$s cambiado',
-	'Change:AttName_EntryAdded' => '%1$s cambiado, nuevo registro agregado.',
+	'Change:AttName_EntryAdded' => '%1$s cambiado, nuevo registro agregado: %2$s',
 	'Change:LinkSet:Added' => 'Agregado %1$s',
 	'Change:LinkSet:Removed' => 'Removido %1$s',
 	'Change:LinkSet:Modified' => 'Modificado %1$s',

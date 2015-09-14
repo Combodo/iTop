@@ -1492,7 +1492,7 @@ Operators:<br/>
 	'Change:Text_AppendedTo_AttName' => '%1$s tilføjet til %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s ændret, tidligere værdi: %2$s',
 	'Change:AttName_Changed' => '%1$s ændret',
-	'Change:AttName_EntryAdded' => '%1$s ændret, ny entry tilføjet.',
+	'Change:AttName_EntryAdded' => '%1$s ændret, ny entry tilføjet: %2$s',
 	'Change:LinkSet:Added' => 'tilføjet %1$s',
 	'Change:LinkSet:Removed' => 'fjernet %1$s',
 	'Change:LinkSet:Modified' => 'ændret %1$s',

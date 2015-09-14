@@ -554,5 +554,26 @@ class ormCaseLog {
 		$iLast = end($aKeys); // Strict standards: the parameter passed to 'end' must be a variable since it is passed by reference
 		return $iLast;
 	}
+	
+	/**
+	 * Get the text string corresponding to the given entry in the log (zero based index, older entries first)
+	 * @param integer $iIndex
+	 * @return string The text of the entry
+	 */
+	public function GetEntryAt($iIndex)
+	{
+		$iPos = 0;
+		$index = count($this->m_aIndex) - 1;
+		$aIndex = $this->m_aIndex;
+		while($index > $iIndex)
+		{
+			$iPos += $this->m_aIndex[$index]['separator_length'];
+			$iPos += $this->m_aIndex[$index]['text_length'];
+			$index--;
+		}
+		$iPos += $this->m_aIndex[$index]['separator_length'];
+		$sText = substr($this->m_sLog, $iPos, $this->m_aIndex[$index]['text_length']);
+		return $sText;
+	}
 }
 ?>

@@ -240,7 +240,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Change:Text_AppendedTo_AttName' => '%1$s allegato a %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modificato, valore precedente: %2$s',
 	'Change:AttName_Changed' => '%1$s modificato',
-	'Change:AttName_EntryAdded' => '%1$s modificato, nuova voce aggiunta.',
+	'Change:AttName_EntryAdded' => '%1$s modificato, nuova voce aggiunta: %2$s',
 ));
 
 //
