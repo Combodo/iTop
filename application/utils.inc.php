@@ -980,10 +980,11 @@ class utils
 	 * @param hash $aData The data to POST as an array('param_name' => value)
 	 * @param string $sOptionnalHeaders Additional HTTP headers as a string with newlines between headers
 	 * @param hash	$aResponseHeaders An array to be filled with reponse headers: WARNING: the actual content of the array depends on the library used: cURL or fopen, test with both !! See: http://fr.php.net/manual/en/function.curl-getinfo.php
+	 * @param hash $aCurlOptions An (optional) array of options to pass to curl_init. The format is 'option_code' => 'value'. These values have precedence over the default ones. Example: CURLOPT_SSLVERSION => CURL_SSLVERSION_SSLv3
 	 * @return string The result of the POST request
 	 * @throws Exception
 	 */ 
-	static public function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null, &$aResponseHeaders = null)
+	static public function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null, &$aResponseHeaders = null, $aCurlOptions = array())
 	{
 		// $sOptionnalHeaders is a string containing additional HTTP headers that you would like to send in your request.
 	
@@ -1001,6 +1002,7 @@ class utils
 					$aHTTPHeaders[$aMatches[1]] = $aMatches[2];
 				}
 			}
+			// Default options, can be overloaded/extended with the 4th parameter of this method, see above $aCurlOptions
 			$aOptions = array(
 				CURLOPT_RETURNTRANSFER	=> true,     // return the content of the request
 				CURLOPT_HEADER			=> false,    // don't return the headers in the output
@@ -1012,14 +1014,17 @@ class utils
 				CURLOPT_TIMEOUT			=> 120,      // timeout on response
 				CURLOPT_MAXREDIRS		=> 10,       // stop after 10 redirects
 				CURLOPT_SSL_VERIFYPEER	=> false,    // Disabled SSL Cert checks
-				CURLOPT_SSLVERSION		=> 3,		 // MUST to prevent a strange SSL error: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
+				// SSLV3 (CURL_SSLVERSION_SSLv3 = 3) is now considered as obsolete/dangerous: http://disablessl3.com/#why
+				// but it used to be a MUST to prevent a strange SSL error: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
+				// CURLOPT_SSLVERSION		=> 3,
 				CURLOPT_POST			=> count($aData),
 				CURLOPT_POSTFIELDS		=> http_build_query($aData),
 				CURLOPT_HTTPHEADER		=> $aHTTPHeaders,
 			);
 			
+			$aAllOptions = $aCurlOptions + $aOptions;
 			$ch = curl_init($sUrl);
-			curl_setopt_array($ch, $aOptions);
+			curl_setopt_array($ch, $aAllOptions);
 			$response = curl_exec($ch);
 			$iErr = curl_errno($ch);
 			$sErrMsg = curl_error( $ch );
