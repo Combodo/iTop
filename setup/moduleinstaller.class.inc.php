@@ -75,16 +75,23 @@ abstract class ModuleInstallerAPI
 	 */
 	public static function RenameClassInDB($sFrom, $sTo)
 	{
-		if (!MetaModel::IsStandaloneClass($sTo))
+		try
 		{
-			$sRootClass = MetaModel::GetRootClass($sTo);
-			$sTableName = MetaModel::DBGetTable($sRootClass);
-			$sFinalClassCol = MetaModel::DBGetClassField($sRootClass);
-			$sRepair = "UPDATE `$sTableName` SET `$sFinalClassCol` = '$sTo' WHERE `$sFinalClassCol` = BINARY '$sFrom'";
-			CMDBSource::Query($sRepair);
-			$iAffectedRows = CMDBSource::AffectedRows();
-			SetupPage::log_info("Renaming class in DB - final class from '$sFrom' to '$sTo': $iAffectedRows rows affected"); 
+			if (!MetaModel::IsStandaloneClass($sTo))
+			{
+				$sRootClass = MetaModel::GetRootClass($sTo);
+				$sTableName = MetaModel::DBGetTable($sRootClass);
+				$sFinalClassCol = MetaModel::DBGetClassField($sRootClass);
+				$sRepair = "UPDATE `$sTableName` SET `$sFinalClassCol` = '$sTo' WHERE `$sFinalClassCol` = BINARY '$sFrom'";
+				CMDBSource::Query($sRepair);
+				$iAffectedRows = CMDBSource::AffectedRows();
+				SetupPage::log_info("Renaming class in DB - final class from '$sFrom' to '$sTo': $iAffectedRows rows affected");
+			}
 		}
+		catch(Exception $e)
+		{
+			SetupPage::log_warning("Failed to rename class in DB - final class from '$sFrom' to '$sTo'. Reason: ".$e->getMessage());
+		} 
 	}
 
 	/**
@@ -101,97 +108,104 @@ abstract class ModuleInstallerAPI
 	 */
 	public static function RenameEnumValueInDB($sClass, $sAttCode, $sFrom, $sTo)
 	{
-		$sOriginClass = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
-		$sTableName = MetaModel::DBGetTable($sOriginClass);
-
-		$oAttDef = MetaModel::GetAttributeDef($sOriginClass, $sAttCode);
-		if ($oAttDef instanceof AttributeEnum)
+		try
 		{
-			$oValDef = $oAttDef->GetValuesDef();
-			if ($oValDef)
-			{
-				$aNewValues = array_keys($oValDef->GetValues(array(), ""));
-				if (in_array($sTo, $aNewValues))
-				{
-					$sEnumCol = $oAttDef->Get("sql");
-					$aFields = CMDBSource::QueryToArray("SHOW COLUMNS FROM `$sTableName` WHERE Field = '$sEnumCol'");
-					if (isset($aFields[0]['Type']))
-					{
-						$sColType = $aFields[0]['Type'];
-						// Note: the parsing should rely on str_getcsv (requires PHP 5.3) to cope with escaped string
-						if (preg_match("/^enum\(\'(.*)\'\)$/", $sColType, $aMatches))
-						{
-							$aCurrentValues = explode("','", $aMatches[1]);
-						}
-					}
-					if (!in_array($sFrom, $aNewValues))
-					{
-						if (!in_array($sTo, $aCurrentValues)) // if not already transformed!
-						{
-							$sNullSpec = $oAttDef->IsNullAllowed() ? 'NULL' : 'NOT NULL';
+			$sOriginClass = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
+			$sTableName = MetaModel::DBGetTable($sOriginClass);
 	
-							if (strtolower($sTo) == strtolower($sFrom))
+			$oAttDef = MetaModel::GetAttributeDef($sOriginClass, $sAttCode);
+			if ($oAttDef instanceof AttributeEnum)
+			{
+				$oValDef = $oAttDef->GetValuesDef();
+				if ($oValDef)
+				{
+					$aNewValues = array_keys($oValDef->GetValues(array(), ""));
+					if (in_array($sTo, $aNewValues))
+					{
+						$sEnumCol = $oAttDef->Get("sql");
+						$aFields = CMDBSource::QueryToArray("SHOW COLUMNS FROM `$sTableName` WHERE Field = '$sEnumCol'");
+						if (isset($aFields[0]['Type']))
+						{
+							$sColType = $aFields[0]['Type'];
+							// Note: the parsing should rely on str_getcsv (requires PHP 5.3) to cope with escaped string
+							if (preg_match("/^enum\(\'(.*)\'\)$/", $sColType, $aMatches))
 							{
-								SetupPage::log_info("Changing enum in DB - $sClass::$sAttCode from '$sFrom' to '$sTo' (just a change in the case)"); 
-								$aTargetValues = array();
-								foreach ($aCurrentValues as $sValue)
-								{
-									if ($sValue == $sFrom)
-									{
-										$sValue = $sTo;
-									}
-									$aTargetValues[] = $sValue;
-								}
-								$sColumnDefinition = "ENUM(".implode(",", CMDBSource::Quote($aTargetValues)).") $sNullSpec";
-								$sRepair = "ALTER TABLE `$sTableName` MODIFY `$sEnumCol` $sColumnDefinition";
-								CMDBSource::Query($sRepair);
+								$aCurrentValues = explode("','", $aMatches[1]);
 							}
-							else
+						}
+						if (!in_array($sFrom, $aNewValues))
+						{
+							if (!in_array($sTo, $aCurrentValues)) // if not already transformed!
 							{
-								// 1st - Allow both values in the column definition
-								//
-								SetupPage::log_info("Changing enum in DB - $sClass::$sAttCode from '$sFrom' to '$sTo'"); 
-								$aAllValues = $aCurrentValues;
-								$aAllValues[] = $sTo;
-								$sColumnDefinition = "ENUM(".implode(",", CMDBSource::Quote($aAllValues)).") $sNullSpec";
-								$sRepair = "ALTER TABLE `$sTableName` MODIFY `$sEnumCol` $sColumnDefinition";
-								CMDBSource::Query($sRepair);
-				
-								// 2nd - Change the old value into the new value
-								//
-								$sRepair = "UPDATE `$sTableName` SET `$sEnumCol` = '$sTo' WHERE `$sEnumCol` = BINARY '$sFrom'";
-								CMDBSource::Query($sRepair);
-								$iAffectedRows = CMDBSource::AffectedRows();
-								SetupPage::log_info("Changing enum in DB - $iAffectedRows rows updated"); 
-				
-								// 3rd - Remove the useless value from the column definition
-								//
-								$aTargetValues = array();
-								foreach ($aCurrentValues as $sValue)
+								$sNullSpec = $oAttDef->IsNullAllowed() ? 'NULL' : 'NOT NULL';
+		
+								if (strtolower($sTo) == strtolower($sFrom))
 								{
-									if ($sValue == $sFrom)
+									SetupPage::log_info("Changing enum in DB - $sClass::$sAttCode from '$sFrom' to '$sTo' (just a change in the case)"); 
+									$aTargetValues = array();
+									foreach ($aCurrentValues as $sValue)
 									{
-										$sValue = $sTo;
+										if ($sValue == $sFrom)
+										{
+											$sValue = $sTo;
+										}
+										$aTargetValues[] = $sValue;
 									}
-									$aTargetValues[] = $sValue;
+									$sColumnDefinition = "ENUM(".implode(",", CMDBSource::Quote($aTargetValues)).") $sNullSpec";
+									$sRepair = "ALTER TABLE `$sTableName` MODIFY `$sEnumCol` $sColumnDefinition";
+									CMDBSource::Query($sRepair);
 								}
-								$sColumnDefinition = "ENUM(".implode(",", CMDBSource::Quote($aTargetValues)).") $sNullSpec";
-								$sRepair = "ALTER TABLE `$sTableName` MODIFY `$sEnumCol` $sColumnDefinition";
-								CMDBSource::Query($sRepair);
-								SetupPage::log_info("Changing enum in DB - removed useless value '$sFrom'");
+								else
+								{
+									// 1st - Allow both values in the column definition
+									//
+									SetupPage::log_info("Changing enum in DB - $sClass::$sAttCode from '$sFrom' to '$sTo'"); 
+									$aAllValues = $aCurrentValues;
+									$aAllValues[] = $sTo;
+									$sColumnDefinition = "ENUM(".implode(",", CMDBSource::Quote($aAllValues)).") $sNullSpec";
+									$sRepair = "ALTER TABLE `$sTableName` MODIFY `$sEnumCol` $sColumnDefinition";
+									CMDBSource::Query($sRepair);
+					
+									// 2nd - Change the old value into the new value
+									//
+									$sRepair = "UPDATE `$sTableName` SET `$sEnumCol` = '$sTo' WHERE `$sEnumCol` = BINARY '$sFrom'";
+									CMDBSource::Query($sRepair);
+									$iAffectedRows = CMDBSource::AffectedRows();
+									SetupPage::log_info("Changing enum in DB - $iAffectedRows rows updated"); 
+					
+									// 3rd - Remove the useless value from the column definition
+									//
+									$aTargetValues = array();
+									foreach ($aCurrentValues as $sValue)
+									{
+										if ($sValue == $sFrom)
+										{
+											$sValue = $sTo;
+										}
+										$aTargetValues[] = $sValue;
+									}
+									$sColumnDefinition = "ENUM(".implode(",", CMDBSource::Quote($aTargetValues)).") $sNullSpec";
+									$sRepair = "ALTER TABLE `$sTableName` MODIFY `$sEnumCol` $sColumnDefinition";
+									CMDBSource::Query($sRepair);
+									SetupPage::log_info("Changing enum in DB - removed useless value '$sFrom'");
+								}
 							}
+						}
+						else
+						{
+							SetupPage::log_warning("Changing enum in DB - $sClass::$sAttCode - '$sFrom' is still a valid value (".implode(', ', $aNewValues).")"); 
 						}
 					}
 					else
 					{
-						SetupPage::log_warning("Changing enum in DB - $sClass::$sAttCode - '$sFrom' is still a valid value (".implode(', ', $aNewValues).")"); 
+						SetupPage::log_warning("Changing enum in DB - $sClass::$sAttCode - '$sTo' is not a known value (".implode(', ', $aNewValues).")"); 
 					}
 				}
-				else
-				{
-					SetupPage::log_warning("Changing enum in DB - $sClass::$sAttCode - '$sTo' is not a known value (".implode(', ', $aNewValues).")"); 
-				}
 			}
+		}
+		catch(Exception $e)
+		{
+			SetupPage::log_warning("Changing enum in DB - $sClass::$sAttCode - '$sTo' failed. Reason ".$e->getMessage());
 		}
 	}
 
