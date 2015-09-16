@@ -71,20 +71,38 @@ class UserLDAP extends UserInternal
 		
 		$sDefaultLDAPUser = MetaModel::GetModuleSetting('authent-ldap', 'default_user', '');
 		$sDefaultLDAPPwd = MetaModel::GetModuleSetting('authent-ldap', 'default_pwd', '');
+		$bLDAPStartTLS = MetaModel::GetModuleSetting('authent-ldap', 'start_tls', false);
 		
-		
+		$aOptions = MetaModel::GetModuleSetting('authent-ldap', 'options', array());
+		if (array_key_exists(LDAP_OPT_DEBUG_LEVEL, $aOptions))
+		{
+			// Set debug level before trying to connect, so that debug info appear in the PHP error log if ldap_connect goes wrong
+			$bRet = ldap_set_option($hDS, LDAP_OPT_DEBUG_LEVEL, $aOptions[LDAP_OPT_DEBUG_LEVEL]);
+			$this->LogMessage("ldap_set_option('$name', '$value') returned ".($bRet ? 'true' : 'false'));
+		}
 		$hDS = @ldap_connect($sLDAPHost, $iLDAPPort);
 		if ($hDS === false)
 		{
 			$this->LogMessage("ldap_authentication: can not connect to the LDAP server '$sLDAPHost' (port: $iLDAPPort). Check the configuration file config-itop.php.");
 			return false;
 		}
-		$aOptions = MetaModel::GetModuleSetting('authent-ldap', 'options', array());
 		foreach($aOptions as $name => $value)
 		{
-			ldap_set_option($hDS, $name, $value);
+			$bRet = ldap_set_option($hDS, $name, $value);
+			$this->LogMessage("ldap_set_option('$name', '$value') returned ".($bRet ? 'true' : 'false'));
 		}
-				
+		if ($bLDAPStartTLS)
+		{
+			$this->LogMessage("ldap_authentication: start tls required.");
+			$hStartTLS = ldap_start_tls($hDS);
+			//$this->LogMessage("ldap_authentication: hStartTLS = '$hStartTLS'");
+			if (!$hStartTLS)
+			{
+				$this->LogMessage("ldap_authentication: start tls failed.");
+				return false;
+			}
+		}
+		
 		if ($bind = @ldap_bind($hDS, $sDefaultLDAPUser, $sDefaultLDAPPwd))
 		{
 			// Search for the person, using the specified query expression
