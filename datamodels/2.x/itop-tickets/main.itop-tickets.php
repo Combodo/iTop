@@ -136,7 +136,7 @@ class _Ticket extends cmdbAbstractObject
 		require_once(APPROOT.'core/displayablegraph.class.inc.php');
 		$oContactsSet = $this->Get('contacts_list');
 		$oCIsSet = $this->Get('functionalcis_list');
-		
+
 		$aCIsToImpactCode = array();
 		$aSources = array();
 		$aExcluded = array();
@@ -208,40 +208,66 @@ class _Ticket extends cmdbAbstractObject
 				$aDefaultContexts[] = $aDefinition['oql'];
 			}
 		}
-		
-		$oGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, 10, true /* bEnableRedundancy */, $aExcluded, $aDefaultContexts);
-		$oIterator = new RelationTypeIterator($oGraph, 'Node');
+		// Merge the directly impacted items with the "new" ones added by the "context" queries
+		$aGraphObjects = array();
+		$oRawGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, 10, true /* bEnableRedundancy */, $aExcluded);
+		$oIterator = new RelationTypeIterator($oRawGraph, 'Node');
 		foreach ($oIterator as $oNode)
 		{
-			if ( ($oNode instanceof RelationObjectNode) && ($oNode->GetProperty('is_reached')) && (!$oNode->GetProperty('source')) && ($oNode->GetProperty('context_root_causes', null) == null) )
+			// Any object node reached AND different from a source will do
+			if ( ($oNode instanceof RelationObjectNode) && ($oNode->GetProperty('is_reached')) && (!$oNode->GetProperty('source')) )
 			{
 				$oObj = $oNode->GetProperty('object');
 				$iKey = $oObj->GetKey();
 				$sRootClass = MetaModel::GetRootClass(get_class($oObj));
-				switch ($sRootClass)
+				$aGraphObjects[get_class($oObj).'::'.$iKey] = $oNode->GetProperty('object');
+			}
+		}
+		
+		if (count($aDefaultContexts) > 0)
+		{
+			$oAnnotatedGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, 10, true /* bEnableRedundancy */, $aExcluded, $aDefaultContexts);
+			$oIterator = new RelationTypeIterator($oAnnotatedGraph, 'Node');
+			foreach ($oIterator as $oNode)
+			{
+				// Only pick the nodes which are NOT impacted by a context root cause, and merge them in the list
+				if ( ($oNode instanceof RelationObjectNode) && ($oNode->GetProperty('is_reached')) && (!$oNode->GetProperty('source')) && ($oNode->GetProperty('context_root_causes', null) == null) )
 				{
-					case 'FunctionalCI':
-					// Only link FunctionalCIs which are not already linked to the ticket
-					if (!array_key_exists($iKey, $aCIsToImpactCode) || ($aCIsToImpactCode[$iKey] != 'not_impacted'))
-					{
-						$oNewLink = new lnkFunctionalCIToTicket();
-						$oNewLink->Set('functionalci_id', $iKey);
-						$oNewLink->Set('impact_code', 'computed');
-						$oNewCIsSet->AddObject($oNewLink);
-					}
-					break;
-					
-					case 'Contact':
-					// Only link Contacts which are not already linked to the ticket
-					if (!array_key_exists($iKey, $aContactsToRoleCode) || ($aCIsToImpactCode[$iKey] != 'do_not_notify'))
-					{
-						$oNewLink = new lnkContactToTicket();
-						$oNewLink->Set('contact_id', $iKey);
-						$oNewLink->Set('role_code', 'computed');
-						$oNewContactsSet->AddObject($oNewLink);
-					}
-					break;
+					$oObj = $oNode->GetProperty('object');
+					$iKey = $oObj->GetKey();
+					$sRootClass = MetaModel::GetRootClass(get_class($oObj));
+					$aGraphObjects[get_class($oObj).'::'.$iKey] = $oNode->GetProperty('object');
 				}
+			}
+		}
+		
+		foreach ($aGraphObjects as $oObj)
+		{
+			$iKey = $oObj->GetKey();
+			$sRootClass = MetaModel::GetRootClass(get_class($oObj));
+			switch ($sRootClass)
+			{
+				case 'FunctionalCI':		
+				// Only link FunctionalCIs which are not already linked to the ticket
+				if (!array_key_exists($iKey, $aCIsToImpactCode) || ($aCIsToImpactCode[$iKey] != 'not_impacted'))
+				{
+					$oNewLink = new lnkFunctionalCIToTicket();
+					$oNewLink->Set('functionalci_id', $iKey);
+					$oNewLink->Set('impact_code', 'computed');
+					$oNewCIsSet->AddObject($oNewLink);
+				}
+				break;
+				
+				case 'Contact':
+				// Only link Contacts which are not already linked to the ticket
+				if (!array_key_exists($iKey, $aContactsToRoleCode) || ($aCIsToImpactCode[$iKey] != 'do_not_notify'))
+				{
+					$oNewLink = new lnkContactToTicket();
+					$oNewLink->Set('contact_id', $iKey);
+					$oNewLink->Set('role_code', 'computed');
+					$oNewContactsSet->AddObject($oNewLink);
+				}
+				break;
 			}
 		}
 		$this->Set('functionalcis_list', $oNewCIsSet);
