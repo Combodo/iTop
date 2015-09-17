@@ -1877,7 +1877,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'The device is up if all its power connections are up~~',
 	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'The device is up if at least %1$s %% of its power connections are up~~',
 	'Class:ApplicationSolution/Attribute:redundancy' => 'Impact analysis: configuration of the redundancy~~',
-	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'The solution is up is all CIs are up~~',
+	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'The solution is up if all CIs are up~~',
 	'Class:ApplicationSolution/Attribute:redundancy/count' => 'The solution is up if at least %1$s CI(s) is(are) up~~',
 	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'The solution is up if at least %1$s %% of the CIs are up~~',
 	'Class:Farm/Attribute:redundancy' => 'High availability~~',

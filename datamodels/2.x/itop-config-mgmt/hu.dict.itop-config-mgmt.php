@@ -901,7 +901,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'inactive~~',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => 'inactive~~',
 	'Class:ApplicationSolution/Attribute:redundancy' => 'Impact analysis: configuration of the redundancy~~',
-	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'The solution is up is all CIs are up~~',
+	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'The solution is up if all CIs are up~~',
 	'Class:ApplicationSolution/Attribute:redundancy/count' => 'The solution is up if at least %1$s CI(s) is(are) up~~',
 	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'The solution is up if at least %1$s %% of the CIs are up~~',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Application solutions~~',
