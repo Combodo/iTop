@@ -26,3 +26,7 @@ body { margin:none; }
 	-webkit-region-break-inside: avoid;
 	page-break-inside: avoid;
 }
+.printable-version legend {
+	padding-left: 8px;
+	background-image: none;
+}
