@@ -148,6 +148,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Attribute:pending_reason+' => '',
 	'Class:Incident/Attribute:parent_incident_id' => 'Incident parent',
 	'Class:Incident/Attribute:parent_incident_id+' => '',
+	'Class:Incident/Attribute:parent_problem_id' => 'Problème lié',
+	'Class:Incident/Attribute:parent_problem_id+' => '',
 	'Class:Incident/Attribute:parent_incident_ref' => 'Référence incident parent',
 	'Class:Incident/Attribute:parent_incident_ref+' => '',
 	'Class:Incident/Attribute:parent_change_id' => 'Changement parent',
