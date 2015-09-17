@@ -845,10 +845,10 @@ class Config
 		'concurrent_lock_enabled' => array(
 			'type' => 'bool',
 			'description' => 'Whether or not to activate the locking mechanism in order to prevent concurrent edition of the same object.',
-			'default' => true,
+			'default' => false,
 			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'concurrent_lock_expiration_delay' => array(
 			'type' => 'integer',
