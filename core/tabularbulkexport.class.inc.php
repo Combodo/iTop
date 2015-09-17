@@ -73,7 +73,7 @@ abstract class TabularBulkExport extends BulkExport
 				$sClass = reset($aAliases);
 			}
 			$sMostRelevantField = $this->SuggestField($sClass, $sAttCode);
-			$sAttCodeEx = $this->NormalizeFieldSpec($sClass, $sMostRelevantField);
+			$sAttCodeEx = MetaModel::NormalizeFieldSpec($sClass, $sMostRelevantField);
 			// Remove the aliases (if any) from the field names to make them compatible
 			// with the 'short' notation used in this case by the widget
 			if (count($aAliases) > 1)
@@ -88,59 +88,6 @@ abstract class TabularBulkExport extends BulkExport
 	protected function SuggestField($sClass, $sAttCode)
 	{
 		return $sAttCode;
-	}
-
-	/**
-	 * Given a field spec, get the most relevant (unique) representation
-	 * Examples for a user request:
-	 * - friendlyname => ref
-	 * - org_name => org_id->name
-	 * - org_id_friendlyname => org_id=>name
-	 * - caller_name => caller_id->name
-	 * - caller_id_friendlyname => caller_id->friendlyname	 	 	 	 	 	 
-	 */	 	
-	protected function NormalizeFieldSpec($sClass, $sField)
-	{
-		$sRet = $sField;
-
-		if ($sField == 'id')
-		{
-			$sRet = 'id';
-		}
-		elseif ($sField == 'friendlyname')
-		{
-			$sFriendlyNameAttCode = MetaModel::GetFriendlyNameAttributeCode($sClass);
-			if (!is_null($sFriendlyNameAttCode))
-			{
-				// The friendly name is made of a single attribute
-				$sRet = $sFriendlyNameAttCode;
-			}
-		}
-		else
-		{
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sField);
-			if ($oAttDef instanceof AttributeFriendlyName)
-			{
-				$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $oAttDef->GetKeyAttCode());
-				$sRemoteClass = $oKeyAttDef->GetTargetClass();
-				$sFriendlyNameAttCode = MetaModel::GetFriendlyNameAttributeCode($sRemoteClass);
-				if (is_null($sFriendlyNameAttCode))
-				{
-					// The friendly name is made of several attributes
-					$sRet = $oAttDef->GetKeyAttCode().'->friendlyname';
-				}
-				else
-				{
-					// The friendly name is made of a single attribute
-					$sRet = $oAttDef->GetKeyAttCode().'->'.$sFriendlyNameAttCode;
-				}
-			}
-			elseif ($oAttDef->IsExternalField())
-			{
-				$sRet = $oAttDef->GetKeyAttCode().'->'.$oAttDef->GetExtAttCode();
-			}
-		}
-		return $sRet;
 	}
 
 	protected function IsSubAttribute($sClass, $sAttCode, $oAttDef)

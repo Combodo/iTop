@@ -4920,6 +4920,62 @@ abstract class MetaModel
 			apc_delete($sAPCKey);
 		}
 	}
+	
+	/**
+	 * Given a field spec, get the most relevant (unique) representation
+	 * Examples for a user request:
+	 * - friendlyname => ref
+	 * - org_name => org_id->name
+	 * - org_id_friendlyname => org_id=>name
+	 * - caller_name => caller_id->name
+	 * - caller_id_friendlyname => caller_id->friendlyname
+	 * @param string $sClass
+	 * @param string $sField
+	 * @return string
+	 */
+	public static function NormalizeFieldSpec($sClass, $sField)
+	{
+		$sRet = $sField;
+	
+		if ($sField == 'id')
+		{
+			$sRet = 'id';
+		}
+		elseif ($sField == 'friendlyname')
+		{
+			$sFriendlyNameAttCode = static::GetFriendlyNameAttributeCode($sClass);
+			if (!is_null($sFriendlyNameAttCode))
+			{
+				// The friendly name is made of a single attribute
+				$sRet = $sFriendlyNameAttCode;
+			}
+		}
+		else
+		{
+			$oAttDef = static::GetAttributeDef($sClass, $sField);
+			if ($oAttDef instanceof AttributeFriendlyName)
+			{
+				$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $oAttDef->GetKeyAttCode());
+				$sRemoteClass = $oKeyAttDef->GetTargetClass();
+				$sFriendlyNameAttCode = static::GetFriendlyNameAttributeCode($sRemoteClass);
+				if (is_null($sFriendlyNameAttCode))
+				{
+					// The friendly name is made of several attributes
+					$sRet = $oAttDef->GetKeyAttCode().'->friendlyname';
+				}
+				else
+				{
+					// The friendly name is made of a single attribute
+					$sRet = $oAttDef->GetKeyAttCode().'->'.$sFriendlyNameAttCode;
+				}
+			}
+			elseif ($oAttDef->IsExternalField())
+			{
+				$sRet = $oAttDef->GetKeyAttCode().'->'.$oAttDef->GetExtAttCode();
+			}
+		}
+		return $sRet;
+	}
 } // class MetaModel
 
 

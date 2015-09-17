@@ -748,6 +748,12 @@ class DataTableSettings implements Serializable
 				{
 					$sSort = $aSortOrder['friendlyname'] ? 'asc' : 'desc';
 				}
+				$sNormalizedFName = MetaModel::NormalizeFieldSpec($sClass, 'friendlyname');
+				if(array_key_exists($sNormalizedFName, $aSortOrder))
+				{
+					$sSort = $aSortOrder[$sNormalizedFName] ? 'asc' : 'desc';
+				}
+				
 				$aColumns[$sAlias]['_key_'] = $oSettings->GetFieldData($sAlias, '_key_', null, true /* bChecked */, $sSort);
 			}
 			foreach($aList as $sAttCode)
