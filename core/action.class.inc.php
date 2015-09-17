@@ -136,7 +136,7 @@ class ActionEmail extends ActionNotification
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb,bizmodel",
+			"category" => "core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
