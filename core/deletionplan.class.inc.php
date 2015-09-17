@@ -101,6 +101,7 @@ class DeletionPlan
 				}
 				if ($aData['mode'] == DEL_MANUAL)
 				{
+					$this->m_aToDelete[$sClass][$iId]['issue'] = $sClass.'::'.$iId.' '.Dict::S('UI:Delete:MustBeDeletedManually');
 					$this->m_bFoundStopper = true;
 					$this->m_bFoundManualDelete = true;
 				}
