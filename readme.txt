@@ -1,4 +1,4 @@
-﻿iTop - version 2.2.0 Beta - 28-July-2015
+﻿iTop - version 2.2.0 - 18-September-2015
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -29,18 +29,26 @@ This version brings a number of expected enhancements, namely:
 
 - An new engine to compute and display impact analysis (requires Graphviz on the server, but no longer depends on Flash)
 - A complete rework of the exports
-- A lock to prevent the concurrent modification of the same object by different agents
+- a "printer friendly" version of the details of an object
 - A few performance optimizations (APC/APCu required on the server to benefit from them)
 - Enhancements to customizations that can be performed in XML
+- A lock (not enabled by default) to prevent the concurrent modification of the same object by different agents
 
-... and about 25 bug fixes
+... and about 50 bug fixes
 
-1.2 Should I upgrade to 2.2.0 beta?
-    -------------------------------
-This version is a beta quality version, and thus is NOT recommended for production.
-If you want to test drive the new features, we recommend that you install it in a "staging" environment.
-Anyhow, prior to taking that decision, we encourage you to have a look at the migration notes:
+1.2 Should I upgrade to 2.2.0?
+    --------------------------
+This version is a production quality version and, as such, is suitable for running in production.
+iTop 2.2.0 is fully backward compatible with iTop 2.1.0. The new version brings quite a number of
+bug fixes and enhancements and this is why we encourage you to upgrade your iTop.
+Anyhow, prior to making that decision, we encourage you to have a look at the migration notes:
 https://wiki.openitop.org/doku.php?id=2_1_0:admin:210_to_220_migration_notes
+
+Warning:
+If you upgrade from the 2.2.0-beta, make sure that the value 'query_cache_enabled' is not set to 'false'
+in the iTop configuration file. If so, please either change the value to 'true' or remove the line from
+the configuration file. Letting the value set to false causes a severe slow down of the application.
+
 
 1.3 Special Thanks To:
     -----------------
@@ -83,8 +91,8 @@ PHP 5.3: Apache, IIS, nginx...
 End-user configuration:
 Although iTop should work with most modern web browsers, the application has been
 tested mostly with Firefox 36+, IE9+, Safari 5 and Chrome. iTop was designed for
-at least a 1024x768 screen resolution. For the graphical view of the impact analysis,
-Flash version 8 or higher is required for some charts.
+at least a 1024x768 screen resolution. Flash version 8 or higher is still required
+for displaying some charts.
 
 2.2. Install procedure
      -----------------
@@ -199,50 +207,80 @@ That's it.
 
 Modernizations
 --------------------
-New look: a little bit "flatter" and more modern, but still quite similar to previous versions of iTop for a smooth migration 
-The 'zip' extension is now mandatory to install iTop, since the code relies on the ZipArchive class for the Excel export and the scheduled backup.
-iTop now requires PH 5.3.0 or higher (instead of PHP 5.2).
+New look: a little bit "flatter" and more modern, but still quite similar to
+previous versions of iTop for a smooth migration.
+The 'zip' extension is now mandatory to install iTop, since the code relies on
+the ZipArchive class for the Excel export and the scheduled backup.
+iTop now requires PHP 5.3.0 or higher (instead of PHP 5.2.0).
 For the display of the impact analysis, Graphviz is required on the server.
 
 
 Impact analysis
 -----------------
 Takes the redundancy into account (On "Power Sources" and on "Farms")
-An new "Impact analysis" tab is now available on tickets, to show the exact impact of a given ticket (can be exported in PDF and attached to the ticket)
-The graphical view no longer depends on Flash, takes into account the active tickets and is exportable in PDF
-The display has been improved and better supports high volumes of data by automatically grouping similar objects
-The impact analysis can now be customized in XML, but remains backwards compatible with definitions made by the mean of PHP methods
+An new "Impact analysis" tab is now available on tickets, to show the exact
+impact of a given ticket (can be exported in PDF and attached to the ticket).
+The graphical view no longer depends on Flash, takes into account the active
+tickets and is exportable in PDF. The display has been improved and better
+supports high volumes of data by automatically grouping similar objects.
+The impact analysis can now be customized in XML, but remains backwards
+compatible with legacy definitions made by the mean of PHP methods.
 
 
 Exports
--------------
+-------
 The bulk export has been completely redesigned:
 - interactive choice of the columns to export (and their order) as well as all the format specific options
 - support for high volumes of data for the interactive export
 - the same export engine" is used for interactive or scripted exports
 - new PDF format
+- a fields specification can now be an extended attribute code (e.g. location_id->org_id->parent_id->code)
+- for full backward compatibility the "old" export.php page still exists, the new export is 'export-v2.php"
+- bulk export is now only allowed to users having the "bulk read" privilege on the specified class of objects
+
+Since the new export requires the specification of the exact list of fields to be exported, if the attribute 'fields'
+is left empty on a Query Phrase Book item, then the iTop user interface proposes the hyperlink to the legacy export and
+displays a message explaining the limitations
+
 The following enhancements/bugs were addressed:
+#1120 Export V2 not working when using aliases (ex: SELECT Person AS p)
 #1071 Bulk Read access rights
 #1034 List of fields for Excel export
 #772 Some attributes not exportedvia export.php
 
+Printer friendly version of the details
+---------------------------------------
+#576 Printable view for object details.
+
+From the detail page of an object, a new action "Printer friendly version" has been
+added in the "toolkit" pull-down menu. This action displays in a new page a printer
+optimized representation of the details. It is also possible to adjust the output
+by interactively hiding/showing certain sections of the page before printing it.
+
+
 Locking
 -------------
-A new locking mechanism has been introduced to prevent the concurrent interactive modification of the same object (for example a User Request ticket)
-by two agents (or by the same agent in two different tabs of her/his browser). In case of troubles, an administrator can however bypass this lock.
+Note: The locking mechanism is disabled by default. To enable it, set the configuration
+parameter: 'concurrent_lock_enabled' to true in the iTop configuration file.
 
-Note: The locking mechanism can be completely disabled to go back to the previous behavior. (via the configuration parameter: concurrent_lock_enabled)
+The new locking mechanism has been introduced to prevent the concurrent interactive
+modification of the same object (for example a User Request ticket)by two agents
+(or by the same agent in two different tabs of her/his browser). In case of troubles
+(e.g. a locked session from an inactive user), an administrator can bypass this lock.
+
 
 OQL syntax
 --------------------
 1) The OQL language now supports UNION statements:
 SELECT Server WHERE cpu = '...' UNION SELECT PC
-Unions support polymorphism: you can use UNION on as many OQL queries as needed as long as the selected classes have a common ancestor.
+Unions support polymorphism: you can use UNION on as many OQL queries as needed as
+long as the selected classes have a common ancestor.
 Unions  can be used anywhere in the application where an OQL query is expected.
 
 2) JOIN ... ON objkey = id
 Allow JOIN on a objclass/objkey pair of attributes
-Enables queries on the synchronized objects (SynchroReplica::dest_id was changed into an attribute of type AttributeObjectKey), or with change tracking logs.
+Enables queries on the synchronized objects (SynchroReplica::dest_id was changed into
+an attribute of type AttributeObjectKey), or with change tracking logs.
 
 
 Scalability / Performance
@@ -255,26 +293,38 @@ Optimization: when displaying an object details, do not check data synchro for e
 Performance optimization: cache the result of the disk scan looking for icons for dashboards (speeds up the welcome page !)
 Optimization of DisplayBlock::FromObjectSet, load only the needed column(s)!
 
-
-Miscellaneous fixes
--------------------
+Usability enhancements
+----------------------
 #714  Localization of the date picker calendar. Get rid of the old jquery.datepicker.js file since iTop now relies on the built-in jQuery UI date picker widget.
 #257  Dashlet label hardcoded to "Search for objects of type Server"
 #759  Ticket lists in CI: show only active tickets (exclude tickets in states rejected/resolved/closed) and display one list per leaf class so that the status column will be visible. It it not possible anymore to edit the ticket list from the CI.
+#788  Whenever a timeout is detected by an ajax request, a popup dialog warns the user to log-in again.
+#1092 Caller not preset when creating a ticket from a contact
+#1082 Dashlet badge: do not display search results everytime.
+#1083 HTML export: show a scroll bar when needed.
+Better display of the "Attachments" (addition/removal) in the history, incliding a preview of images.
+History display enhancement: whenever a new case log entry is added, display its content in the history.
+The display is truncated at a configurable max length. The user can expand/collapse the truncated text, entry per entry.
+Usability enhancement: Autocomplete: do NOT clear the typed text when the value does not match one of the possible values,
+but clear the actual underlying value so that the input field gets marked as "invalid" if it is mandatory.
+More "compact" (but vertically aligned) search forms so that it's easier to find a field and it still works on medium screens.
+#1087: the sort order on "group by" dashlets inside a dashboard is now saved as a user preference.
+
+Miscellaneous fixes
+-------------------
+Log REST/JSON calls (config: 'log_rest_service' => true ; stored as EventRestService)
+REST/JSON services. Take the user rights into account. Something was already done for core/create and core/delete, but the symptoms were not clear. The other verbs (update, apply_stimulus, get and get_related) had no protection at all.
+#1123/#1133 The optimization on loaded columns in SQL queries was inoperant for some queries, resulting in a stopper issue if such queries were added to a union query (2.2.0 beta)
 #1062 bumped the version number of the REST/JSON API to 1.3 to be aligned with the documentation !
 #963  For security reasons, "Portal users" are no longer allowed to use the REST/JSON API.
 #1078 Properly record the history of LinkedSet(Indirect)
 #1079 DBWriteLinks deleting related objects
 Bug fix: don't accept attachments (like images) via Chrome's copy/paste since it may duplicate the text content of a normal copy/paste and moreover causes troubles because there is no file name associated with the pasted content.
-#788  Whenever a timeout is detected by an ajax request, a popup dialog warns the user to log-in again.
 Small enhancement to the display of the meta model: in the list of transitions, display the code of the event as a tooltip.
 JSON/REST: When specifying a case log entry (or the whole), it was not possible to set the user name without knowing a valid user id
 Bug fix: prevent a crash of the web services when trying to log a non scalar paramater value...
-#1092 Caller not preset when creating a ticket from a contact
-#1082 Dashlet badge: do not display search results everytime.
 #1088 Support of HTMLEditor in the PortalWebPage, for example if the description of a ticket is in HTML.
 Bug fix: properly compute the URLs/URIs for the soap server (and its extensions)
-#1083 HTML export: show a scroll bar when needed.
 #1059 fix for the Spanish localization first_name and last_name were swaped.
 #1054 increase max_execution_time during the setup.
 #1052 Fix for the German localization.
@@ -282,10 +332,36 @@ Bug fix: properly compute the URLs/URIs for the soap server (and its extensions)
 #1047 Fix for the FindTab method.
 #1045 Fix in the German localization.
 #594  Properly display attachments inside "properties" by closing the span and the fieldset in non-edit mode.
-
+#384: Triggers should not be in the "bizmodel" category. User rights do not apply to such objects...
+#1106, #1122: Added a new option 'start_tls' (false by default) and improved debugging capabilities for troubleshooting when something goes wrong with LDAP. Thanks to Karl (karkoff1212) for the hint.
+#1148: Fixed dashboards upload: use the more modern fileupload component, since we now hook the ajax call in iTopWebPage and removed references to the old component ajax.fileupload from (almost) everywhere...
+#1049: CSV import (and edition) of n:n links. The Differences() function is NOT commutative: the original value (i.e. the one from the database) must the the first argument.
+#1144 Audit category having no rule -> PHP notices when showing the report + improved the behavior when the OQL of a rule is wrong.
+#1143 Records any change (add/remove/modify) for link sets that can be considered as one of the characteristics of a class (currently those having edit mode = in place)
+#1142 Dashboard editor: protects from unwanted "exit" without saving the modifications:
+- mark the dashboard as modified when a dashlet was added / moved / deleted
+- prevent clicking on the hyperlinks inside the preview of the dashboard
+#1091 CAS memberships broken (parameter "cas_memberof" NOT given as a regular expression, bugged since iTop 2.0 or earlier)
+#1134 Query returning a "null row": just make sure that the row gets displayed (still surprising... see ticket #1138 to follow up on the suppression of those ghost rows)
+#1140 UNION queries not working -in fact, loss of the optimization on column load when filtering on org hierarchies (retrofit possible but the fix will be located in MetaModel)
+#564 Prompt for an update in a case log on a lifecycle transition.
+#1111 Could not attach a UserRequest to a Problem (1-N links). Could not detach either! This fix requires attention: it is assumed that an item of a link set, if it is "modified" then its key to the current object has already been set.
+#1074 Portal: errors when selecting Impact/Urgency, and if the user has access to his organization only.
+#1130 CAS authentication security leak when cas_memberof is left empty (already committed into branch 2.1.0)
+Secure the server: prevent the users from browsing/getting files from the data and log directories. With Apache, it is still a must to enable htaccess with the spec "AllowOverride All". The index.php files are here to prevent from browsing whatever the HTTP server config.
+#1095 Object creation form and bulk modify (final step) not working when using apache-proxy
+#1118: fixed strange display of synchro data sources status.
+#1121: Regression: "filters" on Triggers had no effect. The regression was caused by the new way of computing placeholders "on the fly" (#803).
+#1116 (and #1117): default values for ENUMs must always be expressed as strings.
+Fixed a potential XSS vulnerability.
+Bug fix: typo causing the generation of invalid SQL queries (in some rare cases).
+#1099 and #1014: integration of some German translations.
 
 Extending the data model
 ------------------------
+#1081 Customizations: adjust the dimensions of the HTML Editor (CKEditor). Also fixed an issue when specifying width/height with unit (e.g. "30em") for AttributeText/AttributeLongText
+Customizations/XML: clearer error reporting when encountering a duplicate value for an AttributeEnum
+#1137: the new XML configuration for the "portal as an extension" was too limited. Now one "allow" profile is enough to allow access to a given portal.
 New lifecycle action SetCurrentPerson. Also improved the existing lifecycle action SetCurrentUser to prevent from calling it on an external key that is not pointing to users (!= contact), and if the target attribute is a string, then store the friendlyname there.
 #1069 Fix to add a new hierarchical key when there are already some records in the DB
 Modules implementing a lifecycle written in PHP (and having actions executed on transitions) do not work until 2.1.0. The compatibility patch had been implemented but it was not working.
@@ -300,6 +376,8 @@ Modularization of the portal. The entry points for portals is now defined in XML
 
 Internals
 ----------------------
+Make the 'curl' options overridable when calling utils::DoPostRequest()
+Allow to stop a stop watch at a specified time (case exchange)
 Code cleanup: deprecated the unused (and empty) class CMDBSearchFilter, replaced by DBSearch or DBObjectSearch depending on the usage.
 Added an alternate implementation for storing "transaction" identifiers on disk instead of inside the $_SESSION variable.
 Mutex instrumentation for troubleshooting...
@@ -326,6 +404,7 @@ Internal: fixed the caching of DBObject::ToArgs()
 Change of the QueryReflection API to support DesignTime.
 ModelFactory: Re-creating a class into another location in the class hierarchy it equivalent to moving that class => the delta must be a "redefine" for the class (improved the comment from the previous commit)
 ModelFactory: Re-creating a class into another location in the class hierarchy it equivalent to moving that class => the delta must be a "redefine" for the class
+Protects the setup against renaming of non-existing classes. Useful for heavily customized models where some very basic classes have been deleted.
 
 
 
