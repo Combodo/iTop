@@ -3873,6 +3873,73 @@ class TestLinkSetRecording_NN_WithDuplicates extends TestBizModel
 				'history_modified' => 0,
 			),
 			array(
+				'description' => 'Create one link from scratch, no port, to prepare for the next test case',
+				'links' => array(
+					array(
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => '',
+						'device_port' => '',
+					),
+				),
+				'expected-res' => array (
+					"$iDev2, test device B, unit test linkset, , , downlink, test device B",
+				),
+				'history_added' => 1,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Create a second link from scratch, pointing to the same server and no port, to prepare for the next test case',
+				'links' => array(
+					array(
+						'id' => "SELECT lnkConnectableCIToNetworkDevice WHERE networkdevice_id = $iDev2 AND connectableci_id = $iServer",
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => '',
+						'device_port' => '',
+					),
+					array(
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => 'X',
+						'device_port' => '',
+					),
+				),
+				'expected-res' => array (
+					"$iDev2, test device B, unit test linkset, , , downlink, test device B",
+					"$iDev2, test device B, unit test linkset, X, , downlink, test device B",
+				),
+				'history_added' => 1,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),
+			array(
+				'description' => 'Create a second link from scratch, pointing to the same server and no port, to prepare for the next test case',
+				'links' => array(
+					array(
+						'id' => "SELECT lnkConnectableCIToNetworkDevice WHERE networkdevice_id = $iDev2 AND connectableci_id = $iServer",
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => '',
+						'device_port' => '',
+					),
+					array(
+						'networkdevice_id' => $iDev2,
+						'connectableci_id' => $iServer,
+						'network_port' => 'X',
+						'device_port' => '',
+					),
+				),
+				'expected-res' => array (
+					"$iDev2, test device B, unit test linkset, , , downlink, test device B",
+					"$iDev2, test device B, unit test linkset, X, , downlink, test device B",
+				),
+				'history_added' => 1,
+				'history_removed' => 0,
+				'history_modified' => 0,
+			),
+			array(
 				'description' => 'Device B twice (same characteristics) - known issue #1145',
 				'links' => array(
 					array(

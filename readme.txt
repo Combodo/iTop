@@ -29,10 +29,11 @@ This version brings a number of expected enhancements, namely:
 
 - An new engine to compute and display impact analysis (requires Graphviz on the server, but no longer depends on Flash)
 - A complete rework of the exports
-- a "printer friendly" version of the details of an object
+- A "printer friendly" version of the details of an object
 - A few performance optimizations (APC/APCu required on the server to benefit from them)
 - Enhancements to customizations that can be performed in XML
 - A lock (not enabled by default) to prevent the concurrent modification of the same object by different agents
+- The Czech translation of iTop, thanks to Lukáš Dvořák
 
 ... and about 50 bug fixes
 
@@ -75,6 +76,7 @@ Bruno Cornec for his support and contribution to the Linux packaging of iTop
 Jean-François Bilger for providing a fix for an unsuspected SQL bug
 Remie Malik from Linprofs for the Dutch translation
 Erik Bøg for the Danish translation
+Lukáš Dvořák and Daniel Rokos for the Czech translation
 
 2. INSTALLATION
    ============
