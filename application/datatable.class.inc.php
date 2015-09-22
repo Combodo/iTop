@@ -293,7 +293,7 @@ EOF;
 		if (!$oPage->IsPrintableVersion())
 		{
 			$sMenuTitle = Dict::S('UI:ConfigureThisList');
-			$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$this->iListId.'"><ul><li><img src="../images/toolkit_menu.png"><ul>';
+			$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$this->iListId.'"><ul><li><img src="../images/toolkit_menu.png?itopversion='.ITOP_VERSION.'"><ul>';
 	
 			$oMenuItem1 = new JSPopupMenuItem('iTop::ConfigureList', $sMenuTitle, "$('#datatable_dlg_".$this->iListId."').dialog('open');");
 			$aActions = array(
