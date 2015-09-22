@@ -905,10 +905,10 @@ EOF
 			$sOnlineHelpUrl = MetaModel::GetConfig()->Get('online_help');
 			//$sLogOffMenu = "<span id=\"logOffBtn\" style=\"height:55px;padding:0;margin:0;\"><img src=\"../images/onOffBtn.png\"></span>";
 
-			$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/itop-logo.png';
+			$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/itop-logo.png?itopversion='.ITOP_VERSION;
 			if (file_exists(MODULESROOT.'branding/main-logo.png'))
 			{
-				$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/main-logo.png';
+				$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/main-logo.png?itopversion='.ITOP_VERSION;
 			}
 
 			$sHtml .= $sNorthPane;
@@ -935,7 +935,7 @@ EOF
 			$sHtml .= '			</div>';
 			$sHtml .= '		</div> <!-- /inner menu -->';
 			$sHtml .= ' </div> <!-- /menu -->';
-			$sHtml .= ' <div class="footer ui-layout-south"><div id="combodo_logo"><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logo-combodo.png"/></a></div></div>';
+			$sHtml .= ' <div class="footer ui-layout-south"><div id="combodo_logo"><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logo-combodo.png?itopversion='.ITOP_VERSION.'"/></a></div></div>';
 			$sHtml .= '<!-- End of the left pane -->';
 			$sHtml .= '</div>';
 
@@ -944,7 +944,7 @@ EOF
 			$sHtml .= self::FilterXSS($sApplicationBanner);
 			$sHtml .= '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><table><tr><td></td><td><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="'.$sText.'"></input><div '.$sOnClick.' id="global-search-image"></div></div></td>';
 			//$sHtml .= '<td><input type="image" src="../images/searchBtn.png"/></a></td>';
-			$sHtml .= '<td><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank"><img title="'.Dict::S('UI:Help').'" src="../images/help.png"/></td>';
+			$sHtml .= '<td><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank"><img title="'.Dict::S('UI:Help').'" src="../images/help.png?itopversion='.ITOP_VERSION.'"/></td>';
 			$sHtml .= '<td>'.self::FilterXSS($sLogOffMenu).'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
 			//echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
 			$sHtml .= ' </div>';

@@ -92,10 +92,10 @@ class LoginWebPage extends NiceWebPage
 		}
 		$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
 		$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
-		$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/'.$sLogo;
+		$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/'.$sLogo.'?itopversion='.ITOP_VERSION;
 		if (file_exists(MODULESROOT.'branding/'.$sBrandingLogo))
 		{
-			$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/'.$sBrandingLogo;
+			$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/'.$sBrandingLogo.'?itopversion='.ITOP_VERSION;
 		}
 		$this->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8')."\"><img title=\"$sVersionShort\" src=\"$sDisplayIcon\"></a></div>\n");
 	}

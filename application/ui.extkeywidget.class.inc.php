@@ -257,7 +257,7 @@ EOF
 	
 			// the input for the auto-complete
 			$sHTMLValue = "<input count=\"".$oAllowedValues->Count()."\" type=\"text\" id=\"label_$this->iId\" size=\"$iFieldSize\" value=\"$sDisplayValue\"/>&nbsp;";
-			$sHTMLValue .= "<img id=\"mini_search_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_search.gif\" onClick=\"oACWidget_{$this->iId}.Search();\"/>";
+			$sHTMLValue .= "<img id=\"mini_search_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_search.gif?itopversion=".ITOP_VERSION."\" onClick=\"oACWidget_{$this->iId}.Search();\"/>";
 	
 			// another hidden input to store & pass the object's Id
 			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" />\n";
@@ -281,7 +281,7 @@ EOF
 		}
 		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false)
 		{
-			$sHTMLValue .= "<img id=\"mini_tree_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_tree.gif\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"/>&nbsp;";
+			$sHTMLValue .= "<img id=\"mini_tree_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_tree.gif?itopversion=".ITOP_VERSION."\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"/>&nbsp;";
 			$oPage->add_ready_script(
 <<<EOF
 			if ($('#ac_tree_{$this->iId}').length == 0)
@@ -293,7 +293,7 @@ EOF
 		}
 		if ($bCreate && $bExtensions)
 		{
-			$sHTMLValue .= "<img id=\"mini_add_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_add.gif\" onClick=\"oACWidget_{$this->iId}.CreateObject();\"/>&nbsp;";
+			$sHTMLValue .= "<img id=\"mini_add_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_add.gif?itopversion=".ITOP_VERSION."\" onClick=\"oACWidget_{$this->iId}.CreateObject();\"/>&nbsp;";
 			$oPage->add_ready_script(
 <<<EOF
 		if ($('#ajax_{$this->iId}').length == 0)
