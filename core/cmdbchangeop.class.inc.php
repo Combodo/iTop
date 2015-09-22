@@ -622,26 +622,35 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 			$oObj = $oMonoObjectSet->Fetch();
 			$oCaseLog = $oObj->Get($this->Get('attcode'));
 			$iMaxVisibleLength = MetaModel::getConfig()->Get('max_history_case_log_entry_length', 0);
-			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($oCaseLog->GetEntryAt($this->Get('lastentry')), ENT_QUOTES, 'UTF-8'));
+			$sTextEntry = $oCaseLog->GetEntryAt($this->Get('lastentry'));
 			if (($iMaxVisibleLength > 0) && (strlen($sTextEntry) > $iMaxVisibleLength))
 			{
 				if (function_exists('mb_strcut'))
 				{
 					// Safe with multi-byte strings
-					$sBefore = mb_strcut($sTextEntry, 0, $iMaxVisibleLength);
-					$sAfter = mb_strcut($sTextEntry, $iMaxVisibleLength);
+					$sBefore = $this->ToHtml(mb_strcut($sTextEntry, 0, $iMaxVisibleLength, 'UTF-8'));
+					$sAfter = $this->ToHtml(mb_strcut($sTextEntry, $iMaxVisibleLength, null, 'UTF-8'));
 				}
 				else
 				{
-					// Let's hpe we have no multi-byte characters around the cuttting point...
-					$sBefore = substr($sTextEntry, 0, $iMaxVisibleLength);
-					$sAfter = substr($sTextEntry, $iMaxVisibleLength);
+					// Let's hope we have no multi-byte characters around the cuttting point...
+					$sBefore = $this->ToHtml(substr($sTextEntry, 0, $iMaxVisibleLength));
+					$sAfter = $this->ToHtml(substr($sTextEntry, $iMaxVisibleLength));
 				}
 				$sTextEntry = '<span class="case-log-history-entry">'.$sBefore.'<span class="case-log-history-entry-end">'.$sAfter.'<span class="case-log-history-entry-toggle ui-icon ui-icon-circle-minus"></span></span><span class="case-log-history-entry-more">...<span class="case-log-history-entry-toggle ui-icon ui-icon-circle-plus"></span></span></span>';
+			}
+			else
+			{
+				$sTextEntry = $this->ToHtml($sTextEntry);
 			}
 			$sResult = Dict::Format('Change:AttName_EntryAdded', $sAttName, $sTextEntry);
 		}
 		return $sResult;
+	}
+	
+	protected function ToHtml($sRawText)
+	{
+		return str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sRawText, ENT_QUOTES, 'UTF-8'));
 	}
 }
 

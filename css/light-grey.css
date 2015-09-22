@@ -2101,6 +2101,11 @@ span.refresh-button {
 }
 
 
+.case-log-history-entry {
+  display: block;
+}
+
+
 .case-log-history-entry-end {
   display: none;
 }
