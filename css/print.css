@@ -17,7 +17,7 @@ h2.printable-tab-title {
 	page-break-after: avoid;
 }
 div#tabbedContent_0 { border:none; }
-p a, .ui-widget-content td a, p a:hover, .ui-widget-content td a:hover {
+p a, .ui-widget-content td a, p a:hover, .ui-widget-content td a:hover, p a:visited, .ui-widget-content td a:visited, td a, td a:visited, td a:hover {
 	padding-left: 0;
 	background: transparent;
 }
