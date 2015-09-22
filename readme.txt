@@ -1,4 +1,4 @@
-﻿iTop - version 2.2.0 - 18-September-2015
+iTop - version 2.2.0 - 23-September-2015
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -15,7 +15,7 @@ Readme file
 
 1. ABOUT THIS RELEASE
    ==================
-Thank you for downloading the 21st packaged release of iTop.
+Thank you for downloading the 22nd packaged release of iTop.
 This version is a major release, with quite a few bug fixes and significative enhancements.
 
 The documentation about iTop is available as a Wiki: https://wiki.openitop.org/
@@ -214,17 +214,20 @@ previous versions of iTop for a smooth migration.
 The 'zip' extension is now mandatory to install iTop, since the code relies on
 the ZipArchive class for the Excel export and the scheduled backup.
 iTop now requires PHP 5.3.0 or higher (instead of PHP 5.2.0).
-For the display of the impact analysis, Graphviz is required on the server.
 
 
 Impact analysis
 -----------------
-Takes the redundancy into account (On "Power Sources" and on "Farms")
+The computation of the impact takes the redundancy into account (On
+"Power Sources" and on "Farms"), which requires also to take into account
+the active tickets. 
 An new "Impact analysis" tab is now available on tickets, to show the exact
 impact of a given ticket (can be exported in PDF and attached to the ticket).
-The graphical view no longer depends on Flash, takes into account the active
-tickets and is exportable in PDF. The display has been improved and better
-supports high volumes of data by automatically grouping similar objects.
+The graphical view no longer depends on Flash (browser-side), but now depends
+on Graphviz (server-side) which gives a better disposition of the nodes.
+The view can be resized and is exportable in PDF.
+The display has been improved and better supports high volumes of data by
+automatically grouping similar objects.
 The impact analysis can now be customized in XML, but remains backwards
 compatible with legacy definitions made by the mean of PHP methods.
 
@@ -234,7 +237,7 @@ Exports
 The bulk export has been completely redesigned:
 - interactive choice of the columns to export (and their order) as well as all the format specific options
 - support for high volumes of data for the interactive export
-- the same export engine" is used for interactive or scripted exports
+- the same "export engine" is used for interactive or scripted exports
 - new PDF format
 - a fields specification can now be an extended attribute code (e.g. location_id->org_id->parent_id->code)
 - for full backward compatibility the "old" export.php page still exists, the new export is 'export-v2.php"
