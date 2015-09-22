@@ -581,8 +581,7 @@ EOF
 		if ($bCreate)
 		{
 			$oChangeOp = new CMDBChangeOpAttachmentAdded();
-			$oChangeOp->Set('attachment_class', 'Attachment');
-			$oChangeOp->Set('attachment_key', $oAttachment->GetKey());
+			$oChangeOp->Set('attachment_id', $oAttachment->GetKey());
 			$oChangeOp->Set('filename', $sFileName);
 		}
 		else
@@ -619,13 +618,12 @@ class CMDBChangeOpAttachmentAdded extends CMDBChangeOp
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeString("attachment_class", array("allowed_values"=>null, "sql"=>"attachment_class", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeObjectKey("attachment_key", array("allowed_values"=>null, "class_attcode"=>"attachment_class", "sql"=>"attachment_key", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("attachment_id", array("targetclass"=>"Attachment", "allowed_values"=>null, "sql"=>"attachment_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_SILENT, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("filename", array("allowed_values"=>null, "sql"=>"filename", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('attachment_class', 'attachment_key')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('attachment_class', 'attachment_key')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('attachment_id')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('attachment_id')); // Attributes to be displayed for a list
 	}
 	
 	/**
@@ -637,8 +635,8 @@ class CMDBChangeOpAttachmentAdded extends CMDBChangeOp
 		$bIsHtml = true;
 		
 		$sResult = '';
-		$sTargetObjectClass = $this->Get('attachment_class');
-		$iTargetObjectKey = $this->Get('attachment_key');
+		$sTargetObjectClass = 'Attachment';
+		$iTargetObjectKey = $this->Get('attachment_id');
 		$sFilename = htmlentities($this->Get('filename'), ENT_QUOTES, 'UTF-8');
 		$oTargetSearch = new DBObjectSearch($sTargetObjectClass);
 		$oTargetSearch->AddCondition('id', $iTargetObjectKey, '=');
