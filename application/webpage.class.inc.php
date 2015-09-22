@@ -525,11 +525,19 @@ class WebPage implements Page
         $this->output_dict_entries();
         foreach($this->a_linked_stylesheets as $a_stylesheet)
         {
+			if (strpos($a_stylesheet['link'], '?') === false)
+			{
+				$s_stylesheet = $a_stylesheet['link']."?itopversion=".ITOP_VERSION;
+			}
+			else
+			{
+				$s_stylesheet = $a_stylesheet['link']."&itopversion=".ITOP_VERSION;
+			}
 			if ($a_stylesheet['condition'] != "")
 			{
 				echo "<!--[if {$a_stylesheet['condition']}]>\n";
 			}
-            echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$a_stylesheet['link']}\" />\n";
+			echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$s_stylesheet}\" />\n";
 			if ($a_stylesheet['condition'] != "")
 			{
 				echo "<![endif]-->\n";
@@ -547,7 +555,7 @@ class WebPage implements Page
         }
         if (class_exists('MetaModel') && MetaModel::GetConfig())
         {
- 			echo "<link rel=\"shortcut icon\" href=\"".utils::GetAbsoluteUrlAppRoot()."images/favicon.ico\" />\n";
+ 			echo "<link rel=\"shortcut icon\" href=\"".utils::GetAbsoluteUrlAppRoot()."images/favicon.ico?itopversion=".ITOP_VERSION."\" />\n";
         }
         echo "</head>\n";
         echo "<body>\n";

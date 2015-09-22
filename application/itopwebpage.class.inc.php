@@ -675,18 +675,26 @@ EOF
 		// jQuery scripts may face some spurious problems (like failing on a 'reload')
 		foreach($this->a_linked_stylesheets as $a_stylesheet)
 		{
+			if (strpos($a_stylesheet['link'], '?') === false)
+			{
+				$s_stylesheet = $a_stylesheet['link']."?itopversion=".ITOP_VERSION;
+			}
+			else
+			{
+				$s_stylesheet = $a_stylesheet['link']."&itopversion=".ITOP_VERSION;
+			}
 			if ($a_stylesheet['condition'] != "")
 			{
 				$sHtml .= "<!--[if {$a_stylesheet['condition']}]>\n";
 			}
-			$sHtml .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$a_stylesheet['link']}\" />\n";
+			$sHtml .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$s_stylesheet}\" />\n";
 			if ($a_stylesheet['condition'] != "")
 			{
 				$sHtml .= "<![endif]-->\n";
 			}
 		}
 		// special stylesheet for printing, hides the navigation gadgets
-		$sHtml .= "<link rel=\"stylesheet\" media=\"print\" type=\"text/css\" href=\"../css/print.css\" />\n";
+		$sHtml .= "<link rel=\"stylesheet\" media=\"print\" type=\"text/css\" href=\"../css/print.css?itopversion=".ITOP_VERSION."\" />\n";
 
 		if ($this->GetOutputFormat() == 'html')
 		{
@@ -764,7 +772,7 @@ EOF
 			$sHtml .= "</style>\n";
 		}
 		$sHtml .= "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"".utils::GetAbsoluteUrlAppRoot()."pages/opensearch.xml.php\" />\n";
-		$sHtml .= "<link rel=\"shortcut icon\" href=\"".utils::GetAbsoluteUrlAppRoot()."images/favicon.ico\" />\n";
+		$sHtml .= "<link rel=\"shortcut icon\" href=\"".utils::GetAbsoluteUrlAppRoot()."images/favicon.ico?itopversion=".ITOP_VERSION."\" />\n";
 	
 		$sHtml .= "</head>\n";
 		$sBodyClass = "";
