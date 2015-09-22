@@ -476,15 +476,6 @@ EOF
 			}
 			if (count($aActions) > 0)
 			{
-				if ($oChange == null)
-				{
-					// Let's create a change if non is supplied
-					$oChange = MetaModel::NewObject("CMDBChange");
-					$oChange->Set("date", time());
-					$sUserString = CMDBChange::GetCurrentUserName();
-					$oChange->Set("userinfo", $sUserString);
-					$iChangeId = $oChange->DBInsert();							
-				}
 				foreach($aActions as $oChangeOp)
 				{
 					self::RecordHistory($oChange, $oObject, $oChangeOp);
@@ -571,9 +562,12 @@ EOF
 	}
 	
 	/////////////////////////////////////////////////////////////////////////
-	private static function RecordHistory(CMDBChange $oChange, $oTargetObject, $oMyChangeOp)
+	private static function RecordHistory($oChange, $oTargetObject, $oMyChangeOp)
 	{
-		$oMyChangeOp->Set("change", $oChange->GetKey());
+		if (!is_null($oChange))
+		{
+			$oMyChangeOp->Set("change", $oChange->GetKey());
+		}
 		$oMyChangeOp->Set("objclass", get_class($oTargetObject));
 		$oMyChangeOp->Set("objkey", $oTargetObject->GetKey());
 		$iId = $oMyChangeOp->DBInsertNoReload();
