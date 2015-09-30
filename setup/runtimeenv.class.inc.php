@@ -695,7 +695,7 @@ class RunTimeEnvironment
 		{
 			if (!@mkdir($sDir))
 			{
-				throw new Exception("Failed to create directory '$sTargetPath', please check the rights of the web server");
+				throw new Exception("Failed to create directory '$sDir', please check that the web server process has enough rights to create the directory.");
 			}
 			@chmod($sDir, 0770); // RWX for owner and group, nothing for others
 		}
