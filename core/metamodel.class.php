@@ -45,18 +45,6 @@ require_once(APPROOT.'core/relationgraph.class.inc.php');
  *
  * @package     iTopORM
  */
-define('ENUM_CHILD_CLASSES_EXCLUDETOP', 1);
-/**
- * add some description here... 
- *
- * @package     iTopORM
- */
-define('ENUM_CHILD_CLASSES_ALL', 2);
-/**
- * add some description here... 
- *
- * @package     iTopORM
- */
 define('ENUM_PARENT_CLASSES_EXCLUDELEAF', 1);
 /**
  * add some description here... 
