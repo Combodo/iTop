@@ -580,13 +580,13 @@ class OqlUnionQuery extends OqlQuery
 				if ($iQuery == 0)
 				{
 					// Establish the reference
-					$sRootClass = MetaModel::GetRootClass($aData['class']);
+					$sRootClass = $oModelReflection->GetRootClass($aData['class']);
 				}
 				else
 				{
-					if (MetaModel::GetRootClass($aData['class']) != $sRootClass)
+					if ($oModelReflection->GetRootClass($aData['class']) != $sRootClass)
 					{
-						$aSubclasses = MetaModel::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_ALL);
+						$aSubclasses = $oModelReflection->EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_ALL);
 						throw new OqlNormalizeException('Incompatible classes: could not find a common ancestor', $sSourceQuery, $aData['class_name'], $aSubclasses);
 					}
 				}

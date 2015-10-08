@@ -23,7 +23,21 @@
  * @copyright   Copyright (C) 2013 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
- 
+
+/**
+ * Exclude the parent class from the list
+ *
+ * @package     iTopORM
+ */
+define('ENUM_CHILD_CLASSES_EXCLUDETOP', 1);
+/**
+ * Include the parent class in the list
+ *
+ * @package     iTopORM
+*/
+define('ENUM_CHILD_CLASSES_ALL', 2);
+
+
 abstract class ModelReflection
 {
 	abstract public function GetClassIcon($sClass, $bImgTag = true); 
@@ -62,6 +76,9 @@ abstract class ModelReflection
 	}
 
 	abstract public function GetIconSelectionField($sCode, $sLabel = '', $defaultValue = '');
+	
+	abstract public function GetRootClass($sClass);
+	abstract public function EnumChildClasses($sClass, $iOption = ENUM_CHILD_CLASSES_EXCLUDETOP);
 }
 
 abstract class QueryReflection
@@ -233,6 +250,16 @@ class ModelReflectionRuntime extends ModelReflection
 	public function GetIconSelectionField($sCode, $sLabel = '', $defaultValue = '')
 	{
 		return new RunTimeIconSelectionField($sCode, $sLabel, $defaultValue);
+	}
+	
+	public function GetRootClass($sClass)
+	{
+		return MetaModel::GetRootClass($sClass);
+	}
+	
+	public function EnumChildClasses($sClass, $iOption = ENUM_CHILD_CLASSES_EXCLUDETOP)
+	{
+		return MetaModel::EnumChildClasses($sClass, $iOption);
 	}
 }
 
