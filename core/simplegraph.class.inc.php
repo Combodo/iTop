@@ -234,22 +234,24 @@ class GraphEdge extends GraphElement
 {
 	protected $oSourceNode;
 	protected $oSinkNode;
-	
+
 	/**
 	 * Create a new directed edge inside the given graph
 	 * @param SimpleGraph $oGraph
 	 * @param string $sId The unique identifier of this edge in the graph
 	 * @param GraphNode $oSourceNode
 	 * @param GraphNode $oSinkNode
+	 * @param bool $bMustBeUnique
+	 * @throws SimpleGraphException
 	 */
-	public function __construct(SimpleGraph $oGraph, $sId, GraphNode $oSourceNode, GraphNode $oSinkNode)
+	public function __construct(SimpleGraph $oGraph, $sId, GraphNode $oSourceNode, GraphNode $oSinkNode, $bMustBeUnique = false)
 	{
 		parent::__construct($sId);
 		$this->oSourceNode = $oSourceNode;
 		$this->oSinkNode = $oSinkNode;
-		$oGraph->_AddEdge($this);
+		$oGraph->_AddEdge($this, $bMustBeUnique);
 	}
-	
+
 	/**
 	 * Get the "source" node for this edge
 	 * @return GraphNode
@@ -403,11 +405,22 @@ class SimpleGraph
 	/**
 	 * INTERNAL USE ONLY
 	 * @param GraphEdge $oEdge
+	 * @param bool $bMustBeUnique
 	 * @throws SimpleGraphException
 	 */
-	public function _AddEdge(GraphEdge $oEdge)
+	public function _AddEdge(GraphEdge $oEdge, $bMustBeUnique = false)
 	{
-		if (array_key_exists($oEdge->GetId(), $this->aEdges)) throw new SimpleGraphException('Cannot add edge (id='.$oEdge->GetId().') to the graph. An edge with the same id already exists in the graph.');
+		if (array_key_exists($oEdge->GetId(), $this->aEdges))
+		{
+			if ($bMustBeUnique)
+			{
+				throw new SimpleGraphException('Cannot add edge (id=' . $oEdge->GetId() . ') to the graph. An edge with the same id already exists in the graph.');
+			}
+			else
+			{
+				return;
+			}
+		}
 		
 		$this->aEdges[$oEdge->GetId()] = $oEdge;
 		$oEdge->GetSourceNode()->_AddOutgoingEdge($oEdge);
@@ -692,7 +705,7 @@ EOF
 	}
 	
 	/**
-	 * Merge back to subgraphs into one
+	 * Merge back two subgraphs into one
 	 * @param SimpleGraph $oGraph
 	 */
 	public function Merge(SimpleGraph $oGraph)
