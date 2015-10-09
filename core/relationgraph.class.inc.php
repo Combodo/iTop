@@ -145,10 +145,10 @@ class RelationRedundancyNode extends GraphNode
  */ 
 class RelationEdge extends GraphEdge
 {
-	public function __construct(SimpleGraph $oGraph, GraphNode $oSourceNode, GraphNode $oSinkNode)
+	public function __construct(SimpleGraph $oGraph, GraphNode $oSourceNode, GraphNode $oSinkNode, $bMustBeUnique = false)
 	{
 		$sId = $oSourceNode->GetId().'-to-'.$oSinkNode->GetId();
-		parent::__construct($oGraph, $sId, $oSourceNode, $oSinkNode);
+		parent::__construct($oGraph, $sId, $oSourceNode, $oSinkNode, $bMustBeUnique);
 	}
 }
 
@@ -426,7 +426,7 @@ class RelationGraph extends SimpleGraph
 							if (!$oRedundancyNode)
 							{
 								// Direct link (otherwise handled by ComputeRedundancy)
-								$oEdge = new RelationEdge($this, $oSourceNode, $oSinkNode);
+								new RelationEdge($this, $oSourceNode, $oSinkNode);
 							}
 							// Recurse
 							$this->AddRelatedObjects($sRelCode, $bDown, $oRelatedNode, $iMaxDepth - 1, $bEnableRedundancy);
