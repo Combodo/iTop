@@ -75,7 +75,7 @@ class RunTimeEnvironment
 		require_once(APPROOT.'/core/filterdef.class.inc.php');
 		require_once(APPROOT.'/core/stimulus.class.inc.php');
 		require_once(APPROOT.'/core/MyHelpers.class.inc.php');
-		require_once(APPROOT.'/core/expression.class.inc.php');
+		require_once(APPROOT.'/core/oql/expression.class.inc.php');
 		require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 		require_once(APPROOT.'/core/sqlquery.class.inc.php');
 		require_once(APPROOT.'/core/sqlobjectquery.class.inc.php');
