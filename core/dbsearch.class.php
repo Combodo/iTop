@@ -20,17 +20,6 @@
 require_once('dbobjectsearch.class.php');
 require_once('dbunionsearch.class.php');
 
-
-define('TREE_OPERATOR_EQUALS', 0);
-define('TREE_OPERATOR_BELOW', 1);
-define('TREE_OPERATOR_BELOW_STRICT', 2);
-define('TREE_OPERATOR_NOT_BELOW', 3);
-define('TREE_OPERATOR_NOT_BELOW_STRICT', 4);
-define('TREE_OPERATOR_ABOVE', 5);
-define('TREE_OPERATOR_ABOVE_STRICT', 6);
-define('TREE_OPERATOR_NOT_ABOVE', 7);
-define('TREE_OPERATOR_NOT_ABOVE_STRICT', 8);
-
 /**
  * An object search
  * 
