@@ -24,6 +24,16 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+define('TREE_OPERATOR_EQUALS', 0);
+define('TREE_OPERATOR_BELOW', 1);
+define('TREE_OPERATOR_BELOW_STRICT', 2);
+define('TREE_OPERATOR_NOT_BELOW', 3);
+define('TREE_OPERATOR_NOT_BELOW_STRICT', 4);
+define('TREE_OPERATOR_ABOVE', 5);
+define('TREE_OPERATOR_ABOVE_STRICT', 6);
+define('TREE_OPERATOR_NOT_ABOVE', 7);
+define('TREE_OPERATOR_NOT_ABOVE_STRICT', 8);
+
 // Position a string within an OQL query
 // This is a must if we want to be able to pinpoint an error at any stage of the query interpretation
 // In particular, the normalization phase requires this

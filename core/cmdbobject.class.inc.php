@@ -46,17 +46,17 @@ require_once('stimulus.class.inc.php');
 require_once('valuesetdef.class.inc.php');
 require_once('MyHelpers.class.inc.php');
 
-require_once('expression.class.inc.php');
-
-require_once('cmdbsource.class.inc.php');
-require_once('sqlquery.class.inc.php');
-require_once('sqlobjectquery.class.inc.php');
-require_once('sqlunionquery.class.inc.php');
+require_once('oql/expression.class.inc.php');
 require_once('oql/oqlquery.class.inc.php');
 require_once('oql/oqlexception.class.inc.php');
 require_once('oql/oql-parser.php');
 require_once('oql/oql-lexer.php');
 require_once('oql/oqlinterpreter.class.inc.php');
+
+require_once('cmdbsource.class.inc.php');
+require_once('sqlquery.class.inc.php');
+require_once('sqlobjectquery.class.inc.php');
+require_once('sqlunionquery.class.inc.php');
 
 require_once('dbobject.class.php');
 require_once('dbsearch.class.php');
