@@ -1938,7 +1938,16 @@ class AttributeFinalClass extends AttributeString
 		if (empty($sValue)) return '';
 		return MetaModel::GetName($sValue);
 	}
-
+	/**
+	 * Helper to get a value that will be JSON encoded
+	 * The operation is the opposite to FromJSONToValue
+	 */
+	public function GetForJSON($value)
+	{
+		// JSON values are NOT localized
+		return $value;
+	}
+	
  	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
 	{
 		if ($bLocalize && $value != '')
