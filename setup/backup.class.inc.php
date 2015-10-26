@@ -367,11 +367,14 @@ class DBBackup
 	 */	
 	public function DownloadBackup($sFile)
 	{
-		$oP = new ajax_page('backup');
-		$oP->SetContentType("multipart/x-zip");
-		$oP->SetContentDisposition('inline', basename($sFile));
-		$oP->add(file_get_contents($sFile));
-		$oP->output();
+		header('Content-Description: File Transfer');
+		header('Content-Type: multipart/x-zip');
+		header('Content-Disposition: inline; filename="'.basename($sFile).'"');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate');
+		header('Pragma: public');
+		header('Content-Length: '.filesize($sFile));
+		readfile($sFile);
 	}
 
 	/**
