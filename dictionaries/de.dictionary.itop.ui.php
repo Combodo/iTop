@@ -1069,7 +1069,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Class:ShortcutOQL' => 'Suchergebnis-Shortcut',
 	'Class:ShortcutOQL/Attribute:oql' => 'Query',
 	'Class:ShortcutOQL/Attribute:oql+' => 'OQL-Query, der die zu Suchenden Objekte beschreibt',
-	'Class:ShortcutOQL/Attribute:auto_reload' => 'Rautomatischer Reload',
+	'Class:ShortcutOQL/Attribute:auto_reload' => 'Automatischer Reload',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Deaktiviert',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Eigene Einstellung',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Intervall für automatischen Reload (Sekunden)',
