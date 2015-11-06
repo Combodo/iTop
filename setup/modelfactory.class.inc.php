@@ -316,7 +316,7 @@ class ModelFactory
 				{
 					echo "Dumping target doc - looking for '$sParentId'<br/>\n";
 					$this->oDOMDocument->firstChild->Dump();
-					throw new Exception("could not find parent node for $oSourceNode->tagName(id:".$oSourceNode->getAttribute('id').") with parent id $sParentId");
+					throw new Exception(MFDocument::GetItopNodePath($oSourceNode).' at line '.$oSourceNode->getLineNo().": could not find parent with id $sParentId");
 				}
 			}
 			else 
@@ -326,7 +326,7 @@ class ModelFactory
 				{
 					echo "Dumping target doc - looking for '".$oSourceNode->getAttribute('id')."'<br/>\n";
 					$this->oDOMDocument->firstChild->Dump();
-					throw new Exception("could not find node for $oSourceNode->tagName(id:".$oSourceNode->getAttribute('id').")");
+					throw new Exception(MFDocument::GetItopNodePath($oSourceNode).' at line '.$oSourceNode->getLineNo().": could not be found");
 				}
 				else
 				{
@@ -388,9 +388,13 @@ class ModelFactory
 
 		case 'delete':
 			$oTargetNode = $oTargetParentNode->_FindChildNode($oSourceNode);
-			if ( ($oTargetNode == null) || ($oTargetNode->getAttribute('_alteration') == 'removed') )
+			if ($oTargetNode == null)
 			{
-				throw new Exception("Trying to delete node for {$oSourceNode->tagName} (id:".$oSourceNode->getAttribute('id').") under {$oTargetParentNode->tagName} (id:".$oTargetParentNode->getAttribute('id').'). but nothing found.');
+				throw new Exception(MFDocument::GetItopNodePath($oSourceNode).' at line '.$oSourceNode->getLineNo().": could not be deleted (not found)");
+			}
+			if ($oTargetNode->getAttribute('_alteration') == 'removed')
+			{
+				throw new Exception(MFDocument::GetItopNodePath($oSourceNode).' at line '.$oSourceNode->getLineNo().": could not be deleted (already marked as deleted)");
 			}
 			$oTargetNode->Delete();
 			break;
@@ -1628,7 +1632,7 @@ class MFElement extends DOMElement
 		{
 			if ($oExisting->getAttribute('_alteration') != 'removed')
 			{
-				throw new Exception("Attempting to add a node that already exists: $oNode->tagName (id: ".$oNode->getAttribute('id').")");
+				throw new Exception(MFDocument::GetItopNodePath($oNode).' at line '.$oNode->getLineNo().": could not be added (already exists)");
 			}
 			$oExisting->ReplaceWith($oNode);
 			$sFlag = 'replaced';
@@ -1657,12 +1661,14 @@ class MFElement extends DOMElement
 		$oExisting = $this->_FindChildNode($oNode, $sSearchId);
 		if (!$oExisting)
 		{
-			throw new Exception("Attempting to modify a non existing node: $oNode->tagName (id: ".$oNode->getAttribute('id').")");
+			$sSourceNode = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(is_null($sSearchId) ? '' : "[$sSearchId]").' at line '.$this->getLineNo();
+			throw new Exception($sSourceNode.": could not be modified (not found)");
 		}
 		$sPrevFlag = $oExisting->getAttribute('_alteration');
 		if ($sPrevFlag == 'removed')
 		{
-			throw new Exception("Attempting to modify a deleted node: $oNode->tagName (id: ".$oNode->getAttribute('id')."");
+			$sSourceNode = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(is_null($sSearchId) ? '' : "[$sSearchId]").' at line '.$this->getLineNo();
+			throw new Exception($sSourceNode.": could not be modified (marked as deleted)");
 		}
 		$oExisting->ReplaceWith($oNode);
 		if (!$this->IsInDefinition())
@@ -1810,7 +1816,7 @@ class MFElement extends DOMElement
 			{
 				if ($bMustExist)
 				{
-					throw new Exception("found mandatory node $this->tagName(id:$sSearchId) marked as deleted in ".$oContainer->getNodePath());
+					throw new Exception(MFDocument::GetItopNodePath($this).' at line '.$this->getLineNo().": could not be found (marked as deleted)");
 				}
 				// Beware: ImportNode(xxx, false) DOES NOT copy the node's attribute on *some* PHP versions (<5.2.17)
 				// So use this workaround to import a node and its attributes on *any* PHP version
@@ -1824,7 +1830,7 @@ class MFElement extends DOMElement
 			{
 				echo "Dumping parent node<br/>\n";
 				$oContainer->Dump();
-				throw new Exception("could not find $this->tagName(id:$sSearchId) in ".$oContainer->getNodePath());
+				throw new Exception(MFDocument::GetItopNodePath($this).' at line '.$this->getLineNo().": could not be found");
 			}
 			// Beware: ImportNode(xxx, false) DOES NOT copy the node's attribute on *some* PHP versions (<5.2.17)
 			// So use this workaround to import a node and its attributes on *any* PHP version
@@ -2078,7 +2084,8 @@ class MFDocument extends DOMDocument
 	public static function GetItopNodePath($oNode)
 	{
 		if ($oNode instanceof DOMDocument) return '';
-	
+		if (is_null($oNode)) return '';
+
 		$sId = $oNode->getAttribute('id');
 		$sNodeDesc = ($sId != '') ? $oNode->nodeName.'['.$sId.']' : $oNode->nodeName;
 		return self::GetItopNodePath($oNode->parentNode).'/'.$sNodeDesc;
@@ -2249,7 +2256,7 @@ class MFParameters
 		}
 	}
 	/**
-	 * Check if a node as child nodes (apart from text nodes)
+	 * Check if a node has child nodes (apart from text nodes)
 	 */
 	public function HasChildNodes($oNode)
 	{
@@ -2267,6 +2274,7 @@ class MFParameters
 	}
 	function Merge(XMLParameters $oTask)
 	{
+		//todo: clarify the usage of this function that CANNOT work
 		$this->aData = $this->array_merge_recursive_distinct($this->aData, $oTask->aData);
 	}
 
