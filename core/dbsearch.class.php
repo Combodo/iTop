@@ -91,6 +91,12 @@ abstract class DBSearch
 	abstract public function ChangeClass($sNewClass, $sAlias = null);
 	abstract public function GetSelectedClasses();
 
+	/**
+	 * @param array $aSelectedClasses array of aliases
+	 * @throws CoreException
+	 */
+	abstract public function SetSelectedClasses($aSelectedClasses);
+
 	abstract public function IsAny();
 
 	public function Describe(){return 'deprecated - use ToOQL() instead';}
@@ -162,6 +168,12 @@ abstract class DBSearch
 		return $oRes;
 	}
 
+	/**
+	 * @param string $sQuery
+	 * @param array $aParams
+	 * @return DBSearch
+	 * @throws OQLException
+	 */
 	static public function FromOQL($sQuery, $aParams = null)
 	{
 		if (empty($sQuery)) return null;

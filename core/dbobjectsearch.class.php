@@ -155,6 +155,22 @@ class DBObjectSearch extends DBSearch
 		return $this->m_aSelectedClasses;
 	}
 
+	/**
+	 * @param array $aSelectedClasses array of aliases
+	 * @throws CoreException
+	 */
+	public function SetSelectedClasses($aSelectedClasses)
+	{
+		$this->m_aSelectedClasses = array();
+		foreach ($aSelectedClasses as $sAlias)
+		{
+			if (!array_key_exists($sAlias, $this->m_aClasses))
+			{
+				throw new CoreException("Invalid class alias $sAlias");
+			}
+			$this->m_aSelectedClasses[$sAlias] = $this->m_aClasses[$sAlias];
+		}
+	}
 
 	public function SetModifierProperty($sPluginClass, $sProperty, $value)
 	{
@@ -565,7 +581,7 @@ class DBObjectSearch extends DBSearch
 		// NO: $oFilter = $oFilter->DeepClone();
 		// See also: Trac #639, and self::AddCondition_PointingTo()
 		$aAliasTranslation = array();
-		$res = $this->AddCondition_ReferencedBy_InNameSpace(DBObjectSearch, $sForeignExtKeyAttCode, $this->m_aClasses, $aAliasTranslation);
+		$res = $this->AddCondition_ReferencedBy_InNameSpace($oFilter, $sForeignExtKeyAttCode, $this->m_aClasses, $aAliasTranslation);
 		$this->TransferConditionExpression($oFilter, $aAliasTranslation);
 		return $res;
 	}

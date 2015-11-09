@@ -52,6 +52,14 @@ class DBUnionSearch extends DBSearch
 			}
 		}
 
+		$this->ComputeSelectedClasses();
+	}
+
+	/**
+	 * Find the lowest common ancestor for each of the selected class
+	 */
+	protected function ComputeSelectedClasses()
+	{
 		// 1 - Collect all the column/classes
 		$aColumnToClasses = array();
 		foreach ($this->aSearches as $iPos => $oSearch)
@@ -161,6 +169,22 @@ class DBUnionSearch extends DBSearch
 	public function GetSelectedClasses()
 	{
 		return $this->aSelectedClasses;
+	}
+
+	/**
+	 * @param array $aSelectedClasses array of aliases
+	 * @throws CoreException
+	 */
+	public function SetSelectedClasses($aSelectedClasses)
+	{
+		// 1 - change for each search
+		foreach ($this->aSearches as $oSearch)
+		{
+			// Throws an exception if not valid
+			$oSearch->SetSelectedClasses($aSelectedClasses);
+		}
+		// 2 - update the lowest common ancestors
+		$this->ComputeSelectedClasses();
 	}
 
 	public function IsAny()
