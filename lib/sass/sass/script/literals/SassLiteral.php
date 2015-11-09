@@ -355,5 +355,8 @@ abstract class SassLiteral {
 	 * @param string the subject string
 	 * @return mixed match at the start of the string or false if no match
 	 */
-	abstract public static function isa($subject);
+	public static function isa($subject)
+	{
+		return false;
+	}
 }
