@@ -227,13 +227,18 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext)
 				for(var index = 0; index < aSubmit.length; index++)
 				{
 					// Restore the previously bound submit handlers
+					var sEventName = 'submit';
+					if (aSubmit[index].namespace != undefined)
+					{
+						sEventName += '.'+aSubmit[index].namespace;
+					}
 					if (aSubmit[index].data != undefined)
 					{
-						oForm.bind('submit.'+aSubmit[index].namespace, aSubmit[index].data, aSubmit[index].handler)
+						oForm.bind(sEventName, aSubmit[index].data, aSubmit[index].handler)
 					}
 					else
 					{
-						oForm.bind('submit.'+aSubmit[index].namespace, aSubmit[index].handler)
+						oForm.bind(sEventName, aSubmit[index].handler)
 					}
 				}
 		   }
