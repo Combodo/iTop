@@ -35,7 +35,7 @@
  * }
  */
  
-define('ITOP_DESIGN_LATEST_VERSION', '1.2');
+define('ITOP_DESIGN_LATEST_VERSION', '1.3'); // iTop > 2.2.0
  
 class iTopDesignFormat
 {
@@ -55,6 +55,12 @@ class iTopDesignFormat
 		'1.2' => array(
 			'previous' => '1.1',
 			'go_to_previous' => 'From12To11',
+			'next' => '1.3',
+			'go_to_next' => 'From12To13',
+		),
+		'1.3' => array(
+			'previous' => '1.2',
+			'go_to_previous' => 'From13To12',
 			'next' => null,
 			'go_to_next' => null,
 		),
@@ -469,6 +475,30 @@ class iTopDesignFormat
 		foreach ($oNodeList as $oNode)
 		{
 			$this->LogWarning('Code snippets will be lost.');
+			$this->DeleteNode($oNode);
+		}
+	}
+
+	/**
+	 * Upgrade the format from version 1.2 to 1.3
+	 * @return void (Errors are logged)
+	 */
+	protected function From12To13($oFactory)
+	{
+	}
+
+	/**
+	 * Downgrade the format from version 1.3 to 1.2
+	 * @return void (Errors are logged)
+	 */
+	protected function From13To12($oFactory)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+
+		$oNodeList = $oXPath->query('/itop_design/module_designs/module_design');
+		foreach ($oNodeList as $oNode)
+		{
+			$this->LogWarning('The module design defined in '.self::GetItopNodePath($oNode).' will be lost.');
 			$this->DeleteNode($oNode);
 		}
 	}

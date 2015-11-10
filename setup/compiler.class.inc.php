@@ -18,6 +18,8 @@
 
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
+require_once(APPROOT.'core/moduledesign.class.inc.php');
+
 
 class DOMFormatException extends Exception
 {
@@ -429,7 +431,10 @@ EOF;
 		// Compile the portals
 		$oPortalsNode = $this->oFactory->GetNodes('/itop_design/portals')->item(0);
 		$this->CompilePortals($oPortalsNode, $sTempTargetDir, $sFinalTargetDir);
-		
+
+		// Create module design XML files
+		$this->CompileModuleDesigns($sTempTargetDir, $sFinalTargetDir);
+
 		// Compile the XML parameters
 		$oParametersNode = $this->oFactory->GetNodes('/itop_design/module_parameters')->item(0);
 		$this->CompileParameters($oParametersNode, $sTempTargetDir, $sFinalTargetDir);
@@ -2221,6 +2226,19 @@ EOF;
 		}
 	}
 	
+	protected function CompileModuleDesigns($sTempTargetDir, $sFinalTargetDir)
+	{
+		SetupUtils::builddir($sTempTargetDir.'/core/module_designs');
+		$oDesigns = $this->oFactory->GetNodes('/itop_design/module_designs/module_design');
+		foreach($oDesigns as $oDesign)
+		{
+			$oDoc = new ModuleDesign();
+			$oClone = $oDoc->importNode($oDesign->cloneNode(true), true);
+			$oDoc->appendChild($oClone);
+			$oDoc->save($sTempTargetDir.'/core/module_designs/'.$oDesign->getAttribute('id').'.xml');
+		}
+	}
+
 	protected function LoadSnippets()
 	{
 		$oSnippets = $this->oFactory->GetNodes('/itop_design/snippets/snippet');
@@ -2252,7 +2270,7 @@ EOF;
 			{
 				$this->aSnippets[$sModuleId] = array('before' => array(), 'after' => array());
 			}
-			
+
 			$fOrder = (float) $oSnippet->GetChildText('rank', 0);
 			$sContent = $oSnippet->GetChildText('content', '');
 			if ($fOrder < 0)
@@ -2278,5 +2296,3 @@ EOF;
 		}
 	}
 }
-
-?>
