@@ -1444,17 +1444,14 @@ EOF;
 		if ($oRelations)
 		{
 			$aRelations = array();
-			foreach($oRelations->childNodes as $oRelation)
+			foreach($oRelations->getElementsByTagName('relation') as $oRelation)
 			{
-				if ($oRelation->tagName != 'relation') continue;
-
 				$sRelationId = $oRelation->getAttribute('id');
 				$this->aRelations[$sRelationId] = array('id' => $sRelationId);
 
 				$oNeighbours = $oRelation->GetUniqueElement('neighbours');
-				foreach($oNeighbours->childNodes as $oNeighbour)
+				foreach($oNeighbours->getElementsByTagName('neighbour') as $oNeighbour)
 				{
-					if ($oNeighbour->tagName != 'neighbour') continue;
 					$sNeighbourId = $oNeighbour->getAttribute('id');
 
 					$sDirection = $oNeighbour->GetChildText('direction', 'both');
