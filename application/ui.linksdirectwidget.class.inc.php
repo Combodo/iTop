@@ -294,7 +294,7 @@ class UILinksWidgetDirect
 		$valuesDef = $oLinksetDef->GetValuesDef();				
 		if ($valuesDef === null)
 		{
-			$oFilter = new DBObjectSearch($this->sLinkedClass);
+			$oFilter = new DBObjectSearch($sRemoteClass);
 		}
 		else
 		{
