@@ -228,7 +228,7 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext)
 				{
 					// Restore the previously bound submit handlers
 					var sEventName = 'submit';
-					if (aSubmit[index].namespace != undefined)
+					if ((aSubmit[index].namespace != undefined) && (aSubmit[index].namespace != ''))
 					{
 						sEventName += '.'+aSubmit[index].namespace;
 					}

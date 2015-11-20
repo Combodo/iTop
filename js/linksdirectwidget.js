@@ -238,8 +238,12 @@ $(function()
 				}
 			);
 			oParams.operation = 'searchObjectsToAdd2';
-			oParams['class'] = this.options.class_name;
 			oParams.real_class = '';
+			if ((oParams['class'] != undefined) && (oParams['class'] != ''))
+			{
+				oParams.real_class = oParams['class'];				
+			}
+			oParams['class'] = this.options.class_name;
 			oParams.att_code = this.options.att_code;
 			oParams.iInputId = this.id;
 			if (this.options.oWizardHelper)
