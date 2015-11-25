@@ -135,8 +135,8 @@ abstract class DBSearch
 	 * serialize a search
 	 */
 	abstract public function ApplyParameters($aArgs);
-	
-	public function serialize($bDevelopParams = false, $aContextParams = null)
+
+    public function serialize($bDevelopParams = false, $aContextParams = null)
 	{
 		$sOql = $this->ToOql($bDevelopParams, $aContextParams);
 		return base64_encode(serialize(array($sOql, $this->GetInternalParams(), $this->m_aModifierProperties)));
@@ -155,7 +155,23 @@ abstract class DBSearch
 		return $oRetFilter;
 	}
 
-	abstract public function ToOQL($bDevelopParams = false, $aContextParams = null);
+    /**
+     * Create a new DBObjectSearch from $oSearch with a new alias $sAlias
+     *
+     * Note : This has not be tested with UNION queries.
+     *
+     * @param DBSearch $oSearch
+     * @param string $sAlias
+     * @return DBObjectSearch
+     */
+    static public function CloneWithAlias(DBSearch $oSearch, $sAlias)
+    {
+        $oSearchWithAlias = new DBObjectSearch($oSearch->GetClass(), $sAlias);
+        $oSearchWithAlias = $oSearchWithAlias->Intersect($oSearch);
+        return $oSearchWithAlias;
+    }
+
+    abstract public function ToOQL($bDevelopParams = false, $aContextParams = null);
 
 	static protected $m_aOQLQueries = array();
 
