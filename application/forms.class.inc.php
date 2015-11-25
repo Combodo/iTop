@@ -937,8 +937,8 @@ EOF
 	public function ReadParam(&$aValues)
 	{
 		parent::ReadParam($aValues);
-
-		if (($this->sValidationPattern != '') &&(!preg_match('/'.$this->sValidationPattern.'/', $aValues[$this->sCode])) ) 
+		$sPattern = '/'.str_replace('/', '\/', $this->sValidationPattern).'/'; // Escape the forward slashes since they are used as delimiters for preg_match
+		if (($this->sValidationPattern != '') && (!preg_match($sPattern, $aValues[$this->sCode])) ) 
 		{
 			$aValues[$this->sCode] = $this->defaultValue;
 		}
