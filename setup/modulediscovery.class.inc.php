@@ -25,6 +25,7 @@
 
 class MissingDependencyException extends Exception
 {
+	public $aModulesInfo;
 }
 
 class ModuleDiscovery
@@ -165,14 +166,18 @@ class ModuleDiscovery
 		}
 		if ($bAbortOnMissingDependency && count($aDependencies) > 0)
 		{
+			$aModulesInfo = array();
 			$aModuleDeps = array();			
 			foreach($aDependencies as $sId => $aDeps)
 			{
 				$aModule = $aModules[$sId];
 				$aModuleDeps[] = "{$aModule['label']} (id: $sId) depends on ".implode(' + ', $aDeps);
+				$aModulesInfo[$sId] = array('module' => $aModule, 'dependencies' => $aDeps);
 			}
 			$sMessage = "The following modules have unmet dependencies: ".implode(', ', $aModuleDeps);
-			throw new MissingDependencyException($sMessage);
+			$oException = new MissingDependencyException($sMessage);
+			$oException->aModulesInfo = $aModulesInfo;
+			throw $oException;
 		}
 		// Return the ordered list, so that the dependencies are met...
 		$aResult = array();
