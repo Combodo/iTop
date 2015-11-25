@@ -425,6 +425,7 @@ class ModelFactory
 			$oModuleNode->setAttribute('id', $oModule->GetId());
 			$oModuleNode->AppendChild($this->oDOMDocument->CreateElement('root_dir', $oModule->GetRootDir()));
 			$oModuleNode->AppendChild($this->oDOMDocument->CreateElement('label', $oModule->GetLabel()));
+			
 			$this->oModules->AppendChild($oModuleNode);
 			
 			foreach($aDataModels as $sXmlFile)
@@ -1985,6 +1986,22 @@ class MFDocument extends DOMDocument
 			$this->appendChild($oRootNode);
 		}
 		return parent::saveXML();
+	}
+	
+	/**
+	 * Overload createElement to make sure (via new DOMText) that the XML entities are
+	 * always properly escaped
+	 * (non-PHPdoc)
+	 * @see DOMDocument::createElement()
+	 */
+	function createElement($sName, $value = null, $namespaceURI = null)
+	{
+		$oElement = $this->importNode(new MFElement($sName, null, $namespaceURI));
+		if (!empty($value))
+		{
+			$oElement->appendChild(new DOMText($value));
+		}
+		return $oElement;
 	}
 	/**
 	 * For debugging purposes
