@@ -1086,7 +1086,10 @@ EOF
 		{
 			foreach ($aAttributes as $sAttribute => $value)
 			{
-				$oDelta->documentElement->setAttribute($sAttribute, $value);
+				if ($oDelta->documentElement) // yes, this may happen when still no change has been performed (and a module has been selected for installation)
+				{
+					$oDelta->documentElement->setAttribute($sAttribute, $value);
+				}
 			}
 		}
 		return $oDelta;
