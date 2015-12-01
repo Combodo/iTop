@@ -922,7 +922,8 @@ class DBObjectSearch extends DBSearch
 
 	public function InitFromOqlQuery(OqlQuery $oOqlQuery, $sQuery)
 	{
-		$sClass = $oOqlQuery->GetClass();
+		$oModelReflection = new ModelReflectionRuntime();
+		$sClass = $oOqlQuery->GetClass($oModelReflection);
 		$sClassAlias = $oOqlQuery->GetClassAlias();
 
 		$aAliases = array($sClassAlias => $sClass);

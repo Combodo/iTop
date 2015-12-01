@@ -288,6 +288,23 @@ abstract class OqlQuery
 	 * @throws OqlNormalizeException
 	 */	 	
 	abstract public function Check(ModelReflection $oModelReflection, $sSourceQuery);
+
+	/**
+	 * Determine the class
+	 *
+	 * @param ModelReflection $oModelReflection MetaModel to consider
+	 * @return string
+	 * @throws Exception
+	 */
+	abstract public function GetClass(ModelReflection $oModelReflection);
+
+	/**
+	 * Determine the class alias
+	 *
+	 * @return string
+	 * @throws Exception
+	 */
+	abstract public function GetClassAlias();
 }
 
 class OqlObjectQuery extends OqlQuery
@@ -313,10 +330,25 @@ class OqlObjectQuery extends OqlQuery
 	{
 		return $this->m_aSelect;
 	}
-	public function GetClass()
+
+	/**
+	 * Determine the class
+	 *
+	 * @param ModelReflection $oModelReflection MetaModel to consider
+	 * @return string
+	 * @throws Exception
+	 */
+	public function GetClass(ModelReflection $oModelReflection)
 	{
 		return $this->m_oClass->GetValue();
 	}
+
+	/**
+	 * Determine the class alias
+	 *
+	 * @return string
+	 * @throws Exception
+	 */
 	public function GetClassAlias()
 	{
 		return $this->m_oClassAlias->GetValue();
@@ -349,7 +381,7 @@ class OqlObjectQuery extends OqlQuery
 	 */	 	
 	public function Check(ModelReflection $oModelReflection, $sSourceQuery)
 	{
-		$sClass = $this->GetClass();
+		$sClass = $this->GetClass($oModelReflection);
 		$sClassAlias = $this->GetClassAlias();
 
 		if (!$oModelReflection->IsValidClass($sClass))
@@ -500,7 +532,7 @@ class OqlObjectQuery extends OqlQuery
 	 */	 	
 	public function ToDBSearch($sQuery)
 	{
-		$sClass = $this->GetClass();
+		$sClass = $this->GetClass(new ModelReflectionRuntime());
 		$sClassAlias = $this->GetClassAlias();
 
 		$oSearch = new DBObjectSearch($sClass, $sClassAlias);
@@ -548,7 +580,7 @@ class OqlUnionQuery extends OqlQuery
 		{
 			$oQuery->Check($oModelReflection, $sSourceQuery);
 
-			$aAliasToClass = array($oQuery->GetClassAlias() => $oQuery->GetClass());
+			$aAliasToClass = array($oQuery->GetClassAlias() => $oQuery->GetClass($oModelReflection));
 			$aJoinSpecs = $oQuery->GetJoins();
 			if (is_array($aJoinSpecs))
 			{
@@ -604,6 +636,100 @@ class OqlUnionQuery extends OqlQuery
 		}
 	}
 
+	/**
+	 * Determine the class
+	 *
+	 * @param ModelReflection $oModelReflection MetaModel to consider
+	 * @return string
+	 * @throws Exception
+	 */
+	public function GetClass(ModelReflection $oModelReflection)
+	{
+		$aFirstColClasses = array();
+		foreach ($this->aQueries as $iQuery => $oQuery)
+		{
+			$aFirstColClasses[] = $oQuery->GetClass($oModelReflection);
+		}
+		$sClass = self::GetLowestCommonAncestor($oModelReflection, $aFirstColClasses);
+		if (is_null($sClass))
+		{
+			throw new Exception('Could not determine the class of the union query. This issue should have been detected earlier by calling OqlQuery::Check()');
+		}
+		return $sClass;
+	}
+
+	/**
+	 * Determine the class alias
+	 *
+	 * @return string
+	 * @throws Exception
+	 */
+	public function GetClassAlias()
+	{
+		$sAlias = $this->aQueries[0]->GetClassAlias();
+		return $sAlias;
+	}
+
+	/**
+	 * Check the validity of the expression with regard to the data model
+	 * and the query in which it is used
+	 *
+	 * @param ModelReflection $oModelReflection MetaModel to consider
+	 * @param array $aClasses Flat list of classes
+	 * @return string the lowest common ancestor amongst classes, null if none has been found
+	 * @throws Exception
+	 */
+	public static function GetLowestCommonAncestor(ModelReflection $oModelReflection, $aClasses)
+	{
+		$sAncestor = null;
+		foreach($aClasses as $sClass)
+		{
+			if (is_null($sAncestor))
+			{
+				// first loop
+				$sAncestor = $sClass;
+			}
+			elseif ($sClass == $sAncestor)
+			{
+				// remains the same
+			}
+			elseif ($oModelReflection->GetRootClass($sClass) != $oModelReflection->GetRootClass($sAncestor))
+			{
+				$sAncestor = null;
+				break;
+			}
+			else
+			{
+				$sAncestor = self::LowestCommonAncestor($oModelReflection, $sAncestor, $sClass);
+			}
+		}
+		return $sAncestor;
+	}
+
+	/**
+	 * Note: assumes that class A and B have a common ancestor
+	 */
+	protected static function LowestCommonAncestor(ModelReflection $oModelReflection, $sClassA, $sClassB)
+	{
+		if ($sClassA == $sClassB)
+		{
+			$sRet = $sClassA;
+		}
+		elseif (in_array($sClassA, $oModelReflection->EnumChildClasses($sClassA)))
+		{
+			$sRet = $sClassB;
+		}
+		elseif (in_array($sClassB, $oModelReflection->EnumChildClasses($sClassB)))
+		{
+			$sRet = $sClassA;
+		}
+		else
+		{
+			// Recurse
+			$sRet = self::LowestCommonAncestor($oModelReflection, $sClassA, $oModelReflection->GetParentClass($sClassB));
+		}
+		return $sRet;
+	}
 	/**
 	 * Make the relevant DBSearch instance (FromOQL)
 	 */	 	
