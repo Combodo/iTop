@@ -243,7 +243,7 @@ class ModuleDesignElement extends DOMElement
 	 */
 	public function Dump($bReturnRes = false)
 	{
-		$oDoc = new iTopDesignDocument();
+		$oDoc = new ModuleDesign();
 		$oClone = $oDoc->importNode($this->cloneNode(true), true);
 		$oDoc->appendChild($oClone);
 
