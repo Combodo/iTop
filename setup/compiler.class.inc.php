@@ -18,11 +18,28 @@
 
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
+require_once(APPROOT.'setup/modelfactory.class.inc.php');
 require_once(APPROOT.'core/moduledesign.class.inc.php');
 
 
 class DOMFormatException extends Exception
 {
+    /**
+     * Overrides the Exception default constructor to automatically add informations about the concerned node (path and line number)
+     * 
+     * @param string $message
+     * @param type $code
+     * @param type $previous
+     * @param DOMNode $node [Optionnal] DOMNode causing the DOMFormatException
+     */
+    public function __construct($message, $code, $previous, DOMNode $node = null)
+    {
+        if($node !== null)
+        {
+            $message .= ' ('.MFDocument::GetItopNodePath($node).' at line '.$node->getLineNo().')';
+        }
+        parent::__construct($message, $code, $previous);
+    }
 }
 
 /**
