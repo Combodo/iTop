@@ -489,6 +489,19 @@ abstract class AttributeDefinition
 		return $this->GetAsHTML($sValue, $oHostObject, $bLocalize);
 	}
 	
+
+	/**
+	 * List the available verbs for 'GetForTemplate'
+	 */	 
+	public static function EnumTemplateVerbs()
+	{
+		return array(
+			'' => 'Plain text (unlocalized) representation',
+			'html' => 'HTML representation',
+			'label' => 'Localized representation',
+		);
+	}
+
 	/**
 	 * Get various representations of the value, for insertion into a template (e.g. in Notifications)
 	 * @param $value mixed The current value of the field
@@ -816,6 +829,17 @@ class AttributeLinkedSet extends AttributeDefinition
 		$sRes = str_replace($sTextQualifier, $sTextQualifier.$sTextQualifier, $sRes);
 		$sRes = $sTextQualifier.$sRes.$sTextQualifier;
 		return $sRes;
+	}
+
+	/**
+	 * List the available verbs for 'GetForTemplate'
+	 */	 
+	public static function EnumTemplateVerbs()
+	{
+		return array(
+			'' => 'Plain text (unlocalized) representation',
+			'html' => 'HTML representation (unordered list)',
+		);
 	}
 
 	/**
@@ -2502,6 +2526,18 @@ class AttributeCaseLog extends AttributeLongText
 		}
 	}
 
+	/**
+	 * List the available verbs for 'GetForTemplate'
+	 */	 
+	public static function EnumTemplateVerbs()
+	{
+		return array(
+			'' => 'Plain text representation of all the log entries',
+			'head' => 'Plain text representation of the latest entry',
+			'head_html' => 'HTML representation of the latest entry',
+			'html' => 'HTML representation of all the log entries',
+		);
+	}
 
 	/**
 	 * Get various representations of the value, for insertion into a template (e.g. in Notifications)
