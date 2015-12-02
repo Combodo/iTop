@@ -715,11 +715,11 @@ class OqlUnionQuery extends OqlQuery
 		{
 			$sRet = $sClassA;
 		}
-		elseif (in_array($sClassA, $oModelReflection->EnumChildClasses($sClassA)))
+		elseif (in_array($sClassA, $oModelReflection->EnumChildClasses($sClassB)))
 		{
 			$sRet = $sClassB;
 		}
-		elseif (in_array($sClassB, $oModelReflection->EnumChildClasses($sClassB)))
+		elseif (in_array($sClassB, $oModelReflection->EnumChildClasses($sClassA)))
 		{
 			$sRet = $sClassA;
 		}
