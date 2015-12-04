@@ -1,0 +1,179 @@
+{# layout.html.twig #}
+{# Sample base layout to show how to alter the twig in order to have sidebar nav #}
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block pPageTitle %}{{ 'Page:DefaultTitle'|dict_s }}{% endblock %}</title>
+    {% block pPageStylesheets %}
+    <link href="{{ app['combodo.portal.base.absolute_url'] }}lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ app['combodo.portal.instance.conf'].properties.themes.bootstrap }}" rel="stylesheet">
+    <link href="{{ app['combodo.portal.instance.conf'].properties.themes.portal }}" rel="stylesheet">
+    {% if app['combodo.portal.instance.conf'].properties.themes.custom is defined %}
+        <link href="{{ app['combodo.portal.instance.conf'].properties.themes.custom }}" rel="stylesheet">
+    {% endif %}
+    {% endblock %}
+    {% block pPageScripts %}
+    <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] }}lib/jquery/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] }}lib/bootstrap/js/bootstrap.min.js"></script>
+    {% endblock %}
+</head>
+<body class="{% block pPageBodyClass %}{% endblock %}">
+    {% block pPageBodyWrapper %}
+    <nav class="navbar navbar-fixed-top navbar-inverse visible-xs" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ app.url_generator.generate('p_home') }}">iTop</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="nav navbar-nav">
+                    {% for brick in app['combodo.portal.instance.conf'].bricks %}
+                        {% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
+                            <li {% if oBrick is defined and brick.id == oBrick.id %}class="active"{% endif %}>
+                                <a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %}>
+                                    {{ brick.GetTitle|dict_s }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    <li class="visible-sm">
+                        <a class="navbar-search" data-toggle="collapse" data-target="#searchbar">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div><!-- /.container -->
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            {% block pNavigationWrapper %}
+                <div class="col-sm-3 col-md-2 sidebar">
+                    <ul class="nav nav-sidebar navbar navbar-default">
+                        <li>
+                            <a href="{{ app.url_generator.generate('p_home') }}">iTop</a>
+                        </li>
+                        {% for brick in app['combodo.portal.instance.conf'].bricks %}
+                            {% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
+                                <li {% if oBrick is defined and brick.id == oBrick.id %}class="active"{% endif %}>
+                                    <a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %}>
+                                        {{ brick.GetTitle|dict_s }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endblock %}
+            
+            {% block pMainWrapper %}
+                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2" id="main-wrapper">
+                    <section class="row row-eq-height-sm" id="main-header">
+                        {% block pMainHeader %}
+                        {% endblock %}
+                    </section>
+
+                    <section class="row row-eq-height-sm" id="main-content">
+                        {% block pMainContent %}
+                        {% endblock %}
+                    </section>
+                </div>
+            {% endblock %}
+        </div>
+        
+        <footer id="footer-wrapper">
+            {% block pPageFooter%}
+            <a href="http://www.combodo.com">iTop &copy; {{ "now"|date('Y') }}</a>
+            {% endblock %}
+        </footer>
+    </div>
+    
+    <div class="modal fade" id="modal-for-all" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    
+    {% block pPageLiveScripts %}
+        <script type="text/javascript">
+            // Hack to enable a same modal to load content from different urls
+            $('body').on('hidden.bs.modal', '.modal', function () {
+                $(this).removeData('bs.modal');
+                $(this).find('.modal-content').html('<div class="modal-body modal-wait">{{ 'Page:PleaseWait'|dict_s }}</div>');
+            });
+            
+            /* Will not be used if we go with html response from ajax
+            var prepareModal = function(modal, data, open)
+            {
+                if(open === undefined)
+                {
+                    open = true;
+                }
+                
+                // Filling the whole modal with data if it's a string (It should be HTML)
+                if((typeof data) === 'string')
+                {
+                    $(modal).html(data);
+                }
+                // Parsing object if necessary
+                else if((typeof data) === 'object')
+                {
+                    // - Title
+                    if(data.title !== undefined)
+                    {
+                        parseDataForModalPart(modal, '.modal-header .modal-title', data.title);
+                    }
+                    // - Body
+                    if(data.body !== undefined)
+                    {
+                        parseDataForModalPart(modal, '.modal-body', data.body);
+                    }
+                    // - Footer
+                    if(data.footer !== undefined)
+                    {
+                        parseDataForModalPart(modal, '.modal-footer', data.footer);
+                    }
+                }
+                
+                if(open === true)
+                {
+                    $(modal).fadeIn();
+                }
+            };
+            
+            // Used by prepareModal function to build a specific area from data
+            var parseDataForModalPart = function(modal, partSelector, data)
+            {
+                if((typeof data === 'string'))
+                {
+                    $(modal).find(partSelector).text(data);
+                }
+                else if((typeof data) === 'object')
+                {
+                    if(data.format === 'html')
+                    {
+                        $(modal).find(partSelector).html(data.data);
+                    }
+                    else if(data.format === 'object')
+                    {
+                        console.log('TODO : Build modal '+partSelector+' from data');
+                    }
+                    else
+                    {
+                        $(modal).find(partSelector).text(data.data);
+                    }
+                }
+            };*/
+        </script>
+    {% endblock %}
+</body>
+</html>
