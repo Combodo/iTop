@@ -475,6 +475,15 @@ class ModelFactory
 					}
 				}
 				
+				$oAlteredNodes = $oXPath->query('/itop_design//*[@_delta]');
+				if ($oAlteredNodes->length > 0)
+				{
+					foreach($oAlteredNodes as $oAlteredNode)
+					{
+						$oAlteredNode->SetAttribute('_altered_in', $sModuleName);
+					}
+				}
+				
 				$oFormat = new iTopDesignFormat($oDocument);
 				if (!$oFormat->Convert())
 				{
@@ -1588,7 +1597,24 @@ class MFElement extends DOMElement
 		return false;
 	}
 
-
+	/**
+	 * Check if the given node is (a child of a node) altered by one of the supplied modules 
+	 * @param array $aModules The list of module codes to consider
+	 * @return boolean
+	 */
+	public function IsAlteredByModule($aModules)
+	{
+		// Iterate through the parents: reset the flag if any of them has a flag set
+		for($oParent = $this ; $oParent instanceof MFElement ; $oParent = $oParent->parentNode)
+		{
+			if (in_array($oParent->getAttribute('_altered_in'), $aModules))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	static $aTraceAttributes = null;
 	/**
 	 * Enable/disable the trace on changed nodes
@@ -2006,6 +2032,7 @@ class MFDocument extends DOMDocument
 		}
 		return $oElement;
 	}
+
 	/**
 	 * For debugging purposes
 	 */
