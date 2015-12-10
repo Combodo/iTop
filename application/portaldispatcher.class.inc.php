@@ -55,7 +55,16 @@ class PortalDispatcher
 	
 	public function GetURL()
 	{
-		return utils::GetAbsoluteUrlAppRoot().$this->aData['url'];
+		$aOverloads = MetaModel::GetConfig()->Get('portal_dispatch_urls');
+		if (array_key_exists($this->sPortalid, $aOverloads))
+		{
+			$sRet = $aOverloads[$this->sPortalid];
+		}
+		else
+		{
+			$sRet = utils::GetAbsoluteUrlAppRoot().$this->aData['url'];
+		}
+		return $sRet;
 	}
 	
 	public function GetLabel()

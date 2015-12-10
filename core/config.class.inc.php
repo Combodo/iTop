@@ -718,6 +718,15 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'portal_dispatch_urls' => array(
+			'type' => 'array',
+			'description' => 'Associative array of sPortalId => Home page URL (relatively to the application root)',
+			// examples... not used
+			'default' => array(),
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'max_execution_time_per_loop' => array(
 			'type' => 'integer',
 			'description' => 'Maximum execution time requested, per loop, during bulk operations. Zero means no limit.',
