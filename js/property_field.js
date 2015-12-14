@@ -634,10 +634,18 @@ function ReadFormParams(sFormId)
 				{
 					oMap[sName] = ($(this).attr('checked') == 'checked');
 				}
+				else if (this.type == 'radio')
+				{
+					if ($(this).prop('checked'))
+					{
+						oMap[sName] = $(this).val();					
+					}
+				}
 				else
 				{
 					oMap[sName] = $(this).val();
 				}
+				
 			}
 		}
 	});
