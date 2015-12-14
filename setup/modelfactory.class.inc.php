@@ -1091,6 +1091,12 @@ EOF
 				}
 			}
 		}
+		$oNodesToClean = $oDelta->GetNodes('/itop_design//*[@_altered_in]');
+		foreach($oNodesToClean as $oNode)
+		{
+			$oNode->removeAttribute('_altered_in');
+		}
+		
 		if ($aAttributes != null)
 		{
 			foreach ($aAttributes as $sAttribute => $value)
