@@ -13,20 +13,7 @@ class PortalDispatcher
 	public function IsUserAllowed()
 	{
 		$bRet = true;
-		if (array_key_exists('profile_list', $_SESSION))
-		{
-			$aProfiles = $_SESSION['profile_list'];
-		}
-		else
-		{
-			$oUser = UserRights::GetUserObject();
-			$oSet = $oUser->Get('profile_list');
-			while(($oLnkUserProfile = $oSet->Fetch()) !== null)
-			{
-				$aProfiles[] = $oLnkUserProfile->Get('profileid_friendlyname');
-			}
-			$_SESSION['profile_list'] = $aProfiles;
-		}		
+		$aProfiles = UserRights::ListProfiles();
 		
 		foreach($this->aData['deny'] as $sDeniedProfile)
 		{

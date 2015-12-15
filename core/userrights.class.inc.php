@@ -67,6 +67,18 @@ abstract class UserRightsAddOnAPI
 	abstract public function IsPortalUser($oUser);
 	abstract public function FlushPrivileges();
 
+
+	/**
+	 * Default behavior for addons that do not support profiles
+	 *
+	 * @param $oUser User
+	 * @return array
+	 */
+	public function ListProfiles($oUser)
+	{
+		return array();
+	}
+
 	/**
 	 *	...
 	 */
@@ -821,7 +833,6 @@ class UserRights
 		}
 	}
 
-
 	public static function IsActionAllowed($sClass, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null, $oUser = null)
 	{
 		// When initializing, we need to let everything pass trough
@@ -929,7 +940,7 @@ class UserRights
 		return self::$m_oAddOn->IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet);
 	}
 
-	static $m_aAdmins = array();
+	protected static $m_aAdmins = array();
 	public static function IsAdministrator($oUser = null)
 	{
 		if (!self::CheckLogin()) return false;
@@ -946,7 +957,7 @@ class UserRights
 		return self::$m_aAdmins[$iUser];
 	}
 
-	static $m_aPortalUsers = array();
+	protected static $m_aPortalUsers = array();
 	public static function IsPortalUser($oUser = null)
 	{
 		if (!self::CheckLogin()) return false;
@@ -963,6 +974,39 @@ class UserRights
 		return self::$m_aPortalUsers[$iUser];
 	}
 
+	public static function ListProfiles($oUser = null)
+	{
+		if (is_null($oUser))
+		{
+			$oUser = self::$m_oUser;
+		}
+		if ($oUser->GetKey() == self::$m_oUser->GetKey())
+		{
+			// Data about the current user can be found into the session data
+			if (array_key_exists('profile_list', $_SESSION))
+			{
+				$aProfiles = $_SESSION['profile_list'];
+			}
+		}
+
+		if (!isset($aProfiles))
+		{
+			$aProfiles = self::$m_oAddOn->ListProfiles($oUser);
+		}
+		return $aProfiles;
+	}
+
+	/**
+	 * @param $sProfileName Profile name to search for
+	 * @param $oUser User|null
+	 * @return bool
+	 */
+	public static function HasProfile($sProfileName, $oUser = null)
+	{
+		$bRet = in_array($sProfileName, self::ListProfiles($oUser));
+		return $bRet;
+	}
+
 	/**
 	 * Reset cached data
 	 * @param Bool Reset admin cache as well
@@ -975,7 +1019,9 @@ class UserRights
 		if ($bResetAdminCache)
 		{
 			self::$m_aAdmins = array();
+			self::$m_aPortalUsers = array();
 		}
+		self::_ResetSessionCache();
 		return self::$m_oAddOn->FlushPrivileges();
 	}
 
@@ -1032,6 +1078,17 @@ class UserRights
 	public static function MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings = array(), $sAttCode = null)
 	{
 		return self::$m_oAddOn->MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings, $sAttCode);
+	}
+
+	public static function _InitSessionCache()
+	{
+		// Cache data about the current user into the session
+		$_SESSION['profile_list'] = self::ListProfiles();
+	}
+
+	public static function _ResetSessionCache()
+	{
+		unset($_SESSION['profile_list']);
 	}
 }
 

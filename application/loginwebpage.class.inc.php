@@ -418,18 +418,10 @@ EOF
 
 	static function ResetSession()
 	{
-		if (isset($_SESSION['login_mode']))
-		{
-			$sPreviousLoginMode = $_SESSION['login_mode'];
-		}
-		else
-		{
-			$sPreviousLoginMode = '';
-		}
 		// Unset all of the session variables.
 		unset($_SESSION['auth_user']);
 		unset($_SESSION['login_mode']);
-		unset($_SESSION['profile_list']);
+		UserRights::_ResetSessionCache();
 		// If it's desired to kill the session, also delete the session cookie.
 		// Note: This will destroy the session, and not just the session data!
 	}
@@ -655,6 +647,7 @@ EOF
 					
 					$_SESSION['auth_user'] = $sAuthUser;
 					$_SESSION['login_mode'] = $sLoginMode;
+					UserRights::_InitSessionCache();
 				}
 			}
 		}

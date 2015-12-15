@@ -405,12 +405,6 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	{
 	}
 
-
-	protected $m_aAdmins = array(); // id -> bool, true if the user has the well-known admin profile
-	protected $m_aPortalUsers = array(); // id -> bool, true if the user has the well-known portal user profile
-
-	protected $m_aProfiles; // id -> object
-	protected $m_aUserProfiles = array(); // userid,profileid -> object
 	protected $m_aUserOrgs = array(); // userid -> array of orgid
 
 	// Built on demand, could be optimized if necessary (doing a query for each attribute that needs to be read)
@@ -458,38 +452,10 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		return $this->m_aUserOrgs[$iUser];
 	}
 
-	/**
-	 * Read and cache profiles of the given user
-	 */
-	protected function GetUserProfiles($iUser)
-	{
-		if (!array_key_exists($iUser, $this->m_aUserProfiles))
-		{
-			$oSearch = new DBObjectSearch('URP_UserProfile');
-			$oSearch->AllowAllData();
-			$oCondition = new BinaryExpression(new FieldExpression('userid'), '=', new VariableExpression('userid'));
-			$oSearch->AddConditionExpression($oCondition);
-			
-			$this->m_aUserProfiles[$iUser] = array();
-			$oUserProfileSet = new DBObjectSet($oSearch, array(), array('userid' => $iUser));
-			while ($oUserProfile = $oUserProfileSet->Fetch())
-			{
-				$this->m_aUserProfiles[$iUser][$oUserProfile->Get('profileid')] = $oUserProfile;
-			}
-		}
-		return $this->m_aUserProfiles[$iUser];
-
-	}
-
 	public function ResetCache()
 	{
 		// Loaded by Load cache
-		$this->m_aProfiles = null; 
-		$this->m_aUserProfiles = array();
 		$this->m_aUserOrgs = array();
-
-		$this->m_aAdmins = array();
-		$this->m_aPortalUsers = array();
 
 		// Cache
 		$this->m_aObjectActionGrants = array();
@@ -497,75 +463,53 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	public function LoadCache()
 	{
-		if (!is_null($this->m_aProfiles)) return;
-		// Could be loaded in a shared memory (?)
-
-		$oKPI = new ExecutionKPI();
-
-		if (self::HasSharing())
+		static $bSharedObjectInitialized = false;
+		if (!$bSharedObjectInitialized)
 		{
-			SharedObject::InitSharedClassProperties();
+			$bSharedObjectInitialized = true;
+			if (self::HasSharing())
+			{
+				SharedObject::InitSharedClassProperties();
+			}
 		}
-
-		$oProfileSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_Profiles"));
-		$this->m_aProfiles = array(); 
-		while ($oProfile = $oProfileSet->Fetch())
-		{
-			$this->m_aProfiles[$oProfile->GetKey()] = $oProfile; 
-		}
-
-		$oKPI->ComputeAndReport('Load of user management cache (excepted Action Grants)');
-
-/*
-		echo "<pre>\n";
-		print_r($this->m_aProfiles);
-		print_r($this->m_aUserProfiles);
-		print_r($this->m_aUserOrgs);
-		echo "</pre>\n";
-exit;
-*/
-
 		return true;
 	}
 
+	/**
+	 * @param $oUser User
+	 * @return array
+	 */
 	public function IsAdministrator($oUser)
 	{
-		//$this->LoadCache();
-		$iUser = $oUser->GetKey();
-		if (!array_key_exists($iUser, $this->m_aAdmins))
-		{
-			$bIsAdmin = false;
-			foreach($this->GetUserProfiles($iUser) as $oUserProfile)
-		{
-				if ($oUserProfile->Get('profile') == ADMIN_PROFILE_NAME)
-				{
-					$bIsAdmin = true;
-					break;
-		}
-	}
-			$this->m_aAdmins[$iUser] = $bIsAdmin;
-		}
-		return $this->m_aAdmins[$iUser];
+		// UserRights caches the list for us
+		return UserRights::HasProfile(ADMIN_PROFILE_NAME, $oUser);
 	}
 
+	/**
+	 * @param $oUser User
+	 * @return array
+	 */
 	public function IsPortalUser($oUser)
 	{
-		//$this->LoadCache();
-		$iUser = $oUser->GetKey();
-		if (!array_key_exists($iUser, $this->m_aPortalUsers))
-		{
-			$bIsPortalUser = false;
-			foreach($this->GetUserProfiles($iUser) as $oUserProfile)
-		{
-				if ($oUserProfile->Get('profile') == PORTAL_PROFILE_NAME)
-				{
-					$bIsPortalUser = true;
-					break;
-		}
+		// UserRights caches the list for us
+		return UserRights::HasProfile(PORTAL_PROFILE_NAME, $oUser);
 	}
-			$this->m_aPortalUsers[$iUser] = $bIsPortalUser;
+	/**
+	 * @param $oUser User
+	 * @return bool
+	 */
+	public function ListProfiles($oUser)
+	{
+		$aRet = array();
+		$oSearch = new DBObjectSearch('URP_UserProfile');
+		$oSearch->AllowAllData();
+		$oSearch->Addcondition('userid', $oUser->GetKey(), '=');
+		$oProfiles = new DBObjectSet($oSearch);
+		while ($oUserProfile = $oProfiles->Fetch())
+		{
+			$aRet[$oUserProfile->Get('profileid')] = $oUserProfile->Get('profileid_friendlyname');
 		}
-		return $this->m_aPortalUsers[$iUser];
+		return $aRet;
 	}
 
 	public function GetSelectFilter($oUser, $sClass, $aSettings = array())
@@ -621,8 +565,8 @@ exit;
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
 		$bStatus = null;
-		$aAttributes = array();
-		foreach($this->GetUserProfiles($iUser) as $iProfile => $oProfile)
+		// Call the API of UserRights because it caches the list for us
+		foreach(UserRights::ListProfiles($oUser) as $iProfile => $oProfile)
 		{
 			$bGrant = $this->GetProfileActionGrant($iProfile, $sClass, $sAction);
 			if (!is_null($bGrant))
@@ -645,12 +589,11 @@ exit;
 
 		$aRes = array(
 			'permission' => $iPermission,
-//			'attributes' => $aAttributes,
 		);
 		$this->m_aObjectActionGrants[$iUser][$sClass][$iActionCode] = $aRes;
 		return $aRes;
 	}
-	
+
 	public function IsActionAllowed($oUser, $sClass, $iActionCode, $oInstanceSet = null)
 	{
 		$this->LoadCache();
@@ -752,7 +695,8 @@ exit;
 		// Note: The object set is ignored because it was interesting to optimize for huge data sets
 		//       and acceptable to consider only the root class of the object set
 		$bStatus = null;
-		foreach($this->GetUserProfiles($iUser) as $iProfile => $oProfile)
+		// Call the API of UserRights because it caches the list for us
+		foreach(UserRights::ListProfiles($oUser) as $iProfile => $oProfile)
 		{
 			$bGrant = $this->GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode);
 			if (!is_null($bGrant))
