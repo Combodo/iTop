@@ -58,6 +58,7 @@ class MFCompiler
 	public function __construct($oModelFactory)
 	{
 		$this->oFactory = $oModelFactory;
+		$this->oFactory->ApplyChanges();
 
 		$this->aLog = array();
 		$this->sMainPHPCode = '<'.'?'."php\n";
@@ -1082,6 +1083,50 @@ EOF;
 					$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
 					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
 					$aParameters['depends_on'] = $sDependencies;
+				}
+				elseif ($sAttType == 'AttributeMetaEnum')
+				{
+					$oValues = $oField->GetUniqueElement('values');
+					$oValueNodes = $oValues->getElementsByTagName('value');
+					$aValues = array();
+					foreach($oValueNodes as $oValue)
+					{
+						//	new style... $aValues[] = self::QuoteForPHP($oValue->textContent);
+						$aValues[] = $oValue->textContent;
+					}
+					//	new style... $sValues = 'array('.implode(', ', $aValues).')';
+					$sValues = '"'.implode(',', $aValues).'"';
+// todo: enlever les paramètres inutiles = display_style, depends on, default_value, is_null_allowed ???
+					$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
+					$aParameters['display_style'] = $this->GetPropString($oField, 'display_style', 'list');
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql', '');
+					$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+
+					$oMappings = $oField->GetUniqueElement('mappings');
+					$oMappingNodes = $oMappings->getElementsByTagName('mapping');
+					$aMapping = array();
+					foreach ($oMappingNodes as $oMapping)
+					{
+						$sMappingId = $oMapping->getAttribute('id');
+						$sMappingAttCode = $oMapping->GetChildText('attcode');
+						$aMapping[$sMappingId]['attcode'] = $sMappingAttCode;
+						$aMapping[$sMappingId]['values'] = array();
+						$oMetaValues = $oMapping->GetUniqueElement('metavalues');
+						foreach ($oMetaValues->getElementsByTagName('metavalue') as $oMetaValue)
+						{
+							$sMetaValue = $oMetaValue->getAttribute('id');
+							$oValues = $oMetaValue->GetUniqueElement('values');
+							foreach ($oValues->getElementsByTagName('value') as $oValue)
+							{
+								$sValue = $oValue->getAttribute('id');
+								$aMapping[$sMappingId]['values'][$sValue] = $sMetaValue;
+							}
+
+						}
+					}
+					$aParameters['mapping'] = var_export($aMapping, true);
 				}
 				elseif ($sAttType == 'AttributeBlob')
 				{
