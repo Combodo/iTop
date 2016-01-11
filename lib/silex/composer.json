@@ -1,0 +1,6 @@
+{
+    "require": {
+        "silex/silex": "~1.1",
+        "twig/twig": "1.21.*"
+    }
+}
