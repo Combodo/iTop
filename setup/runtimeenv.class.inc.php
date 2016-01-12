@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Manage a runtime environment
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -420,9 +420,6 @@ class RunTimeEnvironment
 		}
 		else
 		{
-			$oFactory->ApplyChanges();
-			//$oFactory->Dump();
-
 			$sTargetDir = APPROOT.'env-'.$this->sTargetEnv;
 			self::MakeDirSafe($sTargetDir);
 			$oMFCompiler = new MFCompiler($oFactory);
@@ -486,6 +483,12 @@ class RunTimeEnvironment
 				MetaModel::CheckDataSources(false /*$bDiagnostics*/, true/*$bVerbose*/);
 				$sFeedback = ob_get_clean();
 				$this->log_ok("Data sources checked: $sFeedback");
+
+				// Fix meta enums
+				ob_start();
+				MetaModel::RebuildMetaEnums(true /*bVerbose*/);
+				$sFeedback = ob_get_clean();
+				$this->log_ok("Meta enums rebuilt: $sFeedback");
 			}
 			else
 			{
