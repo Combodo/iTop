@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Class NiceWebPage
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -37,19 +37,19 @@ class NiceWebPage extends WebPage
     {
         parent::__construct($s_title, $bPrintable);
 		$this->m_aReadyScripts = array();
-		$this->add_linked_script("../js/jquery-1.10.0.min.js");
-		$this->add_linked_script("../js/jquery-migrate-1.2.1.min.js"); // Needed since many other plugins still rely on oldies like $.browser
-		$this->add_linked_stylesheet('../css/ui-lightness/jquery-ui-1.10.3.custom.min.css');
-		$this->add_linked_script('../js/jquery-ui-1.10.3.custom.min.js');
-		$this->add_linked_script("../js/hovertip.js");
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-1.10.0.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate-1.2.1.min.js'); // Needed since many other plugins still rely on oldies like $.browser
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/ui-lightness/jquery-ui-1.10.3.custom.min.css');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-1.10.3.custom.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/hovertip.js');
 		// table sorting
-		$this->add_linked_script("../js/jquery.tablesorter.js");
-		$this->add_linked_script("../js/jquery.tablesorter.pager.js");
-		$this->add_linked_script("../js/jquery.tablehover.js");
-		$this->add_linked_script('../js/field_sorter.js');
-		$this->add_linked_script('../js/datatable.js');
-		$this->add_linked_script("../js/jquery.positionBy.js");
-		$this->add_linked_script("../js/jquery.popupmenu.js");
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.pager.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablehover.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/field_sorter.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/datatable.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.popupmenu.js');
 		$this->add_ready_script(
 <<< EOF
 	//add new widget called TruncatedList to properly display truncated lists when they are sorted

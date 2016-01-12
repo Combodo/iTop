@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Class LoginWebPage
  *
- * @copyright   Copyright (C) 2010-2013 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -65,7 +65,7 @@ class LoginWebPage extends NiceWebPage
 	
 	public function SetStyleSheet()
 	{
-		$this->add_linked_stylesheet("../css/login.css");
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/login.css');
 	}
 
 	public static function SetLoginFailedMessage($sMessage)
