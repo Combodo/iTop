@@ -69,6 +69,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Ticket/Attribute:workorders_list+' => '',
 	'Class:Ticket/Attribute:finalclass' => 'Type',
 	'Class:Ticket/Attribute:finalclass+' => '',
+	'Class:Ticket/Attribute:operational_status' => 'Statut opérationnel',
+	'Class:Ticket/Attribute:operational_status+' => 'Calculé à partir du statut détaillé',
+	'Class:Ticket/Attribute:operational_status/Value:active' => 'Actif',
+	'Class:Ticket/Attribute:operational_status/Value:active+' => 'Traitement en cours',
+	'Class:Ticket/Attribute:operational_status/Value:inactive' => 'Inactif',
+	'Class:Ticket/Attribute:operational_status/Value:inactive+' => 'Ticket définitivement fermé',
 	'Ticket:ImpactAnalysis' => 'Analyse d\'Impact',
 ));
 

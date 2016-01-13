@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * Abstract class that implements some common and useful methods for displaying
  * the objects
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -2287,7 +2287,7 @@ EOF
 		$aDeps = array();
 		foreach($aDetailsList as $sAttCode)
 		{
-			$aDeps[$sAttCode] = MetaModel::GetPrequisiteAttributes($sClass, $sAttCode);
+			$aDeps[$sAttCode] = MetaModel::GetPrerequisiteAttributes($sClass, $sAttCode);
 		}
 		$aList = self::OrderDependentFields($aDeps);
 		
@@ -2407,7 +2407,7 @@ EOF
 		$aDeps = array();
 		foreach($aAttributes as $sAttCode => $trash)
 		{
-			$aDeps[$sAttCode] = MetaModel::GetPrequisiteAttributes($sClass, $sAttCode);
+			$aDeps[$sAttCode] = MetaModel::GetPrerequisiteAttributes($sClass, $sAttCode);
 		}
 		$aList = $this->OrderDependentFields($aDeps);
 
@@ -3489,7 +3489,7 @@ EOF
 			$sFormPrefix = '2_';
 			foreach($aList as $sAttCode => $oAttDef)
 			{
-				$aPrerequisites = MetaModel::GetPrequisiteAttributes($sClass, $sAttCode); // List of attributes that are needed for the current one
+				$aPrerequisites = MetaModel::GetPrerequisiteAttributes($sClass, $sAttCode); // List of attributes that are needed for the current one
 				if (count($aPrerequisites) > 0)
 				{
 					// When 'enabling' a field, all its prerequisites must be enabled too

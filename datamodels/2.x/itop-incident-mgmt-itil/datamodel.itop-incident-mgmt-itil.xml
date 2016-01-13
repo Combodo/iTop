@@ -1553,6 +1553,9 @@
             <item id="status">
               <rank>90</rank>
             </item>
+            <item id="operational_status">
+              <rank>95</rank>
+            </item>
             <item id="caller_id">
               <rank>100</rank>
             </item>
@@ -1613,6 +1616,9 @@
             </item>
             <item id="status">
               <rank>50</rank>
+            </item>
+            <item id="operational_status">
+              <rank>55</rank>
             </item>
             <item id="agent_id">
               <rank>60</rank>

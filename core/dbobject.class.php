@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -52,7 +52,7 @@ interface iDisplay
 /**
  * Class dbObject: the root of persistent classes
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -412,7 +412,12 @@ abstract class DBObject implements iDisplay
 		$this->m_aCurrValues[$sAttCode] = $realvalue;
 		$this->m_aTouchedAtt[$sAttCode] = true;
 		unset($this->m_aModifiedAtt[$sAttCode]);
-		
+
+		foreach (MetaModel::ListMetaAttributes(get_class($this), $sAttCode) as $sMetaAttCode => $oMetaAttDef)
+		{
+			$this->Set($sMetaAttCode, $oMetaAttDef->MapValue($this));
+		}
+
 		// The object has changed, reset caches
 		$this->m_bCheckStatus = null;
 

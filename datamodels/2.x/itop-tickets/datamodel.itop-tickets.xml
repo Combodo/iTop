@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3">
   <constants>
     <constant id="RESPONSE_TICKET_SLT_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT SLT AS slt JOIN lnkSLAToSLT AS l1 ON l1.slt_id=slt.id JOIN SLA AS sla ON l1.sla_id=sla.id JOIN lnkCustomerContractToService AS l2 ON l2.sla_id=sla.id JOIN CustomerContract AS sc ON l2.customercontract_id=sc.id WHERE slt.metric = :metric AND l2.service_id = :this->service_id AND sc.org_id = :this->org_id AND slt.request_type = :request_type AND slt.priority = :this->priority]]></constant>
     <constant id="PORTAL_POWER_USER_PROFILE" xsi:type="string" _delta="define"><![CDATA[Portal power user]]></constant>
@@ -45,6 +45,28 @@
         </reconciliation>
       </properties>
       <fields>
+        <field id="operational_status" xsi:type="AttributeMetaEnum">
+          <values>
+            <value id="active">active</value>
+            <value id="inactive">inactive</value>
+          </values>
+          <sql>operational_status</sql>
+          <default_value>active</default_value>
+          <mappings>
+            <mapping id="Ticket">
+              <attcode>status</attcode>
+              <metavalues>
+                <metavalue id="inactive">
+                  <values>
+                    <value id="resolved"/>
+                    <value id="closed"/>
+                    <value id="rejected"/>
+                  </values>
+                </metavalue>
+              </metavalues>
+            </mapping>
+          </mappings>
+        </field>
         <field id="ref" xsi:type="AttributeString">
           <sql>ref</sql>
           <default_value/>
@@ -238,6 +260,9 @@
             <item id="description">
               <rank>70</rank>
             </item>
+            <item id="operational_status">
+              <rank>75</rank>
+            </item>
             <item id="start_date">
               <rank>80</rank>
             </item>
@@ -275,6 +300,9 @@
             <item id="description">
               <rank>30</rank>
             </item>
+            <item id="operational_status">
+              <rank>35</rank>
+            </item>
             <item id="start_date">
               <rank>40</rank>
             </item>
@@ -308,6 +336,9 @@
             </item>
             <item id="agent_id">
               <rank>60</rank>
+            </item>
+            <item id="operational_status">
+              <rank>65</rank>
             </item>
             <item id="start_date">
               <rank>70</rank>

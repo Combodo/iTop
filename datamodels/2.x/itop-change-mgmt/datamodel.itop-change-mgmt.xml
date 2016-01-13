@@ -664,6 +664,9 @@
             <item id="status">
               <rank>40</rank>
             </item>
+            <item id="operational_status">
+              <rank>45</rank>
+            </item>
             <item id="start_date">
               <rank>50</rank>
             </item>
@@ -706,6 +709,9 @@
             </item>
             <item id="status">
               <rank>50</rank>
+            </item>
+            <item id="operational_status">
+              <rank>55</rank>
             </item>
             <item id="category">
               <rank>60</rank>

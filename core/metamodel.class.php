@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -26,7 +26,7 @@ require_once(APPROOT.'core/relationgraph.class.inc.php');
 /**
  * Metamodel
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -487,7 +487,7 @@ abstract class MetaModel
 		self::_check_subclass($sClass);
 		return self::$m_aAttribOrigins[$sClass][$sAttCode];
 	}
-	final static public function GetPrequisiteAttributes($sClass, $sAttCode)
+	final static public function GetPrerequisiteAttributes($sClass, $sAttCode)
 	{
 		self::_check_subclass($sClass);
 		$oAtt = self::GetAttributeDef($sClass, $sAttCode);
@@ -499,7 +499,7 @@ abstract class MetaModel
 		return $oAtt->GetPrerequisiteAttributes();
 	}
 	/**
-	 * Find all attributes that depend on the specified one (reverse of GetPrequisiteAttributes)
+	 * Find all attributes that depend on the specified one (reverse of GetPrerequisiteAttributes)
 	 * @param string $sClass Name of the class
 	 * @param string $sAttCode Code of the attributes
 	 * @return Array List of attribute codes that depend on the given attribute, empty array if none.
@@ -510,7 +510,7 @@ abstract class MetaModel
 		self::_check_subclass($sClass);
 		foreach (self::ListAttributeDefs($sClass) as $sDependentAttCode=>$void)
 		{
-			$aPrerequisites = self::GetPrequisiteAttributes($sClass, $sDependentAttCode);
+			$aPrerequisites = self::GetPrerequisiteAttributes($sClass, $sDependentAttCode);
 			if (in_array($sAttCode, $aPrerequisites))
 			{
 				$aResults[] = $sDependentAttCode;
@@ -633,7 +633,8 @@ abstract class MetaModel
 	private static $m_aAttribDefs = array(); // array of ("classname" => array of attributes)
 	private static $m_aAttribOrigins = array(); // array of ("classname" => array of ("attcode"=>"sourceclass"))
 	private static $m_aExtKeyFriends = array(); // array of ("classname" => array of ("indirect ext key attcode"=> array of ("relative ext field")))
-	private static $m_aIgnoredAttributes = array(); //array of ("classname" => array of ("attcode")
+	private static $m_aIgnoredAttributes = array(); //array of ("classname" => array of ("attcode"))
+	private static $m_aEnumToMeta = array(); // array of  ("classname" => array of ("attcode" => array of ("metaattcode" => oMetaAttDef))
 
 	final static public function ListAttributeDefs($sClass)
 	{
@@ -848,6 +849,18 @@ abstract class MetaModel
 		return self::$m_aTrackForwardCache[$sClass];
 	}
 
+	final static public function ListMetaAttributes($sClass, $sAttCode)
+	{
+		if (isset(self::$m_aEnumToMeta[$sClass][$sAttCode]))
+		{
+			$aRet = self::$m_aEnumToMeta[$sClass][$sAttCode];
+		}
+		else
+		{
+			$aRet = array();
+		}
+		return $aRet;
+	}
 
 	/**
 	 * Get the attribute label
@@ -1847,6 +1860,15 @@ abstract class MetaModel
 						}
 					}
 				}
+				if ($oAttDef instanceof AttributeMetaEnum)
+				{
+					$aMappingData = $oAttDef->GetMapRule($sClass);
+					if ($aMappingData != null)
+					{
+						$sEnumAttCode = $aMappingData['attcode'];
+						self::$m_aEnumToMeta[$sClass][$sEnumAttCode][$sAttCode] = $oAttDef;
+					}
+				}
 			}
 
 			// Add a 'id' filter
@@ -2685,7 +2707,77 @@ abstract class MetaModel
 			CMDBSource::Query($sSQL);
 		}
 	}
-	
+
+	/**
+	 * Update the meta enums
+	 * See Also AttributeMetaEnum::MapValue that must be aligned with the above implementation
+	 *
+	 * @param $bVerbose boolean Displays some information about what is done/what needs to be done
+	 */
+	public static function RebuildMetaEnums($bVerbose = false)
+	{
+		foreach (self::GetClasses() as $sClass)
+		{
+			if (!self::HasTable($sClass)) continue;
+
+			foreach(self::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
+			{
+				// Check (once) all the attributes that are hierarchical keys
+				if((self::GetAttributeOrigin($sClass, $sAttCode) == $sClass) && $oAttDef instanceof AttributeEnum)
+				{
+					if (isset(self::$m_aEnumToMeta[$sClass][$sAttCode]))
+					{
+						foreach (self::$m_aEnumToMeta[$sClass][$sAttCode] as $sMetaAttCode => $oMetaAttDef)
+						{
+							$aMetaValues = array(); // array of (metavalue => array of values)
+							foreach ($oAttDef->GetAllowedValues() as $sCode => $sLabel)
+							{
+								$aMappingData = $oMetaAttDef->GetMapRule($sClass);
+								if ($aMappingData == null)
+								{
+									$sMetaValue = $oMetaAttDef->GetDefaultValue();
+								}
+								else
+								{
+									if (array_key_exists($sCode, $aMappingData['values']))
+									{
+										$sMetaValue = $aMappingData['values'][$sCode];
+									}
+									elseif ($oMetaAttDef->GetDefaultValue() != '')
+									{
+										$sMetaValue = $oMetaAttDef->GetDefaultValue();
+									}
+									else
+									{
+										throw new Exception('MetaModel::RebuildMetaEnums(): mapping not found for value "'.$sCode.'"" in '.$sClass.', on attribute '.self::GetAttributeOrigin($sClass, $oMetaAttDef->GetCode()).'::'.$oMetaAttDef->GetCode());
+									}
+								}
+								$aMetaValues[$sMetaValue][] = $sCode;
+							}
+							foreach ($aMetaValues as $sMetaValue => $aEnumValues)
+							{
+								$sMetaTable = self::DBGetTable($sClass, $sMetaAttCode);
+								$sEnumTable = self::DBGetTable($sClass);
+								$aColumns = array_keys($oMetaAttDef->GetSQLColumns());
+								$sMetaColumn = reset($aColumns);
+								$aColumns = array_keys($oAttDef->GetSQLColumns());
+								$sEnumColumn = reset($aColumns);
+								$sValueList = implode(', ', CMDBSource::Quote($aEnumValues));
+								$sSql = "UPDATE `$sMetaTable` JOIN `$sEnumTable` ON `$sEnumTable`.id = `$sMetaTable`.id SET `$sMetaTable`.`$sMetaColumn` = '$sMetaValue' WHERE `$sEnumTable`.`$sEnumColumn` IN ($sValueList) AND `$sMetaTable`.`$sMetaColumn` != '$sMetaValue'";
+								if ($bVerbose)
+								{
+									echo "Executing query: $sSql\n";
+								}
+								CMDBSource::Query($sSql);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
 	public static function CheckDataSources($bDiagnostics, $bVerbose)
 	{
 		$sOQL = 'SELECT SynchroDataSource';
@@ -4190,6 +4282,7 @@ abstract class MetaModel
 				self::$m_aStimuli = $result['m_aStimuli'];
 				self::$m_aTransitions = $result['m_aTransitions'];
 				self::$m_aHighlightScales = $result['m_aHighlightScales'];
+				self::$m_aEnumToMeta = $result['m_aEnumToMeta'];
 			}
 			$oKPI->ComputeAndReport('Metamodel APC (fetch + read)');
 		}
@@ -4227,6 +4320,7 @@ abstract class MetaModel
 				$aCache['m_aStimuli'] = self::$m_aStimuli; // array of ("classname" => array of ("stimuluscode"=>array('label'=>...)))
 				$aCache['m_aTransitions'] = self::$m_aTransitions; // array of ("classname" => array of ("statcode_from"=>array of ("stimuluscode" => array('target_state'=>..., 'actions'=>array of handlers procs, 'user_restriction'=>TBD)))
 				$aCache['m_aHighlightScales'] = self::$m_aHighlightScales; // array of ("classname" => array of higlightcodes)))
+				$aCache['m_aEnumToMeta'] = self::$m_aEnumToMeta;
 				apc_store($sOqlAPCCacheId, $aCache);
 				$oKPI->ComputeAndReport('Metamodel APC (store)');
 			}

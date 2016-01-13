@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Typology for the attributes
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -353,7 +353,7 @@ abstract class AttributeDefinition
 	}
 
 	public function GetValuesDef() {return null;} 
-	public function GetPrerequisiteAttributes() {return array();} 
+	public function GetPrerequisiteAttributes($sClass = null) {return array();}
 
 	public function GetNullValue() {return null;} 
 	public function IsNull($proposedValue) {return is_null($proposedValue);} 
@@ -676,7 +676,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function IsIndirect() {return false;} 
 
 	public function GetValuesDef() {return $this->Get("allowed_values");} 
-	public function GetPrerequisiteAttributes() {return $this->Get("depends_on");} 
+	public function GetPrerequisiteAttributes($sClass = null) {return $this->Get("depends_on");}
 	public function GetDefaultValue($aArgs = array())
 	{
 		// Note: so far, this feature is a prototype,
@@ -1274,7 +1274,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	public function GetEditClass() {return "String";}
 	
 	public function GetValuesDef() {return $this->Get("allowed_values");} 
-	public function GetPrerequisiteAttributes() {return $this->Get("depends_on");} 
+	public function GetPrerequisiteAttributes($sClass = null) {return $this->Get("depends_on");}
 
 	public function IsDirectField() {return true;} 
 	public function IsScalar() {return true;} 
@@ -2993,6 +2993,120 @@ class AttributeEnum extends AttributeString
 }
 
 /**
+ * A meta enum is an aggregation of enum from subclasses into an enum of a base class
+ * It has been designed is to cope with the fact that statuses must be defined in leaf classes, while it makes sense to
+ * have a superstatus available on the root classe(s)
+ *
+ * @package     iTopORM
+ */
+class AttributeMetaEnum extends AttributeEnum
+{
+	static public function ListExpectedParams()
+	{
+		return array('allowed_values', 'sql', 'default_value', 'mapping');
+	}
+
+	public function IsWritable()
+	{
+		return false;
+	}
+
+	public function RequiresIndex()
+	{
+		return true;
+	}
+
+	public function GetPrerequisiteAttributes($sClass = null)
+	{
+		if (is_null($sClass))
+		{
+			$sClass = $this->GetHostClass();
+		}
+		$aMappingData = $this->GetMapRule($sClass);
+		if ($aMappingData == null)
+		{
+			$aRet = array();
+		}
+		else
+		{
+			$aRet = array($aMappingData['attcode']);
+		}
+		return $aRet;
+	}
+
+	/**
+	 * Overload the standard so as to leave the data unsorted
+	 *
+	 * @param array $aArgs
+	 * @param string $sContains
+	 * @return array|null
+	 */
+	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	{
+		$oValSetDef = $this->GetValuesDef();
+		if (!$oValSetDef) return null;
+		$aRawValues = $oValSetDef->GetValueList();
+
+		if (is_null($aRawValues)) return null;
+		$aLocalizedValues = array();
+		foreach ($aRawValues as $sKey => $sValue)
+		{
+			$aLocalizedValues[$sKey] = Str::pure2html($this->GetValueLabel($sKey));
+		}
+		return $aLocalizedValues;
+	}
+
+	/**
+	 * Returns the meta value for the given object.
+	 * See also MetaModel::RebuildMetaEnums() that must be maintained when MapValue changes
+	 *
+	 * @param $oObject
+	 * @return mixed
+	 * @throws Exception
+	 */
+	public function MapValue($oObject)
+	{
+		$aMappingData = $this->GetMapRule(get_class($oObject));
+		if ($aMappingData == null)
+		{
+			$sRet = $this->GetDefaultValue();
+		}
+		else
+		{
+			$sAttCode = $aMappingData['attcode'];
+			$value = $oObject->Get($sAttCode);
+			if (array_key_exists($value, $aMappingData['values']))
+			{
+				$sRet = $aMappingData['values'][$value];
+			}
+			elseif ($this->GetDefaultValue() != '')
+			{
+				$sRet = $this->GetDefaultValue();
+			}
+			else
+			{
+				throw new Exception('AttributeMetaEnum::MapValue(): mapping not found for value "'.$value.'" in '.get_class($oObject).', on attribute '.MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()).'::'.$this->GetCode());
+			}
+		}
+		return $sRet;
+	}
+
+	public function GetMapRule($sClass)
+	{
+		$aMappings = $this->Get('mapping');
+		if (array_key_exists($sClass, $aMappings))
+		{
+			$aMappingData = $aMappings[$sClass];
+		}
+		else
+		{
+			$sParent = MetaModel::GetParentClass($sClass);
+			$aMappingData = $this->GetMapRule($sParent);
+		}
+		return $aMappingData;
+	}
+}
+/**
  * Map a date+time column to an attribute 
  *
  * @package     iTopORM
@@ -3794,7 +3908,7 @@ class AttributeExternalField extends AttributeDefinition
 		}
 	}
 	
-	public function GetPrerequisiteAttributes()
+	public function GetPrerequisiteAttributes($sClass = null)
 	{
 		return array($this->Get("extkey_attcode"));
 	} 
@@ -4833,7 +4947,6 @@ class AttributeSubItem extends AttributeDefinition
 	public function GetEditClass() {return "";}
 	
 	public function GetValuesDef() {return null;} 
-	//public function GetPrerequisiteAttributes() {return $this->Get("depends_on");} 
 
 	public function IsDirectField() {return true;} 
 	public function IsScalar() {return true;} 
@@ -5322,7 +5435,7 @@ class AttributeComputedFieldVoid extends AttributeDefinition
 	public function GetEditClass() {return "";}
 	
 	public function GetValuesDef() {return null;} 
-	public function GetPrerequisiteAttributes() {return $this->GetOptional("depends_on", array());} 
+	public function GetPrerequisiteAttributes($sClass = null) {return $this->GetOptional("depends_on", array());}
 
 	public function IsDirectField() {return true;} 
 	public function IsScalar() {return true;} 
@@ -5546,7 +5659,7 @@ class AttributeRedundancySettings extends AttributeDBField
 	}
 
 	public function GetValuesDef() {return null;} 
-	public function GetPrerequisiteAttributes() {return array();} 
+	public function GetPrerequisiteAttributes($sClass = null) {return array();}
 
 	public function GetEditClass() {return "RedundancySetting";}
 	protected function GetSQLCol($bFullSpec = false)

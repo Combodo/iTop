@@ -82,6 +82,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Ticket/Attribute:workorders_list+' => 'All the work orders for this ticket',
 	'Class:Ticket/Attribute:finalclass' => 'Type',
 	'Class:Ticket/Attribute:finalclass+' => '',
+	'Class:Ticket/Attribute:operational_status' => 'Operational status',
+	'Class:Ticket/Attribute:operational_status+' => 'Computed after the detailed status',
+	'Class:Ticket/Attribute:operational_status/Value:active' => 'Active',
+	'Class:Ticket/Attribute:operational_status/Value:active+' => 'Work in progress',
+	'Class:Ticket/Attribute:operational_status/Value:inactive' => 'Inactive',
+	'Class:Ticket/Attribute:operational_status/Value:inactive+' => 'Done',
 	'Ticket:ImpactAnalysis' => 'Impact Analysis',
 ));
 

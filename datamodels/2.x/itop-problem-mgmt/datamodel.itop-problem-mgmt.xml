@@ -607,6 +607,9 @@
             <item id="status">
               <rank>50</rank>
             </item>
+            <item id="operational_status">
+              <rank>55</rank>
+            </item>
             <item id="service_id">
               <rank>60</rank>
             </item>
@@ -652,6 +655,9 @@
             </item>
             <item id="status">
               <rank>40</rank>
+            </item>
+            <item id="operational_status">
+              <rank>45</rank>
             </item>
             <item id="service_id">
               <rank>50</rank>

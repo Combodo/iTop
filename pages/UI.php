@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -1071,7 +1071,7 @@ EOF
 				{
 					$aAttributesDef = MetaModel::ListAttributeDefs($sClass);
 					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-					$aPrerequisites = MetaModel::GetPrequisiteAttributes($sClass, $sAttCode); // List of attributes that are needed for the current one
+					$aPrerequisites = MetaModel::GetPrerequisiteAttributes($sClass, $sAttCode); // List of attributes that are needed for the current one
 					if (count($aPrerequisites) > 0)
 					{
 						// When 'enabling' a field, all its prerequisites must be enabled too

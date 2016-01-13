@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2014-2015 Combodo SARL
+// Copyright (C) 2014-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -499,6 +499,15 @@ class iTopDesignFormat
 		foreach ($oNodeList as $oNode)
 		{
 			$this->LogWarning('The module design defined in '.self::GetItopNodePath($oNode).' will be lost.');
+			$this->DeleteNode($oNode);
+		}
+
+		// Remove MetaEnum attributes
+		//
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeMetaEnum']");
+		foreach ($oNodeList as $oNode)
+		{
+			$this->LogWarning('The attribute '.self::GetItopNodePath($oNode).' is irrelevant and must be removed.');
 			$this->DeleteNode($oNode);
 		}
 	}

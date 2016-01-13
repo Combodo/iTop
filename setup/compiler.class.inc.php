@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2011-2015 Combodo SARL
+// Copyright (C) 2011-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -1096,13 +1096,9 @@ EOF;
 					}
 					//	new style... $sValues = 'array('.implode(', ', $aValues).')';
 					$sValues = '"'.implode(',', $aValues).'"';
-// todo: enlever les paramètres inutiles = display_style, depends on, default_value, is_null_allowed ???
 					$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
-					$aParameters['display_style'] = $this->GetPropString($oField, 'display_style', 'list');
 					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql', '');
 					$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
-					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
-					$aParameters['depends_on'] = $sDependencies;
 
 					$oMappings = $oField->GetUniqueElement('mappings');
 					$oMappingNodes = $oMappings->getElementsByTagName('mapping');
