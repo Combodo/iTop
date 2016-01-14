@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,13 +19,14 @@
 /**
  * ModelFactory: in-memory manipulation of the XML MetaModel
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 
 require_once(APPROOT.'setup/moduleinstaller.class.inc.php');
 require_once(APPROOT.'setup/itopdesignformat.class.inc.php');
+require_once(APPROOT.'core/designdocument.class.inc.php');
 
  /**
  * ModelFactoryModule: the representation of a Module (i.e. element that can be selected during the setup)
@@ -316,7 +317,7 @@ class ModelFactory
 				{
 					echo "Dumping target doc - looking for '$sParentId'<br/>\n";
 					$this->oDOMDocument->firstChild->Dump();
-					throw new Exception(MFDocument::GetItopNodePath($oSourceNode).' at line '.$oSourceNode->getLineNo().": could not find parent with id $sParentId");
+					throw new Exception(MFDocument::GetItopNodePath($oSourceNode).' at line '.$oSourceNode->getLineNo().": could not find parent with id '$sParentId'");
 				}
 			}
 			else 
@@ -1316,7 +1317,7 @@ class DOMElement {function __construct(){throw new Exception('The dom extension 
  * MFElement: helper to read/change the DOM
  * @package ModelFactory
  */
-class MFElement extends DOMElement
+class MFElement extends Combodo\iTop\DesignElement
 {
 	/**
 	 * Extracts some nodes from the DOM
@@ -1336,28 +1337,6 @@ class MFElement extends DOMElement
 	public function GetNodeById($sXPath, $sId)
 	{
 		return $this->ownerDocument->GetNodeById($sXPath, $sId, $this);
-	}
-
-	/**
-	 * For debugging purposes
-	 */
-	public function Dump($bReturnRes = false)
-	{
-		$oMFDoc = new MFDocument();
-		$oClone = $oMFDoc->importNode($this->cloneNode(true), true);
-		$oMFDoc->appendChild($oClone);
-
-		$sXml = $oMFDoc->saveXML($oClone);
-		if ($bReturnRes)
-		{
-			return $sXml;
-		}
-		else
-		{
-			echo "<pre>\n";
-			echo htmlentities($sXml);
-			echo "</pre>\n";	 	
-		}
 	}
 
 	/**
@@ -1381,52 +1360,6 @@ class MFElement extends DOMElement
 		return $oNode;
 	}
 	
-	/**
-	 * Returns the node directly under the current node, or null if missing 
-	 */ 
-	public function GetOptionalElement($sTagName)
-	{
-		return $this->GetUniqueElement($sTagName, false);
-	}
-	
-	
-	/**
-	 * Returns the TEXT of the current node (possibly from several subnodes) 
-	 */ 
-	public function GetText($sDefault = null)
-	{
-		$sText = null;
-		foreach($this->childNodes as $oChildNode)
-		{
-			if ($oChildNode instanceof DOMText)
-			{
-				if (is_null($sText)) $sText = '';
-				$sText .= $oChildNode->wholeText;
-			}
-		}
-		if (is_null($sText))
-		{
-			return $sDefault;
-		}
-		else
-		{
-			return $sText;
-		}
-	}
-	
-	/**
-	 * Get the TEXT value from the child node 
-	 */ 
-	public function GetChildText($sTagName, $sDefault = null)
-	{
-		$sRet = $sDefault;
-		if ($oChild = $this->GetOptionalElement($sTagName))
-		{
-			$sRet = $oChild->GetText($sDefault);
-		}
-		return $sRet;
-	}
-
 	/**
 	 * Assumes the current node to be either a text or
 	 * <items>
@@ -1979,38 +1912,22 @@ class MFElement extends DOMElement
  */
 if (!class_exists('DOMDocument'))
 {
-class DOMDocument {function __construct(){throw new Exception('The dom extension is not enabled');}}
+	class DOMDocument {function __construct(){throw new Exception('The dom extension is not enabled');}}
 }
 
 /**
  * MFDocument - formating rules for XML input/output
  * @package ModelFactory
  */
-class MFDocument extends DOMDocument
+class MFDocument extends \Combodo\iTop\DesignDocument
 {
-	public function __construct()
+	/**
+	 * Overloadable. Called prior to data loading.
+	 */
+	protected function Init()
 	{
-		parent::__construct('1.0', 'UTF-8');
+		parent::Init();
 		$this->registerNodeClass('DOMElement', 'MFElement');
-
-		$this->formatOutput = true; // indent (must be loaded with option LIBXML_NOBLANKS)
-		$this->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
-	}
-
-	/**
-	 * Overload of the standard API	
-	 */
-	public function load($filename, $options = 0)
-	{
-		parent::load($filename, LIBXML_NOBLANKS);
-	}
-
-	/**
-	 * Overload of the standard API	
-	 */
-	public function loadXML($source, $options = 0)
-	{
-		parent::loadXML($source, LIBXML_NOBLANKS);
 	}
 
 	/**
@@ -2043,24 +1960,6 @@ class MFDocument extends DOMDocument
 			$oElement->appendChild(new DOMText($value));
 		}
 		return $oElement;
-	}
-
-	/**
-	 * For debugging purposes
-	 */
-	public function Dump($bReturnRes = false)
-	{
-		$sXml = $this->saveXML();
-		if ($bReturnRes)
-		{
-			return $sXml;
-		}
-		else
-		{
-			echo "<pre>\n";
-			echo htmlentities($sXml);
-			echo "</pre>\n";	 	
-		}
 	}
 
 	/**
@@ -2113,34 +2012,6 @@ class MFDocument extends DOMDocument
 			return $oXPath->query($sXPath, $oContextNode);
 		}
 	}
-
-	public static function XPathQuote($sValue)
-	{
-		if (strpos($sValue, '"') !== false)
-		{
-			$aParts = explode('"', $sValue);
-			$sRet = 'concat("'.implode('", \'"\', "', $aParts).'")';
-		}
-		else
-		{
-			$sRet = '"'.$sValue.'"';
-		}
-		return $sRet;
-	}
-
-	/**
-	 * An alternative to getNodePath, that gives the id of nodes instead of the position within the children	
-	 */	
-	public static function GetItopNodePath($oNode)
-	{
-		if ($oNode instanceof DOMDocument) return '';
-		if (is_null($oNode)) return '';
-
-		$sId = $oNode->getAttribute('id');
-		$sNodeDesc = ($sId != '') ? $oNode->nodeName.'['.$sId.']' : $oNode->nodeName;
-		return self::GetItopNodePath($oNode->parentNode).'/'.$sNodeDesc;
-	}	 	
-
 }
 
 /**
