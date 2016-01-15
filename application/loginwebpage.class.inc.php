@@ -846,29 +846,4 @@ EOF
 		}
 		return false; // nothing matched !!
 	}
-	
-	public static function GetAllowedPortals()
-	{
-		$aAllowedPortals = array();
-		$aPortalsConf = PortalDispatcherData::GetData();
-		$aDispatchers = array();
-		foreach($aPortalsConf as $sPortalId => $aConf)
-		{
-			$sHandlerClass = $aConf['handler'];
-			$aDispatchers[$sPortalId] = new $sHandlerClass($sPortalId);
-		}
-		
-		foreach($aDispatchers as $sPortalId => $oDispatcher)
-		{
-			if ($oDispatcher->IsUserAllowed())
-			{
-				$aAllowedPortals[] = array(
-					'id' => $sPortalId,
-					'label' => $oDispatcher->GetLabel(),
-					'url' => $oDispatcher->GetUrl(),
-				);
-			}
-		}
-		return $aAllowedPortals;
-	}
 } // End of class

@@ -974,7 +974,32 @@ class UserRights
 		return self::$m_aPortalUsers[$iUser];
 	}
 
-	public static function ListProfiles($oUser = null)
+	public static function GetAllowedPortals()
+    {
+        $aAllowedPortals = array();
+        $aPortalsConf = PortalDispatcherData::GetData();
+        $aDispatchers = array();
+        foreach ($aPortalsConf as $sPortalId => $aConf)
+        {
+            $sHandlerClass = $aConf['handler'];
+            $aDispatchers[$sPortalId] = new $sHandlerClass($sPortalId);
+        }
+
+        foreach ($aDispatchers as $sPortalId => $oDispatcher)
+        {
+            if ($oDispatcher->IsUserAllowed())
+            {
+                $aAllowedPortals[] = array(
+                    'id' => $sPortalId,
+                    'label' => $oDispatcher->GetLabel(),
+                    'url' => $oDispatcher->GetUrl(),
+                );
+            }
+        }
+        return $aAllowedPortals;
+    }
+
+    public static function ListProfiles($oUser = null)
 	{
 		if (is_null($oUser))
 		{
