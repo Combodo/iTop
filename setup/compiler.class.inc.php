@@ -451,7 +451,8 @@ EOF;
 		$this->CompilePortals($oPortalsNode, $sTempTargetDir, $sFinalTargetDir);
 
 		// Create module design XML files
-		$this->CompileModuleDesigns($sTempTargetDir, $sFinalTargetDir);
+		$oModuleDesignsNode = $this->oFactory->GetNodes('/itop_design/module_designs')->item(0);
+		$this->CompileModuleDesigns($oModuleDesignsNode, $sTempTargetDir, $sFinalTargetDir);
 
 		// Compile the XML parameters
 		$oParametersNode = $this->oFactory->GetNodes('/itop_design/module_parameters')->item(0);
@@ -2152,14 +2153,7 @@ EOF;
 	{
 		if (($sIcon = $oBrandingNode->GetChildText($sNodeName)) && (strlen($sIcon) > 0))
 		{
-			if (substr($sIcon, 0, 8) == 'branding')
-			{
-				$sSourceFile = $sTempTargetDir.'/'.$sIcon;
-			}
-			else
-			{
-				$sSourceFile = APPROOT.$sIcon;
-			}
+			$sSourceFile = $sTempTargetDir.'/'.$sIcon;
 			$sTargetFile = $sTempTargetDir.'/branding/'.$sTargetFile.'.png';
 
 			if (!file_exists($sSourceFile))
@@ -2167,17 +2161,17 @@ EOF;
 				throw new Exception("Branding $sNodeName: could not find the file $sIcon ($sSourceFile)");
 			}
 
-			// Note: rename makes sense only when the file given as a file ref, otherwise it may be an item of the application (thus it must be kept there)
 			copy($sSourceFile, $sTargetFile);
 		}
 	}
 
 	protected function CompileBranding($oBrandingNode, $sTempTargetDir, $sFinalTargetDir)
 	{
+		// Enable relative paths
+		SetupUtils::builddir($sTempTargetDir.'/branding');
 		if ($oBrandingNode)
 		{
 			// Transform file refs into files in the images folder
-			SetupUtils::builddir($sTempTargetDir.'/branding');
 			$this->CompileFiles($oBrandingNode, $sTempTargetDir.'/branding', $sFinalTargetDir.'/branding', 'branding');
 
 			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'main_logo', 'main-logo');
@@ -2281,11 +2275,11 @@ EOF;
 		}
 	}
 	
-	protected function CompileModuleDesigns($sTempTargetDir, $sFinalTargetDir)
+	protected function CompileModuleDesigns($oDesigns, $sTempTargetDir, $sFinalTargetDir)
 	{
-		SetupUtils::builddir($sTempTargetDir.'/core/module_designs');
-		$oDesigns = $this->oFactory->GetNodes('/itop_design/module_designs/module_design');
-		foreach($oDesigns as $oDesign)
+		SetupUtils::builddir($sTempTargetDir.'/core/module_designs/images');
+		$this->CompileFiles($oDesigns, $sTempTargetDir.'/core/module_designs', $sFinalTargetDir.'/core/module_designs', 'core/module_designs');
+		foreach ($oDesigns->GetNodes('module_design') as $oDesign)
 		{
 			$oDoc = new ModuleDesign();
 			$oClone = $oDoc->importNode($oDesign->cloneNode(true), true);
