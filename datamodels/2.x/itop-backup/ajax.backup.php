@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2013-2015 Combodo SARL
+// Copyright (C) 2013-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Backup from an interactive session
  *
- * @copyright   Copyright (C) 2013-215 Combodo SARL
+ * @copyright   Copyright (C) 2013-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -77,9 +77,8 @@ try
 
 		$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
 		$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
-		if ($oRestoreMutex->TryLock())
+		if (!$oRestoreMutex->IsLocked())
 		{
-			$oRestoreMutex->Unlock();
 			$sFile = utils::ReadParam('file', '', false, 'raw_data');
 			$sToken = str_replace(' ', '', (string)microtime());
 			$sTokenFile = APPROOT.'/data/restore.'.$sToken.'.tok';
