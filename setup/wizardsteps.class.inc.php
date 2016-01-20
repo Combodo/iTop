@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 
 /**
  * All the steps of the iTop installation wizard
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -624,11 +624,7 @@ EOF
 				$this->oWizard->GetParameter('db_user', ''),
 				$this->oWizard->GetParameter('db_pwd', '')
 			);
-			if ($oMutex->TryLock())
-			{
-				$oMutex->Unlock();
-			}
-			else
+			if ($oMutex->IsLocked())
 			{
 				$oPage->p("<img src=\"../images/error.png\"/>&nbsp;An iTop CRON process is being executed on the target database. It is highly recommended to stop any iTop CRON process prior to running the setup program.");
 			}

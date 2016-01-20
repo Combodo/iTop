@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2013 Combodo SARL
+// Copyright (C) 2013-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -24,7 +24,7 @@
  * Relies on MySQL locks because the API sem_get is not always present in the
  * installed PHP.    
  *
- * @copyright   Copyright (C) 2013 Combodo SARL
+ * @copyright   Copyright (C) 2013-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class iTopMutex
@@ -138,6 +138,36 @@ class iTopMutex
 			throw new Exception($sMsg);
 		}
 		return ($res !== '0');
+	}
+	
+	/**
+	 *	Check if the mutex is locked WITHOUT TRYING TO ACQUIRE IT
+	 *	@returns bool True if the mutex is in use, false otherwise
+	 */
+	public function IsLocked()
+	{
+		if ($this->bLocked)
+		{
+			return true; // Already acquired
+		}
+		if (self::$aAcquiredLocks[$this->sName] > 0)
+		{
+			return true;
+		}
+	
+		$res = $this->QueryToScalar("SELECT IS_FREE_LOCK('".$this->sName."')"); // IS_FREE_LOCK detects some error cases that IS_USED_LOCK do not detect
+		if (is_null($res))
+		{
+			$sMsg = "MySQL Error, IS_FREE_LOCK('".$this->sName."') returned null. Error (".mysqli_errno($this->hDBLink).") = '".mysqli_error($this->hDBLink)."'";
+			IssueLog::Error($sMsg);
+			throw new Exception($sMsg);
+		}
+		else if ($res == '1')
+		{
+			// Lock is free
+			return false;
+		}
+		return true;
 	}
 
 	/**
