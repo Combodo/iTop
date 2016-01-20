@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2014 Combodo SARL
+// Copyright (C) 2014-2016 Combodo SARL
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -29,24 +29,8 @@ class BackupHandler extends ModuleHandlerAPI
 
 		try
 		{
-			$oBackupMutex = new iTopMutex('backup.'.utils::GetCurrentEnvironment());
-			if ($oBackupMutex->TryLock())
-			{
-				$oBackupMutex->Unlock();
-			}
-			else
-			{
-				// Not needed: the DB dump is done in a single transaction
-				//MetaModel::GetConfig()->Set('access_mode', ACCESS_READONLY, 'itop-backup');
-				//MetaModel::GetConfig()->Set('access_message', ' - '.dict::S('bkp-backup-running'), 'itop-backup');
-			}
-	
 			$oRestoreMutex = new iTopMutex('restore.'.utils::GetCurrentEnvironment());
-			if ($oRestoreMutex->TryLock())
-			{
-				$oRestoreMutex->Unlock();
-			}
-			else
+			if ($oRestoreMutex->IsLocked())
 			{
 				MetaModel::GetConfig()->Set('access_mode', ACCESS_READONLY, 'itop-backup');
 				MetaModel::GetConfig()->Set('access_message', ' - '.dict::S('bkp-restore-running'), 'itop-backup');
