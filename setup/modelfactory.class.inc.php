@@ -883,36 +883,12 @@ EOF
 		
 	public function ApplyChanges()
 	{
-		$oNodes = $this->ListChanges();
-		foreach($oNodes as $oNode)
-		{
-			$sOperation = $oNode->GetAttribute('_alteration');
-			switch($sOperation)
-			{
-				case 'added':
-				case 'replaced':
-				case 'needed':
-				// marked as added or modified, just reset the flag
-				$oNode->removeAttribute('_alteration');
-				break;
-				
-				case 'removed':
-				// marked as deleted, let's remove the node from the tree
-				$oNode->parentNode->removeChild($oNode);
-				// TODO!!!!!!!
-				//unset(self::$aLoadedClasses[$sClass]);
-				break;
-			}
-			if ($oNode->hasAttribute('_old_id'))
-			{
-				$oNode->removeAttribute('_old_id');
-			}
-		}
+		return $this->oRoot->ApplyChanges();
 	}
 	
 	public function ListChanges()
 	{
-		return $this->oDOMDocument->GetNodes('//*[@_alteration or @_old_id]', null, false /* not safe */);
+		return $this->oRoot->ListChanges();
 	}
 
 
@@ -1387,7 +1363,7 @@ class MFElement extends Combodo\iTop\DesignElement
 						if (array_key_exists($key, $res))
 						{
 							// Houston!
-							throw new DOMFormatException("Tag ".MFDocument::GetItopNodePath($oItem).", id '$key' already used!!!");
+							throw new DOMFormatException("id '$key' already used", null, null, $oItem);
 						}
 						$res[$key] = $oItem->GetNodeAsArrayOfItems();
 					}
