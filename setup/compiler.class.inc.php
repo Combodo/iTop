@@ -2277,14 +2277,17 @@ EOF;
 	
 	protected function CompileModuleDesigns($oDesigns, $sTempTargetDir, $sFinalTargetDir)
 	{
-		SetupUtils::builddir($sTempTargetDir.'/core/module_designs/images');
-		$this->CompileFiles($oDesigns, $sTempTargetDir.'/core/module_designs', $sFinalTargetDir.'/core/module_designs', 'core/module_designs');
-		foreach ($oDesigns->GetNodes('module_design') as $oDesign)
+		if ($oDesigns)
 		{
-			$oDoc = new ModuleDesign();
-			$oClone = $oDoc->importNode($oDesign->cloneNode(true), true);
-			$oDoc->appendChild($oClone);
-			$oDoc->save($sTempTargetDir.'/core/module_designs/'.$oDesign->getAttribute('id').'.xml');
+			SetupUtils::builddir($sTempTargetDir.'/core/module_designs/images');
+			$this->CompileFiles($oDesigns, $sTempTargetDir.'/core/module_designs', $sFinalTargetDir.'/core/module_designs', 'core/module_designs');
+			foreach ($oDesigns->GetNodes('module_design') as $oDesign)
+			{
+				$oDoc = new ModuleDesign();
+				$oClone = $oDoc->importNode($oDesign->cloneNode(true), true);
+				$oDoc->appendChild($oClone);
+				$oDoc->save($sTempTargetDir.'/core/module_designs/'.$oDesign->getAttribute('id').'.xml');
+			}
 		}
 	}
 
