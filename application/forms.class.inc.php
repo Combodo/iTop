@@ -1336,7 +1336,7 @@ EOF
 		}
 		else
 		{
-			$sValue = '<img src="'.$this->MakeFileUrl($this->defaultValue).'" />';
+			$sValue = '<span style="display:inline-block;line-height:48px;height:48px;"><span><img style="vertical-align:middle" src="'.$this->aAllowedValues[$idx]['icon'].'" />&nbsp;'.htmlentities($this->aAllowedValues[$idx]['label'], ENT_QUOTES, 'UTF-8').'</span></span>';
 		}
 		$sReadOnly = $this->IsReadOnly() ? 'disabled' : '';
 		return array('label' => $this->sLabel, 'value' => $sValue);
