@@ -210,7 +210,7 @@ class CSVBulkExport extends TabularBulkExport
 			{
 				// Note: due to bugs in the glibc library it's safer to call iconv on the smallest possible string
 				// and thus to convert field by field and not the whole row or file at once (see ticket #991)
-				$aData[$idx] = iconv('UTF-8', $this->aStatusInfo['charset'].'//IGNORE//TRANSLIT', $aData[$idx]);
+				$aData[$idx] = @iconv('UTF-8', $this->aStatusInfo['charset'].'//IGNORE//TRANSLIT', $aData[$idx]);
 			}
 		}
 		$sData = implode($this->aStatusInfo['separator'], $aData)."\n";
@@ -258,7 +258,7 @@ class CSVBulkExport extends TabularBulkExport
 				{
 					// Note: due to bugs in the glibc library it's safer to call iconv on the smallest possible string
 					// and thus to convert field by field and not the whole row or file at once (see ticket #991)
-					$aData[] = iconv('UTF-8', $this->aStatusInfo['charset'].'//IGNORE//TRANSLIT', $sField);
+					$aData[] = @iconv('UTF-8', $this->aStatusInfo['charset'].'//IGNORE//TRANSLIT', $sField);
 				}
 				else
 				{
