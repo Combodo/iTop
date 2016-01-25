@@ -236,6 +236,143 @@ class DisplayableNode extends GraphNode
 		return is_object($this->GetProperty('object', null)) ? get_class($this->GetProperty('object', null)) : null;
 	}
 	
+	protected function AddToStats($oNode, &$aNodesPerClass)
+	{
+		$sClass = $oNode->GetObjectClass();
+		if (!array_key_exists($sClass, $aNodesPerClass))
+		{
+			$aNodesPerClass[$sClass] = array(
+				'reached' => array(
+					'count' => 0,
+					'nodes' => array(),
+					'icon_url' => $oNode->GetProperty('icon_url'),
+				),
+				'not_reached' => array(
+					'count' => 0,
+					'nodes' => array(),
+					'icon_url' => $oNode->GetProperty('icon_url'),
+				)
+			);
+		}
+		$sKey = $oNode->GetProperty('is_reached') ? 'reached' : 'not_reached';
+		if (!array_key_exists($oNode->GetId(), $aNodesPerClass[$sClass][$sKey]['nodes']))
+		{
+			$aNodesPerClass[$sClass][$sKey]['nodes'][$oNode->GetId()] = $oNode;
+			$aNodesPerClass[$sClass][$sKey]['count'] += $oNode->GetObjectCount();
+		}		
+	}
+	
+	/**
+	 * Retrieves the list of neighbour nodes, in the given direction: 'up' or 'down'
+	 * @param bool $bDirectionDown
+	 * @return multitype:NULL
+	 */
+	protected function GetNextNodes($bDirectionDown = true)
+	{
+		$aNextNodes = array();
+		if ($bDirectionDown)
+		{
+			foreach($this->GetOutgoingEdges() as $oEdge)
+			{
+				$aNextNodes[] = $oEdge->GetSinkNode();
+			}
+		}
+		else
+		{
+			foreach($this->GetIncomingEdges() as $oEdge)
+			{
+				$aNextNodes[] = $oEdge->GetSourceNode();
+			}	
+		}
+		return $aNextNodes;
+	}
+	
+	/**
+	 * Replaces the next neighbour node (in the given direction: 'up' or 'down') by the supplied group node
+	 * preserving the connectivity of the graph
+	 * @param DisplayableGraph $oGraph
+	 * @param DisplayableNode $oNextNode
+	 * @param DisplayableGroupNode $oNewNode
+	 * @param bool $bDirectionDown
+	 */
+	protected function ReplaceNextNodeBy(DisplayableGraph $oGraph, DisplayableNode $oNextNode, DisplayableGroupNode $oNewNode, $bDirectionDown = true)
+	{
+		$sClass = $oNewNode->GetProperty('class');
+		if ($bDirectionDown)
+		{
+			foreach($oNextNode->GetIncomingEdges() as $oEdge)
+			{
+				if ($oEdge->GetSourceNode()->GetId() !== $this->GetId())
+				{
+					try
+					{
+						$oNewEdge = new DisplayableEdge($oGraph, $oEdge->GetId().'::'.$sClass, $oEdge->GetSourceNode(), $oNewNode);
+					}
+					catch(Exception $e)
+					{
+						// ignore this edge
+					}
+				}
+			}
+			foreach($oNextNode->GetOutgoingEdges() as $oEdge)
+			{
+				try
+				{
+					$oNewEdge = new DisplayableEdge($oGraph, $oEdge->GetId().'::'.$sClass, $oNewNode, $oEdge->GetSinkNode());
+				}
+				catch(Exception $e)
+				{
+					// ignore this edge
+				}
+			}
+		}
+		else
+		{
+			foreach($oNextNode->GetOutgoingEdges() as $oEdge)
+			{
+				if ($oEdge->GetSinkNode()->GetId() !== $this->GetId())
+				{
+					try
+					{
+						$oNewEdge = new DisplayableEdge($oGraph, $oEdge->GetId().'::'.$sClass, $oNewNode, $oEdge->GetSinkNode());
+					}
+					catch(Exception $e)
+					{
+						// ignore this edge
+					}
+				}
+			}
+			foreach($oNextNode->GetIncomingEdges() as $oEdge)
+			{
+				try
+				{
+					$oNewEdge = new DisplayableEdge($oGraph, $oEdge->GetId().'::'.$sClass, $oEdge->GetSourceNode(), $oNewNode);
+				}
+				catch(Exception $e)
+				{
+					// ignore this edge
+				}
+			}
+		}
+		
+		if ($oGraph->GetNode($oNextNode->GetId()))
+		{
+			$oGraph->_RemoveNode($oNextNode);
+			if ($oNextNode instanceof DisplayableGroupNode)
+			{
+				// Copy all the objects of the previous group into the new group
+				foreach($oNextNode->GetObjects() as $oObj)
+				{
+					$oNewNode->AddObject($oObj);
+				}
+			}
+			else
+			{
+				$oNewNode->AddObject($oNextNode->GetProperty('object'));
+			}
+		}			
+	}
+	
 	/**
 	 * Group together (as a special kind of nodes) all the similar neighbours of the current node
 	 * @param DisplayableGraph $oGraph
@@ -247,123 +384,65 @@ class DisplayableNode extends GraphNode
 	{
 		if ($this->GetProperty('grouped') === true) return;
 		$this->SetProperty('grouped', true);
-			
-		if ($bDirectionDown)
+		
+		$aNodesPerClass = array();
+		foreach($this->GetNextNodes($bDirectionDown) as $oNode)
 		{
-			$aNodesPerClass = array();
-			foreach($this->GetOutgoingEdges() as $oEdge)
+			$sClass = $oNode->GetObjectClass();
+			if ($sClass !== null)
 			{
-				$oNode = $oEdge->GetSinkNode();
-				$sClass = $oNode->GetObjectClass();
-				if ($sClass !== null)
-				{
-					if (!array_key_exists($sClass, $aNodesPerClass))
-					{
-						$aNodesPerClass[$sClass] = array(
-							'reached' => array(
-								'count' => 0,
-								'nodes' => array(),
-								'icon_url' => $oNode->GetProperty('icon_url'),
-							),
-							'not_reached' => array(
-								'count' => 0,
-								'nodes' => array(),
-								'icon_url' => $oNode->GetProperty('icon_url'),
-							)
-						);
-					}
-					$sKey = $oNode->GetProperty('is_reached') ? 'reached' : 'not_reached';
-					if (!array_key_exists($oNode->GetId(), $aNodesPerClass[$sClass][$sKey]['nodes']))
-					{
-						$aNodesPerClass[$sClass][$sKey]['nodes'][$oNode->GetId()] = $oNode;
-						$aNodesPerClass[$sClass][$sKey]['count'] += $oNode->GetObjectCount();
-					}
-				}
-				else
-				{
-					$oNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
-				}
+				$this->AddToStats($oNode, $aNodesPerClass);
 			}
-			foreach($aNodesPerClass as $sClass => $aDefs)
+			else
 			{
-				foreach($aDefs as $sStatus => $aGroupProps)
+				$oNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
+			}
+		}
+		foreach($aNodesPerClass as $sClass => $aDefs)
+		{
+			foreach($aDefs as $sStatus => $aGroupProps)
+			{
+				if (count($aGroupProps['nodes']) >= $iThresholdCount)
 				{
-					if (count($aGroupProps['nodes']) >= $iThresholdCount)
+					$sNewId = $this->GetId().'::'.$sClass.'/'.(($sStatus == 'reached') ? '_reached': '');
+					$oNewNode = $oGraph->GetNode($sNewId);
+					if ($oNewNode == null)
 					{
-						$sNewId = $this->GetId().'::'.$sClass.'/'.(($sStatus == 'reached') ? '_reached': '');
-						$oNewNode = $oGraph->GetNode($sNewId);
-						if ($oNewNode == null)
-						{
-							$oNewNode = new DisplayableGroupNode($oGraph, $sNewId);
-							$oNewNode->SetProperty('label', 'x'.$aGroupProps['count']);
-							$oNewNode->SetProperty('icon_url', $aGroupProps['icon_url']);
-							$oNewNode->SetProperty('class', $sClass);
-							$oNewNode->SetProperty('is_reached', ($sStatus == 'reached'));
-							$oNewNode->SetProperty('count', $aGroupProps['count']);
-						}
-						
-						try
+						$oNewNode = new DisplayableGroupNode($oGraph, $sNewId);
+						$oNewNode->SetProperty('label', 'x'.$aGroupProps['count']);
+						$oNewNode->SetProperty('icon_url', $aGroupProps['icon_url']);
+						$oNewNode->SetProperty('class', $sClass);
+						$oNewNode->SetProperty('is_reached', ($sStatus == 'reached'));
+						$oNewNode->SetProperty('count', $aGroupProps['count']);
+					}
+					
+					try
+					{
+						if ($bDirectionDown)
 						{
 							$oIncomingEdge = new DisplayableEdge($oGraph, $this->GetId().'-'.$oNewNode->GetId(), $this, $oNewNode);
 						}
-						catch(Exception $e)
+						else
 						{
-							// Ignore this redundant egde
-						}				
-						
-						foreach($aGroupProps['nodes'] as $oNode)
-						{
-							foreach($oNode->GetIncomingEdges() as $oEdge)
-							{
-								if ($oEdge->GetSourceNode()->GetId() !== $this->GetId())
-								{
-									try
-									{
-										$oNewEdge = new DisplayableEdge($oGraph, $oEdge->GetId().'::'.$sClass, $oEdge->GetSourceNode(), $oNewNode);
-									}
-									catch(Exception $e)
-									{
-										// ignore this edge
-									}
-								}
-							}
-							foreach($oNode->GetOutgoingEdges() as $oEdge)
-							{
-								$aOutgoing[] = $oEdge->GetSinkNode();
-								try
-								{
-									$oNewEdge = new DisplayableEdge($oGraph, $oEdge->GetId().'::'.$sClass, $oNewNode, $oEdge->GetSinkNode());
-								}
-								catch(Exception $e)
-								{
-									// ignore this edge
-								}
-							}
-							if ($oGraph->GetNode($oNode->GetId()))
-							{
-								$oGraph->_RemoveNode($oNode);
-								if ($oNode instanceof DisplayableGroupNode)
-								{
-									// Copy all the objects of the previous group into the new group
-									foreach($oNode->GetObjects() as $oObj)
-									{
-										$oNewNode->AddObject($oObj);
-									}
-								}
-								else
-								{
-									$oNewNode->AddObject($oNode->GetProperty('object'));
-								}								
-							}
+							$oOutgoingEdge = new DisplayableEdge($oGraph, $this->GetId().'-'.$oNewNode->GetId(), $oNewNode, $this);
 						}
-						$oNewNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
 					}
-					else
+					catch(Exception $e)
 					{
-						foreach($aGroupProps['nodes'] as $oNode)
-						{
-							$oNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
-						}
+						// Ignore this redundant egde
+					}				
+					
+					foreach($aGroupProps['nodes'] as $oNextNode)
+					{
+						$this->ReplaceNextNodeBy($oGraph, $oNextNode, $oNewNode, $bDirectionDown);
+					}
+					$oNewNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
+				}
+				else
+				{
+					foreach($aGroupProps['nodes'] as $oNode)
+					{
+						$oNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
 					}
 				}
 			}
@@ -536,8 +615,11 @@ class DisplayableRedundancyNode extends DisplayableNode
 									$oNewEdge = new DisplayableEdge($oGraph, '-'.$oEdge->GetId().'::'.$sClass.'/'.$sStatus, $oNewNode, $oEdge->GetSinkNode());
 								}
 							}
-							$oGraph->_RemoveNode($oNode);
-							$oNewNode->AddObject($oNode->GetProperty('object'));
+							if ($oGraph->HasNode($oNode->GetId()))
+							{
+								$oGraph->_RemoveNode($oNode);
+								$oNewNode->AddObject($oNode->GetProperty('object'));
+							}
 						}
 						//$oNewNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
 					}
@@ -627,14 +709,17 @@ class DisplayableGroupNode extends DisplayableNode
 		$this->aObjects = array();
 	}
 	
-	public function AddObject(DBObject $oObj)
+	public function AddObject(DBObject $oObj = null)
 	{
-		$sPrevClass = $this->GetObjectClass();
-		if (($sPrevClass !== null) && (get_class($oObj) !== $sPrevClass))
+		if (is_object($oObj))
 		{
-			throw new Exception("Error: adding an object of class '".get_class($oObj)."' to a group of '$sPrevClass' objects.");
+			$sPrevClass = $this->GetObjectClass();
+			if (($sPrevClass !== null) && (get_class($oObj) !== $sPrevClass))
+			{
+				throw new Exception("Error: adding an object of class '".get_class($oObj)."' to a group of '$sPrevClass' objects.");
+			}
+			$this->aObjects[$oObj->GetKey()] = $oObj;
 		}
-		$this->aObjects[$oObj->GetKey()] = $oObj;
 	}
 	
 	public function GetObjects()
@@ -863,9 +948,13 @@ class DisplayableGraph extends SimpleGraph
 		foreach($oNodesIter as $oNode)
 		{
 			set_time_limit($iLoopTimeLimit);
-			if ($oNode->GetProperty('source'))
+			if ($bDirectionDown && $oNode->GetProperty('source'))
 			{
-				$oNode->GroupSimilarNeighbours($oNewGraph, $iGroupingThreshold, true, true);
+				$oNode->GroupSimilarNeighbours($oNewGraph, $iGroupingThreshold, true, $bDirectionDown);
+			}
+			else if (!$bDirectionDown && $oNode->GetProperty('sink'))
+			{
+				$oNode->GroupSimilarNeighbours($oNewGraph, $iGroupingThreshold, true, $bDirectionDown);
 			}
 		}
 		// Groups numbering
