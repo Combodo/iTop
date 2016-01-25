@@ -2415,7 +2415,10 @@ abstract class DBObject implements iDisplay
 				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 				$ret = $oAttDef->GetForTemplate($this->Get($sAttCode), $sVerb, $this);
 			}
-
+			if ($ret === null)
+			{
+				$ret = '';
+			}
 		}
 		return $ret;
 	}
