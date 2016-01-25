@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Static class utils
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -768,7 +768,16 @@ class utils
 			return ITOP_DEFAULT_ENV;
 		}
 	}
-	
+
+	/**
+	 * Returns a path to a folder into which any module can store cache data
+	 * The corresponding folder is created or cleaned upon code compilation
+	 * @return string
+	 */
+	public static function GetCachePath()
+	{
+		return APPROOT.'data/cache-'.self::GetCurrentEnvironment().'/';
+	}
 	/**
 	 * Merge standard menu items with plugin provided menus items
 	 */

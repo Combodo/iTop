@@ -424,7 +424,11 @@ class RunTimeEnvironment
 			self::MakeDirSafe($sTargetDir);
 			$oMFCompiler = new MFCompiler($oFactory);
 			$oMFCompiler->Compile($sTargetDir, null, $bUseSymLinks);
-			
+
+			$sCacheDir = APPROOT.'data/cache-'.$this->sTargetEnv;
+			Setuputils::builddir($sCacheDir);
+			Setuputils::tidydir($sCacheDir);
+
 			require_once(APPROOT.'/core/dict.class.inc.php');
 			MetaModel::ResetCache(md5(APPROOT).'-'.$this->sTargetEnv);
 		}

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -30,7 +30,7 @@ require_once(APPROOT.'setup/backup.class.inc.php');
  * while displaying a progress bar, or in an unattended manner
  * (for example from the command line), to run all the steps
  * in one go.
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -522,6 +522,10 @@ class ApplicationInstaller
 			//$aCompilerLog = $oMFCompiler->GetLog();
 			//SetupPage::log_info(implode("\n", $aCompilerLog));
 			SetupPage::log_info("Data model successfully compiled to '$sTargetPath'.");
+
+			$sCacheDir = APPROOT.'/data/cache-'.$sEnvironment.'/';
+			Setuputils::builddir($sCacheDir);
+			Setuputils::tidydir($sCacheDir);
 		}
 		
 		// Special case to patch a ugly patch in itop-config-mgmt
