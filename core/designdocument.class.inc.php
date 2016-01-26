@@ -23,6 +23,9 @@
 
 namespace Combodo\iTop;
 
+use \DOMDocument;
+use \DOMFormatException;
+
 /**
  * Class \Combodo\iTop\DesignDocument
  *
@@ -30,7 +33,7 @@ namespace Combodo\iTop;
  * characteristics is that it can be altered by the mean of the same kind of document.
  *
  */
-class DesignDocument extends \DOMDocument
+class DesignDocument extends DOMDocument
 {
 	/**
 	 * @throws \Exception

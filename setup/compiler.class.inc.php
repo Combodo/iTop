@@ -32,7 +32,7 @@ class DOMFormatException extends Exception
      * @param type $previous
      * @param DOMNode $node [Optionnal] DOMNode causing the DOMFormatException
      */
-    public function __construct($message, $code, $previous, DOMNode $node = null)
+    public function __construct($message, $code = null, $previous = null, DOMNode $node = null)
     {
         if($node !== null)
         {
