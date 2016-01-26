@@ -233,25 +233,32 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
 	var bValid;
 	var sTextContent;
 
-	// Get the contents without the tags
-	var oFormattedContents = $("#cke_"+sFieldId+" iframe");
-	if (oFormattedContents.length == 0)
+	if ($('#'+sFieldId).attr('disabled'))
 	{
-		var oSourceContents = $("#cke_"+sFieldId+" textarea.cke_source");
-		sTextContent = oSourceContents.val();
+		bValid = true; // disabled fields are not checked
 	}
 	else
 	{
-		sTextContent = oFormattedContents.contents().find("body").text();
-	}
-
-	if (bMandatory && (sTextContent == ''))
-	{
-		bValid = false;
-	}
-	else
-	{
-		bValid = true;
+		// Get the contents without the tags
+		var oFormattedContents = $("#cke_"+sFieldId+" iframe");
+		if (oFormattedContents.length == 0)
+		{
+			var oSourceContents = $("#cke_"+sFieldId+" textarea.cke_source");
+			sTextContent = oSourceContents.val();
+		}
+		else
+		{
+			sTextContent = oFormattedContents.contents().find("body").text();
+		}
+	
+		if (bMandatory && (sTextContent == ''))
+		{
+			bValid = false;
+		}
+		else
+		{
+			bValid = true;
+		}
 	}
 
 	ReportFieldValidationStatus(sFieldId, sFormId, bValid, '');

@@ -99,7 +99,7 @@ class UIHTMLEditorWidget
 
 		// Could also be bound to 'instanceReady.ckeditor'
 		$oPage->add_ready_script("$('#$iId').bind('validate', function(evt, sFormId) { return ValidateCKEditField('$iId', '', {$this->m_sMandatory}, sFormId, '') } );\n");
-		$oPage->add_ready_script("$('#$iId').bind('update', function() { BlockField('cke_$iId', $('#$iId').attr('disabled')); } );\n");
+		$oPage->add_ready_script("$('#$iId').bind('update', function() { BlockField('cke_$iId', $('#$iId').attr('disabled')); $(this).data('ckeditorInstance').setReadOnly($(this).prop('disabled')); } );\n");
 
 		return $sHtmlValue;
 	}
