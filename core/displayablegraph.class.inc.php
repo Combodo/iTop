@@ -35,7 +35,7 @@ class DisplayableNode extends GraphNode
 	 * @param number $x Horizontal position
 	 * @param number $y Vertical position
 	 */
-	public function __construct(SimpleGraph $oGraph, $sId, $x = 0, $y = 0)
+	public function __construct(SimpleGraph $oGraph, $sId, $x = null, $y = null)
 	{
 		parent::__construct($oGraph, $sId);
 		$this->x = $x;
@@ -565,67 +565,67 @@ class DisplayableRedundancyNode extends DisplayableNode
 	public function GroupSimilarNeighbours(DisplayableGraph $oGraph, $iThresholdCount, $bDirectionUp = false, $bDirectionDown = true)
 	{
 		parent::GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
-		
+				
 		if ($bDirectionUp)
 		{
 			$aNodesPerClass = array();
 			foreach($this->GetIncomingEdges() as $oEdge)
 			{
 				$oNode = $oEdge->GetSourceNode();
-		
+				
 				if (($oNode->GetObjectClass() !== null) && (!$oNode->GetProperty('is_reached')))
-				{
-					$sClass = $oNode->GetObjectClass();
-					if (!array_key_exists($sClass, $aNodesPerClass))
-					{
-						$aNodesPerClass[$sClass] = array('reached' => array(), 'not_reached' => array());
-					}
-					$aNodesPerClass[$sClass][$oNode->GetProperty('is_reached') ? 'reached' : 'not_reached'][] = $oNode;
+				{			
+					$this->AddToStats($oNode, $aNodesPerClass);
 				}
 				else
 				{
 					//$oNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
 				}
-			}
-
+			}		
 			foreach($aNodesPerClass as $sClass => $aDefs)
 			{
-				foreach($aDefs as $sStatus => $aNodes)
+				foreach($aDefs as $sStatus => $aGroupProps)
 				{
-					if (count($aNodes) >= $iThresholdCount)
+					if (count($aGroupProps['nodes']) >= $iThresholdCount)
 					{
 						$oNewNode = new DisplayableGroupNode($oGraph, '-'.$this->GetId().'::'.$sClass.'/'.$sStatus);
-						$oNewNode->SetProperty('label', 'x'.count($aNodes));
-						$oNewNode->SetProperty('icon_url', $aNodes[0]->GetProperty('icon_url'));
-						$oNewNode->SetProperty('is_reached', $aNodes[0]->GetProperty('is_reached'));
-							
-						$oOutgoingEdge = new DisplayableEdge($oGraph, '-'.$this->GetId().'-'.$oNewNode->GetId().'/'.$sStatus, $oNewNode, $this);
-		
-						foreach($aNodes as $oNode)
+						$oNewNode->SetProperty('label', 'x'.count($aGroupProps['nodes']));
+						$oNewNode->SetProperty('icon_url', $aGroupProps['icon_url']);
+						$oNewNode->SetProperty('is_reached', ($sStatus == 'is_reached'));
+						$oNewNode->SetProperty('class', $sClass);
+						$oNewNode->SetProperty('count', count($aGroupProps['nodes']));
+													
+						
+						$sNewId = $this->GetId().'::'.$sClass.'/'.(($sStatus == 'reached') ? '_reached': '');
+						$oNewNode = $oGraph->GetNode($sNewId);
+						if ($oNewNode == null)
 						{
-							foreach($oNode->GetIncomingEdges() as $oEdge)
-							{
-								$oNewEdge = new DisplayableEdge($oGraph, '-'.$oEdge->GetId().'::'.$sClass, $oEdge->GetSourceNode(), $oNewNode);
-							}
-							foreach($oNode->GetOutgoingEdges() as $oEdge)
-							{
-								if ($oEdge->GetSinkNode()->GetId() !== $this->GetId())
-								{
-									$aOutgoing[] = $oEdge->GetSinkNode();
-									$oNewEdge = new DisplayableEdge($oGraph, '-'.$oEdge->GetId().'::'.$sClass.'/'.$sStatus, $oNewNode, $oEdge->GetSinkNode());
-								}
-							}
-							if ($oGraph->HasNode($oNode->GetId()))
-							{
-								$oGraph->_RemoveNode($oNode);
-								$oNewNode->AddObject($oNode->GetProperty('object'));
-							}
+							$oNewNode = new DisplayableGroupNode($oGraph, $sNewId);
+							$oNewNode->SetProperty('label', 'x'.$aGroupProps['count']);
+							$oNewNode->SetProperty('icon_url', $aGroupProps['icon_url']);
+							$oNewNode->SetProperty('class', $sClass);
+							$oNewNode->SetProperty('is_reached', ($sStatus == 'reached'));
+							$oNewNode->SetProperty('count', $aGroupProps['count']);
+						}
+							
+						try
+						{
+							$oOutgoingEdge = new DisplayableEdge($oGraph, '-'.$this->GetId().'-'.$oNewNode->GetId().'/'.$sStatus, $oNewNode, $this);
+						}
+						catch(Exception $e)
+						{
+							// Ignore this redundant egde
+						}
+							
+						foreach($aGroupProps['nodes'] as $oNextNode)
+						{
+							$this->ReplaceNextNodeBy($oGraph, $oNextNode, $oNewNode, !$bDirectionUp);
 						}
 						//$oNewNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
 					}
 					else
 					{
-						foreach($aNodes as $oNode)
+						foreach($aGroupProps['nodes'] as $oNode)
 						{
 							//$oNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
 						}
@@ -662,10 +662,21 @@ class DisplayableEdge extends GraphEdge
 {
 	public function RenderAsPDF(TCPDF $oPdf, DisplayableGraph $oGraph, $fScale, $aContextDefs)
 	{
-		$xStart = $this->GetSourceNode()->x * $fScale;
-		$yStart = $this->GetSourceNode()->y * $fScale;
-		$xEnd = $this->GetSinkNode()->x * $fScale;
-		$yEnd = $this->GetSinkNode()->y * $fScale;
+		$oSourceNode = $this->GetSourceNode();
+		if (($oSourceNode->x == null) || ($oSourceNode->y == null))
+		{
+			return;
+		}
+		$xStart = $oSourceNode->x * $fScale;
+		$yStart = $oSourceNode->y * $fScale;
+		
+		$oSinkNode = $this->GetSinkNode();
+		if (($oSinkNode->x == null) || ($oSinkNode->y == null))
+		{
+			return;
+		}
+		$xEnd = $oSinkNode->x * $fScale;
+		$yEnd = $oSinkNode->y * $fScale;
 		
 		$bReached = ($this->GetSourceNode()->GetProperty('is_reached') && $this->GetSinkNode()->GetProperty('is_reached'));
 		
@@ -967,7 +978,7 @@ class DisplayableGraph extends SimpleGraph
 			{
 				if ($oNode->GetObjectCount() == 0)
 				{
-					// Remove emtpry groups
+					// Remove empty groups
 					$oNewGraph->_RemoveNode($oNode);
 				}
 				else
@@ -1034,8 +1045,15 @@ class DisplayableGraph extends SimpleGraph
 				$yPos = $aMatches[3];
 				
 				$oNode = $this->GetNode($sId);
-				$oNode->x = (float)$xPos;
-				$oNode->y = (float)$yPos;
+				if ($oNode !== null)
+				{
+					$oNode->x = (float)$xPos;
+					$oNode->y = (float)$yPos;
+				}
+				else
+				{
+					IssueLog::Warning("??? Position of the non-existing node '$sId', x=$xPos, y=$yPos");
+				}
 			}
 		}
 	}
@@ -1213,7 +1231,7 @@ class DisplayableGraph extends SimpleGraph
 			set_time_limit($iLoopTimeLimit);
 			$oNode->RenderAsPDF($oPdf, $this, $fScale, $aContextDefs);
 		}
-		$oIterator = new RelationTypeIterator($this, 'Node');
+
 		$oPdf->SetAutoPageBreak(true, $fBreakMargin);
 		$oPdf->SetAlpha(1);
 	}
