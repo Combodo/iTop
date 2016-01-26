@@ -224,6 +224,9 @@ legend.transparent {
 	padding-left:14px;
 	background: url(../images/mini-arrow-orange.gif) no-repeat left;
 }
+.ui-widget-content td a.cke_toolbox_collapser {
+	padding-left: 0;
+}
 p a:hover, td a:hover {
 	text-decoration:underline;
 	color:$highlight-color;

@@ -280,6 +280,11 @@ legend.transparent {
 }
 
 
+.ui-widget-content td a.cke_toolbox_collapser {
+  padding-left: 0;
+}
+
+
 p a:hover, td a:hover {
   text-decoration: underline;
   color: #e87c1e;
