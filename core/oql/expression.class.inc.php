@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * General definition of an expression tree (could be OQL, SQL or whatever) 
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -214,6 +214,10 @@ class BinaryExpression extends Expression
 		if ($this->m_sOperator == 'AND')
 		{
 			if ($this->m_oLeftExpr->IsTrue() && $this->m_oRightExpr->IsTrue()) return true;
+		}
+		elseif ($this->m_sOperator == 'OR')
+		{
+			if ($this->m_oLeftExpr->IsTrue() || $this->m_oRightExpr->IsTrue()) return true;
 		}
 		return false;
 	}

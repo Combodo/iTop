@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Define filters for a given class of objects (formerly named "filter") 
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
  
@@ -191,7 +191,7 @@ class DBObjectSearch extends DBSearch
 
 	public function IsAny()
 	{
-		// #@# todo - if (!$this->m_oSearchCondition->IsTrue()) return false;
+		if (!$this->m_oSearchCondition->IsTrue()) return false;
 		if (count($this->m_aFullText) > 0) return false;
 		if (count($this->m_aPointingTo) > 0) return false;
 		if (count($this->m_aReferencedBy) > 0) return false;
