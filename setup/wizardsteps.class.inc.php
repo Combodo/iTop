@@ -1685,7 +1685,12 @@ EOF
 		if (count($aSteps[count($aSteps) - 1]['options']) == 0)
 		{
 			// No extensions at all, remove the last step
+			$this->oWizard->SetParameter('additional_extensions_modules', '[]');
 			array_pop($aSteps);
+		}
+		else
+		{
+			$this->oWizard->SetParameter('additional_extensions_modules', json_encode($aSteps[count($aSteps) - 1]['options']));
 		}
 		
 		if (array_key_exists($index, $aSteps))
@@ -2325,9 +2330,71 @@ class WizStepDone extends WizardStep
 		$sForm .= '</form>';
 		$sPHPVersion = phpversion();
 		$sMySQLVersion = SetupUtils::GetMySQLVersion($this->oWizard->GetParameter('db_server'), $this->oWizard->GetParameter('db_user'), $this->oWizard->GetParameter('db_pwd'));
-		$oPage->add('<img style="border:0" src="http://www.combodo.com/stats/?p='.urlencode(ITOP_APPLICATION).'&v='.urlencode(ITOP_VERSION).'&php='.urlencode($sPHPVersion).'&mysql='.urlencode($sMySQLVersion).'&os='.urlencode(PHP_OS).'"/>');
+		$aParameters = json_decode($this->oWizard->GetParameter('selected_components', '{}'), true);
+		$sCompactWizChoices = array();
+		foreach($aParameters as $iStep => $aChoices)
+		{
+			$aShortChoices = array();
+			foreach($aChoices as $sChoiceCode)
+			{
+				$sShortCode = str_replace('_', '', $sChoiceCode);
+				$aShortChoices[] = $sShortCode;
+			}
+			$sCompactWizChoices[] = implode(' ',$aShortChoices);
+		}
+		$sInstallMode = 'i';
+		if ($this->oWizard->GetParameter('install_mode', 'install') == 'upgrade')
+		{
+			if (!$this->oWizard->GetParameter('license'))
+			{
+				// When the version does not change we don't ask for the licence again
+				$sInstallMode = 'r';
+			}
+			else
+			{
+				// An actual upgrade
+				$sInstallMode = 'u';
+			}
+			
+		}
+		$aUrlParams = array(
+			'p' => ITOP_APPLICATION,
+			'v' => ITOP_VERSION,
+			'php' => $sPHPVersion,
+			'mysql' => $sMySQLVersion, 
+			'os' => PHP_OS,
+			's' => ($this->oWizard->GetParameter('sample_data', '') == 'yes') ? 1 : 0 ,
+			'l' => $this->oWizard->GetParameter('default_language'),
+			'i' => $sInstallMode,
+			'w' => json_encode($sCompactWizChoices),
+		);
+		$aSafeParams = array();
+		foreach($aUrlParams as $sCode => $sValue)
+		{
+			$aSafeParams[] = $sCode.'='.urlencode($sValue);
+		}
+		$sImgUrl = 'http://www.combodo.com/stats/?'.implode('&', $aSafeParams);
+		
+		$aAdditionalModules = array();
+		foreach(json_decode($this->oWizard->GetParameter('additional_extensions_modules'), true) as $idx => $aModuleInfo)
+		{
+			if (in_array('_'.$idx, $aParameters[count($aParameters)-1]))
+			{
+				$aAdditionalModules[] = $aModuleInfo['modules'][0]; // Extensions "choices" are always made of one module
+			}
+		}
+		$idx = 0;
+		$aReportedModules = array();
+		while($idx < count($aAdditionalModules) && (strlen($sImgUrl.'&m='.urlencode(implode(' ', $aReportedModules))) < 2000)) // reasonable limit for the URL: 2000 chars
+		{
+			$aReportedModules[] = $aAdditionalModules[$idx];
+			$idx++;
+		}
+		$sImgUrl .= '&m='.urlencode(implode(' ', $aReportedModules));
+		
+		$oPage->add('<img style="border:0" src="'.$sImgUrl.'"/>');
 		$sForm = addslashes($sForm);
-		$oPage->add_ready_script("$('#wiz_form').after('$sForm');");
+		$oPage->add_ready_script("$('#wiz_form').after('$sForm');");		
 	}
 	
 	public function CanMoveForward()
