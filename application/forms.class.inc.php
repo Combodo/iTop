@@ -339,7 +339,7 @@ EOF
 		return '</tr>';
 	}
 	
-	public function RenderAsDialog($oPage, $sDialogId, $sDialogTitle, $iDialogWidth, $sOkButtonLabel, $sIntroduction = null)
+	public function RenderAsDialog($oPage, $sDialogId, $sDialogTitle, $iDialogWidth, $sOkButtonLabel, $sIntroduction = null, $bAutoOpen = true)
 	{
 		$this->SetPrefix('dlg_'); // To make sure that the controls have different IDs that the property sheet which may be displayed at the same time
 		
@@ -355,12 +355,14 @@ EOF
 		$this->Render($oPage);
 		$oPage->add('</div>');
 		
+		$sAutoOpen = $bAutoOpen ? 'true' : 'false';
 		$oPage->add_ready_script(
 <<<EOF
 $('#$sDialogId').dialog({
 		height: 'auto',
 		width: $iDialogWidth,
 		modal: true,
+		autoOpen: $sAutoOpen,
 		title: '$sDialogTitle',
 		buttons: [
 		{ text: "$sOkButtonLabel", click: function() {
