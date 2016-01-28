@@ -491,7 +491,11 @@ class utils
 		if ($sUrl === null)
 		{
 			$sUrl = self::GetConfig()->Get('app_root_url');
-			if (strpos($sUrl, SERVER_NAME_PLACEHOLDER) > -1)
+			if ($sUrl == '')
+			{
+				$sUrl = self::GetDefaultUrlAppRoot();
+			}
+			elseif (strpos($sUrl, SERVER_NAME_PLACEHOLDER) > -1)
 			{
 				if (isset($_SERVER['SERVER_NAME']))
 				{
