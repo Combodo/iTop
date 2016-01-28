@@ -1108,12 +1108,18 @@ class UserRights
 	public static function _InitSessionCache()
 	{
 		// Cache data about the current user into the session
-		$_SESSION['profile_list'] = self::ListProfiles();
+		if (isset($_SESSION))
+		{
+			$_SESSION['profile_list'] = self::ListProfiles();
+		}
 	}
 
 	public static function _ResetSessionCache()
 	{
-		unset($_SESSION['profile_list']);
+		if (isset($_SESSION['profile_list']))
+		{
+			unset($_SESSION['profile_list']);
+		}
 	}
 }
 
