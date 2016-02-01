@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -224,6 +224,13 @@ class DBBackup
 		}
 		if ($iRetCode != 0)
 		{
+			// Cleanup residual output (Happens with Error 2020: Got packet bigger than 'maxallowedpacket' bytes...)
+			if (file_exists($sBackupFileName))
+			{
+				unlink($sBackupFileName);
+				throw new Exception('Effacement du fichier '.$sTmpFileName);
+			}
+
 			$this->LogError("Failed to execute: $sCommandDisplay. The command returned:$iRetCode");
 			foreach($aOutput as $sLine)
 			{

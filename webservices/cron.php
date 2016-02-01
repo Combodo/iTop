@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Heart beat of the application (process asynchron tasks such as broadcasting email)
  *
- * @copyright   Copyright (C) 2010-2013 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -71,49 +71,49 @@ function UsageAndExit($oP)
 
 function RunTask($oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
 {
+	$oNow = new DateTime();
+	$fStart = microtime(true);
 	try
 	{
-		$oNow = new DateTime();
-		$fStart = microtime(true);
 		$sMessage = $oProcess->Process($iTimeLimit);
-		$fDuration = microtime(true) - $fStart;
-		if ($oTask->Get('total_exec_count') == 0)
-		{
-			// First execution
-			$oTask->Set('first_run_date', $oNow->format('Y-m-d H:i:s'));
-		}
-		$oTask->ComputeDurations($fDuration); // does increment the counter and compute statistics
-		$oTask->Set('latest_run_date', $oNow->format('Y-m-d H:i:s'));
-
-		$oRefClass = new ReflectionClass(get_class($oProcess));
-		if ($oRefClass->implementsInterface('iScheduledProcess'))
-		{
-			// Schedules process do repeat at specific moments
-			$oPlannedStart = $oProcess->GetNextOccurrence();
-		}
-		else
-		{
-			// Background processes do repeat periodically
-			$oPlannedStart = new DateTime($oTask->Get('latest_run_date'));
-			// Let's assume that the task was started exactly when planned so that the schedule does no shift each time
-			// this allows to schedule a task everyday "around" 11:30PM for example
-			$oPlannedStart->modify('+'.$oProcess->GetPeriodicity().' seconds');
-			$oEnd = new DateTime();
-			if ($oPlannedStart->format('U') < $oEnd->format('U'))
-			{
-				// Huh, next planned start is already in the past, shift it of the periodicity !
-				$oPlannedStart = $oEnd->modify('+'.$oProcess->GetPeriodicity().' seconds');
-			}
-		}
-
-		$oTask->Set('next_run_date', $oPlannedStart->format('Y-m-d H:i:s'));
-		$oTask->DBUpdate();
 	}
 	catch(Exception $e)
 	{
-		$sMessage = 'Processing failed, the following exception occured: '.$e->getMessage();
+		$sMessage = 'Processing failed with message: '.$e->getMessage();
 	}
-	return $sMessage;	
+	$fDuration = microtime(true) - $fStart;
+	if ($oTask->Get('total_exec_count') == 0)
+	{
+		// First execution
+		$oTask->Set('first_run_date', $oNow->format('Y-m-d H:i:s'));
+	}
+	$oTask->ComputeDurations($fDuration); // does increment the counter and compute statistics
+	$oTask->Set('latest_run_date', $oNow->format('Y-m-d H:i:s'));
+
+	$oRefClass = new ReflectionClass(get_class($oProcess));
+	if ($oRefClass->implementsInterface('iScheduledProcess'))
+	{
+		// Schedules process do repeat at specific moments
+		$oPlannedStart = $oProcess->GetNextOccurrence();
+	}
+	else
+	{
+		// Background processes do repeat periodically
+		$oPlannedStart = new DateTime($oTask->Get('latest_run_date'));
+		// Let's assume that the task was started exactly when planned so that the schedule does no shift each time
+		// this allows to schedule a task everyday "around" 11:30PM for example
+		$oPlannedStart->modify('+'.$oProcess->GetPeriodicity().' seconds');
+		$oEnd = new DateTime();
+		if ($oPlannedStart->format('U') < $oEnd->format('U'))
+		{
+			// Huh, next planned start is already in the past, shift it of the periodicity !
+			$oPlannedStart = $oEnd->modify('+'.$oProcess->GetPeriodicity().' seconds');
+		}
+	}
+
+	$oTask->Set('next_run_date', $oPlannedStart->format('Y-m-d H:i:s'));
+	$oTask->DBUpdate();
+	return $sMessage;
 }
 
 function CronExec($oP, $aProcesses, $bVerbose)
