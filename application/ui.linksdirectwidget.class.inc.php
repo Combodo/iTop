@@ -89,7 +89,7 @@ class UILinksWidgetDirect
 				$sDefault = "default[$sExtKeyToMe]=".$oCurrentObj->GetKey();
 				$oAppContext = new ApplicationContext();
 				$sParams = $oAppContext->GetForLink();
-				$oPage->p("<a target=\"_blank\" href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=new&class=$sTargetClass&$sParams{$sDefault}\">".Dict::Format('UI:ClickToCreateNew', Metamodel::GetName($sTargetClass))."</a>\n");
+				$oPage->p("<a target=\"_blank\" href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=new&class=$sTargetClass&$sParams&{$sDefault}\">".Dict::Format('UI:ClickToCreateNew', Metamodel::GetName($sTargetClass))."</a>\n");
 			}
 			$this->DisplayAsBlock($oPage, $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj, false /* bDisplayMenu*/);
 			break;
