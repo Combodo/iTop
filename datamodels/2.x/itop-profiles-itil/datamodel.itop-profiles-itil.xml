@@ -79,6 +79,7 @@
           <class id="lnkFunctionalCIToTicket"/>
           <class id="lnkContactToTicket"/>
           <class id="WorkOrder"/>
+          <class id="Attachment"/>
         </classes>
       </group>
       <group id="NormalChange" _delta="define">
