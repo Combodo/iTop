@@ -95,7 +95,7 @@ $(function()
         {
             this._super( key, value );
         },
-        _getCurrentValues: function()
+        getCurrentValues: function()
         {
             var result = {};
             
@@ -165,7 +165,7 @@ $(function()
                         operation: 'update',
                         formmanager_class: this.options.formmanager_class,
                         formmanager_data: JSON.stringify(this.options.formmanager_data),
-                        current_values: this._getCurrentValues(),
+                        current_values: this.getCurrentValues(),
                         requested_fields: requestedFields
                     },
                     function(data){
