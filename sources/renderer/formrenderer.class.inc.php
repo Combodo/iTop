@@ -176,8 +176,7 @@ abstract class FormRenderer
             'js_inline' => '',
             'css_inline' => '',
             'js_files' => array(),
-            'css_files' => array(),
-            'validators' => null
+            'css_files' => array()
         );
 
         $sFieldRendererClass = $this->GetFieldRendererClass($oField);
@@ -257,18 +256,6 @@ abstract class FormRenderer
                     $output['html'] .= '<style>' . $oRenderingOutput->GetCss() . '</style>';
                 }
             }
-
-            // Validators
-            foreach ($oField->GetValidators() as $oValidator)
-            {
-                $output['validators'][$oValidator::GetName()] = array(
-                    'reg_exp' => $oValidator->GetRegExp(),
-                    'message' => Dict::S($oValidator->GetErrorMessage())
-                );
-            }
-
-            // Subfields
-            // TODO
         }
 
         return $output;

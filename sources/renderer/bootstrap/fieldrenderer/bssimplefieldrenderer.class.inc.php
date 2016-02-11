@@ -195,6 +195,36 @@ EOF
                 break;
         }
 
+        // JS Form field widget construct
+        $aValidators = array();
+        foreach ($this->oField->GetValidators() as $oValidator)
+        {
+            $aValidators[$oValidator::GetName()] = array(
+                'reg_exp' => $oValidator->GetRegExp(),
+                'message' => Dict::S($oValidator->GetErrorMessage())
+            );
+        }
+
+        $sFormFieldOptions = json_encode(array(
+            'validators' => $aValidators
+        ));
+
+        switch ($sFieldClass)
+        {
+            case 'Combodo\\iTop\\Form\\Field\\StringField':
+            case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
+            case 'Combodo\\iTop\\Form\\Field\\SelectField':
+            case 'Combodo\\iTop\\Form\\Field\\HiddenField':
+            case 'Combodo\\iTop\\Form\\Field\\RadioField':
+            case 'Combodo\\iTop\\Form\\Field\\CheckboxField':
+                $oOutput->AddJs(
+                    <<<EOF
+                    $("[data-field-id='{$this->oField->GetId()}']").form_field($sFormFieldOptions);
+EOF
+                );
+                break;
+        }
+
         return $oOutput;
     }
 
