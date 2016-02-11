@@ -19,6 +19,7 @@
 
 namespace Combodo\iTop\Renderer;
 
+use \Dict;
 use \Combodo\iTop\Form\Form;
 
 /**
@@ -28,6 +29,10 @@ use \Combodo\iTop\Form\Form;
  */
 abstract class FormRenderer
 {
+    const ENUM_RENDER_MODE_EXPLODED = 'exploded';
+    const ENUM_RENDER_MODE_JOINED = 'joined';
+    const DEFAULT_RENDERER_NAMESPACE = '';
+
     protected $oForm;
     protected $sEndpoint;
     protected $aSupportedFields;
@@ -115,6 +120,7 @@ abstract class FormRenderer
         return $this->aOutputs;
     }
 
+
     /**
      * Registers a Renderer class for the specified Field class.
      * 
@@ -127,6 +133,7 @@ abstract class FormRenderer
     public function AddSupportedField($sFieldClass, $sRendererClass)
     {
         $sFieldClass = (strpos($sFieldClass, '\\') !== false) ? $sFieldClass : 'Combodo\\iTop\\Form\\Field\\' . $sFieldClass;
+        $sRendererClass = (strpos($sRendererClass, '\\') !== false) ? $sRendererClass : static::DEFAULT_RENDERER_NAMESPACE . $sRendererClass;
 
         $this->aSupportedFields[$sFieldClass] = $sRendererClass;
 
@@ -139,5 +146,131 @@ abstract class FormRenderer
         return $this;
     }
 
-    abstract public function Render();
+    public function Render()
+    {
+        $this->InitOutputs();
+
+        foreach ($this->oForm->GetFields() as $oField)
+        {
+            $this->aOutputs[$oField->GetId()] = $this->PrepareOutputForField($oField);
+        }
+
+        return $this->aOutputs;
+    }
+
+    /**
+     * Returns the output for the $oField. Output format depends on the $sMode.
+     *
+     * If $sMode = 'exploded', output is an has array with id / html / js_inline / js_files / css_inline / css_files / validators
+     * Else if $sMode = 'joined', output is a string with everything in it
+     *
+     * @param Combodo\iTop\Form\Field\Field $oField
+     * @param string $sMode 'exploded'|'joined'
+     * @return mixed
+     */
+    protected function PrepareOutputForField($oField, $sMode = 'exploded')
+    {
+        $output = array(
+            'id' => $oField->GetId(),
+            'html' => '',
+            'js_inline' => '',
+            'css_inline' => '',
+            'js_files' => array(),
+            'css_files' => array(),
+            'validators' => null
+        );
+
+        $sFieldRendererClass = $this->GetFieldRendererClass($oField);
+        // TODO : We might want to throw an exception instead when there is no renderer for that field
+        if ($sFieldRendererClass !== null)
+        {
+            $oFieldRenderer = new $sFieldRendererClass($oField);
+            $oFieldRenderer->SetEndpoint($this->GetEndpoint());
+
+            $oRenderingOutput = $oFieldRenderer->Render();
+
+            // HTML
+            if ($oRenderingOutput->GetHtml() !== '')
+            {
+                if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
+                {
+                    $output['html'] = $oRenderingOutput->GetHtml();
+                }
+                else
+                {
+                    $output['html'] .= $oRenderingOutput->GetHtml();
+                }
+            }
+
+            // JS files
+            foreach ($oRenderingOutput->GetJsFiles() as $sJsFile)
+            {
+                if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
+                {
+                    if (!in_array($sJsFile, $output['js_files']))
+                    {
+                        $output['js_files'][] = $sJsFile;
+                    }
+                }
+                else
+                {
+                    $output['html'] .= '<script src="' . $sJsFile . '" type="text/javascript"></script>';
+                }
+            }
+            // JS inline
+            if ($oRenderingOutput->GetJs() !== '')
+            {
+                if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
+                {
+                    $output['js_inline'] .= ' ' . $oRenderingOutput->GetJs();
+                }
+                else
+                {
+                    $output['html'] .= '<script type="text/javascript">' . $oRenderingOutput->GetJs() . '</script>';
+                }
+            }
+
+            // CSS files
+            foreach ($oRenderingOutput->GetCssFiles() as $sCssFile)
+            {
+                if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
+                {
+                    if (!in_array($sCssFile, $output['css_files']))
+                    {
+                        $output['css_files'][] = $sCssFile;
+                    }
+                }
+                else
+                {
+                    $output['html'] .= '<link href="' . $sCssFile . '" rel="stylesheet" />';
+                }
+            }
+            // CSS inline
+            if ($oRenderingOutput->GetCss() !== '')
+            {
+                if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
+                {
+                    $output['css_inline'] .= ' ' . $oRenderingOutput->GetCss();
+                }
+                else
+                {
+                    $output['html'] .= '<style>' . $oRenderingOutput->GetCss() . '</style>';
+                }
+            }
+
+            // Validators
+            foreach ($oField->GetValidators() as $oValidator)
+            {
+                $output['validators'][$oValidator::GetName()] = array(
+                    'reg_exp' => $oValidator->GetRegExp(),
+                    'message' => Dict::S($oValidator->GetErrorMessage())
+                );
+            }
+
+            // Subfields
+            // TODO
+        }
+
+        return $output;
+    }
 }
