@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2014 Combodo SARL
+// Copyright (C) 2014-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -105,6 +105,10 @@ try
 	{
 		$oP->add("<div class=\"header_message message_info\">Sorry, iTop is in <b>demonstration mode</b>: the configuration file cannot be edited.</div>");
 	}
+	if (MetaModel::GetModuleSetting('itop-config', 'config_editor', '') == 'disabled')
+	{
+		$oP->add("<div class=\"header_message message_info\">iTop interactive edition of the configuration as been disabled. See <tt>'config_editor' => 'disabled'</tt> in the configuration file.</div>");
+	}
 	else
 	{
 		$oP->add_style(
@@ -129,27 +133,50 @@ EOF
 		if ($sOperation == 'save')
 		{
 			$sConfig = utils::ReadParam('new_config', '', false, 'raw_data');
+			$sTransactionId = utils::ReadParam('transaction_id', '');
 			$sOrginalConfig = utils::ReadParam('prev_config', '', false, 'raw_data');
-			if ($sConfig == $sOrginalConfig)
+			if (!utils::IsTransactionValid($sTransactionId, true))
 			{
-				$oP->add('<div id="save_result" class="header_message">'.Dict::S('config-no-change').'</div>');
+				$oP->add("<div class=\"header_message message_info\">Error: invalid Transaction ID. The configuration was <b>NOT</b> modified.</div>");
 			}
 			else
 			{
-				try
+				if ($sConfig == $sOrginalConfig)
 				{
-					TestConfig($sConfig, $oP); // throws exceptions
-		
-					@chmod($sConfigFile, 0770); // Allow overwriting the file
-					file_put_contents($sConfigFile, $sConfig);
-					@chmod($sConfigFile, 0444); // Read-only
-		
-					$oP->p('<div id="save_result" class="header_message message_ok">'.Dict::S('Successfully recorded.').'</div>');
-					$sOrginalConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
+					$oP->add('<div id="save_result" class="header_message">'.Dict::S('config-no-change').'</div>');
 				}
-				catch (Exception $e)
+				else
 				{
-					$oP->p('<div id="save_result" class="header_message message_error">'.$e->getMessage().'</div>');
+					try
+					{
+						TestConfig($sConfig, $oP); // throws exceptions
+			
+						@chmod($sConfigFile, 0770); // Allow overwriting the file
+						$sTmpFile = tempnam(SetupUtils::GetTmpDir(), 'itop-cfg-');
+						// Don't write the file as-is since it would allow to inject any kind of PHP code.
+						// Instead write the interpreted version of the file
+						// Note:
+						// The actual raw PHP code will anyhow be interpreted exactly twice: once in TestConfig() above
+						// and a second time during the load of the Config object below.
+						// If you are really concerned about an iTop administrator crafting some malicious
+						// PHP code inside the config file, then turn off the interactive configuration
+						// editor by adding the configuration parameter:
+						// 'itop-config' => array(
+						//     'config_editor' => 'disabled',
+						// )
+						file_put_contents($sTmpFile, $sConfig);
+						$oTempConfig = new Config($sTmpFile, true);
+						$oTempConfig->WriteToFile($sConfigFile);
+						@unlink($sTmpFile);
+						@chmod($sConfigFile, 0444); // Read-only
+			
+						$oP->p('<div id="save_result" class="header_message message_ok">'.Dict::S('Successfully recorded.').'</div>');
+						$sOrginalConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
+					}
+					catch (Exception $e)
+					{
+						$oP->p('<div id="save_result" class="header_message message_error">'.$e->getMessage().'</div>');
+					}
 				}
 			}
 		}
@@ -164,6 +191,7 @@ EOF
 		$oP->p(Dict::S('config-edit-intro'));
 		$oP->add("<form method=\"POST\">");
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"save\">");
+		$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">");
 		$oP->add("<input type=\"submit\" value=\"".Dict::S('config-apply')."\"><button onclick=\"ResetConfig(); return false;\">".Dict::S('config-cancel')."</button>");
 		$oP->add("<span class=\"current_line\">".Dict::Format('config-current-line', "<span class=\"line_number\"></span>")."</span>");
 		$oP->add("<input type=\"hidden\" id=\"prev_config\" name=\"prev_config\" value=\"$sOriginalConfigEscaped\">");
