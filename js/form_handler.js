@@ -37,9 +37,9 @@ $(function()
             
             this.element
             .addClass('form_handler');
-           
+            
             this.element
-            .bind('field_change.form_handler', function(event, data){
+            .bind('field_change', function(event, data){
                 me._onFieldChange(event, data);
             });
             
@@ -64,11 +64,11 @@ $(function()
             // Binding buttons
             if(this.options.submit_btn_selector !== null)
             {
-                this.options.submit_btn_selector.off('click').on('click', this._onSubmitClick());
+                this.options.submit_btn_selector.off('click').on('click', function(event){ me._onSubmitClick(event); });
             }
             if(this.options.cancel_btn_selector !== null)
             {
-                this.options.cancel_btn_selector.off('click').on('click', this._onCancelClick());
+                this.options.cancel_btn_selector.off('click').on('click', function(event){ me._onCancelClick(event); });
             }
         },
    
@@ -104,7 +104,7 @@ $(function()
                 var field = this.options.fields_list[i];
                 if(this.element.find('[' + this.options.field_identifier_attr + '="'+field.id+'"]').hasClass('form_field'))
                 {
-                    $.extend(true, result, this.element.find('[' + this.options.field_identifier_attr + '="'+field.id+'"]').trigger('get_current_value'));
+                    $.extend(true, result, this.element.find('[' + this.options.field_identifier_attr + '="'+field.id+'"]').triggerHandler('get_current_value'));
                 }
                 else
                 {
@@ -168,10 +168,12 @@ $(function()
                         current_values: this._getCurrentValues(),
                         requested_fields: requestedFields
                     },
-                    this._onUpdateSuccess(data)
+                    function(data){
+                        me._onUpdateSuccess(data);
+                    }
                 )
-                .fail(this._onUpdateFailure(data))
-                .always(this._onUpdateAlways());
+                .fail(function(data){ me._onUpdateFailure(data); })
+                .always(function(data){ me._onUpdateAlways(data); });
             }
             else
             {
@@ -180,11 +182,11 @@ $(function()
             }
         },
         // Intended for overloading in derived classes
-        _onSubmitClick: function()
+        _onSubmitClick: function(event)
         {
         },
         // Intended for overloading in derived classes
-        _onCancelClick: function()
+        _onCancelClick: function(event)
         {
         },
         // Intended for overloading in derived classes
@@ -197,7 +199,7 @@ $(function()
 
                 for (var i in data.form.updated_fields)
                 {
-                    var updated_field = data.form.updated_field[i];
+                    var updated_field = data.form.updated_fields[i];
                     this.options.fields_list[updated_field.id] = updated_field;
                     this._prepareField(updated_field.id);
                 }
@@ -215,7 +217,7 @@ $(function()
         {
         },
         // Intended for overloading in derived classes
-        _onUpdateAlways: function()
+        _onUpdateAlways: function(data)
         {
             // Check all touched AFTER ajax is complete, otherwise the renderer will redraw the field in the mean time.
             for(var i in this.options.touched_fields)
@@ -294,14 +296,9 @@ $(function()
                 this.buildData.style_code += ' '+ field.css_inline;
             }
             // JS widget itop.form_field
-            if (field.validators != undefined)
-            {
-                this.buildData.script_code += '; $("[' + this.options.field_identifier_attr + '=\'' + field.id + '\']").trigger(\'set_validators\', ' + JSON.stringify(field.validators) + ');';
-            }
-        },
-        showOptions: function() // Debug helper
-        {
-            console.log(this.options);
+            var json_validators = (field.validators != undefined) ? JSON.stringify(field.validators) : 'null';
+            this.buildData.script_code += '; $("[' + this.options.field_identifier_attr + '=\'' + field.id + '\']").form_field({ validators: ' + json_validators + ' });';
+            
         },
         buildForm: function()
         {
@@ -322,6 +319,12 @@ $(function()
 
             this.options.script_element.text('$(document).ready(function(){ '+this.buildData.script_code+' });');
             this.options.style_element.text(this.buildData.style_code);
+            
+            eval(this.options.script_element.text());
+        },
+        showOptions: function() // Debug helper
+        {
+            console.log(this.options);
         }
     });
 });

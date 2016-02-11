@@ -21,24 +21,17 @@ $(function()
             .addClass('form_field');
            
             this.element
-            .bind('field_change.form_field', function(event, data){
-                me._onFieldChange(event, data);
-            });
-
-            this.element
-            .bind('set_validators.form_field', function(event, data){
+            .bind('set_validators', function(event, data){
                 me.options.validators = data;
             });
-
             this.element
-                .bind('validate.form_field', function(event, data){
-                    return me.validate();
-                });
-
+            .bind('validate', function(event, data){
+                return me.validate();
+            });
             this.element
-                .bind('set_current_value.form_field', function(event, data){
-                    return me.getCurrentValue();
-                });
+            .bind('get_current_value', function(event, data){
+                return me.getCurrentValue();
+            });
         },
         // called when created, and later when changing options
         _refresh: function()

@@ -67,7 +67,7 @@ class BsFormRenderer extends FormRenderer
 
         foreach ($this->oForm->GetFields() as $oField)
         {
-            $this->aOutputs[] = $this->PrepareOutputForField($oField);
+            $this->aOutputs[$oField->GetId()] = $this->PrepareOutputForField($oField);
         }
         
         return $this->aOutputs;
