@@ -295,9 +295,6 @@ $(function()
             {
                 this.buildData.style_code += ' '+ field.css_inline;
             }
-            // JS widget itop.form_field
-            var json_validators = (field.validators != undefined) ? JSON.stringify(field.validators) : 'null';
-            this.buildData.script_code += '; $("[' + this.options.field_identifier_attr + '=\'' + field.id + '\']").form_field({ validators: ' + json_validators + ' });';
             
         },
         buildForm: function()

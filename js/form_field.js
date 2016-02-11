@@ -9,7 +9,9 @@ $(function()
         // default options
         options:
         {
-            validators: null
+            validators: null,
+            validate_callback: 'validate',                  // When using an anonymous function, use the 'me' parameter to acces the current widget : function(me){ return me.validate(); },
+            get_current_value_callback: 'getCurrentValue'
         },
    
         // the constructor
@@ -25,12 +27,22 @@ $(function()
                 me.options.validators = data;
             });
             this.element
-            .bind('validate', function(event, data){
-                return me.validate();
-            });
-            this.element
-            .bind('get_current_value', function(event, data){
-                return me.getCurrentValue();
+            .bind('validate get_current_value', function(event, data){
+                var callback = me.options[event.type+'_callback'];
+                
+                if(typeof callback === 'string')
+                {
+                    return me[callback]();
+                }
+                else if(typeof callback === 'function')
+                {
+                    return callback(me);
+                }
+                else
+                {
+                    console.log('Form field : callback type must be a function or a existing function name of the widget');
+                    return false;
+                }
             });
         },
         // called when created, and later when changing options
