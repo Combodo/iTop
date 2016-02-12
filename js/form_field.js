@@ -11,7 +11,9 @@ $(function()
         {
             validators: null,
             validate_callback: 'validate',                  // When using an anonymous function, use the 'me' parameter to acces the current widget : function(me){ return me.validate(); },
-            get_current_value_callback: 'getCurrentValue'
+            on_validation_callback: function(data){  },
+            get_current_value_callback: 'getCurrentValue',
+            
         },
    
         // the constructor
@@ -188,17 +190,7 @@ $(function()
                 }
             }
             
-            // Rendering visual feedback on the field
-            this.element.removeClass('has-success has-warning has-error')
-            this.element.find('.help-block').html('');
-            if(!oResult.is_valid)
-            {
-                this.element.addClass('has-error');
-                for(var i in oResult.error_messages)
-                {
-                    this.element.find('.help-block').append($('<p>' + oResult.error_messages[i] + '</p>'));
-                }
-            }
+            this.options.on_validation_callback();
             
             return oResult;
         },
