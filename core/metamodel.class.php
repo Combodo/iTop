@@ -30,25 +30,11 @@ require_once(APPROOT.'core/relationgraph.class.inc.php');
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-// #@# todo: change into class const (see Doctrine)
-// Doctrine example
-// class toto
-// {
-//    /**
-//     * VERSION
-//     */
-//    const VERSION                   = '1.0.0';
-// }
-
 /**
- * add some description here... 
- *
  * @package     iTopORM
  */
 define('ENUM_PARENT_CLASSES_EXCLUDELEAF', 1);
 /**
- * add some description here... 
- *
  * @package     iTopORM
  */
 define('ENUM_PARENT_CLASSES_ALL', 2);
@@ -2463,19 +2449,26 @@ abstract class MetaModel
 		return $oReflection->isAbstract();
 	}
 
-	public static function PrepareQueryArguments($aArgs)
+	/**
+	 * Normalizes query arguments and adds magic parameters:
+	 * - current_contact_id
+	 * - current_contact (DBObject)
+	 * - current_user (DBObject)
+	 *
+	 * @param array $aArgs Context arguments (some can be persistent objects)
+	 * @param array $aScalarArgs Other query parameters (only scalars allowed here)
+	 * @return array
+	 */
+	public static function PrepareQueryArguments($aArgs, $aScalarArgs = array())
 	{
-		// Translate any object into scalars
-		//
-		$aScalarArgs = array();
 		foreach($aArgs as $sArgName => $value)
 		{
 			if (self::IsValidObject($value))
 			{
 				if (strpos($sArgName, '->object()') === false)
 				{
-					// Lazy syntax - develop the object contextual parameters
-					$aScalarArgs = array_merge($aScalarArgs, $value->ToArgsForQuery($sArgName));
+					// Normalize object arguments
+					$aScalarArgs[$sArgName.'->object()'] = $value;
 				}
 				else
 				{
@@ -2493,11 +2486,24 @@ abstract class MetaModel
 				{
 					$aScalarArgs[$sArgName] = null;
 				}
+				// otherwise... could be an array coming from the extra params...
 			}
 		}
-		// Add standard contextual arguments
+		// Add standard magic arguments
 		//
-		$aScalarArgs['current_contact_id'] = UserRights::GetContactId();
+		$aScalarArgs['current_contact_id'] = UserRights::GetContactId(); // legacy
+
+		$oUser = UserRights::GetUserObject();
+		if (!is_null($oUser))
+		{
+			$aScalarArgs['current_user->object()'] = $oUser;
+
+			$oContact = UserRights::GetContactObject();
+			if (!is_null($oContact))
+			{
+				$aScalarArgs['current_contact->object()'] = $oContact;
+			}
+		}
 		return $aScalarArgs;
 	}
 
@@ -4481,7 +4487,7 @@ abstract class MetaModel
 				$oFilter->AllowAllData();
 			}
 	
-			$sSQL = $oFilter->MakeSelectQuery();
+			$sSQL = $oFilter->MakeSelectQuery(array(), array(), null, null, 0, 0, false, true); // bNoMagicArguments = true
 			self::$aQueryCacheGetObject[$sQuerySign] = $sSQL;
 			self::$aQueryCacheGetObjectHits[$sQuerySign] = 0;
 		}

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015 Combodo SARL
+// Copyright (C) 2015-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -33,7 +33,7 @@ require_once('dbunionsearch.class.php');
  *    - do not provide a type-hint for function parameters defined in the modules
  *    - leave the statements DBObjectSearch::FromOQL in the modules, though DBSearch is more relevant 
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2015-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
  
@@ -347,9 +347,20 @@ abstract class DBSearch
 
 
 	/**
-	 * @param hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
-	 */	
-	public function MakeSelectQuery($aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false)
+	 * @param array|hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
+	 * @param array $aArgs
+	 * @param null $aAttToLoad
+	 * @param null $aExtendedDataSpec
+	 * @param int $iLimitCount
+	 * @param int $iLimitStart
+	 * @param bool $bGetCount
+	 * @param bool $bNoArguments
+	 * @return string
+	 * @throws CoreException
+	 * @throws Exception
+	 * @throws MissingQueryArgument
+	 */
+	public function MakeSelectQuery($aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false, $bNoArguments = false)
 	{
 		// Check the order by specification, and prefix with the class alias
 		// and make sure that the ordering columns are going to be selected
@@ -402,7 +413,16 @@ abstract class DBSearch
 
 		$oSQLQuery = $this->GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount);
 
-		$aScalarArgs = array_merge(MetaModel::PrepareQueryArguments($aArgs), $this->GetInternalParams());
+		if ($bNoArguments)
+		{
+			// Only internal parameters
+			$aScalarArgs = $this->GetInternalParams();
+		}
+		else
+		{
+			// The complete list of arguments will include magic arguments (e.g. current_user->attcode)
+			$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
+		}
 		try
 		{
 			$bBeautifulSQL = self::$m_bTraceQueries || self::$m_bDebugQuery || self::$m_bIndentQueries;

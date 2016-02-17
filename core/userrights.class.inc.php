@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * User rights management API
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -233,6 +233,23 @@ abstract class User extends cmdbAbstractObject
 			}
 		}
 		return $this->Get('login');
+	}
+
+	protected $oContactObject;
+
+	/**
+	 * Fetch and memoize the associated contact (if any)
+	 */
+	public function GetContactObject()
+	{
+		if (is_null($this->oContactObject))
+		{
+			if ($this->Get('contactid') != 0)
+			{
+				$this->oContactObject = MetaModel::GetObject('Contact', $this->Get('contactid'));
+			}
+		}
+		return $this->oContactObject;
 	}
 
 	/*
@@ -750,6 +767,18 @@ class UserRights
 			return '';
 		}
 		return $oUser->Get('contactid');
+	}
+
+	public static function GetContactObject()
+	{
+		if (is_null(self::$m_oUser))
+		{
+			return null;
+		}
+		else
+		{
+			return self::$m_oUser->GetContactObject();
+		}
 	}
 
 	// Render the user name in best effort mode

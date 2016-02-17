@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Tools to design OQL queries and test them
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -142,12 +142,37 @@ try
 				$sSyntaxError = $e->getMessage();
 			}
 		}
-		
+
+		$aNakedMagicArguments = array();
+		foreach (MetaModel::PrepareQueryArguments(array()) as $sArgName => $value)
+		{
+			$iPos = strpos($sArgName, '->object()');
+			if ($iPos === false)
+			{
+				$aNakedMagicArguments[$sArgName] = $value;
+			}
+			else
+			{
+				$aNakedMagicArguments[substr($sArgName, 0, $iPos)] = true;
+			}
+		}
 		if ($oFilter)
 		{
 			$aArgs = array();
 			foreach($oFilter->GetQueryParams() as $sParam => $foo)
 			{
+				// Skip magic parameters
+				$iPos = strpos($sArgName, '->');
+				if ($iPos === false)
+				{
+					$sRefName = $sParam;
+				}
+				else
+				{
+					$sRefName = substr($sParam, 0, $iPos);
+				}
+				if (array_key_exists($sRefName, $aNakedMagicArguments)) continue;
+
 				$value = utils::ReadParam('arg_'.$sParam, null, true, 'raw_data');
 				if (!is_null($value))
 				{

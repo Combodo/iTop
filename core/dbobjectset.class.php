@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Object set management
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1072,7 +1072,7 @@ class DBObjectSet
 	 */
 	public function ListConstantFields()
 	{
-		$aScalarArgs = $this->ExpandArgs();
+		$aScalarArgs = array_merge($this->m_oFilter->GetInternalParams(), $this->m_aArgs);
 		$aConst = $this->m_oFilter->ListConstantFields();
 				
 		foreach($aConst as $sClassAlias => $aVals)
@@ -1089,39 +1089,9 @@ class DBObjectSet
 		return $aConst;		
 	}
 	
-	protected function ExpandArgs()
-	{
-		$aScalarArgs = $this->m_oFilter->GetInternalParams();
-		foreach($this->m_aArgs as $sArgName => $value)
-		{
-			if (MetaModel::IsValidObject($value))
-			{
-				if (strpos($sArgName, '->object()') === false)
-				{
-					// Lazy syntax - develop the object contextual parameters
-					$aScalarArgs = array_merge($aScalarArgs, $value->ToArgsForQuery($sArgName));
-				}
-				else
-				{
-					// Leave as is
-					$aScalarArgs[$sArgName] = $value;
-				}
-			}
-			else
-			{
-				if (!is_array($value)) // Sometimes ExtraParams contains a mix (like defaults[]) so non scalar parameters are ignored
-				{
-					$aScalarArgs[$sArgName] = (string) $value;
-				}
-			}
-		}
-		$aScalarArgs['current_contact_id'] = UserRights::GetContactId();
-		return $aScalarArgs;		
-	}
-	
 	public function ApplyParameters()
 	{
-		$aScalarArgs = $this->ExpandArgs();
+		$aScalarArgs = MetaModel::PrepareQueryArguments($this->m_aArgs, $this->m_oFilter->GetInternalParams());
 		$this->m_oFilter->ApplyParameters($aScalarArgs);
 	}
 }
