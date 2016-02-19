@@ -29,26 +29,26 @@ use \Combodo\iTop\Form\Field\Field;
 abstract class TextField extends Field
 {
 
-    /**
-     * Checks the validators to see if the field's current value is valid.
-     * Then sets $bValid and $aErrorMessages.
-     * 
-     * @return boolean
-     */
-    public function Validate()
-    {
-        $this->SetValid(true);
-        $this->EmptyErrorMessages();
-        foreach ($this->GetValidators() as $oValidator)
-        {
-            if (!preg_match($oValidator->GetRegExp(true), $this->GetCurrentValue()))
-            {
-                $this->SetValid(false);
-                $this->AddErrorMessage($oValidator->GetErrorMessage());
-            }
-        }
+	/**
+	 * Checks the validators to see if the field's current value is valid.
+	 * Then sets $bValid and $aErrorMessages.
+	 *
+	 * @return boolean
+	 */
+	public function Validate()
+	{
+		$this->SetValid(true);
+		$this->EmptyErrorMessages();
+		foreach ($this->GetValidators() as $oValidator)
+		{
+			if (!preg_match($oValidator->GetRegExp(true), $this->GetCurrentValue()))
+			{
+				$this->SetValid(false);
+				$this->AddErrorMessage($oValidator->GetErrorMessage());
+			}
+		}
 
-        return $this->GetValid();
-    }
+		return $this->GetValid();
+	}
 
 }

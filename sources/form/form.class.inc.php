@@ -30,268 +30,343 @@ use \Combodo\iTop\Form\Field\Field;
  */
 class Form
 {
-    protected $sId;
-    protected $aFields;
-    protected $aDependencies;
-    protected $bValid;
-    protected $aErrorMessages;
+	protected $sId;
+	protected $aFields;
+	protected $aDependencies;
+	protected $bValid;
+	protected $aErrorMessages;
 
-    public function __construct($sId)
-    {
-        $this->sId = $sId;
-        $this->aFields = array();
-        $this->aDependencies = array();
-        $this->bValid = true;
-        $this->aErrorMessages = array();
-    }
+	/**
+	 * Default constructor
+	 *
+	 * @param string $sId
+	 */
+	public function __construct($sId)
+	{
+		$this->sId = $sId;
+		$this->aFields = array();
+		$this->aDependencies = array();
+		$this->bValid = true;
+		$this->aErrorMessages = array();
+	}
 
-    public function GetId()
-    {
-        return $this->sId;
-    }
+	/**
+	 *
+	 * @return string
+	 */
+	public function GetId()
+	{
+		return $this->sId;
+	}
 
-    public function GetFields()
-    {
-        return $this->aFields;
-    }
+	/**
+	 *
+	 * @return array
+	 */
+	public function GetFields()
+	{
+		return $this->aFields;
+	}
 
-    public function GetDependencies()
-    {
-        return $this->aDependencies;
-    }
+	/**
+	 *
+	 * @return array
+	 */
+	public function GetDependencies()
+	{
+		return $this->aDependencies;
+	}
 
-    public function GetCurrentValues()
-    {
-        $aValues = array();
-        foreach ($this->aFields as $sId => $oField)
-        {
-            $aValues[$sId] = $oField->GetCurrentValue();
-        }
-        return $aValues;
-    }
+	/**
+	 * Returns a hash array of "Field id" => "Field value"
+	 *
+	 * @return array
+	 */
+	public function GetCurrentValues()
+	{
+		$aValues = array();
+		foreach ($this->aFields as $sId => $oField)
+		{
+			$aValues[$sId] = $oField->GetCurrentValue();
+		}
+		return $aValues;
+	}
 
-    public function SetCurrentValues($aValues)
-    {
-        foreach ($aValues as $sId => $value)
-        {
-            $oField = $this->GetField($sId);
-            $oField->SetCurrentValue($value);
-        }
-    }
+	/**
+	 *
+	 * @param array $aValues Must be a hash array of "Field id" => "Field value"
+	 * @return \Combodo\iTop\Form\Form
+	 */
+	public function SetCurrentValues($aValues)
+	{
+		foreach ($aValues as $sId => $value)
+		{
+			$oField = $this->GetField($sId);
+			$oField->SetCurrentValue($value);
+		}
 
-    /**
-     * Returns the current validation state of the form (true|false).
-     * It DOESN'T make the validation, see Validate() instead.
-     *
-     * @return boolean
-     */
-    public function GetValid()
-    {
-        return $this->bValid;
-    }
+		return $this;
+	}
 
-    /**
-     * Note : Function is protected as bValid should not be set from outside
-     *
-     * @param boolean $bValid
-     * @return \Combodo\iTop\Form\Form
-     */
-    protected function SetValid($bValid)
-    {
-        $this->bValid = $bValid;
-        return $this;
-    }
+	/**
+	 * Returns the current validation state of the form (true|false).
+	 * It DOESN'T make the validation, see Validate() instead.
+	 *
+	 * @return boolean
+	 */
+	public function GetValid()
+	{
+		return $this->bValid;
+	}
 
-    public function GetErrorMessages()
-    {
-        return $this->aErrorMessages;
-    }
+	/**
+	 * Note : Function is protected as bValid should not be set from outside
+	 *
+	 * @param boolean $bValid
+	 * @return \Combodo\iTop\Form\Form
+	 */
+	protected function SetValid($bValid)
+	{
+		$this->bValid = $bValid;
+		return $this;
+	}
 
-    /**
-     * Note : Function is protected as aErrorMessages should not be set from outside
-     *
-     * @param array $aErrorMessages
-     * @param string $sFieldId
-     * @return \Combodo\iTop\Form\Form
-     */
-    protected function SetErrorMessages($aErrorMessages, $sFieldId = null)
-    {
-        if ($sFieldId === null)
-        {
-            $this->aErrorMessages = $aErrorMessages;
-        }
-        else
-        {
-            $this->aErrorMessages[$sFieldId] = $aErrorMessages;
-        }
-        return $this;
-    }
+	/**
+	 *
+	 * @return array
+	 */
+	public function GetErrorMessages()
+	{
+		return $this->aErrorMessages;
+	}
 
-    /**
-     * If $sFieldId is not set, the $sErrorMessage will be added to the general form messages
-     *
-     * Note : Function is protected as aErrorMessages should not be add from outside
-     *
-     * @param string $sErrorMessage
-     * @param string $sFieldId
-     * @return \Combodo\iTop\Form\Form
-     */
-    protected function AddErrorMessage($sErrorMessage, $sFieldId = '_main')
-    {
-        if (!isset($this->aErrorMessages[$sFieldId]))
-        {
-            $this->aErrorMessages[$sFieldId] = array();
-        }
-        $this->aErrorMessages[$sFieldId][] = $sErrorMessage;
-        return $this;
-    }
+	/**
+	 * Note : Function is protected as aErrorMessages should not be set from outside
+	 *
+	 * @param array $aErrorMessages
+	 * @param string $sFieldId
+	 * @return \Combodo\iTop\Form\Form
+	 */
+	protected function SetErrorMessages($aErrorMessages, $sFieldId = null)
+	{
+		if ($sFieldId === null)
+		{
+			$this->aErrorMessages = $aErrorMessages;
+		}
+		else
+		{
+			$this->aErrorMessages[$sFieldId] = $aErrorMessages;
+		}
+		return $this;
+	}
 
-    /**
-     * Note : Function is protected as aErrorMessages should not be set from outside
-     *
-     * @return \Combodo\iTop\Form\Form
-     */
-    protected function EmptyErrorMessages()
-    {
-        $this->aErrorMessages = array();
-        return $this;
-    }
+	/**
+	 * If $sFieldId is not set, the $sErrorMessage will be added to the general form messages
+	 *
+	 * Note : Function is protected as aErrorMessages should not be add from outside
+	 *
+	 * @param string $sErrorMessage
+	 * @param string $sFieldId
+	 * @return \Combodo\iTop\Form\Form
+	 */
+	protected function AddErrorMessage($sErrorMessage, $sFieldId = '_main')
+	{
+		if (!isset($this->aErrorMessages[$sFieldId]))
+		{
+			$this->aErrorMessages[$sFieldId] = array();
+		}
+		$this->aErrorMessages[$sFieldId][] = $sErrorMessage;
+		return $this;
+	}
 
-    public function GetField($sId)
-    {
-        if (!array_key_exists($sId, $this->aFields))
-        {
-            throw new Exception('Field with ID "' . $sId . '" was not found in the Form.');
-        }
-        return $this->aFields[$sId];
-    }
+	/**
+	 * Note : Function is protected as aErrorMessages should not be set from outside
+	 *
+	 * @return \Combodo\iTop\Form\Form
+	 */
+	protected function EmptyErrorMessages()
+	{
+		$this->aErrorMessages = array();
+		return $this;
+	}
 
-    public function HasField($sId)
-    {
-        return array_key_exists($sId, $this->aFields);
-    }
+	/**
+	 *
+	 * @param string $sId
+	 * @return \Combodo\iTop\Form\Field\Field
+	 * @throws Exception
+	 */
+	public function GetField($sId)
+	{
+		if (!array_key_exists($sId, $this->aFields))
+		{
+			throw new Exception('Field with ID "' . $sId . '" was not found in the Form.');
+		}
+		return $this->aFields[$sId];
+	}
 
-    public function AddField(Field $oField, $aDependsOnIds = array())
-    {
-        $oField->SetFormPath($this->sId);
-        $this->aFields[$oField->GetId()] = $oField;
-        return $this;
-    }
+	/**
+	 *
+	 * @param string $sId
+	 * @return boolean
+	 */
+	public function HasField($sId)
+	{
+		return array_key_exists($sId, $this->aFields);
+	}
 
-    public function RemoveField($sId)
-    {
-        if (array_key_exists($sId, $this->aFields))
-        {
-            unset($this->aFields[$sId]);
-        }
-        return $this;
-    }
+	/**
+	 *
+	 * @param \Combodo\iTop\Form\Field\Field $oField
+	 * @param array $aDependsOnIds
+	 * @return \Combodo\iTop\Form\Form
+	 */
+	public function AddField(Field $oField, $aDependsOnIds = array())
+	{
+		$oField->SetFormPath($this->sId);
+		$this->aFields[$oField->GetId()] = $oField;
+		return $this;
+	}
 
-    /**
-     * Returns a array (list) of the fields ordered by their dependencies.
-     * 
-     * @return array
-     */
-    public function GetOrderedFields()
-    {
-        // TODO : Do this so it flatten the array
-        return $this->aFields;
-    }
+	/**
+	 *
+	 * @param string $sId
+	 * @return \Combodo\iTop\Form\Form
+	 */
+	public function RemoveField($sId)
+	{
+		if (array_key_exists($sId, $this->aFields))
+		{
+			unset($this->aFields[$sId]);
+		}
+		return $this;
+	}
 
-    /**
-     * Returns an array of field ids the $sFieldId depends on.
-     *
-     * @param string $sFieldId
-     * @return array
-     * @throws Exception
-     */
-    public function GetFieldDependencies($sFieldId)
-    {
-        if (!array_key_exists($sFieldId, $this->aDependencies))
-        {
-            throw new Exception('Field with ID "' . $sFieldId . '" had no dependancies declared in the Form.');
-        }
-        return $this->aDependencies[$sFieldId];
-    }
+	/**
+	 * Returns a array (list) of the fields ordered by their dependencies.
+	 *
+	 * @return array
+	 */
+	public function GetOrderedFields()
+	{
+		// TODO : Do this so it flatten the array
+		return $this->aFields;
+	}
 
-    public function AddFieldDependencies($sFieldId, array $aDependsOnIds)
-    {
-        foreach ($aDependsOnIds as $sDependsOnId)
-        {
-            $this->AddFieldDependency($sFieldId, $sDependsOnId);
-        }
-        return $this;
-    }
+	/**
+	 * Returns an array of field ids the $sFieldId depends on.
+	 *
+	 * @param string $sFieldId
+	 * @return array
+	 * @throws Exception
+	 */
+	public function GetFieldDependencies($sFieldId)
+	{
+		if (!array_key_exists($sFieldId, $this->aDependencies))
+		{
+			throw new Exception('Field with ID "' . $sFieldId . '" had no dependancies declared in the Form.');
+		}
+		return $this->aDependencies[$sFieldId];
+	}
 
-    public function AddFieldDependency($sFieldId, $sDependsOnId)
-    {
-        if (!array_key_exists($sFieldId, $this->aDependencies))
-        {
-            $this->aDependencies[$sFieldId] = array();
-        }
-        $this->aDependencies[$sFieldId][] = $sDependsOnId;
-        return $this;
-    }
+	/**
+	 *
+	 * @param string $sFieldId
+	 * @param array $aDependsOnIds
+	 * @return \Combodo\iTop\Form\Form
+	 */
+	public function AddFieldDependencies($sFieldId, array $aDependsOnIds)
+	{
+		foreach ($aDependsOnIds as $sDependsOnId)
+		{
+			$this->AddFieldDependency($sFieldId, $sDependsOnId);
+		}
+		return $this;
+	}
 
-    /**
-     * Returns a hash array of the fields impacts on other fields. Key being the field that impacts the fields stored in the value as a regular array
-     * (It kind of reversed the dependencies array)
-     *
-     * eg :
-     * - 'service' => array('subservice', 'template')
-     * - 'subservice' => array()
-     * - ...
-     *
-     * @return array
-     */
-    public function GetFieldsImpacts()
-    {
-        $aRes = array();
+	/**
+	 *
+	 * @param string $sFieldId
+	 * @param string $sDependsOnId
+	 * @return \Combodo\iTop\Form\Form
+	 */
+	public function AddFieldDependency($sFieldId, $sDependsOnId)
+	{
+		if (!array_key_exists($sFieldId, $this->aDependencies))
+		{
+			$this->aDependencies[$sFieldId] = array();
+		}
+		$this->aDependencies[$sFieldId][] = $sDependsOnId;
+		return $this;
+	}
 
-        foreach ($this->aDependencies as $sImpactedFieldId => $aDependentFieldsIds)
-        {
-            foreach ($aDependentFieldsIds as $sDependentFieldId)
-            {
-                if (!array_key_exists($sDependentFieldId, $aRes))
-                {
-                    $aRes[$sDependentFieldId] = array();
-                }
-                $aRes[$sDependentFieldId][] = $sImpactedFieldId;
-            }
-        }
+	/**
+	 * Returns a hash array of the fields impacts on other fields. Key being the field that impacts the fields stored in the value as a regular array
+	 * (It kind of reversed the dependencies array)
+	 *
+	 * eg :
+	 * - 'service' => array('subservice', 'template')
+	 * - 'subservice' => array()
+	 * - ...
+	 *
+	 * @return array
+	 */
+	public function GetFieldsImpacts()
+	{
+		$aRes = array();
 
-        return $aRes;
-    }
+		foreach ($this->aDependencies as $sImpactedFieldId => $aDependentFieldsIds)
+		{
+			foreach ($aDependentFieldsIds as $sDependentFieldId)
+			{
+				if (!array_key_exists($sDependentFieldId, $aRes))
+				{
+					$aRes[$sDependentFieldId] = array();
+				}
+				$aRes[$sDependentFieldId][] = $sImpactedFieldId;
+			}
+		}
 
-    public function Finalize()
-    {
-        //TODO : Call GetOrderedFields
-        // Must call OnFinalize on each fields, regarding the dependencies order
-        // On a SubFormField, will call its own Finalize
-        foreach ($this->aFields as $sId => $oField)
-        {
-            $oField->OnFinalize();
-        }
-    }
+		return $aRes;
+	}
 
-    public function Validate()
-    {
-        $this->SetValid(true);
-        $this->EmptyErrorMessages();
-        
-        foreach ($this->aFields as $oField)
-        {
-            if (!$oField->Validate())
-            {
-                $this->SetValid(false);
-                foreach ($oField->GetErrorMessages() as $sErrorMessage)
-                {
-                    $this->AddErrorMessage(Dict::S($sErrorMessage), $oField->Getid());
-                }
-            }
-        }
-        
-        return $this->GetValid();
-    }
+	/**
+	 *
+	 */
+	public function Finalize()
+	{
+		//TODO : Call GetOrderedFields
+		// Must call OnFinalize on each fields, regarding the dependencies order
+		// On a SubFormField, will call its own Finalize
+		foreach ($this->aFields as $sId => $oField)
+		{
+			$oField->OnFinalize();
+		}
+	}
+
+	/**
+	 * Validate the form and return if it's valid or not
+	 * 
+	 * @return boolean
+	 */
+	public function Validate()
+	{
+		$this->SetValid(true);
+		$this->EmptyErrorMessages();
+
+		foreach ($this->aFields as $oField)
+		{
+			if (!$oField->Validate())
+			{
+				$this->SetValid(false);
+				foreach ($oField->GetErrorMessages() as $sErrorMessage)
+				{
+					$this->AddErrorMessage(Dict::S($sErrorMessage), $oField->Getid());
+				}
+			}
+		}
+
+		return $this->GetValid();
+	}
 
 }

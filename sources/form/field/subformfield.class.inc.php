@@ -23,7 +23,7 @@ use \Closure;
 use \Combodo\iTop\Form\Form;
 
 /**
- * Description of StringField
+ * Description of SubFormField
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
@@ -31,12 +31,23 @@ class SubFormField extends Field
 {
 	protected $oForm;
 
+	/**
+	 * Default constructor
+	 *
+	 * @param string $sId
+	 * @param string $sParentFormId
+	 * @param Closure $onFinalizeCallback
+	 */
 	public function __construct($sId, $sParentFormId, Closure $onFinalizeCallback = null)
 	{
 		$this->oForm = new Form($sParentFormId.'-subform_'.$sId);
 		parent::__construct($sId, $onFinalizeCallback);
 	}
 
+	/**
+	 *
+	 * @return \Combodo\iTop\Form\Form
+	 */
 	public function GetForm()
 	{
 		return $this->oForm;
@@ -53,11 +64,19 @@ class SubFormField extends Field
 		$this->oForm->Validate();
 	}
 
+	/**
+	 *
+	 * @return boolean
+	 */
 	public function GetValid()
 	{
 		return $this->oForm->GetValid();
 	}
 
+	/**
+	 *
+	 * @return array
+	 */
 	public function GetErrorMessages()
 	{
 		$aRet = array();
@@ -68,13 +87,23 @@ class SubFormField extends Field
 		return $aRet;
 	}
 
+	/**
+	 *
+	 * @return array
+	 */
 	public function GetCurrentValue()
 	{
 		return $this->oForm->GetCurrentValues();
 	}
 
+	/**
+	 *
+	 * @param array $value
+	 * @return \Combodo\iTop\Form\Field\SubFormField
+	 */
 	public function SetCurrentValue($value)
 	{
-		return $this->oForm->SetCurrentValues($value);
+		$this->oForm->SetCurrentValues($value);
+		return $this;
 	}
 }

@@ -28,8 +28,8 @@ use \Combodo\iTop\Form\Validator\Validator;
  */
 class NotEmptyValidator extends Validator
 {
-    const VALIDATOR_NAME = 'notempty';
-    const DEFAULT_REGEXP = '.*\S.*';
-    const DEFAULT_ERROR_MESSAGE = 'TOTR: MUST NOT BE EMPTY MESSAGE';
+	const VALIDATOR_NAME = 'notempty';
+	const DEFAULT_REGEXP = '.*\S.*';
+	const DEFAULT_ERROR_MESSAGE = 'TOTR: MUST NOT BE EMPTY MESSAGE';
 
 }

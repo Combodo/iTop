@@ -29,16 +29,22 @@ use \Combodo\iTop\Form\Form;
  */
 class BsFormRenderer extends FormRenderer
 {
-    const DEFAULT_RENDERER_NAMESPACE = 'Combodo\\iTop\\Renderer\\Bootstrap\\FieldRenderer\\';
+	const DEFAULT_RENDERER_NAMESPACE = 'Combodo\\iTop\\Renderer\\Bootstrap\\FieldRenderer\\';
 
-    public function __construct(Form $oForm = null)
-    {
-        parent::__construct($oForm);
-        $this->AddSupportedField('HiddenField', 'BsSimpleFieldRenderer');
-        $this->AddSupportedField('StringField', 'BsSimpleFieldRenderer');
-        $this->AddSupportedField('TextAreaField', 'BsSimpleFieldRenderer');
-        $this->AddSupportedField('SelectField', 'BsSimpleFieldRenderer');
-        $this->AddSupportedField('RadioField', 'BsSimpleFieldRenderer');
-        $this->AddSupportedField('CheckboxField', 'BsSimpleFieldRenderer');
-    }
+	/**
+	 * Default constructor
+	 * 
+	 * @param \Combodo\iTop\Form\Form $oForm
+	 */
+	public function __construct(Form $oForm = null)
+	{
+		parent::__construct($oForm);
+		$this->AddSupportedField('HiddenField', 'BsSimpleFieldRenderer');
+		$this->AddSupportedField('StringField', 'BsSimpleFieldRenderer');
+		$this->AddSupportedField('TextAreaField', 'BsSimpleFieldRenderer');
+		$this->AddSupportedField('SelectField', 'BsSimpleFieldRenderer');
+		$this->AddSupportedField('RadioField', 'BsSimpleFieldRenderer');
+		$this->AddSupportedField('CheckboxField', 'BsSimpleFieldRenderer');
+	}
+
 }

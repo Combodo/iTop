@@ -28,8 +28,8 @@ use \Combodo\iTop\Form\Validator\Validator;
  */
 class IntegerValidator extends Validator
 {
-    const VALIDATOR_NAME = 'integer';
-    const DEFAULT_REGEXP = '^[0-9]+$';
-    const DEFAULT_ERROR_MESSAGE = 'TOTR: MUST NOT BE AN INTEGER MESSAGE';
+	const VALIDATOR_NAME = 'integer';
+	const DEFAULT_REGEXP = '^[0-9]+$';
+	const DEFAULT_ERROR_MESSAGE = 'TOTR: MUST NOT BE AN INTEGER MESSAGE';
 
 }

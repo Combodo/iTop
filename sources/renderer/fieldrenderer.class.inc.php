@@ -28,33 +28,41 @@ use \Combodo\iTop\Form\Field\Field;
  */
 abstract class FieldRenderer
 {
-    protected $oField;
-    protected $sEndpoint;
+	protected $oField;
+	protected $sEndpoint;
 
-    /**
-     * Default constructor
-     * 
-     * @param \Combodo\iTop\Form\Field\Field $oField
-     */
-    public function __construct(Field $oField)
-    {
-        $this->oField = $oField;
-    }
+	/**
+	 * Default constructor
+	 *
+	 * @param \Combodo\iTop\Form\Field\Field $oField
+	 */
+	public function __construct(Field $oField)
+	{
+		$this->oField = $oField;
+	}
 
-    public function GetEndpoint()
-    {
-        return $this->sEndpoint;
-    }
+	/**
+	 *
+	 * @return string
+	 */
+	public function GetEndpoint()
+	{
+		return $this->sEndpoint;
+	}
 
-    public function SetEndpoint($sEndpoint)
-    {
-        $this->sEndpoint = $sEndpoint;
-    }
+	/**
+	 *
+	 * @param string $sEndpoint
+	 */
+	public function SetEndpoint($sEndpoint)
+	{
+		$this->sEndpoint = $sEndpoint;
+	}
 
-    /**
-     * Renders a Field as a RenderingOutput
-     *
-     * @return \Combodo\iTop\Renderer\RenderingOutput
-     */
-    abstract public function Render();
+	/**
+	 * Renders a Field as a RenderingOutput
+	 *
+	 * @return \Combodo\iTop\Renderer\RenderingOutput
+	 */
+	abstract public function Render();
 }

@@ -29,72 +29,111 @@ use \Combodo\iTop\Renderer\FormRenderer;
  */
 abstract class FormManager
 {
-    protected $oForm;
-    protected $oRenderer;
-
-    static function FromJSON($sJson)
-    {
-        // Overload in child class when needed
-        $aJson = json_decode($sJson, true);
-
-        $oFormManager = new static();
-
-        $sFormRendererClass = $aJson['formrenderer_class'];
-        $oFormRenderer = new $sFormRendererClass();
-        $oFormRenderer->SetEndpoint($aJson['formrenderer_endpoint']);
-        $oFormManager->SetRenderer($oFormRenderer);
-
-        return $oFormManager;
-    }
-
-    public function __construct()
-    {
-        // Overload in child class when needed
-    }
+	protected $oForm;
+	protected $oRenderer;
 
 	/**
-     * @return Form
-     */
-    public function GetForm()
-    {
-        return $this->oForm;
-    }
+	 * Creates an instance of \Combodo\iTop\Form\FormManager from JSON data that must contain at least :
+	 * - formrenderer_class : The class of the FormRenderer to use in the FormManager
+	 * - formrenderer_endpoint : The endpoint of the renderer
+	 *
+	 * @param string $sJson
+	 * @return \Combodo\iTop\Form\FormManager
+	 */
+	static function FromJSON($sJson)
+	{
+		// Overload in child class when needed
+		$aJson = json_decode($sJson, true);
 
-    /**
-     * @return FormRenderer
-     */
-    public function GetRenderer()
-    {
-        return $this->oRenderer;
-    }
+		$oFormManager = new static();
 
-    public function SetRenderer(FormRenderer $oRenderer)
-    {
-        $this->oRenderer = $oRenderer;
-        return $this;
-    }
+		$sFormRendererClass = $aJson['formrenderer_class'];
+		$oFormRenderer = new $sFormRendererClass();
+		$oFormRenderer->SetEndpoint($aJson['formrenderer_endpoint']);
+		$oFormManager->SetRenderer($oFormRenderer);
 
-    public function GetClass()
-    {
-        return get_class($this);
-    }
+		return $oFormManager;
+	}
 
-    public function ToJSON()
-    {
-        // Overload in child class when needed
-        return array(
-            'id' => $this->oForm->GetId(),
-            'formmanager_class' => $this->GetClass(),
-            'formrenderer_class' => get_class($this->GetRenderer()),
-            'formrenderer_endpoint' => $this->GetRenderer()->GetEndpoint()
-        );
-    }
+	public function __construct()
+	{
+		// Overload in child class when needed
+	}
 
-    abstract public function Build();
+	/**
+	 *
+	 * @return \Combodo\iTop\Form\Form
+	 */
+	public function GetForm()
+	{
+		return $this->oForm;
+	}
 
-    abstract public function OnUpdate($aArgs = null);
+	/**
+	 *
+	 * @param \Combodo\iTop\Form\Form $oForm
+	 * @return \Combodo\iTop\Form\FormManager
+	 */
+	public function SetForm(Form $oForm)
+	{
+		$this->oForm = $oForm;
+		return $this;
+	}
 
-    abstract public function OnSubmit($aArgs = null);
+	/**
+	 *
+	 * @return \Combodo\iTop\Renderer\FormRenderer
+	 */
+	public function GetRenderer()
+	{
+		return $this->oRenderer;
+	}
 
-    abstract public function OnCancel($aArgs = null);
+	/**
+	 *
+	 * @param \Combodo\iTop\Renderer\FormRenderer $oRenderer
+	 * @return \Combodo\iTop\Form\FormManager
+	 */
+	public function SetRenderer(FormRenderer $oRenderer)
+	{
+		$this->oRenderer = $oRenderer;
+		return $this;
+	}
+
+	/**
+	 *
+	 * @return string
+	 */
+	public function GetClass()
+	{
+		return get_class($this);
+	}
+
+	/**
+	 * Creates a JSON string from the current object including :
+	 * - id : Id of the current Form
+	 * - formmanager_class
+	 * - formrenderer_class
+	 * - formrenderer_endpoint
+	 *
+	 * @return string
+	 */
+	public function ToJSON()
+	{
+		// Overload in child class when needed
+		return array(
+			'id' => $this->oForm->GetId(),
+			'formmanager_class' => $this->GetClass(),
+			'formrenderer_class' => get_class($this->GetRenderer()),
+			'formrenderer_endpoint' => $this->GetRenderer()->GetEndpoint()
+		);
+	}
+
+	abstract public function Build();
+
+	abstract public function OnUpdate($aArgs = null);
+
+	abstract public function OnSubmit($aArgs = null);
+
+	abstract public function OnCancel($aArgs = null);
 }

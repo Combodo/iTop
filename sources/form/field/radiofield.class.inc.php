@@ -28,6 +28,6 @@ use \Combodo\iTop\Form\Field\MultipleChoicesField;
  */
 class RadioField extends MultipleChoicesField
 {
-    const DEFAULT_MULTIPLE_VALUES_ENABLED = false;
+	const DEFAULT_MULTIPLE_VALUES_ENABLED = false;
 
 }

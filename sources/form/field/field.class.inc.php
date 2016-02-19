@@ -30,254 +30,330 @@ use \Combodo\iTop\Form\Validator\MandatoryValidator;
  */
 abstract class Field
 {
-    const DEFAULT_LABEL = '';
-    const DEFAULT_READ_ONLY = false;
-    const DEFAULT_MANDATORY = false;
-    const DEFAULT_VALID = true;
+	const DEFAULT_LABEL = '';
+	const DEFAULT_READ_ONLY = false;
+	const DEFAULT_MANDATORY = false;
+	const DEFAULT_VALID = true;
 
-    protected $sId;
-    protected $sGlobalId;
-    protected $sFormPath;
-    protected $sLabel;
-    protected $bReadOnly;
-    protected $bMandatory;
-    protected $aValidators;
-    protected $bValid;
-    protected $aErrorMessages;
-    protected $currentValue;
-    protected $onFinalizeCallback;
-
-    /**
-     *
-     * @param Closure $callback (Used in the $oForm->AddField($sId, ..., function() use ($oManager, $oForm, '...') { ... } ); )
-     */
-    public function __construct($sId, Closure $onFinalizeCallback = null)
-    {
-        $this->sId = $sId;
-        $this->sGlobalId = 'field_'.$sId.uniqid();
-        $this->sLabel = static::DEFAULT_LABEL;
-        $this->bReadOnly = static::DEFAULT_READ_ONLY;
-        $this->bMandatory = static::DEFAULT_MANDATORY;
-        $this->aValidators = array();
-        $this->bValid = static::DEFAULT_VALID;
-        $this->aErrorMessages = array();
-        $this->onFinalizeCallback = $onFinalizeCallback;
-    }
+	protected $sId;
+	protected $sGlobalId;
+	protected $sFormPath;
+	protected $sLabel;
+	protected $bReadOnly;
+	protected $bMandatory;
+	protected $aValidators;
+	protected $bValid;
+	protected $aErrorMessages;
+	protected $currentValue;
+	protected $onFinalizeCallback;
 
 	/**
-     * Get the field id within its container form
-     * @return string
-     */
-    public function GetId()
-    {
-        return $this->sId;
-    }
+	 * Default constructor
+	 *
+	 * @param string $sId
+	 * @param Closure $onFinalizeCallback (Used in the $oForm->AddField($sId, ..., function() use ($oManager, $oForm, '...') { ... } ); )
+	 */
+	public function __construct($sId, Closure $onFinalizeCallback = null)
+	{
+		$this->sId = $sId;
+		$this->sGlobalId = 'field_' . $sId . '_' . uniqid();
+		$this->sLabel = static::DEFAULT_LABEL;
+		$this->bReadOnly = static::DEFAULT_READ_ONLY;
+		$this->bMandatory = static::DEFAULT_MANDATORY;
+		$this->aValidators = array();
+		$this->bValid = static::DEFAULT_VALID;
+		$this->aErrorMessages = array();
+		$this->onFinalizeCallback = $onFinalizeCallback;
+	}
 
-    /**
-     * Get a unique field id within the top level form
-     * @return string
-     */
-    public function GetGlobalId()
-    {
-        return $this->sGlobalId;
-    }
+	/**
+	 * Returns the field id within its container form
+	 *
+	 * @return string
+	 */
+	public function GetId()
+	{
+		return $this->sId;
+	}
 
-    /**
-     * Get the id of the container form
-     * @return string
-     */
-    public function GetFormPath()
-    {
-        return $this->sFormPath;
-    }
+	/**
+	 * Returns a unique field id within the top level form
+	 *
+	 * @return string
+	 */
+	public function GetGlobalId()
+	{
+		return $this->sGlobalId;
+	}
 
-    public function GetLabel()
-    {
-        return $this->sLabel;
-    }
+	/**
+	 * Returns the id of the container form
+	 *
+	 * @return string
+	 */
+	public function GetFormPath()
+	{
+		return $this->sFormPath;
+	}
 
-    public function GetReadOnly()
-    {
-        return $this->bReadOnly;
-    }
+	/**
+	 *
+	 * @return string
+	 */
+	public function GetLabel()
+	{
+		return $this->sLabel;
+	}
 
-    public function GetMandatory()
-    {
-        return $this->bMandatory;
-    }
+	/**
+	 *
+	 * @return boolean
+	 */
+	public function GetReadOnly()
+	{
+		return $this->bReadOnly;
+	}
 
-    public function GetValidators()
-    {
-        return $this->aValidators;
-    }
+	/**
+	 *
+	 * @return boolean
+	 */
+	public function GetMandatory()
+	{
+		return $this->bMandatory;
+	}
 
-    /**
-     * Returns the current validation state of the field (true|false).
-     * It DOESN'T make the validation, see Validate() instead.
-     *
-     * @return boolean
-     */
-    public function GetValid()
-    {
-        return $this->bValid;
-    }
+	/**
+	 *
+	 * @return array
+	 */
+	public function GetValidators()
+	{
+		return $this->aValidators;
+	}
 
-    public function GetErrorMessages()
-    {
-        return $this->aErrorMessages;
-    }
+	/**
+	 * Returns the current validation state of the field (true|false).
+	 * It DOESN'T make the validation, see Validate() instead.
+	 *
+	 * @return boolean
+	 */
+	public function GetValid()
+	{
+		return $this->bValid;
+	}
 
-    public function GetCurrentValue()
-    {
-        return $this->currentValue;
-    }
+	/**
+	 *
+	 * @return array
+	 */
+	public function GetErrorMessages()
+	{
+		return $this->aErrorMessages;
+	}
 
-    public function SetLabel($sLabel)
-    {
-        $this->sLabel = $sLabel;
-        return $this;
-    }
+	/**
+	 *
+	 * @return array
+	 */
+	public function GetCurrentValue()
+	{
+		return $this->currentValue;
+	}
 
-    public function SetReadOnly($bReadOnly)
-    {
-        $this->bReadOnly = $bReadOnly;
-        return $this;
-    }
+	/**
+	 * Sets the field formpath
+	 * Usually Called by the form when adding the field
+	 *
+	 * @param string $sFormPath
+	 * @return \Combodo\iTop\Form\Field\Field
+	 */
+	public function SetFormPath($sFormPath)
+	{
+		$this->sFormPath = $sFormPath;
+		return $this;
+	}
 
-    public function SetMandatory($bMandatory)
-    {
-        // Before changing the property, we check if it was already mandatory. If not, we had the mandatory validator
-        if ($bMandatory && !$this->bMandatory)
-        {
-            $this->AddValidator(new MandatoryValidator());
-        }
+	/**
+	 *
+	 * @param type $sLabel
+	 * @return \Combodo\iTop\Form\Field\Field
+	 */
+	public function SetLabel($sLabel)
+	{
+		$this->sLabel = $sLabel;
+		return $this;
+	}
 
-        if (!$bMandatory)
-        {
-            foreach ($this->aValidators as $iKey => $oValue)
-            {
-                if ($oValue::Getname() === MandatoryValidator::GetName())
-                {
-                    unset($this->aValidators[$iKey]);
-                }
-            }
-        }
+	/**
+	 *
+	 * @param boolean $bReadOnly
+	 * @return \Combodo\iTop\Form\Field\Field
+	 */
+	public function SetReadOnly($bReadOnly)
+	{
+		$this->bReadOnly = $bReadOnly;
+		return $this;
+	}
 
-        $this->bMandatory = $bMandatory;
-        return $this;
-    }
+	/**
+	 * Sets if the field is mandatory or not.
+	 * Setting the value will automatically add/remove a MandatoryValidator to the Field
+	 *
+	 * @param boolean $bMandatory
+	 * @return \Combodo\iTop\Form\Field\Field
+	 */
+	public function SetMandatory($bMandatory)
+	{
+		// Before changing the property, we check if it was already mandatory. If not, we had the mandatory validator
+		if ($bMandatory && !$this->bMandatory)
+		{
+			$this->AddValidator(new MandatoryValidator());
+		}
 
-    public function SetValidators($aValidators)
-    {
-        $this->aValidators = $aValidators;
-        return $this;
-    }
+		if (!$bMandatory)
+		{
+			foreach ($this->aValidators as $iKey => $oValue)
+			{
+				if ($oValue::Getname() === MandatoryValidator::GetName())
+				{
+					unset($this->aValidators[$iKey]);
+				}
+			}
+		}
 
-    /**
-     * Note : Function is protected as bValid should not be set from outside
-     *
-     * @param boolean $bValid
-     * @return \Combodo\iTop\Form\Field\Field
-     */
-    protected function SetValid($bValid)
-    {
-        $this->bValid = $bValid;
-        return $this;
-    }
+		$this->bMandatory = $bMandatory;
+		return $this;
+	}
 
-    /**
-     * Note : Function is protected as aErrorMessages should not be set from outside
-     *
-     * @param array $aErrorMessages
-     * @return \Combodo\iTop\Form\Field\Field
-     */
-    protected function SetErrorMessages($aErrorMessages)
-    {
-        $this->aErrorMessages = $aErrorMessages;
-        return $this;
-    }
+	/**
+	 *
+	 * @param array $aValidators
+	 * @return \Combodo\iTop\Form\Field\Field
+	 */
+	public function SetValidators($aValidators)
+	{
+		$this->aValidators = $aValidators;
+		return $this;
+	}
 
-    public function SetCurrentValue($currentValue)
-    {
-        $this->currentValue = $currentValue;
-        return $this;
-    }
+	/**
+	 * Note : Function is protected as bValid should not be set from outside
+	 *
+	 * @param boolean $bValid
+	 * @return \Combodo\iTop\Form\Field\Field
+	 */
+	protected function SetValid($bValid)
+	{
+		$this->bValid = $bValid;
+		return $this;
+	}
 
-    public function SetOnFinalizeCallback(Closure $onFinalizeCallback)
-    {
-        $this->onFinalizeCallback = $onFinalizeCallback;
-        return $this;
-    }
+	/**
+	 * Note : Function is protected as aErrorMessages should not be set from outside
+	 *
+	 * @param array $aErrorMessages
+	 * @return \Combodo\iTop\Form\Field\Field
+	 */
+	protected function SetErrorMessages($aErrorMessages)
+	{
+		$this->aErrorMessages = $aErrorMessages;
+		return $this;
+	}
 
-    /**
-     * Called by the form when adding the field
-     */
-    public function SetFormPath($sFormPath)
-    {
-        $this->sFormPath = $sFormPath;
-    }
+	/**
+	 *
+	 * @param mixed $currentValue
+	 * @return \Combodo\iTop\Form\Field\Field
+	 */
+	public function SetCurrentValue($currentValue)
+	{
+		$this->currentValue = $currentValue;
+		return $this;
+	}
 
-    public function AddValidator(Validator $oValidator)
-    {
-        $this->aValidators[] = $oValidator;
-        return $this;
-    }
+	/**
+	 *
+	 * @param Closure $onFinalizeCallback
+	 * @return \Combodo\iTop\Form\Field\Field
+	 */
+	public function SetOnFinalizeCallback(Closure $onFinalizeCallback)
+	{
+		$this->onFinalizeCallback = $onFinalizeCallback;
+		return $this;
+	}
 
-    public function RemoveValidator(Validator $oValidator)
-    {
-        foreach ($this->aValidators as $iKey => $oValue)
-        {
-            if ($oValue === $oValidator)
-            {
-                unset($this->aValidators[$iKey]);
-            }
-        }
-        return $this;
-    }
+	/**
+	 *
+	 * @param Validator $oValidator
+	 * @return \Combodo\iTop\Form\Field\Field
+	 */
+	public function AddValidator(Validator $oValidator)
+	{
+		$this->aValidators[] = $oValidator;
+		return $this;
+	}
 
-    /**
-     * Note : Function is protected as aErrorMessages should not be add from outside
-     *
-     * @param string $sErrorMessage
-     * @return \Combodo\iTop\Form\Field\Field
-     */
-    protected function AddErrorMessage($sErrorMessage)
-    {
-        $this->aErrorMessages[] = $sErrorMessage;
-        return $this;
-    }
+	/**
+	 *
+	 * @param Validator $oValidator
+	 * @return \Combodo\iTop\Form\Field\Field
+	 */
+	public function RemoveValidator(Validator $oValidator)
+	{
+		foreach ($this->aValidators as $iKey => $oValue)
+		{
+			if ($oValue === $oValidator)
+			{
+				unset($this->aValidators[$iKey]);
+			}
+		}
+		return $this;
+	}
 
-    /**
-     * Note : Function is protected as aErrorMessages should not be set from outside
-     *
-     * @return \Combodo\iTop\Form\Field\Field
-     */
-    protected function EmptyErrorMessages()
-    {
-        $this->aErrorMessages = array();
-        return $this;
-    }
+	/**
+	 * Note : Function is protected as aErrorMessages should not be add from outside
+	 *
+	 * @param string $sErrorMessage
+	 * @return \Combodo\iTop\Form\Field\Field
+	 */
+	protected function AddErrorMessage($sErrorMessage)
+	{
+		$this->aErrorMessages[] = $sErrorMessage;
+		return $this;
+	}
 
-    public function OnCancel()
-    {
-        // Overload when needed
-    }
+	/**
+	 * Note : Function is protected as aErrorMessages should not be set from outside
+	 *
+	 * @return \Combodo\iTop\Form\Field\Field
+	 */
+	protected function EmptyErrorMessages()
+	{
+		$this->aErrorMessages = array();
+		return $this;
+	}
 
-    public function OnFinalize()
-    {
-        if ($this->onFinalizeCallback !== null)
-        {
-            // Note : We MUST have a temp variable to call the Closure. otherwise it won't work when the Closure is a class member
-            $callback = $this->onFinalizeCallback;
-            $callback($this);
-        }
-    }
+	public function OnCancel()
+	{
+		// Overload when needed
+	}
 
-    /**
-     * Checks the validators to see if the field's current value is valid.
-     * Then sets $bValid and $aErrorMessages.
-     *
-     * @return boolean
-     */
-    abstract public function Validate();
+	public function OnFinalize()
+	{
+		if ($this->onFinalizeCallback !== null)
+		{
+			// Note : We MUST have a temp variable to call the Closure. otherwise it won't work when the Closure is a class member
+			$callback = $this->onFinalizeCallback;
+			$callback($this);
+		}
+	}
+
+	/**
+	 * Checks the validators to see if the field's current value is valid.
+	 * Then sets $bValid and $aErrorMessages.
+	 *
+	 * @return boolean
+	 */
+	abstract public function Validate();
 }

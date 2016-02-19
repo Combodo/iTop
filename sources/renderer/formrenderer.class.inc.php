@@ -22,6 +22,7 @@ namespace Combodo\iTop\Renderer;
 use \Exception;
 use \Dict;
 use \Combodo\iTop\Form\Form;
+use \Combodo\iTop\Form\Field\Field;
 
 /**
  * Description of FormRenderer
@@ -30,231 +31,272 @@ use \Combodo\iTop\Form\Form;
  */
 abstract class FormRenderer
 {
-    const ENUM_RENDER_MODE_EXPLODED = 'exploded';
-    const ENUM_RENDER_MODE_JOINED = 'joined';
-    const DEFAULT_RENDERER_NAMESPACE = '';
+	const ENUM_RENDER_MODE_EXPLODED = 'exploded';
+	const ENUM_RENDER_MODE_JOINED = 'joined';
+	const DEFAULT_RENDERER_NAMESPACE = '';
 
-    protected $oForm;
-    protected $sEndpoint;
-    protected $aSupportedFields;
-    protected $sBaseLayout;
-    protected $aOutputs;
+	protected $oForm;
+	protected $sEndpoint;
+	protected $aSupportedFields;
+	protected $sBaseLayout;
+	protected $aOutputs;
 
-    /**
-     * Default constructor
-     * 
-     * @param \Combodo\iTop\Form\Form $oForm
-     */
-    public function __construct(Form $oForm = null)
-    {
-        if ($oForm !== null)
-        {
-            $this->oForm = $oForm;
-        }
-        $this->sBaseLayout = '';
-        $this->InitOutputs();
-    }
+	/**
+	 * Default constructor
+	 *
+	 * @param \Combodo\iTop\Form\Form $oForm
+	 */
+	public function __construct(Form $oForm = null)
+	{
+		if ($oForm !== null)
+		{
+			$this->oForm = $oForm;
+		}
+		$this->sBaseLayout = '';
+		$this->InitOutputs();
+	}
 
-    public function GetForm()
-    {
-        return $this->oForm;
-    }
+	/**
+	 *
+	 * @return \Combodo\iTop\Form\Form
+	 */
+	public function GetForm()
+	{
+		return $this->oForm;
+	}
 
-    public function SetForm($oForm)
-    {
-        $this->oForm = $oForm;
-        return $this;
-    }
+	/**
+	 *
+	 * @param \Combodo\iTop\Form\Form $oForm
+	 * @return \Combodo\iTop\Renderer\FormRenderer
+	 */
+	public function SetForm(Form $oForm)
+	{
+		$this->oForm = $oForm;
+		return $this;
+	}
 
-    public function GetEndpoint()
-    {
-        return $this->sEndpoint;
-    }
+	/**
+	 *
+	 * @return string
+	 */
+	public function GetEndpoint()
+	{
+		return $this->sEndpoint;
+	}
 
-    public function SetEndpoint($sEndpoint)
-    {
-        $this->sEndpoint = $sEndpoint;
-        return $this;
-    }
+	/**
+	 *
+	 * @param string $sEndpoint
+	 * @return \Combodo\iTop\Renderer\FormRenderer
+	 */
+	public function SetEndpoint($sEndpoint)
+	{
+		$this->sEndpoint = $sEndpoint;
+		return $this;
+	}
 
-    public function GetBaseLayout()
-    {
-        return $this->sBaseLayout;
-    }
+	/**
+	 *
+	 * @return string
+	 */
+	public function GetBaseLayout()
+	{
+		return $this->sBaseLayout;
+	}
 
-    public function SetBaseLayout($sBaseLayout)
-    {
-        $this->sBaseLayout = $sBaseLayout;
-        return $this;
-    }
+	/**
+	 *
+	 * @param string $sBaseLayout
+	 * @return \Combodo\iTop\Renderer\FormRenderer
+	 */
+	public function SetBaseLayout($sBaseLayout)
+	{
+		$this->sBaseLayout = $sBaseLayout;
+		return $this;
+	}
 
-    public function GetFieldRendererClass($oField)
-    {
-        if (array_key_exists(get_class($oField), $this->aSupportedFields))
-        {
-            return $this->aSupportedFields[get_class($oField)];
-        }
-        else
-        {
-            throw new Exception('Field type not supported by the renderer: '.get_class($oField));
-        }
-    }
+	/**
+	 *
+	 * @param \Combodo\iTop\Form\Field\Field $oField
+	 * @return string
+	 * @throws Exception
+	 */
+	public function GetFieldRendererClass(Field $oField)
+	{
+		if (array_key_exists(get_class($oField), $this->aSupportedFields))
+		{
+			return $this->aSupportedFields[get_class($oField)];
+		}
+		else
+		{
+			throw new Exception('Field type not supported by the renderer: ' . get_class($oField));
+		}
+	}
 
-    /**
-     * Returns the field identified by the id $sId in $this->oForm.
-     *
-     * @param string $sId
-     * @return \Combodo\iTop\Renderer\FieldRenderer
-     */
-    public function GetFieldRendererClassFromId($sId)
-    {
-        return $this->GetFieldRendererClass($this->oForm->GetField($sId));
-    }
+	/**
+	 * Returns the field identified by the id $sId in $this->oForm.
+	 *
+	 * @param string $sId
+	 * @return \Combodo\iTop\Renderer\FieldRenderer
+	 */
+	public function GetFieldRendererClassFromId($sId)
+	{
+		return $this->GetFieldRendererClass($this->oForm->GetField($sId));
+	}
 
-    /**
-     *
-     * @return array
-     */
-    public function GetOutputs()
-    {
-        return $this->aOutputs;
-    }
+	/**
+	 *
+	 * @return array
+	 */
+	public function GetOutputs()
+	{
+		return $this->aOutputs;
+	}
 
+	/**
+	 * Registers a Renderer class for the specified Field class.
+	 *
+	 * If the Field class is not fully qualified, the default "Combodo\iTop\Form\Field" will be prepend.
+	 * If the Field class already had a registered Renderer, it is replaced.
+	 *
+	 * @param string $sFieldClass
+	 * @param string $sRendererClass
+	 */
+	public function AddSupportedField($sFieldClass, $sRendererClass)
+	{
+		$sFieldClass = (strpos($sFieldClass, '\\') !== false) ? $sFieldClass : 'Combodo\\iTop\\Form\\Field\\' . $sFieldClass;
+		$sRendererClass = (strpos($sRendererClass, '\\') !== false) ? $sRendererClass : static::DEFAULT_RENDERER_NAMESPACE . $sRendererClass;
 
-    /**
-     * Registers a Renderer class for the specified Field class.
-     * 
-     * If the Field class is not fully qualified, the default "Combodo\iTop\Form\Field" will be prepend.
-     * If the Field class already had a registered Renderer, it is replaced.
-     *
-     * @param string $sFieldClass
-     * @param string $sRendererClass
-     */
-    public function AddSupportedField($sFieldClass, $sRendererClass)
-    {
-        $sFieldClass = (strpos($sFieldClass, '\\') !== false) ? $sFieldClass : 'Combodo\\iTop\\Form\\Field\\' . $sFieldClass;
-        $sRendererClass = (strpos($sRendererClass, '\\') !== false) ? $sRendererClass : static::DEFAULT_RENDERER_NAMESPACE . $sRendererClass;
+		$this->aSupportedFields[$sFieldClass] = $sRendererClass;
 
-        $this->aSupportedFields[$sFieldClass] = $sRendererClass;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 *
+	 * @return \Combodo\iTop\Renderer\FormRenderer
+	 */
+	public function InitOutputs()
+	{
+		$this->aOutputs = array();
+		return $this;
+	}
 
-    public function InitOutputs()
-    {
-        $this->aOutputs = array();
-        return $this;
-    }
+	/**
+	 *
+	 * @return array
+	 */
+	public function Render()
+	{
+		$this->InitOutputs();
 
-    public function Render()
-    {
-        $this->InitOutputs();
+		foreach ($this->oForm->GetFields() as $oField)
+		{
+			$this->aOutputs[$oField->GetId()] = $this->PrepareOutputForField($oField);
+		}
 
-        foreach ($this->oForm->GetFields() as $oField)
-        {
-            $this->aOutputs[$oField->GetId()] = $this->PrepareOutputForField($oField);
-        }
+		return $this->aOutputs;
+	}
 
-        return $this->aOutputs;
-    }
+	/**
+	 * Returns the output for the $oField. Output format depends on the $sMode.
+	 *
+	 * If $sMode = 'exploded', output is an has array with id / html / js_inline / js_files / css_inline / css_files / validators
+	 * Else if $sMode = 'joined', output is a string with everything in it
+	 *
+	 * @param \Combodo\iTop\Form\Field\Field $oField
+	 * @param string $sMode 'exploded'|'joined'
+	 * @return mixed
+	 */
+	protected function PrepareOutputForField($oField, $sMode = 'exploded')
+	{
+		$output = array(
+			'id' => $oField->GetId(),
+			'html' => '',
+			'js_inline' => '',
+			'css_inline' => '',
+			'js_files' => array(),
+			'css_files' => array()
+		);
 
-    /**
-     * Returns the output for the $oField. Output format depends on the $sMode.
-     *
-     * If $sMode = 'exploded', output is an has array with id / html / js_inline / js_files / css_inline / css_files / validators
-     * Else if $sMode = 'joined', output is a string with everything in it
-     *
-     * @param \Combodo\iTop\Form\Field\Field $oField
-     * @param string $sMode 'exploded'|'joined'
-     * @return mixed
-     */
-    protected function PrepareOutputForField($oField, $sMode = 'exploded')
-    {
-        $output = array(
-            'id' => $oField->GetId(),
-            'html' => '',
-            'js_inline' => '',
-            'css_inline' => '',
-            'js_files' => array(),
-            'css_files' => array()
-        );
+		$sFieldRendererClass = $this->GetFieldRendererClass($oField);
 
-        $sFieldRendererClass = $this->GetFieldRendererClass($oField);
+		$oFieldRenderer = new $sFieldRendererClass($oField);
+		$oFieldRenderer->SetEndpoint($this->GetEndpoint());
 
-        $oFieldRenderer = new $sFieldRendererClass($oField);
-        $oFieldRenderer->SetEndpoint($this->GetEndpoint());
+		$oRenderingOutput = $oFieldRenderer->Render();
 
-        $oRenderingOutput = $oFieldRenderer->Render();
+		// HTML
+		if ($oRenderingOutput->GetHtml() !== '')
+		{
+			if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
+			{
+				$output['html'] = $oRenderingOutput->GetHtml();
+			}
+			else
+			{
+				$output['html'] .= $oRenderingOutput->GetHtml();
+			}
+		}
 
-        // HTML
-        if ($oRenderingOutput->GetHtml() !== '')
-        {
-            if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
-            {
-                $output['html'] = $oRenderingOutput->GetHtml();
-            }
-            else
-            {
-                $output['html'] .= $oRenderingOutput->GetHtml();
-            }
-        }
+		// JS files
+		foreach ($oRenderingOutput->GetJsFiles() as $sJsFile)
+		{
+			if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
+			{
+				if (!in_array($sJsFile, $output['js_files']))
+				{
+					$output['js_files'][] = $sJsFile;
+				}
+			}
+			else
+			{
+				$output['html'] .= '<script src="' . $sJsFile . '" type="text/javascript"></script>';
+			}
+		}
+		// JS inline
+		if ($oRenderingOutput->GetJs() !== '')
+		{
+			if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
+			{
+				$output['js_inline'] .= ' ' . $oRenderingOutput->GetJs();
+			}
+			else
+			{
+				$output['html'] .= '<script type="text/javascript">' . $oRenderingOutput->GetJs() . '</script>';
+			}
+		}
 
-        // JS files
-        foreach ($oRenderingOutput->GetJsFiles() as $sJsFile)
-        {
-            if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
-            {
-                if (!in_array($sJsFile, $output['js_files']))
-                {
-                    $output['js_files'][] = $sJsFile;
-                }
-            }
-            else
-            {
-                $output['html'] .= '<script src="' . $sJsFile . '" type="text/javascript"></script>';
-            }
-        }
-        // JS inline
-        if ($oRenderingOutput->GetJs() !== '')
-        {
-            if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
-            {
-                $output['js_inline'] .= ' ' . $oRenderingOutput->GetJs();
-            }
-            else
-            {
-                $output['html'] .= '<script type="text/javascript">' . $oRenderingOutput->GetJs() . '</script>';
-            }
-        }
+		// CSS files
+		foreach ($oRenderingOutput->GetCssFiles() as $sCssFile)
+		{
+			if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
+			{
+				if (!in_array($sCssFile, $output['css_files']))
+				{
+					$output['css_files'][] = $sCssFile;
+				}
+			}
+			else
+			{
+				$output['html'] .= '<link href="' . $sCssFile . '" rel="stylesheet" />';
+			}
+		}
+		// CSS inline
+		if ($oRenderingOutput->GetCss() !== '')
+		{
+			if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
+			{
+				$output['css_inline'] .= ' ' . $oRenderingOutput->GetCss();
+			}
+			else
+			{
+				$output['html'] .= '<style>' . $oRenderingOutput->GetCss() . '</style>';
+			}
+		}
 
-        // CSS files
-        foreach ($oRenderingOutput->GetCssFiles() as $sCssFile)
-        {
-            if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
-            {
-                if (!in_array($sCssFile, $output['css_files']))
-                {
-                    $output['css_files'][] = $sCssFile;
-                }
-            }
-            else
-            {
-                $output['html'] .= '<link href="' . $sCssFile . '" rel="stylesheet" />';
-            }
-        }
-        // CSS inline
-        if ($oRenderingOutput->GetCss() !== '')
-        {
-            if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
-            {
-                $output['css_inline'] .= ' ' . $oRenderingOutput->GetCss();
-            }
-            else
-            {
-                $output['html'] .= '<style>' . $oRenderingOutput->GetCss() . '</style>';
-            }
-        }
+		return $output;
+	}
 
-        return $output;
-    }
 }

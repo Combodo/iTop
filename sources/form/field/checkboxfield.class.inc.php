@@ -28,6 +28,6 @@ use \Combodo\iTop\Form\Field\MultipleChoicesField;
  */
 class CheckboxField extends MultipleChoicesField
 {
-    const DEFAULT_MULTIPLE_VALUES_ENABLED = true;
+	const DEFAULT_MULTIPLE_VALUES_ENABLED = true;
 
 }

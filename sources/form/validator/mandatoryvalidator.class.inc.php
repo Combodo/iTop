@@ -30,8 +30,8 @@ use \Combodo\iTop\Form\Validator\Validator;
  */
 class MandatoryValidator extends Validator
 {
-    const VALIDATOR_NAME = 'mandatory';
-    const DEFAULT_REGEXP = '.*\S.*';
-    const DEFAULT_ERROR_MESSAGE = 'TOTR: MANDATORY MESSAGE';
+	const VALIDATOR_NAME = 'mandatory';
+	const DEFAULT_REGEXP = '.*\S.*';
+	const DEFAULT_ERROR_MESSAGE = 'TOTR: MANDATORY MESSAGE';
 
 }

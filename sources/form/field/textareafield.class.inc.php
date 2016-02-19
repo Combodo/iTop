@@ -28,5 +28,5 @@ use \Combodo\iTop\Form\Field\TextField;
  */
 class TextAreaField extends TextField
 {
-    
+
 }
