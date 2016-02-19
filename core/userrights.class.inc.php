@@ -371,7 +371,7 @@ abstract class UserInternal extends User
 		MetaModel::Init_InheritAttributes();
 
 		// When set, this token allows for password reset
-		MetaModel::Init_AddAttribute(new AttributeString("reset_pwd_token", array("allowed_values"=>null, "sql"=>"reset_pwd_token", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeOneWayPassword("reset_pwd_token", array("allowed_values"=>null, "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('contactid', 'first_name', 'email', 'login', 'language', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details

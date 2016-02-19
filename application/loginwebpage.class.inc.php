@@ -305,16 +305,20 @@ class LoginWebPage extends NiceWebPage
 		{
 			$this->add("<p>".Dict::Format('UI:ResetPwd-Error-WrongLogin', $sAuthUser)."</p>\n");
 		}
-		elseif ($oUser->Get('reset_pwd_token') != $sToken)
-		{
-			$this->add("<p>".Dict::S('UI:ResetPwd-Error-InvalidToken')."</p>\n");
-		}
 		else
 		{
-			$this->add("<p>".Dict::Format('UI:ResetPwd-Error-EnterPassword', $oUser->GetFriendlyName())."</p>\n");
-
-			$sInconsistenPwdMsg = Dict::S('UI:Login:RetypePwdDoesNotMatch');
-			$this->add_script(
+			$oEncryptedToken = $oUser->Get('reset_pwd_token');
+			
+			if (!$oEncryptedToken->CheckPassword($sToken))
+			{
+				$this->add("<p>".Dict::S('UI:ResetPwd-Error-InvalidToken')."</p>\n");
+			}
+			else
+			{
+				$this->add("<p>".Dict::Format('UI:ResetPwd-Error-EnterPassword', $oUser->GetFriendlyName())."</p>\n");
+	
+				$sInconsistenPwdMsg = Dict::S('UI:Login:RetypePwdDoesNotMatch');
+				$this->add_script(
 <<<EOF
 function DoCheckPwd()
 {
@@ -326,18 +330,19 @@ function DoCheckPwd()
 	return true;
 }
 EOF
-			);
-			$this->add("<form method=\"post\">\n");
-			$this->add("<table>\n");
-			$this->add("<tr><td style=\"text-align:right\"><label for=\"new_pwd\">".Dict::S('UI:Login:NewPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"new_pwd\" name=\"new_pwd\" value=\"\" /></td></tr>\n");
-			$this->add("<tr><td style=\"text-align:right\"><label for=\"retype_new_pwd\">".Dict::S('UI:Login:RetypeNewPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"retype_new_pwd\" name=\"retype_new_pwd\" value=\"\" /></td></tr>\n");
-			$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"><span class=\"btn_border\"><input type=\"submit\" onClick=\"return DoCheckPwd();\" value=\"".Dict::S('UI:Button:ChangePassword')."\" /></span></td></tr>\n");
-			$this->add("</table>\n");
-			$this->add("<input type=\"hidden\" name=\"loginop\" value=\"do_reset_pwd\" />\n");
-			$this->add("<input type=\"hidden\" name=\"auth_user\" value=\"".htmlentities($sAuthUser, ENT_QUOTES, 'UTF-8')."\" />\n");
-			$this->add("<input type=\"hidden\" name=\"token\" value=\"".htmlentities($sToken, ENT_QUOTES, 'UTF-8')."\" />\n");
-			$this->add("</form>\n");
-			$this->add("</div\n");
+				);
+				$this->add("<form method=\"post\">\n");
+				$this->add("<table>\n");
+				$this->add("<tr><td style=\"text-align:right\"><label for=\"new_pwd\">".Dict::S('UI:Login:NewPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"new_pwd\" name=\"new_pwd\" value=\"\" /></td></tr>\n");
+				$this->add("<tr><td style=\"text-align:right\"><label for=\"retype_new_pwd\">".Dict::S('UI:Login:RetypeNewPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"retype_new_pwd\" name=\"retype_new_pwd\" value=\"\" /></td></tr>\n");
+				$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"><span class=\"btn_border\"><input type=\"submit\" onClick=\"return DoCheckPwd();\" value=\"".Dict::S('UI:Button:ChangePassword')."\" /></span></td></tr>\n");
+				$this->add("</table>\n");
+				$this->add("<input type=\"hidden\" name=\"loginop\" value=\"do_reset_pwd\" />\n");
+				$this->add("<input type=\"hidden\" name=\"auth_user\" value=\"".htmlentities($sAuthUser, ENT_QUOTES, 'UTF-8')."\" />\n");
+				$this->add("<input type=\"hidden\" name=\"token\" value=\"".htmlentities($sToken, ENT_QUOTES, 'UTF-8')."\" />\n");
+				$this->add("</form>\n");
+				$this->add("</div\n");
+			}
 		}
 	}
 
@@ -357,21 +362,25 @@ EOF
 		{
 			$this->add("<p>".Dict::Format('UI:ResetPwd-Error-WrongLogin', $sAuthUser)."</p>\n");
 		}
-		elseif ($oUser->Get('reset_pwd_token') != $sToken)
-		{
-			$this->add("<p>".Dict::S('UI:ResetPwd-Error-InvalidToken')."</p>\n");
-		}
 		else
 		{
-			// Trash the token and change the password
-			$oUser->Set('reset_pwd_token', '');
-			$oUser->SetPassword($sNewPwd); // Does record the change into the DB
-
-			$this->add("<p>".Dict::S('UI:ResetPwd-Ready')."</p>");
-			$sUrl = utils::GetAbsoluteUrlAppRoot();
-			$this->add("<p><a href=\"$sUrl\">".Dict::S('UI:ResetPwd-Login')."</a></p>");
+			$oEncryptedPassword = $oUser->Get('reset_pwd_token');
+			if (!$oEncryptedPassword->CheckPassword($sToken))
+			{
+				$this->add("<p>".Dict::S('UI:ResetPwd-Error-InvalidToken')."</p>\n");
+			}
+			else
+			{
+				// Trash the token and change the password
+				$oUser->Set('reset_pwd_token', '');
+				$oUser->SetPassword($sNewPwd); // Does record the change into the DB
+	
+				$this->add("<p>".Dict::S('UI:ResetPwd-Ready')."</p>");
+				$sUrl = utils::GetAbsoluteUrlAppRoot();
+				$this->add("<p><a href=\"$sUrl\">".Dict::S('UI:ResetPwd-Login')."</a></p>");
+			}
+			$this->add("</div\n");
 		}
-		$this->add("</div\n");
 	}
 
 	public function DisplayChangePwdForm($bFailedLogin = false)
