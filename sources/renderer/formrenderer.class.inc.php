@@ -19,6 +19,7 @@
 
 namespace Combodo\iTop\Renderer;
 
+use \Exception;
 use \Dict;
 use \Combodo\iTop\Form\Form;
 
@@ -95,8 +96,7 @@ abstract class FormRenderer
         }
         else
         {
-            // TODO : We might want to throw an exception.
-            return null;
+            throw new Exception('Field type not supported by the renderer: '.get_class($oField));
         }
     }
 
@@ -104,7 +104,7 @@ abstract class FormRenderer
      * Returns the field identified by the id $sId in $this->oForm.
      *
      * @param string $sId
-     * @return Combodo\iTop\Renderer\FieldRenderer
+     * @return \Combodo\iTop\Renderer\FieldRenderer
      */
     public function GetFieldRendererClassFromId($sId)
     {
@@ -164,7 +164,7 @@ abstract class FormRenderer
      * If $sMode = 'exploded', output is an has array with id / html / js_inline / js_files / css_inline / css_files / validators
      * Else if $sMode = 'joined', output is a string with everything in it
      *
-     * @param Combodo\iTop\Form\Field\Field $oField
+     * @param \Combodo\iTop\Form\Field\Field $oField
      * @param string $sMode 'exploded'|'joined'
      * @return mixed
      */
@@ -180,81 +180,78 @@ abstract class FormRenderer
         );
 
         $sFieldRendererClass = $this->GetFieldRendererClass($oField);
-        // TODO : We might want to throw an exception instead when there is no renderer for that field
-        if ($sFieldRendererClass !== null)
+
+        $oFieldRenderer = new $sFieldRendererClass($oField);
+        $oFieldRenderer->SetEndpoint($this->GetEndpoint());
+
+        $oRenderingOutput = $oFieldRenderer->Render();
+
+        // HTML
+        if ($oRenderingOutput->GetHtml() !== '')
         {
-            $oFieldRenderer = new $sFieldRendererClass($oField);
-            $oFieldRenderer->SetEndpoint($this->GetEndpoint());
-
-            $oRenderingOutput = $oFieldRenderer->Render();
-
-            // HTML
-            if ($oRenderingOutput->GetHtml() !== '')
+            if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
             {
-                if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
+                $output['html'] = $oRenderingOutput->GetHtml();
+            }
+            else
+            {
+                $output['html'] .= $oRenderingOutput->GetHtml();
+            }
+        }
+
+        // JS files
+        foreach ($oRenderingOutput->GetJsFiles() as $sJsFile)
+        {
+            if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
+            {
+                if (!in_array($sJsFile, $output['js_files']))
                 {
-                    $output['html'] = $oRenderingOutput->GetHtml();
-                }
-                else
-                {
-                    $output['html'] .= $oRenderingOutput->GetHtml();
+                    $output['js_files'][] = $sJsFile;
                 }
             }
+            else
+            {
+                $output['html'] .= '<script src="' . $sJsFile . '" type="text/javascript"></script>';
+            }
+        }
+        // JS inline
+        if ($oRenderingOutput->GetJs() !== '')
+        {
+            if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
+            {
+                $output['js_inline'] .= ' ' . $oRenderingOutput->GetJs();
+            }
+            else
+            {
+                $output['html'] .= '<script type="text/javascript">' . $oRenderingOutput->GetJs() . '</script>';
+            }
+        }
 
-            // JS files
-            foreach ($oRenderingOutput->GetJsFiles() as $sJsFile)
+        // CSS files
+        foreach ($oRenderingOutput->GetCssFiles() as $sCssFile)
+        {
+            if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
             {
-                if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
+                if (!in_array($sCssFile, $output['css_files']))
                 {
-                    if (!in_array($sJsFile, $output['js_files']))
-                    {
-                        $output['js_files'][] = $sJsFile;
-                    }
-                }
-                else
-                {
-                    $output['html'] .= '<script src="' . $sJsFile . '" type="text/javascript"></script>';
+                    $output['css_files'][] = $sCssFile;
                 }
             }
-            // JS inline
-            if ($oRenderingOutput->GetJs() !== '')
+            else
             {
-                if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
-                {
-                    $output['js_inline'] .= ' ' . $oRenderingOutput->GetJs();
-                }
-                else
-                {
-                    $output['html'] .= '<script type="text/javascript">' . $oRenderingOutput->GetJs() . '</script>';
-                }
+                $output['html'] .= '<link href="' . $sCssFile . '" rel="stylesheet" />';
             }
-
-            // CSS files
-            foreach ($oRenderingOutput->GetCssFiles() as $sCssFile)
+        }
+        // CSS inline
+        if ($oRenderingOutput->GetCss() !== '')
+        {
+            if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
             {
-                if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
-                {
-                    if (!in_array($sCssFile, $output['css_files']))
-                    {
-                        $output['css_files'][] = $sCssFile;
-                    }
-                }
-                else
-                {
-                    $output['html'] .= '<link href="' . $sCssFile . '" rel="stylesheet" />';
-                }
+                $output['css_inline'] .= ' ' . $oRenderingOutput->GetCss();
             }
-            // CSS inline
-            if ($oRenderingOutput->GetCss() !== '')
+            else
             {
-                if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
-                {
-                    $output['css_inline'] .= ' ' . $oRenderingOutput->GetCss();
-                }
-                else
-                {
-                    $output['html'] .= '<style>' . $oRenderingOutput->GetCss() . '</style>';
-                }
+                $output['html'] .= '<style>' . $oRenderingOutput->GetCss() . '</style>';
             }
         }
 

@@ -52,11 +52,17 @@ abstract class FormManager
         // Overload in child class when needed
     }
 
+	/**
+     * @return Form
+     */
     public function GetForm()
     {
         return $this->oForm;
     }
 
+    /**
+     * @return FormRenderer
+     */
     public function GetRenderer()
     {
         return $this->oRenderer;

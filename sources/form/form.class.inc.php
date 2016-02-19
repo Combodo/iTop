@@ -60,6 +60,25 @@ class Form
         return $this->aDependencies;
     }
 
+    public function GetCurrentValues()
+    {
+        $aValues = array();
+        foreach ($this->aFields as $sId => $oField)
+        {
+            $aValues[$sId] = $oField->GetCurrentValue();
+        }
+        return $aValues;
+    }
+
+    public function SetCurrentValues($aValues)
+    {
+        foreach ($aValues as $sId => $value)
+        {
+            $oField = $this->GetField($sId);
+            $oField->SetCurrentValue($value);
+        }
+    }
+
     /**
      * Returns the current validation state of the form (true|false).
      * It DOESN'T make the validation, see Validate() instead.
@@ -154,6 +173,7 @@ class Form
 
     public function AddField(Field $oField, $aDependsOnIds = array())
     {
+        $oField->SetFormPath($this->sId);
         $this->aFields[$oField->GetId()] = $oField;
         return $this;
     }

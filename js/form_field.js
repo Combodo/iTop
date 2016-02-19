@@ -26,19 +26,21 @@ $(function()
            
             this.element
             .bind('set_validators', function(event, data){
+                event.stopPropagation();
                 me.options.validators = data;
             });
             this.element
             .bind('validate get_current_value', function(event, data){
+                event.stopPropagation();
                 var callback = me.options[event.type+'_callback'];
                 
                 if(typeof callback === 'string')
                 {
-                    return me[callback]();
+                    return me[callback](event, data);
                 }
                 else if(typeof callback === 'function')
                 {
-                    return callback(me);
+                    return callback(me, event, data);
                 }
                 else
                 {
@@ -72,29 +74,29 @@ $(function()
         },
         getCurrentValue: function()
         {
-            var value = {};
+            var value = null;
             
             this.element.find(':input').each(function(index, elem){
                 if($(elem).is(':hidden') || $(elem).is(':text') || $(elem).is('textarea'))
                 {
-                    value[$(elem).attr('name')] = $(elem).val();
+                    value = $(elem).val();
                 }
                 else if($(elem).is('select'))
                 {
-                    value[$(elem).attr('name')] = [];
+                    value = [];
                     $(elem).find('option:selected').each(function(){
-                        value[$(elem).attr('name')].push($(this).val());
+                        value.push($(this).val());
                     });
                 }
                 else if($(elem).is(':checkbox') || $(elem).is(':radio'))
                 {
-                    if(value[$(elem).attr('name')] === undefined)
+                    if(value === null)
                     {
-                        value[$(elem).attr('name')] = [];
+                        value = [];
                     }
                     if($(elem).is(':checked'))
                     {
-                        value[$(elem).attr('name')].push($(elem).val());
+                        value.push($(elem).val());
                     }
                 }
                 else
@@ -105,10 +107,10 @@ $(function()
             
             return value;
         },
-        validate: function()
+        validate: function(event, data)
         {
             var oResult = { is_valid: true, error_messages: [] };
-                        
+
             // Doing data validation
             if(this.options.validators !== null)
             {
@@ -139,7 +141,7 @@ $(function()
                                 oResult.is_valid = false;
                                 oResult.error_messages.push(oValidator.message);
                             }
-                            // ... In case of none empty array, we have to check is the value is not null
+                            // ... In case of non empty array, we have to check if the value is not null
                             else if($.isArray(value))
                             {
                                 for(var i in value)
@@ -190,7 +192,7 @@ $(function()
                 }
             }
             
-            this.options.on_validation_callback();
+            this.options.on_validation_callback(this, oResult);
             
             return oResult;
         },

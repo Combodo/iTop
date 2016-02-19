@@ -36,6 +36,8 @@ abstract class Field
     const DEFAULT_VALID = true;
 
     protected $sId;
+    protected $sGlobalId;
+    protected $sFormPath;
     protected $sLabel;
     protected $bReadOnly;
     protected $bMandatory;
@@ -52,6 +54,7 @@ abstract class Field
     public function __construct($sId, Closure $onFinalizeCallback = null)
     {
         $this->sId = $sId;
+        $this->sGlobalId = 'field_'.$sId.uniqid();
         $this->sLabel = static::DEFAULT_LABEL;
         $this->bReadOnly = static::DEFAULT_READ_ONLY;
         $this->bMandatory = static::DEFAULT_MANDATORY;
@@ -61,9 +64,31 @@ abstract class Field
         $this->onFinalizeCallback = $onFinalizeCallback;
     }
 
+	/**
+     * Get the field id within its container form
+     * @return string
+     */
     public function GetId()
     {
         return $this->sId;
+    }
+
+    /**
+     * Get a unique field id within the top level form
+     * @return string
+     */
+    public function GetGlobalId()
+    {
+        return $this->sGlobalId;
+    }
+
+    /**
+     * Get the id of the container form
+     * @return string
+     */
+    public function GetFormPath()
+    {
+        return $this->sFormPath;
     }
 
     public function GetLabel()
@@ -184,6 +209,14 @@ abstract class Field
         return $this;
     }
 
+    /**
+     * Called by the form when adding the field
+     */
+    public function SetFormPath($sFormPath)
+    {
+        $this->sFormPath = $sFormPath;
+    }
+
     public function AddValidator(Validator $oValidator)
     {
         $this->aValidators[] = $oValidator;
@@ -206,7 +239,7 @@ abstract class Field
      * Note : Function is protected as aErrorMessages should not be add from outside
      *
      * @param string $sErrorMessage
-     * @return \Combodo\iTop\Field\Field
+     * @return \Combodo\iTop\Form\Field\Field
      */
     protected function AddErrorMessage($sErrorMessage)
     {
@@ -217,7 +250,7 @@ abstract class Field
     /**
      * Note : Function is protected as aErrorMessages should not be set from outside
      *
-     * @return \Combodo\iTop\Field\Field
+     * @return \Combodo\iTop\Form\Field\Field
      */
     protected function EmptyErrorMessages()
     {
@@ -236,7 +269,7 @@ abstract class Field
         {
             // Note : We MUST have a temp variable to call the Closure. otherwise it won't work when the Closure is a class member
             $callback = $this->onFinalizeCallback;
-            $callback();
+            $callback($this);
         }
     }
 
