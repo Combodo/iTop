@@ -1219,6 +1219,7 @@ EOF;
 				// Added if present...
 				//
 				$aParameters['validation_pattern'] = $this->GetPropString($oField, 'validation_pattern');
+				$aParameters['format'] = $this->GetPropString($oField, 'format');
 				$aParameters['width'] = $this->GetPropString($oField, 'width');
 				$aParameters['height'] = $this->GetPropString($oField, 'height');
 				$aParameters['digits'] = $this->GetPropNumber($oField, 'digits');

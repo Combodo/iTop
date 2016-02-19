@@ -1825,7 +1825,7 @@ EOF
 					$sPreviousLog = is_object($value) ? $value->GetAsHTML($oPage, true /* bEditMode */, array('AttributeText', 'RenderWikiHtml')) : '';
 					$iEntriesCount = is_object($value) ? count($value->GetIndex()) : 0;
 					$sHidden = "<input type=\"hidden\" id=\"{$iId}_count\" value=\"$iEntriesCount\"/>"; // To know how many entries the case log already contains
-					$sHTMLValue = "<div class=\"caselog\" $sStyle><table style=\"width:100%;\"><tr><td>$sHeader<textarea style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".htmlentities($sEditValue, ENT_QUOTES, 'UTF-8')."</textarea>$sPreviousLog</td><td>{$sValidationField}</td></tr></table>$sHidden</div>";
+					$sHTMLValue = "<div class=\"caselog\" $sStyle><table style=\"width:100%;\"><tr><td>$sHeader<textarea class=\"htmlEditor\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".htmlentities($sEditValue, ENT_QUOTES, 'UTF-8')."</textarea>$sPreviousLog</td><td>{$sValidationField}</td></tr></table>$sHidden</div>";
 					$oPage->add_ready_script("$('#$iId').bind('keyup change validate', function(evt, sFormId) { return ValidateCaseLogField('$iId', $bMandatory, sFormId) } );"); // Custom validation function
 				break;
 
@@ -3364,9 +3364,23 @@ EOF
 				{
 					$sHTMLValue = '<span>'.$sComment.'</span><br/>';
 				}
-				$sHTMLValue .= "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+				$sHTMLValue .= "<span style=\"font-family:Tahoma,Verdana,Arial,Helvetica;font-size:12px;\" id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
 				$aFieldsMap[$sAttCode] = $sInputId;
+
+				// Replace the text area with CKEditor
+				// To change the default settings of the editor,
+				// a) edit the file /js/ckeditor/config.js
+				// b) or override some of the configuration settings, using the second parameter of ckeditor()
+				$aConfig = array();
+				$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
+				$aConfig['font_style'] = $sLanguage;
+				$aConfig['language'] = $sLanguage;
+				$aConfig['contentsLanguage'] = $sLanguage;
+				$aConfig['extraPlugins'] = 'disabler';
+				$sConfigJS = json_encode($aConfig);
 				
+				$oPage->add_ready_script("$('#$sInputId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
+								
 			}
 			//$aVal = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
 			$oPage->add('<fieldset><legend>'.$oAttDef->GetLabel().'</legend>');

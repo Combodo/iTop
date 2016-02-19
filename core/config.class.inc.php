@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -30,7 +30,7 @@ define('ACCESS_READONLY', 0);
 /**
  * Configuration read/write
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -871,6 +871,14 @@ class Config
 			'type' => 'array',
 			'description' => 'The list of profiles allowed to "kill" a lock',
 			'default' => array('Administrator'),
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		), 
+		'html_sanitizer' => array(
+			'type' => 'string',
+			'description' => 'The class to use for HTML sanitization: HTMLDOMSanitizer, HTMLPurifierSanitizer or HTMLNullSanitizer',
+			'default' => 'HTMLDOMSanitizer',
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,

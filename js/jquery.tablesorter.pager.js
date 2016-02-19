@@ -15,19 +15,22 @@ function sprintf(format, etc) {
 			
 			function setPageSize(table,size, bReload) {
 				var c = table.config;
-				c.selectedSize = size;
-				if (size == -1)
+				if (c != undefined)
 				{
-					size = c.totalRows;
+					c.selectedSize = size;
+					if (size == -1)
+					{
+						size = c.totalRows;
+					}
+					c.size = size;
+					c.totalPages = Math.ceil(c.totalRows / c.size);
+					c.pagerPositionSet = false;
+					if (bReload)
+					{
+						moveToPage(table);
+					}
+					fixPosition(table);					
 				}
-				c.size = size;
-				c.totalPages = Math.ceil(c.totalRows / c.size);
-				c.pagerPositionSet = false;
-				if (bReload)
-				{
-					moveToPage(table);
-				}
-				fixPosition(table);
 			}
 			
 			function fixPosition(table) {
@@ -246,6 +249,8 @@ function sprintf(format, etc) {
 			function applySelection(table)
 			{
 				var c = table.config;
+				if (c == undefined) return;
+				
 				if (c.selectionMode == 'negative')
 				{
 					$(table).find(':checkbox[name^=selectObj]').attr('checked', true);

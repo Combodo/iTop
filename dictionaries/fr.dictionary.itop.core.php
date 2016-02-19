@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2014 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 
 
 /**
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -700,6 +700,7 @@ Opérateurs :<br/>
 	'Core:BulkExport:SpreadsheetOptions' => 'Options du format HTML pour Excel',
 	'Core:BulkExport:OptionNoLocalize' => 'Ne pas traduire les valeurs (pour les champs de type "Enum")',
 	'Core:BulkExport:OptionLinkSets' => 'Inclure les objets liés',
+	'Core:BulkExport:OptionFormattedText' => 'Préserver le formatage du texte',
 	'Core:BulkExport:ScopeDefinition' => 'Définition des objets à exporter',
 	'Core:BulkExportLabelOQLExpression' => 'Requête OQL:',
 	'Core:BulkExportLabelPhrasebookEntry' => 'Entrée du livre des requêtes:',

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -15,7 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 
 class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExtension
 {
@@ -204,6 +203,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 			$sTitle = ($oSet->Count() > 0)? Dict::Format('Attachments:TabTitle_Count', $oSet->Count()) : Dict::S('Attachments:EmptyTabTitle');
 			$oPage->SetCurrentTab($sTitle);
 		}
+		$sMaxWidth = MetaModel::GetModuleSetting('itop-attachment', 'inline_image_max_width', '450px');
 		$oPage->add_style(
 <<<EOF
 .attachment {
@@ -233,6 +233,9 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 	padding: 0;
 	float: none;
 }
+.inline-image {
+	cursor: zoom-in;
+}
 EOF
 		);
 		$oPage->add('<fieldset>');
@@ -243,15 +246,24 @@ EOF
 			$sIsDeleteEnabled = $this->m_bDeleteEnabled ? 'true' : 'false';
 			$iTransactionId = $oPage->GetTransactionId();
 			$sClass = get_class($oObject);
+			$iObjectId = $oObject->Getkey();
 			$sTempId = session_id().'_'.$iTransactionId;
 			$sDeleteBtn = Dict::S('Attachments:DeleteBtn');
 			$oPage->add_script(
 <<<EOF
 	function RemoveAttachment(att_id)
 	{
-		$('#attachment_'+att_id).attr('name', 'removed_attachments[]');
-		$('#display_attachment_'+att_id).hide();
-		$('#attachment_plugin').trigger('remove_attachment', [att_id]);
+		var bDelete = true;
+		if ($('#display_attachment_'+att_id).hasClass('image-in-use'))
+		{
+				bDelete = window.confirm('This image is used in a description. Delete it anyway?');
+		}
+		if (bDelete)
+		{
+			$('#attachment_'+att_id).attr('name', 'removed_attachments[]');
+			$('#display_attachment_'+att_id).hide();
+			$('#attachment_plugin').trigger('remove_attachment', [att_id]);
+		}
 		return false; // Do not submit the form !
 	}
 EOF
@@ -264,7 +276,7 @@ EOF
 				$sFileName = $oDoc->GetFileName();
 				$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
 				$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
-				$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
+				$sDownloadLink = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DOWNLOAD_URL.$iAttId;
 				$oPage->add('<div class="attachment" id="display_attachment_'.$iAttId.'"><a data-preview="'.$sPreview.'" href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input id="attachment_'.$iAttId.'" type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="Delete" onClick="RemoveAttachment('.$iAttId.');"/>&nbsp;</div>');
 			}
 			
@@ -291,10 +303,10 @@ EOF
 						$oDoc = $oAttachment->Get('contents');
 						$sFileName = $oDoc->GetFileName();
 						$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
-						$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
+						$sDownloadLink = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DOWNLOAD_URL.$iAttId;
 						$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
 						$oPage->add('<div class="attachment" id="display_attachment_'.$iAttId.'"><a data-preview="'.$sPreview.'" href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input id="attachment_'.$iAttId.'" type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="Delete" onClick="RemoveAttachment('.$iAttId.');"/>&nbsp;</div>');
-						$oPage->add_ready_script("$('#attachment_plugin').trigger('add_attachment', [$iAttId, '".addslashes($sFileName)."']);");
+						$oPage->add_ready_script("$('#attachment_plugin').trigger('add_attachment', [$iAttId, '".addslashes($sFileName)."', false /* not an line image */]);");
 					}
 				}
 			}
@@ -305,9 +317,21 @@ EOF
 			$oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file"><span style="display:none;" id="attachment_loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUpload);
 			
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
-
-$oPage->add_ready_script(
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');		
+			
+			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'itop-attachments/css/magnific-popup.css');
+			$oPage->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'itop-attachments/js/jquery.magnific-popup.min.js');
+			$maxWidth = MetaModel::GetModuleSetting('itop-standard-email-synchro', 'inline_image_max_width', '');
+			if ($maxWidth !== '')
+			{
+				$sStyle = "style=\"max-width:{$maxWidth}px;cursor:zoom-in;\"";
+			}
+			else
+			{
+				$sStyle = "style=\"cursor:zoom-in;\"";
+			}
+			$sDownloadLink = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DOWNLOAD_URL;		
+			$oPage->add_ready_script(
 <<< EOF
     $('#file').fileupload({
 		url: GetAbsoluteUrlModulesRoot()+'itop-attachments/ajax.attachment.php',
@@ -323,13 +347,13 @@ $oPage->add_ready_script(
 				}
 				else
 				{
-					var sDownloadLink = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=download_document&class=Attachment&id='+data.result.att_id+'&field=contents';
+					var sDownloadLink = '$sDownloadLink'+data.result.att_id;
 					$('#attachments').append('<div class="attachment" id="display_attachment_'+data.result.att_id+'"><a data-preview="'+data.result.preview+'" href="'+sDownloadLink+'"><img src="'+data.result.icon+'"><br/>'+data.result.msg+'<input id="attachment_'+data.result.att_id+'" type="hidden" name="attachments[]" value="'+data.result.att_id+'"/></a><br/><input type="button" class="btn_hidden" value="{$sDeleteBtn}" onClick="RemoveAttachment('+data.result.att_id+');"/></div>');
 					if($sIsDeleteEnabled)
 					{
 						$('#display_attachment_'+data.result.att_id).hover( function() { $(this).children(':button').toggleClass('btn_hidden'); } );
 					}
-					$('#attachment_plugin').trigger('add_attachment', [data.result.att_id, data.result.msg]);
+					$('#attachment_plugin').trigger('add_attachment', [data.result.att_id, data.result.msg, false /* inline image */]);
 				}
 			}
         },
@@ -380,7 +404,65 @@ $oPage->add_ready_script(
 	        window.dropZoneTimeout = null;
 	        dropZone.removeClass('drag_in');
 	    }, 300);
-	});   
+	});
+
+	// Hook the file upload of all CKEditor instances
+	$('.htmlEditor').each(function() {
+		var oEditor = $(this).ckeditorGet();
+		oEditor.config.extraPlugins = 'uploadimage';
+		oEditor.config.uploadUrl = GetAbsoluteUrlModulesRoot()+'itop-attachments/ajax.attachment.php';
+		oEditor.config.filebrowserBrowseUrl = GetAbsoluteUrlModulesRoot()+'itop-attachments/ajax.attachment.php?operation=cke_browse&temp_id=$sTempId&obj_class=$sClass&obj_key=$iObjectId';
+		oEditor.on( 'fileUploadResponse', function( evt ) {
+		    // Get XHR and response.
+		    var data = evt.data,
+		        xhr = data.fileLoader.xhr,
+		        response = xhr.responseText.split( '|' );
+				
+			var oValues = JSON.parse(response[0]);
+				
+			var sDownloadLink = '$sDownloadLink'+oValues.att_id;
+			$('#attachments').append('<div class="attachment" id="display_attachment_'+oValues.att_id+'"><a data-preview="'+oValues.preview+'" href="'+sDownloadLink+'"><img src="'+oValues.icon+'"><br/>'+oValues.msg+'<input id="attachment_'+oValues.att_id+'" type="hidden" name="attachments[]" value="'+oValues.att_id+'"/></a><br/><input type="button" class="btn_hidden" value="{$sDeleteBtn}" onClick="RemoveAttachment('+oValues.att_id+');"/></div>');
+			if(true)
+			{
+				$('#display_attachment_'+oValues.att_id).hover( function() { $(this).children(':button').toggleClass('btn_hidden'); } );
+			}
+			$('#attachment_plugin').trigger('add_attachment', [oValues.att_id, oValues.msg, true /* inline image */]);
+		} );
+				
+		oEditor.on( 'fileUploadRequest', function( evt ) {
+		    evt.data.fileLoader.uploadUrl += '?operation=cke_img_upload&temp_id=$sTempId&obj_class=$sClass';
+		}, null, null, 4 ); // Listener with priority 4 will be executed before priority 5.
+								
+			});
+			
+	$('img[data-att-id]').each(function() {
+		if ('$sMaxWidth' != '')
+		{
+			$(this).css({'max-width': '$sMaxWidth', width: '', height: '', 'max-height': ''});
+		}
+		$(this).addClass('inline-image').attr('href', $(this).attr('src'));
+	}).magnificPopup({type: 'image', closeOnContentClick: true });
+	
+	// check if the attachments are used by inline images
+	window.setTimeout( function() {
+		$('.attachment a').each(function() {
+			var sUrl = $(this).attr('href');
+			if($('img[src="'+sUrl+'"]').length > 0)
+			{
+				$(this).addClass('image-in-use').find('img').wrap('<div class="image-in-use-wrapper" style="position:relative;display:inline-block;"></div>');
+			}
+		});
+		$('.htmlEditor').each(function() {
+			var oEditor = $(this).ckeditorGet();
+			var sHtml = oEditor.getData();
+			var jElement = $('<div/>').html(sHtml).contents();
+			jElement.find('img').each(function() {
+				var sSrc = $(this).attr('src');
+				$('.attachment a[href="'+sSrc+'"]').parent().addClass('image-in-use').find('img').wrap('<div class="image-in-use-wrapper" style="position:relative;display:inline-block;"></div>');
+			});
+		});
+		$('.image-in-use-wrapper').append('<div style="position:absolute;top:0;left:0;"><img src="../images/transp-lock.png"></div>');
+	}, 200 );
 EOF
 );
 			$oPage->p('<span style="display:none;" id="attachment_loading">Loading, please wait...</span>');
@@ -406,7 +488,7 @@ EOF
 					$sFileName = $oDoc->GetFileName();
 					$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
 					$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
-					$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
+					$sDownloadLink = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DOWNLOAD_URL.$iAttId;
 					$oPage->add('<div class="attachment" id="attachment_'.$iAttId.'"><a data-preview="'.$sPreview.'" href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'</a><input type="hidden" name="attachments[]" value="'.$iAttId.'"/><br/>&nbsp;&nbsp;</div>');
 				}
 			}
@@ -415,7 +497,24 @@ EOF
 		$oPage->add('</fieldset>');
 		$sPreviewNotAvailable = addslashes(Dict::S('Attachments:PreviewNotAvailable'));
 		$iMaxWidth = MetaModel::GetModuleSetting('itop-attachments', 'preview_max_width', 290);
-		$oPage->add_ready_script("$(document).tooltip({ items: '.attachment a',  position: { my: 'left top', at: 'right top', using: function( position, feedback ) { $( this ).css( position ); }}, content: function() { if ($(this).attr('data-preview') == 'true') { return('<img style=\"max-width:{$iMaxWidth}px\" src=\"'+$(this).attr('href')+'\"></img>');} else { return '$sPreviewNotAvailable'; }}});");
+		$oPage->add_ready_script(
+<<<EOF
+	$(document).tooltip({
+		items: '.attachment a',
+		position: { my: 'left top', at: 'right top', using: function( position, feedback ) { $( this ).css( position ); }},
+		content: function() { if ($(this).attr('data-preview') == 'true') { return('<img style=\"max-width:{$iMaxWidth}px\" src=\"'+$(this).attr('href')+'\"></img>');} else { return '$sPreviewNotAvailable'; }}
+	});
+			
+	$('img[data-att-id]').each(function() {
+		if ('$sMaxWidth' != '')
+		{
+			$(this).css({'max-width': '$sMaxWidth', width: '', height: '', 'max-height': ''});
+		}
+		$(this).addClass('inline-image');
+		$(this).attr('href', $(this).attr('src'));
+	}).magnificPopup({type: 'image', closeOnContentClick: true });
+EOF
+		);
 	}
 
 	protected static function UpdateAttachments($oObject, $oChange = null)

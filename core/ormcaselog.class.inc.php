@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@ define('CASELOG_SEPARATOR', "\n".'========== %1$s : %2$s (%3$d) ============'."\
 /**
  * Class to store a "case log" in a structured way, keeping track of its successive entries
  *  
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class ormCaseLog {
@@ -43,9 +43,17 @@ class ormCaseLog {
 		$this->m_bModified = false;
 	}
 	
-	public function GetText()
+	public function GetText($bConvertToPlainText = false)
 	{
-		return $this->m_sLog;
+		if ($bConvertToPlainText)
+		{
+			// Rebuild the log, but filtering any HTML markup for the all 'html' entries in the log
+			return $this->GetAsPlainText();
+		}
+		else
+		{
+			return $this->m_sLog;
+		}
 	}
 	
 	public static function FromJSON($oJson)
@@ -97,11 +105,24 @@ class ormCaseLog {
 					$sDate = '';
 				}
 			}
+			$sFormat = array_key_exists('format',  $this->m_aIndex[$index]) ?  $this->m_aIndex[$index]['format'] : 'text';
+			switch($sFormat)
+			{
+				case 'text':
+				$sHtmlEntry = utils::TextToHtml($sTextEntry);
+				break;
+				
+				case 'html':
+				$sHtmlEntry = $sTextEntry;
+				$sTextEntry = utils::HtmlToText($sHtmlEntry);
+				break;
+			}
 			$aEntries[] = array(
 				'date' => $sDate,
 				'user_login' => $this->m_aIndex[$index]['user_name'],
 				'user_id' => $this->m_aIndex[$index]['user_id'],
-				'message' => $sTextEntry
+				'message' => $sTextEntry,
+				'message_html' => $sHtmlEntry,
 			);
 		}
 
@@ -113,13 +134,30 @@ class ormCaseLog {
 			$aEntries[] = array(
 				'date' => '',
 				'user_login' => '',
-				'message' => $sTextEntry
+				'message' => $sTextEntry,
+				'message_html' => utils::TextToHtml($sTextEntry),
 			);
 		}
 
 		// Order by ascending date
 		$aRet = array('entries' => array_reverse($aEntries));
 		return $aRet;
+	}
+	
+	/**
+	 * Returns a "plain text" version of the log (equivalent to $this->m_sLog) where all the HTML markup from the 'html' entries have been removed
+	 * @return string
+	 */
+	public function GetAsPlainText()
+	{
+		$sPlainText = '';
+		$aJSON = $this->GetForJSON();
+		foreach($aJSON['entries'] as $aData)
+		{
+			$sSeparator = sprintf(CASELOG_SEPARATOR, $aData['date'], $aData['user_login'], $aData['user_id']);
+			$sPlainText .= $sSeparator.$aData['message'];
+		}
+		return $sPlainText;	
 	}
 	
 	public function GetIndex()
@@ -152,7 +190,16 @@ class ormCaseLog {
 		{
 			$iPos += $aIndex[$index]['separator_length'];
 			$sTextEntry = substr($this->m_sLog, $iPos, $aIndex[$index]['text_length']);
-			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
+			$sCSSClass = 'caselog_entry_html';
+			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == 'text'))
+			{
+				$sCSSClass = 'caselog_entry';
+				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
+			}
+			else
+			{
+				$sTextEntry = utils::FixInlineAttachments($sTextEntry);
+			}
 			$iPos += $aIndex[$index]['text_length'];
 
 			$sEntry = '<div class="caselog_header" style="'.$sStyleCaseLogHeader.'">';
@@ -180,7 +227,7 @@ class ormCaseLog {
 			}
 			$sEntry .= sprintf(Dict::S('UI:CaseLog:Header_Date_UserName'), '<span class="caselog_header_date">'.$sDate.'</span>', '<span class="caselog_header_user">'.$aIndex[$index]['user_name'].'</span>');
 			$sEntry .= '</div>';
-			$sEntry .= '<div class="caselog_entry" style="'.$sStyleCaseLogEntry.'">';
+			$sEntry .= '<div class="'.$sCSSClass.'" style="'.$sStyleCaseLogEntry.'">';
 			$sEntry .= $sTextEntry;
 			$sEntry .= '</div>';
 			$sHtml = $sHtml.$sEntry;
@@ -227,7 +274,20 @@ class ormCaseLog {
 		{
 			$iPos += $aIndex[$index]['separator_length'];
 			$sTextEntry = substr($this->m_sLog, $iPos, $aIndex[$index]['text_length']);
-			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
+			$sCSSClass = 'case_log_simple_html_entry_html';
+			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == 'text'))
+			{
+				$sCSSClass = 'case_log_simple_html_entry';
+				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
+				if (!is_null($aTransfoHandler))
+				{
+					$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry);
+				}
+			}
+			else
+			{
+				$sTextEntry = utils::FixInlineAttachments($sTextEntry);
+			}			
 			$iPos += $aIndex[$index]['text_length'];
 
 			$sEntry = '<li>';
@@ -254,7 +314,7 @@ class ormCaseLog {
 				}
 			}
 			$sEntry .= sprintf(Dict::S('UI:CaseLog:Header_Date_UserName'), '<span class="caselog_header_date">'.$sDate.'</span>', '<span class="caselog_header_user">'.$aIndex[$index]['user_name'].'</span>');
-			$sEntry .= '<div class="case_log_simple_html_entry" style="'.$sStyleCaseLogEntry.'">';
+			$sEntry .= '<div class="'.$sCSSClass.'" style="'.$sStyleCaseLogEntry.'">';
 			$sEntry .= $sTextEntry;
 			$sEntry .= '</div>';
 			$sEntry .= '</li>';
@@ -317,10 +377,19 @@ class ormCaseLog {
 			}
 			$iPos += $aIndex[$index]['separator_length'];
 			$sTextEntry = substr($this->m_sLog, $iPos, $aIndex[$index]['text_length']);
-			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
-			if (!is_null($aTransfoHandler))
+			$sCSSClass= 'caselog_entry_html';
+			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == 'text'))
 			{
-				$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry);
+				$sCSSClass= 'caselog_entry';
+				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
+				if (!is_null($aTransfoHandler))
+				{
+					$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry);
+				}
+			}
+			else
+			{
+				$sTextEntry = utils::FixInlineAttachments($sTextEntry);
 			}
 			$iPos += $aIndex[$index]['text_length'];
 
@@ -349,7 +418,7 @@ class ormCaseLog {
 			}
 			$sEntry .= sprintf(Dict::S('UI:CaseLog:Header_Date_UserName'), $sDate, $aIndex[$index]['user_name']);
 			$sEntry .= '</div>';
-			$sEntry .= '<div class="caselog_entry"'.$sDisplay.'>';
+			$sEntry .= '<div class="'.$sCSSClass.'"'.$sDisplay.'>';
 			$sEntry .= $sTextEntry;
 			$sEntry .= '</div>';
 			$sHtml = $sHtml.$sEntry;
@@ -358,6 +427,7 @@ class ormCaseLog {
 		// Process the case of an eventual remainder (quick migration of AttributeText fields)
 		if ($iPos < (strlen($this->m_sLog) - 1))
 		{
+			// In this case the format is always "text"
 			$sTextEntry = substr($this->m_sLog, $iPos);
 			$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
 			if (!is_null($aTransfoHandler))
@@ -402,6 +472,7 @@ class ormCaseLog {
 	 */
 	public function AddLogEntry($sText, $sOnBehalfOf = '')
 	{
+		$sText = HTMLSanitizer::Sanitize($sText);
 		$bMergeEntries = false;
 		$sDate = date(Dict::S('UI:CaseLog:DateFormat'));
 		if ($sOnBehalfOf == '')
@@ -439,7 +510,8 @@ class ormCaseLog {
 				'user_id' => $iUserId,	
 				'date' => time(),	
 				'text_length' => $aLatestEntry['text_length'] + $iTextlength,	
-				'separator_length' => $iSepLength,	
+				'separator_length' => $iSepLength,
+				'format' => 'html',	
 			);
 			
 		}
@@ -455,6 +527,7 @@ class ormCaseLog {
 				'date' => time(),	
 				'text_length' => $iTextlength,	
 				'separator_length' => $iSepLength,	
+				'format' => 'html',	
 			);
 		}
 		$this->m_bModified = true;
@@ -463,7 +536,7 @@ class ormCaseLog {
 
 	public function AddLogEntryFromJSON($oJson, $bCheckUserId = true)
 	{
-		$sText = isset($oJson->message) ? $oJson->message : '';
+		$sText = HTMLSanitizer::Sanitize(isset($oJson->message) ? $oJson->message : '');
 
 		if (isset($oJson->user_id))
 		{
@@ -505,6 +578,16 @@ class ormCaseLog {
 		{
 			$iDate = time();
 		}
+		if (isset($oJson->format))
+		{
+			$sFormat = $oJson->format;
+		}
+		else
+		{
+			// TODO: what is the default format ? text ?
+			$sFormat = 'html';
+		}
+		
 		$sDate = date(Dict::S('UI:CaseLog:DateFormat'), $iDate);
 
 		$sSeparator = sprintf(CASELOG_SEPARATOR, $sDate, $sOnBehalfOf, $iUserId);
@@ -516,7 +599,8 @@ class ormCaseLog {
 			'user_id' => $iUserId,	
 			'date' => $iDate,	
 			'text_length' => $iTextlength,	
-			'separator_length' => $iSepLength,	
+			'separator_length' => $iSepLength,
+			'format' => $sFormat,
 		);
 
 		$this->m_bModified = true;

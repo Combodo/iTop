@@ -224,16 +224,27 @@ legend.transparent {
 	padding-left:14px;
 	background: url(../images/mini-arrow-orange.gif) no-repeat left;
 }
-.ui-widget-content td a.cke_toolbox_collapser {
+.ui-widget-content td a.cke_button, .ui-widget-content td a.cke_toolbox_collapser, .ui-widget-content td a.cke_combo_button, cke_dialog a {
 	padding-left: 0;
-}
-p a:hover, td a:hover {
-	text-decoration:underline;
-	color:$highlight-color;
-	padding-left:14px;
-	background: url(../images/mini-arrow-orange.gif) no-repeat left;
+	background-image: none;
 }
 
+.ui-widget-content td a:hover, p a:hover, td a:hover {
+	text-decoration:underline;
+	color:$highlight-color;
+}
+.cke_reset_all *:hover {
+	text-decoration: none;
+	color: #000;
+}
+table.cke_dialog_contents a.cke_dialog_ui_button_ok {
+    color: #000;
+    border-color: $highlight-color;
+    background: $highlight-color;
+}
+.cke_notifications_area {
+	display: none;
+}
 td a.no-arrow, td a.no-arrow:visited, .SearchDrawer a.no-arrow, .SearchDrawer a.no-arrow:visited {
 	text-decoration:none;
 	color:#000000;
@@ -1582,4 +1593,26 @@ span.refresh-button {
 }
 .printable-tab .case-log-history-entry .case-log-history-entry-toggle {
 	display: none;
+}
+.history_entry {
+	position: relative !important;
+	max-width: 100%;
+}
+.history_entry_truncated {
+	max-height: 7em;
+	overflow: hidden;
+}
+.history_truncated_toggler {
+	position: absolute !important;
+	bottom: 0;
+	right: 0;
+	display: block;
+	cursor: pointer;
+	width: 16px;
+	height: 16px;
+	background-image: url(ui-lightness/images/ui-icons_222222_256x240.png);
+	background-position: -16px -192px;
+}
+.history_entry_truncated .history_truncated_toggler {
+	background-position: 0 -192px;
 }

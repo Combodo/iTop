@@ -249,6 +249,16 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
 		else
 		{
 			sTextContent = oFormattedContents.contents().find("body").text();
+			
+			if (sTextContent == '')
+			{
+				// No plain text, maybe there is just an image...
+				var oImg = oFormattedContents.contents().find("body img");
+				if (oImg.length != 0)
+				{
+					sTextContent = 'image';
+				}
+			}
 		}
 	
 		if (bMandatory && (sTextContent == ''))

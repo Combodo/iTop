@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015 Combodo SARL
+// Copyright (C) 2015-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Bulk export: CSV export
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2015-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -33,6 +33,7 @@ class CSVBulkExport extends TabularBulkExport
 		$oP->p(" *\tcharset: (optional) character set for encoding the result (default is 'UTF-8').");
 		$oP->p(" *\ttext-qualifier: (optional) character to be used around text strings (default is '\"').");
 		$oP->p(" *\tno_localize: set to 1 to retrieve non-localized values (for instance for ENUM values). Default is 0 (= localized values)");
+		$oP->p(" *\tformatted_text: set to 1 to export case logs and formatted text fields with their HTML markup. Default is 0 (= plain text)");
 	}
 
 	public function ReadParameters()
@@ -55,6 +56,7 @@ class CSVBulkExport extends TabularBulkExport
 		}
 
 		$this->aStatusInfo['charset'] = strtoupper(utils::ReadParam('charset', 'UTF-8', true, 'raw_data'));
+		$this->aStatusInfo['formatted_text'] = (bool)utils::ReadParam('formatted_text', 0, true);
 	}
 
 
@@ -79,7 +81,7 @@ class CSVBulkExport extends TabularBulkExport
 
 	public function EnumFormParts()
 	{
-		return array_merge(parent::EnumFormParts(), array('csv_options' => array('separator', 'charset', 'text-qualifier', 'no_localize') ,'interactive_fields_csv' => array('interactive_fields_csv')));
+		return array_merge(parent::EnumFormParts(), array('csv_options' => array('separator', 'charset', 'text-qualifier', 'no_localize', 'formatted_text') ,'interactive_fields_csv' => array('interactive_fields_csv')));
 	}
 
 	public function DisplayFormPart(WebPage $oP, $sPartId)
@@ -157,6 +159,10 @@ class CSVBulkExport extends TabularBulkExport
 				}
 				$oP->add('</select>');
 
+				$sChecked = (utils::ReadParam('formatted_text', 0) == 1) ? ' checked ' : '';
+				$oP->add('<h3>'.Dict::S('Core:BulkExport:TextFormat').'</h3>');
+				$oP->add('<input type="checkbox" id="csv_formatted_text" name="formatted_text" value="1"'.$sChecked.'><label for="csv_formatted_text"> '.Dict::S('Core:BulkExport:OptionFormattedText').'</label>');
+				
 				$oP->add('</td></tr></table>');
 				
 				$oP->add('</fieldset>');
@@ -182,7 +188,7 @@ class CSVBulkExport extends TabularBulkExport
 				break;
 					
 			default:
-				$sRet = trim($oObj->GetAsCSV($sAttCode), '"');
+				$sRet = trim($oObj->GetAsCSV($sAttCode), '"');				
 		}
 		return $sRet;
 	}
@@ -251,7 +257,7 @@ class CSVBulkExport extends TabularBulkExport
 							break;
 								
 						default:
-							$sField = $oObj->GetAsCSV($sAttCode, $this->aStatusInfo['separator'], $this->aStatusInfo['text_qualifier'], $this->bLocalizeOutput);
+							$sField = $oObj->GetAsCSV($sAttCode, $this->aStatusInfo['separator'], $this->aStatusInfo['text_qualifier'], $this->bLocalizeOutput, !$this->aStatusInfo['formatted_text']);
 					}
 				}
 				if ($this->aStatusInfo['charset'] != 'UTF-8')

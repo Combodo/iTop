@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Class cmdbObject
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -337,7 +337,14 @@ abstract class CMDBObject extends DBObject
 			elseif ($oAttDef instanceOf AttributeLongText)
 			{
 				// Data blobs
-				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeLongText");
+				if ($oAttDef->GetFormat() == 'html')
+				{
+					$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeHTML");
+				}
+				else
+				{
+					$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeLongText");
+				}
 				$oMyChangeOp->Set("objclass", get_class($this));
 				$oMyChangeOp->Set("objkey", $this->GetKey());
 				$oMyChangeOp->Set("attcode", $sAttCode);
@@ -352,7 +359,14 @@ abstract class CMDBObject extends DBObject
 			elseif ($oAttDef instanceOf AttributeText)
 			{
 				// Data blobs
-				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeText");
+				if ($oAttDef->GetFormat() == 'html')
+				{
+					$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeHTML");
+				}
+				else
+				{
+					$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeText");
+				}
 				$oMyChangeOp->Set("objclass", get_class($this));
 				$oMyChangeOp->Set("objkey", $this->GetKey());
 				$oMyChangeOp->Set("attcode", $sAttCode);

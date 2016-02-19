@@ -3538,7 +3538,6 @@ abstract class MetaModel
 			{
 				// Skip this attribute if not originaly defined in this class
 				if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass) continue;
-
 				foreach($oAttDef->GetSQLColumns(true) as $sField => $sDBFieldSpec)
 				{
 					// Keep track of columns used by iTop
@@ -4893,9 +4892,9 @@ abstract class MetaModel
 				{
 					// Expand the parameters for the object
 					$sName = substr($sSearch, 0, $iPos);
-					if (preg_match_all('/\\$'.$sName.'->([^\\$]+)\\$/', $sInput, $aMatches))
+					if (preg_match_all('/\\$'.$sName.'-(>|&gt;)([^\\$]+)\\$/', $sInput, $aMatches)) // Support both syntaxes: $this->xxx$ or $this-&gt;xxx$ for HTML compatibility
 					{
-						foreach($aMatches[1] as $sPlaceholderAttCode)
+						foreach($aMatches[2] as $idx => $sPlaceholderAttCode)
 						{
 							try
 							{
@@ -4903,7 +4902,7 @@ abstract class MetaModel
 								if ($sReplacement !== null)
 								{
 									$aReplacements[] = $sReplacement;
-									$aSearches[] = '$'.$sName.'->'.$sPlaceholderAttCode.'$';
+									$aSearches[] = '$'.$sName.'-'.$aMatches[1][$idx].$sPlaceholderAttCode.'$';
 								}
 							}
 							catch(Exception $e)

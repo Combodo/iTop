@@ -833,6 +833,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options~~',
 	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
 	'Core:BulkExport:OptionNoLocalize' => 'Do not localize the values (for Enumerated fields)~~',
+	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting~~',
 	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export~~',
 	'Core:BulkExportLabelOQLExpression' => 'OQL Query:~~',
 	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:~~',

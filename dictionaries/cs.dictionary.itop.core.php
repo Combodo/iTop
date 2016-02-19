@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2014 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -857,6 +857,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Core:BulkExport:SpreadsheetOptions' => 'Možnosti tabulky',
     'Core:BulkExport:OptionNoLocalize' => 'Nepřekládat hodnoty číselníků',
     'Core:BulkExport:OptionLinkSets' => 'Zahrnout odkazované objekty',
+	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting~~',
     'Core:BulkExport:ScopeDefinition' => 'Definice objektů k exportu',
     'Core:BulkExportLabelOQLExpression' => 'Dotaz OQL:',
     'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:~~',

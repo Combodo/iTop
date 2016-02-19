@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Persistent classes (internal) : cmdbChangeOp and derived
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -529,9 +529,6 @@ class CMDBChangeOpSetAttributeLongText extends CMDBChangeOpSetAttribute
 	 */	 
 	public function GetDescription()
 	{
-		// Temporary, until we change the options of GetDescription() -needs a more global revision
-		$bIsHtml = true;
-		
 		$sResult = '';
 		$oTargetObjectClass = $this->Get('objclass');
 		$oTargetObjectKey = $this->Get('objkey');
@@ -558,6 +555,66 @@ class CMDBChangeOpSetAttributeLongText extends CMDBChangeOpSetAttribute
 		}
 		return $sResult;
 	}
+}
+
+/**
+ * Record the modification of a multiline string (text) containing some HTML markup
+ *
+ * @package     iTopORM
+ */
+class CMDBChangeOpSetAttributeHTML extends CMDBChangeOpSetAttributeLongText
+{
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "core/cmdb",
+			"key_type" => "",
+			"name_attcode" => "change",
+			"state_attcode" => "",
+			"reconc_keys" => array(),
+			"db_table" => "priv_changeop_setatt_html",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+		
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
+	}
+	/**
+	 * Describe (as a text string) the modifications corresponding to this change
+	 */
+	public function GetDescription()
+	{
+		$sResult = '';
+		$oTargetObjectClass = $this->Get('objclass');
+		$oTargetObjectKey = $this->Get('objkey');
+		$oTargetSearch = new DBObjectSearch($oTargetObjectClass);
+		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
+	
+		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
+		{
+			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
+			{
+				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
+				$sAttName = $oAttDef->GetLabel();
+			}
+			else
+			{
+				// The attribute was renamed or removed from the object ?
+				$sAttName = $this->Get('attcode');
+			}
+			$sTextView = '<div class="history_entry history_entry_truncated"><div class="history_html_content">'.$this->Get('prevdata').'</div></div>';
+	
+			//$sDocView = $oPrevDoc->GetDisplayInline(get_class($this), $this->GetKey(), 'prevdata');
+			$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sTextView);
+		}
+		return $sResult;
+	}	
 }
 
 /**
@@ -622,27 +679,8 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 			$oObj = $oMonoObjectSet->Fetch();
 			$oCaseLog = $oObj->Get($this->Get('attcode'));
 			$iMaxVisibleLength = MetaModel::getConfig()->Get('max_history_case_log_entry_length', 0);
-			$sTextEntry = $oCaseLog->GetEntryAt($this->Get('lastentry'));
-			if (($iMaxVisibleLength > 0) && (strlen($sTextEntry) > $iMaxVisibleLength))
-			{
-				if (function_exists('mb_strcut'))
-				{
-					// Safe with multi-byte strings
-					$sBefore = $this->ToHtml(mb_strcut($sTextEntry, 0, $iMaxVisibleLength, 'UTF-8'));
-					$sAfter = $this->ToHtml(mb_strcut($sTextEntry, $iMaxVisibleLength, null, 'UTF-8'));
-				}
-				else
-				{
-					// Let's hope we have no multi-byte characters around the cuttting point...
-					$sBefore = $this->ToHtml(substr($sTextEntry, 0, $iMaxVisibleLength));
-					$sAfter = $this->ToHtml(substr($sTextEntry, $iMaxVisibleLength));
-				}
-				$sTextEntry = '<span class="case-log-history-entry">'.$sBefore.'<span class="case-log-history-entry-end">'.$sAfter.'<span class="case-log-history-entry-toggle ui-icon ui-icon-circle-minus"></span></span><span class="case-log-history-entry-more">...<span class="case-log-history-entry-toggle ui-icon ui-icon-circle-plus"></span></span></span>';
-			}
-			else
-			{
-				$sTextEntry = $this->ToHtml($sTextEntry);
-			}
+			$sTextEntry = '<div class="history_entry history_entry_truncated"><div class="history_html_content">'.$oCaseLog->GetEntryAt($this->Get('lastentry')).'</div></div>';
+
 			$sResult = Dict::Format('Change:AttName_EntryAdded', $sAttName, $sTextEntry);
 		}
 		return $sResult;

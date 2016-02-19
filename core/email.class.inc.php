@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Send an email (abstraction for synchronous/asynchronous modes)
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -157,6 +157,9 @@ class EMail
 
 	protected function SendSynchronous(&$aIssues, $oLog = null)
 	{
+		// If the body of the message is in HTML, embed all images based on attachments
+		$this->EmbedInlineImages();
+		
 		$this->LoadConfig();
 
 		$sTransport = self::$m_oConfig->Get('email_transport');
@@ -208,9 +211,46 @@ class EMail
 			return EMAIL_SEND_OK;
 		}
 	}
+	
+	/**
+	 * Reprocess the body of the message (if it is an HTML message)
+	 * to replace the URL of images based on attachments by a link
+	 * to an embedded image (i.e. cid:....)
+	 */
+	protected function EmbedInlineImages()
+	{
+		if ($this->m_aData['body']['mimeType'] == 'text/html')
+		{
+			$oDOMDoc = new DOMDocument();
+			$oDOMDoc->preserveWhitespace = true;
+			@$oDOMDoc->loadHTML('<?xml encoding="UTF-8"?>'.$this->m_aData['body']['body']); // For loading HTML chunks where the character set is not specified
+			
+			$oXPath = new DOMXPath($oDOMDoc);
+			$sXPath = "//img[@data-att-id]";
+			$oImagesList = $oXPath->query($sXPath);
+			
+			if ($oImagesList->length != 0)
+			{
+				foreach($oImagesList as $oImg)
+				{
+					$iAttId = $oImg->getAttribute('data-att-id');
+					$oAttachment = MetaModel::GetObject('Attachment', $iAttId, false, true /* Allow All Data */);
+					if ($oAttachment)
+					{
+						$oDoc = $oAttachment->Get('contents');
+						$oSwiftImage = new Swift_Image($oDoc->GetData(), $oDoc->GetFileName(), $oDoc->GetMimeType());
+						$sCid = $this->m_oMessage->embed($oSwiftImage);
+						$oImg->setAttribute('src', $sCid);
+					}
+				}
+			}
+			$sHtmlBody = $oDOMDoc->saveHTML();
+			$this->m_oMessage->setBody($sHtmlBody, 'text/html', 'UTF-8');
+		}
+	}
 
 	public function Send(&$aIssues, $bForceSynchronous = false, $oLog = null)
-	{	
+	{
 		if ($bForceSynchronous)
 		{
 			return $this->SendSynchronous($aIssues, $oLog);

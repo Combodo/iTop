@@ -30,6 +30,7 @@ require_once('ormdocument.class.inc.php');
 require_once('ormstopwatch.class.inc.php');
 require_once('ormpassword.class.inc.php');
 require_once('ormcaselog.class.inc.php');
+require_once('htmlsanitizer.class.inc.php');
 
 /**
  * MissingColumnException - sent if an attribute is being created but the column is missing in the row 
@@ -436,6 +437,15 @@ abstract class AttributeDefinition
 	{
 		return (string)$sValue;
 	}
+	
+	/**
+	 * For fields containing a potential markup, return the value without this markup
+	 * @return string
+	 */
+	public function GetAsPlainText($sValue, $oHostObj = null)
+	{
+		return (string) $this->GetEditValue($sValue, $oHostObj);
+	}
 
 	/**
 	 * Helper to get a value that will be JSON encoded
@@ -476,7 +486,7 @@ abstract class AttributeDefinition
 	/**
 	 * Override to escape the value when read by DBObject::GetAsCSV()	
 	 */	
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		return (string)$sValue;
 	}
@@ -499,6 +509,7 @@ abstract class AttributeDefinition
 			'' => 'Plain text (unlocalized) representation',
 			'html' => 'HTML representation',
 			'label' => 'Localized representation',
+			'text' => 'Plain text representation (without any markup)',
 		);
 	}
 
@@ -523,6 +534,10 @@ abstract class AttributeDefinition
 				
 				case 'label':
 				return $this->GetEditValue($value);
+				
+				case 'text':
+				return $this->GetAsPlainText($value);
+				break;
 				
 				default:
 				throw new Exception("Unknown verb '$sVerb' for attribute ".$this->GetCode().' in class '.get_class($oHostObj));
@@ -780,7 +795,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		return $sRes;
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		$sSepItem = MetaModel::GetConfig()->Get('link_set_item_separator');
 		$sSepAttribute = MetaModel::GetConfig()->Get('link_set_attribute_separator');
@@ -1676,7 +1691,7 @@ class AttributeBoolean extends AttributeInteger
 	{
 		return $sValue ? '1' : '0';
 	}
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		return $sValue ? '1' : '0';
 	}
@@ -1806,7 +1821,7 @@ class AttributeString extends AttributeDBField
 		return $value;
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		$sFrom = array("\r\n", $sTextQualifier);
 		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
@@ -1972,7 +1987,7 @@ class AttributeFinalClass extends AttributeString
 		return $value;
 	}
 	
- 	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+ 	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		if ($bLocalize && $value != '')
 		{
@@ -1982,7 +1997,7 @@ class AttributeFinalClass extends AttributeString
 		{
 			$sRawValue = $value;
 		}
-		return parent::GetAsCSV($sRawValue, $sSeparator, $sTextQualifier, null, false);
+		return parent::GetAsCSV($sRawValue, $sSeparator, $sTextQualifier, null, false, $bConvertToPlainText);
 	}
 
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
@@ -2162,9 +2177,43 @@ define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)\]\]/U');
  */
 class AttributeText extends AttributeString
 {
-	public function GetEditClass() {return "Text";}
+	public function GetEditClass() {return ($this->GetFormat() == 'text') ? 'Text' : "HTML";}
+	
 	protected function GetSQLCol($bFullSpec = false) {return "TEXT";}
 
+	public function GetSQLColumns($bFullSpec = false)
+	{
+		$aColumns = array();
+		$aColumns[$this->Get('sql')] = $this->GetSQLCol($bFullSpec);
+		if ($this->GetOptional('format', null) != null )
+		{
+			// Add the extra column only if the property 'format' is specified for the attribute
+			$aColumns[$this->Get('sql').'_format'] = "ENUM('text','html')";
+			if ($bFullSpec)
+			{
+				$aColumns[$this->Get('sql').'_format'].= " DEFAULT 'text'"; // default 'text' is for migrating old records
+			}
+		}
+		return $aColumns;
+	}
+
+	public function GetSQLExpressions($sPrefix = '')
+	{
+		if ($sPrefix == '')
+		{
+			$sPrefix = $this->Get('sql');
+		}
+		$aColumns = array();
+		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
+		$aColumns[''] = $sPrefix;
+		if ($this->GetOptional('format', null) != null )
+		{
+			// Add the extra column only if the property 'format' is specified for the attribute
+			$aColumns['_format'] = $sPrefix.'_format';
+		}
+		return $aColumns;
+	}
+	
 	public function GetMaxSize()
 	{
 		// Is there a way to know the current limitation for mysql?
@@ -2224,8 +2273,6 @@ class AttributeText extends AttributeString
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		$sValue = parent::GetAsHTML($sValue, $oHostObject, $bLocalize);
-		$sValue = self::RenderWikiHtml($sValue);
 		$aStyles = array();
 		if ($this->GetWidth() != '')
 		{
@@ -2241,44 +2288,83 @@ class AttributeText extends AttributeString
 			$aStyles[] = 'overflow:auto';
 			$sStyle = 'style="'.implode(';', $aStyles).'"';
 		}
-		return "<div $sStyle>".str_replace("\n", "<br>\n", $sValue).'</div>';
+		
+		if ($this->GetFormat() == 'text')
+		{
+			$sValue = parent::GetAsHTML($sValue, $oHostObject, $bLocalize);
+			$sValue = self::RenderWikiHtml($sValue);
+			return "<div $sStyle>".str_replace("\n", "<br>\n", $sValue).'</div>';			
+		}
+		else
+		{
+			return "<div class=\"HTML\" $sStyle>".utils::FixInlineAttachments($sValue).'</div>';
+		}
+		
 	}
 
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
-		if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER))
+		if ($this->GetFormat() == 'text')
 		{
-			foreach($aAllMatches as $iPos => $aMatches)
+			if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER))
 			{
-				$sClass = $aMatches[1];
-				$sName = $aMatches[2];
-				
-				if (MetaModel::IsValidClass($sClass))
+				foreach($aAllMatches as $iPos => $aMatches)
 				{
-					$sClassLabel = MetaModel::GetName($sClass);
-					$sValue = str_replace($aMatches[0], "[[$sClassLabel:$sName]]", $sValue);
+					$sClass = $aMatches[1];
+					$sName = $aMatches[2];
+					
+					if (MetaModel::IsValidClass($sClass))
+					{
+						$sClassLabel = MetaModel::GetName($sClass);
+						$sValue = str_replace($aMatches[0], "[[$sClassLabel:$sName]]", $sValue);
+					}
 				}
 			}
 		}
 		return $sValue;
 	}
 
+	/**
+	 * For fields containing a potential markup, return the value without this markup
+	 * @return string
+	 */
+	public function GetAsPlainText($sValue, $oHostObj = null)
+	{
+		if ($this->GetFormat() == 'html')
+		{
+			return (string) utils::HtmlToText($this->GetEditValue($sValue, $oHostObj));
+		}
+		else
+		{
+			return parent::GetAsPlainText($sValue, $oHostObj);
+		}
+	}
+	
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		$sValue = $proposedValue;
-		if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER))
+		switch ($this->GetFormat())
 		{
-			foreach($aAllMatches as $iPos => $aMatches)
+			case 'html':
+			$sValue = HTMLSanitizer::Sanitize($sValue);
+			break;
+			
+			case 'text':
+			default:
+			if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER))
 			{
-				$sClassLabel = $aMatches[1];
-				$sName = $aMatches[2];
-				
-				if (!MetaModel::IsValidClass($sClassLabel))
+				foreach($aAllMatches as $iPos => $aMatches)
 				{
-					$sClass = MetaModel::GetClassFromLabel($sClassLabel);
-					if ($sClass)
+					$sClassLabel = $aMatches[1];
+					$sName = $aMatches[2];
+					
+					if (!MetaModel::IsValidClass($sClassLabel))
 					{
-						$sValue = str_replace($aMatches[0], "[[$sClass:$sName]]", $sValue);
+						$sClass = MetaModel::GetClassFromLabel($sClassLabel);
+						if ($sClass)
+						{
+							$sValue = str_replace($aMatches[0], "[[$sClass:$sName]]", $sValue);
+						}
 					}
 				}
 			}
@@ -2299,6 +2385,92 @@ class AttributeText extends AttributeString
 	public function GetHeight()
 	{
 		return $this->GetOptional('height', '');		
+	}
+	
+	/**
+	 * The actual formatting of the field: either text (=plain text) or html (= text with HTML markup)
+	 * @return string
+	 */
+	public function GetFormat()
+	{
+		return $this->GetOptional('format', 'text');
+	}
+	
+	/**
+	 * Read the value from the row returned by the SQL query and transorms it to the appropriate
+	 * internal format (either text or html)
+	 * @see AttributeDBFieldVoid::FromSQLToValue()
+	 */
+	public function FromSQLToValue($aCols, $sPrefix = '')
+	{
+		$value = $aCols[$sPrefix.''];
+		if ($this->GetOptional('format', null) != null )
+		{
+			// Read from the extra column only if the property 'format' is specified for the attribute
+			$sFormat = $aCols[$sPrefix.'_format'];
+		}
+		else
+		{
+			$sFormat = $this->GetFormat();
+		}
+		
+		switch($sFormat)
+		{
+			case 'text':
+			if ($this->GetFormat() == 'html')
+			{
+				$value = utils::TextToHtml($value);
+			}
+			break;
+			
+			case 'html':
+			if ($this->GetFormat() == 'text')
+			{
+				$value = utils::HtmlToText($value);
+			}
+			else
+			{
+				$value = utils::FixInlineAttachments((string)$value);
+			}
+			break;
+			
+			default:
+			// unknown format ??
+		}
+		return $value;
+	}
+	
+	public function GetSQLValues($value)
+	{
+		$aValues = array();
+		$aValues[$this->Get("sql")] = $this->ScalarToSQL($value);
+		if ($this->GetOptional('format', null) != null )
+		{
+			// Add the extra column only if the property 'format' is specified for the attribute
+			$aValues[$this->Get("sql").'_format'] = $this->GetFormat();
+		}
+		return $aValues;
+	}	
+	
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
+	{
+		switch($this->GetFormat())
+		{
+			case 'html':
+			if ($bConvertToPlainText)
+			{
+				$sValue = utils::HtmlToText((string)$sValue);
+			}
+			$sFrom = array("\r\n", $sTextQualifier);
+			$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+			$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
+			return $sTextQualifier.$sEscaped.$sTextQualifier;
+			break;
+			
+			case 'text':
+			default:
+			return parent::GetAsCSV($sValue, $sSeparator, $sTextQualifier, $oHostObject, $bLocalize, $bConvertToPlainText);
+		}
 	}
 }
 
@@ -2358,7 +2530,25 @@ class AttributeCaseLog extends AttributeLongText
 		}
 		return $sValue->GetModifiedEntry();
 	}
-	
+
+	/**
+	 * For fields containing a potential markup, return the value without this markup
+	 * @return string
+	 */
+	public function GetAsPlainText($value, $oHostObj = null)
+	{
+		$value = $oObj->Get($sAttCode);
+		if ($value instanceOf ormCaseLog)
+		{
+
+			return $value->GetAsPlainText();
+		}
+		else
+		{
+			return (string) $value;
+		}
+	}
+		
 	public function GetDefaultValue() {return new ormCaseLog();}
 	public function Equals($val1, $val2) {return ($val1->GetText() == $val2->GetText());}
 	
@@ -2402,7 +2592,7 @@ class AttributeCaseLog extends AttributeLongText
 			{
 				if (strlen($proposedValue) > 0)
 				{
-					$oCaseLog->AddLogEntry(parent::MakeRealValue($proposedValue, $oHostObj));
+					$oCaseLog->AddLogEntry($proposedValue);
 				}
 			}
 			$ret = $oCaseLog;
@@ -2414,7 +2604,7 @@ class AttributeCaseLog extends AttributeLongText
 	{
 		if ($sPrefix == '')
 		{
-			$sPrefix = $this->GetCode();
+			$sPrefix = $this->Get('sql');
 		}
 		$aColumns = array();
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
@@ -2502,11 +2692,11 @@ class AttributeCaseLog extends AttributeLongText
 		return "<div class=\"caselog\" $sStyle>".$sContent.'</div>';	}
 
 
-	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		if ($value instanceOf ormCaseLog)
 		{
-			return parent::GetAsCSV($value->GetText(), $sSeparator, $sTextQualifier, $oHostObject, $bLocalize);
+			return parent::GetAsCSV($value->GetText($bConvertToPlainText), $sSeparator, $sTextQualifier, $oHostObject, $bLocalize, $bConvertToPlainText);
 		}
 		else
 		{
@@ -2615,6 +2805,15 @@ class AttributeCaseLog extends AttributeLongText
 		}
 		return $sFingerprint;
 	}
+	
+	/**
+	 * The actual formatting of the text: either text (=plain text) or html (= text with HTML markup)
+	 * @return string
+	 */
+	public function GetFormat()
+	{
+		return $this->GetOptional('format', 'html'); // default format for case logs is now HTML
+	}
 }
 
 /**
@@ -2624,11 +2823,29 @@ class AttributeCaseLog extends AttributeLongText
  */
 class AttributeHTML extends AttributeLongText
 {
-	public function GetEditClass() {return "HTML";}
-
-	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+	public function GetSQLColumns($bFullSpec = false)
 	{
-		return $sValue;
+		$aColumns = array();
+		$aColumns[$this->GetCode()] = $this->GetSQLCol();
+		if ($this->GetOptional('format', null) != null )
+		{
+			// Add the extra column only if the property 'format' is specified for the attribute
+			$aColumns[$this->Get('sql').'_format'] = "ENUM('text','html')";
+			if ($bFullSpec)
+			{
+				$aColumns[$this->Get('sql').'_format'].= " DEFAULT 'html'"; // default 'html' is for migrating old records
+			}
+		}
+		return $aColumns;
+	}
+
+	/**
+	 * The actual formatting of the text: either text (=plain text) or html (= text with HTML markup)
+	 * @return string
+	 */
+	public function GetFormat()
+	{
+		return $this->GetOptional('format', 'html'); // Defaults to HTML
 	}
 }
 
@@ -2706,11 +2923,29 @@ class AttributeTemplateText extends AttributeText
  */
 class AttributeTemplateHTML extends AttributeText
 {
-	public function GetEditClass() {return "HTML";}
-
-	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+	public function GetSQLColumns($bFullSpec = false)
 	{
-		return $sValue;
+		$aColumns = array();
+		$aColumns[$this->GetCode()] = $this->GetSQLCol();
+		if ($this->GetOptional('format', null) != null )
+		{
+			// Add the extra column only if the property 'format' is specified for the attribute
+			$aColumns[$this->Get('sql').'_format'] = "ENUM('text','html')";
+			if ($bFullSpec)
+			{
+				$aColumns[$this->Get('sql').'_format'].= " DEFAULT 'html'"; // default 'html' is for migrating old records
+			}
+		}
+		return $aColumns;
+	}
+
+	/**
+	 * The actual formatting of the text: either text (=plain text) or html (= text with HTML markup)
+	 * @return string
+	 */
+	public function GetFormat()
+	{
+		return $this->GetOptional('format', 'html'); // Defaults to HTML
 	}
 }
 
@@ -2885,7 +3120,7 @@ class AttributeEnum extends AttributeString
 		return $sRes;
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		if (is_null($sValue))
 		{
@@ -3257,7 +3492,7 @@ class AttributeDateTime extends AttributeDBField
 		return Str::pure2xml($value);
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		$sFrom = array("\r\n", $sTextQualifier);
 		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
@@ -3818,7 +4053,7 @@ class AttributeExternalField extends AttributeDefinition
 	{
 		if ($sPrefix == '')
 		{
-			return array('' => $this->GetCode());
+			return array('' => $this->GetCode()); // Warning: Use GetCode() since AttributeExternalField does not have any 'sql' property
 		}
 		else
 		{
@@ -4013,10 +4248,10 @@ class AttributeExternalField extends AttributeDefinition
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->GetAsXML($value, null, $bLocalize);
 	}
-	public function GetAsCSV($value, $sSeparator = ',', $sTestQualifier = '"', $oHostObject = null, $bLocalize = true)
+	public function GetAsCSV($value, $sSeparator = ',', $sTestQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->GetAsCSV($value, $sSeparator, $sTestQualifier, null, $bLocalize);
+		return $oExtAttDef->GetAsCSV($value, $sSeparator, $sTestQualifier, null, $bLocalize, $bConvertToPlainText);
 	}
 	
 	public function IsPartOfFingerprint() { return false; }
@@ -4257,7 +4492,7 @@ class AttributeBlob extends AttributeDefinition
 		}
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		return ''; // Not exportable in CSV !
 	}
@@ -4379,7 +4614,7 @@ class AttributeStopWatch extends AttributeDefinition
 	{
 		if ($sPrefix == '')
 		{
-			$sPrefix = $this->GetCode();
+			$sPrefix = $this->GetCode(); // Warning: a stopwatch does not have any 'sql' property, so its SQL column is equal to its attribute code !!
 		}
 		$aColumns = array();
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
@@ -4551,7 +4786,7 @@ class AttributeStopWatch extends AttributeDefinition
 		}
 	}
 
-	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		return $value->GetTimeSpent();
 	}
@@ -4773,7 +5008,7 @@ class AttributeStopWatch extends AttributeDefinition
 		return $sHtml;
 	}
 
-	public function GetSubItemAsCSV($sItemCode, $value, $sSeparator = ',', $sTextQualifier = '"')
+	public function GetSubItemAsCSV($sItemCode, $value, $sSeparator = ',', $sTextQualifier = '"', $bConvertToPlainText = false)
 	{
 		$sFrom = array("\r\n", $sTextQualifier);
 		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
@@ -5026,10 +5261,10 @@ class AttributeSubItem extends AttributeDefinition
 		return $res;
 	}
 
-	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		$oParent = $this->GetTargetAttDef();
-		$res = $oParent->GetSubItemAsCSV($this->Get('item_code'), $value, $sSeparator, $sTextQualifier);
+		$res = $oParent->GetSubItemAsCSV($this->Get('item_code'), $value, $sSeparator, $sTextQualifier, $bConvertToPlainText);
 		return $res;
 	}
 	
@@ -5087,7 +5322,7 @@ class AttributeOneWayPassword extends AttributeDefinition
 	{
 		if ($sPrefix == '')
 		{
-			$sPrefix = $this->GetCode();
+			$sPrefix = $this->GetCode(); // Warning: AttributeOneWayPassword does not have any sql property so code = sql !
 		}
 		$aColumns = array();
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
@@ -5196,7 +5431,7 @@ class AttributeOneWayPassword extends AttributeDefinition
 		}
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		return ''; // Not exportable in CSV
 	}
@@ -5300,7 +5535,7 @@ class AttributeTable extends AttributeDBField
 		return $sRes;
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		// Not implemented
 		return '';
@@ -5372,7 +5607,7 @@ class AttributePropertySet extends AttributeTable
 		return $sRes;
 	}
 
-	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		if (count($value) == 0)
 		{
@@ -5451,7 +5686,7 @@ class AttributeComputedFieldVoid extends AttributeDefinition
 	{
 		if ($sPrefix == '')
 		{
-			$sPrefix = $this->GetCode();
+			$sPrefix = $this->GetCode(); // Warning AttributeComputedFieldVoid does not have any sql property
 		}
 		return array('' => $sPrefix); 
 	}
@@ -5602,7 +5837,7 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 		return Str::pure2html((string)$sValue);
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		$sFrom = array("\r\n", $sTextQualifier);
 		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
@@ -5769,7 +6004,7 @@ class AttributeRedundancySettings extends AttributeDBField
 		return sprintf($this->GetUserOptionFormat($sCurrentOption), $this->GetMinUpValue($sValue), MetaModel::GetName($sClass));
 	}
 
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true)
+	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		$sFrom = array("\r\n", $sTextQualifier);
 		$sTo = array("\n", $sTextQualifier.$sTextQualifier);

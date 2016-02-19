@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015 Combodo SARL
+// Copyright (C) 2015-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Bulk export: Excel (xlsx) export
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2015-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -46,12 +46,18 @@ class ExcelBulkExport extends TabularBulkExport
 	{
 		$oP->p(" * xlsx format options:");
 		$oP->p(" *\tfields: the comma separated list of field codes to export (e.g: name,org_id,service_name...).");
+		$oP->p(" *\tformatted_text: set to 1 to export case logs and formatted text fields with their HTML markup. Default is 0 (= plain text)");
 	}
 
-
+	public function ReadParameters()
+	{
+		parent::ReadParameters();
+		$this->aStatusInfo['formatted_text'] = (bool)utils::ReadParam('formatted_text', 0, true);
+	}
+	
 	public function EnumFormParts()
 	{
-		return array_merge(parent::EnumFormParts(), array('interactive_fields_xlsx' => array('interactive_fields_xlsx')));
+		return array_merge(parent::EnumFormParts(), array('xlsx_options' => array('formatted_text') ,'interactive_fields_xlsx' => array('interactive_fields_xlsx')));
 	}
 
 	public function DisplayFormPart(WebPage $oP, $sPartId)
@@ -62,7 +68,20 @@ class ExcelBulkExport extends TabularBulkExport
 				$this->GetInteractiveFieldsWidget($oP, 'interactive_fields_xlsx');
 				break;
 					
-			default:
+			case 'xlsx_options':
+				$oP->add('<fieldset><legend>'.Dict::S('Core:BulkExport:XLSXOptions').'</legend>');
+				$oP->add('<table class="export_parameters"><tr><td style="vertical-align:top">');
+				
+				$sChecked = (utils::ReadParam('formatted_text', 0) == 1) ? ' checked ' : '';
+				$oP->add('<h3>'.Dict::S('Core:BulkExport:TextFormat').'</h3>');
+				$oP->add('<input type="checkbox" id="xlsx_formatted_text" name="formatted_text" value="1"'.$sChecked.'><label for="xlsx_formatted_text"> '.Dict::S('Core:BulkExport:OptionFormattedText').'</label>');
+				
+				$oP->add('</td></tr></table>');
+				
+				$oP->add('</fieldset>');
+				break;
+
+				default:
 				return parent:: DisplayFormPart($oP, $sPartId);
 		}
 	}
@@ -103,8 +122,16 @@ class ExcelBulkExport extends TabularBulkExport
 			$value = $oObj->Get($sAttCode);
 			if ($value instanceOf ormCaseLog)
 			{
+				 if (array_key_exists('formatted_text', $this->aStatusInfo) && $this->aStatusInfo['formatted_text'])
+				 {
+				 	$sText = $value->GetText();
+				 }
+				 else
+				 {
+				 	$sText = $value->GetAsPlainText();
+				 }
 				// Extract the case log as text and remove the "===" which make Excel think that the cell contains a formula the next time you edit it!
-				$sRet = trim(preg_replace('/========== ([^=]+) ============/', '********** $1 ************', $value->GetText()));
+				$sRet = trim(preg_replace('/========== ([^=]+) ============/', '********** $1 ************', $sText));
 			}
 			else if ($value instanceOf DBObjectSet)
 			{
@@ -114,7 +141,14 @@ class ExcelBulkExport extends TabularBulkExport
 			else
 			{
 				$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
-				$sRet = $oAttDef->GetEditValue($value, $oObj);
+				 if (array_key_exists('formatted_text', $this->aStatusInfo) && $this->aStatusInfo['formatted_text'])
+				 {
+					$sRet = $oAttDef->GetEditValue($value, $oObj);
+				 }
+				 else
+				 {
+				 	$sRet = $oAttDef->GetAsPlainText($value, $oObj);
+				 }
 			}
 		}
 		return $sRet;

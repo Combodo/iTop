@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * DisplayBlock and derived class
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1289,8 +1289,34 @@ class HistoryBlock extends DisplayBlock
 			else
 			{
 				$sHtml .= $this->GetHistoryTable($oPage, $oSet);
-			}	
+			}
+			$sMaxWidth = MetaModel::GetModuleSetting('itop-attachment', 'inline_image_max_width', '450px');
+		
 			$oPage->add_ready_script("$('.case-log-history-entry-toggle').on('click', function () { $(this).closest('.case-log-history-entry').toggleClass('expanded');});");
+			$oPage->add_ready_script(
+<<<EOF
+$('.history_entry').each(function() {
+	var jMe = $(this)
+	jMe.find('img[data-att-id]').each(function() {
+		if ('$sMaxWidth' != '')
+		{
+			$(this).css({'max-width': '$sMaxWidth', width: '', height: '', 'max-height': ''});
+		}
+		$(this).addClass('inline-image');
+		$(this).attr('href', $(this).attr('src'));
+	}).magnificPopup({type: 'image', closeOnContentClick: true });
+				
+	var oContent = $(this).find('.history_html_content');
+	if (jMe.height() < oContent.height())
+	{
+			jMe.prepend('<span class="history_truncated_toggler"></span>');
+			jMe.find('.history_truncated_toggler').on('click', function() {
+				jMe.toggleClass('history_entry_truncated');
+			});
+	}
+});
+EOF
+			);
 		}
 		return $sHtml;
 	}
@@ -1319,7 +1345,7 @@ class HistoryBlock extends DisplayBlock
 		}
 		$aAttribs = array('date' => array('label' => Dict::S('UI:History:Date'), 'description' => Dict::S('UI:History:Date+')),
 						  'userinfo' => array('label' => Dict::S('UI:History:User'), 'description' => Dict::S('UI:History:User+')),
-						  'log' => array('label' => Dict::S('UI:History:Changes'), 'description' => Dict::S('UI:History:Changes+')),
+						  'log' => array('label' => Dict::S('UI:History:Changes').'<span style="display:block;float:right">Expand All / Collapse All</span>', 'description' => Dict::S('UI:History:Changes+')),
 						 );
 		$aValues = array();
 		foreach($aChanges as $aChange)

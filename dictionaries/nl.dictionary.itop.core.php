@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@
  * Linux & Open Source Professionals
  * http://www.linprofs.com
  * 
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -845,6 +845,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options~~',
 	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
 	'Core:BulkExport:OptionNoLocalize' => 'Do not localize the values (for Enumerated fields)~~',
+	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting~~',
 	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export~~',
 	'Core:BulkExportLabelOQLExpression' => 'OQL Query:~~',
 	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:~~',

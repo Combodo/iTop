@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -288,7 +288,7 @@ EOF
 							{
 								$('#display_attachment_'+data.att_id).hover( function() { $(this).children(':button').toggleClass('btn_hidden'); } );
 							}
-							$('#attachment_plugin').trigger('add_attachment', [data.att_id, data.msg]);
+							$('#attachment_plugin').trigger('add_attachment', [data.att_id, data.msg, false /* not an inline image */]);
 							
 							//alert(data.msg);
 						}
@@ -342,7 +342,7 @@ EOF
 						$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
 						$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=download_document&class=Attachment&id='.$iAttId.'&field=contents';
 						$oPage->add('<div class="attachment" id="display_attachment_'.$iAttId.'"><a href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="Delete" onClick="RemoveNewAttachment('.$iAttId.');"/>&nbsp;</div>');
-						$oPage->add_ready_script("$('#attachment_plugin').trigger('add_attachment', [$iAttId, '".addslashes($sFileName)."']);");
+						$oPage->add_ready_script("$('#attachment_plugin').trigger('add_attachment', [$iAttId, '".addslashes($sFileName)."', false /* not an line image */]);");
 					}
 				}
 			}

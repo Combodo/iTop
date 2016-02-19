@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -2478,6 +2478,7 @@ Operators:<br/>
 	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options~~',
 	'Core:BulkExport:OptionNoLocalize' => 'Do not localize the values (for Enumerated fields)~~',
 	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
+	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting~~',
 	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export~~',
 	'Core:BulkExportLabelOQLExpression' => 'OQL Query:~~',
 	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:~~',

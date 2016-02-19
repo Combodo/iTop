@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * @author	Stephan Rosenke <stephan.rosenke@itomig.de>
 
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -590,6 +590,7 @@ Operatoren:<br/>
 	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet-Optionen',
 	'Core:BulkExport:OptionNoLocalize' => 'Werte von Aufzählungsfeldern nicht lokalisieren',
 	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
+	'Core:BulkExport:OptionFormattedText' => 'Preserve Textformatierung',
 	'Core:BulkExport:ScopeDefinition' => 'Definition der zu exportierenden Objekte',
 	'Core:BulkExportLabelOQLExpression' => 'OQL-Abfrage',
 	'Core:BulkExportLabelPhrasebookEntry' => 'Query-Bibliotheks-Eintrag:',

@@ -130,6 +130,7 @@
           <sql>description</sql>
           <default_value/>
           <is_null_allowed>false</is_null_allowed>
+          <format>html</format>
         </field>
         <field id="start_date" xsi:type="AttributeDateTime">
           <always_load_in_tables>true</always_load_in_tables>

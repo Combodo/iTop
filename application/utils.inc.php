@@ -1,4 +1,5 @@
 <?php
+use Html2Text\Html2Text;
 // Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
@@ -26,11 +27,14 @@
 
 require_once(APPROOT.'/core/config.class.inc.php');
 require_once(APPROOT.'/application/transaction.class.inc.php');
+require_once(APPROOT.'application/Html2Text.php');
+require_once(APPROOT.'application/Html2TextException.php');
 
 define('ITOP_CONFIG_FILE', 'config-itop.php');
 define('ITOP_DEFAULT_CONFIG_FILE', APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE);
 
 define('SERVER_NAME_PLACEHOLDER', '$SERVER_NAME$');
+define('ATTACHMENT_DOWNLOAD_URL', 'pages/ajax.render.php?operation=download_document&class=Attachment&field=contents&id=');
 
 class FileUploadException extends Exception
 {
@@ -1134,4 +1138,65 @@ class utils
 		asort($aPossibleEncodings);
 		return $aPossibleEncodings;
 	}
+	
+	/**
+	 * Convert a string containing some (valid) HTML markup to plain text
+	 * @param string $sHtml
+	 * @return string
+	 */
+	public static function HtmlToText($sHtml)
+	{
+		try
+		{
+			//return '<?xml encoding="UTF-8">'.$sHtml;
+			return \Html2Text\Html2Text::convert('<?xml encoding="UTF-8">'.$sHtml);
+		}
+		catch(Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
+	
+	/**
+	 * Convert (?) plain text to some HTML markup by replacing newlines by </br> tags
+	 * and escaping HTML entities
+	 * @param string $sText
+	 * @return string
+	 */
+	public static function TextToHtml($sText)
+	{
+		$sText = str_replace("\r\n", "\n", $sText);
+		$sText = str_replace("\r", "\n", $sText);
+		return str_replace("\n", '</br>', htmlentities($sText, ENT_QUOTES, 'UTF-8'));
+	}
+	
+	/**
+	 * Parses the supplied HTML fragment to rebuild the attribute src="" for images
+	 * that refer to an attachment (detected via the attribute data-att-id="") so that
+	 * the URL is consistent with the current URL of the application.
+	 * @param string $sHtml The HTML fragment to process
+	 * @return string The modified HTML
+	 */
+	public static function FixInlineAttachments($sHtml)
+	{
+		$aNeedles = array();
+		$aReplacements = array();
+		// Find img tags with an attribute data-att-id
+		if (preg_match_all('/<img ([^>]*)data-att-id="([0-9]+)"([^>]*)>/i', $sHtml, $aMatches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE))
+		{
+			$sUrl = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DOWNLOAD_URL;
+			foreach($aMatches as $aImgInfo)
+			{
+				$sImgTag = $aImgInfo[0][0];
+				$sAttId = $aImgInfo[2][0];
+				
+				$sNewImgTag = preg_replace('/src="[^"]+"/', 'src="'.$sUrl.$sAttId.'"', $sImgTag); // preserve other attributes
+				$aNeedles[] = $sImgTag;
+				$aReplacements[] = $sNewImgTag;
+			}
+			$sHtml = str_replace($aNeedles, $aReplacements, $sHtml);
+		}
+		return $sHtml;
+	}
+	
 }

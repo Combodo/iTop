@@ -754,10 +754,10 @@ abstract class DBObject implements iDisplay
 		return $oAtt->GetAsXML($this->Get($sAttCode), $this, $bLocalize);
 	}
 
-	public function GetAsCSV($sAttCode, $sSeparator = ',', $sTextQualifier = '"', $bLocalize = true)
+	public function GetAsCSV($sAttCode, $sSeparator = ',', $sTextQualifier = '"', $bLocalize = true, $bConvertToPlainText = false)
 	{
 		$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		return $oAtt->GetAsCSV($this->Get($sAttCode), $sSeparator, $sTextQualifier, $this, $bLocalize);
+		return $oAtt->GetAsCSV($this->Get($sAttCode), $sSeparator, $sTextQualifier, $this, $bLocalize, $bConvertToPlainText);
 	}
 
 	public function GetOriginalAsHTML($sAttCode, $bLocalize = true)
@@ -772,10 +772,10 @@ abstract class DBObject implements iDisplay
 		return $oAtt->GetAsXML($this->GetOriginal($sAttCode), $this, $bLocalize);
 	}
 
-	public function GetOriginalAsCSV($sAttCode, $sSeparator = ',', $sTextQualifier = '"', $bLocalize = true)
+	public function GetOriginalAsCSV($sAttCode, $sSeparator = ',', $sTextQualifier = '"', $bLocalize = true, $bConvertToPlainText = false)
 	{
 		$oAtt = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		return $oAtt->GetAsCSV($this->GetOriginal($sAttCode), $sSeparator, $sTextQualifier, $this, $bLocalize);
+		return $oAtt->GetAsCSV($this->GetOriginal($sAttCode), $sSeparator, $sTextQualifier, $this, $bLocalize, $bConvertToPlainText);
 	}
 
 	public static function MakeHyperLink($sObjClass, $sObjKey, $sLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true)

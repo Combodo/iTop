@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2014 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -842,6 +842,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options',
 	'Core:BulkExport:OptionNoLocalize' => 'Do not localize the values (for Enumerated fields)',
 	'Core:BulkExport:OptionLinkSets' => 'Include linked objects',
+	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting',
 	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export',
 	'Core:BulkExportLabelOQLExpression' => 'OQL Query:',
 	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:',

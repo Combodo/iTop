@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Class iTopWebPage
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -416,7 +416,7 @@ EOF
 	ShowDebug();
 	$('#logOffBtn>ul').popupmenu();
 	
-	$('.caselog_header').click( function () { $(this).toggleClass('open').next('.caselog_entry').toggle(); });
+	$('.caselog_header').click( function () { $(this).toggleClass('open').next('.caselog_entry,.caselog_entry_html').toggle(); });
 	
 	$(document).ajaxSend(function(event, jqxhr, options) {
 		jqxhr.setRequestHeader('X-Combodo-Ajax', 'true');
