@@ -20,7 +20,6 @@
 namespace Combodo\iTop\Form\Field;
 
 use \Closure;
-use \Combodo\iTop\Form\Field\Field;
 use \Combodo\iTop\Form\Form;
 
 /**
@@ -34,7 +33,7 @@ class SubFormField extends Field
 
 	public function __construct($sId, $sParentFormId, Closure $onFinalizeCallback = null)
 	{
-		$this->oForm = new \Combodo\iTop\Form\Form($sParentFormId.'-subform_'.$sId);
+		$this->oForm = new Form($sParentFormId.'-subform_'.$sId);
 		parent::__construct($sId, $onFinalizeCallback);
 	}
 
@@ -61,7 +60,12 @@ class SubFormField extends Field
 
 	public function GetErrorMessages()
 	{
-		return $this->oForm->GetErrorMessages();
+		$aRet = array();
+		foreach ($this->oForm->GetErrorMessages() as $sSubFieldId => $aSubFieldMessages)
+		{
+			$aRet[] = $sSubFieldId.': '.implode(', ', $aSubFieldMessages);
+		}
+		return $aRet;
 	}
 
 	public function GetCurrentValue()
