@@ -4485,8 +4485,8 @@ abstract class MetaModel
 			{
 				$oFilter->AllowAllData();
 			}
-	
-			$sSQL = $oFilter->MakeSelectQuery(array(), array(), null, null, 0, 0, false, true); // bNoMagicArguments = true
+			$oFilter->NoContextParameters();
+			$sSQL = $oFilter->MakeSelectQuery();
 			self::$aQueryCacheGetObject[$sQuerySign] = $sSQL;
 			self::$aQueryCacheGetObjectHits[$sQuerySign] = 0;
 		}

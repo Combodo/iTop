@@ -40,6 +40,7 @@ require_once('dbunionsearch.class.php');
 abstract class DBSearch
 {
 	protected $m_bDataFiltered = false;
+	protected $m_bNoContextParameters = false;
 	protected $m_aModifierProperties = array();
 
 	// By default, some information may be hidden to the current user
@@ -60,6 +61,8 @@ abstract class DBSearch
 
 	public function AllowAllData() {$this->m_bAllowAllData = true;}
 	public function IsAllDataAllowed() {return $this->m_bAllowAllData;}
+	public function NoContextParameters() {$this->m_bNoContextParameters = true;}
+	public function HasContextParameters() {return $this->m_bNoContextParameters;}
 	public function IsDataFiltered() {return $this->m_bDataFiltered; }
 	public function SetDataFiltered() {$this->m_bDataFiltered = true;}
 
@@ -354,13 +357,12 @@ abstract class DBSearch
 	 * @param int $iLimitCount
 	 * @param int $iLimitStart
 	 * @param bool $bGetCount
-	 * @param bool $bNoArguments
 	 * @return string
 	 * @throws CoreException
 	 * @throws Exception
 	 * @throws MissingQueryArgument
 	 */
-	public function MakeSelectQuery($aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false, $bNoArguments = false)
+	public function MakeSelectQuery($aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false)
 	{
 		// Check the order by specification, and prefix with the class alias
 		// and make sure that the ordering columns are going to be selected
@@ -413,7 +415,7 @@ abstract class DBSearch
 
 		$oSQLQuery = $this->GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount);
 
-		if ($bNoArguments)
+		if ($this->m_bNoContextParameters)
 		{
 			// Only internal parameters
 			$aScalarArgs = $this->GetInternalParams();

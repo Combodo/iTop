@@ -162,7 +162,7 @@ try
 			foreach($oFilter->GetQueryParams() as $sParam => $foo)
 			{
 				// Skip magic parameters
-				$iPos = strpos($sArgName, '->');
+				$iPos = strpos($sParam, '->');
 				if ($iPos === false)
 				{
 					$sRefName = $sParam;

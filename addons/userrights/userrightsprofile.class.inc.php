@@ -503,6 +503,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$aRet = array();
 		$oSearch = new DBObjectSearch('URP_UserProfile');
 		$oSearch->AllowAllData();
+		$oSearch->NoContextParameters();
 		$oSearch->Addcondition('userid', $oUser->GetKey(), '=');
 		$oProfiles = new DBObjectSet($oSearch);
 		while ($oUserProfile = $oProfiles->Fetch())
