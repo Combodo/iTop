@@ -241,6 +241,9 @@ EOF
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>'.Dict::S('Attachments:FieldsetTitle').'</legend>');
 
+		$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'itop-attachments/css/magnific-popup.css');
+		$oPage->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'itop-attachments/js/jquery.magnific-popup.min.js');
+			
 		if ($bEditMode)
 		{
 			$sIsDeleteEnabled = $this->m_bDeleteEnabled ? 'true' : 'false';
@@ -319,8 +322,6 @@ EOF
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');		
 			
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'itop-attachments/css/magnific-popup.css');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'itop-attachments/js/jquery.magnific-popup.min.js');
 			$maxWidth = MetaModel::GetModuleSetting('itop-standard-email-synchro', 'inline_image_max_width', '');
 			if ($maxWidth !== '')
 			{
