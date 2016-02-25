@@ -1290,22 +1290,13 @@ class HistoryBlock extends DisplayBlock
 			{
 				$sHtml .= $this->GetHistoryTable($oPage, $oSet);
 			}
-			$sMaxWidth = MetaModel::GetModuleSetting('itop-attachment', 'inline_image_max_width', '450px');
+			$oPage->add_ready_script(InlineImage::FixImagesWidth());
 		
 			$oPage->add_ready_script("$('.case-log-history-entry-toggle').on('click', function () { $(this).closest('.case-log-history-entry').toggleClass('expanded');});");
 			$oPage->add_ready_script(
 <<<EOF
 $('.history_entry').each(function() {
-	var jMe = $(this)
-	jMe.find('img[data-att-id]').each(function() {
-		if ('$sMaxWidth' != '')
-		{
-			$(this).css({'max-width': '$sMaxWidth', width: '', height: '', 'max-height': ''});
-		}
-		$(this).addClass('inline-image');
-		$(this).attr('href', $(this).attr('src'));
-	}).magnificPopup({type: 'image', closeOnContentClick: true });
-				
+	var jMe = $(this);
 	var oContent = $(this).find('.history_html_content');
 	if (jMe.height() < oContent.height())
 	{
@@ -1345,7 +1336,7 @@ EOF
 		}
 		$aAttribs = array('date' => array('label' => Dict::S('UI:History:Date'), 'description' => Dict::S('UI:History:Date+')),
 						  'userinfo' => array('label' => Dict::S('UI:History:User'), 'description' => Dict::S('UI:History:User+')),
-						  'log' => array('label' => Dict::S('UI:History:Changes').'<span style="display:block;float:right">Expand All / Collapse All</span>', 'description' => Dict::S('UI:History:Changes+')),
+						  'log' => array('label' => Dict::S('UI:History:Changes') , 'description' => Dict::S('UI:History:Changes+')),
 						 );
 		$aValues = array();
 		foreach($aChanges as $aChange)

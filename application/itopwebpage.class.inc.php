@@ -54,6 +54,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
 		$this->add_linked_stylesheet("../css/fg.menu.css");
 		$this->add_linked_stylesheet("../css/jquery.multiselect.css");
+		$this->add_linked_stylesheet("../css/magnific-popup.css");
+		
 		$this->add_linked_script('../js/jquery.layout.min.js');
 		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
 		$this->add_linked_script("../js/jquery.treeview.js");
@@ -76,6 +78,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script('../js/jquery.multiselect.js');
 		$this->add_linked_script('../js/ajaxfileupload.js');
 		$this->add_linked_script('../js/jquery.mousewheel.js');
+		$this->add_linked_script('../js/jquery.magnific-popup.min.js');
+			
 		
 		$sSearchAny = addslashes(Dict::S('UI:SearchValue:Any'));
 		$sSearchNbSelected = addslashes(Dict::S('UI:SearchValue:NbSelected'));
@@ -436,9 +440,9 @@ EOF
 			});
 		}
 	});
-			
 EOF
 		);
+		$this->add_ready_script(InlineImage::FixImagesWidth());
 		$sUserPrefs = appUserPreferences::GetAsJSON();
 		$this->add_script(
 <<<EOF
@@ -513,7 +517,7 @@ EOF
 		}
 EOF
 		);
-	}
+	}	
 
 	public function AddToMenu($sHtml)
 	{

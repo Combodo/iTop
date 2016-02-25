@@ -882,7 +882,23 @@ class Config
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
-		), 
+		),
+		'inline_image_max_display_width' => array(
+			'type' => 'integer',
+			'description' => 'The maximum width (in pixels) when displaying images inside an HTML formatted attribute. Images will be displayed using this this maximum width.',
+			'default' => '600',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'inline_image_max_storage_width' => array(
+			'type' => 'integer',
+			'description' => 'The maximum width (in pixels) when uploading images to be used inside an HTML formatted attribute. Images larger than the given size will be downsampled before storing them in the database.',
+			'default' => '1600',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)
@@ -1027,6 +1043,7 @@ class Config
 			'core/ownershiplock.class.inc.php',
 			'synchro/synchrodatasource.class.inc.php',
 			'core/backgroundtask.class.inc.php',
+			'core/inlineimage.class.inc.php',
 		);
 		$this->m_aDataModels = array();
 		$this->m_aWebServiceCategories = array(

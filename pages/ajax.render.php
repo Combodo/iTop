@@ -821,6 +821,7 @@ try
 		// Let's take this opportunity to inform the plug-ins so that they can perform some cleanup
 		$iTransactionId = utils::ReadParam('transaction_id', 0);
 		$sTempId = session_id().'_'.$iTransactionId;
+		InlineImage::OnFormCancel($sTempId);
 		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 		{
 			$oExtensionInstance->OnFormCancel($sTempId);
@@ -2214,7 +2215,208 @@ EOF
 		case 'watchdog':
 		$oPage->add('ok'); // Better for debugging...
 		break;
+		
+		case 'cke_img_upload':
+			// Image uploaded via CKEditor
+			$aResult = array(
+			'uploaded' => 0,
+			'fileName' => '',
+			'url' => '',
+			'icon' => '',
+			'msg' => '',
+			'att_id' => 0,
+			'preview' => 'false',
+			);
+		
+			$sObjClass = stripslashes(utils::ReadParam('obj_class', '', false, 'class'));
+			$sTempId = utils::ReadParam('temp_id', '');
+			if (empty($sObjClass))
+			{
+				$aResult['error'] = "Missing argument 'obj_class'";
+			}
+			elseif (empty($sTempId))
+			{
+				$aResult['error'] = "Missing argument 'temp_id'";
+			}
+			else
+			{
+				try
+				{
+					$oDoc = utils::ReadPostedDocument('upload');
+					if (InlineImage::IsImage($oDoc->GetMimeType()))
+					{
+						$aDimensions = null;
+						$oDoc = InlineImage::ResizeImageToFit($oDoc, $aDimensions);
+						$oAttachment = MetaModel::NewObject('InlineImage');
+						$oAttachment->Set('expire', time() + 3600); // one hour...
+						$oAttachment->Set('temp_id', $sTempId);
+						$oAttachment->Set('item_class', $sObjClass);
+						$oAttachment->SetDefaultOrgId();
+						$oAttachment->Set('contents', $oDoc);
+						$iAttId = $oAttachment->DBInsert();
+			
+						$aResult['uploaded'] = 1;
+						$aResult['msg'] = $oDoc->GetFileName();
+						$aResult['fileName'] = $oDoc->GetFileName();
+						$aResult['url'] = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL.$iAttId;
+						$aResult['icon'] = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($oDoc->GetFileName());
+						$aResult['att_id'] = $iAttId;
+						$aResult['preview'] = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
+						if (is_array($aDimensions))
+						{
+							$aResult['width'] = $aDimensions['width'];
+							$aResult['height'] = $aDimensions['height'];
+						}
+					}
+					else
+					{
+						$aResult['error'] = $oDoc->GetFileName().' is not a valid image format.';
+					}
+				}
+				catch (FileUploadException $e)
+				{
+					$aResult['error'] = $e->GetMessage();
+				}
+			}
+			$oPage->add(json_encode($aResult));
+			break;
+			
+		case 'cke_upload_and_browse':
+			$sTempId = utils::ReadParam('temp_id');
+			$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
+			try
+			{
+				$oDoc = utils::ReadPostedDocument('upload');
+				if (InlineImage::IsImage($oDoc->GetMimeType()))
+				{
+					$aDimensions = null;
+					$oDoc = InlineImage::ResizeImageToFit($oDoc, $aDimensions);
+					$oAttachment = MetaModel::NewObject('InlineImage');
+					$oAttachment->Set('expire', time() + 3600); // one hour...
+					$oAttachment->Set('temp_id', $sTempId);
+					$oAttachment->Set('item_class', $sObjClass);
+					$oAttachment->SetDefaultOrgId();
+					$oAttachment->Set('contents', $oDoc);
+					$iAttId = $oAttachment->DBInsert();
+						
+				}
+			}
+			catch (FileUploadException $e)
+			{
+				// fail silently ??
+			}		
+		// Fall though !! => browse
+		
+		case 'cke_browse':
+			$oPage = new NiceWebPage(Dict::S('UI:BrowseInlineImages'));
+			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/magnific-popup.css');
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.magnific-popup.min.js');
+			$sImgUrl = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL;
+			
+			$sTempId = utils::ReadParam('temp_id');
+			$sClass = utils::ReadParam('obj_class', '', false, 'class');
+			$iObjectId = utils::ReadParam('obj_key', 0, false, 'integer');
+			$sCKEditorFuncNum = utils::ReadParam('CKEditorFuncNum', '');
+			
+			$sPostUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?CKEditorFuncNum='.$sCKEditorFuncNum;
+			
+			$oPage->add_style(
+<<<EOF
+body {
+	overflow: auto;
+}
+EOF
+			);
+			$sMaxUpload = InlineImage::GetMaxUpload();
+			$sUploadLegend = Dict::S('UI:UploadInlineImageLegend');
+			$sUploadLabel = Dict::S('UI:SelectInlineImageToUpload');
+			$sAvailableImagesLegend = Dict::S('UI:AvailableInlineImagesLegend');
+			$sInsertBtnLabel = Dict::S('UI:Button:Insert');
+			$sNoInlineImage = Dict::S('UI:NoInlineImage');
+			$oPage->add(
+<<<EOF
+<div>
+	<fieldset>
+		<legend>$sUploadLegend</legend>
+		<form method="post" id="upload_form" action="$sPostUrl" enctype="multipart/form-data">
+			<input type="hidden" name="operation" value="cke_upload_and_browse">
+			<input type="hidden" name="temp_id" value="$sTempId">
+			<input type="hidden" name="obj_class" value="$sClass">
+			<input type="hidden" name="obj_key" value="$iObjectId">
+			$sUploadLabel <input id="upload_button" type="file" name="upload"> <span id="upload_status"> $sMaxUpload</span>
+		</form>
+	</fieldset>
+</div>
+EOF
+			);
 				
+			$oPage->add_script(
+<<<EOF
+        // Helper function to get parameters from the query string.
+        function getUrlParam( paramName ) {
+            var reParam = new RegExp( '(?:[\?&]|&)' + paramName + '=([^&]+)', 'i' );
+            var match = window.location.search.match( reParam );
+		
+            return ( match && match.length > 1 ) ? match[1] : null;
+        }
+        // Simulate user action of selecting a file to be returned to CKEditor.
+        function returnFileUrl(iAttId, sAltText) {
+
+            var funcNum = getUrlParam( 'CKEditorFuncNum' );
+            var fileUrl = '$sImgUrl'+iAttId;
+            window.opener.CKEDITOR.tools.callFunction( funcNum, fileUrl, function() {
+                // Get the reference to a dialog window.
+                var dialog = this.getDialog();
+                // Check if this is the Image Properties dialog window.
+                if ( dialog.getName() == 'image' ) {
+                    // Get the reference to a text field that stores the "alt" attribute.
+                    var element = dialog.getContentElement( 'info', 'txtAlt' );
+                    // Assign the new value.
+                    if ( element )
+                        element.setValue(sAltText);
+                }
+                // Return "false" to stop further execution. In such case CKEditor will ignore the second argument ("fileUrl")
+                // and the "onSelect" function assigned to the button that called the file manager (if defined).
+                // return false;
+            } );
+            window.close();
+        }
+EOF
+			);
+			$oPage->add_ready_script(
+<<<EOF
+$('#upload_button').on('change', function() {
+	$('#upload_status').html('<img src="../images/indicator.gif">'); 
+	$('#upload_form').submit();
+	$(this).prop('disabled', true);
+});
+$('.img-picker').magnificPopup({type: 'image', closeOnContentClick: true });
+EOF
+			);
+			$sOQL = "SELECT InlineImage WHERE ((temp_id = :temp_id) OR (item_class = :obj_class AND item_id = :obj_id))";
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('temp_id' => $sTempId, 'obj_class' => $sClass, 'obj_id' => $iObjectId));
+			$oPage->add("<div><fieldset><legend>$sAvailableImagesLegend</legend>");
+				
+			if ($oSet->Count() == 0)
+			{
+				$oPage->add("<p style=\"text-align:center\">$sNoInlineImage</p>");
+			}
+			else
+			{
+				while($oAttachment = $oSet->Fetch())
+				{
+					$oDoc = $oAttachment->Get('contents');
+					if ($oDoc->GetMainMimeType() == 'image')
+					{
+						$sDocName = addslashes(htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8'));
+						$iAttId = $oAttachment->GetKey();
+						$oPage->add("<div style=\"float:left;margin:1em;text-align:center;\"><img class=\"img-picker\" style=\"max-width:300px;cursor:zoom-in\" href=\"{$sImgUrl}{$iAttId}\" alt=\"$sDocName\" title=\"$sDocName\" src=\"{$sImgUrl}{$iAttId}\"><br/><button onclick=\"returnFileUrl($iAttId, '$sDocName')\">$sInsertBtnLabel</button></div>");
+					}
+				}
+			}
+			$oPage->add("</fieldset></div>");
+			break;		
+		
 		default:
 		$oPage->p("Invalid query.");
 	}

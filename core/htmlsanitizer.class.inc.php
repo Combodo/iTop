@@ -295,18 +295,18 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 	}
 	
 	/**
-	 * Add an extra attribute data-att-id for images which are based on an actual attachment
+	 * Add an extra attribute data-img-id for images which are based on an actual InlineImage
 	 * so that we can later reconstruct the full "src" URL when needed
 	 * @param DOMNode $oElement
 	 */
 	protected function ProcessImage(DOMNode $oElement)
 	{
 		$sSrc = $oElement->getAttribute('src');
-		$sDownloadUrl = str_replace(array('.', '?'), array('\.', '\?'), ATTACHMENT_DOWNLOAD_URL); // Escape . and ?
+		$sDownloadUrl = str_replace(array('.', '?'), array('\.', '\?'), INLINEIMAGE_DOWNLOAD_URL); // Escape . and ?
 		$sUrlPattern = '|'.$sDownloadUrl.'([0-9]+)|';
 		if (preg_match($sUrlPattern, $sSrc, $aMatches))
 		{
-			$oElement->setAttribute('data-att-id', $aMatches[1]);
+			$oElement->setAttribute('data-img-id', $aMatches[1]);
 		}
 	}
 	

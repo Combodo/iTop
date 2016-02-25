@@ -2297,7 +2297,7 @@ class AttributeText extends AttributeString
 		}
 		else
 		{
-			return "<div class=\"HTML\" $sStyle>".utils::FixInlineAttachments($sValue).'</div>';
+			return "<div class=\"HTML\" $sStyle>".InlineImage::FixUrls($sValue).'</div>';
 		}
 		
 	}
@@ -2430,7 +2430,7 @@ class AttributeText extends AttributeString
 			}
 			else
 			{
-				$value = utils::FixInlineAttachments((string)$value);
+				$value = InlineImage::FixUrls((string)$value);
 			}
 			break;
 			

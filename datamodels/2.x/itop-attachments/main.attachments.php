@@ -16,6 +16,8 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+define('ATTACHMENT_DOWNLOAD_URL', 'pages/ajax.render.php?operation=download_document&class=Attachment&field=contents&id=');
+
 class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExtension
 {
 	protected static $m_bIsModified = false;
@@ -241,9 +243,6 @@ EOF
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>'.Dict::S('Attachments:FieldsetTitle').'</legend>');
 
-		$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'itop-attachments/css/magnific-popup.css');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'itop-attachments/js/jquery.magnific-popup.min.js');
-			
 		if ($bEditMode)
 		{
 			$sIsDeleteEnabled = $this->m_bDeleteEnabled ? 'true' : 'false';
@@ -322,15 +321,6 @@ EOF
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');		
 			
-			$maxWidth = MetaModel::GetModuleSetting('itop-standard-email-synchro', 'inline_image_max_width', '');
-			if ($maxWidth !== '')
-			{
-				$sStyle = "style=\"max-width:{$maxWidth}px;cursor:zoom-in;\"";
-			}
-			else
-			{
-				$sStyle = "style=\"cursor:zoom-in;\"";
-			}
 			$sDownloadLink = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DOWNLOAD_URL;		
 			$oPage->add_ready_script(
 <<< EOF
@@ -406,43 +396,6 @@ EOF
 	        dropZone.removeClass('drag_in');
 	    }, 300);
 	});
-
-	// Hook the file upload of all CKEditor instances
-	$('.htmlEditor').each(function() {
-		var oEditor = $(this).ckeditorGet();
-		oEditor.config.extraPlugins = 'uploadimage';
-		oEditor.config.uploadUrl = GetAbsoluteUrlModulesRoot()+'itop-attachments/ajax.attachment.php';
-		oEditor.config.filebrowserBrowseUrl = GetAbsoluteUrlModulesRoot()+'itop-attachments/ajax.attachment.php?operation=cke_browse&temp_id=$sTempId&obj_class=$sClass&obj_key=$iObjectId';
-		oEditor.on( 'fileUploadResponse', function( evt ) {
-		    // Get XHR and response.
-		    var data = evt.data,
-		        xhr = data.fileLoader.xhr,
-		        response = xhr.responseText.split( '|' );
-				
-			var oValues = JSON.parse(response[0]);
-				
-			var sDownloadLink = '$sDownloadLink'+oValues.att_id;
-			$('#attachments').append('<div class="attachment" id="display_attachment_'+oValues.att_id+'"><a data-preview="'+oValues.preview+'" href="'+sDownloadLink+'"><img src="'+oValues.icon+'"><br/>'+oValues.msg+'<input id="attachment_'+oValues.att_id+'" type="hidden" name="attachments[]" value="'+oValues.att_id+'"/></a><br/><input type="button" class="btn_hidden" value="{$sDeleteBtn}" onClick="RemoveAttachment('+oValues.att_id+');"/></div>');
-			if(true)
-			{
-				$('#display_attachment_'+oValues.att_id).hover( function() { $(this).children(':button').toggleClass('btn_hidden'); } );
-			}
-			$('#attachment_plugin').trigger('add_attachment', [oValues.att_id, oValues.msg, true /* inline image */]);
-		} );
-				
-		oEditor.on( 'fileUploadRequest', function( evt ) {
-		    evt.data.fileLoader.uploadUrl += '?operation=cke_img_upload&temp_id=$sTempId&obj_class=$sClass';
-		}, null, null, 4 ); // Listener with priority 4 will be executed before priority 5.
-								
-			});
-			
-	$('img[data-att-id]').each(function() {
-		if ('$sMaxWidth' != '')
-		{
-			$(this).css({'max-width': '$sMaxWidth', width: '', height: '', 'max-height': ''});
-		}
-		$(this).addClass('inline-image').attr('href', $(this).attr('src'));
-	}).magnificPopup({type: 'image', closeOnContentClick: true });
 	
 	// check if the attachments are used by inline images
 	window.setTimeout( function() {
@@ -505,15 +458,6 @@ EOF
 		position: { my: 'left top', at: 'right top', using: function( position, feedback ) { $( this ).css( position ); }},
 		content: function() { if ($(this).attr('data-preview') == 'true') { return('<img style=\"max-width:{$iMaxWidth}px\" src=\"'+$(this).attr('href')+'\"></img>');} else { return '$sPreviewNotAvailable'; }}
 	});
-			
-	$('img[data-att-id]').each(function() {
-		if ('$sMaxWidth' != '')
-		{
-			$(this).css({'max-width': '$sMaxWidth', width: '', height: '', 'max-height': ''});
-		}
-		$(this).addClass('inline-image');
-		$(this).attr('href', $(this).attr('src'));
-	}).magnificPopup({type: 'image', closeOnContentClick: true });
 EOF
 		);
 	}

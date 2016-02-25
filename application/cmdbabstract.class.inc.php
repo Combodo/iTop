@@ -2216,6 +2216,8 @@ EOF
 		$sJsonFieldsMap = json_encode($aFieldsMap);
 		$sState = $this->GetState();
 		$sSessionStorageKey = $sClass.'_'.$iKey;
+		$sTempId = session_id().'_'.$iTransactionId;
+		$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
 		
 		$oPage->add_script(
 <<<EOF
@@ -3129,6 +3131,10 @@ EOF
 			$aFinalValues[$sAttCode] = $aValues[$sAttCode];
 		}
 		$this->UpdateObjectFromArray($aFinalValues);
+		if (!$this->IsNew()) // for new objects this is performed in DBInsertNoReload()
+		{
+			InlineImage::FinalizeInlineImages($this);
+		}
 		
 		// Invoke extensions after the update of the object from the form
 		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
@@ -3172,6 +3178,8 @@ EOF
 	{
 		$res = parent::DBInsertNoReload();
 
+		InlineImage::FinalizeInlineImages($this);
+		
 		// Invoke extensions after insertion (the object must exist, have an id, etc.)
 		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{

@@ -226,15 +226,15 @@ class EMail
 			@$oDOMDoc->loadHTML('<?xml encoding="UTF-8"?>'.$this->m_aData['body']['body']); // For loading HTML chunks where the character set is not specified
 			
 			$oXPath = new DOMXPath($oDOMDoc);
-			$sXPath = "//img[@data-att-id]";
+			$sXPath = "//img[@data-img-id]";
 			$oImagesList = $oXPath->query($sXPath);
 			
 			if ($oImagesList->length != 0)
 			{
 				foreach($oImagesList as $oImg)
 				{
-					$iAttId = $oImg->getAttribute('data-att-id');
-					$oAttachment = MetaModel::GetObject('Attachment', $iAttId, false, true /* Allow All Data */);
+					$iAttId = $oImg->getAttribute('data-img-id');
+					$oAttachment = MetaModel::GetObject('InlineImage', $iAttId, false, true /* Allow All Data */);
 					if ($oAttachment)
 					{
 						$oDoc = $oAttachment->Get('contents');

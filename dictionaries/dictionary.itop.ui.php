@@ -383,6 +383,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:Rename' => ' Rename... ',
 	'UI:Button:ChangePassword' => ' Change Password ',
 	'UI:Button:ResetPassword' => ' Reset Password ',
+	'UI:Button:Insert' => 'Insert',
 	
 	'UI:SearchToggle' => 'Search',
 	'UI:ClickToCreateNew' => 'Create a new %1$s',
@@ -1293,5 +1294,11 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	
 	'UI:Menu:ExportPDF' => 'Export as PDF...',
 	'UI:Menu:PrintableVersion' => 'Printer friendly version',
+	
+	'UI:BrowseInlineImages' => 'Browse images...',
+	'UI:UploadInlineImageLegend' => 'Upload a new image',
+	'UI:SelectInlineImageToUpload' => 'Select the image to upload',
+	'UI:AvailableInlineImagesLegend' => 'Available images',
+	'UI:NoInlineImage' => 'There is no image available on the server. Use the "Browse" button above to select an image from your computer and upload it to the server.',
 ));
 ?>

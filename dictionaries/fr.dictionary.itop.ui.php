@@ -263,6 +263,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:Rename' => ' Renommer... ',
 	'UI:Button:ChangePassword' => ' Changer ! ',
 	'UI:Button:ResetPassword' => ' Ràz du mot de passe ',
+	'UI:Button:Insert' => 'Insérer',
 	'UI:SearchToggle' => 'Recherche',
 	'UI:ClickToCreateNew' => 'Créer un nouvel objet de type %1$s',
 	'UI:SearchFor_Class' => 'Rechercher des objets de type %1$s',
@@ -1135,4 +1136,10 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	
 	'UI:Menu:ExportPDF' => 'Exporter en PDF...',
 	'UI:Menu:PrintableVersion' => 'Version imprimable',
+
+	'UI:BrowseInlineImages' => 'Parcourir les images...',
+	'UI:UploadInlineImageLegend' => 'Ajouter une image',
+	'UI:SelectInlineImageToUpload' => 'Sélectionnez l\'image à ajouter',
+	'UI:AvailableInlineImagesLegend' => 'Images disponibles',
+	'UI:NoInlineImage' => 'Il n\'y a aucune image de disponible sur le serveur. Utilisez le bouton "Parcourir" (ci-dessus) pour sélectionner une image sur votre ordinateur et la télécharger sur le serveur.',
 ));

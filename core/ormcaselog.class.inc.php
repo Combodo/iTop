@@ -198,7 +198,7 @@ class ormCaseLog {
 			}
 			else
 			{
-				$sTextEntry = utils::FixInlineAttachments($sTextEntry);
+				$sTextEntry = InlineImage::FixUrls($sTextEntry);
 			}
 			$iPos += $aIndex[$index]['text_length'];
 
@@ -286,7 +286,7 @@ class ormCaseLog {
 			}
 			else
 			{
-				$sTextEntry = utils::FixInlineAttachments($sTextEntry);
+				$sTextEntry = InlineImage::FixUrls($sTextEntry);
 			}			
 			$iPos += $aIndex[$index]['text_length'];
 
@@ -389,7 +389,7 @@ class ormCaseLog {
 			}
 			else
 			{
-				$sTextEntry = utils::FixInlineAttachments($sTextEntry);
+				$sTextEntry = InlineImage::FixUrls($sTextEntry);
 			}
 			$iPos += $aIndex[$index]['text_length'];
 
