@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-define('INLINEIMAGE_DOWNLOAD_URL', 'pages/ajax.render.php?operation=download_document&class=InlineImage&field=contents&id=');
+define('INLINEIMAGE_DOWNLOAD_URL', 'pages/ajax.render.php?operation=download_inlineimage&id=');
 
 /**
  * Persistent classes (internal): store images referenced inside HTML formatted text fields
@@ -53,7 +53,7 @@ class InlineImage extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeObjectKey("item_id", array("class_attcode"=>'item_class', "allowed_values"=>null, "sql"=>'item_id', "is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));
 		MetaModel::Init_AddAttribute(new AttributeInteger("item_org_id", array("allowed_values"=>null, "sql"=>'item_org_id', "default_value"=>'0', "is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));
 		MetaModel::Init_AddAttribute(new AttributeBlob("contents", array("is_null_allowed"=>false, "depends_on"=>array(), "always_load_in_tables"=>false)));
-
+		MetaModel::Init_AddAttribute(new AttributeString("secret", array("allowed_values"=>null, "sql"=>'secret', "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array(), "always_load_in_tables"=>false)));
 
 
 		MetaModel::Init_SetZListItems('details', array('temp_id', 'item_class', 'item_id', 'item_org_id'));
@@ -214,9 +214,14 @@ class InlineImage extends DBObject
 			foreach($aMatches as $aImgInfo)
 			{
 				$sImgTag = $aImgInfo[0][0];
+				$sSecret = '';
+				if (preg_match('/data-img-secret="([0-9a-f]+)"/', $sImgTag, $aSecretMatches))
+				{
+					$sSecret = '&s='.$aSecretMatches[1];
+				}
 				$sAttId = $aImgInfo[2][0];
 	
-				$sNewImgTag = preg_replace('/src="[^"]+"/', 'src="'.$sUrl.$sAttId.'"', $sImgTag); // preserve other attributes
+				$sNewImgTag = preg_replace('/src="[^"]+"/', 'src="'.$sUrl.$sAttId.$sSecret.'"', $sImgTag); // preserve other attributes
 				$aNeedles[] = $sImgTag;
 				$aReplacements[] = $sNewImgTag;
 			}

@@ -303,10 +303,11 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 	{
 		$sSrc = $oElement->getAttribute('src');
 		$sDownloadUrl = str_replace(array('.', '?'), array('\.', '\?'), INLINEIMAGE_DOWNLOAD_URL); // Escape . and ?
-		$sUrlPattern = '|'.$sDownloadUrl.'([0-9]+)|';
+		$sUrlPattern = '|'.$sDownloadUrl.'([0-9]+)&s=([0-9a-f]+)|';
 		if (preg_match($sUrlPattern, $sSrc, $aMatches))
 		{
 			$oElement->setAttribute('data-img-id', $aMatches[1]);
+			$oElement->setAttribute('data-img-secret', $aMatches[2]);
 		}
 	}
 	

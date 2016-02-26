@@ -771,7 +771,7 @@ try
 		case 'display_document':
 		$id = utils::ReadParam('id', '');
 		$sField = utils::ReadParam('field', '');
-		if (!empty($sClass) && !empty($id) && !empty($sField))
+		if (!empty($sClass) && ($sClass != 'InlineImage') && !empty($id) && !empty($sField))
 		{
 			DownloadDocument($oPage, $sClass, $id, $sField, 'inline');
 		}
@@ -781,7 +781,7 @@ try
 		$id = utils::ReadParam('id', '');
 		$sField = utils::ReadParam('field', '');
 		$iCacheSec = (int) utils::ReadParam('cache', 0);
-		if (!empty($sClass) && !empty($id) && !empty($sField))
+		if (!empty($sClass) && ($sClass != 'InlineImage') && !empty($id) && !empty($sField))
 		{
 			DownloadDocument($oPage, $sClass, $id, $sField, 'attachment');
 			if ($iCacheSec > 0)
@@ -2253,15 +2253,13 @@ EOF
 						$oAttachment->Set('item_class', $sObjClass);
 						$oAttachment->SetDefaultOrgId();
 						$oAttachment->Set('contents', $oDoc);
+						$oAttachment->Set('secret', sprintf ('%06x', mt_rand(0, 0xFFFFFF))); // something not easy to guess
 						$iAttId = $oAttachment->DBInsert();
 			
 						$aResult['uploaded'] = 1;
 						$aResult['msg'] = $oDoc->GetFileName();
 						$aResult['fileName'] = $oDoc->GetFileName();
-						$aResult['url'] = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL.$iAttId;
-						$aResult['icon'] = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($oDoc->GetFileName());
-						$aResult['att_id'] = $iAttId;
-						$aResult['preview'] = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
+						$aResult['url'] = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL.$iAttId.'&s='.$oAttachment->Get('secret');
 						if (is_array($aDimensions))
 						{
 							$aResult['width'] = $aDimensions['width'];
@@ -2297,6 +2295,7 @@ EOF
 					$oAttachment->Set('item_class', $sObjClass);
 					$oAttachment->SetDefaultOrgId();
 					$oAttachment->Set('contents', $oDoc);
+					$oAttachment->Set('secret', sprintf ('%06x', mt_rand(0, 0xFFFFFF))); // something not easy to guess
 					$iAttId = $oAttachment->DBInsert();
 						
 				}
@@ -2360,10 +2359,10 @@ EOF
             return ( match && match.length > 1 ) ? match[1] : null;
         }
         // Simulate user action of selecting a file to be returned to CKEditor.
-        function returnFileUrl(iAttId, sAltText) {
+        function returnFileUrl(iAttId, sAltText, sSecret) {
 
             var funcNum = getUrlParam( 'CKEditorFuncNum' );
-            var fileUrl = '$sImgUrl'+iAttId;
+            var fileUrl = '$sImgUrl'+iAttId+'&s='+sSecret;
             window.opener.CKEDITOR.tools.callFunction( funcNum, fileUrl, function() {
                 // Get the reference to a dialog window.
                 var dialog = this.getDialog();
@@ -2410,13 +2409,28 @@ EOF
 					{
 						$sDocName = addslashes(htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8'));
 						$iAttId = $oAttachment->GetKey();
-						$oPage->add("<div style=\"float:left;margin:1em;text-align:center;\"><img class=\"img-picker\" style=\"max-width:300px;cursor:zoom-in\" href=\"{$sImgUrl}{$iAttId}\" alt=\"$sDocName\" title=\"$sDocName\" src=\"{$sImgUrl}{$iAttId}\"><br/><button onclick=\"returnFileUrl($iAttId, '$sDocName')\">$sInsertBtnLabel</button></div>");
+						$sSecret = $oAttachment->Get('secret');
+						$oPage->add("<div style=\"float:left;margin:1em;text-align:center;\"><img class=\"img-picker\" style=\"max-width:300px;cursor:zoom-in\" href=\"{$sImgUrl}{$iAttId}&s={$sSecret}\" alt=\"$sDocName\" title=\"$sDocName\" src=\"{$sImgUrl}{$iAttId}&s={$sSecret}\"><br/><button onclick=\"returnFileUrl($iAttId, '$sDocName', '$sSecret')\">$sInsertBtnLabel</button></div>");
 					}
 				}
 			}
 			$oPage->add("</fieldset></div>");
 			break;		
-		
+	
+		case 'download_inlineimage':
+			$id = utils::ReadParam('id', '');
+			$sSecret = utils::ReadParam('s', '');
+			$iCacheSec = (int) utils::ReadParam('cache', 0);
+			if (!empty($id) && !empty($sSecret))
+			{
+				DownloadDocument($oPage, 'InlineImage', $id, 'contents', 'attachment', 'secret', $sSecret);
+				if ($iCacheSec > 0)
+				{
+					$oPage->add_header("Expires: "); // Reset the value set in ajax_page
+					$oPage->add_header("Cache-Control: no-transform,public,max-age=$iCacheSec,s-maxage=$iCacheSec");
+				}
+			}
+			break;
 		default:
 		$oPage->p("Invalid query.");
 	}
@@ -2440,9 +2454,11 @@ catch (Exception $e)
  * @param mixed $id Identifier of the object
  * @param string $sAttCode Name of the attribute containing the document to download
  * @param string $sContentDisposition Either 'inline' or 'attachment'
+ * @param string $sSecretField The attcode of the field containing a "secret" to be provided in order to retrieve the file
+ * @param string $sSecretValue The value of the secret to be compared with the value of the attribute $sSecretField
  * @return none
  */   
-function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisposition = 'attachment')
+function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisposition = 'attachment', $sSecretField = null, $sSecretValue = null)
 {
 	try
 	{
@@ -2450,6 +2466,11 @@ function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisp
 		if (!is_object($oObj))
 		{
 			throw new Exception("Invalid id ($id) for class '$sClass' - the object does not exist or you are not allowed to view it");
+		}
+		if (($sSecretField != null) && ($oObj->Get($sSecretField) != $sSecretValue))
+		{
+			usleep(200);
+			throw new Exception("Invalid secret for class '$sClass' - the object does not exist or you are not allowed to view it");
 		}
 		$oDocument = $oObj->Get($sAttCode);
 		if (is_object($oDocument))
