@@ -51,7 +51,7 @@ abstract class FormManager
 		$oFormRenderer = new $sFormRendererClass();
 		$oFormRenderer->SetEndpoint($aJson['formrenderer_endpoint']);
 		$oFormManager->SetRenderer($oFormRenderer);
-
+		
 		return $oFormManager;
 	}
 
