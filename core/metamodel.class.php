@@ -4917,9 +4917,11 @@ abstract class MetaModel
 					continue; // Ignore this non-scalar value
 				}
 			}
-
-			$aSearches[] = '$'.$sSearch.'$';
-			$aReplacements[] = (string) $replace;
+			else
+			{
+				$aSearches[] = '$'.$sSearch.'$';
+				$aReplacements[] = (string) $replace;
+			}
 		}
 		return str_replace($aSearches, $aReplacements, $sInput);
 	}
