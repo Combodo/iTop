@@ -5432,9 +5432,11 @@ abstract class MetaModel
 		{
 			// Some environment parameters are objects, we just need scalars
 			if (is_object($replace)) continue;
-
-			$aSearches[] = '$'.$sSearch.'$';
-			$aReplacements[] = (string) $replace;
+			else
+			{
+				$aSearches[] = '$'.$sSearch.'$';
+				$aReplacements[] = (string) $replace;
+			}
 		}
 		return str_replace($aSearches, $aReplacements, $aInput);
 	}
