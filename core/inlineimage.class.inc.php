@@ -53,7 +53,7 @@ class InlineImage extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeObjectKey("item_id", array("class_attcode"=>'item_class', "allowed_values"=>null, "sql"=>'item_id', "is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));
 		MetaModel::Init_AddAttribute(new AttributeInteger("item_org_id", array("allowed_values"=>null, "sql"=>'item_org_id', "default_value"=>'0', "is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));
 		MetaModel::Init_AddAttribute(new AttributeBlob("contents", array("is_null_allowed"=>false, "depends_on"=>array(), "always_load_in_tables"=>false)));
-		MetaModel::Init_AddAttribute(new AttributeString("secret", array("allowed_values"=>null, "sql"=>'secret', "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array(), "always_load_in_tables"=>false)));
+		MetaModel::Init_AddAttribute(new AttributeString("secret", array("allowed_values"=>null, "sql" => "secret", "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array(), "always_load_in_tables"=>false)));
 
 
 		MetaModel::Init_SetZListItems('details', array('temp_id', 'item_class', 'item_id', 'item_org_id'));
@@ -468,5 +468,62 @@ EOF
 		});
 EOF
 		;
+	}
+}
+
+
+/**
+ * Garbage collector for cleaning "old" temporary InlineImages (and Attachments).
+ * This background process runs every hour and deletes all temporary InlineImages and Attachments
+ * whic are are older than one hour.
+ */
+class InlineImageGC implements iBackgroundProcess
+{
+	public function GetPeriodicity()
+	{
+		return 3600; // Runs every 3600 seconds
+	}
+
+	public function Process($iTimeLimit)
+	{
+		$sDateLimit = date('Y-m-d H:i:s', time()); // Every temporary InlineImage/Attachment expired will be deleted
+
+		$iProcessed = 0;
+		$sOQL = "SELECT InlineImage WHERE (item_id = 0) AND (expire < '$sDateLimit')";
+		while (time() < $iTimeLimit)
+		{
+			// Next one ?
+			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array('expire' => true) /* order by*/, array(), null, 1 /* limit count */);
+			$oSet->OptimizeColumnLoad(array());
+			$oResult = $oSet->Fetch();
+			if (is_null($oResult))
+			{
+				// Nothing to be done
+				break;
+			}
+			$iProcessed++;
+			$oResult->DBDelete();
+		}
+		
+		$iProcessed2 = 0;
+		if (class_exists('Attachment'))
+		{
+			$sOQL = "SELECT Attachment WHERE (item_id = 0) AND (expire < '$sDateLimit')";
+			while (time() < $iTimeLimit)
+			{
+				// Next one ?
+				$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array('expire' => true) /* order by*/, array(), null, 1 /* limit count */);
+				$oSet->OptimizeColumnLoad(array());
+				$oResult = $oSet->Fetch();
+				if (is_null($oResult))
+				{
+					// Nothing to be done
+					break;
+				}
+				$iProcessed2++;
+				$oResult->DBDelete();
+			}		
+		}
+		return "Cleaned $iProcessed old temporary InlineImage(s) and $iProcessed2 old temporary Attachment(s).";
 	}
 }
