@@ -250,6 +250,7 @@ class RelationGraph extends SimpleGraph
 					$aAliasNames = array_keys($aAliases);
 					$sRootCauseAlias = $aAliasNames[1]; // 1st column (=0) = object, second column = root cause
 					$oSet = new DBObjectSet($aContextQuery['search'], array(), array('id' => $oObj->GetKey()));
+					$oSet->OptimizeColumnLoad(array($aAliasNames[0] => array(), $aAliasNames[1] => array())); // Do not load any column... better do a reload than many joins 
 					while($aRow = $oSet->FetchAssoc())
 					{
 						if (!is_null($aRow[$sRootCauseAlias]))
