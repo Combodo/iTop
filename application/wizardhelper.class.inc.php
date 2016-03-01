@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Class WizardHelper
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -35,7 +35,7 @@ class WizardHelper
 	}
 	/**
 	 * Constructs the PHP target object from the parameters sent to the web page by the wizard
-	 * @param boolean $bReadUploadedFiles True to also ready any uploaded file (for blob/document fields)
+	 * @param boolean $bReadUploadedFiles True to also read any uploaded file (for blob/document fields)
 	 * @return object
 	 */	 	 	 	
 	public function GetTargetObject($bReadUploadedFiles = false)
@@ -52,7 +52,7 @@ class WizardHelper
 		{
 			// Because this is stored in a Javascript array, unused indexes
 			// are filled with null values and unused keys (stored as strings) contain $$NULL$$
-			if ( ($sAttCode !='id') && ($sAttCode !== false) && ($value !== null) && ($value !== '$$NULL$$'))
+			if ( ($sAttCode !='id') && ($value !== '$$NULL$$'))
 			{
 				$oAttDef = MetaModel::GetAttributeDef($this->m_aData['m_sClass'], $sAttCode);
 				if (($oAttDef->IsLinkSet()) && ($value != '') )
@@ -284,4 +284,3 @@ class WizardHelper
 		return $oSet;
 	}
 }
-?>
