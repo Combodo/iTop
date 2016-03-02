@@ -187,12 +187,13 @@ abstract class FormRenderer
 	 *
 	 * @return array
 	 */
-	public function Render()
+	public function Render($aRequestedFields = null)
 	{
 		$this->InitOutputs();
 
 		foreach ($this->oForm->GetFields() as $oField)
 		{
+			if ($aRequestedFields !== null && !in_array($oField->GetId(), $aRequestedFields)) continue;
 			$this->aOutputs[$oField->GetId()] = $this->PrepareOutputForField($oField);
 		}
 
