@@ -386,15 +386,19 @@ abstract class DBObject implements iDisplay
 				}
 			}
 		}
-		if(!$oAttDef->IsScalar() && !is_object($value))
-		{
-			throw new CoreUnexpectedValue("scalar not allowed for attribute '$sAttCode', setting default value (empty list)");
-		}
 		if($oAttDef->IsLinkSet())
 		{
-			if((get_class($value) != 'DBObjectSet') && !is_subclass_of($value, 'DBObjectSet'))
+			if (is_null($value))
 			{
-				throw new CoreUnexpectedValue("expecting a set of persistent objects (found a '".get_class($value)."'), setting default value (empty list)");
+				// Normalize
+				$value = DBObjectSet::FromScratch($oAttDef->GetLinkedClass());
+			}
+			else
+			{
+				if ((get_class($value) != 'DBObjectSet') && !is_subclass_of($value, 'DBObjectSet'))
+				{
+					throw new CoreUnexpectedValue("expecting a set of persistent objects (found a '".get_class($value)."'), setting default value (empty list)");
+				}
 			}
 
 			$oObjectSet = $value;
