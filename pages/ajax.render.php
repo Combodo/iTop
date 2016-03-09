@@ -2010,7 +2010,24 @@ EOF
 			$oPage->p('&nbsp;'); // Some space ?
 		}
 		break;
-		
+
+		case 'relation_lists':
+		$aLists = utils::ReadParam('lists');
+		$iBlock = 1; // Zero is not a valid blockid
+		foreach($aLists as $sListClass => $aKeys)
+		{
+			$oSearch = new DBObjectSearch($sListClass);
+			$oSearch->AddCondition('id', $aKeys, 'IN');
+			
+			$oPage->add("<div class=\"page_header\">\n");
+			$oPage->add("<h2>".MetaModel::GetClassIcon($sListClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aKeys), Metamodel::GetName($sListClass))."</h2>\n");
+			$oPage->add("</div>\n");
+			$oBlock = new DisplayBlock($oSearch, 'list');
+			$oBlock->Display($oPage, 'list_'.$iBlock++, array('table_id' => 'ImpactAnalysis_'.$sListClass));
+			$oPage->p('&nbsp;'); // Some space ?
+		}
+		break;
+					
 		case 'ticket_impact':
 		require_once(APPROOT.'core/simplegraph.class.inc.php');
 		require_once(APPROOT.'core/relationgraph.class.inc.php');

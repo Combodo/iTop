@@ -230,6 +230,11 @@ function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 		$sOldRelation = 'depends on';
 	}
 	$oP->add("<h1>".MetaModel::GetRelationDescription($sOldRelation).' '.$oObj->GetName()."</h1>\n");
+	$oP->add("<div id=\"impacted_objects_lists\">");
+	/*
+	 * Content is rendered asynchronously via pages/ajax.render.php?operation=relation_lists
+	 */
+	/*
 	$iBlock = 1; // Zero is not a valid blockid
 	foreach($aResults as $sListClass => $aObjects)
 	{
@@ -241,6 +246,8 @@ function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 		$oBlock->Display($oP, $iBlock++, array('table_id' => get_class($oObj).'_'.$sRelation.'_'.$sDirection.'_'.$sListClass));
 		$oP->P('&nbsp;'); // Some space ?				
 	}
+	*/
+	$oP->add("</div>");
 	$oP->add("</div>");
 }
 
@@ -1518,6 +1525,10 @@ EOF
 				}
 			}
 		}
+		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
+		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
+		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
+		
 		// Display the tabs
 		if ($sFirstTab == 'list')
 		{
