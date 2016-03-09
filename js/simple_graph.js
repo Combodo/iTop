@@ -720,6 +720,10 @@ $(function()
 			{
 				this.refresh_groups(oData.groups);
 			}
+			if (oData.lists)
+			{
+				this.refresh_lists(oData.lists);
+			}
 			if (this.element.is(':visible'))
 			{
 				this._updateBBox();
@@ -750,6 +754,25 @@ $(function()
 					var sUrl = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php';
 					$.post(sUrl, { operation: 'relation_groups', groups: aGroups }, function(data) {
 						$('#impacted_groups').html(data);
+					});
+				}
+			}
+		},
+		refresh_lists: function(aLists)
+		{
+			if ($('#impacted_objects_lists').length > 0)
+			{
+				// The "Lists" tab is present, refresh it
+				if (aLists.length == 0)
+				{
+					$('#impacted_objects_lists').html('');
+				}
+				else
+				{
+					$('#impacted_objects_lists').html('<img src="../images/indicator.gif">');
+					var sUrl = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php';
+					$.post(sUrl, { operation: 'relation_lists', lists: aLists }, function(data) {
+						$('#impacted_objects_lists').html(data);
 					});
 				}
 			}

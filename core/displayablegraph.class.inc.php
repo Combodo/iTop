@@ -1116,7 +1116,7 @@ class DisplayableGraph extends SimpleGraph
 	{
 		$aContextDefs = static::GetContextDefinitions($sContextKey, false);
 		
-		$aData = array('nodes' => array(), 'edges' => array(), 'groups' => array());
+		$aData = array('nodes' => array(), 'edges' => array(), 'groups' => array(), 'lists' => array());
 		$iGroupIdx = 0;
 		$oIterator = new RelationTypeIterator($this, 'Node');
 		foreach($oIterator as $sId => $oNode)
@@ -1139,9 +1139,34 @@ class DisplayableGraph extends SimpleGraph
 				$aData['groups'][$iGroupIdx] = array('class' => $sClass, 'keys' => $aKeys);
 				$oNode->SetProperty('group_index', $iGroupIdx);
 				$iGroupIdx++;
+				
+				if ($oNode->GetProperty('is_reached'))
+				{
+					// Also add the objects from this group into the 'list' tab
+					if (!array_key_exists($sClass, $aData['lists']))
+					{
+						$aData['lists'][$sClass] = $aKeys;
+					}
+					else 
+					{
+						$aData['lists'][$sClass] = array_merge($aData['lists'][$sClass], $aKeys);
+					}
+						
+				}
+			}
+			if (($oNode instanceof DisplayableNode) && $oNode->GetProperty('is_reached') && is_object($oNode->GetProperty('object')))
+			{
+				$sObjClass = get_class($oNode->GetProperty('object'));
+				if (!array_key_exists($sObjClass, $aData['lists']))
+				{
+					$aData['lists'][$sObjClass] = array();
+				}
+				$aData['lists'][$sObjClass][] = $oNode->GetProperty('object')->GetKey();
 			}
 			$aData['nodes'][] = $oNode->GetForRaphael($aContextDefs);
 		}
+		
+		uksort($aData['lists'], array(get_class($this), 'SortOnClassLabel')); // sort on the localized names of the classes to provide a consistent and stable order
 		
 		$oIterator = new RelationTypeIterator($this, 'Edge');
 		foreach($oIterator as $sId => $oEdge)
@@ -1156,6 +1181,17 @@ class DisplayableGraph extends SimpleGraph
 		}
 	
 		return json_encode($aData);
+	}
+	
+	/**
+	 * Sort class "codes" based on their localized name
+	 * @param string $sClass1
+	 * @param string $sClass2
+	 * @return number -1, 0 or 1
+	 */
+	public static function SortOnClassLabel($sClass1, $sClass2)
+	{
+		return strcasecmp(MetaModel::GetName($sClass1), MetaModel::GetName($sClass2));
 	}
 	
 	/**
