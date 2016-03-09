@@ -31,6 +31,7 @@ use \Combodo\iTop\Form\Field\Field;
 class Form
 {
 	protected $sId;
+	protected $sTransactionId;
 	protected $aFields;
 	protected $aDependencies;
 	protected $bValid;
@@ -44,6 +45,7 @@ class Form
 	public function __construct($sId)
 	{
 		$this->sId = $sId;
+		$this->sTransactionId = null;
 		$this->aFields = array();
 		$this->aDependencies = array();
 		$this->bValid = true;
@@ -57,6 +59,26 @@ class Form
 	public function GetId()
 	{
 		return $this->sId;
+	}
+
+	/**
+	 *
+	 * @return string
+	 */
+	public function GetTransactionId()
+	{
+		return $this->sTransactionId;
+	}
+
+	/**
+	 *
+	 * @param string $sTransactionId
+	 * @return \Combodo\iTop\Form\Form
+	 */
+	public function SetTransactionId($sTransactionId)
+	{
+		$this->sTransactionId = $sTransactionId;
+		return $this;
 	}
 
 	/**

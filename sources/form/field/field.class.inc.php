@@ -31,6 +31,7 @@ use \Combodo\iTop\Form\Validator\MandatoryValidator;
 abstract class Field
 {
 	const DEFAULT_LABEL = '';
+	const DEFAULT_HIDDEN = false;
 	const DEFAULT_READ_ONLY = false;
 	const DEFAULT_MANDATORY = false;
 	const DEFAULT_VALID = true;
@@ -39,6 +40,7 @@ abstract class Field
 	protected $sGlobalId;
 	protected $sFormPath;
 	protected $sLabel;
+	protected $bHidden;
 	protected $bReadOnly;
 	protected $bMandatory;
 	protected $aValidators;
@@ -58,6 +60,7 @@ abstract class Field
 		$this->sId = $sId;
 		$this->sGlobalId = 'field_' . $sId . '_' . uniqid();
 		$this->sLabel = static::DEFAULT_LABEL;
+		$this->bHidden = static::DEFAULT_HIDDEN;
 		$this->bReadOnly = static::DEFAULT_READ_ONLY;
 		$this->bMandatory = static::DEFAULT_MANDATORY;
 		$this->aValidators = array();
@@ -103,6 +106,15 @@ abstract class Field
 	public function GetLabel()
 	{
 		return $this->sLabel;
+	}
+
+	/**
+	 *
+	 * @return boolean
+	 */
+	public function GetHidden()
+	{
+		return $this->bHidden;
 	}
 
 	/**
@@ -182,6 +194,17 @@ abstract class Field
 	public function SetLabel($sLabel)
 	{
 		$this->sLabel = $sLabel;
+		return $this;
+	}
+
+	/**
+	 *
+	 * @param boolean $bHidden
+	 * @return \Combodo\iTop\Form\Field\Field
+	 */
+	public function SetHidden($bHidden)
+	{
+		$this->bHidden = $bHidden;
 		return $this;
 	}
 

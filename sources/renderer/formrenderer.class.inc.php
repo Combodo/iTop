@@ -184,16 +184,21 @@ abstract class FormRenderer
 	}
 
 	/**
+	 * Returns an array of Output for the form fields.
 	 *
+	 * @param array $aFieldIds An array of field ids. If specified, renders only those fields
 	 * @return array
 	 */
-	public function Render($aRequestedFields = null)
+	public function Render($aFieldIds = null)
 	{
 		$this->InitOutputs();
 
 		foreach ($this->oForm->GetFields() as $oField)
 		{
-			if ($aRequestedFields !== null && !in_array($oField->GetId(), $aRequestedFields)) continue;
+			if ($aFieldIds !== null && !in_array($oField->GetId(), $aFieldIds))
+			{
+				continue;
+			}
 			$this->aOutputs[$oField->GetId()] = $this->PrepareOutputForField($oField);
 		}
 

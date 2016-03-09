@@ -51,7 +51,11 @@ abstract class FormManager
 		$oFormRenderer = new $sFormRendererClass();
 		$oFormRenderer->SetEndpoint($aJson['formrenderer_endpoint']);
 		$oFormManager->SetRenderer($oFormRenderer);
-		
+
+		$oFormManager->SetForm(new Form($aJson['id']));
+		$oFormManager->GetForm()->SetTransactionId($aJson['transaction_id']);
+		$oFormManager->GetRenderer()->SetForm($oFormManager->GetForm());
+
 		return $oFormManager;
 	}
 
@@ -123,6 +127,7 @@ abstract class FormManager
 		// Overload in child class when needed
 		return array(
 			'id' => $this->oForm->GetId(),
+			'transaction_id' => $this->oForm->GetTransactionId(),
 			'formmanager_class' => $this->GetClass(),
 			'formrenderer_class' => get_class($this->GetRenderer()),
 			'formrenderer_endpoint' => $this->GetRenderer()->GetEndpoint()

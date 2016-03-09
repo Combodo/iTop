@@ -19,6 +19,7 @@
 
 namespace Combodo\iTop\Renderer;
 
+use \DBObject;
 use \Combodo\iTop\Form\Field\Field;
 
 /**
@@ -57,6 +58,7 @@ abstract class FieldRenderer
 	public function SetEndpoint($sEndpoint)
 	{
 		$this->sEndpoint = $sEndpoint;
+		return $this;
 	}
 
 	/**

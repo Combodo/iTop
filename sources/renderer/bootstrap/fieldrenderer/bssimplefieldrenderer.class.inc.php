@@ -19,7 +19,10 @@
 
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
+use \utils;
 use \Dict;
+use \UserRights;
+use \InlineImage;
 use \Combodo\iTop\Renderer\FieldRenderer;
 use \Combodo\iTop\Renderer\RenderingOutput;
 
@@ -41,10 +44,10 @@ class BsSimpleFieldRenderer extends FieldRenderer
 		$oOutput = new RenderingOutput();
 		$sFieldClass = get_class($this->oField);
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
-
+		
 		// TODO : Shouldn't we have a field type so we don't have to maintain FQN classname ?
 		// Rendering field in edition mode
-		if (!$this->oField->GetReadOnly())
+		if (!$this->oField->GetReadOnly() && !$this->oField->GetHidden())
 		{
 			switch ($sFieldClass)
 			{
@@ -55,11 +58,13 @@ class BsSimpleFieldRenderer extends FieldRenderer
 						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">' . $this->oField->GetLabel() . '</label>');
 					}
 					$oOutput->AddHtml('<div class="help-block"></div>');
-					$oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $this->oField->GetCurrentValue() . '" class="form-control" />');
+					$oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '" class="form-control" maxlength="255" />');
 					$oOutput->AddHtml('</div>');
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
+					$bRichEditor = ($this->oField->GetFormat() === 'html');
+
 					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
 					if ($this->oField->GetLabel() !== '')
 					{
@@ -68,6 +73,21 @@ class BsSimpleFieldRenderer extends FieldRenderer
 					$oOutput->AddHtml('<div class="help-block"></div>');
 					$oOutput->AddHtml('<textarea id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" class="form-control" rows="8">' . $this->oField->GetCurrentValue() . '</textarea>');
 					$oOutput->AddHtml('</div>');
+					// Some additional stuff if we are displaying it with a rich editor
+					if ($bRichEditor)
+					{
+						$sEditorLanguage = strtolower(trim(UserRights::GetUserLanguage()));
+						$oOutput->AddJs(
+<<<EOF
+							$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');
+							$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, {language: '$sEditorLanguage', contentsLanguage: '$sEditorLanguage'});
+EOF
+						);
+						if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null))
+						{
+							$oOutput->AddJs(InlineImage::EnableCKEditorImageUpload($this->oField->GetObject(), utils::GetUploadTempId($this->oField->GetTransactionId())));
+						}
+					}
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\SelectField':
@@ -116,11 +136,11 @@ class BsSimpleFieldRenderer extends FieldRenderer
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\HiddenField':
-					$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $this->oField->GetCurrentValue() . '"/>');
+					$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '"/>');
 					break;
 			}
 		}
-		// ... and in read-only mode
+		// ... and in read-only mode (or hidden)
 		else
 		{
 			// ... specific rendering for fields with mulltiple values
@@ -136,12 +156,16 @@ class BsSimpleFieldRenderer extends FieldRenderer
 					case 'Combodo\\iTop\\Form\\Field\\StringField':
 					case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
 						$oOutput->AddHtml('<div class="form-group">');
-						if ($this->oField->GetLabel() !== '')
+						// Showing label / value only if read-only but not hidden
+						if (!$this->oField->GetHidden())
 						{
-							$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">' . $this->oField->GetLabel() . '</label>');
+							if ($this->oField->GetLabel() !== '')
+							{
+								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">' . $this->oField->GetLabel() . '</label>');
+							}
+							$oOutput->AddHtml('<div class="form-control-static">' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '</div>');
 						}
-						$oOutput->AddHtml('<div class="form-control-static">' . $this->oField->GetCurrentValue() . '</div>');
-						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $this->oField->GetCurrentValue() . '" class="form-control" />');
+						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '" class="form-control" />');
 						$oOutput->AddHtml('</div>');
 						break;
 
@@ -151,11 +175,15 @@ class BsSimpleFieldRenderer extends FieldRenderer
 						$sFieldValue = (isset($aFieldChoices[$this->oField->GetCurrentValue()])) ? $aFieldChoices[$this->oField->GetCurrentValue()] : Dict::S('UI:UndefinedObject');
 
 						$oOutput->AddHtml('<div class="form-group">');
-						if ($this->oField->GetLabel() !== '')
+						// Showing label / value only if read-only but not hidden
+						if (!$this->oField->GetHidden())
 						{
-							$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">' . $this->oField->GetLabel() . '</label>');
+							if ($this->oField->GetLabel() !== '')
+							{
+								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">' . $this->oField->GetLabel() . '</label>');
+							}
+							$oOutput->AddHtml('<div class="form-control-static">' . $sFieldValue . '</div>');
 						}
-						$oOutput->AddHtml('<div class="form-control-static">' . $sFieldValue . '</div>');
 						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $this->oField->GetCurrentValue() . '" class="form-control" />');
 						$oOutput->AddHtml('</div>');
 						break;
@@ -171,7 +199,7 @@ class BsSimpleFieldRenderer extends FieldRenderer
 			case 'Combodo\\iTop\\Form\\Field\\SelectField':
 			case 'Combodo\\iTop\\Form\\Field\\HiddenField':
 				$oOutput->AddJs(
-					<<<EOF
+<<<EOF
 					$("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
 						var me = this;
 
@@ -188,7 +216,7 @@ EOF
 			case 'Combodo\\iTop\\Form\\Field\\RadioField':
 			case 'Combodo\\iTop\\Form\\Field\\CheckboxField':
 				$oOutput->AddJs(
-					<<<EOF
+<<<EOF
 					$("#{$this->oField->GetGlobalId()} input").off("change").on("change", function(){
 						var me = this;
 
@@ -220,7 +248,6 @@ EOF
 		switch ($sFieldClass)
 		{
 			case 'Combodo\\iTop\\Form\\Field\\StringField':
-			case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
 			case 'Combodo\\iTop\\Form\\Field\\SelectField':
 			case 'Combodo\\iTop\\Form\\Field\\HiddenField':
 			case 'Combodo\\iTop\\Form\\Field\\RadioField':
@@ -228,6 +255,13 @@ EOF
 				$oOutput->AddJs(
 					<<<EOF
 					$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field($sFormFieldOptions);
+EOF
+				);
+				break;
+			case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
+				$oOutput->AddJs(
+					<<<EOF
+					$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field_html($sFormFieldOptions);
 EOF
 				);
 				break;
