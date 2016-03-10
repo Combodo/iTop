@@ -1,3 +1,20 @@
+// Copyright (C) 2010-2016 Combodo SARL
+//
+//   This file is part of iTop.
+//
+//   iTop is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU Affero General Public License as published by
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   iTop is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU Affero General Public License for more details.
+//
+//   You should have received a copy of the GNU Affero General Public License
+//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 // Wizard Helper JavaScript class to communicate with the WizardHelper PHP class
 
 if (!Array.prototype.indexOf) // Emulation of the indexOf function for IE and old browsers
@@ -151,6 +168,7 @@ function WizardHelper(sClass, sFormPrefix, sState)
 		   { operation: 'wizard_helper', json_obj: this.ToJSON() },
 			function(html){
 				$('#ajax_content').html(html);
+				$('.blockUI').parent().unblock();
 				//console.log('data received:', oWizardHelper);
 				//oWizardHelper.FromJSON(json_data);
 				//oWizardHelper.UpdateFields(); // Is done directly in the html provided by ajax.render.php
@@ -191,7 +209,8 @@ function WizardHelper(sClass, sFormPrefix, sState)
 		{
 			sAttCode = aFieldNames[index];
 			sFieldId = this.GetFieldId(sAttCode);
-			$('#v_'+sFieldId).html('<img src="../images/indicator.gif" />');
+			$('#fstatus_'+sFieldId).html('<img src="../images/indicator.gif" />');
+			$('#field_'+sFieldId).closest('td').block({message:''});
 			this.RequestAllowedValues(sAttCode);
 			index++;
 		}

@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -28,7 +28,6 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	this.ajax_request = null;
 	this.bSelectMode = bSelectMode; // true if the edited field is a SELECT, false if it's an autocomplete
 	this.bSearchMode = bSearchMode; // true if selecting a value in the context of a search form
-	this.v_html = '';
 	var me = this;
 	
 	this.Init = function()
@@ -55,8 +54,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		// Query the server to get the form to search for target objects
 		if (me.bSelectMode)
 		{
-			me.v_html = $('#v_'+me.id).html();
-			$('#v_'+me.id).html('<img src="../images/indicator.gif" />');
+			$('#fstatus_'+me.id).html('<img src="../images/indicator.gif" />');
 		}
 		else
 		{
@@ -284,8 +282,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		// Query the server to get the form to create a target object
 		if (me.bSelectMode)
 		{
-			me.v_html = $('#v_'+me.id).html();
-			$('#v_'+me.id).html('<img src="../images/indicator.gif" />');
+			$('#fstatus_'+me.id).html('<img src="../images/indicator.gif" />');
 		}
 		else
 		{
@@ -336,7 +333,6 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	{
 		if (me.bSelectMode)
 		{
-			$('#v_'+me.id).html(me.v_html);
 		}
 		else
 		{
@@ -446,8 +442,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	
 		if (me.bSelectMode)
 		{
-			me.v_html = $('#v_'+me.id).html();
-			$('#v_'+me.id).html('<img src="../images/indicator.gif" />');
+			$('#fstatus_'+me.id).html('<img src="../images/indicator.gif" />');
 		}
 		else
 		{
@@ -501,7 +496,6 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	{
 		if (me.bSelectMode)
 		{
-			$('#v_'+me.id).html(me.v_html);
 		}
 		else
 		{

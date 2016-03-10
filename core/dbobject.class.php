@@ -116,7 +116,7 @@ abstract class DBObject implements iDisplay
 		// set default values
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{
-			$this->m_aCurrValues[$sAttCode] = $oAttDef->GetDefaultValue();
+			$this->m_aCurrValues[$sAttCode] = $oAttDef->GetDefaultValue($this);
 			$this->m_aOrigValues[$sAttCode] = null;
 			if ($oAttDef->IsExternalField() || ($oAttDef instanceof AttributeFriendlyName))
 			{
@@ -291,16 +291,30 @@ abstract class DBObject implements iDisplay
 
 			if (!$oAttDef->LoadInObject()) continue;
 
-			// Note: we assume that, for a given attribute, if it can be loaded,
-			// then one column will be found with an empty suffix, the others have a suffix
-			// Take care: the function isset will return false in case the value is null,
-			// which is something that could happen on open joins
-			$sAttRef = $sClassAlias.$sAttCode;
-
-			if (array_key_exists($sAttRef, $aRow))
+			unset($value);
+			$bIsDefined = false;
+			if ($oAttDef->LoadFromDB())
 			{
-				$value = $oAttDef->FromSQLToValue($aRow, $sAttRef);
+				// Note: we assume that, for a given attribute, if it can be loaded,
+				// then one column will be found with an empty suffix, the others have a suffix
+				// Take care: the function isset will return false in case the value is null,
+				// which is something that could happen on open joins
+				$sAttRef = $sClassAlias.$sAttCode;
 
+				if (array_key_exists($sAttRef, $aRow))
+				{
+					$value = $oAttDef->FromSQLToValue($aRow, $sAttRef);
+					$bIsDefined = true;
+				}
+			}
+			else
+			{
+				$value = $oAttDef->ReadValue($this);
+				$bIsDefined = true;
+			}
+
+			if ($bIsDefined)
+			{
 				$this->m_aCurrValues[$sAttCode] = $value;
 				if (is_object($value))
 				{
@@ -380,7 +394,7 @@ abstract class DBObject implements iDisplay
 				{
 					if (($oDef->IsExternalField() || ($oDef instanceof AttributeFriendlyName)) && ($oDef->GetKeyAttCode() == $sAttCode))
 					{
-						$this->m_aCurrValues[$sCode] = $oDef->GetDefaultValue();
+						$this->m_aCurrValues[$sCode] = $oDef->GetDefaultValue($this);
 						unset($this->m_aLoadedAtt[$sCode]);
 					}
 				}
@@ -492,9 +506,7 @@ abstract class DBObject implements iDisplay
 
 		if (!$oAttDef->LoadInObject())
 		{
-			$sParentAttCode = $oAttDef->GetParentAttCode();
-			$parentValue = $this->GetStrict($sParentAttCode);
-			$value = $oAttDef->GetValue($parentValue, $this);
+			$value = $oAttDef->GetValue($this);
 		}
 		else
 		{
@@ -550,7 +562,7 @@ abstract class DBObject implements iDisplay
 							}
 							else
 							{
-								$this->m_aCurrValues[$sCode] = $oDef->GetDefaultValue();
+								$this->m_aCurrValues[$sCode] = $oDef->GetDefaultValue($this);
 							}
 							$this->m_aLoadedAtt[$sCode] = true;
 						}
@@ -1109,6 +1121,10 @@ abstract class DBObject implements iDisplay
 				return "Wrong format [$toCheck]";
 			}
 		}
+		else
+		{
+			return $oAtt->CheckValue($this, $toCheck);
+		}
 		return true;
 	}
 	
@@ -1405,6 +1421,17 @@ abstract class DBObject implements iDisplay
 		}
 	}
 
+	// used both by insert/update
+	private function WriteExternalAttributes()
+	{
+		foreach (MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
+		{
+			if (!$oAttDef->LoadInObject()) continue;
+			if ($oAttDef->LoadFromDB()) continue;
+			$oAttDef->WriteValue($this, $this->m_aCurrValues[$sAttCode]);
+		}
+	}
+
 	// Note: this is experimental - it was designed to speed up the setup of iTop
 	// Known limitations:
 	//   - does not work with multi-table classes (issue with the unique id to maintain in several tables)
@@ -1591,6 +1618,8 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->DBWriteLinks();
+		$this->WriteExternalAttributes();
+
 		$this->m_bIsInDB = true;
 		$this->m_bDirty = false;
 
@@ -1878,6 +1907,7 @@ abstract class DBObject implements iDisplay
 			}
 
 			$this->DBWriteLinks();
+			$this->WriteExternalAttributes();
 			$this->m_bDirty = false;
 
 			$this->AfterUpdate();
@@ -1980,6 +2010,10 @@ abstract class DBObject implements iDisplay
 						$iNewLeft = $aRes[0]['max']+1;
 					}
 					MetaModel::HKReplugBranch($iNewLeft, $iNewLeft + $iDelta - 1, $oAttDef, $sTable);
+				}
+				elseif (!$oAttDef->LoadFromDB())
+				{
+					$oAttDef->DeleteValue($this);
 				}
 			}
 
@@ -2222,7 +2256,7 @@ abstract class DBObject implements iDisplay
 	public function Reset($sAttCode)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		$this->Set($sAttCode, $oAttDef->GetDefaultValue());
+		$this->Set($sAttCode, $oAttDef->GetDefaultValue($this));
 		return true;
 	}
 

@@ -44,6 +44,7 @@ require_once(APPROOT.'/application/ui.passwordwidget.class.inc.php');
 require_once(APPROOT.'/application/ui.extkeywidget.class.inc.php');
 require_once(APPROOT.'/application/ui.htmleditorwidget.class.inc.php');
 require_once(APPROOT.'/application/datatable.class.inc.php');
+require_once(APPROOT.'/sources/renderer/console/consoleformrenderer.class.inc.php');
 
 abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 {
@@ -1712,7 +1713,8 @@ EOF
 			{
 				$bMandatory = 'true';
 			}
-			$sValidationField = "<span class=\"form_validation\" id=\"v_{$iId}\"></span>";
+			$sValidationSpan = "<span class=\"form_validation\" id=\"v_{$iId}\"></span>";
+			$sReloadSpan = "<span class=\"field_status\" id=\"fstatus_{$iId}\"></span>";
 			$sHelpText = htmlentities($oAttDef->GetHelpOnEdition(), ENT_QUOTES, 'UTF-8');
 			$aEventsList = array();
 			switch($oAttDef->GetEditClass())
@@ -1725,7 +1727,7 @@ EOF
 				{
 					$sDisplayValue = date($oAttDef->GetDateFormat());
 				}
-				$sHTMLValue = "<input title=\"$sHelpText\" class=\"date-pick\" type=\"text\" size=\"12\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationField}";
+				$sHTMLValue = "<input title=\"$sHelpText\" class=\"date-pick\" type=\"text\" size=\"12\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationSpan}{$sReloadSpan}";
 				break;
 
 				case 'DateTime':
@@ -1736,7 +1738,7 @@ EOF
 				{
 					$sDisplayValue = date($oAttDef->GetDateFormat());
 				}
-				$sHTMLValue = "<input title=\"$sHelpText\" class=\"datetime-pick\" type=\"text\" size=\"20\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationField}";
+				$sHTMLValue = "<input title=\"$sHelpText\" class=\"datetime-pick\" type=\"text\" size=\"20\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationSpan}{$sReloadSpan}";
 				break;
 
 				case 'Duration':
@@ -1752,7 +1754,7 @@ EOF
 				$sMinutes = "<input title=\"$sHelpText\" type=\"text\" style=\"text-align:right\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[m]{$sNameSuffix}\" value=\"{$aVal['minutes']}\" id=\"{$iId}_m\"/>";
 				$sSeconds = "<input title=\"$sHelpText\" type=\"text\" style=\"text-align:right\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[s]{$sNameSuffix}\" value=\"{$aVal['seconds']}\" id=\"{$iId}_s\"/>";
 				$sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\"/>";
-				$sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes, $sSeconds).$sHidden."&nbsp;".$sValidationField;
+				$sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes, $sSeconds).$sHidden."&nbsp;".$sValidationSpan.$sReloadSpan;
 				$oPage->add_ready_script("$('#{$iId}').bind('update', function(evt, sFormId) { return ToggleDurationField('$iId'); });");				
 				break;
 				
@@ -1760,7 +1762,7 @@ EOF
 					$aEventsList[] ='validate';
 					$aEventsList[] ='keyup';
 					$aEventsList[] ='change';
-					$sHTMLValue = "<input title=\"$sHelpText\" type=\"password\" size=\"30\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationField}";
+					$sHTMLValue = "<input title=\"$sHelpText\" type=\"password\" size=\"30\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationSpan}{$sReloadSpan}";
 				break;
 				
 				case 'OQLExpression':
@@ -1799,7 +1801,7 @@ EOF
 						$sAdditionalStuff = "";
 					}
 					// Ok, the text area is drawn here
-					$sHTMLValue = "<table><tr><td><textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\" $sStyle>".htmlentities($sEditValue, ENT_QUOTES, 'UTF-8')."</textarea>$sAdditionalStuff</td><td>{$sValidationField}</td></tr></table>";
+					$sHTMLValue = "<table><tr><td><textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\" $sStyle>".htmlentities($sEditValue, ENT_QUOTES, 'UTF-8')."</textarea>$sAdditionalStuff</td><td>{$sValidationSpan}{$sReloadSpan}</td></tr></table>";
 
 				break;
 
@@ -1825,12 +1827,12 @@ EOF
 					$sPreviousLog = is_object($value) ? $value->GetAsHTML($oPage, true /* bEditMode */, array('AttributeText', 'RenderWikiHtml')) : '';
 					$iEntriesCount = is_object($value) ? count($value->GetIndex()) : 0;
 					$sHidden = "<input type=\"hidden\" id=\"{$iId}_count\" value=\"$iEntriesCount\"/>"; // To know how many entries the case log already contains
-					$sHTMLValue = "<div class=\"caselog\" $sStyle><table style=\"width:100%;\"><tr><td>$sHeader<textarea class=\"htmlEditor\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".htmlentities($sEditValue, ENT_QUOTES, 'UTF-8')."</textarea>$sPreviousLog</td><td>{$sValidationField}</td></tr></table>$sHidden</div>";
+					$sHTMLValue = "<div class=\"caselog\" $sStyle><table style=\"width:100%;\"><tr><td>$sHeader<textarea class=\"htmlEditor\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".htmlentities($sEditValue, ENT_QUOTES, 'UTF-8')."</textarea>$sPreviousLog</td><td>{$sValidationSpan}{$sReloadSpan}</td></tr></table>$sHidden</div>";
 					$oPage->add_ready_script("$('#$iId').bind('keyup change validate', function(evt, sFormId) { return ValidateCaseLogField('$iId', $bMandatory, sFormId) } );"); // Custom validation function
 				break;
 
 				case 'HTML':
-					$oWidget = new UIHTMLEditorWidget($iId, $oAttDef, $sNameSuffix, $sFieldPrefix, $sHelpText, $sValidationField, $value, $bMandatory);
+					$oWidget = new UIHTMLEditorWidget($iId, $oAttDef, $sNameSuffix, $sFieldPrefix, $sHelpText, $sValidationSpan.$sReloadSpan, $value, $bMandatory);
 					$sHTMLValue = $oWidget->Display($oPage, $aArgs);
 				break;
 
@@ -1862,7 +1864,7 @@ EOF
 					$sHTMLValue = "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$iMaxFileSize\" />\n";
 					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[filename]\" type=\"hidden\" id=\"$iId\" \" value=\"".htmlentities($sFileName, ENT_QUOTES, 'UTF-8')."\"/>\n";
 					$sHTMLValue .= "<span id=\"name_$iInputId\">$sFileName</span><br/>\n";
-					$sHTMLValue .= "<input title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[fcontents]\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>&nbsp;{$sValidationField}\n";
+					$sHTMLValue .= "<input title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[fcontents]\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>&nbsp;{$sValidationSpan}{$sReloadSpan}\n";
 				break;
 				
 				case 'StopWatch':
@@ -1902,10 +1904,57 @@ EOF
 					$sHTMLValue .= $oAttDef->GetDisplayForm($value, $oPage, true);
 					$sHTMLValue .= '</div>';
 					$sHTMLValue .= '</td>';
-					$sHTMLValue .= '<td>'.$sValidationField.'</td>';
+					$sHTMLValue .= '<td>'.$sValidationSpan.$sReloadSpan.'</td>';
 					$sHTMLValue .= '</tr>';
 					$sHTMLValue .= '</table>';
 					$oPage->add_ready_script("$('#$iId :input').bind('keyup change validate', function(evt, sFormId) { return ValidateRedundancySettings('$iId',sFormId); } );"); // Custom validation function
+					break;
+
+				case 'CustomFields':
+					$sHTMLValue = '<table>';
+					$sHTMLValue .= '<tr>';
+					$sHTMLValue .= '<td>';
+					$sHTMLValue .= '<div id="'.$iId.'_console_form">';
+					$sHTMLValue .= '<div id="'.$iId.'_field_set">';
+					$sHTMLValue .= '</div>';
+					$sHTMLValue .= '</div>';
+					$sHTMLValue .= '</td>';
+					$sHTMLValue .= '<td>'.$sReloadSpan.'</td>'; // No validation span for this one: it does handle its own validation!
+					$sHTMLValue .= '</tr>';
+					$sHTMLValue .= '</table>';
+					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" value=\"\"/>\n";
+
+					$oForm = $value->GetForm($sFormPrefix);
+					$oRenderer = new \Combodo\iTop\Renderer\Console\ConsoleFormRenderer($oForm);
+					$aRenderRes = $oRenderer->Render();
+
+					$aFormHandlerOptions = array(
+						'wizard_helper_var_name' => 'oWizardHelper'.$sFormPrefix,
+						'custom_field_attcode' => $sAttCode
+					);
+					$sFormHandlerOptions = json_encode($aFormHandlerOptions);
+					$aFieldSetOptions = array(
+						'field_identifier_attr' => 'data-field-id', // convention: fields are rendered into a div and are identified by this attribute
+						'fields_list' => $aRenderRes,
+						'fields_impacts' => $oForm->GetFieldsImpacts(),
+						'form_path' => $oForm->GetId()
+					);
+					$sFieldSetOptions = json_encode($aFieldSetOptions);
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/form_handler.js');
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/console_form_handler.js');
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/field_set.js');
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/form_field.js');
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/subform_field.js');
+					$oPage->add_ready_script("$('#{$iId}_console_form').console_form_handler($sFormHandlerOptions);");
+					$oPage->add_ready_script("$('#{$iId}_field_set').field_set($sFieldSetOptions);");
+					$oPage->add_ready_script("$('#{$iId}_console_form').console_form_handler('alignColumns');");
+					$oPage->add_ready_script("$('#{$iId}_console_form').console_form_handler('option', 'field_set', $('#{$iId}_field_set'));");
+					// field_change must be processed to refresh the hidden value at anytime
+					$oPage->add_ready_script("$('#{$iId}_console_form .field_set').bind('field_change', function() { $('#{$iId}').val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });");
+					// update_value is triggered when preparing the wizard helper object for ajax calls
+					$oPage->add_ready_script("$('#{$iId}').bind('update_value', function() { $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });");
+					// validate is triggered by CheckFields, on all the input fields, once at page init and once before submitting the form
+					$oPage->add_ready_script("$('#{$iId}').bind('validate', function(evt, sFormId) { return ValidateCustomFields('$iId', sFormId) } );"); // Custom validation function
 					break;
 
 				case 'String':
@@ -1925,7 +1974,7 @@ EOF
 							case 'radio_vertical':
 							$sHTMLValue = '';
 							$bVertical = ($sDisplayStyle != 'radio_horizontal');
-							$sHTMLValue = $oPage->GetRadioButtons($aAllowedValues, $value, $iId, "attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}", $bMandatory, $bVertical, $sValidationField);
+							$sHTMLValue = $oPage->GetRadioButtons($aAllowedValues, $value, $iId, "attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}", $bMandatory, $bVertical, $sValidationSpan.$sReloadSpan);
 							$aEventsList[] ='change';
 							break;
 							
@@ -1946,13 +1995,13 @@ EOF
 								}
 								$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
 							}
-							$sHTMLValue .= "</select>&nbsp;{$sValidationField}\n";
+							$sHTMLValue .= "</select>&nbsp;{$sValidationSpan}{$sReloadSpan}\n";
 							$aEventsList[] ='change';
 						}
 					}
 					else
 					{
-						$sHTMLValue = "<input title=\"$sHelpText\" type=\"text\" size=\"30\" maxlength=\"$iFieldSize\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationField}";
+						$sHTMLValue = "<input title=\"$sHelpText\" type=\"text\" size=\"30\" maxlength=\"$iFieldSize\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationSpan}{$sReloadSpan}";
 						$aEventsList[] ='keyup';
 						$aEventsList[] ='change';
 					}
@@ -2977,6 +3026,10 @@ EOF
 					$this->Set($sAttCode, $iValue);
 				}
 			}
+			elseif ($oAttDef->GetEditClass() == 'CustomFields')
+			{
+				$this->Set($sAttCode, $value);
+			}
 			else if (($oAttDef->GetEditClass() == 'LinkedSet') && !$oAttDef->IsIndirect() &&
 			          (($oAttDef->GetEditMode() == LINKSET_EDITMODE_INPLACE) || ($oAttDef->GetEditMode() == LINKSET_EDITMODE_ADDREMOVE)))
 			{
@@ -3088,6 +3141,10 @@ EOF
 			elseif ($oAttDef->GetEditClass() == 'RedundancySetting')
 			{
 				$value = $oAttDef->ReadValueFromPostedForm($sFormPrefix);
+			}
+			elseif ($oAttDef->GetEditClass() == 'CustomFields')
+			{
+				$value = $oAttDef->ReadValueFromPostedForm($this, $sFormPrefix);
 			}
 			else if (($oAttDef->GetEditClass() == 'LinkedSet') && !$oAttDef->IsIndirect() &&
 			         (($oAttDef->GetEditMode() == LINKSET_EDITMODE_INPLACE) || ($oAttDef->GetEditMode() == LINKSET_EDITMODE_ADDREMOVE)) )

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Handles various ajax requests
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -563,7 +563,7 @@ try
 		foreach($oWizardHelper->GetFieldsForDefaultValue() as $sAttCode)
 		{
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			$defaultValue = $oAttDef->GetDefaultValue();
+			$defaultValue = $oAttDef->GetDefaultValue($oObj);
 			$oWizardHelper->SetDefaultValue($sAttCode, $defaultValue);
 			$oObj->Set($sAttCode, $defaultValue);
 		}
@@ -2448,6 +2448,28 @@ EOF
 				}
 			}
 			break;
+
+		case 'custom_fields_update':
+			$oPage->SetContentType('application/json');
+			$sAttCode = utils::ReadParam('attcode', '');
+			$aRequestedFields = utils::ReadParam('requested_fields', array());
+			$sRequestedFieldsFormPath = utils::ReadParam('form_path', '');
+			$sJson = utils::ReadParam('json_obj', '', false, 'raw_data');
+
+			$oWizardHelper = WizardHelper::FromJSON($sJson);
+			$oObj = $oWizardHelper->GetTargetObject();
+
+			$oOrmCustomFieldValue = $oObj->Get($sAttCode);
+			$oForm = $oOrmCustomFieldValue->GetForm();
+			$oSubForm = $oForm->FindSubForm($sRequestedFieldsFormPath);
+			$oRenderer = new \Combodo\iTop\Renderer\Console\ConsoleFormRenderer($oSubForm);
+			$aRenderRes = $oRenderer->Render($aRequestedFields);
+
+			$aResult = array();
+			$aResult['form']['updated_fields'] = $aRenderRes;
+			$oPage->add(json_encode($aResult));
+			break;
+
 		default:
 		$oPage->p("Invalid query.");
 	}

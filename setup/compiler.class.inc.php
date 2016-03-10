@@ -1206,6 +1206,10 @@ EOF;
 					$aParameters['min_up_mode'] = $this->GetMandatoryPropString($oField, 'min_up_mode');
 					$aParameters['min_up_type'] = $this->GetMandatoryPropString($oField, 'min_up_type');
 				}
+				elseif ($sAttType == 'AttributeCustomFields')
+				{
+					$aParameters['handler_class'] = $this->GetMandatoryPropString($oField, 'handler_class');
+				}
 				else
 				{
 					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"

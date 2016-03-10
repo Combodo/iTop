@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -54,7 +54,7 @@
  * | |   +--------+    +-----+                    | |
  * | +--------------------------------------------+ |
  * +------------------------------------------------+
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -149,7 +149,7 @@ class UIExtKeyWidget
 				case 'radio':
 				case 'radio_horizontal':
 				case 'radio_vertical':
-				$sValidationField = "<span id=\"v_{$this->iId}\"></span>";
+				$sValidationField = "<span id=\"v_{$this->iId}\"></span><span id=\"fstatus_{$this->iId}\"></span>";
 				$sHTMLValue = '';
 				$bVertical = ($sDisplayStyle != 'radio_horizontal');
 				$bExtensions = false;
@@ -305,7 +305,7 @@ EOF
 		}
 		if (($sDisplayStyle == 'select') || ($sDisplayStyle == 'list'))
 		{
-			$sHTMLValue .= "<span id=\"v_{$this->iId}\"></span>";
+			$sHTMLValue .= "<span id=\"v_{$this->iId}\"></span><span id=\"fstatus_{$this->iId}\"></span>";
 		}
 		$sHTMLValue .= "</span>"; // end of no wrap
 		return $sHTMLValue;

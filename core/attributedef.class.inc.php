@@ -31,6 +31,9 @@ require_once('ormstopwatch.class.inc.php');
 require_once('ormpassword.class.inc.php');
 require_once('ormcaselog.class.inc.php');
 require_once('htmlsanitizer.class.inc.php');
+require_once(APPROOT.'sources/autoload.php');
+require_once('customfieldshandler.class.inc.php');
+require_once('ormcustomfieldsvalue.class.inc.php');
 
 /**
  * MissingColumnException - sent if an attribute is being created but the column is missing in the row 
@@ -178,7 +181,6 @@ abstract class AttributeDefinition
 
 	private function ConsistencyCheck()
 	{
-
 		// Check that any mandatory param has been specified
 		//
 		$aExpectedParams = $this->ListExpectedParams();
@@ -192,7 +194,18 @@ abstract class AttributeDefinition
 				throw new Exception("ERROR missing parameter '$sParamName' in ".get_class($this)." declaration for class $sTargetClass ($sCodeInfo)");
 			}
 		}
-	} 
+	}
+
+	/**
+	 * Check the validity of the given value
+	 * @param DBObject $oHostObject
+	 * @param string An error if any, null otherwise
+	 */
+	public function CheckValue(DBObject $oHostObject, $value)
+	{
+		// todo: factorize here the cases implemented into DBObject
+		return true;
+	}
 
 	// table, key field, name field
 	public function ListDBJoins()
@@ -212,8 +225,9 @@ abstract class AttributeDefinition
 	public function IsExternalField() {return false;} 
 	public function IsWritable() {return false;} 
 	public function LoadInObject() {return true;}
+	public function LoadFromDB() {return true;}
 	public function AlwaysLoadInTables() {return $this->GetOptional('always_load_in_tables', false);}
-	public function GetValue($oHostObject){return null;} // must return the value if LoadInObject returns false
+	public function GetValue($oHostObject, $bOriginal = false){return null;} // must return the value if LoadInObject returns false
 	public function IsNullAllowed() {return true;} 
 	public function GetCode() {return $this->m_sCode;} 
 	public function GetMirrorLinkAttribute() {return null;}
@@ -417,7 +431,7 @@ abstract class AttributeDefinition
 		return call_user_func($sComputeFunc);
 	}
 	
-	abstract public function GetDefaultValue();
+	abstract public function GetDefaultValue(DBObject $oHostObject = null);
 
 	//
 	// To be overloaded in subclasses
@@ -503,7 +517,7 @@ abstract class AttributeDefinition
 	/**
 	 * List the available verbs for 'GetForTemplate'
 	 */	 
-	public static function EnumTemplateVerbs()
+	public function EnumTemplateVerbs()
 	{
 		return array(
 			'' => 'Plain text (unlocalized) representation',
@@ -692,21 +706,9 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public function GetValuesDef() {return $this->Get("allowed_values");} 
 	public function GetPrerequisiteAttributes($sClass = null) {return $this->Get("depends_on");}
-	public function GetDefaultValue($aArgs = array())
+	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
-		// Note: so far, this feature is a prototype,
-		//       later, the argument 'this' should always be present in the arguments
-		//       
-		if (($this->IsParam('default_value')) && array_key_exists('this', $aArgs))
-		{
-			$aValues = $this->Get('default_value')->GetValues($aArgs);
-			$oSet = DBObjectSet::FromArray($this->Get('linked_class'), $aValues);
-			return $oSet;
-		}
-		else
-		{
-			return DBObjectSet::FromScratch($this->Get('linked_class'));
-		}
+		return DBObjectSet::FromScratch($this->Get('linked_class'));
 	}
 
 	public function GetTrackingLevel()
@@ -849,7 +851,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	/**
 	 * List the available verbs for 'GetForTemplate'
 	 */	 
-	public static function EnumTemplateVerbs()
+	public function EnumTemplateVerbs()
 	{
 		return array(
 			'' => 'Plain text (unlocalized) representation',
@@ -1295,7 +1297,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	public function IsScalar() {return true;} 
 	public function IsWritable() {return true;} 
 	public function GetSQLExpr()    {return $this->Get("sql");}
-	public function GetDefaultValue() {return $this->MakeRealValue("", null);}
+	public function GetDefaultValue(DBObject $oHostObject = null) {return $this->MakeRealValue("", $oHostObject);}
 	public function IsNullAllowed() {return false;}
 
 	// 
@@ -1368,7 +1370,7 @@ class AttributeDBField extends AttributeDBFieldVoid
 	{
 		return array_merge(parent::ListExpectedParams(), array("default_value", "is_null_allowed"));
 	}
-	public function GetDefaultValue() {return $this->MakeRealValue($this->Get("default_value"), null);}
+	public function GetDefaultValue(DBObject $oHostObject = null) {return $this->MakeRealValue($this->Get("default_value"), $oHostObject);}
 	public function IsNullAllowed() {return $this->Get("is_null_allowed");}
 }
 
@@ -1480,7 +1482,7 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 	public function GetEditClass() {return "String";}
 	protected function GetSQLCol($bFullSpec = false) {return "INT(11)".($bFullSpec ? " DEFAULT 0" : "");}
 
-	public function GetDefaultValue() {return 0;}
+	public function GetDefaultValue(DBObject $oHostObject = null) {return 0;}
 	public function IsNullAllowed()
 	{
 		return $this->Get("is_null_allowed");
@@ -1854,9 +1856,9 @@ class AttributeClass extends AttributeString
 		parent::__construct($sCode, $aParams);
 	}
 
-	public function GetDefaultValue()
+	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
-		$sDefault = parent::GetDefaultValue();
+		$sDefault = parent::GetDefaultValue($oHostObject);
 		if (!$this->IsNullAllowed() && $this->IsNull($sDefault))
 		{
 			// For this kind of attribute specifying null as default value
@@ -1953,7 +1955,7 @@ class AttributeFinalClass extends AttributeString
 	{
 		$this->m_sValue = $sValue;
 	}
-	public function GetDefaultValue()
+	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
 		return $this->m_sValue;
 	}
@@ -2312,7 +2314,7 @@ class AttributeText extends AttributeString
 				{
 					$sClass = $aMatches[1];
 					$sName = $aMatches[2];
-					
+
 					if (MetaModel::IsValidClass($sClass))
 					{
 						$sClassLabel = MetaModel::GetName($sClass);
@@ -2357,7 +2359,7 @@ class AttributeText extends AttributeString
 				{
 					$sClassLabel = $aMatches[1];
 					$sName = $aMatches[2];
-					
+
 					if (!MetaModel::IsValidClass($sClassLabel))
 					{
 						$sClass = MetaModel::GetClassFromLabel($sClassLabel);
@@ -2548,8 +2550,8 @@ class AttributeCaseLog extends AttributeLongText
 			return (string) $value;
 		}
 	}
-		
-	public function GetDefaultValue() {return new ormCaseLog();}
+	
+	public function GetDefaultValue(DBObject $oHostObject = null) {return new ormCaseLog();}
 	public function Equals($val1, $val2) {return ($val1->GetText() == $val2->GetText());}
 	
 
@@ -2719,7 +2721,7 @@ class AttributeCaseLog extends AttributeLongText
 	/**
 	 * List the available verbs for 'GetForTemplate'
 	 */	 
-	public static function EnumTemplateVerbs()
+	public function EnumTemplateVerbs()
 	{
 		return array(
 			'' => 'Plain text representation of all the log entries',
@@ -3372,9 +3374,9 @@ class AttributeDateTime extends AttributeDBField
 	// This has been done at the time when itop was using TIMESTAMP columns,
 	// now that iTop is using DATETIME columns, it seems possible to have IsNullAllowed returning false... later when this is needed
 	public function IsNullAllowed() {return true;}
-	public function GetDefaultValue()
+	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
-		$default = parent::GetDefaultValue();
+		$default = parent::GetDefaultValue($oHostObject);
 
 		if (!parent::IsNullAllowed())
 		{
@@ -3769,7 +3771,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	public function GetDisplayStyle() { return $this->GetOptional('display_style', 'select'); }
 	
 
-	public function GetDefaultValue() {return 0;}
+	public function GetDefaultValue(DBObject $oHostObject = null) {return 0;}
 	public function IsNullAllowed()
 	{
 		if (MetaModel::GetConfig()->Get('disable_mandatory_ext_keys'))
@@ -4163,10 +4165,10 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->GetSQLExpr(); 
 	} 
 
-	public function GetDefaultValue()
+	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->GetDefaultValue(); 
+		return $oExtAttDef->GetDefaultValue();
 	}
 	public function IsNullAllowed()
 	{
@@ -4308,8 +4310,8 @@ class AttributeBlob extends AttributeDefinition
 	public function IsDirectField() {return true;} 
 	public function IsScalar() {return true;} 
 	public function IsWritable() {return true;} 
-	public function GetDefaultValue() {return "";}
-	public function IsNullAllowed() {return $this->GetOptional("is_null_allowed", false);}
+	public function GetDefaultValue(DBObject $oHostObject = null) {return "";}
+	public function IsNullAllowed(DBObject $oHostObject = null) {return $this->GetOptional("is_null_allowed", false);}
 
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
@@ -4569,7 +4571,7 @@ class AttributeStopWatch extends AttributeDefinition
 	public function IsDirectField() {return true;} 
 	public function IsScalar() {return true;} 
 	public function IsWritable() {return false;} 
-	public function GetDefaultValue() {return $this->NewStopWatch();}
+	public function GetDefaultValue(DBObject $oHostObject = null) {return $this->NewStopWatch();}
 
 	public function GetEditValue($value, $oHostObj = null)
 	{
@@ -5186,9 +5188,21 @@ class AttributeSubItem extends AttributeDefinition
 	public function IsDirectField() {return true;} 
 	public function IsScalar() {return true;} 
 	public function IsWritable() {return false;} 
-	public function GetDefaultValue() {return null;}
+	public function GetDefaultValue(DBObject $oHostObject = null) {return null;}
 //	public function IsNullAllowed() {return false;}
-	public function LoadInObject() {return false;} // if this verb returns true, then GetValue must be implemented
+
+	public function LoadInObject() {return false;} // if this verb returns false, then GetValue must be implemented
+
+	/**
+	 * Used by DBOBject::Get()
+	 */
+	public function GetValue($oHostObject, $bOriginal = false)
+	{
+		$oParent = $this->GetTargetAttDef();
+		$parentValue = $oHostObject->GetStrict($oParent->GetCode());
+		$res = $oParent->GetSubItemValue($this->Get('item_code'), $parentValue, $oHostObject);
+		return $res;
+	}
 
 	// 
 //	protected function ScalarToSQL($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
@@ -5234,16 +5248,6 @@ class AttributeSubItem extends AttributeDefinition
 	{
 		$oParent = $this->GetTargetAttDef();
 		$res = $oParent->GetSubItemSQLExpression($this->Get('item_code'));
-		return $res;
-	}
-
-	/**
-	 * Used by DBOBject::Get()	
-	 */	
-	public function GetValue($parentValue, $oHostObject = null)
-	{
-		$oParent = $this->GetTargetAttDef();
-		$res = $oParent->GetSubItemValue($this->Get('item_code'), $parentValue, $oHostObject);
 		return $res;
 	}
 
@@ -5303,7 +5307,7 @@ class AttributeOneWayPassword extends AttributeDefinition
 	public function IsDirectField() {return true;} 
 	public function IsScalar() {return true;} 
 	public function IsWritable() {return true;} 
-	public function GetDefaultValue() {return "";}
+	public function GetDefaultValue(DBObject $oHostObject = null) {return "";}
 	public function IsNullAllowed() {return $this->GetOptional("is_null_allowed", false);}
 
 	// Facilitate things: allow the user to Set the value from a string or from an ormPassword (already encrypted)
@@ -5676,7 +5680,7 @@ class AttributeComputedFieldVoid extends AttributeDefinition
 	public function IsScalar() {return true;} 
 	public function IsWritable() {return false;} 
 	public function GetSQLExpr()    {return null;}
-	public function GetDefaultValue() {return $this->MakeRealValue("", null);}
+	public function GetDefaultValue(DBObject $oHostObject = null) {return $this->MakeRealValue("", $oHostObject);}
 	public function IsNullAllowed() {return false;}
 
 	// 
@@ -5827,7 +5831,7 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 	{
 		$this->m_sValue = $sValue;
 	}
-	public function GetDefaultValue()
+	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
 		return $this->m_sValue;
 	}
@@ -5913,7 +5917,7 @@ class AttributeRedundancySettings extends AttributeDBField
 		return 20;
 	}
 
-	public function GetDefaultValue($aArgs = array())
+	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
 		$sRet = 'disabled';
 		if ($this->Get('enabled'))
@@ -6268,3 +6272,251 @@ class AttributeRedundancySettings extends AttributeDBField
 		return $sRet;
 	}
 }
+
+/**
+ * Custom fields managed by an external implementation
+ *
+ * @package     iTopORM
+ */
+class AttributeCustomFields extends AttributeDefinition
+{
+	static public function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array("handler_class"));
+	}
+
+	public function GetEditClass() {return "CustomFields";}
+	public function IsWritable() {return true;}
+	public function LoadFromDB() {return false;} // See ReadValue...
+
+	public function GetDefaultValue(DBObject $oHostObject = null)
+	{
+		return new ormCustomFieldsValue($oHostObject, $this->GetCode());
+	}
+
+	public function GetBasicFilterOperators() {return array();}
+	public function GetBasicFilterLooseOperator() {return '';}
+	public function GetBasicFilterSQLExpr($sOpCode, $value) {return '';}
+
+	/**
+	 * @param DBObject $oHostObject
+	 * @param ormCustomFieldsValue|null $oValue
+	 * @return CustomFieldsHandler
+	 */
+	public function GetHandler(DBObject $oHostObject, ormCustomFieldsValue $oValue = null)
+	{
+		$sHandlerClass = $this->Get('handler_class');
+		$oHandler = new $sHandlerClass($oHostObject, $this->GetCode());
+		if (!is_null($oValue))
+		{
+			$oHandler->SetCurrentValues($oValue->GetValues());
+		}
+		return $oHandler;
+	}
+
+	public function GetPrerequisiteAttributes($sClass = null)
+	{
+		$sHandlerClass = $this->Get('handler_class');
+		return $sHandlerClass::GetPrerequisiteAttributes($sClass);
+	}
+
+	public function GetEditValue($sValue, $oHostObj = null)
+	{
+		return 'GetEditValueNotImplemented for '.get_class($this);
+	}
+
+	/**
+	 * Makes the string representation out of the values given by the form defined in GetDisplayForm
+	 */
+	public function ReadValueFromPostedForm($oHostObject, $sFormPrefix)
+	{
+		$aRawData = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$this->GetCode()}", '{}', 'raw_data'), true);
+		return new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aRawData);
+	}
+
+	public function MakeRealValue($proposedValue, $oHostObject)
+	{
+		if (is_object($proposedValue) && ($proposedValue instanceof ormCustomFieldsValue))
+		{
+			return $proposedValue;
+		}
+		elseif (is_string($proposedValue))
+		{
+			$aValues = json_decode($proposedValue, true);
+			return new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aValues);
+		}
+		throw new Exception('Unexpected type for the value of a custom fields attribute: '.gettype($proposedValue));
+	}
+
+	/**
+	 * Override to build the relevant form field
+	 *
+	 * When called first, $oFormField is null and will be created (eg. Make). Then when the ::parent is called and the $oFormField is passed, MakeFormField behaves more like a Prepare.
+	 */
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
+	{
+		if ($oFormField === null)
+		{
+			$oField = new Combodo\iTop\Form\Field\SubFormField($this->GetCode(), $sParentFormId);
+			$oField->SetForm($this->GetForm($oObject));
+		}
+		parent::MakeFormField($oObject, $oFormField);
+
+		return $oFormField;
+	}
+
+	/**
+	 * @param DBObject $oHostObject
+	 * @return Combodo\iTop\Form\Form
+	 */
+	public function GetForm(DBObject $oHostObject, $sFormPrefix = null)
+	{
+		$oHandler = $this->GetHandler($oHostObject, $oHostObject->Get($this->GetCode()));
+		$sFormId = is_null($sFormPrefix) ? 'cf_'.$this->GetCode() : $sFormPrefix.'_cf_'.$this->GetCode();
+		$oHandler->BuildForm($sFormId);
+		return $oHandler->GetForm();
+	}
+
+	/**
+	 * Read the data from where it has been stored. This verb must be implemented as soon as LoadFromDB returns false and LoadInObject returns true
+	 * @param $oHostObject
+	 * @return ormCustomFieldsValue
+	 */
+	public function ReadValue($oHostObject)
+	{
+		$oHandler = $this->GetHandler($oHostObject);
+		$aValues = $oHandler->ReadValues();
+		$oRet = new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aValues);
+		return $oRet;
+	}
+
+	/**
+	 * Record the data (currently in the processing of recording the host object)
+	 * It is assumed that the data has been checked prior to calling Write()
+	 * @param DBObject $oHostObject
+	 * @param ormCustomFieldsValue|null $oValue (null is the default value)
+	 */
+	public function WriteValue(DBObject $oHostObject, ormCustomFieldsValue $oValue = null)
+	{
+		$oHandler = $this->GetHandler($oHostObject, $oHostObject->Get($this->GetCode()));
+		if (is_null($oValue))
+		{
+			$aValues = array();
+		}
+		else
+		{
+			$aValues = $oValue->GetValues();
+		}
+		return $oHandler->WriteValues($aValues);
+	}
+
+	/**
+	 * Check the validity of the data
+	 * @param DBObject $oHostObject
+	 * @param $value
+	 * @return bool|string true or error message
+	 */
+	public function CheckValue(DBObject $oHostObject, $value)
+	{
+		try
+		{
+			$oHandler = $this->GetHandler($oHostObject, $value);
+			$oHandler->BuildForm();
+			$oForm = $oHandler->GetForm();
+			$oForm->Validate();
+			if ($oForm->GetValid())
+			{
+				$ret = true;
+			}
+			else
+			{
+				$aMessages = array();
+				foreach ($oForm->GetErrorMessages() as $sFieldId => $aFieldMessages)
+				{
+					$aMessages[] = $sFieldId.': '.implode(', ', $aFieldMessages);
+				}
+				$ret = 'Invalid value: '.implode(', ', $aMessages);
+			}
+		}
+		catch (Exception $e)
+		{
+			$ret = $e->getMessage();
+		}
+		return $ret;
+	}
+
+	/**
+	 * Cleanup data upon object deletion (object id still available here)
+	 * @param DBObject $oHostObject
+	 */
+	public function DeleteValue(DBObject $oHostObject)
+	{
+		$oHandler = $this->GetHandler($oHostObject, $oHostObject->Get($this->GetCode()));
+		return $oHandler->DeleteValues();
+	}
+
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
+	{
+		return $value->GetAsHTML($bLocalize);
+	}
+
+	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
+	{
+		return $value->GetAsXML($bLocalize);
+	}
+
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
+	{
+		return $value->GetAsCSV($sSeparator, $sTextQualifier, $bLocalize, $bConvertToPlainText);
+	}
+
+	/**
+	 * List the available verbs for 'GetForTemplate'
+	 */
+	public function EnumTemplateVerbs()
+	{
+		$sHandlerClass = $this->Get('handler_class');
+		return $sHandlerClass::EnumTemplateVerbs();
+	}
+
+	/**
+	 * Get various representations of the value, for insertion into a template (e.g. in Notifications)
+	 * @param $value mixed The current value of the field
+	 * @param $sVerb string The verb specifying the representation of the value
+	 * @param $oHostObject DBObject The object
+	 * @param $bLocalize bool Whether or not to localize the value
+	 */
+	public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
+	{
+		return $value->GetForTemplate($sVerb, $bLocalize);
+	}
+
+	public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
+	{
+		return null;
+	}
+
+	/**
+	 * Helper to get a value that will be JSON encoded
+	 * The operation is the opposite to FromJSONToValue
+	 */
+	public function GetForJSON($value)
+	{
+		return null;
+	}
+
+	/**
+	 * Helper to form a value, given JSON decoded data
+	 * The operation is the opposite to GetForJSON
+	 */
+	public function FromJSONToValue($json)
+	{
+		return null;
+	}
+
+	public function Equals($val1, $val2)
+	{
+		return $val1->Equals($val2);
+	}
+}
+

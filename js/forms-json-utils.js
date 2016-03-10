@@ -1,3 +1,20 @@
+// Copyright (C) 2010-2016 Combodo SARL
+//
+//   This file is part of iTop.
+//
+//   iTop is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU Affero General Public License as published by
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   iTop is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU Affero General Public License for more details.
+//
+//   You should have received a copy of the GNU Affero General Public License
+//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 // ID of the (hidden) form field used to store the JSON representation of the
 // object being edited in this page
 var sJsonFieldId = 'json_object';
@@ -414,6 +431,15 @@ function ValidateRedundancySettings(sFieldId, sFormId)
 	});
 
 	ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain);
+	return bValid;
+}
+
+//Special validation function for custom fields
+function ValidateCustomFields(sFieldId, sFormId)
+{
+	var oFieldSet = $('#'+sFieldId+'_console_form').console_form_handler('option', 'field_set');
+    bValid = oFieldSet.triggerHandler('validate');
+	ReportFieldValidationStatus(sFieldId, sFormId, bValid, '');
 	return bValid;
 }
 

@@ -302,14 +302,10 @@ abstract class CMDBObject extends DBObject
 			{
 				// Stop watches - record changes for sub items only (they are visible, the rest is not visible)
 				//
-				if (is_null($original))
-				{
-					$original = new OrmStopWatch();
-				}
 				foreach ($oAttDef->ListSubItems() as $sSubItemAttCode => $oSubItemAttDef)
 				{
-					$item_value = $oSubItemAttDef->GetValue($value);
-					$item_original = $oSubItemAttDef->GetValue($original);
+					$item_value = $oSubItemAttDef->GetValue($this);
+					$item_original = $oSubItemAttDef->GetValue($this, true);
 
 					if ($item_value != $item_original)
 					{

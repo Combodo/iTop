@@ -1,3 +1,20 @@
+// Copyright (C) 2010-2016 Combodo SARL
+//
+//   This file is part of iTop.
+//
+//   iTop is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU Affero General Public License as published by
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   iTop is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU Affero General Public License for more details.
+//
+//   You should have received a copy of the GNU Affero General Public License
+//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 //iTop Field set
 //Used by itop.form_handler and itop.subform_field to list their fields
 ;
@@ -36,15 +53,15 @@ $(function()
 			
 			this.element
 			.bind('field_change', function(oEvent, oData){
-				console.log('field_set: field_change');
+				//console.log('field_set: field_change');
 				me._onFieldChange(oEvent, oData);
 			})
 			.bind('update_form', function(oEvent, oData){
-				console.log('field_set: update_form');
+				//console.log('field_set: update_form');
 				me._onUpdateForm(oEvent, oData);
 			})
 			.bind('get_current_values', function(oEvent, oData){
-				console.log('field_set: get_current_values');
+				//console.log('field_set: get_current_values');
 				return me._onGetCurrentValues(oEvent, oData);
 			})
 			.bind('validate', function(oEvent, oData){
@@ -52,7 +69,7 @@ $(function()
 				{
 					oData = {};
 				}
-				console.log('field_set: validate');
+				//console.log('field_set: validate');
 				return me._onValidate(oEvent, oData);
 			});
 
@@ -175,8 +192,9 @@ $(function()
 			}
 
 			// Adding code to the dom
-			this.options.script_element.append('\n\n// Appended by update on ' + Date() + '\n' + this.buildData.script_code);
-			this.options.style_element.append('\n\n// Appended by update on ' + Date() + '\n' + this.buildData.style_code);
+			// Note : We use text() instead of append(), otherwise the code will be interpreted as DOM tags (text + <img /> + ...) and can break some browsers
+			this.options.script_element.text( this.options.script_element.text() + '\n\n// Appended by update on ' + Date() + '\n' + this.buildData.script_code);
+			this.options.style_element.text( this.options.style_element.text() + '\n\n// Appended by update on ' + Date() + '\n' + this.buildData.style_code);
 
 			// Evaluating script code as adding it to dom did not executed it (only script from update !)
 			eval(this.buildData.script_code);
@@ -291,7 +309,7 @@ $(function()
 				var oField = this.options.fields_list[i];
 				if(oField.id === undefined)
 				{
-					console.log('Field set : An field must have at least an id property.');
+					console.log('Field set : A field must have at least an id property.');
 					return false;
 				}
 

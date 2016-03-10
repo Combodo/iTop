@@ -61,7 +61,7 @@ class SubFormField extends Field
 	 */
 	public function Validate()
 	{
-		$this->oForm->Validate();
+		return $this->oForm->Validate();
 	}
 
 	/**
@@ -105,5 +105,14 @@ class SubFormField extends Field
 	{
 		$this->oForm->SetCurrentValues($value);
 		return $this;
+	}
+
+	/**
+	 * @param $sFormPath
+	 * @return Form|null
+	 */
+	public function FindSubForm($sFormPath)
+	{
+		return $this->oForm->FindSubForm($sFormPath);
 	}
 }

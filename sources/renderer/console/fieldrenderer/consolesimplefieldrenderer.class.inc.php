@@ -18,6 +18,7 @@
 
 namespace Combodo\iTop\Renderer\Console\FieldRenderer;
 
+use Combodo\iTop\Form\Field\StringField;
 use \Dict;
 use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
@@ -29,35 +30,60 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 		$oOutput = new RenderingOutput();
 		$sFieldClass = get_class($this->oField);
 
-		// TODO : Shouldn't we have a field type so we don't have to maintain FQN classname ?
-		// Rendering field in edition mode
-		if (!$this->oField->GetReadOnly())
+		if ($sFieldClass == 'Combodo\\iTop\\Form\\Field\\HiddenField')
 		{
-			switch ($sFieldClass)
-			{
-				case 'Combodo\\iTop\\Form\\Field\\StringField':
-					if ($this->oField->GetLabel() !== '')
-					{
-						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">' . $this->oField->GetLabel() . '</label>');
-					}
-					$oOutput->AddHtml('<input type="text" id="'.$this->oField->GetGlobalId().'" value="' . $this->oField->GetCurrentValue() . '" size="30" />');
-					$oOutput->AddHtml('<span class="form_validation"></span>');
-					break;
-			}
+			$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '"/>');
 		}
-		// ... and in read-only mode
 		else
 		{
+			$oOutput->AddHtml('<table class="form-field-container">');
+			$oOutput->AddHtml('<tr>');
+			if ($this->oField->GetLabel() != '')
+			{
+				$oOutput->AddHtml('<td class="form-field-label label"><span><label for="'.$this->oField->GetGlobalId().'">'.$this->oField->GetLabel().'</label></span></td>');
+			}
 			switch ($sFieldClass)
 			{
 				case 'Combodo\\iTop\\Form\\Field\\StringField':
-					if ($this->oField->GetLabel() !== '')
+					$oOutput->AddHtml('<td class="form-field-content">');
+					if ($this->oField->GetReadOnly())
 					{
-						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">' . $this->oField->GetLabel() . '</label>');
+						$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '"/>');
+						$oOutput->AddHtml('<span class="form-field-data">'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'</span>');
 					}
-					$oOutput->AddHtml('<div class="form-control-static">' . $this->oField->GetCurrentValue() . '</div>');
+					else
+					{
+						$oOutput->AddHtml('<input class="form-field-data" type="text" id="'.$this->oField->GetGlobalId().'" value="'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'" size="30"/>');
+					}
+					$oOutput->AddHtml('</td>');
+					$oOutput->AddHtml('<span class="form_validation"></span>');
+					break;
+
+				case 'Combodo\\iTop\\Form\\Field\\SelectField':
+					$oOutput->AddHtml('<td class="form-field-content">');
+					if ($this->oField->GetReadOnly())
+					{
+						$aChoices = $this->oField->GetChoices();
+						$sCurrentLabel = isset($aChoices[$this->oField->GetCurrentValue()]) ? $aChoices[$this->oField->GetCurrentValue()] : '' ;
+						$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '"/>');
+						$oOutput->AddHtml('<span class="form-field-data">'.htmlentities($sCurrentLabel, ENT_QUOTES, 'UTF-8').'</span>');
+					}
+					else
+					{
+						$oOutput->AddHtml('<select class="form-field-data" id="'.$this->oField->GetGlobalId().'" '.(($this->oField->GetMultipleValuesEnabled()) ? 'multiple' : '').'>');
+						foreach ($this->oField->GetChoices() as $sChoice => $sLabel)
+						{
+							// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
+							$sSelectedAtt = ($this->oField->GetCurrentValue() == $sChoice) ? 'selected' : '';
+							$oOutput->AddHtml('<option value="'.htmlentities($sChoice, ENT_QUOTES, 'UTF-8').'" '.$sSelectedAtt.' >'.htmlentities($sLabel, ENT_QUOTES, 'UTF-8').'</option>');
+						}
+						$oOutput->AddHtml('</select>');
+					}
+					$oOutput->AddHtml('</td>');
 					break;
 			}
+			$oOutput->AddHtml('</tr>');
+			$oOutput->AddHtml('</table>');
 		}
 
 		switch ($sFieldClass)
@@ -65,7 +91,22 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 			case 'Combodo\\iTop\\Form\\Field\\StringField':
 				$oOutput->AddJs(
 <<<EOF
-                    $("#{$this->oField->GetGlobalId()}").off("change").on("change keyup", function(){
+                    $("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
+                    	var me = this;
+
+                        $(this).closest(".field_set").trigger("field_change", {
+                            id: $(me).attr("id"),
+                            name: $(me).closest(".form_field").attr("data-field-id"),
+                            value: $(me).val()
+                        });
+                    });
+EOF
+				);
+				break;
+			case 'Combodo\\iTop\\Form\\Field\\SelectField':
+				$oOutput->AddJs(
+<<<EOF
+                    $("#{$this->oField->GetGlobalId()}").off("change").on("change", function(){
                     	var me = this;
 
                         $(this).closest(".field_set").trigger("field_change", {
@@ -88,7 +129,6 @@ EOF
 				'message' => Dict::S($oValidator->GetErrorMessage())
 			);
 		}
-
 		$sValidators = json_encode($aValidators);
 		$sFormFieldOptions =
 <<<EOF
@@ -118,19 +158,27 @@ EOF
 EOF
 			;
 
+		$oOutput->AddJs(
+			<<<EOF
+                    $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").form_field($sFormFieldOptions);
+EOF
+		);
 		switch ($sFieldClass)
 		{
+			case 'Combodo\\iTop\\Form\\Field\\SelectField':
+				$oOutput->AddJs(
+					<<<EOF
+	                    $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").form_field('option', 'get_current_value_callback', function(me){ return $(me.element).find('select').val();});
+EOF
+				);
+				break;
+
+			case 'Combodo\\iTop\\Form\\Field\\HiddenField':
 			case 'Combodo\\iTop\\Form\\Field\\StringField':
 			case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
-			case 'Combodo\\iTop\\Form\\Field\\SelectField':
 			case 'Combodo\\iTop\\Form\\Field\\HiddenField':
 			case 'Combodo\\iTop\\Form\\Field\\RadioField':
 			case 'Combodo\\iTop\\Form\\Field\\CheckboxField':
-				$oOutput->AddJs(
-					<<<EOF
-                    $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").form_field($sFormFieldOptions);
-EOF
-				);
 				break;
 		}
 

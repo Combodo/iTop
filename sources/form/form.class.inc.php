@@ -19,6 +19,7 @@
 
 namespace Combodo\iTop\Form;
 
+use Combodo\iTop\Form\Field\SubFormField;
 use \Exception;
 use \Dict;
 use \Combodo\iTop\Form\Field\Field;
@@ -312,83 +313,108 @@ class Form
 	 * @param string $sDependsOnId
 	 * @return \Combodo\iTop\Form\Form
 	 */
-	public function AddFieldDependency($sFieldId, $sDependsOnId)
-	{
-		if (!array_key_exists($sFieldId, $this->aDependencies))
-		{
-			$this->aDependencies[$sFieldId] = array();
-		}
-		$this->aDependencies[$sFieldId][] = $sDependsOnId;
-		return $this;
-	}
+    public function AddFieldDependency($sFieldId, $sDependsOnId)
+    {
+        if (!array_key_exists($sFieldId, $this->aDependencies))
+        {
+            $this->aDependencies[$sFieldId] = array();
+        }
+        $this->aDependencies[$sFieldId][] = $sDependsOnId;
+        return $this;
+    }
+
+    /**
+     * Returns a hash array of the fields impacts on other fields. Key being the field that impacts the fields stored in the value as a regular array
+     * (It kind of reversed the dependencies array)
+     *
+     * eg :
+     * - 'service' => array('subservice', 'template')
+     * - 'subservice' => array()
+     * - ...
+     *
+     * @return array
+     */
+    public function GetFieldsImpacts()
+    {
+        $aRes = array();
+
+        foreach ($this->aDependencies as $sImpactedFieldId => $aDependentFieldsIds)
+        {
+            foreach ($aDependentFieldsIds as $sDependentFieldId)
+            {
+                if (!array_key_exists($sDependentFieldId, $aRes))
+                {
+                    $aRes[$sDependentFieldId] = array();
+                }
+                $aRes[$sDependentFieldId][] = $sImpactedFieldId;
+            }
+        }
+
+        return $aRes;
+    }
 
 	/**
-	 * Returns a hash array of the fields impacts on other fields. Key being the field that impacts the fields stored in the value as a regular array
-	 * (It kind of reversed the dependencies array)
-	 *
-	 * eg :
-	 * - 'service' => array('subservice', 'template')
-	 * - 'subservice' => array()
-	 * - ...
-	 *
-	 * @return array
+	 * @param $sFormPath
+	 * @return Form|null
 	 */
-	public function GetFieldsImpacts()
+	public function FindSubForm($sFormPath)
 	{
-		$aRes = array();
-
-		foreach ($this->aDependencies as $sImpactedFieldId => $aDependentFieldsIds)
+		$ret = null;
+		if ($sFormPath == $this->sId)
 		{
-			foreach ($aDependentFieldsIds as $sDependentFieldId)
+			$ret = $this;
+		}
+		else
+		{
+			foreach ($this->aFields as $oField)
 			{
-				if (!array_key_exists($sDependentFieldId, $aRes))
+				if ($oField instanceof SubFormField)
 				{
-					$aRes[$sDependentFieldId] = array();
+					$ret = $oField->FindSubForm($sFormPath);
+					if ($ret !== null) break;
 				}
-				$aRes[$sDependentFieldId][] = $sImpactedFieldId;
 			}
 		}
-
-		return $aRes;
+		return $ret;
 	}
 
 	/**
 	 *
 	 */
-	public function Finalize()
-	{
-		//TODO : Call GetOrderedFields
-		// Must call OnFinalize on each fields, regarding the dependencies order
-		// On a SubFormField, will call its own Finalize
-		foreach ($this->aFields as $sId => $oField)
-		{
-			$oField->OnFinalize();
-		}
-	}
+    public function Finalize()
+    {
+        //TODO : Call GetOrderedFields
+        // Must call OnFinalize on each fields, regarding the dependencies order
+        // On a SubFormField, will call its own Finalize
+        foreach ($this->aFields as $sId => $oField)
+        {
+            $oField->OnFinalize();
+        }
+    }
 
 	/**
 	 * Validate the form and return if it's valid or not
 	 * 
 	 * @return boolean
 	 */
-	public function Validate()
-	{
-		$this->SetValid(true);
-		$this->EmptyErrorMessages();
+    public function Validate()
+    {
+        $this->SetValid(true);
+        $this->EmptyErrorMessages();
 
-		foreach ($this->aFields as $oField)
-		{
-			if (!$oField->Validate())
-			{
-				$this->SetValid(false);
-				foreach ($oField->GetErrorMessages() as $sErrorMessage)
-				{
-					$this->AddErrorMessage(Dict::S($sErrorMessage), $oField->Getid());
-				}
-			}
-		}
+        foreach ($this->aFields as $oField)
+        {
+            if (!$oField->Validate())
+            {
+                $this->SetValid(false);
+                foreach ($oField->GetErrorMessages() as $sErrorMessage)
+                {
+                    $this->AddErrorMessage(Dict::S($sErrorMessage), $oField->Getid());
+                }
+            }
+        }
 
-		return $this->GetValid();
-	}
+        return $this->GetValid();
+    }
 
 }
