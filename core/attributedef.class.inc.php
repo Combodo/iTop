@@ -4024,15 +4024,14 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
 
+		// Setting choices regarding the field dependencies
 		$aFieldDependencies = $this->GetPrerequisiteAttributes();
-		// Field dependencies
 		if (!empty($aFieldDependencies))
 		{
 			$oTmpAttDef = $this;
 			$oTmpField = $oFormField;
 			$oFormField->SetOnFinalizeCallback(function() use ($oTmpField, $oTmpAttDef, $oObject)
 			{
-				//$oTmpField = $oForm->GetField($sFieldId);
 				$oTmpField->SetChoices($oTmpAttDef->GetAllowedValues($oObject->ToArgsForQuery()));
 			});
 		}
@@ -4040,7 +4039,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		{
 			$oFormField->SetChoices($this->GetAllowedValues($oObject->ToArgsForQuery()));
 		}
-
+		
 		// If ExtKey is mandatory, we add a validator to ensure that the value 0 is not selected
 		if ($oObject->GetAttributeFlags($this->GetCode()) & OPT_ATT_MANDATORY)
 		{
@@ -6561,7 +6560,7 @@ class AttributeCustomFields extends AttributeDefinition
 			$oFormField->SetForm($this->GetForm($oObject));
 		}
 		parent::MakeFormField($oObject, $oFormField);
-
+		
 		return $oFormField;
 	}
 

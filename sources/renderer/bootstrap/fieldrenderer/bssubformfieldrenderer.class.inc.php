@@ -29,8 +29,16 @@ class BsSubFormFieldRenderer extends FieldRenderer
 	{
 		$oOutput = new RenderingOutput();
 
-		$oOutput->AddHtml('<div id="fieldset_'.$this->oField->GetGlobalId().'">');
+		if (($this->oField->GetLabel() !== null) && ($this->oField->GetLabel() !== ''))
+		{
+			$oOutput->AddHtml('<fieldset><legend>' . $this->oField->GetLabel() . '</legend>');
+		}
+		$oOutput->AddHtml('<div id="fieldset_' . $this->oField->GetGlobalId() . '">');
 		$oOutput->AddHtml('</div>');
+		if (($this->oField->GetLabel() !== null) && ($this->oField->GetLabel() !== ''))
+		{
+			$oOutput->AddHtml('</fieldset>');
+		}
 
 		$oRenderer = new BsFormRenderer($this->oField->GetForm());
 		$aRenderRes = $oRenderer->Render();

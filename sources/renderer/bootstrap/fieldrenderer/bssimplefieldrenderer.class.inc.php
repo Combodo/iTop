@@ -59,9 +59,7 @@ class BsSimpleFieldRenderer extends FieldRenderer
 						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">' . $this->oField->GetLabel() . '</label>');
 					}
 					$oOutput->AddHtml('<div class="help-block"></div>');
-					$oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="');
-					$oOutput->AddHtml($this->oField->GetCurrentValue(), true);
-					$oOutput->AddHtml('" class="form-control" maxlength="255" />');
+					$oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" />');
 					$oOutput->AddHtml('</div>');
 					break;
 
@@ -139,9 +137,7 @@ EOF
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\HiddenField':
-					$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="');
-					$oOutput->AddHtml($this->oField->GetCurrentValue(), true);
-					$oOutput->AddHtml('"/>');
+					$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('"/>');
 					break;
 			}
 		}
@@ -170,13 +166,9 @@ EOF
 							{
 								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">' . $this->oField->GetLabel() . '</label>');
 							}
-							$oOutput->AddHtml('<div class="form-control-static">');
-							$oOutput->AddHtml($this->oField->GetCurrentValue(), $bEncodeHtmlEntities);
-							$oOutput->AddHtml('</div>');
+							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetCurrentValue(), $bEncodeHtmlEntities)->AddHtml('</div>');
 						}
-						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="');
-						$oOutput->AddHtml($this->oField->GetCurrentValue(), true);
-						$oOutput->AddHtml('" class="form-control" />');
+						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" />');
 						$oOutput->AddHtml('</div>');
 						break;
 
