@@ -221,10 +221,15 @@ $(function()
 
 			for(var i in aFieldsToValidate)
 			{
-				var oRes = this.getField(aFieldsToValidate[i]).triggerHandler('validate', oData);
-				if (!oRes.is_valid)
+				var oField = this.getField(aFieldsToValidate[i]);
+				// Checking if the field still exists as it could have been from a dynamic subform (Typically with custom fields)
+				if(oField.length > 0)
 				{
-					this.options.is_valid = false;
+					var oRes = oField.triggerHandler('validate', oData);
+					if (!oRes.is_valid)
+					{
+						this.options.is_valid = false;
+					}
 				}
 			}
 			return this.options.is_valid;
