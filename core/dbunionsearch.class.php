@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015 Combodo SARL
+// Copyright (C) 2015-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * A union of DBObjectSearches 
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2015-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
  
@@ -326,12 +326,12 @@ class DBUnionSearch extends DBSearch
 		return $aParams;
 	}
 
-	public function GetQueryParams()
+	public function GetQueryParams($bExcludeMagicParams = true)
 	{
 		$aParams = array();
 		foreach ($this->aSearches as $oSearch)
 		{
-			$aParams = array_merge($oSearch->GetQueryParams(), $aParams);
+			$aParams = array_merge($oSearch->GetQueryParams($bExcludeMagicParams), $aParams);
 		}
 		return $aParams;
 	}

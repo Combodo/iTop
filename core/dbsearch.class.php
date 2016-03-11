@@ -130,7 +130,7 @@ abstract class DBSearch
 
 	abstract public function SetInternalParams($aParams);
 	abstract public function GetInternalParams();
-	abstract public function GetQueryParams();
+	abstract public function GetQueryParams($bExcludeMagicParams = true);
 	abstract public function ListConstantFields();
 	
 	/**

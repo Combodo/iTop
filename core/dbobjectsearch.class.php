@@ -728,11 +728,48 @@ class DBObjectSearch extends DBSearch
 		return $this->m_aParams;
 	}
 
-	public function GetQueryParams()
+	public function GetQueryParams($bExcludeMagicParams = true)
 	{
 		$aParams = array();
 		$this->m_oSearchCondition->Render($aParams, true);
-		return $aParams;
+
+		if ($bExcludeMagicParams)
+		{
+			$aRet = array();
+
+			// Make the list of acceptable arguments... could be factorized with run_query, into oSearch->GetQueryParams($bExclude magic params)
+			$aNakedMagicArguments = array();
+			foreach (MetaModel::PrepareQueryArguments(array()) as $sArgName => $value)
+			{
+				$iPos = strpos($sArgName, '->object()');
+				if ($iPos === false)
+				{
+					$aNakedMagicArguments[$sArgName] = $value;
+				}
+				else
+				{
+					$aNakedMagicArguments[substr($sArgName, 0, $iPos)] = true;
+				}
+			}
+			foreach ($aParams as $sParam => $foo)
+			{
+				$iPos = strpos($sParam, '->');
+				if ($iPos === false)
+				{
+					$sRefName = $sParam;
+				}
+				else
+				{
+					$sRefName = substr($sParam, 0, $iPos);
+				}
+				if (!array_key_exists($sRefName, $aNakedMagicArguments))
+				{
+					$aRet[$sParam] = $foo;
+				}
+			}
+		}
+
+		return $aRet;
 	}
 
 	public function ListConstantFields()

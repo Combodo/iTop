@@ -143,36 +143,11 @@ try
 			}
 		}
 
-		$aNakedMagicArguments = array();
-		foreach (MetaModel::PrepareQueryArguments(array()) as $sArgName => $value)
-		{
-			$iPos = strpos($sArgName, '->object()');
-			if ($iPos === false)
-			{
-				$aNakedMagicArguments[$sArgName] = $value;
-			}
-			else
-			{
-				$aNakedMagicArguments[substr($sArgName, 0, $iPos)] = true;
-			}
-		}
 		if ($oFilter)
 		{
 			$aArgs = array();
 			foreach($oFilter->GetQueryParams() as $sParam => $foo)
 			{
-				// Skip magic parameters
-				$iPos = strpos($sParam, '->');
-				if ($iPos === false)
-				{
-					$sRefName = $sParam;
-				}
-				else
-				{
-					$sRefName = substr($sParam, 0, $iPos);
-				}
-				if (array_key_exists($sRefName, $aNakedMagicArguments)) continue;
-
 				$value = utils::ReadParam('arg_'.$sParam, null, true, 'raw_data');
 				if (!is_null($value))
 				{
