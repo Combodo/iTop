@@ -21,7 +21,7 @@
  * Typology for the attributes
  *
  * @copyright   Copyright (C) 2010-2016 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @license	 http://opensource.org/licenses/AGPL-3.0
  */
 
 
@@ -34,11 +34,14 @@ require_once('htmlsanitizer.class.inc.php');
 require_once(APPROOT.'sources/autoload.php');
 require_once('customfieldshandler.class.inc.php');
 require_once('ormcustomfieldsvalue.class.inc.php');
+// This should be changed to a use when we go full-namespace
+require_once(APPROOT . 'sources/form/validator/validator.class.inc.php');
+require_once(APPROOT . 'sources/form/validator/notemptyextkeyvalidator.class.inc.php');
 
 /**
  * MissingColumnException - sent if an attribute is being created but the column is missing in the row 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class MissingColumnException extends Exception
 {}
@@ -46,28 +49,28 @@ class MissingColumnException extends Exception
 /**
  * add some description here... 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 define('EXTKEY_RELATIVE', 1);
 
 /**
  * add some description here... 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 define('EXTKEY_ABSOLUTE', 2);
 
 /**
  * Propagation of the deletion through an external key - ask the user to delete the referencing object 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 define('DEL_MANUAL', 1);
 
 /**
  * Propagation of the deletion through an external key - ask the user to delete the referencing object 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 define('DEL_AUTO', 2);
 /**
@@ -83,7 +86,7 @@ define('DEL_MOVEUP', 3);
 /**
  * For Link sets: tracking_level
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 define('ATTRIBUTE_TRACKING_NONE', 0); // Do not track changes of the attribute
 define('ATTRIBUTE_TRACKING_ALL', 3); // Do track all changes of the attribute
@@ -102,7 +105,7 @@ define('LINKSET_EDITMODE_ADDREMOVE', 4); // The "linked" objects can be added/re
 /**
  * Attribute definition API, implemented in and many flavours (Int, String, Enum, etc.) 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 abstract class AttributeDefinition
 {
@@ -145,6 +148,11 @@ abstract class AttributeDefinition
 	public function GetParams()
 	{
 		return $this->m_aParams;
+	}
+
+	public function HasParam($sParam)
+	{
+		return array_key_exists($sParam, $this->m_aParams);
 	}
 
 	public function SetHostClass($sHostClass)
@@ -512,7 +520,61 @@ abstract class AttributeDefinition
 	{
 		return $this->GetAsHTML($sValue, $oHostObject, $bLocalize);
 	}
-	
+
+	static public function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\StringField';
+	}
+
+	/**
+	 * Override to specify Field class
+	 *
+	 * When called first, $oFormField is null and will be created (eg. Make). Then when the ::parent is called and the $oFormField is passed, MakeFormField behave more like a Prepare.
+	 */
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
+	{
+		// This is a fallback in case the AttributeDefinition subclass has no overloading of this function.
+		if ($oFormField === null)
+		{
+			$sFormFieldClass = static::GetFormFieldClass();
+			$oFormField = new $sFormFieldClass($this->GetCode());
+			$oFormField->SetReadOnly(true);
+		}
+
+		$oFormField->SetLabel($this->GetLabel());
+
+		// Attributes flags
+		// - Retrieving flags for the current object
+		if ($oObject->IsNew())
+		{
+			$iFlags = $oObject->GetInitialStateAttributeFlags($this->GetCode());
+		}
+		else
+		{
+			$iFlags = $oObject->GetAttributeFlags($this->GetCode());
+		}
+
+		// - Comparing flags
+		if (!$this->IsNullAllowed() || (($iFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY))
+		{
+			$oFormField->SetMandatory(true);
+		}
+		if ((!$oObject->IsNew() || !$oFormField->GetMandatory()) && (($iFlags & OPT_ATT_READONLY) === OPT_ATT_READONLY))
+		{
+			$oFormField->SetReadOnly(true);
+		}
+		
+		// CurrentValue
+		$oFormField->SetCurrentValue($oObject->Get($this->GetCode()));
+
+		// Validation pattern
+		if ($this->GetValidationPattern() !== '')
+		{
+			$oFormField->AddValidator(new \Combodo\iTop\Form\Validator\Validator($this->GetValidationPattern()));
+		}
+
+		return $oFormField;
+	}
 
 	/**
 	 * List the available verbs for 'GetForTemplate'
@@ -689,7 +751,7 @@ abstract class AttributeDefinition
 /**
  * Set of objects directly linked to an object, and being part of its definition  
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeLinkedSet extends AttributeDefinition
 {
@@ -1207,7 +1269,7 @@ class AttributeLinkedSet extends AttributeDefinition
 /**
  * Set of objects linked to an object (n-n), and being part of its definition  
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeLinkedSetIndirect extends AttributeLinkedSet
 {
@@ -1251,7 +1313,7 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 /**
  * Abstract class implementing default filters for a DB column  
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeDBFieldVoid extends AttributeDefinition
 {	
@@ -1296,7 +1358,11 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	public function IsDirectField() {return true;} 
 	public function IsScalar() {return true;} 
 	public function IsWritable() {return true;} 
-	public function GetSQLExpr()    {return $this->Get("sql");}
+	public function GetSQLExpr()
+	{
+		return $this->Get("sql");
+	}
+
 	public function GetDefaultValue(DBObject $oHostObject = null) {return $this->MakeRealValue("", $oHostObject);}
 	public function IsNullAllowed() {return false;}
 
@@ -1362,7 +1428,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 /**
  * Base class for all kind of DB attributes, with the exception of external keys 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeDBField extends AttributeDBFieldVoid
 {	
@@ -1377,7 +1443,7 @@ class AttributeDBField extends AttributeDBFieldVoid
 /**
  * Map an integer column to an attribute 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeInteger extends AttributeDBField
 {
@@ -1470,7 +1536,7 @@ class AttributeInteger extends AttributeDBField
 /**
  * An external key for which the class is defined as the value of another attribute 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeObjectKey extends AttributeDBFieldVoid
 {
@@ -1525,7 +1591,7 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 /**
  * Display an integer between 0 and 100 as a percentage / horizontal bar graph 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributePercentage extends AttributeInteger
 {
@@ -1564,7 +1630,7 @@ class AttributePercentage extends AttributeInteger
  * a calculation on them, it is recommended to use the BC Math functions in order to
  * retain the precision
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeDecimal extends AttributeDBField
 {
@@ -1662,7 +1728,7 @@ class AttributeDecimal extends AttributeDBField
 /**
  * Map a boolean column to an attribute 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeBoolean extends AttributeInteger
 {
@@ -1714,7 +1780,7 @@ class AttributeBoolean extends AttributeInteger
 /**
  * Map a varchar column (size < ?) to an attribute 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeString extends AttributeDBField
 {
@@ -1835,12 +1901,30 @@ class AttributeString extends AttributeDBField
 	{
 		return $this->GetOptional('display_style', 'select');
 	}
+
+	static public function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\StringField';
+	}
+
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
+	{
+		if ($oFormField === null)
+		{
+			$sFormFieldClass = static::GetFormFieldClass();
+			$oFormField = new $sFormFieldClass($this->GetCode());
+		}
+		parent::MakeFormField($oObject, $oFormField);
+
+		return $oFormField;
+	}
+
 }
 
 /**
  * An attibute that matches an object class 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeClass extends AttributeString
 {
@@ -1892,7 +1976,7 @@ class AttributeClass extends AttributeString
 /**
  * An attibute that matches one of the language codes availables in the dictionnary 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeApplicationLanguage extends AttributeString
 {
@@ -1928,7 +2012,7 @@ class AttributeApplicationLanguage extends AttributeString
 /**
  * The attribute dedicated to the finalclass automatic attribute 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeFinalClass extends AttributeString
 {
@@ -2043,7 +2127,7 @@ class AttributeFinalClass extends AttributeString
 /**
  * Map a varchar column (size < ?) to an attribute that must never be shown to the user 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributePassword extends AttributeString
 {
@@ -2089,7 +2173,7 @@ class AttributePassword extends AttributeString
  * database (in SQL) to someone else without providing the key at the same time
  * the encrypted fields will remain encrypted
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeEncryptedString extends AttributeString
 {
@@ -2175,7 +2259,7 @@ define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)\]\]/U');
 /**
  * Map a text column (size > ?) to an attribute 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeText extends AttributeString
 {
@@ -2388,7 +2472,25 @@ class AttributeText extends AttributeString
 	{
 		return $this->GetOptional('height', '');		
 	}
-	
+
+	static public function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\TextAreaField';
+	}
+
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
+	{
+		if ($oFormField === null)
+		{
+			$sFormFieldClass = static::GetFormFieldClass();
+			$oFormField = new $sFormFieldClass($this->GetCode(), null, $oObject);
+			$oFormField->SetFormat($this->GetFormat());
+		}
+		parent::MakeFormField($oObject, $oFormField);
+
+		return $oFormField;
+	}
+
 	/**
 	 * The actual formatting of the field: either text (=plain text) or html (= text with HTML markup)
 	 * @return string
@@ -2479,7 +2581,7 @@ class AttributeText extends AttributeString
 /**
  * Map a log to an attribute 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeLongText extends AttributeText
 {
@@ -2496,7 +2598,7 @@ class AttributeLongText extends AttributeText
 /**
  * An attibute that stores a case log (i.e journal) 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeCaseLog extends AttributeLongText
 {
@@ -2821,7 +2923,7 @@ class AttributeCaseLog extends AttributeLongText
 /**
  * Map a text column (size > ?), containing HTML code, to an attribute 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeHTML extends AttributeLongText
 {
@@ -2854,7 +2956,7 @@ class AttributeHTML extends AttributeLongText
 /**
  * Specialization of a string: email 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeEmailAddress extends AttributeString
 {
@@ -2873,7 +2975,7 @@ class AttributeEmailAddress extends AttributeString
 /**
  * Specialization of a string: IP address 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeIPAddress extends AttributeString
 {
@@ -2893,7 +2995,7 @@ class AttributeIPAddress extends AttributeString
 /**
  * Specialization of a string: OQL expression 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeOQL extends AttributeText
 {
@@ -2903,7 +3005,7 @@ class AttributeOQL extends AttributeText
 /**
  * Specialization of a string: template (contains iTop placeholders like $current_contact_id$ or $this->name$) 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeTemplateString extends AttributeString
 {
@@ -2912,7 +3014,7 @@ class AttributeTemplateString extends AttributeString
 /**
  * Specialization of a text: template (contains iTop placeholders like $current_contact_id$ or $this->name$)
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeTemplateText extends AttributeText
 {
@@ -2921,7 +3023,7 @@ class AttributeTemplateText extends AttributeText
 /**
  * Specialization of a HTML: template (contains iTop placeholders like $current_contact_id$ or $this->name$)
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeTemplateHTML extends AttributeText
 {
@@ -2955,7 +3057,7 @@ class AttributeTemplateHTML extends AttributeText
 /**
  * Map a enum column to an attribute 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeEnum extends AttributeString
 {
@@ -3010,8 +3112,8 @@ class AttributeEnum extends AttributeString
 	public function ScalarToSQL($value)
 	{
 		// Note: for strings, the null value is an empty string and it is recorded as such in the DB
-		//       but that wasn't working for enums, because '' is NOT one of the allowed values
-		//       that's why a null value must be forced to a real null
+		//	   but that wasn't working for enums, because '' is NOT one of the allowed values
+		//	   that's why a null value must be forced to a real null
 		$value = parent::ScalarToSQL($value);
 		if ($this->IsNull($value))
 		{
@@ -3140,6 +3242,25 @@ class AttributeEnum extends AttributeString
 		return $sRes;
 	}
 
+	static public function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\RadioField';
+	}
+
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
+	{
+		if ($oFormField === null)
+		{
+			// TODO : We should check $this->Get('display_style') and create a Radio / Select / ... regarding its value
+			$sFormFieldClass = static::GetFormFieldClass();
+			$oFormField = new $sFormFieldClass($this->GetCode());
+		}
+
+		$oFormField->SetChoices($this->GetAllowedValues($oObject->ToArgsForQuery()));
+		parent::MakeFormField($oObject, $oFormField);
+
+		return $oFormField;
+	}
 
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
@@ -3234,7 +3355,7 @@ class AttributeEnum extends AttributeString
  * It has been designed is to cope with the fact that statuses must be defined in leaf classes, while it makes sense to
  * have a superstatus available on the root classe(s)
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeMetaEnum extends AttributeEnum
 {
@@ -3346,7 +3467,7 @@ class AttributeMetaEnum extends AttributeEnum
 /**
  * Map a date+time column to an attribute 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeDateTime extends AttributeDBField
 {
@@ -3575,7 +3696,7 @@ class AttributeDateTime extends AttributeDBField
 /**
  * Store a duration as a number of seconds 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeDuration extends AttributeInteger
 {
@@ -3648,7 +3769,7 @@ class AttributeDuration extends AttributeInteger
 /**
  * Map a date+time column to an attribute 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeDate extends AttributeDateTime
 {
@@ -3748,7 +3869,7 @@ class AttributeDeadline extends AttributeDateTime
  *  the difference is that AttributeExternalKey corresponds to a column into the defined table
  *  where an AttributeExternalField corresponds to a column into another table (class)
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeExternalKey extends AttributeDBFieldVoid
 {
@@ -3888,6 +4009,49 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		}
 		return $oRet;
 	}
+
+	static public function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\SelectField';
+	}
+
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
+	{
+		if ($oFormField === null)
+		{
+			// TODO : We should check $this->Get('display_style') and create a Radio / Select / ... regarding its value
+			$sFormFieldClass = static::GetFormFieldClass();
+			$oFormField = new $sFormFieldClass($this->GetCode());
+		}
+
+		$aFieldDependencies = $this->GetPrerequisiteAttributes();
+		// Field dependencies
+		if (!empty($aFieldDependencies))
+		{
+			$oTmpAttDef = $this;
+			$oTmpField = $oFormField;
+			$oFormField->SetOnFinalizeCallback(function() use ($oTmpField, $oTmpAttDef, $oObject)
+			{
+				//$oTmpField = $oForm->GetField($sFieldId);
+				$oTmpField->SetChoices($oTmpAttDef->GetAllowedValues($oObject->ToArgsForQuery()));
+			});
+		}
+		else
+		{
+			$oFormField->SetChoices($this->GetAllowedValues($oObject->ToArgsForQuery()));
+		}
+
+		// If ExtKey is mandatory, we add a validator to ensure that the value 0 is not selected
+		if ($oObject->GetAttributeFlags($this->GetCode()) & OPT_ATT_MANDATORY)
+		{
+			$oFormField->AddValidator(new \Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator());
+		}
+
+		parent::MakeFormField($oObject, $oFormField);
+
+		return $oFormField;
+	}
+
 }
 
 /**
@@ -4027,7 +4191,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 /**
  * An attribute which corresponds to an external key (direct or indirect) 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeExternalField extends AttributeDefinition
 {
@@ -4255,14 +4419,18 @@ class AttributeExternalField extends AttributeDefinition
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->GetAsCSV($value, $sSeparator, $sTestQualifier, null, $bLocalize, $bConvertToPlainText);
 	}
-	
-	public function IsPartOfFingerprint() { return false; }
+
+	public function IsPartOfFingerprint()
+	{
+		return false;
+	}
+
 }
 
 /**
  * Map a varchar column to an URL (formats the ouput in HMTL) 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeURL extends AttributeString
 {
@@ -4296,7 +4464,7 @@ class AttributeURL extends AttributeString
 /**
  * A blob is an ormDocument, it is stored as several columns in the database  
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeBlob extends AttributeDefinition
 {
@@ -4430,11 +4598,11 @@ class AttributeBlob extends AttributeDefinition
 	public function GetSQLValues($value)
 	{
 		// #@# Optimization: do not load blobs anytime
-		//     As per mySQL doc, selecting blob columns will prevent mySQL from
-		//     using memory in case a temporary table has to be created
-		//     (temporary tables created on disk)
-		//     We will have to remove the blobs from the list of attributes when doing the select
-		//     then the use of Get() should finalize the load
+		//	 As per mySQL doc, selecting blob columns will prevent mySQL from
+		//	 using memory in case a temporary table has to be created
+		//	 (temporary tables created on disk)
+		//	 We will have to remove the blobs from the list of attributes when doing the select
+		//	 then the use of Get() should finalize the load
 		if ($value instanceOf ormDocument)
 		{
 			$aValues = array();
@@ -4556,7 +4724,7 @@ class AttributeBlob extends AttributeDefinition
 /**
  * A stop watch is an ormStopWatch object, it is stored as several columns in the database  
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeStopWatch extends AttributeDefinition
 {
@@ -5160,7 +5328,7 @@ class AttributeStopWatch extends AttributeDefinition
  * internal values, each of them being an attribute and therefore they
  * can be displayed at different times in the object lifecycle, and used for
  * reporting (as a condition in OQL, or as an additional column in an export)  
- * Known usages: Stop Watches can expose threshold statuses    
+ * Known usages: Stop Watches can expose threshold statuses
  */
 class AttributeSubItem extends AttributeDefinition
 {
@@ -5358,11 +5526,11 @@ class AttributeOneWayPassword extends AttributeDefinition
 	public function GetSQLValues($value)
 	{
 		// #@# Optimization: do not load blobs anytime
-		//     As per mySQL doc, selecting blob columns will prevent mySQL from
-		//     using memory in case a temporary table has to be created
-		//     (temporary tables created on disk)
-		//     We will have to remove the blobs from the list of attributes when doing the select
-		//     then the use of Get() should finalize the load
+		//	 As per mySQL doc, selecting blob columns will prevent mySQL from
+		//	 using memory in case a temporary table has to be created
+		//	 (temporary tables created on disk)
+		//	 We will have to remove the blobs from the list of attributes when doing the select
+		//	 then the use of Get() should finalize the load
 		if ($value instanceOf ormPassword)
 		{
 			$aValues = array();
@@ -5662,7 +5830,7 @@ class AttributePropertySet extends AttributeTable
 /**
  * The attribute dedicated to the friendly name automatic attribute (not written) 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeComputedFieldVoid extends AttributeDefinition
 {	
@@ -5679,7 +5847,11 @@ class AttributeComputedFieldVoid extends AttributeDefinition
 	public function IsDirectField() {return true;} 
 	public function IsScalar() {return true;} 
 	public function IsWritable() {return false;} 
-	public function GetSQLExpr()    {return null;}
+	public function GetSQLExpr()
+	{
+		return null;
+	}
+
 	public function GetDefaultValue(DBObject $oHostObject = null) {return $this->MakeRealValue("", $oHostObject);}
 	public function IsNullAllowed() {return false;}
 
@@ -5743,7 +5915,7 @@ class AttributeComputedFieldVoid extends AttributeDefinition
 /**
  * The attribute dedicated to the friendly name automatic attribute (not written) 
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeFriendlyName extends AttributeComputedFieldVoid
 {
@@ -5849,6 +6021,24 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 		return $sTextQualifier.$sEscaped.$sTextQualifier;
 	}
 
+	static function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\StringField';
+	}
+
+	public function GetFormField(DBObject $oObject, $oFormField = null)
+	{
+		if ($oFormField === null)
+		{
+			$sFormFieldClass = static::GetFormFieldClass();
+			$oFormField = new $sFormFieldClass($this->GetCode());
+		}
+		$oFormField->SetReadOnly(true);
+		parent::GetFormField($oObject, $oFormField);
+
+		return $oFormField;
+	}
+
 	// Do not display friendly names in the history of change
 	public function DescribeChangeAsHTML($sOldValue, $sNewValue, $sLabel = null)
 	{
@@ -5888,7 +6078,7 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
  * - 'n', where n is a positive integer value giving the minimum count of items upstream
  * - 'n%', where n is a positive integer value, giving the minimum as a percentage of the total count of items upstream
  *
- * @package     iTopORM
+ * @package	 iTopORM
  */
 class AttributeRedundancySettings extends AttributeDBField
 {
@@ -6345,7 +6535,16 @@ class AttributeCustomFields extends AttributeDefinition
 			$aValues = json_decode($proposedValue, true);
 			return new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aValues);
 		}
+		elseif (is_array($proposedValue))
+		{
+			return new ormCustomFieldsValue($oHostObject, $this->GetCode(), $proposedValue);
+		}
 		throw new Exception('Unexpected type for the value of a custom fields attribute: '.gettype($proposedValue));
+	}
+
+	static public function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\SubFormField';
 	}
 
 	/**
@@ -6357,8 +6556,9 @@ class AttributeCustomFields extends AttributeDefinition
 	{
 		if ($oFormField === null)
 		{
-			$oField = new Combodo\iTop\Form\Field\SubFormField($this->GetCode(), $sParentFormId);
-			$oField->SetForm($this->GetForm($oObject));
+			$sFormFieldClass = static::GetFormFieldClass();
+			$oFormField = new $sFormFieldClass($this->GetCode());
+			$oFormField->SetForm($this->GetForm($oObject));
 		}
 		parent::MakeFormField($oObject, $oFormField);
 
@@ -6421,7 +6621,7 @@ class AttributeCustomFields extends AttributeDefinition
 		try
 		{
 			$oHandler = $this->GetHandler($oHostObject, $value);
-			$oHandler->BuildForm();
+			$oHandler->BuildForm('');
 			$oForm = $oHandler->GetForm();
 			$oForm->Validate();
 			if ($oForm->GetValid())

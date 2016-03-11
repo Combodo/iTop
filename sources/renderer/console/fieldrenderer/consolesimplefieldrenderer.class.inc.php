@@ -55,8 +55,8 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 					{
 						$oOutput->AddHtml('<input class="form-field-data" type="text" id="'.$this->oField->GetGlobalId().'" value="'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'" size="30"/>');
 					}
-					$oOutput->AddHtml('</td>');
 					$oOutput->AddHtml('<span class="form_validation"></span>');
+					$oOutput->AddHtml('</td>');
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\SelectField':
@@ -79,6 +79,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 						}
 						$oOutput->AddHtml('</select>');
 					}
+					$oOutput->AddHtml('<span class="form_validation"></span>');
 					$oOutput->AddHtml('</td>');
 					break;
 			}

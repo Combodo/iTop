@@ -41,3 +41,4 @@ require_once APPROOT . 'sources/renderer/fieldrenderer.class.inc.php';
 require_once APPROOT . 'sources/renderer/renderingoutput.class.inc.php';
 require_once APPROOT . 'sources/renderer/bootstrap/bsformrenderer.class.inc.php';
 require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bssimplefieldrenderer.class.inc.php';
+require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bssubformfieldrenderer.class.inc.php';

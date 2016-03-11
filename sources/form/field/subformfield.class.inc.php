@@ -38,9 +38,9 @@ class SubFormField extends Field
 	 * @param string $sParentFormId
 	 * @param Closure $onFinalizeCallback
 	 */
-	public function __construct($sId, $sParentFormId, Closure $onFinalizeCallback = null)
+	public function __construct($sId, Closure $onFinalizeCallback = null)
 	{
-		$this->oForm = new Form($sParentFormId.'-subform_'.$sId);
+		$this->oForm = new Form('subform_' . $sId);
 		parent::__construct($sId, $onFinalizeCallback);
 	}
 
@@ -51,6 +51,17 @@ class SubFormField extends Field
 	public function GetForm()
 	{
 		return $this->oForm;
+	}
+
+	/**
+	 *
+	 * @param \Combodo\iTop\Form\Field\Form $oForm
+	 * @return \Combodo\iTop\Form\Field\SubFormField
+	 */
+	public function SetForm(Form $oForm)
+	{
+		$this->oForm = $oForm;
+		return $this;
 	}
 
 	/**
@@ -115,4 +126,20 @@ class SubFormField extends Field
 	{
 		return $this->oForm->FindSubForm($sFormPath);
 	}
+
+	public function OnFinalize()
+	{
+		$sFormId = 'subform_' . $this->sId;
+		if ($this->sFormPath !== null)
+		{
+			$sFormId = $this->sFormPath . '-' . $sFormId;
+		}
+		$this->oForm->SetId($sFormId);
+
+		// Calling first the field callback,
+		// Then only calling finalize on the subform's fields
+		parent::OnFinalize();
+		$this->oForm->Finalize();
+	}
+
 }

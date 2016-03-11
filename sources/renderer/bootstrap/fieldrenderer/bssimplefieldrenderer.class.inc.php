@@ -25,6 +25,7 @@ use \UserRights;
 use \InlineImage;
 use \Combodo\iTop\Renderer\FieldRenderer;
 use \Combodo\iTop\Renderer\RenderingOutput;
+use \Combodo\iTop\Form\Field\TextAreaField;
 
 /**
  * Description of BsSimpleFieldRenderer
@@ -58,12 +59,14 @@ class BsSimpleFieldRenderer extends FieldRenderer
 						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">' . $this->oField->GetLabel() . '</label>');
 					}
 					$oOutput->AddHtml('<div class="help-block"></div>');
-					$oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '" class="form-control" maxlength="255" />');
+					$oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="');
+					$oOutput->AddHtml($this->oField->GetCurrentValue(), true);
+					$oOutput->AddHtml('" class="form-control" maxlength="255" />');
 					$oOutput->AddHtml('</div>');
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
-					$bRichEditor = ($this->oField->GetFormat() === 'html');
+					$bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
 
 					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
 					if ($this->oField->GetLabel() !== '')
@@ -136,7 +139,9 @@ EOF
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\HiddenField':
-					$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '"/>');
+					$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="');
+					$oOutput->AddHtml($this->oField->GetCurrentValue(), true);
+					$oOutput->AddHtml('"/>');
 					break;
 			}
 		}
@@ -155,6 +160,8 @@ EOF
 				{
 					case 'Combodo\\iTop\\Form\\Field\\StringField':
 					case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
+						$bEncodeHtmlEntities = (($sFieldClass === 'Combodo\\iTop\\Form\\Field\\TextAreaField') && ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML)) ? false : true;
+
 						$oOutput->AddHtml('<div class="form-group">');
 						// Showing label / value only if read-only but not hidden
 						if (!$this->oField->GetHidden())
@@ -163,9 +170,13 @@ EOF
 							{
 								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">' . $this->oField->GetLabel() . '</label>');
 							}
-							$oOutput->AddHtml('<div class="form-control-static">' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '</div>');
+							$oOutput->AddHtml('<div class="form-control-static">');
+							$oOutput->AddHtml($this->oField->GetCurrentValue(), $bEncodeHtmlEntities);
+							$oOutput->AddHtml('</div>');
 						}
-						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '" class="form-control" />');
+						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="');
+						$oOutput->AddHtml($this->oField->GetCurrentValue(), true);
+						$oOutput->AddHtml('" class="form-control" />');
 						$oOutput->AddHtml('</div>');
 						break;
 

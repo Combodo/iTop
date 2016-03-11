@@ -386,7 +386,23 @@ class utils
 	{
 		return privUITransaction::RemoveTransaction($sId);
 	}
-	
+
+	/**
+	 * Returns a unique tmp id for the current upload based on the transaction system (db).
+	 *
+	 * Build as session_id() . '_' . static::GetNewTransactionId()
+	 *
+	 * @return string
+	 */
+	public static function GetUploadTempId($sTransactionId = null)
+	{
+		if ($sTransactionId === null)
+		{
+			$sTransactionId = static::GetNewTransactionId();
+		}
+		return session_id() . '_' . $sTransactionId;
+	}
+
 	public static function ReadFromFile($sFileName)
 	{
 		if (!file_exists($sFileName)) return false;

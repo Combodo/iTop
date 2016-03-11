@@ -64,6 +64,24 @@ class Form
 
 	/**
 	 *
+	 * @param string $sId
+	 * @return \Combodo\iTop\Form\Form
+	 */
+	public function SetId($sId)
+	{
+		// Setting id for the form itself
+		$this->sId = $sId;
+		// Then setting formpath to its fields
+		foreach ($this->aFields as $oField)
+		{
+			$oField->SetFormPath($sId);
+		}
+
+		return $this;
+	}
+
+	/**
+	 *
 	 * @return string
 	 */
 	public function GetTransactionId()

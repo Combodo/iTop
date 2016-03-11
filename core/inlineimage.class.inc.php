@@ -166,7 +166,7 @@ class InlineImage extends DBObject
 		{
 			// Attach new (temporary) inline images
 			
-			$sTempId = session_id().'_'.$iTransactionId;
+			$sTempId = utils::GetUploadTempId($iTransactionId);
 			// The object is being created from a form, check if there are pending inline images for this object
 			$sOQL = 'SELECT InlineImage WHERE temp_id = :temp_id';
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
@@ -412,15 +412,17 @@ EOF
 	{
 		$sObjClass = get_class($oObject);
 		$iObjKey = $oObject->GetKey();
-		
+
+		$sAbsoluteUrlAppRoot = utils::GetAbsoluteUrlAppRoot();
+
 		return
 <<<EOF
 		// Hook the file upload of all CKEditor instances
 		$('.htmlEditor').each(function() {
 			var oEditor = $(this).ckeditorGet();
 			oEditor.config.extraPlugins = 'uploadimage';
-			oEditor.config.uploadUrl = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php';
-			oEditor.config.filebrowserBrowseUrl = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=cke_browse&temp_id=$sTempId&obj_class=$sObjClass&obj_key=$iObjKey';
+			oEditor.config.uploadUrl = '$sAbsoluteUrlAppRoot'+'pages/ajax.render.php';
+			oEditor.config.filebrowserBrowseUrl = '$sAbsoluteUrlAppRoot'+'pages/ajax.render.php?operation=cke_browse&temp_id=$sTempId&obj_class=$sObjClass&obj_key=$iObjKey';
 			oEditor.on( 'fileUploadResponse', function( evt ) {
 				var fileLoader = evt.data.fileLoader;
 				var xhr = fileLoader.xhr;
@@ -440,7 +442,7 @@ EOF
 			        } else {
 			            data.fileName = response.fileName;
 			           	data.url = response.url;
-	
+						
 			            // Do not call the default listener.
 			            evt.stop();
 			        }
