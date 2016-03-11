@@ -99,7 +99,8 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
                             id: $(me).attr("id"),
                             name: $(me).closest(".form_field").attr("data-field-id"),
                             value: $(me).val()
-                        });
+                        })
+                        .closest('.form_handler').trigger('value_change');
                     });
 EOF
 				);
@@ -114,7 +115,8 @@ EOF
                             id: $(me).attr("id"),
                             name: $(me).closest(".form_field").attr("data-field-id"),
                             value: $(me).val()
-                        });
+                        })
+                        .closest('.form_handler').trigger('value_change');
                     });
 EOF
 				);
