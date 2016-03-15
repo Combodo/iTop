@@ -231,6 +231,7 @@ function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 	}
 	$oP->add("<h1>".MetaModel::GetRelationDescription($sOldRelation).' '.$oObj->GetName()."</h1>\n");
 	$oP->add("<div id=\"impacted_objects_lists\">");
+	$oP->add('<img src="../images/indicator.gif">');
 	/*
 	 * Content is rendered asynchronously via pages/ajax.render.php?operation=relation_lists
 	 */
@@ -255,6 +256,7 @@ function DisplayNavigatorGroupTab($oP)
 {
 	$oP->SetCurrentTab(Dict::S('UI:RelationGroups'));
 	$oP->add("<div id=\"impacted_groups\" style=\"width:100%;background-color:#fff;padding:10px;\">");
+	$oP->add('<img src="../images/indicator.gif">');
 	/*
 	 * Content is rendered asynchronously via pages/ajax.render.php?operation=relation_groups
 	*/
