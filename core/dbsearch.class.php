@@ -39,6 +39,9 @@ require_once('dbunionsearch.class.php');
  
 abstract class DBSearch
 {
+	const JOIN_POINTING_TO = 0;
+	const JOIN_REFERENCED_BY = 1;
+
 	protected $m_bDataFiltered = false;
 	protected $m_bNoContextParameters = false;
 	protected $m_aModifierProperties = array();
@@ -127,6 +130,48 @@ abstract class DBSearch
 	abstract public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS);
 	abstract public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode);
 	abstract public function Intersect(DBSearch $oFilter);
+
+	/**
+	 * 
+	 * @param DBSearch $oFilter
+	 * @param integer $iDirection
+	 * @param string $sExtKeyAttCode
+	 * @param integer $iOperatorCode
+	 * @return DBSearch
+	 */
+	public function Join(DBSearch $oFilter, $iDirection, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS)
+	{
+		$oSourceFilter = $this->DeepClone();
+		$oRet = null;
+
+		if ($oFilter instanceof DBUnionSearch)
+		{
+			$aSearches = array();
+			foreach ($oFilter->GetSearches() as $oSearch)
+			{
+				$aSearches[] = $oSourceFilter->Join($oSearch, $iDirection, $sExtKeyAttCode, $iOperatorCode);
+			}
+			$oRet = new DBUnionSearch($aSearches);
+		}
+		else
+		{
+			if ($iDirection === static::JOIN_POINTING_TO)
+			{
+				$oSourceFilter->AddCondition_PointingTo($oFilter, $sExtKeyAttCode, $iOperatorCode);
+			}
+			else
+			{
+				if ($iOperatorCode !== TREE_OPERATOR_EQUALS)
+				{
+					throw new Exception('Only TREE_OPERATOR_EQUALS  operator code is supported yet for AddCondition_ReferencedBy.');
+				}
+				$oSourceFilter->AddCondition_ReferencedBy($oFilter, $sExtKeyAttCode);
+			}
+			$oRet = $oSourceFilter;
+		}
+
+		return $oRet;
+	}
 
 	abstract public function SetInternalParams($aParams);
 	abstract public function GetInternalParams();

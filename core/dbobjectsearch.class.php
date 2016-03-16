@@ -808,11 +808,16 @@ class DBObjectSearch extends DBSearch
 			// Leave it as is, the rendering will be made with parameters in clear
 			$aParams = null;
 		}
-	
-		$sSelectedClasses = implode(', ', array_keys($this->m_aSelectedClasses));
+
+		$aSelectedAliases = array();
+		foreach ($this->m_aSelectedClasses as $sAlias => $sClass)
+		{
+			$aSelectedAliases[] = '`' . $sAlias . '`';
+		}
+		$sSelectedClasses = implode(', ', $aSelectedAliases);
 		$sRes = 'SELECT '.$sSelectedClasses.' FROM';
 
-		$sRes .= ' '.$this->GetFirstJoinedClass().' AS '.$this->GetFirstJoinedClassAlias();
+		$sRes .= ' ' . $this->GetFirstJoinedClass() . ' AS `' . $this->GetFirstJoinedClassAlias() . '`';
 		$sRes .= $this->ToOQL_Joins();
 		$sRes .= " WHERE ".$this->m_oSearchCondition->Render($aParams, $bRetrofitParams);
 
@@ -872,7 +877,7 @@ class DBObjectSearch extends DBSearch
 						break;
 						
 					}
-					$sRes .= ' JOIN '.$oFilter->GetFirstJoinedClass().' AS '.$oFilter->GetFirstJoinedClassAlias().' ON '.$this->GetFirstJoinedClassAlias().'.'.$sExtKey.$sOperator.$oFilter->GetFirstJoinedClassAlias().'.id';
+					$sRes .= ' JOIN ' . $oFilter->GetFirstJoinedClass() . ' AS `' . $oFilter->GetFirstJoinedClassAlias() . '` ON `' . $this->GetFirstJoinedClassAlias() . '`.' . $sExtKey . $sOperator . '`' . $oFilter->GetFirstJoinedClassAlias() . '`.id';
 					$sRes .= $oFilter->ToOQL_Joins();				
 				}
 			}
@@ -881,7 +886,7 @@ class DBObjectSearch extends DBSearch
 		{
 			foreach($aReferences as $sForeignExtKeyAttCode=>$oForeignFilter)
 			{
-				$sRes .= ' JOIN '.$oForeignFilter->GetFirstJoinedClass().' AS '.$oForeignFilter->GetFirstJoinedClassAlias().' ON '.$oForeignFilter->GetFirstJoinedClassAlias().'.'.$sForeignExtKeyAttCode.' = '.$this->GetFirstJoinedClassAlias().'.id';
+				$sRes .= ' JOIN ' . $oForeignFilter->GetFirstJoinedClass() . ' AS `' . $oForeignFilter->GetFirstJoinedClassAlias() . '` ON `' . $oForeignFilter->GetFirstJoinedClassAlias() . '`.' . $sForeignExtKeyAttCode . ' = `' . $this->GetFirstJoinedClassAlias() . '`.id';
 				$sRes .= $oForeignFilter->ToOQL_Joins();
 			}
 		}

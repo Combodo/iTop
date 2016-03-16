@@ -368,6 +368,31 @@ class DBUnionSearch extends DBSearch
 		return $sRet;
 	}
 
+	/**
+	 * Returns a new DBUnionSearch object where duplicates queries have been removed based on their OQLs
+	 * 
+	 * @return \DBUnionSearch
+	 */
+	public function RemoveDuplicateQueries()
+	{
+		$aQueries = array();
+		$aSearches = array();
+
+		foreach ($this->GetSearches() as $oTmpSearch)
+		{
+			$sQuery = $oTmpSearch->ToOQL(true);
+			if (!in_array($sQuery, $aQueries))
+			{
+				$aQueries[] = $sQuery;
+				$aSearches[] = $oTmpSearch;
+			}
+		}
+
+		$oNewSearch = new DBUnionSearch($aSearches);
+		
+		return $oNewSearch;
+	}
+
 	////////////////////////////////////////////////////////////////////////////
 	//
 	// Construction of the SQL queries
