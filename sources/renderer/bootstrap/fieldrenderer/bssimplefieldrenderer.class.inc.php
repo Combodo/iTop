@@ -103,7 +103,7 @@ EOF
 					{
 						// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
 						$sSelectedAtt = ($this->oField->GetCurrentValue() == $sChoice) ? 'selected' : '';
-						$oOutput->AddHtml('<option value="' . $sChoice . '" ' . $sSelectedAtt . ' >' . $sLabel . '</option>');
+						$oOutput->AddHtml('<option value="' . $sChoice . '" ' . $sSelectedAtt . ' >')->AddHtml($sLabel, true)->AddHtml('</option>');
 					}
 					$oOutput->AddHtml('</select>');
 					$oOutput->AddHtml('</div>');
@@ -267,6 +267,8 @@ EOF
 					$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field_html($sFormFieldOptions);
 EOF
 				);
+				// MagnificPopup on images
+				$oOutput->AddJs(InlineImage::FixImagesWidth());
 				break;
 		}
 

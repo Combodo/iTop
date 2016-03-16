@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Form\Field;
 
 use \Closure;
+use \Dict;
 use \Combodo\iTop\Form\Field\MultipleChoicesField;
 
 /**
@@ -29,7 +30,7 @@ use \Combodo\iTop\Form\Field\MultipleChoicesField;
  */
 class SelectField extends MultipleChoicesField
 {
-	const DEFAULT_NULL_CHOICE_LABEL = 'TOTR: - Choisir une valeur -';
+	const DEFAULT_NULL_CHOICE_LABEL = 'UI:SelectOne';
 	const DEFAULT_STARTS_WITH_NULL_CHOICE = true;
 
 	protected $bStartsWithNullChoice;
@@ -55,30 +56,23 @@ class SelectField extends MultipleChoicesField
 	{
 		$this->bStartsWithNullChoice = $bStartsWithNullChoice;
 
-		if (!array_key_exists(null, $this->aChoices))
-		{
-			$this->aChoices = array(null => static::DEFAULT_NULL_CHOICE_LABEL) + $this->aChoices;
-		}
-
 		return $this;
 	}
 
 	/**
-	 * Sets the choices for the fields
-	 * Overloads the methods for the super class in order to put a dummy choice first if necessary.
+	 * Returns the field choices with null choice first
 	 *
-	 * @param array $aChoices
-	 * @return \Combodo\iTop\Form\Field\SelectField
+	 * @return array
 	 */
-	public function SetChoices($aChoices)
+	public function GetChoices()
 	{
+		$aChoices = parent::GetChoices();
 		if ($this->bStartsWithNullChoice && !array_key_exists(null, $aChoices))
 		{
-			$aChoices = array(null => static::DEFAULT_NULL_CHOICE_LABEL) + $aChoices;
+			$aChoices = array(null => Dict::S(static::DEFAULT_NULL_CHOICE_LABEL)) + $aChoices;
 		}
 
-		parent::SetChoices($aChoices);
-		return $this;
+		return $aChoices;
 	}
 
 }
