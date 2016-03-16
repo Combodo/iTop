@@ -378,5 +378,19 @@ abstract class Field
 	 *
 	 * @return boolean
 	 */
-	abstract public function Validate();
+	public function Validate()
+	{
+		$this->SetValid(true);
+		$this->EmptyErrorMessages();
+		foreach ($this->GetValidators() as $oValidator)
+		{
+			if (!preg_match($oValidator->GetRegExp(true), $this->GetCurrentValue()))
+			{
+				$this->SetValid(false);
+				$this->AddErrorMessage($oValidator->GetErrorMessage());
+			}
+		}
+
+		return $this->GetValid();
+	}
 }

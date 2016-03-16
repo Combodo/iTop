@@ -20,7 +20,6 @@ namespace Combodo\iTop\Renderer\Console;
 
 use Combodo\iTop\Form\Form;
 use Combodo\iTop\Renderer\FormRenderer;
-use Combodo\iTop\Renderer\RenderingOutput;
 use \Dict;
 
 require_once('fieldrenderer/consolesimplefieldrenderer.class.inc.php');
@@ -36,6 +35,7 @@ class ConsoleFormRenderer extends FormRenderer
 		$this->AddSupportedField('HiddenField', 'ConsoleSimpleFieldRenderer');
 		$this->AddSupportedField('StringField', 'ConsoleSimpleFieldRenderer');
 		$this->AddSupportedField('SelectField', 'ConsoleSimpleFieldRenderer');
+		$this->AddSupportedField('SelectObjectField', 'ConsoleSimpleFieldRenderer');
 		$this->AddSupportedField('SubFormField', 'ConsoleSubFormFieldRenderer');
 	}
 }

@@ -30,6 +30,7 @@ require_once APPROOT . 'sources/form/field/stringfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/textareafield.class.inc.php';
 require_once APPROOT . 'sources/form/field/multiplechoicesfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/selectfield.class.inc.php';
+require_once APPROOT . 'sources/form/field/selectobjectfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/checkboxfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/radiofield.class.inc.php';
 require_once APPROOT . 'sources/form/validator/validator.class.inc.php';

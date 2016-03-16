@@ -397,16 +397,47 @@ class Form
 	}
 
 	/**
-	 *
+	 * Finalizes each field, following the dependencies so that a field can compute its value or other properties,
+	 * depending on other fields
 	 */
     public function Finalize()
     {
-        //TODO : Call GetOrderedFields
-        // Must call OnFinalize on each fields, regarding the dependencies order
-        // On a SubFormField, will call its own Finalize
-        foreach ($this->aFields as $sId => $oField)
-        {
-            $oField->OnFinalize();
+		$aFieldList = array(); // Fields ordered by dependence
+		// Clone the dependency data : $aDependencies will be truncated as the fields are added to the list
+		$aDependencies = $this->aDependencies;
+		$bMadeProgress = true; // Safety net in case of circular references
+		while ($bMadeProgress && count($aFieldList) < count($this->aFields))
+		{
+			$bMadeProgress = false;
+			foreach ($this->aFields as $sId => $oField)
+			{
+				if (array_key_exists($sId, $aFieldList)) continue;
+				if (isset($aDependencies[$sId]) && count($aDependencies[$sId]) > 0) continue;
+
+				// Add the field at the end of the list
+				$aFieldList[$sId] = $oField;
+				$bMadeProgress = true;
+
+				// Track that this dependency has been solved
+				foreach ($aDependencies as $sImpactedBy => $aSomeFields)
+				{
+					foreach ($aSomeFields as $i => $sSomeId)
+					{
+						if ($sSomeId == $sId)
+						{
+							unset($aDependencies[$sImpactedBy][$i]);
+						}
+					}
+				}
+			}
+		}
+		if (!$bMadeProgress)
+		{
+			throw new Exception('Unmet dependencies: '.implode(', ', array_keys($aDependencies)));
+		}
+		foreach ($aFieldList as $sId => $oField)
+		{
+			$oField->OnFinalize();
         }
     }
 
