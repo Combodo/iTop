@@ -406,14 +406,26 @@ class Form
 		// Clone the dependency data : $aDependencies will be truncated as the fields are added to the list
 		$aDependencies = $this->aDependencies;
 		$bMadeProgress = true; // Safety net in case of circular references
+
+		foreach ($aDependencies as $sImpactedBy => $aSomeFields)
+		{
+			foreach ($aSomeFields as $i => $sSomeId)
+			{
+				if (!array_key_exists($sSomeId, $this->aFields))
+				{
+					throw new Exception('Missing dependancy : Field ' . $sImpactedBy . ' expecting field ' . $sSomeId . ' which is not in the Form');
+				}
+			}
+		}
+
 		while ($bMadeProgress && count($aFieldList) < count($this->aFields))
 		{
 			$bMadeProgress = false;
 			foreach ($this->aFields as $sId => $oField)
 			{
-				if (array_key_exists($sId, $aFieldList)) continue;
+				if (array_key_exists($sId, $aFieldList))
+					continue;
 				if (isset($aDependencies[$sId]) && count($aDependencies[$sId]) > 0) continue;
-
 				// Add the field at the end of the list
 				$aFieldList[$sId] = $oField;
 				$bMadeProgress = true;
@@ -433,7 +445,7 @@ class Form
 		}
 		if (!$bMadeProgress)
 		{
-			throw new Exception('Unmet dependencies: '.implode(', ', array_keys($aDependencies)));
+			throw new Exception('Unmet dependencies (might be a circular reference) : ' . implode(', ', array_keys($aDependencies)));
 		}
 		foreach ($aFieldList as $sId => $oField)
 		{
