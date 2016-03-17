@@ -1074,7 +1074,7 @@ class DBObjectSearch extends DBSearch
 		$oSQLQuery = $this->MakeSQLObjectQuery($oBuild, null, array());
 		$oSQLQuery->SetCondition($oBuild->m_oQBExpressions->GetCondition());
 		$oSQLQuery->SetSelect($oBuild->m_oQBExpressions->GetSelect());
-		$aScalarArgs = array_merge(MetaModel::PrepareQueryArguments($aArgs), $this->GetInternalParams());
+		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
 		return $oSQLQuery->RenderDelete($aScalarArgs);
 	}
 
@@ -1086,7 +1086,7 @@ class DBObjectSearch extends DBSearch
 		$oSQLQuery = $this->MakeSQLObjectQuery($oBuild, null, $aValues);
 		$oSQLQuery->SetCondition($oBuild->m_oQBExpressions->GetCondition());
 		$oSQLQuery->SetSelect($oBuild->m_oQBExpressions->GetSelect());
-		$aScalarArgs = array_merge(MetaModel::PrepareQueryArguments($aArgs), $this->GetInternalParams());
+		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
 		return $oSQLQuery->RenderUpdate($aScalarArgs);
 	}
 

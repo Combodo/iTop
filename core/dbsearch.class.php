@@ -377,7 +377,7 @@ abstract class DBSearch
 		$aAttToLoad = array();
 		$oSQLQuery = $oQueryFilter->GetSQLQuery(array(), $aArgs, $aAttToLoad, null, 0, 0, false, $aGroupByExpr);
 
-		$aScalarArgs = array_merge(MetaModel::PrepareQueryArguments($aArgs), $this->GetInternalParams());
+		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
 		try
 		{
 			$bBeautifulSQL = self::$m_bTraceQueries || self::$m_bDebugQuery || self::$m_bIndentQueries;

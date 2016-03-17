@@ -2456,12 +2456,13 @@ abstract class MetaModel
 	 * - current_user (DBObject)
 	 *
 	 * @param array $aArgs Context arguments (some can be persistent objects)
-	 * @param array $aScalarArgs Other query parameters (only scalars allowed here)
+	 * @param array $aMoreArgs Other query parameters
 	 * @return array
 	 */
-	public static function PrepareQueryArguments($aArgs, $aScalarArgs = array())
+	public static function PrepareQueryArguments($aArgs, $aMoreArgs = array())
 	{
-		foreach($aArgs as $sArgName => $value)
+		$aScalarArgs = array();
+		foreach(array_merge($aArgs, $aMoreArgs) as $sArgName => $value)
 		{
 			if (self::IsValidObject($value))
 			{
