@@ -2918,6 +2918,17 @@ class AttributeCaseLog extends AttributeLongText
 	{
 		return $this->GetOptional('format', 'html'); // default format for case logs is now HTML
 	}
+
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
+	{
+		// First we call the parent so the field is build
+		$oFormField = parent::MakeFormField($oObject, $oFormField);
+		// Then only we set the value
+		$oFormField->SetCurrentValue($this->GetEditValue($oObject->Get($this->GetCode())));
+
+		return $oFormField;
+	}
+
 }
 
 /**
