@@ -2456,17 +2456,25 @@ EOF
 			$sRequestedFieldsFormPath = utils::ReadParam('form_path', '');
 			$sJson = utils::ReadParam('json_obj', '', false, 'raw_data');
 
-			$oWizardHelper = WizardHelper::FromJSON($sJson);
-			$oObj = $oWizardHelper->GetTargetObject();
-
-			$oOrmCustomFieldValue = $oObj->Get($sAttCode);
-			$oForm = $oOrmCustomFieldValue->GetForm();
-			$oSubForm = $oForm->FindSubForm($sRequestedFieldsFormPath);
-			$oRenderer = new \Combodo\iTop\Renderer\Console\ConsoleFormRenderer($oSubForm);
-			$aRenderRes = $oRenderer->Render($aRequestedFields);
-
 			$aResult = array();
-			$aResult['form']['updated_fields'] = $aRenderRes;
+
+			try
+			{
+				$oWizardHelper = WizardHelper::FromJSON($sJson);
+				$oObj = $oWizardHelper->GetTargetObject();
+
+				$oOrmCustomFieldValue = $oObj->Get($sAttCode);
+				$oForm = $oOrmCustomFieldValue->GetForm();
+				$oSubForm = $oForm->FindSubForm($sRequestedFieldsFormPath);
+				$oRenderer = new \Combodo\iTop\Renderer\Console\ConsoleFormRenderer($oSubForm);
+				$aRenderRes = $oRenderer->Render($aRequestedFields);
+
+				$aResult['form']['updated_fields'] = $aRenderRes;
+			}
+			catch (Exception $e)
+			{
+				$aResult['error'] = $e->getMessage();
+			}
 			$oPage->add(json_encode($aResult));
 			break;
 

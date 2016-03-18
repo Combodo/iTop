@@ -69,13 +69,23 @@ $(function()
                     json_obj: this.options.oWizardHelper.UpdateWizardToJSON()
                 },
                 function(data){
-                    me._onUpdateSuccess(data, sFormPath);
+                    if ('form' in data) {
+                        me._onUpdateSuccess(data, sFormPath);
+                    }
                 }
             )
             .fail(function(data){ me._onUpdateFailure(data, sFormPath); })
             .always(function(data){
                 me.alignColumns();
-                $(me.element.find('[data-form-path="' + sFormPath + '"]')).unblock();
+                var oContainer = $(me.element.find('[data-form-path="' + sFormPath + '"]'));
+                oContainer.unblock();
+                if ('error' in data) {
+                    oContainer.block({message: data.error});
+                    console.log('Update field failure: '+data.error);
+                    $('.blockOverlay').click(function(){
+                        oContainer.unblock();
+                    });
+                }
                 me._onUpdateAlways(data, sFormPath);
             });
         },

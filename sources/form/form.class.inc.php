@@ -413,7 +413,7 @@ class Form
 			{
 				if (!array_key_exists($sSomeId, $this->aFields))
 				{
-					throw new Exception('Missing dependancy : Field ' . $sImpactedBy . ' expecting field ' . $sSomeId . ' which is not in the Form');
+					throw new Exception('Unmet dependency : Field ' . $sImpactedBy . ' expecting field ' . $sSomeId . ' which is not in the Form');
 				}
 			}
 		}
