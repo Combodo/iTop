@@ -223,7 +223,7 @@ $(function()
 			{
 				var oField = this.getField(aFieldsToValidate[i]);
 				// Checking if the field still exists as it could have been from a dynamic subform (Typically with custom fields)
-				if(oField.length > 0)
+				if(oField.length > 0 && oField.hasClass('form_field'))
 				{
 					var oRes = oField.triggerHandler('validate', oData);
 					if (!oRes.is_valid)
