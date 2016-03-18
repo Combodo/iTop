@@ -26,6 +26,7 @@ require_once APPROOT . 'sources/form/field/field.class.inc.php';
 require_once APPROOT . 'sources/form/field/subformfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/textfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/hiddenfield.class.inc.php';
+require_once APPROOT . 'sources/form/field/labelfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/stringfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/textareafield.class.inc.php';
 require_once APPROOT . 'sources/form/field/multiplechoicesfield.class.inc.php';

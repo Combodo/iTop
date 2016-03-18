@@ -56,7 +56,7 @@ class BsSimpleFieldRenderer extends FieldRenderer
 					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
 					if ($this->oField->GetLabel() !== '')
 					{
-						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">' . $this->oField->GetLabel() . '</label>');
+						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 					}
 					$oOutput->AddHtml('<div class="help-block"></div>');
 					$oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" />');
@@ -69,7 +69,7 @@ class BsSimpleFieldRenderer extends FieldRenderer
 					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
 					if ($this->oField->GetLabel() !== '')
 					{
-						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">' . $this->oField->GetLabel() . '</label>');
+						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 					}
 					$oOutput->AddHtml('<div class="help-block"></div>');
 					$oOutput->AddHtml('<textarea id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" class="form-control" rows="8">' . $this->oField->GetCurrentValue() . '</textarea>');
@@ -95,7 +95,7 @@ EOF
 					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
 					if ($this->oField->GetLabel() !== '')
 					{
-						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">' . $this->oField->GetLabel() . '</label>');
+						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 					}
 					$oOutput->AddHtml('<div class="help-block"></div>');
 					$oOutput->AddHtml('<select id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" ' . ( ($this->oField->GetMultipleValuesEnabled()) ? 'multiple' : '' ) . ' class="form-control">');
@@ -117,7 +117,7 @@ EOF
 
 					if ($this->oField->GetLabel() !== '')
 					{
-						$oOutput->AddHtml('<div><label class="control-label">' . $this->oField->GetLabel() . '</label></div>');
+						$oOutput->AddHtml('<div><label class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label></div>');
 					}
 
 					$oOutput->AddHtml('<div class="help-block"></div>');
@@ -154,6 +154,20 @@ EOF
 			{
 				switch ($sFieldClass)
 				{
+					case 'Combodo\\iTop\\Form\\Field\\LabelField':
+						$oOutput->AddHtml('<div class="form-group">');
+						// Showing label / value only if read-only but not hidden
+						if (!$this->oField->GetHidden())
+						{
+							if ($this->oField->GetLabel() !== '')
+							{
+								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+							}
+							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('</div>');
+						}
+						$oOutput->AddHtml('</div>');
+						break;
+
 					case 'Combodo\\iTop\\Form\\Field\\StringField':
 					case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
 						$bEncodeHtmlEntities = (($sFieldClass === 'Combodo\\iTop\\Form\\Field\\TextAreaField') && ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML)) ? false : true;
@@ -164,7 +178,7 @@ EOF
 						{
 							if ($this->oField->GetLabel() !== '')
 							{
-								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">' . $this->oField->GetLabel() . '</label>');
+								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 							}
 							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetCurrentValue(), $bEncodeHtmlEntities)->AddHtml('</div>');
 						}
@@ -183,7 +197,7 @@ EOF
 						{
 							if ($this->oField->GetLabel() !== '')
 							{
-								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">' . $this->oField->GetLabel() . '</label>');
+								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 							}
 							$oOutput->AddHtml('<div class="form-control-static">' . $sFieldValue . '</div>');
 						}
