@@ -36,7 +36,8 @@ $(function()
             var me = this;
             
             this.element
-            .addClass('console_form_handler');
+                .append('<div class="last-error"></div>')
+                .addClass('console_form_handler');
 
             this.options.oWizardHelper = window[this.options.wizard_helper_var_name];
 
@@ -57,7 +58,7 @@ $(function()
             var sFormPath = data.form_path;
             var sUpdateUrl = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php';
 
-            $(this.element.find('[data-form-path="' + sFormPath + '"]')).block({message:''});
+            this.element.find('[data-form-path="' + sFormPath + '"]').block({message:''});
             $.post(
                 sUpdateUrl,
                 {
@@ -69,31 +70,28 @@ $(function()
                     json_obj: this.options.oWizardHelper.UpdateWizardToJSON()
                 },
                 function(data){
+                    me.element.find('.last-error').text('');
                     if ('form' in data) {
                         me._onUpdateSuccess(data, sFormPath);
                     }
                 }
             )
-            .fail(function(data){ me._onUpdateFailure(data, sFormPath); })
-            .always(function(data){
-                me.alignColumns();
-                var oContainer = $(me.element.find('[data-form-path="' + sFormPath + '"]'));
-                oContainer.unblock();
-                if ('error' in data) {
-                    oContainer.block({message: data.error});
-                    console.log('Update field failure: '+data.error);
-                    $('.blockOverlay').click(function(){
-                        oContainer.unblock();
-                    });
-                }
-                me._onUpdateAlways(data, sFormPath);
-            });
+                .fail(function(data){ me._onUpdateFailure(data, sFormPath); })
+                .always(function(data){
+                    me.alignColumns();
+                    me.element.find('[data-form-path="' + sFormPath + '"]').unblock();
+                    if ('error' in data) {
+                        console.log('Update field failure: '+data.error);
+                        me.element.find('.last-error').text(data.error);
+                    }
+                    me._onUpdateAlways(data, sFormPath);
+                });
         },
         // On initialization or update
         alignColumns: function()
         {
             var iMaxWidth = 0;
-            var oLabels = $(this.element.find('td.form-field-label'));
+            var oLabels = this.element.find('td.form-field-label');
             // Reset the width to the automatic (original) value
             oLabels.width('');
             oLabels.each(function() {
