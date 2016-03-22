@@ -4050,7 +4050,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		{
 			$oFormField->SetChoices($this->GetAllowedValues($oObject->ToArgsForQuery()));
 		}
-		
+
 		// If ExtKey is mandatory, we add a validator to ensure that the value 0 is not selected
 		if ($oObject->GetAttributeFlags($this->GetCode()) & OPT_ATT_MANDATORY)
 		{
@@ -6500,16 +6500,16 @@ class AttributeCustomFields extends AttributeDefinition
 
 	/**
 	 * @param DBObject $oHostObject
-	 * @param ormCustomFieldsValue|null $oValue
+	 * @param array|null $aValues
 	 * @return CustomFieldsHandler
 	 */
-	public function GetHandler(DBObject $oHostObject, ormCustomFieldsValue $oValue = null)
+	public function GetHandler(DBObject $oHostObject, $aValues = null)
 	{
 		$sHandlerClass = $this->Get('handler_class');
 		$oHandler = new $sHandlerClass($oHostObject, $this->GetCode());
-		if (!is_null($oValue))
+		if (!is_null($aValues))
 		{
-			$oHandler->SetCurrentValues($oValue->GetValues());
+			$oHandler->SetCurrentValues($aValues);
 		}
 		return $oHandler;
 	}
@@ -6581,7 +6581,8 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function GetForm(DBObject $oHostObject, $sFormPrefix = null)
 	{
-		$oHandler = $this->GetHandler($oHostObject, $oHostObject->Get($this->GetCode()));
+		$oValue = $oHostObject->Get($this->GetCode());
+		$oHandler = $this->GetHandler($oHostObject, $oValue->GetValues());
 		$sFormId = is_null($sFormPrefix) ? 'cf_'.$this->GetCode() : $sFormPrefix.'_cf_'.$this->GetCode();
 		$oHandler->BuildForm($sFormId);
 		return $oHandler->GetForm();
@@ -6608,14 +6609,18 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function WriteValue(DBObject $oHostObject, ormCustomFieldsValue $oValue = null)
 	{
-		$oHandler = $this->GetHandler($oHostObject, $oHostObject->Get($this->GetCode()));
 		if (is_null($oValue))
 		{
+			$oHandler = $this->GetHandler($oHostObject);
 			$aValues = array();
 		}
 		else
 		{
-			$aValues = $oValue->GetValues();
+			// Pass the values through the form to make sure that they are correct
+			$oHandler = $this->GetHandler($oHostObject, $oValue->GetValues());
+			$oHandler->BuildForm('');
+			$oForm = $oHandler->GetForm();
+			$aValues = $oForm->GetCurrentValues();
 		}
 		return $oHandler->WriteValues($aValues);
 	}
@@ -6630,7 +6635,7 @@ class AttributeCustomFields extends AttributeDefinition
 	{
 		try
 		{
-			$oHandler = $this->GetHandler($oHostObject, $value);
+			$oHandler = $this->GetHandler($oHostObject, $value->GetValues());
 			$oHandler->BuildForm('');
 			$oForm = $oHandler->GetForm();
 			$oForm->Validate();
@@ -6661,7 +6666,8 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function DeleteValue(DBObject $oHostObject)
 	{
-		$oHandler = $this->GetHandler($oHostObject, $oHostObject->Get($this->GetCode()));
+		$oValue = $oHostObject->Get($this->GetCode());
+		$oHandler = $this->GetHandler($oHostObject, $oValue->GetValues());
 		return $oHandler->DeleteValues();
 	}
 
