@@ -96,6 +96,8 @@ class ormCustomFieldsValue
 	 */
 	public function Equals(ormCustomFieldsValue $oReference)
 	{
-		return (json_encode($this->aCurrentValues) === json_encode($oReference->aCurrentValues));
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
+		$oHandler = $oAttDef->GetHandler($this->oHostObject, $this->GetValues());
+		return $oHandler->CompareValues($this->aCurrentValues, $oReference->aCurrentValues);
 	}
 }

@@ -124,4 +124,11 @@ abstract class CustomFieldsHandler
 	 * Cleanup data upon object deletion (object id still available here)
 	 */
 	abstract public function DeleteValues();
+
+	/**
+	 * @param $aValuesA
+	 * @param $aValuesB
+	 * @return bool
+	 */
+	abstract public function CompareValues($aValuesA, $aValuesB);
 }
