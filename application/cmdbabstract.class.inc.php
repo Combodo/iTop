@@ -1951,6 +1951,8 @@ EOF
 					$oPage->add_ready_script("$('#{$iId}_console_form').console_form_handler('option', 'field_set', $('#{$iId}_field_set'));");
 					// field_change must be processed to refresh the hidden value at anytime
 					$oPage->add_ready_script("$('#{$iId}_console_form').bind('value_change', function() { $('#{$iId}').val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });");
+					// Initialize the hidden value with current state
+					$oPage->add_ready_script("$('#{$iId}_console_form').trigger('value_change');");
 					// update_value is triggered when preparing the wizard helper object for ajax calls
 					$oPage->add_ready_script("$('#{$iId}').bind('update_value', function() { $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });");
 					// validate is triggered by CheckFields, on all the input fields, once at page init and once before submitting the form
