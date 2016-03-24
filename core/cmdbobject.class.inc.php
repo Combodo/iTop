@@ -396,6 +396,17 @@ abstract class CMDBObject extends DBObject
 				$oMyChangeOp->Set("newvalue", $value[$sAttCode]);
 				$iId = $oMyChangeOp->DBInsertNoReload();
 			}
+			elseif ($oAttDef instanceOf AttributeCustomFields)
+			{
+				// Custom fields
+				//
+				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeCustomFields");
+				$oMyChangeOp->Set("objclass", get_class($this));
+				$oMyChangeOp->Set("objkey", $this->GetKey());
+				$oMyChangeOp->Set("attcode", $sAttCode);
+				$oMyChangeOp->Set("prevdata", json_encode($original->GetValues()));
+				$iId = $oMyChangeOp->DBInsertNoReload();
+			}
 			else
 			{
 				// Scalars
@@ -536,13 +547,13 @@ abstract class CMDBObject extends DBObject
 
 	public static function BulkUpdate(DBSearch $oFilter, array $aValues)
 	{
-		return $this->BulkUpdateTracked_Internal($oFilter, $aValues);
+		return static::BulkUpdateTracked_Internal($oFilter, $aValues);
 	}
 
 	public static function BulkUpdateTracked(CMDBChange $oChange, DBSearch $oFilter, array $aValues)
 	{
 		self::SetCurrentChange($oChange);
-		$this->BulkUpdateTracked_Internal($oFilter, $aValues);
+		static::BulkUpdateTracked_Internal($oFilter, $aValues);
 	}
 
 	protected static function BulkUpdateTracked_Internal(DBSearch $oFilter, array $aValues)

@@ -6503,10 +6503,10 @@ class AttributeCustomFields extends AttributeDefinition
 	 * @param array|null $aValues
 	 * @return CustomFieldsHandler
 	 */
-	public function GetHandler(DBObject $oHostObject, $aValues = null)
+	public function GetHandler($aValues = null)
 	{
 		$sHandlerClass = $this->Get('handler_class');
-		$oHandler = new $sHandlerClass($oHostObject, $this->GetCode());
+		$oHandler = new $sHandlerClass($this->GetCode());
 		if (!is_null($aValues))
 		{
 			$oHandler->SetCurrentValues($aValues);
@@ -6581,11 +6581,23 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function GetForm(DBObject $oHostObject, $sFormPrefix = null)
 	{
-		$oValue = $oHostObject->Get($this->GetCode());
-		$oHandler = $this->GetHandler($oHostObject, $oValue->GetValues());
-		$sFormId = is_null($sFormPrefix) ? 'cf_'.$this->GetCode() : $sFormPrefix.'_cf_'.$this->GetCode();
-		$oHandler->BuildForm($sFormId);
-		return $oHandler->GetForm();
+		try
+		{
+			$oValue = $oHostObject->Get($this->GetCode());
+			$oHandler = $this->GetHandler($oValue->GetValues());
+			$sFormId = is_null($sFormPrefix) ? 'cf_'.$this->GetCode() : $sFormPrefix.'_cf_'.$this->GetCode();
+			$oHandler->BuildForm($oHostObject, $sFormId);
+			$oForm = $oHandler->GetForm();
+		}
+		catch (Exception $e)
+		{
+			$oForm = new \Combodo\iTop\Form\Form('');
+			$oField = new \Combodo\iTop\Form\Field\LabelField('');
+			$oField->SetLabel('Custom field error: '.$e->getMessage());
+			$oForm->AddField($oField);
+			$oForm->Finalize();
+		}
+		return $oForm;
 	}
 
 	/**
@@ -6595,9 +6607,16 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function ReadValue($oHostObject)
 	{
-		$oHandler = $this->GetHandler($oHostObject);
-		$aValues = $oHandler->ReadValues();
-		$oRet = new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aValues);
+		try
+		{
+			$oHandler = $this->GetHandler();
+			$aValues = $oHandler->ReadValues($oHostObject);
+			$oRet = new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aValues);
+		}
+		catch (Exception $e)
+		{
+			$oRet = new ormCustomFieldsValue($oHostObject, $this->GetCode());
+		}
 		return $oRet;
 	}
 
@@ -6611,18 +6630,18 @@ class AttributeCustomFields extends AttributeDefinition
 	{
 		if (is_null($oValue))
 		{
-			$oHandler = $this->GetHandler($oHostObject);
+			$oHandler = $this->GetHandler();
 			$aValues = array();
 		}
 		else
 		{
 			// Pass the values through the form to make sure that they are correct
-			$oHandler = $this->GetHandler($oHostObject, $oValue->GetValues());
-			$oHandler->BuildForm('');
+			$oHandler = $this->GetHandler($oValue->GetValues());
+			$oHandler->BuildForm($oHostObject, '');
 			$oForm = $oHandler->GetForm();
 			$aValues = $oForm->GetCurrentValues();
 		}
-		return $oHandler->WriteValues($aValues);
+		return $oHandler->WriteValues($oHostObject, $aValues);
 	}
 
 	/**
@@ -6635,8 +6654,8 @@ class AttributeCustomFields extends AttributeDefinition
 	{
 		try
 		{
-			$oHandler = $this->GetHandler($oHostObject, $value->GetValues());
-			$oHandler->BuildForm('');
+			$oHandler = $this->GetHandler($value->GetValues());
+			$oHandler->BuildForm($oHostObject, '');
 			$oForm = $oHandler->GetForm();
 			$oForm->Validate();
 			if ($oForm->GetValid())
@@ -6667,23 +6686,50 @@ class AttributeCustomFields extends AttributeDefinition
 	public function DeleteValue(DBObject $oHostObject)
 	{
 		$oValue = $oHostObject->Get($this->GetCode());
-		$oHandler = $this->GetHandler($oHostObject, $oValue->GetValues());
-		return $oHandler->DeleteValues();
+		$oHandler = $this->GetHandler($oValue->GetValues());
+		return $oHandler->DeleteValues($oHostObject);
 	}
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		return $value->GetAsHTML($bLocalize);
+		try
+		{
+			$sRet = $value->GetAsHTML($bLocalize);
+		}
+		catch (Exception $e)
+		{
+			$sRet = 'Custom field error: '.htmlentities($e->getMessage(), ENT_QUOTES, 'UTF-8');
+		}
+		return $sRet;
 	}
 
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
-		return $value->GetAsXML($bLocalize);
+		try
+		{
+			$sRet = $value->GetAsXML($bLocalize);
+		}
+		catch (Exception $e)
+		{
+			$sRet = Str::pure2xml('Custom field error: '.$e->getMessage());
+		}
+		return $sRet;
 	}
 
 	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
-		return $value->GetAsCSV($sSeparator, $sTextQualifier, $bLocalize, $bConvertToPlainText);
+		try
+		{
+			$sRet = $value->GetAsCSV($sSeparator, $sTextQualifier, $bLocalize, $bConvertToPlainText);
+		}
+		catch (Exception $e)
+		{
+			$sFrom = array("\r\n", $sTextQualifier);
+			$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+			$sEscaped = str_replace($sFrom, $sTo, 'Custom field error: '.$e->getMessage());
+			$sRet = $sTextQualifier.$sEscaped.$sTextQualifier;
+		}
+		return $sRet;
 	}
 
 	/**
@@ -6704,7 +6750,15 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
 	{
-		return $value->GetForTemplate($sVerb, $bLocalize);
+		try
+		{
+			$sRet = $value->GetForTemplate($sVerb, $bLocalize);
+		}
+		catch (Exception $e)
+		{
+			$sRet = 'Custom field error: '.$e->getMessage();
+		}
+		return $sRet;
 	}
 
 	public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
@@ -6732,7 +6786,15 @@ class AttributeCustomFields extends AttributeDefinition
 
 	public function Equals($val1, $val2)
 	{
-		return $val1->Equals($val2);
+		try
+		{
+			$bEquals = $val1->Equals($val2);
+		}
+		catch (Exception $e)
+		{
+			false;
+		}
+		return $bEquals;
 	}
 }
 

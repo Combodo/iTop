@@ -59,21 +59,21 @@ class ormCustomFieldsValue
 	public function GetAsHTML($bLocalize = true)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
-		$oHandler = $oAttDef->GetHandler($this->oHostObject, $this->GetValues());
+		$oHandler = $oAttDef->GetHandler($this->GetValues());
 		return $oHandler->GetAsHTML($this->aCurrentValues, $bLocalize);
 	}
 
 	public function GetAsXML($bLocalize = true)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
-		$oHandler = $oAttDef->GetHandler($this->oHostObject, $this->GetValues());
+		$oHandler = $oAttDef->GetHandler($this->GetValues());
 		return $oHandler->GetAsXML($this->aCurrentValues, $bLocalize);
 	}
 
 	public function GetAsCSV($sSeparator = ',', $sTextQualifier = '"', $bLocalize = true)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
-		$oHandler = $oAttDef->GetHandler($this->oHostObject, $this->GetValues());
+		$oHandler = $oAttDef->GetHandler($this->GetValues());
 		return $oHandler->GetAsCSV($this->aCurrentValues, $sSeparator = ',', $sTextQualifier = '"', $bLocalize = true);
 	}
 
@@ -86,7 +86,7 @@ class ormCustomFieldsValue
 	public function GetForTemplate($sVerb, $bLocalize = true)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
-		$oHandler = $oAttDef->GetHandler($this->oHostObject, $this->GetValues());
+		$oHandler = $oAttDef->GetHandler($this->GetValues());
 		return 'template...verb='.$sVerb.' sur "'.json_encode($this->aCurrentValues).'"';
 	}
 
@@ -97,7 +97,7 @@ class ormCustomFieldsValue
 	public function Equals(ormCustomFieldsValue $oReference)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
-		$oHandler = $oAttDef->GetHandler($this->oHostObject, $this->GetValues());
+		$oHandler = $oAttDef->GetHandler($this->GetValues());
 		return $oHandler->CompareValues($this->aCurrentValues, $oReference->aCurrentValues);
 	}
 }

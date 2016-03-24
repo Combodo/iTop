@@ -28,7 +28,6 @@ use Combodo\iTop\Form\FormManager;
 
 abstract class CustomFieldsHandler
 {
-	protected $oHostObject;
 	protected $sAttCode;
 	protected $aValues;
 	protected $oForm;
@@ -37,17 +36,15 @@ abstract class CustomFieldsHandler
 	 * This constructor's prototype must be frozen.
 	 * Any specific behavior must be implemented in BuildForm()
 	 *
-	 * @param DBObject $oHostObject
 	 * @param $sAttCode
 	 */
-	final public function __construct(DBObject $oHostObject, $sAttCode)
+	final public function __construct($sAttCode)
 	{
-		$this->oHostObject = $oHostObject;
 		$this->sAttCode = $sAttCode;
 		$this->aValues = null;
 	}
 
-	abstract public function BuildForm($sFormId);
+	abstract public function BuildForm(DBObject $oHostObject, $sFormId);
 
 	/**
 	 *
@@ -109,21 +106,24 @@ abstract class CustomFieldsHandler
 	abstract public function GetAsCSV($aValues, $sSeparator = ',', $sTextQualifier = '"', $bLocalize = true);
 
 	/**
+	 * @param DBObject $oHostObject
 	 * @return array Associative array id => value
 	 */
-	abstract public function ReadValues();
+	abstract public function ReadValues(DBObject $oHostObject);
 
 	/**
 	 * Record the data (currently in the processing of recording the host object)
 	 * It is assumed that the data has been checked prior to calling Write()
+	 * @param DBObject $oHostObject
 	 * @param array Associative array id => value
 	 */
-	abstract public function WriteValues($aValues);
+	abstract public function WriteValues(DBObject $oHostObject, $aValues);
 
 	/**
 	 * Cleanup data upon object deletion (object id still available here)
+	 * @param DBObject $oHostObject
 	 */
-	abstract public function DeleteValues();
+	abstract public function DeleteValues(DBObject $oHostObject);
 
 	/**
 	 * @param $aValuesA

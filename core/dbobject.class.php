@@ -1428,6 +1428,8 @@ abstract class DBObject implements iDisplay
 		{
 			if (!$oAttDef->LoadInObject()) continue;
 			if ($oAttDef->LoadFromDB()) continue;
+			if (!array_key_exists($sAttCode, $this->m_aTouchedAtt)) continue;
+			if (array_key_exists($sAttCode, $this->m_aModifiedAtt) && ($this->m_aModifiedAtt[$sAttCode] == false)) continue;
 			$oAttDef->WriteValue($this, $this->m_aCurrValues[$sAttCode]);
 		}
 	}
@@ -1841,11 +1843,15 @@ abstract class DBObject implements iDisplay
 
 			$bHasANewExternalKeyValue = false;
 			$aHierarchicalKeys = array();
+			$aDBChanges = array();
 			foreach($aChanges as $sAttCode => $valuecurr)
 			{
 				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 				if ($oAttDef->IsExternalKey()) $bHasANewExternalKeyValue = true;
-				if (!$oAttDef->IsDirectField()) unset($aChanges[$sAttCode]);
+				if ($oAttDef->IsDirectField())
+				{
+					$aDBChanges[$sAttCode] = $aChanges[$sAttCode];
+				}
 				if ($oAttDef->IsHierarchicalKey())
 				{
 					$aHierarchicalKeys[$sAttCode] = $oAttDef;
@@ -1865,7 +1871,7 @@ abstract class DBObject implements iDisplay
 					$iDelta =$iMyRight - $iMyLeft + 1;
 					MetaModel::HKTemporaryCutBranch($iMyLeft, $iMyRight, $oAttDef, $sTable);
 					
-					if ($aChanges[$sAttCode] == 0)
+					if ($aDBChanges[$sAttCode] == 0)
 					{
 						// No new parent, insert completely at the right of the tree
 						$sSQL = "SELECT max(`".$oAttDef->GetSQLRight()."`) AS max FROM `$sTable`";
@@ -1882,33 +1888,36 @@ abstract class DBObject implements iDisplay
 					else
 					{
 						// Insert at the right of the specified parent
-						$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` FROM `$sTable` WHERE id=".((int)$aChanges[$sAttCode]);
+						$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` FROM `$sTable` WHERE id=".((int)$aDBChanges[$sAttCode]);
 						$iNewLeft = CMDBSource::QueryToScalar($sSQL);
 					}
 
 					MetaModel::HKReplugBranch($iNewLeft, $iNewLeft + $iDelta - 1, $oAttDef, $sTable);
 
 					$aHKChanges = array();
-					$aHKChanges[$sAttCode] = $aChanges[$sAttCode];
+					$aHKChanges[$sAttCode] = $aDBChanges[$sAttCode];
 					$aHKChanges[$oAttDef->GetSQLLeft()] = $iNewLeft;
 					$aHKChanges[$oAttDef->GetSQLRight()] = $iNewLeft + $iDelta - 1;
-					$aChanges[$sAttCode] = $aHKChanges; // the 3 values will be stored by MakeUpdateQuery below
+					$aDBChanges[$sAttCode] = $aHKChanges; // the 3 values will be stored by MakeUpdateQuery below
 				}
 				
 				// Update scalar attributes
-				if (count($aChanges) != 0)
+				if (count($aDBChanges) != 0)
 				{
 					$oFilter = new DBObjectSearch(get_class($this));
 					$oFilter->AddCondition('id', $this->m_iKey, '=');
 			
-					$sSQL = $oFilter->MakeUpdateQuery($aChanges);
+					$sSQL = $oFilter->MakeUpdateQuery($aDBChanges);
 					CMDBSource::Query($sSQL);
 				}
 			}
 
 			$this->DBWriteLinks();
 			$this->WriteExternalAttributes();
+
 			$this->m_bDirty = false;
+			$this->m_aTouchedAtt = array();
+			$this->m_aModifiedAtt = array();
 
 			$this->AfterUpdate();
 
@@ -1928,7 +1937,6 @@ abstract class DBObject implements iDisplay
 						$this->m_aOrigValues[$sAttCode] = is_object($value) ? clone $value : $value;
 					}
 				}
-			
 			}
 
 			if (count($aChanges) != 0)
