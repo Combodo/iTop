@@ -197,7 +197,6 @@ try
 		
 			$oXmlRoot->SetAttribute('position', 'left');
 			$oXmlRoot->SetAttribute('title', MetaModel::GetRelationDescription($sRelation).' '. htmlspecialchars($oObj->GetRawName()));
-IssueLog::Info(__function__." Rel: $sRelation");
 			GetRelatedObjectsAsXml($oObj, $sRelation, $oLinks, $oXmlDoc, $oXmlNode, 0, $aExcludedClasses);
 			
 			$oXmlRoot->AppendChild($oXmlNode);
