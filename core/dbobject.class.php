@@ -2205,7 +2205,8 @@ abstract class DBObject implements iDisplay
 		$oSW = $this->Get($sAttCode);
 		$oSW->Reset($this, $oAttDef);
 		$this->Set($sAttCode, $oSW);
-	}	 	
+		return true;
+	}
 
 	/**
 	 * Lifecycle action: Recover the default value (aka when an object is being created)
