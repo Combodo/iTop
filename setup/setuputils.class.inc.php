@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 
 /**
  * The standardized result of any pass/fail check performed by the setup
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -609,7 +609,7 @@ class SetupUtils
 			{
 				foreach($aFiles as $sFile)
 				{
-					if ($sFile == '.' || $sFile == '..' || $sFile == '.svn')
+					if ($sFile == '.' || $sFile == '..' || $sFile == '.svn' || $sFile == '.git')
 					{
 						// Skip
 						continue;
@@ -1103,7 +1103,7 @@ EOF
 		$aFiles = scandir($sDir);
 		foreach($aFiles as $sFile)
 		{
-			if ($sFile == '.' || $sFile == '..' || $sFile == '.svn')
+			if ($sFile == '.' || $sFile == '..' || $sFile == '.svn' || $sFile == '.git')
 			{
 				// Skip
 				continue;
@@ -1229,7 +1229,7 @@ EOF
 	 * @param Hash $aResult Used for recursion 
 	 * @return hash Hash array ('added' => array(), 'removed' => array(), 'modified' => array()) 
 	 */
-	public static function CheckDirAgainstManifest($sBaseDir, $sSourceDir, $aManifest, $aExcludeNames = array('.svn'), $aResult = null)
+	public static function CheckDirAgainstManifest($sBaseDir, $sSourceDir, $aManifest, $aExcludeNames = array('.svn', '.git'), $aResult = null)
 	{
 //echo "CheckDirAgainstManifest($sBaseDir, $sSourceDir ...)\n"; 
 		if ($aResult === null)
