@@ -6036,7 +6036,7 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 		return '\\Combodo\\iTop\\Form\\Field\\StringField';
 	}
 
-	public function GetFormField(DBObject $oObject, $oFormField = null)
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
 		if ($oFormField === null)
 		{
@@ -6044,7 +6044,7 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
 		$oFormField->SetReadOnly(true);
-		parent::GetFormField($oObject, $oFormField);
+		parent::MakeFormField($oObject, $oFormField);
 
 		return $oFormField;
 	}

@@ -84,10 +84,17 @@ $(function()
 				}
 				else if($(oElem).is('select'))
 				{
-					value = [];
-					$(oElem).find('option:selected').each(function(){
-						value.push($(this).val());
-					});
+					if($(oElem).is('select[multiple]'))
+					{
+						value = [];
+						$(oElem).find('option:selected').each(function(){
+							value.push($(this).val());
+						});
+					}
+					else
+					{
+						value = $(oElem).val();
+					}
 				}
 				else if($(oElem).is(':checkbox') || $(oElem).is(':radio'))
 				{

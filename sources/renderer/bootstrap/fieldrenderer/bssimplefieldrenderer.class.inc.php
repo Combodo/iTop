@@ -92,6 +92,7 @@ EOF
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\SelectField':
+				case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
 					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
 					if ($this->oField->GetLabel() !== '')
 					{
@@ -187,7 +188,9 @@ EOF
 						break;
 
 					case 'Combodo\\iTop\\Form\\Field\\RadioField':
-					case 'Combodo\\iTop\\Form\\Field\\SelectField': // TODO : This should be check for external key, as we would display it differently
+					case 'Combodo\\iTop\\Form\\Field\\SelectField':
+					case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
+					case 'Combodo\\iTop\\Form\\Field\\SelectObjectField': // TODO : This should be check for external key, as we would display it differently
 						$aFieldChoices = $this->oField->GetChoices();
 						$sFieldValue = (isset($aFieldChoices[$this->oField->GetCurrentValue()])) ? $aFieldChoices[$this->oField->GetCurrentValue()] : Dict::S('UI:UndefinedObject');
 
@@ -214,6 +217,8 @@ EOF
 			case 'Combodo\\iTop\\Form\\Field\\StringField':
 			case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
 			case 'Combodo\\iTop\\Form\\Field\\SelectField':
+			case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
+			case 'Combodo\\iTop\\Form\\Field\\SelectObjectField':
 			case 'Combodo\\iTop\\Form\\Field\\HiddenField':
 				$oOutput->AddJs(
 <<<EOF
@@ -266,6 +271,8 @@ EOF
 		{
 			case 'Combodo\\iTop\\Form\\Field\\StringField':
 			case 'Combodo\\iTop\\Form\\Field\\SelectField':
+			case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
+			case 'Combodo\\iTop\\Form\\Field\\SelectObjectField':
 			case 'Combodo\\iTop\\Form\\Field\\HiddenField':
 			case 'Combodo\\iTop\\Form\\Field\\RadioField':
 			case 'Combodo\\iTop\\Form\\Field\\CheckboxField':

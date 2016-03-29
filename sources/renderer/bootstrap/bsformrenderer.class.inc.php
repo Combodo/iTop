@@ -44,9 +44,11 @@ class BsFormRenderer extends FormRenderer
 		$this->AddSupportedField('StringField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('TextAreaField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('SelectField', 'BsSimpleFieldRenderer');
+		$this->AddSupportedField('MultipleSelectField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('RadioField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('CheckboxField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('SubFormField', 'BsSubFormFieldRenderer');
+		$this->AddSupportedField('SelectObjectField', 'BsSimpleFieldRenderer');
 	}
 
 }

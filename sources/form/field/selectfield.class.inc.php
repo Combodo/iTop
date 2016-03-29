@@ -30,6 +30,7 @@ use \Combodo\iTop\Form\Field\MultipleChoicesField;
  */
 class SelectField extends MultipleChoicesField
 {
+	const DEFAULT_MULTIPLE_VALUES_ENABLED = false;
 	const DEFAULT_NULL_CHOICE_LABEL = 'UI:SelectOne';
 	const DEFAULT_STARTS_WITH_NULL_CHOICE = true;
 
@@ -73,6 +74,18 @@ class SelectField extends MultipleChoicesField
 		}
 
 		return $aChoices;
+	}
+
+	/**
+	 * Overloads the method to prevent changing this property.
+	 *
+	 * @param boolean $bMultipleValuesEnabled
+	 * @return \Combodo\iTop\Form\Field\SelectField
+	 */
+	public function SetMultipleValuesEnabled($bMultipleValuesEnabled)
+	{
+		// We don't allow changing this value
+		return $this;
 	}
 
 }

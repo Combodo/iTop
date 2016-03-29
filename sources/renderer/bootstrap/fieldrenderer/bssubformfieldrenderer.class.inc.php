@@ -48,6 +48,7 @@ class BsSubFormFieldRenderer extends FieldRenderer
 			'fields_impacts' => $this->oField->GetForm()->GetFieldsImpacts(),
 			'form_path' => $this->oField->GetForm()->GetId()
 		);
+		
 		$sFieldSetOptions = json_encode($aFieldSetOptions);
 		$oOutput->AddJs(
 <<<EOF
