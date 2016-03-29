@@ -1698,6 +1698,7 @@ abstract class MetaModel
 					throw new CoreException("Class $sChildClass, 'finalclass' is a reserved keyword, it cannot be used as a filter code");
 				}
 				$oCloned = clone $oClassAtt;
+				$oCloned->SetHostClass($sChildClass);
 				$oCloned->SetFixedValue($sChildClass);
 				self::$m_aAttribDefs[$sChildClass]['finalclass'] = $oCloned;
 				self::$m_aAttribOrigins[$sChildClass]['finalclass'] = $sRootClass;
