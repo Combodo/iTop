@@ -628,8 +628,9 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 				if (function_exists('mb_strcut'))
 				{
 					// Safe with multi-byte strings
-					$sBefore = $this->ToHtml(mb_strcut($sTextEntry, 0, $iMaxVisibleLength, 'UTF-8'));
-					$sAfter = $this->ToHtml(mb_strcut($sTextEntry, $iMaxVisibleLength, null, 'UTF-8'));
+					mb_internal_encoding('UTF-8'); // Do not use the form mb_strcut(str, start, null, encoding) which does not work if PHP < 5.4.9 (null => 0)
+					$sBefore = $this->ToHtml(mb_strcut($sTextEntry, 0, $iMaxVisibleLength));
+					$sAfter = $this->ToHtml(mb_strcut($sTextEntry, $iMaxVisibleLength));
 				}
 				else
 				{
