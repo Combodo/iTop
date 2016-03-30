@@ -1072,7 +1072,8 @@ class DBObjectSet
 	 */
 	public function ListConstantFields()
 	{
-		$aScalarArgs = array_merge($this->m_oFilter->GetInternalParams(), $this->m_aArgs);
+		// The complete list of arguments will include magic arguments (e.g. current_user->attcode)
+		$aScalarArgs = MetaModel::PrepareQueryArguments($this->m_oFilter->GetInternalParams(), $this->m_aArgs);
 		$aConst = $this->m_oFilter->ListConstantFields();
 				
 		foreach($aConst as $sClassAlias => $aVals)
@@ -1091,7 +1092,7 @@ class DBObjectSet
 	
 	public function ApplyParameters()
 	{
-		$aAllArgs = array_merge($this->m_aArgs, $this->m_oFilter->GetInternalParams());
+		$aAllArgs = MetaModel::PrepareQueryArguments($this->m_oFilter->GetInternalParams(), $this->m_aArgs);
 		$this->m_oFilter->ApplyParameters($aAllArgs);
 	}
 }
