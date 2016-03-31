@@ -510,6 +510,15 @@ class iTopDesignFormat
 			$this->LogWarning('The attribute '.self::GetItopNodePath($oNode).' is irrelevant and must be removed.');
 			$this->DeleteNode($oNode);
 		}
+
+		// Remove CustomFields attributes
+		//
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeCustomFields']");
+		foreach ($oNodeList as $oNode)
+		{
+			$this->LogWarning('The attribute '.self::GetItopNodePath($oNode).' is irrelevant and must be removed.');
+			$this->DeleteNode($oNode);
+		}
 	}
 
 	/**
