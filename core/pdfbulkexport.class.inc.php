@@ -23,8 +23,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once(APPROOT.'application/pdfpage.class.inc.php');
-
 class PDFBulkExport extends HTMLBulkExport
 {
 	public function DisplayUsage(Page $oP)
@@ -123,6 +121,7 @@ class PDFBulkExport extends HTMLBulkExport
 	{
 		$sData = parent::GetFooter();
 
+		require_once(APPROOT.'application/pdfpage.class.inc.php');
 		$oPage = new PDFPage(Dict::Format('Core:BulkExportOf_Class', MetaModel::GetName($this->oSearch->GetClass())), $this->aStatusInfo['page_size'], $this->aStatusInfo['page_orientation']);
 		$oPDF = $oPage->get_tcpdf();
 		$oPDF->SetFont('dejavusans', '', 8, '', true);
