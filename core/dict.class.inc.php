@@ -143,6 +143,8 @@ class Dict
 			}
 			// Attempt to find the string in english
 			//
+			self::InitLangIfNeeded('EN US');
+
 			$aDefaultDictionary = self::$m_aData['EN US'];
 			if (array_key_exists($sStringCode, $aDefaultDictionary))
 			{
