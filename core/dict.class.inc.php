@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -57,26 +57,13 @@ define('DICT_ERR_EXCEPTION', 2); // when a string is missing, throw an exception
 
 class Dict
 {
-	protected static $m_bTraceFiles = false;
-	protected static $m_aEntryFiles = array();
-
 	protected static $m_iErrorMode = DICT_ERR_STRING;
 	protected static $m_sDefaultLanguage = 'EN US';
 	protected static $m_sCurrentLanguage = null; // No language selected by default
 
 	protected static $m_aLanguages = array(); // array( code => array( 'description' => '...', 'localized_description' => '...') ...)
 	protected static $m_aData = array();
-
-
-	public static function EnableTraceFiles()
-	{
-		self::$m_bTraceFiles = true;
-	}
-
-	public static function GetEntryFiles()
-	{
-		return self::$m_aEntryFiles;
-	}
+	protected static $m_sApplicationPrefix = null;
 
 	public static function SetDefaultLanguage($sLanguageCode)
 	{
@@ -119,11 +106,20 @@ class Dict
 		self::$m_iErrorMode = $iErrorMode;
 	}
 
-
+	/**
+	 * Returns a localised string from the dictonary
+	 * @param string $sStringCode The code identifying the dictionary entry
+	 * @param string $sDefault Default value if there is no match in the dictionary
+	 * @param bool $bUserLanguageOnly True to allow the use of the default language as a fallback, false otherwise
+	 * @throws DictExceptionMissingString
+	 * @return unknown|Ambigous <>|string
+	 */
 	public static function S($sStringCode, $sDefault = null, $bUserLanguageOnly = false)
 	{
 		// Attempt to find the string in the user language
 		//
+		self::InitLangIfNeeded(self::GetUserLanguage());
+
 		if (!array_key_exists(self::GetUserLanguage(), self::$m_aData))
 		{
 			// It may happen, when something happens before the dictionnaries get loaded
@@ -138,6 +134,8 @@ class Dict
 		{
 			// Attempt to find the string in the default language
 			//
+			self::InitLangIfNeeded(self::$m_sDefaultLanguage);
+			
 			$aDefaultDictionary = self::$m_aData[self::$m_sDefaultLanguage];
 			if (array_key_exists($sStringCode, $aDefaultDictionary))
 			{
@@ -175,6 +173,12 @@ class Dict
 	}
 
 
+	/**
+	 * Formats a localized string with numbered placeholders (%1$s...) for the additional arguments
+	 * See vsprintf for more information about the syntax of the placeholders
+	 * @param string $sFormatCode
+	 * @return string
+	 */
 	public static function Format($sFormatCode /*, ... arguments ....*/)
 	{
 		$sLocalizedFormat = self::S($sFormatCode);
@@ -189,43 +193,95 @@ class Dict
 
 		return vsprintf($sLocalizedFormat, $aArguments);
 	}
-
-
-	// sLanguageCode: Code identifying the language i.e. FR-FR
-	// sEnglishLanguageDesc: Description of the language code, in English. i.e. French (France)
-	// sLocalizedLanguageDesc: Description of the language code, in its own language. i.e. Français (France)
-	// aEntries: Hash array of dictionnary entries
-	// ~~ or ~* can be used to indicate entries still to be translated. 
-	public static function Add($sLanguageCode, $sEnglishLanguageDesc, $sLocalizedLanguageDesc, $aEntries)
+	
+	/**
+	 * Initialize a the entries for a given language (replaces the former Add() method)
+	 * @param string $sLanguageCode Code identifying the language i.e. 'FR-FR', 'EN-US'
+	 * @param hash $aEntries Hash array of dictionnary entries
+	 */
+	public static function SetEntries($sLanguageCode, $aEntries)
 	{
-		if (self::$m_bTraceFiles)
+		self::$m_aData[$sLanguageCode] = $aEntries;
+	}
+	
+	/**
+	 * Set the list of available languages
+	 * @param hash $aLanguagesList
+	 */
+	public static function SetLanguagesList($aLanguagesList)
+	{
+		self::$m_aLanguages = $aLanguagesList;
+	}
+	
+	/**
+	 * Load a language from the language dictionary, if not already loaded
+	 * @param string $sLangCode Language code
+	 * @return boolean
+	 */
+	public static function InitLangIfNeeded($sLangCode)
+	{
+		if (array_key_exists($sLangCode, self::$m_aData)) return true;
+		
+		$bResult = false;
+		
+		if (function_exists('apc_fetch') && (self::$m_sApplicationPrefix !== null))
 		{
-			$aBacktrace = debug_backtrace();
-			$sFile = $aBacktrace[0]["file"];
-
-			foreach($aEntries as $sKey => $sValue)
+			// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
+			//
+			self::$m_aData[$sLangCode] = apc_fetch(self::$m_sApplicationPrefix.'-dict-'.$sLangCode);
+			if (self::$m_aData[$sLangCode] === false)
 			{
-				self::$m_aEntryFiles[$sLanguageCode][$sKey] = array(
-					'file' => $sFile,
-					'value' => $sValue
-				);
+				unset(self::$m_aData[$sLangCode]);
+			}
+			else
+			{
+				$bResult = true;
 			}
 		}
-
-		if (!array_key_exists($sLanguageCode, self::$m_aLanguages))
+		if (!$bResult)
 		{
-			self::$m_aLanguages[$sLanguageCode] = array('description' => $sEnglishLanguageDesc, 'localized_description' => $sLocalizedLanguageDesc);
-			self::$m_aData[$sLanguageCode] = array();
+			$sDictFile = APPROOT.'env-'.utils::GetCurrentEnvironment().'/dictionaries/'.str_replace(' ', '-', strtolower($sLangCode)).'.dict.php';
+			require_once($sDictFile);
+			
+			if (function_exists('apc_store') && (self::$m_sApplicationPrefix !== null))
+			{
+				apc_store(self::$m_sApplicationPrefix.'-dict-'.$sLangCode, self::$m_aData[$sLangCode]);
+			}
+			$bResult = true;
 		}
-		foreach($aEntries as $sCode => $sValue)
-		{
-			self::$m_aData[$sLanguageCode][$sCode] = self::FilterString($sValue);
-		}
+		return $bResult;
+	}
+	
+	/**
+	 * Enable caching (cached using APC)
+	 * @param string $sApplicationPrefix The prefix for uniquely identiying this iTop instance
+	 */
+	public static function EnableCache($sApplicationPrefix)
+	{
+		self::$m_sApplicationPrefix = $sApplicationPrefix;
 	}
 
 	/**
+	 * Reset the cached entries (cached using APC)
+	 * @param string $sApplicationPrefix The prefix for uniquely identiying this iTop instance
+	 */
+	public static function ResetCache($sApplicationPrefix)
+	{
+		if (function_exists('apc_delete'))
+		{
+			foreach(self::$m_aLanguages as $sLang => $void)
+			{
+				apc_delete($sApplicationPrefix.'-dict-'.$sLang);
+			}
+		}
+	}
+
+	/////////////////////////////////////////////////////////////////////////
+
+
+	/**
 	 * Clone a string in every language (if it exists in that language)
-	 */	 	
+	 */
 	public static function CloneString($sSourceCode, $sDestCode)
 	{
 		foreach(self::$m_aLanguages as $sLanguageCode => $foo)
@@ -236,14 +292,14 @@ class Dict
 			}
 		}
 	}
-
+	
 	public static function MakeStats($sLanguageCode, $sLanguageRef = 'EN US')
 	{
 		$aMissing = array(); // Strings missing for the target language
 		$aUnexpected = array(); // Strings defined for the target language, but not found in the reference dictionary
 		$aNotTranslated = array(); // Strings having the same value in both dictionaries
 		$aOK = array(); // Strings having different values in both dictionaries
-
+	
 		foreach (self::$m_aData[$sLanguageRef] as $sStringCode => $sValue)
 		{
 			if (!array_key_exists($sStringCode, self::$m_aData[$sLanguageCode]))
@@ -251,7 +307,7 @@ class Dict
 				$aMissing[$sStringCode] = $sValue;
 			}
 		}
-
+	
 		foreach (self::$m_aData[$sLanguageCode] as $sStringCode => $sValue)
 		{
 			if (!array_key_exists($sStringCode, self::$m_aData[$sLanguageRef]))
@@ -279,57 +335,24 @@ class Dict
 	{
 		MyHelpers::var_dump_html(self::$m_aData);
 	}
-	
-	public static function InCache($sApplicationPrefix)
-	{
-		if (function_exists('apc_fetch'))
-		{
-			$bResult = false;
-			// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
-			//
-			self::$m_aData = apc_fetch($sApplicationPrefix.'-dict');
-			if (is_bool(self::$m_aData) && (self::$m_aData === false))
-			{
-				self::$m_aData = array();
-			}
-			else
-			{
-				self::$m_aLanguages = apc_fetch($sApplicationPrefix.'-languages');
-				if (is_bool(self::$m_aLanguages) && (self::$m_aLanguages === false))
-				{
-					self::$m_aLanguages = array();
-				}
-				else
-				{
-					$bResult = true;
-				}
-			}
-			return $bResult;
-		}
-		return false;
-	}
-	
-	public static function InitCache($sApplicationPrefix)
-	{
-		if (function_exists('apc_store'))
-		{
-			apc_store($sApplicationPrefix.'-languages', self::$m_aLanguages);
-			apc_store($sApplicationPrefix.'-dict', self::$m_aData);
-		}
-	}
 
-	public static function ResetCache($sApplicationPrefix)
+	// Obsolete: only used by the setup/compiler which replaces this method invocation by its own handler !!
+	// sLanguageCode: Code identifying the language i.e. FR-FR
+	// sEnglishLanguageDesc: Description of the language code, in English. i.e. French (France)
+	// sLocalizedLanguageDesc: Description of the language code, in its own language. i.e. Français (France)
+	// aEntries: Hash array of dictionnary entries
+	// ~~ or ~* can be used to indicate entries still to be translated.
+	public static function Add($sLanguageCode, $sEnglishLanguageDesc, $sLocalizedLanguageDesc, $aEntries)
 	{
-		if (function_exists('apc_delete'))
+		if (!array_key_exists($sLanguageCode, self::$m_aLanguages))
 		{
-			apc_delete($sApplicationPrefix.'-languages');
-			apc_delete($sApplicationPrefix.'-dict');
+			self::$m_aLanguages[$sLanguageCode] = array('description' => $sEnglishLanguageDesc, 'localized_description' => $sLocalizedLanguageDesc);
+			self::$m_aData[$sLanguageCode] = array();
 		}
-	}
-	
-	protected static function FilterString($s)
-	{
-		return str_replace(array('~~', '~*'), '', $s);
+		foreach($aEntries as $sCode => $sValue)
+		{
+			self::$m_aData[$sLanguageCode][$sCode] = self::FilterString($sValue);
+		}
 	}
 }
 ?>

@@ -207,6 +207,54 @@ class MFCoreModule extends MFModule
 }
 
 /**
+ * MFDictModule: an optional module, consisting only of dictionaries
+ * @package ModelFactory
+ */
+class MFDictModule extends MFModule
+{
+	public function __construct($sName, $sLabel, $sRootDir)
+	{
+		$this->sId = $sName;
+
+		$this->sName = $sName;
+		$this->sVersion = '1.0';
+
+		$this->sRootDir = $sRootDir;
+		$this->sLabel = $sLabel;
+		$this->aDataModels = array();
+	}
+
+	public function GetRootDir()
+	{
+		return '';
+	}
+
+	public function GetModuleDir()
+	{
+		return '';
+	}
+	
+	public function GetDictionaryFiles()
+	{
+		$aDictionaries = array();
+		if ($hDir = opendir($this->sRootDir))
+		{
+			while (($sFile = readdir($hDir)) !== false)
+			{
+				$aMatches = array();
+				if (preg_match("/^.*dictionary\\.itop.*.php$/i", $sFile, $aMatches)) // Dictionary files are named like <Lang>.dict.<ModuleName>.php
+				{
+					$aDictionaries[] = $this->sRootDir.'/'.$sFile;
+				}
+			}
+			closedir($hDir);
+		}
+		return $aDictionaries;
+	}	
+}
+
+
+/**
  * ModelFactory: the class that manages the in-memory representation of the XML MetaModel
  * @package ModelFactory
  */
@@ -549,14 +597,23 @@ class ModelFactory
 						$oXmlEntry->appendChild($oXmlValue);
 						if (array_key_exists($sLanguageCode, $this->aDictKeys) && array_key_exists($sCode, $this->aDictKeys[$sLanguageCode]))
 						{
-							$oXmlEntries->RedefineChildNode($oXmlEntry);
+							$oMe = $this->aDictKeys[$sLanguageCode][$sCode];
+							$sFlag = $oMe->getAttribute('_alteration');
+							$oMe->parentNode->replaceChild($oXmlEntry, $oMe);
+							$sNewFlag = $sFlag;
+							if ($sFlag == '')
+							{
+								$sNewFlag = 'replaced';
+							}
+							$oXmlEntry->setAttribute('_alteration', $sNewFlag);
+								
 						}
 						else 
 						{
 							$oXmlEntry->setAttribute('_alteration', 'added');
 							$oXmlEntries->appendChild($oXmlEntry);
 						}
-						$this->aDictKeys[$sLanguageCode][$sCode] = true;
+						$this->aDictKeys[$sLanguageCode][$sCode] = $oXmlEntry;
 					}
 				}	 				
 			}

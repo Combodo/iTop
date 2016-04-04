@@ -473,6 +473,9 @@ class ApplicationInstaller
 
 		$oFactory = new ModelFactory($aDirsToScan);
 		
+		$oDictModule = new MFDictModule('dictionaries', 'iTop Dictionaries', APPROOT.'dictionaries');
+		$oFactory->LoadModule($oDictModule);
+		
 		$sDeltaFile = APPROOT.'core/datamodel.core.xml';
 		if (file_exists($sDeltaFile))
 		{

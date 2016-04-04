@@ -424,10 +424,7 @@ EOF;
 		}
 
 		$oDictionaries = $this->oFactory->GetNodes('dictionaries/dictionary');
-		foreach($oDictionaries as $oDictionaryNode)
-		{
-			$this->CompileDictionary($oDictionaryNode, $sTempTargetDir, $sFinalTargetDir);
-		}
+		$this->CompileDictionaries($oDictionaries, $sTempTargetDir, $sFinalTargetDir);
 
 		// Compile the branding
 		//
@@ -2084,37 +2081,63 @@ EOF;
 	return $sPHP;
 	} // function CompileUserRights
 
-	protected function CompileDictionary($oDictionaryNode, $sTempTargetDir, $sFinalTargetDir)
+	protected function CompileDictionaries($oDictionaries, $sTempTargetDir, $sFinalTargetDir)
 	{
-		$sLang = $oDictionaryNode->getAttribute('id');
-		$sEnglishLanguageDesc = $oDictionaryNode->GetChildText('english_description');
-		$sLocalizedLanguageDesc = $oDictionaryNode->GetChildText('localized_description');
-
-		$aEntriesPHP = array();
-		$oEntries = $oDictionaryNode->GetUniqueElement('entries');
-		foreach($oEntries->getElementsByTagName('entry') as $oEntry)
+		$aLanguages = array();
+		foreach($oDictionaries as $oDictionaryNode)
 		{
-			$sStringCode = $oEntry->getAttribute('id');
-			$sValue = $oEntry->GetText();
-			$aEntriesPHP[] = "\t'$sStringCode' => ".self::QuoteForPHP($sValue, true).",";
-		}
-		$sEntriesPHP = implode("\n", $aEntriesPHP);
+			$sLang = $oDictionaryNode->getAttribute('id');
+			$sEnglishLanguageDesc = $oDictionaryNode->GetChildText('english_description');
+			$sLocalizedLanguageDesc = $oDictionaryNode->GetChildText('localized_description');
+			$aLanguages[$sLang] = array('description' => $sEnglishLanguageDesc, 'localized_description' => $sLocalizedLanguageDesc);
 
-		$sEscEnglishLanguageDesc = self::QuoteForPHP($sEnglishLanguageDesc);
-		$sEscLocalizedLanguageDesc = self::QuoteForPHP($sLocalizedLanguageDesc);
-		$sPHPDict =
+			$aEntriesPHP = array();
+			$oEntries = $oDictionaryNode->GetUniqueElement('entries');
+			foreach ($oEntries->getElementsByTagName('entry') as $oEntry)
+			{
+				$sStringCode = $oEntry->getAttribute('id');
+				$sValue = $oEntry->GetText();
+				$aEntriesPHP[] = "\t'$sStringCode' => ".self::QuoteForPHP(self::FilterDictString($sValue), true).",";
+			}
+			$sEntriesPHP = implode("\n", $aEntriesPHP);
+
+			$sPHPDict =
 <<<EOF
 <?php
 //
 // Dictionary built by the compiler for the language "$sLang"
 //
-Dict::Add('$sLang', $sEscEnglishLanguageDesc, $sEscLocalizedLanguageDesc, array(
+Dict::SetEntries('$sLang', array(
 $sEntriesPHP
 ));
 EOF;
-		$sSafeLang = str_replace(' ', '-', strtolower(trim($sLang)));
-		$sDictFile = $sTempTargetDir.'/dictionaries/'.$sSafeLang.'.dict.php';
-		file_put_contents($sDictFile, $sPHPDict);
+			$sSafeLang = str_replace(' ', '-', strtolower(trim($sLang)));
+			$sDictFile = $sTempTargetDir.'/dictionaries/'.$sSafeLang.'.dict.php';
+			file_put_contents($sDictFile, $sPHPDict);
+		}
+		$sLanguagesFile = $sTempTargetDir.'/dictionaries/languages.php';
+		$sLanguagesDump = var_export($aLanguages, true);
+		$sLanguagesFileContent =
+<<<EOF
+<?php
+//
+// Dictionary index built by the compiler
+//
+Dict::SetLanguagesList(
+$sLanguagesDump
+);
+EOF;
+		
+		file_put_contents($sLanguagesFile, $sLanguagesFileContent);
+	}
+
+	protected static function FilterDictString($s)
+	{
+		if (strpos($s, '~') !== false)
+		{
+			return str_replace(array('~~', '~*'), '', $s);
+		}
+		return $s;
 	}
 
 	// Transform the file references into the corresponding filename (and create the file in the relevant directory)

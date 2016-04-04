@@ -341,6 +341,9 @@ class RunTimeEnvironment
 
 		// Do load the required modules
 		//
+		$oDictModule = new MFDictModule('dictionaries', 'iTop Dictionaries', APPROOT.'dictionaries');
+		$aRet[] = $oDictModule;
+		
 		$oFactory = new ModelFactory($aDirsToCompile);
 		$sDeltaFile = APPROOT.'core/datamodel.core.xml';
 		if (file_exists($sDeltaFile))

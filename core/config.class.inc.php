@@ -77,7 +77,6 @@ class Config
 	protected $m_aDataModels;
 	protected $m_aWebServiceCategories;
 	protected $m_aAddons;
-	protected $m_aDictionaries;
 
 	protected $m_aModuleSettings;
 
@@ -1053,7 +1052,6 @@ class Config
 			// Default AddOn, always present can be moved to an official iTop Module later if needed
 			'user rights' => 'addons/userrights/userrightsprofile.class.inc.php',
 		);
-		$this->m_aDictionaries = self::ScanDictionariesDir();
 		
 		foreach($this->m_aSettings as $sPropCode => $aSettingInfo)
 		{
@@ -1173,10 +1171,7 @@ class Config
 			// Add one, by default
 			$MyModules['addons']['user rights'] = '/addons/userrights/userrightsnull.class.inc.php';
 		}
-		if (!array_key_exists('dictionaries', $MyModules))
-		{
-			throw new ConfigException('Missing item in configuration file', array('file' => $sConfigFile, 'expected' => '$MyModules[\'dictionaries\']'));
-		}
+
 		$this->m_aAppModules = $MyModules['application'];
 		$this->m_aDataModels = $MyModules['business'];
 		if (isset($MyModules['webservices']))
@@ -1184,7 +1179,6 @@ class Config
 			$this->m_aWebServiceCategories = $MyModules['webservices'];
 		}
 		$this->m_aAddons = $MyModules['addons'];
-		$this->m_aDictionaries = $MyModules['dictionaries'];
 
 		foreach($MySettings as $sPropCode => $rawvalue)
 		{
@@ -1302,15 +1296,6 @@ class Config
 	public function SetAddons($aAddons)
 	{
 		$this->m_aAddons = $aAddons;
-	}
-
-	public function GetDictionaries()
-	{
-		return $this->m_aDictionaries;
-	}
-	public function SetDictionaries($aDictionaries)
-	{
-		$this->m_aDictionaries = $aDictionaries;
 	}
 
 	public function GetDBHost()
@@ -1608,10 +1593,6 @@ class Config
 		{
 			$aSettings['addon_list'][] = $sFile;
 		}
-		foreach($this->m_aDictionaries as $sFile)
-		{
-			$aSettings['dictionary_list'][] = $sFile;
-		}
 		return $aSettings;
 	}
 
@@ -1780,12 +1761,6 @@ class Config
 				fwrite($hFile, "\t\t'$sKey' => '$sFile',\n");
 			}
 			fwrite($hFile, "\t),\n");
-			fwrite($hFile, "\t'dictionaries' => array (\n");
-			foreach($this->m_aDictionaries as $sFile)
-			{
-				fwrite($hFile, "\t\t'$sFile',\n");
-			}
-			fwrite($hFile, "\t),\n");
 			fwrite($hFile, ");\n");
 			fwrite($hFile, '?'.'>'); // Avoid perturbing the syntax highlighting !
 			return fclose($hFile);
@@ -1794,26 +1769,6 @@ class Config
 		{
 			throw new ConfigException("Could not write to configuration file", array('file' => $sFileName));
 		}
-	}
-	
-	protected static function ScanDictionariesDir()
-	{
-		$aResult = array();
-		// Populate automatically the list of dictionary files
-		$sDir = APPROOT.'/dictionaries';
-		if ($hDir = @opendir($sDir))
-		{
-			while (($sFile = readdir($hDir)) !== false)
-			{
-				$aMatches = array();
-				if (preg_match("/^([^\.]+\.)?dictionary\.itop\.(ui|core)\.php$/i", $sFile, $aMatches)) // Dictionary files named like [<Lang>.]dictionary.[core|ui].php are loaded automatically
-				{
-					$aResult[] = 'dictionaries/'.$sFile;
-				}
-			}
-			closedir($hDir);
-		}
-		return $aResult;
 	}
 
 	/**
@@ -1882,7 +1837,6 @@ class Config
 			}
 			$aDataModels = $oEmptyConfig->GetDataModels();
 			$aWebServiceCategories = $oEmptyConfig->GetWebServiceCategories();
-			$aDictionaries = $oEmptyConfig->GetDictionaries();
 			// Merge the values with the ones provided by the modules
 			// Make sure when don't load the same file twice...
 			
@@ -1935,15 +1889,6 @@ class Config
 			$this->SetAppModules($aAppModules);
 			$this->SetDataModels($aDataModels);
 			$this->SetWebServiceCategories($aWebServiceCategories);
-			
-			// Scan dictionaries
-			//
-			foreach (glob(APPROOT.$sModulesDir.'/dictionaries/*.dict.php') as $sFilePath)
-			{
-				$sFile = basename($sFilePath);
-				$aDictionaries[] = $sModulesDir.'/dictionaries/'.$sFile;
-			}
-			$this->SetDictionaries($aDictionaries);
 		}
 	}
 
@@ -1970,7 +1915,6 @@ class Config
 		$sNewPrefix = 'env-'.$sTargetEnv.'/';
 		self::ChangePrefix($this->m_aDataModels, $sSearchPrefix, $sNewPrefix);
 		self::ChangePrefix($this->m_aWebServiceCategories, $sSearchPrefix, $sNewPrefix);
-		self::ChangePrefix($this->m_aDictionaries, $sSearchPrefix, $sNewPrefix);
 	}
 	
 	/**

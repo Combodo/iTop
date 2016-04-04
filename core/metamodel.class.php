@@ -4219,15 +4219,13 @@ abstract class MetaModel
 		//       needed when some error occur
 		$sAppIdentity = 'itop-'.MetaModel::GetEnvironmentId();
 		$bDictInitializedFromData = false;
-		if (!self::$m_bUseAPCCache || !Dict::InCache($sAppIdentity))
+		if (self::$m_bUseAPCCache)
 		{
-			$bDictInitializedFromData = true;
-			foreach (self::$m_oConfig->GetDictionaries() as $sModule => $sToInclude)
-			{
-				self::IncludeModule('dictionaries', $sToInclude);
-			}
-		}		
-		// Set the language... after the dictionaries have been loaded!
+			Dict::EnableCache($sAppIdentity);
+		}
+		require_once(APPROOT.'env-'.utils::GetCurrentEnvironment().'/dictionaries/languages.php');
+		
+		// Set the default language...
 		Dict::SetDefaultLanguage(self::$m_oConfig->GetDefaultLanguage());
 
 		// Romain: this is the only way I've found to cope with the fact that
@@ -4331,11 +4329,6 @@ abstract class MetaModel
 				apc_store($sOqlAPCCacheId, $aCache);
 				$oKPI->ComputeAndReport('Metamodel APC (store)');
 			}
-		}
-
-		if (self::$m_bUseAPCCache && $bDictInitializedFromData)
-		{
-			Dict::InitCache($sAppIdentity);
 		}
 		
 		self::$m_sDBName = $sSource;
