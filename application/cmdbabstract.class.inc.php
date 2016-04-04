@@ -657,7 +657,12 @@ EOF
 
 											// Attribute is read-only
 											$sHTMLValue = "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode);
-											$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/></span>';
+											$value = $this->Get($sAttCode);
+											if (is_object($value))
+											{
+												$value = '';
+											}
+											$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($value, ENT_QUOTES, 'UTF-8').'"/></span>';
 											$aFieldsMap[$sAttCode] = $sInputId;
 											$sComments = $sSynchroIcon;
 										}
