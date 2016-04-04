@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Form\Field;
 
 use \Closure;
+use \DBSearch;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 
 /**
@@ -28,21 +29,21 @@ use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
  */
 class SelectObjectField extends Field
 {
-	protected $sOqlQuery;
+	protected $oSearch;
 	protected $iMaximumComboLength;
 	protected $iMinAutoCompleteChars;
 
 	public function __construct($sId, Closure $onFinalizeCallback = null)
 	{
 		parent::__construct($sId, $onFinalizeCallback);
-		$this->sOqlQuery = null;
+		$this->oSearch = null;
 		$this->iMaximumComboLength = null;
 		$this->iMinAutoCompleteChars = 3;
 	}
 
-	public function SetOqlQuery($sOqlQuery)
+	public function SetSearch(DBSearch $oSearch)
 	{
-		$this->sOqlQuery = $sOqlQuery;
+		$this->oSearch = $oSearch;
 	}
 
 	public function SetMaximumComboLength($iMaximumComboLength)
@@ -85,9 +86,9 @@ class SelectObjectField extends Field
 		return $this;
 	}
 
-	public function GetOqlQuery()
+	public function GetSearch()
 	{
-		return $this->sOqlQuery;
+		return $this->oSearch;
 	}
 
 	public function GetMaximumComboLength()

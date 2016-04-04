@@ -87,7 +87,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 					$oOutput->AddHtml('<td class="form-field-content">');
 					if ($this->oField->GetReadOnly())
 					{
-						$oSearch = \DBSearch::FromOQL($this->oField->GetOqlQuery());
+						$oSearch = $this->oField->GetSearch()->DeepClone();
 						$oSearch->AddCondition('id', $this->oField->GetCurrentValue());
 						$oSet = new DBObjectSet($oSearch);
 						$oObject = $oSet->Fetch();
@@ -104,7 +104,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 					}
 					else
 					{
-						$oSearch = \DBSearch::FromOQL($this->oField->GetOqlQuery());
+						$oSearch = $this->oField->GetSearch()->DeepClone();
 						$oSet = new \DBObjectSet($oSearch);
 						$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array('friendlyname')));
 						$oOutput->AddHtml('<select class="form-field-data" id="'.$this->oField->GetGlobalId().'">');
