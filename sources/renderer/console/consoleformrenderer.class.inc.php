@@ -23,6 +23,7 @@ use Combodo\iTop\Renderer\FormRenderer;
 use \Dict;
 
 require_once('fieldrenderer/consolesimplefieldrenderer.class.inc.php');
+require_once('fieldrenderer/consoleselectobjectfieldrenderer.class.inc.php');
 require_once('fieldrenderer/consolesubformfieldrenderer.class.inc.php');
 
 class ConsoleFormRenderer extends FormRenderer
@@ -35,7 +36,7 @@ class ConsoleFormRenderer extends FormRenderer
 		$this->AddSupportedField('HiddenField', 'ConsoleSimpleFieldRenderer');
 		$this->AddSupportedField('StringField', 'ConsoleSimpleFieldRenderer');
 		$this->AddSupportedField('SelectField', 'ConsoleSimpleFieldRenderer');
-		$this->AddSupportedField('SelectObjectField', 'ConsoleSimpleFieldRenderer');
+		$this->AddSupportedField('SelectObjectField', 'ConsoleSelectObjectFieldRenderer');
 		$this->AddSupportedField('SubFormField', 'ConsoleSubFormFieldRenderer');
 	}
 }
