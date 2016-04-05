@@ -2274,7 +2274,7 @@ EOF
 						$iAttId = $oAttachment->DBInsert();
 			
 						$aResult['uploaded'] = 1;
-						$aResult['msg'] = $oDoc->GetFileName();
+						$aResult['msg'] = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
 						$aResult['fileName'] = $oDoc->GetFileName();
 						$aResult['url'] = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL.$iAttId.'&s='.$oAttachment->Get('secret');
 						if (is_array($aDimensions))

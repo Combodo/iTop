@@ -1868,7 +1868,7 @@ EOF
 					$iMaxFileSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
 					$sHTMLValue = "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$iMaxFileSize\" />\n";
 					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[filename]\" type=\"hidden\" id=\"$iId\" \" value=\"".htmlentities($sFileName, ENT_QUOTES, 'UTF-8')."\"/>\n";
-					$sHTMLValue .= "<span id=\"name_$iInputId\">$sFileName</span><br/>\n";
+					$sHTMLValue .= "<span id=\"name_$iInputId\">".htmlentities($sFileName, ENT_QUOTES, 'UTF-8')."</span><br/>\n";
 					$sHTMLValue .= "<input title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[fcontents]\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>&nbsp;{$sValidationSpan}{$sReloadSpan}\n";
 				break;
 				

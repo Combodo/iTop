@@ -275,7 +275,7 @@ EOF
 			{
 				$iAttId = $oAttachment->GetKey();
 				$oDoc = $oAttachment->Get('contents');
-				$sFileName = $oDoc->GetFileName();
+				$sFileName = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
 				$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
 				$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
 				$sDownloadLink = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DOWNLOAD_URL.$iAttId;
@@ -303,7 +303,7 @@ EOF
 						// Display them
 						$iAttId = $oAttachment->GetKey();
 						$oDoc = $oAttachment->Get('contents');
-						$sFileName = $oDoc->GetFileName();
+						$sFileName = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
 						$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
 						$sDownloadLink = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DOWNLOAD_URL.$iAttId;
 						$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
@@ -439,7 +439,7 @@ EOF
 				{
 					$iAttId = $oAttachment->GetKey();
 					$oDoc = $oAttachment->Get('contents');
-					$sFileName = $oDoc->GetFileName();
+					$sFileName = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
 					$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
 					$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
 					$sDownloadLink = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DOWNLOAD_URL.$iAttId;

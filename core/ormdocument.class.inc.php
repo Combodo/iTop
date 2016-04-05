@@ -90,12 +90,12 @@ class ormDocument
 		{
 			// If the filename is not empty, display it, this is used
 			// by the creation wizard while the file has not yet been uploaded
-			$sResult = $this->GetFileName();
+			$sResult = htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8');
 		}
 		else
 		{
 			$data = $this->GetData();
-			$sResult = $this->GetFileName().' [ '.$this->GetMimeType().', size: '.strlen($data).' byte(s) ]<br/>';
+			$sResult = htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8').' [ '.$this->GetMimeType().', size: '.strlen($data).' byte(s) ]<br/>';
 		}
 		return $sResult;
 	}
@@ -106,7 +106,7 @@ class ormDocument
 	 */	 	 	
 	public function GetDisplayLink($sClass, $Id, $sAttCode)
 	{
-		return "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" target=\"_blank\" >".$this->GetFileName()."</a>\n";
+		return "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" target=\"_blank\" >".htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8')."</a>\n";
 	}
 	
 	/**
@@ -115,7 +115,7 @@ class ormDocument
 	 */	 	 	
 	public function GetDownloadLink($sClass, $Id, $sAttCode)
 	{
-		return "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode\">".$this->GetFileName()."</a>\n";
+		return "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode\">".htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8')."</a>\n";
 	}
 
 	/**
