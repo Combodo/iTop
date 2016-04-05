@@ -21,6 +21,9 @@ namespace Combodo\iTop\Renderer\Console\FieldRenderer;
 use \Dict;
 use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
+use \Combodo\iTop\Form\Field\TextAreaField;
+use \InlineImage;
+use \UserRights;
 
 class ConsoleSimpleFieldRenderer extends FieldRenderer
 {
@@ -58,6 +61,37 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 					$oOutput->AddHtml('</td>');
 					break;
 
+				case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
+					$bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
+
+					$oOutput->AddHtml('<td class="form-field-content">');
+					if ($this->oField->GetReadOnly())
+					{
+						$oOutput->AddHtml('<textarea disabled="disabled" id="' . $this->oField->GetGlobalId() . '" class="form-field-data resizable" rows="8" cols="40">' . $this->oField->GetCurrentValue() . '</textarea>');
+					}
+					else
+					{
+						$oOutput->AddHtml('<textarea id="' . $this->oField->GetGlobalId() . '" class="form-field-data resizable" rows="8" cols="40">' . $this->oField->GetCurrentValue() . '</textarea>');
+						// Some additional stuff if we are displaying it with a rich editor
+						if ($bRichEditor)
+						{
+							$sEditorLanguage = strtolower(trim(UserRights::GetUserLanguage()));
+							$oOutput->AddJs(
+								<<<EOF
+								$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');
+							$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, {language: '$sEditorLanguage', contentsLanguage: '$sEditorLanguage'});
+EOF
+							);
+							if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null))
+							{
+								$oOutput->AddJs(InlineImage::EnableCKEditorImageUpload($this->oField->GetObject(), utils::GetUploadTempId($this->oField->GetTransactionId())));
+							}
+						}
+					}
+					$oOutput->AddHtml('<span class="form_validation"></span>');
+					$oOutput->AddHtml('</td>');
+					break;
+
 				case 'Combodo\\iTop\\Form\\Field\\SelectField':
 					$oOutput->AddHtml('<td class="form-field-content">');
 					if ($this->oField->GetReadOnly())
@@ -89,6 +123,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 		switch ($sFieldClass)
 		{
 			case 'Combodo\\iTop\\Form\\Field\\StringField':
+			case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
 				$oOutput->AddJs(
 <<<EOF
                     $("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
@@ -104,6 +139,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 EOF
 				);
 				break;
+
 			case 'Combodo\\iTop\\Form\\Field\\SelectField':
 				$oOutput->AddJs(
 <<<EOF
