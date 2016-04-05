@@ -473,7 +473,7 @@ class WebPage implements Page
 				{
 					if (Utils::GetConfig() && Utils::GetConfig()->Get('debug_report_spurious_chars'))
 					{
-						IssueLog::Error("Trashing unexpected output:'$s_captured_output'\n");
+						IssueLog::Error("Trashing unexpected output:'$sOutput'\n");
 					}
 				}
 				$sOutput = '';
