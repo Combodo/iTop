@@ -279,7 +279,7 @@ $(function()
 			// JS files
 			if( (oField.js_files !== undefined) && (oField.js_files.length > 0) )
 			{
-				for(var j in oField.js_files)
+				for(var i in oField.js_files)
 				{
 					this._loadJsFile(oField.js_files[i]);
 				}
@@ -287,7 +287,7 @@ $(function()
 			// CSS files
 			if( (oField.css_files !== undefined) && (oField.css_files.length > 0) )
 			{
-				for(var j in oField.css_files)
+				for(var i in oField.css_files)
 				{
 					this._loadCssFile(oField.css_files[i]);
 				}
