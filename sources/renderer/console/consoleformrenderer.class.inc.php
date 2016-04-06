@@ -38,6 +38,7 @@ class ConsoleFormRenderer extends FormRenderer
 		$this->AddSupportedField('SelectField', 'ConsoleSimpleFieldRenderer');
 		$this->AddSupportedField('TextAreaField', 'ConsoleSimpleFieldRenderer');
 		$this->AddSupportedField('RadioField', 'ConsoleSimpleFieldRenderer');
+		$this->AddSupportedField('DurationField', 'ConsoleSimpleFieldRenderer');
 		$this->AddSupportedField('SelectObjectField', 'ConsoleSelectObjectFieldRenderer');
 		$this->AddSupportedField('SubFormField', 'ConsoleSubFormFieldRenderer');
 	}

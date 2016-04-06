@@ -24,6 +24,7 @@ use Combodo\iTop\Renderer\RenderingOutput;
 use Combodo\iTop\Form\Field\TextAreaField;
 use \InlineImage;
 use \UserRights;
+use \AttributeDuration;
 
 class ConsoleSimpleFieldRenderer extends FieldRenderer
 {
@@ -158,6 +159,36 @@ EOF
 					$oOutput->AddHtml('<span class="form_validation"></span>');
 					$oOutput->AddHtml('</td>');
 					break;
+
+				case 'Combodo\\iTop\\Form\\Field\\DurationField':
+					$oOutput->AddHtml('<td class="form-field-content">');
+					$value = $this->oField->GetCurrentValue();
+					if ($this->oField->GetReadOnly())
+					{
+						$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="' . htmlentities($value, ENT_QUOTES, 'UTF-8') . '"/>');
+						$oOutput->AddHtml('<span class="form-field-data">'.htmlentities(\AttributeDuration::FormatDuration($value), ENT_QUOTES, 'UTF-8').'</span>');
+					}
+					else
+					{
+						$sId = $this->oField->GetGlobalId();
+
+						$aVal = AttributeDuration::SplitDuration($value);
+						$sDays = "<input type=\"text\" size=\"3\" name=\"{$sId}[d]\" value=\"{$aVal['days']}\" id=\"{$sId}_d\"/>";
+						$sHours = "<input type=\"text\" size=\"2\" name=\"{$sId}[h]\" value=\"{$aVal['hours']}\" id=\"{$sId}_h\"/>";
+						$sMinutes = "<input type=\"text\" size=\"2\" name=\"{$sId}[m]\" value=\"{$aVal['minutes']}\" id=\"{$sId}_m\"/>";
+						$sSeconds = "<input type=\"text\" size=\"2\" name=\"{$sId}[s]\" value=\"{$aVal['seconds']}\" id=\"{$sId}_s\"/>";
+						$oOutput->AddHtml(Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes, $sSeconds));
+						$oOutput->AddHtml("<input type=\"hidden\" id=\"{$sId}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\"/>");
+
+						$oOutput->AddJs("$('#{$sId}_d').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$sId'); });");
+						$oOutput->AddJs("$('#{$sId}_h').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$sId'); });");
+						$oOutput->AddJs("$('#{$sId}_m').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$sId'); });");
+						$oOutput->AddJs("$('#{$sId}_s').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$sId'); });");
+						$oOutput->AddJs("$('#{$sId}').bind('update', function(evt, sFormId) { return ToggleDurationField('$sId'); });");
+					}
+					$oOutput->AddHtml('<span class="form_validation"></span>');
+					$oOutput->AddHtml('</td>');
+					break;
 			}
 			$oOutput->AddHtml('</tr>');
 			$oOutput->AddHtml('</table>');
@@ -185,6 +216,7 @@ EOF
 
 			case 'Combodo\\iTop\\Form\\Field\\SelectField':
 			case 'Combodo\\iTop\\Form\\Field\\RadioField':
+			case 'Combodo\\iTop\\Form\\Field\\DurationField':
 				$oOutput->AddJs(
 <<<EOF
                     $("#{$this->oField->GetGlobalId()}").off("change").on("change", function(){
