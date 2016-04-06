@@ -33,12 +33,18 @@ class SelectObjectField extends Field
 	protected $iMaximumComboLength;
 	protected $iMinAutoCompleteChars;
 
+	protected $iControlType;
+
+	const CONTROL_SELECT = 1;
+	const CONTROL_RADIO_VERTICAL = 2;
+
 	public function __construct($sId, Closure $onFinalizeCallback = null)
 	{
 		parent::__construct($sId, $onFinalizeCallback);
 		$this->oSearch = null;
 		$this->iMaximumComboLength = null;
 		$this->iMinAutoCompleteChars = 3;
+		$this->iControlType = self::CONTROL_SELECT;
 	}
 
 	public function SetSearch(DBSearch $oSearch)
@@ -54,6 +60,11 @@ class SelectObjectField extends Field
 	public function SetMinAutoCompleteChars($iMinAutoCompleteChars)
 	{
 		$this->iMinAutoCompleteChars = $iMinAutoCompleteChars;
+	}
+
+	public function SetControlType($iControlType)
+	{
+		$this->iControlType = $iControlType;
 	}
 
 	/**
@@ -99,5 +110,10 @@ class SelectObjectField extends Field
 	public function GetMinAutoCompleteChars()
 	{
 		return $this->iMinAutoCompleteChars;
+	}
+
+	public function GetControlType()
+	{
+		return $this->iControlType;
 	}
 }

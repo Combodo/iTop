@@ -58,7 +58,8 @@ abstract class Field
 	public function __construct($sId, Closure $onFinalizeCallback = null)
 	{
 		$this->sId = $sId;
-		$this->sGlobalId = 'field_' . $sId . '_' . uniqid();
+		// No space in such an id, that could be used as a DOM node id
+		$this->sGlobalId = 'field_' . str_replace(' ', '_', $sId) . '_' . uniqid();
 		$this->sLabel = static::DEFAULT_LABEL;
 		$this->bHidden = static::DEFAULT_HIDDEN;
 		$this->bReadOnly = static::DEFAULT_READ_ONLY;

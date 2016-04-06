@@ -18,13 +18,13 @@
 
 namespace Combodo\iTop\Renderer\Console\FieldRenderer;
 
-use Combodo\iTop\Form\Field\StringField;
 use Combodo\iTop\Form\Validator\MandatoryValidator;
-use Combodo\iTop\Form\Validator\Validator;
 use \Dict;
 use \DBObjectSet;
 use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
+use Combodo\iTop\Form\Field\SelectObjectField;
+
 
 class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 {
@@ -73,6 +73,7 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 			if ($iCount > $iMaxComboLength)
 			{
 				// Auto-complete
+				//
 				$sEditType = 'autocomplete';
 				$aExtKeyParams = array();
 				$aExtKeyParams['iFieldSize'] = 10;
@@ -101,9 +102,44 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 					$oOutput->AddCssFile($sFile);
 				}
 			}
+			elseif($this->oField->GetControlType() == SelectObjectField::CONTROL_RADIO_VERTICAL)
+			{
+				// Radio buttons (vertical)
+				//
+				$sEditType = 'radio';
+				$bVertical = true;
+				$idx = 0;
+				$bMandatory = $this->oField->GetMandatory();
+				$value = $this->oField->GetCurrentValue();
+				$sId = $this->oField->GetGlobalId();
+				$oOutput->AddHtml('<div>');
+				while ($oObject = $oSet->Fetch())
+				{
+					$iObject = $oObject->GetKey();
+					$sLabel = $oObject->Get('friendlyname');
+					if (($iCount == 1) && $bMandatory)
+					{
+						// When there is only once choice, select it by default
+						$sSelected = ' checked';
+					}
+					else
+					{
+						$sSelected = ($value == $iObject) ? ' checked' : '';
+					}
+					$oOutput->AddHtml("<input type=\"radio\" id=\"{$sId}_{$iObject}\" name=\"radio_$sId\" onChange=\"$('#{$sId}').val(this.value).trigger('change');\" value=\"$iObject\"$sSelected><label class=\"radio\" for=\"{$sId}_{$iObject}\">&nbsp;".htmlentities($sLabel, ENT_QUOTES, 'UTF-8')."</label>&nbsp;");
+					if ($bVertical)
+					{
+						$oOutput->AddHtml("<br>\n");
+					}
+					$idx++;
+				}
+				$oOutput->AddHtml('</div>');
+				$oOutput->AddHtml("<input type=\"hidden\" id=\"$sId\" name=\"$sId\" value=\"$value\"/>");
+			}
 			else
 			{
 				// Drop-down select
+				//
 				$sEditType = 'select';
 				$oOutput->AddHtml('<select class="form-field-data" id="'.$this->oField->GetGlobalId().'">');
 				$oOutput->AddHtml('<option value="">'.Dict::S('UI:SelectOne').'</option>');
@@ -189,6 +225,7 @@ EOF
 		switch ($sEditType)
 		{
 			case 'autocomplete':
+			case 'radio':
 				$oOutput->AddJs(
 					<<<EOF
 	                    $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").form_field('option', 'get_current_value_callback', function(me){ return $(me.element).find('#{$this->oField->GetGlobalId()}').val();});

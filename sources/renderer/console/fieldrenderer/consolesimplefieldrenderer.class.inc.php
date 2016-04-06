@@ -21,7 +21,7 @@ namespace Combodo\iTop\Renderer\Console\FieldRenderer;
 use \Dict;
 use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
-use \Combodo\iTop\Form\Field\TextAreaField;
+use Combodo\iTop\Form\Field\TextAreaField;
 use \InlineImage;
 use \UserRights;
 
@@ -115,6 +115,49 @@ EOF
 					$oOutput->AddHtml('<span class="form_validation"></span>');
 					$oOutput->AddHtml('</td>');
 					break;
+
+				case 'Combodo\\iTop\\Form\\Field\\RadioField':
+					$oOutput->AddHtml('<td class="form-field-content">');
+					if ($this->oField->GetReadOnly())
+					{
+						$aChoices = $this->oField->GetChoices();
+						$sCurrentLabel = isset($aChoices[$this->oField->GetCurrentValue()]) ? $aChoices[$this->oField->GetCurrentValue()] : '' ;
+						$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '"/>');
+						$oOutput->AddHtml('<span class="form-field-data">'.htmlentities($sCurrentLabel, ENT_QUOTES, 'UTF-8').'</span>');
+					}
+					else
+					{
+						$bVertical = true;
+						$idx = 0;
+						$bMandatory = $this->oField->GetMandatory();
+						$value = $this->oField->GetCurrentValue();
+						$sId = $this->oField->GetGlobalId();
+						$oOutput->AddHtml('<div>');
+						$aChoices = $this->oField->GetChoices();
+						foreach ($aChoices as $sChoice => $sLabel)
+						{
+							if ((count($aChoices)== 1) && $bMandatory)
+							{
+								// When there is only once choice, select it by default
+								$sSelected = ' checked';
+							}
+							else
+							{
+								$sSelected = ($value == $sChoice) ? ' checked' : '';
+							}
+							$oOutput->AddHtml("<input type=\"radio\" id=\"{$sId}_{$idx}\" name=\"radio_$sId\" onChange=\"$('#{$sId}').val(this.value).trigger('change');\" value=\"".htmlentities($sChoice, ENT_QUOTES, 'UTF-8')."\"$sSelected><label class=\"radio\" for=\"{$sId}_{$idx}\">&nbsp;".htmlentities($sLabel, ENT_QUOTES, 'UTF-8')."</label>&nbsp;");
+							if ($bVertical)
+							{
+								$oOutput->AddHtml("<br>\n");
+							}
+							$idx++;
+						}
+						$oOutput->AddHtml('</div>');
+						$oOutput->AddHtml("<input type=\"hidden\" id=\"$sId\" name=\"$sId\" value=\"$value\"/>");
+					}
+					$oOutput->AddHtml('<span class="form_validation"></span>');
+					$oOutput->AddHtml('</td>');
+					break;
 			}
 			$oOutput->AddHtml('</tr>');
 			$oOutput->AddHtml('</table>');
@@ -141,6 +184,7 @@ EOF
 				break;
 
 			case 'Combodo\\iTop\\Form\\Field\\SelectField':
+			case 'Combodo\\iTop\\Form\\Field\\RadioField':
 				$oOutput->AddJs(
 <<<EOF
                     $("#{$this->oField->GetGlobalId()}").off("change").on("change", function(){
