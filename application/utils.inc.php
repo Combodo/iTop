@@ -1173,7 +1173,7 @@ class utils
 	}
 	
 	/**
-	 * Convert (?) plain text to some HTML markup by replacing newlines by </br> tags
+	 * Convert (?) plain text to some HTML markup by replacing newlines by <br/> tags
 	 * and escaping HTML entities
 	 * @param string $sText
 	 * @return string
@@ -1182,6 +1182,6 @@ class utils
 	{
 		$sText = str_replace("\r\n", "\n", $sText);
 		$sText = str_replace("\r", "\n", $sText);
-		return str_replace("\n", '</br>', htmlentities($sText, ENT_QUOTES, 'UTF-8'));
+		return str_replace("\n", '<br/>', htmlentities($sText, ENT_QUOTES, 'UTF-8'));
 	}
 }
