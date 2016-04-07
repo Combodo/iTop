@@ -338,7 +338,8 @@ class Dict
 		MyHelpers::var_dump_html(self::$m_aData);
 	}
 
-	// Obsolete: only used by the setup/compiler which replaces this method invocation by its own handler !!
+	// Only used by the setup to determine the list of languages to display in the initial setup screen
+	// otherwise replaced by LoadModule by its own handler
 	// sLanguageCode: Code identifying the language i.e. FR-FR
 	// sEnglishLanguageDesc: Description of the language code, in English. i.e. French (France)
 	// sLocalizedLanguageDesc: Description of the language code, in its own language. i.e. Français (France)
@@ -351,10 +352,8 @@ class Dict
 			self::$m_aLanguages[$sLanguageCode] = array('description' => $sEnglishLanguageDesc, 'localized_description' => $sLocalizedLanguageDesc);
 			self::$m_aData[$sLanguageCode] = array();
 		}
-		foreach($aEntries as $sCode => $sValue)
-		{
-			self::$m_aData[$sLanguageCode][$sCode] = self::FilterString($sValue);
-		}
+		// No need to actually load the strings since it's only used to know the list of languages
+		// at setup time !!
 	}
 }
 ?>
