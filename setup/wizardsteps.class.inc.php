@@ -1483,15 +1483,15 @@ EOF
 			// Check once (before recursing) that the hidden modules are selected
 			foreach(SetupUtils::AnalyzeInstallation($this->oWizard) as $sModuleId => $aModule)
 			{
-				if ($sModuleId != ROOT_MODULE)
+				if (($sModuleId != ROOT_MODULE) && !isset($aModules[$sModuleId]))
 				{
-					if (($aModule['category'] == 'authentication') || (!$aModule['visible']))
+					if (($aModule['category'] == 'authentication') || (!$aModule['visible'] && !isset($aModule['auto_select'])))
 					{
 						$aModules[$sModuleId] = true;
+						$sDisplayChoices .= '<li><i>'.$aModule['label'].' (hidden)</i></li>';
 					}
 				}
 			}
-			
 		}
 		$aOptions = isset($aInfo['options']) ? $aInfo['options'] : array();
 		foreach($aOptions as $index => $aChoice)
@@ -1578,6 +1578,7 @@ EOF
 						if ($bSelected)
 						{
 							$aModules[$sModuleId] = true; // store the Id of the selected module
+							$sDisplayChoices .= '<li><b>'.$aModule['label'].' (auto_select)</b></li>';
 							$bModuleAdded  = true;
 						}
 					}
@@ -1659,7 +1660,7 @@ EOF
 			$sModuleLabel = $aModule['label'];
 			$sModuleHelp = $aModule['doc.more_information'];
 			$sMoreInfo = (!empty($aModule['doc.more_information'])) ? "<a href=\"$sDefaultAppPath{$aModule['doc.more_information']}\" target=\"_blank\">more info</a>": '';
-			if (($aModule['category'] != 'authentication') && ($aModule['visible']))
+			if (($aModule['category'] != 'authentication') && ($aModule['visible'] && !isset($aModule['auto_select'])))
 			{
 				if (($bAddExtensionsOnly) && (!$this->IsExtension($aModule))) continue;
 				

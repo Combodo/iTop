@@ -4232,21 +4232,12 @@ abstract class MetaModel
 		//         classes have to be derived from cmdbabstract (to be editable in the UI)
 		require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
 
-		foreach (self::$m_oConfig->GetAppModules() as $sModule => $sToInclude)
-		{
-			self::IncludeModule('application', $sToInclude);
-		}
-		foreach (self::$m_oConfig->GetDataModels() as $sModule => $sToInclude)
-		{
-			self::IncludeModule('business', $sToInclude);
-		}
-		foreach (self::$m_oConfig->GetWebServiceCategories() as $sModule => $sToInclude)
-		{
-			self::IncludeModule('webservice', $sToInclude);
-		}
+		require_once(APPROOT.'core/autoload.php');
+		require_once(APPROOT.'env-'.utils::GetCurrentEnvironment().'/autoload.php');
+
 		foreach (self::$m_oConfig->GetAddons() as $sModule => $sToInclude)
 		{
-			self::IncludeModule('addons', $sToInclude);
+			self::IncludeModule($sToInclude, 'addons');
 		}
 
 		$sServer = self::$m_oConfig->GetDBHost();
@@ -4370,7 +4361,7 @@ abstract class MetaModel
 
 	protected static $m_aExtensionClasses = array();
 
-	protected static function IncludeModule($sModuleType, $sToInclude)
+	protected static function IncludeModule($sToInclude, $sModuleType = null)
 	{
 		$sFirstChar = substr($sToInclude, 0, 1);
 		$sSecondChar = substr($sToInclude, 1, 1);
@@ -4396,14 +4387,21 @@ abstract class MetaModel
 		if (!file_exists($sFile))
 		{
 			$sConfigFile = self::$m_oConfig->GetLoadedFile();
-			if (strlen($sConfigFile) > 0)
+			if ($sModuleType == null)
 			{
-				throw new CoreException('Include: wrong file name in configuration file', array('config file' => $sConfigFile, 'section' => $sModuleType, 'filename' => $sFile));
+					throw new CoreException("Include: unable to load the file '$sFile'");			
 			}
 			else
 			{
-				// The configuration is in memory only
-				throw new CoreException('Include: wrong file name in configuration file (in memory)', array('section' => $sModuleType, 'filename' => $sFile));
+				if (strlen($sConfigFile) > 0)
+				{
+					throw new CoreException('Include: wrong file name in configuration file', array('config file' => $sConfigFile, 'section' => $sModuleType, 'filename' => $sFile));
+				}
+				else
+				{
+					// The configuration is in memory only
+					throw new CoreException('Include: wrong file name in configuration file (in memory)', array('section' => $sModuleType, 'filename' => $sFile));
+				}
 			}
 		}
 
@@ -4419,7 +4417,7 @@ abstract class MetaModel
 		{
 			if ($sPreviousContent != '')
 			{
-				IssueLog::Error("Spurious characters injected by $sModuleType/$sToInclude");
+				IssueLog::Error("Spurious characters injected by '$sFile'");
 			}
 		}
 	}

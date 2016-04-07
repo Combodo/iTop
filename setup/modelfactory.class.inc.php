@@ -40,8 +40,11 @@ class MFModule
 	protected $sRootDir;
 	protected $sLabel;
 	protected $aDataModels;
+	protected $bAutoSelect;
+	protected $sAutoSelect;
+	protected $aFilesToInclude;
 	
-	public function __construct($sId, $sRootDir, $sLabel)
+	public function __construct($sId, $sRootDir, $sLabel, $bAutoSelect = false)
 	{
 		$this->sId = $sId;	
 		
@@ -54,6 +57,9 @@ class MFModule
 		$this->sRootDir = $sRootDir;
 		$this->sLabel = $sLabel;
 		$this->aDataModels = array();
+		$this->bAutoSelect = $bAutoSelect;
+		$this->sAutoSelect = 'false';
+		$this->aFilesToInclude = array('addons' => array(), 'business' => array(), 'webservices' => array(),);
 	
 		// Scan the module's root directory to find the datamodel(*).xml files
 		if ($hDir = opendir($sRootDir))
@@ -131,6 +137,38 @@ class MFModule
 		}
 		return $aDictionaries;		
 	}
+	
+	public function IsAutoSelect()
+	{
+		return $this->bAutoSelect;
+	}
+	
+	public function SetAutoSelect($sAutoSelect)
+	{
+		$this->sAutoSelect = $sAutoSelect;
+	}
+
+	public function GetAutoSelect()
+	{
+		return $this->sAutoSelect;
+	}
+	
+	public function SetFilesToInclude($aFiles, $sCategory)
+	{
+		$sDir = basename($this->sRootDir);
+		$iLen = strlen($sDir.'/');		
+		foreach($aFiles as $sFile)
+		{
+			$iPos = strpos($sFile, $sDir.'/');
+			$this->aFilesToInclude[$sCategory][] = substr($sFile, $iPos+$iLen);
+		}
+	}
+	
+	public function GetFilesToInclude($sCategory)
+	{
+		return $this->aFilesToInclude[$sCategory];
+	}
+	
 }
 
  /**
@@ -149,6 +187,7 @@ class MFDeltaModule extends MFModule
 		$this->sRootDir = '';
 		$this->sLabel = 'Additional Delta';
 		$this->aDataModels = array($sDeltaFile);
+		$this->aFilesToInclude = array('addons' => array(), 'business' => array(), 'webservices' => array(),);
 	}
 
 	public function GetName()
@@ -188,6 +227,7 @@ class MFCoreModule extends MFModule
 		$this->sRootDir = '';
 		$this->sLabel = $sLabel;
 		$this->aDataModels = array($sDeltaFile);
+		$this->aFilesToInclude = array('addons' => array(), 'business' => array(), 'webservices' => array(),);
 	}
 	
 	public function GetRootDir()
@@ -222,6 +262,7 @@ class MFDictModule extends MFModule
 		$this->sRootDir = $sRootDir;
 		$this->sLabel = $sLabel;
 		$this->aDataModels = array();
+		$this->aFilesToInclude = array('addons' => array(), 'business' => array(), 'webservices' => array(),);
 	}
 
 	public function GetRootDir()
@@ -1169,7 +1210,24 @@ EOF
 		$aResult = array();
 		foreach($aAvailableModules as $sId => $aModule)
 		{
-			$aResult[] = new MFModule($sId, $aModule['root_dir'], $aModule['label']);
+			$oModule = new MFModule($sId, $aModule['root_dir'], $aModule['label'], isset($aModule['auto_select']));
+			if (isset($aModule['auto_select']))
+			{
+				$oModule->SetAutoSelect($aModule['auto_select']);
+			}
+			if (isset($aModule['datamodel']) && is_array($aModule['datamodel']))
+			{
+				$oModule->SetFilesToInclude($aModule['datamodel'], 'business');
+			}
+			if (isset($aModule['webservice']) && is_array($aModule['webservice']))
+			{
+				$oModule->SetFilesToInclude($aModule['webservice'], 'webservices');
+			}
+			if (isset($aModule['addons']) && is_array($aModule['addons']))
+			{
+				$oModule->SetFilesToInclude($aModule['addons'], 'addons');
+			}
+			$aResult[] = $oModule;
 		}
 		return $aResult;
 	}

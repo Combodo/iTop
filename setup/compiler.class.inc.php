@@ -181,6 +181,8 @@ class MFCompiler
 		// Compile, module by module
 		//
 		$aModules = $this->oFactory->GetLoadedModules();
+		$aDataModelFiles = array();
+		$aWebservicesFiles = array();
 		foreach($aModules as $foo => $oModule)
 		{
 			$sModuleName = $oModule->GetName();
@@ -412,8 +414,19 @@ EOF;
 			{
 					$this->Log("Compilation of module $sModuleName in version $sModuleVersion produced not code at all. No file written.");
 			}
+			
+			// files to include (PHP datamodels)
+			foreach($oModule->GetFilesToInclude('business') as $sRelFileName)
+			{
+				$aDataModelFiles[] = "MetaModel::IncludeModule('".basename($sFinalTargetDir).'/'.$sRelativeDir.'/'.$sRelFileName."');";
+			}
+			// files to include (PHP webservices providers)
+			foreach($oModule->GetFilesToInclude('webservices') as $sRelFileName)
+			{
+				$aWebservicesFiles[] = "MetaModel::IncludeModule('".basename($sFinalTargetDir).'/'.$sRelativeDir.'/'.$sRelFileName."');";
+			}
 		} // foreach module
-
+		
 		// Compile the dictionaries -out of the modules
 		//
 		$sDictDir = $sTempTargetDir.'/dictionaries';
@@ -484,6 +497,24 @@ EOF;
 		SetupUtils::builddir($sTempTargetDir.'/core');
 		$sPHPFile = $sTempTargetDir.'/core/main.php';
 		file_put_contents($sPHPFile, $this->sMainPHPCode);
+	
+
+		// Autoload
+		$sPHPFile = $sTempTargetDir.'/autoload.php';
+		$sPHPFileContent = 
+<<<EOF
+<?php
+//
+// File generated on $sCurrDate
+// Please do not edit manually
+//
+EOF
+		;
+		
+		$sPHPFileContent .= "\nMetaModel::IncludeModule('".basename($sFinalTargetDir)."/core/main.php');\n";
+		$sPHPFileContent .= implode("\n", $aDataModelFiles);
+		$sPHPFileContent .= implode("\n", $aWebservicesFiles);
+		file_put_contents($sPHPFile, $sPHPFileContent);
 		
 	} // DoCompile()
 

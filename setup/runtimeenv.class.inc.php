@@ -342,20 +342,20 @@ class RunTimeEnvironment
 		// Do load the required modules
 		//
 		$oDictModule = new MFDictModule('dictionaries', 'iTop Dictionaries', APPROOT.'dictionaries');
-		$aRet[] = $oDictModule;
+		$aRet[$oDictModule->GetName()] = $oDictModule;
 		
 		$oFactory = new ModelFactory($aDirsToCompile);
 		$sDeltaFile = APPROOT.'core/datamodel.core.xml';
 		if (file_exists($sDeltaFile))
 		{
 			$oCoreModule = new MFCoreModule('core', 'Core Module', $sDeltaFile);
-			$aRet[] = $oCoreModule;
+			$aRet[$oCoreModule->GetName()] = $oCoreModule;
 		}
 		$sDeltaFile = APPROOT.'application/datamodel.application.xml';
 		if (file_exists($sDeltaFile))
 		{
 			$oApplicationModule = new MFCoreModule('application', 'Application Module', $sDeltaFile);
-			$aRet[] = $oApplicationModule;
+			$aRet[$oApplicationModule->GetName()] = $oApplicationModule;
 		}
 		
 		$aModules = $oFactory->FindModules();
@@ -366,18 +366,47 @@ class RunTimeEnvironment
 			$bIsExtra = (strpos($sModuleRootDir, $sExtraDir) !== false);
 			if (array_key_exists($sModule, $aAvailableModules)) 
 			{
-				if (($aAvailableModules[$sModule]['version_db'] != '') ||  $bIsExtra) //Extra modules are always selected
+				if (($aAvailableModules[$sModule]['version_db'] != '') ||  $bIsExtra && !$oModule->IsAutoSelect()) //Extra modules are always unless they are 'AutoSelect'
 				{
-					$aRet[] = $oModule;
+					$aRet[$oModule->GetName()] = $oModule;
 				}
 			}
 		}
-
+		
+		// Now process the 'AutoSelect' modules
+		do
+		{
+			// Loop while new modules are added...
+			$bModuleAdded = false;
+			foreach($aModules as $foo => $oModule)
+			{
+				if (!array_key_exists($oModule->GetName(), $aRet) && $oModule->IsAutoSelect())
+				{
+					try
+					{
+						$bSelected = false;
+						SetupInfo::SetSelectedModules($aRet);
+						eval('$bSelected = ('.$oModule->GetAutoSelect().');');
+					}
+					catch(Exception $e)
+					{
+						$bSelected = false;
+					}
+					if ($bSelected)
+					{
+						$aRet[$oModule->GetName()] = $oModule; // store the Id of the selected module
+						$bModuleAdded  = true;
+					}
+				}
+			}
+		}
+		while($bModuleAdded);
+		
 		$sDeltaFile = APPROOT.'data/'.$this->sTargetEnv.'.delta.xml';
 		if (file_exists($sDeltaFile))
 		{
 			$oDelta = new MFDeltaModule($sDeltaFile);
-			$aRet[] = $oDelta;
+			$aRet[$oDelta->GetName()] = $oDelta;
 		}
 
 		return $aRet;

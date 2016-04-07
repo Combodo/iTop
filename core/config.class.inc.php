@@ -1022,32 +1022,6 @@ class Config
 			$bLoadConfig = false;
 		}
 
-		$this->m_aAppModules = array(
-			// Some default modules, always present can be move to an official iTop Module later if needed
-			'application/transaction.class.inc.php',
-			'application/menunode.class.inc.php',
-			'application/user.preferences.class.inc.php',
-			'application/user.dashboard.class.inc.php',
-			'application/audit.rule.class.inc.php',
-			'application/query.class.inc.php',
-// Romain - That's dirty, because those classes are in fact part of the core
-//          but I needed those classes to be derived from cmdbAbstractObject
-//          (to be managed via the GUI) and this class in not really known from
-//          the core, PLUS I needed the includes to be there also for the setup
-//          to create the tables.
-			'core/event.class.inc.php',
-			'core/action.class.inc.php',
-			'core/trigger.class.inc.php',
-			'core/bulkexport.class.inc.php',
-			'core/ownershiplock.class.inc.php',
-			'synchro/synchrodatasource.class.inc.php',
-			'core/backgroundtask.class.inc.php',
-			'core/inlineimage.class.inc.php',
-		);
-		$this->m_aDataModels = array();
-		$this->m_aWebServiceCategories = array(
-			'webservices/webservices.basic.php',
-		);
 		$this->m_aAddons = array(
 			// Default AddOn, always present can be moved to an official iTop Module later if needed
 			'user rights' => 'addons/userrights/userrightsprofile.class.inc.php',
@@ -1150,18 +1124,7 @@ class Config
 		{
 			throw new ConfigException('Missing array in configuration file', array('file' => $sConfigFile, 'expected' => '$MySettings'));
 		}
-		if (!isset($MyModules) || !is_array($MyModules))
-		{
-			throw new ConfigException('Missing item in configuration file', array('file' => $sConfigFile, 'expected' => '$MyModules'));
-		}
-		if (!array_key_exists('application', $MyModules))
-		{
-			throw new ConfigException('Missing item in configuration file', array('file' => $sConfigFile, 'expected' => '$MyModules[\'application\']'));
-		}
-		if (!array_key_exists('business', $MyModules))
-		{
-			throw new ConfigException('Missing item in configuration file', array('file' => $sConfigFile, 'expected' => '$MyModules[\'business\']'));
-		}
+
 		if (!array_key_exists('addons', $MyModules))
 		{
 			throw new ConfigException('Missing item in configuration file', array('file' => $sConfigFile, 'expected' => '$MyModules[\'addons\']'));
@@ -1172,12 +1135,6 @@ class Config
 			$MyModules['addons']['user rights'] = '/addons/userrights/userrightsnull.class.inc.php';
 		}
 
-		$this->m_aAppModules = $MyModules['application'];
-		$this->m_aDataModels = $MyModules['business'];
-		if (isset($MyModules['webservices']))
-		{
-			$this->m_aWebServiceCategories = $MyModules['webservices'];
-		}
 		$this->m_aAddons = $MyModules['addons'];
 
 		foreach($MySettings as $sPropCode => $rawvalue)
@@ -1260,33 +1217,6 @@ class Config
 	public function SetModuleSetting($sModule, $sProperty, $value)
 	{
 		$this->m_aModuleSettings[$sModule][$sProperty] = $value;
-	}
-
-	public function GetAppModules()
-	{
-		return $this->m_aAppModules;
-	}
-	public function SetAppModules($aAppModules)
-	{
-		$this->m_aAppModules = $aAppModules;
-	}
-
-	public function GetDataModels()
-	{
-		return $this->m_aDataModels;
-	}
-	public function SetDataModels($aDataModels)
-	{
-		$this->m_aDataModels = $aDataModels;
-	}
-
-	public function GetWebServiceCategories()
-	{
-		return $this->m_aWebServiceCategories;
-	}
-	public function SetWebServiceCategories($aWebServiceCategories)
-	{
-		$this->m_aWebServiceCategories = $aWebServiceCategories;
 	}
 
 	public function GetAddons()
@@ -1577,18 +1507,6 @@ class Config
 				$aSettings['module_settings'][$sModule][$sProperty] = $value;
 			}
 		}
-		foreach($this->m_aAppModules as $sFile)
-		{
-			$aSettings['application_list'][] = $sFile;
-		}
-		foreach($this->m_aDataModels as $sFile)
-		{
-			$aSettings['datamodel_list'][] = $sFile;
-		}
-		foreach($this->m_aWebServiceCategories as $sFile)
-		{
-			$aSettings['webservice_list'][] = $sFile;
-		}
 		foreach($this->m_aAddons as $sKey => $sFile)
 		{
 			$aSettings['addon_list'][] = $sFile;
@@ -1737,24 +1655,6 @@ class Config
 			fwrite($hFile, " *\n");
 			fwrite($hFile, " */\n");
 			fwrite($hFile, "\$MyModules = array(\n");
-			fwrite($hFile, "\t'application' => array (\n");
-			foreach($this->m_aAppModules as $sFile)
-			{
-				fwrite($hFile, "\t\t'$sFile',\n");
-			}
-			fwrite($hFile, "\t),\n");
-			fwrite($hFile, "\t'business' => array (\n");
-			foreach($this->m_aDataModels as $sFile)
-			{
-				fwrite($hFile, "\t\t'$sFile',\n");
-			}
-			fwrite($hFile, "\t),\n");
-			fwrite($hFile, "\t'webservices' => array (\n");
-			foreach($this->m_aWebServiceCategories as $sFile)
-			{
-				fwrite($hFile, "\t\t'$sFile',\n");
-			}
-			fwrite($hFile, "\t),\n");
 			fwrite($hFile, "\t'addons' => array (\n");
 			foreach($this->m_aAddons as $sKey => $sFile)
 			{
@@ -1830,15 +1730,6 @@ class Config
 			// Initialize the arrays below with default values for the application...
 			$oEmptyConfig = new Config('dummy_file', false); // Do NOT load any config file, just set the default values
 			$aAddOns = $oEmptyConfig->GetAddOns();
-			$aAppModules = $oEmptyConfig->GetAppModules();
-			if (file_exists(APPROOT.$sModulesDir.'/core/main.php'))
-			{
-				$aAppModules[] = $sModulesDir.'/core/main.php';
-			}
-			$aDataModels = $oEmptyConfig->GetDataModels();
-			$aWebServiceCategories = $oEmptyConfig->GetWebServiceCategories();
-			// Merge the values with the ones provided by the modules
-			// Make sure when don't load the same file twice...
 			
 			$aModules = ModuleDiscovery::GetAvailableModules(array(APPROOT.$sModulesDir));
 			foreach ($aModules as $sModuleId => $aModuleInfo)
@@ -1846,14 +1737,6 @@ class Config
 				list ($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
 				if (is_null($aSelectedModules) || in_array($sModuleName, $aSelectedModules))
 				{
-					if (isset($aModuleInfo['datamodel']))
-					{
-						$aDataModels = array_unique(array_merge($aDataModels, $aModuleInfo['datamodel']));
-					}
-					if (isset($aModuleInfo['webservice']))
-					{
-						$aWebServiceCategories = array_unique(array_merge($aWebServiceCategories, $aModuleInfo['webservice']));
-					}
 					if (isset($aModuleInfo['settings']))
 					{
 						list ($sName, $sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
@@ -1886,9 +1769,6 @@ class Config
 				}
 			}
 			$this->SetAddOns($aAddOns);
-			$this->SetAppModules($aAppModules);
-			$this->SetDataModels($aDataModels);
-			$this->SetWebServiceCategories($aWebServiceCategories);
 		}
 	}
 
@@ -1907,14 +1787,12 @@ class Config
 	}
 
 	/**
-	 * Quick an dirty way to clone a config file into another environment	
+	 * Obsolete: kept only for backward compatibility of the Toolkit
+     * Quick and dirty way to clone a config file into another environment	
 	 */	
 	public function ChangeModulesPath($sSourceEnv, $sTargetEnv)
 	{
-		$sSearchPrefix = 'env-'.$sSourceEnv.'/';
-		$sNewPrefix = 'env-'.$sTargetEnv.'/';
-		self::ChangePrefix($this->m_aDataModels, $sSearchPrefix, $sNewPrefix);
-		self::ChangePrefix($this->m_aWebServiceCategories, $sSearchPrefix, $sNewPrefix);
+		// Now does nothing since the includes are built into the environment itself
 	}
 	
 	/**
