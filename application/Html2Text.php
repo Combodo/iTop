@@ -1,6 +1,13 @@
 <?php
 namespace Html2Text;
 
+if (!function_exists('mb_split'))
+{
+	function mb_split($pattern, $subject, $limit = -1)
+	{
+		return preg_split('/'.$pattern.'/', $subject, $limit);
+	}
+}
 /**
  * Replace all occurrences of the search string with the replacement string.
  *
