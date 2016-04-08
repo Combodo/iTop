@@ -75,6 +75,31 @@ class ormCaseLog {
 	 */	
 	public function GetForJSON()
 	{
+		// Order by ascending date
+		$aRet = array('entries' => array_reverse($this->GetAsArray()));
+		return $aRet;
+	}
+
+	/**
+	 * Return all the data, in a format that is suitable for programmatic usages:
+	 * -> dates not formatted
+	 * -> to preserve backward compatibility, to the returned structure must grow (new array entries)
+	 *
+	 * Format:
+	 * array (
+	 *    array (
+	 *       'date' => <yyyy-mm-dd hh:mm:ss>,
+	 *       'user_login' => <user friendly name>
+	 *       'user_id' => OPTIONAL <id of the user account (caution: the object might have been deleted since)>
+	 *       'message' => <message as plain text (CR/LF), empty if message_html is given>
+	 *       'message_html' => <message with HTML markup, empty if message is given>
+	 *    )
+	 *
+	 * @return array
+	 * @throws DictExceptionMissingString
+	 */
+	public function GetAsArray()
+	{
 		$aEntries = array();
 		$iPos = 0;
 		for($index=count($this->m_aIndex)-1 ; $index >= 0 ; $index--)
@@ -109,13 +134,13 @@ class ormCaseLog {
 			switch($sFormat)
 			{
 				case 'text':
-				$sHtmlEntry = utils::TextToHtml($sTextEntry);
-				break;
-				
+					$sHtmlEntry = utils::TextToHtml($sTextEntry);
+					break;
+
 				case 'html':
-				$sHtmlEntry = $sTextEntry;
-				$sTextEntry = utils::HtmlToText($sHtmlEntry);
-				break;
+					$sHtmlEntry = $sTextEntry;
+					$sTextEntry = utils::HtmlToText($sHtmlEntry);
+					break;
 			}
 			$aEntries[] = array(
 				'date' => $sDate,
@@ -139,11 +164,10 @@ class ormCaseLog {
 			);
 		}
 
-		// Order by ascending date
-		$aRet = array('entries' => array_reverse($aEntries));
-		return $aRet;
+		return $aEntries;
 	}
-	
+
+
 	/**
 	 * Returns a "plain text" version of the log (equivalent to $this->m_sLog) where all the HTML markup from the 'html' entries have been removed
 	 * @return string
