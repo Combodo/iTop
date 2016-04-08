@@ -502,6 +502,11 @@ abstract class DBObject implements iDisplay
 
 	public function GetStrict($sAttCode)
 	{
+		if ($sAttCode == 'id')
+		{
+			return $this->m_iKey;
+		}
+
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 
 		if (!$oAttDef->LoadInObject())
@@ -3062,6 +3067,356 @@ abstract class DBObject implements iDisplay
 			}
 		}
 		return $sFingerprint;
+	}
+
+	/**
+	 * Execute a set of scripted actions onto the current object
+	 * See ExecAction for the syntax and features of the scripted actions
+	 *
+	 * @param $aActions array of statements (e.g. "set(name, Made after $source->name$)")
+	 * @param $aSourceObjects Array of Alias => Context objects (Convention: some statements require the 'source' element
+	 * @throws Exception
+	 */
+	public function ExecActions($aActions, $aSourceObjects)
+	{
+		foreach($aActions as $sAction)
+		{
+			try
+			{
+				if (preg_match('/^(\S*)\s*\((.*)\)$/ms', $sAction, $aMatches)) // multiline and newline matched by a dot
+				{
+					$sVerb = trim($aMatches[1]);
+					$sParams = $aMatches[2];
+
+					// the coma is the separator for the parameters
+					// comas can be escaped: \,
+					$sParams = str_replace(array("\\\\", "\\,"), array("__backslash__", "__coma__"), $sParams);
+					$sParams = trim($sParams);
+
+					if (strlen($sParams) == 0)
+					{
+						$aParams = array();
+					}
+					else
+					{
+						$aParams = explode(',', $sParams);
+						foreach ($aParams as &$sParam)
+						{
+							$sParam = str_replace(array("__backslash__", "__coma__"), array("\\", ","), $sParam);
+							$sParam = trim($sParam);
+						}
+					}
+					$this->ExecAction($sVerb, $aParams, $aSourceObjects);
+				}
+				else
+				{
+					throw new Exception("Invalid syntax");
+				}
+			}
+			catch(Exception $e)
+			{
+				throw new Exception('Action: '.$sAction.' - '.$e->getMessage());
+			}
+		}
+	}
+
+	/**
+	 * Helper to copy an attribute between two objects (in memory)
+	 * Originally designed for ExecAction()
+	 */
+	public function CopyAttribute($oSourceObject, $sSourceAttCode, $sDestAttCode)
+	{
+		if ($sSourceAttCode == 'id')
+		{
+			$oSourceAttDef = null;
+		}
+		else
+		{
+			if (!MetaModel::IsValidAttCode(get_class($this), $sDestAttCode))
+			{
+				throw new Exception("Unknown attribute ".get_class($this)."::".$sDestAttCode);
+			}
+			if (!MetaModel::IsValidAttCode(get_class($oSourceObject), $sSourceAttCode))
+			{
+				throw new Exception("Unknown attribute ".get_class($oSourceObject)."::".$sSourceAttCode);
+			}
+
+			$oSourceAttDef = MetaModel::GetAttributeDef(get_class($oSourceObject), $sSourceAttCode);
+		}
+		if (is_object($oSourceAttDef) && $oSourceAttDef->IsLinkSet())
+		{
+			// The copy requires that we create a new object set (the semantic of DBObject::Set is unclear about link sets)
+			$oDestSet = DBObjectSet::FromScratch($oSourceAttDef->GetLinkedClass());
+			$oSourceSet = $oSourceObject->Get($sSourceAttCode);
+			$oSourceSet->Rewind();
+			while ($oSourceLink = $oSourceSet->Fetch())
+			{
+				// Clone the link
+				$sLinkClass = get_class($oSourceLink);
+				$oLinkClone = MetaModel::NewObject($sLinkClass);
+				foreach(MetaModel::ListAttributeDefs($sLinkClass) as $sAttCode => $oAttDef)
+				{
+					// As of now, ignore other attribute (do not attempt to recurse!)
+					if ($oAttDef->IsScalar())
+					{
+						$oLinkClone->Set($sAttCode, $oSourceLink->Get($sAttCode));
+					}
+				}
+
+				// Not necessary - this will be handled by DBObject
+				// $oLinkClone->Set($oSourceAttDef->GetExtKeyToMe(), 0);
+				$oDestSet->AddObject($oLinkClone);
+			}
+			$this->Set($sDestAttCode, $oDestSet);
+		}
+		else
+		{
+			$this->Set($sDestAttCode, $oSourceObject->Get($sSourceAttCode));
+		}
+	}
+
+	/**
+	 * Execute a scripted action onto the current object
+	 *    - clone (att1, att2, att3, ...)
+	 *    - clone_scalars ()
+	 *    - copy (source_att, dest_att)
+	 *    - reset (att)
+	 *    - nullify (att)
+	 *    - set (att, value (placeholders $source->att$ or $current_date$, or $current_contact_id$, ...))
+	 *    - append (att, value (placeholders $source->att$ or $current_date$, or $current_contact_id$, ...))
+	 *    - add_to_list (source_key_att, dest_att)
+	 *    - add_to_list (source_key_att, dest_att, lnk_att, lnk_att_value)
+	 *    - apply_stimulus (stimulus)
+	 *    - call_method (method_name)
+	 *
+	 * @param $sVerb string Any of the verb listed above (e.g. "set")
+	 * @param $aParams array of strings (e.g. array('name', 'copied from $source->name$')
+	 * @param $aSourceObjects Array of Alias => Context objects (Convention: some statements require the 'source' element
+	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
+	 * @throws Exception
+	 */
+	public function ExecAction($sVerb, $aParams, $aSourceObjects)
+	{
+		switch($sVerb)
+		{
+			case 'clone':
+				if (!array_key_exists('source', $aSourceObjects))
+				{
+					throw new Exception('Missing conventional "source" object');
+				}
+				$oObjectToRead = $aSourceObjects['source'];
+				foreach($aParams as $sAttCode)
+				{
+					$this->CopyAttribute($oObjectToRead, $sAttCode, $sAttCode);
+				}
+				break;
+
+			case 'clone_scalars':
+				if (!array_key_exists('source', $aSourceObjects))
+				{
+					throw new Exception('Missing conventional "source" object');
+				}
+				$oObjectToRead = $aSourceObjects['source'];
+				foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
+				{
+					if ($oAttDef->IsScalar())
+					{
+						$this->CopyAttribute($oObjectToRead, $sAttCode, $sAttCode);
+					}
+				}
+				break;
+
+			case 'copy':
+				if (!array_key_exists('source', $aSourceObjects))
+				{
+					throw new Exception('Missing conventional "source" object');
+				}
+				$oObjectToRead = $aSourceObjects['source'];
+				if (!array_key_exists(0, $aParams))
+				{
+					throw new Exception('Missing argument #1: source attribute');
+				}
+				$sSourceAttCode = $aParams[0];
+				if (!array_key_exists(1, $aParams))
+				{
+					throw new Exception('Missing argument #2: target attribute');
+				}
+				$sDestAttCode = $aParams[1];
+				$this->CopyAttribute($oObjectToRead, $sSourceAttCode, $sDestAttCode);
+				break;
+
+			case 'reset':
+				if (!array_key_exists(0, $aParams))
+				{
+					throw new Exception('Missing argument #1: target attribute');
+				}
+				$sAttCode = $aParams[0];
+				if (!MetaModel::IsValidAttCode(get_class($this), $sAttCode))
+				{
+					throw new Exception("Unknown attribute ".get_class($this)."::".$sAttCode);
+				}
+				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+				$this->Set($sAttCode, $oAttDef->GetDefaultValue());
+				break;
+
+			case 'nullify':
+				if (!array_key_exists(0, $aParams))
+				{
+					throw new Exception('Missing argument #1: target attribute');
+				}
+				$sAttCode = $aParams[0];
+				if (!MetaModel::IsValidAttCode(get_class($this), $sAttCode))
+				{
+					throw new Exception("Unknown attribute ".get_class($this)."::".$sAttCode);
+				}
+				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+				$this->Set($sAttCode, $oAttDef->GetNullValue());
+				break;
+
+			case 'set':
+				if (!array_key_exists(0, $aParams))
+				{
+					throw new Exception('Missing argument #1: target attribute');
+				}
+				$sAttCode = $aParams[0];
+				if (!MetaModel::IsValidAttCode(get_class($this), $sAttCode))
+				{
+					throw new Exception("Unknown attribute ".get_class($this)."::".$sAttCode);
+				}
+				if (!array_key_exists(1, $aParams))
+				{
+					throw new Exception('Missing argument #2: value to set');
+				}
+				$sRawValue = $aParams[1];
+				$aContext = array();
+				foreach ($aSourceObjects as $sAlias => $oObject)
+				{
+					$aContext = array_merge($aContext, $oObject->ToArgs($sAlias));
+				}
+				$aContext['current_contact_id'] = UserRights::GetContactId();
+				$aContext['current_contact_friendlyname'] = UserRights::GetUserFriendlyName();
+				$aContext['current_date'] = date('Y-m-d');
+				$aContext['current_time'] = date('H:i:s');
+				$sValue = MetaModel::ApplyParams($sRawValue, $aContext);
+				$this->Set($sAttCode, $sValue);
+				break;
+
+			case 'append':
+				if (!array_key_exists(0, $aParams))
+				{
+					throw new Exception('Missing argument #1: target attribute');
+				}
+				$sAttCode = $aParams[0];
+				if (!MetaModel::IsValidAttCode(get_class($this), $sAttCode))
+				{
+					throw new Exception("Unknown attribute ".get_class($this)."::".$sAttCode);
+				}
+				if (!array_key_exists(1, $aParams))
+				{
+					throw new Exception('Missing argument #2: value to append');
+				}
+				$sRawAddendum = $aParams[1];
+				$aContext = array();
+				foreach ($aSourceObjects as $sAlias => $oObject)
+				{
+					$aContext = array_merge($aContext, $oObject->ToArgs($sAlias));
+				}
+				$aContext['current_contact_id'] = UserRights::GetContactId();
+				$aContext['current_contact_friendlyname'] = UserRights::GetUserFriendlyName();
+				$aContext['current_date'] = date('Y-m-d');
+				$aContext['current_time'] = date('H:i:s');
+				$sAddendum = MetaModel::ApplyParams($sRawAddendum, $aContext);
+				$this->Set($sAttCode, $this->Get($sAttCode).$sAddendum);
+				break;
+
+			case 'add_to_list':
+				if (!array_key_exists('source', $aSourceObjects))
+				{
+					throw new Exception('Missing conventional "source" object');
+				}
+				$oObjectToRead = $aSourceObjects['source'];
+				if (!array_key_exists(0, $aParams))
+				{
+					throw new Exception('Missing argument #1: source attribute');
+				}
+				$sSourceKeyAttCode = $aParams[0];
+				if (!MetaModel::IsValidAttCode(get_class($oObjectToRead), $sSourceKeyAttCode))
+				{
+					throw new Exception("Unknown attribute ".get_class($oObjectToRead)."::".$sSourceKeyAttCode);
+				}
+				if (!array_key_exists(1, $aParams))
+				{
+					throw new Exception('Missing argument #2: target attribute (link set)');
+				}
+				$sTargetListAttCode = $aParams[1]; // indirect !!!
+				if (!MetaModel::IsValidAttCode(get_class($this), $sTargetListAttCode))
+				{
+					throw new Exception("Unknown attribute ".get_class($this)."::".$sTargetListAttCode);
+				}
+				if (isset($aParams[2]) && isset($aParams[3]))
+				{
+					$sRoleAttCode = $aParams[2];
+					$sRoleValue = $aParams[3];
+				}
+
+				$iObjKey = $oObjectToRead->Get($sSourceKeyAttCode);
+				if ($iObjKey > 0)
+				{
+					$oLinkSet = $this->Get($sTargetListAttCode);
+
+					$oListAttDef = MetaModel::GetAttributeDef(get_class($this), $sTargetListAttCode);
+					$oLnk = MetaModel::NewObject($oListAttDef->GetLinkedClass());
+					$oLnk->Set($oListAttDef->GetExtKeyToRemote(), $iObjKey);
+					if (isset($sRoleAttCode))
+					{
+						if (!MetaModel::IsValidAttCode(get_class($oLnk), $sRoleAttCode))
+						{
+							throw new Exception("Unknown attribute ".get_class($oLnk)."::".$sRoleAttCode);
+						}
+						$oLnk->Set($sRoleAttCode, $sRoleValue);
+					}
+					$oLinkSet->AddObject($oLnk);
+					$this->Set($sTargetListAttCode, $oLinkSet);
+				}
+				break;
+
+			case 'apply_stimulus':
+				if (!array_key_exists(0, $aParams))
+				{
+					throw new Exception('Missing argument #1: stimulus');
+				}
+				$sStimulus = $aParams[0];
+				if (!in_array($sStimulus, MetaModel::EnumStimuli(get_class($this))))
+				{
+					throw new Exception("Unknown stimulus ".get_class($this)."::".$sStimulus);
+				}
+				$this->ApplyStimulus($sStimulus);
+				break;
+
+			case 'call_method':
+				if (!array_key_exists('source', $aSourceObjects))
+				{
+					throw new Exception('Missing conventional "source" object');
+				}
+				$oObjectToRead = $aSourceObjects['source'];
+				if (!array_key_exists(0, $aParams))
+				{
+					throw new Exception('Missing argument #1: method name');
+				}
+				$sMethod = $aParams[0];
+				$aCallSpec = array($this, $sMethod);
+				if (!is_callable($aCallSpec))
+				{
+					throw new Exception("Unknown method ".get_class($this)."::".$sMethod.'()');
+				}
+				// Note: $oObjectToRead has been preserved when adding $aSourceObjects, so as to remain backward compatible with methods having only 1 parameter ($oObjectToReadà
+				call_user_func($aCallSpec, $oObjectToRead, $aSourceObjects);
+				break;
+
+			default:
+				throw new Exception("Invalid verb");
+		}
 	}
 }
 

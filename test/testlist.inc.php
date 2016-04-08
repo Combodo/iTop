@@ -4895,3 +4895,157 @@ class TestLinkSetRecording_1NAdd_Remove extends TestBizModel
 		return $aRet;
 	}
 }
+
+class TestExecActions extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Scripted actions API DBObject::ExecAction - syntax errors';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Check that wrong arguments are correclty reported';
+	}
+
+	protected function DoExecute()
+	{
+		$oSource = new UserRequest();
+		$oSource->Set('title', 'Houston!');
+		$oSource->Set('description', 'Looks like we have a problem');
+
+		$oTarget = new Server();
+
+		////////////////////////////////////////////////////////////////////////////////
+		// Scenarii
+		//
+		$aScenarii = array(
+			array(
+				'action' => 'set',
+				'error' => 'Action: set - Invalid syntax'
+			),
+			array(
+				'action' => 'smurf()',
+				'error' => 'Action: smurf() - Invalid verb'
+			),
+			array(
+				'action' => ' smurf () ',
+				'error' => 'Action:  smurf ()  - Invalid syntax'
+			),
+			array(
+				'action' => 'clone(some_att_code, another_one)',
+				'error' => 'Action: clone(some_att_code, another_one) - Unknown attribute Server::some_att_code'
+			),
+			array(
+				'action' => 'copy(toto, titi)',
+				'error' => 'Action: copy(toto, titi) - Unknown attribute Server::titi'
+			),
+			array(
+				'action' => 'copy(toto, name)',
+				'error' => 'Action: copy(toto, name) - Unknown attribute UserRequest::toto'
+			),
+			array(
+				'action' => 'copy()',
+				'error' => 'Action: copy() - Missing argument #1: source attribute'
+			),
+			array(
+				'action' => 'copy(title)',
+				'error' => 'Action: copy(title) - Missing argument #2: target attribute'
+			),
+			array(
+				'action' => 'set(toto)',
+				'error' => 'Action: set(toto) - Unknown attribute Server::toto'
+			),
+			array(
+				'action' => 'set(toto, something)',
+				'error' => 'Action: set(toto, something) - Unknown attribute Server::toto'
+			),
+			array(
+				'action' => 'set()',
+				'error' => 'Action: set() - Missing argument #1: target attribute'
+			),
+			array(
+				'action' => 'reset(toto)',
+				'error' => 'Action: reset(toto) - Unknown attribute Server::toto'
+			),
+			array(
+				'action' => 'reset()',
+				'error' => 'Action: reset() - Missing argument #1: target attribute'
+			),
+			array(
+				'action' => 'nullify(toto)',
+				'error' => 'Action: nullify(toto) - Unknown attribute Server::toto'
+			),
+			array(
+				'action' => 'nullify()',
+				'error' => 'Action: nullify() - Missing argument #1: target attribute'
+			),
+			array(
+				'action' => 'append(toto, something)',
+				'error' => 'Action: append(toto, something) - Unknown attribute Server::toto'
+			),
+			array(
+				'action' => 'append(name)',
+				'error' => 'Action: append(name) - Missing argument #2: value to append'
+			),
+			array(
+				'action' => 'append()',
+				'error' => 'Action: append() - Missing argument #1: target attribute'
+			),
+			array(
+				'action' => 'add_to_list(toto, titi)',
+				'error' => 'Action: add_to_list(toto, titi) - Unknown attribute UserRequest::toto'
+			),
+			array(
+				'action' => 'add_to_list(caller_id, titi)',
+				'error' => 'Action: add_to_list(caller_id, titi) - Unknown attribute Server::titi'
+			),
+			array(
+				'action' => 'add_to_list(caller_id)',
+				'error' => 'Action: add_to_list(caller_id) - Missing argument #2: target attribute (link set)'
+			),
+			array(
+				'action' => 'add_to_list()',
+				'error' => 'Action: add_to_list() - Missing argument #1: source attribute'
+			),
+			array(
+				'action' => 'apply_stimulus(toto)',
+				'error' => 'Action: apply_stimulus(toto) - Unknown stimulus Server::toto'
+			),
+			array(
+				'action' => 'apply_stimulus()',
+				'error' => 'Action: apply_stimulus() - Missing argument #1: stimulus'
+			),
+			array(
+				'action' => 'call_method(toto)',
+				'error' => 'Action: call_method(toto) - Unknown method Server::toto()'
+			),
+			array(
+				'action' => 'call_method()',
+				'error' => 'Action: call_method() - Missing argument #1: method name'
+			),
+		);
+
+		foreach ($aScenarii as $aScenario)
+		{
+			echo "<h4>".htmlentities($aScenario['action'], ENT_QUOTES, 'UTF-8')."</h4>\n";
+			$sMessage = '';
+			try
+			{
+				$oTarget->ExecActions(array($aScenario['action']), array('source' => $oSource));
+				$sMessage = 'Expecting an exception... none has been thrown!';
+			}
+			catch (Exception $e)
+			{
+				if ($e->getMessage() != $aScenario['error'])
+				{
+					$sMessage = 'Wrong message: expecting "'.$aScenario['error'].'" and got "'.$e->getMessage().'"';
+				}
+			}
+			if ($sMessage !='')
+			{
+				throw new Exception($sMessage);
+			}
+		}
+	}
+}
