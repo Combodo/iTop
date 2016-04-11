@@ -209,9 +209,14 @@ function WizardHelper(sClass, sFormPrefix, sState)
 		{
 			sAttCode = aFieldNames[index];
 			sFieldId = this.GetFieldId(sAttCode);
-			$('#fstatus_'+sFieldId).html('<img src="../images/indicator.gif" />');
-			$('#field_'+sFieldId).closest('td').block({message:''});
-			this.RequestAllowedValues(sAttCode);
+			if (sFieldId !== undefined) {
+				$('#fstatus_' + sFieldId).html('<img src="../images/indicator.gif" />');
+				$('#field_' + sFieldId).find('div').block({
+					message: '',
+					overlayCSS: {backgroundColor: '#f1f1f1', opacity: 0.3}
+				});
+				this.RequestAllowedValues(sAttCode);
+			}
 			index++;
 		}
 		this.AjaxQueryServer();
