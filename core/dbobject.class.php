@@ -812,7 +812,7 @@ abstract class DBObject implements iDisplay
 			$oTmpObj = MetaModel::GetObject($sObjClass, $sObjKey, false);
 			if (is_object($oTmpObj))
 			{
-				$sLabel = $oTmpObj->GetName();
+				$sLabel = htmlentities($oTmpObj->GetName(), ENT_QUOTES, 'UTF-8');
 			}
 			else
 			{
@@ -820,6 +820,10 @@ abstract class DBObject implements iDisplay
 				$sLabel = "<em>$sObjClass::$sObjKey</em>";
 			}
 			//$sLabel = MetaModel::GetName($sObjClass)." #$sObjKey";
+		}
+		else
+		{
+			$sLabel = htmlentities($sLabel, ENT_QUOTES, 'UTF-8');
 		}
 		$sHint = MetaModel::GetName($sObjClass)."::$sObjKey";
 		$sUrl = ApplicationContext::MakeObjectUrl($sObjClass, $sObjKey, $sUrlMakerClass, $bWithNavigationContext);
@@ -3410,7 +3414,7 @@ abstract class DBObject implements iDisplay
 				{
 					throw new Exception("Unknown method ".get_class($this)."::".$sMethod.'()');
 				}
-				// Note: $oObjectToRead has been preserved when adding $aSourceObjects, so as to remain backward compatible with methods having only 1 parameter ($oObjectToReadà
+				// Note: $oObjectToRead has been preserved when adding $aSourceObjects, so as to remain backward compatible with methods having only 1 parameter ($oObjectToReadï¿½
 				call_user_func($aCallSpec, $oObjectToRead, $aSourceObjects);
 				break;
 
