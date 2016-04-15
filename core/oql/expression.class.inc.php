@@ -686,10 +686,10 @@ class VariableExpression extends UnaryExpression
 	
 	public function GetAsScalar($aArgs)
 	{
-		$value = null;
+		$oRet = null;
 		if (array_key_exists($this->m_sName, $aArgs))
 		{
-			$value = $aArgs[$this->m_sName];
+			$oRet = new ScalarExpression($aArgs[$this->m_sName]);
 		}
 		elseif (($iPos = strpos($this->m_sName, '->')) !== false)
 		{
@@ -700,19 +700,23 @@ class VariableExpression extends UnaryExpression
 				$oObj = $aArgs[$sParamName.'->object()'];
 				if ($sAttCode == 'id')
 				{
-					$value = $oObj->GetKey();
+					$oRet = new ScalarExpression($oObj->GetKey());
+				}
+				elseif (MetaModel::IsValidAttCode(get_class($oObj), $sAttCode))
+				{
+					$oRet = new ScalarExpression($oObj->Get($sAttCode));
 				}
 				else
 				{
-					$value = $oObj->Get($sAttCode);
+					throw new CoreException("Query argument {$this->m_sName} not matching any attribute of class ".get_class($oObj));
 				}
 			}
 		}
-		if (is_null($value))
+		if (is_null($oRet))
 		{
 			throw new MissingQueryArgument('Missing query argument', array('expecting'=>$this->m_sName, 'available'=>array_keys($aArgs)));
 		}
-		return new ScalarExpression($value);
+		return $oRet;
 	}
 }
 
