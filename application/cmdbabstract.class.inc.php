@@ -628,61 +628,44 @@ EOF
 								}
 								else
 								{				
-									if ($iFlags & OPT_ATT_HIDDEN)
+									if ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE))
 									{
-										// Attribute is hidden, add a hidden input
-										$oPage->add('<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/>');
-										$aFieldsMap[$sAttCode] = $sInputId;
+
+										// Check if the attribute is not read-only because of a synchro...
+										$aReasons = array();
+										$sSynchroIcon = '';
+										if ($iFlags & OPT_ATT_SLAVE)
+										{
+											$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
+											$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
+											$sTip = '';
+											foreach($aReasons as $aRow)
+											{
+												$sTip .= "<p>Synchronized with {$aRow['name']} - {$aRow['description']}</p>";
+											}
+											$sTip = addslashes($sTip);
+											$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
+										}
+
+										// Attribute is read-only
+										$sHTMLValue = "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode).'</span>';
+										$sComments = $sSynchroIcon;
 									}
 									else
 									{
-										if ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE))
-										{
+										$sValue = $this->Get($sAttCode);
+										$sDisplayValue = $this->GetEditValue($sAttCode);
+										$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
+										$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+										$aFieldsMap[$sAttCode] = $sInputId;
 
-											// Check if the attribute is not read-only because of a synchro...
-											$aReasons = array();
-											$sSynchroIcon = '';
-											if ($iFlags & OPT_ATT_SLAVE)
-											{
-												$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
-												$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
-												$sTip = '';
-												foreach($aReasons as $aRow)
-												{
-													$sTip .= "<p>Synchronized with {$aRow['name']} - {$aRow['description']}</p>";
-												}
-												$sTip = addslashes($sTip);
-												$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
-											}
-
-											// Attribute is read-only
-											$sHTMLValue = "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode);
-											$value = $this->Get($sAttCode);
-											if (is_object($value))
-											{
-												$value = '';
-											}
-											$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($value, ENT_QUOTES, 'UTF-8').'"/></span>';
-											$aFieldsMap[$sAttCode] = $sInputId;
-											$sComments = $sSynchroIcon;
-										}
-										else
-										{
-											$sValue = $this->Get($sAttCode);
-											$sDisplayValue = $this->GetEditValue($sAttCode);
-											$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
-											$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
-											$aFieldsMap[$sAttCode] = $sInputId;
-											
-										}
-										$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
 									}
+									$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
 								}
 							}
 							else
 							{
 								$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode)."</span>", 'comments' => $sComments, 'infos' => $sInfos);
-								$aFieldsMap[$sAttCode] = $sInputId;			
 							}
 						}
 						else
