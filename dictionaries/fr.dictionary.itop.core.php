@@ -709,6 +709,8 @@ Opérateurs :<br/>
 	'Core:BulkExportQueryPlaceholder' => 'Saisissez une requête OQL...',
 	'Core:BulkExportCanRunNonInteractive' => 'Cliquez ici pour exécuter l\'export en mode non-interactif.',
 	'Core:BulkExportLegacyExport' => 'Cliquez ici pour exécuter l\'ancienne version de l\'export.',
+	'Core:BulkExport:XLSXOptions' => 'Options du format Excel',
+	'Core:BulkExport:TextFormat' => 'Champs texte contenant des balises HTML',
 	'Core:DeletedObjectLabel' => '%1s (effacé)',
 	'Core:SyncSplitModeCLIOnly' => 'The synchronization can be executed in chunks only if run in mode CLI~~',
 	'Core:ExecProcess:Code1' => 'Wrong command or command finished with errors (e.g. wrong script name)~~',

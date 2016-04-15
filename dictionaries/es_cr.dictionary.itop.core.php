@@ -845,6 +845,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:BulkExportQueryPlaceholder' => 'Type an OQL query here...~~',
 	'Core:BulkExportCanRunNonInteractive' => 'Click here to run the export in non-interactive mode.~~',
 	'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.~~',
+	'Core:BulkExport:XLSXOptions' => 'Excel Options~~',
+	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup~~',
 ));
 
 ?>

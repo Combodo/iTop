@@ -599,6 +599,8 @@ Operatoren:<br/>
 	'Core:BulkExportQueryPlaceholder' => 'Geben Sie eine OQL-Abfrage ein...',
 	'Core:BulkExportCanRunNonInteractive' => 'Klicken Sie hier, um den Export im nicht-interaktiven Modus auszuführen',
 	'Core:BulkExportLegacyExport' => 'Klicken Sie hier, um auf die Legacy-Version des Exports zuzugreifen',
+	'Core:BulkExport:XLSXOptions' => 'Excel-Optionen~~',
+	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup~~',
 	'Core:AttributeHierarchicalKey' => 'Hierarischer Key',
 	'Core:AttributeHierarchicalKey+' => 'Externer Key oder Foreign Key zum Parent',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Attachments',

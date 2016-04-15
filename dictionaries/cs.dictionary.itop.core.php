@@ -866,4 +866,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Core:BulkExportQueryPlaceholder' => 'Zde zadejte OQL dotaz...',
     'Core:BulkExportCanRunNonInteractive' => 'Click here to run the export in non-interactive mode.~~',
     'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.~~',
+	'Core:BulkExport:XLSXOptions' => 'Excel Options~~',
+	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup~~',		
 ));
