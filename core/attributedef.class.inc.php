@@ -6645,6 +6645,17 @@ class AttributeCustomFields extends AttributeDefinition
 	}
 
 	/**
+	 * The part of the current attribute in the object's signature, for the supplied value
+	 * @param $value The value of this attribute for the object
+	 * @return string The "signature" for this field/attribute
+	 */
+	public function Fingerprint($value)
+	{
+		$oHandler = $this->GetHandler($value->GetValues());
+		return $oHandler->GetValueFingerprint();
+	}
+
+	/**
 	 * Check the validity of the data
 	 * @param DBObject $oHostObject
 	 * @param $value

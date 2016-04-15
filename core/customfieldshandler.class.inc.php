@@ -131,4 +131,10 @@ abstract class CustomFieldsHandler
 	 * @return bool
 	 */
 	abstract public function CompareValues($aValuesA, $aValuesB);
+
+	/**
+	 * String representation of the value, must depend solely on the semantics
+	 * @return string
+	 */
+	abstract public function GetValueFingerprint();
 }
