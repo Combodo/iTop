@@ -580,7 +580,6 @@ try
 		$oPage->add('</form>');
 		$oPage->add('</div> <!-- end of wizForm -->');
 		
-		
 		if ($bShouldConfirm)
 		{
 			$sYesButton = Dict::S('UI:Button:Ok');
@@ -588,7 +587,7 @@ try
 			$oPage->add('<div id="dlg_confirmation" title="'.htmlentities(Dict::S('UI:CSVImportConfirmTitle'), ENT_QUOTES, 'UTF-8').'">');
 			$oPage->add('<p style="text-align:center"><b>'.$sMessage.'</b></p>');
 			$oPage->add('<p style="text-align:center">'.htmlentities(Dict::S('UI:CSVImportConfirmMessage'), ENT_QUOTES, 'UTF-8').'</p>');
-			$oPage->add('<div id="confirmation_chart"></div>');
+			$oPage->add('<div id="confirmation_chart" style="width:100%;height:300px;overflow:hidden"></div>');
 			$oPage->add('</div> <!-- end of dlg_confirmation -->');
 			$oPage->add_ready_script(
 <<<EOF
@@ -604,21 +603,14 @@ try
 				'$sNoButton': CancelImport 
 			} 
 		});
-		swfobject.embedSWF(	"../images/open-flash-chart.swf", 
-							"confirmation_chart", 
-							"100%", "300","9.0.0",
-							"expressInstall.swf",
-							{}, 
-							{'wmode': 'transparent'}
-						);
 EOF
-);
+			);
 		}
 		
-		$sErrors = addslashes(Dict::Format('UI:CSVImportError_items', $iErrors));
-		$sCreated = addslashes(Dict::Format('UI:CSVImportCreated_items', $iCreated));
-		$sModified = addslashes(Dict::Format('UI:CSVImportModified_items', $iModified));
-		$sUnchanged = addslashes(Dict::Format('UI:CSVImportUnchanged_items', $iUnchanged));
+		$sErrors = json_encode(Dict::Format('UI:CSVImportError_items', $iErrors));
+		$sCreated = json_encode(Dict::Format('UI:CSVImportCreated_items', $iCreated));
+		$sModified = json_encode(Dict::Format('UI:CSVImportModified_items', $iModified));
+		$sUnchanged = json_encode(Dict::Format('UI:CSVImportUnchanged_items', $iUnchanged));
 		$oPage->add_script(		
 <<< EOF
 function CSVGoBack()
@@ -645,6 +637,34 @@ function DoSubmit(bConfirm)
 	if (bConfirm) //Ask for a confirmation
 	{
 		$('#dlg_confirmation').dialog('open');
+				
+		var chart = c3.generate({
+		    bindto: '#confirmation_chart',
+		    data: {
+		    	columns:  [
+					['errors', $iErrors],
+					['created', $iCreated],
+					['modified', $iModified],
+					['unchanged', $iUnchanged]
+				],
+				colors: {
+					errors: '#FF6666',
+					created: '#66FF66',
+					modified: '#6666FF',
+					unchanged: '#666666'
+				},
+				names: {
+					errors: $sErrors,
+					created: $sCreated,
+					modified: $sModified,
+					unchanged: $sUnchanged
+				}
+		      	type: 'donut'
+		    },
+		    legend: {
+		      show: true,
+		    }
+		});
 	}
 	else
 	{
@@ -666,89 +686,6 @@ function RunImport()
 	// Submit the form
 	$('#wizForm').block();
 	$('#wizForm').submit();
-}
-
-function open_flash_chart_data()
-{
-	var iErrors = $iErrors;
-	var iModified = $iModified;
-	var iCreated = $iCreated;
-	var iUnchanged = $iUnchanged;
-	var fAlpha = 0.9;
-	
-	var oResult = {
-		"elements": [
-			{
-				"type": "pie",
-				"tip": "#label# (#percent#)",
-				"gradient-fill": true,
-				"font-size": 14,
-				"colours":[],
-				"values": [],
-				"animate":[
-			        {
-			          "type": "fade"
-			        }
-		        ]
-			}
-		],
-		"x_axis": null,
-		"font-size": 14,
-		"bg_colour": "#EEEEEE"
-	};
-
-	if (iErrors > 0)
-	{
-		var oErrors =
-		{
-			"value":  iErrors,
-			"label": "$sErrors",
-			"alpha": fAlpha,
-			"label-colour": "#CC3333",
-		};
-		oResult.elements[0].values.push(oErrors);
-		oResult.elements[0].colours.push('#FF6666');
-	}
-	if (iModified > 0)
-	{
-		var oModified =
-		{
-			"value":  iModified,
-			"label": "$sModified",
-			"alpha": fAlpha,
-			"label-colour": "#3333CC",
-		};
-		oResult.elements[0].values.push(oModified);
-		oResult.elements[0].colours.push('#6666FF');
-	}
-	if (iCreated > 0)
-	{
-		var oCreated =
-		{
-			"value":  iCreated,
-			"label": "$sCreated",
-			"alpha": fAlpha,
-			"label-colour": "#33CC33",
-			
-		};
-		oResult.elements[0].values.push(oCreated);
-		oResult.elements[0].colours.push('#66FF66');
-	}
-	if (iUnchanged > 0)
-	{
-		var oUnchanged =
-		{
-			"value":  iUnchanged,
-			"label": "$sUnchanged",
-			"alpha": fAlpha,
-			"label-colour": "#333333",
-			
-		};
-		oResult.elements[0].values.push(oUnchanged);
-		oResult.elements[0].colours.push('#666666');
-	}
-
-	return JSON.stringify(oResult);
 }
 EOF
 	);

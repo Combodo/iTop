@@ -596,7 +596,7 @@ abstract class DashletGroupBy extends Dashlet
 			switch($sStyle)
 			{
 			case 'bars':
-				$sType = 'open_flash_chart';
+				$sType = 'chart';
 				$aExtraParams = array(
 					'chart_type' => 'bars',
 					'chart_title' => $sTitle,
@@ -607,7 +607,7 @@ abstract class DashletGroupBy extends Dashlet
 				break;
 
 			case 'pie':
-				$sType = 'open_flash_chart';
+				$sType = 'chart';
 				$aExtraParams = array(
 					'chart_type' => 'pie',
 					'chart_title' => $sTitle,

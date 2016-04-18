@@ -706,19 +706,18 @@ try
 		}
 		break;
 		
-		case 'open_flash_chart':
+		case 'chart':
 		// Workaround for IE8 + IIS + HTTPS
 		// See TRAC #363, fix described here: http://forums.codecharge.com/posts.php?post_id=97771
 		$oPage->add_header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");
 		$oPage->add_header("Cache-Control: cache, must-revalidate");
 		$oPage->add_header("Pragma: public");
 
-		$oPage->SetContentType('application/json');
 		$aParams = utils::ReadParam('params', array(), false, 'raw_data');
 		if ($sFilter != '')
 		{
 			$oFilter = DBSearch::unserialize($sFilter);
-			$oDisplayBlock = new DisplayBlock($oFilter, 'open_flash_chart_ajax', false);
+			$oDisplayBlock = new DisplayBlock($oFilter, 'chart_ajax', false);
 			$oDisplayBlock->RenderContent($oPage, $aParams);
 		}
 		else

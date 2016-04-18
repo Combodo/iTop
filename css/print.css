@@ -30,3 +30,46 @@ body { margin:none; }
 	padding-left: 8px;
 	background-image: none;
 }
+
+/**
+	 *	PRINT Stylesheet
+	 * 
+	 *	First 'neutralize' all the positioning/overflow CSS added by Layout
+	 *	Then change or add cosmetic styles (borders, padding) for printing
+	 *
+	 *	MUST use "!important" for all size, position, margin & overflow rules,
+	 *	so these will 'override' styles applied to the elements by Layout
+	 */
+
+	html, body {
+		/* NEUTRALIZE 'layout container' styles */
+		overflow:	visible 	!important;
+		width:		auto		!important;
+		height:		auto		!important;
+		position:	static		!important;
+	}
+	.ui-layout-pane ,
+	.ui-layout-resizer ,
+	.ui-layout-toggler {
+		/* NEUTRALIZE 'layout element' styles */
+		display:	none		!important; /* hide ALL by default */
+		position:	relative	!important;
+		top:		auto		!important;
+		bottom:		auto		!important;
+		left:		auto		!important;
+		right:		auto		!important;
+		width:		auto		!important;
+		height:		auto		!important;
+		overflow:	visible		!important;
+	}
+	/* SHOW ONLY the panes you want */
+	.ui-layout-pane-center {
+		display:	block		!important;
+		left: 0 !important;
+		right: 0 !important;
+		/* OPTIONAL: change cosmetic styles as desired
+		border:		0			!important;
+		padding:	0			!important;
+		background:	transparent	!important;
+		*/
+	}

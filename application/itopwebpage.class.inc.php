@@ -66,6 +66,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_stylesheet("../css/fg.menu.css");
 		$this->add_linked_stylesheet("../css/jquery.multiselect.css");
 		$this->add_linked_stylesheet("../css/magnific-popup.css");
+		$this->add_linked_stylesheet("../css/c3.min.css");
 
 		$this->add_linked_script('../js/jquery.layout.min.js');
 		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
@@ -82,10 +83,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script('../js/fg.menu.js');
 		$this->add_linked_script('../js/icon_select.js');
 		$this->add_linked_script('../js/raphael-min.js');
-		$this->add_linked_script('../js/g.raphael.js');
-		$this->add_linked_script('../js/g.pie.js');
-		$this->add_linked_script('../js/g.dot.js');
-		$this->add_linked_script('../js/charts.js');
+		$this->add_linked_script('../js/d3.min.js');
+		$this->add_linked_script('../js/c3.min.js');
 		$this->add_linked_script('../js/jquery.multiselect.js');
 		$this->add_linked_script('../js/ajaxfileupload.js');
 		$this->add_linked_script('../js/jquery.mousewheel.js');
@@ -455,6 +454,7 @@ EOF
 EOF
 		);
 		$this->add_ready_script(InlineImage::FixImagesWidth());
+				
 		$sUserPrefs = appUserPreferences::GetAsJSON();
 		$this->add_script(
 <<<EOF
@@ -731,7 +731,7 @@ EOF
 		}
 		// special stylesheet for printing, hides the navigation gadgets
 		$sHtml .= "<link rel=\"stylesheet\" media=\"print\" type=\"text/css\" href=\"../css/print.css?itopversion=".ITOP_VERSION."\" />\n";
-
+		
 		if ($this->GetOutputFormat() == 'html')
 		{
 			$sHtml .= $this->output_dict_entries(true); // before any script so that they can benefit from the translations

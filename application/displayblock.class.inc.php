@@ -872,33 +872,42 @@ EOF
 		 	}
 			break;
 			
-			case 'open_flash_chart':
+			case 'chart':
 			static $iChartCounter = 0;
-			$oAppContext = new ApplicationContext();
-			$sContext = $oAppContext->GetForLink();
-			if (!empty($sContext))
-			{
-				$sContext = '&'.$sContext;
-			}
+			$iChartCounter++;
+	
 			$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
-			$sTitle = isset($aExtraParams['chart_title']) ? $aExtraParams['chart_title'] : '';
+			$sTitle = isset($aExtraParams['chart_title']) ? '<h1 style="text-align:center">'.htmlentities(Dict::S($aExtraParams['chart_title']), ENT_QUOTES, 'UTF-8').'</h1>' : '';
+			$sHtml = "$sTitle<div style=\"height:200px;width:100%\" id=\"my_chart_$sId{$iChartCounter}\"><div style=\"height:200px;line-height:200px;vertical-align:center;text-align:center;width:100%\"><img src=\"../images/indicator.gif\"></div></div>\n";
 			$sGroupBy = isset($aExtraParams['group_by']) ? $aExtraParams['group_by'] : '';
 			$sGroupByExpr = isset($aExtraParams['group_by_expr']) ? '&params[group_by_expr]='.$aExtraParams['group_by_expr'] : '';
 			$sFilter = $this->m_oFilter->serialize();
-			$sHtml .= "<div id=\"my_chart_$sId{$iChartCounter}\">If the chart does not display, <a href=\"http://get.adobe.com/flash/\" target=\"_blank\">install Flash</a></div>\n";
-			$oPage->add_script("function ofc_resize(left, width, top, height) { /* do nothing special */ }");
+
 			if (isset($aExtraParams['group_by_label']))
 			{
-				$sUrl = urlencode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&params[currentId]=$sId&id=$sId&filter=".urlencode($sFilter));
+				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&params[currentId]=$sId{$iChartCounter}&id=$sId{$iChartCounter}&filter=".urlencode($sFilter));
 			}
 			else
 			{
-				$sUrl = urlencode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=open_flash_chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&params[currentId]=$sId&id=$sId&filter=".urlencode($sFilter));
+				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&params[currentId]=$sId{$iChartCounter}&id=$sId{$iChartCounter}&filter=".urlencode($sFilter));
 			}
+			
+			$sType = ($sChartType == 'pie') ? 'pie' : 'bar';
+			
+			$oPage->add_ready_script(
+<<<EOF
+$.post($sUrl, {}, function(data) {
+	$('body').append(data);
+});
+EOF
+			);
+			break;
+			
+			case 'chart_ajax':
+			$sHtml = '';	
+			$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
+			$sId = utils::ReadParam('id', '');
 
-			$oPage->add_ready_script("swfobject.embedSWF(\"../images/open-flash-chart.swf\", \"my_chart_$sId{$iChartCounter}\", \"100%\", \"300\",\"9.0.0\", \"expressInstall.swf\",
-				{\"data-file\":\"".$sUrl."\"}, {wmode: 'transparent'} );\n");
-			$iChartCounter++;
 			if (isset($aExtraParams['group_by']))
 			{
 				if (isset($aExtraParams['group_by_label']))
@@ -921,208 +930,122 @@ EOF
 
 				$aGroupBy = array();
 				$aLabels = array();
-				$aValues = array();
 				$iTotalCount = 0;
+				$aValues = array();
+				$aURLS = array();
 				foreach ($aRes as $iRow => $aRow)
 				{
 					$sValue = $aRow['grouped_by_1'];
-					$aValues[$iRow] = $sValue;
 					$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
-					$aLabels[$iRow] = $sHtmlValue;
-					$aGroupBy[$iRow] = (int) $aRow['_itop_count_'];
+					$aLabels[$iRow] = strip_tags($sHtmlValue);
+					$aGroupBy[(int)$iRow] = (int) $aRow['_itop_count_'];
 					$iTotalCount += $aRow['_itop_count_'];
-				}
-
-				$aData = array();
-				$idx = 0;
-				$aURLs = array();
-				foreach($aGroupBy as $iRow => $iCount)
-				{
+					$aValues[] = array('label' => html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8'), 'label_html' => $sHtmlValue, 'value' => (int) $aRow['_itop_count_']);
+					
 					// Build the search for this subset
 					$oSubsetSearch = $this->m_oFilter->DeepClone();
-					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($aValues[$iRow]));
+					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($sValue));
 					$oSubsetSearch->AddConditionExpression($oCondition);
-					$aURLs[$idx] = $oSubsetSearch->serialize();
-					$idx++;
+					$aURLs[] = utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html&filter=".urlencode($oSubsetSearch->serialize());
 				}
-				$sURLList = '';
-				foreach($aURLs as $index => $sURL)
-				{
-					$sURLList .= "\taURLs[$index] = '".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html{$sContext}&filter=".urlencode($sURL)."';\n";
-				}
-				$oPage->add_script(
-<<<EOF
-function ofc_drill_down_{$sId}(index)
-{
-	var aURLs = new Array();
-{$sURLList}
-	window.location.href=aURLs[index];
-}
-EOF
-				);
+				$sJSURLs = json_encode($aURLs);
 			}
-			break;
 			
-			case 'open_flash_chart_ajax':
-			require_once(APPROOT.'/pages/php-ofc-library/open-flash-chart.php');
-			$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
-			$sId = utils::ReadParam('id', '');
-
-			$oChart = new open_flash_chart();
 			switch($sChartType)
 			{
 				case 'bars':
-				$oChartElement = new bar_glass();
-
-				if (isset($aExtraParams['group_by']))
+				$aNames = array();
+				foreach($aValues as $idx => $aValue)
 				{
-					if (isset($aExtraParams['group_by_label']))
-					{
-						$oGroupByExp = Expression::FromOQL($aExtraParams['group_by']);
-						$sGroupByLabel = $aExtraParams['group_by_label'];
-					}
-					else
-					{
-						// Backward compatibility: group_by is simply a field id
-						$sAlias = $this->m_oFilter->GetClassAlias();
-						$oGroupByExp = new FieldExpression($aExtraParams['group_by'], $sAlias);
-						$sGroupByLabel = MetaModel::GetLabel($this->m_oFilter->GetClass(), $aExtraParams['group_by']);
-					}
-	
-					$aGroupBy = array();
-					$aGroupBy['grouped_by_1'] = $oGroupByExp;
-					$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true);
-					$aRes = CMDBSource::QueryToArray($sSql);
-	
-					$aGroupBy = array();
-					$aLabels = array();
-					$iTotalCount = 0;
-					foreach ($aRes as $iRow => $aRow)
-					{
-						$sValue = $aRow['grouped_by_1'];
-						$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
-						$aLabels[$iRow] = strip_tags($sHtmlValue);
-						$aGroupBy[$iRow] = (int) $aRow['_itop_count_'];
-						$iTotalCount += $aRow['_itop_count_'];
-					}
-	
-					$aData = array();
-					$aChartLabels = array();
-					$maxValue = 0;
-					foreach($aGroupBy as $iRow => $iCount)
-					{
-						$oBarValue = new bar_value($iCount);
-						$oBarValue->on_click("ofc_drill_down_$sId");
-						$aData[] = $oBarValue;
-						if ($iCount > $maxValue) $maxValue = $iCount;
-						$aChartLabels[] = html_entity_decode($aLabels[$iRow], ENT_QUOTES, 'UTF-8');
-					}
-					$oYAxis = new y_axis();
-					$aMagicValues = array(1,2,5,10);
-					$iMultiplier = 1;
-					$index = 0;
-					$iTop = $aMagicValues[$index % count($aMagicValues)]*$iMultiplier;
-					while($maxValue > $iTop)
-					{
-						$index++;
-						$iTop = $aMagicValues[$index % count($aMagicValues)]*$iMultiplier;
-						if (($index % count($aMagicValues)) == 0)
-						{
-							$iMultiplier = $iMultiplier * 10;
-						}
-					}
-					//echo "oYAxis->set_range(0, $iTop, $iMultiplier);\n";
-					$oYAxis->set_range(0, $iTop, $iMultiplier);
-					$oChart->set_y_axis( $oYAxis );
-
-					$oChartElement->set_values( $aData );
-					$oXAxis = new x_axis();
-					$oXLabels = new x_axis_labels();
-					// set them vertical
-					$oXLabels->set_vertical();
-					// set the label text
-					$oXLabels->set_labels($aChartLabels);
-					// Add the X Axis Labels to the X Axis
-					$oXAxis->set_labels( $oXLabels );
-					$oChart->set_x_axis( $oXAxis );
+					$aNames[$idx] = $aValue['label_html'];
 				}
-				break;
+				$sJSNames = json_encode($aNames);
 				
+				$sJson = json_encode($aValues);
+				$sJSCount = json_encode(Dict::S('UI:GroupBy:Count'));
+				$oPage->add_ready_script(
+<<<EOF
+var chart = c3.generate({
+    bindto: d3.select('#my_chart_$sId'),
+    data: {
+   	  json: $sJson,
+      keys: {
+      	x: 'label',
+      	value: ["value"]
+	  },
+	  onclick: function (d, element) {
+		var aURLs = $sJSURLs;
+	    window.location.href = aURLs[d.index];
+	  },
+	  selection: {
+		enabled: true
+	  },
+      type: 'bar'
+    },
+    axis: {
+        x: {
+            type: 'category'   // this needed to load string x value
+        }
+    },
+	grid: {
+		y: {
+			show: true
+		}
+	},
+    legend: {
+      show: false,
+    },
+	tooltip: {
+	  grouped: false,
+	  format: {
+		title: function() { return '' },
+	    name: function (name, ratio, id, index) {
+			var aNames = $sJSNames;
+			return aNames[index];
+		}
+	  }
+	}
+});
+EOF
+				);
+				break;
+
 				case 'pie':
-				default:
-				$oChartElement = new pie();
-				$oChartElement->set_start_angle( 35 );
-				$oChartElement->set_animate( true );
-				$oChartElement->set_tooltip( '#label# - #val# (#percent#)' );
-				$oChartElement->set_colours( array('#FF8A00', '#909980', '#2C2B33', '#CCC08D', '#596664') );
-				if (isset($aExtraParams['group_by']))
+				$aColumns = array();
+				$aNames = array();
+				foreach($aValues as $idx => $aValue)
 				{
-					if (isset($aExtraParams['group_by_label']))
-					{
-						$oGroupByExp = Expression::FromOQL($aExtraParams['group_by']);
-						$sGroupByLabel = $aExtraParams['group_by_label'];
-					}
-					else
-					{
-						// Backward compatibility: group_by is simply a field id
-						$sAlias = $this->m_oFilter->GetClassAlias();
-						$oGroupByExp = new FieldExpression($aExtraParams['group_by'], $sAlias);
-						$sGroupByLabel = MetaModel::GetLabel($this->m_oFilter->GetClass(), $aExtraParams['group_by']);
-					}
-	
-					$aGroupBy = array();
-					$aGroupBy['grouped_by_1'] = $oGroupByExp;
-
-					$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true);
-					$aRes = CMDBSource::QueryToArray($sSql);
-	
-					$aGroupBy = array();
-					$aLabels = array();
-					$iTotalCount = 0;
-					foreach ($aRes as $iRow => $aRow)
-					{
-						$sValue = $aRow['grouped_by_1'];
-						$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
-						$aLabels[$iRow] = strip_tags($sHtmlValue);
-						$aGroupBy[$iRow] = (int) $aRow['_itop_count_'];
-						$iTotalCount += $aRow['_itop_count_'];
-					}
-
-					$aData = array();
-					foreach($aGroupBy as $iRow => $iCount)
-					{
-						$sFlashLabel = html_entity_decode($aLabels[$iRow], ENT_QUOTES, 'UTF-8');
-						$PieValue = new pie_value($iCount, $sFlashLabel); //@@ BUG: not passed via ajax !!!
-						$PieValue->on_click("ofc_drill_down_$sId");
-						$aData[] = $PieValue;
-					}
-	
-					$oChartElement->set_values( $aData );
-					$oChart->x_axis = null;
+					$aColumns[] = array('series_'.$idx, (int)$aValue['value']);
+					$aNames['series_'.$idx] = $aValue['label'];
 				}
-			}				
-			if (isset($aExtraParams['chart_title']))
-			{
-				// The title has been given in an url, and urlencoded...
-				// and urlencode transforms utf-8 into something similar to ISO-8859-1
-				// Example: é (C3A9 becomes %E9)
-				// As a consequence, json_encode (called within open-flash-chart.php)
-				// was returning 'null' and the graph was not displayed at all
-				// To make sure that the graph is displayed AND to get a correct title
-				// (at least for european characters) let's transform back into utf-8 !
-				$sTitle = iconv("ISO-8859-1", "UTF-8//IGNORE", $aExtraParams['chart_title']);
-
-				// If the title is a dictionnary entry, fetch it
-				$sTitle = Dict::S($sTitle);
-
-				$oTitle = new title($sTitle);
-				$oChart->set_title( $oTitle );
-				$oTitle->set_style("{font-size: 16px; font-family: Tahoma; font-weight: bold; text-align: center;}");
+				$sJSColumns = json_encode($aColumns);
+				$sJSNames = json_encode($aNames);
+				$oPage->add_ready_script(
+<<<EOF
+var chart = c3.generate({
+    bindto: d3.select('#my_chart_$sId'),
+    data: {
+    	columns: $sJSColumns,
+      	type: 'pie',
+		names: $sJSNames,
+	    onclick: function (d, element) {
+			var aURLs = $sJSURLs;
+		    window.location.href= aURLs[d.index];
+		},
+    },
+    legend: {
+      show: true,
+    },
+	tooltip: {
+	  format: {
+	    value: function (value, ratio, id) { return value; }
+	  }
+	}
+});
+EOF
+				);
+				break;				
 			}
-			$oChart->set_bg_colour('#FFFFFF');
-			$oChart->add_element( $oChartElement );
-			
-			$sHtml = $oChart->toPrettyString();
 			break;
 			
 			default:
