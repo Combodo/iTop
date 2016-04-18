@@ -28,7 +28,7 @@ class BsSubFormFieldRenderer extends FieldRenderer
 	public function Render()
 	{
 		$oOutput = new RenderingOutput();
-
+		
 		if (($this->oField->GetLabel() !== null) && ($this->oField->GetLabel() !== ''))
 		{
 			$oOutput->AddHtml('<fieldset><legend>' . $this->oField->GetLabel() . '</legend>');

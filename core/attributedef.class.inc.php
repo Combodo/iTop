@@ -1262,7 +1262,56 @@ class AttributeLinkedSet extends AttributeDefinition
 		$oRemoteAtt = MetaModel::GetAttributeDef($this->GetLinkedClass(), $this->GetExtKeyToMe());
 		return $oRemoteAtt;
 	}
-	
+
+	static public function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\LinkedSetField';
+	}
+
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
+	{
+		if ($oFormField === null)
+		{
+			$sFormFieldClass = static::GetFormFieldClass();
+			$oFormField = new $sFormFieldClass($this->GetCode());
+		}
+		
+		// Setting target class
+		if (!$this->IsIndirect())
+		{
+			$sTargetClass = $this->GetLinkedClass();
+		}
+		else
+		{
+			$oRemoteAttDef = MetaModel::GetAttributeDef($this->GetLinkedClass(), $this->GetExtKeyToRemote());
+			$sTargetClass = $oRemoteAttDef->GetTargetClass();
+
+			$oFormField->SetExtKeyToRemote($this->GetExtKeyToRemote());
+		}
+		$oFormField->SetTargetClass($sTargetClass);
+		$oFormField->SetIndirect($this->IsIndirect());
+		// Setting attcodes to display
+		$aAttCodesToDisplay = MetaModel::FlattenZList(MetaModel::GetZListItems($sTargetClass, 'list'));
+		// - Adding friendlyname attribute to the list is not already in it
+		$sTitleAttCode = MetaModel::GetFriendlyNameAttributeCode($sTargetClass);
+		if (!in_array($sTitleAttCode, $aAttCodesToDisplay))
+		{
+			$aAttCodesToDisplay = array_merge(array($sTitleAttCode), $aAttCodesToDisplay);
+		}
+		// - Adding attribute labels
+		$aAttributesToDisplay = array();
+		foreach ($aAttCodesToDisplay as $sAttCodeToDisplay)
+		{
+			$oAttDefToDisplay = MetaModel::GetAttributeDef($sTargetClass, $sAttCodeToDisplay);
+			$aAttributesToDisplay[$sAttCodeToDisplay] = $oAttDefToDisplay->GetLabel();
+		}
+		$oFormField->SetAttributesToDisplay($aAttributesToDisplay);
+		
+		parent::MakeFormField($oObject, $oFormField);
+		
+		return $oFormField;
+	}
+
 	public function IsPartOfFingerprint() { return false; }
 }
 
@@ -2919,16 +2968,22 @@ class AttributeCaseLog extends AttributeLongText
 		return $this->GetOptional('format', 'html'); // default format for case logs is now HTML
 	}
 
+	static public function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\CaseLogField';
+	}
+
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
 		// First we call the parent so the field is build
 		$oFormField = parent::MakeFormField($oObject, $oFormField);
 		// Then only we set the value
 		$oFormField->SetCurrentValue($this->GetEditValue($oObject->Get($this->GetCode())));
+		// And we set the entries
+		$oFormField->SetEntries($oObject->Get($this->GetCode())->GetAsArray());
 
 		return $oFormField;
 	}
-
 }
 
 /**
@@ -4023,7 +4078,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 	static public function GetFormFieldClass()
 	{
-		return '\\Combodo\\iTop\\Form\\Field\\SelectField';
+		return '\\Combodo\\iTop\\Form\\Field\\SelectObjectField';
 	}
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
@@ -4034,7 +4089,11 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
-
+		
+		// Setting params
+		$oFormField->SetMaximumComboLength($this->GetMaximumComboLength());
+		$oFormField->SetMinAutoCompleteChars($this->GetMinAutoCompleteChars());
+		$oFormField->SetHierarchical(MetaModel::IsHierarchicalClass($this->GetTargetClass()));
 		// Setting choices regarding the field dependencies
 		$aFieldDependencies = $this->GetPrerequisiteAttributes();
 		if (!empty($aFieldDependencies))
@@ -4043,12 +4102,16 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 			$oTmpField = $oFormField;
 			$oFormField->SetOnFinalizeCallback(function() use ($oTmpField, $oTmpAttDef, $oObject)
 			{
-				$oTmpField->SetChoices($oTmpAttDef->GetAllowedValues($oObject->ToArgsForQuery()));
+				$oSearch = DBSearch::FromOQL($oTmpAttDef->GetValuesDef()->GetFilterExpression());
+				$oSearch->SetInternalParams(array('this' => $oObject));
+				$oTmpField->SetSearch($oSearch);
 			});
 		}
 		else
 		{
-			$oFormField->SetChoices($this->GetAllowedValues($oObject->ToArgsForQuery()));
+			$oSearch = DBSearch::FromOQL($this->GetValuesDef()->GetFilterExpression());
+			$oSearch->SetInternalParams(array('this' => $oObject));
+			$oFormField->SetSearch($oSearch);
 		}
 
 		// If ExtKey is mandatory, we add a validator to ensure that the value 0 is not selected

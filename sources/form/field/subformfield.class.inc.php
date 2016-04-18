@@ -119,6 +119,49 @@ class SubFormField extends Field
 	}
 
 	/**
+	 * Sets the mandatory flag on all the fields on the form
+	 *
+	 * @param boolean $bMandatory
+	 */
+	public function SetMandatory($bMandatory)
+	{
+		foreach ($this->oForm->GetFields() as $oField)
+		{
+			$oField->SetMandatory($bMandatory);
+		}
+		parent::SetMandatory($bMandatory);
+	}
+
+	/**
+	 * Sets the read-only flag on all the fields on the form
+	 *
+	 * @param boolean $bReadOnly
+	 */
+	public function SetReadOnly($bReadOnly)
+	{
+		foreach ($this->oForm->GetFields() as $oField)
+		{
+			$oField->SetReadOnly($bReadOnly);
+			$oField->SetMandatory(false);
+		}
+		parent::SetReadOnly($bReadOnly);
+	}
+
+	/**
+	 * Sets the hidden flag on all the fields on the form
+	 *
+	 * @param boolean $bHidden
+	 */
+	public function SetHidden($bHidden)
+	{
+		foreach ($this->oForm->GetFields() as $oField)
+		{
+			$oField->SetHidden($bHidden);
+		}
+		parent::SetHidden($bHidden);
+	}
+
+	/**
 	 * @param $sFormPath
 	 * @return Form|null
 	 */

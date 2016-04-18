@@ -13,7 +13,7 @@ $(function()
 			validate_callback: 'validate',				  // When using an anonymous function, use the 'me' parameter to acces the current widget : function(me){ return me.validate(); },
 			on_validation_callback: function(data){  },
 			get_current_value_callback: 'getCurrentValue',
-			
+			set_current_value_callback: function(me, oEvent, oData){ console.log('Form field: set_current_value_callback must be overloaded, this is the default callback.'); }	
 		},
    
 		// the constructor
@@ -30,7 +30,7 @@ $(function()
 				me.options.validators = oData;
 			});
 			this.element
-			.bind('validate get_current_value', function(oEvent, oData){
+			.bind('validate get_current_value set_current_value', function(oEvent, oData){
 				oEvent.stopPropagation();
 		
 				var callback = me.options[oEvent.type+'_callback'];
@@ -124,7 +124,12 @@ $(function()
 			{
 				var bMandatory = (this.options.validators.mandatory !== undefined);
 				// Extracting value for the field
-				var oValue = this.getCurrentValue();
+				var oValue = this.element.triggerHandler('get_current_value');
+				if(oValue === null)
+				{
+					console.log('Form field : Warning, there was no value for "'+this.element.attr('data-field-id')+'"');
+					return oResult;
+				}
 				var aValueKeys = Object.keys(oValue);
 				
 				// This is just a safety check in case a field doesn't always return an object when no value assigned, so we have to check the mandatory validator here...

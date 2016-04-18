@@ -19,6 +19,7 @@
 
 namespace Combodo\iTop\Renderer\Bootstrap;
 
+use \Silex\Application;
 use \Combodo\iTop\Renderer\FormRenderer;
 use \Combodo\iTop\Form\Form;
 
@@ -43,12 +44,14 @@ class BsFormRenderer extends FormRenderer
 		$this->AddSupportedField('LabelField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('StringField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('TextAreaField', 'BsSimpleFieldRenderer');
+		$this->AddSupportedField('CaseLogField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('SelectField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('MultipleSelectField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('RadioField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('CheckboxField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('SubFormField', 'BsSubFormFieldRenderer');
-		$this->AddSupportedField('SelectObjectField', 'BsSimpleFieldRenderer');
+		$this->AddSupportedField('SelectObjectField', 'BsSelectObjectFieldRenderer');
+		$this->AddSupportedField('LinkedSetField', 'BsLinkedSetFieldRenderer');
 	}
 
 }

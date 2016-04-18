@@ -37,6 +37,7 @@ class Form
 	protected $aDependencies;
 	protected $bValid;
 	protected $aErrorMessages;
+	protected $iEditableFieldCount;
 
 	/**
 	 * Default constructor
@@ -51,6 +52,7 @@ class Form
 		$this->aDependencies = array();
 		$this->bValid = true;
 		$this->aErrorMessages = array();
+		$this->iEditableFieldCount = null;
 	}
 
 	/**
@@ -372,6 +374,39 @@ class Form
     }
 
 	/**
+	 * Returns the number of editable fields in this form.
+	 *
+	 * @return integer
+	 */
+	public function GetEditableFieldCount($bForce = false)
+	{
+		// Count is usally done by the Finalize function but it can be done there if Finalize hasn't been called yet or if we choose to force it.
+		if (($this->iEditableFieldCount === null) || ($bForce === true))
+		{
+			$this->iEditableFieldCount = 0;
+			foreach ($this->aFields as $oField)
+			{
+				if ($oField->IsEditable())
+				{
+					$this->iEditableFieldCount++;
+				}
+			}
+		}
+
+		return $this->iEditableFieldCount;
+	}
+
+	/**
+	 * Returns true if the form has at least one editable field
+	 *
+	 * @return boolean
+	 */
+	public function HasEditableFields()
+	{
+		return ($this->GetEditableFieldCount() > 0);
+	}
+
+	/**
 	 * @param $sFormPath
 	 * @return Form|null
 	 */
@@ -450,7 +485,11 @@ class Form
 		foreach ($aFieldList as $sId => $oField)
 		{
 			$oField->OnFinalize();
-        }
+			if ($oField->IsEditable())
+			{
+				$this->iEditableFieldCount++;
+			}
+		}
     }
 
 	/**

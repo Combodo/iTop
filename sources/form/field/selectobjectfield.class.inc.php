@@ -26,14 +26,16 @@ use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 /**
  * Description of SelectObjectField
  *
+ * @author Romain Quetiez <romain.quetiez@combodo.com>
  */
 class SelectObjectField extends Field
 {
 	protected $oSearch;
 	protected $iMaximumComboLength;
 	protected $iMinAutoCompleteChars;
-
+	protected $bHierarchical;
 	protected $iControlType;
+	protected $sSearchEndpoint;
 
 	const CONTROL_SELECT = 1;
 	const CONTROL_RADIO_VERTICAL = 2;
@@ -44,27 +46,44 @@ class SelectObjectField extends Field
 		$this->oSearch = null;
 		$this->iMaximumComboLength = null;
 		$this->iMinAutoCompleteChars = 3;
+		$this->bHierarchical = false;
 		$this->iControlType = self::CONTROL_SELECT;
+		$this->sSearchEndpoint = null;
 	}
 
 	public function SetSearch(DBSearch $oSearch)
 	{
 		$this->oSearch = $oSearch;
+		return $this;
 	}
 
 	public function SetMaximumComboLength($iMaximumComboLength)
 	{
 		$this->iMaximumComboLength = $iMaximumComboLength;
+		return $this;
 	}
 
 	public function SetMinAutoCompleteChars($iMinAutoCompleteChars)
 	{
 		$this->iMinAutoCompleteChars = $iMinAutoCompleteChars;
+		return $this;
+	}
+
+	public function SetHierarchical($bHierarchical)
+	{
+		$this->bHierarchical = $bHierarchical;
+		return $this;
 	}
 
 	public function SetControlType($iControlType)
 	{
 		$this->iControlType = $iControlType;
+	}
+
+	public function SetSearchEndpoint($sSearchEndpoint)
+	{
+		$this->sSearchEndpoint = $sSearchEndpoint;
+		return $this;
 	}
 
 	/**
@@ -112,8 +131,18 @@ class SelectObjectField extends Field
 		return $this->iMinAutoCompleteChars;
 	}
 
+	public function GetHierarchical()
+	{
+		return $this->bHierarchical;
+	}
+
 	public function GetControlType()
 	{
 		return $this->iControlType;
+	}
+
+	public function GetSearchEndpoint()
+	{
+		return $this->sSearchEndpoint;
 	}
 }

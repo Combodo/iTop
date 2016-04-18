@@ -46,7 +46,6 @@ class BsSimpleFieldRenderer extends FieldRenderer
 		$sFieldClass = get_class($this->oField);
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
 		
-		// TODO : Shouldn't we have a field type so we don't have to maintain FQN classname ?
 		// Rendering field in edition mode
 		if (!$this->oField->GetReadOnly() && !$this->oField->GetHidden())
 		{
@@ -64,15 +63,59 @@ class BsSimpleFieldRenderer extends FieldRenderer
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
+				case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
 					$bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
-
+					
 					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
 					if ($this->oField->GetLabel() !== '')
 					{
 						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 					}
 					$oOutput->AddHtml('<div class="help-block"></div>');
+					// First the edition area
+					$oOutput->AddHtml('<div>');
 					$oOutput->AddHtml('<textarea id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" class="form-control" rows="8">' . $this->oField->GetCurrentValue() . '</textarea>');
+					$oOutput->AddHtml('</div>');
+					// Then the previous entries if necessary
+					if ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\CaseLogField')
+					{
+						$aEntries = $this->oField->GetEntries();
+						if (count($aEntries) > 0)
+						{
+							$oOutput->AddHtml('<div>');
+							for ($i = 0; $i < count($aEntries); $i++)
+							{
+								$sEntryDate = $aEntries[$i]['date'];
+								$sEntryUser = $aEntries[$i]['user_login'];
+								$sEntryHeader = Dict::Format('UI:CaseLog:Header_Date_UserName', $sEntryDate, $sEntryUser);
+
+								// Only the last 2 entries are expanded by default
+								$sEntryContentExpanded = ($i < 2) ? 'true' : 'false';
+								$sEntryHeaderButtonClass = ($i < 2) ? '' : 'collapsed';
+								$sEntryContentClass = ($i < 2) ? 'in' : '';
+								$sEntryContentId = 'caselog_field_entry_content-' . $this->oField->GetGlobalId() . '-' . $i;
+
+								// Note : We use CKEditor stylesheet to format this
+								$oOutput->AddHtml(
+<<<EOF
+									<div class="caselog_field_entry cke_inner">
+										<div class="caselog_field_entry_header">
+											{$sEntryHeader}
+											<div class="pull-right">
+												<span class="caselog_field_entry_button {$sEntryHeaderButtonClass}" data-toggle="collapse" href="#{$sEntryContentId}" aria-expanded="{$sEntryContentExpanded}" aria-controls="{$sEntryContentId}"></span>
+											</div>
+										</div>
+										<div class="caselog_field_entry_content collapse {$sEntryContentClass}" id="{$sEntryContentId}">
+											{$aEntries[$i]['message_html']}
+										</div>
+									</div>
+EOF
+								);
+							}
+							$oOutput->AddHtml('</div>');
+						}
+					}
+
 					$oOutput->AddHtml('</div>');
 					// Some additional stuff if we are displaying it with a rich editor
 					if ($bRichEditor)
@@ -145,7 +188,7 @@ EOF
 		// ... and in read-only mode (or hidden)
 		else
 		{
-			// ... specific rendering for fields with mulltiple values
+			// ... specific rendering for fields with multiple values
 			if (($this->oField instanceof Combodo\iTop\Form\Field\MultipleChoicesField) && ($this->oField->GetMultipleValuesEnabled()))
 			{
 				// TODO
@@ -190,7 +233,6 @@ EOF
 					case 'Combodo\\iTop\\Form\\Field\\RadioField':
 					case 'Combodo\\iTop\\Form\\Field\\SelectField':
 					case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
-					case 'Combodo\\iTop\\Form\\Field\\SelectObjectField': // TODO : This should be check for external key, as we would display it differently
 						$aFieldChoices = $this->oField->GetChoices();
 						$sFieldValue = (isset($aFieldChoices[$this->oField->GetCurrentValue()])) ? $aFieldChoices[$this->oField->GetCurrentValue()] : Dict::S('UI:UndefinedObject');
 
@@ -216,9 +258,9 @@ EOF
 		{
 			case 'Combodo\\iTop\\Form\\Field\\StringField':
 			case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
+			case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
 			case 'Combodo\\iTop\\Form\\Field\\SelectField':
 			case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
-			case 'Combodo\\iTop\\Form\\Field\\SelectObjectField':
 			case 'Combodo\\iTop\\Form\\Field\\HiddenField':
 				$oOutput->AddJs(
 <<<EOF
@@ -272,7 +314,6 @@ EOF
 			case 'Combodo\\iTop\\Form\\Field\\StringField':
 			case 'Combodo\\iTop\\Form\\Field\\SelectField':
 			case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
-			case 'Combodo\\iTop\\Form\\Field\\SelectObjectField':
 			case 'Combodo\\iTop\\Form\\Field\\HiddenField':
 			case 'Combodo\\iTop\\Form\\Field\\RadioField':
 			case 'Combodo\\iTop\\Form\\Field\\CheckboxField':
@@ -283,6 +324,7 @@ EOF
 				);
 				break;
 			case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
+			case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
 				$oOutput->AddJs(
 					<<<EOF
 					$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field_html($sFormFieldOptions);

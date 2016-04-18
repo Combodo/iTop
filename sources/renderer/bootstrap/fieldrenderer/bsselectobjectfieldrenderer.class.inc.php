@@ -1,0 +1,402 @@
+<?php
+
+// Copyright (C) 2010-2016 Combodo SARL
+//
+//   This file is part of iTop.
+//
+//   iTop is free software; you can redistribute it and/or modify	
+//   it under the terms of the GNU Affero General Public License as published by
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   iTop is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU Affero General Public License for more details.
+//
+//   You should have received a copy of the GNU Affero General Public License
+//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
+namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
+
+use \utils;
+use \Dict;
+use \UserRights;
+use \InlineImage;
+use \DBObjectSet;
+use \MetaModel;
+use \Combodo\iTop\Renderer\FieldRenderer;
+use \Combodo\iTop\Renderer\RenderingOutput;
+use \Combodo\iTop\Form\Field\SelectObjectField;
+
+/**
+ * Description of BsSelectObjectFieldRenderer
+ *
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ */
+class BsSelectObjectFieldRenderer extends FieldRenderer
+{
+
+	/**
+	 * Returns a RenderingOutput for the FieldRenderer's Field
+	 *
+	 * @return \Combodo\iTop\Renderer\RenderingOutput
+	 */
+	public function Render()
+	{
+		$oOutput = new RenderingOutput();
+		$sFieldValueClass = $this->oField->GetSearch()->GetClass();
+		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
+		$iFieldControlType = $this->oField->GetControlType();
+
+		// TODO : Remove this when hierarchical search supported
+		$this->oField->SetHierarchical(false);
+
+		// Rendering field in edition mode
+		if (!$this->oField->GetReadOnly() && !$this->oField->GetHidden())
+		{
+			// Rendering field
+			$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
+			if ($this->oField->GetLabel() !== '')
+			{
+				$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+			}
+			$oOutput->AddHtml('<div class="help-block"></div>');
+			// - As a select
+			if ($iFieldControlType === SelectObjectField::CONTROL_SELECT)
+			{
+				// Checking if regular select or autocomplete
+				$oSearch = $this->oField->GetSearch()->DeepClone();
+				$oCountSet = new DBObjectSet($oSearch);
+				$iSetCount = $oCountSet->Count();
+				$bRegularSelect = ($iSetCount <= $this->oField->GetMaximumComboLength());
+				unset($oCountSet);
+				
+				// - For regular select
+				if ($bRegularSelect)
+				{
+					// HTML for select part
+					// - Opening row
+					$oOutput->AddHtml('<div class="row">');
+					// - Rendering select
+					$oOutput->AddHtml('<div class="col-xs-' . ( $this->oField->GetHierarchical() ? 10 : 12 ) . ' col-sm-' . ( $this->oField->GetHierarchical() ? 9 : 12 ) . ' col-md-' . ( $this->oField->GetHierarchical() ? 10 : 12 ) . '">');
+					$oOutput->AddHtml('<select id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" class="form-control">');
+					$oOutput->AddHtml('<option value="">')->AddHtml(Dict::S('UI:SelectOne'), false)->AddHtml('</option>');
+					// - Retrieving choices
+					$oChoicesSet = new DBObjectSet($oSearch);
+					while ($oChoice = $oChoicesSet->Fetch())
+					{
+						// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
+						$sSelectedAtt = ($this->oField->GetCurrentValue() == $oChoice->GetKey()) ? 'selected' : '';
+						$oOutput->AddHtml('<option value="' . $oChoice->GetKey() . '" ' . $sSelectedAtt . ' >')->AddHtml($oChoice->GetName(), false)->AddHtml('</option>');
+					}
+					unset($oChoicesSet);
+					$oOutput->AddHtml('</select>');
+					$oOutput->AddHtml('</div>');
+					// - Closing col for autocomplete & opening col for hierarchy, rendering hierarchy button, closing col and row
+					$oOutput->AddHtml('<div class="col-xs-' . ( $this->oField->GetHierarchical() ? 2 : 0 ) . ' col-sm-' . ( $this->oField->GetHierarchical() ? 3 : 0 ) . ' col-md-' . ( $this->oField->GetHierarchical() ? 2 : 0 ) . ' text-right">');
+					$this->RenderHierarchicalSearch($oOutput);
+					$oOutput->AddHtml('</div>');
+					// - Closing row
+					$oOutput->AddHtml('</div>');
+
+					// JS FieldChange trigger (:input are not always at the same depth)
+					$oOutput->AddJs(
+<<<EOF
+						$("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
+							var me = this;
+
+							$(this).closest(".field_set").trigger("field_change", {
+								id: $(me).attr("id"),
+								name: $(me).closest(".form_field").attr("data-field-id"),
+								value: $(me).val()
+							});
+						});
+EOF
+					);
+
+					// Attaching JS widget
+					$oOutput->AddJs(
+<<<EOF
+						$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field({
+							'validators': {$this->GetValidatorsAsJson()}
+						});
+EOF
+					);
+				}
+				// - For autocomplete
+				else
+				{
+					$sAutocompleteFieldId = 's_ac_' . $this->oField->GetGlobalId();
+					$sEndpoint = str_replace('-sMode-', 'autocomplete', $this->oField->GetSearchEndpoint());
+					$sNoResultText = Dict::S('Portal:Autocomplete:NoResult');
+
+					// Retrieving field value
+					if ($this->oField->GetCurrentValue() !== null && $this->oField->GetCurrentValue() !== 0)
+					{
+						$oFieldValue = MetaModel::GetObject($sFieldValueClass, $this->oField->GetCurrentValue());
+						$sFieldValue = $oFieldValue->GetName();
+					}
+					else
+					{
+						$sFieldValue = '';
+					}
+
+					// HTML for autocomplete part
+					// - Opening row
+					$oOutput->AddHtml('<div class="row">');
+					// - Rendering autocomplete search
+					$oOutput->AddHtml('<div class="col-xs-' . ( $this->oField->GetHierarchical() ? 9 : 10 ) . ' col-sm-' . ( $this->oField->GetHierarchical() ? 8 : 9 ) . ' col-md-' . ( $this->oField->GetHierarchical() ? 8 : 10 ) . ' col-lg-' . ( $this->oField->GetHierarchical() ? 9 : 10 ) . '">');
+					$oOutput->AddHtml('<input type="text" id="' . $sAutocompleteFieldId . '" name="' . $sAutocompleteFieldId . '" value="')->AddHtml($sFieldValue, true)->AddHtml('" data-target-id="' . $this->oField->GetGlobalId() . ' "class="form-control" />');
+					$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $this->oField->GetCurrentValue() . '" />');
+					$oOutput->AddHtml('</div>');
+					// - Rendering buttons
+					$oOutput->AddHtml('<div class="col-xs-' . ( $this->oField->GetHierarchical() ? 3 : 2 ) . ' col-sm-' . ( $this->oField->GetHierarchical() ? 4 : 3 ) . ' col-md-' . ( $this->oField->GetHierarchical() ? 4 : 2 ) . ' col-lg-' . ( $this->oField->GetHierarchical() ? 3 : 2 ) . ' text-right">');
+					$oOutput->AddHtml('<div class="btn-group" role="group">');
+					//   - Rendering hierarchy button
+					$this->RenderHierarchicalSearch($oOutput);
+					//   - Rendering regular search
+					$this->RenderRegularSearch($oOutput);
+					$oOutput->AddHtml('</div>');
+					$oOutput->AddHtml('</div>');
+					// - Closing row
+					$oOutput->AddHtml('</div>');
+
+					// JS FieldChange trigger (:input are not always at the same depth)
+					// Note : Not used for that field type
+					// Attaching JS widget
+					$oOutput->AddJs(
+<<<EOF
+					$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field({
+						'validators': {$this->GetValidatorsAsJson()},
+						'get_current_value_callback': function(me, oEvent, oData){
+							var value = null;
+
+							value = me.element.find('#{$this->oField->GetGlobalId()}').val();
+
+							return value;
+						},
+						'set_current_value_callback': function(me, oEvent, oData){
+							var sItemId = Object.keys(oData.value)[0];
+							var sItemName = oData.value[sItemId];
+
+							// Updating autocomplete field
+							me.element.find('#{$this->oField->GetGlobalId()}').val(sItemId);
+							me.element.find('#{$sAutocompleteFieldId}').val(sItemName);
+							oAutocompleteSource_{$this->oField->GetId()}.index.datums[sItemId] = {id: sItemId, name: sItemName};
+						}
+					});
+EOF
+					);
+
+					// Preparing JS part for autocomplete
+					$oOutput->AddJs(
+<<<EOF
+						var oAutocompleteSource_{$this->oField->GetId()} = new Bloodhound({
+							queryTokenizer: Bloodhound.tokenizers.whitespace,
+							datumTokenizer: Bloodhound.tokenizers.whitespace,
+							remote: {
+								url : '{$sEndpoint}',
+								prepare: function(query, settings){
+									settings.type = "POST";
+									settings.contentType = "application/json; charset=UTF-8";
+									settings.data = {
+											sQuery: query
+									}
+									return settings;
+								},
+								filter: function(response){
+									var oItems = response.results.items;
+									// Manualy adding data from remote to the index.datums so we can check data later
+									for(var sItemKey in oItems)
+									{
+										oAutocompleteSource_{$this->oField->GetId()}.index.datums[oItems[sItemKey].id] = oItems[sItemKey];
+									}
+									return oItems;
+								}
+							}
+						});
+
+						$('#$sAutocompleteFieldId').typeahead({
+							hint: true,
+							hightlight: true,
+							minLength: {$this->oField->GetMinAutoCompleteChars()}
+						},{
+							name: '{$this->oField->GetId()}',
+							source: oAutocompleteSource_{$this->oField->GetId()},
+							limit: 20,
+							display: 'name',
+							templates: {
+								suggestion: Handlebars.compile('<div>{{name}}</div>'),
+								pending: $("#page_overlay .content_loader").prop('outerHTML'),
+								notFound: '<div class="no_result">{$sNoResultText}</div>'
+							}
+						})
+						.off('typeahead:select').on('typeahead:select', function(oEvent, oSuggestion){
+							$('#{$this->oField->GetGlobalId()}').val(oSuggestion.id);
+						})
+						.off('typeahead:change').on('typeahead:change', function(oEvent, oSuggestion){
+							// Checking if the value is a correct value. This is necessary because the user could empty the field / remove some chars and typeahead would not update the hidden input
+							var oDatums = oAutocompleteSource_{$this->oField->GetId()}.index.datums;
+							var bFound = false;
+							for(var i in oDatums)
+							{
+								if(oDatums[i].name == oSuggestion)
+								{
+									bFound = true;
+									$('#{$this->oField->GetGlobalId()}').val(oDatums[i].id);
+									break;
+								}
+							}
+							// Emptying the fields if value is incorrect
+							if(!bFound)
+							{
+								$('#{$this->oField->GetGlobalId()}').val(0);
+								$('#{$sAutocompleteFieldId}').val('');
+							}
+						});
+EOF
+					);
+				}
+			}
+			$oOutput->AddHtml('</div>');
+		}
+		// ... and in read-only mode (or hidden)
+		else
+		{
+			// Retrieving field value
+			if ($this->oField->GetCurrentValue() !== null && $this->oField->GetCurrentValue() !== 0 && $this->oField->GetCurrentValue() !== '')
+			{
+				$oFieldValue = MetaModel::GetObject($sFieldValueClass, $this->oField->GetCurrentValue());
+				$sFieldValue = $oFieldValue->GetName();
+			}
+			else
+			{
+				$sFieldValue = Dict::S('UI:UndefinedObject');
+			}
+
+			$oOutput->AddHtml('<div class="form-group">');
+			// Showing label / value only if read-only but not hidden
+			if (!$this->oField->GetHidden())
+			{
+				if ($this->oField->GetLabel() !== '')
+				{
+					$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+				}
+				$oOutput->AddHtml('<div class="form-control-static">' . $sFieldValue . '</div>');
+			}
+			$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $this->oField->GetCurrentValue() . '" class="form-control" />');
+			$oOutput->AddHtml('</div>');
+
+
+			// JS FieldChange trigger (:input are not always at the same depth)
+			$oOutput->AddJs(
+<<<EOF
+				$("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
+					var me = this;
+
+					$(this).closest(".field_set").trigger("field_change", {
+						id: $(me).attr("id"),
+						name: $(me).closest(".form_field").attr("data-field-id"),
+						value: $(me).val()
+					});
+				});
+EOF
+			);
+
+			// Attaching JS widget
+			$oOutput->AddJs(
+<<<EOF
+				$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field({
+					'validators': {$this->GetValidatorsAsJson()}
+				});
+EOF
+			);
+		}
+
+		return $oOutput;
+	}
+
+	/**
+	 * Renders an hierarchical search button
+	 *
+	 * @param RenderingOutput $oOutput
+	 */
+	protected function RenderHierarchicalSearch(RenderingOutput &$oOutput)
+	{
+		if ($this->oField->GetHierarchical())
+		{
+			$sHierarchicalButtonId = 's_hi_' . $this->oField->GetGlobalId();
+			$sEndpoint = str_replace('-sMode-', 'hierarchy', $this->oField->GetSearchEndpoint());
+
+			$oOutput->AddHtml('<button type="button" class="btn btn-default" id="' . $sHierarchicalButtonId . '"><span class="glyphicon glyphicon-ext-hierarchy"></span></button>');
+
+			$oOutput->AddJs(
+<<<EOF
+				$('#{$sHierarchicalButtonId}').off('click').on('click', function(){
+					// Creating a new modal
+					// Note : This could be better if we check for an existing modal first instead of always creating a new one
+					var oModalElem = $('#modal-for-all').clone();
+					oModalElem.attr('id', '').attr('data-source-element', '{$sHierarchicalButtonId}').appendTo('body');
+					// Resizing to small modal
+					oModalElem.find('.modal-dialog').removeClass('modal-lg').addClass('modal-sm');
+					// Loading content
+					oModalElem.find('.modal-content').html($('#page_overlay .overlay_content').html());
+					oModalElem.find('.modal-content').load(
+						'{$sEndpoint}',
+						{
+							sFormPath: '{$this->oField->GetFormPath()}',
+							sFieldId: '{$this->oField->GetId()}'
+						}
+					);
+					oModalElem.modal('show');
+				});
+EOF
+			);
+		}
+	}
+
+	/**
+	 * Renders an regular search button
+	 *
+	 * @param RenderingOutput $oOutput
+	 */
+	protected function RenderRegularSearch(RenderingOutput &$oOutput)
+	{
+		$sSearchButtonId = 's_rg_' . $this->oField->GetGlobalId();
+		$sEndpoint = str_replace('-sMode-', 'from-attribute', $this->oField->GetSearchEndpoint());
+
+		$oOutput->AddHtml('<button type="button" class="btn btn-default" id="' . $sSearchButtonId . '"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>');
+		
+		$oOutput->AddJs(
+<<<EOF
+			$('#{$sSearchButtonId}').off('click').on('click', function(){
+				// Creating a new modal
+				var oModalElem;
+				if($('.modal[data-source-element="{$sSearchButtonId}"]').length === 0)
+				{
+					oModalElem = $('#modal-for-all').clone();
+					oModalElem.attr('id', '').attr('data-source-element', '{$sSearchButtonId}').appendTo('body');
+				}
+				else
+				{
+					oModalElem = $('.modal[data-source-element="{$sSearchButtonId}"]').first();
+				}
+				// Resizing to small modal
+				oModalElem.find('.modal-dialog').removeClass('modal-sm').addClass('modal-lg');
+				// Loading content
+				oModalElem.find('.modal-content').html($('#page_overlay .overlay_content').html());
+				oModalElem.find('.modal-content').load(
+					'{$sEndpoint}',
+					{
+						sFormPath: '{$this->oField->GetFormPath()}',
+						sFieldId: '{$this->oField->GetId()}'
+					}
+				);
+				oModalElem.modal('show');
+			});
+EOF
+		);
+	}
+
+}

@@ -358,6 +358,16 @@ abstract class Field
 		return $this;
 	}
 
+	/**
+	 * Returns if the field is editable. Meaning that it is not editable nor hidden.
+	 * 
+	 * @return boolean
+	 */
+	public function IsEditable()
+	{
+		return (!$this->bReadOnly && !$this->bHidden);
+	}
+
 	public function OnCancel()
 	{
 		// Overload when needed
