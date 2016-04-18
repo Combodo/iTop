@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2013 Combodo SARL
+// Copyright (C) 2013-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Page to configuration the notifications (triggers and actions)
  *
- * @copyright   Copyright (C) 2013 Combodo SARL
+ * @copyright   Copyright (C) 2013-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -42,6 +42,8 @@ $oP = new iTopWebPage(Dict::S('Menu:NotificationsMenu+'));
 $oP->add('<div class="page_header" style="padding:0.5em;">');
 $oP->add('<h1>'.dict::S('UI:NotificationsMenu:Title').'</h1>');
 $oP->add('</div>');
+
+$oP->SetBreadCrumbEntry('ui-tool-notifications', Dict::S('Menu:NotificationsMenu'), Dict::S('Menu:NotificationsMenu+'), '', '../images/bell.png');
 
 $oP->StartCollapsibleSection(Dict::S('UI:NotificationsMenu:Help'), true);
 $oP->add('<div style="padding: 1em; font-size:10pt;background:#E8F3CF;margin-top: 0.25em;">');

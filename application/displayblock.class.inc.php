@@ -1203,6 +1203,15 @@ EOF
 		$oNewCondition = Expression::FromOQL($sOQLCondition);
 		return $oNewCondition;		
 	}
+
+	/**
+	 * For the result to be meaningful, this function must be called AFTER GetRenderContent() (or Display())
+	 * @return int
+	 */
+	public function GetDisplayedCount()
+	{
+		return $this->m_oSet->Count();
+	}
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Construction and display of the application's main menu
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -297,16 +297,26 @@ class ApplicationMenu
 		$sMenuId = $oAppContext->GetCurrentValue('menu', null);		
 		if ($sMenuId  === null)
 		{
+			$sMenuId == self::GetDefaultMenuId();
+		}
+		return $sMenuId;
+	}	
+
+	static public function GetDefaultMenuId()
+	{
+		static $sDefaultMenuId = null;
+		if (is_null($sDefaultMenuId))
+		{
 			// Make sure the root menu is sorted on 'rank'
 			usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
 			$oFirstGroup = self::GetMenuNode(self::$aRootMenus[0]['index']);
 			$aChildren = self::$aMenusIndex[$oFirstGroup->GetIndex()]['children'];
 			usort($aChildren, array('ApplicationMenu', 'CompareOnRank'));
 			$oMenuNode = self::GetMenuNode($aChildren[0]['index']);
-			$sMenuId = $oMenuNode->GetMenuId();
+			$sDefaultMenuId = $oMenuNode->GetMenuId();
 		}
-		return $sMenuId;
-	}	
+		return $sDefaultMenuId;
+	}
 }
 
 /**
@@ -339,6 +349,7 @@ abstract class MenuNode
 {
 	protected $sMenuId;
 	protected $index;
+	protected $iParentIndex;
 
 	/**
 	 * Properties reflecting how the node has been declared
@@ -379,6 +390,7 @@ abstract class MenuNode
 	public function __construct($sMenuId, $iParentIndex = -1, $fRank = 0, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null)
 	{
 		$this->sMenuId = $sMenuId;
+		$this->iParentIndex = $iParentIndex;
 		$this->aReflectionProperties = array();
 		if (strlen($sEnableClass) > 0)
 		{
@@ -411,7 +423,21 @@ abstract class MenuNode
 	
 	public function GetLabel()
 	{
-		return Dict::S("Menu:$this->sMenuId+", "");
+		$sRet = Dict::S("Menu:$this->sMenuId+", "");
+		if ($sRet === '')
+		{
+			if ($this->iParentIndex != -1)
+			{
+				$oParentMenu = ApplicationMenu::GetMenuNode($this->iParentIndex);
+				$sRet = $oParentMenu->GetTitle().' / '.$this->GetTitle();
+			}
+			else
+			{
+				$sRet = $this->GetTitle();
+			}
+			//$sRet = $this->GetTitle();
+		}
+		return $sRet;
 	}
 	
 	public function GetIndex()
@@ -647,11 +673,12 @@ class OQLMenuNode extends MenuNode
 			$this->bSearch, // Search pane
 			true, // Search open
 			$oPage, 
-			array_merge($this->m_aParams, $aExtraParams)
+			array_merge($this->m_aParams, $aExtraParams),
+			true
 		);
 	}
 
-	public static function RenderOQLSearch($sOql, $sTitle, $sUsageId, $bSearchPane, $bSearchOpen, WebPage $oPage, $aExtraParams = array())
+	public static function RenderOQLSearch($sOql, $sTitle, $sUsageId, $bSearchPane, $bSearchOpen, WebPage $oPage, $aExtraParams = array(), $bEnableBreadcrumb = false)
 	{
 		$sUsageId = utils::GetSafeId($sUsageId);
 		$oSearch = DBObjectSearch::FromOQL($sOql);
@@ -669,6 +696,15 @@ class OQLMenuNode extends MenuNode
 		$aParams = array_merge(array('table_id' => $sUsageId), $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'list', false /* Asynchronous */, $aParams);
 		$oBlock->Display($oPage, $sUsageId);
+
+		if ($bEnableBreadcrumb && ($oPage instanceof iTopWebPage))
+		{
+			// Breadcrumb
+			//$iCount = $oBlock->GetDisplayedCount();
+			$sPageId = "ui-search-".$oSearch->GetClass();
+			$sLabel = MetaModel::GetName($oSearch->GetClass());
+			$oPage->SetBreadCrumbEntry($sPageId, $sLabel, $sTitle, '', '../images/breadcrumb-search.png');
+		}
 	}
 }
 
@@ -920,6 +956,29 @@ EOF
 				$sId = addslashes($this->sMenuId);
 				$oPage->add_ready_script("EditDashboard('$sId');");
 			}
+			else
+			{
+				$oParentMenu = ApplicationMenu::GetMenuNode($this->iParentIndex);
+				$sParentTitle = $oParentMenu->GetTitle();
+				$sThisTitle = $this->GetTitle();
+				if ($sParentTitle != $sThisTitle)
+				{
+					$sDescription = $sParentTitle.' / '.$sThisTitle;
+				}
+				else
+				{
+					$sDescription = $sThisTitle;
+				}
+				if ($this->sMenuId == ApplicationMenu::GetDefaultMenuId())
+				{
+					$sIcon = '../images/breadcrumb_home.png';
+				}
+				else
+				{
+					$sIcon = '../images/breadcrumb-dashboard.png';
+				}
+				$oPage->SetBreadCrumbEntry("ui-dashboard-".$this->sMenuId, $this->GetTitle(), $sDescription, '', $sIcon);
+			}
 		}
 		else
 		{
@@ -950,7 +1009,7 @@ EOF
 		}
 		else
 		{
-			$oPage->p("Error: failed to load dashboard file: '{$this->sDashboardFile}'");
+			throw new Exception("Error: failed to load dashboard file: '{$this->sDashboardFile}'");
 		}
 	}
 	

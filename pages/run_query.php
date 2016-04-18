@@ -192,6 +192,29 @@ try
 		$oResultBlock = new DisplayBlock($oFilter, 'list', false);
 		$oResultBlock->Display($oP, 'runquery');
 
+		// Breadcrumb
+		//$iCount = $oResultBlock->GetDisplayedCount();
+		$sPageId = "ui-search-".$oFilter->GetClass();
+		$sLabel = MetaModel::GetName($oFilter->GetClass());
+		$aArgs = array();
+		foreach (array_merge($_POST, $_GET) as $sKey => $value)
+		{
+			if (is_array($value))
+			{
+				$aItems = array();
+				foreach($value as $sItemKey => $sItemValue)
+				{
+					$aArgs[] = $sKey.'['.$sItemKey.']='.urlencode($sItemValue);
+				}
+			}
+			else
+			{
+				$aArgs[] = $sKey.'='.urlencode($value);
+			}
+		}
+		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/run_query.php?'.implode('&', $aArgs);
+		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $oFilter->ToOQL(true), $sUrl, '../images/breadcrumb-search.png');
+
 		$oP->p('');
 		$oP->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false);
 		$oP->p(Dict::S('UI:RunQuery:DevelopedQuery').htmlentities($oFilter->ToOQL(), ENT_QUOTES, 'UTF-8'));

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * Persistent class Shortcut and derived
  * Shortcuts of any kind
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -200,7 +200,7 @@ class ShortcutOQL extends Shortcut
 		$bSearchOpen = false;
 		try
 		{
-			OQLMenuNode::RenderOQLSearch($this->Get('oql'), $this->Get('name'), 'shortcut_'.$this->GetKey(), $bSearchPane, $bSearchOpen, $oPage, $aExtraParams);
+			OQLMenuNode::RenderOQLSearch($this->Get('oql'), $this->Get('name'), 'shortcut_'.$this->GetKey(), $bSearchPane, $bSearchOpen, $oPage, $aExtraParams, true);
 		}
 		catch (Exception $e)
 		{

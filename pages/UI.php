@@ -20,7 +20,7 @@
 /**
  * Main page of iTop
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -174,6 +174,12 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
 		{
 			$oBlock = new DisplayBlock($oFilter, 'list', false);
 			$oBlock->Display($oP, 1);
+
+			// Breadcrumb
+			//$iCount = $oBlock->GetDisplayedCount();
+			$sPageId = "ui-search-".$oFilter->GetClass();
+			$sLabel = MetaModel::GetName($oFilter->GetClass());
+			$oP->SetBreadCrumbEntry($sPageId, $sLabel, '', '', '../images/breadcrumb-search.png');
 		}
 	}
 }
@@ -356,11 +362,13 @@ try
 				}
 				if (!is_null($oObj))
 				{
+					$sClass = get_class($oObj); // get the leaf class
+					$oP->SetBreadCrumbEntry("ui-details-$sClass-$id", $oObj->Get('friendlyname'), $sClass.': '.$oObj->Get('friendlyname'), '', MetaModel::GetClassIcon($sClass, false));
 					DisplayDetails($oP, $sClass, $oObj, $id);
 				}				
 			}
 		break;
-		
+
 		case 'release_lock_and_details':
 		$sClass = utils::ReadParam('class', '');
 		$id = utils::ReadParam('id', '');
@@ -414,19 +422,19 @@ try
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'search_form': // Search form
-		$sClass = utils::ReadParam('class', '', false, 'class');
-		$sFormat = utils::ReadParam('format', 'html');
-		$bSearchForm = utils::ReadParam('search_form', true);
-		$bDoSearch = utils::ReadParam('do_search', true);
-		if (empty($sClass))
-		{
-			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
-		}
-		$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
-		$oFilter =  new DBObjectSearch($sClass);
-		DisplaySearchSet($oP, $oFilter, $bSearchForm, '' /* sBaseClass */, $sFormat, $bDoSearch);
-		break;
-		
+			$sClass = utils::ReadParam('class', '', false, 'class');
+			$sFormat = utils::ReadParam('format', 'html');
+			$bSearchForm = utils::ReadParam('search_form', true);
+			$bDoSearch = utils::ReadParam('do_search', true);
+			if (empty($sClass))
+			{
+				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
+			}
+			$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
+			$oFilter =  new DBObjectSearch($sClass);
+			DisplaySearchSet($oP, $oFilter, $bSearchForm, '' /* sBaseClass */, $sFormat, $bDoSearch);
+			break;
+
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'search': // Serialized DBSearch
@@ -1633,7 +1641,7 @@ catch(Exception $e)
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
-	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));		
+	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));
 	$oP->output();
 
 	if (MetaModel::IsLogEnabledIssue())

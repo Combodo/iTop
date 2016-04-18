@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Analytical search
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -113,7 +113,13 @@ if ($oFilter != null)
 	// Search results	
 	$oResultBlock = new DisplayBlock($oFilter, 'list', false);
 	$oResultBlock->Display($oP, 1);
-	
+
+	// Breadcrumb
+	//$iCount = $oBlock->GetDisplayedCount();
+	$sPageId = "ui-search-".$oFilter->GetClass();
+	$sLabel = MetaModel::GetName($oFilter->GetClass());
+	$oP->SetBreadCrumbEntry($sPageId, $sLabel, '', '', '../images/breadcrumb-search.png');
+
 	// Menu node
 	$sFilter = $oFilter->ToOQL();
 	$oP->add("\n<!-- $sFilter -->\n");

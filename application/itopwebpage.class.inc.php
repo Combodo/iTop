@@ -37,6 +37,11 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	private $m_sMessage;
 	private $m_sInitScript;
 	protected $m_oTabs;
+	protected $sBreadCrumbEntryId;
+	protected $sBreadCrumbEntryLabel;
+	protected $sBreadCrumbEntryDescription;
+	protected $sBreadCrumbEntryUrl;
+	protected $sBreadCrumbEntryIcon;
 
 	public function __construct($sTitle, $bPrintable = false)
 	{
@@ -44,6 +49,12 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->m_oTabs = new TabManager();
 
 		ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
+
+		$this->sBreadCrumbEntryId = null;
+		$this->sBreadCrumbEntryLabel = null;
+		$this->sBreadCrumbEntryDescription = null;
+		$this->sBreadCrumbEntryUrl = null;
+		$this->sBreadCrumbEntryIcon = '';
 
 		$this->m_sMenu = "";
 		$this->m_sMessage = '';
@@ -55,7 +66,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_stylesheet("../css/fg.menu.css");
 		$this->add_linked_stylesheet("../css/jquery.multiselect.css");
 		$this->add_linked_stylesheet("../css/magnific-popup.css");
-		
+
 		$this->add_linked_script('../js/jquery.layout.min.js');
 		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
 		$this->add_linked_script("../js/jquery.treeview.js");
@@ -79,7 +90,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script('../js/ajaxfileupload.js');
 		$this->add_linked_script('../js/jquery.mousewheel.js');
 		$this->add_linked_script('../js/jquery.magnific-popup.min.js');
-			
+		$this->add_linked_script('../js/breadcrumb.js');
+
 		
 		$sSearchAny = addslashes(Dict::S('UI:SearchValue:Any'));
 		$sSearchNbSelected = addslashes(Dict::S('UI:SearchValue:NbSelected'));
@@ -244,7 +256,7 @@ EOF;
 				});
 			}
 		});
-					
+
 		$('.resizable').filter(':visible').resizable();
 	}
 	catch(err)
@@ -517,7 +529,23 @@ EOF
 		}
 EOF
 		);
-	}	
+	}
+
+	/**
+	 * @param string $sId Identifies the item, to search after it in the current breadcrumb
+	 * @param string $sLabel Label of the breadcrumb item
+	 * @param string $sDescription More information, displayed as a tooltip
+	 * @param string $sUrl Specify a URL if the current URL as perceived on the browser side is not relevant
+	 * @param string $sIcon Icon (relative or absolute) path that will be displayed next to the label
+	 */
+	public function SetBreadCrumbEntry($sId, $sLabel, $sDescription, $sUrl = '', $sIcon = '')
+	{
+		$this->sBreadCrumbEntryId = $sId;
+		$this->sBreadCrumbEntryLabel = $sLabel;
+		$this->sBreadCrumbEntryDescription = $sDescription;
+		$this->sBreadCrumbEntryUrl = $sUrl;
+		$this->sBreadCrumbEntryIcon = $sIcon;
+	}
 
 	public function AddToMenu($sHtml)
 	{
@@ -643,7 +671,9 @@ EOF
 			'selectedList' => 1,
 		);
 		$sJSMultiselectOptions = json_encode($aMultiselectOptions);
-		
+
+		$siTopInstanceId = json_encode(APPROOT);
+		$sNewEntry = is_null($this->sBreadCrumbEntryId) ? 'null' : json_encode(array('id' => $this->sBreadCrumbEntryId, 'url' => $this->sBreadCrumbEntryUrl, 'label' => htmlentities($this->sBreadCrumbEntryLabel, ENT_QUOTES, 'UTF-8'), 'description' => htmlentities($this->sBreadCrumbEntryDescription, ENT_QUOTES, 'UTF-8'), 'icon' => $this->sBreadCrumbEntryIcon));
 		$this->add_ready_script(
 <<<EOF
 		// Since the event is only triggered when the hash changes, we need to trigger
@@ -654,6 +684,8 @@ EOF
 		$('table.listResults').each( function() { FixTableSorter($(this)); } );
 		
 		$('.multiselect').multiselect($sJSMultiselectOptions);
+
+		$('#itop-breadcrumb').breadcrumb({itop_instance_id: $siTopInstanceId, new_entry: $sNewEntry});
 
 		FixSearchFormsDisposition();
 
@@ -897,7 +929,7 @@ EOF
 			
 			if (!empty($sNorthPane))
 			{
-				$sNorthPane = '<div id="bottom-pane" class="ui-layout-north">'.$sNorthPane.'</div>';
+				$sNorthPane = '<div id="top-pane" class="ui-layout-north">'.$sNorthPane.'</div>';
 			}
 			
 			if (!empty($sSouthPane))
@@ -944,13 +976,27 @@ EOF
 			$sHtml .= '</div>';
 
 			$sHtml .= '<div class="ui-layout-center">';
-			$sHtml .= ' <div id="top-bar" style="width:100%">';
+			$sHtml .= ' <div id="top-bar" class="ui-helper-clearfix" style="width:100%">';
 			$sHtml .= self::FilterXSS($sApplicationBanner);
+
+			$sHtml .= ' <table id="top-bar-table">';
+			$sHtml .= ' <tr>';
+			$sHtml .= ' <td id="top-bar-table-breadcrumb">';
+			$sHtml .= ' <div id="itop-breadcrumb"></div>';
+			$sHtml .= ' </td>';
+			$sHtml .= ' <td id="top-bar-table-search">';
 			$sHtml .= '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><table><tr><td></td><td><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="'.$sText.'"></input><div '.$sOnClick.' id="global-search-image"></div></div></td>';
-			//$sHtml .= '<td><input type="image" src="../images/searchBtn.png"/></a></td>';
-			$sHtml .= '<td><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank"><img title="'.Dict::S('UI:Help').'" src="../images/help.png?itopversion='.ITOP_VERSION.'"/></td>';
-			$sHtml .= '<td>'.self::FilterXSS($sLogOffMenu).'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
-			//echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
+			$sHtml .= '     <td><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank"><img title="'.Dict::S('UI:Help').'" src="../images/help.png?itopversion='.ITOP_VERSION.'"/></td>';
+			$sHtml .= '     <td>'.self::FilterXSS($sLogOffMenu).'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
+			$sHtml .= ' </td>';
+			$sHtml .= ' </tr>';
+			$sHtml .= ' </table>';
+
+//			$sHtml .= '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><table><tr><td></td><td><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="'.$sText.'"></input><div '.$sOnClick.' id="global-search-image"></div></div></td>';
+//			$sHtml .= '<td><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank"><img title="'.Dict::S('UI:Help').'" src="../images/help.png?itopversion='.ITOP_VERSION.'"/></td>';
+//			$sHtml .= '<td>'.self::FilterXSS($sLogOffMenu).'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
+//			$sHtml .= ' <div id="itop-breadcrumb"></div>';
+
 			$sHtml .= ' </div>';
 			$sHtml .= ' <div class="ui-layout-content" style="overflow:auto;">';
 			$sHtml .= ' <!-- Beginning of page content -->';
