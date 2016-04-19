@@ -810,7 +810,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Portal:Refresh' => 'Neu laden',
 	'Portal:Back' => 'Zurück',
 	'Portal:WelcomeUserOrg' => 'Wilkommen %1$s, von %2$s',
-	'Portal:TitleDetailsFor_Request' => 'Deails für Benutzeranfrage',
+	'Portal:TitleDetailsFor_Request' => 'Details für Benutzeranfrage',
 	'Portal:ShowOngoing' => 'Zeige offene Requests',
 	'Portal:ShowClosed' => 'Zeige geschlossene Requests',
 	'Portal:CreateNewRequest' => 'Einen neuen Request erstellen',

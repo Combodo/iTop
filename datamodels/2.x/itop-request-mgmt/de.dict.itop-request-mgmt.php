@@ -246,7 +246,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => 'Parent Request ID Friendly Name',
 	'Class:UserRequest/Attribute:parent_request_id_friendlyname+' => '',
-	'Portal:TitleDetailsFor_Request' => 'Deails für Benutzeranfrage',
+	'Portal:TitleDetailsFor_Request' => 'Details für Benutzeranfrage',
 	'Portal:ButtonUpdate' => 'Update',
 	'Portal:ButtonClose' => 'Schließen',
 	'Portal:ButtonReopen' => 'Wiedereröffnen',
