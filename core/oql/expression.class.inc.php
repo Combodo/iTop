@@ -648,7 +648,12 @@ class VariableExpression extends UnaryExpression
 		}
 		elseif (array_key_exists($this->m_sName, $aArgs))
 		{
-			return CMDBSource::Quote($aArgs[$this->m_sName]);
+			$res = CMDBSource::Quote($aArgs[$this->m_sName]);
+			if (is_array($res))
+			{
+				$res = implode(', ', $res);
+			}
+			return $res;
 		}
 		elseif (($iPos = strpos($this->m_sName, '->')) !== false)
 		{

@@ -2488,7 +2488,10 @@ abstract class MetaModel
 				{
 					$aScalarArgs[$sArgName] = null;
 				}
-				// otherwise... could be an array coming from the extra params...
+				elseif (is_array($value))
+				{
+					$aScalarArgs[$sArgName] = $value;
+				}
 			}
 		}
 		// Add standard magic arguments
