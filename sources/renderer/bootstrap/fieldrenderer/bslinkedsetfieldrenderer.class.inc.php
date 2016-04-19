@@ -168,7 +168,13 @@ EOF
 					'get_current_value_callback': function(me, oEvent, oData){
 						var value = null;
 
-						value = JSON.parse(me.element.find('#{$this->oField->GetGlobalId()}').val());
+						// Retrieving JSON value as a string and not an object
+						//
+						// Note : The value is passed as a string instead of an array because the attribute would not be included in the posted data when empty.
+						// Which was an issue when deleting all objects from linkedset
+						//
+						// Old code : value = JSON.parse(me.element.find('#{$this->oField->GetGlobalId()}').val());
+						value = me.element.find('#{$this->oField->GetGlobalId()}').val();
 
 						return value;
 					},
