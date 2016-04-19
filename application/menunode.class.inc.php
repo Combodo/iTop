@@ -297,7 +297,7 @@ class ApplicationMenu
 		$sMenuId = $oAppContext->GetCurrentValue('menu', null);		
 		if ($sMenuId  === null)
 		{
-			$sMenuId == self::GetDefaultMenuId();
+			$sMenuId = self::GetDefaultMenuId();
 		}
 		return $sMenuId;
 	}	
