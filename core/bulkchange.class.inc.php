@@ -799,6 +799,8 @@ class BulkChange
 			//
 			foreach ($this->m_aAttList as $sAttCode => $iCol)
 			{
+				if ($sAttCode == 'id') continue;
+
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
 				if ($oAttDef instanceof AttributeDateTime)
 				{
