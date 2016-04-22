@@ -853,4 +853,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.',
 	'Core:BulkExport:XLSXOptions' => 'Excel Options',
 	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup',
+	'Core:BulkExport:DateTimeFormat' => 'Date and Time format',
+	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s',
+	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s',
 ));

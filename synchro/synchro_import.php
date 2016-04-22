@@ -97,7 +97,7 @@ $aPageParams = array
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => '',
-		'description' => 'Input date format (used both for dates and datetimes) - Examples: %Y-%m-%d, %d/%m/%Y (Europe) - no transformation is applied if the argument is omitted',
+		'description' => 'Input date format (used both for dates and datetimes) - Examples: Y-m-d, d/m/Y (Europe) - no transformation is applied if the argument is omitted. (note: old format specification using %Y %m %d is also supported for backward compatibility)',
 	),
 	'separator' => array
 	(
@@ -217,10 +217,10 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
 function ChangeDateFormat($sProposedDate, $sDateFormat)
 {
 	// Make sure this is a valid MySQL datetime
-	$iTime = utils::StringToTime($sProposedDate, $sDateFormat);
-	if ($iTime !== false)
+	$oDate = DateTime::createFromFormat($sDateFormat, $sProposedDate);
+	if ($oDate !== false)
 	{
-		$sDate = date('Y-m-d H:i:s', $iTime);
+		$sDate = $oDate->format(AttributeDateTime::GetInternalFormat());
 		return $sDate;
 	}
 	else
@@ -311,6 +311,10 @@ try
 	$sQualifier = ReadParam($oP, 'qualifier', 'raw_data');
 	$sCharSet = ReadParam($oP, 'charset', 'raw_data');
 	$sDateFormat = ReadParam($oP, 'date_format', 'raw_data');
+	if (strpos($sDateFormat, '%') !== false)
+	{
+		$sDateFormat = utils::DateTimeFormatToPHP($sDateFormat);
+	}
 	$sOutput = ReadParam($oP, 'output');
 //	$sReportLevel = ReadParam($oP, 'reportlevel');
 	$sSimulate = ReadParam($oP, 'simulate');

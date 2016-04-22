@@ -13,6 +13,8 @@ Class XLSXWriter
 	protected $shared_strings = array();//unique set
 	protected $shared_string_count = 0;//count of non-unique references to the unique set
 	protected $temp_files = array();
+	protected $date_format = 'YYYY-MM-DD';
+	protected $date_time_format = 'YYYY-MM-DD\ HH:MM:SS';
 
 	public function __construct(){}
 	public function setAuthor($author='') { $this->author=$author; }
@@ -24,6 +26,16 @@ Class XLSXWriter
 				@unlink($temp_file);
 			}
 		}
+	}
+	
+	public function setDateFormat($date_format)
+	{
+		$this->date_format = $date_format;
+	}
+	
+	public function setDateTimeFormat($date_time_format)
+	{
+		$this->date_time_format = $date_time_format;
 	}
 	
 	protected function tempFilename()
@@ -183,8 +195,8 @@ Class XLSXWriter
 		fwrite($fd, '<numFmts count="4">');
 		fwrite($fd, 		'<numFmt formatCode="GENERAL" numFmtId="164"/>');
 		fwrite($fd, 		'<numFmt formatCode="[$$-1009]#,##0.00;[RED]\-[$$-1009]#,##0.00" numFmtId="165"/>');
-		fwrite($fd, 		'<numFmt formatCode="YYYY-MM-DD\ HH:MM:SS" numFmtId="166"/>');
-		fwrite($fd, 		'<numFmt formatCode="YYYY-MM-DD" numFmtId="167"/>');
+		fwrite($fd, 		'<numFmt formatCode="'.$this->date_time_format.'" numFmtId="166"/>');
+		fwrite($fd, 		'<numFmt formatCode="'.$this->date_format.'" numFmtId="167"/>');
 		fwrite($fd, '</numFmts>');
 		fwrite($fd, '<fonts count="4">');
 		fwrite($fd, 		'<font><name val="Arial"/><charset val="1"/><family val="2"/><sz val="10"/></font>');

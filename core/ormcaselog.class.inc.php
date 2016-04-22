@@ -115,14 +115,14 @@ class ormCaseLog {
 			if (is_int($this->m_aIndex[$index]['date']))
 			{
 				// Unix timestamp
-				$sDate = date(Dict::S('UI:CaseLog:DateFormat'),$this->m_aIndex[$index]['date']);
+				$sDate = date(AttributeDateTime::GetInternalFormat(),$this->m_aIndex[$index]['date']);
 			}
 			elseif (is_object($this->m_aIndex[$index]['date']))
 			{
 				if (version_compare(phpversion(), '5.3.0', '>='))
 				{
 					// DateTime
-					$sDate = $this->m_aIndex[$index]['date']->format(Dict::S('UI:CaseLog:DateFormat'));
+					$sDate = $this->m_aIndex[$index]['date']->format(AttributeDateTime::GetInternalFormat());
 				}
 				else
 				{
@@ -234,14 +234,14 @@ class ormCaseLog {
 			if (is_int($aIndex[$index]['date']))
 			{
 				// Unix timestamp
-				$sDate = date(Dict::S('UI:CaseLog:DateFormat'),$aIndex[$index]['date']);
+				$sDate = date(AttributeDateTime::GetFormat(), $aIndex[$index]['date']);
 			}
 			elseif (is_object($aIndex[$index]['date']))
 			{
 				if (version_compare(phpversion(), '5.3.0', '>='))
 				{
 					// DateTime
-					$sDate = $aIndex[$index]['date']->format(Dict::S('UI:CaseLog:DateFormat'));
+					$sDate = $aIndex[$index]['date']->format(AttributeDateTime::GetFormat());
 				}
 				else
 				{
@@ -322,14 +322,14 @@ class ormCaseLog {
 			if (is_int($aIndex[$index]['date']))
 			{
 				// Unix timestamp
-				$sDate = date(Dict::S('UI:CaseLog:DateFormat'),$aIndex[$index]['date']);
+				$sDate = date(AttributeDateTime::GetFormat(),$aIndex[$index]['date']);
 			}
 			elseif (is_object($aIndex[$index]['date']))
 			{
 				if (version_compare(phpversion(), '5.3.0', '>='))
 				{
 					// DateTime
-					$sDate = $aIndex[$index]['date']->format(Dict::S('UI:CaseLog:DateFormat'));
+					$sDate = $aIndex[$index]['date']->format(AttributeDateTime::GetFormat());
 				}
 				else
 				{
@@ -425,14 +425,14 @@ class ormCaseLog {
 			if (is_int($aIndex[$index]['date']))
 			{
 				// Unix timestamp
-				$sDate = date(Dict::S('UI:CaseLog:DateFormat'),$aIndex[$index]['date']);
+				$sDate = date(AttributeDateTime::GetFormat(),$aIndex[$index]['date']);
 			}
 			elseif (is_object($aIndex[$index]['date']))
 			{
 				if (version_compare(phpversion(), '5.3.0', '>='))
 				{
 					// DateTime
-					$sDate = $aIndex[$index]['date']->format(Dict::S('UI:CaseLog:DateFormat'));
+					$sDate = $aIndex[$index]['date']->format(AttributeDateTime::GetFormat());
 				}
 				else
 				{
@@ -498,7 +498,7 @@ class ormCaseLog {
 	{
 		$sText = HTMLSanitizer::Sanitize($sText);
 		$bMergeEntries = false;
-		$sDate = date(Dict::S('UI:CaseLog:DateFormat'));
+		$sDate = date(AttributeDateTime::GetInternalFormat());
 		if ($sOnBehalfOf == '')
 		{
 			$sOnBehalfOf = UserRights::GetUserFriendlyName();
@@ -612,7 +612,7 @@ class ormCaseLog {
 			$sFormat = 'html';
 		}
 		
-		$sDate = date(Dict::S('UI:CaseLog:DateFormat'), $iDate);
+		$sDate = date(AttributeDateTime::GetInternalFormat(), $iDate);
 
 		$sSeparator = sprintf(CASELOG_SEPARATOR, $sDate, $sOnBehalfOf, $iUserId);
 		$iSepLength = strlen($sSeparator);

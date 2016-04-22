@@ -63,6 +63,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_header("Cache-control: no-cache");
 		$this->add_linked_stylesheet("../css/jquery.treeview.css");
 		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
+		$this->add_linked_stylesheet("../css/jquery-ui-timepicker-addon.css");
 		$this->add_linked_stylesheet("../css/fg.menu.css");
 		$this->add_linked_stylesheet("../css/jquery.multiselect.css");
 		$this->add_linked_stylesheet("../css/magnific-popup.css");
@@ -73,6 +74,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script("../js/jquery.treeview.js");
 		$this->add_linked_script("../js/jquery.autocomplete.js");
 		$this->add_linked_script("../js/date.js");
+		$this->add_linked_script("../js/jquery-ui-timepicker-addon.js");
+		$this->add_linked_script("../js/jquery-ui-timepicker-addon-i18n.min.js");
 		$this->add_linked_script("../js/jquery.blockUI.js");
 		$this->add_linked_script("../js/utils.js");
 		$this->add_linked_script("../js/swfobject.js");
@@ -83,8 +86,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script('../js/fg.menu.js');
 		$this->add_linked_script('../js/icon_select.js');
 		$this->add_linked_script('../js/raphael-min.js');
-		$this->add_linked_script('../js/d3.min.js');
-		$this->add_linked_script('../js/c3.min.js');
+		$this->add_linked_script('../js/d3.js');
+		$this->add_linked_script('../js/c3.js');
 		$this->add_linked_script('../js/jquery.multiselect.js');
 		$this->add_linked_script('../js/ajaxfileupload.js');
 		$this->add_linked_script('../js/jquery.mousewheel.js');
@@ -152,6 +155,11 @@ EOF;
 		$sJSMonthsShort = json_encode(array(Dict::S('Month-01-Short'), Dict::S('Month-02-Short'), Dict::S('Month-03-Short'), Dict::S('Month-04-Short'), Dict::S('Month-05-Short'), Dict::S('Month-06-Short'), 
 											Dict::S('Month-07-Short'), Dict::S('Month-08-Short'), Dict::S('Month-09-Short'), Dict::S('Month-10-Short'), Dict::S('Month-11-Short'), Dict::S('Month-12-Short')));
 		$iFirstDayOfWeek = (int) Dict::S('Calendar-FirstDayOfWeek');
+		$sDateFormat = AttributeDate::GetDatePickerFormat();
+		$sJSDateFormat = json_encode($sDateFormat);
+		$sJSTimeFormat = json_encode(trim(str_replace($sDateFormat, '', AttributeDateTime::GetDatePickerFormat())));
+		$sJSLangShort = json_encode(strtolower(substr(Dict::GetUserLanguage(), 0, 2)));
+		$sJSOk = json_encode(Dict::S('UI:Button:Ok'));
 		
 		$this->m_sInitScript =
 <<< EOF
@@ -393,7 +401,7 @@ EOF
 			showOn: 'button',
 			buttonImage: '../images/calendar.png',
 			buttonImageOnly: true,
-			dateFormat: 'yy-mm-dd',
+			dateFormat: $sJSDateFormat,
 			constrainInput: false,
 			changeMonth: true,
 			changeYear: true,
@@ -401,18 +409,28 @@ EOF
 			monthNamesShort: $sJSMonthsShort,
 			firstDay: $iFirstDayOfWeek
 		});
-	$(".datetime-pick").datepicker({
+	$(".datetime-pick").datetimepicker({
 			showOn: 'button',
 			buttonImage: '../images/calendar.png',
 			buttonImageOnly: true,
-			dateFormat: 'yy-mm-dd 00:00:00',
+			dateFormat: $sJSDateFormat,
 			constrainInput: false,
 			changeMonth: true,
 			changeYear: true,
 			dayNamesMin: $sJSDaysMin,
 			monthNamesShort: $sJSMonthsShort,
-			firstDay: $iFirstDayOfWeek
-		});
+			firstDay: $iFirstDayOfWeek,
+			// time picker options	
+			timeFormat: $sJSTimeFormat,
+			controlType: 'select',
+			timeText: $.timepicker.regional[$sJSLangShort].timeText,
+			hourText: $.timepicker.regional[$sJSLangShort].hourText,
+			minuteText: $.timepicker.regional[$sJSLangShort].minuteText,
+			secondText: $.timepicker.regional[$sJSLangShort].secondText,
+			currentText: $.timepicker.regional[$sJSLangShort].currentText,
+			closeText: $sJSOk
+	});
+				
 
 	// Make sortable, everything that claims to be sortable
 	$('.sortable').sortable( {axis: 'y', cursor: 'move', handle: '.drag_handle', stop: function()
@@ -454,6 +472,11 @@ EOF
 EOF
 		);
 		$this->add_ready_script(InlineImage::FixImagesWidth());
+		/*
+		 * Not used since the sorting of the tables is always performed server-side
+		AttributeDateTime::InitTableSorter($this, 'custom_date_time');
+		AttributeDate::InitTableSorter($this, 'custom_date');
+		*/
 				
 		$sUserPrefs = appUserPreferences::GetAsJSON();
 		$this->add_script(

@@ -488,7 +488,7 @@ class InlineImageGC implements iBackgroundProcess
 
 	public function Process($iTimeLimit)
 	{
-		$sDateLimit = date('Y-m-d H:i:s', time()); // Every temporary InlineImage/Attachment expired will be deleted
+		$sDateLimit = date(AttributeDateTime::GetSQLFormat(), time()); // Every temporary InlineImage/Attachment expired will be deleted
 
 		$iProcessed = 0;
 		$sOQL = "SELECT InlineImage WHERE (item_id = 0) AND (expire < '$sDateLimit')";

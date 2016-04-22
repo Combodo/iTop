@@ -482,6 +482,19 @@ class utils
 	   }
 	   // http://www.spaweditor.com/scripts/regex/index.php
 	}
+	
+	/**
+	 * Convert an old date/time format specifciation (using % placeholders)
+	 * to a format compatible with DateTime::createFromFormat
+	 * @param string $sOldDateTimeFormat
+	 * @return string
+	 */
+	static public function DateTimeFormatToPHP($sOldDateTimeFormat)
+	{
+		$aSearch = array('%d', '%m', '%y', '%Y', '%H', '%i', '%s');
+		$aReplacement = array('d', 'm', 'y', 'Y', 'H', 'i', 's');
+		return str_replace($aSearch, $aReplacement, $sOldDateTimeFormat);
+	}
 
 	static public function GetConfig()
 	{

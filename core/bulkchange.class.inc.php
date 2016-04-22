@@ -258,7 +258,7 @@ class BulkChange
 	protected $m_aReconcilKeys; // attcode (attcode = 'id' for the pkey)
 	protected $m_sSynchroScope; // OQL - if specified, then the missing items will be reported
 	protected $m_aOnDisappear; // array of attcode => value, values to be set when an object gets out of scope (ignored if no scope has been defined)
-	protected $m_sDateFormat; // Date format specification, see utils::StringToTime()
+	protected $m_sDateFormat; // Date format specification, see DateTime::createFromFormat
 	protected $m_bLocalizedValues; // Values in the data set are localized (see AttributeEnum)
 	protected $m_aExtKeysMappingCache; // Cache for resolving external keys based on the given search criterias
 
@@ -800,16 +800,16 @@ class BulkChange
 			foreach ($this->m_aAttList as $sAttCode => $iCol)
 			{
 				if ($sAttCode == 'id') continue;
-
+				
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
 				if ($oAttDef instanceof AttributeDateTime)
 				{
 					foreach($this->m_aData as $iRow => $aRowData)
 					{
-						$sNewDate = utils::StringToTime($this->m_aData[$iRow][$iCol], $this->m_sDateFormat);
-						if ($sNewDate !== false)
+						$oDate = DateTime::createFromFormat($this->m_sDateFormat, $this->m_aData[$iRow][$iCol]);
+						if ($oDate !== false)
 						{
-							// Todo - improve the reporting
+							$sNewDate = $oDate->format($oAttDef->GetInternalFormat());
 							$this->m_aData[$iRow][$iCol] = $sNewDate;
 						}
 						else

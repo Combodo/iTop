@@ -705,6 +705,17 @@ abstract class DBObject implements iDisplay
 			if ($aCallInfo["function"] != "ComputeValues") continue;
 			return; //skip!
 		}
+		
+		// Set the "null-not-allowed" datetimes (and dates) whose value is not initialized
+		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
+		{
+			// AttributeDate is derived from AttributeDateTime
+			if (($oAttDef instanceof AttributeDateTime) && (!$oAttDef->IsNullAllowed()) && ($this->Get($sAttCode) == $oAttDef->GetNullValue()))
+			{
+				$this->Set($sAttCode, date($oAttDef->GetFormat()));
+			}
+		}
+		
 		$this->ComputeValues();
 	}
 
@@ -3300,8 +3311,8 @@ abstract class DBObject implements iDisplay
 				}
 				$aContext['current_contact_id'] = UserRights::GetContactId();
 				$aContext['current_contact_friendlyname'] = UserRights::GetUserFriendlyName();
-				$aContext['current_date'] = date('Y-m-d');
-				$aContext['current_time'] = date('H:i:s');
+				$aContext['current_date'] = date(AttributeDate::GetSQLFormat());
+				$aContext['current_time'] = date(AttributeDateTime::GetSQLTimeFormat());
 				$sValue = MetaModel::ApplyParams($sRawValue, $aContext);
 				$this->Set($sAttCode, $sValue);
 				break;
@@ -3328,8 +3339,8 @@ abstract class DBObject implements iDisplay
 				}
 				$aContext['current_contact_id'] = UserRights::GetContactId();
 				$aContext['current_contact_friendlyname'] = UserRights::GetUserFriendlyName();
-				$aContext['current_date'] = date('Y-m-d');
-				$aContext['current_time'] = date('H:i:s');
+				$aContext['current_date'] = date(AttributeDate::GetSQLFormat());
+				$aContext['current_time'] = date(AttributeDateTime::GetSQLTimeFormat());
 				$sAddendum = MetaModel::ApplyParams($sRawAddendum, $aContext);
 				$this->Set($sAttCode, $this->Get($sAttCode).$sAddendum);
 				break;

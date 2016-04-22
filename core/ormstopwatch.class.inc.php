@@ -490,7 +490,7 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 					{
 						$iPercent = $aThresholdData['percent']; // could be different than the index !
 		
-						$sNow = date('Y-m-d H:i:s');
+						$sNow = date(AttributeDateTime::GetSQLFormat());
 						$sExpression = "SELECT $sClass WHERE {$sAttCode}_laststart AND {$sAttCode}_{$iThreshold}_triggered = 0 AND {$sAttCode}_{$iThreshold}_deadline < '$sNow'";
 						$oFilter = DBObjectSearch::FromOQL($sExpression);
 						$oSet = new DBObjectSet($oFilter);

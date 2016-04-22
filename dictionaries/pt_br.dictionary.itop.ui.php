@@ -1016,7 +1016,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:FailedToApplyStimuli' => 'A ação falhou.',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: modificando objetos %2$d da classe %3$s',
 	'UI:CaseLogTypeYourTextHere' => 'Digite seu texto aqui:',
-	'UI:CaseLog:DateFormat' => 'Y-m-d H:i:s',
 	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
 	'UI:CaseLog:InitialValue' => 'Valor inicial:',
 	'UI:AttemptingToSetASlaveAttribute_Name' => 'O campo %1$s não é editável, porque é originado pela sincronização de dados. Valor não definido.',

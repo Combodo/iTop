@@ -861,7 +861,6 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:FailedToApplyStimuli' => 'Der Vorgang ist fehlgeschlagen.',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: Modifiziere %2$d Objekte der Klasse %3$s',
 	'UI:CaseLogTypeYourTextHere' => 'Geben Sie Ihren Text hier ein:',
-	'UI:CaseLog:DateFormat' => 'Y-m-d H:i:s',
 	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
 	'UI:CaseLog:InitialValue' => 'Anfangswert:',
 	'UI:AttemptingToSetASlaveAttribute_Name' => 'Das Feld %1$s ist nicht schreibbar, weil es durch die Datensynchronisation geführt wird. Wert nicht gesetzt.',

@@ -209,6 +209,11 @@ try
 		$bAdvanced = utils::ReadParam('advanced', 0);
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 		$sSynchroScope = utils::ReadParam('synchro_scope', '', false, 'raw_data');
+		$sDateTimeFormat = utils::ReadParam('date_time_format', 'default');
+		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', AttributeDateTime::GetFormat(), false, 'raw_data');
+		
+		$sChosenDateFormat = ($sDateTimeFormat == 'default') ? AttributeDateTime::GetFormat() : $sCustomDateTimeFormat;
+		
 		if (!empty($sSynchroScope))
 		{
 			$oSearch = DBObjectSearch::FromOQL($sSynchroScope);
@@ -319,7 +324,7 @@ try
 			array_keys($aSearchKeys),
 			empty($sSynchroScope) ? null : $sSynchroScope,
 			$aSynchroUpdate,
-			null, // date format
+			$sChosenDateFormat, // date format
 			true // localize		
 		);
 		$oBulk->SetReportHtml();
@@ -498,6 +503,8 @@ try
 		$oPage->add('<input type="hidden" name="advanced" value="'.$bAdvanced.'"/>');
 		$oPage->add('<input type="hidden" name="encoding" value="'.$sEncoding.'"/>');
 		$oPage->add('<input type="hidden" name="synchro_scope" value="'.$sSynchroScope.'"/>');
+		$oPage->add('<input type="hidden" name="date_time_format" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>');
+		$oPage->add('<input type="hidden" name="custom_date_time_format" value="'.htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>');
 		if (!empty($sSynchroScope))
 		{
 			foreach($aSynchroUpdate as $sKey => $value)
@@ -658,7 +665,7 @@ function DoSubmit(bConfirm)
 					created: $sCreated,
 					modified: $sModified,
 					unchanged: $sUnchanged
-				}
+				},
 		      	type: 'donut'
 		    },
 		    legend: {
@@ -754,6 +761,8 @@ EOF
 		$sClassName = utils::ReadParam('class_name', '', false, 'class');
 		$bAdvanced = utils::ReadParam('advanced', 0);
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
+		$sDateTimeFormat = utils::ReadParam('date_time_format', 'default');
+		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', AttributeDateTime::GetFormat(), false, 'raw_data');
 	
 		$sSynchroScope = utils::ReadParam('synchro_scope', '', false, 'raw_data');
 		if (!empty($sSynchroScope))
@@ -788,6 +797,8 @@ EOF
 		$oPage->add('<input type="hidden" name="csvdata" value="'.htmlentities($sCSVData, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="encoding" value="'.$sEncoding.'">');
 		$oPage->add('<input type="hidden" name="synchro_scope" value="'.$sSynchroScope.'">');
+		$oPage->add('<input type="hidden" name="date_time_format" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>');
+		$oPage->add('<input type="hidden" name="custom_date_time_format" value="'.htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>');
 		if (!empty($sSynchroScope))
 		{
 			foreach($aSynchroUpdate as $sKey => $value)
@@ -1092,6 +1103,8 @@ EOF
 		$bAdvanced = utils::ReadParam('advanced', 0);
 		$aFieldsMapping = utils::ReadParam('field', array(), false, 'raw_data');
 		$aSearchFields = utils::ReadParam('search_field', array(), false, 'field_name');
+		$sDateTimeFormat = utils::ReadParam('date_time_format', 'default');
+		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', AttributeDateTime::GetFormat(), false, 'raw_data');
 		
 		// Create a truncated version of the data used for the fast preview
 		// Take about 20 lines of data... knowing that some lines may contain carriage returns
@@ -1134,7 +1147,7 @@ EOF
 		
 		$oPage->add('<h2>'.Dict::S('UI:Title:CSVImportStep2').'</h2>');
 		$oPage->add('<div class="wizContainer">');
-		$oPage->add('<table><tr><td style="vertical-align:top;padding-right:50px;">');
+		$oPage->add('<table><tr><td style="vertical-align:top;padding-right:30px;">');
 		$oPage->add('<form enctype="multipart/form-data" id="wizForm" method="post" id="csv_options">');
 		$oPage->add('<h3>'.Dict::S('UI:CSVImport:SeparatorCharacter').'</h3>');
 		$oPage->add('<p><input type="radio" name="separator" value="," onClick="DoPreview()"'.IsChecked($sSeparator, ',').'/> '.Dict::S('UI:CSVImport:SeparatorComma+').'<br/>');
@@ -1142,16 +1155,20 @@ EOF
 		$oPage->add('<input type="radio" name="separator" value="tab" onClick="DoPreview()"'.IsChecked($sSeparator, "\t").'/> '.Dict::S('UI:CSVImport:SeparatorTab+').'<br/>');
 		$oPage->add('<input type="radio" name="separator" value="other"  onClick="DoPreview()"'.IsChecked($sOtherSeparator, '', true).'/> '.Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" maxlength="1" name="other_separator" id="other_separator" value="'.$sOtherSeparator.'" onClick="DoPreview()"/>');
 		$oPage->add('</p>');
-		$oPage->add('</td><td style="vertical-align:top;padding-right:50px;">');
+		$oPage->add('</td><td style="vertical-align:top;padding-right:30px;">');
 		$oPage->add('<h3>'.Dict::S('UI:CSVImport:TextQualifierCharacter').'</h3>');
 		$oPage->add('<p><input type="radio" name="text_qualifier" value="&#34;" onClick="DoPreview()"'.IsChecked($sTextQualifier, '"').'/> '.Dict::S('UI:CSVImport:QualifierDoubleQuote+').'<br/>');
 		$oPage->add('<input type="radio" name="text_qualifier" value="&#39;"  onClick="DoPreview()"'.IsChecked($sTextQualifier, "'").'/> '.Dict::S('UI:CSVImport:QualifierSimpleQuote+').'<br/>');
 		$oPage->add('<input type="radio" name="text_qualifier" value="other"  onClick="DoPreview()"'.IsChecked($sOtherTextQualifier, '', true).'/> '.Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" maxlength="1" name="other_qualifier"  value="'.htmlentities($sOtherTextQualifier, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()"/>');
 		$oPage->add('</p>');
-		$oPage->add('</td><td style="vertical-align:top;">');
+		$oPage->add('</td><td style="vertical-align:top;padding-right:30px;">');
 		$oPage->add('<h3>'.Dict::S('UI:CSVImport:CommentsAndHeader').'</h3>');
 		$oPage->add('<p><input type="checkbox" name="header_line" id="box_header" value="1" onClick="DoPreview()"'.IsChecked($bHeaderLine, 1).'/> '.Dict::S('UI:CSVImport:TreatFirstLineAsHeader').'<p>');
 		$oPage->add('<p><input type="checkbox" name="box_skiplines" value="1" id="box_skiplines" onClick="DoPreview()"'.IsChecked($bBoxSkipLines, 1).'/> '.Dict::Format('UI:CSVImport:Skip_N_LinesAtTheBeginning', '<input type="text" size=2 name="nb_skipped_lines" id="nb_skipped_lines" onChange="DoPreview()" value="'.$iSkippedLines.'">').'<p>');
+		$oPage->add('</td><td style="vertical-align:top;">');
+		$oPage->add('<h3>'.Dict::S('UI:CSVImport:DateAndTimeFormats').'</h3>');
+		$oPage->add('<p><input type="radio" name="date_time_format" id="radio_date_time_std" value="default"'.IsChecked($sDateTimeFormat, 'default').'/> '.Dict::Format('UI:CSVImport:DefaultDateTimeFormat_Format_Example', htmlentities(AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8'), date(AttributeDateTime::GetFormat())).'<p>');
+		$oPage->add('<p><input type="radio" name="date_time_format" id="radio_date_time_custom" value="custom"'.IsChecked($sDateTimeFormat, 'custom').'/> '.Dict::Format('UI:CSVImport:CustomDateTimeFormat', '<input type="text" size="15" name="custom_date_time_format" id="custom_date_time_format" title="" value="'.htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8').'">').'<p>');
 		$oPage->add('</td></tr></table>');
 		$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="csvdata" id="csvdata" value="'.htmlentities($sUTF8Data, ENT_QUOTES, 'UTF-8').'"/>');
@@ -1240,7 +1257,13 @@ EOF
 	}
 EOF
 	);
-		$oPage->add_ready_script('DoPreview();');
+		$sJSTooltip = json_encode('<div class="date_format_tooltip">'.Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip').'</div>');
+		$oPage->add_ready_script(
+<<<EOF
+DoPreview();
+$('#custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
+EOF
+		);
 	}
 
 	/**
@@ -1274,6 +1297,9 @@ EOF
 		$sClassName = utils::ReadParam('class_name', '');
 		$bAdvanced = utils::ReadParam('advanced', 0);
 		$sEncoding = utils::ReadParam('encoding', '');
+		$sDateTimeFormat = utils::ReadParam('date_time_format', 'default');
+		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', AttributeDateTime::GetFormat(), false, 'raw_data');
+		
 		if ($sEncoding == '')
 		{
 			$sEncoding = MetaModel::GetConfig()->Get('csv_file_default_charset');
@@ -1335,6 +1361,8 @@ EOF
 				'<input type="hidden" name="operation" value="csv_data"/>'.
 				'<input type="hidden" name="separator" value="'.htmlentities($sSeparator, ENT_QUOTES, 'UTF-8').'"/>'.
 				'<input type="hidden" name="text_qualifier" value="'.htmlentities($sTextQualifier, ENT_QUOTES, 'UTF-8').'"/>'.
+				'<input type="hidden" name="date_time_format" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>'.
+				'<input type="hidden" name="custom_date_time_format" value="'.htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>'.
 				'<input type="hidden" name="header_line" value="'.$bHeaderLine.'"/>'.
 				'<input type="hidden" name="nb_skipped_lines" value="'.utils::ReadParam('nb_skipped_lines', '0').'"/>'.
 				'<input type="hidden" name="box_skiplines" value="'.utils::ReadParam('box_skiplines', '0').'"/>'.

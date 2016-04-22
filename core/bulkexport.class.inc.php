@@ -95,7 +95,7 @@ class BulkExportResultGC implements iBackgroundProcess
 
 	public function Process($iTimeLimit)
 	{
-		$sDateLimit = date('Y-m-d H:i:s', time() - 24*3600); // Every BulkExportResult older than one day will be deleted
+		$sDateLimit = date(AttributeDateTime::GetSQLFormat(), time() - 24*3600); // Every BulkExportResult older than one day will be deleted
 
 		$sOQL = "SELECT BulkExportResult WHERE created < '$sDateLimit'";
 		$iProcessed = 0;

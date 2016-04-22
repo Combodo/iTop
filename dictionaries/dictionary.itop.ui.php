@@ -1053,7 +1053,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:FailedToApplyStimuli' => 'The action has failed.',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: Modifying %2$d objects of class %3$s',
 	'UI:CaseLogTypeYourTextHere' => 'Type your text here:',
-	'UI:CaseLog:DateFormat' => 'Y-m-d H:i:s',
 	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
 	'UI:CaseLog:InitialValue' => 'Initial value:',
 	'UI:AttemptingToSetASlaveAttribute_Name' => 'The field %1$s is not writable because it is mastered by the data synchronization. Value not set.',
@@ -1255,7 +1254,26 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:CSVImportCreated_items' => 'Created: %1$d',
 	'UI:CSVImportModified_items' => 'Modified: %1$d',
 	'UI:CSVImportUnchanged_items' => 'Unchanged: %1$d',
-
+	'UI:CSVImport:DateAndTimeFormats' => 'Date and time format',
+	'UI:CSVImport:DefaultDateTimeFormat_Format_Example' => 'Default format: %1$s (e.g. %2$s)',
+	'UI:CSVImport:CustomDateTimeFormat' => 'Custom format: %1$s',
+	'UI:CSVImport:CustomDateTimeFormatTooltip' => 'Available placeholders:<table>
+<tr><td>Y</td><td>year (4 digits, e.g. 2016)</td></tr>
+<tr><td>y</td><td>year (2 digits, e.g. 16 for 2016)</td></tr>
+<tr><td>m</td><td>month (2 digits, e.g. 01..12)</td></tr>
+<tr><td>n</td><td>month (1 or 2 digits no leading zero, e.g. 1..12)</td></tr>
+<tr><td>d</td><td>day (2 digits, e.g. 01..31)</td></tr>
+<tr><td>j</td><td>day (1 or 2 digits no leading zero, e.g. 1..31)</td></tr>
+<tr><td>H</td><td>hour (24 hour, 2 digits, e.g. 00..23)</td></tr>
+<tr><td>h</td><td>hour (12 hour, 2 digits, e.g. 01..12)</td></tr>
+<tr><td>G</td><td>hour (24 hour, 1 or 2 digits no leading zero, e.g. 0..23)</td></tr>
+<tr><td>g</td><td>hour (12 hour, 1 or 2 digits no leading zero, e.g. 1..12)</td></tr>
+<tr><td>a</td><td>hour, am or pm (lowercase)</td></tr>
+<tr><td>A</td><td>hour, AM or PM (uppercase)</td></tr>
+<tr><td>i</td><td>minutes (2 digits, e.g. 00..59)</td></tr>
+<tr><td>s</td><td>seconds (2 digits, e.g. 00..59)</td></tr>
+</table>',
+		
 	'UI:Button:Remove' => 'Remove',
 	'UI:AddAnExisting_Class' => 'Add objects of type %1$s...',
 	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s',

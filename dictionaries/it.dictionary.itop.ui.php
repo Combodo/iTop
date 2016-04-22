@@ -894,7 +894,6 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 	'UI:FailedToApplyStimuli' => 'L\'azione non è riuscita.',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: Modifica %2$d oggetti della classe %3$s~~',
 	'UI:CaseLogTypeYourTextHere' => 'Digitare il tuo testo qui:',
-	'UI:CaseLog:DateFormat' => 'A-m-g H:m:s',
 	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:~~',
 	'UI:CaseLog:InitialValue' => 'Valore iniziale:',
 	'UI:AttemptingToSetASlaveAttribute_Name' => 'Il campo %1$s on è scrivibile, perché è comandato dalla sincronizzazione dei dati. Valore non impostato.',

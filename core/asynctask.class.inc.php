@@ -34,7 +34,7 @@ class ExecAsyncTask implements iBackgroundProcess
 
 	public function Process($iTimeLimit)
 	{
-		$sNow = date('Y-m-d H:i:s');
+		$sNow = date(AttributeDateTime::GetSQLFormat());
 		// Criteria: planned, and expected to occur... ASAP or in the past
 		$sOQL = "SELECT AsyncTask WHERE (status = 'planned') AND (ISNULL(planned) OR (planned < '$sNow'))";
 		$iProcessed = 0;

@@ -31,6 +31,7 @@ class PDFBulkExport extends HTMLBulkExport
 		$oP->p(" *\tfields: (mandatory) the comma separated list of field codes to export (e.g: name,org_id,service_name...).");
 		$oP->p(" *\tpage_size: (optional) size of the page. One of A4, A3, Letter (default is 'A4').");
 		$oP->p(" *\tpage_orientation: (optional) the orientation of the page. Either Portrait or Landscape (default is 'Portrait').");
+		$oP->p(" *\tdate_format: the format to use when exporting date and time fields (default = the format used in the user interface). Example: 'm/d/Y H:i:s'");
 	}
 
 	public function EnumFormParts()
@@ -44,6 +45,8 @@ class PDFBulkExport extends HTMLBulkExport
 		{
 			case 'pdf_options':
 				$oP->add('<fieldset><legend>'.Dict::S('Core:BulkExport:PDFOptions').'</legend>');
+				$oP->add('<table class="export_parameters"><tr><td style="vertical-align:top">');
+				$oP->add('<h3>'.Dict::S('Core:PDFBulkExport:PageFormat').'</h3>');
 				$oP->add('<table>');
 				$oP->add('<tr>');
 				$oP->add('<td>'.Dict::S('Core:BulkExport:PDFPageSize').'</td>');
@@ -53,8 +56,30 @@ class PDFBulkExport extends HTMLBulkExport
 				$oP->add('<td>'.$this->GetSelectCtrl('page_orientation', array('P', 'L'), 'Core:BulkExport:PageOrientation-', 'L').'</td>');
 				$oP->add('</tr>');
 				$oP->add('</table>');
-
+				
+				$oP->add('</td><td style="vertical-align:top">');
+				
+				$sDateTimeFormat = utils::ReadParam('date_format', AttributeDateTime::GetFormat(), true, 'raw_data');
+				$sDefaultChecked = ($sDateTimeFormat == AttributeDateTime::GetFormat()) ? ' checked' : '';
+				$sCustomChecked = ($sDateTimeFormat !== AttributeDateTime::GetFormat()) ? ' checked' : '';
+				$oP->add('<h3>'.Dict::S('Core:BulkExport:DateTimeFormat').'</h3>');
+				$sDefaultFormat = htmlentities(AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
+				$sExample = htmlentities(date(AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
+				$oP->add('<input type="radio" id="pdf_date_time_format_default" name="date_format_radio" value="default"'.$sDefaultChecked.'><label for="pdf_date_time_format_default"> '.Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample).'</label><br/>');
+				$sFormatInput = '<input type="text" size="15" name="date_format" id="pdf_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
+				$oP->add('<input type="radio" id="pdf_date_time_format_custom" name="date_format_radio" value="custom"'.$sCustomChecked.'><label for="pdf_date_time_format_custom"> '.Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput).'</label>');
+				
+				$oP->add('</td></tr></table>');
+				
+				
 				$oP->add('</fieldset>');
+				$sJSTooltip = json_encode('<div id="date_format_tooltip">'.Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip').'</div>');
+				$oP->add_ready_script(
+<<<EOF
+$('#pdf_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
+$('#pdf_custom_date_time_format').on('click', function() { $('#pdf_date_time_format_custom').prop('checked', true); });
+EOF
+				);
 				break;
 					
 			default:
@@ -88,6 +113,16 @@ class PDFBulkExport extends HTMLBulkExport
 		parent::ReadParameters();
 		$this->aStatusInfo['page_size'] = utils::ReadParam('page_size', 'A4', true, 'raw_data');
 		$this->aStatusInfo['page_orientation'] = utils::ReadParam('page_orientation', 'L', true);
+		
+		$sDateFormatRadio = utils::ReadParam('date_format_radio', 'custom');
+		if ($sDateFormatRadio == 'default')
+		{
+			$this->aStatusInfo['date_format'] = AttributeDateTime::GetFormat();
+		}
+		else
+		{
+			$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', AttributeDateTime::GetFormat(), true, 'raw_data');
+		}
 	}
 
 	public function GetHeader()
@@ -106,7 +141,10 @@ class PDFBulkExport extends HTMLBulkExport
 
 	public function GetNextChunk(&$aStatus)
 	{
+		$sPrevFormat = AttributeDateTime::GetFormat();
+		AttributeDateTime::SetFormat($this->aStatusInfo['date_format']);
 		$sData = parent::GetNextChunk($aStatus);
+		AttributeDateTime::SetFormat($sPrevFormat);
 		$hFile = @fopen($this->aStatusInfo['tmp_file'], 'ab');
 		if ($hFile === false)
 		{

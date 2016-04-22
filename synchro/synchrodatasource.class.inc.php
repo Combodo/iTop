@@ -1862,7 +1862,7 @@ class SynchroReplica extends DBObject implements iDisplay
 				{
 					$oStatLog->Inc($sStatsCode.'_updated');
 				}
-				$this->Set('info_last_modified', date('Y-m-d H:i:s'));
+				$this->Set('info_last_modified', date(AttributeDateTime::GetSQLFormat()));
 			}
 			else
 			{
@@ -1912,7 +1912,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			$this->Set('status_dest_creator', true);
 			$this->Set('status_last_error', '');
 			$this->Set('status', 'synchronized');
-			$this->Set('info_creation_date', date('Y-m-d H:i:s'));
+			$this->Set('info_creation_date', date(AttributeDateTime::GetSQLFormat()));
 			$bCreated = true;
 
 			$oStatLog->AddTrace("Created (".implode(', ', $aValueTrace).")", $this);
@@ -1950,7 +1950,7 @@ class SynchroReplica extends DBObject implements iDisplay
 					} 
 					$oDestObj->Set($sAttCode, $value);
 				}
-				$this->Set('info_last_modified', date('Y-m-d H:i:s'));
+				$this->Set('info_last_modified', date(AttributeDateTime::GetSQLFormat()));
 				$oDestObj->DBUpdateTracked($oChange);
 				$oStatLog->AddTrace("Replica marked as obsolete", $this);
 				$oStatLog->Inc('stats_nb_obj_obsoleted');

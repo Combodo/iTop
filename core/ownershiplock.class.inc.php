@@ -239,7 +239,7 @@ class iTopOwnershipLock
 		{
 			if ($sToken === $this->oToken->Get('token'))
 			{
-				$this->oToken->Set('last_seen', date('Y-m-d H:i:s'));
+				$this->oToken->Set('last_seen', date(AttributeDateTime::GetSQLFormat()));
 				$this->oToken->DBUpdate();
 				$aResult['acquired'] = $this->oToken->Get('acquired');
 			}
@@ -327,9 +327,9 @@ class iTopOwnershipLock
 			$this->oToken->Set('obj_class', $this->sObjClass);
 			$this->oToken->Set('obj_key', $this->iObjKey);
 		}
-		$this->oToken->Set('acquired', date('Y-m-d H:i:s'));
+		$this->oToken->Set('acquired', date(AttributeDateTime::GetSQLFormat()));
 		$this->oToken->Set('user_id', UserRights::GetUserId());
-		$this->oToken->Set('last_seen', date('Y-m-d H:i:s'));
+		$this->oToken->Set('last_seen', date(AttributeDateTime::GetSQLFormat()));
 		if ($sToken === null)
 		{
 			$sToken = sprintf('%X', microtime(true));
@@ -342,7 +342,7 @@ class iTopOwnershipLock
 	protected static function DeleteExpiredLocks()
 	{
 		$sOQL = "SELECT iTopOwnershipToken WHERE last_seen < :last_seen_limit";
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL, array('last_seen_limit' => date('Y-m-d H:i:s', time() - MetaModel::GetConfig()->Get('concurrent_lock_expiration_delay')))));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL, array('last_seen_limit' => date(AttributeDateTime::GetSQLFormat(), time() - MetaModel::GetConfig()->Get('concurrent_lock_expiration_delay')))));
 		while($oToken = $oSet->Fetch())
 		{
 			$oToken->DBDelete();

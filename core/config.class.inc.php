@@ -898,6 +898,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'date_and_time_format' => array(
+			'type' => 'array',
+			'description' => 'Format for date and time display (per language)',
+			'default' => array('default' => array('date' => 'Y-m-d', 'time' => 'H:i:s', 'date_time' => '$date $time')),
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)

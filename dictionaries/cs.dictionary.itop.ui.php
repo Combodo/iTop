@@ -1048,7 +1048,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'UI:FailedToApplyStimuli' => 'Akce se nezdařila.',
     'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: Upravuji %2$d objekt(ů) třídy %3$s',
     'UI:CaseLogTypeYourTextHere' => 'Zadejte text zde:',
-    'UI:CaseLog:DateFormat' => 'Y-m-d H:i:s',
     'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
     'UI:CaseLog:InitialValue' => 'Počáteční hodnota:',
     'UI:AttemptingToSetASlaveAttribute_Name' => 'Pole %1$s není zapisovatelné, protože je spravováno synchronizací dat.',

@@ -34,6 +34,7 @@ class CSVBulkExport extends TabularBulkExport
 		$oP->p(" *\ttext-qualifier: (optional) character to be used around text strings (default is '\"').");
 		$oP->p(" *\tno_localize: set to 1 to retrieve non-localized values (for instance for ENUM values). Default is 0 (= localized values)");
 		$oP->p(" *\tformatted_text: set to 1 to export case logs and formatted text fields with their HTML markup. Default is 0 (= plain text)");
+		$oP->p(" *\tdate_format: the format to use when exporting date and time fields (default = the format used in the user interface). Example: 'm/d/Y H:i:s'");
 	}
 
 	public function ReadParameters()
@@ -57,6 +58,16 @@ class CSVBulkExport extends TabularBulkExport
 
 		$this->aStatusInfo['charset'] = strtoupper(utils::ReadParam('charset', 'UTF-8', true, 'raw_data'));
 		$this->aStatusInfo['formatted_text'] = (bool)utils::ReadParam('formatted_text', 0, true);
+		
+		$sDateFormatRadio = utils::ReadParam('date_format_radio', 'custom');
+		if ($sDateFormatRadio == 'default')
+		{
+			$this->aStatusInfo['date_format'] = AttributeDateTime::GetFormat();
+		}
+		else
+		{
+			$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', AttributeDateTime::GetFormat(), true, 'raw_data');
+		}
 	}
 
 
@@ -97,6 +108,7 @@ class CSVBulkExport extends TabularBulkExport
 				$oP->add('<table class="export_parameters"><tr><td style="vertical-align:top">');
 				$oP->add('<h3>'.Dict::S('UI:CSVImport:SeparatorCharacter').'</h3>');
 				$sRawSeparator = utils::ReadParam('separator', ',', true, 'raw_data');
+				$sCustomDateTimeFormat = utils::ReadParam('', ',', true, 'raw_data');
 				$aSep = array(
 					';' => Dict::S('UI:CSVImport:SeparatorSemicolon+'),
 					',' => Dict::S('UI:CSVImport:SeparatorComma+'),
@@ -162,10 +174,28 @@ class CSVBulkExport extends TabularBulkExport
 				$sChecked = (utils::ReadParam('formatted_text', 0) == 1) ? ' checked ' : '';
 				$oP->add('<h3>'.Dict::S('Core:BulkExport:TextFormat').'</h3>');
 				$oP->add('<input type="checkbox" id="csv_formatted_text" name="formatted_text" value="1"'.$sChecked.'><label for="csv_formatted_text"> '.Dict::S('Core:BulkExport:OptionFormattedText').'</label>');
+				$oP->add('</td><td style="vertical-align:top">');
 				
+				$sDateTimeFormat = utils::ReadParam('date_format', AttributeDateTime::GetFormat(), true, 'raw_data');
+				$sDefaultChecked = ($sDateTimeFormat == AttributeDateTime::GetFormat()) ? ' checked' : '';
+				$sCustomChecked = ($sDateTimeFormat !== AttributeDateTime::GetFormat()) ? ' checked' : '';
+				$oP->add('<h3>'.Dict::S('Core:BulkExport:DateTimeFormat').'</h3>');
+				$sDefaultFormat = htmlentities(AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
+				$sExample = htmlentities(date(AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
+				$oP->add('<input type="radio" id="csv_date_time_format_default" name="date_format_radio" value="default"'.$sDefaultChecked.'><label for="csv_date_time_format_default"> '.Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample).'</label><br/>');
+				$sFormatInput = '<input type="text" size="15" name="date_format" id="csv_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
+				$oP->add('<input type="radio" id="csv_date_time_format_custom" name="date_format_radio" value="custom"'.$sCustomChecked.'><label for="csv_date_time_format_custom"> '.Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput).'</label>');
 				$oP->add('</td></tr></table>');
 				
 				$oP->add('</fieldset>');
+				$sJSTooltip = json_encode('<div class="date_format_tooltip">'.Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip').'</div>');
+				$oP->add_ready_script(
+<<<EOF
+$('#csv_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
+$('#csv_custom_date_time_format').on('click', function() { $('#csv_date_time_format_custom').prop('checked', true); });
+EOF
+				);
+				
 				break;
 					
 					
@@ -257,7 +287,10 @@ class CSVBulkExport extends TabularBulkExport
 							break;
 								
 						default:
+							$sPrevFormat = AttributeDateTime::GetFormat();
+							AttributeDateTime::SetFormat($this->aStatusInfo['date_format']);
 							$sField = $oObj->GetAsCSV($sAttCode, $this->aStatusInfo['separator'], $this->aStatusInfo['text_qualifier'], $this->bLocalizeOutput, !$this->aStatusInfo['formatted_text']);
+							AttributeDateTime::SetFormat($sPrevFormat);
 					}
 				}
 				if ($this->aStatusInfo['charset'] != 'UTF-8')

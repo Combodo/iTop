@@ -1040,7 +1040,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:FailedToApplyStimuli' => 'The action has failed.~~',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: Modifying %2$d objects of class %3$s~~',
 	'UI:CaseLogTypeYourTextHere' => 'Type your text here:~~',
-	'UI:CaseLog:DateFormat' => 'Y-m-d H:i:s~~',
 	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:~~',
 	'UI:CaseLog:InitialValue' => 'Initial value:~~',
 	'UI:AttemptingToSetASlaveAttribute_Name' => 'The field %1$s is not writable because it is mastered by the data synchronization. Value not set.~~',

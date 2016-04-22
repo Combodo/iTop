@@ -840,7 +840,6 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:FailedToApplyStimuli' => 'Handlingen fejlede.',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: Ændrer %2$d objekter af klasse %3$s',
 	'UI:CaseLogTypeYourTextHere' => 'Skriv din tekst her:',
-	'UI:CaseLog:DateFormat' => 'Y-m-d H:i:s',
 	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
 	'UI:CaseLog:InitialValue' => 'Begyndelses værdi:',
 	'UI:AttemptingToSetASlaveAttribute_Name' => 'Feltet %1$s er skrivebeskyttet, fordi det administreres af data synchronization. Værdien er ikke sat.',

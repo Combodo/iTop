@@ -456,6 +456,25 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:CSVImport:AlertMultipleMapping' => 'Veuillez vous assurer que chaque champ cible est sélectionné une seule fois.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Veuillez choisir au moins une clef de recherche.',
 	'UI:CSVImport:Encoding' => 'Encodage des caractères',
+	'UI:CSVImport:DateAndTimeFormats' => 'Format de date et heure',
+	'UI:CSVImport:DefaultDateTimeFormat_Format_Example' => 'Format par défaut: %1$s (ex. %2$s)',
+	'UI:CSVImport:CustomDateTimeFormat' => 'Format spécial: %1$s',
+	'UI:CSVImport:CustomDateTimeFormatTooltip' => 'Codes de format:<table>
+<tr><td>Y</td><td>année (sur 4 chiffres, ex. 2016)</td></tr>
+<tr><td>y</td><td>année (sur 2 chiffres, ex. 16 pour 2016)</td></tr>
+<tr><td>m</td><td>mois (sur 2 chiffres: 01..12)</td></tr>
+<tr><td>n</td><td>month (sur 1 ou 2 chiffres sans le zero au début: 1..12)</td></tr>
+<tr><td>d</td><td>jour (sur 2 chiffres: 01..31)</td></tr>
+<tr><td>j</td><td>jour (sur 1 ou 2 chiffres sans le zero au début: 1..31)</td></tr>
+<tr><td>H</td><td>heure (24 heures sur 2 chiffres: 00..23)</td></tr>
+<tr><td>h</td><td>heure (12 heures sur 2 chiffres: 01..12)</td></tr>
+<tr><td>G</td><td>heure (24 heures sur 1 ou 2 chiffres: 0..23)</td></tr>
+<tr><td>g</td><td>heure (12 heures sur 1 ou 2 chiffres: 1..12)</td></tr>
+<tr><td>a</td><td>am ou pm (en minuscules)</td></tr>
+<tr><td>A</td><td>AM ou PM (en majuscules)</td></tr>
+<tr><td>i</td><td>minutes (sur 2 chiffres: 00..59)</td></tr>
+<tr><td>s</td><td>secondes (sur 2 chiffres: 00..59)</td></tr>
+</table>',
 
 	'UI:CSVReport-Value-Modified' => 'Modifié',
 	'UI:CSVReport-Value-SetIssue' => 'Modification impossible - cause : %1$s',
@@ -897,7 +916,6 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:FailedToApplyStimuli' => 'L\'action a échoué',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: Modification de %2$d objet(s) de type %3$s',
 	'UI:CaseLogTypeYourTextHere' => 'Nouvelle entrée ci-dessous:',
-	'UI:CaseLog:DateFormat' => 'Y-m-d H:i:s',
 	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
 	'UI:CaseLog:InitialValue' => 'Valeur initiale:',
 	'UI:AttemptingToSetASlaveAttribute_Name' => 'Le champ %1$s ne peut pas être modifié car il est géré par une synchronisation avec une source de données. Valeur ignorée.',

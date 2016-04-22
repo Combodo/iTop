@@ -4896,6 +4896,82 @@ class TestLinkSetRecording_1NAdd_Remove extends TestBizModel
 	}
 }
 
+class TestDateTimeFormats extends TestBizModel
+{
+	static public function GetName() {return 'Check Date & Time formating and parsing';}
+	static public function GetDescription() {return 'Check the formating and parsing of dates for various formats';}
+	public function DoExecute()
+	{
+		$bRet = true;
+		$aTestFormats = array(
+				'French (short)' => 'd/m/Y H:i:s',
+				'French (short - no seconds)' => 'd/m/Y H:i',
+				'French (long)' => 'd/m/Y H\\h i\\m\\i\\n s\\s',
+				'English US' => 'm/d/Y H:i:s',
+				'English US (12 hours)' => 'm/d/Y h:i:s a',
+				'English US (12 hours, short)' => 'n/j/Y g:i:s a',
+				'English UK' => 'd/m/Y H:i:s',
+				'German' => 'd.m.Y H:i:s',
+				'SQL' => 'Y-m-d H:i:s',
+		);
+		// Valid date and times, all tests should pass
+		$aTestDates = array('2015-01-01 00:00:00', '2015-12-31 23:59:00', '2016-01-01 08:21:00', '2016-02-28 12:30:00', '2016-02-29 16:47:00', /*'2016-02-29 14:30:17'*/);
+		foreach($aTestFormats as $sDesc => $sFormat)
+		{
+			$this->ReportSuccess("Test of the '$sDesc' format: '$sFormat':");
+			AttributeDateTime::SetFormat($sFormat);
+			foreach($aTestDates as $sTestDate)
+			{
+				$oDate = new DateTime($sTestDate);
+				$sFormattedDate = AttributeDateTime::Format($oDate, AttributeDateTime::GetFormat());
+				$sParsedDate = AttributeDateTime::Parse($sFormattedDate, AttributeDateTime::GetFormat());
+				$sPattern = AttributeDateTime::GetRegExpr();
+				$bParseOk = ($sParsedDate == $sTestDate);
+				if (!$bParseOk)
+				{
+					$this->ReportError('Parsed ('.$sFormattedDate.') date different from initial date (difference of '.((int)$oParsedDate->format('U')- (int)$oDate->format('U')).'s)');
+					$bRet = false;
+				}
+				$bValidateOk = preg_match('/'.$sPattern.'/', $sFormattedDate);
+				if (!$bValidateOk)
+				{
+					$this->ReportError('Formatted date ('.$sFormattedDate.') does not match the validation pattern ('.$sPattern.')');
+					$bRet = false;
+				}
+				
+				$this->ReportSuccess("Formatted date: $sFormattedDate - Parsing: ".($bParseOk ? 'Ok' : '<b>KO</b>')." - Validation: ".($bValidateOk ? 'Ok' : '<b>KO</b>'));
+			}
+			echo "</p>\n";
+		}
+
+		// Invalid date & time strings, all regexpr validation should fail
+		$aInvalidTestDates = array(
+			'SQL' => array('2015-13-01 00:00:00', '2015-12-51 23:59:00', '2016-01-01 +08:21:00', '2016-02-28 24:30:00', '2016-02-29 16:67:88'),
+			'French (short)' => array('01/01/20150 00:00:00', '01/01/20150 00:00:00', '01/13/2015 00:00:00', '01/01/2015 40:00:00', '01/01/2015 00:99:00'),
+			'English US (12 hours)' => array('13/01/2015 12:00:00 am', '12/33/2015 12:00:00 am', '12/23/215 12:00:00 am', '05/04/2016 16:00:00 am', '05/04/2016 10:00:00 ap'),
+		);
+		
+		foreach($aInvalidTestDates as $sFormatName => $aDatesToParse)
+		{
+			$sFormat = $aTestFormats[$sFormatName];
+			AttributeDateTime::SetFormat($sFormat);
+			$this->ReportSuccess("Test of the '$sFormatName' format: '$sFormat':");
+			foreach($aDatesToParse as $sDate)
+			{
+				$sPattern = AttributeDateTime::GetRegExpr();
+				$bValidateOk = preg_match('/'.$sPattern.'/', $sDate);
+				if ($bValidateOk)
+				{
+					$this->ReportError('Formatted date ('.$sFormattedDate.') matches the validation pattern ('.$sPattern.') whereas it should not!');
+					$bRet = false;
+				}
+				$this->ReportSuccess("Formatted date: $sDate - Validation: ".($bValidateOk ? '<b>KO</n>' : 'rejected, Ok.'));
+			}	
+		}
+		return $bRet;
+	}
+}
+
 class TestExecActions extends TestBizModel
 {
 	static public function GetName()

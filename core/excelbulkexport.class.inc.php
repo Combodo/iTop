@@ -47,12 +47,23 @@ class ExcelBulkExport extends TabularBulkExport
 		$oP->p(" * xlsx format options:");
 		$oP->p(" *\tfields: the comma separated list of field codes to export (e.g: name,org_id,service_name...).");
 		$oP->p(" *\tformatted_text: set to 1 to export case logs and formatted text fields with their HTML markup. Default is 0 (= plain text)");
+		$oP->p(" *\tdate_format: the format to use when exporting date and time fields (default = the format used in the user interface). Example: 'm/d/Y H:i:s'");
 	}
 
 	public function ReadParameters()
 	{
 		parent::ReadParameters();
 		$this->aStatusInfo['formatted_text'] = (bool)utils::ReadParam('formatted_text', 0, true);
+			
+		$sDateFormatRadio = utils::ReadParam('date_format_radio', 'custom');
+		if ($sDateFormatRadio == 'default')
+		{
+			$this->aStatusInfo['date_format'] = AttributeDateTime::GetFormat();
+		}
+		else
+		{
+			$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', AttributeDateTime::GetFormat(), true, 'raw_data');
+		}
 	}
 	
 	public function EnumFormParts()
@@ -76,9 +87,28 @@ class ExcelBulkExport extends TabularBulkExport
 				$oP->add('<h3>'.Dict::S('Core:BulkExport:TextFormat').'</h3>');
 				$oP->add('<input type="checkbox" id="xlsx_formatted_text" name="formatted_text" value="1"'.$sChecked.'><label for="xlsx_formatted_text"> '.Dict::S('Core:BulkExport:OptionFormattedText').'</label>');
 				
+				$oP->add('</td><td style="vertical-align:top">');
+				
+				$sDateTimeFormat = utils::ReadParam('date_format', AttributeDateTime::GetFormat(), true, 'raw_data');
+				$sDefaultChecked = ($sDateTimeFormat == AttributeDateTime::GetFormat()) ? ' checked' : '';
+				$sCustomChecked = ($sDateTimeFormat !== AttributeDateTime::GetFormat()) ? ' checked' : '';
+				$oP->add('<h3>'.Dict::S('Core:BulkExport:DateTimeFormat').'</h3>');
+				$sDefaultFormat = htmlentities(AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
+				$sExample = htmlentities(date(AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
+				$oP->add('<input type="radio" id="excel_date_time_format_default" name="date_format_radio" value="default"'.$sDefaultChecked.'><label for="excel_date_time_format_default"> '.Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample).'</label><br/>');
+				$sFormatInput = '<input type="text" size="15" name="date_format" id="excel_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
+				$oP->add('<input type="radio" id="excel_date_time_format_custom" name="date_format_radio" value="custom"'.$sCustomChecked.'><label for="excel_date_time_format_custom"> '.Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput).'</label>');
+				
 				$oP->add('</td></tr></table>');
 				
 				$oP->add('</fieldset>');
+				$sJSTooltip = json_encode('<div class="date_format_tooltip">'.Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip').'</div>');
+				$oP->add_ready_script(
+<<<EOF
+$('#excel_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
+$('#excel_custom_date_time_format').on('click', function() { $('#excel_date_time_format_custom').prop('checked', true); });
+EOF
+				);
 				break;
 
 				default:
@@ -141,14 +171,19 @@ class ExcelBulkExport extends TabularBulkExport
 			else
 			{
 				$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
-				 if (array_key_exists('formatted_text', $this->aStatusInfo) && $this->aStatusInfo['formatted_text'])
-				 {
+				if ($oAttDef instanceof AttributeDateTime)
+				{
+					// Date and times are formatted using the ISO encoding, not the localized format
+					$sRet = $value;
+				}
+				else if (array_key_exists('formatted_text', $this->aStatusInfo) && $this->aStatusInfo['formatted_text'])
+				{
 					$sRet = $oAttDef->GetEditValue($value, $oObj);
-				 }
-				 else
-				 {
-				 	$sRet = $oAttDef->GetAsPlainText($value, $oObj);
-				 }
+				}
+				else
+				{
+					$sRet = $oAttDef->GetAsPlainText($value, $oObj);
+				}
 			}
 		}
 		return $sRet;
@@ -269,6 +304,7 @@ class ExcelBulkExport extends TabularBulkExport
 			
 		$fStartExcel = microtime(true);
 		$writer = new XLSXWriter();
+		$writer->setDateTimeFormat(AttributeDateTime::GetExcelFormat($this->aStatusInfo['date_format']));
 		$writer->setAuthor(UserRights::GetUserFriendlyName());
 		$aHeaderTypes = array();
 		$aHeaderNames = array();

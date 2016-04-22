@@ -839,7 +839,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:FailedToApplyStimuli' => 'アクションは失敗しました。',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: クラス%3$sの%2$dオブジェクトを修正',
 	'UI:CaseLogTypeYourTextHere' => 'テキストを入力ください:',
-	'UI:CaseLog:DateFormat' => 'Y-m-d H:i:s',
 	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
 	'UI:CaseLog:InitialValue' => '初期値:',
 	'UI:AttemptingToSetASlaveAttribute_Name' => 'フィールド %1$s は、データの同期によってマスターリングされているため書き込み可能ではありません。値は設定されません。',

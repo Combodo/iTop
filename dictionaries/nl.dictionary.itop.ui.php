@@ -1025,7 +1025,6 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	'UI:FailedToApplyStimuli' => 'De actie is mislukt.',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: Bezig met het bewerken van %2$d objecten van klasse %3$s',
 	'UI:CaseLogTypeYourTextHere' => 'Typ uw text hier:',
-	'UI:CaseLog:DateFormat' => 'Y-m-d H:i:s',
 	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
 	'UI:CaseLog:InitialValue' => 'InitiÃ«le waarde:',
 	'UI:AttemptingToSetASlaveAttribute_Name' => 'Het veld %1$s is niet beschrijfbaar omdat het onderdeel is van de data synchronisatie. Waarde niet opgegeven',

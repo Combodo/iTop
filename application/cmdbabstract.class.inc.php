@@ -630,7 +630,6 @@ EOF
 								{				
 									if ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE))
 									{
-
 										// Check if the attribute is not read-only because of a synchro...
 										$aReasons = array();
 										$sSynchroIcon = '';
@@ -1312,8 +1311,8 @@ EOF
 							else
 							{
 								$iDate = AttributeDateTime::GetAsUnixSeconds($sDate);
-								$aRow[] = '<td>'.date('Y-m-d', $iDate).'</td>';
-								$aRow[] = '<td>'.date('H:i:s', $iDate).'</td>';								
+								$aRow[] = '<td>'.date('Y-m-d', $iDate).'</td>'; // Format kept as-is for 100% backward compatibility of the exports
+								$aRow[] = '<td>'.date('H:i:s', $iDate).'</td>'; // Format kept as-is for 100% backward compatibility of the exports								
 							}
 						}
 						else if($oAttDef instanceof AttributeCaseLog)
@@ -1711,10 +1710,7 @@ EOF
 				$aEventsList[] ='validate';
 				$aEventsList[] ='keyup';
 				$aEventsList[] ='change';
-				if (($iFlags & OPT_ATT_MANDATORY) && (empty($sDisplayValue)))
-				{
-					$sDisplayValue = date($oAttDef->GetDateFormat());
-				}
+
 				$sHTMLValue = "<input title=\"$sHelpText\" class=\"date-pick\" type=\"text\" size=\"12\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationSpan}{$sReloadSpan}";
 				break;
 
@@ -1722,11 +1718,8 @@ EOF
 				$aEventsList[] ='validate';
 				$aEventsList[] ='keyup';
 				$aEventsList[] ='change';
-				if (($iFlags & OPT_ATT_MANDATORY) && (empty($sDisplayValue)))
-				{
-					$sDisplayValue = date($oAttDef->GetDateFormat());
-				}
-				$sHTMLValue = "<input title=\"$sHelpText\" class=\"datetime-pick\" type=\"text\" size=\"20\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationSpan}{$sReloadSpan}";
+
+				$sHTMLValue = "<input title=\"$sHelpText\" class=\"datetime-pick\" type=\"text\" size=\"15\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationSpan}{$sReloadSpan}";
 				break;
 
 				case 'Duration':
@@ -3160,6 +3153,14 @@ EOF
 							   'to_be_deleted' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbd", '[]', 'raw_data'), true), 
 							   'to_be_added' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tba", '[]', 'raw_data'), true),
 							   'to_be_removed' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbr", '[]', 'raw_data'), true) );
+			}
+			else if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
+			{
+				$value = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
+				if ($value != null)
+				{
+					$value = AttributeDateTime::Parse($value, $oAttDef->GetFormat());
+				}
 			}
 			else
 			{

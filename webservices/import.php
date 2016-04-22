@@ -96,7 +96,7 @@ $aPageParams = array
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => '',
-		'description' => 'Input date format (used both for dates and datetimes) - Examples: %Y-%m-%d, %d/%m/%Y (Europe) - no transformation is applied if the argument is omitted',
+		'description' => 'Input date format (used both for dates and datetimes) - Examples: Y-m-d H:i:s, d/m/Y H:i:s (Europe) - no transformation is applied if the argument is omitted. (note: old format specification using %Y %m %d is also supported for backward compatibility)',
 	),
 	'separator' => array
 	(
@@ -287,6 +287,10 @@ try
 	$sQualifier = ReadParam($oP, 'qualifier', 'raw_data');
 	$sCharSet = ReadParam($oP, 'charset', 'raw_data');
 	$sDateFormat = ReadParam($oP, 'date_format', 'raw_data');
+	if (strpos($sDateFormat, '%') !== false)
+	{
+		$sDateFormat = utils::DateTimeFormatToPHP($sDateFormat);
+	}
 	$sOutput = ReadParam($oP, 'output', 'string');
 	$sReconcKeys = ReadParam($oP, 'reconciliationkeys', 'raw_data');
 	$sSimulate = ReadParam($oP, 'simulate');

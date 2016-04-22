@@ -760,7 +760,6 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:FailedToApplyStimuli' => 'A művelet sikertelen',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: %3$s osztály %2$d objketumainak módosítása',
 	'UI:CaseLogTypeYourTextHere' => 'Írjon ide:',
-	'UI:CaseLog:DateFormat' => 'Y-m-d H:i:s',
 	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
 	'UI:CaseLog:InitialValue' => 'Kezdeti érték:',
 	'UI:AttemptingToSetASlaveAttribute_Name' => '%1$s mező nem írható, mert a szinkronizációnál használt kulcs. Érték nem lett beállítva.',
