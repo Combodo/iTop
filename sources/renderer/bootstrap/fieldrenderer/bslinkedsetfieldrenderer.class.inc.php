@@ -30,7 +30,7 @@ use \Combodo\iTop\Renderer\RenderingOutput;
 use \Combodo\iTop\Form\Field\LinkedSetField;
 
 /**
- * Description of BsSelectObjectFieldRenderer
+ * Description of BsLinkedSetFieldRenderer
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
@@ -182,6 +182,9 @@ EOF
 						// When we have data (meaning that we picked objects from search)
 						if(oData !== undefined && Object.keys(oData.values).length > 0)
 						{
+							// Showing loader while retrieving informations
+							$('#page_overlay').fadeIn(200);
+
 							// Retrieving new rows ids
 							var aObjectIds = Object.keys(oData.values);
 
@@ -222,6 +225,10 @@ EOF
 								}
 
 								$('#{$this->oField->GetGlobalId()}').val(JSON.stringify(aObjectIds));
+							})
+							.always(function(oData){
+								// Hiding loader
+								$('#page_overlay').fadeOut(200);
 							});
 						}
 						// We come from a button

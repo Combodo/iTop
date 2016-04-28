@@ -53,15 +53,12 @@ $(function()
 			
 			this.element
 			.bind('field_change', function(oEvent, oData){
-				//console.log('field_set: field_change');
 				me._onFieldChange(oEvent, oData);
 			})
 			.bind('update_form', function(oEvent, oData){
-				//console.log('field_set: update_form');
 				me._onUpdateForm(oEvent, oData);
 			})
 			.bind('get_current_values', function(oEvent, oData){
-				//console.log('field_set: get_current_values');
 				return me._onGetCurrentValues(oEvent, oData);
 			})
 			.bind('validate', function(oEvent, oData){
@@ -69,7 +66,7 @@ $(function()
 				{
 					oData = {};
 				}
-				//console.log('field_set: validate');
+				
 				return me._onValidate(oEvent, oData);
 			});
 
@@ -166,7 +163,7 @@ $(function()
 
 			// Validate the field
 			var oResult = this.getField(oData.name).triggerHandler('validate', {touched_fields_only: true});
-			if (!oResult.is_valid)
+			if ( (oResult !== undefined) && !oResult.is_valid)
 			{
 				this.options.is_valid = false;
 			}

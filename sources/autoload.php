@@ -23,6 +23,7 @@
 require_once APPROOT . 'sources/form/form.class.inc.php';
 require_once APPROOT . 'sources/form/formmanager.class.inc.php';
 require_once APPROOT . 'sources/form/field/field.class.inc.php';
+require_once APPROOT . 'sources/form/field/fileuploadfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/subformfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/textfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/hiddenfield.class.inc.php';
@@ -52,3 +53,4 @@ require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bssimplefieldre
 require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bsselectobjectfieldrenderer.class.inc.php';
 require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bslinkedsetfieldrenderer.class.inc.php';
 require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bssubformfieldrenderer.class.inc.php';
+require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bsfileuploadfieldrenderer.class.inc.php';
