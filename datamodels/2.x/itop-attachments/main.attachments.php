@@ -279,7 +279,7 @@ EOF
 				$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
 				$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
 				$sDownloadLink = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DOWNLOAD_URL.$iAttId;
-				$oPage->add('<div class="attachment" id="display_attachment_'.$iAttId.'"><a data-preview="'.$sPreview.'" href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input id="attachment_'.$iAttId.'" type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="Delete" onClick="RemoveAttachment('.$iAttId.');"/>&nbsp;</div>');
+				$oPage->add('<div class="attachment" id="display_attachment_' . $iAttId . '"><a data-preview="' . $sPreview . '" href="' . $sDownloadLink . '"><img src="' . $sIcon . '"><br/>' . $sFileName . '<input id="attachment_' . $iAttId . '" type="hidden" name="attachments[]" value="' . $iAttId . '"/></a><br/>&nbsp;<input id="btn_remove_' . $iAttId . '" type="button" class="btn_hidden" value="' . Dict::S('Attachments:DeleteBtn') . '" onClick="RemoveAttachment(' . $iAttId . ');"/>&nbsp;</div>');
 			}
 			
 			// Suggested attachments are listed here but treated as temporary
