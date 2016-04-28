@@ -300,7 +300,6 @@ class DBBackup
 			if (file_exists($sBackupFileName))
 			{
 				unlink($sBackupFileName);
-				throw new Exception('Effacement du fichier '.$sTmpFileName);
 			}
 
 			$this->LogError("Failed to execute: $sCommandDisplay. The command returned:$iRetCode");
