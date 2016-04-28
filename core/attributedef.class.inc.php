@@ -2380,8 +2380,8 @@ class AttributeText extends AttributeString
 		{
 			foreach($aAllMatches as $iPos => $aMatches)
 			{
-				$sClass = $aMatches[1];
-				$sName = $aMatches[2];
+				$sClass = trim($aMatches[1]);
+				$sName = trim($aMatches[2]);
 				
 				if (MetaModel::IsValidClass($sClass))
 				{
