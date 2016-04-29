@@ -856,4 +856,18 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:BulkExport:DateTimeFormat' => 'Date and Time format',
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s',
+	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
+	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
+	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
+	'Core:DateTime:Placeholder_n' => 'M', // Month on 1 or 2 digits 1-12
+	'Core:DateTime:Placeholder_Y' => 'YYYY', // Year on 4 digits
+	'Core:DateTime:Placeholder_y' => 'YY', // Year on 2 digits
+	'Core:DateTime:Placeholder_H' => 'hh', // Hour 00..23
+	'Core:DateTime:Placeholder_h' => 'h', // Hour 01..12
+	'Core:DateTime:Placeholder_G' => 'hh', // Hour 0..23
+	'Core:DateTime:Placeholder_g' => 'h', // Hour 1..12
+	'Core:DateTime:Placeholder_a' => 'am/pm', // am/pm (lowercase)
+	'Core:DateTime:Placeholder_A' => 'AM/PM', // AM/PM (uppercase)
+	'Core:DateTime:Placeholder_i' => 'mm', // minutes, 2 digits: 00..59
+	'Core:DateTime:Placeholder_s' => 'ss', // seconds, 2 digits 00..59
 ));

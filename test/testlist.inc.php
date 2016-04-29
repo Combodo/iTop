@@ -4902,6 +4902,7 @@ class TestDateTimeFormats extends TestBizModel
 	static public function GetDescription() {return 'Check the formating and parsing of dates for various formats';}
 	public function DoExecute()
 	{
+		require_once(APPROOT.'core/datetimeformat.class.inc.php');
 		$bRet = true;
 		$aTestFormats = array(
 				'French (short)' => 'd/m/Y H:i:s',
@@ -4919,14 +4920,14 @@ class TestDateTimeFormats extends TestBizModel
 		foreach($aTestFormats as $sDesc => $sFormat)
 		{
 			$this->ReportSuccess("Test of the '$sDesc' format: '$sFormat':");
-			AttributeDateTime::SetFormat($sFormat);
+			$oFormat = new DateTimeFormat($sFormat);
 			foreach($aTestDates as $sTestDate)
 			{
 				$oDate = new DateTime($sTestDate);
-				$sFormattedDate = AttributeDateTime::Format($oDate, AttributeDateTime::GetFormat());
-				$sParsedDate = AttributeDateTime::Parse($sFormattedDate, AttributeDateTime::GetFormat());
-				$sPattern = AttributeDateTime::GetRegExpr();
-				$bParseOk = ($sParsedDate == $sTestDate);
+				$sFormattedDate = $oFormat->Format($oDate);
+				$oParsedDate = $oFormat->Parse($sFormattedDate);
+				$sPattern = $oFormat->ToRegExpr();
+				$bParseOk = ($oParsedDate->format('Y-m-d H:i:s') == $sTestDate);
 				if (!$bParseOk)
 				{
 					$this->ReportError('Parsed ('.$sFormattedDate.') date different from initial date (difference of '.((int)$oParsedDate->format('U')- (int)$oDate->format('U')).'s)');
@@ -4954,11 +4955,11 @@ class TestDateTimeFormats extends TestBizModel
 		foreach($aInvalidTestDates as $sFormatName => $aDatesToParse)
 		{
 			$sFormat = $aTestFormats[$sFormatName];
-			AttributeDateTime::SetFormat($sFormat);
+			$oFormat = new DateTimeFormat($sFormat);
 			$this->ReportSuccess("Test of the '$sFormatName' format: '$sFormat':");
 			foreach($aDatesToParse as $sDate)
 			{
-				$sPattern = AttributeDateTime::GetRegExpr();
+				$sPattern = $oFormat->ToRegExpr();
 				$bValidateOk = preg_match('/'.$sPattern.'/', $sDate);
 				if ($bValidateOk)
 				{
