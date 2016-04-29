@@ -270,33 +270,19 @@ class WebPage implements Page
     {
         $this->a_linked_stylesheets[] = array( 'link' => $s_linked_stylesheet, 'condition' => $s_condition);
     }
-    
-    public function add_saas($sSaasRelPath)
-    {
-    	$sSaasPath = APPROOT.$sSaasRelPath;
-    	$sCssRelPath = preg_replace('/\.scss$/', '.css', $sSaasRelPath);
-    	$sCssPath = APPROOT.$sCssRelPath;
-    	clearstatcache();
-    	if (!file_exists($sCssPath) || (is_writable($sCssPath) && (filemtime($sCssPath) < filemtime($sSaasPath))))
-    	{
-    		// Rebuild the CSS file from the Saas file
-    		if (file_exists(APPROOT.'lib/sass/sass/SassParser.php'))
-    		{
-    			require_once(APPROOT.'lib/sass/sass/SassParser.php'); //including Sass libary (Syntactically Awesome Stylesheets)
-    			$oParser = new SassParser(array('style'=>'expanded'));
-    			$sCss = $oParser->toCss($sSaasPath);
-    			file_put_contents($sCssPath, $sCss);
-    		}
-    	}
-    	$sRootUrl =  utils::GetAbsoluteUrlAppRoot();
-    	if ($sRootUrl === '')
-    	{
-    		// We're running the setup of the first install...
-    		$sRootUrl = '../';
-    	}
-    	$sCSSUrl = $sRootUrl.$sCssRelPath;
-    	$this->add_linked_stylesheet($sCSSUrl);
-    }
+
+	public function add_saas($sSaasRelPath)
+	{
+		$sCssRelPath = utils::GetCSSFromSASS($sSaasRelPath);
+		$sRootUrl =  utils::GetAbsoluteUrlAppRoot();
+		if ($sRootUrl === '')
+		{
+			// We're running the setup of the first install...
+			$sRootUrl = '../';
+		}
+		$sCSSUrl = $sRootUrl.$sCssRelPath;
+		$this->add_linked_stylesheet($sCSSUrl);
+	}
 	/**
 	 * Add some custom header to the page
 	 */

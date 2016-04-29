@@ -1197,4 +1197,30 @@ class utils
 		$sText = str_replace("\r", "\n", $sText);
 		return str_replace("\n", '<br/>', htmlentities($sText, ENT_QUOTES, 'UTF-8'));
 	}
+
+	/**
+	 * Eventually compiles the SASS (.scss) file into the CSS (.css) file
+	 *
+	 * @param string $sSaasRelPath Relative path to the SCSS file (must have the extension .scss)
+	 * @return string Relative path to the CSS file (<name>.css)
+	 */
+	static public function GetCSSFromSASS($sSaasRelPath)
+	{
+		$sSaasPath = APPROOT.$sSaasRelPath;
+		$sCssRelPath = preg_replace('/\.scss$/', '.css', $sSaasRelPath);
+		$sCssPath = APPROOT.$sCssRelPath;
+		clearstatcache();
+		if (!file_exists($sCssPath) || (is_writable($sCssPath) && (filemtime($sCssPath) < filemtime($sSaasPath))))
+		{
+			// Rebuild the CSS file from the Saas file
+			if (file_exists(APPROOT.'lib/sass/sass/SassParser.php'))
+			{
+				require_once(APPROOT.'lib/sass/sass/SassParser.php'); //including Sass libary (Syntactically Awesome Stylesheets)
+				$oParser = new SassParser(array('style'=>'expanded'));
+				$sCss = $oParser->toCss($sSaasPath);
+				file_put_contents($sCssPath, $sCss);
+			}
+		}
+		return $sCssRelPath;
+	}
 }
