@@ -739,7 +739,8 @@ EOF
 		$iBreadCrumbMaxCount = utils::GetConfig()->Get('breadcrumb.max_count');
 		if ($iBreadCrumbMaxCount > 1)
 		{
-			$siTopInstanceId = json_encode(APPROOT);
+			$oConfig = MetaModel::GetConfig();
+			$siTopInstanceId = json_encode(utils::GetAbsoluteUrlAppRoot().'==='.$oConfig->GetDBHost().'/'.$oConfig->GetDBName().'/'.$oConfig->GetDBSubname());
 			if ($this->bBreadCrumbEnabled)
 			{
 				if (is_null($this->sBreadCrumbEntryId))
