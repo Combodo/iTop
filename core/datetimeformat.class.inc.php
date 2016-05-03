@@ -214,30 +214,27 @@ class DateTimeFormat
 	
 	/**
 	 * Get a date or datetime format string in the Excel format
-	 * @param string $sFormat
 	 * @return string The format string using the Excel convention
 	 */
-	public function ToExcel($sFormat = null)
+	public function ToExcel()
 	{
 		return $this->Transform('datepicker', "%s");
 	}
 	
 	/**
 	 * Get a date or datetime format string in the moment.js format
-	 * @param string $sFormat
 	 * @return string The format string using the moment.js convention
 	 */
-	public function ToMomentJS($sFormat = null)
+	public function ToMomentJS()
 	{
 		return $this->Transform('moment', "[%s]", true /* escape all */);
 	}
 
 	/**
 	 * Get a placeholder text for a date or datetime format string
-	 * @param string $sFormat
 	 * @return string The placeholder text (localized)
 	 */
-	public function ToPlaceholder($sFormat = null)
+	public function ToPlaceholder()
 	{
 		$aMappings = static::GetFormatMapping();
 		$sResult = '';

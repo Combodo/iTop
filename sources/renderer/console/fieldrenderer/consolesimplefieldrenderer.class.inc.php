@@ -25,6 +25,9 @@ use Combodo\iTop\Form\Field\TextAreaField;
 use \InlineImage;
 use \UserRights;
 use \AttributeDuration;
+use \DateTimeFormat;
+use \AttributeDateTime;
+use \AttributeDate;
 
 class ConsoleSimpleFieldRenderer extends FieldRenderer
 {
@@ -47,6 +50,24 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 			}
 			switch ($sFieldClass)
 			{
+				case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
+					$sDateTimeFormat = $this->oField->GetPHPDateTimeFormat();
+					$oFormat = new DateTimeFormat($sDateTimeFormat);
+					$sPlaceHolder = $oFormat->ToPlaceholder();
+					$oOutput->AddHtml('<td class="form-field-content">');
+					if ($this->oField->GetReadOnly())
+					{
+						$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '"/>');
+						$oOutput->AddHtml('<span class="form-field-data">'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'</span>');
+					}
+					else
+					{
+						$oOutput->AddHtml('<input class="form-field-data datetime-pick" size="15" type="text" placeholder="'.htmlentities($sPlaceHolder, ENT_QUOTES, 'UTF-8').'" id="'.$this->oField->GetGlobalId().'" value="'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'" size="30"/>');
+					}
+					$oOutput->AddHtml('<span class="form_validation"></span>');
+					$oOutput->AddHtml('</td>');
+					break;
+
 				case 'Combodo\\iTop\\Form\\Field\\StringField':
 					$oOutput->AddHtml('<td class="form-field-content">');
 					if ($this->oField->GetReadOnly())
@@ -78,7 +99,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 						{
 							$sEditorLanguage = strtolower(trim(UserRights::GetUserLanguage()));
 							$oOutput->AddJs(
-								<<<EOF
+<<<EOF
 								$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');
 							$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, {language: '$sEditorLanguage', contentsLanguage: '$sEditorLanguage'});
 EOF
@@ -196,6 +217,82 @@ EOF
 
 		switch ($sFieldClass)
 		{
+			case 'Combodo\\iTop\Form\\Field\\DateTimeField':
+			case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
+				$sDateTimeFormat = $this->oField->GetPHPDateTimeFormat();
+				$oFormat = new DateTimeFormat($sDateTimeFormat);
+				$sDatePickerFormat = $oFormat->ToDatePicker();
+				$sJSDaysMin = json_encode(array(Dict::S('DayOfWeek-Sunday-Min'), Dict::S('DayOfWeek-Monday-Min'), Dict::S('DayOfWeek-Tuesday-Min'), Dict::S('DayOfWeek-Wednesday-Min'),
+								Dict::S('DayOfWeek-Thursday-Min'), Dict::S('DayOfWeek-Friday-Min'), Dict::S('DayOfWeek-Saturday-Min')));
+				$sJSMonthsShort = json_encode(array(Dict::S('Month-01-Short'), Dict::S('Month-02-Short'), Dict::S('Month-03-Short'), Dict::S('Month-04-Short'), Dict::S('Month-05-Short'), Dict::S('Month-06-Short'), 
+													Dict::S('Month-07-Short'), Dict::S('Month-08-Short'), Dict::S('Month-09-Short'), Dict::S('Month-10-Short'), Dict::S('Month-11-Short'), Dict::S('Month-12-Short')));
+				$iFirstDayOfWeek = (int) Dict::S('Calendar-FirstDayOfWeek');
+				$sJSDateFormat = json_encode(AttributeDate::GetFormat()->ToDatePicker());
+				$sTimeFormat = AttributeDateTime::GetFormat()->ToTimeFormat();
+				$oTimeFormat = new DateTimeFormat($sTimeFormat);
+				$sJSTimeFormat = json_encode($oTimeFormat->ToDatePicker());
+				$sJSLangShort = json_encode(strtolower(substr(Dict::GetUserLanguage(), 0, 2)));
+				$sJSOk = json_encode(Dict::S('UI:Button:Ok'));
+				if ($this->oField->IsDateOnly())
+				{
+					$oOutput->AddJs(
+<<<EOF
+				$("#{$this->oField->GetGlobalId()}").datepicker({
+						showOn: 'button',
+						buttonImage: '../images/calendar.png',
+						buttonImageOnly: true,
+						dateFormat: $sJSDateFormat,
+						constrainInput: false,
+						changeMonth: true,
+						changeYear: true,
+						dayNamesMin: $sJSDaysMin,
+						monthNamesShort: $sJSMonthsShort,
+						firstDay: $iFirstDayOfWeek
+				});
+EOF
+					);
+				}
+				else
+				{
+					$oOutput->AddJs(
+<<<EOF
+				$("#{$this->oField->GetGlobalId()}").datetimepicker({
+						showOn: 'button',
+						buttonImage: '../images/calendar.png',
+						buttonImageOnly: true,
+						dateFormat: $sJSDateFormat,
+						constrainInput: false,
+						changeMonth: true,
+						changeYear: true,
+						dayNamesMin: $sJSDaysMin,
+						monthNamesShort: $sJSMonthsShort,
+						firstDay: $iFirstDayOfWeek,
+						// time picker options	
+						timeFormat: $sJSTimeFormat,
+						controlType: 'select',
+						closeText: $sJSOk
+				});
+EOF
+					);
+				}
+				
+				$oOutput->AddJs(
+<<<EOF
+                    $("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
+                    	var me = this;
+
+                        $(this).closest(".field_set").trigger("field_change", {
+                            id: $(me).attr("id"),
+                            name: $(me).closest(".form_field").attr("data-field-id"),
+                            value: $(me).val()
+                        })
+                        .closest('.form_handler').trigger('value_change');
+                    });
+EOF
+				);
+				break;				
+			break;
+			
 			case 'Combodo\\iTop\\Form\\Field\\StringField':
 			case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
 				$oOutput->AddJs(

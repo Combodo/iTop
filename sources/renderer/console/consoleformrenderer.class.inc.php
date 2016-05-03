@@ -41,5 +41,6 @@ class ConsoleFormRenderer extends FormRenderer
 		$this->AddSupportedField('DurationField', 'ConsoleSimpleFieldRenderer');
 		$this->AddSupportedField('SelectObjectField', 'ConsoleSelectObjectFieldRenderer');
 		$this->AddSupportedField('SubFormField', 'ConsoleSubFormFieldRenderer');
+		$this->AddSupportedField('DateTimeField', 'ConsoleSimpleFieldRenderer');
 	}
 }

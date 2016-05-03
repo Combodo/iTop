@@ -4025,6 +4025,20 @@ class AttributeDate extends AttributeDateTime
 
 	public function GetEditClass() {return "Date";}
 	protected function GetSQLCol($bFullSpec = false) {return "DATE";}
+	
+	/**
+	 * Override to specify Field class
+	 *
+	 * When called first, $oFormField is null and will be created (eg. Make). Then when the ::parent is called and the $oFormField is passed, MakeFormField behave more like a Prepare.
+	 */
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
+	{
+		$oFormField = parent::MakeFormField($oObject, $oFormField);
+		$oFormField->SetDateOnly(true);
+		
+		return $oFormField;
+	}
+	
 }
 
 /**
