@@ -548,7 +548,7 @@ abstract class AttributeDefinition
 		{
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
-			$oFormField->SetReadOnly(true);
+			//$oFormField->SetReadOnly(true);
 		}
 
 		$oFormField->SetLabel($this->GetLabel());
