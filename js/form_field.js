@@ -122,7 +122,6 @@ $(function()
 			// Doing data validation
 			if(this.options.validators !== null)
 			{
-				var bMandatory = (this.options.validators.mandatory !== undefined);
 				// Extracting value for the field
 				var oValue = this.element.triggerHandler('get_current_value');
 				if(oValue === null)
@@ -130,19 +129,22 @@ $(function()
 					console.log('Form field : Warning, there was no value for "'+this.element.attr('data-field-id')+'"');
 					return oResult;
 				}
-				var aValueKeys = Object.keys(oValue);
+				
+				var bMandatory = (this.options.validators.mandatory !== undefined);
+				var bEmpty = ($.isArray(oValue)) ? (oValue.length === 0) : (oValue === '' || oValue === undefined);
+				var value = oValue;
 				
 				// This is just a safety check in case a field doesn't always return an object when no value assigned, so we have to check the mandatory validator here...
 				// ... But this should never happen.
-				if( (aValueKeys.length === 0) && bMandatory )
+				//if( (aValueKeys.length === 0) && bMandatory )
+				if( bEmpty && bMandatory )
 				{
 					oResult.is_valid = false;
 					oResult.error_messages.push(this.options.validators.mandatory.message);
 				}
 				// ... Otherwise, we check every validators
-				else if(aValueKeys.length > 0)
+				else
 				{
-					var value = oValue[aValueKeys[0]];
 					for(var sValidatorType in this.options.validators)
 					{
 						var oValidator = this.options.validators[sValidatorType];
@@ -186,7 +188,7 @@ $(function()
 								}
 							}
 							else if($.isArray(value))
-							{
+							{	
 								for(var i in value)
 								{
 									if(value[i] === 'string' && !oRegExp.test(value))

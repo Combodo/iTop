@@ -86,7 +86,7 @@ EOF
 
 			// Rendering table widget
 			// - Vars
-			$sEmptyTableLabel = htmlentities(Dict::S('UI:Message:EmptyList:UseAdd'), ENT_QUOTES, 'UTF-8');
+			$sEmptyTableLabel = htmlentities(Dict::S( ($this->oField->GetReadOnly()) ? 'Portal:Datatables:Language:EmptyTable' : 'UI:Message:EmptyList:UseAdd'), ENT_QUOTES, 'UTF-8');
 			$sSelectionOptionHtml = ($this->oField->GetReadOnly()) ? 'false' : '{"style": "multi"}';
 			$sSelectionInputHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" name="' . $this->oField->GetId() . '" /></span>';
 			// - Output
