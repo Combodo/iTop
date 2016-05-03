@@ -19,6 +19,7 @@
 
 namespace Combodo\iTop\Form\Field;
 
+use \AttributeDatetime;
 use \Combodo\iTop\Form\Field\StringField;
 
 /**
@@ -71,6 +72,6 @@ class DateTimeField extends StringField
 	
 	public function GetDisplayValue()
 	{
-		return \AttributeDatetime::Format($this->currentValue, $this->GetPHPDateTimeFormat());
+		return AttributeDatetime::GetFormat()->Format($this->currentValue);
 	}
 }

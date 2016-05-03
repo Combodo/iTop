@@ -1304,7 +1304,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		$aAttCodesToDisplay = MetaModel::FlattenZList(MetaModel::GetZListItems($sTargetClass, 'list'));
 		// - Adding friendlyname attribute to the list is not already in it
 		$sTitleAttCode = MetaModel::GetFriendlyNameAttributeCode($sTargetClass);
-		if (!in_array($sTitleAttCode, $aAttCodesToDisplay))
+		if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodesToDisplay))
 		{
 			$aAttCodesToDisplay = array_merge(array($sTitleAttCode), $aAttCodesToDisplay);
 		}
@@ -3320,7 +3320,7 @@ class AttributeEnum extends AttributeString
 
 	static public function GetFormFieldClass()
 	{
-		return '\\Combodo\\iTop\\Form\\Field\\RadioField';
+		return '\\Combodo\\iTop\\Form\\Field\\SelectField';
 	}
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
@@ -3640,9 +3640,9 @@ class AttributeDateTime extends AttributeDBField
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
 		$oFormField = parent::MakeFormField($oObject, $oFormField);
-		$oFormField->SetPHPDateTimeFormat($this->GetFormat());
-		$oFormField->SetJSDateTimeFormat($this->GetMomentJSFormat());
-		
+		$oFormField->SetPHPDateTimeFormat((string) $this->GetFormat());
+		$oFormField->SetJSDateTimeFormat($this->GetFormat()->ToMomentJS());
+
 		return $oFormField;
 	}
 
