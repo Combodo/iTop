@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Presentation of the data model
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -569,6 +569,8 @@ $operation = utils::ReadParam('operation', '');
 
 $oPage = new iTopWebPage(Dict::S('UI:Schema:Title'));
 $oPage->no_cache();
+
+$oPage->SetBreadCrumbEntry('ui-tool-datamodel', Dict::S('Menu:DataModelMenu'), Dict::S('Menu:DataModelMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
 
 $operation = utils::ReadParam('operation', '');
 

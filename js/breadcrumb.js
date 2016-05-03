@@ -11,6 +11,7 @@ $(function()
 		{
 			itop_instance_id: '',
 			new_entry: null,
+			max_count: 8
 		},
    
 		// the constructor
@@ -23,14 +24,12 @@ $(function()
 
 			if(typeof(Storage) !== "undefined")
 			{
-				var sBreadCrumbStorageKey = this.options.itop_instance_id + 'breadcrumb-v1';
-				var aBreadCrumb = [];
-				var sBreadCrumbData = sessionStorage.getItem(sBreadCrumbStorageKey);
-				if (sBreadCrumbData !== null)
+				$(window).bind( 'hashchange', function(e)
 				{
-					aBreadCrumb = JSON.parse(sBreadCrumbData);
-				}
-				var iDisplayableItems = aBreadCrumb.length;
+					me._RefreshLatestEntry();
+				});
+
+				aBreadCrumb = this._Read();
 
                 if (this.options.new_entry !== null) {
                     var sUrl = this.options.new_entry.url;
@@ -49,13 +48,10 @@ $(function()
                         icon: this.options.new_entry.icon,
                         url: sUrl
                     });
-                    // Keep only the last N items
-                    aBreadCrumb = aBreadCrumb.slice(-8);
-					// Do not show the last = current item
-					iDisplayableItems = aBreadCrumb.length - 1;
+                    // Keep only the last <max_count> items
+                    aBreadCrumb = aBreadCrumb.slice(-(this.options.max_count));
                 }
-				sBreadCrumbData = JSON.stringify(aBreadCrumb);
-				sessionStorage.setItem(sBreadCrumbStorageKey, sBreadCrumbData);
+				this._Write(aBreadCrumb);
 				var sBreadCrumbHtml = '<ul>';
 				for (iEntry in aBreadCrumb)
 				{
@@ -72,7 +68,15 @@ $(function()
 						if (sTitle.length == 0) {
 							sTitle = oEntry['label'];
 						}
-						sBreadCrumbHtml += '<li><a class="itop-breadcrumb-link" breadcrumb-entry="'+iEntry+'" href="'+oEntry['url']+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+oEntry['label']+'</span></a></li>';
+						if ((this.options.new_entry !== null) && (iEntry == aBreadCrumb.length - 1))
+						{
+							// Last entry is the current page
+							sBreadCrumbHtml += '<li><div class="itop-breadcrumb-current" breadcrumb-entry="'+iEntry+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+oEntry['label']+'</span></div></li>';
+						}
+						else
+						{
+							sBreadCrumbHtml += '<li><a class="itop-breadcrumb-link" breadcrumb-entry="'+iEntry+'" href="'+oEntry['url']+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+oEntry['label']+'</span></a></li>';
+						}
 					}
 				}
 				sBreadCrumbHtml += '</ul>';
@@ -106,6 +110,36 @@ $(function()
 		_setOption: function( key, value )
 		{
 			this._super( key, value );
+		},
+		_Read: function()
+		{
+			var sBreadCrumbStorageKey = this.options.itop_instance_id + 'breadcrumb-v1';
+			var aBreadCrumb = [];
+			var sBreadCrumbData = sessionStorage.getItem(sBreadCrumbStorageKey);
+			if (sBreadCrumbData !== null)
+			{
+				aBreadCrumb = JSON.parse(sBreadCrumbData);
+			}
+			return aBreadCrumb;
+		},
+		_Write: function(aBreadCrumb)
+		{
+			var sBreadCrumbStorageKey = this.options.itop_instance_id + 'breadcrumb-v1';
+			sBreadCrumbData = JSON.stringify(aBreadCrumb);
+			sessionStorage.setItem(sBreadCrumbStorageKey, sBreadCrumbData);
+		},
+		// Refresh the latest entry (navigating to a tab)
+		_RefreshLatestEntry: function()
+		{
+			aBreadCrumb = this._Read();
+			var iDisplayableItems = aBreadCrumb.length;
+
+			if (this.options.new_entry !== null) {
+				// The current page is the last entry in the breadcrumb, let's refresh it
+				aBreadCrumb[aBreadCrumb.length - 1].url = window.location.href;
+				$('#itop-breadcrumb li:last-of-type a').attr('href', window.location.href);
+			}
+			this._Write(aBreadCrumb);
 		}
 	});
 });

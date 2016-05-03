@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015 Combodo SARL
+// Copyright (C) 2015-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Export data specified by an OQL or a query phrasebook entry
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2015-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -336,6 +336,7 @@ EOF
 	else
 	{
 		$oP = new iTopWebPage('iTop Export');
+		$oP->SetBreadCrumbEntry('ui-tool-export', Dict::S('Menu:ExportMenu'), Dict::S('Menu:ExportMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
 	}
 	
 	if ($sExpression === null)

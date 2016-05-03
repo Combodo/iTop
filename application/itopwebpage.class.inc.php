@@ -37,6 +37,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	private $m_sMessage;
 	private $m_sInitScript;
 	protected $m_oTabs;
+	protected $bBreadCrumbEnabled;
 	protected $sBreadCrumbEntryId;
 	protected $sBreadCrumbEntryLabel;
 	protected $sBreadCrumbEntryDescription;
@@ -50,11 +51,15 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 		ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
 
-		$this->sBreadCrumbEntryId = null;
-		$this->sBreadCrumbEntryLabel = null;
-		$this->sBreadCrumbEntryDescription = null;
-		$this->sBreadCrumbEntryUrl = null;
-		$this->sBreadCrumbEntryIcon = '';
+		if ((count($_POST) == 0) || (array_key_exists('loginop', $_POST)))
+		{
+			// Create a breadcrumb entry for the current page, but get its title as late as possible (page title could be changed later)
+			$this->bBreadCrumbEnabled = true;
+		}
+		else
+		{
+			$this->bBreadCrumbEnabled = false;
+		}
 
 		$this->m_sMenu = "";
 		$this->m_sMessage = '';
@@ -107,45 +112,44 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		}
 	}
 
-	protected function PrepareLayout()
+	protected function IsMenuPaneVisible()
 	{
-		$bForceMenuPane = utils::ReadParam('force_menu_pane', null);
-		$sInitClosed = '';
-		if (($bForceMenuPane !== null) && ($bForceMenuPane == 0))
-		{
-			$sInitClosed = 'initClosed: true,';
-		}
-
-		$this->add_script(
-<<<EOF
-function ShowAboutBox()
-{
-	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'about_box'}, function(data){
-		$('body').append(data);
-	});
-	return false;
-}
-EOF
-		);
-
+		$bLeftPaneOpen = true;
 		if (MetaModel::GetConfig()->Get('demo_mode'))
 		{
 			// Leave the pane opened
+		}
+		else
+		{
+			if (utils::ReadParam('force_menu_pane', null) === 0)
+			{
+				$bLeftPaneOpen = false;
+			}
+			elseif (appUserPreferences::GetPref('menu_pane', 'open') == 'closed')
+			{
+				$bLeftPaneOpen = false;
+			}
+		}
+		return $bLeftPaneOpen;
+	}
+
+	protected function PrepareLayout()
+	{
+		$bLeftPaneOpen = true;
+		if (MetaModel::GetConfig()->Get('demo_mode'))
+		{
+			// No pin button
 			$sConfigureWestPane = '';
 		}
 		else
 		{
 			$sConfigureWestPane =
 <<<EOF
-				if (GetUserPreference('menu_pane', 'open') == 'closed')
-				{
-					myLayout.close('west');
-				}
 				myLayout.addPinBtn( "#tPinMenu", "west" );
 EOF;
 		}
+		$sInitClosed = $this->IsMenuPaneVisible() ? '' : 'initClosed: true,';
 
-		
 		$sJSDisconnectedMessage = json_encode(Dict::S('UI:DisconnectedDlgMessage'));
 		$sJSTitle = json_encode(Dict::S('UI:DisconnectedDlgTitle'));
 		$sJSLoginAgain = json_encode(Dict::S('UI:LoginAgain'));
@@ -172,11 +176,12 @@ EOF;
 		paneSize = GetUserPreference('menu_size', 300)
 		myLayout = $('body').layout({
 			west :	{
-						$sInitClosed minSize: 200, size: paneSize, spacing_open: 16, spacing_close: 16, slideTrigger_open: "mouseover", hideTogglerOnSlide: true, enableCursorHotkey: false,
+						$sInitClosed minSize: 200, size: paneSize, spacing_open: 16, spacing_close: 16, slideTrigger_open: "click", hideTogglerOnSlide: true, enableCursorHotkey: false,
 						onclose_end: function(name, elt, state, options, layout)
 						{
 								if (state.isSliding == false)
 								{
+									$('.menu-pane-exclusive').show();
 									SetUserPreference('menu_pane', 'closed', true);
 								}
 						},
@@ -192,6 +197,7 @@ EOF;
 						{
 							if (state.isSliding == false)
 							{
+								$('.menu-pane-exclusive').hide();
 								SetUserPreference('menu_pane', 'open', true);
 							}
 						}
@@ -570,11 +576,25 @@ EOF
 	 */
 	public function SetBreadCrumbEntry($sId, $sLabel, $sDescription, $sUrl = '', $sIcon = '')
 	{
+		$this->bBreadCrumbEnabled = true;
 		$this->sBreadCrumbEntryId = $sId;
 		$this->sBreadCrumbEntryLabel = $sLabel;
 		$this->sBreadCrumbEntryDescription = $sDescription;
 		$this->sBreadCrumbEntryUrl = $sUrl;
 		$this->sBreadCrumbEntryIcon = $sIcon;
+	}
+
+	/**
+	 * State that there will be no breadcrumb item for the current page
+	 */
+	public function DisableBreadCrumb()
+	{
+		$this->bBreadCrumbEnabled = false;
+		$this->sBreadCrumbEntryId = null;
+		$this->sBreadCrumbEntryLabel = null;
+		$this->sBreadCrumbEntryDescription = null;
+		$this->sBreadCrumbEntryUrl = null;
+		$this->sBreadCrumbEntryIcon = null;
 	}
 
 	public function AddToMenu($sHtml)
@@ -701,9 +721,6 @@ EOF
 			'selectedList' => 1,
 		);
 		$sJSMultiselectOptions = json_encode($aMultiselectOptions);
-
-		$siTopInstanceId = json_encode(APPROOT);
-		$sNewEntry = is_null($this->sBreadCrumbEntryId) ? 'null' : json_encode(array('id' => $this->sBreadCrumbEntryId, 'url' => $this->sBreadCrumbEntryUrl, 'label' => htmlentities($this->sBreadCrumbEntryLabel, ENT_QUOTES, 'UTF-8'), 'description' => htmlentities($this->sBreadCrumbEntryDescription, ENT_QUOTES, 'UTF-8'), 'icon' => $this->sBreadCrumbEntryIcon));
 		$this->add_ready_script(
 <<<EOF
 		// Since the event is only triggered when the hash changes, we need to trigger
@@ -715,12 +732,38 @@ EOF
 		
 		$('.multiselect').multiselect($sJSMultiselectOptions);
 
-		$('#itop-breadcrumb').breadcrumb({itop_instance_id: $siTopInstanceId, new_entry: $sNewEntry});
-
 		FixSearchFormsDisposition();
-
 EOF
 		);
+
+		$iBreadCrumbMaxCount = utils::GetConfig()->Get('breadcrumb.max_count');
+		if ($iBreadCrumbMaxCount > 1)
+		{
+			$siTopInstanceId = json_encode(APPROOT);
+			if ($this->bBreadCrumbEnabled)
+			{
+				if (is_null($this->sBreadCrumbEntryId))
+				{
+					$this->sBreadCrumbEntryId = $this->s_title;
+					$this->sBreadCrumbEntryLabel = $this->s_title;
+					$this->sBreadCrumbEntryDescription = $this->s_title;
+					$this->sBreadCrumbEntryUrl = '';
+					$this->sBreadCrumbEntryIcon = utils::GetAbsoluteUrlAppRoot().'images/wrench.png';
+				}
+				$sNewEntry = json_encode(array('id' => $this->sBreadCrumbEntryId, 'url' => $this->sBreadCrumbEntryUrl, 'label' => htmlentities($this->sBreadCrumbEntryLabel, ENT_QUOTES, 'UTF-8'), 'description' => htmlentities($this->sBreadCrumbEntryDescription, ENT_QUOTES, 'UTF-8'), 'icon' => $this->sBreadCrumbEntryIcon));
+			}
+			else
+			{
+				$sNewEntry = 'null';
+			}
+
+			$this->add_ready_script(
+<<<EOF
+		$('#itop-breadcrumb').breadcrumb({itop_instance_id: $siTopInstanceId, new_entry: $sNewEntry, max_count: $iBreadCrumbMaxCount});
+EOF
+			);
+		}
+
 		if ($this->GetOutputFormat() == 'html')
 		{
 			foreach($this->a_headers as $s_header)
@@ -1009,8 +1052,18 @@ EOF
 			$sHtml .= ' <div id="top-bar" class="ui-helper-clearfix" style="width:100%">';
 			$sHtml .= self::FilterXSS($sApplicationBanner);
 
+			$GoHomeInitialStyle = $this->IsMenuPaneVisible() ? 'display: none;' : '';
+
 			$sHtml .= ' <table id="top-bar-table">';
 			$sHtml .= ' <tr>';
+			$sHtml .= ' <td id="open-left-pane"  class="menu-pane-exclusive" style="'.$GoHomeInitialStyle.'" onclick="$(\'body\').layout().open(\'west\');">';
+			$sHtml .= ' <img src="../images/menu.png">';
+			$sHtml .= ' </td>';
+			$sHtml .= ' <td id="go-home" class="menu-pane-exclusive" style="'.$GoHomeInitialStyle.'">';
+			$sHtml .= ' <a href="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><img src="../images/home.png"></a>';
+			$sHtml .= ' </td>';
+			$sHtml .= ' <td class="top-bar-spacer menu-pane-exclusive" style="'.$GoHomeInitialStyle.'">';
+			$sHtml .= ' </td>';
 			$sHtml .= ' <td id="top-bar-table-breadcrumb">';
 			$sHtml .= ' <div id="itop-breadcrumb"></div>';
 			$sHtml .= ' </td>';

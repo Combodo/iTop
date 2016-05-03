@@ -319,7 +319,7 @@ try
 		$oP->add_linked_script("../js/linksdirectwidget.js");
 		$oP->add_linked_script("../js/extkeywidget.js");
 		$oP->add_linked_script("../js/jquery.blockUI.js");
-		break;		
+		break;
 	}
 		
 	switch($operation)
@@ -363,13 +363,19 @@ try
 				if (!is_null($oObj))
 				{
 					$sClass = get_class($oObj); // get the leaf class
-					$oP->SetBreadCrumbEntry("ui-details-$sClass-$id", $oObj->Get('friendlyname'), $sClass.': '.$oObj->Get('friendlyname'), '', MetaModel::GetClassIcon($sClass, false));
+					$sIcon = MetaModel::GetClassIcon($sClass, false);
+					if ($sIcon == '')
+					{
+						$sIcon = utils::GetAbsoluteUrlAppRoot().'images/breadcrumb_object.png';
+					}
+					$oP->SetBreadCrumbEntry("ui-details-$sClass-$id", $oObj->Get('friendlyname'), MetaModel::GetName($sClass).': '.$oObj->Get('friendlyname'), '', $sIcon);
 					DisplayDetails($oP, $sClass, $oObj, $id);
 				}				
 			}
 		break;
 
 		case 'release_lock_and_details':
+		$oP->DisableBreadCrumb();
 		$sClass = utils::ReadParam('class', '');
 		$id = utils::ReadParam('id', '');
 		$oObj = MetaModel::GetObject($sClass, $id);
@@ -561,6 +567,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'modify': // Form to modify an object
+			$oP->DisableBreadCrumb();
 			$sClass = utils::ReadParam('class', '', false, 'class');
 			$id = utils::ReadParam('id', '');
 			if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
@@ -590,6 +597,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'select_for_modify_all': // Select the list of objects to be modified (bulk modify)
+		$oP->DisableBreadCrumb();
 		$oP->set_title(Dict::S('UI:ModifyAllPageTitle'));
 		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 		if (empty($sFilter))
@@ -607,6 +615,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'form_for_modify_all': // Form to modify multiple objects (bulk modify)
+		$oP->DisableBreadCrumb();
 		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 		$sClass = utils::ReadParam('class', '', false, 'class');
 		$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
@@ -619,6 +628,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'preview_or_modify_all': // Preview or apply bulk modify
+		$oP->DisableBreadCrumb();
 		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 		// TO DO: limit the search filter by the user context
 		$oFilter = DBObjectSearch::unserialize($sFilter); // TO DO : check that the filter is valid
@@ -643,6 +653,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'new': // Form to create a new object
+			$oP->DisableBreadCrumb();
 			$sClass = utils::ReadParam('class', '', false, 'class');
 			$sStateCode = utils::ReadParam('state', '');
 			$bCheckSubClass = utils::ReadParam('checkSubclass', true);
@@ -757,6 +768,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'apply_modify': // Applying the modifications to an existing object
+			$oP->DisableBreadCrumb();
 			$sClass = utils::ReadPostedParam('class', '');
 			$sClassLabel = MetaModel::GetName($sClass);
 			$id = utils::ReadPostedParam('id', '');
@@ -860,6 +872,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'select_for_deletion': // Select multiple objects for deletion
+			$oP->DisableBreadCrumb();
 			$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 			if (empty($sFilter))
 			{
@@ -876,6 +889,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'bulk_delete_confirmed': // Confirm bulk deletion of objects
+			$oP->DisableBreadCrumb();
 			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 			if (!utils::IsTransactionValid($sTransactionId))
 			{
@@ -887,6 +901,7 @@ EOF
 
 		case 'delete':
 		case 'bulk_delete': // Actual bulk deletion (if confirmed)
+			$oP->DisableBreadCrumb();
 			$sClass = utils::ReadParam('class', '', false, 'class');
 			$sClassLabel = MetaModel::GetName($sClass);
 			$aObjects = array();
@@ -938,6 +953,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'apply_new': // Creation of a new object
+		$oP->DisableBreadCrumb();
 		$sClass = utils::ReadPostedParam('class', '', 'class');
 		$sClassLabel = MetaModel::GetName($sClass);
 		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
@@ -1008,6 +1024,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'select_bulk_stimulus': // Form displayed when applying a stimulus to many objects
+		$oP->DisableBreadCrumb();
 		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 		$sStimulus = utils::ReadParam('stimulus', '');
 		$sState = utils::ReadParam('state', '');
@@ -1031,6 +1048,7 @@ EOF
 		break;
 		
 		case 'bulk_stimulus':
+		$oP->DisableBreadCrumb();
 		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 		$sStimulus = utils::ReadParam('stimulus', '');
 		$sState = utils::ReadParam('state', '');
@@ -1196,6 +1214,7 @@ EOF
 		break;
 		
 		case 'bulk_apply_stimulus':
+		$oP->DisableBreadCrumb();
 		$bPreviewMode = utils::ReadPostedParam('preview_mode', false);
 		$sFilter = utils::ReadPostedParam('filter', '', false, 'raw_data');
 		$sStimulus = utils::ReadPostedParam('stimulus', '');
@@ -1329,6 +1348,7 @@ EOF
 		break;
 
 		case 'stimulus': // Form displayed when applying a stimulus (state change)
+		$oP->DisableBreadCrumb();
 		$sClass = utils::ReadParam('class', '', false, 'class');
 		$id = utils::ReadParam('id', '');
 		$sStimulus = utils::ReadParam('stimulus', '');
@@ -1351,6 +1371,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'apply_stimulus': // Actual state change
+		$oP->DisableBreadCrumb();
 		$sClass = utils::ReadPostedParam('class', '');
 		$id = utils::ReadPostedParam('id', '');
 		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
@@ -1489,14 +1510,19 @@ EOF
 		$sRelation = utils::ReadParam('relation', 'impact');
 		$sDirection = utils::ReadParam('direction', 'down');
 		$iGroupingThreshold = utils::ReadParam('g', 5);
-		
+
 		$oObj = MetaModel::GetObject($sClass, $id);
 		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
 		$aSourceObjects = array($oObj);
-		
+
 		$oP->set_title(MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName());
-		
-		if ($sRelation == 'depends on')
+
+		$sPageId = "ui-relation-graph-".$sClass.'::'.$id;
+		$sLabel = $oObj->GetName().' '.MetaModel::GetRelationLabel($sRelation);
+		$sDescription = MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName();
+		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription);
+
+			if ($sRelation == 'depends on')
 		{
 			$sRelation = 'impacts';
 			$sDirection = 'up';
@@ -1561,6 +1587,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 		
 		case 'kill_lock':
+		$oP->DisableBreadCrumb();
 		$sClass = utils::ReadParam('class', '');
 		$id = utils::ReadParam('id', '');
 		iTopOwnershipLock::KillLock($sClass, $id);
@@ -1571,6 +1598,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'cancel': // An action was cancelled
+		$oP->DisableBreadCrumb();
 		$oP->set_title(Dict::S('UI:OperationCancelled'));
 		$oP->add('<h1>'.Dict::S('UI:OperationCancelled').'</h1>');
 		break;
@@ -1582,7 +1610,6 @@ EOF
 		$oMenuNode = ApplicationMenu::GetMenuNode(ApplicationMenu::GetMenuIndexById(ApplicationMenu::GetActiveNodeId()));
 		if (is_object($oMenuNode))
 		{
-		
 			$oMenuNode->RenderContent($oP, $oAppContext->GetAsHash());
 			$oP->set_title($oMenuNode->GetLabel());
 		}

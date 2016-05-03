@@ -906,6 +906,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'breadcrumb.max_count' => array(
+			'type' => 'integer',
+			'description' => 'Maximum number of items kept in the history breadcrumb. Set it to 0 to entirely disable the breadcrumb.',
+			'default' => 8,
+			'value' => 8,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)

@@ -1622,6 +1622,37 @@ span.refresh-button {
 
 #top-bar-table {
   width: 100%;
+  padding-left: 5px;
+
+  $top-button-width: 40px;
+  $top-button-heigth: 55px;
+  $top-button-spacer: 35px;
+
+  #open-left-pane {
+	text-align: center;
+	width: $top-button-width !important;
+	cursor: pointer;
+  }
+  #go-home {
+	text-align: center;
+	width: $top-button-width !important;
+
+	a {
+	  text-decoration: none;
+	  color: #555;
+	  font-size: 9pt;
+	  padding: 0;
+	  background: none;
+
+	  // Make the whole cell clickable
+	  display: inline-block;
+	  line-height: $top-button-heigth;
+	  width: 100%;
+	}
+  }
+  .top-bar-spacer{
+	width: $top-button-spacer !important;
+  }
   #top-bar-table-search{
     width: 347px;
   }
@@ -1631,12 +1662,15 @@ span.refresh-button {
   overflow: hidden;
   float: left;
   background: $frame-background-color;
-  margin-left: -20px;
+
+  ul {
+	display: inline;
+  }
 
   li{
 	list-style: none;
 	float: left;
-	margin: 0 22px 6px 0;
+	margin: 0 22px 0px 0;
 
 	.icon img{
 	  height: 15px;
@@ -1652,18 +1686,19 @@ span.refresh-button {
 	  opacity: 0.5;
 	}
 
-	&:hover .icon img{
-	  -webkit-filter: none;
-	  filter: none;
-	  opacity: 1;
-	}
-
 	a{
 	  text-decoration: none;
 	  color: #555;
 	  font-size: 9pt;
 	  padding: 0;
 	  background: none;
+
+	  &:hover .icon img{
+		-webkit-filter: none;
+		filter: none;
+		opacity: 1;
+	  }
+
 	  span.truncate
 	  {
 		// Ellipsis
@@ -1692,6 +1727,24 @@ span.refresh-button {
 
 	&:last-child a::after{
 	  display: none;
+	}
+
+	.itop-breadcrumb-current{
+	  text-decoration: none;
+	  color: #555;
+	  font-size: 9pt;
+	  padding: 0;
+	  background: none;
+	  span.truncate
+	  {
+		// Ellipsis
+		max-width: 200px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: inline-block;
+	  }
+
 	}
   }
 }

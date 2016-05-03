@@ -54,6 +54,8 @@ $sOQLClause = utils::ReadParam('oql_clause', '', false, 'raw_data');
 $sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 $sOperation = utils::ReadParam('operation', '');
 
+$oP->SetBreadCrumbEntry('ui-tool-universalsearch', Dict::S('Menu:UniversalSearchMenu'), Dict::S('Menu:UniversalSearchMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+
 // First part: select the class to search for
 $oP->add("<form>");
 $oP->add(Dict::S('UI:UniversalSearch:LabelSelectTheClass')."<select style=\"width: 150px;\" id=\"select_class\" name=\"baseClass\" onChange=\"this.form.submit();\">");

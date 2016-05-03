@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Execute and shows the data quality audit
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 /**
@@ -156,10 +156,11 @@ try
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	
 	$oP = new iTopWebPage(Dict::S('UI:Audit:Title'));
-	
+
 	switch($operation)
 	{
 		case 'csv':
+		$oP->DisableBreadCrumb();
 		// Big result sets cause long OQL that cannot be passed (serialized) as a GET parameter
 		// Therefore we don't use the standard "search_oql" operation of UI.php to display the CSV
 		$iCategory = utils::ReadParam('category', '');
@@ -221,6 +222,8 @@ try
 		break;
 						
 		case 'errors':
+		$sTitle = 'Audit Errors';
+		$oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, '', '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
 		$iCategory = utils::ReadParam('category', '');
 		$iRuleIndex = utils::ReadParam('rule', 0);
 	
@@ -244,6 +247,7 @@ try
 		
 		case 'audit':
 		default:
+		$oP->SetBreadCrumbEntry('ui-tool-audit', Dict::S('Menu:Audit'), Dict::S('UI:Audit:InteractiveAudit'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
 		$oP->add('<div class="page_header"><h1>'.Dict::S('UI:Audit:InteractiveAudit').'</h1><img style="margin-top: -20px; margin-right: 10px; float: right;" src="../images/clean.png"/></div>');
 		$oAuditFilter = new DBObjectSearch('AuditCategory');
 		$oCategoriesSet = new DBObjectSet($oAuditFilter);

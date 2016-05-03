@@ -99,6 +99,7 @@ $sOperation = utils::ReadParam('operation', 'menu');
 $oAppContext = new ApplicationContext();
 
 $oP = new iTopWebPage(Dict::S('UI:RunQuery:Title'));
+$oP->SetBreadCrumbEntry('ui-tool-runquery', Dict::S('Menu:RunQueriesMenu'), Dict::S('Menu:RunQueriesMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
 
 // Main program
 $sExpression = utils::ReadParam('expression', '', false, 'raw_data');

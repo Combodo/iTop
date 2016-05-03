@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
  * CSV Import Page
  * Wizard to import CSV (or TSV) data into the database
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 try
@@ -39,7 +39,8 @@ try
 	$iStep = utils::ReadParam('step', 1);
 	
 	$oPage = new iTopWebPage(Dict::S('UI:Title:BulkImport'));
-	
+	$oPage->SetBreadCrumbEntry('ui-tool-bulkimport', Dict::S('Menu:CSVImportMenu'), Dict::S('UI:Title:BulkImport+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+
 	/**
 	 * Helper function to build a select from the list of valid classes for a given action
 	 * @param string $sName The name of the select in the HTML form
