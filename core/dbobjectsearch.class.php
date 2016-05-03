@@ -268,7 +268,7 @@ class DBObjectSearch extends DBSearch
 		$this->AddConditionExpression($oNewCondition);
 	}
 
-	public function AddCondition($sFilterCode, $value, $sOpCode = null)
+	public function AddCondition($sFilterCode, $value, $sOpCode = null, $bParseSeachString = false)
 	{
 		MyHelpers::CheckKeyInArray('filter code in class: '.$this->GetClass(), $sFilterCode, MetaModel::GetClassFilterDefs($this->GetClass()));
 		$oFilterDef = MetaModel::GetClassFilterDef($this->GetClass(), $sFilterCode);
@@ -283,12 +283,18 @@ class DBObjectSearch extends DBSearch
 			else
 			{
 				$oAttDef = MetaModel::GetAttributeDef($this->GetClass(), $sFilterCode);
-				$oNewCondition = $oAttDef->GetSmartConditionExpression($value, $oField, $this->m_aParams);
+				$oNewCondition = $oAttDef->GetSmartConditionExpression($value, $oField, $this->m_aParams, $bParseSeachString);
 				$this->AddConditionExpression($oNewCondition);
 				return;
 			}
 		}
 		MyHelpers::CheckKeyInArray('operator', $sOpCode, $oFilterDef->GetOperators());
+		// Parse search strings if needed and if the filter code corresponds to a valid attcode
+		if($bParseSeachString && MetaModel::IsValidAttCode($this->GetClass(), $sFilterCode))
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sFilterCode);
+			$value = $oAttDef->ParseSearchString($value);
+		}
 
 		// Preserve backward compatibility - quick n'dirty way to change that API semantic
 		//

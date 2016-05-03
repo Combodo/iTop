@@ -155,9 +155,10 @@ EOF;
 		$sJSMonthsShort = json_encode(array(Dict::S('Month-01-Short'), Dict::S('Month-02-Short'), Dict::S('Month-03-Short'), Dict::S('Month-04-Short'), Dict::S('Month-05-Short'), Dict::S('Month-06-Short'), 
 											Dict::S('Month-07-Short'), Dict::S('Month-08-Short'), Dict::S('Month-09-Short'), Dict::S('Month-10-Short'), Dict::S('Month-11-Short'), Dict::S('Month-12-Short')));
 		$iFirstDayOfWeek = (int) Dict::S('Calendar-FirstDayOfWeek');
-		$sDateFormat = AttributeDate::GetDatePickerFormat();
-		$sJSDateFormat = json_encode($sDateFormat);
-		$sJSTimeFormat = json_encode(trim(str_replace($sDateFormat, '', AttributeDateTime::GetDatePickerFormat())));
+		$sJSDateFormat = json_encode(AttributeDate::GetFormat()->ToDatePicker());
+		$sTimeFormat = AttributeDateTime::GetFormat()->ToTimeFormat();
+		$oTimeFormat = new DateTimeFormat($sTimeFormat);
+		$sJSTimeFormat = json_encode($oTimeFormat->ToDatePicker());
 		$sJSLangShort = json_encode(strtolower(substr(Dict::GetUserLanguage(), 0, 2)));
 		$sJSOk = json_encode(Dict::S('UI:Button:Ok'));
 		
@@ -423,14 +424,20 @@ EOF
 			// time picker options	
 			timeFormat: $sJSTimeFormat,
 			controlType: 'select',
+			closeText: $sJSOk
+	});
+	
+	if ($sJSLangShort != 'en')
+	{
+		$(".datetime-pick").datetimepicker('option', {
 			timeText: $.timepicker.regional[$sJSLangShort].timeText,
 			hourText: $.timepicker.regional[$sJSLangShort].hourText,
 			minuteText: $.timepicker.regional[$sJSLangShort].minuteText,
 			secondText: $.timepicker.regional[$sJSLangShort].secondText,
 			currentText: $.timepicker.regional[$sJSLangShort].currentText,
-			closeText: $sJSOk
 	});
 				
+	}	
 
 	// Make sortable, everything that claims to be sortable
 	$('.sortable').sortable( {axis: 'y', cursor: 'move', handle: '.drag_handle', stop: function()

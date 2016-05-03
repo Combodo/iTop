@@ -47,7 +47,7 @@ class ExcelBulkExport extends TabularBulkExport
 		$oP->p(" * xlsx format options:");
 		$oP->p(" *\tfields: the comma separated list of field codes to export (e.g: name,org_id,service_name...).");
 		$oP->p(" *\tformatted_text: set to 1 to export case logs and formatted text fields with their HTML markup. Default is 0 (= plain text)");
-		$oP->p(" *\tdate_format: the format to use when exporting date and time fields (default = the format used in the user interface). Example: 'm/d/Y H:i:s'");
+		$oP->p(" *\tdate_format: the format to use when exporting date and time fields (default = the SQL format). e.g. 'Y-m-d H:i:s'");
 	}
 
 	public function ReadParameters()
@@ -55,14 +55,22 @@ class ExcelBulkExport extends TabularBulkExport
 		parent::ReadParameters();
 		$this->aStatusInfo['formatted_text'] = (bool)utils::ReadParam('formatted_text', 0, true);
 			
-		$sDateFormatRadio = utils::ReadParam('date_format_radio', 'custom');
-		if ($sDateFormatRadio == 'default')
+		$sDateFormatRadio = utils::ReadParam('date_format_radio', '');
+		switch($sDateFormatRadio)
 		{
-			$this->aStatusInfo['date_format'] = AttributeDateTime::GetFormat();
-		}
-		else
-		{
-			$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', AttributeDateTime::GetFormat(), true, 'raw_data');
+			case 'default':
+			// Export from the UI => format = same as is the UI
+			$this->aStatusInfo['date_format'] = (string)AttributeDateTime::GetFormat();
+			break;
+			
+			case 'custom':
+			// Custom format specified from the UI
+			$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
+			break;
+			
+			default:
+			// Export from the command line (or scripted) => default format is SQL, as in previous versions of iTop, unless specified otherwise
+			$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetSQLFormat(), true, 'raw_data');
 		}
 	}
 	
@@ -89,12 +97,12 @@ class ExcelBulkExport extends TabularBulkExport
 				
 				$oP->add('</td><td style="vertical-align:top">');
 				
-				$sDateTimeFormat = utils::ReadParam('date_format', AttributeDateTime::GetFormat(), true, 'raw_data');
-				$sDefaultChecked = ($sDateTimeFormat == AttributeDateTime::GetFormat()) ? ' checked' : '';
-				$sCustomChecked = ($sDateTimeFormat !== AttributeDateTime::GetFormat()) ? ' checked' : '';
+				$sDateTimeFormat = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
+				$sDefaultChecked = ($sDateTimeFormat == (string)AttributeDateTime::GetFormat()) ? ' checked' : '';
+				$sCustomChecked = ($sDateTimeFormat !== (string)AttributeDateTime::GetFormat()) ? ' checked' : '';
 				$oP->add('<h3>'.Dict::S('Core:BulkExport:DateTimeFormat').'</h3>');
-				$sDefaultFormat = htmlentities(AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
-				$sExample = htmlentities(date(AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
+				$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
+				$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
 				$oP->add('<input type="radio" id="excel_date_time_format_default" name="date_format_radio" value="default"'.$sDefaultChecked.'><label for="excel_date_time_format_default"> '.Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample).'</label><br/>');
 				$sFormatInput = '<input type="text" size="15" name="date_format" id="excel_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
 				$oP->add('<input type="radio" id="excel_date_time_format_custom" name="date_format_radio" value="custom"'.$sCustomChecked.'><label for="excel_date_time_format_custom"> '.Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput).'</label>');
@@ -304,7 +312,8 @@ EOF
 			
 		$fStartExcel = microtime(true);
 		$writer = new XLSXWriter();
-		$writer->setDateTimeFormat(AttributeDateTime::GetExcelFormat($this->aStatusInfo['date_format']));
+		$oDateTimeFormat = new DateTimeFormat($this->aStatusInfo['date_format']);
+		$writer->setDateTimeFormat($oDateTimeFormat->ToExcel());
 		$writer->setAuthor(UserRights::GetUserFriendlyName());
 		$aHeaderTypes = array();
 		$aHeaderNames = array();

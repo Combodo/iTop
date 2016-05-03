@@ -30,6 +30,7 @@ class SpreadsheetBulkExport extends TabularBulkExport
 		$oP->p(" * spreadsheet format options:");
 		$oP->p(" *\tfields: (mandatory) the comma separated list of field codes to export (e.g: name,org_id,service_name...).");
 		$oP->p(" *\tno_localize: (optional) pass 1 to retrieve the raw (untranslated) values for enumerated fields. Default: 0.");
+		$oP->p(" *\tdate_format: the format to use when exporting date and time fields (default = the SQL format). e.g. 'Y-m-d H:i:s'");
 	}
 
 	public function EnumFormParts()
@@ -51,13 +52,57 @@ class SpreadsheetBulkExport extends TabularBulkExport
 				$oP->add('<table>');
 				$oP->add('<tr>');
 				$oP->add('<td><input type="checkbox" id="spreadsheet_no_localize" name="no_localize" value="1"'.$sChecked.'><label for="spreadsheet_no_localize"> '.Dict::S('Core:BulkExport:OptionNoLocalize').'</label></td>');
+				
+				$sDateTimeFormat = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
+				$sDefaultChecked = ($sDateTimeFormat == (string)AttributeDateTime::GetFormat()) ? ' checked' : '';
+				$sCustomChecked = ($sDateTimeFormat !== (string)AttributeDateTime::GetFormat()) ? ' checked' : '';
+				
+				$oP->add('<td>');
+				$oP->add('<h3>'.Dict::S('Core:BulkExport:DateTimeFormat').'</h3>');
+				$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
+				$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
+				$oP->add('<input type="radio" id="spreadsheet_date_time_format_default" name="date_format_radio" value="default"'.$sDefaultChecked.'><label for="spreadsheet_date_time_format_default"> '.Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample).'</label><br/>');
+				$sFormatInput = '<input type="text" size="15" name="date_format" id="spreadsheet_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
+				$oP->add('<input type="radio" id="spreadsheet_date_time_format_custom" name="date_format_radio" value="custom"'.$sCustomChecked.'><label for="spreadsheet_date_time_format_custom"> '.Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput).'</label>');
+				$oP->add('</td>');
+				
 				$oP->add('</tr>');
 				$oP->add('</table>');
 				$oP->add('</fieldset>');
+				$sJSTooltip = json_encode('<div class="date_format_tooltip">'.Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip').'</div>');
+				$oP->add_ready_script(
+<<<EOF
+$('#spreadsheet_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
+$('#spreadsheet_custom_date_time_format').on('click', function() { $('#spreadsheet_date_time_format_custom').prop('checked', true); });
+EOF
+				);
 				break;
 				
 			default:
 				return parent:: DisplayFormPart($oP, $sPartId);
+		}
+	}
+
+	public function ReadParameters()
+	{
+		parent::ReadParameters();
+
+		$sDateFormatRadio = utils::ReadParam('date_format_radio', '');
+		switch($sDateFormatRadio)
+		{
+			case 'default':
+			// Export from the UI => format = same as is the UI
+			$this->aStatusInfo['date_format'] = (string)AttributeDateTime::GetFormat();
+			break;
+			
+			case 'custom':
+			// Custom format specified from the UI
+			$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
+			break;
+			
+			default:
+			// Export from the command line (or scripted) => default format is SQL, as in previous versions of iTop, unless specified otherwise
+			$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetSQLFormat(), true, 'raw_data');
 		}
 	}
 	
@@ -89,6 +134,10 @@ class SpreadsheetBulkExport extends TabularBulkExport
 				{
 					$sRet = $oObj->GetAsHTML($sAttCode);
 				}
+				elseif ($oAttDef instanceof AttributeCustomFields)
+				{
+					$sRet = $oObj->GetAsHTML($sAttCode);
+				}
 				else
 				{
 					if ($this->bLocalizeOutput)
@@ -97,7 +146,7 @@ class SpreadsheetBulkExport extends TabularBulkExport
 					}
 					else
 					{
-						$sRet = htmlentities($value, ENT_QUOTES, 'UTF-8');
+						$sRet = htmlentities((string)$value, ENT_QUOTES, 'UTF-8');
 					}
 				}
 		}
@@ -164,7 +213,13 @@ class SpreadsheetBulkExport extends TabularBulkExport
 		$oSet = new DBObjectSet($this->oSearch);
 		$oSet->SetLimit($this->iChunkSize, $this->aStatusInfo['position']);
 		$this->OptimizeColumnLoad($oSet);
-
+		
+		$sExportDateTimeFormat = $this->aStatusInfo['date_format'];
+		// Date & time formats
+		$oDateTimeFormat = new DateTimeFormat($sExportDateTimeFormat);
+		$oDateFormat = new DateTimeFormat($oDateTimeFormat->ToDateFormat());
+		$oTimeFormat = new DateTimeFormat($oDateTimeFormat->ToTimeFormat());
+		
 		$iCount = 0;
 		$sData = '';
 		$iPreviousTimeLimit = ini_get('max_execution_time');
@@ -199,10 +254,16 @@ class SpreadsheetBulkExport extends TabularBulkExport
 					$oFinalAttDef = $oAttDef->GetFinalAttDef();
 					if (get_class($oFinalAttDef) == 'AttributeDateTime')
 					{
-						$iDate = AttributeDateTime::GetAsUnixSeconds($oObj->Get($sAttCode));
-						$sData .= '<td>'.date('Y-m-d', $iDate).'</td>'; // Add the first column directly
-						$sField = date('H:i:s', $iDate); // Will add the second column below
-						$sData .= "<td>$sField</td>";
+						// Split the date and time in two columns
+						$sDate = $oDateFormat->Format($oObj->Get($sAttCode));
+						$sTime = $oTimeFormat->Format($oObj->Get($sAttCode));
+						$sData .= "<td>$sDate</td>";
+						$sData .= "<td>$sTime</td>";
+					}
+					else if (get_class($oFinalAttDef) == 'AttributeDate')
+					{
+						$sDate = $oDateFormat->Format($oObj->Get($sAttCode));
+						$sData .= "<td>$sDate</td>";
 					}
 					else if($oAttDef instanceof AttributeCaseLog)
 					{

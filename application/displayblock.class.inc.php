@@ -319,13 +319,16 @@ class DisplayBlock
 				{
 					$externalFilterValue = utils::ReadParam($sFilterCode, '', false, 'raw_data');
 					$condition = null;
+					$bParseSearchString = true;
 					if (isset($aExtraParams[$sFilterCode]))
 					{
+						$bParseSearchString = false;
 						$condition = $aExtraParams[$sFilterCode];
 					}
 					if ($bDoSearch && $externalFilterValue != "")
 					{
 						// Search takes precedence over context params...
+						$bParseSearchString = true;
 						unset($aExtraParams[$sFilterCode]);
 						if (!is_array($externalFilterValue))
 						{
@@ -350,7 +353,7 @@ class DisplayBlock
 							$sOpCode = 'IN';
 						}
 
-						$this->AddCondition($sFilterCode, $condition, $sOpCode);
+						$this->AddCondition($sFilterCode, $condition, $sOpCode, $bParseSearchString);
 					}
 				}
 				if ($bDoSearch)
@@ -882,14 +885,16 @@ EOF
 			$sGroupBy = isset($aExtraParams['group_by']) ? $aExtraParams['group_by'] : '';
 			$sGroupByExpr = isset($aExtraParams['group_by_expr']) ? '&params[group_by_expr]='.$aExtraParams['group_by_expr'] : '';
 			$sFilter = $this->m_oFilter->serialize();
+			$oContext = new ApplicationContext();
+			$sContextParam = $oContext->GetForLink();
 
 			if (isset($aExtraParams['group_by_label']))
 			{
-				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&params[currentId]=$sId{$iChartCounter}&id=$sId{$iChartCounter}&filter=".urlencode($sFilter));
+				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&id=$sId{$iChartCounter}&filter=".urlencode($sFilter).'&'.$sContextParam);
 			}
 			else
 			{
-				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[chart_title]=$sTitle&params[currentId]=$sId{$iChartCounter}&id=$sId{$iChartCounter}&filter=".urlencode($sFilter));
+				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&id=$sId{$iChartCounter}&filter=".urlencode($sFilter).'&'.$sContextParam);
 			}
 			
 			$sType = ($sChartType == 'pie') ? 'pie' : 'bar';
@@ -927,6 +932,8 @@ EOF
 				$aGroupBy['grouped_by_1'] = $oGroupByExp;
 				$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true);
 				$aRes = CMDBSource::QueryToArray($sSql);
+				$oContext = new ApplicationContext();
+				$sContextParam = $oContext->GetForLink();
 
 				$aGroupBy = array();
 				$aLabels = array();
@@ -946,7 +953,7 @@ EOF
 					$oSubsetSearch = $this->m_oFilter->DeepClone();
 					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($sValue));
 					$oSubsetSearch->AddConditionExpression($oCondition);
-					$aURLs[] = utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html&filter=".urlencode($oSubsetSearch->serialize());
+					$aURLs[] = utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html&filter=".urlencode($oSubsetSearch->serialize()).'&'.$sContextParam;
 				}
 				$sJSURLs = json_encode($aURLs);
 			}
@@ -1059,7 +1066,7 @@ EOF
 	 * Add a condition (restriction) to the current DBSearch on which the display block is based
 	 * taking into account the hierarchical keys for which the condition is based on the 'below' operator
 	 */
-	protected function AddCondition($sFilterCode, $condition, $sOpCode = null)
+	protected function AddCondition($sFilterCode, $condition, $sOpCode = null, $bParseSearchString = false)
 	{
 		// Workaround to an issue revealed whenever a condition on org_id is applied twice (with a hierarchy of organizations)
 		// Moreover, it keeps the query as simple as possible
@@ -1114,7 +1121,7 @@ EOF
 		// In all other cases, just add the condition directly
 		if (!$bConditionAdded)
 		{
-			$this->m_oFilter->AddCondition($sFilterCode, $condition); // Use the default 'loose' operator
+			$this->m_oFilter->AddCondition($sFilterCode, $condition, null, $bParseSearchString); // Use the default 'loose' operator
 		}
 	}
 	

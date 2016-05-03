@@ -34,6 +34,7 @@ require_once('htmlsanitizer.class.inc.php');
 require_once(APPROOT.'sources/autoload.php');
 require_once('customfieldshandler.class.inc.php');
 require_once('ormcustomfieldsvalue.class.inc.php');
+require_once('datetimeformat.class.inc.php');
 // This should be changed to a use when we go full-namespace
 require_once(APPROOT . 'sources/form/validator/validator.class.inc.php');
 require_once(APPROOT . 'sources/form/validator/notemptyextkeyvalidator.class.inc.php');
@@ -298,6 +299,15 @@ abstract class AttributeDefinition
 		return $this->MakeRealValue($sProposedValue, null);
 	}
 
+	/**
+	 * Parses a search string coming from user input
+	 * @param string $sSearchString
+	 * @return string
+	 */
+	public function ParseSearchString($sSearchString)
+	{
+		return $sSearchString;
+	}
 	public function GetLabel_Obsolete()
 	{
 		// Written for compatibility with a data model written prior to version 0.9.1
@@ -3537,17 +3547,16 @@ class AttributeMetaEnum extends AttributeEnum
  */
 class AttributeDateTime extends AttributeDBField
 {
-	static $sDateTimeFormat = null;
-	static $sTimeFormat = null;
+	static $oFormat = null;
 	
 	static public function GetFormat()
 	{
-		if (self::$sDateTimeFormat == null)
+		if (self::$oFormat == null)
 		{
 			static::LoadFormatFromConfig();		
 		}
-		return self::$sDateTimeFormat;
-	}
+		return self::$oFormat;
+	}	
 	
 	/**
 	 * Load the 3 settings: date format, time format and data_time format from the configuration
@@ -3560,11 +3569,10 @@ class AttributeDateTime extends AttributeDBField
 		$sTimeFormat = isset($aFormats[$sLang]['time']) ? $aFormats[$sLang]['time'] : (isset($aFormats['default']['time']) ? $aFormats['default']['time'] : 'H:i:s');
 		$sDateAndTimeFormat = isset($aFormats[$sLang]['date_time']) ? $aFormats[$sLang]['date_time'] : (isset($aFormats['default']['date_time']) ? $aFormats['default']['date_time'] : '$date $time');
 		
-		$sFormat = str_replace(array('$date', '$time'), array($sDateFormat, $sTimeFormat), $sDateAndTimeFormat);
+		$sFullFormat = str_replace(array('$date', '$time'), array($sDateFormat, $sTimeFormat), $sDateAndTimeFormat);
 		
-		self::SetFormat($sFormat);
-		self::SetTimeFormat($sTimeFormat);
-		AttributeDate::SetFormat($sDateFormat);		
+		self::SetFormat(new DateTimeFormat($sFullFormat));
+		AttributeDate::SetFormat(new DateTimeFormat($sDateFormat));		
 	}
 	
 	/**
@@ -3585,18 +3593,9 @@ class AttributeDateTime extends AttributeDBField
 		return 'Y-m-d H:i:s';
 	}
 	
-	static public function SetFormat($sDateTimeFormat)
+	static public function SetFormat(DateTimeFormat $oDateTimeFormat)
 	{
-		self::$sDateTimeFormat = $sDateTimeFormat;
-	}
-
-	static public function GetTimeFormat()
-	{
-		if (self::$sTimeFormat == null)
-		{
-			static::LoadFormatFromConfig();		
-		}
-		return self::$sTimeFormat;
+		self::$oFormat = $oDateTimeFormat;
 	}
 	
 	static public function GetSQLTimeFormat()
@@ -3604,286 +3603,47 @@ class AttributeDateTime extends AttributeDBField
 		return 'H:i:s';
 	}
 	
-	static public function SetTimeFormat($sTimeFormat)
-	{
-		self::$sTimeFormat = $sTimeFormat;
-	}
-	
 	/**
-	 * Return the mapping table for converting between various convention for data formats
-	 */
-	public static function GetFormatMapping()
-	{
-		return array(
-				// Days
-				'd' => array('regexpr' => '(0[1-9]|[1-2][0-9]||3[0-1])', 'datepicker' => 'dd', 'usage' => 'day', 'excel' => 'dd'), // Day of the month: 2 digits (with leading zero)
-				'j' => array('regexpr' => '([1-9]|[1-2][0-9]||3[0-1])', 'datepicker' => 'd', 'usage' => 'day', 'excel' => '%d'), // Day of the month: 1 or 2 digits (without leading zero)
-				// Months
-				'm' => array('regexpr' => '(0[1-9]|1[0-2])', 'datepicker' => 'mm', 'usage' => 'month', 'excel' => 'MM'), // Month on 2 digits i.e. 01-12
-				'n' => array('regexpr' => '([1-9]|1[0-2])', 'datepicker' => 'm', 'usage' => 'month', 'excel' => '%M'), // Month on 1 or 2 digits 1-12
-				// Years
-				'Y' => array('regexpr' => '([0-9]{4})', 'datepicker' => 'yy', 'usage' => 'year', 'excel' => 'YYYY'), // Year on 4 digits
-				'y' => array('regexpr' => '([0-9]{2})', 'datepicker' => 'y', 'usage' => 'year', 'excel' => 'YY'), // Year on 2 digits
-				// Hours
-				'H' => array('regexpr' => '([0-1][0-9]|2[0-3])', 'datepicker' => 'HH', 'usage' => 'hour', 'excel' => 'HH'), // Hour 00..23
-				'h' => array('regexpr' => '(0[1-9]|1[0-2])', 'datepicker' => 'hh', 'usage' => 'hour', 'excel' => 'hh'), // Hour 01..12
-				'G' => array('regexpr' => '([1-9]|[1[0-9]|2[0-3])', 'datepicker' => 'H', 'usage' => 'hour', 'excel' => '%H'), // Hour 0..23
-				'g' => array('regexpr' => '([1-9]|1[0-2])', 'datepicker' => 'h', 'usage' => 'hour', 'excel' => '%h'), // Hour 1..12
-				'a' => array('regexpr' => '(am|pm)', 'datepicker' => 'tt', 'usage' => 'am/pm', 'excel' => 'am/pm'),
-				'A' => array('regexpr' => '(AM|PM)', 'datepicker' => 'TT', 'usage' => 'am/pm', 'excel' => 'AM/PM'),
-				// Minutes
-				'i' => array('regexpr' => '([0-5][0-9])', 'datepicker' => 'mm', 'usage' => 'minutes', 'excel' => 'mm'),
-				// Seconds
-				's' => array('regexpr' => '([0-5][0-9])', 'datepicker' => 'ss', 'usage' => 'seconds', 'excel' => 'ss'),	
-		);
-	}
-	
-	/**
-	 * Format a date into the supplied format string
-	 * @param mixed $date An int, string, DateTime object or null !!
-	 * @param string $sFormat The format using PHP createFromFormat convention
-	 * @throws Exception
-	 * @return string The formatted date
-	 */
-	public static function Format($date, $sFormat = null)
-	{
-		if ($sFormat === null)
-		{
-			$sFormat = static::GetFormat();
-		}
-		if ($date == null)
-		{
-			$sDate = '';
-		}
-		else if (($date === '0000-00-00') || ($date === '0000-00-00 00:00:00'))
-		{
-			$sDate = '';
-		}
-		else if ($date instanceof DateTime)
-		{
-			// Parameter is a DateTime
-			$sDate = $date->format($sFormat);
-		}
-		else if (is_int($date))
-		{
-			// Parameter is a Unix timestamp
-			$oDate = new DateTime();
-			$oDate->setTimestamp($date);
-			$sDate = $oDate->format($sFormat);
-		}
-		else if (is_string($date))
-		{
-			$oDate = new DateTime($date);
-			$sDate = $oDate->format($sFormat);
-		}
-		else
-		{
-			throw new Exception("AttributeDateTime::Format: Unexpected date value: ".print_r($date, true));
-		}
-		return $sDate;
-	}
-	
-	/**
-	 * Parse a date in the supplied format and return the date as a string in the internal format
-	 * @param string $sDate The string to parse
-	 * @param string $sFormat The format, in PHP createFromFormat convention
-	 * @throws Exception
+	 * Parses a search string coming from user input
+	 * @param string $sSearchString
 	 * @return string
 	 */
-	public static function Parse($sDate, $sFormat)
+	public function ParseSearchString($sSearchString)
 	{
-		if (($sDate == null) || ($sDate == '0000-00-00 00:00:00') || ($sDate == '0000-00-00'))
+		try
 		{
-			return null;	
+			$oDateTime = $this->GetFormat()->Parse($sSearchString);
+			$sSearchString = $oDateTime->format($this->GetInternalFormat());
 		}
-		else
+		catch(Exception $e)
 		{
-			$sFormat = preg_replace('/\\?/', '', $sFormat); // replace escaped characters by a wildcard for parsing
-			$oDate = DateTime::createFromFormat($sFormat, $sDate);
-			if ($oDate === false)
+			$sFormatString = '!'.(string)AttributeDate::GetFormat(); // BEWARE: ! is needed to set non-parsed fields to zero !!!
+			$oDateTime = DateTime::createFromFormat($sFormatString, $sSearchString); 
+			if ($oDateTime !== false)
 			{
-				throw new Exception("Unable to parse the date: '$sDate' using the format: '$sFormat'");
+				$sSearchString = $oDateTime->format($this->GetInternalFormat());
 			}
-			return $oDate->format(static::GetInternalFormat());
 		}
+		return $sSearchString;
+	}
+	
+	static public function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\DateTimeField';
 	}
 	
 	/**
-	 * Get a date or datetime format string in the jQuery UI date picker format
-	 * @param string $sFormat
-	 * @return string The format string using the date picker convention
+	 * Override to specify Field class
+	 *
+	 * When called first, $oFormField is null and will be created (eg. Make). Then when the ::parent is called and the $oFormField is passed, MakeFormField behave more like a Prepare.
 	 */
-	static public function GetDatePickerFormat()
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		$sFormat = static::GetFormat();
-		$aMappings = static::GetFormatMapping();
-		$sResult = '';
+		$oFormField = parent::MakeFormField($oObject, $oFormField);
+		$oFormField->SetPHPDateTimeFormat($this->GetFormat());
+		$oFormField->SetJSDateTimeFormat($this->GetMomentJSFormat());
 		
-		$bEscaping = false;
-		for($i=0; $i < strlen($sFormat); $i++)
-		{
-			if (($sFormat[$i] == '\\'))
-			{
-				$bEscaping = true;
-				continue;
-			}
-			
-			if ($bEscaping)
-			{
-				$sResult .= "'{$sFormat[$i]}'";
-				$bEscaping = false;
-			}
-			else if(array_key_exists($sFormat[$i], $aMappings))
-			{
-				// Not a litteral value, must be replaced by its regular expression pattern
-				$sResult .= $aMappings[$sFormat[$i]]['datepicker'];
-			}
-			else
-			{
-
-				// Normal char with no special meaning
-				$sResult .= $sFormat[$i];
-			}
-		}
-		
-		return $sResult;
-	}
-	
-	/**
-	 * Get a date or datetime format string in the Excel format
-	 * @param string $sFormat
-	 * @return string The format string using the Excel convention
-	 */
-	static public function GetExcelFormat($sFormat = null)
-	{
-		$sFormat = ($sFormat == null) ? static::GetFormat() : $sFormat;
-		$aMappings = static::GetFormatMapping();
-		$sResult = '';
-		
-		$bEscaping = false;
-		for($i=0; $i < strlen($sFormat); $i++)
-		{
-			if (($sFormat[$i] == '\\'))
-			{
-				$bEscaping = true;
-				continue;
-			}
-			
-			if ($bEscaping)
-			{
-				$sResult .= $sFormat[$i]; // What's the way to escape characters in Excel format ??
-				$bEscaping = false;
-			}
-			else if(array_key_exists($sFormat[$i], $aMappings))
-			{
-				// Not a litteral value, must be replaced by its regular expression pattern
-				$sResult .= $aMappings[$sFormat[$i]]['excel'];
-			}
-			else
-			{
-
-				// Normal char with no special meaning
-				$sResult .= $sFormat[$i];
-			}
-		}
-		
-		return $sResult;
-	}
-/*
- * Unused since the sorting of the tables is always performed server-side
- * 
-	public static function GetTableSorterRule()
-	{
-		$aOrder = array();
-		$aPos = array();
-		$sRegExpr = static::GetRegExpr($aOrder);
-		foreach(array('year', 'month', 'day', 'hour', 'minutes', 'seconds') as $sUsage)
-		{
-			$pos = array_search($sUsage, $aOrder);
-			if ($pos !== false)
-			{
-				$aPos[$sUsage] = '$'.(1+$pos);
-			}
-		}
-		$sIsoDate = "{$aPos['year']}/{$aPos['month']}/{$aPos['day']}";
-		if (array_key_exists('hour', $aPos))
-		{
-			$sIsoDate .= " {$aPos['hour']}:{$aPos['minutes']}:{$aPos['seconds']}";
-		}
-		return array('regexpr' => $sRegExpr, 'replacement' => $sIsoDate);
-	}
-	
-	public static function InitTableSorter($oPage, $sRuleName)
-	{
-		$aDef = static::GetTableSorterRule();
-		
-		$oPage->add_ready_script(
-<<<EOF
-    $.tablesorter.addParser({
-        id: "$sRuleName",
-        is: function (s) {
-            return /^({$aDef['regexpr']})$/.test(s);
-        }, format: function (s) {
-            s = s.replace(/{$aDef['regexpr']}/, "{$aDef['replacement']}");
-            return $.tablesorter.formatFloat(new Date(s).getTime());
-        }, type: "numeric"
-    });
-EOF
-		);
-	}
-*/	
-	/**
-	 * Get the regular expression to (approximately) validate a date/time for the current format
-	 * @param array $aOrder
-	 * @return string The regular expression in PCRE syntax
-	 */
-	static public function GetRegExpr(&$aOrder = null)
-	{
-		$sFormat = static::GetFormat();
-		$aMappings = static::GetFormatMapping();
-		$sSpecialChars = '.?*$^()[]/'; // Characters having a special meaning in a regular expression, must be escaped by prepending a backslash
-		$sResult = '^';
-
-		$bEscaping = false;
-		for($i=0; $i < strlen($sFormat); $i++)
-		{
-			if (($sFormat[$i] == '\\') && !$bEscaping)
-			{
-				$bEscaping = true;
-				continue;
-			}
-			
-			if (!$bEscaping && array_key_exists($sFormat[$i], $aMappings))
-			{
-				// Not a litteral value, must be replaced by its regular expression pattern
-				$sResult .= $aMappings[$sFormat[$i]]['regexpr'];
-				if ($aOrder !== null)
-				{
-					$aOrder[] = $aMappings[$sFormat[$i]]['usage'];
-				}
-			}
-			else
-			{
-				// Litteral value, take care of special characters in a RegExpr
-				if (strpos($sSpecialChars, $sFormat[$i]) !== false)
-				{
-					$sResult .= '\\'.$sFormat[$i];
-				}
-				else
-				{
-					// Normal char with no special meaning
-					$sResult .= $sFormat[$i];
-				}
-			}
-
-			if ($bEscaping)
-			{
-				$bEscaping = false;
-			}
-		}
-		$sResult .= '$';
-		
-		return $sResult;
+		return $oFormField;
 	}
 
 	static public function ListExpectedParams()
@@ -3897,7 +3657,11 @@ EOF
 
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
-		return (string)static::Format($sValue, static::GetFormat());
+		return (string)static::GetFormat()->format($sValue);
+	}	
+	public function GetValueLabel($sValue, $oHostObj = null)
+	{
+		return (string)static::GetFormat()->format($sValue);
 	}	
 	
 	protected function GetSQLCol($bFullSpec = false) {return "DATETIME";}
@@ -3916,7 +3680,7 @@ EOF
 
 	public function GetValidationPattern()
 	{
-		return static::GetRegExpr();
+		return static::GetFormat()->ToRegExpr();
 	}
 
 	public function GetBasicFilterOperators()
@@ -3990,7 +3754,7 @@ EOF
 			return $proposedValue;
 		}
 
-		return date(self::GetInternalFormat(), $proposedValue);
+		return date(static::GetInternalFormat(), $proposedValue);
 	}
 
 	public function ScalarToSQL($value)
@@ -4009,7 +3773,7 @@ EOF
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		return Str::pure2html(static::Format($value, static::GetFormat()));
+		return Str::pure2html(static::GetFormat()->format($value));
 	}
 
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
@@ -4023,13 +3787,13 @@ EOF
 		{
 			return '';
 		}
-		else if (self::GetFormat() !== self::GetInternalFormat())
+		else if ((string)static::GetFormat() !== static::GetInternalFormat())
 		{
 			// Format conversion
 			$oDate = new DateTime($sValue);
 			if ($oDate !== false)
 			{
-				$sValue = $oDate->format(self::GetFormat());
+				$sValue = static::GetFormat()->format($oDate);
 			}
 		}
 		$sFrom = array("\r\n", $sTextQualifier);
@@ -4047,7 +3811,7 @@ EOF
 	 * @param Hash $aParams Values of the query parameters
 	 * @return Expression The search condition to be added (AND) to the current search
 	 */
-	public function GetSmartConditionExpression($sSearchText, FieldExpression $oField, &$aParams)
+	public function GetSmartConditionExpression($sSearchText, FieldExpression $oField, &$aParams, $bParseSearchString = false)
 	{
 		// Possible smart patterns
 		$aPatterns = array(
@@ -4075,13 +3839,27 @@ EOF
 			
 			$sParamName1 = $oField->GetParent().'_'.$oField->GetName().'_1';
 			$oRightExpr = new VariableExpression($sParamName1);
+			if ($bParseSearchString)
+			{
+				$aParams[$sParamName1] = $this->ParseSearchString($aMatches[1]);
+			}
+			else
+			{
 			$aParams[$sParamName1] = $aMatches[1];
+			}
 			$oCondition1 = new BinaryExpression($oField, '>=', $oRightExpr);
 
 			$sParamName2 = $oField->GetParent().'_'.$oField->GetName().'_2';
 			$oRightExpr = new VariableExpression($sParamName2);
 			$sOperator = $this->GetBasicFilterLooseOperator();
+			if ($bParseSearchString)
+			{
+				$aParams[$sParamName2] = $this->ParseSearchString($aMatches[2]);
+			}
+			else
+			{
 			$aParams[$sParamName2] = $aMatches[2];
+			}
 			$oCondition2 = new BinaryExpression($oField, '<=', $oRightExpr);
 			
 			$oNewCondition = new BinaryExpression($oCondition1, 'AND', $oCondition2);
@@ -4094,18 +3872,35 @@ EOF
 			$sSQLOperator = $aPatterns[$sPatternFound]['operator'];
 			$sParamName = $oField->GetParent().'_'.$oField->GetName();
 			$oRightExpr = new VariableExpression($sParamName);
+			if ($bParseSearchString)
+			{
+				$aParams[$sParamName] = $this->ParseSearchString($aMatches[1]);
+			}
+			else
+			{
 			$aParams[$sParamName] = $aMatches[1];
+			}
 			$oNewCondition = new BinaryExpression($oField, $sSQLOperator, $oRightExpr);
 			
 			break;
 						
 			default:
-			$oNewCondition = parent::GetSmartConditionExpression($sSearchText, $oField, $aParams);
+			$oNewCondition = parent::GetSmartConditionExpression($sSearchText, $oField, $aParams, $bParseSearchString);
 
 		}
 
 		return $oNewCondition;
 	}
+
+
+	public function GetHelpOnSmartSearch()
+	{
+		$sDict = parent::GetHelpOnSmartSearch();
+		
+		$oFormat = static::GetFormat();
+		$sExample = $oFormat->Format(new DateTime('2015-07-19 18:40:00'));
+		return vsprintf($sDict, array($oFormat->ToPlaceholder(), $sExample));
+	}	
 }
 
 /**
@@ -4188,20 +3983,20 @@ class AttributeDuration extends AttributeInteger
  */
 class AttributeDate extends AttributeDateTime
 {
-	static $sDateFormat = null;
+	static $oDateFormat = null;
 	
 	static public function GetFormat()
 	{
-		if (self::$sDateFormat == null)
+		if (self::$oDateFormat == null)
 		{			
 			AttributeDateTime::LoadFormatFromConfig();		
 		}
-		return self::$sDateFormat;
+		return self::$oDateFormat;
 	}
 
-	static public function SetFormat($sDateFormat)
+	static public function SetFormat(DateTimeFormat $oDateFormat)
 	{
-		self::$sDateFormat = $sDateFormat;
+		self::$oDateFormat = $oDateFormat;
 	}
 
 	/**
@@ -4251,7 +4046,7 @@ class AttributeDeadline extends AttributeDateTime
 		if ($value !== null)
 		{
 			$iValue = AttributeDateTime::GetAsUnixSeconds($value);
-			$sDate = $value;
+			$sDate = AttributeDateTime::Format($value);
 			$difference = $iValue - time();
 	
 			if ($difference >= 0)

@@ -554,7 +554,15 @@ class BulkChange
 				else
 				{
 					// By default... nothing happens
-					$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
+					$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+					if ($oAttDef instanceof AttributeDateTime)
+					{
+						$aResults[$iCol]= new CellStatus_Void($oAttDef->GetFormat()->Format($aRowData[$iCol]));
+					}
+					else
+					{
+						$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
+					}
 				}
 			}
 		}
@@ -795,6 +803,11 @@ class BulkChange
 
 		if (!is_null($this->m_sDateFormat) && (strlen($this->m_sDateFormat) > 0))
 		{
+			$sDateTimeFormat = $this->m_sDateFormat; // the specified format is actually the date AND time format
+			$oDateTimeFormat = new DateTimeFormat($sDateTimeFormat);
+			$sDateFormat = $oDateTimeFormat->ToDateFormat();
+			AttributeDateTime::SetFormat($oDateTimeFormat);
+			AttributeDate::SetFormat(new DateTimeFormat($sDateFormat));
 			// Translate dates from the source data
 			//
 			foreach ($this->m_aAttList as $sAttCode => $iCol)
@@ -802,21 +815,34 @@ class BulkChange
 				if ($sAttCode == 'id') continue;
 				
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
-				if ($oAttDef instanceof AttributeDateTime)
+				if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
 				{
 					foreach($this->m_aData as $iRow => $aRowData)
 					{
-						$oDate = DateTime::createFromFormat($this->m_sDateFormat, $this->m_aData[$iRow][$iCol]);
-						if ($oDate !== false)
+						$sFormat = $sDateTimeFormat;
+						$sValue = $this->m_aData[$iRow][$iCol];
+						if (!empty($sValue))
 						{
-							$sNewDate = $oDate->format($oAttDef->GetInternalFormat());
-							$this->m_aData[$iRow][$iCol] = $sNewDate;
+							if ($oAttDef instanceof AttributeDate)
+							{
+								$sFormat = $sDateFormat;
+							}
+							$oDate = DateTime::createFromFormat($sFormat, $this->m_aData[$iRow][$iCol]);
+							if ($oDate !== false)
+							{
+								$sNewDate = $oDate->format($oAttDef->GetInternalFormat());
+								$this->m_aData[$iRow][$iCol] = $sNewDate;
+							}
+							else
+							{
+								// Leave the cell unchanged
+								$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
+								$aResult[$iRow][$sAttCode] = new CellStatus_Issue(null, $this->m_aData[$iRow][$iCol], Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
+							}
 						}
 						else
 						{
-							// Leave the cell unchanged
-							$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
-							$aResult[$iRow][$sAttCode] = new CellStatus_Issue(null, $this->m_aData[$iRow][$iCol], Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
+							$this->m_aData[$iRow][$iCol] = '';
 						}
 					}
 				}

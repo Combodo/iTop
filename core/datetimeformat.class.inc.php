@@ -40,7 +40,15 @@ class DateTimeFormat
 	 */
 	public function __construct($sPHPFormat)
 	{
-		$this->sPHPFormat = $sPHPFormat;
+		$this->sPHPFormat = (string)$sPHPFormat;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return $this->sPHPFormat;
 	}
 	
 	/**
@@ -231,14 +239,13 @@ class DateTimeFormat
 	 */
 	public function ToPlaceholder($sFormat = null)
 	{
-		$sFormat = ($sFormat == null) ? static::GetFormat() : $sFormat;
 		$aMappings = static::GetFormatMapping();
 		$sResult = '';
 		
 		$bEscaping = false;
-		for($i=0; $i < strlen($sFormat); $i++)
+		for($i=0; $i < strlen($this->sPHPFormat); $i++)
 		{
-			if (($sFormat[$i] == '\\'))
+			if (($this->sPHPFormat[$i] == '\\'))
 			{
 				$bEscaping = true;
 				continue;
@@ -246,41 +253,41 @@ class DateTimeFormat
 			
 			if ($bEscaping)
 			{
-				$sResult .= $sFormat[$i]; // No need to escape characters in the placeholder
+				$sResult .= $this->sPHPFormat[$i]; // No need to escape characters in the placeholder
 				$bEscaping = false;
 			}
-			else if(array_key_exists($sFormat[$i], $aMappings))
+			else if(array_key_exists($this->sPHPFormat[$i], $aMappings))
 			{
 				// Not a litteral value, must be replaced by Dict equivalent
-				$sResult .= Dict::S('Core:DateTime:Placeholder_'.$sFormat[$i]);
+				$sResult .= Dict::S('Core:DateTime:Placeholder_'.$this->sPHPFormat[$i]);
 			}
 			else
 			{
 
 				// Normal char with no special meaning
-				$sResult .= $sFormat[$i];
+				$sResult .= $this->sPHPFormat[$i];
 			}
 		}
 		
 		return $sResult;
 	}
-	
+
 	/**
-	 * Produces the Date format string by extracting only the date part of the date and time format string
+	 * Produces a subformat (Date or Time) by extracting the part of the whole DateTime format containing only the given placeholders
 	 * @return string
 	 */
-	public function ToDateFormat()
+	protected function ToSubFormat($aPlaceholders)
 	{
 		$aDatePlaceholders = array('Y', 'y', 'd', 'j', 'm', 'n');
 		$iStart = 999;
 		$iEnd = 0;
 		
-		foreach($aDatePlaceholders as $sChar)
+		foreach($aPlaceholders as $sChar)
 		{
 			$iPos = strpos($this->sPHPFormat, $sChar);
 			if ($iPos !== false)
 			{
-				if (($iPos > 0) && ($aDatePlaceholders[$iPos-1] == '\\'))
+				if (($iPos > 0) && ($this->sPHPFormat[$iPos-1] == '\\'))
 				{
 					// The placeholder is actually escaped, it's a litteral character, ignore it
 					continue;
@@ -291,6 +298,24 @@ class DateTimeFormat
 		}
 		$sFormat = substr($this->sPHPFormat, $iStart, $iEnd - $iStart + 1);
 		return $sFormat;
+	}
+	
+	/**
+	 * Produces the Date format string by extracting only the date part of the date and time format string
+	 * @return string
+	 */
+	public function ToDateFormat()
+	{
+		return $this->ToSubFormat(array('Y', 'y', 'd', 'j', 'm', 'n'));
+	}
+	
+	/**
+	 * Produces the Time format string by extracting only the time part of the date and time format string
+	 * @return string
+	 */
+	public function ToTimeFormat()
+	{
+		return $this->ToSubFormat(array('H', 'h', 'G', 'g', 'i', 's'));
 	}
 	
 	/**

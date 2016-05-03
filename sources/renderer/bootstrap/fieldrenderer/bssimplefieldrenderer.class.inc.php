@@ -51,6 +51,25 @@ class BsSimpleFieldRenderer extends FieldRenderer
 		{
 			switch ($sFieldClass)
 			{
+				case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
+					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
+					if ($this->oField->GetLabel() !== '')
+					{
+						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+					}
+					$oOutput->AddHtml('<div class="help-block"></div>');
+					$oOutput->AddHtml('<div class="input-group date" id="datepicker_' . $this->oField->GetGlobalId() . '">');
+					$oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetDisplayValue(), true)->AddHtml('" class="form-control" maxlength="255" />');
+					$oOutput->AddHtml('<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>');
+					$oOutput->AddHtml('</div>');
+					$oOutput->AddHtml('</div>');
+					$sJSFormat = json_encode($this->oField->GetJSDateTimeFormat());
+					$oOutput->AddJs(
+<<<EOF
+					$('#datepicker_{$this->oField->GetGlobalId()}').datetimepicker({format: $sJSFormat});
+EOF
+					);
+					break;
 				case 'Combodo\\iTop\\Form\\Field\\StringField':
 					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
 					if ($this->oField->GetLabel() !== '')
@@ -230,6 +249,21 @@ EOF
 						$oOutput->AddHtml('</div>');
 						break;
 
+					case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
+						$oOutput->AddHtml('<div class="form-group">');
+						// Showing label / value only if read-only but not hidden
+						if (!$this->oField->GetHidden())
+						{
+							if ($this->oField->GetLabel() !== '')
+							{
+								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+							}
+							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), true)->AddHtml('</div>');
+						}
+						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" />');
+						$oOutput->AddHtml('</div>');
+						break;
+
 					case 'Combodo\\iTop\\Form\\Field\\RadioField':
 					case 'Combodo\\iTop\\Form\\Field\\SelectField':
 					case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
@@ -317,6 +351,7 @@ EOF
 			case 'Combodo\\iTop\\Form\\Field\\HiddenField':
 			case 'Combodo\\iTop\\Form\\Field\\RadioField':
 			case 'Combodo\\iTop\\Form\\Field\\CheckboxField':
+			case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
 				$oOutput->AddJs(
 					<<<EOF
 					$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field($sFormFieldOptions);

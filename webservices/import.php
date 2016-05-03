@@ -357,9 +357,12 @@ try
 		$oP->add_comment("Separator: ".$sSep);
 		$oP->add_comment("Qualifier: ".$sQualifier);
 		$oP->add_comment("Charset Encoding:".$sCharSet);
-		if (strlen($sDateFormat) > 0)
+		if (($sDateFormat !== null) && (strlen($sDateFormat) > 0))
 		{
-			$oP->add_comment("Date format: '$sDateFormat'");
+			$oP->add_comment("Date and time format: '$sDateFormat'");
+			$oDateTimeFormat = new DateTimeFormat($sDateFormat);
+			$sDateOnlyFormat = $oDateTimeFormat->ToDateFormat();
+			$oP->add_comment("Date format: '$sDateOnlyFormat'");
 		}
 		else
 		{

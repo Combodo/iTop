@@ -467,8 +467,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeDateTime?SmartSearch' => '
 <p>
 	Format de date :<br/>
-	<b>aaaa-mm-jj hh:mm:ss</b><br/>
-	Exemple : 2011-07-19 18:40:00
+	<b>%1$s</b><br/>
+	Exemple : %2$s
 </p>
 <p>
 Opérateurs :<br/>
@@ -484,8 +484,8 @@ Si l\'heure n\'est pas spécifiée, cela revient à 00:00:00 (minuit)
 	'Core:AttributeDate?SmartSearch' => '
 <p>
 	Format de date :<br/>
-	<b>aaaa-mm-jj</b><br/>
-	Exemple : 2011-07-19
+	<b>%1$s</b><br/>
+	Exemple : %2$s
 </p>
 <p>
 Opérateurs :<br/>

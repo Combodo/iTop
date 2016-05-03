@@ -91,8 +91,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:AttributeDateTime?SmartSearch' => '
 <p>
 	Date format:<br/>
-	<b>гггг-мм-дд чч:мм:сс</b><br/>
-	Пример: 2011-07-19 18:40:00
+	<b>%1$s</b><br/>
+	Пример: %2$s
 </p>
 <p>
 Operators:<br/>
@@ -109,8 +109,8 @@ If the time is omitted, it defaults to 00:00:00
 	'Core:AttributeDate?SmartSearch' => '
 <p>
 	Date format:<br/>
-	<b>гггг-мм-дд</b><br/>
-	Example: 2011-07-19
+	<b>%1$s</b><br/>
+	Example: %2$s
 </p>
 <p>
 Operators:<br/>

@@ -358,8 +358,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:AttributeDateTime?SmartSearch' => '
 <p>
 	Datumsformat:<br/>
-	<b>yyyy-mm-dd hh:mm:ss</b><br/>
-	Beispiel: 2011-07-19 18:40:00
+	<b>%1$s</b><br/>
+	Beispiel: %2$s
 </p>
 <p>
 Operatoren:<br/>
@@ -375,8 +375,8 @@ Falls der Zeit-Wert weggelassenw ird, ist der Default 00:00:00
 	'Core:AttributeDate?SmartSearch' => '
 <p>
 	Datumsformat:<br/>
-	<b>yyyy-mm-dd</b><br/>
-	Beispiel: 2011-07-19
+	<b>%1$s</b><br/>
+	Beispiel: %2$s
 </p>
 <p>
 Operatoren:<br/>

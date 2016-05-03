@@ -98,8 +98,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Core:AttributeDateTime?SmartSearch' => '
 <p>
 	Formát data:<br/>
-	<b>yyyy-mm-dd hh:mm:ss</b><br/>
-	Například: 2011-07-19 18:40:00
+	<b>%1$s</b><br/>
+	Například: %2$s
 </p>
 <p>
 Operátory:<br/>
@@ -116,8 +116,8 @@ Je-li čas vynechán, bude nastaveno 00:00:00
     'Core:AttributeDate?SmartSearch' => '
 <p>
 	Formát data:<br/>
-	<b>yyyy-mm-dd</b><br/>
-	Například: 2011-07-19
+	<b>%1$s</b><br/>
+	Například: %2$s
 </p>
 <p>
 Operátory:<br/>

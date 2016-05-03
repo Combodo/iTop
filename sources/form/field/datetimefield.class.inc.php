@@ -22,9 +22,55 @@ namespace Combodo\iTop\Form\Field;
 use \Combodo\iTop\Form\Field\StringField;
 
 /**
- * Description of StringField
+ * A field for Dates and Date & Times, supporting custom formats
  */
 class DateTimeField extends StringField
 {
+	protected $sJSDateTimeFormat;
+	protected $sPHPDateTimeFormat;
 
+	/**
+	 *
+	 * @return string
+	 */
+	public function GetPHPDateTimeFormat()
+	{
+		return $this->sPHPDateTimeFormat;
+	}
+
+	/**
+	 *
+	 * @param string $sFormat
+	 * @return \Combodo\iTop\Form\Field\DateTimeField
+	 */
+	public function SetPHPDateTimeFormat($sDateTimeFormat)
+	{
+		$this->sPHPDateTimeFormat = $sDateTimeFormat;
+		return $this;
+	}
+	
+	/**
+	 *
+	 * @return string
+	 */
+	public function GetJSDateTimeFormat()
+	{
+		return $this->sDateTimeFormat;
+	}
+
+	/**
+	 *
+	 * @param string $sFormat
+	 * @return \Combodo\iTop\Form\Field\DateTimeField
+	 */
+	public function SetJSDateTimeFormat($sDateTimeFormat)
+	{
+		$this->sDateTimeFormat = $sDateTimeFormat;
+		return $this;
+	}
+	
+	public function GetDisplayValue()
+	{
+		return \AttributeDatetime::Format($this->currentValue, $this->GetPHPDateTimeFormat());
+	}
 }

@@ -360,8 +360,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:AttributeDateTime?SmartSearch' => '
 <p>
 	Date format:<br/>
-	<b>yyyy-mm-dd hh:mm:ss</b><br/>
-	例: 2011-07-19 18:40:00
+	<b>%1$s</b><br/>
+	例: %2$s
 </p>
 <p>
 Operators:<br/>
@@ -377,8 +377,8 @@ Operators:<br/>
 	'Core:AttributeDate?SmartSearch' => '
 <p>
 	日付フォーマット:<br/>
-	<b>yyyy-mm-dd</b><br/>
-	例: 2011-07-19
+	<b>%1$s</b><br/>
+	例: %2$s
 </p>
 <p>
 演算子:<br/>

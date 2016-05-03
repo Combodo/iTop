@@ -234,14 +234,14 @@ class ormCaseLog {
 			if (is_int($aIndex[$index]['date']))
 			{
 				// Unix timestamp
-				$sDate = date(AttributeDateTime::GetFormat(), $aIndex[$index]['date']);
+				$sDate = date((string)AttributeDateTime::GetFormat(), $aIndex[$index]['date']);
 			}
 			elseif (is_object($aIndex[$index]['date']))
 			{
 				if (version_compare(phpversion(), '5.3.0', '>='))
 				{
 					// DateTime
-					$sDate = $aIndex[$index]['date']->format(AttributeDateTime::GetFormat());
+					$sDate = $aIndex[$index]['date']->format((string)AttributeDateTime::GetFormat());
 				}
 				else
 				{
@@ -322,14 +322,14 @@ class ormCaseLog {
 			if (is_int($aIndex[$index]['date']))
 			{
 				// Unix timestamp
-				$sDate = date(AttributeDateTime::GetFormat(),$aIndex[$index]['date']);
+				$sDate = date((string)AttributeDateTime::GetFormat(),$aIndex[$index]['date']);
 			}
 			elseif (is_object($aIndex[$index]['date']))
 			{
 				if (version_compare(phpversion(), '5.3.0', '>='))
 				{
 					// DateTime
-					$sDate = $aIndex[$index]['date']->format(AttributeDateTime::GetFormat());
+					$sDate = $aIndex[$index]['date']->format((string)AttributeDateTime::GetFormat());
 				}
 				else
 				{
@@ -425,14 +425,14 @@ class ormCaseLog {
 			if (is_int($aIndex[$index]['date']))
 			{
 				// Unix timestamp
-				$sDate = date(AttributeDateTime::GetFormat(),$aIndex[$index]['date']);
+				$sDate = date((string)AttributeDateTime::GetFormat(),$aIndex[$index]['date']);
 			}
 			elseif (is_object($aIndex[$index]['date']))
 			{
 				if (version_compare(phpversion(), '5.3.0', '>='))
 				{
 					// DateTime
-					$sDate = $aIndex[$index]['date']->format(AttributeDateTime::GetFormat());
+					$sDate = $aIndex[$index]['date']->format((string)AttributeDateTime::GetFormat());
 				}
 				else
 				{

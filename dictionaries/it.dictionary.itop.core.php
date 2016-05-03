@@ -90,8 +90,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Core:AttributeDateTime?SmartSearch' => '
 <p>
 	Formato data:<br/>
-	<b>aaaa-mm-gg hh:mm:ss</b><br/>
-	Esempio: 2011-07-19 18:40:00
+	<b>%1$s</b><br/>
+	Esempio: %2$s
 </p>
 <p>
 Operatori:<br/>
@@ -108,8 +108,8 @@ Se \'oraè omessa, di default è 00:00:00
 	'Core:AttributeDate?SmartSearch' => '
 <p>
 	Formato data:<br/>
-	<b>aaaa-mm-gg</b><br/>
-	Esempio: 2011-07-19
+	<b>%1$s</b><br/>
+	Esempio: %2$s
 </p>
 <p>
 Operatori:<br/>

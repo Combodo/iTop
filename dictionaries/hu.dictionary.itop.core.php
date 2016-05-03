@@ -501,8 +501,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Core:AttributeDateTime?SmartSearch' => '
 <p>
 	Date format:<br/>
-	<b>yyyy-mm-dd hh:mm:ss</b><br/>
-	Example: 2011-07-19 18:40:00
+	<b>%1$s</b><br/>
+	Example: %2$s
 </p>
 <p>
 Operators:<br/>
@@ -516,8 +516,8 @@ If the time is omitted, it defaults to 00:00:00
 	'Core:AttributeDate?SmartSearch' => '
 <p>
 	Date format:<br/>
-	<b>yyyy-mm-dd</b><br/>
-	Example: 2011-07-19
+	<b>%1$s</b><br/>
+	Example: %2$s
 </p>
 <p>
 Operators:<br/>

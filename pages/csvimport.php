@@ -210,9 +210,9 @@ try
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 		$sSynchroScope = utils::ReadParam('synchro_scope', '', false, 'raw_data');
 		$sDateTimeFormat = utils::ReadParam('date_time_format', 'default');
-		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', AttributeDateTime::GetFormat(), false, 'raw_data');
+		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', (string)AttributeDateTime::GetFormat(), false, 'raw_data');
 		
-		$sChosenDateFormat = ($sDateTimeFormat == 'default') ? AttributeDateTime::GetFormat() : $sCustomDateTimeFormat;
+		$sChosenDateFormat = ($sDateTimeFormat == 'default') ? (string)AttributeDateTime::GetFormat() : $sCustomDateTimeFormat;
 		
 		if (!empty($sSynchroScope))
 		{
@@ -762,7 +762,7 @@ EOF
 		$bAdvanced = utils::ReadParam('advanced', 0);
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 		$sDateTimeFormat = utils::ReadParam('date_time_format', 'default');
-		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', AttributeDateTime::GetFormat(), false, 'raw_data');
+		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', (string)AttributeDateTime::GetFormat(), false, 'raw_data');
 	
 		$sSynchroScope = utils::ReadParam('synchro_scope', '', false, 'raw_data');
 		if (!empty($sSynchroScope))
@@ -1104,7 +1104,7 @@ EOF
 		$aFieldsMapping = utils::ReadParam('field', array(), false, 'raw_data');
 		$aSearchFields = utils::ReadParam('search_field', array(), false, 'field_name');
 		$sDateTimeFormat = utils::ReadParam('date_time_format', 'default');
-		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', AttributeDateTime::GetFormat(), false, 'raw_data');
+		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', (string)AttributeDateTime::GetFormat(), false, 'raw_data');
 		
 		// Create a truncated version of the data used for the fast preview
 		// Take about 20 lines of data... knowing that some lines may contain carriage returns
@@ -1167,8 +1167,8 @@ EOF
 		$oPage->add('<p><input type="checkbox" name="box_skiplines" value="1" id="box_skiplines" onClick="DoPreview()"'.IsChecked($bBoxSkipLines, 1).'/> '.Dict::Format('UI:CSVImport:Skip_N_LinesAtTheBeginning', '<input type="text" size=2 name="nb_skipped_lines" id="nb_skipped_lines" onChange="DoPreview()" value="'.$iSkippedLines.'">').'<p>');
 		$oPage->add('</td><td style="vertical-align:top;">');
 		$oPage->add('<h3>'.Dict::S('UI:CSVImport:DateAndTimeFormats').'</h3>');
-		$oPage->add('<p><input type="radio" name="date_time_format" id="radio_date_time_std" value="default"'.IsChecked($sDateTimeFormat, 'default').'/> '.Dict::Format('UI:CSVImport:DefaultDateTimeFormat_Format_Example', htmlentities(AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8'), date(AttributeDateTime::GetFormat())).'<p>');
-		$oPage->add('<p><input type="radio" name="date_time_format" id="radio_date_time_custom" value="custom"'.IsChecked($sDateTimeFormat, 'custom').'/> '.Dict::Format('UI:CSVImport:CustomDateTimeFormat', '<input type="text" size="15" name="custom_date_time_format" id="custom_date_time_format" title="" value="'.htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8').'">').'<p>');
+		$oPage->add('<p><input type="radio" name="date_time_format" id="radio_date_time_std" value="default"'.IsChecked($sDateTimeFormat, 'default').'/><label for="radio_date_time_std"> '.Dict::Format('UI:CSVImport:DefaultDateTimeFormat_Format_Example', htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8'), date((string)AttributeDateTime::GetFormat())).'</label><p>');
+		$oPage->add('<p><input type="radio" name="date_time_format" id="radio_date_time_custom" value="custom"'.IsChecked($sDateTimeFormat, 'custom').'/><label for="radio_date_time_custom"> '.Dict::Format('UI:CSVImport:CustomDateTimeFormat', '<input type="text" size="15" name="custom_date_time_format" id="custom_date_time_format" title="" value="'.htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8').'">').'</label><p>');
 		$oPage->add('</td></tr></table>');
 		$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="csvdata" id="csvdata" value="'.htmlentities($sUTF8Data, ENT_QUOTES, 'UTF-8').'"/>');
@@ -1262,6 +1262,7 @@ EOF
 <<<EOF
 DoPreview();
 $('#custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
+$('#custom_date_time_format').on('click', function() { $('#radio_date_time_custom').prop('checked', true); });
 EOF
 		);
 	}
@@ -1298,7 +1299,7 @@ EOF
 		$bAdvanced = utils::ReadParam('advanced', 0);
 		$sEncoding = utils::ReadParam('encoding', '');
 		$sDateTimeFormat = utils::ReadParam('date_time_format', 'default');
-		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', AttributeDateTime::GetFormat(), false, 'raw_data');
+		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', (string)AttributeDateTime::GetFormat(), false, 'raw_data');
 		
 		if ($sEncoding == '')
 		{

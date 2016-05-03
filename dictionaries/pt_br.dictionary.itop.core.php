@@ -96,8 +96,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributeDateTime?SmartSearch' => '
 <p>
 	Data formato:<br/>
-	<b>yyyy-mm-dd hh:mm:ss</b><br/>
-	Exemplo: 2011-07-19 18:40:00
+	<b>%1$s</b><br/>
+	Exemplo: %2$s
 </p>
 <p>
 Operadores:<br/>
@@ -114,8 +114,8 @@ Se o tempo for omitido, o padrão é 00:00:00
 	'Core:AttributeDate?SmartSearch' => '
 <p>
 	Data formato:<br/>
-	<b>yyyy-mm-dd</b><br/>
-	Exemplo: 2011-07-19
+	<b>%1$s</b><br/>
+	Exemplo: %2$s
 </p>
 <p>
 Operadores:<br/>

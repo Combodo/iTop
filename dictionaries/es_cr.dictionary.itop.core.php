@@ -96,8 +96,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:AttributeDateTime?SmartSearch' => '
 <p>
 	Formato de Fecha:<br/>
-	<b>yyyy-mm-dd hh:mm:ss</b><br/>
-	Ejemplo: 2011-07-19 18:40:00
+	<b>%1$s</b><br/>
+	Ejemplo: %2$s
 </p>
 <p>
 Operadores:<br/>
@@ -114,8 +114,8 @@ Si se omite el tiempo, por omisión es 00:00:00
 	'Core:AttributeDate?SmartSearch' => '
 <p>
 	Formato de Fecha:<br/>
-	<b>yyyy-mm-dd</b><br/>
-	Ejemplo: 2011-07-19
+	<b>%1$s</b><br/>
+	Ejemplo: %2$s
 </p>
 <p>
 Operadores:<br/>
