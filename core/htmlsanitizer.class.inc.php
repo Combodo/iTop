@@ -145,6 +145,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		'div' => array('style'),
 		'b' => array(),
 		'i' => array(),
+		'u' => array(),
 		'em' => array(),
 		'strong' => array(),
 		'img' => array('src','style'),

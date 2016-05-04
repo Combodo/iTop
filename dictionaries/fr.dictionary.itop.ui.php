@@ -915,7 +915,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:AttemptingToSetAReadOnlyAttribute_Name' => 'Tentative de modification du champ en lecture seule: %1$s',
 	'UI:FailedToApplyStimuli' => 'L\'action a échoué',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: Modification de %2$d objet(s) de type %3$s',
-	'UI:CaseLogTypeYourTextHere' => 'Nouvelle entrée ci-dessous:',
+	'UI:CaseLogTypeYourTextHere' => 'Nouvelle entrée ici...',
 	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
 	'UI:CaseLog:InitialValue' => 'Valeur initiale:',
 	'UI:AttemptingToSetASlaveAttribute_Name' => 'Le champ %1$s ne peut pas être modifié car il est géré par une synchronisation avec une source de données. Valeur ignorée.',
@@ -1160,4 +1160,6 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:SelectInlineImageToUpload' => 'Sélectionnez l\'image à ajouter',
 	'UI:AvailableInlineImagesLegend' => 'Images disponibles',
 	'UI:NoInlineImage' => 'Il n\'y a aucune image de disponible sur le serveur. Utilisez le bouton "Parcourir" (ci-dessus) pour sélectionner une image sur votre ordinateur et la télécharger sur le serveur.',
+	
+	'UI:ToggleFullScreen' => 'Agrandir / Minimiser',
 ));

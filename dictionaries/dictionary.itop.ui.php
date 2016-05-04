@@ -1052,7 +1052,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:AttemptingToSetAReadOnlyAttribute_Name' => 'Attempting to set the read-only field: %1$s',
 	'UI:FailedToApplyStimuli' => 'The action has failed.',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: Modifying %2$d objects of class %3$s',
-	'UI:CaseLogTypeYourTextHere' => 'Type your text here:',
+	'UI:CaseLogTypeYourTextHere' => 'Type your text here...',
 	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
 	'UI:CaseLog:InitialValue' => 'Initial value:',
 	'UI:AttemptingToSetASlaveAttribute_Name' => 'The field %1$s is not writable because it is mastered by the data synchronization. Value not set.',
@@ -1318,5 +1318,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:SelectInlineImageToUpload' => 'Select the image to upload',
 	'UI:AvailableInlineImagesLegend' => 'Available images',
 	'UI:NoInlineImage' => 'There is no image available on the server. Use the "Browse" button above to select an image from your computer and upload it to the server.',
+	
+	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize',
 ));
 ?>

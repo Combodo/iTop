@@ -57,6 +57,8 @@ CKEDITOR.stylesSet.add( 'default', [
 	{ name: 'Superscript',		element: 'sup' },
 	*/
 
+	{ name: 'Underline',			element: 'u' },
+
 	{ name: 'Marker',			element: 'span', styles: { 'background-color': '#ff0' } },
 
 	{ name: 'Big',				element: 'big' },

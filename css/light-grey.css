@@ -1405,6 +1405,17 @@ span.form_validation {
   border-top: 1px solid white;
   background: #dddddd;
   width: 100%;
+  height: 21px;
+}
+
+
+.caselog_input_header:empty {
+  display: none;
+}
+
+
+.editor_magnifier:hover {
+  background-color: #cccccc;
 }
 
 

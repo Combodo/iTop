@@ -21,8 +21,9 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'about', groups: [ 'about' ] }
 	];
 
-	config.removeButtons = 'Underline,Subscript,Superscript,Scayt,Anchor,Source,Outdent,Indent,Blockquote,About,PasteFromWord';
+	config.removeButtons = 'Subscript,Superscript,Scayt,Anchor,Source,Outdent,Indent,Blockquote,About,PasteFromWord';
 	config.removePlugins = 'elementspath';
+	config.resize_enabled = false;
 	config.toolbarCanCollapse = true;
 	config.toolbarStartupExpanded = false;
 };

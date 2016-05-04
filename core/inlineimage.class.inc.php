@@ -414,6 +414,7 @@ EOF
 		$iObjKey = $oObject->GetKey();
 
 		$sAbsoluteUrlAppRoot = utils::GetAbsoluteUrlAppRoot();
+		$sToggleFullScreen = htmlentities(Dict::S('UI:ToggleFullScreen'), ENT_QUOTES, 'UTF-8');
 
 		return
 <<<EOF
@@ -460,6 +461,15 @@ EOF
 			}, null, null, 4 ); // Listener with priority 4 will be executed before priority 5.
 		
 			oEditor.on( 'instanceReady', function() {
+				console.log(oEditor, $('.cke_toolbox_collapser'));
+				$('#'+oEditor.id+'_toolbox').append('<span class="editor_magnifier" title="$sToggleFullScreen" style="display:block;width:12px;height:11px;border:1px #A6A6A6 solid;cursor:pointer; background-image:url(../images/full-screen.png)">&nbsp;</span>');
+				$('#'+oEditor.id+'_toolbox .editor_magnifier').on('click', function() {
+						oEditor.execCommand('maximize');
+						if ($(this).closest('.cke_maximized').length != 0)
+						{
+							$('#'+oEditor.id+'_toolbar_collapser').trigger('click');
+						}
+				});
 				oEditor.widgets.registered.uploadimage.onUploaded = function( upload ) {
 				var oData = JSON.parse(upload.xhr.responseText);
 			    	this.replaceWith( '<img src="' + upload.url + '" ' +

@@ -1805,7 +1805,7 @@ EOF
 					{
 						$sStyle = 'style="'.implode('; ', $aStyles).'"';
 					}
-					$sHeader = '<div class="caselog_input_header">&nbsp;'.Dict::S('UI:CaseLogTypeYourTextHere').'</div>';
+					$sHeader = '<div class="caselog_input_header"></div>'; // will be hidden in CSS (via :empty) if it remains empty
 					$sEditValue = $oAttDef->GetEditValue($value);
 					$sPreviousLog = is_object($value) ? $value->GetAsHTML($oPage, true /* bEditMode */, array('AttributeText', 'RenderWikiHtml')) : '';
 					$iEntriesCount = is_object($value) ? count($value->GetIndex()) : 0;
@@ -3443,6 +3443,7 @@ EOF
 				$aConfig['language'] = $sLanguage;
 				$aConfig['contentsLanguage'] = $sLanguage;
 				$aConfig['extraPlugins'] = 'disabler';
+				$aConfig['placeholder'] = Dict::S('UI:CaseLogTypeYourTextHere');
 				$sConfigJS = json_encode($aConfig);
 				
 				$oPage->add_ready_script("$('#$sInputId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
