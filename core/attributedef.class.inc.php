@@ -3643,9 +3643,17 @@ class AttributeDateTime extends AttributeDBField
 	 */
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		$oFormField = parent::MakeFormField($oObject, $oFormField);
+		if ($oFormField === null)
+		{
+			$sFormFieldClass = static::GetFormFieldClass();
+			$oFormField = new $sFormFieldClass($this->GetCode());
+		}
 		$oFormField->SetPHPDateTimeFormat((string) $this->GetFormat());
 		$oFormField->SetJSDateTimeFormat($this->GetFormat()->ToMomentJS());
+
+		$oFormField = parent::MakeFormField($oObject, $oFormField);
+
+		// After call to the parent as it sets the current value
 		$oFormField->SetCurrentValue($this->GetFormat()->Format($oObject->Get($this->GetCode())));
 
 		return $oFormField;
