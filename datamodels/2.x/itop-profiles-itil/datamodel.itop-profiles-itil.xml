@@ -82,6 +82,12 @@
           <class id="Attachment"/>
         </classes>
       </group>
+      <group id="Portal" _delta="define">
+        <classes>
+          <class id="lnkFunctionalCIToTicket"/>
+          <class id="lnkContactToTicket"/>
+        </classes>
+      </group>
       <group id="NormalChange" _delta="define">
         <classes>
           <class id="NormalChange"/>
@@ -437,6 +443,12 @@
         <name>Portal user</name>
         <description>Has the rights to access to the user portal. People having this profile will not be allowed to access the standard application, they will be automatically redirected to the user portal.</description>
         <groups>
+          <group id="Portal">
+            <actions>
+              <action id="action:write">allow</action>
+              <action id="action:delete">allow</action>
+            </actions>
+          </group>
           <group id="UserRequest">
             <actions>
               <action id="action:write">allow</action>
