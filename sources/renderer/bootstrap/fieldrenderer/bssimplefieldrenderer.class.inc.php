@@ -260,7 +260,7 @@ EOF
 							}
 							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), true)->AddHtml('</div>');
 						}
-						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" />');
+						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetDisplayValue(), true)->AddHtml('" class="form-control" />');
 						$oOutput->AddHtml('</div>');
 						break;
 
@@ -299,6 +299,22 @@ EOF
 				$oOutput->AddJs(
 <<<EOF
 					$("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
+						var me = this;
+
+						$(this).closest(".field_set").trigger("field_change", {
+							id: $(me).attr("id"),
+							name: $(me).closest(".form_field").attr("data-field-id"),
+							value: $(me).val()
+						});
+					});
+EOF
+				);
+				break;
+			case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
+				// We need the focusout event has the datepicker widget seems to override the change event
+				$oOutput->AddJs(
+<<<EOF
+					$("#{$this->oField->GetGlobalId()}").off("change keyup focusout").on("change keyup focusout", function(){
 						var me = this;
 
 						$(this).closest(".field_set").trigger("field_change", {

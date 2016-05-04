@@ -84,7 +84,7 @@ class DateTimeField extends StringField
 	
 	public function GetDisplayValue()
 	{
-		return AttributeDatetime::GetFormat()->Format($this->currentValue);
+		return $this->currentValue;
 	}
 	
 	/**
@@ -103,4 +103,5 @@ class DateTimeField extends StringField
 	{
 		return $this->bDateOnly;
 	}
+
 }
