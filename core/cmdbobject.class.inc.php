@@ -407,6 +407,18 @@ abstract class CMDBObject extends DBObject
 				$oMyChangeOp->Set("prevdata", json_encode($original->GetValues()));
 				$iId = $oMyChangeOp->DBInsertNoReload();
 			}
+			elseif ($oAttDef instanceOf AttributeURL)
+			{
+				// URLs
+				//
+				$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeURL");
+				$oMyChangeOp->Set("objclass", get_class($this));
+				$oMyChangeOp->Set("objkey", $this->GetKey());
+				$oMyChangeOp->Set("attcode", $sAttCode);
+				$oMyChangeOp->Set("oldvalue", $original);
+				$oMyChangeOp->Set("newvalue", $value);
+				$iId = $oMyChangeOp->DBInsertNoReload();
+			}
 			else
 			{
 				// Scalars

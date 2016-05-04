@@ -1201,7 +1201,7 @@ EOF
 			{
 				$sAttCode = $oOperation->Get('attcode');
 
-				if (get_class($oOperation) == 'CMDBChangeOpSetAttributeScalar')
+				if ((get_class($oOperation) == 'CMDBChangeOpSetAttributeScalar') || (get_class($oOperation) == 'CMDBChangeOpSetAttributeURL'))
 				{
 					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 					if ($oAttDef->IsExternalKey())

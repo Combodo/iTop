@@ -4698,6 +4698,13 @@ class AttributeURL extends AttributeString
 		return array_merge(parent::ListExpectedParams(), array("target"));
 	}
 
+	protected function GetSQLCol($bFullSpec = false) {return "VARCHAR(2048)".($bFullSpec ? $this->GetSQLColSpec() : '');}
+
+	public function GetMaxSize()
+	{
+		return 2048;
+	}
+	
 	public function GetEditClass() {return "String";}
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
@@ -4705,7 +4712,7 @@ class AttributeURL extends AttributeString
 		$sTarget = $this->Get("target");
 		if (empty($sTarget)) $sTarget = "_blank";
 		$sLabel = Str::pure2html($sValue);
-		if (strlen($sLabel) > 255)
+		if (strlen($sLabel) > 128)
 		{
 			// Truncate the length to 128 characters, by removing the middle
 			$sLabel = substr($sLabel, 0, 100).'.....'.substr($sLabel, -20);
