@@ -31,6 +31,7 @@ SetupWebPage::AddModule(
 		'data.sample' => array(
 			'data.sample.organizations.xml',
 			'data.sample.contracts.xml',
+			'data.sample.servicefamilies.xml',
 			'data.sample.services.xml',
 			'data.sample.serviceelements.xml',
 			'data.sample.sla.xml',
