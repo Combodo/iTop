@@ -305,7 +305,7 @@ LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 $iStep = utils::ReadParam('step', 1);
 
 $oPage = new iTopWebPage(Dict::S('UI:Preferences'));
-
+$oPage->DisableBreadCrumb();
 $sOperation = utils::ReadParam('operation', ''); 
 	
 try
@@ -351,6 +351,7 @@ try
 		
 		case 'display':
 		default:
+		$oPage->SetBreadCrumbEntry('ui-tool-preferences', Dict::S('UI:Preferences'), Dict::S('UI:Preferences'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
 		DisplayPreferences($oPage);
 	}
 	$oPage->output();
