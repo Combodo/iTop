@@ -310,6 +310,10 @@ class ormCaseLog {
 			}
 			else
 			{
+				if (!is_null($aTransfoHandler))
+				{
+					$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry, true /* wiki "links" only */);
+				}
 				$sTextEntry = InlineImage::FixUrls($sTextEntry);
 			}			
 			$iPos += $aIndex[$index]['text_length'];
@@ -413,6 +417,10 @@ class ormCaseLog {
 			}
 			else
 			{
+				if (!is_null($aTransfoHandler))
+				{
+					$sTextEntry = call_user_func($aTransfoHandler, $sTextEntry, true /* wiki "links" only */);
+				}
 				$sTextEntry = InlineImage::FixUrls($sTextEntry);
 			}
 			$iPos += $aIndex[$index]['text_length'];

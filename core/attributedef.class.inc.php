@@ -2366,24 +2366,27 @@ class AttributeText extends AttributeString
 		return 65535;
 	}
 
-	static public function RenderWikiHtml($sText)
+	static public function RenderWikiHtml($sText, $bWikiOnly = false)
 	{
-		$sPattern = '/'.str_replace('/', '\/', utils::GetConfig()->Get('url_validation_pattern')).'/i';
-		if (preg_match_all($sPattern, $sText, $aAllMatches, PREG_SET_ORDER /* important !*/ |PREG_OFFSET_CAPTURE /* important ! */))
+		if (!$bWikiOnly)
 		{
-			$aUrls = array();
-			$i = count($aAllMatches);
-			// Replace the URLs by an actual hyperlink <a href="...">...</a>
-			// Let's do it backwards so that the initial positions are not modified by the replacement
-			// This works if the matches are captured: in the order they occur in the string  AND
-			// with their offset (i.e. position) inside the string
-			while($i > 0)
+			$sPattern = '/'.str_replace('/', '\/', utils::GetConfig()->Get('url_validation_pattern')).'/i';
+			if (preg_match_all($sPattern, $sText, $aAllMatches, PREG_SET_ORDER /* important !*/ |PREG_OFFSET_CAPTURE /* important ! */))
 			{
-				$i--;
-				$sUrl = $aAllMatches[$i][0][0]; // String corresponding to the main pattern
-				$iPos = $aAllMatches[$i][0][1]; // Position of the main pattern
-				$sText = substr_replace($sText, "<a href=\"$sUrl\">$sUrl</a>", $iPos, strlen($sUrl));
-				
+				$aUrls = array();
+				$i = count($aAllMatches);
+				// Replace the URLs by an actual hyperlink <a href="...">...</a>
+				// Let's do it backwards so that the initial positions are not modified by the replacement
+				// This works if the matches are captured: in the order they occur in the string  AND
+				// with their offset (i.e. position) inside the string
+				while($i > 0)
+				{
+					$i--;
+					$sUrl = $aAllMatches[$i][0][0]; // String corresponding to the main pattern
+					$iPos = $aAllMatches[$i][0][1]; // Position of the main pattern
+					$sText = substr_replace($sText, "<a href=\"$sUrl\">$sUrl</a>", $iPos, strlen($sUrl));
+					
+				}
 			}
 		}
 		if (preg_match_all(WIKI_OBJECT_REGEXP, $sText, $aAllMatches, PREG_SET_ORDER))
@@ -2442,6 +2445,7 @@ class AttributeText extends AttributeString
 		}
 		else
 		{
+			$sValue = self::RenderWikiHtml($sValue, true /* wiki only */);
 			return "<div class=\"HTML\" $sStyle>".InlineImage::FixUrls($sValue).'</div>';
 		}
 		
