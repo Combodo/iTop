@@ -2460,20 +2460,12 @@ abstract class DBObject implements iDisplay
 				$ret = $this->GetKey();
 				break;
 				
-				case 'hyperlink()':
-				$ret = $this->GetHyperlink('iTopStandardURLMaker', false);
-				break;
-
-				case 'hyperlink(portal)':
-				$ret = $this->GetHyperlink('PortalURLMaker', false);
-				break;
-				
 				case 'name()':
 				$ret = $this->GetName();
 				break;
 
 				default:
-				if (preg_match('/^([^(]+)\\((.+)\\)$/', $sPlaceholderAttCode, $aMatches))
+				if (preg_match('/^([^(]+)\\((.*)\\)$/', $sPlaceholderAttCode, $aMatches))
 				{
 					$sVerb = $aMatches[1];
 					$sAttCode = $aMatches[2];
@@ -2483,9 +2475,21 @@ abstract class DBObject implements iDisplay
 					$sVerb = '';
 					$sAttCode = $sPlaceholderAttCode;
 				}
-				
-				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-				$ret = $oAttDef->GetForTemplate($this->Get($sAttCode), $sVerb, $this);
+
+				if ($sVerb == 'hyperlink')
+				{
+					$sPortalId = ($sAttCode === '') ? 'console' : $sAttCode;
+					if (!array_key_exists($sPortalId, self::$aPortalToURLMaker))
+					{
+						throw new Exception("Unknown portal id '$sPortalId' in placeholder '$sPlaceholderAttCode''");
+					}
+					$ret = $this->GetHyperlink(self::$aPortalToURLMaker[$sPortalId], false);
+				}
+				else
+				{
+					$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+					$ret = $oAttDef->GetForTemplate($this->Get($sAttCode), $sVerb, $this);
+				}
 			}
 			if ($ret === null)
 			{
@@ -2493,6 +2497,20 @@ abstract class DBObject implements iDisplay
 			}
 		}
 		return $ret;
+	}
+
+	static protected $aPortalToURLMaker = array('console' => 'iTopStandardURLMaker', 'portal' => 'PortalURLMaker');
+
+	/**
+	 * Associate a portal to a class that implements iDBObjectURLMaker,
+	 * and which will be invoked with placeholders like $this->org_id->hyperlink(portal)$
+	 *
+	 * @param $sPortalId Identifies the portal. Conventions: the main portal is 'console', The user requests portal is 'portal'.
+	 * @param $sUrlMakerClass
+	 */
+	static public function RegisterURLMakerClass($sPortalId, $sUrlMakerClass)
+	{
+		self::$aPortalToURLMaker[$sPortalId] = $sUrlMakerClass;
 	}
 
 	// To be optionaly overloaded
