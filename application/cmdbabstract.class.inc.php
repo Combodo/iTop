@@ -1815,7 +1815,8 @@ EOF
 				break;
 
 				case 'HTML':
-					$oWidget = new UIHTMLEditorWidget($iId, $oAttDef, $sNameSuffix, $sFieldPrefix, $sHelpText, $sValidationSpan.$sReloadSpan, $value, $bMandatory);
+					$sEditValue = $oAttDef->GetEditValue($value);
+					$oWidget = new UIHTMLEditorWidget($iId, $oAttDef, $sNameSuffix, $sFieldPrefix, $sHelpText, $sValidationSpan.$sReloadSpan, $sEditValue, $bMandatory);
 					$sHTMLValue = $oWidget->Display($oPage, $aArgs);
 				break;
 
