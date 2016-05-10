@@ -95,6 +95,7 @@
                   <module>itop-portal</module>
                   <module>itop-portal-base</module>
                 </modules>
+                <default>true</default>
               </choice>
             </options>
           </sub_options>
@@ -125,6 +126,7 @@
                   <module>itop-portal</module>
                   <module>itop-portal-base</module>
                 </modules>
+                <default>true</default>
               </choice>
             </options>
           </sub_options>
