@@ -599,4 +599,98 @@
       <do_search>1</do_search>
     </menu>
   </menus>
+  <module_designs>
+    <module_design id="itop-portal" xsi:type="portal">
+      <bricks>
+        <brick id="faq" xsi:type="Combodo\iTop\Portal\Brick\BrowseBrick" _delta="define">
+          <active>true</active>
+          <rank>7</rank>
+          <width>4</width>
+          <title>Brick:Portal:FAQ:Title</title>
+          <levels>
+            <level id="1">
+              <class>FAQCategory</class>
+              <parent_att/>
+              <name_att/>
+              <tooltip_att/>
+              <title>Catégories</title>
+              <actions/>
+              <levels>
+                <level id="1">
+                  <class>FAQ</class>
+                  <parent_att>category_id</parent_att>
+                  <name_att>title</name_att>
+                  <tooltip_att>summary</tooltip_att>
+                  <title>FAQs</title>
+                  <fields>
+                    <field id="error_code"/>
+                    <field id="key_words"/>
+                  </fields>
+                  <actions>
+                    <action id="view" xsi:type="view"/>
+                  </actions>
+                  <levels/>
+                </level>
+              </levels>
+            </level>
+          </levels>
+          <browse_modes>
+            <availables>
+              <mode id="list"/>
+              <mode id="tree"/>
+            </availables>
+            <default>list</default>
+          </browse_modes>
+          <data_loading>full</data_loading>
+        </brick>
+      </bricks>
+      <forms>
+        <form id="faq" _delta="define">
+          <class>FAQ</class>
+          <!-- fields tag is optional. If not specified, attributes from zlist "details" will be choose as default -->
+          <fields>
+            <field id="category_name"/>
+            <field id="title"/>
+            <field id="error_code"/>
+            <field id="key_words"/>
+            <field id="summary"/>
+            <field id="description"/>
+          </fields>
+          <twig>
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="form_field" data-field-id="category_name"></div>
+                <div class="form_field" data-field-id="title"></div>
+                <div class="form_field" data-field-id="error_code"></div>
+                <div class="form_field" data-field-id="key_words"></div>
+                <div class="form_field" data-field-id="summary"></div>
+              </div>
+              <div class="col-sm-8">
+                <div class="form_field" data-field-id="description"></div>
+              </div>
+            </div>
+          </twig>
+          <modes>
+            <mode id="view"/>
+          </modes>
+        </form>
+      </forms>
+      <classes>
+        <class id="FAQCategory" _delta="define">
+          <scopes>
+            <scope id="all">
+              <oql_view><![CDATA[SELECT FAQCategory]]></oql_view>
+            </scope>
+          </scopes>
+        </class>
+        <class id="FAQ" _delta="define">
+          <scopes>
+            <scope id="all">
+              <oql_view><![CDATA[SELECT FAQ]]></oql_view>
+            </scope>
+          </scopes>
+        </class>
+      </classes>
+    </module_design>
+  </module_designs>
 </itop_design>

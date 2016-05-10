@@ -959,4 +959,480 @@
       </class>
     </classes>
   </meta>
+  <module_designs>
+    <module_design id="itop-portal" xsi:type="portal" _delta="define">
+      <properties>
+        <name>Portal:Instance:Name</name>
+        <!-- Can be either a fileref or a relative path to the file (To be tested) -->
+        <!--<fileref ref="brt_6a2be154b2a62659d3332c513bdad715"  />-->
+        <logo>../images/itop-logo.png</logo>
+        <!-- Can be either a fileref or a relative path to the file from /env-xxx -->
+        <!-- Available themes must have a unique id. Some ids are loaded in a specific order : bootstrap/portal/custom. Other ids are loaded after them, but their order cannot be predicted -->
+        <themes/>
+        <!-- Can be either a fileref or a relative path to the file from /env-xxx -->
+        <!-- Available templates are id="layout|home" -->
+        <templates/>
+        <!-- An OQL query to determine which TriggerOnPortalUpdate to use within THIS instance of the portal. This is mostly needed to enable different triggers on several portal instances -->
+        <!-- Note : ":parent_classes" parameter is a reserved name that will be used for the current object class name (and its ancestors) -->
+        <triggers_query><![CDATA[SELECT TriggerOnPortalUpdate AS t WHERE t.target_class IN (:parent_classes)]]></triggers_query>
+        <attachments>
+          <allow_delete>true</allow_delete>
+        </attachments>
+      </properties>
+      <bricks>
+        <brick id="user-profile" xsi:type="Combodo\iTop\Portal\Brick\UserProfileBrick">
+          <rank>1</rank>
+          <title>Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil</title>
+          <form>
+            <!-- Optionnal tag to list the fields -->
+            <fields />
+            <!-- Optionnal tag to specify the form layout. Fields that are not positionned in the layout will be placed at the end of the form -->
+            <twig>
+              <!-- data-field-id attribute must be an attribute code of the class -->
+              <div class="form_field" data-field-id="first_name">
+              </div>
+              <div class="form_field" data-field-id="name">
+              </div>
+              <!-- data-field-flags attribute contains flags among read_only/hidden/mandatory/must_prompt/must_change -->
+              <div class="form_field" data-field-id="email" data-field-flags="read_only">
+              </div>
+              <div class="form_field" data-field-id="phone">
+              </div>
+              <div class="form_field" data-field-id="org_id" data-field-flags="read_only">
+              </div>
+              <div class="form_field" data-field-id="location_id" data-field-flags="read_only">
+              </div>
+              <div class="form_field" data-field-id="function" data-field-flags="read_only">
+              </div>
+              <div class="form_field" data-field-id="manager_id" data-field-flags="read_only">
+              </div>
+            </twig>
+          </form>
+        </brick>
+        <brick id="create-user-request" xsi:type="Combodo\iTop\Portal\Brick\CreateBrick">
+          <active>true</active>
+          <rank>3</rank>
+          <width>8</width>
+          <modal>true</modal>
+          <title>Portal:CreateNewRequest</title>
+          <class>UserRequest</class>
+          <!-- Class that will be create created with the form -->
+          <rules>
+            <rule id="contact-to-userrequest"/>
+          </rules>
+        </brick>
+        <brick id="ongoing-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick">
+          <active>true</active>
+          <rank>4</rank>
+          <width>4</width>
+          <title>Portal:ShowOngoing</title>
+          <oql><![CDATA[SELECT Ticket WHERE org_id = :current_contact->org_id AND caller_id = :current_contact_id]]></oql>
+          <!-- Can be either a class tag with the class name or an oql tag with the query -->
+          <!-- <class>Ticket</class> -->
+          <fields>
+            <field id="title"/>
+            <field id="start_date"/>
+            <field id="status"/>
+            <field id="service_id"/>
+            <field id="servicesubcategory_id"/>
+            <field id="priority"/>
+            <field id="caller_id"/>
+          </fields>
+          <!-- Optional tag to add attributes to the table by their code -->
+          <grouping>
+            <!-- Optionnal -->
+            <tabs>
+              <!-- Optionnal. Grouping by tabs -->
+              <!--<attribute>operational_status</attribute>-->
+              <!-- attribute xor groups tag -->
+              <groups>
+                <!-- Can be used only with ../oql tag, not ../class tag. Reason is that we can't know the class alias to apply to the condition's fields. We might have an exception saying that the field in ambigious for the generated query. -->
+                <group id="opened">
+                  <rank>1</rank>
+                  <title>En cours</title>
+                  <condition><![CDATA[SELECT Ticket AS T WHERE operational_status NOT IN ('closed', 'resolved')]]></condition>
+                </group>
+                <group id="resolved">
+                  <rank>2</rank>
+                  <title>Résolues</title>
+                  <condition><![CDATA[SELECT Ticket AS T WHERE org_id = :current_contact->org_id AND operational_status = 'resolved']]></condition>
+                </group>
+              </groups>
+            </tabs>
+            <!-- Implicit grouping on y axis by finalclass -->
+          </grouping>
+          <data_loading>full</data_loading>
+        </brick>
+        <brick id="closed-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick">
+          <active>true</active>
+          <rank>5</rank>
+          <width>4</width>
+          <title>Portal:ShowClosed</title>
+          <oql><![CDATA[SELECT UserRequest WHERE org_id = :current_contact->org_id AND caller_id = :current_contact_id AND status = 'closed']]></oql>
+          <!-- Can be either a class tag with the class name or an oql tag with the query -->
+          <!-- <class>Ticket</class> -->
+          <fields>
+            <field id="finalclass"/>
+            <field id="title"/>
+            <field id="start_date"/>
+            <field id="status"/>
+            <field id="servicesubcategory_id"/>
+            <field id="priority"/>
+            <field id="caller_id"/>
+          </fields>
+          <data_loading>auto</data_loading>
+        </brick>
+        <brick id="services" xsi:type="Combodo\iTop\Portal\Brick\BrowseBrick">
+          <active>true</active>
+          <rank>6</rank>
+          <width>4</width>
+          <visible_home>true</visible_home>
+          <visible_navigation_menu>true</visible_navigation_menu>
+          <title>Brick:Portal:Services:Title</title>
+          <!-- <fields  /> Optional tag to add attributes to the table by their code, can be specified for each level -->
+          <levels>
+            <level id="1">
+              <class>ServiceFamily</class>
+              <levels>
+                <!-- Level IDs must be numeric -->
+                <level id="1">
+                  <!-- Can be either a class tag with the class name or an oql tag with the query -->
+                  <class>Service</class>
+                  <!-- Attribute code of the above class that point to the upper level class -->
+                  <parent_att>servicefamily_id</parent_att>
+                  <!-- Attribute code to use to display the object name, default is 'name'. -->
+                  <name_att/>
+                  <!-- Description text from attribute of above class [from the OQL] -->
+                  <tooltip_att>description</tooltip_att>
+                  <!-- Title of the level, will be display in lists and others browse modes -->
+                  <title>Service</title>
+                  <!-- Optional tag to add attributes to the table by their code, can be specified for each level -->
+                  <!-- <fields  /> -->
+                  <!-- Can be empty on intermediate levels, default is drilldown -->
+                  <actions>
+                    <action id="drilldown" xsi:type="drilldown"/>
+                  </actions>
+                  <levels>
+                    <level id="1">
+                      <!-- Note : We could have used just a class tag and putted the OQL in the scope for everybody -->
+                      <oql><![CDATA[SELECT ServiceSubcategory WHERE ServiceSubcategory.status != 'obsolete']]></oql>
+                      <parent_att>service_id</parent_att>
+                      <name_att/>
+                      <tooltip_att>description</tooltip_att>
+                      <title>Sous-Service</title>
+                      <actions>
+                        <action id="view" xsi:type="view"/>
+                        <action id="create_from_this" xsi:type="create_from_this">
+                          <!-- Can be either a class tag containing the class of the object to create, or a static method taking the origin object as a parameter and that will return a object of the desired class -->
+                          <!-- (eg. \Ticket::FromServiceSubcategory($oOrigin) that should return either a UserRequest or Incident regarding the request type) -->
+                          <class>UserRequest</class>
+                          <!-- Optional tag that can be used on any action type -->
+                          <!--<title>Créer un ticket</title>-->
+                          <rules>
+                            <rule id="contact-to-userrequest"/>
+                            <rule id="servicesubcategory-to-userrequest"/>
+                          </rules>
+                        </action>
+                      </actions>
+                      <levels/>
+                    </level>
+                  </levels>
+                </level>
+              </levels>
+            </level>
+          </levels>
+
+          <browse_modes>
+            <availables>
+              <mode id="list"/>
+              <mode id="tree"/>
+            </availables>
+            <default>tree</default>
+          </browse_modes>
+          <data_loading>auto</data_loading>
+          <!-- lazy|full|auto. Let the consultant choose if the list/tree data are load progressivly at each page/level or in one-shot or if it is up to the system regarding the "lazy_loading_threshold" parameter -->
+        </brick>
+      </bricks>
+      <forms>
+        <form id="servicesubcategory">
+          <class>ServiceSubcategory</class>
+          <!-- Optionnal tag to list the fields -->
+          <fields />
+          <!-- Optionnal tag to specify the form layout. Fields that are not positionned in the layout will be placed at the end of the form -->
+          <twig>
+            <div class="row">
+              <div class="col-sm-6">
+                <!-- data-field-id attribute must be an attribute code of the class -->
+                <div class="form_field" data-field-id="service_id">
+                </div>
+                <!-- data-field-flags attribute contains flags among read_only/hidden/mandatory/must_prompt/must_change -->
+                <div class="form_field" data-field-id="name" data-field-flags="read_only">
+                </div>
+                <div class="form_field" data-field-id="status" data-field-flags="read_only">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form_field" data-field-id="service_org_id">
+                </div>
+                <div class="form_field" data-field-id="request_type">
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="form_field" data-field-id="description">
+              </div>
+            </div>
+          </twig>
+        </form>
+        <form id="user-request-view">
+          <class>UserRequest</class>
+          <fields>
+            <field id="title"/>
+            <field id="description">
+              <mandatory>true</mandatory>
+            </field>
+            <field id="status"/>
+            <field id="agent_id">
+              <read_only>true</read_only>
+            </field>
+            <field id="related_request_list">
+              <hidden>true</hidden>
+            </field>
+            <field id="contacts_list">
+              <hidden>true</hidden>
+            </field>
+          </fields>
+          <modes>
+            <mode id="view"/>
+          </modes>
+        </form>
+        <form id="ticket-create">
+          <class>Ticket</class>
+          <fields />
+          <twig>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form_field" data-field-id="service_id" data-field-flags="mandatory">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form_field" data-field-id="servicesubcategory_id" data-field-flags="mandatory">
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="form_field" data-field-id="service_details">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form_field" data-field-id="impact">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form_field" data-field-id="urgency">
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="form_field" data-field-id="title">
+              </div>
+              <div class="form_field" data-field-id="description">
+              </div>
+              <div class="form_field" data-field-id="contacts_list">
+              </div>
+            </div>
+          </twig>
+          <modes>
+            <!-- mode id can among create / edit / view -->
+            <mode id="create"/>
+          </modes>
+        </form>
+        <form id="ticket-edit">
+          <class>Ticket</class>
+          <fields></fields>
+          <twig>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form_field" data-field-id="caller_id" data-field-flags="read_only">
+                </div>
+                <div class="form_field" data-field-id="service_id" data-field-flags="read_only">
+                </div>
+                <div class="form_field" data-field-id="servicesubcategory_id" data-field-flags="read_only">
+                </div>
+                <div class="form_field" data-field-id="title" data-field-flags="read_only">
+                </div>
+                <div class="form_field" data-field-id="description" data-field-flags="read_only">
+                </div>
+                <div class="form_field" data-field-id="solution" data-field-flags="read_only">
+                </div>
+                <div class="form_field" data-field-id="user_satisfaction" data-field-flags="read_only">
+                </div>
+                <div class="form_field" data-field-id="user_comment" data-field-flags="read_only">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form_field" data-field-id="status" data-field-flags="read_only">
+                </div>
+                <div class="form_field" data-field-id="impact" data-field-flags="read_only">
+                </div>
+                <div class="form_field" data-field-id="urgency" data-field-flags="read_only">
+                </div>
+                <div class="form_field" data-field-id="priority" data-field-flags="read_only">
+                </div>
+                <div class="form_field" data-field-id="start_date" data-field-flags="read_only">
+                </div>
+                <div class="form_field" data-field-id="last_update" data-field-flags="read_only">
+                </div>
+                <!--<div class="form_field" data-field-id="resolution_date" data-field-flags="read_only">
+                </div>-->
+              </div>
+            </div>
+            <div>
+              <div class="form_field" data-field-id="contacts_list">
+              </div>
+              <div class="form_field" data-field-id="public_log">
+              </div>
+            </div>
+          </twig>
+          <modes>
+            <mode id="edit"/>
+          </modes>
+        </form>
+      </forms>
+      <classes>
+        <!-- Note : A class (or one of its ancestors) MUST be declared here to be displayed in the portal -->
+        <class id="User">
+          <!-- Allow <allowed_profile>s to apply the <transition>s below. Flags on <field>s will be merged with those from datamodel -->
+          <!-- See example in UserRequest class -->
+          <!--<lifecycle/>-->
+          <scopes>
+            <!-- Note : Silos apply to those scope queries -->
+            <scope id="all">
+              <oql_view><![CDATA[SELECT User AS U JOIN Person AS P ON U.contactid=P.id WHERE P.id = :current_contact_id]]></oql_view>
+              <!-- No object of this class can be edited -->
+              <!--<oql_edit />-->
+              <!-- Everybody -->
+              <!--<allowed_profiles />-->
+            </scope>
+          </scopes>
+        </class>
+        <class id="Organization">
+          <scopes>
+            <scope id="all">
+              <oql_view><![CDATA[SELECT Organization]]></oql_view>
+            </scope>
+          </scopes>
+        </class>
+        <class id="Contact">
+          <scopes>
+            <scope id="all">
+              <oql_view><![CDATA[SELECT Contact]]></oql_view>
+            </scope>
+          </scopes>
+        </class>
+        <class id="Person">
+          <scopes>
+            <scope id="all">
+              <oql_view><![CDATA[SELECT Person AS P WHERE P.org_id = :current_contact->org_id OR P.id = :current_contact_id]]></oql_view>
+              <oql_edit><![CDATA[SELECT Person AS P WHERE P.id = :current_contact_id]]></oql_edit>
+            </scope>
+            <scope id="administrator">
+              <oql_view><![CDATA[SELECT Person AS P]]></oql_view>
+              <allowed_profiles>
+                <allowed_profile id="Administrator"/>
+              </allowed_profiles>
+            </scope>
+          </scopes>
+        </class>
+        <class id="ServiceFamily">
+          <scopes>
+            <scope id="all">
+              <oql_view><![CDATA[SELECT ServiceFamily]]></oql_view>
+            </scope>
+          </scopes>
+        </class>
+        <class id="Service">
+          <scopes>
+            <scope id="all">
+              <oql_view><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :current_contact->org_id AND s.status != 'obsolete']]></oql_view>
+            </scope>
+          </scopes>
+        </class>
+        <class id="ServiceSubcategory">
+          <scopes>
+            <scope id="all">
+              <oql_view><![CDATA[SELECT ServiceSubcategory WHERE status != 'obsolete']]></oql_view>
+            </scope>
+          </scopes>
+        </class>
+        <class id="Ticket">
+          <lifecycle>
+            <transitions>
+              <transition id="ev_resolve">
+                <fields>
+                  <field id="agent_id">
+                    <must_prompt/>
+                  </field>
+                </fields>
+                <allowed_profiles>
+                  <allowed_profile id="Portal user"/>
+                </allowed_profiles>
+              </transition>
+            </transitions>
+          </lifecycle>
+          <scopes>
+            <scope id="all">
+              <oql_view><![CDATA[SELECT Ticket AS T WHERE T.caller_id = :current_contact_id AND T.finalclass IN ('UserRequest', 'Incident')]]></oql_view>
+              <oql_edit><![CDATA[SELECT Ticket AS T]]></oql_edit>
+            </scope>
+            <scope id="portal-power-user">
+              <oql_view><![CDATA[SELECT Ticket AS T WHERE T.finalclass IN ('UserRequest', 'Incident')]]></oql_view>
+              <oql_edit><![CDATA[SELECT Ticket AS T]]></oql_edit>
+              <allowed_profiles>
+                <allowed_profile id="Portal power user"/>
+              </allowed_profiles>
+            </scope>
+            <scope id="admin">
+              <oql_view><![CDATA[SELECT Ticket AS T]]></oql_view>
+              <oql_edit><![CDATA[SELECT Ticket AS T]]></oql_edit>
+              <allowed_profiles>
+                <allowed_profile id="Administrator"/>
+              </allowed_profiles>
+            </scope>
+          </scopes>
+        </class>
+      </classes>
+      <action_rules>
+        <action_rule id="contact-to-userrequest">
+          <!-- source_oql|source_class is only necessary if there is some copy preset|retrofit -->
+          <source_oql><![CDATA[SELECT Contact AS C WHERE C.id = :current_contact_id]]></source_oql>
+          <presets>
+            <!-- Only set() and copy() are supported for now -->
+            <preset id="1">set(caller_id, $current_contact_id$)</preset>
+            <preset id="2">copy(org_id, org_id)</preset>
+          </presets>
+          <retrofits/>
+        </action_rule>
+        <action_rule id="service-to-userrequest">
+          <source_class>Service</source_class>
+          <presets>
+            <preset id="1">copy(id, service_id)</preset>
+          </presets>
+        </action_rule>
+        <action_rule id="servicesubcategory-to-userrequest">
+          <source_class>ServiceSubcategory</source_class>
+          <presets>
+            <preset id="1">copy(id, servicesubcategory_id)</preset>
+            <preset id="2">copy(service_id, service_id)</preset>
+          </presets>
+        </action_rule>
+      </action_rules>
+    </module_design>
+  </module_designs>
+  <module_parameters>
+    <parameters id="itop-portal" _delta="define">
+      <lazy_loading_threshold>500</lazy_loading_threshold><!-- Will be placed in the conf/<env>/config-itop.php file under the itop-portal module's settings  -->
+    </parameters>
+  </module_parameters>
 </itop_design>

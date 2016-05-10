@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3">
+	<portals>
+		<portal id="legacy_portal" _delta="delete" /> <!-- TODO: voir si opportun de renommer au lieu de delete+define -->
+		<portal id="itop-portal" _delta="define"><!-- ID must match module_design[id] -->
+			<url>pages/exec.php?exec_module=itop-portal&amp;exec_page=index.php</url><!-- exec_module must match module_design[id] -->
+			<rank>1.0</rank>
+			<handler />
+			<allow>
+			</allow>
+			<deny />
+		</portal>
+	</portals>
+</itop_design>

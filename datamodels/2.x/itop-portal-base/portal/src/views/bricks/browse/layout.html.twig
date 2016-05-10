@@ -1,0 +1,35 @@
+{# itop-portal-base/portal/src/views/bricks/browse/layout.html.twig #}
+{# Browse brick base layout #}
+{% extends 'itop-portal-base/portal/src/views/bricks/layout.html.twig' %}
+
+{% block pMainHeaderTitle %}
+	{{ oBrick.GetTitle()|dict_s }}
+{% endblock %}
+
+{% block pMainHeaderActions %}
+	{% if aBrowseButtons|length > 1 %}
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="btn-group btn-group-justified btn-group-sm">
+					{% for sBrowseButton in aBrowseButtons %}
+					<a href="{{ app.url_generator.generate('p_browse_brick_mode', {'sBrickId': sBrickId, 'sBrowseMode': sBrowseButton}) }}" class="btn btn-default {% if sBrowseMode == sBrowseButton %}active{% endif %}">{{ ('Brick:Portal:Browse:Mode:'~sBrowseButton|capitalize)|dict_s }}</a>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block pMainContentHolder%}
+	{% if iItemsCount > 0 %}
+		<div class="panel panel-default">
+			{% block bBrowseMainContent %}
+			{% endblock %}
+		</div>
+	{% else %}
+		<div class="panel panel-info">
+			<div class="panel-heading">Information</div>
+			<div class="panel-body">Il n'y aucune donnée à afficher sur cette page.</div>
+		</div>
+	{% endif %}
+{% endblock %}

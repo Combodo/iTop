@@ -1,0 +1,19 @@
+{# itop-portal-base/portal/src/views/bricks/object/layout.html.twig #}
+{# Object brick base layout #}
+{% extends 'itop-portal-base/portal/src/views/bricks/layout.html.twig' %}
+
+{% block pMainHeader %}
+	<div class="col-xs-12" id="main-header-title">
+		{% if form.title is defined %}
+			<h2>{{ form.title|raw }}</h2>
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% block pMainContentHolder%}
+	<div class="panel panel-default">
+		<div class="panel-body">
+			{% include 'itop-portal-base/portal/src/views/bricks/object/mode_' ~ sMode ~ '.html.twig' %}
+		</div>
+	</div>
+{% endblock %}

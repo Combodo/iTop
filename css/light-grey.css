@@ -2333,3 +2333,14 @@ span.refresh-button {
 }
 
 
+#setup .module-selection-banner img {
+  max-height: 48px;
+}
+
+#setup .module-selection-body {
+  height: 28em;
+  overflow: auto;
+  border: #cccccc 1px solid;
+}
+
+

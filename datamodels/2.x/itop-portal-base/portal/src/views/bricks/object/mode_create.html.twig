@@ -1,0 +1,64 @@
+{# itop-portal-base/portal/src/views/bricks/object/mode_create.html.twig #}
+{# Object brick create layout #}
+
+{% set sFormId = (form.id is defined and form.id is not null) ? form.id : 'object_form' %}
+{% set tIsModal = (tIsModal is defined and tIsModal == true) ? true : false %}
+
+<form id="{{ sFormId }}" method="POST" action="{{ form.renderer.GetEndpoint()|raw }}">
+	<input type="hidden" name="transaction_id" value="{{ form.transaction_id }}" />
+	<div class="form_alerts">
+		{% block pFormAlerts %}
+			<div class="alert alert-success" role="alert" style="display: none;"></div>
+			<div class="alert alert-warning" role="alert" style="display: none;"></div>
+			<div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
+		{% endblock %}
+	</div>
+	<div class="form_fields">
+		{% block pFormFields %}
+			{{ form.renderer.GetBaseLayout()|raw }}
+		{% endblock %}
+	</div>
+	<div class="form_buttons">
+		{% block pFormButtons %}
+			{% if form.buttons is defined and form.buttons.transitions is defined and form.buttons.transitions|length > 0 %}
+				<div class="form_btn_transitions">
+				{% for sStimulusCode, sStimulusLabel in form.buttons.transitions %}
+					<button class="btn btn-default form_btn_transition" type="submit" name="stimulus_code" value="{{ sStimulusCode }}">{{ sStimulusLabel }}</button>
+				{% endfor %}
+				</div>
+			{% endif %}
+			<div class="form_btn_regular">
+				{% if form.editable_fields_count is defined and form.editable_fields_count > 0 %}
+					<input class="btn btn-default form_btn_cancel" type="button" value="{{ 'Portal:Button:Cancel'|dict_s }}" data-dismiss="modal">
+					<input class="btn btn-primary form_btn_submit" type="submit" value="{{ 'Portal:Button:Submit'|dict_s }}">
+				{% else %}
+					{% if tIsModal %}
+						<input class="btn btn-default form_btn_cancel" type="button" value="{{ 'Portal:Button:Close'|dict_s }}" data-dismiss="modal">
+					{% endif %}
+				{% endif %}
+			</div>
+		{% endblock %}
+	</div>
+</form>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		var oFieldSet = $('#{{ sFormId }} > .form_fields').field_set({{ form.fieldset|json_encode()|raw }});
+		
+		$('#{{ sFormId }}').portal_form_handler({
+			formmanager_class: "{{ form.formmanager_class|escape('js') }}",
+			formmanager_data: {{ form.formmanager_data|json_encode()|raw }},
+			field_set: oFieldSet,
+			submit_btn_selector: $('#{{ sFormId }}').parent().find('.form_btn_submit, .form_btn_transition'),
+			cancel_btn_selector: $('#{{ sFormId }}').parent().find('.form_btn_cancel'),
+			submit_url: {% if form.submit_callback is not null %}"{{ form.submit_callback }}"{% else %}null{% endif %},
+			cancel_url: {% if form.cancel_callback is not null %}"{{ form.cancel_callback }}"{% else %}null{% endif %},
+			endpoint: "{{ form.renderer.GetEndpoint()|raw }}",
+			is_modal: {% if tIsModal is defined and tIsModal == true %}true{% else %}false{% endif %}
+		});
+		
+		{% if tIsModal is defined and tIsModal == true %}
+			$('#{{ sFormId }}').closest('.modal').find('.modal-footer').hide();
+		{% endif %}
+	});
+</script>

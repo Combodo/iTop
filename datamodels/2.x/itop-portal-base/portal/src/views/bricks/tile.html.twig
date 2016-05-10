@@ -1,0 +1,31 @@
+{# itop-portal-base/portal/src/views/bricks/tile.html.twig #}
+{# Base brick tile layout #}
+
+{% if brick.GetId == 'create-user-request' %}
+	{% set sIcon = 'warning-sign-orange-100px.png' %}
+{% elseif brick.GetId == 'ongoing-tickets-for-portal-user' %}
+	{% set sIcon = 'headset-mic-orange-100px.png' %}
+{% elseif brick.GetId == 'closed-tickets-for-portal-user' %}
+	{% set sIcon = 'laptop-cursor-orange-100px.png' %}
+{% elseif brick.GetId == 'services' %}
+	{% set sIcon = 'checklist-ok-orange-100px.png' %}
+{% elseif brick.GetId == 'faq' %}
+	{% set sIcon = 'puzzle-piece-orange-100px.png' %}
+{% else %}
+	{% set sIcon = '' %}
+{% endif %}
+
+<div class="col-xs-12 col-sm-{{ brick.GetWidth }}">
+	{% block pTileWrapper %}
+		<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}"
+			{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %}
+			{% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}
+			 class="tile vertical-center" id="brick-{{ brick.GetId }}" data-brick-id="{{ brick.GetId }}">
+			<div class="tile_decoration"><img src="{{ app['combodo.portal.base.absolute_url'] }}img/icons/{{sIcon}}"	/></div>
+			<div clss="tile_body">
+				<div class="tile_title">{{ brick.GetTitle|dict_s }}</div>
+				<div class="tile_description"></div>
+			</div>
+		</a>
+	{% endblock %}
+</div>

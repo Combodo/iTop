@@ -1252,7 +1252,7 @@ class WizStepModulesChoice extends WizardStep
 		$oPage->add_style("div.choice a { text-decoration:none; font-weight: bold; color: #1C94C4 }");
 		$oPage->add_style("div.description { margin-left: 2em; }");
 		$oPage->add_style(".choice-disabled { color: #999; }");
-		$oPage->add('<table><tr>');
+		$oPage->add('<table class="module-selection-banner"><tr>');
 		$sBannerPath = isset($aStepInfo['banner']) ? $aStepInfo['banner'] : '';
 		if (!empty($sBannerPath))
 		{
@@ -1292,7 +1292,7 @@ class WizStepModulesChoice extends WizardStep
 		}
 		$aSelectedComponents = $aParameters[$index];
 
-		$oPage->add('<div style="height:250px;overflow:auto;border:#ccc 1px solid;">');
+		$oPage->add('<div class="module-selection-body">');
 		$this->DisplayOptions($oPage, $aStepInfo, $aSelectedComponents, $aDefaults);
 		$oPage->add('</div>');
 		

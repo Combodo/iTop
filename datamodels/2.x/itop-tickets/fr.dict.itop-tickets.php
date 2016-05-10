@@ -221,4 +221,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Objectif calculé à partir d\'un SLT de type TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Temps de Résolution (TTR)',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Objectif calculé à partir d\'un SLT de type TTR',
+
+	'portal:itop-portal' => 'Portail standard', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
+	'Page:DefaultTitle' => 'iTop - Portail utilisateur',
+	'Brick:Portal:UserProfile:Title' => 'Mon profil',
+	'Brick:Portal:CreateUserRequest:Title' => 'Créer un ticket',
+	'Brick:Portal:ManageTickets:Title' => 'Mes tickets',
+	'Brick:Portal:Services:Title' => 'Catalogue de services',
+	'Brick:Portal:FAQ:Title' => 'FAQ',
 ));

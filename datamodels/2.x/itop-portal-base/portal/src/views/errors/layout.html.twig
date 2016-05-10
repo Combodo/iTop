@@ -1,0 +1,43 @@
+{# errors/layout.html.twig #}
+{# Base error layout #}
+{% extends 'itop-portal-base/portal/src/views/layout.html.twig' %}
+
+{% block pNavigationWrapper %}
+{% endblock %}
+
+{% block pMainWrapper %}
+	<style>
+		.well {
+			margin: 50px auto;
+			text-align: center;
+			padding: 25px;
+			max-width: 600px;
+		}
+		h1, h2, h3, p {
+			margin: 0;
+		}
+		p {
+			font-size: 17px;
+			margin-top: 25px;
+		}
+		p a.btn {
+			margin: 0 5px;
+		}
+		h1 .ion {
+			vertical-align: -5%;
+			margin-right: 5px;
+		}
+	</style>
+	
+	<div class="container">
+		<div class="well">
+			<h1><div class="ion ion-alert-circled"></div> {{ error_title }}</h1>
+			<p>{{ error_message }}</p>
+			<p>{{ 'Error:HTTP:GetHelp'|dict_s }}</p>
+			<p>
+				<a class="btn btn-default btn-lg" href="#" onclick="history.back(); return false;">{{ 'Page:GoPreviousPage'|dict_s }}</a>
+				<a class="btn btn-default btn-lg" href="{{ app.url_generator.generate('p_home') }}">{{ 'Page:GoPortalHome'|dict_s }}</a>
+			</p>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{# itop-portal-base/portal/src/views/bricks/layout.html.twig #}
+{# Brick base layout #}
+{% extends app['combodo.portal.instance.conf'].properties.templates.layout %}
+
+{% block pPageTitle %}
+	{# Overloading the default template's title to show the brick's title #}
+	{% if oBrick is defined and oBrick is not null and oBrick.GetTitle() != '' %}
+		{{ oBrick.GetTitle()|dict_s }} - iTop
+	{% else %}
+		{{ parent() }}
+	{% endif %}
+{% endblock %}
+
+{% block pMainHeader %}
+<div class="col-sm-6 col-md-8" id="main-header-title">
+	<h2>{% block pMainHeaderTitle %}{% endblock %}</h2>
+</div>
+<div class="col-sm-6 col-md-4" id="main-header-actions">
+	{% block pMainHeaderActions %}
+	{% endblock %}
+</div>
+{% endblock %}
+
+{% block pMainContent %}
+<div class="col-xs-12">
+	{% block pMainContentHolder%}
+	{% endblock %}
+</div>
+{% endblock %}

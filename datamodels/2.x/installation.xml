@@ -86,6 +86,18 @@
             <module>itop-request-mgmt</module>
           </modules>
           <default>true</default>
+          <sub_options>
+            <options type="array">
+              <choice>
+                <title>Enhanced Customer Portal</title>
+                <description>Replace the built-in customer portal with a more modern version, working better with hand-held devices and bringing new features</description>
+                <modules type="array">
+                  <module>itop-portal</module>
+                  <module>itop-portal-base</module>
+                </modules>
+              </choice>
+            </options>
+          </sub_options>
         </choice>
         <choice>
           <title>ITIL Compliant Tickets Management</title>
@@ -104,6 +116,14 @@
                 <description>Manage Incidents tickets in iTop</description>
                 <modules type="array">
                   <module>itop-incident-mgmt-itil</module>
+                </modules>
+              </choice>
+              <choice>
+                <title>Enhanced Customer Portal</title>
+                <description>Replace the built-in customer portal with a more modern version, working better with hand-held devices and bringing new features</description>
+                <modules type="array">
+                  <module>itop-portal</module>
+                  <module>itop-portal-base</module>
                 </modules>
               </choice>
             </options>

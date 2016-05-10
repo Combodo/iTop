@@ -1,0 +1,13 @@
+{# itop-portal-base/portal/src/views/bricks/object/modal.html.twig #}
+{# Object brick base layout #}
+{% extends 'itop-portal-base/portal/src/views/modal/layout.html.twig' %}
+
+{% block pModalTitle %}
+	{% if form.title is defined %}
+		{{ form.title|raw }}
+	{% endif %}
+{% endblock %}
+
+{% block pModalBody %}
+	{% include 'itop-portal-base/portal/src/views/bricks/object/mode_' ~ sMode ~ '.html.twig' with {tIsModal: true} %}
+{% endblock %}

@@ -1,0 +1,84 @@
+{# itop-portal-base/portal/src/views/bricks/browse/layout.html.twig #}
+{# Browse brick base layout #}
+{% extends 'itop-portal-base/portal/src/views/bricks/layout.html.twig' %}
+
+
+{% block pMainHeaderTitle %}
+	{{ oBrick.GetTitle()|dict_s }}
+{% endblock %}
+
+{% block pMainContentHolder%}
+	<form class="">
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">{{ 'Brick:Portal:UserProfile:PersonalInformations:Title'|dict_s }}</h3>
+					</div>
+					<div class="panel-body">
+						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
+							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">Nom</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="Lajarige" class="form-control" maxlength="255" /></div>
+						</div>
+						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
+							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">Prénom</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="Guillaume" class="form-control" maxlength="255" /></div>
+						</div>
+						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
+							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">Email</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="guillaume.lajarige@combodo.com" class="form-control" maxlength="255" /></div>
+						</div>
+						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
+							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">Téléphone</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="0625540067" class="form-control" maxlength="255" /></div>
+						</div>
+						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
+							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">Organisation</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="Combodo" class="form-control" maxlength="255" /></div>
+						</div>
+						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
+							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">Site</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="Siège" class="form-control" maxlength="255" /></div>
+						</div>
+						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
+							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">Fonction</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="Ingénieur R&D" class="form-control" maxlength="255" /></div>
+						</div>
+						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
+							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">Manager</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="John Doe" class="form-control" maxlength="255" /></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Photo</h3>
+					</div>
+					<div class="panel-body">
+						<div class="text-center">
+							<img src="{{ sUserPhotoUrl }}" style="max-width: 175px;"/>
+							<input type="file" id="xx" name="xx" />
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">{{ 'Class:appUserPreferences/Attribute:preferences'|dict_s }}</h3>
+					</div>
+					<div class="panel-body">
+						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
+							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">{{ 'UI:FavoriteLanguage'|dict_s }}</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="Français" class="form-control" maxlength="255" /></div>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">{{ 'Brick:Portal:UserProfile:Password:Title'|dict_s }}</h3>
+					</div>
+					<div class="panel-body">
+						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
+							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">{{ 'Brick:Portal:UserProfile:Password:ChoosePassword'|dict_s }}</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="" class="form-control" maxlength="255" /></div>
+						</div>
+						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
+							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">{{ 'Brick:Portal:UserProfile:Password:ConfirmPassword'|dict_s }}</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="" class="form-control" maxlength="255" /></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+{% endblock %}

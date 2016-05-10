@@ -1762,3 +1762,13 @@ span.refresh-button {
 .date_format_tooltip td {
 	padding: 0.25em;
 }
+#setup {
+  .module-selection-banner img {
+		max-height: 48px;
+  }
+  .module-selection-body {
+	height: 28em;
+	overflow: auto;
+	border: #ccc 1px solid;
+  }
+}
