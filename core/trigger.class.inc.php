@@ -383,7 +383,7 @@ class TriggerOnThresholdReached extends TriggerOnObject
 		MetaModel::Init_AddAttribute(new AttributeString("threshold_index", array("allowed_values"=>null, "sql"=>"threshold_index", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));	
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'stop_watch_code', 'threshold_index', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'stop_watch_code', 'threshold_index', 'filter', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('target_class', 'threshold_index', 'threshold_index')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
