@@ -1164,15 +1164,22 @@
           </arguments>
           <code><![CDATA[	public function ResolveChildTickets()
 	{
+        static $aRequests = array(); // prevent infinite recursion
+        static $Incidents = array(); // prevent infinite recursion
+  
 		if (MetaModel::IsValidClass('UserRequest'))
-		{
-			// Automatically resolve child requests
-			$sOQL = "SELECT UserRequest WHERE parent_incident_id = :ticket AND status != 'resolved'";
-			$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ticket' => $this->GetKey()));
-			while($oRequest = $oChildRequestSet->Fetch())
-			{
-				$oRequest->ResolveFrom($this);
-			}
+		{    		
+    		// Automatically resolve child requests
+    		$sOQL = "SELECT UserRequest WHERE parent_incident_id = :ticket AND status != 'resolved'";
+    		$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ticket' => $this->GetKey()));
+    		while($oRequest = $oChildRequestSet->Fetch())
+    		{
+    			if (!array_key_exists($oRequest->GetKey(), $aRequests))
+    			{
+    				$aRequests[$oRequest->GetKey()] = true;
+    				$oRequest->ResolveFrom($this);
+    			}
+    		}
 		}
 
 		// Automatically resolve child incidents
@@ -1180,7 +1187,11 @@
 		$oChildIncidentSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ticket' => $this->GetKey()));
 		while($oIncident = $oChildIncidentSet->Fetch())
 		{
-			$oIncident->ResolveFrom($this);
+            if (!array_key_exists($oIncident->GetKey(), $Incidents))
+            {
+                $Incidents[$oIncident->GetKey()] = true;
+			    $oIncident->ResolveFrom($this);
+            }
 		}
 		return true;
 	}]]></code>

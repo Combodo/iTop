@@ -1278,12 +1278,18 @@
           </arguments>
           <code><![CDATA[	public function ResolveChildTickets()
 	{
+        static $aTickets = array(); // prevent infinite recursion
+    
 		// Automatically resolve child requests
 		$sOQL = "SELECT UserRequest WHERE parent_request_id = :ticket AND status != 'resolved'";
 		$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ticket' => $this->GetKey()));
 		while($oRequest = $oChildRequestSet->Fetch())
 		{
-			$oRequest->ResolveFrom($this);
+            if (!array_key_exists($oRequest->GetKey(), $aTickets))
+            {
+                $aTickets[$oRequest->GetKey()] = true;
+			    $oRequest->ResolveFrom($this);
+            }
 		}
 		return true;
 	}]]></code>
