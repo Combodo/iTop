@@ -939,7 +939,7 @@ EOF
 				$aLabels = array();
 				$iTotalCount = 0;
 				$aValues = array();
-				$aURLS = array();
+				$aURLs = array();
 				foreach ($aRes as $iRow => $aRow)
 				{
 					$sValue = $aRow['grouped_by_1'];
