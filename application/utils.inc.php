@@ -287,7 +287,7 @@ class utils
 					$rInfo = @finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
 					if ($rInfo !== false)
 					{
-					   $sType = @finfo_file($rInfo, $file);
+					   $sType = @finfo_file($rInfo, $sTmpName);
 					   if ( ($sType !== false)
 					        && is_string($sType)
 					        && (strlen($sType)>0))
