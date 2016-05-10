@@ -21,6 +21,15 @@ body {
 	border-bottom: 0;
 	text-align: center;
 }
+@media (max-height: 700px)
+{ 
+	#login-logo {
+		margin-top: 0;
+	} 
+	h1 {
+		margin-top: 0;
+	}
+}
 #login-logo img {
 	border: 0;
 }

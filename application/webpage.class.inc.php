@@ -483,6 +483,7 @@ class WebPage implements Page
         echo "<html>\n";
         echo "<head>\n";
 		echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
+		echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, shrink-to-fit=no\" />";
         echo "<title>".htmlentities($this->s_title, ENT_QUOTES, 'UTF-8')."</title>\n";
         echo $this->get_base_tag();
         foreach($this->a_linked_scripts as $s_script)
