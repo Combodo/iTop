@@ -70,7 +70,7 @@
             <value id="service_request">service_request</value>
           </values>
           <sql>request_type</sql>
-          <default_value>incident</default_value>
+          <default_value></default_value>
           <is_null_allowed>true</is_null_allowed>
           <display_style>list</display_style>
         </field>
@@ -157,7 +157,7 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="servicesubcategory_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT ServiceSubcategory WHERE service_id = :this->service_id AND request_type = :this->request_type AND status != 'obsolete']]></filter>
+          <filter><![CDATA[SELECT ServiceSubcategory WHERE service_id = :this->service_id AND (ISNULL(:this->request_type) OR request_type = :this->request_type) AND status != 'obsolete']]></filter>
           <dependencies>
             <attribute id="service_id"/>
             <attribute id="request_type"/>
@@ -1196,9 +1196,20 @@
           <type>Overload-DBObject</type>
           <code><![CDATA[	public function ComputeValues()
 	{
-
 		// Compute the priority of the ticket
 		$this->Set('priority', $this->ComputePriority());
+
+		// Compute the request_type if not already defined (by the user)
+		$sType = $this->Get('request_type');
+        if (is_null($sType) || ($sType === ''))
+		{
+			$iSvcSubcat = $this->Get('servicesubcategory_id');
+			if ($iSvcSubcat != 0)
+			{
+				$sType = $this->Get('servicesubcategory_id->request_type');
+				$this->Set('request_type', $sType);
+			}
+		}
 
 		return parent::ComputeValues();
 	}]]></code>
