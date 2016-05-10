@@ -488,6 +488,9 @@ class ModelFactory
 			}
 			$oTargetNode->Delete();
 			break;
+			
+		default:
+			throw new Exception(MFDocument::GetItopNodePath($oSourceNode).' at line '.$oSourceNode->getLineNo().": unexpected value for attribute _delta: '".$oSourceNode->getAttribute('_delta')."'");
 		}
 
 		if ($oSourceNode->hasAttribute('_rename_from'))
