@@ -10,8 +10,8 @@ SetupWebPage::AddModule(
 	'dependencies' => array(
 		'itop-portal-base/1.0.0'
 	),
-	'mandatory' => true,
-	'visible' => false,
+	'mandatory' => false,
+	'visible' => true,
 	// Components
 	'datamodel' => array(
 		'main.itop-portal.php'
