@@ -792,6 +792,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Portal:ShowOngoing' => 'オープン中の要求を表示',
 	'Portal:ShowClosed' => 'クローズした要求を表示',
 	'Portal:CreateNewRequest' => '新規要求を作成',
+	'Portal:CreateNewRequestItil' => '新規要求を作成',
+	'Portal:CreateNewIncidentItil' => 'Create a new incident report~~',
 	'Portal:ChangeMyPassword' => 'パスワードを変更',
 	'Portal:Disconnect' => '切断する',
 	'Portal:OpenRequests' => '担当のオープン中の要求',

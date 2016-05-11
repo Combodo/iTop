@@ -844,6 +844,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Portal:ShowOngoing' => 'Show open requests',
 	'Portal:ShowClosed' => 'Show closed requests',
 	'Portal:CreateNewRequest' => '创建一个新的请求',
+	'Portal:CreateNewRequestItil' => '创建一个新的请求',
+	'Portal:CreateNewIncidentItil' => 'Create a new incident report~~',
 	'Portal:ChangeMyPassword' => '改变我的密码',
 	'Portal:Disconnect' => '断开',
 	'Portal:OpenRequests' => '我的待解决的请求',

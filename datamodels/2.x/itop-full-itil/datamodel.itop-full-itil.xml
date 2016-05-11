@@ -11,7 +11,7 @@
 					<static>true</static>
 					<access>public</access>
 					<type>Factory</type>
-					<code><![CDATA[	public function CreateFromServiceSubcategory($oServiceSubcategory)
+					<code><![CDATA[	static public function CreateFromServiceSubcategory($oServiceSubcategory)
 	{
         $sType = $oServiceSubcategory->Get('request_type');
         if ($sType == 'incident')

@@ -964,6 +964,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Portal:ShowOngoing' => 'Показать открытые запросы',
 	'Portal:ShowClosed' => 'Показать закрытые запросы',
 	'Portal:CreateNewRequest' => 'Создать новый запрос',
+	'Portal:CreateNewRequestItil' => 'Создать новый запрос',
+	'Portal:CreateNewIncidentItil' => 'Create a new incident report~~',
 	'Portal:ChangeMyPassword' => 'Изменить мой пароль',
 	'Portal:Disconnect' => 'Отключить',
 	'Portal:OpenRequests' => 'Мои открытые запросы',

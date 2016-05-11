@@ -814,6 +814,8 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Portal:ShowOngoing' => 'Zeige offene Requests',
 	'Portal:ShowClosed' => 'Zeige geschlossene Requests',
 	'Portal:CreateNewRequest' => 'Einen neuen Request erstellen',
+	'Portal:CreateNewRequestItil' => 'Einen neuen Request erstellen',
+	'Portal:CreateNewIncidentItil' => 'Create a new incident report~~',
 	'Portal:ChangeMyPassword' => 'Mein Passwort ändern',
 	'Portal:Disconnect' => 'Abmelden',
 	'Portal:OpenRequests' => 'Meine offenen Requests',

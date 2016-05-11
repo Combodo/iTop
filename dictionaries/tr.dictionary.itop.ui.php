@@ -845,6 +845,8 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'Portal:ShowOngoing' => 'Show open requests',
 	'Portal:ShowClosed' => 'Show closed requests',
 	'Portal:CreateNewRequest' => 'Yeni istek yarat',
+	'Portal:CreateNewRequestItil' => 'Yeni istek yarat',
+	'Portal:CreateNewIncidentItil' => 'Create a new incident report~~',
 	'Portal:ChangeMyPassword' => 'Şifre değiştir',
 	'Portal:Disconnect' => 'Çıkış',
 	'Portal:OpenRequests' => 'Açık isteklerim',

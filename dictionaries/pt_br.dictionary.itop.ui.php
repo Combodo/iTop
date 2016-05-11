@@ -970,6 +970,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Portal:ShowOngoing' => 'Mostrar solicitações abertas',
 	'Portal:ShowClosed' => 'Mostrar solicitações fechadas',
 	'Portal:CreateNewRequest' => 'Criar uma nova solicitação',
+	'Portal:CreateNewRequestItil' => 'Criar uma nova solicitação',
+	'Portal:CreateNewIncidentItil' => 'Create a new incident report~~',
 	'Portal:ChangeMyPassword' => 'Alterar minha senha',
 	'Portal:Disconnect' => 'Sair',
 	'Portal:OpenRequests' => 'Minhas solicitações abertas',

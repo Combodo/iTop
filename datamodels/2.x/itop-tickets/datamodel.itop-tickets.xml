@@ -1016,7 +1016,7 @@
           <modal>true</modal>
           <title>Portal:CreateNewRequest</title>
           <class>UserRequest</class>
-          <!-- Class that will be create created with the form -->
+          <!-- Class that will be created with the form -->
           <rules>
             <rule id="contact-to-userrequest"/>
           </rules>

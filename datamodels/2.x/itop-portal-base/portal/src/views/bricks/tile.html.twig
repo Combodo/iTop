@@ -3,6 +3,10 @@
 
 {% if brick.GetId == 'create-user-request' %}
 	{% set sIcon = 'warning-sign-orange-100px.png' %}
+{% elseif brick.GetId == 'create-user-request-itil' %}
+	{% set sIcon = 'headset-mic-orange-100px.png' %}
+{% elseif brick.GetId == 'create-incident-itil' %}
+	{% set sIcon = 'warning-sign-orange-100px.png' %}
 {% elseif brick.GetId == 'ongoing-tickets-for-portal-user' %}
 	{% set sIcon = 'headset-mic-orange-100px.png' %}
 {% elseif brick.GetId == 'closed-tickets-for-portal-user' %}

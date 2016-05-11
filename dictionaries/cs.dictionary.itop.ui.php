@@ -1001,6 +1001,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Portal:ShowOngoing' => 'Zobrazit otevřené požadavky',
     'Portal:ShowClosed' => 'Zobrazit uzavřené požadavky',
     'Portal:CreateNewRequest' => 'Vytvořit nový požadavek',
+    'Portal:CreateNewRequestItil' => 'Vytvořit nový požadavek',
+    'Portal:CreateNewIncidentItil' => 'Create a new incident report~~',
     'Portal:ChangeMyPassword' => 'Změnit heslo',
     'Portal:Disconnect' => 'Odpojit',
     'Portal:OpenRequests' => 'Mé otevřené požadavky',

@@ -794,6 +794,8 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'Portal:ShowOngoing' => 'Vis åbne anmodninger',
 	'Portal:ShowClosed' => 'Vis lukkede anmodninger',
 	'Portal:CreateNewRequest' => 'Opret ny anmodning',
+	'Portal:CreateNewRequestItil' => 'Vytvořit nový požadavek',
+	'Portal:CreateNewIncidentItil' => 'Create a new incident report~~',
 	'Portal:ChangeMyPassword' => 'Skift password',
 	'Portal:Disconnect' => 'Disconnect',
 	'Portal:OpenRequests' => 'Mine åbne anmodninger',

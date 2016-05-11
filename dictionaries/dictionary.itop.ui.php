@@ -1006,6 +1006,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Portal:ShowOngoing' => 'Show open requests',
 	'Portal:ShowClosed' => 'Show closed requests',
 	'Portal:CreateNewRequest' => 'Create a new request',
+	'Portal:CreateNewRequestItil' => 'Create a new request',
+	'Portal:CreateNewIncidentItil' => 'Create a new incident report',
 	'Portal:ChangeMyPassword' => 'Change my password',
 	'Portal:Disconnect' => 'Disconnect',
 	'Portal:OpenRequests' => 'My open requests',

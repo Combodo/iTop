@@ -869,6 +869,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Portal:ShowOngoing' => 'Requêtes en cours',
 	'Portal:ShowClosed' => 'Requêtes fermées',
 	'Portal:CreateNewRequest' => 'Créer une nouvelle requête',
+	'Portal:CreateNewRequestItil' => 'Créer une nouvelle requête',
+	'Portal:CreateNewIncidentItil' => 'Indiquer une panne',
 	'Portal:ChangeMyPassword' => 'Changer mon mot de passe',
 	'Portal:Disconnect' => 'Déconnexion',
 	'Portal:OpenRequests' => 'Mes requêtes en cours',

@@ -714,6 +714,8 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'Portal:ShowOngoing' => 'Show open requests',
 	'Portal:ShowClosed' => 'Show closed requests',
 	'Portal:CreateNewRequest' => 'Új kérés létrehozása',
+	'Portal:CreateNewRequestItil' => 'Új kérés létrehozása',
+	'Portal:CreateNewIncidentItil' => 'Create a new incident report~~',
 	'Portal:ChangeMyPassword' => 'Jelszó változtatás',
 	'Portal:Disconnect' => 'Kilépés',
 	'Portal:OpenRequests' => 'Nyitott kéréseim',

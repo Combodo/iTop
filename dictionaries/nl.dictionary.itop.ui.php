@@ -978,6 +978,8 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	'Portal:ShowOngoing' => 'Laat lopende aanvragen zien',
 	'Portal:ShowClosed' => 'Laat gesloten aanvragen zien',
 	'Portal:CreateNewRequest' => 'Maak een nieuwe aanvraag aan',
+	'Portal:CreateNewRequestItil' => 'Maak een nieuwe aanvraag aan',
+	'Portal:CreateNewIncidentItil' => 'Create a new incident report~~',
 	'Portal:ChangeMyPassword' => 'Verander mijn wachtwoord',
 	'Portal:Disconnect' => 'Disconnect',
 	'Portal:OpenRequests' => 'Mijn lopende aanvragen',

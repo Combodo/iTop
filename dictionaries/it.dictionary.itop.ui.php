@@ -848,6 +848,8 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 	'Portal:ShowOngoing' => 'Show open requests',
 	'Portal:ShowClosed' => 'Show closed requests',
 	'Portal:CreateNewRequest' => 'Crea una nuova richiesta',
+	'Portal:CreateNewRequestItil' => 'Crea una nuova richiesta',
+	'Portal:CreateNewIncidentItil' => 'Create a new incident report~~',
 	'Portal:ChangeMyPassword' => 'Cambia la mia password',
 	'Portal:Disconnect' => 'Disconnetti',
 	'Portal:OpenRequests' => 'Le mie richieste aperte',

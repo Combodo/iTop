@@ -1858,6 +1858,23 @@
 	</menus>
 	<module_designs>
 		<module_design id="itop-portal">
+			<bricks>
+				<brick id="create-user-request" xsi:type="Combodo\iTop\Portal\Brick\CreateBrick">
+					<active _delta="redefine">false</active>
+				</brick>
+				<brick id="create-user-request-itil" xsi:type="Combodo\iTop\Portal\Brick\CreateBrick" _delta="define">
+					<active>true</active>
+					<rank>3</rank>
+					<width>8</width>
+					<modal>true</modal>
+					<title>Portal:CreateNewRequestItil</title>
+					<class>UserRequest</class>
+					<!-- Class that will be created with the form -->
+					<rules>
+						<rule id="contact-to-userrequest"/>
+					</rules>
+				</brick>
+			</bricks>
 			<classes>
 				<class id="ServiceSubcategory">
 					<scopes>
