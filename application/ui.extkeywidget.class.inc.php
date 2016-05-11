@@ -505,16 +505,23 @@ EOF
 	 */
 	public function DoCreateObject($oPage)
 	{
-		$oObj = MetaModel::NewObject($this->sTargetClass);
-		$aErrors = $oObj->UpdateObjectFromPostedForm($this->iId);
-		if (count($aErrors) == 0)
+		try
 		{
-			$oObj->DBInsert();
-			return array('name' => $oObj->GetName(), 'id' => $oObj->GetKey());
+			$oObj = MetaModel::NewObject($this->sTargetClass);
+			$aErrors = $oObj->UpdateObjectFromPostedForm($this->iId);
+			if (count($aErrors) == 0)
+			{
+				$oObj->DBInsert();
+				return array('name' => $oObj->GetName(), 'id' => $oObj->GetKey());
+			}
+			else
+			{
+				return array('error' => implode(' ', $aErrors), 'id' => 0);		
+			}
 		}
-		else
+		catch(Exception $e)
 		{
-			return array('name' => implode(' ', $aErrors), 'id' => 0);		
+			return array('error' => $e->getMessage(), 'id' => 0);
 		}
 	}
 
