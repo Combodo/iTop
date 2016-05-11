@@ -1456,6 +1456,14 @@ EOF
 					}
 					else if ($sIssues != '')
 					{
+						
+						$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, false, 'raw_data');
+						if ($sOwnershipToken !== null)
+						{
+							// Release the concurrent lock, if any, a new lock will be re-acquired by DisplayStimulusForm below
+							iTopOwnershipLock::ReleaseLock(get_class($oObj), $oObj->GetKey(), $sOwnershipToken);
+						}
+							
 						$bDisplayDetails = false;
 						// Found issues, explain and give the user a second chance
 						//
