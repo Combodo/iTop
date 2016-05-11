@@ -4,7 +4,7 @@ SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-portal-base/1.0.0', array(
 	// Identification
-	'label' => 'iTop Portal Base',
+	'label' => 'Portal Development Library',
 		'category' => 'Portal',
 	// Setup
 	'dependencies' => array(
