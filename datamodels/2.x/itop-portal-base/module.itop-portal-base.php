@@ -9,8 +9,8 @@ SetupWebPage::AddModule(
 	// Setup
 	'dependencies' => array(
 	),
-	'mandatory' => true,
-	'visible' => false,
+	'mandatory' => false,
+	'visible' => true,
 	// Components
 	'datamodel' => array(
 		'portal/src/entities/abstractbrick.class.inc.php',
