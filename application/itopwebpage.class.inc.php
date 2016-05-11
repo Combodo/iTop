@@ -109,6 +109,17 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		if (!$this->IsPrintableVersion())
 		{
 			$this->PrepareLayout();
+			$this->add_script(
+				<<<EOF
+function ShowAboutBox()
+{
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'about_box'}, function(data){
+		$('body').append(data);
+	});
+	return false;
+}
+EOF
+			);
 		}
 	}
 
@@ -135,7 +146,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 	protected function PrepareLayout()
 	{
-		$bLeftPaneOpen = true;
 		if (MetaModel::GetConfig()->Get('demo_mode'))
 		{
 			// No pin button
