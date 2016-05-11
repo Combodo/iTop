@@ -14,8 +14,8 @@ SetupWebPage::AddModule(
 	// Setup
 	//
 		'dependencies' => array(
-		'itop-request-mgmt-itil/2.2.0',
-		'itop-incident-mgmt-itil/2.2.0',
+		'itop-request-mgmt-itil/2.3.0',
+		'itop-incident-mgmt-itil/2.3.0',
 	),
 	'mandatory' => false,
 	'visible' => false, // To prevent auto-install but shall not be listed in the install wizard
