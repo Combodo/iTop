@@ -27,9 +27,10 @@
 			{% endblock %}
 		</div>
 	{% else %}
-		<div class="panel panel-info">
-			<div class="panel-heading">Information</div>
-			<div class="panel-body">Il n'y aucune donnée à afficher sur cette page.</div>
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<h3 class="text-center">{{ 'Brick:Portal:Browse:Filter:NoData'|dict_s }}</h3>
+			</div>
 		</div>
 	{% endif %}
 {% endblock %}
