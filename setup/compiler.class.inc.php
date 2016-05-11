@@ -1738,7 +1738,8 @@ EOF;
 		case 'OQLMenuNode':
 			$sOQL = self::QuoteForPHP($oMenu->GetChildText('oql'));
 			$bSearch = ($oMenu->GetChildText('do_search') == '1') ? 'true' : 'false';
-			$sNewMenu = "new OQLMenuNode('$sMenuId', $sOQL, $sParentSpec, $fRank, $bSearch);";
+			$sSearchFormOpen = ($oMenu->GetChildText('search_form_open') == '1') ? 'true' : 'false';
+			$sNewMenu = "new OQLMenuNode('$sMenuId', $sOQL, $sParentSpec, $fRank, $bSearch, $sSearchFormOpen);";
 			break;
 
 		case 'NewObjectMenuNode':

@@ -618,6 +618,7 @@ class OQLMenuNode extends MenuNode
 	protected $sPageTitle;
 	protected $sOQL;
 	protected $bSearch;
+	protected $bSearchFormOpen;
 	
 	/**
 	 * Extra parameters to be passed to the display block to fine tune its appearence
@@ -637,12 +638,13 @@ class OQLMenuNode extends MenuNode
 	 * @param integer $iAllowedResults Expected "rights" for the action: either UR_ALLOWED_YES, UR_ALLOWED_NO, UR_ALLOWED_DEPENDS or a mix of them...
 	 * @return MenuNode
 	 */
-	public function __construct($sMenuId, $sOQL, $iParentIndex, $fRank = 0, $bSearch = false, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null)
+	public function __construct($sMenuId, $sOQL, $iParentIndex, $fRank = 0, $bSearch = false, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null, $bSearchFormOpen = true)
 	{
 		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
 		$this->sPageTitle = "Menu:$sMenuId+";
 		$this->sOQL = $sOQL;
 		$this->bSearch = $bSearch;
+		$this->bSearchFormOpen = $bSearchFormOpen;
 		$this->m_aParams = array();
 		$this->aReflectionProperties['oql'] = $sOQL;
 		$this->aReflectionProperties['do_search'] = $bSearch;
@@ -671,7 +673,7 @@ class OQLMenuNode extends MenuNode
 			Dict::S($this->sPageTitle),
 			'Menu_'.$this->GetMenuId(),
 			$this->bSearch, // Search pane
-			true, // Search open
+			$this->bSearchFormOpen, // Search open
 			$oPage, 
 			array_merge($this->m_aParams, $aExtraParams),
 			true
