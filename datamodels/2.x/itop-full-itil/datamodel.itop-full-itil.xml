@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3">
+	<classes>
+		<class id="Ticket">
+			<methods>
+				<method id="CreateFromServiceSubcategory" _delta="define">
+					<comment>/**
+						* Instanciate an object of the relevant class, depending on the request type
+						* @return DBObject
+						*/</comment>
+					<static>true</static>
+					<access>public</access>
+					<type>Factory</type>
+					<code><![CDATA[	public function CreateFromServiceSubcategory($oServiceSubcategory)
+	{
+        $sType = $oServiceSubcategory->Get('request_type');
+        if ($sType == 'incident')
+        {
+            if (!class_exists('Incident'))
+            {
+                throw new Exception('Could not create a ticket after the service '.$oServiceSubcategory->Get('friendlyname').' of type '.$sType.': unknown class "Incident"');
+            }
+            $oRet = new Incident();
+        }
+        else
+        {
+            if (!class_exists('UserRequest'))
+            {
+                throw new Exception('Could not create a ticket after the service '.$oServiceSubcategory->Get('friendlyname').' of type '.$sType.': unknown class "UserRequest"');
+            }
+            $oRet = new UserRequest();
+        }
+        return $oRet;
+	}]]></code>
+				</method>
+			</methods>
+		</class>
+		<class id="UserRequest">
+			<fields>
+				<field id="request_type" xsi:type="AttributeEnum">
+					<default_value _delta="redefine"></default_value>
+				</field>
+				<field id="servicesubcategory_id" xsi:type="AttributeExternalKey">
+					<filter _delta="redefine">
+                        <![CDATA[SELECT ServiceSubcategory WHERE service_id = :this->service_id AND (ISNULL(:this->request_type) OR request_type = :this->request_type) AND status != 'obsolete']]></filter>
+				</field>
+			</fields>
+			<methods>
+				<method id="ComputeValues" _delta="redefine">
+					<static>false</static>
+					<access>public</access>
+					<type>Overload-DBObject</type>
+					<code><![CDATA[	public function ComputeValues()
+	{
+		// Compute the priority of the ticket
+		$this->Set('priority', $this->ComputePriority());
+
+		// Compute the request_type if not already given
+		$sType = $this->Get('request_type');
+        if (is_null($sType) || ($sType === ''))
+		{
+			$iSvcSubcat = $this->Get('servicesubcategory_id');
+			if ($iSvcSubcat != 0)
+			{
+				$sType = $this->Get('servicesubcategory_id->request_type');
+				$this->Set('request_type', $sType);
+			}
+		}
+
+		return parent::ComputeValues();
+	}]]></code>
+				</method>
+			</methods>
+		</class>
+	</classes>
+	<module_designs>
+		<module_design id="itop-portal">
+			<bricks>
+				<brick id="services">
+					<levels>
+						<level id="1">
+							<levels>
+								<level id="1">
+									<levels>
+										<level id="1">
+											<actions>
+												<action id="create_from_this">
+													<class _delta="delete" />
+													<factory_method _delta="define"><![CDATA[\Ticket::CreateFromServiceSubcategory]]></factory_method>
+												</action>
+											</actions>
+										</level>
+									</levels>
+								</level>
+							</levels>
+						</level>
+					</levels>
+				</brick>
+			</bricks>
+			<classes>
+				<class id="ServiceSubcategory">
+					<scopes>
+						<scope id="all">
+							<oql_view _delta="redefine"><![CDATA[SELECT ServiceSubcategory WHERE status != 'obsolete']]></oql_view>
+						</scope>
+					</scopes>
+				</class>
+			</classes>
+		</module_design>
+	</module_designs>
+</itop_design>

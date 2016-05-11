@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2">
-  <constants>
-    <constant id="PORTAL_USERREQUEST_PUBLIC_LOG" xsi:type="string" _delta="define"><![CDATA[public_log]]></constant>
-    <constant id="PORTAL_USERREQUEST_USER_COMMENT" xsi:type="string" _delta="define"><![CDATA[user_comment]]></constant>
-    <constant id="PORTAL_USERREQUEST_FORM_ATTRIBUTES" xsi:type="string" _delta="define"><![CDATA[title,description,impact,urgency]]></constant>
-    <constant id="PORTAL_USERREQUEST_TYPE" xsi:type="string" _delta="define"><![CDATA[request_type]]></constant>
-    <constant id="PORTAL_USERREQUEST_LIST_ZLIST" xsi:type="string" _delta="define"><![CDATA[finalclass,title,start_date,status,servicesubcategory_id,priority,caller_id]]></constant>
-    <constant id="PORTAL_USERREQUEST_CLOSED_ZLIST" xsi:type="string" _delta="define"><![CDATA[title,start_date,close_date,servicesubcategory_id]]></constant>
-    <constant id="PORTAL_USERREQUEST_DETAILS_ZLIST" xsi:type="string" _delta="define"><![CDATA[{"col:left":["ref","caller_id","servicesubcategory_id","title","description","solution"],"col:right":["status","priority","start_date","resolution_date","last_update","agent_id"]}]]></constant>
-    <constant id="PORTAL_USERREQUEST_DISPLAY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT UserRequest WHERE org_id = :contact->org_id AND caller_id = :contact->id]]></constant>
-    <constant id="PORTAL_USERREQUEST_DISPLAY_POWERUSER_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT UserRequest WHERE org_id = :contact->org_id]]></constant>
-  </constants>
-  <classes>
-    <class id="UserRequest" _delta="define">
-      <parent>Ticket</parent>
-      <properties>
-        <comment><![CDATA[/**
+	<constants>
+		<constant id="PORTAL_USERREQUEST_PUBLIC_LOG" xsi:type="string" _delta="define"><![CDATA[public_log]]></constant>
+		<constant id="PORTAL_USERREQUEST_USER_COMMENT" xsi:type="string" _delta="define"><![CDATA[user_comment]]></constant>
+		<constant id="PORTAL_USERREQUEST_FORM_ATTRIBUTES" xsi:type="string" _delta="define"><![CDATA[title,description,impact,urgency]]></constant>
+		<constant id="PORTAL_USERREQUEST_TYPE" xsi:type="string" _delta="define"><![CDATA[request_type]]></constant>
+		<constant id="PORTAL_USERREQUEST_LIST_ZLIST" xsi:type="string" _delta="define"><![CDATA[finalclass,title,start_date,status,servicesubcategory_id,priority,caller_id]]></constant>
+		<constant id="PORTAL_USERREQUEST_CLOSED_ZLIST" xsi:type="string" _delta="define"><![CDATA[title,start_date,close_date,servicesubcategory_id]]></constant>
+		<constant id="PORTAL_USERREQUEST_DETAILS_ZLIST" xsi:type="string" _delta="define"><![CDATA[{"col:left":["ref","caller_id","servicesubcategory_id","title","description","solution"],"col:right":["status","priority","start_date","resolution_date","last_update","agent_id"]}]]></constant>
+		<constant id="PORTAL_USERREQUEST_DISPLAY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT UserRequest WHERE org_id = :contact->org_id AND caller_id = :contact->id]]></constant>
+		<constant id="PORTAL_USERREQUEST_DISPLAY_POWERUSER_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT UserRequest WHERE org_id = :contact->org_id]]></constant>
+	</constants>
+	<classes>
+		<class id="UserRequest" _delta="define">
+			<parent>Ticket</parent>
+			<properties>
+				<comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
@@ -1069,78 +1069,78 @@
 	 * To be deprecated: use SetCurrentDate() instead
 	 * @return void
 	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetAssignedDate($sStimulusCode)
+					<static>false</static>
+					<access>public</access>
+					<type>LifecycleAction</type>
+					<code><![CDATA[	public function SetAssignedDate($sStimulusCode)
 	{
 		$this->Set('assignment_date', time());
 		return true;
 	}]]></code>
-        </method>
-        <method id="SetLastPendingDate">
-          <comment><![CDATA[/**
+				</method>
+				<method id="SetLastPendingDate">
+					<comment><![CDATA[/**
 	 * To be deprecated: use SetCurrentDate() instead
 	 * @return void
 	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetLastPendingDate($sStimulusCode)
+					<static>false</static>
+					<access>public</access>
+					<type>LifecycleAction</type>
+					<code><![CDATA[	public function SetLastPendingDate($sStimulusCode)
 	{
 		$this->Set('last_pending_date', time());
 		return true;
 	}]]></code>
-        </method>
-        <method id="SetResolveDate">
-          <comment><![CDATA[/**
+				</method>
+				<method id="SetResolveDate">
+					<comment><![CDATA[/**
 	 * To be deprecated: use SetCurrentDate() and SetElapsedTime() instead
 	 * @return void
 	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetResolveDate($sStimulusCode)
+					<static>false</static>
+					<access>public</access>
+					<type>LifecycleAction</type>
+					<code><![CDATA[	public function SetResolveDate($sStimulusCode)
 	{
 		$this->Set('resolution_date', time());
                 $iTimeSpent = time() - AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
 		$this->Set('time_spent', $iTimeSpent);
 		return true;
 	}]]></code>
-        </method>
-        <method id="SetClosureDate">
-          <comment><![CDATA[/**
+				</method>
+				<method id="SetClosureDate">
+					<comment><![CDATA[/**
 	 * To be deprecated: use SetCurrentDate() instead
 	 * @return void
 	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetClosureDate($sStimulusCode)
+					<static>false</static>
+					<access>public</access>
+					<type>LifecycleAction</type>
+					<code><![CDATA[	public function SetClosureDate($sStimulusCode)
 	{
 		$this->Set('close_date', time());
 		return true;
 	}]]></code>
-        </method>
-        <method id="SetApprover">
-          <comment><![CDATA[/**
+				</method>
+				<method id="SetApprover">
+					<comment><![CDATA[/**
 	 * To be deprecated: use SetCurrentUser() instead
 	 * @return void
 	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetApprover($sStimulusCode)
+					<static>false</static>
+					<access>public</access>
+					<type>LifecycleAction</type>
+					<code><![CDATA[	public function SetApprover($sStimulusCode)
 	{
 		$this->Set('approver_id', UserRights::GetUserId());
 		return true;
 	}]]></code>
-        </method>
-        <method id="DoCheckToWrite">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[public function DoCheckToWrite()
+				</method>
+				<method id="DoCheckToWrite">
+					<static>false</static>
+					<access>public</access>
+					<type>Overload-DBObject</type>
+					<code><![CDATA[public function DoCheckToWrite()
   {
     parent::DoCheckToWrite();
     if (!$this->IsNew() && ($this->Get('parent_request_id') == $this->GetKey()))
@@ -1148,15 +1148,15 @@
       $this->m_aCheckIssues[] = Dict::Format('Class:UserRequest/Error:CannotAssignParentRequestIdToSelf');
     }
   }]]></code>
-        </method>
-        <method id="ComputePriority">
-          <comment>/** Compute the priority of the ticket based on its impact and urgency&#13;
-         * @return integer The priority of the ticket 1(high) .. 3(low)&#13;
-         */</comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[        public function ComputePriority()
+				</method>
+				<method id="ComputePriority">
+					<comment>/** Compute the priority of the ticket based on its impact and urgency&#13;
+						* @return integer The priority of the ticket 1(high) .. 3(low)&#13;
+						*/</comment>
+					<static>false</static>
+					<access>public</access>
+					<type>LifecycleAction</type>
+					<code><![CDATA[        public function ComputePriority()
         {
                 // priority[impact][urgency]
                 $aPriorities = array(
@@ -1189,12 +1189,12 @@
                 }
                 return $iPriority;              
         }]]></code>
-        </method>
-        <method id="ComputeValues">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function ComputeValues()
+				</method>
+				<method id="ComputeValues">
+					<static>false</static>
+					<access>public</access>
+					<type>Overload-DBObject</type>
+					<code><![CDATA[	public function ComputeValues()
 	{
 		// Compute the priority of the ticket
 		$this->Set('priority', $this->ComputePriority());
@@ -1213,12 +1213,12 @@
 
 		return parent::ComputeValues();
 	}]]></code>
-        </method>
-        <method id="DisplayBareRelations">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-cmdbAbstractObject</type>
-          <code><![CDATA[	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+				</method>
+				<method id="DisplayBareRelations">
+					<static>false</static>
+					<access>public</access>
+					<type>Overload-cmdbAbstractObject</type>
+					<code><![CDATA[	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
@@ -1243,15 +1243,15 @@
 			}
 		}
 	}]]></code>
-        </method>
-        <method id="resolveChilds">
-          <comment><![CDATA[/**
+				</method>
+				<method id="resolveChilds">
+					<comment><![CDATA[/**
 	 * To be deprecated: use ResolveChildTickets() instead
 	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function resolveChilds($sStimulusCode)
+					<static>false</static>
+					<access>public</access>
+					<type>LifecycleAction</type>
+					<code><![CDATA[	public function resolveChilds($sStimulusCode)
 	{
 				
 		$sOQL = "SELECT UserRequest WHERE parent_request_id=:ticket";
@@ -1278,18 +1278,18 @@
 		return true;
 
 	}]]></code>
-        </method>
-        <method id="ResolveChildTickets">
-          <comment><![CDATA[/**
+				</method>
+				<method id="ResolveChildTickets">
+					<comment><![CDATA[/**
 	 * Cascade the resolution to child User Request
 	 * @return true (returning false would stop the ongoing transition)
 	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <arguments>
-          </arguments>
-          <code><![CDATA[	public function ResolveChildTickets()
+					<static>false</static>
+					<access>public</access>
+					<type>LifecycleAction</type>
+					<arguments>
+					</arguments>
+					<code><![CDATA[	public function ResolveChildTickets()
 	{
 		static $aTickets = array(); // prevent infinite recursion
 		
@@ -1306,16 +1306,16 @@
 		}
 		return true;
 	}]]></code>
-        </method>
-        <method id="ResolveFrom">
-          <comment><![CDATA[/**
+				</method>
+				<method id="ResolveFrom">
+					<comment><![CDATA[/**
 	 * Resolve the ticket from another resolved ticket
 	 * @return void
 	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>Internal</type>
-          <code><![CDATA[	public function ResolveFrom($oParentTicket)
+					<static>false</static>
+					<access>public</access>
+					<type>Internal</type>
+					<code><![CDATA[	public function ResolveFrom($oParentTicket)
 	{
 		if ($this->Get('status') != 'resolved')
 		{
@@ -1330,12 +1330,12 @@
 			$this->DBUpdate();
 		}
 	}]]></code>
-        </method>
-        <method id="UpdateChildRequestLog">
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function UpdateChildRequestLog()
+				</method>
+				<method id="UpdateChildRequestLog">
+					<static>false</static>
+					<access>public</access>
+					<type>LifecycleAction</type>
+					<code><![CDATA[	public function UpdateChildRequestLog()
 	{
 		$oLog = $this->Get('public_log');
 		$sLogPublic = $oLog->GetModifiedEntry();
@@ -1375,12 +1375,12 @@
 		return true;
 
 	}]]></code>
-        </method>
-        <method id="ComputeImpactedItems">
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[
+				</method>
+				<method id="ComputeImpactedItems">
+					<static>false</static>
+					<access>public</access>
+					<type>LifecycleAction</type>
+					<code><![CDATA[
     public function ComputeImpactedItems()
 	{
         // This method is kept for backward compatibility
@@ -1388,12 +1388,12 @@
         // UpdateImpactedItems directly
 		$this->UpdateImpactedItems();
 	}]]></code>
-        </method>
-        <method id="OnInsert">
-          <static>false</static>
-          <access>protected</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
+				</method>
+				<method id="OnInsert">
+					<static>false</static>
+					<access>protected</access>
+					<type>Overload-DBObject</type>
+					<code><![CDATA[
     protected function OnInsert()
 	{
         parent::OnInsert();
@@ -1401,12 +1401,12 @@
 		$this->Set('last_update', time());
 		$this->Set('start_date', time());
 	}]]></code>
-        </method>
-        <method id="OnUpdate">
-          <static>false</static>
-          <access>protected</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
+				</method>
+				<method id="OnUpdate">
+					<static>false</static>
+					<access>protected</access>
+					<type>Overload-DBObject</type>
+					<code><![CDATA[
    	protected function OnUpdate()
 	{
         parent::OnUpdate();
@@ -1418,515 +1418,515 @@
 		$this->Set('last_update', time());
 		$this->UpdateChildRequestLog();
 	}]]></code>
-        </method>
-      </methods>
-      <presentation>
-        <details>
-          <items>
-            <item id="functionalcis_list">
-              <rank>10</rank>
-            </item>
-            <item id="contacts_list">
-              <rank>20</rank>
-            </item>
-            <item id="related_request_list">
-              <rank>30</rank>
-            </item>
-            <item id="workorders_list">
-              <rank>40</rank>
-            </item>
-            <item id="col:col1">
-              <rank>50</rank>
-              <items>
-                <item id="fieldset:Ticket:baseinfo">
-                  <rank>10</rank>
-                  <items>
-                    <item id="org_id">
-                      <rank>10</rank>
-                    </item>
-                    <item id="caller_id">
-                      <rank>20</rank>
-                    </item>
-                    <item id="status">
-                      <rank>30</rank>
-                    </item>
-                    <item id="origin">
-                      <rank>40</rank>
-                    </item>
-                    <item id="title">
-                      <rank>50</rank>
-                    </item>
-                    <item id="description">
-                      <rank>60</rank>
-                    </item>
-                  </items>
-                </item>
-                <item id="fieldset:Ticket:moreinfo">
-                  <rank>20</rank>
-                  <items>
-                    <item id="service_id">
-                      <rank>10</rank>
-                    </item>
-                    <item id="servicesubcategory_id">
-                      <rank>20</rank>
-                    </item>
-                    <item id="escalation_flag">
-                      <rank>30</rank>
-                    </item>
-                    <item id="escalation_reason">
-                      <rank>40</rank>
-                    </item>
-                    <item id="pending_reason">
-                      <rank>50</rank>
-                    </item>
-                  </items>
-                </item>
-              </items>
-            </item>
-            <item id="col:col2">
-              <rank>60</rank>
-              <items>
-                <item id="fieldset:Ticket:Type">
-                  <rank>10</rank>
-                  <items>
-                    <item id="request_type">
-                      <rank>10</rank>
-                    </item>
-                    <item id="impact">
-                      <rank>20</rank>
-                    </item>
-                    <item id="urgency">
-                      <rank>30</rank>
-                    </item>
-                    <item id="priority">
-                      <rank>40</rank>
-                    </item>
-                  </items>
-                </item>
-                <item id="fieldset:Ticket:contact">
-                  <rank>20</rank>
-                  <items>
-                    <item id="team_id">
-                      <rank>10</rank>
-                    </item>
-                    <item id="agent_id">
-                      <rank>20</rank>
-                    </item>
-                    <item id="approver_id">
-                      <rank>30</rank>
-                    </item>
-                  </items>
-                </item>
-                <item id="fieldset:Ticket:date">
-                  <rank>30</rank>
-                  <items>
-                    <item id="start_date">
-                      <rank>10</rank>
-                    </item>
-                    <item id="last_update">
-                      <rank>20</rank>
-                    </item>
-                    <item id="assignment_date">
-                      <rank>30</rank>
-                    </item>
-                    <item id="tto_escalation_deadline">
-                      <rank>40</rank>
-                    </item>
-                    <item id="ttr_escalation_deadline">
-                      <rank>50</rank>
-                    </item>
-                    <item id="last_pending_date">
-                      <rank>60</rank>
-                    </item>
-                    <item id="resolution_date">
-                      <rank>70</rank>
-                    </item>
-                    <item id="close_date">
-                      <rank>80</rank>
-                    </item>
-                  </items>
-                </item>
-              </items>
-            </item>
-            <item id="col:col3">
-              <rank>70</rank>
-              <items>
-                <item id="fieldset:Ticket:relation">
-                  <rank>10</rank>
-                  <items>
-                    <item id="parent_request_id">
-                      <rank>10</rank>
-                    </item>
-                    <item id="parent_problem_id">
-                      <rank>20</rank>
-                    </item>
-                    <item id="parent_change_id">
-                      <rank>30</rank>
-                    </item>
-                  </items>
-                </item>
-                <item id="fieldset:Ticket:resolution">
-                  <rank>20</rank>
-                  <items>
-                    <item id="resolution_code">
-                      <rank>10</rank>
-                    </item>
-                    <item id="solution">
-                      <rank>20</rank>
-                    </item>
-                    <item id="time_spent">
-                      <rank>30</rank>
-                    </item>
-                    <item id="user_satisfaction">
-                      <rank>40</rank>
-                    </item>
-                    <item id="user_comment">
-                      <rank>50</rank>
-                    </item>
-                  </items>
-                </item>
-                <item id="fieldset:Ticket:SLA">
-                  <rank>30</rank>
-                  <items>
-                    <item id="sla_tto_passed">
-                      <rank>10</rank>
-                    </item>
-                    <item id="sla_tto_over">
-                      <rank>20</rank>
-                    </item>
-                    <item id="sla_ttr_passed">
-                      <rank>30</rank>
-                    </item>
-                    <item id="sla_ttr_over">
-                      <rank>40</rank>
-                    </item>
-                  </items>
-                </item>
-              </items>
-            </item>
-          </items>
-        </details>
-        <search>
-          <items>
-            <item id="ref">
-              <rank>10</rank>
-            </item>
-            <item id="org_id">
-              <rank>20</rank>
-            </item>
-            <item id="title">
-              <rank>30</rank>
-            </item>
-            <item id="description">
-              <rank>40</rank>
-            </item>
-            <item id="start_date">
-              <rank>50</rank>
-            </item>
-            <item id="resolution_date">
-              <rank>70</rank>
-            </item>
-            <item id="close_date">
-              <rank>80</rank>
-            </item>
-            <item id="status">
-              <rank>90</rank>
-            </item>
-            <item id="operational_status">
-              <rank>95</rank>
-            </item>
-            <item id="caller_id">
-              <rank>100</rank>
-            </item>
-            <item id="origin">
-              <rank>110</rank>
-            </item>
-            <item id="request_type">
-              <rank>120</rank>
-            </item>
-            <item id="impact">
-              <rank>130</rank>
-            </item>
-            <item id="urgency">
-              <rank>140</rank>
-            </item>
-            <item id="priority">
-              <rank>150</rank>
-            </item>
-            <item id="service_id">
-              <rank>160</rank>
-            </item>
-            <item id="servicesubcategory_id">
-              <rank>170</rank>
-            </item>
-            <item id="team_id">
-              <rank>180</rank>
-            </item>
-            <item id="agent_id">
-              <rank>190</rank>
-            </item>
-            <item id="escalation_flag">
-              <rank>200</rank>
-            </item>
-            <item id="resolution_code">
-              <rank>210</rank>
-            </item>
-            <item id="user_satisfaction">
-              <rank>220</rank>
-            </item>
-            <item id="sla_tto_passed">
-              <rank>230</rank>
-            </item>
-            <item id="sla_ttr_passed">
-              <rank>240</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="title">
-              <rank>10</rank>
-            </item>
-            <item id="org_id">
-              <rank>20</rank>
-            </item>
-            <item id="caller_id">
-              <rank>30</rank>
-            </item>
-            <item id="start_date">
-              <rank>40</rank>
-            </item>
-            <item id="status">
-              <rank>50</rank>
-            </item>
-            <item id="operational_status">
-              <rank>55</rank>
-            </item>
-            <item id="agent_id">
-              <rank>60</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
-  </classes>
-  <menus>
-    <menu id="WelcomeMenuPage" xsi:type="DashboardMenuNode" _delta="must_exist">
-      <definition>
-        <cells>
-          <cell id="1" _delta="define">
-            <rank>1</rank>
-            <dashlets>
-              <dashlet id="9" xsi:type="DashletHeaderDynamic">
-                <rank>0</rank>
-                <title>Menu:RequestManagement</title>
-                <icon>itop-welcome-itil/images/user-request-deadline.png</icon>
-                <subtitle>Menu:UserRequest:OpenRequests</subtitle>
-                <query>SELECT UserRequest WHERE status != "closed"</query>
-                <group_by>status</group_by>
-                <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
-              </dashlet>
-              <dashlet id="10" xsi:type="DashletObjectList">
-                <rank>1</rank>
-                <title>UI:WelcomeMenu:MyCalls</title>
-                <query>SELECT UserRequest AS i WHERE i.agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")</query>
-                <menu>true</menu>
-              </dashlet>
-            </dashlets>
-          </cell>
-        </cells>
-      </definition>
-    </menu>
-    <menu id="RequestManagement" xsi:type="MenuGroup" _delta="define">
-      <rank>30</rank>
-      <enable_stimulus/>
-    </menu>
-    <menu id="UserRequest:Overview" xsi:type="DashboardMenuNode" _delta="define">
-      <rank>0</rank>
-      <parent>RequestManagement</parent>
-      <definition>
-        <layout>DashboardLayoutTwoCols</layout>
-        <title>UI:RequestMgmtMenuOverview:Title</title>
-        <cells>
-          <cell id="0">
-            <rank>0</rank>
-            <dashlets>
-              <dashlet id="1" xsi:type="DashletGroupByPie">
-                <rank>0</rank>
-                <title>UI-RequestManagementOverview-RequestByType-last-14-days</title>
-                <query>SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) &lt; start_date</query>
-                <group_by>request_type</group_by>
-                <style>pie</style>
-              </dashlet>
-            </dashlets>
-          </cell>
-          <cell id="1">
-            <rank>1</rank>
-            <dashlets>
-              <dashlet id="2" xsi:type="DashletGroupByBars">
-                <rank>0</rank>
-                <title>UI-RequestManagementOverview-Last-14-days</title>
-                <query>SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) &lt; start_date</query>
-                <group_by>start_date:day_of_month</group_by>
-                <style>bars</style>
-              </dashlet>
-            </dashlets>
-          </cell>
-          <cell id="11">
-            <rank>2</rank>
-            <dashlets>
-              <dashlet id="3" xsi:type="DashletGroupByTable">
-                <rank>0</rank>
-                <title>UI-RequestManagementOverview-OpenRequestByStatus</title>
-                <query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
-                <group_by>status</group_by>
-                <style>table</style>
-              </dashlet>
-            </dashlets>
-          </cell>
-          <cell id="2">
-            <rank>3</rank>
-            <dashlets>
-              <dashlet id="4" xsi:type="DashletGroupByTable">
-                <rank>0</rank>
-                <title>UI-RequestManagementOverview-OpenRequestByAgent</title>
-                <query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
-                <group_by>agent_id</group_by>
-                <style>table</style>
-              </dashlet>
-            </dashlets>
-          </cell>
-          <cell id="3">
-            <rank>4</rank>
-            <dashlets>
-              <dashlet id="5" xsi:type="DashletGroupByTable">
-                <rank>0</rank>
-                <title>UI-RequestManagementOverview-OpenRequestByType</title>
-                <query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
-                <group_by>finalclass</group_by>
-                <style>table</style>
-              </dashlet>
-            </dashlets>
-          </cell>
-          <cell id="4">
-            <rank>5</rank>
-            <dashlets>
-              <dashlet id="6" xsi:type="DashletGroupByTable">
-                <rank>0</rank>
-                <title>UI-RequestManagementOverview-OpenRequestByCustomer</title>
-                <query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
-                <group_by>org_id</group_by>
-                <style>table</style>
-              </dashlet>
-            </dashlets>
-          </cell>
-        </cells>
-      </definition>
-    </menu>
-    <menu id="NewUserRequest" xsi:type="NewObjectMenuNode" _delta="define">
-      <rank>1</rank>
-      <parent>RequestManagement</parent>
-      <class>UserRequest</class>
-    </menu>
-    <menu id="SearchUserRequests" xsi:type="SearchMenuNode" _delta="define">
-      <rank>2</rank>
-      <parent>RequestManagement</parent>
-      <class>UserRequest</class>
-    </menu>
-    <menu id="UserRequest:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
-      <rank>3</rank>
-      <parent>RequestManagement</parent>
-      <template_file/>
-    </menu>
-    <menu id="UserRequest:MyRequests" xsi:type="OQLMenuNode" _delta="define">
-      <rank>0</rank>
-      <parent>UserRequest:Shortcuts</parent>
-      <oql><![CDATA[SELECT UserRequest WHERE agent_id = :current_contact_id AND status NOT IN ("closed","resolved")]]></oql>
-      <do_search/>
-      <auto_reload>fast</auto_reload>
-    </menu>
-    <menu id="UserRequest:EscalatedRequests" xsi:type="OQLMenuNode" _delta="define">
-      <rank>1</rank>
-      <parent>UserRequest:Shortcuts</parent>
-      <oql><![CDATA[SELECT UserRequest WHERE status IN ("escalated_tto", "escalated_ttr") OR escalation_flag="yes"]]></oql>
-      <do_search/>
-      <auto_reload>fast</auto_reload>
-    </menu>
-    <menu id="UserRequest:OpenRequests" xsi:type="OQLMenuNode" _delta="define">
-      <rank>2</rank>
-      <parent>UserRequest:Shortcuts</parent>
-      <oql><![CDATA[SELECT UserRequest WHERE status NOT IN ("closed")]]></oql>
-      <do_search>1</do_search>
-      <auto_reload>fast</auto_reload>
-    </menu>
-    <menu id="UserRequest:MySupportRequests" xsi:type="OQLMenuNode" _delta="define">
-      <rank>3</rank>
-      <parent>UserRequest:Shortcuts</parent>
-      <oql><![CDATA[SELECT UserRequest WHERE caller_id = :current_contact_id AND status NOT IN ("closed")]]></oql>
-      <do_search/>
-      <auto_reload>fast</auto_reload>
-    </menu>
-  </menus>
-  <module_parameters>
-    <parameters id="itop-tickets">
-      <relation_context>
-        <UserRequest>
-          <impacts>
-            <down>
-              <items type="array">
-                <item id="open_incidents" _delta="define">
-                  <oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted') AND (R.id != :this->id)]]></oql>
-                  <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-request-mgmt/images/incident-red.png</icon>
-                  <default>yes</default>
-                 </item>
-              </items>
-            </down>
-          </impacts>
-        </UserRequest>
-        <Change>
-          <impacts>
-            <down>
-              <items type="array">
-                <item id="open_incidents" _delta="define">
-                  <oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted') AND (R.id != :this->id)]]></oql>
-                  <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-request-mgmt/images/incident-red.png</icon>
-                  <default>yes</default>
-                </item>
-              </items>
-            </down>
-          </impacts>
-        </Change>
-      </relation_context>
-    </parameters>
-    <parameters id="itop-config-mgmt">
-      <relation_context>
-        <FunctionalCI>
-          <impacts>
-            <down>
-              <items type="array">
-                <item id="open_incidents" _delta="define">
-                  <oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
-                  <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-request-mgmt/images/incident-red.png</icon>
-                  <default>yes</default>
-                </item>
-              </items>
-            </down>
-            <up>
-              <items type="array">
-                <item id="open_incidents" _delta="define">
-                  <oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
-                  <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-request-mgmt/images/incident-red.png</icon>
-                  <default>yes</default>
-                </item>
-              </items>
-            </up>
-          </impacts>
-        </FunctionalCI>
-      </relation_context>
-    </parameters>
-  </module_parameters>
+				</method>
+			</methods>
+			<presentation>
+				<details>
+					<items>
+						<item id="functionalcis_list">
+							<rank>10</rank>
+						</item>
+						<item id="contacts_list">
+							<rank>20</rank>
+						</item>
+						<item id="related_request_list">
+							<rank>30</rank>
+						</item>
+						<item id="workorders_list">
+							<rank>40</rank>
+						</item>
+						<item id="col:col1">
+							<rank>50</rank>
+							<items>
+								<item id="fieldset:Ticket:baseinfo">
+									<rank>10</rank>
+									<items>
+										<item id="org_id">
+											<rank>10</rank>
+										</item>
+										<item id="caller_id">
+											<rank>20</rank>
+										</item>
+										<item id="status">
+											<rank>30</rank>
+										</item>
+										<item id="origin">
+											<rank>40</rank>
+										</item>
+										<item id="title">
+											<rank>50</rank>
+										</item>
+										<item id="description">
+											<rank>60</rank>
+										</item>
+									</items>
+								</item>
+								<item id="fieldset:Ticket:moreinfo">
+									<rank>20</rank>
+									<items>
+										<item id="service_id">
+											<rank>10</rank>
+										</item>
+										<item id="servicesubcategory_id">
+											<rank>20</rank>
+										</item>
+										<item id="escalation_flag">
+											<rank>30</rank>
+										</item>
+										<item id="escalation_reason">
+											<rank>40</rank>
+										</item>
+										<item id="pending_reason">
+											<rank>50</rank>
+										</item>
+									</items>
+								</item>
+							</items>
+						</item>
+						<item id="col:col2">
+							<rank>60</rank>
+							<items>
+								<item id="fieldset:Ticket:Type">
+									<rank>10</rank>
+									<items>
+										<item id="request_type">
+											<rank>10</rank>
+										</item>
+										<item id="impact">
+											<rank>20</rank>
+										</item>
+										<item id="urgency">
+											<rank>30</rank>
+										</item>
+										<item id="priority">
+											<rank>40</rank>
+										</item>
+									</items>
+								</item>
+								<item id="fieldset:Ticket:contact">
+									<rank>20</rank>
+									<items>
+										<item id="team_id">
+											<rank>10</rank>
+										</item>
+										<item id="agent_id">
+											<rank>20</rank>
+										</item>
+										<item id="approver_id">
+											<rank>30</rank>
+										</item>
+									</items>
+								</item>
+								<item id="fieldset:Ticket:date">
+									<rank>30</rank>
+									<items>
+										<item id="start_date">
+											<rank>10</rank>
+										</item>
+										<item id="last_update">
+											<rank>20</rank>
+										</item>
+										<item id="assignment_date">
+											<rank>30</rank>
+										</item>
+										<item id="tto_escalation_deadline">
+											<rank>40</rank>
+										</item>
+										<item id="ttr_escalation_deadline">
+											<rank>50</rank>
+										</item>
+										<item id="last_pending_date">
+											<rank>60</rank>
+										</item>
+										<item id="resolution_date">
+											<rank>70</rank>
+										</item>
+										<item id="close_date">
+											<rank>80</rank>
+										</item>
+									</items>
+								</item>
+							</items>
+						</item>
+						<item id="col:col3">
+							<rank>70</rank>
+							<items>
+								<item id="fieldset:Ticket:relation">
+									<rank>10</rank>
+									<items>
+										<item id="parent_request_id">
+											<rank>10</rank>
+										</item>
+										<item id="parent_problem_id">
+											<rank>20</rank>
+										</item>
+										<item id="parent_change_id">
+											<rank>30</rank>
+										</item>
+									</items>
+								</item>
+								<item id="fieldset:Ticket:resolution">
+									<rank>20</rank>
+									<items>
+										<item id="resolution_code">
+											<rank>10</rank>
+										</item>
+										<item id="solution">
+											<rank>20</rank>
+										</item>
+										<item id="time_spent">
+											<rank>30</rank>
+										</item>
+										<item id="user_satisfaction">
+											<rank>40</rank>
+										</item>
+										<item id="user_comment">
+											<rank>50</rank>
+										</item>
+									</items>
+								</item>
+								<item id="fieldset:Ticket:SLA">
+									<rank>30</rank>
+									<items>
+										<item id="sla_tto_passed">
+											<rank>10</rank>
+										</item>
+										<item id="sla_tto_over">
+											<rank>20</rank>
+										</item>
+										<item id="sla_ttr_passed">
+											<rank>30</rank>
+										</item>
+										<item id="sla_ttr_over">
+											<rank>40</rank>
+										</item>
+									</items>
+								</item>
+							</items>
+						</item>
+					</items>
+				</details>
+				<search>
+					<items>
+						<item id="ref">
+							<rank>10</rank>
+						</item>
+						<item id="org_id">
+							<rank>20</rank>
+						</item>
+						<item id="title">
+							<rank>30</rank>
+						</item>
+						<item id="description">
+							<rank>40</rank>
+						</item>
+						<item id="start_date">
+							<rank>50</rank>
+						</item>
+						<item id="resolution_date">
+							<rank>70</rank>
+						</item>
+						<item id="close_date">
+							<rank>80</rank>
+						</item>
+						<item id="status">
+							<rank>90</rank>
+						</item>
+						<item id="operational_status">
+							<rank>95</rank>
+						</item>
+						<item id="caller_id">
+							<rank>100</rank>
+						</item>
+						<item id="origin">
+							<rank>110</rank>
+						</item>
+						<item id="request_type">
+							<rank>120</rank>
+						</item>
+						<item id="impact">
+							<rank>130</rank>
+						</item>
+						<item id="urgency">
+							<rank>140</rank>
+						</item>
+						<item id="priority">
+							<rank>150</rank>
+						</item>
+						<item id="service_id">
+							<rank>160</rank>
+						</item>
+						<item id="servicesubcategory_id">
+							<rank>170</rank>
+						</item>
+						<item id="team_id">
+							<rank>180</rank>
+						</item>
+						<item id="agent_id">
+							<rank>190</rank>
+						</item>
+						<item id="escalation_flag">
+							<rank>200</rank>
+						</item>
+						<item id="resolution_code">
+							<rank>210</rank>
+						</item>
+						<item id="user_satisfaction">
+							<rank>220</rank>
+						</item>
+						<item id="sla_tto_passed">
+							<rank>230</rank>
+						</item>
+						<item id="sla_ttr_passed">
+							<rank>240</rank>
+						</item>
+					</items>
+				</search>
+				<list>
+					<items>
+						<item id="title">
+							<rank>10</rank>
+						</item>
+						<item id="org_id">
+							<rank>20</rank>
+						</item>
+						<item id="caller_id">
+							<rank>30</rank>
+						</item>
+						<item id="start_date">
+							<rank>40</rank>
+						</item>
+						<item id="status">
+							<rank>50</rank>
+						</item>
+						<item id="operational_status">
+							<rank>55</rank>
+						</item>
+						<item id="agent_id">
+							<rank>60</rank>
+						</item>
+					</items>
+				</list>
+			</presentation>
+		</class>
+	</classes>
+	<menus>
+		<menu id="WelcomeMenuPage" xsi:type="DashboardMenuNode" _delta="must_exist">
+			<definition>
+				<cells>
+					<cell id="1" _delta="define">
+						<rank>1</rank>
+						<dashlets>
+							<dashlet id="9" xsi:type="DashletHeaderDynamic">
+								<rank>0</rank>
+								<title>Menu:RequestManagement</title>
+								<icon>itop-welcome-itil/images/user-request-deadline.png</icon>
+								<subtitle>Menu:UserRequest:OpenRequests</subtitle>
+								<query>SELECT UserRequest WHERE status != "closed"</query>
+								<group_by>status</group_by>
+								<values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
+							</dashlet>
+							<dashlet id="10" xsi:type="DashletObjectList">
+								<rank>1</rank>
+								<title>UI:WelcomeMenu:MyCalls</title>
+								<query>SELECT UserRequest AS i WHERE i.agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")</query>
+								<menu>true</menu>
+							</dashlet>
+						</dashlets>
+					</cell>
+				</cells>
+			</definition>
+		</menu>
+		<menu id="RequestManagement" xsi:type="MenuGroup" _delta="define">
+			<rank>30</rank>
+			<enable_stimulus/>
+		</menu>
+		<menu id="UserRequest:Overview" xsi:type="DashboardMenuNode" _delta="define">
+			<rank>0</rank>
+			<parent>RequestManagement</parent>
+			<definition>
+				<layout>DashboardLayoutTwoCols</layout>
+				<title>UI:RequestMgmtMenuOverview:Title</title>
+				<cells>
+					<cell id="0">
+						<rank>0</rank>
+						<dashlets>
+							<dashlet id="1" xsi:type="DashletGroupByPie">
+								<rank>0</rank>
+								<title>UI-RequestManagementOverview-RequestByType-last-14-days</title>
+								<query>SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) &lt; start_date</query>
+								<group_by>request_type</group_by>
+								<style>pie</style>
+							</dashlet>
+						</dashlets>
+					</cell>
+					<cell id="1">
+						<rank>1</rank>
+						<dashlets>
+							<dashlet id="2" xsi:type="DashletGroupByBars">
+								<rank>0</rank>
+								<title>UI-RequestManagementOverview-Last-14-days</title>
+								<query>SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) &lt; start_date</query>
+								<group_by>start_date:day_of_month</group_by>
+								<style>bars</style>
+							</dashlet>
+						</dashlets>
+					</cell>
+					<cell id="11">
+						<rank>2</rank>
+						<dashlets>
+							<dashlet id="3" xsi:type="DashletGroupByTable">
+								<rank>0</rank>
+								<title>UI-RequestManagementOverview-OpenRequestByStatus</title>
+								<query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
+								<group_by>status</group_by>
+								<style>table</style>
+							</dashlet>
+						</dashlets>
+					</cell>
+					<cell id="2">
+						<rank>3</rank>
+						<dashlets>
+							<dashlet id="4" xsi:type="DashletGroupByTable">
+								<rank>0</rank>
+								<title>UI-RequestManagementOverview-OpenRequestByAgent</title>
+								<query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
+								<group_by>agent_id</group_by>
+								<style>table</style>
+							</dashlet>
+						</dashlets>
+					</cell>
+					<cell id="3">
+						<rank>4</rank>
+						<dashlets>
+							<dashlet id="5" xsi:type="DashletGroupByTable">
+								<rank>0</rank>
+								<title>UI-RequestManagementOverview-OpenRequestByType</title>
+								<query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
+								<group_by>finalclass</group_by>
+								<style>table</style>
+							</dashlet>
+						</dashlets>
+					</cell>
+					<cell id="4">
+						<rank>5</rank>
+						<dashlets>
+							<dashlet id="6" xsi:type="DashletGroupByTable">
+								<rank>0</rank>
+								<title>UI-RequestManagementOverview-OpenRequestByCustomer</title>
+								<query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
+								<group_by>org_id</group_by>
+								<style>table</style>
+							</dashlet>
+						</dashlets>
+					</cell>
+				</cells>
+			</definition>
+		</menu>
+		<menu id="NewUserRequest" xsi:type="NewObjectMenuNode" _delta="define">
+			<rank>1</rank>
+			<parent>RequestManagement</parent>
+			<class>UserRequest</class>
+		</menu>
+		<menu id="SearchUserRequests" xsi:type="SearchMenuNode" _delta="define">
+			<rank>2</rank>
+			<parent>RequestManagement</parent>
+			<class>UserRequest</class>
+		</menu>
+		<menu id="UserRequest:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
+			<rank>3</rank>
+			<parent>RequestManagement</parent>
+			<template_file/>
+		</menu>
+		<menu id="UserRequest:MyRequests" xsi:type="OQLMenuNode" _delta="define">
+			<rank>0</rank>
+			<parent>UserRequest:Shortcuts</parent>
+			<oql><![CDATA[SELECT UserRequest WHERE agent_id = :current_contact_id AND status NOT IN ("closed","resolved")]]></oql>
+			<do_search/>
+			<auto_reload>fast</auto_reload>
+		</menu>
+		<menu id="UserRequest:EscalatedRequests" xsi:type="OQLMenuNode" _delta="define">
+			<rank>1</rank>
+			<parent>UserRequest:Shortcuts</parent>
+			<oql><![CDATA[SELECT UserRequest WHERE status IN ("escalated_tto", "escalated_ttr") OR escalation_flag="yes"]]></oql>
+			<do_search/>
+			<auto_reload>fast</auto_reload>
+		</menu>
+		<menu id="UserRequest:OpenRequests" xsi:type="OQLMenuNode" _delta="define">
+			<rank>2</rank>
+			<parent>UserRequest:Shortcuts</parent>
+			<oql><![CDATA[SELECT UserRequest WHERE status NOT IN ("closed")]]></oql>
+			<do_search>1</do_search>
+			<auto_reload>fast</auto_reload>
+		</menu>
+		<menu id="UserRequest:MySupportRequests" xsi:type="OQLMenuNode" _delta="define">
+			<rank>3</rank>
+			<parent>UserRequest:Shortcuts</parent>
+			<oql><![CDATA[SELECT UserRequest WHERE caller_id = :current_contact_id AND status NOT IN ("closed")]]></oql>
+			<do_search/>
+			<auto_reload>fast</auto_reload>
+		</menu>
+	</menus>
+	<module_parameters>
+		<parameters id="itop-tickets">
+			<relation_context>
+				<UserRequest>
+					<impacts>
+						<down>
+							<items type="array">
+								<item id="open_incidents" _delta="define">
+									<oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted') AND (R.id != :this->id)]]></oql>
+									<dict>Tickets:Related:OpenIncidents</dict>
+									<icon>itop-request-mgmt/images/incident-red.png</icon>
+									<default>yes</default>
+								</item>
+							</items>
+						</down>
+					</impacts>
+				</UserRequest>
+				<Change>
+					<impacts>
+						<down>
+							<items type="array">
+								<item id="open_incidents" _delta="define">
+									<oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted') AND (R.id != :this->id)]]></oql>
+									<dict>Tickets:Related:OpenIncidents</dict>
+									<icon>itop-request-mgmt/images/incident-red.png</icon>
+									<default>yes</default>
+								</item>
+							</items>
+						</down>
+					</impacts>
+				</Change>
+			</relation_context>
+		</parameters>
+		<parameters id="itop-config-mgmt">
+			<relation_context>
+				<FunctionalCI>
+					<impacts>
+						<down>
+							<items type="array">
+								<item id="open_incidents" _delta="define">
+									<oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
+									<dict>Tickets:Related:OpenIncidents</dict>
+									<icon>itop-request-mgmt/images/incident-red.png</icon>
+									<default>yes</default>
+								</item>
+							</items>
+						</down>
+						<up>
+							<items type="array">
+								<item id="open_incidents" _delta="define">
+									<oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
+									<dict>Tickets:Related:OpenIncidents</dict>
+									<icon>itop-request-mgmt/images/incident-red.png</icon>
+									<default>yes</default>
+								</item>
+							</items>
+						</up>
+					</impacts>
+				</FunctionalCI>
+			</relation_context>
+		</parameters>
+	</module_parameters>
 </itop_design>
