@@ -51,7 +51,26 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	protected $m_iFormId; // The ID of the form used to edit the object (when in edition mode !)
 	static $iGlobalFormId = 1;
 	protected $aFieldsMap;
+	
+	/**
+	 * If true, bypass IsActionAllowedOnAttribute when writing this object
+	 * @var bool
+	 */
+	protected $bAllowWrite;
 
+	/**
+	 * Constructor from a row of data (as a hash 'attcode' => value)
+	 * @param hash $aRow
+	 * @param string $sClassAlias
+	 * @param hash $aAttToLoad
+	 * @param hash $aExtendedDataSpec
+	 */
+	public function __construct($aRow = null, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
+	{
+		parent::__construct($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
+		$this->bAllowWrite = false;
+	}
+	
 	/**
 	 * returns what will be the next ID for the forms
 	 */
@@ -3307,7 +3326,16 @@ EOF
 		}
 		return false;
 	}
-
+	
+	/**
+	 * Bypass the check of the user rights when writing this object
+	 * @param bool $bAllow True to bypass the checks, false to restore the default behavior
+	 */
+	public function AllowWrite($bAllow = true)
+	{
+		$this->bAllowWrite = $bAllow;
+	}
+	
 	public function DoCheckToWrite()
 	{
 		parent::DoCheckToWrite();
@@ -3325,24 +3353,27 @@ EOF
 
 		// User rights
 		//
-		$aChanges = $this->ListChanges();
-		if (count($aChanges) > 0)
+		if (!$this->bAllowWrite)
 		{
-			$aForbiddenFields = array();
-			foreach ($this->ListChanges() as $sAttCode => $value)
+			$aChanges = $this->ListChanges();
+			if (count($aChanges) > 0)
 			{
-				$bUpdateAllowed = UserRights::IsActionAllowedOnAttribute(get_class($this), $sAttCode, UR_ACTION_MODIFY, DBObjectSet::FromObject($this));
-				if (!$bUpdateAllowed)
+				$aForbiddenFields = array();
+				foreach ($this->ListChanges() as $sAttCode => $value)
 				{
-					$oAttCode = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-					$aForbiddenFields[] = $oAttCode->GetLabel();
+					$bUpdateAllowed = UserRights::IsActionAllowedOnAttribute(get_class($this), $sAttCode, UR_ACTION_MODIFY, DBObjectSet::FromObject($this));
+					if (!$bUpdateAllowed)
+					{
+						$oAttCode = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+						$aForbiddenFields[] = $oAttCode->GetLabel();
+					}
 				}
-			}
-			if (count($aForbiddenFields) > 0)
-			{
-				// Security issue
-				$this->m_bSecurityIssue = true;
-				$this->m_aCheckIssues[] = Dict::Format('UI:Delete:NotAllowedToUpdate_Fields',implode(', ', $aForbiddenFields));
+				if (count($aForbiddenFields) > 0)
+				{
+					// Security issue
+					$this->m_bSecurityIssue = true;
+					$this->m_aCheckIssues[] = Dict::Format('UI:Delete:NotAllowedToUpdate_Fields',implode(', ', $aForbiddenFields));
+				}
 			}
 		}
 	}
