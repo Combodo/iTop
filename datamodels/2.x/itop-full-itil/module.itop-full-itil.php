@@ -18,7 +18,7 @@ SetupWebPage::AddModule(
 		'itop-incident-mgmt-itil/2.3.0',
 	),
 	'mandatory' => false,
-	'visible' => false, // To prevent auto-install but shall not be listed in the install wizard
+	'visible' => false,
 	'auto_select' => 'SetupInfo::ModuleIsSelected("itop-request-mgmt-itil") && SetupInfo::ModuleIsSelected("itop-incident-mgmt-itil")',
 	// Components
 	//
