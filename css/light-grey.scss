@@ -347,6 +347,9 @@ input.textSearch {
     color: #888888;
     background-color:#FFFFFF;
 }
+#accordion {
+	display:none;
+}
 
 #accordion h3 {
 	padding: 10px;
@@ -1095,6 +1098,10 @@ span.form_validation {
     white-space: -o-pre-wrap; /* Opera 7 */
     word-wrap: break-word; /* Internet Explorer 5.5+, CSS3 */
 }
+.caselog_entry_html p, .HTML p {
+	margin-top: 0.25em;
+	margin-bottom: 0.25em;
+}
 table.details {
   border-collapse: collapse;
   noborder-bottom: 2px #fff solid;
@@ -1771,4 +1778,7 @@ span.refresh-button {
 	overflow: auto;
 	border: #ccc 1px solid;
   }
+}
+.mfp-close {
+	cursor: pointer !important;
 }

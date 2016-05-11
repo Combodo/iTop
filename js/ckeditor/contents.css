@@ -21,7 +21,7 @@ body
 .cke_editable
 {
 	font-size: 12px;
-	line-height: 1.2;
+	line-height: 1.0;
 
 	/* Fix for missing scrollbars with RTL texts. (#10488) */
 	word-wrap: break-word;
@@ -132,4 +132,9 @@ a > img {
 	margin: 1px;
 	border: none;
 	outline: 1px solid #0782C1;
+}
+
+p {
+	margin-top: 0.25em;
+	margin-bottom: 0.25em;
 }

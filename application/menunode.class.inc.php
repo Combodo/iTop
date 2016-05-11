@@ -184,9 +184,12 @@ class ApplicationMenu
 				$oPage->AddToMenu('</ul>');
 				if ($bActive)
 				{
-					//$oPage->add_ready_script("$('#accordion').accordion('activate', $iAccordion);");
-					// $oPage->add_ready_script("$('#accordion').accordion('option', {collapsible: true});"); // Make it auto-collapsible once it has been opened properly
-					$oPage->add_ready_script("$('#accordion').accordion('option', {collapsible: true, active: $iAccordion});"); // Make it auto-collapsible once it has been opened properly
+$oPage->add_ready_script(
+<<<EOF
+		// Accordion Menu
+		$("#accordion").css({display:'block'}).accordion({ header: "h3", navigation: true, heightStyle: "content", collapsible: true,  active: $iAccordion, icons: false, animate:true }); // collapsible will be enabled once the item will be selected
+EOF
+					);
 				}
 			}
 			$oPage->AddToMenu('</div>');

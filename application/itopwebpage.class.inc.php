@@ -235,10 +235,7 @@ EOF;
 		$sConfigureWestPane
 		
 		$('#left-pane').layout({ resizable: false, spacing_open: 0, south: { size: 94 }, enableCursorHotkey: false });
-	
-		// Accordion Menu
-		$("#accordion").accordion({ header: "h3", navigation: true, heightStyle: "content", collapsible: false, icons: false }); // collapsible will be enabled once the item will be selected
-	
+		
 		// Tabs, using JQuery BBQ to store the history
 		// The "tab widgets" to handle.
 		var tabs = $('div[id^=tabbedContent]');

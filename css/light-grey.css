@@ -443,6 +443,11 @@ input.textSearch {
 }
 
 
+#accordion {
+  display: none;
+}
+
+
 #accordion h3 {
   padding: 10px;
 }
@@ -1466,6 +1471,12 @@ span.form_validation {
 }
 
 
+.HTML p, .caselog_entry_html p {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+
 table.details {
   border-collapse: collapse;
   noborder-bottom: 2px white solid;
@@ -2341,6 +2352,11 @@ span.refresh-button {
   height: 28em;
   overflow: auto;
   border: #cccccc 1px solid;
+}
+
+
+.mfp-close {
+  cursor: pointer !important;
 }
 
 
