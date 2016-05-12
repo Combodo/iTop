@@ -81,7 +81,7 @@ $(function()
 							var oValidation = oData.form.validation;
 							
 							// First we build the form
-							me.options.field_set.field_set('option', 'fields_list', oData.form.fields_list);
+							me.options.field_set.field_set('option', 'fields_list', oData.form.fieldset.fields_list);
 							me.options.field_set.field_set('option', 'is_valid', oValidation.valid);
 							me.options.field_set.field_set('buildForm');
 
@@ -298,6 +298,10 @@ $(function()
 		_enableFormAfterLoading: function()
 		{
 			$('#page_overlay').fadeOut(200);
+		},
+		submit: function(oEvent)
+		{
+			this._onSubmitClick(oEvent);
 		},
 		getAttachmentIds: function()
 		{

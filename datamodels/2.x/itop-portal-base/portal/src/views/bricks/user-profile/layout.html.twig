@@ -2,13 +2,16 @@
 {# Browse brick base layout #}
 {% extends 'itop-portal-base/portal/src/views/bricks/layout.html.twig' %}
 
+{% set oContactForm = forms.contact %}
+{% set oPreferencesForm = forms.preferences %}
+{% set oPasswordForm = forms.password %}
 
 {% block pMainHeaderTitle %}
 	{{ oBrick.GetTitle()|dict_s }}
 {% endblock %}
 
 {% block pMainContentHolder%}
-	<form class="">
+	<div id="user-profile-wrapper">
 		<div class="row">
 			<div class="col-sm-6">
 				<div class="panel panel-default">
@@ -16,30 +19,17 @@
 						<h3 class="panel-title">{{ 'Brick:Portal:UserProfile:PersonalInformations:Title'|dict_s }}</h3>
 					</div>
 					<div class="panel-body">
-						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
-							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">Nom</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="Lajarige" class="form-control" maxlength="255" /></div>
-						</div>
-						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
-							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">Prénom</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="Guillaume" class="form-control" maxlength="255" /></div>
-						</div>
-						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
-							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">Email</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="guillaume.lajarige@combodo.com" class="form-control" maxlength="255" /></div>
-						</div>
-						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
-							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">Téléphone</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="0625540067" class="form-control" maxlength="255" /></div>
-						</div>
-						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
-							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">Organisation</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="Combodo" class="form-control" maxlength="255" /></div>
-						</div>
-						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
-							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">Site</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="Siège" class="form-control" maxlength="255" /></div>
-						</div>
-						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
-							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">Fonction</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="Ingénieur R&D" class="form-control" maxlength="255" /></div>
-						</div>
-						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
-							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">Manager</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="John Doe" class="form-control" maxlength="255" /></div>
-						</div>
+						<form id="{{ oContactForm.id }}" class="" method="POST" action="{{ oContactForm.renderer.GetEndpoint()|raw }}">
+							<input type="hidden" name="transaction_id" value="{{ oContactForm.transaction_id }}" />
+							<div class="form_alerts">
+								<div class="alert alert-success" role="alert" style="display: none;"></div>
+								<div class="alert alert-warning" role="alert" style="display: none;"></div>
+								<div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
+							</div>
+							<div class="form_fields">
+								{{ oContactForm.renderer.GetBaseLayout()|raw }}
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -60,9 +50,16 @@
 						<h3 class="panel-title">{{ 'Class:appUserPreferences/Attribute:preferences'|dict_s }}</h3>
 					</div>
 					<div class="panel-body">
-						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
-							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">{{ 'UI:FavoriteLanguage'|dict_s }}</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="Français" class="form-control" maxlength="255" /></div>
-						</div>
+						<form id="{{ oPreferencesForm.id }}" class="" method="POST" action="{{ oPreferencesForm.renderer.GetEndpoint()|raw }}">
+							<div class="form_alerts">
+								<div class="alert alert-success" role="alert" style="display: none;"></div>
+								<div class="alert alert-warning" role="alert" style="display: none;"></div>
+								<div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
+							</div>
+							<div class="form_fields">
+								{{ oPreferencesForm.renderer.GetBaseLayout()|raw }}
+							</div>
+						</form>
 					</div>
 				</div>
 				<div class="panel panel-default">
@@ -70,15 +67,96 @@
 						<h3 class="panel-title">{{ 'Brick:Portal:UserProfile:Password:Title'|dict_s }}</h3>
 					</div>
 					<div class="panel-body">
-						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
-							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">{{ 'Brick:Portal:UserProfile:Password:ChoosePassword'|dict_s }}</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="" class="form-control" maxlength="255" /></div>
-						</div>
-						<div data-field-id="reason" data-form-path="aa" class="portal_form_field form_field">
-							<div class="form-group form_mandatory"><label for="field_reason_572c5888e6378" class="control-label">{{ 'Brick:Portal:UserProfile:Password:ConfirmPassword'|dict_s }}</label><input type="text" id="field_reason_572c5888e6378" name="reason" value="" class="form-control" maxlength="255" /></div>
-						</div>
+						{% if oPasswordForm is not null %}
+							<form id="{{ oPasswordForm.id }}" class="" method="POST" action="{{ oPasswordForm.renderer.GetEndpoint()|raw }}">
+								<div class="form_alerts">
+									<div class="alert alert-success" role="alert" style="display: none;"></div>
+									<div class="alert alert-warning" role="alert" style="display: none;"></div>
+									<div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
+								</div>
+								<div class="form_fields">
+									{{ oPasswordForm.renderer.GetBaseLayout()|raw }}
+								</div>
+							</form>
+						{% else %}
+							pas le droit
+						{% endif %}
 					</div>
 				</div>
 			</div>
+		</div>						
+		<div class="form_buttons">
+			<div class="form_btn_regular">
+				<input class="btn btn-primary form_btn_submit" type="submit" value="{{ 'Portal:Button:Submit'|dict_s }}">
+			</div>
 		</div>
-	</form>
+	</div>
+{% endblock %}
+
+{% block pPageReadyScripts %}
+	{{ parent() }}
+	
+	// Personal informations form
+	var oContactFormFieldSet = $('#{{ oContactForm.id }} > .form_fields').field_set({{ oContactForm.fieldset|json_encode()|raw }});
+	$('#{{ oContactForm.id }}').portal_form_handler({
+		formmanager_class: "{{ oContactForm.formmanager_class|escape('js') }}",
+		formmanager_data: {{ oContactForm.formmanager_data|json_encode()|raw }},
+		field_set: oContactFormFieldSet,
+		endpoint: "{{ oContactForm.renderer.GetEndpoint()|raw }}"
+	});
+	
+	// Preferences form
+	var oPreferencesFormFieldSet = $('#{{ oPreferencesForm.id }} > .form_fields').field_set({{ oPreferencesForm.fieldset|json_encode()|raw }});
+	$('#{{ oPreferencesForm.id }}').portal_form_handler({
+		formmanager_class: "{{ oPreferencesForm.formmanager_class|escape('js') }}",
+		formmanager_data: {{ oPreferencesForm.formmanager_data|json_encode()|raw }},
+		field_set: oPreferencesFormFieldSet,
+		endpoint: "{{ oPreferencesForm.renderer.GetEndpoint()|raw }}"
+	});
+	
+	{% if oPasswordForm is not null %}
+		// Password form
+		var oPasswordFormFieldSet = $('#{{ oPasswordForm.id }} > .form_fields').field_set({{ oPasswordForm.fieldset|json_encode()|raw }});
+		$('#{{ oPasswordForm.id }}').portal_form_handler({
+			formmanager_class: "{{ oPasswordForm.formmanager_class|escape('js') }}",
+			formmanager_data: {{ oPasswordForm.formmanager_data|json_encode()|raw }},
+			field_set: oPasswordFormFieldSet,
+			endpoint: "{{ oPasswordForm.renderer.GetEndpoint()|raw }}"
+		});
+	{% endif %}
+	
+	// Submit button
+	$('#user-profile-wrapper .form_buttons .form_btn_submit').off('click').on('click', function(oEvent){
+		oEvent.preventDefault();
+		
+		// Resetting feedback
+		$('#user-profile-wrapper .form_alerts .alert').hide();
+		$('#user-profile-wrapper .form_alerts .alert > p').remove();
+		$('#user-profile-wrapper .form_field').removeClass('has-error');
+		$('#user-profile-wrapper .form_field .help-block > p').remove();
+		
+		// Submiting contact form through AJAX
+		//if($('#{{ oContactForm.id }} .field_set').field_set('hasTouchedFields'))
+		//{
+			$('#{{ oContactForm.id }}').portal_form_handler('submit', oEvent);
+		//}
+		
+		// Submiting preferences form through AJAX
+		//if($('#{{ oPreferencesForm.id }} .field_set').field_set('hasTouchedFields'))
+		//{
+			$('#{{ oPreferencesForm.id }}').portal_form_handler('submit', oEvent);
+		//}
+		
+		{% if oPasswordForm is not null %}
+			// Submiting password form through AJAX
+			// Only if fields are filled
+			$('#{{ oPasswordForm.id }} :password').each(function(iIndex, oElem){
+				if($(oElem).val() !== '')
+				{
+					$('#{{ oPasswordForm.id }}').portal_form_handler('submit', oEvent);
+					return false;
+				}
+			});
+		{% endif %}
+	});
 {% endblock %}

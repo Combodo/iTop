@@ -231,11 +231,6 @@ $(function()
 			}
 			return this.options.is_valid;
 		},
-		// Debug helper
-		showOptions: function()
-		{
-			return this.options;
-		},
 		_loadCssFile: function(url)
 		{
 			if (!$('link[href="' + url + '"]').length)
@@ -322,6 +317,15 @@ $(function()
 			this.options.style_element.text(this.buildData.style_code);
 			
 			eval(this.options.script_element.text());
-		}
+		},
+		hasTouchedFields: function()
+		{
+			return (this.options.touched_fields.length > 0);
+		},
+		// Debug helper
+		showOptions: function()
+		{
+			return this.options;
+		},
 	});
 });

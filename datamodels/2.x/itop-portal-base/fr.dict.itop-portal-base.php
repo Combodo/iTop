@@ -67,6 +67,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:UserProfile:Password:Title' => 'Mot de passe',
 	'Brick:Portal:UserProfile:Password:ChoosePassword' => 'Choisissez un mot de passe',
 	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Confirmer le mot de passe',
+	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'Veuillez vous adresser à votre administrateur iTop pour changer votre mot de passe',
+	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Impossible de modifier votre mot de passe, veuillez contacter votre administrateur iTop',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Informations personnelles',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Photo',
 ));

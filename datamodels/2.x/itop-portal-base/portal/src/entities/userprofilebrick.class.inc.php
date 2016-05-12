@@ -18,6 +18,8 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
+use \DOMFormatException;
+use \Combodo\iTop\DesignElement;
 use \Combodo\iTop\Portal\Brick\PortalBrick;
 
 /**
@@ -34,6 +36,114 @@ class UserProfileBrick extends PortalBrick
 	const DEFAUT_TITLE = 'Brick:Portal:UserProfile:Title';
 
 	static $sRouteName = 'p_user_profile_brick';
+	protected $aForm;
+
+	public function __construct()
+	{
+		parent::__construct();
+
+		$this->aForm = array(
+			'id' => 'default-user-profile',
+			'type' => 'zlist',
+			'fields' => 'details',
+			'layout' => null
+		);
+	}
+
+	/**
+	 *
+	 * @return array
+	 */
+	public function GetForm()
+	{
+		return $this->aForm;
+	}
+
+	/**
+	 *
+	 * @param array $aForm
+	 * @return \Combodo\iTop\Portal\Brick\UserProfileBrick
+	 */
+	public function SetForm($aForm)
+	{
+		$this->aForm = $aForm;
+		return $this;
+	}
+
+	/**
+	 * Load the brick's data from the xml passed as a ModuleDesignElement.
+	 * This is used to set all the brick attributes at once.
+	 *
+	 * @param \Combodo\iTop\DesignElement $oMDElement
+	 * @return UserProfileBrick
+	 * @throws DOMFormatException
+	 */
+	public function LoadFromXml(DesignElement $oMDElement)
+	{
+		parent::LoadFromXml($oMDElement);
+
+		// Checking specific elements
+		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode)
+		{
+			switch ($oBrickSubNode->nodeName)
+			{
+				case 'form':
+					// Note : This is inspired by Combodo\iTop\Portal\Helper\ApplicationHelper::LoadFormsConfiguration()
+					// Enumerating fields
+					if ($oBrickSubNode->GetOptionalElement('fields') !== null)
+					{
+						$this->aForm['type'] = 'custom_list';
+						$this->aForm['fields'] = array();
+
+						foreach ($oBrickSubNode->GetOptionalElement('fields')->GetNodes('field') as $oFieldNode)
+						{
+							$sFieldId = $oFieldNode->getAttribute('id');
+							if ($sFieldId !== '')
+							{
+								$aField = array();
+								// Parsing field options like read_only, hidden and mandatory
+								if ($oFieldNode->GetOptionalElement('read_only'))
+								{
+									$aField['readonly'] = ($oFieldNode->GetOptionalElement('read_only')->GetText('true') === 'true') ? true : false;
+								}
+								if ($oFieldNode->GetOptionalElement('mandatory'))
+								{
+									$aField['mandatory'] = ($oFieldNode->GetOptionalElement('mandatory')->GetText('true') === 'true') ? true : false;
+								}
+								if ($oFieldNode->GetOptionalElement('hidden'))
+								{
+									$aField['hidden'] = ($oFieldNode->GetOptionalElement('hidden')->GetText('true') === 'true') ? true : false;
+								}
+
+								$this->aForm['fields'][$sFieldId] = $aField;
+							}
+							else
+							{
+								throw new DOMFormatException('Field tag must have an id attribute', null, null, $oFormNode);
+							}
+						}
+					}
+					// Parsing presentation
+					if ($oBrickSubNode->GetOptionalElement('twig') !== null)
+					{
+						// Extracting the twig template and removing the first and last lines (twig tags)
+						$sXml = $oBrickSubNode->GetOptionalElement('twig')->Dump(true);
+						//$sXml = $oMDElement->saveXML($oBrickSubNode->GetOptionalElement('twig'));
+						$sXml = preg_replace('/^.+\n/', '', $sXml);
+						$sXml = preg_replace('/\n.+$/', '', $sXml);
+
+						$this->aForm['layout'] = array(
+							'type' => (preg_match('/\{\{|\{\#|\{\%/', $sXml) === 1) ? 'twig' : 'xhtml',
+							'content' => $sXml
+						);
+					}
+					break;
+			}
+		}
+
+		return $this;
+	}
+
 }
 
 ?>

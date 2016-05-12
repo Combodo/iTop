@@ -123,6 +123,23 @@ class ApplicationHelper
 	}
 
 	/**
+	 * Loads form managers from the base portal
+	 *
+	 * @param string $sScannedDir Directory to load the managers from
+	 * @throws \Exception
+	 */
+	static function LoadFormManagers($sScannedDir = null)
+	{
+		if ($sScannedDir === null)
+		{
+			$sScannedDir = __DIR__ . '/../forms';
+		}
+
+		// Loading form managers from base portal (those from modules have already been loaded by module.xxx.php files)
+		self::LoadClasses($sScannedDir, 'formmanager.class.inc.php', 'brick');
+	}
+
+	/**
 	 * Registers routes in the Silex Application from all declared Router classes
 	 *
 	 * @param \Silex\Application $oApp
@@ -581,7 +598,7 @@ class ApplicationHelper
 //						$oApp['combodo.portal.instance.routes'] = $aRoutes;
 //					}
 					// Checking brick security
-					if ($oBrick->IsGrantedForProfiles(UserRights::ListProfiles()))
+					if ($oBrick->GetActive() && $oBrick->IsGrantedForProfiles(UserRights::ListProfiles()))
 					{
 						$aPortalConf['bricks'][] = $oBrick;
 						$aPortalConf['bricks_total_width'] += $oBrick->GetWidth();

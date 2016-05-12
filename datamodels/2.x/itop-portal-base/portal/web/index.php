@@ -39,15 +39,15 @@ require_once __DIR__ . '/../src/providers/scopevalidatorserviceprovider.class.in
 require_once __DIR__ . '/../src/helpers/scopevalidatorhelper.class.inc.php';
 require_once __DIR__ . '/../src/helpers/securityhelper.class.inc.php';
 require_once __DIR__ . '/../src/helpers/applicationhelper.class.inc.php';
-// Forms
-require_once __DIR__ . '/../src/forms/objectformmanager.class.inc.php';
 
-use \Exception;
-use \Symfony\Component\HttpFoundation\Response;
 use \Combodo\iTop\Portal\Helper\ApplicationHelper;
 
 // Checking user rights and prompt if needed
 LoginWebPage::DoLoginEx(PORTAL_ID);
+if (UserRights::GetContactId() == 0)
+{
+	die(Dict::S('Portal:ErrorNoContactForThisUser'));
+}
 
 // Initializing Silex framework
 $oApp = new Silex\Application();
@@ -81,6 +81,7 @@ ApplicationHelper::LoadControllers();
 ApplicationHelper::LoadRouters();
 ApplicationHelper::RegisterRoutes($oApp);
 ApplicationHelper::LoadBricks();
+ApplicationHelper::LoadFormManagers();
 ApplicationHelper::RegisterTwigExtensions($oApp);
 
 // Loading portal configuration from the module design

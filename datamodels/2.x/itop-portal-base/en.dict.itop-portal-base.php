@@ -67,6 +67,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:UserProfile:Password:Title' => 'Password',
 	'Brick:Portal:UserProfile:Password:ChoosePassword' => 'Choose password',
 	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Confirm password',
+	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'To change your password, please contact your iTop administrator',
+	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Can\'t change password, please contact your iTop administrator',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Personal informations',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Photo',
 ));

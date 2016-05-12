@@ -19,12 +19,16 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
+use \Exception;
 use \UserRights;
 use \Silex\Application;
 use \Symfony\Component\HttpFoundation\Request;
 use \Combodo\iTop\Portal\Helper\ApplicationHelper;
 use \Combodo\iTop\Portal\Brick\UserProfileBrick;
 use \Combodo\iTop\Portal\Controller\ObjectController;
+use \Combodo\iTop\Portal\Form\PreferencesFormManager;
+use \Combodo\iTop\Portal\Form\PasswordFormManager;
+use \Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
 
 class UserProfileBrickController extends BrickController
 {
@@ -55,22 +59,165 @@ class UserProfileBrickController extends BrickController
 		}
 
 		$aData = array();
-
-		// Retrieving current contact
-		$oCurContact = UserRights::GetContactObject();
-		$sCurContactClass = get_class($oCurContact);
-		$sCurContactId = $oCurContact->GetKey();
 		
-		// Preparing contact form
-		$aData['forms']['contact'] = ObjectController::HandleForm($oRequest, $oApp, ObjectController::ENUM_MODE_EDIT, $sCurContactClass, $sCurContactId);
-//		var_dump($aData['forms']['contact']);
-//		die();
+		// If this is ajax call, we are just submiting preferences or password forms
+		if ($oRequest->isXmlHttpRequest())
+		{
+			$aCurrentValues = $oRequest->request->get('current_values');
+			$sFormType = $aCurrentValues['form_type'];
+			if ($sFormType === PreferencesFormManager::FORM_TYPE)
+			{
+				$aData['form'] = $this->HandlePreferencesForm($oRequest, $oApp);
+			}
+			elseif ($sFormType === PasswordFormManager::FORM_TYPE)
+			{
+				$aData['form'] = $this->HandlePasswordForm($oRequest, $oApp);
+			}
+			else
+			{
+				throw new Exception('Unknown form type.');
+			}
+			$oResponse = $oApp->json($aData);
+		}
+		// Else, we are displaying page for first time
+		else
+		{
+			// Retrieving current contact
+			$oCurContact = UserRights::GetContactObject();
+			$sCurContactClass = get_class($oCurContact);
+			$sCurContactId = $oCurContact->GetKey();
 
-		$aData = $aData + array(
-			'oBrick' => $oBrick
+			// Preparing forms
+			$aData['forms']['contact'] = ObjectController::HandleForm($oRequest, $oApp, ObjectController::ENUM_MODE_EDIT, $sCurContactClass, $sCurContactId, $oBrick->GetForm());
+			$aData['forms']['preferences'] = $this->HandlePreferencesForm($oRequest, $oApp);
+			// - If user can change password, we display the form
+			$aData['forms']['password'] = (UserRights::CanChangePassword()) ? $this->HandlePasswordForm($oRequest, $oApp) : null;
+
+			$aData = $aData + array(
+				'oBrick' => $oBrick
+			);
+
+			$oResponse = $oApp['twig']->render($oBrick->GetPageTemplatePath(), $aData);
+		}
+
+		return $oResponse;
+	}
+
+	public function HandlePreferencesForm(Request $oRequest, Application $oApp)
+	{
+		$aFormData = array();
+		$oRequestParams = $oRequest->request;
+
+		// Handling form
+		$sOperation = $oRequestParams->get('operation');
+		// - Create
+		if ($sOperation === null)
+		{
+			// - Creating renderer
+			$oFormRenderer = new BsFormRenderer();
+			$oFormRenderer->SetEndpoint($_SERVER['REQUEST_URI']);
+			// - Creating manager
+			$oFormManager = new PreferencesFormManager();
+			$oFormManager->SetRenderer($oFormRenderer)
+				->Build();
+		}
+		// - Submit
+		else if ($sOperation === 'submit')
+		{
+			$sFormManagerClass = $oRequestParams->get('formmanager_class');
+			$sFormManagerData = $oRequestParams->get('formmanager_data');
+			if ($sFormManagerClass === null || $sFormManagerData === null)
+			{
+				$oApp->abort(500, 'Parameters formmanager_class and formmanager_data must be defined.');
+			}
+
+			// Rebuilding manager from json
+			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
+			// Applying modification to object
+			$aFormData['validation'] = $oFormManager->OnSubmit(array('currentValues' => $oRequestParams->get('current_values')));
+			// Reloading page only if preferences were changed
+			if (($aFormData['validation']['valid'] === true) && !empty($aFormData['validation']['messages']['success']))
+			{
+				$aFormData['validation']['redirection'] = array(
+					'url' => $oApp['url_generator']->generate('p_user_profile_brick'),
+				);
+			}
+		}
+		else
+		{
+			// Else, submit from another form
+		}
+
+		// Preparing field_set data
+		$aFieldSetData = array(
+			'fields_list' => $oFormManager->GetRenderer()->Render(),
+			'fields_impacts' => $oFormManager->GetForm()->GetFieldsImpacts(),
+			'form_path' => $oFormManager->GetForm()->GetId()
 		);
 
-		return $oApp['twig']->render($oBrick->GetPageTemplatePath(), $aData);
+		// Preparing form data
+		$aFormData['id'] = $oFormManager->GetForm()->GetId();
+		$aFormData['formmanager_class'] = $oFormManager->GetClass();
+		$aFormData['formmanager_data'] = $oFormManager->ToJSON();
+		$aFormData['renderer'] = $oFormManager->GetRenderer();
+		$aFormData['fieldset'] = $aFieldSetData;
+
+		return $aFormData;
+	}
+
+	public function HandlePasswordForm(Request $oRequest, Application $oApp)
+	{
+		$aFormData = array();
+		$oRequestParams = $oRequest->request;
+
+		// Handling form
+		$sOperation = $oRequestParams->get('operation');
+		// - Create
+		if ($sOperation === null)
+		{
+			// - Creating renderer
+			$oFormRenderer = new BsFormRenderer();
+			$oFormRenderer->SetEndpoint($_SERVER['REQUEST_URI']);
+			// - Creating manager
+			$oFormManager = new PasswordFormManager();
+			$oFormManager->SetRenderer($oFormRenderer)
+				->Build();
+		}
+		// - Submit
+		else if ($sOperation === 'submit')
+		{
+			$sFormManagerClass = $oRequestParams->get('formmanager_class');
+			$sFormManagerData = $oRequestParams->get('formmanager_data');
+			if ($sFormManagerClass === null || $sFormManagerData === null)
+			{
+				$oApp->abort(500, 'Parameters formmanager_class and formmanager_data must be defined.');
+			}
+
+			// Rebuilding manager from json
+			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
+			// Applying modification to object
+			$aFormData['validation'] = $oFormManager->OnSubmit(array('currentValues' => $oRequestParams->get('current_values')));
+		}
+		else
+		{
+			// Else, submit from another form
+		}
+
+		// Preparing field_set data
+		$aFieldSetData = array(
+			'fields_list' => $oFormManager->GetRenderer()->Render(),
+			'fields_impacts' => $oFormManager->GetForm()->GetFieldsImpacts(),
+			'form_path' => $oFormManager->GetForm()->GetId()
+		);
+
+		// Preparing form data
+		$aFormData['id'] = $oFormManager->GetForm()->GetId();
+		$aFormData['formmanager_class'] = $oFormManager->GetClass();
+		$aFormData['formmanager_data'] = $oFormManager->ToJSON();
+		$aFormData['renderer'] = $oFormManager->GetRenderer();
+		$aFormData['fieldset'] = $aFieldSetData;
+
+		return $aFormData;
 	}
 
 }

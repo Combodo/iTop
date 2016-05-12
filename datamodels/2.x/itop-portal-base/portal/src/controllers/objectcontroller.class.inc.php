@@ -25,7 +25,6 @@ use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpKernel\HttpKernelInterface;
 use \Exception;
-use \SecurityException;
 use \FileUploadException;
 use \utils;
 use \Dict;
@@ -36,10 +35,8 @@ use \BinaryExpression;
 use \FieldExpression;
 use \VariableExpression;
 use \DBObjectSet;
-use \CMDBObject;
 use \cmdbAbstractObject;
 use \UserRights;
-use \Combodo\iTop\Portal\Brick\BrowseBrick;
 use \Combodo\iTop\Portal\Helper\ApplicationHelper;
 use \Combodo\iTop\Portal\Helper\SecurityHelper;
 use \Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
@@ -133,7 +130,9 @@ class ObjectController extends AbstractController
 		}
 		
 		// Checking security layers
-		if (!SecurityHelper::IsActionAllowed($oApp, UR_ACTION_MODIFY, $sObjectClass, $sObjectId))
+		// Warning : This is a dirty quick fix to allow editing its own contact information
+		$bAllowWrite = ($sObjectClass === 'Person' && $sObjectId == UserRights::GetContactId());
+		if (!SecurityHelper::IsActionAllowed($oApp, UR_ACTION_MODIFY, $sObjectClass, $sObjectId) && !$bAllowWrite)
 		{
 			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
 		}
@@ -432,7 +431,6 @@ class ObjectController extends AbstractController
 			$aCallbackUrls = $oApp['context_manipulator']->GetCallbackUrls($oApp, $aActionRules, $oObject, $bModal);
 			$aFormData['submit_callback'] = $aCallbackUrls['submit'];
 			$aFormData['cancel_callback'] = $aCallbackUrls['cancel'];
-			//var_dump($aFormData);
 
 			// Preparing renderer
 			// Note : We might need to distinguish form & renderer endpoints
@@ -501,9 +499,9 @@ class ObjectController extends AbstractController
 						// Otherwise, we show the object if there is no default
 						else
 						{
-							$aFormData['validation']['redirection'] = array(
-								'alternative_url' => $oApp['url_generator']->generate('p_object_edit', array('sObjectClass' => $sObjectClass, 'sObjectId' => $oFormManager->GetObject()->GetKey()))
-							);
+//							$aFormData['validation']['redirection'] = array(
+//								'alternative_url' => $oApp['url_generator']->generate('p_object_edit', array('sObjectClass' => $sObjectClass, 'sObjectId' => $oFormManager->GetObject()->GetKey()))
+//							);
 						}
 					}
 					break;

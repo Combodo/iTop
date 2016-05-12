@@ -78,7 +78,7 @@ $(function()
 			var value = null;
 			
 			this.element.find(':input').each(function(iIndex, oElem){
-				if($(oElem).is(':hidden') || $(oElem).is(':text') || $(oElem).is('textarea'))
+				if($(oElem).is(':hidden') || $(oElem).is(':text') || $(oElem).is(':password') || $(oElem).is('textarea'))
 				{
 					value = $(oElem).val();
 				}

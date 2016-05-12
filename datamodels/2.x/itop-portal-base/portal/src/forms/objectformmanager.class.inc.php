@@ -20,10 +20,10 @@
 namespace Combodo\iTop\Portal\Form;
 
 use \Exception;
-use \DOMFormatException;
 use \Silex\Application;
 use \utils;
 use \Dict;
+use \UserRights;
 use \MetaModel;
 use \CMDBSource;
 use \DBObject;
@@ -31,21 +31,11 @@ use \DBObjectSet;
 use \DBObjectSearch;
 use \DBObjectSetComparator;
 use \InlineImage;
-use \UserRights;
 use \AttributeDateTime;
 use \Combodo\iTop\Form\FormManager;
 use \Combodo\iTop\Form\Form;
 use \Combodo\iTop\Form\Field\FileUploadField;
-use \Combodo\iTop\Form\Field\HiddenField;
 use \Combodo\iTop\Form\Field\LabelField;
-use \Combodo\iTop\Form\Field\StringField;
-use \Combodo\iTop\Form\Field\TextAreaField;
-use \Combodo\iTop\Form\Field\SelectField;
-use \Combodo\iTop\Form\Field\RadioField;
-use \Combodo\iTop\Form\Field\CheckboxField;
-use \Combodo\iTop\Form\Validator\IntegerValidator;
-use \Combodo\iTop\Form\Validator\NotEmptyValidator;
-use \Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
 
 /**
  * Description of objectformmanager
@@ -108,6 +98,12 @@ class ObjectFormManager extends FormManager
 		if (isset($aJson['formactionrulestoken']))
 		{
 			$oFormManager->SetActionRulesToken($aJson['formactionrulestoken']);
+		}
+
+		// Retrieving form properties
+		if (isset($aJson['formproperties']))
+		{
+			$oFormManager->SetFormProperties($aJson['formproperties']);
 		}
 
 		// Retrieving callback urls
@@ -215,6 +211,10 @@ class ObjectFormManager extends FormManager
 	 */
 	public function SetFormProperties($aFormProperties)
 	{
+//		echo '<pre>';
+//		print_r($aFormProperties);
+//		echo '</pre>';
+//		die();
 		$this->aFormProperties = $aFormProperties;
 		return $this;
 	}
@@ -256,6 +256,7 @@ class ObjectFormManager extends FormManager
 			$aJson['formobject_id'] = $this->oObject->GetKey();
 		$aJson['formmode'] = $this->sMode;
 		$aJson['formactionrulestoken'] = $this->sActionRulesToken;
+		$aJson['formproperties'] = $this->aFormProperties;
 
 		return $aJson;
 	}
@@ -433,7 +434,7 @@ class ObjectFormManager extends FormManager
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this->oObject), $sAttCode);
 			
 			// TODO : Make AttributeDefinition::MakeFormField() for all kind of fields
-			if (in_array(get_class($oAttDef), array('AttributeString', 'AttributeText', 'AttributeLongText', 'AttributeCaseLog', 'AttributeHTML', 'AttributeFriendlyName', 'AttributeEnum', 'AttributeExternalKey', 'AttributeCustomFields', 'AttributeLinkedSet', 'AttributeLinkedSetIndirect', 'AttributeDate', 'AttributeDateTime')))
+			if (in_array(get_class($oAttDef), array('AttributeString', 'AttributeEmailAddress', 'AttributeText', 'AttributeLongText', 'AttributeCaseLog', 'AttributeHTML', 'AttributeFriendlyName', 'AttributeEnum', 'AttributeExternalKey', 'AttributeCustomFields', 'AttributeLinkedSet', 'AttributeLinkedSetIndirect', 'AttributeDate', 'AttributeDateTime')))
 			{
 				$oField = $oAttDef->MakeFormField($this->oObject);
 				
@@ -631,10 +632,20 @@ class ObjectFormManager extends FormManager
 			// The try catch is essentially to start a MySQL transaction in order to ensure that all or none objects are persisted when creating an object with links
 			try
 			{
+				$sObjectClass = get_class($this->oObject);
+
 				// Starting transaction
 				CMDBSource::Query('START TRANSACTION');
+				// Forcing allowed writing on the object if necessary. This is used in some particular cases.
+				$bAllowWrite = ($sObjectClass === 'Person' && $this->oObject->GetKey() == UserRights::GetContactId());
+				if ($bAllowWrite)
+				{
+					$this->oObject->AllowWrite(true);
+				}
+
 				// Writing object to DB
 				$bActivateTriggers = (!$this->oObject->IsNew() && $this->oObject->IsModified());
+				$bWasModified = $this->oObject->IsModified();
 				$this->oObject->DBWrite();
 				// Finalizing images link to object, otherwise it will be cleaned by the GC
 				InlineImage::FinalizeInlineImages($this->oObject);
@@ -655,7 +666,7 @@ class ObjectFormManager extends FormManager
 					$sTriggersQuery = $this->oApp['combodo.portal.instance.conf']['properties']['triggers_query'];
 					if ($sTriggersQuery !== null)
 					{
-						$aParentClasses = MetaModel::EnumParentClasses(get_class($this->oObject), ENUM_PARENT_CLASSES_ALL);
+						$aParentClasses = MetaModel::EnumParentClasses($sObjectClass, ENUM_PARENT_CLASSES_ALL);
 						$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL($sTriggersQuery), array(), array('parent_classes' => $aParentClasses));
 						while ($oTrigger = $oTriggerSet->Fetch())
 						{
@@ -668,7 +679,10 @@ class ObjectFormManager extends FormManager
 				// Ending transaction with a commit as everything was fine
 				CMDBSource::Query('COMMIT');
 
-				$aData['messages']['success'] += array('_main' => array(Dict::S('Brick:Portal:Object:Form:Message:Saved')));
+				if ($bWasModified)
+				{
+					$aData['messages']['success'] += array('_main' => array(Dict::S('Brick:Portal:Object:Form:Message:Saved')));
+				}
 			}
 			catch (Exception $e)
 			{
@@ -810,7 +824,11 @@ class ObjectFormManager extends FormManager
 			}
 		}
 		// Then we build and update form
-		$this->SetFormProperties($aFormProperties);
+		// - We update form properties only we don't have any yet. This is a fallback for cases when form properties where not among the JSON data
+		if ($this->GetFormProperties() === null)
+		{
+			$this->SetFormProperties($aFormProperties);
+		}
 		$this->Build();
 	}
 
