@@ -36,6 +36,10 @@ class BrowseBrick extends PortalBrick
 	const ENUM_ACTION_EDIT = 'edit';
 	const ENUM_ACTION_DRILLDOWN = 'drilldown';
 	const ENUM_ACTION_CREATE_FROM_THIS = 'create_from_this';
+	const ENUM_ACTION_ICON_CLASS_VIEW = 'glyphicon glyphicon-list-alt';
+	const ENUM_ACTION_ICON_CLASS_EDIT = 'glyphicon glyphicon-pencil';
+	const ENUM_ACTION_ICON_CLASS_DRILLDOWN = 'glyphicon glyphicon-menu-down';
+	const ENUM_ACTION_ICON_CLASS_CREATE_FROM_THIS = 'glyphicon glyphicon-edit';
 	const ENUM_FACTORY_TYPE_METHOD = 'method';
 	const ENUM_FACTORY_TYPE_CLASS = 'class';
 	const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_FULL;
@@ -393,6 +397,12 @@ class BrowseBrick extends PortalBrick
 								if ($oActionTitleNode !== null)
 								{
 									$aTmpAction['title'] = $oActionTitleNode->GetText();
+								}
+								// Action icon class
+								$oActionIconClassNode = $oActionNode->GetOptionalElement('icon_class');
+								if ($oActionIconClassNode !== null)
+								{
+									$aTmpAction['icon_class'] = $oActionIconClassNode->GetText();
 								}
 								// Action rules
 								foreach ($oActionNode->GetNodes('./rules/rule') as $oRuleNode)

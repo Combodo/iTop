@@ -446,6 +446,26 @@ class BrowseBrickController extends BrickController
 							}
 						}
 
+						// Setting action icon class
+						if (!isset($aAction['icon_class']))
+						{
+							switch ($aAction['type'])
+							{
+								case BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS:
+									$aAction['icon_class'] = BrowseBrick::ENUM_ACTION_ICON_CLASS_CREATE_FROM_THIS;
+									break;
+								case BrowseBrick::ENUM_ACTION_VIEW:
+									$aAction['icon_class'] = BrowseBrick::ENUM_ACTION_ICON_CLASS_VIEW;
+									break;
+								case BrowseBrick::ENUM_ACTION_EDIT:
+									$aAction['icon_class'] = BrowseBrick::ENUM_ACTION_ICON_CLASS_EDIT;
+									break;
+								case BrowseBrick::ENUM_ACTION_DRILLDOWN:
+									$aAction['icon_class'] = BrowseBrick::ENUM_ACTION_ICON_CLASS_DRILLDOWN;
+									break;
+							}
+						}
+
 						// Setting action url
 						switch ($aAction['type'])
 						{

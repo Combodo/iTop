@@ -1128,6 +1128,7 @@
                           <class>UserRequest</class>
                           <!-- Optional tag that can be used on any action type -->
                           <!--<title>Créer un ticket</title>-->
+						  <!--<icon_class>glyphicon glyphicon-plus</icon_class>-->
                           <rules>
                             <rule id="contact-to-userrequest"/>
                             <rule id="servicesubcategory-to-userrequest"/>

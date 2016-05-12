@@ -458,7 +458,10 @@ label{
 	line-height: 1em;
 }
 .list-group-item .keep-spinning{
+	animation: spin 1s linear infinite;
 	-webkit-animation: spin 1s linear infinite;
+	-moz-animation: spin 1s linear infinite;
+	-ms-animation: spin 1s linear infinite;
 }
 
 /* Secondary actions */
@@ -481,6 +484,10 @@ table .group-actions .item-action-wrapper
 	-webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
 	-moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
 	box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
+}
+.list-group-item-actions .item-action-wrapper .glyphicon,
+table .group-actions .item-action-wrapper .glyphicon{
+	margin-right: 0.6em;
 }
 .list-group-item-actions .item-action-wrapper.collapse.in,
 table .group-actions .item-action-wrapper.collapse.in{
@@ -633,9 +640,15 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 }
 #drag_overlay.drag_in{
 	animation: show-drop-zone 0.3s ease-out forwards;
+	-webkit-animation: show-drop-zone 0.3s ease-out forwards;
+	-moz-animation: show-drop-zone 0.3s ease-out forwards;
+	-ms-animation: show-drop-zone 0.3s ease-out forwards;
 }
 #drag_overlay.drag_out{
 	animation: hide-drop-zone 0.3s ease-out forwards;
+	-webkit-animation: hide-drop-zone 0.3s ease-out forwards;
+	-moz-animation: hide-drop-zone 0.3s ease-out forwards;
+	-ms-animation: hide-drop-zone 0.3s ease-out forwards;
 }
 #drag_overlay .overlay_content{
 	margin-top: 5em;
