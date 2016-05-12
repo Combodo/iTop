@@ -133,12 +133,14 @@ class ModuleDiscovery
 	{
 		// Order the modules to take into account their inter-dependencies
 		$aDependencies = array();
+		$aSelectedModules = array();
 		foreach($aModules as $sId => $aModule)
 		{
 			list($sModuleName, $sModuleVersion) = self::GetModuleName($sId);
 			if (is_null($aModulesToLoad) || in_array($sModuleName, $aModulesToLoad))
 			{
 				$aDependencies[$sId] = $aModule['dependencies'];
+				$aSelectedModules[$sModuleName] = true;
 			}
 		}
 		ksort($aDependencies);
@@ -151,7 +153,7 @@ class ModuleDiscovery
 				$bDependenciesSolved = true;
 				foreach($aRemainingDeps as $sDepId)
 				{
-					if (!self::DependencyIsResolved($sDepId, $aOrderedModules))
+					if (!self::DependencyIsResolved($sDepId, $aOrderedModules, $aSelectedModules))
 					{
 						$bDependenciesSolved = false;
 					}
@@ -249,7 +251,7 @@ class ModuleDiscovery
 		return $aRes;
 	}
 		
-	protected static function DependencyIsResolved($sDepString, $aOrderedModules)
+	protected static function DependencyIsResolved($sDepString, $aOrderedModules, $aSelectedModules)
 	{
 		$bResult = false;
 		$aModuleVersions = array();
@@ -269,6 +271,7 @@ class ModuleDiscovery
 		if (preg_match_all('/([^\(\)&| ]+)/', $sDepString, $aMatches))
 		{
 			$aReplacements = array();
+			$aPotentialPrerequisites = array();
 			foreach($aMatches as $aMatch)
 			{
 				foreach($aMatch as $sModuleId)
@@ -278,6 +281,7 @@ class ModuleDiscovery
 					if(preg_match('|^([^/]+)/(<?>?=?)([^><=]+)$|', $sModuleId, $aModuleMatches))
 					{
 						$sModuleName = $aModuleMatches[1];
+						$aPotentialPrerequisites[$sModuleName] = true;
 						$sOperator = $aModuleMatches[2];
 						if ($sOperator == '')
 						{
@@ -308,12 +312,31 @@ class ModuleDiscovery
 					}
 				}
 			}
-			$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $sDepString);
-			$bOk = @eval('$bResult = '.$sBooleanExpr.'; return true;');
-			if($bOk == false)
+			$bMissingPrerequisite = false;
+			foreach ($aPotentialPrerequisites as $sModuleName => $void)
 			{
-				SetupPage::log_warning("Eval of $sRelDir/$sFile returned false");
-				echo "Failed to parse the boolean Expression = '$sBooleanExpr'<br/>";			
+				if (array_key_exists($sModuleName, $aSelectedModules))
+				{
+					// This module is actually a prerequisite
+					if (!array_key_exists($sModuleName, $aModuleVersions))
+					{
+						$bMissingPrerequisite = true;
+					}
+				}
+			}
+			if ($bMissingPrerequisite)
+			{
+				$bResult = false;
+			}
+			else
+			{
+				$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $sDepString);
+				$bOk = @eval('$bResult = '.$sBooleanExpr.'; return true;');
+				if ($bOk == false)
+				{
+					SetupPage::log_warning("Eval of '$sBooleanExpr' returned false");
+					echo "Failed to parse the boolean Expression = '$sBooleanExpr'<br/>";
+				}
 			}
 		}
 		return $bResult;
