@@ -394,10 +394,11 @@ class ModelFactory
 		//echo "Load $oSourceNode->tagName::".$oSourceNode->getAttribute('id')." (".$oSourceNode->getAttribute('_delta').")<br/>\n";
 		$oTarget = $this->oDOMDocument;
 
+		$sDeltaSpec = $oSourceNode->getAttribute('_delta');
 		if (($oSourceNode->tagName == 'class') && ($oSourceNode->parentNode->tagName == 'classes') && ($oSourceNode->parentNode->parentNode->tagName == 'itop_design'))
 		{
 			$sParentId = $oSourceNode->GetChildText('parent');
-			if ($oSourceNode->getAttribute('_delta') == 'define')
+			if ($sDeltaSpec == 'define')
 			{
 				// This tag is organized in hierarchy: determine the real parent node (as a subnode of the current node)
 				$oTargetParentNode = $oTarget->GetNodeById('/itop_design/classes//class', $sParentId)->item(0);
@@ -421,7 +422,7 @@ class ModelFactory
 				else
 				{
 					$oTargetParentNode = $oTargetNode->parentNode;
-					if (($oSourceNode->getAttribute('_delta') == 'redefine') && ($oTargetParentNode->getAttribute('id') != $sParentId))
+					if (($sDeltaSpec == 'redefine') && ($oTargetParentNode->getAttribute('id') != $sParentId))
 					{
 						// A class that has moved <=> deletion and creation elsewhere
 						$oTargetParentNode = $oTarget->GetNodeById('/itop_design/classes//class', $sParentId)->item(0);
@@ -433,19 +434,24 @@ class ModelFactory
 			}
 		}
 
-		switch ($oSourceNode->getAttribute('_delta'))
+		switch ($sDeltaSpec)
 		{
+		case 'if_exists':
 		case 'must_exist':
 		case 'merge':
 		case '':
-			$bMustExist = ($oSourceNode->getAttribute('_delta') == 'must_exist');
+			$bMustExist = ($sDeltaSpec == 'must_exist');
+			$bIfExists =($sDeltaSpec == 'if_exists');
 			$sSearchId = $oSourceNode->hasAttribute('_rename_from') ? $oSourceNode->getAttribute('_rename_from') : $oSourceNode->getAttribute('id');
-			$oTargetNode = $oSourceNode->MergeInto($oTargetParentNode, $sSearchId, $bMustExist);
-			foreach($oSourceNode->childNodes as $oSourceChild)
+			$oTargetNode = $oSourceNode->MergeInto($oTargetParentNode, $sSearchId, $bMustExist, $bIfExists);
+			if ($oTargetNode)
 			{
-				// Continue deeper
-				$this->LoadDelta($oSourceChild, $oTargetNode);
-			}			
+				foreach ($oSourceNode->childNodes as $oSourceChild)
+				{
+					// Continue deeper
+					$this->LoadDelta($oSourceChild, $oTargetNode);
+				}
+			}
 			break;
 
 		case 'define_if_not_exists':
@@ -490,16 +496,19 @@ class ModelFactory
 			break;
 			
 		default:
-			throw new Exception(MFDocument::GetItopNodePath($oSourceNode).' at line '.$oSourceNode->getLineNo().": unexpected value for attribute _delta: '".$oSourceNode->getAttribute('_delta')."'");
+			throw new Exception(MFDocument::GetItopNodePath($oSourceNode).' at line '.$oSourceNode->getLineNo().": unexpected value for attribute _delta: '".$sDeltaSpec."'");
 		}
 
-		if ($oSourceNode->hasAttribute('_rename_from'))
+		if ($oTargetNode)
 		{
-			$oTargetNode->Rename($oSourceNode->getAttribute('id'));
-		}
-		if ($oTargetNode->hasAttribute('_delta'))
-		{
-			$oTargetNode->removeAttribute('_delta');
+			if ($oSourceNode->hasAttribute('_rename_from'))
+			{
+				$oTargetNode->Rename($oSourceNode->getAttribute('id'));
+			}
+			if ($oTargetNode->hasAttribute('_delta'))
+			{
+				$oTargetNode->removeAttribute('_delta');
+			}
 		}
 	}
 
@@ -1862,12 +1871,14 @@ class MFElement extends Combodo\iTop\DesignElement
 
 	/**
 	 * Merge the current node into the given container
-	 * 	 
-	 * @param DOMNode $oContainer An element or a document	 
-	 * @param string  $sSearchId  The id to consider (could be blank)
-	 * @param bool    $bMustExist Throw an exception if the node must already be found (and not marked as deleted!)
+	 *
+	 * @param DOMNode $oContainer An element or a document
+	 * @param string $sSearchId The id to consider (could be blank)
+	 * @param bool $bMustExist Throw an exception if the node must already be found (and not marked as deleted!)
+	 * @param bool $bIfExists Return null if the node does not exists (or is marked as deleted)
+	 * @return DOMNode|null
 	 */
-	public function MergeInto($oContainer, $sSearchId, $bMustExist)
+	public function MergeInto($oContainer, $sSearchId, $bMustExist, $bIfExists = false)
 	{
 		$oTargetNode = $oContainer->_FindChildNode($this, $sSearchId);
 		if ($oTargetNode)
@@ -1892,10 +1903,13 @@ class MFElement extends Combodo\iTop\DesignElement
 				$oContainer->Dump();
 				throw new Exception(MFDocument::GetItopNodePath($this).' at line '.$this->getLineNo().": could not be found");
 			}
-			// Beware: ImportNode(xxx, false) DOES NOT copy the node's attribute on *some* PHP versions (<5.2.17)
-			// So use this workaround to import a node and its attributes on *any* PHP version
-			$oTargetNode = $oContainer->ownerDocument->ImportNode($this->cloneNode(false), true);
-			$oContainer->AddChildNode($oTargetNode);
+			if (!$bIfExists)
+			{
+				// Beware: ImportNode(xxx, false) DOES NOT copy the node's attribute on *some* PHP versions (<5.2.17)
+				// So use this workaround to import a node and its attributes on *any* PHP version
+				$oTargetNode = $oContainer->ownerDocument->ImportNode($this->cloneNode(false), true);
+				$oContainer->AddChildNode($oTargetNode);
+			}
 		}
 		return $oTargetNode;
 	}
