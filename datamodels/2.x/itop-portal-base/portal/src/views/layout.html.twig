@@ -308,8 +308,9 @@
 						}
 					});
 					// Hide tooltips when a modal is opening, otherwise it might be overlapping it
-					$('body').on('show.bs.modal', function (event) {
-						$(this).find('[data-toggle*="tooltip"]').tooltip('hide');
+					$('body').on('show.bs.modal', function () {
+						console.log('event captured');
+						$(this).find('.tooltip.in').tooltip('hide');
 					});
 				{% endblock %}
 			});
