@@ -42,6 +42,7 @@ class BsFormRenderer extends FormRenderer
 		parent::__construct($oForm);
 		$this->AddSupportedField('HiddenField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('LabelField', 'BsSimpleFieldRenderer');
+		$this->AddSupportedField('PasswordField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('StringField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('TextAreaField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('CaseLogField', 'BsSimpleFieldRenderer');

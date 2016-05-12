@@ -70,6 +70,17 @@ class BsSimpleFieldRenderer extends FieldRenderer
 EOF
 					);
 					break;
+				case 'Combodo\\iTop\\Form\\Field\\PasswordField':
+					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
+					if ($this->oField->GetLabel() !== '')
+					{
+						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+					}
+					$oOutput->AddHtml('<div class="help-block"></div>');
+					$oOutput->AddHtml('<input type="password" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" />');
+					$oOutput->AddHtml('</div>');
+					break;
+
 				case 'Combodo\\iTop\\Form\\Field\\StringField':
 					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
 					if ($this->oField->GetLabel() !== '')
@@ -290,6 +301,7 @@ EOF
 		// JS FieldChange trigger (:input are not always at the same depth)
 		switch ($sFieldClass)
 		{
+			case 'Combodo\\iTop\\Form\\Field\\PasswordField':
 			case 'Combodo\\iTop\\Form\\Field\\StringField':
 			case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
 			case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
@@ -361,6 +373,7 @@ EOF
 
 		switch ($sFieldClass)
 		{
+			case 'Combodo\\iTop\\Form\\Field\\PasswordField':
 			case 'Combodo\\iTop\\Form\\Field\\StringField':
 			case 'Combodo\\iTop\\Form\\Field\\SelectField':
 			case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
