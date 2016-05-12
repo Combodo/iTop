@@ -30,6 +30,6 @@ class NotEmptyExtKeyValidator extends Validator
 {
 	const VALIDATOR_NAME = 'notemptyextkey';
 	const DEFAULT_REGEXP = '^[1-9]+$';
-	const DEFAULT_ERROR_MESSAGE = 'TOTR: MUST SELECT ONE';
+	const DEFAULT_ERROR_MESSAGE = 'Core:Validator:MustSelectOne';
 
 }

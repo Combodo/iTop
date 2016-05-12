@@ -32,6 +32,6 @@ class MandatoryValidator extends Validator
 {
 	const VALIDATOR_NAME = 'mandatory';
 	const DEFAULT_REGEXP = '.*\S.*';
-	const DEFAULT_ERROR_MESSAGE = 'TOTR: MANDATORY MESSAGE';
+	const DEFAULT_ERROR_MESSAGE = 'Core:Validator:Mandatory';
 
 }

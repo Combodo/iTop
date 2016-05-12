@@ -28,7 +28,7 @@ class Validator
 {
 	const VALIDATOR_NAME = 'expression';
 	const DEFAULT_REGEXP = '';
-	const DEFAULT_ERROR_MESSAGE = 'TOTR: Core:Validator:Default';
+	const DEFAULT_ERROR_MESSAGE = 'Core:Validator:Default';
 
 	protected $sRegExp;
 	protected $sErrorMessage;

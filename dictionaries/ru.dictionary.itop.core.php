@@ -858,6 +858,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:DateTime:Placeholder_A' => 'AM/PM', // AM/PM (uppercase)
 	'Core:DateTime:Placeholder_i' => 'мм', // minutes, 2 digits: 00..59
 	'Core:DateTime:Placeholder_s' => 'сс', // seconds, 2 digits 00..59
+	'Core:Validator:Default' => 'Wrong format~~',
+	'Core:Validator:Mandatory' => 'Please, fill this field~~',
+	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
+	'Core:Validator:MustSelectOne' => 'Please, select one~~',
 ));
 
 ?>

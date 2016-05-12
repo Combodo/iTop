@@ -17,19 +17,16 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-namespace Combodo\iTop\Form\Validator;
+namespace Combodo\iTop\Form\Field;
 
-use \Combodo\iTop\Form\Validator\Validator;
+use \Combodo\iTop\Form\Field\TextField;
 
 /**
- * Description of IntegerValidator
+ * Description of PasswordField
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
-class IntegerValidator extends Validator
+class PasswordField extends TextField
 {
-	const VALIDATOR_NAME = 'integer';
-	const DEFAULT_REGEXP = '^[0-9]+$';
-	const DEFAULT_ERROR_MESSAGE = 'Core:Validator:MustBeInteger';
 
 }

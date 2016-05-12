@@ -732,4 +732,8 @@ Opérateurs :<br/>
 	'Core:SyncSplitModeCLIOnly' => 'The synchronization can be executed in chunks only if run in mode CLI~~',
 	'Core:ExecProcess:Code1' => 'Wrong command or command finished with errors (e.g. wrong script name)~~',
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)~~',
+	'Core:Validator:Default' => 'Format incorrect',
+	'Core:Validator:Mandatory' => 'Veuillez remplir ce champ',
+	'Core:Validator:MustBeInteger' => 'Ce champ ne peut contenir qu\'un nombre entier',
+	'Core:Validator:MustSelectOne' => 'Veuillez choisir une valeur',
 ));

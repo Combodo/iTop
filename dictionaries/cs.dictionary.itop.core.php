@@ -867,5 +867,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Core:BulkExportCanRunNonInteractive' => 'Click here to run the export in non-interactive mode.~~',
     'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.~~',
 	'Core:BulkExport:XLSXOptions' => 'Excel Options~~',
-	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup~~',		
+	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup~~',
+	'Core:Validator:Default' => 'Wrong format~~',
+	'Core:Validator:Mandatory' => 'Please, fill this field~~',
+	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
+	'Core:Validator:MustSelectOne' => 'Please, select one~~',
 ));

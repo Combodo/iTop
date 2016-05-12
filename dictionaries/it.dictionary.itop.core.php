@@ -850,6 +850,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Core:DateTime:Placeholder_A' => 'AM/PM', // AM/PM (uppercase)
 	'Core:DateTime:Placeholder_i' => 'mm', // minutes, 2 digits: 00..59
 	'Core:DateTime:Placeholder_s' => 'ss', // seconds, 2 digits 00..59
+	'Core:Validator:Default' => 'Wrong format~~',
+	'Core:Validator:Mandatory' => 'Please, fill this field~~',
+	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
+	'Core:Validator:MustSelectOne' => 'Please, select one~~',
 ));
 
 ?>
