@@ -115,7 +115,7 @@ footer{
 /******************/
 /* Global classes */
 /******************/
-@media (min-width: 768px) {
+/*@media (min-width: 768px) {
 	.row-eq-height-sm {
 		display: -webkit-box;
 		display: -webkit-flex;
@@ -138,7 +138,7 @@ footer{
 		display: -ms-flexbox;
 		display: flex;
 	}
-}
+}*/
 
 .vertical-center {
 	/* Make it a flex container */
@@ -295,12 +295,6 @@ label{
 .home #main-wrapper{
 	padding-top: 15px;
 }
-@media (min-width: 768px) {
-	.home .tiles_wrapper{
-		/*margin-bottom: 18px;*/
-		margin-bottom: 35px;
-	}
-}
 
 .home .tile{
 	margin-bottom: 8px;
@@ -332,7 +326,7 @@ label{
 }
 @media (min-width: 768px) {
 	.home .tile{
-		margin-bottom: 0px;
+		margin-bottom: 30px;
 		min-height: 10em;
 	}
 	.home .tile .tile_decoration{
