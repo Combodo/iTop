@@ -19,7 +19,7 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
-use DOMFormatException;
+use \DOMFormatException;
 use \Combodo\iTop\DesignElement;
 use \Combodo\iTop\Portal\Brick\PortalBrick;
 

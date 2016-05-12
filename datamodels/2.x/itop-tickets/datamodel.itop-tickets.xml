@@ -989,20 +989,20 @@
             <!-- Optionnal tag to specify the form layout. Fields that are not positionned in the layout will be placed at the end of the form -->
             <twig>
               <!-- data-field-id attribute must be an attribute code of the class -->
-              <div class="form_field" data-field-id="first_name">
-              </div>
-              <div class="form_field" data-field-id="name">
-              </div>
               <!-- data-field-flags attribute contains flags among read_only/hidden/mandatory/must_prompt/must_change -->
+              <div class="form_field" data-field-id="first_name" data-field-flags="read_only">
+              </div>
+              <div class="form_field" data-field-id="name" data-field-flags="read_only">
+              </div>
+              <div class="form_field" data-field-id="org_id" data-field-flags="read_only">
+              </div>
               <div class="form_field" data-field-id="email" data-field-flags="read_only">
               </div>
               <div class="form_field" data-field-id="phone">
               </div>
-              <div class="form_field" data-field-id="org_id" data-field-flags="read_only">
+              <div class="form_field" data-field-id="location_id">
               </div>
-              <div class="form_field" data-field-id="location_id" data-field-flags="read_only">
-              </div>
-              <div class="form_field" data-field-id="function" data-field-flags="read_only">
+              <div class="form_field" data-field-id="function">
               </div>
               <div class="form_field" data-field-id="manager_id" data-field-flags="read_only">
               </div>

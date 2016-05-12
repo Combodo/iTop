@@ -27,14 +27,10 @@ else
 }
 require_once APPROOT . '/application/startup.inc.php';
 
+// Protection against setup in the following configuration : ITIL Ticket with Enhanced Portal selected but neither UserRequest or Incident. Which would crash the portal.
 if (!class_exists('UserRequest') && !class_exists('Incident'))
 {
 	die('iTop has neither been installed with User Request nor Incident tickets. Please contact your administrator.');
-}
-
-if (UserRights::GetContactId() == 0)
-{
-	die(Dict::S('Portal:ErrorNoContactForThisUser'));
 }
 
 $sDir = basename(__DIR__);

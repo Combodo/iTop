@@ -58,6 +58,7 @@
 		});
 		
 		{% if tIsModal is defined and tIsModal == true %}
+			$('#{{ sFormId }}').closest('.modal').scrollTop(0);
 			$('#{{ sFormId }}').closest('.modal').find('.modal-footer').hide();
 		{% endif %}
 	});
