@@ -45,6 +45,7 @@ abstract class AbstractBrick
 	const DEFAULT_RANK = 1.0;
 	const DEFAULT_PAGE_TEMPLATE_PATH = null;
 	const DEFAULT_TITLE = '';
+	const DEFAULT_DESCRIPTION = null;
 	const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_AUTO;
 	const DEFAULT_ALLOWED_PROFILES_OQL = '';
 	const DEFAULT_DENIED_PROFILES_OQL = '';
@@ -55,6 +56,7 @@ abstract class AbstractBrick
 	protected $fRank;
 	protected $sPageTemplatePath;
 	protected $sTitle;
+	protected $sDescription;
 	protected $sDataLoading;
 	protected $aAllowedProfiles;
 	protected $aDeniedProfiles;
@@ -81,6 +83,7 @@ abstract class AbstractBrick
 		$this->fRank = static::DEFAULT_RANK;
 		$this->sPageTemplatePath = static::DEFAULT_PAGE_TEMPLATE_PATH;
 		$this->sTitle = static::DEFAULT_TITLE;
+		$this->sDescription = static::DEFAULT_DESCRIPTION;
 		$this->sDataLoading = static::DEFAULT_DATA_LOADING;
 		$this->aAllowedProfiles = array();
 		$this->aDeniedProfiles = array();
@@ -146,6 +149,16 @@ abstract class AbstractBrick
 	public function GetTitle()
 	{
 		return $this->sTitle;
+	}
+
+	/**
+	 * Returns the brick description
+	 *
+	 * @return string
+	 */
+	public function GetDescription()
+	{
+		return $this->sDescription;
 	}
 
 	/**
@@ -261,6 +274,17 @@ abstract class AbstractBrick
 	public function SetTitle($sTitle)
 	{
 		$this->sTitle = $sTitle;
+		return $this;
+	}
+
+	/**
+	 * Sets the description of the brick
+	 *
+	 * @param string $sDescription
+	 */
+	public function SetDescription($sDescription)
+	{
+		$this->sDescription = $sDescription;
 		return $this;
 	}
 
@@ -451,6 +475,15 @@ abstract class AbstractBrick
 	}
 
 	/**
+	 *
+	 * @return boolean
+	 */
+	public function HasDescription()
+	{
+		return ($this->sDescription !== null && $this->sDescription !== '');
+	}
+
+	/**
 	 * Load the brick's data from the xml passed as a ModuleDesignElement.
 	 * This is used to set all the brick attributes at once.
 	 *
@@ -490,6 +523,9 @@ abstract class AbstractBrick
 					break;
 				case 'title':
 					$this->SetTitle($oBrickSubNode->GetText(static::DEFAULT_TITLE));
+					break;
+				case 'description':
+					$this->SetDescription($oBrickSubNode->GetText(static::DEFAULT_DESCRIPTION));
 					break;
 				case 'data_loading':
 					$this->SetDataLoading($oBrickSubNode->GetText(static::DEFAULT_DATA_LOADING));
