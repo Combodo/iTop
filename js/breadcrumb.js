@@ -52,7 +52,7 @@ $(function()
                     aBreadCrumb = aBreadCrumb.slice(-(this.options.max_count));
                 }
 				this._Write(aBreadCrumb);
-				var sBreadCrumbHtml = '<ul>';
+				var sBreadCrumbHtml = '';
 				for (iEntry in aBreadCrumb)
 				{
                     //if (iEntry >= iDisplayableItems) break; // skip the current page
@@ -71,15 +71,14 @@ $(function()
 						if ((this.options.new_entry !== null) && (iEntry == aBreadCrumb.length - 1))
 						{
 							// Last entry is the current page
-							sBreadCrumbHtml += '<li><div class="itop-breadcrumb-current" breadcrumb-entry="'+iEntry+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+oEntry['label']+'</span></div></li>';
+							sBreadCrumbHtml += '<div class="breadcrumb-item breadcrumb-current" breadcrumb-entry="'+iEntry+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+oEntry['label']+'</span></div>';
 						}
 						else
 						{
-							sBreadCrumbHtml += '<li><a class="itop-breadcrumb-link" breadcrumb-entry="'+iEntry+'" href="'+oEntry['url']+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+oEntry['label']+'</span></a></li>';
+							sBreadCrumbHtml += '<div class="breadcrumb-item"><a class="breadcrumb-link" breadcrumb-entry="'+iEntry+'" href="'+oEntry['url']+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+oEntry['label']+'</span></a></div>';
 						}
 					}
 				}
-				sBreadCrumbHtml += '</ul>';
 				$('#itop-breadcrumb').html(sBreadCrumbHtml);
 			}
 			else
@@ -137,7 +136,7 @@ $(function()
 			if (this.options.new_entry !== null) {
 				// The current page is the last entry in the breadcrumb, let's refresh it
 				aBreadCrumb[aBreadCrumb.length - 1].url = window.location.href;
-				$('#itop-breadcrumb li:last-of-type a').attr('href', window.location.href);
+				$('#itop-breadcrumb .breadcrumb-current:last-of-type a').attr('href', window.location.href);
 			}
 			this._Write(aBreadCrumb);
 		}

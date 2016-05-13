@@ -1677,14 +1677,9 @@ span.refresh-button {
   float: left;
   background: $frame-background-color;
 
-  ul {
-	display: inline;
-  }
-
-  li{
-	list-style: none;
+  .breadcrumb-item{
 	float: left;
-	margin: 0 22px 0px 0;
+	margin: 3px 22px 2px 0px;
 
 	.icon img{
 	  height: 15px;
@@ -1743,7 +1738,7 @@ span.refresh-button {
 	  display: none;
 	}
 
-	.itop-breadcrumb-current{
+	&.breadcrumb-current{
 	  text-decoration: none;
 	  color: #555;
 	  font-size: 9pt;
