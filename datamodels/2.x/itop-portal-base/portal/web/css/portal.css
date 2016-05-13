@@ -72,6 +72,9 @@ footer{
 	width: 100%;
 	text-align: center;
 }
+#sidebar .logo img{
+	max-width: 100%;
+}
 
 /* Overlays*/
 .global_overlay{
@@ -746,35 +749,31 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	.form_btn_regular.sticky{
 		display: block;
 		position: fixed;
-		bottom: 0px;
 		padding: 15px;
 		background-color: #FFF; /* TODO : SASS this to panel bg */
 		border: 1px solid #DDD; /* TODO : SASS this to panel border */
 		border-radius: 4px; /* TODO : SASS this to panel border */
-		transition: bottom 0.3s;
-	}
-	.form_btn_regular.sticky.closed{
-		bottom: -80px;
 	}
 	/* - For regular layout */
 	#main-content .form_btn_regular.sticky{
+		bottom: 0px;
 		right: 15px; /* TODO : SASS this to col-xs-12 padding */
+		transition: bottom 0.3s;
+	}
+	#main-content .form_btn_regular.sticky.closed{
+		bottom: -80px;
 	}
 	/* - For modal layout */
 	.modal.in .form_btn_regular.sticky{
-		margin-left: 61%;
+		bottom: 5em;
+		right: 15px; /* TODO : SASS this to col-xs-12 padding */
+		transition: right 0.3s;
 	}
-}
-@media (min-width: 992px) {
-	/* - For modal layout */
-	.modal.in .form_btn_regular.sticky{
-		margin-left: 70%;
+	.modal.in .form_btn_regular.sticky.closed{
+		right: -60px;
 	}
-}
-@media (min-width: 1200px) {
-	/* - For modal layout */
-	.modal.in .form_btn_regular.sticky{
-		margin-left: 73%;
+	.modal.in .form_btn_regular.sticky button{
+		display: block;
 	}
 }
 
