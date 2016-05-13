@@ -283,14 +283,14 @@ class ApplicationHelper
 				throw new Exception('Cannot load module design, Portal ID is not defined');
 			}
 			$oDesign = new ModuleDesign(PORTAL_ID);
-
+			
 			// Parsing file
 			// - Default values
 			$aPortalConf = array(
 				'properties' => array(
 					'id' => PORTAL_ID,
 					'name' => 'Page:DefaultTitle',
-					'logo' => null,
+					'logo' => (file_exists(MODULESROOT . 'branding/portal-logo.png')) ? utils::GetAbsoluteUrlModulesRoot() . 'branding/portal-logo.png' : '../images/itop-logo.png',
 					'themes' => array(
 						'bootstrap' => $oApp['combodo.portal.base.absolute_url'] . 'css/bootstrap-theme.min.css',
 						'portal' => $oApp['combodo.portal.base.absolute_url'] . 'css/portal.css',
@@ -321,23 +321,7 @@ class ApplicationHelper
 						$aPortalConf['properties'][$oPropertyNode->nodeName] = $oPropertyNode->GetText($aPortalConf['properties'][$oPropertyNode->nodeName]);
 						break;
 					case 'logo':
-						$sLogoUri = $oPropertyNode->GetText($aPortalConf['properties'][$oPropertyNode->nodeName]);
-
-						if ($sLogoUri === null)
-						{
-							// There is no logo : do nothing
-						}
-						elseif (preg_match('/^http/', $sLogoUri))
-						{
-							// The uri is already complete : do nothing
-						}
-						else
-						{
-							// We prefix it with the server base url
-							$sLogoUri = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/' . $sLogoUri;
-						}
-
-						$aPortalConf['properties'][$oPropertyNode->nodeName] = $sLogoUri;
+						$aPortalConf['properties'][$oPropertyNode->nodeName] = $oPropertyNode->GetText($aPortalConf['properties'][$oPropertyNode->nodeName]);
 						break;
 					case 'themes':
 					case 'templates':
@@ -398,6 +382,14 @@ class ApplicationHelper
 						break;
 				}
 			}
+			// - Rectifying portal logo url
+			$sLogoUri = $aPortalConf['properties']['logo'];
+			if (!preg_match('/^http/', $sLogoUri))
+			{
+				// We prefix it with the server base url
+				$sLogoUri = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/' . $sLogoUri;
+			}
+			$aPortalConf['properties']['logo'] = $sLogoUri;
 			// - User allowed portals
 			$aPortalConf['portals'] = UserRights::GetAllowedPortals();
 			// - Bricks
