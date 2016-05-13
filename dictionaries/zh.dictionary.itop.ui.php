@@ -645,6 +645,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ErrorPageTitle' => 'iTop - 错误',
 	'UI:ObjectDoesNotExist' => '抱歉, 该对象不存在 (或您未被允许浏览该对象).',
 	'UI:SearchResultsPageTitle' => 'iTop - 搜索结果',
+	'UI:SearchResultsTitle' => '搜索结果',
+	'UI:SearchResultsTitle+' => 'Full-text search results~~',
 	'UI:Search:NoSearch' => '没有可搜索的内容',
 	'UI:FullTextSearchTitle_Text' => '"%1$s" 的结果:',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '发现 %2$s 类的 %1$d 个对象.',

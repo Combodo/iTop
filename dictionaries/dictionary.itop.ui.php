@@ -767,6 +767,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:ErrorPageTitle' => 'iTop - Error',
 	'UI:ObjectDoesNotExist' => 'Sorry, this object does not exist (or you are not allowed to view it).',
 	'UI:SearchResultsPageTitle' => 'iTop - Search Results',
+	'UI:SearchResultsTitle' => 'Search Results',
+	'UI:SearchResultsTitle+' => 'Full-text search results',
 	'UI:Search:NoSearch' => 'Nothing to search for',
 	'UI:Search:NeedleTooShort' => 'The search string "%1$s" is too short. Please type at least %2$d characters.',
 	'UI:Search:Ongoing' => 'Searching for "%1$s"',

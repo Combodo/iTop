@@ -761,6 +761,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:ErrorPageTitle' => 'Erro',
 	'UI:ObjectDoesNotExist' => 'Desculpe, este objeto não existe (ou você não tem permissão para vê-lo).',
 	'UI:SearchResultsPageTitle' => 'Resultado da pesquisa',
+	'UI:SearchResultsTitle' => 'Resultado da pesquisa',
+	'UI:SearchResultsTitle+' => 'Full-text search results~~',
 	'UI:Search:NoSearch' => 'Nada a pesquisar de',
 	'UI:FullTextSearchTitle_Text' => 'Resultado para "%1$s":',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%1$d objeto(s) da classe %2$s encontrado(s).',

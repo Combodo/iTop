@@ -609,6 +609,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:ErrorPageTitle' => 'iTop - Fejl',
 	'UI:ObjectDoesNotExist' => 'Beklager, dette objekt eksisterer ikke (eller du har ikke tilladelse til at se det).',
 	'UI:SearchResultsPageTitle' => 'iTop - Søge Resultater',
+	'UI:SearchResultsTitle' => 'Søge Resultater',
+	'UI:SearchResultsTitle+' => 'Full-text search results~~',
 	'UI:Search:NoSearch' => 'Intet at søge efter',
 	'UI:FullTextSearchTitle_Text' => 'Resultater for "%1$s":',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%1$d objekt(er) af klasse %2$s fundet.',

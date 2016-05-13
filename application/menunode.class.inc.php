@@ -740,9 +740,11 @@ class SearchMenuNode extends MenuNode
 		$this->sClass = $sClass;
 		$this->aReflectionProperties['class'] = $sClass;
 	}
-	
+
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
+		$oPage->SetBreadCrumbEntry("menu-".$this->sMenuId, $this->GetTitle(), '', '', utils::GetAbsoluteUrlAppRoot().'images/search.png');
+
 		$oSearch = new DBObjectSearch($this->sClass);
 		$aParams = array_merge(array('open' => true, 'table_id' => 'Menu_'.utils::GetSafeId($this->GetMenuId())), $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);

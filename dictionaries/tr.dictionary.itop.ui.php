@@ -646,6 +646,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:ErrorPageTitle' => 'iTop - Hata',
 	'UI:ObjectDoesNotExist' => 'Nesne mevcut değil veya yetkiniz yok.',
 	'UI:SearchResultsPageTitle' => 'iTop - Arama Sonuçları',
+	'UI:SearchResultsTitle' => 'Arama Sonuçları',
+	'UI:SearchResultsTitle+' => 'Full-text search results~~',
 	'UI:Search:NoSearch' => 'Nothing to search for',
 	'UI:FullTextSearchTitle_Text' => '"%1$s" için arama sonuçları:',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%2$s sınıfına ait %1$d nesne bulundu.',

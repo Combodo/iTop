@@ -656,6 +656,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:ErrorPageTitle' => 'iTop - Erreur',
 	'UI:ObjectDoesNotExist' => 'Désolé cet objet n\'existe pas (où vous n\'êtes pas autorisé à l\'afficher).',
 	'UI:SearchResultsPageTitle' => 'iTop - Résultats de la recherche',
+	'UI:SearchResultsTitle' => 'Recherche globale',
+	'UI:SearchResultsTitle+' => 'Résultat de recherche globale',
 	'UI:Search:NoSearch' => 'Rien à rechercher',
 	'UI:Search:NeedleTooShort' => 'La clé de recherche "%1$s" est trop courte. Veuillez saisir au moins %2$d caractères.',
 	'UI:Search:Ongoing' => 'Recherche de "%1$s"',

@@ -764,6 +764,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'UI:ErrorPageTitle' => 'iTop - Chyba',
     'UI:ObjectDoesNotExist' => 'Tento objekt neexistuje (nebo nemáte oprávnění k jeho zobrazení).',
     'UI:SearchResultsPageTitle' => 'iTop - Výsledky hledání',
+    'UI:SearchResultsTitle' => 'Výsledky hledání',
+    'UI:SearchResultsTitle+' => 'Full-text search results~~',
     'UI:Search:NoSearch' => 'Nic k hledání',
     'UI:Search:NeedleTooShort' => 'Zadaný výraz "%1$s" je příliš krátký. Zadejte prosím alespoň %2$d znaky.',
     'UI:Search:Ongoing' => 'Hledám "%1$s"',

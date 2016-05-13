@@ -769,6 +769,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:ErrorPageTitle' => 'iTop - Error',
 	'UI:ObjectDoesNotExist' => 'Sorry, dit object bestaat niet (of u bent niet gemachtigd het te bekijken).',
 	'UI:SearchResultsPageTitle' => 'iTop - Zoekresultaten',
+	'UI:SearchResultsTitle' => 'Zoekresultaten',
+	'UI:SearchResultsTitle+' => 'Full-text search results~~',
 	'UI:Search:NoSearch' => 'Geen zoekopdracht',
 	'UI:Search:NeedleTooShort' => 'De zoekopdracht "%1$s" is te kort. Type tenminste %2$d karakters.',
 	'UI:Search:Ongoing' => 'Zoeken naar "%1$s"',

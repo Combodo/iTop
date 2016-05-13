@@ -606,6 +606,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:ErrorPageTitle' => 'iTop - Fehler',
 	'UI:ObjectDoesNotExist' => 'Leider existiert dieses Objekt nicht oder Sie sind nicht berechtigt es einzusehen.',
 	'UI:SearchResultsPageTitle' => 'iTop - Suchergebnisse',
+	'UI:SearchResultsTitle' => 'Suchergebnisse',
+	'UI:SearchResultsTitle+' => 'Full-text search results~~',
 	'UI:Search:NoSearch' => 'Kein Suchbegriff eingegeben',
 	'UI:FullTextSearchTitle_Text' => 'Ergebnisse für "%1$s":',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%1$d Objekt(e) der Klasse %2$s gefunden.',

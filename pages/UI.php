@@ -460,6 +460,7 @@ try
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'full_text': // Global "google-like" search
+			$oP->DisableBreadCrumb();
 			$sFullText = trim(utils::ReadParam('text', '', false, 'raw_data'));
 			$iTune = utils::ReadParam('tune', 0);
 			if (empty($sFullText))
@@ -534,6 +535,10 @@ try
 				if ($iErrors == 0)
 				{
 					$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
+					$sPageId = "ui-global-search";
+					$sLabel = Dict::S('UI:SearchResultsTitle');
+					$sDescription = Dict::S('UI:SearchResultsTitle+');
+					$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription, '', utils::GetAbsoluteUrlAppRoot().'images/search.png');
 					$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
 					$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
 					$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');					

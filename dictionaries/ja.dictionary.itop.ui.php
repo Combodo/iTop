@@ -609,6 +609,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:ErrorPageTitle' => 'iTop - エラー',
 	'UI:ObjectDoesNotExist' => '申し訳ございません。このオブジェクトは既に存在しません。(あるいは参照する権限がありません。)',
 	'UI:SearchResultsPageTitle' => 'iTop - 検索結果',
+	'UI:SearchResultsTitle' => '検索結果',
+	'UI:SearchResultsTitle+' => 'Full-text search results~~',
 	'UI:Search:NoSearch' => '検索するものがありません。',
 	'UI:FullTextSearchTitle_Text' => '"%1$s"の結果：',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%2$sクラスの%1$dオブジェクトが見つかりました。',

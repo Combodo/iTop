@@ -761,6 +761,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:ErrorPageTitle' => 'iTop - Error',
 	'UI:ObjectDoesNotExist' => 'Disculpe, este objeto no existe (o no está autorizado para verlo).',
 	'UI:SearchResultsPageTitle' => 'iTop - Resultados de la Búsqueda',
+	'UI:SearchResultsTitle' => 'Resultados de la Búsqueda',
+	'UI:SearchResultsTitle+' => 'Full-text search results~~',
 	'UI:Search:NoSearch' => 'Nada para buscar',
 	'UI:FullTextSearchTitle_Text' => 'Resultados para "%1$s":',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%1$d objeto(s) de la clase %2$s encontrado(s).',

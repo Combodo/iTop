@@ -757,6 +757,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:ErrorPageTitle' => 'iTop - Ошибка',
 	'UI:ObjectDoesNotExist' => 'Извните, этот объект не существует (или вы не можете его видеть).',
 	'UI:SearchResultsPageTitle' => 'iTop - Результаты поиска',
+	'UI:SearchResultsTitle' => 'Результаты поиска',
+	'UI:SearchResultsTitle+' => 'Full-text search results~~',
 	'UI:Search:NoSearch' => 'Ничего не найдено',
 	'UI:FullTextSearchTitle_Text' => 'Результаты для "%1$s":',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%1$d объект(ы) класса %2$s найдено.',

@@ -540,6 +540,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:ErrorPageTitle' => 'iTop - Hiba',
 	'UI:ObjectDoesNotExist' => 'Sajnálom ez az objektum nem létezik (vagy a megtekintése nem engedélyezett a felhasználó számára).',
 	'UI:SearchResultsPageTitle' => 'iTop - Keresés eredményei',
+	'UI:SearchResultsTitle' => 'Keresés eredményei',
+	'UI:SearchResultsTitle+' => 'Full-text search results~~',
 	'UI:Search:NoSearch' => 'Nincs keresés',
 	'UI:FullTextSearchTitle_Text' => '"%1$s" keresés eredményei:',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%2$s osztály %1$d objektuma',
