@@ -86,8 +86,10 @@ EOF
 
 			// Rendering table widget
 			// - Vars
-			$sEmptyTableLabel = htmlentities(Dict::S( ($this->oField->GetReadOnly()) ? 'Portal:Datatables:Language:EmptyTable' : 'UI:Message:EmptyList:UseAdd'), ENT_QUOTES, 'UTF-8');
+			$sEmptyTableLabel = htmlentities(Dict::S(($this->oField->GetReadOnly()) ? 'Portal:Datatables:Language:EmptyTable' : 'UI:Message:EmptyList:UseAdd'), ENT_QUOTES, 'UTF-8');
+			$sLabelGeneralCheckbox = htmlentities(Dict::S('Core:BulkExport:CheckAll') . ' / ' . Dict::S('Core:BulkExport:UncheckAll'), ENT_QUOTES, 'UTF-8');
 			$sSelectionOptionHtml = ($this->oField->GetReadOnly()) ? 'false' : '{"style": "multi"}';
+			$sSelectionInputGlobalHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" id="' . $this->oField->GetId() . '_check_all" name="' . $this->oField->GetId() . '_check_all" title="' . $sLabelGeneralCheckbox . '" /></span>';
 			$sSelectionInputHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" name="' . $this->oField->GetId() . '" /></span>';
 			// - Output
 			$oOutput->AddJs(
@@ -100,7 +102,16 @@ EOF
 				var getColumnsDefinition_{$this->oField->GetGlobalId()} = function()
 				{
 					var aColumnsDefinition = [];
-					var sFirstColumnId = Object.keys(oColumnProperties_{$this->oField->GetGlobalId()})[0];
+					
+					aColumnsDefinition.push({
+							"width": "auto",
+							"searchable": false,
+							"sortable": false,
+							"title": '{$sSelectionInputGlobalHtml}',
+							"type": "html",
+							"data": "",
+							"render": function(data, type, row){ return '{$sSelectionInputHtml}'; }
+					});
 
 					for(sKey in oColumnProperties_{$this->oField->GetGlobalId()})
 					{
@@ -128,11 +139,6 @@ EOF
 								}
 								cellElem.attr('data-object-id', row.id).html('<span>' + row.attributes[data].value + '</span>');
 
-								if(data === sFirstColumnId)
-								{
-									cellElem.prepend('{$sSelectionInputHtml}');
-								}
-
 								return cellElem.prop('outerHTML');
 							},
 						});
@@ -150,6 +156,7 @@ EOF
 					"displayLength": -1,
 					"scrollY": "300px",
 					"scrollCollapse": true,
+					"order": [[1, "asc"]],
 					"dom": 't',
 					"columns": getColumnsDefinition_{$this->oField->GetGlobalId()}(),
 					"select": {$sSelectionOptionHtml},
@@ -255,25 +262,17 @@ EOF
 			{
 				// Rendering table
 				// - Vars
-				$sButtonAllId = 'btn_all_' . $this->oField->GetGlobalId();
-				$sButtonNoneId = 'btn_none_' . $this->oField->GetGlobalId();
 				$sButtonRemoveId = 'btn_remove_' . $this->oField->GetGlobalId();
 				$sButtonAddId = 'btn_add_' . $this->oField->GetGlobalId();
-				$sLabelAll = Dict::S('Core:BulkExport:CheckAll');
-				$sLabelNone = Dict::S('Core:BulkExport:UncheckAll');
 				$sLabelRemove = Dict::S('UI:Button:Remove');
 				$sLabelAdd = Dict::S('UI:Button:AddObject');
 				// - Output
 				$oOutput->AddHtml(
 <<<EOF
 					<div class="row">
-						<div class="col-xs-6">
-							<button type="button" class="btn btn-secondary" id="{$sButtonAllId}">{$sLabelAll}</button>
-							<button type="button" class="btn btn-secondary" id="{$sButtonNoneId}">{$sLabelNone}</button>
-						</div>
-						<div class="col-xs-6 text-right">
-							<button type="button" class="btn btn-danger" id="{$sButtonRemoveId}">{$sLabelRemove}</button>
-							<button type="button" class="btn btn-default" id="{$sButtonAddId}">{$sLabelAdd}</button>
+						<div class="col-xs-12">
+							<button type="button" class="btn btn-sm btn-danger" id="{$sButtonRemoveId}" title="{$sLabelRemove}" disabled><span class="glyphicon glyphicon-minus"></span></button>
+							<button type="button" class="btn btn-sm btn-default" id="{$sButtonAddId}" title="{$sLabelAdd}"><span class="glyphicon glyphicon-plus"></span></button>
 						</div>
 					</div>
 EOF
@@ -286,12 +285,18 @@ EOF
 				$oOutput->AddJs(
 	<<<EOF
 					// Handles items selection/deselection
+					// - Remove button state handler
+					var updateRemoveButtonState_{$this->oField->GetGlobalId()} = function()
+					{
+						var bIsDisabled = (Object.keys(oSelectedItems_{$this->oField->GetGlobalId()}).length == 0);
+						$('#{$sButtonRemoveId}').prop('disabled', bIsDisabled);
+					};
 					// - Directly on the table
 					oTable_{$this->oField->GetGlobalId()}.off('select').on('select', function(oEvent, dt, type, indexes){
 						var aData = oTable_{$this->oField->GetGlobalId()}.rows(indexes).data().toArray();
 
 						// Checking input
-						$('#{$sTableId} tr[role="row"].selected td:first-child input').prop('checked', true);
+						$('#{$sTableId} tbody tr[role="row"].selected td:first-child input').prop('checked', true);
 						// Saving values in temp array
 						for(var i in aData)
 						{
@@ -301,12 +306,14 @@ EOF
 								oSelectedItems_{$this->oField->GetGlobalId()}[iItemId] = aData[i].name;
 							}
 						}
+						// Updating remove button
+						updateRemoveButtonState_{$this->oField->GetGlobalId()}();
 					});
 					oTable_{$this->oField->GetGlobalId()}.off('deselect').on('deselect', function(oEvent, dt, type, indexes){
 						var aData = oTable_{$this->oField->GetGlobalId()}.rows(indexes).data().toArray();
 
 						// Checking input
-						$('#{$sTableId} tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
+						$('#{$sTableId} tbody tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
 						// Saving values in temp array
 						for(var i in aData)
 						{
@@ -316,19 +323,34 @@ EOF
 								delete oSelectedItems_{$this->oField->GetGlobalId()}[iItemId];
 							}
 						}
+						// Unchecking global checkbox
+						$('#{$this->oField->GetId()}_check_all').prop('checked', false);
+						// Updating remove button
+						updateRemoveButtonState_{$this->oField->GetGlobalId()}();
 					});
-					// - From the bottom buttons
-					$('#{$sButtonAllId}').off('click').on('click', function(){
-						oTable_{$this->oField->GetGlobalId()}.rows().select();
-					});
-					$('#{$sButtonNoneId}').off('click').on('click', function(){
-						oTable_{$this->oField->GetGlobalId()}.rows().deselect();
+					// - From the global button
+					$('#{$this->oField->GetId()}_check_all').off('click').on('click', function(oEvent){
+						if($(this).prop('checked'))
+						{
+							oTable_{$this->oField->GetGlobalId()}.rows().select();
+						}
+						else
+						{
+							oTable_{$this->oField->GetGlobalId()}.rows().deselect();
+						}
+						updateRemoveButtonState_{$this->oField->GetGlobalId()}();
 					});
 
 					// Handles items remove/add
 					$('#{$sButtonRemoveId}').off('click').on('click', function(){
+						// Removing items from table
 						oTable_{$this->oField->GetGlobalId()}.rows({selected: true}).remove().draw();
+						// Resetting selected items
+						oSelectedItems_{$this->oField->GetGlobalId()} = {};
+						// Updating form value
 						$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").triggerHandler('set_current_value');
+						// Updating remove button
+						updateRemoveButtonState_{$this->oField->GetGlobalId()}();
 					});
 					$('#{$sButtonAddId}').off('click').on('click', function(){
 						// Creating a new modal
