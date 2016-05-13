@@ -65,7 +65,7 @@ $oApp->register(new Silex\Provider\TwigServiceProvider(), array(
 ));
 
 // Configuring Silex application
-$oApp['debug'] = false;
+$oApp['debug'] = true;
 $oApp['combodo.absolute_url'] = utils::GetAbsoluteUrlAppRoot();
 $oApp['combodo.portal.base.absolute_url'] = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/web/';
 $oApp['combodo.portal.instance.absolute_url'] = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/' . PORTAL_MODULE_ID . '/';

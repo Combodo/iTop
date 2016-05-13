@@ -125,59 +125,67 @@ $(function()
 
 							// Scrolling to top so the user can see messages
 							$('body').scrollTop(0);
-						}
 						
-						// If everything is okay, we close the form and reload it.
-						if(oValidation.valid)
-						{
-							if(me.options.is_modal)
+							// If everything is okay, we close the form and reload it.
+							if(oValidation.valid)
 							{
-								me.element.closest('.modal').modal('hide');
-							}
-							
-							// Checking if we have to redirect to another page
-							if(oValidation.redirection !== undefined)
-							{
-								var oRedirection = oValidation.redirection;
-								var bRedirectionAjax = (oRedirection.ajax !== undefined) ? oRedirection.ajax : false;
-								var sUrl = null;
-								
-								// URL priority order :
-								// redirection.url > me.option.submit_url > redirection.alternative_url
-								if(oRedirection.url !== undefined)
+								if(me.options.is_modal)
 								{
-									sUrl = oRedirection.url;
+									me.element.closest('.modal').modal('hide');
+								}
+
+								// Checking if we have to redirect to another page
+								if(oValidation.redirection !== undefined)
+								{
+									var oRedirection = oValidation.redirection;
+									var bRedirectionAjax = (oRedirection.ajax !== undefined) ? oRedirection.ajax : false;
+									var sUrl = null;
+
+									// URL priority order :
+									// redirection.url > me.option.submit_url > redirection.alternative_url
+									if(oRedirection.url !== undefined)
+									{
+										sUrl = oRedirection.url;
+									}
+									else if(me.options.submit_url !== null)
+									{
+										sUrl = me.options.submit_url;
+									}
+									else if(oRedirection.alternative_url !== undefined)
+									{
+										sUrl = oRedirection.alternative_url;
+									}
+
+									if(sUrl !== null)
+									{
+										if(bRedirectionAjax)
+										{
+											// Creating a new modal
+											var oModalElem = $('#modal-for-all').clone();
+											oModalElem.attr('id', '').appendTo('body');
+											// Loading content
+											oModalElem.find('.modal-content').html($('#page_overlay .overlay_content').html());
+											oModalElem.find('.modal-content').load(sUrl);
+											oModalElem.modal('show');
+										}
+										else
+										{
+											// Showing loader while redirecting, otherwise user tend to click somewhere in the page.
+											// Note : We use a timeout because .always() is called right after here and will hide the loader
+											setTimeout(function(){ me._disableFormBeforeLoading(); }, 50);
+											// Redirecting after a few ms so the user can see what happend
+											setTimeout(function() { location.href = sUrl; }, 400);
+										}
+									}
 								}
 								else if(me.options.submit_url !== null)
 								{
-									sUrl = me.options.submit_url;
+									// Showing loader while redirecting, otherwise user tend to click somewhere in the page.
+									// Note : We use a timeout because .always() is called right after here and will hide the loader
+									setTimeout(function(){ me._disableFormBeforeLoading(); }, 50);
+									// Redirecting after a few ms so the user can see what happend
+									setTimeout(function() { location.href = me.options.submit_url; }, 400);
 								}
-								else if(oRedirection.alternative_url !== undefined)
-								{
-									sUrl = oRedirection.alternative_url;
-								}
-								
-								if(sUrl !== null)
-								{
-									if(bRedirectionAjax)
-									{
-										// Creating a new modal
-										var oModalElem = $('#modal-for-all').clone();
-										oModalElem.attr('id', '').appendTo('body');
-										// Loading content
-										oModalElem.find('.modal-content').html($('#page_overlay .overlay_content').html());
-										oModalElem.find('.modal-content').load(sUrl);
-										oModalElem.modal('show');
-									}
-									else
-									{
-										setTimeout(function() { location.href = sUrl; }, 400);
-									}
-								}
-							}
-							else if(me.options.submit_url !== null)
-							{
-								setTimeout(function() { location.href = me.options.submit_url; }, 400);
 							}
 						}
 					}

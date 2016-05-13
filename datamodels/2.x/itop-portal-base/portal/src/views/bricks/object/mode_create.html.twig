@@ -2,6 +2,7 @@
 {# Object brick create layout #}
 
 {% set sFormId = (form.id is defined and form.id is not null) ? form.id : 'object_form' %}
+{% set sFormIdSanitized = sFormId|replace({'-': ''}) %}
 {% set tIsModal = (tIsModal is defined and tIsModal == true) ? true : false %}
 
 <form id="{{ sFormId }}" method="POST" action="{{ form.renderer.GetEndpoint()|raw }}">
@@ -43,23 +44,65 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		var oFieldSet = $('#{{ sFormId }} > .form_fields').field_set({{ form.fieldset|json_encode()|raw }});
-		
+		// Form field set declaration
+		var oFieldSet_{{ sFormIdSanitized }} = $('#{{ sFormId }} > .form_fields').field_set({{ form.fieldset|json_encode()|raw }});
+		// Form handler declaration
 		$('#{{ sFormId }}').portal_form_handler({
 			formmanager_class: "{{ form.formmanager_class|escape('js') }}",
 			formmanager_data: {{ form.formmanager_data|json_encode()|raw }},
-			field_set: oFieldSet,
+			field_set: oFieldSet_{{ sFormIdSanitized }},
 			submit_btn_selector: $('#{{ sFormId }}').parent().find('.form_btn_submit, .form_btn_transition'),
 			cancel_btn_selector: $('#{{ sFormId }}').parent().find('.form_btn_cancel'),
 			submit_url: {% if form.submit_callback is not null %}"{{ form.submit_callback }}"{% else %}null{% endif %},
 			cancel_url: {% if form.cancel_callback is not null %}"{{ form.cancel_callback }}"{% else %}null{% endif %},
 			endpoint: "{{ form.renderer.GetEndpoint()|raw }}",
-			is_modal: {% if tIsModal is defined and tIsModal == true %}true{% else %}false{% endif %}
+			is_modal: {% if tIsModal == true %}true{% else %}false{% endif %}
 		});
 		
-		{% if tIsModal is defined and tIsModal == true %}
+		// Sticky buttons handler
+		// Note : This pattern if to prevent performance issues
+		// - Cloning buttons
+		var oNormalRegularButtons_{{ sFormIdSanitized }} = $('#{{ sFormId }} .form_btn_regular');
+		var oStickyRegularButtons_{{ sFormIdSanitized }} = oNormalRegularButtons_{{ sFormIdSanitized }}.clone(true, true);
+		oStickyRegularButtons_{{ sFormIdSanitized }}.addClass('sticky');
+		{% if tIsModal == true %}
+			$('#{{ sFormId }}').closest('.modal').append(oStickyRegularButtons_{{ sFormIdSanitized }});
+		{% else %}
+			$('#{{ sFormId }}').closest('#main-content').append(oStickyRegularButtons_{{ sFormIdSanitized }});
+		{% endif %}
+		// - Global timeout for any
+		var oScrollTimeout;
+		// - Scroll handler
+		scrollHandler_{{ sFormIdSanitized }} = function () {
+			if($('#{{ sFormId }} .form_buttons').visible())
+			{
+				oStickyRegularButtons_{{ sFormIdSanitized }}.addClass('closed');
+			}
+			else
+			{
+				oStickyRegularButtons_{{ sFormIdSanitized }}.removeClass('closed');
+			}
+		};
+		// - Event binding
+		$({% if tIsModal == true %}'.modal.in'{% else %}window{% endif %}).off('scroll').on('scroll', function () {
+			if (oScrollTimeout) {
+				// Clear the timeout, if one is pending
+				clearTimeout(oScrollTimeout);
+				oScrollTimeout = null;
+			}
+			oScrollTimeout = setTimeout(scrollHandler_{{ sFormIdSanitized }}, 50);
+		});
+		// - First time call
+		scrollHandler_{{ sFormIdSanitized }}();
+		
+		{% if tIsModal == true %}
+			// Scroll top (because sometimes when several modals have been opened)
 			$('#{{ sFormId }}').closest('.modal').scrollTop(0);
 			$('#{{ sFormId }}').closest('.modal').find('.modal-footer').hide();
+			// Remove sticky button when closing modal
+			$('#{{ sFormId }}').closest('.modal').on('hidden.bs.modal', function () {
+				oStickyRegularButtons_{{ sFormIdSanitized }}.remove();
+			});
 		{% endif %}
 	});
 </script>

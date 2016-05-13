@@ -638,18 +638,6 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	bottom: 0px;
 	height: 0px;
 }
-#drag_overlay.drag_in{
-	animation: show-drop-zone 0.3s ease-out forwards;
-	-webkit-animation: show-drop-zone 0.3s ease-out forwards;
-	-moz-animation: show-drop-zone 0.3s ease-out forwards;
-	-ms-animation: show-drop-zone 0.3s ease-out forwards;
-}
-#drag_overlay.drag_out{
-	animation: hide-drop-zone 0.3s ease-out forwards;
-	-webkit-animation: hide-drop-zone 0.3s ease-out forwards;
-	-moz-animation: hide-drop-zone 0.3s ease-out forwards;
-	-ms-animation: hide-drop-zone 0.3s ease-out forwards;
-}
 #drag_overlay .overlay_content{
 	margin-top: 5em;
     width: 100%;
@@ -661,56 +649,71 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 #drag_overlay .overlay_content .message{
 	font-size: 1.5em;
 }
-@keyframes show-drop-zone{
-	100% {
-		height: 20%;
+/* Attachments drag & drop zone, only for none mobile devices */
+@media (min-width: 768px){
+	#drag_overlay.drag_in{
+		animation: show-drop-zone 0.3s ease-out forwards;
+		-webkit-animation: show-drop-zone 0.3s ease-out forwards;
+		-moz-animation: show-drop-zone 0.3s ease-out forwards;
+		-ms-animation: show-drop-zone 0.3s ease-out forwards;
 	}
-}
-@-webkit-keyframes show-drop-zone{
-	100% {
-		height: 20%;
+	#drag_overlay.drag_out{
+		animation: hide-drop-zone 0.3s ease-out forwards;
+		-webkit-animation: hide-drop-zone 0.3s ease-out forwards;
+		-moz-animation: hide-drop-zone 0.3s ease-out forwards;
+		-ms-animation: hide-drop-zone 0.3s ease-out forwards;
 	}
-}
-@-moz-keyframes show-drop-zone{
-	100% {
-		height: 20%;
+	@keyframes show-drop-zone{
+		100% {
+			height: 20%;
+		}
 	}
-}
-@-ms-keyframes show-drop-zone{
-	100% {
-		height: 20%;
+	@-webkit-keyframes show-drop-zone{
+		100% {
+			height: 20%;
+		}
 	}
-}
-@keyframes hide-drop-zone{
-	0% {
-		height: 20%;
+	@-moz-keyframes show-drop-zone{
+		100% {
+			height: 20%;
+		}
 	}
-	100% {
-		height: 0%;
+	@-ms-keyframes show-drop-zone{
+		100% {
+			height: 20%;
+		}
 	}
-}
-@-webkit-keyframes hide-drop-zone{
-	0% {
-		height: 20%;
+	@keyframes hide-drop-zone{
+		0% {
+			height: 20%;
+		}
+		100% {
+			height: 0%;
+		}
 	}
-	100% {
-		height: 0%;
+	@-webkit-keyframes hide-drop-zone{
+		0% {
+			height: 20%;
+		}
+		100% {
+			height: 0%;
+		}
 	}
-}
-@-moz-keyframes hide-drop-zone{
-	0% {
-		height: 20%;
+	@-moz-keyframes hide-drop-zone{
+		0% {
+			height: 20%;
+		}
+		100% {
+			height: 0%;
+		}
 	}
-	100% {
-		height: 0%;
-	}
-}
-@-ms-keyframes hide-drop-zone{
-	0% {
-		height: 20%;
-	}
-	100% {
-		height: 0%;
+	@-ms-keyframes hide-drop-zone{
+		0% {
+			height: 20%;
+		}
+		100% {
+			height: 0%;
+		}
 	}
 }
 
@@ -726,6 +729,9 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 .form_buttons .form_btn_transitions{
 	margin-bottom: 20px;
 }
+.form_btn_regular.sticky{
+	display: none;
+}
 @media (min-width: 768px){
 	.form_buttons .form_btn_transitions{
 		float: left !important;
@@ -735,6 +741,40 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	}
 	.form_buttons .form_btn_regular btn{
 		width: inherit;
+	}
+	/* Making regular button sticky */
+	.form_btn_regular.sticky{
+		display: block;
+		position: fixed;
+		bottom: 0px;
+		padding: 15px;
+		background-color: #FFF; /* TODO : SASS this to panel bg */
+		border: 1px solid #DDD; /* TODO : SASS this to panel border */
+		border-radius: 4px; /* TODO : SASS this to panel border */
+		transition: bottom 0.3s;
+	}
+	.form_btn_regular.sticky.closed{
+		bottom: -80px;
+	}
+	/* - For regular layout */
+	#main-content .form_btn_regular.sticky{
+		right: 15px; /* TODO : SASS this to col-xs-12 padding */
+	}
+	/* - For modal layout */
+	.modal.in .form_btn_regular.sticky{
+		margin-left: 61%;
+	}
+}
+@media (min-width: 992px) {
+	/* - For modal layout */
+	.modal.in .form_btn_regular.sticky{
+		margin-left: 70%;
+	}
+}
+@media (min-width: 1200px) {
+	/* - For modal layout */
+	.modal.in .form_btn_regular.sticky{
+		margin-left: 73%;
 	}
 }
 
