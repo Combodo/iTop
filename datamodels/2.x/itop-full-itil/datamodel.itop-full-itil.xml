@@ -35,43 +35,6 @@
 				</method>
 			</methods>
 		</class>
-		<class id="UserRequest">
-			<fields>
-				<field id="request_type" xsi:type="AttributeEnum">
-					<default_value _delta="redefine"></default_value>
-				</field>
-				<field id="servicesubcategory_id" xsi:type="AttributeExternalKey">
-					<filter _delta="redefine">
-                        <![CDATA[SELECT ServiceSubcategory WHERE service_id = :this->service_id AND (ISNULL(:this->request_type) OR request_type = :this->request_type) AND status != 'obsolete']]></filter>
-				</field>
-			</fields>
-			<methods>
-				<method id="ComputeValues" _delta="redefine">
-					<static>false</static>
-					<access>public</access>
-					<type>Overload-DBObject</type>
-					<code><![CDATA[	public function ComputeValues()
-	{
-		// Compute the priority of the ticket
-		$this->Set('priority', $this->ComputePriority());
-
-		// Compute the request_type if not already given
-		$sType = $this->Get('request_type');
-        if (is_null($sType) || ($sType === ''))
-		{
-			$iSvcSubcat = $this->Get('servicesubcategory_id');
-			if ($iSvcSubcat != 0)
-			{
-				$sType = $this->Get('servicesubcategory_id->request_type');
-				$this->Set('request_type', $sType);
-			}
-		}
-
-		return parent::ComputeValues();
-	}]]></code>
-				</method>
-			</methods>
-		</class>
 	</classes>
 	<module_designs>
 		<module_design id="itop-portal">
