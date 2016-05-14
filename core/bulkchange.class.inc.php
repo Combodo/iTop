@@ -827,17 +827,24 @@ class BulkChange
 							{
 								$sFormat = $sDateFormat;
 							}
-							$oDate = DateTime::createFromFormat($sFormat, $this->m_aData[$iRow][$iCol]);
-							if ($oDate !== false)
+							if (!preg_match('/'.$sRegExp.'/', $this->m_aData[$iRow][$iCol]))
 							{
-								$sNewDate = $oDate->format($oAttDef->GetInternalFormat());
-								$this->m_aData[$iRow][$iCol] = $sNewDate;
+								$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
 							}
 							else
 							{
-								// Leave the cell unchanged
-								$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
-								$aResult[$iRow][$sAttCode] = new CellStatus_Issue(null, $this->m_aData[$iRow][$iCol], Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
+								$oDate = DateTime::createFromFormat($sFormat, $this->m_aData[$iRow][$iCol]);
+								if ($oDate !== false)
+								{
+									$sNewDate = $oDate->format($oAttDef->GetInternalFormat());
+									$this->m_aData[$iRow][$iCol] = $sNewDate;
+								}
+								else
+								{
+									// Leave the cell unchanged
+									$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
+									$aResult[$iRow][$sAttCode] = new CellStatus_Issue(null, $this->m_aData[$iRow][$iCol], Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
+								}
 							}
 						}
 						else
