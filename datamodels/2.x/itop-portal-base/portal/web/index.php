@@ -49,6 +49,9 @@ if (UserRights::GetContactId() == 0)
 	die(Dict::S('Portal:ErrorNoContactForThisUser'));
 }
 
+// Checking if debug param is on
+$bDebug = (isset($_REQUEST['debug']) && ($_REQUEST['debug'] === 'true') );
+
 // Initializing Silex framework
 $oApp = new Silex\Application();
 
@@ -65,7 +68,7 @@ $oApp->register(new Silex\Provider\TwigServiceProvider(), array(
 ));
 
 // Configuring Silex application
-$oApp['debug'] = true;
+$oApp['debug'] = $bDebug;
 $oApp['combodo.absolute_url'] = utils::GetAbsoluteUrlAppRoot();
 $oApp['combodo.portal.base.absolute_url'] = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/web/';
 $oApp['combodo.portal.instance.absolute_url'] = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/' . PORTAL_MODULE_ID . '/';

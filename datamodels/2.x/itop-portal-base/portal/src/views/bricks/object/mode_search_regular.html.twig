@@ -44,11 +44,21 @@
 	var getColumnsDefinition = function()
 	{
 		var aColumnsDefinition = [];
-		var sFirstColumnId = Object.keys(oColumnProperties)[0];
+		
+		// Checkbox / Radio
+		aColumnsDefinition.push({
+				"width": "auto",
+				"searchable": false,
+				"sortable": false,
+				"title": "",
+				"type": "html",
+				"data": "",
+				"render": function(data, type, row){ return '<span class="row_input"><input type="{{ (bMultipleSelect) ? 'checkbox' : 'radio' }}" name="{{ sTargetAttCode }}" /></span>'; }
+		});
 
 		for(sKey in oColumnProperties)
 		{
-			// Level main column
+			// Object attribute
 			aColumnsDefinition.push({
 				"width": "auto",
 				"searchable": true,
@@ -72,11 +82,6 @@
 					}
 					cellElem.attr('data-object-id', row.id).html('<span>' + row.attributes[data].value + '</span>');
 					
-					if(data === sFirstColumnId)
-					{
-						cellElem.prepend('<span class="row_input"><input type="{{ (bMultipleSelect) ? 'checkbox' : 'radio' }}" name="{{ sTargetAttCode }}" /></span>');
-					}
-
 					return cellElem.prop('outerHTML');
 				},
 			});
@@ -113,6 +118,7 @@
 			},
 			"lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "{{ 'Portal:Datatables:Language:DisplayLength:All'|dict_s }}"]],
 			"displayLength": {{ constant('Combodo\\iTop\\Portal\\Controller\\ObjectController::DEFAULT_COUNT_PER_PAGE_LIST') }},
+			"order": [[1, "asc"]],
 			"dom": '<"row"<"col-sm-6"l><"col-sm-6"<f><"visible-xs"p>>>t<"row"<"col-sm-6"i><"col-sm-6"p>>',
 			"columns": getColumnsDefinition(),
 			"select": {

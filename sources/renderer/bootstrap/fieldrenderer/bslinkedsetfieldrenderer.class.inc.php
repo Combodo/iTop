@@ -58,10 +58,20 @@ class BsLinkedSetFieldRenderer extends FieldRenderer
 		if (!$this->oField->GetHidden())
 		{
 			// Rendering field
+			$sCollapseTogglerVisibleClass = 'glyphicon-menu-right';
+			$sCollapseTogglerHiddenClass = 'glyphicon-menu-down';
+			$sCollapseTogglerId = 'form_linkedset_toggler_' . $this->oField->GetGlobalId();
+			$sFieldWrapperId = 'form_linkedset_wrapper_' . $this->oField->GetGlobalId();
 			$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
 			if ($this->oField->GetLabel() !== '')
 			{
-				$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+				$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')
+					->AddHtml($this->oField->GetLabel(), true)
+					->AddHtml('<a id="' . $sCollapseTogglerId . '" class="form_linkedset_toggler" data-toggle="collapse" href="#' . $sFieldWrapperId . '" aria-expanded="false" aria-controls="' . $sFieldWrapperId . '">')
+					->AddHtml('<span class="text">' . count($aItemIds) . '</span>')
+					->AddHtml('<span class="glyphicon ' . $sCollapseTogglerHiddenClass . '"></>')
+					->AddHtml('</a>')
+					->AddHtml('</label>');
 			}
 			$oOutput->AddHtml('<div class="help-block"></div>');
 
@@ -71,7 +81,7 @@ class BsLinkedSetFieldRenderer extends FieldRenderer
 			// - Output
 			$oOutput->AddHtml(
 <<<EOF
-				<div class="form_linkedset_wrapper">
+				<div class="form_linkedset_wrapper collapse" id="{$sFieldWrapperId}">
 					<div class="row">
 						<div class="col-xs-12">
 							<input type="hidden" id="{$this->oField->GetGlobalId()}" name="{$this->oField->GetId()}" value="{$sItemIdsAsJson}" />
@@ -89,11 +99,32 @@ EOF
 			$sEmptyTableLabel = htmlentities(Dict::S(($this->oField->GetReadOnly()) ? 'Portal:Datatables:Language:EmptyTable' : 'UI:Message:EmptyList:UseAdd'), ENT_QUOTES, 'UTF-8');
 			$sLabelGeneralCheckbox = htmlentities(Dict::S('Core:BulkExport:CheckAll') . ' / ' . Dict::S('Core:BulkExport:UncheckAll'), ENT_QUOTES, 'UTF-8');
 			$sSelectionOptionHtml = ($this->oField->GetReadOnly()) ? 'false' : '{"style": "multi"}';
-			$sSelectionInputGlobalHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" id="' . $this->oField->GetId() . '_check_all" name="' . $this->oField->GetId() . '_check_all" title="' . $sLabelGeneralCheckbox . '" /></span>';
-			$sSelectionInputHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" name="' . $this->oField->GetId() . '" /></span>';
+			$sSelectionInputGlobalHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" id="' . $this->oField->GetGlobalId() . '_check_all" name="' . $this->oField->GetGlobalId() . '_check_all" title="' . $sLabelGeneralCheckbox . '" /></span>';
+			$sSelectionInputHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" name="' . $this->oField->GetGlobalId() . '" /></span>';
 			// - Output
 			$oOutput->AddJs(
 <<<EOF
+				// Collapse handlers
+				// - Collapsing by default to optimize form space
+				// It would be better to be able to construct the widget as collapsed, but in this ase, datatables thinks the container is very small and therefore renders the table as if it was in microbox.
+				$('#{$sFieldWrapperId}').collapse({toggle: false});
+				// - Change toggle icon class
+				$('#{$sFieldWrapperId}').on('shown.bs.collapse', function(){
+					// Creating the table if null (first expand). If we create it on start, it will be displayed as if it was in a micro screen due to the div being "display: none;"
+					if(oTable_{$this->oField->GetGlobalId()} === undefined)
+					{
+						buildTable_{$this->oField->GetGlobalId()}();
+					}
+					$('#{$sCollapseTogglerId} > span.glyphicon').removeClass('{$sCollapseTogglerHiddenClass}').addClass('{$sCollapseTogglerVisibleClass}');
+				})
+				.on('hidden.bs.collapse', function(){
+					$('#{$sCollapseTogglerId} > span.glyphicon').removeClass('{$sCollapseTogglerVisibleClass}').addClass('{$sCollapseTogglerHiddenClass}');
+				});
+
+				// Places a loader in the empty datatables
+				$('#{$sTableId} > tbody').html('<tr><td class="datatables_overlay" colspan="100">' + $('#page_overlay').html() + '</td></tr>');
+
+				// Prepares data for datatables
 				var oColumnProperties_{$this->oField->GetGlobalId()} = {$sAttributesToDisplayAsJson};
 				var oRawDatas_{$this->oField->GetGlobalId()} = {$sItemsAsJson};
 				var oTable_{$this->oField->GetGlobalId()};
@@ -147,22 +178,78 @@ EOF
 					return aColumnsDefinition;
 				};
 
+				// Helper to build the datatable
 				// Note : Those options should be externalized in an library so we can use them on any DataTables for the portal.
 				// We would just have to override / complete the necessary elements
-				oTable_{$this->oField->GetGlobalId()} = $('#{$sTableId}').DataTable({
-					"language": {
-						"emptyTable":	  "{$sEmptyTableLabel}"
-					},
-					"displayLength": -1,
-					"scrollY": "300px",
-					"scrollCollapse": true,
-					"order": [[1, "asc"]],
-					"dom": 't',
-					"columns": getColumnsDefinition_{$this->oField->GetGlobalId()}(),
-					"select": {$sSelectionOptionHtml},
-					"rowId": "id",
-					"data": oRawDatas_{$this->oField->GetGlobalId()},
-				});
+				var buildTable_{$this->oField->GetGlobalId()} = function()
+				{
+					// Instanciates datatables
+					oTable_{$this->oField->GetGlobalId()} = $('#{$sTableId}').DataTable({
+						"language": {
+							"emptyTable":	  "{$sEmptyTableLabel}"
+						},
+						"displayLength": -1,
+						"scrollY": "300px",
+						"scrollCollapse": true,
+						"order": [[1, "asc"]],
+						"dom": 't',
+						"columns": getColumnsDefinition_{$this->oField->GetGlobalId()}(),
+						"select": {$sSelectionOptionHtml},
+						"rowId": "id",
+						"data": oRawDatas_{$this->oField->GetGlobalId()},
+					});
+						
+					// Handles items selection/deselection
+					// - Directly on the table
+					oTable_{$this->oField->GetGlobalId()}.off('select').on('select', function(oEvent, dt, type, indexes){
+						var aData = oTable_{$this->oField->GetGlobalId()}.rows(indexes).data().toArray();
+
+						// Checking input
+						$('#{$sTableId} tbody tr[role="row"].selected td:first-child input').prop('checked', true);
+						// Saving values in temp array
+						for(var i in aData)
+						{
+							var iItemId = aData[i].id;
+							if(!(iItemId in oSelectedItems_{$this->oField->GetGlobalId()}))
+							{
+								oSelectedItems_{$this->oField->GetGlobalId()}[iItemId] = aData[i].name;
+							}
+						}
+						// Updating remove button
+						updateRemoveButtonState_{$this->oField->GetGlobalId()}();
+					});
+					oTable_{$this->oField->GetGlobalId()}.off('deselect').on('deselect', function(oEvent, dt, type, indexes){
+						var aData = oTable_{$this->oField->GetGlobalId()}.rows(indexes).data().toArray();
+
+						// Checking input
+						$('#{$sTableId} tbody tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
+						// Saving values in temp array
+						for(var i in aData)
+						{
+							var iItemId = aData[i].id;
+							if(iItemId in oSelectedItems_{$this->oField->GetGlobalId()})
+							{
+								delete oSelectedItems_{$this->oField->GetGlobalId()}[iItemId];
+							}
+						}
+						// Unchecking global checkbox
+						$('#{$this->oField->GetGlobalId()}_check_all').prop('checked', false);
+						// Updating remove button
+						updateRemoveButtonState_{$this->oField->GetGlobalId()}();
+					});
+					// - From the global button
+					$('#{$this->oField->GetGlobalId()}_check_all').off('click').on('click', function(oEvent){
+						if($(this).prop('checked'))
+						{
+							oTable_{$this->oField->GetGlobalId()}.rows().select();
+						}
+						else
+						{
+							oTable_{$this->oField->GetGlobalId()}.rows().deselect();
+						}
+						updateRemoveButtonState_{$this->oField->GetGlobalId()}();
+					});
+				};
 EOF
 			);
 
@@ -232,6 +319,8 @@ EOF
 								}
 
 								$('#{$this->oField->GetGlobalId()}').val(JSON.stringify(aObjectIds));
+								// Updating items count
+								updateItemCount();
 							})
 							.always(function(oData){
 								// Hiding loader
@@ -251,6 +340,8 @@ EOF
 							}
 
 							$('#{$this->oField->GetGlobalId()}').val(JSON.stringify(aObjectIds));
+							// Updating items count
+							updateItemCount();
 						}
 					}
 				});
@@ -291,55 +382,13 @@ EOF
 						var bIsDisabled = (Object.keys(oSelectedItems_{$this->oField->GetGlobalId()}).length == 0);
 						$('#{$sButtonRemoveId}').prop('disabled', bIsDisabled);
 					};
-					// - Directly on the table
-					oTable_{$this->oField->GetGlobalId()}.off('select').on('select', function(oEvent, dt, type, indexes){
-						var aData = oTable_{$this->oField->GetGlobalId()}.rows(indexes).data().toArray();
-
-						// Checking input
-						$('#{$sTableId} tbody tr[role="row"].selected td:first-child input').prop('checked', true);
-						// Saving values in temp array
-						for(var i in aData)
-						{
-							var iItemId = aData[i].id;
-							if(!(iItemId in oSelectedItems_{$this->oField->GetGlobalId()}))
-							{
-								oSelectedItems_{$this->oField->GetGlobalId()}[iItemId] = aData[i].name;
-							}
-						}
-						// Updating remove button
-						updateRemoveButtonState_{$this->oField->GetGlobalId()}();
-					});
-					oTable_{$this->oField->GetGlobalId()}.off('deselect').on('deselect', function(oEvent, dt, type, indexes){
-						var aData = oTable_{$this->oField->GetGlobalId()}.rows(indexes).data().toArray();
-
-						// Checking input
-						$('#{$sTableId} tbody tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
-						// Saving values in temp array
-						for(var i in aData)
-						{
-							var iItemId = aData[i].id;
-							if(iItemId in oSelectedItems_{$this->oField->GetGlobalId()})
-							{
-								delete oSelectedItems_{$this->oField->GetGlobalId()}[iItemId];
-							}
-						}
-						// Unchecking global checkbox
-						$('#{$this->oField->GetId()}_check_all').prop('checked', false);
-						// Updating remove button
-						updateRemoveButtonState_{$this->oField->GetGlobalId()}();
-					});
-					// - From the global button
-					$('#{$this->oField->GetId()}_check_all').off('click').on('click', function(oEvent){
-						if($(this).prop('checked'))
-						{
-							oTable_{$this->oField->GetGlobalId()}.rows().select();
-						}
-						else
-						{
-							oTable_{$this->oField->GetGlobalId()}.rows().deselect();
-						}
-						updateRemoveButtonState_{$this->oField->GetGlobalId()}();
-					});
+					// - Item count state handler
+					var updateItemCount = function()
+					{
+						console.log('in fct');
+						console.log(oTable_{$this->oField->GetGlobalId()}.rows().count());
+						$('#{$sCollapseTogglerId} > .text').text( oTable_{$this->oField->GetGlobalId()}.rows().count() );
+					};
 
 					// Handles items remove/add
 					$('#{$sButtonRemoveId}').off('click').on('click', function(){

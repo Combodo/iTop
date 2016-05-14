@@ -598,6 +598,43 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	margin: 10px;
 	overflow-x: auto;
 }
+/* LinkedSet*/
+.form_linkedset_toggler,
+.form_linkedset_toggler:hover,
+.form_linkedset_toggler:focus{
+	margin-left: 0.4em;
+	text-decoration: none;
+	color: inherit;
+}
+.form_linkedset_toggler > .text:before{
+	content: "(";
+}
+.form_linkedset_toggler > .text:after{
+	content: ")";
+}
+.form_linkedset_toggler > .glyphicon{
+	margin-left: 0.5em;
+	font-size: 0.85em;
+	color: #d9230f; /* TODO : SASS this to primary color */
+}
+/* - DataTables : Loader */
+.form_linkedset_wrapper .datatables_overlay{
+	padding: 8px !important;
+}
+.form_linkedset_wrapper .overlay_content{
+	font-size: 0.6em;
+}
+.form_linkedset_wrapper .content_loader{
+	margin: 0px;
+}
+.form_linkedset_wrapper .content_loader .icon{
+	height: 23px;
+}
+/* - DataTables : Fit the table in the form */
+.form_linkedset_wrapper .dataTables_wrapper{
+	margin-bottom: 5px;
+	padding: 0px;
+}
 /* FileUpload */
 .fileupload_field_content{
 	padding: 8px 23px;
@@ -817,14 +854,10 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
     color: #c09853;
 }
 
-/* DataTables : Fit the table in the form */
-.form_linkedset_wrapper .dataTables_wrapper{
-	margin-bottom: 5px;
-	padding: 0px;
-}
 /* DataTables : Selection inputs */
+.dataTable.table th span.row_input,
 .dataTable.table td span.row_input{
 	display: inline-block;
-	margin-right: 5px;
-	vertical-align: middle;
+	width: 100%;
+	text-align: center;
 }

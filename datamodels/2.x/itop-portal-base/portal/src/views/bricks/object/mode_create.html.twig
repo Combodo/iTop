@@ -94,6 +94,9 @@
 			}
 			oScrollTimeout = setTimeout(scrollHandler_{{ sFormIdSanitized }}, 50);
 		});
+		$({% if tIsModal == true %}'.modal.in'{% else %}window{% endif %}).off('shown.bs.collapse hidden.bs.collapse').on('shown.bs.collapse hidden.bs.collapse', function () {
+			scrollHandler_{{ sFormIdSanitized }}();
+		});
 		// - First time call
 		scrollHandler_{{ sFormIdSanitized }}();
 		
