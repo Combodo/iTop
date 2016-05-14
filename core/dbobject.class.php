@@ -712,7 +712,7 @@ abstract class DBObject implements iDisplay
 			// AttributeDate is derived from AttributeDateTime
 			if (($oAttDef instanceof AttributeDateTime) && (!$oAttDef->IsNullAllowed()) && ($this->Get($sAttCode) == $oAttDef->GetNullValue()))
 			{
-				$this->Set($sAttCode, date($oAttDef->GetFormat()));
+				$this->Set($sAttCode, date($oAttDef->GetInternalFormat()));
 			}
 		}
 		
