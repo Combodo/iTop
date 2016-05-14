@@ -55,7 +55,7 @@ class ExcelBulkExport extends TabularBulkExport
 		parent::ReadParameters();
 		$this->aStatusInfo['formatted_text'] = (bool)utils::ReadParam('formatted_text', 0, true);
 			
-		$sDateFormatRadio = utils::ReadParam('date_format_radio', '');
+		$sDateFormatRadio = utils::ReadParam('excel_date_format_radio', '');
 		switch($sDateFormatRadio)
 		{
 			case 'default':
@@ -103,9 +103,9 @@ class ExcelBulkExport extends TabularBulkExport
 				$oP->add('<h3>'.Dict::S('Core:BulkExport:DateTimeFormat').'</h3>');
 				$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
 				$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
-				$oP->add('<input type="radio" id="excel_date_time_format_default" name="date_format_radio" value="default"'.$sDefaultChecked.'><label for="excel_date_time_format_default"> '.Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample).'</label><br/>');
+				$oP->add('<input type="radio" id="excel_date_time_format_default" name="excel_date_format_radio" value="default"'.$sDefaultChecked.'><label for="excel_date_time_format_default"> '.Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample).'</label><br/>');
 				$sFormatInput = '<input type="text" size="15" name="date_format" id="excel_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
-				$oP->add('<input type="radio" id="excel_date_time_format_custom" name="date_format_radio" value="custom"'.$sCustomChecked.'><label for="excel_date_time_format_custom"> '.Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput).'</label>');
+				$oP->add('<input type="radio" id="excel_date_time_format_custom" name="excel_date_format_radio" value="custom"'.$sCustomChecked.'><label for="excel_date_time_format_custom"> '.Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput).'</label>');
 				
 				$oP->add('</td></tr></table>');
 				
@@ -114,7 +114,8 @@ class ExcelBulkExport extends TabularBulkExport
 				$oP->add_ready_script(
 <<<EOF
 $('#excel_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
-$('#excel_custom_date_time_format').on('click', function() { $('#excel_date_time_format_custom').prop('checked', true); });
+$('#form_part_xlsx_options').on('preview_updated', function() { FormatDatesInPreview('excel', 'xlsx'); });
+$('#excel_custom_date_time_format').on('click', function() { $('#excel_date_time_format_custom').prop('checked', true); FormatDatesInPreview('excel', 'xlsx'); }).on('keyup', function() { FormatDatesInPreview('excel', 'xlsx'); });					
 EOF
 				);
 				break;
@@ -145,6 +146,15 @@ EOF
 
 	protected function GetSampleData($oObj, $sAttCode)
 	{
+		if ($sAttCode != 'id')
+		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+			if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
+			{
+				$sClass = (get_class($oAttDef) == 'AttributeDateTime') ? 'user-formatted-date-time' : 'user-formatted-date';
+				return '<div class="'.$sClass.'" data-date="'.$oObj->Get($sAttCode).'">'.htmlentities($oAttDef->GetEditValue($oObj->Get($sAttCode), $oObj), ENT_QUOTES, 'UTF-8').'</div>';
+			}
+		}
 		return '<div class="text-preview">'.htmlentities($this->GetValue($oObj, $sAttCode), ENT_QUOTES, 'UTF-8').'</div>';
 	}
 
@@ -182,7 +192,15 @@ EOF
 				if ($oAttDef instanceof AttributeDateTime)
 				{
 					// Date and times are formatted using the ISO encoding, not the localized format
-					$sRet = $value;
+					if ($oAttDef->IsNull($value))
+					{
+						// NOt a valid date
+						$sRet = '';
+					}
+					else
+					{
+						$sRet = $value;
+					}
 				}
 				else if (array_key_exists('formatted_text', $this->aStatusInfo) && $this->aStatusInfo['formatted_text'])
 				{
@@ -220,7 +238,11 @@ EOF
 				default:
 					$oAttDef = MetaModel::GetAttributeDef($aFieldSpec['sClass'], $aFieldSpec['sAttCode']);
 					$sType = 'string';
-					if($oAttDef instanceof AttributeDateTime)
+					if($oAttDef instanceof AttributeDate)
+					{
+						$sType = 'date';
+					}
+					else if($oAttDef instanceof AttributeDateTime)
 					{
 						$sType = 'datetime';
 					}
@@ -314,6 +336,8 @@ EOF
 		$writer = new XLSXWriter();
 		$oDateTimeFormat = new DateTimeFormat($this->aStatusInfo['date_format']);
 		$writer->setDateTimeFormat($oDateTimeFormat->ToExcel());
+		$oDateFormat = new DateTimeFormat($oDateTimeFormat->ToDateFormat());
+		$writer->setDateFormat($oDateFormat->ToExcel());
 		$writer->setAuthor(UserRights::GetUserFriendlyName());
 		$aHeaderTypes = array();
 		$aHeaderNames = array();

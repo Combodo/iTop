@@ -189,6 +189,33 @@ EOF
 function DisplayForm(WebPage $oP, $sAction = '', $sExpression = '', $sQueryId = '', $sFormat = null)
 {
 	$oExportSearch = null;
+	$oP->add_script(DateTimeFormat::GetJSSQLToCustomFormat());
+	$sJSDefaultDateTimeFormat = json_encode((string)AttributeDateTime::GetFormat());
+	$oP->add_script(
+<<<EOF
+function FormatDatesInPreview(sRadioSelector, sPreviewSelector)
+{
+	if ($('#'+sRadioSelector+'_date_format_radio').prop('checked'))
+	{
+		sPHPFormat = '$sJSDefaultDateTimeFormat';
+	}
+	else
+	{
+		sPHPFormat = $('#'+sRadioSelector+'_custom_date_time_format').val();
+	}
+	$('#interactive_fields_'+sPreviewSelector+' .user-formatted-date-time').each(function() {
+		var val = $('this').attr('data-date');
+		var sDisplay = DateTimeFormatFromPHP(val, sPHPFormat);
+		$(this).html(sDisplay);
+	});
+	$('#interactive_fields_'+sPreviewSelector+' .user-formatted-date').each(function() {
+		var val = $('this').attr('data-date');
+		var sDisplay = DateFormatFromPHP(val, sPHPFormat);
+		$(this).html(sDisplay);
+	});
+}
+EOF
+	);
 	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
 	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
 	$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');

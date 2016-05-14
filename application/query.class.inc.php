@@ -102,7 +102,7 @@ class QueryOQL extends Query
 			}
 			else 
 			{
-				$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?format=spreadsheet&login_mode=basic&query='.$this->GetKey();
+				$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?format=spreadsheet&login_mode=basic&date_format='.urlencode((string)AttributeDateTime::GetFormat()).'&query='.$this->GetKey();
 			}
 			$sOql = $this->Get('oql');
 			$sMessage = null;

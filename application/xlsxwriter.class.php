@@ -164,7 +164,7 @@ Class XLSXWriter
 	{
 		static $styles = array('money'=>1,'dollar'=>1,'datetime'=>2,'date'=>3,'string'=>0);
 		$cell = self::xlsCell($row_number, $column_number);
-		$s = isset($styles[$cell_format]) ? $styles[$cell_format] : '0';
+		$s = isset($styles[$cell_format]) && ($value !== '') ? $styles[$cell_format] : '0';
 		
 		if (is_int($value) || is_float($value)) {
 			fwrite($fd,'<c r="'.$cell.'" s="'.$s.'" t="n"><v>'.($value*1).'</v></c>');//int,float, etc

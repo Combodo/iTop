@@ -65,9 +65,9 @@ class PDFBulkExport extends HTMLBulkExport
 				$oP->add('<h3>'.Dict::S('Core:BulkExport:DateTimeFormat').'</h3>');
 				$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
 				$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
-				$oP->add('<input type="radio" id="pdf_date_time_format_default" name="date_format_radio" value="default"'.$sDefaultChecked.'><label for="pdf_date_time_format_default"> '.Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample).'</label><br/>');
+				$oP->add('<input type="radio" id="pdf_date_time_format_default" name="pdf_date_format_radio" value="default"'.$sDefaultChecked.'><label for="pdf_date_time_format_default"> '.Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample).'</label><br/>');
 				$sFormatInput = '<input type="text" size="15" name="date_format" id="pdf_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
-				$oP->add('<input type="radio" id="pdf_date_time_format_custom" name="date_format_radio" value="custom"'.$sCustomChecked.'><label for="pdf_date_time_format_custom"> '.Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput).'</label>');
+				$oP->add('<input type="radio" id="pdf_date_time_format_custom" name="pdf_date_format_radio" value="custom"'.$sCustomChecked.'><label for="pdf_date_time_format_custom"> '.Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput).'</label>');
 				
 				$oP->add('</td></tr></table>');
 				
@@ -77,7 +77,8 @@ class PDFBulkExport extends HTMLBulkExport
 				$oP->add_ready_script(
 <<<EOF
 $('#pdf_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
-$('#pdf_custom_date_time_format').on('click', function() { $('#pdf_date_time_format_custom').prop('checked', true); });
+$('#form_part_pdf_options').on('preview_updated', function() { FormatDatesInPreview('pdf', 'html'); });
+$('#pdf_custom_date_time_format').on('click', function() { $('#pdf_date_time_format_custom').prop('checked', true); FormatDatesInPreview('pdf', 'html'); }).on('keyup', function() { FormatDatesInPreview('pdf', 'html'); });					
 EOF
 				);
 				break;
@@ -114,7 +115,7 @@ EOF
 		$this->aStatusInfo['page_size'] = utils::ReadParam('page_size', 'A4', true, 'raw_data');
 		$this->aStatusInfo['page_orientation'] = utils::ReadParam('page_orientation', 'L', true);
 		
-		$sDateFormatRadio = utils::ReadParam('date_format_radio', '');
+		$sDateFormatRadio = utils::ReadParam('pdf_date_format_radio', '');
 		switch($sDateFormatRadio)
 		{
 			case 'default':

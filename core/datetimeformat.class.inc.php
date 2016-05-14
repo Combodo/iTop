@@ -218,7 +218,7 @@ class DateTimeFormat
 	 */
 	public function ToExcel()
 	{
-		return $this->Transform('datepicker', "%s");
+		return $this->Transform('excel', "%s");
 	}
 	
 	/**
@@ -229,7 +229,101 @@ class DateTimeFormat
 	{
 		return $this->Transform('moment', "[%s]", true /* escape all */);
 	}
+	
+	public static function GetJSSQLToCustomFormat()
+	{
+		$aPHPToMoment = array();
+		foreach(self::GetFormatMapping() as $sPHPCode => $aMapping)
+		{
+			$aPHPToMoment[$sPHPCode] = $aMapping['moment'];
+		}
+		$sJSMapping = json_encode($aPHPToMoment);
+		
+		$sFunction =
+<<<EOF
+function PHPDateTimeFormatToSubFormat(sPHPFormat, sPlaceholders)
+{
+	var iMax = 0;
+	var iMin = 999;
+	var bEscaping = false;
+	for(var i=0; i<sPHPFormat.length; i++)
+	{
+		var c = sPHPFormat[i];
+		if (c == '\\\\')
+		{
+			bEscaping = true;
+			continue;
+		}
+		
+		if (bEscaping)
+		{
+			bEscaping = false;
+			continue;
+		}
+		else
+		{
+			if (sPlaceholders.search(c) != -1)
+			{
+				iMax = Math.max(iMax, i);
+				iMin = Math.min(iMin, i);
+			}
+		}
+	}
+	return sPHPFormat.substr(iMin, iMax - iMin + 1);
+}
 
+function PHPDateTimeFormatToMomentFormat(sPHPFormat)
+{
+	var aFormatMapping = $sJSMapping;
+	var sMomentFormat = '';
+	
+	var bEscaping = false;
+	for(var i=0; i<sPHPFormat.length; i++)
+	{
+		var c = sPHPFormat[i];
+		if (c == '\\\\')
+		{
+			bEscaping = true;
+			continue;
+		}
+		
+		if (bEscaping)
+		{
+			sMomentFormat += '['+c+']';
+			bEscaping = false;
+		}
+		else
+		{
+			if (aFormatMapping[c] !== undefined)
+			{
+				sMomentFormat += aFormatMapping[c];
+			}
+			else
+			{
+				sMomentFormat += '['+c+']';
+			}
+		}
+	}
+	return sMomentFormat;
+}
+
+function DateFormatFromPHP(sSQLDate, sPHPFormat)
+{
+	var sPHPDateFormat = PHPDateTimeFormatToSubFormat(sPHPFormat, 'Yydjmn');
+	var sMomentFormat = PHPDateTimeFormatToMomentFormat(sPHPDateFormat);	
+	return moment(sSQLDate).format(sMomentFormat);
+}		
+
+function DateTimeFormatFromPHP(sSQLDate, sPHPFormat)
+{
+	var sMomentFormat = PHPDateTimeFormatToMomentFormat(sPHPFormat);	
+	return moment(sSQLDate).format(sMomentFormat);
+}		
+EOF
+		;
+		return $sFunction;
+	}
+	
 	/**
 	 * Get a placeholder text for a date or datetime format string
 	 * @return string The placeholder text (localized)
@@ -275,7 +369,6 @@ class DateTimeFormat
 	 */
 	protected function ToSubFormat($aPlaceholders)
 	{
-		$aDatePlaceholders = array('Y', 'y', 'd', 'j', 'm', 'n');
 		$iStart = 999;
 		$iEnd = 0;
 		
@@ -312,7 +405,7 @@ class DateTimeFormat
 	 */
 	public function ToTimeFormat()
 	{
-		return $this->ToSubFormat(array('H', 'h', 'G', 'g', 'i', 's'));
+		return $this->ToSubFormat(array('H', 'h', 'G', 'g', 'i', 's', 'a', 'A'));
 	}
 	
 	/**

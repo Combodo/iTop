@@ -59,7 +59,7 @@ class CSVBulkExport extends TabularBulkExport
 		$this->aStatusInfo['charset'] = strtoupper(utils::ReadParam('charset', 'UTF-8', true, 'raw_data'));
 		$this->aStatusInfo['formatted_text'] = (bool)utils::ReadParam('formatted_text', 0, true);
 		
-		$sDateFormatRadio = utils::ReadParam('date_format_radio', '');
+		$sDateFormatRadio = utils::ReadParam('csv_date_format_radio', '');
 		switch($sDateFormatRadio)
 		{
 			case 'default':
@@ -190,17 +190,19 @@ class CSVBulkExport extends TabularBulkExport
 				$oP->add('<h3>'.Dict::S('Core:BulkExport:DateTimeFormat').'</h3>');
 				$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
 				$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
-				$oP->add('<input type="radio" id="csv_date_time_format_default" name="date_format_radio" value="default"'.$sDefaultChecked.'><label for="csv_date_time_format_default"> '.Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample).'</label><br/>');
+				$oP->add('<input type="radio" id="csv_date_time_format_default" name="csv_date_format_radio" value="default"'.$sDefaultChecked.'><label for="csv_date_time_format_default"> '.Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample).'</label><br/>');
 				$sFormatInput = '<input type="text" size="15" name="date_format" id="csv_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
-				$oP->add('<input type="radio" id="csv_date_time_format_custom" name="date_format_radio" value="custom"'.$sCustomChecked.'><label for="csv_date_time_format_custom"> '.Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput).'</label>');
+				$oP->add('<input type="radio" id="csv_date_time_format_custom" name="csv_date_format_radio" value="custom"'.$sCustomChecked.'><label for="csv_date_time_format_custom"> '.Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput).'</label>');
 				$oP->add('</td></tr></table>');
 				
 				$oP->add('</fieldset>');
 				$sJSTooltip = json_encode('<div class="date_format_tooltip">'.Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip').'</div>');
+
 				$oP->add_ready_script(
 <<<EOF
 $('#csv_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
-$('#csv_custom_date_time_format').on('click', function() { $('#csv_date_time_format_custom').prop('checked', true); });
+$('#form_part_csv_options').on('preview_updated', function() { FormatDatesInPreview('csv', 'csv'); });
+$('#csv_custom_date_time_format').on('click', function() { $('#csv_date_time_format_custom').prop('checked', true); FormatDatesInPreview('csv', 'csv'); }).on('keyup', function() { FormatDatesInPreview('csv', 'csv'); });
 EOF
 				);
 				
@@ -213,7 +215,16 @@ EOF
 	}
 
 	protected function GetSampleData($oObj, $sAttCode)
-	{
+	{	
+		if ($sAttCode != 'id')
+		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+			if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
+			{
+				$sClass = (get_class($oAttDef) == 'AttributeDateTime') ? 'user-formatted-date-time' : 'user-formatted-date';
+				return '<div class="'.$sClass.'" data-date="'.$oObj->Get($sAttCode).'">'.htmlentities($oAttDef->GetEditValue($oObj->Get($sAttCode), $oObj), ENT_QUOTES, 'UTF-8').'</div>';
+			}
+		}
 		return '<div class="text-preview">'.htmlentities($this->GetValue($oObj, $sAttCode), ENT_QUOTES, 'UTF-8').'</div>';
 	}
 

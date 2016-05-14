@@ -98,7 +98,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script('../js/jquery.mousewheel.js');
 		$this->add_linked_script('../js/jquery.magnific-popup.min.js');
 		$this->add_linked_script('../js/breadcrumb.js');
-
+		$this->add_linked_script('../js/moment.min.js');
+		
 		
 		$sSearchAny = addslashes(Dict::S('UI:SearchValue:Any'));
 		$sSearchNbSelected = addslashes(Dict::S('UI:SearchValue:NbSelected'));

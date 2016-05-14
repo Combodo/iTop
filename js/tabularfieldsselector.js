@@ -290,6 +290,7 @@ $(function()
 				$('#'+this.sId+' .preview_header').hide();
 				$('#'+this.sId+' .table_preview').html('<div class="export_empty_preview">'+this.options.labels.empty_preview+'</div>');
 			}
+			$('.form_part:visible').trigger('preview_updated');
 		},
 		_get_field_by_code: function(sFieldCode)
 		{

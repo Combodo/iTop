@@ -61,9 +61,9 @@ class SpreadsheetBulkExport extends TabularBulkExport
 				$oP->add('<h3>'.Dict::S('Core:BulkExport:DateTimeFormat').'</h3>');
 				$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
 				$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
-				$oP->add('<input type="radio" id="spreadsheet_date_time_format_default" name="date_format_radio" value="default"'.$sDefaultChecked.'><label for="spreadsheet_date_time_format_default"> '.Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample).'</label><br/>');
+				$oP->add('<input type="radio" id="spreadsheet_date_time_format_default" name="spreadsheet_date_format_radio" value="default"'.$sDefaultChecked.'><label for="spreadsheet_date_time_format_default"> '.Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample).'</label><br/>');
 				$sFormatInput = '<input type="text" size="15" name="date_format" id="spreadsheet_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
-				$oP->add('<input type="radio" id="spreadsheet_date_time_format_custom" name="date_format_radio" value="custom"'.$sCustomChecked.'><label for="spreadsheet_date_time_format_custom"> '.Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput).'</label>');
+				$oP->add('<input type="radio" id="spreadsheet_date_time_format_custom" name="spreadsheet_date_format_radio" value="custom"'.$sCustomChecked.'><label for="spreadsheet_date_time_format_custom"> '.Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput).'</label>');
 				$oP->add('</td>');
 				
 				$oP->add('</tr>');
@@ -73,7 +73,9 @@ class SpreadsheetBulkExport extends TabularBulkExport
 				$oP->add_ready_script(
 <<<EOF
 $('#spreadsheet_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
+$('#form_part_spreadsheet_options').on('preview_updated', function() { FormatDatesInPreview('spreadsheet', 'spreadsheet'); });
 $('#spreadsheet_custom_date_time_format').on('click', function() { $('#spreadsheet_date_time_format_custom').prop('checked', true); });
+$('#spreadsheet_custom_date_time_format').on('click', function() { $('#spreadsheet_date_time_format_custom').prop('checked', true); FormatDatesInPreview('spreadsheet', 'spreadsheet'); }).on('keyup', function() { FormatDatesInPreview('spreadsheet', 'spreadsheet'); });											
 EOF
 				);
 				break;
@@ -87,7 +89,7 @@ EOF
 	{
 		parent::ReadParameters();
 
-		$sDateFormatRadio = utils::ReadParam('date_format_radio', '');
+		$sDateFormatRadio = utils::ReadParam('spreadsheet_date_format_radio', '');
 		switch($sDateFormatRadio)
 		{
 			case 'default':
@@ -108,6 +110,15 @@ EOF
 	
 	protected function GetSampleData($oObj, $sAttCode)
 	{
+		if ($sAttCode != 'id')
+		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+			if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
+			{
+				$sClass = (get_class($oAttDef) == 'AttributeDateTime') ? 'user-formatted-date-time' : 'user-formatted-date';
+				return '<div class="'.$sClass.'" data-date="'.$oObj->Get($sAttCode).'">'.htmlentities($oAttDef->GetEditValue($oObj->Get($sAttCode), $oObj), ENT_QUOTES, 'UTF-8').'</div>';
+			}
+		}
 		return $this->GetValue($oObj, $sAttCode);
 	}
 
