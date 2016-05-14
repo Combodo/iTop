@@ -4077,7 +4077,7 @@ class AttributeDeadline extends AttributeDateTime
 		if ($value !== null)
 		{
 			$iValue = AttributeDateTime::GetAsUnixSeconds($value);
-			$sDate = AttributeDateTime::Format($value);
+			$sDate = AttributeDateTime::GetFormat()->Format($value);
 			$difference = $iValue - time();
 	
 			if ($difference >= 0)
