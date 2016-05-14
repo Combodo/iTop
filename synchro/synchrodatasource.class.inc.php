@@ -235,7 +235,7 @@ class SynchroDataSource extends cmdbAbstractObject
 		if ($oSetSynchroLog->Count() > 0)
 		{
 			$oLastLog = $oSetSynchroLog->Fetch();
-			$sStartDate = $oLastLog->Get('start_date');
+			$sStartDate = $oLastLog->GetAsHTML('start_date');
 			$oLastLog->Get('stats_nb_replica_seen');
 			$iLastLog = 0;
 			$iDSid = $this->GetKey();
@@ -246,7 +246,7 @@ class SynchroDataSource extends cmdbAbstractObject
 			}
 			else
 			{
-				$sEndDate = $oLastLog->Get('end_date');
+				$sEndDate = $oLastLog->GetAsHTML('end_date');
 				$iLastLog = $oLastLog->GetKey();
 				$oPage->p('<h2>'.Dict::Format('Core:Synchro:SynchroEndedOn_Date', $sEndDate).'</h2>');
 				$sOQL = "SELECT SynchroReplica WHERE sync_source_id=$iDSid";
@@ -274,7 +274,7 @@ class SynchroDataSource extends cmdbAbstractObject
 			$sScript = "var aSynchroLog = {\n";
 			while($oLog = $oSetSynchroLog->Fetch())
 			{
-				$sLogTitle = Dict::Format('Core:SynchroLogTitle', $oLog->Get('status'), $oLog->Get('start_date'));
+				$sLogTitle = Dict::Format('Core:SynchroLogTitle', $oLog->Get('status'), $oLog->GetEditValue('start_date'));
 				$oPage->add('<option value="'.$oLog->GetKey().'"'.$sSelected.'>'.$sLogTitle.'</option>');
 				$sSelected = ''; // only the first log is selected by default
 				$aData = $this->ProcessLog($oLog);
