@@ -317,6 +317,9 @@ $(function()
 			this.options.style_element.text(this.buildData.style_code);
 			
 			eval(this.options.script_element.text());
+			
+			// Sending event to let know that form is built
+			this.element.trigger('form_built');
 		},
 		hasTouchedFields: function()
 		{

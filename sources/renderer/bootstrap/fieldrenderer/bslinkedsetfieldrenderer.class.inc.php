@@ -362,8 +362,10 @@ EOF
 <<<EOF
 					<div class="row">
 						<div class="col-xs-12">
-							<button type="button" class="btn btn-sm btn-danger" id="{$sButtonRemoveId}" title="{$sLabelRemove}" disabled><span class="glyphicon glyphicon-minus"></span></button>
-							<button type="button" class="btn btn-sm btn-default" id="{$sButtonAddId}" title="{$sLabelAdd}"><span class="glyphicon glyphicon-plus"></span></button>
+							<div class="btn-group" role="group">
+								<button type="button" class="btn btn-sm btn-danger" id="{$sButtonRemoveId}" title="{$sLabelRemove}" disabled><span class="glyphicon glyphicon-minus"></span></button>
+								<button type="button" class="btn btn-sm btn-default" id="{$sButtonAddId}" title="{$sLabelAdd}"><span class="glyphicon glyphicon-plus"></span></button>
+							</div>
 						</div>
 					</div>
 EOF

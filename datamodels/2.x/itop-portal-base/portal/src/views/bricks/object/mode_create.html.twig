@@ -85,7 +85,7 @@
 				oStickyRegularButtons_{{ sFormIdSanitized }}.removeClass('closed');
 			}
 		};
-		// - Event binding
+		// - Event binding for scroll
 		$({% if tIsModal == true %}'.modal.in'{% else %}window{% endif %}).off('scroll').on('scroll', function () {
 			if (oScrollTimeout) {
 				// Clear the timeout, if one is pending
@@ -94,11 +94,15 @@
 			}
 			oScrollTimeout = setTimeout(scrollHandler_{{ sFormIdSanitized }}, 50);
 		});
+		// - Event binding for linkedset collapse
 		$({% if tIsModal == true %}'.modal.in'{% else %}window{% endif %}).off('shown.bs.collapse hidden.bs.collapse').on('shown.bs.collapse hidden.bs.collapse', function () {
 			scrollHandler_{{ sFormIdSanitized }}();
 		});
-		// - First time call
-		scrollHandler_{{ sFormIdSanitized }}();
+		// - Event binding for form building / updating
+		// Note : We do not want to 'off' the event or it will remove listeners from the widget
+		oFieldSet_{{ sFormIdSanitized }}.on('form_built', function(oEvent){
+			scrollHandler_{{ sFormIdSanitized }}();
+		});
 		
 		{% if tIsModal == true %}
 			// Scroll top (because sometimes when several modals have been opened)
