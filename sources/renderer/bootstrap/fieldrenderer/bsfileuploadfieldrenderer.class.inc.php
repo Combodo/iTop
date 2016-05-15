@@ -97,7 +97,7 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 					}
 					else
 					{
-						var sDownloadLink = '{$this->oField->GetDownloadEndpoint()}'.replace(/-sAttId-/, data.result.att_id);
+						var sDownloadLink = '{$this->oField->GetDownloadEndpoint()}'.replace(/-sAttachmentId-/, data.result.att_id);
 
 						$(this).closest('.fileupload_field_content').find('.attachments_container').append(
 							'<div class="attachment col-xs-6 col-sm-3 col-md-2" id="display_attachment_'+data.result.att_id+'">'+
@@ -109,14 +109,21 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 							'	<input type="button" class="btn btn-xs btn-danger hidden" value="{$sDeleteBtn}"/>'+
 							'</div>'
 						);
-
+						// Preview tooltip
+						if(data.result.preview){
+							$('#display_attachment_'+data.result.att_id).tooltip({
+								html: true,
+								title: function(){ return '<img src="'+sDownloadLink+'" style="max-width: 100%;" />'; }
+							});
+						}
+						// Showing remove button on hover
+						$('#display_attachment_'+data.result.att_id).hover( function(){
+							$(this).children(':button').toggleClass('hidden');
+						});
+						// Remove button handler
 						$('#display_attachment_'+data.result.att_id+' :button').click(function(oEvent){
 							oEvent.preventDefault();
 							RemoveAttachment(data.result.att_id);
-						});
-
-						$('#display_attachment_'+data.result.att_id).hover( function(){
-							$(this).children(':button').toggleClass('hidden');
 						});
 					}
 				},
@@ -136,12 +143,21 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 					});
 				}
 			});
-			
+
+
+			// Preview tooltip
+			$('.attachment [data-preview="true"]').each(function(iIndex, oElem){
+				$(oElem).parent().tooltip({
+					html: true,
+					title: function(){ return '<img src="'+$(oElem).attr('href')+'" style="max-width: 100%;" />'; }
+				});
+			});
+			// Remove button handler
 			$('.attachments_container .attachment :button').click(function(oEvent){
 				oEvent.preventDefault();
 				RemoveAttachment($(this).closest('.attachment').find(':input[name="attachments[]"]').val());
 			});
-
+			// Remove button showing
 			if($sIsDeleteAllowed)
 			{
 				$('.attachment').hover( function(){
