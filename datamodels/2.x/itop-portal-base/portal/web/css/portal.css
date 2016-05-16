@@ -807,7 +807,7 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 		transition: right 0.3s;
 	}
 	.modal.in .form_btn_regular.sticky.closed{
-		right: -60px;
+		right: -75px;
 	}
 	.modal.in .form_btn_regular.sticky button{
 		display: block;

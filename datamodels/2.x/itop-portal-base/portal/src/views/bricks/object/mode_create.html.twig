@@ -60,58 +60,61 @@
 		});
 		
 		// Sticky buttons handler
-		// Note : This pattern if to prevent performance issues
-		// - Cloning buttons
-		var oNormalRegularButtons_{{ sFormIdSanitized }} = $('#{{ sFormId }} .form_btn_regular');
-		var oStickyRegularButtons_{{ sFormIdSanitized }} = oNormalRegularButtons_{{ sFormIdSanitized }}.clone(true, true);
-		oStickyRegularButtons_{{ sFormIdSanitized }}.addClass('sticky');
-		{% if tIsModal == true %}
-			oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_submit').html('<span class="glyphicon glyphicon-ok"></span>');
-			oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_cancel').html('<span class="glyphicon glyphicon-remove"></span>');
-			$('#{{ sFormId }}').closest('.modal').append(oStickyRegularButtons_{{ sFormIdSanitized }});
-		{% else %}
-			$('#{{ sFormId }}').closest('#main-content').append(oStickyRegularButtons_{{ sFormIdSanitized }});
+		{% if sMode != 'view' %}
+			// Note : This pattern if to prevent performance issues
+			// - Cloning buttons
+			var oNormalRegularButtons_{{ sFormIdSanitized }} = $('#{{ sFormId }} .form_btn_regular');
+			var oStickyRegularButtons_{{ sFormIdSanitized }} = oNormalRegularButtons_{{ sFormIdSanitized }}.clone(true, true);
+			oStickyRegularButtons_{{ sFormIdSanitized }}.addClass('sticky');
+			{% if tIsModal == true %}
+				oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_submit').html('<span class="glyphicon glyphicon-ok"></span>');
+				oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_cancel').html('<span class="glyphicon glyphicon-remove"></span>');
+				$('#{{ sFormId }}').closest('.modal').append(oStickyRegularButtons_{{ sFormIdSanitized }});
+			{% else %}
+				$('#{{ sFormId }}').closest('#main-content').append(oStickyRegularButtons_{{ sFormIdSanitized }});
+			{% endif %}
+			// - Global timeout for any
+			var oScrollTimeout;
+			// - Scroll handler
+			scrollHandler_{{ sFormIdSanitized }} = function () {
+				if($('#{{ sFormId }} .form_buttons').visible())
+				{
+					oStickyRegularButtons_{{ sFormIdSanitized }}.addClass('closed');
+				}
+				else
+				{
+					oStickyRegularButtons_{{ sFormIdSanitized }}.removeClass('closed');
+				}
+			};
+			// - Event binding for scroll
+			$({% if tIsModal == true %}'.modal.in'{% else %}window{% endif %}).off('scroll').on('scroll', function () {
+				if (oScrollTimeout) {
+					// Clear the timeout, if one is pending
+					clearTimeout(oScrollTimeout);
+					oScrollTimeout = null;
+				}
+				oScrollTimeout = setTimeout(scrollHandler_{{ sFormIdSanitized }}, 50);
+			});
+			// - Event binding for linkedset collapse
+			$({% if tIsModal == true %}'.modal.in'{% else %}window{% endif %}).off('shown.bs.collapse hidden.bs.collapse').on('shown.bs.collapse hidden.bs.collapse', function () {
+				scrollHandler_{{ sFormIdSanitized }}();
+			});
+			// - Event binding for form building / updating
+			// Note : We do not want to 'off' the event or it will remove listeners from the widget
+			oFieldSet_{{ sFormIdSanitized }}.on('form_built', function(oEvent){
+				scrollHandler_{{ sFormIdSanitized }}();
+			});
+			
+			// Remove sticky button when closing modal
+			$('#{{ sFormId }}').closest('.modal').on('hide.bs.modal', function () {
+				oStickyRegularButtons_{{ sFormIdSanitized }}.remove();
+			});
 		{% endif %}
-		// - Global timeout for any
-		var oScrollTimeout;
-		// - Scroll handler
-		scrollHandler_{{ sFormIdSanitized }} = function () {
-			if($('#{{ sFormId }} .form_buttons').visible())
-			{
-				oStickyRegularButtons_{{ sFormIdSanitized }}.addClass('closed');
-			}
-			else
-			{
-				oStickyRegularButtons_{{ sFormIdSanitized }}.removeClass('closed');
-			}
-		};
-		// - Event binding for scroll
-		$({% if tIsModal == true %}'.modal.in'{% else %}window{% endif %}).off('scroll').on('scroll', function () {
-			if (oScrollTimeout) {
-				// Clear the timeout, if one is pending
-				clearTimeout(oScrollTimeout);
-				oScrollTimeout = null;
-			}
-			oScrollTimeout = setTimeout(scrollHandler_{{ sFormIdSanitized }}, 50);
-		});
-		// - Event binding for linkedset collapse
-		$({% if tIsModal == true %}'.modal.in'{% else %}window{% endif %}).off('shown.bs.collapse hidden.bs.collapse').on('shown.bs.collapse hidden.bs.collapse', function () {
-			scrollHandler_{{ sFormIdSanitized }}();
-		});
-		// - Event binding for form building / updating
-		// Note : We do not want to 'off' the event or it will remove listeners from the widget
-		oFieldSet_{{ sFormIdSanitized }}.on('form_built', function(oEvent){
-			scrollHandler_{{ sFormIdSanitized }}();
-		});
 		
 		{% if tIsModal == true %}
 			// Scroll top (because sometimes when several modals have been opened)
 			$('#{{ sFormId }}').closest('.modal').scrollTop(0);
 			$('#{{ sFormId }}').closest('.modal').find('.modal-footer').hide();
-			// Remove sticky button when closing modal
-			$('#{{ sFormId }}').closest('.modal').on('hidden.bs.modal', function () {
-				oStickyRegularButtons_{{ sFormIdSanitized }}.remove();
-			});
 		{% endif %}
 	});
 </script>
