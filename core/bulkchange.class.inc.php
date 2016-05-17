@@ -827,6 +827,8 @@ class BulkChange
 							{
 								$sFormat = $sDateFormat;
 							}
+							$oFormat = new DateTimeFormat($sFormat);
+							$sRegExp = $oFormat->ToRegExpr();
 							if (!preg_match('/'.$sRegExp.'/', $this->m_aData[$iRow][$iCol]))
 							{
 								$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-DateFormat'));

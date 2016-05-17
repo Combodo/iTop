@@ -217,15 +217,24 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
 function ChangeDateFormat($sProposedDate, $sDateFormat)
 {
 	// Make sure this is a valid MySQL datetime
-	$oDate = DateTime::createFromFormat($sDateFormat, $sProposedDate);
-	if ($oDate !== false)
+	$oFormat = new DateTimeFormat($sDateFormat);
+	$sRegExpr = $oFormat->ToRegExpr();
+	if (!preg_match('/'.$sRegExpr.'/', $sProposedDate))
 	{
-		$sDate = $oDate->format(AttributeDateTime::GetInternalFormat());
-		return $sDate;
+		return false;	
 	}
 	else
 	{
-		return false;
+		$oDate = DateTime::createFromFormat($sDateFormat, $sProposedDate);
+		if ($oDate !== false)
+		{
+			$sDate = $oDate->format(AttributeDateTime::GetInternalFormat());
+			return $sDate;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
 
