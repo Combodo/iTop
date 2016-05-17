@@ -30,8 +30,14 @@
 			{% endif %}
 			<div class="form_btn_regular">
 				{% if form.editable_fields_count is defined and form.editable_fields_count > 0 %}
-					<button class="btn btn-default form_btn_cancel" type="button" value="cancel" title="{{ 'Portal:Button:Cancel'|dict_s }}" data-dismiss="modal">{{ 'Portal:Button:Cancel'|dict_s }}</button>
-					<button class="btn btn-primary form_btn_submit" type="submit" value="submit" title="{{ 'Portal:Button:Submit'|dict_s }}">{{ 'Portal:Button:Submit'|dict_s }}</button>
+					<button class="btn btn-default form_btn_cancel" type="button" value="cancel" title="{{ 'Portal:Button:Cancel'|dict_s }}" data-dismiss="modal">
+						<span class="glyphicon glyphicon-remove"></span>
+						{{ 'Portal:Button:Cancel'|dict_s }}
+					</button>
+					<button class="btn btn-primary form_btn_submit" type="submit" value="submit" title="{{ 'Portal:Button:Submit'|dict_s }}">
+						<span class="glyphicon glyphicon-ok"></span>
+						{{ 'Portal:Button:Submit'|dict_s }}
+					</button>
 				{% else %}
 					{% if tIsModal %}
 						<input class="btn btn-default form_btn_cancel" type="button" value="{{ 'Portal:Button:Close'|dict_s }}" data-dismiss="modal">
@@ -66,13 +72,11 @@
 			var oNormalRegularButtons_{{ sFormIdSanitized }} = $('#{{ sFormId }} .form_btn_regular');
 			var oStickyRegularButtons_{{ sFormIdSanitized }} = oNormalRegularButtons_{{ sFormIdSanitized }}.clone(true, true);
 			oStickyRegularButtons_{{ sFormIdSanitized }}.addClass('sticky');
-			{% if tIsModal == true %}
-				oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_submit').html('<span class="glyphicon glyphicon-ok"></span>');
-				oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_cancel').html('<span class="glyphicon glyphicon-remove"></span>');
-				$('#{{ sFormId }}').closest('.modal').append(oStickyRegularButtons_{{ sFormIdSanitized }});
-			{% else %}
-				$('#{{ sFormId }}').closest('#main-content').append(oStickyRegularButtons_{{ sFormIdSanitized }});
-			{% endif %}
+			oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_submit').html( oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_submit span.glyphicon')[0].outerHTML );
+			oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_cancel').html( oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_cancel span.glyphicon')[0].outerHTML );
+			
+			$('#{{ sFormId }}').closest({% if tIsModal == true %}'.modal'{% else %}'#main-content'{% endif %}).append(oStickyRegularButtons_{{ sFormIdSanitized }});
+			
 			// - Global timeout for any
 			var oScrollTimeout;
 			// - Scroll handler

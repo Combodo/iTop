@@ -616,6 +616,10 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	margin-left: 0.5em;
 	font-size: 0.85em;
 	color: #d9230f; /* TODO : SASS this to primary color */
+	transition: transform 0.2s linear;
+}
+.form_linkedset_toggler > .glyphicon.collapsed{
+	transform: rotateZ(-90deg);
 }
 /* - DataTables : Loader */
 .form_linkedset_wrapper .datatables_overlay{
@@ -769,6 +773,9 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 .form_buttons .form_btn_transitions{
 	margin-bottom: 20px;
 }
+.form_buttons .btn .glyphicon{
+	margin-right: 0.5em;
+}
 .form_btn_regular.sticky{
 	display: none;
 }
@@ -786,31 +793,26 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	.form_btn_regular.sticky{
 		display: block;
 		position: fixed;
+		bottom: 5em;
+		right: -2px; /* TODO : SASS this to col-xs-12 padding */
 		padding: 15px;
 		background-color: #FFF; /* TODO : SASS this to panel bg */
 		border: 1px solid #DDD; /* TODO : SASS this to panel border */
 		border-radius: 4px; /* TODO : SASS this to panel border */
-	}
-	/* - For regular layout */
-	#main-content .form_btn_regular.sticky{
-		bottom: 0px;
-		right: 15px; /* TODO : SASS this to col-xs-12 padding */
-		transition: bottom 0.3s;
-	}
-	#main-content .form_btn_regular.sticky.closed{
-		bottom: -80px;
-	}
-	/* - For modal layout */
-	.modal.in .form_btn_regular.sticky{
-		bottom: 5em;
-		right: 15px; /* TODO : SASS this to col-xs-12 padding */
 		transition: right 0.3s;
 	}
-	.modal.in .form_btn_regular.sticky.closed{
+	.form_btn_regular.sticky.closed{
 		right: -75px;
 	}
-	.modal.in .form_btn_regular.sticky button{
+	.form_btn_regular.sticky button{
 		display: block;
+	}
+	.form_btn_regular.sticky button:first-child{
+		margin-bottom: 4px;
+	}
+	/* - Adjustments for modal sticky buttons */
+	.modal.in .form_btn_regular.sticky{
+		/*right: 15px;*/ /* TODO : SASS this to col-xs-12 padding */
 	}
 }
 
