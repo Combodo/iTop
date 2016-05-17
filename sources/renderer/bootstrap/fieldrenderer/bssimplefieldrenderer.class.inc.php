@@ -294,6 +294,10 @@ EOF
 						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $this->oField->GetCurrentValue() . '" class="form-control" />');
 						$oOutput->AddHtml('</div>');
 						break;
+
+					case 'Combodo\\iTop\\Form\\Field\\HiddenField':
+						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('"/>');
+						break;
 				}
 			}
 		}

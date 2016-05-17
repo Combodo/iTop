@@ -29,20 +29,8 @@ class BsSubFormFieldRenderer extends FieldRenderer
 	{
 		$oOutput = new RenderingOutput();
 		
-		// Checking if subform has visible fields
-		$bHasVisibleFields = false;
-		foreach ($this->oField->GetForm()->GetFields() as $oSubFormField)
-		{
-			$sSubFormFieldClass = get_class($oSubFormField);
-			// Note : This is a dirty hack for templates. As they show a label when there is no template, we have to detect it...
-			if (($sSubFormFieldClass !== 'Combodo\iTop\Form\Field\HiddenField') && ($oSubFormField->GetId() !== '_no_template_'))
-			{
-				$bHasVisibleFields = true;
-			}
-		}
-
 		// Showing subform if there are visible fields
-		if (!$bHasVisibleFields)
+		if (!$this->oField->GetForm()->HasVisibleFields())
 		{
 			$oOutput->AddHtml('<div class="hidden">');
 		}
@@ -56,14 +44,13 @@ class BsSubFormFieldRenderer extends FieldRenderer
 		{
 			$oOutput->AddHtml('</fieldset>');
 		}
-		if (!$bHasVisibleFields)
+		if (!$this->oField->GetForm()->HasVisibleFields())
 		{
 			$oOutput->AddHtml('</div>');
 		}
-
+		
 		$oRenderer = new BsFormRenderer($this->oField->GetForm());
 		$aRenderRes = $oRenderer->Render();
-
 		$aFieldSetOptions = array(
 			'fields_list' => $aRenderRes,
 			'fields_impacts' => $this->oField->GetForm()->GetFieldsImpacts(),
