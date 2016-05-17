@@ -407,6 +407,25 @@ class Form
 	}
 
 	/**
+	 * Returns true if the form has at least one editable field
+	 *
+	 * @return boolean
+	 */
+	public function HasVisibleFields()
+	{
+		$bRet = false;
+		foreach ($this->aFields as $oField)
+		{
+			if (!$oField->GetHidden())
+			{
+				$bRet = true;
+				break;
+			}
+		}
+		return $bRet;
+	}
+
+	/**
 	 * @param $sFormPath
 	 * @return Form|null
 	 */

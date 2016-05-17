@@ -28,5 +28,5 @@ use \Combodo\iTop\Form\Field\TextField;
  */
 class HiddenField extends TextField
 {
-   
+	const DEFAULT_HIDDEN = true;
 }
