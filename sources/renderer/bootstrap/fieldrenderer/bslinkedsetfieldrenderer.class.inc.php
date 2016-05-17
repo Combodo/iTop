@@ -58,8 +58,9 @@ class BsLinkedSetFieldRenderer extends FieldRenderer
 		if (!$this->oField->GetHidden())
 		{
 			// Rendering field
-			$sCollapseTogglerVisibleClass = 'glyphicon-menu-right';
-			$sCollapseTogglerHiddenClass = 'glyphicon-menu-down';
+			$sIsEditable = ($this->oField->GetReadOnly()) ? 'false' : 'true';
+			$sCollapseTogglerVisibleClass = 'glyphicon-menu-down';
+			$sCollapseTogglerHiddenClass = 'glyphicon-menu-down collapsed';
 			$sCollapseTogglerId = 'form_linkedset_toggler_' . $this->oField->GetGlobalId();
 			$sFieldWrapperId = 'form_linkedset_wrapper_' . $this->oField->GetGlobalId();
 			$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
@@ -115,9 +116,11 @@ EOF
 					{
 						buildTable_{$this->oField->GetGlobalId()}();
 					}
+				})
+				.on('show.bs.collapse', function(){
 					$('#{$sCollapseTogglerId} > span.glyphicon').removeClass('{$sCollapseTogglerHiddenClass}').addClass('{$sCollapseTogglerVisibleClass}');
 				})
-				.on('hidden.bs.collapse', function(){
+				.on('hide.bs.collapse', function(){
 					$('#{$sCollapseTogglerId} > span.glyphicon').removeClass('{$sCollapseTogglerVisibleClass}').addClass('{$sCollapseTogglerHiddenClass}');
 				});
 
@@ -133,16 +136,19 @@ EOF
 				var getColumnsDefinition_{$this->oField->GetGlobalId()} = function()
 				{
 					var aColumnsDefinition = [];
-					
-					aColumnsDefinition.push({
-							"width": "auto",
-							"searchable": false,
-							"sortable": false,
-							"title": '{$sSelectionInputGlobalHtml}',
-							"type": "html",
-							"data": "",
-							"render": function(data, type, row){ return '{$sSelectionInputHtml}'; }
-					});
+
+					if({$sIsEditable})
+					{
+						aColumnsDefinition.push({
+								"width": "auto",
+								"searchable": false,
+								"sortable": false,
+								"title": '{$sSelectionInputGlobalHtml}',
+								"type": "html",
+								"data": "",
+								"render": function(data, type, row){ return '{$sSelectionInputHtml}'; }
+						});
+					}
 
 					for(sKey in oColumnProperties_{$this->oField->GetGlobalId()})
 					{
@@ -183,6 +189,8 @@ EOF
 				// We would just have to override / complete the necessary elements
 				var buildTable_{$this->oField->GetGlobalId()} = function()
 				{
+					var iDefaultOrderColumnIndex = ({$sIsEditable}) ? 1 : 0;
+
 					// Instanciates datatables
 					oTable_{$this->oField->GetGlobalId()} = $('#{$sTableId}').DataTable({
 						"language": {
@@ -191,7 +199,7 @@ EOF
 						"displayLength": -1,
 						"scrollY": "300px",
 						"scrollCollapse": true,
-						"order": [[1, "asc"]],
+						"order": [[iDefaultOrderColumnIndex, "asc"]],
 						"dom": 't',
 						"columns": getColumnsDefinition_{$this->oField->GetGlobalId()}(),
 						"select": {$sSelectionOptionHtml},
@@ -321,6 +329,8 @@ EOF
 								$('#{$this->oField->GetGlobalId()}').val(JSON.stringify(aObjectIds));
 								// Updating items count
 								updateItemCount();
+								// Updating global checkbox
+								$('#{$this->oField->GetGlobalId()}_check_all').prop('checked', false);
 							})
 							.always(function(oData){
 								// Hiding loader
@@ -342,6 +352,8 @@ EOF
 							$('#{$this->oField->GetGlobalId()}').val(JSON.stringify(aObjectIds));
 							// Updating items count
 							updateItemCount();
+							// Updating global checkbox
+							$('#{$this->oField->GetGlobalId()}_check_all').prop('checked', false);
 						}
 					}
 				});
@@ -387,8 +399,7 @@ EOF
 					// - Item count state handler
 					var updateItemCount = function()
 					{
-						console.log('in fct');
-						console.log(oTable_{$this->oField->GetGlobalId()}.rows().count());
+						console.log(oSelectedItems_{$this->oField->GetGlobalId()});
 						$('#{$sCollapseTogglerId} > .text').text( oTable_{$this->oField->GetGlobalId()}.rows().count() );
 					};
 
@@ -400,10 +411,19 @@ EOF
 						oSelectedItems_{$this->oField->GetGlobalId()} = {};
 						// Updating form value
 						$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").triggerHandler('set_current_value');
+						// Updating global checkbox state
+						$('#{$this->oField->GetGlobalId()}_check_all').prop('checked', false);
 						// Updating remove button
 						updateRemoveButtonState_{$this->oField->GetGlobalId()}();
 					});
 					$('#{$sButtonAddId}').off('click').on('click', function(){
+						// Preparing current values
+						var aFieldValue = JSON.parse( $('#{$this->oField->GetGlobalId()}').val() );
+						var aObjectIdsToIgnore = [];
+						for(var i in aFieldValue)
+						{
+							aObjectIdsToIgnore.push( Math.abs(aFieldValue[i].id) );
+						}
 						// Creating a new modal
 						var oModalElem;
 						if($('.modal[data-source-element="{$sButtonAddId}"]').length === 0)
@@ -423,7 +443,8 @@ EOF
 							'{$sAddButtonEndpoint}',
 							{
 								sFormPath: '{$this->oField->GetFormPath()}',
-								sFieldId: '{$this->oField->GetId()}'
+								sFieldId: '{$this->oField->GetId()}',
+								aObjectIdsToIgnore : aObjectIdsToIgnore
 							}
 						);
 						oModalElem.modal('show');
@@ -492,51 +513,6 @@ EOF
 			$aItems[] = $aItemProperties;
 			$aItemIds[] = array('id' => $oItem->GetKey());
 		}
-	}
-
-	/**
-	 * Renders an regular search button
-	 *
-	 * @param RenderingOutput $oOutput
-	 */
-	protected function RenderRegularSearch(RenderingOutput &$oOutput)
-	{
-		$sSearchButtonId = 's_rg_' . $this->oField->GetGlobalId();
-		$sEndpoint = str_replace('-sMode-', 'from-attribute', $this->oField->GetSearchEndpoint());
-
-		$oOutput->AddHtml('<div class="col-xs-2 col-lg-1">');
-		$oOutput->AddHtml('<button type="button" class="btn btn-default" id="' . $sSearchButtonId . '">S</button>');
-		$oOutput->AddHtml('</div>');
-
-		$oOutput->AddJs(
-<<<EOF
-			$('#{$sSearchButtonId}').off('click').on('click', function(){
-				// Creating a new modal
-				var oModalElem;
-				if($('.modal[data-source-element="{$sSearchButtonId}"]').length === 0)
-				{
-					oModalElem = $('#modal-for-all').clone();
-					oModalElem.attr('id', '').attr('data-source-element', '{$sSearchButtonId}').appendTo('body');
-				}
-				else
-				{
-					oModalElem = $('.modal[data-source-element="{$sSearchButtonId}"]').first();
-				}
-				// Resizing to small modal
-				oModalElem.find('.modal-dialog').removeClass('modal-sm').addClass('modal-lg');
-				// Loading content
-				oModalElem.find('.modal-content').html($('#page_overlay .overlay_content').html());
-				oModalElem.find('.modal-content').load(
-					'{$sEndpoint}',
-					{
-						sFormPath: '{$this->oField->GetFormPath()}',
-						sFieldId: '{$this->oField->GetId()}'
-					}
-				);
-				oModalElem.modal('show');
-			});
-EOF
-		);
 	}
 
 }

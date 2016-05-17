@@ -34,6 +34,8 @@ use \DBObjectSearch;
 use \BinaryExpression;
 use \FieldExpression;
 use \VariableExpression;
+use \ListExpression;
+use \ScalarExpression;
 use \DBObjectSet;
 use \cmdbAbstractObject;
 use \UserRights;
@@ -685,6 +687,7 @@ class ObjectController extends AbstractController
 		$sQuery = $oRequest->get('sSearchValue');
 		$sFormPath = $oRequest->get('sFormPath');
 		$sFieldId = $oRequest->get('sFieldId');
+		$aObjectIdsToIgnore = $oRequest->get('aObjectIdsToIgnore');
 
 		// Building search query
 		// - Retrieving target object class from attcode
@@ -721,6 +724,7 @@ class ObjectController extends AbstractController
 
 		// - Retrieving scope search
 		$oScopeSearch = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ);
+		$aInternalParams = array();
 		if ($oScopeSearch === null)
 		{
 			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
@@ -736,8 +740,20 @@ class ObjectController extends AbstractController
 			$oSearch = $oScopeSearch;
 		}
 
+		// - Filtering objects to ignore
+		if (($aObjectIdsToIgnore !== null) && (is_array($aObjectIdsToIgnore)))
+		{
+			//$oSearch->AddConditionExpression('id', $aObjectIdsToIgnore, 'NOT IN');
+			$aExpressions = array();
+			foreach ($aObjectIdsToIgnore as $sObjectIdToIgnore)
+			{
+				$aExpressions[] = new ScalarExpression($sObjectIdToIgnore);
+			}
+			$oSearch->AddConditionExpression(new BinaryExpression(new FieldExpression('id', $oSearch->GetClassAlias()), 'NOT IN', new ListExpression($aExpressions)));
+		}
+
 		// - Adding query condition
-		$aInternalParams = array('this' => $oHostObject);
+		$aInternalParams['this'] = $oHostObject;
 		if ($sQuery !== null)
 		{
 			$oFullExpr = null;
@@ -836,7 +852,8 @@ class ObjectController extends AbstractController
 				'bMultipleSelect' => $oTargetAttDef->IsLinkSet(),
 				'aSource' => array(
 					'sFormPath' => $sFormPath,
-					'sFieldId' => $sFieldId
+					'sFieldId' => $sFieldId,
+					'aObjectIdsToIgnore' => $aObjectIdsToIgnore,
 				)
 			);
 
