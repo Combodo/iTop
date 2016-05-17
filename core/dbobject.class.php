@@ -2426,10 +2426,10 @@ abstract class DBObject implements iDisplay
 	public function GetForTemplate($sPlaceholderAttCode)
 	{
 		$ret = null;
-		if (($iPos = strpos($sPlaceholderAttCode, '->')) !== false)
+		if (preg_match('/^([^-]+)-(>|&gt;)(.+)$/', $sPlaceholderAttCode, $aMatches)) // Support both syntaxes: this->xxx or this-&gt;xxx for HTML compatibility
 		{
-			$sExtKeyAttCode = substr($sPlaceholderAttCode, 0, $iPos);
-			$sRemoteAttCode = substr($sPlaceholderAttCode, $iPos + 2);
+			$sExtKeyAttCode = $aMatches[1];
+			$sRemoteAttCode = $aMatches[3];
 			if (!MetaModel::IsValidAttCode(get_class($this), $sExtKeyAttCode))
 			{
 				throw new CoreException("Unknown attribute '$sExtKeyAttCode' for the class ".get_class($this));
