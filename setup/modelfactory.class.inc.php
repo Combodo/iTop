@@ -415,9 +415,16 @@ class ModelFactory
 				$oTargetNode = $oTarget->GetNodeById('/itop_design/classes//class', $oSourceNode->getAttribute('id'))->item(0);
 				if (!$oTargetNode)
 				{
-					echo "Dumping target doc - looking for '".$oSourceNode->getAttribute('id')."'<br/>\n";
-					$this->oDOMDocument->firstChild->Dump();
-					throw new Exception(MFDocument::GetItopNodePath($oSourceNode).' at line '.$oSourceNode->getLineNo().": could not be found");
+					if ($sDeltaSpec === 'if_exists')
+					{
+						// Just ignore it
+					}
+					else
+					{
+						echo "Dumping target doc - looking for '".$oSourceNode->getAttribute('id')."'<br/>\n";
+						$this->oDOMDocument->firstChild->Dump();
+						throw new Exception(MFDocument::GetItopNodePath($oSourceNode).' at line '.$oSourceNode->getLineNo().": could not be found A");
+					}
 				}
 				else
 				{
@@ -1901,7 +1908,7 @@ class MFElement extends Combodo\iTop\DesignElement
 			{
 				echo "Dumping parent node<br/>\n";
 				$oContainer->Dump();
-				throw new Exception(MFDocument::GetItopNodePath($this).' at line '.$this->getLineNo().": could not be found");
+				throw new Exception(MFDocument::GetItopNodePath($this).' at line '.$this->getLineNo().": could not be found B");
 			}
 			if (!$bIfExists)
 			{
