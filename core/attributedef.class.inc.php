@@ -5889,6 +5889,13 @@ class AttributeOneWayPassword extends AttributeDefinition
 	{
 		return ''; // Not exportable in XML
 	}
+	
+	public function GetValueLabel($sValue, $oHostObj = null)
+	{
+		// Don't display anything in "group by" reports
+		return '*****';
+	}
+	
 }
 
 // Indexed array having two dimensions
