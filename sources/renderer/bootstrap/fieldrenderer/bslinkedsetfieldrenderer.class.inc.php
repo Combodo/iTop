@@ -146,7 +146,12 @@ EOF
 								"title": '{$sSelectionInputGlobalHtml}',
 								"type": "html",
 								"data": "",
-								"render": function(data, type, row){ return '{$sSelectionInputHtml}'; }
+								"render": function(data, type, row)
+								{
+									var oCheckboxElem = $('{$sSelectionInputHtml}');
+									oCheckboxElem.find(':input').attr('data-object-id', row.id).attr('data-target-object-id', row.target_id);
+									return oCheckboxElem.prop('outerHTML');
+								}
 						});
 					}
 
@@ -174,7 +179,7 @@ EOF
 								{
 									cellElem = $('<span></span>');
 								}
-								cellElem.attr('data-object-id', row.id).html('<span>' + row.attributes[data].value + '</span>');
+								cellElem.html('<span>' + row.attributes[data].value + '</span>');
 
 								return cellElem.prop('outerHTML');
 							},
@@ -204,6 +209,7 @@ EOF
 						"columns": getColumnsDefinition_{$this->oField->GetGlobalId()}(),
 						"select": {$sSelectionOptionHtml},
 						"rowId": "id",
+						"rowTest": "id",
 						"data": oRawDatas_{$this->oField->GetGlobalId()},
 					});
 						
@@ -304,8 +310,10 @@ EOF
 									{
 										for(var i in oData.items)
 										{
+											// Adding target item id information
+											oData.items[i].target_id = oData.items[i].id;
 											// Adding item to table only if it's not already there
-											if($('#{$sTableId} tr#' + oData.items[i].id + '[role="row"]').length === 0)
+											if($('#{$sTableId} tr[role="row"] > td input[data-target-object-id="' + oData.items[i].target_id + '"], #{$sTableId} tr[role="row"] > td input[data-target-object-id="' + (oData.items[i].target_id*-1) + '"]').length === 0)
 											{
 												// Making id negative in order to recognize it when persisting
 												oData.items[i].id = -1 * parseInt(oData.items[i].id);
@@ -472,12 +480,6 @@ EOF
 		$oValueSet->OptimizeColumnLoad(array($this->oField->GetTargetClass() => $this->oField->GetAttributesToDisplay(true)));
 		while ($oItem = $oValueSet->Fetch())
 		{
-			$aItemProperties = array(
-				'id' => $oItem->GetKey(),
-				'name' => $oItem->GetName(),
-				'attributes' => array()
-			);
-
 			// In case of indirect linked set, we must retrieve the remote object
 			if ($this->oField->IsIndirect())
 			{
@@ -488,6 +490,14 @@ EOF
 				$oRemoteItem = $oItem;
 			}
 
+			$aItemProperties = array(
+				'id' => $oItem->GetKey(),
+				'target_id' => $oRemoteItem->GetKey(),
+				'name' => $oItem->GetName(),
+				'attributes' => array()
+			);
+
+			// Target object others attributes
 			foreach ($this->oField->GetAttributesToDisplay(true) as $sAttCode)
 			{
 				if ($sAttCode !== 'id')
@@ -509,7 +519,7 @@ EOF
 					$aItemProperties['attributes'][$sAttCode] = $aAttProperties;
 				}
 			}
-
+			
 			$aItems[] = $aItemProperties;
 			$aItemIds[] = array('id' => $oItem->GetKey());
 		}
