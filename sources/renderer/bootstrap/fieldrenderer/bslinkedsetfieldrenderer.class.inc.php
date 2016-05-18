@@ -426,12 +426,10 @@ EOF
 					});
 					$('#{$sButtonAddId}').off('click').on('click', function(){
 						// Preparing current values
-						var aFieldValue = JSON.parse( $('#{$this->oField->GetGlobalId()}').val() );
 						var aObjectIdsToIgnore = [];
-						for(var i in aFieldValue)
-						{
-							aObjectIdsToIgnore.push( Math.abs(aFieldValue[i].id) );
-						}
+						$('#{$sTableId} tr[role="row"] > td input[data-target-object-id]').each(function(iIndex, oElem){
+							aObjectIdsToIgnore.push( $(oElem).attr('data-target-object-id') );
+						});
 						// Creating a new modal
 						var oModalElem;
 						if($('.modal[data-source-element="{$sButtonAddId}"]').length === 0)
