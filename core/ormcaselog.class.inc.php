@@ -286,7 +286,7 @@ class ormCaseLog {
 	/**
 	 * Produces an HTML representation, aimed at being used to produce a PDF with TCPDF (no table)
 	 */	 	
-	public function GetAsSimpleHtml()
+	public function GetAsSimpleHtml($aTransfoHandler = null)
 	{
 		$sStyleCaseLogHeader = '';
 		$sStyleCaseLogEntry = '';
