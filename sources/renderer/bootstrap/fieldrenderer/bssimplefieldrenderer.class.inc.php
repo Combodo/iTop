@@ -77,7 +77,7 @@ EOF
 						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 					}
 					$oOutput->AddHtml('<div class="help-block"></div>');
-					$oOutput->AddHtml('<input type="password" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" />');
+					$oOutput->AddHtml('<input type="password" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" autocomplete="off" />');
 					$oOutput->AddHtml('</div>');
 					break;
 
