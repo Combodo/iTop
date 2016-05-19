@@ -736,8 +736,8 @@ abstract class DBObject implements iDisplay
 			}
 			else
 			{
-				$sLabel = $this->Get($sAttCode.'_friendlyname');
-				return $this->MakeHyperLink($sTargetClass, $iTargetKey, $sLabel);
+				$sHtmlLabel = htmlentities($this->Get($sAttCode.'_friendlyname'), ENT_QUOTES, 'UTF-8');
+				return $this->MakeHyperLink($sTargetClass, $iTargetKey, $sHtmlLabel);
 			}
 		}
 
@@ -810,41 +810,45 @@ abstract class DBObject implements iDisplay
 		return $oAtt->GetAsCSV($this->GetOriginal($sAttCode), $sSeparator, $sTextQualifier, $this, $bLocalize, $bConvertToPlainText);
 	}
 
-	public static function MakeHyperLink($sObjClass, $sObjKey, $sLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true)
+	/**
+	 * @param $sObjClass
+	 * @param $sObjKey
+	 * @param string $sHtmlLabel Label with HTML entities escaped (< escaped as &lt;)
+	 * @param null $sUrlMakerClass
+	 * @param bool|true $bWithNavigationContext
+	 * @return string
+	 * @throws DictExceptionMissingString
+	 */
+	public static function MakeHyperLink($sObjClass, $sObjKey, $sHtmlLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true)
 	{
 		if ($sObjKey <= 0) return '<em>'.Dict::S('UI:UndefinedObject').'</em>'; // Objects built in memory have negative IDs
 
 		// Safety net
 		//
-		if (empty($sLabel))
+		if (empty($sHtmlLabel))
 		{
 			// If the object if not issued from a query but constructed programmatically
 			// the label may be empty. In this case run a query to get the object's friendly name
 			$oTmpObj = MetaModel::GetObject($sObjClass, $sObjKey, false);
 			if (is_object($oTmpObj))
 			{
-				$sLabel = htmlentities($oTmpObj->GetName(), ENT_QUOTES, 'UTF-8');
+				$sHtmlLabel = $oTmpObj->GetName();
 			}
 			else
 			{
 				// May happen in case the target object is not in the list of allowed values for this attribute
-				$sLabel = "<em>$sObjClass::$sObjKey</em>";
+				$sHtmlLabel = "<em>$sObjClass::$sObjKey</em>";
 			}
-			//$sLabel = MetaModel::GetName($sObjClass)." #$sObjKey";
-		}
-		else
-		{
-			$sLabel = htmlentities($sLabel, ENT_QUOTES, 'UTF-8');
 		}
 		$sHint = MetaModel::GetName($sObjClass)."::$sObjKey";
 		$sUrl = ApplicationContext::MakeObjectUrl($sObjClass, $sObjKey, $sUrlMakerClass, $bWithNavigationContext);
 		if (strlen($sUrl) > 0)
 		{
-			return "<a href=\"$sUrl\" title=\"$sHint\">$sLabel</a>";
+			return "<a href=\"$sUrl\" title=\"$sHint\">$sHtmlLabel</a>";
 		}
 		else
 		{
-			return $sLabel;
+			return $sHtmlLabel;
 		}
 	}
 
