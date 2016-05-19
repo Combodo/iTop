@@ -981,8 +981,15 @@
       </properties>
       <bricks>
         <brick id="user-profile" xsi:type="Combodo\iTop\Portal\Brick\UserProfileBrick">
-          <rank>1</rank>
-          <title>Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil</title>
+          <rank>
+			  <default>1</default>
+		  </rank>
+          <title>
+			  <default>Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil</default>
+		  </title>
+		  <decoration_class>
+			  <default>glyphicon glyphicon-user</default>
+		  </decoration_class>
           <form>
             <!-- Optionnal tag to list the fields -->
             <fields />
@@ -1011,10 +1018,31 @@
         </brick>
         <brick id="create-user-request" xsi:type="Combodo\iTop\Portal\Brick\CreateBrick">
           <active>true</active>
-          <rank>3</rank>
+		  <!-- Optionnal tag : Bricks will be order as declared in the XML by default -->
+          <rank>
+			  <default>2</default>
+			  <!-- <home>2</home> -->
+			  <!-- <navigation_menu>2</navigation_menu> -->
+		  </rank>
           <width>8</width>
           <modal>true</modal>
-          <title>Portal:CreateNewRequest</title>
+          <title>
+			  <default>Portal:CreateNewRequest</default>
+			  <!-- <home>Portal:CreateNewRequest</home> -->
+			  <!-- <navigation_menu>Portal:CreateNewRequest</navigation_menu> -->
+		  </title>
+		  <!-- Optional tag : Shows a description in the brick home tile -->
+		  <description>Un deux trois nous irons au bois, quatre cinq six cueillir des cerises. Sept huit neuf, das un panier neuf.</description>
+		  <!-- Optional tag : Brick is visible by default -->
+		  <visible>
+			  <home>true</home>
+			  <navigation_menu>true</navigation_menu>
+		  </visible>
+		  <decoration_class>
+			  <default>fa fa-plus fa-2x</default>
+			  <!-- <home>fa fa-plus</home> -->
+			  <!-- <navigation_menu>fa fa-plus</navigation_menu> -->
+		  </decoration_class>
           <class>UserRequest</class>
           <!-- Class that will be created with the form -->
           <rules>
@@ -1023,9 +1051,17 @@
         </brick>
         <brick id="ongoing-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick">
           <active>true</active>
-          <rank>4</rank>
+          <rank>
+			  <default>4</default>
+		  </rank>
           <width>4</width>
-          <title>Portal:ShowOngoing</title>
+          <title>
+			  <default>Portal:ShowOngoing</default>
+		  </title>
+		  <description>Un deux trois nous irons au bois, quatre cinq six cueillir des cerises. Sept huit neuf, das un panier neuf.</description>
+		  <decoration_class>
+			  <default>fa fa-pencil-square fa-2x</default>
+		  </decoration_class>
           <oql><![CDATA[SELECT Ticket WHERE org_id = :current_contact->org_id AND caller_id = :current_contact_id]]></oql>
           <!-- Can be either a class tag with the class name or an oql tag with the query -->
           <!-- <class>Ticket</class> -->
@@ -1065,9 +1101,17 @@
         </brick>
         <brick id="closed-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick">
           <active>true</active>
-          <rank>5</rank>
+          <rank>
+			  <default>5</default>
+		  </rank>
           <width>4</width>
-          <title>Portal:ShowClosed</title>
+          <title>
+			  <default>Portal:ShowClosed</default>
+		  </title>
+		  <description>Un deux trois nous irons au bois, quatre cinq six cueillir des cerises. Sept huit neuf, das un panier neuf.</description>
+		  <decoration_class>
+			  <default>fa fa-pencil-square fa-2x</default>
+		  </decoration_class>
           <oql><![CDATA[SELECT UserRequest WHERE org_id = :current_contact->org_id AND caller_id = :current_contact_id AND status = 'closed']]></oql>
           <!-- Can be either a class tag with the class name or an oql tag with the query -->
           <!-- <class>Ticket</class> -->
@@ -1084,11 +1128,17 @@
         </brick>
         <brick id="services" xsi:type="Combodo\iTop\Portal\Brick\BrowseBrick">
           <active>true</active>
-          <rank>6</rank>
           <width>4</width>
-          <visible_home>true</visible_home>
-          <visible_navigation_menu>true</visible_navigation_menu>
-          <title>Brick:Portal:Services:Title</title>
+          <rank>
+			  <default>6</default>
+		  </rank>
+          <title>
+			  <default>Brick:Portal:Services:Title</default>
+		  </title>
+		  <description>Un deux trois nous irons au bois, quatre cinq six cueillir des cerises. Sept huit neuf, das un panier neuf.</description>
+		  <decoration_class>
+			  <default>fa fa-map fa-2x</default>
+		  </decoration_class>
           <!-- <fields  /> Optional tag to add attributes to the table by their code, can be specified for each level -->
           <levels>
             <level id="1">

@@ -290,7 +290,7 @@ class ApplicationHelper
 				'properties' => array(
 					'id' => PORTAL_ID,
 					'name' => 'Page:DefaultTitle',
-					'logo' => (file_exists(MODULESROOT . 'branding/portal-logo.png')) ? utils::GetAbsoluteUrlModulesRoot() . 'branding/portal-logo.png' : '../images/itop-logo.png',
+					'logo' => (file_exists(MODULESROOT . 'branding/portal-logo.png')) ? utils::GetAbsoluteUrlModulesRoot() . 'branding/portal-logo.png' : '../images/logo-itop-dark-bg.svg',
 					'themes' => array(
 						'bootstrap' => $oApp['combodo.portal.base.absolute_url'] . 'css/bootstrap-theme.min.css',
 						'portal' => $oApp['combodo.portal.base.absolute_url'] . 'css/portal.css',
@@ -623,7 +623,7 @@ class ApplicationHelper
 		{
 			return $a->GetRank() > $b->GetRank();
 		});
-
+		
 		return $aPortalConf;
 	}
 

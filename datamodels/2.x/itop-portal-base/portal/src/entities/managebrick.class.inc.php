@@ -32,6 +32,8 @@ use MetaModel;
  */
 class ManageBrick extends PortalBrick
 {
+	const DEFAULT_HOME_ICON_CLASS = 'fa fa-pencil-square';
+	const DEFAULT_NAVIGATION_MENU_ICON_CLASS = 'fa fa-pencil-square fa-2x';
 	const ENUM_ACTION_VIEW = 'view';
 	const ENUM_ACTION_EDIT = 'edit';
 	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/manage/layout.html.twig';

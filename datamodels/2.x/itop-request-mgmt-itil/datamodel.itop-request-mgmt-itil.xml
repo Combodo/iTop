@@ -1864,10 +1864,18 @@
 				</brick>
 				<brick id="create-user-request-itil" xsi:type="Combodo\iTop\Portal\Brick\CreateBrick" _delta="define">
 					<active>true</active>
-					<rank>3</rank>
+					<rank>
+						<default>3</default>
+					</rank>
 					<width>8</width>
 					<modal>true</modal>
-					<title>Portal:CreateNewRequestItil</title>
+					<title>
+						<default>Portal:CreateNewRequestItil</default>
+					</title>
+					<description>Un deux trois nous irons au bois, quatre cinq six cueillir des cerises. Sept huit neuf, das un panier neuf.</description>
+					<decoration_class>
+						<default>fa fa-plus fa-2x</default>
+					</decoration_class>
 					<class>UserRequest</class>
 					<!-- Class that will be created with the form -->
 					<rules>

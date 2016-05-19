@@ -42,6 +42,7 @@ abstract class AbstractBrick
 	const ENUM_DATA_LOADING_AUTO = 'auto';
 	const DEFAULT_MANDATORY = true;
 	const DEFAULT_ACTIVE = true;
+	const DEFAULT_VISIBLE = true;
 	const DEFAULT_RANK = 1.0;
 	const DEFAULT_PAGE_TEMPLATE_PATH = null;
 	const DEFAULT_TITLE = '';
@@ -53,6 +54,7 @@ abstract class AbstractBrick
 	protected $sId;
 	protected $bMandatory;
 	protected $bActive;
+	protected $bVisible;
 	protected $fRank;
 	protected $sPageTemplatePath;
 	protected $sTitle;
@@ -80,6 +82,7 @@ abstract class AbstractBrick
 	{
 		$this->bMandatory = static::DEFAULT_MANDATORY;
 		$this->bActive = static::DEFAULT_ACTIVE;
+		$this->bVisible = static::DEFAULT_VISIBLE;
 		$this->fRank = static::DEFAULT_RANK;
 		$this->sPageTemplatePath = static::DEFAULT_PAGE_TEMPLATE_PATH;
 		$this->sTitle = static::DEFAULT_TITLE;
@@ -119,6 +122,16 @@ abstract class AbstractBrick
 	public function GetActive()
 	{
 		return $this->bActive;
+	}
+
+	/**
+	 * Returns if brick is visible
+	 *
+	 * @return boolean
+	 */
+	public function GetVisible()
+	{
+		return $this->bVisible;
 	}
 
 	/**
@@ -230,6 +243,17 @@ abstract class AbstractBrick
 	public function SetMandatory($bMandatory)
 	{
 		$this->bMandatory = $bMandatory;
+		return $this;
+	}
+
+	/**
+	 * Sets if the brick is visible
+	 *
+	 * @param boolean $bVisible
+	 */
+	public function SetVisible($bVisible)
+	{
+		$this->bVisible = $bVisible;
 		return $this;
 	}
 
@@ -512,7 +536,11 @@ abstract class AbstractBrick
 					$this->SetActive(($oBrickSubNode->GetText() === 'false') ? false : true );
 					break;
 				case 'rank':
-					$this->SetRank((float) $oBrickSubNode->GetText(static::DEFAULT_RANK));
+					$oOptionalNode = $oBrickSubNode->GetOptionalElement('default');
+					if ($oOptionalNode !== null)
+					{
+						$this->SetRank((float) $oOptionalNode->GetText(static::DEFAULT_RANK));
+					}
 					break;
 				case 'templates':
 					$oTemplateNodeList = $oBrickSubNode->GetNodes('template[@id=' . ModuleDesign::XPathQuote('page') . ']');
@@ -522,7 +550,11 @@ abstract class AbstractBrick
 					}
 					break;
 				case 'title':
-					$this->SetTitle($oBrickSubNode->GetText(static::DEFAULT_TITLE));
+					$oOptionalNode = $oBrickSubNode->GetOptionalElement('default');
+					if ($oOptionalNode !== null)
+					{
+						$this->SetTitle($oOptionalNode->GetText(static::DEFAULT_TITLE));
+					}
 					break;
 				case 'description':
 					$this->SetDescription($oBrickSubNode->GetText(static::DEFAULT_DESCRIPTION));

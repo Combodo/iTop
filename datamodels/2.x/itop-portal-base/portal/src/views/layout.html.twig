@@ -6,6 +6,7 @@
 	{% set sUserFullname = app['combodo.current_user'].Get('first_name') ~ ' ' ~ app['combodo.current_user'].Get('last_name') %}
 	{% set sUserEmail = app['combodo.current_user'].Get('email') %}
 	{% set sUserPhotoUrl = app['combodo.portal.base.absolute_url'] ~ 'img/user-profile-default-256px.png' %}
+	{% set sUserPhotoUrl = 'https://scontent-fra3-1.xx.fbcdn.net/v/t1.0-9/11050099_10153305298138954_7206181025917413544_n.jpg?oh=728b8e7b1f073b81a2e6b43858c795f8&oe=57E2B0D3' %}
 {% else %}
 	{% set bUserConnected = false %}
 	{% set sUserFullname = '' %}
@@ -33,6 +34,8 @@
 		<link href="{{ app['combodo.portal.base.absolute_url'] }}lib/datatables/css/scroller.bootstrap.min.css" rel="stylesheet">
 		<link href="{{ app['combodo.portal.base.absolute_url'] }}lib/datatables/css/select.bootstrap.min.css" rel="stylesheet">
 		<link href="{{ app['combodo.portal.base.absolute_url'] }}lib/datatables/css/select.dataTables.min.css" rel="stylesheet">
+		{# - Font awesome #}
+		<link href="{{ app['combodo.portal.base.absolute_url'] }}lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 		{# - Misc libs #}
 		<link href="{{ app['combodo.portal.base.absolute_url'] }}lib/typeahead/css/typeaheadjs.bootstrap.css" rel="stylesheet">
 		<link href="{{ app['combodo.absolute_url'] }}css/magnific-popup.css" rel="stylesheet">
@@ -115,8 +118,9 @@
 				<div class="collapse navbar-collapse" id="navbar">
 					<ul class="nav navbar-nav">
 						{% block pNavigationTopBricks %}
-							<li>
+							<li class="{% if oBrick is not defined %}active{% endif %}">
 								<a href="{{ app.url_generator.generate('p_home') }}">
+									<span class="brick_icon fa fa-home"></span>
 									{{ 'Page:Home'|dict_s }}
 								</a>
 							</li>
@@ -124,7 +128,8 @@
 								{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
 									<li class="{% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}">
 										<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}>
-											{{ brick.GetTitle|dict_s }}
+											<span class="brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
+											{{ brick.GetTitleNavigationMenu|dict_s }}
 										</a>
 									</li>
 								{% endif %}
@@ -190,8 +195,9 @@
 			<div class="menu">
 				{% block pNavigationSideMenu %}
 					<ul class="nav">
-						<li>
+						<li class="{% if oBrick is not defined %}active{% endif %}">
 							<a href="{{ app.url_generator.generate('p_home') }}">
+								<span class="brick_icon fa fa-home fa-2x"></span>
 								{{ 'Page:Home'|dict_s }}
 							</a>
 						</li>
@@ -199,7 +205,8 @@
 							{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
 								<li class="{% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}">
 									<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}>
-										{{ brick.GetTitle|dict_s }}
+										<span class="brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
+										{{ brick.GetTitleNavigationMenu|dict_s }}
 									</a>
 								</li>
 							{% endif %}
@@ -225,6 +232,7 @@
 		<div class="container-fluid" id="main-wrapper">
 			<div class="row">
 				<div class="col-xs-12 col-sm-9 col-md-10 col-sm-offset-3 col-md-offset-2">
+					
 					<section class="row" id="main-header">
 						{% block pMainHeader %}
 						{% endblock %}

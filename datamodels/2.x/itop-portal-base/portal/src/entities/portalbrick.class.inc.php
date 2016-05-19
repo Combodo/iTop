@@ -37,6 +37,8 @@ abstract class PortalBrick extends AbstractBrick
 	const DEFAULT_MODAL = false;
 	const DEFAULT_VISIBLE_HOME = true;
 	const DEFAULT_VISIBLE_NAVIGATION_MENU = true;
+	const DEFAULT_DECORATION_CLASS_HOME = '';
+	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = '';
 	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/tile.html.twig';
 
 	static $sRouteName = null;
@@ -45,7 +47,14 @@ abstract class PortalBrick extends AbstractBrick
 	protected $bModal;
 	protected $bVisibleHome;
 	protected $bVisibleNavigationMenu;
+	protected $sDecorationClassHome;
+	protected $sDecorationClassNavigationMenu;
 	protected $sTileTemplatePath;
+	// Vars below are itemization from parent class
+	protected $fRankHome;
+	protected $fRankNavigationMenu;
+	protected $sTitleHome;
+	protected $sTitleNavigationMenu;
 
 	static function GetRouteName()
 	{
@@ -64,6 +73,8 @@ abstract class PortalBrick extends AbstractBrick
 		$this->bModal = static::DEFAULT_MODAL;
 		$this->bVisibleHome = static::DEFAULT_VISIBLE_HOME;
 		$this->bVisibleNavigationMenu = static::DEFAULT_VISIBLE_NAVIGATION_MENU;
+		$this->sDecorationClassHome = static::DEFAULT_DECORATION_CLASS_HOME;
+		$this->sDecorationClassNavigationMenu = static::DEFAULT_DECORATION_CLASS_NAVIGATION_MENU;
 		$this->sTileTemplatePath = static::DEFAULT_TILE_TEMPLATE_PATH;
 	}
 
@@ -115,6 +126,66 @@ abstract class PortalBrick extends AbstractBrick
 	public function GetVisibleNavigationMenu()
 	{
 		return $this->bVisibleNavigationMenu;
+	}
+
+	/**
+	 * Returns if the brick's rank on the portal's home page
+	 *
+	 * @return int
+	 */
+	public function GetRankHome()
+	{
+		return $this->bRankHome;
+	}
+
+	/**
+	 * Returns if the brick's rank on the portal's navigation menu
+	 *
+	 * @return int
+	 */
+	public function GetRankNavigationMenu()
+	{
+		return $this->bRankNavigationMenu;
+	}
+
+	/**
+	 * Return the css class that will be applied to the brick's decoration in its home tile
+	 *
+	 * @return string
+	 */
+	public function GetDecorationClassHome()
+	{
+		return $this->sDecorationClassHome;
+	}
+
+	/**
+	 * Return the css class that will be applied to the brick's decoration in its navigation menu item
+	 *
+	 * @return string
+	 */
+	public function GetDecorationClassNavigationMenu()
+	{
+		return $this->sDecorationClassNavigationMenu;
+	}
+
+	/**
+	 * Return the brick's title on the home page
+	 *
+	 * @return string
+	 */
+	public function GetTitleHome()
+	{
+		return $this->sTitleHome;
+	}
+
+	/**
+	 * Return the brick's title on the navigation menu
+	 *
+	 * @return string
+	 */
+	public function GetTitleNavigationMenu()
+	{
+		return $this->sTitleNavigationMenu;
 	}
 
 	/**
@@ -183,6 +254,72 @@ abstract class PortalBrick extends AbstractBrick
 	}
 
 	/**
+	 * Sets if the brick's rank on the portal's home
+	 *
+	 * @param boolean $fRank
+	 */
+	public function SetRankHome($fRankHome)
+	{
+		$this->fRankHome = $fRankHome;
+		return $this;
+	}
+
+	/**
+	 * Sets if the brick's rank on the portal's navigation menu
+	 *
+	 * @param boolean $fRank
+	 */
+	public function SetRankNavigationMenu($fRankNavigationMenu)
+	{
+		$this->fRankNavigationMenu = $fRankNavigationMenu;
+		return $this;
+	}
+
+	/**
+	 * Sets if the brick's decoration class on the portal's home
+	 *
+	 * @param boolean $sDecorationClassHome
+	 */
+	public function SetDecorationClassHome($sDecorationClassHome)
+	{
+		$this->sDecorationClassHome = $sDecorationClassHome;
+		return $this;
+	}
+
+	/**
+	 * Sets if the brick's decoration class on the portal's navigation menu
+	 *
+	 * @param boolean $sDecorationClassNavigationMenu
+	 */
+	public function SetDecorationClassNavigationMenu($sDecorationClassNavigationMenu)
+	{
+		$this->sDecorationClassNavigationMenu = $sDecorationClassNavigationMenu;
+		return $this;
+	}
+
+	/**
+	 * Sets if the brick's title on the portal's home
+	 *
+	 * @param boolean $sTitleHome
+	 */
+	public function SetTitleHome($sTitleHome)
+	{
+		$this->sTitleHome = $sTitleHome;
+		return $this;
+	}
+
+	/**
+	 * Sets if the brick's title on the portal's navigation menu
+	 *
+	 * @param boolean $sTitleNavigationMenu
+	 */
+	public function SetTitleNavigationMenu($sTitleNavigationMenu)
+	{
+		$this->sTitleNavigationMenu = $sTitleNavigationMenu;
+		return $this;
+	}
+
+	/**
 	 * Sets the brick tile template path
 	 *
 	 * @param boolean $sTileTemplatePath
@@ -219,17 +356,116 @@ abstract class PortalBrick extends AbstractBrick
 					$bModal = ($oBrickSubNode->GetText(static::DEFAULT_MODAL) === 'true');
 					$this->SetModal($bModal);
 					break;
-				case 'visible_home':
-					$this->SetVisibleHome(($oBrickSubNode->GetText() === 'false') ? false : true );
-					break;
-				case 'visible_navigation_menu':
-					$this->SetVisibleNavigationMenu(($oBrickSubNode->GetText() === 'false') ? false : true );
+				case 'visible':
+					// Default value
+					$oOptionalNode = $oBrickSubNode->GetOptionalElement('default');
+					if ($oOptionalNode !== null)
+					{
+						$optionalNodeValue = ($oOptionalNode->GetText() === 'false') ? false : true;
+						$this->SetVisibleHome($optionalNodeValue);
+						$this->SetVisibleNavigationMenu($optionalNodeValue);
+					}
+					// Home value
+					$oOptionalNode = $oBrickSubNode->GetOptionalElement('home');
+					if ($oOptionalNode !== null)
+					{
+						$optionalNodeValue = ($oOptionalNode->GetText() === 'false') ? false : true;
+						$this->SetVisibleHome($optionalNodeValue);
+					}
+					// Navigation menu value
+					$oOptionalNode = $oBrickSubNode->GetOptionalElement('navigation_menu');
+					if ($oOptionalNode !== null)
+					{
+						$optionalNodeValue = ($oOptionalNode->GetText() === 'false') ? false : true;
+						$this->SetVisibleNavigationMenu($optionalNodeValue);
+					}
 					break;
 				case 'templates':
 					$oTemplateNodeList = $oBrickSubNode->GetNodes('template[@id=' . ModuleDesign::XPathQuote('tile') . ']');
 					if ($oTemplateNodeList->length > 0)
 					{
 						$this->SetTileTemplatePath($oTemplateNodeList->item(0)->GetText(static::DEFAULT_TILE_TEMPLATE_PATH));
+					}
+					break;
+				case 'rank':
+					// Setting value from parent attribute
+					$this->SetRankHome($this->fRank);
+					$this->SetRankNavigationMenu($this->fRank);
+					// Default value
+					$oOptionalNode = $oBrickSubNode->GetOptionalElement('default');
+					if ($oOptionalNode !== null)
+					{
+						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_RANK);
+						$this->SetRankHome($optionalNodeValue);
+						$this->SetRankNavigationMenu($optionalNodeValue);
+					}
+					// Home value
+					$oOptionalNode = $oBrickSubNode->GetOptionalElement('home');
+					if ($oOptionalNode !== null)
+					{
+						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_RANK);
+						$this->SetRankHome($optionalNodeValue);
+					}
+					// Navigation menu value
+					$oOptionalNode = $oBrickSubNode->GetOptionalElement('navigation_menu');
+					if ($oOptionalNode !== null)
+					{
+						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_RANK);
+						$this->SetRankNavigationMenu($optionalNodeValue);
+					}
+					break;
+				case 'title':
+					// Setting value from parent attribute
+					$this->SetTitleHome($this->sTitle);
+					$this->SetTitleNavigationMenu($this->sTitle);
+					// Default value
+					$oOptionalNode = $oBrickSubNode->GetOptionalElement('default');
+					if ($oOptionalNode !== null)
+					{
+						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_TITLE);
+						$this->SetTitleHome($optionalNodeValue);
+						$this->SetTitleNavigationMenu($optionalNodeValue);
+					}
+					// Home value
+					$oOptionalNode = $oBrickSubNode->GetOptionalElement('home');
+					if ($oOptionalNode !== null)
+					{
+						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_TITLE);
+						$this->SetTitleHome($optionalNodeValue);
+					}
+					// Navigation menu value
+					$oOptionalNode = $oBrickSubNode->GetOptionalElement('navigation_menu');
+					if ($oOptionalNode !== null)
+					{
+						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_TITLE);
+						$this->SetTitleNavigationMenu($optionalNodeValue);
+					}
+					break;
+				case 'decoration_class':
+					// Setting value from parent attribute
+					$this->SetDecorationClassHome(static::DEFAULT_DECORATION_CLASS_HOME);
+					$this->SetDecorationClassNavigationMenu(static::DEFAULT_DECORATION_CLASS_NAVIGATION_MENU);
+					// Default value
+					$oOptionalNode = $oBrickSubNode->GetOptionalElement('default');
+					if ($oOptionalNode !== null)
+					{
+						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_DECORATION_CLASS_NAVIGATION_MENU);
+						$this->SetDecorationClassHome($optionalNodeValue);
+						$this->SetDecorationClassNavigationMenu($optionalNodeValue);
+					}
+					// Home value
+					$oOptionalNode = $oBrickSubNode->GetOptionalElement('home');
+					if ($oOptionalNode !== null)
+					{
+						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_DECORATION_CLASS_HOME);
+						$this->SetDecorationClassHome($optionalNodeValue);
+					}
+					// Navigation menu value
+					$oOptionalNode = $oBrickSubNode->GetOptionalElement('navigation_menu');
+					if ($oOptionalNode !== null)
+					{
+						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_DECORATION_CLASS_NAVIGATION_MENU);
+						$this->SetDecorationClassNavigationMenu($optionalNodeValue);
 					}
 					break;
 			}

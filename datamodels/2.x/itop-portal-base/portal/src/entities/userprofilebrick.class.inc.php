@@ -34,6 +34,8 @@ class UserProfileBrick extends PortalBrick
 	const DEFAULT_VISIBLE_NAVIGATION_MENU = false;
 	const DEFAULT_VISIBLE_HOME = false;
 	const DEFAUT_TITLE = 'Brick:Portal:UserProfile:Title';
+	const DEFAULT_HOME_ICON_CLASS = 'glyphicon glyphicon-user';
+	const DEFAULT_NAVIGATION_MENU_ICON_CLASS = 'glyphicon glyphicon-user';
 
 	static $sRouteName = 'p_user_profile_brick';
 	protected $aForm;

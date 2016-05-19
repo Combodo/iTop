@@ -25,9 +25,12 @@
 			{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %}
 			{% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}
 			 class="tile vertical-center" id="brick-{{ brick.GetId }}" data-brick-id="{{ brick.GetId }}">
-			<div class="tile_decoration"><img src="{{ app['combodo.portal.base.absolute_url'] }}img/icons/{{sIcon}}"	/></div>
+		<div class="tile_decoration">
+			<span class="{{ brick.GetDecorationClassHome }}"></span>
+			
+		</div>
 			<div clss="tile_body">
-				<div class="tile_title">{{ brick.GetTitle|dict_s }}</div>
+				<div class="tile_title">{{ brick.GetTitleHome|dict_s }}</div>
 				{% if brick.HasDescription %}
 					<div class="tile_description">{{ brick.GetDescription }}</div>
 				{% endif %}

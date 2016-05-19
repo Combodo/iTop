@@ -30,6 +30,8 @@ use \Combodo\iTop\Portal\Brick\PortalBrick;
  */
 class CreateBrick extends PortalBrick
 {
+	const DEFAULT_HOME_ICON_CLASS = 'fa fa-plus';
+	const DEFAULT_NAVIGATION_MENU_ICON_CLASS = 'fa fa-plus fa-2x';
 	const DEFAULT_CLASS = '';
 
 	static $sRouteName = 'p_create_brick';

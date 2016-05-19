@@ -604,9 +604,17 @@
       <bricks>
         <brick id="faq" xsi:type="Combodo\iTop\Portal\Brick\BrowseBrick" _delta="define">
           <active>true</active>
-          <rank>7</rank>
+          <rank>
+			  <default>7</default>
+		  </rank>
           <width>4</width>
-          <title>Brick:Portal:FAQ:Title</title>
+			<title>
+				<default>Brick:Portal:FAQ:Title</default>
+			</title>
+			<description>Un deux trois nous irons au bois, quatre cinq six cueillir des cerises. Sept huit neuf, das un panier neuf.</description>
+			<decoration_class>
+				<default>fa fa-map fa-2x</default>
+			</decoration_class>
           <levels>
             <level id="1">
               <class>FAQCategory</class>

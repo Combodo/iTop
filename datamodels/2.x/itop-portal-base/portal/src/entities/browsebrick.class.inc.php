@@ -30,6 +30,8 @@ use \Combodo\iTop\Portal\Brick\PortalBrick;
  */
 class BrowseBrick extends PortalBrick
 {
+	const DEFAULT_HOME_ICON_CLASS = 'fa fa-map';
+	const DEFAULT_NAVIGATION_MENU_ICON_CLASS = 'fa fa-map fa-2x';
 	const ENUM_BROWSE_MODE_LIST = 'list';
 	const ENUM_BROWSE_MODE_TREE = 'tree';
 	const ENUM_ACTION_VIEW = 'view';
