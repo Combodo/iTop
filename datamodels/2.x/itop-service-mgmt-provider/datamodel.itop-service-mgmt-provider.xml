@@ -1514,7 +1514,7 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>customercontract_id</ext_key_to_remote>
-          <duplicates/>
+          <duplicates>true</duplicates>
         </field>
       </fields>
       <methods/>
