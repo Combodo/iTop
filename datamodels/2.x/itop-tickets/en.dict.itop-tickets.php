@@ -240,8 +240,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'portal:itop-portal' => 'Standard portal', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
 	'Page:DefaultTitle' => 'iTop - User portal',
 	'Brick:Portal:UserProfile:Title' => 'My profile',
-	'Brick:Portal:CreateUserRequest:Title' => 'Create a request',
-	'Brick:Portal:ManageTickets:Title' => 'My requests',
-	'Brick:Portal:Services:Title' => 'Service catalog',
-	'Brick:Portal:FAQ:Title' => 'FAQ',
 ));

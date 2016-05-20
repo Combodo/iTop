@@ -1858,31 +1858,6 @@
 	</menus>
 	<module_designs>
 		<module_design id="itop-portal">
-			<bricks>
-				<brick id="create-user-request" xsi:type="Combodo\iTop\Portal\Brick\CreateBrick">
-					<active _delta="redefine">false</active>
-				</brick>
-				<brick id="create-user-request-itil" xsi:type="Combodo\iTop\Portal\Brick\CreateBrick" _delta="define">
-					<active>true</active>
-					<rank>
-						<default>3</default>
-					</rank>
-					<width>8</width>
-					<modal>true</modal>
-					<title>
-						<default>Portal:CreateNewRequestItil</default>
-					</title>
-					<description>Un deux trois nous irons au bois, quatre cinq six cueillir des cerises. Sept huit neuf, das un panier neuf.</description>
-					<decoration_class>
-						<default>fa fa-plus fa-2x</default>
-					</decoration_class>
-					<class>UserRequest</class>
-					<!-- Class that will be created with the form -->
-					<rules>
-						<rule id="contact-to-userrequest"/>
-					</rules>
-				</brick>
-			</bricks>
 			<classes>
 				<class id="ServiceSubcategory">
 					<scopes>

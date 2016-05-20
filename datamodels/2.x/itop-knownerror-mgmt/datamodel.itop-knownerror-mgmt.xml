@@ -605,13 +605,13 @@
         <brick id="faq" xsi:type="Combodo\iTop\Portal\Brick\BrowseBrick" _delta="define">
           <active>true</active>
           <rank>
-			  <default>7</default>
+			  <default>40</default>
 		  </rank>
-          <width>4</width>
+          <width>12</width>
 			<title>
 				<default>Brick:Portal:FAQ:Title</default>
 			</title>
-			<description>Un deux trois nous irons au bois, quatre cinq six cueillir des cerises. Sept huit neuf, das un panier neuf.</description>
+			<description>Brick:Portal:FAQ:Title+</description>
 			<decoration_class>
 				<default>fa fa-map fa-2x</default>
 			</decoration_class>

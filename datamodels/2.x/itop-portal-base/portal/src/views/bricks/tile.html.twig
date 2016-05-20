@@ -1,24 +1,6 @@
 {# itop-portal-base/portal/src/views/bricks/tile.html.twig #}
 {# Base brick tile layout #}
 
-{% if brick.GetId == 'create-user-request' %}
-	{% set sIcon = 'warning-sign-orange-100px.png' %}
-{% elseif brick.GetId == 'create-user-request-itil' %}
-	{% set sIcon = 'headset-mic-orange-100px.png' %}
-{% elseif brick.GetId == 'create-incident-itil' %}
-	{% set sIcon = 'warning-sign-orange-100px.png' %}
-{% elseif brick.GetId == 'ongoing-tickets-for-portal-user' %}
-	{% set sIcon = 'headset-mic-orange-100px.png' %}
-{% elseif brick.GetId == 'closed-tickets-for-portal-user' %}
-	{% set sIcon = 'laptop-cursor-orange-100px.png' %}
-{% elseif brick.GetId == 'services' %}
-	{% set sIcon = 'checklist-ok-orange-100px.png' %}
-{% elseif brick.GetId == 'faq' %}
-	{% set sIcon = 'puzzle-piece-orange-100px.png' %}
-{% else %}
-	{% set sIcon = '' %}
-{% endif %}
-
 <div class="col-xs-12 col-sm-{{ brick.GetWidth }}">
 	{% block pTileWrapper %}
 		<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}"
@@ -32,7 +14,7 @@
 			<div clss="tile_body">
 				<div class="tile_title">{{ brick.GetTitleHome|dict_s }}</div>
 				{% if brick.HasDescription %}
-					<div class="tile_description">{{ brick.GetDescription }}</div>
+					<div class="tile_description">{{ brick.GetDescription|dict_s }}</div>
 				{% endif %}
 			</div>
 		</a>

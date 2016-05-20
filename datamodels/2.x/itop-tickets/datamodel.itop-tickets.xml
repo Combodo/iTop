@@ -1016,49 +1016,93 @@
             </twig>
           </form>
         </brick>
-        <brick id="create-user-request" xsi:type="Combodo\iTop\Portal\Brick\CreateBrick">
+        <brick id="services" xsi:type="Combodo\iTop\Portal\Brick\BrowseBrick">
           <active>true</active>
-		  <!-- Optionnal tag : Bricks will be order as declared in the XML by default -->
+          <width>6</width>
           <rank>
-			  <default>2</default>
-			  <!-- <home>2</home> -->
-			  <!-- <navigation_menu>2</navigation_menu> -->
-		  </rank>
-          <width>8</width>
-          <modal>true</modal>
+            <default>10</default>
+          </rank>
           <title>
-			  <default>Portal:CreateNewRequest</default>
-			  <!-- <home>Portal:CreateNewRequest</home> -->
-			  <!-- <navigation_menu>Portal:CreateNewRequest</navigation_menu> -->
-		  </title>
-		  <!-- Optional tag : Shows a description in the brick home tile -->
-		  <description>Un deux trois nous irons au bois, quatre cinq six cueillir des cerises. Sept huit neuf, das un panier neuf.</description>
-		  <!-- Optional tag : Brick is visible by default -->
-		  <visible>
-			  <home>true</home>
-			  <navigation_menu>true</navigation_menu>
-		  </visible>
-		  <decoration_class>
-			  <default>fa fa-plus fa-2x</default>
-			  <!-- <home>fa fa-plus</home> -->
-			  <!-- <navigation_menu>fa fa-plus</navigation_menu> -->
-		  </decoration_class>
-          <class>UserRequest</class>
-          <!-- Class that will be created with the form -->
-          <rules>
-            <rule id="contact-to-userrequest"/>
-          </rules>
+            <default>Portal:CreateNewRequest</default>
+          </title>
+          <description>Portal:CreateNewRequest+</description>
+          <decoration_class>
+            <default>fa fa-map fa-2x</default>
+          </decoration_class>
+          <!-- <fields  /> Optional tag to add attributes to the table by their code, can be specified for each level -->
+          <levels>
+            <level id="1">
+              <class>ServiceFamily</class>
+              <levels>
+                <!-- Level IDs must be numeric -->
+                <level id="1">
+                  <!-- Can be either a class tag with the class name or an oql tag with the query -->
+                  <class>Service</class>
+                  <!-- Attribute code of the above class that point to the upper level class -->
+                  <parent_att>servicefamily_id</parent_att>
+                  <!-- Attribute code to use to display the object name, default is 'name'. -->
+                  <name_att/>
+                  <!-- Description text from attribute of above class [from the OQL] -->
+                  <tooltip_att>description</tooltip_att>
+                  <!-- Title of the level, will be display in lists and others browse modes -->
+                  <title>Service</title>
+                  <!-- Optional tag to add attributes to the table by their code, can be specified for each level -->
+                  <!-- <fields  /> -->
+                  <!-- Can be empty on intermediate levels, default is drilldown -->
+                  <actions>
+                    <action id="drilldown" xsi:type="drilldown"/>
+                  </actions>
+                  <levels>
+                    <level id="1">
+                      <!-- Note : We could have used just a class tag and putted the OQL in the scope for everybody -->
+                      <oql><![CDATA[SELECT ServiceSubcategory WHERE ServiceSubcategory.status != 'obsolete']]></oql>
+                      <parent_att>service_id</parent_att>
+                      <name_att/>
+                      <tooltip_att>description</tooltip_att>
+                      <title>Sous-Service</title>
+                      <actions>
+                        <action id="view" xsi:type="view"/>
+                        <action id="create_from_this" xsi:type="create_from_this">
+                          <!-- Can be either a class tag containing the class of the object to create, or a static method taking the origin object as a parameter and that will return a object of the desired class -->
+                          <!-- (eg. \Ticket::FromServiceSubcategory($oOrigin) that should return either a UserRequest or Incident regarding the request type) -->
+                          <class>UserRequest</class>
+                          <!-- Optional tag that can be used on any action type -->
+                          <!--<title>Créer un ticket</title>-->
+                          <!--<icon_class>glyphicon glyphicon-plus</icon_class>-->
+                          <rules>
+                            <rule id="contact-to-userrequest"/>
+                            <rule id="servicesubcategory-to-userrequest"/>
+                          </rules>
+                        </action>
+                      </actions>
+                      <levels/>
+                    </level>
+                  </levels>
+                </level>
+              </levels>
+            </level>
+          </levels>
+
+          <browse_modes>
+            <availables>
+              <mode id="list"/>
+              <mode id="tree"/>
+            </availables>
+            <default>tree</default>
+          </browse_modes>
+          <data_loading>auto</data_loading>
+          <!-- lazy|full|auto. Let the consultant choose if the list/tree data are load progressivly at each page/level or in one-shot or if it is up to the system regarding the "lazy_loading_threshold" parameter -->
         </brick>
         <brick id="ongoing-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick">
           <active>true</active>
           <rank>
-			  <default>4</default>
+			  <default>20</default>
 		  </rank>
-          <width>4</width>
+          <width>6</width>
           <title>
 			  <default>Portal:ShowOngoing</default>
 		  </title>
-		  <description>Un deux trois nous irons au bois, quatre cinq six cueillir des cerises. Sept huit neuf, das un panier neuf.</description>
+		  <description>Portal:ShowOngoing+</description>
 		  <decoration_class>
 			  <default>fa fa-pencil-square fa-2x</default>
 		  </decoration_class>
@@ -1102,13 +1146,16 @@
         <brick id="closed-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick">
           <active>true</active>
           <rank>
-			  <default>5</default>
+			  <menu>50</menu>
 		  </rank>
-          <width>4</width>
+          <visible>
+            <home>false</home>
+          </visible>
+          <width>12</width>
           <title>
 			  <default>Portal:ShowClosed</default>
 		  </title>
-		  <description>Un deux trois nous irons au bois, quatre cinq six cueillir des cerises. Sept huit neuf, das un panier neuf.</description>
+		  <description>Portal:ShowClosed+</description>
 		  <decoration_class>
 			  <default>fa fa-pencil-square fa-2x</default>
 		  </decoration_class>
@@ -1125,83 +1172,6 @@
             <field id="caller_id"/>
           </fields>
           <data_loading>auto</data_loading>
-        </brick>
-        <brick id="services" xsi:type="Combodo\iTop\Portal\Brick\BrowseBrick">
-          <active>true</active>
-          <width>4</width>
-          <rank>
-			  <default>6</default>
-		  </rank>
-          <title>
-			  <default>Brick:Portal:Services:Title</default>
-		  </title>
-		  <description>Un deux trois nous irons au bois, quatre cinq six cueillir des cerises. Sept huit neuf, das un panier neuf.</description>
-		  <decoration_class>
-			  <default>fa fa-map fa-2x</default>
-		  </decoration_class>
-          <!-- <fields  /> Optional tag to add attributes to the table by their code, can be specified for each level -->
-          <levels>
-            <level id="1">
-              <class>ServiceFamily</class>
-              <levels>
-                <!-- Level IDs must be numeric -->
-                <level id="1">
-                  <!-- Can be either a class tag with the class name or an oql tag with the query -->
-                  <class>Service</class>
-                  <!-- Attribute code of the above class that point to the upper level class -->
-                  <parent_att>servicefamily_id</parent_att>
-                  <!-- Attribute code to use to display the object name, default is 'name'. -->
-                  <name_att/>
-                  <!-- Description text from attribute of above class [from the OQL] -->
-                  <tooltip_att>description</tooltip_att>
-                  <!-- Title of the level, will be display in lists and others browse modes -->
-                  <title>Service</title>
-                  <!-- Optional tag to add attributes to the table by their code, can be specified for each level -->
-                  <!-- <fields  /> -->
-                  <!-- Can be empty on intermediate levels, default is drilldown -->
-                  <actions>
-                    <action id="drilldown" xsi:type="drilldown"/>
-                  </actions>
-                  <levels>
-                    <level id="1">
-                      <!-- Note : We could have used just a class tag and putted the OQL in the scope for everybody -->
-                      <oql><![CDATA[SELECT ServiceSubcategory WHERE ServiceSubcategory.status != 'obsolete']]></oql>
-                      <parent_att>service_id</parent_att>
-                      <name_att/>
-                      <tooltip_att>description</tooltip_att>
-                      <title>Sous-Service</title>
-                      <actions>
-                        <action id="view" xsi:type="view"/>
-                        <action id="create_from_this" xsi:type="create_from_this">
-                          <!-- Can be either a class tag containing the class of the object to create, or a static method taking the origin object as a parameter and that will return a object of the desired class -->
-                          <!-- (eg. \Ticket::FromServiceSubcategory($oOrigin) that should return either a UserRequest or Incident regarding the request type) -->
-                          <class>UserRequest</class>
-                          <!-- Optional tag that can be used on any action type -->
-                          <!--<title>Créer un ticket</title>-->
-						  <!--<icon_class>glyphicon glyphicon-plus</icon_class>-->
-                          <rules>
-                            <rule id="contact-to-userrequest"/>
-                            <rule id="servicesubcategory-to-userrequest"/>
-                          </rules>
-                        </action>
-                      </actions>
-                      <levels/>
-                    </level>
-                  </levels>
-                </level>
-              </levels>
-            </level>
-          </levels>
-
-          <browse_modes>
-            <availables>
-              <mode id="list"/>
-              <mode id="tree"/>
-            </availables>
-            <default>tree</default>
-          </browse_modes>
-          <data_loading>auto</data_loading>
-          <!-- lazy|full|auto. Let the consultant choose if the list/tree data are load progressivly at each page/level or in one-shot or if it is up to the system regarding the "lazy_loading_threshold" parameter -->
         </brick>
       </bricks>
       <forms>

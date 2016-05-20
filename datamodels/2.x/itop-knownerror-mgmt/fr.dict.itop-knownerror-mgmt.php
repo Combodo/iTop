@@ -152,12 +152,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:NewError+' => 'Créer une erreur connue',
 	'Menu:SearchError' => 'Rechercher une erreur connue',
 	'Menu:SearchError+' => 'Rechercher une erreur connue',
-        'Menu:Problem:KnownErrors' => 'Toutes les erreurs connues',
-        'Menu:Problem:KnownErrors+' => 'Toutes les erreurs connues',
+	'Menu:Problem:KnownErrors' => 'Toutes les erreurs connues',
+	'Menu:Problem:KnownErrors+' => 'Toutes les erreurs connues',
 	'Menu:FAQCategory' => 'Catégories de FAQ',
 	'Menu:FAQCategory+' => 'Toutes les catégories de FAQ',
 	'Menu:FAQ' => 'FAQs',
 	'Menu:FAQ+' => 'Toutes les  FAQs',
 
+	'Brick:Portal:FAQ:Title' => 'Foire Aux Questions',
+	'Brick:Portal:FAQ:Title+' => 'Recherchez la réponse à vos questions dans la base de connaissances',
 ));
-?>
