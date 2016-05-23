@@ -214,10 +214,10 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
 	return trim($sValue);
 }
 
-function ChangeDateFormat($sProposedDate, $sDateFormat)
+function ChangeDateFormat($sProposedDate, $sFormat)
 {
-	// Make sure this is a valid MySQL datetime
-	$oFormat = new DateTimeFormat($sDateFormat);
+	// Convert to a valid MySQL datetime
+	$oFormat = new DateTimeFormat($sFormat);
 	$sRegExpr = $oFormat->ToRegExpr();
 	if (!preg_match('/'.$sRegExpr.'/', $sProposedDate))
 	{
@@ -319,11 +319,17 @@ try
 	$sSep = ReadParam($oP, 'separator', 'raw_data');
 	$sQualifier = ReadParam($oP, 'qualifier', 'raw_data');
 	$sCharSet = ReadParam($oP, 'charset', 'raw_data');
-	$sDateFormat = ReadParam($oP, 'date_format', 'raw_data');
-	if (strpos($sDateFormat, '%') !== false)
+	$sDateTimeFormat = ReadParam($oP, 'date_format', 'raw_data');
+	if ($sDateTimeFormat == '')
 	{
-		$sDateFormat = utils::DateTimeFormatToPHP($sDateFormat);
+		$sDateTimeFormat = 'Y-m-d H:i:s'; // By default use the SQL date & time format
 	}
+	if (strpos($sDateTimeFormat, '%') !== false)
+	{
+		$sDateTimeFormat = utils::DateTimeFormatToPHP($sDateTimeFormat);
+	}
+	$oDateTimeFormat = new DateTimeFormat($sDateTimeFormat);
+	$sDateFormat = $oDateTimeFormat->ToDateFormat(); // Keep only the date part
 	$sOutput = ReadParam($oP, 'output');
 //	$sReportLevel = ReadParam($oP, 'reportlevel');
 	$sSimulate = ReadParam($oP, 'simulate');
@@ -435,9 +441,9 @@ try
 	$aDateToTransformReport = array();
 	foreach($aInputColumns as $iFieldId => $sInputColumn)
 	{
-		if ((strlen($sDateFormat) > 0) && (array_key_exists($sInputColumn, $aDateColumns)))
+		if (array_key_exists($sInputColumn, $aDateColumns))
 		{
-			$aIsDateToTransform[$iFieldId] = true;
+			$aIsDateToTransform[$iFieldId] = $aDateColumns[$sInputColumn]; // either DATE or DATETIME
 			$aDateToTransformReport[] = $sInputColumn;
 		}
 		else
@@ -466,9 +472,13 @@ try
 	//
 	try
 	{
-		$oP->add_comment('Load--------------');
-		$oP->add_comment('------------------');
-
+		if ($sOutput == 'details')
+		{
+			$oP->add_comment('------------------------------------------------------------');
+			$oP->add_comment(' Import phase');
+			$oP->add_comment('------------------------------------------------------------');
+		}
+		
 		if ($bSimulate)
 		{
 			CMDBSource::Query('START TRANSACTION');
@@ -507,15 +517,20 @@ try
 					{
 						$aValues[] = 'NULL';
 					}
-					elseif ($aIsDateToTransform[$iCol])
+					elseif ($aIsDateToTransform[$iCol] !== false)
 					{
-						$sDate = ChangeDateFormat($value, $sDateFormat);
+						$sFormat = $sDateTimeFormat;
+						if ($aIsDateToTransform[$iCol] == 'DATE')
+						{
+							$sFormat = $sDateFormat;
+						}
+						$sDate = ChangeDateFormat($value, $sFormat);
 						if ($sDate === false)
 						{
 							$aValues[] = CMDBSource::Quote('');
 							if ($sOutput == 'details')
 							{
-								$oP->add("$iRow: Wrong format for date field: '$value' (skipped column)\n");
+								$oP->add("$iRow: Wrong format for {$aIsDateToTransform[$iCol]} column $iCol: '$value' does not match the expected format: '$sFormat' (column skipped)\n");
 							}
 						}
 						else
@@ -564,15 +579,19 @@ try
 					if ($iCol == $iPrimaryKeyCol) continue;
 		
 					$sCol = $aInputColumns[$iCol];
-					if ($aIsDateToTransform[$iCol])
+					if ($aIsDateToTransform[$iCol] !== false)
 					{
-						$sDate = ChangeDateFormat($aRow[$iCol], $sDateFormat);
+						$sFormat = $sDateTimeFormat;
+						if ($aIsDateToTransform[$iCol] == 'DATE')
+						{
+							$sFormat = $sDateFormat;
+						}
+						$sDate = ChangeDateFormat($value, $sFormat);
 						if ($sDate === false)
 						{
-							// Skip this column spec
 							if ($sOutput == 'details')
 							{
-								$oP->add("$iRow: Wrong format for date field: '".$aRow[$iCol]."' (skipped column)\n");
+								$oP->add("$iRow: Wrong format for {$aIsDateToTransform[$iCol]} column $iCol: '$value' does not match the expected format: '$sFormat' (column skipped)\n");
 							}
 						}
 						else
@@ -616,18 +635,43 @@ try
 		
 		if (($sOutput == "summary") || ($sOutput == 'details'))
 		{
+			$oP->add_comment('------------------------------------------------------------');
+			$oP->add_comment(' Import phase summary');
+			$oP->add_comment('------------------------------------------------------------');
 			$oP->add_comment("Data Source: ".$iDataSourceId);
 			$oP->add_comment("Synchronize: ".($bSynchronize ? '1' : '0'));
 			$oP->add_comment("Class: ".$sClass);
 			$oP->add_comment("Separator: ".$sSep);
 			$oP->add_comment("Qualifier: ".$sQualifier);
 			$oP->add_comment("Charset Encoding:".$sCharSet);
-			if (strlen($sDateFormat) > 0)
+
+			if (strlen($sDateTimeFormat) > 0)
 			{
-				$oP->add_comment("Date format: '$sDateFormat', applied to columns {".implode(', ', $aDateToTransformReport)."}");
+				$aDateTimeColumns = array();
+				$aDateColumns = array();
+				foreach($aIsDateToTransform as $iCol => $sSQLDef)
+				{
+					if ($sSQLDef !== false)
+					{
+						$sCol = $aInputColumns[$iCol];
+						if ($sSQLDef == 'DATE')
+						{
+							$aDateColumns[] = $sCol;
+						}
+						else
+						{
+							$aDateTimeColumns[] = $sCol;
+						}
+					}
+				}
+				$sFormatedDateTimeColumns = (count($aDateTimeColumns) > 0) ? ', applied to columns ['.implode(', ', $aDateTimeColumns).']' : '';
+				$sFormatedDateColumns = (count($aDateColumns) > 0) ? ', applied to columns ['.implode(', ', $aDateColumns).']' : '';
+				$oP->add_comment("Date and time format: '$sDateTimeFormat' $sFormatedDateTimeColumns");
+				$oP->add_comment("Date only format: '$sDateFormat' $sFormatedDateColumns");
 			}
 			else
 			{
+				// shall never get there
 				$oP->add_comment("Date format: <none>");
 			}
 			$oP->add_comment("Data Size: ".strlen($sCSVData));
@@ -651,19 +695,29 @@ try
 		{
 			$oSynchroExec = new SynchroExecution($oDataSource, $oLoadStartDate);
 			$oStatLog = $oSynchroExec->Process();
-			$oP->add_comment('Synchronization---');
-			$oP->add_comment('------------------');
 			if ($sOutput == 'details')
 			{
+				$oP->add_comment('------------------------------------------------------------');
+				$oP->add_comment(' Synchronization phase');
+				$oP->add_comment('------------------------------------------------------------');
+				$iCount = 0;
 				foreach ($oStatLog->GetTraces() as $sMessage)
 				{
+					$iCount++;
 					$oP->add_comment($sMessage);
+				}
+				if ($iCount == 0)
+				{
+					$oP->add_comment(' No traces. (To activate the traces set "synchro_trace" => true in the configuration file)');
 				}
 			}
 			if ($oStatLog->Get('status') == 'error')
 			{
 				$oP->p("ERROR: ".$oStatLog->Get('last_error'));
 			}
+			$oP->add_comment('------------------------------------------------------------');
+			$oP->add_comment(' Synchronization phase summary');
+			$oP->add_comment('------------------------------------------------------------');
 			$oP->add_comment("Replicas: ".$oStatLog->Get('stats_nb_replica_total'));
 			$oP->add_comment("Replicas touched since last synchro: ".$oStatLog->Get('stats_nb_replica_seen'));
 			$oP->add_comment("Objects deleted: ".$oStatLog->Get('stats_nb_obj_deleted'));
