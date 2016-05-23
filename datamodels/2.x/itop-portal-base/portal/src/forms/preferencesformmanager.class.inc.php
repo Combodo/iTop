@@ -54,10 +54,13 @@ class PreferencesFormManager extends FormManager
 			->SetCurrentValue(Dict::GetUserLanguage())
 			->SetStartsWithNullChoice(false);
 		// - Preparing choices
+		$aChoices = array();
 		foreach (Dict::GetLanguages() as $sCode => $aLanguage)
 		{
-			$oField->AddChoice($sCode, $aLanguage['description'] . ' (' . $aLanguage['localized_description'] . ')');
+			$aChoices[$sCode] = $aLanguage['description'] . ' (' . $aLanguage['localized_description'] . ')';
 		}
+		asort($aChoices);
+		$oField->SetChoices($aChoices);
 		// - Adding to form
 		$oForm->AddField($oField);
 
