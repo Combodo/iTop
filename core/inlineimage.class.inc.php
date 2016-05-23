@@ -221,7 +221,7 @@ class InlineImage extends DBObject
 				}
 				$sAttId = $aImgInfo[2][0];
 	
-				$sNewImgTag = preg_replace('/src="[^"]+"/', 'src="'.$sUrl.$sAttId.$sSecret.'"', $sImgTag); // preserve other attributes
+				$sNewImgTag = preg_replace('/src="[^"]+"/', 'src="'.htmlentities($sUrl.$sAttId.$sSecret, ENT_QUOTES, 'UTF-8').'"', $sImgTag); // preserve other attributes, must convert & to &amp; to be idempotent with CKEditor
 				$aNeedles[] = $sImgTag;
 				$aReplacements[] = $sNewImgTag;
 			}
@@ -422,7 +422,7 @@ EOF
 		// Hook the file upload of all CKEditor instances
 		$('.htmlEditor').each(function() {
 			var oEditor = $(this).ckeditorGet();
-			oEditor.config.extraPlugins = 'uploadimage';
+			oEditor.config.extraPlugins = 'font,uploadimage';
 			oEditor.config.uploadUrl = '$sAbsoluteUrlAppRoot'+'pages/ajax.render.php';
 			oEditor.config.filebrowserBrowseUrl = '$sAbsoluteUrlAppRoot'+'pages/ajax.render.php?operation=cke_browse&temp_id=$sTempId&obj_class=$sObjClass&obj_key=$iObjKey';
 			oEditor.on( 'fileUploadResponse', function( evt ) {
