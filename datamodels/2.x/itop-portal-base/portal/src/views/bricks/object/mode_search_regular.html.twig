@@ -135,10 +135,21 @@
 					$(oRow).find('td:first-child input').prop('checked', true);
 				}
 			},
+			"drawCallback": function(settings){
+				// Hiding pagination if only one page
+				if($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2)
+				{
+					$(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
+				}
+				else
+				{
+					$(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
+				}
+			},
 			"processing": true,
 			"serverSide": true,
 			"ajax": {
-				"url": "{{ app.url_generator.generate('p_object_search_from_attribute', {'sTargetAttCode': sTargetAttCode, 'sHostObjectClass': sHostObjectClass, 'sHostObjectId': sHostObjectId})|raw }}",
+				"url": "{{ app.url_generator.generate('p_object_search_from_attribute', {'sTargetAttCode': sTargetAttCode, 'sHostObjectClass': sHostObjectClass, 'sHostObjectId': sHostObjectId, 'ar_token': sActionRulesToken})|raw }}",
 				"data": function(d){
 					d.aObjectIdsToIgnore = {{ aSource.aObjectIdsToIgnore|json_encode()|raw }};
 					d.iPageNumber = Math.floor(d.start/d.length) + 1;
@@ -165,7 +176,7 @@
 				var iItemId = aData[i].id;
 				if(!(iItemId in oSelectedItems))
 				{
-					oSelectedItems[iItemId] = aData[i].name;
+					oSelectedItems[iItemId] = $('<textarea />').html(aData[i].name).text();
 				}
 			}
 		});

@@ -184,6 +184,13 @@ EOF
 							me.element.find('#{$this->oField->GetGlobalId()}').val(sItemId);
 							me.element.find('#{$sAutocompleteFieldId}').val(sItemName);
 							oAutocompleteSource_{$this->oField->GetId()}.index.datums[sItemId] = {id: sItemId, name: sItemName};
+
+							// Triggering field change event
+							me.element.closest(".field_set").trigger("field_change", {
+								id: me.element.find('#{$this->oField->GetGlobalId()}').attr("id"),
+								name: me.element.find('#{$this->oField->GetGlobalId()}').attr("name"),
+								value: me.element.find('#{$this->oField->GetGlobalId()}').val()
+							});
 						}
 					});
 EOF

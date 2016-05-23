@@ -1106,7 +1106,7 @@
 		  <decoration_class>
 			  <default>fa fa-pencil-square fa-2x</default>
 		  </decoration_class>
-          <oql><![CDATA[SELECT Ticket WHERE org_id = :current_contact->org_id AND caller_id = :current_contact_id]]></oql>
+          <oql><![CDATA[SELECT Ticket]]></oql>
           <!-- Can be either a class tag with the class name or an oql tag with the query -->
           <!-- <class>Ticket</class> -->
           <fields>
@@ -1146,7 +1146,7 @@
         <brick id="closed-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick">
           <active>true</active>
           <rank>
-			  <menu>50</menu>
+			  <navigation_menu>50</navigation_menu>
 		  </rank>
           <visible>
             <home>false</home>
@@ -1318,6 +1318,31 @@
             <mode id="edit"/>
           </modes>
         </form>
+		<form id="service-view">
+			<class>Service</class>
+			<fields></fields>
+			<twig>
+			  <div class="row">
+				<div class="col-sm-6">
+				  <div class="form_field" data-field-id="name">
+				  </div>
+				  <div class="form_field" data-field-id="description">
+				  </div>
+				</div>
+				<div class="col-sm-6">
+				  <div class="form_field" data-field-id="org_id">
+				  </div>
+				  <div class="form_field" data-field-id="servicefamily_id">
+				  </div>
+				  <div class="form_field" data-field-id="status">
+				  </div>
+				</div>
+			  </div>
+			</twig>
+			<modes>
+				<mode id="view" />
+			</modes>
+		</form>
       </forms>
       <classes>
         <!-- Note : A class (or one of its ancestors) MUST be declared here to be displayed in the portal -->
@@ -1352,10 +1377,6 @@
         </class>
         <class id="Person">
           <scopes>
-            <scope id="all">
-              <oql_view><![CDATA[SELECT Person AS P WHERE P.org_id = :current_contact->org_id OR P.id = :current_contact_id]]></oql_view>
-              <oql_edit><![CDATA[SELECT Person AS P WHERE P.id = :current_contact_id]]></oql_edit>
-            </scope>
             <scope id="administrator">
               <oql_view><![CDATA[SELECT Person AS P]]></oql_view>
               <allowed_profiles>

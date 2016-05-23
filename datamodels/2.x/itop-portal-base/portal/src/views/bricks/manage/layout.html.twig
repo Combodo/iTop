@@ -7,17 +7,13 @@
 {% endblock %}
 
 {% block pMainHeaderActions %}
-		<div class="row">
-			<div class="col-sm-12">
-				{% if aGroupingTabsValues|length > 1 %}
-				<div class="btn-group btn-group-justified btn-group-sm">
-					{% for aGroupingTab in aGroupingTabsValues %}
-						<a href="{{ app.url_generator.generate('p_manage_brick', {'sBrickId': sBrickId, 'sGroupingTab': aGroupingTab.value}) }}" class="btn btn-default {% if sGroupingTab is defined and sGroupingTab == aGroupingTab.value %}active{% endif %}">{{ aGroupingTab.label|raw }}</a>
-					{% endfor %}
-				</div>
-				{% endif %}
-			</div>
+	{% if aGroupingTabsValues|length > 1 %}
+		<div class="btn-group btn-group-sm btn_group_explicit">
+			{% for aGroupingTab in aGroupingTabsValues %}
+				<a href="{{ app.url_generator.generate('p_manage_brick', {'sBrickId': sBrickId, 'sGroupingTab': aGroupingTab.value}) }}" class="btn btn-default {% if sGroupingTab is defined and sGroupingTab == aGroupingTab.value %}active{% endif %}">{{ aGroupingTab.label|raw }}</a>
+			{% endfor %}
 		</div>
+	{% endif %}
 {% endblock %}
 
 {% block pMainContentHolder%}
@@ -169,6 +165,17 @@
 					"dom": '<"row"<"col-sm-6"l><"col-sm-6"<f><"visible-xs"p>>>t<"row"<"col-sm-6"ri><"col-sm-6"p>>',
 					"columns": getColumnsDefinition('{{ sAreaId }}'),
 					"order": [[0, "desc"]],
+					"drawCallback": function(settings){
+						// Hiding pagination if only one page
+						if($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2)
+						{
+							$(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
+						}
+						else
+						{
+							$(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
+						}
+					},
 					{% if sDataLoading == constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL') %}
 						"data": rawData['{{ sAreaId }}'],
 					{% else %}

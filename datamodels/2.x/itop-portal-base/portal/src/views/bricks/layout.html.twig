@@ -12,13 +12,15 @@
 {% endblock %}
 
 {% block pMainHeader %}
-<div class="col-sm-6 col-md-8" id="main-header-title">
-	<h2>{% block pMainHeaderTitle %}{% endblock %}</h2>
-</div>
-<div class="col-sm-6 col-md-4" id="main-header-actions">
-	{% block pMainHeaderActions %}
-	{% endblock %}
-</div>
+	<div class="col-xs-12">
+		<div id="main-header-title">
+			<h2>{% block pMainHeaderTitle %}{% endblock %}</h2>
+		</div>
+		<div id="main-header-actions">
+			{% block pMainHeaderActions %}
+			{% endblock %}
+		</div>
+	</div>
 {% endblock %}
 
 {% block pMainContent %}

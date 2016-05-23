@@ -619,11 +619,20 @@ class ApplicationHelper
 			}
 		}
 		// - Sorting bricks by rank
-		usort($aPortalConf['bricks'], function($a, $b)
+		$aPortalConf['bricks_ordering'] = array();
+		//   - Home
+		$aPortalConf['bricks_ordering']['home'] = $aPortalConf['bricks'];
+		usort($aPortalConf['bricks_ordering']['home'], function($a, $b)
 		{
-			return $a->GetRank() > $b->GetRank();
+			return $a->GetRankHome() > $b->GetRankHome();
 		});
-		
+		//    - Navigation menu
+		$aPortalConf['bricks_ordering']['navigation_menu'] = $aPortalConf['bricks'];
+		usort($aPortalConf['bricks_ordering']['navigation_menu'], function($a, $b)
+		{
+			return $a->GetRankNavigationMenu() > $b->GetRankNavigationMenu();
+		});
+
 		return $aPortalConf;
 	}
 

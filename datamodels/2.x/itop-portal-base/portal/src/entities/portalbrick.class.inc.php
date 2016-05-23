@@ -135,7 +135,7 @@ abstract class PortalBrick extends AbstractBrick
 	 */
 	public function GetRankHome()
 	{
-		return $this->bRankHome;
+		return $this->fRankHome;
 	}
 
 	/**
@@ -145,7 +145,7 @@ abstract class PortalBrick extends AbstractBrick
 	 */
 	public function GetRankNavigationMenu()
 	{
-		return $this->bRankNavigationMenu;
+		return $this->fRankNavigationMenu;
 	}
 
 	/**

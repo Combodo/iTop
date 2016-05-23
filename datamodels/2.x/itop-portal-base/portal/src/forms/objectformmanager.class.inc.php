@@ -487,7 +487,8 @@ class ObjectFormManager extends FormManager
 							$sSearchEndpoint = $this->oApp['url_generator']->generate('p_object_search_generic', array(
 								'sTargetAttCode' => $oAttDef->GetCode(),
 								'sHostObjectClass' => get_class($this->oObject),
-								'sHostObjectId' => ($this->oObject->IsNew()) ? null : $this->oObject->GetKey()
+								'sHostObjectId' => ($this->oObject->IsNew()) ? null : $this->oObject->GetKey(),
+								'ar_token' => $this->GetActionRulesToken(),
 							));
 							$oField->SetSearchEndpoint($sSearchEndpoint);
 						}

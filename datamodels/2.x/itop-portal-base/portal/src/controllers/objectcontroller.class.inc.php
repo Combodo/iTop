@@ -395,7 +395,7 @@ class ObjectController extends AbstractController
 			// But it would not be a security issue as it only presets values in the form.
 			$sActionRulesToken = $oRequest->get('ar_token');
 			$aActionRules = ($sActionRulesToken !== null) ? ContextManipulatorHelper::DecodeRulesToken($sActionRulesToken) : array();
-
+			
 			// Preparing object
 			if ($sObjectId === null)
 			{
@@ -606,6 +606,14 @@ class ObjectController extends AbstractController
 		else
 		{
 			$oHostObject = MetaModel::NewObject($sHostObjectClass);
+			// Retrieving action rules
+			//
+			// Note : The action rules must be a base64-encoded JSON object, this is just so users are tempted to changes values.
+			// But it would not be a security issue as it only presets values in the form.
+			$sActionRulesToken = $oRequest->get('ar_token');
+			$aActionRules = ($sActionRulesToken !== null) ? ContextManipulatorHelper::DecodeRulesToken($sActionRulesToken) : array();
+			// Preparing object
+			$oApp['context_manipulator']->PrepareObject($aActionRules, $oHostObject);
 		}
 
 		// Building search query
@@ -617,7 +625,7 @@ class ObjectController extends AbstractController
 		// - Adding query condition
 		$oSearch->AddConditionExpression(new BinaryExpression(new FieldExpression('friendlyname', $oSearch->GetClassAlias()), 'LIKE', new VariableExpression('ac_query')));
 		// - Intersecting with scope constraints
-		$oSearch->Intersect($oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ));
+		$oSearch = $oSearch->Intersect($oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ));
 
 		// Retrieving results
 		// - Preparing object set
@@ -628,7 +636,7 @@ class ObjectController extends AbstractController
 		// - Retrieving objects
 		while ($oItem = $oSet->Fetch())
 		{
-			$aData['results']['items'][] = array('id' => $oItem->GetKey(), 'name' => $oItem->GetName());
+			$aData['results']['items'][] = array('id' => $oItem->GetKey(), 'name' => html_entity_decode($oItem->GetName(), ENT_QUOTES, 'UTF-8'));
 			$aData['results']['count'] ++;
 		}
 
@@ -661,7 +669,8 @@ class ObjectController extends AbstractController
 			'sMode' => 'search_regular',
 			'sTargetAttCode' => $sTargetAttCode,
 			'sHostObjectClass' => $sHostObjectClass,
-			'sHostObjectId' => $sHostObjectId
+			'sHostObjectId' => $sHostObjectId,
+			'sActionRulesToken' => $oRequest->get('ar_token')
 		);
 
 		// Checking security layers
@@ -678,6 +687,13 @@ class ObjectController extends AbstractController
 		else
 		{
 			$oHostObject = MetaModel::NewObject($sHostObjectClass);
+			// Retrieving action rules
+			//
+			// Note : The action rules must be a base64-encoded JSON object, this is just so users are tempted to changes values.
+			// But it would not be a security issue as it only presets values in the form.
+			$aActionRules = ($aData['sActionRulesToken'] !== null) ? ContextManipulatorHelper::DecodeRulesToken($aData['sActionRulesToken']) : array();
+			// Preparing object
+			$oApp['context_manipulator']->PrepareObject($aActionRules, $oHostObject);
 		}
 
 		// Retrieving request parameters
@@ -780,7 +796,7 @@ class ObjectController extends AbstractController
 		}
 
 		// - Intersecting with scope constraints
-		$oSearch->Intersect($oScopeSearch);
+		$oSearch = $oSearch->Intersect($oScopeSearch);
 
 		// Retrieving results
 		// - Preparing object set
@@ -999,7 +1015,7 @@ class ObjectController extends AbstractController
 //			$aInternalParams['re_query'] = '%' . $sQuery . '%';
 //		}
 		// - Intersecting with scope constraints
-		$oSearch->Intersect($oScopeSearch);
+		$oSearch = $oSearch->Intersect($oScopeSearch);
 
 		// Retrieving results
 		// - Preparing object set

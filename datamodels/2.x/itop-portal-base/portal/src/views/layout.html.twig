@@ -124,7 +124,7 @@
 									{{ 'Page:Home'|dict_s }}
 								</a>
 							</li>
-							{% for brick in app['combodo.portal.instance.conf'].bricks %}
+							{% for brick in app['combodo.portal.instance.conf'].bricks_ordering.navigation_menu %}
 								{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
 									<li class="{% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}">
 										<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}>
@@ -201,7 +201,7 @@
 								{{ 'Page:Home'|dict_s }}
 							</a>
 						</li>
-						{% for brick in app['combodo.portal.instance.conf'].bricks %}
+						{% for brick in app['combodo.portal.instance.conf'].bricks_ordering.navigation_menu %}
 							{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
 								<li class="{% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}">
 									<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}>
