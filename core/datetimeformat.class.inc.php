@@ -309,6 +309,7 @@ function PHPDateTimeFormatToMomentFormat(sPHPFormat)
 
 function DateFormatFromPHP(sSQLDate, sPHPFormat)
 {
+	if (sSQLDate === '') return '';
 	var sPHPDateFormat = PHPDateTimeFormatToSubFormat(sPHPFormat, 'Yydjmn');
 	var sMomentFormat = PHPDateTimeFormatToMomentFormat(sPHPDateFormat);	
 	return moment(sSQLDate).format(sMomentFormat);
@@ -316,6 +317,7 @@ function DateFormatFromPHP(sSQLDate, sPHPFormat)
 
 function DateTimeFormatFromPHP(sSQLDate, sPHPFormat)
 {
+	if (sSQLDate === '') return '';
 	var sMomentFormat = PHPDateTimeFormatToMomentFormat(sPHPFormat);	
 	return moment(sSQLDate).format(sMomentFormat);
 }		

@@ -204,12 +204,12 @@ function FormatDatesInPreview(sRadioSelector, sPreviewSelector)
 		sPHPFormat = $('#'+sRadioSelector+'_custom_date_time_format').val();
 	}
 	$('#interactive_fields_'+sPreviewSelector+' .user-formatted-date-time').each(function() {
-		var val = $('this').attr('data-date');
+		var val = $(this).attr('data-date');
 		var sDisplay = DateTimeFormatFromPHP(val, sPHPFormat);
 		$(this).html(sDisplay);
 	});
 	$('#interactive_fields_'+sPreviewSelector+' .user-formatted-date').each(function() {
-		var val = $('this').attr('data-date');
+		var val = $(this).attr('data-date');
 		var sDisplay = DateFormatFromPHP(val, sPHPFormat);
 		$(this).html(sDisplay);
 	});
