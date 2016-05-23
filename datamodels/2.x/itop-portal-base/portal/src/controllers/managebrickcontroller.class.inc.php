@@ -192,6 +192,13 @@ class ManageBrickController extends BrickController
 			if (MetaModel::IsValidAttCode($oQuery->GetClass(), $sGroupingAreaAttCode))
 			{
 				$oDistinctQuery = DBSearch::FromOQL($oBrick->GetOql());
+				// Checking if there is a scope to apply
+				$oDistinctScopeQuery = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $oQuery->GetClass(), UR_ACTION_READ);
+				if ($oDistinctScopeQuery != null)
+				{
+					$oDistinctQuery = $oDistinctQuery->Intersect($oDistinctScopeQuery);
+				}
+				// Adding grouping conditions
 				$oFieldExp = new FieldExpression($sGroupingAreaAttCode, $sParentAlias);
 				$sDistinctSql = $oDistinctQuery->MakeGroupByQuery(array(), array('grouped_by_1' => $oFieldExp), true);
 				$aDistinctResults = CMDBSource::QueryToArray($sDistinctSql);
