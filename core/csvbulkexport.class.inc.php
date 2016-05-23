@@ -202,6 +202,8 @@ class CSVBulkExport extends TabularBulkExport
 <<<EOF
 $('#csv_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
 $('#form_part_csv_options').on('preview_updated', function() { FormatDatesInPreview('csv', 'csv'); });
+$('#csv_date_time_format_default').on('click', function() { FormatDatesInPreview('csv', 'csv'); });
+$('#csv_date_time_format_custom').on('click', function() { FormatDatesInPreview('csv', 'csv'); });
 $('#csv_custom_date_time_format').on('click', function() { $('#csv_date_time_format_custom').prop('checked', true); FormatDatesInPreview('csv', 'csv'); }).on('keyup', function() { FormatDatesInPreview('csv', 'csv'); });
 EOF
 				);

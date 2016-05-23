@@ -78,6 +78,8 @@ class PDFBulkExport extends HTMLBulkExport
 <<<EOF
 $('#pdf_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
 $('#form_part_pdf_options').on('preview_updated', function() { FormatDatesInPreview('pdf', 'html'); });
+$('#pdf_date_time_format_default').on('click', function() { FormatDatesInPreview('pdf', 'html'); });
+$('#pdf_date_time_format_custom').on('click', function() { FormatDatesInPreview('pdf', 'html'); });
 $('#pdf_custom_date_time_format').on('click', function() { $('#pdf_date_time_format_custom').prop('checked', true); FormatDatesInPreview('pdf', 'html'); }).on('keyup', function() { FormatDatesInPreview('pdf', 'html'); });					
 EOF
 				);
@@ -151,9 +153,13 @@ EOF
 	public function GetNextChunk(&$aStatus)
 	{
 		$oPrevFormat = AttributeDateTime::GetFormat();
-		AttributeDateTime::SetFormat(new DateTimeFormat($this->aStatusInfo['date_format']));
+		$oPrevDateFormat = AttributeDate::GetFormat();
+		$oDateTimeFormat = new DateTimeFormat($this->aStatusInfo['date_format']);
+		AttributeDateTime::SetFormat($oDateTimeFormat);
+		AttributeDate::SetFormat(new DateTimeFormat($oDateTimeFormat->ToDateFormat()));
 		$sData = parent::GetNextChunk($aStatus);
 		AttributeDateTime::SetFormat($oPrevFormat);
+		AttributeDate::SetFormat($oPrevDateFormat);
 		$hFile = @fopen($this->aStatusInfo['tmp_file'], 'ab');
 		if ($hFile === false)
 		{

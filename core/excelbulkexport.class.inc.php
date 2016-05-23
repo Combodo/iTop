@@ -115,6 +115,8 @@ class ExcelBulkExport extends TabularBulkExport
 <<<EOF
 $('#excel_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
 $('#form_part_xlsx_options').on('preview_updated', function() { FormatDatesInPreview('excel', 'xlsx'); });
+$('#excel_date_time_format_default').on('click', function() { FormatDatesInPreview('excel', 'xlsx'); });
+$('#excel_date_time_format_custom').on('click', function() { FormatDatesInPreview('excel', 'xlsx'); });
 $('#excel_custom_date_time_format').on('click', function() { $('#excel_date_time_format_custom').prop('checked', true); FormatDatesInPreview('excel', 'xlsx'); }).on('keyup', function() { FormatDatesInPreview('excel', 'xlsx'); });					
 EOF
 				);

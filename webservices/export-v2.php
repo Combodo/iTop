@@ -195,7 +195,7 @@ function DisplayForm(WebPage $oP, $sAction = '', $sExpression = '', $sQueryId = 
 <<<EOF
 function FormatDatesInPreview(sRadioSelector, sPreviewSelector)
 {
-	if ($('#'+sRadioSelector+'_date_format_radio').prop('checked'))
+	if ($('#'+sRadioSelector+'_date_time_format_default').prop('checked'))
 	{
 		sPHPFormat = '$sJSDefaultDateTimeFormat';
 	}
