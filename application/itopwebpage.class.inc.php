@@ -165,17 +165,47 @@ EOF;
 		$sJSTitle = json_encode(Dict::S('UI:DisconnectedDlgTitle'));
 		$sJSLoginAgain = json_encode(Dict::S('UI:LoginAgain'));
 		$sJSStayOnThePage = json_encode(Dict::S('UI:StayOnThePage'));
-		$sJSDaysMin = json_encode(array(Dict::S('DayOfWeek-Sunday-Min'), Dict::S('DayOfWeek-Monday-Min'), Dict::S('DayOfWeek-Tuesday-Min'), Dict::S('DayOfWeek-Wednesday-Min'),
-										Dict::S('DayOfWeek-Thursday-Min'), Dict::S('DayOfWeek-Friday-Min'), Dict::S('DayOfWeek-Saturday-Min')));
-		$sJSMonthsShort = json_encode(array(Dict::S('Month-01-Short'), Dict::S('Month-02-Short'), Dict::S('Month-03-Short'), Dict::S('Month-04-Short'), Dict::S('Month-05-Short'), Dict::S('Month-06-Short'), 
-											Dict::S('Month-07-Short'), Dict::S('Month-08-Short'), Dict::S('Month-09-Short'), Dict::S('Month-10-Short'), Dict::S('Month-11-Short'), Dict::S('Month-12-Short')));
-		$iFirstDayOfWeek = (int) Dict::S('Calendar-FirstDayOfWeek');
-		$sJSDateFormat = json_encode(AttributeDate::GetFormat()->ToDatePicker());
+		$aDaysMin = array(Dict::S('DayOfWeek-Sunday-Min'), Dict::S('DayOfWeek-Monday-Min'), Dict::S('DayOfWeek-Tuesday-Min'), Dict::S('DayOfWeek-Wednesday-Min'),
+										Dict::S('DayOfWeek-Thursday-Min'), Dict::S('DayOfWeek-Friday-Min'), Dict::S('DayOfWeek-Saturday-Min'));
+		$aMonthsShort = array(Dict::S('Month-01-Short'), Dict::S('Month-02-Short'), Dict::S('Month-03-Short'), Dict::S('Month-04-Short'), Dict::S('Month-05-Short'), Dict::S('Month-06-Short'), 
+											Dict::S('Month-07-Short'), Dict::S('Month-08-Short'), Dict::S('Month-09-Short'), Dict::S('Month-10-Short'), Dict::S('Month-11-Short'), Dict::S('Month-12-Short'));
 		$sTimeFormat = AttributeDateTime::GetFormat()->ToTimeFormat();
 		$oTimeFormat = new DateTimeFormat($sTimeFormat);
-		$sJSTimeFormat = json_encode($oTimeFormat->ToDatePicker());
 		$sJSLangShort = json_encode(strtolower(substr(Dict::GetUserLanguage(), 0, 2)));
-		$sJSOk = json_encode(Dict::S('UI:Button:Ok'));
+		
+		// Date picker options
+		$aPickerOptions = array(
+			'showOn' => 'button',
+			'buttonImage' => '../images/calendar.png',
+			'buttonImageOnly' => true,
+			'dateFormat' => AttributeDate::GetFormat()->ToDatePicker(),
+			'constrainInput' => false,
+			'changeMonth' => true,
+			'changeYear' => true,
+			'dayNamesMin' => $aDaysMin,
+			'monthNamesShort' => $aMonthsShort,
+			'firstDay' => (int) Dict::S('Calendar-FirstDayOfWeek'),
+		);
+		$sJSDatePickerOptions = json_encode($aPickerOptions);
+		
+		// Time picker additional options
+		
+		$aPickerOptions['timeFormat'] = $oTimeFormat->ToDatePicker();
+		$aPickerOptions['controlType'] = 'select';
+		$aPickerOptions['closeText'] = 	Dict::S('UI:Button:Ok');
+		$sJSDateTimePickerOptions = json_encode($aPickerOptions);
+		if ($sJSLangShort != '"en"')
+		{
+			// More options that cannot be passed via json_encode since they must be evaluated client-side
+			$aMoreJSOptions = ",
+				'timeText': $.timepicker.regional[$sJSLangShort].timeText,
+				'hourText': $.timepicker.regional[$sJSLangShort].hourText,
+				'minuteText': $.timepicker.regional[$sJSLangShort].minuteText,
+				'secondText': $.timepicker.regional[$sJSLangShort].secondText,
+				'currentText': $.timepicker.regional[$sJSLangShort].currentText
+			}";
+			$sJSDateTimePickerOptions = substr($sJSDateTimePickerOptions, 0, -1).$aMoreJSOptions;
+		}
 		
 		$this->m_sInitScript =
 <<< EOF
@@ -412,46 +442,8 @@ EOF
 
 	// End of Tabs handling
 
-	$(".date-pick").datepicker({
-			showOn: 'button',
-			buttonImage: '../images/calendar.png',
-			buttonImageOnly: true,
-			dateFormat: $sJSDateFormat,
-			constrainInput: false,
-			changeMonth: true,
-			changeYear: true,
-			dayNamesMin: $sJSDaysMin,
-			monthNamesShort: $sJSMonthsShort,
-			firstDay: $iFirstDayOfWeek
-		});
-	$(".datetime-pick").datetimepicker({
-			showOn: 'button',
-			buttonImage: '../images/calendar.png',
-			buttonImageOnly: true,
-			dateFormat: $sJSDateFormat,
-			constrainInput: false,
-			changeMonth: true,
-			changeYear: true,
-			dayNamesMin: $sJSDaysMin,
-			monthNamesShort: $sJSMonthsShort,
-			firstDay: $iFirstDayOfWeek,
-			// time picker options	
-			timeFormat: $sJSTimeFormat,
-			controlType: 'select',
-			closeText: $sJSOk
-	});
-	
-	if ($sJSLangShort != 'en')
-	{
-		$(".datetime-pick").datetimepicker('option', {
-			timeText: $.timepicker.regional[$sJSLangShort].timeText,
-			hourText: $.timepicker.regional[$sJSLangShort].hourText,
-			minuteText: $.timepicker.regional[$sJSLangShort].minuteText,
-			secondText: $.timepicker.regional[$sJSLangShort].secondText,
-			currentText: $.timepicker.regional[$sJSLangShort].currentText,
-	});
-				
-	}	
+	$(".date-pick").datepicker($sJSDatePickerOptions);
+	$(".datetime-pick").datetimepicker($sJSDateTimePickerOptions);	
 
 	// Make sortable, everything that claims to be sortable
 	$('.sortable').sortable( {axis: 'y', cursor: 'move', handle: '.drag_handle', stop: function()
