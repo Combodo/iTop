@@ -168,14 +168,10 @@ Class XLSXWriter
 		
 		if (is_int($value) || is_float($value)) {
 			fwrite($fd,'<c r="'.$cell.'" s="'.$s.'" t="n"><v>'.($value*1).'</v></c>');//int,float, etc
-		} else if ($cell_format=='date') {
+		} else if (($cell_format=='date') && ($value != '')) {
 			fwrite($fd,'<c r="'.$cell.'" s="'.$s.'" t="n"><v>'.intval(self::convert_date_time($value)).'</v></c>');
-		} else if ($cell_format=='datetime') {
-			if ($value === '') {
-				fwrite($fd,'<c r="'.$cell.'" s="0"/>');
-			} else {
-				fwrite($fd,'<c r="'.$cell.'" s="'.$s.'" t="n"><v>'.self::convert_date_time($value).'</v></c>');
-			}			
+		} else if (($cell_format=='datetime') && ($value != '')) {
+			fwrite($fd,'<c r="'.$cell.'" s="'.$s.'" t="n"><v>'.self::convert_date_time($value).'</v></c>');
 		} else if ($value==''){
 			fwrite($fd,'<c r="'.$cell.'" s="'.$s.'"/>');
 		} else if ($value{0}=='='){
