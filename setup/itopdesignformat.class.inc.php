@@ -520,6 +520,15 @@ class iTopDesignFormat
 			$this->DeleteNode($oNode);
 		}
 
+		// Remove Image attributes
+		//
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeImage']");
+		foreach ($oNodeList as $oNode)
+		{
+			$this->LogWarning('The attribute '.self::GetItopNodePath($oNode).' is irrelevant and must be removed.');
+			$this->DeleteNode($oNode);
+		}
+
 		// Discard _delta="if_exists"
 		//
 		$oNodeList = $oXPath->query("//*[@_delta='if_exists']");
