@@ -71,10 +71,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Ticket/Attribute:finalclass+' => '',
 	'Class:Ticket/Attribute:operational_status' => 'Statut opérationnel',
 	'Class:Ticket/Attribute:operational_status+' => 'Calculé à partir du statut détaillé',
-	'Class:Ticket/Attribute:operational_status/Value:active' => 'Actif',
-	'Class:Ticket/Attribute:operational_status/Value:active+' => 'Traitement en cours',
-	'Class:Ticket/Attribute:operational_status/Value:inactive' => 'Inactif',
-	'Class:Ticket/Attribute:operational_status/Value:inactive+' => 'Ticket définitivement fermé',
+	'Class:Ticket/Attribute:operational_status/Value:ongoing' => 'En cours',
+	'Class:Ticket/Attribute:operational_status/Value:ongoing+' => 'Traitement en cours',
+	'Class:Ticket/Attribute:operational_status/Value:resolved' => 'Résolu',
+	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '',
+	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Clôt',
+	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
 	'Ticket:ImpactAnalysis' => 'Analyse d\'Impact',
 ));
 

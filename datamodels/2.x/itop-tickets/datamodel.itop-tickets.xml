@@ -47,18 +47,23 @@
       <fields>
         <field id="operational_status" xsi:type="AttributeMetaEnum">
           <values>
-            <value id="active">active</value>
-            <value id="inactive">inactive</value>
+            <value id="ongoing">ongoing</value>
+            <value id="resolved">resolved</value>
+            <value id="closed">closed</value>
           </values>
           <sql>operational_status</sql>
-          <default_value>active</default_value>
+          <default_value>ongoing</default_value>
           <mappings>
             <mapping id="Ticket">
               <attcode>status</attcode>
               <metavalues>
-                <metavalue id="inactive">
+                <metavalue id="resolved">
                   <values>
                     <value id="resolved"/>
+                  </values>
+                </metavalue>
+                <metavalue id="closed">
+                  <values>
                     <value id="closed"/>
                     <value id="rejected"/>
                   </values>

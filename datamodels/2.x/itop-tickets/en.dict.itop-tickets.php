@@ -84,10 +84,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Ticket/Attribute:finalclass+' => '',
 	'Class:Ticket/Attribute:operational_status' => 'Operational status',
 	'Class:Ticket/Attribute:operational_status+' => 'Computed after the detailed status',
-	'Class:Ticket/Attribute:operational_status/Value:active' => 'Active',
-	'Class:Ticket/Attribute:operational_status/Value:active+' => 'Work in progress',
-	'Class:Ticket/Attribute:operational_status/Value:inactive' => 'Inactive',
-	'Class:Ticket/Attribute:operational_status/Value:inactive+' => 'Done',
+	'Class:Ticket/Attribute:operational_status/Value:ongoing' => 'Ongoing',
+	'Class:Ticket/Attribute:operational_status/Value:ongoing+' => 'Work in progress',
+	'Class:Ticket/Attribute:operational_status/Value:resolved' => 'Resolved',
+	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '',
+	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Closed',
+	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
 	'Ticket:ImpactAnalysis' => 'Impact Analysis',
 ));
 
