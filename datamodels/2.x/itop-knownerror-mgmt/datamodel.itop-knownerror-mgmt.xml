@@ -613,7 +613,7 @@
 			</title>
 			<description>Brick:Portal:FAQ:Title+</description>
 			<decoration_class>
-				<default>fa fa-map fa-2x</default>
+				<default>fc fc-life-saver fc-2x</default>
 			</decoration_class>
           <levels>
             <level id="1">

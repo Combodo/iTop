@@ -1,13 +1,6 @@
 /*******************/
 /* Global settings */
 /*******************/
-@font-face {
-    font-family: 'Combodo';
-    src: url('../fonts/fontawesome-webfont.woff') format('woff'), url('../fonts/fontawesome-webfont.ttf') format('truetype');
-    font-weight: normal;
-	font-style: normal;
-}
-
 @media (max-width: 768px){
 	body{
 		padding-top: 60px;
@@ -504,6 +497,10 @@ a:hover, a:focus{
 		padding: 40px 40px 30px 40px;
 		min-height: 10em;
 		text-align: left;
+		transition: all 0.2s linear;
+	}
+	.home .tile:hover{
+		box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.10);
 	}
 	.home .tile .tile_decoration{
 		display: block;

@@ -1,0 +1,54 @@
+@font-face {
+    font-family: 'CombodoRegular';
+    src: url('combodo-webfont.woff2') format('woff2'),
+         url('combodo-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+.fc {
+  display: inline-block;
+  font: normal normal normal 14px/1 CombodoRegular;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* makes the font 33% larger relative to the icon container */
+.fc-lg {
+  font-size: 1.33333333em;
+  line-height: 0.75em;
+  vertical-align: -15%;
+}
+.fc-2x {
+  font-size: 2em;
+}
+.fc-3x {
+  font-size: 3em;
+}
+.fc-4x {
+  font-size: 4em;
+}
+.fc-5x {
+  font-size: 5em;
+}
+.fc-life-saver:before {
+  content: "0";
+}
+.fc-new-request:before {
+  content: "1";
+}
+.fc-ongoing-request:before {
+  content: "2";
+}
+.fc-closed-request:before {
+  content: "3";
+}
+.fc-combodo-icon:before {
+  content: "C";
+}
+.fc-itop-icon:before {
+  content: "I";
+}
+

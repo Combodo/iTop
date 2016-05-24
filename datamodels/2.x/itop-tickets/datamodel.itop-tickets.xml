@@ -1027,7 +1027,7 @@
           </title>
           <description>Portal:CreateNewRequest+</description>
           <decoration_class>
-            <default>fa fa-map fa-2x</default>
+            <default>fc fc-new-request fc-2x</default>
           </decoration_class>
           <!-- <fields  /> Optional tag to add attributes to the table by their code, can be specified for each level -->
           <levels>
@@ -1104,7 +1104,7 @@
 		  </title>
 		  <description>Portal:ShowOngoing+</description>
 		  <decoration_class>
-			  <default>fa fa-pencil-square fa-2x</default>
+			  <default>fc fc-ongoing-request fc-2x</default>
 		  </decoration_class>
           <oql><![CDATA[SELECT Ticket]]></oql>
           <!-- Can be either a class tag with the class name or an oql tag with the query -->
@@ -1157,7 +1157,7 @@
 		  </title>
 		  <description>Portal:ShowClosed+</description>
 		  <decoration_class>
-			  <default>fa fa-pencil-square fa-2x</default>
+			  <default>fc fc-closed-request fc-2x</default>
 		  </decoration_class>
           <oql><![CDATA[SELECT UserRequest WHERE org_id = :current_contact->org_id AND caller_id = :current_contact_id AND status = 'closed']]></oql>
           <!-- Can be either a class tag with the class name or an oql tag with the query -->
