@@ -812,6 +812,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Core:BulkExport:CSVOptions' => 'CSV Options~~',
 	'Core:BulkExport:CSVLocalization' => 'Localization~~',
 	'Core:BulkExport:PDFOptions' => 'PDF Options~~',
+	'Core:BulkExport:PDFPageFormat' => 'Page Format~~',
 	'Core:BulkExport:PDFPageSize' => 'Page Size:~~',
 	'Core:BulkExport:PageSize-A4' => 'A4~~',
 	'Core:BulkExport:PageSize-A3' => 'A3~~',

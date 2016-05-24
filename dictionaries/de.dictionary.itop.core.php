@@ -577,6 +577,7 @@ Operatoren:<br/>
 	'Core:BulkExport:CSVOptions' => 'CSV-Optionen',
 	'Core:BulkExport:CSVLocalization' => 'Lokaliserung',
 	'Core:BulkExport:PDFOptions' => 'PDF-Optionen',
+	'Core:BulkExport:PDFPageFormat' => 'Seitenformat',
 	'Core:BulkExport:PDFPageSize' => 'Seitengrösse:',
 	'Core:BulkExport:PageSize-A4' => 'A4',
 	'Core:BulkExport:PageSize-A3' => 'A3',

@@ -46,7 +46,7 @@ class PDFBulkExport extends HTMLBulkExport
 			case 'pdf_options':
 				$oP->add('<fieldset><legend>'.Dict::S('Core:BulkExport:PDFOptions').'</legend>');
 				$oP->add('<table class="export_parameters"><tr><td style="vertical-align:top">');
-				$oP->add('<h3>'.Dict::S('Core:PDFBulkExport:PageFormat').'</h3>');
+				$oP->add('<h3>'.Dict::S('Core:BulkExport:PDFPageFormat').'</h3>');
 				$oP->add('<table>');
 				$oP->add('<tr>');
 				$oP->add('<td>'.Dict::S('Core:BulkExport:PDFPageSize').'</td>');
