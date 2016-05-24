@@ -1168,4 +1168,6 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:NoInlineImage' => 'Il n\'y a aucune image de disponible sur le serveur. Utilisez le bouton "Parcourir" (ci-dessus) pour sélectionner une image sur votre ordinateur et la télécharger sur le serveur.',
 	
 	'UI:ToggleFullScreen' => 'Agrandir / Minimiser',
+	'UI:Button:ResetImage' => 'Récupérer l\'image initiale',
+	'UI:Button:RemoveImage' => 'Supprimer l\'image',
 ));

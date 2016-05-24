@@ -1869,7 +1869,42 @@ EOF
 					$sHTMLValue .= "<span id=\"name_$iInputId\">".htmlentities($sFileName, ENT_QUOTES, 'UTF-8')."</span><br/>\n";
 					$sHTMLValue .= "<input title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[fcontents]\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>&nbsp;{$sValidationSpan}{$sReloadSpan}\n";
 				break;
-				
+
+				case 'Image':
+					$aEventsList[] ='validate';
+					$aEventsList[] ='change';
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/edit_image.js');
+					$oDocument = $value; // Value is an ormDocument object
+					$sDefaultUrl = $oAttDef->Get('default_image');
+					if (is_object($oDocument) && !$oDocument->IsEmpty())
+					{
+						$sUrl = 'data:'.$oDocument->GetMimeType().';base64,'.base64_encode($oDocument->GetData());
+					}
+					else
+					{
+						$sUrl = $sDefaultUrl;
+					}
+
+					$sHTMLValue = "<div id=\"edit_$iInputId\" class=\"edit-image\"></div>";
+					$sHTMLValue .= "&nbsp;{$sValidationSpan}{$sReloadSpan}\n";
+
+					$aEditImage = array(
+						'input_name' => 'attr_'.$sFieldPrefix.$sAttCode.$sNameSuffix,
+						'max_file_size' => utils::ConvertToBytes(ini_get('upload_max_filesize')),
+						'max_width_px' => $oAttDef->Get('display_max_width'),
+						'max_height_px' => $oAttDef->Get('display_max_height'),
+						'current_image_url' => $sUrl,
+						'default_image_url' => $sDefaultUrl,
+						'labels' => array(
+							'reset_button' => htmlentities(Dict::S('UI:Button:ResetImage'), ENT_QUOTES, 'UTF-8'),
+							'remove_button' => htmlentities(Dict::S('UI:Button:RemoveImage'), ENT_QUOTES, 'UTF-8'),
+							'upload_button' => $sHelpText
+						)
+					);
+					$sEditImageOptions = json_encode($aEditImage);
+					$oPage->add_ready_script("$('#edit_$iInputId').edit_image($sEditImageOptions);");
+					break;
+
 				case 'StopWatch':
 					$sHTMLValue = "The edition of a stopwatch is not allowed!!!";
 				break;
@@ -3008,6 +3043,23 @@ EOF
 					$this->Set($sAttCode, $oDocument);
 				}
 			}
+			elseif ($oAttDef->GetEditClass() == 'Image')
+			{
+				// There should be an uploaded file with the named attr_<attCode>
+				if ($value['remove'])
+				{
+					$this->Set($sAttCode, null);
+				}
+				else
+				{
+					$oDocument = $value['fcontents'];
+					if (!$oDocument->IsEmpty())
+					{
+						// A new file has been uploaded
+						$this->Set($sAttCode, $oDocument);
+					}
+				}
+			}
 			elseif ($oAttDef->GetEditClass() == 'One Way Password')
 			{
 				// Check if the password was typed/changed
@@ -3142,6 +3194,14 @@ EOF
 			if ($oAttDef->GetEditClass() == 'Document')
 			{
 				$value = array('fcontents' => utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents'));
+			}
+			elseif ($oAttDef->GetEditClass() == 'Image')
+			{
+				$oImage = utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents');
+				$aSize = utils::GetImageSize($oImage->GetData());
+				$oImage = utils::ResizeImageToFit($oImage, $aSize[0], $aSize[1], $oAttDef->Get('storage_max_width'), $oAttDef->Get('storage_max_height'));
+				$aOtherData = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", array(), 'raw_data');
+				$value = array('fcontents' => $oImage, 'remove' => $aOtherData['remove']);
 			}
 			elseif ($oAttDef->GetEditClass() == 'RedundancySetting')
 			{

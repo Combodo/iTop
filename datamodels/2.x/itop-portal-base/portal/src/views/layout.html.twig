@@ -5,8 +5,7 @@
 	{% set bUserConnected = true %}
 	{% set sUserFullname = app['combodo.current_user'].Get('first_name') ~ ' ' ~ app['combodo.current_user'].Get('last_name') %}
 	{% set sUserEmail = app['combodo.current_user'].Get('email') %}
-	{% set sUserPhotoUrl = app['combodo.portal.base.absolute_url'] ~ 'img/user-profile-default-256px.png' %}
-	{% set sUserPhotoUrl = 'https://scontent-fra3-1.xx.fbcdn.net/v/t1.0-9/11050099_10153305298138954_7206181025917413544_n.jpg?oh=728b8e7b1f073b81a2e6b43858c795f8&oe=57E2B0D3' %}
+	{% set sUserPhotoUrl = app['combodo.current_user_img'] %}
 {% else %}
 	{% set bUserConnected = false %}
 	{% set sUserFullname = '' %}

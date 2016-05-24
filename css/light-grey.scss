@@ -90,6 +90,83 @@ table.listResults td {
 	padding: 2px;
 }
 
+table.listResults td .view-image {
+  // Counteract the forced dimensions (usefull for displaying in the details view)
+  width: inherit !important;
+  height: inherit !important;
+  img {
+    max-width: 48px !important;
+    max-height: 48px !important;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.edit-image {
+  .view-image {
+	display: inline-block;
+
+	&.dirty {
+	  // The image will be modified when saving the changes
+
+	  &.compat {
+		// Browser not supporting FileReader
+		background-image: url("ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png");
+		img {
+		  opacity: 0.3;
+		}
+	  }
+	}
+  }
+
+  .edit-buttons {
+	display: inline-block;
+	vertical-align: top;
+	margin-top: 4px;
+	margin-left: 3px;
+
+	.button {
+	  cursor: pointer;
+	  margin-bottom: 3px;
+	  padding: 2px;
+	  background-color: $highlight-color;
+
+	  &.disabled {
+		cursor: default;
+		background-color: $grey-color;
+		opacity: 0.3;
+	  }
+	  .ui-icon {
+		background-image: url("ui-lightness/images/ui-icons_ffffff_256x240.png");
+	  }
+	}
+  }
+
+  .file-input {
+	display: block;
+  }
+}
+
+/* Center the image both horizontally and vertically, withing a box which size is fixed (depends on the attribute definition) */
+.details .view-image {
+  text-align: center;
+  padding: 2px;
+  border: 2px solid #DDDDDD;
+  border-radius: 6px;
+
+  img {
+	display: inline-block;
+	vertical-align: middle;
+  }
+  .helper-middle {
+	// Helper to center the image (requires a span dedicated to this)
+	display: inline-block;
+	height: 100%;
+	vertical-align: middle;
+  }
+}
+
 table.listContainer {
     border: 0;
 	padding: 0;
@@ -1520,6 +1597,18 @@ table.export_parameters td {
 .table_preview div.text-preview {
 	white-space: pre-wrap;
 }
+/* Format for the PDF output */
+.table_preview .view-image {
+  // Counteract the forced dimensions (usefull for displaying in the details view)
+  width: inherit !important;
+  height: inherit !important;
+  text-align: center;
+  img {
+	max-width: 48px !important;
+	max-height: 48px !important;
+	display: inline-block;
+  }
+}
 .graph_zoom {
 	display: inline-block;
 	float: right;
@@ -1585,10 +1674,10 @@ span.refresh-button {
 	display: block;
 }
 .case-log-history-entry-end {
-	display: none;	
+	display: none;
 }
 .expanded .case-log-history-entry-end {
-	display: inline;	
+	display: inline;
 }
 .case-log-history-entry-more {
 	display: inline;
@@ -1603,7 +1692,7 @@ span.refresh-button {
 	vertical-align: bottom;
 }
 .printable-tab .case-log-history-entry-end {
-	display: inline;	
+	display: inline;
 }
 .printable-tab .case-log-history-entry-more {
 	display: none;

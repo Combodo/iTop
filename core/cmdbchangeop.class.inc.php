@@ -355,11 +355,19 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 				$sAttName = $this->Get('attcode');
 			}
 			$oPrevDoc = $this->Get('prevdata');
-			$sDocView = $oPrevDoc->GetAsHtml();
-			$sDocView .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_',$oPrevDoc->GetDisplayLink(get_class($this), $this->GetKey(), 'prevdata')).", \n";
-			$sDocView .= Dict::Format('UI:DownloadDocument_', $oPrevDoc->GetDownloadLink(get_class($this), $this->GetKey(), 'prevdata'))."\n";
-			//$sDocView = $oPrevDoc->GetDisplayInline(get_class($this), $this->GetKey(), 'prevdata');
-			$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sDocView);
+			if ($oPrevDoc->IsEmpty())
+			{
+				$sPrevious = '';
+				$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sPrevious);
+			}
+			else
+			{
+				$sDocView = $oPrevDoc->GetAsHtml();
+				$sDocView .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_', $oPrevDoc->GetDisplayLink(get_class($this), $this->GetKey(), 'prevdata')).", \n";
+				$sDocView .= Dict::Format('UI:DownloadDocument_', $oPrevDoc->GetDownloadLink(get_class($this), $this->GetKey(), 'prevdata'))."\n";
+				//$sDocView = $oPrevDoc->GetDisplayInline(get_class($this), $this->GetKey(), 'prevdata');
+				$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sDocView);
+			}
 		}
 		return $sResult;
 	}

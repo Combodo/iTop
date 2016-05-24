@@ -109,6 +109,20 @@ class WizardHelper
 						$oObj->Set($sAttCode, $oDocument);
 					}
 				}
+				else if ( $oAttDef->GetEditClass() == 'Image' )
+				{
+					if ($bReadUploadedFiles)
+					{
+						$oDocument = utils::ReadPostedDocument('attr_'.$sAttCode, 'fcontents');
+						$oObj->Set($sAttCode, $oDocument);
+					}
+					else
+					{
+						// Create a new empty document, just for displaying the file name
+						$oDocument = new ormDocument(null, '', $value);
+						$oObj->Set($sAttCode, $oDocument);
+					}
+				}
 				else if (($oAttDef->IsExternalKey()) && (!empty($value)) && ($value > 0) )
 				{
 					// For external keys: load the target object so that external fields

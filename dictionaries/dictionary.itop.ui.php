@@ -1326,5 +1326,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:NoInlineImage' => 'There is no image available on the server. Use the "Browse" button above to select an image from your computer and upload it to the server.',
 	
 	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize',
+	'UI:Button:ResetImage' => 'Recover the previous image',
+	'UI:Button:RemoveImage' => 'Remove the image',
 ));
-?>

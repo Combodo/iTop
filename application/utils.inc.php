@@ -1223,4 +1223,108 @@ class utils
 		}
 		return $sCssRelPath;
 	}
+	
+	
+	static public function GetImageSize($sImageData)
+	{
+		if (function_exists('getimagesizefromstring')) // PHP 5.4.0 or higher
+		{
+			$aRet = @getimagesizefromstring($sImageData);
+		}
+		else if(ini_get('allow_url_fopen'))
+		{
+			// work around to avoid creating a tmp file
+			$sUri = 'data://application/octet-stream;base64,'.base64_encode($sImageData);
+			$aRet = @getimagesize($sUri);
+		}
+		else
+		{
+			// Damned, need to create a tmp file
+			$sTempFile = tempnam(SetupUtils::GetTmpDir(), 'img-');
+			@file_put_contents($sTempFile, $sImageData);
+			$aRet = @getimagesize($sTempFile);
+			@unlink($sTempFile);
+		}
+		return $aRet;
+	}
+
+	/**
+	 * Resize an image attachment so that it fits in the given dimensions
+	 * @param ormDocument $oImage The original image stored as an ormDocument
+	 * @param int $iWidth Image's original width
+	 * @param int $iHeight Image's original height
+	 * @param int $iMaxImageWidth Maximum width for the resized image
+	 * @param int $iMaxImageHeight Maximum height for the resized image
+	 * @return ormDocument The resampled image
+	 */
+	public static function ResizeImageToFit(ormDocument $oImage, $iWidth, $iHeight, $iMaxImageWidth, $iMaxImageHeight)
+	{
+		if (($iWidth <= $iMaxImageWidth) && ($iHeight <= $iMaxImageHeight))
+		{
+			return $oImage;
+		}
+		switch($oImage->GetMimeType())
+		{
+			case 'image/gif':
+			case 'image/jpeg':
+			case 'image/png':
+			$img = @imagecreatefromstring($oImage->GetData());
+			break;
+			
+			default:
+			// Unsupported image type, return the image as-is
+			//throw new Exception("Unsupported image type: '".$oImage->GetMimeType()."'. Cannot resize the image, original image will be used.");
+			return $oImage;
+		}
+		if ($img === false)
+		{
+			//throw new Exception("Warning: corrupted image: '".$oImage->GetFileName()." / ".$oImage->GetMimeType()."'. Cannot resize the image, original image will be used.");
+			return $oImage;
+		}
+		else
+		{
+			// Let's scale the image, preserving the transparency for GIFs and PNGs
+			
+			$fScale = min($iMaxImageWidth / $iWidth, $iMaxImageHeight / $iHeight);
+
+			$iNewWidth = $iWidth * $fScale;
+			$iNewHeight = $iHeight * $fScale;
+			
+			$new = imagecreatetruecolor($iNewWidth, $iNewHeight);
+			
+			// Preserve transparency
+			if(($oImage->GetMimeType() == "image/gif") || ($oImage->GetMimeType() == "image/png"))
+			{
+				imagecolortransparent($new, imagecolorallocatealpha($new, 0, 0, 0, 127));
+				imagealphablending($new, false);
+				imagesavealpha($new, true);
+			}
+			
+			imagecopyresampled($new, $img, 0, 0, 0, 0, $iNewWidth, $iNewHeight, $iWidth, $iHeight);
+			
+			ob_start();
+			switch ($oImage->GetMimeType())
+			{
+				case 'image/gif':
+				imagegif($new); // send image to output buffer
+				break;
+				
+				case 'image/jpeg':
+				imagejpeg($new, null, 80); // null = send image to output buffer, 80 = good quality
+				break;
+				 
+				case 'image/png':
+				imagepng($new, null, 5); // null = send image to output buffer, 5 = medium compression
+				break;
+			}
+			$oResampledImage = new ormDocument(ob_get_contents(), $oImage->GetMimeType(), $oImage->GetFileName());
+			@ob_end_clean();
+			
+			imagedestroy($img);
+			imagedestroy($new);
+							
+			return $oResampledImage;
+		}
+				
+	}	
 }

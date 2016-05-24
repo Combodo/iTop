@@ -424,6 +424,25 @@ class ApplicationHelper
 		}
 
 		$oApp['combodo.current_user'] = $oUser;
+
+		$sUrl = $oApp['combodo.portal.base.absolute_url'].'img/user-profile-default-256px.png';
+		$oContact = UserRights::GetContactObject();
+		if ($oContact)
+		{
+			if (MetaModel::IsValidAttCode(get_class($oContact), 'picture'))
+			{
+				$oImage = $oContact->Get('picture');
+				if (is_object($oImage) && !$oImage->IsEmpty())
+				{
+					$sUrl = $oImage->GetDownloadURL(get_class($oContact), $oContact->GetKey(), 'picture');
+				}
+				else
+				{
+					$sUrl = MetaModel::GetAttributeDef(get_class($oContact), 'picture')->Get('default_image');
+				}
+			}
+		}
+		$oApp['combodo.current_user_img'] = $sUrl;
 	}
 
 	/**

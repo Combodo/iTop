@@ -4880,7 +4880,7 @@ class AttributeBlob extends AttributeDefinition
 		//	 (temporary tables created on disk)
 		//	 We will have to remove the blobs from the list of attributes when doing the select
 		//	 then the use of Get() should finalize the load
-		if ($value instanceOf ormDocument)
+		if ($value instanceOf ormDocument && !$value->IsEmpty())
 		{
 			$aValues = array();
 			$aValues[$this->GetCode().'_data'] = $value->GetData();
@@ -4946,7 +4946,17 @@ class AttributeBlob extends AttributeDefinition
 	
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
-		return ''; // Not exportable in XML, or as CDATA + some subtags ??
+		$sRet = '';
+		if (is_object($value))
+		{
+			if (!$value->IsEmpty())
+			{
+				$sRet = '<mimetype>'.$value->GetMimeType().'</mimetype>';
+				$sRet .= '<filename>'.$value->GetFileName().'</filename>';
+				$sRet .= '<data>'.base64_encode($value->GetData()).'</data>';
+			}
+		}
+		return $sRet;
 	}
 
 	/**
@@ -4998,6 +5008,58 @@ class AttributeBlob extends AttributeDefinition
 	}
 }
 
+/**
+ * An image is a specific type of document, it is stored as several columns in the database
+ *
+ * @package	 iTopORM
+ */
+class AttributeImage extends AttributeBlob
+{
+	public function GetEditClass() {return "Image";}
+
+	// Facilitate things: allow administrators to upload a document
+	// from a CSV by specifying its path/URL
+	public function MakeRealValue($proposedValue, $oHostObj)
+	{
+		if (!is_object($proposedValue))
+		{
+			if (file_exists($proposedValue) && UserRights::IsAdministrator())
+			{
+				$sContent = file_get_contents($proposedValue);
+				$sExtension = strtolower(pathinfo($proposedValue, PATHINFO_EXTENSION));
+				$sMimeType = "application/x-octet-stream";
+				$aKnownExtensions = array(
+					'jpg' => 'image/jpeg',
+					'jpeg' => 'image/jpeg',
+					'gif' => 'image/gif',
+					'png' => 'image/png'
+				);
+
+				if (!array_key_exists($sExtension, $aKnownExtensions) && extension_loaded('fileinfo'))
+				{
+					$finfo = new finfo(FILEINFO_MIME);
+					$sMimeType = $finfo->file($proposedValue);
+				}
+				return new ormDocument($sContent, $sMimeType);
+			}
+		}
+		return $proposedValue;
+	}
+
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
+	{
+		$iMaxWidthPx = $this->Get('display_max_width');
+		$iMaxHeightPx = $this->Get('display_max_height');
+		$sUrl = $this->Get('default_image');
+		$sRet = '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'px; max-height: '.$iMaxHeightPx.'px">';
+		if (is_object($value) && !$value->IsEmpty())
+		{
+			$sUrl = $value->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $this->GetCode());
+			$sRet = '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'px; max-height: '.$iMaxHeightPx.'px">';
+		}
+		return '<div class="view-image" style="width: '.$iMaxWidthPx.'px; height: '.$iMaxHeightPx.'px;"><span class="helper-middle"></span>'.$sRet.'</div>';
+	}
+}
 /**
  * A stop watch is an ormStopWatch object, it is stored as several columns in the database  
  *

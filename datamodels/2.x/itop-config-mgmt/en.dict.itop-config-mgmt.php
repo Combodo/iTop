@@ -201,6 +201,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager friendly name',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
+	'Class:Person/Attribute:picture' => 'Picture',
+	'Class:Person/Attribute:picture+' => '',
 ));
 
 //
@@ -1880,6 +1882,7 @@ Dict::Add('EN US', 'English', 'English', array(
 'Server:otherinfo' => 'Other information',
 'Server:power' => 'Power supply',
 'Person:info' => 'General information',
+'Person:personal_info' => 'Personal information',
 'Person:notifiy' => 'Notification',
 'Class:Subnet/Tab:IPUsage' => 'IP Usage',
 'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces having an IP in the range: <em>%1$s</em> to <em>%2$s</em>',

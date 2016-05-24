@@ -187,6 +187,55 @@ EOF
 		return $sPDF;
 	}
 
+	protected function GetValue($oObj, $sAttCode)
+	{
+		switch($sAttCode)
+		{
+			case 'id':
+				$sRet = parent::GetValue($oObj, $sAttCode);
+				break;
+
+			default:
+				$value = $oObj->Get($sAttCode);
+				if ($value instanceof ormDocument)
+				{
+					$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+					if ($oAttDef instanceof AttributeImage)
+					{
+						// To limit the image size in the PDF output, we have to enforce the size as height/width because max-width/max-height have no effect
+						//
+						list($iWidth, $iHeight) = utils::GetImageSize($value->GetData());
+						$iMaxWidthPx = min(48, $oAttDef->Get('display_max_width'));
+						$iMaxHeightPx = min(48, $oAttDef->Get('display_max_height'));
+
+						$fScale = min($iMaxWidthPx / $iWidth, $iMaxHeightPx / $iHeight);
+						$iNewWidth = $iWidth * $fScale;
+						$iNewHeight = $iHeight * $fScale;
+						if ($value->IsEmpty())
+						{
+							$sUrl = $oAttDef->Get('default_image');
+							$sRet = '<img src="'.$sUrl.'" style="width: '.$iNewWidth.'px; height: '.$iNewHeight.'px">';
+						}
+						else
+						{
+							$sUrl = 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
+							$sRet = '<img src="'.$sUrl.'" style="width: '.$iNewWidth.'px; height: '.$iNewHeight.'px">';
+						}
+						$sRet = '<div class="view-image">'.$sRet.'</div>';
+					}
+					else
+					{
+						$sRet = parent::GetValue($oObj, $sAttCode);
+					}
+				}
+				else
+				{
+					$sRet = parent::GetValue($oObj, $sAttCode);
+				}
+		}
+		return $sRet;
+	}
+
 	public function GetSupportedFormats()
 	{
 		return array('pdf' => Dict::S('Core:BulkExport:PDFFormat'));

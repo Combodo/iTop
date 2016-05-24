@@ -143,6 +143,10 @@ EOF
 				{
 					$sRet = $value->GetTimeSpent();
 				}
+				elseif ($value instanceof ormDocument)
+				{
+					$sRet = '';
+				}
 				elseif ($oAttDef instanceof AttributeString)
 				{
 					$sRet = $oObj->GetAsHTML($sAttCode);

@@ -146,6 +146,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Person/Attribute:tickets_list+' => '',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager friendly name',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
+	'Class:Person/Attribute:picture' => 'Photo',
+	'Class:Person/Attribute:picture+' => '',
 ));
 
 //
@@ -1850,6 +1852,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 'Server:otherinfo' => 'Autres informations',
 'Server:power' => 'Alimentation électrique',
 'Person:info' => 'Informations générales',
+'Person:personal_info' => 'Informations personnelles',
 'Person:notifiy' => 'Notification',
 'Class:Subnet/Tab:IPUsage' => 'IP utilisées',
 'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces ayant une IP dans la plage: <em>%1$s</em> à <em>%2$s</em>',

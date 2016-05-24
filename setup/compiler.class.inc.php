@@ -1158,6 +1158,20 @@ EOF
 					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
 					$aParameters['depends_on'] = $sDependencies;
 				}
+				elseif ($sAttType == 'AttributeImage')
+				{
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['display_max_width'] = $this->GetPropNumber($oField, 'display_max_width', 128);
+					$aParameters['display_max_height'] = $this->GetPropNumber($oField, 'display_max_height', 128);
+					$aParameters['storage_max_width'] = $this->GetPropNumber($oField, 'storage_max_width', 256);
+					$aParameters['storage_max_height'] = $this->GetPropNumber($oField, 'storage_max_height', 256);
+
+					if (($sDefault = $oField->GetChildText('default_image')) && (strlen($sDefault) > 0))
+					{
+						$aParameters['default_image'] = "utils::GetAbsoluteUrlModulesRoot().'$sModuleRelativeDir/$sDefault'";
+					}
+				}
 				elseif ($sAttType == 'AttributeStopWatch')
 				{
 					$oStates = $oField->GetUniqueElement('states');

@@ -458,6 +458,14 @@
         </reconciliation>
       </properties>
       <fields>
+        <field id="picture" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <default_image>images/silhouette.png</default_image>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="first_name" xsi:type="AttributeString">
           <sql>first_name</sql>
           <default_value/>
@@ -568,6 +576,14 @@
             <item id="col:col2">
               <rank>50</rank>
               <items>
+                <item id="fieldset:Person:personal_info">
+                  <rank>5</rank>
+                  <items>
+                    <item id="picture">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                </item>
                 <item id="fieldset:Person:notifiy">
                   <rank>10</rank>
                   <items>
