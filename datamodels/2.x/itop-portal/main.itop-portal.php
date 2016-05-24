@@ -50,7 +50,7 @@ class iTopPortalUrlMaker implements iDBObjectURLMaker
 			$sPortalId = basename(__DIR__);
 		}
 
-		$sObjectQueryString = $oApp['url_generator']->generate('p_object_view', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
+		$sObjectQueryString = $oApp['url_generator']->generate('p_object_edit', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
 		$sPortalAbsoluteUrl = utils::GetAbsoluteUrlModulePage($sPortalId, 'index.php');
 		$sUrl = str_replace('?', $sObjectQueryString . '?', $sPortalAbsoluteUrl);
 		
