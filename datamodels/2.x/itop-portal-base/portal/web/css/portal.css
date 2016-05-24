@@ -112,7 +112,11 @@ footer{
 	padding-left: 1em;*/
 }
 #sidebar .menu .nav > li > a{
-	padding-left: 3em;
+	/*padding-left: 3em;*/
+	padding-left: 10%;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 #sidebar .menu .nav > li > a > .brick_icon{
 	width: 1.2em;
@@ -251,6 +255,9 @@ body{
 }
 a{
 	color: #D46201;
+}
+a:hover, a:focus{
+	color: #C15A02; /* TODO : Darken #D46201 */
 }
 .pagination{
 	margin: 14px 0px; 
@@ -463,7 +470,9 @@ a{
 }
 
 .home .tile{
+	display: block;
 	margin-bottom: 8px;
+	padding: 0em 1em;
 	min-height: 4em;
 	background-color: #FFFFFF;
     background-image: none;
@@ -472,16 +481,13 @@ a{
     text-align: center;
 	text-decoration: none;
 	white-space: normal;
+	line-height: 4em;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
 }
 .home .tile .tile_decoration{
 	position: absolute;
-	top: 3px;
-	left: 21px;
-}
-.home .tile .tile_decoration > img{
-	width: 45px;
-	max-height: 45px;
+	top: 0.3em;
+	left: 2.5em;
 }
 .home .tile .tile_title{
 	font-weight: bold;
@@ -495,42 +501,45 @@ a{
 	.home .tile{
 		display: block;
 		margin-bottom: 40px;
+		padding: 40px 40px 30px 40px;
 		min-height: 10em;
 		text-align: left;
 	}
 	.home .tile .tile_decoration{
+		display: block;
 		position: relative;
+		float: left;
 		top: initial;
 		left: initial;
-		width: 150px;
-		text-align: center;
-	}
-	.home .tile .tile_decoration > img{
-		width: 55px;
-		max-height: 55px;
+		margin: 0px 40px 5px 0px;
 	}
 	.home .tile .tile_body{
-		text-align: left
+		display: block;
+		text-align: left;
+		line-height: 1.5em;
 	}
 	.home .tile .tile_title{
+		margin-bottom: 1em;
 		font-size: 1.0em;
 	}
 	.home .tile .tile_description{
 		display: block;
-		margin-top: 15px;
 		text-align: justify;
 	}
 }
 @media (min-width: 992px) {
 	.home .tile{
 		min-height: 15em;
-		padding-right: 50px;
+		padding: 40px 50px 30px 50px;
 	}
 	.home .tile .tile_decoration > span.icon{
-		font-size: 5em;
+		font-size: 6em;
 	}
 	.home .tile .tile_title{
-		font-size: 1.4em;
+		font-size: 1.5em;
+	}
+	.home .tile .tile_description{
+		font-size: 1.2em;
 	}
 }
 
