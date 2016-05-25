@@ -67,8 +67,14 @@ footer{
 	box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.4);
 }
 #topbar .user_fullname{
-	margin-left: 85px;
+	display: inline-block;
+	position: absolute;
+	padding-left: 85px;
+	max-width: 55%;
 	color: #FFFFFF;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow-x: hidden;
 }
 /* Sidebar */
 @media (min-width: 768px){
