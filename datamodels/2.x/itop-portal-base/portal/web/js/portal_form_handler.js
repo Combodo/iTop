@@ -51,6 +51,12 @@ $(function()
 			oEvent.preventDefault();
 			var me = this;
 
+			// EasterEgg : Vibrate on submit
+			if(window.navigator.vibrate)
+			{
+				window.navigator.vibrate(200);
+			}
+
 			// Validating fields prior to post (Client side)
 			var bIsValid = me.options.field_set.triggerHandler('validate');
 			// Retrieving stimulus name
@@ -200,6 +206,11 @@ $(function()
 			// Else go to the first invalid field
 			else
 			{
+				// EasterEgg : Vibrate on submit
+				if(window.navigator.vibrate)
+				{
+					window.navigator.vibrate([200, 100, 200]);
+				}
 				this.element.find('.has-error')[0].scrollIntoView();
 			}
 		},
