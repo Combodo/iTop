@@ -159,6 +159,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:FAQ' => 'FAQs',
 	'Menu:FAQ+' => 'Toutes les  FAQs',
 
+	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'Foire Aux Questions',
-	'Brick:Portal:FAQ:Title+' => 'Recherchez la réponse à vos questions dans la base de connaissances',
+	'Brick:Portal:FAQ:Title+' => '<p>Vous êtes pressé&nbsp;?</p><p>Consultez la liste des questions les plus fréquentes et vous trouverez (peut-être) immédiatement la réponse à votre besoin.</p>',
 ));

@@ -609,7 +609,8 @@
 		  </rank>
           <width>12</width>
 			<title>
-				<default>Brick:Portal:FAQ:Title</default>
+              <navigation_menu>Brick:Portal:FAQ:Menu</navigation_menu>
+			  <home>Brick:Portal:FAQ:Title</home>
 			</title>
 			<description>Brick:Portal:FAQ:Title+</description>
 			<decoration_class>

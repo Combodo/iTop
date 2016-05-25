@@ -1028,9 +1028,9 @@
             <default>10</default>
           </rank>
           <title>
-            <default>Portal:CreateNewRequest</default>
+            <default>Brick:Portal:NewRequest:Title</default>
           </title>
-          <description>Portal:CreateNewRequest+</description>
+          <description>Brick:Portal:NewRequest:Title+</description>
           <decoration_class>
             <default>fc fc-new-request fc-2x</default>
           </decoration_class>
@@ -1106,9 +1106,9 @@
 		  </rank>
           <width>6</width>
           <title>
-			  <default>Portal:ShowOngoing</default>
+			  <default>Brick:Portal:OngoingRequests:Title</default>
 		  </title>
-		  <description>Portal:ShowOngoing+</description>
+		  <description>Brick:Portal:OngoingRequests:Title+</description>
 		  <decoration_class>
 			  <default>fc fc-ongoing-request fc-2x</default>
 		  </decoration_class>
@@ -1159,9 +1159,9 @@
           </visible>
           <width>12</width>
           <title>
-			  <default>Portal:ShowClosed</default>
+			  <default>Brick:Portal:ClosedRequests:Title</default>
 		  </title>
-		  <description>Portal:ShowClosed+</description>
+		  <description></description>
 		  <decoration_class>
 			  <default>fc fc-closed-request fc-2x</default>
 		  </decoration_class>

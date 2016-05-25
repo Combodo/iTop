@@ -242,4 +242,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'portal:itop-portal' => 'Standard portal', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
 	'Page:DefaultTitle' => 'iTop - User portal',
 	'Brick:Portal:UserProfile:Title' => 'My profile',
+	'Brick:Portal:NewRequest:Title' => 'New request',
+	'Brick:Portal:NewRequest:Title+' => '<p>Need help?</p><p>Pick from the services catalog and submit your request to our support teams.</p>',
+	'Brick:Portal:OngoingRequests:Title' => 'Ongoing requests',
+	'Brick:Portal:OngoingRequests:Title+' => '<p>Follow up with your ongoing requests.</p><p>Check the progress, add comments, attach documents, acknowledge the solution.</p>',
+	'Brick:Portal:ClosedRequests:Title' => 'Closed requests',
 ));

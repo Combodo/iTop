@@ -186,6 +186,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:FAQ' => 'FAQs',
 	'Menu:FAQ+' => 'All FAQs',
 
+	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'Frequently Asked Questions',
-	'Brick:Portal:FAQ:Title+' => 'Search for the right answer within the knowledge base',
+	'Brick:Portal:FAQ:Title+' => '<p>In a hurry?</p><p>Check out the list of most common questions and (maybe) find the expected answer right away.</p>',
 ));
