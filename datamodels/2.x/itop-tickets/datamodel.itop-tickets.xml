@@ -1077,6 +1077,7 @@
                           <rules>
                             <rule id="contact-to-userrequest"/>
                             <rule id="servicesubcategory-to-userrequest"/>
+							<rule id="go-to-open-request-on-submit"/>
                           </rules>
                         </action>
                       </actions>
@@ -1472,6 +1473,11 @@
             <preset id="2">copy(service_id, service_id)</preset>
           </presets>
         </action_rule>
+		<action_rule id="go-to-open-request-on-submit">
+			<submit xsi:type="goto">
+				<brick>ongoing-tickets-for-portal-user</brick>
+			</submit>
+		</action_rule>
       </action_rules>
     </module_design>
   </module_designs>
