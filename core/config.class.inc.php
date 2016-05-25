@@ -885,7 +885,7 @@ class Config
 		'inline_image_max_display_width' => array(
 			'type' => 'integer',
 			'description' => 'The maximum width (in pixels) when displaying images inside an HTML formatted attribute. Images will be displayed using this this maximum width.',
-			'default' => '600',
+			'default' => '250',
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
