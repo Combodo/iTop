@@ -197,7 +197,7 @@ function FormatDatesInPreview(sRadioSelector, sPreviewSelector)
 {
 	if ($('#'+sRadioSelector+'_date_time_format_default').prop('checked'))
 	{
-		sPHPFormat = '$sJSDefaultDateTimeFormat';
+		sPHPFormat = $sJSDefaultDateTimeFormat;
 	}
 	else
 	{
