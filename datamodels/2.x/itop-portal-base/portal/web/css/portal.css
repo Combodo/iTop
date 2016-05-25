@@ -5,6 +5,9 @@
 	body{
 		padding-top: 60px;
 	}
+	body.home{
+		padding-top: 70px;
+	}
 }
 footer{
 	margin: 5em 1em;
@@ -19,112 +22,153 @@ footer{
 	margin-right: 20px;
 }
 /* Topbar */
-#topbar #navbar{
+#topbar .navbar-header{
+	position: relative;
+	z-index: 2;
+}
+#topbar .navbar-collapse{
+	position: relative;
+	z-index: 1;
 	overflow-y: auto;
+}
+#topbar .navbar-collapse > .navbar-nav{
+	padding-top: 30px;
+}
+#topbar .navbar-brand{
+	padding: 5px 15px;
+}
+#topbar .navbar-brand > img{
+	max-height: 100%;
 }
 #topbar .user_infos{
 	text-decoration: none;
 }
 #topbar .user_photo{
-	margin-right: 10px;
-}
-#topbar .user_photo img{
-	margin-top: -4px;
-	max-width: 100%;
-	max-height: 100%;
-	height: 25px;
-	border-radius: 100%;
-}
-/* Sidebar */
-#sidebar{
-	position: fixed;
-	top: 0px;
-	left: 0px;
-	padding: 0px; /* Overriding BS */
-	height: 100%;
-}
-#sidebar .user_card{
-	padding: 30px 0px;
-	background-color: #EA7D1E; /* TODO : Change this */
-	text-align: center;
-	box-shadow: -3px 2px 3px rgba(0, 0, 0, 0.4);
-}
-#sidebar .user_card .user_photo{
-	margin-bottom: 10px;
-}
-#sidebar .user_card .user_photo img{
+	position: absolute;
+	display: block;
+	top: 5px;
+	left: 10px;
+	width: 65px;
+	height: 65px;
+	background-size: 100%;
+	background-position: center center;
+	background-color: #585653;
 	border: 2px solid #FFFFFF;
 	border-radius: 100%;
-	width: 80px;
+	box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.4);
 }
-#sidebar .user_card .user_infos{
-	font-size: 1em;
+#topbar .user_fullname{
+	margin-left: 85px;
 	color: #FFFFFF;
 }
-#sidebar .user_card .user_infos .dropdown-toggle{
-	color: #FFFFFF;
-}
-#sidebar .user_card .user_options.dropdown-menu{
-	width: 92%;
-	left: 4%;
-}
-#sidebar .user_card .user_fullname{
-	font-weight: 600;
-}
-#sidebar .menu{
-	max-height: 59%;
-	overflow-y: auto;
-}
-#sidebar .menu .nav > li{
-	line-height: 3.0em;
-}
-#sidebar .menu .nav > li:after{
-	content: "";
-    display: block;
-    position: relative;
-    /*margin-left: 6.8em;
-    width: 56%;*/
-    color: #FFFFFF;
-    border-bottom: 1px solid #7D7D7D;
-}
-#sidebar .menu .nav > li.active{
-	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.8) inset;
-}
-#sidebar .menu .nav > li.active:after{
-	content: " ";
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    border: 30px solid transparent;
-    border-right-width: 20px;
-    border-right-color: #EDECEC;
-}
-#sidebar .menu .nav > li.active > a{
-	margin-top: -1px; /* To mask border from previous li item */
-	/*margin-left: 4em;
-	padding-left: 1em;*/
-}
-#sidebar .menu .nav > li > a{
-	/*padding-left: 3em;*/
-	padding-left: 10%;
-	overflow-x: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-#sidebar .menu .nav > li > a > .brick_icon{
-	width: 1.2em;
-	vertical-align: sub;
-	text-align: center;
-}
-#sidebar .logo{
-	position: absolute;
-	bottom: 15px;
-	width: 100%;
-	text-align: center;
-}
-#sidebar .logo img{
+/* Sidebar */
+@media (min-width: 768px){
+	#sidebar{
+		position: fixed;
+		top: 0px;
+		left: 0px;
+		padding: 0px; /* Overriding BS */
+		height: 100%;
+	}
+	#sidebar .user_card{
+		padding: 30px 0px;
+		background-color: #EA7D1E; /* TODO : Change this */
+		text-align: center;
+		box-shadow: -3px 2px 3px rgba(0, 0, 0, 0.4);
+	}
+	#sidebar .user_card .user_photo{
+		margin: 0px auto 10px auto;
+		width: 80px;
+		height: 80px;
+		background-size: 100%;
+		background-position: center center;
+		background-color: #585653;
+		border: 2px solid #FFFFFF;
+		border-radius: 100%;
+	}
+	#sidebar .user_card .user_infos{
+		font-size: 1em;
+		color: #FFFFFF;
+	}
+	#sidebar .user_card .user_infos .dropdown-toggle{
+		color: #FFFFFF;
+	}
+	#sidebar .user_card .user_options.dropdown-menu{
+		width: 92%;
+		left: 4%;
+	}
+	#sidebar .user_card .user_fullname{
+		font-weight: 600;
+	}
+	#sidebar .menu{
+		max-height: 59%;
+		overflow-y: auto;
+	}
+	#sidebar .menu .nav > li{
+		line-height: 3.0em;
+	}
+	#sidebar .menu .nav > li:after{
+		content: "";
+		display: block;
+		position: relative;
+		/*margin-left: 6.8em;
+		width: 56%;*/
+		color: #FFFFFF;
+		border-bottom: 1px solid #7D7D7D;
+	}
+	#sidebar .menu .nav > li.active{
+		box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.8) inset;
+	}
+	#sidebar .menu .nav > li.active:after{
+		content: " ";
+		position: absolute;
+		right: 0px;
+		top: 0px;
+		border: 30px solid transparent;
+		border-right-width: 20px;
+		border-right-color: #EDECEC;
+	}
+	#sidebar .menu .nav > li.active > a{
+		margin-top: -1px; /* To mask border from previous li item */
+		/*margin-left: 4em;
+		padding-left: 1em;*/
+	}
+	#sidebar .menu .nav > li > a{
+		/*padding-left: 3em;*/
+		padding-left: 10%;
+		overflow-x: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	#sidebar .menu .nav > li > a > .brick_icon{
+		width: 1.2em;
+		vertical-align: sub;
+		text-align: center;
+		margin-right: 10px;
+	}
+	#sidebar .logo{
+		position: absolute;
+		bottom: 15px;
+		width: 100%;
+		text-align: center;
+	}
+	#sidebar .logo img{
 	width: 40%;
 	max-width: 100%;
+}
+}
+@media (min-width: 992px){
+	
+}
+/* Warning : Not a offical BS breakpoint */
+@media (min-width: 1600px){
+	#sidebar .user_card .user_photo{
+		width: 120px;
+		height: 120px;
+	}
+	#sidebar .menu .nav > li > a > .brick_icon{
+		margin-right: 20px;
+	}
 }
 
 /* Main content */
@@ -268,19 +312,46 @@ a:hover, a:focus{
 }
 
 /* Navbars */
+.navbar-fixed-top .navbar-header{
+	box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.4);
+}
+
+.navbar-default .navbar-toggle {
+    border-top: none;
+	border-right: none;
+	border-bottom: none;
+	border-radius: 0px;
+	margin-right: 0px;
+}
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus{
+	background-color: inherit;
+}
+.navbar-default .navbar-toggle .icon-bar{
+	height: 3px;
+}
+.navbar-default .navbar-collapse, 
+.navbar-default .navbar-form{
+	border: none;
+}
+
 .navbar-default{
 	background-color: #585653;
 	border: none;
 }
-.navbar-default .nav > li > a{
+.navbar-default .nav > li > a,
+.navbar-default .nav.navbar-nav > li > a{
 	color: #FFFFFF;
 }
 .navbar-default .nav > li > a:focus,
-.navbar-default .nav > li > a:hover{
+.navbar-default .nav > li > a:hover,
+.navbar-default .nav.navbar-nav > li > a:focus,
+.navbar-default .nav.navbar-nav > li > a:hover{
 	background-color: #FFFFFF;
 	color: #EA7D1E;
 }
-.navbar-default .nav > li.active{
+.navbar-default .nav > li.active,
+.navbar-default .nav.navbar-nav > li.active > a{
 	background-color: #292827; /* TODO Darken #585653 */
 	color: #FFFFFF;
 	font-weight: 600;
@@ -292,6 +363,11 @@ a:hover, a:focus{
 	text-decoration: none;
     color: #FFFFFF;
     background-color: #EA7D1E;
+}
+
+.navbar-default .navbar-nav .open .dropdown-menu > li > a{
+	color: #FFFFFF;
+    background-color: inherit;
 }
 
 /* Buttons */
@@ -493,7 +569,7 @@ a:hover, a:focus{
 @media (min-width: 768px) {
 	.home .tile{
 		display: block;
-		margin-bottom: 40px;
+		margin-bottom: 25px;
 		padding: 40px 40px 30px 40px;
 		min-height: 10em;
 		text-align: left;
@@ -506,9 +582,9 @@ a:hover, a:focus{
 		display: block;
 		position: relative;
 		float: left;
-		top: initial;
+		top: 1.5em;
 		left: initial;
-		margin: 0px 40px 5px 0px;
+		margin: 0px 30px 15px 0px;
 	}
 	.home .tile .tile_body{
 		display: block;
@@ -526,8 +602,28 @@ a:hover, a:focus{
 }
 @media (min-width: 992px) {
 	.home .tile{
+		min-height: 14em;
+		padding: 30px 40px 30px 40px;
+	}
+	.home .tile .tile_decoration > span.icon{
+		font-size: 4em;
+	}
+	.home .tile .tile_title{
+		font-size: 1.4em;
+	}
+	.home .tile .tile_description{
+		font-size: 1.2em;
+	}
+}
+@media (min-width: 1200px) {
+	.home .tile{
+		margin-bottom: 40px;
 		min-height: 15em;
 		padding: 40px 50px 30px 50px;
+	}
+	.home .tile .tile_decoration{
+		margin: 0px 40px 15px 0px;
+		top: 1.5em;
 	}
 	.home .tile .tile_decoration > span.icon{
 		font-size: 6em;

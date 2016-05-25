@@ -417,6 +417,7 @@ class ApplicationHelper
 	 */
 	static function LoadCurrentUser(Application $oApp)
 	{
+		// User
 		$oUser = UserRights::GetUserObject();
 		if ($oUser === null)
 		{
@@ -425,7 +426,8 @@ class ApplicationHelper
 
 		$oApp['combodo.current_user'] = $oUser;
 
-		$sUrl = $oApp['combodo.portal.base.absolute_url'].'img/user-profile-default-256px.png';
+		// Contact
+		$sContactPhotoUrl = $oApp['combodo.portal.base.absolute_url'] . 'img/user-profile-default-256px.png';
 		$oContact = UserRights::GetContactObject();
 		if ($oContact)
 		{
@@ -434,15 +436,15 @@ class ApplicationHelper
 				$oImage = $oContact->Get('picture');
 				if (is_object($oImage) && !$oImage->IsEmpty())
 				{
-					$sUrl = $oImage->GetDownloadURL(get_class($oContact), $oContact->GetKey(), 'picture');
+					$sContactPhotoUrl = $oImage->GetDownloadURL(get_class($oContact), $oContact->GetKey(), 'picture');
 				}
 				else
 				{
-					$sUrl = MetaModel::GetAttributeDef(get_class($oContact), 'picture')->Get('default_image');
+					$sContactPhotoUrl = MetaModel::GetAttributeDef(get_class($oContact), 'picture')->Get('default_image');
 				}
 			}
 		}
-		$oApp['combodo.current_user_img'] = $sUrl;
+		$oApp['combodo.current_contact.photo_url'] = $sContactPhotoUrl;
 	}
 
 	/**

@@ -1,0 +1,81 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Combodo Font test page</title>
+<link rel="stylesheet" type="text/css" href="./font-combodo.css" />
+<style>
+body {
+	font-size: 10pt;
+	font-family: Verdana, Arial, Helvetica;
+}
+</style>
+<script>
+aIcons = {
+	'new-request': 'New request',
+	'new-request-o': 'New request (outline)',
+	'ongoing-request': 'On-going request',
+	'closed-request': 'Closed request',
+	'combodo-icon': 'Combodo icon',
+	'combodo-icon-o': 'Combodo icon (outline)',
+	'itop-icon': 'iTop icon',
+}
+
+function GenerateTable() {
+	var sHtml = '';
+	for(var k in aIcons)
+	{
+		var sClass =  'fc fc-'+k;
+		var sColor = document.getElementById('color').value;
+		var sSize = document.getElementById('size').value;
+		if (sSize != '')
+		{
+			sClass += ' fc-'+sSize;
+		}
+		var sRotation = document.getElementById('rotation').value;
+		if (sRotation != '')
+		{
+			sClass += ' fc-rotate-'+sRotation;
+		}
+		var sFlip = document.getElementById('flip').value;
+		if (sFlip != '')
+		{
+			sClass += ' fc-flip-'+sFlip;
+		}
+		var sAnimation = document.getElementById('animation').value;
+		if (sAnimation != '')
+		{
+			sClass += ' fc-'+sAnimation;
+		}
+		var sStyle= 'color: '+sColor;
+		var sTitle = sClass;
+		sHtml += '<div title="'+sTitle+'"><span class="'+sClass+'" style="'+sStyle+'"></span>&nbsp;'+aIcons[k]+'</div>';
+	}
+	var oElement = document.getElementById('dump');
+	oElement.innerHTML = sHtml;
+}
+</script>
+</head>
+<body>
+<h1>Combodo Font test page</h1>
+<h2>Parameters</h2>
+<div>
+<p>Text color: <input type="text" id="color" value="#CC8800"></p>
+<p>Icon size: <select id="size"><option value="">Normal (1x)</option><option value="2x" selected>2x</option><option value="3x">3x</option><option value="4x">4x</option><option value="5x" selected>5x</option></select></p>
+<p>Rotation: <select id="rotation"><option value="" selected>None</option><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select></p>
+<p>Flip: <select id="flip"><option value="" selected>None</option><option value="vertical">Vertical</option><option value="horizontal">Horizontal</option></select> (NB: flip and rotation cannot be combined)</p>
+<p>Animation: <select id="animation"><option value="" selected>None</option><option value="spin">Spin</option><option value="Rotate">Rotate (Experimental!)</option></select></p>
+<button type="button" onclick="GenerateTable()">Redraw !</button>                                                                                         
+</div>
+<h2>Icons</h2>
+<div id="dump"></div>
+
+<script>
+(function() {
+   // your page initialization code here
+   // the DOM will be available here
+   GenerateTable();
+})();
+</script>
+
+</body>
+</html>

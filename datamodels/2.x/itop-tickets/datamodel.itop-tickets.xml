@@ -1073,7 +1073,7 @@
                           <class>UserRequest</class>
                           <!-- Optional tag that can be used on any action type -->
                           <!--<title>Créer un ticket</title>-->
-                          <!--<icon_class>glyphicon glyphicon-plus</icon_class>-->
+                          <icon_class>fc fc-new-request fc-1-6x fc-flip-horizontal</icon_class>
                           <rules>
                             <rule id="contact-to-userrequest"/>
                             <rule id="servicesubcategory-to-userrequest"/>

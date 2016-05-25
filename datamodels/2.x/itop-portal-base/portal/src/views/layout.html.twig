@@ -5,7 +5,7 @@
 	{% set bUserConnected = true %}
 	{% set sUserFullname = app['combodo.current_user'].Get('first_name') ~ ' ' ~ app['combodo.current_user'].Get('last_name') %}
 	{% set sUserEmail = app['combodo.current_user'].Get('email') %}
-	{% set sUserPhotoUrl = app['combodo.current_user_img'] %}
+	{% set sUserPhotoUrl = app['combodo.current_contact.photo_url'] %}
 {% else %}
 	{% set bUserConnected = false %}
 	{% set sUserFullname = '' %}
@@ -100,7 +100,7 @@
 	{% block pPageBodyWrapper %}
 		{% block pNavigationWrapper %}
 		{# Topbar navigation menu for mobile screens #}
-		<nav class="navbar navbar-fixed-top navbar-inverse visible-xs" id="topbar" role="navigation">
+		<nav class="navbar navbar-fixed-top navbar-default visible-xs" id="topbar" role="navigation">
 			<div class="container-fluid">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -108,10 +108,16 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="{{ app.url_generator.generate('p_home') }}">iTop</a>
+					<a class="navbar-brand pull-right" href="{{ app.url_generator.generate('p_home') }}">
+						{% if app['combodo.portal.instance.conf'].properties.logo is not null %}
+							<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
+						{% else %}
+							iTop
+						{% endif %}
+					</a>
 					<p class="navbar-text">
 						<a class="navbar-link user_infos" href="{{ app.url_generator.generate('p_user_profile_brick') }}">
-							<span class="user_photo"><img src="{{ sUserPhotoUrl }}" alt="{{ sUserFullname }}" /></span>
+							<span class="user_photo" style="background-image: url('{{ sUserPhotoUrl }}');"></span>
 							<span class="user_fullname">{{ sUserFullname }}</span>
 						</a>
 					</p>
@@ -121,7 +127,7 @@
 						{% block pNavigationTopBricks %}
 							<li class="{% if oBrick is not defined %}active{% endif %}">
 								<a href="{{ app.url_generator.generate('p_home') }}">
-									<span class="brick_icon fa fa-home"></span>
+									<span class="brick_icon fa fa-home fa-2x"></span>
 									{{ 'Page:Home'|dict_s }}
 								</a>
 							</li>
@@ -166,8 +172,7 @@
 		{# Sidebar navigation menu for normal screens #}
 		<nav class="navbar-default hidden-xs col-sm-3 col-md-2" id="sidebar" role="navigation">
 			<div class="user_card">
-				<div class="user_photo">
-					<img src="{{ sUserPhotoUrl }}" alt="{{ sUserFullname }}" />
+				<div class="user_photo" style="background-image: url('{{ sUserPhotoUrl }}');">
 				</div>
 				<div class="user_infos">
 					<div class="user_fullname">{{ sUserFullname }}</div>

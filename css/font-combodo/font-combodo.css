@@ -1,7 +1,8 @@
 @font-face {
     font-family: 'CombodoRegular';
-    src: url('combodo-webfont.woff2') format('woff2'),
-         url('combodo-webfont.woff') format('woff');
+    src: url('combodo-webfont.woff2?v=1.0') format('woff2'),
+         url('combodo-webfont.woff?v=1.0') format('woff'),
+         url('combodo-webfont.ttf?v=1.0') format('truetype');
     font-weight: normal;
     font-style: normal;
 
@@ -21,6 +22,12 @@
   line-height: 0.75em;
   vertical-align: -15%;
 }
+.fc-1-5x {
+  font-size: 1.5em;
+}
+.fc-1-6x {
+  font-size: 1.6em;
+}
 .fc-2x {
   font-size: 2em;
 }
@@ -33,11 +40,146 @@
 .fc-5x {
   font-size: 5em;
 }
+.fc-border {
+  padding: .2em .25em .15em;
+  border: solid 0.08em #eeeeee;
+  border-radius: .1em;
+}
+.fc-ul {
+  padding-left: 0;
+  margin-left: 2.2em;
+  list-style-type: none;
+}
+.fc-ul > li {
+  position: relative;
+}
+.fc-li {
+  position: absolute;
+  left: -2.2em;
+  width: 2.2em;
+  top: 0.15em;
+  text-align: center;
+}
+.fc-li.fa-lg {
+  left: -1.9em;
+}
+.fc-pull-left {
+  float: left;
+}
+.fc-pull-right {
+  float: right;
+}
+.fc.fc-pull-left {
+  margin-right: .3em;
+}
+.fc.fa-pull-right {
+  margin-left: .3em;
+}
+.fc-fw {
+  width: 1.3em;
+  text-align: center;
+}
+.fc-rotate-90 {
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";
+  -webkit-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+.fc-rotate-180 {
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2)";
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+.fc-rotate-270 {
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=3)";
+  -webkit-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  transform: rotate(270deg);
+}
+.fc-flip-horizontal {
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)";
+  -webkit-transform: scale(-1, 1);
+  -ms-transform: scale(-1, 1);
+  transform: scale(-1, 1);
+}
+.fc-flip-vertical {
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)";
+  -webkit-transform: scale(1, -1);
+  -ms-transform: scale(1, -1);
+  transform: scale(1, -1);
+}
+.fc-spin {
+  -webkit-animation: fc-spin 2s infinite linear;
+  animation: fc-spin 2s infinite linear;
+}
+.fc-pulse {
+  -webkit-animation: fc-spin 1s infinite steps(8);
+  animation: fc-spin 1s infinite steps(8);
+}
+.fc-rotate {
+  -webkit-animation: fc-rotate 2s infinite linear;
+  animation: fc-rotate 2s infinite linear;
+}
+
+@-webkit-keyframes fc-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes fc-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes fc-rotate {
+  0% {
+	  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=0)";
+	  -webkit-transform: scale(1, 1);
+	  -ms-transform: scale(1, 1);
+	  transform: scale(1, 1);
+  }
+  100% {
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)";
+  -webkit-transform: scale(-1, 1);
+  -ms-transform: scale(-1, 1);
+  transform: scale(-1, 1);
+  }
+}
+@keyframes fc-rotate {
+  0% {
+	  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=0)";
+	  -webkit-transform: scale(1, 1);
+	  -ms-transform: scale(1, 1);
+	  transform: scale(1, 1);
+  }
+  100% {
+	  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)";
+	  -webkit-transform: scale(-1, 1);
+	  -ms-transform: scale(-1, 1);
+	  transform: scale(-1, 1);
+  }
+}
+
+/* icons */
 .fc-life-saver:before {
   content: "0";
 }
 .fc-new-request:before {
   content: "1";
+}
+.fc-new-request-o:before {
+  content: "4";
 }
 .fc-ongoing-request:before {
   content: "2";
@@ -45,8 +187,11 @@
 .fc-closed-request:before {
   content: "3";
 }
-.fc-combodo-icon:before {
+.fc-combodo-icon-o:before {
   content: "C";
+}
+.fc-combodo-icon:before {
+  content: "D";
 }
 .fc-itop-icon:before {
   content: "I";
