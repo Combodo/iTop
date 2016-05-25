@@ -2915,10 +2915,10 @@ class AttributeCaseLog extends AttributeLongText
 			return $value->GetText();
 			
 			case 'head':
-			return $value->GetLatestEntry();
+			return $value->GetLatestEntry('text');
 
 			case 'head_html':
-			return '<div class="caselog_entry">'.str_replace( array( "\r\n", "\n", "\r"), "<br/>", htmlentities($value->GetLatestEntry(), ENT_QUOTES, 'UTF-8')).'</div>';
+			return $value->GetLatestEntry('html');
 			
 			case 'html':
 			return $value->GetAsEmailHtml();

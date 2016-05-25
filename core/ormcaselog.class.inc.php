@@ -651,12 +651,38 @@ class ormCaseLog {
 
 	/**
 	 * Get the latest entry from the log
+	 * @param string The expected output format text|html
 	 * @return string
 	 */
-	public function GetLatestEntry()
+	public function GetLatestEntry($sFormat = 'text')
 	{
+		$sRes = '';
 		$aLastEntry = end($this->m_aIndex);
-		$sRes = substr($this->m_sLog, $aLastEntry['separator_length'], $aLastEntry['text_length']);
+		$sRaw = substr($this->m_sLog, $aLastEntry['separator_length'], $aLastEntry['text_length']);
+		switch($sFormat)
+		{
+			case 'text':
+			if ($aLastEntry['format'] == 'text')
+			{
+				$sRes = $sRaw;
+			}
+			else
+			{
+				$sRes = utils::HtmlToText($sRaw);
+			}
+			break;
+			
+			case 'html':
+			if ($aLastEntry['format'] == 'text')
+			{
+				$sRes = utils::TextToHtml($sRaw);
+			}
+			else
+			{
+				$sRes = $sRaw;
+			}
+			break;
+		}
 		return $sRes;
 	}
 
