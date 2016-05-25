@@ -192,10 +192,10 @@ abstract class DBObject implements iDisplay
 		return true;
 	}
 
-	public function Reload()
+	public function Reload($bAllowAllData = false)
 	{
 		assert($this->m_bIsInDB);
-		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey, false/*, $this->m_bAllowAllData*/);
+		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey, false /* must be found */, $bAllowAllData/* in the future $this->m_bAllowAllData ??*/);
 		if (empty($aRow))
 		{
 			throw new CoreException("Failed to reload object of class '".get_class($this)."', id = ".$this->m_iKey);
@@ -1948,7 +1948,7 @@ abstract class DBObject implements iDisplay
 			// Reload to get the external attributes
 			if ($bHasANewExternalKeyValue)
 			{
-				$this->Reload();
+				$this->Reload(true /* AllowAllData */);
 			}
 			else
 			{
