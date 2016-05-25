@@ -675,9 +675,8 @@ EOF
 										$sDisplayValue = $this->GetEditValue($sAttCode);
 										$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
 										$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
-										$aFieldsMap[$sAttCode] = $sInputId;
-
 									}
+									$aFieldsMap[$sAttCode] = $sInputId;
 									$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
 								}
 							}
