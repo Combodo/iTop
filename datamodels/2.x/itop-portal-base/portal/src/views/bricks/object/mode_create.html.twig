@@ -108,6 +108,8 @@
 			oFieldSet_{{ sFormIdSanitized }}.on('form_built', function(oEvent){
 				scrollHandler_{{ sFormIdSanitized }}();
 			});
+			// - Initial test
+			setTimeout(function(){ scrollHandler_{{ sFormIdSanitized }}(); }, 400);
 			
 			// Remove sticky button when closing modal
 			$('#{{ sFormId }}').closest('.modal').on('hide.bs.modal', function () {
