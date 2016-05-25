@@ -14,7 +14,7 @@
 			<div class="tile_body">
 				<div class="tile_title">{{ brick.GetTitleHome|dict_s }}</div>
 				{% if brick.HasDescription %}
-					<div class="tile_description">{{ brick.GetDescription|dict_s }}</div>
+					<div class="tile_description">{{ brick.GetDescription|dict_s|raw }}</div>
 				{% endif %}
 			</div>
 		</a>

@@ -591,6 +591,7 @@ a:hover, a:focus{
 	}
 	.home .tile .tile_body{
 		display: block;
+		padding-left: 4.3em;
 		text-align: left;
 		line-height: 1.5em;
 	}
@@ -611,6 +612,9 @@ a:hover, a:focus{
 	.home .tile .tile_decoration > span.icon{
 		font-size: 4em;
 	}
+	.home .tile .tile_body{
+		padding-left: 6.3em;
+	}
 	.home .tile .tile_title{
 		font-size: 1.4em;
 	}
@@ -630,6 +634,9 @@ a:hover, a:focus{
 	}
 	.home .tile .tile_decoration > span.icon{
 		font-size: 6em;
+	}
+	.home .tile .tile_body{
+		padding-left: 9.1em;
 	}
 	.home .tile .tile_title{
 		font-size: 1.5em;
