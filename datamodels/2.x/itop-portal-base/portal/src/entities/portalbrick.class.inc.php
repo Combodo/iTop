@@ -439,6 +439,7 @@ abstract class PortalBrick extends AbstractBrick
 					{
 						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_TITLE);
 						$this->SetTitleNavigationMenu($optionalNodeValue);
+						$this->SetTitle($optionalNodeValue);
 					}
 					break;
 				case 'decoration_class':
