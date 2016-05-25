@@ -1182,9 +1182,6 @@
             <item id="status">
               <rank>60</rank>
             </item>
-            <item id="operational_status">
-              <rank>65</rank>
-            </item>
             <item id="agent_id">
               <rank>70</rank>
             </item>
@@ -1977,9 +1974,6 @@
             </item>
             <item id="status">
               <rank>60</rank>
-            </item>
-            <item id="operational_status">
-              <rank>65</rank>
             </item>
             <item id="agent_id">
               <rank>70</rank>
@@ -2978,9 +2972,6 @@
             <item id="status">
               <rank>60</rank>
             </item>
-            <item id="operational_status">
-              <rank>65</rank>
-            </item>
             <item id="agent_id">
               <rank>70</rank>
             </item>
@@ -3672,9 +3663,6 @@
             </item>
             <item id="status">
               <rank>60</rank>
-            </item>
-            <item id="operational_status">
-              <rank>65</rank>
             </item>
             <item id="agent_id">
               <rank>70</rank>
@@ -4428,9 +4416,6 @@
             </item>
             <item id="status">
               <rank>60</rank>
-            </item>
-            <item id="operational_status">
-              <rank>65</rank>
             </item>
             <item id="agent_id">
               <rank>70</rank>

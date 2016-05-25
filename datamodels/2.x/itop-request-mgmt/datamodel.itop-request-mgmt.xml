@@ -1699,9 +1699,6 @@
 						<item id="status">
 							<rank>50</rank>
 						</item>
-						<item id="operational_status">
-							<rank>55</rank>
-						</item>
 						<item id="agent_id">
 							<rank>60</rank>
 						</item>
