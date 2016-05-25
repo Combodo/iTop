@@ -621,7 +621,7 @@ a:hover, a:focus{
 	}
 	.home .tile .tile_description{
 		display: block;
-		text-align: justify;
+		text-align: left;
 	}
 }
 @media (min-width: 992px) {
