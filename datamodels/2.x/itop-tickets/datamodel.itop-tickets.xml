@@ -993,7 +993,7 @@
 			  <default>Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil</default>
 		  </title>
 		  <decoration_class>
-			  <default>glyphicon glyphicon-user</default>
+			  <default>fa fa-user fa-2x</default>
 		  </decoration_class>
           <form>
             <!-- Optionnal tag to list the fields -->
