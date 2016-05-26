@@ -1135,7 +1135,7 @@
                 <!-- Can be used only with ../oql tag, not ../class tag. Reason is that we can't know the class alias to apply to the condition's fields. We might have an exception saying that the field in ambigious for the generated query. -->
                 <group id="opened">
                   <rank>1</rank>
-                  <title>Class:Ticket/Attribute:operational_status/Value:ongoing</title>
+                  <title>Brick:Portal:OngoingRequests:Tab:OnGoing</title>
                   <condition><![CDATA[SELECT Ticket AS T WHERE operational_status NOT IN ('closed', 'resolved')]]></condition>
                 </group>
                 <group id="resolved">
