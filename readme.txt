@@ -1,4 +1,4 @@
-﻿iTop - version 2.2.1 - 04-February-2016
+iTop - version 2.3.0 Beta - 26-May-2016
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -9,14 +9,14 @@ Readme file
 2.4. Upgrading from 2.x.x
 2.5. Migration from 1.x versions
 3.   FEATURES
-3.1. Changes since 2.2.0
+3.1. Changes since 2.2.1
 3.2. Known limitations
 3.3. Known issues
 
 1. ABOUT THIS RELEASE
    ==================
-Thank you for downloading the 23rd packaged release of iTop.
-This version is a maintenance release, with quite a few bug fixes.
+Thank you for downloading the 24th packaged release of iTop.
+This version is a major release, with quite a few bug fixes.
 
 The documentation about iTop is available as a Wiki: https://wiki.openitop.org/
 
@@ -25,13 +25,18 @@ The source code of iTop can be found on SourceForge: https://sourceforge.net/p/i
 
 1.1 What's new?
     ---------------------------
-Nothing is really new: this release aims at fixing bugs.
+This is a major release.
+
+It brings the following new features (details in chapter 3.1):
+- Enhanced customer portal
+- Navigation breadcrumb
+- Rich text formatting
+- Date and time formats
 
 
-1.2 Should I upgrade to 2.2.1?
+1.2 Should I upgrade to 2.3.0?
     --------------------------
-This version is a production quality version and, as such, is suitable for running in production.
-iTop 2.2.1 exhibits the same behavior as 2.2.0.
+This version is a beta quality version and, as such, is NOT suitable for running in production.
 
 
 1.3 Special Thanks To:
@@ -76,8 +81,7 @@ PHP 5.3: Apache, IIS, nginx...
 End-user configuration:
 Although iTop should work with most modern web browsers, the application has been
 tested mostly with Firefox 36+, IE9+, Safari 5 and Chrome. iTop was designed for
-at least a 1024x768 screen resolution. Flash version 8 or higher is still required
-for displaying some charts.
+at least a 1024x768 screen resolution.
 
 2.2. Install procedure
      -----------------
@@ -122,9 +126,9 @@ The output will look as shown below:
 
 2.4. Upgrading from 2.x.x
      --------------------
-The version 2.2.0 if fully compatible with 2.0.0, 2.0.1, 2.0.2, 2.0.3 and 2.1.0. Due to few database changes,
-and new modules/files that have to be installed, you must run the setup when upgrading (whatever the original
-version).
+The version 2.3.0 if fully compatible with 2.0.0, 2.0.1, 2.0.2, 2.0.3, 2.1.0, 2.2.0 and 2.2.1.
+Due to few database changes and new modules/files that have to be installed, you
+must run the setup when upgrading (whatever the original version).
 
 If the location of mysql binaries is in the "path", the setup proposes to perform a full backup
 of iTop (database + configuration file) using mysqldump.
@@ -187,42 +191,129 @@ That's it.
 3. FEATURES
    ========
 
-3.1. Changes since 2.2.0
+3.1. New features
+     ------------
+
+1) Enhanced customer portal
+Completely new and responsive user interface: support of mobile phone, tablets, etc.
+Highly customizable via XML
+FAQs integrated by default 
+
+2) Navigation breadcrumb
+Based on Most Recently visited pages
+New shorcuts buttons when the navigation menu is hidden 
+
+3) Rich text fields
+Case log and ticket description can now be formatted
+Fullscreen edition
+Copy/Paste and Drag-and-Drop of images
+
+4) Date and time format
+Configurable per language (new setting date_and_time_format in the configuration file)
+Custom formats are supported for import/export  
+For backward compatibility, the default setting is the MySQL format
+
+
+3.2. Changes since 2.2.1
      -------------------
-This release fixes a few issues:
 
-#1174: support HTML fields in the bulk modify forms (capability to enable/disable the field live)
-#1183: more refactoring and some robustness enhancements after tests on big datasets.
-#1153: preserve leading zeroes (in "numeric" fields) in the Excel export.
-#1183: grouping threshold is now taken into account for "Depends on..." graphs (i.e. grouping backwards)
-#1176: empty placeholders are represented by an empty string as in previous version.
-#1165 backup with errors fills up tmp-directories with lots of backup-files
-#1150: Spurious message "A restore is running..." - FIXED !
-Support of derived classes in "add_remove" edition mode for AttributeLinkSet fields (the search form was not refreshing / loading properly when toggling the class to search for).
-Make ReloadSearchForm work properly when the "submit" event handler is declared either with or without a "namespace" portion (e.g. 'submit.itop' vs 'submit')
-#1164: typo in German localization.
-Support the download of "bigger-than-memory" backup files.
-Do NOT localize finalclass values in REST/JSON.
-#1159 Cannot add edge (impact analysis not working depending on the data model customizations)
-#1156: properly escape file paths containing spaces
-#1196: Only adminitrator accounts can be used to create attachments by the mean of the REST/JSON API
-Better error reporting when the setup fails to create a directory.
+1) Browser compatibility
+IE8 is not supported anymore: the minimum version for Internet Explorer is 9
+No need for Flash players anymore
 
-Internals:
-IconSelectorField (Design time !) can be read-only.
-Properly read radio button values inside a form.
-Remove _altered_in when exporting the delta.
-Keep track of which module altered which node in the XML.
-Fixed the computation of the lowest common ancestor.
-Dehardcoded OqlUnionQuery::GetClass against the metamodel reflection API
-Added AttributeDef::EnumTemplateVerbs, to generate the documentation about the available attribute formatting placeholders
-MFFactory: fixed GetDelta when there is no change at all
-Added structured error reporting in case of missing dependencies for the modules to install.
-Properly create DOMNodes with a text content (beware of XML entities inside the text)
-Support validation patterns containing a forward slash
-Code refactoring to make the OQL parsing self contained in the "oql" subdirectory.
-Added a version number (arbitrary initialized to 2015-08-31 for iTop v2.2.0) to the OQL Lexer/parser.
-Do not rely on MetaModel::GetRootClass() to check the data model, use the abstraction of ModelReflection instead to keep the code portable.
+2) Data model (2.x)
+Added attribute Ticket::operational_status: depending on the status of the ticket, this attribute will take on of the following values: ongoing, resolved or closed
+Added Person/picture: optionally add the picture and visualize it in the details or in the enhanced portal
+User Request (all-in-one): the end-user can leave the request type undefined, in such a case, she can select any type of services and the request type gets computed when the requests is written to the DB. Still, this is possible to select a request type and the list of services is filled with the corresponding services. This behavior was necessary for the new user portal to work fine.
+Tickets description and case logs are now in HTML
+
+3) Data corruption
+#1213 Losing SLA data when changing any attribute of an SLA.
+
+4) Security
+#1202: Fix for a security vulnerability in the Configuration Editor.
+Fix for potential XSS vulnerability on uploaded file names.
+XSS: Correctly escape the name of an object when it is displayed within an hyperlink
+"Forgotten password" feature: the temporary token could be hacked by the mean of a hand-made HTTP request
+
+4) Customizations (via XML deltas)
+Switching to XML version 1.3.
+- new attribute MetaEnum
+- new attribute AttributeCustomFields (experimental!)
+- new attribute AttributeImage (experimental!)
+- new flag _delta="if_exists". Use this flag to ignore a branch if the corresponding node does not exist in the data model being hacked. This is to reduce the burden of developping separate modules depending on the installation options.
+- new flag to open/collapse the search form at the top of a page in an OQLMenuNode: search_form_open
+ResetStopWatch could not be used as a lifecycle action: the symptom is "The action has failed".
+Label of the final class attribute could only be defined on the root class (overriding it in derived classes had no effect)
+Improved the error reporting when assembling data model XML files (full path and line number of the faulty node)
+A module can have its own design defined in XML (/itop_design/modules_designs/module_design) and accessed at run time via the class ModuleDesign.
+The images specified in the branding or in module_designs can be given as a fileref or a path relative to the env-production directory
+
+5) Module development (PHP API)
+No need for bridge (auto-select) modules to be listed as installed modules in the about box. Still, they are listed in the "support information".
+Improved the module ordering algorithm. If a module has several dependencies (inclusive OR), it must be installed after each and every of its dependency that has been selected for installation.
+Support for objects to go "out of the silo" during a transition by making sure that we can reload an object we've just saved.
+If you have developped specific pages, and want them to appear in the breadcrumb, call iTopWebPage::AddBreadCrumbEntry.
+Added verbs to the User Rights management API:
+- HasProfile
+- ListProfiles
+- GetAllowedPortals
+Added a mean to cache data that will be reset upon compilation. To be used in conjunction with ModuleDesign.
+
+6) Queries (OQL)
+Magic query arguments:
+- In addition to current_contact_id, the following arguments can be used in any OQL query (provided that the page running the query requires a  login): current_contact->attcode and current_user->attcode
+- The "Run queries" page is now taking into account those magic arguments (do not prompt the end-user with these arguments!)
+
+7) Optimizations
+Do not load all columns when checking if a CI is part of  the "context" of a given ticket.
+Optimization/bug (!): Never use the whole object as a placeholder in ApplyParams !!
+Cleanup and optimization of the handling/loading of the dictionary files.
+Optimization: load "pdftage" (and thus tcpdf) only when needed.
+Adding an extra index to speed-up data synchronization for large volumes of data.
+Improved the User Rights management API:
+Doing less queries for user rights: caching the user profiles into the SESSION cookie
+
+8) Other fixes
+#1210 Dependant field not reset (servicesubcategory not reset when service is reset)
+Modified the "List" tab of the Impact Analysis to display only the actually impacted objects. The content of this tab is now refreshed every time the graph is rebuilt to take into account the "context" changes which causes the actual impact to change, or the filtering.
+Initial feedback while loading the 'list' tab of the impact analysis, useful when this tab is displayed first.
+Fixed a typo in German translation files ("Deails für Benutzeranfrage" => "Details für Benutzeranfrage")
+When a date/time format is specified, don't try to process columns named 'id' since obviously these are neither date/times nor a genuine attribute code.
+#1209 Setup or Backup failing with french error message 'Effacement du fichier ...' Regression introduced in iTop 2.2.1. Occurs when a backup fails and prevents users from seeing the mysql error report.
+Attachments : Delete button's label of an attachment was hard-coded. Putted dictionnary entry instead.
+Wiki syntax: allow white spaces in the specification of a link to an object (form: [[<class>:<friendlyname>]])
+#1215: URL fields can now store up to 2048 characters
+#1214: concurrent access lock not properly released when CheckToWrite() reports an error during a transition from one state to another.
+Styles fine tuning and nicer display of the main menu (no more animation on initial load).
+Suppress "Notice" messages when iconv detects invalid UTF-8 characters, since it breaks the JSON output if display_errors in On...
+
+9) Internal
+Exclude magic parameters when listing query parameters (refactoring from run_query) This enables the use of magic parameters in the exports. The issue was less exposed in iTop 2.2.0 because only one single magic parameter was available.
+DBSearch : Allow join between DBUnionSearch by adding the DBUnionSearch::Join verb
+#1221 Exclude git folder from the copied folders, during the compilation process
+Fixed typo in the reporting of page spurious chars
+Installation
+- Better handling of  'auto_select' modules
+- New way of implementing the "includes" of modules, now completely out of the configuration file !
+Implemented DBObject::ExecActions, enables scripting object preset/modifications
+Added verb ormCaseLog::GetAsArray()
+Query arguments: when the value of a query argument is null, it must be considered as being a valid argument (was reported as missing). Improved the error reporting when the argument is in the form :this->attcode and the attcode is not valid for the class of 'this'.
+Query arguments could be array values, making it easier to build dynamic IN() clauses
+Added DBObject::RegisterURLMakerClass, to allow for overriding the standard behavior of template placeholders such as $this->org_id->hyperlink(portal)$
+When uploading documents, get the mimetype from the file itself (if feasible) rather than relying on the mimetype of the HTTP header. This was already implemented but it was buggy and fell anytime into the fallback method.
+Make the login page more mobile friendly.
+Add the "filter" attribute into the details form of the TriggerOnThresholdReached class.
+Prevent infinite cross-ticket recursion when propagating parent->child resolution in tickets.
+The result of CheckToWrite() was not taken into account (action failed silently) when creating an object using the [+] button inside a form.
+Programmatically allow to write on any object - if needed - independently of the profiles.
+PHP warning issued when the CSS is rebuilt (SASS lib)
+Core API: added DBSearch:SetSelectedClasses
+#1173 Error during setup on a development system (XML containing unwanted text)
+Core : Added CloneWithAlias function to DBSearch class. It creates a new DBObjectSearch from a DBSearch with a new alias.
+Compiler: Model alterations not flattened prior to compilation (when using the setup UI)
+Model Factory: factorized duplicate code from ApplyChanges + fixed an issue in the error reporting
+Fixed the verb DBObjectSearch::IsAny
 
 
 
