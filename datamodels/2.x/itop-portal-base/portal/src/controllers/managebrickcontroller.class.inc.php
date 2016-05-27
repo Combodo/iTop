@@ -375,12 +375,13 @@ class ManageBrickController extends BrickController
 						'actions' => $aActions
 					);
 				}
-
+				
 				// ... And item's properties
 				$aItems[] = array(
 					'id' => $oCurrentRow->GetKey(),
 					'class' => $sCurrentClass,
-					'attributes' => $aItemAttrs
+					'attributes' => $aItemAttrs,
+					'highlight_class' => $oCurrentRow->GetHilightClass()
 				);
 			}
 

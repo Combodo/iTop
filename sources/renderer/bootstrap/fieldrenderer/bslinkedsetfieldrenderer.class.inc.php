@@ -209,7 +209,6 @@ EOF
 						"columns": getColumnsDefinition_{$this->oField->GetGlobalId()}(),
 						"select": {$sSelectionOptionHtml},
 						"rowId": "id",
-						"rowTest": "id",
 						"data": oRawDatas_{$this->oField->GetGlobalId()},
 					});
 						
