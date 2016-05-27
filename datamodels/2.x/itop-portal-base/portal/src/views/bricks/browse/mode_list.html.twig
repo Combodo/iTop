@@ -32,6 +32,7 @@
 		var getColumnsDefinition = function()
 		{
 			var aColumnsDefinition = [];
+			var iPriorityCounter = 100; // This number is arbiratrory
 			
 			for(sKey in oLevelsProperties)
 			{
@@ -40,6 +41,7 @@
 					"width": "auto",
 					"searchable": true,
 					"sortable": (sDataLoading === '{{ constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL') }}'),
+					"responsivePriority": iPriorityCounter,
 					"title": oLevelsProperties[sKey].title,
 					"defaultContent": "",
 					"type": "html",
@@ -195,6 +197,7 @@
 							"width": "auto",
 							"searchable": true,
 							"sortable": false,
+							// Responsive priority is not applyed on those columns as we preserve the levels main column
 							"title": oLevelsProperties[sKey].fields[i].label,
 							"defaultContent": "",
 							"type": "html",
@@ -202,6 +205,8 @@
 						});
 					}
 				}
+				
+				iPriorityCounter--;
 			}
 			
 			return aColumnsDefinition;
