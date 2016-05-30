@@ -385,7 +385,7 @@ $(function()
 		_flatten_fields: function(aFields)
 		{
 			// Update the "flattened" via of the fields
-			this.aFieldsByCode = [];
+			this.aFieldsByCode = {}; // Must be an object since indexes are non-numeric
 			for(var k in aFields)
 			{
 				for(var i in aFields[k])
