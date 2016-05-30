@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Portal\Controller;
 
 use \Exception;
+use \MetaModel;
 use \UserRights;
 use \Silex\Application;
 use \Symfony\Component\HttpFoundation\Request;
@@ -87,14 +88,18 @@ class UserProfileBrickController extends BrickController
 			$sCurContactClass = get_class($oCurContact);
 			$sCurContactId = $oCurContact->GetKey();
 
+			// Setting form mode regarding the demo mode parameter
+			$sFormMode = (MetaModel::GetConfig()->Get('demo_mode')) ? ObjectController::ENUM_MODE_VIEW : ObjectController::ENUM_MODE_EDIT;
+
 			// Preparing forms
-			$aData['forms']['contact'] = ObjectController::HandleForm($oRequest, $oApp, ObjectController::ENUM_MODE_EDIT, $sCurContactClass, $sCurContactId, $oBrick->GetForm());
-			$aData['forms']['preferences'] = $this->HandlePreferencesForm($oRequest, $oApp);
+			$aData['forms']['contact'] = ObjectController::HandleForm($oRequest, $oApp, $sFormMode, $sCurContactClass, $sCurContactId, $oBrick->GetForm());
+			$aData['forms']['preferences'] = $this->HandlePreferencesForm($oRequest, $oApp, $sFormMode);
 			// - If user can change password, we display the form
 			$aData['forms']['password'] = (UserRights::CanChangePassword()) ? $this->HandlePasswordForm($oRequest, $oApp) : null;
 
 			$aData = $aData + array(
-				'oBrick' => $oBrick
+				'oBrick' => $oBrick,
+				'sFormMode' => $sFormMode
 			);
 
 			$oResponse = $oApp['twig']->render($oBrick->GetPageTemplatePath(), $aData);
@@ -103,7 +108,7 @@ class UserProfileBrickController extends BrickController
 		return $oResponse;
 	}
 
-	public function HandlePreferencesForm(Request $oRequest, Application $oApp)
+	public function HandlePreferencesForm(Request $oRequest, Application $oApp, $sFormMode)
 	{
 		$aFormData = array();
 		$oRequestParams = $oRequest->request;
@@ -120,6 +125,11 @@ class UserProfileBrickController extends BrickController
 			$oFormManager = new PreferencesFormManager();
 			$oFormManager->SetRenderer($oFormRenderer)
 				->Build();
+			// - Checking if we have to make the form read only
+			if ($sFormMode === ObjectController::ENUM_MODE_VIEW)
+			{
+				$oFormManager->GetForm()->MakeReadOnly();
+			}
 		}
 		// - Submit
 		else if ($sOperation === 'submit')

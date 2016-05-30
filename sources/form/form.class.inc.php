@@ -426,6 +426,21 @@ class Form
 	}
 
 	/**
+	 * Forces the form to a read only state by setting read only to true on all its fields
+	 * 
+	 * @return \Combodo\iTop\Form\Form
+	 */
+	public function MakeReadOnly()
+	{
+		foreach ($this->GetFields() as $oField)
+		{
+			$oField->SetReadOnly(true);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * @param $sFormPath
 	 * @return Form|null
 	 */
