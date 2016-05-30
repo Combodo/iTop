@@ -89,7 +89,8 @@ class UserProfileBrickController extends BrickController
 			$sCurContactId = $oCurContact->GetKey();
 
 			// Setting form mode regarding the demo mode parameter
-			$sFormMode = (MetaModel::GetConfig()->Get('demo_mode')) ? ObjectController::ENUM_MODE_VIEW : ObjectController::ENUM_MODE_EDIT;
+			$bDemoMode = MetaModel::GetConfig()->Get('demo_mode');
+			$sFormMode = ($bDemoMode) ? ObjectController::ENUM_MODE_VIEW : ObjectController::ENUM_MODE_EDIT;
 
 			// Preparing forms
 			$aData['forms']['contact'] = ObjectController::HandleForm($oRequest, $oApp, $sFormMode, $sCurContactClass, $sCurContactId, $oBrick->GetForm());
@@ -99,7 +100,8 @@ class UserProfileBrickController extends BrickController
 
 			$aData = $aData + array(
 				'oBrick' => $oBrick,
-				'sFormMode' => $sFormMode
+				'sFormMode' => $sFormMode,
+				'bDemoMode' => $bDemoMode
 			);
 
 			$oResponse = $oApp['twig']->render($oBrick->GetPageTemplatePath(), $aData);

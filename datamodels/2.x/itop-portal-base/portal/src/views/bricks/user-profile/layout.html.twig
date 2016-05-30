@@ -11,6 +11,13 @@
 {% endblock %}
 
 {% block pMainContentHolder%}
+	{% if bDemoMode %}
+		<div class="alert alert-warning">
+			<span class="fa fa-info fa-2x" style="margin-right: 10px; vertical-align: sub;"></span>
+			User profile edition is not available in demo mode.
+		</div>
+	{% endif %}
+	
 	<div id="user-profile-wrapper">
 		<div class="row">
 			<div class="col-sm-6">
