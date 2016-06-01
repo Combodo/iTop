@@ -199,10 +199,18 @@ class SpreadsheetBulkExport extends TabularBulkExport
 					$oFinalAttDef = $oAttDef->GetFinalAttDef();
 					if (get_class($oFinalAttDef) == 'AttributeDateTime')
 					{
-						$iDate = AttributeDateTime::GetAsUnixSeconds($oObj->Get($sAttCode));
-						$sData .= '<td>'.date('Y-m-d', $iDate).'</td>'; // Add the first column directly
-						$sField = date('H:i:s', $iDate); // Will add the second column below
-						$sData .= "<td>$sField</td>";
+						$value = $oObj->Get($sAttCode);
+						if (($value === null) || ($value === '0000-00-00') || ($value === '0000-00-00 00:00:00') )
+						{
+							$sData .= '<td></td><td></td>';
+						}
+						else
+						{
+							$iDate = AttributeDateTime::GetAsUnixSeconds($oObj->Get($sAttCode));
+							$sData .= '<td>'.date('Y-m-d', $iDate).'</td>'; // Add the first column directly
+							$sField = date('H:i:s', $iDate); // Will add the second column below
+							$sData .= "<td>$sField</td>";
+						}
 					}
 					else if($oAttDef instanceof AttributeCaseLog)
 					{
