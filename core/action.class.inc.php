@@ -262,8 +262,10 @@ class ActionEmail extends ActionNotification
 			{
 				$sPrefix = '';
 			}
-			$oLog->Set('message', $sPrefix.$sRes);
-
+			if ($oLog)
+			{
+				$oLog->Set('message', $sPrefix . $sRes);
+			}
 		}
 		catch (Exception $e)
 		{
