@@ -61,6 +61,10 @@ class UserProfileBrickController extends BrickController
 
 		$aData = array();
 		
+		// Setting form mode regarding the demo mode parameter
+		$bDemoMode = MetaModel::GetConfig()->Get('demo_mode');
+		$sFormMode = ($bDemoMode) ? ObjectController::ENUM_MODE_VIEW : ObjectController::ENUM_MODE_EDIT;
+
 		// If this is ajax call, we are just submiting preferences or password forms
 		if ($oRequest->isXmlHttpRequest())
 		{
@@ -68,7 +72,7 @@ class UserProfileBrickController extends BrickController
 			$sFormType = $aCurrentValues['form_type'];
 			if ($sFormType === PreferencesFormManager::FORM_TYPE)
 			{
-				$aData['form'] = $this->HandlePreferencesForm($oRequest, $oApp);
+				$aData['form'] = $this->HandlePreferencesForm($oRequest, $oApp, $sFormMode);
 			}
 			elseif ($sFormType === PasswordFormManager::FORM_TYPE)
 			{
@@ -87,10 +91,6 @@ class UserProfileBrickController extends BrickController
 			$oCurContact = UserRights::GetContactObject();
 			$sCurContactClass = get_class($oCurContact);
 			$sCurContactId = $oCurContact->GetKey();
-
-			// Setting form mode regarding the demo mode parameter
-			$bDemoMode = MetaModel::GetConfig()->Get('demo_mode');
-			$sFormMode = ($bDemoMode) ? ObjectController::ENUM_MODE_VIEW : ObjectController::ENUM_MODE_EDIT;
 
 			// Preparing forms
 			$aData['forms']['contact'] = ObjectController::HandleForm($oRequest, $oApp, $sFormMode, $sCurContactClass, $sCurContactId, $oBrick->GetForm());
