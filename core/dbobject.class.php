@@ -383,6 +383,7 @@ abstract class DBObject implements iDisplay
 					if (($oDef->IsExternalField() || ($oDef instanceof AttributeFriendlyName)) && ($oDef->GetKeyAttCode() == $sAttCode))
 					{
 						$this->m_aCurrValues[$sCode] = $value->Get($oDef->GetExtAttCode());
+						$this->m_aLoadedAtt[$sCode] = true;
 					}
 				}
 			}
