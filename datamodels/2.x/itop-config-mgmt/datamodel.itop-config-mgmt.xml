@@ -526,7 +526,84 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods/>
+      <methods>
+        <method id="CheckToDelete">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[  	public function CheckToDelete(&$oDeletionPlan)
+  	{
+  		if (MetaModel::GetConfig()->Get('demo_mode'))
+		{
+			if ($this->HasUserAccount())
+			{
+				// Do not let users change user accounts in demo mode
+				$oDeletionPlan->AddToDelete($this, null);
+				$oDeletionPlan->SetDeletionIssues($this, array('deletion not allowed in demo mode.'), true);
+				$oDeletionPlan->ComputeResults();
+				return false;
+			}
+		}
+		return parent::CheckToDelete($oDeletionPlan);
+  	}
+]]></code>
+        </method>
+        <method id="DBDeleteSingleObject">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[  	public function DBDeleteSingleObject(&$oDeletionPlan)
+	{
+		if (MetaModel::GetConfig()->Get('demo_mode'))
+		{
+			if ($this->HasUserAccount())
+			{
+				// Do not let users change user accounts in demo mode
+				return;
+			}
+		}
+		parent::DBDeleteSingleObject();
+	}
+]]></code>
+        </method>
+        <method id="GetAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
+		if ( ($sAttCode == 'org_id') && (!$this->IsNew()) )
+		{
+			if (MetaModel::GetConfig()->Get('demo_mode'))
+			{
+				if ($this->HasUserAccount())
+				{
+					// Do not let users change user accounts in demo mode
+					return OPT_ATT_READONLY;
+				}
+			}
+		}
+		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+	}
+]]></code>
+        </method>
+        <method id="HasUserAccount">
+          <static>false</static>
+          <access>public</access>
+          <type>Helper</type>
+          <code><![CDATA[  	public function HasUserAccount()
+  	{
+		static $bHasUserAccount = null;
+		if (is_null($bHasUserAccount))
+		{
+			$oUserSet = new DBObjectSet(DBSearch::FromOQL('SELECT User WHERE contactid = :person', array('person' => $this->GetKey())));
+			$bHasUserAccount = ($oUserSet->Count() > 0);
+		}
+		return $bHasUserAccount;
+  	}
+]]></code>
+        </method>
+      </methods>
       <presentation>
         <details>
           <items>
