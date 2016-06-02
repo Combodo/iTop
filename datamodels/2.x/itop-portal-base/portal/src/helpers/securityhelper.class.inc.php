@@ -24,6 +24,7 @@ use \Silex\Application;
 use \utils;
 use \UserRights;
 use \Dict;
+use \IssueLog;
 use \MetaModel;
 use \DBObjectSet;
 use \FieldExpression;
@@ -52,9 +53,15 @@ class SecurityHelper
 	 */
 	public static function IsActionAllowed(Application $oApp, $sAction, $sObjectClass, $sObjectId = null)
 	{
+		$sDebugTracePrefix = __CLASS__ . ' / ' . __METHOD__ . ' : Returned false for action ' . $sAction . ' on ' . $sObjectClass . '::' . $sObjectId;
+
 		// Checking action type
 		if (!in_array($sAction, array(UR_ACTION_READ, UR_ACTION_MODIFY, UR_ACTION_CREATE)))
 		{
+			if ($oApp['debug'])
+			{
+				IssueLog::Info($sDebugTracePrefix . ' as the action value could not be understood (' . UR_ACTION_READ . '/' . UR_ACTION_MODIFY . '/' . UR_ACTION_CREATE . ' expected');
+			}
 			return false;
 		}
 
@@ -65,6 +72,10 @@ class SecurityHelper
 		$oScopeQuery = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sObjectClass, $sScopeAction);
 		if ($oScopeQuery === null)
 		{
+			if ($oApp['debug'])
+			{
+				IssueLog::Info($sDebugTracePrefix . ' as there was no scope defined for action ' . $sScopeAction . ' and profiles ' . implode('/', UserRights::ListProfiles()));
+			}
 			return false;
 		}
 		// - If action != create we do some additionnal checks
@@ -89,6 +100,10 @@ class SecurityHelper
 			$oSet = new DBObjectSet($oScopeQuery);
 			if ($oSet->Count() === 0)
 			{
+				if ($oApp['debug'])
+				{
+					IssueLog::Info($sDebugTracePrefix . ' as there was no result for the following scope query : ' . $oScopeQuery->ToOQL(true));
+				}
 				return false;
 			}
 
@@ -98,6 +113,10 @@ class SecurityHelper
 				$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */);
 				if ($oObject === null)
 				{
+					if ($oApp['debug'])
+					{
+						IssueLog::Info($sDebugTracePrefix . ' as object doesn\'t exists');
+					}
 					return false;
 				}
 				unset($oObject);
@@ -109,6 +128,10 @@ class SecurityHelper
 		{
 			// For security reasons, we don't want to give the user too many informations on why he cannot access the object.
 			//throw new SecurityException('User not allowed to view this object', array('class' => $sObjectClass, 'id' => $sObjectId));
+			if ($oApp['debug'])
+			{
+				IssueLog::Info($sDebugTracePrefix . ' as the user is not allowed to access this object according to the datamodel security (cf. Console settings)');
+			}
 			return false;
 		}
 
