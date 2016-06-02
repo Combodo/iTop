@@ -77,7 +77,7 @@
 					</div>
 					<div class="panel-body">
 						{% if oPasswordForm is not null %}
-							<form id="{{ oPasswordForm.id }}" class="" method="POST" action="{{ oPasswordForm.renderer.GetEndpoint()|raw }}">
+							<form id="{{ oPasswordForm.id }}" class="" method="POST" action="{{ oPasswordForm.renderer.GetEndpoint()|raw }}" autocomplete="off">
 								<div class="form_alerts">
 									<div class="alert alert-success" role="alert" style="display: none;"></div>
 									<div class="alert alert-warning" role="alert" style="display: none;"></div>
