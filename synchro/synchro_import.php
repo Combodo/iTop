@@ -225,8 +225,8 @@ function ChangeDateFormat($sProposedDate, $sFormat)
 	}
 	else
 	{
-		$oDate = DateTime::createFromFormat($sDateFormat, $sProposedDate);
-		if ($oDate !== false)
+		$oDate = $oFormat->Parse($sProposedDate);
+		if ($oDate !== null)
 		{
 			$sDate = $oDate->format(AttributeDateTime::GetInternalFormat());
 			return $sDate;
