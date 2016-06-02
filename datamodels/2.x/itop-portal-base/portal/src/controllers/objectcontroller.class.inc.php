@@ -91,6 +91,15 @@ class ObjectController extends AbstractController
 		$aData['form'] = $this->HandleForm($oRequest, $oApp, $aData['sMode'], $sObjectClass, $sObjectId);
 		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:View:Title', MetaModel::GetName($sObjectClass), $oObject->GetName());
 
+		// Add an edit button if user is allowed
+		if (SecurityHelper::IsActionAllowed($oApp, UR_ACTION_MODIFY, $sObjectClass, $sObjectId))
+		{
+			$aData['form']['buttons']['links'][] = array(
+				'label' => Dict::S('UI:Menu:Modify'),
+				'url' => $oApp['url_generator']->generate('p_object_edit', array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId))
+			);
+		}
+
 		// Preparing response
 		if ($oRequest->isXmlHttpRequest())
 		{
