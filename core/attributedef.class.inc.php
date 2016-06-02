@@ -3992,6 +3992,29 @@ class AttributeDuration extends AttributeInteger
 		$seconds = ($duration % 60); // modulo
 		return array( 'days' => $days, 'hours' => $hours, 'minutes' => $minutes, 'seconds' => $seconds );		
 	}
+
+	static public function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\LabelField';
+	}
+
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
+	{
+		if ($oFormField === null)
+		{
+			$sFormFieldClass = static::GetFormFieldClass();
+			$oFormField = new $sFormFieldClass($this->GetCode());
+		}
+		parent::MakeFormField($oObject, $oFormField);
+
+		// Note : As of today, this attribute is -by nature- only supported in readonly mode, not edition
+		$sAttCode = $this->GetCode();
+		$oFormField->SetCurrentValue(html_entity_decode($oObject->GetAsHTML($sAttCode), ENT_QUOTES, 'UTF-8'));
+		$oFormField->SetReadOnly(true);
+
+		return $oFormField;
+	}
+
 }
 /**
  * Map a date+time column to an attribute 
@@ -4688,6 +4711,32 @@ class AttributeExternalField extends AttributeDefinition
 	{
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->GetAsCSV($value, $sSeparator, $sTestQualifier, null, $bLocalize, $bConvertToPlainText);
+	}
+
+	static public function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\LabelField';
+	}
+
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
+	{
+		if ($oFormField === null)
+		{
+			$sFormFieldClass = static::GetFormFieldClass();
+			$oFormField = new $sFormFieldClass($this->GetCode());
+		}
+		parent::MakeFormField($oObject, $oFormField);
+
+		// Note : As of today, this attribute is -by nature- only supported in readonly mode, not edition
+		$sAttCode = $this->GetCode();
+		$sAttCodeFriendlyname = $sAttCode .= '_friendlyname';
+		if ($this->IsExternalKey(EXTKEY_ABSOLUTE) && MetaModel::IsValidAttCode(get_class($oObject), $sAttCodeFriendlyname))
+		{
+			$sAttCode = $sAttCodeFriendlyname;
+		}
+		$oFormField->SetCurrentValue(html_entity_decode($oObject->GetAsHTML($sAttCode), ENT_QUOTES, 'UTF-8'));
+
+		return $oFormField;
 	}
 
 	public function IsPartOfFingerprint()
@@ -5796,7 +5845,33 @@ class AttributeSubItem extends AttributeDefinition
 		return $res;
 	}
 	
-	public function IsPartOfFingerprint() { return false; }
+	public function IsPartOfFingerprint()
+	{
+		return false;
+	}
+
+	static public function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\LabelField';
+	}
+
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
+	{
+		if ($oFormField === null)
+		{
+			$sFormFieldClass = static::GetFormFieldClass();
+			$oFormField = new $sFormFieldClass($this->GetCode());
+		}
+		parent::MakeFormField($oObject, $oFormField);
+
+		// Note : As of today, this attribute is -by nature- only supported in readonly mode, not edition
+		$sAttCode = $this->GetCode();
+		$oFormField->SetCurrentValue(html_entity_decode($oObject->GetAsHTML($sAttCode), ENT_QUOTES, 'UTF-8'));
+		$oFormField->SetReadOnly(true);
+
+		return $oFormField;
+	}
+
 }
 
 /**

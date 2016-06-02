@@ -434,7 +434,7 @@ class ObjectFormManager extends FormManager
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this->oObject), $sAttCode);
 			
 			// TODO : Make AttributeDefinition::MakeFormField() for all kind of fields
-			if (in_array(get_class($oAttDef), array('AttributeString', 'AttributeEmailAddress', 'AttributeText', 'AttributeLongText', 'AttributeCaseLog', 'AttributeHTML', 'AttributeFriendlyName', 'AttributeEnum', 'AttributeExternalKey', 'AttributeCustomFields', 'AttributeLinkedSet', 'AttributeLinkedSetIndirect', 'AttributeDate', 'AttributeDateTime')))
+			if (in_array(get_class($oAttDef), array('AttributeString', 'AttributeEmailAddress', 'AttributeText', 'AttributeLongText', 'AttributeCaseLog', 'AttributeHTML', 'AttributeFriendlyName', 'AttributeEnum', 'AttributeExternalKey', 'AttributeExternalField', 'AttributeHierarchicalKey', 'AttributeCustomFields', 'AttributeLinkedSet', 'AttributeLinkedSetIndirect', 'AttributeDate', 'AttributeDateTime', 'AttributeDuration', 'AttributeSubItem')))
 			{
 				$oField = $oAttDef->MakeFormField($this->oObject);
 				
@@ -471,7 +471,7 @@ class ObjectFormManager extends FormManager
 					{
 						// Normal field
 					}
-
+					
 					// Specific operation on field
 					// - Field that require a transaction id
 					if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\TextAreaField', 'Combodo\\iTop\\Form\\Field\\CaseLogField')))
@@ -513,7 +513,7 @@ class ObjectFormManager extends FormManager
 						$oField->SetReadOnly(true);
 					}
 				}
-
+				
 				$oForm->AddField($oField);
 			}
 			else
