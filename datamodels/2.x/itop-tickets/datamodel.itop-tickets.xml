@@ -1059,7 +1059,7 @@
                   </actions>
                   <levels>
                     <level id="1">
-                      <!-- Note : We could have used just a class tag and putted the OQL in the scope for everybody -->
+                      <!-- Note : We could have used just a class tag and put the OQL in the scope for everybody -->
                       <oql><![CDATA[SELECT ServiceSubcategory WHERE ServiceSubcategory.status != 'obsolete']]></oql>
                       <parent_att>service_id</parent_att>
                       <name_att/>
