@@ -313,6 +313,9 @@ class ManageBrickController extends BrickController
 			{
 				$aColumnsAttrs = array_merge(array($sTitleAttrCode), $aColumnsAttrs);
 			}
+			// Defining which attribute will open the edition form)
+			$sMainActionAttrCode = $aColumnsAttrs[0];
+
 			// Loading columns definition
 			$aColumnsDefinition = array();
 			foreach ($aColumnsAttrs as $sColumnAttr)
@@ -334,8 +337,9 @@ class ManageBrickController extends BrickController
 				foreach ($aColumnsAttrs as $sItemAttr)
 				{
 					$aActions = array();
-					// Set the edit action to the main attribute only
-					if ($sItemAttr === $sTitleAttrCode)
+					// Set the edit action to the main (first) attribute only
+					//if ($sItemAttr === $sTitleAttrCode)
+					if ($sItemAttr === $sMainActionAttrCode)
 					{
 						$aActions[] = array(
 							'type' => ManageBrick::ENUM_ACTION_EDIT,
