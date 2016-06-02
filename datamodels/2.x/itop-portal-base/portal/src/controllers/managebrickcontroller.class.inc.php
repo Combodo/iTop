@@ -309,7 +309,7 @@ class ManageBrickController extends BrickController
 			// Getting area columns properties
 			$aColumnsAttrs = $oBrick->GetFields();
 			// Adding friendlyname attribute to the list is not already in it
-			if (!in_array($sTitleAttrCode, $aColumnsAttrs))
+			if (($sTitleAttrCode !== null) && !in_array($sTitleAttrCode, $aColumnsAttrs))
 			{
 				$aColumnsAttrs = array_merge(array($sTitleAttrCode), $aColumnsAttrs);
 			}
