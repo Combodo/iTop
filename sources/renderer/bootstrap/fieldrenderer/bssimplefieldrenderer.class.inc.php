@@ -22,6 +22,7 @@ namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 use \utils;
 use \Dict;
 use \UserRights;
+use \AttributeDateTime;
 use \InlineImage;
 use \Combodo\iTop\Renderer\FieldRenderer;
 use \Combodo\iTop\Renderer\RenderingOutput;
@@ -109,41 +110,7 @@ EOF
 					// Then the previous entries if necessary
 					if ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\CaseLogField')
 					{
-						$aEntries = $this->oField->GetEntries();
-						if (count($aEntries) > 0)
-						{
-							$oOutput->AddHtml('<div>');
-							for ($i = 0; $i < count($aEntries); $i++)
-							{
-								$sEntryDate = $aEntries[$i]['date'];
-								$sEntryUser = $aEntries[$i]['user_login'];
-								$sEntryHeader = Dict::Format('UI:CaseLog:Header_Date_UserName', $sEntryDate, $sEntryUser);
-
-								// Only the last 2 entries are expanded by default
-								$sEntryContentExpanded = ($i < 2) ? 'true' : 'false';
-								$sEntryHeaderButtonClass = ($i < 2) ? '' : 'collapsed';
-								$sEntryContentClass = ($i < 2) ? 'in' : '';
-								$sEntryContentId = 'caselog_field_entry_content-' . $this->oField->GetGlobalId() . '-' . $i;
-
-								// Note : We use CKEditor stylesheet to format this
-								$oOutput->AddHtml(
-<<<EOF
-									<div class="caselog_field_entry cke_inner">
-										<div class="caselog_field_entry_header">
-											{$sEntryHeader}
-											<div class="pull-right">
-												<span class="caselog_field_entry_button {$sEntryHeaderButtonClass}" data-toggle="collapse" href="#{$sEntryContentId}" aria-expanded="{$sEntryContentExpanded}" aria-controls="{$sEntryContentId}"></span>
-											</div>
-										</div>
-										<div class="caselog_field_entry_content collapse {$sEntryContentClass}" id="{$sEntryContentId}">
-											{$aEntries[$i]['message_html']}
-										</div>
-									</div>
-EOF
-								);
-							}
-							$oOutput->AddHtml('</div>');
-						}
+						$this->PreparingCaseLogEntries($oOutput);
 					}
 
 					$oOutput->AddHtml('</div>');
@@ -257,6 +224,17 @@ EOF
 							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetCurrentValue(), $bEncodeHtmlEntities)->AddHtml('</div>');
 						}
 						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" />');
+						$oOutput->AddHtml('</div>');
+						break;
+
+					case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
+						$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
+						if ($this->oField->GetLabel() !== '')
+						{
+							$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+						}
+						// Entries if necessary
+						$this->PreparingCaseLogEntries($oOutput);
 						$oOutput->AddHtml('</div>');
 						break;
 
@@ -404,6 +382,45 @@ EOF
 		}
 
 		return $oOutput;
+	}
+
+	protected function PreparingCaseLogEntries(RenderingOutput &$oOutput)
+	{
+		$aEntries = $this->oField->GetEntries();
+		if (count($aEntries) > 0)
+		{
+			$oOutput->AddHtml('<div>');
+			for ($i = 0; $i < count($aEntries); $i++)
+			{
+				$sEntryDate = AttributeDateTime::GetFormat()->Format($aEntries[$i]['date']);
+				$sEntryUser = $aEntries[$i]['user_login'];
+				$sEntryHeader = Dict::Format('UI:CaseLog:Header_Date_UserName', $sEntryDate, $sEntryUser);
+
+				// Only the last 2 entries are expanded by default
+				$sEntryContentExpanded = ($i < 2) ? 'true' : 'false';
+				$sEntryHeaderButtonClass = ($i < 2) ? '' : 'collapsed';
+				$sEntryContentClass = ($i < 2) ? 'in' : '';
+				$sEntryContentId = 'caselog_field_entry_content-' . $this->oField->GetGlobalId() . '-' . $i;
+
+				// Note : We use CKEditor stylesheet to format this
+				$oOutput->AddHtml(
+<<<EOF
+					<div class="caselog_field_entry cke_inner">
+						<div class="caselog_field_entry_header">
+							{$sEntryHeader}
+							<div class="pull-right">
+								<span class="caselog_field_entry_button {$sEntryHeaderButtonClass}" data-toggle="collapse" href="#{$sEntryContentId}" aria-expanded="{$sEntryContentExpanded}" aria-controls="{$sEntryContentId}"></span>
+							</div>
+						</div>
+						<div class="caselog_field_entry_content collapse {$sEntryContentClass}" id="{$sEntryContentId}">
+							{$aEntries[$i]['message_html']}
+						</div>
+					</div>
+EOF
+				);
+			}
+			$oOutput->AddHtml('</div>');
+		}
 	}
 
 }
