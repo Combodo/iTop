@@ -23,6 +23,7 @@ use \Silex\Application;
 use \Symfony\Component\HttpFoundation\Request;
 use \UserRights;
 use \CMDBSource;
+use \IssueLog;
 use \MetaModel;
 use \AttributeDefinition;
 use \AttributeDate;
@@ -249,7 +250,8 @@ class ManageBrickController extends BrickController
 
 			// Restricting query to allowed scope on each classes
 			// Note : Will need to moved the scope restriction on queries elsewhere when we consider grouping on something else than finalclass
-			$oScopeQuery = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $aGroupingAreasValue['value'], UR_ACTION_MODIFY);
+			// Note : We now get view scope instead of edit scope as we allowed users to view/edit objects in the brick regarding their rights
+			$oScopeQuery = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $aGroupingAreasValue['value'], UR_ACTION_READ);
 			$oAreaQuery = ($oScopeQuery !== null) ? $oAreaQuery->Intersect($oScopeQuery) : null;
 
 			$aQueries[$sKey] = $oAreaQuery;
@@ -341,11 +343,29 @@ class ManageBrickController extends BrickController
 					//if ($sItemAttr === $sTitleAttrCode)
 					if ($sItemAttr === $sMainActionAttrCode)
 					{
-						$aActions[] = array(
-							'type' => ManageBrick::ENUM_ACTION_EDIT,
-							'class' => $sCurrentClass,
-							'id' => $oCurrentRow->GetKey()
-						);
+						// Checking if we can edit the object
+						if (SecurityHelper::IsActionAllowed($oApp, UR_ACTION_MODIFY, $sCurrentClass, $oCurrentRow->GetKey()))
+						{
+							$sActionType = ManageBrick::ENUM_ACTION_EDIT;
+						}
+						// - Otherwise, check if view is allowed
+						elseif (SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sCurrentClass, $oCurrentRow->GetKey()))
+						{
+							$sActionType = ManageBrick::ENUM_ACTION_VIEW;
+						}
+						else
+						{
+							$sActionType = null;
+						}
+						// - Then set allowed action
+						if ($sActionType !== null)
+						{
+							$aActions[] = array(
+								'type' => $sActionType,
+								'class' => $sCurrentClass,
+								'id' => $oCurrentRow->GetKey()
+							);
+						}
 					}
 
 					$oAttDef = MetaModel::GetAttributeDef($sCurrentClass, $sItemAttr);
