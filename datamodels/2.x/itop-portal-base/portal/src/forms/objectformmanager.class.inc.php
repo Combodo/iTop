@@ -569,6 +569,12 @@ class ObjectFormManager extends FormManager
 					->SetTransactionId($oForm->GetTransactionId())
 					->SetAllowDelete($this->oApp['combodo.portal.instance.conf']['properties']['attachments']['allow_delete'])
 					->SetObject($this->oObject);
+
+				if ($this->sMode === static::ENUM_MODE_VIEW)
+				{
+					$oField->SetReadOnly(true);
+				}
+
 				$oForm->AddField($oField);
 			}
 		}

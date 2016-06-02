@@ -68,8 +68,12 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 		$oOutput->AddHtml('<div class="attachments_container row">');
 		$this->PrepareExistingFiles($oOutput);
 		$oOutput->Addhtml('</div>');
+		// Removing upload input if in read only
 		// TODO : Add max upload size when itop attachment has been refactored
-		$oOutput->AddHtml('<div class="upload_container row">' . Dict::S('Attachments:AddAttachment') . '<input type="file" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" /><span class="loader glyphicon glyphicon-refresh"></span></div>');
+		if (!$this->oField->GetReadOnly())
+		{
+			$oOutput->AddHtml('<div class="upload_container row">' . Dict::S('Attachments:AddAttachment') . '<input type="file" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" /><span class="loader glyphicon glyphicon-refresh"></span></div>');
+		}
 		// Ending files container
 		$oOutput->AddHtml('</div>');
 		// Ending field container
@@ -226,16 +230,24 @@ EOF
 
 		$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
 		$oSet = new DBObjectSet($oSearch, array(), array('class' => $sObjectClass, 'item_id' => $this->oField->GetObject()->GetKey()));
-		while ($oAttachment = $oSet->Fetch())
-		{
-			$iAttId = $oAttachment->GetKey();
-			$oDoc = $oAttachment->Get('contents');
-			$sFileName = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
-			$sIcon = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/itop-attachments/icons/image.png';
-			$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
-			$sDownloadLink = str_replace('-sAttachmentId-', $iAttId, $this->oField->GetDownloadEndpoint());
 
-			$oOutput->Addhtml(
+		// If in read only and no attachments, we display a short message
+		if ($this->oField->GetReadOnly() && ($oSet->Count() === 0))
+		{
+			$oOutput->AddHtml(Dict::S('Attachments:NoAttachment'));
+		}
+		else
+		{
+			while ($oAttachment = $oSet->Fetch())
+			{
+				$iAttId = $oAttachment->GetKey();
+				$oDoc = $oAttachment->Get('contents');
+				$sFileName = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
+				$sIcon = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/itop-attachments/icons/image.png';
+				$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
+				$sDownloadLink = str_replace('-sAttachmentId-', $iAttId, $this->oField->GetDownloadEndpoint());
+
+				$oOutput->Addhtml(
 <<<EOF
 				<div class="attachment col-xs-6 col-sm-3 col-md-2" id="display_attachment_{$iAttId}">
 					<a data-preview="{$sPreview}" href="{$sDownloadLink}" title="{$sFileName}">
@@ -246,7 +258,8 @@ EOF
 					<input id="btn_remove_{$iAttId}" type="button" class="btn btn-xs btn-danger hidden" value="{$sDeleteBtn}"/>
 				</div>
 EOF
-			);
+				);
+			}
 		}
 	}
 
