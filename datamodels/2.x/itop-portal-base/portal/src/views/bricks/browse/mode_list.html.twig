@@ -54,7 +54,14 @@
 						var drilldownActionIndex;
 						var levelPrimaryAction;
 						var url = '';
+						var rowGlobalId = '';
 						
+						// Preparing global row id
+						for(sLevelId in row)
+						{
+							rowGlobalId += ((rowGlobalId !== '') ? '-' : '') + row[sLevelId].id;
+						}
+						rowGlobalId = levelAltId + '_' + rowGlobalId;
 						// Preparing actions on the cell
 						levelActions = oLevelsProperties[data.level_alias].actions;
 						// - Removing explicit (not default) drilldown action as it has no prupose on that browse mode
@@ -125,8 +132,8 @@
 								// Preparing secondary actions for small screens
 								if(bHasSeveralSecondaryActions)
 								{
-									var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-'+levelAltId+'"></a>');
-									var actionsSSMenuElem = $('<div id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default"></div>');
+									var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-'+rowGlobalId+'"></a>');
+									var actionsSSMenuElem = $('<div id="item-actions-menu-'+rowGlobalId+'" class="item-action-wrapper panel panel-default"></div>');
 									var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
 									actionsSSMenuElem.append(actionsSSMenuContainerElem);
 									actionsElem.append(actionsSSTogglerElem);
