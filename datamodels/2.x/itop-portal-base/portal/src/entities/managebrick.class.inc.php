@@ -38,12 +38,14 @@ class ManageBrick extends PortalBrick
 	const ENUM_ACTION_EDIT = 'edit';
 	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/manage/layout.html.twig';
 	const DEFAULT_OQL = '';
+	const DEFAULT_OPENING_MODE = self::ENUM_ACTION_EDIT;
 	const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_LAZY;
 	const DEFAULT_COUNT_PER_PAGE_LIST = 20;
 	const DEFAULT_ZLIST_FIELDS = 'list';
 
 	static $sRouteName = 'p_manage_brick';
 	protected $sOql;
+	protected $sOpeningMode;
 	protected $aGrouping;
 	protected $aFields;
 
@@ -52,6 +54,7 @@ class ManageBrick extends PortalBrick
 		parent::__construct();
 
 		$this->sOql = static::DEFAULT_OQL;
+		$this->sOpeningMode = static::DEFAULT_OPENING_MODE;
 		$this->aGrouping = array();
 		$this->aFields = array();
 
@@ -67,6 +70,16 @@ class ManageBrick extends PortalBrick
 	public function GetOql()
 	{
 		return $this->sOql;
+	}
+
+	/**
+	 * Returns the brick's objects opening mode (edit or view)
+	 *
+	 * @return string
+	 */
+	public function GetOpeningMode()
+	{
+		return $this->sOpeningMode;
 	}
 
 	/**
@@ -93,10 +106,23 @@ class ManageBrick extends PortalBrick
 	 * Sets the oql of the brick
 	 *
 	 * @param string $sOql
+	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
 	public function SetOql($sOql)
 	{
 		$this->sOql = $sOql;
+		return $this;
+	}
+
+	/**
+	 * Sets the brick's objects opening mode
+	 *
+	 * @param string $sOpeningMode
+	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
+	 */
+	public function SetOpeningMode($sOpeningMode)
+	{
+		$this->sOpeningMode = $sOpeningMode;
 		return $this;
 	}
 
@@ -287,7 +313,7 @@ class ManageBrick extends PortalBrick
 					$sClass = $oBrickSubNode->GetText();
 					if ($sClass === '')
 					{
-						throw new DOMFormatException('BrowseBrick : class tag is empty. Must contain Classname', null, null, $oBrickSubNode);
+						throw new DOMFormatException('ManageBrick : class tag is empty. Must contain Classname', null, null, $oBrickSubNode);
 					}
 
 					$this->SetOql('SELECT ' . $sClass);
@@ -297,10 +323,20 @@ class ManageBrick extends PortalBrick
 					$sOql = $oBrickSubNode->GetText();
 					if ($sOql === '')
 					{
-						throw new DOMFormatException('BrowseBrick : oql tag is empty. Must contain OQL statement', null, null, $oBrickSubNode);
+						throw new DOMFormatException('ManageBrick : oql tag is empty. Must contain OQL statement', null, null, $oBrickSubNode);
 					}
 
 					$this->SetOql($sOql);
+					break;
+
+				case 'opening_mode':
+					$sOpeningMode = $oBrickSubNode->GetText(static::DEFAULT_OPENING_MODE);
+					if (!in_array($sOpeningMode, array(static::ENUM_ACTION_VIEW, static::ENUM_ACTION_EDIT)))
+					{
+						throw new DOMFormatException('ManageBrick : opening_mode tag value must be edit|view ("' . $sOpeningMode . '" given)', null, null, $oBrickSubNode);
+					}
+
+					$this->SetOpeningMode($sOpeningMode);
 					break;
 
 				case 'fields':
