@@ -435,8 +435,8 @@ class ObjectFormManager extends FormManager
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this->oObject), $sAttCode);
 			
-			// TODO : Make AttributeDefinition::MakeFormField() for all kind of fields
-			if (in_array(get_class($oAttDef), array('AttributeString', 'AttributeEmailAddress', 'AttributeText', 'AttributeLongText', 'AttributeCaseLog', 'AttributeHTML', 'AttributeFriendlyName', 'AttributeEnum', 'AttributeExternalKey', 'AttributeExternalField', 'AttributeHierarchicalKey', 'AttributeCustomFields', 'AttributeLinkedSet', 'AttributeLinkedSetIndirect', 'AttributeDate', 'AttributeDateTime', 'AttributeDuration', 'AttributeSubItem')))
+			// Failsafe for AttributeType that would not have MakeFormField and therefore could not be used in a form
+			if (is_callable(get_class($oAttDef) . '::MakeFormField'))
 			{
 				$oField = $oAttDef->MakeFormField($this->oObject);
 				
