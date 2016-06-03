@@ -278,7 +278,7 @@
 						<div class="alert">
 						</div>
 						<div class="text-right">
-							<button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Portal:Button:Close'|dict_s }}</button>
+							<button type="button" class="btn btn-primary" data-dismiss="modal">{{ 'Portal:Button:Close'|dict_s }}</button>
 						</div>
 					</div>
 				</div>
@@ -304,13 +304,14 @@
 				sUrl += (sUrl.split('?')[1] ? '&':'?') + sParamName + '=' + sParamValue;
 				return sUrl;
 			};
-		
+			var contentLoaderTemplate = '<div class="content_loader"><div class="icon glyphicon glyphicon-refresh"></div><div class="message">{{ 'Page:PleaseWait'|dict_s }}</div></div>';
+			
 			$(document).ready(function(){
 				{% block pPageReadyScripts %}
 					// Hack to enable a same modal to load content from different urls
 					$('body').on('hidden.bs.modal', '.modal#modal-for-all', function () {
 						$(this).removeData('bs.modal');
-						$(this).find('.modal-content').html('<div class="content_loader"><div class="icon glyphicon glyphicon-refresh"></div><div class="message">{{ 'Page:PleaseWait'|dict_s }}</div></div>');
+						$(this).find('.modal-content').html(contentLoaderTemplate);
 					});
 					// Hack to enable multiple modals by making sure the .modal-open class is set to the <body> when there is at least one modal open left
 					$('body').on('hidden.bs.modal', function () {
@@ -322,6 +323,16 @@
 					// Hide tooltips when a modal is opening, otherwise it might be overlapping it
 					$('body').on('show.bs.modal', function () {
 						$(this).find('.tooltip.in').tooltip('hide');
+					});
+					// Display a error message on modal if the content could not be loaded.
+					// Note : As of now, we can't display a more detailled message based on the response because Bootstrap doesn't pass response data with the loaded event.
+					$('body').on('loaded.bs.modal', function (oEvent) {
+						if($(oEvent.target).find('.modal-content').html().replace(/[\n\r\t]+/g, '') === contentLoaderTemplate)
+						{
+							$(oEvent.target).find('.modal-content').html($('#modal-for-alert .modal-content').html());
+							$(oEvent.target).find('.modal-content .modal-header .modal-title').text('{{ 'Error:HTTP:500'|dict_s }}');
+							$(oEvent.target).find('.modal-content .modal-body .alert').addClass('alert-danger').text('{{ 'Error:XHR:Fail'|dict_s }}');
+						}
 					});
 				{% endblock %}
 			});
