@@ -327,7 +327,9 @@
 					// Display a error message on modal if the content could not be loaded.
 					// Note : As of now, we can't display a more detailled message based on the response because Bootstrap doesn't pass response data with the loaded event.
 					$('body').on('loaded.bs.modal', function (oEvent) {
-						if($(oEvent.target).find('.modal-content').html().replace(/[\n\r\t]+/g, '') === contentLoaderTemplate)
+						var sModalContent = $(oEvent.target).find('.modal-content').html();
+						
+						if( (sModalContent === '') || (sModalContent.replace(/[\n\r\t]+/g, '') === contentLoaderTemplate) )
 						{
 							$(oEvent.target).find('.modal-content').html($('#modal-for-alert .modal-content').html());
 							$(oEvent.target).find('.modal-content .modal-header .modal-title').text('{{ 'Error:HTTP:500'|dict_s }}');
