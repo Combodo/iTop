@@ -23,6 +23,7 @@ use \Exception;
 use \Silex\Application;
 use \utils;
 use \Dict;
+use \IssueLog;
 use \UserRights;
 use \MetaModel;
 use \CMDBSource;
@@ -377,6 +378,7 @@ class ObjectFormManager extends FormManager
 						}
 						else
 						{
+							IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Flag "' . $sFieldFlag . '" is not valid for field [@data-field-id="' . $sFieldId . '"] in form[@id="' . $this->aFormProperties['id'] . '"]');
 							throw new Exception('Flag "' . $sFieldFlag . '" is not valid for field [@data-field-id="' . $sFieldId . '"] in form[@id="' . $this->aFormProperties['id'] . '"]');
 						}
 					}
@@ -697,6 +699,7 @@ class ObjectFormManager extends FormManager
 				CMDBSource::Query('ROLLBACK');
 				$aData['valid'] = false;
 				$aData['messages']['error'] += array('_main' => array($e->getMessage()));
+				IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Rollback during submit (' . $e->getMessage() . ')');
 			}
 		}
 		else

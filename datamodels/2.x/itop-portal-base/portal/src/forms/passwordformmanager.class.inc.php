@@ -140,6 +140,7 @@ class PasswordFormManager extends FormManager
 			{
 				$aData['valid'] = false;
 				$aData['messages']['error'] += array('_main' => array($e->getMessage()));
+				IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Exception during submit (' . $e->getMessage() . ')');
 			}
 		}
 		else

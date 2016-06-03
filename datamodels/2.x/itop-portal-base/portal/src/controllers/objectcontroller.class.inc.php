@@ -28,6 +28,7 @@ use \Exception;
 use \FileUploadException;
 use \utils;
 use \Dict;
+use \IssueLog;
 use \MetaModel;
 use \DBSearch;
 use \DBObjectSearch;
@@ -70,12 +71,14 @@ class ObjectController extends AbstractController
 		// Checking parameters
 		if ($sObjectClass === '' || $sObjectId === '')
 		{
+			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : sObjectClass and sObjectId expected, "' . $sObjectClass . '" and "' . $sObjectId . '" given.');
 			$oApp->abort(500, Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 		}
 
 		// Checking security layers
 		if (!SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sObjectClass, $sObjectId))
 		{
+			IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' not allowed to read ' . $sObjectClass . '::' . $sObjectId . ' object.');
 			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -84,6 +87,7 @@ class ObjectController extends AbstractController
 		if ($oObject === null)
 		{
 			// We should never be there as the secuirty helper makes sure that the object exists, but just in case.
+			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : Could not load object ' . $sObjectClass . '::' . $sObjectId . '.');
 			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -137,6 +141,7 @@ class ObjectController extends AbstractController
 		// Checking parameters
 		if ($sObjectClass === '' || $sObjectId === '')
 		{
+			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : sObjectClass and sObjectId expected, "' . $sObjectClass . '" and "' . $sObjectId . '" given.');
 			$oApp->abort(500, Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 		}
 		
@@ -145,6 +150,7 @@ class ObjectController extends AbstractController
 		$bAllowWrite = ($sObjectClass === 'Person' && $sObjectId == UserRights::GetContactId());
 		if (!SecurityHelper::IsActionAllowed($oApp, UR_ACTION_MODIFY, $sObjectClass, $sObjectId) && !$bAllowWrite)
 		{
+			IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' not allowed to modify ' . $sObjectClass . '::' . $sObjectId . ' object.');
 			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -153,6 +159,7 @@ class ObjectController extends AbstractController
 		if ($oObject === null)
 		{
 			// We should never be there as the secuirty helper makes sure that the object exists, but just in case.
+			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : Could not load object ' . $sObjectClass . '::' . $sObjectId . '.');
 			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -205,6 +212,7 @@ class ObjectController extends AbstractController
 		// Checking security layers
 		if (!SecurityHelper::IsActionAllowed($oApp, UR_ACTION_CREATE, $sObjectClass))
 		{
+			IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' not allowed to create ' . $sObjectClass . ' object.');
 			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -262,6 +270,7 @@ class ObjectController extends AbstractController
 		// Checking that the factory method is valid
 		if (!is_callable($sMethodName))
 		{
+			IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Invalid factory method "' . $sMethodName . '" used when creating an object.');
 			$oApp->abort(500, 'Invalid factory method "' . $sMethodName . '" used when creating an object');
 		}
 		
@@ -306,6 +315,7 @@ class ObjectController extends AbstractController
 		// Checking parameters
 		if ($sObjectClass === '' || $sObjectId === '' || $sStimulusCode === '')
 		{
+			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : sObjectClass, sObjectId and $sStimulusCode expected, "' . $sObjectClass . '", "' . $sObjectId . '" and "' . $sStimulusCode . '" given.');
 			$oApp->abort(500, Dict::Format('UI:Error:3ParametersMissing', 'class', 'id', 'stimulus'));
 		}
 
@@ -321,6 +331,7 @@ class ObjectController extends AbstractController
 		if ($oObject === null)
 		{
 			// We should never be there as the secuirty helper makes sure that the object exists, but just in case.
+			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : Could not load object ' . $sObjectClass . '::' . $sObjectId . '.');
 			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -475,6 +486,7 @@ class ObjectController extends AbstractController
 			$sFormManagerData = $oRequestParams->get('formmanager_data');
 			if ($sFormManagerClass === null || $sFormManagerData === null)
 			{
+				IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Parameters formmanager_class and formamanager_data must be defined.');
 				$oApp->abort(500, 'Parameters formmanager_class and formmanager_data must be defined.');
 			}
 
@@ -595,6 +607,7 @@ class ObjectController extends AbstractController
 		// Checking parameters
 		if (!isset($aRequestContent['sQuery']))
 		{
+			IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Parameter sQuery missing.');
 			$oApp->abort(500, Dict::Format('UI:Error:ParameterMissing', 'sQuery'));
 		}
 
@@ -604,6 +617,7 @@ class ObjectController extends AbstractController
 		// Checking security layers
 		if (!SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sHostObjectClass, $sHostObjectId))
 		{
+			IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : Could not load object ' . $sHostObjectClass . '::' . $sHostObjectId . '.');
 			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -685,6 +699,7 @@ class ObjectController extends AbstractController
 		// Checking security layers
 		if (!SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sHostObjectClass, $sHostObjectId))
 		{
+			IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' not allowed to read ' . $sHostObjectClass . '::' . $sHostObjectId . ' object.');
 			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -752,6 +767,7 @@ class ObjectController extends AbstractController
 		$aInternalParams = array();
 		if ($oScopeSearch === null)
 		{
+			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' has no scope query for ' . $sTargetObjectClass . ' class.');
 			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -929,6 +945,7 @@ class ObjectController extends AbstractController
 		// Checking security layers
 		if (!SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sHostObjectClass, $sHostObjectId))
 		{
+			IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' not allowed to read ' . $sHostObjectClass . '::' . $sHostObjectId . ' object.');
 			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -984,6 +1001,7 @@ class ObjectController extends AbstractController
 		$oScopeSearch = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ);
 		if ($oScopeSearch === null)
 		{
+			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' has no scope query for ' . $sTargetObjectClass . ' class.');
 			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -1219,6 +1237,7 @@ class ObjectController extends AbstractController
 		$aObjectAttCodes = $oRequest->Get('aObjectAttCodes');
 		if ($sObjectClass === null || $aObjectIds === null || $aObjectAttCodes === null)
 		{
+			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : sObjectClass, sObjectId and aObjectAttCodes expected, "' . $sObjectClass . '", "' . $sObjectId . '" given.');
 			$oApp->abort(500, 'Invalid request data, some informations are missing');
 		}
 

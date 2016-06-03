@@ -133,6 +133,7 @@ class PreferencesFormManager extends FormManager
 				CMDBSource::Query('ROLLBACK');
 				$aData['valid'] = false;
 				$aData['messages']['error'] += array('_main' => array($e->getMessage()));
+				IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Rollback during submit (' . $e->getMessage() . ')');
 			}
 		}
 		else

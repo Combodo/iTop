@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Portal\Controller;
 
 use \Exception;
+use \IssueLog;
 use \MetaModel;
 use \UserRights;
 use \Silex\Application;
@@ -140,6 +141,7 @@ class UserProfileBrickController extends BrickController
 			$sFormManagerData = $oRequestParams->get('formmanager_data');
 			if ($sFormManagerClass === null || $sFormManagerData === null)
 			{
+				IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Parameters formmanager_class and formamanager_data must be defined.');
 				$oApp->abort(500, 'Parameters formmanager_class and formmanager_data must be defined.');
 			}
 
@@ -202,6 +204,7 @@ class UserProfileBrickController extends BrickController
 			$sFormManagerData = $oRequestParams->get('formmanager_data');
 			if ($sFormManagerClass === null || $sFormManagerData === null)
 			{
+				IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Parameters formmanager_class and formamanager_data must be defined.');
 				$oApp->abort(500, 'Parameters formmanager_class and formmanager_data must be defined.');
 			}
 

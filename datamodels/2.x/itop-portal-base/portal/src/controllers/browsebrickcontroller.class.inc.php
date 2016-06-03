@@ -24,6 +24,7 @@ use \Symfony\Component\HttpFoundation\Request;
 use \Exception;
 use \UserRights;
 use \Dict;
+use \IssueLog;
 use \MetaModel;
 use \DBSearch;
 use \DBObjectSearch;
@@ -64,10 +65,12 @@ class BrowseBrickController extends BrickController
 		// Concistency checks
 		if (!in_array($sBrowseMode, array_keys($aBrowseModes)))
 		{
+			IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Unknown browse mode "' . $sBrowseMode . '" for brick #' . $sBrickId . ', availables are ' . implode(' / ', array_keys($aBrowseModes)));
 			$oApp->abort(500, 'Browse brick "' . $sBrickId . '" : Unknown browse mode "' . $sBrowseMode . '", availables are ' . implode(' / ', array_keys($aBrowseModes)));
 		}
 		if (empty($aLevelsProperties))
 		{
+			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : No levels to display for brick #' . $sBrickId . '.');
 			$oApp->abort(500, 'Browse brick "' . $sBrickId . '" : No levels to display.');
 		}
 
@@ -235,6 +238,7 @@ class BrowseBrickController extends BrickController
 
 						if (!$bFoundLevel)
 						{
+							IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Level alias "' . $sLevelAlias . '" is not defined for brick #' . $sBrickId . '.');
 							$oApp->abort(500, 'Browse brick "' . $sBrickId . '" : Level alias "' . $sLevelAlias . '" is not defined for that brick.');
 						}
 					}
