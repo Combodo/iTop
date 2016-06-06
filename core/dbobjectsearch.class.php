@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Define filters for a given class of objects (formerly named "filter") 
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
  
@@ -565,7 +565,7 @@ class DBObjectSearch extends DBSearch
 		// NO: $oFilter = $oFilter->DeepClone();
 		// See also: Trac #639, and self::AddCondition_PointingTo()
 		$aAliasTranslation = array();
-		$res = $this->AddCondition_ReferencedBy_InNameSpace(DBObjectSearch, $sForeignExtKeyAttCode, $this->m_aClasses, $aAliasTranslation);
+		$res = $this->AddCondition_ReferencedBy_InNameSpace($oFilter, $sForeignExtKeyAttCode, $this->m_aClasses, $aAliasTranslation);
 		$this->TransferConditionExpression($oFilter, $aAliasTranslation);
 		return $res;
 	}
