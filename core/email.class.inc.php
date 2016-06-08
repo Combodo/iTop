@@ -57,9 +57,6 @@ class EMail
 	{
 		$this->m_aData = array();
 		$this->m_oMessage = Swift_Message::newInstance();
-
-		$oEncoder = new Swift_Mime_ContentEncoder_PlainContentEncoder('8bit');
-		$this->m_oMessage->setEncoder($oEncoder);
 	}
 
 	/**
@@ -197,6 +194,9 @@ class EMail
 		$oMailer = Swift_Mailer::newInstance($oTransport);
 
 		$aFailedRecipients = array();
+		$this->m_oMessage->setMaxLineLength(0);
+IssueLog::Info(__METHOD__.' '.$this->m_oMessage->getMaxLineLength());
+IssueLog::Info(__METHOD__.' '.$this->m_oMessage->toString());
 		$iSent = $oMailer->send($this->m_oMessage, $aFailedRecipients);
 		if ($iSent === 0)
 		{
