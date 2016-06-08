@@ -94,6 +94,7 @@ foreach($aActionClasses as $sActionClass)
 		$oP->add('<h2>'.MetaModel::GetName($sActionClass).'</h2>');
 	}
 	$oFilter = new DBObjectSearch($sActionClass);
+	$oFilter->AddCondition('finalclass', $sActionClass); // derived classes will be further processed
 	$aParams = array();
 	$oBlock = new DisplayBlock($oFilter, 'list', false, $aParams);
 	$oBlock->Display($oP, 'block_action_'.$iBlock, $aParams);
