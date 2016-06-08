@@ -43,7 +43,14 @@ abstract class FormManager
 	static function FromJSON($sJson)
 	{
 		// Overload in child class when needed
-		$aJson = json_decode($sJson, true);
+		if (is_array($sJson))
+		{
+			$aJson = $sJson;
+		}
+		else
+		{
+			$aJson = json_decode($sJson, true);
+		}
 
 		$oFormManager = new static();
 

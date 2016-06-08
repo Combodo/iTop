@@ -150,6 +150,7 @@
 			"serverSide": true,
 			"ajax": {
 				"url": "{{ app.url_generator.generate('p_object_search_from_attribute', {'sTargetAttCode': sTargetAttCode, 'sHostObjectClass': sHostObjectClass, 'sHostObjectId': sHostObjectId, 'ar_token': sActionRulesToken})|raw }}",
+				"type": "POST",
 				"data": function(d){
 					d.aObjectIdsToIgnore = {{ aSource.aObjectIdsToIgnore|json_encode()|raw }};
 					d.iPageNumber = Math.floor(d.start/d.length) + 1;
@@ -160,6 +161,13 @@
 					{
 						d.sSearchValue = d.search.value;
 					}
+					{% if aSource.sFormManagerClass is not null and aSource.sFormManagerData is not null %}
+						// Retrieving form data 
+						d.formmanager_class = "{{ aSource.sFormManagerClass|escape('js') }}";
+						d.formmanager_data = {{ aSource.sFormManagerData|json_encode()|raw }};
+						// Retrieving values from source form
+						d.current_values = $('[data-form-path="{{aSource.sFormPath}}"][data-field-id="{{aSource.sFieldId}}"]').closest('.portal_form_handler').portal_form_handler('getCurrentValues');
+					{% endif %}
 				}
 			}
 		});

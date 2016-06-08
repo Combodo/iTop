@@ -406,7 +406,6 @@ EOF
 					// - Item count state handler
 					var updateItemCount = function()
 					{
-						console.log(oSelectedItems_{$this->oField->GetGlobalId()});
 						$('#{$sCollapseTogglerId} > .text').text( oTable_{$this->oField->GetGlobalId()}.rows().count() );
 					};
 

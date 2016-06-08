@@ -67,7 +67,14 @@ class ObjectFormManager extends FormManager
 	 */
 	static function FromJSON($sJson)
 	{
-		$aJson = json_decode($sJson, true);
+		if (is_array($sJson))
+		{
+			$aJson = $sJson;
+		}
+		else
+		{
+			$aJson = json_decode($sJson, true);
+		}
 
 		$oFormManager = parent::FromJSON($sJson);
 
@@ -80,7 +87,7 @@ class ObjectFormManager extends FormManager
 
 		if (!isset($aJson['formobject_id']))
 		{
-			$oObject = new $sObjectClass();
+			$oObject = MetaModel::NewObject($sObjectClass);
 		}
 		else
 		{
@@ -104,6 +111,11 @@ class ObjectFormManager extends FormManager
 		// Retrieving form properties
 		if (isset($aJson['formproperties']))
 		{
+			// As empty array are no passed through HTTP, this one is not always present and we have to ensure it is.
+			if (!isset($aJson['formproperties']['fields']))
+			{
+				$aJson['formproperties']['fields'] = array();
+			}
 			$oFormManager->SetFormProperties($aJson['formproperties']);
 		}
 
@@ -258,7 +270,7 @@ class ObjectFormManager extends FormManager
 		$aJson['formmode'] = $this->sMode;
 		$aJson['formactionrulestoken'] = $this->sActionRulesToken;
 		$aJson['formproperties'] = $this->aFormProperties;
-
+		
 		return $aJson;
 	}
 

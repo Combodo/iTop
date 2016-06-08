@@ -184,7 +184,7 @@ EOF
 							me.element.find('#{$this->oField->GetGlobalId()}').val(sItemId);
 							me.element.find('#{$sAutocompleteFieldId}').val(sItemName);
 							oAutocompleteSource_{$this->oField->GetId()}.index.datums[sItemId] = {id: sItemId, name: sItemName};
-
+console.log('callback', oData);
 							// Triggering field change event
 							me.element.closest(".field_set").trigger("field_change", {
 								id: me.element.find('#{$this->oField->GetGlobalId()}').attr("id"),
@@ -208,7 +208,10 @@ EOF
 									settings.type = "POST";
 									settings.contentType = "application/json; charset=UTF-8";
 									settings.data = {
-											sQuery: query
+											sQuery: query,
+											formmanager_class: $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").closest('.portal_form_handler').portal_form_handler('getOptions').formmanager_class,
+											formmanager_data: $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").closest('.portal_form_handler').portal_form_handler('getOptions').formmanager_data,
+											current_values: $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").closest('.portal_form_handler').portal_form_handler('getCurrentValues')
 									}
 									return settings;
 								},
@@ -241,6 +244,10 @@ EOF
 						})
 						.off('typeahead:select').on('typeahead:select', function(oEvent, oSuggestion){
 							$('#{$this->oField->GetGlobalId()}').val(oSuggestion.id);
+							// Triggering set_current_value event
+							var oValue = {};
+							oValue[oSuggestion.id] = oSuggestion.name;
+							$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").trigger('set_current_value', {value: oValue});
 						})
 						.off('typeahead:change').on('typeahead:change', function(oEvent, oSuggestion){
 							// Checking if the value is a correct value. This is necessary because the user could empty the field / remove some chars and typeahead would not update the hidden input
@@ -397,7 +404,10 @@ EOF
 					'{$sEndpoint}',
 					{
 						sFormPath: '{$this->oField->GetFormPath()}',
-						sFieldId: '{$this->oField->GetId()}'
+						sFieldId: '{$this->oField->GetId()}',
+						formmanager_class: $(this).closest('.portal_form_handler').portal_form_handler('getOptions').formmanager_class,
+						formmanager_data: JSON.stringify($(this).closest('.portal_form_handler').portal_form_handler('getOptions').formmanager_data),
+						current_values: $(this).closest('.portal_form_handler').portal_form_handler('getCurrentValues')
 					}
 				);
 				oModalElem.modal('show');

@@ -639,6 +639,29 @@ class ObjectController extends AbstractController
 			$oApp['context_manipulator']->PrepareObject($aActionRules, $oHostObject);
 		}
 
+		// Updating host object with form data / values
+		$sFormManagerClass = $aRequestContent['formmanager_class'];
+		$sFormManagerData = $aRequestContent['formmanager_data'];
+		if ($sFormManagerClass !== null && $sFormManagerData !== null)
+		{
+			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
+			$oFormManager->SetApplication($oApp);
+			$oFormManager->SetObject($oHostObject);
+
+			// Applying action rules if present
+			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== ''))
+			{
+				$aActionRules = ContextManipulatorHelper::DecodeRulesToken($oFormManager->GetActionRulesToken());
+				$oObj = $oFormManager->GetObject();
+				$oApp['context_manipulator']->PrepareObject($aActionRules, $oObj);
+				$oFormManager->SetObject($oObj);
+			}
+			
+			// Updating host object
+			$oFormManager->OnUpdate(array('currentValues' => $aRequestContent['current_values']));
+			$oHostObject = $oFormManager->GetObject();
+		}
+
 		// Building search query
 		// - Retrieving target object class from attcode
 		$oTargetAttDef = MetaModel::GetAttributeDef($sHostObjectClass, $sTargetAttCode);
@@ -649,7 +672,7 @@ class ObjectController extends AbstractController
 		$oSearch->AddConditionExpression(new BinaryExpression(new FieldExpression('friendlyname', $oSearch->GetClassAlias()), 'LIKE', new VariableExpression('ac_query')));
 		// - Intersecting with scope constraints
 		$oSearch = $oSearch->Intersect($oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ));
-
+		
 		// Retrieving results
 		// - Preparing object set
 		$oSet = new DBObjectSet($oSearch, array(), array('this' => $oHostObject, 'ac_query' => '%' . $sQuery . '%'));
@@ -720,6 +743,30 @@ class ObjectController extends AbstractController
 			$oApp['context_manipulator']->PrepareObject($aActionRules, $oHostObject);
 		}
 
+		// Updating host object with form data / values
+		$oRequestParams = $oRequest->request;
+		$sFormManagerClass = $oRequestParams->get('formmanager_class');
+		$sFormManagerData = $oRequestParams->get('formmanager_data');
+		if ($sFormManagerClass !== null && $sFormManagerData !== null)
+		{
+			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
+			$oFormManager->SetApplication($oApp);
+			$oFormManager->SetObject($oHostObject);
+
+			// Applying action rules if present
+			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== ''))
+			{
+				$aActionRules = ContextManipulatorHelper::DecodeRulesToken($oFormManager->GetActionRulesToken());
+				$oObj = $oFormManager->GetObject();
+				$oApp['context_manipulator']->PrepareObject($aActionRules, $oObj);
+				$oFormManager->SetObject($oObj);
+			}
+			
+			// Updating host object
+			$oFormManager->OnUpdate(array('currentValues' => $oRequestParams->get('current_values')));
+			$oHostObject = $oFormManager->GetObject();
+		}
+		
 		// Retrieving request parameters
 		$iPageNumber = ($oRequest->get('iPageNumber') !== null) ? $oRequest->get('iPageNumber') : 1;
 		$iCountPerPage = ($oRequest->get('iCountPerPage') !== null) ? $oRequest->get('iCountPerPage') : static::DEFAULT_COUNT_PER_PAGE_LIST;
@@ -752,7 +799,7 @@ class ObjectController extends AbstractController
 		{
 			throw new Exception('Search from attribute can only apply on AttributeExternalKey or AttributeLinkedSet objects, ' . get_class($oTargetAttDef) . ' given.');
 		}
-
+		
 		// - Retrieving class attribute list
 		$aAttCodes = MetaModel::FlattenZList(MetaModel::GetZListItems($sTargetObjectClass, 'list'));
 		// - Adding friendlyname attribute to the list is not already in it
@@ -895,6 +942,8 @@ class ObjectController extends AbstractController
 					'sFormPath' => $sFormPath,
 					'sFieldId' => $sFieldId,
 					'aObjectIdsToIgnore' => $aObjectIdsToIgnore,
+					'sFormManagerClass' => $sFormManagerClass,
+					'sFormManagerData' => $sFormManagerData
 				)
 			);
 

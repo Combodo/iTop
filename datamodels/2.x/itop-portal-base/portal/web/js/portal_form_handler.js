@@ -322,6 +322,10 @@ $(function()
 		{
 			this._onSubmitClick(oEvent);
 		},
+		getOptions: function()
+		{
+			return this.options;
+		},
 		getAttachmentIds: function()
 		{
 			var me = this;
