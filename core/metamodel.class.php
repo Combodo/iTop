@@ -1619,7 +1619,7 @@ abstract class MetaModel
 			$oExtensionInstance = null;
 			foreach($aInterfaces as $sInterface)
 			{
-				if ($oRefClass->implementsInterface($sInterface))
+				if ($oRefClass->implementsInterface($sInterface) && $oRefClass->isInstantiable())
 				{
 					if (is_null($oExtensionInstance))
 					{
