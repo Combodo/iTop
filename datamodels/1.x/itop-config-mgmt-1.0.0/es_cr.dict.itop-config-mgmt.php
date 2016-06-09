@@ -603,7 +603,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:ApplicationSolution' => 'Soluciones',
+	'Class:ApplicationSolution' => 'Solución Aplicativa',
 	'Class:ApplicationSolution+' => '',
 	'Class:ApplicationSolution/Attribute:description' => 'Descripción',
 	'Class:ApplicationSolution/Attribute:description+' => '',
@@ -714,7 +714,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Device' => 'Dispositivo',
 	'Class:Device+' => '',
-	'Class:Device/Attribute:nwinterface_list' => 'Interfases de Red',
+	'Class:Device/Attribute:nwinterface_list' => 'Interfaces de Red',
 	'Class:Device/Attribute:nwinterface_list+' => '',
 ));
 
@@ -957,7 +957,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 'Class:Subnet/Tab:IPUsage' => 'Uso de Números IPs',
-'Class:Subnet/Tab:IPUsage-explain' => 'Interfases que tienen IP en el rango: <em>%1$s</em> hasta <em>%2$s</em>',
+'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces que tienen IP en el rango: <em>%1$s</em> hasta <em>%2$s</em>',
 'Class:Subnet/Tab:FreeIPs' => 'IPs libres',
 'Class:Subnet/Tab:FreeIPs-count' => 'IPs Libres/sin asignar: %1$s',
 'Class:Subnet/Tab:FreeIPs-explain' => 'Aquí esta un extracto de las 10 direcciones IPs libres',
