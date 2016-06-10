@@ -2143,13 +2143,21 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	* Designed as an action to be called when a stop watch threshold times out
-	* or from within the framework	
-	*/	
+	 * Designed as an action to be called when a stop watch threshold times out
+	 * or from within the framework
+	 * @param $sStimulusCode
+	 * @param bool|false $bDoNotWrite
+	 * @return bool
+	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
+	 */
 	public function ApplyStimulus($sStimulusCode, $bDoNotWrite = false)
 	{
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
-		if (empty($sStateAttCode)) return false;
+		if (empty($sStateAttCode))
+		{
+			throw new CoreException('No lifecycle for the class '.get_class($this));
+		}
 
 		MyHelpers::CheckKeyInArray('object lifecycle stimulus', $sStimulusCode, MetaModel::EnumStimuli(get_class($this)));
 
@@ -2157,7 +2165,7 @@ abstract class DBObject implements iDisplay
 		if (!array_key_exists($sStimulusCode, $aStateTransitions))
 		{
 			// This simulus has no effect in the current state... do nothing
-			return;
+			return true;
 		}
 		$aTransitionDef = $aStateTransitions[$sStimulusCode];
 
@@ -2177,11 +2185,11 @@ abstract class DBObject implements iDisplay
 			{
 				// Old (pre-2.1.0 modules) action definition without any parameter
 				$aActionCallSpec = array($this, $actionHandler);
+				$sActionDesc = get_class($this).'::'.$actionHandler;
 	
 				if (!is_callable($aActionCallSpec))
 				{
 					throw new CoreException("Unable to call action: ".get_class($this)."::$actionHandler");
-					return;
 				}
 				$bRet = call_user_func($aActionCallSpec, $sStimulusCode);
 			}
@@ -2189,6 +2197,7 @@ abstract class DBObject implements iDisplay
 			{
 				// New syntax: 'verb' and typed parameters
 				$sAction = $actionHandler['verb'];
+				$sActionDesc = get_class($this).'::'.$sAction;
 				$aParams = array();
 				foreach($actionHandler['params'] as $aDefinition)
 				{
@@ -2221,7 +2230,12 @@ abstract class DBObject implements iDisplay
 				$bRet = call_user_func_array($aCallSpec, $aParams);
 			}
 			// if one call fails, the whole is considered as failed
-			if (!$bRet) $bSuccess = false;
+			// (in case there is no returned value, null is obtained and means "ok")
+			if ($bRet === false)
+			{
+				IssueLog::Info("Lifecycle action $sActionDesc returned false on object #".$this->GetKey());
+				$bSuccess = false;
+			}
 		}
 		if ($bSuccess)
 		{
