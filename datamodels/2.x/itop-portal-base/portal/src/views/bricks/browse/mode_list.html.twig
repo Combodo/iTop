@@ -32,7 +32,6 @@
 		var getColumnsDefinition = function()
 		{
 			var aColumnsDefinition = [];
-			var iPriorityCounter = 100; // This number is arbiratrory
 			
 			for(sKey in oLevelsProperties)
 			{
@@ -41,7 +40,6 @@
 					"width": "auto",
 					"searchable": true,
 					"sortable": (sDataLoading === '{{ constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL') }}'),
-					"responsivePriority": iPriorityCounter,
 					"title": oLevelsProperties[sKey].title,
 					"defaultContent": "",
 					"type": "html",
@@ -54,14 +52,7 @@
 						var drilldownActionIndex;
 						var levelPrimaryAction;
 						var url = '';
-						var rowGlobalId = '';
 						
-						// Preparing global row id
-						for(sLevelId in row)
-						{
-							rowGlobalId += ((rowGlobalId !== '') ? '-' : '') + row[sLevelId].id;
-						}
-						rowGlobalId = levelAltId + '_' + rowGlobalId;
 						// Preparing actions on the cell
 						levelActions = oLevelsProperties[data.level_alias].actions;
 						// - Removing explicit (not default) drilldown action as it has no prupose on that browse mode
@@ -132,8 +123,8 @@
 								// Preparing secondary actions for small screens
 								if(bHasSeveralSecondaryActions)
 								{
-									var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-'+rowGlobalId+'"></a>');
-									var actionsSSMenuElem = $('<div id="item-actions-menu-'+rowGlobalId+'" class="item-action-wrapper panel panel-default"></div>');
+									var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-'+levelAltId+'"></a>');
+									var actionsSSMenuElem = $('<div id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default"></div>');
 									var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
 									actionsSSMenuElem.append(actionsSSMenuContainerElem);
 									actionsElem.append(actionsSSTogglerElem);
@@ -204,7 +195,6 @@
 							"width": "auto",
 							"searchable": true,
 							"sortable": false,
-							// Responsive priority is not applyed on those columns as we preserve the levels main column
 							"title": oLevelsProperties[sKey].fields[i].label,
 							"defaultContent": "",
 							"type": "html",
@@ -212,8 +202,6 @@
 						});
 					}
 				}
-				
-				iPriorityCounter--;
 			}
 			
 			return aColumnsDefinition;
@@ -275,6 +263,14 @@
 							d.iCountPerPage = d.length;
 							d.columns = null;
 							d.orders = null;
+							{% if sSearchValue is not null %}
+								// Sets default filter value
+								if(d.draw === 1)
+								{
+									$('#brick-content-table_filter input').val('{{ sSearchValue }}');
+									d.search.value = $('#brick-content-table_filter input').val();
+								}
+							{% endif %}
 							if(d.search.value)
 							{
 								d.sSearchValue = d.search.value;
