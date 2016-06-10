@@ -3014,7 +3014,7 @@ class AttributeHTML extends AttributeLongText
 	public function GetSQLColumns($bFullSpec = false)
 	{
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = $this->GetSQLCol();
+		$aColumns[$this->Get('sql')] = $this->GetSQLCol();
 		if ($this->GetOptional('format', null) != null )
 		{
 			// Add the extra column only if the property 'format' is specified for the attribute
@@ -3114,7 +3114,7 @@ class AttributeTemplateHTML extends AttributeText
 	public function GetSQLColumns($bFullSpec = false)
 	{
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = $this->GetSQLCol();
+		$aColumns[$this->Get('sql')] = $this->GetSQLCol();
 		if ($this->GetOptional('format', null) != null )
 		{
 			// Add the extra column only if the property 'format' is specified for the attribute
