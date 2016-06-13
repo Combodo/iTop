@@ -804,7 +804,7 @@ class ObjectController extends AbstractController
 		$aAttCodes = MetaModel::FlattenZList(MetaModel::GetZListItems($sTargetObjectClass, 'list'));
 		// - Adding friendlyname attribute to the list is not already in it
 		$sTitleAttCode = MetaModel::GetFriendlyNameAttributeCode($sTargetObjectClass);
-		if (!in_array($sTitleAttCode, $aAttCodes))
+		if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodes))
 		{
 			$aAttCodes = array_merge(array($sTitleAttCode), $aAttCodes);
 		}
@@ -1042,7 +1042,7 @@ class ObjectController extends AbstractController
 //		$aAttCodes = MetaModel::FlattenZList(MetaModel::GetZListItems($sTargetObjectClass, 'list'));
 //		// - Adding friendlyname attribute to the list is not already in it
 //		$sTitleAttrCode = MetaModel::GetFriendlyNameAttributeCode($sTargetObjectClass);
-//		if (!in_array($sTitleAttrCode, $aAttCodes))
+//		if (($sTitleAttrCode !== null) && !in_array($sTitleAttrCode, $aAttCodes))
 //		{
 //			$aAttCodes = array_merge(array($sTitleAttrCode), $aAttCodes);
 //		}
