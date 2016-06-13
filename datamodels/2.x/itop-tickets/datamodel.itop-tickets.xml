@@ -971,10 +971,10 @@
         <!-- Can be either a fileref or a relative path to the file (To be tested). Takes over env-xxx/branding/portal-logo.png -->
 		<!--<fileref ref="brt_6a2be154b2a62659d3332c513bdad715"  />-->
 		<!--<logo>../images/itop-logo.png</logo>-->
-        <!-- Can be either a fileref or a relative path to the file from /env-xxx -->
+        <!-- Can be either a fileref or a relative path to the file from /env-xxx (eg. itop-portal-base/mystyle.css) -->
         <!-- Available themes must have a unique id. Some ids are loaded in a specific order : bootstrap/portal/custom. Other ids are loaded after them, but their order cannot be predicted -->
         <themes/>
-        <!-- Can be either a fileref or a relative path to the file from /env-xxx -->
+        <!-- Can be either a fileref or a relative path to the file from /env-xxx (eg. itop-portal-base/mytemplate.html.twig) -->
         <!-- Available templates are id="layout|home" -->
         <templates/>
         <!-- An OQL query to determine which TriggerOnPortalUpdate to use within THIS instance of the portal. This is mostly needed to enable different triggers on several portal instances -->
