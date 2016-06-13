@@ -29,7 +29,7 @@ use \Combodo\iTop\Form\Validator\Validator;
 class NotEmptyExtKeyValidator extends Validator
 {
 	const VALIDATOR_NAME = 'notemptyextkey';
-	const DEFAULT_REGEXP = '^[1-9]+$';
+	const DEFAULT_REGEXP = '^[0-9]*[1-9][0-9]*$';
 	const DEFAULT_ERROR_MESSAGE = 'Core:Validator:MustSelectOne';
 
 }
