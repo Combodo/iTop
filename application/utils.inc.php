@@ -1,5 +1,6 @@
 <?php
 use Html2Text\Html2Text;
+use Leafo\ScssPhp\Compiler;
 // Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
@@ -1197,33 +1198,30 @@ class utils
 		$sText = str_replace("\r", "\n", $sText);
 		return str_replace("\n", '<br/>', htmlentities($sText, ENT_QUOTES, 'UTF-8'));
 	}
-
+	
 	/**
 	 * Eventually compiles the SASS (.scss) file into the CSS (.css) file
 	 *
-	 * @param string $sSaasRelPath Relative path to the SCSS file (must have the extension .scss)
+	 * @param string $sSassRelPath Relative path to the SCSS file (must have the extension .scss)
 	 * @return string Relative path to the CSS file (<name>.css)
 	 */
-	static public function GetCSSFromSASS($sSaasRelPath)
+	static public function GetCSSFromSASS($sSassRelPath)
 	{
-		$sSaasPath = APPROOT.$sSaasRelPath;
-		$sCssRelPath = preg_replace('/\.scss$/', '.css', $sSaasRelPath);
+		$sSassPath = APPROOT.$sSassRelPath;
+		$sCssRelPath = preg_replace('/\.scss$/', '.css', $sSassRelPath);
 		$sCssPath = APPROOT.$sCssRelPath;
 		clearstatcache();
-		if (!file_exists($sCssPath) || (is_writable($sCssPath) && (filemtime($sCssPath) < filemtime($sSaasPath))))
+		if (!file_exists($sCssPath) || (is_writable($sCssPath) && (filemtime($sCssPath) < filemtime($sSassPath))))
 		{
-			// Rebuild the CSS file from the Saas file
-			if (file_exists(APPROOT.'lib/sass/sass/SassParser.php'))
-			{
-				require_once(APPROOT.'lib/sass/sass/SassParser.php'); //including Sass libary (Syntactically Awesome Stylesheets)
-				$oParser = new SassParser(array('style'=>'expanded'));
-				$sCss = $oParser->toCss($sSaasPath);
-				file_put_contents($sCssPath, $sCss);
-			}
+			require_once(APPROOT.'lib/scssphp/scss.inc.php');
+			$oScss = new Compiler();
+			$oScss->setImportPaths(array(APPROOT.'/css'));
+			$oScss->setFormatter('Leafo\\ScssPhp\\Formatter\\Expanded');
+			$sCss = $oScss->compile(file_get_contents($sSassPath));
+			file_put_contents($sCssPath, $sCss);
 		}
 		return $sCssRelPath;
 	}
-	
 	
 	static public function GetImageSize($sImageData)
 	{
