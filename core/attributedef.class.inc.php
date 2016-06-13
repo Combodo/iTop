@@ -4729,7 +4729,7 @@ class AttributeExternalField extends AttributeDefinition
 
 		// Note : As of today, this attribute is -by nature- only supported in readonly mode, not edition
 		$sAttCode = $this->GetCode();
-		$sAttCodeFriendlyname = $sAttCode .= '_friendlyname';
+		$sAttCodeFriendlyname = $sAttCode . '_friendlyname';
 		if ($this->IsExternalKey(EXTKEY_ABSOLUTE) && MetaModel::IsValidAttCode(get_class($oObject), $sAttCodeFriendlyname))
 		{
 			$sAttCode = $sAttCodeFriendlyname;
