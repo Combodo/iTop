@@ -1207,6 +1207,12 @@ class utils
 	 */
 	static public function GetCSSFromSASS($sSassRelPath)
 	{
+		// Avoiding compilation if file is already a css file.
+		if (preg_match('/\.css$/', $sSassRelPath))
+		{
+			return $sSassRelPath;
+		}
+
 		$sSassPath = APPROOT.$sSassRelPath;
 		$sCssRelPath = preg_replace('/\.scss$/', '.css', $sSassRelPath);
 		$sCssPath = APPROOT.$sCssRelPath;
