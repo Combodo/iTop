@@ -147,7 +147,7 @@ EOF
 					$oOutput->AddHtml('<div class="row">');
 					// - Rendering autocomplete search
 					$oOutput->AddHtml('<div class="col-xs-' . ( $this->oField->GetHierarchical() ? 9 : 10 ) . ' col-sm-' . ( $this->oField->GetHierarchical() ? 8 : 9 ) . ' col-md-' . ( $this->oField->GetHierarchical() ? 8 : 10 ) . ' col-lg-' . ( $this->oField->GetHierarchical() ? 9 : 10 ) . '">');
-					$oOutput->AddHtml('<input type="text" id="' . $sAutocompleteFieldId . '" name="' . $sAutocompleteFieldId . '" value="')->AddHtml($sFieldValue, true)->AddHtml('" data-target-id="' . $this->oField->GetGlobalId() . ' "class="form-control" />');
+					$oOutput->AddHtml('<input type="text" id="' . $sAutocompleteFieldId . '" name="' . $sAutocompleteFieldId . '" value="')->AddHtml($sFieldValue)->AddHtml('" data-target-id="' . $this->oField->GetGlobalId() . ' "class="form-control" />');
 					$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $this->oField->GetCurrentValue() . '" />');
 					$oOutput->AddHtml('</div>');
 					// - Rendering buttons
