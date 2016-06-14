@@ -2528,6 +2528,7 @@ class SynchroExecution
 				$aArguments['step_count'] = $iStepCount;
 				$iStepCount++;
 
+				set_time_limit(0); // On Linux the time spent outside of the script does not count, but on Windows it does, so let give us time !
 				list ($iRes, $aOut) = utils::ExecITopScript('synchro/priv_sync_chunk.php', $aArguments);
 
 				// Reload the log that has been modified by the processes
@@ -2618,6 +2619,7 @@ class SynchroExecution
 	protected function DoJob1($iMaxReplica = null, $iCurrPos = -1)
 	{
 		$sLimitDate = $this->m_oLastFullLoadStartDate->Format('Y-m-d H:i:s');
+		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 
 		// Get all the replicas that were not seen in the last import and mark them as obsolete
 		$sDeletePolicy = $this->m_oDataSource->Get('delete_policy');
@@ -2646,6 +2648,7 @@ class SynchroExecution
 			$iLastReplicaProcessed = -1;
 			while($oReplica = $oSetToProcess->Fetch())
 			{
+				set_time_limit($iLoopTimeLimit);
 				$iLastReplicaProcessed = $oReplica->GetKey();
 				switch ($sDeletePolicy)
 				{
@@ -2720,7 +2723,8 @@ class SynchroExecution
 	protected function DoJob2($iMaxReplica = null, $iCurrPos = -1)
 	{
 		$sLimitDate = $this->m_oLastFullLoadStartDate->Format('Y-m-d H:i:s');
-
+		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
+		
 		// Get all the replicas that are 'new' or modified or synchronized with a warning
 		//
 		$sSelectToSync  = "SELECT SynchroReplica WHERE id > :curr_pos AND (status = 'new' OR status = 'modified' OR (status = 'synchronized' AND status_last_warning != '')) AND sync_source_id = :source_id AND status_last_seen >= :last_import";
@@ -2742,6 +2746,7 @@ class SynchroExecution
 		$iLastReplicaProcessed = -1;
 		while($oReplica = $oSetToProcess->Fetch())
 		{
+			set_time_limit($iLoopTimeLimit);
 			$iLastReplicaProcessed = $oReplica->GetKey();
 			$oReplica->Synchro($this->m_oDataSource, $this->m_aReconciliationKeys, $this->m_aAttributes, $this->m_oChange, $this->m_oStatLog);
 			$oReplica->DBUpdateTracked($this->m_oChange);			
@@ -2771,6 +2776,8 @@ class SynchroExecution
 	 */
 	protected function DoJob3($iMaxReplica = null, $iCurrPos = -1)
 	{
+		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
+		
 		$sDeletePolicy = $this->m_oDataSource->Get('delete_policy');
 		if ($sDeletePolicy != 'update_then_delete')
 		{
@@ -2815,6 +2822,7 @@ class SynchroExecution
 		$iLastReplicaProcessed = -1;
 		while($oReplica = $oSetToProcess->Fetch())
 		{
+			set_time_limit($iLoopTimeLimit);
 			$iLastReplicaProcessed = $oReplica->GetKey();
 			$this->m_oStatLog->AddTrace("Destination object to be DELETED", $oReplica);
 			$oReplica->DeleteDestObject($this->m_oChange, $this->m_oStatLog);

@@ -491,11 +491,14 @@ try
 	   // Prepare insert columns
 		$sInsertColumns = '`'.implode('`, `', $aInputColumns).'`';
 	
+		$iPreviousTimeLimit = ini_get('max_execution_time');
+		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		$oMutex = new iTopMutex('synchro_import_'.$oDataSource->GetKey());
 		$oMutex->Lock();
 		foreach($aData as $iRow => $aRow)
 	  	{
-	      $sReconciliationCondition = "`primary_key` = ".CMDBSource::Quote($aRow[$iPrimaryKeyCol]);
+	  		set_time_limit($iLoopTimeLimit);
+	      	$sReconciliationCondition = "`primary_key` = ".CMDBSource::Quote($aRow[$iPrimaryKeyCol]);
 			$sSelect = "SELECT COUNT(*) FROM `$sTable` WHERE $sReconciliationCondition"; 
 			$aRes = CMDBSource::QueryToArray($sSelect);
 			$iCount = $aRes[0]['COUNT(*)'];
@@ -632,6 +635,7 @@ try
 			}
 		}
 		$oMutex->Unlock();
+		set_time_limit($iPreviousTimeLimit);
 		
 		if (($sOutput == "summary") || ($sOutput == 'details'))
 		{
