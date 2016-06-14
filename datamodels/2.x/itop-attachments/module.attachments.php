@@ -89,9 +89,27 @@ if (!class_exists('AttachmentInstaller'))
 		 */
 		public static function BeforeDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			// If you want to migrate data from one format to another, do it here
+			if ($sPreviousVersion != '')
+			{
+				// Migrating from a previous version
+				// Check for records where item_id = '', since they are not attached to any object and cannot be migrated to the objkey schema
+				$sTableName = MetaModel::DBGetTable('Attachment');
+				$sCountQuery = "SELECT COUNT(*) FROM `$sTableName` WHERE (`item_id`='' OR `item_id` IS NULL)";
+				$iCount = CMDBSource::QueryToScalar($sCountQuery);
+				if ($iCount > 0)
+				{
+					SetupPage::log_info("Cleanup of orphan attachments that cannot be migrated to the new ObjKey model: $iCount record(s) must be deleted."); 
+					$sRepairQuery = "DELETE FROM `$sTableName` WHERE (`item_id`='' OR `item_id` IS NULL)";
+					$iRet = CMDBSource::Query($sRepairQuery); // Throws an exception in case of error
+					SetupPage::log_info("Cleanup of orphan attachments successfully completed.");
+				}
+				else
+				{
+					SetupPage::log_info("No orphan attachment found.");
+				}
+			}
 		}
-	
+		
 		/**
 		 * Handler called after the creation/update of the database schema
 		 * @param $oConfiguration Config The new configuration of the application
