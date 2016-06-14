@@ -74,8 +74,8 @@ class SpreadsheetBulkExport extends TabularBulkExport
 <<<EOF
 $('#spreadsheet_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
 $('#form_part_spreadsheet_options').on('preview_updated', function() { FormatDatesInPreview('spreadsheet', 'spreadsheet'); });
-$('#preadsheet_date_time_format_default').on('click', function() { FormatDatesInPreview('spreadsheet', 'spreadsheet'); });
-$('#preadsheet_date_time_format_custom').on('click', function() { FormatDatesInPreview('spreadsheet', 'spreadsheet'); });
+$('#spreadsheet_date_time_format_default').on('click', function() { FormatDatesInPreview('spreadsheet', 'spreadsheet'); });
+$('#spreadsheet_date_time_format_custom').on('click', function() { FormatDatesInPreview('spreadsheet', 'spreadsheet'); });
 $('#spreadsheet_custom_date_time_format').on('click', function() { $('#spreadsheet_date_time_format_custom').prop('checked', true); });
 $('#spreadsheet_custom_date_time_format').on('click', function() { $('#spreadsheet_date_time_format_custom').prop('checked', true); FormatDatesInPreview('spreadsheet', 'spreadsheet'); }).on('keyup', function() { FormatDatesInPreview('spreadsheet', 'spreadsheet'); });											
 EOF
