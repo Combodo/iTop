@@ -533,73 +533,81 @@ EOF
 	public static function GetFileIcon($sFileName)
 	{
 		$aPathParts = pathinfo($sFileName);
-		switch($aPathParts['extension'])
+		if (!array_key_exists('extension', $aPathParts))
 		{
-			case 'doc':
-			case 'docx':
-			$sIcon = 'doc.png';
-			break;
-			
-			case 'xls':
-			case 'xlsx':
-			$sIcon = 'xls.png';
-			break;
-			
-			case 'ppt':
-			case 'pptx':
-			$sIcon = 'ppt.png';
-			break;
-			
-			case 'pdf':
-			$sIcon = 'pdf.png';
-			break;
-			
-			case 'txt':
-			case 'text':
-			$sIcon = 'txt.png';
-			break;
-			
-			case 'rtf':
-			$sIcon = 'rtf.png';
-			break;
-			
-			case 'odt':
-			$sIcon = 'odt.png';
-			break;
-			
-			case 'ods':
-			$sIcon = 'ods.png';
-			break;
-			
-			case 'odp':
-			$sIcon = 'odp.png';
-			break;
-			
-			case 'html':
-			case 'htm':
-			$sIcon = 'html.png';
-			break;
-			
-			case 'png':
-			case 'gif':
-			case 'jpg':
-			case 'jpeg':
-			case 'tiff':
-			case 'tif':
-			case 'bmp':
-			$sIcon = 'image.png';
-			
-			break;
-			case 'zip':
-			case 'gz':
-			case 'tgz':
-			case 'rar':
-			$sIcon = 'zip.png';
-			break;
-
-			default:
+			// No extension: use the default icon
 			$sIcon = 'document.png';
-			break;
+		}
+		else 
+		{
+			switch($aPathParts['extension'])
+			{
+				case 'doc':
+				case 'docx':
+				$sIcon = 'doc.png';
+				break;
+				
+				case 'xls':
+				case 'xlsx':
+				$sIcon = 'xls.png';
+				break;
+				
+				case 'ppt':
+				case 'pptx':
+				$sIcon = 'ppt.png';
+				break;
+				
+				case 'pdf':
+				$sIcon = 'pdf.png';
+				break;
+				
+				case 'txt':
+				case 'text':
+				$sIcon = 'txt.png';
+				break;
+				
+				case 'rtf':
+				$sIcon = 'rtf.png';
+				break;
+				
+				case 'odt':
+				$sIcon = 'odt.png';
+				break;
+				
+				case 'ods':
+				$sIcon = 'ods.png';
+				break;
+				
+				case 'odp':
+				$sIcon = 'odp.png';
+				break;
+				
+				case 'html':
+				case 'htm':
+				$sIcon = 'html.png';
+				break;
+				
+				case 'png':
+				case 'gif':
+				case 'jpg':
+				case 'jpeg':
+				case 'tiff':
+				case 'tif':
+				case 'bmp':
+				$sIcon = 'image.png';
+				
+				break;
+				case 'zip':
+				case 'gz':
+				case 'tgz':
+				case 'rar':
+				$sIcon = 'zip.png';
+				break;
+	
+				default:
+				$sIcon = 'document.png';
+				break;
+			}
 		}
 		
 		return 'env-'.utils::GetCurrentEnvironment()."/itop-attachments/icons/$sIcon";
