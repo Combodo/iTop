@@ -1231,7 +1231,11 @@ class utils
 			$oScss = new Compiler();
 			$oScss->setImportPaths($aImportPaths);
 			$oScss->setFormatter('Leafo\\ScssPhp\\Formatter\\Expanded');
+			// Temporary disabling max exec time while compiling
+			$iCurrentMaxExecTime = (int) ini_get('max_execution_time');
+			set_time_limit(0);
 			$sCss = $oScss->compile(file_get_contents($sSassPath));
+			set_time_limit($iCurrentMaxExecTime);
 			file_put_contents($sCssPath, $sCss);
 		}
 		return $sCssRelPath;
