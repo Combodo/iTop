@@ -3448,6 +3448,11 @@ class AttributeMetaEnum extends AttributeEnum
 		return array('allowed_values', 'sql', 'default_value', 'mapping');
 	}
 
+	public function IsNullAllowed()
+	{
+		return false; // Well... this actually depends on the mapping
+	}
+
 	public function IsWritable()
 	{
 		return false;
