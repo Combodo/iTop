@@ -27,6 +27,7 @@ use \Symfony\Component\HttpFoundation\Request;
 use \Twig_SimpleFilter;
 use \Dict;
 use \utils;
+use \IssueLog;
 use \UserRights;
 use \DOMFormatException;
 use \ModuleDesign;
@@ -253,6 +254,8 @@ class ApplicationHelper
 						break;
 				}
 
+				IssueLog::Error($aData['error_title'] . ' : ' . $aData['error_message']);
+
 				if ($oApp['request']->isXmlHttpRequest())
 				{
 					$oResponse = $oApp->json($aData, $code);
@@ -292,8 +295,8 @@ class ApplicationHelper
 					'name' => 'Page:DefaultTitle',
 					'logo' => (file_exists(MODULESROOT . 'branding/portal-logo.png')) ? utils::GetAbsoluteUrlModulesRoot() . 'branding/portal-logo.png' : '../images/logo-itop-dark-bg.svg',
 					'themes' => array(
-						'bootstrap' => $oApp['combodo.portal.base.absolute_url'] . 'css/bootstrap-theme.min.css',
-						'portal' => $oApp['combodo.portal.base.absolute_url'] . 'css/portal.css',
+						'bootstrap' => 'itop-portal-base/portal/web/css/bootstrap-theme-combodo.scss',
+						'portal' => 'itop-portal-base/portal/web/css/portal.scss',
 						'others' => array(),
 					),
 					'templates' => array(
@@ -341,10 +344,10 @@ class ApplicationHelper
 										case 'bootstrap':
 										case 'portal':
 										case 'custom':
-											$aPortalConf['properties']['themes'][$sNodeId] = $oApp['combodo.portal.instance.absolute_url'] . '' . $oSubNode->GetText(null);
+											$aPortalConf['properties']['themes'][$sNodeId] = $oSubNode->GetText(null);
 											break;
 										default:
-											$aPortalConf['properties']['themes']['others'][] = $oApp['combodo.portal.instance.absolute_url'] . '' . $oSubNode->GetText(null);
+											$aPortalConf['properties']['themes']['others'][] = $oSubNode->GetText(null);
 											break;
 									}
 									break;
@@ -400,6 +403,24 @@ class ApplicationHelper
 			static::LoadScopesConfiguration($oApp, $oDesign);
 			// - Action rules
 			static::LoadActionRulesConfiguration($oApp, $oDesign);
+			// - Generating CSS files
+			$aImportPaths = array($oApp['combodo.portal.base.absolute_path'] . 'css/');
+			foreach ($aPortalConf['properties']['themes'] as $key => $value)
+			{
+				if (!is_array($value))
+				{
+					$aPortalConf['properties']['themes'][$key] = $oApp['combodo.absolute_url'] . utils::GetCSSFromSASS('env-' . utils::GetCurrentEnvironment() . '/' . $value, $aImportPaths);
+				}
+				else
+				{
+					$aValues = array();
+					foreach ($value as $sSubvalue)
+					{
+						$aValues[] = $oApp['combodo.absolute_url'] . utils::GetCSSFromSASS('env-' . utils::GetCurrentEnvironment() . '/' . $sSubvalue, $aImportPaths);
+					}
+					$aPortalConf['properties']['themes'][$key] = $aValues;
+				}
+			}
 
 			$oApp['combodo.portal.instance.conf'] = $aPortalConf;
 		}

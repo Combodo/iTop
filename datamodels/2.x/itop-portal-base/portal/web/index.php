@@ -64,13 +64,14 @@ $oApp->register(new Combodo\iTop\Portal\Provider\ScopeValidatorServiceProvider()
 	'scope_validator.instance_name' => PORTAL_ID
 ));
 $oApp->register(new Silex\Provider\TwigServiceProvider(), array(
-	'twig.path' => APPROOT . 'env-' . utils::GetCurrentEnvironment()
+	'twig.path' => MODULESROOT
 ));
 
 // Configuring Silex application
 $oApp['debug'] = $bDebug;
 $oApp['combodo.absolute_url'] = utils::GetAbsoluteUrlAppRoot();
 $oApp['combodo.portal.base.absolute_url'] = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/web/';
+$oApp['combodo.portal.base.absolute_path'] = MODULESROOT . '/itop-portal-base/portal/web/';
 $oApp['combodo.portal.instance.absolute_url'] = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/' . PORTAL_MODULE_ID . '/';
 $oApp['combodo.portal.instance.id'] = PORTAL_MODULE_ID;
 $oApp['combodo.portal.instance.conf'] = array();

@@ -1203,15 +1203,23 @@ class utils
 	 * Eventually compiles the SASS (.scss) file into the CSS (.css) file
 	 *
 	 * @param string $sSassRelPath Relative path to the SCSS file (must have the extension .scss)
+	 * @param array $aImportPaths Array of absolute paths to load imports from
 	 * @return string Relative path to the CSS file (<name>.css)
 	 */
-	static public function GetCSSFromSASS($sSassRelPath)
+	static public function GetCSSFromSASS($sSassRelPath, $aImportPaths = null)
 	{
 		// Avoiding compilation if file is already a css file.
 		if (preg_match('/\.css$/', $sSassRelPath))
 		{
 			return $sSassRelPath;
 		}
+
+		// Setting import paths
+		if ($aImportPaths === null)
+		{
+			$aImportPaths = array();
+		}
+		$aImportPaths[] = APPROOT . '/css';
 
 		$sSassPath = APPROOT.$sSassRelPath;
 		$sCssRelPath = preg_replace('/\.scss$/', '.css', $sSassRelPath);
@@ -1221,7 +1229,7 @@ class utils
 		{
 			require_once(APPROOT.'lib/scssphp/scss.inc.php');
 			$oScss = new Compiler();
-			$oScss->setImportPaths(array(APPROOT.'/css'));
+			$oScss->setImportPaths($aImportPaths);
 			$oScss->setFormatter('Leafo\\ScssPhp\\Formatter\\Expanded');
 			$sCss = $oScss->compile(file_get_contents($sSassPath));
 			file_put_contents($sCssPath, $sCss);
