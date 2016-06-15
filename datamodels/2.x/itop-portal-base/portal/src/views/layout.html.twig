@@ -301,6 +301,10 @@
 	
 	{% block pPageLiveScripts %}
 		<script type="text/javascript">
+			var GetAbsoluteUrlAppRoot = function()
+			{
+				return '{{ app['combodo.absolute_url'] }}';
+			};
 			var addParameterToUrl = function(sUrl, sParamName, sParamValue)
 			{
 				sUrl += (sUrl.split('?')[1] ? '&':'?') + sParamName + '=' + sParamValue;
