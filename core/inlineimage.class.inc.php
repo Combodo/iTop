@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-define('INLINEIMAGE_DOWNLOAD_URL', 'pages/ajax.render.php?operation=download_inlineimage&id=');
+define('INLINEIMAGE_DOWNLOAD_URL', 'pages/ajax.document.php?operation=download_inlineimage&id=');
 
 /**
  * Persistent classes (internal): store images referenced inside HTML formatted text fields

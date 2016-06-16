@@ -772,22 +772,7 @@ try
 		$sField = utils::ReadParam('field', '');
 		if (!empty($sClass) && ($sClass != 'InlineImage') && !empty($id) && !empty($sField))
 		{
-			DownloadDocument($oPage, $sClass, $id, $sField, 'inline');
-		}
-		break;
-		
-		case 'download_document':
-		$id = utils::ReadParam('id', '');
-		$sField = utils::ReadParam('field', '');
-		$iCacheSec = (int) utils::ReadParam('cache', 0);
-		if (!empty($sClass) && ($sClass != 'InlineImage') && !empty($id) && !empty($sField))
-		{
-			DownloadDocument($oPage, $sClass, $id, $sField, 'attachment');
-			if ($iCacheSec > 0)
-			{
-				$oPage->add_header("Expires: "); // Reset the value set in ajax_page
-				$oPage->add_header("Cache-Control: no-transform,public,max-age=$iCacheSec,s-maxage=$iCacheSec");
-			}
+			ormDocument::DownloadDocument($oPage, $sClass, $id, $sField, 'inline');
 		}
 		break;
 		
@@ -2433,21 +2418,6 @@ EOF
 			$oPage->add("</fieldset></div>");
 			break;		
 	
-		case 'download_inlineimage':
-			$id = utils::ReadParam('id', '');
-			$sSecret = utils::ReadParam('s', '');
-			$iCacheSec = (int) utils::ReadParam('cache', 0);
-			if (!empty($id) && !empty($sSecret))
-			{
-				DownloadDocument($oPage, 'InlineImage', $id, 'contents', 'attachment', 'secret', $sSecret);
-				if ($iCacheSec > 0)
-				{
-					$oPage->add_header("Expires: "); // Reset the value set in ajax_page
-					$oPage->add_header("Cache-Control: no-transform,public,max-age=$iCacheSec,s-maxage=$iCacheSec");
-				}
-			}
-			break;
-
 		case 'custom_fields_update':
 			$oPage->SetContentType('application/json');
 			$sAttCode = utils::ReadParam('attcode', '');
@@ -2489,47 +2459,3 @@ catch (Exception $e)
 	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }
-
-
-
-/**
- * Downloads a document to the browser, either as 'inline' or 'attachment'
- *  
- * @param WebPage $oPage The web page for the output
- * @param string $sClass Class name of the object
- * @param mixed $id Identifier of the object
- * @param string $sAttCode Name of the attribute containing the document to download
- * @param string $sContentDisposition Either 'inline' or 'attachment'
- * @param string $sSecretField The attcode of the field containing a "secret" to be provided in order to retrieve the file
- * @param string $sSecretValue The value of the secret to be compared with the value of the attribute $sSecretField
- * @return none
- */   
-function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisposition = 'attachment', $sSecretField = null, $sSecretValue = null)
-{
-	try
-	{
-		$oObj = MetaModel::GetObject($sClass, $id, false, false);
-		if (!is_object($oObj))
-		{
-			throw new Exception("Invalid id ($id) for class '$sClass' - the object does not exist or you are not allowed to view it");
-		}
-		if (($sSecretField != null) && ($oObj->Get($sSecretField) != $sSecretValue))
-		{
-			usleep(200);
-			throw new Exception("Invalid secret for class '$sClass' - the object does not exist or you are not allowed to view it");
-		}
-		$oDocument = $oObj->Get($sAttCode);
-		if (is_object($oDocument))
-		{
-			$oPage->TrashUnexpectedOutput();
-			$oPage->SetContentType($oDocument->GetMimeType());
-			$oPage->SetContentDisposition($sContentDisposition,$oDocument->GetFileName());
-			$oPage->add($oDocument->GetData());
-		}
-	}
-	catch(Exception $e)
-	{
-		$oPage->p($e->getMessage());
-	}
-}
-?>

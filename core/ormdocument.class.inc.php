@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * ormDocument
  * encapsulate the behavior of a binary data set that will be stored an attribute of class AttributeBlob 
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -126,7 +126,7 @@ class ormDocument
 	{
 		// Compute a signature to reset the cache anytime the data changes (this is acceptable if used only with icon files)
 		$sSignature = md5($this->GetData());
-		return utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
+		return utils::GetAbsoluteUrlAppRoot()."pages/ajax.document.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
 	}
 
 	
@@ -144,5 +144,45 @@ class ormDocument
 		}
 		return $bRet;
 	}
+
+	/**
+	 * Downloads a document to the browser, either as 'inline' or 'attachment'
+	 *
+	 * @param WebPage $oPage The web page for the output
+	 * @param string $sClass Class name of the object
+	 * @param mixed $id Identifier of the object
+	 * @param string $sAttCode Name of the attribute containing the document to download
+	 * @param string $sContentDisposition Either 'inline' or 'attachment'
+	 * @param string $sSecretField The attcode of the field containing a "secret" to be provided in order to retrieve the file
+	 * @param string $sSecretValue The value of the secret to be compared with the value of the attribute $sSecretField
+	 * @return none
+	 */
+	public static function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisposition = 'attachment', $sSecretField = null, $sSecretValue = null)
+	{
+		try
+		{
+			$oObj = MetaModel::GetObject($sClass, $id, false, false);
+			if (!is_object($oObj))
+			{
+				throw new Exception("Invalid id ($id) for class '$sClass' - the object does not exist or you are not allowed to view it");
+			}
+			if (($sSecretField != null) && ($oObj->Get($sSecretField) != $sSecretValue))
+			{
+				usleep(200);
+				throw new Exception("Invalid secret for class '$sClass' - the object does not exist or you are not allowed to view it");
+			}
+			$oDocument = $oObj->Get($sAttCode);
+			if (is_object($oDocument))
+			{
+				$oPage->TrashUnexpectedOutput();
+				$oPage->SetContentType($oDocument->GetMimeType());
+				//$oPage->SetContentDisposition($sContentDisposition,$oDocument->GetFileName());
+				$oPage->add($oDocument->GetData());
+			}
+		}
+		catch(Exception $e)
+		{
+			$oPage->p($e->getMessage());
+		}
+	}
 }
-?>

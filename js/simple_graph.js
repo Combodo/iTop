@@ -857,7 +857,7 @@ $(function()
 				jTab.find('span').html(sTabText+' <img style="vertical-align:bottom" src="../images/indicator.gif">');
 			}
 			$.post(sUrl, oParams, function(data) {
-				var sDownloadLink = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=download_document&class=Attachment&field=contents&id='+data.att_id;
+				var sDownloadLink = GetAbsoluteUrlAppRoot()+'pages/ajax.document.php?operation=download_document&class=Attachment&field=contents&id='+data.att_id;
 				var sIcon = GetAbsoluteUrlModulesRoot()+'itop-attachments/icons/pdf.png';
 				if (jTab != null)
 				{
