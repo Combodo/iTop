@@ -44,9 +44,9 @@
 		<link href="{{ app['combodo.portal.base.absolute_url'] }}lib/typeahead/css/typeaheadjs.bootstrap.css" rel="stylesheet">
 		<link href="{{ app['combodo.absolute_url'] }}css/magnific-popup.css" rel="stylesheet">
 		{# - Bootstrap theme #}
-		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.bootstrap }}" rel="stylesheet">
+		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.bootstrap }}" rel="stylesheet" id="css_bootstrap_theme">
 		{# - Portal adjustments for BS theme #}
-		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.portal }}" rel="stylesheet">
+		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.portal }}" rel="stylesheet" id="css_portal">
 		{# Custom CSS that is supposed to do adjustments to the portal #}
 		{% if app['combodo.portal.instance.conf'].properties.themes.custom is defined %}
 			<link href="{{ app['combodo.portal.instance.conf'].properties.themes.custom }}" rel="stylesheet">

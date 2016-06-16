@@ -3457,9 +3457,6 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
 		color: $white;
 		border-bottom: 1px solid #7D7D7D;
 	}
-	.navbar-nav>li.active {
-		box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.8) inset;
-	}
 	.navbar-nav>li.active:after{
 		content: " ";
 		position: absolute;
@@ -3471,6 +3468,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
 	}
 	.navbar-nav>li.active>a{
 		margin-top: -1px; /* To mask border from previous li item */
+		box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.8) inset;
 	}
     .navbar-nav>li>a {
         padding-top: 11px;
