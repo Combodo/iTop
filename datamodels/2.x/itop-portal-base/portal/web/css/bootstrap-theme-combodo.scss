@@ -2097,28 +2097,32 @@ fieldset[disabled] .btn {
     opacity: 0.65;
     filter: alpha(opacity=65);
     -webkit-box-shadow: none;
-    box-shadow: none
+    box-shadow: none;
 }
 a.btn.disabled,
 fieldset[disabled] a.btn {
-    pointer-events: none
+    pointer-events: none;
 }
 .btn-default {
     color: $btn-default-color;
     background-color: $btn-default-bg;
-    border: $btn-default-border
+    border: $btn-default-border;
 }
 .btn-default:focus,
 .btn-default.focus {
-	box-shadow: $btn-bg-shadow;
+    color: $btn-default-color;
+	background-color: $btn-default-bg-hover;
+    border: $btn-default-border;
 }
 .btn-default:hover {
-    box-shadow: $btn-bg-shadow;
+	background-color: $btn-default-bg-hover;
+    border: $btn-default-border;
 }
 .btn-default:active,
 .btn-default.active,
 .open>.dropdown-toggle.btn-default {
-    box-shadow: $btn-bg-shadow;
+	background-color: $btn-default-bg-hover;
+    border: $btn-default-border;
 }
 .btn-default:active:hover,
 .btn-default.active:hover,
@@ -2129,12 +2133,14 @@ fieldset[disabled] a.btn {
 .btn-default:active.focus,
 .btn-default.active.focus,
 .open>.dropdown-toggle.btn-default.focus {
-    box-shadow: $btn-bg-shadow;
+	background-color: $btn-default-bg-hover;
+    border: $btn-default-border;
 }
 .btn-default:active,
 .btn-default.active,
 .open>.dropdown-toggle.btn-default {
-    background-image: none
+	background-color: $btn-default-bg-hover;
+    border: $btn-default-border;
 }
 .btn-default.disabled,
 .btn-default[disabled],
@@ -2164,19 +2170,22 @@ fieldset[disabled] .btn-default.active {
 .btn-primary {
     color: $btn-primary-color;
     background-color: $btn-primary-bg;
-    border: $btn-primary-border
+    border: $btn-primary-border;
 }
 .btn-primary:focus,
 .btn-primary.focus {
-    box-shadow: $btn-bg-shadow;
+	background-color: $btn-primary-bg-hover;
+    border: $btn-primary-border;
 }
 .btn-primary:hover {
-    box-shadow: $btn-bg-shadow;
+	background-color: $btn-primary-bg-hover;
+    border: $btn-primary-border;
 }
 .btn-primary:active,
 .btn-primary.active,
 .open>.dropdown-toggle.btn-primary {
-    box-shadow: $btn-bg-shadow;
+	background-color: $btn-primary-bg-hover;
+    border: $btn-primary-border;
 }
 .btn-primary:active:hover,
 .btn-primary.active:hover,
@@ -2187,12 +2196,14 @@ fieldset[disabled] .btn-default.active {
 .btn-primary:active.focus,
 .btn-primary.active.focus,
 .open>.dropdown-toggle.btn-primary.focus {
-    box-shadow: $btn-bg-shadow;
+	background-color: $btn-primary-bg-hover;
+    border: $btn-primary-border;
 }
 .btn-primary:active,
 .btn-primary.active,
 .open>.dropdown-toggle.btn-primary {
-    background-image: none
+	background-color: $btn-primary-bg-hover;
+    border: $btn-primary-border;
 }
 .btn-primary.disabled,
 .btn-primary[disabled],
@@ -2226,15 +2237,18 @@ fieldset[disabled] .btn-primary.active {
 }
 .btn-success:focus,
 .btn-success.focus {
-    box-shadow: $btn-bg-shadow;
+    background-color: $btn-success-bg-hover;
+    border: $btn-success-border
 }
 .btn-success:hover {
-    box-shadow: $btn-bg-shadow;
+    background-color: $btn-success-bg-hover;
+    border: $btn-success-border
 }
 .btn-success:active,
 .btn-success.active,
 .open>.dropdown-toggle.btn-success {
-    box-shadow: $btn-bg-shadow;
+    background-color: $btn-success-bg-hover;
+    border: $btn-success-border
 }
 .btn-success:active:hover,
 .btn-success.active:hover,
@@ -2245,12 +2259,14 @@ fieldset[disabled] .btn-primary.active {
 .btn-success:active.focus,
 .btn-success.active.focus,
 .open>.dropdown-toggle.btn-success.focus {
-    box-shadow: $btn-bg-shadow;
+    background-color: $btn-success-bg-hover;
+    border: $btn-success-border
 }
 .btn-success:active,
 .btn-success.active,
 .open>.dropdown-toggle.btn-success {
-    background-image: none
+    background-color: $btn-success-bg-hover;
+    border: $btn-success-border
 }
 .btn-success.disabled,
 .btn-success[disabled],
@@ -2274,8 +2290,8 @@ fieldset[disabled] .btn-success.active {
     border-color: #469408
 }
 .btn-success .badge {
-    color: #469408;
-    background-color: #ffffff
+    color: $btn-success-color;
+    background-color: $btn-success-bg;
 }
 .btn-info {
     color: $btn-info-color;
@@ -2284,15 +2300,18 @@ fieldset[disabled] .btn-success.active {
 }
 .btn-info:focus,
 .btn-info.focus {
-    box-shadow: $btn-bg-shadow
+    background-color: $btn-info-bg-hover;
+    border: $btn-info-border
 }
 .btn-info:hover {
-    box-shadow: $btn-bg-shadow
+    background-color: $btn-info-bg-hover;
+    border: $btn-info-border
 }
 .btn-info:active,
 .btn-info.active,
 .open>.dropdown-toggle.btn-info {
-    box-shadow: $btn-bg-shadow
+    background-color: $btn-info-bg-hover;
+    border: $btn-info-border
 }
 .btn-info:active:hover,
 .btn-info.active:hover,
@@ -2303,12 +2322,14 @@ fieldset[disabled] .btn-success.active {
 .btn-info:active.focus,
 .btn-info.active.focus,
 .open>.dropdown-toggle.btn-info.focus {
-    box-shadow: $btn-bg-shadow
+    background-color: $btn-info-bg-hover;
+    border: $btn-info-border
 }
 .btn-info:active,
 .btn-info.active,
 .open>.dropdown-toggle.btn-info {
-    background-image: none
+    background-color: $btn-info-bg-hover;
+    border: $btn-info-border
 }
 .btn-info.disabled,
 .btn-info[disabled],
@@ -2332,8 +2353,8 @@ fieldset[disabled] .btn-info.active {
     border-color: #029acf
 }
 .btn-info .badge {
-    color: #029acf;
-    background-color: #ffffff
+    color: $btn-info-color;
+    background-color: $btn-info-bg;
 }
 .btn-warning {
     color: $btn-warning-color;
@@ -2342,15 +2363,18 @@ fieldset[disabled] .btn-info.active {
 }
 .btn-warning:focus,
 .btn-warning.focus {
-    box-shadow: $btn-bg-shadow;
+    background-color: $btn-warning-bg-hover;
+    border: $btn-warning-border;
 }
 .btn-warning:hover {
-    box-shadow: $btn-bg-shadow;
+    background-color: $btn-warning-bg-hover;
+    border: $btn-warning-border;
 }
 .btn-warning:active,
 .btn-warning.active,
 .open>.dropdown-toggle.btn-warning {
-    box-shadow: $btn-bg-shadow;
+    background-color: $btn-warning-bg-hover;
+    border: $btn-warning-border;
 }
 .btn-warning:active:hover,
 .btn-warning.active:hover,
@@ -2361,12 +2385,14 @@ fieldset[disabled] .btn-info.active {
 .btn-warning:active.focus,
 .btn-warning.active.focus,
 .open>.dropdown-toggle.btn-warning.focus {
-    box-shadow: $btn-bg-shadow;
+    background-color: $btn-warning-bg-hover;
+    border: $btn-warning-border;
 }
 .btn-warning:active,
 .btn-warning.active,
 .open>.dropdown-toggle.btn-warning {
-    background-image: none
+    background-color: $btn-warning-bg-hover;
+    border: $btn-warning-border;
 }
 .btn-warning.disabled,
 .btn-warning[disabled],
@@ -2390,25 +2416,28 @@ fieldset[disabled] .btn-warning.active {
     border-color: #9b479f
 }
 .btn-warning .badge {
-    color: #9b479f;
-    background-color: #ffffff
+    color: $btn-warning-color;
+    background-color: $btn-warning-bg;
 }
 .btn-danger {
     color: $btn-danger-color;
     background-color: $btn-danger-bg;
-    border: $btn-danger-border
+    border: $btn-danger-border;
 }
 .btn-danger:focus,
 .btn-danger.focus {
-    box-shadow: $btn-bg-shadow;
+    background-color: $btn-danger-bg-hover;
+    border: $btn-danger-border;
 }
 .btn-danger:hover {
-    box-shadow: $btn-bg-shadow;
+    background-color: $btn-danger-bg-hover;
+    border: $btn-danger-border;
 }
 .btn-danger:active,
 .btn-danger.active,
 .open>.dropdown-toggle.btn-danger {
-    box-shadow: $btn-bg-shadow;
+    background-color: $btn-danger-bg-hover;
+    border: $btn-danger-border;
 }
 .btn-danger:active:hover,
 .btn-danger.active:hover,
@@ -2419,12 +2448,14 @@ fieldset[disabled] .btn-warning.active {
 .btn-danger:active.focus,
 .btn-danger.active.focus,
 .open>.dropdown-toggle.btn-danger.focus {
-    box-shadow: $btn-bg-shadow;
+    background-color: $btn-danger-bg-hover;
+    border: $btn-danger-border;
 }
 .btn-danger:active,
 .btn-danger.active,
 .open>.dropdown-toggle.btn-danger {
-    background-image: none
+    background-color: $btn-danger-bg-hover;
+    border: $btn-danger-border;
 }
 .btn-danger.disabled,
 .btn-danger[disabled],
@@ -2448,8 +2479,8 @@ fieldset[disabled] .btn-danger.active {
     border-color: #d9831f
 }
 .btn-danger .badge {
-    color: #d9831f;
-    background-color: #ffffff
+    color: $btn-danger-color;
+    background-color: $btn-danger-bg;
 }
 .btn-link {
     color: $brand-primary;
@@ -3584,12 +3615,21 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
         margin-right: 0
     }
 }
+@media (min-width: 768px){
+	.user_card{
+		background-color: $combodo-orange;
+		background-image: url('../img/backgrounds/geometric-orange.svg');
+		background-size: 170%;
+		background-position: 60% 60%;
+		box-shadow: -3px 2px 3px rgba(0, 0, 0, 0.4);
+	}
+}
 .navbar-default {
     background-color: $combodo-dark-gray;
     border-color: none;
 }
 .navbar-default .navbar-brand {
-    color: $gray
+    color: $gray;
 }
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
@@ -3597,13 +3637,13 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     background-color: transparent
 }
 .navbar-default .navbar-text {
-    color: $gray
+    color: $gray;
 }
 .navbar-default .navbar-nav>li>a {
-    color: $white
+    color: white;
 }
 .navbar-default .navbar-nav>.active>a {
-    color: $white;
+    color: white;
     background-color: $combodo-dark-gray-darker;
 	font-weight: 600
 }
@@ -3617,11 +3657,11 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
 .navbar-default .navbar-nav>.disabled>a,
 .navbar-default .navbar-nav>.disabled>a:hover,
 .navbar-default .navbar-nav>.disabled>a:focus {
-    color: #444444;
+    color: $gray-dark;
     background-color: transparent
 }
 .navbar-default .navbar-toggle {
-    border-color: #dddddd;
+    border-color: $gray-lighter;
 	border-top: none;
 	border-right: none;
 	border-bottom: none;
@@ -3634,6 +3674,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
 }
 .navbar-default .navbar-toggle .icon-bar {
     height: 3px;
+	background-color: $gray;
 }
 .navbar-default .navbar-collapse,
 .navbar-default .navbar-form {
@@ -3646,9 +3687,13 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     color: $brand-primary
 }
 @media (max-width: 767px) {
-	.navbar-default .navbar-nav .open .dropdown-menu .divider{
-		background-color: $combodo-dark-gray-dark;
-	}
+    .navbar-default .navbar-nav .open .dropdown-menu>.dropdown-header {
+        border-color: $combodo-dark-gray-dark
+    }
+    .navbar-default .navbar-nav .divider,
+    .navbar-default .navbar-nav .open .dropdown-menu .divider {
+        background-color: $combodo-dark-gray-dark;
+    }
     .navbar-default .navbar-nav .open .dropdown-menu>li>a {
         color: $white;
 		background-color: inherit;
@@ -3667,18 +3712,26 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     .navbar-default .navbar-nav .open .dropdown-menu>.disabled>a,
     .navbar-default .navbar-nav .open .dropdown-menu>.disabled>a:hover,
     .navbar-default .navbar-nav .open .dropdown-menu>.disabled>a:focus {
-        color: #444444;
+        color: $gray-dark;
         background-color: transparent
     }
 }
+@media (min-width: 768px) {
+	.navbar-default .navbar-nav>li:after{
+		border-bottom-color: #7D7D7D;
+	}
+	.navbar-default .navbar-nav>li.active:after{
+		border-bottom-color: transparent;
+	}
+}
 .navbar-default .navbar-link {
-    color: $gray
+    color: $white
 }
 .navbar-default .navbar-link:hover {
     color: $brand-primary
 }
 .navbar-default .btn-link {
-    color: $gray
+    color: $white
 }
 .navbar-default .btn-link:hover,
 .navbar-default .btn-link:focus {
@@ -3688,109 +3741,123 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
 fieldset[disabled] .navbar-default .btn-link:hover,
 .navbar-default .btn-link[disabled]:focus,
 fieldset[disabled] .navbar-default .btn-link:focus {
-    color: #444444
+    color: $gray-dark
 }
 .navbar-inverse {
     background-color: $brand-primary;
-    border-color: $brand-primary-dark
+    border-color: $brand-primary-dark;
 }
 .navbar-inverse .navbar-brand {
-    color: #fac0ba
+    color: $white
 }
 .navbar-inverse .navbar-brand:hover,
 .navbar-inverse .navbar-brand:focus {
-    color: #ffffff;
+    color: $brand-primary;
     background-color: transparent
 }
 .navbar-inverse .navbar-text {
-    color: #fac0ba
+    color: $white;
 }
 .navbar-inverse .navbar-nav>li>a {
-    color: #fac0ba
+    color: $white
+}
+.navbar-inverse .navbar-nav>.active>a {
+    color: $white;
+    background-color: $combodo-orange-darker;
+	font-weight: 600
 }
 .navbar-inverse .navbar-nav>li>a:hover,
-.navbar-inverse .navbar-nav>li>a:focus {
-    color: #ffffff;
-    background-color: transparent
-}
-.navbar-inverse .navbar-nav>.active>a,
+.navbar-inverse .navbar-nav>li>a:focus,
 .navbar-inverse .navbar-nav>.active>a:hover,
 .navbar-inverse .navbar-nav>.active>a:focus {
-    color: #ffffff;
-    background-color: transparent
+    color: $combodo-orange;
+    background-color: $white
 }
 .navbar-inverse .navbar-nav>.disabled>a,
 .navbar-inverse .navbar-nav>.disabled>a:hover,
 .navbar-inverse .navbar-nav>.disabled>a:focus {
-    color: #cccccc;
+    color: $gray-dark;
     background-color: transparent
 }
 .navbar-inverse .navbar-toggle {
-    border-color: $brand-primary-dark
+    border-color: $white;
+	border-top: none;
+	border-right: none;
+	border-bottom: none;
+	border-radius: 0px;
+	margin-right: 0px;
 }
 .navbar-inverse .navbar-toggle:hover,
 .navbar-inverse .navbar-toggle:focus {
-    background-color: $brand-primary-dark
+    background-color: inherit;
 }
 .navbar-inverse .navbar-toggle .icon-bar {
-    background-color: #ffffff
+    height: 3px;
+	background-color: $white;
 }
 .navbar-inverse .navbar-collapse,
 .navbar-inverse .navbar-form {
-    border-color: #b81e0d
+    border: none;
 }
 .navbar-inverse .navbar-nav>.open>a,
 .navbar-inverse .navbar-nav>.open>a:hover,
 .navbar-inverse .navbar-nav>.open>a:focus {
     background-color: transparent;
-    color: #ffffff
+    color: $brand-primary
 }
 @media (max-width: 767px) {
-    .navbar-inverse .navbar-nav .open .dropdown-menu>.dropdown-header {
-        border-color: $brand-primary-dark
-    }
-    .navbar-inverse .navbar-nav .open .dropdown-menu .divider {
-        background-color: $brand-primary-dark
-    }
+	.navbar-inverse .navbar-nav .divider,
+	.navbar-inverse .navbar-nav .open .dropdown-menu .divider{
+		background-color: $combodo-orange-darker;
+	}
     .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
-        color: #fac0ba
+        color: $white;
+		background-color: inherit;
     }
     .navbar-inverse .navbar-nav .open .dropdown-menu>li>a:hover,
     .navbar-inverse .navbar-nav .open .dropdown-menu>li>a:focus {
-        color: #ffffff;
+        color: $brand-primary;
         background-color: transparent
     }
     .navbar-inverse .navbar-nav .open .dropdown-menu>.active>a,
     .navbar-inverse .navbar-nav .open .dropdown-menu>.active>a:hover,
     .navbar-inverse .navbar-nav .open .dropdown-menu>.active>a:focus {
-        color: #ffffff;
+        color: $brand-primary;
         background-color: transparent
     }
     .navbar-inverse .navbar-nav .open .dropdown-menu>.disabled>a,
     .navbar-inverse .navbar-nav .open .dropdown-menu>.disabled>a:hover,
     .navbar-inverse .navbar-nav .open .dropdown-menu>.disabled>a:focus {
-        color: #cccccc;
+        color: #444444;
         background-color: transparent
     }
 }
+@media (min-width: 768px) {
+	.navbar-inverse .navbar-nav>li:after{
+		border-bottom-color: #D06F1A;
+	}
+	.navbar-inverse .navbar-nav>li.active:after{
+		border-bottom-color: transparent;
+	}
+}
 .navbar-inverse .navbar-link {
-    color: #fac0ba
+    color: $white
 }
 .navbar-inverse .navbar-link:hover {
-    color: #ffffff
+    color: $brand-primary
 }
 .navbar-inverse .btn-link {
-    color: #fac0ba
+    color: $white
 }
 .navbar-inverse .btn-link:hover,
 .navbar-inverse .btn-link:focus {
-    color: #ffffff
+    color: $brand-primary
 }
 .navbar-inverse .btn-link[disabled]:hover,
 fieldset[disabled] .navbar-inverse .btn-link:hover,
 .navbar-inverse .btn-link[disabled]:focus,
 fieldset[disabled] .navbar-inverse .btn-link:focus {
-    color: #cccccc
+    color: #444444
 }
 .breadcrumb {
     padding: 8px 15px;
@@ -5865,74 +5932,27 @@ button.close {
 }
 .btn-default,
 .btn-default:hover {
-    background-image: -webkit-linear-gradient(#4f5151, #474949 6%, #3f4141);
-    background-image: -o-linear-gradient(#4f5151, #474949 6%, #3f4141);
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#4f5151), color-stop(6%, #474949), to(#3f4141));
-    background-image: linear-gradient(#4f5151, #474949 6%, #3f4141);
-    background-repeat: no-repeat;
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ff4f5151', endColorstr='#ff3f4141', GradientType=0);
-    -webkit-filter: none;
-    filter: none;
-    border: 1px solid #2e2f2f
+    color: $btn-default-color;
+    border: $btn-default-border
 }
 .btn-primary,
 .btn-primary:hover {
-    background-image: -webkit-linear-gradient(#e72510, $brand-primary 6%, #cb210e);
-    background-image: -o-linear-gradient(#e72510, $brand-primary 6%, #cb210e);
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#e72510), color-stop(6%, $brand-primary), to(#cb210e));
-    background-image: linear-gradient(#e72510, $brand-primary 6%, #cb210e);
-    background-repeat: no-repeat;
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ffe72510', endColorstr='#ffcb210e', GradientType=0);
-    -webkit-filter: none;
-    filter: none;
     border: 1px solid $brand-primary-dark
 }
 .btn-success,
 .btn-success:hover {
-    background-image: -webkit-linear-gradient(#4da309, #469408 6%, #3f8507);
-    background-image: -o-linear-gradient(#4da309, #469408 6%, #3f8507);
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#4da309), color-stop(6%, #469408), to(#3f8507));
-    background-image: linear-gradient(#4da309, #469408 6%, #3f8507);
-    background-repeat: no-repeat;
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ff4da309', endColorstr='#ff3f8507', GradientType=0);
-    -webkit-filter: none;
-    filter: none;
     border: 1px solid #2f6405
 }
 .btn-info,
 .btn-info:hover {
-    background-image: -webkit-linear-gradient(#02a5de, #029acf 6%, #028fc0);
-    background-image: -o-linear-gradient(#02a5de, #029acf 6%, #028fc0);
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#02a5de), color-stop(6%, #029acf), to(#028fc0));
-    background-image: linear-gradient(#02a5de, #029acf 6%, #028fc0);
-    background-repeat: no-repeat;
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ff02a5de', endColorstr='#ff028fc0', GradientType=0);
-    -webkit-filter: none;
-    filter: none;
     border: 1px solid #02749c
 }
 .btn-warning,
 .btn-warning:hover {
-    background-image: -webkit-linear-gradient(#a54caa, #9b479f 6%, #914294);
-    background-image: -o-linear-gradient(#a54caa, #9b479f 6%, #914294);
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#a54caa), color-stop(6%, #9b479f), to(#914294));
-    background-image: linear-gradient(#a54caa, #9b479f 6%, #914294);
-    background-repeat: no-repeat;
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ffa54caa', endColorstr='#ff914294', GradientType=0);
-    -webkit-filter: none;
-    filter: none;
     border: 1px solid #79377c
 }
 .btn-danger,
 .btn-danger:hover {
-    background-image: -webkit-linear-gradient(#e08b27, #d9831f 6%, #cc7b1d);
-    background-image: -o-linear-gradient(#e08b27, #d9831f 6%, #cc7b1d);
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#e08b27), color-stop(6%, #d9831f), to(#cc7b1d));
-    background-image: linear-gradient(#e08b27, #d9831f 6%, #cc7b1d);
-    background-repeat: no-repeat;
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ffe08b27', endColorstr='#ffcc7b1d', GradientType=0);
-    -webkit-filter: none;
-    filter: none;
     border: 1px solid #ac6819
 }
 body {
@@ -5947,57 +5967,6 @@ legend {
 label {
     font-weight: normal
 }
-.has-warning .help-block,
-.has-warning .control-label,
-.has-warning .radio,
-.has-warning .checkbox,
-.has-warning .radio-inline,
-.has-warning .checkbox-inline,
-.has-warning.radio label,
-.has-warning.checkbox label,
-.has-warning.radio-inline label,
-.has-warning.checkbox-inline label,
-.has-warning .form-control-feedback {
-    color: #d9831f
-}
-.has-warning .form-control,
-.has-warning .form-control:focus {
-    border-color: #d9831f
-}
-.has-error .help-block,
-.has-error .control-label,
-.has-error .radio,
-.has-error .checkbox,
-.has-error .radio-inline,
-.has-error .checkbox-inline,
-.has-error.radio label,
-.has-error.checkbox label,
-.has-error.radio-inline label,
-.has-error.checkbox-inline label,
-.has-error .form-control-feedback {
-    color: $brand-primary
-}
-.has-error .form-control,
-.has-error .form-control:focus {
-    border-color: $brand-primary
-}
-.has-success .help-block,
-.has-success .control-label,
-.has-success .radio,
-.has-success .checkbox,
-.has-success .radio-inline,
-.has-success .checkbox-inline,
-.has-success.radio label,
-.has-success.checkbox label,
-.has-success.radio-inline label,
-.has-success.checkbox-inline label,
-.has-success .form-control-feedback {
-    color: #469408
-}
-.has-success .form-control,
-.has-success .form-control:focus {
-    border-color: #469408
-}
 .pager a {
     color: #444444
 }
@@ -6008,4 +5977,26 @@ label {
 }
 .pager .disabled>a {
     border-color: #dddddd
+}
+
+/*
+ * Specific to the combodo theme. Not standard BS classes
+*/
+.btn-group.btn_group_explicit{
+	padding: 7px;
+	background-color: $combodo-dark-gray-darker;
+	border: 1px solid #EBEAEA;
+	border-radius: 30px;
+	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.4) inset;	
+}
+.btn-group.btn_group_explicit .btn{
+	color: $white;
+	background-color: transparent;
+	border: none;
+}
+.btn-group.btn_group_explicit .btn.active{
+	color: #6B6965;
+	background-color: $body-bg;
+	border-radius: 37px !important;
+	box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.4);
 }

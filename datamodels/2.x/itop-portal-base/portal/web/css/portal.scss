@@ -1,3 +1,5 @@
+@import 'variables.scss';
+
 /*!
  * Combodo portal template v1.0.0
 */
@@ -56,7 +58,7 @@ footer{
 	background-size: 100%;
 	background-position: center center;
 	background-color: #585653;
-	border: 2px solid #FFFFFF;
+	border: 2px solid $white;
 	border-radius: 100%;
 	box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.4);
 }
@@ -65,7 +67,7 @@ footer{
 	position: absolute;
 	padding-left: 85px;
 	max-width: 55%;
-	color: #FFFFFF;
+	/*color: $white;*/
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow-x: hidden;
@@ -81,12 +83,7 @@ footer{
 	}
 	#sidebar .user_card{
 		padding: 30px 0px;
-		background-color: #EA7D1E;
-		background-image: url('../img/backgrounds/geometric-orange.svg');
-		background-size: 170%;
-		background-position: 60% 60%;
 		text-align: center;
-		box-shadow: -3px 2px 3px rgba(0, 0, 0, 0.4);
 	}
 	#sidebar .user_card .user_photo{
 		margin: 0px auto 10px auto;
@@ -96,15 +93,15 @@ footer{
 		background-position: center center;
 		background-color: #585653;
 		background-repeat: no-repeat;
-		border: 2px solid #FFFFFF;
+		border: 2px solid $white;
 		border-radius: 100%;
 	}
 	#sidebar .user_card .user_infos{
 		font-size: 1em;
-		color: #FFFFFF;
+		color: $white;
 	}
 	#sidebar .user_card .user_infos .dropdown-toggle{
-		color: #FFFFFF;
+		color: $white;
 	}
 	#sidebar .user_card .user_options.dropdown-menu{
 		width: 92%;
@@ -121,42 +118,6 @@ footer{
 	#sidebar .menu .navbar-nav > li{
 		width: 100%;
 	}
-	/*#sidebar .menu .navbar-nav > li:after{
-		content: "";
-		display: block;
-		position: relative;
-		color: #FFFFFF;
-		border-bottom: 1px solid #7D7D7D;
-	}*/
-	/*#sidebar .menu .navbar-nav > li.active{
-		box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.8) inset;
-	}*/
-	/*#sidebar .menu .navbar-nav > li.active:after{
-		content: " ";
-		position: absolute;
-		right: 0px;
-		top: 0px;
-		border: 30px solid transparent;
-		border-right-width: 20px;
-		border-right-color: #EDECEC;
-	}*/
-	/*#sidebar .menu .navbar-nav > li.active > a{
-		margin-top: -1px; /* To mask border from previous li item */
-		/*margin-left: 4em;
-		padding-left: 1em;*/
-	/*}*/
-	/*#sidebar .menu .navbar-nav > li > a{
-		/*padding-left: 3em;*/
-		/*padding-left: 10%;
-		overflow-x: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		line-height: 3em;
-	}*/
-	/*#sidebar .menu .navbar-nav > li > a:hover{
-		padding-left: 5%;
-		transition: padding-left 0.2s ease-in-out;
-	}*/
 	#sidebar .menu .navbar-nav > li > a > .brick_icon{
 		width: 1.2em;
 		vertical-align: sub;
@@ -288,34 +249,9 @@ footer{
 	}
 }
 
-/***************/
-/* BS override */
-/***************/
-/*@font-face {
-  font-family: 'Glyphicons Halflings';
-
-  src: url('../lib/bootstrap/fonts/glyphicons-halflings-regular.eot');
-  src: url('../lib/bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../lib/bootstrap/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../lib/bootstrap/fonts/glyphicons-halflings-regular.woff') format('woff'), url('../lib/bootstrap/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../lib/bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
-}*/
-/*label{
-	font-weight: bold;
-}*/
-
 /*********************/
 /* BS theme override */
 /*********************/
-/*body{
-	background-color: #EDECEC;
-}
-a{
-	color: #D46201;
-}
-a:hover, a:focus{
-	color: #C15A02; /* TODO : Darken #D46201 */
-/*}
-.pagination{
-	margin: 14px 0px; 
-}*/
 .list-group.tree{
 	margin-top: 11px;
 	margin-bottom: -11px;
@@ -323,183 +259,11 @@ a:hover, a:focus{
 .list-group.tree .list-group-item{
 	padding-right: 0px; /* To align all actions on the right without indent */
 }
-/*.tooltip-inner{
-	max-width: 400px;
-	padding: 15px;
-}*/
-
-/* Navbars */
-/*.navbar-fixed-top .navbar-header{
-	box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.4);
-}*/
-/*.navbar-fixed-top .navbar-collapse, 
-.navbar-fixed-bottom .navbar-collapse{
-	max-height: 400px;
-}*/
-
-/*.navbar-default .navbar-toggle {
-    border-top: none;
-	border-right: none;
-	border-bottom: none;
-	border-radius: 0px;
-	margin-right: 0px;
-}
-.navbar-default .navbar-toggle:hover,
-.navbar-default .navbar-toggle:focus{
-	background-color: inherit;
-}
-.navbar-default .navbar-toggle .icon-bar{
-	height: 3px;
-}
-.navbar-default .navbar-collapse, 
-.navbar-default .navbar-form{
-	border: none;
-}
-
-.navbar-default{
-	background-color: #585653; /* TODO SASS dark grey */
-	/*border: none;
-}
-.navbar-default .nav > li > a,
-.navbar-default .nav.navbar-nav > li > a{
-	color: #FFFFFF;
-}
-.navbar-default .nav > li > a:focus,
-.navbar-default .nav > li > a:hover,
-.navbar-default .nav.navbar-nav > li > a:focus,
-.navbar-default .nav.navbar-nav > li > a:hover{
-	background-color: #FFFFFF;
-	color: #EA7D1E;
-}
-.navbar-default .nav > li.active,
-.navbar-default .nav.navbar-nav > li.active > a{
-	background-color: #292827; /* TODO Darken #585653 */
-	/*color: #FFFFFF;
-	font-weight: 600;
-}*/
-
-/* Dropdowns */
-/*.dropdown-menu>li>a:hover,
-.dropdown-menu>li>a:focus {
-	text-decoration: none;
-    color: #FFFFFF;
-    background-color: #EA7D1E;
-}
-
-.navbar-default .navbar-nav .open .dropdown-menu > li > a{
-	color: #FFFFFF;
-    background-color: inherit;
-}*/
-
-/* Buttons */
-/* - Default */
-.btn-default,
-.btn-default:active, .btn-default.active,
-.btn-default:hover, .btn-default:focus{
-	color: inherit;
-    background-color: #FFFFFF;
-	background-image: none;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-}
-.btn-default:hover, .btn-default.active:focus{
-	background-color: #FAFAFA; /* TODO : Darken white */
-}
-.btn-default:active, .btn-default.active{
-	background-color: transparent; /* Body background */
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15) inset;
-	border: none;
-	border-bottom-color: #EBEAEA;
-}
-.btn-default:active:hover, .btn-default.active:hover, 
-.btn-default:active:focus, .btn-default.active:focus,
-.btn-default:active.focus, .btn-default.active.focus {
-	color: inherit;
-    background-color: #EAEAEA; /* Darken body background */
-	border: inherit;
-}
-/* - Primary */
-.btn-primary,
-.btn-primary:active, .btn-primary.active,
-.btn-primary:hover, .btn-primary:focus{
-	color: #FFFFFF;
-    background-color: #EA7D1E;
-	background-image: none;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-}
-.btn-primary:hover,
-.btn-primary:active:hover, .btn-primary.active:hover, 
-.btn-primary:active:focus, .btn-primary.active:focus, 
-.btn-primary:active.focus, .btn-primary.active.focus{
-	background-color: #DA751C; /* TODO : Darken #EA7D1E */
-}
-
-/* Button groups */
-.btn-group.btn_group_explicit{
-	padding: 7px;
-	background-color: #292827;
-	border: 1px solid #EBEAEA;
-	border-radius: 30px;
-	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.4) inset;	
-}
-.btn-group.btn_group_explicit .btn{
-	color: #FFFFFF;
-	background-color: transparent;
-	border: none;
-}
-.btn-group.btn_group_explicit .btn.active{
-	color: #6B6965;
-	background-color: #EDECEC;
-	border-radius: 37px !important;
-	box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.4);
-}
-
-/* Panels */
-/*.panel{
-	border: none;
-	border-radius: 0px;
-	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-}*/
-
-/* Forms */
-/*.form-control{
-	border-radius: 0px;
-}*/
-
-/* Pagination */
-/*.pagination>.active>a,
-.pagination>.active>span,
-.pagination>.active>a:hover,
-.pagination>.active>span:hover,
-.pagination>.active>a:focus,
-.pagination>.active>span:focus {
-    background-color: #EA7D1E;
-    border-color: #EA7D1E;
-}*/
-/*.pagination>li>a:hover,
-.pagination>li>span:hover, 
-.pagination>li>a:focus, 
-.pagination>li>span:focus {
-    background-color: #EA7D1E;
-    border-color: #EA7D1E;
-}*/
-
-/* Modal */
-/*.modal-content{
-	border-radius: 0px;
-}*/
 
 /* Custom "glyphicons" */
 .glyphicon-ext-hierarchy:before {
     content: url('../img/icons/hierarchy-white-13px.png');
 }
-
-/**********************/
-/* BS plugin override */
-/**********************/
-/* Datatables */
-/*.table-striped > tbody > tr:hover {
-	background-color: #fdf5d0;
-}*/
 
 /******************/
 /* Modal settings */
@@ -508,13 +272,6 @@ a:hover, a:focus{
 	margin: 7em 0em;
 	text-align: center;
 }
-
-/*@media (min-width: 992px){
-	.modal-lg {
-		width: 80%;
-		max-width: 1200px;
-	}
-}*/
 
 /**************************/
 /* MagnificPopup settings */
@@ -564,7 +321,7 @@ a:hover, a:focus{
 	margin-bottom: 8px;
 	padding: 0em 1em;
 	min-height: 4em;
-	background-color: #FFFFFF;
+	background-color: $white;
     background-image: none;
     border: none;
 	border-radius: 0px;
@@ -678,11 +435,13 @@ a:hover, a:focus{
 #main-header-actions{
 	margin-bottom: 15px;
 }
-#main-header-actions .btn-group .btn{
+/* This is no longer necessary but we keep it just in case */
+/*#main-header-actions .btn-group .btn{
 	padding: 0em 1.5em;
 	line-height: 2.4em;
 	font-size: 14px;
-}
+	background-image: none;
+}*/
 @media (min-width: 768px) {
 	#main-header:after{
 		clear: both;
@@ -748,10 +507,6 @@ a:hover, a:focus{
 #brick_content_tree{
 	position: relative;
 }
-/*.panel > .list-group:last-child .list-group-item:last-child,
-.panel > .panel-collapse > .list-group:last-child .list-group-item:last-child{
-	margin-bottom: 1px;
-}*/
 
 .list-group-item > .list-group-item-actions{
 	/*display: none; Displaying actions only when hovering was not unanimous in the team */
@@ -765,11 +520,6 @@ a:hover, a:focus{
 .list-group-item .list-group-item-actions a:not(:first-child){
 	margin-left: 10px;
 }
-/*.list-group-item .list-group-item-text{
-	margin-left: 5px;
-	font-size: 1em;
-	line-height: 1em;
-}*/
 .list-group-item .keep-spinning{
 	animation: spin 1s linear infinite;
 	-webkit-animation: spin 1s linear infinite;
@@ -824,19 +574,9 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 
 /* Loader */
 #brick_tree_overlay{
-	/*z-index: 10;*/
 	display: none;
 	padding: 8% 0px;
-	/*position: absolute;
-	top: 0px;
-	left: 0px;
-	width: 100%;
-	height: 100%;
-	min-height: 130px;*/
-	/*background-color: black;*/
 	border-radius: 0px 0px 4px 4px;
-	/*opacity: 0.5;
-	color: white;*/
 	font-size: 1em;
 }
 /****************/
@@ -847,42 +587,22 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 /*********/
 /* Forms */
 /*********/
-/*.form_fields textarea{
-	height: 160px;
-}*/
 .form_field .form_mandatory .control-label:after{
 	content: "\002a";
 	position: relative;
 	left: 3px;
-	color: red; /* TODO : SASS this */
+	color: $brand-primary;
 	font-size: 0.9em;
 }
-/* Subform field */
-/*.subform_field > fieldset{
-	margin: inherit;
-	margin-bottom: 15px;
-	padding: 10px 15px;
-	border: 1px solid #dddddd;
-	border-radius: 0px;
-}
-.subform_field > fieldset > legend{
-	margin: 0px 0px;
-	padding: 0px 7px;
-	width: inherit;
-	border: none;
-	font-size: 1em;
-	font-weight: bold;
-	color: #777777;
-}*/
 /* CaseLog field */
 .caselog_field_entry{
-	border: 1px solid #dddddd;
+	border: 1px solid $gray-lighter;
 	border-top: none;
 }
 .caselog_field_entry_header{
 	padding: 6px;
 	font-size: 1em;
-	border-bottom: 1px solid #FFFFFF;
+	border-bottom: 1px solid $white;
 	background-color: #F2F2F2;
 }
 .caselog_field_entry_button{
@@ -925,7 +645,7 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 .form_linkedset_toggler > .glyphicon{
 	margin-left: 0.5em;
 	font-size: 0.85em;
-	color: #EA7D1E; /* TODO : SASS this to primary color */
+	color: $combodo-orange;
 	transition: transform 0.2s linear;
 }
 .form_linkedset_toggler > .glyphicon.collapsed{
@@ -952,8 +672,8 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 /* FileUpload */
 .fileupload_field_content{
 	padding: 8px 23px;
-	border: 1px solid #DDDDDD; /* TODO : SASS this */
-	background-color: #F9F9F9; /* TODO : SASS this*/
+	border: 1px solid $gray-lighter;
+	background-color: #F9F9F9;
 }
 .fileupload_field_content > div{
 	margin-bottom: 15px;
@@ -1106,9 +826,9 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 		bottom: 5em;
 		right: -2px; /* TODO : SASS this to col-xs-12 padding */
 		padding: 15px;
-		background-color: #FFF; /* TODO : SASS this to panel bg */
-		border: 1px solid #DDD; /* TODO : SASS this to panel border */
-		border-radius: 4px; /* TODO : SASS this to panel border */
+		background-color: $white;
+		border: 1px solid $gray-lighter;
+		border-radius: $border-radius-base;
 		transition: right 0.3s;
 	}
 	.form_btn_regular.sticky.closed{
@@ -1120,19 +840,15 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	.form_btn_regular.sticky button:first-child{
 		margin-bottom: 4px;
 	}
-	/* - Adjustments for modal sticky buttons */
-	.modal.in .form_btn_regular.sticky{
-		/*right: 15px;*/ /* TODO : SASS this to col-xs-12 padding */
-	}
 }
 
 /* CKEditor : Adding BS error feedback */
 .form_field div.cke{
-    border: 1px solid #dddddd; /* TODO : SASS this */
+    border: 1px solid $gray-lighter;
 }
 .form_field.has-error div.cke{
-	border: 1px solid #D9230F; /* TODO : SASS this */
-	border-radius: 3px; /* TODO : SASS this */
+	border: 1px solid $state-danger-border;
+	border-radius: $border-radius-base;
 	box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
 }
 /* CKEditor : Styling notifications based on BS alerts */
@@ -1142,7 +858,7 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
     margin-bottom: 18px;
     border: 1px solid transparent;
     border-radius: 4px;
-	background-color: #FFFFFF
+	background-color: $white
 }
 .cke_notification_close{
 	position: absolute;
@@ -1154,16 +870,16 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	line-height: 1em;
 	font-size: 1em;
 }
-.cke_notification_success{ /* TODO : SASS this */
+.cke_notification_success{
 	display: none;
-	background-color: #dff0d8;
-    border-color: #d6e9c6;
-    color: #468847;
+	background-color: $alert-success-bg;
+    border-color: $alert-success-border;
+    color: $alert-success-text;
 }
-.cke_notification_warning{ /* TODO : SASS this */
-    background-color: #fcf8e3;
-    border-color: #fbeed5;
-    color: #c09853;
+.cke_notification_warning{
+    background-color: $alert-warning-bg;
+    border-color: $alert-warning-border;
+    color: $alert-warning-text;
 }
 
 /* DataTables : Selection inputs */

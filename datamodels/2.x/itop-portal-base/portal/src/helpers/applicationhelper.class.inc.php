@@ -313,6 +313,12 @@ class ApplicationHelper
 				'bricks' => array(),
 				'bricks_total_width' => 0
 			);
+			$aPortalConf['properties']['themes']['bootstrap'] = 'itop-portal-base/portal/web/css/bootstrap-theme-simplex.min.css';
+			$aPortalConf['properties']['themes']['bootstrap'] = 'itop-portal-base/portal/web/css/bootstrap-theme-darkly.min.css';
+			$aPortalConf['properties']['themes']['bootstrap'] = 'itop-portal-base/portal/web/css/bootstrap-theme-flatly.min.css';
+			$aPortalConf['properties']['themes']['bootstrap'] = 'itop-portal-base/portal/web/css/bootstrap-theme-slate.min.css';
+			$aPortalConf['properties']['themes']['bootstrap'] = 'itop-portal-base/portal/web/css/bootstrap-theme-superhero.min.css';
+			$aPortalConf['properties']['themes']['bootstrap'] = 'itop-portal-base/portal/web/css/bootstrap-theme-united.min.css';
 			// - Global portal properties
 			foreach ($oDesign->GetNodes('/module_design/properties/*') as $oPropertyNode)
 			{

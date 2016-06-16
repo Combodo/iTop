@@ -8,7 +8,7 @@
 
 {% block pMainHeaderActions %}
 	{% if aGroupingTabsValues|length > 1 %}
-		<div class="btn-group btn-group-sm btn_group_explicit">
+		<div class="btn-group {#btn-group-sm#} btn_group_explicit">
 			{% for aGroupingTab in aGroupingTabsValues %}
 				<a href="{{ app.url_generator.generate('p_manage_brick', {'sBrickId': sBrickId, 'sGroupingTab': aGroupingTab.value}) }}" class="btn btn-default {% if sGroupingTab is defined and sGroupingTab == aGroupingTab.value %}active{% endif %}">{{ aGroupingTab.label|raw }}</a>
 			{% endfor %}
