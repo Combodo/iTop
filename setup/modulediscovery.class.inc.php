@@ -47,6 +47,7 @@ class ModuleDiscovery
 	// Cache the results and the source directories
 	protected static $m_aSearchDirs = null;
 	protected static $m_aModules = array();
+	protected static $m_aModuleVersionByName = array();
 
 	// All the entries below are list of file paths relative to the module directory
 	protected static $m_aFilesList = array('datamodel', 'webservice', 'dictionary', 'data.struct', 'data.sample');
@@ -77,6 +78,31 @@ class ModuleDiscovery
 		$aArgs['root_dir'] = dirname($sFilePath);
 		$aArgs['module_file'] = $sFilePath;
 
+		list($sModuleName, $sModuleVersion) = static::GetModuleName($sId);
+		if ($sModuleVersion == '')
+		{
+			$sModuleVersion = '1.0.0';
+		}
+
+		if (array_key_exists($sModuleName, self::$m_aModuleVersionByName))
+		{
+			if (version_compare($sModuleVersion, self::$m_aModuleVersionByName[$sModuleName], '>'))
+			{
+				// Newer version, let's upgrade
+				self::$m_aModuleVersionByName[$sModuleName] = $sModuleVersion;
+			}
+			else
+			{
+				// Older (or equal) version, let's ignore it
+				return;
+			}
+		}
+		else
+		{
+			// First version to be loaded for this module, remember it
+			self::$m_aModuleVersionByName[$sModuleName] = $sModuleVersion;
+		}
+		
 		self::$m_aModules[$sId] = $aArgs;
 
 		foreach(self::$m_aFilesList as $sAttribute)
@@ -193,62 +219,13 @@ class ModuleDiscovery
 	/**
 	 * Remove the duplicate modules (i.e. modules with the same name but with a different version) from the supplied list of modules
 	 * @param hash $aModules
-	 * @return hash The ordered a duplicate-free list of modules
+	 * @return hash The ordered modules as a duplicate-free list of modules
 	 */
 	public static function RemoveDuplicateModules($aModules)
 	{
-		$aRes = array();
-		$aIndex = array();
-		foreach($aModules as $sModuleId => $aModuleInfo)
-		{
-			if (preg_match('|^([^/]+)/(.*)$|', $sModuleId, $aMatches))
-			{
-				$sModuleName = $aMatches[1];
-				$sModuleVersion = $aMatches[2];
-			}
-			else
-			{
-				// No version number found, assume 1.0.0
-				$sModuleName = str_replace('/', '', $sModuleId);
-				$sModuleVersion = '1.0.0';
-			}
-			// The last version encountered has precedence
-			$aIndex[$sModuleName] = $sModuleVersion;
-		}
-	
-		foreach($aModules as $sModuleId => $aModuleInfo)
-		{
-			if (preg_match('|^([^/]+)/(.*)$|', $sModuleId, $aMatches))
-			{
-				$sModuleName = $aMatches[1];
-				$sModuleVersion = $aMatches[2];
-			}
-			else
-			{
-				// No version number found, assume 1.0.0
-				$sModuleName = str_replace('/', '', $sModuleId);
-				$sModuleVersion = '1.0.0';
-			}
-			if ($aIndex[$sModuleName] == $sModuleVersion)
-			{
-				// Ok, this this the last (or only) version of this module in the list, keep it
-				$aRes[$sModuleId] = $aModuleInfo;
-			}
-			else
-			{
-				if(version_compare($sModuleVersion, $aIndex[$sModuleName], '<'))
-				{
-					SetupPage::log_info("Module $sModuleId will be upgraded to $sModuleName/{$aIndex[$sModuleName]}.");
-				}
-				else
-				{
-					SetupPage::log_warning("Module $sModuleId will be DOWNGRADED to $sModuleName/{$aIndex[$sModuleName]} since the older version is to be loaded AFTER the more recent version.");
-				}
-			}
-		}
-		// If needed re-arrange the list ot take care of inter dependencies
-		$aRes = self::OrderModulesByDependencies($aRes, true);
-		return $aRes;
+		// No longer needed, kept only for compatibility
+		// The de-duplication is now done directly by the AddModule method
+		return $aModules;
 	}
 		
 	protected static function DependencyIsResolved($sDepString, $aOrderedModules, $aSelectedModules)
@@ -386,6 +363,7 @@ class ModuleDiscovery
 	{
 		self::$m_aSearchDirs = null;
 		self::$m_aModules = array();
+		self::$m_aModuleVersionByName = array();
 	}
 
 	/**
