@@ -181,7 +181,17 @@ class SynchroDataSource extends cmdbAbstractObject
 							$aRow['update_policy'] = $oAttribute->GetAsHTML('update_policy');
 							if ($oAttDef->IsExternalKey())
 							{
-								$aRow['reconciliation_attcode'] = $oAttribute->GetAsHTML('reconciliation_attcode');
+								$sReconciliationAttCode = $oAttribute->Get('reconciliation_attcode');
+								switch($sReconciliationAttCode)
+								{
+									case '':
+									$sDisplayReconciliationAttCode = Dict::S('Core:SynchroAttExtKey:ReconciliationById');
+									break;
+									
+									default:
+									$sDisplayReconciliationAttCode = MetaModel::GetLabel($oAttDef->GetTargetClass(), $sReconciliationAttCode);
+								}
+								$aRow['reconciliation_attcode'] = $sDisplayReconciliationAttCode;
 							}
 							else
 							{
@@ -1275,16 +1285,33 @@ class SynchroAttExtKey extends SynchroAttribute
 	public function GetReconciliationFormElement($sTargetClass, $sFieldName)
 	{
 		$sHtml = "<select name=\"$sFieldName\">\n";
+		// Id
 		$sSelected = (''== $this->Get('reconciliation_attcode')) ? ' selected' : '';
 		$sHtml .= "<option value=\"\" $sSelected>".Dict::S('Core:SynchroAttExtKey:ReconciliationById')."</option>\n";
+		
+		// Friendly name
+		$sSelected = ('friendlyname' == $this->Get('reconciliation_attcode')) ? ' selected' : '';
+		$sHtml .= "<option value=\"friendlyname\" $sSelected>".MetaModel::GetLabel($sTargetClass, 'friendlyname')."</option>\n";
+		
+		// Separator
+		$sHtml .= '<option value="" disabled=disabled">———————————</option>'; // Note: using the em-dash character which has no space between 2 characters
+		
+		// Then add all remaining scalar attributes, sorted alphabetically
+		$aMoreOptions = array();
 		foreach(MetaModel::ListAttributeDefs($sTargetClass) as $sAttCode => $oAttDef)
 		{
-			if ($oAttDef->IsScalar())
+			if ($oAttDef->IsScalar() && ($sAttCode != 'friendlyname'))
 			{
 				$sSelected = ($sAttCode == $this->Get('reconciliation_attcode')) ? ' selected' : '';
-				$sHtml .= "<option value=\"$sAttCode\" $sSelected>".MetaModel::GetLabel($sTargetClass, $sAttCode)."</option>\n";	
+				$aMoreOptions[MetaModel::GetLabel($sTargetClass, $sAttCode)] = "<option value=\"$sAttCode\" $sSelected>".MetaModel::GetLabel($sTargetClass, $sAttCode)."</option>\n";	
 			}
 		}
+		ksort($aMoreOptions);
+		foreach($aMoreOptions as $sOption)
+		{
+			$sHtml .= $sOption;
+		}
+		
 		$sHtml .= "</select>\n";
 		return $sHtml;
 	}
