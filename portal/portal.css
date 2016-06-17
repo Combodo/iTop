@@ -232,3 +232,6 @@ div.edit_item span div table tbody tr td textarea{
 div#ticket_shortcuts form {
 	display: inline-block;
 }
+.cke_contents {
+	border: 1px #C8C9CA solid !important;
+}

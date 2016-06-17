@@ -1122,6 +1122,20 @@ EOF
 		$oP->add('<h1>'.$aEditFields[$sLogAttCode]['label'].'</h1>');
 		$oP->add($aEditFields[$sLogAttCode]['value']);
 		$oP->add('</div>');
+		// Replace the text area with CKEditor
+		// To change the default settings of the editor,
+		// a) edit the file /js/ckeditor/config.js
+		// b) or override some of the configuration settings, using the second parameter of ckeditor()
+		$aConfig = array();
+		$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
+		$aConfig['font_style'] = $sLanguage;
+		$aConfig['language'] = $sLanguage;
+		$aConfig['contentsLanguage'] = $sLanguage;
+		$aConfig['extraPlugins'] = 'disabler';
+		$aConfig['placeholder'] = Dict::S('UI:CaseLogTypeYourTextHere');
+		$sConfigJS = json_encode($aConfig);
+		
+		$oP->add_ready_script("$('#input_$sLogAttCode').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
 	}
 	else
 	{
@@ -1133,7 +1147,8 @@ EOF
 
 	$oP->add('</table>');
 	$oP->add('</div>');
-
+	
+	$oP->add_ready_script(InlineImage::EnableCKEditorImageUpload($oObj, 'zzzzz'));
 	$oP->WizardFormEnd();
 	$oP->add('</div>');
 }
