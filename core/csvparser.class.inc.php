@@ -54,12 +54,14 @@ class CSVParser
 	private $m_sCSVData;
 	private $m_sSep;
 	private $m_sTextQualifier;
+	private $m_iTimeLimitPerRow;
 
-	public function __construct($sTxt, $sSep = ',', $sTextQualifier = '"')
+	public function __construct($sTxt, $sSep = ',', $sTextQualifier = '"', $iTimeLimitPerRow = null)
 	{
 		$this->m_sCSVData = str_replace("\r\n", "\n", $sTxt);
 		$this->m_sSep = $sSep;
 		$this->m_sTextQualifier = $sTextQualifier;
+		$this->m_iTimeLimitPerRow = $iTimeLimitPerRow;
 	}
 
 	protected $m_sCurrCell = '';
@@ -129,6 +131,12 @@ class CSVParser
 			// blank line, skip silently
 		}
 		$this->m_aCurrRow = array();
+		
+		// More time for the next row
+		if ($this->m_iTimeLimitPerRow !== null)
+		{
+			set_time_limit($this->m_iTimeLimitPerRow);
+		}
 	}
 	protected function __AddCellTrimmed($c = null, $aFieldMap = null)
 	{
@@ -181,6 +189,13 @@ class CSVParser
 		$iDataLength = strlen($this->m_sCSVData);
 
 		$iState = stSTARTING;
+		$iTimeLimit = null;
+		if ($this->m_iTimeLimitPerRow !== null)
+		{
+			// Give some time for the first row
+			$iTimeLimit = ini_get('max_execution_time');
+			set_time_limit($this->m_iTimeLimitPerRow);
+		}
 		for($i = 0; $i <= $iDataLength ; $i++)
 		{
 			if ($i == $iDataLength)
@@ -236,6 +251,11 @@ class CSVParser
 
 			$iLineCount = count($this->m_aDataSet);
 			if (($iMax > 0) && ($iLineCount >= $iMax)) break;
+		}
+		if ($iTimeLimit !== null)
+		{
+			// Restore the previous time limit
+			set_time_limit($iTimeLimit);
 		}
 		return $this->m_aDataSet;
 	}

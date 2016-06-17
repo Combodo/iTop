@@ -429,7 +429,7 @@ try
 	{
 		$sUTF8Data = iconv($sCharSet, 'UTF-8//IGNORE//TRANSLIT', $sCSVData);
 	}
-	$oCSVParser = new CSVParser($sUTF8Data, $sSep, $sQualifier); 
+	$oCSVParser = new CSVParser($sUTF8Data, $sSep, $sQualifier, MetaModel::GetConfig()->Get('max_execution_time_per_loop')); 
 
 	$aInputColumns = $oCSVParser->ListFields();
 	$iColCount = count($aInputColumns);

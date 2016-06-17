@@ -232,7 +232,7 @@ try
 		}
 				
 		// Parse the data set
-		$oCSVParser = new CSVParser($sCSVData, $sSeparator, $sTextQualifier);
+		$oCSVParser = new CSVParser($sCSVData, $sSeparator, $sTextQualifier, MetaModel::GetConfig()->Get('max_execution_time_per_loop'));
 		$aData = $oCSVParser->ToArray($iSkippedLines);
 		$iRealSkippedLines = $iSkippedLines;
 		if ($bHeaderLine)

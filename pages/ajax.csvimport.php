@@ -244,8 +244,9 @@ try
 		$bFirstLineAsHeader = utils::ReadParam('header_line', true);
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 		$sData = stripslashes(utils::ReadParam('csvdata', true, false, 'raw_data'));
-		$oCSVParser = new CSVParser($sData, $sSeparator, $sTextQualifier);
-		$aData = $oCSVParser->ToArray($iLinesToSkip);
+		$oCSVParser = new CSVParser($sData, $sSeparator, $sTextQualifier, MetaModel::GetConfig()->Get('max_execution_time_per_loop'));
+		$iMaxIndex= 10; // Display maximum 10 lines for the preview
+		$aData = $oCSVParser->ToArray($iLinesToSkip, null, $iMaxIndex);
 		$iTarget = count($aData);
 		if ($iTarget == 0)
 		{
@@ -258,7 +259,6 @@ try
 			$oPage->p("<h3>".Dict::S('UI:Title:DataPreview')."</h3>\n");
 			$oPage->p("<div style=\"overflow-y:auto\" class=\"white\">\n");
 			$oPage->add("<table cellspacing=\"0\" style=\"overflow-y:auto\">");
-			$iMaxIndex= 10; // Display maximum 10 lines for the preview
 			$index = 1;
 			foreach($aData as $aRow)
 			{
@@ -318,8 +318,8 @@ try
 		$aInitFieldMapping = empty($sInitFieldMapping) ? array() : json_decode($sInitFieldMapping, true);
 		$aInitSearchField = empty($sInitSearchField) ? array() : json_decode($sInitSearchField, true);
 
-		$oCSVParser = new CSVParser($sData, $sSeparator, $sTextQualifier);
-		$aData = $oCSVParser->ToArray($iLinesToSkip);
+		$oCSVParser = new CSVParser($sData, $sSeparator, $sTextQualifier, MetaModel::GetConfig()->Get('max_execution_time_per_loop'));
+		$aData = $oCSVParser->ToArray($iLinesToSkip, null, 3 /* Max: 1 header line + 2 lines of sample data */);
 		$iTarget = count($aData);
 		if ($iTarget == 0)
 		{
