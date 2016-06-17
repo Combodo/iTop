@@ -1449,6 +1449,8 @@ div.ui-dialog-header {
 .ui-tooltip {
   padding: 10px 10px;
   box-shadow: 0 0 7px black;
+  max-width: 350px;
+  overflow: hidden;
 }
 .ui-tooltip .arrow {
   width: 70px;
