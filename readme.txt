@@ -1,4 +1,4 @@
-iTop - version 2.3.0 Beta - 26-May-2016
+﻿iTop - version 2.3.0 Beta - 26-May-2016
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -234,7 +234,8 @@ Tickets description and case logs are now in HTML
 #1202: Fix for a security vulnerability in the Configuration Editor.
 Fix for potential XSS vulnerability on uploaded file names.
 XSS: Correctly escape the name of an object when it is displayed within an hyperlink
-"Forgotten password" feature: the temporary token could be hacked by the mean of a hand-made HTTP request
+#1206: "Forgotten password" - the temporary token could be hacked by the mean of a hand-made HTTP request
+.htaccess and web.config files to prevent users from accessing the contents of data/log directories
 
 4) Customizations (via XML deltas)
 Switching to XML version 1.3.
@@ -259,6 +260,8 @@ Added verbs to the User Rights management API:
 - ListProfiles
 - GetAllowedPortals
 Added a mean to cache data that will be reset upon compilation. To be used in conjunction with ModuleDesign.
+It is possible to implement several portals and still use placeholders to point to the relevant portal (use DBObject::RegisterURLMakerClass(<my-portal>, <mu-url-maker>), then $this-hyperlink(<my-portal>)$)
+
 
 6) Queries (OQL)
 Magic query arguments:
@@ -300,7 +303,6 @@ Implemented DBObject::ExecActions, enables scripting object preset/modifications
 Added verb ormCaseLog::GetAsArray()
 Query arguments: when the value of a query argument is null, it must be considered as being a valid argument (was reported as missing). Improved the error reporting when the argument is in the form :this->attcode and the attcode is not valid for the class of 'this'.
 Query arguments could be array values, making it easier to build dynamic IN() clauses
-Added DBObject::RegisterURLMakerClass, to allow for overriding the standard behavior of template placeholders such as $this->org_id->hyperlink(portal)$
 When uploading documents, get the mimetype from the file itself (if feasible) rather than relying on the mimetype of the HTTP header. This was already implemented but it was buggy and fell anytime into the fallback method.
 Make the login page more mobile friendly.
 Add the "filter" attribute into the details form of the TriggerOnThresholdReached class.
@@ -324,7 +326,7 @@ Fixed the verb DBObjectSearch::IsAny
 
 Suhosin can interfere with iTop. More information can be found here: http://www.combodo.com/wiki/doku.php?id=admin:suhosin
 Internet Explorer 6 is not supported (neither IE7 nor IE8 in compatibility mode)
-Tested with IE8 and IE9, Firefox 3.6 up to Firefox 24 and Chrome. Be aware that there are certain limitations when using IE8 in "security mode" (when running IE on a Windows 2008 Server for example)
+Tested with IE9, Firefox 3.6 up to Firefox 24 and Chrome. Be aware that there are certain limitations when using IE8 in "security mode" (when running IE on a Windows 2008 Server for example)
 
 
 3.3. Known issues (https://sourceforge.net/apps/trac/itop/report/3)
