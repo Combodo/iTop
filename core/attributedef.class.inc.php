@@ -2499,7 +2499,10 @@ class AttributeText extends AttributeString
 		switch ($this->GetFormat())
 		{
 			case 'html':
-			$sValue = HTMLSanitizer::Sanitize($sValue);
+			if (($sValue !== null) && ($sValue !== ''))
+			{
+				$sValue = HTMLSanitizer::Sanitize($sValue);
+			}
 			break;
 			
 			case 'text':
