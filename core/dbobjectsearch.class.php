@@ -630,6 +630,16 @@ class DBObjectSearch extends DBSearch
 		$aSearches = array();
 		foreach ($aFilters as $oRightFilter)
 		{
+			// Limitation: the queried class must be the first declared class
+			if ($this->GetFirstJoinedClassAlias() != $this->GetClassAlias())
+			{
+				throw new CoreException("Limitation: cannot merge two queries if the queried class ({$this->GetClass()} AS {$this->GetClassAlias()}) is not the first joined class ({$this->GetFirstJoinedClass()} AS {$this->GetFirstJoinedClassAlias()})");
+			}
+			if ($oRightFilter->GetFirstJoinedClassAlias() != $oRightFilter->GetClassAlias())
+			{
+				throw new CoreException("Limitation: cannot merge two queries if the queried class ({$oRightFilter->GetClass()} AS {$oRightFilter->GetClassAlias()}) is not the first joined class ({$oRightFilter->GetFirstJoinedClass()} AS {$oRightFilter->GetFirstJoinedClassAlias()})");
+			}
+
 			$oLeftFilter = $this->DeepClone();
 			$oRightFilter = $oRightFilter->DeepClone();
 	
