@@ -29,7 +29,8 @@ class UserProfileRouter extends AbstractRouter
 			'bind' => 'p_user_profile_brick',
 			'values' => array(
 				'sBrickId' => null
-			))
+			)
+		)
 	);
 
 }

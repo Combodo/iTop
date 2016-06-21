@@ -21,6 +21,7 @@ namespace Combodo\iTop\Portal\Controller;
 
 use \Exception;
 use \IssueLog;
+use \utils;
 use \MetaModel;
 use \UserRights;
 use \Silex\Application;
@@ -34,6 +35,7 @@ use \Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
 
 class UserProfileBrickController extends BrickController
 {
+	const ENUM_FORM_TYPE_PICTURE = 'picture';
 
 	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId)
 	{
@@ -78,6 +80,10 @@ class UserProfileBrickController extends BrickController
 			elseif ($sFormType === PasswordFormManager::FORM_TYPE)
 			{
 				$aData['form'] = $this->HandlePasswordForm($oRequest, $oApp);
+			}
+			elseif ($sFormType === static::ENUM_FORM_TYPE_PICTURE)
+			{
+				$aData['form'] = $this->HandlePictureForm($oRequest, $oApp, $sFormMode);
 			}
 			else
 			{
@@ -231,6 +237,66 @@ class UserProfileBrickController extends BrickController
 		$aFormData['formmanager_data'] = $oFormManager->ToJSON();
 		$aFormData['renderer'] = $oFormManager->GetRenderer();
 		$aFormData['fieldset'] = $aFieldSetData;
+
+		return $aFormData;
+	}
+
+	public function HandlePictureForm(Request $oRequest, Application $oApp, $sFormMode)
+	{
+		$aFormData = array();
+		$oRequestParams = $oRequest->request;
+		$sPictureAttCode = 'picture';
+
+		// Handling form
+		$sOperation = $oRequestParams->get('operation');
+		// - No operation specified
+		if ($sOperation === null)
+		{
+			IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Operation parameter must be specified.');
+			$oApp->abort(500, 'Operation parameter must be specified.');
+		}
+		// - Submit
+		else if ($sOperation === 'submit')
+		{
+			$oRequestFiles = $oRequest->files;
+			$oPictureFile = $oRequestFiles->get($sPictureAttCode);
+			if ($oPictureFile === null)
+			{
+				IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Parameter picture must be defined.');
+				$oApp->abort(500, 'Parameter picture must be defined.');
+			}
+			
+			try
+			{
+				// Retrieving image as an ORMDocument
+				$oImage = utils::ReadPostedDocument($sPictureAttCode);
+				// Retrieving current contact
+				$oCurContact = UserRights::GetContactObject();
+				// Resizing image
+				$oAttDef = MetaModel::GetAttributeDef(get_class($oCurContact), $sPictureAttCode);
+				$aSize = utils::GetImageSize($oImage->GetData());
+				$oImage = utils::ResizeImageToFit($oImage, $aSize[0], $aSize[1], $oAttDef->Get('storage_max_width'), $oAttDef->Get('storage_max_height'));
+				// Setting it to the contact
+				$oCurContact->Set($sPictureAttCode, $oImage);
+				// Forcing allowed writing on the object if necessary.
+				$oCurContact->AllowWrite(true);
+				$oCurContact->DBUpdate();
+			}
+			catch (FileUploadException $e)
+			{
+				$aFormData['error'] = $e->GetMessage();
+			}
+
+			$aFormData['picture_url'] = $oImage->GetDownloadURL(get_class($oCurContact), $oCurContact->GetKey(), $sPictureAttCode);
+			$aFormData['validation'] = array(
+				'valid' => true,
+				'messages' => array()
+			);
+		}
+		else
+		{
+			// Else, submit from another form
+		}
 
 		return $aFormData;
 	}

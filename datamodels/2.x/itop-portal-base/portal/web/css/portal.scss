@@ -495,8 +495,50 @@ footer{
 /**********************/
 /* Brick user profile */
 /**********************/
-.home .userprofile-brick{
-	background-color: #E8E7E7;
+#user-profile-wrapper .user_profile_picture .content_loader{
+	position: absolute;
+	z-index: 1;
+    top: 0;
+    left: 0;
+    padding-top: 4em;
+    width: 100%;
+    height: 100%;
+	text-align: center;
+	color: white;
+    background-color: black;
+    opacity: 0.5;
+}
+#user-profile-wrapper .user_profile_picture .preview{
+	display: inline-block;
+	position: relative;
+	max-width: 175px;
+	max-height: 175px;
+	overflow: hidden;
+}
+#user-profile-wrapper .user_profile_picture .actions{
+	display: inline-block;
+	vertical-align: top; /*middle;*/
+	margin-left: 5px;
+}
+#user-profile-wrapper .user_profile_picture .actions .btn{
+	display: block;
+	position: relative;
+	margin-bottom: 10px;
+}
+#user-profile-wrapper .user_profile_picture .actions .btn:last-child{
+	margin-bottom: 0px;
+}
+#user-profile-wrapper .user_profile_picture .actions .btn.btn_edit{
+	overflow: hidden;
+}
+#user-profile-wrapper .user_profile_picture .actions .btn.btn_edit input{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	cursor: pointer;
 }
 
 /****************/

@@ -41,17 +41,37 @@
 				</div>
 			</div>
 			<div class="col-sm-6">
-				<div class="panel panel-default">
+				<div class="panel panel-default user_profile_picture">
 					<div class="panel-heading">
 						<h3 class="panel-title">Photo</h3>
 					</div>
 					<div class="panel-body" style="position: relative;">
-						<div class="text-center">
-							<img src="{{ sUserPhotoUrl }}" style="max-width: 175px;"/>
-							<!--<input type="file" id="xx" name="xx" />-->
-							<div style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; background-color: #000000; opacity: 0.5;"></div>
-							<div style="position: absolute; bottom: 0.5em; left: 0px; width: 100%; color: #FFFFFF; font-size: 1.5em; font-style: italic;">Picture edition not available in beta</div>
+						<div class="form_alerts">
+							<div class="alert alert-success" role="alert" style="display: none;"></div>
+							<div class="alert alert-warning" role="alert" style="display: none;"></div>
+							<div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
 						</div>
+						<form id="picture-form" method="POST" action="{{ app['url_generator'].generate('p_user_profile_brick') }}">
+							<input type="hidden" name="current_values[form_type]" value="{{ constant('\\Combodo\\iTop\\Portal\\Controller\\UserProfileBrickController::ENUM_FORM_TYPE_PICTURE') }}" />
+							<input type="hidden" name="operation" value="submit" />
+							<div class="text-center">
+								<span class="preview">
+									<img src="{{ sUserPhotoUrl }}"/>
+								</span>
+								<span class="actions">
+									<button type="button" class="btn btn-default btn_edit">
+										<span class="fa fa-pencil fa-fw"></span>
+										<input id="picture" type="file" name="picture" />
+									</button>
+									{#<button type="button" class="btn btn-default btn_undo" title="{{ 'UI:Button:ResetImage'|dict_s }}" disabled>
+										<span class="fa fa-undo fa-fw"></span>
+									</button>
+									<button type="button" class="btn btn-default btn_reset" title="{{ 'UI:Button:RemoveImage'|dict_s }}">
+										<span class="fa fa-trash-o fa-fw"></span>
+									</button>#}
+								</span>
+							</div>
+						</form>
 					</div>
 				</div>
 				<div class="panel panel-default">
@@ -136,6 +156,46 @@
 		});
 	{% endif %}
 	
+	// Picture form
+	// - JQuery upload widget
+	$('#picture-form #picture').fileupload({
+		dataType: 'json',
+		acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+		disableImageResize: /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent)
+	})
+	.on('fileuploadsend', function(oEvent, oData){
+		$('.user_profile_picture .form_alerts .alert-error').hide()
+		$('#page_overlay .overlay_content .content_loader').clone().prependTo('.user_profile_picture .panel-body');
+	})
+	.on('fileuploadalways', function(oEvent, oData){
+		$('.user_profile_picture .content_loader').remove();
+	})
+	.on('fileuploaddone', function(oEvent, oData){
+		if( (oData._response.result.form !== undefined) && (oData._response.result.form.validation.valid === true) )
+		{
+			// Retrieving picture url
+			var sPictureUrl = oData._response.result.form.picture_url;
+			// Replacing form preview image
+			$('#picture-form .preview img').attr('src', sPictureUrl);
+			// Replacing menu image
+			$('#topbar .user_photo, #sidebar .user_photo').css('background-image', 'url("' + sPictureUrl + '")');
+		}
+	})
+	.on('fileuploadfail', function(oEvent, oData){
+		if( (oData._response.jqXHR.responseJSON !== undefined) && (oData._response.jqXHR.responseJSON.error_message !== undefined) )
+		{
+			$('.user_profile_picture .form_alerts .alert-error').show().text(oData._response.jqXHR.responseJSON.error_message);
+		}
+	});
+	// - Undo button
+	/*$('#user-profile-wrapper .actions .btn_undo').on('click', function(oEvent){
+		console.log('Picture undo trigger');
+	});*/
+	// - Reset button
+	$('#user-profile-wrapper .actions .btn_reset').on('click', function(oEvent){
+		console.log('Picture reset trigger');
+	});
+	
 	// Submit button
 	$('#user-profile-wrapper .form_buttons .form_btn_submit').off('click').on('click', function(oEvent){
 		oEvent.preventDefault();
@@ -168,6 +228,6 @@
 					return false;
 				}
 			});
-		{% endif %}
+		{% endif %}		
 	});
 {% endblock %}

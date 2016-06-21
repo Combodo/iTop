@@ -1617,8 +1617,8 @@ output {
 .form-control:focus {
     border-color: $brand-primary;
     outline: 0;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6)
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(234, 125, 30, 0.6); /* Last rgb color is $brand-primary */
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(234, 125, 30, 0.6)
 }
 .form-control::-moz-placeholder {
     color: #dddddd;
@@ -2160,8 +2160,8 @@ fieldset[disabled] .btn-default:active,
 .btn-default.disabled.active,
 .btn-default[disabled].active,
 fieldset[disabled] .btn-default.active {
-    background-color: #474949;
-    border-color: #474949
+    background-color: #BBBBBB;
+    border-color: $gray-light;
 }
 .btn-default .badge {
     color: #474949;
