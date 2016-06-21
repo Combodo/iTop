@@ -188,15 +188,16 @@ abstract class User extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("login", array("allowed_values"=>null, "sql"=>"login", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", array("sql"=>"language", "default_value"=>"EN US", "is_null_allowed"=>false, "depends_on"=>array())));
-
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values" => new ValueSetEnum('enabled,disabled'), "sql"=>"status", "default_value"=>"enabled", "is_null_allowed"=>false, "depends_on"=>array())));
+		
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profile_list", array("linked_class"=>"URP_UserProfile", "ext_key_to_me"=>"userid", "ext_key_to_remote"=>"profileid", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("allowed_org_list", array("linked_class"=>"URP_UserOrg", "ext_key_to_me"=>"userid", "ext_key_to_remote"=>"allowed_org_id", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('contactid', 'first_name', 'email', 'login', 'language', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'login')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('contactid', 'first_name', 'email', 'login', 'language', 'status', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'login', 'status')); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'status')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('login', 'contactid')); // Criteria of the advanced search form
 	}
 
@@ -432,10 +433,10 @@ abstract class UserInternal extends User
 		MetaModel::Init_AddAttribute(new AttributeOneWayPassword("reset_pwd_token", array("allowed_values"=>null, "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('contactid', 'first_name', 'email', 'login', 'language', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'login')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('contactid', 'first_name', 'email', 'login', 'status', 'language', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'login', 'status')); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'status')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('login', 'contactid')); // Criteria of the advanced search form
 	}
 
@@ -591,7 +592,17 @@ class UserRights
 		$oUser = self::FindUser($sName, $sAuthentication);
 		if (is_null($oUser))
 		{
-			return self::CheckCredentialsAndCreateUser($sName, $sPassword, $sLoginMode, $sAuthentication);
+			// Check if the user does not exist at all or if it is just disabled
+			if (self::FindUser($sName, $sAuthentication, true) == null)
+			{
+				// User does not exist at all
+				return self::CheckCredentialsAndCreateUser($sName, $sPassword, $sLoginMode, $sAuthentication);
+			}
+			else
+			{
+				// User is actually disabled
+				return  false;
+			}
 		}
 
 		if (!$oUser->CheckCredentials($sPassword))
@@ -1084,9 +1095,10 @@ class UserRights
 	 * Find a user based on its login and its type of authentication
 	 * @param string $sLogin Login/identifier of the user
 	 * @param string $sAuthentication Type of authentication used: internal|external|any
+	 * @param bool $bAllowDisabledUsers Whether or not to retrieve disabled users (status != enabled)
 	 * @return User The found user or null
 	 */
-	protected static function FindUser($sLogin, $sAuthentication = 'any')
+	protected static function FindUser($sLogin, $sAuthentication = 'any', $bAllowDisabledUsers = false)
 	{
 		if ($sAuthentication == 'any')
 		{
@@ -1120,6 +1132,10 @@ class UserRights
 					assert(false); // should never happen
 				}
 				$oSearch = DBObjectSearch::FromOQL("SELECT $sBaseClass WHERE login = :login");
+				if (!$bAllowDisabledUsers)
+				{
+					$oSearch->AddCondition('status', 'enabled');
+				}
 				$oSet = new DBObjectSet($oSearch, array(), array('login' => $sLogin));
 				$oUser = $oSet->fetch();
 				self::$m_aCacheUsers[$sAuthentication][$sLogin] = $oUser;

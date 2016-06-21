@@ -478,97 +478,101 @@ EOF
 		{
 			//echo "User: ".$_SESSION['auth_user']."\n";
 			// Already authentified
-			UserRights::Login($_SESSION['auth_user']); // Login & set the user's language
-			return self::EXIT_CODE_OK;
-		}
-		else
-		{
-			$index = 0;
-			$sLoginMode = '';
-			$sAuthentication = 'internal';
-			while(($sLoginMode == '') && ($index < count($aAllowedLoginTypes)))
+			$bRet = UserRights::Login($_SESSION['auth_user']); // Login & set the user's language
+			if ($bRet)
 			{
-				$sLoginType = $aAllowedLoginTypes[$index];
-				switch($sLoginType)
-				{
-					case 'cas':
-					utils::InitCASClient();					
-					// check CAS authentication
-					if (phpCAS::isAuthenticated())
-					{
-						$sAuthUser = phpCAS::getUser();
-						$sAuthPwd = '';
-						$sLoginMode = 'cas';
-						$sAuthentication = 'external';
-					}
-					break;
-					
-					case 'form':
-					// iTop standard mode: form based authentication
-					$sAuthUser = utils::ReadPostedParam('auth_user', '', false, 'raw_data');
-					$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, false, 'raw_data');
-					if (($sAuthUser != '') && ($sAuthPwd !== null))
-					{
-						$sLoginMode = 'form';
-					}
-					break;
-					
-					case 'basic':
-					// Standard PHP authentication method, works with Apache...
-					// Case 1) Apache running in CGI mode + rewrite rules in .htaccess
-					if (isset($_SERVER['HTTP_AUTHORIZATION']) && !empty($_SERVER['HTTP_AUTHORIZATION']))
-					{
-						list($sAuthUser, $sAuthPwd) = explode(':' , base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
-						$sLoginMode = 'basic';
-					}
-					else if (isset($_SERVER['PHP_AUTH_USER']))
-					{
-						$sAuthUser = $_SERVER['PHP_AUTH_USER'];
-						// Unfortunately, the RFC is not clear about the encoding...
-						// IE and FF supply the user and password encoded in ISO-8859-1 whereas Chrome provides them encoded in UTF-8
-						// So let's try to guess if it's an UTF-8 string or not... fortunately all encodings share the same ASCII base
-						if (!self::LooksLikeUTF8($sAuthUser))
-						{
-							// Does not look like and UTF-8 string, try to convert it from iso-8859-1 to UTF-8
-							// Supposed to be harmless in case of a plain ASCII string...
-							$sAuthUser = iconv('iso-8859-1', 'utf-8', $sAuthUser);
-						}
-						$sAuthPwd = $_SERVER['PHP_AUTH_PW'];
-						if (!self::LooksLikeUTF8($sAuthPwd))
-						{
-							// Does not look like and UTF-8 string, try to convert it from iso-8859-1 to UTF-8
-							// Supposed to be harmless in case of a plain ASCII string...
-							$sAuthPwd = iconv('iso-8859-1', 'utf-8', $sAuthPwd);
-						}
-						$sLoginMode = 'basic';
-					}
-					break;
-
-					case 'external':
-					// Web server supplied authentication
-					$bExternalAuth = false;
-					$sExtAuthVar = MetaModel::GetConfig()->GetExternalAuthenticationVariable(); // In which variable is the info passed ?
-					eval('$sAuthUser = isset('.$sExtAuthVar.') ? '.$sExtAuthVar.' : false;'); // Retrieve the value
-					if ($sAuthUser && (strlen($sAuthUser) > 0))
-					{
-						$sAuthPwd = ''; // No password in this case the web server already authentified the user...
-						$sLoginMode = 'external';
-						$sAuthentication = 'external';
-					}
-					break;
-
-					case 'url':
-					// Credentials passed directly in the url
-					$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
-					$sAuthPwd = utils::ReadParam('auth_pwd', null, false, 'raw_data');
-					if (($sAuthUser != '') && ($sAuthPwd !== null))
-					{
-						$sLoginMode = 'url';
-					}		
-					break;	
-				}
-				$index++;
+				return self::EXIT_CODE_OK;
 			}
+			// The user account is no longer valid/enabled
+			 static::ResetSession();
+		}
+		
+		$index = 0;
+		$sLoginMode = '';
+		$sAuthentication = 'internal';
+		while(($sLoginMode == '') && ($index < count($aAllowedLoginTypes)))
+		{
+			$sLoginType = $aAllowedLoginTypes[$index];
+			switch($sLoginType)
+			{
+				case 'cas':
+				utils::InitCASClient();					
+				// check CAS authentication
+				if (phpCAS::isAuthenticated())
+				{
+					$sAuthUser = phpCAS::getUser();
+					$sAuthPwd = '';
+					$sLoginMode = 'cas';
+					$sAuthentication = 'external';
+				}
+				break;
+				
+				case 'form':
+				// iTop standard mode: form based authentication
+				$sAuthUser = utils::ReadPostedParam('auth_user', '', false, 'raw_data');
+				$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, false, 'raw_data');
+				if (($sAuthUser != '') && ($sAuthPwd !== null))
+				{
+					$sLoginMode = 'form';
+				}
+				break;
+				
+				case 'basic':
+				// Standard PHP authentication method, works with Apache...
+				// Case 1) Apache running in CGI mode + rewrite rules in .htaccess
+				if (isset($_SERVER['HTTP_AUTHORIZATION']) && !empty($_SERVER['HTTP_AUTHORIZATION']))
+				{
+					list($sAuthUser, $sAuthPwd) = explode(':' , base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
+					$sLoginMode = 'basic';
+				}
+				else if (isset($_SERVER['PHP_AUTH_USER']))
+				{
+					$sAuthUser = $_SERVER['PHP_AUTH_USER'];
+					// Unfortunately, the RFC is not clear about the encoding...
+					// IE and FF supply the user and password encoded in ISO-8859-1 whereas Chrome provides them encoded in UTF-8
+					// So let's try to guess if it's an UTF-8 string or not... fortunately all encodings share the same ASCII base
+					if (!self::LooksLikeUTF8($sAuthUser))
+					{
+						// Does not look like and UTF-8 string, try to convert it from iso-8859-1 to UTF-8
+						// Supposed to be harmless in case of a plain ASCII string...
+						$sAuthUser = iconv('iso-8859-1', 'utf-8', $sAuthUser);
+					}
+					$sAuthPwd = $_SERVER['PHP_AUTH_PW'];
+					if (!self::LooksLikeUTF8($sAuthPwd))
+					{
+						// Does not look like and UTF-8 string, try to convert it from iso-8859-1 to UTF-8
+						// Supposed to be harmless in case of a plain ASCII string...
+						$sAuthPwd = iconv('iso-8859-1', 'utf-8', $sAuthPwd);
+					}
+					$sLoginMode = 'basic';
+				}
+				break;
+
+				case 'external':
+				// Web server supplied authentication
+				$bExternalAuth = false;
+				$sExtAuthVar = MetaModel::GetConfig()->GetExternalAuthenticationVariable(); // In which variable is the info passed ?
+				eval('$sAuthUser = isset('.$sExtAuthVar.') ? '.$sExtAuthVar.' : false;'); // Retrieve the value
+				if ($sAuthUser && (strlen($sAuthUser) > 0))
+				{
+					$sAuthPwd = ''; // No password in this case the web server already authentified the user...
+					$sLoginMode = 'external';
+					$sAuthentication = 'external';
+				}
+				break;
+
+				case 'url':
+				// Credentials passed directly in the url
+				$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
+				$sAuthPwd = utils::ReadParam('auth_pwd', null, false, 'raw_data');
+				if (($sAuthUser != '') && ($sAuthPwd !== null))
+				{
+					$sLoginMode = 'url';
+				}		
+				break;	
+			}
+			$index++;
+			
 			//echo "\nsLoginMode: $sLoginMode (user: $sAuthUser / pwd: $sAuthPwd\n)";
 			if ($sLoginMode == '')
 			{
