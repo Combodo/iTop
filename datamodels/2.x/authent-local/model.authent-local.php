@@ -121,7 +121,7 @@ class UserLocal extends UserInternal
 		$iFlags = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 		if (MetaModel::GetConfig()->Get('demo_mode'))
 		{
-			if (strpos('contactid,login,language,password,profile_list,allowed_org_list', $sAttCode) !== false)
+			if (strpos('contactid,login,language,password,status,profile_list,allowed_org_list', $sAttCode) !== false)
 			{
 				// contactid and allowed_org_list are disabled to make sure the portal remains accessible 
 				$aReasons[] = 'Sorry, this attribute is read-only in the demonstration mode!';
