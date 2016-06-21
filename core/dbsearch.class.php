@@ -128,7 +128,7 @@ abstract class DBSearch
 	abstract public function AddCondition_FullText($sFullText);
 
 	abstract public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS);
-	abstract public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode);
+	abstract public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS);
 	abstract public function Intersect(DBSearch $oFilter);
 
 	/**

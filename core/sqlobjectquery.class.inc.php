@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015 Combodo SARL
+// Copyright (C) 2015-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * SQLObjectQuery
  * build a mySQL compatible SQL query
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2015-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -196,7 +196,7 @@ class SQLObjectQuery extends SQLQuery
 	{
 		$this->AddJoin("inner", $oSQLQuery, $sLeftField, $sRightField, $sRightTable);
 	}
-	public function AddInnerJoinTree($oSQLQuery, $sLeftFieldLeft, $sLeftFieldRight, $sRightFieldLeft, $sRightFieldRight, $sRightTableAlias = '', $iOperatorCode = TREE_OPERATOR_BELOW)
+	public function AddInnerJoinTree($oSQLQuery, $sLeftFieldLeft, $sLeftFieldRight, $sRightFieldLeft, $sRightFieldRight, $sRightTableAlias = '', $iOperatorCode = TREE_OPERATOR_BELOW, $bInvertOnClause = false)
 	{
 		assert((get_class($oSQLQuery) == __CLASS__) || is_subclass_of($oSQLQuery, __CLASS__));
 		if (empty($sRightTableAlias))
@@ -211,7 +211,9 @@ class SQLObjectQuery extends SQLQuery
 			"rightfield_left" => $sRightFieldLeft,
 			"rightfield_right" => $sRightFieldRight,
 			"righttablealias" => $sRightTableAlias,
-			"tree_operator" => $iOperatorCode);
+			"tree_operator" => $iOperatorCode,
+			'invert_on_clause' => $bInvertOnClause
+		);
 	}
 	public function AddLeftJoin($oSQLQuery, $sLeftField, $sRightField)
 	{
@@ -406,10 +408,20 @@ class SQLObjectQuery extends SQLQuery
 				$aFrom[$this->m_sTableAlias] = array("jointype"=>$aJoinData['jointype'], "tablename"=>$this->m_sTable, "joincondition"=>"$sJoinCond");
 				break;
 			case "inner_tree":
-				$sNodeLeft = "`$sCallerAlias`.`{$aJoinData['leftfield']}`";
-				$sNodeRight = "`$sCallerAlias`.`{$aJoinData['rightfield']}`";
-				$sRootLeft = "`$sRightTableAlias`.`{$aJoinData['rightfield_left']}`";
-				$sRootRight = "`$sRightTableAlias`.`{$aJoinData['rightfield_right']}`";
+				if ($aJoinData['invert_on_clause'])
+				{
+					$sRootLeft = "`$sCallerAlias`.`{$aJoinData['leftfield']}`";
+					$sRootRight = "`$sCallerAlias`.`{$aJoinData['rightfield']}`";
+					$sNodeLeft = "`$sRightTableAlias`.`{$aJoinData['rightfield_left']}`";
+					$sNodeRight = "`$sRightTableAlias`.`{$aJoinData['rightfield_right']}`";
+				}
+				else
+				{
+					$sNodeLeft = "`$sCallerAlias`.`{$aJoinData['leftfield']}`";
+					$sNodeRight = "`$sCallerAlias`.`{$aJoinData['rightfield']}`";
+					$sRootLeft = "`$sRightTableAlias`.`{$aJoinData['rightfield_left']}`";
+					$sRootRight = "`$sRightTableAlias`.`{$aJoinData['rightfield_right']}`";
+				}
 				switch($aJoinData['tree_operator'])
 				{
 					case TREE_OPERATOR_BELOW:

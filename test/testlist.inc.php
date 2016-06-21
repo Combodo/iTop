@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Core test list
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -263,6 +263,7 @@ class TestOQLParser extends TestFunction
 			'SELECT  A, B,C FROM A JOIN B ON A.myB = B.id' => true,
 			'SELECT C FROM A JOIN B ON A.myB = B.id WHERE A.col1 = 2' => true,
 			'SELECT A JOIN B ON A.myB BELOW B.id WHERE A.col1 = 2' => true,
+			'SELECT A JOIN B ON B.myA BELOW A.id WHERE A.col1 = 2' => true,
 			'SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id BELOW B.id WHERE A.col1 = 2 AND B.id = 3' => true,
 			'SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id BELOW STRICT B.id WHERE A.col1 = 2 AND B.id = 3' => true,
 			'SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id NOT BELOW B.id WHERE A.col1 = 2 AND B.id = 3' => true,
@@ -373,6 +374,9 @@ class TestOQLNormalization extends TestBizModel
 			'SELECT Contact AS c WHERE c.name = "foo"' => true,
 			'SELECT Contact AS c WHERE Contact.name = "foo"' => false,
 			'SELECT Contact AS c WHERE x.name = "foo"' => false,
+
+			'SELECT Organization AS child JOIN Organization AS root ON child.parent_id BELOW root.id' => true,
+			'SELECT Organization AS root JOIN Organization AS child ON child.parent_id BELOW root.id' => true,
 
 			'SELECT RelationProfessionnelle' => false,
 			'SELECT RelationProfessionnelle AS c WHERE name = "foo"' => false,

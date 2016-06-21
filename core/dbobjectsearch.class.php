@@ -143,9 +143,15 @@ class DBObjectSearch extends DBSearch
 		}
 		foreach($this->m_aReferencedBy as $sForeignClass => $aReferences)
 		{
-			foreach($aReferences as $sForeignExtKeyAttCode => $oForeignFilter)
+			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
 			{
-				$oForeignFilter->ChangeClass($sNewClass, $sAlias);
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
+				{
+					foreach ($aFilters as $oForeignFilter)
+					{
+						$oForeignFilter->ChangeClass($sNewClass, $sAlias);
+					}
+				}
 			}
 		}
 	}
@@ -237,9 +243,15 @@ class DBObjectSearch extends DBSearch
 		}
 		foreach($this->m_aReferencedBy as $sForeignClass => $aReferences)
 		{
-			foreach($aReferences as $sForeignExtKeyAttCode => $oForeignFilter)
+			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
 			{
-				$oForeignFilter->RenameParam($sOldName, $sNewName);
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
+				{
+					foreach ($aFilters as $oForeignFilter)
+					{
+						$oForeignFilter->RenameParam($sOldName, $sNewName);
+					}
+				}
 			}
 		}
 	}
@@ -482,9 +494,15 @@ class DBObjectSearch extends DBSearch
 
 		foreach($this->m_aReferencedBy as $sForeignClass=>$aReferences)
 		{
-			foreach($aReferences as $sForeignExtKeyAttCode=>$oForeignFilter)
+			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
 			{
-				$oForeignFilter->AddToNameSpace($aClassAliases, $aAliasTranslation);
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
+				{
+					foreach ($aFilters as $oForeignFilter)
+					{
+						$oForeignFilter->AddToNameSpace($aClassAliases, $aAliasTranslation);
+					}
+				}
 			}
 		}
 	}
@@ -516,12 +534,18 @@ class DBObjectSearch extends DBSearch
 			}
 			foreach($this->m_aReferencedBy as $sForeignClass=>$aReferences)
 			{
-				foreach($aReferences as $sForeignExtKeyAttCode=>$oForeignFilter)
+				foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
 				{
-					$ret = $oForeignFilter->GetNode($sAlias);
-					if (is_object($ret))
+					foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
 					{
-						return $ret;
+						foreach ($aFilters as $oForeignFilter)
+						{
+							$ret = $oForeignFilter->GetNode($sAlias);
+							if (is_object($ret))
+							{
+								return $ret;
+							}
+						}
 					}
 				}
 			}
@@ -567,7 +591,7 @@ class DBObjectSearch extends DBSearch
 		$oReceivingFilter->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][] = $oFilter;
 	}
 
-	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode)
+	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS)
 	{
 		$sForeignClass = $oFilter->GetClass();
 		if (!MetaModel::IsValidKeyAttCode($sForeignClass, $sForeignExtKeyAttCode))
@@ -587,32 +611,20 @@ class DBObjectSearch extends DBSearch
 		// NO: $oFilter = $oFilter->DeepClone();
 		// See also: Trac #639, and self::AddCondition_PointingTo()
 		$aAliasTranslation = array();
-		$res = $this->AddCondition_ReferencedBy_InNameSpace($oFilter, $sForeignExtKeyAttCode, $this->m_aClasses, $aAliasTranslation);
+		$res = $this->AddCondition_ReferencedBy_InNameSpace($oFilter, $sForeignExtKeyAttCode, $this->m_aClasses, $aAliasTranslation, $iOperatorCode);
 		$this->TransferConditionExpression($oFilter, $aAliasTranslation);
 		return $res;
 	}
 
-	protected function AddCondition_ReferencedBy_InNameSpace(DBSearch $oFilter, $sForeignExtKeyAttCode, &$aClassAliases, &$aAliasTranslation)
+	protected function AddCondition_ReferencedBy_InNameSpace(DBSearch $oFilter, $sForeignExtKeyAttCode, &$aClassAliases, &$aAliasTranslation, $iOperatorCode)
 	{
 		$sForeignClass = $oFilter->GetClass();
 
 		// Find the node on which the new tree must be attached (most of the time it is "this")
 		$oReceivingFilter = $this->GetNode($this->GetClassAlias());
 
-		if (array_key_exists($sForeignClass, $this->m_aReferencedBy) && array_key_exists($sForeignExtKeyAttCode, $this->m_aReferencedBy[$sForeignClass]))
-		{
-			$oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode]->MergeWith_InNamespace($oFilter, $aClassAliases, $aAliasTranslation);
-		}
-		else
-		{
-			$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
-
-			// #@# The condition expression found in that filter should not be used - could be another kind of structure like a join spec tree !!!!
-			//$oNewFilter = $oFilter->DeepClone();
-			//$oNewFilter->ResetCondition();
-
-			$oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode]= $oFilter;
-		}
+		$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
+		$oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode][$iOperatorCode][] = $oFilter;
 	}
 
 	public function Intersect(DBSearch $oFilter)
@@ -701,16 +713,22 @@ class DBObjectSearch extends DBSearch
 		}
 		foreach($oFilter->m_aReferencedBy as $sForeignClass => $aReferences)
 		{
-			foreach($aReferences as $sForeignExtKeyAttCode => $oForeignFilter)
+			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
 			{
-				$this->AddCondition_ReferencedBy_InNamespace($oForeignFilter, $sForeignExtKeyAttCode, $aClassAliases, $aAliasTranslation);
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
+				{
+					foreach ($aFilters as $oForeignFilter)
+					{
+						$this->AddCondition_ReferencedBy_InNamespace($oForeignFilter, $sForeignExtKeyAttCode, $aClassAliases, $aAliasTranslation, $iOperatorCode);
+					}
+				}
 			}
 		}
 	}
 
 	public function GetCriteria() {return $this->m_oSearchCondition;}
 	public function GetCriteria_FullText() {return $this->m_aFullText;}
-	public function GetCriteria_PointingTo($sKeyAttCode = "")
+	protected function GetCriteria_PointingTo($sKeyAttCode = "")
 	{
 		if (empty($sKeyAttCode))
 		{
@@ -719,19 +737,9 @@ class DBObjectSearch extends DBSearch
 		if (!array_key_exists($sKeyAttCode, $this->m_aPointingTo)) return array();
 		return $this->m_aPointingTo[$sKeyAttCode];
 	}
-	public function GetCriteria_ReferencedBy($sRemoteClass = "", $sForeignExtKeyAttCode = "")
+	protected function GetCriteria_ReferencedBy()
 	{
-		if (empty($sRemoteClass))
-		{
-			return $this->m_aReferencedBy;
-		}
-		if (!array_key_exists($sRemoteClass, $this->m_aReferencedBy)) return null;
-		if (empty($sForeignExtKeyAttCode))
-		{
-			return $this->m_aReferencedBy[$sRemoteClass];
-		}
-		if (!array_key_exists($sForeignExtKeyAttCode, $this->m_aReferencedBy[$sRemoteClass])) return null;
-		return $this->m_aReferencedBy[$sRemoteClass][$sForeignExtKeyAttCode];
+		return $this->m_aReferencedBy;
 	}
 
 	public function SetInternalParams($aParams)
@@ -845,6 +853,50 @@ class DBObjectSearch extends DBSearch
 		return $sRes;
 	}
 
+	protected function OperatorCodeToOQL($iOperatorCode)
+	{
+		switch($iOperatorCode)
+		{
+			case TREE_OPERATOR_EQUALS:
+				$sOperator = ' = ';
+				break;
+
+			case TREE_OPERATOR_BELOW:
+				$sOperator = ' BELOW ';
+				break;
+
+			case TREE_OPERATOR_BELOW_STRICT:
+				$sOperator = ' BELOW STRICT ';
+				break;
+
+			case TREE_OPERATOR_NOT_BELOW:
+				$sOperator = ' NOT BELOW ';
+				break;
+
+			case TREE_OPERATOR_NOT_BELOW_STRICT:
+				$sOperator = ' NOT BELOW STRICT ';
+				break;
+
+			case TREE_OPERATOR_ABOVE:
+				$sOperator = ' ABOVE ';
+				break;
+
+			case TREE_OPERATOR_ABOVE_STRICT:
+				$sOperator = ' ABOVE STRICT ';
+				break;
+
+			case TREE_OPERATOR_NOT_ABOVE:
+				$sOperator = ' NOT ABOVE ';
+				break;
+
+			case TREE_OPERATOR_NOT_ABOVE_STRICT:
+				$sOperator = ' NOT ABOVE STRICT ';
+				break;
+
+		}
+		return $sOperator;
+	}
+
 	protected function ToOQL_Joins()
 	{
 		$sRes = '';
@@ -852,47 +904,9 @@ class DBObjectSearch extends DBSearch
 		{
 			foreach($aPointingTo as $iOperatorCode => $aFilter)
 			{
+				$sOperator = $this->OperatorCodeToOQL($iOperatorCode);
 				foreach($aFilter as $oFilter)
 				{
-					switch($iOperatorCode)
-					{
-						case TREE_OPERATOR_EQUALS:
-						$sOperator = ' = ';
-						break;
-						
-						case TREE_OPERATOR_BELOW:
-						$sOperator = ' BELOW ';
-						break;
-						
-						case TREE_OPERATOR_BELOW_STRICT:
-						$sOperator = ' BELOW STRICT ';
-						break;
-						
-						case TREE_OPERATOR_NOT_BELOW:
-						$sOperator = ' NOT BELOW ';
-						break;
-						
-						case TREE_OPERATOR_NOT_BELOW_STRICT:
-						$sOperator = ' NOT BELOW STRICT ';
-						break;
-						
-						case TREE_OPERATOR_ABOVE:
-						$sOperator = ' ABOVE ';
-						break;
-						
-						case TREE_OPERATOR_ABOVE_STRICT:
-						$sOperator = ' ABOVE STRICT ';
-						break;
-						
-						case TREE_OPERATOR_NOT_ABOVE:
-						$sOperator = ' NOT ABOVE ';
-						break;
-						
-						case TREE_OPERATOR_NOT_ABOVE_STRICT:
-						$sOperator = ' NOT ABOVE STRICT ';
-						break;
-						
-					}
 					$sRes .= ' JOIN ' . $oFilter->GetFirstJoinedClass() . ' AS `' . $oFilter->GetFirstJoinedClassAlias() . '` ON `' . $this->GetFirstJoinedClassAlias() . '`.' . $sExtKey . $sOperator . '`' . $oFilter->GetFirstJoinedClassAlias() . '`.id';
 					$sRes .= $oFilter->ToOQL_Joins();				
 				}
@@ -900,10 +914,17 @@ class DBObjectSearch extends DBSearch
 		}
 		foreach($this->m_aReferencedBy as $sForeignClass=>$aReferences)
 		{
-			foreach($aReferences as $sForeignExtKeyAttCode=>$oForeignFilter)
+			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
 			{
-				$sRes .= ' JOIN ' . $oForeignFilter->GetFirstJoinedClass() . ' AS `' . $oForeignFilter->GetFirstJoinedClassAlias() . '` ON `' . $oForeignFilter->GetFirstJoinedClassAlias() . '`.' . $sForeignExtKeyAttCode . ' = `' . $this->GetFirstJoinedClassAlias() . '`.id';
-				$sRes .= $oForeignFilter->ToOQL_Joins();
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
+				{
+					$sOperator = $this->OperatorCodeToOQL($iOperatorCode);
+					foreach ($aFilters as $oForeignFilter)
+					{
+						$sRes .= ' JOIN ' . $oForeignFilter->GetFirstJoinedClass() . ' AS `' . $oForeignFilter->GetFirstJoinedClassAlias() . '` ON `' . $oForeignFilter->GetFirstJoinedClassAlias() . '`.' . $sForeignExtKeyAttCode . $sOperator . '`' . $this->GetFirstJoinedClassAlias() . '`.id';
+						$sRes .= $oForeignFilter->ToOQL_Joins();
+					}
+				}
 			}
 		}
 		return $sRes;
@@ -1011,47 +1032,49 @@ class DBObjectSearch extends DBSearch
 				$aAliases[$sJoinClassAlias] = $sJoinClass;
 				$aJoinItems[$sJoinClassAlias] = new DBObjectSearch($sJoinClass, $sJoinClassAlias);
 
+				$sOperator = $oJoinSpec->GetOperator();
+				switch($sOperator)
+				{
+					case '=':
+					default:
+						$iOperatorCode = TREE_OPERATOR_EQUALS;
+						break;
+					case 'BELOW':
+						$iOperatorCode = TREE_OPERATOR_BELOW;
+						break;
+					case 'BELOW_STRICT':
+						$iOperatorCode = TREE_OPERATOR_BELOW_STRICT;
+						break;
+					case 'NOT_BELOW':
+						$iOperatorCode = TREE_OPERATOR_NOT_BELOW;
+						break;
+					case 'NOT_BELOW_STRICT':
+						$iOperatorCode = TREE_OPERATOR_NOT_BELOW_STRICT;
+						break;
+					case 'ABOVE':
+						$iOperatorCode = TREE_OPERATOR_ABOVE;
+						break;
+					case 'ABOVE_STRICT':
+						$iOperatorCode = TREE_OPERATOR_ABOVE_STRICT;
+						break;
+					case 'NOT_ABOVE':
+						$iOperatorCode = TREE_OPERATOR_NOT_ABOVE;
+						break;
+					case 'NOT_ABOVE_STRICT':
+						$iOperatorCode = TREE_OPERATOR_NOT_ABOVE_STRICT;
+						break;
+				}
+
 				if ($sFromClass == $sJoinClassAlias)
 				{
 					$oReceiver = $aJoinItems[$sToClass];
 					$oNewComer = $aJoinItems[$sFromClass];
 
 					$aAliasTranslation = array();
-					$oReceiver->AddCondition_ReferencedBy_InNameSpace($oNewComer, $sExtKeyAttCode, $oReceiver->m_aClasses, $aAliasTranslation);
+					$oReceiver->AddCondition_ReferencedBy_InNameSpace($oNewComer, $sExtKeyAttCode, $oReceiver->m_aClasses, $aAliasTranslation, $iOperatorCode);
 				}
 				else
 				{
-					$sOperator = $oJoinSpec->GetOperator();
-					switch($sOperator)
-					{
-						case '=':
-						$iOperatorCode = TREE_OPERATOR_EQUALS;
-						break;
-						case 'BELOW':
-						$iOperatorCode = TREE_OPERATOR_BELOW;
-						break;
-						case 'BELOW_STRICT':
-						$iOperatorCode = TREE_OPERATOR_BELOW_STRICT;
-						break;
-						case 'NOT_BELOW':
-						$iOperatorCode = TREE_OPERATOR_NOT_BELOW;
-						break;
-						case 'NOT_BELOW_STRICT':
-						$iOperatorCode = TREE_OPERATOR_NOT_BELOW_STRICT;
-						break;
-						case 'ABOVE':
-						$iOperatorCode = TREE_OPERATOR_ABOVE;
-						break;
-						case 'ABOVE_STRICT':
-						$iOperatorCode = TREE_OPERATOR_ABOVE_STRICT;
-						break;
-						case 'NOT_ABOVE':
-						$iOperatorCode = TREE_OPERATOR_NOT_ABOVE;
-						break;
-						case 'NOT_ABOVE_STRICT':
-						$iOperatorCode = TREE_OPERATOR_NOT_ABOVE_STRICT;
-						break;
-					}
 					$oReceiver = $aJoinItems[$sFromClass];
 					$oNewComer = $aJoinItems[$sToClass];
 
@@ -1348,38 +1371,57 @@ class DBObjectSearch extends DBSearch
 		}
 
 		// Filter on objects referencing me
-		foreach ($this->GetCriteria_ReferencedBy() as $sForeignClass => $aKeysAndFilters)
+		//
+		foreach($this->m_aReferencedBy as $sForeignClass=>$aReferences)
 		{
-			foreach ($aKeysAndFilters as $sForeignKeyAttCode => $oForeignFilter)
+			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
 			{
-				$oForeignKeyAttDef = MetaModel::GetAttributeDef($sForeignClass, $sForeignKeyAttCode);
-	
-				self::DbgTrace("Referenced by foreign key: $sForeignKeyAttCode... let's call MakeSQLObjectQuery()");
-				//self::DbgTrace($oForeignFilter);
-				//self::DbgTrace($oForeignFilter->ToOQL());
-				//self::DbgTrace($oSelectForeign);
-				//self::DbgTrace($oSelectForeign->RenderSelect(array()));
-
-				$sForeignClassAlias = $oForeignFilter->GetFirstJoinedClassAlias();
-				$oBuild->m_oQBExpressions->PushJoinField(new FieldExpression($sForeignKeyAttCode, $sForeignClassAlias));
-
-				if ($oForeignKeyAttDef instanceof AttributeObjectKey)
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
 				{
-					$sClassAttCode = $oForeignKeyAttDef->Get('class_attcode');
+					foreach ($aFilters as $oForeignFilter)
+					{
+						$oForeignKeyAttDef = MetaModel::GetAttributeDef($sForeignClass, $sForeignExtKeyAttCode);
 
-					// Add the condition: `$sForeignClassAlias`.$sClassAttCode IN (subclasses of $sClass')
-					$oClassListExpr = ListExpression::FromScalars(MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL));
-					$oClassExpr = new FieldExpression($sClassAttCode, $sForeignClassAlias);
-					$oClassRestriction = new BinaryExpression($oClassExpr, 'IN', $oClassListExpr);
-					$oBuild->m_oQBExpressions->AddCondition($oClassRestriction);
+						self::DbgTrace("Referenced by foreign key: $sForeignExtKeyAttCode... let's call MakeSQLObjectQuery()");
+						//self::DbgTrace($oForeignFilter);
+						//self::DbgTrace($oForeignFilter->ToOQL());
+						//self::DbgTrace($oSelectForeign);
+						//self::DbgTrace($oSelectForeign->RenderSelect(array()));
+
+						$sForeignClassAlias = $oForeignFilter->GetFirstJoinedClassAlias();
+						$oBuild->m_oQBExpressions->PushJoinField(new FieldExpression($sForeignExtKeyAttCode, $sForeignClassAlias));
+
+						if ($oForeignKeyAttDef instanceof AttributeObjectKey)
+						{
+							$sClassAttCode = $oForeignKeyAttDef->Get('class_attcode');
+
+							// Add the condition: `$sForeignClassAlias`.$sClassAttCode IN (subclasses of $sClass')
+							$oClassListExpr = ListExpression::FromScalars(MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL));
+							$oClassExpr = new FieldExpression($sClassAttCode, $sForeignClassAlias);
+							$oClassRestriction = new BinaryExpression($oClassExpr, 'IN', $oClassListExpr);
+							$oBuild->m_oQBExpressions->AddCondition($oClassRestriction);
+						}
+
+						$oSelectForeign = $oForeignFilter->MakeSQLObjectQuery($oBuild, $aAttToLoad);
+
+						$oJoinExpr = $oBuild->m_oQBExpressions->PopJoinField();
+						$sForeignKeyTable = $oJoinExpr->GetParent();
+						$sForeignKeyColumn = $oJoinExpr->GetName();
+
+						if ($iOperatorCode == TREE_OPERATOR_EQUALS)
+						{
+							$oSelectBase->AddInnerJoin($oSelectForeign, $sKeyField, $sForeignKeyColumn, $sForeignKeyTable);
+						}
+						else
+						{
+							// Hierarchical key
+							$KeyLeft = $oForeignKeyAttDef->GetSQLLeft();
+							$KeyRight = $oForeignKeyAttDef->GetSQLRight();
+
+							$oSelectBase->AddInnerJoinTree($oSelectForeign, $KeyLeft, $KeyRight, $KeyLeft, $KeyRight, $sForeignKeyTable, $iOperatorCode, true);
+						}
+					}
 				}
-
-				$oSelectForeign = $oForeignFilter->MakeSQLObjectQuery($oBuild, $aAttToLoad);
-
-				$oJoinExpr = $oBuild->m_oQBExpressions->PopJoinField();
-				$sForeignKeyTable = $oJoinExpr->GetParent();
-				$sForeignKeyColumn = $oJoinExpr->GetName();
-				$oSelectBase->AddInnerJoin($oSelectForeign, $sKeyField, $sForeignKeyColumn, $sForeignKeyTable);
 			}
 		}
 
