@@ -641,13 +641,20 @@ class OQLMenuNode extends MenuNode
 	 * @param integer $iAllowedResults Expected "rights" for the action: either UR_ALLOWED_YES, UR_ALLOWED_NO, UR_ALLOWED_DEPENDS or a mix of them...
 	 * @return MenuNode
 	 */
-	public function __construct($sMenuId, $sOQL, $iParentIndex, $fRank = 0, $bSearch = false, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null, $bSearchFormOpen = true)
+	public function __construct($sMenuId, $sOQL, $iParentIndex, $fRank = 0, $bSearch = false, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null, $bSearchFormOpen = null)
 	{
 		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
 		$this->sPageTitle = "Menu:$sMenuId+";
 		$this->sOQL = $sOQL;
 		$this->bSearch = $bSearch;
-		$this->bSearchFormOpen = $bSearchFormOpen;
+		if ($bSearchFormOpen == null)
+		{
+			$this->bSearchFormOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open');
+		}
+		else
+		{
+			$this->bSearchFormOpen = $bSearchFormOpen;
+		}
 		$this->m_aParams = array();
 		$this->aReflectionProperties['oql'] = $sOQL;
 		$this->aReflectionProperties['do_search'] = $bSearch;

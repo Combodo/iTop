@@ -1773,7 +1773,21 @@ EOF;
 		case 'OQLMenuNode':
 			$sOQL = self::QuoteForPHP($oMenu->GetChildText('oql'));
 			$bSearch = ($oMenu->GetChildText('do_search') == '1') ? 'true' : 'false';
-			$sSearchFormOpen = ($oMenu->GetChildText('search_form_open') == '1') ? 'true' : 'false';
+			$sSearchFormOpenXML = $oMenu->GetChildText('search_form_open');
+			switch($sSearchFormOpenXML)
+			{
+				case '1':
+				$sSearchFormOpen = 'true';
+				break;
+				
+				case '0':
+				$sSearchFormOpen = 'false';
+				break;
+				
+				default:
+				$sSearchFormOpen = 'null'; // Actual open/close status depend on the config
+			}
+			$sSearchFormOpen = ($oMenu->GetChildText('search_form_open') == '') ? 'null' : 'false';
 			$sNewMenu = "new OQLMenuNode('$sMenuId', $sOQL, $sParentSpec, $fRank, $bSearch, $sSearchFormOpen);";
 			break;
 

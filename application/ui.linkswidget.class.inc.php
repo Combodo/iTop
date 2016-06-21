@@ -356,11 +356,12 @@ EOF
 	
 	public function GetObjectPickerDialog($oPage, $oCurrentObj)
 	{
+		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open');
 		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
 		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
 		$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
-		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}", array('open' => true));
+		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}", array('open' => $bOpen));
 		$sHtml .= "<form id=\"ObjectsAddForm_{$this->m_sAttCode}{$this->m_sNameSuffix}\" OnSubmit=\"return oWidget{$this->m_iInputId}.DoAddObjects(this.id);\">\n";
 		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
 		$sHtml .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";
