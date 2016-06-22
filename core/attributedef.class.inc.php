@@ -6968,6 +6968,10 @@ class AttributeCustomFields extends AttributeDefinition
 		{
 			return new ormCustomFieldsValue($oHostObject, $this->GetCode(), $proposedValue);
 		}
+		elseif (is_null($proposedValue))
+		{
+			return new ormCustomFieldsValue($oHostObject, $this->GetCode());
+		}
 		throw new Exception('Unexpected type for the value of a custom fields attribute: '.gettype($proposedValue));
 	}
 
