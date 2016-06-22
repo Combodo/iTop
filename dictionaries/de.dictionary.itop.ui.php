@@ -1111,5 +1111,6 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'ExcelExport:Statistics' => 'Statistik',
 	'portal:legacy_portal' => 'Endbenutzer-Portal',
 	'portal:backoffice' => 'iTop Backend',
+	'UI:UploadNotSupportedInThisMode' => 'Die Modifizierung von Bildern oder Dateien wird in diesem Modus nicht unterstützt.',
 ));
 ?>

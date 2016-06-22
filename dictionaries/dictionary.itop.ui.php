@@ -1330,4 +1330,5 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize',
 	'UI:Button:ResetImage' => 'Recover the previous image',
 	'UI:Button:RemoveImage' => 'Remove the image',
+	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.',
 ));

@@ -452,7 +452,17 @@ EOF
 		$sDialogTitle = '';
 		$oPage->add('<div id="ac_create_'.$this->iId.'"><div class="wizContainer" style="vertical-align:top;"><div id="dcr_'.$this->iId.'">');
 		$oPage->add("<h1>".MetaModel::GetClassIcon($this->sTargetClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', MetaModel::GetName($this->sTargetClass))."</h1>\n");
-	 	cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), array('formPrefix' => $this->iId, 'noRelations' => true));	
+		$aFieldsFlags = array();
+		$aFieldsComments = array();
+		foreach(MetaModel::ListAttributeDefs($this->sTargetClass) as $sAttCode => $oAttDef)
+		{
+			if (($oAttDef instanceof AttributeBlob) || (false))
+			{
+				$aFieldsFlags[$sAttCode] = OPT_ATT_READONLY;
+				$aFieldsComments[$sAttCode] = '&nbsp;<img src="../images/transp-lock.png" style="vertical-align:middle" title="'.htmlentities(Dict::S('UI:UploadNotSupportedInThisMode')).'"/>';
+			}
+		}
+	 	cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), array('formPrefix' => $this->iId, 'noRelations' => true, 'fieldsFlags' => $aFieldsFlags, 'fieldsComments' => $aFieldsComments));	
 		$oPage->add('</div></div></div>');
 //		$oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: $(window).width()*0.8, height: 'auto', autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
 		$oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitle'});\n");

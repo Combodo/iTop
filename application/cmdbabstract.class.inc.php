@@ -663,11 +663,11 @@ EOF
 											}
 											$sTip = addslashes($sTip);
 											$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
+											$sComments = $sSynchroIcon;
 										}
 
 										// Attribute is read-only
 										$sHTMLValue = "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode).'</span>';
-										$sComments = $sSynchroIcon;
 									}
 									else
 									{
@@ -3199,8 +3199,15 @@ EOF
 				$oImage = utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents');
 				$aSize = utils::GetImageSize($oImage->GetData());
 				$oImage = utils::ResizeImageToFit($oImage, $aSize[0], $aSize[1], $oAttDef->Get('storage_max_width'), $oAttDef->Get('storage_max_height'));
-				$aOtherData = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", array(), 'raw_data');
-				$value = array('fcontents' => $oImage, 'remove' => $aOtherData['remove']);
+				$aOtherData = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
+				if (is_array($aOtherData))
+				{
+					$value = array('fcontents' => $oImage, 'remove' => $aOtherData['remove']);
+				}
+				else
+				{
+					$value = null;
+				}
 			}
 			elseif ($oAttDef->GetEditClass() == 'RedundancySetting')
 			{

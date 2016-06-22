@@ -1173,4 +1173,5 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:ToggleFullScreen' => 'Agrandir / Minimiser',
 	'UI:Button:ResetImage' => 'Récupérer l\'image initiale',
 	'UI:Button:RemoveImage' => 'Supprimer l\'image',
+	'UI:UploadNotSupportedInThisMode' => 'La modification d\'images ou de fichiers n\'est pas supportée dans ce mode.',
 ));
