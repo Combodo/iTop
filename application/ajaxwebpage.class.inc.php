@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
  * Simple web page with no includes, header or fancy formatting, useful to
  * generate HTML fragments when called by an AJAX method
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -252,7 +252,6 @@ EOF
 	        echo "<script type=\"text/javascript\">\n";
 	        echo "$('#inner_menu').html($('#accordion_temp_$uid').html());\n";
 	        echo "$('#accordion_temp_$uid').remove();\n";
-	        echo "$('#accordion').accordion({ header: 'h3', navigation: true, autoHeight: false, collapsible: false, icons: false });\n";
 	        echo "\n</script>\n";
         }
 
