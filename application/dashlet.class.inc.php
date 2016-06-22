@@ -733,7 +733,8 @@ abstract class DashletGroupBy extends Dashlet
 			if (is_subclass_of($sAttType, 'AttributeFriendlyName')) continue;
 			if ($sAttType == 'AttributeExternalField') continue;
 			if (is_subclass_of($sAttType, 'AttributeExternalField')) continue;
-
+			if ($sAttType == 'AttributeOneWayPassword') continue;
+			
 			$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
 			$aGroupBy[$sAttCode] = $sLabel;
 

@@ -394,7 +394,7 @@ class DisplayBlock
 			{
 				if (isset($aExtraParams['group_by_label']))
 				{
-					$oGroupByExp = Expression::FromOQL($aExtraParams['group_by']);
+					$oGroupByExp = Expression::FromOQL($aExtraParams['group_by']);					
 					$sGroupByLabel = $aExtraParams['group_by_label'];
 				}
 				else
@@ -405,6 +405,21 @@ class DisplayBlock
 					$sGroupByLabel = MetaModel::GetLabel($this->m_oFilter->GetClass(), $aExtraParams['group_by']);
 				}
 
+				// Security filtering
+				$aFields = $oGroupByExp->ListRequiredFields();
+				foreach($aFields as $sFieldAlias)
+				{
+					if (preg_match('/^([^.]+)\\.([^.]+)$/', $sFieldAlias, $aMatches))
+					{
+						$sFieldClass = $this->m_oFilter->GetClassName($aMatches[1]);
+						$oAttDef = MetaModel::GetAttributeDef($sFieldClass, $aMatches[2]);
+						if ($oAttDef instanceof AttributeOneWayPassword)
+						{
+							throw new Exception('Grouping on password fields is not supported.');
+						}
+					}
+				}
+				
 				$aGroupBy = array();
 				$aGroupBy['grouped_by_1'] = $oGroupByExp;
 				$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true);
