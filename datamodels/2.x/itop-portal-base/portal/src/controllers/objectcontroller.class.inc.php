@@ -801,7 +801,7 @@ class ObjectController extends AbstractController
 		}
 		
 		// - Retrieving class attribute list
-		$aAttCodes = MetaModel::FlattenZList(MetaModel::GetZListItems($sTargetObjectClass, 'list'));
+		$aAttCodes = ApplicationHelper::GetLoadedListFromClass($oApp, $sTargetObjectClass, 'list');
 		// - Adding friendlyname attribute to the list is not already in it
 		$sTitleAttCode = MetaModel::GetFriendlyNameAttributeCode($sTargetObjectClass);
 		if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodes))

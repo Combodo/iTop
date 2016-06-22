@@ -56,6 +56,7 @@ $bDebug = (isset($_REQUEST['debug']) && ($_REQUEST['debug'] === 'true') );
 $oApp = new Silex\Application();
 
 // Registring optional silex components
+$oApp->register(new Silex\Provider\HttpFragmentServiceProvider());
 $oApp->register(new Combodo\iTop\Portal\Provider\UrlGeneratorServiceProvider());
 $oApp->register(new Combodo\iTop\Portal\Provider\ContextManipulatorServiceProvider());
 $oApp->register(new Combodo\iTop\Portal\Provider\ScopeValidatorServiceProvider(), array(

@@ -401,6 +401,8 @@ class ApplicationHelper
 			$aPortalConf['forms'] = static::LoadFormsConfiguration($oApp, $oDesign);
 			// - Scopes
 			static::LoadScopesConfiguration($oApp, $oDesign);
+			// - Presentation lists
+			$aPortalConf['lists'] = static::LoadListsConfiguration($oApp, $oDesign);
 			// - Action rules
 			static::LoadActionRulesConfiguration($oApp, $oDesign);
 			// - Generating CSS files
@@ -581,6 +583,83 @@ class ApplicationHelper
 		}
 
 		return $aForm;
+	}
+
+	/**
+	 * Return the attribute list for the $sClassname in $sList.
+	 *
+	 * If not found, tries to find one from the closest parent class.
+	 * Else returns a default attribute list based on zlist 'list'
+	 *
+	 * @param Application $oApp
+	 * @param string $sClass Object class to find a list for
+	 * @param string $sList List name to find
+	 * @return array Array of attribute codes
+	 */
+	static function GetLoadedListFromClass(Application $oApp, $sClass, $sList = 'default')
+	{
+		$aLists = $oApp['combodo.portal.instance.conf']['lists'];
+		$aList = null;
+		$aAttCodes = array();
+
+		// We try to find the list for that class
+		if (isset($aLists[$sClass]) && isset($aLists[$sClass][$sList]))
+		{
+			$aList = $aLists[$sClass][$sList];
+		}
+		// Else we try to found the default list for that class
+		elseif (isset($aLists[$sClass]) && isset($aLists[$sClass]['default']))
+		{
+			$aList = $aLists[$sClass]['default'];
+		}
+		// If not found, we try find one from the closest parent class
+		else
+		{
+			$bFound = false;
+			foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass)
+			{
+				// Trying to find the right list
+				if (isset($aLists[$sParentClass]) && isset($aLists[$sParentClass][$sList]))
+				{
+					$aList = $aLists[$sParentClass][$sList];
+					$bFound = true;
+					break;
+				}
+				// Or the default list
+				elseif (isset($aLists[$sParentClass]) && isset($aLists[$sParentClass]['default']))
+				{
+					$aList = $aLists[$sParentClass]['default'];
+					$bFound = true;
+					break;
+				}
+			}
+
+			// If we have still not found one, we return a default form
+			if (!$bFound)
+			{
+				$aForm = array(
+					'id' => 'default',
+					'type' => 'zlist',
+					'fields' => 'details',
+					'layout' => null
+				);
+			}
+		}
+
+		// If found, we flatten the list to keep only the attribute codes (not the rank)
+		if ($aList !== null)
+		{
+			foreach ($aList as $aItem)
+			{
+				$aAttCodes[] = $aItem['att_code'];
+			}
+		}
+		else
+		{
+			$aAttCodes = MetaModel::FlattenZList(MetaModel::GetZListItems($sClass, 'list'));
+		}
+
+		return $aAttCodes;
 	}
 
 	/**
@@ -858,6 +937,94 @@ class ApplicationHelper
 	static protected function LoadActionRulesConfiguration(Application $oApp, ModuleDesign $oDesign)
 	{
 		$oApp['context_manipulator']->Init($oDesign->GetNodes('/module_design/action_rules/action_rule'));
+	}
+
+	/**
+	 * Loads the classes lists from the module design XML. They are mainly used when searching an external key but could be used more extensively later
+	 *
+	 * @param \Silex\Application $oApp
+	 * @param ModuleDesign $oDesign
+	 * @return array
+	 */
+	static protected function LoadListsConfiguration(Application $oApp, ModuleDesign $oDesign)
+	{
+		$iDefaultItemRank = 0;
+		$aClassesLists = array();
+
+		// Parsing XML file
+		// - Each classes
+		foreach ($oDesign->GetNodes('/module_design/classes/class') as $oClassNode)
+		{
+			$aClassLists = array();
+			$sClassId = $oClassNode->getAttribute('id');
+			if ($sClassId === null)
+			{
+				throw new DOMFormatException('Class tag must have an id attribute', null, null, $oClassNode);
+			}
+
+			// - Each lists
+			foreach ($oClassNode->GetNodes('./lists/list') as $oListNode)
+			{
+				$aListItems = array();
+				$sListId = $oListNode->getAttribute('id');
+				if ($sListId === null)
+				{
+					throw new DOMFormatException('List tag of "' . $sClassId . '" class must have an id attribute', null, null, $oListNode);
+				}
+
+				// - Each items
+				foreach ($oListNode->GetNodes('./items/item') as $oItemNode)
+				{
+					$sItemId = $oItemNode->getAttribute('id');
+					if ($sItemId === null)
+					{
+						throw new DOMFormatException('Item tag of "' . $sItemId . '" list must have an id attribute', null, null, $oItemNode);
+					}
+
+					$aItem = array(
+						'att_code' => $sItemId,
+						'rank' => $iDefaultItemRank
+					);
+
+					$oRankNode = $oItemNode->GetOptionalElement('rank');
+					if ($oRankNode !== null)
+					{
+						$aItem['rank'] = $oRankNode->GetText($iDefaultItemRank);
+					}
+
+					$aListItems[] = $aItem;
+				}
+				// - Sorting list items by rank
+				usort($aListItems, function($a, $b)
+				{
+					return $a['rank'] > $b['rank'];
+				});
+				$aClassLists[$sListId] = $aListItems;
+			}
+
+			// - Adding class only if it has at least one list
+			if (!empty($aClassLists))
+			{
+				$aClassesLists[$sClassId] = $aClassLists;
+			}
+		}
+
+		// Creating lists for child classes
+		// Note : This has been removed has we now dynamically look for the closest parent list only when necessary instead of generating list for child classes everytime
+		/* $aParentClasses = array_keys($aClassesLists);
+		  foreach ($aParentClasses as $sParentClass)
+		  {
+		  foreach (MetaModel::EnumChildClasses($sParentClass) as $sChildClass)
+		  {
+		  // If the child class is not in the scope, we are going to try to add it
+		  if (!in_array($sChildClass, $aParentClasses))
+		  {
+		  $aClassesLists[$sChildClass] = $aClassesLists[$sParentClass];
+		  }
+		  }
+		  } */
+
+		return $aClassesLists;
 	}
 
 }

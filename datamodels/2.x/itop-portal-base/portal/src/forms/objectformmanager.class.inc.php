@@ -37,6 +37,7 @@ use \Combodo\iTop\Form\FormManager;
 use \Combodo\iTop\Form\Form;
 use \Combodo\iTop\Form\Field\FileUploadField;
 use \Combodo\iTop\Form\Field\LabelField;
+use \Combodo\iTop\Portal\Helper\ApplicationHelper;
 
 /**
  * Description of objectformmanager
@@ -527,7 +528,33 @@ class ObjectFormManager extends FormManager
 						$oField->SetReadOnly(true);
 					}
 				}
-				
+
+				// Specific operation on field
+				// - LinkedSet
+				//   - Overriding attributes to display
+				if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\LinkedSetField')))
+				{
+					if ($this->oApp !== null)
+					{
+						// Note : This snippet is inspired from AttributeLinkedSet::MakeFormField()
+						$aAttCodesToDisplay = ApplicationHelper::GetLoadedListFromClass($this->oApp, $oField->GetTargetClass(), 'list');
+						// - Adding friendlyname attribute to the list is not already in it
+						$sTitleAttCode = MetaModel::GetFriendlyNameAttributeCode($oField->GetTargetClass());
+						if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodesToDisplay))
+						{
+							$aAttCodesToDisplay = array_merge(array($sTitleAttCode), $aAttCodesToDisplay);
+						}
+						// - Adding attribute labels
+						$aAttributesToDisplay = array();
+						foreach ($aAttCodesToDisplay as $sAttCodeToDisplay)
+						{
+							$oAttDefToDisplay = MetaModel::GetAttributeDef($oField->GetTargetClass(), $sAttCodeToDisplay);
+							$aAttributesToDisplay[$sAttCodeToDisplay] = $oAttDefToDisplay->GetLabel();
+						}
+						$oField->SetAttributesToDisplay($aAttributesToDisplay);
+					}
+				}
+
 				$oForm->AddField($oField);
 			}
 			else

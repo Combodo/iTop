@@ -1,198 +1,200 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3">
-  <constants>
-    <constant id="RESPONSE_TICKET_SLT_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT SLT AS slt JOIN lnkSLAToSLT AS l1 ON l1.slt_id=slt.id JOIN SLA AS sla ON l1.sla_id=sla.id JOIN lnkCustomerContractToService AS l2 ON l2.sla_id=sla.id JOIN CustomerContract AS sc ON l2.customercontract_id=sc.id WHERE slt.metric = :metric AND l2.service_id = :this->service_id AND sc.org_id = :this->org_id AND slt.request_type = :request_type AND slt.priority = :this->priority]]></constant>
-    <constant id="PORTAL_POWER_USER_PROFILE" xsi:type="string" _delta="define"><![CDATA[Portal power user]]></constant>
-    <constant id="PORTAL_SERVICECATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :org_id AND s.status != 'obsolete']]></constant>
-    <constant id="PORTAL_SERVICE_SUBCATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT ServiceSubcategory WHERE service_id = :svc_id AND ServiceSubcategory.status != 'obsolete']]></constant>
-    <constant id="PORTAL_VALIDATE_SERVICECATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :org_id AND s.id = :id AND s.status != 'obsolete']]></constant>
-    <constant id="PORTAL_VALIDATE_SERVICESUBCATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT ServiceSubcategory AS Sub JOIN Service AS Svc ON Sub.service_id = Svc.id WHERE Sub.id=:id AND Sub.status != 'obsolete']]></constant>
-    <constant id="PORTAL_ALL_PARAMS" xsi:type="string" _delta="define"><![CDATA[from_service_id,org_id,caller_id,service_id,servicesubcategory_id,title,description,impact,emergency,moreinfo,caller_id,start_date,end_date,duration,impact_duration]]></constant>
-    <constant id="PORTAL_SET_TYPE_FROM" xsi:type="string" _delta="define"><![CDATA[request_type]]></constant>
-    <constant id="PORTAL_TYPE_TO_CLASS" xsi:type="string" _delta="define"><![CDATA[]]></constant>
-    <constant id="PORTAL_TICKETS_SEARCH_CRITERIA" xsi:type="string" _delta="define"><![CDATA[ref,start_date,close_date,service_id,caller_id]]></constant>
-    <constant id="PORTAL_TICKETS_SEARCH_FILTER_service_id" xsi:type="string" _delta="define"><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :org_id AND s.status != 'obsolete']]></constant>
-    <constant id="PORTAL_TICKETS_SEARCH_FILTER_caller_id" xsi:type="string" _delta="define"><![CDATA[SELECT Person WHERE org_id = :org_id]]></constant>
-  </constants>
-  <classes>
-    <class id="Ticket" _delta="define">
-      <parent>cmdbAbstractObject</parent>
-       <php_parent><name>_Ticket</name></php_parent>
-      <properties>
-        <comment><![CDATA[/**
+	<constants>
+		<constant id="RESPONSE_TICKET_SLT_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT SLT AS slt JOIN lnkSLAToSLT AS l1 ON l1.slt_id=slt.id JOIN SLA AS sla ON l1.sla_id=sla.id JOIN lnkCustomerContractToService AS l2 ON l2.sla_id=sla.id JOIN CustomerContract AS sc ON l2.customercontract_id=sc.id WHERE slt.metric = :metric AND l2.service_id = :this->service_id AND sc.org_id = :this->org_id AND slt.request_type = :request_type AND slt.priority = :this->priority]]></constant>
+		<constant id="PORTAL_POWER_USER_PROFILE" xsi:type="string" _delta="define"><![CDATA[Portal power user]]></constant>
+		<constant id="PORTAL_SERVICECATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :org_id AND s.status != 'obsolete']]></constant>
+		<constant id="PORTAL_SERVICE_SUBCATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT ServiceSubcategory WHERE service_id = :svc_id AND ServiceSubcategory.status != 'obsolete']]></constant>
+		<constant id="PORTAL_VALIDATE_SERVICECATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :org_id AND s.id = :id AND s.status != 'obsolete']]></constant>
+		<constant id="PORTAL_VALIDATE_SERVICESUBCATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT ServiceSubcategory AS Sub JOIN Service AS Svc ON Sub.service_id = Svc.id WHERE Sub.id=:id AND Sub.status != 'obsolete']]></constant>
+		<constant id="PORTAL_ALL_PARAMS" xsi:type="string" _delta="define"><![CDATA[from_service_id,org_id,caller_id,service_id,servicesubcategory_id,title,description,impact,emergency,moreinfo,caller_id,start_date,end_date,duration,impact_duration]]></constant>
+		<constant id="PORTAL_SET_TYPE_FROM" xsi:type="string" _delta="define"><![CDATA[request_type]]></constant>
+		<constant id="PORTAL_TYPE_TO_CLASS" xsi:type="string" _delta="define"><![CDATA[]]></constant>
+		<constant id="PORTAL_TICKETS_SEARCH_CRITERIA" xsi:type="string" _delta="define"><![CDATA[ref,start_date,close_date,service_id,caller_id]]></constant>
+		<constant id="PORTAL_TICKETS_SEARCH_FILTER_service_id" xsi:type="string" _delta="define"><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :org_id AND s.status != 'obsolete']]></constant>
+		<constant id="PORTAL_TICKETS_SEARCH_FILTER_caller_id" xsi:type="string" _delta="define"><![CDATA[SELECT Person WHERE org_id = :org_id]]></constant>
+	</constants>
+	<classes>
+		<class id="Ticket" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+			<php_parent>
+				<name>_Ticket</name>
+			</php_parent>
+			<properties>
+				<comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
-        <category>bizmodel,searchable,structure</category>
-        <abstract>true</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>ticket</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field>finalclass</db_final_class_field>
-        <naming>
-          <attributes>
-            <attribute id="ref"/>
-          </attributes>
-        </naming>
-        <display_template/>
-        <icon/>
-        <reconciliation>
-          <attributes>
-            <attribute id="ref"/>
-          </attributes>
-        </reconciliation>
-      </properties>
-      <fields>
-        <field id="operational_status" xsi:type="AttributeMetaEnum">
-          <values>
-            <value id="ongoing">ongoing</value>
-            <value id="resolved">resolved</value>
-            <value id="closed">closed</value>
-          </values>
-          <sql>operational_status</sql>
-          <default_value>ongoing</default_value>
-          <mappings>
-            <mapping id="Ticket">
-              <attcode>status</attcode>
-              <metavalues>
-                <metavalue id="resolved">
-                  <values>
-                    <value id="resolved"/>
-                  </values>
-                </metavalue>
-                <metavalue id="closed">
-                  <values>
-                    <value id="closed"/>
-                    <value id="rejected"/>
-                  </values>
-                </metavalue>
-              </metavalues>
-            </mapping>
-          </mappings>
-        </field>
-        <field id="ref" xsi:type="AttributeString">
-          <sql>ref</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="org_id" xsi:type="AttributeExternalKey">
-          <sql>org_id</sql>
-          <target_class>Organization</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="org_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>org_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-        <field id="caller_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT Person WHERE org_id = :this->org_id]]></filter>
-          <dependencies>
-            <attribute id="org_id"/>
-          </dependencies>
-          <sql>caller_id</sql>
-          <target_class>Person</target_class>
-          <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="caller_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>caller_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-        <field id="team_id" xsi:type="AttributeExternalKey">
-          <sql>team_id</sql>
-          <target_class>Team</target_class>
-          <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="team_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>team_id</extkey_attcode>
-          <target_attcode>email</target_attcode>
-        </field>
-        <field id="agent_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT Person AS p JOIN lnkPersonToTeam AS l ON l.person_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this->team_id]]></filter>
-          <dependencies>
-            <attribute id="team_id"/>
-          </dependencies>
-          <sql>agent_id</sql>
-          <target_class>Person</target_class>
-          <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-          <allow_target_creation>false</allow_target_creation>
-        </field>
-        <field id="agent_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>agent_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-        <field id="title" xsi:type="AttributeString">
-          <sql>title</sql>
-          <default_value/>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <field id="description" xsi:type="AttributeText">
-          <sql>description</sql>
-          <default_value/>
-          <is_null_allowed>false</is_null_allowed>
-          <format>html</format>
-        </field>
-        <field id="start_date" xsi:type="AttributeDateTime">
-          <always_load_in_tables>true</always_load_in_tables>
-          <sql>start_date</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="end_date" xsi:type="AttributeDateTime">
-          <sql>end_date</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="last_update" xsi:type="AttributeDateTime">
-          <sql>last_update</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-          <tracking_level>none</tracking_level>
-        </field>
-        <field id="close_date" xsi:type="AttributeDateTime">
-          <sql>close_date</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="private_log" xsi:type="AttributeCaseLog">
-          <sql>private_log</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="contacts_list" xsi:type="AttributeLinkedSetIndirect">
-          <linked_class>lnkContactToTicket</linked_class>
-          <ext_key_to_me>ticket_id</ext_key_to_me>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-          <ext_key_to_remote>contact_id</ext_key_to_remote>
-          <duplicates/>
-        </field>
-        <field id="functionalcis_list" xsi:type="AttributeLinkedSetIndirect">
-          <linked_class>lnkFunctionalCIToTicket</linked_class>
-          <ext_key_to_me>ticket_id</ext_key_to_me>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-          <ext_key_to_remote>functionalci_id</ext_key_to_remote>
-          <duplicates/>
-        </field>
-        <field id="workorders_list" xsi:type="AttributeLinkedSet">
-          <linked_class>WorkOrder</linked_class>
-          <ext_key_to_me>ticket_id</ext_key_to_me>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-        </field>
-      </fields>
-      <methods>
-        <method id="DBInsertNoReload">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
+				<category>bizmodel,searchable,structure</category>
+				<abstract>true</abstract>
+				<key_type>autoincrement</key_type>
+				<db_table>ticket</db_table>
+				<db_key_field>id</db_key_field>
+				<db_final_class_field>finalclass</db_final_class_field>
+				<naming>
+					<attributes>
+						<attribute id="ref"/>
+					</attributes>
+				</naming>
+				<display_template/>
+				<icon/>
+				<reconciliation>
+					<attributes>
+						<attribute id="ref"/>
+					</attributes>
+				</reconciliation>
+			</properties>
+			<fields>
+				<field id="operational_status" xsi:type="AttributeMetaEnum">
+					<values>
+						<value id="ongoing">ongoing</value>
+						<value id="resolved">resolved</value>
+						<value id="closed">closed</value>
+					</values>
+					<sql>operational_status</sql>
+					<default_value>ongoing</default_value>
+					<mappings>
+						<mapping id="Ticket">
+							<attcode>status</attcode>
+							<metavalues>
+								<metavalue id="resolved">
+									<values>
+										<value id="resolved"/>
+									</values>
+								</metavalue>
+								<metavalue id="closed">
+									<values>
+										<value id="closed"/>
+										<value id="rejected"/>
+									</values>
+								</metavalue>
+							</metavalues>
+						</mapping>
+					</mappings>
+				</field>
+				<field id="ref" xsi:type="AttributeString">
+					<sql>ref</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+				</field>
+				<field id="org_id" xsi:type="AttributeExternalKey">
+					<sql>org_id</sql>
+					<target_class>Organization</target_class>
+					<is_null_allowed>false</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+				</field>
+				<field id="org_name" xsi:type="AttributeExternalField">
+					<extkey_attcode>org_id</extkey_attcode>
+					<target_attcode>name</target_attcode>
+				</field>
+				<field id="caller_id" xsi:type="AttributeExternalKey">
+					<filter><![CDATA[SELECT Person WHERE org_id = :this->org_id]]></filter>
+					<dependencies>
+						<attribute id="org_id"/>
+					</dependencies>
+					<sql>caller_id</sql>
+					<target_class>Person</target_class>
+					<is_null_allowed>true</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+				</field>
+				<field id="caller_name" xsi:type="AttributeExternalField">
+					<extkey_attcode>caller_id</extkey_attcode>
+					<target_attcode>name</target_attcode>
+				</field>
+				<field id="team_id" xsi:type="AttributeExternalKey">
+					<sql>team_id</sql>
+					<target_class>Team</target_class>
+					<is_null_allowed>true</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+				</field>
+				<field id="team_name" xsi:type="AttributeExternalField">
+					<extkey_attcode>team_id</extkey_attcode>
+					<target_attcode>email</target_attcode>
+				</field>
+				<field id="agent_id" xsi:type="AttributeExternalKey">
+					<filter><![CDATA[SELECT Person AS p JOIN lnkPersonToTeam AS l ON l.person_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this->team_id]]></filter>
+					<dependencies>
+						<attribute id="team_id"/>
+					</dependencies>
+					<sql>agent_id</sql>
+					<target_class>Person</target_class>
+					<is_null_allowed>true</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+					<allow_target_creation>false</allow_target_creation>
+				</field>
+				<field id="agent_name" xsi:type="AttributeExternalField">
+					<extkey_attcode>agent_id</extkey_attcode>
+					<target_attcode>name</target_attcode>
+				</field>
+				<field id="title" xsi:type="AttributeString">
+					<sql>title</sql>
+					<default_value/>
+					<is_null_allowed>false</is_null_allowed>
+				</field>
+				<field id="description" xsi:type="AttributeText">
+					<sql>description</sql>
+					<default_value/>
+					<is_null_allowed>false</is_null_allowed>
+					<format>html</format>
+				</field>
+				<field id="start_date" xsi:type="AttributeDateTime">
+					<always_load_in_tables>true</always_load_in_tables>
+					<sql>start_date</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+				</field>
+				<field id="end_date" xsi:type="AttributeDateTime">
+					<sql>end_date</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+				</field>
+				<field id="last_update" xsi:type="AttributeDateTime">
+					<sql>last_update</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+					<tracking_level>none</tracking_level>
+				</field>
+				<field id="close_date" xsi:type="AttributeDateTime">
+					<sql>close_date</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+				</field>
+				<field id="private_log" xsi:type="AttributeCaseLog">
+					<sql>private_log</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+				</field>
+				<field id="contacts_list" xsi:type="AttributeLinkedSetIndirect">
+					<linked_class>lnkContactToTicket</linked_class>
+					<ext_key_to_me>ticket_id</ext_key_to_me>
+					<count_min>0</count_min>
+					<count_max>0</count_max>
+					<ext_key_to_remote>contact_id</ext_key_to_remote>
+					<duplicates/>
+				</field>
+				<field id="functionalcis_list" xsi:type="AttributeLinkedSetIndirect">
+					<linked_class>lnkFunctionalCIToTicket</linked_class>
+					<ext_key_to_me>ticket_id</ext_key_to_me>
+					<count_min>0</count_min>
+					<count_max>0</count_max>
+					<ext_key_to_remote>functionalci_id</ext_key_to_remote>
+					<duplicates/>
+				</field>
+				<field id="workorders_list" xsi:type="AttributeLinkedSet">
+					<linked_class>WorkOrder</linked_class>
+					<ext_key_to_me>ticket_id</ext_key_to_me>
+					<count_min>0</count_min>
+					<count_max>0</count_max>
+				</field>
+			</fields>
+			<methods>
+				<method id="DBInsertNoReload">
+					<static>false</static>
+					<access>public</access>
+					<type>Overload-DBObject</type>
+					<code><![CDATA[
     public function DBInsertNoReload()
     {
           $oMutex = new iTopMutex('ticket_insert');
@@ -205,12 +207,12 @@
           return $iKey;
     }
         ]]></code>
-        </method>
-        <method id="MakeTicketRef">
-          <static>false</static>
-          <access>protected</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
+				</method>
+				<method id="MakeTicketRef">
+					<static>false</static>
+					<access>protected</access>
+					<type>Overload-DBObject</type>
+					<code><![CDATA[
         protected function MakeTicketRef($iNextId)
         {
                 switch(get_class($this))
@@ -240,460 +242,460 @@
                 return sprintf($sFormat, $iNextId);
         }
         ]]></code>
-        </method>
-      </methods>
-      <presentation>
-        <details>
-          <items>
-            <item id="ref">
-              <rank>10</rank>
-            </item>
-            <item id="org_id">
-              <rank>20</rank>
-            </item>
-            <item id="caller_id">
-              <rank>30</rank>
-            </item>
-            <item id="team_id">
-              <rank>40</rank>
-            </item>
-            <item id="agent_id">
-              <rank>50</rank>
-            </item>
-            <item id="title">
-              <rank>60</rank>
-            </item>
-            <item id="description">
-              <rank>70</rank>
-            </item>
-            <item id="operational_status">
-              <rank>75</rank>
-            </item>
-            <item id="start_date">
-              <rank>80</rank>
-            </item>
-            <item id="end_date">
-              <rank>90</rank>
-            </item>
-            <item id="last_update">
-              <rank>100</rank>
-            </item>
-            <item id="close_date">
-              <rank>110</rank>
-            </item>
-            <item id="private_log">
-              <rank>120</rank>
-            </item>
-            <item id="contacts_list">
-              <rank>130</rank>
-            </item>
-            <item id="functionalcis_list">
-              <rank>140</rank>
-            </item>
-            <item id="workorders_list">
-              <rank>150</rank>
-            </item>
-          </items>
-        </details>
-        <search>
-          <items>
-            <item id="ref">
-              <rank>10</rank>
-            </item>
-            <item id="title">
-              <rank>20</rank>
-            </item>
-            <item id="description">
-              <rank>30</rank>
-            </item>
-            <item id="operational_status">
-              <rank>35</rank>
-            </item>
-            <item id="start_date">
-              <rank>40</rank>
-            </item>
-            <item id="end_date">
-              <rank>50</rank>
-            </item>
-            <item id="last_update">
-              <rank>60</rank>
-            </item>
-            <item id="close_date">
-              <rank>70</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="ref">
-              <rank>10</rank>
-            </item>
-            <item id="org_id">
-              <rank>20</rank>
-            </item>
-            <item id="title">
-              <rank>30</rank>
-            </item>
-            <item id="caller_id">
-              <rank>40</rank>
-            </item>
-            <item id="team_id">
-              <rank>50</rank>
-            </item>
-            <item id="agent_id">
-              <rank>60</rank>
-            </item>
-            <item id="operational_status">
-              <rank>65</rank>
-            </item>
-            <item id="start_date">
-              <rank>70</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
-    <class id="lnkContactToTicket" _delta="define">
-      <parent>cmdbAbstractObject</parent>
-      <properties>
-        <is_link>1</is_link>
-        <category>bizmodel</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>lnkcontacttoticket</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <naming>
-          <attributes>
-            <attribute id="ticket_id"/>
-            <attribute id="contact_id"/>
-          </attributes>
-        </naming>
-        <display_template/>
-        <icon/>
-        <reconciliation>
-          <attributes>
-            <attribute id="ticket_id"/>
-            <attribute id="contact_id"/>
-          </attributes>
-        </reconciliation>
-      </properties>
-      <fields>
-        <field id="ticket_id" xsi:type="AttributeExternalKey">
-          <sql>ticket_id</sql>
-          <target_class>Ticket</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="ticket_ref" xsi:type="AttributeExternalField">
-          <extkey_attcode>ticket_id</extkey_attcode>
-          <target_attcode>ref</target_attcode>
-        </field>
-        <field id="contact_id" xsi:type="AttributeExternalKey">
-          <sql>contact_id</sql>
-          <target_class>Contact</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="contact_email" xsi:type="AttributeExternalField">
-          <extkey_attcode>contact_id</extkey_attcode>
-          <target_attcode>email</target_attcode>
-        </field>
-        <field id="role" xsi:type="AttributeString">
-          <sql>role</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="role_code" xsi:type="AttributeEnum">
-          <values>
-            <value id="manual">manual</value>
-            <value id="computed">computed</value>
-            <value id="do_not_notify">do_not_notify</value>
-          </values>
-          <sql>impact_code</sql>
-          <default_value>manual</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <display_style>list</display_style>
-        </field>
-      </fields>
-      <methods/>
-      <presentation>
-        <details>
-          <items>
-            <item id="ticket_id">
-              <rank>10</rank>
-            </item>
-            <item id="contact_id">
-              <rank>20</rank>
-            </item>
-            <item id="role_code">
-              <rank>30</rank>
-            </item>
-          </items>
-        </details>
-        <search>
-          <items>
-            <item id="ticket_id">
-              <rank>10</rank>
-            </item>
-            <item id="contact_id">
-              <rank>20</rank>
-            </item>
-            <item id="role_code">
-              <rank>30</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="ticket_id">
-              <rank>10</rank>
-            </item>
-            <item id="contact_id">
-              <rank>20</rank>
-            </item>
-            <item id="role_code">
-              <rank>30</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
-    <class id="lnkFunctionalCIToTicket" _delta="define">
-      <parent>cmdbAbstractObject</parent>
-      <properties>
-        <is_link>1</is_link>
-        <category>bizmodel</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>lnkfunctionalcitoticket</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <naming>
-          <attributes>
-            <attribute id="ticket_id"/>
-            <attribute id="functionalci_id"/>
-          </attributes>
-        </naming>
-        <display_template/>
-        <icon/>
-        <reconciliation>
-          <attributes>
-            <attribute id="ticket_id"/>
-            <attribute id="functionalci_id"/>
-          </attributes>
-        </reconciliation>
-      </properties>
-      <fields>
-        <field id="ticket_id" xsi:type="AttributeExternalKey">
-          <sql>ticket_id</sql>
-          <target_class>Ticket</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="ticket_ref" xsi:type="AttributeExternalField">
-          <extkey_attcode>ticket_id</extkey_attcode>
-          <target_attcode>ref</target_attcode>
-        </field>
-        <field id="ticket_title" xsi:type="AttributeExternalField">
-          <extkey_attcode>ticket_id</extkey_attcode>
-          <target_attcode>title</target_attcode>
-        </field>
-        <field id="functionalci_id" xsi:type="AttributeExternalKey">
-          <sql>functionalci_id</sql>
-          <target_class>FunctionalCI</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="functionalci_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>functionalci_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-        <field id="impact" xsi:type="AttributeString">
-          <sql>impact</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="impact_code" xsi:type="AttributeEnum">
-          <values>
-            <value id="manual">manual</value>
-            <value id="computed">computed</value>
-            <value id="not_impacted">not_impacted</value>
-          </values>
-          <sql>impact_code</sql>
-          <default_value>manual</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <display_style>list</display_style>
-        </field>
-      </fields>
-      <methods/>
-      <presentation>
-        <details>
-          <items>
-            <item id="ticket_id">
-              <rank>10</rank>
-            </item>
-            <item id="functionalci_id">
-              <rank>20</rank>
-            </item>
-            <item id="impact_code">
-              <rank>30</rank>
-            </item>
-          </items>
-        </details>
-        <search>
-          <items>
-            <item id="ticket_id">
-              <rank>10</rank>
-            </item>
-            <item id="functionalci_id">
-              <rank>20</rank>
-            </item>
-            <item id="impact_code">
-              <rank>30</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="ticket_id">
-              <rank>10</rank>
-            </item>
-            <item id="functionalci_id">
-              <rank>20</rank>
-            </item>
-            <item id="impact_code">
-              <rank>30</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
-    <class id="WorkOrder" _delta="define">
-      <parent>cmdbAbstractObject</parent>
-      <properties>
-        <category>bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,m2prequest</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>workorder</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <naming>
-          <attributes>
-            <attribute id="name"/>
-          </attributes>
-        </naming>
-        <display_template/>
-        <icon>images/workorder.png</icon>
-        <reconciliation>
-          <attributes>
-            <attribute id="name"/>
-            <attribute id="ticket_id"/>
-          </attributes>
-        </reconciliation>
-      </properties>
-      <fields>
-        <field id="name" xsi:type="AttributeString">
-          <sql>name</sql>
-          <default_value/>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <field id="status" xsi:type="AttributeEnum">
-          <values>
-            <value id="open">open</value>
-            <value id="closed">closed</value>
-          </values>
-          <sql>status</sql>
-          <default_value>open</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <display_style>list</display_style>
-        </field>
-        <field id="description" xsi:type="AttributeText">
-          <sql>description</sql>
-          <default_value/>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <field id="ticket_id" xsi:type="AttributeExternalKey">
-          <sql>ticket_id</sql>
-          <target_class>Ticket</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="ticket_ref" xsi:type="AttributeExternalField">
-          <extkey_attcode>ticket_id</extkey_attcode>
-          <target_attcode>ref</target_attcode>
-        </field>
-        <field id="team_id" xsi:type="AttributeExternalKey">
-          <filter>SELECT Team</filter>
-          <sql>team_id</sql>
-          <target_class>Team</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_MANUAL</on_target_delete>
-        </field>
-        <field id="team_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>team_id</extkey_attcode>
-          <target_attcode>email</target_attcode>
-        </field>
-        <field id="agent_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT Person AS p JOIN lnkPersonToTeam AS l ON l.person_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this->team_id]]></filter>
-          <dependencies>
-            <attribute id="team_id"/>
-          </dependencies>
-          <sql>owner_id</sql>
-          <target_class>Person</target_class>
-          <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_MANUAL</on_target_delete>
-          <allow_target_creation>false</allow_target_creation>
-        </field>
-        <field id="agent_email" xsi:type="AttributeExternalField">
-          <extkey_attcode>agent_id</extkey_attcode>
-          <target_attcode>email</target_attcode>
-        </field>
-        <field id="start_date" xsi:type="AttributeDateTime">
-          <sql>start_date</sql>
-          <default_value/>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <field id="end_date" xsi:type="AttributeDateTime">
-          <sql>end_date</sql>
-          <default_value/>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <field id="log" xsi:type="AttributeCaseLog">
-          <sql>log</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-      </fields>
-      <lifecycle>
-        <attribute>status</attribute>
-        <stimuli>
-          <stimulus id="ev_close" xsi:type="StimulusUserAction"/>
-        </stimuli>
-        <states>
-          <state id="open">
-            <flags/>
-            <transitions>
-              <transition id="ev_close">
-                <target>closed</target>
-                <actions/>
-              </transition>
-            </transitions>
-          </state>
-          <state id="closed">
-            <flags/>
-            <transitions/>
-          </state>
-        </states>
-      </lifecycle>
-      <methods>
-        <method id="UpdateParentTicketLog">
-          <static>false</static>
-          <access>public</access>
-          <type>StimulusUserAction</type>
-          <arguments>
-          </arguments>
-          <code><![CDATA[	public function UpdateParentTicketLog()
+				</method>
+			</methods>
+			<presentation>
+				<details>
+					<items>
+						<item id="ref">
+							<rank>10</rank>
+						</item>
+						<item id="org_id">
+							<rank>20</rank>
+						</item>
+						<item id="caller_id">
+							<rank>30</rank>
+						</item>
+						<item id="team_id">
+							<rank>40</rank>
+						</item>
+						<item id="agent_id">
+							<rank>50</rank>
+						</item>
+						<item id="title">
+							<rank>60</rank>
+						</item>
+						<item id="description">
+							<rank>70</rank>
+						</item>
+						<item id="operational_status">
+							<rank>75</rank>
+						</item>
+						<item id="start_date">
+							<rank>80</rank>
+						</item>
+						<item id="end_date">
+							<rank>90</rank>
+						</item>
+						<item id="last_update">
+							<rank>100</rank>
+						</item>
+						<item id="close_date">
+							<rank>110</rank>
+						</item>
+						<item id="private_log">
+							<rank>120</rank>
+						</item>
+						<item id="contacts_list">
+							<rank>130</rank>
+						</item>
+						<item id="functionalcis_list">
+							<rank>140</rank>
+						</item>
+						<item id="workorders_list">
+							<rank>150</rank>
+						</item>
+					</items>
+				</details>
+				<search>
+					<items>
+						<item id="ref">
+							<rank>10</rank>
+						</item>
+						<item id="title">
+							<rank>20</rank>
+						</item>
+						<item id="description">
+							<rank>30</rank>
+						</item>
+						<item id="operational_status">
+							<rank>35</rank>
+						</item>
+						<item id="start_date">
+							<rank>40</rank>
+						</item>
+						<item id="end_date">
+							<rank>50</rank>
+						</item>
+						<item id="last_update">
+							<rank>60</rank>
+						</item>
+						<item id="close_date">
+							<rank>70</rank>
+						</item>
+					</items>
+				</search>
+				<list>
+					<items>
+						<item id="ref">
+							<rank>10</rank>
+						</item>
+						<item id="org_id">
+							<rank>20</rank>
+						</item>
+						<item id="title">
+							<rank>30</rank>
+						</item>
+						<item id="caller_id">
+							<rank>40</rank>
+						</item>
+						<item id="team_id">
+							<rank>50</rank>
+						</item>
+						<item id="agent_id">
+							<rank>60</rank>
+						</item>
+						<item id="operational_status">
+							<rank>65</rank>
+						</item>
+						<item id="start_date">
+							<rank>70</rank>
+						</item>
+					</items>
+				</list>
+			</presentation>
+		</class>
+		<class id="lnkContactToTicket" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+			<properties>
+				<is_link>1</is_link>
+				<category>bizmodel</category>
+				<abstract>false</abstract>
+				<key_type>autoincrement</key_type>
+				<db_table>lnkcontacttoticket</db_table>
+				<db_key_field>id</db_key_field>
+				<db_final_class_field/>
+				<naming>
+					<attributes>
+						<attribute id="ticket_id"/>
+						<attribute id="contact_id"/>
+					</attributes>
+				</naming>
+				<display_template/>
+				<icon/>
+				<reconciliation>
+					<attributes>
+						<attribute id="ticket_id"/>
+						<attribute id="contact_id"/>
+					</attributes>
+				</reconciliation>
+			</properties>
+			<fields>
+				<field id="ticket_id" xsi:type="AttributeExternalKey">
+					<sql>ticket_id</sql>
+					<target_class>Ticket</target_class>
+					<is_null_allowed>false</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+				</field>
+				<field id="ticket_ref" xsi:type="AttributeExternalField">
+					<extkey_attcode>ticket_id</extkey_attcode>
+					<target_attcode>ref</target_attcode>
+				</field>
+				<field id="contact_id" xsi:type="AttributeExternalKey">
+					<sql>contact_id</sql>
+					<target_class>Contact</target_class>
+					<is_null_allowed>false</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+				</field>
+				<field id="contact_email" xsi:type="AttributeExternalField">
+					<extkey_attcode>contact_id</extkey_attcode>
+					<target_attcode>email</target_attcode>
+				</field>
+				<field id="role" xsi:type="AttributeString">
+					<sql>role</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+				</field>
+				<field id="role_code" xsi:type="AttributeEnum">
+					<values>
+						<value id="manual">manual</value>
+						<value id="computed">computed</value>
+						<value id="do_not_notify">do_not_notify</value>
+					</values>
+					<sql>impact_code</sql>
+					<default_value>manual</default_value>
+					<is_null_allowed>false</is_null_allowed>
+					<display_style>list</display_style>
+				</field>
+			</fields>
+			<methods/>
+			<presentation>
+				<details>
+					<items>
+						<item id="ticket_id">
+							<rank>10</rank>
+						</item>
+						<item id="contact_id">
+							<rank>20</rank>
+						</item>
+						<item id="role_code">
+							<rank>30</rank>
+						</item>
+					</items>
+				</details>
+				<search>
+					<items>
+						<item id="ticket_id">
+							<rank>10</rank>
+						</item>
+						<item id="contact_id">
+							<rank>20</rank>
+						</item>
+						<item id="role_code">
+							<rank>30</rank>
+						</item>
+					</items>
+				</search>
+				<list>
+					<items>
+						<item id="ticket_id">
+							<rank>10</rank>
+						</item>
+						<item id="contact_id">
+							<rank>20</rank>
+						</item>
+						<item id="role_code">
+							<rank>30</rank>
+						</item>
+					</items>
+				</list>
+			</presentation>
+		</class>
+		<class id="lnkFunctionalCIToTicket" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+			<properties>
+				<is_link>1</is_link>
+				<category>bizmodel</category>
+				<abstract>false</abstract>
+				<key_type>autoincrement</key_type>
+				<db_table>lnkfunctionalcitoticket</db_table>
+				<db_key_field>id</db_key_field>
+				<db_final_class_field/>
+				<naming>
+					<attributes>
+						<attribute id="ticket_id"/>
+						<attribute id="functionalci_id"/>
+					</attributes>
+				</naming>
+				<display_template/>
+				<icon/>
+				<reconciliation>
+					<attributes>
+						<attribute id="ticket_id"/>
+						<attribute id="functionalci_id"/>
+					</attributes>
+				</reconciliation>
+			</properties>
+			<fields>
+				<field id="ticket_id" xsi:type="AttributeExternalKey">
+					<sql>ticket_id</sql>
+					<target_class>Ticket</target_class>
+					<is_null_allowed>false</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+				</field>
+				<field id="ticket_ref" xsi:type="AttributeExternalField">
+					<extkey_attcode>ticket_id</extkey_attcode>
+					<target_attcode>ref</target_attcode>
+				</field>
+				<field id="ticket_title" xsi:type="AttributeExternalField">
+					<extkey_attcode>ticket_id</extkey_attcode>
+					<target_attcode>title</target_attcode>
+				</field>
+				<field id="functionalci_id" xsi:type="AttributeExternalKey">
+					<sql>functionalci_id</sql>
+					<target_class>FunctionalCI</target_class>
+					<is_null_allowed>false</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+				</field>
+				<field id="functionalci_name" xsi:type="AttributeExternalField">
+					<extkey_attcode>functionalci_id</extkey_attcode>
+					<target_attcode>name</target_attcode>
+				</field>
+				<field id="impact" xsi:type="AttributeString">
+					<sql>impact</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+				</field>
+				<field id="impact_code" xsi:type="AttributeEnum">
+					<values>
+						<value id="manual">manual</value>
+						<value id="computed">computed</value>
+						<value id="not_impacted">not_impacted</value>
+					</values>
+					<sql>impact_code</sql>
+					<default_value>manual</default_value>
+					<is_null_allowed>false</is_null_allowed>
+					<display_style>list</display_style>
+				</field>
+			</fields>
+			<methods/>
+			<presentation>
+				<details>
+					<items>
+						<item id="ticket_id">
+							<rank>10</rank>
+						</item>
+						<item id="functionalci_id">
+							<rank>20</rank>
+						</item>
+						<item id="impact_code">
+							<rank>30</rank>
+						</item>
+					</items>
+				</details>
+				<search>
+					<items>
+						<item id="ticket_id">
+							<rank>10</rank>
+						</item>
+						<item id="functionalci_id">
+							<rank>20</rank>
+						</item>
+						<item id="impact_code">
+							<rank>30</rank>
+						</item>
+					</items>
+				</search>
+				<list>
+					<items>
+						<item id="ticket_id">
+							<rank>10</rank>
+						</item>
+						<item id="functionalci_id">
+							<rank>20</rank>
+						</item>
+						<item id="impact_code">
+							<rank>30</rank>
+						</item>
+					</items>
+				</list>
+			</presentation>
+		</class>
+		<class id="WorkOrder" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+			<properties>
+				<category>bizmodel,searchable,incidentmgmt,requestmgmt,changemgmt,m2prequest</category>
+				<abstract>false</abstract>
+				<key_type>autoincrement</key_type>
+				<db_table>workorder</db_table>
+				<db_key_field>id</db_key_field>
+				<db_final_class_field/>
+				<naming>
+					<attributes>
+						<attribute id="name"/>
+					</attributes>
+				</naming>
+				<display_template/>
+				<icon>images/workorder.png</icon>
+				<reconciliation>
+					<attributes>
+						<attribute id="name"/>
+						<attribute id="ticket_id"/>
+					</attributes>
+				</reconciliation>
+			</properties>
+			<fields>
+				<field id="name" xsi:type="AttributeString">
+					<sql>name</sql>
+					<default_value/>
+					<is_null_allowed>false</is_null_allowed>
+				</field>
+				<field id="status" xsi:type="AttributeEnum">
+					<values>
+						<value id="open">open</value>
+						<value id="closed">closed</value>
+					</values>
+					<sql>status</sql>
+					<default_value>open</default_value>
+					<is_null_allowed>false</is_null_allowed>
+					<display_style>list</display_style>
+				</field>
+				<field id="description" xsi:type="AttributeText">
+					<sql>description</sql>
+					<default_value/>
+					<is_null_allowed>false</is_null_allowed>
+				</field>
+				<field id="ticket_id" xsi:type="AttributeExternalKey">
+					<sql>ticket_id</sql>
+					<target_class>Ticket</target_class>
+					<is_null_allowed>false</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+				</field>
+				<field id="ticket_ref" xsi:type="AttributeExternalField">
+					<extkey_attcode>ticket_id</extkey_attcode>
+					<target_attcode>ref</target_attcode>
+				</field>
+				<field id="team_id" xsi:type="AttributeExternalKey">
+					<filter>SELECT Team</filter>
+					<sql>team_id</sql>
+					<target_class>Team</target_class>
+					<is_null_allowed>false</is_null_allowed>
+					<on_target_delete>DEL_MANUAL</on_target_delete>
+				</field>
+				<field id="team_name" xsi:type="AttributeExternalField">
+					<extkey_attcode>team_id</extkey_attcode>
+					<target_attcode>email</target_attcode>
+				</field>
+				<field id="agent_id" xsi:type="AttributeExternalKey">
+					<filter><![CDATA[SELECT Person AS p JOIN lnkPersonToTeam AS l ON l.person_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this->team_id]]></filter>
+					<dependencies>
+						<attribute id="team_id"/>
+					</dependencies>
+					<sql>owner_id</sql>
+					<target_class>Person</target_class>
+					<is_null_allowed>true</is_null_allowed>
+					<on_target_delete>DEL_MANUAL</on_target_delete>
+					<allow_target_creation>false</allow_target_creation>
+				</field>
+				<field id="agent_email" xsi:type="AttributeExternalField">
+					<extkey_attcode>agent_id</extkey_attcode>
+					<target_attcode>email</target_attcode>
+				</field>
+				<field id="start_date" xsi:type="AttributeDateTime">
+					<sql>start_date</sql>
+					<default_value/>
+					<is_null_allowed>false</is_null_allowed>
+				</field>
+				<field id="end_date" xsi:type="AttributeDateTime">
+					<sql>end_date</sql>
+					<default_value/>
+					<is_null_allowed>false</is_null_allowed>
+				</field>
+				<field id="log" xsi:type="AttributeCaseLog">
+					<sql>log</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+				</field>
+			</fields>
+			<lifecycle>
+				<attribute>status</attribute>
+				<stimuli>
+					<stimulus id="ev_close" xsi:type="StimulusUserAction"/>
+				</stimuli>
+				<states>
+					<state id="open">
+						<flags/>
+						<transitions>
+							<transition id="ev_close">
+								<target>closed</target>
+								<actions/>
+							</transition>
+						</transitions>
+					</state>
+					<state id="closed">
+						<flags/>
+						<transitions/>
+					</state>
+				</states>
+			</lifecycle>
+			<methods>
+				<method id="UpdateParentTicketLog">
+					<static>false</static>
+					<access>public</access>
+					<type>StimulusUserAction</type>
+					<arguments>
+					</arguments>
+					<code><![CDATA[	public function UpdateParentTicketLog()
 	{
 		$oLog = $this->Get('log');
 		$sLog = $oLog->GetModifiedEntry();
@@ -707,785 +709,800 @@
 			}
 		}
 	}]]></code>
-        </method>
-        <method id="OnUpdate">
-          <static>false</static>
-          <access>protected</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	protected function OnUpdate()
+				</method>
+				<method id="OnUpdate">
+					<static>false</static>
+					<access>protected</access>
+					<type>Overload-DBObject</type>
+					<code><![CDATA[	protected function OnUpdate()
 	{
 		$this->UpdateParentTicketLog();
 	}]]></code>
-        </method>
-      </methods>
-      <presentation>
-        <details>
-          <items>
-            <item id="name">
-              <rank>10</rank>
-            </item>
-            <item id="status">
-              <rank>20</rank>
-            </item>
-            <item id="ticket_id">
-              <rank>30</rank>
-            </item>
-            <item id="team_id">
-              <rank>40</rank>
-            </item>
-            <item id="agent_id">
-              <rank>50</rank>
-            </item>
-            <item id="description">
-              <rank>60</rank>
-            </item>
-            <item id="start_date">
-              <rank>70</rank>
-            </item>
-            <item id="end_date">
-              <rank>80</rank>
-            </item>
-          </items>
-        </details>
-        <search>
-          <items>
-            <item id="name">
-              <rank>10</rank>
-            </item>
-            <item id="status">
-              <rank>20</rank>
-            </item>
-            <item id="ticket_id">
-              <rank>30</rank>
-            </item>
-            <item id="team_id">
-              <rank>40</rank>
-            </item>
-            <item id="agent_id">
-              <rank>50</rank>
-            </item>
-            <item id="start_date">
-              <rank>60</rank>
-            </item>
-            <item id="end_date">
-              <rank>70</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="status">
-              <rank>10</rank>
-            </item>
-            <item id="ticket_id">
-              <rank>20</rank>
-            </item>
-            <item id="start_date">
-              <rank>30</rank>
-            </item>
-            <item id="end_date">
-              <rank>40</rank>
-            </item>
-            <item id="team_id">
-              <rank>50</rank>
-            </item>
-            <item id="agent_id">
-              <rank>60</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
-  </classes>
-  <meta>
-    <classes>
-      <class id="cmdbAbstractObject" _delta="define">
-        <methods>
-          <method id="Set">
-            <arguments>
-              <argument id="1">
-                <type>attcode</type>
-                <mandatory>true</mandatory>
-                <type_restrictions>
-                  <operation>deny</operation>
-                  <types>
-                    <type id="AttributeStopWatch"/>
-                    <type id="AttributeSubItem"/>
-                    <type id="AttributeExternalField"/>
-                    <type id="AttributeLinkedSetIndirect"/>
-                    <type id="AttributeLinkedSet"/>
-                  </types>
-                </type_restrictions>
-              </argument>
-              <argument id="2">
-                <type>string</type>
-                <mandatory>true</mandatory>
-              </argument>
-            </arguments>
-          </method>
-          <method id="SetCurrentDate">
-            <arguments>
-              <argument id="1">
-                <type>attcode</type>
-                <mandatory>true</mandatory>
-                <type_restrictions>
-                  <operation>allow</operation>
-                  <types>
-                    <type id="AttributeDate"/>
-                    <type id="AttributeDateTime"/>
-                    <type id="AttributeString"/>
-                  </types>
-                </type_restrictions>
-              </argument>
-            </arguments>
-          </method>
-          <method id="SetCurrentUser">
-            <arguments>
-              <argument id="1">
-                <type>attcode</type>
-                <mandatory>true</mandatory>
-                <type_restrictions>
-                  <operation>allow</operation>
-                  <types>
-                    <type id="AttributeExternalKey"/>
-                    <type id="AttributeInteger"/>
-                    <type id="AttributeString"/>
-                  </types>
-                </type_restrictions>
-              </argument>
-            </arguments>
-          </method>
-          <method id="SetCurrentPerson">
-            <arguments>
-              <argument id="1">
-                <type>attcode</type>
-                <mandatory>true</mandatory>
-                <type_restrictions>
-                  <operation>allow</operation>
-                  <types>
-                    <type id="AttributeExternalKey"/>
-                    <type id="AttributeInteger"/>
-                    <type id="AttributeString"/>
-                  </types>
-                </type_restrictions>
-              </argument>
-            </arguments>
-          </method>
-          <method id="SetElapsedTime">
-            <arguments>
-              <argument id="1">
-                <type>attcode</type>
-                <mandatory>true</mandatory>
-                <type_restrictions>
-                  <operation>allow</operation>
-                  <types>
-                    <type id="AttributeDuration"/>
-                  </types>
-                </type_restrictions>
-              </argument>
-              <argument id="2">
-                <type>attcode</type>
-                <mandatory>true</mandatory>
-                <type_restrictions>
-                  <operation>allow</operation>
-                  <types>
-                    <type id="AttributeDate"/>
-                    <type id="AttributeDateTime"/>
-                  </types>
-                </type_restrictions>
-              </argument>
-              <argument id="3">
-                <type>string</type>
-                <mandatory>false</mandatory>
-              </argument>
-            </arguments>
-          </method>
-          <method id="Reset">
-            <arguments>
-              <argument id="1">
-                <type>attcode</type>
-                <mandatory>true</mandatory>
-                <type_restrictions>
-                  <operation>deny</operation>
-                  <types>
-                    <type id="AttributeStopWatch"/>
-                    <type id="AttributeSubItem"/>
-                    <type id="AttributeExternalField"/>
-                  </types>
-                </type_restrictions>
-              </argument>
-            </arguments>
-          </method>
-          <method id="ResetStopWatch">
-            <arguments>
-              <argument id="1">
-                <type>attcode</type>
-                <mandatory>true</mandatory>
-                <type_restrictions>
-                  <operation>allow</operation>
-                  <types>
-                    <type id="AttributeStopWatch"/>
-                  </types>
-                </type_restrictions>
-              </argument>
-            </arguments>
-          </method>
-          <method id="Copy">
-            <arguments>
-              <argument id="1">
-                <type>attcode</type>
-                <mandatory>true</mandatory>
-                <type_restrictions>
-                  <operation>deny</operation>
-                  <types>
-                    <type id="AttributeStopWatch"/>
-                    <type id="AttributeSubItem"/>
-                    <type id="AttributeExternalField"/>
-                  </types>
-                </type_restrictions>
-              </argument>
-              <argument id="2">
-                <type>attcode</type>
-                <mandatory>true</mandatory>
-              </argument>
-            </arguments>
-          </method>
-        </methods>
-      </class>
-      <class id="ResponseTicketTTO" _delta="define">
-        <interfaces>
-          <interface id="iMetricComputer"/>
-        </interfaces>
-      </class>
-      <class id="ResponseTicketTTR" _delta="define">
-        <interfaces>
-          <interface id="iMetricComputer"/>
-        </interfaces>
-      </class>
-    </classes>
-  </meta>
-  <module_designs>
-    <module_design id="itop-portal" xsi:type="portal" _delta="define">
-      <properties>
-        <name>portal:itop-portal</name>
-        <!-- Can be either a fileref or a relative path to the file (To be tested). Takes over env-xxx/branding/portal-logo.png -->
-		<!--<fileref ref="brt_6a2be154b2a62659d3332c513bdad715"  />-->
-		<!--<logo>../images/itop-logo.png</logo>-->
-        <!-- Can be either a fileref or a relative path to the file from /env-xxx (eg. itop-portal-base/mystyle.css) -->
-        <!-- Available themes must have a unique id. Some ids are loaded in a specific order : bootstrap/portal/custom. Other ids are loaded after them, but their order cannot be predicted -->
-        <themes/>
-        <!-- Can be either a fileref or a relative path to the file from /env-xxx (eg. itop-portal-base/mytemplate.html.twig) -->
-        <!-- Available templates are id="layout|home" -->
-        <templates/>
-        <!-- An OQL query to determine which TriggerOnPortalUpdate to use within THIS instance of the portal. This is mostly needed to enable different triggers on several portal instances -->
-        <!-- Note : ":parent_classes" parameter is a reserved name that will be used for the current object class name (and its ancestors) -->
-        <triggers_query><![CDATA[SELECT TriggerOnPortalUpdate AS t WHERE t.target_class IN (:parent_classes)]]></triggers_query>
-        <attachments>
-          <allow_delete>true</allow_delete>
-        </attachments>
-      </properties>
-      <bricks>
-        <brick id="user-profile" xsi:type="Combodo\iTop\Portal\Brick\UserProfileBrick">
-          <rank>
-			  <default>1</default>
-		  </rank>
-          <title>
-			  <default>Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil</default>
-		  </title>
-		  <decoration_class>
-			  <default>fa fa-user fa-2x</default>
-		  </decoration_class>
-          <form>
-            <!-- Optionnal tag to list the fields -->
-            <fields />
-            <!-- Optionnal tag to specify the form layout. Fields that are not positionned in the layout will be placed at the end of the form -->
-            <twig>
-              <!-- data-field-id attribute must be an attribute code of the class -->
-              <!-- data-field-flags attribute contains flags among read_only/hidden/mandatory/must_prompt/must_change -->
-              <div class="form_field" data-field-id="first_name" data-field-flags="read_only">
-              </div>
-              <div class="form_field" data-field-id="name" data-field-flags="read_only">
-              </div>
-              <div class="form_field" data-field-id="org_id" data-field-flags="read_only">
-              </div>
-              <div class="form_field" data-field-id="email" data-field-flags="read_only">
-              </div>
-              <div class="form_field" data-field-id="phone">
-              </div>
-              <div class="form_field" data-field-id="location_id">
-              </div>
-              <div class="form_field" data-field-id="function">
-              </div>
-              <div class="form_field" data-field-id="manager_id" data-field-flags="read_only">
-              </div>
-            </twig>
-          </form>
-        </brick>
-        <brick id="services" xsi:type="Combodo\iTop\Portal\Brick\BrowseBrick">
-          <active>true</active>
-          <width>6</width>
-          <rank>
-            <default>10</default>
-          </rank>
-          <title>
-            <default>Brick:Portal:NewRequest:Title</default>
-          </title>
-          <description>Brick:Portal:NewRequest:Title+</description>
-          <decoration_class>
-            <default>fc fc-new-request fc-2x</default>
-          </decoration_class>
-          <!-- <fields  /> Optional tag to add attributes to the table by their code, can be specified for each level -->
-          <levels>
-            <level id="1">
-              <class>ServiceFamily</class>
-              <levels>
-                <!-- Level IDs must be numeric -->
-                <level id="1">
-                  <!-- Can be either a class tag with the class name or an oql tag with the query -->
-                  <class>Service</class>
-                  <!-- Attribute code of the above class that point to the upper level class -->
-                  <parent_att>servicefamily_id</parent_att>
-                  <!-- Attribute code to use to display the object name, default is 'name'. -->
-                  <name_att/>
-                  <!-- Description text from attribute of above class [from the OQL] -->
-                  <tooltip_att>description</tooltip_att>
-                  <!-- Title of the level, will be display in lists and others browse modes -->
-                  <title>Service</title>
-                  <!-- Optional tag to add attributes to the table by their code, can be specified for each level -->
-                  <!-- <fields  /> -->
-                  <!-- Can be empty on intermediate levels, default is drilldown -->
-                  <actions>
-                    <action id="drilldown" xsi:type="drilldown"/>
-                  </actions>
-                  <levels>
-                    <level id="1">
-                      <!-- Note : We could have used just a class tag and put the OQL in the scope for everybody -->
-                      <oql><![CDATA[SELECT ServiceSubcategory WHERE ServiceSubcategory.status != 'obsolete']]></oql>
-                      <parent_att>service_id</parent_att>
-                      <name_att/>
-                      <tooltip_att>description</tooltip_att>
-                      <title>Sous-Service</title>
-                      <actions>
-                        <action id="view" xsi:type="view"/>
-                        <action id="create_from_this" xsi:type="create_from_this">
-                          <!-- Can be either a class tag containing the class of the object to create, or a static method taking the origin object as a parameter and that will return a object of the desired class -->
-                          <!-- (eg. \Ticket::FromServiceSubcategory($oOrigin) that should return either a UserRequest or Incident regarding the request type) -->
-                          <class>UserRequest</class>
-                          <!-- Optional tag that can be used on any action type -->
-                          <!--<title>Créer un ticket</title>-->
-                          <icon_class>fc fc-new-request fc-1-6x fc-flip-horizontal</icon_class>
-                          <rules>
-                            <rule id="contact-to-userrequest"/>
-                            <rule id="servicesubcategory-to-userrequest"/>
-							<rule id="go-to-open-request-on-submit"/>
-                          </rules>
-                        </action>
-                      </actions>
-                      <levels/>
-                    </level>
-                  </levels>
-                </level>
-              </levels>
-            </level>
-          </levels>
+				</method>
+			</methods>
+			<presentation>
+				<details>
+					<items>
+						<item id="name">
+							<rank>10</rank>
+						</item>
+						<item id="status">
+							<rank>20</rank>
+						</item>
+						<item id="ticket_id">
+							<rank>30</rank>
+						</item>
+						<item id="team_id">
+							<rank>40</rank>
+						</item>
+						<item id="agent_id">
+							<rank>50</rank>
+						</item>
+						<item id="description">
+							<rank>60</rank>
+						</item>
+						<item id="start_date">
+							<rank>70</rank>
+						</item>
+						<item id="end_date">
+							<rank>80</rank>
+						</item>
+					</items>
+				</details>
+				<search>
+					<items>
+						<item id="name">
+							<rank>10</rank>
+						</item>
+						<item id="status">
+							<rank>20</rank>
+						</item>
+						<item id="ticket_id">
+							<rank>30</rank>
+						</item>
+						<item id="team_id">
+							<rank>40</rank>
+						</item>
+						<item id="agent_id">
+							<rank>50</rank>
+						</item>
+						<item id="start_date">
+							<rank>60</rank>
+						</item>
+						<item id="end_date">
+							<rank>70</rank>
+						</item>
+					</items>
+				</search>
+				<list>
+					<items>
+						<item id="status">
+							<rank>10</rank>
+						</item>
+						<item id="ticket_id">
+							<rank>20</rank>
+						</item>
+						<item id="start_date">
+							<rank>30</rank>
+						</item>
+						<item id="end_date">
+							<rank>40</rank>
+						</item>
+						<item id="team_id">
+							<rank>50</rank>
+						</item>
+						<item id="agent_id">
+							<rank>60</rank>
+						</item>
+					</items>
+				</list>
+			</presentation>
+		</class>
+	</classes>
+	<meta>
+		<classes>
+			<class id="cmdbAbstractObject" _delta="define">
+				<methods>
+					<method id="Set">
+						<arguments>
+							<argument id="1">
+								<type>attcode</type>
+								<mandatory>true</mandatory>
+								<type_restrictions>
+									<operation>deny</operation>
+									<types>
+										<type id="AttributeStopWatch"/>
+										<type id="AttributeSubItem"/>
+										<type id="AttributeExternalField"/>
+										<type id="AttributeLinkedSetIndirect"/>
+										<type id="AttributeLinkedSet"/>
+									</types>
+								</type_restrictions>
+							</argument>
+							<argument id="2">
+								<type>string</type>
+								<mandatory>true</mandatory>
+							</argument>
+						</arguments>
+					</method>
+					<method id="SetCurrentDate">
+						<arguments>
+							<argument id="1">
+								<type>attcode</type>
+								<mandatory>true</mandatory>
+								<type_restrictions>
+									<operation>allow</operation>
+									<types>
+										<type id="AttributeDate"/>
+										<type id="AttributeDateTime"/>
+										<type id="AttributeString"/>
+									</types>
+								</type_restrictions>
+							</argument>
+						</arguments>
+					</method>
+					<method id="SetCurrentUser">
+						<arguments>
+							<argument id="1">
+								<type>attcode</type>
+								<mandatory>true</mandatory>
+								<type_restrictions>
+									<operation>allow</operation>
+									<types>
+										<type id="AttributeExternalKey"/>
+										<type id="AttributeInteger"/>
+										<type id="AttributeString"/>
+									</types>
+								</type_restrictions>
+							</argument>
+						</arguments>
+					</method>
+					<method id="SetCurrentPerson">
+						<arguments>
+							<argument id="1">
+								<type>attcode</type>
+								<mandatory>true</mandatory>
+								<type_restrictions>
+									<operation>allow</operation>
+									<types>
+										<type id="AttributeExternalKey"/>
+										<type id="AttributeInteger"/>
+										<type id="AttributeString"/>
+									</types>
+								</type_restrictions>
+							</argument>
+						</arguments>
+					</method>
+					<method id="SetElapsedTime">
+						<arguments>
+							<argument id="1">
+								<type>attcode</type>
+								<mandatory>true</mandatory>
+								<type_restrictions>
+									<operation>allow</operation>
+									<types>
+										<type id="AttributeDuration"/>
+									</types>
+								</type_restrictions>
+							</argument>
+							<argument id="2">
+								<type>attcode</type>
+								<mandatory>true</mandatory>
+								<type_restrictions>
+									<operation>allow</operation>
+									<types>
+										<type id="AttributeDate"/>
+										<type id="AttributeDateTime"/>
+									</types>
+								</type_restrictions>
+							</argument>
+							<argument id="3">
+								<type>string</type>
+								<mandatory>false</mandatory>
+							</argument>
+						</arguments>
+					</method>
+					<method id="Reset">
+						<arguments>
+							<argument id="1">
+								<type>attcode</type>
+								<mandatory>true</mandatory>
+								<type_restrictions>
+									<operation>deny</operation>
+									<types>
+										<type id="AttributeStopWatch"/>
+										<type id="AttributeSubItem"/>
+										<type id="AttributeExternalField"/>
+									</types>
+								</type_restrictions>
+							</argument>
+						</arguments>
+					</method>
+					<method id="ResetStopWatch">
+						<arguments>
+							<argument id="1">
+								<type>attcode</type>
+								<mandatory>true</mandatory>
+								<type_restrictions>
+									<operation>allow</operation>
+									<types>
+										<type id="AttributeStopWatch"/>
+									</types>
+								</type_restrictions>
+							</argument>
+						</arguments>
+					</method>
+					<method id="Copy">
+						<arguments>
+							<argument id="1">
+								<type>attcode</type>
+								<mandatory>true</mandatory>
+								<type_restrictions>
+									<operation>deny</operation>
+									<types>
+										<type id="AttributeStopWatch"/>
+										<type id="AttributeSubItem"/>
+										<type id="AttributeExternalField"/>
+									</types>
+								</type_restrictions>
+							</argument>
+							<argument id="2">
+								<type>attcode</type>
+								<mandatory>true</mandatory>
+							</argument>
+						</arguments>
+					</method>
+				</methods>
+			</class>
+			<class id="ResponseTicketTTO" _delta="define">
+				<interfaces>
+					<interface id="iMetricComputer"/>
+				</interfaces>
+			</class>
+			<class id="ResponseTicketTTR" _delta="define">
+				<interfaces>
+					<interface id="iMetricComputer"/>
+				</interfaces>
+			</class>
+		</classes>
+	</meta>
+	<module_designs>
+		<module_design id="itop-portal" xsi:type="portal" _delta="define">
+			<properties>
+				<name>portal:itop-portal</name>
+				<!-- Can be either a fileref or a relative path to the file (To be tested). Takes over env-xxx/branding/portal-logo.png -->
+				<!--<fileref ref="brt_6a2be154b2a62659d3332c513bdad715"  />-->
+				<!--<logo>../images/itop-logo.png</logo>-->
+				<!-- Can be either a fileref or a relative path to the file from /env-xxx (eg. itop-portal-base/mystyle.css) -->
+				<!-- Available themes must have a unique id. Some ids are loaded in a specific order : bootstrap/portal/custom. Other ids are loaded after them, but their order cannot be predicted -->
+				<themes/>
+				<!-- Can be either a fileref or a relative path to the file from /env-xxx (eg. itop-portal-base/mytemplate.html.twig) -->
+				<!-- Available templates are id="layout|home" -->
+				<templates/>
+				<!-- An OQL query to determine which TriggerOnPortalUpdate to use within THIS instance of the portal. This is mostly needed to enable different triggers on several portal instances -->
+				<!-- Note : ":parent_classes" parameter is a reserved name that will be used for the current object class name (and its ancestors) -->
+				<triggers_query><![CDATA[SELECT TriggerOnPortalUpdate AS t WHERE t.target_class IN (:parent_classes)]]></triggers_query>
+				<attachments>
+					<allow_delete>true</allow_delete>
+				</attachments>
+			</properties>
+			<bricks>
+				<brick id="user-profile" xsi:type="Combodo\iTop\Portal\Brick\UserProfileBrick">
+					<rank>
+						<default>1</default>
+					</rank>
+					<title>
+						<default>Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil</default>
+					</title>
+					<decoration_class>
+						<default>fa fa-user fa-2x</default>
+					</decoration_class>
+					<form>
+						<!-- Optionnal tag to list the fields -->
+						<fields />
+						<!-- Optionnal tag to specify the form layout. Fields that are not positionned in the layout will be placed at the end of the form -->
+						<twig>
+							<!-- data-field-id attribute must be an attribute code of the class -->
+							<!-- data-field-flags attribute contains flags among read_only/hidden/mandatory/must_prompt/must_change -->
+							<div class="form_field" data-field-id="first_name" data-field-flags="read_only">
+							</div>
+							<div class="form_field" data-field-id="name" data-field-flags="read_only">
+							</div>
+							<div class="form_field" data-field-id="org_id" data-field-flags="read_only">
+							</div>
+							<div class="form_field" data-field-id="email" data-field-flags="read_only">
+							</div>
+							<div class="form_field" data-field-id="phone">
+							</div>
+							<div class="form_field" data-field-id="location_id">
+							</div>
+							<div class="form_field" data-field-id="function">
+							</div>
+							<div class="form_field" data-field-id="manager_id" data-field-flags="read_only">
+							</div>
+						</twig>
+					</form>
+				</brick>
+				<brick id="services" xsi:type="Combodo\iTop\Portal\Brick\BrowseBrick">
+					<active>true</active>
+					<width>6</width>
+					<rank>
+						<default>10</default>
+					</rank>
+					<title>
+						<default>Brick:Portal:NewRequest:Title</default>
+					</title>
+					<description>Brick:Portal:NewRequest:Title+</description>
+					<decoration_class>
+						<default>fc fc-new-request fc-2x</default>
+					</decoration_class>
+					<!-- <fields  /> Optional tag to add attributes to the table by their code, can be specified for each level -->
+					<levels>
+						<level id="1">
+							<class>ServiceFamily</class>
+							<levels>
+								<!-- Level IDs must be numeric -->
+								<level id="1">
+									<!-- Can be either a class tag with the class name or an oql tag with the query -->
+									<class>Service</class>
+									<!-- Attribute code of the above class that point to the upper level class -->
+									<parent_att>servicefamily_id</parent_att>
+									<!-- Attribute code to use to display the object name, default is 'name'. -->
+									<name_att/>
+									<!-- Description text from attribute of above class [from the OQL] -->
+									<tooltip_att>description</tooltip_att>
+									<!-- Title of the level, will be display in lists and others browse modes -->
+									<title>Service</title>
+									<!-- Optional tag to add attributes to the table by their code, can be specified for each level -->
+									<!-- <fields  /> -->
+									<!-- Can be empty on intermediate levels, default is drilldown -->
+									<actions>
+										<action id="drilldown" xsi:type="drilldown"/>
+									</actions>
+									<levels>
+										<level id="1">
+											<!-- Note : We could have used just a class tag and put the OQL in the scope for everybody -->
+											<oql><![CDATA[SELECT ServiceSubcategory WHERE ServiceSubcategory.status != 'obsolete']]></oql>
+											<parent_att>service_id</parent_att>
+											<name_att/>
+											<tooltip_att>description</tooltip_att>
+											<title>Sous-Service</title>
+											<actions>
+												<action id="view" xsi:type="view"/>
+												<action id="create_from_this" xsi:type="create_from_this">
+													<!-- Can be either a class tag containing the class of the object to create, or a static method taking the origin object as a parameter and that will return a object of the desired class -->
+													<!-- (eg. \Ticket::FromServiceSubcategory($oOrigin) that should return either a UserRequest or Incident regarding the request type) -->
+													<class>UserRequest</class>
+													<!-- Optional tag that can be used on any action type -->
+													<!--<title>Créer un ticket</title>-->
+													<icon_class>fc fc-new-request fc-1-6x fc-flip-horizontal</icon_class>
+													<rules>
+														<rule id="contact-to-userrequest"/>
+														<rule id="servicesubcategory-to-userrequest"/>
+														<rule id="go-to-open-request-on-submit"/>
+													</rules>
+												</action>
+											</actions>
+											<levels/>
+										</level>
+									</levels>
+								</level>
+							</levels>
+						</level>
+					</levels>
 
-          <browse_modes>
-            <availables>
-              <mode id="list"/>
-              <mode id="tree"/>
-            </availables>
-            <default>list</default>
-          </browse_modes>
-          <data_loading>auto</data_loading>
-          <!-- lazy|full|auto. Let the consultant choose if the list/tree data are load progressivly at each page/level or in one-shot or if it is up to the system regarding the "lazy_loading_threshold" parameter -->
-        </brick>
-        <brick id="ongoing-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick">
-          <active>true</active>
-          <rank>
-			  <default>20</default>
-		  </rank>
-          <width>6</width>
-          <title>
-			  <default>Brick:Portal:OngoingRequests:Title</default>
-		  </title>
-		  <description>Brick:Portal:OngoingRequests:Title+</description>
-		  <decoration_class>
-			  <default>fc fc-ongoing-request fc-2x</default>
-		  </decoration_class>
-          <oql><![CDATA[SELECT Ticket]]></oql>
-          <!-- Optional tag to define the how the objects should be opened. Values can be edit|view. Note that even if this is set to edit, objects not allowed in edition mode for the user (cf. scopes and security layers) will open in view mode -->
-		  <!-- <opening_mode>edit</opening_mode> -->
-		  <!-- Can be either a class tag with the class name or an oql tag with the query -->
-          <!-- <class>Ticket</class> -->
-          <fields>
-            <field id="title"/>
-            <field id="start_date"/>
-            <field id="status"/>
-            <field id="service_id"/>
-            <field id="servicesubcategory_id"/>
-            <field id="priority"/>
-            <field id="caller_id"/>
-          </fields>
-          <!-- Optional tag to add attributes to the table by their code -->
-          <grouping>
-            <!-- Optionnal -->
-            <tabs>
-              <!-- Optionnal. Grouping by tabs -->
-              <!--<attribute>operational_status</attribute>-->
-              <!-- attribute xor groups tag -->
-              <groups>
-                <!-- Can be used only with ../oql tag, not ../class tag. Reason is that we can't know the class alias to apply to the condition's fields. We might have an exception saying that the field in ambigious for the generated query. -->
-                <group id="opened">
-                  <rank>1</rank>
-                  <title>Brick:Portal:OngoingRequests:Tab:OnGoing</title>
-                  <condition><![CDATA[SELECT Ticket AS T WHERE operational_status NOT IN ('closed', 'resolved')]]></condition>
-                </group>
-                <group id="resolved">
-                  <rank>2</rank>
-                  <title>Brick:Portal:OngoingRequests:Tab:Resolved</title>
-                  <condition><![CDATA[SELECT Ticket AS T WHERE org_id = :current_contact->org_id AND operational_status = 'resolved']]></condition>
-                </group>
-              </groups>
-            </tabs>
-            <!-- Implicit grouping on y axis by finalclass -->
-          </grouping>
-          <data_loading>full</data_loading>
-        </brick>
-        <brick id="closed-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick">
-          <active>true</active>
-          <rank>
-			  <navigation_menu>50</navigation_menu>
-		  </rank>
-          <visible>
-            <home>false</home>
-          </visible>
-          <width>12</width>
-          <title>
-			  <default>Brick:Portal:ClosedRequests:Title</default>
-		  </title>
-		  <description></description>
-		  <decoration_class>
-			  <default>fc fc-closed-request fc-2x</default>
-		  </decoration_class>
-          <oql><![CDATA[SELECT UserRequest WHERE org_id = :current_contact->org_id AND caller_id = :current_contact_id AND status = 'closed']]></oql>
-          <!-- Can be either a class tag with the class name or an oql tag with the query -->
-          <!-- <class>Ticket</class> -->
-          <fields>
-            <field id="finalclass"/>
-            <field id="title"/>
-            <field id="start_date"/>
-            <field id="status"/>
-            <field id="servicesubcategory_id"/>
-            <field id="priority"/>
-            <field id="caller_id"/>
-          </fields>
-          <data_loading>auto</data_loading>
-        </brick>
-      </bricks>
-      <forms>
-        <form id="servicesubcategory">
-          <class>ServiceSubcategory</class>
-          <!-- Optionnal tag to list the fields -->
-          <fields />
-          <!-- Optionnal tag to specify the form layout. Fields that are not positionned in the layout will be placed at the end of the form -->
-          <twig>
-            <div class="row">
-              <div class="col-sm-6">
-                <!-- data-field-id attribute must be an attribute code of the class -->
-                <div class="form_field" data-field-id="service_id">
-                </div>
-                <!-- data-field-flags attribute contains flags among read_only/hidden/mandatory/must_prompt/must_change -->
-                <div class="form_field" data-field-id="name" data-field-flags="read_only">
-                </div>
-                <div class="form_field" data-field-id="status" data-field-flags="read_only">
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form_field" data-field-id="service_org_id">
-                </div>
-                <div class="form_field" data-field-id="request_type">
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="form_field" data-field-id="description">
-              </div>
-            </div>
-          </twig>
-        </form>
-        <form id="user-request-view">
-          <class>UserRequest</class>
-          <fields>
-            <field id="title"/>
-            <field id="description">
-              <mandatory>true</mandatory>
-            </field>
-            <field id="status"/>
-            <field id="agent_id">
-              <read_only>true</read_only>
-            </field>
-            <field id="related_request_list">
-              <hidden>true</hidden>
-            </field>
-            <field id="contacts_list">
-              <hidden>true</hidden>
-            </field>
-          </fields>
-          <modes>
-            <mode id="view"/>
-          </modes>
-        </form>
-        <form id="ticket-create">
-          <class>Ticket</class>
-          <fields />
-          <twig>
-            <div class="row">
-              <div class="col-sm-6">
-                <div class="form_field" data-field-id="service_id" data-field-flags="mandatory">
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form_field" data-field-id="servicesubcategory_id" data-field-flags="mandatory">
-                </div>
-              </div>
-            </div>
-            <div id="service_details_placeholder">
-            </div>
-            <div class="row">
-              <div class="col-sm-6">
-                <div class="form_field" data-field-id="impact">
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form_field" data-field-id="urgency">
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="form_field" data-field-id="title">
-              </div>
-              <div class="form_field" data-field-id="description">
-              </div>
-              <div class="form_field" data-field-id="contacts_list">
-              </div>
-            </div>
-          </twig>
-          <modes>
-            <!-- mode id can among create / edit / view -->
-            <mode id="create"/>
-          </modes>
-        </form>
-        <form id="ticket-edit">
-          <class>Ticket</class>
-          <fields></fields>
-          <twig>
-            <div class="row">
-              <div class="col-sm-6">
-                <div class="form_field" data-field-id="caller_id" data-field-flags="read_only">
-                </div>
-                <div class="form_field" data-field-id="service_id" data-field-flags="read_only">
-                </div>
-                <div class="form_field" data-field-id="servicesubcategory_id" data-field-flags="read_only">
-                </div>
-                <div class="form_field" data-field-id="title" data-field-flags="read_only">
-                </div>
-                <div class="form_field" data-field-id="description" data-field-flags="read_only">
-                </div>
-                <div class="form_field" data-field-id="solution" data-field-flags="read_only">
-                </div>
-                <div class="form_field" data-field-id="user_satisfaction" data-field-flags="read_only">
-                </div>
-                <div class="form_field" data-field-id="user_comment" data-field-flags="read_only">
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form_field" data-field-id="status" data-field-flags="read_only">
-                </div>
-                <div class="form_field" data-field-id="impact" data-field-flags="read_only">
-                </div>
-                <div class="form_field" data-field-id="urgency" data-field-flags="read_only">
-                </div>
-                <div class="form_field" data-field-id="priority" data-field-flags="read_only">
-                </div>
-                <div class="form_field" data-field-id="start_date" data-field-flags="read_only">
-                </div>
-                <div class="form_field" data-field-id="last_update" data-field-flags="read_only">
-                </div>
-                <!--<div class="form_field" data-field-id="resolution_date" data-field-flags="read_only">
-                </div>-->
-              </div>
-            </div>
-            <div>
-              <div class="form_field" data-field-id="contacts_list">
-              </div>
-              <div class="form_field" data-field-id="public_log">
-              </div>
-            </div>
-          </twig>
-          <modes>
-            <mode id="edit"/>
-          </modes>
-        </form>
-		<form id="service-view">
-			<class>Service</class>
-			<fields></fields>
-			<twig>
-			  <div class="row">
-				<div class="col-sm-6">
-				  <div class="form_field" data-field-id="name">
-				  </div>
-				  <div class="form_field" data-field-id="description">
-				  </div>
-				</div>
-				<div class="col-sm-6">
-				  <div class="form_field" data-field-id="org_id">
-				  </div>
-				  <div class="form_field" data-field-id="servicefamily_id">
-				  </div>
-				  <div class="form_field" data-field-id="status">
-				  </div>
-				</div>
-			  </div>
-			</twig>
-			<modes>
-				<mode id="view" />
-			</modes>
-		</form>
-      </forms>
-      <classes>
-        <!-- Note : A class (or one of its ancestors) MUST be declared here to be displayed in the portal -->
-        <class id="User">
-          <!-- Allow <allowed_profile>s to apply the <transition>s below. Flags on <field>s will be merged with those from datamodel -->
-          <!-- See example in UserRequest class -->
-          <!--<lifecycle/>-->
-          <scopes>
-            <!-- Note : Silos apply to those scope queries -->
-            <scope id="all">
-              <oql_view><![CDATA[SELECT User AS U JOIN Person AS P ON U.contactid=P.id WHERE P.id = :current_contact_id]]></oql_view>
-              <!-- No object of this class can be edited -->
-              <!--<oql_edit />-->
-              <!-- Everybody -->
-              <!--<allowed_profiles />-->
-            </scope>
-          </scopes>
-        </class>
-        <class id="Organization">
-          <scopes>
-            <scope id="all">
-              <oql_view><![CDATA[SELECT Organization]]></oql_view>
-            </scope>
-          </scopes>
-        </class>
-        <class id="Contact">
-          <scopes>
-            <scope id="all">
-              <oql_view><![CDATA[SELECT Contact]]></oql_view>
-            </scope>
-          </scopes>
-        </class>
-        <class id="Person">
-          <scopes>
-            <scope id="administrator">
-              <oql_view><![CDATA[SELECT Person AS P]]></oql_view>
-              <allowed_profiles>
-                <allowed_profile id="Administrator"/>
-              </allowed_profiles>
-            </scope>
-          </scopes>
-        </class>
-        <class id="ServiceFamily">
-          <scopes>
-            <scope id="all">
-              <oql_view><![CDATA[SELECT ServiceFamily]]></oql_view>
-            </scope>
-          </scopes>
-        </class>
-        <class id="Service">
-          <scopes>
-            <scope id="all">
-              <oql_view><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :current_contact->org_id AND s.status != 'obsolete']]></oql_view>
-            </scope>
-          </scopes>
-        </class>
-        <class id="ServiceSubcategory">
-          <scopes>
-            <scope id="all">
-              <oql_view><![CDATA[SELECT ServiceSubcategory WHERE status != 'obsolete']]></oql_view>
-            </scope>
-          </scopes>
-        </class>
-        <class id="Ticket">
-          <lifecycle>
-            <transitions>
-              <transition id="ev_resolve">
-                <fields>
-                  <field id="agent_id">
-                    <must_prompt/>
-                  </field>
-                </fields>
-                <allowed_profiles>
-                  <allowed_profile id="Portal user"/>
-                </allowed_profiles>
-              </transition>
-            </transitions>
-          </lifecycle>
-          <scopes>
-            <scope id="all">
-              <oql_view><![CDATA[SELECT Ticket AS T WHERE T.caller_id = :current_contact_id AND T.finalclass IN ('UserRequest', 'Incident')]]></oql_view>
-              <oql_edit><![CDATA[SELECT Ticket AS T]]></oql_edit>
-            </scope>
-            <scope id="portal-power-user">
-              <oql_view><![CDATA[SELECT Ticket AS T WHERE T.finalclass IN ('UserRequest', 'Incident')]]></oql_view>
-              <oql_edit><![CDATA[SELECT Ticket AS T]]></oql_edit>
-              <allowed_profiles>
-                <allowed_profile id="Portal power user"/>
-              </allowed_profiles>
-            </scope>
-            <scope id="admin">
-              <oql_view><![CDATA[SELECT Ticket AS T]]></oql_view>
-              <oql_edit><![CDATA[SELECT Ticket AS T]]></oql_edit>
-              <allowed_profiles>
-                <allowed_profile id="Administrator"/>
-              </allowed_profiles>
-            </scope>
-          </scopes>
-        </class>
-      </classes>
-      <action_rules>
-        <action_rule id="contact-to-userrequest">
-          <!-- source_oql|source_class is only necessary if there is some copy preset|retrofit -->
-          <source_oql><![CDATA[SELECT Contact AS C WHERE C.id = :current_contact_id]]></source_oql>
-          <presets>
-            <!-- Only set() and copy() are supported for now -->
-            <preset id="1">set(caller_id, $current_contact_id$)</preset>
-            <preset id="2">copy(org_id, org_id)</preset>
-          </presets>
-          <retrofits/>
-        </action_rule>
-        <action_rule id="service-to-userrequest">
-          <source_class>Service</source_class>
-          <presets>
-            <preset id="1">copy(id, service_id)</preset>
-          </presets>
-        </action_rule>
-        <action_rule id="servicesubcategory-to-userrequest">
-          <source_class>ServiceSubcategory</source_class>
-          <presets>
-            <preset id="1">copy(id, servicesubcategory_id)</preset>
-            <preset id="2">copy(service_id, service_id)</preset>
-          </presets>
-        </action_rule>
-		<action_rule id="go-to-open-request-on-submit">
-			<submit xsi:type="goto">
-				<brick>ongoing-tickets-for-portal-user</brick>
-			</submit>
-		</action_rule>
-      </action_rules>
-    </module_design>
-  </module_designs>
-  <module_parameters>
-    <parameters id="itop-portal" _delta="define">
-      <lazy_loading_threshold>500</lazy_loading_threshold><!-- Will be placed in the conf/<env>/config-itop.php file under the itop-portal module's settings  -->
-    </parameters>
-  </module_parameters>
+					<browse_modes>
+						<availables>
+							<mode id="list"/>
+							<mode id="tree"/>
+						</availables>
+						<default>list</default>
+					</browse_modes>
+					<data_loading>auto</data_loading>
+					<!-- lazy|full|auto. Let the consultant choose if the list/tree data are load progressivly at each page/level or in one-shot or if it is up to the system regarding the "lazy_loading_threshold" parameter -->
+				</brick>
+				<brick id="ongoing-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick">
+					<active>true</active>
+					<rank>
+						<default>20</default>
+					</rank>
+					<width>6</width>
+					<title>
+						<default>Brick:Portal:OngoingRequests:Title</default>
+					</title>
+					<description>Brick:Portal:OngoingRequests:Title+</description>
+					<decoration_class>
+						<default>fc fc-ongoing-request fc-2x</default>
+					</decoration_class>
+					<oql><![CDATA[SELECT Ticket]]></oql>
+					<!-- Optional tag to define the how the objects should be opened. Values can be edit|view. Note that even if this is set to edit, objects not allowed in edition mode for the user (cf. scopes and security layers) will open in view mode -->
+					<!-- <opening_mode>edit</opening_mode> -->
+					<!-- Can be either a class tag with the class name or an oql tag with the query -->
+					<!-- <class>Ticket</class> -->
+					<fields>
+						<field id="title"/>
+						<field id="start_date"/>
+						<field id="status"/>
+						<field id="service_id"/>
+						<field id="servicesubcategory_id"/>
+						<field id="priority"/>
+						<field id="caller_id"/>
+					</fields>
+					<!-- Optional tag to add attributes to the table by their code -->
+					<grouping>
+						<!-- Optionnal -->
+						<tabs>
+							<!-- Optionnal. Grouping by tabs -->
+							<!--<attribute>operational_status</attribute>-->
+							<!-- attribute xor groups tag -->
+							<groups>
+								<!-- Can be used only with ../oql tag, not ../class tag. Reason is that we can't know the class alias to apply to the condition's fields. We might have an exception saying that the field in ambigious for the generated query. -->
+								<group id="opened">
+									<rank>1</rank>
+									<title>Brick:Portal:OngoingRequests:Tab:OnGoing</title>
+									<condition><![CDATA[SELECT Ticket AS T WHERE operational_status NOT IN ('closed', 'resolved')]]></condition>
+								</group>
+								<group id="resolved">
+									<rank>2</rank>
+									<title>Brick:Portal:OngoingRequests:Tab:Resolved</title>
+									<condition><![CDATA[SELECT Ticket AS T WHERE org_id = :current_contact->org_id AND operational_status = 'resolved']]></condition>
+								</group>
+							</groups>
+						</tabs>
+						<!-- Implicit grouping on y axis by finalclass -->
+					</grouping>
+					<data_loading>full</data_loading>
+				</brick>
+				<brick id="closed-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick">
+					<active>true</active>
+					<rank>
+						<navigation_menu>50</navigation_menu>
+					</rank>
+					<visible>
+						<home>false</home>
+					</visible>
+					<width>12</width>
+					<title>
+						<default>Brick:Portal:ClosedRequests:Title</default>
+					</title>
+					<description></description>
+					<decoration_class>
+						<default>fc fc-closed-request fc-2x</default>
+					</decoration_class>
+					<oql><![CDATA[SELECT UserRequest WHERE org_id = :current_contact->org_id AND caller_id = :current_contact_id AND status = 'closed']]></oql>
+					<!-- Can be either a class tag with the class name or an oql tag with the query -->
+					<!-- <class>Ticket</class> -->
+					<fields>
+						<field id="finalclass"/>
+						<field id="title"/>
+						<field id="start_date"/>
+						<field id="status"/>
+						<field id="servicesubcategory_id"/>
+						<field id="priority"/>
+						<field id="caller_id"/>
+					</fields>
+					<data_loading>auto</data_loading>
+				</brick>
+			</bricks>
+			<forms>
+				<form id="servicesubcategory">
+					<class>ServiceSubcategory</class>
+					<!-- Optionnal tag to list the fields -->
+					<fields />
+					<!-- Optionnal tag to specify the form layout. Fields that are not positionned in the layout will be placed at the end of the form -->
+					<twig>
+						<div class="row">
+							<div class="col-sm-6">
+								<!-- data-field-id attribute must be an attribute code of the class -->
+								<div class="form_field" data-field-id="service_id">
+								</div>
+								<!-- data-field-flags attribute contains flags among read_only/hidden/mandatory/must_prompt/must_change -->
+								<div class="form_field" data-field-id="name" data-field-flags="read_only">
+								</div>
+								<div class="form_field" data-field-id="status" data-field-flags="read_only">
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form_field" data-field-id="service_org_id">
+								</div>
+								<div class="form_field" data-field-id="request_type">
+								</div>
+							</div>
+						</div>
+						<div>
+							<div class="form_field" data-field-id="description">
+							</div>
+						</div>
+					</twig>
+				</form>
+				<form id="user-request-view">
+					<class>UserRequest</class>
+					<fields>
+						<field id="title"/>
+						<field id="description">
+							<mandatory>true</mandatory>
+						</field>
+						<field id="status"/>
+						<field id="agent_id">
+							<read_only>true</read_only>
+						</field>
+						<field id="related_request_list">
+							<hidden>true</hidden>
+						</field>
+						<field id="contacts_list">
+							<hidden>true</hidden>
+						</field>
+					</fields>
+					<modes>
+						<mode id="view"/>
+					</modes>
+				</form>
+				<form id="ticket-create">
+					<class>Ticket</class>
+					<fields />
+					<twig>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form_field" data-field-id="service_id" data-field-flags="mandatory">
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form_field" data-field-id="servicesubcategory_id" data-field-flags="mandatory">
+								</div>
+							</div>
+						</div>
+						<div id="service_details_placeholder">
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form_field" data-field-id="impact">
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form_field" data-field-id="urgency">
+								</div>
+							</div>
+						</div>
+						<div>
+							<div class="form_field" data-field-id="title">
+							</div>
+							<div class="form_field" data-field-id="description">
+							</div>
+							<div class="form_field" data-field-id="contacts_list">
+							</div>
+						</div>
+					</twig>
+					<modes>
+						<!-- mode id can among create / edit / view -->
+						<mode id="create"/>
+					</modes>
+				</form>
+				<form id="ticket-edit">
+					<class>Ticket</class>
+					<fields></fields>
+					<twig>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form_field" data-field-id="caller_id" data-field-flags="read_only">
+								</div>
+								<div class="form_field" data-field-id="service_id" data-field-flags="read_only">
+								</div>
+								<div class="form_field" data-field-id="servicesubcategory_id" data-field-flags="read_only">
+								</div>
+								<div class="form_field" data-field-id="title" data-field-flags="read_only">
+								</div>
+								<div class="form_field" data-field-id="description" data-field-flags="read_only">
+								</div>
+								<div class="form_field" data-field-id="solution" data-field-flags="read_only">
+								</div>
+								<div class="form_field" data-field-id="user_satisfaction" data-field-flags="read_only">
+								</div>
+								<div class="form_field" data-field-id="user_comment" data-field-flags="read_only">
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form_field" data-field-id="status" data-field-flags="read_only">
+								</div>
+								<div class="form_field" data-field-id="impact" data-field-flags="read_only">
+								</div>
+								<div class="form_field" data-field-id="urgency" data-field-flags="read_only">
+								</div>
+								<div class="form_field" data-field-id="priority" data-field-flags="read_only">
+								</div>
+								<div class="form_field" data-field-id="start_date" data-field-flags="read_only">
+								</div>
+								<div class="form_field" data-field-id="last_update" data-field-flags="read_only">
+								</div>
+								<!--<div class="form_field" data-field-id="resolution_date" data-field-flags="read_only">
+								</div>-->
+							</div>
+						</div>
+						<div>
+							<div class="form_field" data-field-id="contacts_list">
+							</div>
+							<div class="form_field" data-field-id="public_log">
+							</div>
+						</div>
+					</twig>
+					<modes>
+						<mode id="edit"/>
+					</modes>
+				</form>
+				<form id="service-view">
+					<class>Service</class>
+					<fields></fields>
+					<twig>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form_field" data-field-id="name">
+								</div>
+								<div class="form_field" data-field-id="description">
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form_field" data-field-id="org_id">
+								</div>
+								<div class="form_field" data-field-id="servicefamily_id">
+								</div>
+								<div class="form_field" data-field-id="status">
+								</div>
+							</div>
+						</div>
+					</twig>
+					<modes>
+						<mode id="view" />
+					</modes>
+				</form>
+			</forms>
+			<classes>
+				<!-- Note : A class (or one of its ancestors) MUST be declared here to be displayed in the portal -->
+				<class id="User">
+					<!-- Allow <allowed_profile>s to apply the <transition>s below. Flags on <field>s will be merged with those from datamodel -->
+					<!-- See example in UserRequest class -->
+					<!--<lifecycle/>-->
+					<scopes>
+						<!-- Note : Silos apply to those scope queries -->
+						<scope id="all">
+							<oql_view><![CDATA[SELECT User AS U JOIN Person AS P ON U.contactid=P.id WHERE P.id = :current_contact_id]]></oql_view>
+							<!-- No object of this class can be edited -->
+							<!--<oql_edit />-->
+							<!-- Everybody -->
+							<!--<allowed_profiles />-->
+						</scope>
+					</scopes>
+				</class>
+				<class id="Organization">
+					<scopes>
+						<scope id="all">
+							<oql_view><![CDATA[SELECT Organization]]></oql_view>
+						</scope>
+					</scopes>
+				</class>
+				<class id="Contact">
+					<scopes>
+						<scope id="all">
+							<oql_view><![CDATA[SELECT Contact]]></oql_view>
+						</scope>
+					</scopes>
+					<lists>
+						<list id="default">
+							<items>
+								<item id="status">
+									<rank>10</rank>
+								</item>
+								<item id="org_id">
+									<rank>20</rank>
+								</item>
+								<item id="function">
+									<rank>50</rank>
+								</item>
+							</items>
+						</list>
+					</lists>
+				</class>
+				<class id="Person">
+					<scopes>
+						<scope id="administrator">
+							<oql_view><![CDATA[SELECT Person AS P]]></oql_view>
+							<allowed_profiles>
+								<allowed_profile id="Administrator"/>
+							</allowed_profiles>
+						</scope>
+					</scopes>
+				</class>
+				<class id="ServiceFamily">
+					<scopes>
+						<scope id="all">
+							<oql_view><![CDATA[SELECT ServiceFamily]]></oql_view>
+						</scope>
+					</scopes>
+				</class>
+				<class id="Service">
+					<scopes>
+						<scope id="all">
+							<oql_view><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :current_contact->org_id AND s.status != 'obsolete']]></oql_view>
+						</scope>
+					</scopes>
+				</class>
+				<class id="ServiceSubcategory">
+					<scopes>
+						<scope id="all">
+							<oql_view><![CDATA[SELECT ServiceSubcategory WHERE status != 'obsolete']]></oql_view>
+						</scope>
+					</scopes>
+				</class>
+				<class id="Ticket">
+					<lifecycle>
+						<transitions>
+							<transition id="ev_resolve">
+								<fields>
+									<field id="agent_id">
+										<must_prompt/>
+									</field>
+								</fields>
+								<allowed_profiles>
+									<allowed_profile id="Portal user"/>
+								</allowed_profiles>
+							</transition>
+						</transitions>
+					</lifecycle>
+					<scopes>
+						<scope id="all">
+							<oql_view><![CDATA[SELECT Ticket AS T WHERE T.caller_id = :current_contact_id AND T.finalclass IN ('UserRequest', 'Incident')]]></oql_view>
+							<oql_edit><![CDATA[SELECT Ticket AS T]]></oql_edit>
+						</scope>
+						<scope id="portal-power-user">
+							<oql_view><![CDATA[SELECT Ticket AS T WHERE T.finalclass IN ('UserRequest', 'Incident')]]></oql_view>
+							<oql_edit><![CDATA[SELECT Ticket AS T]]></oql_edit>
+							<allowed_profiles>
+								<allowed_profile id="Portal power user"/>
+							</allowed_profiles>
+						</scope>
+						<scope id="admin">
+							<oql_view><![CDATA[SELECT Ticket AS T]]></oql_view>
+							<oql_edit><![CDATA[SELECT Ticket AS T]]></oql_edit>
+							<allowed_profiles>
+								<allowed_profile id="Administrator"/>
+							</allowed_profiles>
+						</scope>
+					</scopes>
+				</class>
+			</classes>
+			<action_rules>
+				<action_rule id="contact-to-userrequest">
+					<!-- source_oql|source_class is only necessary if there is some copy preset|retrofit -->
+					<source_oql><![CDATA[SELECT Contact AS C WHERE C.id = :current_contact_id]]></source_oql>
+					<presets>
+						<!-- Only set() and copy() are supported for now -->
+						<preset id="1">set(caller_id, $current_contact_id$)</preset>
+						<preset id="2">copy(org_id, org_id)</preset>
+					</presets>
+					<retrofits/>
+				</action_rule>
+				<action_rule id="service-to-userrequest">
+					<source_class>Service</source_class>
+					<presets>
+						<preset id="1">copy(id, service_id)</preset>
+					</presets>
+				</action_rule>
+				<action_rule id="servicesubcategory-to-userrequest">
+					<source_class>ServiceSubcategory</source_class>
+					<presets>
+						<preset id="1">copy(id, servicesubcategory_id)</preset>
+						<preset id="2">copy(service_id, service_id)</preset>
+					</presets>
+				</action_rule>
+				<action_rule id="go-to-open-request-on-submit">
+					<submit xsi:type="goto">
+						<brick>ongoing-tickets-for-portal-user</brick>
+					</submit>
+				</action_rule>
+			</action_rules>
+		</module_design>
+	</module_designs>
+	<module_parameters>
+		<parameters id="itop-portal" _delta="define">
+			<lazy_loading_threshold>500</lazy_loading_threshold><!-- Will be placed in the conf/<env>/config-itop.php file under the itop-portal module's settings  -->
+		</parameters>
+	</module_parameters>
 </itop_design>
