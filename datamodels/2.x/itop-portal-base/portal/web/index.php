@@ -49,8 +49,9 @@ if (UserRights::GetContactId() == 0)
 	die(Dict::S('Portal:ErrorNoContactForThisUser'));
 }
 
-$oCtx = new ContextTag('GUI:Portal');
-$oCtx2 = new ContextTag('Portal:'.PORTAL_MODULE_ID);
+// Stacking context tag so it knows we are in the portal
+$oContex = new ContextTag('GUI:Portal');
+$oContex2 = new ContextTag('Portal:' . PORTAL_MODULE_ID);
 
 // Checking if debug param is on
 $bDebug = (isset($_REQUEST['debug']) && ($_REQUEST['debug'] === 'true') );
@@ -59,7 +60,6 @@ $bDebug = (isset($_REQUEST['debug']) && ($_REQUEST['debug'] === 'true') );
 $oApp = new Silex\Application();
 
 // Registring optional silex components
-$oApp->register(new Silex\Provider\HttpFragmentServiceProvider());
 $oApp->register(new Combodo\iTop\Portal\Provider\UrlGeneratorServiceProvider());
 $oApp->register(new Combodo\iTop\Portal\Provider\ContextManipulatorServiceProvider());
 $oApp->register(new Combodo\iTop\Portal\Provider\ScopeValidatorServiceProvider(), array(
@@ -70,6 +70,7 @@ $oApp->register(new Combodo\iTop\Portal\Provider\ScopeValidatorServiceProvider()
 $oApp->register(new Silex\Provider\TwigServiceProvider(), array(
 	'twig.path' => MODULESROOT
 ));
+$oApp->register(new Silex\Provider\HttpFragmentServiceProvider());
 
 // Configuring Silex application
 $oApp['debug'] = $bDebug;
