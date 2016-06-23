@@ -26,6 +26,7 @@
 
 require_once(APPROOT.'/core/cmdbobject.class.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
+require_once(APPROOT.'/core/contexttag.class.inc.php');
 session_name('itop-'.md5(APPROOT));
 session_start();
 $sSwitchEnv = utils::ReadParam('switch_env', null);

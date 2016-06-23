@@ -91,6 +91,7 @@ class RestResultListOperations extends RestResult
 // Main
 //
 $oP = new ajax_page('rest');
+$oCtx = new ContextTag('REST/JSON');
 
 $sVersion = utils::ReadParam('version', null, false, 'raw_data');
 $sOperation = utils::ReadParam('operation', null);

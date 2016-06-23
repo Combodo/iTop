@@ -43,11 +43,13 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	protected $sBreadCrumbEntryDescription;
 	protected $sBreadCrumbEntryUrl;
 	protected $sBreadCrumbEntryIcon;
+	protected $oCtx;
 
 	public function __construct($sTitle, $bPrintable = false)
 	{
 		parent::__construct($sTitle, $bPrintable);
 		$this->m_oTabs = new TabManager();
+		$this->oCtx = new ContextTag('GUI:Console');
 
 		ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
 

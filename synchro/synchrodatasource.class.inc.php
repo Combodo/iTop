@@ -2244,7 +2244,9 @@ class SynchroExecution
 	protected $m_aReconciliationKeys = array();
 	protected $m_aAttributes = array();
 	protected $m_iCountAllReplicas = 0;
-
+	protected $m_oCtx;
+	protected $m_oCtx1;
+	
 	/**
 	 * Constructor
 	 * @param SynchroDataSource $oDataSource Synchronization task
@@ -2255,6 +2257,8 @@ class SynchroExecution
 	{
 		$this->m_oDataSource = $oDataSource;
 		$this->m_oLastFullLoadStartDate = $oLastFullLoadStartDate;
+		$this->m_oCtx = new ContextTag('Synchro');
+		$this->m_oCtx1 = new ContextTag('Synchro:'.$oDataSource->GetRawName()); // More precise context information
 	}
 
 	/**

@@ -49,9 +49,12 @@ class PortalWebPage extends NiceWebPage
 	 */
 	protected $m_sWelcomeMsg;
 	protected $m_aMenuButtons;
+	protected $m_oCtx;
+	
 	
     public function __construct($sTitle, $sAlternateStyleSheet = '')
     {
+    	$this->m_oCtx = new ContextTag('GUI:Portal');
     	$this->m_sWelcomeMsg = '';
     	$this->m_aMenuButtons = array();
         parent::__construct($sTitle);
