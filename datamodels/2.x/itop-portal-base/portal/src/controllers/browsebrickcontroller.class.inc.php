@@ -360,11 +360,12 @@ class BrowseBrickController extends BrickController
 				{
 					$aLevelsProperties[$sCurrentLevelAlias]['fields'] = array();
 
-					foreach ($aLevel['fields'] as $sFieldAttCode)
+					foreach ($aLevel['fields'] as $sFieldAttCode => $aFieldProperties)
 					{
 						$aLevelsProperties[$sCurrentLevelAlias]['fields'][] = array(
 							'code' => $sFieldAttCode,
-							'label' => MetaModel::GetAttributeDef($oSearch->GetClass(), $sFieldAttCode)->GetLabel()
+							'label' => MetaModel::GetAttributeDef($oSearch->GetClass(), $sFieldAttCode)->GetLabel(),
+							'hidden' => $aFieldProperties['hidden']
 						);
 					}
 				}

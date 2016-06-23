@@ -349,11 +349,17 @@ class BrowseBrick extends PortalBrick
 						{
 							if ($oFieldNode->hasAttribute('id') && $oFieldNode->getAttribute('id') !== '')
 							{
-								$aLevel[$sTagName][] = $oFieldNode->getAttribute('id');
+								$aLevel[$sTagName][$oFieldNode->getAttribute('id')] = array('hidden' => false);
 							}
 							else
 							{
 								throw new DOMFormatException('BrowseBrick :  ' . $sTagName . '/* tag must have an "id" attribute and it must not be empty', null, null, $oFieldNode);
+							}
+
+							$oFieldSubNode = $oFieldNode->GetOptionalElement('hidden');
+							if ($oFieldSubNode !== null)
+							{
+								$aLevel[$sTagName][$oFieldNode->getAttribute('id')]['hidden'] = ($oFieldSubNode->GetText() === 'true') ? true : false;
 							}
 						}
 					}

@@ -195,11 +195,13 @@
 							"width": "auto",
 							"searchable": true,
 							"sortable": false,
+							"visible": !oLevelsProperties[sKey].fields[i].hidden,
 							"title": oLevelsProperties[sKey].fields[i].label,
 							"defaultContent": "",
 							"type": "html",
 							"data": oLevelsProperties[sKey].alias+".fields."+oLevelsProperties[sKey].fields[i].code
 						});
+						console.log(oLevelsProperties[sKey].fields[i].visible);
 					}
 				}
 			}
