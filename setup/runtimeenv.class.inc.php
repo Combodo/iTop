@@ -596,6 +596,10 @@ class RunTimeEnvironment
 	
 	public function RecordInstallation(Config $oConfig, $sDataModelVersion, $aSelectedModules, $sModulesRelativePath, $sShortComment = null)
 	{
+		// Have it work fine even if the DB has been set in read-only mode for the users
+		$iPrevAccessMode = $oConfig->Get('access_mode');
+		$oConfig->Set('access_mode', ACCESS_FULL);
+
 		if ($sShortComment === null)
 		{
 			$sShortComment = 'Done by the setup program';
@@ -665,6 +669,10 @@ class RunTimeEnvironment
 			$oInstallRec->Set('installed', $iInstallationTime);
 			$oInstallRec->DBInsertNoReload();
 		}
+
+		// Restore the previous access mode
+		$oConfig->Set('access_mode', $iPrevAccessMode);
+
 		// Database is created, installation has been tracked into it
 		return true;	
 	}

@@ -1000,10 +1000,6 @@ class ApplicationInstaller
 		}
 		$oConfig->Set('source_dir', $sSourceDir);
 
-		// Have it work fine even if the DB has been set in read-only mode for the users
-		$iPrevAccessMode = $oConfig->Get('access_mode');
-		$oConfig->Set('access_mode', ACCESS_FULL);
-
 		// Record which modules are installed...
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
@@ -1011,11 +1007,8 @@ class ApplicationInstaller
 		if (!$oProductionEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModules, $sModulesDir))
 		{
 			throw new Exception("Failed to record the installation information");
-		}		
-		
-		// Restore the previous access mode
-		$oConfig->Set('access_mode', $iPrevAccessMode);
-		
+		}
+
 		// Make sure the root configuration directory exists
 		if (!file_exists(APPCONF))
 		{
