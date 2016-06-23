@@ -74,7 +74,7 @@ class ormCustomFieldsValue
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
 		$oHandler = $oAttDef->GetHandler($this->GetValues());
-		return $oHandler->GetAsCSV($this->aCurrentValues, $sSeparator = ',', $sTextQualifier = '"', $bLocalize = true);
+		return $oHandler->GetAsCSV($this->aCurrentValues, $sSeparator, $sTextQualifier, $bLocalize);
 	}
 
 	/**
