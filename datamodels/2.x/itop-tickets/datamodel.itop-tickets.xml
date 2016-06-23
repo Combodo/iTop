@@ -1313,8 +1313,10 @@
 								</div>
 								<div class="form_field" data-field-id="last_update" data-field-flags="read_only">
 								</div>
-								<!--<div class="form_field" data-field-id="resolution_date" data-field-flags="read_only">
-								</div>-->
+								<div class="form_field" data-field-id="resolution_date" data-field-flags="read_only">
+								</div>
+								<div class="form_field" data-field-id="agent_id" data-field-flags="read_only">
+								</div>
 							</div>
 						</div>
 						<div>
@@ -1374,14 +1376,20 @@
 				<class id="Organization">
 					<scopes>
 						<scope id="all">
-							<oql_view><![CDATA[SELECT Organization]]></oql_view>
+							<oql_view><![CDATA[SELECT Organization WHERE id = :current_contact->org_id]]></oql_view>
 						</scope>
 					</scopes>
 				</class>
 				<class id="Contact">
 					<scopes>
 						<scope id="all">
+							<oql_view><![CDATA[SELECT Contact WHERE org_id = :current_contact->org_id]]></oql_view>
+						</scope>
+						<scope id="all">
 							<oql_view><![CDATA[SELECT Contact]]></oql_view>
+							<allowed_profiles>
+								<allowed_profile id="Administrator"/>
+							</allowed_profiles>
 						</scope>
 					</scopes>
 					<lists>
@@ -1400,20 +1408,10 @@
 						</list>
 					</lists>
 				</class>
-				<class id="Person">
-					<scopes>
-						<scope id="administrator">
-							<oql_view><![CDATA[SELECT Person AS P]]></oql_view>
-							<allowed_profiles>
-								<allowed_profile id="Administrator"/>
-							</allowed_profiles>
-						</scope>
-					</scopes>
-				</class>
 				<class id="ServiceFamily">
 					<scopes>
 						<scope id="all">
-							<oql_view><![CDATA[SELECT ServiceFamily]]></oql_view>
+							<oql_view><![CDATA[SELECT ServiceFamily AS sf JOIN Service AS s ON s.servicefamily_id = sf.id JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :current_contact->org_id]]></oql_view>
 						</scope>
 					</scopes>
 				</class>
@@ -1427,42 +1425,21 @@
 				<class id="ServiceSubcategory">
 					<scopes>
 						<scope id="all">
-							<oql_view><![CDATA[SELECT ServiceSubcategory WHERE status != 'obsolete']]></oql_view>
+							<oql_view><![CDATA[SELECT ServiceSubcategory AS ssc JOIN Service AS s ON ssc.service_id=s.id JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :current_contact->org_id AND ssc.status != 'obsolete']]></oql_view>
 						</scope>
 					</scopes>
 				</class>
 				<class id="Ticket">
-					<lifecycle>
-						<transitions>
-							<transition id="ev_resolve">
-								<fields>
-									<field id="agent_id">
-										<must_prompt/>
-									</field>
-								</fields>
-								<allowed_profiles>
-									<allowed_profile id="Portal user"/>
-								</allowed_profiles>
-							</transition>
-						</transitions>
-					</lifecycle>
 					<scopes>
 						<scope id="all">
 							<oql_view><![CDATA[SELECT Ticket AS T WHERE T.caller_id = :current_contact_id AND T.finalclass IN ('UserRequest', 'Incident')]]></oql_view>
 							<oql_edit><![CDATA[SELECT Ticket AS T]]></oql_edit>
 						</scope>
 						<scope id="portal-power-user">
-							<oql_view><![CDATA[SELECT Ticket AS T WHERE T.finalclass IN ('UserRequest', 'Incident')]]></oql_view>
+							<oql_view><![CDATA[SELECT Ticket AS T WHERE T.org_id = :current_contact->org_id AND T.finalclass IN ('UserRequest', 'Incident')]]></oql_view>
 							<oql_edit><![CDATA[SELECT Ticket AS T]]></oql_edit>
 							<allowed_profiles>
 								<allowed_profile id="Portal power user"/>
-							</allowed_profiles>
-						</scope>
-						<scope id="admin">
-							<oql_view><![CDATA[SELECT Ticket AS T]]></oql_view>
-							<oql_edit><![CDATA[SELECT Ticket AS T]]></oql_edit>
-							<allowed_profiles>
-								<allowed_profile id="Administrator"/>
 							</allowed_profiles>
 						</scope>
 					</scopes>

@@ -633,7 +633,9 @@
                   <title>FAQs</title>
                   <fields>
                     <field id="error_code"/>
-                    <field id="key_words"/>
+					<field id="key_words">
+						<hidden>true</hidden>
+					</field>
                   </fields>
                   <actions>
                     <action id="view" xsi:type="view"/>
