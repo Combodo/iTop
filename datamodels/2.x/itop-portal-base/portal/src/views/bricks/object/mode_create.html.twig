@@ -72,8 +72,14 @@
 			var oNormalRegularButtons_{{ sFormIdSanitized }} = $('#{{ sFormId }} .form_btn_regular');
 			var oStickyRegularButtons_{{ sFormIdSanitized }} = oNormalRegularButtons_{{ sFormIdSanitized }}.clone(true, true);
 			oStickyRegularButtons_{{ sFormIdSanitized }}.addClass('sticky');
-			oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_submit').html( oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_submit span.glyphicon')[0].outerHTML );
-			oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_cancel').html( oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_cancel span.glyphicon')[0].outerHTML );
+			if(oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_submit span.glyphicon').length > 0)
+			{
+				oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_submit').html( oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_submit span.glyphicon')[0].outerHTML );
+			}
+			if(oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_cancel span.glyphicon').length > 0)
+			{
+				oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_cancel').html( oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_cancel span.glyphicon')[0].outerHTML );
+			}
 			
 			$('#{{ sFormId }}').closest({% if tIsModal == true %}'.modal'{% else %}'#main-content'{% endif %}).append(oStickyRegularButtons_{{ sFormIdSanitized }});
 			

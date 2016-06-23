@@ -599,7 +599,7 @@ class ObjectFormManager extends FormManager
 					break;
 				}
 			}
-
+			
 			// Adding attachment field
 			if ($bClassAllowed)
 			{
@@ -611,7 +611,7 @@ class ObjectFormManager extends FormManager
 					->SetAllowDelete($this->oApp['combodo.portal.instance.conf']['properties']['attachments']['allow_delete'])
 					->SetObject($this->oObject);
 
-				if ($this->sMode === static::ENUM_MODE_VIEW)
+				if (($this->sMode === static::ENUM_MODE_VIEW) || ($oForm->GetEditableFieldCount() === 0))
 				{
 					$oField->SetReadOnly(true);
 				}
