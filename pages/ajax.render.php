@@ -584,7 +584,6 @@ try
 				if ($iFlags & OPT_ATT_READONLY)
 				{
 					$sHTMLValue = "<span id=\"field_{$sId}\">".$oObj->GetAsHTML($sAttCode);
-					$sHTMLValue .= '<input type="hidden" id="'.$sId.'" name="attr_'.$sFormPrefix.$sAttCode.'" value="'.htmlentities($oObj->Get($sAttCode), ENT_QUOTES, 'UTF-8').'"/></span>';
 					$oWizardHelper->SetAllowedValuesHtml($sAttCode, $sHTMLValue);
 				}
 				else
