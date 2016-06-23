@@ -515,6 +515,10 @@ footer{
 	max-height: 175px;
 	overflow: hidden;
 }
+#user-profile-wrapper .user_profile_picture .preview img{
+	max-width: 100%;
+	max-height: 100%;
+}
 #user-profile-wrapper .user_profile_picture .actions{
 	display: inline-block;
 	vertical-align: top; /*middle;*/
