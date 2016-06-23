@@ -98,7 +98,9 @@ class SecurityHelper
 
 			// - Checking if query result is null
 			$oSet = new DBObjectSet($oScopeQuery);
-			if ($oSet->Count() === 0)
+			// Note : This is to address a bug (#R-011452). We creating an object that is the first of its class, this would failed as the scope query always return an empty set
+			//if ($oSet->Count() === 0)
+			if (($oSet->Count() === 0) && ($sObjectId !== null))
 			{
 				if ($oApp['debug'])
 				{
