@@ -1,4 +1,4 @@
-﻿iTop - version 2.3.0 Beta - 26-May-2016
+﻿iTop - version 2.3.0 - 5-Jul-2016
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -15,7 +15,7 @@ Readme file
 
 1. ABOUT THIS RELEASE
    ==================
-Thank you for downloading the 24th packaged release of iTop.
+Thank you for downloading the 25th packaged release of iTop.
 This version is a major release, with quite a few bug fixes.
 
 The documentation about iTop is available as a Wiki: https://wiki.openitop.org/
@@ -221,21 +221,28 @@ For backward compatibility, the default setting is the MySQL format
 IE8 is not supported anymore: the minimum version for Internet Explorer is 9
 No need for Flash players anymore
 
+
 2) Data model (2.x)
 Added attribute Ticket::operational_status: depending on the status of the ticket, this attribute will take on of the following values: ongoing, resolved or closed
 Added Person/picture: optionally add the picture and visualize it in the details or in the enhanced portal
 User Request (all-in-one): the end-user can leave the request type undefined, in such a case, she can select any type of services and the request type gets computed when the requests is written to the DB. Still, this is possible to select a request type and the list of services is filled with the corresponding services. This behavior was necessary for the new user portal to work fine.
 Tickets description and case logs are now in HTML
+New field on the User class to enable/disable user accounts (this attribute is R/O in demo mode).
+
 
 3) Data corruption
 #1213 Losing SLA data when changing any attribute of an SLA.
+
 
 4) Security
 #1202: Fix for a security vulnerability in the Configuration Editor.
 Fix for potential XSS vulnerability on uploaded file names.
 XSS: Correctly escape the name of an object when it is displayed within an hyperlink
 #1206: "Forgotten password" - the temporary token could be hacked by the mean of a hand-made HTTP request
-.htaccess and web.config files to prevent users from accessing the contents of data/log directories
+#1162 .htaccess and web.config files to prevent users from accessing the contents of data/log directories (support of apache 2.4)
+Prevent grouping on password fields since it may lead to disclosure of the encrypted version of the password.
+Properly sanitize the "switch_env" parameter and take it into account only if it contains a valid value.
+
 
 4) Customizations (via XML deltas)
 Switching to XML version 1.3.
@@ -249,6 +256,8 @@ Label of the final class attribute could only be defined on the root class (over
 Improved the error reporting when assembling data model XML files (full path and line number of the faulty node)
 A module can have its own design defined in XML (/itop_design/modules_designs/module_design) and accessed at run time via the class ModuleDesign.
 The images specified in the branding or in module_designs can be given as a fileref or a path relative to the env-production directory
+#1188 Allow to define a new constant or a brand new class as part of a delta that is not in a module
+#1223 Custom lifecycle actions: improved the reporting when an action returns false (class/function/id logged into error.log)+ the framework now considers that no return value is equivalent to 'true'
 
 5) Module development (PHP API)
 No need for bridge (auto-select) modules to be listed as installed modules in the about box. Still, they are listed in the "support information".
@@ -261,12 +270,15 @@ Added verbs to the User Rights management API:
 - GetAllowedPortals
 Added a mean to cache data that will be reset upon compilation. To be used in conjunction with ModuleDesign.
 It is possible to implement several portals and still use placeholders to point to the relevant portal (use DBObject::RegisterURLMakerClass(<my-portal>, <mu-url-maker>), then $this-hyperlink(<my-portal>)$)
+Context tags to identify the context of the execution. Usage: ContextTag::Check('Portal:itop-portal'). Known tags: 'GUI:console', 'GUI:Portal', 'Portal:itop-portal', 'CRON'... see ContextTag::GetStack()
 
 
 6) Queries (OQL)
 Magic query arguments:
 - In addition to current_contact_id, the following arguments can be used in any OQL query (provided that the page running the query requires a  login): current_contact->attcode and current_user->attcode
 - The "Run queries" page is now taking into account those magic arguments (do not prompt the end-user with these arguments!)
+Hierarchies can now be expressed both ways. Example of a query that now works fine: SELECT Organization AS root JOIN Organization AS child ON child.parent_id BELOW root.id WHERE child.name LIKE 'Combodo'. In the previous implementation, the operator was interpreted as '='.
+
 
 7) Optimizations
 Do not load all columns when checking if a CI is part of  the "context" of a given ticket.
@@ -277,7 +289,14 @@ Adding an extra index to speed-up data synchronization for large volumes of data
 Improved the User Rights management API:
 Doing less queries for user rights: caching the user profiles into the SESSION cookie
 
-8) Other fixes
+
+8) Data synchro
+Enhanced display/edition of the "Reconciliation Key" column when defining the reconciliation using the attributes.
+Prevent timeouts, since the synchro may be launched from the web (as a "web service", especially by the "collectors").
+#1253 Properly parse dates in synchro import. Thanks to Karl aka karkoff1212 for reporting the issue.
+
+
+9) Other fixes
 #1210 Dependant field not reset (servicesubcategory not reset when service is reset)
 Modified the "List" tab of the Impact Analysis to display only the actually impacted objects. The content of this tab is now refreshed every time the graph is rebuilt to take into account the "context" changes which causes the actual impact to change, or the filtering.
 Initial feedback while loading the 'list' tab of the impact analysis, useful when this tab is displayed first.
@@ -290,8 +309,29 @@ Wiki syntax: allow white spaces in the specification of a link to an object (for
 #1214: concurrent access lock not properly released when CheckToWrite() reports an error during a transition from one state to another.
 Styles fine tuning and nicer display of the main menu (no more animation on initial load).
 Suppress "Notice" messages when iconv detects invalid UTF-8 characters, since it breaks the JSON output if display_errors in On...
+#1167 Error while upgrading db model from v 2.1 to 2.2 with orphan attachments.
+File or image upload is not supported (and thus disabled) when using the [+] button to create a new object inside a popup dialog.
+#1169 Broken link to iTop Wiki in itop-tickets.htm
+Impact analysis display: cosmetics on tooltips: widen a bit the tooltips and prevent the text from overflowing horizontally.
+CSV Imports:
+- Make sure that the CSV Parser has enough time to run on big amount of data.
+- Speedup the display of the CSV Import interactive wizard by parsing only the needed lines of the CSV data (in the first steps of the wizard).
+#1199 Properly handle the icon of attachments without any extension.
+#1205 Positioning of dropdown list of "Popup Menus" on Chrome (and IE 11) when the content has been scrolled
+#1233 Spanish translation: InterfaCe + Solución Aplicativa
+#1251 Disabling log notification in config causes a fatal error
+Export: cannot export an object with a property named "length"
+"Search Drawer" is closed by default, unless the configuration parameter "legacy_search_drawer" is set to "true".
 
-9) Internal
+
+9) Setup
+Setup: Automatically remove duplicated modules (by keeping only the most recent one) when loading modules, independently of the loading order.
+Setup: Make sure that the setup can be launched even if the 'php-zip' module is not installed.
+#1252 Setup: make the project compatible with Ansible deployment (the file "database exi.png" was in fact not used at all!)
+#1254 Setup: iTop 2.3.0 requires PHP 5.3.6 (HTML sanitizer using the API DOMDocument::saveHTML with an argument)
+
+
+10) Internal
 Exclude magic parameters when listing query parameters (refactoring from run_query) This enables the use of magic parameters in the exports. The issue was less exposed in iTop 2.2.0 because only one single magic parameter was available.
 DBSearch : Allow join between DBUnionSearch by adding the DBUnionSearch::Join verb
 #1221 Exclude git folder from the copied folders, during the compilation process
@@ -316,7 +356,15 @@ Core : Added CloneWithAlias function to DBSearch class. It creates a new DBObjec
 Compiler: Model alterations not flattened prior to compilation (when using the setup UI)
 Model Factory: factorized duplicate code from ApplyChanges + fixed an issue in the error reporting
 Fixed the verb DBObjectSearch::IsAny
-
+Read-only fields are no longer stored in the form as hidden fields.
+Code refactoring: fix of #876 implemented in 2.0.3 as [r3161], moved to a place where it will fix other implementations of the setup
+Limitation: DBSearch::Intersect to throw an exception whenever any of the merged queries have a queried class that does not correspond to the first joined class. This is a limitation of the current implementation of Intersect. Allowing such use cases would require quite a rework of that API.
+Replacing the SCSS->CSS conversion library by a newer one made by Leaf Corcoran: http://leafo.github.io/scssphp, tweaked to work on PHP 5.3
+Extending action classes (notifications): objects listed twice (in the base classes and leaf classes) in the notification page (actions tab).
+Email generation - No need to force "Content-Transfer-Encoding: 8bit". The default is "quoted-printable" and works fine if the content is made of plain text. Leaving the 8bit encoding could work but in such a case, the statement should be:
+$oEncoder = new Swift_Mime_ContentEncoder_PlainContentEncoder('8bit', true /*canonicalize*/);... otherwise the lines get truncated at random places (CRLF is assumed while PHP EOL is made of CR only!) -This has an impact on plain text email only.
+#1235 DBObject API - external fields not up to date after changing the external key (though they seem to be in sync when inspecting the internal values, Get() does not return the expected value).
+Demo mode: to not allow deleting neither changing the org of persons attached to a user account (this to make sure that the portal users will still have access to the customer portal)
 
 
 
