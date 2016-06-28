@@ -40,6 +40,7 @@ abstract class PortalBrick extends AbstractBrick
 	const DEFAULT_DECORATION_CLASS_HOME = '';
 	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = '';
 	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/tile.html.twig';
+	const DEFAULT_TILE_CONTROLLER_ACTION = null;
 
 	static $sRouteName = null;
 	protected $iWidth;
@@ -50,6 +51,7 @@ abstract class PortalBrick extends AbstractBrick
 	protected $sDecorationClassHome;
 	protected $sDecorationClassNavigationMenu;
 	protected $sTileTemplatePath;
+	protected $sTileControllerAction;
 	// Vars below are itemization from parent class
 	protected $fRankHome;
 	protected $fRankNavigationMenu;
@@ -76,6 +78,7 @@ abstract class PortalBrick extends AbstractBrick
 		$this->sDecorationClassHome = static::DEFAULT_DECORATION_CLASS_HOME;
 		$this->sDecorationClassNavigationMenu = static::DEFAULT_DECORATION_CLASS_NAVIGATION_MENU;
 		$this->sTileTemplatePath = static::DEFAULT_TILE_TEMPLATE_PATH;
+		$this->sTileControllerAction = static::DEFAULT_TILE_CONTROLLER_ACTION;
 	}
 
 	/**
@@ -186,6 +189,16 @@ abstract class PortalBrick extends AbstractBrick
 	public function GetTitleNavigationMenu()
 	{
 		return $this->sTitleNavigationMenu;
+	}
+
+	/**
+	 * Returns the brick tile controller action
+	 *
+	 * @return string
+	 */
+	public function GetTileControllerAction()
+	{
+		return $this->sTileControllerAction;
 	}
 
 	/**
@@ -327,6 +340,17 @@ abstract class PortalBrick extends AbstractBrick
 	public function SetTileTemplatePath($sTileTemplatePath)
 	{
 		$this->sTileTemplatePath = $sTileTemplatePath;
+		return $this;
+	}
+
+	/**
+	 * Sets the brick tile controller action
+	 *
+	 * @param boolean $sTileControllerAction
+	 */
+	public function SetTileControllerAction($sTileControllerAction)
+	{
+		$this->sTileControllerAction = $sTileControllerAction;
 		return $this;
 	}
 

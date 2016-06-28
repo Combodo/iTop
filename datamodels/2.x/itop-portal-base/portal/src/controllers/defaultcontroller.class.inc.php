@@ -21,6 +21,7 @@ namespace Combodo\iTop\Portal\Controller;
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Combodo\iTop\Portal\Brick\PortalBrick;
 
 class DefaultController
 {
@@ -28,6 +29,20 @@ class DefaultController
 	public function homeAction(Request $oRequest, Application $oApp)
 	{
 		$aData = array();
+
+		// Rendering tiles
+		$aData['aTilesRendering'] = array();
+		foreach($oApp['combodo.portal.instance.conf']['bricks'] as $oBrick)
+		{
+			// Doing it only for tile visible on home page to avoid unnecessary rendering
+			if (($oBrick->GetVisibleHome() === true) && ($oBrick->GetTileControllerAction() !== null))
+			{
+				$oController = new \Combodo\iTop\Portal\Controller\ManageBrickController($oRequest, $oApp);
+				$aData['aTilesRendering'][$oBrick->GetId()] = $oController->HomeAction($oRequest, $oApp);
+			}
+		}
+
+		// Home page template
 		$template = $oApp['combodo.portal.instance.conf']['properties']['templates']['home'];
 
 		return $oApp['twig']->render($template, $aData);
