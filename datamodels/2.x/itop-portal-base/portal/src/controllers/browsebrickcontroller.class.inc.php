@@ -63,8 +63,8 @@ class BrowseBrickController extends BrickController
 		$aData = array();
 		$aLevelsProperties = array();
 		$aLevelsClasses = array();
-		$this->TreeToFlatLevelsProperties($oApp, $oBrick->GetLevels(), $aLevelsProperties);
-		
+		static::TreeToFlatLevelsProperties($oApp, $oBrick->GetLevels(), $aLevelsProperties);
+
 		// Concistency checks
 		if (!in_array($sBrowseMode, array_keys($aBrowseModes)))
 		{
@@ -267,12 +267,12 @@ class BrowseBrickController extends BrickController
 			switch ($sBrowseMode)
 			{
 				case BrowseBrick::ENUM_BROWSE_MODE_TREE:
-					$this->AddToTreeItems($aItems, $aCurrentRow, $aLevelsProperties);
+					static::AddToTreeItems($aItems, $aCurrentRow, $aLevelsProperties);
 					break;
 
 				case BrowseBrick::ENUM_BROWSE_MODE_LIST:
 				default:
-					$aItems[] = $this->AddToFlatItems($aCurrentRow, $aLevelsProperties);
+					$aItems[] = static::AddToFlatItems($aCurrentRow, $aLevelsProperties);
 					break;
 			}
 		}
@@ -332,7 +332,7 @@ class BrowseBrickController extends BrickController
 	 * @param array $aLevelsProperties Reference to an array that will contain the flattened levels
 	 * @param string $sLevelAliasPrefix String that will be prefixed to the level ID as an unique path identifier
 	 */
-	protected function TreeToFlatLevelsProperties(Application $oApp, array $aLevels, array &$aLevelsProperties, $sLevelAliasPrefix = 'L')
+	public static function TreeToFlatLevelsProperties(Application $oApp, array $aLevels, array &$aLevelsProperties, $sLevelAliasPrefix = 'L')
 	{
 		foreach ($aLevels as $aLevel)
 		{
@@ -394,7 +394,7 @@ class BrowseBrickController extends BrickController
 						}
 						unset($oChildSearch);
 					}
-					$this->TreeToFlatLevelsProperties($oApp, $aLevel['levels'], $aLevelsProperties, $sCurrentLevelAlias);
+					static::TreeToFlatLevelsProperties($oApp, $aLevel['levels'], $aLevelsProperties, $sCurrentLevelAlias);
 				}
 
 				// Adding actions to the level
@@ -502,7 +502,7 @@ class BrowseBrickController extends BrickController
 	 * @param array $aLevelsProperties
 	 * @return array
 	 */
-	protected function PrepareActionRulesForItem(DBObject $oItem, $sLevelsAlias, array &$aLevelsProperties)
+	public static function PrepareActionRulesForItem(DBObject $oItem, $sLevelsAlias, array &$aLevelsProperties)
 	{
 		$aActionRules = array();
 
@@ -536,7 +536,7 @@ class BrowseBrickController extends BrickController
 	 * @param array $aLevelsProperties
 	 * @return array
 	 */
-	protected function AddToFlatItems(array $aCurrentRow, array &$aLevelsProperties)
+	public static function AddToFlatItems(array $aCurrentRow, array &$aLevelsProperties)
 	{
 		$aRow = array();
 
@@ -547,7 +547,7 @@ class BrowseBrickController extends BrickController
 				'id' => $value->GetKey(),
 				'name' => $value->Get($aLevelsProperties[$key]['name_att']),
 				'class' => get_class($value),
-				'action_rules_token' => $this->PrepareActionRulesForItem($value, $key, $aLevelsProperties)
+				'action_rules_token' => static::PrepareActionRulesForItem($value, $key, $aLevelsProperties)
 			);
 
 			// Adding tooltip attribute if necessary
@@ -599,7 +599,7 @@ class BrowseBrickController extends BrickController
 	 * @param array $aCurrentRow
 	 * @param array $aLevelsProperties
 	 */
-	protected function AddToTreeItems(array &$aItems, array $aCurrentRow, array &$aLevelsProperties)
+	public static function AddToTreeItems(array &$aItems, array $aCurrentRow, array &$aLevelsProperties)
 	{
 		$aCurrentRowKeys = array_keys($aCurrentRow);
 		$aCurrentRowValues = array_values($aCurrentRow);
@@ -613,7 +613,7 @@ class BrowseBrickController extends BrickController
 				'name' => $aCurrentRowValues[0]->Get($aLevelsProperties[$aCurrentRowKeys[0]]['name_att']),
 				'class' => get_class($aCurrentRowValues[0]),
 				'subitems' => array(),
-				'action_rules_token' => $this->PrepareActionRulesForItem($aCurrentRowValues[0], $aCurrentRowKeys[0], $aLevelsProperties)
+				'action_rules_token' => static::PrepareActionRulesForItem($aCurrentRowValues[0], $aCurrentRowKeys[0], $aLevelsProperties)
 			);
 
 			if ($aLevelsProperties[$aCurrentRowKeys[0]]['tooltip_att'] !== null)
@@ -625,7 +625,7 @@ class BrowseBrickController extends BrickController
 		$aCurrentRowSliced = array_slice($aCurrentRow, 1);
 		if (!empty($aCurrentRowSliced))
 		{
-			$this->AddToTreeItems($aItems[$sCurrentIndex]['subitems'], $aCurrentRowSliced, $aLevelsProperties);
+			static::AddToTreeItems($aItems[$sCurrentIndex]['subitems'], $aCurrentRowSliced, $aLevelsProperties);
 		}
 	}
 

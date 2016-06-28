@@ -304,56 +304,6 @@
 							actionsElem.append(actionElem);
 						}
 					}
-					
-					
-					////////////////////////////////////////////////
-					
-					/*
-					var actionsElem = $('<div></div>').addClass('list-group-item-actions');
-					liElem.append(actionsElem);
-					
-					// Preparing secondary actions for small screens
-					var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger visible-xs" data-toggle="collapse" data-target="#item-actions-menu-'+levelAltId+'"></a>');
-					var actionsSSMenuElem = $('<div id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default"></div>');
-					var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
-					actionsSSMenuElem.append(actionsSSMenuContainerElem);
-					actionsElem.append(actionsSSTogglerElem);
-					actionsElem.append(actionsSSMenuElem);
-					
-					
-					var actionsButtons = {};
-					// Fill actionsButtons with all actions but the primary
-					for(j = 1; j < levelActionsKeys.length; j++)
-					{
-						actionsButtons[levelActionsKeys[j]] = levelActions[levelActionsKeys[j]];
-					}
-					for(j in actionsButtons)
-					{
-						var action = actionsButtons[j];
-						var actionElem = $('<a></a>');
-						
-						switch(action.type)
-						{
-							case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
-								url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
-								actionElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url).text(action.title);
-								break;
-							case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_EDIT') }}':
-								url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
-								actionElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url).text(action.title);
-								break;
-							case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
-								url = action.url.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
-								url = addParameterToUrl(url, 'ar_token', item.action_rules_token[action.type]);
-								actionElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url).text(action.title);
-								break;
-							default:
-								console.log('Action "'+action.type+'" not implemented for secondary action');
-								break;
-						}
-						actionsSSMenuContainerElem.append( $('<p></p>').append(actionElem.clone()) );
-						actionsElem.append(actionElem.addClass('hidden-xs'));   // We don't want to display it on small screens
-					}*/
 				}
 				
 				// Building subnodes if necessary
