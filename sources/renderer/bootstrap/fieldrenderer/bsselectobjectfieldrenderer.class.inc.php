@@ -19,7 +19,10 @@
 
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
+use \Exception;
+use \CoreException;
 use \utils;
+use \IssueLog;
 use \Dict;
 use \UserRights;
 use \InlineImage;
@@ -134,7 +137,15 @@ EOF
 					// Retrieving field value
 					if ($this->oField->GetCurrentValue() !== null && $this->oField->GetCurrentValue() !== 0)
 					{
-						$oFieldValue = MetaModel::GetObject($sFieldValueClass, $this->oField->GetCurrentValue());
+						try
+						{
+							$oFieldValue = MetaModel::GetObject($sFieldValueClass, $this->oField->GetCurrentValue());
+						}
+						catch (CoreException $e)
+						{
+							IssueLog::Error('Could not retrieve object ' . $sFieldValueClass . '::' . $this->oField->GetCurrentValue() . ' for "' . $this->oField->GetId() . '" field.');
+							throw new Exception($e->getMessage(), $e->getCode(), $e->getPrevious());
+						}
 						$sFieldValue = $oFieldValue->GetName();
 					}
 					else
