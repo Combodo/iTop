@@ -393,12 +393,18 @@ abstract class Field
 	{
 		$this->SetValid(true);
 		$this->EmptyErrorMessages();
-		foreach ($this->GetValidators() as $oValidator)
+
+		$bEmpty = ( ($this->GetCurrentValue() === null) || ($this->GetCurrentValue() === '') );
+
+		if (!$bEmpty || $this->GetMandatory())
 		{
-			if (!preg_match($oValidator->GetRegExp(true), $this->GetCurrentValue()))
+			foreach ($this->GetValidators() as $oValidator)
 			{
-				$this->SetValid(false);
-				$this->AddErrorMessage($oValidator->GetErrorMessage());
+				if (!preg_match($oValidator->GetRegExp(true), $this->GetCurrentValue()))
+				{
+					$this->SetValid(false);
+					$this->AddErrorMessage($oValidator->GetErrorMessage());
+				}
 			}
 		}
 

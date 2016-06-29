@@ -142,6 +142,11 @@ $(function()
 					oResult.is_valid = false;
 					oResult.error_messages.push(this.options.validators.mandatory.message);
 				}
+				// ... Field empty but not mandatory, no need to validate
+				else if( bEmpty && !bMandatory )
+				{
+					// It's okay, no need to validate
+				}
 				// ... Otherwise, we check every validators
 				else
 				{
