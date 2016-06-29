@@ -2927,7 +2927,7 @@ class AttributeCaseLog extends AttributeLongText
 			return $value->GetAsEmailHtml();
 	
 			default:
-			throw new Exception("Unknown verb '$sVerb' for attribute ".$this->GetCode().' in class '.get_class($oHostObj));	
+			throw new Exception("Unknown verb '$sVerb' for attribute ".$this->GetCode().' in class '.get_class($oHostObject));
 		}
 	}
 	
