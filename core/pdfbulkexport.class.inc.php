@@ -204,23 +204,28 @@ EOF
 					{
 						// To limit the image size in the PDF output, we have to enforce the size as height/width because max-width/max-height have no effect
 						//
-						list($iWidth, $iHeight) = utils::GetImageSize($value->GetData());
-						$iMaxWidthPx = min(48, $oAttDef->Get('display_max_width'));
-						$iMaxHeightPx = min(48, $oAttDef->Get('display_max_height'));
-
-						$fScale = min($iMaxWidthPx / $iWidth, $iMaxHeightPx / $iHeight);
-						$iNewWidth = $iWidth * $fScale;
-						$iNewHeight = $iHeight * $fScale;
+						$iDefaultMaxWidthPx = 48;
+						$iDefaultMaxHeightPx = 48;
 						if ($value->IsEmpty())
 						{
+							$iNewWidth = $iDefaultMaxWidthPx;
+							$iNewHeight = $iDefaultMaxHeightPx;
+
 							$sUrl = $oAttDef->Get('default_image');
-							$sRet = '<img src="'.$sUrl.'" style="width: '.$iNewWidth.'px; height: '.$iNewHeight.'px">';
 						}
 						else
 						{
-							$sUrl = 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
-							$sRet = '<img src="'.$sUrl.'" style="width: '.$iNewWidth.'px; height: '.$iNewHeight.'px">';
+							list($iWidth, $iHeight) = utils::GetImageSize($value->GetData());
+							$iMaxWidthPx = min($iDefaultMaxWidthPx, $oAttDef->Get('display_max_width'));
+							$iMaxHeightPx = min($iDefaultMaxHeightPx, $oAttDef->Get('display_max_height'));
+
+							$fScale = min($iMaxWidthPx / $iWidth, $iMaxHeightPx / $iHeight);
+							$iNewWidth = $iWidth * $fScale;
+							$iNewHeight = $iHeight * $fScale;
+
+							$sUrl = 'data:' . $value->GetMimeType() . ';base64,' . base64_encode($value->GetData());
 						}
+						$sRet = '<img src="' . $sUrl . '" style="width: ' . $iNewWidth . 'px; height: ' . $iNewHeight . 'px">';
 						$sRet = '<div class="view-image">'.$sRet.'</div>';
 					}
 					else
