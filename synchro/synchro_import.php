@@ -96,7 +96,7 @@ $aPageParams = array
 	(
 		'mandatory' => false,
 		'modes' => 'http,cli',
-		'default' => '',
+		'default' => 'Y-m-d H:i:s',
 		'description' => 'Input date format (used both for dates and datetimes) - Examples: Y-m-d, d/m/Y (Europe) - no transformation is applied if the argument is omitted. (note: old format specification using %Y %m %d is also supported for backward compatibility)',
 	),
 	'separator' => array
