@@ -1215,28 +1215,6 @@
 						</div>
 					</twig>
 				</form>
-				<form id="user-request-view">
-					<class>UserRequest</class>
-					<fields>
-						<field id="title"/>
-						<field id="description">
-							<mandatory>true</mandatory>
-						</field>
-						<field id="status"/>
-						<field id="agent_id">
-							<read_only>true</read_only>
-						</field>
-						<field id="related_request_list">
-							<hidden>true</hidden>
-						</field>
-						<field id="contacts_list">
-							<hidden>true</hidden>
-						</field>
-					</fields>
-					<modes>
-						<mode id="view"/>
-					</modes>
-				</form>
 				<form id="ticket-create">
 					<class>Ticket</class>
 					<fields />
@@ -1328,6 +1306,7 @@
 					</twig>
 					<modes>
 						<mode id="edit"/>
+						<mode id="view"/>
 					</modes>
 				</form>
 				<form id="service-view">
@@ -1453,6 +1432,7 @@
 						<!-- Only set() and copy() are supported for now -->
 						<preset id="1">set(caller_id, $current_contact_id$)</preset>
 						<preset id="2">copy(org_id, org_id)</preset>
+						<preset id="3">set(origin, portal)</preset>
 					</presets>
 					<retrofits/>
 				</action_rule>
