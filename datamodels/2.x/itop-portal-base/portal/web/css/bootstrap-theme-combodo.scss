@@ -2648,7 +2648,9 @@ tbody.collapse.in {
     font-weight: normal;
     line-height: $line-height-base;
     color: #444444;
-    white-space: nowrap
+    white-space: nowrap;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
 }
 .dropdown-menu>li>a:hover,
 .dropdown-menu>li>a:focus {
