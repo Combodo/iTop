@@ -282,10 +282,15 @@ EOF
 				$sTip .= "<p><b>".Dict::S('Core:Synchro:ListOfDataSources')."</b></p>";
 				foreach($aMasterSources as $aStruct)
 				{
+					// Formatting last synchro date
+					$oDateTime = DateTime::createFromFormat('Y-m-d H:i:s', $aStruct['last_synchro']);
+					$oDateTimeFormat = AttributeDateTime::GetFormat();
+					$sLastSynchro = $oDateTimeFormat->Format($oDateTime);
+
 					$oDataSource = $aStruct['datasource'];
 					$sLink = $aStruct['url'];
 					$sTip .= "<p style=\"white-space:nowrap\">".$oDataSource->GetIcon(true, 'style="vertical-align:middle"')."&nbsp;$sLink<br/>";
-					$sTip .= Dict::S('Core:Synchro:LastSynchro').'<br/>'.$aStruct['last_synchro']."</p>";
+					$sTip .= Dict::S('Core:Synchro:LastSynchro') . '<br/>' . $sLastSynchro . "</p>";
 				}
 				$aIcons[] = '&nbsp;<img style="vertical-align:middle;" id="synchro_icon" src="../images/locked.png"/>';
 				$sTip = addslashes($sTip);
