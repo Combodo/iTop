@@ -543,6 +543,11 @@ class RunTimeEnvironment
 
 	public function UpdatePredefinedObjects()
 	{
+		// Have it work fine even if the DB has been set in read-only mode for the users
+		$oConfig = MetaModel::GetConfig();
+		$iPrevAccessMode = $oConfig->Get('access_mode');
+		$oConfig->Set('access_mode', ACCESS_FULL);
+
 		// Constant classes (e.g. User profiles)
 		//
 		foreach (MetaModel::GetClasses() as $sClass)
@@ -592,6 +597,9 @@ class RunTimeEnvironment
 				}
 			}
 		}
+
+		// Restore the previous access mode
+		$oConfig->Set('access_mode', $iPrevAccessMode);
 	}
 	
 	public function RecordInstallation(Config $oConfig, $sDataModelVersion, $aSelectedModules, $sModulesRelativePath, $sShortComment = null)
