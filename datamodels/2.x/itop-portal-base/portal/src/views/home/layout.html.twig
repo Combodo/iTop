@@ -1,6 +1,6 @@
 {# itop-portal-base-base/portal/src/views/home/layout.html.twig #}
 {# Home layout #}
-{% extends 'itop-portal-base/portal/src/views/layout.html.twig' %}
+{% extends app['combodo.portal.instance.conf'].properties.templates.layout %}
 
 {% block pPageBodyClass %}home{% endblock %}
 
