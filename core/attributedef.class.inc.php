@@ -5342,7 +5342,7 @@ class AttributeStopWatch extends AttributeDefinition
 	public function GetBasicFilterSQLExpr($sOpCode, $value)
 	{
 		return 'true';
-	} 
+	}
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
@@ -5517,59 +5517,122 @@ class AttributeStopWatch extends AttributeDefinition
 		}
 	}
 
+	public function GetSubItemAsPlainText($sItemCode, $value)
+	{
+		$sRet = $value;
+
+		switch ($sItemCode)
+		{
+			case 'timespent':
+				$sRet = AttributeDuration::FormatDuration($value);
+				break;
+			case 'started':
+			case 'laststart':
+			case 'stopped':
+				if (is_null($value))
+				{
+					$sRet = ''; // Undefined
+				}
+				else
+				{
+					$oDateTime = new DateTime();
+					$oDateTime->setTimestamp($value);
+					$oDateTimeFormat = AttributeDateTime::GetFormat();
+					$sRet = $oDateTimeFormat->Format($oDateTime);
+				}
+				break;
+
+			default:
+				foreach ($this->ListThresholds() as $iThreshold => $aFoo)
+				{
+					$sThPrefix = $iThreshold . '_';
+					if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
+					{
+						// The current threshold is concerned
+						$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+						switch ($sThresholdCode)
+						{
+							case 'deadline':
+								if ($value)
+								{
+									$sDate = date(self::GetDateFormat(true /* full */), $value);
+									$sRet = AttributeDeadline::FormatDeadline($sDate);
+								}
+								else
+								{
+									$sRet = '';
+								}
+								break;
+							case 'passed':
+							case 'triggered':
+								$sRet = $this->GetBooleanLabel($value);
+								break;
+							case 'overrun':
+								$sRet = AttributeDuration::FormatDuration($value);
+								break;
+						}
+					}
+				}
+		}
+		return $sRet;
+	}
+
 	public function GetSubItemAsHTML($sItemCode, $value)
 	{
 		$sHtml = $value;
 
-		switch($sItemCode)
+		switch ($sItemCode)
 		{
-		case 'timespent':
-			$sHtml = Str::pure2html(AttributeDuration::FormatDuration($value));
-			break;
-		case 'started':
-		case 'laststart':
-		case 'stopped':
-			if (is_null($value))
-			{
-				$sHtml = ''; // Undefined
-			}
-			else
-			{
-				$sHtml = date(self::GetDateFormat(), $value);
-			}
-			break;
-
-		default:
-			foreach ($this->ListThresholds() as $iThreshold => $aFoo)
-			{
-				$sThPrefix = $iThreshold.'_';
-				if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
+			case 'timespent':
+				$sHtml = Str::pure2html(AttributeDuration::FormatDuration($value));
+				break;
+			case 'started':
+			case 'laststart':
+			case 'stopped':
+				if (is_null($value))
 				{
-					// The current threshold is concerned
-					$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
-					switch($sThresholdCode)
+					$sHtml = ''; // Undefined
+				}
+				else
+				{
+					$oDateTime = new DateTime();
+					$oDateTime->setTimestamp($value);
+					$oDateTimeFormat = AttributeDateTime::GetFormat();
+					$sHtml = Str::pure2html($oDateTimeFormat->Format($oDateTime));
+				}
+				break;
+
+			default:
+				foreach ($this->ListThresholds() as $iThreshold => $aFoo)
+				{
+					$sThPrefix = $iThreshold . '_';
+					if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
 					{
-					case 'deadline':
-						if ($value)
+						// The current threshold is concerned
+						$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+						switch ($sThresholdCode)
 						{
-							$sDate = date(self::GetDateFormat(true /*full*/), $value);
-							$sHtml = Str::pure2html(AttributeDeadline::FormatDeadline($sDate));
+							case 'deadline':
+								if ($value)
+								{
+									$sDate = date(self::GetDateFormat(true /* full */), $value);
+									$sHtml = Str::pure2html(AttributeDeadline::FormatDeadline($sDate));
+								}
+								else
+								{
+									$sHtml = '';
+								}
+								break;
+							case 'passed':
+							case 'triggered':
+								$sHtml = $this->GetBooleanLabel($value);
+								break;
+							case 'overrun':
+								$sHtml = Str::pure2html(AttributeDuration::FormatDuration($value));
+								break;
 						}
-						else
-						{
-							$sHtml = '';
-						}
-						break;
-					case 'passed':
-					case 'triggered':
-						$sHtml = $this->GetBooleanLabel($value);
-						break;
-					case 'overrun':
-						$sHtml = Str::pure2html(AttributeDuration::FormatDuration($value));
-						break;
 					}
 				}
-			}
 		}
 		return $sHtml;
 	}
@@ -5584,10 +5647,19 @@ class AttributeStopWatch extends AttributeDefinition
 		switch($sItemCode)
 		{
 		case 'timespent':
+				$sRet = $sTextQualifier . AttributeDuration::FormatDuration($value) . $sTextQualifier;
+				break;
 		case 'started':
 		case 'laststart':
 		case 'stopped':
-			break;
+				if ($value !== null)
+				{
+					$oDateTime = new DateTime();
+					$oDateTime->setTimestamp($value);
+					$oDateTimeFormat = AttributeDateTime::GetFormat();
+					$sRet = $sTextQualifier . $oDateTimeFormat->Format($oDateTime) . $sTextQualifier;
+				}
+				break;
 
 		default:
 			foreach ($this->ListThresholds() as $iThreshold => $aFoo)
@@ -5599,21 +5671,25 @@ class AttributeStopWatch extends AttributeDefinition
 					$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
 					switch($sThresholdCode)
 					{
-					case 'deadline':
-						if ($value != '')
-						{
-							$sRet = $sTextQualifier.date(self::GetDateFormat(true /*full*/), $value).$sTextQualifier;
+						case 'deadline':
+								if ($value != '')
+								{
+									$oDateTime = new DateTime();
+									$oDateTime->setTimestamp($value);
+									$oDateTimeFormat = AttributeDateTime::GetFormat();
+									$sRet = $sTextQualifier . $oDateTimeFormat->Format($oDateTime) . $sTextQualifier;
+								}
+								break;
+
+							case 'passed':
+							case 'triggered':
+								$sRet = $sTextQualifier . $this->GetBooleanLabel($value) . $sTextQualifier;
+								break;
+
+							case 'overrun':
+								$sRet = $sTextQualifier . AttributeDuration::FormatDuration($value) . $sTextQualifier;
+								break;
 						}
-						break;
-
-					case 'passed':
-					case 'triggered':
-						$sRet = $sTextQualifier.$this->GetBooleanLabel($value).$sTextQualifier;
-						break;
-
-					case 'overrun':
-						break;
-					}
 				}
 			}
 		}
@@ -5630,7 +5706,7 @@ class AttributeStopWatch extends AttributeDefinition
 		case 'started':
 		case 'laststart':
 		case 'stopped':
-			break;
+				break;
 
 		default:
 			foreach ($this->ListThresholds() as $iThreshold => $aFoo)
@@ -5812,6 +5888,13 @@ class AttributeSubItem extends AttributeDefinition
 	{
 		$oParent = $this->GetTargetAttDef();
 		$res = $oParent->GetSubItemSQLExpression($this->Get('item_code'));
+		return $res;
+	}
+
+	public function GetAsPlainText($value, $oHostObject = null, $bLocalize = true)
+	{
+		$oParent = $this->GetTargetAttDef();
+		$res = $oParent->GetSubItemAsPlainText($this->Get('item_code'), $value);
 		return $res;
 	}
 
