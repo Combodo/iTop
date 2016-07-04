@@ -1,0 +1,12 @@
+/* Note: only CSS1 is supported here (see the limitations of emogrifier: https://github.com/jjriv/emogrifier/) */
+.caselog_header {
+	padding: 3px;
+	border-top: 1px solid #fff;
+	background-color: #ddd;
+	padding-left: 16px;
+	width: 100%;
+}
+.caselog_header_date {
+}
+.caselog_header_user {
+}

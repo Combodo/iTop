@@ -305,8 +305,14 @@ IssueLog::Info(__METHOD__.' '.$this->m_oMessage->toString());
 		$this->AddToHeader('References', $sReferences);
 	}
 
-	public function SetBody($sBody, $sMimeType = 'text/html')
+	public function SetBody($sBody, $sMimeType = 'text/html', $sCustomStyles = null)
 	{
+		if (($sMimeType === 'text/html') && ($sCustomStyles !== null))
+		{
+			require_once(APPROOT.'lib/emogrifier/classes/emogrifier.php');
+			$emogrifier = new \Pelago\Emogrifier($sBody, $sCustomStyles);
+			$sBody = $emogrifier->emogrify(); // Adds html/body tags if not already present
+		}
 		$this->m_aData['body'] = array('body' => $sBody, 'mimeType' => $sMimeType);
 		$this->m_oMessage->setBody($sBody, $sMimeType);
 	}

@@ -404,6 +404,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'email_css' => array(
+			'type' => 'string',
+			'description' => 'CSS that will override the standard stylesheet used for the notifications',
+			'default' => "",
+			'value' => "",
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'apc_cache.enabled' => array(
 			'type' => 'bool',
 			'description' => 'If set, the APC cache is allowed (the PHP extension must also be active)',

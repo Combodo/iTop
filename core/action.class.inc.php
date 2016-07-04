@@ -324,6 +324,8 @@ class ActionEmail extends ActionNotification
 			if (isset($sSubject))  $oLog->Set('subject', $sSubject);
 			if (isset($sBody))     $oLog->Set('body', $sBody);
 		}
+		$sStyles = file_get_contents(APPROOT.'css/email.css');
+		$sStyles .= MetaModel::GetConfig()->Get('email_css');
 
 		$oEmail = new EMail();
 
@@ -344,7 +346,7 @@ class ActionEmail extends ActionNotification
 			$sTestBody .= "</ul>\n";
 			$sTestBody .= "</p>\n";
 			$sTestBody .= "</div>\n";
-			$oEmail->SetBody($sTestBody);
+			$oEmail->SetBody($sTestBody, 'text/html', $sStyles);
 			$oEmail->SetRecipientTO($this->Get('test_recipient'));
 			$oEmail->SetRecipientFrom($this->Get('test_recipient'));
 			$oEmail->SetReferences($sReference);
@@ -353,7 +355,7 @@ class ActionEmail extends ActionNotification
 		else
 		{
 			$oEmail->SetSubject($sSubject);
-			$oEmail->SetBody($sBody);
+			$oEmail->SetBody($sBody, 'text/html', $sStyles);
 			$oEmail->SetRecipientTO($sTo);
 			$oEmail->SetRecipientCC($sCC);
 			$oEmail->SetRecipientBCC($sBCC);

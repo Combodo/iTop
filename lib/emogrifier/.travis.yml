@@ -1,0 +1,31 @@
+sudo: false
+
+language: php
+
+cache:
+  directories:
+  - vendor
+  
+env:
+  global:
+    secure: nOIIWvxRsDlkg+5H21dmVeqvFbweOAk3l3ZiyZO1m5XuGuuZR9yj10oOudee8m0hzJ7e9eoZ+dfB3t8lmK0fTRTB6w0G7RuGiQb89ief3Zhs1vOveYOgS5yfTMRym57iluxsLeCe7AxWmy7+0fWAvx1qL7bKp+THGK9yv/aj9eM=
+
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+  - hhvm
+
+before_script:
+  - composer install
+  - vendor/bin/phpcs --config-set encoding utf-8
+  - if [ "$GITHUB_COMPOSER_AUTH" ]; then composer config -g github-oauth.github.com $GITHUB_COMPOSER_AUTH; fi
+
+script:
+  # Run PHP lint on all PHP files.
+  - find Classes/ Tests/ -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
+  # Check the coding style.
+  - vendor/bin/phpcs --standard=Configuration/PhpCodeSniffer/Standards/Emogrifier/ Classes/ Tests/
+  # Run the unit tests.
+  - vendor/bin/phpunit Tests/
