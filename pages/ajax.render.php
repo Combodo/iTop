@@ -2066,6 +2066,15 @@ EOF
 		break;
 		
 		case 'export_build':
+		register_shutdown_function(function()
+		{
+			$aErr = error_get_last();
+			if (($aErr !== null) && ($aErr['type'] & (E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR)))
+			{
+				ob_end_clean();
+				echo json_encode(array('code' => 'error', 'percentage' => 100, 'message' => Dict::Format('UI:Error_Details', $aErr['message'])));
+			}
+		});
 		try
 		{
 			$token = utils::ReadParam('token', null);
