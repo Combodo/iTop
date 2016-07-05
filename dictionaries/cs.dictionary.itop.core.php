@@ -97,15 +97,15 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Core:AttributeDateTime+' => 'Datum a čas (rok-měsíc-den hh:mm:ss)',
     'Core:AttributeDateTime?SmartSearch' => '
 <p>
-	Formát data:<br/>
-	<b>%1$s</b><br/>
-	Například: %2$s
+    Formát data:<br/>
+    <b>%1$s</b><br/>
+    Například: %2$s
 </p>
 <p>
 Operátory:<br/>
-	<b>&gt;</b><em>datum</em><br/>
-	<b>&lt;</b><em>datum</em><br/>
-	<b>[</b><em>datum</em>,<em>datum</em><b>]</b>
+    <b>&gt;</b><em>datum</em><br/>
+    <b>&lt;</b><em>datum</em><br/>
+    <b>[</b><em>datum</em>,<em>datum</em><b>]</b>
 </p>
 <p>
 Je-li čas vynechán, bude nastaveno 00:00:00
@@ -115,15 +115,15 @@ Je-li čas vynechán, bude nastaveno 00:00:00
     'Core:AttributeDate+' => 'Datum (rok-měsíc-den)',
     'Core:AttributeDate?SmartSearch' => '
 <p>
-	Formát data:<br/>
-	<b>%1$s</b><br/>
-	Například: %2$s
+    Formát data:<br/>
+    <b>%1$s</b><br/>
+    Například: %2$s
 </p>
 <p>
 Operátory:<br/>
-	<b>&gt;</b><em>datum</em><br/>
-	<b>&lt;</b><em>datum</em><br/>
-	<b>[</b><em>datum</em>,<em>datum</em><b>]</b>
+    <b>&gt;</b><em>datum</em><br/>
+    <b>&lt;</b><em>datum</em><br/>
+    <b>[</b><em>datum</em>,<em>datum</em><b>]</b>
 </p>',
 
     'Core:AttributeDeadline' => 'Uzávěrka',
@@ -516,7 +516,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Class:TriggerOnPortalUpdate' => 'Trigger \'aktualizace přes portál\'',
-    'Class:TriggerOnPortalUpdate+' => 'Trigger on a end-user\'s update from the portal',
+    'Class:TriggerOnPortalUpdate+' => 'Trigger při aktualizaci koncovým uživatelem přes portál',
 ));
 
 //
@@ -844,7 +844,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Core:BulkExport:CSVOptions' => 'Možnosti CSV',
     'Core:BulkExport:CSVLocalization' => 'Lokalizace',
     'Core:BulkExport:PDFOptions' => 'Možnosti PDF',
-	'Core:BulkExport:PDFPageFormat' => 'Formát stránky',
+    'Core:BulkExport:PDFPageFormat' => 'Formát stránky',
     'Core:BulkExport:PDFPageSize' => 'Velikost stránky:',
     'Core:BulkExport:PageSize-A4' => 'A4',
     'Core:BulkExport:PageSize-A3' => 'A3',
@@ -858,7 +858,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Core:BulkExport:SpreadsheetOptions' => 'Možnosti tabulky',
     'Core:BulkExport:OptionNoLocalize' => 'Nepřekládat hodnoty číselníků',
     'Core:BulkExport:OptionLinkSets' => 'Zahrnout odkazované objekty',
-	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting~~',
+    'Core:BulkExport:OptionFormattedText' => 'Zachovat formátování textu',
     'Core:BulkExport:ScopeDefinition' => 'Definice objektů k exportu',
     'Core:BulkExportLabelOQLExpression' => 'Dotaz OQL:',
     'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:~~',
@@ -866,11 +866,11 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Please select a valid phrasebook entry.~~',
     'Core:BulkExportQueryPlaceholder' => 'Zde zadejte OQL dotaz...',
     'Core:BulkExportCanRunNonInteractive' => 'Click here to run the export in non-interactive mode.~~',
-    'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.~~',
-	'Core:BulkExport:XLSXOptions' => 'Excel Options~~',
-	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup~~',
-	'Core:Validator:Default' => 'Wrong format~~',
-	'Core:Validator:Mandatory' => 'Please, fill this field~~',
-	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
-	'Core:Validator:MustSelectOne' => 'Please, select one~~',
+    'Core:BulkExportLegacyExport' => 'Původní verze exportu',
+    'Core:BulkExport:XLSXOptions' => 'Nastavení pro Excel',
+    'Core:BulkExport:TextFormat' => 'Textová pole obsahující HTML kód',
+    'Core:Validator:Default' => 'Nesprávný formát',
+    'Core:Validator:Mandatory' => 'Vyplňte prosím toto pole',
+    'Core:Validator:MustBeInteger' => 'Musí být celé číslo',
+    'Core:Validator:MustSelectOne' => 'Zvolte prosím jednu hodnotu',
 ));

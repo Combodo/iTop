@@ -34,11 +34,11 @@
 
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Relation:impacts/Description' => 'Prvky ovlivněné objektem',
-    'Relation:impacts/DownStream' => 'Dopad na...',
-    'Relation:impacts/UpStream' => 'Prvky ovlivněné objektem...',
-    'Relation:depends on/Description' => 'Prvky na kterých závisí objekt',
-    'Relation:depends on/DownStream' => 'Závislost na...',
-    'Relation:depends on/UpStream' => 'Prvky na kterých tento objekt závisí...',
+    'Relation:impacts/DownStream' => 'Dopad na',
+    'Relation:impacts/UpStream' => 'Závislost na',
+    'Relation:depends on/Description' => 'Prvky ovlivňující objekt',
+    'Relation:depends on/DownStream' => 'Závislost na',
+    'Relation:depends on/UpStream' => 'Dopad na',
 ));
 
 // Dictionnay conventions
@@ -90,7 +90,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Class:Organization/Attribute:status+' => '',
     'Class:Organization/Attribute:status/Value:active' => 'Aktivní',
     'Class:Organization/Attribute:status/Value:active+' => '',
-    'Class:Organization/Attribute:status/Value:inactive' => 'Pasivní',
+    'Class:Organization/Attribute:status/Value:inactive' => 'Neaktivní',
     'Class:Organization/Attribute:status/Value:inactive+' => '',
     'Class:Organization/Attribute:parent_id' => 'Mateřská organizace',
     'Class:Organization/Attribute:parent_id+' => '',
@@ -117,7 +117,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Class:Location/Attribute:status+' => '',
     'Class:Location/Attribute:status/Value:active' => 'Aktivní',
     'Class:Location/Attribute:status/Value:active+' => '',
-    'Class:Location/Attribute:status/Value:inactive' => 'Pasivní',
+    'Class:Location/Attribute:status/Value:inactive' => 'Neaktivní',
     'Class:Location/Attribute:status/Value:inactive+' => '',
     'Class:Location/Attribute:org_id' => 'Vlastník (Organizace)',
     'Class:Location/Attribute:org_id+' => '',
@@ -150,7 +150,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Class:Contact/Attribute:status+' => '',
     'Class:Contact/Attribute:status/Value:active' => 'Aktivní',
     'Class:Contact/Attribute:status/Value:active+' => '',
-    'Class:Contact/Attribute:status/Value:inactive' => 'Pasivní',
+    'Class:Contact/Attribute:status/Value:inactive' => 'Neaktivní',
     'Class:Contact/Attribute:status/Value:inactive+' => '',
     'Class:Contact/Attribute:org_id' => 'Organizace',
     'Class:Contact/Attribute:org_id+' => '',
@@ -696,7 +696,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Class:ApplicationSolution/Attribute:status+' => '',
     'Class:ApplicationSolution/Attribute:status/Value:active' => 'aktivní',
     'Class:ApplicationSolution/Attribute:status/Value:active+' => '',
-    'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'pasivní',
+    'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'neaktivní',
     'Class:ApplicationSolution/Attribute:status/Value:inactive+' => '',
     'Class:ApplicationSolution/Attribute:redundancy' => 'Redundance',
     'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'Řešení je v provozu, pokud jsou funkční všechny konfigurační položky',
@@ -717,7 +717,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Class:BusinessProcess/Attribute:status+' => '',
     'Class:BusinessProcess/Attribute:status/Value:active' => 'aktivní',
     'Class:BusinessProcess/Attribute:status/Value:active+' => '',
-    'Class:BusinessProcess/Attribute:status/Value:inactive' => 'pasivní',
+    'Class:BusinessProcess/Attribute:status/Value:inactive' => 'neaktivní',
     'Class:BusinessProcess/Attribute:status/Value:inactive+' => '',
 ));
 
@@ -746,7 +746,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Class:SoftwareInstance/Attribute:status+' => '',
     'Class:SoftwareInstance/Attribute:status/Value:active' => 'aktivní',
     'Class:SoftwareInstance/Attribute:status/Value:active+' => '',
-    'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'pasivní',
+    'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'neaktivní',
     'Class:SoftwareInstance/Attribute:status/Value:inactive+' => '',
 ));
 

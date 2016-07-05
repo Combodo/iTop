@@ -188,4 +188,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Menu:FAQCategory+' => '',
     'Menu:FAQ' => 'FAQ',
     'Menu:FAQ+' => 'FAQ - Často kladené dotazy',
+
+    'Brick:Portal:FAQ:Menu' => 'FAQ',
+    'Brick:Portal:FAQ:Title' => 'Často kladené dotazy (FAQ)',
+    'Brick:Portal:FAQ:Title+' => '<p>Spěcháte?</p><p>Podívejte se na seznam nejčastějších otázek a (možná) najdete hledanou odpověď ihned.</p>',
 ));

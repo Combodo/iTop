@@ -48,6 +48,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'UI-ChangeManagementOverview-Last-7-days' => 'Počet změn za posledních 7 dní',
     'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Změny v posledních 7 dnech podle oblasti',
     'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Změny v posledních 7 dnech podle stavu',
+    'Tickets:Related:OpenChanges' => 'Otevřené změny',
+    'Tickets:Related:RecentChanges' => 'Nedávné změny (72h)',
 ));
 
 // Dictionnay conventions

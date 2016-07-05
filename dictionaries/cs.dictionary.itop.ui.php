@@ -132,6 +132,11 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Class:User/Attribute:profile_list+' => '',
     'Class:User/Attribute:allowed_org_list' => 'Přístupné organizace',
     'Class:User/Attribute:allowed_org_list+' => 'Uživatel má oprávnění přistupovat k údajům následujících organizací. Pokud není zvolena žádná organizace, neuplatňují se žádná omezení.',
+    'Class:User/Attribute:status' => 'Stav',
+    'Class:User/Attribute:status+' => '',
+    'Class:User/Attribute:status/Value:enabled' => 'Aktivní',
+    'Class:User/Attribute:status/Value:disabled' => 'Neaktivní',
+
     'Class:User/Error:LoginMustBeUnique' => 'Uživatelské jméno musí být jedinečné - "%1s" je již použito.',
     'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Uživateli musí být přidělen alespoň jeden profil.',
     'Class:UserInternal' => 'Interní uživatel',
@@ -765,7 +770,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'UI:ObjectDoesNotExist' => 'Tento objekt neexistuje (nebo nemáte oprávnění k jeho zobrazení).',
     'UI:SearchResultsPageTitle' => 'iTop - Výsledky hledání',
     'UI:SearchResultsTitle' => 'Výsledky hledání',
-    'UI:SearchResultsTitle+' => 'Full-text search results~~',
+    'UI:SearchResultsTitle+' => 'Výsledky fulltextového hledání',
     'UI:Search:NoSearch' => 'Nic k hledání',
     'UI:Search:NeedleTooShort' => 'Zadaný výraz "%1$s" je příliš krátký. Zadejte prosím alespoň %2$d znaky.',
     'UI:Search:Ongoing' => 'Hledám "%1$s"',
@@ -791,7 +796,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'UI:PageTitle:FatalError' => 'iTop - Závažná chyba',
     'UI:SystemIntrusion' => 'Přístup odepřen. Vyžadujete operaci, která vám není povolena.',
     'UI:FatalErrorMessage' => 'Závažná chyba, iTop nemůže pokračovat.',
-    'UI:Error_Details' => 'Chyba: %1$s.',
+    'UI:Error_Details' => 'Chyba: %1$s',
 
     'UI:PageTitle:ClassProjections' => 'iTop správa uživatelů - projekce tříd',
     'UI:PageTitle:ProfileProjections' => 'iTop správa uživatelů - projekce profilů',
@@ -1004,7 +1009,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Portal:ShowClosed' => 'Zobrazit uzavřené požadavky',
     'Portal:CreateNewRequest' => 'Vytvořit nový požadavek',
     'Portal:CreateNewRequestItil' => 'Vytvořit nový požadavek',
-    'Portal:CreateNewIncidentItil' => 'Create a new incident report~~',
+    'Portal:CreateNewIncidentItil' => 'Nahlásit nový incident',
     'Portal:ChangeMyPassword' => 'Změnit heslo',
     'Portal:Disconnect' => 'Odpojit',
     'Portal:OpenRequests' => 'Mé otevřené požadavky',
@@ -1241,12 +1246,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Class:ShortcutOQL/Attribute:auto_reload_sec/tip' => 'Minimální povolená hodnota je %1$d sekund',
 
     'UI:FillAllMandatoryFields' => 'Vyplňte prosím všechna povinná pole.',
-    'UI:ValueMustBeSet' => 'Uveďte prosím hodnotu',
-    'UI:ValueMustBeChanged' => 'Změňte prosím hodnotu',
-    'UI:ValueInvalidFormat' => 'Nesprávný formát',
 
-    'UI:ValueMustBeSet' => 'Uveďte prosím hodnotu',
-    'UI:ValueMustBeChanged' => 'Změňte prosím hodnotu',
+    'UI:ValueMustBeSet' => 'Toto pole je poviné',
+    'UI:ValueMustBeChanged' => 'Hodnota musí být změněna',
     'UI:ValueInvalidFormat' => 'Nesprávný formát',
 
     'UI:CSVImportConfirmTitle' => 'Potvrďte prosím operaci',
@@ -1255,6 +1257,25 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'UI:CSVImportCreated_items' => 'Vytvořeno: %1$d',
     'UI:CSVImportModified_items' => 'Upraveno: %1$d',
     'UI:CSVImportUnchanged_items' => 'Nezměněno: %1$d',
+    'UI:CSVImport:DateAndTimeFormats' => 'Formát data a času',
+    'UI:CSVImport:DefaultDateTimeFormat_Format_Example' => 'Výchozí formát: %1$s (např. %2$s)',
+    'UI:CSVImport:CustomDateTimeFormat' => 'Vlastní formát: %1$s',
+    'UI:CSVImport:CustomDateTimeFormatTooltip' => 'Dostupné zástupné znaky:<table>
+      <tr><td>Y</td><td>rok (4 znaky, např. 2016)</td></tr>
+      <tr><td>y</td><td>rok (2 znaky, např. 16 pro 2016)</td></tr>
+      <tr><td>m</td><td>měsíc (2 znaky, např. 01..12)</td></tr>
+      <tr><td>n</td><td>měsíc (1 nebo 2 znaky bez úvodních nul, např. 1..12)</td></tr>
+      <tr><td>d</td><td>den (2 znaky, např. 01..31)</td></tr>
+      <tr><td>j</td><td>den (1 nebo 2 znaky bez úvodnách nul, např. 1..31)</td></tr>
+      <tr><td>H</td><td>hodina (24h formát, 2 znaky, např. 00..23)</td></tr>
+      <tr><td>h</td><td>hodina (12h formát, 2 znaky, např. 01..12)</td></tr>
+      <tr><td>G</td><td>hodina (24h formát, 1 nebo 2 znaky bez úvodních nul, např. 0..23)</td></tr>
+      <tr><td>g</td><td>hodina (12h formát, 1 nebo 2 znaky bez úvodních nul, např. 1..12)</td></tr>
+      <tr><td>a</td><td>hodina, am nebo pm</td></tr>
+      <tr><td>A</td><td>hodina, AM nebo PM</td></tr>
+      <tr><td>i</td><td>minuty (2 znaky, např. 00..59)</td></tr>
+      <tr><td>s</td><td>sekundy (2 znaky, např. 00..59)</td></tr>
+    </table>',
 
     'UI:Button:Remove' => 'Odstranit',
     'UI:AddAnExisting_Class' => 'Přidat objekty typu %1$s...',
@@ -1294,4 +1315,15 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
     'UI:Menu:ExportPDF' => 'PDF export',
     'UI:Menu:PrintableVersion' => 'Verze pro tisk',
+
+    'UI:BrowseInlineImages' => 'Procházet obrázky...',
+    'UI:UploadInlineImageLegend' => 'Nahrát nový obrázek',
+    'UI:SelectInlineImageToUpload' => 'Vyberte obrázek',
+    'UI:AvailableInlineImagesLegend' => 'Dostupné obrázky',
+    'UI:NoInlineImage' => 'Na serveru není dostupný žádný obrázek. Nahrajte nějaký pomocí tlačítka výše.',
+
+    'UI:ToggleFullScreen' => 'Přepnout zobrazení',
+    'UI:Button:ResetImage' => 'Obnovit původní obrázek',
+    'UI:Button:RemoveImage' => 'Odebrat obrázek',
+    'UI:UploadNotSupportedInThisMode' => 'Úprava obrázků není v tomto režimu podporována.',
 ));

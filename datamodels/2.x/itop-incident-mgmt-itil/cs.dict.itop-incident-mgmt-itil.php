@@ -169,13 +169,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Class:Incident/Attribute:resolution_code+' => '',
     'Class:Incident/Attribute:resolution_code/Value:assistance' => 'asistence',
     'Class:Incident/Attribute:resolution_code/Value:assistance+' => '',
-    'Class:Incident/Attribute:resolution_code/Value:bug fixed' => 'oprava chyby',
+    'Class:Incident/Attribute:resolution_code/Value:bug fixed' => 'oprava SW (bugfix)',
     'Class:Incident/Attribute:resolution_code/Value:bug fixed+' => '',
     'Class:Incident/Attribute:resolution_code/Value:hardware repair' => 'oprava HW',
     'Class:Incident/Attribute:resolution_code/Value:hardware repair+' => '',
     'Class:Incident/Attribute:resolution_code/Value:other' => 'jiné',
     'Class:Incident/Attribute:resolution_code/Value:other+' => '',
-    'Class:Incident/Attribute:resolution_code/Value:software patch' => 'záplata (patch) softwaru',
+    'Class:Incident/Attribute:resolution_code/Value:software patch' => 'oprava SW (patch)',
     'Class:Incident/Attribute:resolution_code/Value:software patch+' => '',
     'Class:Incident/Attribute:resolution_code/Value:system update' => 'aktualizace systému',
     'Class:Incident/Attribute:resolution_code/Value:system update+' => '',
@@ -239,4 +239,5 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
     'Class:Incident/Method:ResolveChildTickets' => 'Vyřešit podřízené tikety',
     'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
+    'Tickets:Related:OpenIncidents' => 'Otevřené incidenty',
 ));
