@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * File to include to initialize the datamodel in memory
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -46,6 +46,4 @@ else
 	$_SESSION['itop_env'] = ITOP_DEFAULT_ENV;
 }
 $sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
-MetaModel::Startup($sConfigFile);
-
-?>
+MetaModel::Startup($sConfigFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);

@@ -103,7 +103,7 @@ class RunTimeEnvironment
 			MetaModel::ResetCache(md5(APPROOT).'-'.$this->sTargetEnv);
 		}
 	
-		MetaModel::Startup($oConfig, $bModelOnly, $bUseCache);
+		MetaModel::Startup($oConfig, $bModelOnly, $bUseCache, false /* $bTraceSourceFiles */, $this->sTargetEnv);
 	}
 	
 	/**

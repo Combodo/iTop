@@ -108,6 +108,7 @@ abstract class MetaModel
 
 	private static $m_bTraceSourceFiles = false;
 	private static $m_aClassToFile = array();
+	protected static $m_sEnvironment = 'production';
 
 	public static function GetClassFiles()
 	{
@@ -305,7 +306,7 @@ abstract class MetaModel
 				return self::GetClassIcon($sParentClass, $bImgTag, $sMoreStyles);
 			}
 		}
-		$sIcon = str_replace('/modules/', '/env-'.utils::GetCurrentEnvironment().'/', $sIcon); // Support of pre-2.0 modules
+		$sIcon = str_replace('/modules/', '/env-'.self::$m_sEnvironment.'/', $sIcon); // Support of pre-2.0 modules
 		if ($bImgTag && ($sIcon != ''))
 		{
 			$sIcon = "<img src=\"$sIcon\" style=\"vertical-align:middle;$sMoreStyles\"/>";
@@ -3484,8 +3485,9 @@ abstract class MetaModel
 		$aAlterTableItems = array(); // array of <table> => <alter specification>
 		
 		foreach (self::GetClasses() as $sClass)
-		{
+		{	
 			if (!self::HasTable($sClass)) continue;
+
 
 			// Check that the table exists
 			//
@@ -4125,11 +4127,13 @@ abstract class MetaModel
 		}
 	}
 
-	public static function Startup($config, $bModelOnly = false, $bAllowCache = true, $bTraceSourceFiles = false)
+	public static function Startup($config, $bModelOnly = false, $bAllowCache = true, $bTraceSourceFiles = false, $sEnvironment = 'production')
 	{
+		self::$m_sEnvironment = $sEnvironment;
+		
 		if (!defined('MODULESROOT'))
 		{
-			define('MODULESROOT', APPROOT.'env-'.utils::GetCurrentEnvironment().'/');
+			define('MODULESROOT', APPROOT.'env-'.self::$m_sEnvironment.'/');
 	
 			self::$m_bTraceSourceFiles = $bTraceSourceFiles;
 	
@@ -4226,7 +4230,7 @@ abstract class MetaModel
 		{
 			Dict::EnableCache($sAppIdentity);
 		}
-		require_once(APPROOT.'env-'.utils::GetCurrentEnvironment().'/dictionaries/languages.php');
+		require_once(APPROOT.'env-'.self::$m_sEnvironment.'/dictionaries/languages.php');
 		
 		// Set the default language...
 		Dict::SetDefaultLanguage(self::$m_oConfig->GetDefaultLanguage());
@@ -4236,7 +4240,7 @@ abstract class MetaModel
 		require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
 
 		require_once(APPROOT.'core/autoload.php');
-		require_once(APPROOT.'env-'.utils::GetCurrentEnvironment().'/autoload.php');
+		require_once(APPROOT.'env-'.self::$m_sEnvironment.'/autoload.php');
 
 		foreach (self::$m_oConfig->GetAddons() as $sModule => $sToInclude)
 		{
@@ -4359,7 +4363,7 @@ abstract class MetaModel
 
 	public static function GetEnvironmentId()
 	{
-		return md5(APPROOT).'-'.utils::GetCurrentEnvironment();
+		return md5(APPROOT).'-'.self::$m_sEnvironment;
 	}
 
 	protected static $m_aExtensionClasses = array();
