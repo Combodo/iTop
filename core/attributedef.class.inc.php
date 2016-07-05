@@ -5474,7 +5474,7 @@ class AttributeStopWatch extends AttributeDefinition
 		case 'started':
 		case 'laststart':
 		case 'stopped':
-			$sHtml = (int)$sValue ? date(self::GetDateFormat(), (int)$sValue) : null;
+			$sHtml = (int)$sValue ? date((string)AttributeDateTime::GetFormat(), (int)$sValue) : null;
 			break;
 
 		default:
@@ -5488,7 +5488,7 @@ class AttributeStopWatch extends AttributeDefinition
 					switch($sThresholdCode)
 					{
 					case 'deadline':
-						$sHtml = (int)$sValue ? date(self::GetDateFormat(true /*full*/), (int)$sValue) : null;
+						$sHtml = (int)$sValue ? date((string)AttributeDateTime::GetFormat(), (int)$sValue) : null;
 						break;
 					case 'passed':
 						$sHtml = $this->GetBooleanLabel((int)$sValue);
@@ -5503,18 +5503,6 @@ class AttributeStopWatch extends AttributeDefinition
 			}
 		}
 		return $sHtml;
-	}
-
-	static protected function GetDateFormat($bFull = false)
-	{
-		if ($bFull)
-		{
-			return "Y-m-d H:i:s";
-		}
-		else
-		{
-			return "Y-m-d H:i";
-		}
 	}
 
 	public function GetSubItemAsPlainText($sItemCode, $value)
@@ -5555,7 +5543,7 @@ class AttributeStopWatch extends AttributeDefinition
 							case 'deadline':
 								if ($value)
 								{
-									$sDate = date(self::GetDateFormat(true /* full */), $value);
+									$sDate = date(AttributeDateTime::GetInternalFormat(), $value);
 									$sRet = AttributeDeadline::FormatDeadline($sDate);
 								}
 								else
@@ -5615,7 +5603,7 @@ class AttributeStopWatch extends AttributeDefinition
 							case 'deadline':
 								if ($value)
 								{
-									$sDate = date(self::GetDateFormat(true /* full */), $value);
+									$sDate = date(AttributeDateTime::GetInternalFormat(), $value);
 									$sHtml = Str::pure2html(AttributeDeadline::FormatDeadline($sDate));
 								}
 								else
@@ -5756,7 +5744,7 @@ class AttributeStopWatch extends AttributeDefinition
 			}
 			else
 			{
-				$sRet = date(self::GetDateFormat(), $value);
+				$sRet = date((string)AttributeDateTime::GetFormat(), $value);
 			}
 			break;
 
@@ -5773,7 +5761,7 @@ class AttributeStopWatch extends AttributeDefinition
 					case 'deadline':
 						if ($value)
 						{
-							$sRet = date(self::GetDateFormat(true /*full*/), $value);
+							$sRet = date((string)AttributeDateTime::GetFormat(), $value);
 						}
 						else
 						{
