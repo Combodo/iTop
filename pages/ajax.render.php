@@ -1207,7 +1207,7 @@ EOF
 		$oPage->add("<div>");
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>'.Dict::S('UI:About:Licenses').'</legend>');
-		$oPage->add('<ul style="margin: 0; font-size: smaller;">');
+		$oPage->add('<ul style="margin: 0; font-size: smaller; max-height: 15em; overflow: auto;">');
 		foreach($aLicenses as $index => $oLicense)
 		{
 			$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<a id="toggle_'.$index.'" class="CollapsibleLabel" style="cursor:pointer;">Details</a>)');
