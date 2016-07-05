@@ -236,7 +236,7 @@ abstract class AttributeDefinition
 	public function LoadInObject() {return true;}
 	public function LoadFromDB() {return true;}
 	public function AlwaysLoadInTables() {return $this->GetOptional('always_load_in_tables', false);}
-	public function GetValue($oHostObject, $bOriginal = false){return null;} // must return the value if LoadInObject returns false
+	public function GetValue($oHostObject){return null;} // must return the value if LoadInObject returns false
 	public function IsNullAllowed() {return true;} 
 	public function GetCode() {return $this->m_sCode;} 
 	public function GetMirrorLinkAttribute() {return null;}
@@ -5824,7 +5824,7 @@ class AttributeSubItem extends AttributeDefinition
 	/**
 	 * Used by DBOBject::Get()
 	 */
-	public function GetValue($oHostObject, $bOriginal = false)
+	public function GetValue($oHostObject)
 	{
 		$oParent = $this->GetTargetAttDef();
 		$parentValue = $oHostObject->GetStrict($oParent->GetCode());
