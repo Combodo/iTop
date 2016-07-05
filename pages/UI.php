@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
@@ -174,12 +175,14 @@ function DisplayMessages($sMessageKey, WebPage $oPage)
  * @param $bSearchForm boolean Whether or not to display the search form at the top the page
  * @param $sBaseClass string The base class for the search (can be different from the actual class of the results)
  * @param $sFormat string The format to use for the output: csv or html
+ * @param $bDoSearch bool True to display the search results below the search form
+ * @param $bSearchFormOpen bool True to display the search form fully expanded (only if $bSearchForm of course)
  */
-function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', $sFormat = '', $bDoSearch = true)
+function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', $sFormat = '', $bDoSearch = true, $bSearchFormOpen = false)
 {
 	if ($bSearchForm)
 	{
-		$aParams = array('open' => true);
+		$aParams = array('open' => $bSearchFormOpen);
 		if (!empty($sBaseClass))
 		{
 			$aParams['baseClass'] = $sBaseClass;
@@ -472,7 +475,7 @@ try
 			}
 			$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
 			$oFilter =  new DBObjectSearch($sClass);
-			DisplaySearchSet($oP, $oFilter, $bSearchForm, '' /* sBaseClass */, $sFormat, $bDoSearch);
+			DisplaySearchSet($oP, $oFilter, $bSearchForm, '' /* sBaseClass */, $sFormat, $bDoSearch, true /* Search Form Expanded */);
 			break;
 
 		///////////////////////////////////////////////////////////////////////////////////////////
