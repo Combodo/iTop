@@ -142,6 +142,32 @@ function DisplayDetails($oP, $sClass, $oObj, $id)
 }
 
 /**
+ * Display the session messages relative to the object identified by its "message key" (class::id)
+ * @param string $sMessageKey
+ * @param WebPage $oPage
+ */
+function DisplayMessages($sMessageKey, WebPage $oPage)
+{
+	if (array_key_exists('obj_messages', $_SESSION) && array_key_exists($sMessageKey, $_SESSION['obj_messages']))
+	{
+		$aMessages = array();
+		$aRanks = array();
+		foreach ($_SESSION['obj_messages'][$sMessageKey] as $sMessageId => $aMessageData)
+		{
+			$sMsgClass = 'message_'.$aMessageData['severity'];
+			$aMessages[] = "<div class=\"header_message $sMsgClass\">".$aMessageData['message']."</div>";
+			$aRanks[] = $aMessageData['rank'];
+		}
+		unset($_SESSION['obj_messages'][$sMessageKey]);
+		array_multisort($aRanks, $aMessages);
+		foreach ($aMessages as $sMessage)
+		{
+			$oPage->add($sMessage);
+		}		
+	}
+}
+
+/**
  * Displays the result of a search request
  * @param $oP WebPage Web page for the output
  * @param $oFilter DBSearch The search of objects to display
@@ -344,6 +370,9 @@ try
 			}
 			if (is_null($oObj))
 			{
+				// Check anyhow if there is a message for this object (like you've just created it)
+				$sMessageKey = $sClass.'::'.$id;
+				DisplayMessages($sMessageKey, $oP);
 				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
 				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
 			}
@@ -356,6 +385,11 @@ try
 				catch(Exception $e)
 				{
 					// Probably not allowed to see this instance of a derived class
+					
+					// Check anyhow if there is a message for this object (like you've just created it)
+					$sMessageKey = $sClass.'::'.$id;
+					DisplayMessages($sMessageKey, $oP);
+						
 					$oObj = null; 
 					$oP->set_title(Dict::S('UI:ErrorPageTitle'));
 					$oP->P(Dict::S('UI:ObjectDoesNotExist'));
@@ -992,13 +1026,15 @@ EOF
 			list($bRes, $aIssues) = $oObj->CheckToWrite();
 			if ($bRes)
 			{
-				$oObj->DBInsert();
+				$oObj->DBInsertNoReload(); // No need to reload
 				utils::RemoveTransaction($sTransactionId);
 				$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
-				$sMessage = Dict::Format('UI:Title:Object_Of_Class_Created', $oObj->GetName(), $sClassLabel);
 				
-				$oObj = MetaModel::GetObject(get_class($oObj), $oObj->GetKey()); //Workaround: reload the object so that the linkedset are displayed properly
-
+				// Compute the name, by reloading the object, even if it disappeared from the silo
+				$oObj = MetaModel::GetObject($sClass, $oObj->GetKey(), true /* Must be found */, true /* Allow All Data*/);
+				$sName = $oObj->GetName(); 
+				$sMessage = Dict::Format('UI:Title:Object_Of_Class_Created', $sName, $sClassLabel);
+				
 				$sNextAction = utils::ReadPostedParam('next_action', '');
 				if (!empty($sNextAction))
 				{
