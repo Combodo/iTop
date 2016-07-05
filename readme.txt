@@ -294,6 +294,7 @@ Doing less queries for user rights: caching the user profiles into the SESSION c
 Enhanced display/edition of the "Reconciliation Key" column when defining the reconciliation using the attributes.
 Prevent timeouts, since the synchro may be launched from the web (as a "web service", especially by the "collectors").
 #1253 Properly parse dates in synchro import. Thanks to Karl aka karkoff1212 for reporting the issue.
+Synchro : Change description attribute from AttributeString to AttributeText
 
 
 9) Other fixes
@@ -322,6 +323,14 @@ CSV Imports:
 #1251 Disabling log notification in config causes a fatal error
 Export: cannot export an object with a property named "length"
 "Search Drawer" is closed by default, unless the configuration parameter "legacy_search_drawer" is set to "true".
+Properly handle the creation of objects which go outside of the silo.
+Provide some feedback to the end-user in case of a fatal error during an interactive export.
+When iTop is in restricted access mode (access_mode=2), the upgrade is not completely performed (profiles not updated correctly)
+Placeholders in notifications:
+- Fixed the error message when a placeholder is invalid
+- Fixed the rendering of the case log in gmail and Outlook (support only the inline styles).
+  The stylesheet cannot be defined within the email templates (aka ActionEmail) anymore. Instead, a default (ready
+  for use) stylesheet is provided into /css/email.css and it can be overriden by the configuration parameter email_css.
 
 
 9) Setup
@@ -367,6 +376,10 @@ $oEncoder = new Swift_Mime_ContentEncoder_PlainContentEncoder('8bit', true /*can
 Demo mode: to not allow deleting neither changing the org of persons attached to a user account (this to make sure that the portal users will still have access to the customer portal)
 
 
+11) Localizations
+The French and English localizations are up to date
+Czech has been updated thanks to Lukáš Dvořák
+
 
 3.2. Known limitations (https://sourceforge.net/apps/trac/itop/report/3)
      -----------------
@@ -387,8 +400,7 @@ Tested with IE9, Firefox 3.6 up to Firefox 24 and Chrome. Be aware that there ar
 #388	IE9: edition fields not resizable
 #443 	Objects remain in the database after de-installing some modules
 #442 	Useless profiles installed (1.x legacy data model only)
-#438 	The selection of Organizations using the hierarchy does not work on IE8 in security mode
-#436 	Cannot type "All Organizations" 	
+#436 	Cannot type "All Organizations"
 #381 	Deletion of dependencies could fail in a multi-org environment
 #241 	"status" is a free-text field when configuring a Trigger
 #358 	Multi-column queries sometimes returning an empty set
