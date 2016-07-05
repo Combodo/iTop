@@ -2915,7 +2915,7 @@ class AttributeCaseLog extends AttributeLongText
 		switch($sVerb)
 		{
 			case '':
-			return $value->GetText();
+			return $value->GetText(true);
 			
 			case 'head':
 			return $value->GetLatestEntry('text');
