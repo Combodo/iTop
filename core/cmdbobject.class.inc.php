@@ -304,8 +304,8 @@ abstract class CMDBObject extends DBObject
 				//
 				foreach ($oAttDef->ListSubItems() as $sSubItemAttCode => $oSubItemAttDef)
 				{
-					$item_value = $oSubItemAttDef->GetValue($this);
-					$item_original = $oSubItemAttDef->GetValue($this, true);
+					$item_value = $oAttDef->GetSubItemValue($oSubItemAttDef->Get('item_code'), $value, $this);
+					$item_original = $oAttDef->GetSubItemValue($oSubItemAttDef->Get('item_code'), $original, $this);
 
 					if ($item_value != $item_original)
 					{
