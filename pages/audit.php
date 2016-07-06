@@ -197,6 +197,9 @@ try
 			}
 			else
 			{
+				$sCSVName = basename($sFileName); // pseudo sanitization, just in case
+				// Force the name of the downloaded file, since windows gives precedence to the extension over of the mime type
+				$oP->add_header("Content-disposition: attachment; filename=\"$sCSVName\"");
 				$oP->add_header("Content-type: text/csv; charset=$sCharset");
 			}
 			$oP->add($sOutputData);
