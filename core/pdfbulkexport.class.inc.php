@@ -174,6 +174,9 @@ EOF
 	{
 		$sData = parent::GetFooter();
 
+		// We need a lot of time for the PDF conversion
+		set_time_limit(60*10); // 10 minutes max ???
+		
 		require_once(APPROOT.'application/pdfpage.class.inc.php');
 		$oPage = new PDFPage(Dict::Format('Core:BulkExportOf_Class', MetaModel::GetName($this->oSearch->GetClass())), $this->aStatusInfo['page_size'], $this->aStatusInfo['page_orientation']);
 		$oPDF = $oPage->get_tcpdf();
