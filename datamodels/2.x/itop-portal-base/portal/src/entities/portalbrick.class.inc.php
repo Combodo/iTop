@@ -493,6 +493,9 @@ abstract class PortalBrick extends AbstractBrick
 						$this->SetDecorationClassNavigationMenu($optionalNodeValue);
 					}
 					break;
+				case 'tile_controller_action':
+					$this->SetTileControllerAction($oBrickSubNode->GetText(static::DEFAULT_TILE_CONTROLLER_ACTION));
+					break;
 			}
 		}
 
