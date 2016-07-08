@@ -572,27 +572,59 @@ EOF
 				break;	
 			}
 			$index++;
-			
-			//echo "\nsLoginMode: $sLoginMode (user: $sAuthUser / pwd: $sAuthPwd\n)";
-			if ($sLoginMode == '')
+		}
+		//echo "\nsLoginMode: $sLoginMode (user: $sAuthUser / pwd: $sAuthPwd\n)";
+		if ($sLoginMode == '')
+		{
+			// First connection
+			$sDesiredLoginMode = utils::ReadParam('login_mode');
+			if (in_array($sDesiredLoginMode, $aAllowedLoginTypes))
 			{
-				// First connection
-				$sDesiredLoginMode = utils::ReadParam('login_mode');
-				if (in_array($sDesiredLoginMode, $aAllowedLoginTypes))
+				$sLoginMode = $sDesiredLoginMode;
+			}
+			else
+			{
+				$sLoginMode = $aAllowedLoginTypes[0]; // First in the list...
+			}
+			if (array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER))
+			{
+				// X-Combodo-Ajax is a special header automatically added to all ajax requests
+				// Let's reply that we're currently logged-out
+				header('HTTP/1.0 401 Unauthorized');
+				exit;
+			}
+			if (($iOnExit == self::EXIT_HTTP_401) || ($sLoginMode == 'basic'))
+			{
+				header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_VERSION));
+				header('HTTP/1.0 401 Unauthorized');
+				header('Content-type: text/html; charset=iso-8859-1');
+				exit;
+			}
+			else if($iOnExit == self::EXIT_RETURN)
+			{
+				if (($sAuthUser !== '') && ($sAuthPwd === null))
 				{
-					$sLoginMode = $sDesiredLoginMode;
+					return self::EXIT_CODE_MISSINGPASSWORD;
 				}
 				else
 				{
-					$sLoginMode = $aAllowedLoginTypes[0]; // First in the list...
+					return self::EXIT_CODE_MISSINGLOGIN;
 				}
-				if (array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER))
-				{
-					// X-Combodo-Ajax is a special header automatically added to all ajax requests
-					// Let's reply that we're currently logged-out
-					header('HTTP/1.0 401 Unauthorized');
-					exit;
-				}
+			}
+			else
+			{
+				$oPage = self::NewLoginWebPage();
+				$oPage->DisplayLoginForm( $sLoginMode, false /* no previous failed attempt */);
+				$oPage->output();
+				exit;
+			}
+		}
+		else
+		{
+			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, $sLoginMode, $sAuthentication))
+			{
+				//echo "Check Credentials returned false for user $sAuthUser!";
+				self::ResetSession();
 				if (($iOnExit == self::EXIT_HTTP_401) || ($sLoginMode == 'basic'))
 				{
 					header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_VERSION));
@@ -602,66 +634,33 @@ EOF
 				}
 				else if($iOnExit == self::EXIT_RETURN)
 				{
-					if (($sAuthUser !== '') && ($sAuthPwd === null))
-					{
-						return self::EXIT_CODE_MISSINGPASSWORD;
-					}
-					else
-					{
-						return self::EXIT_CODE_MISSINGLOGIN;
-					}
+					return self::EXIT_CODE_WRONGCREDENTIALS;
 				}
 				else
 				{
 					$oPage = self::NewLoginWebPage();
-					$oPage->DisplayLoginForm( $sLoginMode, false /* no previous failed attempt */);
+					$oPage->DisplayLoginForm( $sLoginMode, true /* failed attempt */);
 					$oPage->output();
 					exit;
 				}
 			}
 			else
 			{
-				if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, $sLoginMode, $sAuthentication))
+				// User is Ok, let's save it in the session and proceed with normal login
+				UserRights::Login($sAuthUser, $sAuthentication); // Login & set the user's language
+				
+				if (MetaModel::GetConfig()->Get('log_usage'))
 				{
-					//echo "Check Credentials returned false for user $sAuthUser!";
-					self::ResetSession();
-					if (($iOnExit == self::EXIT_HTTP_401) || ($sLoginMode == 'basic'))
-					{
-						header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_VERSION));
-						header('HTTP/1.0 401 Unauthorized');
-						header('Content-type: text/html; charset=iso-8859-1');
-						exit;
-					}
-					else if($iOnExit == self::EXIT_RETURN)
-					{
-						return self::EXIT_CODE_WRONGCREDENTIALS;
-					}
-					else
-					{
-						$oPage = self::NewLoginWebPage();
-						$oPage->DisplayLoginForm( $sLoginMode, true /* failed attempt */);
-						$oPage->output();
-						exit;
-					}
+					$oLog = new EventLoginUsage();
+					$oLog->Set('userinfo', UserRights::GetUser());
+					$oLog->Set('user_id', UserRights::GetUserObject()->GetKey());
+					$oLog->Set('message', 'Successful login');
+					$oLog->DBInsertNoReload();
 				}
-				else
-				{
-					// User is Ok, let's save it in the session and proceed with normal login
-					UserRights::Login($sAuthUser, $sAuthentication); // Login & set the user's language
-					
-					if (MetaModel::GetConfig()->Get('log_usage'))
-					{
-						$oLog = new EventLoginUsage();
-						$oLog->Set('userinfo', UserRights::GetUser());
-						$oLog->Set('user_id', UserRights::GetUserObject()->GetKey());
-						$oLog->Set('message', 'Successful login');
-						$oLog->DBInsertNoReload();
-					}
-					
-					$_SESSION['auth_user'] = $sAuthUser;
-					$_SESSION['login_mode'] = $sLoginMode;
-					UserRights::_InitSessionCache();
-				}
+				
+				$_SESSION['auth_user'] = $sAuthUser;
+				$_SESSION['login_mode'] = $sLoginMode;
+				UserRights::_InitSessionCache();
 			}
 		}
 		return self::EXIT_CODE_OK;
