@@ -412,7 +412,11 @@ abstract class BulkExport
 // The built-in exports
 require_once(APPROOT.'core/tabularbulkexport.class.inc.php');
 require_once(APPROOT.'core/htmlbulkexport.class.inc.php');
-require_once(APPROOT.'core/pdfbulkexport.class.inc.php');
+if (extension_loaded('gd'))
+{
+	// PDF export - via TCPDF - requires GD
+	require_once(APPROOT.'core/pdfbulkexport.class.inc.php');
+}
 require_once(APPROOT.'core/csvbulkexport.class.inc.php');
 require_once(APPROOT.'core/excelbulkexport.class.inc.php');
 require_once(APPROOT.'core/spreadsheetbulkexport.class.inc.php');
