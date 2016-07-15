@@ -490,7 +490,17 @@ class ModelFactory
 			$oTargetParentNode->RedefineChildNode($oTargetNode, $sSearchId);
 			break;
 
-		case 'delete':
+		case 'delete_if_exists':
+			$oTargetNode = $oTargetParentNode->_FindChildNode($oSourceNode);
+			if (($oTargetNode !== null) && ($oTargetNode->getAttribute('_alteration') !== 'removed'))
+			{
+				// Delete the node if it actually exists and is not already marked as deleted
+				$oTargetNode->Delete();
+			}
+			// otherwise fail silently
+			break;
+			
+		case 'delete':			
 			$oTargetNode = $oTargetParentNode->_FindChildNode($oSourceNode);
 			if ($oTargetNode == null)
 			{
