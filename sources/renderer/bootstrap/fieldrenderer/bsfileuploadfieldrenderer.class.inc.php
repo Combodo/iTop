@@ -95,7 +95,7 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 				dataType: 'json',
 				pasteZone: null, // Don't accept files via Chrome's copy/paste
 				done: function (e, data) {
-					if(data.result.error !== undefined)
+					if((data.result.error !== undefined) && window.console)
 					{
 						console.log(data.result.error);
 					}
