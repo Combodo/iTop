@@ -473,12 +473,15 @@ EOF
 							}
 					});
 				}
-				oEditor.widgets.registered.uploadimage.onUploaded = function( upload ) {
-				var oData = JSON.parse(upload.xhr.responseText);
-			    	this.replaceWith( '<img src="' + upload.url + '" ' +
-			    		'width="' + oData.width + '" ' +
-						'height="' + oData.height + '">' );
-			    }
+				if (oEditor.widgets.registered.uploadimage)
+				{
+					oEditor.widgets.registered.uploadimage.onUploaded = function( upload ) {
+					var oData = JSON.parse(upload.xhr.responseText);
+				    	this.replaceWith( '<img src="' + upload.url + '" ' +
+				    		'width="' + oData.width + '" ' +
+							'height="' + oData.height + '">' );
+				    }
+				}
 			});
 		});
 EOF
