@@ -494,6 +494,7 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 						$sExpression = "SELECT $sClass WHERE {$sAttCode}_laststart AND {$sAttCode}_{$iThreshold}_triggered = 0 AND {$sAttCode}_{$iThreshold}_deadline < '$sNow'";
 						$oFilter = DBObjectSearch::FromOQL($sExpression);
 						$oSet = new DBObjectSet($oFilter);
+						$oSet->OptimizeColumnLoad(array($sAttCode));
 						while ((time() < $iTimeLimit) && ($oObj = $oSet->Fetch()))
 						{
 							$sClass = get_class($oObj);
