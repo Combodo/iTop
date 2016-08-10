@@ -115,7 +115,7 @@ class ormDocument
 	 */	 	 	
 	public function GetDownloadLink($sClass, $Id, $sAttCode)
 	{
-		return "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode\">".htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8')."</a>\n";
+		return "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.document.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode\">".htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8')."</a>\n";
 	}
 
 	/**
@@ -176,7 +176,7 @@ class ormDocument
 			{
 				$oPage->TrashUnexpectedOutput();
 				$oPage->SetContentType($oDocument->GetMimeType());
-				//$oPage->SetContentDisposition($sContentDisposition,$oDocument->GetFileName());
+				$oPage->SetContentDisposition($sContentDisposition,$oDocument->GetFileName());
 				$oPage->add($oDocument->GetData());
 			}
 		}
