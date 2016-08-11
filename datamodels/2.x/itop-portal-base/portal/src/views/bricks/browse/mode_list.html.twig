@@ -101,7 +101,7 @@
 									cellElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
 									break;
 								default:
-									console.log('Action "'+levelPrimaryAction.type+'" not implemented');
+									//console.log('Action "'+levelPrimaryAction.type+'" not implemented');
 									break;
 							}
 
@@ -154,7 +154,7 @@
 											actionElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
 											break;
 										default:
-											console.log('Action "'+action.type+'" not implemented for secondary action');
+											//console.log('Action "'+action.type+'" not implemented for secondary action');
 											break;
 									}
 									
@@ -201,7 +201,6 @@
 							"type": "html",
 							"data": oLevelsProperties[sKey].alias+".fields."+oLevelsProperties[sKey].fields[i].code
 						});
-						console.log(oLevelsProperties[sKey].fields[i].visible);
 					}
 				}
 			}

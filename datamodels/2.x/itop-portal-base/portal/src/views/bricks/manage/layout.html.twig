@@ -69,12 +69,12 @@
 		{
 			var tableProperties = columnsProperties[tableName];
 			
-			if(tableProperties === undefined)
+			if(tableProperties === undefined && window.console)
 			{
 				console.log('Could not retrieve columns properties for table "'+tableName+'"');
 				return false;
 			}
-			if(rawData[tableName] === undefined)
+			if(rawData[tableName] === undefined && window.console)
 			{
 				console.log('Could not retrieve data for table "'+tableName+'"');
 				return false;
@@ -120,7 +120,7 @@
 									cellElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
 									break;
 								default:
-									console.log('Action "'+itemPrimaryAction+'" not implemented');
+									//console.log('Action "'+itemPrimaryAction+'" not implemented');
 									break;
 							}
 							
@@ -227,7 +227,7 @@
 				// Note : The '.off()' call is to unbind event from DataTables that where triggered before we could intercept anything
 				$('#table-{{ sAreaId }}_filter input').off().on('keyup', function(){
 					var me = this;
-					console.log('here');
+					
 					clearTimeout(oKeyTimeout);
 					oKeyTimeout = setTimeout(function() {
 						oTable{{ sAreaId }}.search(me.value.latinise()).draw();
