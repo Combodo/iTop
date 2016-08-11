@@ -73,11 +73,11 @@
 						// For the same reason, tooltip widget is created in "drawCallback" instead of here.
 						if( (data.tooltip !== undefined) && (data.tooltip !== ''))
 						{
-							cellElem.html( $('<span></span>').attr('title', data.tooltip).attr('data-toggle', 'tooltip').text(data.name).prop('outerHTML') );
+							cellElem.html( $('<span></span>').attr('title', data.tooltip).attr('data-toggle', 'tooltip').html(data.name).prop('outerHTML') );
 						}
 						else
 						{
-							cellElem.text(data.name);
+							cellElem.html(data.name);
 						}
 						
 						// Building actions

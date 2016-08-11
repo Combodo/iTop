@@ -103,7 +103,7 @@
 						
 						// Preparing the cell data
 						cellElem = (itemActions.length > 0) ? $('<a></a>') : $('<span></span>');
-						cellElem.text(row.attributes[att_code].value);
+						cellElem.html(row.attributes[att_code].value);
 						// Building actions
 						if(itemActions.length > 0)
 						{
@@ -227,7 +227,7 @@
 				// Note : The '.off()' call is to unbind event from DataTables that where triggered before we could intercept anything
 				$('#table-{{ sAreaId }}_filter input').off().on('keyup', function(){
 					var me = this;
-					
+
 					clearTimeout(oKeyTimeout);
 					oKeyTimeout = setTimeout(function() {
 						oTable{{ sAreaId }}.search(me.value.latinise()).draw();
