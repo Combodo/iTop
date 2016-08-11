@@ -1052,7 +1052,7 @@
 									<!-- Description text from attribute of above class [from the OQL] -->
 									<tooltip_att>description</tooltip_att>
 									<!-- Title of the level, will be display in lists and others browse modes -->
-									<title>Service</title>
+									<title>Class:Service</title>
 									<!-- Optional tag to add attributes to the table by their code, can be specified for each level -->
 									<!-- <fields  /> -->
 									<!-- Can be empty on intermediate levels, default is drilldown -->
@@ -1066,7 +1066,7 @@
 											<parent_att>service_id</parent_att>
 											<name_att/>
 											<tooltip_att>description</tooltip_att>
-											<title>Sous-Service</title>
+											<title>Class:ServiceSubcategory</title>
 											<actions>
 												<action id="view" xsi:type="view"/>
 												<action id="create_from_this" xsi:type="create_from_this">
