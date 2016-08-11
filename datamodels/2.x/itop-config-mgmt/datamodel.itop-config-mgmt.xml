@@ -552,7 +552,7 @@
           <static>false</static>
           <access>public</access>
           <type>Overload-DBObject</type>
-          <code><![CDATA[  	public function DBDeleteSingleObject(&$oDeletionPlan)
+          <code><![CDATA[  	public function DBDeleteSingleObject()
 	{
 		if (MetaModel::GetConfig()->Get('demo_mode'))
 		{
