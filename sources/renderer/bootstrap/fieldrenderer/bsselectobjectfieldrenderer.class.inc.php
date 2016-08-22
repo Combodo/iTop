@@ -66,7 +66,9 @@ class BsSelectObjectFieldRenderer extends FieldRenderer
 			}
 			$oOutput->AddHtml('<div class="help-block"></div>');
 			// - As a select
-			if ($iFieldControlType === SelectObjectField::CONTROL_SELECT)
+			// TODO : This should be changed when we do the radio button display. For now we display everything with select
+			//if ($iFieldControlType === SelectObjectField::CONTROL_SELECT)
+			if (true)
 			{
 				// Checking if regular select or autocomplete
 				$oSearch = $this->oField->GetSearch()->DeepClone();
