@@ -1,0 +1,15 @@
+{# itop-portal-base/portal/src/views/bricks/object/mode_loader.html.twig #}
+{# Modal loader layout #}
+{% extends 'itop-portal-base/portal/src/views/modal/layout.html.twig' %}
+
+{% block pModalContent %}
+	{% include 'itop-portal-base/portal/src/views/helpers/loader.html.twig' %}
+	
+	{% if redirection is defined and redirection.url is defined %}
+		<script type="text/javascript">
+			$(document).ready( function(){
+				window.location = '{{ redirection.url|raw }}';
+			});
+		</script>
+	{% endif %}
+{% endblock %}

@@ -335,6 +335,9 @@ class ObjectController extends AbstractController
 			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
+		// Retrieving request parameters
+		$sOperation = $oRequest->request->get('operation');
+		
 		// Preparing a dedicated form for the stimulus application
 		$aFormProperties = array(
 			'id' => 'apply-stimulus',
@@ -372,13 +375,38 @@ class ObjectController extends AbstractController
 			'url' => $oApp['url_generator']->generate('p_object_edit', array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId))
 		);
 
+		// TODO : This is a ugly patch to avoid showing a modal with a readonly form to the user as it would prevent user from finishing the transition.
+		// Instead, we apply the stimulus directly here and then go to the edited object.
+		if ($sOperation === null)
+		{
+			if (isset($aData['form']['editable_fields_count']) && $aData['form']['editable_fields_count'] === 0)
+			{
+				$sOperation = 'redirect';
+
+				$oSubRequest = $oRequest;
+				$oSubRequest->request->set('operation', 'submit');
+				$oSubRequest->request->set('stimulus_code', null);
+				
+				$aData = array('sMode' => 'apply_stimulus');
+				$aData['form'] = $this->HandleForm($oSubRequest, $oApp, $aData['sMode'], $sObjectClass, $sObjectId, $aFormProperties);
+				// Redefining the array to be as simple as possible :
+				$aData = array('redirection' =>
+					array('url' => $oApp['url_generator']->generate('p_object_edit', array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId)))
+				);
+			}
+		}
+
 		// Preparing response
 		if ($oRequest->isXmlHttpRequest())
 		{
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
-			if ($oRequest->request->get('operation') === null)
+			if ($sOperation === null)
 			{
 				$oResponse = $oApp['twig']->render('itop-portal-base/portal/src/views/bricks/object/modal.html.twig', $aData);
+			}
+			elseif ($sOperation === 'redirect')
+			{
+				$oResponse = $oApp['twig']->render('itop-portal-base/portal/src/views/modal/mode_loader.html.twig', $aData);
 			}
 			else
 			{
