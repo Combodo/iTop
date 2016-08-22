@@ -1130,9 +1130,9 @@
 					</fields>
 					<!-- Optional tag to add attributes to the table by their code -->
 					<grouping>
-						<!-- Optionnal -->
+						<!-- Mandatory -->
 						<tabs>
-							<!-- Optionnal. Grouping by tabs -->
+							<!-- Mandatory. Grouping by tabs -->
 							<!--<attribute>operational_status</attribute>-->
 							<!-- attribute xor groups tag -->
 							<groups>
@@ -1169,7 +1169,7 @@
 					<decoration_class>
 						<default>fc fc-closed-request fc-2x</default>
 					</decoration_class>
-					<oql><![CDATA[SELECT UserRequest WHERE org_id = :current_contact->org_id AND caller_id = :current_contact_id AND status = 'closed']]></oql>
+					<oql><![CDATA[SELECT Ticket WHERE org_id = :current_contact->org_id AND caller_id = :current_contact_id AND operational_status = 'closed']]></oql>
 					<!-- Can be either a class tag with the class name or an oql tag with the query -->
 					<!-- <class>Ticket</class> -->
 					<fields>
@@ -1181,6 +1181,18 @@
 						<field id="priority"/>
 						<field id="caller_id"/>
 					</fields>
+					<grouping>
+						<tabs>
+							<groups>
+								<group id="all">
+									<rank>1</rank>
+									<title>Brick:Portal:ClosedRequests:Title</title>
+									<condition><![CDATA[SELECT Ticket]]></condition>
+								</group>
+							</groups>
+						</tabs>
+						<!-- Implicit grouping on y axis by finalclass -->
+					</grouping>
 					<data_loading>auto</data_loading>
 				</brick>
 			</bricks>
