@@ -137,8 +137,7 @@ EOF
 					$sAutocompleteFieldId = 's_ac_' . $this->oField->GetGlobalId();
 					$sEndpoint = str_replace('-sMode-', 'autocomplete', $this->oField->GetSearchEndpoint());
 					$sNoResultText = Dict::S('Portal:Autocomplete:NoResult');
-					\IssueLog::Info('== Field #' . $this->oField->GetId());
-					\IssueLog::Info('    |- Endpoint : ' . $sEndpoint);
+					
 					// Retrieving field value
 					if (($this->oField->GetCurrentValue() !== null) && ($this->oField->GetCurrentValue() !== 0) && ($this->oField->GetCurrentValue() !== ''))
 					{
