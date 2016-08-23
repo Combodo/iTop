@@ -191,7 +191,8 @@ EOF;
 		$sJSDatePickerOptions = json_encode($aPickerOptions);
 		
 		// Time picker additional options
-		
+		$aPickerOptions['showOn'] = '';
+		$aPickerOptions['buttonImage'] = null;
 		$aPickerOptions['timeFormat'] = $oTimeFormat->ToDatePicker();
 		$aPickerOptions['controlType'] = 'select';
 		$aPickerOptions['closeText'] = 	Dict::S('UI:Button:Ok');
@@ -445,7 +446,28 @@ EOF
 	// End of Tabs handling
 
 	$(".date-pick").datepicker($sJSDatePickerOptions);
-	$(".datetime-pick").datetimepicker($sJSDateTimePickerOptions);	
+
+	// Hack for the date and time picker addon issue on Chrome (see #1305)
+	// The workaround is to instantiate the widget on demand
+	// It relies on the same markup, thus reverting to the original implementation should be straightforward
+	$(".datetime-pick").each(function(){
+		var oInput = this;
+		$('<img class="datetime-pick-button" src="../images/calendar.png">')
+			.insertAfter($(this))
+			.on('click', function(){
+				$(oInput)
+					.datetimepicker($sJSDateTimePickerOptions)
+					.datetimepicker('show')
+					.datetimepicker('option', 'onClose', function(dateText,inst){
+						$(oInput).datetimepicker('destroy');
+					})
+					.on('click keypress', function(){
+						$(oInput).datetimepicker('hide');
+					});
+				});
+		});
+
+	$(".datetime-pick-button")
 
 	// Make sortable, everything that claims to be sortable
 	$('.sortable').sortable( {axis: 'y', cursor: 'move', handle: '.drag_handle', stop: function()
