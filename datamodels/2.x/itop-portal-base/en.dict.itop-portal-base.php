@@ -41,7 +41,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Error:HTTP:GetHelp' => 'Please contact your iTop administrator if the problem keeps happening.',
 	'Error:XHR:Fail' => 'Could not load data, please contact your iTop administrator',
 	'Portal:Datatables:Language:Processing' => 'Please wait...',
-	'Portal:Datatables:Language:Search' => 'filter :',
+	'Portal:Datatables:Language:Search' => 'Filter:',
 	'Portal:Datatables:Language:LengthMenu' => 'Display _MENU_ items per page',
 	'Portal:Datatables:Language:ZeroRecords' => 'No result',
 	'Portal:Datatables:Language:Info' => 'Page _PAGE_ of _PAGES_',

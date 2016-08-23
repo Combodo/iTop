@@ -622,7 +622,7 @@
               <parent_att/>
               <name_att/>
               <tooltip_att/>
-              <title>Catégories</title>
+              <title>Class:FAQCategory</title>
               <actions/>
               <levels>
                 <level id="1">
@@ -630,7 +630,7 @@
                   <parent_att>category_id</parent_att>
                   <name_att>title</name_att>
                   <tooltip_att>summary</tooltip_att>
-                  <title>FAQs</title>
+                  <title>Class:FAQ</title>
                   <fields>
                     <field id="error_code"/>
 					<field id="key_words">
