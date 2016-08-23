@@ -280,18 +280,20 @@ class ObjectController extends AbstractController
 		// Retrieving target object (We check if the method is a simple function or if it's part of a class in which case only static function are supported)
 		if (!strpos($sMethodName, '::'))
 		{
-			$sTargetObject = $sMethodName($oOriginObject);
+			$oTargetObject = $sMethodName($oOriginObject);
 		}
 		else
 		{
 			$aMethodNameParts = explode('::', $sMethodName);
-			$sTargetObject = $aMethodNameParts[0]::$aMethodNameParts[1]($oOriginObject);
+			$sMethodClass = $aMethodNameParts[0];
+			$sMethodName = $aMethodNameParts[1];
+			$oTargetObject = $sMethodClass::$sMethodName($oOriginObject);
 		}
 
 		// Preparing redirection
 		// - Route
 		$aRouteParams = array(
-			'sObjectClass' => get_class($sTargetObject)
+			'sObjectClass' => get_class($oTargetObject)
 		);
 		$sRedirectRoute = $oApp['url_generator']->generate('p_object_create', $aRouteParams);
 		// - Request
