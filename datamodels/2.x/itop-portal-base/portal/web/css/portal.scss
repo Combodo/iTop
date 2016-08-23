@@ -857,7 +857,8 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 }
 @media (min-width: 768px){
 	.form_buttons .form_btn_transitions{
-		float: left !important;
+		float: right !important;
+		margin-left: 3px;
 	}
 	.form_buttons .form_btn_regular{
 		text-align: right;

@@ -8,7 +8,7 @@
 	{% if form.buttons is defined and form.buttons.links is defined %}
 		<div class="form_btn_transitions">
 			{% for aLink in form.buttons.links %}
-				<a class="btn btn-default" href="{{ aLink.url }}">{{ aLink.label }}</a>
+				<a class="btn btn-primary" href="{{ aLink.url }}">{{ aLink.label }}</a>
 			{% endfor %}
 		</div>
 	{% endif %}

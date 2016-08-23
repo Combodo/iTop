@@ -22,7 +22,7 @@
 	{# This block can be used to add your own meta tags by extending the default template #}
 	{% block pPageExtraMetas %}
 	{% endblock %}
-	<title>{% block pPageTitle %}{% if sPageTitle is defined and sPageTitle is not null %}{{ sPageTitle }} - iTop{% else %}{{ 'Page:DefaultTitle'|dict_s }}{% endif %}{% endblock %}</title>
+	<title>{% block pPageTitle %}{% if sPageTitle is defined and sPageTitle is not null %}{{ sPageTitle }} - {{ constant('ITOP_APPLICATION') }}{% else %}{{ 'Page:DefaultTitle'|dict_s }}{% endif %}{% endblock %}</title>
 	<link rel="shortcut icon" href="{{ app['combodo.absolute_url'] }}images/favicon.ico?itopversion=$ITOP_VERSION$" />
 	{% block pPageStylesheets %}
 		{# First bootstrap core, lib themes, then bootstrap theme, portal adjustements #}
@@ -260,12 +260,7 @@
 		<div class="modal fade" id="modal-for-all" role="dialog">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
-					<div class="content_loader">
-						<div class="icon glyphicon glyphicon-refresh"></div>
-						<div class="message">
-							{{ 'Page:PleaseWait'|dict_s }}
-						</div>
-					</div>
+					{% include 'itop-portal-base/portal/src/views/helpers/loader.html.twig' %}
 				</div>
 			</div>
 		</div>					
@@ -289,12 +284,7 @@
 
 		<div id="page_overlay" class="global_overlay">
 			<div class="overlay_content">
-				<div class="content_loader">
-					<div class="icon glyphicon glyphicon-refresh"></div>
-					<div class="message">
-						{{ 'Page:PleaseWait'|dict_s }}
-					</div>
-				</div>
+				{% include 'itop-portal-base/portal/src/views/helpers/loader.html.twig' %}
 			</div>
 		</div>
 	{% endblock %}

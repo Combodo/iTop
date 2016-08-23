@@ -816,7 +816,8 @@ table .group-actions {
 @media (min-width: 768px) {
   /* Making regular button sticky */
   .form_buttons .form_btn_transitions {
-    float: left !important;
+    float: right !important;
+    margin-left: 3px;
   }
   .form_buttons .form_btn_regular {
     text-align: right;

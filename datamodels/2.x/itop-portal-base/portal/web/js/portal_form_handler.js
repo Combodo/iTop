@@ -171,7 +171,13 @@ $(function()
 											oModalElem.attr('id', '').appendTo('body');
 											// Loading content
 											oModalElem.find('.modal-content').html($('#page_overlay .overlay_content').html());
-											oModalElem.find('.modal-content').load(sUrl);
+											oModalElem.find('.modal-content').load(sUrl, {
+													// Passing formmanager data to the next page, just in case it needs it (eg. when applying stimulus)
+													formmanager_class: me.options.formmanager_class,
+													formmanager_data: JSON.stringify(me.options.formmanager_data)
+												}
+											);
+											
 											oModalElem.modal('show');
 										}
 										else

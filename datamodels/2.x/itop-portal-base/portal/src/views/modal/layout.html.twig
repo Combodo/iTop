@@ -1,12 +1,14 @@
 {# modal/layout.html.twig #}
 {# Base modal layout, used to fill Bootstrap .modal-content #}
-<div class="modal-header">
-	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-	<h4 class="modal-title">{% block pModalTitle %}{% endblock %}</h4>
-</div>
-<div class="modal-body">{% block pModalBody %}{% endblock %}</div>
-<div class="modal-footer">
-	{% block pModalFooter %}
-		<button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Portal:ButtonClose'|dict_s }}</button>
-	{% endblock %}
-</div>
+{% block pModalContent %}
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h4 class="modal-title">{% block pModalTitle %}{% endblock %}</h4>
+	</div>
+	<div class="modal-body">{% block pModalBody %}{% endblock %}</div>
+	<div class="modal-footer">
+		{% block pModalFooter %}
+			<button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Portal:ButtonClose'|dict_s }}</button>
+		{% endblock %}
+	</div>
+{% endblock %}
