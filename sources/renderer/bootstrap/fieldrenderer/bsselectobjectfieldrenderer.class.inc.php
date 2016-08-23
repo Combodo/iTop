@@ -74,7 +74,9 @@ class BsSelectObjectFieldRenderer extends FieldRenderer
 				$oSearch = $this->oField->GetSearch()->DeepClone();
 				$oCountSet = new DBObjectSet($oSearch);
 				$iSetCount = $oCountSet->Count();
-				$bRegularSelect = ($iSetCount <= $this->oField->GetMaximumComboLength());
+				// Note : Autocomplete/Search is disabled for template fields as they are not external keys, thus they will just be displayed as regular select.
+				//$bRegularSelect = ($iSetCount <= $this->oField->GetMaximumComboLength());
+				$bRegularSelect = ( ($iSetCount <= $this->oField->GetMaximumComboLength()) || ($this->oField->GetSearchEndpoint() === null) || ($this->oField->GetSearchEndpoint() === '') );
 				unset($oCountSet);
 				
 				// - For regular select
@@ -135,9 +137,10 @@ EOF
 					$sAutocompleteFieldId = 's_ac_' . $this->oField->GetGlobalId();
 					$sEndpoint = str_replace('-sMode-', 'autocomplete', $this->oField->GetSearchEndpoint());
 					$sNoResultText = Dict::S('Portal:Autocomplete:NoResult');
-
+					\IssueLog::Info('== Field #' . $this->oField->GetId());
+					\IssueLog::Info('    |- Endpoint : ' . $sEndpoint);
 					// Retrieving field value
-					if ($this->oField->GetCurrentValue() !== null && $this->oField->GetCurrentValue() !== 0)
+					if (($this->oField->GetCurrentValue() !== null) && ($this->oField->GetCurrentValue() !== 0) && ($this->oField->GetCurrentValue() !== ''))
 					{
 						try
 						{
