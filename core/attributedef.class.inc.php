@@ -2116,6 +2116,41 @@ class AttributeFinalClass extends AttributeString
 		}
 	}
 
+	/**
+	 * An enum can be localized
+	 */
+	public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
+	{
+		if ($bLocalizedValue)
+		{
+			// Lookup for the value matching the input
+			//
+			$sFoundValue = null;
+			$aRawValues = self::GetAllowedValues();
+			if (!is_null($aRawValues))
+			{
+				foreach ($aRawValues as $sKey => $sValue)
+				{
+					if ($sProposedValue == $sValue)
+					{
+						$sFoundValue = $sKey;
+						break;
+					}
+				}
+			}
+			if (is_null($sFoundValue))
+			{
+				return null;
+			}
+			return $this->MakeRealValue($sFoundValue, null);
+		}
+		else
+		{
+			return parent::MakeValueFromString($sProposedValue, $bLocalizedValue, $sSepItem, $sSepAttribute, $sSepValue, $sAttributeQualifier);
+		}
+	}
+
+
 	// Because this is sometimes used to get a localized/string version of an attribute...
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
