@@ -516,6 +516,38 @@ class ObjectFormManager extends FormManager
 							$oField->SetInformationEndpoint($this->oApp['url_generator']->generate('p_object_get_informations_json'));
 						}
 					}
+					// - Field that require processing on their subfields
+					if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\SubFormField')))
+					{
+						$oSubForm = $oField->GetForm();
+						if ($oAttDef->GetEditClass() === 'CustomFields')
+						{
+							// Retrieving only user data fields (not the metadata fields of the template)
+							if ($oSubForm->HasField('user_data'))
+							{
+								$oUserDataField = $oSubForm->GetField('user_data');
+								$oUserDataForm = $oUserDataField->GetForm();
+								foreach ($oUserDataForm->GetFields() as $oCustomField)
+								{
+									// - Field that require a search endpoint (OQL based dropdown list fields)
+									if (in_array(get_class($oCustomField), array('Combodo\\iTop\\Form\\Field\\SelectObjectField')))
+									{
+										if ($this->oApp !== null)
+										{
+
+											$sSearchEndpoint = $this->oApp['url_generator']->generate('p_object_search_generic', array(
+												'sTargetAttCode' => $oAttDef->GetCode(),
+												'sHostObjectClass' => get_class($this->oObject),
+												'sHostObjectId' => ($this->oObject->IsNew()) ? null : $this->oObject->GetKey(),
+												'ar_token' => $this->GetActionRulesToken(),
+											));
+											$oCustomField->SetSearchEndpoint($sSearchEndpoint);
+										}
+									}
+								}
+							}
+						}
+					}
 				}
 				else
 				{
