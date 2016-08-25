@@ -97,7 +97,7 @@
 									break;
 								case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
 									url = levelPrimaryAction.url.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
-									url = addParameterToUrl(url, 'ar_token', data.action_rules_token[levelPrimaryAction.type]);
+									url = AddParameterToUrl(url, 'ar_token', data.action_rules_token[levelPrimaryAction.type]);
 									cellElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
 									break;
 								default:
@@ -150,7 +150,7 @@
 											break;
 										case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
 											url = action.url.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
-											url = addParameterToUrl(url, 'ar_token', data.action_rules_token[action.type]);
+											url = AddParameterToUrl(url, 'ar_token', data.action_rules_token[action.type]);
 											actionElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
 											break;
 										default:

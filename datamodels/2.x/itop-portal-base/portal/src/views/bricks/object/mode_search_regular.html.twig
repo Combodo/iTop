@@ -92,7 +92,7 @@
 	
 	$(document).ready(function(){
 		showTableLoader();
-
+		
 		// Note : Those options should be externalized in an library so we can use them on any DataTables for the portal.
 		// We would just have to override / complete the necessary elements
 		oTable = $('#{{ sTableId }}').DataTable({
@@ -170,6 +170,24 @@
 						// Retrieving values from source form
 						d.current_values = $('[data-form-path="{{aSource.sFormPath}}"][data-field-id="{{aSource.sFieldId}}"]').closest('.portal_form_handler').portal_form_handler('getCurrentValues');
 					{% endif %}
+				},
+				"error": function(oData, sError, sThrow){
+					if(oData.responseJSON !== undefined && oData.responseJSON !== null)
+					{
+						var oResponse = oData.responseJSON;
+						// If we encounter an error
+						if(oResponse.exception !== undefined)
+						{
+							// Note : This could be refactored for a global use
+							$('#{{ sTableId }}').closest('.modal').html( $('#modal-for-alert').html() );
+							var oModalElem = $('#{{ sTableId }}').closest('.modal');
+							oModalElem.find('.modal-title').html(oResponse.error_title);
+							oModalElem.find('.modal-body .alert').html(oResponse.error_message)
+									.removeClass('alert-success alert-info alert-warning alert-danger')
+									.addClass('alert-danger');
+							oModalElem.modal('show');
+						}
+					}
 				}
 			}
 		});
