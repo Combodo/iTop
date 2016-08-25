@@ -643,6 +643,8 @@ class ObjectController extends AbstractController
 
 		// Retrieving parameters
 		$sQuery = $aRequestContent['sQuery'];
+		$sFormPath = $aRequestContent['sFormPath'];
+		$sFieldId = $aRequestContent['sFieldId'];
 
 		// Checking security layers
 		if (!SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sHostObjectClass, $sHostObjectId))
@@ -695,20 +697,52 @@ class ObjectController extends AbstractController
 		// Building search query
 		// - Retrieving target object class from attcode
 		$oTargetAttDef = MetaModel::GetAttributeDef($sHostObjectClass, $sTargetAttCode);
-		$sTargetObjectClass = $oTargetAttDef->GetTargetClass();
+		if ($oTargetAttDef->GetEditClass() === 'CustomFields')
+		{
+			$oRequestTemplate = $oHostObject->Get($sTargetAttCode);
+			$oTemplateFieldSearch = $oRequestTemplate->GetForm()->GetField('user_data')->GetForm()->GetField($sFieldId)->GetSearch();
+			$sTargetObjectClass = $oTemplateFieldSearch->GetClass();
+		}
+		elseif ($oTargetAttDef->IsLinkSet())
+		{
+			throw new Exception('Search autocomplete cannot apply on AttributeLinkedSet objects, ' . get_class($oTargetAttDef) . ' (' . $sHostObjectClass . '->' . $sTargetAttCode . ') given.');
+		}
+		else
+		{
+			$sTargetObjectClass = $oTargetAttDef->GetTargetClass();
+		}
 		// - Base query from meta model
-		$oSearch = DBSearch::FromOQL($oTargetAttDef->GetValuesDef()->GetFilterExpression());
+		if ($oTargetAttDef->GetEditClass() === 'CustomFields')
+		{
+			$oSearch = $oTemplateFieldSearch;
+		}
+		else
+		{
+			$oSearch = DBSearch::FromOQL($oTargetAttDef->GetValuesDef()->GetFilterExpression());
+		}
 		// - Adding query condition
 		$oSearch->AddConditionExpression(new BinaryExpression(new FieldExpression('friendlyname', $oSearch->GetClassAlias()), 'LIKE', new VariableExpression('ac_query')));
 		// - Intersecting with scope constraints
-		$oSearch = $oSearch->Intersect($oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ));
-		
+		// Note : This do NOT apply to custom fields as the portal administrator is not supposed to know which objects will be put in the templates.
+		// It is the responsability of the template designer to write the right query so the user see only what he should.
+		if ($oTargetAttDef->GetEditClass() !== 'CustomFields')
+		{
+			$oSearch = $oSearch->Intersect($oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ));
+		}
+
 		// Retrieving results
 		// - Preparing object set
 		$oSet = new DBObjectSet($oSearch, array(), array('this' => $oHostObject, 'ac_query' => '%' . $sQuery . '%'));
 		$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array('friendlyname')));
 		// Note : This limit is also used in the field renderer by typeahead to determine how many suggestions to display
-		$oSet->SetLimit($oTargetAttDef->GetMaximumComboLength()); // TODO : Is this the right limit value ? We might want to use another parameter
+		if ($oTargetAttDef->GetEditClass() === 'CustomFields')
+		{
+			$oSet->SetLimit(static::DEFAULT_COUNT_PER_PAGE_LIST);
+		}
+		else
+		{
+			$oSet->SetLimit($oTargetAttDef->GetMaximumComboLength()); // TODO : Is this the right limit value ? We might want to use another parameter
+		}
 		// - Retrieving objects
 		while ($oItem = $oSet->Fetch())
 		{
