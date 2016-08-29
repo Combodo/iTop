@@ -545,7 +545,7 @@ class BrowseBrickController extends BrickController
 			$aRow[$key] = array(
 				'level_alias' => $key,
 				'id' => $value->GetKey(),
-				'name' => $value->GetAsHTML($aLevelsProperties[$key]['name_att']),
+				'name' => $value->Get($aLevelsProperties[$key]['name_att']),
 				'class' => get_class($value),
 				'action_rules_token' => static::PrepareActionRulesForItem($value, $key, $aLevelsProperties)
 			);
@@ -561,7 +561,7 @@ class BrowseBrickController extends BrickController
 				$aRow[$key]['fields'] = array();
 				foreach ($aLevelsProperties[$key]['fields'] as $aField)
 				{
-					$aRow[$key]['fields'][$aField['code']] = $value->GetAsHTML($aField['code']);
+					$aRow[$key]['fields'][$aField['code']] = $value->Get($aField['code']);
 				}
 			}
 		}
@@ -610,7 +610,7 @@ class BrowseBrickController extends BrickController
 			$aItems[$sCurrentIndex] = array(
 				'level_alias' => $aCurrentRowKeys[0],
 				'id' => $aCurrentRowValues[0]->GetKey(),
-				'name' => $aCurrentRowValues[0]->GetAsHTML($aLevelsProperties[$aCurrentRowKeys[0]]['name_att']),
+				'name' => $aCurrentRowValues[0]->Get($aLevelsProperties[$aCurrentRowKeys[0]]['name_att']),
 				'class' => get_class($aCurrentRowValues[0]),
 				'subitems' => array(),
 				'action_rules_token' => static::PrepareActionRulesForItem($aCurrentRowValues[0], $aCurrentRowKeys[0], $aLevelsProperties)
