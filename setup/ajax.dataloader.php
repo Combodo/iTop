@@ -47,6 +47,7 @@ require_once(APPROOT.'/setup/setuppage.class.inc.php');
 require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
 
 ini_set('max_execution_time', max(3600, ini_get('max_execution_time'))); // Under Windows SQL/backup operations are part of the timeout and require extra time
+date_default_timezone_set('Europe/Paris'); // Just to avoid a warning if the timezone is not set in php.ini
 
 $sMemoryLimit = trim(ini_get('memory_limit'));
 if (empty($sMemoryLimit))
