@@ -389,7 +389,7 @@ class ManageBrickController extends BrickController
 					}
 					else
 					{
-						$sValue = $oCurrentRow->GetAsHTML($sItemAttr);
+						$sValue = $oCurrentRow->Get($sItemAttr);
 					}
 					unset($oAttDef);
 
