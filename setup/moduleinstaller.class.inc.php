@@ -110,6 +110,11 @@ abstract class ModuleInstallerAPI
 	{
 		try
 		{
+			if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
+			{
+				SetupPage::log_warning("Changing enum in DB - $sClass::$sAttCode - from '$sFrom' to '$sTo' failed. Reason '$sAttCode' is not a valid attribute of the class '$sClass'.");
+				return;
+			}
 			$sOriginClass = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
 			$sTableName = MetaModel::DBGetTable($sOriginClass);
 	
