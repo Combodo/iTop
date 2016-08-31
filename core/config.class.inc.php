@@ -246,7 +246,7 @@ class Config
 		),
 		'access_mode' => array(
 			'type' => 'integer',
-			'description' => 'Combination of flags (ACCESS_USER_WRITE | ACCESS_ADMIN_WRITE, or ACCESS_FULL)',
+			'description' => 'Access mode: ACCESS_READONLY = 0, ACCESS_ADMIN_WRITE = 2, ACCESS_FULL = 3',
 			'default' => ACCESS_FULL,
 			'value' => ACCESS_FULL,
 			'source_of_value' => '',
