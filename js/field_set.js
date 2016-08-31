@@ -131,7 +131,10 @@ $(function()
 				}
 				else
 				{
-					console.log('Field set : Cannot retrieve current value from field [' + this.options.field_identifier_attr + '="' + oField.id + '"][data-form-path="' + this.options.form_path + '"] as it seems to have no itop.form_field widget attached.');
+					if(window.console)
+					{
+						console.log('Field set : Cannot retrieve current value from field [' + this.options.field_identifier_attr + '="' + oField.id + '"][data-form-path="' + this.options.form_path + '"] as it seems to have no itop.form_field widget attached.');
+					}
 				}
 			}
 			

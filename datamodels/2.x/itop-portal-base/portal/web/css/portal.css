@@ -267,6 +267,10 @@ footer {
 .mfp-wrap {
   z-index: 1210;
 }
+.mfp-img {
+  cursor: pointer;
+  cursor: zoom-out;
+}
 /********************/
 /* Typeahed setting */
 /********************/
@@ -602,6 +606,11 @@ table .group-actions {
   color: #ea7d1e;
   font-size: 0.9em;
 }
+/* InlineImage */
+.inline-image {
+  cursor: pointer;
+  cursor: zoom-in;
+}
 /* CaseLog field */
 .caselog_field_entry {
   border: 1px solid #ddd;
@@ -622,6 +631,7 @@ table .group-actions {
   font-size: 16px;
   border: 1px solid #a6a6a6;
   border-bottom-color: #979797;
+  cursor: pointer;
 }
 .caselog_field_entry_button:hover {
   background-color: #ccc;
@@ -885,6 +895,10 @@ table .group-actions {
   background-color: #fcf8e3;
   border-color: #fbeed5;
   color: #c09853;
+}
+/* CKEditor : Misc */
+.cke_toolbox_collapser, .cke_toolbox_collapser .cke_arrow {
+  cursor: pointer !important;
 }
 /* DataTables : Selection inputs */
 .dataTable.table th span.row_input, .dataTable.table td span.row_input {
