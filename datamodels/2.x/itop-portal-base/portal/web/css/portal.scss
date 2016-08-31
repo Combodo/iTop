@@ -282,6 +282,10 @@ footer{
 .mfp-wrap{
 	z-index: 1210;
 }
+.mfp-img{
+	cursor: pointer;
+	cursor: zoom-out;
+}
 
 /********************/
 /* Typeahed setting */
@@ -640,6 +644,11 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	color: $brand-primary;
 	font-size: 0.9em;
 }
+/* InlineImage */
+.inline-image{
+	cursor: pointer;
+	cursor: zoom-in;
+}
 /* CaseLog field */
 .caselog_field_entry{
 	border: 1px solid $gray-lighter;
@@ -660,6 +669,7 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	font-size: 16px;
     border: 1px solid #a6a6a6;
     border-bottom-color: #979797;
+	cursor: pointer;
 }
 .caselog_field_entry_button:hover{
 	background-color: #cccccc;
@@ -927,6 +937,11 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
     background-color: $alert-warning-bg;
     border-color: $alert-warning-border;
     color: $alert-warning-text;
+}
+/* CKEditor : Misc */
+.cke_toolbox_collapser,
+.cke_toolbox_collapser .cke_arrow{
+	cursor: pointer !important;
 }
 
 /* DataTables : Selection inputs */
