@@ -51,11 +51,8 @@ require_once(APPROOT.'application/utils.inc.php');
 // Load the modules installed and enabled
 //
 $oConfig = utils::GetConfig();
-$aFiles = $oConfig->GetWebServiceCategories();
-foreach ($aFiles as $sFile)
-{
-	require_once(APPROOT.$sFile);
-}
+
+require_once(APPROOT.'webservices/webservices.basic.php');
 
 if (isset($_REQUEST['service_category']) && (!empty($_REQUEST['service_category'])))
 {
