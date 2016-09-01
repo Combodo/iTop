@@ -32,6 +32,7 @@ use \IssueLog;
 use \MetaModel;
 use \DBSearch;
 use \DBObjectSearch;
+use \FalseExpression;
 use \BinaryExpression;
 use \FieldExpression;
 use \VariableExpression;
@@ -39,6 +40,8 @@ use \ListExpression;
 use \ScalarExpression;
 use \DBObjectSet;
 use \cmdbAbstractObject;
+use \AttributeEnum;
+use \AttributeFinalClass;
 use \UserRights;
 use \Combodo\iTop\Portal\Helper\ApplicationHelper;
 use \Combodo\iTop\Portal\Helper\SecurityHelper;
@@ -873,7 +876,7 @@ class ObjectController extends AbstractController
 		// - Retrieving class attribute list
 		$aAttCodes = ApplicationHelper::GetLoadedListFromClass($oApp, $sTargetObjectClass, 'list');
 		// - Adding friendlyname attribute to the list is not already in it
-		$sTitleAttCode = MetaModel::GetFriendlyNameAttributeCode($sTargetObjectClass);
+		$sTitleAttCode = 'friendlyname';
 		if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodes))
 		{
 			$aAttCodes = array_merge(array($sTitleAttCode), $aAttCodes);
@@ -928,7 +931,35 @@ class ObjectController extends AbstractController
 				$oAttDef = MetaModel::GetAttributeDef($sTargetObjectClass, $aAttCodes[$i]);
 				$sAttCode = (!$oAttDef->IsExternalKey()) ? $aAttCodes[$i] : $aAttCodes[$i] . '_friendlyname';
 				// Building expression for the current attcode
-				$oBinExpr = new BinaryExpression(new FieldExpression($sAttCode, $oSearch->GetClassAlias()), 'LIKE', new VariableExpression('re_query'));
+				// - For attributes that need conversion from their display value to storage value
+				//   Note : This is dirty hack that will need to be refactored in the OQL core in order to be nicer and to be extended to other types such as dates etc...
+				if (($oAttDef instanceof AttributeEnum) || ($oAttDef instanceof AttributeFinalClass))
+				{
+					// Looking up storage value
+					$aMatchedCodes = array();
+					foreach ($oAttDef->GetAllowedValues() as $sValueCode => $sValueLabel)
+					{
+						if (stripos($sValueLabel, $sQuery) !== false)
+						{
+							$aMatchedCodes[] = $sValueCode;
+						}
+					}
+					// Building expression
+					if (!empty($aMatchedCodes))
+					{
+						$oEnumeratedListExpr = ListExpression::FromScalars($aMatchedCodes);
+						$oBinExpr = new BinaryExpression(new FieldExpression($sAttCode, $oSearch->GetClassAlias()), 'IN', $oEnumeratedListExpr);
+					}
+					else
+					{
+						$oBinExpr = new FalseExpression();
+					}
+				}
+				// - For regular attributs
+				else
+				{
+					$oBinExpr = new BinaryExpression(new FieldExpression($sAttCode, $oSearch->GetClassAlias()), 'LIKE', new VariableExpression('re_query'));
+				}
 				// Adding expression to the full expression (all attcodes)
 				if ($i === 0)
 				{
@@ -1123,7 +1154,7 @@ class ObjectController extends AbstractController
 //		// - Retrieving class attribute list
 //		$aAttCodes = MetaModel::FlattenZList(MetaModel::GetZListItems($sTargetObjectClass, 'list'));
 //		// - Adding friendlyname attribute to the list is not already in it
-//		$sTitleAttrCode = MetaModel::GetFriendlyNameAttributeCode($sTargetObjectClass);
+//		$sTitleAttrCode = 'friendlyname';
 //		if (($sTitleAttrCode !== null) && !in_array($sTitleAttrCode, $aAttCodes))
 //		{
 //			$aAttCodes = array_merge(array($sTitleAttrCode), $aAttCodes);

@@ -571,7 +571,7 @@ class ObjectFormManager extends FormManager
 						// Note : This snippet is inspired from AttributeLinkedSet::MakeFormField()
 						$aAttCodesToDisplay = ApplicationHelper::GetLoadedListFromClass($this->oApp, $oField->GetTargetClass(), 'list');
 						// - Adding friendlyname attribute to the list is not already in it
-						$sTitleAttCode = MetaModel::GetFriendlyNameAttributeCode($oField->GetTargetClass());
+						$sTitleAttCode = 'friendlyname';
 						if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodesToDisplay))
 						{
 							$aAttCodesToDisplay = array_merge(array($sTitleAttCode), $aAttCodesToDisplay);

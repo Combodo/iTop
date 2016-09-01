@@ -306,7 +306,7 @@ class ManageBrickController extends BrickController
 		{
 			// Set properties
 			$sCurrentClass = $sKey;
-			$sTitleAttrCode = MetaModel::GetFriendlyNameAttributeCode($sCurrentClass);
+			$sTitleAttrCode = 'friendlyname';
 
 			// Getting area columns properties
 			$aColumnsAttrs = $oBrick->GetFields();
@@ -389,7 +389,7 @@ class ManageBrickController extends BrickController
 					}
 					else
 					{
-						$sValue = $oCurrentRow->Get($sItemAttr);
+						$sValue = $oAttDef->GetValueLabel($oCurrentRow->Get($sItemAttr));
 					}
 					unset($oAttDef);
 
