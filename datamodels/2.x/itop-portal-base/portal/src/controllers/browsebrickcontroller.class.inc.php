@@ -561,7 +561,8 @@ class BrowseBrickController extends BrickController
 				$aRow[$key]['fields'] = array();
 				foreach ($aLevelsProperties[$key]['fields'] as $aField)
 				{
-					$aRow[$key]['fields'][$aField['code']] = $value->Get($aField['code']);
+					$oAttDef = MetaModel::GetAttributeDef(get_class($value), $aField['code']);
+					$aRow[$key]['fields'][$aField['code']] = $oAttDef->GetValueLabel($value->Get($aField['code']));
 				}
 			}
 		}

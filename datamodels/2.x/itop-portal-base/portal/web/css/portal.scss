@@ -465,6 +465,10 @@ footer{
 .dataTables_wrapper{
 	padding: 10px 10px;
 }
+.dataTable.table td img{
+	max-width: 100%;
+	height: initial !important;
+}
 #brick_content_toolbar{
 	/* margin: 10px 0px 6px 0px; */
 	padding: 10px;
