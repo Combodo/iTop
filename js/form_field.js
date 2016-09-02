@@ -131,6 +131,7 @@ $(function()
 				}
 				
 				var bMandatory = (this.options.validators.mandatory !== undefined);
+				var bNotEmptyExtKey = (this.options.validators.notemptyextkey !== undefined);
 				var bEmpty = ($.isArray(oValue)) ? (oValue.length === 0) : (oValue === '' || oValue === undefined);
 				var value = oValue;
 				
@@ -141,6 +142,11 @@ $(function()
 				{
 					oResult.is_valid = false;
 					oResult.error_messages.push(this.options.validators.mandatory.message);
+				}
+				else if( bEmpty && bNotEmptyExtKey )
+				{
+					oResult.is_valid = false;
+					oResult.error_messages.push(this.options.validators.notemptyextkey.message);
 				}
 				// ... Field empty but not mandatory, no need to validate
 				else if( bEmpty && !bMandatory )
