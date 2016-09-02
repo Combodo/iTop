@@ -243,7 +243,7 @@ class Form
 	{
 		if (!array_key_exists($sId, $this->aFields))
 		{
-			throw new Exception('Field with ID "' . $sId . '" was not found in the Form.');
+			throw new Exception('Field with ID "' . $sId . '" was not found in the Form of ID "' . $this->sId . '".');
 		}
 		return $this->aFields[$sId];
 	}

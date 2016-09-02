@@ -152,6 +152,8 @@
 				"url": "{{ app.url_generator.generate('p_object_search_from_attribute', {'sTargetAttCode': sTargetAttCode, 'sHostObjectClass': sHostObjectClass, 'sHostObjectId': sHostObjectId, 'ar_token': sActionRulesToken})|raw }}",
 				"type": "POST",
 				"data": function(d){
+					d.sFormPath = '{{ aSource.sFormPath }}';
+					d.sFieldId = '{{ aSource.sFieldId }}';
 					d.aObjectIdsToIgnore = {{ aSource.aObjectIdsToIgnore|json_encode()|raw }};
 					d.iPageNumber = Math.floor(d.start/d.length) + 1;
 					d.iCountPerPage = d.length;

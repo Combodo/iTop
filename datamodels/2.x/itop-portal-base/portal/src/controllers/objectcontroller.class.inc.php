@@ -828,6 +828,12 @@ class ObjectController extends AbstractController
 				$sTargetObjectClass = $oRemoteAttDef->GetTargetClass();
 			}
 		}
+		elseif ($oTargetAttDef->GetEditClass() === 'CustomFields')
+		{
+			$oRequestTemplate = $oHostObject->Get($sTargetAttCode);
+			$oTemplateFieldSearch = $oRequestTemplate->GetForm()->GetField('user_data')->GetForm()->GetField($sFieldId)->GetSearch();
+			$sTargetObjectClass = $oTemplateFieldSearch->GetClass();
+		}
 		else
 		{
 			throw new Exception('Search from attribute can only apply on AttributeExternalKey or AttributeLinkedSet objects, ' . get_class($oTargetAttDef) . ' given.');
@@ -843,9 +849,11 @@ class ObjectController extends AbstractController
 		}
 
 		// - Retrieving scope search
+		// Note : This do NOT apply to custom fields as the portal administrator is not supposed to know which objects will be put in the templates.
+		// It is the responsability of the template designer to write the right query so the user see only what he should.
 		$oScopeSearch = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ);
 		$aInternalParams = array();
-		if ($oScopeSearch === null)
+		if (($oScopeSearch === null) && ($oTargetAttDef->GetEditClass() !== 'CustomFields'))
 		{
 			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' has no scope query for ' . $sTargetObjectClass . ' class.');
 			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
@@ -860,6 +868,11 @@ class ObjectController extends AbstractController
 		{
 			$oSearch = $oScopeSearch;
 		}
+		elseif ($oTargetAttDef->GetEditClass() === 'CustomFields')
+		{
+			// Note : $oTemplateFieldSearch has been defined in the "Retrieving target object class from attcode" part, it is not available otherwise
+			$oSearch = $oTemplateFieldSearch;
+		}
 
 		// - Filtering objects to ignore
 		if (($aObjectIdsToIgnore !== null) && (is_array($aObjectIdsToIgnore)))
@@ -872,7 +885,7 @@ class ObjectController extends AbstractController
 			}
 			$oSearch->AddConditionExpression(new BinaryExpression(new FieldExpression('id', $oSearch->GetClassAlias()), 'NOT IN', new ListExpression($aExpressions)));
 		}
-
+		
 		// - Adding query condition
 		$aInternalParams['this'] = $oHostObject;
 		if ($sQuery !== null)
@@ -929,7 +942,12 @@ class ObjectController extends AbstractController
 		}
 
 		// - Intersecting with scope constraints
-		$oSearch = $oSearch->Intersect($oScopeSearch);
+		// Note : This do NOT apply to custom fields as the portal administrator is not supposed to know which objects will be put in the templates.
+		// It is the responsability of the template designer to write the right query so the user see only what he should.
+		if (($oScopeSearch !== null) && ($oTargetAttDef->GetEditClass() !== 'CustomFields'))
+		{
+			$oSearch = $oSearch->Intersect($oScopeSearch);
+		}
 
 		// Retrieving results
 		// - Preparing object set
@@ -1007,7 +1025,7 @@ class ObjectController extends AbstractController
 					'sFormManagerData' => $sFormManagerData
 				)
 			);
-
+			
 			if ($oRequest->isXmlHttpRequest())
 			{
 				$oResponse = $oApp['twig']->render('itop-portal-base/portal/src/views/bricks/object/modal.html.twig', $aData);
