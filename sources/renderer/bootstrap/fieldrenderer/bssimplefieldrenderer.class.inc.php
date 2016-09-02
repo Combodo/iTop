@@ -211,8 +211,6 @@ EOF
 
 					case 'Combodo\\iTop\\Form\\Field\\StringField':
 					case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
-						$bEncodeHtmlEntities = (($sFieldClass === 'Combodo\\iTop\\Form\\Field\\TextAreaField') && ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML)) ? false : true;
-
 						$oOutput->AddHtml('<div class="form-group">');
 						// Showing label / value only if read-only but not hidden
 						if (!$this->oField->GetHidden())
@@ -221,7 +219,25 @@ EOF
 							{
 								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 							}
-							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetCurrentValue(), $bEncodeHtmlEntities)->AddHtml('</div>');
+
+							if($sFieldClass === 'Combodo\\iTop\\Form\\Field\\TextAreaField')
+							{
+								$bEncodeHtmlEntities = false;
+								if($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML)
+								{
+									$sDisplayValue = $this->oField->GetCurrentValue();
+								}
+								else
+								{
+									$sDisplayValue = utils::TextToHtml($this->oField->GetCurrentValue());
+								}
+							}
+							else
+							{
+								$bEncodeHtmlEntities = true;
+								$sDisplayValue = $this->oField->GetCurrentValue();
+							}
+							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($sDisplayValue, $bEncodeHtmlEntities)->AddHtml('</div>');
 						}
 						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" />');
 						$oOutput->AddHtml('</div>');
