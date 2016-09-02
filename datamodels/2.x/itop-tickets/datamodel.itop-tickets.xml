@@ -998,7 +998,7 @@
 						<default>fa fa-user fa-2x</default>
 					</decoration_class>
 					<form>
-						<!-- Optionnal tag to list the fields -->
+						<!-- Optionnal tag to list the fields. If empty only fields from <twig> tag will be displayed, if ommited fields from zlist details will. -->
 						<fields />
 						<!-- Optionnal tag to specify the form layout. Fields that are not positionned in the layout will be placed at the end of the form -->
 						<twig>
