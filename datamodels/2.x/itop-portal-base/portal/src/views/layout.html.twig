@@ -295,19 +295,22 @@
 			{
 				return '{{ app['combodo.absolute_url'] }}';
 			};
-			var addParameterToUrl = function(sUrl, sParamName, sParamValue)
+			var AddParameterToUrl = function(sUrl, sParamName, sParamValue)
 			{
 				sUrl += (sUrl.split('?')[1] ? '&':'?') + sParamName + '=' + sParamValue;
 				return sUrl;
 			};
-			var contentLoaderTemplate = '<div class="content_loader"><div class="icon glyphicon glyphicon-refresh"></div><div class="message">{{ 'Page:PleaseWait'|dict_s }}</div></div>';
+			var GetContentLoaderTemplate = function()
+			{
+				return '<div class="content_loader"><div class="icon glyphicon glyphicon-refresh"></div><div class="message">{{ 'Page:PleaseWait'|dict_s }}</div></div>';
+			}
 			
 			$(document).ready(function(){
 				{% block pPageReadyScripts %}
 					// Hack to enable a same modal to load content from different urls
 					$('body').on('hidden.bs.modal', '.modal#modal-for-all', function () {
 						$(this).removeData('bs.modal');
-						$(this).find('.modal-content').html(contentLoaderTemplate);
+						$(this).find('.modal-content').html(GetContentLoaderTemplate());
 					});
 					// Hack to enable multiple modals by making sure the .modal-open class is set to the <body> when there is at least one modal open left
 					$('body').on('hidden.bs.modal', function () {
@@ -325,7 +328,7 @@
 					$('body').on('loaded.bs.modal', function (oEvent) {
 						var sModalContent = $(oEvent.target).find('.modal-content').html();
 						
-						if( (sModalContent === '') || (sModalContent.replace(/[\n\r\t]+/g, '') === contentLoaderTemplate) )
+						if( (sModalContent === '') || (sModalContent.replace(/[\n\r\t]+/g, '') === GetContentLoaderTemplate()) )
 						{
 							$(oEvent.target).find('.modal-content').html($('#modal-for-alert .modal-content').html());
 							$(oEvent.target).find('.modal-content .modal-header .modal-title').text('{{ 'Error:HTTP:500'|dict_s }}');
