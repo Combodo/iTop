@@ -224,6 +224,8 @@ EOF
 									settings.contentType = "application/json; charset=UTF-8";
 									settings.data = {
 											sQuery: query,
+											sFormPath: '{$this->oField->GetFormPath()}',
+											sFieldId: '{$this->oField->GetId()}',
 											formmanager_class: $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").closest('.portal_form_handler').portal_form_handler('getOptions').formmanager_class,
 											formmanager_data: $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").closest('.portal_form_handler').portal_form_handler('getOptions').formmanager_data,
 											current_values: $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").closest('.portal_form_handler').portal_form_handler('getCurrentValues')
