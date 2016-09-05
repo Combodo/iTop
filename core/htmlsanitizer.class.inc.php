@@ -159,7 +159,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		'nav' => array('style'),
 		'section' => array('style'),
 		'code' => array('style'),
-		'table' => array('style', 'width'),
+		'table' => array('style', 'width', 'summary', 'align', 'border', 'cellpadding', 'cellspacing'),
 		'thead' => array('style'),
 		'tbody' => array('style'),
 		'tr' => array('style'),
@@ -183,6 +183,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		'hr' => array('style'),
 		'pre' => array(),
 		'center' => array(),
+		'caption' => array(),
 	);
 	
 	protected static $aAttrsWhiteList = array(
