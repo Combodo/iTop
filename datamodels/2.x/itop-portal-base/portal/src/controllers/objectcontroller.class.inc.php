@@ -506,9 +506,16 @@ class ObjectController extends AbstractController
 				->SetMode($sMode)
 				->SetActionRulesToken($sActionRulesToken)
 				->SetRenderer($oFormRenderer)
-				->SetFormProperties($aFormProperties)
-				->Build();
-			
+				->SetFormProperties($aFormProperties);
+
+			if ($sMode === 'apply_stimulus')
+			{
+				$aEditFormProperties = ApplicationHelper::GetLoadedFormFromClass($oApp, $sObjectClass, ObjectFormManager::ENUM_MODE_APPLY_STIMULUS);
+				$oFormManager->MergeFormProperties($aEditFormProperties);
+			}
+
+			$oFormManager->Build();
+
 			// Check the number of editable fields
 			$aFormData['editable_fields_count'] = $oFormManager->GetForm()->GetEditableFieldCount();
 		}

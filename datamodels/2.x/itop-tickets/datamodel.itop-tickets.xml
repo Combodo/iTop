@@ -1321,6 +1321,21 @@
 						<mode id="view"/>
 					</modes>
 				</form>
+				<form id="ticket-apply-stimulus">
+					<class>Ticket</class>
+					<fields />
+					<twig>
+						<div>
+							<div class="form_field" data-field-id="team_id" data-field-flags="read_only">
+							</div>
+							<div class="form_field" data-field-id="agent_id" data-field-flags="read_only">
+							</div>
+						</div>
+					</twig>
+					<modes>
+						<mode id="apply_stimulus"/>
+					</modes>
+				</form>
 				<form id="service-view">
 					<class>Service</class>
 					<fields></fields>
