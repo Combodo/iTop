@@ -4365,9 +4365,13 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 			$oTmpField = $oFormField;
 			$oFormField->SetOnFinalizeCallback(function() use ($oTmpField, $oTmpAttDef, $oObject)
 			{
-				$oSearch = DBSearch::FromOQL($oTmpAttDef->GetValuesDef()->GetFilterExpression());
-				$oSearch->SetInternalParams(array('this' => $oObject));
-				$oTmpField->SetSearch($oSearch);
+				// We set search object only if it has not already been set (overrided)
+				if ($oTmpField->GetSearch() === null)
+				{
+					$oSearch = DBSearch::FromOQL($oTmpAttDef->GetValuesDef()->GetFilterExpression());
+					$oSearch->SetInternalParams(array('this' => $oObject));
+					$oTmpField->SetSearch($oSearch);
+				}
 			});
 		}
 		else
