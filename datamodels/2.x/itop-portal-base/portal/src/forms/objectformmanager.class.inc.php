@@ -540,7 +540,7 @@ class ObjectFormManager extends FormManager
 							$oScopeSearch = $this->oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $oScopeOriginal->GetClass(), UR_ACTION_READ);
 							if ($oScopeSearch === null)
 							{
-								IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' has no scope query for ' . $sTargetObjectClass . ' class.');
+								IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' has no scope query for ' . $oScopeOriginal->GetClass() . ' class.');
 								$this->oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
 							}
 

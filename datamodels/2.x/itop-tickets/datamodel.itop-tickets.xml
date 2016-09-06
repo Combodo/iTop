@@ -1145,7 +1145,7 @@
 								<group id="resolved">
 									<rank>2</rank>
 									<title>Brick:Portal:OngoingRequests:Tab:Resolved</title>
-									<condition><![CDATA[SELECT Ticket AS T WHERE org_id = :current_contact->org_id AND operational_status = 'resolved']]></condition>
+									<condition><![CDATA[SELECT Ticket AS T WHERE operational_status = 'resolved']]></condition>
 								</group>
 							</groups>
 						</tabs>
@@ -1383,6 +1383,13 @@
 					<scopes>
 						<scope id="all">
 							<oql_view><![CDATA[SELECT Organization WHERE id = :current_contact->org_id]]></oql_view>
+						</scope>
+					</scopes>
+				</class>
+				<class id="Location">
+					<scopes>
+						<scope id="all">
+							<oql_view><![CDATA[SELECT Location WHERE org_id = :current_contact->org_id]]></oql_view>
 						</scope>
 					</scopes>
 				</class>
