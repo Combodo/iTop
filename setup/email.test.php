@@ -204,7 +204,7 @@ function DisplayStep2(SetupPage $oP, $sFrom, $sTo)
 	//$sNextOperation = 'step3';
 	$oP->add("<h1>iTop configuration wizard</h1>\n");
 	$oP->add("<h2>Step 2: send an email</h2>\n");
-	$oP->add("<p>Sending an email to '$sTo'... (From: '$sFrom')</p>\n");
+	$oP->add("<p>Sending an email to '".htmlentities($sTo, ENT_QUOTES, 'utf-8')."'... (From: '".htmlentities($sFrom, ENT_QUOTES, 'utf-8')."')</p>\n");
 	$oP->add("<form method=\"post\">\n");
 
 	$oEmail = new Email();
@@ -236,7 +236,7 @@ function DisplayStep2(SetupPage $oP, $sFrom, $sTo)
 		case EMAIL_SEND_ERROR:
 			foreach ($aIssues as $sError)
 			{
-				$oP->error($sError);
+				$oP->error(htmlentities($sError, ENT_QUOTES, 'utf-8'));
 			}
 			$oP->add("<button onClick=\"window.history.back();\"><< Back</button>\n");
 			break;
@@ -279,7 +279,7 @@ try
 }
 catch(Exception $e)
 {
-	$oP->error("Error: '".$e->getMessage()."'");	
+	$oP->error("Error: '".htmlentities($e->getMessage(), ENT_QUOTES, 'utf-8')."'");
 }
 catch(CoreException $e)
 {
