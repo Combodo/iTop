@@ -688,6 +688,7 @@ EOF
 							else
 							{
 								$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode)."</span>", 'comments' => $sComments, 'infos' => $sInfos);
+								$aFieldsMap[$sAttCode] = $sInputId;	
 							}
 						}
 						else
