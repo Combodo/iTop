@@ -29,6 +29,7 @@ use \MetaModel;
 use \CMDBSource;
 use \DBObject;
 use \DBObjectSet;
+use \DBSearch;
 use \DBObjectSearch;
 use \DBObjectSetComparator;
 use \InlineImage;
@@ -529,6 +530,25 @@ class ObjectFormManager extends FormManager
 							$oField->SetInformationEndpoint($this->oApp['url_generator']->generate('p_object_get_informations_json'));
 						}
 					}
+					// - Field that require to apply scope on its DM OQL
+					if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\SelectObjectField')))
+					{
+						if ($this->oApp !== null)
+						{
+							$oScopeOriginal = ($oField->GetSearch() !== null) ? $oField->GetSearch() : DBSearch::FromOQL($oAttDef->GetValuesDef()->GetFilterExpression());
+							
+							$oScopeSearch = $this->oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $oScopeOriginal->GetClass(), UR_ACTION_READ);
+							if ($oScopeSearch === null)
+							{
+								IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' has no scope query for ' . $sTargetObjectClass . ' class.');
+								$this->oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
+							}
+
+							$oScopeOriginal = $oScopeOriginal->Intersect($oScopeSearch);
+							$oScopeOriginal->SetInternalParams(array('this' => $this->oObject));
+							$oField->SetSearch($oScopeOriginal);
+						}
+					}
 					// - Field that require processing on their subfields
 					if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\SubFormField')))
 					{
@@ -986,7 +1006,7 @@ class ObjectFormManager extends FormManager
 						else
 						{
 							$this->oObject->Set($sAttCode, $value);
-					}
+						}
 					}
 				}
 				$this->oObject->DoComputeValues();
