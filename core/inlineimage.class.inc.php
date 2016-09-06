@@ -464,7 +464,7 @@ EOF
 			oEditor.on( 'instanceReady', function() {
 				if(!CKEDITOR.env.iOS && $('#'+oEditor.id+'_toolbox .editor_magnifier').length == 0)
 				{
-					$('#'+oEditor.id+'_toolbox').append('<span class="editor_magnifier" title="$sToggleFullScreen" style="display:block;width:12px;height:11px;border:1px #A6A6A6 solid;cursor:pointer; background-image:url('$sAppRootUrl/images/full-screen.png')">&nbsp;</span>');
+					$('#'+oEditor.id+'_toolbox').append('<span class="editor_magnifier" title="$sToggleFullScreen" style="display:block;width:12px;height:11px;border:1px #A6A6A6 solid;cursor:pointer; background-image:url(\\'$sAppRootUrl/images/full-screen.png\\')">&nbsp;</span>');
 					$('#'+oEditor.id+'_toolbox .editor_magnifier').on('click', function() {
 							oEditor.execCommand('maximize');
 							if ($(this).closest('.cke_maximized').length != 0)
