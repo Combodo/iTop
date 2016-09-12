@@ -350,6 +350,7 @@ class SynchroDataSource extends cmdbAbstractObject
 		ToggleSynoptics('#cw_obj_new_unchanged_warnings', aValues['obj_new_unchanged_warnings'] > 0);
 		ToggleSynoptics('#cw_obj_updated_warnings', aValues['obj_updated_warnings'] > 0);
 		ToggleSynoptics('#cw_obj_unchanged_warnings', aValues['obj_unchanged_warnings'] > 0);
+		$('#status_traces').html(aValues['traces']);
 	}
 EOF
 ;
@@ -401,6 +402,7 @@ EOF
 			$oPage->add($this->HtmlBox('obj_new_errors', $aData, '#C00', '', " <a style=\"color:#fff\" href=\"../synchro/replica.php?operation=oql&datasource=$iDSid&oql=$sOQL\" id=\"new_errors_link\">Show</a>"));
 			$oPage->add("</tr>\n</table>\n");
 			$oPage->add('</td></tr></table>');
+			$oPage->add('<div id="status_traces" style="overflow-x:auto"></div>');
 			$oPage->add_ready_script("UpdateSynoptics('$iLastLog')");
 		}
 		else
@@ -455,6 +457,14 @@ EOF
 		$aData['repl_ignored'] = $iIgnored;
 		$aData['nb_obj_total'] = $iNew + $iExisting + $iDisappeared;
 		$aData['nb_replica_total'] = $aData['nb_obj_total'] + $iIgnored;
+		if(strlen($oLastLog->Get('traces')) > 0)
+		{
+			$aData['traces'] = '<fieldset><legend>Debug traces</legend><pre>'.htmlentities($oLastLog->Get('traces'), ENT_QUOTES, 'UTF-8').'</pre></fieldset>';
+		}
+		else
+		{
+			$aData['traces'] = '';
+		}
 		return $aData;
 	}
 	
@@ -1667,6 +1677,7 @@ class SynchroReplica extends DBObject implements iDisplay
 	
 	public function Synchro($oDataSource, $aReconciliationKeys, $aAttributes, $oChange, &$oStatLog)
 	{
+		$oStatLog->AddTrace(">>> Beginning of SynchroReplica::Synchro, replica status is '".$this->Get('status')."'.", $this);
 		$this->ResetWarnings();
 		switch($this->Get('status'))
 		{
@@ -1699,11 +1710,14 @@ class SynchroReplica extends DBObject implements iDisplay
 					$oStatLog->AddTrace("Could not reconcile on null value for attribute '$sFilterCode'", $this);
 					$this->SetLastError("Could not reconcile on null value for attribute '$sFilterCode'");
 					$oStatLog->Inc('stats_nb_replica_reconciled_errors');
+					$oStatLog->AddTrace("<<< End of SyncroReplica::Synchro (error could not reconcile on null value for attribute '$sFilterCode').", $this);
 					return;
 				}
 			}
 			$oDestSet = new DBObjectSet(self::$aSearches[$oDataSource->GetKey()], array(), $aFilterValues);
 			$iCount = $oDestSet->Count();
+			$sDebugOQL = $oDestSet->GetFilter()->ToOQL(true);
+			$oStatLog->AddTrace("Reconciliation query: '$sDebugOQL' returned $iCount object(s).", $this);		
 			$aConditions = array();
 			foreach($aFilterValues as $sCode => $sValue)
 			{
@@ -1717,6 +1731,7 @@ class SynchroReplica extends DBObject implements iDisplay
 				$oStatLog->AddTrace("Nothing found on: $sConditionDesc", $this);
 				if ($oDataSource->Get('action_on_zero') == 'create')
 				{
+					$oStatLog->AddTrace("Calling CreateObjectFromReplica", $this);
 					$bCreated = $this->CreateObjectFromReplica($oDataSource->GetTargetClass(), $aAttributes, $oChange, $oStatLog);
 					if ($bCreated)
 					{
@@ -1745,6 +1760,7 @@ class SynchroReplica extends DBObject implements iDisplay
 				if ($oDataSource->Get('action_on_one') == 'update')
 				{
 					$oDestObj = $oDestSet->Fetch();
+					$oStatLog->AddTrace("Calling UpdateObjectFromReplica(".(get_class($oDestObj).'::'.$oDestObj->GetKey()).")", $this);
 					$bModified = $this->UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, $oStatLog, 'stats_nb_obj_new', 'stats_nb_replica_reconciled_errors');
 					$this->Set('dest_id', $oDestObj->GetKey());
 					$this->Set('dest_class', get_class($oDestObj));
@@ -1847,6 +1863,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			
 			default: // Do nothing in all other cases
 		}
+		$oStatLog->AddTrace("<<< End of SynchroReplica::Synchro.", $this);
 	}
 	
 	/**
@@ -2313,6 +2330,11 @@ class SynchroExecution
 		$this->m_oStatLog->Set('stats_nb_replica_total', $this->m_iCountAllReplicas);
 
 		$this->m_oStatLog->DBInsertTracked($this->m_oChange);
+		$sLastFullLoad = is_object($this->m_oLastFullLoadStartDate) ? $this->m_oLastFullLoadStartDate->format('Y-m-d H:i:s') : 'not specified';
+		$this->m_oStatLog->AddTrace("###### STARTING SYNCHRONIZATION ##### Total: {$this->m_iCountAllReplicas} replica(s). Last full load: '$sLastFullLoad' ");
+		$sSql = 'SELECT NOW();';
+		$sDBNow = CMDBSource::QueryToScalar($sSql);
+		$this->m_oStatLog->AddTrace("Database server current date/time is '$sDBNow', web server current date/time is: '".date('Y-m-d H:i:s')."'");		
 	}
 
 	/**
@@ -2649,6 +2671,7 @@ class SynchroExecution
 	 */
 	protected function DoJob1($iMaxReplica = null, $iCurrPos = -1)
 	{
+		$this->m_oStatLog->AddTrace(">>> Beginning of DoJob1(\$iMaxReplica = $iMaxReplica, \$iCurrPos = $iCurrPos)");
 		$sLimitDate = $this->m_oLastFullLoadStartDate->Format('Y-m-d H:i:s');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 
@@ -2659,6 +2682,8 @@ class SynchroExecution
 			$sSelectToObsolete  = "SELECT SynchroReplica WHERE id > :curr_pos AND sync_source_id = :source_id AND status IN ('new', 'synchronized', 'modified', 'orphan') AND status_last_seen < :last_import";
 			$oSetScope = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToObsolete), array() /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sLimitDate, 'curr_pos' => $iCurrPos));
 			$iCountScope = $oSetScope->Count();
+			$sDebugOql = $oSetScope->GetFilter()->ToOQL(true);
+			$this->m_oStatLog->AddTrace("Searching for replicas to mark as obsolete using query: '$sDebugOql', returned $iCountScope replica(s).");
 			if (($this->m_iCountAllReplicas > 10) && ($this->m_iCountAllReplicas == $iCountScope) && MetaModel::GetConfig()->Get('synchro_prevent_delete_all'))
 			{
 				throw new SynchroExceptionNotStarted(Dict::S('Core:SyncTooManyMissingReplicas'));
@@ -2728,6 +2753,7 @@ class SynchroExecution
 				{
 					// Continue with this job!
 					$this->m_oStatLog->Set('status_curr_pos', $iLastReplicaProcessed);
+					$this->m_oStatLog->AddTrace("<<< End of DoJob1(\$iMaxReplica = $iMaxReplica, \$iCurrPos = $iCurrPos) (returning true => more replicas to process)");
 					return true;
 				}
 			}
@@ -2742,6 +2768,7 @@ class SynchroExecution
 		// Job complete!
 		$this->m_oStatLog->Set('status_curr_job', 2);
 		$this->m_oStatLog->Set('status_curr_pos', -1);
+		$this->m_oStatLog->AddTrace("<<< End of DoJob1(\$iMaxReplica = $iMaxReplica, \$iCurrPos = $iCurrPos) (completed)");
 		return false;
 	}
 
@@ -2753,14 +2780,18 @@ class SynchroExecution
 	 */
 	protected function DoJob2($iMaxReplica = null, $iCurrPos = -1)
 	{
+		$this->m_oStatLog->AddTrace(">>> Beginning of DoJob2(\$iMaxReplica = $iMaxReplica, \$iCurrPos = $iCurrPos)");
 		$sLimitDate = $this->m_oLastFullLoadStartDate->Format('Y-m-d H:i:s');
+		$this->m_oStatLog->AddTrace("\$sLimitDate = '$sLimitDate'");
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		
+
 		// Get all the replicas that are 'new' or modified or synchronized with a warning
 		//
 		$sSelectToSync  = "SELECT SynchroReplica WHERE id > :curr_pos AND (status = 'new' OR status = 'modified' OR (status = 'synchronized' AND status_last_warning != '')) AND sync_source_id = :source_id AND status_last_seen >= :last_import";
 		$oSetScope = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToSync), array() /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sLimitDate, 'curr_pos' => $iCurrPos), $this->m_aExtDataSpec);
 		$iCountScope = $oSetScope->Count();
+		$sDebugOQL = $oSetScope->GetFilter()->ToOQL(true);
+		$this->m_oStatLog->AddTrace("Looking for - new, modified or synchonized with a warning - replicas using the OQL query: '$sDebugOQL', returned $iCountScope replicas.");
 
 		if ($iMaxReplica)
 		{
@@ -2779,7 +2810,9 @@ class SynchroExecution
 		{
 			set_time_limit($iLoopTimeLimit);
 			$iLastReplicaProcessed = $oReplica->GetKey();
+			$this->m_oStatLog->AddTrace("Synchronizing replica id=$iLastReplicaProcessed.");
 			$oReplica->Synchro($this->m_oDataSource, $this->m_aReconciliationKeys, $this->m_aAttributes, $this->m_oChange, $this->m_oStatLog);
+			$this->m_oStatLog->AddTrace("Updating replica id=$iLastReplicaProcessed.");
 			$oReplica->DBUpdateTracked($this->m_oChange);			
 		}
 		
@@ -2789,6 +2822,7 @@ class SynchroExecution
 			{
 				// Continue with this job!
 				$this->m_oStatLog->Set('status_curr_pos', $iLastReplicaProcessed);
+				$this->m_oStatLog->AddTrace("<<< End of DoJob2(\$iMaxReplica = $iMaxReplica, \$iCurrPos = $iCurrPos) (returning true => more replicas to process)");
 				return true;
 			}
 		}
@@ -2796,6 +2830,7 @@ class SynchroExecution
 		// Job complete!
 		$this->m_oStatLog->Set('status_curr_job', 3);
 		$this->m_oStatLog->Set('status_curr_pos', -1);
+		$this->m_oStatLog->AddTrace("<<< End of DoJob2(\$iMaxReplica = $iMaxReplica, \$iCurrPos = $iCurrPos) (completed)");
 		return false;
 	}
 
@@ -2807,14 +2842,17 @@ class SynchroExecution
 	 */
 	protected function DoJob3($iMaxReplica = null, $iCurrPos = -1)
 	{
+		$this->m_oStatLog->AddTrace(">>> Beginning of DoJob3(\$iMaxReplica = $iMaxReplica, \$iCurrPos = $iCurrPos)");
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		
 		$sDeletePolicy = $this->m_oDataSource->Get('delete_policy');
 		if ($sDeletePolicy != 'update_then_delete')
 		{
+			$this->m_oStatLog->AddTrace("\$sDeletePoliciy = $sDeletePolicy != 'update_then_delete', nothing to do!");
 			// Job complete!
 			$this->m_oStatLog->Set('status_curr_job', 0);
 			$this->m_oStatLog->Set('status_curr_pos', -1);
+			$this->m_oStatLog->AddTrace("<<< End of DoJob3(\$iMaxReplica = $iMaxReplica, \$iCurrPos = $iCurrPos) (completed)");
 			return false;
 		}
 
@@ -2865,12 +2903,14 @@ class SynchroExecution
 			{
 				// Continue with this job!
 				$this->m_oStatLog->Set('status_curr_pos', $iLastReplicaProcessed);
+				$this->m_oStatLog->AddTrace("<<< End of DoJob3\$iMaxReplica = $iMaxReplica, \$iCurrPos = $iCurrPos) (returning true => more replicas to process)");
 				return true;
 			}
 		}
 		// Job complete!
 		$this->m_oStatLog->Set('status_curr_job', 0);
 		$this->m_oStatLog->Set('status_curr_pos', -1);
+		$this->m_oStatLog->AddTrace("<<< End of DoJob3(\$iMaxReplica = $iMaxReplica, \$iCurrPos = $iCurrPos) (completed)");
 		return false;
 	}
 }
