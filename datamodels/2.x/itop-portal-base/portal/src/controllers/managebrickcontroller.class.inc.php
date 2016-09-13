@@ -59,6 +59,15 @@ class ManageBrickController extends BrickController
 		// Getting search value
 		$sSearchValue = $oRequest->get('sSearchValue', null);
 
+		// Getting area columns properties
+		$aColumnsAttrs = $oBrick->GetFields();
+		// Adding friendlyname attribute to the list is not already in it
+		$sTitleAttrCode = 'friendlyname';
+		if (($sTitleAttrCode !== null) && !in_array($sTitleAttrCode, $aColumnsAttrs))
+		{
+			$aColumnsAttrs = array_merge(array($sTitleAttrCode), $aColumnsAttrs);
+		}
+
 		// Starting to build query
 		$oQuery = DBSearch::FromOQL($oBrick->GetOql());
 
@@ -264,6 +273,7 @@ class ManageBrickController extends BrickController
 			// - Check how many records there is.
 			// - Update $sDataLoading with its new value regarding the number of record and the threshold
 			$oCountSet = new DBObjectSet($oQuery);
+			$oCountSet->OptimizeColumnLoad(array($oQuery->GetClassAlias() => $aColumnsAttrs));
 			$fThreshold = (float) MetaModel::GetModuleSetting($oApp['combodo.portal.instance.id'], 'lazy_loading_threshold');
 			$sDataLoading = ($oCountSet->Count() > $fThreshold) ? AbstractBrick::ENUM_DATA_LOADING_LAZY : AbstractBrick::ENUM_DATA_LOADING_FULL;
 			unset($oCountSet);
@@ -285,6 +295,7 @@ class ManageBrickController extends BrickController
 
 					// Getting total records number
 					$oCountSet = new DBObjectSet($oQuery);
+					$oCountSet->OptimizeColumnLoad(array($oQuery->GetClassAlias() => $aColumnsAttrs));
 					$aData['recordsTotal'] = $oCountSet->Count();
 					$aData['recordsFiltered'] = $oCountSet->Count();
 					unset($oCountSet);
@@ -296,6 +307,7 @@ class ManageBrickController extends BrickController
 				{
 					$oSet = new DBObjectSet($oQuery);
 				}
+				$oSet->OptimizeColumnLoad(array($oQuery->GetClassAlias() => $aColumnsAttrs));
 				$aSets[$sKey] = $oSet;
 			}
 		}
@@ -306,15 +318,7 @@ class ManageBrickController extends BrickController
 		{
 			// Set properties
 			$sCurrentClass = $sKey;
-			$sTitleAttrCode = 'friendlyname';
-
-			// Getting area columns properties
-			$aColumnsAttrs = $oBrick->GetFields();
-			// Adding friendlyname attribute to the list is not already in it
-			if (($sTitleAttrCode !== null) && !in_array($sTitleAttrCode, $aColumnsAttrs))
-			{
-				$aColumnsAttrs = array_merge(array($sTitleAttrCode), $aColumnsAttrs);
-			}
+			
 			// Defining which attribute will open the edition form)
 			$sMainActionAttrCode = $aColumnsAttrs[0];
 

@@ -259,7 +259,29 @@ class BrowseBrickController extends BrickController
 		{
 			$oSet = new DBObjectSet($oQuery);
 		}
-		
+
+		// Optimizing the ObjectSet to retrieve only necessary columns
+		$aColumnAttrs = array();
+		foreach ($oSet->GetFilter()->GetSelectedClasses() as $sTmpClassAlias => $sTmpClassName)
+		{
+			if (isset($aLevelsProperties[$sTmpClassAlias]))
+			{
+				$aTmpLevelProperties = $aLevelsProperties[$sTmpClassAlias];
+				// Mandatory main attribute
+				$aTmpColumnAttrs = array($aTmpLevelProperties['name_att']);
+				// Optionnal attributes, only if in list mode
+				if ($sBrowseMode === BrowseBrick::ENUM_BROWSE_MODE_LIST)
+				{
+					foreach ($aTmpLevelProperties['fields'] as $aTmpField)
+					{
+						$aTmpColumnAttrs[] = $aTmpField['code'];
+					}
+				}
+				$aColumnAttrs[$sTmpClassAlias] = $aTmpColumnAttrs;
+			}
+		}
+		$oSet->OptimizeColumnLoad($aColumnAttrs);
+
 		// Retrieving results and organizing them for templating
 		$aItems = array();
 		while ($aCurrentRow = $oSet->FetchAssoc())
