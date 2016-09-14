@@ -1767,10 +1767,10 @@ abstract class MetaModel
 						$oFriendlyName = new AttributeExternalField($sFriendlyNameAttCode, array("allowed_values"=>null, "extkey_attcode"=>$sKeyAttCode, "target_attcode"=>$sRemoteAttCode, "depends_on"=>array()));
 						$oFriendlyName->SetHostClass($sClass);
 						self::$m_aAttribDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyName;
-						self::$m_aAttribOrigins[$sClass][$sFriendlyNameAttCode] = $sRemoteClass;
+						self::$m_aAttribOrigins[$sClass][$sFriendlyNameAttCode] = self::$m_aAttribOrigins[$sClass][$sKeyAttCode];
 						$oFriendlyNameFlt = new FilterFromAttribute($oFriendlyName);
 						self::$m_aFilterDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyNameFlt;
-						self::$m_aFilterOrigins[$sClass][$sFriendlyNameAttCode] = $sRemoteClass;
+						self::$m_aFilterOrigins[$sClass][$sFriendlyNameAttCode] = self::$m_aFilterOrigins[$sClass][$sKeyAttCode];
 					}
 					else
 					{
@@ -1782,7 +1782,7 @@ abstract class MetaModel
 						self::$m_aAttribOrigins[$sClass][$sFriendlyNameAttCode] = self::$m_aAttribOrigins[$sClass][$sAttCode];
 						$oFriendlyNameFlt = new FilterFromAttribute($oFriendlyName);
 						self::$m_aFilterDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyNameFlt;
-						self::$m_aFilterOrigins[$sClass][$sFriendlyNameAttCode] = $sRemoteClass;
+						self::$m_aFilterOrigins[$sClass][$sFriendlyNameAttCode] = self::$m_aFilterOrigins[$sClass][$sAttCode];
 
 						if (self::HasChildrenClasses($sRemoteClass))
 						{
