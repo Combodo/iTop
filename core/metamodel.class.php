@@ -1779,7 +1779,7 @@ abstract class MetaModel
 						$oFriendlyName = new AttributeFriendlyName($sFriendlyNameAttCode, $sAttCode);
 						$oFriendlyName->SetHostClass($sClass);
 						self::$m_aAttribDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyName;
-						self::$m_aAttribOrigins[$sClass][$sFriendlyNameAttCode] = $sRemoteClass;
+						self::$m_aAttribOrigins[$sClass][$sFriendlyNameAttCode] = self::$m_aAttribOrigins[$sClass][$sAttCode];
 						$oFriendlyNameFlt = new FilterFromAttribute($oFriendlyName);
 						self::$m_aFilterDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyNameFlt;
 						self::$m_aFilterOrigins[$sClass][$sFriendlyNameAttCode] = $sRemoteClass;
