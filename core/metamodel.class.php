@@ -1797,11 +1797,11 @@ abstract class MetaModel
 							));
 							$oClassRecall->SetHostClass($sClass);
 							self::$m_aAttribDefs[$sClass][$sClassRecallAttCode] = $oClassRecall;
-							self::$m_aAttribOrigins[$sClass][$sClassRecallAttCode] = $sRemoteClass;
+							self::$m_aAttribOrigins[$sClass][$sClassRecallAttCode] = self::$m_aAttribOrigins[$sClass][$sAttCode];
 
 							$oClassFlt = new FilterFromAttribute($oClassRecall);
 							self::$m_aFilterDefs[$sClass][$sClassRecallAttCode] = $oClassFlt;
-							self::$m_aFilterOrigins[$sClass][$sClassRecallAttCode] = $sRemoteClass;
+							self::$m_aFilterOrigins[$sClass][$sClassRecallAttCode] = self::$m_aFilterOrigins[$sClass][$sAttCode];
 
 							// Add it to the ZLists where the external key is present
 							//foreach(self::$m_aListData[$sClass] as $sListCode => $aAttributes)
