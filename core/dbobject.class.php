@@ -192,10 +192,14 @@ abstract class DBObject implements iDisplay
 		return true;
 	}
 
+	/**
+	 * @param bool $bAllowAllData DEPRECATED: the reload must never fail!
+	 * @throws CoreException
+	 */
 	public function Reload($bAllowAllData = false)
 	{
 		assert($this->m_bIsInDB);
-		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey, false /* must be found */, $bAllowAllData/* in the future $this->m_bAllowAllData ??*/);
+		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey, false /* must be found */, true /* AllowAllData */);
 		if (empty($aRow))
 		{
 			throw new CoreException("Failed to reload object of class '".get_class($this)."', id = ".$this->m_iKey);
@@ -1931,6 +1935,7 @@ abstract class DBObject implements iDisplay
 				{
 					$oFilter = new DBObjectSearch(get_class($this));
 					$oFilter->AddCondition('id', $this->m_iKey, '=');
+					$oFilter->AllowAllData();
 			
 					$sSQL = $oFilter->MakeUpdateQuery($aDBChanges);
 					CMDBSource::Query($sSQL);
