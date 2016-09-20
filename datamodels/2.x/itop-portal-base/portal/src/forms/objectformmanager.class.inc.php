@@ -543,8 +543,16 @@ class ObjectFormManager extends FormManager
 								IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' has no scope query for ' . $oScopeOriginal->GetClass() . ' class.');
 								$this->oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
 							}
-
+							IssueLog::Info('Applying scope on field #' . $sAttCode);
+							IssueLog::Info('|-- AllowAllData on scope search ' . (($oScopeSearch->IsAllDataAllowed()) ? 'true' : 'false') . ' : ' . $oScopeSearch->ToOQL());
+							IssueLog::Info('|-- AllowAllData on scope original ' . (($oScopeOriginal->IsAllDataAllowed()) ? 'true' : 'false'));
 							$oScopeOriginal = $oScopeOriginal->Intersect($oScopeSearch);
+							// Note : This is to skip the silo restriction on the final query
+							if ($oScopeSearch->IsAllDataAllowed())
+							{
+								$oScopeOriginal->AllowAllData();
+							}
+							IssueLog::Info('|-- AllowAllData on result search ' . (($oScopeOriginal->IsAllDataAllowed()) ? 'true' : 'false'));
 							$oScopeOriginal->SetInternalParams(array('this' => $this->oObject));
 							$oField->SetSearch($oScopeOriginal);
 						}

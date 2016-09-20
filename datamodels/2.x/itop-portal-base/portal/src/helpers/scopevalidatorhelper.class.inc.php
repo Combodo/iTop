@@ -36,6 +36,7 @@ class ScopeValidatorHelper
 	const ENUM_TYPE_ALLOW = 'allow';
 	const ENUM_TYPE_RESTRICT = 'restrict';
 	const DEFAULT_GENERATED_CLASS = 'PortalScopesValues';
+	const DEFAULT_IGNORE_ALLOWED_ORGANIZATIONS = false;
 
 	protected $sCachePath;
 	protected $sFilename;
@@ -179,7 +180,10 @@ class ScopeValidatorHelper
 						// Retrieving the edit query
 						$oOqlEditNode = $oScopeNode->GetOptionalElement('oql_edit');
 						$sOqlEdit = ( ($oOqlEditNode !== null) && ($oOqlEditNode->GetText() !== null) ) ? $oOqlEditNode->GetText() : null;
-
+						// Retrieving ignore allowed org flag
+						$oIgnoreAllowedOrgNode = $oScopeNode->GetOptionalElement('ignore_allowed_organizations');
+						$bIgnoreAllowedOrg = ( ($oIgnoreAllowedOrgNode !== null) && ($oIgnoreAllowedOrgNode->GetText() === 'true') ) ? true : static::DEFAULT_IGNORE_ALLOWED_ORGANIZATIONS;
+						
 						// Retrieving profiles for the scope
 						$oProfilesNode = $oScopeNode->GetOptionalElement('allowed_profiles');
 						$aProfilesNames = array();
@@ -221,13 +225,20 @@ class ScopeValidatorHelper
 								$oExistingFilter = DBSearch::FromOQL($aProfiles[$sMatrixPrefix . static::ENUM_MODE_READ][$sOqlViewType]);
 								$aFilters = array($oExistingFilter, $oViewFilter);
 								$oResFilter = new DBUnionSearch($aFilters);
+
+								// Applying ignore_allowed_organizations flag on result filter if necessary (As the union will remove it if it is not on all sub-queries)
+								if ($aProfiles[$sMatrixPrefix . static::ENUM_MODE_READ]['ignore_allowed_organizations'] === true)
+								{
+									$bIgnoreAllowedOrg = true;
+								}
 							}
 							else
 							{
 								$oResFilter = $oViewFilter;
 							}
 							$aProfiles[$sMatrixPrefix . static::ENUM_MODE_READ] = array(
-								$sOqlViewType => $oResFilter->ToOQL()
+								$sOqlViewType => $oResFilter->ToOQL(),
+								'ignore_allowed_organizations' => $bIgnoreAllowedOrg
 							);
 							// - Edit query
 							if ($sOqlEdit !== null)
@@ -264,7 +275,8 @@ class ScopeValidatorHelper
 									$oResFilter = $oEditFilter;
 								}
 								$aProfiles[$sMatrixPrefix . static::ENUM_MODE_WRITE] = array(
-									$sOqlViewType => $oResFilter->ToOQL()
+									$sOqlViewType => $oResFilter->ToOQL(),
+									'ignore_allowed_organizations' => $bIgnoreAllowedOrg
 								);
 							}
 						}
@@ -273,7 +285,7 @@ class ScopeValidatorHelper
 					$aProfileClasses[] = $sClass;
 				}
 			}
-
+			
 			// Filling the array with missing classes from MetaModel, so we can have an inheritance principle on the scope
 			// For each class explicitly given in the scopes, we check if its child classes were also in the scope :
 			// If not, we add them with the same OQL
@@ -295,10 +307,14 @@ class ScopeValidatorHelper
 									$aTmpProfile = $aProfiles[$iProfileId . '_' . $sProfileClass . '_' . $sAction];
 									foreach ($aTmpProfile as $sType => $sOql)
 									{
-										$oTmpFilter = DBSearch::FromOQL($sOql);
-										$oTmpFilter->ChangeClass($sChildClass);
+										// IF condition is just to skip the 'ignore_allowed_organizations' flag
+										if (in_array($sType, array(static::ENUM_TYPE_ALLOW, static::ENUM_TYPE_RESTRICT)))
+										{
+											$oTmpFilter = DBSearch::FromOQL($sOql);
+											$oTmpFilter->ChangeClass($sChildClass);
 
-										$aTmpProfile[$sType] = $oTmpFilter->ToOQL();
+											$aTmpProfile[$sType] = $oTmpFilter->ToOQL();
+										}
 									}
 
 									$aProfiles[$iProfileId . '_' . $sChildClass . '_' . $sAction] = $aTmpProfile;
@@ -471,6 +487,7 @@ class ScopeValidatorHelper
 		$oSearch = null;
 		$aAllowSearches = array();
 		$aRestrictSearches = array();
+		$bIgnoreAllowedOrg = static::DEFAULT_IGNORE_ALLOWED_ORGANIZATIONS;
 
 		// Checking the default mode
 		if ($iAction === null)
@@ -498,6 +515,11 @@ class ScopeValidatorHelper
 				{
 					$aRestrictSearches[] = DBSearch::FromOQL($aProfileMatrix['restrict']);
 				}
+				// If a profile should ignore allowed org, we set it for all its queries no matter the profile
+				if (isset($aProfileMatrix['ignore_allowed_organizations']) && $aProfileMatrix['ignore_allowed_organizations'] === true)
+				{
+					$bIgnoreAllowedOrg = true;
+				}
 			}
 		}
 
@@ -514,7 +536,11 @@ class ScopeValidatorHelper
 			$oSearch = new DBUnionSearch($aAllowSearches);
 			$oSearch = $oSearch->RemoveDuplicateQueries();
 		}
-
+		if ($bIgnoreAllowedOrg === true)
+		{
+			$oSearch->AllowAllData();
+		}
+		
 		return $oSearch;
 	}
 
