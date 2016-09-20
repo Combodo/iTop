@@ -36,7 +36,7 @@ class ScopeValidatorHelper
 	const ENUM_TYPE_ALLOW = 'allow';
 	const ENUM_TYPE_RESTRICT = 'restrict';
 	const DEFAULT_GENERATED_CLASS = 'PortalScopesValues';
-	const DEFAULT_IGNORE_ALLOWED_ORGANIZATIONS = false;
+	const DEFAULT_IGNORE_SILOS = false;
 
 	protected $sCachePath;
 	protected $sFilename;
@@ -181,9 +181,9 @@ class ScopeValidatorHelper
 						$oOqlEditNode = $oScopeNode->GetOptionalElement('oql_edit');
 						$sOqlEdit = ( ($oOqlEditNode !== null) && ($oOqlEditNode->GetText() !== null) ) ? $oOqlEditNode->GetText() : null;
 						// Retrieving ignore allowed org flag
-						$oIgnoreAllowedOrgNode = $oScopeNode->GetOptionalElement('ignore_allowed_organizations');
-						$bIgnoreAllowedOrg = ( ($oIgnoreAllowedOrgNode !== null) && ($oIgnoreAllowedOrgNode->GetText() === 'true') ) ? true : static::DEFAULT_IGNORE_ALLOWED_ORGANIZATIONS;
-						
+						$oIgnoreSilosNode = $oScopeNode->GetOptionalElement('ignore_silos');
+						$bIgnoreSilos = ( ($oIgnoreSilosNode !== null) && ($oIgnoreSilosNode->GetText() === 'true') ) ? true : static::DEFAULT_IGNORE_SILOS;
+
 						// Retrieving profiles for the scope
 						$oProfilesNode = $oScopeNode->GetOptionalElement('allowed_profiles');
 						$aProfilesNames = array();
@@ -226,10 +226,10 @@ class ScopeValidatorHelper
 								$aFilters = array($oExistingFilter, $oViewFilter);
 								$oResFilter = new DBUnionSearch($aFilters);
 
-								// Applying ignore_allowed_organizations flag on result filter if necessary (As the union will remove it if it is not on all sub-queries)
-								if ($aProfiles[$sMatrixPrefix . static::ENUM_MODE_READ]['ignore_allowed_organizations'] === true)
+								// Applying ignore_silos flag on result filter if necessary (As the union will remove it if it is not on all sub-queries)
+								if ($aProfiles[$sMatrixPrefix . static::ENUM_MODE_READ]['ignore_silos'] === true)
 								{
-									$bIgnoreAllowedOrg = true;
+									$bIgnoreSilos = true;
 								}
 							}
 							else
@@ -238,7 +238,7 @@ class ScopeValidatorHelper
 							}
 							$aProfiles[$sMatrixPrefix . static::ENUM_MODE_READ] = array(
 								$sOqlViewType => $oResFilter->ToOQL(),
-								'ignore_allowed_organizations' => $bIgnoreAllowedOrg
+								'ignore_silos' => $bIgnoreSilos
 							);
 							// - Edit query
 							if ($sOqlEdit !== null)
@@ -276,7 +276,7 @@ class ScopeValidatorHelper
 								}
 								$aProfiles[$sMatrixPrefix . static::ENUM_MODE_WRITE] = array(
 									$sOqlViewType => $oResFilter->ToOQL(),
-									'ignore_allowed_organizations' => $bIgnoreAllowedOrg
+									'ignore_silos' => $bIgnoreSilos
 								);
 							}
 						}
@@ -307,7 +307,7 @@ class ScopeValidatorHelper
 									$aTmpProfile = $aProfiles[$iProfileId . '_' . $sProfileClass . '_' . $sAction];
 									foreach ($aTmpProfile as $sType => $sOql)
 									{
-										// IF condition is just to skip the 'ignore_allowed_organizations' flag
+										// IF condition is just to skip the 'ignore_silos' flag
 										if (in_array($sType, array(static::ENUM_TYPE_ALLOW, static::ENUM_TYPE_RESTRICT)))
 										{
 											$oTmpFilter = DBSearch::FromOQL($sOql);
@@ -487,7 +487,7 @@ class ScopeValidatorHelper
 		$oSearch = null;
 		$aAllowSearches = array();
 		$aRestrictSearches = array();
-		$bIgnoreAllowedOrg = static::DEFAULT_IGNORE_ALLOWED_ORGANIZATIONS;
+		$bIgnoreSilos = static::DEFAULT_IGNORE_SILOS;
 
 		// Checking the default mode
 		if ($iAction === null)
@@ -516,9 +516,9 @@ class ScopeValidatorHelper
 					$aRestrictSearches[] = DBSearch::FromOQL($aProfileMatrix['restrict']);
 				}
 				// If a profile should ignore allowed org, we set it for all its queries no matter the profile
-				if (isset($aProfileMatrix['ignore_allowed_organizations']) && $aProfileMatrix['ignore_allowed_organizations'] === true)
+				if (isset($aProfileMatrix['ignore_silos']) && $aProfileMatrix['ignore_silos'] === true)
 				{
-					$bIgnoreAllowedOrg = true;
+					$bIgnoreSilos = true;
 				}
 			}
 		}
@@ -536,7 +536,7 @@ class ScopeValidatorHelper
 			$oSearch = new DBUnionSearch($aAllowSearches);
 			$oSearch = $oSearch->RemoveDuplicateQueries();
 		}
-		if ($bIgnoreAllowedOrg === true)
+		if ($bIgnoreSilos === true)
 		{
 			$oSearch->AllowAllData();
 		}
