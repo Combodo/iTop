@@ -44,6 +44,7 @@ class UrlGenerator extends SymfonyUrlGenerator
 	 */
 	public function generate($name, $parameters = array(), $referenceType = SymfonyUrlGenerator::ABSOLUTE_PATH)
 	{
+		// Mandatory parameters
 		$sExecModule = utils::ReadParam('exec_module', '', false, 'string');
 		$sExecPage = utils::ReadParam('exec_page', '', false, 'string');
 		if ($sExecModule !== '' && $sExecPage !== '')
@@ -52,6 +53,18 @@ class UrlGenerator extends SymfonyUrlGenerator
 			$parameters['exec_page'] = $sExecPage;
 		}
 
+		// Optional parameters
+		$sEnvSwitch = utils::ReadParam('env_switch', '', false, 'string');
+		if ($sEnvSwitch !== '')
+		{
+			$parameters['env_switch'] = $sEnvSwitch;
+		}
+		$sDebug = utils::ReadParam('debug', '', false, 'string');
+		if ($sDebug !== '')
+		{
+			$parameters['debug'] = $sDebug;
+		}
+		
 		return parent::generate($name, $parameters, $referenceType);
 	}
 
