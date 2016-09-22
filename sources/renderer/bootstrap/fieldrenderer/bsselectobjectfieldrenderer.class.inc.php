@@ -143,7 +143,8 @@ EOF
 					{
 						try
 						{
-							$oFieldValue = MetaModel::GetObject($sFieldValueClass, $this->oField->GetCurrentValue());
+							// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+							$oFieldValue = MetaModel::GetObject($sFieldValueClass, $this->oField->GetCurrentValue(), true, true);
 						}
 						catch (CoreException $e)
 						{
@@ -298,7 +299,8 @@ EOF
 			// Retrieving field value
 			if ($this->oField->GetCurrentValue() !== null && $this->oField->GetCurrentValue() !== 0 && $this->oField->GetCurrentValue() !== '')
 			{
-				$oFieldValue = MetaModel::GetObject($sFieldValueClass, $this->oField->GetCurrentValue());
+				// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+				$oFieldValue = MetaModel::GetObject($sFieldValueClass, $this->oField->GetCurrentValue(), true, true);
 				$sFieldValue = $oFieldValue->GetName();
 			}
 			else

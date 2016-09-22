@@ -545,6 +545,39 @@ class ScopeValidatorHelper
 	}
 
 	/**
+	 * Returns true if at least one of the $aProfiles has the ignore_silos flag set to true for the $sClass.
+	 *
+	 * @param array $aProfiles
+	 * @param string $sClass
+	 * @return boolean
+	 */
+	public function IsAllDataAllowedForScope($aProfiles, $sClass)
+	{
+		$bIgnoreSilos = false;
+
+		// Iterating on profiles to retrieving the different OQLs parts
+		foreach ($aProfiles as $sProfile)
+		{
+			// Retrieving matrix informtions
+			$iProfileId = $this->GetProfileIdFromProfileName($sProfile);
+
+			// Retrieving profile OQLs
+			$sScopeValuesClass = $this->sGeneratedClass;
+			$aProfileMatrix = $sScopeValuesClass::GetProfileScope($iProfileId, $sClass, static::ENUM_MODE_READ);
+			if ($aProfileMatrix !== null)
+			{
+				// If a profile should ignore allowed org, we set it for all its queries no matter the profile
+				if (isset($aProfileMatrix['ignore_silos']) && $aProfileMatrix['ignore_silos'] === true)
+				{
+					$bIgnoreSilos = true;
+				}
+			}
+		}
+
+		return $bIgnoreSilos;
+	}
+
+	/**
 	 * Returns the profile id from a string being either a constant or its name.
 	 *
 	 * @param string $sProfile

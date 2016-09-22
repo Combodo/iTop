@@ -479,7 +479,8 @@ EOF
 			// In case of indirect linked set, we must retrieve the remote object
 			if ($this->oField->IsIndirect())
 			{
-				$oRemoteItem = MetaModel::GetObject($this->oField->GetTargetClass(), $oItem->Get($this->oField->GetExtKeyToRemote()));
+				// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+				$oRemoteItem = MetaModel::GetObject($this->oField->GetTargetClass(), $oItem->Get($this->oField->GetExtKeyToRemote()), true, true);
 			}
 			else
 			{

@@ -94,7 +94,8 @@ class ObjectFormManager extends FormManager
 		}
 		else
 		{
-			$oObject = MetaModel::GetObject($sObjectClass, $aJson['formobject_id'], true);
+			// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+			$oObject = MetaModel::GetObject($sObjectClass, $aJson['formobject_id'], true, true);
 		}
 		$oFormManager->SetObject($oObject);
 
@@ -945,7 +946,8 @@ class ObjectFormManager extends FormManager
 								// LinkedSet
 								if (!$oAttDef->IsIndirect())
 								{
-									$oLinkedObject = MetaModel::GetObject($sTargetClass, abs($iTargetId));
+									// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+									$oLinkedObject = MetaModel::GetObject($sTargetClass, abs($iTargetId), true, true);
 									$oValueSet->AddObject($oLinkedObject);
 								}
 								// LinkedSetIndirect
@@ -961,7 +963,8 @@ class ObjectFormManager extends FormManager
 									// Existing relation
 									else
 									{
-										$oLink = MetaModel::GetObject($sTargetClass, $iTargetId);
+										// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+										$oLink = MetaModel::GetObject($sTargetClass, $iTargetId, true, true);
 									}
 									$oValueSet->AddObject($oLink);
 								}
