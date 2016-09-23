@@ -64,7 +64,7 @@ class BrowseBrickController extends BrickController
 		$aLevelsProperties = array();
 		$aLevelsClasses = array();
 		static::TreeToFlatLevelsProperties($oApp, $oBrick->GetLevels(), $aLevelsProperties);
-
+		
 		// Concistency checks
 		if (!in_array($sBrowseMode, array_keys($aBrowseModes)))
 		{
@@ -281,7 +281,7 @@ class BrowseBrickController extends BrickController
 			}
 		}
 		$oSet->OptimizeColumnLoad($aColumnAttrs);
-
+		
 		// Retrieving results and organizing them for templating
 		$aItems = array();
 		while ($aCurrentRow = $oSet->FetchAssoc())
@@ -364,6 +364,12 @@ class BrowseBrickController extends BrickController
 			// Restricting to the allowed scope
 			$oScopeSearch = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $oSearch->GetClass(), UR_ACTION_READ);
 			$oSearch = ($oScopeSearch !== null) ? $oSearch->Intersect($oScopeSearch) : null;
+			// - Allowing all data if necessary
+			if ($oScopeSearch->IsAllDataAllowed())
+			{
+				$oSearch->AllowAllData();
+			}
+
 			if ($oSearch !== null)
 			{
 				$aLevelsProperties[$sCurrentLevelAlias] = array(
