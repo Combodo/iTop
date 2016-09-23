@@ -445,8 +445,8 @@ class DBObjectSet
 
 	/**
 	 * Sets the sort order for loading the rows from the DB. Changing the order by causes a Reload.
-	 * 
-	 * @param hash $aOrderBy Format: field_code => boolean (true = ascending, false = descending)
+	 *
+	 * @param hash $aOrderBy Format: [alias.]attcode => boolean (true = ascending, false = descending)
 	 */
 	public function SetOrderBy($aOrderBy)
 	{
@@ -459,6 +459,34 @@ class DBObjectSet
 				$this->Load();
 			}
 		}
+	}
+
+	/**
+	 * Sets the sort order for loading the rows from the DB. Changing the order by causes a Reload.
+	 *
+	 * @param hash $aAliases Format: alias => boolean (true = ascending, false = descending). If omitted, then it defaults to all the selected classes
+	 */
+	public function SetOrderByClasses($aAliases = null)
+	{
+		if ($aAliases === null)
+		{
+			$aAliases = array();
+			foreach ($this->GetSelectedClasses() as $sAlias => $sClass)
+			{
+				$aAliases[$sAlias] = true;
+			}
+		}
+
+		$aAttributes = array();
+		foreach ($aAliases as $sAlias => $bClassDirection)
+		{
+			foreach (MetaModel::GetOrderByDefault($this->m_oFilter->GetClass($sAlias)) as $sAttCode => $bAttributeDirection)
+			{
+				$bDirection = $bClassDirection ? $bAttributeDirection : !$bAttributeDirection;
+				$aAttributes[$sAlias.'.'.$sAttCode] = $bDirection;
+			}
+		}
+		$this->SetOrderBy($aAttributes);
 	}
 
 	/**
