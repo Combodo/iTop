@@ -739,7 +739,13 @@ class ObjectController extends AbstractController
 		// It is the responsability of the template designer to write the right query so the user see only what he should.
 		if ($oTargetAttDef->GetEditClass() !== 'CustomFields')
 		{
-			$oSearch = $oSearch->Intersect($oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ));
+			$oScopeSearch = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ);
+			$oSearch = $oSearch->Intersect($oScopeSearch);
+			// - Allowing all data if necessary
+			if ($oScopeSearch->IsAllDataAllowed())
+			{
+				$oSearch->AllowAllData();
+			}
 		}
 
 		// Retrieving results
@@ -991,6 +997,11 @@ class ObjectController extends AbstractController
 		if (($oScopeSearch !== null) && ($oTargetAttDef->GetEditClass() !== 'CustomFields'))
 		{
 			$oSearch = $oSearch->Intersect($oScopeSearch);
+			// - Allowing all data if necessary
+			if ($oScopeSearch->IsAllDataAllowed())
+			{
+				$oSearch->AllowAllData();
+			}
 		}
 
 		// Retrieving results
@@ -1216,6 +1227,11 @@ class ObjectController extends AbstractController
 //		}
 		// - Intersecting with scope constraints
 		$oSearch = $oSearch->Intersect($oScopeSearch);
+		// - Allowing all data if necessary
+		if ($oScopeSearch->IsAllDataAllowed())
+		{
+			$oSearch->AllowAllData();
+		}
 
 		// Retrieving results
 		// - Preparing object set

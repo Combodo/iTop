@@ -207,6 +207,11 @@ class ManageBrickController extends BrickController
 				if ($oDistinctScopeQuery != null)
 				{
 					$oDistinctQuery = $oDistinctQuery->Intersect($oDistinctScopeQuery);
+					// - Allowing all data if necessary
+					if ($oDistinctScopeQuery->IsAllDataAllowed())
+					{
+						$oDistinctQuery->AllowAllData();
+					}
 				}
 				// Adding grouping conditions
 				$oFieldExp = new FieldExpression($sGroupingAreaAttCode, $sParentAlias);
@@ -261,7 +266,19 @@ class ManageBrickController extends BrickController
 			// Note : Will need to moved the scope restriction on queries elsewhere when we consider grouping on something else than finalclass
 			// Note : We now get view scope instead of edit scope as we allowed users to view/edit objects in the brick regarding their rights
 			$oScopeQuery = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $aGroupingAreasValue['value'], UR_ACTION_READ);
-			$oAreaQuery = ($oScopeQuery !== null) ? $oAreaQuery->Intersect($oScopeQuery) : null;
+			if ($oScopeQuery !== null)
+			{
+				$oAreaQuery = $oAreaQuery->Intersect($oScopeQuery);
+				// - Allowing all data if necessary
+				if ($oScopeQuery->IsAllDataAllowed())
+				{
+					$oAreaQuery->AllowAllData();
+				}
+			}
+			else
+			{
+				$oAreaQuery = null;
+			}
 
 			$aQueries[$sKey] = $oAreaQuery;
 		}
