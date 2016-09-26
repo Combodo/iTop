@@ -79,7 +79,7 @@ class Html2Text {
 		// replace &nbsp; with spaces
 
 		$html = str_replace("&nbsp;", " ", $html);
-		$html = mb_str_replace("\xa0", " ", $html); // DO NOT USE str_replace since it breaks the "à" character which is \xc3 \xa0 in UTF-8
+		$html = mb_str_replace("\xc2\xa0", " ", $html); // DO NOT USE str_replace since it breaks the "à" character which is \xc3 \xa0 in UTF-8
 
 		$html = static::fixNewlines($html);
 
