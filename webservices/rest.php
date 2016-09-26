@@ -86,6 +86,22 @@ class RestResultListOperations extends RestResult
 	}
 }
 
+if (!function_exists('json_last_error_msg')) {
+	function json_last_error_msg() {
+		static $ERRORS = array(
+			JSON_ERROR_NONE => 'No error',
+			JSON_ERROR_DEPTH => 'Maximum stack depth exceeded',
+			JSON_ERROR_STATE_MISMATCH => 'State mismatch (invalid or malformed JSON)',
+			JSON_ERROR_CTRL_CHAR => 'Control character error, possibly incorrectly encoded',
+			JSON_ERROR_SYNTAX => 'Syntax error',
+			JSON_ERROR_UTF8 => 'Malformed UTF-8 characters, possibly incorrectly encoded'
+		);
+
+		$error = json_last_error();
+		return isset($ERRORS[$error]) ? $ERRORS[$error] : 'Unknown error';
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Main
@@ -214,6 +230,14 @@ catch(Exception $e)
 // Output the results
 //
 $sResponse = json_encode($oResult);
+
+if ($sResponse === false)
+{
+	$oJsonIssue = new RestResult();
+	$oJsonIssue->code = RestResult::INTERNAL_ERROR;
+	$oJsonIssue->message = 'json encoding failed with message: '.json_last_error_msg().'. Full response structure for debugging purposes (print_r+bin2hex): '.bin2hex(print_r($oResult, true));
+	$sResponse = json_encode($oJsonIssue);
+}
 
 $oP->add_header('Access-Control-Allow-Origin: *');
 
