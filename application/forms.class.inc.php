@@ -1368,6 +1368,29 @@ class RunTimeIconSelectionField extends DesignerIconSelectionField
 
 	static protected function FindIconsOnDisk($sBaseDir, $sDir = '')
 	{
+		$sKey = md5($sBaseDir.'/'.$sDir);
+		$sCacheFile = utils::GetCachePath().'available-icons-'.$sKey.'.php';
+		if (file_exists($sCacheFile))
+		{
+			require_once($sCacheFile);
+			$aFiles = AvailableIcons::$aIconFiles;
+		}
+		else
+		{
+			$aFiles = self::_FindIconsOnDisk($sBaseDir, $sDir);
+			$sAvailableIcons = '<?php'.PHP_EOL;
+			$sAvailableIcons .= '// Generated and used by '.__METHOD__.PHP_EOL;
+			$sAvailableIcons .= 'class AvailableIcons'.PHP_EOL;
+			$sAvailableIcons .= '{'.PHP_EOL;
+			$sAvailableIcons .= '   static $aIconFiles = '.var_export($aFiles, true).';'.PHP_EOL;
+			$sAvailableIcons .= '}'.PHP_EOL;
+			file_put_contents($sCacheFile, $sAvailableIcons);
+		}
+		return $aFiles;
+	}
+
+	static protected function _FindIconsOnDisk($sBaseDir, $sDir = '')
+	{
 		$aResult = array();
 		// Populate automatically the list of icon files
 		if ($hDir = @opendir($sBaseDir.'/'.$sDir))
@@ -1378,7 +1401,7 @@ class RunTimeIconSelectionField extends DesignerIconSelectionField
 				if (($sFile != '.') && ($sFile != '..') && ($sFile != 'lifecycle') && is_dir($sBaseDir.'/'.$sDir.'/'.$sFile))
 				{
 					$sDirSubPath = ($sDir == '') ? $sFile : $sDir.'/'.$sFile;
-					$aResult = array_merge($aResult, self::FindIconsOnDisk($sBaseDir, $sDirSubPath));
+					$aResult = array_merge($aResult, self::_FindIconsOnDisk($sBaseDir, $sDirSubPath));
 				}
 				if (preg_match("/\.(png|jpg|jpeg|gif)$/i", $sFile, $aMatches)) // png, jp(e)g and gif are considered valid
 				{
