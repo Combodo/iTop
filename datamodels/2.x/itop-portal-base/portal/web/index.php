@@ -73,7 +73,10 @@ $oApp->register(new Combodo\iTop\Portal\Provider\ScopeValidatorServiceProvider()
 	'scope_validator.instance_name' => PORTAL_ID
 ));
 $oApp->register(new Silex\Provider\TwigServiceProvider(), array(
-	'twig.path' => MODULESROOT
+	'twig.path' => MODULESROOT,
+	'twig.options' => array(
+		'cache' => utils::GetCachePath() . 'twig/'
+	)
 ));
 $oApp->register(new Silex\Provider\HttpFragmentServiceProvider());
 
