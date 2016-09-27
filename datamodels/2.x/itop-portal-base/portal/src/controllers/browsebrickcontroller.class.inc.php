@@ -281,7 +281,10 @@ class BrowseBrickController extends BrickController
 			}
 		}
 		$oSet->OptimizeColumnLoad($aColumnAttrs);
-		
+
+		// Sorting objects through defined order (in DM)
+		$oSet->SetOrderByClasses();
+
 		// Retrieving results and organizing them for templating
 		$aItems = array();
 		while ($aCurrentRow = $oSet->FetchAssoc())

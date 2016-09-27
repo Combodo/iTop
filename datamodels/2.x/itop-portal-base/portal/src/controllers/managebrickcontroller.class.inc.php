@@ -325,6 +325,7 @@ class ManageBrickController extends BrickController
 					$oSet = new DBObjectSet($oQuery);
 				}
 				$oSet->OptimizeColumnLoad(array($oQuery->GetClassAlias() => $aColumnsAttrs));
+				$oSet->SetOrderByClasses();
 				$aSets[$sKey] = $oSet;
 			}
 		}

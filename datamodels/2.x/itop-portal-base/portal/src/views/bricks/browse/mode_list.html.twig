@@ -239,6 +239,7 @@
 				"displayLength": {{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::DEFAULT_COUNT_PER_PAGE_LIST') }},
 				"dom": '<"row"<"col-sm-6"l><"col-sm-6"<f><"visible-xs"p>>>t<"row"<"col-sm-6"i><"col-sm-6"p>>',
 				"columns": getColumnsDefinition(),
+				"order": [],
 				"drawCallback": function(settings){
 					// Tooltip has to been created here, as the render callback only returns a string, not an object.
 					$(this).find('[data-toggle="tooltip"]').tooltip({container: 'body', html: true, trigger: 'hover', placement: 'right'});	// container option is necessary when in a table
