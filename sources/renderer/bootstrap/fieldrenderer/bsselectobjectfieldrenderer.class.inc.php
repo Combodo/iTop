@@ -78,7 +78,7 @@ class BsSelectObjectFieldRenderer extends FieldRenderer
 				//$bRegularSelect = ($iSetCount <= $this->oField->GetMaximumComboLength());
 				$bRegularSelect = ( ($iSetCount <= $this->oField->GetMaximumComboLength()) || ($this->oField->GetSearchEndpoint() === null) || ($this->oField->GetSearchEndpoint() === '') );
 				unset($oCountSet);
-				
+
 				// - For regular select
 				if ($bRegularSelect)
 				{
@@ -245,48 +245,54 @@ EOF
 							}
 						});
 
-						$('#$sAutocompleteFieldId').typeahead({
-							hint: true,
-							hightlight: true,
-							minLength: {$this->oField->GetMinAutoCompleteChars()}
-						},{
-							name: '{$this->oField->GetId()}',
-							source: oAutocompleteSource_{$this->oField->GetId()},
-							limit: 20,
-							display: 'name',
-							templates: {
-								suggestion: Handlebars.compile('<div>{{name}}</div>'),
-								pending: $("#page_overlay .content_loader").prop('outerHTML'),
-								notFound: '<div class="no_result">{$sNoResultText}</div>'
-							}
-						})
-						.off('typeahead:select').on('typeahead:select', function(oEvent, oSuggestion){
-							$('#{$this->oField->GetGlobalId()}').val(oSuggestion.id);
-							// Triggering set_current_value event
-							var oValue = {};
-							oValue[oSuggestion.id] = oSuggestion.name;
-							$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").trigger('set_current_value', {value: oValue});
-						})
-						.off('typeahead:change').on('typeahead:change', function(oEvent, oSuggestion){
-							// Checking if the value is a correct value. This is necessary because the user could empty the field / remove some chars and typeahead would not update the hidden input
-							var oDatums = oAutocompleteSource_{$this->oField->GetId()}.index.datums;
-							var bFound = false;
-							for(var i in oDatums)
-							{
-								if(oDatums[i].name == oSuggestion)
-								{
-									bFound = true;
-									$('#{$this->oField->GetGlobalId()}').val(oDatums[i].id);
-									break;
+						// This check is only for IE9... Otherwise the widget is duplicated on the field causing misbehaviour.
+						if($('#$sAutocompleteFieldId').typeahead('val') === undefined)
+						{
+							$('#$sAutocompleteFieldId').typeahead({
+								hint: true,
+								hightlight: true,
+								minLength: {$this->oField->GetMinAutoCompleteChars()}
+							},{
+								name: '{$this->oField->GetId()}',
+								source: oAutocompleteSource_{$this->oField->GetId()},
+								limit: 20,
+								display: 'name',
+								templates: {
+									suggestion: Handlebars.compile('<div>{{name}}</div>'),
+									pending: $("#page_overlay .content_loader").prop('outerHTML'),
+									notFound: '<div class="no_result">{$sNoResultText}</div>'
 								}
-							}
-							// Emptying the fields if value is incorrect
-							if(!bFound)
-							{
-								$('#{$this->oField->GetGlobalId()}').val(0);
-								$('#{$sAutocompleteFieldId}').val('');
-							}
-						});
+							})
+							.off('typeahead:select').on('typeahead:select', function(oEvent, oSuggestion){
+								$('#{$this->oField->GetGlobalId()}').val(oSuggestion.id);
+								$('#{$sAutocompleteFieldId}').val(oSuggestion.name);
+								// Triggering set_current_value event
+								var oValue = {};
+								oValue[oSuggestion.id] = oSuggestion.name;
+								$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").trigger('set_current_value', {value: oValue});
+							})
+							.off('typeahead:change').on('typeahead:change', function(oEvent, oSuggestion){
+								// Checking if the value is a correct value. This is necessary because the user could empty the field / remove some chars and typeahead would not update the hidden input
+								var oDatums = oAutocompleteSource_{$this->oField->GetId()}.index.datums;
+								var bFound = false;
+								for(var i in oDatums)
+								{
+									if(oDatums[i].name == oSuggestion)
+									{
+										bFound = true;
+										$('#{$this->oField->GetGlobalId()}').val(oDatums[i].id);
+										$('#{$sAutocompleteFieldId}').val(oDatums[i].name);
+										break;
+									}
+								}
+								// Emptying the fields if value is incorrect
+								if(!bFound)
+								{
+									$('#{$this->oField->GetGlobalId()}').val(0);
+									$('#{$sAutocompleteFieldId}').val('');
+								}
+							});
+						}
 EOF
 					);
 				}
