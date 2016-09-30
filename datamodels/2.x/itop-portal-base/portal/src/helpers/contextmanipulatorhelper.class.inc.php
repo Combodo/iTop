@@ -4,7 +4,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -23,6 +23,7 @@ use \Exception;
 use \Silex\Application;
 use \DOMNodeList;
 use \DOMFormatException;
+use \UserRights;
 use \DBObject;
 use \DBSearch;
 use \DBObjectSet;
@@ -42,6 +43,7 @@ class ContextManipulatorHelper
 	const ENUM_RULE_CALLBACK_OPEN_EDIT = 'edit';
 	const DEFAULT_RULE_CALLBACK_OPEN = self::ENUM_RULE_CALLBACK_OPEN_VIEW;
 
+	protected $oApp;
 	protected $aRules;
 
 	public function __construct()
@@ -59,7 +61,7 @@ class ContextManipulatorHelper
 	public function Init(DOMNodeList $oNodes)
 	{
 		$this->aRules = array();
-		
+
 		// Iterating over the scope nodes
 		foreach ($oNodes as $oRuleNode)
 		{
@@ -181,6 +183,11 @@ class ContextManipulatorHelper
 		}
 	}
 
+	public function SetApp($oApp)
+	{
+		$this->oApp = $oApp;
+	}
+
 	/**
 	 * Returns a hash array of rules
 	 *
@@ -222,7 +229,7 @@ class ContextManipulatorHelper
 	 *     ...
 	 *   )
 	 * )
-	 * 
+	 *
 	 * @param array $aData
 	 * @param DBObject $oObject
 	 */
@@ -288,6 +295,13 @@ class ContextManipulatorHelper
 								}
 							}
 						}
+					}
+
+					// Checking for silos
+					$oScopeSearch = $this->oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sSearchClass, UR_ACTION_READ);
+					if ($oScopeSearch->IsAllDataAllowed())
+					{
+						$oSearch->AllowAllData();
 					}
 
 					// Retrieving source object(s) and applying rules
