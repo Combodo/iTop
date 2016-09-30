@@ -28,6 +28,7 @@ use \MetaModel;
 use \AttributeDefinition;
 use \AttributeDate;
 use \AttributeDateTime;
+use \AttributeSubItem;
 use \DBSearch;
 use \DBObjectSearch;
 use \DBObjectSet;
@@ -371,7 +372,7 @@ class ManageBrickController extends BrickController
 							);
 						}
 					}
-
+					
 					$oAttDef = MetaModel::GetAttributeDef($sCurrentClass, $sItemAttr);
 					if ($oAttDef->IsExternalKey())
 					{
@@ -390,6 +391,10 @@ class ManageBrickController extends BrickController
 								);
 							}
 						}
+					}
+					elseif ($oAttDef instanceof AttributeSubItem)
+					{
+						$sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
 					}
 					else
 					{
