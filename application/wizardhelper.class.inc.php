@@ -138,6 +138,22 @@ class WizardHelper
 						$oObj->Set($sAttCode, $value);
 					}
 				}
+				else if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
+				{
+					if ($value != null)
+					{
+						$oDate = $oAttDef->GetFormat()->Parse($value);
+						if ($oDate instanceof DateTime)
+						{
+							$value = $oDate->format($oAttDef->GetInternalFormat());
+						}
+						else
+						{
+							$value = null;
+						}
+					}
+					$oObj->Set($sAttCode, $value);
+				}
 				else
 				{
 					$oObj->Set($sAttCode, $value);
