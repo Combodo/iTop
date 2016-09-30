@@ -3811,6 +3811,17 @@ class AttributeDateTime extends AttributeDBField
 		}
 		if (!is_numeric($proposedValue))
 		{
+			// Check the format
+			try
+			{
+				$oFormat = new DateTimeFormat($this->GetInternalFormat());
+				$oTrash = $oFormat->Parse($proposedValue);
+			}
+			catch (Exception $e)
+			{
+				throw new Exception('Wrong format for date attribute '.$this->GetCode().', expecting "'.$this->GetInternalFormat().'" and got "'.$proposedValue.'"');
+			}
+
 			return $proposedValue;
 		}
 
