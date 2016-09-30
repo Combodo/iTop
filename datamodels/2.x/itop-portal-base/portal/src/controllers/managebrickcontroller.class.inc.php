@@ -290,7 +290,7 @@ class ManageBrickController extends BrickController
 			// - Check how many records there is.
 			// - Update $sDataLoading with its new value regarding the number of record and the threshold
 			$oCountSet = new DBObjectSet($oQuery);
-			$oCountSet->OptimizeColumnLoad(array($oQuery->GetClassAlias() => $aColumnsAttrs));
+			$oCountSet->OptimizeColumnLoad(array());
 			$fThreshold = (float) MetaModel::GetModuleSetting($oApp['combodo.portal.instance.id'], 'lazy_loading_threshold');
 			$sDataLoading = ($oCountSet->Count() > $fThreshold) ? AbstractBrick::ENUM_DATA_LOADING_LAZY : AbstractBrick::ENUM_DATA_LOADING_FULL;
 			unset($oCountSet);
