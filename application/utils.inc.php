@@ -1279,10 +1279,21 @@ class utils
 	 */
 	public static function ResizeImageToFit(ormDocument $oImage, $iWidth, $iHeight, $iMaxImageWidth, $iMaxImageHeight)
 	{
+		// If image size smaller than maximums, we do nothing
 		if (($iWidth <= $iMaxImageWidth) && ($iHeight <= $iMaxImageHeight))
 		{
 			return $oImage;
 		}
+
+
+		// If gd extension is not loaded, we put a warning in the log and return the image as is
+		if (extension_loaded('gd') === false)
+		{
+			IssueLog::Warning('Image could not be resized as the "gd" extension does not seem to be loaded. It will remain as ' . $iWidth . 'x' . $iHeight . ' instead of ' . $iMaxImageWidth . 'x' . $iMaxImageHeight);
+			return $oImage;
+		}
+
+
 		switch($oImage->GetMimeType())
 		{
 			case 'image/gif':
