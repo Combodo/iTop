@@ -335,7 +335,7 @@ EOF
 
 								$('#{$this->oField->GetGlobalId()}').val(JSON.stringify(aObjectIds));
 								// Updating items count
-								updateItemCount();
+								updateItemCount_{$this->oField->GetGlobalId()}();
 								// Updating global checkbox
 								$('#{$this->oField->GetGlobalId()}_check_all').prop('checked', false);
 							})
@@ -358,7 +358,7 @@ EOF
 
 							$('#{$this->oField->GetGlobalId()}').val(JSON.stringify(aObjectIds));
 							// Updating items count
-							updateItemCount();
+							updateItemCount_{$this->oField->GetGlobalId()}();
 							// Updating global checkbox
 							$('#{$this->oField->GetGlobalId()}_check_all').prop('checked', false);
 						}
@@ -404,7 +404,7 @@ EOF
 						$('#{$sButtonRemoveId}').prop('disabled', bIsDisabled);
 					};
 					// - Item count state handler
-					var updateItemCount = function()
+					var updateItemCount_{$this->oField->GetGlobalId()} = function()
 					{
 						$('#{$sCollapseTogglerId} > .text').text( oTable_{$this->oField->GetGlobalId()}.rows().count() );
 					};
