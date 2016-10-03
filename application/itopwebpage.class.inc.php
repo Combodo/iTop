@@ -209,7 +209,39 @@ EOF;
 			}";
 			$sJSDateTimePickerOptions = substr($sJSDateTimePickerOptions, 0, -1).$aMoreJSOptions;
 		}
-		
+		$this->add_script(
+<<< EOF
+	function PrepareWidgets()
+	{
+		// note: each action implemented here must be idempotent,
+		//       because this helper function might be called several times on a given page 
+	
+		$(".date-pick").datepicker($sJSDatePickerOptions);
+	
+		// Hack for the date and time picker addon issue on Chrome (see #1305)
+		// The workaround is to instantiate the widget on demand
+		// It relies on the same markup, thus reverting to the original implementation should be straightforward
+		$(".datetime-pick:not(.is-widget-ready)").each(function(){
+			var oInput = this;
+			$(oInput).addClass('is-widget-ready');
+			$('<img class="datetime-pick-button" src="../images/calendar.png">')
+				.insertAfter($(this))
+				.on('click', function(){
+					$(oInput)
+						.datetimepicker($sJSDateTimePickerOptions)
+						.datetimepicker('show')
+						.datetimepicker('option', 'onClose', function(dateText,inst){
+							$(oInput).datetimepicker('destroy');
+						})
+						.on('click keypress', function(){
+							$(oInput).datetimepicker('hide');
+						});
+				});
+		});
+	}
+EOF
+		);
+
 		$this->m_sInitScript =
 <<< EOF
 	try
@@ -445,29 +477,7 @@ EOF
 
 	// End of Tabs handling
 
-	$(".date-pick").datepicker($sJSDatePickerOptions);
-
-	// Hack for the date and time picker addon issue on Chrome (see #1305)
-	// The workaround is to instantiate the widget on demand
-	// It relies on the same markup, thus reverting to the original implementation should be straightforward
-	$(".datetime-pick").each(function(){
-		var oInput = this;
-		$('<img class="datetime-pick-button" src="../images/calendar.png">')
-			.insertAfter($(this))
-			.on('click', function(){
-				$(oInput)
-					.datetimepicker($sJSDateTimePickerOptions)
-					.datetimepicker('show')
-					.datetimepicker('option', 'onClose', function(dateText,inst){
-						$(oInput).datetimepicker('destroy');
-					})
-					.on('click keypress', function(){
-						$(oInput).datetimepicker('hide');
-					});
-				});
-		});
-
-	$(".datetime-pick-button")
+	PrepareWidgets();
 
 	// Make sortable, everything that claims to be sortable
 	$('.sortable').sortable( {axis: 'y', cursor: 'move', handle: '.drag_handle', stop: function()

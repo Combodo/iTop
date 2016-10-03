@@ -202,32 +202,15 @@ EOF
 		// Render the tabs in the page (if any)
 		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
 		
-		// Additional UI widgets to be activated inside the ajax fragment ??
-    	if (($this->sContentType == 'text/html') && (preg_match('/class="date-pick"/', $this->s_content) || preg_match('/class="datetime-pick"/', $this->s_content)) )
+		// Additional UI widgets to be activated inside the ajax fragment
+    	if ($this->sContentType == 'text/html')
 		{
 			$this->add_ready_script(
 <<<EOF
-	$(".date-pick").datepicker({
-			showOn: 'button',
-			buttonImage: '../images/calendar.png',
-			buttonImageOnly: true,
-			dateFormat: 'yy-mm-dd',
-			constrainInput: false,
-			changeMonth: true,
-			changeYear: true
-		});
-	$(".datetime-pick").datepicker({
-			showOn: 'button',
-			buttonImage: '../images/calendar.png',
-			buttonImageOnly: true,
-			dateFormat: 'yy-mm-dd 00:00:00',
-			constrainInput: false,
-			changeMonth: true,
-			changeYear: true
-		});
+PrepareWidgets();
 EOF
 			);
-		}	
+		}
         $s_captured_output = $this->ob_get_clean_safe();
 		  if (($this->sContentType == 'text/html') &&  ($this->sContentDisposition == 'inline'))
         {
