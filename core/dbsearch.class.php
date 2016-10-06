@@ -42,13 +42,8 @@ abstract class DBSearch
 	const JOIN_POINTING_TO = 0;
 	const JOIN_REFERENCED_BY = 1;
 
-	protected $m_bDataFiltered = false;
 	protected $m_bNoContextParameters = false;
 	protected $m_aModifierProperties = array();
-
-	// By default, some information may be hidden to the current user
-	// But it may happen that we need to disable that feature
-	protected $m_bAllowAllData = false;
 
 	public function __construct()
 	{
@@ -62,12 +57,11 @@ abstract class DBSearch
 		return unserialize(serialize($this)); // Beware this serializes/unserializes the search and its parameters as well
 	}
 
-	public function AllowAllData() {$this->m_bAllowAllData = true;}
-	public function IsAllDataAllowed() {return $this->m_bAllowAllData;}
+	abstract public function AllowAllData();
+	abstract public function IsAllDataAllowed();
+
 	public function NoContextParameters() {$this->m_bNoContextParameters = true;}
 	public function HasContextParameters() {return $this->m_bNoContextParameters;}
-	public function IsDataFiltered() {return $this->m_bDataFiltered; }
-	public function SetDataFiltered() {$this->m_bDataFiltered = true;}
 
 	public function SetModifierProperty($sPluginClass, $sProperty, $value)
 	{
@@ -219,7 +213,7 @@ abstract class DBSearch
         return $oSearchWithAlias;
     }
 
-    abstract public function ToOQL($bDevelopParams = false, $aContextParams = null);
+    abstract public function ToOQL($bDevelopParams = false, $aContextParams = null, $bWithAllowAllFlag = false);
 
 	static protected $m_aOQLQueries = array();
 
@@ -492,39 +486,16 @@ abstract class DBSearch
 
 	protected function GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $aGroupByExpr = null)
 	{
-		// Hide objects that are not visible to the current user
-		//
-		$oSearch = $this;
-		if (!$this->IsAllDataAllowed() && !$this->IsDataFiltered())
-		{
-			$oVisibleObjects = UserRights::GetSelectFilter($this->GetClass(), $this->GetModifierProperties('UserRightsGetSelectFilter'));
-			if ($oVisibleObjects === false)
-			{
-				// Make sure this is a valid search object, saying NO for all
-				$oVisibleObjects = DBObjectSearch::FromEmptySet($this->GetClass());
-			}
-			if (is_object($oVisibleObjects))
-			{
-				$oSearch = $this->Intersect($oVisibleObjects);
-				$oSearch->SetDataFiltered();
-			}
-			else
-			{
-				// should be true at this point, meaning that no additional filtering
-				// is required
-			}
-		}
-
 		// Compute query modifiers properties (can be set in the search itself, by the context, etc.)
 		//
-		$aModifierProperties = MetaModel::MakeModifierProperties($oSearch);
+		$aModifierProperties = MetaModel::MakeModifierProperties($this);
 
 		// Create a unique cache id
 		//
 		if (self::$m_bQueryCacheEnabled || self::$m_bTraceQueries)
 		{
 			// Need to identify the query
-			$sOqlQuery = $oSearch->ToOql();
+			$sOqlQuery = $this->ToOql(false, null, true);
 
 			if (count($aModifierProperties))
 			{
@@ -553,7 +524,7 @@ abstract class DBSearch
 		}
 		else
 		{
-			$sOqlQuery = "SELECTING... ".$oSearch->GetClass();
+			$sOqlQuery = "SELECTING... ".$this->GetClass();
 			$sOqlId = "query id ? n/a";
 		}
 
@@ -599,7 +570,7 @@ abstract class DBSearch
 		if (!isset($oSQLQuery))
 		{
 			$oKPI = new ExecutionKPI();
-			$oSQLQuery = $oSearch->MakeSQLQuery($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr);
+			$oSQLQuery = $this->MakeSQLQuery($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr);
 			$oSQLQuery->SetSourceOQL($sOqlQuery);
 			$oKPI->ComputeStats('MakeSQLQuery', $sOqlQuery);
 
@@ -624,7 +595,7 @@ abstract class DBSearch
 			$aExtendedFields = array();
 			foreach($aExtendedDataSpec['fields'] as $sColumn)
 			{
-				$sColRef = $oSearch->GetClassAlias().'_extdata_'.$sColumn;
+				$sColRef = $this->GetClassAlias().'_extdata_'.$sColumn;
 				$aExtendedFields[$sColRef] = new FieldExpressionResolved($sColumn, $sTableAlias);
 			}
 			$oSQLQueryExt = new SQLObjectQuery($aExtendedDataSpec['table'], $sTableAlias, $aExtendedFields);

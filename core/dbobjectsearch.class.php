@@ -35,6 +35,11 @@ class DBObjectSearch extends DBSearch
 	private $m_aPointingTo;
 	private $m_aReferencedBy;
 
+	// By default, some information may be hidden to the current user
+	// But it may happen that we need to disable that feature
+	protected $m_bAllowAllData = false;
+	protected $m_bDataFiltered = false;
+
 	public function __construct($sClass, $sClassAlias = null)
 	{
 		parent::__construct();
@@ -51,6 +56,11 @@ class DBObjectSearch extends DBSearch
 		$this->m_aPointingTo = array();
 		$this->m_aReferencedBy = array();
 	}
+
+	public function AllowAllData($bAllowAllData = true) {$this->m_bAllowAllData = $bAllowAllData;}
+	public function IsAllDataAllowed() {return $this->m_bAllowAllData;}
+	protected function IsDataFiltered() {return $this->m_bDataFiltered; }
+	protected function SetDataFiltered() {$this->m_bDataFiltered = true;}
 
 	// Create a search definition that leads to 0 result, still a valid search object
 	static public function FromEmptySet($sClass)
@@ -654,7 +664,10 @@ class DBObjectSearch extends DBSearch
 
 			$oLeftFilter = $this->DeepClone();
 			$oRightFilter = $oRightFilter->DeepClone();
-	
+
+			$bAllowAllData = ($oLeftFilter->IsAllDataAllowed() && $oRightFilter->IsAllDataAllowed());
+			$oLeftFilter->AllowAllData($bAllowAllData);
+
 			if ($oLeftFilter->GetClass() != $oRightFilter->GetClass())
 			{
 				if (MetaModel::IsParentClass($oLeftFilter->GetClass(), $oRightFilter->GetClass()))
@@ -810,7 +823,7 @@ class DBObjectSearch extends DBSearch
 		return $this->m_oSearchCondition->ApplyParameters(array_merge($this->m_aParams, $aArgs));
 	}
 	
-	public function ToOQL($bDevelopParams = false, $aContextParams = null)
+	public function ToOQL($bDevelopParams = false, $aContextParams = null, $bWithAllowAllFlag = false)
 	{
 		// Currently unused, but could be useful later
 		$bRetrofitParams = false;
@@ -849,6 +862,10 @@ class DBObjectSearch extends DBSearch
 		foreach($this->m_aFullText as $sFullText)
 		{
 			$sRes .= " AND MATCHES '$sFullText'";
+		}
+		if ($bWithAllowAllFlag && $this->m_bAllowAllData)
+		{
+			$sRes .= " ALLOW ALL DATA";
 		}
 		return $sRes;
 	}
@@ -1131,9 +1148,33 @@ class DBObjectSearch extends DBSearch
 
 	public function MakeSQLQuery($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr = null, $aSelectedClasses = null)
 	{
-		$oBuild = new QueryBuilderContext($this, $aModifierProperties, $aGroupByExpr, $aSelectedClasses);
+		// Hide objects that are not visible to the current user
+		//
+		$oSearch = $this;
+		if (!$this->IsAllDataAllowed() && !$this->IsDataFiltered())
+		{
+			$oVisibleObjects = UserRights::GetSelectFilter($this->GetClass(), $this->GetModifierProperties('UserRightsGetSelectFilter'));
+			if ($oVisibleObjects === false)
+			{
+				// Make sure this is a valid search object, saying NO for all
+				$oVisibleObjects = DBObjectSearch::FromEmptySet($this->GetClass());
+			}
+			if (is_object($oVisibleObjects))
+			{
+				$oVisibleObjects->AllowAllData();
+				$oSearch = $this->Intersect($oVisibleObjects);
+				$oSearch->SetDataFiltered();
+			}
+			else
+			{
+				// should be true at this point, meaning that no additional filtering
+				// is required
+			}
+		}
 
-		$oSQLQuery = $this->MakeSQLObjectQuery($oBuild, $aAttToLoad, array());
+		$oBuild = new QueryBuilderContext($oSearch, $aModifierProperties, $aGroupByExpr, $aSelectedClasses);
+
+		$oSQLQuery = $oSearch->MakeSQLObjectQuery($oBuild, $aAttToLoad, array());
 		$oSQLQuery->SetCondition($oBuild->m_oQBExpressions->GetCondition());
 		if ($aGroupByExpr)
 		{

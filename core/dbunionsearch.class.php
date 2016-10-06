@@ -55,6 +55,22 @@ class DBUnionSearch extends DBSearch
 		$this->ComputeSelectedClasses();
 	}
 
+	public function AllowAllData()
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->AllowAllData();
+		}
+	}
+	public function IsAllDataAllowed()
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			if ($oSearch->IsAllDataAllowed() === false) return false;
+		}
+		return true;
+	}
+
 	/**
 	 * Find the lowest common ancestor for each of the selected class
 	 */
@@ -357,12 +373,12 @@ class DBUnionSearch extends DBSearch
 	/**
 	 * Overloads for query building
 	 */ 
-	public function ToOQL($bDevelopParams = false, $aContextParams = null)
+	public function ToOQL($bDevelopParams = false, $aContextParams = null, $bWithAllowAllFlag = false)
 	{
 		$aSubQueries = array();
 		foreach ($this->aSearches as $oSearch)
 		{
-			$aSubQueries[] = $oSearch->ToOQL($bDevelopParams, $aContextParams);
+			$aSubQueries[] = $oSearch->ToOQL($bDevelopParams, $aContextParams, $bWithAllowAllFlag);
 		}
 		$sRet = implode(' UNION ', $aSubQueries);
 		return $sRet;
