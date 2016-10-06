@@ -229,6 +229,8 @@ EOF
 		$sDeleteBtn = Dict::S('Portal:Button:Delete');
 
 		$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
+		// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+		$oSearch->AllowAllData();
 		$oSet = new DBObjectSet($oSearch, array(), array('class' => $sObjectClass, 'item_id' => $this->oField->GetObject()->GetKey()));
 
 		// If in read only and no attachments, we display a short message

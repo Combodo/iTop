@@ -94,7 +94,8 @@ class ObjectFormManager extends FormManager
 		}
 		else
 		{
-			$oObject = MetaModel::GetObject($sObjectClass, $aJson['formobject_id'], true);
+			// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+			$oObject = MetaModel::GetObject($sObjectClass, $aJson['formobject_id'], true, true);
 		}
 		$oFormManager->SetObject($oObject);
 
@@ -543,8 +544,16 @@ class ObjectFormManager extends FormManager
 								IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' has no scope query for ' . $oScopeOriginal->GetClass() . ' class.');
 								$this->oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
 							}
-
+							IssueLog::Info('Applying scope on field #' . $sAttCode);
+							IssueLog::Info('|-- AllowAllData on scope search ' . (($oScopeSearch->IsAllDataAllowed()) ? 'true' : 'false') . ' : ' . $oScopeSearch->ToOQL());
+							IssueLog::Info('|-- AllowAllData on scope original ' . (($oScopeOriginal->IsAllDataAllowed()) ? 'true' : 'false'));
 							$oScopeOriginal = $oScopeOriginal->Intersect($oScopeSearch);
+							// Note : This is to skip the silo restriction on the final query
+							if ($oScopeSearch->IsAllDataAllowed())
+							{
+								$oScopeOriginal->AllowAllData();
+							}
+							IssueLog::Info('|-- AllowAllData on result search ' . (($oScopeOriginal->IsAllDataAllowed()) ? 'true' : 'false'));
 							$oScopeOriginal->SetInternalParams(array('this' => $this->oObject));
 							$oField->SetSearch($oScopeOriginal);
 						}
@@ -937,7 +946,8 @@ class ObjectFormManager extends FormManager
 								// LinkedSet
 								if (!$oAttDef->IsIndirect())
 								{
-									$oLinkedObject = MetaModel::GetObject($sTargetClass, abs($iTargetId));
+									// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+									$oLinkedObject = MetaModel::GetObject($sTargetClass, abs($iTargetId), true, true);
 									$oValueSet->AddObject($oLinkedObject);
 								}
 								// LinkedSetIndirect
@@ -953,7 +963,8 @@ class ObjectFormManager extends FormManager
 									// Existing relation
 									else
 									{
-										$oLink = MetaModel::GetObject($sTargetClass, $iTargetId);
+										// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+										$oLink = MetaModel::GetObject($sTargetClass, $iTargetId, true, true);
 									}
 									$oValueSet->AddObject($oLink);
 								}

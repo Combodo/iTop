@@ -112,7 +112,7 @@ class SecurityHelper
 			// Checking if the cmdbAbstractObject exists if id is specified
 			if ($sObjectId !== null)
 			{
-				$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */);
+				$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */, $oApp['scope_validator']->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
 				if ($oObject === null)
 				{
 					if ($oApp['debug'])

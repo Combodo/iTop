@@ -86,7 +86,7 @@ class ObjectController extends AbstractController
 		}
 
 		// Retrieving object
-		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */);
+		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */, $oApp['scope_validator']->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
 		if ($oObject === null)
 		{
 			// We should never be there as the secuirty helper makes sure that the object exists, but just in case.
@@ -158,7 +158,7 @@ class ObjectController extends AbstractController
 		}
 
 		// Retrieving object
-		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */);
+		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */, $oApp['scope_validator']->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
 		if ($oObject === null)
 		{
 			// We should never be there as the secuirty helper makes sure that the object exists, but just in case.
@@ -278,8 +278,9 @@ class ObjectController extends AbstractController
 		}
 		
 		// Retrieving origin object
-		$oOriginObject = MetaModel::GetObject($sObjectClass, $sObjectId);
-		
+		// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+		$oOriginObject = MetaModel::GetObject($sObjectClass, $sObjectId, true, true);
+
 		// Retrieving target object (We check if the method is a simple function or if it's part of a class in which case only static function are supported)
 		if (!strpos($sMethodName, '::'))
 		{
@@ -332,7 +333,7 @@ class ObjectController extends AbstractController
 //		}
 		
 		// Retrieving object
-		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */);
+		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */, $oApp['scope_validator']->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
 		if ($oObject === null)
 		{
 			// We should never be there as the secuirty helper makes sure that the object exists, but just in case.
@@ -461,7 +462,7 @@ class ObjectController extends AbstractController
 			}
 			else
 			{
-				$oObject = MetaModel::GetObject($sObjectClass, $sObjectId);
+				$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, true, $oApp['scope_validator']->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
 			}
 
 			// Preparing transitions only if we are currently going through one
@@ -666,7 +667,8 @@ class ObjectController extends AbstractController
 		// Retrieving host object for future DBSearch parameters
 		if ($sHostObjectId !== null)
 		{
-			$oHostObject = MetaModel::GetObject($sHostObjectClass, $sHostObjectId);
+			// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+			$oHostObject = MetaModel::GetObject($sHostObjectClass, $sHostObjectId, true, true);
 		}
 		else
 		{
@@ -737,7 +739,13 @@ class ObjectController extends AbstractController
 		// It is the responsability of the template designer to write the right query so the user see only what he should.
 		if ($oTargetAttDef->GetEditClass() !== 'CustomFields')
 		{
-			$oSearch = $oSearch->Intersect($oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ));
+			$oScopeSearch = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ);
+			$oSearch = $oSearch->Intersect($oScopeSearch);
+			// - Allowing all data if necessary
+			if ($oScopeSearch->IsAllDataAllowed())
+			{
+				$oSearch->AllowAllData();
+			}
 		}
 
 		// Retrieving results
@@ -803,7 +811,8 @@ class ObjectController extends AbstractController
 		// Retrieving host object for future DBSearch parameters
 		if ($sHostObjectId !== null)
 		{
-			$oHostObject = MetaModel::GetObject($sHostObjectClass, $sHostObjectId);
+			// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+			$oHostObject = MetaModel::GetObject($sHostObjectClass, $sHostObjectId, true, true);
 		}
 		else
 		{
@@ -988,6 +997,11 @@ class ObjectController extends AbstractController
 		if (($oScopeSearch !== null) && ($oTargetAttDef->GetEditClass() !== 'CustomFields'))
 		{
 			$oSearch = $oSearch->Intersect($oScopeSearch);
+			// - Allowing all data if necessary
+			if ($oScopeSearch->IsAllDataAllowed())
+			{
+				$oSearch->AllowAllData();
+			}
 		}
 
 		// Retrieving results
@@ -1121,7 +1135,8 @@ class ObjectController extends AbstractController
 		// Retrieving host object for future DBSearch parameters
 		if ($sHostObjectId !== null)
 		{
-			$oHostObject = MetaModel::GetObject($sHostObjectClass, $sHostObjectId);
+			// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+			$oHostObject = MetaModel::GetObject($sHostObjectClass, $sHostObjectId, true, true);
 		}
 		else
 		{
@@ -1212,6 +1227,11 @@ class ObjectController extends AbstractController
 //		}
 		// - Intersecting with scope constraints
 		$oSearch = $oSearch->Intersect($oScopeSearch);
+		// - Allowing all data if necessary
+		if ($oScopeSearch->IsAllDataAllowed())
+		{
+			$oSearch->AllowAllData();
+		}
 
 		// Retrieving results
 		// - Preparing object set
@@ -1427,7 +1447,12 @@ class ObjectController extends AbstractController
 		}
 		
 		// Building the search
+		$bIgnoreSilos = $oApp['scope_validator']->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass);
 		$oSearch = DBObjectSearch::FromOQL("SELECT " . $sObjectClass . " WHERE id IN ('" . implode("','", $aObjectIds) . "')");
+		if ($bIgnoreSilos === true)
+		{
+			$oSearch->AllowAllData();
+		}
 		$oSet = new DBObjectSet($oSearch);
 		$oSet->OptimizeColumnLoad($aObjectAttCodes);
 
