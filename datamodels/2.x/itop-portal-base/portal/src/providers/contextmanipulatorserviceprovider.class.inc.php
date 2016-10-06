@@ -38,6 +38,7 @@ class ContextManipulatorServiceProvider implements ServiceProviderInterface
 			$oApp->flush();
 
 			$oContextManipulatorHelper = new ContextManipulatorHelper();
+			$oContextManipulatorHelper->SetApp($oApp);
 
 			return $oContextManipulatorHelper;
 		});
