@@ -195,8 +195,6 @@ class EMail
 
 		$aFailedRecipients = array();
 		$this->m_oMessage->setMaxLineLength(0);
-IssueLog::Info(__METHOD__.' '.$this->m_oMessage->getMaxLineLength());
-IssueLog::Info(__METHOD__.' '.$this->m_oMessage->toString());
 		$iSent = $oMailer->send($this->m_oMessage, $aFailedRecipients);
 		if ($iSent === 0)
 		{
