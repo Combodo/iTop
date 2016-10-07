@@ -1233,6 +1233,13 @@ class DBObjectSearch extends DBSearch
 
 		$aAliases = array($sClassAlias => $sClass);
 
+		// Note: the condition must be built here, it may be altered later on when optimizing some joins
+		$oConditionTree = $oOqlQuery->GetCondition();
+		if ($oConditionTree instanceof Expression)
+		{
+			$this->m_oSearchCondition = $this->OQLExpressionToCondition($sQuery, $oConditionTree, $aAliases);
+		}
+
 		// Maintain an array of filters, because the flat list is in fact referring to a tree
 		// And this will be an easy way to dispatch the conditions
 		// $this will be referenced by the other filters, or the other way around...
@@ -1241,19 +1248,32 @@ class DBObjectSearch extends DBSearch
 		$aJoinSpecs = $oOqlQuery->GetJoins();
 		if (is_array($aJoinSpecs))
 		{
+			$aAliasTranslation = array();
 			foreach ($aJoinSpecs as $oJoinSpec)
 			{
 				$sJoinClass = $oJoinSpec->GetClass();
 				$sJoinClassAlias = $oJoinSpec->GetClassAlias();
+				if (isset($aAliasTranslation[$sJoinClassAlias]['*']))
+				{
+					$sJoinClassAlias = $aAliasTranslation[$sJoinClassAlias]['*'];
+				}
 
 				// Assumption: ext key on the left only !!!
 				// normalization should take care of this
 				$oLeftField = $oJoinSpec->GetLeftField();
 				$sFromClass = $oLeftField->GetParent();
+				if (isset($aAliasTranslation[$sFromClass]['*']))
+				{
+					$sFromClass = $aAliasTranslation[$sFromClass]['*'];
+				}
 				$sExtKeyAttCode = $oLeftField->GetName();
 
 				$oRightField = $oJoinSpec->GetRightField();
 				$sToClass = $oRightField->GetParent();
+				if (isset($aAliasTranslation[$sToClass]['*']))
+				{
+					$sToClass = $aAliasTranslation[$sToClass]['*'];
+				}
 
 				$aAliases[$sJoinClassAlias] = $sJoinClass;
 				$aJoinItems[$sJoinClassAlias] = new DBObjectSearch($sJoinClass, $sJoinClassAlias);
@@ -1295,19 +1315,16 @@ class DBObjectSearch extends DBSearch
 				{
 					$oReceiver = $aJoinItems[$sToClass];
 					$oNewComer = $aJoinItems[$sFromClass];
-
-					$aAliasTranslation = array();
 					$oReceiver->AddCondition_ReferencedBy_InNameSpace($oNewComer, $sExtKeyAttCode, $oReceiver->m_aClasses, $aAliasTranslation, $iOperatorCode);
 				}
 				else
 				{
 					$oReceiver = $aJoinItems[$sFromClass];
 					$oNewComer = $aJoinItems[$sToClass];
-
-					$aAliasTranslation = array();
 					$oReceiver->AddCondition_PointingTo_InNameSpace($oNewComer, $sExtKeyAttCode, $oReceiver->m_aClasses, $aAliasTranslation, $iOperatorCode);
 				}
 			}
+			$this->m_oSearchCondition = $this->m_oSearchCondition->Translate($aAliasTranslation, false, false /* leave unresolved fields */);
 		}
 
 		// Check and prepare the select information
@@ -1318,12 +1335,6 @@ class DBObjectSearch extends DBSearch
 			$this->m_aSelectedClasses[$sClassToSelect] = $aAliases[$sClassToSelect];
 		}
 		$this->m_aClasses = $aAliases;
-
-		$oConditionTree = $oOqlQuery->GetCondition();
-		if ($oConditionTree instanceof Expression)
-		{
-			$this->m_oSearchCondition = $this->OQLExpressionToCondition($sQuery, $oConditionTree, $aAliases);
-		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////
