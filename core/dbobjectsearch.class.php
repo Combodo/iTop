@@ -23,7 +23,9 @@
  * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
- 
+
+// Dev hack for disabling the some query build optimizations (Folding/Merging)
+define('ENABLE_OPT', true);
 
 class DBObjectSearch extends DBSearch
 {
@@ -182,10 +184,85 @@ class DBObjectSearch extends DBSearch
 		{
 			if (!array_key_exists($sAlias, $this->m_aClasses))
 			{
-				throw new CoreException("Invalid class alias $sAlias");
+				throw new CoreException("SetSelectedClasses: Invalid class alias $sAlias");
 			}
 			$this->m_aSelectedClasses[$sAlias] = $this->m_aClasses[$sAlias];
 		}
+	}
+
+	/**
+	 * Change any alias of the query tree
+	 *
+	 * @param $sOldName
+	 * @param $sNewName
+	 * @return bool True if the alias has been found and changed
+	 */
+	public function RenameAlias($sOldName, $sNewName)
+	{
+		$bFound = false;
+		if (array_key_exists($sOldName, $this->m_aClasses))
+		{
+			$bFound = true;
+		}
+		if (array_key_exists($sNewName, $this->m_aClasses))
+		{
+			throw new Exception("RenameAlias: alias '$sNewName' already used");
+		}
+
+		$aClasses = array();
+		foreach ($this->m_aClasses as $sAlias => $sClass)
+		{
+			if ($sAlias === $sOldName)
+			{
+				$aClasses[$sNewName] = $sClass;
+			}
+			else
+			{
+				$aClasses[$sAlias] = $sClass;
+			}
+		}
+		$this->m_aClasses = $aClasses;
+
+		$aSelectedClasses = array();
+		foreach ($this->m_aSelectedClasses as $sAlias => $sClass)
+		{
+			if ($sAlias === $sOldName)
+			{
+				$aSelectedClasses[$sNewName] = $sClass;
+			}
+			else
+			{
+				$aSelectedClasses[$sAlias] = $sClass;
+			}
+		}
+		$this->m_aSelectedClasses = $aSelectedClasses;
+
+		$this->m_oSearchCondition->RenameAlias($sOldName, $sNewName);
+
+		foreach($this->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
+		{
+			foreach($aPointingTo as $iOperatorCode => $aFilter)
+			{
+				foreach($aFilter as $oExtFilter)
+				{
+					$bFound = $oExtFilter->RenameAlias($sOldName, $sNewName) || $bFound;
+				}
+			}
+		}
+		foreach($this->m_aReferencedBy as $sForeignClass => $aReferences)
+		{
+			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
+			{
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
+				{
+					foreach ($aFilters as $oForeignFilter)
+					{
+						$bFound = $oForeignFilter->RenameAlias($sOldName, $sNewName) || $bFound;
+					}
+				}
+			}
+		}
+		return $bFound;
 	}
 
 	public function SetModifierProperty($sPluginClass, $sProperty, $value)
@@ -564,8 +641,85 @@ class DBObjectSearch extends DBSearch
 		return null;
 	}
 
+	/**
+	 * Helper to
+	 * - convert a translation table (format optimized for the translation in an expression tree) into simple hash
+	 * - compile over an eventually existing map
+	 *
+	 * @param $aRealiasingMap  Map to update
+	 * @param $aAliasTranslation Translation table resulting from calls to MergeWith_InNamespace
+	 * @return array of <old-alias> => <new-alias>
+	 */
+	protected function UpdateRealiasingMap(&$aRealiasingMap, $aAliasTranslation)
+	{
+		if ($aRealiasingMap !== null)
+		{
+			foreach ($aAliasTranslation as $sPrevAlias => $aRules)
+			{
+				if (isset($aRules['*']))
+				{
+					$sNewAlias = $aRules['*'];
+					$sOriginalAlias = array_search($sPrevAlias, $aRealiasingMap);
+					if ($sOriginalAlias !== false)
+					{
+						$aRealiasingMap[$sOriginalAlias] = $sNewAlias;
+					}
+					else
+					{
+						$aRealiasingMap[$sPrevAlias] = $sNewAlias;
+					}
+				}
+			}
+		}
+	}
 
-	public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS)
+	/**
+	 * Completes the list of alias=>class by browsing the whole structure recursively
+	 * This a workaround to handle some cases in which the list of classes is not correctly updated.
+	 * This code should disappear as soon as DBObjectSearch get split between a container search class and a Node class
+	 *
+	 * @param $aClasses List to be completed
+	 */
+	protected function RecomputeClassList(&$aClasses)
+	{
+		$aClasses[$this->GetFirstJoinedClassAlias()] = $this->GetFirstJoinedClass();
+
+		// Recurse in the query tree
+		foreach($this->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
+		{
+			foreach($aPointingTo as $iOperatorCode => $aFilter)
+			{
+				foreach($aFilter as $oFilter)
+				{
+					$oFilter->RecomputeClassList($aClasses);
+				}
+			}
+		}
+
+		foreach($this->m_aReferencedBy as $sForeignClass=>$aReferences)
+		{
+			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
+			{
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
+				{
+					foreach ($aFilters as $oForeignFilter)
+					{
+						$oForeignFilter->RecomputeClassList($aClasses);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param DBObjectSearch $oFilter
+	 * @param $sExtKeyAttCode
+	 * @param int $iOperatorCode
+	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
+	 * @throws CoreException
+	 * @throws CoreWarning
+	 */
+	public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
 		if (!MetaModel::IsValidKeyAttCode($this->GetClass(), $sExtKeyAttCode))
 		{
@@ -589,6 +743,22 @@ class DBObjectSearch extends DBSearch
 		$aAliasTranslation = array();
 		$res = $this->AddCondition_PointingTo_InNameSpace($oFilter, $sExtKeyAttCode, $this->m_aClasses, $aAliasTranslation, $iOperatorCode);
 		$this->TransferConditionExpression($oFilter, $aAliasTranslation);
+		$this->UpdateRealiasingMap($aRealiasingMap, $aAliasTranslation);
+
+		if (ENABLE_OPT && ($oFilter->GetClass() == $oFilter->GetFirstJoinedClass()))
+		{
+			if (isset($oFilter->m_aReferencedBy[$this->GetClass()][$sExtKeyAttCode][$iOperatorCode]))
+			{
+				// Optimization - fold sibling query
+				$oRemoteFilter = $oFilter->m_aReferencedBy[$this->GetClass()][$sExtKeyAttCode][$iOperatorCode][0];
+				$aAliasTranslation = array();
+				$this->MergeWith_InNamespace($oRemoteFilter, $this->m_aClasses, $aAliasTranslation);
+				unset($oFilter->m_aReferencedBy[$this->GetClass()][$sExtKeyAttCode][$iOperatorCode]);
+				$this->m_oSearchCondition  = $this->m_oSearchCondition->Translate($aAliasTranslation, false, false);
+				$this->UpdateRealiasingMap($aRealiasingMap, $aAliasTranslation);
+			}
+		}
+		$this->RecomputeClassList($this->m_aClasses);
 		return $res;
 	}
 
@@ -597,11 +767,25 @@ class DBObjectSearch extends DBSearch
 		// Find the node on which the new tree must be attached (most of the time it is "this")
 		$oReceivingFilter = $this->GetNode($this->GetClassAlias());
 
-		$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
-		$oReceivingFilter->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][] = $oFilter;
+		if (ENABLE_OPT && isset($oReceivingFilter->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode]))
+		{
+			$oExisting = $oReceivingFilter->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][0];
+			$oExisting->MergeWith_InNamespace($oFilter, $oExisting->m_aClasses, $aAliasTranslation);
+		}
+		else
+		{
+			$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
+			$oReceivingFilter->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][] = $oFilter;
+		}
 	}
 
-	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS)
+	/**
+	 * @param DBObjectSearch $oFilter
+	 * @param $sForeignExtKeyAttCode
+	 * @param int $iOperatorCode
+	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
+	 */
+	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
 		$sForeignClass = $oFilter->GetClass();
 		if (!MetaModel::IsValidKeyAttCode($sForeignClass, $sForeignExtKeyAttCode))
@@ -614,6 +798,7 @@ class DBObjectSearch extends DBSearch
 			// à refaire en spécifique dans FromOQL
 			throw new CoreException("The specified filter (objects referencing an object of class {$this->GetClass()}) is not compatible with the key '{$sForeignClass}::$sForeignExtKeyAttCode', which is pointing to {$oAttExtKey->GetTargetClass()}");
 		}
+
 		// Note: though it seems to be a good practice to clone the given source filter
 		//       (as it was done and fixed an issue in Intersect())
 		//       this was not implemented here because it was causing a regression (login as admin, select an org, click on any badge)
@@ -623,6 +808,22 @@ class DBObjectSearch extends DBSearch
 		$aAliasTranslation = array();
 		$res = $this->AddCondition_ReferencedBy_InNameSpace($oFilter, $sForeignExtKeyAttCode, $this->m_aClasses, $aAliasTranslation, $iOperatorCode);
 		$this->TransferConditionExpression($oFilter, $aAliasTranslation);
+		$this->UpdateRealiasingMap($aRealiasingMap, $aAliasTranslation);
+
+		if (ENABLE_OPT && ($oFilter->GetClass() == $oFilter->GetFirstJoinedClass()))
+		{
+			if (isset($oFilter->m_aPointingTo[$sForeignExtKeyAttCode][$iOperatorCode]))
+			{
+				// Optimization - fold sibling query
+				$oRemoteFilter = $oFilter->m_aPointingTo[$sForeignExtKeyAttCode][$iOperatorCode][0];
+				$aAliasTranslation = array();
+				$this->MergeWith_InNamespace($oRemoteFilter, $this->m_aClasses, $aAliasTranslation);
+				unset($oFilter->m_aPointingTo[$sForeignExtKeyAttCode][$iOperatorCode]);
+				$this->m_oSearchCondition  = $this->m_oSearchCondition->Translate($aAliasTranslation, false, false);
+				$this->UpdateRealiasingMap($aRealiasingMap, $aAliasTranslation);
+			}
+		}
+		$this->RecomputeClassList($this->m_aClasses);
 		return $res;
 	}
 
@@ -633,8 +834,16 @@ class DBObjectSearch extends DBSearch
 		// Find the node on which the new tree must be attached (most of the time it is "this")
 		$oReceivingFilter = $this->GetNode($this->GetClassAlias());
 
-		$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
-		$oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode][$iOperatorCode][] = $oFilter;
+		if (ENABLE_OPT && isset($oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode][$iOperatorCode]))
+		{
+			$oExisting = $oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode][$iOperatorCode][0];
+			$oExisting->MergeWith_InNamespace($oFilter, $oExisting->m_aClasses, $aAliasTranslation);
+		}
+		else
+		{
+			$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
+			$oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode][$iOperatorCode][] = $oFilter;
+		}
 	}
 
 	public function Intersect(DBSearch $oFilter)

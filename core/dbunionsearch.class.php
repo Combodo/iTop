@@ -203,6 +203,23 @@ class DBUnionSearch extends DBSearch
 		$this->ComputeSelectedClasses();
 	}
 
+	/**
+	 * Change any alias of the query tree
+	 *
+	 * @param $sOldName
+	 * @param $sNewName
+	 * @return bool True if the alias has been found and changed
+	 */
+	public function RenameAlias($sOldName, $sNewName)
+	{
+		$bRet = false;
+		foreach ($this->aSearches as $oSearch)
+		{
+			$bRet = $oSearch->RenameAlias($sOldName, $sNewName) || $bRet;
+		}
+		return $bRet;
+	}
+
 	public function IsAny()
 	{
 		$bIsAny = true;
@@ -298,19 +315,33 @@ class DBUnionSearch extends DBSearch
 		}
 	}
 
-	public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS)
+	/**
+	 * @param DBObjectSearch $oFilter
+	 * @param $sExtKeyAttCode
+	 * @param int $iOperatorCode
+	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
+	 * @throws CoreException
+	 * @throws CoreWarning
+	 */
+	public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
 		foreach ($this->aSearches as $oSearch)
 		{
-			$oSearch->AddCondition_PointingTo($oFilter, $sExtKeyAttCode, $iOperatorCode);
+			$oSearch->AddCondition_PointingTo($oFilter, $sExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
 		}
 	}
 
-	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS)
+	/**
+	 * @param DBObjectSearch $oFilter
+	 * @param $sForeignExtKeyAttCode
+	 * @param int $iOperatorCode
+	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
+	 */
+	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
 		foreach ($this->aSearches as $oSearch)
 		{
-			$oSearch->AddCondition_ReferencedBy($oFilter, $sForeignExtKeyAttCode, $iOperatorCode);
+			$oSearch->AddCondition_ReferencedBy($oFilter, $sForeignExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
 		}
 	}
 
