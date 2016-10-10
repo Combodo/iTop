@@ -187,14 +187,22 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 	);
 	
 	protected static $aAttrsWhiteList = array(
-		'href' => '/^(http:|https:)/i',
 		'src' => '/^(http:|https:|data:)/i',
 	);
 	
 	protected static $aStylesWhiteList = array(
 		'background-color', 'color', 'float', 'font', 'font-style', 'font-size', 'font-family', 'padding', 'margin', 'border', 'cellpadding', 'cellspacing', 'bordercolor', 'border-collapse', 'width', 'height',
 	);
-	
+
+	public function __construct()
+	{
+		if (!array_key_exists('href', self::$aAttrsWhiteList))
+		{
+			$sPattern = '/'.str_replace('/', '\/', utils::GetConfig()->Get('url_validation_pattern')).'/i';
+			self::$aAttrsWhiteList['href'] = $sPattern;
+		}
+	}
+
 	public function DoSanitize($sHTML)
 	{
 		$this->oDoc = new DOMDocument();
