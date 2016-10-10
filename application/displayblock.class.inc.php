@@ -1015,6 +1015,12 @@ var chart = c3.generate({
     },
     axis: {
         x: {
+			tick: {
+				culling: {max: 25}, // Maximum 24 labels on x axis (2 years).
+				centered: true,
+				rotate: 90,
+				multiline: false
+			},
             type: 'category'   // this needed to load string x value
         }
     },
@@ -1066,6 +1072,7 @@ var chart = c3.generate({
     },
     legend: {
       show: true,
+	  position: 'right',
     },
 	tooltip: {
 	  format: {
