@@ -97,6 +97,15 @@ abstract class DBSearch
 	 */
 	abstract public function SetSelectedClasses($aSelectedClasses);
 
+	/**
+	 * Change any alias of the query tree
+	 *
+	 * @param $sOldName
+	 * @param $sNewName
+	 * @return bool True if the alias has been found and changed
+	 */
+	abstract public function RenameAlias($sOldName, $sNewName);
+
 	abstract public function IsAny();
 
 	public function Describe(){return 'deprecated - use ToOQL() instead';}
@@ -121,19 +130,35 @@ abstract class DBSearch
 	abstract public function AddConditionAdvanced($sAttSpec, $value);
 	abstract public function AddCondition_FullText($sFullText);
 
-	abstract public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS);
-	abstract public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS);
+	/**
+	 * @param DBObjectSearch $oFilter
+	 * @param $sExtKeyAttCode
+	 * @param int $iOperatorCode
+	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
+	 * @throws CoreException
+	 * @throws CoreWarning
+	 */
+	abstract public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null);
+
+	/**
+	 * @param DBObjectSearch $oFilter
+	 * @param $sForeignExtKeyAttCode
+	 * @param int $iOperatorCode
+	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
+	 */
+	abstract public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null);
+
 	abstract public function Intersect(DBSearch $oFilter);
 
 	/**
-	 * 
 	 * @param DBSearch $oFilter
 	 * @param integer $iDirection
 	 * @param string $sExtKeyAttCode
 	 * @param integer $iOperatorCode
+	 * @param array &$RealisasingMap  Map of aliases from the attached query, that could have been renamed by the optimization process
 	 * @return DBSearch
 	 */
-	public function Join(DBSearch $oFilter, $iDirection, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS)
+	public function Join(DBSearch $oFilter, $iDirection, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
 		$oSourceFilter = $this->DeepClone();
 		$oRet = null;
@@ -143,7 +168,7 @@ abstract class DBSearch
 			$aSearches = array();
 			foreach ($oFilter->GetSearches() as $oSearch)
 			{
-				$aSearches[] = $oSourceFilter->Join($oSearch, $iDirection, $sExtKeyAttCode, $iOperatorCode);
+				$aSearches[] = $oSourceFilter->Join($oSearch, $iDirection, $sExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
 			}
 			$oRet = new DBUnionSearch($aSearches);
 		}
@@ -151,7 +176,7 @@ abstract class DBSearch
 		{
 			if ($iDirection === static::JOIN_POINTING_TO)
 			{
-				$oSourceFilter->AddCondition_PointingTo($oFilter, $sExtKeyAttCode, $iOperatorCode);
+				$oSourceFilter->AddCondition_PointingTo($oFilter, $sExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
 			}
 			else
 			{
@@ -159,7 +184,7 @@ abstract class DBSearch
 				{
 					throw new Exception('Only TREE_OPERATOR_EQUALS  operator code is supported yet for AddCondition_ReferencedBy.');
 				}
-				$oSourceFilter->AddCondition_ReferencedBy($oFilter, $sExtKeyAttCode);
+				$oSourceFilter->AddCondition_ReferencedBy($oFilter, $sExtKeyAttCode, TREE_OPERATOR_EQUALS, $aRealiasingMap);
 			}
 			$oRet = $oSourceFilter;
 		}

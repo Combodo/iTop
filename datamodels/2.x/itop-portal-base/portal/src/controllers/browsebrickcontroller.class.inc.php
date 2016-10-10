@@ -64,7 +64,7 @@ class BrowseBrickController extends BrickController
 		$aLevelsProperties = array();
 		$aLevelsClasses = array();
 		static::TreeToFlatLevelsProperties($oApp, $oBrick->GetLevels(), $aLevelsProperties);
-		
+
 		// Concistency checks
 		if (!in_array($sBrowseMode, array_keys($aBrowseModes)))
 		{
@@ -93,11 +93,19 @@ class BrowseBrickController extends BrickController
 			{
 				// Retrieving class alias for all depth
 				array_unshift($aLevelsClasses, $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->GetClassAlias());
-				
+
 				// Joining queries from bottom-up
 				if ($i < $iLoopMax)
 				{
-					$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search'] = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->Join($aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['search'], DBSearch::JOIN_REFERENCED_BY, $aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['parent_att']);
+					$aRealiasingMap = array();
+					$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search'] = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->Join($aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['search'], DBSearch::JOIN_REFERENCED_BY, $aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['parent_att'], TREE_OPERATOR_EQUALS, $aRealiasingMap);
+					foreach ($aLevelsPropertiesKeys as $sLevelAlias)
+					{
+						if (array_key_exists($sLevelAlias, $aRealiasingMap))
+						{
+							$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->RenameAlias($aRealiasingMap[$sLevelAlias], $sLevelAlias);
+						}
+					}
 				}
 
 				// Adding search clause
@@ -168,7 +176,7 @@ class BrowseBrickController extends BrickController
 				}
 			}
 			$oQuery = $aLevelsProperties[$aLevelsPropertiesKeys[0]]['search'];
-			
+
 			// Testing appropriate data loading mode if we are in auto
 			if ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_AUTO)
 			{
@@ -363,7 +371,7 @@ class BrowseBrickController extends BrickController
 		{
 			$sCurrentLevelAlias = $sLevelAliasPrefix . static::LEVEL_SEPARATOR . $aLevel['id'];
 			$oSearch = DBSearch::CloneWithAlias(DBSearch::FromOQL($aLevel['oql']), $sCurrentLevelAlias);
-			
+
 			// Restricting to the allowed scope
 			$oScopeSearch = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $oSearch->GetClass(), UR_ACTION_READ);
 			$oSearch = ($oScopeSearch !== null) ? $oSearch->Intersect($oScopeSearch) : null;
@@ -662,5 +670,3 @@ class BrowseBrickController extends BrickController
 	}
 
 }
-
-?>
