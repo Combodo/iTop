@@ -1386,7 +1386,8 @@ class ObjectController extends AbstractController
 					}
 				}
 
-				$oResponse = $oApp->json($aData);
+				// Note : The Content-Type header is set to 'text/plain' in order to be IE9 compatible. Otherwise ('application/json') IE9 will download the response as a JSON file to the user computer...
+				$oResponse = $oApp->json($aData, 200, array('Content-Type' => 'text/plain'));
 				break;
 
 			case 'download':
