@@ -5130,3 +5130,236 @@ class TestExecActions extends TestBizModel
 		}
 	}
 }
+
+class TestIntersectOptimization extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Internal query optimizations (pointing to)';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Clever optimization required for the portal to work fine (expected improvement: query never finishing... to an almost instantaneous query!';
+	}
+
+	protected function DoExecute()
+	{
+		$sBaseQuery = 'SELECT Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "The World Company"';
+		$aQueries = array(
+			// Exact same query
+			'SELECT Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "The World Company"',
+			// Same query, other aliases
+			'SELECT Service AS s2 JOIN Organization AS o2 ON s2.org_id = o2.id WHERE o2.name = "The World Company"',
+			// Same aliases, different condition
+			'SELECT Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.parent_id = 0',
+			// Other aliases, different condition
+			'SELECT Service AS s2 JOIN Organization AS o2 ON s2.org_id = o2.id WHERE o2.parent_id = 0',
+			// Same aliases, simpler query tree
+			'SELECT Service AS s WHERE name LIKE "Save the World"',
+			// Other aliases, simpler query tree
+			'SELECT Service AS s2 WHERE name LIKE "Save the World"',
+			// Same aliases, different query tree
+			'SELECT Service AS s JOIN ServiceFamily AS f ON s.servicefamily_id = f.id WHERE s.org_id = 123 AND f.name = "Care"',
+			// Other aliases, different query tree
+			'SELECT Service AS s2 JOIN ServiceFamily AS f ON s2.servicefamily_id = f.id WHERE s2.org_id = 123 AND f.name = "Care"',
+		);
+		echo "<h4>Base query: ".htmlentities($sBaseQuery, ENT_QUOTES, 'UTF-8')."</h4>\n";
+		foreach ($aQueries as $sOQL)
+		{
+			echo "<h5>Checking: ".htmlentities($sOQL, ENT_QUOTES, 'UTF-8')."</h5>\n";
+			$oSearchA = DBSearch::FromOQL($sBaseQuery);
+			$oSearchB = DBSearch::FromOQL($sOQL);
+			$oIntersect = $oSearchA->Intersect($oSearchB);
+			echo "<p>Intersect: ".htmlentities($oIntersect->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
+			CMDBSource::TestQuery($oIntersect->MakeSelectQuery());
+			echo "<p>Successfully tested the SQL query.</p>\n";
+		}
+	}
+}
+
+class TestIntersectOptimization2 extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Internal query optimizations (referenced by)';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Clever optimization required for the portal to work fine (expected improvement: query never finishing... to an almost instantaneous query!';
+	}
+
+	protected function DoExecute()
+	{
+		$sBaseQuery = 'SELECT Organization AS o JOIN Service AS s ON s.org_id = o.id WHERE s.name = "Help"';
+		$aQueries = array(
+			// Exact same query
+			'SELECT Organization AS o JOIN Service AS s ON s.org_id = o.id WHERE s.name = "Help"',
+			// Same query, other aliases
+			'SELECT Organization AS o2 JOIN Service AS s2 ON s2.org_id = o2.id WHERE s2.name = "Help"',
+			// Same aliases, different condition
+			'SELECT Organization AS o JOIN Service AS s ON s.org_id = o.id WHERE s.servicefamily_id = 321',
+			// Other aliases, different condition
+			'SELECT Organization AS o2 JOIN Service AS s2 ON s2.org_id = o2.id WHERE s2.servicefamily_id = 321',
+			// Same aliases, simpler query tree
+			'SELECT Organization AS o WHERE o.name = "Demo"',
+			// Other aliases, simpler query tree
+			'SELECT Organization AS o2 WHERE o2.name = "Demo"',
+			// Same aliases, different query tree
+			'SELECT Organization AS o JOIN Location AS l ON l.org_id = o.id WHERE l.name = "Paris"',
+			// Other aliases, different query tree
+			'SELECT Organization AS o2 JOIN Location AS l ON l.org_id = o2.id WHERE l.name = "Paris"',
+		);
+		echo "<h4>Base query: ".htmlentities($sBaseQuery, ENT_QUOTES, 'UTF-8')."</h4>\n";
+		foreach ($aQueries as $sOQL)
+		{
+			echo "<h5>Checking: ".htmlentities($sOQL, ENT_QUOTES, 'UTF-8')."</h5>\n";
+			$oSearchA = DBSearch::FromOQL($sBaseQuery);
+			$oSearchB = DBSearch::FromOQL($sOQL);
+			$oIntersect = $oSearchA->Intersect($oSearchB);
+			echo "<p>Intersect: ".htmlentities($oIntersect->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
+			CMDBSource::TestQuery($oIntersect->MakeSelectQuery());
+			echo "<p>Successfully tested the SQL query.</p>\n";
+		}
+	}
+}
+
+class TestIntersectOptimization3 extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Internal query optimizations (mix)';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Clever optimization required for the portal to work fine (expected improvement: query never finishing... to an almost instantaneous query!';
+	}
+
+	protected function DoExecute()
+	{
+		$aQueries = array(
+			array(
+				'SELECT Organization AS o',
+				'SELECT Organization AS o JOIN Location AS l ON l.org_id = o.id JOIN Organization AS p ON o.parent_id = p.id WHERE l.name = "Paris" AND p.code LIKE "toto"',
+			),
+			array(
+				'SELECT UserRequest AS r JOIN Service AS s ON r.service_id = s.id JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "left_name"',
+				'SELECT UserRequest AS r JOIN Service AS s ON r.service_id = s.id JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "right_name"',
+			),
+		);
+		echo "<h4>Mixing....</h4>\n";
+		foreach ($aQueries as $aQ)
+		{
+			$sBaseQuery = $aQ[0];
+			$sOQL = $aQ[1];
+			echo "<h5>Left: ".htmlentities($sBaseQuery, ENT_QUOTES, 'UTF-8')."</h5>\n";
+			echo "<h5>Right: ".htmlentities($sOQL, ENT_QUOTES, 'UTF-8')."</h5>\n";
+			$oSearchA = DBSearch::FromOQL($sBaseQuery);
+			$oSearchB = DBSearch::FromOQL($sOQL);
+			$oIntersect = $oSearchA->Intersect($oSearchB);
+			echo "<p>Intersect: ".htmlentities($oIntersect->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
+			CMDBSource::TestQuery($oIntersect->MakeSelectQuery());
+			echo "<p>Successfully tested the SQL query.</p>\n";
+		}
+	}
+}
+
+class TestIntersectOptimization4 extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Internal query optimizations (Folding on Join/ReferencedBy)';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Clever optimization required for the portal to work fine (expected improvement: query never finishing... to an almost instantaneous query!';
+	}
+
+	protected function DoExecute()
+	{
+		echo "<h4>Here we are (conluding a long series of tests)</h4>\n";
+		$sQueryA = 'SELECT UserRequest AS r JOIN Service AS s ON r.service_id = s.id JOIN Organization AS o ON s.org_id = o.id WHERE r.agent_id = 456 AND s.servicefamily_id = 789 AND o.name = "right_name"';
+		$sQueryB = 'SELECT Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "some name"';
+
+		echo "<h5>A: ".htmlentities($sQueryA, ENT_QUOTES, 'UTF-8')."</h5>\n";
+		echo "<h5>B: ".htmlentities($sQueryB, ENT_QUOTES, 'UTF-8')."</h5>\n";
+		$oSearchA = DBSearch::FromOQL($sQueryA);
+		$oSearchB = DBSearch::FromOQL($sQueryB);
+		$oSearchB->AddCondition_ReferencedBy($oSearchA, 'service_id');
+		echo "<p>Referenced by...: ".htmlentities($oSearchB->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
+		CMDBSource::TestQuery($oSearchB->MakeSelectQuery());
+		echo "<p>Successfully tested the SQL query.</p>\n";
+	}
+}
+
+class TestIntersectOptimization5 extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Internal query optimizations (Folding on Join/PointingTo)';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Clever optimization required for the portal to work fine (expected improvement: query never finishing... to an almost instantaneous query!';
+	}
+
+	protected function DoExecute()
+	{
+		echo "<h4>Here we are (conluding a long series of tests)</h4>\n";
+		$sQueryA = 'SELECT Organization AS o JOIN UserRequest AS r ON r.org_id = o.id JOIN Person AS p ON r.caller_id = p.id WHERE o.name LIKE "Company" AND r.service_id = 123 AND p.employee_number LIKE "007"';
+		$sQueryB = 'SELECT UserRequest AS ur JOIN Person AS p ON ur.agent_id = p.id WHERE p.status != "terminated"';
+
+		echo "<h5>A: ".htmlentities($sQueryA, ENT_QUOTES, 'UTF-8')."</h5>\n";
+		echo "<h5>B: ".htmlentities($sQueryB, ENT_QUOTES, 'UTF-8')."</h5>\n";
+		$oSearchA = DBSearch::FromOQL($sQueryA);
+		$oSearchB = DBSearch::FromOQL($sQueryB);
+		$oSearchB->AddCondition_PointingTo($oSearchA, 'org_id');
+		echo "<p>Referenced by...: ".htmlentities($oSearchB->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
+		CMDBSource::TestQuery($oSearchB->MakeSelectQuery());
+		echo "<p>Successfully tested the SQL query.</p>\n";
+	}
+}
+
+class TestParsingOptimization extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Query optimizations (Merging joins on OQL parsing)';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Checking a few queries that do involve query optimizations (implemented for the sake of optimizing the portal)';
+	}
+
+	protected function DoExecute()
+	{
+		$aQueries = array(
+			"SELECT UserRequest AS u
+				JOIN Person AS p1 ON u.caller_id=p1.id
+				JOIN Organization AS o1 ON p1.org_id=o1.id
+				JOIN Person AS p2 ON u.caller_id=p2.id WHERE p2.status='active' AND p1.status='inactive'",
+			"SELECT UserRequest AS u
+				JOIN Person AS p1 ON u.caller_id=p1.id
+				JOIN Person AS p2 ON u.caller_id=p2.id WHERE p2.status='active' AND p1.status='inactive'",
+			"SELECT UserRequest AS u
+				JOIN Person AS p1 ON u.caller_id=p1.id
+				JOIN Organization AS o1 ON p1.org_id=o1.id
+				JOIN Person ON u.caller_id=Person.id
+				JOIN Location AS l ON Person.location_id = l.id WHERE Person.status='active' AND p1.status='inactive' AND l.country='France'",
+		);
+		foreach ($aQueries as $sQuery)
+		{
+			echo "<h5>To Parse: ".htmlentities($sQuery, ENT_QUOTES, 'UTF-8')."</h5>\n";
+			$oSearch = DBSearch::FromOQL($sQuery);
+			$sQueryOpt = $oSearch->ToOQL();
+			echo "<h5>Optimized: ".htmlentities($sQueryOpt, ENT_QUOTES, 'UTF-8')."</h5>\n";
+			CMDBSource::TestQuery($oSearch->MakeSelectQuery());
+			echo "<p>Successfully tested the SQL query.</p>\n";
+		}
+	}
+}
