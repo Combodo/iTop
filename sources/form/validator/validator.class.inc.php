@@ -57,7 +57,15 @@ class Validator
 	 */
 	public function GetRegExp($bWithSlashes = false)
 	{
-		return ($bWithSlashes) ? '/' . $this->sRegExp . '/' : $this->sRegExp;
+		if ($bWithSlashes)
+		{
+			$sRet = '/' . str_replace('/', '\\/', $this->sRegExp) . '/';
+		}
+		else
+		{
+			$sRet = $this->sRegExp;
+		}
+		return $sRet;
 	}
 
 	public function GetErrorMessage()
