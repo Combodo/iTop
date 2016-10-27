@@ -2080,7 +2080,7 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	function createElement($sName, $value = null, $namespaceURI = null)
 	{
 		$oElement = $this->importNode(new MFElement($sName, null, $namespaceURI));
-		if (!empty($value))
+		if (($value !== '') && ($value !== null))
 		{
 			$oElement->appendChild(new DOMText($value));
 		}
