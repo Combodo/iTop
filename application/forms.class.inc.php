@@ -1368,23 +1368,30 @@ class RunTimeIconSelectionField extends DesignerIconSelectionField
 
 	static protected function FindIconsOnDisk($sBaseDir, $sDir = '')
 	{
-		$sKey = md5($sBaseDir.'/'.$sDir);
-		$sCacheFile = utils::GetCachePath().'available-icons-'.$sKey.'.php';
+		$aFiles = null;
+		$sKey = $sBaseDir.'/'.$sDir;
+		$sShortKey = crc32($sKey);
+		$sCacheFile = utils::GetCachePath().'available-icons-'.$sShortKey.'.php';
+		$sCacheClass = 'AvailableIcons_'.$sShortKey;
 		if (file_exists($sCacheFile))
 		{
 			require_once($sCacheFile);
-			$aFiles = AvailableIcons::$aIconFiles;
+			if ($sCacheClass::$sKey === $sKey) // crc32 collision detection
+			{
+				$aFiles = $sCacheClass::$aIconFiles;
+			}
 		}
-		else
+		if ($aFiles === null)
 		{
 			$aFiles = self::_FindIconsOnDisk($sBaseDir, $sDir);
 			$sAvailableIcons = '<?php'.PHP_EOL;
 			$sAvailableIcons .= '// Generated and used by '.__METHOD__.PHP_EOL;
-			$sAvailableIcons .= 'class AvailableIcons'.PHP_EOL;
+			$sAvailableIcons .= 'class '.$sCacheClass.PHP_EOL;
 			$sAvailableIcons .= '{'.PHP_EOL;
+			$sAvailableIcons .= '   static $sKey = '.var_export($sKey, true).';'.PHP_EOL;
 			$sAvailableIcons .= '   static $aIconFiles = '.var_export($aFiles, true).';'.PHP_EOL;
 			$sAvailableIcons .= '}'.PHP_EOL;
-			file_put_contents($sCacheFile, $sAvailableIcons);
+			file_put_contents($sCacheFile, $sAvailableIcons, LOCK_EX);
 		}
 		return $aFiles;
 	}
