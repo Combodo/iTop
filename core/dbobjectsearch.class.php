@@ -1366,7 +1366,7 @@ class DBObjectSearch extends DBSearch
 		return $oSQLQuery->RenderUpdate($aScalarArgs);
 	}
 
-	public function MakeSQLQuery($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr = null, $aSelectedClasses = null)
+	public function GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null)
 	{
 		// Hide objects that are not visible to the current user
 		//
@@ -1392,9 +1392,113 @@ class DBObjectSearch extends DBSearch
 			}
 		}
 
-		$oBuild = new QueryBuilderContext($oSearch, $aModifierProperties, $aGroupByExpr, $aSelectedClasses);
+		// Compute query modifiers properties (can be set in the search itself, by the context, etc.)
+		//
+		$aModifierProperties = MetaModel::MakeModifierProperties($oSearch);
 
-		$oSQLQuery = $oSearch->MakeSQLObjectQuery($oBuild, $aAttToLoad, array());
+		// Create a unique cache id
+		//
+		if (self::$m_bQueryCacheEnabled || self::$m_bTraceQueries)
+		{
+			// Need to identify the query
+			$sOqlQuery = $oSearch->ToOql(false, null, true);
+
+			if (count($aModifierProperties))
+			{
+				array_multisort($aModifierProperties);
+				$sModifierProperties = json_encode($aModifierProperties);
+			}
+			else
+			{
+				$sModifierProperties = '';
+			}
+
+			$sRawId = $sOqlQuery.$sModifierProperties;
+			if (!is_null($aAttToLoad))
+			{
+				$sRawId .= json_encode($aAttToLoad);
+			}
+			if (!is_null($aGroupByExpr))
+			{
+				foreach($aGroupByExpr as $sAlias => $oExpr)
+				{
+					$sRawId .= 'g:'.$sAlias.'!'.$oExpr->Render();
+				}
+			}
+			$sRawId .= $bGetCount;
+			$sOqlId = md5($sRawId);
+		}
+		else
+		{
+			$sOqlQuery = "SELECTING... ".$oSearch->GetClass();
+			$sOqlId = "query id ? n/a";
+		}
+
+
+		// Query caching
+		//
+		if (self::$m_bQueryCacheEnabled)
+		{
+			// Warning: using directly the query string as the key to the hash array can FAIL if the string
+			// is long and the differences are only near the end... so it's safer (but not bullet proof?)
+			// to use a hash (like md5) of the string as the key !
+			//
+			// Example of two queries that were found as similar by the hash array:
+			// SELECT SLT JOIN lnkSLTToSLA AS L1 ON L1.slt_id=SLT.id JOIN SLA ON L1.sla_id = SLA.id JOIN lnkContractToSLA AS L2 ON L2.sla_id = SLA.id JOIN CustomerContract ON L2.contract_id = CustomerContract.id WHERE SLT.ticket_priority = 1 AND SLA.service_id = 3 AND SLT.metric = 'TTO' AND CustomerContract.customer_id = 2
+			// and
+			// SELECT SLT JOIN lnkSLTToSLA AS L1 ON L1.slt_id=SLT.id JOIN SLA ON L1.sla_id = SLA.id JOIN lnkContractToSLA AS L2 ON L2.sla_id = SLA.id JOIN CustomerContract ON L2.contract_id = CustomerContract.id WHERE SLT.ticket_priority = 1 AND SLA.service_id = 3 AND SLT.metric = 'TTR' AND CustomerContract.customer_id = 2
+			// the only difference is R instead or O at position 285 (TTR instead of TTO)...
+			//
+			if (array_key_exists($sOqlId, self::$m_aQueryStructCache))
+			{
+				// hit!
+
+				$oSQLQuery = unserialize(serialize(self::$m_aQueryStructCache[$sOqlId]));
+				// Note: cloning is not enough because the subtree is made of objects
+			}
+			elseif (self::$m_bUseAPCCache)
+			{
+				// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
+				//
+				$sOqlAPCCacheId = 'itop-'.MetaModel::GetEnvironmentId().'-query-cache-'.$sOqlId;
+				$oKPI = new ExecutionKPI();
+				$result = apc_fetch($sOqlAPCCacheId);
+				$oKPI->ComputeStats('Query APC (fetch)', $sOqlQuery);
+
+				if (is_object($result))
+				{
+					$oSQLQuery = $result;
+					self::$m_aQueryStructCache[$sOqlId] = $oSQLQuery;
+				}
+			}
+		}
+
+		if (!isset($oSQLQuery))
+		{
+			$oKPI = new ExecutionKPI();
+			$oSQLQuery = $oSearch->BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr);
+			$oKPI->ComputeStats('BuildSQLQueryStruct', $sOqlQuery);
+
+			if (self::$m_bQueryCacheEnabled)
+			{
+				if (self::$m_bUseAPCCache)
+				{
+					$oKPI = new ExecutionKPI();
+					apc_store($sOqlAPCCacheId, $oSQLQuery, self::$m_iQueryCacheTTL);
+					$oKPI->ComputeStats('Query APC (store)', $sOqlQuery);
+				}
+
+				self::$m_aQueryStructCache[$sOqlId] = $oSQLQuery->DeepClone();
+			}
+		}
+		return $oSQLQuery;
+	}
+
+	protected function BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr = null, $aSelectedClasses = null)
+	{
+		$oBuild = new QueryBuilderContext($this, $aModifierProperties, $aGroupByExpr, $aSelectedClasses);
+
+		$oSQLQuery = $this->MakeSQLObjectQuery($oBuild, $aAttToLoad, array());
 		$oSQLQuery->SetCondition($oBuild->m_oQBExpressions->GetCondition());
 		if ($aGroupByExpr)
 		{

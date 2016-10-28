@@ -456,11 +456,11 @@ class DBUnionSearch extends DBSearch
 		throw new Exception('MakeUpdateQuery is not implemented for the unions!');
 	}
 
-	protected function MakeSQLQuery($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr = null, $aSelectedClasses = null)
+	protected function GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null)
 	{
 		if (count($this->aSearches) == 1)
 		{
-			return $this->aSearches[0]->MakeSQLQuery($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr);
+			return $this->aSearches[0]->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr);
 		}
 
 		$aSQLQueries = array();
@@ -515,7 +515,7 @@ class DBUnionSearch extends DBSearch
 					$aQueryGroupByExpr[$sExpressionAlias] = $oExpression->Translate($aTranslationData, false, false);
 				}
 			}
-			$oSubQuery = $oSearch->MakeSQLQuery($aQueryAttToLoad, false, $aModifierProperties, $aQueryGroupByExpr, $aSearchSelectedClasses);
+			$oSubQuery = $oSearch->GetSQLQueryStructure($aQueryAttToLoad, false, $aQueryGroupByExpr, $aSearchSelectedClasses);
 			$aSQLQueries[] = $oSubQuery;
 		}
 
