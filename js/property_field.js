@@ -487,11 +487,24 @@ function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId, aForbidden
 		{
 			for(j in aForbiddenValues[i].values)
 			{
-				if (aForbiddenValues[i].values[j] == currentVal)
+				if (aForbiddenValues[i].case_sensitive)
 				{
-					bValid = false;
-					sMessage = aForbiddenValues[i].message;
-					break;	
+					if (aForbiddenValues[i].values[j] == currentVal)
+					{
+						bValid = false;
+						sMessage = aForbiddenValues[i].message;
+						break;	
+					}
+				}
+				else
+				{
+					if (aForbiddenValues[i].values[j].toUpperCase() == currentVal.toUpperCase())
+					{
+						bValid = false;
+						sMessage = aForbiddenValues[i].message;
+						break;	
+					}
+					
 				}
 			}
 		}

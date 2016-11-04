@@ -881,7 +881,7 @@ class DesignerTextField extends DesignerFormField
 		$this->sValidationPattern = $sValidationPattern;
 	}
 
-	public function SetForbiddenValues($aValues, $sExplain)
+	public function SetForbiddenValues($aValues, $sExplain, $bCaseSensitive = true)
 	{
 		$aForbiddenValues = $aValues;
 		
@@ -893,7 +893,7 @@ class DesignerTextField extends DesignerFormField
 			
 		}
 		
-		$this->aForbiddenValues[] = array('values' => $aForbiddenValues, 'message' => $sExplain);
+		$this->aForbiddenValues[] = array('values' => $aForbiddenValues, 'message' => $sExplain, 'case_sensitive' => $bCaseSensitive);
 	}
 	
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
