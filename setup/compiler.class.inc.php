@@ -995,6 +995,11 @@ EOF
 	
 		// Fields
 		//
+		$oFields = $oClass->GetOptionalElement('fields');
+		if ($oFields)
+		{
+			$this->CompileFiles($oFields, $sTempTargetDir.'/'.$sModuleRelativeDir, $sFinalTargetDir.'/'.$sModuleRelativeDir, '');
+		}
 		$sAttributes = '';
 		foreach($this->oFactory->ListFields($oClass) as $oField)
 		{
