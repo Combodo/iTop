@@ -11,7 +11,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 	'Menu:ConfigEditor' => 'Konfiguration',
 	'config-edit-title' => 'Konfigurations-Editor',
-	'config-edit-intro' => 'Seien sie bei der Bearbeitung der Konfigurationsdatei sehr vorsichtig. Normalerweise sollten es ausreichen die Einträge im oberen Teil der Konfiguration zu bearbeiten (Bsp.: die globalen Konfigurations- und Moduleinstellungen).',
+	'config-edit-intro' => 'Seien sie bei der Bearbeitung der Konfigurationsdatei sehr vorsichtig.',
 	'config-apply' => 'Anwenden',
 	'config-cancel' => 'Zurücksetzen',
 	'config-confirm-cancel' => 'Ihre Änderungen werden nicht gespeichert.',

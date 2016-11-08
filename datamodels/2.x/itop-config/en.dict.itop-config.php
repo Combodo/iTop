@@ -10,7 +10,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'Menu:ConfigEditor' => 'Configuration',
 	'config-edit-title' => 'Configuration File Editor',
-	'config-edit-intro' => 'Be very cautious when editing the configuration file. In particular, only the upper items (i.e. the global configuration and modules settings) should be edited.',
+	'config-edit-intro' => 'Be very cautious when editing the configuration file.',
 	'config-apply' => 'Apply',
 	'config-cancel' => 'Reset',
 	'config-confirm-cancel' => 'Your changes will be lost.',
