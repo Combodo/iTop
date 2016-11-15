@@ -22,6 +22,7 @@ require_once(APPROOT.'core/querymodifier.class.inc.php');
 require_once(APPROOT.'core/metamodelmodifier.inc.php');
 require_once(APPROOT.'core/computing.inc.php');
 require_once(APPROOT.'core/relationgraph.class.inc.php');
+require_once(APPROOT.'core/apc-compat.php');
 
 /**
  * Metamodel
