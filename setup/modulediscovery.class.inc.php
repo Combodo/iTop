@@ -86,10 +86,14 @@ class ModuleDiscovery
 
 		if (array_key_exists($sModuleName, self::$m_aModuleVersionByName))
 		{
-			if (version_compare($sModuleVersion, self::$m_aModuleVersionByName[$sModuleName], '>'))
+			if (version_compare($sModuleVersion, self::$m_aModuleVersionByName[$sModuleName]['version'], '>'))
 			{
 				// Newer version, let's upgrade
-				self::$m_aModuleVersionByName[$sModuleName] = $sModuleVersion;
+				$sIdToRemove = self::$m_aModuleVersionByName[$sModuleName]['id'];
+				unset(self::$m_aModules[$sIdToRemove]);
+
+				self::$m_aModuleVersionByName[$sModuleName]['version'] = $sModuleVersion;
+				self::$m_aModuleVersionByName[$sModuleName]['id'] = $sId;
 			}
 			else
 			{
@@ -100,7 +104,8 @@ class ModuleDiscovery
 		else
 		{
 			// First version to be loaded for this module, remember it
-			self::$m_aModuleVersionByName[$sModuleName] = $sModuleVersion;
+			self::$m_aModuleVersionByName[$sModuleName]['version'] = $sModuleVersion;
+			self::$m_aModuleVersionByName[$sModuleName]['id'] = $sId;
 		}
 		
 		self::$m_aModules[$sId] = $aArgs;
