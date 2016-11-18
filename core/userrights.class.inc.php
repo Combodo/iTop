@@ -1045,7 +1045,12 @@ class UserRights
 		{
 			$oUser = self::$m_oUser;
 		}
-		if ($oUser->GetKey() == self::$m_oUser->GetKey())
+		if ($oUser === null)
+		{
+			// Not logged in: no profile at all
+			$aProfiles = array();
+		}
+		elseif ((self::$m_oUser !== null) && ($oUser->GetKey() == self::$m_oUser->GetKey()))
 		{
 			// Data about the current user can be found into the session data
 			if (array_key_exists('profile_list', $_SESSION))
