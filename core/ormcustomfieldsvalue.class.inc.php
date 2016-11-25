@@ -87,7 +87,7 @@ class ormCustomFieldsValue
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this->oHostObject), $this->sAttCode);
 		$oHandler = $oAttDef->GetHandler($this->GetValues());
-		return 'template...verb='.$sVerb.' sur "'.json_encode($this->aCurrentValues).'"';
+		return $oHandler->GetForTemplate($this->aCurrentValues, $sVerb, $bLocalize);
 	}
 
 	/**
