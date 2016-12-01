@@ -1370,7 +1370,7 @@ class RunTimeIconSelectionField extends DesignerIconSelectionField
 	{
 		$aFiles = null;
 		$sKey = $sBaseDir.'/'.$sDir;
-		$sShortKey = crc32($sKey);
+		$sShortKey = abs(crc32($sKey));
 		$sCacheFile = utils::GetCachePath().'available-icons-'.$sShortKey.'.php';
 		$sCacheClass = 'AvailableIcons_'.$sShortKey;
 		if (file_exists($sCacheFile))
