@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,9 +20,8 @@
  * Class UIHTMLEditorWidget
  * UI wdiget for displaying and editing one-way encrypted passwords
  *
- * @author      Phil Eddies
  * @author      Romain Quetiez
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -99,9 +98,26 @@ class UIHTMLEditorWidget
 
 		// Could also be bound to 'instanceReady.ckeditor'
 		$oPage->add_ready_script("$('#$iId').bind('validate', function(evt, sFormId) { return ValidateCKEditField('$iId', '', {$this->m_sMandatory}, sFormId, '') } );\n");
-		$oPage->add_ready_script("$('#$iId').bind('update', function() { BlockField('cke_$iId', $('#$iId').attr('disabled')); $(this).data('ckeditorInstance').setReadOnly($(this).prop('disabled')); } );\n");
-
+		$oPage->add_ready_script(
+				<<<EOF
+$('#$iId').bind('update', function(evt){
+	BlockField('cke_$iId', $('#$iId').attr('disabled'));
+	//Delayed execution - ckeditor must be properly initialized before setting readonly
+	var retryCount = 0;
+	var oMe = $('#$iId');
+	var delayedSetReadOnly = function () {
+		if (oMe.data('ckeditorInstance').editable() == undefined && retryCount++ < 10) {
+			setTimeout(delayedSetReadOnly, retryCount * 100); //Wait a while longer each iteration
+		}
+		else
+		{
+			oMe.data('ckeditorInstance').setReadOnly(oMe.prop('disabled'));
+		}
+	};
+	setTimeout(delayedSetReadOnly, 50);
+});
+EOF
+		);
 		return $sHtmlValue;
 	}
 }
-?>
