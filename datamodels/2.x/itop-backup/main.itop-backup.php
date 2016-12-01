@@ -244,6 +244,7 @@ class BackupExec implements iScheduledProcess
 					{
 						break;
 					}
+					$iNextPos = false; // necessary on sundays
 				}
 			}
 	
