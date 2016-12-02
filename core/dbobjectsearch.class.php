@@ -1426,6 +1426,7 @@ class DBObjectSearch extends DBSearch
 				}
 			}
 			$sRawId .= $bGetCount;
+			$sRawId .= implode(',', $aSelectedClasses); // Unions may alter the list of selected columns
 			$sOqlId = md5($sRawId);
 		}
 		else
@@ -1476,7 +1477,7 @@ class DBObjectSearch extends DBSearch
 		if (!isset($oSQLQuery))
 		{
 			$oKPI = new ExecutionKPI();
-			$oSQLQuery = $oSearch->BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr);
+			$oSQLQuery = $oSearch->BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr, $aSelectedClasses);
 			$oKPI->ComputeStats('BuildSQLQueryStruct', $sOqlQuery);
 
 			if (self::$m_bQueryCacheEnabled)

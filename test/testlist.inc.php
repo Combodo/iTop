@@ -5363,3 +5363,45 @@ class TestParsingOptimization extends TestBizModel
 		}
 	}
 }
+
+class TestUnions extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Unions';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Checking a few UNION queries';
+	}
+
+	protected function DoExecute()
+	{
+		// The two first items did reveal an issue with the query cache,
+		//because SELECT Person on the second line must not give the same query as SELECT Person on the first line
+		$aQueries = array(
+			"SELECT Person UNION SELECT Person" => true,
+			"SELECT Person UNION SELECT Team" => true,
+			"SELECT Person UNION SELECT Contact" => true,
+			"SELECT Contact UNION SELECT Person" => true,
+			"SELECT Person UNION SELECT Organization" => false,
+		);
+		foreach ($aQueries as $sQuery => $bSuccess)
+		{
+			echo "<h5>To Parse: ".htmlentities($sQuery, ENT_QUOTES, 'UTF-8')."</h5>\n";
+			try
+			{
+				$oSearch = DBSearch::FromOQL($sQuery);
+				if (!$bSuccess) throw new Exception('This query should not be parsable!');
+
+				CMDBSource::TestQuery($oSearch->MakeSelectQuery());
+				echo "<p>Successfully tested the SQL query.</p>\n";
+			}
+			catch (OQLException $e)
+			{
+				if ($bSuccess) throw $e;
+			}
+		}
+	}
+}
