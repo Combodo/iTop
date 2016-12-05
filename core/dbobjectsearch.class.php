@@ -1426,7 +1426,10 @@ class DBObjectSearch extends DBSearch
 				}
 			}
 			$sRawId .= $bGetCount;
-			$sRawId .= implode(',', $aSelectedClasses); // Unions may alter the list of selected columns
+			if (is_array($aSelectedClasses))
+			{
+				$sRawId .= implode(',', $aSelectedClasses); // Unions may alter the list of selected columns
+			}
 			$sOqlId = md5($sRawId);
 		}
 		else
