@@ -5401,6 +5401,55 @@ class TestUnions extends TestBizModel
 			catch (OQLException $e)
 			{
 				if ($bSuccess) throw $e;
+				echo "<p>Failed as expected.</p>\n";
+			}
+		}
+	}
+}
+
+class TestImplicitAlias extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'OQLImplicitAliases';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Checking implicit aliases resolution';
+	}
+
+	protected function DoExecute()
+	{
+		// The two first items did reveal an issue with the query cache,
+		//because SELECT Person on the second line must not give the same query as SELECT Person on the first line
+		$aQueries = array(
+			"SELECT Person WHERE org_id = 1" => true,
+			"SELECT Person WHERE s.org_id = 1" => false,
+			"SELECT Person AS p WHERE p.org_id = 1" => true,
+			"SELECT Person AS p WHERE Person.org_id = 1" => false,
+			"SELECT P FROM Organization AS O JOIN Person AS P ON P.org_id = O.id WHERE org_id = 2" => true, // Bug N.539
+			"SELECT Server JOIN Location ON Server.location_id = Location.id" => true,
+			"SELECT Server JOIN Location ON Server.location_id = id" => false,
+			"SELECT Server JOIN Location ON Server = Location.id" => false,
+			"SELECT Server JOIN Location ON Server.location_id = Location.id WHERE Server.org_id = 1" => true,
+			"SELECT Server JOIN Location ON Server.location_id = Location.id WHERE org_id = 1" => false,
+		);
+		foreach ($aQueries as $sQuery => $bSuccess)
+		{
+			echo "<h5>To Parse: ".htmlentities($sQuery, ENT_QUOTES, 'UTF-8')."</h5>\n";
+			try
+			{
+				$oSearch = DBSearch::FromOQL($sQuery);
+				if (!$bSuccess) throw new Exception('This query should not be parsable!');
+
+				CMDBSource::TestQuery($oSearch->MakeSelectQuery());
+				echo "<p>Successfully tested the SQL query.</p>\n";
+			}
+			catch (OQLException $e)
+			{
+				if ($bSuccess) throw $e;
+				echo "<p>Failed as expected.</p>\n";
 			}
 		}
 	}
