@@ -1237,7 +1237,16 @@ class DBObjectSearch extends DBSearch
 		$oConditionTree = $oOqlQuery->GetCondition();
 		if ($oConditionTree instanceof Expression)
 		{
-			$this->m_oSearchCondition = $this->OQLExpressionToCondition($sQuery, $oConditionTree, $aAliases);
+			$aRawAliases = array($sClassAlias => $sClass);
+			$aJoinSpecs = $oOqlQuery->GetJoins();
+			if (is_array($aJoinSpecs))
+			{
+				foreach ($aJoinSpecs as $oJoinSpec)
+				{
+					$aRawAliases[$oJoinSpec->GetClassAlias()] = $oJoinSpec->GetClass();
+				}
+			}
+			$this->m_oSearchCondition = $this->OQLExpressionToCondition($sQuery, $oConditionTree, $aRawAliases);
 		}
 
 		// Maintain an array of filters, because the flat list is in fact referring to a tree
