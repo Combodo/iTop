@@ -364,6 +364,16 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				{
 					if (this.name != '')
 					{
+						if ($(this).hasClass('htmlEditor'))
+						{
+							var sId = $(this).attr('id');
+							var editorInst = CKEDITOR.instances[sId];
+							if (editorInst)
+							{
+								editorInst.updateElement();
+							}
+						}
+
 						theMap[this.name] = this.value;
 					}
 				}
