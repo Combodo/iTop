@@ -124,6 +124,21 @@ class MFCompiler
 			// Move the results to the target directory
 			SetupUtils::movedir($sTempTargetDir, $sFinalTargetDir);
 		}
+		
+		// Reset the opcache since otherwise the PHP "model" files may still be cached !!
+		// In case of bad luck (this happens **sometimes** - see N. 550), we may analyze the database structure
+		// with the previous datamodel still loaded (in opcode cache) and thus fail to create the new fields
+		// Finally the application crashes (because of the missing field) when the cache gets updated
+		if (function_exists('opcache_reset'))
+		{
+			// Zend opcode cache
+			opcache_reset();
+		}
+		else if (function_exists('apc_clear_cache'))
+		{
+			// old style APC
+			apc_clear_cache();
+		}
 	}
 	
 
