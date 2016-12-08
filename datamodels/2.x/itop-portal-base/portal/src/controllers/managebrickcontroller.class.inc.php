@@ -28,6 +28,7 @@ use \MetaModel;
 use \AttributeDefinition;
 use \AttributeDate;
 use \AttributeDateTime;
+use \AttributeDuration;
 use \AttributeSubItem;
 use \DBSearch;
 use \DBObjectSearch;
@@ -410,7 +411,7 @@ class ManageBrickController extends BrickController
 							}
 						}
 					}
-					elseif ($oAttDef instanceof AttributeSubItem)
+					elseif ($oAttDef instanceof AttributeSubItem || $oAttDef instanceof AttributeDuration)
 					{
 						$sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
 					}
@@ -473,5 +474,3 @@ class ManageBrickController extends BrickController
 	}
 
 }
-
-?>
