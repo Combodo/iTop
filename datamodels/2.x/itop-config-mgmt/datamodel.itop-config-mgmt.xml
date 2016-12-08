@@ -1582,7 +1582,8 @@
 					$sStateAttCode = MetaModel::GetStateAttributeCode($sSubClass);
 					if ($sStateAttCode != '')
 					{
-						$oSearch = DBSearch::FromOQL("SELECT $sSubClass AS t JOIN $sLnkClass AS lnk ON lnk.$sExtKeyToRemote = t.id WHERE $sExtKeyToMe = :myself AND $sStateAttCode NOT IN ('rejected', 'resolved', 'closed')", array('myself' => $this->GetKey()));
+					    // Todo: base the search condition on operational_status = 'ongoing' for a more flexible behavior
+						$oSearch = DBSearch::FromOQL("SELECT $sSubClass AS t JOIN $sLnkClass AS lnk ON lnk.$sExtKeyToRemote = t.id WHERE lnk.$sExtKeyToMe = :myself AND t.$sStateAttCode NOT IN ('rejected', 'resolved', 'closed')", array('myself' => $this->GetKey()));
 						$aSearches[$sSubClass] = $oSearch;
 
 						$oSet = new DBObjectSet($oSearch);
