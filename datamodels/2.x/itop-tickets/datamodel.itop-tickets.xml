@@ -698,7 +698,7 @@
 					<code><![CDATA[	public function UpdateParentTicketLog()
 	{
 		$oLog = $this->Get('log');
-		$sLog = $oLog->GetModifiedEntry();
+		$sLog = $oLog->GetModifiedEntry('html');
 		if ($sLog != '')
 		{
 			$oTicket = MetaModel::GetObject('Ticket', $this->Get('ticket_id'), false);

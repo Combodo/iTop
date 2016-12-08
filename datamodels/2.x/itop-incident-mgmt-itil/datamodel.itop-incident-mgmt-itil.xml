@@ -1229,7 +1229,7 @@
         if (!MetaModel::IsValidClass('UserRequest')) return true; // Do nothing
   
 		$oLog = $this->Get('public_log');
-		$sLogPublic = $oLog->GetModifiedEntry();
+		$sLogPublic = $oLog->GetModifiedEntry('html');
 		if ($sLogPublic != '')
 		{
 			$sOQL = "SELECT UserRequest WHERE parent_incident_id=:ticket";
@@ -1247,7 +1247,7 @@
 
 		}
 		$oLog = $this->Get('private_log');
-		$sLogPrivate = $oLog->GetModifiedEntry();
+		$sLogPrivate = $oLog->GetModifiedEntry('html');
 		if ($sLogPrivate != '')
 		{
 			$sOQL = "SELECT UserRequest WHERE parent_incident_id=:ticket";
@@ -1274,7 +1274,7 @@
 					<code><![CDATA[	public function UpdateChildIncidentLog()
 	{
 		$oLog = $this->Get('public_log');
-		$sLogPublic = $oLog->GetModifiedEntry();
+		$sLogPublic = $oLog->GetModifiedEntry('html');
 		if ($sLogPublic != '')
 		{
 			$sOQL = "SELECT Incident WHERE parent_incident_id=:ticket";
@@ -1292,7 +1292,7 @@
 
 		}
 		$oLog = $this->Get('private_log');
-		$sLogPrivate = $oLog->GetModifiedEntry();
+		$sLogPrivate = $oLog->GetModifiedEntry('html');
 		if ($sLogPrivate != '')
 		{
 			$sOQL = "SELECT Incident WHERE parent_incident_id=:ticket";
