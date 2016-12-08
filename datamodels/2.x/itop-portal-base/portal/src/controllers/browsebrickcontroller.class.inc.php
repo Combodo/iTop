@@ -601,7 +601,14 @@ class BrowseBrickController extends BrickController
 				foreach ($aLevelsProperties[$key]['fields'] as $aField)
 				{
 					$oAttDef = MetaModel::GetAttributeDef(get_class($value), $aField['code']);
-					$aRow[$key]['fields'][$aField['code']] = $oAttDef->GetValueLabel($value->Get($aField['code']));
+					if ($oAttDef->GetEditClass() === 'Duration')
+					{
+						$aRow[$key]['fields'][$aField['code']] = $oAttDef->GetAsHTML($value->Get($aField['code']));
+					}
+					else
+					{
+						$aRow[$key]['fields'][$aField['code']] = $oAttDef->GetValueLabel($value->Get($aField['code']));
+					}
 				}
 			}
 		}

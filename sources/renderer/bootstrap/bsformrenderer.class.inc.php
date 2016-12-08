@@ -54,6 +54,7 @@ class BsFormRenderer extends FormRenderer
 		$this->AddSupportedField('SelectObjectField', 'BsSelectObjectFieldRenderer');
 		$this->AddSupportedField('LinkedSetField', 'BsLinkedSetFieldRenderer');
 		$this->AddSupportedField('DateTimeField', 'BsSimpleFieldRenderer');
+		$this->AddSupportedField('DurationField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('FileUploadField', 'BsFileUploadFieldRenderer');
 	}
 

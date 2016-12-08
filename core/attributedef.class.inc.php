@@ -4049,7 +4049,7 @@ class AttributeDuration extends AttributeInteger
 
 	static public function GetFormFieldClass()
 	{
-		return '\\Combodo\\iTop\\Form\\Field\\LabelField';
+		return '\\Combodo\\iTop\\Form\\Field\\DurationField';
 	}
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
@@ -4063,7 +4063,7 @@ class AttributeDuration extends AttributeInteger
 
 		// Note : As of today, this attribute is -by nature- only supported in readonly mode, not edition
 		$sAttCode = $this->GetCode();
-		$oFormField->SetCurrentValue(html_entity_decode($oObject->GetAsHTML($sAttCode), ENT_QUOTES, 'UTF-8'));
+		$oFormField->SetCurrentValue($oObject->Get($sAttCode));
 		$oFormField->SetReadOnly(true);
 
 		return $oFormField;
