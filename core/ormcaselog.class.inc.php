@@ -639,12 +639,12 @@ class ormCaseLog {
 	}
 
 
-	public function GetModifiedEntry()
+	public function GetModifiedEntry($sFormat = 'text')
 	{
 		$sModifiedEntry = '';
 		if ($this->m_bModified)
 		{
-			$sModifiedEntry = $this->GetLatestEntry();
+			$sModifiedEntry = $this->GetLatestEntry($sFormat);
 		}
 		return $sModifiedEntry;
 	}
