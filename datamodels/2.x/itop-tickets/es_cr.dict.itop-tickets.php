@@ -231,6 +231,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
+	'portal:itop-portal' => 'Portal estándar',
+	'Page:DefaultTitle' => 'ITop - Portal de usuarios',
+	'Brick:Portal:UserProfile:Title' => 'Mi perfil',
+	'Brick:Portal:NewRequest:Title' => 'Nueva solicitud',
+	'Brick:Portal:NewRequest:Title+' => '¿Necesita ayuda? Elija del catálogo de servicios y envíe su solicitud a nuestros equipos de soporte.',
+	'Brick:Portal:OngoingRequests:Title' => 'Solicitudes en curso',
+	'Brick:Portal:OngoingRequests:Title+' => 'Revise sus peticiones en curso. Compruebe el progreso, agregue comentarios, adjunte documentos, entienda la solución. </ P>',
+	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'En marcha',
+	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Resuelto',
+	'Brick:Portal:ClosedRequests:Title' => 'Solicitudes cerradas',
 ));
 
 
