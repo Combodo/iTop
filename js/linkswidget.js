@@ -16,6 +16,11 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		$('#linkedset_'+this.id+' .selection').each( function() { this.checked = false; });
 		$('#'+this.id+'_btnRemove').attr('disabled','disabled');
 		$('#'+this.id+'_linksToRemove').val('');
+		
+		$('#linkedset_'+me.id).on('remove', function() {
+			// prevent having the dlg div twice
+			$('#dlg_'+me.id).remove();
+		});
 	};
 	
 	this.RemoveSelected = function()
@@ -294,7 +299,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	
 	this.GetUpdatedValue = function()
 	{
-		var sSelector = '#linkedset_'+me.id+' input[name^=attr_'+me.id+']';
+		var sSelector = '#linkedset_'+me.id+' :input[name^=attr_'+me.id+']';
 		var aIndexes = [];
 		var aValues = [];
 		$(sSelector).each(function() {
