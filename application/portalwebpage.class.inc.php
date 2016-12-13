@@ -19,7 +19,7 @@
 /**
  * Class PortalWebPage
  *
- * @copyright   Copyright (C) 2010-2013 Combodo SARL
+ * @copyright   Copyright (C) 2010-2016 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -96,15 +96,88 @@ class PortalWebPage extends NiceWebPage
 		$this->add_linked_script("../js/ckeditor/ckeditor.js");
 		$this->add_linked_script("../js/ckeditor/adapters/jquery.js");
 
+		$this->add_linked_script("../js/jquery-ui-timepicker-addon.js");
+		$this->add_linked_script("../js/jquery-ui-timepicker-addon-i18n.min.js");
+		$this->add_linked_stylesheet("../css/jquery-ui-timepicker-addon.css");
+
 		$sJSDisconnectedMessage = json_encode(Dict::S('UI:DisconnectedDlgMessage'));
 		$sJSTitle = json_encode(Dict::S('UI:DisconnectedDlgTitle'));
 		$sJSLoginAgain = json_encode(Dict::S('UI:LoginAgain'));
 		$sJSStayOnThePage = json_encode(Dict::S('UI:StayOnThePage'));
-		$sJSDaysMin = json_encode(array(Dict::S('DayOfWeek-Sunday-Min'), Dict::S('DayOfWeek-Monday-Min'), Dict::S('DayOfWeek-Tuesday-Min'), Dict::S('DayOfWeek-Wednesday-Min'),
-										Dict::S('DayOfWeek-Thursday-Min'), Dict::S('DayOfWeek-Friday-Min'), Dict::S('DayOfWeek-Saturday-Min')));
-		$sJSMonthsShort = json_encode(array(Dict::S('Month-01-Short'), Dict::S('Month-02-Short'), Dict::S('Month-03-Short'), Dict::S('Month-04-Short'), Dict::S('Month-05-Short'), Dict::S('Month-06-Short'),
-											Dict::S('Month-07-Short'), Dict::S('Month-08-Short'), Dict::S('Month-09-Short'), Dict::S('Month-10-Short'), Dict::S('Month-11-Short'), Dict::S('Month-12-Short')));
-		$iFirstDayOfWeek = (int) Dict::S('Calendar-FirstDayOfWeek');
+		$aDaysMin = array(Dict::S('DayOfWeek-Sunday-Min'), Dict::S('DayOfWeek-Monday-Min'), Dict::S('DayOfWeek-Tuesday-Min'), Dict::S('DayOfWeek-Wednesday-Min'),
+			Dict::S('DayOfWeek-Thursday-Min'), Dict::S('DayOfWeek-Friday-Min'), Dict::S('DayOfWeek-Saturday-Min'));
+		$aMonthsShort = array(Dict::S('Month-01-Short'), Dict::S('Month-02-Short'), Dict::S('Month-03-Short'), Dict::S('Month-04-Short'), Dict::S('Month-05-Short'), Dict::S('Month-06-Short'),
+			Dict::S('Month-07-Short'), Dict::S('Month-08-Short'), Dict::S('Month-09-Short'), Dict::S('Month-10-Short'), Dict::S('Month-11-Short'), Dict::S('Month-12-Short'));
+		$sTimeFormat = AttributeDateTime::GetFormat()->ToTimeFormat();
+		$oTimeFormat = new DateTimeFormat($sTimeFormat);
+		$sJSLangShort = json_encode(strtolower(substr(Dict::GetUserLanguage(), 0, 2)));
+
+		// Date picker options
+		$aPickerOptions = array(
+			'showOn' => 'button',
+			'buttonImage' => '../images/calendar.png',
+			'buttonImageOnly' => true,
+			'dateFormat' => AttributeDate::GetFormat()->ToDatePicker(),
+			'constrainInput' => false,
+			'changeMonth' => true,
+			'changeYear' => true,
+			'dayNamesMin' => $aDaysMin,
+			'monthNamesShort' => $aMonthsShort,
+			'firstDay' => (int) Dict::S('Calendar-FirstDayOfWeek'),
+		);
+		$sJSDatePickerOptions = json_encode($aPickerOptions);
+
+		// Time picker additional options
+		$aPickerOptions['showOn'] = '';
+		$aPickerOptions['buttonImage'] = null;
+		$aPickerOptions['timeFormat'] = $oTimeFormat->ToDatePicker();
+		$aPickerOptions['controlType'] = 'select';
+		$aPickerOptions['closeText'] = 	Dict::S('UI:Button:Ok');
+		$sJSDateTimePickerOptions = json_encode($aPickerOptions);
+		if ($sJSLangShort != '"en"')
+		{
+			// More options that cannot be passed via json_encode since they must be evaluated client-side
+			$aMoreJSOptions = ",
+				'timeText': $.timepicker.regional[$sJSLangShort].timeText,
+				'hourText': $.timepicker.regional[$sJSLangShort].hourText,
+				'minuteText': $.timepicker.regional[$sJSLangShort].minuteText,
+				'secondText': $.timepicker.regional[$sJSLangShort].secondText,
+				'currentText': $.timepicker.regional[$sJSLangShort].currentText
+			}";
+			$sJSDateTimePickerOptions = substr($sJSDateTimePickerOptions, 0, -1).$aMoreJSOptions;
+		}
+		$this->add_script(
+			<<< EOF
+				function PrepareWidgets()
+	{
+		// note: each action implemented here must be idempotent,
+		//       because this helper function might be called several times on a given page 
+	
+		$(".date-pick").datepicker($sJSDatePickerOptions);
+	
+		// Hack for the date and time picker addon issue on Chrome (see #1305)
+		// The workaround is to instantiate the widget on demand
+		// It relies on the same markup, thus reverting to the original implementation should be straightforward
+		$(".datetime-pick:not(.is-widget-ready)").each(function(){
+			var oInput = this;
+			$(oInput).addClass('is-widget-ready');
+			$('<img class="datetime-pick-button" src="../images/calendar.png">')
+				.insertAfter($(this))
+				.on('click', function(){
+					$(oInput)
+						.datetimepicker($sJSDateTimePickerOptions)
+						.datetimepicker('show')
+						.datetimepicker('option', 'onClose', function(dateText,inst){
+							$(oInput).datetimepicker('destroy');
+						})
+						.on('click keypress', function(){
+							$(oInput).datetimepicker('hide');
+						});
+				});
+		});
+	}
+EOF
+		);
 		
 		$this->add_ready_script(
 <<<EOF
@@ -146,31 +219,7 @@ try
 	    } 
 	});
 		
-	$(".date-pick").datepicker({
-		showOn: 'button',
-		buttonImage: '../images/calendar.png',
-		buttonImageOnly: true,
-		dateFormat: 'yy-mm-dd',
-		constrainInput: false,
-		changeMonth: true,
-		changeYear: true,
-		dayNamesMin: $sJSDaysMin,
-		monthNamesShort: $sJSMonthsShort,
-		firstDay: $iFirstDayOfWeek		
-	});
-
-	$(".datetime-pick").datepicker({
-		showOn: 'button',
-		buttonImage: '../images/calendar.png',
-		buttonImageOnly: true,
-		dateFormat: 'yy-mm-dd 00:00:00',
-		constrainInput: false,
-		changeMonth: true,
-		changeYear: true,
-		dayNamesMin: $sJSDaysMin,
-		monthNamesShort: $sJSMonthsShort,
-		firstDay: $iFirstDayOfWeek
-	});
+	PrepareWidgets();
 
 	//$('.resizable').resizable(); // Make resizable everything that claims to be resizable !
 	$('.caselog_header').click( function () { $(this).toggleClass('open').next('.caselog_entry_html').toggle(); });
