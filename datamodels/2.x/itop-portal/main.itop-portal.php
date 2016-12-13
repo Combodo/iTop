@@ -22,20 +22,26 @@
  * 
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
-class iTopPortalUrlMaker implements iDBObjectURLMaker
+class iTopPortalEditUrlMaker implements iDBObjectURLMaker
 {
-
-	public static function MakeObjectURL($sClass, $iId)
+	/**
+	 * Generate an (absolute) URL to an object, either in view or edit mode
+	 * @param string $sClass The class of the object
+	 * @param int $iId The identifier of the object
+	 * @param string $sMode edit|view
+	 * @return string
+	 */
+	public static function PrepareObjectURL($sClass, $iId, $sMode)
 	{
 		require_once APPROOT . '/lib/silex/vendor/autoload.php';
 		require_once APPROOT . '/env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/src/providers/urlgeneratorserviceprovider.class.inc.php';
 		require_once APPROOT . '/env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/src/helpers/urlgeneratorhelper.class.inc.php';
 		require_once APPROOT . '/env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/src/helpers/applicationhelper.class.inc.php';
-
+	
 		// Using a static var allows to preserve the object through function calls
 		static $oApp = null;
 		static $sPortalId = null;
-
+	
 		// Initializing Silex app
 		if ($oApp === null)
 		{
@@ -49,15 +55,51 @@ class iTopPortalUrlMaker implements iDBObjectURLMaker
 			// Retrieving portal id
 			$sPortalId = basename(__DIR__);
 		}
-
-		$sObjectQueryString = $oApp['url_generator']->generate('p_object_edit', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
-		$sPortalAbsoluteUrl = utils::GetAbsoluteUrlModulePage($sPortalId, 'index.php');
-		$sUrl = str_replace('?', $sObjectQueryString . '?', $sPortalAbsoluteUrl);
+		// The object is reachable in the specified mode (edit/view)
+		switch($sMode)
+		{
+			case 'view':
+			$sObjectQueryString = $oApp['url_generator']->generate('p_object_view', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
+			break;
+					
+			case 'edit':
+			default:
+			$sObjectQueryString = $oApp['url_generator']->generate('p_object_edit', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
+		}
 		
+		$sPortalAbsoluteUrl = utils::GetAbsoluteUrlModulePage($sPortalId, 'index.php');
+		if (strpos($sPortalAbsoluteUrl, '?') !== false)
+		{
+			$sUrl = substr($sPortalAbsoluteUrl, 0, strpos($sPortalAbsoluteUrl, '?')).$sObjectQueryString;
+		}
+		else
+		{
+			$sUrl = $sPortalAbsoluteUrl.$sObjectQueryString;
+		}
+	
 		return $sUrl;
 	}
-
+	
+	public static function MakeObjectURL($sClass, $iId)
+	{	
+		return static::PrepareObjectURL($sClass, $iId, 'edit');
+	}
 }
 
-DBObject::RegisterURLMakerClass('portal', 'iTopPortalUrlMaker');
+/**
+ * Hyperlinks to the "view" of the object (vs edition)
+ * @author denis
+ *
+ */
+class iTopPortalViewUrlMaker extends iTopPortalEditUrlMaker
+{
+	public static function MakeObjectURL($sClass, $iId)
+	{
+		return static::PrepareObjectURL($sClass, $iId, 'view');
+	}
+	
+}
+
+// Default portal hyperlink (for notifications) is the edit hyperlink
+DBObject::RegisterURLMakerClass('portal', 'iTopPortalEditUrlMaker');
 

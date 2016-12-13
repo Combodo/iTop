@@ -23,6 +23,7 @@ use \utils;
 use \Dict;
 use \UserRights;
 use \AttributeDateTime;
+use \AttributeText;
 use \InlineImage;
 use \Combodo\iTop\Renderer\FieldRenderer;
 use \Combodo\iTop\Renderer\RenderingOutput;
@@ -223,14 +224,7 @@ EOF
 							if($sFieldClass === 'Combodo\\iTop\\Form\\Field\\TextAreaField')
 							{
 								$bEncodeHtmlEntities = false;
-								if($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML)
-								{
-									$sDisplayValue = $this->oField->GetCurrentValue();
-								}
-								else
-								{
-									$sDisplayValue = utils::TextToHtml($this->oField->GetCurrentValue());
-								}
+								$sDisplayValue = $this->oField->GetDisplayValue();
 							}
 							else
 							{
@@ -452,6 +446,8 @@ EOF
 				$sEntryHeaderButtonClass = ($i < 2) ? '' : 'collapsed';
 				$sEntryContentClass = ($i < 2) ? 'in' : '';
 				$sEntryContentId = 'caselog_field_entry_content-' . $this->oField->GetGlobalId() . '-' . $i;
+				$sEntryHtml = AttributeText::RenderWikiHtml($aEntries[$i]['message_html'], true /* wiki only */);
+				$sEntryHtml = InlineImage::FixUrls($sEntryHtml);
 
 				// Note : We use CKEditor stylesheet to format this
 				$oOutput->AddHtml(
@@ -464,7 +460,7 @@ EOF
 							</div>
 						</div>
 						<div class="caselog_field_entry_content collapse {$sEntryContentClass}" id="{$sEntryContentId}">
-							{$aEntries[$i]['message_html']}
+							{$sEntryHtml}
 						</div>
 					</div>
 EOF

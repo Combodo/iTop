@@ -82,11 +82,6 @@ class DateTimeField extends StringField
 		return $this;
 	}
 	
-	public function GetDisplayValue()
-	{
-		return $this->currentValue;
-	}
-	
 	/**
 	 * Set the DateOnly flag
 	 * @return \Combodo\iTop\Form\Field\DateTimeField
