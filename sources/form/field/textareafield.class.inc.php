@@ -21,6 +21,8 @@ namespace Combodo\iTop\Form\Field;
 
 use \Closure;
 use \DBObject;
+use \InlineImage;
+use \AttributeText;
 use \Combodo\iTop\Form\Field\TextField;
 
 /**
@@ -105,6 +107,21 @@ class TextAreaField extends TextField
 	{
 		$this->sTransactionId = $sTransactionId;
 		return $this;
+	}
+	
+	public function GetDisplayValue()
+	{
+		if ($this->GetFormat() == TextAreaField::ENUM_FORMAT_TEXT)
+		{
+			$sValue = $this->GetCurrentValue();
+			$sValue = AttributeText::RenderWikiHtml($sValue);
+			return "<div>".str_replace("\n", "<br>\n", $sValue).'</div>';			
+		}
+		else
+		{
+			$sValue = AttributeText::RenderWikiHtml($this->GetCurrentValue(), true /* wiki only */);
+			return "<div class=\"HTML\">".InlineImage::FixUrls($sValue).'</div>';
+		}
 	}
 
 }

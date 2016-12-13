@@ -174,6 +174,12 @@ abstract class Field
 		return $this->currentValue;
 	}
 
+
+	public function GetDisplayValue()
+	{
+		return $this->currentValue;
+	}
+	
 	/**
 	 * Sets the field formpath
 	 * Usually Called by the form when adding the field

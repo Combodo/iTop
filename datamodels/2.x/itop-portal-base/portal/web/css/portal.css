@@ -916,3 +916,7 @@ table .group-actions {
   width: 100%;
   text-align: center;
 }
+/* Wiki text (hyperlinks) */
+.wiki_broken_link {
+  text-decoration: line-through;
+}
