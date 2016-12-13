@@ -692,9 +692,11 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 .form_linkedset_toggler,
 .form_linkedset_toggler:hover,
 .form_linkedset_toggler:focus{
-	margin-left: 0.4em;
 	text-decoration: none;
 	color: inherit;
+}
+.form_linkedset_toggler > .text{
+	margin-left: 0.4em;
 }
 .form_linkedset_toggler > .text:before{
 	content: "(";

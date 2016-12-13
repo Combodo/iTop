@@ -67,8 +67,8 @@ class BsLinkedSetFieldRenderer extends FieldRenderer
 			if ($this->oField->GetLabel() !== '')
 			{
 				$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')
-					->AddHtml($this->oField->GetLabel(), true)
 					->AddHtml('<a id="' . $sCollapseTogglerId . '" class="form_linkedset_toggler" data-toggle="collapse" href="#' . $sFieldWrapperId . '" aria-expanded="false" aria-controls="' . $sFieldWrapperId . '">')
+					->AddHtml($this->oField->GetLabel(), true)
 					->AddHtml('<span class="text">' . count($aItemIds) . '</span>')
 					->AddHtml('<span class="glyphicon ' . $sCollapseTogglerHiddenClass . '"></>')
 					->AddHtml('</a>')
