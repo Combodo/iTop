@@ -236,7 +236,7 @@ function WizardHelper(sClass, sFormPrefix, sState)
 				$('#'+sFormId).find('.htmlEditor').each(function() {
 					var sId = $(this).attr('id');
 					var editorInst = CKEDITOR.instances[sId];
-				    if (editorInst)
+				    if (editorInst.status == 'ready')
 				    {
 				    	editorInst.destroy(true);
 				    }
