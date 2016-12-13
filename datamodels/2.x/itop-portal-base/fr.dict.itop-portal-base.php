@@ -57,6 +57,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Portal:Datatables:Language:Sort:Descending' => 'activer pour trier la colonne par ordre décroissant',
 	'Portal:Autocomplete:NoResult' => 'Aucun résultat',
 	'Portal:Attachments:DropZone:Message' => 'Déposez vos fichiers pour les ajouter en pièces jointes',
+	'Portal:File:None' => 'Aucun fichier',
+	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
+	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Ouvrir</a> / <a href="%4$s" class="file_download_link">Télécharger</a>',
 ));
 
 // UserProfile brick

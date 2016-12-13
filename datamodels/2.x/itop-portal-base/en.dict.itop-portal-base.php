@@ -57,6 +57,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Portal:Datatables:Language:Sort:Descending' => 'enable for a descending sort',
 	'Portal:Autocomplete:NoResult' => 'No data',
 	'Portal:Attachments:DropZone:Message' => 'Drop your files to add them as attachments',
+	'Portal:File:None' => 'No file',
+	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
+	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
 ));
 
 // UserProfile brick

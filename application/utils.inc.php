@@ -438,6 +438,45 @@ class utils
     }
 
 	/**
+	 * Format a value into a more friendly format (KB, MB, GB, TB) instead a juste a Bytes amount.
+	 *
+	 * @param type $value
+	 * @return string
+	 */
+	public static function BytesToFriendlyFormat($value)
+	{
+		$sReturn = '';
+		// Kilobytes
+		if ($value >= 1024)
+		{
+			$sReturn = 'K';
+			$value = $value / 1024;
+		}
+		// Megabytes
+		if ($value >= 1024)
+		{
+			$sReturn = 'M';
+			$value = $value / 1024;
+		}
+		// Gigabytes
+		if ($value >= 1024)
+		{
+			$sReturn = 'G';
+			$value = $value / 1024;
+		}
+		// Terabytes
+		if ($value >= 1024)
+		{
+			$sReturn = 'T';
+			$value = $value / 1024;
+		}
+
+		$value = round($value, 1);
+
+		return $value . '' . $sReturn . 'B';
+	}
+
+	/**
 	 * Helper function to convert a string to a date, given a format specification. It replaces strtotime which does not allow for specifying a date in a french format (for instance)
 	 * Example: StringToTime('01/05/11 12:03:45', '%d/%m/%y %H:%i:%s')
 	 * @param string $sDate
