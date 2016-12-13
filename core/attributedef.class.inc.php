@@ -5113,6 +5113,33 @@ class AttributeBlob extends AttributeDefinition
 		}
 		return $sFingerprint;		
 	}
+
+	static public function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\BlobField';
+	}
+
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
+	{
+		if ($oFormField === null)
+		{
+			$sFormFieldClass = static::GetFormFieldClass();
+			$oFormField = new $sFormFieldClass($this->GetCode());
+		}
+
+		// Note: As of today we want this field to always be read-only
+		$oFormField->SetReadOnly(true);
+
+		// Generating urls
+		$value = $oObject->Get($this->GetCode());
+		$oFormField->SetDownloadUrl($value->GetDownloadURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
+		$oFormField->SetDisplayUrl($value->GetDisplayURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
+
+		parent::MakeFormField($oObject, $oFormField);
+
+		return $oFormField;
+	}
+
 }
 
 /**

@@ -61,6 +61,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Portal:Datatables:Language:Sort:Descending' => 'řadit sestupně',
     'Portal:Autocomplete:NoResult' => 'Žádná data',
     'Portal:Attachments:DropZone:Message' => 'Přesuňte soubory myší pro vložení',
+	'Portal:File:None' => 'No file',
+	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
+	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
 ));
 
 // UserProfile brick

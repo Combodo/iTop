@@ -119,17 +119,25 @@ class ormDocument
 	}
 
 	/**
+	 * Returns an URL to display a document like an image
+	 * @return string
+	 */
+	public function GetDisplayURL($sClass, $Id, $sAttCode)
+	{
+		return utils::GetAbsoluteUrlAppRoot() . "pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode";
+	}
+
+	/**
 	 * Returns an URL to download a document like an image (uses HTTP caching)
 	 * @return string
-	 */	 	 	
+	 */
 	public function GetDownloadURL($sClass, $Id, $sAttCode)
 	{
 		// Compute a signature to reset the cache anytime the data changes (this is acceptable if used only with icon files)
 		$sSignature = md5($this->GetData());
-		return utils::GetAbsoluteUrlAppRoot()."pages/ajax.document.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
+		return utils::GetAbsoluteUrlAppRoot() . "pages/ajax.document.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
 	}
 
-	
 	public function IsPreviewAvailable()
 	{
 		$bRet = false;
