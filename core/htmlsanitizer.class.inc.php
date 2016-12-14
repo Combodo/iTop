@@ -191,7 +191,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 	);
 	
 	protected static $aStylesWhiteList = array(
-		'background-color', 'color', 'float', 'font', 'font-style', 'font-size', 'font-family', 'padding', 'margin', 'border', 'cellpadding', 'cellspacing', 'bordercolor', 'border-collapse', 'width', 'height',
+		'background-color', 'color', 'float', 'font', 'font-style', 'font-size', 'font-family', 'padding', 'margin', 'border', 'cellpadding', 'cellspacing', 'bordercolor', 'border-collapse', 'width', 'height', 'text-align',
 	);
 
 	public function __construct()
