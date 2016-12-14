@@ -202,6 +202,7 @@ class ApplicationHelper
 			return Dict::S($sStringCode, $sDefault, $bUserLanguageOnly);
 		})
 		);
+
 		// A filter to format a string via the Dict::Format function
 		// Usage in twig : {{ 'String:ToTranslate'|dict_format() }}
 		$oApp['twig']->addFilter(new Twig_SimpleFilter('dict_format', function($sStringCode, $sParam01 = null, $sParam02 = null, $sParam03 = null, $sParam04 = null)
@@ -209,10 +210,12 @@ class ApplicationHelper
 			return Dict::Format($sStringCode, $sParam01, $sParam02, $sParam03, $sParam04);
 		})
 		);
+
 		// Filters to enable base64 encode/decode
 		// Usage in twig : {{ 'String to encode'|base64_encode }}
 		$oApp['twig']->addFilter(new Twig_SimpleFilter('base64_encode', 'base64_encode'));
 		$oApp['twig']->addFilter(new Twig_SimpleFilter('base64_decode', 'base64_decode'));
+
 		// Filters to enable json decode  (encode already exists)
 		// Usage in twig : {{ aSomeArray|json_decode }}
 		$oApp['twig']->addFilter(new Twig_SimpleFilter('json_decode', function($sJsonString, $bAssoc = false)
@@ -220,6 +223,21 @@ class ApplicationHelper
 			return json_decode($sJsonString, $bAssoc);
 		})
 		);
+
+		// Filter to add itopversion to an url
+		$oApp['twig']->addFilter(new Twig_SimpleFilter('add_itop_version', function($sUrl)
+		{
+			if (strpos($sUrl, '?') === false)
+			{
+				$sUrl = $sUrl . "?itopversion=" . ITOP_VERSION;
+			}
+			else
+			{
+				$sUrl = $sUrl . "&itopversion=" . ITOP_VERSION;
+			}
+
+			return $sUrl;
+		}));
 	}
 
 	/**
