@@ -600,6 +600,8 @@ EOF
 		});
 EOF
 );
+		// Enable the button to upload images (or cut and paste of images)
+		$oP->add_ready_script(InlineImage::EnableCKEditorImageUpload($oRequest, utils::GetUploadTempId($oP->GetTransactionId())));
 	}
 	else
 	{
@@ -1147,8 +1149,9 @@ EOF
 
 	$oP->add('</table>');
 	$oP->add('</div>');
-	
-	$oP->add_ready_script(InlineImage::EnableCKEditorImageUpload($oObj, 'zzzzz'));
+
+	// Enable the button to upload images (or cut and paste of images)
+	$oP->add_ready_script(InlineImage::EnableCKEditorImageUpload($oObj, utils::GetUploadTempId($oP->GetTransactionId())));
 	$oP->WizardFormEnd();
 	$oP->add('</div>');
 }
