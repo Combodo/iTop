@@ -4,21 +4,26 @@
  */
 
 CKEDITOR.editorConfig = function( config ) {
+	// Define changes to default configuration here.
+	// For complete reference see:
+	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
+
+	// The toolbar groups arrangement, optimized for two toolbar rows.
 	config.toolbarGroups = [
-		{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
-		{ name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
-		{ name: 'links', groups: [ 'links' ] },
-		{ name: 'insert', groups: [ 'insert' ] },
-		{ name: 'forms', groups: [ 'forms' ] },
-		{ name: 'tools', groups: [ 'tools' ] },
-		{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
-		{ name: 'others', groups: [ 'others' ] },
+		{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+		{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+		{ name: 'links' },
+		{ name: 'insert' },
+		{ name: 'forms' },
+		{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
+		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+		{ name: 'others' },
+		{ name: 'tools' },
 		'/',
 		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-		{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
-		{ name: 'styles', groups: [ 'styles' ] },
-		{ name: 'colors', groups: [ 'colors' ] },
-		{ name: 'about', groups: [ 'about' ] }
+		{ name: 'colors' },
+		{ name: 'styles' },
+		{ name: 'about' }
 	];
 
 	config.removeButtons = 'Subscript,Superscript,Scayt,Anchor,Source,Outdent,Indent,Blockquote,About,PasteFromWord';
@@ -26,7 +31,10 @@ CKEDITOR.editorConfig = function( config ) {
 	config.resize_enabled = false;
 	config.toolbarCanCollapse = true;
 	config.toolbarStartupExpanded = false;
+
+	// Set the most common block elements.
+	config.format_tags = 'p;h1;h2;h3;pre';
+
+	// Simplify the dialog windows.
+	config.removeDialogTabs = 'image:advanced;link:advanced';
 };
-
-
-
