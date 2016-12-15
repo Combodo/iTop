@@ -36,6 +36,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Portal:Button:Add' => 'Ajouter',
 	'Portal:Button:Remove' => 'Enlever',
 	'Portal:Button:Delete' => 'Supprimer',
+	'Portal:EnvironmentBanner:Title' => 'Vous êtes dans le mode <strong>%1$s</strong>',
+	'Portal:EnvironmentBanner:GoToProduction' => 'Retourner au mode PRODUCTION',
 	'Error:HTTP:404' => 'Page non trouvée',
 	'Error:HTTP:500' => 'Oups ! Une erreur est survenue.',
 	'Error:HTTP:GetHelp' => 'Si le problème persiste, veuillez contacter votre administrateur iTop.',

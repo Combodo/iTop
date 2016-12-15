@@ -104,6 +104,17 @@
 </head>
 <body class="{% block pPageBodyClass %}{% endblock %}">
 	{% block pPageBodyWrapper %}
+		{% block pEnvBannerWrapper %}
+			{% if app['combodo.current_environment'] != 'production' %}
+				<div id="envbanner" class="alert alert-danger" role="alert">
+					{{ 'Portal:EnvironmentBanner:Title'|dict_format( app['combodo.current_environment']|upper )|raw }}
+					<button type="button" onclick="window;location.href='{{ app['url_generator'].generate('p_home', {'switch_env': 'production'}) }}'">
+						{{ 'Portal:EnvironmentBanner:GoToProduction'|dict_s|raw }}
+					</button>
+				</div>
+			{% endif %}
+		{% endblock %}
+		
 		{% block pNavigationWrapper %}
 		{# Topbar navigation menu for mobile screens #}
 		<nav class="navbar navbar-fixed-top navbar-default visible-xs" id="topbar" role="navigation">

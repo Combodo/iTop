@@ -82,6 +82,7 @@ $oApp->register(new Silex\Provider\HttpFragmentServiceProvider());
 
 // Configuring Silex application
 $oApp['debug'] = $bDebug;
+$oApp['combodo.current_environment'] = utils::GetCurrentEnvironment();
 $oApp['combodo.absolute_url'] = utils::GetAbsoluteUrlAppRoot();
 $oApp['combodo.portal.base.absolute_url'] = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/web/';
 $oApp['combodo.portal.base.absolute_path'] = MODULESROOT . '/itop-portal-base/portal/web/';
