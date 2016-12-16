@@ -125,5 +125,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:FAQ/Attribute:category_name' => 'Kategoriename',
 	'Class:FAQ/Attribute:category_name+' => '',
+	'Brick:Portal:FAQ:Menu' => 'FAQ',
+	'Brick:Portal:FAQ:Title' => 'Oft gestellte Fragen (FAQs)',
+	'Brick:Portal:FAQ:Title+' => '<p>In Eile?</p><p>Sehen Sie sich die meistgestellten Fragen an (FAQs) und finden Sie (eventuell) die Antwort direkt dort.</p>',
 ));
 ?>

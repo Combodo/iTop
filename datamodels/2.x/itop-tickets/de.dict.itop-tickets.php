@@ -185,5 +185,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Zielvorgabe (SLT) vom Typ TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve (Erstlösungszeit)',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Zielvorgabe (SLT) vom Typ TTR',
+    'portal:itop-portal' => 'Standard Portal', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
+	'Brick:Portal:UserProfile:Title' => 'Mein Profile',
+	'Brick:Portal:NewRequest:Title' => 'Neue Störung/Anfrage',
+	'Brick:Portal:NewRequest:Title+' => '<p>Hilfe?</p><p>Wählen Sie einen Service aus und senden Sie Ihre Anfrage zum Service Desk.</p>',
+	'Brick:Portal:OngoingRequests:Title' => 'Offene Störungen/Anfragen',
+	'Brick:Portal:OngoingRequests:Title+' => '<p>Hier können Sie Ihre laufenden Anfragen und Störungsmeldungen ansehen,</p><p>den Verlauf verfolgen, Kommentare und Anhänge hinzufügen und gelöste Anfragen schließen.</p>',
+	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Offen',
+	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Gelöst',
+	'Brick:Portal:ClosedRequests:Title' => 'Geschlossene Störungen/Anfragen',
 ));
 ?>
