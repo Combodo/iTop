@@ -87,7 +87,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Browse:Action:View' => 'Detalles',
 	'Brick:Portal:Browse:Action:Edit' => 'Editar',
 	'Brick:Portal:Browse:Action:Create' => 'Crear',
-	'Brick:Portal:Browse:Action:CreateObjectFromThis' => 'Nuevo % 1 $ s',
+	'Brick:Portal:Browse:Action:CreateObjectFromThis' => 'Nuevo %1$s',
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Expandir todo',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Desplegar todo',
 	'Brick:Portal:Browse:Filter:NoData' => 'Sin objeto',
