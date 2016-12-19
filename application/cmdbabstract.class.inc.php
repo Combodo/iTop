@@ -3543,7 +3543,6 @@ EOF
 				// b) or override some of the configuration settings, using the second parameter of ckeditor()
 				$aConfig = array();
 				$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
-				$aConfig['font_style'] = $sLanguage;
 				$aConfig['language'] = $sLanguage;
 				$aConfig['contentsLanguage'] = $sLanguage;
 				$aConfig['extraPlugins'] = 'disabler';
