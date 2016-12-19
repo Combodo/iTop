@@ -413,10 +413,16 @@ EOF
 	/**
 	 * Get the regular expression to (approximately) validate a date/time for the current format
 	 * The validation does not take into account the number of days in a month (i.e. June 31st will pass, as well as Feb 30th!)
+	 * @param string $sDelimiter Surround the regexp (and escape) if needed
 	 * @return string The regular expression in PCRE syntax
 	 */
-	public function ToRegExpr()
+	public function ToRegExpr($sDelimiter = null)
 	{
-		return '^'.$this->Transform('regexpr', "\\%s", false /* escape all */, '.?*$^()[]/:').'$';
+		$sRet = '^'.$this->Transform('regexpr', "\\%s", false /* escape all */, '.?*$^()[]:').'$';
+		if ($sDelimiter !== null)
+		{
+			$sRet = $sDelimiter.str_replace($sDelimiter, '\\'.$sDelimiter, $sRet).$sDelimiter;
+		}
+		return $sRet;
 	}
 }
