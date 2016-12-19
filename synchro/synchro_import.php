@@ -218,8 +218,8 @@ function ChangeDateFormat($sProposedDate, $sFormat)
 {
 	// Convert to a valid MySQL datetime
 	$oFormat = new DateTimeFormat($sFormat);
-	$sRegExpr = $oFormat->ToRegExpr();
-	if (!preg_match('/'.$sRegExpr.'/', $sProposedDate))
+	$sRegExpr = $oFormat->ToRegExpr('/');
+	if (!preg_match($sRegExpr, $sProposedDate))
 	{
 		return false;	
 	}

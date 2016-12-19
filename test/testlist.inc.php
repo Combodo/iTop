@@ -4930,14 +4930,14 @@ class TestDateTimeFormats extends TestBizModel
 				$oDate = new DateTime($sTestDate);
 				$sFormattedDate = $oFormat->Format($oDate);
 				$oParsedDate = $oFormat->Parse($sFormattedDate);
-				$sPattern = $oFormat->ToRegExpr();
+				$sPattern = $oFormat->ToRegExpr('/');
 				$bParseOk = ($oParsedDate->format('Y-m-d H:i:s') == $sTestDate);
 				if (!$bParseOk)
 				{
 					$this->ReportError('Parsed ('.$sFormattedDate.') date different from initial date (difference of '.((int)$oParsedDate->format('U')- (int)$oDate->format('U')).'s)');
 					$bRet = false;
 				}
-				$bValidateOk = preg_match('/'.$sPattern.'/', $sFormattedDate);
+				$bValidateOk = preg_match($sPattern, $sFormattedDate);
 				if (!$bValidateOk)
 				{
 					$this->ReportError('Formatted date ('.$sFormattedDate.') does not match the validation pattern ('.$sPattern.')');
@@ -4963,8 +4963,8 @@ class TestDateTimeFormats extends TestBizModel
 			$this->ReportSuccess("Test of the '$sFormatName' format: '$sFormat':");
 			foreach($aDatesToParse as $sDate)
 			{
-				$sPattern = $oFormat->ToRegExpr();
-				$bValidateOk = preg_match('/'.$sPattern.'/', $sDate);
+				$sPattern = $oFormat->ToRegExpr('/');
+				$bValidateOk = preg_match($sPattern, $sDate);
 				if ($bValidateOk)
 				{
 					$this->ReportError('Formatted date ('.$sFormattedDate.') matches the validation pattern ('.$sPattern.') whereas it should not!');
