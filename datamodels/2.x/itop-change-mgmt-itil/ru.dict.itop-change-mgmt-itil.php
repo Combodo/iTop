@@ -2,45 +2,39 @@
 
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
- * 
- * @author   Vladimir Kunin <v.b.kunin@gmail.com>
- * @license   http://opensource.org/licenses/AGPL-3.0
  *
- * 
- * Инструкция по установке
- * 
- * Процесс установки заключается в замене имеющихся локализационных файлов полученными и последующем запуске процедуры обновления iTop для перекомпиляции кода.
- * 	1. Скопируйте с заменой два полученных файла из "itop-rus/dictionaries" в "путь/до/вашего/itop/dictionaries".
- * 	2. Скопируйте с заменой полученные файлы "itop-rus/datamodels/2.x/название-модуля/ru.dict.название-модуля.php" в "путь/до/вашего/itop/datamodels/2.x/название-модуля".
- *  3. Перейдите по адресу "http://адрес/вашего/itop/setup", при этом файл "путь/до/вашего/itop/conf/production/config-itop.php" должен быть доступен для записи.
- *  4. На второй странице установщика выберите "Upgrade an existing iTop instance" и следуйте дальнейшим инструкциям установщика.
- *
- * Ответы на вопросы по установке и использованию переводов, а также на любые другие вопросы по iTop всегда можно получить на сайте сообщества iTop по-русски http://community.itop-itsm.ru.
+ * @author      Vladimir Kunin <v.b.kunin@gmail.com>
+ * @link        http://community.itop-itsm.ru  iTop Russian Community
+ * @link        https://github.com/itop-itsm-ru/itop-rus
+ * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  *
  */
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:ChangeManagement' => 'Управление изменениями',
 	'Menu:Change:Overview' => 'Обзор',
-	'Menu:Change:Overview+' => '',
+	'Menu:Change:Overview+' => 'Управление изменениями - Обзор',
 	'Menu:NewChange' => 'Новый запрос на изменение',
 	'Menu:NewChange+' => 'Создание нового запроса на изменение',
 	'Menu:SearchChanges' => 'Поиск изменений',
 	'Menu:SearchChanges+' => 'Поиск запросов на изменение',
 	'Menu:Change:Shortcuts' => 'Ярлыки',
-	'Menu:Change:Shortcuts+' => '',
-	'Menu:WaitingAcceptance' => 'Изменения, ожидающие принятия',
-	'Menu:WaitingAcceptance+' => '',
-	'Menu:WaitingApproval' => 'Изменения, ожидающие утверждения',
-	'Menu:WaitingApproval+' => '',
-	'Menu:Changes' => 'Открытые изменения',
+	'Menu:Change:Shortcuts+' => 'Ярлыки',
+	'Menu:WaitingAcceptance' => 'Ожидающие принятия',
+	'Menu:WaitingAcceptance+' => 'Изменения, ожидающие принятия',
+	'Menu:WaitingApproval' => 'Ожидающие утверждения',
+	'Menu:WaitingApproval+' => 'Изменения, ожидающие утверждения',
+	'Menu:Changes' => 'Открытые',
 	'Menu:Changes+' => 'Все открытые изменения',
-	'Menu:MyChanges' => 'Изменения, назначенные на меня',
-	'Menu:MyChanges+' => 'Изменения, назначенные на меня (как агента)',
+	'Menu:MyChanges' => 'Назначенные мне',
+	'Menu:MyChanges+' => 'Изменения, назначенные мне',
 	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Изменения по категориям за 7 дней',
 	'UI-ChangeManagementOverview-Last-7-days' => 'Количество изменений за 7 дней',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Изменения по домену за 7 дней',
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Изменения по статусу за 7 дней',
+	'Tickets:Related:OpenChanges' => 'Открытые изменения',
+	'Tickets:Related:RecentChanges' => 'Недавние изменения (72ч)',
+
 ));
 
 // Dictionnay conventions
@@ -89,7 +83,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Change/Attribute:requestor_id+' => '',
 	'Class:Change/Attribute:requestor_email' => 'Email инициатора запроса',
 	'Class:Change/Attribute:requestor_email+' => '',
-	'Class:Change/Attribute:creation_date' => 'Создан',
+	'Class:Change/Attribute:creation_date' => 'Дата создания',
 	'Class:Change/Attribute:creation_date+' => '',
 	'Class:Change/Attribute:impact' => 'Критичность',
 	'Class:Change/Attribute:impact+' => '',
@@ -119,7 +113,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Change/Attribute:fallback+' => '',
 	'Class:Change/Attribute:parent_id' => 'Родительское изменение',
 	'Class:Change/Attribute:parent_id+' => '',
-	'Class:Change/Attribute:parent_name' => 'Имя родительского изменения',
+	'Class:Change/Attribute:parent_name' => 'Родительское изменение',
 	'Class:Change/Attribute:parent_name+' => '',
 	'Class:Change/Attribute:related_request_list' => 'Связанные запросы',
 	'Class:Change/Attribute:related_request_list+' => 'Связанные запросы',
@@ -197,7 +191,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Дата утверждения',
 	'Class:ApprovedChange/Attribute:approval_date+' => '',
-	'Class:ApprovedChange/Attribute:approval_comment' => 'Коментарий утверждения',
+	'Class:ApprovedChange/Attribute:approval_comment' => 'Комментарий утверждения',
 	'Class:ApprovedChange/Attribute:approval_comment+' => '',
 	'Class:ApprovedChange/Stimulus:ev_validate' => 'Подтвердить',
 	'Class:ApprovedChange/Stimulus:ev_validate+' => '',
@@ -213,7 +207,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ApprovedChange/Stimulus:ev_approve+' => '',
 	'Class:ApprovedChange/Stimulus:ev_replan' => 'Перепланировать',
 	'Class:ApprovedChange/Stimulus:ev_replan+' => '',
-	'Class:ApprovedChange/Stimulus:ev_notapprove' => 'Отклонить утверждение',
+	'Class:ApprovedChange/Stimulus:ev_notapprove' => 'Отклонить',
 	'Class:ApprovedChange/Stimulus:ev_notapprove+' => '',
 	'Class:ApprovedChange/Stimulus:ev_implement' => 'Реализовать',
 	'Class:ApprovedChange/Stimulus:ev_implement+' => '',
@@ -287,8 +281,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Закончить',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
-	'Tickets:Related:OpenChanges' => 'Open changes~~',
-	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
 ));
-
-?>

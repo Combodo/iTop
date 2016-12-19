@@ -16,7 +16,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 'Menu:ServiceManagement+' => 'Управление услугами',
 'Menu:Service:Overview' => 'Обзор',
 'Menu:Service:Overview+' => 'Управление услугами - Обзор',
-'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Договоры по уровню услуг',
+'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Договоры по уровню услуги',
 'UI-ServiceManagementMenu-ContractsByStatus' => 'Договоры по статусу',
 'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Договоры, оканчивающиеся в течение 30-ти дней',
 
@@ -36,14 +36,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 'Menu:SLT+' => 'Целевые показатели уровня услуг',
 'Menu:DeliveryModel' => 'Модели предоставления услуг',
 'Menu:DeliveryModel+' => 'Модели предоставления услуг (Delivery Models)',
-'Menu:ServiceFamily' => 'Пакеты услуг',
-'Menu:ServiceFamily+' => 'Пакеты услуг',
-'Menu:Procedure' => 'Каталог процедур',
-'Menu:Procedure+' => 'Каталог процедур',
-
-
 
 ));
+
 
 //
 // Class: Organization
@@ -53,8 +48,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Organization/Attribute:deliverymodel_id' => 'Модель предоставления услуг',
 	'Class:Organization/Attribute:deliverymodel_id+' => 'Модель предоставления услуг (Delivery Model)',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Модель предоставления услуг',
-
+	'Class:Organization/Attribute:deliverymodel_name+' => '',
 ));
+
 
 
 //
@@ -65,6 +61,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ContractType' => 'Тип договора',
 	'Class:ContractType+' => '',
 ));
+
 
 //
 // Class: Contract
@@ -120,6 +117,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Contract/Attribute:finalclass' => 'Тип',
 	'Class:Contract/Attribute:finalclass+' => '',
 ));
+
 //
 // Class: CustomerContract
 //
@@ -129,6 +127,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Услуги',
 	'Class:CustomerContract/Attribute:services_list+' => 'Все услуги, предоставляемые по договору',
+	'Class:CustomerContract/Attribute:functionalcis_list' => 'КЕ',
+	'Class:CustomerContract/Attribute:functionalcis_list+' => 'Конфигурационные единицы, охватываемые договором',
+	'Class:CustomerContract/Attribute:providercontracts_list' => 'Договоры с поставщиками',
+	'Class:CustomerContract/Attribute:providercontracts_list+' => 'Договоры с поставщиками, используемые для поддержки услуг данного договора (Underpinning Contracts)',
 ));
 
 //
@@ -144,10 +146,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ProviderContract/Attribute:sla+' => 'Соглашение об уровне услуги (Service Level Agreement)',
 	'Class:ProviderContract/Attribute:coverage' => 'Время обслуживания',
 	'Class:ProviderContract/Attribute:coverage+' => '',
-	'Class:ProviderContract/Attribute:contracttype_id' => 'Тип договора',
-	'Class:ProviderContract/Attribute:contracttype_id+' => '',
-	'Class:ProviderContract/Attribute:contracttype_name' => 'Тип договора',
-	'Class:ProviderContract/Attribute:contracttype_name+' => '',
 ));
 
 //
@@ -227,12 +225,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Service/Attribute:org_id+' => '',
 	'Class:Service/Attribute:organization_name' => 'Поставщик',
 	'Class:Service/Attribute:organization_name+' => '',
+	'Class:Service/Attribute:description' => 'Описание',
+	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:servicefamily_id' => 'Пакет услуг',
 	'Class:Service/Attribute:servicefamily_id+' => '',
 	'Class:Service/Attribute:servicefamily_name' => 'Пакет услуг',
 	'Class:Service/Attribute:servicefamily_name+' => '',
-	'Class:Service/Attribute:description' => 'Описание',
-	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:documents_list' => 'Документы',
 	'Class:Service/Attribute:documents_list+' => 'Связанные документы',
 	'Class:Service/Attribute:contacts_list' => 'Контакты',
@@ -247,10 +245,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Service/Attribute:status/Value:production+' => 'Эксплуатация',
 	'Class:Service/Attribute:customercontracts_list' => 'Договоры с заказчиками',
 	'Class:Service/Attribute:customercontracts_list+' => 'Договоры с заказчиками, по которым предоставляется услуга',
-	'Class:Service/Attribute:providercontracts_list' => 'Договоры с поставщиками',
-	'Class:Service/Attribute:providercontracts_list+' => 'Договоры с поставщиками, по которым поддерживается услуга',
-	'Class:Service/Attribute:functionalcis_list' => 'Зависимость от КЕ',
-	'Class:Service/Attribute:functionalcis_list+' => 'Конфигурационные единицы, которые используются для предоставления услуги',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Подкатегории услуги',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'Подкатегории услуги',
 ));
@@ -304,12 +298,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ServiceSubcategory/Attribute:service_id+' => '',
 	'Class:ServiceSubcategory/Attribute:service_name' => 'Услуга',
 	'Class:ServiceSubcategory/Attribute:service_name+' => '',
-	'Class:ServiceSubcategory/Attribute:request_type' => 'Тип запроса',
-	'Class:ServiceSubcategory/Attribute:request_type+' => '',
-	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Инцидент',
-	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'Инцидент',
-	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Запрос на обслуживание',
-	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'Запрос на обслуживание',
 	'Class:ServiceSubcategory/Attribute:status' => 'Статус',
 	'Class:ServiceSubcategory/Attribute:status+' => '',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation' => 'Внедрение',
@@ -318,8 +306,15 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete+' => 'Устаревшее',
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Эксплуатация',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'Эксплуатация',
+	'Class:ServiceSubcategory/Attribute:request_type' => 'Тип запроса',
+	'Class:ServiceSubcategory/Attribute:request_type+' => '',
+	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Инцидент',
+	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'Инцидент',
+	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Запрос на обслуживание',
+	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'Запрос на обслуживание',
 	'Class:ServiceSubcategory/Attribute:service_provider' => 'Поставщик',
 	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Поставщик',
+
 ));
 
 //
@@ -333,12 +328,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:SLA/Attribute:name+' => '',
 	'Class:SLA/Attribute:description' => 'Описание',
 	'Class:SLA/Attribute:description+' => '',
-	'Class:SLA/Attribute:org_id' => 'Поставщик',
+	'Class:SLA/Attribute:org_id' => 'Организация',
 	'Class:SLA/Attribute:org_id+' => '',
-	'Class:SLA/Attribute:organization_name' => 'Поставщик',
+	'Class:SLA/Attribute:organization_name' => 'Организация',
 	'Class:SLA/Attribute:organization_name+' => '',
 	'Class:SLA/Attribute:slts_list' => 'SLT',
-	'Class:SLA/Attribute:slts_list+' => 'Целевые показатели уровня услуги (Service Level Target)',
+	'Class:SLA/Attribute:slts_list+' => 'Целевой показатель уровня услуги (Service Level Target)',
 	'Class:SLA/Attribute:customercontracts_list' => 'Договоры с заказчиками',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Договоры с заказчиками, в которых используется SLA',
 ));
@@ -423,37 +418,37 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 ));
 
 //
-// Class: lnkProviderContractToService
+// Class: lnkCustomerContractToProviderContract
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:lnkProviderContractToService' => 'Связь Договор с поставщиком/Услуга',
-	'Class:lnkProviderContractToService+' => '',
-	'Class:lnkProviderContractToService/Attribute:service_id' => 'Услуга',
-	'Class:lnkProviderContractToService/Attribute:service_id+' => '',
-	'Class:lnkProviderContractToService/Attribute:service_name' => 'Услуга',
-	'Class:lnkProviderContractToService/Attribute:service_name+' => '',
-	'Class:lnkProviderContractToService/Attribute:providercontract_id' => 'Договор с поставщиком',
-	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '',
-	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Договор с поставщиком',
-	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '',
+	'Class:lnkCustomerContractToProviderContract' => 'Связь Договор с заказчиком/Договор с поставщиком',
+	'Class:lnkCustomerContractToProviderContract+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id' => 'Договор с заказчиком',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name' => 'Договор с заказчиком',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id' => 'Договор с поставщиком',
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name' => 'Договор с поставщиком',
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name+' => '',
 ));
 
 //
-// Class: lnkFunctionalCIToService
+// Class: lnkCustomerContractToFunctionalCI
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:lnkFunctionalCIToService' => 'Связь Функциональная КЕ/Услуга',
-	'Class:lnkFunctionalCIToService+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Услуга',
-	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Услуга',
-	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'КЕ',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'КЕ',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
+	'Class:lnkCustomerContractToFunctionalCI' => 'Связь Договор с заказчиком/Функциональная КЕ',
+	'Class:lnkCustomerContractToFunctionalCI+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id' => 'Договор с заказчиком',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name' => 'Договор с заказчиком',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id' => 'КЕ',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name' => 'КЕ',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name+' => '',
 ));
 
 //

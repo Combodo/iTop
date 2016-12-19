@@ -2,20 +2,11 @@
 
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
- * 
- * @author   Vladimir Kunin <v.b.kunin@gmail.com>
- * @license   http://opensource.org/licenses/AGPL-3.0
  *
- * 
- * Инструкция по установке
- * 
- * Процесс установки заключается в замене имеющихся локализационных файлов полученными и последующем запуске процедуры обновления iTop для перекомпиляции кода.
- * 	1. Скопируйте с заменой два полученных файла из "itop-rus/dictionaries" в "путь/до/вашего/itop/dictionaries".
- * 	2. Скопируйте с заменой полученные файлы "itop-rus/datamodels/2.x/название-модуля/ru.dict.название-модуля.php" в "путь/до/вашего/itop/datamodels/2.x/название-модуля".
- *  3. Перейдите по адресу "http://адрес/вашего/itop/setup", при этом файл "путь/до/вашего/itop/conf/production/config-itop.php" должен быть доступен для записи.
- *  4. На второй странице установщика выберите "Upgrade an existing iTop instance" и следуйте дальнейшим инструкциям установщика.
- *
- * Ответы на вопросы по установке и использованию переводов, а также на любые другие вопросы по iTop всегда можно получить на сайте сообщества iTop по-русски http://community.itop-itsm.ru.
+ * @author      Vladimir Kunin <v.b.kunin@gmail.com>
+ * @link        http://community.itop-itsm.ru  iTop Russian Community
+ * @link        https://github.com/itop-itsm-ru/itop-rus
+ * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  *
  */
 
@@ -48,7 +39,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:AttributeClass+' => 'Class',
 
 	'Core:AttributeApplicationLanguage' => 'Язык пользователя',
-	'Core:AttributeApplicationLanguage+' => 'Language and country (EN US)',
+	'Core:AttributeApplicationLanguage+' => 'Язык и страна (EN US)',
 
 	'Core:AttributeFinalClass' => 'Класс (авто)',
 	'Core:AttributeFinalClass+' => 'Real class of the object (automatically created by the core)',
@@ -91,8 +82,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:AttributeDateTime?SmartSearch' => '
 <p>
 	Date format:<br/>
-	<b>%1$s</b><br/>
-	Пример: %2$s
+	<b>гггг-мм-дд чч:мм:сс</b><br/>
+	Пример: 2011-07-19 18:40:00
 </p>
 <p>
 Operators:<br/>
@@ -109,8 +100,8 @@ If the time is omitted, it defaults to 00:00:00
 	'Core:AttributeDate?SmartSearch' => '
 <p>
 	Date format:<br/>
-	<b>%1$s</b><br/>
-	Example: %2$s
+	<b>гггг-мм-дд</b><br/>
+	Example: 2011-07-19
 </p>
 <p>
 Operators:<br/>
@@ -164,12 +155,14 @@ Operators:<br/>
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:CMDBChange' => 'Изменение',
-	'Class:CMDBChange+' => 'Отслеживание изменений',
-	'Class:CMDBChange/Attribute:date' => 'дата',
-	'Class:CMDBChange/Attribute:date+' => 'Дата и время регистрации изменений',
-	'Class:CMDBChange/Attribute:userinfo' => 'разная информация',
-	'Class:CMDBChange/Attribute:userinfo+' => 'изменение определённые -вызвавшим-',
+	'Class:CMDBChange' => 'Изменение CMDB',
+	'Class:CMDBChange+' => 'Отслеживание изменений CMDB',
+	'Class:CMDBChange/Attribute:date' => 'Дата',
+	'Class:CMDBChange/Attribute:date+' => 'Дата и время изменения',
+	'Class:CMDBChange/Attribute:origin' => 'Источник',
+	'Class:CMDBChange/Attribute:origin+' => 'Источник приосхождения изменения',
+	'Class:CMDBChange/Attribute:userinfo' => 'Пользователь',
+	'Class:CMDBChange/Attribute:userinfo+' => 'Кто произвёл изменение',
 ));
 
 //
@@ -177,19 +170,19 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:CMDBChangeOp' => 'Операция изменения',
-	'Class:CMDBChangeOp+' => 'Отслеживание операции изменения',
-	'Class:CMDBChangeOp/Attribute:change' => 'изменение',
-	'Class:CMDBChangeOp/Attribute:change+' => 'изменение',
-	'Class:CMDBChangeOp/Attribute:date' => 'дата',
-	'Class:CMDBChangeOp/Attribute:date+' => 'дата и время изменения',
-	'Class:CMDBChangeOp/Attribute:userinfo' => 'пользователь',
-	'Class:CMDBChangeOp/Attribute:userinfo+' => 'кто сделал изменение',
-	'Class:CMDBChangeOp/Attribute:objclass' => 'класс объекта',
-	'Class:CMDBChangeOp/Attribute:objclass+' => 'класс объекта',
-	'Class:CMDBChangeOp/Attribute:objkey' => 'id объекта',
-	'Class:CMDBChangeOp/Attribute:objkey+' => 'id объекта',
-	'Class:CMDBChangeOp/Attribute:finalclass' => 'тип',
+	'Class:CMDBChangeOp' => 'Операция изменения CMDB',
+	'Class:CMDBChangeOp+' => 'Отслеживание операции изменения CMDB',
+	'Class:CMDBChangeOp/Attribute:change' => 'Изменение CMDB',
+	'Class:CMDBChangeOp/Attribute:change+' => 'Изменение CMDB',
+	'Class:CMDBChangeOp/Attribute:date' => 'Дата',
+	'Class:CMDBChangeOp/Attribute:date+' => 'Дата и время изменения',
+	'Class:CMDBChangeOp/Attribute:userinfo' => 'Пользователь',
+	'Class:CMDBChangeOp/Attribute:userinfo+' => 'Кто произвёл изменение',
+	'Class:CMDBChangeOp/Attribute:objclass' => 'Класс объекта',
+	'Class:CMDBChangeOp/Attribute:objclass+' => 'Класс объекта',
+	'Class:CMDBChangeOp/Attribute:objkey' => 'ID объекта',
+	'Class:CMDBChangeOp/Attribute:objkey+' => 'ID объекта',
+	'Class:CMDBChangeOp/Attribute:finalclass' => 'Итоговый класс',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
 ));
 
@@ -198,7 +191,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:CMDBChangeOpCreate' => 'создание объекта',
+	'Class:CMDBChangeOpCreate' => 'Операция создания объекта',
 	'Class:CMDBChangeOpCreate+' => 'Отслеживание создания объекта',
 ));
 
@@ -207,7 +200,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:CMDBChangeOpDelete' => 'удаление объекта',
+	'Class:CMDBChangeOpDelete' => 'Операция удаления объекта',
 	'Class:CMDBChangeOpDelete+' => 'Отслеживание удаления объекта',
 ));
 
@@ -216,10 +209,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:CMDBChangeOpSetAttribute' => 'изменение объекта',
+	'Class:CMDBChangeOpSetAttribute' => 'Изменение объекта',
 	'Class:CMDBChangeOpSetAttribute+' => 'Отслеживание изменения объекта',
-	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Атрибут',
-	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'код изменённого свойства',
+	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Свойство',
+	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'Код изменённого свойства',
 ));
 
 //
@@ -227,27 +220,27 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:CMDBChangeOpSetAttributeScalar' => 'изменение свойства',
+	'Class:CMDBChangeOpSetAttributeScalar' => 'Изменение свойства',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'Отслеживание изменения скалярного свойства объекта',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Предыдущее значение',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'предыдущее значение атрибута',
+	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'Предыдущее значение атрибута',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Новое значение',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'новое значение атрибута',
+	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'Новое значение атрибута',
 ));
 // Used by CMDBChangeOp... & derived classes
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Change:ObjectCreated' => 'Объект создан',
-	'Change:ObjectDeleted' => 'Объект удалён',
-	'Change:ObjectModified' => 'Object modified~~',
-	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s установлено в %2$s (предыдущее значение: %3$s)',
-	'Change:AttName_SetTo' => '%1$s установлено в %2$s',
-	'Change:Text_AppendedTo_AttName' => '%1$s добавлено к %2$s',
-	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s изменено, предыдущее значение: %2$s',
-	'Change:AttName_Changed' => '%1$s изменено',
-	'Change:AttName_EntryAdded' => '%1$s изменено, добавлено новое значение: %2$s',
-	'Change:LinkSet:Added' => 'добавлен %1$s~~',
-	'Change:LinkSet:Removed' => 'удален %1$s~~',
-	'Change:LinkSet:Modified' => 'изменен %1$s~~',
+	'Change:ObjectCreated' => 'Объект создан.',
+	'Change:ObjectDeleted' => 'Объект удалён.',
+	'Change:ObjectModified' => 'Объект изменён.',
+	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => 'В поле "%1$s" установлено значение "%2$s" (предыдущее значение "%3$s").',
+	'Change:AttName_SetTo' => 'В поле "%1$s" установлено значение "%2$s".',
+	'Change:Text_AppendedTo_AttName' => 'Новое значение "%1$s" добавлено к полю "%2$s".',
+	'Change:AttName_Changed_PreviousValue_OldValue' => 'Поле "%1$s" изменено (предыдущее значение "%2$s").',
+	'Change:AttName_Changed' => 'Поле "%1$s" изменено.',
+	'Change:AttName_EntryAdded' => 'В поле "%1$s" добавлено новое значение.',
+	'Change:LinkSet:Added' => 'добавлен объект %1$s.',
+	'Change:LinkSet:Removed' => 'удалён объект %1$s.',
+	'Change:LinkSet:Modified' => 'изменён объект %1$s.',
 ));
 
 //
@@ -351,7 +344,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 ));
 
 //
-// Classes: EventWebService and EventRestService
+// Class: EventWebService
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
@@ -369,20 +362,23 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:EventWebService/Attribute:log_error+' => 'Результаты логов ошибок',
 	'Class:EventWebService/Attribute:data' => 'Данные',
 	'Class:EventWebService/Attribute:data+' => 'Результаты данных',
-	'Class:EventRestService' => 'REST/JSON call~~',
-	'Class:EventRestService+' => 'Trace of a REST/JSON service call~~',
-	'Class:EventRestService/Attribute:operation' => 'Operation~~',
-	'Class:EventRestService/Attribute:operation+' => 'Argument \'operation\'~~',
-	'Class:EventRestService/Attribute:version' => 'Version~~',
-	'Class:EventRestService/Attribute:version+' => 'Argument \'version\'~~',
-	'Class:EventRestService/Attribute:json_input' => 'Input~~',
-	'Class:EventRestService/Attribute:json_input+' => 'Argument \'json_data\'~~',
-	'Class:EventRestService/Attribute:code' => 'Code~~',
-	'Class:EventRestService/Attribute:code+' => 'Result code~~',
-	'Class:EventRestService/Attribute:json_output' => 'Response~~',
-	'Class:EventRestService/Attribute:json_output+' => 'HTTP response (json)~~',
-	'Class:EventRestService/Attribute:provider' => 'Provider~~',
-	'Class:EventRestService/Attribute:provider+' => 'PHP class implementing the expected operation~~',
+));
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:EventRestService' => 'REST/JSON call',
+	'Class:EventRestService+' => 'Trace of a REST/JSON service call',
+	'Class:EventRestService/Attribute:operation' => 'Operation',
+	'Class:EventRestService/Attribute:operation+' => 'Argument \'operation\'',
+	'Class:EventRestService/Attribute:version' => 'Version',
+	'Class:EventRestService/Attribute:version+' => 'Argument \'version\'',
+	'Class:EventRestService/Attribute:json_input' => 'Input',
+	'Class:EventRestService/Attribute:json_input+' => 'Argument \'json_data\'',
+	'Class:EventRestService/Attribute:code' => 'Code',
+	'Class:EventRestService/Attribute:code+' => 'Result code',
+	'Class:EventRestService/Attribute:json_output' => 'Response',
+	'Class:EventRestService/Attribute:json_output+' => 'HTTP response (json)',
+	'Class:EventRestService/Attribute:provider' => 'Provider',
+	'Class:EventRestService/Attribute:provider+' => 'PHP class implementing the expected operation',
 ));
 
 //
@@ -405,22 +401,22 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:Action' => 'Заказное действие',
-	'Class:Action+' => 'Действие определённое пользователем',
-	'Class:Action/Attribute:name' => 'Имя',
+	'Class:Action' => 'Действие',
+	'Class:Action+' => 'Действие, определённое пользователем',
+	'Class:Action/Attribute:name' => 'Название',
 	'Class:Action/Attribute:name+' => '',
 	'Class:Action/Attribute:description' => 'Описание',
 	'Class:Action/Attribute:description+' => '',
 	'Class:Action/Attribute:status' => 'Статус',
-	'Class:Action/Attribute:status+' => 'В производстве или ?',
-	'Class:Action/Attribute:status/Value:test' => 'Проходит проверку',
-	'Class:Action/Attribute:status/Value:test+' => 'Проходит проверку',
-	'Class:Action/Attribute:status/Value:enabled' => 'В производстве',
-	'Class:Action/Attribute:status/Value:enabled+' => 'В производстве',
-	'Class:Action/Attribute:status/Value:disabled' => 'Неактивный',
-	'Class:Action/Attribute:status/Value:disabled+' => 'Неактивный',
+	'Class:Action/Attribute:status+' => '',
+	'Class:Action/Attribute:status/Value:test' => 'Тест',
+	'Class:Action/Attribute:status/Value:test+' => 'Тест',
+	'Class:Action/Attribute:status/Value:enabled' => 'Включено',
+	'Class:Action/Attribute:status/Value:enabled+' => 'Включено',
+	'Class:Action/Attribute:status/Value:disabled' => 'Выключено',
+	'Class:Action/Attribute:status/Value:disabled+' => 'Выключено',
 	'Class:Action/Attribute:trigger_list' => 'Связанные триггеры',
-	'Class:Action/Attribute:trigger_list+' => 'Триггеры привызанные к этому действию',
+	'Class:Action/Attribute:trigger_list+' => 'Триггеры, которые запускают данное действие',
 	'Class:Action/Attribute:finalclass' => 'Тип',
 	'Class:Action/Attribute:finalclass+' => '',
 ));
@@ -431,7 +427,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ActionNotification' => 'Уведомление',
-	'Class:ActionNotification+' => 'Уведомление (выдержка)',
+	'Class:ActionNotification+' => 'Уведомление',
 ));
 
 //
@@ -441,30 +437,30 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ActionEmail' => 'Уведомление по email',
 	'Class:ActionEmail+' => '',
-	'Class:ActionEmail/Attribute:test_recipient' => 'Проверочный получатель',
-	'Class:ActionEmail/Attribute:test_recipient+' => 'Получатель, если уведомление в статусе "Проходит проверку"',
+	'Class:ActionEmail/Attribute:test_recipient' => 'Тестовый получатель',
+	'Class:ActionEmail/Attribute:test_recipient+' => 'Получатель, если уведомление в статусе "Тест"',
 	'Class:ActionEmail/Attribute:from' => 'От',
-	'Class:ActionEmail/Attribute:from+' => 'Будет отослано в заголовке email',
+	'Class:ActionEmail/Attribute:from+' => 'Будет отправлено в заголовке email',
 	'Class:ActionEmail/Attribute:reply_to' => 'Ответить на',
-	'Class:ActionEmail/Attribute:reply_to+' => 'Будет отослано в заголовке email',
+	'Class:ActionEmail/Attribute:reply_to+' => 'Будет отправлено в заголовке email',
 	'Class:ActionEmail/Attribute:to' => 'Кому',
 	'Class:ActionEmail/Attribute:to+' => 'Получатель email',
 	'Class:ActionEmail/Attribute:cc' => 'Копия',
 	'Class:ActionEmail/Attribute:cc+' => 'Копия',
 	'Class:ActionEmail/Attribute:bcc' => 'Скр. копия',
 	'Class:ActionEmail/Attribute:bcc+' => 'Скрытая копия',
-	'Class:ActionEmail/Attribute:subject' => 'тема',
+	'Class:ActionEmail/Attribute:subject' => 'Тема',
 	'Class:ActionEmail/Attribute:subject+' => 'Заголовок письма',
-	'Class:ActionEmail/Attribute:body' => 'тело',
+	'Class:ActionEmail/Attribute:body' => 'Тело',
 	'Class:ActionEmail/Attribute:body+' => 'Содержимое письма',
-	'Class:ActionEmail/Attribute:importance' => 'значение',
-	'Class:ActionEmail/Attribute:importance+' => 'Флаг значения',
-	'Class:ActionEmail/Attribute:importance/Value:low' => 'низкий',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => 'низкий',
-	'Class:ActionEmail/Attribute:importance/Value:normal' => 'нормальный',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'нормальный',
-	'Class:ActionEmail/Attribute:importance/Value:high' => 'высокий',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => 'высокий',
+	'Class:ActionEmail/Attribute:importance' => 'Важность',
+	'Class:ActionEmail/Attribute:importance+' => 'Флаг важности',
+	'Class:ActionEmail/Attribute:importance/Value:low' => 'Низкая',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => 'Низкая',
+	'Class:ActionEmail/Attribute:importance/Value:normal' => 'Нормальная',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'Нормальная',
+	'Class:ActionEmail/Attribute:importance/Value:high' => 'Высокая',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => 'Высокая',
 ));
 
 //
@@ -473,11 +469,11 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Trigger' => 'Триггер',
-	'Class:Trigger+' => 'Заказной триггер события',
+	'Class:Trigger+' => 'Пользовательский обработчик событий',
 	'Class:Trigger/Attribute:description' => 'Описание',
-	'Class:Trigger/Attribute:description+' => 'однострочное описание',
+	'Class:Trigger/Attribute:description+' => 'Описание триггера',
 	'Class:Trigger/Attribute:action_list' => 'Действия триггера',
-	'Class:Trigger/Attribute:action_list+' => 'Действия, выполняемые при активации триггера',
+	'Class:Trigger/Attribute:action_list+' => 'Действия, выполняемые при срабатывании триггера',
 	'Class:Trigger/Attribute:finalclass' => 'Тип',
 	'Class:Trigger/Attribute:finalclass+' => '',
 ));
@@ -487,10 +483,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:TriggerOnObject' => 'Триггер (в зависимости класс)',
-	'Class:TriggerOnObject+' => 'Триггер по даному классу объектов',
+	'Class:TriggerOnObject' => 'Триггер (на класс объекта)',
+	'Class:TriggerOnObject+' => 'Триггер на события объектов данного класса',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Целевой класс',
-	'Class:TriggerOnObject/Attribute:target_class+' => '',
+	'Class:TriggerOnObject/Attribute:target_class+' => 'Класс объектов, для которых будет срабатывать данный триггер',
+	'Class:TriggerOnObject/Attribute:filter' => 'Фильтр OQL',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Позволяет ограничить список объектов, для которых будет срабатывать триггер',
+	'TriggerOnObject:WrongFilterQuery' => 'Направильный запрос фильтра: %1$s',
+	'TriggerOnObject:WrongFilterClass' => 'Запрос фильтра должен возвращать объекты класса "%1$s"',
 ));
 
 //
@@ -498,8 +498,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:TriggerOnPortalUpdate' => 'Триггер (при обновлении из портала)',
-	'Class:TriggerOnPortalUpdate+' => 'Trigger on a end-user\'s update from the portal',
+	'Class:TriggerOnPortalUpdate' => 'Триггер (обновление из портала)',
+	'Class:TriggerOnPortalUpdate+' => 'Триггер на обновление объекта пользователем портала',
 ));
 
 //
@@ -507,10 +507,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:TriggerOnStateChange' => 'Триггер (на изменение состояния)',
-	'Class:TriggerOnStateChange+' => 'Триггер на изменение состояния объекта',
+	'Class:TriggerOnStateChange' => 'Триггер (изменение статуса)',
+	'Class:TriggerOnStateChange+' => 'Триггер на изменение статуса объекта',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Статус',
-	'Class:TriggerOnStateChange/Attribute:state+' => '',
+	'Class:TriggerOnStateChange/Attribute:state+' => 'Код статуса объекта, например "resolved"',
 ));
 
 //
@@ -518,8 +518,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:TriggerOnStateEnter' => 'Триггер (на начало состояния)',
-	'Class:TriggerOnStateEnter+' => 'Триггер на изменению состояния объекта - начало',
+	'Class:TriggerOnStateEnter' => 'Триггер (на вход в статус)',
+	'Class:TriggerOnStateEnter+' => 'Триггер на вход объекта в статус',
 ));
 
 //
@@ -527,8 +527,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:TriggerOnStateLeave' => 'Триггер (на окончание состояния)',
-	'Class:TriggerOnStateLeave+' => 'Триггер на изменению состояния объекта - окончание',
+	'Class:TriggerOnStateLeave' => 'Триггер (на выход из статуса)',
+	'Class:TriggerOnStateLeave+' => 'Триггер на выход объекта из статуса',
 ));
 
 //
@@ -537,7 +537,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:TriggerOnObjectCreate' => 'Триггер (на создание объекта)',
-	'Class:TriggerOnObjectCreate+' => 'Триггер на создание объекта [дочерний класс] данного класса',
+	'Class:TriggerOnObjectCreate+' => 'Триггер на создание объекта данного или дочернего класса',
 ));
 
 //
@@ -545,12 +545,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:TriggerOnThresholdReached' => 'Триггер (пороговое)~~',
-	'Class:TriggerOnThresholdReached+' => 'Trigger on Stop-Watch threshold reached',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Секундомер~~',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Порог~~',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
+	'Class:TriggerOnThresholdReached' => 'Триггер (на пороговое значение)',
+	'Class:TriggerOnThresholdReached+' => 'Триггер на достижение секундомером порогового значения (TTO, TTR)',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Секундомер',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => 'По умолчанию для Инцидентов и Запросов доступны "ttr" и "tto"',
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Порог',
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => 'Пороговое значние секундомера, по умолчанию "75" и "100"',
 ));
 
 //
@@ -558,8 +558,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:lnkTriggerAction' => 'Действие/Триггер',
-	'Class:lnkTriggerAction+' => 'Связь между триггером и действий',
+	'Class:lnkTriggerAction' => 'Связь Триггер/Действие',
+	'Class:lnkTriggerAction+' => 'Связь между триггером и действиями',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Действие',
 	'Class:lnkTriggerAction/Attribute:action_id+' => 'Выполняемое действие',
 	'Class:lnkTriggerAction/Attribute:action_name' => 'Действие',
@@ -617,7 +617,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'SynchroDataSource:Definition' => 'Definition~~',
 	'Core:SynchroAttributes' => 'Аттрибуты~~',
 	'Core:SynchroStatus' => 'Свойства~~',
-	'Core:Synchro:ErrorsLabel' => 'Ошибки~~',	
+	'Core:Synchro:ErrorsLabel' => 'Ошибки~~',
 	'Core:Synchro:CreatedLabel' => 'Создан~~',
 	'Core:Synchro:ModifiedLabel' => 'Изменен~~',
 	'Core:Synchro:UnchangedLabel' => 'Неизменен~~',
@@ -633,8 +633,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:Synchro:NeverRun' => 'Синхронизация не запускалась. Логи отсутсвуют.~~',
 	'Core:Synchro:SynchroEndedOn_Date' => 'Синхронизация была закончена в %1$s.~~',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Синхронизация запущена в %1$s сейчас в процессе...~~',
-	'Menu:DataSources' => 'Синхронизация данных', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataSources+' => 'All Synchronization Data Sources', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources' => 'Источники данных',
+	'Menu:DataSources+' => 'Источники синхронизируемых данных',
 	'Core:Synchro:label_repl_ignored' => 'Игнор. (%1$s)~~',
 	'Core:Synchro:label_repl_disappeared' => 'Невид. (%1$s)~~',
 	'Core:Synchro:label_repl_existing' => 'Existing (%1$s)~~',
@@ -644,18 +644,18 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:Synchro:label_obj_disappeared_errors' => 'Ошибки (%1$s)~~',
 	'Core:Synchro:label_obj_disappeared_no_action' => 'No Action (%1$s)~~',
 	'Core:Synchro:label_obj_unchanged' => 'Unchanged (%1$s)~~',
-	'Core:Synchro:label_obj_updated' => 'Обновлен (%1$s)~~', 
+	'Core:Synchro:label_obj_updated' => 'Обновлен (%1$s)~~',
 	'Core:Synchro:label_obj_updated_errors' => 'Ошибки (%1$s)~~',
 	'Core:Synchro:label_obj_new_unchanged' => 'Unchanged (%1$s)~~',
 	'Core:Synchro:label_obj_new_updated' => 'Обновлен (%1$s)~~',
 	'Core:Synchro:label_obj_created' => 'Создан (%1$s)~~',
 	'Core:Synchro:label_obj_new_errors' => 'Ошибки (%1$s)~~',
-	'Core:Synchro:History' => 'История синхронизаций~~',
+	'Core:Synchro:History' => 'История синхронизаций',
 	'Core:SynchroLogTitle' => '%1$s - %2$s~~',
 	'Core:Synchro:Nb_Replica' => 'Replica processed: %1$s~~',
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s~~',
-	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'At Least one reconciliation key must be specified, or the reconciliation policy must be to use the primary key.~~',			
-	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'A delete retention period must be specified, since objects are to be deleted after being marked as obsolete~~',			
+	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'At Least one reconciliation key must be specified, or the reconciliation policy must be to use the primary key.~~',
+	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'A delete retention period must be specified, since objects are to be deleted after being marked as obsolete~~',
 	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Obsolete objects are to be updated, but no update is specified.~~',
 	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'Строка %1$s уже есть в базе. Пожалуйста, используйте другое значение для синхронизаций.~~',
 	'Core:SynchroReplica:PublicData' => 'Public Data~~',
@@ -699,12 +699,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Предыдущее значение~~',
 	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Лог',
 	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Посл.значение',
-	'Class:SynchroDataSource' => 'Синх.исходные данные',
-	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Имплементация',
-	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Устаревший~~',
-	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Производство~~',
+
+	'Class:SynchroDataSource' => 'Источник синхронизации данных',
+	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Внедрение',
+	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Устаревшее',
+	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Эксплуатация',
 	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Объем ограничений',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Использовать аттрибуты',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Использовать атрибуты',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Использовать primary_key значение',
 	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Создать~~',
 	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Ошибка~~',
@@ -722,9 +723,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Только администраторы~~',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Каждый может удалить объект',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Никто',
+
 	'Class:SynchroAttribute' => 'Синх.характеристики~~',
 	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Синхронизация данных',
-	'Class:SynchroAttribute/Attribute:attcode' => 'Код аттрибута',
+	'Class:SynchroAttribute/Attribute:attcode' => 'Код атрибута',
 	'Class:SynchroAttribute/Attribute:update' => 'Обновить',
 	'Class:SynchroAttribute/Attribute:reconcile' => 'Согласование',
 	'Class:SynchroAttribute/Attribute:update_policy' => 'Обновить политику',
@@ -736,7 +738,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:SynchroAttExtKey/Attribute:reconciliation_attcode' => 'Аттрибут согласования',
 	'Class:SynchroAttLinkSet' => 'Synchro Attribute (Linkset)~~',
 	'Class:SynchroAttLinkSet/Attribute:row_separator' => 'Разделитель строк',
-	'Class:SynchroAttLinkSet/Attribute:attribute_separator' => 'Делитель аттрибутов',
+	'Class:SynchroAttLinkSet/Attribute:attribute_separator' => 'Разделитель атрибутов',
 	'Class:SynchroLog' => 'Synchr Log~~',
 	'Class:SynchroLog/Attribute:sync_source_id' => 'Синх.исходные данные',
 	'Class:SynchroLog/Attribute:start_date' => 'Стартовать в',
@@ -777,9 +779,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:SynchroReplica/Attribute:status_last_warning' => 'Предупреждения',
 	'Class:SynchroReplica/Attribute:info_creation_date' => 'Дата создания',
 	'Class:SynchroReplica/Attribute:info_last_modified' => 'Дата последнего изменения',
-	'Class:appUserPreferences' => 'Свойства пользователей',
+	'Class:appUserPreferences' => 'Предпочтения пользователя',
 	'Class:appUserPreferences/Attribute:userid' => 'Пользователь',
-	'Class:appUserPreferences/Attribute:preferences' => 'Свойства',
+	'Class:appUserPreferences/Attribute:preferences' => 'Предпочтения',
 	'Core:ExecProcess:Code1' => 'Неверная команда или команда завершена с ошибкой (возможно, неверное имя скрипта)',
 	'Core:ExecProcess:Code255' => 'Ошибка PHP (parsing, or runtime)~~',
 ));
@@ -788,81 +790,84 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 // Attribute Duration
 //
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Core:Duration_Seconds'	=> '%1$ds~~',	
-	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds~~',	
-	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds~~',		
-	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds~~',		
-	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
-	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
-	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class \"%1$s\"~~',
-	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as \"%1$s\")~~',
-	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for \"%1$s\"~~',
-	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for \"%1$s\" at %2$d%%~~',
-	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter \"%1$s\"~~',
-	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \"query\". There is no Query Phrasebook corresponding to the id: \"%1$s\".~~',
-	'Core:BulkExport:ExportFormatPrompt' => 'Export format:~~',
-	'Core:BulkExportOf_Class' => '%1$s Export~~',
-	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click here to download %1$s~~',
-	'Core:BulkExport:ExportResult' => 'Result of the export:~~',
-	'Core:BulkExport:RetrievingData' => 'Retrieving data...~~',
-	'Core:BulkExport:HTMLFormat' => 'Web Page (*.html)~~',
-	'Core:BulkExport:CSVFormat' => 'Comma Separated Values (*.csv)~~',
-	'Core:BulkExport:XLSXFormat' => 'Excel 2007 or newer (*.xlsx)~~',
-	'Core:BulkExport:PDFFormat' => 'PDF Document (*.pdf)~~',
-	'Core:BulkExport:DragAndDropHelp' => 'Drag and drop the columns\' headers to arrange the columns. Preview of %1$s lines. Total number of lines to export: %2$s.~~',
-	'Core:BulkExport:EmptyPreview' => 'Select the columns to be exported from the list above~~',
-	'Core:BulkExport:ColumnsOrder' => 'Columns order~~',
-	'Core:BulkExport:AvailableColumnsFrom_Class' => 'Available columns from %1$s~~',
-	'Core:BulkExport:NoFieldSelected' => 'Select at least one column to be exported~~',
-	'Core:BulkExport:CheckAll' => 'Check All~~',
-	'Core:BulkExport:UncheckAll' => 'Uncheck All~~',
-	'Core:BulkExport:ExportCancelledByUser' => 'Export cancelled by the user~~',
-	'Core:BulkExport:CSVOptions' => 'CSV Options~~',
-	'Core:BulkExport:CSVLocalization' => 'Localization~~',
-	'Core:BulkExport:PDFOptions' => 'PDF Options~~',
-	'Core:BulkExport:PDFPageFormat' => 'Page Format~~',
-	'Core:BulkExport:PDFPageSize' => 'Page Size:~~',
-	'Core:BulkExport:PageSize-A4' => 'A4~~',
-	'Core:BulkExport:PageSize-A3' => 'A3~~',
-	'Core:BulkExport:PageSize-Letter' => 'Letter~~',
-	'Core:BulkExport:PDFPageOrientation' => 'Page Orientation:~~',
-	'Core:BulkExport:PageOrientation-L' => 'Landscape~~',
-	'Core:BulkExport:PageOrientation-P' => 'Portrait~~',
-	'Core:BulkExport:XMLFormat' => 'XML file (*.xml)~~',
-	'Core:BulkExport:XMLOptions' => 'XML Options~~',
-	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML format (*.html)~~',
-	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options~~',
-	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
-	'Core:BulkExport:OptionNoLocalize' => 'Do not localize the values (for Enumerated fields)~~',
-	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting~~',
-	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export~~',
-	'Core:BulkExportLabelOQLExpression' => 'OQL Query:~~',
-	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:~~',
-	'Core:BulkExportMessageEmptyOQL' => 'Please enter a valid OQL query.~~',
-	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Please select a valid phrasebook entry.~~',
-	'Core:BulkExportQueryPlaceholder' => 'Type an OQL query here...~~',
-	'Core:BulkExportCanRunNonInteractive' => 'Click here to run the export in non-interactive mode.~~',
-	'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.~~',
-	'Core:BulkExport:XLSXOptions' => 'Excel Options~~',
-	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup~~',
-	'Core:DateTime:Placeholder_d' => 'дд', // Day of the month: 2 digits (with leading zero)
-	'Core:DateTime:Placeholder_j' => 'д', // Day of the month: 1 or 2 digits (without leading zero)
-	'Core:DateTime:Placeholder_m' => 'мм', // Month on 2 digits i.e. 01-12
-	'Core:DateTime:Placeholder_n' => 'м', // Month on 1 or 2 digits 1-12
-	'Core:DateTime:Placeholder_Y' => 'гггг', // Year on 4 digits
-	'Core:DateTime:Placeholder_y' => 'гг', // Year on 2 digits
-	'Core:DateTime:Placeholder_H' => 'чч', // Hour 00..23
-	'Core:DateTime:Placeholder_h' => 'чч', // Hour 01..12
-	'Core:DateTime:Placeholder_G' => 'ч', // Hour 0..23
-	'Core:DateTime:Placeholder_g' => 'ч', // Hour 1..12
+	'Core:Duration_Seconds'	=> '%1$d с',
+	'Core:Duration_Minutes_Seconds'	=>'%1$d мин %2$d с',
+	'Core:Duration_Hours_Minutes_Seconds' => '%1$d ч %2$d мин %3$d с',
+	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$s д %2$d ч %3$d мин %4$d с',
+
+		// Explain working time computing
+	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as "%1$s")',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for "%1$s"',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for "%1$s" at %2$d%%',
+
+	// Bulk export
+	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter "%1$s"',
+	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter "query". There is no Query Phrasebook corresponding to the id: "%1$s".',
+	'Core:BulkExport:ExportFormatPrompt' => 'Export format:',
+	'Core:BulkExportOf_Class' => '%1$s Export',
+	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click here to download %1$s',
+	'Core:BulkExport:ExportResult' => 'Result of the export:',
+	'Core:BulkExport:RetrievingData' => 'Retrieving data...',
+	'Core:BulkExport:HTMLFormat' => 'Web Page (*.html)',
+	'Core:BulkExport:CSVFormat' => 'Comma Separated Values (*.csv)',
+	'Core:BulkExport:XLSXFormat' => 'Excel 2007 or newer (*.xlsx)',
+	'Core:BulkExport:PDFFormat' => 'PDF Document (*.pdf)',
+	'Core:BulkExport:DragAndDropHelp' => 'Drag and drop the columns\' headers to arrange the columns. Preview of %1$s lines. Total number of lines to export: %2$s.',
+	'Core:BulkExport:EmptyPreview' => 'Select the columns to be exported from the list above',
+	'Core:BulkExport:ColumnsOrder' => 'Columns order',
+	'Core:BulkExport:AvailableColumnsFrom_Class' => 'Available columns from %1$s',
+	'Core:BulkExport:NoFieldSelected' => 'Select at least one column to be exported',
+	'Core:BulkExport:CheckAll' => 'Check All',
+	'Core:BulkExport:UncheckAll' => 'Uncheck All',
+	'Core:BulkExport:ExportCancelledByUser' => 'Export cancelled by the user',
+	'Core:BulkExport:CSVOptions' => 'CSV Options',
+	'Core:BulkExport:CSVLocalization' => 'Localization',
+	'Core:BulkExport:PDFOptions' => 'PDF Options',
+	'Core:BulkExport:PDFPageFormat' => 'Page Format',
+	'Core:BulkExport:PDFPageSize' => 'Page Size:',
+	'Core:BulkExport:PageSize-A4' => 'A4',
+	'Core:BulkExport:PageSize-A3' => 'A3',
+	'Core:BulkExport:PageSize-Letter' => 'Letter',
+	'Core:BulkExport:PDFPageOrientation' => 'Page Orientation:',
+	'Core:BulkExport:PageOrientation-L' => 'Landscape',
+	'Core:BulkExport:PageOrientation-P' => 'Portrait',
+	'Core:BulkExport:XMLFormat' => 'XML file (*.xml)',
+	'Core:BulkExport:XMLOptions' => 'XML Options',
+	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML format (*.html)',
+	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options',
+	'Core:BulkExport:OptionNoLocalize' => 'Do not localize the values (for Enumerated fields)',
+	'Core:BulkExport:OptionLinkSets' => 'Include linked objects',
+	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting',
+	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export',
+	'Core:BulkExportLabelOQLExpression' => 'OQL Query:',
+	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:',
+	'Core:BulkExportMessageEmptyOQL' => 'Please enter a valid OQL query.',
+	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Please select a valid phrasebook entry.',
+	'Core:BulkExportQueryPlaceholder' => 'Type an OQL query here...',
+	'Core:BulkExportCanRunNonInteractive' => 'Click here to run the export in non-interactive mode.',
+	'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.',
+	'Core:BulkExport:XLSXOptions' => 'Excel Options',
+	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup',
+	'Core:BulkExport:DateTimeFormat' => 'Date and Time format',
+	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s',
+	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s',
+
+	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
+	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
+	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
+	'Core:DateTime:Placeholder_n' => 'M', // Month on 1 or 2 digits 1-12
+	'Core:DateTime:Placeholder_Y' => 'YYYY', // Year on 4 digits
+	'Core:DateTime:Placeholder_y' => 'YY', // Year on 2 digits
+	'Core:DateTime:Placeholder_H' => 'hh', // Hour 00..23
+	'Core:DateTime:Placeholder_h' => 'h', // Hour 01..12
+	'Core:DateTime:Placeholder_G' => 'hh', // Hour 0..23
+	'Core:DateTime:Placeholder_g' => 'h', // Hour 1..12
 	'Core:DateTime:Placeholder_a' => 'am/pm', // am/pm (lowercase)
 	'Core:DateTime:Placeholder_A' => 'AM/PM', // AM/PM (uppercase)
-	'Core:DateTime:Placeholder_i' => 'мм', // minutes, 2 digits: 00..59
-	'Core:DateTime:Placeholder_s' => 'сс', // seconds, 2 digits 00..59
-	'Core:Validator:Default' => 'Wrong format~~',
-	'Core:Validator:Mandatory' => 'Please, fill this field~~',
-	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
-	'Core:Validator:MustSelectOne' => 'Please, select one~~',
+	'Core:DateTime:Placeholder_i' => 'mm', // minutes, 2 digits: 00..59
+	'Core:DateTime:Placeholder_s' => 'ss', // seconds, 2 digits 00..59
+	'Core:Validator:Default' => 'Неправильный формат',
+	'Core:Validator:Mandatory' => 'Пожалуйста, заполните это поле',
+	'Core:Validator:MustBeInteger' => 'Должно быть целым числом',
+	'Core:Validator:MustSelectOne' => 'Пожалуйста, выберите значение',
 ));
-
-?>
