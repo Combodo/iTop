@@ -222,7 +222,7 @@ try
 	PrepareWidgets();
 
 	//$('.resizable').resizable(); // Make resizable everything that claims to be resizable !
-	$('.caselog_header').click( function () { $(this).toggleClass('open').next('.caselog_entry_html').toggle(); });
+	$('.caselog_header').click( function () { $(this).toggleClass('open').next('.caselog_entry,.caselog_entry_html').toggle(); });
 			
 	$(document).ajaxSend(function(event, jqxhr, options) {
 		jqxhr.setRequestHeader('X-Combodo-Ajax', 'true');
