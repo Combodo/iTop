@@ -119,24 +119,45 @@ class BrowseBrickController extends BrickController
 						trim($sSearchValue);
 					});
 
+					// - Retrieving fields to search
+					$aSearchFields = array($aLevelsProperties[$aLevelsPropertiesKeys[$i]]['name_att']);
+					if (!empty($aLevelsProperties[$aLevelsPropertiesKeys[$i]]['fields']))
+					{
+						foreach ($aLevelsProperties[$aLevelsPropertiesKeys[$i]]['fields'] as $aTmpField)
+						{
+							$aSearchFields[] = $aTmpField['code'];
+						}
+					}
 					// - Building query for the search values parts
 					$oLevelBinExpr = null;
+					$iFieldLoopMax = count($aSearchFields) - 1;
 					$iSearchLoopMax = count($aSearchValues) - 1;
-					for ($j = 0; $j <= $iSearchLoopMax; $j++)
+					for ($j = 0; $j <= $iFieldLoopMax; $j++)
 					{
-						$oSearchBinExpr = new BinaryExpression(new FieldExpression($aLevelsProperties[$aLevelsPropertiesKeys[$i]]['name_att'], $aLevelsPropertiesKeys[$i]), 'LIKE', new VariableExpression('search_value_' . $j));
+						$sTmpFieldAttCode = $aSearchFields[$j];
+						$oFieldBinExpr = null;
+						//$oFieldBinExpr = new BinaryExpression(new FieldExpression($aSearchFields[$j], $aLevelsPropertiesKeys[$i]), )
+
+						for ($k = 0; $k <= $iSearchLoopMax; $k++)
+						{
+							$oSearchBinExpr = new BinaryExpression(new FieldExpression($sTmpFieldAttCode, $aLevelsPropertiesKeys[$i]), 'LIKE', new VariableExpression('search_value_' . $k));
+							if ($k === 0)
+							{
+								$oFieldBinExpr = $oSearchBinExpr;
+							}
+							else
+							{
+								$oFieldBinExpr = new BinaryExpression($oFieldBinExpr, 'AND', $oSearchBinExpr);
+							}
+						}
+
 						if ($j === 0)
 						{
-							$oLevelBinExpr = $oSearchBinExpr;
+							$oLevelBinExpr = $oFieldBinExpr;
 						}
 						else
 						{
-							$oLevelBinExpr = new BinaryExpression($oLevelBinExpr, 'AND', $oSearchBinExpr);
-						}
-
-						if ($j === $iSearchLoopMax)
-						{
-
+							$oLevelBinExpr = new BinaryExpression($oLevelBinExpr, 'OR', $oFieldBinExpr);
 						}
 					}
 
@@ -601,14 +622,7 @@ class BrowseBrickController extends BrickController
 				foreach ($aLevelsProperties[$key]['fields'] as $aField)
 				{
 					$oAttDef = MetaModel::GetAttributeDef(get_class($value), $aField['code']);
-					if ($oAttDef->GetEditClass() === 'Duration')
-					{
-						$aRow[$key]['fields'][$aField['code']] = $oAttDef->GetAsHTML($value->Get($aField['code']));
-					}
-					else
-					{
-						$aRow[$key]['fields'][$aField['code']] = $oAttDef->GetValueLabel($value->Get($aField['code']));
-					}
+					$aRow[$key]['fields'][$aField['code']] = $oAttDef->GetValueLabel($value->Get($aField['code']));
 				}
 			}
 		}
