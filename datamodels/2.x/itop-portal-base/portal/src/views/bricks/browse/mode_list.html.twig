@@ -263,6 +263,7 @@
 						"data": function(d){
 							d.iPageNumber = Math.floor(d.start/d.length) + 1;
 							d.iCountPerPage = d.length;
+							d.sDataLoading = "{{ constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_LAZY') }}";
 							d.columns = null;
 							d.orders = null;
 							{% if sSearchValue is not null %}
