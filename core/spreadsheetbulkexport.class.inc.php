@@ -31,6 +31,7 @@ class SpreadsheetBulkExport extends TabularBulkExport
 		$oP->p(" *\tfields: (mandatory) the comma separated list of field codes to export (e.g: name,org_id,service_name...).");
 		$oP->p(" *\tno_localize: (optional) pass 1 to retrieve the raw (untranslated) values for enumerated fields. Default: 0.");
 		$oP->p(" *\tdate_format: the format to use when exporting date and time fields (default = the SQL format). e.g. 'Y-m-d H:i:s'");
+		$oP->p(" *\tformatted_text: set to 1 to formatted text fields with their HTML markup, 0 to remove formatting. Default is 1 (= formatted text)");
 	}
 
 	public function EnumFormParts()
@@ -51,7 +52,14 @@ class SpreadsheetBulkExport extends TabularBulkExport
 				$oP->add('<fieldset><legend>'.Dict::S('Core:BulkExport:SpreadsheetOptions').'</legend>');
 				$oP->add('<table>');
 				$oP->add('<tr>');
-				$oP->add('<td><input type="checkbox" id="spreadsheet_no_localize" name="no_localize" value="1"'.$sChecked.'><label for="spreadsheet_no_localize"> '.Dict::S('Core:BulkExport:OptionNoLocalize').'</label></td>');
+				
+				$oP->add('<td style="vertical-align:top">');
+				$sChecked = (utils::ReadParam('formatted_text', 1) == 1) ? ' checked ' : '';
+				$oP->add('<h3>'.Dict::S('Core:BulkExport:TextFormat').'</h3>');
+				$oP->add('<input type="hidden" name="formatted_text" value="0">'); // Trick to pass the zero value if the checkbox below is unchecked, since we want the default value to be "1"
+				$oP->add('<input type="checkbox" id="spreadsheet_formatted_text" name="formatted_text" value="1"'.$sChecked.'><label for="spreadsheet_formatted_text"> '.Dict::S('Core:BulkExport:OptionFormattedText').'</label><br/><br/>');
+				$oP->add('<input type="checkbox" id="spreadsheet_no_localize" name="no_localize" value="1"'.$sChecked.'><label for="spreadsheet_no_localize"> '.Dict::S('Core:BulkExport:OptionNoLocalize').'</label>');
+				$oP->add('</td>');
 				
 				$sDateTimeFormat = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
 				$sDefaultChecked = ($sDateTimeFormat == (string)AttributeDateTime::GetFormat()) ? ' checked' : '';
@@ -90,7 +98,8 @@ EOF
 	public function ReadParameters()
 	{
 		parent::ReadParameters();
-
+		$this->aStatusInfo['formatted_text'] = (bool)utils::ReadParam('formatted_text', 1, true);
+		
 		$sDateFormatRadio = utils::ReadParam('spreadsheet_date_format_radio', '');
 		switch($sDateFormatRadio)
 		{
@@ -126,6 +135,7 @@ EOF
 
 	protected function GetValue($oObj, $sAttCode)
 	{
+		$bFormattedText =  (array_key_exists('formatted_text', $this->aStatusInfo) ? $this->aStatusInfo['formatted_text'] : false);
 		switch($sAttCode)
 		{
 			case 'id':
@@ -146,6 +156,18 @@ EOF
 				elseif ($value instanceof ormDocument)
 				{
 					$sRet = '';
+				}
+				elseif ($oAttDef instanceof AttributeText)
+				{
+					if ($bFormattedText)
+					{
+						// Replace paragraphs (<p...>...</p>, etc) by line breaks (<br/>) since Excel (pre-2016) splits the cells when there is a paragraph
+						$sRet = static::HtmlToSpreadsheet($oObj->GetAsHTML($sAttCode));
+					}
+					else
+					{
+						$sRet = utils::HtmlToText($oObj->GetAsHTML($sAttCode));
+					}
 				}
 				elseif ($oAttDef instanceof AttributeString)
 				{
@@ -232,6 +254,7 @@ EOF
 		$this->OptimizeColumnLoad($oSet);
 		
 		$sExportDateTimeFormat = $this->aStatusInfo['date_format'];
+		$bFormattedText =  (array_key_exists('formatted_text', $this->aStatusInfo) ? $this->aStatusInfo['formatted_text'] : false);
 		// Date & time formats
 		$oDateTimeFormat = new DateTimeFormat($sExportDateTimeFormat);
 		$oDateFormat = new DateTimeFormat($oDateTimeFormat->ToDateFormat());
@@ -287,6 +310,20 @@ EOF
 						$rawValue = $oObj->Get($sAttCode);
 						$sField = str_replace("\n", "<br/>", htmlentities($rawValue->__toString(), ENT_QUOTES, 'UTF-8'));
 						// Trick for Excel: treat the content as text even if it begins with an equal sign
+						$sData .= "<td x:str>$sField</td>";
+					}
+					elseif ($oAttDef instanceof AttributeText)
+					{
+						if ($bFormattedText)
+						{
+							// Replace paragraphs (<p...>...</p>, etc) by line breaks (<br/>) since Excel (pre-2016) splits the cells when there is a paragraph
+							$sField = static::HtmlToSpreadsheet($oObj->GetAsHTML($sAttCode));
+						}
+						else
+						{
+							// Convert to plain text
+							$sField = utils::HtmlToText($oObj->GetAsHTML($sAttCode));
+						}
 						$sData .= "<td x:str>$sField</td>";
 					}
 					else if($oAttDef instanceof AttributeString)
@@ -353,5 +390,40 @@ EOF
 	public function GetFileExtension()
 	{
 		return 'html';
+	}
+	
+	/**
+	 * Cleanup all markup displayed as line breaks (except <br> tags) since this
+	 * causes Excel (pre-2016) to generate extra lines in the table, thus breaking
+	 * the tabular disposition of the export
+	 * Note: Excel 2016 also refuses line breaks, so the only solution for this case is alas plain text
+	 * @param string $sHtml The HTML to cleanup
+	 * @return string The cleaned HTML
+	 */
+	public static function HtmlToSpreadsheet($sHtml)
+	{
+		// The tags listed here are a subset of the whitelist defined in HTMLDOMSanitizer
+		// Tags causing a visual "line break" in the displayed page (i.e. display: block) => to be replaced by a <span> followed by a <br/>
+		$aTagsToReplace = array(
+		 'pre', 'div', 'p', 'hr', 'center', 'h1', 'h2', 'h3', 'h4', 'li', 'fieldset', 'legend', 'nav', 'section', 'tr', 'caption',
+		);
+		// Tags to completely remove from the markup
+		$aTagsToRemove = array(
+				'table', 'thead', 'tbody', 'ul', 'ol', 'td', 'th',
+		);
+		
+		foreach($aTagsToReplace as $sTag)
+		{
+			$sHtml = preg_replace("|<{$sTag} ?([^>]*)>|i", '<span $1>', $sHtml);
+			$sHtml = preg_replace("|</{$sTag}>|i", '</span><br/>', $sHtml);
+		}
+		
+		foreach($aTagsToRemove as $sTag)
+		{
+			$sHtml = preg_replace("|<{$sTag} ?([^>]*)>|i", '', $sHtml);
+			$sHtml = preg_replace("|</{$sTag}>|i", '', $sHtml);
+		}
+		
+		return $sHtml;
 	}
 }
