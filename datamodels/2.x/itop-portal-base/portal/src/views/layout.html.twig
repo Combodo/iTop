@@ -116,132 +116,136 @@
 		{% endblock %}
 		
 		{% block pNavigationWrapper %}
-		{# Topbar navigation menu for mobile screens #}
-		<nav class="navbar navbar-fixed-top navbar-default visible-xs" id="topbar" role="navigation">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand pull-right" href="{{ app.url_generator.generate('p_home') }}">
-						{% if app['combodo.portal.instance.conf'].properties.logo is not null %}
-							<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
-						{% else %}
-							iTop
-						{% endif %}
-					</a>
-					<p class="navbar-text">
-						<a class="navbar-link user_infos" href="{{ app.url_generator.generate('p_user_profile_brick') }}">
-							<span class="user_photo" style="background-image: url('{{ sUserPhotoUrl }}');"></span>
-							<span class="user_fullname">{{ sUserFullname }}</span>
-						</a>
-					</p>
-				</div>
-				<div class="collapse navbar-collapse" id="navbar">
-					<ul class="nav navbar-nav">
-						{% block pNavigationTopBricks %}
-							<li class="{% if oBrick is not defined %}active{% endif %}">
-								<a href="{{ app.url_generator.generate('p_home') }}">
-									<span class="brick_icon fa fa-home fa-2x"></span>
-									{{ 'Page:Home'|dict_s }}
+			{# Topbar navigation menu for mobile screens #}
+			{% block pNavigationTopMenuWrapper %}
+				<nav class="navbar navbar-fixed-top navbar-default visible-xs" id="topbar" role="navigation">
+					<div class="container-fluid">
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+							<a class="navbar-brand pull-right" href="{{ app.url_generator.generate('p_home') }}">
+								{% if app['combodo.portal.instance.conf'].properties.logo is not null %}
+									<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
+								{% else %}
+									iTop
+								{% endif %}
+							</a>
+							<p class="navbar-text">
+								<a class="navbar-link user_infos" href="{{ app.url_generator.generate('p_user_profile_brick') }}">
+									<span class="user_photo" style="background-image: url('{{ sUserPhotoUrl }}');"></span>
+									<span class="user_fullname">{{ sUserFullname }}</span>
 								</a>
-							</li>
-							{% for brick in app['combodo.portal.instance.conf'].bricks_ordering.navigation_menu %}
-								{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
-									<li class="{% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}">
-										<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}>
-											<span class="brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
-											{{ brick.GetTitleNavigationMenu|dict_s }}
+							</p>
+						</div>
+						<div class="collapse navbar-collapse" id="navbar">
+							<ul class="nav navbar-nav">
+								{% block pNavigationTopBricks %}
+									<li class="{% if oBrick is not defined %}active{% endif %}">
+										<a href="{{ app.url_generator.generate('p_home') }}">
+											<span class="brick_icon fa fa-home fa-2x"></span>
+											{{ 'Page:Home'|dict_s }}
 										</a>
 									</li>
+									{% for brick in app['combodo.portal.instance.conf'].bricks_ordering.navigation_menu %}
+										{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
+											<li class="{% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}">
+												<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}>
+													<span class="brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
+													{{ brick.GetTitleNavigationMenu|dict_s }}
+												</a>
+											</li>
+										{% endif %}
+									{% endfor %}
+								{% endblock %}
+								{% if bUserConnected %}
+									<li role="separator" class="divider"></li>
+									<li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="brick_icon fa fa-user fa-2x fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
+									{% for aPortal in app['combodo.portal.instance.conf'].portals %}
+										{% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}
+											{% set sIconClass = (aPortal.id == 'backoffice') ? 'fa-list-alt' : 'fa-external-link' %}
+											<li><a href="{{ aPortal.url }}" target="_blank"><span class="brick_icon fa {{ sIconClass }} fa-2x fa-fw"></span>{{ aPortal.label|dict_s }}</a></li>
+										{% endif %}
+									{% endfor %}
+									{# We display the separator only if the user has more then 1 portal. Meaning default portal + console or several portal at least #}
+									{% if app['combodo.portal.instance.conf'].portals|length > 1 %}
+										<li role="separator" class="divider"></li>
+									{% endif %}
+									<li><a href="{{ app['combodo.absolute_url'] }}pages/logoff.php"><span class="brick_icon fa fa-sign-out fa-2x fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:Logout'|dict_s }}</a></li>
 								{% endif %}
-							{% endfor %}
-						{% endblock %}
-						{% if bUserConnected %}
-							<li role="separator" class="divider"></li>
-							<li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="brick_icon fa fa-user fa-2x fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
-							{% for aPortal in app['combodo.portal.instance.conf'].portals %}
-								{% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}
-									{% set sIconClass = (aPortal.id == 'backoffice') ? 'fa-list-alt' : 'fa-external-link' %}
-									<li><a href="{{ aPortal.url }}" target="_blank"><span class="brick_icon fa {{ sIconClass }} fa-2x fa-fw"></span>{{ aPortal.label|dict_s }}</a></li>
-								{% endif %}
-							{% endfor %}
-							{# We display the separator only if the user has more then 1 portal. Meaning default portal + console or several portal at least #}
-							{% if app['combodo.portal.instance.conf'].portals|length > 1 %}
-								<li role="separator" class="divider"></li>
-							{% endif %}
-							<li><a href="{{ app['combodo.absolute_url'] }}pages/logoff.php"><span class="brick_icon fa fa-sign-out fa-2x fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:Logout'|dict_s }}</a></li>
-						{% endif %}
-					</ul>
-				</div>
-			</div>
-		</nav>
-		
-		{# Sidebar navigation menu for normal screens #}
-		<nav class="navbar-default hidden-xs col-sm-3 col-md-2" id="sidebar" role="navigation">
-			<div class="user_card bg-primary">
-				<div class="user_photo" style="background-image: url('{{ sUserPhotoUrl }}');">
-				</div>
-				<div class="user_infos">
-					<div class="user_fullname">{{ sUserFullname }}</div>
-					<div class="user_email dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="user_options">
-							{{ sUserEmail }}
-							<span class="caret"></span>
-						</a>
-						<ul class="dropdown-menu user_options" aria-labelledby="user_options">
-							<li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="brick_icon fa fa-user fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
-							{% for aPortal in app['combodo.portal.instance.conf'].portals %}
-								{% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}
-									{% set sGlyphiconClass = (aPortal.id == 'backoffice') ? 'fa-list-alt' : 'fa-external-link' %}
-									<li><a href="{{ aPortal.url }}" target="_blank" title="{{ aPortal.label|dict_s }}"><span class="brick_icon fa {{ sGlyphiconClass }} fa-lg fa-fw"></span>{{ aPortal.label|dict_s }}</a></li>
-								{% endif %}
-							{% endfor %}
-							{# We display the separator only if the user has more then 1 portal. Meaning default portal + console or several portal at least #}
-							{% if app['combodo.portal.instance.conf'].portals|length > 1 %}
-								<li role="separator" class="divider"></li>
-							{% endif %}
-							<li><a href="{{ app['combodo.absolute_url'] }}pages/logoff.php"><span class="brick_icon fa fa-sign-out fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:Logout'|dict_s }}</a></li>
-						</ul>
+							</ul>
+						</div>
 					</div>
-				</div>
-			</div>
-			<div class="menu">
-				{% block pNavigationSideMenu %}
-					<ul class="nav navbar-nav">
-						<li class="{% if oBrick is not defined %}active{% endif %}">
-							<a href="{{ app.url_generator.generate('p_home') }}">
-								<span class="brick_icon fa fa-home fa-2x"></span>
-								{{ 'Page:Home'|dict_s }}
-							</a>
-						</li>
-						{% for brick in app['combodo.portal.instance.conf'].bricks_ordering.navigation_menu %}
-							{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
-								<li class="{% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}">
-									<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}>
-										<span class="brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
-										{{ brick.GetTitleNavigationMenu|dict_s }}
+				</nav>
+			{% endblock %}
+
+			{# Sidebar navigation menu for normal screens #}
+			{% block pNavigationSideMenuWrapper %}
+				<nav class="navbar-default hidden-xs col-sm-3 col-md-2" id="sidebar" role="navigation">
+					<div class="user_card bg-primary">
+						<div class="user_photo" style="background-image: url('{{ sUserPhotoUrl }}');">
+						</div>
+						<div class="user_infos">
+							<div class="user_fullname">{{ sUserFullname }}</div>
+							<div class="user_email dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="user_options">
+									{{ sUserEmail }}
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu user_options" aria-labelledby="user_options">
+									<li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="brick_icon fa fa-user fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
+									{% for aPortal in app['combodo.portal.instance.conf'].portals %}
+										{% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}
+											{% set sGlyphiconClass = (aPortal.id == 'backoffice') ? 'fa-list-alt' : 'fa-external-link' %}
+											<li><a href="{{ aPortal.url }}" target="_blank" title="{{ aPortal.label|dict_s }}"><span class="brick_icon fa {{ sGlyphiconClass }} fa-lg fa-fw"></span>{{ aPortal.label|dict_s }}</a></li>
+										{% endif %}
+									{% endfor %}
+									{# We display the separator only if the user has more then 1 portal. Meaning default portal + console or several portal at least #}
+									{% if app['combodo.portal.instance.conf'].portals|length > 1 %}
+										<li role="separator" class="divider"></li>
+									{% endif %}
+									<li><a href="{{ app['combodo.absolute_url'] }}pages/logoff.php"><span class="brick_icon fa fa-sign-out fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:Logout'|dict_s }}</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="menu">
+						{% block pNavigationSideMenu %}
+							<ul class="nav navbar-nav">
+								<li class="{% if oBrick is not defined %}active{% endif %}">
+									<a href="{{ app.url_generator.generate('p_home') }}">
+										<span class="brick_icon fa fa-home fa-2x"></span>
+										{{ 'Page:Home'|dict_s }}
 									</a>
 								</li>
+								{% for brick in app['combodo.portal.instance.conf'].bricks_ordering.navigation_menu %}
+									{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
+										<li class="{% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}">
+											<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}>
+												<span class="brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
+												{{ brick.GetTitleNavigationMenu|dict_s }}
+											</a>
+										</li>
+									{% endif %}
+								{% endfor %}
+							</ul>
+						{% endblock %}
+					</div>
+					{% if app['combodo.portal.instance.conf'].properties.logo is not null %}
+						<div class="logo">
+							{# This is a debug helper to know in which screen size we are #}
+							{% if app['debug'] %}
+								<div style="position: fixed; bottom: 0px; left: 0px; z-index: 9999;">Debug : Taille <span class="hidden-sm hidden-md hidden-lg">XS</span><span class="hidden-xs hidden-md hidden-lg">SM</span><span class="hidden-xs hidden-sm hidden-lg">MD</span><span class="hidden-xs hidden-sm hidden-md">LG</span></div>
 							{% endif %}
-						{% endfor %}
-					</ul>
-				{% endblock %}
-			</div>
-			{% if app['combodo.portal.instance.conf'].properties.logo is not null %}
-				<div class="logo">
-					{# This is a debug helper to know in which screen size we are #}
-					{% if app['debug'] %}
-						<div style="position: fixed; bottom: 0px; left: 0px; z-index: 9999;">Debug : Taille <span class="hidden-sm hidden-md hidden-lg">XS</span><span class="hidden-xs hidden-md hidden-lg">SM</span><span class="hidden-xs hidden-sm hidden-lg">MD</span><span class="hidden-xs hidden-sm hidden-md">LG</span></div>
+							<a href="{{ app.url_generator.generate('p_home') }}" title="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}">
+								<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
+							</a>
+						</div>
 					{% endif %}
-					<a href="{{ app.url_generator.generate('p_home') }}" title="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}">
-						<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
-					</a>
-				</div>
-			{% endif %}
-		</nav>
+				</nav>
+			{% endblock %}
 		{% endblock %}
 		
 		{% block pMainWrapper %}
@@ -265,40 +269,46 @@
 		
 		<footer id="footer-wrapper">
 			{% block pPageFooter%}
-			<a href="http://www.combodo.com">iTop &copy; {{ "now"|date('Y') }}</a>
+				<a href="http://www.combodo.com">iTop &copy; {{ "now"|date('Y') }}</a>
 			{% endblock %}
 		</footer>
 	
-		<div class="modal fade" id="modal-for-all" role="dialog">
-			<div class="modal-dialog modal-lg" role="document">
-				<div class="modal-content">
+		{% block pModalForAllWrapper %}
+			<div class="modal fade" id="modal-for-all" role="dialog">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+						{% include 'itop-portal-base/portal/src/views/helpers/loader.html.twig' %}
+					</div>
+				</div>
+			</div>
+		{% endblock %}
+		{% block pModalForAlert %}
+			<div class="modal fade" id="modal-for-alert" role="dialog">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="{{ 'Portal:Button:Close'|dict_s }}"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title"></h4>
+						</div>
+						<div class="modal-body">
+							<div class="alert">
+							</div>
+							<div class="text-right">
+								<button type="button" class="btn btn-primary" data-dismiss="modal">{{ 'Portal:Button:Close'|dict_s }}</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endblock %}
+
+		{% block pPageOverlay %}
+			<div id="page_overlay" class="global_overlay">
+				<div class="overlay_content">
 					{% include 'itop-portal-base/portal/src/views/helpers/loader.html.twig' %}
 				</div>
 			</div>
-		</div>					
-		<div class="modal fade" id="modal-for-alert" role="dialog">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="{{ 'Portal:Button:Close'|dict_s }}"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title"></h4>
-					</div>
-					<div class="modal-body">
-						<div class="alert">
-						</div>
-						<div class="text-right">
-							<button type="button" class="btn btn-primary" data-dismiss="modal">{{ 'Portal:Button:Close'|dict_s }}</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div id="page_overlay" class="global_overlay">
-			<div class="overlay_content">
-				{% include 'itop-portal-base/portal/src/views/helpers/loader.html.twig' %}
-			</div>
-		</div>
+		{% endblock %}
 	{% endblock %}
 	
 	{% block pPageLiveScripts %}
