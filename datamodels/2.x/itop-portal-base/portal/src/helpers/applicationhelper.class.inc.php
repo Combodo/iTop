@@ -324,7 +324,10 @@ class ApplicationHelper
 					'triggers_query' => null,
 					'attachments' => array(
 						'allow_delete' => true
-					)
+					),
+                    'allowed_portals' => array(
+                        'opening_mode' => null,
+                    ),
 				),
 				'portals' => array(),
 				'forms' => array(),
@@ -401,6 +404,23 @@ class ApplicationHelper
 							}
 						}
 						break;
+                    case 'allowed_portals':
+                        foreach ($oPropertyNode->GetNodes('*') as $oSubNode)
+                        {
+                            switch ($oSubNode->nodeName)
+                            {
+                                case 'opening_mode':
+                                    $sValue = $oSubNode->GetText();
+                                    // If the text is null, we keep the default value
+                                    // Else we set it
+                                    if ($sValue !== null)
+                                    {
+                                        $aPortalConf['properties']['allowed_portals'][$oSubNode->nodeName] = ($sValue === 'self') ? 'self' : 'tab';
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
 				}
 			}
 			// - Rectifying portal logo url

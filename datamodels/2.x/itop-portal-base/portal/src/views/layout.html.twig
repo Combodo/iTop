@@ -199,7 +199,7 @@
 									{% for aPortal in app['combodo.portal.instance.conf'].portals %}
 										{% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}
 											{% set sGlyphiconClass = (aPortal.id == 'backoffice') ? 'fa-list-alt' : 'fa-external-link' %}
-											<li><a href="{{ aPortal.url }}" target="_blank" title="{{ aPortal.label|dict_s }}"><span class="brick_icon fa {{ sGlyphiconClass }} fa-lg fa-fw"></span>{{ aPortal.label|dict_s }}</a></li>
+											<li><a href="{{ aPortal.url }}" {% if app['combodo.portal.instance.conf'].properties.allowed_portals.opening_mode == 'tab' %}target="_blank"{% endif %} title="{{ aPortal.label|dict_s }}"><span class="brick_icon fa {{ sGlyphiconClass }} fa-lg fa-fw"></span>{{ aPortal.label|dict_s }}</a></li>
 										{% endif %}
 									{% endfor %}
 									{# We display the separator only if the user has more then 1 portal. Meaning default portal + console or several portal at least #}
