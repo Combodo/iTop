@@ -554,25 +554,25 @@ class BrowseBrickController extends BrickController
 		}
 	}
 
-	/**
-	 * Prepares the action rules for an $oItem. Action rules are used to defined some iTopObjectCopier rules that will be apply to an DBObject created from $oItem
-	 *
-	 * @param DBObject $oItem
-	 * @param string $sLevelsAlias
-	 * @param array $aLevelsProperties
-	 * @return array
-	 */
-	public static function PrepareActionRulesForItem(DBObject $oItem, $sLevelsAlias, array &$aLevelsProperties)
-	{
-		$aActionRules = array();
+    /**
+     * Prepares the action rules for an array of DBObject items.
+     *
+     * @param array $aItems
+     * @param string $sLevelsAlias
+     * @param array $aLevelsProperties
+     * @return array
+     */
+	public static function PrepareActionRulesForItems(array $aItems, $sLevelsAlias, array &$aLevelsProperties)
+    {
+        $aActionRules = array();
 
-		foreach ($aLevelsProperties[$sLevelsAlias]['actions'] as $sId => $aAction)
-		{
-			$aActionRules[$sId] = ContextManipulatorHelper::EncodeRulesToken($aAction['rules'], array($oItem));
-		}
+        foreach ($aLevelsProperties[$sLevelsAlias]['actions'] as $sId => $aAction)
+        {
+            $aActionRules[$sId] = ContextManipulatorHelper::PrepareAndEncodeRulesToken($aAction['rules'], $aItems);
+        }
 
-		return $aActionRules;
-	}
+        return $aActionRules;
+    }
 
 	/**
 	 * Takes $aCurrentRow as a flat array and transform it in another flat array (not objects) with only the necessary informations
@@ -602,12 +602,15 @@ class BrowseBrickController extends BrickController
 
 		foreach ($aCurrentRow as $key => $value)
 		{
+		    // Retrieving objects from all levels
+		    $aItems = array_values($aCurrentRow);
+
 			$aRow[$key] = array(
 				'level_alias' => $key,
 				'id' => $value->GetKey(),
 				'name' => $value->Get($aLevelsProperties[$key]['name_att']),
 				'class' => get_class($value),
-				'action_rules_token' => static::PrepareActionRulesForItem($value, $key, $aLevelsProperties)
+				'action_rules_token' => static::PrepareActionRulesForItems($aItems, $key, $aLevelsProperties)
 			);
 
 			// Adding tooltip attribute if necessary
@@ -660,11 +663,18 @@ class BrowseBrickController extends BrickController
 	 * @param array $aCurrentRow
 	 * @param array $aLevelsProperties
 	 */
-	public static function AddToTreeItems(array &$aItems, array $aCurrentRow, array &$aLevelsProperties)
+	public static function AddToTreeItems(array &$aItems, array $aCurrentRow, array &$aLevelsProperties, $aCurrentRowObjects = null)
 	{
 		$aCurrentRowKeys = array_keys($aCurrentRow);
 		$aCurrentRowValues = array_values($aCurrentRow);
 		$sCurrentIndex = $aCurrentRowKeys[0] . '::' . $aCurrentRowValues[0]->GetKey();
+
+		// We make sure to keep all row objects through levels by copying them when processing the first level.
+        // Otherwise they will be sliced through levels, one by one.
+		if($aCurrentRowObjects === null)
+        {
+            $aCurrentRowObjects = $aCurrentRowValues;
+        }
 
 		if (!isset($aItems[$sCurrentIndex]))
 		{
@@ -674,7 +684,7 @@ class BrowseBrickController extends BrickController
 				'name' => $aCurrentRowValues[0]->Get($aLevelsProperties[$aCurrentRowKeys[0]]['name_att']),
 				'class' => get_class($aCurrentRowValues[0]),
 				'subitems' => array(),
-				'action_rules_token' => static::PrepareActionRulesForItem($aCurrentRowValues[0], $aCurrentRowKeys[0], $aLevelsProperties)
+				'action_rules_token' => static::PrepareActionRulesForItems($aCurrentRowObjects, $aCurrentRowKeys[0], $aLevelsProperties)
 			);
 
 			if ($aLevelsProperties[$aCurrentRowKeys[0]]['tooltip_att'] !== null)
@@ -686,7 +696,7 @@ class BrowseBrickController extends BrickController
 		$aCurrentRowSliced = array_slice($aCurrentRow, 1);
 		if (!empty($aCurrentRowSliced))
 		{
-			static::AddToTreeItems($aItems[$sCurrentIndex]['subitems'], $aCurrentRowSliced, $aLevelsProperties);
+			static::AddToTreeItems($aItems[$sCurrentIndex]['subitems'], $aCurrentRowSliced, $aLevelsProperties, $aCurrentRowObjects);
 		}
 	}
 

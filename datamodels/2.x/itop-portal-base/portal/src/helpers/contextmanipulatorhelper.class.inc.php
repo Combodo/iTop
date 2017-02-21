@@ -400,6 +400,31 @@ class ContextManipulatorHelper
 		return $aResults;
 	}
 
+    /**
+     * Prepares the rules as an array of rules and source objects so it can be tokenised
+     *
+     * @param array $aRules
+     * @param array $aObjects
+     * @return array
+     */
+	public static function PrepareRulesForToken($aRules, $aObjects = array())
+    {
+        // Getting necessary information from objects
+        $aSources = array();
+        foreach ($aObjects as $oObject)
+        {
+            $aSources[get_class($oObject)] = $oObject->GetKey();
+        }
+
+        // Preparing data
+        $aTokenRules = array(
+            'rules' => $aRules,
+            'sources' => $aSources
+        );
+
+        return $aTokenRules;
+    }
+
 	/**
 	 * Encodes a token made out of the rules.
 	 *
@@ -411,24 +436,25 @@ class ContextManipulatorHelper
 	 * @param array $aObjects
 	 * @return string
 	 */
-	static public function EncodeRulesToken($aRules, $aObjects = array())
+	public static function EncodeRulesToken($aTokenRules)
 	{
-		// Getting necessary information from objects
-		$aSources = array();
-		foreach ($aObjects as $oObject)
-		{
-			$aSources[get_class($oObject)] = $oObject->GetKey();
-		}
-
-		// Preparing data
-		$aTokenRules = array(
-			'rules' => $aRules,
-			'sources' => $aSources
-		);
-
-		// Returning tokenised data
+	    // Returning tokenised data
 		return base64_encode(json_encode($aTokenRules));
 	}
+
+    /**
+     * @param array $aRules
+     * @param array $aObjects
+     * @return string
+     */
+	public static function PrepareAndEncodeRulesToken($aRules, $aObjects = array())
+    {
+        // Preparing rules before making a token
+        $aTokenRules = static::PrepareRulesForToken($aRules, $aObjects);
+
+        // Returning tokenised data
+        return static::EncodeRulesToken($aTokenRules);
+    }
 
 	/**
 	 * Decodes a token made out of the rules
@@ -436,7 +462,7 @@ class ContextManipulatorHelper
 	 * @param string $sToken
 	 * @return array
 	 */
-	static public function DecodeRulesToken($sToken)
+	public static function DecodeRulesToken($sToken)
 	{
 		return json_decode(base64_decode($sToken), true);
 	}
