@@ -70,13 +70,13 @@ class iTopPortalEditUrlMaker implements iDBObjectURLMaker
 		$sPortalAbsoluteUrl = utils::GetAbsoluteUrlModulePage($sPortalId, 'index.php');
 		if (strpos($sPortalAbsoluteUrl, '?') !== false)
 		{
-			$sUrl = substr($sPortalAbsoluteUrl, 0, strpos($sPortalAbsoluteUrl, '?')).$sObjectQueryString;
+			$sUrl = substr($sPortalAbsoluteUrl, 0, strpos($sPortalAbsoluteUrl, '?')).$sObjectQueryString.substr($sPortalAbsoluteUrl, strpos($sPortalAbsoluteUrl, '?'));
 		}
 		else
 		{
 			$sUrl = $sPortalAbsoluteUrl.$sObjectQueryString;
 		}
-	
+
 		return $sUrl;
 	}
 	
