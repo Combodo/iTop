@@ -113,5 +113,5 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 // CreateBrick brick
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:Create:Name' => 'Schnelles Erstellen',
+    'Brick:Portal:Create:ChooseType' => 'Please, choose a type~~',
 ));
-?>

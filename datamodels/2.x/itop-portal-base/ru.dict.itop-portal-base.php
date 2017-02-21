@@ -96,4 +96,5 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 // CreateBrick brick
 Dict::Add('RU RU', 'Russian', 'Русский', array(
     'Brick:Portal:Create:Name' => 'Быстрое создание',
+    'Brick:Portal:Create:ChooseType' => 'Please, choose a type~~',
 ));

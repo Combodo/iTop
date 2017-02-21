@@ -114,5 +114,5 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // CreateBrick brick
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Create:Name' => 'Creación rápida',
+    'Brick:Portal:Create:ChooseType' => 'Please, choose a type~~',
 ));
-?>
