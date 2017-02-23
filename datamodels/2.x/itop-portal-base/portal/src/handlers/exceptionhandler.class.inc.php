@@ -143,4 +143,83 @@ EOF;
 
         return $stylesheet . $parentStylesheet;
     }
+
+    /**
+     * Note: Duplicated as the original one is private.
+     *
+     * @param $class
+     * @return string
+     */
+    protected function formatClass($class)
+    {
+        $parts = explode('\\', $class);
+
+        return sprintf('<abbr title="%s">%s</abbr>', $class, array_pop($parts));
+    }
+
+    /**
+     * Note: Duplicated as the original one is private.
+     *
+     * Formats an array as a string.
+     *
+     * @param array $args The argument array
+     *
+     * @return string
+     */
+    private function formatArgs(array $args)
+    {
+        $result = array();
+        foreach ($args as $key => $item) {
+            if ('object' === $item[0]) {
+                $formattedValue = sprintf('<em>object</em>(%s)', $this->formatClass($item[1]));
+            } elseif ('array' === $item[0]) {
+                $formattedValue = sprintf('<em>array</em>(%s)', is_array($item[1]) ? $this->formatArgs($item[1]) : $item[1]);
+            } elseif ('string' === $item[0]) {
+                $formattedValue = sprintf("'%s'", $this->escapeHtml($item[1]));
+            } elseif ('null' === $item[0]) {
+                $formattedValue = '<em>null</em>';
+            } elseif ('boolean' === $item[0]) {
+                $formattedValue = '<em>'.strtolower(var_export($item[1], true)).'</em>';
+            } elseif ('resource' === $item[0]) {
+                $formattedValue = '<em>resource</em>';
+            } else {
+                $formattedValue = str_replace("\n", '', var_export($this->escapeHtml((string) $item[1]), true));
+            }
+
+            $result[] = is_int($key) ? $formattedValue : sprintf("'%s' => %s", $key, $formattedValue);
+        }
+
+        return implode(', ', $result);
+    }
+
+    /**
+     * Note: Duplicated as the original one is private.
+     *
+     * HTML-encodes a string.
+     */
+    private function escapeHtml($str)
+    {
+        return htmlspecialchars($str, ENT_QUOTES | (PHP_VERSION_ID >= 50400 ? ENT_SUBSTITUTE : 0), $this->charset);
+    }
+
+    /**
+     * Note: Duplicated as the original one is private.
+     *
+     * @param $path
+     * @param $line
+     * @return string
+     */
+    private function formatPath($path, $line)
+    {
+        $path = $this->escapeHtml($path);
+        $file = preg_match('#[^/\\\\]*$#', $path, $file) ? $file[0] : $path;
+
+        if ($linkFormat = $this->fileLinkFormat) {
+            $link = strtr($this->escapeHtml($linkFormat), array('%f' => $path, '%l' => (int) $line));
+
+            return sprintf(' in <a href="%s" title="Go to source">%s line %d</a>', $link, $file, $line);
+        }
+
+        return sprintf(' in <a title="%s line %3$d" ondblclick="var f=this.innerHTML;this.innerHTML=this.title;this.title=f;">%s line %d</a>', $path, $file, $line);
+    }
 }
