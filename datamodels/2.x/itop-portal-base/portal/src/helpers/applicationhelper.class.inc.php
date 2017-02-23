@@ -22,7 +22,8 @@ namespace Combodo\iTop\Portal\Helper;
 use \Exception;
 use \Silex\Application;
 use \Symfony\Component\Debug\ErrorHandler;
-use \Symfony\Component\Debug\ExceptionHandler;
+//use \Symfony\Component\Debug\ExceptionHandler;
+use \Combodo\iTop\Portal\Handler\ExceptionHandler;
 use \Symfony\Component\HttpFoundation\Request;
 use \Twig_SimpleFilter;
 use \Dict;
@@ -248,9 +249,11 @@ class ApplicationHelper
 	 */
 	static function RegisterExceptionHandler(Application $oApp)
 	{
+	    // Intercepting fatal errors and exceptions
 		ErrorHandler::register();
 		ExceptionHandler::register(($oApp['debug'] === true));
 
+		// Intercepting manually aborted request
 		if (!$oApp['debug'])
 		{
 			$oApp->error(function(Exception $e, $code) use ($oApp)
@@ -489,7 +492,22 @@ class ApplicationHelper
 
 		// Contact
 		$sContactPhotoUrl = $oApp['combodo.portal.base.absolute_url'] . 'img/user-profile-default-256px.png';
-		$oContact = UserRights::GetContactObject();
+		// - Checking if we can load the contact
+        try{
+            $oContact = UserRights::GetContactObject();
+        }
+        catch(Exception $e)
+        {
+            $oAllowedOrgSet = $oUser->Get('allowed_org_list');
+            if($oAllowedOrgSet->Count() > 0)
+            {
+                throw new Exception('Could not load contact related to connected user. (Tip: Make sure the contact\'s organization is among the user\'s allowed organizations)');
+            }
+            else{
+                throw new Exception('Could not load contact related to connected user.');
+            }
+        }
+        // - Retrieving picture
 		if ($oContact)
 		{
 			if (MetaModel::IsValidAttCode(get_class($oContact), 'picture'))
