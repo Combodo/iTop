@@ -245,7 +245,7 @@ abstract class User extends cmdbAbstractObject
 	{
 		if (is_null($this->oContactObject))
 		{
-			if ($this->Get('contactid') != 0)
+			if (MetaModel::IsValidAttCode(get_class($this), 'contactid') && ($this->Get('contactid') != 0))
 			{
 				$this->oContactObject = MetaModel::GetObject('Contact', $this->Get('contactid'));
 			}
