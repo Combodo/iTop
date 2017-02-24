@@ -1438,8 +1438,12 @@ class RunTimeIconSelectionField extends DesignerIconSelectionField
 
 	public function GetDefaultValue($sClass = 'Contact')
 	{
-		$sIconPath = MetaModel::GetClassIcon($sClass, false);
-		$sIcon = str_replace(utils::GetAbsoluteUrlModulesRoot(), '', $sIconPath);
+		$sIcon = '';
+		if (MetaModel::IsValidClass($sClass))
+		{
+			$sIconPath = MetaModel::GetClassIcon($sClass, false);
+			$sIcon = str_replace(utils::GetAbsoluteUrlModulesRoot(), '', $sIconPath);
+		}
 		return $sIcon;	
 	}
 }
