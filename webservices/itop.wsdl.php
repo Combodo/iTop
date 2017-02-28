@@ -50,7 +50,7 @@ require_once(APPROOT.'application/utils.inc.php');
 
 // Load the modules installed and enabled
 //
-$oConfig = utils::GetConfig();
+require_once(APPROOT.'/application/startup.inc.php');
 
 require_once(APPROOT.'webservices/webservices.basic.php');
 
