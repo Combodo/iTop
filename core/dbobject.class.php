@@ -1411,6 +1411,12 @@ abstract class DBObject implements iDisplay
 		return true;
 	}
 
+	// used only by insert
+	protected function OnObjectKeyReady()
+    {
+        // Meant to be overloaded
+    }
+
 	// used both by insert/update
 	private function DBWriteLinks()
 	{
@@ -1648,7 +1654,9 @@ abstract class DBObject implements iDisplay
 			$this->DBInsertSingleTable($sParentClass);
 		}
 
-		$this->DBWriteLinks();
+		$this->OnObjectKeyReady();
+
+        $this->DBWriteLinks();
 		$this->WriteExternalAttributes();
 
 		$this->m_bIsInDB = true;
