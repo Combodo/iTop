@@ -3328,8 +3328,6 @@ EOF
 	{
 		$res = parent::DBInsertNoReload();
 
-		InlineImage::FinalizeInlineImages($this);
-		
 		// Invoke extensions after insertion (the object must exist, have an id, etc.)
 		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
@@ -3338,6 +3336,14 @@ EOF
 
 		return $res;
 	}
+
+    /**
+     * Attaches InlineImages to the current object
+     */
+	protected function OnObjectKeyReady()
+    {
+        InlineImage::FinalizeInlineImages($this);
+    }
 
 	protected function DBCloneTracked_Internal($newKey = null)
 	{
