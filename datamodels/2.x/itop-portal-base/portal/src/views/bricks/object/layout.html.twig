@@ -2,6 +2,8 @@
 {# Object brick base layout #}
 {% extends 'itop-portal-base/portal/src/views/bricks/layout.html.twig' %}
 
+{% block pPageBodyClass %}{{ parent() }} page_object_brick page_object_brick_as_{{ sMode }}{% endblock %}
+
 {% block pMainHeader %}
 	<div class="col-xs-12" id="main-header-title">
 		{% if form.title is defined %}

@@ -2,6 +2,8 @@
 {# Browse brick base layout #}
 {% extends 'itop-portal-base/portal/src/views/bricks/layout.html.twig' %}
 
+{% block pPageBodyClass %}{{ parent() }} page_browse_brick page_browse_brick_as_{{ sBrowseMode }}{% endblock %}
+
 {% block pMainHeaderTitle %}
 	{{ oBrick.GetTitle()|dict_s }}
 {% endblock %}

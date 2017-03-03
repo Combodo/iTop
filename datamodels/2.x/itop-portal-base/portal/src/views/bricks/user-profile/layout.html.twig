@@ -1,10 +1,12 @@
-{# itop-portal-base/portal/src/views/bricks/browse/layout.html.twig #}
-{# Browse brick base layout #}
+{# itop-portal-base/portal/src/views/bricks/user-profile/layout.html.twig #}
+{# User profile brick base layout #}
 {% extends 'itop-portal-base/portal/src/views/bricks/layout.html.twig' %}
 
 {% set oContactForm = forms.contact %}
 {% set oPreferencesForm = forms.preferences %}
 {% set oPasswordForm = forms.password %}
+
+{% block pPageBodyClass %}{{ parent() }} page_user-profile_brick{% endblock %}
 
 {% block pMainHeaderTitle %}
 	{{ oBrick.GetTitle()|dict_s }}

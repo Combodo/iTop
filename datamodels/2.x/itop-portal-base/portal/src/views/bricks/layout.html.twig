@@ -11,6 +11,8 @@
 	{% endif %}
 {% endblock %}
 
+{% block pPageBodyClass %}{{ parent() }} page_brick_of_id_{{ oBrick.GetId() }}{% endblock %}
+
 {% block pMainHeader %}
 	<div class="col-xs-12">
 		<div id="main-header-title">
