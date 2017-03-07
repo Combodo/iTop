@@ -33,7 +33,8 @@ class BrowseBrick extends PortalBrick
 	const DEFAULT_HOME_ICON_CLASS = 'fa fa-map';
 	const DEFAULT_NAVIGATION_MENU_ICON_CLASS = 'fa fa-map fa-2x';
 	const ENUM_BROWSE_MODE_LIST = 'list';
-	const ENUM_BROWSE_MODE_TREE = 'tree';
+    const ENUM_BROWSE_MODE_TREE = 'tree';
+    const ENUM_BROWSE_MODE_GRID = 'grid';
 	const ENUM_ACTION_VIEW = 'view';
 	const ENUM_ACTION_EDIT = 'edit';
 	const ENUM_ACTION_DRILLDOWN = 'drilldown';
@@ -289,6 +290,8 @@ class BrowseBrick extends PortalBrick
 		$aLevel = array(
 			'parent_att' => null,
 			'tooltip_att' => null,
+            'description_att' => null,
+            'image_att' => null,
 			'title' => null,
 			'name_att' => static::DEFAULT_LEVEL_NAME_ATT,
 			'fields' => array(),
@@ -331,6 +334,8 @@ class BrowseBrick extends PortalBrick
 
 				case 'parent_att':
 				case 'tooltip_att':
+                case 'description_att':
+                case 'image_att':
 				case 'title':
 					$aLevel[$oLevelPropertyNode->nodeName] = $oLevelPropertyNode->GetText(null);
 					break;
@@ -458,5 +463,3 @@ class BrowseBrick extends PortalBrick
 	}
 
 }
-
-?>

@@ -553,10 +553,10 @@ footer {
   top: 10px;
   right: 10px;
 }
-.list-group-item:hover > .list-group-item-actions {
+.list-group-item:hover > .list-group-item-actions, .grid-group-item:hover > .grid-group-item-actions {
   display: block;
 }
-.list-group-item .list-group-item-actions a:not(:first-child) {
+.list-group-item .list-group-item-actions a:not(:first-child), .grid-group-item .grid-group-item-actions a:not(:first-child) {
   margin-left: 10px;
 }
 .list-group-item .keep-spinning {
@@ -565,15 +565,20 @@ footer {
   -moz-animation: spin 1s linear infinite;
   -ms-animation: spin 1s linear infinite;
 }
+.list-group.tree .list-group-item .list-group-item-description {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.8em;
+}
 /* Secondary actions */
 table .group-actions {
   position: relative;
 }
-.list-group-item-actions a.glyphicon-menu-hamburger, table .group-actions a.glyphicon-menu-hamburger {
+.list-group-item-actions a.glyphicon-menu-hamburger, .grid-group-item-actions a.glyphicon-menu-hamburger, table .group-actions a.glyphicon-menu-hamburger {
   cursor: pointer;
   text-decoration: none;
 }
-.list-group-item-actions .item-action-wrapper, table .group-actions .item-action-wrapper {
+.list-group-item-actions .item-action-wrapper, .grid-group-item-actions .item-action-wrapper, table .group-actions .item-action-wrapper {
   display: none;
   position: absolute;
   z-index: 5;
@@ -583,16 +588,16 @@ table .group-actions {
   -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
 }
-.list-group-item-actions .item-action-wrapper .glyphicon, table .group-actions .item-action-wrapper .glyphicon {
+.list-group-item-actions .item-action-wrapper .glyphicon, .grid-group-item-actions .item-action-wrapper .glyphicon, table .group-actions .item-action-wrapper .glyphicon {
   margin-right: 0.6em;
 }
-.list-group-item-actions .item-action-wrapper.collapse.in, table .group-actions .item-action-wrapper.collapse.in {
+.list-group-item-actions .item-action-wrapper.collapse.in, .grid-group-item-actions .item-action-wrapper.collapse.in, table .group-actions .item-action-wrapper.collapse.in {
   display: block;
 }
-.list-group-item-actions .item-action-wrapper .panel-body > p, table .group-actions .item-action-wrapper .panel-body > p {
+.list-group-item-actions .item-action-wrapper .panel-body > p, .grid-group-item-actions .item-action-wrapper .panel-body > p, table .group-actions .item-action-wrapper .panel-body > p {
   white-space: nowrap;
 }
-.list-group-item-actions .item-action-wrapper .panel-body > p:last-child, table .group-actions .item-action-wrapper .panel-body > p:last-child {
+.list-group-item-actions .item-action-wrapper .panel-body > p:last-child, .grid-group-item-actions .item-action-wrapper .panel-body > p:last-child, table .group-actions .item-action-wrapper .panel-body > p:last-child {
   margin-bottom: 0px;
 }
 #brick_content_empty {
@@ -602,11 +607,195 @@ table .group-actions {
   font-style: italic;
 }
 /* Loader */
-#brick_tree_overlay {
+#brick_tree_overlay, #brick_grid_overlay {
   display: none;
   padding: 8% 0px;
   border-radius: 0px 0px 4px 4px;
   font-size: 1em;
+}
+/****************/
+/* - Grid mode  */
+/* Note: Some of the CSS is factorised in the "Tree mode" part */
+/****************/
+#brick_content_grid {
+  position: relative;
+  padding: 10px 10px 1px 10px;
+}
+.grid-group {
+  display: none;
+}
+/* Only the first level is showed by default */
+.grid-group:first-child {
+  display: block;
+}
+.grid-group-back, .grid-group-item {
+  position: relative;
+  height: 55px;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #fff;
+}
+.grid-group-back {
+  font-size: 25px;
+}
+.grid-item {
+  display: table;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #585653;
+  transition: background-color linear 0.3s;
+}
+.grid-item, .grid-item:hover, .grid-item:active, .grid-item:focus, .grid-item:visited {
+  color: #fff;
+  text-decoration: none;
+}
+.grid-item:active {
+  background-color: #9e510f;
+}
+.grid-item-image, .grid-item-text {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+.grid-item-image > img {
+  max-width: 100%;
+}
+.grid-group-item > .grid-group-item-actions {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+.grid-group-item-actions > a {
+  color: #fff;
+  text-decoration: none;
+}
+.grid-group-item-actions > a:hover, .grid-group-item-actions > a:focus {
+  color: #eee;
+}
+.ggi-last-xs, .ggi-last-sm, .ggi-last-md, .ggi-last-lg {
+  margin-right: 0px;
+}
+@media (max-width: 768px) {
+  /* All layout */
+  /* Layout 2 */
+  /* Layout 5/7 */
+  .grid-group-item > .grid-group-item-actions {
+    top: 12px;
+    right: 6px;
+  }
+  .grid-group-item > .grid-group-item-actions > .glyphicon {
+    margin-top: 5px;
+  }
+  .grid-group-item-actions > a {
+    font-size: 20px;
+  }
+  .grid-item-image {
+    width: 55px;
+    padding: 10px;
+  }
+  .grid-item-image > img {
+    max-height: 30px;
+  }
+  .grid-item-name {
+    font-size: 14px;
+  }
+  .grid-item-description {
+    display: none;
+  }
+  .grid-item-layout-2 .grid-item-description {
+    display: block;
+  }
+  .grid-item-layout-5 .grid-item-name, .grid-item-layout-7 .grid-item-name {
+    padding-right: 40px;
+  }
+}
+@media (min-width: 768px) {
+  /* All layout */
+  /* Layout 1 */
+  /* Layout 7 */
+  .grid-group-back, .grid-group-item {
+    display: inline-block;
+    width: 32%;
+    height: 120px;
+    margin-right: 1.95%;
+    /* We don't put 2% to keep a margin in case of a bad browser rendering */
+  }
+  .grid-item {
+    padding: 10px;
+  }
+  .grid-item:hover, .grid-item:focus {
+    background-color: #ea7d1e;
+  }
+  .grid-item-name {
+    font-weight: 600;
+    font-size: 12px;
+  }
+  .grid-item-description {
+    overflow: hidden;
+  }
+  .grid-item-layout-1 .grid-item-name {
+    font-weight: inherit;
+    font-size: 14px;
+  }
+  .grid-item-layout-7 .grid-item-image {
+    display: none;
+  }
+  .grid-item-layout-3 .grid-item-description, .grid-item-layout-7 .grid-item-description {
+    margin-top: 10px;
+    max-height: 40px;
+    font-size: 10px;
+  }
+}
+@media (min-width: 992px) {
+  /* Layout 7 */
+  .grid-item {
+    padding: 10px 15px;
+  }
+  .grid-group-back {
+    font-size: 40px;
+  }
+  .grid-item-layout-7 .grid-item-image {
+    display: table-cell;
+    width: 105px;
+    padding-left: 5px;
+    padding-right: 18px;
+  }
+  .grid-item-layout-7 .grid-item-image > img {
+    max-width: 100%;
+  }
+  .grid-item-layout-7 .grid-item-name {
+    font-size: 12px;
+  }
+}
+@media (min-width: 1200px) {
+  /* Layout 7 */
+  .grid-group-back, .grid-group-item {
+    width: 24%;
+    height: 140px;
+    margin-right: 1.3%;
+  }
+}
+/* Helper classes to remove margin depending on the screen size */
+@media (max-width: 992px) {
+  .ggi-last-xs {
+    margin-right: 0px;
+  }
+}
+@media (min-width: 768px) and (max-width: 992px) {
+  .ggi-last-sm {
+    margin-right: 0px;
+  }
+}
+@media (min-width: 992px) and (max-width: 1200px) {
+  .ggi-last-md {
+    margin-right: 0px;
+  }
+}
+@media (min-width: 1200px) {
+  .ggi-last-lg {
+    margin-right: 0px;
+  }
 }
 /****************/
 /* - List mode  */

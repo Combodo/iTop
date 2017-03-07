@@ -11,7 +11,7 @@
 	{% endif %}
 {% endblock %}
 
-{% block pPageBodyClass %}{{ parent() }} page_brick_of_id_{{ oBrick.GetId() }}{% endblock %}
+{% block pPageBodyClass %}{{ parent() }} {% if oBrick is defined and oBrick is not null %}page_brick_of_id_{{ oBrick.GetId() }}{% endif %}{% endblock %}
 
 {% block pMainHeader %}
 	<div class="col-xs-12">

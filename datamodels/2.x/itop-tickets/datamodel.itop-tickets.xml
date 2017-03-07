@@ -1051,12 +1051,18 @@
 								<level id="1">
 									<!-- Can be either a class tag with the class name or an oql tag with the query -->
 									<class>Service</class>
-									<!-- Attribute code of the above class that point to the upper level class -->
+									<!-- Attribute code of the above class [from the OQL] that point to the upper level class -->
 									<parent_att>servicefamily_id</parent_att>
-									<!-- Attribute code to use to display the object name, default is 'name'. -->
+									<!-- Attribute code of the above class [from the OQL] used to display the object name, default is 'name'. -->
 									<name_att/>
-									<!-- Description text from attribute of above class [from the OQL] -->
+									<!-- Attribute code of the above class [from the OQL] used to display in a tooltip when mouse is over the object -->
 									<tooltip_att>description</tooltip_att>
+									<!-- Attribute code of the above class [from the OQL] used to display a small text beside the object's name -->
+									<!-- Note: This is not used in "list" mode -->
+									<description_att/>
+									<!-- Attribute code of the above class [from the OQL] used to display a image beside the object's name -->
+									<!-- Note: This is used in "grid" mode only for now -->
+									<!--<image_att/>-->
 									<!-- Title of the level, will be display in lists and others browse modes -->
 									<title>Class:Service</title>
 									<!-- Optional tag to add attributes to the table by their code, can be specified for each level -->
@@ -1101,6 +1107,7 @@
 						<availables>
 							<mode id="list"/>
 							<mode id="tree"/>
+							<mode id="grid"/>
 						</availables>
 						<default>list</default>
 					</browse_modes>

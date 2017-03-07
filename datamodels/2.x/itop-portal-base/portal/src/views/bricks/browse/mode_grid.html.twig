@@ -1,0 +1,385 @@
+{# itop-portal-base/portal/src/views/bricks/browse/mode_grid.html.twig #}
+{# Browse brick grid mode layout #}
+{% extends 'itop-portal-base/portal/src/views/bricks/browse/layout.html.twig' %}
+
+{% block bBrowseMainContent %}
+	<div id="brick_content_grid">
+		{% block bBrowseGridContent %}
+			<div class="grid-group" data-level-id="L">
+			</div>
+		{% endblock %}
+	</div>
+
+	<div id="brick_content_empty" class="text-center">
+		{% block bBrowseGridEmpty %}
+			{{ 'Brick:Portal:Browse:Filter:NoData'|dict_s }}
+		{% endblock %}
+	</div>
+	<div id="brick_grid_overlay">
+		{% block bBrowseGridOverlay %}
+			<div class="overlay_content">
+				{% include 'itop-portal-base/portal/src/views/helpers/loader.html.twig' %}
+			</div>
+		{% endblock %}
+	</div>
+{% endblock %}
+
+{% block pPageLiveScripts %}
+	{{ parent() }}
+	
+	<script type="text/javascript">
+		var sBrowseMode = '{{ sBrowseMode }}';
+		var oLevelsProperties = {{ aLevelsProperties|raw }};
+		var oRawDatas = {{ aItems|raw }};
+        var sGridEffectName = 'fade';
+        var oGridEffectOptions = {};
+        var iGridEffectDuration = 200;
+
+        // Show a loader over the grid
+		var showGridLoader = function()
+		{
+			$("#brick_content_grid").hide();
+			$('#brick_grid_overlay').show();
+		};
+		// Hide the loader over the tree
+		var hideGridLoader = function()
+		{
+			$('#brick_grid_overlay').hide();
+			$("#brick_content_grid").show();
+		}
+		// Registers the toggle listeners on the tree nodes. Used after every AJAX calls.
+		var registerToggleListeners = function()
+		{
+		    $('#brick_content_grid .grid-drilldown').off('click').on('click', function (oEvent) {
+				oEvent.preventDefault();
+
+				var me = this;
+				// Retrieving sublevel
+                var sublevelId = $(this).attr('data-level-alias') + '::' + $(this).attr('data-item-id');
+                var sublevelElem = $('#brick_content_grid .grid-group[data-level-id="'+sublevelId+'"]');
+
+				// Hidding current level
+                if(sublevelElem.length === 0)
+                {
+                    showGridLoader();
+                }
+                $(this).closest('.grid-group').hide(
+                    sGridEffectName,
+					oGridEffectOptions,
+					iGridEffectDuration,
+					function(){
+				        // Showing sublevel
+				        if(sublevelElem.length === 0)
+						{
+                            loadChildNodes($(me).attr('data-level-alias'), $(me).attr('data-item-id'));
+						}
+						else
+						{
+                            sublevelElem.show(sGridEffectName, oGridEffectOptions, iGridEffectDuration);
+						}
+					}
+				);
+			});
+
+            $('#brick_content_grid .grid-rollup').off('click').on('click', function (oEvent) {
+                oEvent.preventDefault();
+
+                // Retrieving upper level
+                var upperlevelId = $(this).attr('data-level-id');
+                var upperlevelElem = $('#brick_content_grid .grid-group[data-level-id="'+upperlevelId+'"]');
+
+                // Hidding current level
+                $(this).closest('.grid-group').hide(
+                    sGridEffectName,
+					oGridEffectOptions,
+					iGridEffectDuration,
+                    function(){
+                        // Showing upper level
+                        if(upperlevelElem.length === 0)
+                        {
+                            var upperlevelIdParts = upperlevelId.split('::');
+
+                            loadChildNodes(upperlevelIdParts[0], upperlevelIdParts[1]);
+                        }
+                        else
+                        {
+                            upperlevelElem.show(sGridEffectName, oGridEffectOptions, iGridEffectDuration);
+                        }
+                    }
+                );
+            });
+		};
+		// Registers the filter listeners on the tree.
+		var registerFilterListeners = function()
+		{
+			/*$('#brick_search_field').treeListFilter('#brick_content_grid', iSearchDelay, filterResultsHandler);*/
+		};
+		// Load current node childnodes throught AJAX
+		var loadChildNodes = function(sLevelAlias, sNodeId)
+		{
+			var sUrl = '{{ app.url_generator.generate('p_browse_brick_mode_tree', {'sBrickId': sBrickId, 'sBrowseMode': sBrowseMode, 'sLevelAlias': '-sLevelAlias-', 'sNodeId': '-sNodeId-'})|raw }}';
+			sUrl = sUrl.replace(/-sLevelAlias-/, sLevelAlias).replace(/-sNodeId-/, sNodeId);
+
+            $.ajax(sUrl)
+			.done(function(data) {
+				// Building child nodes
+				for(index in data.data)
+				{
+					var sublevel = data.data[index];
+					var sublevelData = {};
+					sublevelData[sublevel.level_alias+"::"+sublevel.id] = sublevel;
+					buildGrid(sublevelData, sLevelAlias+"::"+sNodeId, false);
+				}
+				// Showing sublevel
+                $('#brick_content_grid .grid-group[data-level-id="'+sLevelAlias+"::"+sNodeId+'"]').show(sGridEffectName, oGridEffectOptions, iGridEffectDuration);
+
+				registerToggleListeners();
+			})
+			.fail(function() {
+				alert('{{ 'Error:XHR:Fail'|dict_s }}');
+			})
+			.always(function(){
+                hideGridLoader();
+			});
+		};
+		// Build tree nodes from data under the nodeId
+		var buildGrid = function(data, nodeId, isRootLevel)
+		{
+		    var iItemIndex;
+		    var oItemFlowLastOfLineIndex = {
+		        sm: 3,
+				md: 3,
+				lg: 4,
+			};
+
+			if(nodeId === undefined)
+			{
+				// We are on the root node
+				nodeId = 'L';
+			}
+			if(isRootLevel === undefined)
+			{
+				isRootLevel = true;
+			}
+
+			// Building node if necessary
+			if($('div[data-level-id="'+nodeId+'"]').length === 0)
+			{
+                $('#brick_content_grid').append( $('<div></div>').addClass('grid-group').attr('data-level-id', nodeId) );
+			}
+			// - Initializing item index
+			iItemIndex = $('div[data-level-id="'+nodeId+'"] .grid-item').length;
+
+			if(!isRootLevel)
+			{
+			    // Retrieving upper level id
+                var levelIdParts = nodeId.split('::');
+                var upperlevelId = $('.grid-item[data-level-alias="'+levelIdParts[0]+'"][data-item-id="'+levelIdParts[1]+'"]').closest('.grid-group').attr('data-level-id');
+
+                // Building back button
+                if( $('div[data-level-id="'+nodeId+'"] .grid-group-back').length === 0 ) {
+                    var backElem = $('<div></div>').addClass('grid-group-back');
+                    var aElem = $('<a></a>').addClass('grid-item').addClass('grid-rollup').attr('href', '#').attr('data-level-id', upperlevelId).html('<div class="grid-item-text"><span class="glyphicon glyphicon-arrow-left"></span></div>');
+
+                    iItemIndex++;
+
+                    backElem.append(aElem);
+                    $('div[data-level-id="' + nodeId + '"]').append(backElem);
+                }
+			}
+			else
+			{
+                $('div[data-level-id="'+nodeId+'"]').html('');
+			}
+			
+			$.each(data, function(i, item){
+				var levelId = item.level_alias+'::'+item.id;
+				var levelAltId = item.level_alias+'_'+item.id;
+				var levelActions = oLevelsProperties[item.level_alias].actions;
+				var levelActionsKeys = Object.keys(levelActions);
+				var levelPrimaryAction = levelActions[levelActionsKeys[0]];
+				var url = '';
+
+                // Building node
+                var itemElem  = $('<div></div>').addClass('grid-group-item');
+				var aElem   = $('<a></a>').addClass('grid-item').attr('data-item-id', item.id).attr('href', '#').attr('data-level-alias', item.level_alias);
+				var iItemFlags = 0;
+                iItemIndex++;
+                // - Adding stub div
+				var textElem = $('<div></div>').addClass('grid-item-text');
+                // - Adding image
+                if( (item.image !== undefined) && (item.image !== '') )
+                {
+                    iItemFlags += 4;
+                    aElem.append( $('<div></div>').addClass('grid-item-image').append( $('<img />').attr('src', item.image) ) );
+                }
+                // - Adding name
+                if( (item.name !== undefined) && (item.name !== '') )
+                {
+                    iItemFlags += 1;
+                    textElem.append( $('<div></div>').addClass('grid-item-name').text(item.name) );
+                }
+                // - Adding description
+                if( (item.description !== undefined) && (item.description !== '') )
+                {
+                    iItemFlags += 2;
+                    textElem.append( $('<div></div>').addClass('grid-item-description').text(item.description) );
+				}
+                aElem.append( textElem );
+				// - Adding CSS class to adjust the layout regarding which properties are available
+				aElem.addClass('grid-item-layout-'+iItemFlags);
+                // - Adding CSS class to adjust items flow regarding the screen size
+				for(var i in oItemFlowLastOfLineIndex)
+				{
+                    if(iItemIndex % oItemFlowLastOfLineIndex[i] === 0)
+                    {
+                        itemElem.addClass('ggi-last-'+i);
+                    }
+				}
+                // - Appending element
+				$('div[data-level-id="'+nodeId+'"]').append(itemElem);
+				itemElem.append(aElem);
+				
+				// Building tooltip for the node
+				if( (item.tooltip !== undefined) && (item.tooltip !== '') )
+				{
+					aElem.attr('title', item.tooltip).attr('data-toggle', 'tooltip').tooltip({html: true, trigger: 'hover', placement: 'top'});
+				}
+				
+				// Building actions for that node
+				switch(levelPrimaryAction.type)
+				{
+					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_DRILLDOWN') }}':
+						aElem.addClass('grid-drilldown');
+						break;
+					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
+						url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+						aElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
+						break;
+					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_EDIT') }}':
+						url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+						aElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
+						break;
+					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
+						url = levelPrimaryAction.url.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+						url = AddParameterToUrl(url, 'ar_token', item.action_rules_token[levelPrimaryAction.type]);
+						aElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
+						break;
+					default:
+						//console.log('Action "'+levelPrimaryAction.type+'" not implemented for primary action');
+						break;
+				}
+				
+				if(levelActionsKeys.length > 1)
+				{
+					// Retrieving secondary action
+					var actionsButtons = {};
+					for(j = 1; j < levelActionsKeys.length; j++)
+					{
+						actionsButtons[levelActionsKeys[j]] = levelActions[levelActionsKeys[j]];
+					}
+					
+					// Preparing secondary actions container
+					var actionsElem = $('<div></div>').addClass('grid-group-item-actions');
+					itemElem.append(actionsElem);
+					// Checking if a menu is necessary
+					var bHasSeveralSecondaryActions = (Object.keys(actionsButtons).length > 1);
+					// Preparing secondary actions menu
+					if(bHasSeveralSecondaryActions)
+					{
+						var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-'+levelAltId+'"></a>');
+						var actionsSSMenuElem = $('<div id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default"></div>');
+						var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
+						actionsSSMenuElem.append(actionsSSMenuContainerElem);
+						actionsElem.append(actionsSSTogglerElem);
+						actionsElem.append(actionsSSMenuElem);
+					}
+					
+					// Adding secondary actions
+					for(j in actionsButtons)
+					{
+						var action = actionsButtons[j];
+						var actionElem = $('<a></a>');
+						var actionIconElem = $('<span></span>').appendTo(actionElem);
+						
+						switch(action.type)
+						{
+							case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
+								url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+								actionElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
+								break;
+							case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_EDIT') }}':
+								url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+								actionElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
+								break;
+							case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
+								url = action.url.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+								url = AddParameterToUrl(url, 'ar_token', item.action_rules_token[action.type]);
+								actionElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
+								break;
+							default:
+								//console.log('Action "'+action.type+'" not implemented for secondary action');
+								break;
+						}
+						
+						// Adding title if present
+						if(action.title !== undefined)
+						{
+							actionElem.attr('title', action.title);
+						}
+						// Adding icon class if present
+						if(action.icon_class !== undefined)
+						{
+							actionIconElem.addClass(action.icon_class);
+						}
+						
+						if(bHasSeveralSecondaryActions)
+						{
+							actionElem.append(action.title);
+							actionsSSMenuContainerElem.append( $('<p></p>').append(actionElem) );
+						}
+						else
+						{
+							actionsElem.append(actionElem);
+						}
+					}
+				}
+				
+				// Building subnodes if necessary
+				if(item.subitems.length !== 0)
+				{
+                    var subitemsElem;
+				    if($('div[data-level-id="'+levelId+'"]').length > 0)
+					{
+                        subitemsElem = $('div[data-level-id="'+levelId+'"]');
+					}
+					else
+					{
+					    subitemsElem = $('<div></div>').addClass('grid-group').attr('data-level-id', levelId);
+                        $('div[data-level-id="'+nodeId+'"]').after(subitemsElem);
+					}
+					buildGrid(item.subitems, levelId, false);
+				}				
+			});
+			
+			// Update listeners
+			if(isRootLevel)
+			{
+				registerToggleListeners();
+			}
+		};
+		
+		$(document).ready(function(){
+			// Auto collapse item actions popup
+			$('body').click(function(){
+				$('#brick_content_grid .item-action-wrapper.collapse.in').collapse('hide');
+			});
+			
+			// Build the tree (collapsed)
+			showGridLoader();
+			buildGrid(oRawDatas);
+			hideGridLoader();
+			registerFilterListeners();
+		});
+	</script>
+{% endblock %}

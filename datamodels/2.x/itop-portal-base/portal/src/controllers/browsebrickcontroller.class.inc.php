@@ -41,6 +41,7 @@ use \Combodo\iTop\Portal\Brick\BrowseBrick;
 class BrowseBrickController extends BrickController
 {
 	const LEVEL_SEPARATOR = '-';
+	public static $aOptionalAttributes = array('tooltip_att', 'description_att', 'image_att');
 
 	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sBrowseMode = null, $sDataLoading = null)
 	{
@@ -78,7 +79,7 @@ class BrowseBrickController extends BrickController
 		// Building DBobjectSearch
 		$oQuery = null;
 		// ... In this case only we have to build a specific query for the current level only
-		if (($sBrowseMode === BrowseBrick::ENUM_BROWSE_MODE_TREE) && ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_LAZY))
+		if (in_array($sBrowseMode, array(BrowseBrick::ENUM_BROWSE_MODE_TREE, BrowseBrick::ENUM_BROWSE_MODE_GRID)) && ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_LAZY))
 		{
 			// Will be handled later in the pagination part
 		}
@@ -231,6 +232,7 @@ class BrowseBrickController extends BrickController
 
 					break;
 				case BrowseBrick::ENUM_BROWSE_MODE_TREE:
+                case BrowseBrick::ENUM_BROWSE_MODE_GRID:
 					// Retrieving parameters
 					$sLevelAlias = $oRequest->get('sLevelAlias');
 					$sNodeId = $oRequest->get('sNodeId');
@@ -298,7 +300,7 @@ class BrowseBrickController extends BrickController
 				$aTmpLevelProperties = $aLevelsProperties[$sTmpClassAlias];
 				// Mandatory main attribute
 				$aTmpColumnAttrs = array($aTmpLevelProperties['name_att']);
-				// Optionnal attributes, only if in list mode
+				// Optional attributes, only if in list mode
 				if ($sBrowseMode === BrowseBrick::ENUM_BROWSE_MODE_LIST)
 				{
 					foreach ($aTmpLevelProperties['fields'] as $aTmpField)
@@ -306,6 +308,15 @@ class BrowseBrickController extends BrickController
 						$aTmpColumnAttrs[] = $aTmpField['code'];
 					}
 				}
+                // Optional attributes
+                foreach(static::$aOptionalAttributes as $sOptionalAttribute)
+                {
+                    if($aTmpLevelProperties[$sOptionalAttribute] !== null)
+                    {
+                        $aTmpColumnAttrs[] = $aTmpLevelProperties[$sOptionalAttribute];
+                    }
+                }
+
 				$aColumnAttrs[$sTmpClassAlias] = $aTmpColumnAttrs;
 			}
 		}
@@ -321,6 +332,7 @@ class BrowseBrickController extends BrickController
 			switch ($sBrowseMode)
 			{
 				case BrowseBrick::ENUM_BROWSE_MODE_TREE:
+                case BrowseBrick::ENUM_BROWSE_MODE_GRID:
 					static::AddToTreeItems($aItems, $aCurrentRow, $aLevelsProperties);
 					break;
 
@@ -381,7 +393,7 @@ class BrowseBrickController extends BrickController
 	 *
 	 * Note : This is not in the BrowseBrick class because the classes should not rely on DBObjectSearch.
 	 *
-	 * @param Silex\Application $oApp
+	 * @param \Silex\Application $oApp
 	 * @param array $aLevels Levels from a BrowseBrick class
 	 * @param array $aLevelsProperties Reference to an array that will contain the flattened levels
 	 * @param string $sLevelAliasPrefix String that will be prefixed to the level ID as an unique path identifier
@@ -409,7 +421,9 @@ class BrowseBrickController extends BrickController
 					'title' => ($aLevel['title'] !== null) ? Dict::S($aLevel['title']) : MetaModel::GetName($oSearch->GetClass()),
 					'parent_att' => $aLevel['parent_att'],
 					'name_att' => $aLevel['name_att'],
-					'tooltip_att' => $aLevel['tooltip_att'],
+                    'tooltip_att' => $aLevel['tooltip_att'],
+                    'description_att' => $aLevel['description_att'],
+                    'image_att' => $aLevel['image_att'],
 					'search' => $oSearch,
 					'fields' => array(),
 					'actions' => array()
@@ -613,11 +627,29 @@ class BrowseBrickController extends BrickController
 				'action_rules_token' => static::PrepareActionRulesForItems($aItems, $key, $aLevelsProperties)
 			);
 
-			// Adding tooltip attribute if necessary
-			if ($aLevelsProperties[$key]['tooltip_att'] !== null)
-			{
-				$aRow[$key]['tooltip'] = $value->Get($aLevelsProperties[$key]['tooltip_att']);
-			}
+			// Adding optional attributes if necessary
+            foreach(static::$aOptionalAttributes as $sOptionalAttribute)
+            {
+                if ($aLevelsProperties[$key][$sOptionalAttribute] !== null)
+                {
+                    $sPropertyName = substr($sOptionalAttribute, 0, -4);
+
+                    $tmpAttValue = $value->Get($aLevelsProperties[$key][$sOptionalAttribute]);
+                    if($sOptionalAttribute === 'image_att')
+                    {
+                        if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
+                        {
+                            $tmpAttValue = $tmpAttValue->GetDisplayURL(get_class($value), $value->GetKey(), $aLevelsProperties[$key][$sOptionalAttribute]);
+                        }
+                        else
+                        {
+                            $tmpAttValue = MetaModel::GetAttributeDef(get_class($value), $aLevelsProperties[$key][$sOptionalAttribute])->Get('default_image');
+                        }
+                    }
+
+                    $aRow[$key][$sPropertyName] = $tmpAttValue;
+                }
+            }
 			// Adding fields attributes if necessary
 			if (!empty($aLevelsProperties[$key]['fields']))
 			{
@@ -687,10 +719,29 @@ class BrowseBrickController extends BrickController
 				'action_rules_token' => static::PrepareActionRulesForItems($aCurrentRowObjects, $aCurrentRowKeys[0], $aLevelsProperties)
 			);
 
-			if ($aLevelsProperties[$aCurrentRowKeys[0]]['tooltip_att'] !== null)
-			{
-				$aItems[$sCurrentIndex]['tooltip'] = $aCurrentRowValues[0]->Get($aLevelsProperties[$aCurrentRowKeys[0]]['tooltip_att']);
-			}
+            // Adding optional attributes if necessary
+            foreach(static::$aOptionalAttributes as $sOptionalAttribute)
+            {
+                if ($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute] !== null)
+                {
+                    $sPropertyName = substr($sOptionalAttribute, 0, -4);
+
+                    $tmpAttValue = $aCurrentRowValues[0]->Get($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
+                    if($sOptionalAttribute === 'image_att')
+                    {
+                        if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
+                        {
+                            $tmpAttValue = $tmpAttValue->GetDisplayURL(get_class($aCurrentRowValues[0]), $aCurrentRowValues[0]->GetKey(), $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
+                        }
+                        else
+                        {
+                            $tmpAttValue = MetaModel::GetAttributeDef(get_class($aCurrentRowValues[0]), $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute])->Get('default_image');
+                        }
+                    }
+
+                    $aItems[$sCurrentIndex][$sPropertyName] = $tmpAttValue;
+                }
+            }
 		}
 
 		$aCurrentRowSliced = array_slice($aCurrentRow, 1);

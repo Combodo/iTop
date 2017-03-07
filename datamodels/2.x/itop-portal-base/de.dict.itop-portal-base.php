@@ -83,6 +83,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:Browse:Name' => 'List durchgehen',
 	'Brick:Portal:Browse:Mode:List' => 'Liste',
 	'Brick:Portal:Browse:Mode:Tree' => 'Baum',
+    'Brick:Portal:Browse:Mode:Grid' => 'Tiles~~',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Drilldown',
 	'Brick:Portal:Browse:Action:View' => 'Details',
 	'Brick:Portal:Browse:Action:Edit' => 'Editieren',

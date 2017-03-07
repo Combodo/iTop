@@ -65,6 +65,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
     'Brick:Portal:Browse:Name' => 'Просмотр элементов',
     'Brick:Portal:Browse:Mode:List' => 'Список',
     'Brick:Portal:Browse:Mode:Tree' => 'Дерево',
+    'Brick:Portal:Browse:Mode:Grid' => 'Tiles~~',
     'Brick:Portal:Browse:Action:Drilldown' => 'Детализация',
     'Brick:Portal:Browse:Action:View' => 'Подробно',
     'Brick:Portal:Browse:Action:Edit' => 'Изменить',

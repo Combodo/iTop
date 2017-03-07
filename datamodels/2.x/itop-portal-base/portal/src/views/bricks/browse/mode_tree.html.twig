@@ -36,12 +36,7 @@
 	</div>
 	<div id="brick_tree_overlay">
 		<div class="overlay_content">
-			<div class="content_loader">
-				<div class="icon glyphicon glyphicon-refresh"></div>
-				<div class="message">
-					{{ 'Page:PleaseWait'|dict_s }}
-				</div>
-			</div>
+            {% include 'itop-portal-base/portal/src/views/helpers/loader.html.twig' %}
 		</div>
 	</div>
 {% endblock %}
@@ -205,6 +200,11 @@
 				if( (item.tooltip !== undefined) && (item.tooltip !== '') )
 				{
 					aElem.attr('title', item.tooltip).attr('data-toggle', 'tooltip').tooltip({html: true, trigger: 'hover', placement: 'right'});
+				}
+				// Building description for the node
+				if( (item.description !== undefined) && (item.description !== '') )
+				{
+				    liElem.append( $('<span class="list-group-item-description">'+item.description+'</span>') );
 				}
 				
 				// Building actions for that node
