@@ -1182,7 +1182,7 @@
 					<decoration_class>
 						<default>fc fc-closed-request fc-2x</default>
 					</decoration_class>
-					<oql><![CDATA[SELECT Ticket WHERE org_id = :current_contact->org_id AND caller_id = :current_contact_id AND operational_status = 'closed']]></oql>
+					<oql><![CDATA[SELECT Ticket WHERE operational_status = 'closed']]></oql>
 					<!-- Can be either a class tag with the class name or an oql tag with the query -->
 					<!-- <class>Ticket</class> -->
 					<fields>
