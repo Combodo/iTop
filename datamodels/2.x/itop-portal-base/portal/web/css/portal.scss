@@ -729,10 +729,6 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
   color: #EEEEEE;
 }
 
-.ggi-last-xs, .ggi-last-sm, .ggi-last-md, .ggi-last-lg{
-	margin-right: 0px;
-}
-
 @media (max-width: 768px) {
 	.grid-group-item > .grid-group-item-actions{
 		top: 12px;
@@ -769,7 +765,6 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	}
 }
 @media (min-width: 768px) {
-	.grid-group-back,
 	.grid-group-item{
 		display: inline-block;
 		width: 32%;
@@ -831,37 +826,26 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	}
 }
 @media (min-width: 1200px) {
-	.grid-group-back,
 	.grid-group-item{
 		width: 24%;
 		height: 140px;
 		margin-right: 1.3%;
 	}
-	/* Layout 7 */
-	//.grid-item-layout-7 .grid-item-image{
-	//	width: 100px;
-	//	padding: 60px 15px;
-	//}
 }
 
 /* Helper classes to remove margin depending on the screen size */
-@media (max-width: 992px) {
-	.ggi-last-xs{
-		margin-right: 0px;
-	}
-}
 @media (min-width: 768px) and (max-width: 992px) {
-	.ggi-last-sm{
+	.grid-group-item:nth-child(3n){
 		margin-right: 0px;
 	}
 }
 @media (min-width: 992px) and (max-width: 1200px) {
-	.ggi-last-md{
+	.grid-group-item:nth-child(3n){
 		margin-right: 0px;
 	}
 }
 @media (min-width: 1200px) {
-	.ggi-last-lg{
+	.grid-group-item:nth-child(4n){
 		margin-right: 0px;
 	}
 }

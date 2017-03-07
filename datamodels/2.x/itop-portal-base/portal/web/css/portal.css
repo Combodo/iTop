@@ -673,9 +673,6 @@ table .group-actions {
 .grid-group-item-actions > a:hover, .grid-group-item-actions > a:focus {
   color: #eee;
 }
-.ggi-last-xs, .ggi-last-sm, .ggi-last-md, .ggi-last-lg {
-  margin-right: 0px;
-}
 @media (max-width: 768px) {
   /* All layout */
   /* Layout 2 */
@@ -714,7 +711,7 @@ table .group-actions {
   /* All layout */
   /* Layout 1 */
   /* Layout 7 */
-  .grid-group-back, .grid-group-item {
+  .grid-group-item {
     display: inline-block;
     width: 32%;
     height: 120px;
@@ -769,31 +766,25 @@ table .group-actions {
   }
 }
 @media (min-width: 1200px) {
-  /* Layout 7 */
-  .grid-group-back, .grid-group-item {
+  .grid-group-item {
     width: 24%;
     height: 140px;
     margin-right: 1.3%;
   }
 }
 /* Helper classes to remove margin depending on the screen size */
-@media (max-width: 992px) {
-  .ggi-last-xs {
-    margin-right: 0px;
-  }
-}
 @media (min-width: 768px) and (max-width: 992px) {
-  .ggi-last-sm {
+  .grid-group-item:nth-child(3n) {
     margin-right: 0px;
   }
 }
 @media (min-width: 992px) and (max-width: 1200px) {
-  .ggi-last-md {
+  .grid-group-item:nth-child(3n) {
     margin-right: 0px;
   }
 }
 @media (min-width: 1200px) {
-  .ggi-last-lg {
+  .grid-group-item:nth-child(4n) {
     margin-right: 0px;
   }
 }
