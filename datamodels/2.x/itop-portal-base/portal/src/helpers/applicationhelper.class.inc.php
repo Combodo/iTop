@@ -25,6 +25,7 @@ use \Symfony\Component\Debug\ErrorHandler;
 //use \Symfony\Component\Debug\ExceptionHandler;
 use \Combodo\iTop\Portal\Handler\ExceptionHandler;
 use \Symfony\Component\HttpFoundation\Request;
+use \Twig_Environment;
 use \Twig_SimpleFilter;
 use \Dict;
 use \utils;
@@ -192,13 +193,13 @@ class ApplicationHelper
 	 * Registers Twig extensions such as filters or functions.
 	 * It allows us to access some stuff directly in twig.
 	 *
-	 * @param \Silex\Application $oApp
+	 * @param \Twig_Environment $oTwigEnv
 	 */
-	static function RegisterTwigExtensions(Application $oApp)
+	static function RegisterTwigExtensions(Twig_Environment &$oTwigEnv)
 	{
 		// A filter to translate a string via the Dict::S function
 		// Usage in twig : {{ 'String:ToTranslate'|dict_s }}
-		$oApp['twig']->addFilter(new Twig_SimpleFilter('dict_s', function($sStringCode, $sDefault = null, $bUserLanguageOnly = false)
+        $oTwigEnv->addFilter(new Twig_SimpleFilter('dict_s', function($sStringCode, $sDefault = null, $bUserLanguageOnly = false)
 		{
 			return Dict::S($sStringCode, $sDefault, $bUserLanguageOnly);
 		})
@@ -206,7 +207,7 @@ class ApplicationHelper
 
 		// A filter to format a string via the Dict::Format function
 		// Usage in twig : {{ 'String:ToTranslate'|dict_format() }}
-		$oApp['twig']->addFilter(new Twig_SimpleFilter('dict_format', function($sStringCode, $sParam01 = null, $sParam02 = null, $sParam03 = null, $sParam04 = null)
+        $oTwigEnv->addFilter(new Twig_SimpleFilter('dict_format', function($sStringCode, $sParam01 = null, $sParam02 = null, $sParam03 = null, $sParam04 = null)
 		{
 			return Dict::Format($sStringCode, $sParam01, $sParam02, $sParam03, $sParam04);
 		})
@@ -214,19 +215,19 @@ class ApplicationHelper
 
 		// Filters to enable base64 encode/decode
 		// Usage in twig : {{ 'String to encode'|base64_encode }}
-		$oApp['twig']->addFilter(new Twig_SimpleFilter('base64_encode', 'base64_encode'));
-		$oApp['twig']->addFilter(new Twig_SimpleFilter('base64_decode', 'base64_decode'));
+        $oTwigEnv->addFilter(new Twig_SimpleFilter('base64_encode', 'base64_encode'));
+        $oTwigEnv->addFilter(new Twig_SimpleFilter('base64_decode', 'base64_decode'));
 
 		// Filters to enable json decode  (encode already exists)
 		// Usage in twig : {{ aSomeArray|json_decode }}
-		$oApp['twig']->addFilter(new Twig_SimpleFilter('json_decode', function($sJsonString, $bAssoc = false)
+        $oTwigEnv->addFilter(new Twig_SimpleFilter('json_decode', function($sJsonString, $bAssoc = false)
 		{
 			return json_decode($sJsonString, $bAssoc);
 		})
 		);
 
 		// Filter to add itopversion to an url
-		$oApp['twig']->addFilter(new Twig_SimpleFilter('add_itop_version', function($sUrl)
+        $oTwigEnv->addFilter(new Twig_SimpleFilter('add_itop_version', function($sUrl)
 		{
 			if (strpos($sUrl, '?') === false)
 			{
@@ -1084,5 +1085,3 @@ class ApplicationHelper
 	}
 
 }
-
-?>

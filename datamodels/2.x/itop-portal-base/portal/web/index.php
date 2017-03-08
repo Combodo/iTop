@@ -101,7 +101,7 @@ ApplicationHelper::LoadRouters();
 ApplicationHelper::RegisterRoutes($oApp);
 ApplicationHelper::LoadBricks();
 ApplicationHelper::LoadFormManagers();
-ApplicationHelper::RegisterTwigExtensions($oApp);
+ApplicationHelper::RegisterTwigExtensions($oApp['twig']);
 
 // Loading portal configuration from the module design
 ApplicationHelper::LoadPortalConfiguration($oApp);

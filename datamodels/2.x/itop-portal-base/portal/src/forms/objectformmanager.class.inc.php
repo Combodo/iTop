@@ -357,6 +357,7 @@ class ObjectFormManager extends FormManager
 			{
 				// Creating sandbox twig env. to load and test the custom form template
 				$oTwig = new \Twig_Environment(new \Twig_Loader_String());
+				ApplicationHelper::RegisterTwigExtensions($oTwig);
 				$sRendered = $oTwig->render($this->aFormProperties['layout']['content'], array('oRenderer' => $this->oRenderer, 'oObject' => $this->oObject));
 			}
 			else
@@ -366,7 +367,8 @@ class ObjectFormManager extends FormManager
 
 			// Parsing rendered template to find the fields
 			$oHtmlDocument = new \DOMDocument();
-			$oHtmlDocument->loadHTML('<root>' . $sRendered . '</root>');
+			// Note: Loading as XML instead of HTML avoid some encoding issues (eg. 'é' was transformed to '&tilde;&copy;')
+			$oHtmlDocument->loadXML('<root>' . $sRendered . '</root>');
 
 			// Adding fields to the list
 			$oXPath = new \DOMXPath($oHtmlDocument);
