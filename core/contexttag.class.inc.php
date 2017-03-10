@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2016 Combodo SARL
+// Copyright (C) 2016-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -29,13 +29,13 @@
  * 
  * if (ContextTag::Check('GUI:Portal'))
  *
- * @copyright   Copyright (C) 2016 Combodo SARL
+ * @copyright   Copyright (C) 2016-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 class ContextTag
 {
-	protected static $aStack;
+	protected static $aStack = array();
 	
 	/**
 	 * Store a context tag on the stack
