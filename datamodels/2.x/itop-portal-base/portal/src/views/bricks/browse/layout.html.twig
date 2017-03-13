@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block pMainContentHolder%}
-	{% if iItemsCount > 0 %}
+	{% if iItemsCount > 0 or sSearchValue is not null %}
 		<div class="panel panel-default">
 			{% block bBrowseMainContent %}
 			{% endblock %}

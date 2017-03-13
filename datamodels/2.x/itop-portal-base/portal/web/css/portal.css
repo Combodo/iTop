@@ -546,12 +546,13 @@ footer {
 /****************/
 #brick_content_tree {
   position: relative;
+  margin-top: 0px;
 }
 .list-group-item > .list-group-item-actions {
   /*display: none; Displaying actions only when hovering was not unanimous in the team */
   position: absolute;
   top: 10px;
-  right: 10px;
+  right: 15px;
 }
 .list-group-item:hover > .list-group-item-actions, .grid-group-item:hover > .grid-group-item-actions {
   display: block;
@@ -791,6 +792,36 @@ table .group-actions {
 /****************/
 /* - List mode  */
 /****************/
+/****************/
+/* Filter brick */
+/****************/
+.tile.tile-filter-brick .tile_filterbox .form-group:first-child {
+  width: 100%;
+}
+.tile.tile-filter-brick .tile_filterbox input[type="text"] {
+  width: 100%;
+}
+@media (max-width: 768px) {
+  .tile.tile-filter-brick .tile_filterbox .form-group:first-child {
+    margin-bottom: 5px;
+  }
+}
+@media (min-width: 768px) {
+  .tile.tile-filter-brick .tile_filterbox form {
+    display: table;
+  }
+  .tile.tile-filter-brick .tile_filterbox .form-group:first-child {
+    display: table-cell;
+  }
+  .tile.tile-filter-brick .tile_filterbox button[type="submit"] {
+    margin-left: 5px;
+  }
+}
+@media (min-width: 992px) {
+  .tile.tile-filter-brick .tile_filterbox .form-group:first-child {
+    display: table-cell;
+  }
+}
 /*********/
 /* Forms */
 /*********/

@@ -99,3 +99,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
     'Brick:Portal:Create:Name' => 'Быстрое создание',
     'Brick:Portal:Create:ChooseType' => 'Please, choose a type~~',
 ));
+
+// Filter brick
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+    'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
+    'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg: install office~~',
+    'Brick:Portal:Filter:SearchInput:Submit' => 'Search~~',
+));

@@ -117,3 +117,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Create:Name' => 'Creación rápida',
     'Brick:Portal:Create:ChooseType' => 'Please, choose a type~~',
 ));
+
+// Filter brick
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+    'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
+    'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg: install office~~',
+    'Brick:Portal:Filter:SearchInput:Submit' => 'Search~~',
+));

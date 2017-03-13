@@ -4110,6 +4110,9 @@ a.badge:focus {
     text-decoration: none;
     cursor: pointer
 }
+.list-group .list-group-item:hover{
+    background-color: rgba(254, 223, 167, 0.1);
+}
 .list-group-item.active>.badge,
 .nav-pills>.active>a>.badge {
     color: $brand-primary;

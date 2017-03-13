@@ -57,7 +57,7 @@ class ManageBrickController extends BrickController
 		$aQueries = array();
 
 		// Getting current dataloading mode (First from router parameter, then query parameter, then default brick value)
-		$sDataLoading = ($sDataLoading !== null) ? $sDataLoading : ( ($oRequest->query->get('sDataLoading') !== null) ? $oRequest->query->get('sDataLoading') : $oBrick->GetDataLoading() );
+		$sDataLoading = ($sDataLoading !== null) ? $sDataLoading : ( ($oRequest->get('sDataLoading') !== null) ? $oRequest->get('sDataLoading') : $oBrick->GetDataLoading() );
 		// Getting search value
 		$sSearchValue = $oRequest->get('sSearchValue', null);
 
@@ -465,6 +465,7 @@ class ManageBrickController extends BrickController
 				'aGroupingAreasData' => $aGroupingAreasData,
 				'sDateFormat' => AttributeDate::GetFormat()->ToMomentJS(),
 				'sDateTimeFormat' => AttributeDateTime::GetFormat()->ToMomentJS(),
+                'sSearchValue' => $sSearchValue,
 			);
 
 			$oResponse = $oApp['twig']->render($oBrick->GetPageTemplatePath(), $aData);

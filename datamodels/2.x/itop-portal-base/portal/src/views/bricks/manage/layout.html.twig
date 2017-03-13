@@ -76,8 +76,13 @@
 				'{{ aAreaData.sId }}': {{ aAreaData.aItems|json_encode()|raw }},
 			{% endfor %}
 		};
-		
-		// Columns definition for the table from the columnsProperties
+
+        // Show a loader inside the table
+        var showTableLoader = function(oElem)
+        {
+            oElem.children('tbody').html('<tr><td class="datatables_overlay" colspan="100">' + $('#page_overlay').html() + '</td></tr>');
+        };
+        // Columns definition for the table from the columnsProperties
 		var getColumnsDefinition = function(tableName)
 		{
 			var tableProperties = columnsProperties[tableName];
@@ -152,6 +157,8 @@
 		$(document).ready(function(){
 			{% for aAreaData in aGroupingAreasData %}
 				{% set sAreaId = aAreaData.sId %}
+
+            	showTableLoader( $('#table-{{ sAreaId }}') );
 				var oTable{{ sAreaId }} = $('#table-{{ sAreaId }}').DataTable( {
 					"language": {
 						"processing":	  "{{ 'Portal:Datatables:Language:Processing'|dict_s }}",
@@ -175,7 +182,7 @@
 					},
 					"lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "{{ 'Portal:Datatables:Language:DisplayLength:All'|dict_s }}"]],
 					"displayLength": {{ constant('Combodo\\iTop\\Portal\\Brick\\ManageBrick::DEFAULT_COUNT_PER_PAGE_LIST') }},
-					"dom": '<"row"<"col-sm-6"l><"col-sm-6"<f><"visible-xs"p>>>t<"row"<"col-sm-6"ri><"col-sm-6"p>>',
+					"dom": '<"row"<"col-sm-6"l><"col-sm-6"<f><"visible-xs"p>>>t<"row"<"col-sm-6"i><"col-sm-6"p>>',
 					"columns": getColumnsDefinition('{{ sAreaId }}'),
 					"order": [[0, "desc"]],
 					"rowCallback": function(oRow, oData){
@@ -226,6 +233,15 @@
 								d.iCountPerPage = d.length;
 								d.columns = null;
 								d.orders = null;
+
+                                {% if sSearchValue is not null %}
+									// Sets default filter value
+									if(d.draw === 1)
+									{
+                                        $('#table-{{ sAreaId }}_filter input').val('{{ sSearchValue }}');
+										d.search.value = $('#table-{{ sAreaId }}_filter input').val();
+									}
+                                {% endif %}
 								if(d.search.value)
 								{
 									d.sSearchValue = d.search.value;
@@ -234,7 +250,7 @@
 						}
 					{% endif %}
 				} );
-				
+
 				// Overrides filter input to apply throttle. Otherwise, an ajax request is send each time a key is pressed
 				// Also removes accents from search string
 				// Note : The '.off()' call is to unbind event from DataTables that where triggered before we could intercept anything
@@ -245,6 +261,12 @@
 					oKeyTimeout = setTimeout(function() {
 						oTable{{ sAreaId }}.search(me.value.latinise()).draw();
 					}, iSearchThrottle);
+				});// Shows a loader in the table when processing
+				$('#table-{{ sAreaId }}').on('processing.dt', function(event, settings, processing){
+					if(processing === true)
+					{
+						showTableLoader($(this));
+					}
 				});
 			{% endfor %}
 		});

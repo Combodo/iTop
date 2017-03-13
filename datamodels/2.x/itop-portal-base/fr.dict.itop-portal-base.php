@@ -118,3 +118,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
     'Brick:Portal:Create:ChooseType' => 'Veuillez choisir le type',
 ));
 
+// Filter brick
+Dict::Add('FR FR', 'French', 'Français', array(
+    'Brick:Portal:Filter:Name' => 'Préfiltre une brique',
+    'Brick:Portal:Filter:SearchInput:Placeholder' => 'ex : installation office',
+    'Brick:Portal:Filter:SearchInput:Submit' => 'Rechercher',
+));
+

@@ -121,3 +121,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Brick:Portal:Create:Name' => 'Rychlé vytvoření',
     'Brick:Portal:Create:ChooseType' => 'Please, choose a type~~',
 ));
+
+// Filter brick
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+    'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
+    'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg: install office~~',
+    'Brick:Portal:Filter:SearchInput:Submit' => 'Search~~',
+));

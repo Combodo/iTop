@@ -24,9 +24,9 @@
 		var aKeyTimeoutFilteredKeys = [16, 17, 18, 19, 27, 33, 34, 35, 36, 37, 38, 39, 40]; // Shift, Ctrl, Alt, Pause, Esc, Page Up/Down, Home, End, Left/Up/Right/Down arrows
 		
 		// Show a loader inside the table
-		var showTableLoader = function()
+		var showTableLoader = function(oElem)
 		{
-			$('#brick-content-table > tbody').html('<tr><td class="datatables_overlay" colspan="100">' + $('#page_overlay').html() + '</td></tr>');
+			oElem.children('tbody').html('<tr><td class="datatables_overlay" colspan="100">' + $('#page_overlay').html() + '</td></tr>');
 		};
 		// Columns definition for the table from the oLevelsProperties
 		var getColumnsDefinition = function()
@@ -210,7 +210,7 @@
 		
 		$(document).ready(function()
 		{
-			showTableLoader();
+			showTableLoader($('#brick-content-table'));
 			
 			// Note : Those options should be externalized in an library so we can use them on any DataTables for the portal.
 			// We would just have to override / complete the necessary elements
@@ -301,7 +301,7 @@
 			$('#brick-content-table').on('processing.dt', function(event, settings, processing){
 				if(processing === true)
 				{
-					showTableLoader();
+					showTableLoader($(this));
 				}
 			});
 			
