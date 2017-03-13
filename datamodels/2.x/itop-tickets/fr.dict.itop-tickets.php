@@ -75,8 +75,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Ticket/Attribute:operational_status/Value:ongoing+' => 'Traitement en cours',
 	'Class:Ticket/Attribute:operational_status/Value:resolved' => 'Résolu',
 	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '',
-	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Clôt',
-	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
+	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Clos',
+	'Class:Ticket/Attribute:operational_status/Value:closed+' => 'Fermé',
 	'Ticket:ImpactAnalysis' => 'Analyse d\'Impact',
 ));
 
