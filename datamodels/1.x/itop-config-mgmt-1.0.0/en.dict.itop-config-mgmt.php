@@ -223,8 +223,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Contact/Attribute:ticket_list+' => 'Tickets related to the contact',
 	'Class:Contact/Attribute:team_list' => 'Teams',
 	'Class:Contact/Attribute:team_list+' => 'Teams this contact belongs to',
-	'Class:Contact/Attribute:finalclass' => 'Type',
-	'Class:Contact/Attribute:finalclass+' => '',
+	'Class:Contact/Attribute:finalclass' => 'Contact sub-class',
+	'Class:Contact/Attribute:finalclass+' => 'Name of the final class',
 ));
 
 //
@@ -450,8 +450,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Software/Attribute:description+' => '',
 	'Class:Software/Attribute:instance_list' => 'Installations',
 	'Class:Software/Attribute:instance_list+' => 'Instances of this software',
-	'Class:Software/Attribute:finalclass' => 'Type',
-	'Class:Software/Attribute:finalclass+' => '',
+	'Class:Software/Attribute:finalclass' => 'Software sub-class',
+	'Class:Software/Attribute:finalclass+' => 'Name of the final class',
 ));
 
 //
@@ -538,8 +538,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FunctionalCI/Attribute:contract_list+' => 'Contracts supporting this CI',
 	'Class:FunctionalCI/Attribute:ticket_list' => 'Tickets',
 	'Class:FunctionalCI/Attribute:ticket_list+' => 'Tickets related to the CI',
-	'Class:FunctionalCI/Attribute:finalclass' => 'Type',
-	'Class:FunctionalCI/Attribute:finalclass+' => '',
+	'Class:FunctionalCI/Attribute:finalclass' => 'CI sub-class',
+	'Class:FunctionalCI/Attribute:finalclass+' => 'Name of the final class',
 ));
 
 //

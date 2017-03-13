@@ -26,6 +26,7 @@
         <reconciliation>
           <attributes>
             <attribute id="ref"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
         <order>
@@ -2001,6 +2002,7 @@
         <reconciliation>
           <attributes>
             <attribute id="ref"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
         <order>

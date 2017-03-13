@@ -194,8 +194,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:CMDBChangeOp/Attribute:objclass+' => 'object class',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'object id',
 	'Class:CMDBChangeOp/Attribute:objkey+' => 'object id',
-	'Class:CMDBChangeOp/Attribute:finalclass' => 'type',
-	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
+	'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDBChangeOp sub-class',
+	'Class:CMDBChangeOp/Attribute:finalclass+' => 'Name of the final class',
 ));
 
 //
@@ -290,8 +290,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Event/Attribute:date+' => 'date and time at which the changes have been recorded',
 	'Class:Event/Attribute:userinfo' => 'User info',
 	'Class:Event/Attribute:userinfo+' => 'identification of the user that was doing the action that triggered this event',
-	'Class:Event/Attribute:finalclass' => 'Type',
-	'Class:Event/Attribute:finalclass+' => '',
+	'Class:Event/Attribute:finalclass' => 'Event sub-class',
+	'Class:Event/Attribute:finalclass+' => 'Name of the final class',
 ));
 
 //
@@ -429,8 +429,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Action/Attribute:status/Value:disabled+' => 'Inactive',
 	'Class:Action/Attribute:trigger_list' => 'Related Triggers',
 	'Class:Action/Attribute:trigger_list+' => 'Triggers linked to this action',
-	'Class:Action/Attribute:finalclass' => 'Type',
-	'Class:Action/Attribute:finalclass+' => '',
+	'Class:Action/Attribute:finalclass' => 'Action sub-class',
+	'Class:Action/Attribute:finalclass+' => 'Name of the final class',
 ));
 
 //
@@ -486,8 +486,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Trigger/Attribute:description+' => 'one line description',
 	'Class:Trigger/Attribute:action_list' => 'Triggered actions',
 	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated',
-	'Class:Trigger/Attribute:finalclass' => 'Type',
-	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:finalclass' => 'Trigger sub-class',
+	'Class:Trigger/Attribute:finalclass+' => 'Name of the final class',
 ));
 
 //

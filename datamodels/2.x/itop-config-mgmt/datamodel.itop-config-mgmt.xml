@@ -293,6 +293,7 @@
             <attribute id="org_id"/>
             <attribute id="org_name"/>
             <attribute id="email"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
       </properties>
@@ -880,7 +881,10 @@
         <icon>images/document.png</icon>
         <reconciliation>
           <attributes>
-            <attribute id=""/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
       </properties>
@@ -1866,6 +1870,7 @@
             <attribute id="name"/>
             <attribute id="org_id"/>
             <attribute id="organization_name"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
       </properties>
@@ -2043,6 +2048,7 @@
             <attribute id="name"/>
             <attribute id="org_id"/>
             <attribute id="organization_name"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
       </properties>
@@ -4536,6 +4542,7 @@
         <reconciliation>
           <attributes>
             <attribute id="name"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
       </properties>
@@ -4790,6 +4797,7 @@
             <attribute id="name"/>
             <attribute id="org_id"/>
             <attribute id="organization_name"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
       </properties>
@@ -5300,6 +5308,7 @@
         <reconciliation>
           <attributes>
             <attribute id="name"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
       </properties>
@@ -6733,6 +6742,7 @@
         <reconciliation>
           <attributes>
             <attribute id="name"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
       </properties>
@@ -6787,6 +6797,7 @@
         <reconciliation>
           <attributes>
             <attribute id="name"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
       </properties>

@@ -147,8 +147,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Contract/Attribute:status/Value:obsolete+' => 'obsolete',
 	'Class:Contract/Attribute:status/Value:production' => 'production',
 	'Class:Contract/Attribute:status/Value:production+' => 'production',
-	'Class:Contract/Attribute:finalclass' => 'Contract type',
-	'Class:Contract/Attribute:finalclass+' => '',
+	'Class:Contract/Attribute:finalclass' => 'Contract sub-class',
+	'Class:Contract/Attribute:finalclass+' => 'Name of the final class',
 ));
 
 //

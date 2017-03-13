@@ -64,8 +64,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Ticket/Attribute:contact_list+' => 'Team and persons involved',
 	'Class:Ticket/Attribute:incident_list' => 'Related Incidents',
 	'Class:Ticket/Attribute:incident_list+' => '',
-	'Class:Ticket/Attribute:finalclass' => 'Type',
-	'Class:Ticket/Attribute:finalclass+' => '',
+	'Class:Ticket/Attribute:finalclass' => 'Ticket sub-class',
+	'Class:Ticket/Attribute:finalclass+' => 'Name of the final class',
 ));
 
 // Fieldset translation

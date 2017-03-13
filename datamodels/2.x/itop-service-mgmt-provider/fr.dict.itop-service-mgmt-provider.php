@@ -93,8 +93,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Contract/Attribute:status/Value:obsolete+' => 'obsolète',
 	'Class:Contract/Attribute:status/Value:production' => 'production',
 	'Class:Contract/Attribute:status/Value:production+' => 'production',
-	'Class:Contract/Attribute:finalclass' => 'Type',
-	'Class:Contract/Attribute:finalclass+' => '',
+	'Class:Contract/Attribute:finalclass' => 'Sous-classe de Contrat',
+	'Class:Contract/Attribute:finalclass+' => 'Nom de la classe instanciable',
 ));
 
 //

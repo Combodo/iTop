@@ -135,7 +135,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User' => 'Utilisateur',
 	'Class:User+' => 'Compte utilisateur',
 	'Class:User/Attribute:finalclass' => 'Type de compte',
-	'Class:User/Attribute:finalclass+' => '',
+	'Class:User/Attribute:finalclass+' => 'Nom de la classe instanciable',
 	'Class:User/Attribute:contactid' => 'Contact (personne)',
 	'Class:User/Attribute:contactid+' => '',
 	'Class:User/Attribute:last_name' => 'Nom',

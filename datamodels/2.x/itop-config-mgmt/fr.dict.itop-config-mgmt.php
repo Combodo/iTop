@@ -115,8 +115,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Contact/Attribute:function+' => '',
 	'Class:Contact/Attribute:cis_list' => 'CIs',
 	'Class:Contact/Attribute:cis_list+' => '',
-	'Class:Contact/Attribute:finalclass' => 'Type de contact',
-	'Class:Contact/Attribute:finalclass+' => '',
+	'Class:Contact/Attribute:finalclass' => 'Sous-classe de Contact',
+	'Class:Contact/Attribute:finalclass+' => 'Nom de la classe instanciable',
 ));
 
 //
@@ -198,8 +198,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Document/Attribute:contracts_list+' => '',
 	'Class:Document/Attribute:services_list' => 'Services',
 	'Class:Document/Attribute:services_list+' => '',
-	'Class:Document/Attribute:finalclass' => 'Type de document',
-	'Class:Document/Attribute:finalclass+' => '',
+	'Class:Document/Attribute:finalclass' => 'Sous-classe de Document',
+	'Class:Document/Attribute:finalclass+' => 'Nom de la classe instanciable',
 ));
 
 //
@@ -274,8 +274,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FunctionalCI/Attribute:softwares_list+' => '',
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
 	'Class:FunctionalCI/Attribute:tickets_list+' => '',
-	'Class:FunctionalCI/Attribute:finalclass' => 'Type de CI',
-	'Class:FunctionalCI/Attribute:finalclass+' => '',
+	'Class:FunctionalCI/Attribute:finalclass' => 'Sous-classe de CI',
+	'Class:FunctionalCI/Attribute:finalclass+' => 'Nom de la classe instanciable',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Tickets en cours',
 ));
 
@@ -1058,8 +1058,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Patch/Attribute:documents_list+' => '',
 	'Class:Patch/Attribute:description' => 'Description',
 	'Class:Patch/Attribute:description+' => '',
-	'Class:Patch/Attribute:finalclass' => 'Type',
-	'Class:Patch/Attribute:finalclass+' => '',
+	'Class:Patch/Attribute:finalclass' => 'Sous-classe de Patch',
+	'Class:Patch/Attribute:finalclass+' => 'Nom de la classe instanciable',
 ));
 
 //
@@ -1123,8 +1123,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Licence/Attribute:perpetual/Value:no+' => 'non',
 	'Class:Licence/Attribute:perpetual/Value:yes' => 'oui',
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'oui',
-	'Class:Licence/Attribute:finalclass' => 'Type',
-	'Class:Licence/Attribute:finalclass+' => '',
+	'Class:Licence/Attribute:finalclass' => 'Sous-classe de License',
+	'Class:Licence/Attribute:finalclass+' => 'Nom de la classe instanciable',
 ));
 
 //
@@ -1185,8 +1185,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Typology+' => '',
 	'Class:Typology/Attribute:name' => 'Nom',
 	'Class:Typology/Attribute:name+' => '',
-	'Class:Typology/Attribute:finalclass' => 'Type',
-	'Class:Typology/Attribute:finalclass+' => '',
+	'Class:Typology/Attribute:finalclass' => 'Sous-classe de Typologie',
+	'Class:Typology/Attribute:finalclass+' => 'Nom de la classe instanciable',
 ));
 
 //
@@ -1486,8 +1486,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NetworkInterface+' => '',
 	'Class:NetworkInterface/Attribute:name' => 'Nom',
 	'Class:NetworkInterface/Attribute:name+' => '',
-	'Class:NetworkInterface/Attribute:finalclass' => 'Type',
-	'Class:NetworkInterface/Attribute:finalclass+' => '',
+	'Class:NetworkInterface/Attribute:finalclass' => 'Sous-classe d\'Interface Réseau',
+	'Class:NetworkInterface/Attribute:finalclass+' => 'Nom de la classe instanciable',
 ));
 
 //

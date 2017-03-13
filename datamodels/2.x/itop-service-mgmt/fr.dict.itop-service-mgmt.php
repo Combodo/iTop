@@ -92,8 +92,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Contract/Attribute:status/Value:obsolete+' => 'obsolète',
 	'Class:Contract/Attribute:status/Value:production' => 'production',
 	'Class:Contract/Attribute:status/Value:production+' => 'production',
-	'Class:Contract/Attribute:finalclass' => 'Type',
-	'Class:Contract/Attribute:finalclass+' => '',
+	'Class:Contract/Attribute:finalclass' => 'Sous-classe de Contrat',
+	'Class:Contract/Attribute:finalclass+' => 'Nom de la classe instanciable',
 ));
 
 //
@@ -122,7 +122,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ProviderContract/Attribute:coverage+' => '',
 	'Class:ProviderContract/Attribute:contracttype_id' => 'Type de contrat',
 	'Class:ProviderContract/Attribute:contracttype_id+' => '',
-	'Class:ProviderContract/Attribute:contracttype_name' => 'Nom type de contrat',
+	'Class:ProviderContract/Attribute:contracttype_name' => 'Nom Type de contrat',
 	'Class:ProviderContract/Attribute:contracttype_name+' => '',
 ));
 
@@ -442,7 +442,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:DeliveryModel/Attribute:org_id' => 'Organisation',
 	'Class:DeliveryModel/Attribute:org_id+' => '',
 	'Class:DeliveryModel/Attribute:organization_name' => 'Nom organisation',
-	'Class:DeliveryModel/Attribute:organization_name+' => 'Common name',
+	'Class:DeliveryModel/Attribute:organization_name+' => '',
 	'Class:DeliveryModel/Attribute:description' => 'Description',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Contacts',

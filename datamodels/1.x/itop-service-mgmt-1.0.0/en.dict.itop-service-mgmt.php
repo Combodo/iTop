@@ -105,8 +105,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Contract/Attribute:document_list+' => 'Documents attached to the contract',
 	'Class:Contract/Attribute:ci_list' => 'CIs',
 	'Class:Contract/Attribute:ci_list+' => 'CI supported by the contract',
-	'Class:Contract/Attribute:finalclass' => 'Type',
-	'Class:Contract/Attribute:finalclass+' => '',
+	'Class:Contract/Attribute:finalclass' => 'Contract sub-class',
+	'Class:Contract/Attribute:finalclass+' => 'Name of the final class',
 ));
 
 //

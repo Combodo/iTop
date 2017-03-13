@@ -110,7 +110,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:User' => 'User',
 	'Class:User+' => 'User login',
 	'Class:User/Attribute:finalclass' => 'Type of account',
-	'Class:User/Attribute:finalclass+' => '',
+	'Class:User/Attribute:finalclass+' => 'Name of the final class',
 	'Class:User/Attribute:contactid' => 'Contact (person)',
 	'Class:User/Attribute:contactid+' => 'Personal details from the business data',
 	'Class:User/Attribute:last_name' => 'Last name',

@@ -65,6 +65,7 @@
         <reconciliation>
           <attributes>
             <attribute id="name"/>
+            <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
       </properties>

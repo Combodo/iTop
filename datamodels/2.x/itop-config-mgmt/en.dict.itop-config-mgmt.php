@@ -168,8 +168,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Contact/Attribute:function+' => '',
 	'Class:Contact/Attribute:cis_list' => 'CIs',
 	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact',
-	'Class:Contact/Attribute:finalclass' => 'Contact Type',
-	'Class:Contact/Attribute:finalclass+' => '',
+	'Class:Contact/Attribute:finalclass' => 'Contact sub-class',
+	'Class:Contact/Attribute:finalclass+' => 'Name of the final class',
 ));
 
 //
@@ -253,8 +253,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document',
 	'Class:Document/Attribute:services_list' => 'Services',
 	'Class:Document/Attribute:services_list+' => 'All the services linked to this document',
-	'Class:Document/Attribute:finalclass' => 'Document Type',
-	'Class:Document/Attribute:finalclass+' => '',
+	'Class:Document/Attribute:finalclass' => 'Document sub-class',
+	'Class:Document/Attribute:finalclass+' => 'Name of the final class',
 ));
 
 //
@@ -329,8 +329,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FunctionalCI/Attribute:softwares_list+' => 'All the softwares installed on this configuration item',
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item',
-	'Class:FunctionalCI/Attribute:finalclass' => 'CI Type',
-	'Class:FunctionalCI/Attribute:finalclass+' => '',
+	'Class:FunctionalCI/Attribute:finalclass' => 'CI sub-class',
+	'Class:FunctionalCI/Attribute:finalclass+' => 'Name of the final class',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets',
 ));
 
@@ -1114,8 +1114,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Patch/Attribute:documents_list+' => 'All the documents linked to this patch',
 	'Class:Patch/Attribute:description' => 'Description',
 	'Class:Patch/Attribute:description+' => '',
-	'Class:Patch/Attribute:finalclass' => 'Type',
-	'Class:Patch/Attribute:finalclass+' => '',
+	'Class:Patch/Attribute:finalclass' => 'Patch sub-class',
+	'Class:Patch/Attribute:finalclass+' => 'Name of the final class',
 ));
 
 //
@@ -1179,8 +1179,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Licence/Attribute:perpetual/Value:no+' => 'no',
 	'Class:Licence/Attribute:perpetual/Value:yes' => 'yes',
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'yes',
-	'Class:Licence/Attribute:finalclass' => 'Type',
-	'Class:Licence/Attribute:finalclass+' => '',
+	'Class:Licence/Attribute:finalclass' => 'Licence sub-class',
+	'Class:Licence/Attribute:finalclass+' => 'Name of the final class',
 ));
 
 //
@@ -1241,8 +1241,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Typology+' => '',
 	'Class:Typology/Attribute:name' => 'Name',
 	'Class:Typology/Attribute:name+' => '',
-	'Class:Typology/Attribute:finalclass' => 'Type',
-	'Class:Typology/Attribute:finalclass+' => '',
+	'Class:Typology/Attribute:finalclass' => 'Typology sub-class',
+	'Class:Typology/Attribute:finalclass+' => 'Name of the final class',
 ));
 
 //
@@ -1547,8 +1547,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:NetworkInterface+' => '',
 	'Class:NetworkInterface/Attribute:name' => 'Name',
 	'Class:NetworkInterface/Attribute:name+' => '',
-	'Class:NetworkInterface/Attribute:finalclass' => 'Type',
-	'Class:NetworkInterface/Attribute:finalclass+' => '',
+	'Class:NetworkInterface/Attribute:finalclass' => 'NetworkInterface sub-class',
+	'Class:NetworkInterface/Attribute:finalclass+' => 'Name of the final class',
 ));
 
 //
