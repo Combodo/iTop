@@ -1,4 +1,20 @@
 <?php
+// Copyright (C) 2016-2017 Combodo SARL
+//
+//   This file is part of iTop.
+//
+//   iTop is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU Affero General Public License as published by
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   iTop is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU Affero General Public License for more details.
+//
+//   You should have received a copy of the GNU Affero General Public License
+//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * Base class for all possible implementations of HTML Sanitization
  */
@@ -207,6 +223,13 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 	{
 		$this->oDoc = new DOMDocument();
 		$this->oDoc->preserveWhitespace = true;
+
+		// MS outlook implements empty lines by the mean of <p><o:p></o:p></p>
+		// We have to transform that into <p><br></p> (which is how Thunderbird implements empty lines)
+		// Unfortunately, DOMDocument::loadHTML does not take the tag namespaces into account (once loaded there is no way to know if the tag did have a namespace)
+		// therefore we have to do the transformation upfront
+		$sHTML = preg_replace('@<o:p>\s*</o:p>@', '<br>', $sHTML);
+
 		@$this->oDoc->loadHTML('<?xml encoding="UTF-8"?>'.$sHTML); // For loading HTML chunks where the character set is not specified
 		
 		$this->CleanNode($this->oDoc);
