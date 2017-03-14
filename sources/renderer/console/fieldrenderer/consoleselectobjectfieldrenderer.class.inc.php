@@ -63,6 +63,7 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 			$oSearch->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
 
 			$oSet = new \DBObjectSet($oSearch);
+			$oSet->ApplyParameters();
 			$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array('friendlyname')));
 
 			$sTargetClass = $oSearch->GetClass();
@@ -92,7 +93,10 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 				$oOutput->AddHtml($oPage->GetHtml());
 				$oOutput->AddJs($oPage->GetJS());
 				$oOutput->AddJs($oPage->GetReadyJS());
-				$oOutput->AddCss($oPage->GetCSS());
+				foreach ($oPage->GetCSS() as $sCss)
+				{
+					$oOutput->AddCss($sCss);
+				}
 				foreach ($oPage->GetJSFiles() as $sFile)
 				{
 					$oOutput->AddJsFile($sFile);
