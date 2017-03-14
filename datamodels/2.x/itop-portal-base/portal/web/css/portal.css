@@ -622,11 +622,37 @@ table .group-actions {
   position: relative;
   padding: 10px 10px 1px 10px;
 }
+/* Breadcrumb */
+#grid-breadcrumb {
+  padding-left: 0px;
+  font-size: 12px;
+}
+#grid-breadcrumb > li {
+  display: inline;
+  cursor: pointer;
+  color: #ea7d1e;
+}
+#grid-breadcrumb > li:hover {
+  color: #d56e14;
+}
+#grid-breadcrumb > li:last-of-type {
+  color: inherit;
+  cursor: inherit;
+}
+#grid-breadcrumb > li:after {
+  content: '/';
+  margin-left: 0.4em;
+  margin-right: 0.2em;
+  color: initial;
+}
+#grid-breadcrumb > li:last-of-type:after {
+  content: none;
+}
 .grid-group {
   display: none;
 }
 /* Only the first level is showed by default */
-.grid-group:first-child {
+.grid-group:first-of-type {
   display: block;
 }
 .grid-group-back, .grid-group-item {

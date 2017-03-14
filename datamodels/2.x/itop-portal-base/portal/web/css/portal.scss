@@ -669,11 +669,38 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
   	position: relative;
 	padding: 10px 10px 1px 10px;
 }
+/* Breadcrumb */
+#grid-breadcrumb{
+	padding-left: 0px;
+	font-size: 12px;
+}
+#grid-breadcrumb > li{
+	display: inline;
+	cursor: pointer;
+	color: $brand-primary;
+}
+#grid-breadcrumb > li:hover{
+	color: $brand-primary-dark;
+}
+#grid-breadcrumb > li:last-of-type{
+	color: inherit;
+	cursor: inherit;
+}
+#grid-breadcrumb > li:after{
+	content: '/';
+	margin-left: 0.4em;
+	margin-right: 0.2em;
+	color: initial;
+}
+#grid-breadcrumb > li:last-of-type:after{
+	content: none;
+}
+
 .grid-group{
 	display: none;
 }
 /* Only the first level is showed by default */
-.grid-group:first-child{
+.grid-group:first-of-type{
 	display: block;
 }
 

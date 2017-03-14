@@ -5,6 +5,9 @@
 {% block bBrowseMainContent %}
 	<div id="brick_content_grid">
 		{% block bBrowseGridContent %}
+			<ul id="grid-breadcrumb">
+				<li class="grid-crumb grid-crumb-root" data-level-id="L"><span class="fa fa-home"></span></li>
+			</ul>
 			<div class="grid-group" data-level-id="L">
 			</div>
 		{% endblock %}
@@ -47,66 +50,49 @@
 			$('#brick_grid_overlay').hide();
 			$("#brick_content_grid").show();
 		}
+		// Show the requested level
+		var showLevel = function(sLevelAlias, sItemId)
+		{
+		    // Retrieving level to show
+		    var sLevelId = sLevelAlias + ((sItemId !== undefined) ? '::'+sItemId : '' );
+		    var oLevelElem = $('#brick_content_grid .grid-group[data-level-id="' + sLevelId + '"]');
+		    var bLevelLoaded = (oLevelElem.length > 0);
+
+		    // Hiding current level
+            $('#brick_content_grid .grid-group:visible').hide(
+                sGridEffectName,
+				oGridEffectOptions,
+				iGridEffectDuration,
+				function(){
+                    // Showing level
+					if(!bLevelLoaded)
+					{
+                        showGridLoader();
+					    loadChildNodes(sLevelAlias, sItemId);
+					}
+					else
+					{
+					    oLevelElem.show(sGridEffectName, oGridEffectOptions, iGridEffectDuration, function(){ buildBreadcrumb(); });
+					}
+				}
+			);
+		};
 		// Registers the toggle listeners on the tree nodes. Used after every AJAX calls.
 		var registerToggleListeners = function()
 		{
 		    $('#brick_content_grid .grid-drilldown').off('click').on('click', function (oEvent) {
 				oEvent.preventDefault();
 
-				var me = this;
-				// Retrieving sublevel
-                var sublevelId = $(this).attr('data-level-alias') + '::' + $(this).attr('data-item-id');
-                var sublevelElem = $('#brick_content_grid .grid-group[data-level-id="'+sublevelId+'"]');
-
-				// Hidding current level
-                if(sublevelElem.length === 0)
-                {
-                    showGridLoader();
-                }
-                $(this).closest('.grid-group').hide(
-                    sGridEffectName,
-					oGridEffectOptions,
-					iGridEffectDuration,
-					function(){
-				        // Showing sublevel
-				        if(sublevelElem.length === 0)
-						{
-                            loadChildNodes($(me).attr('data-level-alias'), $(me).attr('data-item-id'));
-						}
-						else
-						{
-                            sublevelElem.show(sGridEffectName, oGridEffectOptions, iGridEffectDuration);
-						}
-					}
-				);
+                showLevel($(this).attr('data-level-alias'), $(this).attr('data-item-id'));
 			});
 
             $('#brick_content_grid .grid-rollup').off('click').on('click', function (oEvent) {
                 oEvent.preventDefault();
 
-                // Retrieving upper level
                 var upperlevelId = $(this).attr('data-level-id');
-                var upperlevelElem = $('#brick_content_grid .grid-group[data-level-id="'+upperlevelId+'"]');
+                var upperlevelIdParts = upperlevelId.split('::');
 
-                // Hidding current level
-                $(this).closest('.grid-group').hide(
-                    sGridEffectName,
-					oGridEffectOptions,
-					iGridEffectDuration,
-                    function(){
-                        // Showing upper level
-                        if(upperlevelElem.length === 0)
-                        {
-                            var upperlevelIdParts = upperlevelId.split('::');
-
-                            loadChildNodes(upperlevelIdParts[0], upperlevelIdParts[1]);
-                        }
-                        else
-                        {
-                            upperlevelElem.show(sGridEffectName, oGridEffectOptions, iGridEffectDuration);
-                        }
-                    }
-                );
+                showLevel(upperlevelIdParts[0], upperlevelIdParts[1]);
             });
 		};
 		// Registers the filter listeners on the tree.
@@ -131,7 +117,7 @@
 					buildGrid(sublevelData, sLevelAlias+"::"+sNodeId, false);
 				}
 				// Showing sublevel
-                $('#brick_content_grid .grid-group[data-level-id="'+sLevelAlias+"::"+sNodeId+'"]').show(sGridEffectName, oGridEffectOptions, iGridEffectDuration);
+                $('#brick_content_grid .grid-group[data-level-id="'+sLevelAlias+"::"+sNodeId+'"]').show(sGridEffectName, oGridEffectOptions, iGridEffectDuration, function(){ buildBreadcrumb(); });
 
 				registerToggleListeners();
 			})
@@ -142,7 +128,7 @@
                 hideGridLoader();
 			});
 		};
-		// Build tree nodes from data under the nodeId
+		// Build grid nodes from data under the nodeId
 		var buildGrid = function(data, nodeId, isRootLevel)
 		{
 		    if(nodeId === undefined)
@@ -205,13 +191,13 @@
                 if( (item.name !== undefined) && (item.name !== '') )
                 {
                     iItemFlags += 1;
-                    textElem.append( $('<div></div>').addClass('grid-item-name').text(item.name) );
+                    textElem.append( $('<div></div>').addClass('grid-item-name').html(item.name) );
                 }
                 // - Adding description
                 if( (item.description !== undefined) && (item.description !== '') )
                 {
                     iItemFlags += 2;
-                    textElem.append( $('<div></div>').addClass('grid-item-description').text(item.description) );
+                    textElem.append( $('<div></div>').addClass('grid-item-description').html(item.description) );
 				}
                 aElem.append( textElem );
 				// - Adding CSS class to adjust the layout regarding which properties are available
@@ -346,6 +332,62 @@
 			if(isRootLevel)
 			{
 				registerToggleListeners();
+			}
+		};
+		// Build breadcrumb
+		var buildBreadcrumb = function(oCurrentElem)
+		{
+            var aCurrentLevelParts = [];
+
+		    // If no current item, it's because we begin to build the breadcrumb, starting from the bottom
+			if(oCurrentElem === undefined)
+			{
+                // Retrieving current level id
+                var sCurrentLevelId = $('#brick_content_grid > .grid-group:visible').attr('data-level-id');
+                aCurrentLevelParts = sCurrentLevelId.split('::');
+
+                // Emptying breadcrumb
+                $('#grid-breadcrumb > li:not(:first-of-type)').remove();
+
+				// Finding current item
+                oCurrentElem = $('#brick_content_grid .grid-item[data-level-alias="'+aCurrentLevelParts[0]+'"][data-item-id="'+aCurrentLevelParts[1]+'"]');
+                if(oCurrentElem.length === 0)
+				{
+				    return false;
+				}
+			}
+			else
+			{
+			    aCurrentLevelParts = [oCurrentElem.attr('data-level-alias'), oCurrentElem.attr('data-item-id')];
+			}
+
+            // Adding level as crumb
+			var oCrumb = $('<li></li>').html( oCurrentElem.find('.grid-item-name').html() );
+			oCrumb.addClass('grid-crumb');
+			oCrumb.attr('data-level-id', aCurrentLevelParts.join('::'));
+			oCrumb.insertAfter('#grid-breadcrumb > li:first-of-type');
+			// Adding listener
+			$('#grid-breadcrumb > li:not(:last-of-type)').off('click').on('click', function(oEvent){
+                oEvent.preventDefault();
+
+				var levelId = $(this).attr('data-level-id');
+				var levelIdParts = levelId.split('::');
+
+				showLevel(levelIdParts[0], levelIdParts[1]);
+            });
+
+			// Finding parent level
+			var oParentLevelElem = oCurrentElem.closest('.grid-group');
+			if(oParentLevelElem.length > 0)
+			{
+			    var sParentLevelId = oParentLevelElem.attr('data-level-id');
+			    var aParentLevelParts = sParentLevelId.split('::');
+			    var oParentElem = $('#brick_content_grid .grid-item[data-level-alias="'+aParentLevelParts[0]+'"][data-item-id="'+aParentLevelParts[1]+'"]');
+
+			    if(oParentElem.length === 1)
+				{
+				    buildBreadcrumb(oParentElem);
+				}
 			}
 		};
 		
