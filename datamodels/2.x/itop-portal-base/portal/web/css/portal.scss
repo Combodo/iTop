@@ -673,6 +673,9 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 #grid-breadcrumb{
 	padding-left: 0px;
 	font-size: 12px;
+	white-space: nowrap;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
 }
 #grid-breadcrumb > li{
 	display: inline;
