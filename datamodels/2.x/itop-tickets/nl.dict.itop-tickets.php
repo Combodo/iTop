@@ -232,6 +232,17 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
+	'portal:itop-portal' => 'Standaard portaal', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
+	'Page:DefaultTitle' => 'iTop - Gebruikersportaal',
+	'Brick:Portal:UserProfile:Title' => 'Mijn profiel',
+	'Brick:Portal:NewRequest:Title' => 'Nieuw verzoek',
+	'Brick:Portal:NewRequest:Title+' => '<p>Hulp nodig?</p><p>Selecteer de categorie uit de dienstencatalogus en verstuur uw verzoek naar onze support teams.</p>',
+	'Brick:Portal:OngoingRequests:Title' => 'Lopende verzoeken',
+	'Brick:Portal:OngoingRequests:Title+' => '<p>Verder gaan met uw openstaande verzoeken.</p><p>Controleer de voortgang, voeg commentaar of documenten toe, bevestig de geboden oplossing.</p>',
+	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Openstaand',
+	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Opgelost',
+	'Brick:Portal:ClosedRequests:Title' => 'Gesloten verzoeken',
+
 ));
 
 
