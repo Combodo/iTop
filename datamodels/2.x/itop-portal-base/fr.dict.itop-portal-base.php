@@ -121,7 +121,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Filter brick
 Dict::Add('FR FR', 'French', 'Français', array(
     'Brick:Portal:Filter:Name' => 'Préfiltre une brique',
-    'Brick:Portal:Filter:SearchInput:Placeholder' => 'ex : installation office',
+    'Brick:Portal:Filter:SearchInput:Placeholder' => 'ex : connecter wifi',
     'Brick:Portal:Filter:SearchInput:Submit' => 'Rechercher',
 ));
 

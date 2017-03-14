@@ -121,6 +121,6 @@ Dict::Add('EN US', 'English', 'English', array(
 // Filter brick
 Dict::Add('EN US', 'English', 'English', array(
     'Brick:Portal:Filter:Name' => 'Prefilter a brick',
-    'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg: install office',
+    'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi',
     'Brick:Portal:Filter:SearchInput:Submit' => 'Search',
 ));

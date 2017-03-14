@@ -154,10 +154,12 @@ class FilterBrick extends PortalBrick
 					}
 					break;
 				case 'search_placeholder_value':
-					$this->SetSearchPlaceholderValue($oBrickSubNode->GetText(static::DEFAULT_SEARCH_PLACEHOLDER_VALUE));
+				    // Note: We don't put the default value constant if the node is empty because we might actually want this to be empty
+					$this->SetSearchPlaceholderValue($oBrickSubNode->GetText(''));
 					break;
 				case 'search_submit_label':
-					$this->SetSearchSubmitLabel($oBrickSubNode->GetText(static::DEFAULT_SEARCH_SUBMIT_LABEL));
+                    // Note: We don't put the default value constant if the node is empty because we might actually want this to be empty
+                    $this->SetSearchSubmitLabel($oBrickSubNode->GetText(''));
 					break;
 				case 'search_submit_class':
 					$this->SetSearchSubmitClass($oBrickSubNode->GetText(static::DEFAULT_SEARCH_SUBMIT_CLASS));
