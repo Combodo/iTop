@@ -5,9 +5,9 @@
 {% block bBrowseMainContent %}
 	<div id="brick_content_grid">
 		{% block bBrowseGridContent %}
-			<ul id="grid-breadcrumb">
-				<li class="grid-crumb grid-crumb-root" data-level-id="L"><span class="fa fa-home"></span></li>
-			</ul>
+			<ol id="grid-breadcrumb" class="breadcrumb">
+				<li><a href="#" data-level-id="L"><span class="fa fa-home"></span></a></li>
+			</ol>
 			<div class="grid-group" data-level-id="L">
 			</div>
 		{% endblock %}
@@ -338,10 +338,13 @@
 		var buildBreadcrumb = function(oCurrentElem)
 		{
             var aCurrentLevelParts = [];
+            var bLeafLevel = false;
 
 		    // If no current item, it's because we begin to build the breadcrumb, starting from the bottom
 			if(oCurrentElem === undefined)
 			{
+			    bLeafLevel = true;
+
                 // Retrieving current level id
                 var sCurrentLevelId = $('#brick_content_grid > .grid-group:visible').attr('data-level-id');
                 aCurrentLevelParts = sCurrentLevelId.split('::');
@@ -362,12 +365,17 @@
 			}
 
             // Adding level as crumb
-			var oCrumb = $('<li></li>').html( oCurrentElem.find('.grid-item-name').html() );
-			oCrumb.addClass('grid-crumb');
-			oCrumb.attr('data-level-id', aCurrentLevelParts.join('::'));
-			oCrumb.insertAfter('#grid-breadcrumb > li:first-of-type');
+			var oCrumb = $('<li></li>');
+			var oCrumbLink = (bLeafLevel) ? $('<span></span>') : $('<a></a>');
+			oCrumbLink.html( oCurrentElem.find('.grid-item-name').html() );
+			oCrumbLink.attr('data-level-id', aCurrentLevelParts.join('::')).attr('href', '#');
+			oCrumb.append(oCrumbLink).insertAfter('#grid-breadcrumb > li:first-of-type');
+			if(bLeafLevel)
+			{
+                oCrumb.addClass('active');
+            }
 			// Adding listener
-			$('#grid-breadcrumb > li:not(:last-of-type)').off('click').on('click', function(oEvent){
+			$('#grid-breadcrumb > li:not(:last-of-type) > a').off('click').on('click', function(oEvent){
                 oEvent.preventDefault();
 
 				var levelId = $(this).attr('data-level-id');

@@ -624,32 +624,12 @@ table .group-actions {
 }
 /* Breadcrumb */
 #grid-breadcrumb {
+  margin-bottom: 5px;
   padding-left: 0px;
   font-size: 12px;
   white-space: nowrap;
   overflow-x: hidden;
   text-overflow: ellipsis;
-}
-#grid-breadcrumb > li {
-  display: inline;
-  cursor: pointer;
-  color: #ea7d1e;
-}
-#grid-breadcrumb > li:hover {
-  color: #d56e14;
-}
-#grid-breadcrumb > li:last-of-type {
-  color: inherit;
-  cursor: inherit;
-}
-#grid-breadcrumb > li:after {
-  content: '/';
-  margin-left: 0.4em;
-  margin-right: 0.2em;
-  color: initial;
-}
-#grid-breadcrumb > li:last-of-type:after {
-  content: none;
 }
 .grid-group {
   display: none;
@@ -674,7 +654,7 @@ table .group-actions {
   height: 100%;
   overflow: hidden;
   background-color: #585653;
-  transition: background-color linear 0.3s;
+  transition: all linear 0.3s;
 }
 .grid-item, .grid-item:hover, .grid-item:active, .grid-item:focus, .grid-item:visited {
   color: #fff;
@@ -753,6 +733,7 @@ table .group-actions {
   }
   .grid-item:hover, .grid-item:focus {
     background-color: #ea7d1e;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.20);
   }
   .grid-item-name {
     font-weight: 600;

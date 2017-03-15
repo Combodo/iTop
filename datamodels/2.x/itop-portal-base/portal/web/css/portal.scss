@@ -671,32 +671,12 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 }
 /* Breadcrumb */
 #grid-breadcrumb{
+	margin-bottom: 5px;
 	padding-left: 0px;
 	font-size: 12px;
 	white-space: nowrap;
 	overflow-x: hidden;
 	text-overflow: ellipsis;
-}
-#grid-breadcrumb > li{
-	display: inline;
-	cursor: pointer;
-	color: $brand-primary;
-}
-#grid-breadcrumb > li:hover{
-	color: $brand-primary-dark;
-}
-#grid-breadcrumb > li:last-of-type{
-	color: inherit;
-	cursor: inherit;
-}
-#grid-breadcrumb > li:after{
-	content: '/';
-	margin-left: 0.4em;
-	margin-right: 0.2em;
-	color: initial;
-}
-#grid-breadcrumb > li:last-of-type:after{
-	content: none;
 }
 
 .grid-group{
@@ -724,7 +704,7 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	height: 100%;
 	overflow: hidden;
 	background-color: $combodo-dark-gray;
-	transition: background-color linear 0.3s;
+	transition: all linear 0.3s;
 }
 .grid-item,
 .grid-item:hover,
@@ -808,6 +788,7 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	.grid-item:hover,
 	.grid-item:focus{
 		background-color: $combodo-orange;
+		box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.20);
 	}
 
 	/* All layout */
