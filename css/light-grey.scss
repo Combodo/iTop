@@ -1869,3 +1869,23 @@ span.refresh-button {
 .mfp-close {
 	cursor: pointer !important;
 }
+
+.qtip-content {
+	font-size: 12px;
+}
+.qtip-content p:first-child {
+	margin-top: 0px;
+}
+.qtip-content p:last-child {
+	margin-bottom: 0px;
+}
+.synchro-source {
+}
+.synchro-source-title {
+	font-weight: bolder;
+}
+.synchro-source-description {
+	font-size: smaller;
+	margin-top: 3px;
+	margin-bottom: 1px;
+}

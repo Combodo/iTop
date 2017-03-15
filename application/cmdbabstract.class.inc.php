@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * Abstract class that implements some common and useful methods for displaying
  * the objects
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -655,16 +655,19 @@ EOF
 									if ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE))
 									{
 										// Check if the attribute is not read-only because of a synchro...
-										$aReasons = array();
-										$sSynchroIcon = '';
 										if ($iFlags & OPT_ATT_SLAVE)
 										{
+											$aReasons = array();
 											$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
 											$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
 											$sTip = '';
 											foreach($aReasons as $aRow)
 											{
-												$sTip .= "<p>Synchronized with {$aRow['name']} - {$aRow['description']}</p>";
+												$sDescription = htmlentities($aRow['description'], ENT_QUOTES, 'UTF-8');
+												$sDescription = str_replace(array("\r\n", "\n"), "<br/>", $sDescription);
+												$sTip .= "<div class='synchro-source'>";
+												$sTip .= "<div class='synchro-source-title'>Synchronized with {$aRow['name']}</div>";
+												$sTip .= "<div class='synchro-source-description'>$sDescription</div>";
 											}
 											$sTip = addslashes($sTip);
 											$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
@@ -3509,18 +3512,21 @@ EOF
 			if ((!$bEditMode) || ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE)))
 			{
 				// Check if the attribute is not read-only because of a synchro...
-				$aReasons = array();
 				$sSynchroIcon = '';
 				if ($iFlags & OPT_ATT_SLAVE)
 				{
+					$aReasons = array();
 					$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
 					$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
 					$sTip = '';
 					foreach($aReasons as $aRow)
 					{
-						$sTip .= "<p>Synchronized with {$aRow['name']} - {$aRow['description']}</p>";
+						$sDescription = htmlentities($aRow['description'], ENT_QUOTES, 'UTF-8');
+						$sDescription = str_replace(array("\r\n", "\n"), "<br/>", $sDescription);
+						$sTip .= "<div class='synchro-source'>";
+						$sTip .= "<div class='synchro-source-title'>Synchronized with {$aRow['name']}</div>";
+						$sTip .= "<div class='synchro-source-description'>$sDescription</div>";
 					}
-					$sTip = addslashes($sTip);
 					$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
 				}
 
