@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Manage a runtime environment
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -505,6 +505,11 @@ class RunTimeEnvironment
 		{
 			if (MetaModel::DBExists(/* bMustBeComplete */ false))
 			{
+				// Have it work fine even if the DB has been set in read-only mode for the users
+				// (fix copied from RunTimeEnvironment::RecordInstallation)
+				$iPrevAccessMode = $oConfig->Get('access_mode');
+				$oConfig->Set('access_mode', ACCESS_FULL);
+
 				MetaModel::DBCreate(array($this, 'LogQueryCallback'));
 				$this->log_ok("Database structure successfully updated.");
 	
@@ -525,6 +530,9 @@ class RunTimeEnvironment
 				MetaModel::RebuildMetaEnums(true /*bVerbose*/);
 				$sFeedback = ob_get_clean();
 				$this->log_ok("Meta enums rebuilt: $sFeedback");
+
+				// Restore the previous access mode
+				$oConfig->Set('access_mode', $iPrevAccessMode);
 			}
 			else
 			{
