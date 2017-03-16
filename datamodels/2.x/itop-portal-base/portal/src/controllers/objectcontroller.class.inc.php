@@ -1043,7 +1043,7 @@ class ObjectController extends AbstractController
 						// Checking if we can view the object
 						if ((SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $oAttDef->GetTargetClass(), $oItem->Get($sAttCode))))
 						{
-							$aAttProperties['url'] = $oApp['url_generator']->generate('p_object_view', array('sObjectClass' => $oAttDef->GetTargetClass(), 'sObjectId' => $oItem->GetKey()));
+							$aAttProperties['url'] = $oApp['url_generator']->generate('p_object_view', array('sObjectClass' => $oAttDef->GetTargetClass(), 'sObjectId' => $oItem->Get($sAttCode)));
 						}
 					}
 					else
