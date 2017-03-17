@@ -386,7 +386,8 @@ class ModelFactory
 	}
 	/**
 	 * To progressively replace LoadModule
-	 * @param xxx xxx
+	 * @param MFElement $oSourceNode
+	 * @param MFElement $oTargetParentNode
 	 */
 	public function LoadDelta($oSourceNode, $oTargetParentNode)
 	{
@@ -398,7 +399,7 @@ class ModelFactory
 		if (($oSourceNode->tagName == 'class') && ($oSourceNode->parentNode->tagName == 'classes') && ($oSourceNode->parentNode->parentNode->tagName == 'itop_design'))
 		{
 			$sParentId = $oSourceNode->GetChildText('parent');
-			if ($sDeltaSpec == 'define')
+			if (($sDeltaSpec == 'define') || ($sDeltaSpec == 'force'))
 			{
 				// This tag is organized in hierarchy: determine the real parent node (as a subnode of the current node)
 				$oTargetParentNode = $oTarget->GetNodeById('/itop_design/classes//class', $sParentId)->item(0);
@@ -477,12 +478,18 @@ class ModelFactory
 			$oTargetNode->setAttribute('_alteration', 'needed');
 			break;
 			
-		case 'define':
-			// New node - copy child nodes as well
+			case 'define':
+				// New node - copy child nodes as well
+				$oTargetNode = $oTarget->ImportNode($oSourceNode, true);
+				$oTargetParentNode->AddChildNode($oTargetNode);
+				break;
+			
+		case 'force':
+			// Force node - copy child nodes as well
 			$oTargetNode = $oTarget->ImportNode($oSourceNode, true);
-			$oTargetParentNode->AddChildNode($oTargetNode);
+			$oTargetParentNode->SetChildNode($oTargetNode, null, true);
 			break;
-
+				
 		case 'redefine':
 			// Replace the existing node by the given node - copy child nodes as well
 			$oTargetNode = $oTarget->ImportNode($oSourceNode, true);
@@ -1052,6 +1059,9 @@ EOF
 		case 'needed':
 			$oNodeClone->setAttribute('_delta', 'define_if_not_exists');
 			break;
+		case 'forced':
+			$oNodeClone->setAttribute('_delta', 'force');
+			break;
 		}
 		return $oNodeClone;
 	}
@@ -1137,7 +1147,7 @@ EOF
 			}
 			if (!$oNodeClone)
 			{
-				$bCopyContents = ($sAlteration == 'replaced') || ($sAlteration == 'added') || ($sAlteration == 'needed');
+				$bCopyContents = ($sAlteration == 'replaced') || ($sAlteration == 'added') || ($sAlteration == 'needed') || ($sAlteration == 'forced');
 				$oNodeClone = $oTargetDoc->importNode($oNode->cloneNode($bCopyContents), $bCopyContents);
 				$this->SetDeltaFlags($oNodeClone);
 				$oParentClone->appendChild($oNodeClone);
@@ -1721,12 +1731,12 @@ class MFElement extends Combodo\iTop\DesignElement
 				throw new Exception(MFDocument::GetItopNodePath($oNode).' at line '.$oNode->getLineNo().": could not be added (already exists)");
 			}
 			$oExisting->ReplaceWith($oNode);
-			$sFlag = 'replaced';
+			$sFlag =  'replaced';
 		}
 		else
 		{
 			$this->appendChild($oNode);
-			$sFlag = 'added';
+			$sFlag =  'added';
 		}
 		if (!$this->IsInDefinition())
 		{
@@ -1736,7 +1746,7 @@ class MFElement extends Combodo\iTop\DesignElement
 
 	/**
 	 * Modify a node and set the flags that will be used to compute the delta
-	 * @param MFElement $oNode       The node (including all subnodes) to set
+	 * @param MFElement $oNode The node (including all subnodes) to set
 	 */	
 	public function RedefineChildNode(MFElement $oNode, $sSearchId = null)
 	{
@@ -1770,9 +1780,11 @@ class MFElement extends Combodo\iTop\DesignElement
 	/**
 	 * Combination of AddChildNode or RedefineChildNode... it depends
 	 * This should become the preferred way of doing things (instead of implementing a test + the call to one of the APIs!
-	 * @param MFElement $oNode       The node (including all subnodes) to set
+	 * @param MFElement $oNode The node (including all subnodes) to set
+	 * @param string $sSearchId Optional Id of the node to SearchMenuNode
+	 * @param bool $bForce Force mode to dynamically add or replace nodes
 	 */	
-	public function SetChildNode(MFElement $oNode, $sSearchId = null)
+	public function SetChildNode(MFElement $oNode, $sSearchId = null, $bForce = false)
 	{
 		// First: cleanup any flag behind the new node, and eventually add trace data
 		$oNode->ApplyChanges();
@@ -1784,7 +1796,7 @@ class MFElement extends Combodo\iTop\DesignElement
 			$sPrevFlag = $oExisting->getAttribute('_alteration');
 			if ($sPrevFlag == 'removed')
 			{
-				$sFlag = 'replaced';
+				$sFlag = $bForce ? 'forced': 'replaced';
 			}
 			else
 			{
@@ -1795,13 +1807,13 @@ class MFElement extends Combodo\iTop\DesignElement
 		else
 		{
 			$this->appendChild($oNode);
-			$sFlag = 'added';
+			$sFlag =  $bForce ? 'forced': 'added';
 		}
 		if (!$this->IsInDefinition())
 		{
 			if ($sFlag == '')
 			{
-				$sFlag = 'replaced';
+				$sFlag =  $bForce ? 'forced': 'replaced';
 			}
 			$oNode->setAttribute('_alteration', $sFlag);
 		}

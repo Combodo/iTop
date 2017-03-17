@@ -35,7 +35,7 @@
  * }
  */
  
-define('ITOP_DESIGN_LATEST_VERSION', '1.3'); // iTop > 2.2.0
+define('ITOP_DESIGN_LATEST_VERSION', '1.4'); // iTop >= 2.4.0
  
 class iTopDesignFormat
 {
@@ -61,6 +61,12 @@ class iTopDesignFormat
 		'1.3' => array(
 			'previous' => '1.2',
 			'go_to_previous' => 'From13To12',
+			'next' => '1.4',
+			'go_to_next' => 'From13To14',
+		),
+		'1.4' => array(
+			'previous' => '1.3',
+			'go_to_previous' => 'From14To13',
 			'next' => null,
 			'go_to_next' => null,
 		),
@@ -538,6 +544,39 @@ class iTopDesignFormat
 			$oNode->setAttribute('_delta', 'must_exist');
 		}
 	}
+	
+	/**
+	 * Upgrade the format from version 1.3 to 1.4
+	 * @return void (Errors are logged)
+	 */
+	protected function From13To14($oFactory)
+	{
+	}
+	
+	/**
+	 * Downgrade the format from version 1.4 to 1.3
+	 * @return void (Errors are logged)
+	 */
+	protected function From14To13($oFactory)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+		
+		// Transform _delta="force" into _delta="define"
+		//
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@_delta='force']");
+		$iCount = 0;
+		foreach ($oNodeList as $oNode)
+		{
+			$oNode->setAttribute('_delta', 'define');
+			$iCount++;
+		}
+		if ($iCount > 0)
+		{
+			$this->LogWarning('The attribute _delta="force" is not supported, converted to _delta="define" ('.$iCount.' instances processed).');
+		}
+	}
+	
+	
 
 	/**
 	 * Delete a node from the DOM and make sure to also remove the immediately following line break (DOMText), if any.
