@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Data Exchange - synchronization with external applications (incoming data)
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -2049,7 +2049,8 @@ class SynchroReplica extends DBObject implements iDisplay
 
 	/**
 	 * Get the value from the 'Extended Data' located in the synchro_data_xxx table for this replica
-	 * Note: sExtAttCode could be a standard attcode, or 'primary_key'	 
+	 * Note: sExtAttCode could be a standard attcode, or 'primary_key'
+	 * @return mixed, or null (leave unchanged), or '' (reset)
 	 */
 	protected function GetValueFromExtData($sExtAttCode, $oSyncAtt, &$oStatLog)
 	{
@@ -2125,7 +2126,13 @@ class SynchroReplica extends DBObject implements iDisplay
 					return null;
 				}
 			}
+			// No null column has been found
 			$retValue = $oAttDef->FromImportToValue($aData, $sExtAttCode);
+			if (is_null($retValue))
+			{
+				// This is a reset
+				$retValue = '';
+			}
 		}
 
 		return $retValue;

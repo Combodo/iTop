@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Typology for the attributes
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license	 http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -3725,6 +3725,15 @@ class AttributeDateTime extends AttributeDBField
 	}	
 	
 	protected function GetSQLCol($bFullSpec = false) {return "DATETIME";}
+
+	public function GetImportColumns()
+	{
+		// Allow an empty string to be a valid value (synonym for "reset")
+		$aColumns = array();
+		$aColumns[$this->GetCode()] = 'VARCHAR(19)';
+		return $aColumns;
+	}
+
 	public static function GetAsUnixSeconds($value)
 	{
 		$oDeadlineDateTime = new DateTime($value);
@@ -3837,6 +3846,8 @@ class AttributeDateTime extends AttributeDBField
 		elseif (empty($value))
 		{
 			// Make a valid date for MySQL. TO DO: support NULL as a literal value for fields that can be null.
+			// todo: this is NOT valid in strict mode (default setting for MySQL 5.7)
+			// todo: if to be kept, this should be overloaded for AttributeDate (0000-00-00)
 			return '0000-00-00 00:00:00';
 		}
 		return $value;
@@ -4119,7 +4130,15 @@ class AttributeDate extends AttributeDateTime
 
 	public function GetEditClass() {return "Date";}
 	protected function GetSQLCol($bFullSpec = false) {return "DATE";}
-	
+	public function GetImportColumns()
+	{
+		// Allow an empty string to be a valid value (synonym for "reset")
+		$aColumns = array();
+		$aColumns[$this->GetCode()] = 'VARCHAR(10)';
+		return $aColumns;
+	}
+
+
 	/**
 	 * Override to specify Field class
 	 *
