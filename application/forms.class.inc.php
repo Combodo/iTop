@@ -531,7 +531,7 @@ EOF
 	
 	public function GetFieldId($sCode)
 	{
-		return $this->GetPrefix().'attr_'.$sCode;
+		return $this->GetPrefix().'attr_'.utils::GetSafeId($sCode.$this->GetSuffix());
 	}
 	
 	public function GetFieldName($sCode)
