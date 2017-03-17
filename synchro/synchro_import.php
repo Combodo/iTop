@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2011-2012 Combodo SARL
+// Copyright (C) 2011-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Data Exchange web service 
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -216,6 +216,11 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
 
 function ChangeDateFormat($sProposedDate, $sFormat)
 {
+	if ($sProposedDate == '')
+	{
+		// An empty string means 'reset'
+		return '';
+	}
 	// Convert to a valid MySQL datetime
 	$oFormat = new DateTimeFormat($sFormat);
 	$sRegExpr = $oFormat->ToRegExpr('/');
