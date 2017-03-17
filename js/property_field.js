@@ -97,6 +97,7 @@ $(function()
 			if (this._equals(new_value, this.value))
 			{
 				this.bModified = false;
+				this._notify_as_clean(true);
 			}
 			else
 			{
@@ -105,12 +106,24 @@ $(function()
 				{
 					this._do_apply();
 				}
+				else
+				{
+					this._notify_as_dirty();
+				}
 			}
 			this._refresh();
 			if (this.options.parent_selector)
 			{
 				$(this.options.parent_selector).trigger('subitem_changed');
 			}
+		},
+		_notify_as_dirty: function()
+		{
+			this.element.closest('form').trigger('property_field_dirty', { id: this.options.field_id, reason: 'modified' });
+		},
+		_notify_as_clean: function(bRevert)
+		{
+			this.element.closest('form').trigger('property_field_clean', { id: this.options.field_id, reason: (bRevert ? 'revert' :  'apply') });			
 		},
 		_equals: function( value1, value2 )
 		{
@@ -141,6 +154,10 @@ $(function()
 			{
 				return this.options.get_field_value();
 			}			
+		},
+		get_field_value: function()
+		{
+			return this._get_field_value();
 		},
 		get_field_name: function()
 		{
@@ -186,6 +203,7 @@ $(function()
 					this._refresh();
 				}
 			}
+			this._notify_as_clean(false);
 		},
 		_do_cancel: function()
 		{
@@ -221,6 +239,7 @@ $(function()
 					$(this.options.parent_selector).trigger('subitem_changed');
 				}
 			}
+			this._notify_as_clean(true);
 		},
 		_do_submit: function()
 		{
