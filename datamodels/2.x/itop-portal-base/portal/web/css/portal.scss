@@ -1126,6 +1126,9 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	padding-top: 20px;
 	text-align: center;
 }
+.form_buttons .form_btn_misc {
+	margin-bottom: 20px;
+}
 .form_buttons .form_btn_transitions{
 	margin-bottom: 20px;
 }
@@ -1136,6 +1139,9 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	display: none;
 }
 @media (min-width: 768px){
+	.form_buttons .form_btn_misc{
+		float: left !important;
+	}
 	.form_buttons .form_btn_transitions{
 		float: right !important;
 		margin-left: 3px;

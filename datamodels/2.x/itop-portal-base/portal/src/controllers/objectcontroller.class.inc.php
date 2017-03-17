@@ -43,6 +43,9 @@ use \cmdbAbstractObject;
 use \AttributeEnum;
 use \AttributeFinalClass;
 use \UserRights;
+use \iPopupMenuExtension;
+use \URLButtonItem;
+use \JSButtonItem;
 use \Combodo\iTop\Portal\Helper\ApplicationHelper;
 use \Combodo\iTop\Portal\Helper\SecurityHelper;
 use \Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
@@ -101,10 +104,13 @@ class ObjectController extends AbstractController
 		// Add an edit button if user is allowed
 		if (SecurityHelper::IsActionAllowed($oApp, UR_ACTION_MODIFY, $sObjectClass, $sObjectId))
 		{
-			$aData['form']['buttons']['links'][] = array(
-				'label' => Dict::S('UI:Menu:Modify'),
-				'url' => $oApp['url_generator']->generate('p_object_edit', array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId))
-			);
+		    $oModifyButton = new URLButtonItem(
+		        'modify_object',
+                Dict::S('UI:Menu:Modify'),
+				$oApp['url_generator']->generate('p_object_edit', array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId))
+            );
+		    // Putting this one first
+		    $aData['form']['buttons']['links'][] = $oModifyButton->GetMenuItem();
 		}
 
 		// Preparing response
@@ -467,7 +473,9 @@ class ObjectController extends AbstractController
 
 			// Preparing transitions only if we are currently going through one
 			$aFormData['buttons'] = array(
-				'transitions' => array()
+				'transitions' => array(),
+                'actions' => array(),
+                'links' => array(),
 			);
 			if ($sMode !== 'apply_stimulus')
 			{
@@ -482,6 +490,25 @@ class ObjectController extends AbstractController
 						$aFormData['buttons']['transitions'][$sStimulusCode] = $aStimuli[$sStimulusCode]->GetLabel();
 					}
 				}
+
+                // Add plugins buttons
+                foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
+                {
+                    foreach($oExtensionInstance->EnumItems(iPopupMenuExtension::PORTAL_OBJDETAILS_ACTIONS, array('portal_id' => $oApp['combodo.portal.instance.id'], 'object' => $oObject)) as $oMenuItem)
+                    {
+                        if (is_object($oMenuItem))
+                        {
+                            if($oMenuItem instanceof JSButtonItem)
+                            {
+                                $aFormData['buttons']['actions'][] = $oMenuItem->GetMenuItem() + array('js_files' => $oMenuItem->GetLinkedScripts());
+                            }
+                            elseif($oMenuItem instanceof URLButtonItem)
+                            {
+                                $aFormData['buttons']['links'][] = $oMenuItem->GetMenuItem();
+                            }
+                        }
+                    }
+                }
 			}
 			// Preparing callback urls
 			$aCallbackUrls = $oApp['context_manipulator']->GetCallbackUrls($oApp, $aActionRules, $oObject, $bModal);
@@ -1499,5 +1526,3 @@ class ObjectController extends AbstractController
 	}
 
 }
-
-?>

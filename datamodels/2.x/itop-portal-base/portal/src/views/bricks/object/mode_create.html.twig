@@ -21,6 +21,13 @@
 	</div>
 	<div class="form_buttons">
 		{% block pFormButtons %}
+            {# Misc. buttons #}
+            {% if form.buttons is defined and (form.buttons.actions is defined or form.buttons.links is defined) %}
+				<div class="form_btn_misc">
+                    {% include 'itop-portal-base/portal/src/views/bricks/object/plugins_buttons.html.twig' with {'aButtons': form.buttons} %}
+				</div>
+            {% endif %}
+			{# Transition buttons #}
 			{% if form.buttons is defined and form.buttons.transitions is defined and form.buttons.transitions|length > 0 %}
 				<div class="form_btn_transitions">
 				{% for sStimulusCode, sStimulusLabel in form.buttons.transitions %}
@@ -29,6 +36,7 @@
 				</div>
 			{% endif %}
 			<div class="form_btn_regular">
+				{# If form has editable fields, we display cancel / submit buttons #}
 				{% if form.editable_fields_count is defined and form.editable_fields_count > 0 %}
 					<button class="btn btn-default form_btn_cancel" type="button" value="cancel" title="{{ 'Portal:Button:Cancel'|dict_s }}" data-dismiss="modal">
 						<span class="glyphicon glyphicon-remove"></span>
@@ -39,6 +47,7 @@
 						{{ 'Portal:Button:Submit'|dict_s }}
 					</button>
 				{% else %}
+					{# Modal mode #}
 					{% if tIsModal %}
 						<input class="btn btn-default form_btn_cancel" type="button" value="{{ 'Portal:Button:Close'|dict_s }}" data-dismiss="modal">
 					{% endif %}

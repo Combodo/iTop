@@ -1,0 +1,61 @@
+{% set iLinkButtonsCount = (aButtons.links is defined) ? aButtons.links|length : 0 %}
+{% set iActionButtonsCount = (aButtons.actions is defined) ? aButtons.actions|length : 0 %}
+{% set iButtonsCount = iLinkButtonsCount + iActionButtonsCount %}
+{% set iButtonsGroupThreshold = 2 %}
+{% set bGroupButtons = (iButtonsCount > iButtonsGroupThreshold) ? true : false %}
+
+{% set sButtonCssClasses = (bGroupButtons) ? '' : 'btn btn-default' %}
+{% set aJSFiles = [] %}
+
+{% if bGroupButtons == true %}
+	<div class="dropup">
+		<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			{{ 'UI:Menu:OtherActions'|dict_s }}
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu">
+{% endif %}
+
+	{# JSs buttons #}
+	{% if aButtons.actions is defined %}
+		{% for aButton in aButtons.actions %}
+			{# Adding button #}
+			{% if bGroupButtons == true %}
+				<li>
+			{% endif %}
+			<a class="{{ sButtonCssClasses }} {{ aButton.css_classes|join(' ') }}" href="{{ aButton.url }}" onclick="{{ aButton.onclick }}">{{ aButton.label }}</a>
+			{% if bGroupButtons == true %}
+				</li>
+			{% endif %}
+			{# Preparing JS files to load #}
+			{% set aJSFiles = aJSFiles|merge(aButton.js_files) %}
+		{% endfor %}
+	{%  endif %}
+	{# URLs buttons #}
+	{% if aButtons.links is defined %}
+		{% for aButton in aButtons.links %}
+            {% if bGroupButtons == true %}
+				<li>
+			{% endif %}
+			<a class="{{ sButtonCssClasses }} {{ aButton.css_classes|join(' ') }}" href="{{ aButton.url }}" target="{{ aButton.target }}">{{ aButton.label }}</a>
+            {% if bGroupButtons == true %}
+				</li>
+            {% endif %}
+		{% endfor %}
+	{%  endif %}
+
+{% if bGroupButtons == true %}
+		</ul>
+	</div>
+{% endif %}
+
+{# Loading JS files #}
+{% if aJSFiles|length > 0 %}
+	<script type="text/javascript">
+		{% for sJSFile in aJSFiles %}
+		console.log('loading {{ sJSFile }}');
+			$.getScript('{{ sJSFile }}');
+		{% endfor %}
+	</script>
+{% endif %}
+

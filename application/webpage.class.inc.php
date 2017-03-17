@@ -734,7 +734,7 @@ class WebPage implements Page
 		{
 			foreach ($aActions as $aAction)
 			{
-				$sClass = isset($aAction['class']) ? " class=\"{$aAction['class']}\"" : "";
+				$sClass = isset($aAction['css_classes']) ? ' class="'.implode(' ', $aAction['css_classes']).'"' : '';
 				$sOnClick = isset($aAction['onclick']) ? ' onclick="'.htmlspecialchars($aAction['onclick'], ENT_QUOTES, "UTF-8").'"' : '';
 				$sTarget = isset($aAction['target']) ? " target=\"{$aAction['target']}\"" : "";
 				if (empty($aAction['url']))

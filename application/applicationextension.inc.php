@@ -308,6 +308,37 @@ interface iPopupMenuExtension
 	 * $param is null
 	 */
 	const MENU_USER_ACTIONS = 5;
+    /**
+     * Insert an item into the Action menu on an object details page in the portal
+     *
+     * $param is an array('portal_id' => $sPortalId, 'object' => $oObject) containing the portal id and a DBObject instance (the object currently displayed)
+     */
+	const PORTAL_OBJDETAILS_ACTIONS = 7;
+
+    /**
+     * Insert an item into the Actions menu of a list in the portal
+     * Note: This is not implemented yet !
+     *
+     * $param is an array('portal_id' => $sPortalId, 'object_set' => $oSet) containing DBObjectSet containing the list of objects
+     * @todo
+     */
+    const PORTAL_OBJLIST_ACTIONS = 6;
+    /**
+     * Insert an item into the user menu of the portal
+     * Note: This is not implemented yet !
+     *
+     * $param is the portal id
+     * @todo
+     */
+    const PORTAL_USER_ACTIONS = 8;
+    /**
+     * Insert an item into the navigation menu of the portal
+     * Note: This is not implemented yet !
+     *
+     * $param is the portal id
+     * @todo
+     */
+    const PORTAL_MENU_ACTIONS = 9;
 
 	/**
 	 * Get the list of items to be added to a menu.
@@ -334,17 +365,21 @@ abstract class ApplicationPopupMenuItem
 	protected $sUID;
 	/** @ignore */
 	protected $sLabel;
+	/** @ignore */
+	protected $aCssClasses;
 	
 	/**
 	 *	Constructor
 	 *	
 	 * @param string $sUID The unique identifier of this menu in iTop... make sure you pass something unique enough
-	 * @param string $sLabel The display label of the menu (must be localized)
-	 */	
+     * @param string $sLabel The display label of the menu (must be localized)
+     * @param array $aCssClasses The CSS classes to add to the menu
+	 */
 	public function __construct($sUID, $sLabel)
 	{
 		$this->sUID = $sUID;
 		$this->sLabel = $sLabel;
+		$this->aCssClasses = array();
 	}
 	
 	/**
@@ -368,6 +403,35 @@ abstract class ApplicationPopupMenuItem
 	{
 		return $this->sLabel;
 	}
+
+    /**
+     * Get the CSS classes
+     *
+     * @return array
+     * @ignore
+     */
+	public function GetCssClasses()
+    {
+        return $this->aCssClasses;
+    }
+
+    /**
+     * @param $aCssClasses
+     */
+    public function SetCssClasses($aCssClasses)
+    {
+        $this->aCssClasses = $aCssClasses;
+    }
+
+    /**
+     * Adds a CSS class to the CSS classes that will be put on the menu item
+     *
+     * @param $sCssClass
+     */
+	public function AddCssClass($sCssClass)
+    {
+        $this->aCssClasses[] = $sCssClass;
+    }
 	
 	/**
 	 * Returns the components to create a popup menu item in HTML
@@ -415,7 +479,7 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 	/** @ignore */
 	public function GetMenuItem()
 	{
-		return array ('label' => $this->GetLabel(), 'url' => $this->sURL, 'target' => $this->sTarget);	
+		return array ('label' => $this->GetLabel(), 'url' => $this->sURL, 'target' => $this->sTarget, 'css_classes' => $this->aCssClasses);
 	}
 }
 
@@ -451,7 +515,7 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	public function GetMenuItem()
 	{
 		// Note: the semicolumn is a must here!
-		return array ('label' => $this->GetLabel(), 'onclick' => $this->sJSCode.'; return false;', 'url' => '#');
+		return array ('label' => $this->GetLabel(), 'onclick' => $this->sJSCode.'; return false;', 'url' => '#', 'css_classes' => $this->aCssClasses);
 	}
 	
 	/** @ignore */
@@ -483,8 +547,32 @@ class SeparatorPopupMenuItem extends ApplicationPopupMenuItem
 	/** @ignore */
 	public function GetMenuItem()
 	{
-		return array ('label' => '<hr class="menu-separator">', 'url' => '');
+		return array ('label' => '<hr class="menu-separator">', 'url' => '', 'css_classes' => $this->aCssClasses);
 	}
+}
+
+/**
+ * Class for adding an item as a button that browses to the given URL
+ *
+ * @package     Extensibility
+ * @api
+ * @since 2.0
+ */
+class URLButtonItem extends URLPopupMenuItem
+{
+
+}
+
+/**
+ * Class for adding an item as a button that runs some JS code
+ *
+ * @package     Extensibility
+ * @api
+ * @since 2.0
+ */
+class JSButtonItem extends JSPopupMenuItem
+{
+
 }
 
 /**

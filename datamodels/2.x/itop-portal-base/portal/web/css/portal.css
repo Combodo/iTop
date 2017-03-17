@@ -1056,6 +1056,9 @@ table .group-actions {
   padding-top: 20px;
   text-align: center;
 }
+.form_buttons .form_btn_misc {
+  margin-bottom: 20px;
+}
 .form_buttons .form_btn_transitions {
   margin-bottom: 20px;
 }
@@ -1067,6 +1070,9 @@ table .group-actions {
 }
 @media (min-width: 768px) {
   /* Making regular button sticky */
+  .form_buttons .form_btn_misc {
+    float: left !important;
+  }
   .form_buttons .form_btn_transitions {
     float: right !important;
     margin-left: 3px;
