@@ -411,18 +411,30 @@ EOF
 				break;
 			case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
 			case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
-				// Overloading $sFormFieldOptions to include the set_current_value_callback. It would have been nicer to refactor the variable for all field types, but as this is a fix for a maintenance release, we rather be safe.
-				$sValidators = json_encode($aValidators);
-				$oOutput->AddJs(
-					<<<EOF
-					$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field_html({
-						validators: $sValidators,
-						set_current_value_callback: function(me, oEvent, oData){ $(me.element).find('textarea').val(oData); }
-					});
+                $bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
+			    if($bRichEditor)
+			    {
+                    // Overloading $sFormFieldOptions to include the set_current_value_callback. It would have been nicer to refactor the variable for all field types, but as this is a fix for a maintenance release, we rather be safe.
+                    $sValidators = json_encode($aValidators);
+                    $oOutput->AddJs(
+                        <<<EOF
+                        $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field_html({
+                            validators: $sValidators,
+                            set_current_value_callback: function(me, oEvent, oData){ $(me.element).find('textarea').val(oData); }
+                        });
 EOF
-				);
-				// MagnificPopup on images
-				$oOutput->AddJs(InlineImage::FixImagesWidth());
+                    );
+                    // MagnificPopup on images
+                    $oOutput->AddJs(InlineImage::FixImagesWidth());
+                }
+                else
+                {
+                    $oOutput->AddJs(
+                        <<<EOF
+    					$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field($sFormFieldOptions);
+EOF
+                    );
+                }
 				break;
 		}
 
