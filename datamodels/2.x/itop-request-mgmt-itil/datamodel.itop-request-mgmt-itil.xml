@@ -1157,7 +1157,7 @@
         {
                 // priority[impact][urgency]
                 $aPriorities = array(
-                        // single person
+                        // a department
                         1 => array(
                                         1 => 1,
                                         2 => 1,
@@ -1171,7 +1171,7 @@
                                 3 => 3,
                                 4 => 4,
                         ),
-                        // a departement!
+                        // a person
                         3 => array(
                                         1 => 2,
                                         2 => 3,
