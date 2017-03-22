@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Define filters for a given class of objects (formerly named "filter") 
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -749,13 +749,18 @@ class DBObjectSearch extends DBSearch
 		{
 			if (isset($oFilter->m_aReferencedBy[$this->GetClass()][$sExtKeyAttCode][$iOperatorCode]))
 			{
-				// Optimization - fold sibling query
-				$oRemoteFilter = $oFilter->m_aReferencedBy[$this->GetClass()][$sExtKeyAttCode][$iOperatorCode][0];
-				$aAliasTranslation = array();
-				$this->MergeWith_InNamespace($oRemoteFilter, $this->m_aClasses, $aAliasTranslation);
-				unset($oFilter->m_aReferencedBy[$this->GetClass()][$sExtKeyAttCode][$iOperatorCode]);
-				$this->m_oSearchCondition  = $this->m_oSearchCondition->Translate($aAliasTranslation, false, false);
-				$this->UpdateRealiasingMap($aRealiasingMap, $aAliasTranslation);
+				foreach ($oFilter->m_aReferencedBy[$this->GetClass()][$sExtKeyAttCode][$iOperatorCode] as $oRemoteFilter)
+				{
+					if ($this->GetClass() == $oRemoteFilter->GetClass())
+					{
+						// Optimization - fold sibling query
+						$aAliasTranslation = array();
+						$this->MergeWith_InNamespace($oRemoteFilter, $this->m_aClasses, $aAliasTranslation);
+						unset($oFilter->m_aReferencedBy[$this->GetClass()][$sExtKeyAttCode][$iOperatorCode]);
+						$this->m_oSearchCondition = $this->m_oSearchCondition->Translate($aAliasTranslation, false, false);
+						$this->UpdateRealiasingMap($aRealiasingMap, $aAliasTranslation);
+					}
+				}
 			}
 		}
 		$this->RecomputeClassList($this->m_aClasses);
@@ -767,12 +772,20 @@ class DBObjectSearch extends DBSearch
 		// Find the node on which the new tree must be attached (most of the time it is "this")
 		$oReceivingFilter = $this->GetNode($this->GetClassAlias());
 
+		$bMerged = false;
 		if (ENABLE_OPT && isset($oReceivingFilter->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode]))
 		{
-			$oExisting = $oReceivingFilter->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][0];
-			$oExisting->MergeWith_InNamespace($oFilter, $oExisting->m_aClasses, $aAliasTranslation);
+			foreach ($oReceivingFilter->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode] as $oExisting)
+			{
+				if ($oExisting->GetClass() == $oFilter->GetClass())
+				{
+					$oExisting->MergeWith_InNamespace($oFilter, $oExisting->m_aClasses, $aAliasTranslation);
+					$bMerged = true;
+					break;
+				}
+			}
 		}
-		else
+		if (!$bMerged)
 		{
 			$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
 			$oReceivingFilter->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][] = $oFilter;
@@ -814,13 +827,18 @@ class DBObjectSearch extends DBSearch
 		{
 			if (isset($oFilter->m_aPointingTo[$sForeignExtKeyAttCode][$iOperatorCode]))
 			{
-				// Optimization - fold sibling query
-				$oRemoteFilter = $oFilter->m_aPointingTo[$sForeignExtKeyAttCode][$iOperatorCode][0];
-				$aAliasTranslation = array();
-				$this->MergeWith_InNamespace($oRemoteFilter, $this->m_aClasses, $aAliasTranslation);
-				unset($oFilter->m_aPointingTo[$sForeignExtKeyAttCode][$iOperatorCode]);
-				$this->m_oSearchCondition  = $this->m_oSearchCondition->Translate($aAliasTranslation, false, false);
-				$this->UpdateRealiasingMap($aRealiasingMap, $aAliasTranslation);
+				foreach ($oFilter->m_aPointingTo[$sForeignExtKeyAttCode][$iOperatorCode] as $oRemoteFilter)
+				{
+					if ($this->GetClass() == $oRemoteFilter->GetClass())
+					{
+						// Optimization - fold sibling query
+						$aAliasTranslation = array();
+						$this->MergeWith_InNamespace($oRemoteFilter, $this->m_aClasses, $aAliasTranslation);
+						unset($oFilter->m_aPointingTo[$sForeignExtKeyAttCode][$iOperatorCode]);
+						$this->m_oSearchCondition  = $this->m_oSearchCondition->Translate($aAliasTranslation, false, false);
+						$this->UpdateRealiasingMap($aRealiasingMap, $aAliasTranslation);
+					}
+				}
 			}
 		}
 		$this->RecomputeClassList($this->m_aClasses);
@@ -834,12 +852,20 @@ class DBObjectSearch extends DBSearch
 		// Find the node on which the new tree must be attached (most of the time it is "this")
 		$oReceivingFilter = $this->GetNode($this->GetClassAlias());
 
+		$bMerged = false;
 		if (ENABLE_OPT && isset($oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode][$iOperatorCode]))
 		{
-			$oExisting = $oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode][$iOperatorCode][0];
-			$oExisting->MergeWith_InNamespace($oFilter, $oExisting->m_aClasses, $aAliasTranslation);
+			foreach ($oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode][$iOperatorCode] as $oExisting)
+			{
+				if ($oExisting->GetClass() == $oFilter->GetClass())
+				{
+					$oExisting->MergeWith_InNamespace($oFilter, $oExisting->m_aClasses, $aAliasTranslation);
+					$bMerged = true;
+					break;
+				}
+			}
 		}
-		else
+		if (!$bMerged)
 		{
 			$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
 			$oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode][$iOperatorCode][] = $oFilter;
