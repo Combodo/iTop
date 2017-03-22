@@ -20,6 +20,10 @@ define('ATTACHMENT_DOWNLOAD_URL', 'pages/ajax.document.php?operation=download_do
 
 class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExtension
 {
+    const ENUM_GUI_ALL = 'all';
+    const ENUM_GUI_BACKOFFICE = 'backoffice';
+    const ENUM_GUI_PORTALS = 'portals';
+
 	protected static $m_bIsModified = false;
 
 	public function OnDisplayProperties($oObject, WebPage $oPage, $bEditMode = false)
@@ -243,7 +247,7 @@ EOF
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>'.Dict::S('Attachments:FieldsetTitle').'</legend>');
 
-		if ($bEditMode)
+		if ($bEditMode && !static::IsReadonlyState($oObject, $oObject->GetState(), static::ENUM_GUI_BACKOFFICE) )
 		{
 			$sIsDeleteEnabled = $this->m_bDeleteEnabled ? 'true' : 'false';
 			$iTransactionId = $oPage->GetTransactionId();
@@ -642,7 +646,66 @@ EOF
 			$oChangeOp->Set('filename', $sFileName);
 		}
 		return $oChangeOp;
-	}	
+	}
+
+	/////////////////////////////////////////////////////////////////////////
+    /**
+     * Returns if Attachments should be readonly for $oObject in the $sState state for the $sGUI GUI
+     *
+     * @param DBObject $oObject
+     * @param string $sState
+     * @param string $sGUI
+     * @return bool
+     */
+    public static function IsReadonlyState(DBObject $oObject, $sState, $sGUI = self::ENUM_GUI_ALL)
+    {
+        $aParamDefaultValue = array(
+            static::ENUM_GUI_ALL => array(
+                'Ticket' => array('closed')
+            )
+        );
+
+        $bReadonly = false;
+        $sClass = get_class($oObject);
+        $aReadonlyStatus = MetaModel::GetModuleSetting('itop-attachments', 'readonly_states', $aParamDefaultValue);
+        if(!empty($aReadonlyStatus))
+        {
+            // Merging GUIs entries
+            $aEntries = array();
+            // - All
+            if( array_key_exists(static::ENUM_GUI_ALL, $aReadonlyStatus) )
+            {
+                $aEntries = array_merge_recursive($aEntries, $aReadonlyStatus[static::ENUM_GUI_ALL]);
+            }
+            // - Backoffice & Portals
+            foreach( array(static::ENUM_GUI_BACKOFFICE, static::ENUM_GUI_PORTALS) as $sEnumGUI)
+            {
+                if( in_array($sGUI, array(static::ENUM_GUI_ALL, $sEnumGUI)) )
+                {
+                    if( array_key_exists($sEnumGUI, $aReadonlyStatus) )
+                    {
+                        $aEntries = array_merge_recursive($aEntries, $aReadonlyStatus[$sEnumGUI]);
+                    }
+                }
+            }
+
+            $aParentClasses = array_reverse( MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL) );
+            foreach($aParentClasses as $sParentClass)
+            {
+                if( array_key_exists($sParentClass, $aEntries) )
+                {
+                    // If we found an ancestor of the object's class, we stop looking event if the current state is not specified
+                    if( in_array($oObject->GetState(), $aEntries[$sParentClass]) )
+                    {
+                        $bReadonly = true;
+                    }
+                    break;
+                }
+            }
+        }
+
+        return $bReadonly;
+    }
 }
 
 /**

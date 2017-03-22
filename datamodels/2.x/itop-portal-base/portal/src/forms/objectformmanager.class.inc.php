@@ -34,6 +34,7 @@ use \DBObjectSearch;
 use \DBObjectSetComparator;
 use \InlineImage;
 use \AttributeDateTime;
+use \AttachmentPlugIn;
 use \Combodo\iTop\Form\FormManager;
 use \Combodo\iTop\Form\Form;
 use \Combodo\iTop\Form\Field\FileUploadField;
@@ -52,7 +53,9 @@ class ObjectFormManager extends FormManager
 	const ENUM_MODE_CREATE = 'create';
 	const ENUM_MODE_APPLY_STIMULUS = 'apply_stimulus';
 
+	/** @var \Silex\Application $oApp */
 	protected $oApp;
+    /** @var \DBObject $oObject */
 	protected $oObject;
 	protected $sMode;
 	protected $sActionRulesToken;
@@ -658,9 +661,9 @@ class ObjectFormManager extends FormManager
 		}
 
 		// Checking if the instance has attachments
-		if (class_exists('Attachment'))
+		if (class_exists('Attachment') && class_exists('AttachmentPlugIn'))
 		{
-			// Checking if the object is allowed for attchments
+			// Checking if the object is allowed for attachments
 			$bClassAllowed = false;
 			$aAllowedClasses = MetaModel::GetModuleSetting('itop-attachments', 'allowed_classes', array('Ticket'));
 			foreach ($aAllowedClasses as $sAllowedClass)
@@ -683,7 +686,8 @@ class ObjectFormManager extends FormManager
 					->SetAllowDelete($this->oApp['combodo.portal.instance.conf']['properties']['attachments']['allow_delete'])
 					->SetObject($this->oObject);
 
-				if (($this->sMode === static::ENUM_MODE_VIEW) || ($oForm->GetEditableFieldCount() === 0))
+				// Checking if we can edit attachments in the current state
+                if (($this->sMode === static::ENUM_MODE_VIEW) || AttachmentPlugIn::IsReadonlyState($this->oObject, $this->oObject->GetState(), AttachmentPlugIn::ENUM_GUI_PORTALS) === true)
 				{
 					$oField->SetReadOnly(true);
 				}
