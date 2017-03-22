@@ -6293,7 +6293,9 @@ class AttributeTable extends AttributeDBField
 			$sRes .= "<TR>";
 			foreach ($aRawData as $iCol => $cell)
 			{
-				$sCell = str_replace("\n", "<br>\n", Str::pure2html((string)$cell));
+				// Note: avoid the warning in case the cell is made of an array
+				$sCell = @Str::pure2html((string)$cell);
+				$sCell = str_replace("\n", "<br>\n", $sCell);
 				$sRes .= "<TD>$sCell</TD>";
 			}
 			$sRes .= "</TR>";

@@ -264,8 +264,8 @@ class EventIssue extends Event
 				}
 				else
 				{
-					// Not a string
-					$aPost[$sKey] = (string) $sValue;
+					// Not a string (avoid warnings in case the value cannot be easily casted into a string)
+					$aPost[$sKey] = @(string) $sValue;
 				}
 			}
 			$this->Set('arguments_post', $aPost);
