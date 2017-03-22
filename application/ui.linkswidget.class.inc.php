@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Class UILinksWidget
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -121,8 +121,10 @@ class UILinksWidget
 			{
 				$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId->GetKey().']';
 				$sSafeId = utils::GetSafeId($sFieldId);
+				$sValue = $linkObjOrId->Get($sFieldCode);
+				$sDisplayValue = $linkObjOrId->GetEditValue($sFieldCode);
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
-				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $linkObjOrId->Get($sFieldCode), '' /* DisplayValue */, $sSafeId, $sNameSuffix, 0, $aArgs);
+				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $sValue, $sDisplayValue, $sSafeId, $sNameSuffix, 0, $aArgs);
 				$aFieldsMap[$sFieldCode] = $sSafeId;
 			}
 			$sState = $linkObjOrId->GetState();
@@ -158,8 +160,10 @@ class UILinksWidget
 			{
 				$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId.']';
 				$sSafeId = utils::GetSafeId($sFieldId);
+				$sValue = $oNewLinkObj->Get($sFieldCode);
+				$sDisplayValue = $oNewLinkObj->GetEditValue($sFieldCode);
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
-				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $oNewLinkObj->Get($sFieldCode) /* TO DO/ call GetDefaultValue($oObject->ToArgs()) */, '' /* DisplayValue */, $sSafeId /* id */, $sNameSuffix, 0, $aArgs);
+				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $sValue, $sDisplayValue, $sSafeId /* id */, $sNameSuffix, 0, $aArgs);
 				$aFieldsMap[$sFieldCode] = $sSafeId;
 			}
 			$sState = '';
