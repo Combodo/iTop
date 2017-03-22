@@ -5309,7 +5309,7 @@ class TestIntersectOptimization5 extends TestBizModel
 
 	protected function DoExecute()
 	{
-		echo "<h4>Here we are (conluding a long series of tests)</h4>\n";
+		echo "<h4>Here we are (concluding a long series of tests)</h4>\n";
 		$sQueryA = 'SELECT Organization AS o JOIN UserRequest AS r ON r.org_id = o.id JOIN Person AS p ON r.caller_id = p.id WHERE o.name LIKE "Company" AND r.service_id = 123 AND p.employee_number LIKE "007"';
 		$sQueryB = 'SELECT UserRequest AS ur JOIN Person AS p ON ur.agent_id = p.id WHERE p.status != "terminated"';
 
@@ -5318,7 +5318,7 @@ class TestIntersectOptimization5 extends TestBizModel
 		$oSearchA = DBSearch::FromOQL($sQueryA);
 		$oSearchB = DBSearch::FromOQL($sQueryB);
 		$oSearchB->AddCondition_PointingTo($oSearchA, 'org_id');
-		echo "<p>Referenced by...: ".htmlentities($oSearchB->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
+		echo "<p>Pointing to...: ".htmlentities($oSearchB->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
 		CMDBSource::TestQuery($oSearchB->MakeSelectQuery());
 		echo "<p>Successfully tested the SQL query.</p>\n";
 	}
@@ -5452,5 +5452,69 @@ class TestImplicitAlias extends TestBizModel
 				echo "<p>Failed as expected.</p>\n";
 			}
 		}
+	}
+}
+
+class TestIntersectNotOptimized extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Internal query NOT optimized';
+	}
+
+	static public function GetDescription()
+	{
+		return '(N.718) Sometimes, the optimization CANNOT be performed because merging two different classes (same branch) is not implemented';
+	}
+
+	protected function DoExecute()
+	{
+		echo "<h4>Intersect NOT optimized on 'pointing to'</h4>\n";
+		$sBaseQuery = 'SELECT lnkContactToFunctionalCI AS l JOIN Contact AS c ON l.contact_id = c.id';
+		$sOQL = 'SELECT lnkContactToFunctionalCI AS l JOIN Person AS p ON l.contact_id = p.id';
+		echo "<h5>Left: ".htmlentities($sBaseQuery, ENT_QUOTES, 'UTF-8')."</h5>\n";
+		echo "<h5>Right: ".htmlentities($sOQL, ENT_QUOTES, 'UTF-8')."</h5>\n";
+		$oSearchA = DBSearch::FromOQL($sBaseQuery);
+		$oSearchB = DBSearch::FromOQL($sOQL);
+		$oIntersect = $oSearchA->Intersect($oSearchB);
+		echo "<p>Intersect: ".htmlentities($oIntersect->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
+		CMDBSource::TestQuery($oIntersect->MakeSelectQuery());
+		echo "<p>Successfully tested the SQL query.</p>\n";
+
+		echo "<h4>Intersect NOT optimized on 'referenced by'</h4>\n";
+		$sBaseQuery = 'SELECT Organization AS o JOIN Contact AS c ON c.org_id = o.id WHERE c.id = 1';
+		$sOQL = 'SELECT Organization AS o JOIN Person AS p ON p.org_id = o.id WHERE p.id = 2';
+		echo "<h5>Left: ".htmlentities($sBaseQuery, ENT_QUOTES, 'UTF-8')."</h5>\n";
+		echo "<h5>Right: ".htmlentities($sOQL, ENT_QUOTES, 'UTF-8')."</h5>\n";
+		$oSearchA = DBSearch::FromOQL($sBaseQuery);
+		$oSearchB = DBSearch::FromOQL($sOQL);
+		$oIntersect = $oSearchA->Intersect($oSearchB);
+		echo "<p>Intersect: ".htmlentities($oIntersect->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
+		CMDBSource::TestQuery($oIntersect->MakeSelectQuery());
+		echo "<p>Successfully tested the SQL query.</p>\n";
+
+		echo "<h4>NOT Folding on AddCondition_PointingTo</h4>\n";
+		$sQueryA = 'SELECT Organization AS o JOIN Contact AS c ON c.org_id = o.id';
+		$sQueryB = 'SELECT Person';
+		echo "<h5>A: ".htmlentities($sQueryA, ENT_QUOTES, 'UTF-8')."</h5>\n";
+		echo "<h5>B: ".htmlentities($sQueryB, ENT_QUOTES, 'UTF-8')."</h5>\n";
+		$oSearchA = DBSearch::FromOQL($sQueryA);
+		$oSearchB = DBSearch::FromOQL($sQueryB);
+		$oSearchB->AddCondition_PointingTo($oSearchA, 'org_id');
+		echo "<p>Pointing to...: ".htmlentities($oSearchB->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
+		CMDBSource::TestQuery($oSearchB->MakeSelectQuery());
+		echo "<p>Successfully tested the SQL query.</p>\n";
+
+		echo "<h4>NOT Folding on AddCondition_ReferencedBy</h4>\n";
+		$sQueryA = 'SELECT lnkContactToFunctionalCI AS l JOIN Contact AS c ON l.contact_id = c.id';
+		$sQueryB = 'SELECT Person';
+		echo "<h5>A: ".htmlentities($sQueryA, ENT_QUOTES, 'UTF-8')."</h5>\n";
+		echo "<h5>B: ".htmlentities($sQueryB, ENT_QUOTES, 'UTF-8')."</h5>\n";
+		$oSearchA = DBSearch::FromOQL($sQueryA);
+		$oSearchB = DBSearch::FromOQL($sQueryB);
+		$oSearchB->AddCondition_ReferencedBy($oSearchA, 'contact_id');
+		echo "<p>Referenced by...: ".htmlentities($oSearchA->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
+		CMDBSource::TestQuery($oSearchA->MakeSelectQuery());
+		echo "<p>Successfully tested the SQL query.</p>\n";
 	}
 }
