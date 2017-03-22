@@ -759,6 +759,7 @@ class DBObjectSearch extends DBSearch
 						unset($oFilter->m_aReferencedBy[$this->GetClass()][$sExtKeyAttCode][$iOperatorCode]);
 						$this->m_oSearchCondition = $this->m_oSearchCondition->Translate($aAliasTranslation, false, false);
 						$this->UpdateRealiasingMap($aRealiasingMap, $aAliasTranslation);
+						break;
 					}
 				}
 			}
@@ -837,6 +838,7 @@ class DBObjectSearch extends DBSearch
 						unset($oFilter->m_aPointingTo[$sForeignExtKeyAttCode][$iOperatorCode]);
 						$this->m_oSearchCondition  = $this->m_oSearchCondition->Translate($aAliasTranslation, false, false);
 						$this->UpdateRealiasingMap($aRealiasingMap, $aAliasTranslation);
+						break;
 					}
 				}
 			}
