@@ -274,8 +274,6 @@ class UILinksWidgetDirect
 		$sHtml .= "</div>\n";
 		$sHtml .= "</form>\n";
 		$oPage->add($sHtml);
-		//$oPage->add_ready_script("$('#SearchFormToAdd_{$this->sAttCode}{$this->sNameSuffix} form').bind('submit.uilinksWizard', oWidget{$this->sInputId}.SearchObjectsToAdd);");
-		//$oPage->add_ready_script("$('#SearchFormToAdd_{$this->sAttCode}{$this->sNameSuffix}').resize(oWidget{$this->siInputId}.UpdateSizes);");
 	}
 	
 	/**
