@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
 /**
  * Main page of iTop
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -704,12 +704,14 @@ EOF
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 			}
 
+/*
 			$aArgs = utils::ReadParam('default', array(), false, 'raw_data');
 			$aContext = $oAppContext->GetAsHash();
 			foreach( $oAppContext->GetNames() as $key)
 			{
-				$aArgs[$key] = $oAppContext->GetCurrentValue($key);	
+				$aArgs[$key] = $oAppContext->GetCurrentValue($key);
 			}
+*/
 			// If the specified class has subclasses, ask the user an instance of which class to create
 			$aSubClasses = MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL); // Including the specified class itself
 			$aPossibleClasses = array();
@@ -779,18 +781,21 @@ EOF
 							{
 								foreach($value2 as $key3 => $value3)
 								{
-									$oP->add("<input type=\"hidden\" name=\"default[$key][$key2][$key3]\" value=\"$value3\">\n");	
+									$sValue = htmlentities($value3, ENT_QUOTES, 'UTF-8');
+									$oP->add("<input type=\"hidden\" name=\"default[$key][$key2][$key3]\" value=\"$sValue\">\n");
 								}
 							}
 							else
 							{
-								$oP->add("<input type=\"hidden\" name=\"default[$key][$key2]\" value=\"$value2\">\n");	
+								$sValue = htmlentities($value2, ENT_QUOTES, 'UTF-8');
+								$oP->add("<input type=\"hidden\" name=\"default[$key][$key2]\" value=\"$sValue\">\n");
 							}
 						}
 					}
 					else
 					{
-						$oP->add("<input type=\"hidden\" name=\"default[$key]\" value=\"$value\">\n");	
+						$sValue = htmlentities($value, ENT_QUOTES, 'UTF-8');
+						$oP->add("<input type=\"hidden\" name=\"default[$key]\" value=\"$sValue\">\n");
 					}
 				}
 				$oP->add('<select name="class">');
