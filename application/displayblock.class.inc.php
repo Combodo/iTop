@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * DisplayBlock and derived class
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -960,7 +960,6 @@ EOF
 				$sContextParam = $oContext->GetForLink();
 
 				$aGroupBy = array();
-				$aLabels = array();
 				$iTotalCount = 0;
 				$aValues = array();
 				$aURLs = array();
@@ -968,7 +967,6 @@ EOF
 				{
 					$sValue = $aRow['grouped_by_1'];
 					$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
-					$aLabels[$iRow] = strip_tags($sHtmlValue);
 					$aGroupBy[(int)$iRow] = (int) $aRow['_itop_count_'];
 					$iTotalCount += $aRow['_itop_count_'];
 					$aValues[] = array('label' => html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8'), 'label_html' => $sHtmlValue, 'value' => (int) $aRow['_itop_count_']);
@@ -988,7 +986,7 @@ EOF
 				$aNames = array();
 				foreach($aValues as $idx => $aValue)
 				{
-					$aNames[$idx] = $aValue['label_html'];
+					$aNames[$idx] = $aValue['label'];
 				}
 				$sJSNames = json_encode($aNames);
 				
