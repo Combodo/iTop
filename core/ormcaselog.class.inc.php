@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@ define('CASELOG_SEPARATOR', "\n".'========== %1$s : %2$s (%3$d) ============'."\
 /**
  * Class to store a "case log" in a structured way, keeping track of its successive entries
  *  
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class ormCaseLog {
@@ -568,8 +568,6 @@ class ormCaseLog {
 
 	public function AddLogEntryFromJSON($oJson, $bCheckUserId = true)
 	{
-		$sText = HTMLSanitizer::Sanitize(isset($oJson->message) ? $oJson->message : '');
-
 		if (isset($oJson->user_id))
 		{
 			if (!UserRights::IsAdministrator())
@@ -616,10 +614,16 @@ class ormCaseLog {
 		}
 		else
 		{
-			// TODO: what is the default format ? text ?
+			// The default is HTML
 			$sFormat = 'html';
 		}
-		
+
+		$sText = isset($oJson->message) ? $oJson->message : '';
+		if ($sFormat == 'html')
+		{
+			$sText = HTMLSanitizer::Sanitize($sText);
+		}
+
 		$sDate = date(AttributeDateTime::GetInternalFormat(), $iDate);
 
 		$sSeparator = sprintf(CASELOG_SEPARATOR, $sDate, $sOnBehalfOf, $iUserId);
