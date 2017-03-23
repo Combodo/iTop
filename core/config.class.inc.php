@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -48,7 +48,6 @@ define ('DEFAULT_LOG_GLOBAL', true);
 define ('DEFAULT_LOG_NOTIFICATION', true);
 define ('DEFAULT_LOG_ISSUE', true);
 define ('DEFAULT_LOG_WEB_SERVICE', true);
-define ('DEFAULT_LOG_QUERIES', false);
 
 define ('DEFAULT_QUERY_CACHE_ENABLED', true);
 
@@ -990,7 +989,6 @@ class Config
 	protected $m_bLogNotification;
 	protected $m_bLogIssue;
 	protected $m_bLogWebService;
-	protected $m_bLogQueries; // private setting
 	protected $m_bQueryCacheEnabled; // private setting
 
 	/**
@@ -1085,7 +1083,6 @@ class Config
 		$this->m_sExtAuthVariable = DEFAULT_EXT_AUTH_VARIABLE;
 		$this->m_sEncryptionKey = DEFAULT_ENCRYPTION_KEY;
 		$this->m_aCharsets = array();
-		$this->m_bLogQueries = DEFAULT_LOG_QUERIES;
 		$this->m_bQueryCacheEnabled = DEFAULT_QUERY_CACHE_ENABLED;
 		
 		$this->m_aModuleSettings = array();
@@ -1198,7 +1195,6 @@ class Config
 		$this->m_bLogNotification = isset($MySettings['log_notification']) ? (bool) trim($MySettings['log_notification']) : DEFAULT_LOG_NOTIFICATION;
 		$this->m_bLogIssue = isset($MySettings['log_issue']) ? (bool) trim($MySettings['log_issue']) : DEFAULT_LOG_ISSUE;
 		$this->m_bLogWebService = isset($MySettings['log_web_service']) ? (bool) trim($MySettings['log_web_service']) : DEFAULT_LOG_WEB_SERVICE;
-		$this->m_bLogQueries = isset($MySettings['log_queries']) ? (bool) trim($MySettings['log_queries']) : DEFAULT_LOG_QUERIES;
 		$this->m_bQueryCacheEnabled = isset($MySettings['query_cache_enabled']) ? (bool) trim($MySettings['query_cache_enabled']) : DEFAULT_QUERY_CACHE_ENABLED;
 
 		$this->m_iMinDisplayLimit = isset($MySettings['min_display_limit']) ? trim($MySettings['min_display_limit']) : DEFAULT_MIN_DISPLAY_LIMIT;
@@ -1317,7 +1313,7 @@ class Config
 
 	public function GetLogQueries()
 	{
-		return $this->m_bLogQueries;
+		return false;
 	}
 
 	public function GetQueryCacheEnabled()
@@ -1519,7 +1515,6 @@ class Config
 		$aSettings['log_notification'] = $this->m_bLogNotification;
 		$aSettings['log_issue'] = $this->m_bLogIssue;
 		$aSettings['log_web_service'] = $this->m_bLogWebService;
-		$aSettings['log_queries'] = $this->m_bLogQueries;
 		$aSettings['query_cache_enabled'] = $this->m_bQueryCacheEnabled;
 		$aSettings['min_display_limit'] = $this->m_iMinDisplayLimit;
 		$aSettings['max_display_limit'] = $this->m_iMaxDisplayLimit;
@@ -1578,7 +1573,6 @@ class Config
 				'log_notification' => $this->m_bLogNotification,
 				'log_issue' => $this->m_bLogIssue,
 				'log_web_service' => $this->m_bLogWebService,
-				'log_queries' => $this->m_bLogQueries,
 				'query_cache_enabled' => $this->m_bQueryCacheEnabled,
 				'secure_connection_required' => $this->m_bSecureConnectionRequired,
 			);
