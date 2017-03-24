@@ -45,7 +45,8 @@ class BrowseBrickController extends BrickController
 
 	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sBrowseMode = null, $sDataLoading = null)
 	{
-		$oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
+        /** @var \Combodo\iTop\Portal\Brick\BrowseBrick $oBrick */
+        $oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
 
 		// Getting availables browse modes
 		$aBrowseModes = $oBrick->GetAvailablesBrowseModes();

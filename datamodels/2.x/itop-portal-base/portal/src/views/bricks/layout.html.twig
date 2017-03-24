@@ -31,3 +31,28 @@
 	{% endblock %}
 </div>
 {% endblock %}
+
+{% block pPageLiveScriptHelpers %}
+    {{ parent() }}
+
+	var SetActionUrl = function(oElem, sUrl)
+	{
+		oElem.attr('href', sUrl);
+	};
+
+	var SetActionOpeningTarget = function(oElem, sMode)
+	{
+		if(sMode === '{{ constant('Combodo\\iTop\\Portal\\Brick\\PortalBrick::ENUM_OPENING_TARGET_MODAL') }}')
+		{
+			oElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all');
+		}
+		else if(sMode === '{{ constant('Combodo\\iTop\\Portal\\Brick\\PortalBrick::ENUM_OPENING_TARGET_SELF') }}')
+		{
+			oElem.attr('target', '_self');
+		}
+		else if(sMode === '{{ constant('Combodo\\iTop\\Portal\\Brick\\PortalBrick::ENUM_OPENING_TARGET_NEW') }}')
+		{
+			oElem.attr('target', '_blank');
+		}
+	};
+{% endblock %}

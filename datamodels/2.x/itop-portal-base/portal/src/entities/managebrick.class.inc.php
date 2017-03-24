@@ -54,7 +54,7 @@ class ManageBrick extends PortalBrick
 		parent::__construct();
 
 		$this->sOql = static::DEFAULT_OQL;
-		$this->sOpeningMode = static::DEFAULT_OPENING_MODE;
+        $this->sOpeningMode = static::DEFAULT_OPENING_MODE;
 		$this->aGrouping = array();
 		$this->aFields = array();
 
@@ -72,15 +72,15 @@ class ManageBrick extends PortalBrick
 		return $this->sOql;
 	}
 
-	/**
-	 * Returns the brick's objects opening mode (edit or view)
-	 *
-	 * @return string
-	 */
-	public function GetOpeningMode()
-	{
-		return $this->sOpeningMode;
-	}
+    /**
+     * Returns the brick's objects opening mode (edit or view)
+     *
+     * @return string
+     */
+    public function GetOpeningMode()
+    {
+        return $this->sOpeningMode;
+    }
 
 	/**
 	 * Returns the brick grouping
@@ -114,17 +114,17 @@ class ManageBrick extends PortalBrick
 		return $this;
 	}
 
-	/**
-	 * Sets the brick's objects opening mode
-	 *
-	 * @param string $sOpeningMode
-	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
-	 */
-	public function SetOpeningMode($sOpeningMode)
-	{
-		$this->sOpeningMode = $sOpeningMode;
-		return $this;
-	}
+    /**
+     * Sets the brick's objects opening mode
+     *
+     * @param string $sOpeningMode
+     * @return \Combodo\iTop\Portal\Brick\ManageBrick
+     */
+    public function SetOpeningMode($sOpeningMode)
+    {
+        $this->sOpeningMode = $sOpeningMode;
+        return $this;
+    }
 
 	/**
 	 * Sets the grouping of the brick
@@ -329,15 +329,15 @@ class ManageBrick extends PortalBrick
 					$this->SetOql($sOql);
 					break;
 
-				case 'opening_mode':
-					$sOpeningMode = $oBrickSubNode->GetText(static::DEFAULT_OPENING_MODE);
-					if (!in_array($sOpeningMode, array(static::ENUM_ACTION_VIEW, static::ENUM_ACTION_EDIT)))
-					{
-						throw new DOMFormatException('ManageBrick : opening_mode tag value must be edit|view ("' . $sOpeningMode . '" given)', null, null, $oBrickSubNode);
-					}
+                case 'opening_mode':
+                    $sOpeningMode = $oBrickSubNode->GetText(static::DEFAULT_OPENING_MODE);
+                    if (!in_array($sOpeningMode, array(static::ENUM_ACTION_VIEW, static::ENUM_ACTION_EDIT)))
+                    {
+                        throw new DOMFormatException('ManageBrick : opening_mode tag value must be edit|view ("' . $sOpeningMode . '" given)', null, null, $oBrickSubNode);
+                    }
 
-					$this->SetOpeningMode($sOpeningMode);
-					break;
+                    $this->SetOpeningMode($sOpeningMode);
+                    break;
 
 				case 'fields':
 					foreach ($oBrickSubNode->GetNodes('./field') as $oFieldNode)
@@ -426,5 +426,3 @@ class ManageBrick extends PortalBrick
 	}
 
 }
-
-?>

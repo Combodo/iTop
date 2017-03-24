@@ -313,19 +313,21 @@
 	
 	{% block pPageLiveScripts %}
 		<script type="text/javascript">
-			var GetAbsoluteUrlAppRoot = function()
-			{
-				return '{{ app['combodo.absolute_url'] }}';
-			};
-			var AddParameterToUrl = function(sUrl, sParamName, sParamValue)
-			{
-				sUrl += (sUrl.split('?')[1] ? '&':'?') + sParamName + '=' + sParamValue;
-				return sUrl;
-			};
-			var GetContentLoaderTemplate = function()
-			{
-				return '<div class="content_loader"><div class="icon glyphicon glyphicon-refresh"></div><div class="message">{{ 'Page:PleaseWait'|dict_s }}</div></div>';
-			}
+			{% block pPageLiveScriptHelpers %}
+				var GetAbsoluteUrlAppRoot = function()
+				{
+					return '{{ app['combodo.absolute_url'] }}';
+				};
+				var AddParameterToUrl = function(sUrl, sParamName, sParamValue)
+				{
+					sUrl += (sUrl.split('?')[1] ? '&':'?') + sParamName + '=' + sParamValue;
+					return sUrl;
+				};
+				var GetContentLoaderTemplate = function()
+				{
+					return '<div class="content_loader"><div class="icon glyphicon glyphicon-refresh"></div><div class="message">{{ 'Page:PleaseWait'|dict_s }}</div></div>';
+				}
+			{% endblock %}
 			
 			$(document).ready(function(){
 				{% block pPageReadyScripts %}

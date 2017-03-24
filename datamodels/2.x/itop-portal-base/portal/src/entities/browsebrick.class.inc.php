@@ -49,9 +49,13 @@ class BrowseBrick extends PortalBrick
 	const DEFAULT_LEVEL_NAME_ATT = 'name';
 	const DEFAULT_BROWSE_MODE = self::ENUM_BROWSE_MODE_LIST;
 	const DEFAULT_ACTION = self::ENUM_ACTION_DRILLDOWN;
+	const DEFAULT_ACTION_OPENING_TARGET = self::ENUM_OPENING_TARGET_MODAL;
 	const DEFAULT_COUNT_PER_PAGE_LIST = 20;
 
-	static $sRouteName = 'p_browse_brick';
+    static $aBrowseModes = array(self::ENUM_BROWSE_MODE_LIST, self::ENUM_BROWSE_MODE_TREE, self::ENUM_BROWSE_MODE_GRID);
+
+    static $sRouteName = 'p_browse_brick';
+
 	protected $aLevels;
 	protected $aAvailablesBrowseModes;
 	protected $sDefaultBrowseMode;
@@ -417,6 +421,21 @@ class BrowseBrick extends PortalBrick
 								{
 									$aTmpAction['icon_class'] = $oActionIconClassNode->GetText();
 								}
+								// Action opening target
+                                $oActionOpeningTargetNode = $oActionNode->GetOptionalElement('opening_target');
+								if($oActionOpeningTargetNode !== null)
+                                {
+                                    $aTmpAction['opening_target'] = $oActionOpeningTargetNode->GetText(static::DEFAULT_ACTION_OPENING_TARGET);
+                                }
+                                else
+                                {
+                                    $aTmpAction['opening_target'] = static::DEFAULT_ACTION_OPENING_TARGET;
+                                }
+                                // - Checking that opening target is among authorized modes
+                                if(!in_array($aTmpAction['opening_target'], static::$aOpeningTargets))
+                                {
+                                    throw new DOMFormatException('BrowseBrick :  ' . $sTagName . '/action/opening_target has a wrong value. "'.$aTmpAction['opening_target'].'" given, '.implode('|', static::$aOpeningTargets).' expected.', null, null, $oActionOpeningTargetNode);
+                                }
 								// Action rules
 								foreach ($oActionNode->GetNodes('./rules/rule') as $oRuleNode)
 								{

@@ -89,21 +89,21 @@
 							{
 								case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
 									url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
-									cellElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
-									break;
+                                    break;
 								case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_EDIT') }}':
 									url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
-									cellElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
 									break;
 								case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
 									url = levelPrimaryAction.url.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
 									url = AddParameterToUrl(url, 'ar_token', data.action_rules_token[levelPrimaryAction.type]);
-									cellElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
 									break;
 								default:
+								    url = '#';
 									//console.log('Action "'+levelPrimaryAction.type+'" not implemented');
 									break;
 							}
+                            SetActionUrl(cellElem, url);
+                            SetActionOpeningTarget(cellElem, levelPrimaryAction.opening_target);
 
 							// - Secondary actions
 							if(levelActionsKeys.length > 1)
@@ -142,21 +142,21 @@
 									{
 										case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
 											url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
-											actionElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
 											break;
 										case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_EDIT') }}':
 											url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
-											actionElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
 											break;
 										case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
 											url = action.url.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
 											url = AddParameterToUrl(url, 'ar_token', data.action_rules_token[action.type]);
-											actionElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
 											break;
 										default:
+										    url = '#';
 											//console.log('Action "'+action.type+'" not implemented for secondary action');
 											break;
 									}
+                                    SetActionUrl(actionElem, url);
+                                    SetActionOpeningTarget(actionElem, action.opening_target);
 									
 									// Adding title if present
 									if(action.title !== undefined)

@@ -131,16 +131,17 @@
 							{
 								case '{{ constant('Combodo\\iTop\\Portal\\Brick\\ManageBrick::ENUM_ACTION_VIEW') }}':
 									url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, itemPrimaryAction.class).replace(/-objectId-/, itemPrimaryAction.id);
-									cellElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
 									break;
 								case '{{ constant('Combodo\\iTop\\Portal\\Brick\\ManageBrick::ENUM_ACTION_EDIT') }}':
 									url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, itemPrimaryAction.class).replace(/-objectId-/, itemPrimaryAction.id);
-									cellElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all').attr('href', url);
 									break;
 								default:
+								    url = '#';
 									//console.log('Action "'+itemPrimaryAction+'" not implemented');
 									break;
 							}
+                            SetActionUrl(cellElem, url);
+                            SetActionOpeningTarget(cellElem, itemPrimaryAction.opening_target);
 							
 							// - Secondary actions
 							// Not done for now, only the data structure is ready in case we need it later

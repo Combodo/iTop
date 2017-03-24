@@ -49,6 +49,7 @@ class ManageBrickController extends BrickController
 
 	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $sDataLoading = null)
 	{
+	    /** @var \Combodo\iTop\Portal\Brick\ManageBrick $oBrick */
 		$oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
 
 		$aData = array();
@@ -387,7 +388,8 @@ class ManageBrickController extends BrickController
 							$aActions[] = array(
 								'type' => $sActionType,
 								'class' => $sCurrentClass,
-								'id' => $oCurrentRow->GetKey()
+								'id' => $oCurrentRow->GetKey(),
+                                'opening_target' => $oBrick->GetOpeningTarget(),
 							);
 						}
 					}
@@ -406,7 +408,8 @@ class ManageBrickController extends BrickController
 								$aActions[] = array(
 									'type' => ManageBrick::ENUM_ACTION_VIEW,
 									'class' => $oAttDef->GetTargetClass(),
-									'id' => $oCurrentRow->Get($sItemAttr)
+									'id' => $oCurrentRow->Get($sItemAttr),
+                                    'opening_target' => $oBrick->GetOpeningTarget(),
 								);
 							}
 						}
