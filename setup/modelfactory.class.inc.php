@@ -28,6 +28,70 @@ require_once(APPROOT.'setup/moduleinstaller.class.inc.php');
 require_once(APPROOT.'setup/itopdesignformat.class.inc.php');
 require_once(APPROOT.'core/designdocument.class.inc.php');
 
+/**
+ * Special exception type thrown when the XML stacking fails
+ *
+ */
+class MFException extends Exception
+{
+	/**
+	 * @var integer
+	 */
+	protected $iSourceLineNumber;
+	/**
+	 * @var string
+	 */
+	protected $sXPath;
+	/**
+	 * @var string
+	 */
+	protected $sExtraInfo;
+	
+	const COULD_NOT_BE_ADDED = 1;
+	const COULD_NOT_BE_DELETED = 2;
+	const COULD_NOT_BE_MODIFIED_NOT_FOUND = 3;
+	const COULD_NOT_BE_MODIFIED_ALREADY_DELETED = 4;
+	const INVALID_DELTA = 5;
+	const ALREADY_DELETED = 6;
+	const NOT_FOUND = 7;
+	
+	
+	public function __construct ($message = null, $code = null, $iSourceLineNumber = 0, $sXPath = '', $sExtraInfo = '', $previous = null)
+	{
+		parent::__construct($message, $code, $previous);
+		$this->iSourceLineNumber = $iSourceLineNumber;
+		$this->sXPath = $sXPath;
+		$this->sExtraInfo = $sExtraInfo;
+	}
+	
+	/**
+	 * Get the source line number where the problem happened
+	 * @return number
+	 */
+	public function GetSourceLineNumber()
+	{
+		return $this->iSourceLineNumber;
+	}
+
+	/**
+	 * Get the XPath in the whole document where the problem happened
+	 * @return string
+	 */
+	public function GetXPath()
+	{
+		return $this->sXPath;
+	}
+	
+	/**
+	 * Get some extra info (depending on the exception's code), like the invalid value for the _delta attribute
+	 * @return string
+	 */
+	public function GetExtraInfo()
+	{
+		return $this->sExtraInfo;
+	}
+}
+
  /**
  * ModelFactoryModule: the representation of a Module (i.e. element that can be selected during the setup)
  * @package ModelFactory
@@ -408,7 +472,9 @@ class ModelFactory
 				{
 					echo "Dumping target doc - looking for '$sParentId'<br/>\n";
 					$this->oDOMDocument->firstChild->Dump();
-					throw new Exception(MFDocument::GetItopNodePath($oSourceNode).' at line '.$oSourceNode->getLineNo().": could not find parent with id '$sParentId'");
+					$sPath = MFDocument::GetItopNodePath($oSourceNode);
+					$iLine = $oSourceNode->getLineNo();
+					throw new MFException($sPath.' at line '.$iLine.": could not be found", MFException::PARENT_NOT_FOUND, $iLine, $sPath, $sParentId);
 				}
 			}
 			else 
@@ -424,7 +490,10 @@ class ModelFactory
 					{
 						echo "Dumping target doc - looking for '".$oSourceNode->getAttribute('id')."'<br/>\n";
 						$this->oDOMDocument->firstChild->Dump();
-						throw new Exception(MFDocument::GetItopNodePath($oSourceNode).' at line '.$oSourceNode->getLineNo().": could not be found");
+						$sPath = MFDocument::GetItopNodePath($oSourceNode);
+						$iLine = $oSourceNode->getLineNo();
+						throw new MFException($sPath.' at line '.$iLine.": could not be found", MFException::NOT_FOUND, $iLine, $sPath);
+						
 					}
 				}
 				else
@@ -509,19 +578,23 @@ class ModelFactory
 			
 		case 'delete':			
 			$oTargetNode = $oTargetParentNode->_FindChildNode($oSourceNode);
+			$sPath = MFDocument::GetItopNodePath($oSourceNode);
+			$iLine = $oSourceNode->getLineNo();
 			if ($oTargetNode == null)
 			{
-				throw new Exception(MFDocument::GetItopNodePath($oSourceNode).' at line '.$oSourceNode->getLineNo().": could not be deleted (not found)");
+				throw new MFException($sPath.' at line '.$iLine.": could not be deleted (not found)", MFException::COULD_NOT_BE_DELETED, $iLine, $sPath);
 			}
 			if ($oTargetNode->getAttribute('_alteration') == 'removed')
 			{
-				throw new Exception(MFDocument::GetItopNodePath($oSourceNode).' at line '.$oSourceNode->getLineNo().": could not be deleted (already marked as deleted)");
+				throw new MFException($sPath.' at line '.$iLine.": could not be deleted (already marked as deleted)", MFException::ALREADY_DELETED, $iLine, $sPath);
 			}
 			$oTargetNode->Delete();
 			break;
 			
 		default:
-			throw new Exception(MFDocument::GetItopNodePath($oSourceNode).' at line '.$oSourceNode->getLineNo().": unexpected value for attribute _delta: '".$sDeltaSpec."'");
+			$sPath = MFDocument::GetItopNodePath($oSourceNode);
+			$iLine = $oSourceNode->getLineNo();
+			throw new MFException($sPath.' at line '.$iLine.": unexpected value for attribute _delta: '".$sDeltaSpec."'", MFException::INVALID_DELTA, $iLine, $sPath, $sDeltaSpec);
 		}
 
 		if ($oTargetNode)
@@ -1728,7 +1801,9 @@ class MFElement extends Combodo\iTop\DesignElement
 		{
 			if ($oExisting->getAttribute('_alteration') != 'removed')
 			{
-				throw new Exception(MFDocument::GetItopNodePath($oNode).' at line '.$oNode->getLineNo().": could not be added (already exists)");
+				$sPath = MFDocument::GetItopNodePath($oNode);
+				$iLine = $oNode->getLineNo();
+				throw new MFException($sPath.' at line '.$iLine.": could not be added (already exists)", MFException::COULD_NOT_BE_ADDED, $iLine, $sPath);
 			}
 			$oExisting->ReplaceWith($oNode);
 			$sFlag =  'replaced';
@@ -1757,14 +1832,17 @@ class MFElement extends Combodo\iTop\DesignElement
 		$oExisting = $this->_FindChildNode($oNode, $sSearchId);
 		if (!$oExisting)
 		{
-			$sSourceNode = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(is_null($sSearchId) ? '' : "[$sSearchId]").' at line '.$this->getLineNo();
-			throw new Exception($sSourceNode.": could not be modified (not found)");
+			$sPath = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(empty($sSearchId) ? '' : "[$sSearchId]");
+			$iLine = $oNode->getLineNo();
+			throw new MFException($sPath." at line $iLine: could not be modified (not found)", MFException::COULD_NOT_BE_MODIFIED_NOT_FOUND, $sPath, $iLine);
 		}
 		$sPrevFlag = $oExisting->getAttribute('_alteration');
 		if ($sPrevFlag == 'removed')
 		{
+			$sPath = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(empty($sSearchId) ? '' : "[$sSearchId]");
+			$iLine = $oNode->getLineNo();
 			$sSourceNode = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(is_null($sSearchId) ? '' : "[$sSearchId]").' at line '.$this->getLineNo();
-			throw new Exception($sSourceNode.": could not be modified (marked as deleted)");
+			throw new MFException($sPath." at line $iLine: could not be modified (marked as deleted)", MFException::COULD_NOT_BE_MODIFIED_ALREADY_DELETED, $sPath, $iLine);
 		}
 		$oExisting->ReplaceWith($oNode);
 		if (!$this->IsInDefinition())
@@ -2080,7 +2158,7 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 			$oRootNode->setAttribute('version', ITOP_DESIGN_LATEST_VERSION);
 			$this->appendChild($oRootNode);
 		}
-		return parent::saveXML();
+		return parent::saveXML($node);
 	}
 	
 	/**
