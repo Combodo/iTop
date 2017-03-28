@@ -214,7 +214,7 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
 	return trim($sValue);
 }
 
-function ChangeDateFormat($sProposedDate, $sFormat)
+function ChangeDateFormat($sProposedDate, $sFormat, $bDateOnly)
 {
 	if ($sProposedDate == '')
 	{
@@ -233,7 +233,8 @@ function ChangeDateFormat($sProposedDate, $sFormat)
 		$oDate = $oFormat->Parse($sProposedDate);
 		if ($oDate !== null)
 		{
-			$sDate = $oDate->format(AttributeDateTime::GetInternalFormat());
+			$oTargetFormat = $bDateOnly ? AttributeDate::GetInternalFormat() : AttributeDateTime::GetInternalFormat();
+			$sDate = $oDate->format($oTargetFormat);
 			return $sDate;
 		}
 		else
@@ -444,7 +445,20 @@ try
 
 	// Check columns
 	$aColumns = $oDataSource->GetSQLColumns();
-	$aDateColumns = $oDataSource->GetDateSQLColumns();
+
+	$aDateColumns = array();
+	foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+	{
+		if ($oAttDef instanceof AttributeDate)
+		{
+			$aDateColumns[$sAttCode] = 'DATE';
+		}
+		elseif ($oAttDef instanceof AttributeDateTime)
+		{
+			$aDateColumns[$sAttCode] = 'DATETIME';
+		}
+	}
+
 	$aIsDateToTransform = array();
 	$aDateToTransformReport = array();
 	foreach($aInputColumns as $iFieldId => $sInputColumn)
@@ -530,12 +544,14 @@ try
 					}
 					elseif ($aIsDateToTransform[$iCol] !== false)
 					{
+						$bDateOnly = false;
 						$sFormat = $sDateTimeFormat;
 						if ($aIsDateToTransform[$iCol] == 'DATE')
 						{
+							$bDateOnly = true;
 							$sFormat = $sDateFormat;
 						}
-						$sDate = ChangeDateFormat($value, $sFormat);
+						$sDate = ChangeDateFormat($value, $sFormat, $bDateOnly);
 						if ($sDate === false)
 						{
 							$aValues[] = CMDBSource::Quote('');
@@ -592,12 +608,14 @@ try
 					$sCol = $aInputColumns[$iCol];
 					if ($aIsDateToTransform[$iCol] !== false)
 					{
+						$bDateOnly = false;
 						$sFormat = $sDateTimeFormat;
 						if ($aIsDateToTransform[$iCol] == 'DATE')
 						{
+							$bDateOnly = true;
 							$sFormat = $sDateFormat;
 						}
-						$sDate = ChangeDateFormat($value, $sFormat);
+						$sDate = ChangeDateFormat($value, $sFormat, $bDateOnly);
 						if ($sDate === false)
 						{
 							if ($sOutput == 'details')
@@ -661,12 +679,12 @@ try
 			{
 				$aDateTimeColumns = array();
 				$aDateColumns = array();
-				foreach($aIsDateToTransform as $iCol => $sSQLDef)
+				foreach($aIsDateToTransform as $iCol => $sType)
 				{
-					if ($sSQLDef !== false)
+					if ($sType !== false)
 					{
 						$sCol = $aInputColumns[$iCol];
-						if ($sSQLDef == 'DATE')
+						if ($sType == 'DATE')
 						{
 							$aDateColumns[] = $sCol;
 						}
