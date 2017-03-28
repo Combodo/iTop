@@ -1165,7 +1165,7 @@ EOF
 	}
 	
 	/**
-	 * Get the list of Date and Datetime SQL columns
+	 * DEPRECATED - Get the list of Date and Datetime SQL columns
 	 */
 	public function GetDateSQLColumns()
 	{
