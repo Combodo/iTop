@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * File logging
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -69,81 +69,54 @@ class FileLog
 	}
 }
 
-class SetupLog
+abstract class LogAPI
 {
-	protected static $m_oFileLog; 
-
 	public static function Enable($sTargetFile)
 	{
-		self::$m_oFileLog = new FileLog($sTargetFile);
+		static::$m_oFileLog = new FileLog($sTargetFile);
 	}
+
 	public static function Error($sText)
 	{
-		self::$m_oFileLog->Error($sText);
+		if (static::$m_oFileLog)
+		{
+			static::$m_oFileLog->Error($sText);
+		}
 	}
 	public static function Warning($sText)
 	{
-		self::$m_oFileLog->Warning($sText);
+		if (static::$m_oFileLog)
+		{
+			static::$m_oFileLog->Warning($sText);
+		}
 	}
 	public static function Info($sText)
 	{
-		self::$m_oFileLog->Info($sText);
+		if (static::$m_oFileLog)
+		{
+			static::$m_oFileLog->Info($sText);
+		}
 	}
 	public static function Ok($sText)
 	{
-		self::$m_oFileLog->Ok($sText);
+		if (static::$m_oFileLog)
+		{
+			static::$m_oFileLog->Ok($sText);
+		}
 	}
 }
 
-class IssueLog
+class SetupLog extends LogAPI
 {
-	protected static $m_oFileLog; 
-
-	public static function Enable($sTargetFile)
-	{
-		self::$m_oFileLog = new FileLog($sTargetFile);
-	}
-	public static function Error($sText)
-	{
-		self::$m_oFileLog->Error($sText);
-	}
-	public static function Warning($sText)
-	{
-		self::$m_oFileLog->Warning($sText);
-	}
-	public static function Info($sText)
-	{
-		self::$m_oFileLog->Info($sText);
-	}
-	public static function Ok($sText)
-	{
-		self::$m_oFileLog->Ok($sText);
-	}
+	protected static $m_oFileLog = null;
 }
 
-class ToolsLog
+class IssueLog extends LogAPI
 {
-	protected static $m_oFileLog; 
-
-	public static function Enable($sTargetFile)
-	{
-		self::$m_oFileLog = new FileLog($sTargetFile);
-	}
-	public static function Error($sText)
-	{
-		self::$m_oFileLog->Error($sText);
-	}
-	public static function Warning($sText)
-	{
-		self::$m_oFileLog->Warning($sText);
-	}
-	public static function Info($sText)
-	{
-		self::$m_oFileLog->Info($sText);
-	}
-	public static function Ok($sText)
-	{
-		self::$m_oFileLog->Ok($sText);
-	}
+	protected static $m_oFileLog = null;
 }
-?>
+
+class ToolsLog extends LogAPI
+{
+	protected static $m_oFileLog = null;
+}
