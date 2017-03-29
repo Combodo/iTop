@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015-2016 Combodo SARL
+// Copyright (C) 2015-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * A union of DBObjectSearches 
  *
- * @copyright   Copyright (C) 2015-2016 Combodo SARL
+ * @copyright   Copyright (C) 2015-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
  
@@ -516,6 +516,12 @@ class DBUnionSearch extends DBSearch
 				}
 			}
 			$oSubQuery = $oSearch->GetSQLQueryStructure($aQueryAttToLoad, false, $aQueryGroupByExpr, $aSearchSelectedClasses);
+			if (count($aSearchAliases) > 1)
+			{
+				// Necessary to make sure that selected columns will match throughout all the queries
+				// (default order of selected fields depending on the order of JOINS)
+				$oSubQuery->SortSelectedFields();
+			}
 			$aSQLQueries[] = $oSubQuery;
 		}
 
