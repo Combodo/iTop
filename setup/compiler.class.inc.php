@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2011-2016 Combodo SARL
+// Copyright (C) 2011-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -889,15 +889,10 @@ EOF
 			{
 				$aNameAttCodes[] = $oAttribute->getAttribute('id');
 			}
-			if (count($aNameAttCodes) > 1)
+			if (count($aNameAttCodes) > 0)
 			{
 				// New style...
 				$sNameAttCode = "array('".implode("', '", $aNameAttCodes)."')";
-			}
-			elseif (count($aNameAttCodes) == 1)
-			{
-				// New style...
-				$sNameAttCode = "'$aNameAttCodes[0]'";
 			}
 			else
 			{
