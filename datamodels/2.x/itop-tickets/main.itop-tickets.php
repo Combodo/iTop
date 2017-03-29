@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -260,7 +260,7 @@ class _Ticket extends cmdbAbstractObject
 				
 				case 'Contact':
 				// Only link Contacts which are not already linked to the ticket
-				if (!array_key_exists($iKey, $aContactsToRoleCode) || ($aCIsToImpactCode[$iKey] != 'do_not_notify'))
+				if (!array_key_exists($iKey, $aContactsToRoleCode) || ($aContactsToRoleCode[$iKey] != 'do_not_notify'))
 				{
 					$oNewLink = new lnkContactToTicket();
 					$oNewLink->Set('contact_id', $iKey);
