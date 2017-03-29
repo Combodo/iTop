@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015-2016 Combodo SARL
+// Copyright (C) 2015-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * SQLObjectQuery
  * build a mySQL compatible SQL query
  *
- * @copyright   Copyright (C) 2015-2016 Combodo SARL
+ * @copyright   Copyright (C) 2015-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -136,6 +136,11 @@ class SQLObjectQuery extends SQLQuery
 	public function SetSelect($aExpressions)
 	{
 		$this->m_aFields = $aExpressions;
+	}
+
+	public function SortSelectedFields()
+	{
+		ksort($this->m_aFields);
 	}
 
 	public function AddSelect($sAlias, $oExpression)

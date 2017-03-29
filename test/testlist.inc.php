@@ -5518,3 +5518,30 @@ class TestIntersectNotOptimized extends TestBizModel
 		echo "<p>Successfully tested the SQL query.</p>\n";
 	}
 }
+
+class TestBug609 extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'UNION with JOINS ordered differently';
+	}
+
+	static public function GetDescription()
+	{
+		return '(N.609) Inconsistent SQL query (various symptoms, must mostly in the form of "Class \'IT Department\' not found"';
+	}
+
+	protected function DoExecute()
+	{
+		$sQueryA = 'SELECT t,o FROM Team AS t JOIN Organization AS o ON t.org_id = o.id';
+		$sQueryB = 'SELECT t,o FROM Organization AS o JOIN Team AS t ON t.org_id = o.id';
+
+		$oSearch = DBSearch::FromOQL("$sQueryB UNION $sQueryA");
+
+		$oSet = new DBObjectSet($oSearch);
+		while($oObject = $oSet->Fetch())
+		{
+			echo "Successfull load for <b>".$oObject->GetName()."</b><br>\n";
+		}
+	}
+}
