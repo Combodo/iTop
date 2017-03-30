@@ -3586,8 +3586,16 @@ class AttributeMetaEnum extends AttributeEnum
 		else
 		{
 			$sParent = MetaModel::GetParentClass($sClass);
-			$aMappingData = $this->GetMapRule($sParent);
+			if (is_null($sParent))
+			{
+				$aMappingData = null;
+			}
+			else
+			{
+				$aMappingData = $this->GetMapRule($sParent);
+			}
 		}
+
 		return $aMappingData;
 	}
 }
