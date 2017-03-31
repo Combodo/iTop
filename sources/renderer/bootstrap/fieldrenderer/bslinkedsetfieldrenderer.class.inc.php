@@ -19,7 +19,9 @@
 
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
+use \Exception;
 use \utils;
+use \IssueLog;
 use \Dict;
 use \UserRights;
 use \InlineImage;
@@ -479,8 +481,17 @@ EOF
 			// In case of indirect linked set, we must retrieve the remote object
 			if ($this->oField->IsIndirect())
 			{
-				// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
-				$oRemoteItem = MetaModel::GetObject($this->oField->GetTargetClass(), $oItem->Get($this->oField->GetExtKeyToRemote()), true, true);
+			    try{
+                    // Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+                    $oRemoteItem = MetaModel::GetObject($this->oField->GetTargetClass(), $oItem->Get($this->oField->GetExtKeyToRemote()), true, true);
+                }
+                catch(Exception $e)
+                {
+                    // In some cases we can't retrieve an object from a linkedset, eg. when the extkey to remote is 0 due to a database corruption.
+                    // Rather than crashing we rather just skip the object like in the administration console
+                    IssueLog::Error('Could not retrieve object of linkedset in form #'.$this->oField->GetFormPath().' for field #'.$this->oField->GetId().'. Message: '.$e->getMessage());
+                    continue;
+                }
 			}
 			else
 			{
