@@ -3406,7 +3406,7 @@ abstract class DBObject implements iDisplay
 					throw new Exception('Missing argument #1: source attribute');
 				}
 				$sSourceKeyAttCode = $aParams[0];
-				if (!MetaModel::IsValidAttCode(get_class($oObjectToRead), $sSourceKeyAttCode))
+				if (($sSourceKeyAttCode != 'id') && !MetaModel::IsValidAttCode(get_class($oObjectToRead), $sSourceKeyAttCode))
 				{
 					throw new Exception("Unknown attribute ".get_class($oObjectToRead)."::".$sSourceKeyAttCode);
 				}
