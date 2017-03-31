@@ -124,6 +124,53 @@ $aOperations = array(
 			),
 		),
 	),
+	// Rewrite the full CaseLog on an existing UserRequest with id=1, setting date and user (optional)
+	array(
+		'operation' => 'core/update',
+		'comment' => 'Synchronization from ServiceFirst', // comment recorded in the change tracking log
+		'class' => 'UserRequest',
+		'key' => 'SELECT UserRequest WHERE id=1',
+		'output_fields' => 'id, friendlyname, title',
+		'fields' => array(
+			'public_log' => array(
+				'items' => array(
+					0 => array(
+						'date' => '2001-02-01 23:59:59', //Allow to set the date of a true event, an alarm for eg.
+						'user_login' => 'Alarm monitoring', //Free text
+						'user_id' => 0, //0 is required for the user_login to be taken into account
+						'message' => 'This is 1st entry as an <b>HTML</b> formatted<br>text',
+					),
+					1 => array(
+						'date' => '2001-02-02 00:00:00', //If ommitted set automatically.
+						'user_login' => 'Alarm monitoring', //user=id=0 is missing so will be ignored
+						'message' => 'Second entry in text format:
+with new line, but format not specified, so treated as HTML!, user_id=0 missing, so user_login ignored',
+					),
+				),
+			),
+		),
+	),
+	// Add a Text entry in the HTML CaseLog of the UserRequest with id=1, setting date and user (optional)
+	array(
+		'operation' => 'core/update', // operation code
+		'comment' => 'Synchronization from Alarm Monitoring', // comment recorded in the change tracking log
+		'class' => 'UserRequest',
+		'key' => 1, // object id or OQL
+		'output_fields' => 'id, friendlyname, title', // list of fields to show in the results (* or a,b,c)
+		// Example of adding an entry into a CaseLog on an existing UserRequest
+		'fields' => array(
+			'public_log' => array(
+			'add_item' => array(
+				'user_login' => 'New Entry', //Free text
+				'user_id' => 0, //0 is required for the user_login to be taken into account
+				'format' => 'text', //If ommitted, source is expected to be HTML
+				'message' => 'This text is not HTML formatted with 3 lines:
+new line
+3rd and last line',
+				),
+			),
+		),
+	),
 	array(
 		'operation' => 'core/get', // operation code
 		'class' => 'UserRequest',
