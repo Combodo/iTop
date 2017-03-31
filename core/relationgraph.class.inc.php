@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015 Combodo SARL
+// Copyright (C) 2015-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * Data structures (i.e. PHP classes) to build and use relation graphs
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2015-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * 
  */
@@ -106,9 +106,9 @@ class RelationRedundancyNode extends GraphNode
 	/**
 	 * Make a normalized ID to ensure the uniqueness of such a node	
 	 */	
-	public static function MakeId($sRelCode, $sNeighbourId, $oSinkObject)
+	public static function MakeId($sRelCode, $sNeighbourId, $oSourceObject, $oSinkObject)
 	{
-		return 'redundancy-'.$sRelCode.'-'.$sNeighbourId.'-'.get_class($oSinkObject).'::'.$oSinkObject->GetKey();
+		return 'redundancy-'.$sRelCode.'-'.get_class($oSourceObject).'-'.$sNeighbourId.'-'.get_class($oSinkObject).'::'.$oSinkObject->GetKey();
 	}
 
 	/**
@@ -326,7 +326,7 @@ class RelationGraph extends SimpleGraph
 			$this->AddRelatedObjects($sRelCode, false, $oSinkNode, $iMaxDepth, $bEnableRedundancy);
 			//echo "<h5>After processing of {$oSinkNode->GetId()}</h5>\n".$this->DumpAsHtmlImage()."<br/>\n";
 		}
-		
+
 		// Mark also the "context" nodes as reached and record the "root causes" for each node
 		$oIterator = new RelationTypeIterator($this, 'Node');
 		foreach($oIterator as $oNode)
@@ -407,11 +407,11 @@ class RelationGraph extends SimpleGraph
 						do
 						{
 							set_time_limit($iLoopTimeLimit);
-							
+
 							$sObjectRef = 	RelationObjectNode::MakeId($oRelatedObj);
 							$oRelatedNode = $this->GetNode($sObjectRef);
 							if (is_null($oRelatedNode))
-							{	
+							{
 								$oRelatedNode = new RelationObjectNode($this, $oRelatedObj);
 							}
 							$oSourceNode = $bDown ? $oObjectNode : $oRelatedNode;
@@ -449,8 +449,7 @@ class RelationGraph extends SimpleGraph
 		$oObject = $oToNode->GetProperty('object');
 		if ($this->IsRedundancyEnabled($sRelCode, $aQueryInfo, $oToNode))
 		{
-
-			$sId = RelationRedundancyNode::MakeId($sRelCode, $aQueryInfo['sNeighbour'], $oToNode->GetProperty('object'));
+			$sId = RelationRedundancyNode::MakeId($sRelCode, $aQueryInfo['sNeighbour'], $oFromNode->GetProperty('object'), $oToNode->GetProperty('object'));
 
 			$oRedundancyNode = $this->GetNode($sId);
 			if (is_null($oRedundancyNode))
