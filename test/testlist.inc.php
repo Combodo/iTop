@@ -5545,3 +5545,53 @@ class TestBug609 extends TestBizModel
 		}
 	}
 }
+
+class TestBug788 extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'Graph - delete nodes';
+	}
+
+	static public function GetDescription()
+	{
+		return '(N.788) Graph not refreshed when unchecking some classes';
+	}
+
+	protected function DoExecute()
+	{
+		$oGraph = new SimpleGraph();
+		$a = new GraphNode($oGraph, 'A');
+		$b = new GraphNode($oGraph, 'B');
+		$c = new GraphNode($oGraph, 'C');
+		new GraphEdge($oGraph, 'A--B', $a, $b);
+		new GraphEdge($oGraph, 'B--C', $b, $c);
+		new GraphEdge($oGraph, 'C--B', $c, $b);
+
+		echo "<h5>Graphe initial</h5>";
+		echo $oGraph->DumpAsHtmlImage();
+		echo $oGraph->DumpAsHTMLText();
+
+		echo "<h5>Removing C</h5>";
+		$oGraph->FilterNode($c);
+		unset($c);
+		echo $oGraph->DumpAsHtmlImage();
+		echo $oGraph->DumpAsHTMLText();
+
+		if ((count($oGraph->_GetNodes()) != 2) || (count($oGraph->_GetEdges()) != 1))
+		{
+			throw new Exception('The graph should be made of 2 nodes and 1 edge');
+		}
+
+		echo "<h5>Removing B</h5>";
+		$oGraph->FilterNode($b);
+		unset($b);
+		echo $oGraph->DumpAsHtmlImage();
+		echo $oGraph->DumpAsHTMLText();
+
+		if ((count($oGraph->_GetNodes()) != 1) || (count($oGraph->_GetEdges()) != 0))
+		{
+			throw new Exception('The graph should contain only the node A');
+		}
+	}
+}
