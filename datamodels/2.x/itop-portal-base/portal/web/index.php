@@ -62,6 +62,7 @@ if (!defined('DISABLE_DATA_LOCALIZER_PORTAL'))
 $bDebug = (isset($_REQUEST['debug']) && ($_REQUEST['debug'] === 'true') );
 
 // Initializing Silex framework
+$oKPI = new ExecutionKPI();
 $oApp = new Silex\Application();
 
 // Registring optional silex components
@@ -76,6 +77,7 @@ $oApp->register(new Silex\Provider\TwigServiceProvider(), array(
 	'twig.path' => MODULESROOT
 ));
 $oApp->register(new Silex\Provider\HttpFragmentServiceProvider());
+$oKPI->ComputeAndReport('Initialization of the Silex application');
 
 // Configuring Silex application
 $oApp['debug'] = $bDebug;
@@ -91,17 +93,27 @@ $oApp['combodo.portal.instance.routes'] = array();
 ApplicationHelper::RegisterExceptionHandler($oApp);
 
 // Preparing portal foundations (Can't use Silex autoload through composer as we don't follow PSR conventions -filenames, functions-)
+$oKPI = new ExecutionKPI();
 ApplicationHelper::LoadControllers();
 ApplicationHelper::LoadRouters();
 ApplicationHelper::RegisterRoutes($oApp);
 ApplicationHelper::LoadBricks();
 ApplicationHelper::LoadFormManagers();
 ApplicationHelper::RegisterTwigExtensions($oApp);
+$oKPI->ComputeAndReport('Loading portal files (routers, controllers, ...)');
 
 // Loading portal configuration from the module design
+$oKPI = new ExecutionKPI();
 ApplicationHelper::LoadPortalConfiguration($oApp);
+$oKPI->ComputeAndReport('Parsing portal configuration');
 // Loading current user
 ApplicationHelper::LoadCurrentUser($oApp);
 
 // Running application
+$oKPI = new ExecutionKPI();
 $oApp->run();
+$oKPI->ComputeAndReport('Page execution and rendering');
+
+// Logging trace and stats
+DBSearch::RecordQueryTrace();
+ExecutionKPI::ReportStats();
