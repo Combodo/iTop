@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015 Combodo SARL
+// Copyright (C) 2015-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * Data structures (i.e. PHP classes) to manage "graphs"
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2015-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * 
  * Example:
@@ -346,14 +346,15 @@ class SimpleGraph
 		}
 		unset($this->aNodes[$oNode->GetId()]);
 	}
-	
+
 	/**
 	 * Removes the given node but preserves the connectivity of the graph
 	 * all "source" nodes are connected to all "sink" nodes
 	 * @param GraphNode $oNode
+	 * @param bool $bAllowLoopingEdge
 	 * @throws SimpleGraphException
 	 */
-	public function FilterNode(GraphNode $oNode)
+	public function FilterNode(GraphNode $oNode, $bAllowLoopingEdge = false)
 	{
 		if (!array_key_exists($oNode->GetId(), $this->aNodes)) throw new SimpleGraphException('Cannot filter the node (id='.$oNode->GetId().') from the graph. The node was not found in the graph.');
 		
@@ -362,13 +363,19 @@ class SimpleGraph
 		foreach($oNode->GetOutgoingEdges() as $oEdge)
 		{
 			$sSinkId =  $oEdge->GetSinkNode()->GetId();
-			$aSinkNodes[$sSinkId] = $oEdge->GetSinkNode();
+			if ($sSinkId != $oNode->GetId())
+			{
+				$aSinkNodes[$sSinkId] = $oEdge->GetSinkNode();
+			}
 			$this->_RemoveEdge($oEdge);
 		}
 		foreach($oNode->GetIncomingEdges() as $oEdge)
 		{
 			$sSourceId =  $oEdge->GetSourceNode()->GetId();
-			$aSourceNodes[$sSourceId] = $oEdge->GetSourceNode();
+			if ($sSourceId != $oNode->GetId())
+			{
+				$aSourceNodes[$sSourceId] = $oEdge->GetSourceNode();
+			}
 			$this->_RemoveEdge($oEdge);
 		}
 		unset($this->aNodes[$oNode->GetId()]);
@@ -377,7 +384,10 @@ class SimpleGraph
 		{
 			foreach($aSinkNodes as $sSinkId => $oSinkNode)
 			{
-				$oEdge = new RelationEdge($this, $oSourceNode, $oSinkNode);
+				if ($bAllowLoopingEdge || ($oSourceNode->GetId() != $oSinkNode->GetId()))
+				{
+					$oEdge = new RelationEdge($this, $oSourceNode, $oSinkNode);
+				}
 			}
 		}
 	}
