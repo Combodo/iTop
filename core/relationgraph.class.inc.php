@@ -108,7 +108,7 @@ class RelationRedundancyNode extends GraphNode
 	 */	
 	public static function MakeId($sRelCode, $sNeighbourId, $oSourceObject, $oSinkObject)
 	{
-		return 'redundancy-'.$sRelCode.'-'.get_class($oSourceObject).'-'.$sNeighbourId.'-'.get_class($oSinkObject).'::'.$oSinkObject->GetKey();
+		return 'redundancy-'.$sRelCode.'-'.$sNeighbourId.'-'.get_class($oSinkObject).'::'.$oSinkObject->GetKey();
 	}
 
 	/**
@@ -449,7 +449,8 @@ class RelationGraph extends SimpleGraph
 		$oObject = $oToNode->GetProperty('object');
 		if ($this->IsRedundancyEnabled($sRelCode, $aQueryInfo, $oToNode))
 		{
-			$sId = RelationRedundancyNode::MakeId($sRelCode, $aQueryInfo['sNeighbour'], $oFromNode->GetProperty('object'), $oToNode->GetProperty('object'));
+			$sUniqueNeighbourId = $aQueryInfo['sDefinedInClass'].'-'.$aQueryInfo['sNeighbour'];
+			$sId = RelationRedundancyNode::MakeId($sRelCode, $sUniqueNeighbourId, $oFromNode->GetProperty('object'), $oToNode->GetProperty('object'));
 
 			$oRedundancyNode = $this->GetNode($sId);
 			if (is_null($oRedundancyNode))
