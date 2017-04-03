@@ -540,10 +540,13 @@ class RelationGraph extends SimpleGraph
 			{
 				if ($oAttDef->Get('relation_code') == $sRelCode)
 				{
-					if ($oAttDef->Get('neighbour_id') == $aQueryInfo['sNeighbour'])
+					if ($oAttDef->Get('from_class') == $aQueryInfo['sFromClass'])
 					{
-						$oRet = $oAttDef;
-						break;
+						if ($oAttDef->Get('neighbour_id') == $aQueryInfo['sNeighbour'])
+						{
+							$oRet = $oAttDef;
+							break;
+						}
 					}
 				}
 			}
