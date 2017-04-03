@@ -530,7 +530,7 @@ abstract class DashletGroupBy extends Dashlet
 			$this->sGroupByAttCode = $sGroupBy;
 			$this->sFunction = null;
 		}
-		if ($this->oModelReflection->IsValidAttCode($sClass, $this->sGroupByAttCode))
+		if (($sClass != '') && $this->oModelReflection->IsValidAttCode($sClass, $this->sGroupByAttCode))
 		{
 			$sAttLabel = $this->oModelReflection->GetLabel($sClass, $this->sGroupByAttCode);
 			if (!is_null($this->sFunction))
