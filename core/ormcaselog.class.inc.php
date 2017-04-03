@@ -519,49 +519,30 @@ class ormCaseLog {
 		if ($this->m_bModified)
 		{
 			$aLatestEntry = end($this->m_aIndex);
-			if ($aLatestEntry['user_name'] != $sOnBehalfOf)
+			if ($aLatestEntry['user_name'] == $sOnBehalfOf)
 			{
-				$bMergeEntries = false;
+				// Append the new text to the previous one
+				$sPreviousText = substr($this->m_sLog, $aLatestEntry['separator_length'], $aLatestEntry['text_length']);
+				$sText = $sPreviousText."\n".$sText;
+
+				// Cleanup the previous entry
+				array_pop($this->m_aIndex);
+				$this->m_sLog = substr($this->m_sLog, $aLatestEntry['separator_length'] + $aLatestEntry['text_length']);
 			}
-			else
-			{
-				$bMergeEntries = true;
-			}
 		}
-		
-		if ($bMergeEntries)
-		{
-			$aLatestEntry = end($this->m_aIndex);
-			$this->m_sLog = substr($this->m_sLog, $aLatestEntry['separator_length']);
-			$sSeparator = sprintf(CASELOG_SEPARATOR, $sDate, $sOnBehalfOf, $iUserId);
-			$iSepLength = strlen($sSeparator);
-			$iTextlength = strlen($sText."\n");
-			$this->m_sLog = $sSeparator.$sText.$this->m_sLog; // Latest entry printed first
-			$this->m_aIndex[] = array(
-				'user_name' => $sOnBehalfOf,	
-				'user_id' => $iUserId,	
-				'date' => time(),	
-				'text_length' => $aLatestEntry['text_length'] + $iTextlength,	
-				'separator_length' => $iSepLength,
-				'format' => 'html',	
-			);
-			
-		}
-		else
-		{
-			$sSeparator = sprintf(CASELOG_SEPARATOR, $sDate, $sOnBehalfOf, $iUserId);
-			$iSepLength = strlen($sSeparator);
-			$iTextlength = strlen($sText);
-			$this->m_sLog = $sSeparator.$sText.$this->m_sLog; // Latest entry printed first
-			$this->m_aIndex[] = array(
-				'user_name' => $sOnBehalfOf,	
-				'user_id' => $iUserId,	
-				'date' => time(),	
-				'text_length' => $iTextlength,	
-				'separator_length' => $iSepLength,	
-				'format' => 'html',	
-			);
-		}
+
+		$sSeparator = sprintf(CASELOG_SEPARATOR, $sDate, $sOnBehalfOf, $iUserId);
+		$iSepLength = strlen($sSeparator);
+		$iTextlength = strlen($sText);
+		$this->m_sLog = $sSeparator.$sText.$this->m_sLog; // Latest entry printed first
+		$this->m_aIndex[] = array(
+			'user_name' => $sOnBehalfOf,
+			'user_id' => $iUserId,
+			'date' => time(),
+			'text_length' => $iTextlength,
+			'separator_length' => $iSepLength,
+			'format' => 'html',
+		);
 		$this->m_bModified = true;
 	}
 
