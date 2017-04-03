@@ -617,7 +617,7 @@ class ApplicationHelper
 		else
 		{
 			$bFound = false;
-			foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass)
+			foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_EXCLUDELEAF, false) as $sParentClass)
 			{
 				if (isset($aForms[$sParentClass]) && isset($aForms[$sParentClass][$sMode]))
 				{
