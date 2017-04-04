@@ -499,7 +499,7 @@ EOF
 			}
 
 			$aItemProperties = array(
-				'id' => $oItem->GetKey(),
+				'id' => ($this->oField->IsIndirect() && $oItem->IsNew()) ? -1*$oRemoteItem->GetKey() : $oItem->GetKey(),
 				'target_id' => $oRemoteItem->GetKey(),
 				'name' => $oItem->GetName(),
 				'attributes' => array()
@@ -529,7 +529,7 @@ EOF
 			}
 			
 			$aItems[] = $aItemProperties;
-			$aItemIds[] = array('id' => $oItem->GetKey());
+			$aItemIds[] = array('id' => $aItemProperties['id']);
 		}
 	}
 
