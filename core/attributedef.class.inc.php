@@ -2768,7 +2768,7 @@ class AttributeCaseLog extends AttributeLongText
 		if ($proposedValue instanceof ormCaseLog)
 		{
 			// Passthrough
-			$ret = $proposedValue;
+			$ret = clone $proposedValue;
 		}
 		else
 		{
@@ -4902,7 +4902,11 @@ class AttributeBlob extends AttributeDefinition
 	// from a CSV by specifying its path/URL
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (!is_object($proposedValue))
+		if (is_object($proposedValue))
+		{
+			$proposedValue = clone $proposedValue;
+		}
+		else
 		{
 			if (file_exists($proposedValue) && UserRights::IsAdministrator())
 			{
@@ -5182,7 +5186,11 @@ class AttributeImage extends AttributeBlob
 	// from a CSV by specifying its path/URL
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (!is_object($proposedValue))
+		if (is_object($proposedValue))
+		{
+			$proposedValue = clone $proposedValue;
+		}
+		else
 		{
 			if (file_exists($proposedValue) && UserRights::IsAdministrator())
 			{
@@ -6079,7 +6087,11 @@ class AttributeOneWayPassword extends AttributeDefinition
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		$oPassword = $proposedValue;
-		if (!is_object($oPassword))
+		if (is_object($oPassword))
+		{
+			$oPassword = clone $proposedValue;
+		}
+		else
 		{
 			$oPassword = new ormPassword('', '');
 			$oPassword->SetPassword($proposedValue);
