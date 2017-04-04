@@ -135,16 +135,6 @@ $(function()
 							// If everything is okay, we close the form and reload it.
 							if(oValidation.valid)
 							{
-								// Resetting textarea fields (delay is necessary has we have to wait for the form to be built.
-								setTimeout(function(){
-									me.options.field_set.find('.portal_form_field_html').each(function(iIndex, oElem){
-										if($(oElem).find('.cke').length > 0)
-										{
-											$(oElem).triggerHandler('set_current_value', '');
-										}
-									});
-								}, 200);
-								
 								if(me.options.is_modal)
 								{
 									me.element.closest('.modal').modal('hide');
