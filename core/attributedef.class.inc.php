@@ -565,7 +565,7 @@ abstract class AttributeDefinition
 		}
 
 		// - Comparing flags
-		if (!$this->IsNullAllowed() || (($iFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY))
+		if ($this->IsWritable() && (!$this->IsNullAllowed() || (($iFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY)))
 		{
 			$oFormField->SetMandatory(true);
 		}
