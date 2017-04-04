@@ -1833,7 +1833,7 @@ EOF
 						$sStyle = 'style="'.implode('; ', $aStyles).'"';
 					}
 					$sHeader = '<div class="caselog_input_header"></div>'; // will be hidden in CSS (via :empty) if it remains empty
-					$sEditValue = $oAttDef->GetEditValue($value);
+					$sEditValue = is_object($value) ? $value->GetModifiedEntry('html') : '';
 					$sPreviousLog = is_object($value) ? $value->GetAsHTML($oPage, true /* bEditMode */, array('AttributeText', 'RenderWikiHtml')) : '';
 					$iEntriesCount = is_object($value) ? count($value->GetIndex()) : 0;
 					$sHidden = "<input type=\"hidden\" id=\"{$iId}_count\" value=\"$iEntriesCount\"/>"; // To know how many entries the case log already contains
