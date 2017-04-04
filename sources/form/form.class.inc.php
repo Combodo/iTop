@@ -19,10 +19,11 @@
 
 namespace Combodo\iTop\Form;
 
-use Combodo\iTop\Form\Field\SubFormField;
 use \Exception;
 use \Dict;
 use \Combodo\iTop\Form\Field\Field;
+use \Combodo\iTop\Form\Field\CaseLogField;
+use \Combodo\iTop\Form\Field\SubFormField;
 
 /**
  * Description of Form
@@ -464,6 +465,28 @@ class Form
 		}
 		return $ret;
 	}
+
+    /**
+     * Resets CaseLog fields value in the form and its sub-forms
+     *
+     * @return Form
+     */
+	public function ResetCaseLogFields()
+    {
+        foreach($this->GetFields() as $oField)
+        {
+            if($oField instanceof CaseLogField)
+            {
+                $oField->SetCurrentValue(null);
+            }
+            elseif($oField instanceof SubFormField)
+            {
+                $oField->GetForm()->ResetCaseLogFields();
+            }
+        }
+
+        return $this;
+    }
 
 	/**
 	 * Finalizes each field, following the dependencies so that a field can compute its value or other properties,

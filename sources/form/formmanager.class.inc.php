@@ -29,7 +29,9 @@ use \Combodo\iTop\Renderer\FormRenderer;
  */
 abstract class FormManager
 {
+    /** @var \Combodo\iTop\Form\Form $oForm */
 	protected $oForm;
+	/** @var \Combodo\iTop\Renderer\FormRenderer $oRenderer */
 	protected $oRenderer;
 
 	/**

@@ -884,6 +884,9 @@ class ObjectFormManager extends FormManager
 				// Ending transaction with a commit as everything was fine
 				CMDBSource::Query('COMMIT');
 
+				// Resetting caselog fields value, otherwise the value will stay in it after submit.
+                $this->oForm->ResetCaseLogFields();
+
 				if ($bWasModified)
 				{
 					$aData['messages']['success'] += array('_main' => array(Dict::S('Brick:Portal:Object:Form:Message:Saved')));
