@@ -534,6 +534,17 @@ class SQLObjectQuery extends SQLQuery
 		return (count($this->m_aJoinSelects) == 0);
 	}
 
+	public function CountTables()
+	{
+		$iRet = 1;
+		foreach ($this->m_aJoinSelects as $i => $aJoinInfo)
+		{
+			$oSQLQuery = $aJoinInfo["select"];
+			$iRet += $oSQLQuery->CountTables();
+		}
+		return $iRet;
+	}
+
 	protected function CollectUsedTables(&$aTables)
 	{
 		$this->m_oConditionExpr->CollectUsedParents($aTables);

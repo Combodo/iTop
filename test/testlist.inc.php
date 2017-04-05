@@ -5629,3 +5629,102 @@ class TestBug788 extends TestBizModel
 		}
 	}
 }
+
+class WhereIsThe61TablesThreat extends TestBizModel
+{
+	static public function GetName()
+	{
+		return '61 tables';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Evaluate where is the 61 tables limit threat';
+	}
+
+	protected function DoExecute()
+	{
+		$aClassToCount_Full = array();
+		$aDistribution = array();
+		$iTotalClasses = 0;
+		foreach (MetaModel::GetClasses() as $sClass)
+		{
+			if (MetaModel::IsAbstract($sClass)) continue;
+
+			$iTotalClasses++;
+			$oSearch = DBSearch::FromOQL("SELECT $sClass WHERE id = 1");
+			$oSql = $oSearch->GetSQLQueryStructure(array(), false, null);
+			$iCount = $oSql->CountTables();
+			$aClassToCount_Full[$sClass] = $iCount;
+			if (array_key_exists($iCount, $aDistribution))
+			{
+				$aDistribution[$iCount]++;
+			}
+			else
+			{
+				$aDistribution[$iCount] = 1;
+			}
+		}
+		arsort($aClassToCount_Full);
+
+		$iHighestCount = max($aClassToCount_Full);
+		for($i = 1; $i < $iHighestCount ; $i++)
+		{
+			if (!array_key_exists($i, $aDistribution))
+			{
+				$aDistribution[$i] = 0;
+			}
+		}
+		ksort($aDistribution);
+
+
+		$i = 0;
+		$iLimit = 15;
+		$iCountThreshold = 10;
+		echo "<h5>TOP $iLimit offenders (+ those exceeding $iCountThreshold tables)</h5>";
+		foreach ($aClassToCount_Full as $sClass => $iCountFull)
+		{
+			$i++;
+			if (($iCountFull <= $iCountThreshold) && ($i >= $iLimit)) break;
+
+			echo "$sClass: $iCountFull tables<br/>";
+		}
+
+		echo "<h5>Distribution of table counts</h5>";
+		echo "<p>Over a total of $iTotalClasses instantiable classes.</p>";
+		echo "<table>";
+		echo "<tr><td>Table count</td><td>Classes</td></tr>";
+		foreach ($aDistribution as $iTableCount => $iClassCount)
+		{
+			echo "<tr><td>$iTableCount</td><td>$iClassCount</td></tr>";
+		}
+		echo "</table>";
+	}
+}
+
+class TestBug689 extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'An OQL failing to export in XML';
+	}
+
+	static public function GetDescription()
+	{
+		return '(N.689) Reaching the limit of 61 tables';
+	}
+
+	protected function DoExecute()
+	{
+		$sOql = 'SELECT child, parent, s1, p, o FROM UserRequest AS child JOIN UserRequest AS parent ON child.parent_request_id = parent.id JOIN lnkFunctionalCIToTicket AS l1 ON l1.ticket_id = child.id JOIN Server AS s1 ON l1.functionalci_id = s1.id JOIN Person AS p ON child.caller_id = p.id JOIN Organization AS o ON p.org_id = o.id';
+		$oSearch = DBSearch::FromOQL($sOql);
+		$oSql = $oSearch->GetSQLQueryStructure(array(), false, null);
+		//$sSql = $oSql->RenderSelect();
+
+		echo '<p>'.$sOql.'</p>';
+		echo '<p>This query rendered with all columns give a MySQL query having <b>'.$oSql->CountTables().'</b> tables... let\'s try it with the DBObjectSet API:</p>';
+		$oSet = new DBObjectSet($oSearch);
+		$oObj = $oSet->Fetch();
+		echo '<p>Well done, this is working fine! Some magic happened in the background!</p>';
+	}
+}
