@@ -1371,16 +1371,33 @@ class TestItopEfficiency extends TestBizModel
 		// Everything but the ToOQL (wich is interesting, anyhow)
 		$fTotal = $fParsingDuration + $fBuildDuration + $fQueryDuration + $fFetchDuration; 
 
-		return array(
-			'rows' => CMDBSource::NbRows($res),
-			'duration (s)' => round($fTotal, 4),
-			'parsing (%)' => round(100 * $fParsingDuration / $fTotal, 1),
-			'build SQL (%)' => round(100 * $fBuildDuration / $fTotal, 1),
-			'query exec (%)' => round(100 * $fQueryDuration / $fTotal, 1),
-			'fetch (%)' => round(100 * $fFetchDuration / $fTotal, 1),
-			'to OQL (%)' => round(100 * $fToOqlDuration / $fTotal, 1),
-			'parsing+build (%)' => round(100 * ($fParsingDuration + $fBuildDuration) / $fTotal, 1),
-		);
+		if ($fTotal == 0)
+		{
+			$aRet = array(
+				'rows' => CMDBSource::NbRows($res),
+				'duration (s)' => '0 (negligeable)',
+				'parsing (%)' => '?',
+				'build SQL (%)' => '?',
+				'query exec (%)' => '?',
+				'fetch (%)' => '?',
+				'to OQL (%)' => '?',
+				'parsing+build (%)' => '?',
+			);
+		}
+		else
+		{
+			$aRet = array(
+				'rows' => CMDBSource::NbRows($res),
+				'duration (s)' => round($fTotal, 4),
+				'parsing (%)' => round(100 * $fParsingDuration / $fTotal, 1),
+				'build SQL (%)' => round(100 * $fBuildDuration / $fTotal, 1),
+				'query exec (%)' => round(100 * $fQueryDuration / $fTotal, 1),
+				'fetch (%)' => round(100 * $fFetchDuration / $fTotal, 1),
+				'to OQL (%)' => round(100 * $fToOqlDuration / $fTotal, 1),
+				'parsing+build (%)' => round(100 * ($fParsingDuration + $fBuildDuration) / $fTotal, 1),
+			);
+		}
+		return $aRet;
 	}
 	
 	protected function DoExecute()
@@ -1399,7 +1416,7 @@ class TestItopEfficiency extends TestBizModel
 			'SELECT Person WHERE id=1',
 			'SELECT Server',
 			'SELECT Server WHERE id=1',
-			'SELECT Incident JOIN Person ON Incident.agent_id = Person.id WHERE Person.id = 5',
+			'SELECT UserRequest JOIN Person ON UserRequest.agent_id = Person.id WHERE Person.id = 5',
 		);
 		$aStats  = array();
 		foreach ($aQueries as $sOQL)
@@ -1479,18 +1496,35 @@ class TestQueries extends TestBizModel
 		}
 
 		// Everything but the ToOQL (wich is interesting, anyhow)
-		$fTotal = $fParsingDuration + $fBuildDuration + $fQueryDuration + $fFetchDuration; 
+		$fTotal = $fParsingDuration + $fBuildDuration + $fQueryDuration + $fFetchDuration;
 
-		return array(
-			'rows' => CMDBSource::NbRows($res),
-			'duration (s)' => round($fTotal, 4),
-			'parsing (%)' => round(100 * $fParsingDuration / $fTotal, 1),
-			'build SQL (%)' => round(100 * $fBuildDuration / $fTotal, 1),
-			'query exec (%)' => round(100 * $fQueryDuration / $fTotal, 1),
-			'fetch (%)' => round(100 * $fFetchDuration / $fTotal, 1),
-			'to OQL (%)' => round(100 * $fToOqlDuration / $fTotal, 1),
-			'parsing+build (%)' => round(100 * ($fParsingDuration + $fBuildDuration) / $fTotal, 1),
-		);
+		if ($fTotal == 0)
+		{
+			$aRet = array(
+				'rows' => CMDBSource::NbRows($res),
+				'duration (s)' => '0 (negligeable)',
+				'parsing (%)' => '?',
+				'build SQL (%)' => '?',
+				'query exec (%)' => '?',
+				'fetch (%)' => '?',
+				'to OQL (%)' => '?',
+				'parsing+build (%)' => '?',
+			);
+		}
+		else
+		{
+			$aRet = array(
+				'rows' => CMDBSource::NbRows($res),
+				'duration (s)' => round($fTotal, 4),
+				'parsing (%)' => round(100 * $fParsingDuration / $fTotal, 1),
+				'build SQL (%)' => round(100 * $fBuildDuration / $fTotal, 1),
+				'query exec (%)' => round(100 * $fQueryDuration / $fTotal, 1),
+				'fetch (%)' => round(100 * $fFetchDuration / $fTotal, 1),
+				'to OQL (%)' => round(100 * $fToOqlDuration / $fTotal, 1),
+				'parsing+build (%)' => round(100 * ($fParsingDuration + $fBuildDuration) / $fTotal, 1),
+			);
+		}
+		return $aRet;
 	}
 	
 	protected function DoExecute()
