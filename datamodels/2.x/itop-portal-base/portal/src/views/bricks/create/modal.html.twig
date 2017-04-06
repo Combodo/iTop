@@ -28,14 +28,11 @@
                 sUrl = AddParameterToUrl(sUrl, 'ar_token', '{{ ar_token }}');
                 // Loading form
                 oModalElem.find('.modal-content').load(sUrl, function(oData, sStatus, oXHR){
-                    var oResponse = (oXHR.responseJSON !== undefined) ? oXHR.responseJSON : JSON.parse(oXHR.responseText);
-
-                    // Note : This could be refactored for a global use
-                    oModalElem.html( $('#modal-for-alert').html() );
-                    oModalElem.find('.modal-title').html(oResponse.error_title);
-                    oModalElem.find('.modal-body .alert').html(oResponse.error_message)
-                        .removeClass('alert-success alert-info alert-warning alert-danger')
-                        .addClass('alert-danger');
+                    if(sStatus === 'error')
+                    {
+                        // Hiding modal in case of error as the general AJAX error handler will display a message
+                        oModalElem.modal('hide');
+                    }
                 });
             });
         });

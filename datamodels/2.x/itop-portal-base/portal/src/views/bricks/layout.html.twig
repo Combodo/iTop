@@ -35,11 +35,11 @@
 {% block pPageLiveScriptHelpers %}
     {{ parent() }}
 
+	// Helpers used for brick's opening target
 	var SetActionUrl = function(oElem, sUrl)
 	{
 		oElem.attr('href', sUrl);
 	};
-
 	var SetActionOpeningTarget = function(oElem, sMode)
 	{
 		if(sMode === '{{ constant('Combodo\\iTop\\Portal\\Brick\\PortalBrick::ENUM_OPENING_TARGET_MODAL') }}')

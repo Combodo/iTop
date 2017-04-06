@@ -75,7 +75,6 @@ class BsSelectObjectFieldRenderer extends FieldRenderer
 				$oCountSet = new DBObjectSet($oSearch);
 				$iSetCount = $oCountSet->Count();
 				// Note : Autocomplete/Search is disabled for template fields as they are not external keys, thus they will just be displayed as regular select.
-				//$bRegularSelect = ($iSetCount <= $this->oField->GetMaximumComboLength());
 				$bRegularSelect = ( ($iSetCount <= $this->oField->GetMaximumComboLength()) || ($this->oField->GetSearchEndpoint() === null) || ($this->oField->GetSearchEndpoint() === '') );
 				unset($oCountSet);
 
@@ -386,7 +385,14 @@ EOF
 						{
 							sFormPath: '{$this->oField->GetFormPath()}',
 							sFieldId: '{$this->oField->GetId()}'
-						}
+						},
+                        function(sResponseText, sStatus, oXHR){
+                            // Hiding modal in case of error as the general AJAX error handler will display a message
+                            if(sStatus === 'error')
+                            {
+                                oModalElem.modal('hide');
+                            }
+                        }
 					);
 					oModalElem.modal('show');
 				});
@@ -433,7 +439,14 @@ EOF
 						formmanager_class: $(this).closest('.portal_form_handler').portal_form_handler('getOptions').formmanager_class,
 						formmanager_data: JSON.stringify($(this).closest('.portal_form_handler').portal_form_handler('getOptions').formmanager_data),
 						current_values: $(this).closest('.portal_form_handler').portal_form_handler('getCurrentValues')
-					}
+					},
+                    function(sResponseText, sStatus, oXHR){
+                        // Hiding modal in case of error as the general AJAX error handler will display a message
+                        if(sStatus === 'error')
+                        {
+                            oModalElem.modal('hide');
+                        }
+                    }
 				);
 				oModalElem.modal('show');
 			});

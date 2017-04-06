@@ -451,6 +451,13 @@ EOF
 								sFormPath: '{$this->oField->GetFormPath()}',
 								sFieldId: '{$this->oField->GetId()}',
 								aObjectIdsToIgnore : aObjectIdsToIgnore
+							},
+							function(sResponseText, sStatus, oXHR){
+							    // Hiding modal in case of error as the general AJAX error handler will display a message
+							    if(sStatus === 'error')
+							    {
+							        oModalElem.modal('hide');
+							    }
 							}
 						);
 						oModalElem.modal('show');

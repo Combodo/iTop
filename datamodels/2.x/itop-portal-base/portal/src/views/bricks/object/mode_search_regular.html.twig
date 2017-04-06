@@ -172,21 +172,26 @@
 					{% endif %}
 				},
 				"error": function(oData, sError, sThrow){
+				    // Error returned by the framework
 					if(oData.responseJSON !== undefined && oData.responseJSON !== null)
 					{
 						var oResponse = oData.responseJSON;
 						// If we encounter an error
 						if(oResponse.exception !== undefined)
 						{
-							// Note : This could be refactored for a global use
-							$('#{{ sTableId }}').closest('.modal').html( $('#modal-for-alert').html() );
-							var oModalElem = $('#{{ sTableId }}').closest('.modal');
-							oModalElem.find('.modal-title').html(oResponse.error_title);
-							oModalElem.find('.modal-body .alert').html(oResponse.error_message)
-									.removeClass('alert-success alert-info alert-warning alert-danger')
-									.addClass('alert-danger');
-							oModalElem.modal('show');
+							{# Hiding modal in case of error as the general AJAX error handler will display a message #}
+                            {% if tIsModal is defined and tIsModal == true %}
+                            	$('#{{ sFormId }}').closest('.modal').modal('hide');
+                            {% endif %}
 						}
+					}
+					// Global failure
+					else
+					{
+						{# Hiding modal in case of error as the general AJAX error handler will display a message #}
+                        {% if tIsModal is defined and tIsModal == true %}
+                        	$('#{{ sFormId }}').closest('.modal').modal('hide');
+                        {% endif %}
 					}
 				}
 			}

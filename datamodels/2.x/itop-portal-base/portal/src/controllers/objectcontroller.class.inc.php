@@ -275,7 +275,7 @@ class ObjectController extends AbstractController
 	public function CreateFromFactoryAction(Request $oRequest, Application $oApp, $sObjectClass, $sObjectId, $sEncodedMethodName)
 	{
 		$sMethodName = base64_decode($sEncodedMethodName);
-		
+
 		// Checking that the factory method is valid
 		if (!is_callable($sMethodName))
 		{

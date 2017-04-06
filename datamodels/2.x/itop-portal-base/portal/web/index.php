@@ -41,30 +41,19 @@ require_once __DIR__ . '/../src/helpers/scopevalidatorhelper.class.inc.php';
 require_once __DIR__ . '/../src/helpers/securityhelper.class.inc.php';
 require_once __DIR__ . '/../src/helpers/applicationhelper.class.inc.php';
 
+use \Silex\Application;
 use \Combodo\iTop\Portal\Helper\ApplicationHelper;
-
-// Checking user rights and prompt if needed
-LoginWebPage::DoLoginEx(PORTAL_ID);
-if (UserRights::GetContactId() == 0)
-{
-	die(Dict::S('Portal:ErrorNoContactForThisUser'));
-}
 
 // Stacking context tag so it knows we are in the portal
 $oContex = new ContextTag('GUI:Portal');
 $oContex2 = new ContextTag('Portal:' . PORTAL_MODULE_ID);
-
-if (!defined('DISABLE_DATA_LOCALIZER_PORTAL'))
-{
-	ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', UserRights::GetUserLanguage());
-}
 
 // Checking if debug param is on
 $bDebug = (isset($_REQUEST['debug']) && ($_REQUEST['debug'] === 'true') );
 
 // Initializing Silex framework
 $oKPI = new ExecutionKPI();
-$oApp = new Silex\Application();
+$oApp = new Application();
 
 // Registring optional silex components
 $oApp->register(new Combodo\iTop\Portal\Provider\UrlGeneratorServiceProvider());
@@ -83,36 +72,57 @@ $oApp->register(new Silex\Provider\TwigServiceProvider(), array(
 $oApp->register(new Silex\Provider\HttpFragmentServiceProvider());
 $oKPI->ComputeAndReport('Initialization of the Silex application');
 
-// Configuring Silex application
-$oApp['debug'] = $bDebug;
-$oApp['combodo.current_environment'] = utils::GetCurrentEnvironment();
-$oApp['combodo.absolute_url'] = utils::GetAbsoluteUrlAppRoot();
-$oApp['combodo.portal.base.absolute_url'] = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/web/';
-$oApp['combodo.portal.base.absolute_path'] = MODULESROOT . '/itop-portal-base/portal/web/';
-$oApp['combodo.portal.instance.absolute_url'] = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/' . PORTAL_MODULE_ID . '/';
-$oApp['combodo.portal.instance.id'] = PORTAL_MODULE_ID;
-$oApp['combodo.portal.instance.conf'] = array();
-$oApp['combodo.portal.instance.routes'] = array();
+$oApp->before(function(Symfony\Component\HttpFoundation\Request $oRequest, Silex\Application $oApp) use ($bDebug){
+    // Checking user rights and prompt if needed (401 HTTP code returned if XHR request)
+    $iExitMethod = ($oRequest->isXmlHttpRequest()) ? LoginWebPage::EXIT_RETURN : LoginWebPage::EXIT_PROMPT;
+    $iLogonRes = LoginWebPage::DoLoginEx(PORTAL_ID, false, $iExitMethod);
+    if( ($iExitMethod === LoginWebPage::EXIT_RETURN) && ($iLogonRes != 0) )
+    {
+        $oApp->abort(401, Dict::S('Portal:ErrorUserLoggedOut'));
+    }
 
-// Registering error/exception handler in order to transform php error to exception
-ApplicationHelper::RegisterExceptionHandler($oApp);
+    if (UserRights::GetContactId() == 0)
+    {
+        $oApp->abort(500, Dict::S('Portal:ErrorNoContactForThisUser'));
+    }
 
-// Preparing portal foundations (Can't use Silex autoload through composer as we don't follow PSR conventions -filenames, functions-)
-$oKPI = new ExecutionKPI();
-ApplicationHelper::LoadControllers();
-ApplicationHelper::LoadRouters();
-ApplicationHelper::RegisterRoutes($oApp);
-ApplicationHelper::LoadBricks();
-ApplicationHelper::LoadFormManagers();
-ApplicationHelper::RegisterTwigExtensions($oApp['twig']);
-$oKPI->ComputeAndReport('Loading portal files (routers, controllers, ...)');
+    // Enabling datalocalizer if needed
+    if (!defined('DISABLE_DATA_LOCALIZER_PORTAL'))
+    {
+        ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', UserRights::GetUserLanguage());
+    }
 
-// Loading portal configuration from the module design
-$oKPI = new ExecutionKPI();
-ApplicationHelper::LoadPortalConfiguration($oApp);
-$oKPI->ComputeAndReport('Parsing portal configuration');
-// Loading current user
-ApplicationHelper::LoadCurrentUser($oApp);
+    // Configuring Silex application
+    $oApp['debug'] = $bDebug;
+    $oApp['combodo.current_environment'] = utils::GetCurrentEnvironment();
+    $oApp['combodo.absolute_url'] = utils::GetAbsoluteUrlAppRoot();
+    $oApp['combodo.portal.base.absolute_url'] = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/web/';
+    $oApp['combodo.portal.base.absolute_path'] = MODULESROOT . '/itop-portal-base/portal/web/';
+    $oApp['combodo.portal.instance.absolute_url'] = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/' . PORTAL_MODULE_ID . '/';
+    $oApp['combodo.portal.instance.id'] = PORTAL_MODULE_ID;
+    $oApp['combodo.portal.instance.conf'] = array();
+    $oApp['combodo.portal.instance.routes'] = array();
+
+    // Registering error/exception handler in order to transform php error to exception
+    ApplicationHelper::RegisterExceptionHandler($oApp);
+
+    // Preparing portal foundations (Can't use Silex autoload through composer as we don't follow PSR conventions -filenames, functions-)
+    $oKPI = new ExecutionKPI();
+    ApplicationHelper::LoadControllers();
+    ApplicationHelper::LoadRouters();
+    ApplicationHelper::RegisterRoutes($oApp);
+    ApplicationHelper::LoadBricks();
+    ApplicationHelper::LoadFormManagers();
+    ApplicationHelper::RegisterTwigExtensions($oApp['twig']);
+    $oKPI->ComputeAndReport('Loading portal files (routers, controllers, ...)');
+
+    // Loading portal configuration from the module design
+    $oKPI = new ExecutionKPI();
+    ApplicationHelper::LoadPortalConfiguration($oApp);
+    $oKPI->ComputeAndReport('Parsing portal configuration');
+    // Loading current user
+    ApplicationHelper::LoadCurrentUser($oApp);
+}, Application::EARLY_EVENT);
 
 // Running application
 $oKPI = new ExecutionKPI();
