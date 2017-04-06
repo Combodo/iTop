@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -239,8 +239,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		me.ajax_request = $.post( AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap, 
 			function(data)
 			{
-				var oTemp = $('<div id="ac_temp" style="display:none">'+data.name+'</div>'); 
-				var txt = oTemp.html(); // this causes HTML entities to be interpreted
+				var oTemp = $('<div>'+data.name+'</div>');
+				var txt = oTemp.text(); // this causes HTML entities to be interpreted
 				$('#label_'+me.id).val(txt);
 				$('#label_'+me.id).removeClass('ac_dlg_loading');
 				var prevValue = $('#'+me.id).val();
@@ -408,8 +408,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					else
 					{
 						// Put the value corresponding to the newly created object in the autocomplete
-						var oTemp = $('<div id="ac_temp" style="display:none">'+data.name+'</div>'); 
-						var txt = oTemp.html(); // this causes HTML entities to be interpreted
+						var oTemp = $('<div>'+data.name+'</div>');
+						var txt = oTemp.text(); // this causes HTML entities to be interpreted
 						$('#label_'+me.id).val(txt);
 						$('#'+me.id).val(data.id);
 						$('#label_'+me.id).removeClass('ac_dlg_loading');
@@ -546,8 +546,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		me.ajax_request = $.post( AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap, 
 			function(data)
 			{
-				var oTemp = $('<div id="ac_temp" style="display:none">'+data.name+'</div>'); 
-				var txt = oTemp.html(); // this causes HTML entities to be interpreted
+				var oTemp = $('<div>'+data.name+'</div>');
+				var txt = oTemp.text(); // this causes HTML entities to be interpreted
 				$('#label_'+me.id).val(txt);
 				$('#label_'+me.id).removeClass('ac_dlg_loading');
 				var prevValue = $('#'+me.id).val();
