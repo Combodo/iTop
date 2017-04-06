@@ -388,8 +388,9 @@ class ormCaseLog {
 		if (($bEditMode) && (count($aIndex) > 0) && $this->m_bModified)
 		{
 			// Don't display the first element, that is still considered as editable
-			$iPos = $aIndex[0]['separator_length'] + $aIndex[0]['text_length'];
-			array_shift($aIndex); 
+			$aLastEntry = end($aIndex);
+			$iPos = $aLastEntry['separator_length'] + $aLastEntry['text_length'];
+			array_pop($aIndex);
 		}
 		for($index=count($aIndex)-1 ; $index >= 0 ; $index--)
 		{
