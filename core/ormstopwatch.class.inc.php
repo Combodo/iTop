@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2014 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -22,7 +22,7 @@ require_once('backgroundprocess.inc.php');
  * ormStopWatch
  * encapsulate the behavior of a stop watch that will be stored as an attribute of class AttributeStopWatch 
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -260,7 +260,7 @@ class ormStopWatch
 		return $iRet;
 	}
 
-	protected function ComputeDeadline($oObject, $oAttDef, $iStartTime, $iDurationSec)
+	protected function ComputeDeadline($oObject, $oAttDef, $iPercent, $iStartTime, $iDurationSec)
 	{
 		$sWorkingTimeComputer = $oAttDef->Get('working_time_computing');
 		if ($sWorkingTimeComputer == '')
@@ -280,7 +280,7 @@ class ormStopWatch
 		}
 		// GetDeadline($oObject, $iDuration, DateTime $oStartDate)
 		$oStartDate = new DateTime('@'.$iStartTime); // setTimestamp not available in PHP 5.2
-		$oDeadline = call_user_func($aCallSpec, $oObject, $iDurationSec, $oStartDate);
+		$oDeadline = call_user_func($aCallSpec, $oObject, $iDurationSec, $oStartDate, $iPercent);
 		$iRet = $oDeadline->format('U');
 		return $iRet;
 	}
@@ -384,8 +384,8 @@ class ormStopWatch
 					$sAttCode = $oAttDef->GetCode();
 					WorkingTimeRecorder::Start($oObject, $iComputationRefTime, "ormStopWatch-Deadline-$iPercent-$sAttCode", 'Core:ExplainWTC:StopWatch-Deadline', array("Class:$sClass/Attribute:$sAttCode", $iPercent));
 				}
-				$aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $this->iLastStart, $iThresholdDuration - $this->iTimeSpent);
-				// OR $aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $this->iStarted, $iThresholdDuration);
+				$aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $iPercent, $this->iLastStart, $iThresholdDuration - $this->iTimeSpent);
+				// OR $aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $iPercent, $this->iStarted, $iThresholdDuration);
 
 				if (class_exists('WorkingTimeRecorder'))
 				{
