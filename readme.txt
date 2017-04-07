@@ -14,9 +14,9 @@ Readme file
 
 1. ABOUT THIS RELEASE
    ==================
-Thank you for downloading the 27th packaged release of iTop.
+Thank you for downloading the 28th packaged release of iTop.
 This maintenance release fixes regressions and functions which were supposed to be part of the 2.3.x feature set.
-Most of the regressions are related to the introduction of HTML formatted Case Logs and the Enhanced Portal.
+Most of the regressions are related to the introduction of HTML formatted Case Logs, Date formating and the Enhanced Portal.
 
 The documentation about iTop is available as a Wiki at: https://wiki.openitop.org/
 
@@ -26,7 +26,54 @@ The source code of iTop can be found on SourceForge: https://sourceforge.net/p/i
 1.1 What's new?
     -----------
 
+Changes since iTop 2.3.3:
+=========================
+
+   User Interface
+   --------------
+
+Enable browser spell checking in the rich text editor, use: Ctrl + right click to get it
+#1125 Friendly name format ignored if only one attribute was used.
+Dependent fields fail to reload when creating an object from another one, with mandatory date using format different from MySQL one.
+Adding an InlineImage while adding at the same time an object in a IndirectLinkedSet would attach the InlineImage to the linked object instead of the host one. If their organizations were different, it could result in denying the display of the InlineImage.
+Ugly labels when hovering bar or pie charts (grouped on an external key or an enum)
+Corrupted coverage windows when edited from a browser having a timezone different from the iTop timezone
+Object with a &, < ou > in its name was not displayed correctly in external key field when created or retrieved through a pop-up search.
+Object Copier: case logs corrupted in the created object (and loss of HTML formatting for new comments)
+Object Copier: Dependent fields fail to reload when creating an object from another one and using localised Date format.
+
+Impact analyses
+---------------
+Messing up with redundancy settings (could either lead to wrong results or a fatal error if a relation is configured downstream).
+Missing edges (and redundancy) when two classes impact a given class and both relations use the same neighbour id (and if redundancy is enabled over both relations).
+Role "Do not notify" on contact was ignored when recomputing the ticket impact (and log flood with PHP Notices)
+Impact analysis graph does not refresh when unchecking some items (clicking on the blue drawer shows the graph unchanged).
+
+Portals
+-------
+New: add_to_list() can now be used in portal action rules.
+#1396 $this->hyperlink(portal)$ used in 'notifications' was broken since iTop 2.3.3 (since r4519) 
+Portal: log_kpi_duration / log_kpi_memory are now supported by the portal
+Portal: Fix invalid URL in LinkedSet searchbox when editing an object (eg. Adding a Contact to an UserRequest)
+Portal: Object display crashed when a linkedset attribute has corrupted data (eg. an external key to 0)
+Portal: Wrong form used in some inheritance cases.
+Legacy portal: Since iTop 2.3, plain text caselog entries can no longer be toggled due to a bad jQuery selector. Only HTML entries were working.
+
+Administration tasks
+--------------------
+#1413 Data synchro: a line break or '<' in the 'description' of the DataSource object, brook the display of synchronized objects edition form.
+Data synchro: allow setting 'undefined' value for a date when an empty string is provided. Known issue: Integer and Decimal cannot be set to 'undefined' value.
+OQL: Multi-objects OQL queries with UNION, could fail with various symptoms such as "Class 'IT Department' not found" or "An object id must be an integer value".
+Audit: failing with message "Attempting to merge a filter of class A with a filter of class B" (regression introduced in 1.3.2)
+Configuration: 'log_queries' setting has been deprecated, use 'log_kpi_duration' instead.
+Remove Fatal Errors when disabling logging in the configuration file or when developing specific pages
+Fixed XSS vulnerability
+Improve API/REST JSON to enable adding entry to HTML caselog using non-HTML text (handling 'new line').
+Setup: failing (during database creation) with MetaEnum attribute having no mapping for the class they are declared in.
+
+
 Changes since iTop 2.3.1:
+=========================
 
   Enhanced Portal
   ---------------
@@ -106,9 +153,9 @@ Changes since iTop 2.3.1:
 - Security fixes to prevent XSS injections in the page setup/email.test.php
 
 
-1.2 Should I upgrade to 2.3.3?
+1.2 Should I upgrade to 2.3.4?
     --------------------------
-Yes, if you are running iTop 2.3.1 we recommend you to upgrade. This version fixes quite a number of bugs from the previous version and is suitable for running in production.
+Yes, if you are running iTop 2.3.3 we recommend you to upgrade. This version fixes quite a number of bugs from the previous version and is suitable for running in production.
 
 
 1.3 Special Thanks To
@@ -198,7 +245,7 @@ The output will look as shown below:
 
 2.4. Upgrading from 2.x.x
      --------------------
-The version 2.3.3 if fully compatible with 2.0.0, 2.0.1, 2.0.2, 2.0.3, 2.1.0, 2.2.0, 2.2.1 and 2.3.1.
+The version 2.3.4 if fully compatible with 2.0.0, 2.0.1, 2.0.2, 2.0.3, 2.1.0, 2.2.0, 2.2.1, 2.3.1. and 2.3.3
 Due to few database changes and new modules/files that have to be installed, you
 MUST run the setup when upgrading (whatever the original version).
 
@@ -269,7 +316,7 @@ That's it.
 Some types of attributes (AttributeDuration, AttributeBlob) are always displayed as read-only in the Enhanced Portal.
 Suhosin can interfere with iTop. More information can be found here: http://www.combodo.com/wiki/doku.php?id=admin:suhosin
 Internet Explorer 6 is not supported (neither IE7 nor IE8 in compatibility mode)
-Tested with IE9, Firefox 3.6 up to Firefox 50 and Chrome.
+Tested with IE9, Firefox 3.6 up to Firefox 52 and Chrome.
 
 
 3.2. Known issues (https://sourceforge.net/apps/trac/itop/report/3)
