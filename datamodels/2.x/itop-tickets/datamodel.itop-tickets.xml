@@ -972,6 +972,7 @@
 			<properties>
 				<name>portal:itop-portal</name>
 				<!-- Can be either a fileref or a relative path to the file (To be tested). Takes over env-xxx/branding/portal-logo.png -->
+				<!-- Priority order is <logo> from xml > env-xxx/branding/portal-logo.png > /images/logo-itop-dark-bg.svg -->
 				<!--<fileref ref="brt_6a2be154b2a62659d3332c513bdad715"  />-->
 				<!--<logo>../images/itop-logo.png</logo>-->
 				<!-- Can be either a fileref or a relative path to the file from /env-xxx (eg. itop-portal-base/mystyle.css) -->
