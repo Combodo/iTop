@@ -14,7 +14,7 @@ Readme file
 
 1. ABOUT THIS RELEASE
    ==================
-Thank you for downloading the 27th packaged release of iTop.
+Thank you for downloading the 28th packaged release of iTop.
 This maintenance release fixes regressions and functions which were supposed to be part of the 2.3.x feature set.
 Most of the regressions are related to the introduction of HTML formatted Case Logs and the Enhanced Portal.
 
@@ -26,89 +26,50 @@ The source code of iTop can be found on SourceForge: https://sourceforge.net/p/i
 1.1 What's new?
     -----------
 
-Changes since iTop 2.3.1:
+Changes since iTop 2.3.3
 
-  Enhanced Portal
-  ---------------
-- Align behavior to legacy Portal: the enhanced portal now works fine for users having "Allowed Organizations" defined in their user account.
-- #1299 "Oops, could not load data" when creating request in Full ITIL instance when running PHP7, has been fixed.
-- Added possibility to specify a controller action for a brick tile. This allows to use some logic in order to make a specific render relying for example on DB dataobjects.
-- Activate multi-objects sorting based on DataModel default ordering in BrowseBrick. For example the Services catalog which is made of 3 objects: ServiceFamily/Service/ServiceSubcategory, used to be ordered only on Service Family is now sorted on Service Family, then on Service and last on Service Sub-category.
-- Fix bug in edition form with multiple LinkedSets.
-- Templates not working with OQL "list" fields (requires the Request Templates extension). This only happened when the field had too many items and was trying to render them as an autocomplete.
-- Support display of HTML fields in lists in the new portal.
-- Fix Deadline attributes which were not displayed properly in ManageBrick.
-- Optimized column load in ManageBrick and BrowseBrick to improve performance.
-- Fixed a regression which caused some characters (like < >) to be displayed as their corresponding HTML entities (&gt;)
-- Fixed the quick search on enumerated values and finalclass field. The search was performed against the "code" instead of the displayed (localized) value.
-- Fixed the display of enums and html images in lists.
-- Fixed the display of friendlyname in lists, which was not behaving well on abstract class when the name was composed of several fields in the child classes.
-- Fixed the list of resolved tickets for power users: the list was restricted to their own tickets.
-- A read-only AttributeDuration in the portal ticket edit form was preventing attachment on that form. It’s been fixed. AttributeDuration field are still read-only in the portal.
-- AttributeBlob was not working in the portal. It is now available but in read-only mode only.
-- #1281: Fixed a few hardcoded strings to dictionary: Service catalog brick had 2 hardcoded headers ("Service" and "Sous-Service")
-- The Spanish translation of the new Portal has been added.
-- The German translation has been improved.
-- When a Ticket is opened in a new tab, the caselog entry was not emptied after submission, leading to frequent duplicate entries in the Public log, if user was submitting again. This is fixed.
-- Fix display of Wiki text which was pointing to the console object, instead of the portal one.
-- #1284: Fixed issue when trying to re-open a ticket as a portal user. Cause was that the destination state had "must prompt" attributes that were all "read only" for the current user, making the entire form "read only" and therefore removing "submit" button. The user was the not able to complete the transition. Fix consists of skipping the form when all attributes are "read only" for the user.
-- Refactored a portion of TWIG (Loader is now in an helper TWIG)
-- Placed transition buttons to the right with the 'submit' one as it was confusing.
-- Fixed a bug on the default configuration that was displaying only UserRequest in the Closed requests brick instead of both UserRequest and Incident objects.
-- Fixed a bug with external key as radio button in forms
+User Interface
+--------------
+Enable browser spell checking in the rich text editor, use: Ctrl + right click to get it
+#1125 Friendly name format ignored if only one attribute was used.
+Dependent fields fail to reload when creating an object from another one, with mandatory date using format different from MySQL one.
+Adding an InlineImage while adding at the same time an object in a IndirectLinkedSet would attach the InlineImage to the linked object instead of the host one. If their organizations were different, it could result in denying the display of the InlineImage.
+Ugly labels when hovering bar or pie charts (grouped on an external key or an enum)
+Object with a &, < ou > in its name was not displayed correctly in external key field when created or retrieved through a pop-up search.
 
-  Support of Internet Explorer 9 in the new portal
-  ------------------------------------------------
-- Removed console.log to prevent a javascript error on IE9 which was stopiing the processing
-- Cosmetic adjustments for IE 9: zoom-in/zoom-out cursors do not exist in IE9: use the hand cursor instead
-- Fix Autocomplete bug with IE9 in forms.
-- Remove in IE9 the placeholder "Type your text here" in the Public log of a Ticket as it was wrongly logged as a real user entry
-- Fix for the upload of attachments with IE9.
+Impact analyses
+---------------
+Messing up with redundancy settings (could either lead to wrong results or a fatal error if a relation is configured downstream).
+Missing edges (and redundancy) when two classes impact a given class and both relations use the same neighbour id (and if redundancy is enabled over both relations).
+Role "Do not notify" on contact was ignored when recomputing the ticket impact (and log flood with PHP Notices)
+Impact analysis graph does not refresh when unchecking some items (clicking on the blue drawer shows the graph unchanged).
 
-  Legacy Portal
-  -------------
-- Uploading an inline image in the Case Log was not working, image was loaded but not permanently stored, it’s been fixed.
-- Uploading an inline image in an HTML text has been enabled.
+Portals
+-------
+>> New: add_to_list() can now be used in portal action rules.
+#1396 $this->hyperlink(portal)$ used in 'notifications' was broken since iTop 2.3.3 (since r4519) 
+Portal: log_kpi_duration / log_kpi_memory are now supported by the portal
+Portal: Fix invalid URL in LinkedSet searchbox when editing an object (eg. Adding a Contact to an UserRequest)
+Portal: Object display crashed when a linkedset attribute has corrupted data (eg. an external key to 0)
+Portal: Wrong form used in some inheritance cases.
+Legacy portal: Since iTop 2.3, plain text caselog entries can no longer be toggled due to a bad jQuery selector. Only HTML entries were working.
 
-  Embedded HTML editor
-  --------------------
-- #1321 Table formatting (border, cellpadding, width) was lost when editing a table inside the HTML editor
-- Fix regression introduced by HTML sanitizer, which was preventing 'ftp' and 'file' protocols in <a href= > tag, thanks to configuration parameter: 'url_validation_pattern'
-- Fixed CKEditor which was missing in the Console: Text justification, Fonts and Size selection.
-- The maximize icon for the rich text editor was not showing when iTop was installed at a location which path contained a space.
-
-  Console
-  -------
-- Cosmetics: Enlarge DateTime fields which were too narrow (the end of the time was not visible when editing).
-- Creation of a Ticket in a status different than the default initial value was not working very well.
-- Case log copy from a Parent ticket to its child tickets was not handling properly the HTML formatting.
-- The creation of an object B from an object A edition form (using the + icon), was failing if object B was having a mandatory HTML field, as the data in the HTML field was ignored/dropped.
-- Massive modification of objects having an HTML field, followed by at least one required field was failing.
-- #1305 Issue with date/time inputs on Chrome: losing focus as soon as the date has been correctly typed, preventing the user from typing the time.
-
-  Core
-  ----
-- CSV import failing with final class (localized value not taken into account)
-- #1279: CSV export of audit results: pass the parameters as a POST since they may be too long to fit in the query string of the URL.
-- #1297: timezone configuration setting was inoperant (regression from iTop 2.2.x).
-- Resize on AttributeImage used to crash when "gd" extension was not installed. Now it just does not resize.
-- Added protection against time differences between the MySQL server and the PHP server, when running 'synchro_import.php'
-- Optimization of database queries which was impacting Portal performance. We found one case where the query execution was never ending and takes now less than a second.
-- Fix corner case situation where UNIONS and INTERSECTIONS were not handled correctly.
-- Fix: a character "à" in a case log was causing the REST/JSON API to fail if mbstring was not enabled.
-- Fix the pollution of "error.log" with the contents of each email sent (transport = PHPMail)
-- Within some customized DataModel where users could create Ticket directly in Resolved state, if the date format was not the default, it was displaying a Fatal Error.
-- Backup on Sundays was not working due to wrong query.
-- Properly integrate .htaccess files (in /data and in /log) into the iTop zip package (those files were ignored by the build process)
-- Fix one OQL query in DataModel which could become ambiguous after tricky Datamodel customization.
-- Setup enhancement: protect the method RenameValueInDB() from non-existent attributes.
-- When editing an object in the console, external fields (i.e. fields depending on an external key) were not automatically refreshed when changing the value of the external key (regression from iTop 2.2.x)
-- Security fixes to prevent XSS injections in the page setup/email.test.php
+Administration tasks
+--------------------
+#1413 Data synchro: a line break or '<' in the 'description' of the DataSource object, brook the display of synchronized objects edition form.
+Data synchro: allow setting 'undefined' value for a date when an empty string is provided. Known issue: Integer and Decimal cannot be set to 'undefined' value.
+OQL: Multi-objects OQL queries with UNION, could fail with various symptoms such as "Class 'IT Department' not found" or "An object id must be an integer value".
+Audit: failing with message "Attempting to merge a filter of class A with a filter of class B" (regression introduced in 1.3.2)
+Configuration: 'log_queries' setting has been deprecated, use 'log_kpi_duration' instead.
+Remove Fatal Errors when disabling logging in the configuration file or when developing specific pages
+Fixed XSS vulnerability
+Improve API/REST JSON to enable adding entry to HTML caselog using non-HTML text (handling 'new line').
+Setup: failing (during database creation) with MetaEnum attribute having no mapping for the class they are declared in.
 
 
-1.2 Should I upgrade to 2.3.3?
+1.2 Should I upgrade to 2.3.4?
     --------------------------
-Yes, if you are running iTop 2.3.1 we recommend you to upgrade. This version fixes quite a number of bugs from the previous version and is suitable for running in production.
+Yes, we recommend you to upgrade. This version fixes quite a number of bugs from the previous version and is suitable for running in production.
 
 
 1.3 Special Thanks To
@@ -198,7 +159,7 @@ The output will look as shown below:
 
 2.4. Upgrading from 2.x.x
      --------------------
-The version 2.3.3 if fully compatible with 2.0.0, 2.0.1, 2.0.2, 2.0.3, 2.1.0, 2.2.0, 2.2.1 and 2.3.1.
+The version 2.3.4 if fully compatible with 2.0.0, 2.0.1, 2.0.2, 2.0.3, 2.1.0, 2.2.0, 2.2.1, 2.3.1 and 2.3.3.
 Due to few database changes and new modules/files that have to be installed, you
 MUST run the setup when upgrading (whatever the original version).
 
