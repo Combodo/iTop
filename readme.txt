@@ -1,4 +1,4 @@
-﻿iTop - version 2.3.3 - 22-Dec-2016
+﻿iTop - version 2.3.4 - 14-April-2017
 Readme file
 
 1.   ABOUT THIS RELEASE
