@@ -41,6 +41,7 @@ use \Combodo\iTop\Portal\Brick\BrowseBrick;
 class BrowseBrickController extends BrickController
 {
 	const LEVEL_SEPARATOR = '-';
+    public static $aOptionalAttributes = array('tooltip_att');
 
 	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sBrowseMode = null, $sDataLoading = null)
 	{
@@ -285,7 +286,16 @@ class BrowseBrickController extends BrickController
 						$aTmpColumnAttrs[] = $aTmpField['code'];
 					}
 				}
-				$aColumnAttrs[$sTmpClassAlias] = $aTmpColumnAttrs;
+                // Optional attributes
+                foreach(static::$aOptionalAttributes as $sOptionalAttribute)
+                {
+                    if($aTmpLevelProperties[$sOptionalAttribute] !== null)
+                    {
+                        $aTmpColumnAttrs[] = $aTmpLevelProperties[$sOptionalAttribute];
+                    }
+                }
+
+                $aColumnAttrs[$sTmpClassAlias] = $aTmpColumnAttrs;
 			}
 		}
 		$oSet->OptimizeColumnLoad($aColumnAttrs);
