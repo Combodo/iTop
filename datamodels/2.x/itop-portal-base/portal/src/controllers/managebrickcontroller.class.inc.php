@@ -369,7 +369,7 @@ class ManageBrickController extends BrickController
 					if ($sItemAttr === $sMainActionAttrCode)
 					{
 						// Checking if we can edit the object
-						if (SecurityHelper::IsActionAllowed($oApp, UR_ACTION_MODIFY, $sCurrentClass, $oCurrentRow->GetKey()) && ($oBrick->GetOpeningMode() === ManageBrick::ENUM_ACTION_EDIT))
+						if (($oBrick->GetOpeningMode() === ManageBrick::ENUM_ACTION_EDIT) && SecurityHelper::IsActionAllowed($oApp, UR_ACTION_MODIFY, $sCurrentClass, $oCurrentRow->GetKey()))
 						{
 							$sActionType = ManageBrick::ENUM_ACTION_EDIT;
 						}
