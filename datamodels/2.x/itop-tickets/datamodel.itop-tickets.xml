@@ -953,6 +953,14 @@
 							</argument>
 						</arguments>
 					</method>
+					<method id="ApplyStimulus">
+					  <arguments>
+					    <argument id="1">
+					      <type>string</type>
+					      <mandatory>true</mandatory>
+					    </argument>
+					  </arguments>
+					</method>
 				</methods>
 			</class>
 			<class id="ResponseTicketTTO" _delta="define">
