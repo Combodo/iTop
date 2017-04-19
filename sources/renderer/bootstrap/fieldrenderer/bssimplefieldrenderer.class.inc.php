@@ -84,6 +84,7 @@ EOF
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\StringField':
+                case 'Combodo\\iTop\\Form\\Field\\UrlField':
 					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
 					if ($this->oField->GetLabel() !== '')
 					{
@@ -210,7 +211,8 @@ EOF
 						$oOutput->AddHtml('</div>');
 						break;
 
-					case 'Combodo\\iTop\\Form\\Field\\StringField':
+                    case 'Combodo\\iTop\\Form\\Field\\StringField':
+                    case 'Combodo\\iTop\\Form\\Field\\UrlField':
 					case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
 						$oOutput->AddHtml('<div class="form-group">');
 						// Showing label / value only if read-only but not hidden
@@ -221,7 +223,7 @@ EOF
 								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 							}
 
-							if($sFieldClass === 'Combodo\\iTop\\Form\\Field\\TextAreaField')
+							if($sFieldClass === 'Combodo\\iTop\\Form\\Field\\UrlField' || $sFieldClass === 'Combodo\\iTop\\Form\\Field\\TextAreaField')
 							{
 								$bEncodeHtmlEntities = false;
 								$sDisplayValue = $this->oField->GetDisplayValue();
@@ -324,7 +326,8 @@ EOF
 		switch ($sFieldClass)
 		{
 			case 'Combodo\\iTop\\Form\\Field\\PasswordField':
-			case 'Combodo\\iTop\\Form\\Field\\StringField':
+            case 'Combodo\\iTop\\Form\\Field\\StringField':
+            case 'Combodo\\iTop\\Form\\Field\\UrlField':
 			case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
 			case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
 			case 'Combodo\\iTop\\Form\\Field\\SelectField':
@@ -396,7 +399,8 @@ EOF
 		switch ($sFieldClass)
 		{
 			case 'Combodo\\iTop\\Form\\Field\\PasswordField':
-			case 'Combodo\\iTop\\Form\\Field\\StringField':
+            case 'Combodo\\iTop\\Form\\Field\\StringField':
+            case 'Combodo\\iTop\\Form\\Field\\UrlField':
 			case 'Combodo\\iTop\\Form\\Field\\SelectField':
 			case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
 			case 'Combodo\\iTop\\Form\\Field\\HiddenField':
