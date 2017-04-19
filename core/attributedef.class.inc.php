@@ -4870,6 +4870,25 @@ class AttributeURL extends AttributeString
 	{
 		return $this->GetOptional('validation_pattern', '^'.utils::GetConfig()->Get('url_validation_pattern').'$');
 	}
+
+    static public function GetFormFieldClass()
+    {
+        return '\\Combodo\\iTop\\Form\\Field\\UrlField';
+    }
+
+    public function MakeFormField(DBObject $oObject, $oFormField = null)
+    {
+        if ($oFormField === null)
+        {
+            $sFormFieldClass = static::GetFormFieldClass();
+            $oFormField = new $sFormFieldClass($this->GetCode());
+        }
+        parent::MakeFormField($oObject, $oFormField);
+
+        $oFormField->SetTarget($this->Get('target'));
+
+        return $oFormField;
+    }
 }
 
 /**
