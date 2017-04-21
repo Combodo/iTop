@@ -2464,16 +2464,13 @@ EOF
 		}
 		$sActionLabel = $aStimuli[$sStimulus]->GetLabel();
 		$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
-		$aTransition = $aTransitions[$sStimulus];
-		$sTargetState = $aTransition['target_state'];
-		$aTargetStates = MetaModel::EnumStates($sClass);
-		$oPage->add("<div class=\"page_header\">\n");
-		$oPage->add("<h1>$sActionLabel - <span class=\"hilite\">{$this->GetName()}</span></h1>\n");
-		$oPage->set_title($sActionLabel);
-		$oPage->add("</div>\n");
-		$aTargetState = $aTargetStates[$sTargetState];
-		$aExpectedAttributes = $aTargetState['attribute_list'];
-		$oPage->add("<h1>$sActionDetails</h1>\n");
+        $oPage->add("<div class=\"page_header\">\n");
+        $oPage->add("<h1>$sActionLabel - <span class=\"hilite\">{$this->GetName()}</span></h1>\n");
+        $oPage->set_title($sActionLabel);
+        $oPage->add("</div>\n");
+        $oPage->add("<h1>$sActionDetails</h1>\n");
+        $sTargetState = $aTransitions[$sStimulus]['target_state'];
+        $aExpectedAttributes = $this->GetTransitionAttributes($sStimulus /*, current state*/);
 		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
 		if ($sButtonsPosition == 'bottom')
 		{

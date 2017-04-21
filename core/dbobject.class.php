@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -1059,6 +1059,67 @@ abstract class DBObject implements iDisplay
 		}
 		return $iFlags | $iSynchroFlags; // Combine both sets of flags
 	}
+
+    /**
+     * Returns the set of flags (OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY...)
+     * for the given attribute in a transition
+     * @param $sAttCode string $sAttCode The code of the attribute
+     * @param $sStimulus string The stimulus code to apply
+     * @param $aReasons array To store the reasons why the attribute is read-only (info about the synchro replicas)
+     * @param $sOriginState string The state from which to apply $sStimulus, if empty current state will be used
+     * @return integer Flags: the binary combination of the flags applicable to this attribute
+     */
+    public function GetTransitionFlags($sAttCode, $sStimulus, &$aReasons = array(), $sOriginState = '')
+    {
+        $iFlags = 0; // By default (if no lifecycle) no flag at all
+
+        $sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
+        // If no state attribute, there is no lifecycle
+        if (empty($sStateAttCode))
+        {
+            return $iFlags;
+        }
+
+        // Retrieving current state if necessary
+        if ($sOriginState === '')
+        {
+            $sOriginState = $this->Get($sStateAttCode);
+        }
+
+        // Retrieving attribute flags
+        $iAttributeFlags = $this->GetAttributeFlags($sAttCode, $aReasons, $sOriginState);
+
+        // Retrieving transition flags
+        $iTransitionFlags = MetaModel::GetTransitionFlags(get_class($this), $sOriginState, $sStimulus, $sAttCode);
+
+        // Merging transition flags with attribute flags
+        $iFlags = $iTransitionFlags | $iAttributeFlags;
+
+        return $iFlags;
+    }
+
+    /**
+     * Returns an array of attribute codes (with their flags) when $sStimulus is applied on the object in the $sOriginState state.
+     * Note: Attributes (and flags) from the target state and the transition are combined.
+     *
+     * @param $sStimulus string
+     * @param $sOriginState string Default is current state
+     * @return array
+     */
+    public function GetTransitionAttributes($sStimulus, $sOriginState = null)
+    {
+        $sObjClass = get_class($this);
+
+        // Defining current state as origin state if not specified
+        if($sOriginState === null)
+        {
+            $sOriginState = $this->GetState();
+        }
+
+        $aAttributes = MetaModel::GetTransitionAttributes($sObjClass, $sStimulus, $sOriginState);
+
+        return $aAttributes;
+    }
 
 	/**
 	 * Returns the set of flags (OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY...)

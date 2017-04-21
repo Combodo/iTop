@@ -1536,7 +1536,29 @@ EOF
 						$aVerbs[] = "array('verb' => '$sVerb', 'params' => $sActionParams)";
 					}
 					$sActions = implode(', ', $aVerbs);
-					$sLifecycle .= "		MetaModel::Init_DefineTransition(\"$sState\", \"$sStimulus\", array(\"target_state\"=>\"$sTargetState\", \"actions\"=>array($sActions), \"user_restriction\"=>null));\n";
+
+                    $sLifecycle .= "		MetaModel::Init_DefineTransition(\"$sState\", \"$sStimulus\", array(\n";
+                    $sLifecycle .= "            \"target_state\"=>\"$sTargetState\",\n";
+                    $sLifecycle .= "            \"actions\"=>array($sActions),\n";
+                    $sLifecycle .= "            \"user_restriction\"=>null,\n";
+                    $sLifecycle .= "            \"attribute_list\"=>array(\n";
+
+					$oFlags = $oTransition->GetOptionalElement('flags');
+					if($oFlags !== null)
+                    {
+                        foreach ($oFlags->getElementsByTagName('attribute') as $oAttributeNode)
+                        {
+                            $sFlags = $this->FlagsToPHP($oAttributeNode);
+                            if (strlen($sFlags) > 0)
+                            {
+                                $sAttCode = $oAttributeNode->GetAttribute('id');
+                                $sLifecycle .= "                '$sAttCode' => $sFlags,\n";
+                            }
+                        }
+                    }
+
+                    $sLifecycle .= "            )\n";
+                    $sLifecycle .= "        ));\n";
 				}
 			}
 		}

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -27,7 +27,7 @@ require_once(APPROOT.'core/apc-compat.php');
 /**
  * Metamodel
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1503,6 +1503,82 @@ abstract class MetaModel
 		}
 		return $iFlags;
 	}
+
+    /**
+     * Returns the $sAttCode flags when $sStimulus is applied on an object of $sClass in the $sState state.
+     * Note: This does NOT combine flags from the target state.
+     *
+     * @param $sClass string
+     * @param $sState string
+     * @param $sStimulus string
+     * @param $sAttCode string
+     * @return int
+     * @throws CoreException
+     */
+	public static function GetTransitionFlags($sClass, $sState, $sStimulus, $sAttCode)
+    {
+        $iFlags = 0; // By default (if no lifecycle) no flag at all
+        $sStateAttCode = self::GetStateAttributeCode($sClass);
+        if (!empty($sStateAttCode))
+        {
+            $aTransitions = MetaModel::EnumTransitions($sClass, $sState);
+            if(!array_key_exists($sStimulus, $aTransitions))
+            {
+                throw new CoreException("Invalid transition '$sStimulus' for class '$sClass', expecting a value in {".implode(', ', array_keys($aTransitions))."}");
+            }
+
+            $aCurrentTransition = $aTransitions[$sStimulus];
+            if( (array_key_exists('attribute_list', $aCurrentTransition)) && (array_key_exists($sAttCode, $aCurrentTransition['attribute_list'])) )
+            {
+                $iFlags = $aCurrentTransition['attribute_list'][$sAttCode];
+            }
+        }
+
+        return $iFlags;
+    }
+
+    /**
+     * Returns an array of attribute codes (with their flags) when $sStimulus is applied on an object of $sClass in the $sOriginState state.
+     * Note: Attributes (and flags) from the target state and the transition are combined.
+     *
+     * @param $sClass string Object class
+     * @param $sStimulus string Stimulus code applied
+     * @param $sOriginState string State the stimulus comes from
+     * @return array
+     */
+    public static function GetTransitionAttributes($sClass, $sStimulus, $sOriginState)
+    {
+        $aAttributes = array();
+
+        // Retrieving target state
+        $aTransitions = MetaModel::EnumTransitions($sClass, $sOriginState);
+        $aTransition = $aTransitions[$sStimulus];
+        $sTargetState = $aTransition['target_state'];
+
+        // Retrieving attributes from state
+        $aStates = MetaModel::EnumStates($sClass);
+        $aTargetState = $aStates[$sTargetState];
+        $aTargetStateAttributes = $aTargetState['attribute_list'];
+        // - Merging with results
+        $aAttributes = $aTargetStateAttributes;
+
+        // Retrieving attributes from transition
+        $aTransitionAttributes = $aTransition['attribute_list'];
+        // - Merging with results
+        foreach($aTransitionAttributes as $sAttCode => $iAttributeFlags)
+        {
+            if(array_key_exists($sAttCode, $aAttributes))
+            {
+                $aAttributes[$sAttCode] = $aAttributes[$sAttCode] | $iAttributeFlags;
+            }
+            else
+            {
+                $aAttributes[$sAttCode] = $iAttributeFlags;
+            }
+        }
+
+        return $aAttributes;
+    }
 	
 	/**
 	 * Combines the flags from the all states that compose the initial_state_path

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2014-2016 Combodo SARL
+// Copyright (C) 2014-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -574,6 +574,16 @@ class iTopDesignFormat
 		{
 			$this->LogWarning('The attribute _delta="force" is not supported, converted to _delta="define" ('.$iCount.' instances processed).');
 		}
+
+        // Remove attribute flags on transitions
+        //
+        $oNodeList = $oXPath->query("/itop_design/classes//class/lifecycle/states/state/transitions/transition/flags");
+        $this->LogWarning('Before removing flags nodes');
+        foreach ($oNodeList as $oNode)
+        {
+            $this->LogWarning('Attribute flags '.self::GetItopNodePath($oNode).' is irrelevant on transition and must be removed.');
+            $this->DeleteNode($oNode);
+        }
 	}
 	
 	

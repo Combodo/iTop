@@ -1120,17 +1120,16 @@ EOF
 			
 			$sActionLabel = $aStimuli[$sStimulus]->GetLabel();
 			$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
-			$aTransition = $aTransitions[$sStimulus];
-			$sTargetState = $aTransition['target_state'];
+			$sTargetState = $aTransitions[$sStimulus]['target_state'];
 			$aStates = MetaModel::EnumStates($sClass);
 			$aTargetStateDef = $aStates[$sTargetState];
-			
+
 			$oP->set_title(Dict::Format('UI:StimulusModify_N_ObjectsOf_Class', $sActionLabel, count($aSelectObject), $sClass));
 			$oP->add('<div class="page_header">');
 			$oP->add('<h1>'.MetaModel::GetClassIcon($sClass).'&nbsp;'.Dict::Format('UI:StimulusModify_N_ObjectsOf_Class', $sActionLabel, count($aSelectObject), $sClass).'</h1>');
 			$oP->add('</div>');
 
-			$aExpectedAttributes = $aTargetStateDef['attribute_list'];
+			$aExpectedAttributes = MetaModel::GetTransitionAttributes($sClass, $sStimulus, $sState);
 			$aDetails = array();
 			$iFieldIndex = 0;
 			$aFieldsMap = array();
@@ -1326,16 +1325,13 @@ EOF
 					{
 						$sActionLabel = $aStimuli[$sStimulus]->GetLabel();
 						$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
-						$aTransition = $aTransitions[$sStimulus];
-						$sTargetState = $aTransition['target_state'];
-						$aTargetStates = MetaModel::EnumStates($sClass);
-						$aTargetState = $aTargetStates[$sTargetState];
-						$aExpectedAttributes = $aTargetState['attribute_list'];
+						$sTargetState = $aTransitions[$sStimulus]['target_state'];
+						$aExpectedAttributes = $oObj->GetTransitionAttributes($sStimulus /* cureent state */);
 						$aDetails = array();
 						$aErrors = array();
 						foreach($aExpectedAttributes as $sAttCode => $iExpectCode)
 						{
-							$iFlags = $oObj->GetAttributeFlags($sAttCode);
+							$iFlags = $oObj->GetTransitionFlags($sAttCode, $sStimulus);
 							if (($iExpectCode & (OPT_ATT_MUSTCHANGE|OPT_ATT_MUSTPROMPT)) || ($oObj->Get($sAttCode) == '') ) 
 							{
 								$paramValue = utils::ReadPostedParam("attr_$sAttCode", '', 'raw_data');
@@ -1450,16 +1446,13 @@ EOF
 			{
 				$sActionLabel = $aStimuli[$sStimulus]->GetLabel();
 				$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
-				$aTransition = $aTransitions[$sStimulus];
-				$sTargetState = $aTransition['target_state'];
-				$aTargetStates = MetaModel::EnumStates($sClass);
-				$aTargetState = $aTargetStates[$sTargetState];
-				$aExpectedAttributes = $aTargetState['attribute_list'];
+				$sTargetState = $aTransitions[$sStimulus]['target_state'];
+				$aExpectedAttributes = $oObj->GetTransitionAttributes($sStimulus /*, current state*/);
 				$aDetails = array();
 				$aErrors = array();
 				foreach($aExpectedAttributes as $sAttCode => $iExpectCode)
 				{
-					$iFlags = $oObj->GetAttributeFlags($sAttCode);
+					$iFlags = $oObj->GetTransitionFlags($sAttCode, $sStimulus);
 					if (($iExpectCode & (OPT_ATT_MUSTCHANGE|OPT_ATT_MUSTPROMPT)) || ($oObj->Get($sAttCode) == '') ) 
 					{
 						$paramValue = utils::ReadPostedParam("attr_$sAttCode", '', 'raw_data');
