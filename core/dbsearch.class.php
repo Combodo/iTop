@@ -48,7 +48,7 @@ abstract class DBSearch
 
 	public function __construct()
 	{
-		$this->m_bArchiveMode = self::GetArchiveModeDefault();
+		$this->m_bArchiveMode = utils::IsArchiveMode();
 	}
 
 	/**
@@ -61,16 +61,6 @@ abstract class DBSearch
 
 	abstract public function AllowAllData();
 	abstract public function IsAllDataAllowed();
-
-	static $bArchiveModeDefault = false;
-	static public function SetArchiveModeDefault($bEnable)
-	{
-		self::$bArchiveModeDefault = $bEnable;
-	}
-	static public function GetArchiveModeDefault()
-	{
-		return self::$bArchiveModeDefault;
-	}
 
 	public function SetArchiveMode($bEnable)
 	{

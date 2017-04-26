@@ -140,7 +140,10 @@ class utils
 		}
 	}
 
-	public static function IsArchiveMode()
+	protected static $bPageMode = null;
+	protected static $aModes = array();
+
+	public static function InitArchiveMode()
 	{
 		if (isset($_SESSION['archive_mode']))
 		{
@@ -152,7 +155,34 @@ class utils
 		}
 		$iCurrent = self::ReadParam('with-archive', $iDefault, true);
 		$_SESSION['archive_mode'] = $iCurrent;
-		return ($iCurrent == 1);
+		self::$bPageMode = ($iCurrent == 1);
+	}
+
+	public static function PushArchiveMode($bMode)
+	{
+		array_push(self::$aModes, $bMode);
+	}
+
+	public static function PopArchiveMode()
+	{
+		array_pop(self::$aModes);
+	}
+
+	public static function IsArchiveMode()
+	{
+		if (count(self::$aModes) > 0)
+		{
+			$bRet = end(self::$aModes);
+		}
+		else
+		{
+			if (self::$bPageMode === null)
+			{
+				self::InitArchiveMode();
+			}
+			$bRet = self::$bPageMode;
+		}
+		return $bRet;
 	}
 
 	public static function ReadParam($sName, $defaultValue = "", $bAllowCLI = false, $sSanitizationFilter = 'parameter')

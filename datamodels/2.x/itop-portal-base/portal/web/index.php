@@ -87,9 +87,7 @@ $oApp->before(function(Symfony\Component\HttpFoundation\Request $oRequest, Silex
     }
 
 	// Enable archived data
-	$bArchiveMode = utils::IsArchiveMode();
-	DBSearch::SetArchiveModeDefault($bArchiveMode);
-	if ($bArchiveMode) MetaModel::DBSetReadOnly();
+	utils::InitArchiveMode();
 
     // Enabling datalocalizer if needed
     if (!defined('DISABLE_DATA_LOCALIZER_PORTAL'))

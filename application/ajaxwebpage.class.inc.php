@@ -54,12 +54,7 @@ class ajax_page extends WebPage implements iTabbedPage
 		$this->sContentDisposition = 'inline';
 		$this->m_sMenu = "";
 
-		if (class_exists('DBSearch')) // This class does not exist in the contect of the setup page
-		{
-			$bArchiveMode = utils::IsArchiveMode();
-			DBSearch::SetArchiveModeDefault($bArchiveMode);
-			if ($bArchiveMode) MetaModel::DBSetReadOnly();
-		}
+		utils::InitArchiveMode();
     }
 
 	public function AddTabContainer($sTabContainer, $sPrefix = '')

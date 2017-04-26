@@ -63,9 +63,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 			$this->bBreadCrumbEnabled = false;
 		}
 
-		$bArchiveMode = utils::IsArchiveMode();
-		DBSearch::SetArchiveModeDefault($bArchiveMode);
-		if ($bArchiveMode) MetaModel::DBSetReadOnly();
+		utils::InitArchiveMode();
 
 		$this->m_sMenu = "";
 		$this->m_aMessages = array();

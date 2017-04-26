@@ -1312,9 +1312,7 @@ try
 
 	ApplicationContext::SetUrlMakerClass('MyPortalURLMaker');
 
-	$bArchiveMode = utils::IsArchiveMode();
-	DBSearch::SetArchiveModeDefault($bArchiveMode);
-	if ($bArchiveMode) MetaModel::DBSetReadOnly();
+	utils::InitArchiveMode();
 
 	$aClasses = explode(',', MetaModel::GetConfig()->Get('portal_tickets'));
 	$sMainClass = trim(reset($aClasses));

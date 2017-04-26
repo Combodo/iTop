@@ -3450,12 +3450,6 @@ abstract class MetaModel
 		return $aDataDump;
 	}
 
-	protected static $m_bReadOnlyMode = false;
-	public static function DBSetReadOnly()
-	{
-		self::$m_bReadOnlyMode = true;
-	}
-
 	/*
 	* Determines wether the target DB is frozen or not
 	*/		
@@ -3463,7 +3457,7 @@ abstract class MetaModel
 	{
 		// Improvement: check the mySQL variable -> Read-only
 
-		if (self::$m_bReadOnlyMode)
+		if (utils::IsArchiveMode())
 		{
 			return true;
 		}
@@ -4600,7 +4594,7 @@ abstract class MetaModel
 			$sModifierProperties = json_encode($aModifierProperties);
 			$sQuerySign .= '_all_'.md5($sModifierProperties);
 		}
-		$sQuerySign .= DBSearch::GetArchiveModeDefault() ? '_arch_' : '';
+		$sQuerySign .= utils::IsArchiveMode() ? '_arch_' : '';
 
 		if (!array_key_exists($sQuerySign, self::$aQueryCacheGetObject))
 		{
@@ -4693,10 +4687,9 @@ abstract class MetaModel
 
 	public static function GetObjectWithArchive($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false, $aModifierProperties = null)
 	{
-		$bPreviousMode = DBSearch::GetArchiveModeDefault();
-		DBSearch::SetArchiveModeDefault(true);
+		utils::PushArchiveMode(true);
 		$oObject = static::GetObject($sClass, $iKey, $bMustBeFound, $bAllowAllData, $aModifierProperties);
-		DBSearch::SetArchiveModeDefault($bPreviousMode);
+		utils::PopArchiveMode();
 		return $oObject;
 	}
 

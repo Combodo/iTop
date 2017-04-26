@@ -379,7 +379,7 @@ try
 				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
 
 				// Attempt to load the object in archive mode
-				DBSearch::SetArchiveModeDefault(true);
+				utils::PushArchiveMode(true);
 				if (is_numeric($id))
 				{
 					$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
@@ -388,6 +388,7 @@ try
 				{
 					$oObj = MetaModel::GetObjectByName($sClass, $id, false /* MustBeFound */);
 				}
+				utils::PopArchiveMode();
 				if (is_null($oObj))
 				{
 					$oP->P(Dict::S('UI:ObjectDoesNotExist'));
