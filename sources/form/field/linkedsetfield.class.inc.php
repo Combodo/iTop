@@ -28,9 +28,13 @@ use \Combodo\iTop\Form\Field\Field;
  */
 class LinkedSetField extends Field
 {
+    const DEFAULT_INDIRECT = false;
+    const DEFAULT_DISPLAY_OPENED = false;
+
 	protected $sTargetClass;
 	protected $sExtKeyToRemote;
 	protected $bIndirect;
+    protected $bDisplayOpened;
 	protected $aAttributesToDisplay;
 	protected $sSearchEndpoint;
 	protected $sInformationEndpoint;
@@ -39,7 +43,8 @@ class LinkedSetField extends Field
 	{
 		$this->sTargetClass = null;
 		$this->sExtKeyToRemote = null;
-		$this->bIndirect = false;
+		$this->bIndirect = static::DEFAULT_INDIRECT;
+		$this->bDisplayOpened = static::DEFAULT_DISPLAY_OPENED;
 		$this->aAttributesToDisplay = array();
 		$this->sSearchEndpoint = null;
 		$this->sInformationEndpoint = null;
@@ -106,6 +111,28 @@ class LinkedSetField extends Field
 		$this->bIndirect = $bIndirect;
 		return $this;
 	}
+
+    /**
+     * Returns if the field should be displayed opened on initialization
+     *
+     * @return boolean
+     */
+	public function GetDisplayOpened()
+    {
+        return $this->bDisplayOpened;
+    }
+
+    /**
+     * Sets if the field should be displayed opened on initialization
+     *
+     * @param $bDisplayOpened
+     * @return \Combodo\iTop\Form\Field\LinkedSetField
+     */
+    public function SetDisplayOpened($bDisplayOpened)
+    {
+        $this->bDisplayOpened = $bDisplayOpened;
+        return $this;
+    }
 
 	/**
 	 * Returns a hash array of attributes to be displayed in the linkedset in the form $sAttCode => $sAttLabel

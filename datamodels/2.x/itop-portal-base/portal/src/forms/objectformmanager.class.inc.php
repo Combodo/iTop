@@ -286,9 +286,7 @@ class ObjectFormManager extends FormManager
 		$sObjectClass = get_class($this->oObject);
 
 		$aFieldsAtts = array();
-		$aMandatoryAtts = array();
-		$aReadonlyAtts = array();
-		$aHiddenAtts = array();
+		$aFieldsExtraData = array();
 
 		if ($this->oForm !== null)
 		{
@@ -386,6 +384,12 @@ class ObjectFormManager extends FormManager
 				{
 					$oFieldNode->setAttribute('data-form-path', $oForm->GetId());
 				}
+
+				// Checking if field should be displayed opened (For linked set)
+                if($oFieldNode->hasAttribute('data-field-opened') && ($oFieldNode->getAttribute('data-field-opened') === 'true') )
+                {
+                    $aFieldsExtraData[$sFieldId]['opened'] = true;
+                }
 
 				// Settings field flags from the data-field-flags attribute
 				foreach (explode(' ', $sFieldFlags) as $sFieldFlag)
@@ -606,9 +610,9 @@ class ObjectFormManager extends FormManager
 
 				// Specific operation on field
 				// - LinkedSet
-				//   - Overriding attributes to display
 				if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\LinkedSetField')))
 				{
+                    //   - Overriding attributes to display
 					if ($this->oApp !== null)
 					{
 						// Note : This snippet is inspired from AttributeLinkedSet::MakeFormField()
@@ -628,6 +632,11 @@ class ObjectFormManager extends FormManager
 						}
 						$oField->SetAttributesToDisplay($aAttributesToDisplay);
 					}
+					//    - Displaying as opened
+                    if(array_key_exists($sAttCode, $aFieldsExtraData) && array_key_exists('opened', $aFieldsExtraData[$sAttCode]))
+                    {
+                        $oField->SetDisplayOpened(true);
+                    }
 				}
 
 				$oForm->AddField($oField);

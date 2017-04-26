@@ -46,7 +46,7 @@ class BsLinkedSetFieldRenderer extends FieldRenderer
 	 */
 	public function Render()
 	{
-		$oOutput = new RenderingOutput();
+	    $oOutput = new RenderingOutput();
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
 		// Vars to build the table
 		$sAttributesToDisplayAsJson = json_encode($this->oField->GetAttributesToDisplay());
@@ -61,18 +61,35 @@ class BsLinkedSetFieldRenderer extends FieldRenderer
 		{
 			// Rendering field
 			$sIsEditable = ($this->oField->GetReadOnly()) ? 'false' : 'true';
-			$sCollapseTogglerVisibleClass = 'glyphicon-menu-down';
-			$sCollapseTogglerHiddenClass = 'glyphicon-menu-down collapsed';
-			$sCollapseTogglerId = 'form_linkedset_toggler_' . $this->oField->GetGlobalId();
+			$sCollapseTogglerIconVisibleClass = 'glyphicon-menu-down';
+			$sCollapseTogglerIconHiddenClass = 'glyphicon-menu-down collapsed';
+			$sCollapseTogglerClass = 'form_linkedset_toggler';
+			$sCollapseTogglerId = $sCollapseTogglerClass . '_' . $this->oField->GetGlobalId();
 			$sFieldWrapperId = 'form_linkedset_wrapper_' . $this->oField->GetGlobalId();
+
+			// Preparing collapsed state
+            if($this->oField->GetDisplayOpened())
+            {
+                $sCollapseTogglerExpanded = 'true';
+                $sCollapseTogglerIconClass = $sCollapseTogglerIconVisibleClass;
+                $sCollapseJSInitState = 'true';
+            }
+            else
+            {
+                $sCollapseTogglerClass .= ' collapsed';
+                $sCollapseTogglerExpanded = 'false';
+                $sCollapseTogglerIconClass = $sCollapseTogglerIconHiddenClass;
+                $sCollapseJSInitState = 'false';
+            }
+
 			$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
 			if ($this->oField->GetLabel() !== '')
 			{
 				$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')
-					->AddHtml('<a id="' . $sCollapseTogglerId . '" class="form_linkedset_toggler" data-toggle="collapse" href="#' . $sFieldWrapperId . '" aria-expanded="false" aria-controls="' . $sFieldWrapperId . '">')
+					->AddHtml('<a id="' . $sCollapseTogglerId . '" class="' . $sCollapseTogglerClass . '" data-toggle="collapse" href="#' . $sFieldWrapperId . '" aria-expanded="' . $sCollapseTogglerExpanded . '" aria-controls="' . $sFieldWrapperId . '">')
 					->AddHtml($this->oField->GetLabel(), true)
 					->AddHtml('<span class="text">' . count($aItemIds) . '</span>')
-					->AddHtml('<span class="glyphicon ' . $sCollapseTogglerHiddenClass . '"></>')
+					->AddHtml('<span class="glyphicon ' . $sCollapseTogglerIconClass . '"></>')
 					->AddHtml('</a>')
 					->AddHtml('</label>');
 			}
@@ -109,8 +126,8 @@ EOF
 <<<EOF
 				// Collapse handlers
 				// - Collapsing by default to optimize form space
-				// It would be better to be able to construct the widget as collapsed, but in this ase, datatables thinks the container is very small and therefore renders the table as if it was in microbox.
-				$('#{$sFieldWrapperId}').collapse({toggle: false});
+				// It would be better to be able to construct the widget as collapsed, but in this case, datatables thinks the container is very small and therefore renders the table as if it was in microbox.
+				$('#{$sFieldWrapperId}').collapse({toggle: {$sCollapseJSInitState}});
 				// - Change toggle icon class
 				$('#{$sFieldWrapperId}').on('shown.bs.collapse', function(){
 					// Creating the table if null (first expand). If we create it on start, it will be displayed as if it was in a micro screen due to the div being "display: none;"
@@ -120,10 +137,10 @@ EOF
 					}
 				})
 				.on('show.bs.collapse', function(){
-					$('#{$sCollapseTogglerId} > span.glyphicon').removeClass('{$sCollapseTogglerHiddenClass}').addClass('{$sCollapseTogglerVisibleClass}');
+					$('#{$sCollapseTogglerId} > span.glyphicon').removeClass('{$sCollapseTogglerIconHiddenClass}').addClass('{$sCollapseTogglerIconVisibleClass}');
 				})
 				.on('hide.bs.collapse', function(){
-					$('#{$sCollapseTogglerId} > span.glyphicon').removeClass('{$sCollapseTogglerVisibleClass}').addClass('{$sCollapseTogglerHiddenClass}');
+					$('#{$sCollapseTogglerId} > span.glyphicon').removeClass('{$sCollapseTogglerIconVisibleClass}').addClass('{$sCollapseTogglerIconHiddenClass}');
 				});
 
 				// Places a loader in the empty datatables
