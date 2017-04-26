@@ -1543,6 +1543,9 @@ fieldset {
 	border-radius: $border-radius-base;
     min-width: 0;
 }
+form fieldset {
+    background-color: #f9f9f9;
+}
 legend {
     display: block;
     width: inherit;
@@ -5109,15 +5112,19 @@ button.close {
 }
 .modal-header {
     padding: 15px;
-    border-bottom: 1px solid #e5e5e5;
+    background-color: $modal-header-bg;
+    border-bottom: 1px solid $modal-header-border-color;
     min-height: 16.42857143px
 }
 .modal-header .close {
-    margin-top: -2px
+    margin-top: -2px;
+    color: $modal-close-color;
+    opacity: 0.6;
 }
 .modal-title {
     margin: 0;
-    line-height: $line-height-base
+    line-height: $line-height-base;
+    color: $modal-title-color
 }
 .modal-body {
     position: relative;

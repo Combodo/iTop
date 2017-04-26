@@ -645,6 +645,12 @@ $modal-backdrop-bg:           #000 !default;
 $modal-backdrop-opacity:      .5 !default;
 //** Modal header border color
 $modal-header-border-color:   #e5e5e5 !default;
+//** Modal header background color
+$modal-header-bg:             $combodo-dark-gray;
+//** Modal title color
+$modal-title-color:           $white;
+//** Modal close button color
+$modal-close-color:           $white;
 //** Modal footer border color
 $modal-footer-border-color:   $modal-header-border-color !default;
 

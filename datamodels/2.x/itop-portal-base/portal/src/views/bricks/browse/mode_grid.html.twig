@@ -94,6 +94,11 @@
 
                 showLevel(upperlevelIdParts[0], upperlevelIdParts[1]);
             });
+
+            // Allows link in item's description to work. Otherwise, the predentDefault of the item takes over.
+            $('#brick_content_grid .grid-item-description a').off('click').on('click', function(oEvent){
+                oEvent.stopPropagation();
+			});
 		};
 		// Registers the filter listeners on the tree.
 		var registerFilterListeners = function()
@@ -251,19 +256,14 @@
 					// Preparing secondary actions container
 					var actionsElem = $('<div></div>').addClass('grid-group-item-actions');
 					itemElem.append(actionsElem);
-					// Checking if a menu is necessary
-					var bHasSeveralSecondaryActions = (Object.keys(actionsButtons).length > 1);
 					// Preparing secondary actions menu
-					if(bHasSeveralSecondaryActions)
-					{
-						var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-'+levelAltId+'"></a>');
-						var actionsSSMenuElem = $('<div id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default"></div>');
-						var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
-						actionsSSMenuElem.append(actionsSSMenuContainerElem);
-						actionsElem.append(actionsSSTogglerElem);
-						actionsElem.append(actionsSSMenuElem);
-					}
-					
+					var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-'+levelAltId+'"></a>');
+					var actionsSSMenuElem = $('<div id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default"></div>');
+					var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
+					actionsSSMenuElem.append(actionsSSMenuContainerElem);
+					actionsElem.append(actionsSSTogglerElem);
+					actionsElem.append(actionsSSMenuElem);
+
 					// Adding secondary actions
 					for(j in actionsButtons)
 					{
@@ -302,15 +302,8 @@
 							actionIconElem.addClass(action.icon_class);
 						}
 						
-						if(bHasSeveralSecondaryActions)
-						{
-							actionElem.append(action.title);
-							actionsSSMenuContainerElem.append( $('<p></p>').append(actionElem) );
-						}
-						else
-						{
-							actionsElem.append(actionElem);
-						}
+						actionElem.append(action.title);
+						actionsSSMenuContainerElem.append( $('<p></p>').append(actionElem) );
 					}
 				}
 				

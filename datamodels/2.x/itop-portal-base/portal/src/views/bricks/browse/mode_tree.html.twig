@@ -108,6 +108,11 @@
 					loadChildNodes($(this).attr('data-level-alias'), $(this).attr('data-item-id'));
 				}
 			});
+
+            // Allows link in item's description to work. Otherwise, the predentDefault of the item takes over.
+            $('#brick_content_tree .list-group-item-description a').off('click').on('click', function(oEvent){
+                oEvent.stopPropagation();
+            });
 		};
 		// Registers the filter listeners on the tree.
 		var registerFilterListeners = function()
@@ -189,30 +194,33 @@
 				var levelActionsKeys = Object.keys(levelActions);
 				var levelPrimaryAction = levelActions[levelActionsKeys[0]];
 				var url = '';
-				
+
 				var liElem  = $('<li></li>').addClass('list-group-item');
-				var aElem   = $('<a></a>').addClass('tree-item').attr('data-item-id', item.id).attr('href', '#').attr('data-level-alias', item.level_alias).text(item.name);
+				var aElem = $('<span></span>').addClass('tree-item-wrapper').attr('data-item-id', item.id).attr('data-level-alias', item.level_alias);
+				var nameElem   = $('<a></a>').addClass('tree-item').text(item.name);
 				// Building node
 				$('ul[data-level-id="'+nodeId+'"]').append(liElem);
+				aElem.append(nameElem);
 				liElem.append(aElem);
 				
 				// Building tooltip for the node
 				if( (item.tooltip !== undefined) && (item.tooltip !== '') )
 				{
-					aElem.attr('title', item.tooltip).attr('data-toggle', 'tooltip').tooltip({html: true, trigger: 'hover', placement: 'right'});
+					nameElem.attr('title', item.tooltip).attr('data-toggle', 'tooltip').tooltip({html: true, trigger: 'hover', placement: 'right'});
 				}
 				// Building description for the node
 				if( (item.description !== undefined) && (item.description !== '') )
 				{
-				    liElem.append( $('<span class="list-group-item-description">'+item.description+'</span>') );
+					aElem.append( $('<span class="list-group-item-description">'+item.description+'</span>') );
 				}
 				
 				// Building actions for that node
 				switch(levelPrimaryAction.type)
 				{
 					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_DRILLDOWN') }}':
-						aElem.addClass('tree-toggle').html('<span class="glyphicon '+sNodeCollapsedClass+'" aria-hidden="true"></span><span class="list-group-item-text">'+aElem.text()+'</span>');
-						break;
+                        aElem.addClass('tree-toggle');
+                        nameElem.html('<span class="glyphicon '+sNodeCollapsedClass+'" aria-hidden="true"></span><span class="list-group-item-text">'+nameElem.text()+'</span>');
+                        break;
 					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
 						url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
 						SetActionUrl(aElem, url);
@@ -247,18 +255,13 @@
 					var actionsElem = $('<div></div>').addClass('list-group-item-actions');
 					liElem.append(actionsElem);
 					// Checking if a menu is necessary
-					var bHasSeveralSecondaryActions = (Object.keys(actionsButtons).length > 1);
-					// Preparing secondary actions menu
-					if(bHasSeveralSecondaryActions)
-					{
-						var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-'+levelAltId+'"></a>');
-						var actionsSSMenuElem = $('<div id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default"></div>');
-						var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
-						actionsSSMenuElem.append(actionsSSMenuContainerElem);
-						actionsElem.append(actionsSSTogglerElem);
-						actionsElem.append(actionsSSMenuElem);
-					}
-					
+					var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-'+levelAltId+'"></a>');
+					var actionsSSMenuElem = $('<div id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default"></div>');
+					var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
+					actionsSSMenuElem.append(actionsSSMenuContainerElem);
+					actionsElem.append(actionsSSTogglerElem);
+					actionsElem.append(actionsSSMenuElem);
+
 					// Adding secondary actions
 					for(j in actionsButtons)
 					{
@@ -297,15 +300,8 @@
 							actionIconElem.addClass(action.icon_class);
 						}
 						
-						if(bHasSeveralSecondaryActions)
-						{
-							actionElem.append(action.title);
-							actionsSSMenuContainerElem.append( $('<p></p>').append(actionElem) );
-						}
-						else
-						{
-							actionsElem.append(actionElem);
-						}
+						actionElem.append(action.title);
+						actionsSSMenuContainerElem.append( $('<p></p>').append(actionElem) );
 					}
 				}
 				
@@ -324,14 +320,16 @@
 				registerToggleListeners();
 			}
 		};
-		
+
 		$(document).ready(function(){
 			// Init expand/collapse all buttons
 			$('#btn-collapse-all').on('click', function (oEvent) {
+			    oEvent.preventDefault();
 				collapseAll();
 			});
 			$('#btn-expand-all').on('click', function (oEvent) {
-				if(!bIsFullyLoaded)
+                oEvent.preventDefault();
+                if(!bIsFullyLoaded)
 				{
 					// Show a loader while fetching results
 					showTreeLoader();

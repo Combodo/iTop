@@ -575,11 +575,22 @@ footer{
 	margin-top: 0px;
 }
 
+#brick_content_tree .list-group-item{
+	padding-top: 0px;
+}
+#brick_content_tree .list-group-item > .tree-item-wrapper{
+	display: block;
+	padding-top: 10px;
+	color: inherit;
+	text-decoration: inherit;
+	cursor: pointer;
+}
+
 .list-group-item > .list-group-item-actions{
 	/*display: none; Displaying actions only when hovering was not unanimous in the team */
 	position: absolute;
 	top: 10px;
-	right: 15px;
+	right: 10px;
 }
 .list-group-item:hover > .list-group-item-actions,
 .grid-group-item:hover > .grid-group-item-actions{
@@ -618,8 +629,8 @@ table .group-actions .item-action-wrapper
 	display: none;
 	position: absolute;
 	z-index: 5;
-	bottom: 5px;
-	right: 0px;
+	bottom: -7px;
+	right: 15px;
 	-webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
 	-moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
 	box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
@@ -637,6 +648,7 @@ table .group-actions .item-action-wrapper.collapse.in{
 .list-group-item-actions .item-action-wrapper .panel-body > p,
 .grid-group-item-actions .item-action-wrapper .panel-body > p,
 table .group-actions .item-action-wrapper .panel-body > p{
+	text-align: left;
 	white-space: nowrap;
 }
 .list-group-item-actions .item-action-wrapper .panel-body > p:last-child,
@@ -724,7 +736,7 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	vertical-align: middle;
 }
 .grid-item-image > img{
-	max-width: 100%;
+	max-width: 85%;
 }
 .grid-group-item > .grid-group-item-actions{
 	position: absolute;
