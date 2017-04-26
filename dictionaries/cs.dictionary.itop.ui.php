@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@
  *
  * @author      Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author      Daniel Rokos <daniel.rokos@itopportal.cz>
- * @copyright   Copyright (C) 2010-2014 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1070,6 +1070,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'UI:Pagination:All' => 'Vše',
     'UI:HierarchyOf_Class' => 'Hierarchie %1$s',
     'UI:Preferences' => 'Předvolby',
+	'UI:ArchiveModeOn' => 'Activate archive mode~~',
+	'UI:ArchiveModeOff' => 'Deactivate archive mode~~',
     'UI:FavoriteOrganizations' => 'Oblíbené organizace',
     'UI:FavoriteOrganizations+' => 'Zaškrtněte, které organizace chcete vidět v rozbalovacím menu pro rychlý přístup. Mějte na paměti, že toto není bezpečnostní opatření. Objekty všech organizací jsou pořád viditelné a přístupné vybráním "Všechny organizace" z rozbalovacího menu.',
     'UI:FavoriteLanguage' => 'Jazyk uživatelského rozhraní',

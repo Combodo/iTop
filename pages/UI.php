@@ -377,7 +377,25 @@ try
 				$sMessageKey = $sClass.'::'.$id;
 				DisplayMessages($sMessageKey, $oP);
 				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
-				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
+
+				// Attempt to load the object in archive mode
+				DBSearch::SetArchiveModeDefault(true);
+				if (is_numeric($id))
+				{
+					$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
+				}
+				else
+				{
+					$oObj = MetaModel::GetObjectByName($sClass, $id, false /* MustBeFound */);
+				}
+				if (is_null($oObj))
+				{
+					$oP->P(Dict::S('UI:ObjectDoesNotExist'));
+				}
+				else
+				{
+					$oP->P(Dict::S('UI:ObjectArchived'));
+				}
 			}
 			else
 			{
@@ -1746,4 +1764,3 @@ catch(Exception $e)
 		IssueLog::Error($e->getMessage());
 	}
 }
-?>

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -608,6 +608,11 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$s detaljer',
 	'UI:ErrorPageTitle' => 'iTop - Fejl',
 	'UI:ObjectDoesNotExist' => 'Beklager, dette objekt eksisterer ikke (eller du har ikke tilladelse til at se det).',
+	'UI:ObjectArchived' => 'This object has been archived. Please enable the archive mode or contact your administrator.~~',
+	'Tag:Archived' => 'Archived~~',
+	'Tag:Archived+' => 'Can be accessed only in archive mode~~',
+	'Tag:Synchronized' => 'Synchronized~~',
+	'ObjectRef:Archived' => 'Archived~~',
 	'UI:SearchResultsPageTitle' => 'iTop - Søge Resultater',
 	'UI:SearchResultsTitle' => 'Søge Resultater',
 	'UI:SearchResultsTitle+' => 'Full-text search results~~',
@@ -857,6 +862,10 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:Pagination:All' => 'Alle',
 	'UI:HierarchyOf_Class' => 'Hierarchy af %1$s',
 	'UI:Preferences' => 'Indstillinger...',
+	'UI:ArchiveModeOn' => 'Activate archive mode~~',
+	'UI:ArchiveModeOff' => 'Deactivate archive mode~~',
+	'UI:ArchiveMode:Banner' => 'Archive mode~~',
+	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Favorit Organisationer',
 	'UI:FavoriteOrganizations+' => '',
 	'UI:FavoriteLanguage' => 'Sprog i brugergrænseflade',

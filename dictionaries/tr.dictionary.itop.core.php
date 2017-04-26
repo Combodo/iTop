@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * Localized data
  *
  * @author      Izzet Sirin <izzet.sirin@htr.com.tr>
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -413,6 +413,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:AttributeDecimal+' => 'Decimal value (could be negative)~~',
 	'Core:AttributeBoolean' => 'Boolean~~',
 	'Core:AttributeBoolean+' => 'Boolean~~',
+	'Core:AttributeBoolean/Value:null' => '',
+	'Core:AttributeBoolean/Value:yes' => 'Yes~~',
+	'Core:AttributeBoolean/Value:no' => 'No~~',
+
+	'Core:AttributeArchiveFlag/Value:yes' => 'Yes~~',
+	'Core:AttributeArchiveFlag/Value:yes+' => 'This object is visible only in archive mode~~',
+	'Core:AttributeArchiveFlag/Value:no' => 'No~~',
 	'Core:AttributeString' => 'String~~',
 	'Core:AttributeString+' => 'Alphanumeric string~~',
 	'Core:AttributeClass' => 'Class~~',
@@ -782,6 +789,3 @@ Operators:<br/>
 	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
 	'Core:Validator:MustSelectOne' => 'Please, select one~~',
 ));
-
-
-?>

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * @author	Stephan Rosenke <stephan.rosenke@itomig.de>
 
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -609,6 +609,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$s Details',
 	'UI:ErrorPageTitle' => 'iTop - Fehler',
 	'UI:ObjectDoesNotExist' => 'Leider existiert dieses Objekt nicht oder Sie sind nicht berechtigt es einzusehen.',
+	'UI:ObjectArchived' => 'This object has been archived. Please enable the archive mode or contact your administrator.~~',
+	'Tag:Archived' => 'Archived~~',
+	'Tag:Archived+' => 'Can be accessed only in archive mode~~',
+	'Tag:Synchronized' => 'Synchronized~~',
+	'ObjectRef:Archived' => 'Archived~~',
 	'UI:SearchResultsPageTitle' => 'iTop - Suchergebnisse',
 	'UI:SearchResultsTitle' => 'Suchergebnisse',
 	'UI:SearchResultsTitle+' => 'Full-text search results~~',
@@ -882,6 +887,10 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Pagination:All' => 'Alles',
 	'UI:HierarchyOf_Class' => 'Hierarchie von %1$s',
 	'UI:Preferences' => 'Einstellungen...',
+	'UI:ArchiveModeOn' => 'Activate archive mode~~',
+	'UI:ArchiveModeOff' => 'Deactivate archive mode~~',
+	'UI:ArchiveMode:Banner' => 'Archive mode~~',
+	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Bevorzugte Organisationen',
 	'UI:FavoriteOrganizations+' => '',
 	'UI:FavoriteLanguage' => 'Sprache des Benutzerinterfaces',

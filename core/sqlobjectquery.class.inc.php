@@ -166,7 +166,7 @@ class SQLObjectQuery extends SQLQuery
 		}
 		else
 		{
-			$this->m_oConditionExpr->LogAnd($oConditionExpr);
+			$this->m_oConditionExpr = $this->m_oConditionExpr->LogAnd($oConditionExpr);
 		}
 	}
 

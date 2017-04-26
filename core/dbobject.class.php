@@ -226,6 +226,18 @@ abstract class DBObject implements iDisplay
 
 			$oLinkSearch = new DBObjectSearch($sLinkClass);
 			$oLinkSearch->AddCondition_PointingTo($oMyselfSearch, $sExtKeyToMe);
+			if ($oAttDef->IsIndirect())
+			{
+				// Join the remote class so that the archive flag will be taken into account
+				$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
+				$oExtKeyToRemote = MetaModel::GetAttributeDef($sLinkClass, $sExtKeyToRemote);
+				$sRemoteClass = $oExtKeyToRemote->GetTargetClass();
+				if (MetaModel::IsArchivable($sRemoteClass))
+				{
+					$oRemoteSearch = new DBObjectSearch($sRemoteClass);
+					$oLinkSearch->AddCondition_PointingTo($oRemoteSearch, $oAttDef->GetExtKeyToRemote());
+				}
+			}
 			$oLinks = new DBObjectSet($oLinkSearch);
 
 			$this->m_aCurrValues[$sAttCode] = $oLinks;
@@ -360,8 +372,15 @@ abstract class DBObject implements iDisplay
 			// Ignore it - this attribute is set upon object creation and that's it
 			return false;
 		}
-		
+
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+
+		if (!$oAttDef->IsWritable())
+		{
+			$sClass = get_class($this);
+			throw new Exception("Attempting to set the value on the read-only attribute $sClass::$sAttCode");
+		}
+
 		if ($this->m_bIsInDB && !$this->m_bFullyLoaded && !$this->m_bDirty)
 		{
 			// First time Set is called... ensure that the object gets fully loaded
@@ -742,7 +761,8 @@ abstract class DBObject implements iDisplay
 			else
 			{
 				$sHtmlLabel = htmlentities($this->Get($sAttCode.'_friendlyname'), ENT_QUOTES, 'UTF-8');
-				return $this->MakeHyperLink($sTargetClass, $iTargetKey, $sHtmlLabel);
+				$bArchived = $this->IsArchived($sAttCode);
+				return $this->MakeHyperLink($sTargetClass, $iTargetKey, $sHtmlLabel, null, true, $bArchived);
 			}
 		}
 
@@ -821,10 +841,11 @@ abstract class DBObject implements iDisplay
 	 * @param string $sHtmlLabel Label with HTML entities escaped (< escaped as &lt;)
 	 * @param null $sUrlMakerClass
 	 * @param bool|true $bWithNavigationContext
+	 * @param bool|false $bArchived
 	 * @return string
 	 * @throws DictExceptionMissingString
 	 */
-	public static function MakeHyperLink($sObjClass, $sObjKey, $sHtmlLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true)
+	public static function MakeHyperLink($sObjClass, $sObjKey, $sHtmlLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true, $bArchived = false)
 	{
 		if ($sObjKey <= 0) return '<em>'.Dict::S('UI:UndefinedObject').'</em>'; // Objects built in memory have negative IDs
 
@@ -847,19 +868,51 @@ abstract class DBObject implements iDisplay
 		}
 		$sHint = MetaModel::GetName($sObjClass)."::$sObjKey";
 		$sUrl = ApplicationContext::MakeObjectUrl($sObjClass, $sObjKey, $sUrlMakerClass, $bWithNavigationContext);
-		if (strlen($sUrl) > 0)
+
+		$bClickable = !$bArchived || utils::IsArchiveMode();
+		if ($bArchived)
 		{
-			return "<a href=\"$sUrl\" title=\"$sHint\">$sHtmlLabel</a>";
+			$sSpanClass = 'archived';
+			$sFA = 'fa-archive object-archived';
+			$sHint = Dict::S('ObjectRef:Archived');
 		}
 		else
 		{
-			return $sHtmlLabel;
+			$sSpanClass = '';
+			$sFA = '';
 		}
+		if ($sFA == '')
+		{
+			$sIcon = '';
+		}
+		else
+		{
+			if ($bClickable)
+			{
+				$sIcon = "<span class=\"object-ref-icon fa $sFA fa-1x fa-fw\"></span>";
+			}
+			else
+			{
+				$sIcon = "<span class=\"object-ref-icon-disabled fa $sFA fa-1x fa-fw\"></span>";
+			}
+		}
+
+		if ($bClickable && (strlen($sUrl) > 0))
+		{
+			$sHLink = "<a class=\"object-ref-link\" href=\"$sUrl\">$sIcon$sHtmlLabel</a>";
+		}
+		else
+		{
+			$sHLink = $sIcon.$sHtmlLabel;
+		}
+		$sRet = "<span class=\"object-ref $sSpanClass\" title=\"$sHint\">$sHLink</span>";
+		return $sRet;
 	}
 
 	public function GetHyperlink($sUrlMakerClass = null, $bWithNavigationContext = true)
 	{
-		return self::MakeHyperLink(get_class($this), $this->GetKey(), $this->GetName(), $sUrlMakerClass, $bWithNavigationContext);
+		$bArchived = $this->IsArchived();
+		return self::MakeHyperLink(get_class($this), $this->GetKey(), $this->GetName(), $sUrlMakerClass, $bWithNavigationContext, $bArchived);
 	}
 	
 	public static function ComputeStandardUIPage($sClass)
@@ -1232,7 +1285,7 @@ abstract class DBObject implements iDisplay
 
 		$aChanges = $this->ListChanges();
 
-		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
+		foreach($aChanges as $sAttCode => $value)
 		{
 			$res = $this->CheckValue($sAttCode);
 			if ($res !== true)
@@ -3543,6 +3596,84 @@ abstract class DBObject implements iDisplay
 			default:
 				throw new Exception("Invalid verb");
 		}
+	}
+
+	public function IsArchived($sKeyAttCode = null)
+	{
+		$bRet = false;
+		$sFlagAttCode = is_null($sKeyAttCode) ? 'archive_flag' : $sKeyAttCode.'_archive_flag';
+		if (MetaModel::IsValidAttCode(get_class($this), $sFlagAttCode) && $this->Get($sFlagAttCode))
+		{
+			$bRet = true;
+		}
+		return $bRet;
+	}
+
+	/**
+	 * @param $bArchive
+	 * @throws Exception
+	 */
+	protected function DBWriteArchiveFlag($bArchive)
+	{
+		if (!MetaModel::IsArchivable(get_class($this)))
+		{
+			throw new Exception(get_class($this).' is not an archivable class');
+		}
+
+		$iFlag = $bArchive ? 1 : 0;
+		$sDate = $bArchive ? '"'.date(AttributeDate::GetSQLFormat()).'"' : 'null';
+
+		$sClass = get_class($this);
+		$sArchiveRoot = MetaModel::GetAttributeOrigin($sClass, 'archive_flag');
+		$sRootTable = MetaModel::DBGetTable($sArchiveRoot);
+		$sRootKey = MetaModel::DBGetKey($sArchiveRoot);
+		$aJoins = array("`$sRootTable`");
+		$aUpdates = array();
+		foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL) as $sParentClass)
+		{
+			if (!MetaModel::IsValidAttCode($sParentClass, 'archive_flag')) continue;
+
+			$sTable = MetaModel::DBGetTable($sParentClass);
+			$aUpdates[] = "`$sTable`.`archive_flag` = $iFlag";
+			if ($sParentClass == $sArchiveRoot)
+			{
+				if (!$bArchive || $this->Get('archive_date') == '')
+				{
+					// Erase or set the date (do not change it)
+					$aUpdates[] = "`$sTable`.`archive_date` = $sDate";
+				}
+			}
+			else
+			{
+				$sKey = MetaModel::DBGetKey($sParentClass);
+				$aJoins[] = "`$sTable` ON `$sTable`.`$sKey` = `$sRootTable`.`$sRootKey`";
+			}
+		}
+		$sJoins = implode(' INNER JOIN ', $aJoins);
+		$sValues = implode(', ', $aUpdates);
+		$sUpdateQuery = "UPDATE $sJoins SET $sValues WHERE `$sRootTable`.`$sRootKey` = ".$this->GetKey();
+		CMDBSource::Query($sUpdateQuery);
+	}
+
+	/**
+	 * Can be called to repair the database (tables consistency)
+	 * The archive_date will be preserved
+	 * @throws Exception
+	 */
+	public function DBArchive()
+	{
+		$this->DBWriteArchiveFlag(true);
+		$this->m_aCurrValues['archive_flag'] = true;
+		$this->m_aOrigValues['archive_flag'] = true;
+	}
+
+	public function DBUnarchive()
+	{
+		$this->DBWriteArchiveFlag(false);
+		$this->m_aCurrValues['archive_flag'] = false;
+		$this->m_aOrigValues['archive_flag'] = false;
+		$this->m_aCurrValues['archive_date'] = null;
+		$this->m_aOrigValues['archive_date'] = null;
 	}
 }
 

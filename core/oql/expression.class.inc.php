@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * General definition of an expression tree (could be OQL, SQL or whatever) 
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -579,7 +579,7 @@ class FieldExpression extends UnaryExpression
 			$iObjKey = (int)$sValue;
 			if ($iObjKey > 0)
 			{
-				$oObject = MetaModel::GetObject($sObjClass, $iObjKey);
+				$oObject = MetaModel::GetObjectWithArchive($sObjClass, $iObjKey);
 				$sRes = $oObject->GetHyperlink();
 			}
 			else
@@ -1404,5 +1404,3 @@ class QueryBuilderExpressions
 		}
 	}
 }
-
-?>

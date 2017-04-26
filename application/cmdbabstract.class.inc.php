@@ -198,8 +198,6 @@ EOF
 			$oBlock->Display($oPage, -1);
 		}
 
-		$oPage->add("<div class=\"page_header\"><h1>".$this->GetIcon()."&nbsp;\n");
-
 		// Master data sources
 		$bSynchronized = false;
 		$aIcons = array();
@@ -292,16 +290,46 @@ EOF
 					$sTip .= "<p style=\"white-space:nowrap\">".$oDataSource->GetIcon(true, 'style="vertical-align:middle"')."&nbsp;$sLink<br/>";
 					$sTip .= Dict::S('Core:Synchro:LastSynchro') . '<br/>' . $sLastSynchro . "</p>";
 				}
-				$aIcons[] = '&nbsp;<img style="vertical-align:middle;" id="synchro_icon" src="../images/locked.png"/>';
+				$sLabel = htmlentities(Dict::S('Tag:Synchronized'), ENT_QUOTES, 'UTF-8');
+				$sSynchroTagId = 'synchro_icon-'.$this->GetKey();
+				$aIcons[] = "<div class=\"tag\" id=\"$sSynchroTagId\"><span class=\"object-synchronized fa fa-lock fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
 				$sTip = addslashes($sTip);
-				$oPage->add_ready_script("$('#synchro_icon').qtip( { content: '$sTip', show: 'mouseover', hide: { fixed: true }, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
+				$oPage->add_ready_script("$('#$sSynchroTagId').qtip( { content: '$sTip', show: 'mouseover', hide: { fixed: true }, style: { name: 'dark', tip: 'topLeft' }, position: { corner: { target: 'bottomMiddle', tooltip: 'topLeft' }} } );");
 			}
 		}
-	
-		$sIcons = implode(' ', $aIcons);
-		$oPage->add(MetaModel::GetName(get_class($this)).": <span class=\"hilite\">".$this->GetName()."</span>$sIcons</h1>\n");
-		$oPage->add("</div>\n");
-		
+
+		if ($this->IsArchived())
+		{
+			$sLabel = htmlentities(Dict::S('Tag:Archived'), ENT_QUOTES, 'UTF-8');
+			$sTitle = htmlentities(Dict::S('Tag:Archived+'), ENT_QUOTES, 'UTF-8');
+			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-archived fa fa-archive fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
+		}
+
+		$sObjectIcon = $this->GetIcon();
+		$sClassName = MetaModel::GetName(get_class($this));
+		$sObjectName = $this->GetName();
+		if (count($aIcons) > 0)
+		{
+			$sTags = '<div class="tags">'.implode('&nbsp;', $aIcons).'</div>';
+		}
+		else
+		{
+			$sTags = '';
+		}
+
+		$oPage->add(
+<<<EOF
+<div class="page_header">
+   <div class="object-details-header">
+      <div class ="object-icon">$sObjectIcon</div>
+      <div class ="object-infos">
+		  <h1 class="object-name">$sClassName: <span class="hilite">$sObjectName</span></h1>
+		  $sTags
+      </div>
+   </div>
+</div>
+EOF
+		);
 	}
 
 	function DisplayBareHistory(WebPage $oPage, $bEditMode = false, $iLimitCount = 0, $iLimitStart = 0)
@@ -558,7 +586,6 @@ EOF
 				
 				foreach($aNotificationClasses as $sNotifClass)
 				{
-					
 					$oPage->p(MetaModel::GetClassIcon($sNotifClass, true).'&nbsp;'.MetaModel::GetName($sNotifClass));
 					$oBlock = new DisplayBlock($aNotifSearches[$sNotifClass], 'list', false);
 					$oBlock->Display($oPage, 'notifications_'.$sNotifClass, array('menu' => false));
@@ -1933,7 +1960,7 @@ EOF
 					$aEventsList[] ='validate';
 					$aEventsList[] ='change';
 
-					$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs);
+					$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '', $value);
 					$sFieldName = $sFieldPrefix.$sAttCode.$sNameSuffix;
 					$aExtKeyParams = $aArgs;
 					$aExtKeyParams['iFieldSize'] = $oAttDef->GetMaxSize();
@@ -2526,7 +2553,7 @@ EOF
 					{
 						if ($oAttDef->IsExternalKey())
 						{
-							$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs);
+							$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '', $this->Get($sAttCode));
 							if ($oAllowedValues->Count() == 1)
 							{
 								$oRemoteObj = $oAllowedValues->Fetch();

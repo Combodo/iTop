@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Class iTopWebPage
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -34,7 +34,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 {
 	private $m_sMenu;
 	//	private $m_currentOrganization;
-	private $m_sMessage;
+	private $m_aMessages;
 	private $m_sInitScript;
 	protected $m_oTabs;
 	protected $bBreadCrumbEnabled;
@@ -63,8 +63,12 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 			$this->bBreadCrumbEnabled = false;
 		}
 
+		$bArchiveMode = utils::IsArchiveMode();
+		DBSearch::SetArchiveModeDefault($bArchiveMode);
+		if ($bArchiveMode) MetaModel::DBSetReadOnly();
+
 		$this->m_sMenu = "";
-		$this->m_sMessage = '';
+		$this->m_aMessages = array();
 		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
 		$this->add_header("Content-type: text/html; charset=utf-8");
 		$this->add_header("Cache-control: no-cache");
@@ -75,6 +79,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_stylesheet("../css/jquery.multiselect.css");
 		$this->add_linked_stylesheet("../css/magnific-popup.css");
 		$this->add_linked_stylesheet("../css/c3.min.css");
+		$this->add_linked_stylesheet("../css/font-awesome/css/font-awesome.min.css");
 
 		$this->add_linked_script('../js/jquery.layout.min.js');
 		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
@@ -120,6 +125,23 @@ function ShowAboutBox()
 		$('body').append(data);
 	});
 	return false;
+}
+function ArchiveMode(bEnable)
+{
+	var sPrevUrl = StripArchiveArgument(window.location.search);
+	if (bEnable)
+	{
+		window.location.search = sPrevUrl + '&with-archive=1';
+	}
+	else
+	{
+		window.location.search = sPrevUrl + '&with-archive=0';
+	}
+}
+function StripArchiveArgument(sUrl)
+{
+	var res = sUrl.replace(/&with-archive=[01]/g, '');
+	return res;
 }
 EOF
 			);
@@ -732,7 +754,7 @@ EOF
 
 		if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled())
 		{
-			$sNorthPane .= '<div id="admin-banner"><span style="padding:5px;">'.ExecutionKPI::GetDescription().'<span></div>';
+			$sNorthPane .= '<div class="app-message"><span style="padding:5px;">'.ExecutionKPI::GetDescription().'<span></div>';
 		}
 		
 		//$sSouthPane = '<p>Peak memory Usage: '.sprintf('%.3f MB', memory_get_peak_usage(true) / (1024*1024)).'</p>';
@@ -982,7 +1004,20 @@ EOF
 
 			$oPrefs = new URLPopupMenuItem('UI:Preferences', Dict::S('UI:Preferences'), utils::GetAbsoluteUrlAppRoot()."pages/preferences.php?".$oAppContext->GetForLink());
 			$aActions[$oPrefs->GetUID()] = $oPrefs->GetMenuItem();
-				
+
+			if (utils::IsArchiveMode())
+			{
+				$oExitArchive = new JSPopupMenuItem('UI:ArchiveModeOff', Dict::S('UI:ArchiveModeOff'), 'return ArchiveMode(false);');
+				$aActions[$oExitArchive->GetUID()] = $oExitArchive->GetMenuItem();
+
+				$sIcon = '<span class="fa fa-lock fa-1x"></span>';
+				$this->AddApplicationMessage(Dict::S('UI:ArchiveMode:Banner'), $sIcon, Dict::S('UI:ArchiveMode:Banner+'));
+			}
+			elseif (UserRights::CanBrowseArchive())
+			{
+				$oBrowseArchive = new JSPopupMenuItem('UI:ArchiveModeOn', Dict::S('UI:ArchiveModeOn'), 'return ArchiveMode(true);');
+				$aActions[$oBrowseArchive->GetUID()] = $oBrowseArchive->GetMenuItem();
+			}
 			if (utils::CanLogOff())
 			{
 				$oLogOff = new URLPopupMenuItem('UI:LogOffMenu', Dict::S('UI:LogOffMenu'), utils::GetAbsoluteUrlAppRoot().'pages/logoff.php?operation=do_logoff');
@@ -1014,26 +1049,34 @@ EOF
 				$sRestrictions = Dict::S('UI:AccessRO-Users');
 			}
 
-			$sApplicationBanner = '';
 			if (strlen($sRestrictions) > 0)
 			{
+				$sIcon =
+<<<EOF
+<span class="fa-stack fa-sm">
+  <i class="fa fa-pencil fa-flip-horizontal fa-stack-1x"></i>
+  <i class="fa fa-ban fa-stack-2x text-danger"></i>
+</span>
+EOF;
+
 				$sAdminMessage = trim(MetaModel::GetConfig()->Get('access_message'));
-				$sApplicationBanner .= '<div id="admin-banner">';
-				$sApplicationBanner .= '<img src="../images/locked.png" style="vertical-align:middle;">';
-				$sApplicationBanner .= '&nbsp;<b>'.$sRestrictions.'</b>';
 				if (strlen($sAdminMessage) > 0)
 				{
-					$sApplicationBanner .= '&nbsp;<b>'.$sAdminMessage.'</b>';
+					$sRestrictions .= '&nbsp;'.$sAdminMessage;
 				}
-				$sApplicationBanner .= '</div>';
+				$this->AddApplicationMessage($sRestrictions, $sIcon);
 			}
 
-			if(strlen($this->m_sMessage))
+			$sApplicationMessages = '';
+			foreach ($this->m_aMessages as $aMessage)
 			{
-				$sApplicationBanner .= '<div id="admin-banner"><span style="padding:5px;">'.$this->m_sMessage.'<span></div>';
+				$sHtmlIcon = $aMessage['icon'] ? $aMessage['icon'] : '';
+				$sHtmlMessage = $aMessage['message'];
+				$sTitleAttr = $aMessage['tip'] ? 'title="'.htmlentities($aMessage['tip'], ENT_QUOTES, 'UTF-8').'"' : '';
+				$sApplicationMessages .= '<div class="app-message" '.$sTitleAttr.'><span class="app-message-icon">'.$sHtmlIcon.'</span><span class="app-message-body">'.$sHtmlMessage.'</div></span>';
 			}
 
-			$sApplicationBanner .= $sBannerExtraHtml;
+			$sApplicationBanner = "<div class=\"app-banner ui-helper-clearfix\">$sApplicationMessages$sBannerExtraHtml</div>";
 			
 			if (!empty($sNorthPane))
 			{
@@ -1333,10 +1376,26 @@ EOF
 	}
 
 	/**
-	 * Set the message to be displayed in the 'admin-banner' section at the top of the page
+	 * Set the message to be displayed in the 'app-banner' section at the top of the page
 	 */
-	public function SetMessage($sMessage)
+	public function SetMessage($sHtmlMessage)
 	{
-			$this->m_sMessage = $sMessage;
+		$sHtmlIcon = '<span class="fa fa-comment fa-1x"></span>';
+		$this->AddApplicationMessage($sHtmlMessage, $sHtmlIcon);
+	}
+
+	/**
+	 * Add message to be displayed in the 'app-banner' section at the top of the page
+	 */
+	public function AddApplicationMessage($sHtmlMessage, $sHtmlIcon = null, $sTip = null)
+	{
+		if (strlen($sHtmlMessage))
+		{
+			$this->m_aMessages[] = array(
+				'icon' => $sHtmlIcon,
+				'message' => $sHtmlMessage,
+				'tip' => $sTip
+			);
+		}
 	}
 }

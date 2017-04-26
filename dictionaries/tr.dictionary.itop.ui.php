@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * Localized data
  *
  * @author      Izzet Sirin <izzet.sirin@htr.com.tr>
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -645,6 +645,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$s detayları',
 	'UI:ErrorPageTitle' => 'iTop - Hata',
 	'UI:ObjectDoesNotExist' => 'Nesne mevcut değil veya yetkiniz yok.',
+	'UI:ObjectArchived' => 'This object has been archived. Please enable the archive mode or contact your administrator.~~',
+	'Tag:Archived' => 'Archived~~',
+	'Tag:Archived+' => 'Can be accessed only in archive mode~~',
+	'Tag:Synchronized' => 'Synchronized~~',
+	'ObjectRef:Archived' => 'Archived~~',
 	'UI:SearchResultsPageTitle' => 'iTop - Arama Sonuçları',
 	'UI:SearchResultsTitle' => 'Arama Sonuçları',
 	'UI:SearchResultsTitle+' => 'Full-text search results~~',
@@ -1058,6 +1063,10 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:Pagination:All' => 'All~~',
 	'UI:HierarchyOf_Class' => 'Hierarchy of %1$s~~',
 	'UI:Preferences' => 'Preferences...~~',
+	'UI:ArchiveModeOn' => 'Activate archive mode~~',
+	'UI:ArchiveModeOff' => 'Deactivate archive mode~~',
+	'UI:ArchiveMode:Banner' => 'Archive mode~~',
+	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Favorite Organizations~~',
 	'UI:FavoriteOrganizations+' => 'Check in the list below the organizations that you want to see in the drop-down menu for a quick access. Note that this is not a security setting, objects from any organization are still visible and can be accessed by selecting \"All Organizations\" in the drop-down list.~~',
 	'UI:FavoriteLanguage' => 'Language of the User Interface~~',
@@ -1252,7 +1261,3 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:Menu:KillConcurrentLock' => 'Kill the Concurrent Modification Lock !~~',
 	'UI:Menu:ExportPDF' => 'Export as PDF...~~',
 ));
-
-
-
-?>

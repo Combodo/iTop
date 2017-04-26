@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -608,6 +608,11 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$sの詳細',
 	'UI:ErrorPageTitle' => 'iTop - エラー',
 	'UI:ObjectDoesNotExist' => '申し訳ございません。このオブジェクトは既に存在しません。(あるいは参照する権限がありません。)',
+	'UI:ObjectArchived' => 'This object has been archived. Please enable the archive mode or contact your administrator.~~',
+	'Tag:Archived' => 'Archived~~',
+	'Tag:Archived+' => 'Can be accessed only in archive mode~~',
+	'Tag:Synchronized' => 'Synchronized~~',
+	'ObjectRef:Archived' => 'Archived~~',
 	'UI:SearchResultsPageTitle' => 'iTop - 検索結果',
 	'UI:SearchResultsTitle' => '検索結果',
 	'UI:SearchResultsTitle+' => 'Full-text search results~~',
@@ -856,6 +861,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Pagination:All' => '全',
 	'UI:HierarchyOf_Class' => '%1$s の階層',
 	'UI:Preferences' => 'プリファレンス...',
+	'UI:ArchiveModeOn' => 'Activate archive mode~~',
+	'UI:ArchiveModeOff' => 'Deactivate archive mode~~',
+	'UI:ArchiveMode:Banner' => 'Archive mode~~',
+	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'クイックアクセス組織',
 	'UI:FavoriteOrganizations+' => '迅速なアクセスのためのドロップダウンメニューに表示したい組織は、以下のリストで確認してください。セキュリティ設定ではないことに注意してください。全ての組織のオブジェクトは、表示可能です。ドロップダウンリストで「すべての組織(All Organizations)」を選択することでアクセスすることができます。',
 	'UI:FavoriteLanguage' => 'ユーザインターフェースの言語',
@@ -1104,4 +1113,3 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Menu:KillConcurrentLock' => 'Kill the Concurrent Modification Lock !~~',
 	'UI:Menu:ExportPDF' => 'Export as PDF...~~',
 ));
-?>

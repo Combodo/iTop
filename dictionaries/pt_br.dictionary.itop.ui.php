@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -760,6 +760,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:DetailsPageTitle' => '%1$s - %2$s detalhes',
 	'UI:ErrorPageTitle' => 'Erro',
 	'UI:ObjectDoesNotExist' => 'Desculpe, este objeto não existe (ou você não tem permissão para vê-lo).',
+	'UI:ObjectArchived' => 'This object has been archived. Please enable the archive mode or contact your administrator.~~',
+	'Tag:Archived' => 'Archived~~',
+	'Tag:Archived+' => 'Can be accessed only in archive mode~~',
+	'Tag:Synchronized' => 'Synchronized~~',
+	'ObjectRef:Archived' => 'Archived~~',
 	'UI:SearchResultsPageTitle' => 'Resultado da pesquisa',
 	'UI:SearchResultsTitle' => 'Resultado da pesquisa',
 	'UI:SearchResultsTitle+' => 'Full-text search results~~',
@@ -1033,6 +1038,10 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Pagination:All' => 'Todos',
 	'UI:HierarchyOf_Class' => 'Hierarquia de %1$s',
 	'UI:Preferences' => 'Preferências...',
+	'UI:ArchiveModeOn' => 'Activate archive mode~~',
+	'UI:ArchiveModeOff' => 'Deactivate archive mode~~',
+	'UI:ArchiveMode:Banner' => 'Archive mode~~',
+	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Organizações favoritas',
 	'UI:FavoriteOrganizations+' => 'Confira na lista abaixo as organizações que você deseja ver no menu drop-down para um acesso rápido.'.
 'Note-se que esta não é uma configuração de segurança, objetos de qualquer organização ainda são visíveis e podem ser acessadas ao selecionar \"Todos Organizações\" na lista drop-down.',
@@ -1284,4 +1293,3 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Menu:KillConcurrentLock' => 'Kill the Concurrent Modification Lock !~~',
 	'UI:Menu:ExportPDF' => 'Export as PDF...~~',
 ));
-?>

@@ -1,5 +1,5 @@
 <?php 
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@
  * Linux & Open Source Professionals
  * http://www.linprofs.com
  * 
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -768,6 +768,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$s details',
 	'UI:ErrorPageTitle' => 'iTop - Error',
 	'UI:ObjectDoesNotExist' => 'Sorry, dit object bestaat niet (of u bent niet gemachtigd het te bekijken).',
+	'UI:ObjectArchived' => 'This object has been archived. Please enable the archive mode or contact your administrator.~~',
+	'Tag:Archived' => 'Archived~~',
+	'Tag:Archived+' => 'Can be accessed only in archive mode~~',
+	'Tag:Synchronized' => 'Synchronized~~',
+	'ObjectRef:Archived' => 'Archived~~',
 	'UI:SearchResultsPageTitle' => 'iTop - Zoekresultaten',
 	'UI:SearchResultsTitle' => 'Zoekresultaten',
 	'UI:SearchResultsTitle+' => 'Full-text search results~~',
@@ -1042,6 +1047,10 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	'UI:Pagination:All' => 'Alles',
 	'UI:HierarchyOf_Class' => 'Hierarchie van %1$s',
 	'UI:Preferences' => 'Voorkeuren...',
+	'UI:ArchiveModeOn' => 'Activate archive mode~~',
+	'UI:ArchiveModeOff' => 'Deactivate archive mode~~',
+	'UI:ArchiveMode:Banner' => 'Archive mode~~',
+	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Favoriete Organizaties',
 	'UI:FavoriteOrganizations+' => 'Bekijk de organisaties die u wilt zijn in het drop-down menu voor een snelle toegang in de onderstaande lijst. '.
 								   'Merk op dat dit geen security instelling is, objecten van elke organisatie zijn nog steed zichtbaar en toegankelijk door "All Organizations" te selecteren in de drop-down list.',
@@ -1293,4 +1302,3 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	'UI:Menu:KillConcurrentLock' => 'Kill the Concurrent Modification Lock !~~',
 	'UI:Menu:ExportPDF' => 'Export as PDF...~~',
 ));
-?>

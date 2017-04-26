@@ -302,8 +302,6 @@ legend.transparent {
 .ui-widget-content td a, p a, p a:visited, td a, td a:visited {
 	text-decoration:none;
 	color: $complement-color;
-	padding-left:14px;
-	background: url(../images/mini-arrow-orange.gif) no-repeat left;
 }
 .ui-widget-content td a.cke_button, .ui-widget-content td a.cke_toolbox_collapser, .ui-widget-content td a.cke_combo_button, cke_dialog a {
 	padding-left: 0;
@@ -956,13 +954,62 @@ div#logo div {
 	background: $frame-background-color;
 	text-align: right;
 }
-#admin-banner {
+.app-banner {
+
+}
+.app-message {
 	float: left;
 	margin-top: 2px;
-	padding: 8px;
-	border: 1px solid #c33;
-	background-color: #fee;
-	-moz-border-radius: 0.5em;
+	margin-right: 4px;
+	padding: 6px 9px;
+	background-color: $highlight-color;
+	color: white;
+	border-radius: 6px;
+	text-align: left;
+}
+.app-message-icon {
+	margin-right: 5px;
+}
+.app-message-body {
+}
+.fa-sm {
+	font-size: 0.66em;
+}
+.object-details-header {
+	margin-top: 7px;
+	margin-bottom: 7px;
+
+}
+.object-icon {
+	display: table-cell;
+	vertical-align: middle;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+.object-infos {
+	display: table-cell;
+	vertical-align: middle;
+}
+.object-name {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+.tags {
+	margin-top: 5px;
+}
+.tag {
+	font-size: 10px;
+	font-weight: initial;
+	display: inline-block;
+	color:white;
+	background-color:#555;
+	padding: 3px 6px;
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	border-radius:4px;
+}
+.text-danger {
+	color: red;
 }
 #global-search {
 	height: 55px;
@@ -1888,4 +1935,20 @@ span.refresh-button {
 	font-size: smaller;
 	margin-top: 3px;
 	margin-bottom: 1px;
+}
+.object-ref.archived {
+}
+.object-ref-icon.fa {
+	color: $highlight-color;
+	font-size: smaller;
+	vertical-align: 1px;
+	margin-right: 1px;
+}
+.object-ref-icon-disabled.fa {
+	color: $grey-color;
+	font-size: smaller;
+	margin-right: 1px;
+}
+.object-ref-link {
+	background: none;
 }

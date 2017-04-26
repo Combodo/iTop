@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@
  * Linux & Open Source Professionals
  * http://www.linprofs.com
  * 
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -50,6 +50,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 	'Core:AttributeBoolean' => 'Boolean',
 	'Core:AttributeBoolean+' => 'Boolean',
+	'Core:AttributeBoolean/Value:null' => '',
+	'Core:AttributeBoolean/Value:yes' => 'Yes~~',
+	'Core:AttributeBoolean/Value:no' => 'No~~',
+
+	'Core:AttributeArchiveFlag/Value:yes' => 'Yes~~',
+	'Core:AttributeArchiveFlag/Value:yes+' => 'This object is visible only in archive mode~~',
+	'Core:AttributeArchiveFlag/Value:no' => 'No~~',
 
 	'Core:AttributeString' => 'String',
 	'Core:AttributeString+' => 'Alphanumerieke string',
@@ -862,5 +869,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
 	'Core:Validator:MustSelectOne' => 'Please, select one~~',
 ));
-
-?>

@@ -232,7 +232,8 @@ abstract class AttributeDefinition
 	public function IsExternalKey($iType = EXTKEY_RELATIVE) {return false;} 
 	public function IsHierarchicalKey() {return false;}
 	public function IsExternalField() {return false;} 
-	public function IsWritable() {return false;} 
+	public function IsWritable() {return false;}
+	public function IsMagic() {return $this->GetOptional('magic', false);}
 	public function LoadInObject() {return true;}
 	public function LoadFromDB() {return true;}
 	public function AlwaysLoadInTables() {return $this->GetOptional('always_load_in_tables', false);}
@@ -399,6 +400,7 @@ abstract class AttributeDefinition
 	public function GetSQLColumns($bFullSpec = false) {return array();} // returns column/spec pairs (1 in most of the cases), for STRUCTURING (DB creation)
 	public function GetSQLValues($value) {return array();} // returns column/value pairs (1 in most of the cases), for WRITING (Insert, Update)
 	public function RequiresIndex() {return false;}
+	public function CopyOnAllTables() {return false;}
 
 	public function GetOrderBySQLExpressions($sClassAlias)
 	{
@@ -1416,7 +1418,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 
 	public function IsDirectField() {return true;} 
 	public function IsScalar() {return true;} 
-	public function IsWritable() {return true;} 
+	public function IsWritable() {return !$this->IsMagic();}
 	public function GetSQLExpr()
 	{
 		return $this->Get("sql");
@@ -1799,7 +1801,7 @@ class AttributeBoolean extends AttributeInteger
 
 	public function GetEditClass() {return "Integer";}
 	protected function GetSQLCol($bFullSpec = false) {return "TINYINT(1)".($bFullSpec ? $this->GetSQLColSpec() : '');}
-	
+
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue)) return null;
@@ -1814,25 +1816,169 @@ class AttributeBoolean extends AttributeInteger
 		return 0;
 	}
 
-	public function GetAsXML($sValue, $oHostObject = null, $bLocalize = true)
+	public function GetValueLabel($bValue)
 	{
-		return $sValue ? '1' : '0';
+		if (is_null($bValue))
+		{
+			$sLabel = Dict::S('Core:'.get_class($this).'/Value:null');
+		}
+		else
+		{
+			$sValue = $bValue ? 'yes' : 'no';
+			$sDefault = Dict::S('Core:'.get_class($this).'/Value:'.$sValue);
+			$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, $sDefault, true /*user lang*/);
+		}
+		return $sLabel;
 	}
-	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
+
+	public function GetValueDescription($bValue)
 	{
-		return $sValue ? '1' : '0';
+		if (is_null($bValue))
+		{
+			$sDescription = Dict::S('Core:'.get_class($this).'/Value:null+');
+		}
+		else
+		{
+			$sValue = $bValue ? 'yes' : 'no';
+			$sDefault = Dict::S('Core:'.get_class($this).'/Value:'.$sValue.'+');
+			$sDescription = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue.'+', $sDefault, true /*user lang*/);
+		}
+		return $sDescription;
 	}
-	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+
+	public function GetAsHTML($bValue, $oHostObject = null, $bLocalize = true)
 	{
-		return $sValue ? '1' : '0';
+		if (is_null($bValue))
+		{
+			$sRes = '';
+		}
+		elseif ($bLocalize)
+		{
+			$sLabel = $this->GetValueLabel($bValue);
+			$sDescription = $this->GetValueDescription($bValue);
+			// later, we could imagine a detailed description in the title
+			$sRes = "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
+		}
+		else
+		{
+			$sRes = $bValue ? 'yes' : 'no';
+		}
+		return $sRes;
 	}
+
+	public function GetAsXML($bValue, $oHostObject = null, $bLocalize = true)
+	{
+		if (is_null($bValue))
+		{
+			$sFinalValue = '';
+		}
+		elseif ($bLocalize)
+		{
+			$sFinalValue = $this->GetValueLabel($bValue);
+		}
+		else
+		{
+			$sFinalValue = $bValue ? 'yes' : 'no';
+		}
+		$sRes = parent::GetAsXML($sFinalValue, $oHostObject, $bLocalize);
+		return $sRes;
+	}
+
+	public function GetAsCSV($bValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
+	{
+		if (is_null($bValue))
+		{
+			$sFinalValue = '';
+		}
+		elseif ($bLocalize)
+		{
+			$sFinalValue = $this->GetValueLabel($bValue);
+		}
+		else
+		{
+			$sFinalValue = $bValue ? 'yes' : 'no';
+		}
+		$sRes = parent::GetAsCSV($sFinalValue, $sSeparator, $sTextQualifier, $oHostObject, $bLocalize);
+		return $sRes;
+	}
+
+	static public function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\SelectField';
+	}
+
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
+	{
+		if ($oFormField === null)
+		{
+			$sFormFieldClass = static::GetFormFieldClass();
+			$oFormField = new $sFormFieldClass($this->GetCode());
+		}
+
+		$oFormField->SetChoices(array('yes' => $this->GetValueLabel(true), 'no' => $this->GetValueLabel(false)));
+		parent::MakeFormField($oObject, $oFormField);
+
+		return $oFormField;
+	}
+
+	public function GetEditValue($value, $oHostObj = null)
+	{
+		if (is_null($value))
+		{
+			return '';
+		}
+		else
+		{
+			return $this->GetValueLabel($value);
+		}
+	}
+
 	/**
 	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue	 
-	 */	 	
+	 * The operation is the opposite to FromJSONToValue
+	 */
 	public function GetForJSON($value)
 	{
-		return $value ? '1' : '0';
+		return (bool)$value;
+	}
+
+	public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
+	{
+		$sInput = strtolower(trim($sProposedValue));
+		if ($bLocalizedValue)
+		{
+			switch ($sInput)
+			{
+				case '1': // backward compatibility
+				case $this->GetValueLabel(true):
+					$value = true;
+					break;
+				case '0': // backward compatibility
+				case 'no':
+				case $this->GetValueLabel(false):
+					$value = false;
+					break;
+				default:
+					$value = null;
+			}
+		}
+		else
+		{
+			switch ($sInput)
+			{
+				case '1': // backward compatibility
+				case 'yes':
+					$value = true;
+					break;
+				case '0': // backward compatibility
+				case 'no':
+					$value = false;
+					break;
+				default:
+					$value = null;
+			}
+		}
+		return $value;
 	}
 }
 
@@ -2087,6 +2233,10 @@ class AttributeFinalClass extends AttributeString
 	public function IsWritable()
 	{
 		return false;
+	}
+	public function IsMagic()
+	{
+		return true;
 	}
 
 	public function RequiresIndex()
@@ -4312,10 +4462,10 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		}
 	}
 
-	public function GetAllowedValuesAsObjectSet($aArgs = array(), $sContains = '')
+	public function GetAllowedValuesAsObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
 	{
 		$oValSetDef = $this->GetValuesDef();
-		$oSet = $oValSetDef->ToObjectSet($aArgs, $sContains);
+		$oSet = $oValSetDef->ToObjectSet($aArgs, $sContains, $iAdditionalValue);
 		return $oSet;
 	}
 
@@ -4535,7 +4685,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		}
 	}
 
-	public function GetAllowedValuesAsObjectSet($aArgs = array(), $sContains = '')
+	public function GetAllowedValuesAsObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
 	{
 		$oValSetDef = $this->GetValuesDef();
 		if (array_key_exists('this', $aArgs))
@@ -4551,7 +4701,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 				$oValSetDef->AddCondition($oFilter);
 			}
 		}
-		$oSet = $oValSetDef->ToObjectSet($aArgs, $sContains);
+		$oSet = $oValSetDef->ToObjectSet($aArgs, $sContains, $iAdditionalValue);
 		return $oSet;
 	}
 
@@ -5265,7 +5415,7 @@ class AttributeStopWatch extends AttributeDefinition
 	
 	public function IsDirectField() {return true;} 
 	public function IsScalar() {return true;} 
-	public function IsWritable() {return false;} 
+	public function IsWritable() {return true;}
 	public function GetDefaultValue(DBObject $oHostObject = null) {return $this->NewStopWatch();}
 
 	public function GetEditValue($value, $oHostObj = null)
@@ -6630,6 +6780,10 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 	{
 		return false;
 	}
+	public function IsMagic()
+	{
+		return true;
+	}
 
 	public function IsDirectField()
 	{
@@ -7440,3 +7594,26 @@ class AttributeCustomFields extends AttributeDefinition
 	}
 }
 
+class AttributeArchiveFlag extends AttributeBoolean
+{
+	public function __construct($sCode)
+	{
+		parent::__construct($sCode, array("allowed_values" => null, "sql" => $sCode, "default_value" => false, "is_null_allowed" => false, "depends_on" => array()));
+	}
+	public function RequiresIndex()
+	{
+		return true;
+	}
+	public function CopyOnAllTables()
+	{
+		return true;
+	}
+	public function IsWritable()
+	{
+		return false;
+	}
+	public function IsMagic()
+	{
+		return true;
+	}
+}

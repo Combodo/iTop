@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
  * Simple web page with no includes, header or fancy formatting, useful to
  * generate HTML fragments when called by an AJAX method
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -53,7 +53,11 @@ class ajax_page extends WebPage implements iTabbedPage
 		$this->sContentType = 'text/html';
 		$this->sContentDisposition = 'inline';
 		$this->m_sMenu = "";
-    }	
+
+		$bArchiveMode = utils::IsArchiveMode();
+		DBSearch::SetArchiveModeDefault($bArchiveMode);
+		if ($bArchiveMode) MetaModel::DBSetReadOnly();
+    }
 
 	public function AddTabContainer($sTabContainer, $sPrefix = '')
 	{

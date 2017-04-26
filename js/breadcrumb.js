@@ -75,7 +75,8 @@ $(function()
 						}
 						else
 						{
-							sBreadCrumbHtml += '<div class="breadcrumb-item"><a class="breadcrumb-link" breadcrumb-entry="'+iEntry+'" href="'+oEntry['url']+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+oEntry['label']+'</span></a></div>';
+							var sSanitizedUrl = StripArchiveArgument(oEntry['url']);
+							sBreadCrumbHtml += '<div class="breadcrumb-item"><a class="breadcrumb-link" breadcrumb-entry="'+iEntry+'" href="'+sSanitizedUrl+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+oEntry['label']+'</span></a></div>';
 						}
 					}
 				}

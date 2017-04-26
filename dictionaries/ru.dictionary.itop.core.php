@@ -31,6 +31,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'Core:AttributeBoolean' => 'Логич.',
 	'Core:AttributeBoolean+' => 'Boolean',
+	'Core:AttributeBoolean/Value:null' => '',
+	'Core:AttributeBoolean/Value:yes' => 'Yes~~',
+	'Core:AttributeBoolean/Value:no' => 'No~~',
+
+	'Core:AttributeArchiveFlag/Value:yes' => 'Yes~~',
+	'Core:AttributeArchiveFlag/Value:yes+' => 'This object is visible only in archive mode~~',
+	'Core:AttributeArchiveFlag/Value:no' => 'No~~',
 
 	'Core:AttributeString' => 'Строка',
 	'Core:AttributeString+' => 'Alphanumeric string',

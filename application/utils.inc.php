@@ -1,7 +1,7 @@
 <?php
 use Html2Text\Html2Text;
 use Leafo\ScssPhp\Compiler;
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -22,7 +22,7 @@ use Leafo\ScssPhp\Compiler;
 /**
  * Static class utils
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -140,6 +140,20 @@ class utils
 		}
 	}
 
+	public static function IsArchiveMode()
+	{
+		if (isset($_SESSION['archive_mode']))
+		{
+			$iDefault = $_SESSION['archive_mode'];
+		}
+		else
+		{
+			$iDefault = 0;
+		}
+		$iCurrent = self::ReadParam('with-archive', $iDefault, true);
+		$_SESSION['archive_mode'] = $iCurrent;
+		return ($iCurrent == 1);
+	}
 
 	public static function ReadParam($sName, $defaultValue = "", $bAllowCLI = false, $sSanitizationFilter = 'parameter')
 	{
@@ -700,7 +714,7 @@ class utils
 		}
 		return $bResult;
 	}
-	
+
 	/**
 	 * Initializes the CAS client
 	 */

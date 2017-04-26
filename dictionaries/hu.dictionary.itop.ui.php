@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -539,6 +539,11 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$s részletek',
 	'UI:ErrorPageTitle' => 'iTop - Hiba',
 	'UI:ObjectDoesNotExist' => 'Sajnálom ez az objektum nem létezik (vagy a megtekintése nem engedélyezett a felhasználó számára).',
+	'UI:ObjectArchived' => 'This object has been archived. Please enable the archive mode or contact your administrator.~~',
+	'Tag:Archived' => 'Archived~~',
+	'Tag:Archived+' => 'Can be accessed only in archive mode~~',
+	'Tag:Synchronized' => 'Synchronized~~',
+	'ObjectRef:Archived' => 'Archived~~',
 	'UI:SearchResultsPageTitle' => 'iTop - Keresés eredményei',
 	'UI:SearchResultsTitle' => 'Keresés eredményei',
 	'UI:SearchResultsTitle+' => 'Full-text search results~~',
@@ -906,6 +911,10 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:Pagination:All' => 'All~~',
 	'UI:HierarchyOf_Class' => 'Hierarchy of %1$s~~',
 	'UI:Preferences' => 'Preferences...~~',
+	'UI:ArchiveModeOn' => 'Activate archive mode~~',
+	'UI:ArchiveModeOff' => 'Deactivate archive mode~~',
+	'UI:ArchiveMode:Banner' => 'Archive mode~~',
+	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Favorite Organizations~~',
 	'UI:FavoriteOrganizations+' => 'Check in the list below the organizations that you want to see in the drop-down menu for a quick access. Note that this is not a security setting, objects from any organization are still visible and can be accessed by selecting \"All Organizations\" in the drop-down list.~~',
 	'UI:FavoriteLanguage' => 'Language of the User Interface~~',
@@ -1100,4 +1109,3 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:Menu:KillConcurrentLock' => 'Kill the Concurrent Modification Lock !~~',
 	'UI:Menu:ExportPDF' => 'Export as PDF...~~',
 ));
-?>

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@
  *
  * @author      Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author      Daniel Rokos <daniel.rokos@itopportal.cz>
- * @copyright   Copyright (C) 2010-2014 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
@@ -47,6 +47,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
     'Core:AttributeBoolean' => 'Boolean',
     'Core:AttributeBoolean+' => 'Boolean',
+	'Core:AttributeBoolean/Value:null' => '',
+	'Core:AttributeBoolean/Value:yes' => 'Yes~~',
+	'Core:AttributeBoolean/Value:no' => 'No~~',
+
+	'Core:AttributeArchiveFlag/Value:yes' => 'Yes~~',
+	'Core:AttributeArchiveFlag/Value:yes+' => 'This object is visible only in archive mode~~',
+	'Core:AttributeArchiveFlag/Value:no' => 'No~~',
 
     'Core:AttributeString' => 'Řetězec (string)',
     'Core:AttributeString+' => 'Alfanumerický řetězec',

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Class PortalWebPage
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -387,7 +387,7 @@ EOF
 		{
 			$sReadOnly = Dict::S('UI:AccessRO-Users');
 			$sAdminMessage = trim(MetaModel::GetConfig()->Get('access_message'));
-			$sApplicationBanner .= '<div id="admin-banner">';
+			$sApplicationBanner .= '<div class="app-message">';
 			$sApplicationBanner .= '<img src="../images/locked.png" style="vertical-align:middle;">';
 			$sApplicationBanner .= '&nbsp;<b>'.$sReadOnly.'</b>';
 			if (strlen($sAdminMessage) > 0)

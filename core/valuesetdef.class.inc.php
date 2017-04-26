@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Value set definitions (from a fixed list or from a query, etc.)
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -124,7 +124,7 @@ class ValueSetObjects extends ValueSetDefinition
 		$this->m_aExtraConditions[] = $oFilter;		
 	}
 
-	public function ToObjectSet($aArgs = array(), $sContains = '')
+	public function ToObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
 	{
 		if ($this->m_bAllowAllData)
 		{
@@ -144,6 +144,14 @@ class ValueSetObjects extends ValueSetDefinition
 			{
 				$oFilter->SetModifierProperty($sPluginClass, $sProperty, $value);
 			}
+		}
+		if ($iAdditionalValue > 0)
+		{
+			$oSearchAdditionalValue = new DBObjectSearch($oFilter->GetClass());
+			$oSearchAdditionalValue->AddCondition('id', $iAdditionalValue);
+			$oSearchAdditionalValue->AllowAllData();
+			$oSearchAdditionalValue->SetArchiveMode(true);
+			$oFilter = new DBUnionSearch(array($oFilter, $oSearchAdditionalValue));
 		}
 
 		return new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs);

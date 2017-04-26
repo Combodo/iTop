@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -770,6 +770,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$s details',
 	'UI:ErrorPageTitle' => 'iTop - Error',
 	'UI:ObjectDoesNotExist' => 'Sorry, this object does not exist (or you are not allowed to view it).',
+	'UI:ObjectArchived' => 'This object has been archived. Please enable the archive mode or contact your administrator.',
+	'Tag:Archived' => 'Archived',
+	'Tag:Archived+' => 'Can be accessed only in archive mode',
+	'Tag:Synchronized' => 'Synchronized',
+	'ObjectRef:Archived' => 'Archived',
 	'UI:SearchResultsPageTitle' => 'iTop - Search Results',
 	'UI:SearchResultsTitle' => 'Search Results',
 	'UI:SearchResultsTitle+' => 'Full-text search results',
@@ -1074,6 +1079,10 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Pagination:All' => 'All',
 	'UI:HierarchyOf_Class' => 'Hierarchy of %1$s',
 	'UI:Preferences' => 'Preferences...',
+	'UI:ArchiveModeOn' => 'Activate archive mode',
+	'UI:ArchiveModeOff' => 'Deactivate archive mode',
+	'UI:ArchiveMode:Banner' => 'Archive mode',
+	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed',
 	'UI:FavoriteOrganizations' => 'Favorite Organizations',
 	'UI:FavoriteOrganizations+' => 'Check in the list below the organizations that you want to see in the drop-down menu for a quick access. '.
 								   'Note that this is not a security setting, objects from any organization are still visible and can be accessed by selecting "All Organizations" in the drop-down list.',

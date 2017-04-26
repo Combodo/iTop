@@ -1310,7 +1310,11 @@ try
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(false /* bMustBeAdmin */, true /* IsAllowedToPortalUsers */); // Check user rights and prompt if needed
 
-   ApplicationContext::SetUrlMakerClass('MyPortalURLMaker');
+	ApplicationContext::SetUrlMakerClass('MyPortalURLMaker');
+
+	$bArchiveMode = utils::IsArchiveMode();
+	DBSearch::SetArchiveModeDefault($bArchiveMode);
+	if ($bArchiveMode) MetaModel::DBSetReadOnly();
 
 	$aClasses = explode(',', MetaModel::GetConfig()->Get('portal_tickets'));
 	$sMainClass = trim(reset($aClasses));

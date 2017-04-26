@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015-2016 Combodo SARL
+// Copyright (C) 2015-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -33,7 +33,7 @@ require_once('dbunionsearch.class.php');
  *    - do not provide a type-hint for function parameters defined in the modules
  *    - leave the statements DBObjectSearch::FromOQL in the modules, though DBSearch is more relevant 
  *
- * @copyright   Copyright (C) 2015-2016 Combodo SARL
+ * @copyright   Copyright (C) 2015-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
  
@@ -44,9 +44,11 @@ abstract class DBSearch
 
 	protected $m_bNoContextParameters = false;
 	protected $m_aModifierProperties = array();
+	protected $m_bArchiveMode = false;
 
 	public function __construct()
 	{
+		$this->m_bArchiveMode = self::GetArchiveModeDefault();
 	}
 
 	/**
@@ -59,6 +61,25 @@ abstract class DBSearch
 
 	abstract public function AllowAllData();
 	abstract public function IsAllDataAllowed();
+
+	static $bArchiveModeDefault = false;
+	static public function SetArchiveModeDefault($bEnable)
+	{
+		self::$bArchiveModeDefault = $bEnable;
+	}
+	static public function GetArchiveModeDefault()
+	{
+		return self::$bArchiveModeDefault;
+	}
+
+	public function SetArchiveMode($bEnable)
+	{
+		$this->m_bArchiveMode = $bEnable;
+	}
+	public function GetArchiveMode()
+	{
+		return $this->m_bArchiveMode;
+	}
 
 	public function NoContextParameters() {$this->m_bNoContextParameters = true;}
 	public function HasContextParameters() {return $this->m_bNoContextParameters;}

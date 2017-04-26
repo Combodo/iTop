@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -85,6 +85,11 @@ $oApp->before(function(Symfony\Component\HttpFoundation\Request $oRequest, Silex
     {
         $oApp->abort(500, Dict::S('Portal:ErrorNoContactForThisUser'));
     }
+
+	// Enable archived data
+	$bArchiveMode = utils::IsArchiveMode();
+	DBSearch::SetArchiveModeDefault($bArchiveMode);
+	if ($bArchiveMode) MetaModel::DBSetReadOnly();
 
     // Enabling datalocalizer if needed
     if (!defined('DISABLE_DATA_LOCALIZER_PORTAL'))

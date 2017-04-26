@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -660,6 +660,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:DetailsPageTitle' => 'iTop - %2$s - Détails de %1$s',
 	'UI:ErrorPageTitle' => 'iTop - Erreur',
 	'UI:ObjectDoesNotExist' => 'Désolé cet objet n\'existe pas (où vous n\'êtes pas autorisé à l\'afficher).',
+	'UI:ObjectArchived' => 'Cet objet a été archivé. Veuillez activer le mode Archive, on contactez votre administrateur.',
+	'Tag:Archived' => 'Archivé',
+	'Tag:Archived+' => 'Accessible seulement dans le mode Archive',
+	'Tag:Synchronized' => 'Synchronisé',
+	'ObjectRef:Archived' => 'Archivé',
 	'UI:SearchResultsPageTitle' => 'iTop - Résultats de la recherche',
 	'UI:SearchResultsTitle' => 'Recherche globale',
 	'UI:SearchResultsTitle+' => 'Résultat de recherche globale',
@@ -938,6 +943,10 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Pagination:All' => 'Tous',
 	'UI:HierarchyOf_Class' => 'Hiérarchie de type %1$s',
 	'UI:Preferences' => 'Préférences...',
+	'UI:ArchiveModeOn' => 'Activer le mode Archive',
+	'UI:ArchiveModeOff' => 'Désactiver le mode Archive',
+	'UI:ArchiveMode:Banner' => 'Mode Archive',
+	'UI:ArchiveMode:Banner+' => 'Les objets archivés sont visibles, et aucune modification n\'est possible',
 	'UI:FavoriteOrganizations' => 'Organisations Favorites',
 	'UI:FavoriteOrganizations+' => 'Cochez dans la liste ci-dessous les organisations que vous voulez voir listées dans le menu principal. '.
 								   'Ceci n\'est pas un réglage de sécurité. Les objets de toutes les organisations sont toujours visibles en choisissant "Toutes les Organisations" dans le menu.',

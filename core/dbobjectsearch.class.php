@@ -1467,6 +1467,7 @@ class DBObjectSearch extends DBSearch
 			{
 				$sRawId .= implode(',', $aSelectedClasses); // Unions may alter the list of selected columns
 			}
+			$sRawId .= $oSearch->GetArchiveMode() ? '--arch' : '';
 			$sOqlId = md5($sRawId);
 		}
 		else
@@ -1552,6 +1553,7 @@ class DBObjectSearch extends DBSearch
 			$oSQLQuery->SetSelect($oBuild->m_oQBExpressions->GetSelect());
 		}
 
+		$aMandatoryTables = null;
 		if (self::$m_bOptimizeQueries)
 		{
 			if ($bGetCount)
@@ -1561,6 +1563,17 @@ class DBObjectSearch extends DBSearch
 			}
 			$oBuild->m_oQBExpressions->GetMandatoryTables($aMandatoryTables);
 			$oSQLQuery->OptimizeJoins($aMandatoryTables);
+		}
+		// Filter tables as late as possible: do not interfere with the optimization process
+		foreach ($oBuild->GetFilteredTables() as $sTableAlias => $aConditions)
+		{
+			if ($aMandatoryTables && array_key_exists($sTableAlias, $aMandatoryTables))
+			{
+				foreach ($aConditions as $oCondition)
+				{
+					$oSQLQuery->AddCondition($oCondition);
+				}
+			}
 		}
 
 		return $oSQLQuery;
@@ -1869,7 +1882,7 @@ class DBObjectSearch extends DBSearch
 		$oBuild->m_oQBExpressions->GetUnresolvedFields($sTargetAlias, $aExpectedAtts);
 		
 		$bIsOnQueriedClass = array_key_exists($sTargetAlias, $oBuild->GetRootFilter()->GetSelectedClasses());
-		
+
 		self::DbgTrace("Entering: tableclass=$sTableClass, filter=".$this->ToOQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY"));
 
 		// 1 - SELECT and UPDATE
@@ -2098,6 +2111,24 @@ class DBObjectSearch extends DBSearch
 		$oBuild->m_oQBExpressions->Translate($aTranslation, false);
 //echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oBuild->m_oQBExpressions, true)."</pre></p>\n";
 
+		// Filter out archived records
+		//
+		if (MetaModel::IsArchivable($sTableClass))
+		{
+			if (!$oBuild->GetRootFilter()->GetArchiveMode())
+			{
+				$bIsOnJoinedClass = array_key_exists($sTargetAlias, $oBuild->GetRootFilter()->GetJoinedClasses());
+				//$bIsOnJoinedClass = true;
+				if ($bIsOnJoinedClass)
+				{
+					if (MetaModel::IsParentClass($sTableClass, $sTargetClass))
+					{
+						$oNotArchived = new BinaryExpression(new FieldExpressionResolved('archive_flag', $sTableAlias), '=', new ScalarExpression(0));
+						$oBuild->AddFilteredTable($sTableAlias, $oNotArchived);
+					}
+				}
+			}
+		}
 		//MyHelpers::var_dump_html($oSelectBase->RenderSelect());
 		return $oSelectBase;
 	}

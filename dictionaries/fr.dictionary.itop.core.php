@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 
 
 /**
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -432,6 +432,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeDecimal+' => 'Valeur numérique décimale',
 	'Core:AttributeBoolean' => 'Booléen',
 	'Core:AttributeBoolean+' => 'Booléen',
+	'Core:AttributeBoolean/Value:null' => '',
+	'Core:AttributeBoolean/Value:yes' => 'Oui',
+	'Core:AttributeBoolean/Value:no' => 'Non',
+	'Core:AttributeArchiveFlag/Value:yes' => 'Oui',
+	'Core:AttributeArchiveFlag/Value:yes+' => 'Cet object n\'est visible que dans le mode Archive',
+	'Core:AttributeArchiveFlag/Value:no' => 'Non',
 	'Core:AttributeString' => 'Chaîne de caractères',
 	'Core:AttributeString+' => 'Chaîne de caractères (limitée à une ligne)',
 	'Core:AttributeClass' => 'Classe',

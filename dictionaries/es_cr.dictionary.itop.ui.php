@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -760,6 +760,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:DetailsPageTitle' => 'iTop - %1$s - Detalles %2$s',
 	'UI:ErrorPageTitle' => 'iTop - Error',
 	'UI:ObjectDoesNotExist' => 'Disculpe, este objeto no existe (o no está autorizado para verlo).',
+	'UI:ObjectArchived' => 'This object has been archived. Please enable the archive mode or contact your administrator.~~',
+	'Tag:Archived' => 'Archived~~',
+	'Tag:Archived+' => 'Can be accessed only in archive mode~~',
+	'Tag:Synchronized' => 'Synchronized~~',
+	'ObjectRef:Archived' => 'Archived~~',
 	'UI:SearchResultsPageTitle' => 'iTop - Resultados de la Búsqueda',
 	'UI:SearchResultsTitle' => 'Resultados de la Búsqueda',
 	'UI:SearchResultsTitle+' => 'Full-text search results~~',
@@ -1034,6 +1039,10 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:Pagination:All' => 'Todos',
 	'UI:HierarchyOf_Class' => 'Jerarquía de %1$s',
 	'UI:Preferences' => 'Preferencias',
+	'UI:ArchiveModeOn' => 'Activate archive mode~~',
+	'UI:ArchiveModeOff' => 'Deactivate archive mode~~',
+	'UI:ArchiveMode:Banner' => 'Archive mode~~',
+	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Mi Organización Favorita',
 	'UI:FavoriteOrganizations+' => 'Verifique en la siguiente lista de Organizaciones, la que necesite ver en los menues para un rápido acceso. '.
 								   'Nota, esto no es una configuración de seguridad, elementos de cualquier Organización son visibles y pueden ser accesados mediante la selección de "Todas las Organizaciones" en la lista del menú.',
@@ -1431,4 +1440,3 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Menu:ExportPDF' => 'Export as PDF...~~',
 	'UI:Menu:PrintableVersion' => 'Versión imprimible',
 ));
-?>

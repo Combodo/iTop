@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * User rights management API
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -639,6 +639,29 @@ class UserRights
 		{
 			return false;
 		}
+	}
+
+	/**
+	 * Tells whether or not the archive mode is allowed to the current user
+	 * @return boolean
+	 */
+	static function CanBrowseArchive()
+	{
+		if (is_null(self::$m_oUser))
+		{
+			$bRet = false;
+		}
+		elseif (isset($_SESSION['archive_allowed']))
+		{
+			$bRet = $_SESSION['archive_allowed'];
+		}
+		else
+		{
+			// As of now, anybody can swith to the archive mode
+			$bRet = true;
+			$_SESSION['archive_allowed'] = $bRet;
+		}
+		return $bRet;
 	}
 
 	public static function CanChangePassword()
@@ -1676,4 +1699,3 @@ class CAS_SelfRegister implements iSelfRegister
 
 // By default enable the 'CAS_SelfRegister' defined above
 UserRights::SelectSelfRegister('CAS_SelfRegister');
-?>

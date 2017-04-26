@@ -725,7 +725,7 @@ EOF
 				$val = $sDefault;
 			}
 		}
-		return "'".$val."'";
+		return "'".str_replace("'", "\\'", $val)."'";
 	}
 	
 	protected function GetMandatoryPropString($oNode, $sTag)
@@ -989,6 +989,11 @@ EOF
 			$aClassParams['indexes'] = var_export($aIndexes, true);
 		}
 
+		if ($oArchive = $oProperties->GetOptionalElement('archive'))
+		{
+			$bEnabled = $this->GetPropBoolean($oArchive, 'enabled', false);
+			$aClassParams['archive'] = $bEnabled;
+		}
 
 		// Finalize class params declaration
 		//

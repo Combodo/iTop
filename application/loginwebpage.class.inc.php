@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Class LoginWebPage
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -430,6 +430,8 @@ EOF
 		// Unset all of the session variables.
 		unset($_SESSION['auth_user']);
 		unset($_SESSION['login_mode']);
+		unset($_SESSION['archive_mode']);
+		unset($_SESSION['archive_allowed']);
 		UserRights::_ResetSessionCache();
 		// If it's desired to kill the session, also delete the session cookie.
 		// Note: This will destroy the session, and not just the session data!

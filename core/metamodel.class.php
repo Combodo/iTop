@@ -319,6 +319,11 @@ abstract class MetaModel
 		self::_check_subclass($sClass);	
 		return (self::$m_aClassParams[$sClass]["key_type"] == "autoincrement");
 	}
+	final static public function IsArchivable($sClass)
+	{
+		self::_check_subclass($sClass);
+		return self::$m_aClassParams[$sClass]["archive"];
+	}
 	final static public function GetNameSpec($sClass)
 	{
 		self::_check_subclass($sClass);
@@ -559,12 +564,13 @@ abstract class MetaModel
 		self::_check_subclass($sClass);
 		if (isset(self::$m_aClassParams[$sClass]['indexes']))
 		{
-			return self::$m_aClassParams[$sClass]['indexes'];
+			$aRet = self::$m_aClassParams[$sClass]['indexes'];
 		}
 		else
 		{
-			return array();
+			$aRet = array();
 		}
+		return $aRet;
 	}
 
 	final static public function DBGetKey($sClass)
@@ -1639,10 +1645,10 @@ abstract class MetaModel
 		return $oFltDef->GetAllowedValues($aArgs, $sContains);
 	}
 
-	public static function GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs = array(), $sContains = '')
+	public static function GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs = array(), $sContains = '', $iAdditionalValue = null)
 	{
 		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
-		return $oAttDef->GetAllowedValuesAsObjectSet($aArgs, $sContains);
+		return $oAttDef->GetAllowedValuesAsObjectSet($aArgs, $sContains, $iAdditionalValue);
 	}
 	//
 	// Businezz model declaration verbs (should be static)
@@ -1672,6 +1678,24 @@ abstract class MetaModel
 		self::$m_aRelationInfos[$sRelCode] = $sRelCode;
 	}
 
+	/*
+	 * Helper to correctly add a magic attribute (called from InitClasses)
+	 */
+	private static function AddMagicAttribute(AttributeDefinition $oAttribute, $sTargetClass, $sOriginClass = null)
+	{
+		$sCode = $oAttribute->GetCode();
+		if (is_null($sOriginClass))
+		{
+			$sOriginClass = $sTargetClass;
+		}
+		$oAttribute->SetHostClass($sTargetClass);
+		self::$m_aAttribDefs[$sTargetClass][$sCode] = $oAttribute;
+		self::$m_aAttribOrigins[$sTargetClass][$sCode] = $sOriginClass;
+
+		$oFlt = new FilterFromAttribute($oAttribute);
+		self::$m_aFilterDefs[$sTargetClass][$sCode] = $oFlt;
+		self::$m_aFilterOrigins[$sTargetClass][$sCode] = $sOriginClass;
+	}
 	// Must be called once and only once...
 	public static function InitClasses($sTablePrefix)
 	{
@@ -1726,6 +1750,23 @@ abstract class MetaModel
 					if ($oMethod->getDeclaringClass()->name == $sPHPClass)
 					{
 						call_user_func(array($sPHPClass, 'Init'));
+
+						// Inherit archive flag
+						$bParentArchivable = isset(self::$m_aClassParams[$sParent]['archive']) ? self::$m_aClassParams[$sParent]['archive'] : false;
+						$bArchivable = isset(self::$m_aClassParams[$sPHPClass]['archive']) ? self::$m_aClassParams[$sPHPClass]['archive'] : null;
+						if ($bParentArchivable && ($bArchivable === false))
+						{
+							throw new Exception("$sPHPClass must be archivable (consistency throughout the whole class tree is a must)");
+						}
+						$bReallyArchivable = $bParentArchivable || $bArchivable;
+						self::$m_aClassParams[$sPHPClass]['archive'] = $bReallyArchivable;
+						$bArchiveRoot = $bReallyArchivable && !$bParentArchivable;
+						self::$m_aClassParams[$sPHPClass]['archive_root'] = $bArchiveRoot;
+						if ($bReallyArchivable)
+						{
+							self::$m_aClassParams[$sPHPClass]['archive_root_class'] = $bArchiveRoot ? $sPHPClass : self::$m_aClassParams[$sParent]['archive_root_class'];
+						}
+
 						foreach (MetaModel::EnumPlugins('iOnClassInitialization') as $sPluginClass => $oClassInit)
 						{
 							$oClassInit->OnAfterClassInitialization($sPHPClass);
@@ -1757,13 +1798,7 @@ abstract class MetaModel
 					"is_null_allowed"=>false,
 					"depends_on"=>array()
 			));
-			$oClassAtt->SetHostClass($sRootClass);
-			self::$m_aAttribDefs[$sRootClass]['finalclass'] = $oClassAtt;
-			self::$m_aAttribOrigins[$sRootClass]['finalclass'] = $sRootClass;
-
-			$oClassFlt = new FilterFromAttribute($oClassAtt);
-			self::$m_aFilterDefs[$sRootClass]['finalclass'] = $oClassFlt;
-			self::$m_aFilterOrigins[$sRootClass]['finalclass'] = $sRootClass;
+			self::AddMagicAttribute($oClassAtt, $sRootClass);
 
 			foreach(self::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_EXCLUDETOP) as $sChildClass)
 			{
@@ -1776,14 +1811,8 @@ abstract class MetaModel
 					throw new CoreException("Class $sChildClass, 'finalclass' is a reserved keyword, it cannot be used as a filter code");
 				}
 				$oCloned = clone $oClassAtt;
-				$oCloned->SetHostClass($sChildClass);
 				$oCloned->SetFixedValue($sChildClass);
-				self::$m_aAttribDefs[$sChildClass]['finalclass'] = $oCloned;
-				self::$m_aAttribOrigins[$sChildClass]['finalclass'] = $sRootClass;
-
-				$oClassFlt = new FilterFromAttribute($oClassAtt);
-				self::$m_aFilterDefs[$sChildClass]['finalclass'] = $oClassFlt;
-				self::$m_aFilterOrigins[$sChildClass]['finalclass'] = self::GetRootClass($sChildClass);
+				self::AddMagicAttribute($oCloned, $sChildClass, $sRootClass);
 			}
 		}
 
@@ -1795,13 +1824,30 @@ abstract class MetaModel
 			// Create the friendly name attribute
 			$sFriendlyNameAttCode = 'friendlyname'; 
 			$oFriendlyName = new AttributeFriendlyName($sFriendlyNameAttCode, 'id');
-			$oFriendlyName->SetHostClass($sClass);
-			self::$m_aAttribDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyName;
-			self::$m_aAttribOrigins[$sClass][$sFriendlyNameAttCode] = $sClass;
-			$oFriendlyNameFlt = new FilterFromAttribute($oFriendlyName);
-			self::$m_aFilterDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyNameFlt;
-			self::$m_aFilterOrigins[$sClass][$sFriendlyNameAttCode] = $sClass;
+			self::AddMagicAttribute($oFriendlyName, $sClass);
 
+			if (self::$m_aClassParams[$sClass]["archive_root"])
+			{
+				// Create archive attributes on top the archivable hierarchy
+				$oArchiveFlag = new AttributeArchiveFlag('archive_flag');
+				self::AddMagicAttribute($oArchiveFlag, $sClass);
+
+				$oArchiveDate = new AttributeDate('archive_date', array('magic' => true, "allowed_values"=>null, "sql"=>'archive_date', "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array()));
+				self::AddMagicAttribute($oArchiveDate, $sClass);
+			}
+			elseif (self::$m_aClassParams[$sClass]["archive"])
+			{
+				$sArchiveRoot = self::$m_aClassParams[$sClass]['archive_root_class'];
+				// Inherit archive attributes
+				$oArchiveFlag = clone self::$m_aAttribDefs[$sArchiveRoot]['archive_flag'];
+				$oArchiveFlag->SetHostClass($sArchiveRoot);
+				self::$m_aAttribDefs[$sClass]['archive_flag'] = $oArchiveFlag;
+				self::$m_aAttribOrigins[$sClass]['archive_flag'] = $sArchiveRoot;
+				$oArchiveDate = clone self::$m_aAttribDefs[$sArchiveRoot]['archive_date'];
+				$oArchiveDate->SetHostClass($sArchiveRoot);
+				self::$m_aAttribDefs[$sClass]['archive_date'] = $oArchiveDate;
+				self::$m_aAttribOrigins[$sClass]['archive_date'] = $sArchiveRoot;
+			}
 			self::$m_aExtKeyFriends[$sClass] = array();
 			foreach (self::$m_aAttribDefs[$sClass] as $sAttCode => $oAttDef)
 			{
@@ -1840,26 +1886,15 @@ abstract class MetaModel
 						$sKeyAttCode = $oAttDef->GetKeyAttCode();
 						$sRemoteAttCode = $oAttDef->GetExtAttCode()."_friendlyname";
 						$sFriendlyNameAttCode = $sAttCode.'_friendlyname';
-						// propagate "is_null_allowed" ? 
 						$oFriendlyName = new AttributeExternalField($sFriendlyNameAttCode, array("allowed_values"=>null, "extkey_attcode"=>$sKeyAttCode, "target_attcode"=>$sRemoteAttCode, "depends_on"=>array()));
-						$oFriendlyName->SetHostClass($sClass);
-						self::$m_aAttribDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyName;
-						self::$m_aAttribOrigins[$sClass][$sFriendlyNameAttCode] = self::$m_aAttribOrigins[$sClass][$sKeyAttCode];
-						$oFriendlyNameFlt = new FilterFromAttribute($oFriendlyName);
-						self::$m_aFilterDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyNameFlt;
-						self::$m_aFilterOrigins[$sClass][$sFriendlyNameAttCode] = self::$m_aFilterOrigins[$sClass][$sKeyAttCode];
+						self::AddMagicAttribute($oFriendlyName, $sClass, self::$m_aAttribOrigins[$sClass][$sKeyAttCode]);
 					}
 					else
 					{
 						// Create the friendly name attribute
 						$sFriendlyNameAttCode = $sAttCode.'_friendlyname'; 
 						$oFriendlyName = new AttributeFriendlyName($sFriendlyNameAttCode, $sAttCode);
-						$oFriendlyName->SetHostClass($sClass);
-						self::$m_aAttribDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyName;
-						self::$m_aAttribOrigins[$sClass][$sFriendlyNameAttCode] = self::$m_aAttribOrigins[$sClass][$sAttCode];
-						$oFriendlyNameFlt = new FilterFromAttribute($oFriendlyName);
-						self::$m_aFilterDefs[$sClass][$sFriendlyNameAttCode] = $oFriendlyNameFlt;
-						self::$m_aFilterOrigins[$sClass][$sFriendlyNameAttCode] = self::$m_aFilterOrigins[$sClass][$sAttCode];
+						self::AddMagicAttribute($oFriendlyName, $sClass, self::$m_aAttribOrigins[$sClass][$sAttCode]);
 
 						if (self::HasChildrenClasses($sRemoteClass))
 						{
@@ -1872,13 +1907,7 @@ abstract class MetaModel
 									"is_null_allowed"=>true,
 									"depends_on"=>array()
 							));
-							$oClassRecall->SetHostClass($sClass);
-							self::$m_aAttribDefs[$sClass][$sClassRecallAttCode] = $oClassRecall;
-							self::$m_aAttribOrigins[$sClass][$sClassRecallAttCode] = self::$m_aAttribOrigins[$sClass][$sAttCode];
-
-							$oClassFlt = new FilterFromAttribute($oClassRecall);
-							self::$m_aFilterDefs[$sClass][$sClassRecallAttCode] = $oClassFlt;
-							self::$m_aFilterOrigins[$sClass][$sClassRecallAttCode] = self::$m_aFilterOrigins[$sClass][$sAttCode];
+							self::AddMagicAttribute($oClassRecall, $sClass, self::$m_aAttribOrigins[$sClass][$sAttCode]);
 
 							// Add it to the ZLists where the external key is present
 							//foreach(self::$m_aListData[$sClass] as $sListCode => $aAttributes)
@@ -1923,6 +1952,13 @@ abstract class MetaModel
 						{
 							self::$m_aExtKeyFriends[$sClass][$sAttCode][$oExtField->GetCode()] = $oExtField;
 						}
+					}
+
+					if (self::IsArchivable($sRemoteClass))
+					{
+						$sArchiveRemote = $sAttCode.'_archive_flag';
+						$oArchiveRemote = new AttributeExternalField($sArchiveRemote, array("allowed_values"=>null, "extkey_attcode"=>$sAttCode, "target_attcode"=>'archive_flag', "depends_on"=>array()));
+						self::AddMagicAttribute($oArchiveRemote, $sClass, self::$m_aAttribOrigins[$sClass][$sAttCode]);
 					}
 				}
 				if ($oAttDef instanceof AttributeMetaEnum)
@@ -2467,6 +2503,19 @@ abstract class MetaModel
 		}
 		return $aRes;
 	}
+	public static function EnumArchivableClasses()
+	{
+		$aRes = array();
+		foreach (self::GetClasses() as $sClass)
+		{
+			if (self::IsArchivable($sClass))
+			{
+				$aRes[] = $sClass;
+			}
+		}
+		return $aRes;
+	}
+
 	public static function HasChildrenClasses($sClass)
 	{
 		return (count(self::$m_aChildClasses[$sClass]) > 0);
@@ -3401,6 +3450,12 @@ abstract class MetaModel
 		return $aDataDump;
 	}
 
+	protected static $m_bReadOnlyMode = false;
+	public static function DBSetReadOnly()
+	{
+		self::$m_bReadOnlyMode = true;
+	}
+
 	/*
 	* Determines wether the target DB is frozen or not
 	*/		
@@ -3408,6 +3463,10 @@ abstract class MetaModel
 	{
 		// Improvement: check the mySQL variable -> Read-only
 
+		if (self::$m_bReadOnlyMode)
+		{
+			return true;
+		}
 		if (UserRights::IsAdministrator())
 		{
 			return (!self::DBHasAccess(ACCESS_ADMIN_WRITE));
@@ -3620,8 +3679,11 @@ abstract class MetaModel
 			$aTableInfo['Fields'][$sKeyField]['used'] = true;
 			foreach(self::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
 			{
-				// Skip this attribute if not originaly defined in this class
-				if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass) continue;
+				if (!$oAttDef->CopyOnAllTables())
+				{
+					// Skip this attribute if not originaly defined in this class
+					if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass) continue;
+				}
 				foreach($oAttDef->GetSQLColumns(true) as $sField => $sDBFieldSpec)
 				{
 					// Keep track of columns used by iTop
@@ -3725,7 +3787,7 @@ abstract class MetaModel
 					}
 				}
 			}
-			
+
 			// Find out unused columns
 			//
 			foreach($aTableInfo['Fields'] as $sField => $aFieldData)
@@ -4538,6 +4600,7 @@ abstract class MetaModel
 			$sModifierProperties = json_encode($aModifierProperties);
 			$sQuerySign .= '_all_'.md5($sModifierProperties);
 		}
+		$sQuerySign .= DBSearch::GetArchiveModeDefault() ? '_arch_' : '';
 
 		if (!array_key_exists($sQuerySign, self::$aQueryCacheGetObject))
 		{
@@ -4626,6 +4689,15 @@ abstract class MetaModel
 			return null;
 		}
 		return self::GetObjectByRow($sClass, $aRow);
+	}
+
+	public static function GetObjectWithArchive($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false, $aModifierProperties = null)
+	{
+		$bPreviousMode = DBSearch::GetArchiveModeDefault();
+		DBSearch::SetArchiveModeDefault(true);
+		$oObject = static::GetObject($sClass, $iKey, $bMustBeFound, $bAllowAllData, $aModifierProperties);
+		DBSearch::SetArchiveModeDefault($bPreviousMode);
+		return $oObject;
 	}
 
 	public static function GetObjectByName($sClass, $sName, $bMustBeFound = true)
