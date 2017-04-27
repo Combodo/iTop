@@ -210,6 +210,7 @@ class RelationGraph extends SimpleGraph
 		if ($sOQL === '') return;
 		
 		$oSearch = DBObjectSearch::FromOQL($sOQL);
+		$oSearch->SetArchiveMode(false); // Exclude archived objects anytime
 		$aAliases = $oSearch->GetSelectedClasses();
 		if (count($aAliases) < 2 )
 		{
@@ -394,6 +395,7 @@ class RelationGraph extends SimpleGraph
 					try
 					{
 						$oFlt = DBObjectSearch::FromOQL($sQuery);
+						$oFlt->SetArchiveMode(false); // Exclude archived objects anytime
 						$oObjSet = new DBObjectSet($oFlt, array(), $oObject->ToArgsForQuery());
 						$oRelatedObj = $oObjSet->Fetch();
 					}
@@ -460,6 +462,7 @@ class RelationGraph extends SimpleGraph
 				try
 				{
 					$oFlt = DBObjectSearch::FromOQL($sQuery);
+					$oFlt->SetArchiveMode(false); // Exclude archived objects anytime
 					$oObjSet = new DBObjectSet($oFlt, array(), $oObject->ToArgsForQuery());
 					$iCount = $oObjSet->Count();
 				}
