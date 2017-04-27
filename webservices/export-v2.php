@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015-2016 Combodo SARL
+// Copyright (C) 2015-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Export data specified by an OQL or a query phrasebook entry
  *
- * @copyright   Copyright (C) 2015-2016 Combodo SARL
+ * @copyright   Copyright (C) 2015-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -90,6 +90,14 @@ function Usage(Page $oP)
 	}
 	$oP->p(" * expression: an OQL expression (e.g. SELECT Contact WHERE name LIKE 'm%')");
 	$oP->p(" * query: (alternative to 'expression') the id of an entry from the query phrasebook");
+	if (Utils::IsModeCLI())
+	{
+		$oP->p(" * with_archive: (optional, defaults to 0) if set to 1 then the result set will include archived objects");
+	}
+	else
+	{
+		$oP->p(" * with_archive: (optional, defaults to the current mode) if set to 1 then the result set will include archived objects");
+	}
 	$oP->p(" * arg_xxx: (needed if the query has parameters) the value of the parameter 'xxx'");
 	$aSupportedFormats = BulkExport::FindSupportedFormats();
 	$oP->p(" * format: (optional, default is html) the desired output format. Can be one of '".implode("', '", array_keys($aSupportedFormats))."'");
@@ -430,13 +438,19 @@ EOF
  * @param string $sExpression The OQL query to export or null
  * @param string $sQueryId The entry in the query phrasebook if $sExpression is null
  * @param string $sFormat The code of export format: csv, pdf, html, xlsx
+ * @param boolean $bWithArchive
  * @throws MissingQueryArgument
  * @return Ambigous <iBulkExport, NULL>
  */
 function CheckParameters($sExpression, $sQueryId, $sFormat)
 {
-	$oExporter  = null;	
-	
+	$oExporter  = null;
+
+	if (utils::IsArchiveMode() && !UserRights::CanBrowseArchive())
+	{
+		ReportErrorAndExit("The user account is not authorized to access the archives");
+	}
+
 	if (($sExpression === null) && ($sQueryId === null))
 	{
 		ReportErrorAndUsage("Missing parameter. The parameter 'expression' or 'query' must be specified.");
@@ -485,7 +499,7 @@ function CheckParameters($sExpression, $sQueryId, $sFormat)
 			}
 		}
 		$oSearch->SetInternalParams($aArgs);
-	
+
 		$sFormat = utils::ReadParam('format', 'html', true /* Allow CLI */, 'raw_data');
 		$oExporter = BulkExport::FindExporter($sFormat, $oSearch);
 		if ($oExporter == null)
@@ -588,7 +602,11 @@ if (utils::IsModeCLI())
 	$sExpression = utils::ReadParam('expression', null, true /* Allow CLI */, 'raw_data');
 	$sQueryId = utils::ReadParam('query', null, true /* Allow CLI */, 'raw_data');
 	$bLocalize = (utils::ReadParam('no_localize', 0) != 1);
-	
+	if (utils::IsArchiveMode() && !UserRights::CanBrowseArchive())
+	{
+		ReportErrorAndExit("The user account is not authorized to access the archives");
+	}
+
 	if (($sExpression == null) && ($sQueryId == null))
 	{
 		ReportErrorAndUsage("Missing parameter. At least one of '--expression' or '--query' must be specified.");

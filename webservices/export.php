@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Export data specified by an OQL
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -75,6 +75,14 @@ ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
 $oAppContext = new ApplicationContext();
 $iActiveNodeId = utils::ReadParam('menu', -1);
 $currentOrganization = utils::ReadParam('org_id', '');
+
+if (utils::IsArchiveMode() && !UserRights::CanBrowseArchive())
+{
+	$oP = new CLIPage("iTop - Export");
+	$oP->p("The user account is not authorized to access the archives");
+	$oP->output();
+	exit -1;
+}
 
 $bLocalize = (utils::ReadParam('no_localize', 0) != 1);
 $sFileName = utils::ReadParam('filename', '', true, 'string');
@@ -336,6 +344,14 @@ if (!$oP)
 	$oP->p("Parameters:");
 	$oP->p(" * expression: an OQL expression (URL encoded if needed)");
 	$oP->p(" * query: (alternative to 'expression') the id of an entry from the query phrasebook");
+	if (Utils::IsModeCLI())
+	{
+		$oP->p(" * with_archive: (optional, defaults to 0) if set to 1 then the result set will include archived objects");
+	}
+	else
+	{
+		$oP->p(" * with_archive: (optional, defaults to the current mode) if set to 1 then the result set will include archived objects");
+	}
 	$oP->p(" * arg_xxx: (needed if the query has parameters) the value of the parameter 'xxx'");
 	$oP->p(" * format: (optional, default is html) the desired output format. Can be one of 'html', 'spreadsheet', 'csv', 'xlsx' or 'xml'");
 	$oP->p(" * fields: (optional, no effect on XML format) list of fields (attribute codes, or alias.attcode) separated by a coma");
