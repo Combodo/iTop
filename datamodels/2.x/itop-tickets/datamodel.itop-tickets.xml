@@ -1224,6 +1224,31 @@
 				</brick>
 			</bricks>
 			<forms>
+				<form id="service-view">
+					<class>Service</class>
+					<fields></fields>
+					<twig>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form_field" data-field-id="name">
+								</div>
+								<div class="form_field" data-field-id="description">
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form_field" data-field-id="org_id">
+								</div>
+								<div class="form_field" data-field-id="servicefamily_id">
+								</div>
+								<div class="form_field" data-field-id="status">
+								</div>
+							</div>
+						</div>
+					</twig>
+					<modes>
+						<mode id="view" />
+					</modes>
+				</form>
 				<form id="servicesubcategory">
 					<class>ServiceSubcategory</class>
 					<!-- Optionnal tag to list the fields. If empty only fields from <twig> tag will be displayed, if ommited fields from zlist details will. -->
@@ -1363,30 +1388,33 @@
 						<mode id="apply_stimulus"/>
 					</modes>
 				</form>
-				<form id="service-view">
-					<class>Service</class>
-					<fields></fields>
+				<form id="person-view">
+					<class>Person</class>
+					<fields />
 					<twig>
 						<div class="row">
-							<div class="col-sm-6">
-								<div class="form_field" data-field-id="name">
-								</div>
-								<div class="form_field" data-field-id="description">
+							<div class="col-sm-4">
+								<div class="form_field" data-field-id="picture" data-field-flags="read_only">
 								</div>
 							</div>
-							<div class="col-sm-6">
-								<div class="form_field" data-field-id="org_id">
+							<div class="col-sm-4">
+								<div class="form_field" data-field-id="name" data-field-flags="read_only">
 								</div>
-								<div class="form_field" data-field-id="servicefamily_id">
+								<div class="form_field" data-field-id="first_name" data-field-flags="read_only">
 								</div>
-								<div class="form_field" data-field-id="status">
+								<div class="form_field" data-field-id="status" data-field-flags="read_only">
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form_field" data-field-id="org_id" data-field-flags="read_only">
+								</div>
+								<div class="form_field" data-field-id="function" data-field-flags="read_only">
+								</div>
+								<div class="form_field" data-field-id="manager_id" data-field-flags="read_only">
 								</div>
 							</div>
 						</div>
 					</twig>
-					<modes>
-						<mode id="view" />
-					</modes>
 				</form>
 			</forms>
 			<classes>
