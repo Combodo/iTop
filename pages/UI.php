@@ -303,14 +303,15 @@ function DisplayNavigatorGroupTab($oP)
  * Main user interface page starts here
  *
  ***********************************************************************************/
+require_once('../approot.inc.php');
+require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/itopwebpage.class.inc.php');
+require_once(APPROOT.'/application/wizardhelper.class.inc.php');
+
+require_once(APPROOT.'/application/startup.inc.php');
+
 try
 {
-	require_once('../approot.inc.php');
-	require_once(APPROOT.'/application/application.inc.php');
-	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
-	require_once(APPROOT.'/application/wizardhelper.class.inc.php');
-
-	require_once(APPROOT.'/application/startup.inc.php');
 	$operation = utils::ReadParam('operation', '');
 	$bPrintable = (utils::ReadParam('printable', 0) == '1');
 
