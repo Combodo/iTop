@@ -1743,7 +1743,7 @@ fieldset[disabled] .checkbox label {
     cursor: not-allowed
 }
 .form-control-static {
-    padding-top: 9px;
+    padding-top: 0px; /* 9px; */
     padding-bottom: 9px;
     margin-bottom: 0;
     min-height: 31px
@@ -5992,6 +5992,7 @@ label {
 /*
  * Specific to the combodo theme. Not standard BS classes
 */
+/* Button groups */
 .btn-group.btn_group_explicit{
 	padding: 7px;
 	background-color: $combodo-dark-gray-darker;
@@ -6009,4 +6010,9 @@ label {
 	background-color: $body-bg;
 	border-radius: 37px !important;
 	box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.4);
+}
+/* Help blocks in forms */
+.form_fields .form-group > .help-block{
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
