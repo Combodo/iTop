@@ -66,7 +66,7 @@ $oApp->register(new Combodo\iTop\Portal\Provider\ScopeValidatorServiceProvider()
 $oApp->register(new Silex\Provider\TwigServiceProvider(), array(
 	'twig.path' => MODULESROOT,
 	'twig.options' => array(
-		'cache' => utils::GetCachePath() . 'twig/'
+		'cache' => ($bDebug) ? false : utils::GetCachePath() . 'twig/',
 	)
 ));
 $oApp->register(new Silex\Provider\HttpFragmentServiceProvider());
