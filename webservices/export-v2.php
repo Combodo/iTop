@@ -316,9 +316,6 @@ EOF
 	$oP->add('</div>');
 	
 	$sJSParts = json_encode($aFormPartsByFormat);
-	$sJSCancel = json_encode(Dict::S('UI:Button:Cancel'));
-	$sJSClose = json_encode(Dict::S('UI:Button:Done'));
-	
 	$oP->add_ready_script(
 <<<EOF
 window.aFormParts = $sJSParts;
@@ -385,7 +382,6 @@ EOF
 			{
 				$oQuery = $oQueries->Fetch();
 				$sExpression = $oQuery->Get('oql');
-				$sFields = trim($oQuery->Get('fields'));
 			}
 			else
 			{
@@ -465,11 +461,6 @@ function CheckParameters($sExpression, $sQueryId, $sFormat)
 		{
 			$oQuery = $oQueries->Fetch();
 			$sExpression = $oQuery->Get('oql');
-			$sFields = $oQuery->Get('fields');
-			if (strlen($sFields) == 0)
-			{
-				$sFields = trim($oQuery->Get('fields'));
-			}
 		}
 		else
 		{
