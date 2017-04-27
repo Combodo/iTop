@@ -1090,7 +1090,6 @@
 											<tooltip_att>description</tooltip_att>
 											<title>Class:ServiceSubcategory</title>
 											<actions>
-												<action id="view" xsi:type="view"/>
 												<action id="create_from_this" xsi:type="create_from_this">
 													<!-- Can be either a class tag containing the class of the object to create, or a static method taking the origin object as a parameter and that will return a object of the desired class -->
 													<!-- (eg. \Ticket::FromServiceSubcategory($oOrigin) that should return either a UserRequest or Incident regarding the request type) -->
@@ -1106,6 +1105,7 @@
 														<rule id="go-to-open-request-on-submit"/>
 													</rules>
 												</action>
+												<action id="view" xsi:type="view"/>
 											</actions>
 											<levels/>
 										</level>
