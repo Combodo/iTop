@@ -7616,4 +7616,27 @@ class AttributeArchiveFlag extends AttributeBoolean
 	{
 		return true;
 	}
+	public function GetLabel($sDefault = null)
+	{
+		$sDefault = Dict::S('Core:AttributeArchiveFlag/Label', $sDefault);
+		return parent::GetLabel($sDefault);
+	}
+	public function GetDescription($sDefault = null)
+	{
+		$sDefault = Dict::S('Core:AttributeArchiveFlag/Label+', $sDefault);
+		return parent::GetDescription($sDefault);
+	}
+}
+class AttributeArchiveDate extends AttributeDate
+{
+	public function GetLabel($sDefault = null)
+	{
+		$sDefault = Dict::S('Core:AttributeArchiveDate/Label', $sDefault);
+		return parent::GetLabel($sDefault);
+	}
+	public function GetDescription($sDefault = null)
+	{
+		$sDefault = Dict::S('Core:AttributeArchiveDate/Label+', $sDefault);
+		return parent::GetDescription($sDefault);
+	}
 }

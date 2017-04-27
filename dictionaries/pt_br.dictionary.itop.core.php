@@ -49,9 +49,14 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributeBoolean/Value:yes' => 'Yes~~',
 	'Core:AttributeBoolean/Value:no' => 'No~~',
 
+	'Core:AttributeArchiveFlag' => 'Archive flag~~',
 	'Core:AttributeArchiveFlag/Value:yes' => 'Yes~~',
 	'Core:AttributeArchiveFlag/Value:yes+' => 'This object is visible only in archive mode~~',
 	'Core:AttributeArchiveFlag/Value:no' => 'No~~',
+	'Core:AttributeArchiveFlag/Label' => 'Archived~~',
+	'Core:AttributeArchiveFlag/Label+' => '',
+	'Core:AttributeArchiveDate/Label' => 'Archive date~~',
+	'Core:AttributeArchiveDate/Label+' => '',
 
 	'Core:AttributeString' => 'String',
 	'Core:AttributeString+' => 'Seqüência alfanumérica',
