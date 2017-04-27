@@ -169,6 +169,22 @@ function DisplayMessages($sMessageKey, WebPage $oPage)
 }
 
 /**
+ * Helper to update the breadrumb for the current object
+ * @param DBObject $oObj
+ * @param WebPage $oPage
+ */
+function SetObjectBreadCrumbEntry(DBObject $oObj, WebPage $oPage)
+{
+	$sClass = get_class($oObj); // get the leaf class
+	$sIcon = MetaModel::GetClassIcon($sClass, false);
+	if ($sIcon == '')
+	{
+		$sIcon = utils::GetAbsoluteUrlAppRoot().'images/breadcrumb_object.png';
+	}
+	$oPage->SetBreadCrumbEntry("ui-details-$sClass-".$oObj->GetKey(), $oObj->Get('friendlyname'), MetaModel::GetName($sClass).': '.$oObj->Get('friendlyname'), '', $sIcon);
+}
+
+/**
  * Displays the result of a search request
  * @param $oP WebPage Web page for the output
  * @param $oFilter DBSearch The search of objects to display
@@ -396,6 +412,7 @@ try
 				}
 				else
 				{
+					SetObjectBreadCrumbEntry($oObj, $oP);
 					$oP->P(Dict::S('UI:ObjectArchived'));
 				}
 			}
@@ -419,13 +436,7 @@ try
 				}
 				if (!is_null($oObj))
 				{
-					$sClass = get_class($oObj); // get the leaf class
-					$sIcon = MetaModel::GetClassIcon($sClass, false);
-					if ($sIcon == '')
-					{
-						$sIcon = utils::GetAbsoluteUrlAppRoot().'images/breadcrumb_object.png';
-					}
-					$oP->SetBreadCrumbEntry("ui-details-$sClass-$id", $oObj->Get('friendlyname'), MetaModel::GetName($sClass).': '.$oObj->Get('friendlyname'), '', $sIcon);
+					SetObjectBreadCrumbEntry($oObj, $oP);
 					DisplayDetails($oP, $sClass, $oObj, $id);
 				}				
 			}
