@@ -657,8 +657,8 @@ class UserRights
 		}
 		else
 		{
-			// As of now, anybody can swith to the archive mode
-			$bRet = true;
+			// As of now, anybody can switch to the archive mode as soon as there is an archivable class
+			$bRet = (count(MetaModel::EnumArchivableClasses()) > 0);
 			$_SESSION['archive_allowed'] = $bRet;
 		}
 		return $bRet;
