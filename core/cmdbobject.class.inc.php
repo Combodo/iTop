@@ -618,7 +618,9 @@ abstract class CMDBObject extends DBObject
 
 		if (!$bOriginal)
 		{
+			utils::PushArchiveMode(false);
 			$this->RecordAttChange('archive_flag', false, true);
+			utils::PopArchiveMode();
 		}
 	}
 
@@ -630,7 +632,9 @@ abstract class CMDBObject extends DBObject
 
 		if ($bOriginal)
 		{
+			utils::PushArchiveMode(false);
 			$this->RecordAttChange('archive_flag', true, false);
+			utils::PopArchiveMode();
 		}
 	}
 }
