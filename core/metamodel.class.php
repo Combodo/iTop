@@ -1754,6 +1754,10 @@ abstract class MetaModel
 						// Inherit archive flag
 						$bParentArchivable = isset(self::$m_aClassParams[$sParent]['archive']) ? self::$m_aClassParams[$sParent]['archive'] : false;
 						$bArchivable = isset(self::$m_aClassParams[$sPHPClass]['archive']) ? self::$m_aClassParams[$sPHPClass]['archive'] : null;
+						if (!$bParentArchivable && $bArchivable && !self::IsRootClass($sPHPClass))
+						{
+							throw new Exception("Archivability must be declared on top of the class hierarchy above $sPHPClass (consistency throughout the whole class tree is a must)");
+						}
 						if ($bParentArchivable && ($bArchivable === false))
 						{
 							throw new Exception("$sPHPClass must be archivable (consistency throughout the whole class tree is a must)");
@@ -1832,7 +1836,7 @@ abstract class MetaModel
 				$oArchiveFlag = new AttributeArchiveFlag('archive_flag');
 				self::AddMagicAttribute($oArchiveFlag, $sClass);
 
-				$oArchiveDate = new AttributeArchiveDate('archive_date', array('magic' => true, "allowed_values"=>null, "sql"=>'archive_date', "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array()));
+				$oArchiveDate = new AttributeDate('archive_date', array('magic' => true, "allowed_values"=>null, "sql"=>'archive_date', "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array()));
 				self::AddMagicAttribute($oArchiveDate, $sClass);
 			}
 			elseif (self::$m_aClassParams[$sClass]["archive"])
