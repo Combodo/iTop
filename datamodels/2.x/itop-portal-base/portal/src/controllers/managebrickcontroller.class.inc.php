@@ -33,6 +33,7 @@ use \AttributeSubItem;
 use \DBSearch;
 use \DBObjectSearch;
 use \DBObjectSet;
+use \DBObject;
 use \FieldExpression;
 use \BinaryExpression;
 use \VariableExpression;
@@ -301,12 +302,13 @@ class ManageBrickController extends BrickController
 
 		// Preparing data sets
 		$aSets = array();
-		foreach ($aQueries as $sKey => $oQuery)
+		/** @var DBSearch $oQuery */
+        foreach ($aQueries as $sKey => $oQuery)
 		{
 			// Checking if we have a valid query
 			if ($oQuery !== null)
 			{
-				// Setting query pagination if needed
+                // Setting query pagination if needed
 				if ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_LAZY)
 				{
 					// Retrieving parameters
@@ -327,7 +329,22 @@ class ManageBrickController extends BrickController
 				{
 					$oSet = new DBObjectSet($oQuery);
 				}
-				$oSet->OptimizeColumnLoad(array($oQuery->GetClassAlias() => $aColumnsAttrs));
+
+				// Adding always_in_tables attributes
+                $aColumnsToLoad = array($oQuery->GetClassAlias() => $aColumnsAttrs);
+                foreach($oQuery->GetSelectedClasses() as $sAlias => $sClass)
+                {
+                    /** @var AttributeDefinition $oAttDef */
+                    foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+                    {
+                        if($oAttDef->AlwaysLoadInTables())
+                        {
+                            $aColumnsToLoad[$sAlias][] = $sAttCode;
+                        }
+                    }
+                }
+
+				$oSet->OptimizeColumnLoad($aColumnsToLoad);
 				$oSet->SetOrderByClasses();
 				$aSets[$sKey] = $oSet;
 			}
@@ -357,6 +374,7 @@ class ManageBrickController extends BrickController
 			// Getting items
 			$aItems = array();
 			// ... For each item
+            /** @var DBObject $oCurrentRow */
 			while ($oCurrentRow = $oSet->Fetch())
 			{
 				// ... Retrieving item's attributes values
@@ -393,7 +411,8 @@ class ManageBrickController extends BrickController
 							);
 						}
 					}
-					
+
+					/** @var AttributeDefinition $oAttDef */
 					$oAttDef = MetaModel::GetAttributeDef($sCurrentClass, $sItemAttr);
 					if ($oAttDef->IsExternalKey())
 					{
