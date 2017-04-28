@@ -41,6 +41,10 @@ use \Combodo\iTop\Portal\Helper\ScopeValidatorHelper;
  */
 class SecurityHelper
 {
+    public static $aAllowedScopeObjectsCache = array(
+        UR_ACTION_READ => array(),
+        UR_ACTION_MODIFY => array(),
+    );
 
 	/**
 	 * Returns true if the current user is allowed to do the $sAction on an $sObjectClass object (with optionnal $sObjectId id)
@@ -81,29 +85,51 @@ class SecurityHelper
 		// - If action != create we do some additionnal checks
 		if ($sAction !== UR_ACTION_CREATE)
 		{
-			// - Adding object id to the query if specified
+			// - Checking specific object if id is specified
 			if ($sObjectId !== null)
 			{
-				// - Adding expression
-				$sObjectKeyAtt = MetaModel::DBGetKey($sObjectClass);
-				$oFieldExp = new FieldExpression($sObjectKeyAtt, $oScopeQuery->GetClassAlias());
-				$oBinExp = new BinaryExpression($oFieldExp, '=', new VariableExpression('object_id'));
-				$oScopeQuery->AddConditionExpression($oBinExp);
-				// - Setting value
-				$aQueryParams = $oScopeQuery->GetInternalParams();
-				$aQueryParams['object_id'] = $sObjectId;
-				$oScopeQuery->SetInternalParams($aQueryParams);
-				unset($aQueryParams);
-
-                // - Checking if query result is null
-                $oSet = new DBObjectSet($oScopeQuery);
-                if ($oSet->Count() === 0)
+			    // Checking if object status is in cache (to avoid unnecessary query)
+                if(isset(static::$aAllowedScopeObjectsCache[$sScopeAction][$sObjectClass][$sObjectId]) )
                 {
-                    if ($oApp['debug'])
+                    if(static::$aAllowedScopeObjectsCache[$sScopeAction][$sObjectClass][$sObjectId] === false)
                     {
-                        IssueLog::Info($sDebugTracePrefix . ' as there was no result for the following scope query : ' . $oScopeQuery->ToOQL(true));
+                        if ($oApp['debug'])
+                        {
+                            IssueLog::Info($sDebugTracePrefix . ' as it was denied in the scope objects cache');
+                        }
+                        return false;
                     }
-                    return false;
+                }
+                else
+                {
+                    // Modifying query to filter on the ID
+                    // - Adding expression
+                    $sObjectKeyAtt = MetaModel::DBGetKey($sObjectClass);
+                    $oFieldExp = new FieldExpression($sObjectKeyAtt, $oScopeQuery->GetClassAlias());
+                    $oBinExp = new BinaryExpression($oFieldExp, '=', new VariableExpression('object_id'));
+                    $oScopeQuery->AddConditionExpression($oBinExp);
+                    // - Setting value
+                    $aQueryParams = $oScopeQuery->GetInternalParams();
+                    $aQueryParams['object_id'] = $sObjectId;
+                    $oScopeQuery->SetInternalParams($aQueryParams);
+                    unset($aQueryParams);
+
+                    // - Checking if query result is null (which means that the user has no right to view this specific object)
+                    $oSet = new DBObjectSet($oScopeQuery);
+                    if ($oSet->Count() === 0)
+                    {
+                        // Updating cache
+                        static::$aAllowedScopeObjectsCache[$sScopeAction][$sObjectClass][$sObjectId] = false;
+
+                        if ($oApp['debug'])
+                        {
+                            IssueLog::Info($sDebugTracePrefix . ' as there was no result for the following scope query : ' . $oScopeQuery->ToOQL(true));
+                        }
+                        return false;
+                    }
+
+                    // Updating cache
+                    static::$aAllowedScopeObjectsCache[$sScopeAction][$sObjectClass][$sObjectId] = true;
                 }
 			}
 		}
