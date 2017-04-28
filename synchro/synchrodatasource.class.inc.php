@@ -2922,8 +2922,8 @@ class SynchroExecution
 	}
 }
 
-	$oAdminMenu = new MenuGroup('AdminTools', 80 /* fRank */, 'SynchroDataSource', UR_ACTION_MODIFY, UR_ALLOWED_YES);
-	new OQLMenuNode('DataSources', 'SELECT SynchroDataSource', $oAdminMenu->GetIndex(), 12 /* fRank */, true, 'SynchroDataSource', UR_ACTION_MODIFY, UR_ALLOWED_YES);
-//	new OQLMenuNode('Replicas', 'SELECT SynchroReplica', $oAdminMenu->GetIndex(), 12 /* fRank */, true, 'SynchroReplica', UR_ACTION_MODIFY, UR_ALLOWED_YES);
-//	new WebPageMenuNode('Test:RunSynchro', '../synchro/synchro_exec.php', $oAdminMenu->GetIndex(), 13 /* fRank */, 'SynchroDataSource');
-?>
+if (UserRights::IsAdministrator())
+{
+	$oAdminMenu = new MenuGroup('AdminTools', 80 /* fRank */);
+	new OQLMenuNode('DataSources', 'SELECT SynchroDataSource', $oAdminMenu->GetIndex(), 12 /* fRank */, true);
+}
