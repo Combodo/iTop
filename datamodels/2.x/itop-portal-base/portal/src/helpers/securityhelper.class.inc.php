@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -68,7 +68,7 @@ class SecurityHelper
 		// Checking the scopes layer
 		// - Transforming scope action as there is only 2 values
 		$sScopeAction = ($sAction === UR_ACTION_READ) ? UR_ACTION_READ : UR_ACTION_MODIFY;
-		// - Retrieving the query
+		// - Retrieving the query. If user has no scope, it can't access that kind of objects
 		$oScopeQuery = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sObjectClass, $sScopeAction);
 		if ($oScopeQuery === null)
 		{
@@ -94,34 +94,17 @@ class SecurityHelper
 				$aQueryParams['object_id'] = $sObjectId;
 				$oScopeQuery->SetInternalParams($aQueryParams);
 				unset($aQueryParams);
-			}
 
-			// - Checking if query result is null
-			$oSet = new DBObjectSet($oScopeQuery);
-			// Note : This is to address a bug (#R-011452). We creating an object that is the first of its class, this would failed as the scope query always return an empty set
-			//if ($oSet->Count() === 0)
-			if (($oSet->Count() === 0) && ($sObjectId !== null))
-			{
-				if ($oApp['debug'])
-				{
-					IssueLog::Info($sDebugTracePrefix . ' as there was no result for the following scope query : ' . $oScopeQuery->ToOQL(true));
-				}
-				return false;
-			}
-
-			// Checking if the cmdbAbstractObject exists if id is specified
-			if ($sObjectId !== null)
-			{
-				$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */, $oApp['scope_validator']->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
-				if ($oObject === null)
-				{
-					if ($oApp['debug'])
-					{
-						IssueLog::Info($sDebugTracePrefix . ' as object doesn\'t exists');
-					}
-					return false;
-				}
-				unset($oObject);
+                // - Checking if query result is null
+                $oSet = new DBObjectSet($oScopeQuery);
+                if ($oSet->Count() === 0)
+                {
+                    if ($oApp['debug'])
+                    {
+                        IssueLog::Info($sDebugTracePrefix . ' as there was no result for the following scope query : ' . $oScopeQuery->ToOQL(true));
+                    }
+                    return false;
+                }
 			}
 		}
 
@@ -147,5 +130,3 @@ class SecurityHelper
 	}
 
 }
-
-?>
