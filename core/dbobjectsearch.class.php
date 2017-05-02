@@ -411,12 +411,14 @@ class DBObjectSearch extends DBSearch
 
 		case "IN":
 			if (!is_array($value)) $value = array($value);
+			if (count($value) === 0) throw new Exception('AddCondition '.$sOpCode.': Value cannot be an empty array.');
 			$sListExpr = '('.implode(', ', CMDBSource::Quote($value)).')';
 			$sOQLCondition = $oField->Render()." IN $sListExpr";
 			break;
 
 		case "NOTIN":
 			if (!is_array($value)) $value = array($value);
+            if (count($value) === 0) throw new Exception('AddCondition '.$sOpCode.': Value cannot be an empty array.');
 			$sListExpr = '('.implode(', ', CMDBSource::Quote($value)).')';
 			$sOQLCondition = $oField->Render()." NOT IN $sListExpr";
 			break;
