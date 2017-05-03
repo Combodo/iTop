@@ -43,7 +43,7 @@ class CreateBrickController extends BrickController
         $aRules = $oBrick->GetRules();
         if (!empty($aRules))
         {
-            $aRouteParams['ar_token'] = ContextManipulatorHelper::EncodeRulesToken($aRules);
+            $aRouteParams['ar_token'] = ContextManipulatorHelper::PrepareAndEncodeRulesToken($aRules);
         }
 
         // Checking if the target object class is asbtract or not
