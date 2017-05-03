@@ -19,6 +19,7 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
+use Combodo\iTop\Portal\Helper\ScopeValidatorHelper;
 use \Silex\Application;
 use \Symfony\Component\HttpFoundation\Request;
 use \UserRights;
@@ -267,8 +268,8 @@ class ManageBrickController extends BrickController
 			}
 
 			// Restricting query to allowed scope on each classes
-			// Note : Will need to moved the scope restriction on queries elsewhere when we consider grouping on something else than finalclass
-			// Note : We now get view scope instead of edit scope as we allowed users to view/edit objects in the brick regarding their rights
+			// Note: Will need to moved the scope restriction on queries elsewhere when we consider grouping on something else than finalclass
+			// Note: We now get view scope instead of edit scope as we allowed users to view/edit objects in the brick regarding their rights
 			$oScopeQuery = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $aGroupingAreasValue['value'], UR_ACTION_READ);
 			if ($oScopeQuery !== null)
 			{
@@ -284,7 +285,7 @@ class ManageBrickController extends BrickController
 				$oAreaQuery = null;
 			}
 
-			$aQueries[$sKey] = $oAreaQuery;
+            $aQueries[$sKey] = $oAreaQuery;
 		}
 
 		// Testing appropriate data loading mode if we are in auto
@@ -346,11 +347,12 @@ class ManageBrickController extends BrickController
 
 				$oSet->OptimizeColumnLoad($aColumnsToLoad);
 				$oSet->SetOrderByClasses();
+                SecurityHelper::PreloadForCache($oApp, $oSet->GetFilter(), $aColumnsToLoad[$oQuery->GetClassAlias()] /* preloading only extkeys from the main class */);
 				$aSets[$sKey] = $oSet;
 			}
 		}
 
-		// Retrieving and preparing datas for rendering
+		// Retrieving and preparing data for rendering
 		$aGroupingAreasData = array();
 		foreach ($aSets as $sKey => $oSet)
 		{
@@ -373,6 +375,7 @@ class ManageBrickController extends BrickController
 
 			// Getting items
 			$aItems = array();
+			$aItemsIds = array();
 			// ... For each item
             /** @var DBObject $oCurrentRow */
 			while ($oCurrentRow = $oSet->Fetch())
@@ -457,7 +460,17 @@ class ManageBrickController extends BrickController
 					'attributes' => $aItemAttrs,
 					'highlight_class' => $oCurrentRow->GetHilightClass()
 				);
+				$aItemsIds = $oCurrentRow->GetKey();
 			}
+
+			// Now that we retrieved items, we check which can be edited, which can be view and which cannot be opened
+            //
+            // Note: Now that we do checks here and not through the SecurityHelper while fetching objects, we might bypass datamodel security regarding the object class!
+//            $oScopeQuery = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sCurrentClass, UR_ACTION_MODIFY);
+//			if($oSearchEditableItems !== null)
+//            {
+//                $oSearchEditableItems->A
+//            }
 
 			$aGroupingAreasData[$sKey] = array(
 				'sId' => $sKey,
