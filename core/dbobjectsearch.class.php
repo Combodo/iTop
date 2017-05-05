@@ -1677,66 +1677,71 @@ class DBObjectSearch extends DBSearch
 		}
 
 		$aFNJoinAlias = array(); // array of (subclass => alias)
-		if (array_key_exists('friendlyname', $aExpectedAtts))
+		foreach ($aExpectedAtts as $sAttCode => $oExpression)
 		{
-			// To optimize: detect a restriction on child classes in the condition expression
-			//    e.g. SELECT FunctionalCI WHERE finalclass IN ('Server', 'VirtualMachine')
-			$oNameExpression = self::GetExtendedNameExpression($sClass);
-
-			$aNameFields = array();
-			$oNameExpression->GetUnresolvedFields('', $aNameFields);
-			$aTranslateNameFields = array();
-			foreach($aNameFields as $sSubClass => $aFields)
+			if (!MetaModel::IsValidAttCode($sClass, $sAttCode)) continue;
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			if ($oAttDef->IsBasedOnOQLExpression())
 			{
-				foreach($aFields as $sAttCode => $oField)
-				{
-					$oAttDef = MetaModel::GetAttributeDef($sSubClass, $sAttCode);
-					if ($oAttDef->IsExternalKey())
-					{
-						$sClassOfAttribute = MetaModel::GetAttributeOrigin($sSubClass, $sAttCode);
-						$aExtKeys[$sClassOfAttribute][$sAttCode] = array();
-					}				
-					elseif ($oAttDef->IsExternalField() || ($oAttDef instanceof AttributeFriendlyName))
-					{
-						$sKeyAttCode = $oAttDef->GetKeyAttCode();
-						$sClassOfAttribute = MetaModel::GetAttributeOrigin($sSubClass, $sKeyAttCode);
-						$aExtKeys[$sClassOfAttribute][$sKeyAttCode][$sAttCode] = $oAttDef;
-					}
-					else
-					{
-						$sClassOfAttribute = MetaModel::GetAttributeOrigin($sSubClass, $sAttCode);
-					}
+				// To optimize: detect a restriction on child classes in the condition expression
+				//    e.g. SELECT FunctionalCI WHERE finalclass IN ('Server', 'VirtualMachine')
+				$oExpression = $oAttDef->GetOQLExpression($sClass);
 
-					if (MetaModel::IsParentClass($sClassOfAttribute, $sClass))
+				$aRequiredFields = array();
+				$oExpression->GetUnresolvedFields('', $aRequiredFields);
+				$aTranslateFields = array();
+				foreach($aRequiredFields as $sSubClass => $aFields)
+				{
+					foreach($aFields as $sAttCode => $oField)
 					{
-						// The attribute is part of the standard query
-						//
-						$sAliasForAttribute = $sClassAlias;
-					}
-					else
-					{
-						// The attribute will be available from an additional outer join
-						// For each subclass (table) one single join is enough
-						//
-						if (!array_key_exists($sClassOfAttribute, $aFNJoinAlias))
+						$oAttDef = MetaModel::GetAttributeDef($sSubClass, $sAttCode);
+						if ($oAttDef->IsExternalKey())
 						{
-							$sAliasForAttribute = $oBuild->GenerateClassAlias($sClassAlias.'_fn_'.$sClassOfAttribute, $sClassOfAttribute);
-							$aFNJoinAlias[$sClassOfAttribute] = $sAliasForAttribute;
+							$sClassOfAttribute = MetaModel::GetAttributeOrigin($sSubClass, $sAttCode);
+							$aExtKeys[$sClassOfAttribute][$sAttCode] = array();
+						}
+						elseif ($oAttDef->IsExternalField() || ($oAttDef instanceof AttributeFriendlyName))
+						{
+							$sKeyAttCode = $oAttDef->GetKeyAttCode();
+							$sClassOfAttribute = MetaModel::GetAttributeOrigin($sSubClass, $sKeyAttCode);
+							$aExtKeys[$sClassOfAttribute][$sKeyAttCode][$sAttCode] = $oAttDef;
 						}
 						else
 						{
-							$sAliasForAttribute = $aFNJoinAlias[$sClassOfAttribute];
+							$sClassOfAttribute = MetaModel::GetAttributeOrigin($sSubClass, $sAttCode);
 						}
+
+						if (MetaModel::IsParentClass($sClassOfAttribute, $sClass))
+						{
+							// The attribute is part of the standard query
+							//
+							$sAliasForAttribute = $sClassAlias;
+						}
+						else
+						{
+							// The attribute will be available from an additional outer join
+							// For each subclass (table) one single join is enough
+							//
+							if (!array_key_exists($sClassOfAttribute, $aFNJoinAlias))
+							{
+								$sAliasForAttribute = $oBuild->GenerateClassAlias($sClassAlias.'_fn_'.$sClassOfAttribute, $sClassOfAttribute);
+								$aFNJoinAlias[$sClassOfAttribute] = $sAliasForAttribute;
+							}
+							else
+							{
+								$sAliasForAttribute = $aFNJoinAlias[$sClassOfAttribute];
+							}
+						}
+
+						$aTranslateFields[$sSubClass][$sAttCode] = new FieldExpression($sAttCode, $sAliasForAttribute);
 					}
-
-					$aTranslateNameFields[$sSubClass][$sAttCode] = new FieldExpression($sAttCode, $sAliasForAttribute);
 				}
-			}
-			$oNameExpression = $oNameExpression->Translate($aTranslateNameFields, false);
+				$oExpression = $oExpression->Translate($aTranslateFields, false);
 
-			$aTranslateNow = array();
-			$aTranslateNow[$sClassAlias]['friendlyname'] = $oNameExpression;
-			$oBuild->m_oQBExpressions->Translate($aTranslateNow, false);
+				$aTranslateNow = array();
+				$aTranslateNow[$sClassAlias]['friendlyname'] = $oExpression;
+				$oBuild->m_oQBExpressions->Translate($aTranslateNow, false);
+			}
 		}
 
 		// Add the ext fields used in the select (eventually adds an external key)
@@ -1921,7 +1926,7 @@ class DBObjectSearch extends DBSearch
 			//
 			if ($bIsOnQueriedClass && array_key_exists($sAttCode, $aValues))
 			{
-				assert ($oAttDef->IsDirectField());
+				assert ($oAttDef->IsBasedOnDBColumns());
 				foreach ($oAttDef->GetSQLValues($aValues[$sAttCode]) as $sColumn => $sValue)
 				{
 					$aUpdateValues[$sColumn] = $sValue;
@@ -2134,61 +2139,4 @@ class DBObjectSearch extends DBSearch
 		//MyHelpers::var_dump_html($oSelectBase->RenderSelect());
 		return $oSelectBase;
 	}
-
-	/**
-	 *	Get the friendly name for the class and its subclasses (if finalclass = 'subclass' ...)
-	 *	Simplifies the final expression by grouping classes having the same name expression	 
-	 *	Used when querying a parent class 	 
-	*/
-	static protected function GetExtendedNameExpression($sClass)
-	{
-		// 1st step - get all of the required expressions (instantiable classes)
-		//            and group them using their OQL representation
-		//
-		$aFNExpressions = array(); // signature => array('expression' => oExp, 'classes' => array of classes)
-		foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sSubClass)
-		{
-			if (($sSubClass != $sClass) && MetaModel::IsAbstract($sSubClass)) continue;
-
-			$oSubClassName = MetaModel::GetNameExpression($sSubClass);
-			$sSignature = $oSubClassName->Render();
-			if (!array_key_exists($sSignature, $aFNExpressions))
-			{
-				$aFNExpressions[$sSignature] = array(
-					'expression' => $oSubClassName,
-					'classes' => array(),
-				);
-			}
-			$aFNExpressions[$sSignature]['classes'][] = $sSubClass;
-		}
-
-		// 2nd step - build the final name expression depending on the finalclass
-		//
-		if (count($aFNExpressions) == 1)
-		{
-			$aExpData = reset($aFNExpressions);
-			$oNameExpression = $aExpData['expression'];
-		}
-		else
-		{
-			$oNameExpression = null;
-			foreach ($aFNExpressions as $sSignature => $aExpData)
-			{
-				$oClassListExpr = ListExpression::FromScalars($aExpData['classes']);
-				$oClassExpr = new FieldExpression('finalclass', $sClass);
-				$oClassInList = new BinaryExpression($oClassExpr, 'IN', $oClassListExpr);
-
-				if (is_null($oNameExpression))
-				{
-					$oNameExpression = $aExpData['expression'];
-				}
-				else
-				{
-					$oNameExpression = new FunctionExpression('IF', array($oClassInList, $aExpData['expression'], $oNameExpression));
-				}
-			}
-		}
-		return $oNameExpression;
-	}
-
 }

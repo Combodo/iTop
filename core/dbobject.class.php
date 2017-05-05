@@ -1999,7 +1999,7 @@ abstract class DBObject implements iDisplay
 			{
 				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 				if ($oAttDef->IsExternalKey()) $bHasANewExternalKeyValue = true;
-				if ($oAttDef->IsDirectField())
+				if ($oAttDef->IsBasedOnDBColumns())
 				{
 					$aDBChanges[$sAttCode] = $aChanges[$sAttCode];
 				}

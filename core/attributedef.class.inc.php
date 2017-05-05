@@ -226,20 +226,93 @@ abstract class AttributeDefinition
 	{
 		return $this;
 	}
-	public function IsDirectField() {return false;} 
-	public function IsScalar() {return false;} 
-	public function IsLinkSet() {return false;} 
-	public function IsExternalKey($iType = EXTKEY_RELATIVE) {return false;} 
-	public function IsHierarchicalKey() {return false;}
-	public function IsExternalField() {return false;} 
+
+	/**
+	 * Deprecated - use IsBasedOnDBColumns instead
+	 * @return bool
+	 */
+	public function IsDirectField() {return static::IsBasedOnDBColumns();}
+
+	/**
+	 * Returns true if the attribute value is built after DB columns
+	 * @return bool
+	 */
+	static public function IsBasedOnDBColumns() {return false;}
+	/**
+	 * Returns true if the attribute value is built after other attributes by the mean of an expression
+	 * @return bool
+	 */
+	static public function IsBasedOnOQLExpression() {return false;}
+	/**
+	 * Returns true if the attribute value can be shown as a string
+	 * @return bool
+	 */
+	static public function IsScalar() {return false;}
+	/**
+	 * Returns true if the attribute value is a set of related objects (1-N or N-N)
+	 * @return bool
+	 */
+	static public function IsLinkSet() {return false;}
+	/**
+	 * Returns true if the attribute is an external key, either directly (RELATIVE to the host class), or indirectly (ABSOLUTELY)
+	 * @return bool
+	 */
+	public function IsExternalKey($iType = EXTKEY_RELATIVE) {return false;}
+	/**
+	 * Returns true if the attribute value is an external key, pointing to the host class
+	 * @return bool
+	 */
+	static public function IsHierarchicalKey() {return false;}
+	/**
+	 * Returns true if the attribute value is stored on an object pointed to be an external key
+	 * @return bool
+	 */
+	static public function IsExternalField() {return false;}
+	/**
+	 * Returns true if the attribute can be written (by essence)
+	 * @return bool
+	 */
 	public function IsWritable() {return false;}
+	/**
+	 * Returns true if the attribute has been added automatically by the framework
+	 * @return bool
+	 */
 	public function IsMagic() {return $this->GetOptional('magic', false);}
-	public function LoadInObject() {return true;}
-	public function LoadFromDB() {return true;}
+	/**
+	 * Returns true if the attribute value is kept in the loaded object (in memory)
+	 * @return bool
+	 */
+	static public function LoadInObject() {return true;}
+	/**
+	 * Returns true if the attribute value comes from the database in one way or another
+	 * @return bool
+	 */
+	static public function LoadFromDB() {return true;}
+	/**
+	 * Returns true if the attribute should be loaded anytime (in addition to the column selected by the user)
+	 * @return bool
+	 */
 	public function AlwaysLoadInTables() {return $this->GetOptional('always_load_in_tables', false);}
-	public function GetValue($oHostObject){return null;} // must return the value if LoadInObject returns false
-	public function IsNullAllowed() {return true;} 
-	public function GetCode() {return $this->m_sCode;} 
+	/**
+	 * Must return the value if LoadInObject returns false
+	 * @return mixed
+	 */
+	public function GetValue($oHostObject){return null;}
+	/**
+	 * Returns true if the attribute must not be stored if its current value is "null" (Cf. IsNull())
+	 * @return bool
+	 */
+	public function IsNullAllowed() {return true;}
+	/**
+	 * Returns the attribute code (identifies the attribute in the host class)
+	 * @return string
+	 */
+	public function GetCode() {return $this->m_sCode;}
+
+	/**
+	 * Find the corresponding "link" attribute on the target class, if any
+	 * @return null | AttributeDefinition
+	 */
 	public function GetMirrorLinkAttribute() {return null;}
 
 	/**
@@ -774,8 +847,8 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public function GetEditClass() {return "LinkedSet";}
 
-	public function IsWritable() {return true;} 
-	public function IsLinkSet() {return true;} 
+	public function IsWritable() {return true;}
+	static public function IsLinkSet() {return true;}
 	public function IsIndirect() {return false;} 
 
 	public function GetValuesDef() {return $this->Get("allowed_values");} 
@@ -899,7 +972,7 @@ class AttributeLinkedSet extends AttributeDefinition
 					}
 					if ($sAttCode == $this->GetExtKeyToMe()) continue;
 					if ($oAttDef->IsExternalField()) continue;
-					if (!$oAttDef->IsDirectField()) continue;
+					if (!$oAttDef->IsBasedOnDBColumns()) continue;
 					if (!$oAttDef->IsScalar()) continue;
 					$sAttValue = $oObj->GetAsCSV($sAttCode, $sSepValue, '', $bLocalize);
 					if (strlen($sAttValue) > 0)
@@ -1162,7 +1235,7 @@ class AttributeLinkedSet extends AttributeDefinition
 					}
 					if ($sAttCode == $this->GetExtKeyToMe()) continue;
 					if ($oAttDef->IsExternalField()) continue;
-					if (!$oAttDef->IsDirectField()) continue;
+					if (!$oAttDef->IsBasedOnDBColumns()) continue;
 					if (!$oAttDef->IsScalar()) continue;
 					$attValue = $oObj->Get($sAttCode);
 					$aAttributes[$sAttCode] = $oAttDef->GetForJSON($attValue);
@@ -1265,9 +1338,8 @@ class AttributeLinkedSet extends AttributeDefinition
 	}
 
 	/**
-	 * Find the corresponding "link" attribute on the target class
-	 * 	 
-	 * @return string The attribute code on the target class, or null if none has been found
+	 * Find the corresponding "link" attribute on the target class, if any
+	 * @return null | AttributeDefinition
 	 */
 	public function GetMirrorLinkAttribute()
 	{
@@ -1349,9 +1421,8 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 	}
 
 	/**
-	 * Find the corresponding "link" attribute on the target class
-	 * 	 
-	 * @return string The attribute code on the target class, or null if none has been found
+	 * Find the corresponding "link" attribute on the target class, if any
+	 * @return null | AttributeDefinition
 	 */
 	public function GetMirrorLinkAttribute()
 	{
@@ -1416,8 +1487,8 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	public function GetValuesDef() {return $this->Get("allowed_values");} 
 	public function GetPrerequisiteAttributes($sClass = null) {return $this->Get("depends_on");}
 
-	public function IsDirectField() {return true;} 
-	public function IsScalar() {return true;} 
+	static public function IsBasedOnDBColumns() {return true;}
+	static public function IsScalar() {return true;}
 	public function IsWritable() {return !$this->IsMagic();}
 	public function GetSQLExpr()
 	{
@@ -4508,9 +4579,8 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	}
 
 	/**
-	 * Find the corresponding "link" attribute on the target class
-	 * 	 
-	 * @return string The attribute code on the target class, or null if none has been found
+	 * Find the corresponding "link" attribute on the target class, if any
+	 * @return null | AttributeDefinition
 	 */
 	public function GetMirrorLinkAttribute()
 	{
@@ -4617,7 +4687,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		parent::SetHostClass($sHostClass);
 	}
 
-	public function IsHierarchicalKey() {return true;}
+	static public function IsHierarchicalKey() {return true;}
 	public function GetTargetClass($iType = EXTKEY_RELATIVE) {return $this->m_sTargetClass;}
 	public function GetKeyAttDef($iType = EXTKEY_RELATIVE){return $this;}
 	public function GetKeyAttCode() {return $this->GetCode();}
@@ -4706,9 +4776,8 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 	}
 
 	/**
-	 * Find the corresponding "link" attribute on the target class
-	 * 	 
-	 * @return string The attribute code on the target class, or null if none has been found
+	 * Find the corresponding "link" attribute on the target class, if any
+	 * @return null | AttributeDefinition
 	 */
 	public function GetMirrorLinkAttribute()
 	{
@@ -4808,7 +4877,7 @@ class AttributeExternalField extends AttributeDefinition
 		return $this->GetKeyAttDef($iType)->GetTargetClass();
 	}
 
-	public function IsExternalField() {return true;} 
+	static public function IsExternalField() {return true;}
 	public function GetKeyAttCode() {return $this->Get("extkey_attcode");} 
 	public function GetExtAttCode() {return $this->Get("target_attcode");} 
 
@@ -4868,11 +4937,10 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->IsNullAllowed(); 
 	}
 
-	public function IsScalar()
+	static public function IsScalar()
 	{
-		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->IsScalar(); 
-	} 
+		return true;
+	}
 
 	public function GetFilterDefinitions()
 	{
@@ -5054,10 +5122,10 @@ class AttributeBlob extends AttributeDefinition
 	}
 
 	public function GetEditClass() {return "Document";}
-	
-	public function IsDirectField() {return true;} 
-	public function IsScalar() {return true;} 
-	public function IsWritable() {return true;} 
+
+	static public function IsBasedOnDBColumns() {return true;}
+	static public function IsScalar() {return true;}
+	public function IsWritable() {return true;}
 	public function GetDefaultValue(DBObject $oHostObject = null) {return "";}
 	public function IsNullAllowed(DBObject $oHostObject = null) {return $this->GetOptional("is_null_allowed", false);}
 
@@ -5412,9 +5480,9 @@ class AttributeStopWatch extends AttributeDefinition
 	}
 
 	public function GetEditClass() {return "StopWatch";}
-	
-	public function IsDirectField() {return true;} 
-	public function IsScalar() {return true;} 
+
+	static public function IsBasedOnDBColumns() {return true;}
+	static public function IsScalar() {return true;}
 	public function IsWritable() {return true;}
 	public function GetDefaultValue(DBObject $oHostObject = null) {return $this->NewStopWatch();}
 
@@ -6092,15 +6160,15 @@ class AttributeSubItem extends AttributeDefinition
 
 	public function GetEditClass() {return "";}
 	
-	public function GetValuesDef() {return null;} 
+	public function GetValuesDef() {return null;}
 
-	public function IsDirectField() {return true;} 
-	public function IsScalar() {return true;} 
-	public function IsWritable() {return false;} 
+	static public function IsBasedOnDBColumns() {return true;}
+	static public function IsScalar() {return true;}
+	public function IsWritable() {return false;}
 	public function GetDefaultValue(DBObject $oHostObject = null) {return null;}
 //	public function IsNullAllowed() {return false;}
 
-	public function LoadInObject() {return false;} // if this verb returns false, then GetValue must be implemented
+	static public function LoadInObject() {return false;} // if this verb returns false, then GetValue must be implemented
 
 	/**
 	 * Used by DBOBject::Get()
@@ -6245,10 +6313,10 @@ class AttributeOneWayPassword extends AttributeDefinition
 	}
 
 	public function GetEditClass() {return "One Way Password";}
-	
-	public function IsDirectField() {return true;} 
-	public function IsScalar() {return true;} 
-	public function IsWritable() {return true;} 
+
+	static public function IsBasedOnDBColumns() {return true;}
+	static public function IsScalar() {return true;}
+	public function IsWritable() {return true;}
 	public function GetDefaultValue(DBObject $oHostObject = null) {return "";}
 	public function IsNullAllowed() {return $this->GetOptional("is_null_allowed", false);}
 
@@ -6619,31 +6687,33 @@ class AttributePropertySet extends AttributeTable
  *
  * @package	 iTopORM
  */
-class AttributeComputedFieldVoid extends AttributeDefinition
-{	
-	static public function ListExpectedParams()
+
+/**
+ * The attribute dedicated to the friendly name automatic attribute (not written) 
+ *
+ * @package	 iTopORM
+ */
+class AttributeFriendlyName extends AttributeDefinition
+{
+	public function __construct($sCode, $sExtKeyAttCode)
 	{
-		return array_merge(parent::ListExpectedParams(), array());
+		$this->m_sCode = $sCode;
+		$aParams = array();
+		$aParams["default_value"] = '';
+		$aParams["extkey_attcode"] = $sExtKeyAttCode;
+		parent::__construct($sCode, $aParams);
+
+		$this->m_sValue = $this->Get("default_value");
 	}
+
 
 	public function GetEditClass() {return "";}
-	
-	public function GetValuesDef() {return null;} 
+
+	public function GetValuesDef() {return null;}
 	public function GetPrerequisiteAttributes($sClass = null) {return $this->GetOptional("depends_on", array());}
 
-	public function IsDirectField() {return true;} 
-	public function IsScalar() {return true;} 
-	public function IsWritable() {return false;} 
-	public function GetSQLExpr()
-	{
-		return null;
-	}
-
-	public function GetDefaultValue(DBObject $oHostObject = null) {return $this->MakeRealValue("", $oHostObject);}
+	static public function IsScalar() {return true;}
 	public function IsNullAllowed() {return false;}
-
-	// 
-//	protected function ScalarToSQL($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
 
 	public function GetSQLExpressions($sPrefix = '')
 	{
@@ -6651,72 +6721,70 @@ class AttributeComputedFieldVoid extends AttributeDefinition
 		{
 			$sPrefix = $this->GetCode(); // Warning AttributeComputedFieldVoid does not have any sql property
 		}
-		return array('' => $sPrefix); 
+		return array('' => $sPrefix);
 	}
 
-	public function FromSQLToValue($aCols, $sPrefix = '')
+	static public function IsBasedOnOQLExpression() {return true;}
+	public function GetOQLExpression()
 	{
-		return null;
+		return static::GetExtendedNameExpression($this->GetHostClass());
 	}
-	public function GetSQLValues($value)
+	/**
+	 *	Get the friendly name for the class and its subclasses (if finalclass = 'subclass' ...)
+	 *	Simplifies the final expression by grouping classes having the same name expression
+	 *	Used when querying a parent class
+	 */
+	static protected function GetExtendedNameExpression($sClass)
 	{
-		return array();
-	}
-
-	public function GetSQLColumns($bFullSpec = false)
-	{
-		return array();
-	}
-
-	public function GetFilterDefinitions()
-	{
-		return array($this->GetCode() => new FilterFromAttribute($this));
-	}
-
-	public function GetBasicFilterOperators()
-	{
-		return array("="=>"equals", "!="=>"differs from");
-	}
-	public function GetBasicFilterLooseOperator()
-	{
-		return "=";
-	}
-
-	public function GetBasicFilterSQLExpr($sOpCode, $value)
-	{
-		$sQValue = CMDBSource::Quote($value);
-		switch ($sOpCode)
+		// 1st step - get all of the required expressions (instantiable classes)
+		//            and group them using their OQL representation
+		//
+		$aFNExpressions = array(); // signature => array('expression' => oExp, 'classes' => array of classes)
+		foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sSubClass)
 		{
-		case '!=':
-			return $this->GetSQLExpr()." != $sQValue";
-			break;
-		case '=':
-		default:
-			return $this->GetSQLExpr()." = $sQValue";
+			if (($sSubClass != $sClass) && MetaModel::IsAbstract($sSubClass)) continue;
+
+			$oSubClassName = MetaModel::GetNameExpression($sSubClass);
+			$sSignature = $oSubClassName->Render();
+			if (!array_key_exists($sSignature, $aFNExpressions))
+			{
+				$aFNExpressions[$sSignature] = array(
+					'expression' => $oSubClassName,
+					'classes' => array(),
+				);
+			}
+			$aFNExpressions[$sSignature]['classes'][] = $sSubClass;
 		}
+
+		// 2nd step - build the final name expression depending on the finalclass
+		//
+		if (count($aFNExpressions) == 1)
+		{
+			$aExpData = reset($aFNExpressions);
+			$oNameExpression = $aExpData['expression'];
+		}
+		else
+		{
+			$oNameExpression = null;
+			foreach ($aFNExpressions as $sSignature => $aExpData)
+			{
+				$oClassListExpr = ListExpression::FromScalars($aExpData['classes']);
+				$oClassExpr = new FieldExpression('finalclass', $sClass);
+				$oClassInList = new BinaryExpression($oClassExpr, 'IN', $oClassListExpr);
+
+				if (is_null($oNameExpression))
+				{
+					$oNameExpression = $aExpData['expression'];
+				}
+				else
+				{
+					$oNameExpression = new FunctionExpression('IF', array($oClassInList, $aExpData['expression'], $oNameExpression));
+				}
+			}
+		}
+		return $oNameExpression;
 	}
 
-	public function IsPartOfFingerprint() { return false; }
-}
-
-/**
- * The attribute dedicated to the friendly name automatic attribute (not written) 
- *
- * @package	 iTopORM
- */
-class AttributeFriendlyName extends AttributeComputedFieldVoid
-{
-	public function __construct($sCode, $sExtKeyAttCode)
-	{
-		$this->m_sCode = $sCode;
-		$aParams = array();
-//		$aParams["is_null_allowed"] = false,
-		$aParams["default_value"] = '';
-		$aParams["extkey_attcode"] = $sExtKeyAttCode;
-		parent::__construct($sCode, $aParams);
-
-		$this->m_sValue = $this->Get("default_value");
-	}
 
 	public function GetKeyAttCode() {return $this->Get("extkey_attcode");} 
 
@@ -6759,21 +6827,10 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 		return $sLabel;
 	} 
 
-	// n/a, the friendly name is made of a complex expression (see GetNameSpec)
-	protected function GetSQLCol($bFullSpec = false) {return "";}	
-
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
  		$sValue = $aCols[$sPrefix];
 		return $sValue;
-	}
-
-	/**
-	 * Encrypt the value before storing it in the database
-	 */
-	public function GetSQLValues($value)
-	{
-		return array();
 	}
 
 	public function IsWritable()
@@ -6785,7 +6842,7 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 		return true;
 	}
 
-	public function IsDirectField()
+	static public function IsBasedOnDBColumns()
 	{
 		return false;
 	}
@@ -6834,6 +6891,16 @@ class AttributeFriendlyName extends AttributeComputedFieldVoid
 	public function DescribeChangeAsHTML($sOldValue, $sNewValue, $sLabel = null)
 	{
 		return '';
+	}
+
+	public function GetFilterDefinitions()
+	{
+		return array($this->GetCode() => new FilterFromAttribute($this));
+	}
+
+	public function GetBasicFilterOperators()
+	{
+		return array("="=>"equals", "!="=>"differs from");
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -7268,7 +7335,7 @@ class AttributeCustomFields extends AttributeDefinition
 
 	public function GetEditClass() {return "CustomFields";}
 	public function IsWritable() {return true;}
-	public function LoadFromDB() {return false;} // See ReadValue...
+	static public function LoadFromDB() {return false;} // See ReadValue...
 
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{

@@ -4092,7 +4092,7 @@ abstract class MetaModel
 						}
 					}
 				}
-				else if ($oAttDef->IsDirectField())
+				else if ($oAttDef->IsBasedOnDBColumns())
 				{
 					// Check that the values fit the allowed values
 					//
