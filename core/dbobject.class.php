@@ -364,7 +364,14 @@ abstract class DBObject implements iDisplay
 		}
 		return $bFullyLoaded;
 	}
-	
+
+	protected function _Set($sAttCode, $value)
+	{
+		$this->m_aCurrValues[$sAttCode] = $value;
+		$this->m_aTouchedAtt[$sAttCode] = true;
+		unset($this->m_aModifiedAtt[$sAttCode]);
+	}
+
 	public function Set($sAttCode, $value)
 	{
 		if ($sAttCode == 'finalclass')
@@ -451,13 +458,11 @@ abstract class DBObject implements iDisplay
 
 		$realvalue = $oAttDef->MakeRealValue($value, $this);
 
-		$this->m_aCurrValues[$sAttCode] = $realvalue;
-		$this->m_aTouchedAtt[$sAttCode] = true;
-		unset($this->m_aModifiedAtt[$sAttCode]);
+		$this->_Set($sAttCode, $realvalue);
 
 		foreach (MetaModel::ListMetaAttributes(get_class($this), $sAttCode) as $sMetaAttCode => $oMetaAttDef)
 		{
-			$this->Set($sMetaAttCode, $oMetaAttDef->MapValue($this));
+			$this->_Set($sMetaAttCode, $oMetaAttDef->MapValue($this));
 		}
 
 		// The object has changed, reset caches
