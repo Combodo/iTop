@@ -5465,6 +5465,11 @@ class AttributeImage extends AttributeBlob
 		}
 		return '<div class="view-image" style="width: '.$iMaxWidthPx.'px; height: '.$iMaxHeightPx.'px;"><span class="helper-middle"></span>'.$sRet.'</div>';
 	}
+
+    static public function GetFormFieldClass()
+    {
+        return '\\Combodo\\iTop\\Form\\Field\\ImageField';
+    }
 }
 /**
  * A stop watch is an ormStopWatch object, it is stored as several columns in the database  

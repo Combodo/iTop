@@ -25,6 +25,7 @@ require_once APPROOT . 'sources/form/formmanager.class.inc.php';
 require_once APPROOT . 'sources/form/field/field.class.inc.php';
 require_once APPROOT . 'sources/form/field/fileuploadfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/blobfield.class.inc.php';
+require_once APPROOT . 'sources/form/field/imagefield.class.inc.php';
 require_once APPROOT . 'sources/form/field/subformfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/textfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/hiddenfield.class.inc.php';

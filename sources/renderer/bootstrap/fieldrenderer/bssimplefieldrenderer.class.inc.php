@@ -280,7 +280,8 @@ EOF
 						$oOutput->AddHtml('</div>');
 						break;
 
-					case 'Combodo\\iTop\\Form\\Field\\BlobField':
+                    case 'Combodo\\iTop\\Form\\Field\\BlobField':
+                    case 'Combodo\\iTop\\Form\\Field\\ImageField':
 						$oOutput->AddHtml('<div class="form-group">');
 						// Showing label / value only if read-only but not hidden
 						if (!$this->oField->GetHidden())
@@ -289,7 +290,16 @@ EOF
 							{
 								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 							}
-							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), false)->AddHtml('</div>');
+							$oOutput->AddHtml('<div class="form-control-static">');
+							if($sFieldClass === 'Combodo\\iTop\\Form\\Field\\ImageField')
+                            {
+                                $oOutput->AddHtml('<img src="' . $this->oField->GetDisplayUrl() . '" />', false);
+                            }
+                            else
+                            {
+                                $oOutput->AddHtml($this->oField->GetDisplayValue(), false);
+                            }
+							$oOutput->AddHtml('</div>');
 						}
 						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" />');
 						$oOutput->AddHtml('</div>');
