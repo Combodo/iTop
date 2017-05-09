@@ -148,7 +148,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkContractToDocument' => 'Lien Contract / Document',
+	'Class:lnkContractToDocument' => 'Lien Contrat / Document',
 	'Class:lnkContractToDocument+' => '',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Contrat',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => '',
