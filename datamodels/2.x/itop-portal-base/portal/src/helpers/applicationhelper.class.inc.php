@@ -863,6 +863,7 @@ class ApplicationHelper
                             {
                                 case 'always_show_submit':
                                     $aFormProperties['always_show_submit'] = ($oPropertyNode->GetText('false') === 'true') ? true : false;
+                                    break;
                             }
                         }
                     }
