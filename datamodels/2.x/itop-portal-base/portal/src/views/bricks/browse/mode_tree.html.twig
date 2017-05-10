@@ -410,6 +410,14 @@
 			hideTreeLoader();
 			registerFilterListeners();
 			collapseAll();
+
+            // Open first level if only one item
+            if($('#brick_content_tree > .list-group-item').length == 1)
+            {
+                setTimeout(function(){
+                    $('#brick_content_tree > .list-group-item > .tree-toggle').trigger('click');
+                }, 300);
+            }
 			
 			{% if sSearchValue is not null %}
 				// Filters from default value

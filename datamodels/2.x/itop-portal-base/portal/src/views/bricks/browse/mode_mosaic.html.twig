@@ -406,6 +406,14 @@
 			buildMosaic(oRawDatas);
 			hideMosaicLoader();
 			registerFilterListeners();
+
+			// Open first level if only one item
+			if($('#brick_content_mosaic > .mosaic-group[data-level-id="L"] > .mosaic-group-item').length == 1)
+			{
+			    setTimeout(function(){
+                    $('#brick_content_mosaic > .mosaic-group[data-level-id="L"] > .mosaic-group-item > .mosaic-item').trigger('click');
+				}, 300);
+			}
 		});
 	</script>
 {% endblock %}
