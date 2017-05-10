@@ -32,6 +32,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Page:GoPortalHome' => 'Startseite',
 	'Page:GoPreviousPage' => 'vorherige Seite',
 	'Portal:Button:Submit' => 'Abschicken',
+    'Portal:Button:Apply' => 'Update~~',
 	'Portal:Button:Cancel' => 'Zurück',
 	'Portal:Button:Close' => 'Schließen',
 	'Portal:Button:Add' => 'Hinzu',

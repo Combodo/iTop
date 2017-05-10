@@ -18,6 +18,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
     'Page:GoPortalHome' => 'Домашняя страница',
     'Page:GoPreviousPage' => 'Предыдущяя страница',
     'Portal:Button:Submit' => 'Применить',
+    'Portal:Button:Apply' => 'Update~~',
     'Portal:Button:Cancel' => 'Отменить',
     'Portal:Button:Close' => 'Закрыть',
     'Portal:Button:Add' => 'Добавить',

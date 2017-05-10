@@ -35,6 +35,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Page:GoPortalHome' => 'Domů',
     'Page:GoPreviousPage' => 'Předchozí stránka',
     'Portal:Button:Submit' => 'Odeslat',
+    'Portal:Button:Apply' => 'Update~~',
     'Portal:Button:Cancel' => 'Zrušit',
     'Portal:Button:Close' => 'Zavřít',
     'Portal:Button:Add' => 'Přidat',
