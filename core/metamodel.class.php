@@ -626,7 +626,6 @@ abstract class MetaModel
 	// (see also filters definition)
 	private static $m_aAttribDefs = array(); // array of ("classname" => array of attributes)
 	private static $m_aAttribOrigins = array(); // array of ("classname" => array of ("attcode"=>"sourceclass"))
-	private static $m_aExtKeyFriends = array(); // array of ("classname" => array of ("indirect ext key attcode"=> array of ("relative ext field")))
 	private static $m_aIgnoredAttributes = array(); //array of ("classname" => array of ("attcode"))
 	private static $m_aEnumToMeta = array(); // array of  ("classname" => array of ("attcode" => array of ("metaattcode" => oMetaAttDef))
 
@@ -801,18 +800,6 @@ abstract class MetaModel
 		else
 		{
 			return null;
-		}
-	}
-
-	final static public function GetExtKeyFriends($sClass, $sExtKeyAttCode)
-	{
-		if (array_key_exists($sExtKeyAttCode, self::$m_aExtKeyFriends[$sClass]))
-		{
-			return self::$m_aExtKeyFriends[$sClass][$sExtKeyAttCode];
-		}
-		else
-		{
-			return array();
 		}
 	}
 
@@ -1852,7 +1839,6 @@ abstract class MetaModel
 				self::$m_aAttribDefs[$sClass]['archive_date'] = $oArchiveDate;
 				self::$m_aAttribOrigins[$sClass]['archive_date'] = $sArchiveRoot;
 			}
-			self::$m_aExtKeyFriends[$sClass] = array();
 			foreach (self::$m_aAttribDefs[$sClass] as $sAttCode => $oAttDef)
 			{
 				// Compute the filter codes
@@ -1943,20 +1929,6 @@ abstract class MetaModel
 					// Get the real external key attribute
 					// It will be our reference to determine the other ext fields related to the same ext key
 					$oFinalKeyAttDef = $oAttDef->GetKeyAttDef(EXTKEY_ABSOLUTE);
-
-					self::$m_aExtKeyFriends[$sClass][$sAttCode] = array();
-					foreach (self::GetExternalFields($sClass, $oAttDef->GetKeyAttCode($sAttCode)) as $oExtField)
-					{
-						// skip : those extfields will be processed as external keys
-						if ($oExtField->IsExternalKey(EXTKEY_ABSOLUTE)) continue;
-
-						// Note: I could not compare the objects by the mean of '==='
-						// because they are copied for the inheritance, and the internal references are NOT updated
-						if ($oExtField->GetKeyAttDef(EXTKEY_ABSOLUTE) == $oFinalKeyAttDef)
-						{
-							self::$m_aExtKeyFriends[$sClass][$sAttCode][$oExtField->GetCode()] = $oExtField;
-						}
-					}
 
 					if (self::IsArchivable($sRemoteClass))
 					{
@@ -2056,7 +2028,6 @@ abstract class MetaModel
 
 		self::$m_aAttribDefs[$sClass] = array();
 		self::$m_aAttribOrigins[$sClass] = array();
-		self::$m_aExtKeyFriends[$sClass] = array();
 		self::$m_aFilterDefs[$sClass] = array();
 		self::$m_aFilterOrigins[$sClass] = array();
 	}
@@ -4411,7 +4382,6 @@ abstract class MetaModel
 				self::$m_aClassParams = $result['m_aClassParams'];
 				self::$m_aAttribDefs = $result['m_aAttribDefs'];
 				self::$m_aAttribOrigins = $result['m_aAttribOrigins'];
-				self::$m_aExtKeyFriends = $result['m_aExtKeyFriends'];
 				self::$m_aIgnoredAttributes = $result['m_aIgnoredAttributes'];
 				self::$m_aFilterDefs = $result['m_aFilterDefs'];
 				self::$m_aFilterOrigins = $result['m_aFilterOrigins'];
@@ -4449,7 +4419,6 @@ abstract class MetaModel
 				$aCache['m_aClassParams'] = self::$m_aClassParams; // array of ("classname" => array of class information)
 				$aCache['m_aAttribDefs'] = self::$m_aAttribDefs; // array of ("classname" => array of attributes)
 				$aCache['m_aAttribOrigins'] = self::$m_aAttribOrigins; // array of ("classname" => array of ("attcode"=>"sourceclass"))
-				$aCache['m_aExtKeyFriends'] = self::$m_aExtKeyFriends; // array of ("classname" => array of ("indirect ext key attcode"=> array of ("relative ext field")))
 				$aCache['m_aIgnoredAttributes'] = self::$m_aIgnoredAttributes; //array of ("classname" => array of ("attcode")
 				$aCache['m_aFilterDefs'] = self::$m_aFilterDefs; // array of ("classname" => array filterdef)
 				$aCache['m_aFilterOrigins'] = self::$m_aFilterOrigins; // array of ("classname" => array of ("attcode"=>"sourceclass"))
