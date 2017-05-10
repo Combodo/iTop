@@ -1321,6 +1321,10 @@
 				</form>
 				<form id="ticket-edit">
 					<class>Ticket</class>
+					<properties>
+						<!-- When set to false, submit button is hidden when transitions are available on the object (in edit mode only). Default is false. -->
+						<!--<always_show_submit>false</always_show_submit>-->
+					</properties>
 					<fields></fields>
 					<twig>
 						<div class="row">

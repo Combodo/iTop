@@ -471,14 +471,18 @@ class ObjectController extends AbstractController
 				$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, true, $oApp['scope_validator']->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
 			}
 
-			// Preparing transitions only if we are currently going through one
+			// Preparing buttons
 			$aFormData['buttons'] = array(
 				'transitions' => array(),
                 'actions' => array(),
                 'links' => array(),
+                'submit' => array(
+                    'label' => Dict::S('Portal:Button:Submit'),
+                ),
 			);
 			if ($sMode !== 'apply_stimulus')
 			{
+			    // Add transition buttons
 				$oSetToCheckRights = DBObjectSet::FromObject($oObject);
 				$aStimuli = Metamodel::EnumStimuli($sObjectClass);
 				foreach ($oObject->EnumTransitions() as $sStimulusCode => $aTransitionDef)
@@ -491,7 +495,7 @@ class ObjectController extends AbstractController
 					}
 				}
 
-                // Add plugins buttons
+                // Add plugin buttons
                 foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
                 {
                     foreach($oExtensionInstance->EnumItems(iPopupMenuExtension::PORTAL_OBJDETAILS_ACTIONS, array('portal_id' => $oApp['combodo.portal.instance.id'], 'object' => $oObject)) as $oMenuItem)
@@ -509,7 +513,18 @@ class ObjectController extends AbstractController
                         }
                     }
                 }
+
+                // Hiding submit button or changing its label if necessary
+                if($aFormProperties['properties']['always_show_submit'] === false)
+                {
+                    unset($aFormData['buttons']['submit']);
+                }
+                elseif($sMode === static::ENUM_MODE_EDIT)
+                {
+                    $aFormData['buttons']['submit']['label'] = Dict::S('Portal:Button:Apply');
+                }
 			}
+
 			// Preparing callback urls
 			$aCallbackUrls = $oApp['context_manipulator']->GetCallbackUrls($oApp, $aActionRules, $oObject, $bModal);
 			$aFormData['submit_callback'] = $aCallbackUrls['submit'];

@@ -42,10 +42,12 @@
 						<span class="glyphicon glyphicon-remove"></span>
 						{{ 'Portal:Button:Cancel'|dict_s }}
 					</button>
-					<button class="btn btn-primary form_btn_submit" type="submit" value="submit" title="{{ 'Portal:Button:Submit'|dict_s }}">
-						<span class="glyphicon glyphicon-ok"></span>
-						{{ 'Portal:Button:Submit'|dict_s }}
-					</button>
+					{% if form.buttons.submit is defined %}
+						<button class="btn btn-primary form_btn_submit" type="submit" value="submit" title="{{ form.buttons.submit.label }}">
+							<span class="glyphicon glyphicon-ok"></span>
+							{{ form.buttons.submit.label }}
+						</button>
+					{% endif %}
 				{% else %}
 					{# Modal mode #}
 					{% if tIsModal %}

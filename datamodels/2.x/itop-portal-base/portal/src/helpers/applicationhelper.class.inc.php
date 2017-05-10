@@ -848,7 +848,24 @@ class ApplicationHelper
 				// Parsing form object class
 				if ($oFormNode->GetUniqueElement('class')->GetText() !== null)
 				{
+				    // Parsing class
 					$sFormClass = $oFormNode->GetUniqueElement('class')->GetText();
+
+                    // Parsing properties
+                    $aFormProperties = array(
+                        'always_show_submit' => false,
+                    );
+                    if($oFormNode->GetOptionalElement('properties') !== null)
+                    {
+                        foreach($oFormNode->GetOptionalElement('properties')->childNodes as $oPropertyNode)
+                        {
+                            switch($oPropertyNode->nodeName)
+                            {
+                                case 'always_show_submit':
+                                    $aFormProperties['always_show_submit'] = ($oPropertyNode->GetText('false') === 'true') ? true : false;
+                            }
+                        }
+                    }
 
 					// Parsing availables modes for that form (view, edit, create)
 					if (($oFormNode->GetOptionalElement('modes') !== null) && ($oFormNode->GetOptionalElement('modes')->GetNodes('mode')->length > 0))
@@ -875,6 +892,7 @@ class ApplicationHelper
 					$aFields = array(
 						'id' => $oFormNode->getAttribute('id'),
 						'type' => null,
+                        'properties' => $aFormProperties,
 						'fields' => null,
 						'layout' => null
 					);
@@ -955,7 +973,7 @@ class ApplicationHelper
 							throw new DOMFormatException('There is already a form for the class "' . $sFormClass . '" in "' . $sMode . '"', null, null, $oFormNode);
 						}
 					}
-				}
+                }
 				else
 				{
 					throw new DOMFormatException('Class tag must be defined', null, null, $oFormNode);
