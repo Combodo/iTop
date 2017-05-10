@@ -34,7 +34,7 @@ class BrowseBrick extends PortalBrick
 	const DEFAULT_NAVIGATION_MENU_ICON_CLASS = 'fa fa-map fa-2x';
 	const ENUM_BROWSE_MODE_LIST = 'list';
     const ENUM_BROWSE_MODE_TREE = 'tree';
-    const ENUM_BROWSE_MODE_GRID = 'grid';
+    const ENUM_BROWSE_MODE_MOSAIC = 'mosaic';
 	const ENUM_ACTION_VIEW = 'view';
 	const ENUM_ACTION_EDIT = 'edit';
 	const ENUM_ACTION_DRILLDOWN = 'drilldown';
@@ -52,7 +52,7 @@ class BrowseBrick extends PortalBrick
 	const DEFAULT_ACTION_OPENING_TARGET = self::ENUM_OPENING_TARGET_MODAL;
 	const DEFAULT_COUNT_PER_PAGE_LIST = 20;
 
-    static $aBrowseModes = array(self::ENUM_BROWSE_MODE_LIST, self::ENUM_BROWSE_MODE_TREE, self::ENUM_BROWSE_MODE_GRID);
+    static $aBrowseModes = array(self::ENUM_BROWSE_MODE_LIST, self::ENUM_BROWSE_MODE_TREE, self::ENUM_BROWSE_MODE_MOSAIC);
 
     static $sRouteName = 'p_browse_brick';
 

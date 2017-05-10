@@ -1119,7 +1119,7 @@
 						<availables>
 							<mode id="list"/>
 							<mode id="tree"/>
-							<mode id="grid"/>
+							<mode id="mosaic"/>
 						</availables>
 						<default>list</default>
 					</browse_modes>

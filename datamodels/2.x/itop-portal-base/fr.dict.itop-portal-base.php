@@ -86,7 +86,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:Browse:Name' => 'Navigation dans les éléments',
 	'Brick:Portal:Browse:Mode:List' => 'Liste',
     'Brick:Portal:Browse:Mode:Tree' => 'Hiérarchie',
-    'Brick:Portal:Browse:Mode:Grid' => 'Tuiles',
+    'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaïque',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Parcourir',
 	'Brick:Portal:Browse:Action:View' => 'Détails',
 	'Brick:Portal:Browse:Action:Edit' => 'Modifier',

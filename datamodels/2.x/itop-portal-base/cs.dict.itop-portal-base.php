@@ -90,7 +90,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Brick:Portal:Browse:Name' => 'Procházet položky',
     'Brick:Portal:Browse:Mode:List' => 'Seznam',
     'Brick:Portal:Browse:Mode:Tree' => 'Strom',
-    'Brick:Portal:Browse:Mode:Grid' => 'Tiles~~',
+    'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic~~',
     'Brick:Portal:Browse:Action:Drilldown' => 'Rozpad',
     'Brick:Portal:Browse:Action:View' => 'Podrobnosti',
     'Brick:Portal:Browse:Action:Edit' => 'Upravit',

@@ -86,7 +86,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Browse:Name' => 'Buscar en todos los elementos',
 	'Brick:Portal:Browse:Mode:List' => 'Lista',
 	'Brick:Portal:Browse:Mode:Tree' => 'Árbol',
-    'Brick:Portal:Browse:Mode:Grid' => 'Tiles~~',
+    'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic~~',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Desglose',
 	'Brick:Portal:Browse:Action:View' => 'Detalles',
 	'Brick:Portal:Browse:Action:Edit' => 'Editar',

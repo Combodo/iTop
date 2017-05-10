@@ -80,7 +80,7 @@ class BrowseBrickController extends BrickController
 		// Building DBobjectSearch
 		$oQuery = null;
 		// ... In this case only we have to build a specific query for the current level only
-		if (in_array($sBrowseMode, array(BrowseBrick::ENUM_BROWSE_MODE_TREE, BrowseBrick::ENUM_BROWSE_MODE_GRID)) && ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_LAZY))
+		if (in_array($sBrowseMode, array(BrowseBrick::ENUM_BROWSE_MODE_TREE, BrowseBrick::ENUM_BROWSE_MODE_MOSAIC)) && ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_LAZY))
 		{
 			// Will be handled later in the pagination part
 		}
@@ -233,7 +233,7 @@ class BrowseBrickController extends BrickController
 
 					break;
 				case BrowseBrick::ENUM_BROWSE_MODE_TREE:
-                case BrowseBrick::ENUM_BROWSE_MODE_GRID:
+                case BrowseBrick::ENUM_BROWSE_MODE_MOSAIC:
 					// Retrieving parameters
 					$sLevelAlias = $oRequest->get('sLevelAlias');
 					$sNodeId = $oRequest->get('sNodeId');
@@ -333,7 +333,7 @@ class BrowseBrickController extends BrickController
 			switch ($sBrowseMode)
 			{
 				case BrowseBrick::ENUM_BROWSE_MODE_TREE:
-                case BrowseBrick::ENUM_BROWSE_MODE_GRID:
+                case BrowseBrick::ENUM_BROWSE_MODE_MOSAIC:
 					static::AddToTreeItems($aItems, $aCurrentRow, $aLevelsProperties);
 					break;
 

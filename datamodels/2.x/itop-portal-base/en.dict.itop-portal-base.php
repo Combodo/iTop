@@ -86,7 +86,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:Browse:Name' => 'Browse throught items',
 	'Brick:Portal:Browse:Mode:List' => 'List',
 	'Brick:Portal:Browse:Mode:Tree' => 'Tree',
-    'Brick:Portal:Browse:Mode:Grid' => 'Tiles',
+    'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Drilldown',
 	'Brick:Portal:Browse:Action:View' => 'Details',
 	'Brick:Portal:Browse:Action:Edit' => 'Edit',
