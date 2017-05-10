@@ -108,9 +108,9 @@
 							// - Secondary actions
 							if(levelActionsKeys.length > 1)
 							{
-								// Retrieving secondary action
+								// Retrieving secondary action (Now we also display primary action)
 								var actionsButtons = {};
-								for(j = 1; j < levelActionsKeys.length; j++)
+								for(j = 0; j < levelActionsKeys.length; j++)
 								{
 									actionsButtons[levelActionsKeys[j]] = levelActions[levelActionsKeys[j]];
 								}
