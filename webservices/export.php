@@ -162,13 +162,9 @@ if (!empty($sExpression))
 			{
 				$aAliasToFields[$sClassAlias][] = $oAttDef->GetParentAttCode();
 			}
-			else if($oAttDef instanceof AttributeFriendlyname)
+			else if($oAttDef instanceof AttributeExternalField && $oAttDef->IsFriendlyName())
 			{
-				$sKeyAttCode = $oAttDef->GetKeyAttCode();
-				if ($sKeyAttCode != 'id')
-				{
-					$aAliasToFields[$sClassAlias][] = $sKeyAttCode;
-				}
+				$aAliasToFields[$sClassAlias][] = $sKeyAttCode;
 			}
 		}
 

@@ -1381,15 +1381,12 @@ EOF
 							$rawValue = $oObj->Get($sAttCodeEx);
 							// Due to custom formatting rules, empty friendlynames may be rendered as non-empty strings
 							// let's fix this and make sure we render an empty string if the key == 0
-							if ($oAttDef instanceof AttributeFriendlyName)
+							if ($oAttDef instanceof AttributeExternalField && $oAttDef->IsFriendlyName())
 							{
 								$sKeyAttCode = $oAttDef->GetKeyAttCode();
-								if ($sKeyAttCode != 'id')
+								if ($oObj->Get($sKeyAttCode) == 0)
 								{
-									if ($oObj->Get($sKeyAttCode) == 0)
-									{
-										$rawValue = '';
-									}
+									$rawValue = '';
 								}
 							}
 							if ($bLocalize)

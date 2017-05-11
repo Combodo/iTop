@@ -239,7 +239,7 @@ abstract class AttributeDefinition
 	 */
 	static public function IsBasedOnDBColumns() {return false;}
 	/**
-	 * Returns true if the attribute value is built after other attributes by the mean of an expression
+	 * Returns true if the attribute value is built after other attributes by the mean of an expression (obtained via GetOQLExpression)
 	 * @return bool
 	 */
 	static public function IsBasedOnOQLExpression() {return false;}
@@ -926,9 +926,12 @@ class AttributeLinkedSet extends AttributeDefinition
 						}
 					}
 					if ($sAttCode == $this->GetExtKeyToMe()) continue;
-					if ($oAttDef->IsExternalField() && ($oAttDef->GetKeyAttCode() == $this->GetExtKeyToMe())) continue;
-					if (($oAttDef instanceof AttributeFriendlyName) && ($oAttDef->GetKeyAttCode() == $this->GetExtKeyToMe())) continue;
-					if (($oAttDef instanceof AttributeFriendlyName) && ($oAttDef->GetKeyAttCode() == 'id')) continue;
+					if ($oAttDef->IsExternalField())
+					{
+						if ($oAttDef->GetKeyAttCode() == $this->GetExtKeyToMe()) continue;
+						if ($oAttDef->IsFriendlyName()) continue;
+					}
+					if ($oAttDef instanceof AttributeFriendlyName) continue;
 					if (!$oAttDef->IsScalar()) continue;
 					$sAttValue = $oObj->GetAsXML($sAttCode, $bLocalize);
 					$sRes .= "<$sAttCode>$sAttValue</$sAttCode>\n";
@@ -4826,11 +4829,20 @@ class AttributeExternalField extends AttributeDefinition
 
 	public function GetLabel($sDefault = null)
 	{
-		$sLabel = parent::GetLabel('');
-		if (strlen($sLabel) == 0)
+		if ($this->IsFriendlyName())
 		{
-			$oRemoteAtt = $this->GetExtAttDef();
-			$sLabel = $oRemoteAtt->GetLabel($this->m_sCode);
+			$sKeyAttCode = $this->Get("extkey_attcode");
+			$oExtKeyAttDef = MetaModel::GetAttributeDef($this->GetHostClass(), $sKeyAttCode);
+			$sLabel = $oExtKeyAttDef->GetLabel($this->m_sCode);
+		}
+		else
+		{
+			$sLabel = parent::GetLabel('');
+			if (strlen($sLabel) == 0)
+			{
+				$oRemoteAtt = $this->GetExtAttDef();
+				$sLabel = $oRemoteAtt->GetLabel($this->m_sCode);
+			}
 		}
 		return $sLabel;
 	}
@@ -4870,6 +4882,27 @@ class AttributeExternalField extends AttributeDefinition
 		default:
 			throw new CoreException("Unexpected value for argument iType: '$iType'");
 		}
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function IsFriendlyName()
+	{
+		$oRemoteAtt = $this->GetExtAttDef();
+		if ($oRemoteAtt instanceof AttributeExternalField)
+		{
+			$bRet = $oRemoteAtt->IsFriendlyName();
+		}
+		elseif ($oRemoteAtt instanceof  AttributeFriendlyName)
+		{
+			$bRet = true;
+		}
+		else
+		{
+			$bRet = false;
+		}
+		return $bRet;
 	}
 
 	public function GetTargetClass($iType = EXTKEY_RELATIVE)
@@ -6700,12 +6733,11 @@ class AttributePropertySet extends AttributeTable
  */
 class AttributeFriendlyName extends AttributeDefinition
 {
-	public function __construct($sCode, $sExtKeyAttCode)
+	public function __construct($sCode)
 	{
 		$this->m_sCode = $sCode;
 		$aParams = array();
 		$aParams["default_value"] = '';
-		$aParams["extkey_attcode"] = $sExtKeyAttCode;
 		parent::__construct($sCode, $aParams);
 
 		$this->m_sValue = $this->Get("default_value");
@@ -6732,84 +6764,15 @@ class AttributeFriendlyName extends AttributeDefinition
 	static public function IsBasedOnOQLExpression() {return true;}
 	public function GetOQLExpression()
 	{
-		return static::GetExtendedNameExpression($this->GetHostClass());
+		return MetaModel::GetNameExpression($this->GetHostClass());
 	}
-	/**
-	 *	Get the friendly name for the class and its subclasses (if finalclass = 'subclass' ...)
-	 *	Simplifies the final expression by grouping classes having the same name expression
-	 *	Used when querying a parent class
-	 */
-	static protected function GetExtendedNameExpression($sClass)
-	{
-		// 1st step - get all of the required expressions (instantiable classes)
-		//            and group them using their OQL representation
-		//
-		$aFNExpressions = array(); // signature => array('expression' => oExp, 'classes' => array of classes)
-		foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sSubClass)
-		{
-			if (($sSubClass != $sClass) && MetaModel::IsAbstract($sSubClass)) continue;
-
-			$oSubClassName = MetaModel::GetNameExpression($sSubClass);
-			$sSignature = $oSubClassName->Render();
-			if (!array_key_exists($sSignature, $aFNExpressions))
-			{
-				$aFNExpressions[$sSignature] = array(
-					'expression' => $oSubClassName,
-					'classes' => array(),
-				);
-			}
-			$aFNExpressions[$sSignature]['classes'][] = $sSubClass;
-		}
-
-		// 2nd step - build the final name expression depending on the finalclass
-		//
-		if (count($aFNExpressions) == 1)
-		{
-			$aExpData = reset($aFNExpressions);
-			$oNameExpression = $aExpData['expression'];
-		}
-		else
-		{
-			$oNameExpression = null;
-			foreach ($aFNExpressions as $sSignature => $aExpData)
-			{
-				$oClassListExpr = ListExpression::FromScalars($aExpData['classes']);
-				$oClassExpr = new FieldExpression('finalclass', $sClass);
-				$oClassInList = new BinaryExpression($oClassExpr, 'IN', $oClassListExpr);
-
-				if (is_null($oNameExpression))
-				{
-					$oNameExpression = $aExpData['expression'];
-				}
-				else
-				{
-					$oNameExpression = new FunctionExpression('IF', array($oClassInList, $aExpData['expression'], $oNameExpression));
-				}
-			}
-		}
-		return $oNameExpression;
-	}
-
-
-	public function GetKeyAttCode() {return $this->Get("extkey_attcode");} 
-
-	public function GetExtAttCode() {return 'friendlyname';} 
 
 	public function GetLabel($sDefault = null)
 	{
 		$sLabel = parent::GetLabel('');
 		if (strlen($sLabel) == 0)
 		{
-			$sKeyAttCode = $this->Get("extkey_attcode");
-			if ($sKeyAttCode == 'id')
-			{
-				return Dict::S('Core:FriendlyName-Label');
-			}
-			else
-			{
-				$oExtKeyAttDef = MetaModel::GetAttributeDef($this->GetHostClass(), $sKeyAttCode);
-				$sLabel = $oExtKeyAttDef->GetLabel($this->m_sCode);
-			}
+			$sLabel = Dict::S('Core:FriendlyName-Label');
 		}
 		return $sLabel;
 	}
@@ -6818,16 +6781,7 @@ class AttributeFriendlyName extends AttributeDefinition
 		$sLabel = parent::GetDescription('');
 		if (strlen($sLabel) == 0)
 		{
-			$sKeyAttCode = $this->Get("extkey_attcode");
-			if ($sKeyAttCode == 'id')
-			{
-				return Dict::S('Core:FriendlyName-Description');
-			}
-			else
-			{
-				$oExtKeyAttDef = MetaModel::GetAttributeDef($this->GetHostClass(), $sKeyAttCode);
-				$sLabel = $oExtKeyAttDef->GetDescription('');
-			}
+			$sLabel = Dict::S('Core:FriendlyName-Description');
 		}
 		return $sLabel;
 	} 
@@ -7712,3 +7666,58 @@ class AttributeArchiveDate extends AttributeDate
 		return parent::GetDescription($sDefault);
 	}
 }
+
+class AttributeObsolescenceFlag extends AttributeBoolean
+{
+	public function __construct($sCode)
+	{
+		parent::__construct($sCode, array("allowed_values"=>null, "sql"=>$sCode, "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array()));
+	}
+	public function IsWritable()
+	{
+		return false;
+	}
+	public function IsMagic()
+	{
+		return true;
+	}
+
+	static public function IsBasedOnDBColumns() {return false;}
+	/**
+	 * Returns true if the attribute value is built after other attributes by the mean of an expression (obtained via GetOQLExpression)
+	 * @return bool
+	 */
+	static public function IsBasedOnOQLExpression() {return true;}
+	public function GetOQLExpression()
+	{
+		return MetaModel::GetObsolescenceExpression($this->GetHostClass());
+	}
+
+	public function GetSQLExpressions($sPrefix = '')
+	{
+		return array();
+		if ($sPrefix == '')
+		{
+			$sPrefix = $this->GetCode(); // Warning AttributeComputedFieldVoid does not have any sql property
+		}
+		return array('' => $sPrefix);
+	}
+	public function GetSQLColumns($bFullSpec = false) {return array();} // returns column/spec pairs (1 in most of the cases), for STRUCTURING (DB creation)
+	public function GetSQLValues($value) {return array();} // returns column/value pairs (1 in most of the cases), for WRITING (Insert, Update)
+
+	public function GetEditClass() {return "";}
+
+	public function GetValuesDef() {return null;}
+	public function GetPrerequisiteAttributes($sClass = null) {return $this->GetOptional("depends_on", array());}
+
+	public function IsDirectField() {return true;}
+	static public function IsScalar() {return true;}
+	public function GetSQLExpr()
+	{
+		return null;
+	}
+
+	public function GetDefaultValue(DBObject $oHostObject = null) {return $this->MakeRealValue("", $oHostObject);}
+	public function IsNullAllowed() {return false;}
+}
+

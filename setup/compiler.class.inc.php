@@ -994,6 +994,14 @@ EOF
 			$bEnabled = $this->GetPropBoolean($oArchive, 'enabled', false);
 			$aClassParams['archive'] = $bEnabled;
 		}
+		if ($oObsolescence = $oProperties->GetOptionalElement('obsolescence'))
+		{
+			$sCondition = trim($this->GetPropString($oObsolescence, 'condition', ''));
+			if ($sCondition != "''")
+			{
+				$aClassParams['obsolescence_expression'] = $sCondition;
+			}
+		}
 
 		// Finalize class params declaration
 		//
@@ -1686,7 +1694,6 @@ EOF
 			$sMethods .= "\t\t}\n";
 			$sMethods .= "\t}\n";
 		}
-
 
 		// Let's make the whole class declaration
 		//

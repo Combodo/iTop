@@ -45,6 +45,13 @@ abstract class Expression
 	// recursive rendering (aArgs used as input by default, or used as output if bRetrofitParams set to True
 	abstract public function Render(&$aArgs = null, $bRetrofitParams = false);
 
+	/**
+	 * Recursively browse the expression tree
+	 * @param Closure $callback
+	 * @return mixed
+	 */
+	abstract public function Browse(Closure $callback);
+
 	abstract public function ApplyParameters($aArgs);
 	
 	// recursively builds an array of class => fieldname
@@ -76,6 +83,10 @@ abstract class Expression
 		return self::FromOQL(base64_decode($sValue));
 	}
 
+	/**
+	 * @param $sConditionExpr
+	 * @return Expression
+	 */
 	static public function FromOQL($sConditionExpr)
 	{
 		$oOql = new OqlInterpreter($sConditionExpr);
@@ -137,6 +148,11 @@ class SQLExpression extends Expression
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
 		return $this->m_sSQL;
+	}
+
+	public function Browse(Closure $callback)
+	{
+		$callback($this);
 	}
 
 	public function ApplyParameters($aArgs)
@@ -245,7 +261,14 @@ class BinaryExpression extends Expression
 		$sRight = $this->GetRightExpr()->Render($aArgs, $bRetrofitParams);
 		return "($sLeft $sOperator $sRight)";
 	}
-	
+
+	public function Browse(Closure $callback)
+	{
+		$callback($this);
+		$this->m_oLeftExpr->Browse($callback);
+		$this->m_oRightExpr->Browse($callback);
+	}
+
 	public function ApplyParameters($aArgs)
 	{
 		if ($this->m_oLeftExpr instanceof VariableExpression)
@@ -358,12 +381,17 @@ class UnaryExpression extends Expression
 	public function GetValue()
 	{
 		return $this->m_value;
-	} 
+	}
 
 	// recursive rendering
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
 		return CMDBSource::Quote($this->m_value);
+	}
+
+	public function Browse(Closure $callback)
+	{
+		$callback($this);
 	}
 
 	public function ApplyParameters($aArgs)
@@ -483,6 +511,12 @@ class FieldExpression extends UnaryExpression
 
 	public function GetParent() {return $this->m_sParent;}
 	public function GetName() {return $this->m_sName;}
+
+	public function SetParent($sParent)
+	{
+		$this->m_sParent = $sParent;
+		$this->m_value = $sParent.'.'.$this->m_sName;
+	}
 
 	// recursive rendering
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
@@ -680,7 +714,7 @@ class VariableExpression extends UnaryExpression
 			throw new MissingQueryArgument('Missing query argument', array('expecting'=>$this->m_sName, 'available'=>array_keys($aArgs)));
 		}
 	}
-	
+
 	public function RenameParam($sOldName, $sNewName)
 	{
 		if ($this->m_sName == $sOldName)
@@ -766,6 +800,15 @@ class ListExpression extends Expression
 			$aRes[] = $oExpr->Render($aArgs, $bRetrofitParams);
 		}
 		return '('.implode(', ', $aRes).')';
+	}
+
+	public function Browse(Closure $callback)
+	{
+		$callback($this);
+		foreach ($this->m_aExpressions as $oExpr)
+		{
+			$oExpr->Browse($callback);
+		}
 	}
 
 	public function ApplyParameters($aArgs)
@@ -886,6 +929,15 @@ class FunctionExpression extends Expression
 			$aRes[] = $oExpr->Render($aArgs, $bRetrofitParams);
 		}
 		return $this->m_sVerb.'('.implode(', ', $aRes).')';
+	}
+
+	public function Browse(Closure $callback)
+	{
+		$callback($this);
+		foreach ($this->m_aArgs as $iPos => $oExpr)
+		{
+			$oExpr->Browse($callback);
+		}
 	}
 
 	public function ApplyParameters($aArgs)
@@ -1071,6 +1123,12 @@ class IntervalExpression extends Expression
 		return 'INTERVAL '.$this->m_oValue->Render($aArgs, $bRetrofitParams).' '.$this->m_sUnit;
 	}
 
+	public function Browse(Closure $callback)
+	{
+		$callback($this);
+		$this->m_oValue->Browse($callback);
+	}
+
 	public function ApplyParameters($aArgs)
 	{
 		if ($this->m_oValue instanceof VariableExpression)
@@ -1149,6 +1207,15 @@ class CharConcatExpression extends Expression
 			$aRes[] = "COALESCE($sCol, '')";
 		}
 		return "CAST(CONCAT(".implode(', ', $aRes).") AS CHAR)";
+	}
+
+	public function Browse(Closure $callback)
+	{
+		$callback($this);
+		foreach ($this->m_aExpressions as $oExpr)
+		{
+			$oExpr->Browse($callback);
+		}
 	}
 
 	public function ApplyParameters($aArgs)
@@ -1253,6 +1320,15 @@ class CharConcatWSExpression extends CharConcatExpression
 		}
 		$sSep = CMDBSource::Quote($this->m_separator);
 		return "CAST(CONCAT_WS($sSep, ".implode(', ', $aRes).") AS CHAR)";
+	}
+
+	public function Browse(Closure $callback)
+	{
+		$callback($this);
+		foreach ($this->m_aExpressions as $oExpr)
+		{
+			$oExpr->Browse($callback);
+		}
 	}
 
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)

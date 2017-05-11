@@ -324,6 +324,18 @@ abstract class MetaModel
 		self::_check_subclass($sClass);
 		return self::$m_aClassParams[$sClass]["archive"];
 	}
+	final static public function IsObsoletable($sClass)
+	{
+		self::_check_subclass($sClass);
+		return (!is_null(self::$m_aClassParams[$sClass]['obsolescence_expression']));
+	}
+	final static public function GetObsolescenceExpression($sClass)
+	{
+		self::_check_subclass($sClass);
+		$sOql = self::$m_aClassParams[$sClass]['obsolescence_expression'];
+		$oRet = Expression::FromOQL($sOql);
+		return $oRet;
+	}
 	final static public function GetNameSpec($sClass)
 	{
 		self::_check_subclass($sClass);
@@ -379,20 +391,10 @@ abstract class MetaModel
 				//
 				$iReplacement = (int)$sPiece - 1;
 
-		      if (isset($aAttributes[$iReplacement]))
-		      {
-		      	$sAttCode = $aAttributes[$iReplacement];
-					$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
-					if ($oAttDef->IsExternalField() || ($oAttDef instanceof AttributeFriendlyName))
-					{
-						$sKeyAttCode = $oAttDef->GetKeyAttCode();
-						$sClassOfAttribute = self::GetAttributeOrigin($sClass, $sKeyAttCode);
-					}
-					else
-					{
-			      	$sClassOfAttribute = self::GetAttributeOrigin($sClass, $sAttCode);
-			      }
-					$aExpressions[] = new FieldExpression($sAttCode, $sClassOfAttribute);
+				if (isset($aAttributes[$iReplacement]))
+				{
+					$sAttCode = $aAttributes[$iReplacement];
+					$aExpressions[] = new FieldExpression($sAttCode);
 				}
 			}
 			else
@@ -1758,6 +1760,31 @@ abstract class MetaModel
 							self::$m_aClassParams[$sPHPClass]['archive_root_class'] = $bArchiveRoot ? $sPHPClass : self::$m_aClassParams[$sParent]['archive_root_class'];
 						}
 
+						// Inherit obsolescence expression
+						$sObsolescence = null;
+						if (isset(self::$m_aClassParams[$sPHPClass]['obsolescence_expression']))
+						{
+							// Defined or overloaded
+							$sObsolescence = self::$m_aClassParams[$sPHPClass]['obsolescence_expression'];
+						}
+						elseif (@self::$m_aClassParams[$sParent]['obsolescence_expression'])
+						{
+							// Inherited
+							$sObsolescence = self::$m_aClassParams[$sParent]['obsolescence_expression'];
+						}
+						self::$m_aClassParams[$sPHPClass]['obsolescence_expression'] = $sObsolescence;
+
+						if (@self::$m_aClassParams[$sParent]['obsolescence_expression'])
+						{
+							// Inherited or overloaded
+							self::$m_aClassParams[$sPHPClass]['obsolescence_root_class'] = self::$m_aClassParams[$sParent]['obsolescence_root_class'];
+						}
+						elseif ($sObsolescence)
+						{
+							// Defined
+							self::$m_aClassParams[$sPHPClass]['obsolescence_root_class'] = $sPHPClass;
+						}
+
 						foreach (MetaModel::EnumPlugins('iOnClassInitialization') as $sPluginClass => $oClassInit)
 						{
 							$oClassInit->OnAfterClassInitialization($sPHPClass);
@@ -1814,7 +1841,7 @@ abstract class MetaModel
 		{
 			// Create the friendly name attribute
 			$sFriendlyNameAttCode = 'friendlyname'; 
-			$oFriendlyName = new AttributeFriendlyName($sFriendlyNameAttCode, 'id');
+			$oFriendlyName = new AttributeFriendlyName($sFriendlyNameAttCode);
 			self::AddMagicAttribute($oFriendlyName, $sClass);
 
 			if (self::$m_aClassParams[$sClass]["archive_root"])
@@ -1831,13 +1858,32 @@ abstract class MetaModel
 				$sArchiveRoot = self::$m_aClassParams[$sClass]['archive_root_class'];
 				// Inherit archive attributes
 				$oArchiveFlag = clone self::$m_aAttribDefs[$sArchiveRoot]['archive_flag'];
-				$oArchiveFlag->SetHostClass($sArchiveRoot);
+				$oArchiveFlag->SetHostClass($sClass);
 				self::$m_aAttribDefs[$sClass]['archive_flag'] = $oArchiveFlag;
 				self::$m_aAttribOrigins[$sClass]['archive_flag'] = $sArchiveRoot;
 				$oArchiveDate = clone self::$m_aAttribDefs[$sArchiveRoot]['archive_date'];
-				$oArchiveDate->SetHostClass($sArchiveRoot);
+				$oArchiveDate->SetHostClass($sClass);
 				self::$m_aAttribDefs[$sClass]['archive_date'] = $oArchiveDate;
 				self::$m_aAttribOrigins[$sClass]['archive_date'] = $sArchiveRoot;
+			}
+			if (!is_null(self::$m_aClassParams[$sClass]['obsolescence_expression']))
+			{
+				$oObsolescenceFlag = new AttributeObsolescenceFlag('obsolescence_flag');
+				self::AddMagicAttribute($oObsolescenceFlag, $sClass);
+
+				$sObsolescenceRoot = self::$m_aClassParams[$sClass]['obsolescence_root_class'];
+				if ($sClass == $sObsolescenceRoot)
+				{
+					$oObsolescenceDate = new AttributeDate('obsolescence_date', array('magic' => true, "allowed_values" => null, "sql" => 'obsolescence_date', "default_value" => '', "is_null_allowed" => true, "depends_on" => array()));
+					self::AddMagicAttribute($oObsolescenceDate, $sClass);
+				}
+				else
+				{
+					$oObsolescenceDate = clone self::$m_aAttribDefs[$sObsolescenceRoot]['archive_date'];
+					$oObsolescenceDate->SetHostClass($sClass);
+					self::$m_aAttribDefs[$sClass]['obsolescence_date'] = $oObsolescenceDate;
+					self::$m_aAttribOrigins[$sClass]['obsolescence_date'] = $sObsolescenceRoot;
+				}
 			}
 			foreach (self::$m_aAttribDefs[$sClass] as $sAttCode => $oAttDef)
 			{
@@ -1882,8 +1928,8 @@ abstract class MetaModel
 					else
 					{
 						// Create the friendly name attribute
-						$sFriendlyNameAttCode = $sAttCode.'_friendlyname'; 
-						$oFriendlyName = new AttributeFriendlyName($sFriendlyNameAttCode, $sAttCode);
+						$sFriendlyNameAttCode = $sAttCode.'_friendlyname';
+						$oFriendlyName = new AttributeExternalField($sFriendlyNameAttCode, array('magic' => true, 'allowed_values'=>null, 'extkey_attcode'=>$sAttCode, "target_attcode"=>'friendlyname', 'depends_on'=>array()));
 						self::AddMagicAttribute($oFriendlyName, $sClass, self::$m_aAttribOrigins[$sClass][$sAttCode]);
 
 						if (self::HasChildrenClasses($sRemoteClass))
@@ -1935,6 +1981,12 @@ abstract class MetaModel
 						$sArchiveRemote = $sAttCode.'_archive_flag';
 						$oArchiveRemote = new AttributeExternalField($sArchiveRemote, array("allowed_values"=>null, "extkey_attcode"=>$sAttCode, "target_attcode"=>'archive_flag', "depends_on"=>array()));
 						self::AddMagicAttribute($oArchiveRemote, $sClass, self::$m_aAttribOrigins[$sClass][$sAttCode]);
+					}
+					if (self::IsObsoletable($sRemoteClass))
+					{
+						$sObsoleteRemote = $sAttCode.'_obsolescence_flag';
+						$oObsoleteRemote = new AttributeExternalField($sObsoleteRemote, array("allowed_values"=>null, "extkey_attcode"=>$sAttCode, "target_attcode"=>'archive_flag', "depends_on"=>array()));
+						self::AddMagicAttribute($oObsoleteRemote, $sClass, self::$m_aAttribOrigins[$sClass][$sAttCode]);
 					}
 				}
 				if ($oAttDef instanceof AttributeMetaEnum)
@@ -2484,6 +2536,18 @@ abstract class MetaModel
 		foreach (self::GetClasses() as $sClass)
 		{
 			if (self::IsArchivable($sClass))
+			{
+				$aRes[] = $sClass;
+			}
+		}
+		return $aRes;
+	}
+	public static function EnumObsoletableClasses()
+	{
+		$aRes = array();
+		foreach (self::GetClasses() as $sClass)
+		{
+			if (self::IsObsoletable($sClass))
 			{
 				$aRes[] = $sClass;
 			}
@@ -5157,25 +5221,28 @@ abstract class MetaModel
 		else
 		{
 			$oAttDef = static::GetAttributeDef($sClass, $sField);
-			if ($oAttDef instanceof AttributeFriendlyName)
+			if ($oAttDef->IsExternalField())
 			{
-				$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $oAttDef->GetKeyAttCode());
-				$sRemoteClass = $oKeyAttDef->GetTargetClass();
-				$sFriendlyNameAttCode = static::GetFriendlyNameAttributeCode($sRemoteClass);
-				if (is_null($sFriendlyNameAttCode))
+				if ($oAttDef->IsFriendlyName())
 				{
-					// The friendly name is made of several attributes
-					$sRet = $oAttDef->GetKeyAttCode().'->friendlyname';
+					$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $oAttDef->GetKeyAttCode());
+					$sRemoteClass = $oKeyAttDef->GetTargetClass();
+					$sFriendlyNameAttCode = static::GetFriendlyNameAttributeCode($sRemoteClass);
+					if (is_null($sFriendlyNameAttCode))
+					{
+						// The friendly name is made of several attributes
+						$sRet = $oAttDef->GetKeyAttCode().'->friendlyname';
+					}
+					else
+					{
+						// The friendly name is made of a single attribute
+						$sRet = $oAttDef->GetKeyAttCode().'->'.$sFriendlyNameAttCode;
+					}
 				}
 				else
 				{
-					// The friendly name is made of a single attribute
-					$sRet = $oAttDef->GetKeyAttCode().'->'.$sFriendlyNameAttCode;
+					$sRet = $oAttDef->GetKeyAttCode().'->'.$oAttDef->GetExtAttCode();
 				}
-			}
-			elseif ($oAttDef->IsExternalField())
-			{
-				$sRet = $oAttDef->GetKeyAttCode().'->'.$oAttDef->GetExtAttCode();
 			}
 		}
 		return $sRet;

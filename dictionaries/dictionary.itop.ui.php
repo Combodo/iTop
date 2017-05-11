@@ -775,6 +775,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Tag:Archived+' => 'Can be accessed only in archive mode',
 	'Tag:Synchronized' => 'Synchronized',
 	'ObjectRef:Archived' => 'Archived',
+	'ObjectRef:Obsolete' => 'Obsolete',
 	'UI:SearchResultsPageTitle' => 'iTop - Search Results',
 	'UI:SearchResultsTitle' => 'Search Results',
 	'UI:SearchResultsTitle+' => 'Full-text search results',

@@ -410,7 +410,7 @@ abstract class DBObject implements iDisplay
 
 				foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
 				{
-					if (($oDef->IsExternalField() || ($oDef instanceof AttributeFriendlyName)) && ($oDef->GetKeyAttCode() == $sAttCode))
+					if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sAttCode))
 					{
 						$this->m_aCurrValues[$sCode] = $value->Get($oDef->GetExtAttCode());
 						$this->m_aLoadedAtt[$sCode] = true;
@@ -423,7 +423,7 @@ abstract class DBObject implements iDisplay
 				// Invalidate the corresponding fields so that they get reloaded in case they are needed (See Get())
 				foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
 				{
-					if (($oDef->IsExternalField() || ($oDef instanceof AttributeFriendlyName)) && ($oDef->GetKeyAttCode() == $sAttCode))
+					if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sAttCode))
 					{
 						$this->m_aCurrValues[$sCode] = $oDef->GetDefaultValue($this);
 						unset($this->m_aLoadedAtt[$sCode]);
@@ -566,7 +566,7 @@ abstract class DBObject implements iDisplay
 			else
 			{
 				// Not loaded... is it related to an external key?
-				if ($oAttDef->IsExternalField() || ($oAttDef instanceof AttributeFriendlyName))
+				if ($oAttDef->IsExternalField())
 				{
 					// Let's get the object and compute all of the corresponding attributes
 					// (i.e not only the requested attribute)
@@ -588,7 +588,7 @@ abstract class DBObject implements iDisplay
 	
 					foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
 					{
-						if (($oDef->IsExternalField() || ($oDef instanceof AttributeFriendlyName)) && ($oDef->GetKeyAttCode() == $sExtKeyAttCode))
+						if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sExtKeyAttCode))
 						{
 							if ($oRemote)
 							{
@@ -3608,6 +3608,16 @@ abstract class DBObject implements iDisplay
 		$bRet = false;
 		$sFlagAttCode = is_null($sKeyAttCode) ? 'archive_flag' : $sKeyAttCode.'_archive_flag';
 		if (MetaModel::IsValidAttCode(get_class($this), $sFlagAttCode) && $this->Get($sFlagAttCode))
+		{
+			$bRet = true;
+		}
+		return $bRet;
+	}
+
+	public function IsObsolete()
+	{
+		$bRet = false;
+		if (MetaModel::IsValidAttCode(get_class($this), 'obsolescence_flag') && $this->Get('obsolescence_flag'))
 		{
 			$bRet = true;
 		}

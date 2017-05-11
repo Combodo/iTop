@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Wrapper to execute the parser, lexical analyzer and normalization of an OQL query
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -83,6 +83,9 @@ class OqlInterpreter
 		return $res;
 	}
 
+	/**
+	 * @return OqlQuery
+	 */
 	public function ParseQuery()
 	{
 		$oRes = $this->Parse();
@@ -93,6 +96,9 @@ class OqlInterpreter
 		return $oRes;
 	}
 
+	/**
+	 * @return Expression
+	 */
 	public function ParseExpression()
 	{
 		$oRes = $this->Parse();
@@ -103,5 +109,3 @@ class OqlInterpreter
 		return $oRes;
 	}
 }
-
-?>

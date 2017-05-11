@@ -928,8 +928,15 @@ class DataTableSettings implements Serializable
 			}
 			else if ($oAttDef->IsExternalField())
 			{
-				$oExtAttDef = $oAttDef->GetExtAttDef();
-				$sLabel = Dict::Format('UI:ExtField_AsRemoteField', $oAttDef->GetLabel(), $oExtAttDef->GetLabel());
+				if ($oAttDef->IsFriendlyName())
+				{
+					$sLabel = Dict::Format('UI:ExtKey_AsFriendlyName', $oAttDef->GetLabel());
+				}
+				else
+				{
+					$oExtAttDef = $oAttDef->GetExtAttDef();
+					$sLabel = Dict::Format('UI:ExtField_AsRemoteField', $oAttDef->GetLabel(), $oExtAttDef->GetLabel());
+				}
 			}
 			elseif ($oAttDef instanceof AttributeFriendlyName)
 			{
