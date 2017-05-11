@@ -515,7 +515,7 @@ class ObjectController extends AbstractController
                 }
 
                 // Hiding submit button or changing its label if necessary
-                if($aFormProperties['properties']['always_show_submit'] === false && !empty($aFormData['buttons']['transitions']))
+                if(!empty($aFormData['buttons']['transitions']) && isset($aFormProperties['properties']) &&$aFormProperties['properties']['always_show_submit'] === false)
                 {
                     unset($aFormData['buttons']['submit']);
                 }
