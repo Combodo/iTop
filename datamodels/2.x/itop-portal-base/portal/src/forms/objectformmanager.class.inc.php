@@ -373,7 +373,7 @@ class ObjectFormManager extends FormManager
 
 			// Adding fields to the list
 			$oXPath = new \DOMXPath($oHtmlDocument);
-			foreach ($oXPath->query('//div[@class="form_field"][@data-field-id]') as $oFieldNode)
+			foreach ($oXPath->query('//div[contains(@class, "form_field")][@data-field-id]') as $oFieldNode)
 			{
 				$sFieldId = $oFieldNode->getAttribute('data-field-id');
 				$sFieldFlags = $oFieldNode->getAttribute('data-field-flags');
