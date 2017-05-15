@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -47,6 +47,8 @@ class BsLinkedSetFieldRenderer extends FieldRenderer
 	public function Render()
 	{
 	    $oOutput = new RenderingOutput();
+        $oOutput->AddCssClass('form_field_' . $this->oField->GetDisplayMode());
+
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
 		// Vars to build the table
 		$sAttributesToDisplayAsJson = json_encode($this->oField->GetAttributesToDisplay());

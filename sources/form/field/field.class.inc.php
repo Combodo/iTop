@@ -30,14 +30,15 @@ use \Combodo\iTop\Form\Validator\MandatoryValidator;
  */
 abstract class Field
 {
-    const ENUM_DISPLAY_MODE_VERTICAL = 'vertical';      // Label and value side by side
-    const ENUM_DISPLAY_MODE_HORIZONTAL = 'horizontal';  // Label above value
+    const ENUM_DISPLAY_MODE_COSY = 'cosy';          // Label above value
+    const ENUM_DISPLAY_MODE_COMPACT = 'compact';    // Label and value side by side
+    const ENUM_DISPLAY_MODE_DENSE = 'dense';        // Label and value side by side, closely
 
 	const DEFAULT_LABEL = '';
 	const DEFAULT_HIDDEN = false;
 	const DEFAULT_READ_ONLY = false;
 	const DEFAULT_MANDATORY = false;
-    const DEFAULT_DISPLAY_MODE = self::ENUM_DISPLAY_MODE_HORIZONTAL;
+    const DEFAULT_DISPLAY_MODE = self::ENUM_DISPLAY_MODE_COSY;
 	const DEFAULT_VALID = true;
 
 	protected $sId;
@@ -389,16 +390,6 @@ abstract class Field
 		$this->aErrorMessages = array();
 		return $this;
 	}
-
-    /**
-     * Returns if the field should be displayed horizontally (label and value side by side)
-     *
-     * @return bool
-     */
-	public function IsHorizontalDisplayMode()
-    {
-        return $this->sDisplayMode === static::ENUM_DISPLAY_MODE_HORIZONTAL;
-    }
 
 	/**
 	 * Returns if the field is editable. Meaning that it is not editable nor hidden.

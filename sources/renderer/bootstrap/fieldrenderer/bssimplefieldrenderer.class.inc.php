@@ -45,9 +45,10 @@ class BsSimpleFieldRenderer extends FieldRenderer
 	public function Render()
 	{
 		$oOutput = new RenderingOutput();
+		$oOutput->AddCssClass('form_field_' . $this->oField->GetDisplayMode());
+
 		$sFieldClass = get_class($this->oField);
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
-		$sFieldContainerClass = ($this->oField->IsHorizontalDisplayMode() && !$this->oField->GetHidden()) ? 'row' : '';
 		
 		// Rendering field in edition mode
 		if (!$this->oField->GetReadOnly() && !$this->oField->GetHidden())
@@ -61,18 +62,18 @@ class BsSimpleFieldRenderer extends FieldRenderer
                 case 'Combodo\\iTop\\Form\\Field\\SelectField':
                 case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
                     // Opening container
-                    $oOutput->AddHtml('<div class="form-group form_group_small ' . $sFieldMandatoryClass . ' ' . $sFieldContainerClass . '">');
+                    $oOutput->AddHtml('<div class="form-group form_group_small ' . $sFieldMandatoryClass . '">');
 
                     // Label
-                    if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-3">'); }
+                    $oOutput->AddHtml('<div class="form_field_label">');
                     if ($this->oField->GetLabel() !== '')
                     {
                         $oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
                     }
-                    if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
+                    $oOutput->AddHtml('</div>');
 
                     // Value
-                    if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-9">'); }
+                    $oOutput->AddHtml('<div class="form_field_control">');
                     // - Help block
                     $oOutput->AddHtml('<div class="help-block"></div>');
                     // - Value regarding the field type
@@ -112,7 +113,7 @@ EOF
                             $oOutput->AddHtml('</select>');
                             break;
                     }
-                    if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
+                    $oOutput->AddHtml('</div>');
 
                     // Closing container
                     $oOutput->AddHtml('</div>');
@@ -122,11 +123,20 @@ EOF
 				case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
 					$bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
 
+					// Opening container
 					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
+
+					// Label
+                    $oOutput->AddHtml('<div class="form_field_label">');
 					if ($this->oField->GetLabel() !== '')
 					{
 						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 					}
+					$oOutput->AddHtml('</div>');
+
+					// Value
+                    $oOutput->AddHtml('<div class="form_field_control">');
+                    // - Help block
 					$oOutput->AddHtml('<div class="help-block"></div>');
 					// First the edition area
 					$oOutput->AddHtml('<div>');
@@ -137,8 +147,11 @@ EOF
 					{
 						$this->PreparingCaseLogEntries($oOutput);
 					}
-
 					$oOutput->AddHtml('</div>');
+
+					// Closing container
+					$oOutput->AddHtml('</div>');
+
 					// Some additional stuff if we are displaying it with a rich editor
 					if ($bRichEditor)
 					{
@@ -160,13 +173,20 @@ EOF
 				case 'Combodo\\iTop\\Form\\Field\\CheckboxField':
 					$sFieldType = ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\RadioField') ? 'radio' : 'checkbox';
 
+					// Opening container
 					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '" id="' . $this->oField->GetGlobalId() . '">');
 
+					// Label
+					$oOutput->AddHtml('<div class="form_field_label">');
 					if ($this->oField->GetLabel() !== '')
 					{
 						$oOutput->AddHtml('<div><label class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label></div>');
 					}
+					$oOutput->AddHtml('</div>');
 
+					// Value
+                    $oOutput->AddHtml('<div class="form_field_control">');
+                    // - Help block
 					$oOutput->AddHtml('<div class="help-block"></div>');
 					$oOutput->AddHtml('<div class="btn-group" data-toggle="buttons">');
 					$i = 0;
@@ -179,7 +199,9 @@ EOF
 						$i++;
 					}
 					$oOutput->AddHtml('</div>');
+					$oOutput->AddHtml('</div>');
 
+					// Closing container
 					$oOutput->AddHtml('</div>');
 					break;
 
@@ -207,24 +229,24 @@ EOF
                     case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
                     case 'Combodo\\iTop\\Form\\Field\\DurationField':
                         // Opening container
-						$oOutput->AddHtml('<div class="form-group form_group_small ' . $sFieldContainerClass . '">');
+						$oOutput->AddHtml('<div class="form-group form_group_small">');
 
 						// Showing label / value only if read-only but not hidden
 						if (!$this->oField->GetHidden())
 						{
 						    // Label
-                            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-3">'); }
+                            $oOutput->AddHtml('<div class="form_field_label">');
 							if ($this->oField->GetLabel() !== '')
 							{
 								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 							}
-                            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
+                            $oOutput->AddHtml('</div>');
 
                             // Value
                             $bEncodeHtmlEntities = ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\UrlField') ? false : true;
-                            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-9">'); }
+                            $oOutput->AddHtml('<div class="form_field_control">');
 							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), $bEncodeHtmlEntities)->AddHtml('</div>');
-                            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
+                            $oOutput->AddHtml('</div>');
 						}
 
 						// Adding hidden input if not a label
@@ -239,45 +261,74 @@ EOF
 						break;
 
 					case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
-						$oOutput->AddHtml('<div class="form-group">');
+                        // Opening container
+                        $oOutput->AddHtml('<div class="form-group">');
+
 						// Showing label / value only if read-only but not hidden
 						if (!$this->oField->GetHidden())
 						{
-							if ($this->oField->GetLabel() !== '')
+                            // Label
+                            $oOutput->AddHtml('<div class="form_field_label">');
+                            if ($this->oField->GetLabel() !== '')
 							{
 								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 							}
+							$oOutput->AddHtml('</div>');
 
-
-							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), false)->AddHtml('</div>');
+                            // Value
+                            $oOutput->AddHtml('<div class="form_field_control">');
+                            $oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), false)->AddHtml('</div>');
+                            $oOutput->AddHtml('</div>');
 						}
+
 						// Adding hidden input
 						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" />');
+
+						// Closing container
 						$oOutput->AddHtml('</div>');
 						break;
 
 					case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
-						$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
-						if ($this->oField->GetLabel() !== '')
+                        // Opening container
+                        $oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
+
+                        // Label
+                        $oOutput->AddHtml('<div class="form_field_label">');
+                        if ($this->oField->GetLabel() !== '')
 						{
 							$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 						}
-						// Entries if necessary
+                        $oOutput->AddHtml('</div>');
+
+                        // Value
+                        $oOutput->AddHtml('<div class="form_field_control">');
+                        // - Entries if necessary
 						$this->PreparingCaseLogEntries($oOutput);
-						$oOutput->AddHtml('</div>');
+                        $oOutput->AddHtml('</div>');
+
+                        // Closing container
+                        $oOutput->AddHtml('</div>');
 						break;
 
 					case 'Combodo\\iTop\\Form\\Field\\BlobField':
                     case 'Combodo\\iTop\\Form\\Field\\ImageField':
+                        // Opening container
 						$oOutput->AddHtml('<div class="form-group">');
+
 						// Showing label / value only if read-only but not hidden
 						if (!$this->oField->GetHidden())
 						{
+						    // Label
+                            $oOutput->AddHtml('<div class="form_field_label">');
 							if ($this->oField->GetLabel() !== '')
 							{
 								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 							}
-							$oOutput->AddHtml('<div class="form-control-static">');
+							$oOutput->AddHtml('</div>');
+
+							// Value
+                            $oOutput->AddHtml('<div class="form_field_control">');
+                            $oOutput->AddHtml('<div class="form-control-static">');
 							if($sFieldClass === 'Combodo\\iTop\\Form\\Field\\ImageField')
                             {
                                 $oOutput->AddHtml('<img src="' . $this->oField->GetDisplayUrl() . '" />', false);
@@ -287,8 +338,11 @@ EOF
                                 $oOutput->AddHtml($this->oField->GetDisplayValue(), false);
                             }
 							$oOutput->AddHtml('</div>');
+							$oOutput->AddHtml('</div>');
 						}
 						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" />');
+
+						// Closing container
 						$oOutput->AddHtml('</div>');
 						break;
 
@@ -299,23 +353,23 @@ EOF
 						$sFieldValue = (isset($aFieldChoices[$this->oField->GetCurrentValue()])) ? $aFieldChoices[$this->oField->GetCurrentValue()] : Dict::S('UI:UndefinedObject');
 
 						// Opening container
-						$oOutput->AddHtml('<div class="form-group form_group_small ' . $sFieldContainerClass . '">');
+						$oOutput->AddHtml('<div class="form-group form_group_small">');
 
 						// Showing label / value only if read-only but not hidden
 						if (!$this->oField->GetHidden())
 						{
 						    // Label
-                            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-3">'); }
+                            $oOutput->AddHtml('<div class="form_field_label">');
 							if ($this->oField->GetLabel() !== '')
 							{
 								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 							}
-                            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
+                            $oOutput->AddHtml('</div>');
 
                             // Value
-                            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-9">'); }
+                            $oOutput->AddHtml('<div class="form_field_control">');
 							$oOutput->AddHtml('<div class="form-control-static">' . $sFieldValue . '</div>');
-                            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
+                            $oOutput->AddHtml('</div>');
 						}
 
 						// Adding hidden value

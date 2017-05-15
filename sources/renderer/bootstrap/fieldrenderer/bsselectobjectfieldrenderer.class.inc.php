@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -48,9 +48,10 @@ class BsSelectObjectFieldRenderer extends FieldRenderer
 	public function Render()
 	{
 		$oOutput = new RenderingOutput();
+        $oOutput->AddCssClass('form_field_' . $this->oField->GetDisplayMode());
+
 		$sFieldValueClass = $this->oField->GetSearch()->GetClass();
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
-        $sFieldContainerClass = ($this->oField->IsHorizontalDisplayMode() && !$this->oField->GetHidden()) ? 'row' : '';
 		$iFieldControlType = $this->oField->GetControlType();
 
 		// TODO : Remove this when hierarchical search supported
@@ -61,18 +62,18 @@ class BsSelectObjectFieldRenderer extends FieldRenderer
 		{
 			// Rendering field
             // - Opening container
-			$oOutput->AddHtml('<div class="form-group form_group_small ' . $sFieldMandatoryClass . ' ' . $sFieldContainerClass . '">');
+			$oOutput->AddHtml('<div class="form-group form_group_small ' . $sFieldMandatoryClass . '">');
 
 			// Label
-            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-3">'); }
+            $oOutput->AddHtml('<div class="form_field_label">');
 			if ($this->oField->GetLabel() !== '')
 			{
 				$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 			}
-            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
+            $oOutput->AddHtml('</div>');
 
             // Value
-            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-9">'); }
+            $oOutput->AddHtml('<div class="form_field_control">');
 			$oOutput->AddHtml('<div class="help-block"></div>');
 			// - As a select
 			// TODO : This should be changed when we do the radio button display. For now we display everything with select
@@ -299,7 +300,7 @@ EOF
 					);
 				}
 			}
-            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
+            $oOutput->AddHtml('</div>');
 
             // - Closing container
 			$oOutput->AddHtml('</div>');
@@ -320,23 +321,23 @@ EOF
 			}
 
 			// Opening container
-			$oOutput->AddHtml('<div class="form-group form_group_small ' . $sFieldContainerClass . '">');
+			$oOutput->AddHtml('<div class="form-group form_group_small">');
 
 			// Showing label / value only if read-only but not hidden
 			if (!$this->oField->GetHidden())
 			{
 			    // Label
-                if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-3">'); }
+                $oOutput->AddHtml('<div class="form_field_label">');
 				if ($this->oField->GetLabel() !== '')
 				{
 					$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 				}
-                if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
+                $oOutput->AddHtml('</div>');
 
                 // Value
-                if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-9">'); }
+                $oOutput->AddHtml('<div class="form_field_control">');
 				$oOutput->AddHtml('<div class="form-control-static">' . $sFieldValue . '</div>');
-                if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
+                $oOutput->AddHtml('</div>');
 			}
 
 			// Adding hidden value

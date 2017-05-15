@@ -660,8 +660,7 @@ class ObjectFormManager extends FormManager
 			// Setting field display mode
             if(array_key_exists($sAttCode, $aFieldsExtraData) && array_key_exists('display_mode', $aFieldsExtraData[$sAttCode]))
             {
-                $sFieldDisplayMode = ($aFieldsExtraData[$sAttCode]['display_mode'] === ApplicationHelper::FORM_ENUM_DISPLAY_MODE_COSY) ? Field::ENUM_DISPLAY_MODE_VERTICAL : Field::ENUM_DISPLAY_MODE_HORIZONTAL;
-                $oField->SetDisplayMode($sFieldDisplayMode);
+                $oField->SetDisplayMode($aFieldsExtraData[$sAttCode]['display_mode']);
             }
 
             $oForm->AddField($oField);

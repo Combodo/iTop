@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -46,6 +46,7 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 	public function Render()
 	{
 		$oOutput = new RenderingOutput();
+        $oOutput->AddCssClass('form_field_' . $this->oField->GetDisplayMode());
 
 		$sObjectClass = get_class($this->oField->GetObject());
 		$sIsDeleteAllowed = ($this->oField->GetAllowDelete() && !$this->oField->GetReadOnly()) ? 'true' : 'false';
@@ -55,12 +56,18 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 
 		// Starting field container
 		$oOutput->AddHtml('<div class="form-group">');
-		// Field label
-		if ($this->oField->GetLabel() !== '')
+
+		// Label
+        $oOutput->AddHtml('<div class="form_field_label">');
+        if ($this->oField->GetLabel() !== '')
 		{
 			$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 		}
-		// Field feedback
+        $oOutput->AddHtml('</div>');
+
+        // Value
+        $oOutput->AddHtml('<div class="form_field_control">');
+		// - Field feedback
 		$oOutput->AddHtml('<div class="help-block"></div>');
 		// Starting files container
 		$oOutput->AddHtml('<div class="fileupload_field_content">');
@@ -68,6 +75,7 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 		$oOutput->AddHtml('<div class="attachments_container row">');
 		$this->PrepareExistingFiles($oOutput);
 		$oOutput->Addhtml('</div>');
+
 		// Removing upload input if in read only
 		// TODO : Add max upload size when itop attachment has been refactored
 		if (!$this->oField->GetReadOnly())
@@ -75,7 +83,9 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 			$oOutput->AddHtml('<div class="upload_container row">' . Dict::S('Attachments:AddAttachment') . '<input type="file" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" /><span class="loader glyphicon glyphicon-refresh"></span></div>');
 		}
 		// Ending files container
-		$oOutput->AddHtml('</div>');
+        $oOutput->AddHtml('</div>');
+        $oOutput->AddHtml('</div>');
+
 		// Ending field container
 		$oOutput->AddHtml('</div>');
 		
