@@ -258,10 +258,6 @@ footer {
   padding-right: 0px;
   /* To align all actions on the right without indent */
 }
-/* Custom "glyphicons" */
-.glyphicon-ext-hierarchy:before {
-  content: url('../img/icons/hierarchy-white-13px.png');
-}
 /******************/
 /* Modal settings */
 /******************/
@@ -852,6 +848,10 @@ table .group-actions {
   left: 3px;
   color: #ea7d1e;
   font-size: 0.9em;
+}
+/* ExternalKey */
+.selectobject .input-group-addon {
+  cursor: pointer;
 }
 /* InlineImage */
 .inline-image {

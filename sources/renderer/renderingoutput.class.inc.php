@@ -31,6 +31,7 @@ class RenderingOutput
 	protected $aJsFiles;
 	protected $sCssInline;
 	protected $aCssFiles;
+	protected $aCssClasses;
 
 	public function __construct()
 	{
@@ -39,6 +40,7 @@ class RenderingOutput
 		$this->aJsFiles = array();
 		$this->sCssInline = '';
 		$this->aCssFiles = array();
+		$this->aCssClasses = array();
 	}
 
 	/**
@@ -85,6 +87,15 @@ class RenderingOutput
 	{
 		return $this->aCssFiles;
 	}
+
+    /**
+     *
+     * @return array
+     */
+	public function GetCssClasses()
+    {
+        return $this->aCssClasses;
+    }
 
 	/**
 	 *
@@ -147,32 +158,60 @@ class RenderingOutput
 		return $this;
 	}
 
-	/**
-	 *
-	 * @param string $sFile
-	 * @return \Combodo\iTop\Renderer\RenderingOutput
-	 */
-	public function AddCssFile($sFile)
-	{
-		if (!in_array($sFile, $this->aCssFiles))
-		{
-			$this->aCssFiles[] = $sFile;
-		}
-		return $this;
-	}
+    /**
+     *
+     * @param string $sFile
+     * @return \Combodo\iTop\Renderer\RenderingOutput
+     */
+    public function AddCssFile($sFile)
+    {
+        if (!in_array($sFile, $this->aCssFiles))
+        {
+            $this->aCssFiles[] = $sFile;
+        }
+        return $this;
+    }
 
-	/**
-	 *
-	 * @param string $sFile
-	 * @return \Combodo\iTop\Renderer\RenderingOutput
-	 */
-	public function RemoveCssFile($sFile)
-	{
-		if (in_array($sFile, $this->aCssFiles))
-		{
-			unset($this->aCssFiles[$sFile]);
-		}
-		return $this;
-	}
+    /**
+     *
+     * @param string $sFile
+     * @return \Combodo\iTop\Renderer\RenderingOutput
+     */
+    public function RemoveCssFile($sFile)
+    {
+        if (in_array($sFile, $this->aCssFiles))
+        {
+            unset($this->aCssFiles[$sFile]);
+        }
+        return $this;
+    }
+
+    /**
+     *
+     * @param string $sClass
+     * @return \Combodo\iTop\Renderer\RenderingOutput
+     */
+    public function AddCssClass($sClass)
+    {
+        if (!in_array($sClass, $this->aCssClasses))
+        {
+            $this->aCssClasses[] = $sClass;
+        }
+        return $this;
+    }
+
+    /**
+     *
+     * @param string $sClass
+     * @return \Combodo\iTop\Renderer\RenderingOutput
+     */
+    public function RemoveCssClass($sClass)
+    {
+        if (in_array($sClass, $this->aCssClasses))
+        {
+            unset($this->aCssClasses[$sClass]);
+        }
+        return $this;
+    }
 
 }

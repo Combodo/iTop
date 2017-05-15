@@ -279,14 +279,22 @@ $(function()
 					this._loadJsFile(oField.js_files[i]);
 				}
 			}
-			// CSS files
-			if( (oField.css_files !== undefined) && (oField.css_files.length > 0) )
-			{
-				for(var i in oField.css_files)
-				{
-					this._loadCssFile(oField.css_files[i]);
-				}
-			}
+            // CSS files
+            if( (oField.css_files !== undefined) && (oField.css_files.length > 0) )
+            {
+                for(var i in oField.css_files)
+                {
+                    this._loadCssFile(oField.css_files[i]);
+                }
+            }
+            // CSS classes
+            if( (oField.css_classes !== undefined) && (oField.css_classes.length > 0) )
+            {
+                for(var i in oField.css_classes)
+                {
+                    oFieldContainer.addClass(oField.css_classes[i]);
+                }
+            }
 			// JS inline
 			if( (oField.js_inline !== undefined) && (oField.js_inline !== '') )
 			{

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -661,6 +661,7 @@ class ObjectController extends AbstractController
 		$aFormData['renderer'] = $oFormManager->GetRenderer();
 		$aFormData['object_name'] = $oFormManager->GetObject()->GetName();
 		$aFormData['fieldset'] = $aFieldSetData;
+        $aFormData['display_mode'] = (isset($aFormProperties['properties'])) ? $aFormProperties['properties']['display_mode'] : ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE;
 
 		return $aFormData;
 	}

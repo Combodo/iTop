@@ -2,10 +2,11 @@
 {# Object brick create layout #}
 
 {% set sFormId = (form.id is defined and form.id is not null) ? form.id : 'object_form' %}
+{% set sFormClass = (form.display_mode is defined and form.display_mode is not null) ? 'form_' ~ form.display_mode : '' %}
 {% set sFormIdSanitized = sFormId|replace({'-': ''}) %}
 {% set tIsModal = (tIsModal is defined and tIsModal == true) ? true : false %}
 
-<form id="{{ sFormId }}" method="POST" action="{{ form.renderer.GetEndpoint()|raw }}">
+<form id="{{ sFormId }}" class="{{ sFormClass }}" method="POST" action="{{ form.renderer.GetEndpoint()|raw }}">
 	<input type="hidden" name="transaction_id" value="{{ form.transaction_id }}" />
 	<div class="form_alerts">
 		{% block pFormAlerts %}

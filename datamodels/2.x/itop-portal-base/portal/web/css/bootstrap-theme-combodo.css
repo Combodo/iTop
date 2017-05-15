@@ -66,7 +66,7 @@ img {
   height: auto;
 }
 .img-rounded {
-  border-radius: 6px;
+  border-radius: 0px;
 }
 .img-thumbnail {
   padding: 4px;
@@ -375,7 +375,7 @@ kbd {
   font-size: 90%;
   color: #fff;
   background-color: #333;
-  border-radius: 3px;
+  border-radius: 0px;
   -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
@@ -1388,7 +1388,7 @@ input[type="radio"][disabled], input[type="checkbox"][disabled], input[type="rad
   padding: 5px 10px;
   font-size: 12px;
   line-height: 1.5;
-  border-radius: 3px;
+  border-radius: 0px;
 }
 select.input-sm {
   height: 30px;
@@ -1402,7 +1402,7 @@ textarea.input-sm, select[multiple].input-sm {
   padding: 5px 10px;
   font-size: 12px;
   line-height: 1.5;
-  border-radius: 3px;
+  border-radius: 0px;
 }
 .form-group-sm select.form-control {
   height: 30px;
@@ -1423,7 +1423,7 @@ textarea.input-sm, select[multiple].input-sm {
   padding: 14px 16px;
   font-size: 17px;
   line-height: 1.33333;
-  border-radius: 6px;
+  border-radius: 0px;
 }
 select.input-lg {
   height: 53px;
@@ -1437,7 +1437,7 @@ textarea.input-lg, select[multiple].input-lg {
   padding: 14px 16px;
   font-size: 17px;
   line-height: 1.33333;
-  border-radius: 6px;
+  border-radius: 0px;
 }
 .form-group-lg select.form-control {
   height: 53px;
@@ -1906,19 +1906,19 @@ a.btn.disabled, fieldset[disabled] a.btn {
   padding: 14px 16px;
   font-size: 17px;
   line-height: 1.33333;
-  border-radius: 6px;
+  border-radius: 0px;
 }
 .btn-sm, .btn-group-sm > .btn {
   padding: 5px 10px;
   font-size: 12px;
   line-height: 1.5;
-  border-radius: 3px;
+  border-radius: 0px;
 }
 .btn-xs, .btn-group-xs > .btn {
   padding: 1px 5px;
   font-size: 12px;
   line-height: 1.5;
-  border-radius: 3px;
+  border-radius: 0px;
 }
 .btn-block {
   display: block;
@@ -2271,7 +2271,7 @@ tbody.collapse.in {
   padding: 14px 16px;
   font-size: 17px;
   line-height: 1.33333;
-  border-radius: 6px;
+  border-radius: 0px;
 }
 select.input-group-lg > .form-control, select.input-group-lg > .input-group-addon, select.input-group-lg > .input-group-btn > .btn {
   height: 53px;
@@ -2285,7 +2285,7 @@ textarea.input-group-lg > .form-control, textarea.input-group-lg > .input-group-
   padding: 5px 10px;
   font-size: 12px;
   line-height: 1.5;
-  border-radius: 3px;
+  border-radius: 0px;
 }
 select.input-group-sm > .form-control, select.input-group-sm > .input-group-addon, select.input-group-sm > .input-group-btn > .btn {
   height: 30px;
@@ -2313,18 +2313,18 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
   color: #777;
   text-align: center;
   background-color: #ddd;
-  border: 1px solid #ddd;
+  border: 1px solid #c7c7c7;
   border-radius: 0px;
 }
 .input-group-addon.input-sm {
   padding: 5px 10px;
   font-size: 12px;
-  border-radius: 3px;
+  border-radius: 0px;
 }
 .input-group-addon.input-lg {
   padding: 14px 16px;
   font-size: 17px;
-  border-radius: 6px;
+  border-radius: 0px;
 }
 .input-group-addon input[type="radio"], .input-group-addon input[type="checkbox"] {
   margin-top: 0;
@@ -3334,7 +3334,7 @@ a.badge:hover, a.badge:focus {
   border-top-color: #dbdbdb;
 }
 .container .jumbotron, .container-fluid .jumbotron {
-  border-radius: 6px;
+  border-radius: 0px;
 }
 .jumbotron .container {
   max-width: 100%;
@@ -4022,11 +4022,11 @@ a.list-group-item-danger.active, button.list-group-item-danger.active, a.list-gr
 }
 .well-lg {
   padding: 24px;
-  border-radius: 6px;
+  border-radius: 0px;
 }
 .well-sm {
   padding: 9px;
-  border-radius: 3px;
+  border-radius: 0px;
 }
 .close {
   float: right;
@@ -4324,7 +4324,7 @@ button.close {
   background-clip: padding-box;
   border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 6px;
+  border-radius: 0px;
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
@@ -4929,7 +4929,37 @@ label {
   box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.4);
 }
 /* Help blocks in forms */
-.form_fields .form-group > .help-block {
+.form_fields .form-group .help-block {
   margin-top: 0px;
   margin-bottom: 0px;
+}
+/* Overriding Twitter Typeahead */
+.input-group span.twitter-typeahead {
+  height: initial;
+}
+.input-group span.twitter-typeahead:first-child .form-control, .input-group span.twitter-typeahead:last-child .form-control, .input-group span.twitter-typeahead .form-control {
+  border-radius: 0px;
+}
+.input-group span.twitter-typeahead .tt-suggestion.tt-cursor, .input-group span.twitter-typeahead .tt-suggestion:hover, .input-group span.twitter-typeahead .tt-suggestion:focus {
+  color: #fff;
+  background-color: #ea7d1e;
+}
+/* Compact form display */
+.form_compact .form-group.form_group_small {
+  margin-bottom: 10px;
+}
+.form_compact .form-group.form_group_small .control-label {
+  margin-right: 0.5em;
+}
+.form_compact .form-group.form_group_small .form-control-static {
+  display: inline;
+}
+.form_compact .form-group.form_group_small .form-control {
+  height: 28px;
+  padding: 4px 5px;
+  font-size: 12px;
+}
+.form_compact .form-group.form_group_small .input-group-addon {
+  padding: 4px 10px;
+  font-size: 12px;
 }

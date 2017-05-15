@@ -50,6 +50,7 @@ class BsSelectObjectFieldRenderer extends FieldRenderer
 		$oOutput = new RenderingOutput();
 		$sFieldValueClass = $this->oField->GetSearch()->GetClass();
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
+        $sFieldContainerClass = ($this->oField->IsHorizontalDisplayMode() && !$this->oField->GetHidden()) ? 'row' : '';
 		$iFieldControlType = $this->oField->GetControlType();
 
 		// TODO : Remove this when hierarchical search supported
@@ -59,11 +60,19 @@ class BsSelectObjectFieldRenderer extends FieldRenderer
 		if (!$this->oField->GetReadOnly() && !$this->oField->GetHidden())
 		{
 			// Rendering field
-			$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
+            // - Opening container
+			$oOutput->AddHtml('<div class="form-group form_group_small ' . $sFieldMandatoryClass . ' ' . $sFieldContainerClass . '">');
+
+			// Label
+            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-3">'); }
 			if ($this->oField->GetLabel() !== '')
 			{
 				$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 			}
+            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
+
+            // Value
+            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-9">'); }
 			$oOutput->AddHtml('<div class="help-block"></div>');
 			// - As a select
 			// TODO : This should be changed when we do the radio button display. For now we display everything with select
@@ -77,7 +86,7 @@ class BsSelectObjectFieldRenderer extends FieldRenderer
 				// Note : Autocomplete/Search is disabled for template fields as they are not external keys, thus they will just be displayed as regular select.
 				$bRegularSelect = ( ($iSetCount <= $this->oField->GetMaximumComboLength()) || ($this->oField->GetSearchEndpoint() === null) || ($this->oField->GetSearchEndpoint() === '') );
 				unset($oCountSet);
-
+$bRegularSelect=false;
 				// - For regular select
 				if ($bRegularSelect)
 				{
@@ -158,24 +167,18 @@ EOF
 					}
 
 					// HTML for autocomplete part
-					// - Opening row
-					$oOutput->AddHtml('<div class="row">');
-					// - Rendering autocomplete search
-					$oOutput->AddHtml('<div class="col-xs-' . ( $this->oField->GetHierarchical() ? 9 : 10 ) . ' col-sm-' . ( $this->oField->GetHierarchical() ? 8 : 9 ) . ' col-md-' . ( $this->oField->GetHierarchical() ? 8 : 10 ) . ' col-lg-' . ( $this->oField->GetHierarchical() ? 9 : 10 ) . '">');
-					$oOutput->AddHtml('<input type="text" id="' . $sAutocompleteFieldId . '" name="' . $sAutocompleteFieldId . '" value="')->AddHtml($sFieldValue)->AddHtml('" data-target-id="' . $this->oField->GetGlobalId() . ' "class="form-control" />');
-					$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $this->oField->GetCurrentValue() . '" />');
-					$oOutput->AddHtml('</div>');
-					// - Rendering buttons
-					$oOutput->AddHtml('<div class="col-xs-' . ( $this->oField->GetHierarchical() ? 3 : 2 ) . ' col-sm-' . ( $this->oField->GetHierarchical() ? 4 : 3 ) . ' col-md-' . ( $this->oField->GetHierarchical() ? 4 : 2 ) . ' col-lg-' . ( $this->oField->GetHierarchical() ? 3 : 2 ) . ' text-right">');
-					$oOutput->AddHtml('<div class="btn-group" role="group">');
-					//   - Rendering hierarchy button
-					$this->RenderHierarchicalSearch($oOutput);
-					//   - Rendering regular search
-					$this->RenderRegularSearch($oOutput);
-					$oOutput->AddHtml('</div>');
-					$oOutput->AddHtml('</div>');
-					// - Closing row
-					$oOutput->AddHtml('</div>');
+                    // - Opening input group
+                    $oOutput->AddHtml('<div class="input-group selectobject">');
+                    // - Rendering autocomplete search
+                    $oOutput->AddHtml('<input type="text" id="' . $sAutocompleteFieldId . '" name="' . $sAutocompleteFieldId . '" value="')->AddHtml($sFieldValue)->AddHtml('" data-target-id="' . $this->oField->GetGlobalId() . ' "class="form-control" />');
+                    $oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $this->oField->GetCurrentValue() . '" />');
+                    // - Rendering buttons
+                    //   - Rendering hierarchy button
+                    $this->RenderHierarchicalSearch($oOutput);
+                    //   - Rendering regular search
+                    $this->RenderRegularSearch($oOutput);
+                    // - Closing input group
+                    $oOutput->AddHtml('</div>');
 
 					// JS FieldChange trigger (:input are not always at the same depth)
 					// Note : Not used for that field type
@@ -296,6 +299,9 @@ EOF
 					);
 				}
 			}
+            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
+
+            // - Closing container
 			$oOutput->AddHtml('</div>');
 		}
 		// ... and in read-only mode (or hidden)
@@ -313,19 +319,31 @@ EOF
 				$sFieldValue = Dict::S('UI:UndefinedObject');
 			}
 
-			$oOutput->AddHtml('<div class="form-group">');
+			// Opening container
+			$oOutput->AddHtml('<div class="form-group form_group_small ' . $sFieldContainerClass . '">');
+
 			// Showing label / value only if read-only but not hidden
 			if (!$this->oField->GetHidden())
 			{
+			    // Label
+                if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-3">'); }
 				if ($this->oField->GetLabel() !== '')
 				{
 					$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 				}
-				$oOutput->AddHtml('<div class="form-control-static">' . $sFieldValue . '</div>');
-			}
-			$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $this->oField->GetCurrentValue() . '" class="form-control" />');
-			$oOutput->AddHtml('</div>');
+                if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
 
+                // Value
+                if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-9">'); }
+				$oOutput->AddHtml('<div class="form-control-static">' . $sFieldValue . '</div>');
+                if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
+			}
+
+			// Adding hidden value
+			$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $this->oField->GetCurrentValue() . '" class="form-control" />');
+
+			// Closing container
+			$oOutput->AddHtml('</div>');
 
 			// JS FieldChange trigger (:input are not always at the same depth)
 			$oOutput->AddJs(
@@ -362,12 +380,12 @@ EOF
 	 */
 	protected function RenderHierarchicalSearch(RenderingOutput &$oOutput)
 	{
-		if ($this->oField->GetHierarchical())
-		{
+        if ($this->oField->GetHierarchical())
+        {
 			$sHierarchicalButtonId = 's_hi_' . $this->oField->GetGlobalId();
 			$sEndpoint = str_replace('-sMode-', 'hierarchy', $this->oField->GetSearchEndpoint());
 
-			$oOutput->AddHtml('<button type="button" class="btn btn-default" id="' . $sHierarchicalButtonId . '"><span class="glyphicon glyphicon-ext-hierarchy"></span></button>');
+			$oOutput->AddHtml('<div class="input-group-addon" id="' . $sHierarchicalButtonId . '"><span class="fa fa-sitemap"></span></div>');
 
 			$oOutput->AddJs(
 <<<EOF
@@ -411,8 +429,8 @@ EOF
 		$sSearchButtonId = 's_rg_' . $this->oField->GetGlobalId();
 		$sEndpoint = str_replace('-sMode-', 'from-attribute', $this->oField->GetSearchEndpoint());
 
-		$oOutput->AddHtml('<button type="button" class="btn btn-default" id="' . $sSearchButtonId . '"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>');
-		
+        $oOutput->AddHtml('<div class="input-group-addon" id="' . $sSearchButtonId . '"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></div>');
+
 		$oOutput->AddJs(
 <<<EOF
 			$('#{$sSearchButtonId}').off('click').on('click', function(){

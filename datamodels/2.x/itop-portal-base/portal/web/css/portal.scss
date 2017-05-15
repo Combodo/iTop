@@ -272,11 +272,6 @@ footer{
 	padding-right: 0px; /* To align all actions on the right without indent */
 }
 
-/* Custom "glyphicons" */
-.glyphicon-ext-hierarchy:before {
-    content: url('../img/icons/hierarchy-white-13px.png');
-}
-
 /******************/
 /* Modal settings */
 /******************/
@@ -919,6 +914,10 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	left: 3px;
 	color: $brand-primary;
 	font-size: 0.9em;
+}
+/* ExternalKey */
+.selectobject .input-group-addon{
+	cursor: pointer;
 }
 /* InlineImage */
 .inline-image{

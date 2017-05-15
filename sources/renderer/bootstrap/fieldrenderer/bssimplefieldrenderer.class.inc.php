@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -47,58 +47,81 @@ class BsSimpleFieldRenderer extends FieldRenderer
 		$oOutput = new RenderingOutput();
 		$sFieldClass = get_class($this->oField);
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
+		$sFieldContainerClass = ($this->oField->IsHorizontalDisplayMode() && !$this->oField->GetHidden()) ? 'row' : '';
 		
 		// Rendering field in edition mode
 		if (!$this->oField->GetReadOnly() && !$this->oField->GetHidden())
 		{
 			switch ($sFieldClass)
 			{
-				case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
-					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
-					if ($this->oField->GetLabel() !== '')
-					{
-						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
-					}
-					$oOutput->AddHtml('<div class="help-block"></div>');
-					$oOutput->AddHtml('<div class="input-group date" id="datepicker_' . $this->oField->GetGlobalId() . '">');
-					$oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetDisplayValue(), true)->AddHtml('" class="form-control" maxlength="255" />');
-					$oOutput->AddHtml('<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>');
-					$oOutput->AddHtml('</div>');
-					$oOutput->AddHtml('</div>');
-					$sJSFormat = json_encode($this->oField->GetJSDateTimeFormat());
-					$oOutput->AddJs(
-<<<EOF
-					$('#datepicker_{$this->oField->GetGlobalId()}').datetimepicker({format: $sJSFormat});
-EOF
-					);
-					break;
-				case 'Combodo\\iTop\\Form\\Field\\PasswordField':
-					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
-					if ($this->oField->GetLabel() !== '')
-					{
-						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
-					}
-					$oOutput->AddHtml('<div class="help-block"></div>');
-					$oOutput->AddHtml('<input type="password" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" autocomplete="off" />');
-					$oOutput->AddHtml('</div>');
-					break;
-
-				case 'Combodo\\iTop\\Form\\Field\\StringField':
+                case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
+                case 'Combodo\\iTop\\Form\\Field\\PasswordField':
+                case 'Combodo\\iTop\\Form\\Field\\StringField':
                 case 'Combodo\\iTop\\Form\\Field\\UrlField':
-					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
-					if ($this->oField->GetLabel() !== '')
-					{
-						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
-					}
-					$oOutput->AddHtml('<div class="help-block"></div>');
-					$oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" />');
-					$oOutput->AddHtml('</div>');
-					break;
+                case 'Combodo\\iTop\\Form\\Field\\SelectField':
+                case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
+                    // Opening container
+                    $oOutput->AddHtml('<div class="form-group form_group_small ' . $sFieldMandatoryClass . ' ' . $sFieldContainerClass . '">');
+
+                    // Label
+                    if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-3">'); }
+                    if ($this->oField->GetLabel() !== '')
+                    {
+                        $oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+                    }
+                    if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
+
+                    // Value
+                    if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-9">'); }
+                    // - Help block
+                    $oOutput->AddHtml('<div class="help-block"></div>');
+                    // - Value regarding the field type
+                    switch($sFieldClass)
+                    {
+                        case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
+                            $oOutput->AddHtml('<div class="input-group date" id="datepicker_' . $this->oField->GetGlobalId() . '">');
+                            $oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetDisplayValue(), true)->AddHtml('" class="form-control" maxlength="255" />');
+                            $oOutput->AddHtml('<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>');
+                            $oOutput->AddHtml('</div>');
+                            $sJSFormat = json_encode($this->oField->GetJSDateTimeFormat());
+                            $oOutput->AddJs(
+                                <<<EOF
+                                					$('#datepicker_{$this->oField->GetGlobalId()}').datetimepicker({format: $sJSFormat});
+EOF
+                            );
+                            break;
+
+                        case 'Combodo\\iTop\\Form\\Field\\PasswordField':
+                            $oOutput->AddHtml('<input type="password" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" autocomplete="off" />');
+                            break;
+
+                        case 'Combodo\\iTop\\Form\\Field\\StringField':
+                        case 'Combodo\\iTop\\Form\\Field\\UrlField':
+                            $oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" />');
+                            break;
+
+                        case 'Combodo\\iTop\\Form\\Field\\SelectField':
+                        case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
+                            $oOutput->AddHtml('<select id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" ' . ( ($this->oField->GetMultipleValuesEnabled()) ? 'multiple' : '' ) . ' class="form-control">');
+                            foreach ($this->oField->GetChoices() as $sChoice => $sLabel)
+                            {
+                                // Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
+                                $sSelectedAtt = ($this->oField->GetCurrentValue() == $sChoice) ? 'selected' : '';
+                                $oOutput->AddHtml('<option value="' . $sChoice . '" ' . $sSelectedAtt . ' >')->AddHtml($sLabel)->AddHtml('</option>');
+                            }
+                            $oOutput->AddHtml('</select>');
+                            break;
+                    }
+                    if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
+
+                    // Closing container
+                    $oOutput->AddHtml('</div>');
+                    break;
 
 				case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
 				case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
 					$bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
-					
+
 					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
 					if ($this->oField->GetLabel() !== '')
 					{
@@ -131,25 +154,6 @@ EOF
 							$oOutput->AddJs(InlineImage::EnableCKEditorImageUpload($this->oField->GetObject(), utils::GetUploadTempId($this->oField->GetTransactionId())));
 						}
 					}
-					break;
-
-				case 'Combodo\\iTop\\Form\\Field\\SelectField':
-				case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
-					$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
-					if ($this->oField->GetLabel() !== '')
-					{
-						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
-					}
-					$oOutput->AddHtml('<div class="help-block"></div>');
-					$oOutput->AddHtml('<select id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" ' . ( ($this->oField->GetMultipleValuesEnabled()) ? 'multiple' : '' ) . ' class="form-control">');
-					foreach ($this->oField->GetChoices() as $sChoice => $sLabel)
-					{
-						// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
-						$sSelectedAtt = ($this->oField->GetCurrentValue() == $sChoice) ? 'selected' : '';
-						$oOutput->AddHtml('<option value="' . $sChoice . '" ' . $sSelectedAtt . ' >')->AddHtml($sLabel)->AddHtml('</option>');
-					}
-					$oOutput->AddHtml('</select>');
-					$oOutput->AddHtml('</div>');
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\RadioField':
@@ -198,21 +202,42 @@ EOF
 				switch ($sFieldClass)
 				{
 					case 'Combodo\\iTop\\Form\\Field\\LabelField':
-						$oOutput->AddHtml('<div class="form-group">');
+                    case 'Combodo\\iTop\\Form\\Field\\StringField':
+                    case 'Combodo\\iTop\\Form\\Field\\UrlField':
+                    case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
+                    case 'Combodo\\iTop\\Form\\Field\\DurationField':
+                        // Opening container
+						$oOutput->AddHtml('<div class="form-group form_group_small ' . $sFieldContainerClass . '">');
+
 						// Showing label / value only if read-only but not hidden
 						if (!$this->oField->GetHidden())
 						{
+						    // Label
+                            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-3">'); }
 							if ($this->oField->GetLabel() !== '')
 							{
 								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 							}
-							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('</div>');
+                            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
+
+                            // Value
+                            $bEncodeHtmlEntities = ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\UrlField') ? false : true;
+                            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-9">'); }
+							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), $bEncodeHtmlEntities)->AddHtml('</div>');
+                            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
 						}
+
+						// Adding hidden input if not a label
+                        if($sFieldClass !== 'Combodo\\iTop\\Form\\Field\\LabelField')
+                        {
+                            $sValueForInput = ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\DateTimeField') ? $this->oField->GetDisplayValue() : $this->oField->GetCurrentValue();
+                            $oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($sValueForInput, true)->AddHtml('" class="form-control" />');
+                        }
+
+                        // Closing container
 						$oOutput->AddHtml('</div>');
 						break;
 
-                    case 'Combodo\\iTop\\Form\\Field\\StringField':
-                    case 'Combodo\\iTop\\Form\\Field\\UrlField':
 					case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
 						$oOutput->AddHtml('<div class="form-group">');
 						// Showing label / value only if read-only but not hidden
@@ -223,18 +248,10 @@ EOF
 								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 							}
 
-							if($sFieldClass === 'Combodo\\iTop\\Form\\Field\\UrlField' || $sFieldClass === 'Combodo\\iTop\\Form\\Field\\TextAreaField')
-							{
-								$bEncodeHtmlEntities = false;
-								$sDisplayValue = $this->oField->GetDisplayValue();
-							}
-							else
-							{
-								$bEncodeHtmlEntities = true;
-								$sDisplayValue = $this->oField->GetCurrentValue();
-							}
-							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($sDisplayValue, $bEncodeHtmlEntities)->AddHtml('</div>');
+
+							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), false)->AddHtml('</div>');
 						}
+						// Adding hidden input
 						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" />');
 						$oOutput->AddHtml('</div>');
 						break;
@@ -250,37 +267,7 @@ EOF
 						$oOutput->AddHtml('</div>');
 						break;
 
-					case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
-						$oOutput->AddHtml('<div class="form-group">');
-						// Showing label / value only if read-only but not hidden
-						if (!$this->oField->GetHidden())
-						{
-							if ($this->oField->GetLabel() !== '')
-							{
-								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
-							}
-							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), true)->AddHtml('</div>');
-						}
-						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetDisplayValue(), true)->AddHtml('" class="form-control" />');
-						$oOutput->AddHtml('</div>');
-						break;
-
-					case 'Combodo\\iTop\\Form\\Field\\DurationField':
-						$oOutput->AddHtml('<div class="form-group">');
-						// Showing label / value only if read-only but not hidden
-						if (!$this->oField->GetHidden())
-						{
-							if ($this->oField->GetLabel() !== '')
-							{
-								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
-							}
-							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), true)->AddHtml('</div>');
-						}
-						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" />');
-						$oOutput->AddHtml('</div>');
-						break;
-
-                    case 'Combodo\\iTop\\Form\\Field\\BlobField':
+					case 'Combodo\\iTop\\Form\\Field\\BlobField':
                     case 'Combodo\\iTop\\Form\\Field\\ImageField':
 						$oOutput->AddHtml('<div class="form-group">');
 						// Showing label / value only if read-only but not hidden
@@ -311,17 +298,30 @@ EOF
 						$aFieldChoices = $this->oField->GetChoices();
 						$sFieldValue = (isset($aFieldChoices[$this->oField->GetCurrentValue()])) ? $aFieldChoices[$this->oField->GetCurrentValue()] : Dict::S('UI:UndefinedObject');
 
-						$oOutput->AddHtml('<div class="form-group">');
+						// Opening container
+						$oOutput->AddHtml('<div class="form-group form_group_small ' . $sFieldContainerClass . '">');
+
 						// Showing label / value only if read-only but not hidden
 						if (!$this->oField->GetHidden())
 						{
+						    // Label
+                            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-3">'); }
 							if ($this->oField->GetLabel() !== '')
 							{
 								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 							}
+                            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
+
+                            // Value
+                            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('<div class="col-sm-9">'); }
 							$oOutput->AddHtml('<div class="form-control-static">' . $sFieldValue . '</div>');
+                            if($this->oField->IsHorizontalDisplayMode()){ $oOutput->AddHtml('</div>'); }
 						}
+
+						// Adding hidden value
 						$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $this->oField->GetCurrentValue() . '" class="form-control" />');
+
+						// Closing container
 						$oOutput->AddHtml('</div>');
 						break;
 

@@ -223,11 +223,13 @@ abstract class FormRenderer
 			'js_inline' => '',
 			'css_inline' => '',
 			'js_files' => array(),
-			'css_files' => array()
+			'css_files' => array(),
+            'css_classes' => array(),
 		);
 
 		$sFieldRendererClass = $this->GetFieldRendererClass($oField);
 
+		/** @var FieldRenderer $oFieldRenderer */
 		$oFieldRenderer = new $sFieldRendererClass($oField);
 		$oFieldRenderer->SetEndpoint($this->GetEndpoint());
 
@@ -301,6 +303,11 @@ abstract class FormRenderer
 				$output['html'] .= '<style>' . $oRenderingOutput->GetCss() . '</style>';
 			}
 		}
+        // CSS classes
+        if ($oRenderingOutput->GetHtml() !== '')
+        {
+            $output['css_classes'] = $oRenderingOutput->GetCssClasses();
+        }
 
 		return $output;
 	}

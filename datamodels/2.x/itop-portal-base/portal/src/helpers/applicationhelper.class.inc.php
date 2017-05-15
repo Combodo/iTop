@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -46,6 +46,10 @@ use \Combodo\iTop\Portal\Brick\AbstractBrick;
  */
 class ApplicationHelper
 {
+    const FORM_ENUM_DISPLAY_MODE_COSY = 'cosy';
+    const FORM_ENUM_DISPLAY_MODE_COMPACT = 'compact';
+    const FORM_DEFAULT_DISPLAY_MODE = self::FORM_ENUM_DISPLAY_MODE_COSY;
+    const FORM_DEFAULT_ALWAYS_SHOW_SUBMIT = false;
 
 	/**
 	 * Loads classes from the base portal
@@ -853,7 +857,8 @@ class ApplicationHelper
 
                     // Parsing properties
                     $aFormProperties = array(
-                        'always_show_submit' => false,
+                        'display_mode' => static::FORM_DEFAULT_DISPLAY_MODE,
+                        'always_show_submit' => static::FORM_DEFAULT_ALWAYS_SHOW_SUBMIT,
                     );
                     if($oFormNode->GetOptionalElement('properties') !== null)
                     {
@@ -861,6 +866,9 @@ class ApplicationHelper
                         {
                             switch($oPropertyNode->nodeName)
                             {
+                                case 'display_mode':
+                                    $aFormProperties['display_mode'] = $oPropertyNode->GetText(static::FORM_DEFAULT_DISPLAY_MODE);
+                                    break;
                                 case 'always_show_submit':
                                     $aFormProperties['always_show_submit'] = ($oPropertyNode->GetText('false') === 'true') ? true : false;
                                     break;

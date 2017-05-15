@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -30,10 +30,14 @@ use \Combodo\iTop\Form\Validator\MandatoryValidator;
  */
 abstract class Field
 {
+    const ENUM_DISPLAY_MODE_VERTICAL = 'vertical';      // Label and value side by side
+    const ENUM_DISPLAY_MODE_HORIZONTAL = 'horizontal';  // Label above value
+
 	const DEFAULT_LABEL = '';
 	const DEFAULT_HIDDEN = false;
 	const DEFAULT_READ_ONLY = false;
 	const DEFAULT_MANDATORY = false;
+    const DEFAULT_DISPLAY_MODE = self::ENUM_DISPLAY_MODE_HORIZONTAL;
 	const DEFAULT_VALID = true;
 
 	protected $sId;
@@ -43,6 +47,7 @@ abstract class Field
 	protected $bHidden;
 	protected $bReadOnly;
 	protected $bMandatory;
+	protected $sDisplayMode;
 	protected $aValidators;
 	protected $bValid;
 	protected $aErrorMessages;
@@ -64,6 +69,7 @@ abstract class Field
 		$this->bHidden = static::DEFAULT_HIDDEN;
 		$this->bReadOnly = static::DEFAULT_READ_ONLY;
 		$this->bMandatory = static::DEFAULT_MANDATORY;
+		$this->sDisplayMode = static::DEFAULT_DISPLAY_MODE;
 		$this->aValidators = array();
 		$this->bValid = static::DEFAULT_VALID;
 		$this->aErrorMessages = array();
@@ -135,6 +141,15 @@ abstract class Field
 	{
 		return $this->bMandatory;
 	}
+
+    /**
+     *
+     * @return string
+     */
+	public function GetDisplayMode()
+    {
+        return $this->sDisplayMode;
+    }
 
 	/**
 	 *
@@ -256,6 +271,17 @@ abstract class Field
 		return $this;
 	}
 
+    /**
+     *
+     * @param $sDisplayMode
+     * @return $this
+     */
+	public function SetDisplayMode($sDisplayMode)
+    {
+        $this->sDisplayMode = $sDisplayMode;
+        return $this;
+    }
+
 	/**
 	 *
 	 * @param array $aValidators
@@ -363,6 +389,16 @@ abstract class Field
 		$this->aErrorMessages = array();
 		return $this;
 	}
+
+    /**
+     * Returns if the field should be displayed horizontally (label and value side by side)
+     *
+     * @return bool
+     */
+	public function IsHorizontalDisplayMode()
+    {
+        return $this->sDisplayMode === static::ENUM_DISPLAY_MODE_HORIZONTAL;
+    }
 
 	/**
 	 * Returns if the field is editable. Meaning that it is not editable nor hidden.

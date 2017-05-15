@@ -2995,7 +2995,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     color: $gray;
     text-align: center;
     background-color: #dddddd;
-    border: 1px solid #dddddd;
+    border: 1px solid #c7c7c7;
     border-radius: $border-radius-base
 }
 .input-group-addon.input-sm {
@@ -6012,7 +6012,42 @@ label {
 	box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.4);
 }
 /* Help blocks in forms */
-.form_fields .form-group > .help-block{
+.form_fields .form-group .help-block{
     margin-top: 0px;
     margin-bottom: 0px;
+}
+/* Overriding Twitter Typeahead */
+.input-group span.twitter-typeahead{
+    height: initial;
+}
+.input-group span.twitter-typeahead:first-child .form-control,
+.input-group span.twitter-typeahead:last-child .form-control,
+.input-group span.twitter-typeahead .form-control{
+    border-radius: $border-radius-base;
+}
+.input-group span.twitter-typeahead .tt-suggestion.tt-cursor,
+.input-group span.twitter-typeahead .tt-suggestion:hover,
+.input-group span.twitter-typeahead .tt-suggestion:focus{
+    color: $btn-primary-color;
+    background-color: $btn-primary-bg;
+}
+/* Compact form display */
+.form_compact .form-group.form_group_small{
+    margin-bottom: 10px;
+
+    .control-label{
+        margin-right: 0.5em;
+    }
+    .form-control-static{
+        display: inline;
+    }
+    .form-control{
+        height: 28px;
+        padding: 4px 5px;
+        font-size: 12px;
+    }
+    .input-group-addon {
+        padding: 4px 10px;
+        font-size: 12px;
+    }
 }

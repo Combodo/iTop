@@ -1,10 +1,10 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -19,6 +19,7 @@
 
 namespace Combodo\iTop\Portal\Form;
 
+use Combodo\iTop\Form\Field\Field;
 use \Exception;
 use \Silex\Application;
 use \utils;
@@ -136,7 +137,7 @@ class ObjectFormManager extends FormManager
 	}
 
 	/**
-	 * 
+	 *
 	 * @return \Silex\Application
 	 */
 	public function GetApplication()
@@ -277,7 +278,7 @@ class ObjectFormManager extends FormManager
 		$aJson['formmode'] = $this->sMode;
 		$aJson['formactionrulestoken'] = $this->sActionRulesToken;
 		$aJson['formproperties'] = $this->aFormProperties;
-		
+
 		return $aJson;
 	}
 
@@ -384,11 +385,19 @@ class ObjectFormManager extends FormManager
 				{
 					$oFieldNode->setAttribute('data-form-path', $oForm->GetId());
 				}
-
-				// Checking if field should be displayed opened (For linked set)
+                // Checking if field should be displayed opened (For linked set)
                 if($oFieldNode->hasAttribute('data-field-opened') && ($oFieldNode->getAttribute('data-field-opened') === 'true') )
                 {
                     $aFieldsExtraData[$sFieldId]['opened'] = true;
+                }
+                // Checking field display mode
+                if($oFieldNode->hasAttribute('data-field-display-mode') && $oFieldNode->getAttribute('data-field-display-mode') !== '')
+                {
+                    $aFieldsExtraData[$sFieldId]['display_mode'] = $oFieldNode->getAttribute('data-field-display-mode');
+                }
+                else
+                {
+                    $aFieldsExtraData[$sFieldId]['display_mode'] = $this->aFormProperties['properties']['display_mode'];
                 }
 
 				// Settings field flags from the data-field-flags attribute
@@ -436,7 +445,7 @@ class ObjectFormManager extends FormManager
 				{
 					$iFieldFlags = $this->oObject->GetAttributeFlags($sAttCode);
 				}
-				
+
 				// Merging flags with those from the form definition
 				// - only if the field if it's in fields list
 				if (array_key_exists($sAttCode, $aFieldsAtts))
@@ -459,12 +468,12 @@ class ObjectFormManager extends FormManager
 		foreach ($aFieldsAtts as $sAttCode => $iFieldFlags)
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this->oObject), $sAttCode);
-			
+
 			// Failsafe for AttributeType that would not have MakeFormField and therefore could not be used in a form
 			if (is_callable(get_class($oAttDef) . '::MakeFormField'))
 			{
 				$oField = $oAttDef->MakeFormField($this->oObject);
-				
+
 				if ($this->sMode !== static::ENUM_MODE_VIEW)
 				{
 					// Field dependencies
@@ -510,7 +519,7 @@ class ObjectFormManager extends FormManager
 					{
 						// Normal field
 					}
-					
+
 					// Specific operation on field
 					// - Field that require a transaction id
 					if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\TextAreaField', 'Combodo\\iTop\\Form\\Field\\CaseLogField')))
@@ -546,7 +555,7 @@ class ObjectFormManager extends FormManager
 						if ($this->oApp !== null)
 						{
 							$oScopeOriginal = ($oField->GetSearch() !== null) ? $oField->GetSearch() : DBSearch::FromOQL($oAttDef->GetValuesDef()->GetFilterExpression());
-							
+
 							$oScopeSearch = $this->oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $oScopeOriginal->GetClass(), UR_ACTION_READ);
 							if ($oScopeSearch === null)
 							{
@@ -638,8 +647,6 @@ class ObjectFormManager extends FormManager
                         $oField->SetDisplayOpened(true);
                     }
 				}
-
-				$oForm->AddField($oField);
 			}
 			else
 			{
@@ -648,10 +655,18 @@ class ObjectFormManager extends FormManager
 					->SetHidden(false)
 					->SetCurrentValue(get_class($oAttDef) . ' : Sorry, that AttributeType is not implemented yet.')
 					->SetLabel($oAttDef->GetLabel());
-				$oForm->AddField($oField);
 			}
+
+			// Setting field display mode
+            if(array_key_exists($sAttCode, $aFieldsExtraData) && array_key_exists('display_mode', $aFieldsExtraData[$sAttCode]))
+            {
+                $sFieldDisplayMode = ($aFieldsExtraData[$sAttCode]['display_mode'] === ApplicationHelper::FORM_ENUM_DISPLAY_MODE_COSY) ? Field::ENUM_DISPLAY_MODE_VERTICAL : Field::ENUM_DISPLAY_MODE_HORIZONTAL;
+                $oField->SetDisplayMode($sFieldDisplayMode);
+            }
+
+            $oForm->AddField($oField);
 		}
-		
+
 		// Checking dependencies to ensure that all needed fields are in the form
 		// (This is kind of a garbage collector for dependancies)
 		foreach ($oForm->GetDependencies() as $sImpactedFieldId => $aDependancies)
@@ -663,7 +678,7 @@ class ObjectFormManager extends FormManager
 					$oAttDef = MetaModel::GetAttributeDef(get_class($this->oObject), $sDependancyFieldId);
 					$oField = $oAttDef->MakeFormField($this->oObject);
 					$oField->SetHidden(true);
-					
+
 					$oForm->AddField($oField);
 				}
 			}
@@ -683,7 +698,7 @@ class ObjectFormManager extends FormManager
 					break;
 				}
 			}
-			
+
 			// Adding attachment field
 			if ($bClassAllowed)
 			{
@@ -916,7 +931,7 @@ class ObjectFormManager extends FormManager
 			$aData['valid'] = false;
 			$aData['messages']['error'] += $this->oForm->GetErrorMessages();
 		}
-		
+
 		return $aData;
 	}
 
@@ -1036,7 +1051,7 @@ class ObjectFormManager extends FormManager
 				}
 				$this->oObject->DoComputeValues();
 			}
-			
+
 			// Then we retrieve properties of the form to build
 			if (isset($aArgs['formProperties']))
 			{
