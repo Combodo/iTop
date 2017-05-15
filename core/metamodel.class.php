@@ -728,6 +728,14 @@ abstract class MetaModel
 		return (in_array($sAttCode, self::GetReconcKeys($sClass)));
 	}
 
+    /**
+     * Returns the AttributeDefinition of the $sAttCode attribute of the $sClass class
+     *
+     * @param string $sClass Class name
+     * @param string $sAttCode Attribute code
+     * @return AttributeDefinition
+     * @throws Exception
+     */
 	final static public function GetAttributeDef($sClass, $sAttCode)
 	{
 		self::_check_subclass($sClass);
