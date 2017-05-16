@@ -87,7 +87,7 @@ class BsSelectObjectFieldRenderer extends FieldRenderer
 				// Note : Autocomplete/Search is disabled for template fields as they are not external keys, thus they will just be displayed as regular select.
 				$bRegularSelect = ( ($iSetCount <= $this->oField->GetMaximumComboLength()) || ($this->oField->GetSearchEndpoint() === null) || ($this->oField->GetSearchEndpoint() === '') );
 				unset($oCountSet);
-$bRegularSelect=false;
+
 				// - For regular select
 				if ($bRegularSelect)
 				{

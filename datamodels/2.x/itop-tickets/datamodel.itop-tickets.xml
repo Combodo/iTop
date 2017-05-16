@@ -1322,6 +1322,8 @@
 				<form id="ticket-edit">
 					<class>Ticket</class>
 					<properties>
+						<!--Display mode of the form fields. "cosy" for a regular labels over values layout; "compact" for a side-by-side layout with input aligned; "dense" for a side-by-side layout with input filling all available space. You can also use a custom css class that will be used on the form as "form_xxx", as well as on the fields as "form_field_xxx".-->
+						<!--<display_mode>cosy</display_mode>-->
 						<!-- When set to false, submit button is hidden when transitions are available on the object (in edit mode only). Default is false. -->
 						<!--<always_show_submit>false</always_show_submit>-->
 					</properties>

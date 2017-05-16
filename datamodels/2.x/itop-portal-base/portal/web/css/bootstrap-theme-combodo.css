@@ -4953,13 +4953,18 @@ label {
   }
   .form_field_compact .form-group.form_group_small .control-label, .form_field_dense .form-group.form_group_small .control-label {
     margin-right: 0.5em;
+    margin-bottom: 0px;
+    height: 28px;
+    vertical-align: sub;
   }
   .form_field_compact .form-group.form_group_small .form-control-static, .form_field_dense .form-group.form_group_small .form-control-static {
-    display: inline;
+    display: inline-block;
+    height: 28px;
+    vertical-align: sub;
   }
   .form_field_compact .form-group.form_group_small .form-control, .form_field_dense .form-group.form_group_small .form-control {
     height: 28px;
-    padding: 4px 5px;
+    padding: 4px 6px;
     font-size: 12px;
   }
   .form_field_compact .form-group.form_group_small .input-group-addon, .form_field_dense .form-group.form_group_small .input-group-addon {

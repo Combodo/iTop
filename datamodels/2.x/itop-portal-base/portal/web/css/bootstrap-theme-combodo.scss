@@ -6039,13 +6039,18 @@ label {
 
         .control-label{
             margin-right: 0.5em;
+            margin-bottom: 0px;
+            height: 28px;
+            vertical-align: sub;
         }
         .form-control-static{
-            display: inline;
+            display: inline-block;
+            height: 28px;
+            vertical-align: sub;
         }
         .form-control{
             height: 28px;
-            padding: 4px 5px;
+            padding: 4px 6px;
             font-size: 12px;
         }
         .input-group-addon {
