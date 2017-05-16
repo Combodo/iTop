@@ -116,7 +116,7 @@ abstract class DBObject implements iDisplay
 		// set default values
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
 		{
-			$this->m_aCurrValues[$sAttCode] = $oAttDef->GetDefaultValue($this);
+			$this->m_aCurrValues[$sAttCode] = $this->GetDefaultValue($sAttCode);
 			$this->m_aOrigValues[$sAttCode] = null;
 			if ($oAttDef->IsExternalField() || ($oAttDef instanceof AttributeFriendlyName))
 			{
@@ -425,7 +425,7 @@ abstract class DBObject implements iDisplay
 				{
 					if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sAttCode))
 					{
-						$this->m_aCurrValues[$sCode] = $oDef->GetDefaultValue($this);
+						$this->m_aCurrValues[$sCode] = $this->GetDefaultValue($sCode);
 						unset($this->m_aLoadedAtt[$sCode]);
 					}
 				}
@@ -596,7 +596,7 @@ abstract class DBObject implements iDisplay
 							}
 							else
 							{
-								$this->m_aCurrValues[$sCode] = $oDef->GetDefaultValue($this);
+								$this->m_aCurrValues[$sCode] = $this->GetDefaultValue($sCode);
 							}
 							$this->m_aLoadedAtt[$sCode] = true;
 						}
@@ -621,6 +621,19 @@ abstract class DBObject implements iDisplay
 		}
 		return $this->m_aOrigValues[$sAttCode];
 	}
+
+    /**
+     * Returns the default value of the $sAttCode. By default, returns the default value of the AttributeDefinition.
+     * Overridable.
+     *
+     * @param $sAttCode
+     * @return mixed
+     */
+	public function GetDefaultValue($sAttCode)
+    {
+        $oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+        return $oAttDef->GetDefaultValue($this);
+    }
 
 	/**
 	 * Returns data loaded by the mean of a dynamic and explicit JOIN
@@ -2435,8 +2448,7 @@ abstract class DBObject implements iDisplay
 	 */	 	
 	public function Reset($sAttCode)
 	{
-		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		$this->Set($sAttCode, $oAttDef->GetDefaultValue($this));
+		$this->Set($sAttCode, $this->GetDefaultValue($sAttCode));
 		return true;
 	}
 
@@ -3440,8 +3452,7 @@ abstract class DBObject implements iDisplay
 				{
 					throw new Exception("Unknown attribute ".get_class($this)."::".$sAttCode);
 				}
-				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-				$this->Set($sAttCode, $oAttDef->GetDefaultValue());
+				$this->Set($sAttCode, $this->GetDefaultValue($sAttCode));
 				break;
 
 			case 'nullify':
