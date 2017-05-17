@@ -101,14 +101,22 @@ abstract class Expression
 		return $oSql;
 	}
 
-	public function LogAnd($oExpr)
+	/**
+	 * @param Expression $oExpr
+	 * @return Expression
+	 */
+	public function LogAnd(Expression $oExpr)
 	{
 		if ($this->IsTrue()) return clone $oExpr;
 		if ($oExpr->IsTrue()) return clone $this;
 		return new BinaryExpression($this, 'AND', $oExpr);
 	}
 
-	public function LogOr($oExpr)
+	/**
+	 * @param Expression $oExpr
+	 * @return Expression
+	 */
+	public function LogOr(Expression $oExpr)
 	{
 		return new BinaryExpression($this, 'OR', $oExpr);
 	}
@@ -1345,22 +1353,40 @@ class CharConcatWSExpression extends CharConcatExpression
 
 class QueryBuilderExpressions
 {
+	/**
+	 * @var Expression
+	 */
 	protected $m_oConditionExpr;
+	/**
+	 * @var Expression[]
+	 */
 	protected $m_aSelectExpr;
+	/**
+	 * @var Expression[]
+	 */
 	protected $m_aGroupByExpr;
+	/**
+	 * @var Expression[]
+	 */
 	protected $m_aJoinFields;
+	/**
+	 * @var string[]
+	 */
 	protected $m_aClassIds;
 
 	public function __construct(DBObjectSearch $oSearch, $aGroupByExpr = null)
 	{
-		if ($oSearch->GetShowObsoleteData() || !MetaModel::IsObsoletable($oSearch->GetClass()))
+		$this->m_oConditionExpr = $oSearch->GetCriteria();
+		if (!$oSearch->GetShowObsoleteData())
 		{
-			$this->m_oConditionExpr = $oSearch->GetCriteria();
-		}
-		else
-		{
-			$oNotObsolete = new BinaryExpression(new FieldExpression('obsolescence_flag', $oSearch->GetClassAlias()), '=', new ScalarExpression(0));
-			$this->m_oConditionExpr = new BinaryExpression($oSearch->GetCriteria(), 'AND', $oNotObsolete);
+			foreach ($oSearch->GetSelectedClasses() as $sAlias => $sClass)
+			{
+				if (MetaModel::IsObsoletable($sClass))
+				{
+					$oNotObsolete = new BinaryExpression(new FieldExpression('obsolescence_flag', $sAlias), '=', new ScalarExpression(0));
+					$this->m_oConditionExpr = $this->m_oConditionExpr->LogAnd($oNotObsolete);
+				}
+			}
 		}
 		$this->m_aSelectExpr = array();
 		$this->m_aGroupByExpr = $aGroupByExpr;
@@ -1388,23 +1414,35 @@ class QueryBuilderExpressions
 		return $this->m_oConditionExpr;
 	}
 
+	/**
+	 * @return Expression|mixed
+	 */
 	public function PopJoinField()
 	{
 		return array_pop($this->m_aJoinFields);
 	}
 
-	public function AddSelect($sAttAlias, $oExpression)
+	/**
+	 * @param string $sAttAlias
+	 * @param Expression $oExpression
+	 */
+	public function AddSelect($sAttAlias, Expression $oExpression)
 	{
 		$this->m_aSelectExpr[$sAttAlias] = $oExpression;
 	}
 
-			//$oConditionTree = $oConditionTree->LogAnd($oFinalClassRestriction);
-	public function AddCondition($oExpression)
+	/**
+	 * @param Expression $oExpression
+	 */
+	public function AddCondition(Expression $oExpression)
 	{
 		$this->m_oConditionExpr = $this->m_oConditionExpr->LogAnd($oExpression);
 	}
 
-	public function PushJoinField($oExpression)
+	/**
+	 * @param Expression $oExpression
+	 */
+	public function PushJoinField(Expression $oExpression)
 	{
 		array_push($this->m_aJoinFields, $oExpression);
 	}
