@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
  * User preferences page
  * Displays / edit some user preferences
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 require_once('../approot.inc.php');
@@ -86,8 +86,18 @@ function DisplayPreferences($oP)
 	
 	$oP->add('<fieldset><legend>'.Dict::S('UI:FavoriteOtherSettings').'</legend>');
 	$oP->add('<form method="post" onsubmit="return ValidateOtherSettings()">');
+
 	$iDefaultPageSize = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
 	$oP->add('<p>'.Dict::Format('UI:Favorites:Default_X_ItemsPerPage', '<input id="default_page_size" name="default_page_size" type="text" size="3" value="'.$iDefaultPageSize.'"/><span id="v_default_page_size"></span>').'</p>');
+
+	$bDefaultShow = appUserPreferences::GetPref('show_obsolete_data', MetaModel::GetConfig()->Get('show_obsolete_data'));
+	$sSelected = $bDefaultShow ? ' checked="checked"' : '';
+	$oP->add(
+		'<p>'
+		.'<input type="checkbox" id="show_obsolete_data" name="show_obsolete_data" value="1"'.$sSelected.'>'
+		.'<label for="show_obsolete_data" title="'.Dict::S('UI:Favorites:ShowObsoleteData+').'">'.Dict::S('UI:Favorites:ShowObsoleteData').'</label>'
+		.'</p>');
+
 	$oP->add('<input type="hidden" name="operation" value="apply_others"/>');
 	$oP->add($oAppContext->GetForForm());
 	$oP->add('<p><input type="button" onClick="window.location.href=\''.$sURL.'\'" value="'.Dict::S('UI:Button:Cancel').'"/>');
@@ -346,6 +356,8 @@ try
 		{
 			appUserPreferences::SetPref('default_page_size', $iDefaultPageSize);
 		}
+		$bShowObsoleteData = (bool)utils::ReadParam('show_obsolete_data', 0);
+		appUserPreferences::SetPref('show_obsolete_data', $bShowObsoleteData);
 		DisplayPreferences($oPage);
 		break;
 		

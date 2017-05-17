@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2012-2013 Combodo SARL
+// Copyright (C) 2012-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@ require_once(APPROOT.'application/forms.class.inc.php');
 /**
  * Base class for all 'dashlets' (i.e. widgets to be inserted into a dashboard)
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 abstract class Dashlet
@@ -583,6 +583,7 @@ abstract class DashletGroupBy extends Dashlet
 
 		// First perform the query - if the OQL is not ok, it will generate an exception : no need to go further 
 		$oFilter = DBObjectSearch::FromOQL($sQuery);
+		$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 
 		$sClass = $oFilter->GetClass();
 		$sClassAlias = $oFilter->GetClassAlias();

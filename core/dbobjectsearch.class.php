@@ -1470,6 +1470,7 @@ class DBObjectSearch extends DBSearch
 				$sRawId .= implode(',', $aSelectedClasses); // Unions may alter the list of selected columns
 			}
 			$sRawId .= $oSearch->GetArchiveMode() ? '--arch' : '';
+			$sRawId .= $oSearch->GetShowObsoleteData() ? '--obso' : '';
 			$sOqlId = md5($sRawId);
 		}
 		else
@@ -1613,10 +1614,17 @@ class DBObjectSearch extends DBSearch
 			{
 				if (!$oAttDef->IsScalar()) continue;
 				// keep because it can be used for sorting - if (!$oAttDef->LoadInObject()) continue;
-				
-				foreach ($oAttDef->GetSQLExpressions() as $sColId => $sSQLExpr)
+
+				if ($oAttDef->IsBasedOnOQLExpression())
 				{
-					$oBuild->m_oQBExpressions->AddSelect($sClassAlias.$sAttCode.$sColId, new FieldExpression($sAttCode.$sColId, $sClassAlias));
+					$oBuild->m_oQBExpressions->AddSelect($sClassAlias.$sAttCode, new FieldExpression($sAttCode, $sClassAlias));
+				}
+				else
+				{
+					foreach ($oAttDef->GetSQLExpressions() as $sColId => $sSQLExpr)
+					{
+						$oBuild->m_oQBExpressions->AddSelect($sClassAlias.$sAttCode.$sColId, new FieldExpression($sAttCode.$sColId, $sClassAlias));
+					}
 				}
 			}
 
@@ -2013,10 +2021,10 @@ class DBObjectSearch extends DBSearch
 							$aTranslateNow = array(); // Translation for external fields - must be performed before the join is done (recursion...)
 							foreach($aExtKeys[$sTableClass][$sKeyAttCode] as $sAttCode => $oAtt)
 							{
-								if ($oAtt->IsFriendlyName())
+								$oExtAttDef = $oAtt->GetExtAttDef();
+								if ($oExtAttDef->IsBasedOnOQLExpression())
 								{
-									// Note: for a given ext key, there is one single attribute "friendly name"
-									$aTranslateNow[$sTargetAlias][$sAttCode] = new FieldExpression('friendlyname', $sKeyClassAlias);
+									$aTranslateNow[$sTargetAlias][$sAttCode] = new FieldExpression($oExtAttDef->GetCode(), $sKeyClassAlias);
 								}
 								else
 								{

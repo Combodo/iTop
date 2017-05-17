@@ -188,6 +188,21 @@ class utils
 		return $bRet;
 	}
 
+	/**
+	 * Helper to be called by the GUI and define if the user will see obsolete data (otherwise, the user will have to dig further)
+	 * @return bool
+	 */
+	public static function ShowObsoleteData()
+	{
+		$bDefault = MetaModel::GetConfig()->Get('show_obsolete_data'); // default is false
+		$bShow = appUserPreferences::GetPref('show_obsolete_data', $bDefault);
+		if (static::IsArchiveMode())
+		{
+			$bShow = true;
+		}
+		return $bShow;
+	}
+
 	public static function ReadParam($sName, $defaultValue = "", $bAllowCLI = false, $sSanitizationFilter = 'parameter')
 	{
 		global $argv;

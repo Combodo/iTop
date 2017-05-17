@@ -1351,9 +1351,17 @@ class QueryBuilderExpressions
 	protected $m_aJoinFields;
 	protected $m_aClassIds;
 
-	public function __construct($oSearch, $aGroupByExpr = null)
+	public function __construct(DBObjectSearch $oSearch, $aGroupByExpr = null)
 	{
-		$this->m_oConditionExpr = $oSearch->GetCriteria();
+		if ($oSearch->GetShowObsoleteData() || !MetaModel::IsObsoletable($oSearch->GetClass()))
+		{
+			$this->m_oConditionExpr = $oSearch->GetCriteria();
+		}
+		else
+		{
+			$oNotObsolete = new BinaryExpression(new FieldExpression('obsolescence_flag', $oSearch->GetClassAlias()), '=', new ScalarExpression(0));
+			$this->m_oConditionExpr = new BinaryExpression($oSearch->GetCriteria(), 'AND', $oNotObsolete);
+		}
 		$this->m_aSelectExpr = array();
 		$this->m_aGroupByExpr = $aGroupByExpr;
 		$this->m_aJoinFields = array();

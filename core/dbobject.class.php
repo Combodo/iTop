@@ -780,7 +780,8 @@ abstract class DBObject implements iDisplay
 			{
 				$sHtmlLabel = htmlentities($this->Get($sAttCode.'_friendlyname'), ENT_QUOTES, 'UTF-8');
 				$bArchived = $this->IsArchived($sAttCode);
-				return $this->MakeHyperLink($sTargetClass, $iTargetKey, $sHtmlLabel, null, true, $bArchived);
+				$bObsolete = $this->IsObsolete($sAttCode);
+				return $this->MakeHyperLink($sTargetClass, $iTargetKey, $sHtmlLabel, null, true, $bArchived, $bObsolete);
 			}
 		}
 
@@ -860,10 +861,11 @@ abstract class DBObject implements iDisplay
 	 * @param null $sUrlMakerClass
 	 * @param bool|true $bWithNavigationContext
 	 * @param bool|false $bArchived
+	 * @param bool|false $bObsolete
 	 * @return string
 	 * @throws DictExceptionMissingString
 	 */
-	public static function MakeHyperLink($sObjClass, $sObjKey, $sHtmlLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true, $bArchived = false)
+	public static function MakeHyperLink($sObjClass, $sObjKey, $sHtmlLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true, $bArchived = false, $bObsolete = false)
 	{
 		if ($sObjKey <= 0) return '<em>'.Dict::S('UI:UndefinedObject').'</em>'; // Objects built in memory have negative IDs
 
@@ -893,6 +895,12 @@ abstract class DBObject implements iDisplay
 			$sSpanClass = 'archived';
 			$sFA = 'fa-archive object-archived';
 			$sHint = Dict::S('ObjectRef:Archived');
+		}
+		elseif ($bObsolete)
+		{
+			$sSpanClass = 'obsolete';
+			$sFA = 'fa-eye-slash object-obsolete';
+			$sHint = Dict::S('ObjectRef:Obsolete');
 		}
 		else
 		{
@@ -930,7 +938,8 @@ abstract class DBObject implements iDisplay
 	public function GetHyperlink($sUrlMakerClass = null, $bWithNavigationContext = true)
 	{
 		$bArchived = $this->IsArchived();
-		return self::MakeHyperLink(get_class($this), $this->GetKey(), $this->GetName(), $sUrlMakerClass, $bWithNavigationContext, $bArchived);
+		$bObsolete = $this->IsObsolete();
+		return self::MakeHyperLink(get_class($this), $this->GetKey(), $this->GetName(), $sUrlMakerClass, $bWithNavigationContext, $bArchived, $bObsolete);
 	}
 	
 	public static function ComputeStandardUIPage($sClass)
@@ -3625,10 +3634,11 @@ abstract class DBObject implements iDisplay
 		return $bRet;
 	}
 
-	public function IsObsolete()
+	public function IsObsolete($sKeyAttCode = null)
 	{
 		$bRet = false;
-		if (MetaModel::IsValidAttCode(get_class($this), 'obsolescence_flag') && $this->Get('obsolescence_flag'))
+		$sFlagAttCode = is_null($sKeyAttCode) ? 'obsolescence_flag' : $sKeyAttCode.'_obsolescence_flag';
+		if (MetaModel::IsValidAttCode(get_class($this), $sFlagAttCode) && $this->Get($sFlagAttCode))
 		{
 			$bRet = true;
 		}

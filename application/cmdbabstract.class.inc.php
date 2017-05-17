@@ -304,6 +304,12 @@ EOF
 			$sTitle = htmlentities(Dict::S('Tag:Archived+'), ENT_QUOTES, 'UTF-8');
 			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-archived fa fa-archive fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
 		}
+		elseif ($this->IsObsolete())
+		{
+			$sLabel = htmlentities(Dict::S('Tag:Obsolete'), ENT_QUOTES, 'UTF-8');
+			$sTitle = htmlentities(Dict::S('Tag:Obsolete+'), ENT_QUOTES, 'UTF-8');
+			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-obsolete fa fa-eye-slash fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
+		}
 
 		$sObjectIcon = $this->GetIcon();
 		$sClassName = MetaModel::GetName(get_class($this));
@@ -402,6 +408,7 @@ EOF
 			
 			// $oSet = new DBObjectSet($this->Get($sAttCode)->GetFilter()); // Why do something so useless ?
 			$oSet = $this->Get($sAttCode);
+			$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
 			$iCount = $oSet->Count();
 			$sCount = '';
 			if ($iCount != 0)

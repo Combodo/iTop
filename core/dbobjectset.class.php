@@ -123,6 +123,17 @@ class DBObjectSet
 		$this->m_iCurrRow = 0;
 		$this->m_oSQLResult = null;
 	}
+
+	public function SetShowObsoleteData($bShow)
+	{
+		$this->m_oFilter->SetShowObsoleteData($bShow);
+	}
+
+	public function GetShowObsoleteData()
+	{
+		return $this->m_oFilter->GetShowObsoleteData();
+	}
+
 	/**
 	 * Specify the subset of attributes to load (for each class of objects) before performing the SQL query for retrieving the rows from the DB
 	 * 
@@ -364,6 +375,7 @@ class DBObjectSet
 	{
 		// Make sure that we carry on the parameters of the set with the filter
 		$oFilter = $this->m_oFilter->DeepClone();
+		$oFilter->SetShowObsoleteData(true);
 		// Note: the arguments found within a set can be object (but not in a filter)
 		// That's why PrepareQueryArguments must be invoked there
 		$oFilter->SetInternalParams(array_merge($oFilter->GetInternalParams(), $this->m_aArgs));

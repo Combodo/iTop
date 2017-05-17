@@ -1731,6 +1731,7 @@ abstract class MetaModel
 
 		// Initialize the classes (declared attributes, etc.)
 		//
+		$aObsoletableRootClasses = array();
 		foreach(get_declared_classes() as $sPHPClass)
 		{
 			if (is_subclass_of($sPHPClass, 'DBObject'))
@@ -1774,24 +1775,14 @@ abstract class MetaModel
 						{
 							// Defined or overloaded
 							$sObsolescence = self::$m_aClassParams[$sPHPClass]['obsolescence_expression'];
+							$aObsoletableRootClasses[self::$m_aRootClasses[$sPHPClass]] = true;
 						}
-						elseif (@self::$m_aClassParams[$sParent]['obsolescence_expression'])
+						elseif (isset(self::$m_aClassParams[$sParent]['obsolescence_expression']))
 						{
 							// Inherited
 							$sObsolescence = self::$m_aClassParams[$sParent]['obsolescence_expression'];
 						}
 						self::$m_aClassParams[$sPHPClass]['obsolescence_expression'] = $sObsolescence;
-
-						if (@self::$m_aClassParams[$sParent]['obsolescence_expression'])
-						{
-							// Inherited or overloaded
-							self::$m_aClassParams[$sPHPClass]['obsolescence_root_class'] = self::$m_aClassParams[$sParent]['obsolescence_root_class'];
-						}
-						elseif ($sObsolescence)
-						{
-							// Defined
-							self::$m_aClassParams[$sPHPClass]['obsolescence_root_class'] = $sPHPClass;
-						}
 
 						foreach (MetaModel::EnumPlugins('iOnClassInitialization') as $sPluginClass => $oClassInit)
 						{
@@ -1826,6 +1817,13 @@ abstract class MetaModel
 			));
 			self::AddMagicAttribute($oClassAtt, $sRootClass);
 
+			$bObsoletable = array_key_exists($sRootClass, $aObsoletableRootClasses);
+			if ($bObsoletable  && is_null(self::$m_aClassParams[$sRootClass]['obsolescence_expression']))
+			{
+				self::$m_aClassParams[$sRootClass]['obsolescence_expression'] = '0';
+			}
+
+
 			foreach(self::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_EXCLUDETOP) as $sChildClass)
 			{
 				if (array_key_exists('finalclass', self::$m_aAttribDefs[$sChildClass]))
@@ -1839,6 +1837,11 @@ abstract class MetaModel
 				$oCloned = clone $oClassAtt;
 				$oCloned->SetFixedValue($sChildClass);
 				self::AddMagicAttribute($oCloned, $sChildClass, $sRootClass);
+
+				if ($bObsoletable  && is_null(self::$m_aClassParams[$sChildClass]['obsolescence_expression']))
+				{
+					self::$m_aClassParams[$sChildClass]['obsolescence_expression'] = '0';
+				}
 			}
 		}
 
@@ -1847,6 +1850,8 @@ abstract class MetaModel
 		//
 		foreach (self::GetClasses() as $sClass)
 		{
+			$sRootClass = self::$m_aRootClasses[$sClass];
+
 			// Create the friendly name attribute
 			$sFriendlyNameAttCode = 'friendlyname'; 
 			$oFriendlyName = new AttributeFriendlyName($sFriendlyNameAttCode);
@@ -1879,18 +1884,17 @@ abstract class MetaModel
 				$oObsolescenceFlag = new AttributeObsolescenceFlag('obsolescence_flag');
 				self::AddMagicAttribute($oObsolescenceFlag, $sClass);
 
-				$sObsolescenceRoot = self::$m_aClassParams[$sClass]['obsolescence_root_class'];
-				if ($sClass == $sObsolescenceRoot)
+				if (self::$m_aRootClasses[$sClass] == $sClass)
 				{
 					$oObsolescenceDate = new AttributeDate('obsolescence_date', array('magic' => true, "allowed_values" => null, "sql" => 'obsolescence_date', "default_value" => '', "is_null_allowed" => true, "depends_on" => array()));
 					self::AddMagicAttribute($oObsolescenceDate, $sClass);
 				}
 				else
 				{
-					$oObsolescenceDate = clone self::$m_aAttribDefs[$sObsolescenceRoot]['archive_date'];
+					$oObsolescenceDate = clone self::$m_aAttribDefs[$sRootClass]['obsolescence_date'];
 					$oObsolescenceDate->SetHostClass($sClass);
 					self::$m_aAttribDefs[$sClass]['obsolescence_date'] = $oObsolescenceDate;
-					self::$m_aAttribOrigins[$sClass]['obsolescence_date'] = $sObsolescenceRoot;
+					self::$m_aAttribOrigins[$sClass]['obsolescence_date'] = $sRootClass;
 				}
 			}
 			foreach (self::$m_aAttribDefs[$sClass] as $sAttCode => $oAttDef)
@@ -1993,7 +1997,7 @@ abstract class MetaModel
 					if (self::IsObsoletable($sRemoteClass))
 					{
 						$sObsoleteRemote = $sAttCode.'_obsolescence_flag';
-						$oObsoleteRemote = new AttributeExternalField($sObsoleteRemote, array("allowed_values"=>null, "extkey_attcode"=>$sAttCode, "target_attcode"=>'archive_flag', "depends_on"=>array()));
+						$oObsoleteRemote = new AttributeExternalField($sObsoleteRemote, array("allowed_values"=>null, "extkey_attcode"=>$sAttCode, "target_attcode"=>'obsolescence_flag', "depends_on"=>array()));
 						self::AddMagicAttribute($oObsoleteRemote, $sClass, self::$m_aAttribOrigins[$sClass][$sAttCode]);
 					}
 				}
@@ -4533,7 +4537,10 @@ abstract class MetaModel
 		}
 		return $value;
 	}
-	
+
+	/**
+	 * @return Config
+	 */
 	public static function GetConfig()
 	{
 		return self::$m_oConfig;
@@ -4719,6 +4726,14 @@ abstract class MetaModel
 		return new $sClass($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
 	}
 
+	/**
+	 * @param $sClass
+	 * @param $iKey
+	 * @param bool $bMustBeFound
+	 * @param bool $bAllowAllData
+	 * @param null $aModifierProperties
+	 * @return DBObject|null
+	 */
 	public static function GetObject($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false, $aModifierProperties = null)
 	{
 		self::_check_subclass($sClass);	

@@ -7719,5 +7719,16 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 
 	public function GetDefaultValue(DBObject $oHostObject = null) {return $this->MakeRealValue("", $oHostObject);}
 	public function IsNullAllowed() {return false;}
+
+	public function GetLabel($sDefault = null)
+	{
+		$sDefault = Dict::S('Core:AttributeObsolescenceFlag/Label', $sDefault);
+		return parent::GetLabel($sDefault);
+	}
+	public function GetDescription($sDefault = null)
+	{
+		$sDefault = Dict::S('Core:AttributeObsolescenceFlag/Label+', $sDefault);
+		return parent::GetDescription($sDefault);
+	}
 }
 

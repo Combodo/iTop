@@ -209,8 +209,7 @@ class RelationGraph extends SimpleGraph
 	{
 		if ($sOQL === '') return;
 		
-		$oSearch = DBObjectSearch::FromOQL($sOQL);
-		$oSearch->SetArchiveMode(false); // Exclude archived objects anytime
+		$oSearch = static::MakeSearch($sOQL);
 		$aAliases = $oSearch->GetSelectedClasses();
 		if (count($aAliases) < 2 )
 		{
@@ -394,8 +393,7 @@ class RelationGraph extends SimpleGraph
 	 				$sQuery = $bDown ? $aQueryInfo['sQueryDown'] : $aQueryInfo['sQueryUp'];
 					try
 					{
-						$oFlt = DBObjectSearch::FromOQL($sQuery);
-						$oFlt->SetArchiveMode(false); // Exclude archived objects anytime
+						$oFlt = static::MakeSearch($sQuery);
 						$oObjSet = new DBObjectSet($oFlt, array(), $oObject->ToArgsForQuery());
 						$oRelatedObj = $oObjSet->Fetch();
 					}
@@ -461,8 +459,7 @@ class RelationGraph extends SimpleGraph
 				$sQuery = $aQueryInfo['sQueryUp'];
 				try
 				{
-					$oFlt = DBObjectSearch::FromOQL($sQuery);
-					$oFlt->SetArchiveMode(false); // Exclude archived objects anytime
+					$oFlt = static::MakeSearch($sQuery);
 					$oObjSet = new DBObjectSet($oFlt, array(), $oObject->ToArgsForQuery());
 					$iCount = $oObjSet->Count();
 				}
@@ -580,4 +577,17 @@ class RelationGraph extends SimpleGraph
 		}
 		return $aResults;		
 	}	
+
+	protected static function MakeSearch($sOQL)
+	{
+		$oSearch = DBSearch::FromOQL($sOQL);
+		if (MetaModel::IsObsoletable($oSearch->GetClass()))
+		{
+			// Exclude obsolete objects anytime
+			$oSearch->AddCondition('obsolescence_flag', 0);
+		}
+		// Exclude archived objects anytime
+		$oSearch->SetArchiveMode(false);
+		return $oSearch;
+	}
 }

@@ -58,6 +58,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:AttributeArchiveDate/Label' => 'Archive date~~',
 	'Core:AttributeArchiveDate/Label+' => '',
 
+	'Core:AttributeObsolescenceFlag' => 'Obsolescence flag~~',
+	'Core:AttributeObsolescenceFlag/Value:yes' => 'Yes~~',
+	'Core:AttributeObsolescenceFlag/Value:yes+' => 'This object is excluded from the impact analysis, and hidden from search results~~',
+	'Core:AttributeObsolescenceFlag/Value:no' => 'No~~',
+	'Core:AttributeObsolescenceFlag/Label' => 'Obsolete~~',
+	'Core:AttributeObsolescenceFlag/Label+' => 'Computed dynamically on other attributes~~',
+
 	'Core:AttributeString' => 'Cadena de caracteres',
 	'Core:AttributeString+' => 'Cadena de caracteres alfanumerico',
 

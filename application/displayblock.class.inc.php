@@ -390,6 +390,7 @@ class DisplayBlock
 			
 			$this->m_oSet = new CMDBObjectSet($this->m_oFilter, $aOrderBy, $aQueryParams);
 		}
+		$this->m_oSet->SetShowObsoleteData(utils::ShowObsoleteData());
 		switch($this->m_sStyle)
 		{
 			case 'count':
@@ -709,7 +710,8 @@ class DisplayBlock
 				{
 					$aQueryParams = $aExtraParams['query_params'];
 				}
-				$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);				
+				$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);
+				$this->m_oSet->SetShowObsoleteData(utils::ShowObsoleteData());
 			}
 			$iCount = $this->m_oSet->Count();
 			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($this->m_oFilter->serialize());
@@ -752,7 +754,8 @@ class DisplayBlock
 				{
 					$aQueryParams = $aExtraParams['query_params'];
 				}
-				$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);				
+				$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);
+				$this->m_oSet->SetShowObsoleteData(utils::ShowObsoleteData());
 			}
 			// Summary details
 			$aCounts = array();
@@ -766,6 +769,7 @@ class DisplayBlock
 					$oFilter = $this->m_oFilter->DeepClone();
 					$oFilter->AddCondition($sStateAttrCode, $sStateValue, '=');
 					$oSet = new DBObjectSet($oFilter);
+					$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
 					$aCounts[$sStateValue] = $oSet->Count();
 					$aStateLabels[$sStateValue] = htmlentities($oAttDef->GetValueLabel($sStateValue), ENT_QUOTES, 'UTF-8');
 					if ($aCounts[$sStateValue] == 0)

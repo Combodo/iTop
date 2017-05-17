@@ -45,6 +45,7 @@ abstract class DBSearch
 	protected $m_bNoContextParameters = false;
 	protected $m_aModifierProperties = array();
 	protected $m_bArchiveMode = false;
+	protected $m_bShowObsoleteData = true;
 
 	public function __construct()
 	{
@@ -69,6 +70,15 @@ abstract class DBSearch
 	public function GetArchiveMode()
 	{
 		return $this->m_bArchiveMode;
+	}
+
+	public function SetShowObsoleteData($bShow)
+	{
+		$this->m_bShowObsoleteData = $bShow;
+	}
+	public function GetShowObsoleteData()
+	{
+		return $this->m_bShowObsoleteData;
 	}
 
 	public function NoContextParameters() {$this->m_bNoContextParameters = true;}

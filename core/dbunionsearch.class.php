@@ -71,6 +71,24 @@ class DBUnionSearch extends DBSearch
 		return true;
 	}
 
+	public function SetArchiveMode($bEnable)
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->SetArchiveMode($bEnable);
+		}
+		parent::SetArchiveMode($bEnable);
+	}
+
+	public function SetShowObsoleteData($bShow)
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->SetShowObsoleteData($bShow);
+		}
+		parent::SetShowObsoleteData($bShow);
+	}
+
 	/**
 	 * Find the lowest common ancestor for each of the selected class
 	 */

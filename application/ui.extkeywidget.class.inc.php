@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -54,7 +54,7 @@
  * | |   +--------+    +-----+                    | |
  * | +--------------------------------------------+ |
  * +------------------------------------------------+
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -101,7 +101,7 @@ class UIExtKeyWidget
 	 * @param Hash $aArgs Extra context arguments
 	 * @return string The HTML fragment to be inserted into the page
 	 */
-	public function Display(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix = '', $aArgs = array(), $bSearchMode = null, $sDisplayStyle = 'select', $bSearchMultiple = true)
+	public function Display(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, DBObjectset $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix = '', $aArgs = array(), $bSearchMode = null, $sDisplayStyle = 'select', $bSearchMultiple = true)
 	{
 		if (!is_null($bSearchMode))
 		{
@@ -141,7 +141,8 @@ class UIExtKeyWidget
 		{
 			throw new Exception('Implementation: null value for allowed values definition');
 		}
-		elseif ($oAllowedValues->Count() < $iMaxComboLength)
+		$oAllowedValues->SetShowObsoleteData(utils::ShowObsoleteData());
+		if ($oAllowedValues->Count() < $iMaxComboLength)
 		{
 			// Discrete list of values, use a SELECT or RADIO buttons depending on the config
 			switch($sDisplayStyle)
@@ -497,6 +498,7 @@ EOF
 			$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 			$oSet = new DBObjectSet($oFilter);
 		}
+		$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
 
 		$sHKAttCode = MetaModel::IsHierarchicalClass($this->sTargetClass);
 		$this->DumpTree($oPage, $oSet, $sHKAttCode, $currValue);

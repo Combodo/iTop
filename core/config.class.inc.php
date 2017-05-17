@@ -929,6 +929,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'show_obsolete_data' => array(
+			'type' => 'bool',
+			'description' => 'Default value for the user preference "show obsolete data"',
+			'default' => false,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)
