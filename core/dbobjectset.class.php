@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Object set management
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -32,16 +32,49 @@
  */
 class DBObjectSet
 {
+	/**
+	 * @var array
+	 */
 	protected $m_aAddedIds; // Ids of objects added (discrete lists)
+	/**
+	 * @var hash array of (row => array of (classalias) => object/null) storing the objects added "in memory"
+	 */
 	protected $m_aAddedObjects;
+	/**
+	 * @var array
+	 */
 	protected $m_aArgs;
+	/**
+	 * @var array
+	 */
 	protected $m_aAttToLoad;
+	/**
+	 * @var array
+	 */
 	protected $m_aOrderBy;
+	/**
+	 * @var bool True when the filter has been used OR the set is built step by step (AddObject...)
+	 */
 	public $m_bLoaded;
+	/**
+	 * @var int Total number of rows for the query without LIMIT. null if unknown yet
+	 */
 	protected $m_iNumTotalDBRows;
+	/**
+	 * @var int Total number of rows LOADED in $this->m_oSQLResult via a SQL query. 0 by default
+	 */
 	protected $m_iNumLoadedDBRows;
+	/**
+	 * @var int
+	 */
 	protected $m_iCurrRow;
+	/*
+	 * @var DBSearch
+	 */
 	protected $m_oFilter;
+	/**
+	 * @var mysqli_result
+	 */
 	protected $m_oSQLResult;
 
 	/**
@@ -65,10 +98,10 @@ class DBObjectSet
 		$this->m_iLimitCount = $iLimitCount;
 		$this->m_iLimitStart = $iLimitStart;
 
-		$this->m_iNumTotalDBRows = null; // Total number of rows for the query without LIMIT. null if unknown yet
-		$this->m_iNumLoadedDBRows = 0; // Total number of rows LOADED in $this->m_oSQLResult via a SQL query. 0 by default
-		$this->m_bLoaded = false; // true when the filter has been used OR the set is built step by step (AddObject...)
-		$this->m_aAddedObjects = array(); // array of (row => array of (classalias) => object/null) storing the objects added "in memory"
+		$this->m_iNumTotalDBRows = null;
+		$this->m_iNumLoadedDBRows = 0;
+		$this->m_bLoaded = false;
+		$this->m_aAddedObjects = array();
 		$this->m_iCurrRow = 0;
 		$this->m_oSQLResult = null;
 	}
