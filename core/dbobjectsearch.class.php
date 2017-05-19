@@ -439,23 +439,46 @@ class DBObjectSearch extends DBSearch
 			break;
 
 		default:
-			$this->m_aParams[$sFilterCode] = $value;
-			$sOperator = $sOpCode;
+			if ($value === null)
+			{
+				switch ($sOpCode)
+				{
+					case '=':
+						$sOpCode = '*Expression*';
+						$oExpression = new FunctionExpression('ISNULL', array($oField));
+						break;
+					case '!=':
+						$sOpCode = '*Expression*';
+						$oExpression = new FunctionExpression('ISNULL', array($oField));
+						$oExpression = new BinaryExpression($oExpression, '=', new ScalarExpression(0));
+						break;
+					default:
+						throw new Exception("AddCondition on null value: unsupported operator '$sOpCode''");
+				}
+			}
+			else
+			{
+				$this->m_aParams[$sFilterCode] = $value;
+				$sOperator = $sOpCode;
+			}
 		}
 
 		switch($sOpCode)
 		{
-		case "IN":
-		case "NOTIN":
-			$oNewCondition = Expression::FromOQL($sOQLCondition);
-			break;
+			case '*Expression*':
+				$oNewCondition = $oExpression;
+				break;
+			case "IN":
+			case "NOTIN":
+				$oNewCondition = Expression::FromOQL($sOQLCondition);
+				break;
 
-		case 'Contains':
-		case 'Begins with':
-		case 'Finishes with':
-		default:
-			$oRightExpr = new VariableExpression($sFilterCode);
-			$oNewCondition = new BinaryExpression($oField, $sOperator, $oRightExpr);
+			case 'Contains':
+			case 'Begins with':
+			case 'Finishes with':
+			default:
+				$oRightExpr = new VariableExpression($sFilterCode);
+				$oNewCondition = new BinaryExpression($oField, $sOperator, $oRightExpr);
 		}
 
 		$this->AddConditionExpression($oNewCondition);
