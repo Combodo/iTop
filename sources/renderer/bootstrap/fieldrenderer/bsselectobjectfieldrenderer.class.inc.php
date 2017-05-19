@@ -28,6 +28,7 @@ use \UserRights;
 use \InlineImage;
 use \DBObjectSet;
 use \MetaModel;
+use \ContextTag;
 use \Combodo\iTop\Renderer\FieldRenderer;
 use \Combodo\iTop\Renderer\RenderingOutput;
 use \Combodo\iTop\Form\Field\SelectObjectField;
@@ -60,6 +61,12 @@ class BsSelectObjectFieldRenderer extends FieldRenderer
 		// Rendering field in edition mode
 		if (!$this->oField->GetReadOnly() && !$this->oField->GetHidden())
 		{
+		    // Debug trace: This is very useful when this kind of field doesn't return the expected values.
+            if(ContextTag::Check('debug'))
+            {
+                IssueLog::Info('Form field #'.$this->oField->GetId().' OQL query: '.$this->oField->GetSearch()->ToOQL(true));
+            }
+
 			// Rendering field
             // - Opening container
 			$oOutput->AddHtml('<div class="form-group form_group_small ' . $sFieldMandatoryClass . '">');

@@ -50,6 +50,10 @@ $oContex2 = new ContextTag('Portal:' . PORTAL_MODULE_ID);
 
 // Checking if debug param is on
 $bDebug = (isset($_REQUEST['debug']) && ($_REQUEST['debug'] === 'true') );
+if($bDebug)
+{
+    $oContexDebug = new ContextTag('debug');
+}
 
 // Initializing Silex framework
 $oKPI = new ExecutionKPI();
