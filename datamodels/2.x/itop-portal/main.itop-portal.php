@@ -68,13 +68,20 @@ class iTopPortalEditUrlMaker implements iDBObjectURLMaker
 		}
 		
 		$sPortalAbsoluteUrl = utils::GetAbsoluteUrlModulePage($sPortalId, 'index.php');
-		if (strpos($sPortalAbsoluteUrl, '?') !== false)
+        if (strpos($sPortalAbsoluteUrl, '?') !== false)
 		{
-			$sUrl = substr($sPortalAbsoluteUrl, 0, strpos($sPortalAbsoluteUrl, '?')).$sObjectQueryString.substr($sPortalAbsoluteUrl, strpos($sPortalAbsoluteUrl, '?'));
+		    // Removing generated url query parameters so it can be replaced with those from the absolute url
+            // Mostly necessary when iTop instance has multiple portals
+		    if(strpos($sObjectQueryString, '?') !== false)
+            {
+                $sObjectQueryString = substr($sObjectQueryString, 0, strpos($sObjectQueryString, '?'));
+            }
+
+            $sUrl = substr($sPortalAbsoluteUrl, 0, strpos($sPortalAbsoluteUrl, '?')).$sObjectQueryString.substr($sPortalAbsoluteUrl, strpos($sPortalAbsoluteUrl, '?'));
 		}
 		else
 		{
-			$sUrl = $sPortalAbsoluteUrl.$sObjectQueryString;
+            $sUrl = $sPortalAbsoluteUrl.$sObjectQueryString;
 		}
 
 		return $sUrl;
