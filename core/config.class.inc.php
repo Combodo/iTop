@@ -929,11 +929,19 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'show_obsolete_data' => array(
+		'obsolescence.show_obsolete_data' => array(
 			'type' => 'bool',
 			'description' => 'Default value for the user preference "show obsolete data"',
 			'default' => false,
 			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'obsolescence.date_update_interval' => array(
+			'type' => 'integer',
+			'description' => 'Delay in seconds between two refreshes of the obsolescence dates.',
+			'default' => 600,
+			'value' => 600,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),

@@ -194,7 +194,7 @@ class utils
 	 */
 	public static function ShowObsoleteData()
 	{
-		$bDefault = MetaModel::GetConfig()->Get('show_obsolete_data'); // default is false
+		$bDefault = MetaModel::GetConfig()->Get('obsolescence.show_obsolete_data'); // default is false
 		$bShow = appUserPreferences::GetPref('show_obsolete_data', $bDefault);
 		if (static::IsArchiveMode())
 		{

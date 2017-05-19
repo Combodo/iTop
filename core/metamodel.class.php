@@ -2554,13 +2554,14 @@ abstract class MetaModel
 		}
 		return $aRes;
 	}
-	public static function EnumObsoletableClasses()
+	public static function EnumObsoletableClasses($bRootClassesOnly = true)
 	{
 		$aRes = array();
 		foreach (self::GetClasses() as $sClass)
 		{
 			if (self::IsObsoletable($sClass))
 			{
+				if ($bRootClassesOnly && !static::IsRootClass($sClass)) continue;
 				$aRes[] = $sClass;
 			}
 		}
@@ -4868,6 +4869,11 @@ abstract class MetaModel
 		}
 	}
 
+	/**
+	 * @param DBObjectSearch $oFilter
+	 * @param array $aValues array of attcode => value
+	 * @return int Modified objects
+	 */
 	public static function BulkUpdate(DBObjectSearch $oFilter, array $aValues)
 	{
 		// $aValues is an array of $sAttCode => $value
@@ -4876,6 +4882,7 @@ abstract class MetaModel
 		{
 			CMDBSource::Query($sSQL);
 		}
+		return CMDBSource::AffectedRows();
 	}
 
 	/**
