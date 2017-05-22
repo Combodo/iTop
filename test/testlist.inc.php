@@ -3635,7 +3635,39 @@ class TestEmailAsynchronous extends TestBizModel
 	}
 }
 
-class TestLinkSetRecording_NN_WithDuplicates extends TestBizModel
+abstract class TestLinkSet extends TestBizModel
+{
+	protected function StandardizedDump($oSet, $sAttPrefixToIgnore)
+	{
+		if (!$oSet->m_bLoaded) $oSet->Load();
+		$oSet->Rewind();
+
+		$aRet = array();
+		while($oObject = $oSet->Fetch())
+		{
+			$aValues = array();
+			foreach(MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef)
+			{
+				//if (!$oAttDef->IsPartOfFingerprint()) continue;
+				//if ($oAttDef->IsMagic()) continue;
+				if ($sAttCode == 'friendlyname') continue;
+				if (substr($sAttCode, -strlen('_archive_flag')) == '_archive_flag') continue;
+				if (substr($sAttCode, -strlen('_obsolescence_flag')) == '_obsolescence_flag') continue;
+				if (substr($sAttCode, 0, strlen($sAttPrefixToIgnore)) == $sAttPrefixToIgnore) continue;
+				if ($oAttDef->IsScalar())
+				{
+					$aValues[] = $oObject->Get($sAttCode);
+				}
+			}
+			$aRet[] = implode(', ', $aValues);
+		}
+		sort($aRet);
+		return $aRet;
+	}
+
+}
+
+class TestLinkSetRecording_NN_WithDuplicates extends TestLinkSet
 {
 	static public function GetName()
 	{
@@ -3916,69 +3948,19 @@ class TestLinkSetRecording_NN_WithDuplicates extends TestBizModel
 					array(
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
-						'network_port' => '',
+						'network_port' => 'portX',
 						'device_port' => '',
 					),
 				),
 				'expected-res' => array (
-					"$iDev2, test device B, unit test linkset, , , downlink, test device B",
+					"$iDev2, test device B, unit test linkset, portX, , downlink, test device B",
 				),
 				'history_added' => 1,
 				'history_removed' => 0,
 				'history_modified' => 0,
 			),
 			array(
-				'description' => 'Create a second link from scratch, pointing to the same server and no port, to prepare for the next test case',
-				'links' => array(
-					array(
-						'id' => "SELECT lnkConnectableCIToNetworkDevice WHERE networkdevice_id = $iDev2 AND connectableci_id = $iServer",
-						'networkdevice_id' => $iDev2,
-						'connectableci_id' => $iServer,
-						'network_port' => '',
-						'device_port' => '',
-					),
-					array(
-						'networkdevice_id' => $iDev2,
-						'connectableci_id' => $iServer,
-						'network_port' => 'X',
-						'device_port' => '',
-					),
-				),
-				'expected-res' => array (
-					"$iDev2, test device B, unit test linkset, , , downlink, test device B",
-					"$iDev2, test device B, unit test linkset, X, , downlink, test device B",
-				),
-				'history_added' => 1,
-				'history_removed' => 0,
-				'history_modified' => 0,
-			),
-			array(
-				'description' => 'Create a second link from scratch, pointing to the same server and no port, to prepare for the next test case',
-				'links' => array(
-					array(
-						'id' => "SELECT lnkConnectableCIToNetworkDevice WHERE networkdevice_id = $iDev2 AND connectableci_id = $iServer",
-						'networkdevice_id' => $iDev2,
-						'connectableci_id' => $iServer,
-						'network_port' => '',
-						'device_port' => '',
-					),
-					array(
-						'networkdevice_id' => $iDev2,
-						'connectableci_id' => $iServer,
-						'network_port' => 'X',
-						'device_port' => '',
-					),
-				),
-				'expected-res' => array (
-					"$iDev2, test device B, unit test linkset, , , downlink, test device B",
-					"$iDev2, test device B, unit test linkset, X, , downlink, test device B",
-				),
-				'history_added' => 1,
-				'history_removed' => 0,
-				'history_modified' => 0,
-			),
-			array(
-				'description' => 'Device B twice (same characteristics) - known issue #1145',
+				'description' => 'Device B twice (same characteristics) - known issue #1145 (test failing until we fix it)',
 				'links' => array(
 					array(
 						'networkdevice_id' => $iDev2,
@@ -4092,33 +4074,9 @@ class TestLinkSetRecording_NN_WithDuplicates extends TestBizModel
 			}
 		}
 	}
-
-	protected function StandardizedDump($oSet, $sAttPrefixToIgnore)
-	{
-		if (!$oSet->m_bLoaded) $oSet->Load();
-		$oSet->Rewind();
-	
-		$aRet = array();
-		while($oObject = $oSet->Fetch())
-		{
-			$aValues = array();
-			foreach(MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef)
-			{
-				if ($sAttCode == 'friendlyname') continue;
-				if (substr($sAttCode, 0, strlen($sAttPrefixToIgnore)) == $sAttPrefixToIgnore) continue;
-				if ($oAttDef->IsScalar())
-				{
-					$aValues[] = $oObject->Get($sAttCode);
-				}
-			}
-			$aRet[] = implode(', ', $aValues);
-		}
-		sort($aRet);
-		return $aRet;
-	}
 }
 
-class TestLinkSetRecording_NN_NoDuplicates extends TestBizModel
+class TestLinkSetRecording_NN_NoDuplicates extends TestLinkSet
 {
 	static public function GetName()
 	{
@@ -4435,33 +4393,9 @@ class TestLinkSetRecording_NN_NoDuplicates extends TestBizModel
 			}
 		}
 	}
-
-	protected function StandardizedDump($oSet, $sAttPrefixToIgnore)
-	{
-		if (!$oSet->m_bLoaded) $oSet->Load();
-		$oSet->Rewind();
-	
-		$aRet = array();
-		while($oObject = $oSet->Fetch())
-		{
-			$aValues = array();
-			foreach(MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef)
-			{
-				if ($sAttCode == 'friendlyname') continue;
-				if (substr($sAttCode, 0, strlen($sAttPrefixToIgnore)) == $sAttPrefixToIgnore) continue;
-				if ($oAttDef->IsScalar())
-				{
-					$aValues[] = $oObject->Get($sAttCode);
-				}
-			}
-			$aRet[] = implode(', ', $aValues);
-		}
-		sort($aRet);
-		return $aRet;
-	}
 }
 
-class TestLinkSetRecording_1N extends TestBizModel
+class TestLinkSetRecording_1N extends TestLinkSet
 {
 	static public function GetName()
 	{
@@ -4663,34 +4597,10 @@ class TestLinkSetRecording_1N extends TestBizModel
 			}
 		}
 	}
-
-	protected function StandardizedDump($oSet, $sAttPrefixToIgnore)
-	{
-		if (!$oSet->m_bLoaded) $oSet->Load();
-		$oSet->Rewind();
-
-		$aRet = array();
-		while($oObject = $oSet->Fetch())
-		{
-			$aValues = array();
-			foreach(MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef)
-			{
-				if ($sAttCode == 'friendlyname') continue;
-				if (substr($sAttCode, 0, strlen($sAttPrefixToIgnore)) == $sAttPrefixToIgnore) continue;
-				if ($oAttDef->IsScalar())
-				{
-					$aValues[] = $oObject->Get($sAttCode);
-				}
-			}
-			$aRet[] = implode(', ', $aValues);
-		}
-		sort($aRet);
-		return $aRet;
-	}
 }
 
 
-class TestLinkSetRecording_1NAdd_Remove extends TestBizModel
+class TestLinkSetRecording_1NAdd_Remove extends TestLinkSet
 {
 	static public function GetName()
 	{
@@ -4907,30 +4817,6 @@ class TestLinkSetRecording_1NAdd_Remove extends TestBizModel
 				throw new Exception('Stopping on failed scenario');
 			}
 		}
-	}
-
-	protected function StandardizedDump($oSet, $sAttPrefixToIgnore)
-	{
-		if (!$oSet->m_bLoaded) $oSet->Load();
-		$oSet->Rewind();
-
-		$aRet = array();
-		while($oObject = $oSet->Fetch())
-		{
-			$aValues = array();
-			foreach(MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef)
-			{
-				if ($sAttCode == 'friendlyname') continue;
-				if (substr($sAttCode, 0, strlen($sAttPrefixToIgnore)) == $sAttPrefixToIgnore) continue;
-				if ($oAttDef->IsScalar())
-				{
-					$aValues[] = $oObject->Get($sAttCode);
-				}
-			}
-			$aRet[] = implode(', ', $aValues);
-		}
-		sort($aRet);
-		return $aRet;
 	}
 }
 
