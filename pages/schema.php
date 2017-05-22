@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Presentation of the data model
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -208,7 +208,8 @@ function DisplayLifecycle($oPage, $sClass)
 			foreach(MetaModel::EnumTransitions($sClass, $sStateCode) as $sStimulusCode => $aTransitionDef)
 			{
 				$sStimulusLabel = $aStimuli[$sStimulusCode]->GetLabel();
-				$sTargetStateLabel = MetaModel::GetStateLabel($sClass, $aTransitionDef['target_state']);
+				$sTargetState = $aTransitionDef['target_state'];
+				$sTargetStateLabel = MetaModel::GetStateLabel($sClass, $sTargetState);
 				if (count($aTransitionDef['actions']) > 0)
 				{
 					$aActionsDesc = array();
@@ -234,7 +235,7 @@ function DisplayLifecycle($oPage, $sClass)
 				{
 					$sActions = "";
 				}
-				$oPage->add("<li><span title=\"code: $sStimulusCode\" style=\"color:red;font-weight=bold;\">$sStimulusLabel</span> =&gt; $sTargetStateLabel $sActions</li>\n");
+				$oPage->add("<li><span title=\"code: $sStimulusCode\" style=\"color:red;font-weight=bold;\">$sStimulusLabel</span> <span style=\"color:grey;\">($sStimulusCode)</span> =&gt; $sTargetStateLabel <span style=\"color:grey;\">($sTargetState)</span> $sActions</li>\n");
 			}
 			$oPage->add("</ul>\n");
 		}

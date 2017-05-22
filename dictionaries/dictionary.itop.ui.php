@@ -710,7 +710,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Schema:Links:n-n' => 'Classes linked to %1$s (n:n links):',
 	'UI:Schema:Links:All' => 'Graph of all related classes',
 	'UI:Schema:NoLifeCyle' => 'There is no life cycle defined for this class.',
-	'UI:Schema:LifeCycleTransitions' => 'Transitions',
+	'UI:Schema:LifeCycleTransitions' => 'States and Transitions',
 	'UI:Schema:LifeCyleAttributeOptions' => 'Attribute options',
 	'UI:Schema:LifeCycleHiddenAttribute' => 'Hidden',
 	'UI:Schema:LifeCycleReadOnlyAttribute' => 'Read-only',
