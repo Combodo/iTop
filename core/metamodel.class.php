@@ -2673,22 +2673,32 @@ abstract class MetaModel
 				}
 			}
 		}
+		$aScalarArgs = static::AddMagicPlaceholders($aScalarArgs);
+		return $aScalarArgs;
+	}
+
+	/**
+	 * @param $aPlaceholders The array into which standard placeholders should be added
+	 * @return array of placeholder (or name->object()) => value (or object)
+	 */
+	public static function AddMagicPlaceholders($aPlaceholders)
+	{
 		// Add standard magic arguments
 		//
-		$aScalarArgs['current_contact_id'] = UserRights::GetContactId(); // legacy
+		$aPlaceholders['current_contact_id'] = UserRights::GetContactId(); // legacy
 
 		$oUser = UserRights::GetUserObject();
 		if (!is_null($oUser))
 		{
-			$aScalarArgs['current_user->object()'] = $oUser;
+			$aPlaceholders['current_user->object()'] = $oUser;
 
 			$oContact = UserRights::GetContactObject();
 			if (!is_null($oContact))
 			{
-				$aScalarArgs['current_contact->object()'] = $oContact;
+				$aPlaceholders['current_contact->object()'] = $oContact;
 			}
 		}
-		return $aScalarArgs;
+		return $aPlaceholders;
 	}
 
 	public static function MakeModifierProperties($oFilter)
@@ -5085,6 +5095,8 @@ abstract class MetaModel
 	 */
 	static public function ApplyParams($sInput, $aParams)
 	{
+		$aParams = static::AddMagicPlaceholders($aParams);
+
 		// Declare magic parameters
 		$aParams['APP_URL'] = utils::GetAbsoluteUrlAppRoot();
 		$aParams['MODULES_URL'] = utils::GetAbsoluteUrlModulesRoot();
