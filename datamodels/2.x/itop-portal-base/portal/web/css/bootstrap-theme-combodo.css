@@ -4971,6 +4971,16 @@ label {
     padding: 4px 10px;
     font-size: 12px;
   }
+  .form_field_compact {
+    /* Small fields */
+    /* CKEditor */
+  }
+  .form_field_compact div.cke .cke_contents {
+    height: 180px !important;
+  }
+  .form_field_dense {
+    /* CKEditor */
+  }
   .form_field_dense .form-group.form_group_small {
     display: flex;
     display: -webkit-flex;
@@ -4984,5 +4994,8 @@ label {
     flex-grow: 1;
     -webkit-flex-grow: 1;
     -ms-flex-grow: 1;
+  }
+  .form_field_dense div.cke .cke_contents {
+    height: 120px !important;
   }
 }

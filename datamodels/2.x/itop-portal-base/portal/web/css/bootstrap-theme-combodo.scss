@@ -6059,30 +6059,44 @@ label {
         }
     }
     /* Compact mode */
-    .form_field_compact .form-group.form_group_small{
-        @extend .row;
+    .form_field_compact{
+        /* Small fields */
+        .form-group.form_group_small{
+            @extend .row;
 
-        .form_field_label{
-            @extend .col-sm-3;
+            .form_field_label{
+                @extend .col-sm-3;
+            }
+            .form_field_control{
+                @extend .col-sm-9;
+            }
         }
-        .form_field_control{
-            @extend .col-sm-9;
+        /* CKEditor */
+        div.cke .cke_contents{
+            height: 180px !important;
         }
     }
     /* Dense mode */
-    .form_field_dense .form-group.form_group_small{
-        display: flex;
-        display: -webkit-flex;
-        display: -ms-flex;
+    .form_field_dense{
+        .form-group.form_group_small{
+            display: flex;
+            display: -webkit-flex;
+            display: -ms-flex;
 
-        .form_field_label{
-            margin-right: 0.7em;
-            white-space: nowrap;
+            .form_field_label{
+                margin-right: 0.7em;
+                white-space: nowrap;
+            }
+            .form_field_control{
+                flex-grow: 1;
+                -webkit-flex-grow: 1;
+                -ms-flex-grow: 1;
+            }
         }
-        .form_field_control{
-            flex-grow: 1;
-            -webkit-flex-grow: 1;
-            -ms-flex-grow: 1;
+
+        /* CKEditor */
+        div.cke .cke_contents{
+            height: 120px !important;
         }
     }
 }

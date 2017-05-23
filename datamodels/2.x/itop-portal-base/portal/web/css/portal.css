@@ -14,6 +14,7 @@
 }
 footer {
   margin: 5em 1em;
+  text-align: center;
 }
 /* Environment banner */
 #envbanner {
@@ -175,6 +176,9 @@ footer {
   color: white;
 }
 .overlay_content {
+  text-align: center;
+}
+.content_loader {
   text-align: center;
 }
 .content_loader .icon {
@@ -1124,10 +1128,6 @@ table .group-actions {
   border: 1px solid #b94a48;
   border-radius: 0px;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-}
-/* CKEditor : Styling basics */
-.form_field div.cke .cke_contents {
-  height: 180px !important;
 }
 /* CKEditor : Styling notifications based on BS alerts */
 .cke_notification {
