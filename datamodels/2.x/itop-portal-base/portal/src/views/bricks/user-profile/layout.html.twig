@@ -19,116 +19,128 @@
 			User profile edition is not available in demo mode.
 		</div>
 	{% endif %}
-	
+
 	<div id="user-profile-wrapper">
-		<div class="row">
-			<div class="col-sm-6">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">{{ 'Brick:Portal:UserProfile:PersonalInformations:Title'|dict_s }}</h3>
-					</div>
-					<div class="panel-body">
-						<form id="{{ oContactForm.id }}" class="" method="POST" action="{{ oContactForm.renderer.GetEndpoint()|raw }}">
-							<input type="hidden" name="transaction_id" value="{{ oContactForm.transaction_id }}" />
-							<div class="form_alerts">
-								<div class="alert alert-success" role="alert" style="display: none;"></div>
-								<div class="alert alert-warning" role="alert" style="display: none;"></div>
-								<div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
-							</div>
-							<div class="form_fields">
-								{{ oContactForm.renderer.GetBaseLayout()|raw }}
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-			<div class="col-sm-6">
-				<div class="panel panel-default user_profile_picture">
-					<div class="panel-heading">
-						<h3 class="panel-title">{{ 'Brick:Portal:UserProfile:Photo:Title'|dict_s }}</h3>
-					</div>
-					<div class="panel-body" style="position: relative;">
-						<div class="form_alerts">
-							<div class="alert alert-success" role="alert" style="display: none;"></div>
-							<div class="alert alert-warning" role="alert" style="display: none;"></div>
-							<div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
+		{% block pUserProfileWrapper %}
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">{{ 'Brick:Portal:UserProfile:PersonalInformations:Title'|dict_s }}</h3>
 						</div>
-						<form id="picture-form" method="POST" action="{{ app['url_generator'].generate('p_user_profile_brick') }}">
-							<input type="hidden" name="current_values[form_type]" value="{{ constant('\\Combodo\\iTop\\Portal\\Controller\\UserProfileBrickController::ENUM_FORM_TYPE_PICTURE') }}" />
-							<input type="hidden" name="operation" value="submit" />
-							<div class="text-center">
-								<span class="preview">
-									<img src="{{ sUserPhotoUrl }}"/>
-								</span>
-								<span class="actions">
-									<span type="button" class="btn btn-default btn_edit">
-										<span class="fa fa-pencil fa-fw"></span>
-										<input id="picture" type="file" name="picture" />
-									</span>
-									{#<button type="button" class="btn btn-default btn_undo" title="{{ 'UI:Button:ResetImage'|dict_s }}" disabled>
-										<span class="fa fa-undo fa-fw"></span>
-									</button>
-									<button type="button" class="btn btn-default btn_reset" title="{{ 'UI:Button:RemoveImage'|dict_s }}">
-										<span class="fa fa-trash-o fa-fw"></span>
-									</button>#}
-								</span>
-							</div>
-						</form>
-					</div>
-				</div>
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">{{ 'Class:appUserPreferences/Attribute:preferences'|dict_s }}</h3>
-					</div>
-					<div class="panel-body">
-						<form id="{{ oPreferencesForm.id }}" class="" method="POST" action="{{ oPreferencesForm.renderer.GetEndpoint()|raw }}">
-							<div class="form_alerts">
-								<div class="alert alert-success" role="alert" style="display: none;"></div>
-								<div class="alert alert-warning" role="alert" style="display: none;"></div>
-								<div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
-							</div>
-							<div class="form_fields">
-								{{ oPreferencesForm.renderer.GetBaseLayout()|raw }}
-							</div>
-						</form>
-					</div>
-				</div>
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">{{ 'Brick:Portal:UserProfile:Password:Title'|dict_s }}</h3>
-					</div>
-					<div class="panel-body">
-						{% if oPasswordForm is not null %}
-							<form id="{{ oPasswordForm.id }}" class="" method="POST" action="{{ oPasswordForm.renderer.GetEndpoint()|raw }}" autocomplete="off">
+						<div class="panel-body">
+							<form id="{{ oContactForm.id }}" class="" method="POST" action="{{ oContactForm.renderer.GetEndpoint()|raw }}">
+								<input type="hidden" name="transaction_id" value="{{ oContactForm.transaction_id }}" />
 								<div class="form_alerts">
 									<div class="alert alert-success" role="alert" style="display: none;"></div>
 									<div class="alert alert-warning" role="alert" style="display: none;"></div>
 									<div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
 								</div>
 								<div class="form_fields">
-									{{ oPasswordForm.renderer.GetBaseLayout()|raw }}
+									{{ oContactForm.renderer.GetBaseLayout()|raw }}
 								</div>
 							</form>
-						{% else %}
-							{{ 'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator'|dict_s }}
-						{% endif %}
+						</div>
 					</div>
 				</div>
+				<div class="col-sm-6">
+					{% block pUserProfilePictureFormContainer %}
+						<div class="panel panel-default user_profile_picture">
+							<div class="panel-heading">
+								<h3 class="panel-title">{{ 'Brick:Portal:UserProfile:Photo:Title'|dict_s }}</h3>
+							</div>
+							<div class="panel-body" style="position: relative;">
+								<div class="form_alerts">
+									<div class="alert alert-success" role="alert" style="display: none;"></div>
+									<div class="alert alert-warning" role="alert" style="display: none;"></div>
+									<div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
+								</div>
+								<form id="picture-form" method="POST" action="{{ app['url_generator'].generate('p_user_profile_brick') }}">
+									<input type="hidden" name="current_values[form_type]" value="{{ constant('\\Combodo\\iTop\\Portal\\Controller\\UserProfileBrickController::ENUM_FORM_TYPE_PICTURE') }}" />
+									<input type="hidden" name="operation" value="submit" />
+									<div class="text-center">
+										<span class="preview">
+											<img src="{{ sUserPhotoUrl }}"/>
+										</span>
+										<span class="actions">
+											<span type="button" class="btn btn-default btn_edit">
+												<span class="fa fa-pencil fa-fw"></span>
+												<input id="picture" type="file" name="picture" />
+											</span>
+											{#<button type="button" class="btn btn-default btn_undo" title="{{ 'UI:Button:ResetImage'|dict_s }}" disabled>
+												<span class="fa fa-undo fa-fw"></span>
+											</button>
+											<button type="button" class="btn btn-default btn_reset" title="{{ 'UI:Button:RemoveImage'|dict_s }}">
+												<span class="fa fa-trash-o fa-fw"></span>
+											</button>#}
+										</span>
+									</div>
+								</form>
+							</div>
+						</div>
+					{% endblock %}
+
+					{% block pUserProfilePreferencesFormContainer %}
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">{{ 'Class:appUserPreferences/Attribute:preferences'|dict_s }}</h3>
+							</div>
+							<div class="panel-body">
+								<form id="{{ oPreferencesForm.id }}" class="" method="POST" action="{{ oPreferencesForm.renderer.GetEndpoint()|raw }}">
+									<div class="form_alerts">
+										<div class="alert alert-success" role="alert" style="display: none;"></div>
+										<div class="alert alert-warning" role="alert" style="display: none;"></div>
+										<div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
+									</div>
+									<div class="form_fields">
+										{{ oPreferencesForm.renderer.GetBaseLayout()|raw }}
+									</div>
+								</form>
+							</div>
+						</div>
+					{% endblock %}
+
+					{% block pUserProfilePasswordFormContainer %}
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">{{ 'Brick:Portal:UserProfile:Password:Title'|dict_s }}</h3>
+							</div>
+							<div class="panel-body">
+								{% if oPasswordForm is not null %}
+									<form id="{{ oPasswordForm.id }}" class="" method="POST" action="{{ oPasswordForm.renderer.GetEndpoint()|raw }}" autocomplete="off">
+										<div class="form_alerts">
+											<div class="alert alert-success" role="alert" style="display: none;"></div>
+											<div class="alert alert-warning" role="alert" style="display: none;"></div>
+											<div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
+										</div>
+										<div class="form_fields">
+											{{ oPasswordForm.renderer.GetBaseLayout()|raw }}
+										</div>
+									</form>
+								{% else %}
+									{{ 'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator'|dict_s }}
+								{% endif %}
+							</div>
+						</div>
+					{% endblock %}
+				</div>
 			</div>
-		</div>						
-		<div class="form_buttons">
-			<div class="form_btn_regular">
-				{% if sFormMode == constant('\\Combodo\\iTop\\Portal\\Controller\\ObjectController::ENUM_MODE_EDIT') %}
-					<input class="btn btn-primary form_btn_submit" type="submit" value="{{ 'Portal:Button:Submit'|dict_s }}">
-				{% endif %}
+			<div class="form_buttons">
+				{% block pUserProfileFormButtons %}
+					<div class="form_btn_regular">
+						{% if sFormMode == constant('\\Combodo\\iTop\\Portal\\Controller\\ObjectController::ENUM_MODE_EDIT') %}
+							<input class="btn btn-primary form_btn_submit" type="submit" value="{{ 'Portal:Button:Submit'|dict_s }}">
+						{% endif %}
+					</div>
+				{% endblock %}
 			</div>
-		</div>
+		{% endblock %}
 	</div>
 {% endblock %}
 
 {% block pPageReadyScripts %}
 	{{ parent() }}
-	
+
 	// Personal informations form
 	var oContactFormFieldSet = $('#{{ oContactForm.id }} > .form_fields').field_set({{ oContactForm.fieldset|json_encode()|raw }});
 	$('#{{ oContactForm.id }}').portal_form_handler({
@@ -137,7 +149,7 @@
 		field_set: oContactFormFieldSet,
 		endpoint: "{{ oContactForm.renderer.GetEndpoint()|raw }}"
 	});
-	
+
 	// Preferences form
 	var oPreferencesFormFieldSet = $('#{{ oPreferencesForm.id }} > .form_fields').field_set({{ oPreferencesForm.fieldset|json_encode()|raw }});
 	$('#{{ oPreferencesForm.id }}').portal_form_handler({
@@ -146,7 +158,7 @@
 		field_set: oPreferencesFormFieldSet,
 		endpoint: "{{ oPreferencesForm.renderer.GetEndpoint()|raw }}"
 	});
-	
+
 	{% if oPasswordForm is not null %}
 		// Password form
 		var oPasswordFormFieldSet = $('#{{ oPasswordForm.id }} > .form_fields').field_set({{ oPasswordForm.fieldset|json_encode()|raw }});
@@ -157,7 +169,7 @@
 			endpoint: "{{ oPasswordForm.renderer.GetEndpoint()|raw }}"
 		});
 	{% endif %}
-	
+
 	// Picture form
 	// - JQuery upload widget
 	$('#picture-form #picture').fileupload({
@@ -197,29 +209,29 @@
 	$('#user-profile-wrapper .actions .btn_reset').on('click', function(oEvent){
 		//console.log('Picture reset trigger');
 	});
-	
+
 	// Submit button
 	$('#user-profile-wrapper .form_buttons .form_btn_submit').off('click').on('click', function(oEvent){
 		oEvent.preventDefault();
-		
+
 		// Resetting feedback
 		$('#user-profile-wrapper .form_alerts .alert').hide();
 		$('#user-profile-wrapper .form_alerts .alert > p').remove();
 		$('#user-profile-wrapper .form_field').removeClass('has-error');
 		$('#user-profile-wrapper .form_field .help-block > p').remove();
-		
+
 		// Submiting contact form through AJAX
 		//if($('#{{ oContactForm.id }} .field_set').field_set('hasTouchedFields'))
 		//{
 			$('#{{ oContactForm.id }}').portal_form_handler('submit', oEvent);
 		//}
-		
+
 		// Submiting preferences form through AJAX
 		//if($('#{{ oPreferencesForm.id }} .field_set').field_set('hasTouchedFields'))
 		//{
 			$('#{{ oPreferencesForm.id }}').portal_form_handler('submit', oEvent);
 		//}
-		
+
 		{% if oPasswordForm is not null %}
 			// Submiting password form through AJAX
 			// Only if fields are filled
@@ -230,6 +242,6 @@
 					return false;
 				}
 			});
-		{% endif %}		
+		{% endif %}
 	});
 {% endblock %}
