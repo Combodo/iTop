@@ -1013,6 +1013,10 @@
 					<decoration_class>
 						<default>fa fa-user fa-2x</default>
 					</decoration_class>
+					<!-- Show / hide some of the user profile forms by setting the tag value to true|false -->
+					<!--<show_picture_form>true</show_picture_form>-->
+					<!--<show_preferences_form>true</show_preferences_form>-->
+					<!--<show_password_form>true</show_password_form>-->
 					<form>
 						<!-- Optionnal tag to list the fields. If empty only fields from <twig> tag will be displayed, if ommited fields from zlist details will. -->
 						<fields />
