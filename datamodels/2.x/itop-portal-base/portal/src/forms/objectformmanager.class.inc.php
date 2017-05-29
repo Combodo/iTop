@@ -395,9 +395,13 @@ class ObjectFormManager extends FormManager
                 {
                     $aFieldsExtraData[$sFieldId]['display_mode'] = $oFieldNode->getAttribute('data-field-display-mode');
                 }
-                else
+                elseif(isset($this->aFormProperties['properties']['display_mode']))
                 {
                     $aFieldsExtraData[$sFieldId]['display_mode'] = $this->aFormProperties['properties']['display_mode'];
+                }
+                else
+                {
+                    $aFieldsExtraData[$sFieldId]['display_mode'] = ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE;
                 }
 
 				// Settings field flags from the data-field-flags attribute
