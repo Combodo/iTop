@@ -35,9 +35,9 @@
 			<p>{{ error_message }}</p>
 			<p>{{ 'Error:HTTP:GetHelp'|dict_s }}</p>
 			<p>
-				<a class="btn btn-default btn" href="#" onclick="history.back(); return false;">{{ 'Page:GoPreviousPage'|dict_s }}</a>
-				<a class="btn btn-default btn" href="">{{ 'Page:ReloadPage'|dict_s }}</a>
-				<a class="btn btn-default btn" href="{{ app.url_generator.generate('p_home') }}">{{ 'Page:GoPortalHome'|dict_s }}</a>
+				<a class="btn btn-default" href="#" onclick="history.back(); return false;"><span class="fa fa-arrow-left"></span> {{ 'Page:GoPreviousPage'|dict_s }}</a>
+				<a class="btn btn-default" href=""><span class="fa fa-repeat"></span> {{ 'Page:ReloadPage'|dict_s }}</a>
+				<a class="btn btn-default" href="{{ app.url_generator.generate('p_home') }}"><span class="fa fa-home"></span> {{ 'Page:GoPortalHome'|dict_s }}</a>
 			</p>
 		</div>
 	</div>
