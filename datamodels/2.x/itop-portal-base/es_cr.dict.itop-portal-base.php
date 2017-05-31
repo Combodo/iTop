@@ -30,6 +30,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Page:Home' => 'Bienvenido',
 	'Page:GoPortalHome' => 'Regresar a bienvenida',
 	'Page:GoPreviousPage' => 'página anterior',
+    'Page:ReloadPage' => 'Reload page~~',
 	'Portal:Button:Submit' => 'Enviar',
     'Portal:Button:Apply' => 'Update~~',
 	'Portal:Button:Cancel' => 'Cancelar',

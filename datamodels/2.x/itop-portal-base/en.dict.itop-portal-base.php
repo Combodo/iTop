@@ -30,6 +30,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Page:Home' => 'Home',
 	'Page:GoPortalHome' => 'Home page',
 	'Page:GoPreviousPage' => 'Previous page',
+    'Page:ReloadPage' => 'Reload page',
 	'Portal:Button:Submit' => 'Submit',
     'Portal:Button:Apply' => 'Update',
 	'Portal:Button:Cancel' => 'Cancel',

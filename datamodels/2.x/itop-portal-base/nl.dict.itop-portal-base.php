@@ -30,6 +30,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Page:Home' => 'Welkom',
 	'Page:GoPortalHome' => 'Startpagina',
 	'Page:GoPreviousPage' => 'Vorige pagina',
+    'Page:ReloadPage' => 'Reload page~~',
 	'Portal:Button:Submit' => 'Verstuur',
     'Portal:Button:Apply' => 'Update~~',
 	'Portal:Button:Cancel' => 'Afbreken',
