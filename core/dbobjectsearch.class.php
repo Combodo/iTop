@@ -1409,11 +1409,13 @@ class DBObjectSearch extends DBSearch
 	{
 		$aModifierProperties = MetaModel::MakeModifierProperties($this);
 		$oBuild = new QueryBuilderContext($this, $aModifierProperties);
-		$oSQLQuery = $this->MakeSQLObjectQuery($oBuild, null, array());
+		$oSQLQuery = $this->MakeSQLObjectQuery($oBuild, array($this->GetClassAlias() => array()), array());
 		$oSQLQuery->SetCondition($oBuild->m_oQBExpressions->GetCondition());
 		$oSQLQuery->SetSelect($oBuild->m_oQBExpressions->GetSelect());
+		$oSQLQuery->OptimizeJoins(array());
 		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
-		return $oSQLQuery->RenderDelete($aScalarArgs);
+		$sRet = $oSQLQuery->RenderDelete($aScalarArgs);
+		return $sRet;
 	}
 
 	public function MakeUpdateQuery($aValues, $aArgs = array())
@@ -1421,11 +1423,18 @@ class DBObjectSearch extends DBSearch
 		// $aValues is an array of $sAttCode => $value
 		$aModifierProperties = MetaModel::MakeModifierProperties($this);
 		$oBuild = new QueryBuilderContext($this, $aModifierProperties);
-		$oSQLQuery = $this->MakeSQLObjectQuery($oBuild, null, $aValues);
+		$aRequested = array(); // Requested attributes are the updated attributes
+		foreach ($aValues as $sAttCode => $value)
+		{
+			$aRequested[$sAttCode] = MetaModel::GetAttributeDef($this->GetClass(), $sAttCode);
+		}
+		$oSQLQuery = $this->MakeSQLObjectQuery($oBuild, array($this->GetClassAlias() => $aRequested), $aValues);
 		$oSQLQuery->SetCondition($oBuild->m_oQBExpressions->GetCondition());
 		$oSQLQuery->SetSelect($oBuild->m_oQBExpressions->GetSelect());
+		$oSQLQuery->OptimizeJoins(array());
 		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
-		return $oSQLQuery->RenderUpdate($aScalarArgs);
+		$sRet = $oSQLQuery->RenderUpdate($aScalarArgs);
+		return $sRet;
 	}
 
 	public function GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null)
