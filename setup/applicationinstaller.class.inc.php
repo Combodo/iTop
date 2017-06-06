@@ -541,6 +541,15 @@ class ApplicationInstaller
 			
 			file_put_contents($sFileToPatch, $sContent);
 		}
+		
+		// Set an "Instance UUID" identifying this machine based on a file located in the data directory
+		$sInstanceUUIDFile = APPROOT.'data/instance.txt';
+		Setuputils::builddir(APPROOT.'data');
+		if (!file_exists($sInstanceUUIDFile))
+		{
+			$sIntanceUUID = utils::CreateUUID('filesystem');
+			file_put_contents($sInstanceUUIDFile, $sIntanceUUID);
+		}
 	}
 	
 	protected static function DoUpdateDBSchema($sMode, $aSelectedModules, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment  = '', $bOldAddon = false)
@@ -639,6 +648,14 @@ class ApplicationInstaller
 		if(!$oProductionEnv->CreateDatabaseStructure(MetaModel::GetConfig(), $sMode))
 		{
 			throw new Exception("Failed to create/upgrade the database structure for environment '$sTargetEnvironment'");		
+		}
+		
+		// Set a DBProperty with a unique ID to identify this instance of iTop
+		$sUUID = DBProperty::GetProperty('database_uuid', '');
+		if ($sUUID === '')
+		{
+			$sUUID = utils::CreateUUID('database');
+			DBProperty::SetProperty('database_uuid', $sUUID, 'Installation/upgrade of '.ITOP_APPLICATION, 'Unique ID of this '.ITOP_APPLICATION.' Database');
 		}
 		
 		// priv_change now has an 'origin' field to distinguish between the various input sources
