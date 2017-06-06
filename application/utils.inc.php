@@ -1458,5 +1458,35 @@ class utils
 			return $oResampledImage;
 		}
 				
-	}	
+	}
+	
+	/**
+	 * Create a 128 bit UUID in the format: {########-####-####-####-############}
+	 * 
+	 * Note: this method can be run from the command line as well as from the web server.
+	 * Note2: this method is not cryptographically secure! If you need a cryptographically secure value
+	 * consider using open_ssl or PHP 7 methods.
+	 * @param string $sPrefix
+	 * @return string
+	 */
+	static public function CreateUUID($sPrefix = '')
+	{
+		$uid = uniqid("", true);
+		$data = $sPrefix;
+		$data .= __FILE__;
+		$data .= mt_rand();
+		$hash = strtoupper(hash('ripemd128', $uid . md5($data)));
+		$sUUID = '{' .
+				substr($hash,  0,  8) .
+				'-' .
+				substr($hash,  8,  4) .
+				'-' .
+				substr($hash, 12,  4) .
+				'-' .
+				substr($hash, 16,  4) .
+				'-' .
+				substr($hash, 20, 12) .
+				'}';
+		return $sUUID;
+	}
 }
