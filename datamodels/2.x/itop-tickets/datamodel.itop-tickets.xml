@@ -1163,6 +1163,8 @@
 					<grouping>
 						<!-- Mandatory -->
 						<tabs>
+							<!-- Optional. Show object count for each tabs. Available values are true|false. Default is false. -->
+							<!--<show_tab_counts>false</show_tab_counts>-->
 							<!-- Mandatory. Grouping by tabs -->
 							<!--<attribute>operational_status</attribute>-->
 							<!-- attribute xor groups tag -->
@@ -1214,6 +1216,8 @@
 					</fields>
 					<grouping>
 						<tabs>
+							<!-- Optional. Show object count for each tabs. Available values are true|false. Default is false. -->
+							<!--<show_tab_counts>false</show_tab_counts>-->
 							<groups>
 								<group id="all">
 									<rank>1</rank>

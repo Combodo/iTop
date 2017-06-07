@@ -140,7 +140,7 @@ class ManageBrickController extends BrickController
 							'value' => $aDistinctResult['grouped_by_1'],
 							'label' => strip_tags($oFieldExp->MakeValueLabel($oDistinctQuery, $aDistinctResult['grouped_by_1'], '')),
 							'condition' => $oConditionQuery,
-							'count' => $aDistinctResult['_itop_count_']
+							'count' => $aDistinctResult['_itop_count_'],
 						);
 						unset($oConditionQuery);
 					}
@@ -152,7 +152,7 @@ class ManageBrickController extends BrickController
 						'value' => 'undefined',
 						'label' => '',
 						'condition' => null,
-						'count' => null
+						'count' => null,
 					);
 				}
 			}
@@ -161,11 +161,14 @@ class ManageBrickController extends BrickController
 			{
 				foreach ($aGroupingTabs['groups'] as $aGroup)
 				{
+				    $oConditionQuery = DBSearch::FromOQL($aGroup['condition']);
+				    $oConditionSet = new DBObjectSet($oConditionQuery);
+
 					$aGroupingTabsValues[$aGroup['id']] = array(
 						'value' => $aGroup['id'],
 						'label' => Dict::S($aGroup['title']),
-						'condition' => DBSearch::FromOQL($aGroup['condition']),
-						'count' => null
+						'condition' => $oConditionQuery,
+						'count' => $oConditionSet->Count(),
 					);
 				}
 			}

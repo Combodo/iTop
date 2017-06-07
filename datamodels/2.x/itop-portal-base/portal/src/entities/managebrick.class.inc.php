@@ -42,12 +42,14 @@ class ManageBrick extends PortalBrick
 	const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_LAZY;
 	const DEFAULT_COUNT_PER_PAGE_LIST = 20;
 	const DEFAULT_ZLIST_FIELDS = 'list';
+    const DEFAULT_SHOW_TAB_COUNTS = false;
 
 	static $sRouteName = 'p_manage_brick';
 	protected $sOql;
 	protected $sOpeningMode;
 	protected $aGrouping;
 	protected $aFields;
+	protected $bShowTabCounts;
 
 	public function __construct()
 	{
@@ -57,6 +59,7 @@ class ManageBrick extends PortalBrick
         $this->sOpeningMode = static::DEFAULT_OPENING_MODE;
 		$this->aGrouping = array();
 		$this->aFields = array();
+		$this->bShowTabCounts = static::DEFAULT_SHOW_TAB_COUNTS;
 
 		// This is hardcoded for now, we might allow area grouping on another attribute in the futur
 		$this->AddGrouping('areas', array('attribute' => 'finalclass'));
@@ -101,6 +104,16 @@ class ManageBrick extends PortalBrick
 	{
 		return $this->aFields;
 	}
+
+    /**
+     * Returns if the brick should display objects count on tabs
+     *
+     * @return bool
+     */
+	public function GetShowTabCounts()
+    {
+        return $this->bShowTabCounts;
+    }
 
 	/**
 	 * Sets the oql of the brick
@@ -147,6 +160,18 @@ class ManageBrick extends PortalBrick
 		$this->aFields = $aFields;
 		return $this;
 	}
+
+    /**
+     * Sets if the brick should display objects count on tab
+     *
+     * @param bool $bShowTabCounts
+     * @return \Combodo\iTop\Portal\Brick\ManageBrick
+     */
+    public function SetShowTabCounts($bShowTabCounts)
+    {
+        $this->bShowTabCounts = $bShowTabCounts;
+        return $this;
+    }
 
 	/**
 	 * Adds a grouping.
@@ -356,6 +381,10 @@ class ManageBrick extends PortalBrick
 					{
 						switch ($oGroupingNode->nodeName)
 						{
+						    case 'show_tab_counts';
+						        $bShowTabCounts = ( $oGroupingNode->GetText(static::DEFAULT_SHOW_TAB_COUNTS) === 'true' ) ? true : false;
+						        $this->SetShowTabCounts($bShowTabCounts);
+						        break;
 							case 'attribute':
 								$sAttribute = $oGroupingNode->GetText();
 								if ($sAttribute !== '')

@@ -5998,18 +5998,28 @@ label {
 	background-color: $combodo-dark-gray-darker;
 	border: 1px solid #EBEAEA;
 	border-radius: 30px;
-	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.4) inset;	
-}
-.btn-group.btn_group_explicit .btn{
-	color: $white;
-	background-color: transparent;
-	border: none;
-}
-.btn-group.btn_group_explicit .btn.active{
-	color: #6B6965;
-	background-color: $body-bg;
-	border-radius: 37px !important;
-	box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.4);
+	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.4) inset;
+
+    .btn{
+        color: $white;
+        background-color: transparent;
+        border: none;
+
+        &.active{
+            color: #6B6965;
+            background-color: $body-bg;
+            border-radius: 37px !important;
+            box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn_tab_count:before{
+            content: "(";
+            margin-left: 2px;
+        }
+        .btn_tab_count:after{
+            content: ")";
+         }
+    }
 }
 /* Help blocks in forms */
 .form_fields .form-group .help-block{

@@ -4928,6 +4928,13 @@ label {
   border-radius: 37px !important;
   box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.4);
 }
+.btn-group.btn_group_explicit .btn .btn_tab_count:before {
+  content: "(";
+  margin-left: 2px;
+}
+.btn-group.btn_group_explicit .btn .btn_tab_count:after {
+  content: ")";
+}
 /* Help blocks in forms */
 .form_fields .form-group .help-block {
   margin-top: 0px;

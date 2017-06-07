@@ -12,7 +12,12 @@
 	{% if aGroupingTabsValues|length > 1 %}
 		<div class="btn-group {#btn-group-sm#} btn_group_explicit">
 			{% for aGroupingTab in aGroupingTabsValues %}
-				<a href="{{ app.url_generator.generate('p_manage_brick', {'sBrickId': sBrickId, 'sGroupingTab': aGroupingTab.value}) }}" class="btn btn-default {% if sGroupingTab is defined and sGroupingTab == aGroupingTab.value %}active{% endif %}">{{ aGroupingTab.label|raw }}</a>
+				<a href="{{ app.url_generator.generate('p_manage_brick', {'sBrickId': sBrickId, 'sGroupingTab': aGroupingTab.value}) }}" id="btn_tab_for_{{ aGroupingTab.value }}" class="btn btn-default {% if sGroupingTab is defined and sGroupingTab == aGroupingTab.value %}active{% endif %}">
+					{{ aGroupingTab.label|raw }}
+					{% if oBrick.GetShowTabCounts() %}
+						<span class="btn_tab_count">{{ aGroupingTab.count|raw }}</span>
+					{% endif %}
+				</a>
 			{% endfor %}
 		</div>
 	{% endif %}
