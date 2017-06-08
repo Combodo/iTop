@@ -18,8 +18,8 @@
 
 
 define('ITOP_APPLICATION', 'iTop');
-define('ITOP_VERSION', '$ITOP_VERSION$');
-define('ITOP_REVISION', '$WCREV$');
+define('ITOP_VERSION', '2.4.x');
+define('ITOP_REVISION', 'svn');
 define('ITOP_BUILD_DATE', '$WCNOW$');
 
 define('ACCESS_USER_WRITE', 1);
