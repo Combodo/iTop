@@ -499,11 +499,15 @@ class ApplicationInstaller
 				$oFactory->LoadModule($oModule);
 			}
 		}
+		// Dump the "reference" model, just before loading any actual delta
+		$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$sEnvironment.'.xml');
+		
 		$sDeltaFile = APPROOT.'data/'.$sEnvironment.'.delta.xml';
 		if (file_exists($sDeltaFile))
 		{
 			$oDelta = new MFDeltaModule($sDeltaFile);
 			$oFactory->LoadModule($oDelta);
+			$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$sEnvironment.'-with-delta.xml');
 		}
 		//$oFactory->Dump();
 		if ($oFactory->HasLoadErrors())

@@ -431,6 +431,12 @@ class RunTimeEnvironment
 		$oFactory = new ModelFactory($sSourceDirFull);
 		foreach($this->GetMFModulesToCompile($sSourceEnv, $sSourceDir) as $oModule)
 		{
+			if ($oModule instanceof MFDeltaModule)
+			{
+				// Just before loading the delta, let's save an image of the datamodel
+				// in case there is no delta the operation will be done after the end of the loop
+				$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'.xml');
+			}
 			$sModule = $oModule->GetName();
 			$oFactory->LoadModule($oModule);
 			if ($oFactory->HasLoadErrors())
@@ -452,6 +458,17 @@ class RunTimeEnvironment
 		}
 		else
 		{
+			if ($oModule instanceof MFDeltaModule)
+			{
+				// A delta was loaded, let's save a second copy of the datamodel
+				$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'-with-delta.xml');
+			}
+			else
+			{
+				// No delta was loaded, let's save the datamodel now
+				$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'.xml');
+			}
+			
 			$sTargetDir = APPROOT.'env-'.$this->sTargetEnv;
 			self::MakeDirSafe($sTargetDir);
 			$oMFCompiler = new MFCompiler($oFactory);
