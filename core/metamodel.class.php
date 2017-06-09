@@ -1562,8 +1562,16 @@ abstract class MetaModel
         $aStates = MetaModel::EnumStates($sClass);
         $aTargetState = $aStates[$sTargetState];
         $aTargetStateAttributes = $aTargetState['attribute_list'];
-        // - Merging with results
-        $aAttributes = $aTargetStateAttributes;
+        // - Merging with results (only MUST_XXX and MANDATORY)
+        foreach($aTargetStateAttributes as $sTargetStateAttCode => $iTargetStateAttFlags)
+        {
+            $iTmpAttFlags = OPT_ATT_NORMAL;
+            if($iTargetStateAttFlags & OPT_ATT_MUSTPROMPT){ $iTmpAttFlags = $iTmpAttFlags | OPT_ATT_MUSTPROMPT; }
+            if($iTargetStateAttFlags & OPT_ATT_MUSTCHANGE){ $iTmpAttFlags = $iTmpAttFlags | OPT_ATT_MUSTCHANGE; }
+            if($iTargetStateAttFlags & OPT_ATT_MANDATORY){ $iTmpAttFlags = $iTmpAttFlags | OPT_ATT_MANDATORY; }
+
+            $aAttributes[$sTargetStateAttCode] = $iTmpAttFlags;
+        }
 
         // Retrieving attributes from transition
         $aTransitionAttributes = $aTransition['attribute_list'];
