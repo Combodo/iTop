@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * ModelFactory: in-memory manipulation of the XML MetaModel
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -54,7 +54,8 @@ class MFException extends Exception
 	const INVALID_DELTA = 5;
 	const ALREADY_DELETED = 6;
 	const NOT_FOUND = 7;
-	
+	const PARENT_NOT_FOUND = 8;
+
 	
 	public function __construct ($message = null, $code = null, $iSourceLineNumber = 0, $sXPath = '', $sExtraInfo = '', $previous = null)
 	{
@@ -474,7 +475,7 @@ class ModelFactory
 					$this->oDOMDocument->firstChild->Dump();
 					$sPath = MFDocument::GetItopNodePath($oSourceNode);
 					$iLine = $oSourceNode->getLineNo();
-					throw new MFException($sPath.' at line '.$iLine.": could not be found", MFException::PARENT_NOT_FOUND, $iLine, $sPath, $sParentId);
+					throw new MFException($sPath.' at line '.$iLine.": parent class '$sParentId' could not be found", MFException::PARENT_NOT_FOUND, $iLine, $sPath, $sParentId);
 				}
 			}
 			else 
