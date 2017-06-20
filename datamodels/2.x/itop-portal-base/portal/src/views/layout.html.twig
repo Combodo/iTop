@@ -126,13 +126,15 @@
 								<span class="icon-bar"></span>
 								<span class="icon-bar"></span>
 							</button>
-							<a class="navbar-brand pull-right" href="{{ app.url_generator.generate('p_home') }}">
-								{% if app['combodo.portal.instance.conf'].properties.logo is not null %}
-									<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
-								{% else %}
-									iTop
-								{% endif %}
-							</a>
+							{% block pNavigationTopMenuLogo %}
+								<a class="navbar-brand pull-right" href="{{ app.url_generator.generate('p_home') }}">
+									{% if app['combodo.portal.instance.conf'].properties.logo is not null %}
+										<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
+									{% else %}
+										iTop
+									{% endif %}
+								</a>
+							{% endblock %}
 							<p class="navbar-text">
 								<a class="navbar-link user_infos" href="{{ app.url_generator.generate('p_user_profile_brick') }}">
 									<span class="user_photo" style="background-image: url('{{ sUserPhotoUrl }}');"></span>
@@ -235,13 +237,15 @@
 					</div>
 					{% if app['combodo.portal.instance.conf'].properties.logo is not null %}
 						<div class="logo">
-							{# This is a debug helper to know in which screen size we are #}
-							{% if app['debug'] %}
-								<div style="position: fixed; bottom: 0px; left: 0px; z-index: 9999;">Debug : Taille <span class="hidden-sm hidden-md hidden-lg">XS</span><span class="hidden-xs hidden-md hidden-lg">SM</span><span class="hidden-xs hidden-sm hidden-lg">MD</span><span class="hidden-xs hidden-sm hidden-md">LG</span></div>
-							{% endif %}
-							<a href="{{ app.url_generator.generate('p_home') }}" title="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}">
-								<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
-							</a>
+							{% block pNavigationSideMenuLogo %}
+								{# This is a debug helper to know in which screen size we are #}
+								{% if app['debug'] %}
+									<div style="position: fixed; bottom: 0px; left: 0px; z-index: 9999;">Debug : Taille <span class="hidden-sm hidden-md hidden-lg">XS</span><span class="hidden-xs hidden-md hidden-lg">SM</span><span class="hidden-xs hidden-sm hidden-lg">MD</span><span class="hidden-xs hidden-sm hidden-md">LG</span></div>
+								{% endif %}
+								<a href="{{ app.url_generator.generate('p_home') }}" title="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}">
+									<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
+								</a>
+							{% endblock %}
 						</div>
 					{% endif %}
 				</nav>
