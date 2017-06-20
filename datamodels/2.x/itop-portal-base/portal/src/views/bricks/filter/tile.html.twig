@@ -35,3 +35,14 @@
 		</a>
 	{% endblock %}
 </div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+	    // Preventing click on tile to scroll up
+	    $('#brick-{{ brick.GetId }}').on('click', function(oEvent){
+	        if(oEvent.target.type !== 'submit'){
+                oEvent.preventDefault();
+			}
+		});
+	});
+</script>
