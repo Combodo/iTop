@@ -124,6 +124,18 @@ class ManageBrickController extends BrickController
 				$sGroupingTabAttCode = $aGroupingTabs['attribute'];
 
 				$oDistinctQuery = DBSearch::FromOQL($oBrick->GetOql());
+				// - Restricting query to scope
+                $oScopeQuery = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $oDistinctQuery->GetClass(), UR_ACTION_READ);
+                if ($oScopeQuery !== null)
+                {
+                    $oDistinctQuery = $oDistinctQuery->Intersect($oScopeQuery);
+                    // - Allowing all data if necessary
+                    if ($oScopeQuery->IsAllDataAllowed())
+                    {
+                        $oDistinctQuery->AllowAllData();
+                    }
+                }
+                // - Adding field condition
 				$oFieldExp = new FieldExpression($sGroupingTabAttCode, $oDistinctQuery->GetClassAlias());
 				$sDistinctSql = $oDistinctQuery->MakeGroupByQuery(array(), array('grouped_by_1' => $oFieldExp), true);
 				$aDistinctResults = CMDBSource::QueryToArray($sDistinctSql);
@@ -162,6 +174,18 @@ class ManageBrickController extends BrickController
 				foreach ($aGroupingTabs['groups'] as $aGroup)
 				{
 				    $oConditionQuery = DBSearch::FromOQL($aGroup['condition']);
+                    // - Restricting query to scope
+                    $oScopeQuery = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $oConditionQuery->GetClass(), UR_ACTION_READ);
+                    if ($oScopeQuery !== null)
+                    {
+                        $oConditionQuery = $oConditionQuery->Intersect($oScopeQuery);
+                        // - Allowing all data if necessary
+                        if ($oScopeQuery->IsAllDataAllowed())
+                        {
+                            $oConditionQuery->AllowAllData();
+                        }
+                    }
+                    // - Building ObjectSet
 				    $oConditionSet = new DBObjectSet($oConditionQuery);
 
 					$aGroupingTabsValues[$aGroup['id']] = array(
