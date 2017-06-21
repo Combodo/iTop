@@ -30,6 +30,7 @@ require_once('ormdocument.class.inc.php');
 require_once('ormstopwatch.class.inc.php');
 require_once('ormpassword.class.inc.php');
 require_once('ormcaselog.class.inc.php');
+require_once('ormlinkset.class.inc.php');
 require_once('htmlsanitizer.class.inc.php');
 require_once(APPROOT.'sources/autoload.php');
 require_once('customfieldshandler.class.inc.php');
@@ -855,7 +856,37 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function GetPrerequisiteAttributes($sClass = null) {return $this->Get("depends_on");}
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
-		return DBObjectSet::FromScratch($this->Get('linked_class'));
+		$sLinkClass = $this->GetLinkedClass();
+		$sExtKeyToMe = $this->GetExtKeyToMe();
+
+		// The class to target is not the current class, because if this is a derived class,
+		// it may differ from the target class, then things start to become confusing
+		$oRemoteExtKeyAtt = MetaModel::GetAttributeDef($sLinkClass, $sExtKeyToMe);
+		$sMyClass = $oRemoteExtKeyAtt->GetTargetClass();
+
+		$oMyselfSearch = new DBObjectSearch($sMyClass);
+		if ($oHostObject !== null)
+		{
+			$oMyselfSearch->AddCondition('id', $oHostObject->GetKey(), '=');
+		}
+
+		$oLinkSearch = new DBObjectSearch($sLinkClass);
+		$oLinkSearch->AddCondition_PointingTo($oMyselfSearch, $sExtKeyToMe);
+		if ($this->IsIndirect())
+		{
+			// Join the remote class so that the archive flag will be taken into account
+			$sExtKeyToRemote = $this->GetExtKeyToRemote();
+			$oExtKeyToRemote = MetaModel::GetAttributeDef($sLinkClass, $sExtKeyToRemote);
+			$sRemoteClass = $oExtKeyToRemote->GetTargetClass();
+			if (MetaModel::IsArchivable($sRemoteClass))
+			{
+				$oRemoteSearch = new DBObjectSearch($sRemoteClass);
+				$oLinkSearch->AddCondition_PointingTo($oRemoteSearch, $this->GetExtKeyToRemote());
+			}
+		}
+		$oLinks = new DBObjectSet($oLinkSearch);
+		$oLinkSet = new ormLinkSet($this->GetHostClass(), $this->GetCode(), $oLinks);
+		return $oLinkSet;
 	}
 
 	public function GetTrackingLevel()
@@ -877,7 +908,7 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (is_object($sValue) && ($sValue instanceof DBObjectSet))
+		if (is_object($sValue) && ($sValue instanceof ormLinkSet))
 		{
 			$sValue->Rewind();
 			$aItems = array();
@@ -905,7 +936,7 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public function GetAsXML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (is_object($sValue) && ($sValue instanceof DBObjectSet))
+		if (is_object($sValue) && ($sValue instanceof ormLinkSet))
 		{
 			$sValue->Rewind();
 			$sRes = "<Set>\n";
@@ -954,7 +985,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		$sSepValue = MetaModel::GetConfig()->Get('link_set_value_separator');
 		$sAttributeQualifier = MetaModel::GetConfig()->Get('link_set_attribute_qualifier');
 
-		if (is_object($sValue) && ($sValue instanceof DBObjectSet))
+		if (is_object($sValue) && ($sValue instanceof ormLinkSet))
 		{
 			$sValue->Rewind();
 			$aItems = array();
@@ -1165,7 +1196,7 @@ class AttributeLinkedSet extends AttributeDefinition
 					$oExtKeyFilter->AddCondition($sRemoteAttCode, $sValue, '=');
 					$aReconciliationDesc[] = "$sRemoteAttCode=$sValue";
 				}
-				$oExtKeySet = new CMDBObjectSet($oExtKeyFilter);
+				$oExtKeySet = new DBObjectSet($oExtKeyFilter);
 				switch($oExtKeySet->Count())
 				{
 				case 0:
@@ -1218,7 +1249,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function GetForJSON($value)
 	{
 		$aRet = array();
-		if (is_object($value) && ($value instanceof DBObjectSet))
+		if (is_object($value) && ($value instanceof ormLinkSet))
 		{
 			$value->Rewind();
 			while ($oObj = $value->Fetch())
@@ -1311,32 +1342,21 @@ class AttributeLinkedSet extends AttributeDefinition
 		return $oSet;
 	}
 
+	/**
+	 * @param ormLinkSet $val1
+	 * @param ormLinkSet $val2
+	 * @return bool
+	 */
 	public function Equals($val1, $val2)
 	{
-		if ($val1 === $val2) return true;
-
-		if (is_object($val1) != is_object($val2))
+		if ($val1 === $val2)
 		{
-			return false;
+			$bAreEquivalent = true;
 		}
-		if (!is_object($val1))
+		else
 		{
-			// string ?
-			// todo = implement this case ?
-			return false;
+			$bAreEquivalent = $val1->Equals($val2);
 		}
-
-		// Note: maintain this algorithm so as to make sure it is strictly equivalent to the one used within DBObject::DBWriteLinks()
-		$sExtKeyToMe = $this->GetExtKeyToMe();
-		$sAdditionalKey = null;
-		if ($this->IsIndirect() && !$this->DuplicatesAllowed())
-		{
-			$sAdditionalKey = $this->GetExtKeyToRemote();
-		}
-		$oComparator = new DBObjectSetComparator($val1, $val2, array($sExtKeyToMe), $sAdditionalKey);
-		$aChanges = $oComparator->GetDifferences();
-
-		$bAreEquivalent = (count($aChanges['added']) == 0) && (count($aChanges['removed']) == 0) && (count($aChanges['modified']) == 0);
 		return $bAreEquivalent;
 	}
 

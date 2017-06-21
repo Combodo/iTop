@@ -212,35 +212,7 @@ abstract class DBObject implements iDisplay
 		{
 			if (!$oAttDef->IsLinkSet()) continue;
 
-			// Load the link information
-			$sLinkClass = $oAttDef->GetLinkedClass();
-			$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
-
-			// The class to target is not the current class, because if this is a derived class,
-			// it may differ from the target class, then things start to become confusing
-			$oRemoteExtKeyAtt = MetaModel::GetAttributeDef($sLinkClass, $sExtKeyToMe);
-			$sMyClass = $oRemoteExtKeyAtt->GetTargetClass();
-
-			$oMyselfSearch = new DBObjectSearch($sMyClass);
-			$oMyselfSearch->AddCondition('id', $this->m_iKey, '=');
-
-			$oLinkSearch = new DBObjectSearch($sLinkClass);
-			$oLinkSearch->AddCondition_PointingTo($oMyselfSearch, $sExtKeyToMe);
-			if ($oAttDef->IsIndirect())
-			{
-				// Join the remote class so that the archive flag will be taken into account
-				$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
-				$oExtKeyToRemote = MetaModel::GetAttributeDef($sLinkClass, $sExtKeyToRemote);
-				$sRemoteClass = $oExtKeyToRemote->GetTargetClass();
-				if (MetaModel::IsArchivable($sRemoteClass))
-				{
-					$oRemoteSearch = new DBObjectSearch($sRemoteClass);
-					$oLinkSearch->AddCondition_PointingTo($oRemoteSearch, $oAttDef->GetExtKeyToRemote());
-				}
-			}
-			$oLinks = new DBObjectSet($oLinkSearch);
-
-			$this->m_aCurrValues[$sAttCode] = $oLinks;
+			$this->m_aCurrValues[$sAttCode] = $oAttDef->GetDefaultValue($this);
 			$this->m_aOrigValues[$sAttCode] = clone $this->m_aCurrValues[$sAttCode];
 			$this->m_aLoadedAtt[$sAttCode] = true;
 		}
@@ -431,33 +403,15 @@ abstract class DBObject implements iDisplay
 				}
 			}
 		}
-		if($oAttDef->IsLinkSet())
+		if ($oAttDef->IsLinkSet() && ($value != null))
 		{
-			if (is_null($value))
-			{
-				// Normalize
-				$value = DBObjectSet::FromScratch($oAttDef->GetLinkedClass());
-			}
-			else
-			{
-				if ((get_class($value) != 'DBObjectSet') && !is_subclass_of($value, 'DBObjectSet'))
-				{
-					throw new CoreUnexpectedValue("expecting a set of persistent objects (found a '".get_class($value)."'), setting default value (empty list)");
-				}
-			}
-
-			$oObjectSet = $value;
-			$sSetClass = $oObjectSet->GetClass();
-			$sLinkClass = $oAttDef->GetLinkedClass();
-			// not working fine :-(   if (!is_subclass_of($sSetClass, $sLinkClass))
-			if ($sSetClass != $sLinkClass)
-			{
-				throw new CoreUnexpectedValue("expecting a set of '$sLinkClass' objects (found a set of '$sSetClass'), setting default value (empty list)");
-			}
+			$realvalue = clone $this->m_aCurrValues[$sAttCode];
+			$realvalue->UpdateFromCompleteList($value);
 		}
-
-		$realvalue = $oAttDef->MakeRealValue($value, $this);
-
+		else
+		{
+			$realvalue = $oAttDef->MakeRealValue($value, $this);
+		}
 		$this->_Set($sAttCode, $realvalue);
 
 		foreach (MetaModel::ListMetaAttributes(get_class($this), $sAttCode) as $sMetaAttCode => $oMetaAttDef)
@@ -606,7 +560,7 @@ abstract class DBObject implements iDisplay
 			$value = $this->m_aCurrValues[$sAttCode];
 		}
 
-		if ($value instanceof DBObjectSet)
+		if ($value instanceof ormLinkSet)
 		{
 			$value->Rewind();
 		}
@@ -1561,39 +1515,14 @@ abstract class DBObject implements iDisplay
 	// used both by insert/update
 	private function DBWriteLinks()
 	{
-		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
+		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
 		{
 			if (!$oAttDef->IsLinkSet()) continue;
 			if (!array_key_exists($sAttCode, $this->m_aTouchedAtt)) continue;
 			if (array_key_exists($sAttCode, $this->m_aModifiedAtt) && ($this->m_aModifiedAtt[$sAttCode] == false)) continue;
-				
-			// Note: any change to this algorithm must be reproduced into the implementation of AttributeLinkSet::Equals()
-			$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
-			$sAdditionalKey = null;
-			if ($oAttDef->IsIndirect() && !$oAttDef->DuplicatesAllowed())
-			{
-				$sAdditionalKey = $oAttDef->GetExtKeyToRemote();
-			}
-			$oComparator = new DBObjectSetComparator($this->m_aOrigValues[$sAttCode], $this->Get($sAttCode), array($sExtKeyToMe), $sAdditionalKey);
-			$aChanges = $oComparator->GetDifferences();
-			
-			foreach($aChanges['added'] as $oLink)
-			{
-				// Make sure that the objects in the set point to "this"
-				$oLink->Set($oAttDef->GetExtKeyToMe(), $this->m_iKey);
-				$id = $oLink->DBWrite();
-			}
-			
-			foreach($aChanges['modified'] as $oLink)
-			{
-				// Objects in the set either remain attached or have been detached -> leave the link as is
-				$oLink->DBWrite();
-			}
-			
-			foreach($aChanges['removed'] as $oLink)
-			{
-				$oLink->DBDelete();
-			}
+
+			$oLinkSet = $this->m_aCurrValues[$sAttCode];
+			$oLinkSet->DBWrite($this);
 		}
 	}
 

@@ -9,39 +9,60 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	this.bDuplicates = bDuplicates;
 	this.oWizardHelper = oWizHelper;
 	this.sExtKeyToRemote = sExtKeyToRemote;
+    this.iMaxAddedId = 0;
+	this.aAdded = [];
+	this.aRemoved = [];
+	this.aModified = {};
 	var me = this;
+
 	this.Init = function()
 	{
 		// make sure that the form is clean
 		$('#linkedset_'+this.id+' .selection').each( function() { this.checked = false; });
 		$('#'+this.id+'_btnRemove').attr('disabled','disabled');
-		$('#'+this.id+'_linksToRemove').val('');
-		
+
 		$('#linkedset_'+me.id).on('remove', function() {
 			// prevent having the dlg div twice
 			$('#dlg_'+me.id).remove();
 		});
+
+        $('#linkedset_'+me.id+' :input').off('change').on('change', function() {
+			if (!($(this).hasClass('selection'))) {
+				var oCheckbox = $(this).closest('tr').find('.selection');
+				var iLink = oCheckbox.attr('data-link-id');
+				var iUniqueId = oCheckbox.attr('data-unique-id');
+				var sAttCode = $(this).closest('.attribute-edit').attr('data-attcode');
+				var value = $(this).val();
+				return me.OnValueChange(iLink, iUniqueId, sAttCode, value);
+			}
+			return true;
+        });
+
+		var oInput = $('#'+this.iInputId);
+		oInput.bind('update_value', function() { $(this).val(me.GetUpdatedValue()); });
+		oInput.closest('form').submit(function() { return me.OnFormSubmit(); });
 	};
 	
 	this.RemoveSelected = function()
 	{
 		var my_id = '#'+me.id;
-		$('#linkedset_'+me.id+' .selection:checked').each(
-			function()
+		$('#linkedset_'+me.id+' .selection:checked').each(function() {
+			$(my_id+'_row_'+this.value).remove();
+			var iLink = $(this).attr('data-link-id');
+			if (iLink > 0)
 			{
-				$linksToRemove = $(my_id+'_linksToRemove');
-				prevValue = $linksToRemove.val();
-				if (prevValue != '')
+				me.aRemoved.push(iLink);
+				if (me.aModified.hasOwnProperty(iLink))
 				{
-					$linksToRemove.val(prevValue + ',' + this.value);
+					delete me.aModified[iLink];
 				}
-				else
-				{
-					$linksToRemove.val(this.value);
-				}
-				$(my_id+'_row_'+this.value).remove();
 			}
-		);
+			else
+			{
+				var iUniqueId = $(this).attr('data-unique-id');
+				me.aAdded[iUniqueId] = null;
+			}
+		});
 		// Disable the button since all the selected items have been removed
 		$(my_id+'_btnRemove').attr('disabled','disabled');
 		// Re-run the zebra plugin to properly highlight the remaining lines & and take into account the removed ones
@@ -115,13 +136,11 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		});
 		
 		// Gather the already linked target objects
-		theMap.aAlreadyLinked = new Array();
-		$('#linkedset_'+me.id+' .selection:input').each(
-			function(i)
-			{
-				theMap.aAlreadyLinked.push(this.value);
-			}
-		);
+		theMap.aAlreadyLinked = [];
+		$('#linkedset_'+me.id+' .selection:input').each(function(i) {
+			var iRemote = $(this).attr('data-remote-id');
+			theMap.aAlreadyLinked.push(iRemote);
+		});
 		theMap['sRemoteClass'] = theMap['class'];  // swap 'class' (defined in the form) and 'remoteClass'
 		theMap['class'] = me.sClass;
 		theMap.operation = 'searchObjectsToAdd'; // Override what is defined in the form itself
@@ -190,7 +209,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			$(' :input[name^=storedSelection]', context).each(function() {
 				if (theMap[this.name] == undefined)
 				{
-					theMap[this.name] = new Array();
+					theMap[this.name] = [];
 				}
 				theMap[this.name].push(this.value);
 				$(this).remove(); // Remove the selection for the next time the dialog re-opens
@@ -208,14 +227,13 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				{
 					if ( (this.name != '') && ((this.type != 'checkbox') || (this.checked)) ) 
 					{
-						//console.log(this.type);
 						arrayExpr = /\[\]$/;
 						if (arrayExpr.test(this.name))
 						{
 							// Array
 							if (theMap[this.name] == undefined)
 							{
-								theMap[this.name] = new Array();
+								theMap[this.name] = [];
 							}
 							theMap[this.name].push(this.value);
 						}
@@ -230,6 +248,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 //		}
 		
 		theMap['operation'] = 'doAddObjects';
+        theMap['max_added_id'] = this.iMaxAddedId;
 		if (me.oWizardHelper == null)
 		{
 			theMap['json'] = '';
@@ -245,7 +264,6 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		$.post( GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', theMap, 
 			function(data)
 			{
-				//console.log('Data: ' + data);
 				if (data != '')
 				{
 					$('#'+me.id+'_empty_row').hide();
@@ -262,7 +280,29 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		$('#dlg_'+me.id).dialog('close');
 		return false;
 	};
-	
+
+    this.OnLinkAdded = function(iAddedId, iRemote)
+    {
+        // Assumption: this identifier will be higher than the previous one
+        me.iMaxAddedId = iAddedId;
+		var sFormPrefix = me.iInputId;
+		oAdded = {};
+		oAdded['formPrefix'] = sFormPrefix;
+		oAdded['attr_' + sFormPrefix + this.sExtKeyToRemote] = iRemote;
+        me.aAdded[iAddedId] = oAdded;
+        $('#linkedset_'+me.id+' :input').off('change').on('change', function() {
+			if (!($(this).hasClass('selection'))) {
+				var oCheckbox = $(this).closest('tr').find('.selection');
+				var iLink = oCheckbox.attr('data-link-id');
+				var iUniqueId = oCheckbox.attr('data-unique-id');
+				var sAttCode = $(this).closest('.attribute-edit').attr('data-attcode');
+				var value = $(this).val();
+				return me.OnValueChange(iLink, iUniqueId, sAttCode, value);
+			}
+			return true;
+        });
+    };
+
 	this.UpdateSizes = function(event, ui)
 	{
 		var dlg = $('#dlg_'+me.id);
@@ -335,5 +375,48 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			}
 		});
 		return JSON.stringify(aValues);
+	};
+
+	this.OnValueChange = function(iLink, iUniqueId, sAttCode, value)
+	{
+		var sFormPrefix = me.iInputId;
+        if (iLink > 0) {
+            // Modifying an existing link
+            var oModified = me.aModified[iLink];
+            if (oModified == undefined) {
+                // Still not marked as modified
+                oModified = {};
+                oModified['formPrefix'] = sFormPrefix;
+            }
+            // Weird formatting, aligned with the output of the direct links widget (new links to be created)
+            oModified['attr_' + sFormPrefix + sAttCode] = value;
+            me.aModified[iLink] = oModified;
+        }
+        else {
+            // Modifying a newly added link - the structure should already be up to date
+            me.aAdded[iUniqueId]['attr_' + sFormPrefix + sAttCode] = value;
+        }
+	};
+
+	this.OnFormSubmit = function()
+	{
+		var oDiv = $('#linkedset_'+me.id);
+
+		var sToBeDeleted = JSON.stringify(me.aRemoved);
+		$('<input type="hidden" name="attr_'+me.sAttCode+'_tbd">').val(sToBeDeleted).appendTo(oDiv);
+
+
+		var sToBeModified = JSON.stringify(me.aModified);
+		$('<input type="hidden" name="attr_'+me.sAttCode+'_tbm">').val(sToBeModified).appendTo(oDiv);
+
+		var aToBeCreated = [];
+		me.aAdded.forEach(function(oAdded){
+			if (oAdded != null)
+			{
+				aToBeCreated.push(oAdded);
+			}
+		});
+		var sToBeCreated = JSON.stringify(aToBeCreated);
+		$('<input type="hidden" name="attr_'+me.sAttCode+'_tbc">').val(sToBeCreated).appendTo(oDiv);
 	};
 }

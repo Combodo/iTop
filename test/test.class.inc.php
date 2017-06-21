@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Core automated tests - basics
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -143,20 +143,22 @@ abstract class TestHandler
 	{
 		// Note: return false to call the default handler (stop the program if an error)
 
+		if ($errstr == 'assert()') $errno = E_USER_ERROR;
+
 		switch ($errno)
 		{
 		case E_USER_ERROR:
-			$this->ReportError($errstr);
-			//throw new ExceptionFromError("Fatal error in line $errline of file $errfile: $errstr");
+		case E_WARNING: //(assertion failed)
+			$this->ReportError("@$errline - $errstr");
 			break;
 		case E_USER_WARNING:
-			$this->ReportWarning($errstr);
+			$this->ReportWarning("@$errline - $errstr");
 			break;
 		case E_USER_NOTICE:
-			$this->ReportWarning($errstr);
+			$this->ReportWarning("@$errline - $errstr");
 			break;
 		default:
-			$this->ReportWarning("Unknown error type: [$errno] $errstr in $errfile at $errline");
+			$this->ReportWarning("@$errline - Unknown error type: [$errno] $errstr");
 			echo "Unknown error type: [$errno] $errstr in $errfile at $errline<br />\n";
 			break;
 		}

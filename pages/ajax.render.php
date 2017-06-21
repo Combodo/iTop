@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Handles various ajax requests
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -530,6 +530,7 @@ try
 		$sRemoteClass = utils::ReadParam('sRemoteClass', $sClass, false, 'class');
 		$bDuplicates = (utils::ReadParam('bDuplicates', 'false') == 'false') ? false : true;
 		$sJson = utils::ReadParam('json', '', false, 'raw_data');
+		$iMaxAddedId = utils::ReadParam('max_added_id');
 		$oWizardHelper = WizardHelper::FromJSON($sJson);
 		$oObj = $oWizardHelper->GetTargetObject();
 		$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
@@ -541,7 +542,7 @@ try
 		{
 			$oFullSetFilter = new DBObjectSearch($sRemoteClass);		
 		}
-		$oWidget->DoAddObjects($oPage, $oFullSetFilter, $oObj);	
+		$oWidget->DoAddObjects($oPage, $iMaxAddedId, $oFullSetFilter, $oObj);
 		break;
 			
 		////////////////////////////////////////////////////////////

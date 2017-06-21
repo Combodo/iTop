@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Core test list
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -5612,5 +5612,200 @@ class TestBug689 extends TestBizModel
 		$oSet = new DBObjectSet($oSearch);
 		$oObj = $oSet->Fetch();
 		echo '<p>Well done, this is working fine! Some magic happened in the background!</p>';
+	}
+}
+
+class TestDBObjectLinkedObjects extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'DBObject Linked objects API';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Add/Remove/Modify linked objects (recorded as a delta within DBObject, later recorded in DB)';
+	}
+
+	protected function DoExecute()
+	{
+		CMDBSource::Query('START TRANSACTION');
+		//CMDBSource::Query('ROLLBACK'); automatique !
+
+		////////////////////////////////////////////////////////////////////////////////
+		// Set the stage
+		//
+
+		$oTypes = new DBObjectSet(DBObjectSearch::FromOQL('SELECT NetworkDeviceType WHERE name = "Router"'));
+		$oType = $oTypes->fetch();
+
+		$oDevice1 = MetaModel::NewObject('NetworkDevice');
+		$oDevice1->Set('name', 'test device 1');
+		$oDevice1->Set('org_id', 3);
+		$oDevice1->Set('networkdevicetype_id', $oType->GetKey());
+		$oDevice1->DBInsert();
+		$iDev1 = $oDevice1->GetKey();
+
+		$oDevice2 = MetaModel::NewObject('NetworkDevice');
+		$oDevice2->Set('name', 'test device 2');
+		$oDevice2->Set('org_id', 3);
+		$oDevice2->Set('networkdevicetype_id', $oType->GetKey());
+		$oDevice2->DBInsert();
+		$iDev2 = $oDevice2->GetKey();
+
+		$oServer = MetaModel::NewObject('Server');
+		$oServer->Set('name', 'unit test linkset');
+		$oServer->Set('org_id', 3);
+		$oLinkSet = $oServer->Get('networkdevice_list');
+		$oLinkSet->AddItem(MetaModel::NewObject('lnkConnectableCIToNetworkDevice', array('networkdevice_id' => $iDev1)));
+		$oServer->Set('networkdevice_list', $oLinkSet);
+		assert($oServer->IsModified(), 'Server is modified');
+		$oServer->DBInsert();
+		$iServer = $oServer->GetKey();
+
+		$oServer = MetaModel::GetObject('Server', $iServer);
+		$oLinkSet = $oServer->Get('networkdevice_list');
+		assert($oLinkSet->Count() == 1, 'One NW Dev attached');
+		$oLink = $oLinkSet->Fetch();
+		assert($oLink->Get('networkdevice_id') == $iDev1, 'New device correctly attached');
+
+		$oLinkSet = $oServer->Get('networkdevice_list');
+		$oLinkSet->AddItem(MetaModel::NewObject('lnkConnectableCIToNetworkDevice', array('networkdevice_id' => $iDev2)));
+		$oServer->Set('networkdevice_list', $oLinkSet);
+		assert($oServer->IsModified(), 'Server is modified');
+		$oServer->DBUpdate();
+
+		$oServer = MetaModel::GetObject('Server', $iServer);
+		$oLinkSet = $oServer->Get('networkdevice_list');
+		assert($oLinkSet->Count() == 2, 'Two NW Dev attached');
+		$oNewLinkSet = clone $oLinkSet;
+		while ($oLink = $oLinkSet->Fetch())
+		{
+			$iLinkId = $oLink->Get('networkdevice_id');
+			if ($iLinkId == $iDev1)
+			{
+				$oNewLinkSet->RemoveItem($oLink->GetKey());
+			}
+			elseif ($iLinkId == $iDev2)
+			{
+				$oLink->Set('network_port', 'lePortSalut');
+				$oNewLinkSet->ModifyItem($oLink);
+			}
+		}
+		$oServer->Set('networkdevice_list', $oNewLinkSet);
+		assert($oServer->IsModified(), 'Server is modified');
+		$oServer->DBUpdate();
+
+		$oServer = MetaModel::GetObject('Server', $iServer);
+		$oLinkSet = $oServer->Get('networkdevice_list');
+		assert($oLinkSet->Count() == 1, 'One NW Dev attached');
+		$oLink = $oLinkSet->Fetch();
+		assert($oLink->Get('networkdevice_id') == $iDev2, 'Dev2 remained attached');
+		assert($oLink->Get('network_port') == 'lePortSalut', 'Port has been changed');
+	}
+}
+
+class TestDBObjectLinkedObjectsLegacy extends TestBizModel
+{
+	static public function GetName()
+	{
+		return 'DBObject Linked objects API (legacy usage)';
+	}
+
+	static public function GetDescription()
+	{
+		return 'Alter a link set by redefining the whole list of links (not recommended!)';
+	}
+
+	protected function DoExecute()
+	{
+		CMDBSource::Query('START TRANSACTION');
+		//CMDBSource::Query('ROLLBACK'); automatique !
+
+		////////////////////////////////////////////////////////////////////////////////
+		// Set the stage
+		//
+
+		$oTypes = new DBObjectSet(DBObjectSearch::FromOQL('SELECT NetworkDeviceType WHERE name = "Router"'));
+		$oType = $oTypes->fetch();
+
+		$oDevice1 = MetaModel::NewObject('NetworkDevice');
+		$oDevice1->Set('name', 'test device 1');
+		$oDevice1->Set('org_id', 3);
+		$oDevice1->Set('networkdevicetype_id', $oType->GetKey());
+		$oDevice1->DBInsert();
+		$iDev1 = $oDevice1->GetKey();
+
+		$oDevice2 = MetaModel::NewObject('NetworkDevice');
+		$oDevice2->Set('name', 'test device 2');
+		$oDevice2->Set('org_id', 3);
+		$oDevice2->Set('networkdevicetype_id', $oType->GetKey());
+		$oDevice2->DBInsert();
+		$iDev2 = $oDevice2->GetKey();
+
+		$oServer = MetaModel::NewObject('Server');
+		$oServer->Set('name', 'unit test linkset');
+		$oServer->Set('org_id', 3);
+		$oLinkSet = $oServer->Get('networkdevice_list');
+		$oNewLinkSet = DBObjectSet::FromScratch('lnkConnectableCIToNetworkDevice');
+		while ($oLink = $oLinkSet->Fetch())
+		{
+			$oNewLinkSet->AddObject($oLink);
+		}
+		$oNewLinkSet->AddObject(MetaModel::NewObject('lnkConnectableCIToNetworkDevice', array('networkdevice_id' => $iDev1)));
+		$oServer->Set('networkdevice_list', $oNewLinkSet);
+		assert($oServer->IsModified(), 'Server is modified');
+		$oServer->DBInsert();
+		$iServer = $oServer->GetKey();
+
+		$oServer = MetaModel::GetObject('Server', $iServer);
+		$oLinkSet = $oServer->Get('networkdevice_list');
+		assert($oLinkSet->Count() == 1, 'One NW Dev attached');
+		$oLink = $oLinkSet->Fetch();
+		assert($oLink->Get('networkdevice_id') == $iDev1, 'New device correctly attached');
+
+		$oNewLinkSet = DBObjectSet::FromScratch('lnkConnectableCIToNetworkDevice');
+		$oLinkSet->Rewind();
+		while ($oLink = $oLinkSet->Fetch())
+		{
+			$oNewLinkSet->AddObject($oLink);
+		}
+		$oNewLinkSet->AddObject(MetaModel::NewObject('lnkConnectableCIToNetworkDevice', array('networkdevice_id' => $iDev2)));
+		$oServer->Set('networkdevice_list', $oNewLinkSet);
+		assert($oServer->IsModified(), 'Server is modified');
+		$oServer->DBUpdate();
+
+		$oServer = MetaModel::GetObject('Server', $iServer);
+		$oLinkSet = $oServer->Get('networkdevice_list');
+		assert($oLinkSet->Count() == 2, 'Two NW Dev attached');
+		$oNewLinkSet = DBObjectSet::FromScratch('lnkConnectableCIToNetworkDevice');
+		$oServer->Set('networkdevice_list', $oNewLinkSet);
+		while ($oLink = $oLinkSet->Fetch())
+		{
+			$iLinkId = $oLink->Get('networkdevice_id');
+			if ($iLinkId == $iDev1)
+			{
+				// Remove...ie do not add it!
+			}
+			elseif ($iLinkId == $iDev2)
+			{
+				$oLink->Set('network_port', 'lePortSalut');
+				$oNewLinkSet->AddObject($oLink);
+			}
+			else
+			{
+				$oNewLinkSet->AddObject($oLink);
+			}
+		}
+		$oServer->Set('networkdevice_list', $oNewLinkSet);
+		assert($oServer->IsModified(), 'Server is modified');
+		$oServer->DBUpdate();
+
+		$oServer = MetaModel::GetObject('Server', $iServer);
+		$oLinkSet = $oServer->Get('networkdevice_list');
+		assert($oLinkSet->Count() == 1, 'One NW Dev attached');
+		$oLink = $oLinkSet->Fetch();
+		assert($oLink->Get('networkdevice_id') == $iDev2, 'Dev2 remained attached');
+		assert($oLink->Get('network_port') == 'lePortSalut', 'Port has been changed');
 	}
 }

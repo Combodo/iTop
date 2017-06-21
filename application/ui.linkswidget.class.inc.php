@@ -92,16 +92,18 @@ class UILinksWidget
 			}
 		}
 	}
-	
+
 	/**
 	 * A one-row form for editing a link record
 	 * @param WebPage $oP Web page used for the ouput
-	 * @param DBObject $oLinkedObj The object to which all the elements of the linked set refer to
+	 * @param DBObject $oLinkedObj Remote object
 	 * @param mixed $linkObjOrId Either the object linked or a unique number for new link records to add
-	 * @param Hash $aArgs Extra context arguments
+	 * @param array|Hash $aArgs Extra context arguments
+	 * @param $oCurrentObj The object to which all the elements of the linked set refer to
+	 * @param $iUniqueId A unique identifier of new links
 	 * @return string The HTML fragment of the one-row form
 	 */
-	protected function GetFormRow(WebPage $oP, DBObject $oLinkedObj, $linkObjOrId = null, $aArgs = array(), $oCurrentObj )
+	protected function GetFormRow(WebPage $oP, DBObject $oLinkedObj, $linkObjOrId, $aArgs, $oCurrentObj, $iUniqueId)
 	{
 		$sPrefix = "$this->m_sAttCode{$this->m_sNameSuffix}";
 		$aRow = array();
@@ -115,8 +117,7 @@ class UILinksWidget
 			$aArgs['prefix'] = $sPrefix;
 			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}{$key}";
 			$aArgs['this'] = $linkObjOrId;
-			$aRow['form::checkbox'] = "<input class=\"selection\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$key\">";
-			$aRow['form::checkbox'] .= "<input type=\"hidden\" name=\"attr_{$sPrefix}id{$sNameSuffix}\" value=\"$key\">";
+			$aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"$key\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$key\">";
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
 				$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId->GetKey().']';
@@ -137,28 +138,25 @@ class UILinksWidget
 				// New link existing only in memory
 				$oNewLinkObj = $linkObjOrId;
 				$iRemoteObjKey = $oNewLinkObj->Get($this->m_sExtKeyToRemote);
-				$oRemoteObj = MetaModel::GetObject($this->m_sRemoteClass, $iRemoteObjKey);
 				$oNewLinkObj->Set($this->m_sExtKeyToMe, $oCurrentObj); // Setting the extkey with the object also fills the related external fields
-				$linkObjOrId = -$iRemoteObjKey;
 			}
 			else
 			{
-				$iRemoteObjKey = -$linkObjOrId;
+				$iRemoteObjKey = $linkObjOrId;
 				$oNewLinkObj = MetaModel::NewObject($this->m_sLinkedClass);
-				$oRemoteObj = MetaModel::GetObject($this->m_sRemoteClass, -$linkObjOrId);
+				$oRemoteObj = MetaModel::GetObject($this->m_sRemoteClass, $iRemoteObjKey);
 				$oNewLinkObj->Set($this->m_sExtKeyToRemote, $oRemoteObj); // Setting the extkey with the object alsoo fills the related external fields
 				$oNewLinkObj->Set($this->m_sExtKeyToMe, $oCurrentObj); // Setting the extkey with the object also fills the related external fields
 			}
-			$sPrefix .= "[$linkObjOrId][";
+			$sPrefix .= "[-$iUniqueId][";
 			$sNameSuffix = "]"; // To make a tabular form
 			$aArgs['prefix'] = $sPrefix;
-			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}_".(-$linkObjOrId);
+			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}_".$iUniqueId;
 			$aArgs['this'] = $oNewLinkObj;
-			$aRow['form::checkbox'] = "<input class=\"selection\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$linkObjOrId\">";
-			$aRow['form::checkbox'] .= "<input type=\"hidden\" name=\"attr_{$sPrefix}id{$sNameSuffix}\" value=\"\">";
+			$aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"-$iUniqueId\">";
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
-				$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId.']';
+				$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.-$iUniqueId.']';
 				$sSafeId = utils::GetSafeId($sFieldId);
 				$sValue = $oNewLinkObj->Get($sFieldCode);
 				$sDisplayValue = $oNewLinkObj->GetEditValue($sFieldCode);
@@ -171,6 +169,7 @@ class UILinksWidget
 			$oP->add_script(
 <<<EOF
 PrepareWidgets();
+oWidget{$this->m_iInputId}.OnLinkAdded($iUniqueId, $iRemoteObjKey);
 EOF
 			);
 		}
@@ -278,21 +277,19 @@ EOF
 		$sHtmlValue .= "<input type=\"hidden\" id=\"{$sFormPrefix}{$this->m_iInputId}\">\n";
 		$oValue->Rewind();
 		$aForm = array();
+		$iAddedId = 1; // Unique id for new links
 		while($oCurrentLink = $oValue->Fetch())
 		{
-			$aRow = array();
 			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote));
 			if ($oCurrentLink->IsNew())
 			{
-				$key = -$oLinkedObj->GetKey();
-				$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj);
+				$key = -($iAddedId++);
 			}
 			else
 			{
 				$key = $oCurrentLink->GetKey();
-				$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj);
 			}
-
+			$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key);
 		}
 		$sHtmlValue .= $this->DisplayFormTable($oPage, $this->m_aTableConfig, $aForm);
 		$sDuplicates = ($this->m_bDuplicatesAllowed) ? 'true' : 'false';
@@ -300,7 +297,6 @@ EOF
 		$oPage->add_ready_script(<<<EOF
 		oWidget{$this->m_iInputId} = new LinksWidget('{$this->m_sAttCode}{$this->m_sNameSuffix}', '{$this->m_sClass}', '{$this->m_sAttCode}', '{$this->m_iInputId}', '{$this->m_sNameSuffix}', $sDuplicates, $sWizHelper, '{$this->m_sExtKeyToRemote}');
 		oWidget{$this->m_iInputId}.Init();
-		$('#{$this->m_iInputId}').bind('update_value', function() { $(this).val(oWidget{$this->m_iInputId}.GetUpdatedValue()); })
 EOF
 );
 		$sHtmlValue .= "<span style=\"float:left;\">&nbsp;&nbsp;&nbsp;<img src=\"../images/tv-item-last.gif\">&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnRemove\" type=\"button\" value=\"".Dict::S('UI:RemoveLinkedObjectsOf_Class')."\" onClick=\"oWidget{$this->m_iInputId}.RemoveSelected();\" >";
@@ -373,51 +369,25 @@ EOF
 		}
 		if (!$this->m_bDuplicatesAllowed && count($aAlreadyLinkedIds) > 0)
 		{
-			// Positive IDs correspond to existing link records
-			// negative IDs correspond to "remote" objects to be linked
-			$aLinkIds = array();
-			$aRemoteObjIds = array();
-			foreach($aAlreadyLinkedIds as $iId)
-			{
-				if ($iId > 0)
-				{
-					$aLinkIds[] = $iId;
-				}
-				else
-				{
-					$aRemoteObjIds[] = -$iId;
-				}
-			}
-			
-			if (count($aLinkIds) >0)
-			{
-				// Search for the links to find to which "remote" object they are linked
-				$oLinkFilter = new DBObjectSearch($this->m_sLinkedClass);
-				$oLinkFilter->AddCondition('id', $aLinkIds, 'IN');
-				$oLinkSet = new CMDBObjectSet($oLinkFilter);
-				while($oLink = $oLinkSet->Fetch())
-				{
-					$aRemoteObjIds[] = $oLink->Get($this->m_sExtKeyToRemote);
-				}
-			}
-			$oFilter->AddCondition('id', $aRemoteObjIds, 'NOTIN');
+			$oFilter->AddCondition('id', $aAlreadyLinkedIds, 'NOTIN');
 		}
-		$oSet = new CMDBObjectSet($oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'list', false);
 		$oBlock->Display($oP, "ResultsToAdd_{$this->m_sAttCode}", array('menu' => false, 'cssCount'=> '#count_'.$this->m_sAttCode.$this->m_sNameSuffix , 'selection_mode' => true, 'table_id' => 'add_'.$this->m_sAttCode)); // Don't display the 'Actions' menu on the results
 	}
 	
-	public function DoAddObjects(WebPage $oP, $oFullSetFilter, $oCurrentObj)
+	public function DoAddObjects(WebPage $oP, $iMaxAddedId, $oFullSetFilter, $oCurrentObj)
 	{
 		$aLinkedObjectIds = utils::ReadMultipleSelection($oFullSetFilter);
 
+		$iAdditionId = $iMaxAddedId + 1;
 		foreach($aLinkedObjectIds as $iObjectId)
 		{
-			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $iObjectId);
+			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $iObjectId, false);
 			if (is_object($oLinkedObj))
 			{
-				$aRow = $this->GetFormRow($oP, $oLinkedObj, -$iObjectId, array(), $oCurrentObj ); // Not yet created link get negative Ids
-				$oP->add($this->DisplayFormRow($oP, $this->m_aTableConfig, $aRow, -$iObjectId)); 
+				$aRow = $this->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
+				$oP->add($this->DisplayFormRow($oP, $this->m_aTableConfig, $aRow, -$iAdditionId));
+				$iAdditionId++;
 			}
 			else
 			{
@@ -468,4 +438,3 @@ EOF
 		}
 	}
 }
-?>

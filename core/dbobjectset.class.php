@@ -16,6 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+require_once('dbobjectiterator.php');
 
 /**
  * Object set management
@@ -30,7 +31,7 @@
  *
  * @package     iTopORM
  */
-class DBObjectSet
+class DBObjectSet implements iDBObjectSetIterator
 {
 	/**
 	 * @var array
@@ -236,7 +237,7 @@ class DBObjectSet
 	 * 
 	 * @param string $sClass The class (or an ancestor) for the objects to be added in this set
 	 * 
-	 * @return DBObject The empty set
+	 * @return DBObjectSet The empty set
 	 */
 	static public function FromScratch($sClass)
 	{
@@ -922,22 +923,6 @@ class DBObjectSet
 		return $oComparator->SetsAreEquivalent();
 	}
 
-	protected function GetObjectAt($iIndex)
-	{
-		if (!$this->m_bLoaded) $this->Load();
-		
-		// Save the current position for iteration
-		$iCurrPos = $this->m_iCurrRow;
-		
-		$this->Seek($iIndex);
-		$oObject = $this->Fetch();
-		
-		// Restore the current position for iteration
-		$this->Seek($this->m_iCurrRow);
-		
-		return $oObject;
-	}
-	
 	/**
 	 * Build a new set (in memory) made of objects of the given set which are NOT present in the current set
 	 * 
@@ -1199,19 +1184,27 @@ class DBObjectSetComparator
 	protected $aIDs1;
 	protected $aIDs2;
 	protected $aExcludedColumns;
+
+	/**
+	 * @var iDBObjectSetIterator
+	 */
 	protected $oSet1;
+	/**
+	 * @var iDBObjectSetIterator
+	 */
 	protected $oSet2;
+
 	protected $sAdditionalKeyColumn;
 	protected $aAdditionalKeys;
 	
 	/**
 	 * Initializes the comparator
-	 * @param DBObjectSet $oSet1 The first set of objects to compare, or null
-	 * @param DBObjectSet $oSet2 The second set of objects to compare, or null
+	 * @param iDBObjectSetIterator $oSet1 The first set of objects to compare, or null
+	 * @param iDBObjectSetIterator $oSet2 The second set of objects to compare, or null
 	 * @param array $aExcludedColumns The list of columns (= attribute codes) to exclude from the comparison
 	 * @param string $sAdditionalKeyColumn The attribute code of an additional column to be considered as a key indentifying the object (useful for n:n links)
 	 */
-	public function __construct($oSet1, $oSet2, $aExcludedColumns = array(), $sAdditionalKeyColumn = null)
+	public function __construct(iDBObjectSetIterator $oSet1, iDBObjectSetIterator $oSet2, $aExcludedColumns = array(), $sAdditionalKeyColumn = null)
 	{
 		$this->aFingerprints1 = null;
 		$this->aFingerprints2 = null;
@@ -1237,9 +1230,6 @@ class DBObjectSetComparator
 			
 			if ($this->oSet1 !== null)
 			{
-				$aAliases = $this->oSet1->GetSelectedClasses();
-				if (count($aAliases) > 1) throw new Exception('DBObjectSetComparator does not support Sets with more than one column. $oSet1: ('.print_r($aAliases, true).')');
-				
 				$this->oSet1->Rewind();
 				while($oObj = $this->oSet1->Fetch())
 				{
@@ -1255,9 +1245,6 @@ class DBObjectSetComparator
 				
 			if ($this->oSet2 !== null)
 			{
-				$aAliases = $this->oSet2->GetSelectedClasses();
-				if (count($aAliases) > 1) throw new Exception('DBObjectSetComparator does not support Sets with more than one column. $oSet2: ('.print_r($aAliases, true).')');
-				
 				$this->oSet2->Rewind();
 				while($oObj = $this->oSet2->Fetch())
 				{

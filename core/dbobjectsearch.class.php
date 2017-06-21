@@ -387,7 +387,6 @@ class DBObjectSearch extends DBSearch
 				return;
 			}
 		}
-		MyHelpers::CheckKeyInArray('operator', $sOpCode, $oFilterDef->GetOperators());
 		// Parse search strings if needed and if the filter code corresponds to a valid attcode
 		if($bParseSeachString && MetaModel::IsValidAttCode($this->GetClass(), $sFilterCode))
 		{

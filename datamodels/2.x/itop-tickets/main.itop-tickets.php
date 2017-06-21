@@ -195,8 +195,6 @@ class _Ticket extends cmdbAbstractObject
 			}
 		}
 		
-		$oContactsSet = DBObjectSet::FromScratch('lnkContactToTicket');
-		
 		$sContextKey = 'itop-tickets/relation_context/'.get_class($this).'/impacts/down';
 		$aContextDefs = DisplayableGraph::GetContextDefinitions($sContextKey, true, array('this' => $this));
 		$aDefaultContexts = array();
@@ -219,7 +217,6 @@ class _Ticket extends cmdbAbstractObject
 			{
 				$oObj = $oNode->GetProperty('object');
 				$iKey = $oObj->GetKey();
-				$sRootClass = MetaModel::GetRootClass(get_class($oObj));
 				$aGraphObjects[get_class($oObj).'::'.$iKey] = $oNode->GetProperty('object');
 			}
 		}
@@ -235,7 +232,6 @@ class _Ticket extends cmdbAbstractObject
 				{
 					$oObj = $oNode->GetProperty('object');
 					$iKey = $oObj->GetKey();
-					$sRootClass = MetaModel::GetRootClass(get_class($oObj));
 					$aGraphObjects[get_class($oObj).'::'.$iKey] = $oNode->GetProperty('object');
 				}
 			}
@@ -247,8 +243,8 @@ class _Ticket extends cmdbAbstractObject
 			$sRootClass = MetaModel::GetRootClass(get_class($oObj));
 			switch ($sRootClass)
 			{
-				case 'FunctionalCI':		
-				// Only link FunctionalCIs which are not already linked to the ticket
+				case 'FunctionalCI':
+				// Only FunctionalCIs which are not already linked to the ticket
 				if (!array_key_exists($iKey, $aCIsToImpactCode) || ($aCIsToImpactCode[$iKey] != 'not_impacted'))
 				{
 					$oNewLink = new lnkFunctionalCIToTicket();

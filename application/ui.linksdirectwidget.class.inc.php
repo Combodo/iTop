@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Class UILinksWidgetDirect
  *  
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */ 
 
@@ -71,7 +71,14 @@ class UILinksWidgetDirect
 		}
 		
 	}
-	
+
+	/**
+	 * @param WebPage $oPage
+	 * @param DBObjectSet $oValue
+	 * @param array $aArgs
+	 * @param $sFormPrefix
+	 * @param $oCurrentObj
+	 */
 	public function Display(WebPage $oPage, DBObjectSet $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj)
 	{
 		$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
@@ -115,7 +122,15 @@ class UILinksWidgetDirect
 			$this->DisplayAsBlock($oPage, $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj, true /* bDisplayMenu*/);
 		}
 	}
-	
+
+	/**
+	 * @param WebPage $oPage
+	 * @param DBObjectSet $oValue
+	 * @param array $aArgs
+	 * @param $sFormPrefix
+	 * @param $oCurrentObj
+	 * @param $bDisplayMenu
+	 */
 	protected function DisplayAsBlock(WebPage $oPage, DBObjectSet $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj, $bDisplayMenu)
 	{
 		$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
@@ -151,7 +166,15 @@ class UILinksWidgetDirect
 			$oBlock->Display($oPage, $this->sInputid, $aParams);
 		}	
 	}
-	
+
+	/**
+	 * @param WebPage $oPage
+	 * @param DBObjectSet $oValue
+	 * @param array $aArgs
+	 * @param $sFormPrefix
+	 * @param $oCurrentObj
+	 * @param array $aButtons
+	 */
 	protected function DisplayEditInPlace(WebPage $oPage, DBObjectSet $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj, $aButtons = array('create', 'delete'))
 	{
 		$aAttribs = $this->GetTableConfig();

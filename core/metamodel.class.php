@@ -631,6 +631,10 @@ abstract class MetaModel
 	private static $m_aIgnoredAttributes = array(); //array of ("classname" => array of ("attcode"))
 	private static $m_aEnumToMeta = array(); // array of  ("classname" => array of ("attcode" => array of ("metaattcode" => oMetaAttDef))
 
+	/**
+	 * @param $sClass
+	 * @return AttributeDefinition[]
+	 */
 	final static public function ListAttributeDefs($sClass)
 	{
 		self::_check_subclass($sClass);	
@@ -4855,10 +4859,23 @@ abstract class MetaModel
 		return $oObj->GetHyperLink();
 	}
 
-	public static function NewObject($sClass)
+	/**
+	 * @param string $sClass
+	 * @param array|null $aValues array of attcode => value
+	 * @return DBObject
+	 */
+	public static function NewObject($sClass, $aValues = null)
 	{
 		self::_check_subclass($sClass);
-		return new $sClass();
+		$oRet = new $sClass();
+		if (is_array($aValues))
+		{
+			foreach ($aValues as $sAttCode => $value)
+			{
+				$oRet->Set($sAttCode, $value);
+			}
+		}
+		return $oRet;
 	}	
 
 	public static function GetNextKey($sClass)

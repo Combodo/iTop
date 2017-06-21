@@ -405,11 +405,28 @@ EOF
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 			// Display mode
 			if (!$oAttDef->IsLinkset()) continue; // Process only linkset attributes...
-			
-			// $oSet = new DBObjectSet($this->Get($sAttCode)->GetFilter()); // Why do something so useless ?
-			$oSet = $this->Get($sAttCode);
-			$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
-			$iCount = $oSet->Count();
+
+			$sLinkedClass = $oAttDef->GetLinkedClass();
+
+			// Filter out links pointing to obsolete objects (if relevant)
+			$oLinkSearch = $this->Get($sAttCode)->GetFilter();
+			if ($oAttDef->IsIndirect())
+			{
+				$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
+				$sTargetClass = $oLinkingAttDef->GetTargetClass();
+				if (!utils::ShowObsoleteData() && MetaModel::IsObsoletable($sTargetClass))
+				{
+					$oNotObsolete = new BinaryExpression(
+						new FieldExpression('obsolescence_flag', $sTargetClass),
+						'=',
+						new ScalarExpression(0)
+					);
+					$oLinkSearch->AddConditionExpression($oNotObsolete);
+				}
+			}
+			$oLinkSet = new DBObjectSet($oLinkSearch);
+
+			$iCount = $oLinkSet->Count();
 			$sCount = '';
 			if ($iCount != 0)
 			{
@@ -427,8 +444,7 @@ EOF
 			// Adjust the flags according to user rights
 			if ($oAttDef->IsIndirect())
 			{
-				$sLinkedClass = $oAttDef->GetLinkedClass();
-				$oLinkingAttDef = 	MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
+				$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
 				$sTargetClass = $oLinkingAttDef->GetTargetClass();
 				// n:n links => must be allowed to modify the linking class AND  read the target class in order to edit the linkedset
 				if (!UserRights::IsActionAllowed($sLinkedClass, UR_ACTION_MODIFY) || !UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ))
@@ -444,12 +460,12 @@ EOF
 			else
 			{
 				// 1:n links => must be allowed to modify the linked class in order to edit the linkedset
-				if (!UserRights::IsActionAllowed($oAttDef->GetLinkedClass(), UR_ACTION_MODIFY))
+				if (!UserRights::IsActionAllowed($sLinkedClass, UR_ACTION_MODIFY))
 				{
 					$iFlags |= OPT_ATT_READONLY;
 				}
 				// 1:n links => must be allowed to read the linked class in order to display the linkedset
-				if (!UserRights::IsActionAllowed($oAttDef->GetLinkedClass(), UR_ACTION_READ))
+				if (!UserRights::IsActionAllowed($sLinkedClass, UR_ACTION_READ))
 				{
 					$iFlags |= OPT_ATT_HIDDEN;
 				}
@@ -463,10 +479,9 @@ EOF
 			{
 				$sInputId = $this->m_iFormId.'_'.$sAttCode;
 
-				$sLinkedClass = $oAttDef->GetLinkedClass();
 				if ($oAttDef->IsIndirect())
 				{
-					$oLinkingAttDef = 	MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
+					$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
 					$sTargetClass = $oLinkingAttDef->GetTargetClass();
 				}
 				else
@@ -475,9 +490,8 @@ EOF
 				}
 				$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription().'<span id="busy_'.$sInputId.'"></span>');
 
-				$oValue = $this->Get($sAttCode);
 				$sDisplayValue = ''; // not used
-				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $oValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $oLinkSet, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
 				$this->AddToFieldsMap($sAttCode,  $sInputId);
 				$oPage->add($sHTMLValue);
 			}
@@ -487,7 +501,7 @@ EOF
 				if (!$oAttDef->IsIndirect())
 				{
 					// 1:n links
-					$sTargetClass = $oAttDef->GetLinkedClass();
+					$sTargetClass = $sLinkedClass;
 
 					$aDefaults = array($oAttDef->GetExtKeyToMe() => $this->GetKey());
 					$oAppContext = new ApplicationContext();
@@ -510,10 +524,8 @@ EOF
 				else
 				{
 					// n:n links
-					$sLinkedClass = $oAttDef->GetLinkedClass();
-					$oLinkingAttDef = 	MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
+					$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
 					$sTargetClass = $oLinkingAttDef->GetTargetClass();
-					$bMenu = ($this->Get($sAttCode)->Count() > 0); // The menu is enabled only if there are already some elements...
 					$aParams = array(
 							'link_attr' => $oAttDef->GetExtKeyToMe(),
 							'object_id' => $this->GetKey(),
@@ -525,7 +537,7 @@ EOF
 						);
 				}
 				$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription());
-				$oBlock = new DisplayBlock($this->Get($sAttCode)->GetFilter(), 'list', false);
+				$oBlock = new DisplayBlock($oLinkSet->GetFilter(), 'list', false);
 				$oBlock->Display($oPage, 'rel_'.$sAttCode, $aParams);
 			}
 			if (array_key_exists($sAttCode, $aRedundancySettings))
@@ -2107,7 +2119,7 @@ EOF
 		$oPage->add_dict_entry('UI:ValueMustBeSet');
 		$oPage->add_dict_entry('UI:ValueMustBeChanged');
 		$oPage->add_dict_entry('UI:ValueInvalidFormat');
-		return "<div>{$sHTMLValue}</div>";
+		return "<div class=\"attribute-edit\" data-attcode=\"$sAttCode\">{$sHTMLValue}</div>";
 	}
 
 	public function DisplayModifyForm(WebPage $oPage, $aExtraParams = array())
@@ -3026,50 +3038,7 @@ EOF
 		foreach($aValues as $sAttCode => $value)
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-			if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
-			{
-				$aLinks = $value;
-				$sLinkedClass = $oAttDef->GetLinkedClass();
-				$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
-				$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
-				$oLinkedSet = DBObjectSet::FromScratch($sLinkedClass);
-				if (is_array($aLinks))
-				{
-					foreach($aLinks as $id => $aData)
-					{
-						if (is_numeric($id))
-						{
-							if ($id < 0)
-							{
-								// New link to be created, the opposite of the id (-$id) is the ID of the remote object
-								$oLink = MetaModel::NewObject($sLinkedClass);
-								$oLink->Set($sExtKeyToRemote, -$id);
-								$oLink->Set($sExtKeyToMe, $this->GetKey());
-							}
-							else
-							{
-								// Existing link, potentially to be updated...
-								$oLink = MetaModel::GetObject($sLinkedClass, $id);
-							}
-							// Now populate the attributes
-							foreach($aData as $sName => $value)
-							{
-								if (MetaModel::IsValidAttCode($sLinkedClass, $sName))
-								{
-									$oLinkAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sName);
-									if ($oLinkAttDef->IsWritable())
-									{
-										$oLink->Set($sName, $value);
-									}
-								}
-							}
-							$oLinkedSet->AddObject($oLink);
-						}
-					}
-				}
-				$this->Set($sAttCode, $oLinkedSet);
-			}
-			elseif ($oAttDef->GetEditClass() == 'Document')
+			if ($oAttDef->GetEditClass() == 'Document')
 			{
 				// There should be an uploaded file with the named attr_<attCode>
 				$oDocument = $value['fcontents'];
@@ -3123,30 +3092,10 @@ EOF
 			{
 				$this->Set($sAttCode, $value);
 			}
-			else if (($oAttDef->GetEditClass() == 'LinkedSet') && !$oAttDef->IsIndirect() &&
-			          (($oAttDef->GetEditMode() == LINKSET_EDITMODE_INPLACE) || ($oAttDef->GetEditMode() == LINKSET_EDITMODE_ADDREMOVE)))
+			else if ($oAttDef->GetEditClass() == 'LinkedSet')
 			{
-				$oLinkset = $this->Get($sAttCode);
-				$sLinkedClass = $oLinkset->GetClass();
-				$aObjSet = array();
-				$oLinkset->Rewind();
-				$bModified = false;
-				while($oLink = $oLinkset->Fetch())
-				{
-					if (in_array($oLink->GetKey(), $value['to_be_deleted']))
-					{
-						// The link is to be deleted, don't copy it in the array
-						$bModified = true;
-					}
-					else
-					{
-						if (!array_key_exists('to_be_removed', $value) || !in_array($oLink->GetKey(), $value['to_be_removed']))
-						{
-							$aObjSet[] = $oLink;
-						}
-					}
-				}
-
+				$oLinkSet = $this->Get($sAttCode);
+				$sLinkedClass = $oAttDef->GetLinkedClass();
 				if (array_key_exists('to_be_created', $value) && (count($value['to_be_created']) > 0))
 				{
 					// Now handle the links to be created
@@ -3156,11 +3105,10 @@ EOF
 						if ( ($sLinkedClass == $sSubClass) || (is_subclass_of($sSubClass, $sLinkedClass)) )
 						{
 							$aObjData = $aData['data'];
-							
-							$oLink = new $sSubClass;
+
+							$oLink = MetaModel::NewObject($sSubClass);
 							$oLink->UpdateObjectFromArray($aObjData);
-							$aObjSet[] = $oLink;
-							$bModified = true;
+							$oLinkSet->AddItem($oLink);
 						}
 					}
 				}
@@ -3172,32 +3120,39 @@ EOF
 						$oLink = MetaModel::GetObject($sLinkedClass, $iObjKey, false);
 						if ($oLink)
 						{
-							$aObjSet[] = $oLink;
-							$bModified = true;
+							$oLinkSet->AddItem($oLink);
+						}
+					}
+				}
+				if (array_key_exists('to_be_modified', $value) && (count($value['to_be_modified']) > 0))
+				{
+					// Now handle the links to be added by making the remote object point to self
+					foreach($value['to_be_modified'] as $iObjKey => $aData)
+					{
+						$oLink = MetaModel::GetObject($sLinkedClass, $iObjKey, false);
+						if ($oLink)
+						{
+							$aObjData = $aData['data'];
+							$oLink->UpdateObjectFromArray($aObjData);
+							$oLinkSet->ModifyItem($oLink);
 						}
 					}
 				}
 				if (array_key_exists('to_be_removed', $value) && (count($value['to_be_removed']) > 0))
 				{
-					// Now handle the links to be removed by making the remote object point to nothing
-					// Keep them in the set (modified), DBWriteLinks will handle them
 					foreach($value['to_be_removed'] as $iObjKey)
 					{
-						$oLink = MetaModel::GetObject($sLinkedClass, $iObjKey, false);
-						if ($oLink)
-						{
-							$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
-							$oLink->Set($sExtKeyToMe, null);
-							$aObjSet[] = $oLink;
-							$bModified = true;
-						}
+						$oLinkSet->RemoveItem($iObjKey);
 					}
 				}
-				if ($bModified)
+				if (array_key_exists('to_be_deleted', $value) && (count($value['to_be_deleted']) > 0))
 				{
-					$oNewSet = DBObjectSet::FromArray($oLinkset->GetClass(), $aObjSet);
-					$this->Set($sAttCode, $oNewSet);
-				}		
+					foreach($value['to_be_deleted'] as $iObjKey)
+					{
+						$oLinkSet->RemoveItem($iObjKey);
+					}
+				}
+				$this->Set($sAttCode, $oLinkSet);
 			}
 			else
 			{
@@ -3254,15 +3209,14 @@ EOF
 			{
 				$value = $oAttDef->ReadValueFromPostedForm($this, $sFormPrefix);
 			}
-			else if (($oAttDef->GetEditClass() == 'LinkedSet') && !$oAttDef->IsIndirect() &&
-			         (($oAttDef->GetEditMode() == LINKSET_EDITMODE_INPLACE) || ($oAttDef->GetEditMode() == LINKSET_EDITMODE_ADDREMOVE)) )
+			else if ($oAttDef->GetEditClass() == 'LinkedSet')
 			{
 				$aRawToBeCreated = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbc", '{}', 'raw_data'), true);
 				$aToBeCreated = array();
 				foreach($aRawToBeCreated as $aData)
 				{
 					$sSubFormPrefix = $aData['formPrefix'];
-					$sObjClass = $aData['class'];
+					$sObjClass = $oAttDef->GetLinkedClass();
 					$aObjData = array();
 					foreach($aData as $sKey => $value)
 					{
@@ -3273,11 +3227,30 @@ EOF
 					}
 					$aToBeCreated[] = array('class' => $sObjClass, 'data' => $aObjData);
 				}
-				
-				$value = array('to_be_created' => $aToBeCreated, 
-							   'to_be_deleted' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbd", '[]', 'raw_data'), true), 
-							   'to_be_added' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tba", '[]', 'raw_data'), true),
-							   'to_be_removed' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbr", '[]', 'raw_data'), true) );
+
+				$aRawToBeModified = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbm", '{}', 'raw_data'), true);
+				$aToBeModified = array();
+				foreach($aRawToBeModified as $iObjKey => $aData)
+				{
+					$sSubFormPrefix = $aData['formPrefix'];
+					$aObjData = array();
+					foreach($aData as $sKey => $value)
+					{
+						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
+						{
+							$aObjData[$aMatches[1]] = $value;
+						}
+					}
+					$aToBeModified[$iObjKey] = array('data' => $aObjData);
+				}
+
+				$value = array(
+					'to_be_created' => $aToBeCreated,
+					'to_be_modified' => $aToBeModified,
+					'to_be_deleted' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbd", '[]', 'raw_data'), true),
+					'to_be_added' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tba", '[]', 'raw_data'), true),
+					'to_be_removed' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbr", '[]', 'raw_data'), true)
+				);
 			}
 			else if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
 			{
