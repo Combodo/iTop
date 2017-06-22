@@ -816,7 +816,7 @@ EOF
 		$sClass = get_class($oObj);
 
 		$sStimulus = trim(utils::ReadPostedParam('apply_stimulus', ''));
-		$sTargetState = '';
+		$aExpectedAttributes = array();
 		if (!empty($sStimulus))
 		{
 			// Compute the target state
@@ -826,10 +826,10 @@ EOF
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulus, $oObj->GetName(), $oObj->GetStateLabel()));
 			}
-			$sTargetState = $aTransitions[$sStimulus]['target_state'];
-		}
+			$aExpectedAttributes = $oObj->GetTransitionAttributes($sStimulus /*, current state*/);
+        }
 			
-		$oObj->UpdateObjectFromPostedForm('' /* form prefix */, $aAttList, $sTargetState);
+		$oObj->UpdateObjectFromPostedForm('' /* form prefix */, $aAttList, $aExpectedAttributes);
 
 		// Optional: apply a stimulus
 		//

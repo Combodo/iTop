@@ -1375,7 +1375,7 @@ EOF
 							}
 						}
 						
-						$oObj->UpdateObjectFromPostedForm('', array_keys($aExpectedAttributes), $sTargetState);
+						$oObj->UpdateObjectFromPostedForm('', array_keys($aExpectedAttributes), $aExpectedAttributes);
 						
 						if (count($aErrors) == 0)
 						{
@@ -1496,7 +1496,7 @@ EOF
 					}
 				}
 				
-				$oObj->UpdateObjectFromPostedForm('', array_keys($aExpectedAttributes), $sTargetState);				
+				$oObj->UpdateObjectFromPostedForm('', array_keys($aExpectedAttributes), $aExpectedAttributes);
 				
 				if (count($aErrors) == 0)
 				{
@@ -1513,7 +1513,7 @@ EOF
 						{
 							// Rollback to the previous state... by reloading the object from the database and applying the modifications again
 							$oObj = MetaModel::GetObject(get_class($oObj), $oObj->GetKey());
-							$oObj->UpdateObjectFromPostedForm('', array_keys($aExpectedAttributes), $sTargetState);
+							$oObj->UpdateObjectFromPostedForm('', array_keys($aExpectedAttributes), $aExpectedAttributes);
 							$sIssues = $e->getMessage();
 						}
 					}

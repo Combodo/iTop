@@ -2944,10 +2944,10 @@ EOF
 	 * Updates the object from a flat array of values
 	 * @param $aAttList array $aAttList array of attcode
 	 * @param $aErrors array Returns information about slave attributes
-	 * @param $sTargetState string Target state for which to evaluate the writeable attributes (=current state is empty)
+	 * @param $aAttFlags array Attribute codes => Flags to use instead of those from the MetaModel
 	 * @return array of attcodes that can be used for writing on the current object
 	 */
-	public function GetWriteableAttList($aAttList, &$aErrors, $sTargetState = '')
+	public function GetWriteableAttList($aAttList, &$aErrors, $aAttFlags = array())
 	{
 		if (!is_array($aAttList))
 		{
@@ -2956,14 +2956,19 @@ EOF
 			// WARNING: if you change this also check the functions DisplayModifyForm and DisplayCaseLog
 			foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
 			{
-				if ($this->IsNew())
+
+			    if(array_key_exists($sAttCode, $aAttFlags))
+                {
+                    $iFlags = $aAttFlags[$sAttCode];
+                }
+				elseif ($this->IsNew())
 				{
 					$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
 				}
 				else
 				{
 					$aVoid = array();
-					$iFlags = $this->GetAttributeFlags($sAttCode, $aVoid, $sTargetState);
+					$iFlags = $this->GetAttributeFlags($sAttCode, $aVoid);
 				}
 				if ($oAttDef instanceof AttributeCaseLog)
 				{
@@ -2979,15 +2984,19 @@ EOF
 		foreach($aAttList as $sAttCode)
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-			
-			if ($this->IsNew())
+
+            if(array_key_exists($sAttCode, $aAttFlags))
+            {
+                $iFlags = $aAttFlags[$sAttCode];
+            }
+            elseif ($this->IsNew())
 			{
 				$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
 			}
 			else
 			{
 				$aVoid = array();
-				$iFlags = $this->GetAttributeFlags($sAttCode, $aVoid, $sTargetState);
+				$iFlags = $this->GetAttributeFlags($sAttCode, $aVoid);
 			}
 			if ($oAttDef->IsWritable())
 			{
@@ -3172,7 +3181,7 @@ EOF
 	/**
 	 * Updates the object from the POSTed parameters (form)
 	 */
-	public function UpdateObjectFromPostedForm($sFormPrefix = '', $aAttList = null, $sTargetState = '')
+	public function UpdateObjectFromPostedForm($sFormPrefix = '', $aAttList = null, $aAttFlags = array())
 	{
 		if (is_null($aAttList))
 		{
@@ -3280,7 +3289,7 @@ EOF
 
 		$aErrors = array();
 		$aFinalValues = array();
-		foreach($this->GetWriteableAttList(array_keys($aValues), $aErrors, $sTargetState) as $sAttCode => $oAttDef)
+		foreach($this->GetWriteableAttList(array_keys($aValues), $aErrors, $aAttFlags) as $sAttCode => $oAttDef)
 		{
 			$aFinalValues[$sAttCode] = $aValues[$sAttCode];
 		}
@@ -3302,7 +3311,7 @@ EOF
 	/**
 	 * Updates the object from a given page argument
 	 */
-	public function UpdateObjectFromArg($sArgName, $aAttList = null, $sTargetState = '')
+	public function UpdateObjectFromArg($sArgName, $aAttList = null, $aAttFlags = array())
 	{
 		if (is_null($aAttList))
 		{
@@ -3320,7 +3329,7 @@ EOF
 
 		$aErrors = array();
 		$aFinalValues = array();
-		foreach($this->GetWriteableAttList(array_keys($aValues), $aErrors, $sTargetState) as $sAttCode => $oAttDef)
+		foreach($this->GetWriteableAttList(array_keys($aValues), $aErrors, $aAttFlags) as $sAttCode => $oAttDef)
 		{
 			$aFinalValues[$sAttCode] = $aValues[$sAttCode];
 		}

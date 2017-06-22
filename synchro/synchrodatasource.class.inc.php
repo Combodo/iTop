@@ -514,9 +514,9 @@ EOF
 		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 	}
 		
-	public function UpdateObjectFromPostedForm($sFormPrefix = '', $sAttList = null, $sTargetState = '')
+	public function UpdateObjectFromPostedForm($sFormPrefix = '', $sAttList = null, $aAttFlags = array())
 	{
-		parent::UpdateObjectFromPostedForm($sFormPrefix, $sAttList, $sTargetState);
+		parent::UpdateObjectFromPostedForm($sFormPrefix, $sAttList, $aAttFlags);
 		// And now read the other post parameters...
 		$oAttributeSet = $this->Get('attribute_list');
 		$aAttributes = array();
