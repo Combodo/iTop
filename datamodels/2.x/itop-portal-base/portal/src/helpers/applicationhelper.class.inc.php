@@ -447,6 +447,8 @@ class ApplicationHelper
 			$aPortalConf['forms'] = static::LoadFormsConfiguration($oApp, $oDesign);
 			// - Scopes
 			static::LoadScopesConfiguration($oApp, $oDesign);
+			// - Lifecycle
+            static::LoadLifecycleConfiguration($oApp, $oDesign);
 			// - Presentation lists
 			$aPortalConf['lists'] = static::LoadListsConfiguration($oApp, $oDesign);
 			// - Action rules
@@ -1001,18 +1003,29 @@ class ApplicationHelper
 		return $aForms;
 	}
 
-	/**
-	 * Loads the scopes configuration from the module design XML
-	 *
-	 * @param \Silex\Application $oApp
-	 * @param ModuleDesign $oDesign
-	 */
-	static protected function LoadScopesConfiguration(Application $oApp, ModuleDesign $oDesign)
-	{
-		$oApp['scope_validator']->Init($oDesign->GetNodes('/module_design/classes/class'));
-	}
+    /**
+     * Loads the scopes configuration from the module design XML
+     *
+     * @param \Silex\Application $oApp
+     * @param ModuleDesign $oDesign
+     */
+    static protected function LoadScopesConfiguration(Application $oApp, ModuleDesign $oDesign)
+    {
+        $oApp['scope_validator']->Init($oDesign->GetNodes('/module_design/classes/class'));
+    }
 
-	/**
+    /**
+     * Loads the lifecycle configuration from the module design XML
+     *
+     * @param \Silex\Application $oApp
+     * @param ModuleDesign $oDesign
+     */
+    static protected function LoadLifecycleConfiguration(Application $oApp, ModuleDesign $oDesign)
+    {
+        $oApp['lifecycle_validator']->Init($oDesign->GetNodes('/module_design/classes/class'));
+    }
+
+    /**
 	 * Loads the context helper from the module design XML
 	 *
 	 * @param \Silex\Application $oApp

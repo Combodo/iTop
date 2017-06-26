@@ -157,8 +157,22 @@ class SecurityHelper
 
 	public static function IsStimulusAllowed(Application $oApp, $sStimulusCode, $sObjectClass, $oInstanceSet = null)
 	{
-		$aStimuli = Metamodel::EnumStimuli($sObjectClass);
-		$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sObjectClass, $sStimulusCode, $oInstanceSet) : UR_ALLOWED_NO;
+	    // Checking DataModel layer
+        $aStimuliFromDatamodel = Metamodel::EnumStimuli($sObjectClass);
+		$iActionAllowed = (get_class($aStimuliFromDatamodel[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sObjectClass, $sStimulusCode, $oInstanceSet) : UR_ALLOWED_NO;
+        if( ($iActionAllowed === false) || ($iActionAllowed === UR_ALLOWED_NO) )
+        {
+            return false;
+        }
+
+        // Checking portal security layer
+        $aStimuliFromPortal = $oApp['lifecycle_validator']->GetStimuliForProfiles(UserRights::ListProfiles(), $sObjectClass);
+		if(!in_array($sStimulusCode, $aStimuliFromPortal))
+        {
+            return false;
+        }
+
+        return true;
 	}
 
     /**

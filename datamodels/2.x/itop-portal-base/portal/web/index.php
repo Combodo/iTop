@@ -38,6 +38,8 @@ require_once __DIR__ . '/../src/providers/contextmanipulatorserviceprovider.clas
 require_once __DIR__ . '/../src/helpers/contextmanipulatorhelper.class.inc.php';
 require_once __DIR__ . '/../src/providers/scopevalidatorserviceprovider.class.inc.php';
 require_once __DIR__ . '/../src/helpers/scopevalidatorhelper.class.inc.php';
+require_once __DIR__ . '/../src/providers/lifecyclevalidatorserviceprovider.class.inc.php';
+require_once __DIR__ . '/../src/helpers/lifecyclevalidatorhelper.class.inc.php';
 require_once __DIR__ . '/../src/helpers/securityhelper.class.inc.php';
 require_once __DIR__ . '/../src/helpers/applicationhelper.class.inc.php';
 
@@ -63,9 +65,14 @@ $oApp = new Application();
 $oApp->register(new Combodo\iTop\Portal\Provider\UrlGeneratorServiceProvider());
 $oApp->register(new Combodo\iTop\Portal\Provider\ContextManipulatorServiceProvider());
 $oApp->register(new Combodo\iTop\Portal\Provider\ScopeValidatorServiceProvider(), array(
-	'scope_validator.scopes_path' => utils::GetCachePath(),
-	'scope_validator.scopes_filename' => PORTAL_ID . '.scopes.php',
-	'scope_validator.instance_name' => PORTAL_ID
+    'scope_validator.scopes_path' => utils::GetCachePath(),
+    'scope_validator.scopes_filename' => PORTAL_ID . '.scopes.php',
+    'scope_validator.instance_name' => PORTAL_ID
+));
+$oApp->register(new Combodo\iTop\Portal\Provider\LifecycleValidatorServiceProvider(), array(
+    'lifecycle_validator.lifecycle_path' => utils::GetCachePath(),
+    'lifecycle_validator.lifecycle_filename' => PORTAL_ID . '.lifecycle.php',
+    'lifecycle_validator.instance_name' => PORTAL_ID
 ));
 $oApp->register(new Silex\Provider\TwigServiceProvider(), array(
 	'twig.path' => MODULESROOT,

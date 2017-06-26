@@ -487,12 +487,16 @@ class ObjectController extends AbstractController
 				$aStimuli = Metamodel::EnumStimuli($sObjectClass);
 				foreach ($oObject->EnumTransitions() as $sStimulusCode => $aTransitionDef)
 				{
-					$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sObjectClass, $sStimulusCode, $oSetToCheckRights) : UR_ALLOWED_NO;
-					// Careful, $iAction is an integer whereas UR_ALLOWED_YES is a boolean, therefore we can't use a '===' operator.
-					if ($iActionAllowed == UR_ALLOWED_YES)
-					{
-						$aFormData['buttons']['transitions'][$sStimulusCode] = $aStimuli[$sStimulusCode]->GetLabel();
-					}
+//					$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sObjectClass, $sStimulusCode, $oSetToCheckRights) : UR_ALLOWED_NO;
+//					// Careful, $iAction is an integer whereas UR_ALLOWED_YES is a boolean, therefore we can't use a '===' operator.
+//					if ($iActionAllowed == UR_ALLOWED_YES)
+//					{
+//						$aFormData['buttons']['transitions'][$sStimulusCode] = $aStimuli[$sStimulusCode]->GetLabel();
+//					}
+					if(SecurityHelper::IsStimulusAllowed($oApp, $sStimulusCode, $sObjectClass, $oSetToCheckRights))
+                    {
+                        $aFormData['buttons']['transitions'][$sStimulusCode] = $aStimuli[$sStimulusCode]->GetLabel();
+                    }
 				}
 
                 // Add plugin buttons

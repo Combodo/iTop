@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -31,8 +31,6 @@ use \Combodo\iTop\DesignElement;
 
 class LifecycleValidatorHelper
 {
-	const ENUM_TYPE_ALLOW = 'allow';
-	const ENUM_TYPE_RESTRICT = 'restrict';
 	const DEFAULT_GENERATED_CLASS = 'PortalLifecycleValues';
 
 	protected $sCachePath;
@@ -40,11 +38,6 @@ class LifecycleValidatorHelper
 	protected $sInstancePrefix;
 	protected $sGeneratedClass;
 	protected $aProfilesMatrix;
-
-	public static function EnumTypeValues()
-	{
-		return array(static::ENUM_TYPE_ALLOW, static::ENUM_TYPE_RESTRICT);
-	}
 
 	public function __construct($sFilename, $sCachePath = null)
 	{
@@ -133,148 +126,93 @@ class LifecycleValidatorHelper
 
 		// Creating file if not existing
 		// Note : This is a temporary cache system, it should soon evolve to a cache provider (fs, apc, memcache, ...)
-		if (!file_exists($sFilePath))
+		if (1 || !file_exists($sFilePath))
 		{
 			// - Build php array from xml
 			$aProfiles = array();
 			// This will be used to know which classes have been set, so we can set the missing ones.
 			$aProfileClasses = array();
 			// Iterating over the class nodes
-			foreach ($oNodes as $oClassNode)
+            foreach ($oNodes as $oClassNode)
 			{
-				// retrieving mandatory class id attribute
+				// Retrieving mandatory class id attribute
 				$sClass = $oClassNode->getAttribute('id');
 				if ($sClass === '')
 				{
 					throw new DOMFormatException('Class tag must have an id attribute.', null, null, $oClassNode);
 				}
-				
-				// Iterating over scope nodes of the class
-				$oScopesNode = $oClassNode->GetOptionalElement('scopes');
-				if ($oScopesNode !== null)
-				{
-					foreach ($oScopesNode->GetNodes('./scope') as $oScopeNode)
-					{
-						// Retrieving mandatory scope id attribute
-						$sScopeId = $oScopeNode->getAttribute('id');
-						if ($sScopeId === '')
-						{
-							throw new DOMFormatException('Scope tag must have an id attribute.', null, null, $oScopeNode);
-						}
 
-						// Retrieving the type of query
-						// Note : This has been disabled as we don't want deny rules for now
-						// $oOqlViewTypeNode = $oClassNode->GetOptionalElement('oql_view_type');
-						// $sOqlViewType = ($oOqlViewTypeNode !== null && ($oOqlViewTypeNode->GetText() === static::ENUM_TYPE_RESTRICT)) ? static::ENUM_TYPE_RESTRICT : static::ENUM_TYPE_ALLOW;
-						$sOqlViewType = static::ENUM_TYPE_ALLOW;
-						// Retrieving the view query
-						$oOqlViewNode = $oScopeNode->GetUniqueElement('oql_view');
-						$sOqlView = $oOqlViewNode->GetText();
-						if ($sOqlView === null)
-						{
-							throw new DOMFormatException('Scope tag in class must have a not empty oql_view tag', null, null, $oScopeNode);
-						}
-						// Retrieving the edit query
-						$oOqlEditNode = $oScopeNode->GetOptionalElement('oql_edit');
-						$sOqlEdit = ( ($oOqlEditNode !== null) && ($oOqlEditNode->GetText() !== null) ) ? $oOqlEditNode->GetText() : null;
+				// Retrieving lifecycle node of the class
+                $oLifecycleNode = $oClassNode->GetOptionalElement('lifecycle');
+                if($oLifecycleNode !== null)
+                {
+                    // Iterating over scope nodes of the class
+                    $oStimuliNode = $oLifecycleNode->GetOptionalElement('stimuli');
+                    if ($oStimuliNode !== null)
+                    {
+                        foreach ($oStimuliNode->GetNodes('./stimulus') as $oStimulusNode)
+                        {
+                            // Retrieving mandatory scope id attribute
+                            $sStimulusId = $oStimulusNode->getAttribute('id');
+                            if ($sStimulusId === '')
+                            {
+                                throw new DOMFormatException('Stimulus tag must have an id attribute.', null, null, $oStimulusNode);
+                            }
 
-						// Retrieving profiles for the scope
-						$oProfilesNode = $oScopeNode->GetOptionalElement('allowed_profiles');
-						$aProfilesNames = array();
-						// If no profile is specified, we consider that it's for ALL the profiles
-						if (($oProfilesNode === null) || ($oProfilesNode->GetNodes('./allowed_profile')->length === 0))
-						{
-							foreach (ProfilesConfig::GetProfilesValues() as $iKey => $aValue)
-							{
-								$aProfilesNames[] = $aValue['name'];
-							}
-						}
-						else
-						{
-							foreach ($oProfilesNode->GetNodes('./allowed_profile') as $oProfileNode)
-							{
-								// Retrieving mandatory profile id attribute
-								$sProfileId = $oProfileNode->getAttribute('id');
-								if ($sProfileId === '')
-								{
-									throw new DOMFormatException('Scope tag must have an id attribute.', null, null, $oProfileNode);
-								}
-								$aProfilesNames[] = $sProfileId;
-							}
-						}
+                            // Retrieving profiles for the stimulus
+                            $oProfilesNode = $oStimulusNode->GetOptionalElement('allowed_profiles');
+                            $aProfilesNames = array();
+                            // If no profile is specified, we consider that it's for ALL the profiles
+                            if (($oProfilesNode === null) || ($oProfilesNode->GetNodes('./allowed_profile')->length === 0))
+                            {
+                                foreach (ProfilesConfig::GetProfilesValues() as $iKey => $aValue)
+                                {
+                                    $aProfilesNames[] = $aValue['name'];
+                                }
+                            }
+                            else
+                            {
+                                foreach ($oProfilesNode->GetNodes('./allowed_profile') as $oProfileNode)
+                                {
+                                    // Retrieving mandatory profile id attribute
+                                    $sProfileId = $oProfileNode->getAttribute('id');
+                                    if ($sProfileId === '')
+                                    {
+                                        throw new DOMFormatException('Stimulus tag must have an id attribute.', null, null, $oProfileNode);
+                                    }
+                                    $aProfilesNames[] = $sProfileId;
+                                }
+                            }
 
-						//
-						foreach ($aProfilesNames as $sProfileName)
-						{
-							// Scope profile id
-							$iProfileId = $this->GetProfileIdFromProfileName($sProfileName);
-							
-							// Now that we have the queries infos, we are going to build the queries for that profile / class
-							$sMatrixPrefix = $iProfileId . '_' . $sClass . '_';
-							// - View query
-							$oViewFilter = DBSearch::FromOQL($sOqlView);
-							// ... We have to union the query if this profile has another scope for that class
-							if (array_key_exists($sMatrixPrefix . static::ENUM_MODE_READ, $aProfiles) && array_key_exists($sOqlViewType, $aProfiles[$sMatrixPrefix . static::ENUM_MODE_READ]))
-							{
-								$oExistingFilter = DBSearch::FromOQL($aProfiles[$sMatrixPrefix . static::ENUM_MODE_READ][$sOqlViewType]);
-								$aFilters = array($oExistingFilter, $oViewFilter);
-								$oResFilter = new DBUnionSearch($aFilters);
-							}
-							else
-							{
-								$oResFilter = $oViewFilter;
-							}
-							$aProfiles[$sMatrixPrefix . static::ENUM_MODE_READ] = array(
-								$sOqlViewType => $oResFilter->ToOQL()
-							);
-							// - Edit query
-							if ($sOqlEdit !== null)
-							{
-								$oEditFilter = DBSearch::FromOQL($sOqlEdit);
-								// - If the queries are the same, we don't make an intersect, we just reuse the view query
-								if ($sOqlEdit === $sOqlView)
-								{
-									// Do not intersect, edit query is identical to view query
-								}
-								else
-								{
-									if (($oEditFilter->GetClass() === $oViewFilter->GetClass()) && $oEditFilter->IsAny())
-									{
-										$oEditFilter = $oViewFilter;
-										// Do not intersect, edit query is identical to view query
-									}
-									else
-									{
-										// Intersect
-										$oEditFilter = $oViewFilter->Intersect($oEditFilter);
-									}
-								}
+                            //
+                            foreach ($aProfilesNames as $sProfileName)
+                            {
+                                // Stimulus profile id
+                                $iProfileId = $this->GetProfileIdFromProfileName($sProfileName);
 
-								// ... We have to union the query if this profile has another scope for that class
-								if (array_key_exists($sMatrixPrefix . static::ENUM_MODE_WRITE, $aProfiles) && array_key_exists($sOqlViewType, $aProfiles[$sMatrixPrefix . static::ENUM_MODE_WRITE]))
-								{
-									$oExistingFilter = DBSearch::FromOQL($aProfiles[$sMatrixPrefix . static::ENUM_MODE_WRITE][$sOqlViewType]);
-									$aFilters = array($oExistingFilter, $oEditFilter);
-									$oResFilter = new DBUnionSearch($aFilters);
-								}
-								else
-								{
-									$oResFilter = $oEditFilter;
-								}
-								$aProfiles[$sMatrixPrefix . static::ENUM_MODE_WRITE] = array(
-									$sOqlViewType => $oResFilter->ToOQL()
-								);
-							}
-						}
-					}
+                                // Now that we have the queries infos, we are going to build the queries for that profile / class
+                                $sMatrixPrefix = $iProfileId . '_' . $sClass;
+                                // - Creating profile / class entry if not already present
+                                if(!array_key_exists($sMatrixPrefix, $aProfiles))
+                                {
+                                    $aProfiles[$sMatrixPrefix] = array();
+                                }
+                                // - Adding stimulus if not already present
+                                if(!in_array($sStimulusId, $aProfiles[$sMatrixPrefix]))
+                                {
+                                    $aProfiles[$sMatrixPrefix][] = $sStimulusId;
+                                }
+                            }
+                        }
 
-					$aProfileClasses[] = $sClass;
-				}
+                        $aProfileClasses[] = $sClass;
+                    }
+                }
 			}
 
-			// Filling the array with missing classes from MetaModel, so we can have an inheritance principle on the scope
-			// For each class explicitly given in the scopes, we check if its child classes were also in the scope :
-			// If not, we add them with the same OQL
+			// Filling the array with missing classes from MetaModel, so we can have an inheritance principle on the stimuli
+			// For each class explicitly given in the stimuli, we check if its child classes were also in the stimuli :
+			// If not, we add them
 			foreach ($aProfileClasses as $sProfileClass)
 			{
 				foreach (MetaModel::EnumChildClasses($sProfileClass) as $sChildClass)
@@ -285,136 +223,16 @@ class LifecycleValidatorHelper
 						foreach (ProfilesConfig::GetProfilesValues() as $iKey => $aValue)
 						{
 							$iProfileId = $iKey;
-							foreach (array(static::ENUM_MODE_READ, static::ENUM_MODE_WRITE) as $sAction)
-							{
-								// If the current profile has scope for that class in that mode, we duplicate it
-								if (isset($aProfiles[$iProfileId . '_' . $sProfileClass . '_' . $sAction]))
-								{
-									$aTmpProfile = $aProfiles[$iProfileId . '_' . $sProfileClass . '_' . $sAction];
-									foreach ($aTmpProfile as $sType => $sOql)
-									{
-										$oTmpFilter = DBSearch::FromOQL($sOql);
-										$oTmpFilter->ChangeClass($sChildClass);
 
-										$aTmpProfile[$sType] = $oTmpFilter->ToOQL();
-									}
-
-									$aProfiles[$iProfileId . '_' . $sChildClass . '_' . $sAction] = $aTmpProfile;
-								}
-							}
+                            // If the current profile has scope for that class in that mode, we duplicate it
+                            if (isset($aProfiles[$iProfileId . '_' . $sProfileClass]))
+                            {
+                                $aProfiles[$iProfileId . '_' . $sChildClass] = $aProfiles[$iProfileId . '_' . $sProfileClass];
+                            }
 						}
 					}
 				}
 			}
-
-			// Iterating over the scope nodes
-			/* foreach ($oNodes as $oScopeNode)
-			  {
-			  // Retrieving mandatory id attribute
-			  $sProfile = $oScopeNode->getAttribute('id');
-			  if ($sProfile === '')
-			  {
-			  throw new DOMFormatException('Scope tag must have an id attribute.', null, null, $oScopeNode);
-			  }
-
-			  // Scope profile id
-			  $iProfileId = $this->GetProfileIdFromProfileName($sProfile);
-			  // This will be used to know which classes have been set, so we can set the missing ones.
-			  $aProfileClasses = array();
-
-			  // Iterating over the class nodes of the scope
-			  foreach ($oScopeNode->GetUniqueElement('classes')->GetNodes('./class') as $oClassNode)
-			  {
-			  // Retrieving mandatory id attribute
-			  $sClass = $oClassNode->getAttribute('id');
-			  if ($sClass === '')
-			  {
-			  throw new DOMFormatException('Class tag must have an id attribute.', null, null, $oClassNode);
-			  }
-
-			  // Retrieving the type of query
-			  $oOqlViewTypeNode = $oClassNode->GetOptionalElement('oql_view_type');
-			  $sOqlViewType = ($oOqlViewTypeNode !== null && ($oOqlViewTypeNode->GetText() === static::ENUM_TYPE_RESTRICT)) ? static::ENUM_TYPE_RESTRICT : static::ENUM_TYPE_ALLOW;
-			  // Retrieving the view query
-			  $oOqlViewNode = $oClassNode->GetUniqueElement('oql_view');
-			  $sOqlView = $oOqlViewNode->GetText();
-			  if ($sOqlView === null)
-			  {
-			  throw new DOMFormatException('Class tag in scope must have a not empty oql_view tag', null, null, $oClassNode);
-			  }
-			  // Retrieving the edit query
-			  $oOqlEditNode = $oClassNode->GetOptionalElement('oql_edit');
-			  $sOqlEdit = ( ($oOqlEditNode !== null) && ($oOqlEditNode->GetText() !== null) ) ? $oOqlEditNode->GetText() : null;
-
-			  // Now that we have the queries infos, we are going to build the queries for that profile / class
-			  $sMatrixPrefix = $iProfileId . '_' . $sClass . '_';
-			  // - View query
-			  $oViewFilter = DBSearch::FromOQL($sOqlView);
-			  $aProfiles[$sMatrixPrefix . 'r'] = array(
-			  $sOqlViewType => $oViewFilter->ToOQL()
-			  );
-			  // - Edit query
-			  if ($sOqlEdit !== null)
-			  {
-			  $oEditFilter = DBSearch::FromOQL($sOqlEdit);
-			  // - If the queries are the same, we don't make an intersect, we just reuse the view query
-			  if ($sOqlEdit === $sOqlView)
-			  {
-			  // Do not intersect, edit query is identical to view query
-			  }
-			  else
-			  {
-			  if (($oEditFilter->GetClass() === $oViewFilter->GetClass()) && $oEditFilter->IsAny())
-			  {
-			  $oEditFilter = $oViewFilter;
-			  // Do not intersect, edit query is identical to view query
-			  }
-			  else
-			  {
-			  // Intersect
-			  $oEditFilter = $oViewFilter->Intersect($oEditFilter);
-			  }
-			  }
-
-			  $aProfiles[$sMatrixPrefix . 'w'] = array(
-			  $sOqlViewType => $oEditFilter->ToOQL()
-			  );
-			  }
-
-			  $aProfileClasses[] = $sClass;
-			  }
-
-			  // Filling the array with missing classes from MetaModel, so we can have an inheritance principle on the scope
-			  // For each class explicitly given in the scopes, we check if its child classes were also in the scope :
-			  // If not, we add them with the same OQL
-			  foreach ($aProfileClasses as $sProfileClass)
-			  {
-			  foreach (MetaModel::EnumChildClasses($sProfileClass) as $sChildClass)
-			  {
-			  // If the child class is not in the scope, we are going to try to add it
-			  if (!in_array($sChildClass, $aProfileClasses))
-			  {
-			  foreach (array('r', 'w') as $sAction)
-			  {
-			  // If the current profile has scope for that class in that mode, we duplicate it
-			  if (isset($aProfiles[$iProfileId . '_' . $sProfileClass . '_' . $sAction]))
-			  {
-			  $aTmpProfile = $aProfiles[$iProfileId . '_' . $sProfileClass . '_' . $sAction];
-			  foreach ($aTmpProfile as $sType => $sOql)
-			  {
-			  $oTmpFilter = DBSearch::FromOQL($sOql);
-			  $oTmpFilter->ChangeClass($sChildClass);
-
-			  $aTmpProfile[$sType] = $oTmpFilter->ToOQL();
-			  }
-
-			  $aProfiles[$iProfileId . '_' . $sChildClass . '_' . $sAction] = $aTmpProfile;
-			  }
-			  }
-			  }
-			  }
-			  }
-			  } */
 
 			// - Build php class
 			$sPHP = $this->BuildPHPClass($aProfiles);
@@ -443,77 +261,42 @@ class LifecycleValidatorHelper
 	}
 
 	/**
-	 * Returns the DBSearch for the $sProfile in $iAction for the class $sClass
+	 * Returns an array of available stimuli for the $sProfile for the class $sClass
 	 *
 	 * @param string $sProfile
 	 * @param string $sClass
-	 * @param integer $iAction
 	 * @return DBSearch
 	 */
-	public function GetScopeFilterForProfile($sProfile, $sClass, $iAction = null)
+	public function GetStimuliForProfile($sProfile, $sClass)
 	{
-		return $this->GetScopeFilterForProfiles(array($sProfile), $sClass, $iAction);
+		return $this->GetStimuliForProfiles(array($sProfile), $sClass);
 	}
 
 	/**
-	 * Returns the DBSearch for the $aProfiles in $iAction for the class $sClass.
+	 * Returns an array of available stimuli for the $aProfiles for the class $sClass.
 	 * Profiles are a OR condition.
 	 *
 	 * @param array $aProfiles
 	 * @param string $sClass
-	 * @param integer $iAction
 	 * @return DBSearch
 	 */
-	public function GetScopeFilterForProfiles($aProfiles, $sClass, $iAction = null)
+	public function GetStimuliForProfiles($aProfiles, $sClass)
 	{
-		$oSearch = null;
-		$aAllowSearches = array();
-		$aRestrictSearches = array();
+		$aStimuli = array();
 
-		// Checking the default mode
-		if ($iAction === null)
-		{
-			$iAction = UR_ACTION_READ;
-		}
-		
 		// Iterating on profiles to retrieving the different OQLs parts
 		foreach ($aProfiles as $sProfile)
 		{
 			// Retrieving matrix informtions
 			$iProfileId = $this->GetProfileIdFromProfileName($sProfile);
-			$sMode = ($iAction === UR_ACTION_READ) ? static::ENUM_MODE_READ : static::ENUM_MODE_WRITE;
 
-			// Retrieving profile OQLs
-			$sScopeValuesClass = $this->sGeneratedClass;
-			$aProfileMatrix = $sScopeValuesClass::GetProfileScope($iProfileId, $sClass, $sMode);
-			if ($aProfileMatrix !== null)
-			{
-				if (isset($aProfileMatrix['allow']) && $aProfileMatrix['allow'] !== null)
-				{
-					$aAllowSearches[] = DBSearch::FromOQL($aProfileMatrix['allow']);
-				}
-				if (isset($aProfileMatrix['restrict']) && $aProfileMatrix['restrict'] !== null)
-				{
-					$aRestrictSearches[] = DBSearch::FromOQL($aProfileMatrix['restrict']);
-				}
-			}
+			// Retrieving profile stimuli
+			$sLifecycleValuesClass = $this->sGeneratedClass;
+			$aProfileMatrix = $sLifecycleValuesClass::GetProfileStimuli($iProfileId, $sClass);
+			$aStimuli = array_merge_recursive($aStimuli, $aProfileMatrix);
 		}
 
-		// Building the real OQL from all the parts from the differents profiles
-		for ($i = 0; $i < count($aAllowSearches); $i++)
-		{
-			foreach ($aRestrictSearches as $oRestrictSearch)
-			{
-				$aAllowSearches[$i] = $aAllowSearches[$i]->Intersect($oRestrictSearch);
-			}
-		}
-		if (count($aAllowSearches) > 0)
-		{
-			$oSearch = new DBUnionSearch($aAllowSearches);
-			$oSearch = $oSearch->RemoveDuplicateQueries();
-		}
-
-		return $oSearch;
+		return $aStimuli;
 	}
 
 	/**
@@ -550,13 +333,13 @@ class LifecycleValidatorHelper
 		// - Else, we can't find the id from the name as we don't know the used UserRights addon. It has to be a constant
 		else
 		{
-			throw new Exception('Scope validator : Unknown UserRights addon, scope\'s profile must be a constant');
+			throw new Exception('Lifecycle validator : Unknown UserRights addon, lifecycle\'s profile must be a constant');
 		}
 
 		// If profile was not found from its name or from a constant, we throw an exception
 		if ($iProfileId === null)
 		{
-			throw new Exception('Scope validator : Could not find "' . $sProfile . '" in the profiles list');
+			throw new Exception('Lifecycle validator : Could not find "' . $sProfile . '" in the profiles list');
 		}
 
 		return $iProfileId;
@@ -575,11 +358,11 @@ class LifecycleValidatorHelper
 		$sPHP = <<<EOF
 <?php
 
-// File generated by LifeCycleValidatorHelperHelper
+// File generated by LifeCycleValidatorHelper
 //
 // Please do not edit manually
-// List of constant scopes
-// - used by the portal LifecycleValidatorHelperHelper
+// List of constant lifecycles
+// - used by the portal LifecycleValidatorHelper
 //
 class $sClassName
 {
@@ -589,17 +372,17 @@ class $sClassName
 	* @param integer \$iProfileId
 	* @param string \$sClass
 	*/
-	public static function GetTransitionProfileScope(\$iProfileId, \$sClass, \$sStimulusCode)
+	public static function GetProfileStimuli(\$iProfileId, \$sClass)
 	{
-		\$sQuery = null;
+		\$aStimuli = array();
 
-		\$sScopeKey = \$iProfileId.'_'.\$sClass.'_'.\$sAction;
-		if (isset(self::\$aPROFILES[\$sScopeKey]))
+		\$sLifecycleKey = \$iProfileId.'_'.\$sClass;
+		if (isset(self::\$aPROFILES[\$sLifecycleKey]))
 		{
-			\$sQuery = self::\$aPROFILES[\$sScopeKey];
+			\$aStimuli = self::\$aPROFILES[\$sLifecycleKey];
 		}
 
-		return \$sQuery;
+		return \$aStimuli;
 	}
 }
 
@@ -609,4 +392,3 @@ EOF;
 
 }
 
-?>
