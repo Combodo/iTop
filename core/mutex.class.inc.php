@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2013-2016 Combodo SARL
+// Copyright (C) 2013-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -24,7 +24,7 @@
  * Relies on MySQL locks because the API sem_get is not always present in the
  * installed PHP.    
  *
- * @copyright   Copyright (C) 2013-2016 Combodo SARL
+ * @copyright   Copyright (C) 2013-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class iTopMutex
@@ -38,7 +38,11 @@ class iTopMutex
 	{
 		// Compute the name of a lock for mysql
 		// Note: names are server-wide!!! So let's make the name specific to this iTop instance
-		$oConfig = utils::GetConfig(); // Will return an empty config when called during the setup
+		$oConfig = MetaModel::GetConfig();
+		if ($oConfig === null)
+		{
+			$oConfig = utils::GetConfig(); // Will return an empty config when called during the setup
+		}
 		$sDBName = $oConfig->GetDBName();
 		$sDBSubname = $oConfig->GetDBSubname();
 		$this->sName = 'itop.'.$sName;
@@ -49,7 +53,7 @@ class iTopMutex
 			// running cron job by its mutex, without knowing if the config already exists or not
 			$this->sName .= $sDBName.$sDBSubname;
 		}
-		
+
 		$this->bLocked = false; // Not yet locked
 
 		if (!array_key_exists($this->sName, self::$aAcquiredLocks))
