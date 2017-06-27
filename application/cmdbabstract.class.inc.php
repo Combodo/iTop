@@ -412,7 +412,8 @@ EOF
 			$oLinkSearch = $this->Get($sAttCode)->GetFilter();
 			if ($oAttDef->IsIndirect())
 			{
-				$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
+				$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
+				$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sExtKeyToRemote);
 				$sTargetClass = $oLinkingAttDef->GetTargetClass();
 				if (!utils::ShowObsoleteData() && MetaModel::IsObsoletable($sTargetClass))
 				{
@@ -421,7 +422,9 @@ EOF
 						'=',
 						new ScalarExpression(0)
 					);
-					$oLinkSearch->AddConditionExpression($oNotObsolete);
+					$oNotObsoleteRemote = new DBObjectSearch($sTargetClass);
+					$oNotObsoleteRemote->AddConditionExpression($oNotObsolete);
+					$oLinkSearch->AddCondition_PointingTo($oNotObsoleteRemote, $sExtKeyToRemote);
 				}
 			}
 			$oLinkSet = new DBObjectSet($oLinkSearch);
@@ -3331,7 +3334,14 @@ EOF
 		$aFinalValues = array();
 		foreach($this->GetWriteableAttList(array_keys($aValues), $aErrors, $aAttFlags) as $sAttCode => $oAttDef)
 		{
-			$aFinalValues[$sAttCode] = $aValues[$sAttCode];
+			if ($oAttDef->IsLinkSet())
+			{
+				$aFinalValues[$sAttCode] = json_decode($aValues[$sAttCode], true);
+			}
+			else
+			{
+				$aFinalValues[$sAttCode] = $aValues[$sAttCode];
+			}
 		}
 		$this->UpdateObjectFromArray($aFinalValues);
 		return $aErrors;
