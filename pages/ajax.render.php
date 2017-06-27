@@ -569,12 +569,17 @@ try
 			$oObj->Set($sAttCode, $defaultValue);
 		}
 		$sFormPrefix = $oWizardHelper->GetFormPrefix();
+		$aExpectedAttributes = $oObj->GetTransitionAttributes($oWizardHelper->GetStimulus(), $oWizardHelper->GetInitialState());
 		foreach($oWizardHelper->GetFieldsForAllowedValues() as $sAttCode)
 		{
 			$sId = $oWizardHelper->GetIdForField($sAttCode);
 			if ($sId != '')
 			{
-				if ($oObj->IsNew())
+                if(array_key_exists($sAttCode, $aExpectedAttributes))
+                {
+                    $iFlags = $aExpectedAttributes[$sAttCode];
+                }
+                elseif ($oObj->IsNew())
 				{
 					$iFlags = $oObj->GetInitialStateAttributeFlags($sAttCode);
 				}

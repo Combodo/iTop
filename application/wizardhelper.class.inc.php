@@ -270,11 +270,21 @@ class WizardHelper
 	{
 		return $this->m_aData['m_sClass'];
 	}
-	
-	public function GetFormPrefix()
-	{
-		return $this->m_aData['m_sFormPrefix'];
-	}
+
+    public function GetFormPrefix()
+    {
+        return $this->m_aData['m_sFormPrefix'];
+    }
+
+    public function GetInitialState()
+    {
+        return $this->m_aData['m_sInitialState'];
+    }
+
+    public function GetStimulus()
+    {
+        return $this->m_aData['m_sStimulus'];
+    }
 	
 	public function GetIdForField($sFieldName)
 	{

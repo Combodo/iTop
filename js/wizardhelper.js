@@ -34,7 +34,7 @@ if (!Array.prototype.indexOf) // Emulation of the indexOf function for IE and ol
 	};
 }
 
-function WizardHelper(sClass, sFormPrefix, sState)
+function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus)
 {
 	this.m_oData = { 'm_sClass' : '',
 					 'm_oFieldsMap': {},
@@ -48,7 +48,17 @@ function WizardHelper(sClass, sFormPrefix, sState)
 					 'm_sState': sState
 					};
 	this.m_oData.m_sClass = sClass;
-	
+
+	// Setting optional transition data
+	if(sInitialState !== undefined)
+	{
+		this.m_oData.m_sInitialState = sInitialState;
+	}
+	if(sStimulus !== undefined)
+	{
+		this.m_oData.m_sStimulus = sStimulus;
+	}
+
 	// Methods
 	this.SetFieldsMap = function (oFieldsMap)
 	{

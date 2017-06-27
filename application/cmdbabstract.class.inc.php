@@ -2628,7 +2628,7 @@ EOF
 		$oPage->add_script(
 <<<EOF
 		// Initializes the object once at the beginning of the page...
-		var oWizardHelper = new WizardHelper('$sClass', '', '$sTargetState');
+		var oWizardHelper = new WizardHelper('$sClass', '', '$sTargetState', '{$this->GetState()}', '$sStimulus');
 		oWizardHelper.SetFieldsMap($sJsonFieldsMap);
 		oWizardHelper.SetFieldsCount($iFieldsCount);
 EOF
