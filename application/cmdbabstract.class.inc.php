@@ -3228,7 +3228,7 @@ EOF
 				foreach($aRawToBeCreated as $aData)
 				{
 					$sSubFormPrefix = $aData['formPrefix'];
-					$sObjClass = $oAttDef->GetLinkedClass();
+					$sObjClass = isset($aData['class']) ? $aData['class'] : $oAttDef->GetLinkedClass();
 					$aObjData = array();
 					foreach($aData as $sKey => $value)
 					{
