@@ -428,6 +428,7 @@ EOF
 				}
 			}
 			$oLinkSet = new DBObjectSet($oLinkSearch);
+			$oLinkSet->SetShowObsoleteData(utils::ShowObsoleteData());
 
 			$iCount = $oLinkSet->Count();
 			$sCount = '';
