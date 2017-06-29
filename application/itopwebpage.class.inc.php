@@ -328,6 +328,19 @@ EOF
 			
 		// This selector will be reused when selecting actual tab widget A elements.
 		var tab_a_selector = 'ul.ui-tabs-nav a';
+		
+		// This helper will be used to resize tab width
+		var resizeTab = function(oElem){
+		    var tableWidth = (oElem.children('table:first').length > 0) ? oElem.children('table:first').outerWidth() : 0;
+		    
+		    $('.wizContainer').css('min-width', 
+                parseInt(tableWidth) +
+                parseInt(oElem.css('margin-left'))*2 +
+                parseInt(oElem.css('padding-left'))*2 +
+                parseInt(tabs.css('margin-left'))*2 +
+                parseInt(tabs.css('padding-left'))*2
+            )
+		};
 		  
 		// Ugly patch for a change in the behavior of jQuery UI:
 		// Before jQuery UI 1.9, tabs were always considered as "local" (opposed to Ajax)
@@ -352,6 +365,9 @@ EOF
 			event: 'change', 'show': function(event, ui) {
 				$('.resizable', ui.panel).resizable(); // Make resizable everything that claims to be resizable !
 			},
+			create: function( event, ui ) {
+			    resizeTab(ui.panel);
+			},
 			beforeLoad: function( event, ui ) {
 				if ( ui.tab.data('loaded') && (ui.tab.attr('data-cache') == 'true')) {
 					event.preventDefault();
@@ -361,6 +377,9 @@ EOF
 				ui.jqXHR.success(function() {
 					ui.tab.data( "loaded", true );
 				});
+			},
+			activate: function( event, ui ) {
+			    resizeTab(ui.newPanel);
 			}
 		});
 
