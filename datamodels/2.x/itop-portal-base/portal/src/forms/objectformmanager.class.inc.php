@@ -260,6 +260,16 @@ class ObjectFormManager extends FormManager
 		return $this;
 	}
 
+    /**
+     * Returns if the form manager is handling a transition form instead of a state form.
+     *
+     * @return bool
+     */
+	public function IsTransitionForm()
+    {
+        return ($this->sMode === static::ENUM_MODE_APPLY_STIMULUS);
+    }
+
 	/**
 	 * Creates a JSON string from the current object including :
 	 * - formobject_class
@@ -314,15 +324,15 @@ class ObjectFormManager extends FormManager
 					{
 						$iFieldFlags = $iFieldFlags | OPT_ATT_SLAVE;
 					}
-					// Checking if field should be must prompt
+                    // Checking if field should be must_change
+                    if (isset($aOptions['must_change']) && ($aOptions['must_change'] === true))
+                    {
+                        $iFieldFlags = $iFieldFlags | OPT_ATT_MUSTCHANGE;
+                    }
+                    // Checking if field should be must prompt
 					if (isset($aOptions['must_prompt']) && ($aOptions['must_prompt'] === true))
 					{
 						$iFieldFlags = $iFieldFlags | OPT_ATT_MUSTPROMPT;
-					}
-					// Checking if field should be must_change
-					if (isset($aOptions['must_change']) && ($aOptions['must_change'] === true))
-					{
-						$iFieldFlags = $iFieldFlags | OPT_ATT_MUSTCHANGE;
 					}
 					// Checking if field should be hidden
 					if (isset($aOptions['hidden']) && ($aOptions['hidden'] === true))
@@ -438,10 +448,24 @@ class ObjectFormManager extends FormManager
 		// Also, retrieving mandatory attributes from metamodel to be able to complete the form with them if necessary
 		if ($this->aFormProperties['type'] !== 'static')
 		{
-			foreach (MetaModel::ListAttributeDefs($sObjectClass) as $sAttCode => $oAttDef)
+		    if($this->IsTransitionForm())
+            {
+                $aDatamodelAttCodes = $this->oObject->GetTransitionAttributes($this->aFormProperties['stimulus_code']);
+            }
+            else
+            {
+                $aDatamodelAttCodes = MetaModel::ListAttributeDefs($sObjectClass);
+            }
+
+			foreach ($aDatamodelAttCodes as $sAttCode => $value)
 			{
 				// Retrieving object flags
-				if ($this->oObject->IsNew())
+                if ($this->IsTransitionForm())
+                {
+                    // Retrieving only mandatory flag from DM when on a transition
+                    $iFieldFlags = $value & OPT_ATT_MANDATORY;
+                }
+				elseif ($this->oObject->IsNew())
 				{
 					$iFieldFlags = $this->oObject->GetInitialStateAttributeFlags($sAttCode);
 				}
@@ -454,7 +478,9 @@ class ObjectFormManager extends FormManager
 				// - only if the field if it's in fields list
 				if (array_key_exists($sAttCode, $aFieldsAtts))
 				{
-					$aFieldsAtts[$sAttCode] = $aFieldsAtts[$sAttCode] | $iFieldFlags;
+				    if($this->IsTransitionForm()) {
+                        $aFieldsAtts[$sAttCode] = $aFieldsAtts[$sAttCode] | $iFieldFlags;
+                    }
 				}
 				// - or it is mandatory and has no value
 				if ((($iFieldFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY) && ($this->oObject->Get($sAttCode) === ''))
@@ -493,12 +519,19 @@ class ObjectFormManager extends FormManager
 					{
 						$oField->SetReadOnly(true);
 					}
-					// - Else if it's mandatory and has no value, we force it as mandatory
-					elseif ((($iFieldFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY) && $oAttDef->IsNull($this->oObject->Get($sAttCode)))
-					{
-						$oField->SetMandatory(true);
-					}
-					// - Else if it wasn't mandatory or already had a value, and it's hidden, we force it as hidden
+                    // - Else if it's must change (transition), we force it as not readonly and not hidden
+                    elseif (($iFieldFlags & OPT_ATT_MUSTCHANGE) === OPT_ATT_MUSTCHANGE && $this->IsTransitionForm())
+                    {
+                        $oField->SetReadOnly(false);
+                        $oField->SetHidden(false);
+                    }
+                    // - Else if it's must prompt (transition), we force it as not readonly and not hidden
+                    elseif (($iFieldFlags & OPT_ATT_MUSTPROMPT) === OPT_ATT_MUSTPROMPT && $this->IsTransitionForm())
+                    {
+                        $oField->SetReadOnly(false);
+                        $oField->SetHidden(false);
+                    }
+                    // - Else if it wasn't mandatory or already had a value, and it's hidden, we force it as hidden
 					elseif (($iFieldFlags & OPT_ATT_HIDDEN) === OPT_ATT_HIDDEN)
 					{
 						$oField->SetHidden(true);
@@ -507,22 +540,16 @@ class ObjectFormManager extends FormManager
 					{
 						$oField->SetReadOnly(true);
 					}
-					// - Else if it's must change, we force it as not readonly and not hidden
-					elseif (($iFieldFlags & OPT_ATT_MUSTCHANGE) === OPT_ATT_MUSTCHANGE)
-					{
-						$oField->SetReadOnly(false);
-						$oField->SetHidden(false);
-					}
-					// - Else if it's must prompt, we force it as not readonly and not hidden
-					elseif (($iFieldFlags & OPT_ATT_MUSTPROMPT) === OPT_ATT_MUSTPROMPT)
-					{
-						$oField->SetReadOnly(false);
-						$oField->SetHidden(false);
-					}
 					else
 					{
 						// Normal field
 					}
+
+                    // Finally, if it's mandatory and has no value, we force it as mandatory
+                    if ((($iFieldFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY) && $oAttDef->IsNull($this->oObject->Get($sAttCode)))
+                    {
+                        $oField->SetMandatory(true);
+                    }
 
 					// Specific operation on field
 					// - Field that require a transaction id
@@ -719,94 +746,17 @@ class ObjectFormManager extends FormManager
 					$oField->SetReadOnly(true);
 				}
 
-				$oForm->AddField($oField);
+				// Adding attachements field in transition only if it is editable
+				if(!$this->IsTransitionForm() || ($this->IsTransitionForm() && !$oField->GetReadOnly()) )
+                {
+                    $oForm->AddField($oField);
+                }
 			}
 		}
 
 		$oForm->Finalize();
 		$this->oForm = $oForm;
 		$this->oRenderer->SetForm($this->oForm);
-	}
-
-	/**
-	 * Merging $this->aFormProperties with $aFormPropertiesToMerge. Merge only layout for now
-	 *
-	 * @param array $aFormPropertiesToMerge
-	 * @throws Exception
-	 */
-	public function MergeFormProperties($aFormPropertiesToMerge)
-	{
-		if ($aFormPropertiesToMerge['layout'] !== null)
-		{
-			// Checking if we need to render the template from twig to html in order to parse the fields
-			if ($aFormPropertiesToMerge['layout']['type'] === 'twig')
-			{
-				// Creating sandbox twig env. to load and test the custom form template
-				$oTwig = new \Twig_Environment(new \Twig_Loader_String());
-				$sRendered = $oTwig->render($aFormPropertiesToMerge['layout']['content'], array('oRenderer' => $this->oRenderer, 'oObject' => $this->oObject));
-			}
-			else
-			{
-				$sRendered = $aFormPropertiesToMerge['layout']['content'];
-			}
-
-			// Parsing rendered template to find the fields
-			$oHtmlDocument = new \DOMDocument();
-			$oHtmlDocument->loadHTML('<root>' . $sRendered . '</root>');
-
-			// Adding fields to the list
-			$oXPath = new \DOMXPath($oHtmlDocument);
-			foreach ($oXPath->query('//div[@class="form_field"][@data-field-id]') as $oFieldNode)
-			{
-				$sFieldId = $oFieldNode->getAttribute('data-field-id');
-				$sFieldFlags = $oFieldNode->getAttribute('data-field-flags');
-//				$iFieldFlags = OPT_ATT_NORMAL;
-
-//				// Checking if field has form_path, if not, we add it
-//				if (!$oFieldNode->hasAttribute('data-form-path'))
-//				{
-//					$oFieldNode->setAttribute('data-form-path', $oForm->GetId());
-//				}
-				// Merging only fields that are already in the form
-				if (array_key_exists($sFieldId, $this->aFormProperties['fields']))
-				{
-					// Settings field flags from the data-field-flags attribute
-					foreach (explode(' ', $sFieldFlags) as $sFieldFlag)
-					{
-						if ($sFieldFlag !== '')
-						{
-							$sConst = 'OPT_ATT_' . strtoupper(str_replace('_', '', $sFieldFlag));
-							if (defined($sConst))
-							{
-								switch ($sConst)
-								{
-									case 'OPT_ATT_SLAVE':
-									case 'OPT_ATT_HIDDEN':
-										if (!array_key_exists($sFieldId, $this->aFormProperties['fields']))
-										{
-											$this->aFormProperties['fields'][$sFieldId] = array();
-										}
-										$this->aFormProperties['fields'][$sFieldId]['hidden'] = true;
-										break;
-									case 'OPT_ATT_READONLY':
-										if (!array_key_exists($sFieldId, $this->aFormProperties['fields']))
-										{
-											$this->aFormProperties['fields'][$sFieldId] = array();
-										}
-										$this->aFormProperties['fields'][$sFieldId]['read_only'] = true;
-										break;
-								}
-							}
-							else
-							{
-								IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Flag "' . $sFieldFlag . '" is not valid for field [@data-field-id="' . $sFieldId . '"] in form[@id="' . $aFormPropertiesToMerge['id'] . '"]');
-								throw new Exception('Flag "' . $sFieldFlag . '" is not valid for field [@data-field-id="' . $sFieldId . '"] in form[@id="' . $aFormPropertiesToMerge['id'] . '"]');
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 	/**

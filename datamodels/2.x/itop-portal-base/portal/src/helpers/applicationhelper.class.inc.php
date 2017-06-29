@@ -878,7 +878,8 @@ class ApplicationHelper
                         }
                     }
 
-					// Parsing availables modes for that form (view, edit, create)
+					// Parsing availables modes for that form (view, edit, create, apply_stimulus)
+                    $aFormStimuli = array();
 					if (($oFormNode->GetOptionalElement('modes') !== null) && ($oFormNode->GetOptionalElement('modes')->GetNodes('mode')->length > 0))
 					{
 						$aModes = array();
@@ -892,10 +893,25 @@ class ApplicationHelper
 							{
 								throw new DOMFormatException('Mode tag must have an id attribute', null, null, $oFormNode);
 							}
+
+							// If apply_stimulus mode, checking if stimuli are defined
+                            if ($oModeNode->getAttribute('id') === 'apply_stimulus')
+                            {
+                                $oStimuliNode = $oModeNode->GetOptionalElement('stimuli');
+                                if($oStimuliNode !== null)
+                                {
+                                    foreach ($oStimuliNode->GetNodes('stimulus') as $oStimulusNode)
+                                    {
+                                        $aFormStimuli[] = $oStimulusNode->getAttribute('id');
+                                    }
+                                }
+                            }
 						}
 					}
 					else
 					{
+					    // If no mode was specified, we set it all but stimuli as it would have no sense that every transition forms
+                        // have as many fields displayed as a regular edit form for example.
 						$aModes = array('view', 'edit', 'create');
 					}
 
@@ -941,17 +957,31 @@ class ApplicationHelper
 							}
 						}
 					}
-//					// ... or a specified zlist
-//					elseif ($oFormNode->GetOptionalElement('presentation') !== null)
-//					{
-//						// This is not implemented yet as it was rejected until futher notice.
-//					}
 					// ... or the default zlist
 					else
 					{
 						$aFields['type'] = 'zlist';
 						$aFields['fields'] = 'details';
 					}
+
+					// Adding stimuli if explicitly defined
+                    if(in_array('apply_stimulus', $aModes))
+                    {
+                        // If stimuli are implicitly defined (empty tag), we define all those that have not already been by other forms.
+                        if(empty($aFormStimuli))
+                        {
+                            // Stimuli already declared
+                            $aDeclaredStimuli = array();
+                            if(array_key_exists($sFormClass, $aForms) && array_key_exists('apply_stimulus', $aForms[$sFormClass]))
+                            {
+                                $aDeclaredStimuli = array_keys($aForms[$sFormClass]['apply_stimulus']);
+                            }
+                            // All stimuli
+                            $aDatamodelStimuli = array_keys(MetaModel::EnumStimuli($sFormClass));
+                            // Missing stimuli
+                            $aFormStimuli = array_diff($aDatamodelStimuli, $aDeclaredStimuli);
+                        }
+                    }
 
 					// Parsing presentation
 					if ($oFormNode->GetOptionalElement('twig') !== null)
@@ -975,7 +1005,18 @@ class ApplicationHelper
 							$aForms[$sFormClass] = array();
 						}
 
-						if (!isset($aForms[$sFormClass][$sMode]))
+						if ($sMode === 'apply_stimulus')
+                        {
+                            foreach($aFormStimuli as $sFormStimulus)
+                            {
+                                if(!isset($aForms[$sFormClass][$sMode][$sFormStimulus]))
+                                {
+                                    $aForms[$sFormClass][$sMode][$sFormStimulus] = $aFields;
+                                    $aForms[$sFormClass][$sMode][$sFormStimulus]['id'] = 'apply_stimulus-'.$sFormClass.'-'.$sFormStimulus;
+                                }
+                            }
+                        }
+						elseif (!isset($aForms[$sFormClass][$sMode]))
 						{
 							$aForms[$sFormClass][$sMode] = $aFields;
 						}

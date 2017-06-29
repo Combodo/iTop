@@ -332,11 +332,10 @@ class ObjectController extends AbstractController
 		}
 
 		// Checking security layers
-		// TODO : This should call the stimulus check in the security helper
-//		if (!SecurityHelper::IsActionAllowed($oApp, UR_ACTION_MODIFY, $sObjectClass, $sObjectId))
-//		{
-//			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
-//		}
+        if(!SecurityHelper::IsStimulusAllowed($oApp, $sStimulusCode, $sObjectClass))
+		{
+			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
+		}
 		
 		// Retrieving object
 		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */, $oApp['scope_validator']->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
@@ -349,34 +348,54 @@ class ObjectController extends AbstractController
 
 		// Retrieving request parameters
 		$sOperation = $oRequest->request->get('operation');
-		
-		// Preparing a dedicated form for the stimulus application
-		$aFormProperties = array(
-			'id' => 'apply-stimulus',
-			'type' => 'static',
-			'fields' => array(),
-			'layout' => null
-		);
-		// Checking which fields need to be prompt
-		$aTransitions = MetaModel::EnumTransitions($sObjectClass, $oObject->GetState());
-		$aTargetStates = MetaModel::EnumStates($sObjectClass);
-		$aTargetState = $aTargetStates[$aTransitions[$sStimulusCode]['target_state']];
-		$aExpectedAttributes = $aTargetState['attribute_list'];
-		foreach ($aExpectedAttributes as $sAttCode => $iFlags)
-		{
-			if (($iFlags & (OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) ||
-				(($iFlags & OPT_ATT_MANDATORY) && ($oObject->Get($sAttCode) == '')))
-			{
-				$aFormProperties['fields'][$sAttCode] = array();
-				// Settings flags for the field
-				if ($iFlags & OPT_ATT_MUSTCHANGE)
-					$aFormProperties['fields'][$sAttCode]['must_change'] = true;
-				if ($iFlags & OPT_ATT_MUSTPROMPT)
-					$aFormProperties['fields'][$sAttCode]['must_prompt'] = true;
-				if (($iFlags & OPT_ATT_MANDATORY) && ($oObject->Get($sAttCode) == ''))
-					$aFormProperties['fields'][$sAttCode]['mandatory'] = true;
-			}
-		}
+
+		// Retrieving form properties
+        $aStimuliForms = ApplicationHelper::GetLoadedFormFromClass($oApp, $sObjectClass, 'apply_stimulus');
+        if(array_key_exists($sStimulusCode, $aStimuliForms))
+        {
+            $aFormProperties = $aStimuliForms[$sStimulusCode];
+        }
+        // Or preparing a default form for the stimulus application
+        else
+        {
+            $aFormProperties = array(
+                'id' => 'apply-stimulus',
+                'type' => 'static',
+                'fields' => array(),
+                'layout' => null
+            );
+        }
+
+        // Adding stimulus code to form
+        $aFormProperties['stimulus_code'] = $sStimulusCode;
+
+        // Checking which fields need to be prompt
+//		$aTransitions = MetaModel::EnumTransitions($sObjectClass, $oObject->GetState());
+//		$aTargetStates = MetaModel::EnumStates($sObjectClass);
+//		$aTargetState = $aTargetStates[$aTransitions[$sStimulusCode]['target_state']];
+//		$aExpectedAttributes = $oObject->GetTransitionAttributes($sStimulusCode /*, current state*/);
+//		IssueLog::Info($oObject->GetState());
+//		IssueLog::Info(print_r($aExpectedAttributes, true));
+//		foreach ($aExpectedAttributes as $sAttCode => $iFlags)
+//		{
+//			if (($iFlags & (OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) ||
+//				(($iFlags & OPT_ATT_MANDATORY) && ($oObject->Get($sAttCode) == '')))
+//			{
+//			    if(!isset($aFormProperties['fields'][$sAttCode]))
+//                {
+//                    $aFormProperties['fields'][$sAttCode] = array();
+//                }
+//
+//				// Settings flags for the field
+//				if ($iFlags & OPT_ATT_MUSTCHANGE)
+//					$aFormProperties['fields'][$sAttCode]['must_change'] = true;
+//				if ($iFlags & OPT_ATT_MUSTPROMPT)
+//					$aFormProperties['fields'][$sAttCode]['must_prompt'] = true;
+//				if (($iFlags & OPT_ATT_MANDATORY) && ($oObject->Get($sAttCode) == ''))
+//					$aFormProperties['fields'][$sAttCode]['mandatory'] = true;
+//			}
+//		}
+//		IssueLog::Info(print_r($aFormProperties['fields'], true));
 		// Adding target_state to current_values
 		$oRequest->request->set('apply_stimulus', array('code' => $sStimulusCode));
 
@@ -487,12 +506,6 @@ class ObjectController extends AbstractController
 				$aStimuli = Metamodel::EnumStimuli($sObjectClass);
 				foreach ($oObject->EnumTransitions() as $sStimulusCode => $aTransitionDef)
 				{
-//					$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sObjectClass, $sStimulusCode, $oSetToCheckRights) : UR_ALLOWED_NO;
-//					// Careful, $iAction is an integer whereas UR_ALLOWED_YES is a boolean, therefore we can't use a '===' operator.
-//					if ($iActionAllowed == UR_ALLOWED_YES)
-//					{
-//						$aFormData['buttons']['transitions'][$sStimulusCode] = $aStimuli[$sStimulusCode]->GetLabel();
-//					}
 					if(SecurityHelper::IsStimulusAllowed($oApp, $sStimulusCode, $sObjectClass, $oSetToCheckRights))
                     {
                         $aFormData['buttons']['transitions'][$sStimulusCode] = $aStimuli[$sStimulusCode]->GetLabel();
@@ -554,12 +567,6 @@ class ObjectController extends AbstractController
 				->SetActionRulesToken($sActionRulesToken)
 				->SetRenderer($oFormRenderer)
 				->SetFormProperties($aFormProperties);
-
-			if ($sMode === 'apply_stimulus')
-			{
-				$aEditFormProperties = ApplicationHelper::GetLoadedFormFromClass($oApp, $sObjectClass, ObjectFormManager::ENUM_MODE_APPLY_STIMULUS);
-				$oFormManager->MergeFormProperties($aEditFormProperties);
-			}
 
 			$oFormManager->Build();
 
