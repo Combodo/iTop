@@ -1953,7 +1953,7 @@ abstract class MetaModel
 					{
 						// Create the friendly name attribute
 						$sFriendlyNameAttCode = $sAttCode.'_friendlyname';
-						$oFriendlyName = new AttributeExternalField($sFriendlyNameAttCode, array('magic' => true, 'allowed_values'=>null, 'extkey_attcode'=>$sAttCode, "target_attcode"=>'friendlyname', 'depends_on'=>array()));
+						$oFriendlyName = new AttributeExternalField($sFriendlyNameAttCode, array('allowed_values'=>null, 'extkey_attcode'=>$sAttCode, "target_attcode"=>'friendlyname', 'depends_on'=>array()));
 						self::AddMagicAttribute($oFriendlyName, $sClass, self::$m_aAttribOrigins[$sClass][$sAttCode]);
 
 						if (self::HasChildrenClasses($sRemoteClass))
@@ -1996,21 +1996,42 @@ abstract class MetaModel
 						}
 					}
 
-					// Get the real external key attribute
-					// It will be our reference to determine the other ext fields related to the same ext key
-					$oFinalKeyAttDef = $oAttDef->GetKeyAttDef(EXTKEY_ABSOLUTE);
-
 					if (self::IsArchivable($sRemoteClass))
 					{
-						$sArchiveRemote = $sAttCode.'_archive_flag';
-						$oArchiveRemote = new AttributeExternalField($sArchiveRemote, array("allowed_values"=>null, "extkey_attcode"=>$sAttCode, "target_attcode"=>'archive_flag', "depends_on"=>array()));
-						self::AddMagicAttribute($oArchiveRemote, $sClass, self::$m_aAttribOrigins[$sClass][$sAttCode]);
+						$sCode = $sAttCode.'_archive_flag';
+						if ($oAttDef->IsExternalField())
+						{
+							// This is a key, but the value comes from elsewhere
+							// Create an external field pointing to the remote attribute
+							$sKeyAttCode = $oAttDef->GetKeyAttCode();
+							$sRemoteAttCode = $oAttDef->GetExtAttCode().'_archive_flag';
+						}
+						else
+						{
+							$sKeyAttCode = $sAttCode;
+							$sRemoteAttCode = 'archive_flag';
+						}
+						$oMagic = new AttributeExternalField($sCode, array("allowed_values"=>null, "extkey_attcode"=>$sKeyAttCode, "target_attcode"=>$sRemoteAttCode, "depends_on"=>array()));
+						self::AddMagicAttribute($oMagic, $sClass, self::$m_aAttribOrigins[$sClass][$sKeyAttCode]);
+
 					}
 					if (self::IsObsoletable($sRemoteClass))
 					{
-						$sObsoleteRemote = $sAttCode.'_obsolescence_flag';
-						$oObsoleteRemote = new AttributeExternalField($sObsoleteRemote, array("allowed_values"=>null, "extkey_attcode"=>$sAttCode, "target_attcode"=>'obsolescence_flag', "depends_on"=>array()));
-						self::AddMagicAttribute($oObsoleteRemote, $sClass, self::$m_aAttribOrigins[$sClass][$sAttCode]);
+						$sCode = $sAttCode.'_obsolescence_flag';
+						if ($oAttDef->IsExternalField())
+						{
+							// This is a key, but the value comes from elsewhere
+							// Create an external field pointing to the remote attribute
+							$sKeyAttCode = $oAttDef->GetKeyAttCode();
+							$sRemoteAttCode = $oAttDef->GetExtAttCode().'_obsolescence_flag';
+						}
+						else
+						{
+							$sKeyAttCode = $sAttCode;
+							$sRemoteAttCode = 'obsolescence_flag';
+						}
+						$oMagic = new AttributeExternalField($sCode, array("allowed_values"=>null, "extkey_attcode"=>$sKeyAttCode, "target_attcode"=>$sRemoteAttCode, "depends_on"=>array()));
+						self::AddMagicAttribute($oMagic, $sClass, self::$m_aAttribOrigins[$sClass][$sKeyAttCode]);
 					}
 				}
 				if ($oAttDef instanceof AttributeMetaEnum)
