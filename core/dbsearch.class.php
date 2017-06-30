@@ -78,7 +78,16 @@ abstract class DBSearch
 	}
 	public function GetShowObsoleteData()
 	{
-		return $this->m_bShowObsoleteData;
+		if ($this->m_bArchiveMode || $this->IsAllDataAllowed())
+		{
+			// Enable obsolete data too!
+			$bRet = true;
+		}
+		else
+		{
+			$bRet = $this->m_bShowObsoleteData;
+		}
+		return $bRet;
 	}
 
 	public function NoContextParameters() {$this->m_bNoContextParameters = true;}
