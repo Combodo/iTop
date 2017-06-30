@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -110,7 +110,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:User/Attribute:language/Value:FR FR+' => 'French (France)',
 	'Class:User/Attribute:status' => 'Status',
 	'Class:User/Attribute:status+' => 'Ist das Benutzer aktiviert oder deaktiviert ?',
-	'Class:User/Attribute:status/Value:enabled' => 'Akitv',
+	'Class:User/Attribute:status/Value:enabled' => 'Aktiv',
 	'Class:User/Attribute:status/Value:disabled' => 'Inaktiv',
 	'Class:User/Attribute:profile_list' => 'Profile',
 	'Class:User/Attribute:profile_list+' => 'Rollen, Rechtemanagement für diese Person',
@@ -217,8 +217,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 <p>Alle Module können nacheinander und vollständig unabhängig voneinander eingerichtet werden.</p>',
 	'UI:WelcomeMenu:RightBlock' => '<p>iTop ist mandantenfähig, es erlaubt IT-Technikern, auf einfache Art eine Vielzahl an Kunden und Firmen zu verwalten.
 <ul>iTop bietet ein umfangreiches Set an Business-Prozessen, die
-<li>die Effizienz des IT-Managements steigern,</li> 
-<li>die die Performance des IT-Betriebs steuern,</li> 
+<li>die Effizienz des IT-Managements steigern,</li>
+<li>die die Performance des IT-Betriebs steuern,</li>
 <li>die Kundenzufriedenheit verbessern und Führungskräften Einsicht in die Business Performance ermöglichen.</li>
 </ul>
 </p>
@@ -316,12 +316,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:History:User+' => 'Benutzer, der die Änderung durchführte',
 	'UI:History:Changes' => 'Änderungen',
 	'UI:History:Changes+' => 'Änderungen, die am Objekt durchgeführt wurden',
-	'UI:History:StatsCreations' => 'Created',
-	'UI:History:StatsCreations+' => 'Count of objects created',
-	'UI:History:StatsModifs' => 'Modified',
-	'UI:History:StatsModifs+' => 'Count of objects modified',
-	'UI:History:StatsDeletes' => 'Deleted',
-	'UI:History:StatsDeletes+' => 'Count of objects deleted',
+	'UI:History:StatsCreations' => 'Created~~',
+	'UI:History:StatsCreations+' => 'Count of objects created~~',
+	'UI:History:StatsModifs' => 'Modified~~',
+	'UI:History:StatsModifs+' => 'Count of objects modified~~',
+	'UI:History:StatsDeletes' => 'Deleted~~',
+	'UI:History:StatsDeletes+' => 'Count of objects deleted~~',
 	'UI:Loading' => 'Laden...',
 	'UI:Menu:Actions' => 'Aktionen',
 	'UI:Menu:OtherActions' => 'Andere Aktionen',
@@ -791,32 +791,32 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:RelationshipList' => 'Liste',
 	'UI:RelationGroups' => 'Gruppen',
 	'UI:RelationGroupNumber_N' => 'Gruppe #%1$d~~',
-	'UI:Relation:ExportAsPDF' => 'Export as PDF...~~',
-	'UI:RelationOption:GroupingThreshold' => 'Grouping threshold~~',
-	'UI:Relation:AdditionalContextInfo' => 'Additional context info~~',
-	'UI:Relation:NoneSelected' => 'Nichts~~',
+	'UI:Relation:ExportAsPDF' => 'Als PDF exportieren...',
+	'UI:RelationOption:GroupingThreshold' => 'Schwellwert der Gruppierung',
+	'UI:Relation:AdditionalContextInfo' => 'Zusätzliche Kontextinformation',
+	'UI:Relation:NoneSelected' => 'Nichts ausgewählt',
 	'UI:Relation:Zoom' => 'Zoom',
-	'UI:Relation:ExportAsDocument' => 'Export as Document...~~',
-	'UI:Relation:DrillDown' => 'Details...~~',
-	'UI:Relation:PDFExportOptions' => 'PDF Export Options~~',
-	'UI:Relation:AttachmentExportOptions_Name' => 'Options for Attachment to %1$s~~',
-	'UI:RelationOption:Untitled' => 'Untitled~~',
-	'UI:Relation:Key' => 'Key~~',
-	'UI:Relation:Comments' => 'Comments~~',
-	'UI:RelationOption:Title' => 'Title~~',
-	'UI:RelationOption:IncludeList' => 'Include the list of objects~~',
-	'UI:RelationOption:Comments' => 'Comments~~',
-	'UI:Button:Export' => 'Export~~',
-	'UI:Relation:PDFExportPageFormat' => 'Page format~~',
-	'UI:PageFormat_A3' => 'A3~~',
-	'UI:PageFormat_A4' => 'A4~~',
-	'UI:PageFormat_Letter' => 'Letter~~',
-	'UI:Relation:PDFExportPageOrientation' => 'Page orientation~~',
-	'UI:PageOrientation_Portrait' => 'Portrait~~',
-	'UI:PageOrientation_Landscape' => 'Landscape~~',
-	'UI:RelationTooltip:Redundancy' => 'Redundancy~~',
-	'UI:RelationTooltip:ImpactedItems_N_of_M' => '# of impacted items: %1$d / %2$d~~',
-	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Critical threshold: %1$d / %2$d~~',
+	'UI:Relation:ExportAsDocument' => 'Als Dokument exportieren...',
+	'UI:Relation:DrillDown' => 'Details...',
+	'UI:Relation:PDFExportOptions' => 'PDF Export Optionen',
+	'UI:Relation:AttachmentExportOptions_Name' => 'Optionen für Anhänge zu %1$s',
+	'UI:RelationOption:Untitled' => 'Unbezeichnet',
+	'UI:Relation:Key' => 'Schlüssel',
+	'UI:Relation:Comments' => 'Kommentare',
+	'UI:RelationOption:Title' => 'Titel',
+	'UI:RelationOption:IncludeList' => 'Inkludiere die Liste der Objekte',
+	'UI:RelationOption:Comments' => 'Kommentare',
+	'UI:Button:Export' => 'Export',
+	'UI:Relation:PDFExportPageFormat' => 'Seitenformat',
+	'UI:PageFormat_A3' => 'A3',
+	'UI:PageFormat_A4' => 'A4',
+	'UI:PageFormat_Letter' => 'Letter',
+	'UI:Relation:PDFExportPageOrientation' => 'Seitenorientierung',
+	'UI:PageOrientation_Portrait' => 'Portrait',
+	'UI:PageOrientation_Landscape' => 'Landscape',
+	'UI:RelationTooltip:Redundancy' => 'Redundanz',
+	'UI:RelationTooltip:ImpactedItems_N_of_M' => '# der betroffenen Items: %1$d / %2$d',
+	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Kritischer Schwellwert: %1$d / %2$d',
 	'UI:OperationCancelled' => 'Operation abgebrochen',
 	'UI:ElementsDisplayed' => 'Filtere',
 	'Portal:Title' => 'iTop-Benutzerportal',
@@ -1031,19 +1031,19 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Month-11-Short' => 'Nov',
 	'Month-12-Short' => 'Dez',
 	'Calendar-FirstDayOfWeek' => 1, // 0 = Sunday, 1 = Monday, etc...
-	
+
 	'UI:FillAllMandatoryFields' => 'Bitte füllen Sie alle Pflichtfelder',
 	'UI:DisconnectedDlgMessage' => 'Sie sind abgemeldet. Sie müssen sich identifizeren, um die Anwendung weiter zu benutzen.',
 	'UI:DisconnectedDlgTitle' => 'Warnung!',
 	'UI:LoginAgain' => 'Erneut einloggen',
-	'UI:StayOnThePage' => 'Auf dieser Seite bleiben',	
+	'UI:StayOnThePage' => 'Auf dieser Seite bleiben',
 	'UI:CurrentObjectIsLockedBy_User' => 'Das Objekt ist gesperrt, da es derzeit durch %1$s bearbeitet wird.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'Das Objekt wird derzeit durch %1$s bearbeitet. Ihre Änderungen können nicht abgesendet werden, da sie überschrieben würden.',
 	'UI:CurrentObjectLockExpired' => 'Die Sperre um simultane Änderungen des Objekts zu verhindern ist abgelaufen.',
 	'UI:CurrentObjectLockExpired_Explanation' => 'Die Sperre um simultane Änderungen des Objekts zu verhindern ist abgelaufen. Sie können Ihre Änderungen nicht mehr absenden, da andere User jetzt das Objekt verändern können. ',
 	'UI:ConcurrentLockKilled' => 'Die Sperre um simultane Änderungen an dem Objekt zu verhindern ist gelöscht worden. ',
 	'UI:Menu:KillConcurrentLock' => 'Sperre für simultane Änderungen löschen! ',
-	
+
 	'UI:Menu:ExportPDF' => 'Als PDF exportieren... ',
 	'UI:Menu:PrintableVersion' => 'Druckversion',
 	'Class:UserInternal' => 'Interner Benutzer',
