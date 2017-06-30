@@ -49,6 +49,7 @@ class DisplayBlock
 	protected $m_bAsynchronous;
 	protected $m_aParams;
 	protected $m_oSet;
+	protected $m_bShowObsoleteData = null;
 	
 	public function __construct(DBSearch $oFilter, $sStyle = 'list', $bAsynchronous = false, $aParams = array(), $oSet = null)
 	{
@@ -58,6 +59,15 @@ class DisplayBlock
 		$this->m_bAsynchronous = $bAsynchronous;
 		$this->m_aParams = $aParams;
 		$this->m_oSet = $oSet;
+		if (array_key_exists('show_obsolete_data', $aParams))
+		{
+			$this->m_bShowObsoleteData = $aParams['show_obsolete_data'];
+		}
+		if ($this->m_bShowObsoleteData === null)
+		{
+			// User defined
+			$this->m_bShowObsoleteData = utils::ShowObsoleteData();
+		}
 	}
 	
 	public function GetFilter()
@@ -390,7 +400,7 @@ class DisplayBlock
 			
 			$this->m_oSet = new CMDBObjectSet($this->m_oFilter, $aOrderBy, $aQueryParams);
 		}
-		$this->m_oSet->SetShowObsoleteData(utils::ShowObsoleteData());
+		$this->m_oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
 		switch($this->m_sStyle)
 		{
 			case 'count':
@@ -711,7 +721,7 @@ class DisplayBlock
 					$aQueryParams = $aExtraParams['query_params'];
 				}
 				$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);
-				$this->m_oSet->SetShowObsoleteData(utils::ShowObsoleteData());
+				$this->m_oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
 			}
 			$iCount = $this->m_oSet->Count();
 			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($this->m_oFilter->serialize());
@@ -755,7 +765,7 @@ class DisplayBlock
 					$aQueryParams = $aExtraParams['query_params'];
 				}
 				$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);
-				$this->m_oSet->SetShowObsoleteData(utils::ShowObsoleteData());
+				$this->m_oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
 			}
 			// Summary details
 			$aCounts = array();
@@ -769,7 +779,7 @@ class DisplayBlock
 					$oFilter = $this->m_oFilter->DeepClone();
 					$oFilter->AddCondition($sStateAttrCode, $sStateValue, '=');
 					$oSet = new DBObjectSet($oFilter);
-					$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
+					$oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
 					$aCounts[$sStateValue] = $oSet->Count();
 					$aStateLabels[$sStateValue] = htmlentities($oAttDef->GetValueLabel($sStateValue), ENT_QUOTES, 'UTF-8');
 					if ($aCounts[$sStateValue] == 0)

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Execute and shows the data quality audit
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 /**
@@ -213,7 +213,7 @@ try
 			$oP->p('<a href="./audit.php?'.$oAppContext->GetForLink().'">[Back to audit results]</a>');
 		    $sBlockId = 'audit_errors';
 			$oP->p("<div id=\"$sBlockId\" style=\"clear:both\">\n");
-			$oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'csv');    
+			$oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'csv', array('show_obsolete_data' => true));
 			$oBlock->Display($oP, 1);
 			$oP->p("</div>\n");    
 			// Adjust the size of the Textarea containing the CSV to fit almost all the remaining space
@@ -241,7 +241,7 @@ try
 		$oP->p('<a href="./audit.php?'.$oAppContext->GetForLink().'">[Back to audit results]</a>');
 	    $sBlockId = 'audit_errors';
 		$oP->p("<div id=\"$sBlockId\" style=\"clear:both\">\n");
-		$oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'list');    
+		$oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'list', array('show_obsolete_data' => true));
 		$oBlock->Display($oP, 1);
 		$oP->p("</div>\n");
 		$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey();
