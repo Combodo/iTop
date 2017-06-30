@@ -1022,7 +1022,9 @@ EOF
 			$oShortcut->Set("auto_reload_sec", max(MetaModel::GetConfig()->Get('min_reload_interval'), $iAutoReload));
 			$oShortcut->Set("auto_reload", 'custom');
 		}
+		utils::PushArchiveMode(false);
 		$iId = $oShortcut->DBInsertNoReload();
+		utils::PopArchiveMode();
 
 		$oShortcut->CloneTableSettings($aValues['table_settings']);
 
@@ -1052,7 +1054,9 @@ EOF
 		if (strlen($sName) > 0)
 		{
 			$oShortcut->Set('name', $sName);
+			utils::PushArchiveMode(false);
 			$oShortcut->DBUpdate();
+			utils::PopArchiveMode();
 			$oPage->add_ready_script('window.location.reload();');
 		}
 		
@@ -1065,7 +1069,9 @@ EOF
 		foreach ($aShortcuts as $iShortcut)
 		{
 			$oShortcut = MetaModel::GetObject('Shortcut', $iShortcut);
+			utils::PushArchiveMode(false);
 			$oShortcut->DBDelete();
+			utils::PopArchiveMode();
 			$oPage->add_ready_script('window.location.reload();');
 		}
 		break;
