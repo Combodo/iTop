@@ -112,7 +112,9 @@ class BulkExportResultGC implements iBackgroundProcess
 			}
 			$iProcessed++;
 			@unlink($oResult->Get('temp_file_path'));
+			utils::PushArchiveMode(false);
 			$oResult->DBDelete();
+			utils::PopArchiveMode();
 		}
 		return "Cleaned $iProcessed old export results(s).";
 	}
@@ -306,7 +308,10 @@ abstract class BulkExport
 			$this->oBulkExportResult->Set('temp_file_path', $this->sTmpFile);	
 		}
 		$this->oBulkExportResult->Set('status_info', json_encode($this->GetStatusInfo()));
-		return $this->oBulkExportResult->DBWrite();
+		utils::PushArchiveMode(false);
+		$ret = $this->oBulkExportResult->DBWrite();
+		utils::PopArchiveMode();
+		return $ret;
 	}
 	
 	public function Cleanup()
@@ -318,7 +323,9 @@ abstract class BulkExport
 			{
 				@unlink($sFilename);
 			}
+			utils::PushArchiveMode(false);
 			$this->oBulkExportResult->DBDelete();
+			utils::PopArchiveMode();
 		}
 	}
 	
