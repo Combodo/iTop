@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@ require_once(APPROOT.'core/modelreflection.class.inc.php');
 /**
  * A user editable dashboard page
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 abstract class Dashboard
@@ -515,8 +515,6 @@ class RuntimeDashboard extends Dashboard
 			// Assuming there is at most one couple {user, menu}!
 			$oUserDashboard = $oUDSet->Fetch();
 			$oUserDashboard->Set('contents', $sXml);
-			
-			$oUserDashboard->DBUpdate();
 		}
 		else
 		{
@@ -525,9 +523,10 @@ class RuntimeDashboard extends Dashboard
 			$oUserDashboard->Set('user_id', UserRights::GetUserId());
 			$oUserDashboard->Set('menu_code', $this->sId);
 			$oUserDashboard->Set('contents', $sXml);
-			
-			$oUserDashboard->DBInsert();
-		}		
+		}
+		utils::PushArchiveMode(false);
+		$oUserDashboard->DBWrite();
+		utils::PopArchiveMode();
 	}
 	
 	public function Revert()
@@ -540,7 +539,9 @@ class RuntimeDashboard extends Dashboard
 		{
 			// Assuming there is at most one couple {user, menu}!
 			$oUserDashboard = $oUDSet->Fetch();
+			utils::PushArchiveMode(false);
 			$oUserDashboard->DBDelete();
+			utils::PopArchiveMode();
 		}
 	}
 	
