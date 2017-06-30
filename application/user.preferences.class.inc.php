@@ -155,7 +155,9 @@ class appUserPreferences extends DBObject
 		{
 			if (self::$oUserPrefs->IsModified())
 			{
+				utils::PushArchiveMode(false);
 				self::$oUserPrefs->DBUpdate();
+				utils::PopArchiveMode();
 			}
 		}
 	}
@@ -179,7 +181,9 @@ class appUserPreferences extends DBObject
 			$oObj->Set('preferences', array()); // Default preferences: an empty array
 			try
 			{
+				utils::PushArchiveMode(false);
 				$oObj->DBInsert();
+				utils::PopArchiveMode();
 			}
 			catch(Exception $e)
 			{
@@ -214,7 +218,8 @@ class appUserPreferences extends DBObject
 	*/
 	public function DBDeleteTracked(CMDBChange $oChange, $bSkipStrongSecurity = null, &$oDeletionPlan = null)
 	{
+		utils::PushArchiveMode(false);
 		$this->DBDelete($oDeletionPlan);
+		utils::PopArchiveMode();
 	}
 }
-?>

@@ -344,7 +344,9 @@ try
 		$sLangCode = utils::ReadParam('language', 'EN US');
 		$oUser = UserRights::GetUserObject();
 		$oUser->Set('language', $sLangCode);
+		utils::PushArchiveMode(false);
 		$oUser->DBUpdate();
+		utils::PopArchiveMode();
 		// Redirect to force a reload/display of the page with the new language
 		$oAppContext = new ApplicationContext();
 		$sURL = utils::GetAbsoluteUrlAppRoot().'pages/preferences.php?'.$oAppContext->GetForLink();
@@ -423,4 +425,3 @@ catch(Exception $e)
 		IssueLog::Error($e->getMessage());
 	}
 }
-?>
