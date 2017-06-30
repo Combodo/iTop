@@ -1413,6 +1413,7 @@ EOF
 					$oFilter->AddCondition_FullText($sSearchText);
 				}
 			}
+			$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 			// Skip abstract classes
 			if (MetaModel::IsAbstract($sClassName)) continue;
 
@@ -1576,6 +1577,7 @@ EOF
 		{
 			$oFilter->AddCondition_FullText($sSearchText);
 		}
+		$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 		$oSet = new DBObjectSet($oFilter);
 		$oPage->add("<div class=\"page_header\">\n");
 		$oPage->add("<h2>".MetaModel::GetClassIcon($sClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', $oSet->Count(), Metamodel::GetName($sClass))."</h2>\n");
@@ -1854,6 +1856,7 @@ EOF
 			{
 				set_time_limit($iLoopTimeLimit*count($aObjects));
 				$oSet = CMDBObjectSet::FromArray($sListClass, $aObjects);
+				$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
 				$sHtml = "<div class=\"page_header\">\n";
 				$sHtml .= "<table class=\"section\"><tr><td>".MetaModel::GetClassIcon($sListClass, true, 'width: 24px; height: 24px;')." ".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', $oSet->Count(), Metamodel::GetName($sListClass))."</td></tr></table>\n";
 				$sHtml .= "</div>\n";
@@ -1990,7 +1993,8 @@ EOF
 		{
 			$sListClass = $aDefinition['class'];
 			$oSearch = new DBObjectSearch($sListClass);
-			$oSearch->AddCondition('id', $aDefinition['keys'], 'IN');		
+			$oSearch->AddCondition('id', $aDefinition['keys'], 'IN');
+			$oSearch->SetShowObsoleteData(utils::ShowObsoleteData());
 			$oPage->add("<h1>".Dict::Format('UI:RelationGroupNumber_N', (1+$idx))."</h1>\n");
 			$oPage->add("<div id=\"relation_group_$idx\" class=\"page_header\">\n");
 			$oPage->add("<h2>".MetaModel::GetClassIcon($sListClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aDefinition['keys']), Metamodel::GetName($sListClass))."</h2>\n");
@@ -2008,7 +2012,7 @@ EOF
 		{
 			$oSearch = new DBObjectSearch($sListClass);
 			$oSearch->AddCondition('id', $aKeys, 'IN');
-			
+			$oSearch->SetShowObsoleteData(utils::ShowObsoleteData());
 			$oPage->add("<div class=\"page_header\">\n");
 			$oPage->add("<h2>".MetaModel::GetClassIcon($sListClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aKeys), Metamodel::GetName($sListClass))."</h2>\n");
 			$oPage->add("</div>\n");
