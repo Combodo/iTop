@@ -904,7 +904,7 @@ class ApplicationHelper
                                     {
                                         $sStimulusCode = $oStimulusNode->getAttribute('id');
 
-                                        // Removing default form is present (in case the default forms were parsed before the current one)
+                                        // Removing default form is present (in case the default forms were parsed before the current one (from current or parent class))
                                         if(isset($aForms[$sFormClass]['apply_stimulus'][$sStimulusCode]))
                                         {
                                             unset($aForms[$sFormClass]['apply_stimulus'][$sStimulusCode]);
@@ -972,25 +972,6 @@ class ApplicationHelper
 						$aFields['fields'] = 'details';
 					}
 
-					// Adding stimuli if explicitly defined
-                    if(in_array('apply_stimulus', $aModes))
-                    {
-                        // If stimuli are implicitly defined (empty tag), we define all those that have not already been by other forms.
-                        if(empty($aFormStimuli))
-                        {
-                            // Stimuli already declared
-                            $aDeclaredStimuli = array();
-                            if(array_key_exists($sFormClass, $aForms) && array_key_exists('apply_stimulus', $aForms[$sFormClass]))
-                            {
-                                $aDeclaredStimuli = array_keys($aForms[$sFormClass]['apply_stimulus']);
-                            }
-                            // All stimuli
-                            $aDatamodelStimuli = array_keys(MetaModel::EnumStimuli($sFormClass));
-                            // Missing stimuli
-                            $aFormStimuli = array_diff($aDatamodelStimuli, $aDeclaredStimuli);
-                        }
-                    }
-
 					// Parsing presentation
 					if ($oFormNode->GetOptionalElement('twig') !== null)
 					{
@@ -1008,6 +989,7 @@ class ApplicationHelper
 					// Adding form for each class / mode
 					foreach ($aModes as $sMode)
 					{
+					    // Initializing current class if necessary
 						if (!isset($aForms[$sFormClass]))
 						{
 							$aForms[$sFormClass] = array();
@@ -1015,17 +997,38 @@ class ApplicationHelper
 
 						if ($sMode === 'apply_stimulus')
                         {
-                            if(!isset($aForms[$sFormClass][$sMode]))
+                            // Iterating over current class and child classes to fill stimuli forms
+                            foreach (MetaModel::EnumChildClasses($sFormClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass)
                             {
-                                $aForms[$sFormClass][$sMode] = array();
-                            }
-
-                            foreach($aFormStimuli as $sFormStimulus)
-                            {
-                                if(!isset($aForms[$sFormClass][$sMode][$sFormStimulus]))
+                                // Initializing child class if necessary
+                                if(!isset($aForms[$sChildClass][$sMode]))
                                 {
-                                    $aForms[$sFormClass][$sMode][$sFormStimulus] = $aFields;
-                                    $aForms[$sFormClass][$sMode][$sFormStimulus]['id'] = 'apply_stimulus-'.$sFormClass.'-'.$sFormStimulus;
+                                    $aForms[$sChildClass][$sMode] = array();
+                                }
+
+                                // If stimuli are implicitly defined (empty tag), we define all those that have not already been by other forms.
+                                $aChildStimuli = $aFormStimuli;
+                                if(empty($aChildStimuli))
+                                {
+                                    // Stimuli already declared
+                                    $aDeclaredStimuli = array();
+                                    if(array_key_exists($sChildClass, $aForms) && array_key_exists('apply_stimulus', $aForms[$sChildClass]))
+                                    {
+                                        $aDeclaredStimuli = array_keys($aForms[$sChildClass]['apply_stimulus']);
+                                    }
+                                    // All stimuli
+                                    $aDatamodelStimuli = array_keys(MetaModel::EnumStimuli($sChildClass));
+                                    // Missing stimuli
+                                    $aChildStimuli = array_diff($aDatamodelStimuli, $aDeclaredStimuli);
+                                }
+
+                                foreach($aChildStimuli as $sFormStimulus)
+                                {
+                                    if(!isset($aForms[$sChildClass][$sMode][$sFormStimulus]))
+                                    {
+                                        $aForms[$sChildClass][$sMode][$sFormStimulus] = $aFields;
+                                        $aForms[$sChildClass][$sMode][$sFormStimulus]['id'] = 'apply_stimulus-'.$sChildClass.'-'.$sFormStimulus;
+                                    }
                                 }
                             }
                         }
