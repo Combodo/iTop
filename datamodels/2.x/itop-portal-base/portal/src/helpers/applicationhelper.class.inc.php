@@ -902,6 +902,14 @@ class ApplicationHelper
                                 {
                                     foreach ($oStimuliNode->GetNodes('stimulus') as $oStimulusNode)
                                     {
+                                        $sStimulusCode = $oStimulusNode->getAttribute('id');
+
+                                        // Removing default form is present (in case the default forms were parsed before the current one)
+                                        if(isset($aForms[$sFormClass]['apply_stimulus'][$sStimulusCode]))
+                                        {
+                                            unset($aForms[$sFormClass]['apply_stimulus'][$sStimulusCode]);
+                                        }
+
                                         $aFormStimuli[] = $oStimulusNode->getAttribute('id');
                                     }
                                 }
@@ -1007,6 +1015,11 @@ class ApplicationHelper
 
 						if ($sMode === 'apply_stimulus')
                         {
+                            if(!isset($aForms[$sFormClass][$sMode]))
+                            {
+                                $aForms[$sFormClass][$sMode] = array();
+                            }
+
                             foreach($aFormStimuli as $sFormStimulus)
                             {
                                 if(!isset($aForms[$sFormClass][$sMode][$sFormStimulus]))

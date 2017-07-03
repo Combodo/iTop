@@ -297,6 +297,7 @@ class ObjectFormManager extends FormManager
 		$sObjectClass = get_class($this->oObject);
 
 		$aFieldsAtts = array();
+		$aFieldsDMOnlyAttCodes = array();
 		$aFieldsExtraData = array();
 
 		if ($this->oForm !== null)
@@ -318,7 +319,15 @@ class ObjectFormManager extends FormManager
 			case 'static':
 				foreach ($this->aFormProperties['fields'] as $sAttCode => $aOptions)
 				{
-					$iFieldFlags = OPT_ATT_NORMAL;
+				    // When in a transition and no flags are specified for the field, we will retrieve its flags from DM later
+				    if($this->IsTransitionForm() && empty($aOptions))
+                    {
+                        $aFieldsDMOnlyAttCodes[] = $sAttCode;
+                        continue;
+                    }
+
+                    // Otherwise we proceed as usual
+				    $iFieldFlags = OPT_ATT_NORMAL;
 					// Checking if field should be slave
 					if (isset($aOptions['slave']) && ($aOptions['slave'] === true))
 					{
@@ -339,16 +348,16 @@ class ObjectFormManager extends FormManager
 					{
 						$iFieldFlags = $iFieldFlags | OPT_ATT_HIDDEN;
 					}
-					// Checking if field should be mandatory
-					if (isset($aOptions['mandatory']) && ($aOptions['mandatory'] === true))
-					{
-						$iFieldFlags = $iFieldFlags | OPT_ATT_MANDATORY;
-					}
 					// Checking if field should be readonly
 					if (isset($aOptions['read_only']) && ($aOptions['read_only'] === true))
 					{
 						$iFieldFlags = $iFieldFlags | OPT_ATT_READONLY;
 					}
+                    // Checking if field should be mandatory
+                    if (isset($aOptions['mandatory']) && ($aOptions['mandatory'] === true))
+                    {
+                        $iFieldFlags = $iFieldFlags | OPT_ATT_MANDATORY;
+                    }
 					// Finally, adding the attribute and its flags
 					$aFieldsAtts[$sAttCode] = $iFieldFlags;
 				}
@@ -390,7 +399,36 @@ class ObjectFormManager extends FormManager
 				$sFieldFlags = $oFieldNode->getAttribute('data-field-flags');
 				$iFieldFlags = OPT_ATT_NORMAL;
 
-				// Checking if field has form_path, if not, we add it
+                // When in a transition and no flags are specified for the field, we will retrieve its flags from DM later
+                if($this->IsTransitionForm() && $sFieldFlags === '')
+                {
+                    // (Might have already been added from the "fields" property)
+                    if(!in_array($sFieldId, $aFieldsDMOnlyAttCodes))
+                    {
+                        $aFieldsDMOnlyAttCodes[] = $sFieldId;
+                    }
+                    continue;
+                }
+
+                // Otherwise we proceed as usual
+                foreach (explode(' ', $sFieldFlags) as $sFieldFlag)
+                {
+                    if ($sFieldFlag !== '')
+                    {
+                        $sConst = 'OPT_ATT_' . strtoupper(str_replace('_', '', $sFieldFlag));
+                        if (defined($sConst))
+                        {
+                            $iFieldFlags = $iFieldFlags | constant($sConst);
+                        }
+                        else
+                        {
+                            IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Flag "' . $sFieldFlag . '" is not valid for field [@data-field-id="' . $sFieldId . '"] in form[@id="' . $this->aFormProperties['id'] . '"]');
+                            throw new Exception('Flag "' . $sFieldFlag . '" is not valid for field [@data-field-id="' . $sFieldId . '"] in form[@id="' . $this->aFormProperties['id'] . '"]');
+                        }
+                    }
+                }
+
+                // Checking if field has form_path, if not, we add it
 				if (!$oFieldNode->hasAttribute('data-form-path'))
 				{
 					$oFieldNode->setAttribute('data-form-path', $oForm->GetId());
@@ -414,24 +452,6 @@ class ObjectFormManager extends FormManager
                     $aFieldsExtraData[$sFieldId]['display_mode'] = ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE;
                 }
 
-				// Settings field flags from the data-field-flags attribute
-				foreach (explode(' ', $sFieldFlags) as $sFieldFlag)
-				{
-					if ($sFieldFlag !== '')
-					{
-						$sConst = 'OPT_ATT_' . strtoupper(str_replace('_', '', $sFieldFlag));
-						if (defined($sConst))
-						{
-							$iFieldFlags = $iFieldFlags | constant($sConst);
-						}
-						else
-						{
-							IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Flag "' . $sFieldFlag . '" is not valid for field [@data-field-id="' . $sFieldId . '"] in form[@id="' . $this->aFormProperties['id'] . '"]');
-							throw new Exception('Flag "' . $sFieldFlag . '" is not valid for field [@data-field-id="' . $sFieldId . '"] in form[@id="' . $this->aFormProperties['id'] . '"]');
-						}
-					}
-				}
-
 				// Finally adding field to the list
 				if (!array_key_exists($sFieldId, $aFieldsAtts))
 				{
@@ -446,6 +466,8 @@ class ObjectFormManager extends FormManager
 
 		// Merging flags from metamodel with those from the form
 		// Also, retrieving mandatory attributes from metamodel to be able to complete the form with them if necessary
+        //
+        // Note: When in a transition, we don't do this for fields that should be set from DM
 		if ($this->aFormProperties['type'] !== 'static')
 		{
 		    if($this->IsTransitionForm())
@@ -459,25 +481,52 @@ class ObjectFormManager extends FormManager
 
 			foreach ($aDatamodelAttCodes as $sAttCode => $value)
 			{
+			    /** var AttributeDefinition $oAttDef */
+
+			    // Skipping fields that should come from DM only as they will be process later on
+                if(in_array($sAttCode, $aFieldsDMOnlyAttCodes))
+                {
+                    continue;
+                }
+
 				// Retrieving object flags
                 if ($this->IsTransitionForm())
                 {
                     // Retrieving only mandatory flag from DM when on a transition
                     $iFieldFlags = $value & OPT_ATT_MANDATORY;
+                    $oAttDef = MetaModel::GetAttributeDef(get_class($this->oObject), $sAttCode);
                 }
 				elseif ($this->oObject->IsNew())
 				{
 					$iFieldFlags = $this->oObject->GetInitialStateAttributeFlags($sAttCode);
+					$oAttDef = $value;
 				}
 				else
 				{
 					$iFieldFlags = $this->oObject->GetAttributeFlags($sAttCode);
+					$oAttDef = $value;
 				}
 
+                // Skipping fields that were not specified to DM only list (garbage collector)
+                if($this->IsTransitionForm() && !array_key_exists($sAttCode, $aFieldsAtts))
+                {
+                    if( (($iFieldFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY && $oAttDef->IsNull($this->oObject->Get($sAttCode)))
+                        || (($iFieldFlags & OPT_ATT_MUSTPROMPT) === OPT_ATT_MUSTPROMPT)
+                        || (($iFieldFlags & OPT_ATT_MUSTCHANGE) === OPT_ATT_MUSTCHANGE))
+                    {
+                        if(!in_array($sAttCode, $aFieldsDMOnlyAttCodes))
+                        {
+                            $aFieldsDMOnlyAttCodes[] = $sAttCode;
+                        }
+                    }
+                    continue;
+                }
+
 				// Merging flags with those from the form definition
-				// - only if the field if it's in fields list
+				// - If the field is in fields list
 				if (array_key_exists($sAttCode, $aFieldsAtts))
 				{
+				    // .. We merge them all
 				    if($this->IsTransitionForm()) {
                         $aFieldsAtts[$sAttCode] = $aFieldsAtts[$sAttCode] | $iFieldFlags;
                     }
@@ -494,6 +543,44 @@ class ObjectFormManager extends FormManager
 			}
 		}
 
+		// Adding fields with DM flags only
+        // Note: This should only happen when in a transition
+		foreach($aFieldsDMOnlyAttCodes as $sAttCode)
+        {
+            // Retrieving object flags from DM
+            if ($this->IsTransitionForm())
+            {
+                $aTransitionAtts = $this->oObject->GetTransitionAttributes($this->aFormProperties['stimulus_code']);
+                $iFieldFlags = $aTransitionAtts[$sAttCode];
+            }
+            elseif ($this->oObject->IsNew())
+            {
+                $iFieldFlags = $this->oObject->GetInitialStateAttributeFlags($sAttCode);
+            }
+            else
+            {
+                $iFieldFlags = $this->oObject->GetAttributeFlags($sAttCode);
+            }
+
+            // Resetting/Forcing flag to read/write
+            $aFieldsAtts[$sAttCode] = OPT_ATT_NORMAL;
+            // Checking if field should be must_change
+            if(($iFieldFlags & OPT_ATT_MUSTCHANGE) === OPT_ATT_MUSTCHANGE)
+            {
+                $aFieldsAtts[$sAttCode] = $aFieldsAtts[$sAttCode] | OPT_ATT_MUSTCHANGE;
+            }
+            // Checking if field should be must_prompt
+            if(($iFieldFlags & OPT_ATT_MUSTPROMPT) === OPT_ATT_MUSTPROMPT)
+            {
+                $aFieldsAtts[$sAttCode] = $aFieldsAtts[$sAttCode] | OPT_ATT_MUSTPROMPT;
+            }
+            // Checking if field should be mandatory
+            if(($iFieldFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY)
+            {
+                $aFieldsAtts[$sAttCode] = $aFieldsAtts[$sAttCode] | OPT_ATT_MANDATORY;
+            }
+        }
+
 		// Building the form
 		foreach ($aFieldsAtts as $sAttCode => $iFieldFlags)
 		{
@@ -502,6 +589,7 @@ class ObjectFormManager extends FormManager
 			// Failsafe for AttributeType that would not have MakeFormField and therefore could not be used in a form
 			if (is_callable(get_class($oAttDef) . '::MakeFormField'))
 			{
+			    /** @var Field $oField */
 				$oField = $oAttDef->MakeFormField($this->oObject);
 
 				if ($this->sMode !== static::ENUM_MODE_VIEW)
@@ -543,12 +631,24 @@ class ObjectFormManager extends FormManager
 					else
 					{
 						// Normal field
+                        $oField->SetReadOnly(false);
+                        $oField->SetHidden(false);
+                        $oField->SetMandatory(false);
 					}
 
-                    // Finally, if it's mandatory and has no value, we force it as mandatory
-                    if ((($iFieldFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY) && $oAttDef->IsNull($this->oObject->Get($sAttCode)))
+                    // Finally, if it's mandatory ...
+                    if (($iFieldFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY)
                     {
-                        $oField->SetMandatory(true);
+                        // ... and when in a transition, we force it as mandatory
+                        if($this->IsTransitionForm())
+                        {
+                            $oField->SetMandatory(true);
+                        }
+                        // .. and has no value, we force it as mandatory
+                        elseif($oAttDef->IsNull($this->oObject->Get($sAttCode)))
+                        {
+                            $oField->SetMandatory(true);
+                        }
                     }
 
 					// Specific operation on field
@@ -741,7 +841,9 @@ class ObjectFormManager extends FormManager
 					->SetObject($this->oObject);
 
 				// Checking if we can edit attachments in the current state
-                if (($this->sMode === static::ENUM_MODE_VIEW) || AttachmentPlugIn::IsReadonlyState($this->oObject, $this->oObject->GetState(), AttachmentPlugIn::ENUM_GUI_PORTALS) === true)
+                if (($this->sMode === static::ENUM_MODE_VIEW)
+                    || AttachmentPlugIn::IsReadonlyState($this->oObject, $this->oObject->GetState(), AttachmentPlugIn::ENUM_GUI_PORTALS) === true
+                    || $oForm->GetEditableFieldCount(true) === 0)
 				{
 					$oField->SetReadOnly(true);
 				}

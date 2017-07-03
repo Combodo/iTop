@@ -358,9 +358,10 @@ class ObjectController extends AbstractController
         // Or preparing a default form for the stimulus application
         else
         {
+            // Preparing default form
             $aFormProperties = array(
                 'id' => 'apply-stimulus',
-                'type' => 'static',
+                'type' => 'custom_list',
                 'fields' => array(),
                 'layout' => null
             );
@@ -369,33 +370,6 @@ class ObjectController extends AbstractController
         // Adding stimulus code to form
         $aFormProperties['stimulus_code'] = $sStimulusCode;
 
-        // Checking which fields need to be prompt
-//		$aTransitions = MetaModel::EnumTransitions($sObjectClass, $oObject->GetState());
-//		$aTargetStates = MetaModel::EnumStates($sObjectClass);
-//		$aTargetState = $aTargetStates[$aTransitions[$sStimulusCode]['target_state']];
-//		$aExpectedAttributes = $oObject->GetTransitionAttributes($sStimulusCode /*, current state*/);
-//		IssueLog::Info($oObject->GetState());
-//		IssueLog::Info(print_r($aExpectedAttributes, true));
-//		foreach ($aExpectedAttributes as $sAttCode => $iFlags)
-//		{
-//			if (($iFlags & (OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) ||
-//				(($iFlags & OPT_ATT_MANDATORY) && ($oObject->Get($sAttCode) == '')))
-//			{
-//			    if(!isset($aFormProperties['fields'][$sAttCode]))
-//                {
-//                    $aFormProperties['fields'][$sAttCode] = array();
-//                }
-//
-//				// Settings flags for the field
-//				if ($iFlags & OPT_ATT_MUSTCHANGE)
-//					$aFormProperties['fields'][$sAttCode]['must_change'] = true;
-//				if ($iFlags & OPT_ATT_MUSTPROMPT)
-//					$aFormProperties['fields'][$sAttCode]['must_prompt'] = true;
-//				if (($iFlags & OPT_ATT_MANDATORY) && ($oObject->Get($sAttCode) == ''))
-//					$aFormProperties['fields'][$sAttCode]['mandatory'] = true;
-//			}
-//		}
-//		IssueLog::Info(print_r($aFormProperties['fields'], true));
 		// Adding target_state to current_values
 		$oRequest->request->set('apply_stimulus', array('code' => $sStimulusCode));
 
