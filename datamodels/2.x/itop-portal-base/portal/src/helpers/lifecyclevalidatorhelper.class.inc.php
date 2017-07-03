@@ -23,6 +23,7 @@ use \Exception;
 use \DOMNodeList;
 use \DOMFormatException;
 use \utils;
+use \UserRights;
 use \ProfilesConfig;
 use \MetaModel;
 use \DBSearch;
@@ -125,8 +126,8 @@ class LifecycleValidatorHelper
 		$sFilePath = $this->sCachePath . $this->sFilename;
 
 		// Creating file if not existing
-		// Note : This is a temporary cache system, it should soon evolve to a cache provider (fs, apc, memcache, ...)
-		if (1 || !file_exists($sFilePath))
+		// Note: This is a temporary cache system, it should soon evolve to a cache provider (fs, apc, memcache, ...)
+		if (!file_exists($sFilePath))
 		{
 			// - Build php array from xml
 			$aProfiles = array();
@@ -213,6 +214,8 @@ class LifecycleValidatorHelper
 			// Filling the array with missing classes from MetaModel, so we can have an inheritance principle on the stimuli
 			// For each class explicitly given in the stimuli, we check if its child classes were also in the stimuli :
 			// If not, we add them
+            //
+            // Note: Classes / Stimuli not in the matrix are implicitly ALLOWED. That can happen by omitting the <lifecycle> in a <class>
 			foreach ($aProfileClasses as $sProfileClass)
 			{
 				foreach (MetaModel::EnumChildClasses($sProfileClass) as $sChildClass)
@@ -293,7 +296,17 @@ class LifecycleValidatorHelper
 			// Retrieving profile stimuli
 			$sLifecycleValuesClass = $this->sGeneratedClass;
 			$aProfileMatrix = $sLifecycleValuesClass::GetProfileStimuli($iProfileId, $sClass);
-			$aStimuli = array_merge_recursive($aStimuli, $aProfileMatrix);
+
+			// If the profile / class tuple is not present (null), it means that all stimuli are allowed
+			if($aProfileMatrix === null)
+            {
+                $aImplicitStimuli = array_keys(MetaModel::EnumStimuli($sClass));
+                $aStimuli = array_merge_recursive($aStimuli, $aImplicitStimuli);
+            }
+            else
+            {
+                $aStimuli = array_merge_recursive($aStimuli, $aProfileMatrix);
+            }
 		}
 
 		return $aStimuli;
@@ -374,7 +387,7 @@ class $sClassName
 	*/
 	public static function GetProfileStimuli(\$iProfileId, \$sClass)
 	{
-		\$aStimuli = array();
+		\$aStimuli = null;
 
 		\$sLifecycleKey = \$iProfileId.'_'.\$sClass;
 		if (isset(self::\$aPROFILES[\$sLifecycleKey]))
