@@ -510,9 +510,9 @@ class ObjectFormManager extends FormManager
                 // Skipping fields that were not specified to DM only list (garbage collector)
                 if($this->IsTransitionForm() && !array_key_exists($sAttCode, $aFieldsAtts))
                 {
-                    if( (($iFieldFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY && $oAttDef->IsNull($this->oObject->Get($sAttCode)))
-                        || (($iFieldFlags & OPT_ATT_MUSTPROMPT) === OPT_ATT_MUSTPROMPT)
-                        || (($iFieldFlags & OPT_ATT_MUSTCHANGE) === OPT_ATT_MUSTCHANGE))
+                    if( (($value & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY && $oAttDef->IsNull($this->oObject->Get($sAttCode)))
+                        || (($value & OPT_ATT_MUSTPROMPT) === OPT_ATT_MUSTPROMPT)
+                        || (($value & OPT_ATT_MUSTCHANGE) === OPT_ATT_MUSTCHANGE))
                     {
                         if(!in_array($sAttCode, $aFieldsDMOnlyAttCodes))
                         {
