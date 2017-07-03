@@ -527,9 +527,7 @@ class ObjectFormManager extends FormManager
 				if (array_key_exists($sAttCode, $aFieldsAtts))
 				{
 				    // .. We merge them all
-				    if($this->IsTransitionForm()) {
-                        $aFieldsAtts[$sAttCode] = $aFieldsAtts[$sAttCode] | $iFieldFlags;
-                    }
+                    $aFieldsAtts[$sAttCode] = $aFieldsAtts[$sAttCode] | $iFieldFlags;
 				}
 				// - or it is mandatory and has no value
 				if ((($iFieldFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY) && ($this->oObject->Get($sAttCode) === ''))
