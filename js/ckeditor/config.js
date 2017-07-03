@@ -26,7 +26,7 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'about' }
 	];
 
-	config.removeButtons = 'Subscript,Superscript,Scayt,Anchor,Source,Outdent,Indent,Blockquote,About,PasteFromWord';
+	config.removeButtons = 'Subscript,Superscript,Scayt,Anchor,Outdent,Indent,Blockquote,About,PasteFromWord';
 	config.removePlugins = 'elementspath';
 	config.resize_enabled = false;
 	config.toolbarCanCollapse = true;
