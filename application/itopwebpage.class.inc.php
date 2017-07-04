@@ -332,10 +332,12 @@ EOF
 		// This helper will be used to resize tab width
 		var resizeTab = function(oElem){
 		    var iTableWidth = (oElem.children('table:first').length > 0) ? oElem.children('table:first').outerWidth() : 0;
-		    var oWizContainerElem = $('.wizContainer');
+		    var oLayoutContentElem = oElem.closest('.ui-layout-content'); 
+		    var bEditMode = (oLayoutContentElem.find('.wizContainer').length > 0);
+		    var oContainerElem = (bEditMode) ? oLayoutContentElem.find('.wizContainer:first') : oLayoutContentElem.find('.ui-tabs:first');
 		    
 		    // Resizing wizard container
-		    oWizContainerElem.css('min-width', 
+		    oContainerElem.css('min-width', 
                 parseInt(iTableWidth) +
                 parseInt(oElem.css('margin-left'))*2 +
                 parseInt(oElem.css('padding-left'))*2 +
@@ -343,12 +345,13 @@ EOF
                 parseInt(tabs.css('padding-left'))*2
             )
             
-            // Resizing header according to wizContainer
-            oWizContainerElem.parent().find('.page_header').css('min-width',
-                parseInt(oWizContainerElem.width()) +
-                parseInt(oWizContainerElem.css('margin-left'))*2 +
-                parseInt(oWizContainerElem.css('padding-left'))*2
-            );
+            // Resizing header according to content container
+            var iLayoutContentWidth = parseInt(oContainerElem.width());
+            if(bEditMode)
+            {
+                iLayoutContentWidth += parseInt(oContainerElem.css('margin-left'))*2 + parseInt(oContainerElem.css('padding-left'))*2
+            }
+            oLayoutContentElem.find('.page_header').css('min-width', iLayoutContentWidth);
 		};
 		  
 		// Ugly patch for a change in the behavior of jQuery UI:
@@ -374,7 +377,7 @@ EOF
 			event: 'change', 'show': function(event, ui) {
 				$('.resizable', ui.panel).resizable(); // Make resizable everything that claims to be resizable !
 			},
-			create: function( event, ui ) {
+			create: function( event, ui ) {console.log(ui);
 			    resizeTab(ui.panel);
 			},
 			beforeLoad: function( event, ui ) {
@@ -387,7 +390,7 @@ EOF
 					ui.tab.data( "loaded", true );
 				});
 			},
-			activate: function( event, ui ) {
+			activate: function( event, ui ) {console.log(ui);
 			    resizeTab(ui.newPanel);
 			}
 		});
