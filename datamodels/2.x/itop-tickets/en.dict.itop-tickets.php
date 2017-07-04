@@ -250,7 +250,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:NewRequest:Title+' => '<p>Need help?</p><p>Pick from the services catalog and submit your request to our support teams.</p>',
 	'Brick:Portal:OngoingRequests:Title' => 'Ongoing requests',
 	'Brick:Portal:OngoingRequests:Title+' => '<p>Follow up with your ongoing requests.</p><p>Check the progress, add comments, attach documents, acknowledge the solution.</p>',
-	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'On going',
+	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Open',
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Resolved',
 	'Brick:Portal:ClosedRequests:Title' => 'Closed requests',
 ));

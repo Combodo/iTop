@@ -596,10 +596,12 @@
               <attribute id="team_id">
                 <mandatory/>
                 <must_prompt/>
+                <read_only/>
               </attribute>
               <attribute id="agent_id">
                 <mandatory/>
                 <must_prompt/>
+                <read_only/>
               </attribute>
               <attribute id="approver_id">
                 <read_only/>
@@ -661,6 +663,14 @@
               <transition id="ev_reassign">
                 <target>assigned</target>
                 <actions/>
+				<flags>
+					<attribute id="agent_id">
+						<must_change/>
+					</attribute>
+					<attribute id="team_id">
+						<must_prompt/>
+					</attribute>
+				</flags>
               </transition>
               <transition id="ev_timeout">
                 <target>escalated_ttr</target>
@@ -1050,12 +1060,13 @@
               </attribute>
               <attribute id="pending_reason">
                 <read_only/>
-                <read_only/>
               </attribute>
               <attribute id="user_satisfaction">
+                <read_only/>              
                 <must_prompt/>
               </attribute>
               <attribute id="user_comment">
+				<read_only/>              
                 <must_prompt/>
               </attribute>
             </flags>

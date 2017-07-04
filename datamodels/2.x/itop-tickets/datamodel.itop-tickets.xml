@@ -1164,7 +1164,7 @@
 						<!-- Mandatory -->
 						<tabs>
 							<!-- Optional. Show object count for each tabs. Available values are true|false. Default is false. -->
-							<!--<show_tab_counts>false</show_tab_counts>-->
+							<show_tab_counts>true</show_tab_counts>
 							<!-- Mandatory. Grouping by tabs -->
 							<!--<attribute>operational_status</attribute>-->
 							<!-- attribute xor groups tag -->
@@ -1338,48 +1338,50 @@
 					<fields></fields>
 					<twig>
 						<div class="row">
-							<div class="col-sm-6">
-								<div class="form_field" data-field-id="caller_id" data-field-flags="read_only">
-								</div>
-								<div class="form_field" data-field-id="service_id" data-field-flags="read_only">
-								</div>
-								<div class="form_field" data-field-id="servicesubcategory_id" data-field-flags="read_only">
-								</div>
-								<div class="form_field" data-field-id="title" data-field-flags="read_only">
-								</div>
-								<div class="form_field" data-field-id="description" data-field-flags="read_only">
-								</div>
-								<div class="form_field" data-field-id="solution" data-field-flags="read_only">
-								</div>
-								<div class="form_field" data-field-id="user_satisfaction" data-field-flags="read_only">
-								</div>
-								<div class="form_field" data-field-id="user_comment" data-field-flags="read_only">
-								</div>
+							<div class="col-sm-7">
+								<fieldset>
+									<legend>{{'Ticket:baseinfo'|dict_s}}</legend>
+									<div class="col-sm-6">
+										<div class="form_field" data-field-id="title" data-field-flags="read_only"></div>
+										<div class="form_field" data-field-id="service_id" data-field-flags="read_only"></div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form_field" data-field-id="caller_id" data-field-flags="read_only"></div>
+										<div class="form_field" data-field-id="servicesubcategory_id" data-field-flags="read_only"></div>
+									</div>
+									<div class="col-sm-12">
+										<div class="form_field" data-field-id="description" data-field-flags="read_only"></div>
+										<div class="form_field" data-field-id="solution" data-field-flags="read_only"></div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form_field" data-field-id="user_satisfaction" data-field-flags="read_only"></div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form_field" data-field-id="user_comment" data-field-flags="read_only"></div>
+									</div>
+								</fieldset>
 							</div>
-							<div class="col-sm-6">
-								<div class="form_field" data-field-id="status" data-field-flags="read_only">
-								</div>
-								<div class="form_field" data-field-id="impact" data-field-flags="read_only">
-								</div>
-								<div class="form_field" data-field-id="urgency" data-field-flags="read_only">
-								</div>
-								<div class="form_field" data-field-id="priority" data-field-flags="read_only">
-								</div>
-								<div class="form_field" data-field-id="start_date" data-field-flags="read_only">
-								</div>
-								<div class="form_field" data-field-id="last_update" data-field-flags="read_only">
-								</div>
-								<div class="form_field" data-field-id="resolution_date" data-field-flags="read_only">
-								</div>
-								<div class="form_field" data-field-id="agent_id" data-field-flags="read_only">
-								</div>
+							<div class="col-sm-5">
+								<fieldset>
+									<legend>{{'Ticket:Type'|dict_s}} &amp; {{'Ticket:date'|dict_s}}</legend>
+									<div class="col-sm-6">
+										<div class="form_field" data-field-id="status" data-field-flags="read_only"></div>
+										<div class="form_field" data-field-id="impact" data-field-flags="read_only"></div>
+										<div class="form_field" data-field-id="urgency" data-field-flags="read_only"></div>
+										<div class="form_field" data-field-id="priority" data-field-flags="read_only"></div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form_field" data-field-id="start_date" data-field-flags="read_only"></div>
+										<div class="form_field" data-field-id="last_update" data-field-flags="read_only"></div>
+										<div class="form_field" data-field-id="resolution_date" data-field-flags="read_only"></div>
+										<div class="form_field" data-field-id="agent_id" data-field-flags="read_only"></div>
+									</div>
+								</fieldset>
 							</div>
 						</div>
 						<div>
-							<div class="form_field" data-field-id="contacts_list">
-							</div>
-							<div class="form_field" data-field-id="public_log">
-							</div>
+							<div class="form_field" data-field-id="contacts_list"></div>
+							<div class="form_field" data-field-id="public_log"></div>
 						</div>
 					</twig>
 					<modes>
@@ -1387,17 +1389,28 @@
 						<mode id="view"/>
 					</modes>
 				</form>
-				<form id="ticket-apply-stimulus">
+				<form id="ticket-reopen">
 					<class>Ticket</class>
 					<fields />
 					<twig>
 						<div>
-							<div class="form_field" data-field-id="team_id" data-field-flags="read_only">
-							</div>
-							<div class="form_field" data-field-id="agent_id" data-field-flags="read_only">
-							</div>
+							<div class="form_field" data-field-id="public_log" data-field-flags="must_prompt"></div>
+							<div class="form_field" data-field-id="team_id" data-field-flags="hidden"></div>
+							<div class="form_field" data-field-id="agent_id" data-field-flags="hidden"></div>
 						</div>
 					</twig>
+					<modes>
+						<mode id="apply_stimulus">
+							<stimuli>
+        						<stimulus id="ev_reopen"/>
+	      					</stimuli>
+	      				</mode>
+					</modes>
+				</form>
+				<form id="ticket-apply-stimulus">
+					<class>Ticket</class>
+					<fields />
+					<twig />
 					<modes>
 						<mode id="apply_stimulus"/>
 					</modes>

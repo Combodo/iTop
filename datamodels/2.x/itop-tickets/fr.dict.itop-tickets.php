@@ -236,7 +236,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:NewRequest:Title+' => '<p>Besoin d\'assistance&nbsp;?</p><p>Choisissez un service (assistance ou dépannage) et soumettez votre requête à nos équipes de support.</p>',
 	'Brick:Portal:OngoingRequests:Title' => 'Requêtes en cours',
 	'Brick:Portal:OngoingRequests:Title+' => '<p>Suivez vos requêtes en cours.</p><p>Consultez l\'avancement, ajoutez des commentaires ou des pièces jointes, validez la solution.</p>',
-	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'En cours',
+	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Ouvertes',
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Résolues',
 	'Brick:Portal:ClosedRequests:Title' => 'Requêtes fermées',
 ));
