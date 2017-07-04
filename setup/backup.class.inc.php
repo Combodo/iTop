@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -284,8 +284,10 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			}
 			// Delete the file created by tempnam() so that the spawned process can write into it (Windows/IIS)
 			unlink($sBackupFileName);
-			$sCommand = "$sMySQLDump --opt --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=$sUser --password=$sPwd --result-file=$sTmpFileName $sDBName $sTables 2>&1";
-			$sCommandDisplay = "$sMySQLDump --opt --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xxxxx --password=xxxxx --result-file=$sTmpFileName $sDBName $sTables";
+			// Note: opt implicitely sets lock-tables... which cancels the benefit of single-transaction!
+			//       skip-lock-tables compensates and allows for writes during a backup
+			$sCommand = "$sMySQLDump --opt --skip-lock-tables --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=$sUser --password=$sPwd --result-file=$sTmpFileName $sDBName $sTables 2>&1";
+			$sCommandDisplay = "$sMySQLDump --opt --skip-lock-tables --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xxxxx --password=xxxxx --result-file=$sTmpFileName $sDBName $sTables";
 	
 			// Now run the command for real
 			$this->LogInfo("Executing command: $sCommandDisplay");
