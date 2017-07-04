@@ -331,15 +331,24 @@ EOF
 		
 		// This helper will be used to resize tab width
 		var resizeTab = function(oElem){
-		    var tableWidth = (oElem.children('table:first').length > 0) ? oElem.children('table:first').outerWidth() : 0;
+		    var iTableWidth = (oElem.children('table:first').length > 0) ? oElem.children('table:first').outerWidth() : 0;
+		    var oWizContainerElem = $('.wizContainer');
 		    
-		    $('.wizContainer').css('min-width', 
-                parseInt(tableWidth) +
+		    // Resizing wizard container
+		    oWizContainerElem.css('min-width', 
+                parseInt(iTableWidth) +
                 parseInt(oElem.css('margin-left'))*2 +
                 parseInt(oElem.css('padding-left'))*2 +
                 parseInt(tabs.css('margin-left'))*2 +
                 parseInt(tabs.css('padding-left'))*2
             )
+            
+            // Resizing header according to wizContainer
+            oWizContainerElem.parent().find('.page_header').css('min-width',
+                parseInt(oWizContainerElem.width()) +
+                parseInt(oWizContainerElem.css('margin-left'))*2 +
+                parseInt(oWizContainerElem.css('padding-left'))*2
+            );
 		};
 		  
 		// Ugly patch for a change in the behavior of jQuery UI:
