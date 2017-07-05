@@ -1699,7 +1699,7 @@ span.refresh-button {
   width: 35px !important;
 }
 #top-bar-table #top-bar-table-search {
-  width: 347px;
+  min-width: 370px;
 }
 #itop-breadcrumb {
   overflow: hidden;

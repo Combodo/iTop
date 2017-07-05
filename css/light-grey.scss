@@ -1807,7 +1807,7 @@ span.refresh-button {
 	width: $top-button-spacer !important;
   }
   #top-bar-table-search{
-    width: 347px;
+    min-width: 370px;
   }
 }
 
