@@ -24,7 +24,7 @@
 				<comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
 				<category>bizmodel,searchable,structure</category>
@@ -46,6 +46,12 @@
 						<attribute id="finalclass"/>
 					</attributes>
 				</reconciliation>
+		        <archive>
+        			<enabled>true</enabled>
+        		</archive>
+		        <obsolescence>
+        			<condition><![CDATA[operational_status='closed' AND ISNULL(close_date)=0 AND close_date < DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 15 MONTH),'%Y-%m-%d 00:00:00')]]></condition>
+        		</obsolescence>
 			</properties>
 			<fields>
 				<field id="operational_status" xsi:type="AttributeMetaEnum">

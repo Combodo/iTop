@@ -25,6 +25,9 @@
             <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>status='obsolete'</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="status" xsi:type="AttributeEnum">
@@ -275,7 +278,12 @@
             <attribute id="name"/>
             <attribute id="org_id"/>
             <attribute id="organization_name"/>
+			<attribute id="server_id"/>
+			<attribute id="farm_id"/>
           </attributes>
+        <obsolescence>
+          <condition>(ISNULL(server_id)=0 AND server_id_obsolescence_flag) OR status='obsolete'</condition>
+        </obsolescence>
         </reconciliation>
       </properties>
       <fields>
@@ -566,8 +574,12 @@
             <attribute id="name"/>
             <attribute id="org_id"/>
             <attribute id="organization_name"/>
+            <attribute id="virtualhost_id"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+        	<condition>status='obsolete' OR virtualhost_id_obsolescence_flag</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="virtualhost_id" xsi:type="AttributeExternalKey">
@@ -808,6 +820,9 @@
             <attribute id="virtualmachine_name"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+        	<condition>status='obsolete' OR virtualmachine_id_obsolescence_flag</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="virtualmachine_id" xsi:type="AttributeExternalKey">

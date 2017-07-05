@@ -887,6 +887,9 @@
             <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>status='obsolete'</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="name" xsi:type="AttributeString">
@@ -1654,6 +1657,9 @@
             <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>status='obsolete'</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="serialnumber" xsi:type="AttributeString">
@@ -2927,6 +2933,9 @@
             <attribute id="organization_name"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>status='inactive'</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="functionalcis_list" xsi:type="AttributeLinkedSetIndirect">
@@ -3083,6 +3092,9 @@
             <attribute id="organization_name"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>status='inactive'</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="applicationsolutions_list" xsi:type="AttributeLinkedSetIndirect">
@@ -3206,6 +3218,9 @@
             <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>status='inactive'</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="system_id" xsi:type="AttributeExternalKey">
@@ -4041,6 +4056,9 @@
             <attribute id="middleware_name"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>middleware_id_obsolescence_flag</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="middleware_id" xsi:type="AttributeExternalKey">
@@ -4158,6 +4176,9 @@
             <attribute id="organization_name"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>dbserver_id_obsolescence_flag</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="dbserver_id" xsi:type="AttributeExternalKey">
@@ -4275,6 +4296,9 @@
             <attribute id="organization_name"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>webserver_id_obsolescence_flag</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="webserver_id" xsi:type="AttributeExternalKey">
@@ -4800,6 +4824,9 @@
             <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition><![CDATA[perpetual='no' AND ISNULL(end_date)=0 AND end_date < DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 15 MONTH),'%Y-%m-%d 00:00:00')]]></condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="name" xsi:type="AttributeString">
@@ -6932,6 +6959,9 @@
             <attribute id="connectableci_name"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>connectableci_id_obsolescence_flag</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="connectableci_id" xsi:type="AttributeExternalKey">
@@ -7657,6 +7687,9 @@
             <attribute id="owner_name"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>status='obsolete'</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="name" xsi:type="AttributeString">

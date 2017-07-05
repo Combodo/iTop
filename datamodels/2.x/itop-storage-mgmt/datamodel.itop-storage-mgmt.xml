@@ -1058,6 +1058,9 @@
             <attribute id="name"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>tapelibrary_id_obsolescence_flag</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="name" xsi:type="AttributeString">
@@ -1159,6 +1162,9 @@
             <attribute id="name"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>nas_id_obsolescence_flag</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="name" xsi:type="AttributeString">
@@ -1276,6 +1282,9 @@
             <attribute id="datacenterdevice_name"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>datacenterdevice_id_obsolescence_flag</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="speed" xsi:type="AttributeDecimal">
@@ -1383,6 +1392,9 @@
             <attribute id="storagesystem_name"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>storagesystem_id_obsolescence_flag</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="name" xsi:type="AttributeString">
