@@ -821,7 +821,7 @@
           </attributes>
         </reconciliation>
         <obsolescence>
-        	<condition>status='obsolete' OR virtualmachine_id_obsolescence_flag</condition>
+        	<condition>virtualmachine_id_obsolescence_flag</condition>
         </obsolescence>
       </properties>
       <fields>
