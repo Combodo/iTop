@@ -50,7 +50,7 @@
         			<enabled>true</enabled>
         		</archive>
 		        <obsolescence>
-        			<condition><![CDATA[operational_status='closed' AND ISNULL(close_date)=0 AND close_date < DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 15 MONTH),'%Y-%m-%d 00:00:00')]]></condition>
+        			<condition><![CDATA[operational_status='closed' AND (close_date < DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 15 MONTH),'%Y-%m-%d 00:00:00') OR (ISNULL(close_date) AND last_update < DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 15 MONTH),'%Y-%m-%d 00:00:00')))]]></condition>
         		</obsolescence>
 			</properties>
 			<fields>
