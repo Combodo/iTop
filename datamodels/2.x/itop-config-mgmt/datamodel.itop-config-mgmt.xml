@@ -7,7 +7,7 @@
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
         <category>bizmodel,searchable,structure</category>
@@ -29,6 +29,9 @@
             <attribute id="code"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>status='inactive'</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="name" xsi:type="AttributeString">
@@ -133,6 +136,9 @@
             <attribute id="org_name"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>status='inactive'</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="name" xsi:type="AttributeString">
@@ -296,6 +302,9 @@
             <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition>status='inactive'</condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="name" xsi:type="AttributeString">

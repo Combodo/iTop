@@ -281,10 +281,10 @@
 			<attribute id="server_id"/>
 			<attribute id="farm_id"/>
           </attributes>
-        <obsolescence>
-          <condition>(ISNULL(server_id)=0 AND server_id_obsolescence_flag) OR status='obsolete'</condition>
-        </obsolescence>
         </reconciliation>
+        <obsolescence>
+          <condition><![CDATA[status='obsolete' OR (server_id!=0 AND server_id_obsolescence_flag)]]></condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="farm_id" xsi:type="AttributeExternalKey">
@@ -578,7 +578,7 @@
           </attributes>
         </reconciliation>
         <obsolescence>
-        	<condition>status='obsolete' OR virtualhost_id_obsolescence_flag</condition>
+        	<condition><![CDATA[status='obsolete' OR virtualhost_id_obsolescence_flag]]></condition>
         </obsolescence>
       </properties>
       <fields>
