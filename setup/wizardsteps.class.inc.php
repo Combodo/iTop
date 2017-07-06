@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 
 /**
  * All the steps of the iTop installation wizard
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -207,7 +207,7 @@ class WizStepInstallOrUpgrade extends WizardStep
 		$sPreviousVersionDir = '';
 		if ($sInstallMode == '')
 		{
-			$sDBBackupPath = APPROOT.'data/'.ITOP_APPLICATION.strftime('-backup-%Y-%m-%d.zip');
+			$sDBBackupPath = APPROOT.'data/'.ITOP_APPLICATION.strftime('-backup-%Y-%m-%d');
 			$bDBBackup = true;
 			$aPreviousInstance = SetupUtils::GetPreviousInstance(APPROOT);
 			if ($aPreviousInstance['found'])
@@ -2305,10 +2305,9 @@ class WizStepDone extends WizardStep
 		if (($this->oWizard->GetParameter('mode', '') == 'upgrade') && $this->oWizard->GetParameter('db_backup', false))
 		{
 			$sBackupDestination = $this->oWizard->GetParameter('db_backup_path', '');
-			if (file_exists($sBackupDestination))
+			if (file_exists($sBackupDestination.'.tar.gz'))
 			{
 				// To mitigate security risks: pass only the filename without the extension, the download will add the extension itself
-				$sTruncatedFilePath = preg_replace('/\.zip$/', '', $sBackupDestination);
 				$oPage->p('Your backup is ready');
 				$oPage->p('<a style="background:transparent;" href="'.utils::GetAbsoluteUrlAppRoot().'setup/ajax.dataloader.php?operation=async_action&step_class=WizStepDone&params[backup]='.urlencode($sTruncatedFilePath).'" target="_blank"><img src="../images/tar.png" style="border:0;vertical-align:middle;">&nbsp;Download '.basename($sBackupDestination).'</a>');
 			}
@@ -2418,14 +2417,13 @@ class WizStepDone extends WizardStep
 	
 	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
 	{
-		$oParameters = new PHPParameters();
 		// For security reasons: add the extension now so that this action can be used to read *only* .zip files from the disk...
-		$sBackupFile = $aParameters['backup'].'.zip';
+		$sBackupFile = $aParameters['backup'].'.tar.gz';
 		if (file_exists($sBackupFile))
 		{
 			// Make sure there is NO output at all before our content, otherwise the document will be corrupted
 			$sPreviousContent = ob_get_clean();
-			$oPage->SetContentType('application/zip');
+			$oPage->SetContentType('application/gzip');
 			$oPage->SetContentDisposition('attachment', basename($sBackupFile));
 			$oPage->add(file_get_contents($sBackupFile));			
 		}

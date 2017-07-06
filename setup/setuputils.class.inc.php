@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 
 /**
  * The standardized result of any pass/fail check performed by the setup
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -85,7 +85,7 @@ class SetupUtils
 		$aWritableDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'conf', 'data'));
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
 		
-		$aMandatoryExtensions = array('mysqli', 'iconv', 'simplexml', 'soap', 'hash', 'json', 'session', 'pcre', 'dom', 'zip');
+		$aMandatoryExtensions = array('mysqli', 'iconv', 'simplexml', 'soap', 'hash', 'json', 'session', 'pcre', 'dom', 'phar', 'zlib', 'zip');
 		$aOptionalExtensions = array('mcrypt' => 'Strong encryption will not be used.',
 									 'ldap' => 'LDAP authentication will be disabled.',
 									 'gd' => 'PDF export will be disabled. Also, image resizing will be disabled on profile pictures (May increase database size).');
@@ -376,10 +376,15 @@ class SetupUtils
 
 		// zip extension
 		//
-		if (!extension_loaded('zip'))
+		if (!extension_loaded('phar'))
 		{
-			$sMissingExtensionLink = "<a href=\"http://www.php.net/manual/en/book.zip.php\" target=\"_blank\">zip</a>";
-			$aResult[] = new CheckResult(CheckResult::ERROR, "Missing PHP extension: zip", $sMissingExtensionLink);
+			$sMissingExtensionLink = "<a href=\"http://www.php.net/manual/en/book.phar.php\" target=\"_blank\">zip</a>";
+			$aResult[] = new CheckResult(CheckResult::ERROR, "Missing PHP extension: phar", $sMissingExtensionLink);
+		}
+		if (!extension_loaded('zlib'))
+		{
+			$sMissingExtensionLink = "<a href=\"http://www.php.net/manual/en/book.zlib.php\" target=\"_blank\">zip</a>";
+			$aResult[] = new CheckResult(CheckResult::ERROR, "Missing PHP extension: zlib", $sMissingExtensionLink);
 		}
 
 		// availability of exec()

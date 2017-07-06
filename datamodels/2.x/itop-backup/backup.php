@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2014 Combodo SARL
+// Copyright (C) 2014-2017 Combodo SARL
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -176,13 +176,12 @@ $sBackupFile =  utils::ReadParam('backup_file', $sDefaultBackupFileName, true, '
 $oBackup = new MyDBBackup($oP);
 $oBackup->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''));
 $sBackupFile = $oBackup->MakeName($sBackupFile);
-$sZipArchiveFile = $sBackupFile.'.zip';
 
 $bSimulate = utils::ReadParam('simulate', false, true);
 $res = false;
 if ($bSimulate)
 {
-	$oP->p("Simulate: would create file '$sZipArchiveFile'");
+	$oP->p("Simulate: would create file '$sBackupFile'");
 }
 elseif (MetaModel::GetConfig()->Get('demo_mode'))
 {
@@ -190,11 +189,10 @@ elseif (MetaModel::GetConfig()->Get('demo_mode'))
 }
 else
 {
-	$oBackup->CreateZip($sZipArchiveFile);
+	$oBackup->CreateCompressedBackup($sBackupFile);
 }
 if ($res && $bDownloadBackup)
 {
-	$oBackup->DownloadBackup($sZipArchiveFile);
+	$oBackup->DownloadBackup($sBackupFile);
 }
 $oP->output();
-?>

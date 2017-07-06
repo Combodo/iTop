@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2014 Combodo SARL
+// Copyright (C) 2014-2017 Combodo SARL
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -100,7 +100,7 @@ function MakeArchiveFileName($iRefTime = null)
 		$sBackupFile = strftime($sBackupFile, $iRefTime);
 	}
 
-	return $sBackupFile.'.zip';
+	return $sBackupFile;
 }
 
 

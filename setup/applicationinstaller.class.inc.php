@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -30,7 +30,7 @@ require_once(APPROOT.'setup/backup.class.inc.php');
  * while displaying a progress bar, or in an unattended manner
  * (for example from the command line), to run all the steps
  * in one go.
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -172,7 +172,7 @@ class ApplicationInstaller
 				
 				case 'backup':
 				$aPreinstall = $this->oParams->Get('preinstall');
-				// __DB__-%Y-%m-%d.zip
+				// __DB__-%Y-%m-%d
 				$sDestination = $aPreinstall['backup']['destination'];
 				$sSourceConfigFile = $aPreinstall['backup']['configuration_file'];
 				$aDBParams = $this->oParams->Get('database');
@@ -412,11 +412,11 @@ class ApplicationInstaller
 		return $sReport;
 	}
 
-	protected static function DoBackup($sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sBackupFile, $sSourceConfigFile)
+	protected static function DoBackup($sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sBackupFileFormat, $sSourceConfigFile)
 	{
 		$oBackup = new SetupDBBackup($sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix);
-		$sZipFile = $oBackup->MakeName($sBackupFile);
-		$oBackup->CreateZip($sZipFile, $sSourceConfigFile);
+		$sTargetFile = $oBackup->MakeName($sBackupFileFormat);
+		$oBackup->CreateCompressedBackup($sTargetFile, $sSourceConfigFile);
 	}
 
 	

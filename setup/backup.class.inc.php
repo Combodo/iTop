@@ -15,12 +15,54 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * Handles adding directories into a Zip archive
- */
+
+interface BackupArchive
+{
+	/**
+	 * @param string $sFile
+	 * @return bool <b>TRUE</b> if the file is present, <b>FALSE</b> otherwise.
+	 */
+	public function hasFile($sFile);
+
+	/**
+	 * @param string $sDirectory
+	 * @return bool <b>TRUE</b> if the directory is present, <b>FALSE</b> otherwise.
+	 */
+	public function hasDir($sDirectory);
+
+	/**
+	 * @param string $sDestinationDir
+	 * @param string $sArchiveFile
+	 * @return bool <b>TRUE</b> on success or <b>FALSE</b> on failure.
+	 */
+	public function extractFileTo($sDestinationDir, $sArchiveFile);
+
+	/**
+	 * Extract a whole directory from the archive.
+	 * Usage: $oArchive->extractDirTo('/var/www/html/itop/data', '/production-modules/')
+	 * @param string $sDestinationDir
+	 * @param string $sArchiveDir Note: must start and end with a slash !!
+	 * @return bool <b>TRUE</b> on success or <b>FALSE</b> on failure.
+	 */
+	public function extractDirTo($sDestinationDir, $sArchiveDir);
+
+	/**
+	 * Returns the entry contents using its name
+	 * @param string $name Name of the entry
+	 * @param int $length [optional] The length to be read from the entry. If 0, then the entire entry is read.
+	 * @param int $flags [optional] The flags to use to open the archive. the following values may be ORed to it. <b>ZipArchive::FL_UNCHANGED</b>
+	 * @return string the contents of the entry on success or <b>FALSE</b> on failure.
+	 */
+	public function getFromName($name, $length = 0, $flags = null);
+}
+
 if (class_exists('ZipArchive')) // The setup must be able to start even if the "zip" extension is not loaded
 {
-	class ZipArchiveEx extends ZipArchive
+	/**
+	 * Handles adding directories into a Zip archive, and a unified API for archive read
+	 * suggested enhancement: refactor the API for writing as well
+	 */
+	class ZipArchiveEx extends ZipArchive implements BackupArchive
 	{
 		public function addDir($sDir, $sZipDir = '')
 		{
@@ -53,6 +95,34 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			}
 		}
 		/**
+		 * @param string $sFile
+		 * @return bool <b>TRUE</b> if the file is present, <b>FALSE</b> otherwise.
+		 */
+		public function hasFile($sFile)
+		{
+			return ($this->locateName($sFile) !== false);
+		}
+
+		/**
+		 * @param string $sDirectory
+		 * @return bool <b>TRUE</b> if the directory is present, <b>FALSE</b> otherwise.
+		 */
+		public function hasDir($sDirectory)
+		{
+			return ($this->locateName($sDirectory) !== false);
+		}
+
+		/**
+		 * @param string $sDestinationDir
+		 * @param string $sArchiveFile
+		 * @return bool <b>TRUE</b> on success or <b>FALSE</b> on failure.
+		 */
+		public function extractFileTo($sDestinationDir, $sArchiveFile)
+		{
+			return $this->extractTo($sDestinationDir, $sArchiveFile);
+		}
+
+		/**
 		 * Extract a whole directory from the archive.
 		 * Usage: $oZip->extractDirTo('/var/www/html/itop/data', '/production-modules/')
 		 * @param string $sDestinationDir
@@ -72,7 +142,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 					$aFiles[] = $sEntry;
 				}
 			}
-			// Extract only the selcted files
+			// Extract only the selected files
 			if ((count($aFiles)  > 0) && ($this->extractTo($sDestinationDir, $aFiles) === true)) 
 			{
 				return true;
@@ -169,58 +239,170 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			$sFileName = strftime($sFileName);
 			return $sFileName;
 		}
-	
+
+		/**
+		 * @deprecated 2.4.0 Zip files are limited to 4 Gb, use CreateCompressedBackup to create tar.gz files
+		 * @param $sZipFile
+		 * @param null $sSourceConfigFile
+		 */
 		public function CreateZip($sZipFile, $sSourceConfigFile = null)
 		{
+			$aContents = array();
+
 			// Note: the file is created by tempnam and might not be writeable by another process (Windows/IIS)
 			// (delete it before spawning a process)
 			$sDataFile = tempnam(SetupUtils::GetTmpDir(), 'itop-');
 			$this->LogInfo("Data file: '$sDataFile'");
-	
-			$aContents = array();
+			$this->DoBackup($sDataFile);
 			$aContents[] = array(
 				'source' => $sDataFile,
 				'dest' => 'itop-dump.sql',
 			);
-	
+
+			foreach ($this->GetAdditionalFiles($sSourceConfigFile) as $sArchiveFile => $sSourceFile)
+			{
+				$aContents[] = array(
+					'source' => $sSourceFile,
+					'dest' => $sArchiveFile,
+				);
+			}
+
+			$this->DoZip($aContents, $sZipFile);
+
+			// Windows/IIS: the data file has been created by the spawned process...
+			//   trying to delete it will issue a warning, itself stopping the setup abruptely
+			@unlink($sDataFile);
+		}
+
+		/**
+		 * @param string $sTargetFile Path and name, without the extension
+		 * @param string|null $sSourceConfigFile Configuration file to embed into the backup, if not the current one
+		 */
+		public function CreateCompressedBackup($sTargetFile, $sSourceConfigFile = null)
+		{
+			$this->LogInfo("Creating backup: '$sTargetFile.tar.gz'");
+
+			// Note: PharData::compress strips averything after the first dot found in the name of the tar, then it adds .tar.gz
+			//       Hence, we have to create our own file in the target directory, and rename it when the process is complete
+			$sTarFile = str_replace('.', '_', $sTargetFile).'.tar';
+			$this->LogInfo("Tar file: '$sTarFile'");
+			$oArchive = new PharData($sTarFile);
+
+			// Note: the file is created by tempnam and might not be writeable by another process (Windows/IIS)
+			// (delete it before spawning a process)
+			// Note: the file is created by tempnam and might not be writeable by another process (Windows/IIS)
+			// (delete it before spawning a process)
+			$sDataFile = tempnam(SetupUtils::GetTmpDir(), 'itop-');
+			$this->LogInfo("Data file: '$sDataFile'");
+			$this->DoBackup($sDataFile);
+
+			$oArchive->addFile($sDataFile, 'itop-dump.sql');
+			// todo: reduce disk space needed by the operation by piping the output of mysqldump directly into the tar
+			// tip1 : this syntax works fine (did not work with addFile)
+			//$oArchive->buildFromIterator(
+			//	new ArrayIterator(
+			//		array('production.delta.xml' => fopen(ROOTDIR.'production.delta.xml', 'rb'))
+			//	)
+			//);
+			// tip2 : use the phar stream by redirecting the output of mysqldump into
+			//        phar://var/www/itop/data/backups/manual/trunk_pro-2017-07-05_15_10.tar.gz/itop-dump.sql
+			//
+			//	new ArrayIterator(
+			//		array('production.delta.xml' => fopen(ROOTDIR.'production.delta.xml', 'rb'))
+			//	)
+			//);
+
+			// Windows/IIS: the data file has been created by the spawned process...
+			//   trying to delete it will issue a warning, itself stopping the setup abruptely
+			@unlink($sDataFile);
+
+			foreach ($this->GetAdditionalFiles($sSourceConfigFile) as $sArchiveFile => $sSourceFile)
+			{
+				if (is_dir($sSourceFile))
+				{
+					$this->LogInfo("Adding directory into tar file: '$sSourceFile', recorded as '$sArchiveFile'");
+					// Note: Phar::buildFromDirectory does not allow to specify a destination subdirectory
+					//       Hence we have to add all files one by one
+					$sSourceDir = realpath($sSourceFile);
+					$sArchiveDir = trim($sArchiveFile, '/');
+
+					$oDirectoryIterator = new RecursiveDirectoryIterator($sSourceDir, RecursiveDirectoryIterator::SKIP_DOTS);
+					$oAllFiles = new RecursiveIteratorIterator($oDirectoryIterator);
+					foreach ($oAllFiles as $oSomeFile)
+					{
+						if ($oSomeFile->isDir()) continue;
+
+						// Replace the local path by the archive path - the resulting string starts with a '/'
+						$sRelativePathName = substr($oSomeFile->getRealPath(), strlen($sSourceDir));
+						// Under Windows realpath gives a mix of backslashes and slashes
+						$sRelativePathName = str_replace('\\', '/', $sRelativePathName);
+						$sArchiveFile = $sArchiveDir.$sRelativePathName;
+						$oArchive->addFile($oSomeFile->getPathName(), $sArchiveFile);
+					}
+				}
+				else
+				{
+					$this->LogInfo("Adding file into tar file: '$sSourceFile', recorded as '$sArchiveFile'");
+					$oArchive->addFile($sSourceFile, $sArchiveFile);
+				};
+			}
+
+			if (file_exists($sTarFile.'.gz'))
+			{
+				// Prevent the gzip compression from failing -> the whole operation is an overwrite
+				$this->LogInfo("Overwriting tar.gz: '$sTarFile'");
+				unlink($sTarFile.'.gz');
+			}
+			// zlib is a must!
+			$oArchive->compress(Phar::GZ);
+
+			// Cleanup
+			unset($oArchive);
+			unlink($sTarFile);
+
+			if ($sTargetFile != $sTarFile)
+			{
+				// Give the file the expected name
+				if (file_exists($sTargetFile.'.gz'))
+				{
+					// Remove it -> the whole operation is an overwrite
+					$this->LogInfo("Overwriting tar.gz: '$sTargetFile'");
+					unlink($sTargetFile.'.gz');
+				}
+				rename($sTarFile.'.gz', $sTargetFile.'.tar.gz');
+			}
+		}
+
+		/**
+		 * List files to store into the archive, in addition to the SQL dump
+		 * @return array of sArchiveName => sFilePath
+		 */
+		protected function GetAdditionalFiles($sSourceConfigFile)
+		{
+			$aRet = array();
 			if (is_null($sSourceConfigFile))
 			{
 				$sSourceConfigFile = MetaModel::GetConfig()->GetLoadedFile();
 			}
 			if (!empty($sSourceConfigFile))
 			{
-				$aContents[] = array(
-					'source' => $sSourceConfigFile,
-					'dest' => 'config-itop.php',
-				);
+				$aRet['config-itop.php'] = $sSourceConfigFile;
 			}
-	
-			$this->DoBackup($sDataFile);
-	
+
 			$sDeltaFile = APPROOT.'data/'.utils::GetCurrentEnvironment().'.delta.xml';
 			if (file_exists($sDeltaFile))
 			{
-				$aContents[] = array(
-					'source' => $sDeltaFile,
-					'dest' => 'delta.xml',
-				);
+				$aRet['delta.xml'] = $sDeltaFile;
 			}
 			$sExtraDir = APPROOT.'data/'.utils::GetCurrentEnvironment().'-modules/';
 			if (is_dir($sExtraDir))
 			{
-				$aContents[] = array(
-					'source' => $sExtraDir,
-					'dest' => utils::GetCurrentEnvironment().'-modules/',
-				);
+				$sModules = utils::GetCurrentEnvironment().'-modules/';
+				$aRet[$sModules] = $sExtraDir;
 			}
-			
-			$this->DoZip($aContents, $sZipFile);
-			// Windows/IIS: the data file has been created by the spawned process...
-			//   trying to delete it will issue a warning, itself stopping the setup abruptely
-			@unlink($sDataFile);
+			return $aRet;
 		}
-	
-	
+
 		protected static function EscapeShellArg($sValue)
 		{
 			// Note: See comment from the 23-Apr-2004 03:30 in the PHP documentation
@@ -324,7 +506,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		}
 	
 		/**
-		 * Helper to create a ZIP out of a data file and the configuration file
+		 * Helper to create a ZIP out of several files
 		 */	 	
 		protected function DoZip($aFiles, $sZipArchiveFile)
 		{
@@ -439,3 +621,169 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		}
 	}
 }
+
+class TarGzArchive implements BackupArchive
+{
+	/*
+	 * @var PharData
+	 */
+	protected $oPharArchive;
+	/*
+	 * string[]
+	 */
+	protected $aFiles = null;
+
+	public function __construct($sFile)
+	{
+		$this->oPharArchive = new PharData($sFile);
+	}
+
+	/**
+	 * @param string $sFile
+	 * @return bool <b>TRUE</b> if the file is present, <b>FALSE</b> otherwise.
+	 */
+	public function hasFile($sFile)
+	{
+		return $this->oPharArchive->offsetExists($sFile);
+	}
+
+	/**
+	 * @param string $sDirectory
+	 * @return bool <b>TRUE</b> if the directory is present, <b>FALSE</b> otherwise.
+	 */
+	public function hasDir($sDirectory)
+	{
+		return $this->oPharArchive->offsetExists($sDirectory);
+	}
+
+	/**
+	 * @param string $sDestinationDir
+	 * @param string $sArchiveFile
+	 * @return bool <b>TRUE</b> on success or <b>FALSE</b> on failure.
+	 */
+	public function extractFileTo($sDestinationDir, $sArchiveFile)
+	{
+		return $this->oPharArchive->extractTo($sDestinationDir, $sArchiveFile, true);
+	}
+
+	/**
+	 * Extract a whole directory from the archive.
+	 * Usage: $oArchive->extractDirTo('/var/www/html/itop/data', '/production-modules/')
+	 * @param string $sDestinationDir
+	 * @param string $sArchiveDir Note: must start and end with a slash !!
+	 * @return bool <b>TRUE</b> on success or <b>FALSE</b> on failure.
+	 */
+	public function extractDirTo($sDestinationDir, $sArchiveDir)
+	{
+		$aFiles = array();
+		foreach ($this->getFiles($sArchiveDir) as $oFileInfo)
+		{
+			$aFiles[] = $oFileInfo->getRelativePath();
+		}
+		if ((count($aFiles) > 0) && ($this->oPharArchive->extractTo($sDestinationDir, $aFiles, true) === true))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Returns the entry contents using its name
+	 * @param string $name Name of the entry
+	 * @param int $length [optional] The length to be read from the entry. If 0, then the entire entry is read.
+	 * @param int $flags [optional] The flags to use to open the archive. the following values may be ORed to it. <b>ZipArchive::FL_UNCHANGED</b>
+	 * @return string the contents of the entry on success or <b>FALSE</b> on failure.
+	 */
+	public function getFromName($name, $length = 0, $flags = null)
+	{
+		$oFileInfo = $this->oPharArchive->offsetGet($name);
+		$sFile = $oFileInfo->getPathname();
+		$sRet = file_get_contents($sFile);
+		return $sRet;
+	}
+
+	/**
+	 * @param string|null $sArchivePath Path to search for
+	 * @return null
+	 */
+	public function getFiles($sArchivePath = null)
+	{
+		if ($this->aFiles === null)
+		{
+			// Initial load
+			$this->buildFileList();
+		}
+		if ($sArchivePath === null)
+		{
+			// Take them all
+			$aRet = $this->aFiles;
+		}
+		else
+		{
+			// Filter out files not in the given path
+			$aRet = array();
+			foreach ($this->aFiles as $oFileInfo)
+			{
+				if ($oFileInfo->isUnder($sArchivePath))
+				{
+					$aRet[] = $oFileInfo;
+				}
+			}
+		}
+		return $aRet;
+	}
+
+	/**
+	 * @param PharData|null $oPharData
+	 * @param string $sArchivePath Path relatively to the archive root
+	 */
+	protected function buildFileList($oPharData = null, $sArchivePath = '/')
+	{
+		if ($oPharData === null)
+		{
+			$oPharData = $this->oPharArchive;
+		}
+		foreach($oPharData as $oPharFileInfo)
+		{
+			if($oPharFileInfo->isDir())
+			{
+				$oSubDirectory = new PharData($oPharFileInfo->getPathname());
+				// Recurse
+				$this->buildFileList($oSubDirectory, $sArchivePath.'/'.$oPharFileInfo->getFileName());
+			}
+			else
+			{
+				$this->aFiles[] = new TarGzFileInfo($oPharFileInfo, $sArchivePath);
+			}
+		}
+	}
+}
+
+class TarGzFileInfo
+{
+	public function __construct(PharFileInfo $oFileInfo, $sArchivePath)
+	{
+		$this->oPharFileInfo = $oFileInfo;
+		$this->sArchivePath = trim($sArchivePath, '/');
+	}
+
+	protected $sArchivePath;
+	protected $oPharFileInfo;
+
+	public function getPathname()
+	{
+		return $this->oPharFileInfo->getPathname();
+	}
+
+	public function getRelativePath()
+	{
+		return $this->sArchivePath.'/'.$this->oPharFileInfo->getFilename();
+	}
+
+	public function isUnder($sArchivePath)
+	{
+		$sTestedPath = trim($sArchivePath, '/');
+		return (strpos($this->sArchivePath, $sTestedPath) === 0);
+	}
+}
+

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2014-2016 Combodo SARL
+// Copyright (C) 2014-2017 Combodo SARL
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -82,7 +82,14 @@ class DBBackupScheduled extends DBBackup
 	{
 		$aFiles = array();
 		$aTimes = array();
+		// Legacy format -limited to 4 Gb
 		foreach(glob($sBackupDir.'*.zip') as $sFilePath)
+		{
+			$aFiles[] = $sFilePath;
+			$aTimes[] = filemtime($sFilePath); // unix time
+		}
+		// Modern format
+		foreach(glob($sBackupDir.'*.tar.gz') as $sFilePath)
 		{
 			$aFiles[] = $sFilePath;
 			$aTimes[] = filemtime($sFilePath); // unix time
@@ -156,15 +163,15 @@ class BackupExec implements iScheduledProcess
 			//
 			$oBackup->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''));
 	
-			$sBackupFile = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'file_name_format', '__DB__-%Y-%m-%d_%H_%M');
-			$sName = $oBackup->MakeName($sBackupFile);
+			$sBackupFileFormat = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'file_name_format', '__DB__-%Y-%m-%d_%H_%M');
+			$sName = $oBackup->MakeName($sBackupFileFormat);
 			if ($sName == '')
 			{
 				$sName = $oBackup->MakeName(BACKUP_DEFAULT_FORMAT);
 			}
-			$sZipFile = $this->sBackupDir.$sName.'.zip';
+			$sBackupFile = $this->sBackupDir.$sName;
 			$sSourceConfigFile = APPCONF.utils::GetCurrentEnvironment().'/'.ITOP_CONFIG_FILE;
-			$oBackup->CreateZip($sZipFile, $sSourceConfigFile);
+			$oBackup->CreateCompressedBackup($sBackupFile, $sSourceConfigFile);
 		}
 		catch (Exception $e)
 		{
@@ -172,7 +179,7 @@ class BackupExec implements iScheduledProcess
 			throw $e;
 		}
 		$oMutex->Unlock();
-		return "Created the backup: $sZipFile";
+		return "Created the backup: $sBackupFile";
 	}
 
 	/*

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2014 Combodo SARL
+// Copyright (C) 2014-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -88,19 +88,47 @@ class DBRestore extends DBBackup
 		}
 	}
 
+	/**
+	 * @deprecated Use RestoreFromCompressedBackup instead
+	 * @param $sZipFile
+	 * @param string $sEnvironment
+	 */
 	public function RestoreFromZip($sZipFile, $sEnvironment = 'production')
 	{
-		$this->LogInfo("Starting restore of ".basename($sZipFile));
+		$this->RestoreFromCompressedBackup($sZipFile, $sEnvironment);
+	}
 
-		$oZip = new ZipArchiveEx();
-		$res = $oZip->open($sZipFile);
+	/**
+	 * @param $sFile A file with the extension .zip or .tar.gz
+	 * @param string $sEnvironment Target environment
+	 */
+	public function RestoreFromCompressedBackup($sFile, $sEnvironment = 'production')
+	{
+		$this->LogInfo("Starting restore of ".basename($sFile));
+
+		$sNormalizedFile = strtolower(basename($sFile));
+		if (substr($sNormalizedFile, -4) == '.zip')
+		{
+			$this->LogInfo('zip file detected');
+			$oArchive = new ZipArchiveEx();
+			$res = $oArchive->open($sFile);
+		}
+		elseif (substr($sNormalizedFile, -7) == '.tar.gz')
+		{
+			$this->LogInfo('tar.gz file detected');
+			$oArchive = new TarGzArchive($sFile);
+		}
+		else
+		{
+			throw new Exception('Unsupported format for a backup file: '.$sFile);
+		}
 
 		// Load the database
 		//
 		$sDataDir = tempnam(SetupUtils::GetTmpDir(), 'itop-');
 		unlink($sDataDir); // I need a directory, not a file...
 		SetupUtils::builddir($sDataDir); // Here is the directory
-		$oZip->extractTo($sDataDir, 'itop-dump.sql');
+		$oArchive->extractFileTo($sDataDir, 'itop-dump.sql');
 		$sDataFile = $sDataDir.'/itop-dump.sql';
 		$this->LoadDatabase($sDataFile);
 		unlink($sDataFile);
@@ -108,10 +136,10 @@ class DBRestore extends DBBackup
 		// Update the code
 		//
 		$sDeltaFile = APPROOT.'data/'.$sEnvironment.'.delta.xml';
-		if ($oZip->locateName('delta.xml') !== false)
+		if ($oArchive->hasFile('delta.xml') !== false)
 		{
 			// Extract and rename delta.xml => <env>.delta.xml;
-			file_put_contents($sDeltaFile, $oZip->getFromName('delta.xml'));
+			file_put_contents($sDeltaFile, $oArchive->getFromName('delta.xml'));
 		}
 		else
 		{
@@ -121,18 +149,17 @@ class DBRestore extends DBBackup
 		{
 			SetupUtils::rrmdir(APPROOT.'data/production-modules/');
 		}
-		if ($oZip->locateName('production-modules/') !== false)
+		if ($oArchive->hasDir('production-modules/') !== false)
 		{
-			$oZip->extractDirTo(APPROOT.'data/', 'production-modules/');
+			$oArchive->extractDirTo(APPROOT.'data/', 'production-modules/');
 		}
 
 		$sConfigFile = APPROOT.'conf/'.$sEnvironment.'/config-itop.php';
 		@chmod($sConfigFile, 0770); // Allow overwriting the file
-		$oZip->extractTo(APPROOT.'conf/'.$sEnvironment, 'config-itop.php');
+		$oArchive->extractFileTo(APPROOT.'conf/'.$sEnvironment, 'config-itop.php');
 		@chmod($sConfigFile, 0444); // Read-only
 
 		$oEnvironment = new RunTimeEnvironment($sEnvironment);
 		$oEnvironment->CompileFrom($sEnvironment);
 	}
 }
-

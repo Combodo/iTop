@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2013-2016 Combodo SARL
+// Copyright (C) 2013-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Backup from an interactive session
  *
- * @copyright   Copyright (C) 2013-2016 Combodo SARL
+ * @copyright   Copyright (C) 2013-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -147,7 +147,7 @@ EOF
 	
 				$sBackupDir = APPROOT.'data/backups/';
 				$sBackupFile = $sBackupDir.$sFile;
-				$sRes = $oDBRS->RestoreFromZip($sBackupFile, $sEnvironment);
+				$sRes = $oDBRS->RestoreFromCompressedBackup($sBackupFile, $sEnvironment);
 	
 				IssueLog::Info('Backup Restore - Done, releasing the LOCK');
 				$oRestoreMutex->Unlock();
