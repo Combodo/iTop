@@ -377,7 +377,7 @@ EOF
 			event: 'change', 'show': function(event, ui) {
 				$('.resizable', ui.panel).resizable(); // Make resizable everything that claims to be resizable !
 			},
-			create: function( event, ui ) {console.log(ui);
+			create: function( event, ui ) {
 			    resizeTab(ui.panel);
 			},
 			beforeLoad: function( event, ui ) {
@@ -390,7 +390,7 @@ EOF
 					ui.tab.data( "loaded", true );
 				});
 			},
-			activate: function( event, ui ) {console.log(ui);
+			activate: function( event, ui ) {
 			    resizeTab(ui.newPanel);
 			}
 		});
