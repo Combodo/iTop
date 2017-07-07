@@ -760,4 +760,79 @@ abstract class DBSearch
 			echo "$sIndent$sFunction: $value<br/>\n";
 		}
 	}
+
+	/**
+	 * Experimental!
+	 * todo: implement the change tracking
+	 *
+	 * @param $bArchive
+	 * @throws Exception
+	 */
+	function DBBulkWriteArchiveFlag($bArchive)
+	{
+		$sClass = $this->GetClass();
+		if (!MetaModel::IsArchivable($sClass))
+		{
+			throw new Exception($sClass.' is not an archivable class');
+		}
+
+		$iFlag = $bArchive ? 1 : 0;
+
+		$oSet = new DBObjectSet($this);
+		if (MetaModel::IsStandaloneClass($sClass))
+		{
+			$oSet->OptimizeColumnLoad(array($this->GetClassAlias() => array('')));
+			$aIds = array($sClass => $oSet->GetColumnAsArray('id'));
+		}
+		else
+		{
+			$oSet->OptimizeColumnLoad(array($this->GetClassAlias() => array('finalclass')));
+			$aTemp = $oSet->GetColumnAsArray('finalclass');
+			$aIds = array();
+			foreach ($aTemp as $iObjectId => $sObjectClass)
+			{
+				$aIds[$sObjectClass][$iObjectId] = $iObjectId;
+			}
+		}
+		foreach ($aIds as $sFinalClass => $aObjectIds)
+		{
+			$sIds = implode(', ', $aObjectIds);
+
+			$sArchiveRoot = MetaModel::GetAttributeOrigin($sFinalClass, 'archive_flag');
+			$sRootTable = MetaModel::DBGetTable($sArchiveRoot);
+			$sRootKey = MetaModel::DBGetKey($sArchiveRoot);
+			$aJoins = array("`$sRootTable`");
+			$aUpdates = array();
+			foreach (MetaModel::EnumParentClasses($sFinalClass, ENUM_PARENT_CLASSES_ALL) as $sParentClass)
+			{
+				if (!MetaModel::IsValidAttCode($sParentClass, 'archive_flag')) continue;
+
+				$sTable = MetaModel::DBGetTable($sParentClass);
+				$aUpdates[] = "`$sTable`.`archive_flag` = $iFlag";
+				if ($sParentClass == $sArchiveRoot)
+				{
+					if ($bArchive)
+					{
+						// Set the date (do not change it)
+						$sDate = '"'.date(AttributeDate::GetSQLFormat()).'"';
+						$aUpdates[] = "`$sTable`.`archive_date` = coalesce(`$sTable`.`archive_date`, $sDate)";
+					}
+					else
+					{
+						// Reset the date
+						$aUpdates[] = "`$sTable`.`archive_date` = null";
+					}
+				}
+				else
+				{
+					$sKey = MetaModel::DBGetKey($sParentClass);
+					$aJoins[] = "`$sTable` ON `$sTable`.`$sKey` = `$sRootTable`.`$sRootKey`";
+				}
+			}
+			$sJoins = implode(' INNER JOIN ', $aJoins);
+			$sValues = implode(', ', $aUpdates);
+			$sUpdateQuery = "UPDATE $sJoins SET $sValues WHERE `$sRootTable`.`$sRootKey` IN ($sIds)";
+			CMDBSource::Query($sUpdateQuery);
+		}
+	}
 }
