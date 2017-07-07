@@ -808,7 +808,7 @@ class SetupUtils
 		$oPage->add('</fieldset>');
 		$oPage->add('</td></tr>');
 		
-		$oPage->add('<tr><td colspan="2"><span id="db_info"></span></td></tr>');
+		$oPage->add('<tr><td colspan="2"><span id="db_info" style="display:inline-block; height:1.5em; margin-left:10px;"></span></td></tr>');
 		
 		$oPage->add('<tr><td colspan="2">');
 		$oPage->add('<fieldset><legend>Database</legend>');
@@ -1036,7 +1036,7 @@ EOF
 		{
 			// Connection failed, disable the "Next" button
 			$oPage->add_ready_script('$("#wiz_form").data("db_connection", "error");');
-			$oPage->add_ready_script('$("#db_info").html("No connection to the database...");');
+			$oPage->add_ready_script('$("#db_info").html("<img src=\'../images/error.png\'/>&nbsp;No connection to the database...");');
 		}
 		else
 		{
