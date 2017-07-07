@@ -20,6 +20,11 @@ abstract class Parameters
 		}
 		return $default;
 	}
+	
+	protected function Set($sCode, $value)
+	{
+		$this->aData[$sCode] = $value;
+	}
 
 	public function ToXML(DOMNode $oRoot, $data = null, $sNodeName = null)
 	{
@@ -42,7 +47,7 @@ abstract class Parameters
 
 			$aKeys = array_keys($data);
 			$bNumericKeys = true;
-			foreach($aKeys as $idx => $subkey)
+			foreach($aKeys as $subkey)
 			{
 				if(((int)$subkey) !== $subkey)
 				{
@@ -89,7 +94,7 @@ class PHPParameters extends Parameters
 		if ($this->aData == null)
 		{
 			require_once($sParametersFile);
-			$this->aData = $ITOP_PARAMS;
+			$this->aData = $ITOP_PARAMS; // Defined in the file loaded just above
 		}
 	}
 }
