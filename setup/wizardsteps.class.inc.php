@@ -2309,7 +2309,7 @@ class WizStepDone extends WizardStep
 			{
 				// To mitigate security risks: pass only the filename without the extension, the download will add the extension itself
 				$oPage->p('Your backup is ready');
-				$oPage->p('<a style="background:transparent;" href="'.utils::GetAbsoluteUrlAppRoot().'setup/ajax.dataloader.php?operation=async_action&step_class=WizStepDone&params[backup]='.urlencode($sTruncatedFilePath).'" target="_blank"><img src="../images/tar.png" style="border:0;vertical-align:middle;">&nbsp;Download '.basename($sBackupDestination).'</a>');
+				$oPage->p('<a style="background:transparent;" href="'.utils::GetAbsoluteUrlAppRoot().'setup/ajax.dataloader.php?operation=async_action&step_class=WizStepDone&params[backup]='.urlencode($sBackupDestination).'" target="_blank"><img src="../images/tar.png" style="border:0;vertical-align:middle;">&nbsp;Download '.basename($sBackupDestination).'</a>');
 			}
 			else
 			{
