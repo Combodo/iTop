@@ -1305,7 +1305,10 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:About:DataModel' => 'Data model',
 	'UI:About:Support' => 'Support information',
 	'UI:About:Licenses' => 'Licenses',
-	'UI:About:Modules' => 'Installed modules',
+	'UI:About:InstallationOptions' => 'Installation options',
+	'UI:About:ManualExtensionSource' => 'Extension',
+	'UI:About:Extension_Version' => 'Version: %1$s',
+	'UI:About:RemoteExtensionSource' => 'Data',	
 	
 	'UI:DisconnectedDlgMessage' => 'You are disconnected. You must identify yourself to continue using the application.',
 	'UI:DisconnectedDlgTitle' => 'Warning!',

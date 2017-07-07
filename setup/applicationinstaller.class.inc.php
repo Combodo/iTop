@@ -198,7 +198,6 @@ class ApplicationInstaller
 					$sTargetEnvironment = 'production';
 				}
 				$sTargetDir = 'env-'.$sTargetEnvironment;
-				$sWorkspaceDir = $this->oParams->Get('workspace_dir', 'workspace');
 				$bUseSymbolicLinks = false;
 				$aMiscOptions = $this->oParams->Get('options', array());
 				if (isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks'] )
@@ -299,7 +298,6 @@ class ApplicationInstaller
 				$sDBPwd = $aDBParams['pwd'];
 				$sDBName = $aDBParams['name'];
 				$sDBPrefix = $aDBParams['prefix'];
-				$aFiles = $this->oParams->Get('files', array());
 				$bOldAddon = $this->oParams->Get('old_addon', false);
 				$bSampleData = ($this->oParams->Get('sample_data', 0) == 1);
 				
@@ -331,13 +329,14 @@ class ApplicationInstaller
 				$sUrl = $this->oParams->Get('url', '');
 				$sGraphvizPath = $this->oParams->Get('graphviz_path', '');
 				$sLanguage = $this->oParams->Get('language', '');
-				$aSelectedModules = $this->oParams->Get('selected_modules', array());
+				$aSelectedModuleCodes = $this->oParams->Get('selected_modules', array());
+				$aSelectedExtensionCodes = $this->oParams->Get('selected_extensions', array());
 				$bOldAddon = $this->oParams->Get('old_addon', false);
 				$sSourceDir = $this->oParams->Get('source_dir', '');
 				$sPreviousConfigFile = $this->oParams->Get('previous_configuration_file', '');
 				$sDataModelVersion = $this->oParams->Get('datamodel_version', '0.0.0');
 								
-				self::DoCreateConfig($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModules, $sTargetEnvironment, $bOldAddon, $sSourceDir, $sPreviousConfigFile, $sDataModelVersion, $sGraphvizPath);
+				self::DoCreateConfig($sMode, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sTargetEnvironment, $bOldAddon, $sSourceDir, $sPreviousConfigFile, $sDataModelVersion, $sGraphvizPath);
 				
 				$aResult = array(
 					'status' => self::INFO,
@@ -491,7 +490,7 @@ class ApplicationInstaller
 		
 		$aModules = $oFactory->FindModules();
 
-		foreach($aModules as $foo => $oModule)
+		foreach($aModules as $oModule)
 		{
 			$sModule = $oModule->GetName();
 			if (in_array($sModule, $aSelectedModules))
@@ -531,8 +530,8 @@ class ApplicationInstaller
 			SetupPage::log_info("Data model successfully compiled to '$sTargetPath'.");
 
 			$sCacheDir = APPROOT.'/data/cache-'.$sEnvironment.'/';
-			Setuputils::builddir($sCacheDir);
-			Setuputils::tidydir($sCacheDir);
+			SetupUtils::builddir($sCacheDir);
+			SetupUtils::tidydir($sCacheDir);
 		}
 		
 		// Special case to patch a ugly patch in itop-config-mgmt
@@ -548,7 +547,7 @@ class ApplicationInstaller
 		
 		// Set an "Instance UUID" identifying this machine based on a file located in the data directory
 		$sInstanceUUIDFile = APPROOT.'data/instance.txt';
-		Setuputils::builddir(APPROOT.'data');
+		SetupUtils::builddir(APPROOT.'data');
 		if (!file_exists($sInstanceUUIDFile))
 		{
 			$sIntanceUUID = utils::CreateUUID('filesystem');
@@ -690,7 +689,8 @@ class ApplicationInstaller
 				// Syncho data sources were identified by the comment at the end
 				// Unfortunately the comment is localized, so we have to search for all possible patterns
 				$sCurrentLanguage = Dict::GetUserLanguage();
-				foreach(Dict::GetLanguages() as $sLangCode => $aLang)
+				$aSuffixes = array();
+				foreach(array_keys(Dict::GetLanguages()) as $sLangCode)
 				{
 					Dict::SetUserLanguage($sLangCode);
 					$sSuffix = CMDBSource::Quote('%'.Dict::S('Core:SyncDataExchangeComment'));
@@ -966,7 +966,7 @@ class ApplicationInstaller
 	    SetupPage::log_info("ending data load session");
 	}
 	
-	protected static function DoCreateConfig($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModules, $sTargetEnvironment, $bOldAddon, $sSourceDir, $sPreviousConfigFile, $sDataModelVersion, $sGraphvizPath)
+	protected static function DoCreateConfig($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sTargetEnvironment, $bOldAddon, $sSourceDir, $sPreviousConfigFile, $sDataModelVersion, $sGraphvizPath)
 	{	
 		$aParamValues = array(
 			'mode' => $sMode, 
@@ -979,7 +979,7 @@ class ApplicationInstaller
 			'application_path' => $sUrl,
 			'language' => $sLanguage,
 			'graphviz_path' => $sGraphvizPath,
-			'selected_modules' => implode(',', $aSelectedModules),
+			'selected_modules' => implode(',', $aSelectedModuleCodes)
 		);
 		
 		$bPreserveModuleSettings = false;
@@ -1024,8 +1024,7 @@ class ApplicationInstaller
 		// Record which modules are installed...
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
-		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
-		if (!$oProductionEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModules, $sModulesDir))
+		if (!$oProductionEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sModulesDir))
 		{
 			throw new Exception("Failed to record the installation information");
 		}

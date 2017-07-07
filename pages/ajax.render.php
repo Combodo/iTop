@@ -1231,16 +1231,30 @@ EOF
 		$oPage->add("</div>");
 
 		$oPage->add('<fieldset>');
-		$oPage->add('<legend>'.Dict::S('UI:About:Modules').'</legend>');
-		//$oPage->add(print_r($aAvailableModules, true));
-		$oPage->add("<div style=\"height: 150px; overflow: auto; font-size: smaller;\">");
+		$oPage->add('<legend>'.Dict::S('UI:About:InstallationOptions').'</legend>');
+		$oPage->add("<div style=\"max-height: 150px; overflow: auto; font-size: smaller;\">");
 		$oPage->add('<ul style="margin: 0;">');
-		foreach ($aAvailableModules as $sModuleId => $aModuleData)
+		
+		require_once(APPROOT.'setup/extensionsmap.class.inc.php');
+		$oExtensionsMap = new iTopExtensionsMap();
+		$oExtensionsMap->LoadChoicesFromDatabase(MetaModel::GetConfig());
+		$aChoices = $oExtensionsMap->GetChoices();
+		foreach ($aChoices as $oExtension)
 		{
-			if ($sModuleId == '_Root_') continue;
-			if (!$aModuleData['visible']) continue;
-			if ($aModuleData['version_db'] == '') continue;
-			$oPage->add('<li>'.$aModuleData['label'].' ('.$aModuleData['version_db'].')</li>');
+			switch($oExtension->sSource)
+			{
+				case iTopExtension::SOURCE_REMOTE:
+				$sSource = ' <span class="extension-source">'.Dict::S('UI:About:RemoteExtensionSource').'</span>';
+				break;
+				
+				case iTopExtension::SOURCE_MANUAL:
+				$sSource = ' <span class="extension-source">'.Dict::S('UI:About:ManualExtensionSource').'</span>';
+				break;
+				
+				default:
+				$sSource = '';
+			}
+			$oPage->add('<li title="'.Dict::Format('UI:About:Extension_Version', $oExtension->sInstalledVersion).'">'.$oExtension->sLabel.$sSource.'</li>');
 		}
 		$oPage->add('</ul>');
 		$oPage->add("</div>");
@@ -1280,6 +1294,25 @@ EOF
 
 		$oPage->add('InstallDate: '.$sLastInstallDate."\n");
 		$oPage->add('InstallPath: '.APPROOT."\n");
+		$oPage->add("---- Installation choices ----\n");
+		foreach ($aChoices as $oExtension)
+		{
+			switch($oExtension->sSource)
+			{
+				case iTopExtension::SOURCE_REMOTE:
+				$sSource = ' ('.Dict::S('UI:About:RemoteExtensionSource').')';
+				break;
+					
+				case iTopExtension::SOURCE_MANUAL:
+				$sSource = ' ('.Dict::S('UI:About:ManualExtensionSource').')';
+				break;
+					
+				default:
+				$sSource = '';
+			}
+			$oPage->add('InstalledExtension/'.$oExtension->sCode.'/'.$oExtension->sVersion.$sSource."\n");
+		}
+		$oPage->add("---- Actual modules installed ----\n");
 		foreach ($aAvailableModules as $sModuleId => $aModuleData)
 		{
 			if ($sModuleId == '_Root_') continue;

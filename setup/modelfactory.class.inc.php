@@ -220,13 +220,19 @@ class MFModule
 	
 	public function SetFilesToInclude($aFiles, $sCategory)
 	{
+		// Now ModuleDiscovery provides us directly with relative paths... nothing to do
+		$this->aFilesToInclude[$sCategory] = $aFiles;
+		
+		/*
 		$sDir = basename($this->sRootDir);
 		$iLen = strlen($sDir.'/');		
 		foreach($aFiles as $sFile)
 		{
 			$iPos = strpos($sFile, $sDir.'/');
-			$this->aFilesToInclude[$sCategory][] = substr($sFile, $iPos+$iLen);
+			//$this->aFilesToInclude[$sCategory][] = substr($sFile, $iPos+$iLen);
+			$this->aFilesToInclude[$sCategory][] = $sFile;
 		}
+		*/
 	}
 	
 	public function GetFilesToInclude($sCategory)

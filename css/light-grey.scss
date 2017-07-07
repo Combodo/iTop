@@ -2163,3 +2163,11 @@ span.refresh-button {
 .object-ref-link {
 	background: none;
 }
+.extension-source {
+	display:inline-block;
+	background-color: $grey-color;
+	padding:3px;
+	font-size:10px;
+	color:#fff;
+    border-radius: 4px;
+}

@@ -27,6 +27,7 @@
 require_once(APPROOT."setup/modulediscovery.class.inc.php");
 require_once(APPROOT.'setup/modelfactory.class.inc.php');
 require_once(APPROOT.'setup/compiler.class.inc.php');
+require_once(APPROOT.'setup/extensionsmap.class.inc.php');
 require_once(APPROOT.'core/metamodel.class.php');
 
 define ('MODULE_ACTION_OPTIONAL', 1);
@@ -41,9 +42,16 @@ class RunTimeEnvironment
 {
 	protected $sTargetEnv;
 	
+	/**
+	 * Extensions map of the source environment
+	 * @var iTopExtensionsMap
+	 */
+	protected $oExtensionsMap;
+	
 	public function __construct($sEnvironment = 'production')
 	{
 		$this->sTargetEnv = $sEnvironment;
+		$this->oExtensionsMap = null;
 	}
 
 	/**
@@ -104,6 +112,11 @@ class RunTimeEnvironment
 		}
 	
 		MetaModel::Startup($oConfig, $bModelOnly, $bUseCache, false /* $bTraceSourceFiles */, $this->sTargetEnv);
+		
+		if ($this->oExtensionsMap === null)
+		{
+			$this->oExtensionsMap = new iTopExtensionsMap($this->sTargetEnv);
+		}
 	}
 	
 	/**
@@ -333,11 +346,26 @@ class RunTimeEnvironment
 		
 		$aRet = array();
 
-		// Determine the installed modules
+		// Determine the installed modules and extensions
 		//
 		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
 		$oSourceEnv = new RunTimeEnvironment($sSourceEnv);
 		$aAvailableModules = $oSourceEnv->AnalyzeInstallation($oSourceConfig, $aDirsToCompile);
+		
+		// Actually read the modules available for the target environment,
+		// but get the selection from the source environment and finally
+		// mark as (automatically) chosen alll the "remote" modules present in the
+		// target environment (data/<target-env>-modules)
+		// The actual choices will be recorded by RecordInstallation below
+		$this->oExtensionsMap = new iTopExtensionsMap($this->sTargetEnv);
+		$this->oExtensionsMap->LoadChoicesFromDatabase($oSourceConfig);
+		foreach($this->oExtensionsMap->GetAllExtensions() as $oExtension)
+		{
+			if($oExtension->sSource == iTopExtension::SOURCE_REMOTE)
+			{
+				$this->oExtensionsMap->MarkAsChosen($oExtension->sCode);
+			}
+		}
 
 		// Do load the required modules
 		//
@@ -359,7 +387,7 @@ class RunTimeEnvironment
 		}
 		
 		$aModules = $oFactory->FindModules();
-		foreach($aModules as $foo => $oModule)
+		foreach($aModules as $oModule)
 		{
 			$sModule = $oModule->GetName();
 			$sModuleRootDir = $oModule->GetRootDir();
@@ -378,7 +406,7 @@ class RunTimeEnvironment
 		{
 			// Loop while new modules are added...
 			$bModuleAdded = false;
-			foreach($aModules as $foo => $oModule)
+			foreach($aModules as $oModule)
 			{
 				if (!array_key_exists($oModule->GetName(), $aRet) && $oModule->IsAutoSelect())
 				{
@@ -437,7 +465,6 @@ class RunTimeEnvironment
 				// in case there is no delta the operation will be done after the end of the loop
 				$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'.xml');
 			}
-			$sModule = $oModule->GetName();
 			$oFactory->LoadModule($oModule);
 			if ($oFactory->HasLoadErrors())
 			{
@@ -475,8 +502,8 @@ class RunTimeEnvironment
 			$oMFCompiler->Compile($sTargetDir, null, $bUseSymLinks);
 
 			$sCacheDir = APPROOT.'data/cache-'.$this->sTargetEnv;
-			Setuputils::builddir($sCacheDir);
-			Setuputils::tidydir($sCacheDir);
+			SetupUtils::builddir($sCacheDir);
+			SetupUtils::tidydir($sCacheDir);
 
 			require_once(APPROOT.'/core/dict.class.inc.php');
 			MetaModel::ResetCache(md5(APPROOT).'-'.$this->sTargetEnv);
@@ -627,11 +654,18 @@ class RunTimeEnvironment
 		$oConfig->Set('access_mode', $iPrevAccessMode);
 	}
 	
-	public function RecordInstallation(Config $oConfig, $sDataModelVersion, $aSelectedModules, $sModulesRelativePath, $sShortComment = null)
+	public function RecordInstallation(Config $oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sModulesRelativePath, $sShortComment = null)
 	{
 		// Have it work fine even if the DB has been set in read-only mode for the users
 		$iPrevAccessMode = $oConfig->Get('access_mode');
 		$oConfig->Set('access_mode', ACCESS_FULL);
+
+		if (CMDBSource::DBName() == '')
+		{		
+			// In case this has not yet been done
+			CMDBSource::Init($oConfig->GetDBHost(), $oConfig->GetDBUser(), $oConfig->GetDBPwd(), $oConfig->GetDBName());
+			CMDBSource::SetCharacterSet($oConfig->GetDBCharacterSet(), $oConfig->GetDBCollation());
+		}
 
 		if ($sShortComment === null)
 		{
@@ -662,10 +696,11 @@ class RunTimeEnvironment
 		$iMainItopRecord = $oInstallRec->DBInsertNoReload();
 	
 		
-		// Record installed modules
+		// Record installed modules and extensions
 		//
+		$aAvailableExtensions = array();
 		$aAvailableModules = $this->AnalyzeInstallation($oConfig, APPROOT.$sModulesRelativePath);
-		foreach($aSelectedModules as $sModuleId)
+		foreach($aSelectedModuleCodes as $sModuleId)
 		{
 			$aModuleData = $aAvailableModules[$sModuleId];
 			$sName = $sModuleId;
@@ -701,6 +736,30 @@ class RunTimeEnvironment
 			$oInstallRec->Set('parent_id', $iMainItopRecord);
 			$oInstallRec->Set('installed', $iInstallationTime);
 			$oInstallRec->DBInsertNoReload();
+		}
+		
+		if ($this->oExtensionsMap)
+		{
+			// Mark as chosen the selected extensions code passed to us
+			// Note: some other extensions may already be marked as chosen
+			foreach($this->oExtensionsMap->GetAllExtensions() as $oExtension)
+			{
+				if (in_array($oExtension->sCode, $aSelectedExtensionCodes))
+				{
+					$this->oExtensionsMap->MarkAsChosen($oExtension->sCode);
+				}
+			}
+			
+			foreach($this->oExtensionsMap->GetChoices() as $oExtension)
+			{
+				$oInstallRec = new ExtensionInstallation();
+				$oInstallRec->Set('code', $oExtension->sCode);
+				$oInstallRec->Set('label', $oExtension->sLabel);
+				$oInstallRec->Set('version', $oExtension->sVersion);
+				$oInstallRec->Set('source',  $oExtension->sSource);
+				$oInstallRec->Set('installed', $iInstallationTime);
+				$oInstallRec->DBInsertNoReload();
+			}
 		}
 
 		// Restore the previous access mode

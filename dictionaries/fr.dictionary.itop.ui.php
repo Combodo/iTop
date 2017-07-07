@@ -1148,7 +1148,10 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:About:DataModel' => 'Modèle de données',
 	'UI:About:Support' => 'Informations pour le support',
 	'UI:About:Licenses' => 'Licences',
-	'UI:About:Modules' => 'Modules installés',
+	'UI:About:InstallationOptions' => 'Options d\'installation',
+	'UI:About:Extension_Version' => 'Version: %1$s',
+	'UI:About:ManualExtensionSource' => 'Extension',
+		
 	
 	'UI:DisconnectedDlgMessage' => 'Vous êtes déconnecté(e). Vous devez vous identifier pour pouvoir continuer à utiliser l\'application.',
 	'UI:DisconnectedDlgTitle' => 'Attention !',

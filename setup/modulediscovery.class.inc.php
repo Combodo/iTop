@@ -67,7 +67,7 @@ class ModuleDiscovery
 			// Assume 1.0.2
 			$aArgs['itop_version'] = '1.0.2';
 		}
-		foreach (self::$m_aModuleArgs as $sArgName => $sArgDesc)
+		foreach (array_keys(self::$m_aModuleArgs) as $sArgName)
 		{
 			if (!array_key_exists($sArgName, $aArgs))
 			{
@@ -110,6 +110,8 @@ class ModuleDiscovery
 		
 		self::$m_aModules[$sId] = $aArgs;
 
+		// Now keep the relative paths, as provided
+		/*
 		foreach(self::$m_aFilesList as $sAttribute)
 		{
 			if (isset(self::$m_aModules[$sId][$sAttribute]))
@@ -122,7 +124,9 @@ class ModuleDiscovery
 				}
 			}
 		}
+		*/
 		// Populate automatically the list of dictionary files
+		$aMatches = array();
 		if(preg_match('|^([^/]+)|', $sId, $aMatches)) // ModuleName = everything before the first forward slash
 		{
 			$sModuleName = $aMatches[1];
@@ -240,6 +244,7 @@ class ModuleDiscovery
 		// Separate the module names from their version for an easier comparison later
 		foreach($aOrderedModules as $sModuleId)
 		{
+			$aMatches = array();
 			if (preg_match('|^([^/]+)/(.*)$|', $sModuleId, $aMatches))
 			{
 				$aModuleVersions[$aMatches[1]] = $aMatches[2];
@@ -260,6 +265,7 @@ class ModuleDiscovery
 				{
 					// $sModuleId in the dependency string is made of a <name>/<optional_operator><version>
 					// where the operator is < <= = > >= (by default >=)
+					$aModuleMatches = array();
 					if(preg_match('|^([^/]+)/(<?>?=?)([^><=]+)$|', $sModuleId, $aModuleMatches))
 					{
 						$sModuleName = $aModuleMatches[1];
@@ -295,7 +301,7 @@ class ModuleDiscovery
 				}
 			}
 			$bMissingPrerequisite = false;
-			foreach ($aPotentialPrerequisites as $sModuleName => $void)
+			foreach (array_keys($aPotentialPrerequisites) as $sModuleName)
 			{
 				if (array_key_exists($sModuleName, $aSelectedModules))
 				{
@@ -378,6 +384,7 @@ class ModuleDiscovery
 	 */    
 	public static function GetModuleName($sModuleId)
 	{
+		$aMatches = array();
 		if (preg_match('!^(.*)/(.*)$!', $sModuleId, $aMatches))
 		{
 			$sName = $aMatches[1];
@@ -394,12 +401,12 @@ class ModuleDiscovery
 	/**
 	 * Helper function to browse a directory and get the modules
 	 * @param $sRelDir string Directory to start from
+	 * @param $sRootDir string The root directory path
 	 * @return array(name, version)
 	 */    
 	protected static function ListModuleFiles($sRelDir, $sRootDir)
 	{
 		static $iDummyClassIndex = 0;
-		static $aDefinedClasses = array();
 		$sDirectory = $sRootDir.'/'.$sRelDir;
 		
 		if ($hDir = opendir($sDirectory))
@@ -504,3 +511,4 @@ class SetupWebPage extends ModuleDiscovery
  */
 class DummyHandler {
 }
+
