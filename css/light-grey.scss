@@ -1227,20 +1227,231 @@ span.form_validation {
 	margin-top: 0.25em;
 	margin-bottom: 0.25em;
 }
-table.details {
+
+.details {
   border-collapse: collapse;
   noborder-bottom: 2px #fff solid;
   nowidth:100%;
+
+	* {
+		box-sizing: border-box;
+	}
+
+	> .field_container {
+		display: table;
+		width: 100%;
+		margin-bottom: 5px;
+		border-bottom: 2px #ddd solid;
+
+		&:last-child {
+			margin-bottom: 0px;
+		}
+
+		&.field_large{
+			display: inherit;
+
+			/* .field_label, .field_data */
+			> div {
+				display: inherit;
+
+				&.field_label{
+					width: inherit;
+					margin-bottom: 5px;
+				}
+
+				/* .field_value, .field_comments, .field_infos */
+				> div {
+				}
+			}
+		}
+
+		/* .field_label, .field_data */
+		> div {
+			display: table-cell;
+			vertical-align: top;
+
+			&.field_label {
+				width: 30%;
+				padding-right: 10px;
+
+				> label,span {
+					color: #000000;
+					font-weight:bold;
+				}
+			}
+
+			&.field_data {
+				display: table;
+				width: 100%;
+				margin-bottom: 5px;
+			}
+
+			/* .field_value, .field_comments, .field_infos */
+			> div {
+				display: table-cell;
+				width: auto;
+
+				&.field_comments,
+				&.field_infos{
+					width: 20px;
+				}
+
+				&.field_value{
+
+					.attribute-edit{
+						display: table;
+						width: 100%;
+
+						/* TODO: Refactor so status icon show over mandatory icon */
+						.form_validation, .field_status{
+							display: table-cell;
+							width: 20px;
+							padding-left: 0.4em;
+							vertical-align: middle;
+						}
+
+						.field_input_zone{
+							width: 100%; /* auto; */
+
+							&.field_input_string,
+							&.field_input_password{
+								> select, input{
+									width: 100%;
+								}
+							}
+
+							&.field_input_onewaypassword{
+								// Not implemented yet
+							}
+
+							&.field_input_date,
+							&.field_input_datetime{
+								display: table;
+								width: 100%;
+
+								> input {
+									display: table-cell;
+									width: 100%;
+								}
+
+								> span {
+									display: table-cell;
+									width: 20px;
+									padding-left: 0.4em;
+									vertical-align: middle;
+
+									> img {
+										max-width: 16px;
+									}
+								}
+							}
+
+							&.field_input_text{
+								border: none;
+
+								//.f_i_text_header{
+								//	padding: 6px 8px 2px;
+								//	white-space: normal;
+								//	border-bottom: 1px solid #fff;
+								//	background: #f2f2f2;
+								//}
+								textarea{
+									width: 100%;
+									//padding: 5px;
+									//border: none;
+								}
+							}
+
+							&.field_input_html{
+								// Nothing
+							}
+
+							&.field_input_document{
+								> input{
+									width: 100%;
+								}
+
+								> span {
+									display: inline-block;
+									margin-bottom: 2px;
+								}
+							}
+
+							&.field_input_image{
+								input{
+									width: 100%;
+								}
+							}
+
+							&.field_input_extkey{
+								display: table;
+								width: 100%;
+
+								> .field_select_wrapper{
+									display: table-cell;
+									width: auto;
+
+									> select {
+										width: 100%;
+									}
+								}
+
+								> .field_autocomplete{
+									display: table-cell;
+									width: 100%;
+								}
+
+								> .field_input_btn{
+									display: table-cell;
+									width: 25px;
+									padding-left: 0.4em;
+
+									> img {
+										max-width: 20px;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
-table.details>tbody>tr>td {
-	border-bottom: 2px #ddd solid;
-	padding-bottom: 5px;
-	padding-top: 3px;
-}
-fieldset table.details>tbody>tr>td {
-	padding-top: 3px;
+fieldset .details>.field_container {
 	background: transparent;
 	border: 0;
+}
+#SiloSelection{
+	padding-top: 3px;
+	padding-right: 30px;
+	text-align: left;
+
+	*{
+		box-sizing: border-box;
+		vertical-align: middle;
+	}
+
+	.field_input_extkey{
+		display: table;
+		width: 100%;
+
+		.field_select_wrapper{
+			display: table-cell;
+			width: 100%;
+
+			> select{
+				width: 100%;
+				max-width: initial;
+			}
+		}
+
+		.field_input_btn{
+			display: table-cell;
+			width: 20px;
+			margin-left: 0.4em;
+		}
+	}
 }
 .ac_dlg_loading {
 	background: white url('../images/indicator.gif') right center no-repeat;

@@ -629,6 +629,7 @@ EOF
 		// Compute the list of properties to display, first the attributes in the 'details' list, then 
 		// all the remaining attributes that are not external fields
 		$sHtml = '';
+		$sEditMode = ($bEditMode) ? 'edit' : 'view';
 		$aDetails = array();
 		$iInputId = 0;
 		$aFieldsMap = array();
@@ -639,9 +640,18 @@ EOF
 		foreach($aDetailsStruct as $sTab => $aCols )
 		{
 			$aDetails[$sTab] = array();
-			ksort($aCols);
+            $aTableStyles[] = 'vertical-align:top';
+
+            ksort($aCols);
+			$iColCount = count($aCols);
+			if($iColCount > 1)
+            {
+                $aTableStyles[] = 'width: 100%';
+            }
+            // Else, will size regarding the largest field of the column
+
 			$oPage->SetCurrentTab(Dict::S($sTab));
-			$oPage->add('<table style="vertical-align:top"><tr>');
+			$oPage->add('<table style="'.implode('; ', $aTableStyles).'" data-mode="'.$sEditMode.'"><tr>');
 			foreach($aCols as $sColIndex => $aFieldsets)
 			{
 				$oPage->add('<td style="vertical-align:top">');
@@ -651,7 +661,7 @@ EOF
 				$aDetails[$sTab][$sColIndex] = array();
 				foreach($aFieldsets as $sFieldsetName => $aFields)
 				{
-					if (!empty($sFieldsetName) && ($sFieldsetName[0] != '_'))
+				    if (!empty($sFieldsetName) && ($sFieldsetName[0] != '_'))
 					{
 						$sLabel = $sFieldsetName;
 					}
@@ -680,8 +690,8 @@ EOF
 						{
 
 
-						$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '&nbsp;';
-						$sInfos = '&nbsp;';
+						$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '';
+						$sInfos = '';
 						$iFlags = $this->GetFormAttributeFlags($sAttCode);
 						if (array_key_exists($sAttCode, $aExtraFlags))
 						{
@@ -698,7 +708,7 @@ EOF
 								{
 									// State attribute is always read-only from the UI
 									$sHTMLValue = $this->GetStateLabel();
-									$val = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
+									$val = array('label' => '<label>'.$oAttDef->GetLabel().'</label>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos, 'attcode' => $sAttCode);
 								}
 								else
 								{				
@@ -732,17 +742,28 @@ EOF
 										$sValue = $this->Get($sAttCode);
 										$sDisplayValue = $this->GetEditValue($sAttCode);
 										$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
-										$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+										$sHTMLValue = "<div id=\"field_{$sInputId}\" class=\"field_value_container\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</div>';
 									}
 									$aFieldsMap[$sAttCode] = $sInputId;
-									$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
+									$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos, 'attcode' => $sAttCode);
 								}
 							}
 							else
 							{
-								$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode)."</span>", 'comments' => $sComments, 'infos' => $sInfos);
+								$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode)."</span>", 'comments' => $sComments, 'infos' => $sInfos, 'attcode' => $sAttCode);
 								$aFieldsMap[$sAttCode] = $sInputId;	
 							}
+
+                            // Checking how the field should be rendered
+                            // Note: For view mode, this is done in cmdbAbstractObject::GetFieldAsHtml()
+                            if(in_array($oAttDef->GetEditClass(), array('Text', 'HTML', 'CaseLog', 'CustomFields')))
+                            {
+                                $val['layout'] = 'large';
+                            }
+                            else
+                            {
+                                $val['layout'] = 'small';
+                            }
 						}
 						else
 						{
@@ -761,7 +782,7 @@ EOF
 
 						if ($val != null)
 						{
-							// The field is visible, add it to the current column
+						    // The field is visible, add it to the current column
 							$aDetails[$sTab][$sColIndex][] = $val;
 							$iInputId++;
 						}				
@@ -1786,7 +1807,7 @@ EOF
 				$aEventsList[] ='change';
 				$sPlaceholderValue = 'placeholder="'.htmlentities(AttributeDate::GetFormat()->ToPlaceholder(), ENT_QUOTES, 'UTF-8').'"';
 
-				$sHTMLValue = "<input title=\"$sHelpText\" class=\"date-pick\" type=\"text\" size=\"12\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationSpan}{$sReloadSpan}";
+				$sHTMLValue = "<div class=\"field_input_zone field_input_date\"><input title=\"$sHelpText\" class=\"date-pick\" type=\"text\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
 				break;
 
 				case 'DateTime':
@@ -1795,7 +1816,7 @@ EOF
 				$aEventsList[] ='change';
 
 				$sPlaceholderValue = 'placeholder="'.htmlentities(AttributeDateTime::GetFormat()->ToPlaceholder(), ENT_QUOTES, 'UTF-8').'"';
-				$sHTMLValue = "<input title=\"$sHelpText\" class=\"datetime-pick\" type=\"text\" size=\"19\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationSpan}{$sReloadSpan}";
+				$sHTMLValue = "<div class=\"field_input_zone field_input_datetime\"><input title=\"$sHelpText\" class=\"datetime-pick\" type=\"text\" size=\"19\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
 				break;
 
 				case 'Duration':
@@ -1819,7 +1840,7 @@ EOF
 					$aEventsList[] ='validate';
 					$aEventsList[] ='keyup';
 					$aEventsList[] ='change';
-					$sHTMLValue = "<input title=\"$sHelpText\" type=\"password\" size=\"30\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationSpan}{$sReloadSpan}";
+					$sHTMLValue = "<div class=\"field_input_zone field_input_password\"><input title=\"$sHelpText\" type=\"password\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
 				break;
 				
 				case 'OQLExpression':
@@ -1828,10 +1849,10 @@ EOF
 					$aEventsList[] ='keyup';
 					$aEventsList[] ='change';
 					$sEditValue = $oAttDef->GetEditValue($value);
+
 					$aStyles = array();
 					$sStyle = '';
 					$sWidth = $oAttDef->GetWidth('width', '');
-
 					if (!empty($sWidth))
 					{
 						$aStyles[] = 'width:'.$sWidth;
@@ -1845,6 +1866,7 @@ EOF
 					{
 						$sStyle = 'style="'.implode('; ', $aStyles).'"';
 					}
+
 					if ($oAttDef->GetEditClass() == 'OQLExpression')
 					{
 						$sTestResId = 'query_res_'.$sFieldPrefix.$sAttCode.$sNameSuffix; //$oPage->GetUniqueId();
@@ -1858,7 +1880,7 @@ EOF
 						$sAdditionalStuff = "";
 					}
 					// Ok, the text area is drawn here
-					$sHTMLValue = "<table><tr><td><textarea class=\"resizable\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\" $sStyle>".htmlentities($sEditValue, ENT_QUOTES, 'UTF-8')."</textarea>$sAdditionalStuff</td><td>{$sValidationSpan}{$sReloadSpan}</td></tr></table>";
+					$sHTMLValue = "<div class=\"field_input_zone field_input_text\"><textarea class=\"\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\" $sStyle>".htmlentities($sEditValue, ENT_QUOTES, 'UTF-8')."</textarea>$sAdditionalStuff</div>{$sValidationSpan}{$sReloadSpan}";
 
 				break;
 
@@ -1879,12 +1901,14 @@ EOF
 					{
 						$sStyle = 'style="'.implode('; ', $aStyles).'"';
 					}
+
 					$sHeader = '<div class="caselog_input_header"></div>'; // will be hidden in CSS (via :empty) if it remains empty
 					$sEditValue = is_object($value) ? $value->GetModifiedEntry('html') : '';
 					$sPreviousLog = is_object($value) ? $value->GetAsHTML($oPage, true /* bEditMode */, array('AttributeText', 'RenderWikiHtml')) : '';
 					$iEntriesCount = is_object($value) ? count($value->GetIndex()) : 0;
 					$sHidden = "<input type=\"hidden\" id=\"{$iId}_count\" value=\"$iEntriesCount\"/>"; // To know how many entries the case log already contains
-					$sHTMLValue = "<div class=\"caselog\" $sStyle><table style=\"width:100%;\"><tr><td>$sHeader<textarea class=\"htmlEditor\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".htmlentities($sEditValue, ENT_QUOTES, 'UTF-8')."</textarea>$sPreviousLog</td><td>{$sValidationSpan}{$sReloadSpan}</td></tr></table>$sHidden</div>";
+
+					$sHTMLValue = "<div class=\"field_input_zone field_input_caselog caselog\" $sStyle>$sHeader<textarea class=\"htmlEditor\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".htmlentities($sEditValue, ENT_QUOTES, 'UTF-8')."</textarea>$sPreviousLog</div>{$sValidationSpan}{$sReloadSpan}$sHidden";
 					$oPage->add_ready_script("$('#$iId').bind('keyup change validate', function(evt, sFormId) { return ValidateCaseLogField('$iId', $bMandatory, sFormId) } );"); // Custom validation function
 				break;
 
@@ -1919,10 +1943,13 @@ EOF
 						$sFileName = $oDocument->GetFileName();
 					}
 					$iMaxFileSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
-					$sHTMLValue = "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$iMaxFileSize\" />\n";
+					$sHTMLValue = "<div class=\"field_input_zone field_input_document\">\n";
+					$sHTMLValue .= "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$iMaxFileSize\" />\n";
 					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[filename]\" type=\"hidden\" id=\"$iId\" \" value=\"".htmlentities($sFileName, ENT_QUOTES, 'UTF-8')."\"/>\n";
-					$sHTMLValue .= "<span id=\"name_$iInputId\">".htmlentities($sFileName, ENT_QUOTES, 'UTF-8')."</span><br/>\n";
-					$sHTMLValue .= "<input title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[fcontents]\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>&nbsp;{$sValidationSpan}{$sReloadSpan}\n";
+					$sHTMLValue .= "<span id=\"name_$iInputId\"'>".htmlentities($sFileName, ENT_QUOTES, 'UTF-8')."</span><br/>\n";
+					$sHTMLValue .= "<input title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[fcontents]\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>\n";
+					$sHTMLValue .= "</div>\n";
+					$sHTMLValue .= "{$sValidationSpan}{$sReloadSpan}\n";
 				break;
 
 				case 'Image':
@@ -1940,8 +1967,8 @@ EOF
 						$sUrl = $sDefaultUrl;
 					}
 
-					$sHTMLValue = "<div id=\"edit_$iInputId\" class=\"edit-image\"></div>";
-					$sHTMLValue .= "&nbsp;{$sValidationSpan}{$sReloadSpan}\n";
+					$sHTMLValue = "<div class=\"field_input_zone field_input_image\"><div id=\"edit_$iInputId\" class=\"edit-image\"></div></div>\n";
+					$sHTMLValue .= "{$sValidationSpan}{$sReloadSpan}\n";
 
 					$aEditImage = array(
 						'input_name' => 'attr_'.$sFieldPrefix.$sAttCode.$sNameSuffix,
@@ -2075,7 +2102,7 @@ EOF
 							
 							case 'select':
 							default:
-							$sHTMLValue = "<select title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
+							$sHTMLValue = "<div class=\"field_input_zone field_input_string\"><select title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
 							$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
 							foreach($aAllowedValues as $key => $display_value)
 							{
@@ -2090,13 +2117,13 @@ EOF
 								}
 								$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
 							}
-							$sHTMLValue .= "</select>&nbsp;{$sValidationSpan}{$sReloadSpan}\n";
+							$sHTMLValue .= "</select></div>{$sValidationSpan}{$sReloadSpan}\n";
 							$aEventsList[] ='change';
 						}
 					}
 					else
 					{
-						$sHTMLValue = "<input title=\"$sHelpText\" type=\"text\" size=\"30\" maxlength=\"$iFieldSize\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/>&nbsp;{$sValidationSpan}{$sReloadSpan}";
+						$sHTMLValue = "<div class=\"field_input_zone field_input_string\"><input title=\"$sHelpText\" type=\"text\" maxlength=\"$iFieldSize\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
 						$aEventsList[] ='keyup';
 						$aEventsList[] ='change';
 					}
@@ -2763,7 +2790,18 @@ EOF
 			{
 				$sDisplayValue = $this->GetAsHTML($sAttCode);
 			}
-			$retVal = array('label' => '<span title="'.MetaModel::GetDescription($sClass, $sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>', 'value' => $sDisplayValue);
+			$retVal = array('label' => '<span title="'.MetaModel::GetDescription($sClass, $sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>', 'value' => $sDisplayValue, 'attcode' => $sAttCode);
+
+            // Checking how the field should be rendered
+            // Note: For edit mode, this is done in self::GetBareProperties()
+            if(in_array($oAttDef->GetEditClass(), array('Text', 'HTML', 'CaseLog', 'CustomFields')))
+            {
+                $retVal['layout'] = 'large';
+            }
+            else
+            {
+                $retVal['layout'] = 'small';
+            }
 		}
 		return $retVal;
 	}

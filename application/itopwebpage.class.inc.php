@@ -236,7 +236,9 @@ EOF;
 		// note: each action implemented here must be idempotent,
 		//       because this helper function might be called several times on a given page 
 	
-		$(".date-pick").datepicker($sJSDatePickerOptions);
+	    // Note: Trigger image is wrapped in a span so we can display it we want 
+		$(".date-pick").datepicker($sJSDatePickerOptions)
+		    .next("img").wrap("<span>");
 	
 		// Hack for the date and time picker addon issue on Chrome (see #1305)
 		// The workaround is to instantiate the widget on demand
@@ -244,7 +246,7 @@ EOF;
 		$(".datetime-pick:not(.is-widget-ready)").each(function(){
 			var oInput = this;
 			$(oInput).addClass('is-widget-ready');
-			$('<img class="datetime-pick-button" src="../images/calendar.png">')
+			$('<span><img class="datetime-pick-button" src="../images/calendar.png"></span>')
 				.insertAfter($(this))
 				.on('click', function(){
 					$(oInput)

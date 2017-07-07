@@ -345,27 +345,38 @@ class WebPage implements Page
 	 */
 	public function GetDetails($aFields)
 	{
-		$sHtml = "<table class=\"details\">\n";
-		$sHtml .= "<tbody>\n";
+		$sHtml = "<div class=\"details\">\n";
 		foreach($aFields as $aAttrib)
 		{
-			$sHtml .= "<tr>\n";
+		    $sHtml .= "<div class=\"field_container field_{$aAttrib['layout']}\" data-attcode=\"{$aAttrib['attcode']}\">\n";
+            $sHtml .= "<div class=\"field_label label\">{$aAttrib['label']}</div>\n";
+
+            $sHtml .= "<div class=\"field_data\">\n";
 			// By Rom, for csv import, proposed to show several values for column selection
 			if (is_array($aAttrib['value']))
 			{
-				$sHtml .= "<td class=\"label\">".$aAttrib['label']."</td><td>".implode("</td><td>", $aAttrib['value'])."</td>\n";
+				$sHtml .= "<div class=\"field_value\">".implode("</div><div>", $aAttrib['value'])."</div>\n";
 			}
 			else
 			{
-				$sHtml .= "<td class=\"label\">".$aAttrib['label']."</td><td>".$aAttrib['value']."</td>\n";
+				$sHtml .= "<div class=\"field_value\">".$aAttrib['value']."</div>\n";
 			}
-			$sComment = (isset($aAttrib['comments'])) ? $aAttrib['comments'] : '&nbsp;';
-			$sInfo = (isset($aAttrib['infos'])) ? $aAttrib['infos'] : '&nbsp;';
-			$sHtml .= "<td>$sComment</td><td>$sInfo</td>\n";
-    		$sHtml .= "</tr>\n";
+			// Checking if we should add comments & infos
+			$sComment = (isset($aAttrib['comments'])) ? $aAttrib['comments'] : '';
+			$sInfo = (isset($aAttrib['infos'])) ? $aAttrib['infos'] : '';
+			if($sComment !== '')
+            {
+                $sHtml .= "<div class=\"field_comments\">$sComment</div>\n";
+            }
+            if($sInfo !== '')
+            {
+                $sHtml .= "<div class=\"field_infos\">$sInfo</div>\n";
+            }
+			$sHtml .= "</div>\n";
+
+			$sHtml .= "</div>\n";
 		}
-		$sHtml .= "</tbody>\n";
-		$sHtml .= "</table>\n";
+		$sHtml .= "</div>\n";
 		return $sHtml;
     }
 

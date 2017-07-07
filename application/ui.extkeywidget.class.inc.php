@@ -116,7 +116,7 @@ class UIExtKeyWidget
 		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$sAttrFieldPrefix = ($this->bSearchMode) ? '' : 'attr_';
 
-		$sHTMLValue = "<span style=\"white-space:nowrap\">"; // no wrap
+		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey\">";
 		$sFilter = addslashes($oAllowedValues->GetFilter()->ToOQL());
 		if($this->bSearchMode)
 		{
@@ -144,14 +144,14 @@ class UIExtKeyWidget
 		$oAllowedValues->SetShowObsoleteData(utils::ShowObsoleteData());
 		if ($oAllowedValues->Count() < $iMaxComboLength)
 		{
-			// Discrete list of values, use a SELECT or RADIO buttons depending on the config
+            // Discrete list of values, use a SELECT or RADIO buttons depending on the config
 			switch($sDisplayStyle)
 			{
 				case 'radio':
 				case 'radio_horizontal':
 				case 'radio_vertical':
-				$sValidationField = "<span id=\"v_{$this->iId}\"></span><span id=\"fstatus_{$this->iId}\"></span>";
-				$sHTMLValue = '';
+				$sValidationField = null;
+
 				$bVertical = ($sDisplayStyle != 'radio_horizontal');
 				$bExtensions = false;
 				$oAllowedValues->Rewind();
@@ -160,7 +160,7 @@ class UIExtKeyWidget
 				{
 					$aAllowedValues[$oObj->GetKey()] = $oObj->GetName();
 				}				
-				$sHTMLValue = $oPage->GetRadioButtons($aAllowedValues, $value, $this->iId, "{$sAttrFieldPrefix}{$sFieldName}", $bMandatory, $bVertical, $sValidationField);
+				$sHTMLValue .= $oPage->GetRadioButtons($aAllowedValues, $value, $this->iId, "{$sAttrFieldPrefix}{$sFieldName}", false /*  $bMandatory will be placed manually */, $bVertical, $sValidationField);
 				$aEventsList[] ='change';
 				break;
 
@@ -170,25 +170,27 @@ class UIExtKeyWidget
 				$sSelectMode = 'true';
 				
 				$sHelpText = ''; //$this->oAttDef->GetHelpOnEdition();
-				
+				$sHTMLValue .= "<div class=\"field_select_wrapper\">\n";
+
 				if ($this->bSearchMode)
 				{
 					if ($bSearchMultiple)
 					{
-						$sHTMLValue = "<select class=\"multiselect\" multiple title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}[]\" id=\"$this->iId\">\n";
+						$sHTMLValue .= "<select class=\"multiselect\" multiple title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}[]\" id=\"$this->iId\">\n";
 					}
 					else
 					{
-						$sHTMLValue = "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
+						$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
 						$sDisplayValue = isset($aArgs['sDefaultValue']) ? $aArgs['sDefaultValue'] : Dict::S('UI:SearchValue:Any');
 						$sHTMLValue .= "<option value=\"\">$sDisplayValue</option>\n";
 					}
 				}
 				else
 				{
-					$sHTMLValue = "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
+					$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
 					$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
 				}
+
 				$oAllowedValues->Rewind();
 				while($oObj = $oAllowedValues->Fetch())
 				{
@@ -207,6 +209,8 @@ class UIExtKeyWidget
 					$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
 				}
 				$sHTMLValue .= "</select>\n";
+				$sHTMLValue .= "</div>\n";
+
 				if (($this->bSearchMode) && $bSearchMultiple)
 				{
 					$aOptions = array(
@@ -257,8 +261,8 @@ EOF
 			$iFieldSize = isset($aArgs['iFieldSize']) ? $aArgs['iFieldSize'] : 20; //@@@ $this->oAttDef->GetMaxSize();
 	
 			// the input for the auto-complete
-			$sHTMLValue = "<input count=\"".$oAllowedValues->Count()."\" type=\"text\" id=\"label_$this->iId\" size=\"$iFieldSize\" value=\"$sDisplayValue\"/>&nbsp;";
-			$sHTMLValue .= "<img id=\"mini_search_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_search.gif?itopversion=".ITOP_VERSION."\" onClick=\"oACWidget_{$this->iId}.Search();\"/>";
+			$sHTMLValue .= "<input class=\"field_autocomplete\" count=\"".$oAllowedValues->Count()."\" type=\"text\" id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
+			$sHTMLValue .= "<span class=\"field_input_btn\"><img id=\"mini_search_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_search.gif?itopversion=".ITOP_VERSION."\" onClick=\"oACWidget_{$this->iId}.Search();\"/></span>";
 	
 			// another hidden input to store & pass the object's Id
 			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" />\n";
@@ -282,7 +286,7 @@ EOF
 		}
 		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false)
 		{
-			$sHTMLValue .= "<img id=\"mini_tree_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_tree.gif?itopversion=".ITOP_VERSION."\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"/>&nbsp;";
+			$sHTMLValue .= "<span class=\"field_input_btn\"><img id=\"mini_tree_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_tree.gif?itopversion=".ITOP_VERSION."\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"/></span>";
 			$oPage->add_ready_script(
 <<<EOF
 			if ($('#ac_tree_{$this->iId}').length == 0)
@@ -294,7 +298,7 @@ EOF
 		}
 		if ($bCreate && $bExtensions)
 		{
-			$sHTMLValue .= "<img id=\"mini_add_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_add.gif?itopversion=".ITOP_VERSION."\" onClick=\"oACWidget_{$this->iId}.CreateObject();\"/>&nbsp;";
+			$sHTMLValue .= "<span class=\"field_input_btn\"><img id=\"mini_add_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_add.gif?itopversion=".ITOP_VERSION."\" onClick=\"oACWidget_{$this->iId}.CreateObject();\"/></span>";
 			$oPage->add_ready_script(
 <<<EOF
 		if ($('#ajax_{$this->iId}').length == 0)
@@ -304,11 +308,14 @@ EOF
 EOF
 );
 		}
-		if (($sDisplayStyle == 'select') || ($sDisplayStyle == 'list'))
-		{
-			$sHTMLValue .= "<span id=\"v_{$this->iId}\"></span><span id=\"fstatus_{$this->iId}\"></span>";
-		}
-		$sHTMLValue .= "</span>"; // end of no wrap
+        $sHTMLValue .= "</div>";
+
+		// Note: This test is no longer necessary as we changed the markup to extract validation decoration in the standard .field_input_xxx container
+		//if (($sDisplayStyle == 'select') || ($sDisplayStyle == 'list'))
+		//{
+			$sHTMLValue .= "<span class=\"form_validation\" id=\"v_{$this->iId}\"></span><span class=\"field_status\" id=\"fstatus_{$this->iId}\"></span>";
+		//}
+
 		return $sHTMLValue;
 	}
 	

@@ -1138,20 +1138,164 @@ span.form_validation {
   margin-top: 0.25em;
   margin-bottom: 0.25em;
 }
-table.details {
+.details {
   border-collapse: collapse;
   noborder-bottom: 2px #fff solid;
   nowidth: 100%;
 }
-table.details > tbody > tr > td {
-  border-bottom: 2px #ddd solid;
-  padding-bottom: 5px;
-  padding-top: 3px;
+.details * {
+  box-sizing: border-box;
 }
-fieldset table.details > tbody > tr > td {
-  padding-top: 3px;
+.details > .field_container {
+  display: table;
+  width: 100%;
+  margin-bottom: 5px;
+  border-bottom: 2px #ddd solid;
+  /* .field_label, .field_data */
+}
+.details > .field_container:last-child {
+  margin-bottom: 0px;
+}
+.details > .field_container.field_large {
+  display: inherit;
+  /* .field_label, .field_data */
+}
+.details > .field_container.field_large > div {
+  display: inherit;
+  /* .field_value, .field_comments, .field_infos */
+}
+.details > .field_container.field_large > div.field_label {
+  width: inherit;
+  margin-bottom: 5px;
+}
+.details > .field_container > div {
+  display: table-cell;
+  vertical-align: top;
+  /* .field_value, .field_comments, .field_infos */
+}
+.details > .field_container > div.field_label {
+  width: 30%;
+  padding-right: 10px;
+}
+.details > .field_container > div.field_label > label, .details > .field_container > div.field_label span {
+  color: #000;
+  font-weight: bold;
+}
+.details > .field_container > div.field_data {
+  display: table;
+  width: 100%;
+  margin-bottom: 5px;
+}
+.details > .field_container > div > div {
+  display: table-cell;
+  width: auto;
+}
+.details > .field_container > div > div.field_comments, .details > .field_container > div > div.field_infos {
+  width: 20px;
+}
+.details > .field_container > div > div.field_value .attribute-edit {
+  display: table;
+  width: 100%;
+  /* TODO: Refactor so status icon show over mandatory icon */
+}
+.details > .field_container > div > div.field_value .attribute-edit .form_validation, .details > .field_container > div > div.field_value .attribute-edit .field_status {
+  display: table-cell;
+  width: 20px;
+  padding-left: 0.4em;
+  vertical-align: middle;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone {
+  width: 100%;
+  /* auto; */
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_string > select, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_password > select, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_string input, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_password input {
+  width: 100%;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime {
+  display: table;
+  width: 100%;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date > input, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime > input {
+  display: table-cell;
+  width: 100%;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date > span, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime > span {
+  display: table-cell;
+  width: 20px;
+  padding-left: 0.4em;
+  vertical-align: middle;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date > span > img, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime > span > img {
+  max-width: 16px;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text {
+  border: none;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text textarea {
+  width: 100%;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_document > input {
+  width: 100%;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_document > span {
+  display: inline-block;
+  margin-bottom: 2px;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_image input {
+  width: 100%;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey {
+  display: table;
+  width: 100%;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_select_wrapper {
+  display: table-cell;
+  width: auto;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_select_wrapper > select {
+  width: 100%;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_autocomplete {
+  display: table-cell;
+  width: 100%;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_input_btn {
+  display: table-cell;
+  width: 25px;
+  padding-left: 0.4em;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_input_btn > img {
+  max-width: 20px;
+}
+fieldset .details > .field_container {
   background: transparent;
   border: 0;
+}
+#SiloSelection {
+  padding-top: 3px;
+  padding-right: 30px;
+  text-align: left;
+}
+#SiloSelection * {
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+#SiloSelection .field_input_extkey {
+  display: table;
+  width: 100%;
+}
+#SiloSelection .field_input_extkey .field_select_wrapper {
+  display: table-cell;
+  width: 100%;
+}
+#SiloSelection .field_input_extkey .field_select_wrapper > select {
+  width: 100%;
+  max-width: initial;
+}
+#SiloSelection .field_input_extkey .field_input_btn {
+  display: table-cell;
+  width: 20px;
+  margin-left: 0.4em;
 }
 .ac_dlg_loading {
   background: white url('../images/indicator.gif') right center no-repeat;
