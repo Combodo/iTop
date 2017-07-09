@@ -1880,8 +1880,21 @@ EOF
 						$sAdditionalStuff = "";
 					}
 					// Ok, the text area is drawn here
-					$sHTMLValue = "<div class=\"field_input_zone field_input_text\"><textarea class=\"\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\" $sStyle>".htmlentities($sEditValue, ENT_QUOTES, 'UTF-8')."</textarea>$sAdditionalStuff</div>{$sValidationSpan}{$sReloadSpan}";
+					$sHTMLValue = "<div class=\"field_input_zone field_input_text\"><div class=\"f_i_text_header\"><span class=\"fullscreen_button\" title=\"".Dict::S('UI:ToggleFullScreen')."\"></span></div><textarea class=\"\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\" $sStyle>".htmlentities($sEditValue, ENT_QUOTES, 'UTF-8')."</textarea>$sAdditionalStuff</div>{$sValidationSpan}{$sReloadSpan}";
 
+                    $oPage->add_ready_script(
+<<<EOF
+                        $('#$iId').closest('.field_input_text').find('.fullscreen_button').on('click', function(oEvent){
+                            var oOriginField = $('#$iId').closest('.field_input_text');
+                            var oClonedField = oOriginField.clone();
+                            oClonedField.addClass('fullscreen').appendTo('body');
+                            oClonedField.find('.fullscreen_button').on('click', function(oEvent){
+                                oOriginField.find('textarea').val(oClonedField.find('textarea').val());
+                                oClonedField.remove();
+                            });
+                        });
+EOF
+                    );
 				break;
 
 				case 'CaseLog':

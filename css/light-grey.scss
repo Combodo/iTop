@@ -1197,6 +1197,12 @@ span.form_validation {
 .caselog_input_header:empty {
 	display: none;
 }
+.editor_magnifier{
+	/* !important so it overrides the .cke_reset_all style */
+	background-position: center center !important;
+	background-repeat: no-repeat !important;
+	background-size: 100% !important;
+}
 .editor_magnifier:hover {
 	background-color: #CCC;
 }
@@ -1293,7 +1299,7 @@ span.form_validation {
 
 				&.field_comments,
 				&.field_infos{
-					width: 20px;
+					width: 50px;
 				}
 
 				&.field_value{
@@ -1349,16 +1355,56 @@ span.form_validation {
 							&.field_input_text{
 								border: none;
 
-								//.f_i_text_header{
-								//	padding: 6px 8px 2px;
-								//	white-space: normal;
-								//	border-bottom: 1px solid #fff;
-								//	background: #f2f2f2;
-								//}
+								.f_i_text_header{
+									/* Inspired by .cke_top */
+									padding: 6px 8px 6px;
+									white-space: normal;
+									border-bottom: 1px solid #fff;
+									background: #f2f2f2;
+
+									.fullscreen_button{
+										display: block;
+										width: 15px;
+										height: 15px;
+										border: 1px #A6A6A6 solid;
+										cursor: pointer;
+										background-image: url('../images/full-screen.png');
+										background-repeat: no-repeat;
+										background-position: center center;
+										background-size: 98%;
+									}
+									.fullscreen_button:hover,
+									.fullscreen_button:focus{
+										background-color: #CCCCCC;
+									}
+								}
 								textarea{
+									/* Size for default display */
 									width: 100%;
-									//padding: 5px;
-									//border: none;
+									height: 100%;
+									padding: 5px 10px;
+									border: none;
+									resize: none;
+								}
+
+								&.fullscreen{
+									z-index: 100;
+									position: fixed;
+									top: 0px;
+									left: 0px;
+									width: 100%;
+									height: 100%;
+
+									textarea{
+										/* Size set again here to override resize value when in fullscreen */
+										width: 100% !important;
+										height: 100% !important;
+									}
+									.fullscreen_button{
+										width: 22px;
+										height: 22px;
+										background-color: #CCCCCC;
+									}
 								}
 							}
 
@@ -1421,6 +1467,63 @@ span.form_validation {
 fieldset .details>.field_container {
 	background: transparent;
 	border: 0;
+}
+/* This is extracted from the ".details > .field_container ..." because of the fullscreen option (element is moved at the end of the body */
+.field_input_text{
+	border: none;
+
+	.f_i_text_header{
+		/* Inspired by .cke_top */
+		padding: 6px 8px 6px;
+		white-space: normal;
+		border-bottom: 1px solid #fff;
+		background: #f2f2f2;
+
+		.fullscreen_button{
+			display: block;
+			width: 15px;
+			height: 15px;
+			border: 1px #A6A6A6 solid;
+			cursor: pointer;
+			background-image: url('../images/full-screen.png');
+			background-repeat: no-repeat;
+			background-position: center center;
+			background-size: 98%;
+		}
+		.fullscreen_button:hover,
+		.fullscreen_button:focus{
+			background-color: #CCCCCC;
+		}
+	}
+	textarea{
+		/* Size for default display */
+		width: 100%;
+		height: 100%;
+		margin: 0px;
+		padding: 5px 10px;
+		border: none;
+		resize: none;
+	}
+
+	&.fullscreen{
+		z-index: 100;
+		position: fixed;
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		height: 100%;
+
+		textarea{
+			/* Size set again here to override resize value when in fullscreen */
+			width: 100% !important;
+			height: 100% !important;
+		}
+		.fullscreen_button{
+			width: 22px;
+			height: 22px;
+			background-color: #CCCCCC;
+		}
+	}
 }
 #SiloSelection{
 	padding-top: 3px;

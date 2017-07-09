@@ -1103,6 +1103,12 @@ span.form_validation {
 .caselog_input_header:empty {
   display: none;
 }
+.editor_magnifier {
+  /* !important so it overrides the .cke_reset_all style */
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% !important;
+}
 .editor_magnifier:hover {
   background-color: #ccc;
 }
@@ -1191,7 +1197,7 @@ span.form_validation {
   width: auto;
 }
 .details > .field_container > div > div.field_comments, .details > .field_container > div > div.field_infos {
-  width: 20px;
+  width: 50px;
 }
 .details > .field_container > div > div.field_value .attribute-edit {
   display: table;
@@ -1231,8 +1237,52 @@ span.form_validation {
 .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text {
   border: none;
 }
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header {
+  /* Inspired by .cke_top */
+  padding: 6px 8px 6px;
+  white-space: normal;
+  border-bottom: 1px solid #fff;
+  background: #f2f2f2;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header .fullscreen_button {
+  display: block;
+  width: 15px;
+  height: 15px;
+  border: 1px #a6a6a6 solid;
+  cursor: pointer;
+  background-image: url('../images/full-screen.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 98%;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header .fullscreen_button:hover, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header .fullscreen_button:focus {
+  background-color: #ccc;
+}
 .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text textarea {
+  /* Size for default display */
   width: 100%;
+  height: 100%;
+  padding: 5px 10px;
+  border: none;
+  resize: none;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text.fullscreen {
+  z-index: 100;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text.fullscreen textarea {
+  /* Size set again here to override resize value when in fullscreen */
+  width: 100% !important;
+  height: 100% !important;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text.fullscreen .fullscreen_button {
+  width: 22px;
+  height: 22px;
+  background-color: #ccc;
 }
 .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_document > input {
   width: 100%;
@@ -1270,6 +1320,58 @@ span.form_validation {
 fieldset .details > .field_container {
   background: transparent;
   border: 0;
+}
+/* This is extracted from the ".details > .field_container ..." because of the fullscreen option (element is moved at the end of the body */
+.field_input_text {
+  border: none;
+}
+.field_input_text .f_i_text_header {
+  /* Inspired by .cke_top */
+  padding: 6px 8px 6px;
+  white-space: normal;
+  border-bottom: 1px solid #fff;
+  background: #f2f2f2;
+}
+.field_input_text .f_i_text_header .fullscreen_button {
+  display: block;
+  width: 15px;
+  height: 15px;
+  border: 1px #a6a6a6 solid;
+  cursor: pointer;
+  background-image: url('../images/full-screen.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 98%;
+}
+.field_input_text .f_i_text_header .fullscreen_button:hover, .field_input_text .f_i_text_header .fullscreen_button:focus {
+  background-color: #ccc;
+}
+.field_input_text textarea {
+  /* Size for default display */
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 5px 10px;
+  border: none;
+  resize: none;
+}
+.field_input_text.fullscreen {
+  z-index: 100;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+}
+.field_input_text.fullscreen textarea {
+  /* Size set again here to override resize value when in fullscreen */
+  width: 100% !important;
+  height: 100% !important;
+}
+.field_input_text.fullscreen .fullscreen_button {
+  width: 22px;
+  height: 22px;
+  background-color: #ccc;
 }
 #SiloSelection {
   padding-top: 3px;
