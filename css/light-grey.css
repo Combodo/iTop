@@ -1232,7 +1232,8 @@ span.form_validation {
   vertical-align: middle;
 }
 .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date > span > img, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime > span > img {
-  max-width: 16px;
+  width: 20px;
+  cursor: pointer;
 }
 .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text {
   border: none;
