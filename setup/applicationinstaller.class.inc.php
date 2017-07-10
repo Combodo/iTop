@@ -839,7 +839,7 @@ class ApplicationInstaller
 		}
 	}
 	
-	protected static function DoLoadFiles($aSelectedModules, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment = '', $bOldAddon = false, $bSampleData = false)
+	protected static function DoLoadFiles($aSelectedModules, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment = 'production', $bOldAddon = false, $bSampleData = false)
 	{
 		$aParamValues = array(
 			'db_server' => $sDBServer,
@@ -885,6 +885,7 @@ class ApplicationInstaller
 		{
 			if (($sModuleId != ROOT_MODULE))
 			{
+				$sRelativePath = 'env-'.$sTargetEnvironment.'/'.basename($aModule['root_dir']);
 				// Load data only for selected AND newly installed modules
 				if (in_array($sModuleId, $aSelectedModules))
 				{
@@ -893,38 +894,26 @@ class ApplicationInstaller
 						// Simulate the load of the previously loaded XML files to get the mapping of the keys					
 						if ($bSampleData)
 						{
-							$aPreviouslyLoadedFiles = array_merge(
-								$aPreviouslyLoadedFiles,
-								$aAvailableModules[$sModuleId]['data.struct'],
-								$aAvailableModules[$sModuleId]['data.sample']
-							);
+							$aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
+							$aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.sample']);
 						}
 						else
 						{
 							// Load only structural data
-							$aPreviouslyLoadedFiles = array_merge(
-								$aPreviouslyLoadedFiles,
-								$aAvailableModules[$sModuleId]['data.struct']
-							);
+							$aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
 						}
 					}
 					else
 					{
 						if ($bSampleData)
 						{
-							$aFiles = array_merge(
-								$aFiles,
-								$aAvailableModules[$sModuleId]['data.struct'],
-								$aAvailableModules[$sModuleId]['data.sample']
-							);
+							$aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
+							$aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.sample']);
 						}
 						else
 						{
 							// Load only structural data
-							$aFiles = array_merge(
-								$aFiles,
-								$aAvailableModules[$sModuleId]['data.struct']
-							);
+							$aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
 						}
 					}
 				}
@@ -964,6 +953,23 @@ class ApplicationInstaller
 	
 	    $oDataLoader->EndSession();
 	    SetupPage::log_info("ending data load session");
+	}
+	
+	/**
+	 * Merge two arrays of file names, adding the relative path to the files provided in the array to merge
+	 * @param string[] $aSourceArray
+	 * @param string $sBaseDir
+	 * @param string[] $aFilesToMerge
+	 * @return string[]
+	 */
+	protected static function MergeWithRelativeDir($aSourceArray, $sBaseDir, $aFilesToMerge)
+	{
+		$aToMerge = array();
+		foreach($aFilesToMerge as $sFile)
+		{
+			$aToMerge[] = $sBaseDir.'/'.$sFile;
+		}
+		return array_merge($aSourceArray, $aToMerge);
 	}
 	
 	protected static function DoCreateConfig($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sTargetEnvironment, $bOldAddon, $sSourceDir, $sPreviousConfigFile, $sDataModelVersion, $sGraphvizPath)
