@@ -1297,6 +1297,8 @@ fieldset .details>.field_container {
 		vertical-align: top;
 
 		&.field_label {
+			min-width: 100px;
+			max-width: 145px;
 			width: 30%;
 			padding-right: 10px;
 

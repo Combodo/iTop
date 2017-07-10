@@ -1196,6 +1196,8 @@ fieldset .details > .field_container {
   /* .field_value, .field_comments, .field_infos */
 }
 .field_container > div.field_label {
+  min-width: 100px;
+  max-width: 145px;
   width: 30%;
   padding-right: 10px;
 }
