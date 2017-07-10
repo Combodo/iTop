@@ -1,4 +1,4 @@
-﻿iTop - version 2.3.3 - 22-Dec-2016
+﻿iTop - version 2.4 beta - 12-July-2017
 Readme file
 
 1.   ABOUT THIS RELEASE
@@ -12,11 +12,13 @@ Readme file
 3.1. Known limitations
 3.2. Known issues
 
+
 1. ABOUT THIS RELEASE
    ==================
-Thank you for downloading the 28th packaged release of iTop.
-This maintenance release fixes regressions and functions which were supposed to be part of the 2.3.x feature set.
-Most of the regressions are related to the introduction of HTML formatted Case Logs and the Enhanced Portal.
+Thank you for downloading the 29th packaged release of iTop.
+
+
+It is a beta version, so the new features may not be fully operational.
 
 The documentation about iTop is available as a Wiki at: https://wiki.openitop.org/
 
@@ -26,50 +28,47 @@ The source code of iTop can be found on SourceForge: https://sourceforge.net/p/i
 1.1 What's new?
     -----------
 
-Changes since iTop 2.3.3
+It will bring three main new features:
+•	Transition forms: iTop allows now to define per transition, which fields are displayed and required, independently on the console and on each portal.
 
-User Interface
---------------
-Enable browser spell checking in the rich text editor, use: Ctrl + right click to get it
-#1125 Friendly name format ignored if only one attribute was used.
-Dependent fields fail to reload when creating an object from another one, with mandatory date using format different from MySQL one.
-Adding an InlineImage while adding at the same time an object in a IndirectLinkedSet would attach the InlineImage to the linked object instead of the host one. If their organizations were different, it could result in denying the display of the InlineImage.
-Ugly labels when hovering bar or pie charts (grouped on an external key or an enum)
-Object with a &, < ou > in its name was not displayed correctly in external key field when created or retrieved through a pop-up search.
+Archiving
+---------
+Addressing performance issue in case of large databases. 
+Archiving objects is equivalent to a “soft delete”. 
+Archived objects are ignored by the application as if they had been truly deleted. 
+Nevertheless, they are still accessible through a special mode of the console (read-only).
+As long as no class is defined with archive enable, no change/menu appear in iTop related to that feature.
 
-Impact analyses
+A Ticket archiving module will be published in parallel of iTop, as an example.
+
+
+Obsolescence
+------------
+
+Based on user preference, objects which became useless, are removed from displayed data.
+Rules of obsolescence are defined per class in the Data Model.
+
+Lifecycle
+---------
+
+Lifecycle was enriched with the possibility to define flags on transition. It was possible to define actions during a transition.
+Now, you can force a field to be changed or documented during a particular transion, for example 
+"caller must be changed during re-assign" and at the same time, be "read-only in the assigned state" and "not prompted during a reopen". 
+
+Enhanced portal
 ---------------
-Messing up with redundancy settings (could either lead to wrong results or a fatal error if a relation is configured downstream).
-Missing edges (and redundancy) when two classes impact a given class and both relations use the same neighbour id (and if redundancy is enabled over both relations).
-Role "Do not notify" on contact was ignored when recomputing the ticket impact (and log flood with PHP Notices)
-Impact analysis graph does not refresh when unchecking some items (clicking on the blue drawer shows the graph unchanged).
 
-Portals
--------
->> New: add_to_list() can now be used in portal action rules.
-#1396 $this->hyperlink(portal)$ used in 'notifications' was broken since iTop 2.3.3 (since r4519) 
-Portal: log_kpi_duration / log_kpi_memory are now supported by the portal
-Portal: Fix invalid URL in LinkedSet searchbox when editing an object (eg. Adding a Contact to an UserRequest)
-Portal: Object display crashed when a linkedset attribute has corrupted data (eg. an external key to 0)
-Portal: Wrong form used in some inheritance cases.
-Legacy portal: Since iTop 2.3, plain text caselog entries can no longer be toggled due to a bad jQuery selector. Only HTML entries were working.
+A new Search Brick is now available.
+Forms can be defined specifically for a particular transition. Flags for each field on that form can be redefined.
+A new mosaic mode was added to the Browse Brick, allowing to display an icon associated with the browsed objects.
+The Tree mode was enhanced to display a description under the object name, and default action was changed
+Manage Brick can display a count of object on each tab.
+Form display mode was enriched with: labels and values displayed side by side, with values aligned or not. 
 
-Administration tasks
---------------------
-#1413 Data synchro: a line break or '<' in the 'description' of the DataSource object, brook the display of synchronized objects edition form.
-Data synchro: allow setting 'undefined' value for a date when an empty string is provided. Known issue: Integer and Decimal cannot be set to 'undefined' value.
-OQL: Multi-objects OQL queries with UNION, could fail with various symptoms such as "Class 'IT Department' not found" or "An object id must be an integer value".
-Audit: failing with message "Attempting to merge a filter of class A with a filter of class B" (regression introduced in 1.3.2)
-Configuration: 'log_queries' setting has been deprecated, use 'log_kpi_duration' instead.
-Remove Fatal Errors when disabling logging in the configuration file or when developing specific pages
-Fixed XSS vulnerability
-Improve API/REST JSON to enable adding entry to HTML caselog using non-HTML text (handling 'new line').
-Setup: failing (during database creation) with MetaEnum attribute having no mapping for the class they are declared in.
-
-
-1.2 Should I upgrade to 2.3.4?
-    --------------------------
-Yes, we recommend you to upgrade. This version fixes quite a number of bugs from the previous version and is suitable for running in production.
+1.2 Should I upgrade to 2.4 beta?
+    -----------------------------
+No, we don't recommend you to upgrade any production machine with this version. 
+It is a beta version, not safe to be used in production mode.
 
 
 1.3 Special Thanks To
