@@ -156,8 +156,10 @@ table.listResults td .view-image {
   border-radius: 6px;
 
   img {
-	display: inline-block;
-	vertical-align: middle;
+	  display: inline-block;
+	  vertical-align: middle;
+	  max-width: 90% !important;
+	  max-height: 90% !important;
   }
   .helper-middle {
 	// Helper to center the image (requires a span dedicated to this)
@@ -755,6 +757,15 @@ input.dp-applied {
 .SearchDrawer h1 {
 	color: #000;
 }
+.SearchDrawer .SearchAttribute{
+	> .field_input_zone{
+		display: inline-block;
+
+		> .field_select_wrapper{
+			display: inline-block;
+		}
+	}
+}
 .DrawerClosed {
 	display: none;
 }
@@ -1242,230 +1253,238 @@ span.form_validation {
 	* {
 		box-sizing: border-box;
 	}
+}
+fieldset .details>.field_container {
+	background: transparent;
+	border: 0;
+}
+.field_container {
+	display: table;
+	width: 100%;
+	margin-bottom: 5px;
+	border-bottom: 2px #ddd solid;
+	box-sizing: border-box;
 
-	> .field_container {
-		display: table;
-		width: 100%;
-		margin-bottom: 5px;
-		border-bottom: 2px #ddd solid;
+	&:last-child {
+		margin-bottom: 0px;
+	}
 
-		&:last-child {
-			margin-bottom: 0px;
-		}
-
-		&.field_large{
-			display: inherit;
-
-			/* .field_label, .field_data */
-			> div {
-				display: inherit;
-
-				&.field_label{
-					width: inherit;
-					margin-bottom: 5px;
-				}
-
-				/* .field_value, .field_comments, .field_infos */
-				> div {
-				}
-			}
-		}
+	&.field_large{
+		display: inherit;
 
 		/* .field_label, .field_data */
 		> div {
-			display: table-cell;
-			vertical-align: top;
+			display: inherit;
 
-			&.field_label {
-				width: 30%;
-				padding-right: 10px;
-
-				> label,span {
-					color: #000000;
-					font-weight:bold;
-				}
-			}
-
-			&.field_data {
-				display: table;
-				width: 100%;
+			&.field_label{
+				width: inherit;
 				margin-bottom: 5px;
 			}
 
 			/* .field_value, .field_comments, .field_infos */
 			> div {
-				display: table-cell;
-				width: auto;
+			}
+		}
+	}
 
-				&.field_comments,
-				&.field_infos{
-					width: 50px;
-				}
+	* {
+		box-sizing: border-box;
+	}
 
-				&.field_value{
+	/* .field_label, .field_data */
+	> div {
+		display: table-cell;
+		vertical-align: top;
 
-					.attribute-edit{
-						display: table;
-						width: 100%;
+		&.field_label {
+			width: 30%;
+			padding-right: 10px;
 
-						/* TODO: Refactor so status icon show over mandatory icon */
-						.form_validation, .field_status{
-							display: table-cell;
-							width: 20px;
-							padding-left: 0.4em;
-							vertical-align: middle;
+			> label,span {
+				color: #000000;
+				font-weight:bold;
+			}
+		}
+
+		&.field_data {
+			display: table;
+			width: 100%;
+			margin-bottom: 5px;
+		}
+
+		/* .field_value, .field_comments, .field_infos */
+		> div {
+			display: table-cell;
+			width: auto;
+
+			&.field_comments,
+			&.field_infos{
+				width: 50px;
+			}
+
+			&.field_value{
+
+				.attribute-edit{
+					display: table;
+					width: 100%;
+
+					/* TODO: Refactor so status icon show over mandatory icon */
+					.form_validation, .field_status{
+						display: table-cell;
+						width: 20px;
+						padding-left: 0.4em;
+						vertical-align: middle;
+					}
+
+					.field_input_zone{
+						width: 100%; /* auto; */
+
+						&.field_input_string,
+						&.field_input_password{
+							> select, input{
+								width: 100%;
+							}
 						}
 
-						.field_input_zone{
-							width: 100%; /* auto; */
+						&.field_input_onewaypassword{
+							display: table-cell;
+							width: auto;
 
-							&.field_input_string,
-							&.field_input_password{
-								> select, input{
-									width: 100%;
-								}
+							> *{
+								display: block;
+								width: 100%;
 							}
 
-							&.field_input_onewaypassword{
+							> span{
+								margin-bottom: 3px;
+							}
+						}
+
+						&.field_input_date,
+						&.field_input_datetime{
+							display: table;
+							width: 100%;
+
+							> input {
+								display: table-cell;
+								width: 100%;
+							}
+
+							> span {
+								display: table-cell;
+								width: 20px;
+								padding-left: 0.4em;
+								vertical-align: middle;
+
+								> img {
+									width: 20px;
+									cursor: pointer;
+								}
+							}
+						}
+
+						&.field_input_text{
+							border: none;
+
+							.f_i_text_header{
+								/* Inspired by .cke_top */
+								padding: 6px 8px 6px;
+								white-space: normal;
+								border-bottom: 1px solid #fff;
+								background: #f2f2f2;
+
+								.fullscreen_button{
+									display: block;
+									width: 15px;
+									height: 15px;
+									border: 1px #A6A6A6 solid;
+									cursor: pointer;
+									background-image: url('../images/full-screen.png');
+									background-repeat: no-repeat;
+									background-position: center center;
+									background-size: 98%;
+								}
+								.fullscreen_button:hover,
+								.fullscreen_button:focus{
+									background-color: #CCCCCC;
+								}
+							}
+							textarea{
+								/* Size for default display */
+								width: 100%;
+								height: 100%;
+								padding: 5px 10px;
+								border: none;
+								resize: none;
+							}
+
+							&.fullscreen{
+								z-index: 100;
+								position: fixed;
+								top: 0px;
+								left: 0px;
+								width: 100%;
+								height: 100%;
+
+								textarea{
+									/* Size set again here to override resize value when in fullscreen */
+									width: 100% !important;
+									height: 100% !important;
+								}
+								.fullscreen_button{
+									width: 22px;
+									height: 22px;
+									background-color: #CCCCCC;
+								}
+							}
+						}
+
+						&.field_input_html{
+							// Nothing
+						}
+
+						&.field_input_document{
+							> input{
+								width: 100%;
+							}
+
+							> span {
+								display: inline-block;
+								margin-bottom: 2px;
+							}
+						}
+
+						&.field_input_image{
+							input{
+								width: 100%;
+							}
+						}
+
+						&.field_input_extkey{
+							display: table;
+							width: 100%;
+
+							> .field_select_wrapper{
 								display: table-cell;
 								width: auto;
 
-								> *{
-									display: block;
+								> select {
 									width: 100%;
-								}
-
-								> span{
-									margin-bottom: 3px;
 								}
 							}
 
-							&.field_input_date,
-							&.field_input_datetime{
-								display: table;
+							> .field_autocomplete{
+								display: table-cell;
 								width: 100%;
-
-								> input {
-									display: table-cell;
-									width: 100%;
-								}
-
-								> span {
-									display: table-cell;
-									width: 20px;
-									padding-left: 0.4em;
-									vertical-align: middle;
-
-									> img {
-										width: 20px;
-										cursor: pointer;
-									}
-								}
 							}
 
-							&.field_input_text{
-								border: none;
+							> .field_input_btn{
+								display: table-cell;
+								width: 25px;
+								padding-left: 0.4em;
 
-								.f_i_text_header{
-									/* Inspired by .cke_top */
-									padding: 6px 8px 6px;
-									white-space: normal;
-									border-bottom: 1px solid #fff;
-									background: #f2f2f2;
-
-									.fullscreen_button{
-										display: block;
-										width: 15px;
-										height: 15px;
-										border: 1px #A6A6A6 solid;
-										cursor: pointer;
-										background-image: url('../images/full-screen.png');
-										background-repeat: no-repeat;
-										background-position: center center;
-										background-size: 98%;
-									}
-									.fullscreen_button:hover,
-									.fullscreen_button:focus{
-										background-color: #CCCCCC;
-									}
-								}
-								textarea{
-									/* Size for default display */
-									width: 100%;
-									height: 100%;
-									padding: 5px 10px;
-									border: none;
-									resize: none;
-								}
-
-								&.fullscreen{
-									z-index: 100;
-									position: fixed;
-									top: 0px;
-									left: 0px;
-									width: 100%;
-									height: 100%;
-
-									textarea{
-										/* Size set again here to override resize value when in fullscreen */
-										width: 100% !important;
-										height: 100% !important;
-									}
-									.fullscreen_button{
-										width: 22px;
-										height: 22px;
-										background-color: #CCCCCC;
-									}
-								}
-							}
-
-							&.field_input_html{
-								// Nothing
-							}
-
-							&.field_input_document{
-								> input{
-									width: 100%;
-								}
-
-								> span {
-									display: inline-block;
-									margin-bottom: 2px;
-								}
-							}
-
-							&.field_input_image{
-								input{
-									width: 100%;
-								}
-							}
-
-							&.field_input_extkey{
-								display: table;
-								width: 100%;
-
-								> .field_select_wrapper{
-									display: table-cell;
-									width: auto;
-
-									> select {
-										width: 100%;
-									}
-								}
-
-								> .field_autocomplete{
-									display: table-cell;
-									width: 100%;
-								}
-
-								> .field_input_btn{
-									display: table-cell;
-									width: 25px;
-									padding-left: 0.4em;
-
-									> img {
-										max-width: 20px;
-									}
+								> img {
+									max-width: 20px;
 								}
 							}
 						}
@@ -1474,10 +1493,6 @@ span.form_validation {
 			}
 		}
 	}
-}
-fieldset .details>.field_container {
-	background: transparent;
-	border: 0;
 }
 /* This is extracted from the ".details > .field_container ..." because of the fullscreen option (element is moved at the end of the body */
 .field_input_text{

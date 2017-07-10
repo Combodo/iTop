@@ -124,6 +124,8 @@ table.listResults td .view-image img {
 .details .view-image img {
   display: inline-block;
   vertical-align: middle;
+  max-width: 90% !important;
+  max-height: 90% !important;
 }
 .details .view-image .helper-middle {
   display: inline-block;
@@ -679,6 +681,12 @@ input.dp-applied {
 .SearchDrawer h1 {
   color: #000;
 }
+.SearchDrawer .SearchAttribute > .field_input_zone {
+  display: inline-block;
+}
+.SearchDrawer .SearchAttribute > .field_input_zone > .field_select_wrapper {
+  display: inline-block;
+}
 .DrawerClosed {
   display: none;
 }
@@ -1152,111 +1160,119 @@ span.form_validation {
 .details * {
   box-sizing: border-box;
 }
-.details > .field_container {
+fieldset .details > .field_container {
+  background: transparent;
+  border: 0;
+}
+.field_container {
   display: table;
   width: 100%;
   margin-bottom: 5px;
   border-bottom: 2px #ddd solid;
+  box-sizing: border-box;
   /* .field_label, .field_data */
 }
-.details > .field_container:last-child {
+.field_container:last-child {
   margin-bottom: 0px;
 }
-.details > .field_container.field_large {
+.field_container.field_large {
   display: inherit;
   /* .field_label, .field_data */
 }
-.details > .field_container.field_large > div {
+.field_container.field_large > div {
   display: inherit;
   /* .field_value, .field_comments, .field_infos */
 }
-.details > .field_container.field_large > div.field_label {
+.field_container.field_large > div.field_label {
   width: inherit;
   margin-bottom: 5px;
 }
-.details > .field_container > div {
+.field_container * {
+  box-sizing: border-box;
+}
+.field_container > div {
   display: table-cell;
   vertical-align: top;
   /* .field_value, .field_comments, .field_infos */
 }
-.details > .field_container > div.field_label {
+.field_container > div.field_label {
   width: 30%;
   padding-right: 10px;
 }
-.details > .field_container > div.field_label > label, .details > .field_container > div.field_label span {
+.field_container > div.field_label > label, .field_container > div.field_label span {
   color: #000;
   font-weight: bold;
 }
-.details > .field_container > div.field_data {
+.field_container > div.field_data {
   display: table;
   width: 100%;
   margin-bottom: 5px;
 }
-.details > .field_container > div > div {
+.field_container > div > div {
   display: table-cell;
   width: auto;
 }
-.details > .field_container > div > div.field_comments, .details > .field_container > div > div.field_infos {
+.field_container > div > div.field_comments, .field_container > div > div.field_infos {
   width: 50px;
 }
-.details > .field_container > div > div.field_value .attribute-edit {
+.field_container > div > div.field_value .attribute-edit {
   display: table;
   width: 100%;
   /* TODO: Refactor so status icon show over mandatory icon */
 }
-.details > .field_container > div > div.field_value .attribute-edit .form_validation, .details > .field_container > div > div.field_value .attribute-edit .field_status {
+.field_container > div > div.field_value .attribute-edit .form_validation, .field_container > div > div.field_value .attribute-edit .field_status {
   display: table-cell;
   width: 20px;
   padding-left: 0.4em;
   vertical-align: middle;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone {
+.field_container > div > div.field_value .attribute-edit .field_input_zone {
   width: 100%;
   /* auto; */
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_string > select, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_password > select, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_string input, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_password input {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_string > select, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_password > select, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_string input, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_password input {
   width: 100%;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_onewaypassword {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_onewaypassword {
   display: table-cell;
   width: auto;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_onewaypassword > * {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_onewaypassword > * {
   display: block;
   width: 100%;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_onewaypassword > span {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_onewaypassword > span {
   margin-bottom: 3px;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime {
   display: table;
   width: 100%;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date > input, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime > input {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date > input, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime > input {
   display: table-cell;
   width: 100%;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date > span, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime > span {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date > span, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime > span {
   display: table-cell;
   width: 20px;
   padding-left: 0.4em;
   vertical-align: middle;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date > span > img, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime > span > img {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date > span > img, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime > span > img {
   width: 20px;
   cursor: pointer;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text {
   border: none;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header {
   /* Inspired by .cke_top */
   padding: 6px 8px 6px;
   white-space: normal;
   border-bottom: 1px solid #fff;
   background: #f2f2f2;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header .fullscreen_button {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header .fullscreen_button {
   display: block;
   width: 15px;
   height: 15px;
@@ -1267,10 +1283,10 @@ span.form_validation {
   background-position: center center;
   background-size: 98%;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header .fullscreen_button:hover, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header .fullscreen_button:focus {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header .fullscreen_button:hover, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header .fullscreen_button:focus {
   background-color: #ccc;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text textarea {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text textarea {
   /* Size for default display */
   width: 100%;
   height: 100%;
@@ -1278,7 +1294,7 @@ span.form_validation {
   border: none;
   resize: none;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text.fullscreen {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text.fullscreen {
   z-index: 100;
   position: fixed;
   top: 0px;
@@ -1286,52 +1302,48 @@ span.form_validation {
   width: 100%;
   height: 100%;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text.fullscreen textarea {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text.fullscreen textarea {
   /* Size set again here to override resize value when in fullscreen */
   width: 100% !important;
   height: 100% !important;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text.fullscreen .fullscreen_button {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text.fullscreen .fullscreen_button {
   width: 22px;
   height: 22px;
   background-color: #ccc;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_document > input {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_document > input {
   width: 100%;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_document > span {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_document > span {
   display: inline-block;
   margin-bottom: 2px;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_image input {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_image input {
   width: 100%;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey {
   display: table;
   width: 100%;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_select_wrapper {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_select_wrapper {
   display: table-cell;
   width: auto;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_select_wrapper > select {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_select_wrapper > select {
   width: 100%;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_autocomplete {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_autocomplete {
   display: table-cell;
   width: 100%;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_input_btn {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_input_btn {
   display: table-cell;
   width: 25px;
   padding-left: 0.4em;
 }
-.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_input_btn > img {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_input_btn > img {
   max-width: 20px;
-}
-fieldset .details > .field_container {
-  background: transparent;
-  border: 0;
 }
 /* This is extracted from the ".details > .field_container ..." because of the fullscreen option (element is moved at the end of the body */
 .field_input_text {

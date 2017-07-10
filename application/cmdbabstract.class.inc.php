@@ -742,7 +742,7 @@ EOF
 										$sValue = $this->Get($sAttCode);
 										$sDisplayValue = $this->GetEditValue($sAttCode);
 										$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
-										$sHTMLValue = "<div id=\"field_{$sInputId}\" class=\"field_value_container\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</div>';
+										$sHTMLValue = "".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'';
 									}
 									$aFieldsMap[$sAttCode] = $sInputId;
 									$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos, 'attcode' => $sAttCode);
@@ -1589,7 +1589,7 @@ EOF
 		$sHtml .= "<form id=\"fs_{$sSearchFormId}\" action=\"{$sAction}\">\n"; // Don't use $_SERVER['SCRIPT_NAME'] since the form may be called asynchronously (from ajax.php)
 		$sHtml .= "<h2>".Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)."</h2>\n";
 		$index = 0;
-		$sHtml .= "<p>\n";
+		$sHtml .= "<div>\n";
 		$aMapCriteria = array();
 		$aList = MetaModel::GetZListItems($sClassName, 'standard_search');
 		$aConsts = $oSet->ListConstantFields(); // Some fields are constants based on the query/context
@@ -1597,7 +1597,7 @@ EOF
 		foreach($aList as $sFilterCode)
 		{
 			//$oAppContext->Reset($sFilterCode); // Make sure the same parameter will not be passed twice
-			$sHtml .= '<span style="white-space: nowrap;padding:5px;display:inline-block;">';
+			$sHtml .= '<div class="SearchAttribute" style="white-space: nowrap;padding:5px;display:inline-block;">';
 			$sFilterValue = isset($aConsts[$sClassAlias][$sFilterCode]) ? $aConsts[$sClassAlias][$sFilterCode] : '';
 			$sFilterValue = utils::ReadParam($sFilterCode, $sFilterValue, false, 'raw_data');
 			$sFilterOpCode = null; // Use the default 'loose' OpCode
@@ -1689,9 +1689,9 @@ EOF
 				$oPage->add_ready_script("$('form#fs_$sSearchFormId :input[name={$sFilterCode}]').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
 			}
 			$index++;
-			$sHtml .= '</span> ';
+			$sHtml .= '</div> ';
 		}
-		$sHtml .= "</p>\n";
+		$sHtml .= "</div>\n";
 		$sHtml .= "<p align=\"right\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Search')."\"></p>\n";
 		if (isset($aExtraParams['table_id']))
 		{
@@ -1889,8 +1889,11 @@ EOF
                             var oClonedField = oOriginField.clone();
                             oClonedField.addClass('fullscreen').appendTo('body');
                             oClonedField.find('.fullscreen_button').on('click', function(oEvent){
+                                // Copying value to origin field
                                 oOriginField.find('textarea').val(oClonedField.find('textarea').val());
                                 oClonedField.remove();
+                                // Triggering change event
+                                oOriginField.find('textarea').triggerHandler('change');
                             });
                         });
 EOF
@@ -2163,7 +2166,7 @@ EOF
 		$oPage->add_dict_entry('UI:ValueMustBeSet');
 		$oPage->add_dict_entry('UI:ValueMustBeChanged');
 		$oPage->add_dict_entry('UI:ValueInvalidFormat');
-		return "<div class=\"attribute-edit\" data-attcode=\"$sAttCode\">{$sHTMLValue}</div>";
+		return "<div id=\"field_{$iId}\" class=\"field_value_container\"><div class=\"attribute-edit\" data-attcode=\"$sAttCode\">{$sHTMLValue}</div></div>";
 	}
 
 	public function DisplayModifyForm(WebPage $oPage, $aExtraParams = array())
