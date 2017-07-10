@@ -1217,6 +1217,17 @@ span.form_validation {
 .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_string > select, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_password > select, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_string input, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_password input {
   width: 100%;
 }
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_onewaypassword {
+  display: table-cell;
+  width: auto;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_onewaypassword > * {
+  display: block;
+  width: 100%;
+}
+.details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_onewaypassword > span {
+  margin-bottom: 3px;
+}
 .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date, .details > .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime {
   display: table;
   width: 100%;

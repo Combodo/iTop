@@ -58,9 +58,15 @@ class UIPasswordWidget
 		$sConfirmPasswordValue = $aPasswordValues ? $aPasswordValues['confirm'] : '*****';
 		$sChangedValue = (($sPasswordValue != '*****') || ($sConfirmPasswordValue != '*****')) ? 1 : 0;
 		$sHtmlValue = '';
-		$sHtmlValue = '<input type="password" maxlength="255" name="attr_'.$sCode.'[value]" id="'.$this->iId.'" value="'.htmlentities($sPasswordValue, ENT_QUOTES, 'UTF-8').'"/>&nbsp;<span class="form_validation" id="v_'.$this->iId.'"></span><span id="fstatus_'.$this->iId.'"></span><br/>';
-		$sHtmlValue .= '<input type="password" maxlength="255" id="'.$this->iId.'_confirm" value="'.htmlentities($sConfirmPasswordValue, ENT_QUOTES, 'UTF-8').'" name="attr_'.$sCode.'[confirm]"/> '.Dict::S('UI:PasswordConfirm').' <input id="'.$this->iId.'_reset" type="button" value="'.Dict::S('UI:Button:ResetPassword').'" onClick="ResetPwd(\''.$this->iId.'\');">';
+		$sHtmlValue .= '<div class="field_input_zone field_input_onewaypassword">';
+		$sHtmlValue .= '<input type="password" maxlength="255" name="attr_'.$sCode.'[value]" id="'.$this->iId.'" value="'.htmlentities($sPasswordValue, ENT_QUOTES, 'UTF-8').'"/>';
+		$sHtmlValue .= '<input type="password" maxlength="255" id="'.$this->iId.'_confirm" value="'.htmlentities($sConfirmPasswordValue, ENT_QUOTES, 'UTF-8').'" name="attr_'.$sCode.'[confirm]"/>';
+		$sHtmlValue .= '<span>'.Dict::S('UI:PasswordConfirm').'</span>';
+		$sHtmlValue .= '<input id="'.$this->iId.'_reset" type="button" value="'.Dict::S('UI:Button:ResetPassword').'" onClick="ResetPwd(\''.$this->iId.'\');">';
 		$sHtmlValue .= '<input type="hidden" id="'.$this->iId.'_changed" name="attr_'.$sCode.'[changed]" value="'.$sChangedValue.'"/>';
+		$sHtmlValue .= '</div>';
+
+		$sHtmlValue .= '<span class="form_validation" id="v_'.$this->iId.'"></span><span class="field_status" id="fstatus_'.$this->iId.'"></span>';
 
 		$oPage->add_ready_script("$('#$this->iId').bind('keyup change', function(evt) { return PasswordFieldChanged('$this->iId') } );"); // Bind to a custom event: validate
 		$oPage->add_ready_script("$('#$this->iId').bind('keyup change validate', function(evt, sFormId) { return ValidatePasswordField('$this->iId', sFormId) } );"); // Bind to a custom event: validate

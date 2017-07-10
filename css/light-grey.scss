@@ -1327,7 +1327,17 @@ span.form_validation {
 							}
 
 							&.field_input_onewaypassword{
-								// Not implemented yet
+								display: table-cell;
+								width: auto;
+
+								> *{
+									display: block;
+									width: 100%;
+								}
+
+								> span{
+									margin-bottom: 3px;
+								}
 							}
 
 							&.field_input_date,
