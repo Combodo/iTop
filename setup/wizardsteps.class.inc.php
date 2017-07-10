@@ -1807,6 +1807,8 @@ EOF
 				}
 			}
 			$aSteps[] = $aStepDefinition;
+			
+			$this->oWizard->SetParameter('additional_extensions_modules', json_encode(array()));
 		}
 		
 		if (array_key_exists($index, $aSteps))
