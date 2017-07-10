@@ -26,7 +26,7 @@
           </attributes>
         </reconciliation>
         <obsolescence>
-          <condition>status='obsolete'</condition>
+          <condition><![CDATA[COALESCE(status='obsolete',0)]]></condition>
         </obsolescence>
       </properties>
       <fields>
@@ -283,7 +283,7 @@
           </attributes>
         </reconciliation>
         <obsolescence>
-          <condition><![CDATA[status='obsolete' OR (server_id!=0 AND server_id_obsolescence_flag)]]></condition>
+          <condition><![CDATA[COALESCE(status='obsolete' OR (server_id!=0 AND server_id_obsolescence_flag),0)]]></condition>
         </obsolescence>
       </properties>
       <fields>
