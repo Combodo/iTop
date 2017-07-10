@@ -628,17 +628,21 @@ class ObjectFormManager extends FormManager
 					}
 					else
 					{
-						// Normal field
-                        $oField->SetReadOnly(false);
-                        $oField->SetHidden(false);
-                        $oField->SetMandatory(false);
+						// Normal field, use "flags" set by AttDef::MakeFormField()
+                        // Except if we are in a transition be cause $oAttDef doesn't know if the form is for a transition
+                        if($this->IsTransitionForm())
+                        {
+                            $oField->SetReadOnly(false);
+                            $oField->SetHidden(false);
+                            $oField->SetMandatory(false);
+                        }
 					}
 
                     // Finally, if it's mandatory ...
                     if (($iFieldFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY)
                     {
                         // ... and when in a transition, we force it as mandatory
-                        if($this->IsTransitionForm())
+                        if($this->IsTransitionForm() && $oAttDef->IsNull($this->oObject->Get($sAttCode)))
                         {
                             $oField->SetMandatory(true);
                         }
