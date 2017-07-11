@@ -171,8 +171,8 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			{
 
 				// Nothing to load
-				$this->aOriginalObjects = [];
-				$this->aPreserved = [];
+				$this->aOriginalObjects = array();
+				$this->aPreserved = array();
 			}
 		}
 	}
