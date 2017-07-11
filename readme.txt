@@ -17,7 +17,6 @@ Readme file
    ==================
 Thank you for downloading the 29th packaged release of iTop.
 
-
 It is a beta version, so the new features may not be fully operational.
 
 The documentation about iTop is available as a Wiki at: https://wiki.openitop.org/
@@ -28,8 +27,11 @@ The source code of iTop can be found on SourceForge: https://sourceforge.net/p/i
 1.1 What's new?
     -----------
 
-It will bring three main new features:
-•	Transition forms: iTop allows now to define per transition, which fields are displayed and required, independently on the console and on each portal.
+It will bring those main new features:
+Archiving: improve performance
+Obsolescence: hide or highlight obsolete objects depending on user preference. 
+Transition forms: define per transition, which fields are displayed and required, independently on the console and on each portal.
+Portal: multiple enhancements, see below.
 
 Archiving
 ---------
@@ -41,7 +43,6 @@ As long as no class is defined with archive enable, no change/menu appear in iTo
 
 A Ticket archiving module will be published in parallel of iTop, as an example.
 
-
 Obsolescence
 ------------
 
@@ -51,9 +52,11 @@ Rules of obsolescence are defined per class in the Data Model.
 Lifecycle
 ---------
 
-Lifecycle was enriched with the possibility to define flags on transition. It was possible to define actions during a transition.
-Now, you can force a field to be changed or documented during a particular transion, for example 
-"caller must be changed during re-assign" and at the same time, be "read-only in the assigned state" and "not prompted during a reopen". 
+Lifecycle was enriched with the possibility to define flags on transition. 
+It was possible to define actions during a transition.
+Now, you can force a field to be changed or documented during a particular transion.
+For example on Ticket "caller must be changed during re-assign" and at the same time,
+be "read-only in the assigned state" and "not prompted during a reopen". 
 
 Enhanced portal
 ---------------
