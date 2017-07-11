@@ -348,7 +348,9 @@ class WebPage implements Page
 		$sHtml = "<div class=\"details\">\n";
 		foreach($aFields as $aAttrib)
 		{
-		    $sHtml .= "<div class=\"field_container field_{$aAttrib['layout']}\" data-attcode=\"{$aAttrib['attcode']}\">\n";
+			$sDataAttCode = isset($aAttrib['attcode']) ? "data-attcode=\"{$aAttrib['attcode']}\"" : '';
+			$sLayout = isset($aAttrib['layout']) ? $aAttrib['layout'] : 'small';
+		    $sHtml .= "<div class=\"field_container field_{$sLayout}\" $sDataAttCode>\n";
             $sHtml .= "<div class=\"field_label label\">{$aAttrib['label']}</div>\n";
 
             $sHtml .= "<div class=\"field_data\">\n";
