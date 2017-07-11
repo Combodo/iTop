@@ -1743,6 +1743,8 @@ EOF
 		}
 		
 		$aSteps = array();
+		$this->oWizard->SetParameter('additional_extensions_modules', json_encode(array())); // Default value, no additional extensions 
+		
 		if (@file_exists($this->GetSourceFilePath()))
 		{
 			// Found an "installation.xml" file, let's us tis definition for the wizard
@@ -1779,7 +1781,6 @@ EOF
 				$aSteps[] = $aStepDefinition;
 				$this->oWizard->SetParameter('additional_extensions_modules', json_encode($aStepDefinition['options']));
 			}
-			
 		}
 		else
 		{
@@ -1807,8 +1808,6 @@ EOF
 				}
 			}
 			$aSteps[] = $aStepDefinition;
-			
-			$this->oWizard->SetParameter('additional_extensions_modules', json_encode(array()));
 		}
 		
 		if (array_key_exists($index, $aSteps))
