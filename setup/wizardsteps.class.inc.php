@@ -2476,7 +2476,6 @@ class WizStepDone extends WizardStep
 		
 		if ($sIframeUrl != '')
 		{
-			$sIframeUrl .= '?';
 			$oPage->add('<iframe id="fresh_content" style="border:0; width:100%; display:none;" src="'.$sIframeUrl.'"></iframe>');
 			
 			$oPage->add_script("window.addEventListener('message', function(event) {
