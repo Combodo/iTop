@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2014 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This program is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
  
  SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-storage-mgmt/2.2.0',
+	'itop-storage-mgmt/2.4.0',
 	array(
 		// Identification
 		//
@@ -35,7 +35,7 @@
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-config-mgmt/2.2.0'
+			'itop-config-mgmt/2.4.0'
 		),
 		'mandatory' => false,
 		'visible' => true,

@@ -54,8 +54,8 @@ Lifecycle
 
 Lifecycle was enriched with the possibility to define flags on transition. 
 It was possible to define actions during a transition.
-Now, you can force a field to be changed or documented during a particular transion.
-For example on Ticket "caller must be changed during re-assign" and at the same time,
+Now, you can force a field to be changed or documented during a particular transition.
+For example on Ticket "agent must be changed during re-assign" and at the same time,
 be "read-only in the assigned state" and "not prompted during a reopen". 
 
 Enhanced portal
