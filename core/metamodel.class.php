@@ -333,7 +333,7 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);
 		$sOql = self::$m_aClassParams[$sClass]['obsolescence_expression'];
-		$oRet = Expression::FromOQL($sOql);
+		$oRet = Expression::FromOQL("COALESCE($sOql, 0)");
 		return $oRet;
 	}
 	final static public function GetNameSpec($sClass)

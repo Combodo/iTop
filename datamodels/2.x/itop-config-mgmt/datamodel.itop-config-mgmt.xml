@@ -30,7 +30,7 @@
           </attributes>
         </reconciliation>
         <obsolescence>
-          <condition><![CDATA[COALESCE(status='inactive',0)]]></condition>
+          <condition><![CDATA[status = 'inactive']]></condition>
         </obsolescence>
       </properties>
       <fields>
@@ -137,7 +137,7 @@
           </attributes>
         </reconciliation>
         <obsolescence>
-          <condition><![CDATA[COALESCE(status='inactive',0)]]></condition>
+          <condition><![CDATA[status = 'inactive']]></condition>
         </obsolescence>
       </properties>
       <fields>
@@ -897,7 +897,7 @@
           </attributes>
         </reconciliation>
         <obsolescence>
-          <condition><![CDATA[COALESCE(status='obsolete',0)]]></condition>
+          <condition><![CDATA[status = 'obsolete']]></condition>
         </obsolescence>
       </properties>
       <fields>
@@ -1667,7 +1667,7 @@
           </attributes>
         </reconciliation>
         <obsolescence>
-          <condition><![CDATA[COALESCE(status='obsolete',0)]]></condition>
+          <condition><![CDATA[status = 'obsolete']]></condition>
         </obsolescence>
       </properties>
       <fields>
@@ -2943,7 +2943,7 @@
           </attributes>
         </reconciliation>
         <obsolescence>
-          <condition><![CDATA[COALESCE(status='inactive',0)]]></condition>
+          <condition><![CDATA[status='inactive']]></condition>
         </obsolescence>
       </properties>
       <fields>
@@ -3102,7 +3102,7 @@
           </attributes>
         </reconciliation>
         <obsolescence>
-          <condition><![CDATA[COALESCE(status='inactive',0)]]></condition>
+          <condition><![CDATA[status = 'inactive']]></condition>
         </obsolescence>
       </properties>
       <fields>
@@ -3228,7 +3228,7 @@
           </attributes>
         </reconciliation>
         <obsolescence>
-          <condition><![CDATA[COALESCE(status='inactive',0)]]></condition>
+          <condition><![CDATA[status = 'inactive']]></condition>
         </obsolescence>
       </properties>
       <fields>
