@@ -22,8 +22,7 @@ namespace Combodo\iTop\Portal\Helper;
 use \Exception;
 use \Silex\Application;
 use \Symfony\Component\Debug\ErrorHandler;
-//use \Symfony\Component\Debug\ExceptionHandler;
-use \Combodo\iTop\Portal\Handler\ExceptionHandler;
+use \Symfony\Component\Debug\ExceptionHandler;
 use \Symfony\Component\HttpFoundation\Request;
 use \Twig_Environment;
 use \Twig_SimpleFilter;
@@ -259,7 +258,7 @@ class ApplicationHelper
 		ExceptionHandler::register(($oApp['debug'] === true));
 
 		// Intercepting manually aborted request
-		if (!$oApp['debug'])
+		if (1 || !$oApp['debug'])
 		{
 			$oApp->error(function(Exception $e, $code) use ($oApp)
 			{
@@ -288,6 +287,66 @@ class ApplicationHelper
 				}
 				else
 				{
+				    // Preparing debug trace
+                    $aSteps = array();
+                    foreach($e->getTrace() as $aStep)
+                    {
+                        // - Default file name
+                        if(!isset($aStep['file']))
+                        {
+                            $aStep['file'] = '';
+                        }
+                        $aFileParts = explode('\\', $aStep['file']);
+                        // - Default line number
+                        if(!isset($aStep['line']))
+                        {
+                            $aStep['line'] = 'unknown';
+                        }
+                        // - Default class name
+                        if(isset($aStep['class']) && isset($aStep['function']) && isset($aStep['type']))
+                        {
+                            $aClassParts = explode('\\', $aStep['class']);
+                            $sClassName = $aClassParts[count($aClassParts)-1];
+                            $sClassFQ = $aStep['class'];
+
+                            $aArgsAsString = array();
+                            foreach($aStep['args'] as $arg)
+                            {
+                                if(is_array($arg))
+                                {
+                                    $aArgsAsString[] = 'array(...)';
+                                }
+                                elseif(is_object($arg))
+                                {
+                                    $aArgsAsString[] = 'object('.get_class($arg).')';
+                                }
+                                else
+                                {
+                                    $aArgsAsString[] = $arg;
+                                }
+                            }
+
+                            $sFunctionCall = $sClassName . $aStep['type'] . $aStep['function'] . '(' . implode(', ', $aArgsAsString) . ')';
+                        }
+                        else
+                        {
+                            $sClassName = null;
+                            $sClassFQ = null;
+                            $sFunctionCall = null;
+                        }
+
+                        $aSteps[] = array(
+                            'file_fq' => $aStep['file'],
+                            'file_name' => $aFileParts[count($aFileParts)-1],
+                            'line' => $aStep['line'],
+                            'class_name' => $sClassName,
+                            'class_fq' => $sClassFQ,
+                            'function_call' => $sFunctionCall,
+                        );
+                    }
+
+                    $aData['debug_trace_steps'] = $aSteps;
+
 					$oResponse = $oApp['twig']->render('itop-portal-base/portal/src/views/errors/layout.html.twig', $aData);
 				}
 

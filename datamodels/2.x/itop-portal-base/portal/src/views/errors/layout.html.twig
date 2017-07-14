@@ -11,7 +11,8 @@
 			margin: 50px auto;
 			text-align: center;
 			padding: 25px;
-			max-width: 600px;
+			min-width: 600px;
+			max-width: 1000px;
 		}
 		h1, h2, h3, p {
 			margin: 0;
@@ -27,6 +28,12 @@
 			vertical-align: -5%;
 			margin-right: 5px;
 		}
+		abbr[title]{
+			border-bottom: none;
+		}
+		.traces.list_exception{
+			text-align: left;
+		}
 	</style>
 	
 	<div class="container">
@@ -40,5 +47,18 @@
 				<a class="btn btn-default" href="{{ app.url_generator.generate('p_home') }}"><span class="fa fa-home"></span> {{ 'Page:GoPortalHome'|dict_s }}</a>
 			</p>
 		</div>
+
+		{% if app['debug'] == true %}
+			<div class="well">
+				<ol class="traces list_exception">
+					{% for aStep in debug_trace_steps %}
+                        <li>
+							{% if aStep.function_call is not null %}at <abbr title="{{ aStep.class_fq }}">{{ aStep.function_call }}</abbr>{% endif %}
+							in <a title="{{ aStep.file_fq }}">{{ aStep.file_name }}</a> line {{ aStep.line }}
+						</li>
+					{% endfor %}
+				</ol>
+			</div>
+		{% endif %}
 	</div>
 {% endblock %}

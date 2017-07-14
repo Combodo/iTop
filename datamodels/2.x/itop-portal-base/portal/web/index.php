@@ -31,7 +31,6 @@ require_once APPROOT . '/core/moduledesign.class.inc.php';
 require_once APPROOT . '/application/loginwebpage.class.inc.php';
 require_once APPROOT . '/sources/autoload.php';
 // Portal
-require_once __DIR__ . '/../src/handlers/exceptionhandler.class.inc.php';
 require_once __DIR__ . '/../src/providers/urlgeneratorserviceprovider.class.inc.php';
 require_once __DIR__ . '/../src/helpers/urlgeneratorhelper.class.inc.php';
 require_once __DIR__ . '/../src/providers/contextmanipulatorserviceprovider.class.inc.php';
