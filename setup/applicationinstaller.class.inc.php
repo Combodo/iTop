@@ -1011,11 +1011,6 @@ class ApplicationInstaller
 			$oConfig->Set('tracking_level_linked_set_default', LINKSET_TRACKING_NONE, 'first_install');
 		}
 		
-		
-		// Migration: force utf8_unicode_ci as the collation to make the global search
-		// NON case sensitive
-		$oConfig->SetDBCollation('utf8_unicode_ci');
-		
 		// Final config update: add the modules
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir, $bPreserveModuleSettings);
 		if ($bOldAddon)
