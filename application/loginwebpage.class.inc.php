@@ -431,7 +431,7 @@ EOF
 		unset($_SESSION['auth_user']);
 		unset($_SESSION['login_mode']);
 		unset($_SESSION['archive_mode']);
-		unset($_SESSION['archive_allowed']);
+		unset($_SESSION['impersonate_user']);
 		UserRights::_ResetSessionCache();
 		// If it's desired to kill the session, also delete the session cookie.
 		// Note: This will destroy the session, and not just the session data!

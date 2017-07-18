@@ -583,6 +583,13 @@ class UserRights
 			return false;
 		}
 		self::$m_oUser = $oUser;
+
+		if (isset($_SESSION['impersonate_user']))
+		{
+			self::$m_oRealUser = self::$m_oUser;
+			self::$m_oUser = self::FindUser($_SESSION['impersonate_user']);
+		}
+
 		Dict::SetUserLanguage(self::GetUserLanguage());
 		return true;
 	}
@@ -702,24 +709,50 @@ class UserRights
 		}
 	}
 
-	public static function Impersonate($sName, $sPassword)
+	/**
+	 * @param string $sName Login identifier of the user to impersonate
+	 * @return bool True if an impersonation occurred
+	 */
+	public static function Impersonate($sName)
 	{
 		if (!self::CheckLogin()) return false;
 
+		$bRet = false;
 		$oUser = self::FindUser($sName);
-		if (is_null($oUser))
+		if ($oUser)
 		{
-			return false;
+			$bRet = true;
+			if (is_null(self::$m_oRealUser))
+			{
+				// First impersonation
+				self::$m_oRealUser = self::$m_oUser;
+			}
+			if (self::$m_oRealUser && (self::$m_oRealUser->GetKey() == $oUser->GetKey()))
+			{
+				// Equivalent to "Deimpersonate"
+				self::Deimpersonate();
+			}
+			else
+			{
+				// Do impersonate!
+				self::$m_oUser = $oUser;
+				Dict::SetUserLanguage(self::GetUserLanguage());
+				$_SESSION['impersonate_user'] = $sName;
+				self::_ResetSessionCache();
+			}
 		}
-		if (!$oUser->CheckCredentials($sPassword))
-		{
-			return false;
-		}
+		return $bRet;
+	}
 
-		self::$m_oRealUser = self::$m_oUser;
-		self::$m_oUser = $oUser;
-		Dict::SetUserLanguage(self::GetUserLanguage());
-		return true;
+	public static function Deimpersonate()
+	{
+		if (!is_null(self::$m_oRealUser))
+		{
+			self::$m_oUser = self::$m_oRealUser;
+			Dict::SetUserLanguage(self::GetUserLanguage());
+			unset($_SESSION['impersonate_user']);
+			self::_ResetSessionCache();
+		}
 	}
 
 	public static function GetUser()
@@ -849,6 +882,11 @@ class UserRights
 			return '';
 		}
 		return self::$m_oRealUser->Get('login');
+	}
+
+	public static function GetRealUserObject()
+	{
+		return self::$m_oRealUser;
 	}
 
 	public static function GetRealUserId()
@@ -1192,6 +1230,10 @@ class UserRights
 		if (isset($_SESSION['profile_list']))
 		{
 			unset($_SESSION['profile_list']);
+		}
+		if (isset($_SESSION['archive_allowed']))
+		{
+			unset($_SESSION['archive_allowed']);
 		}
 	}
 }
