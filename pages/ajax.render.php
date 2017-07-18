@@ -454,22 +454,31 @@ try
 		// ui.extkeywidget
 		case 'objectCreationForm':
 		$oPage->SetContentType('text/html');
+		// Retrieving parameters
 		$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
-		$iInputId = utils::ReadParam('iInputId', '');
-		$sAttCode = utils::ReadParam('sAttCode', '');
-		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, false);
-		$sJson = utils::ReadParam('json', '', false, 'raw_data');
-		if (!empty($sJson))
-		{
-			$oWizardHelper = WizardHelper::FromJSON($sJson);
-			$oObj = $oWizardHelper->GetTargetObject();
-		}
-		else
-		{
-			// Search form: no current object
-			$oObj = null;
-		}
-		$oWidget->GetObjectCreationForm($oPage, $oObj);
+        $iInputId = utils::ReadParam('iInputId', '');
+        $sAttCode = utils::ReadParam('sAttCode', '');
+        $sJson = utils::ReadParam('json', '', false, 'raw_data');
+		// Building form, if target class is abstract we ask the user for the desired leaf class
+        $oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, false);
+        if(MetaModel::IsAbstract($sTargetClass))
+        {
+            $oWidget->GetClassSelectionForm($oPage);
+        }
+        else
+        {
+            if (!empty($sJson))
+            {
+                $oWizardHelper = WizardHelper::FromJSON($sJson);
+                $oObj = $oWizardHelper->GetTargetObject();
+            }
+            else
+            {
+                // Search form: no current object
+                $oObj = null;
+            }
+            $oWidget->GetObjectCreationForm($oPage, $oObj);
+        }
 		break;
 		
 		// ui.extkeywidget

@@ -111,7 +111,7 @@ class UIExtKeyWidget
 		$oPage->add_linked_script('../js/extkeywidget.js');
 		$oPage->add_linked_script('../js/forms-json-utils.js');
 		
-		$bCreate = (!$this->bSearchMode) && (!MetaModel::IsAbstract($this->sTargetClass)) && (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY) && $bAllowTargetCreation);
+		$bCreate = (!$this->bSearchMode) && (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY) && $bAllowTargetCreation);
 		$bExtensions = true;
 		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$sAttrFieldPrefix = ($this->bSearchMode) ? '' : 'attr_';
@@ -298,7 +298,9 @@ EOF
 		}
 		if ($bCreate && $bExtensions)
 		{
-			$sHTMLValue .= "<span class=\"field_input_btn\"><img id=\"mini_add_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_add.gif?itopversion=".ITOP_VERSION."\" onClick=\"oACWidget_{$this->iId}.CreateObject();\"/></span>";
+			$sCallbackName = (MetaModel::IsAbstract($this->sTargetClass)) ? 'SelectObjectClass' : 'CreateObject';
+
+			$sHTMLValue .= "<span class=\"field_input_btn\"><img id=\"mini_add_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_add.gif?itopversion=".ITOP_VERSION."\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\"/></span>";
 			$oPage->add_ready_script(
 <<<EOF
 		if ($('#ajax_{$this->iId}').length == 0)
@@ -424,7 +426,49 @@ EOF
 			return '';
 		}
 	}
-	
+
+    /**
+	 * Get the form to select a leaf class from the $this->sTargetClass (that should be abstract)
+	 * Note: Inspired from UILinksWidgetDirect::GetObjectCreationDialog()
+	 *
+     * @param WebPage $oPage
+     */
+	public function GetClassSelectionForm(WebPage $oPage)
+	{
+        // For security reasons: check that the "proposed" class is actually a subclass of the linked class
+        // and that the current user is allowed to create objects of this class
+        $aSubClasses = MetaModel::EnumChildClasses($this->sTargetClass);
+        $aPossibleClasses = array();
+        foreach($aSubClasses as $sCandidateClass)
+        {
+            if (!MetaModel::IsAbstract($sCandidateClass) && (UserRights::IsActionAllowed($sCandidateClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
+            {
+                $aPossibleClasses[$sCandidateClass] = MetaModel::GetName($sCandidateClass);
+            }
+        }
+
+        $sDialogTitle = '';
+        $oPage->add('<div id="ac_create_'.$this->iId.'"><div class="wizContainer" style="vertical-align:top;"><div id="dcr_'.$this->iId.'">');
+        $oPage->add('<form>');
+
+		$sClassLabel = MetaModel::GetName($this->sTargetClass);
+		$oPage->add('<p>'.Dict::Format('UI:SelectTheTypeOf_Class_ToCreate', $sClassLabel));
+		$oPage->add('<nobr><select name="class">');
+		asort($aPossibleClasses);
+		foreach($aPossibleClasses as $sClassName => $sClassLabel)
+		{
+			$oPage->add("<option value=\"$sClassName\">$sClassLabel</option>");
+		}
+		$oPage->add('</select>');
+		$oPage->add('&nbsp; <button type="submit" class="action" style="margin-top:15px;"><span>' . Dict::S('UI:Button:Ok') . '</span></button></nobr></p>');
+
+        $oPage->add('</form>');
+        $oPage->add('</div></div></div>');
+        $oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
+        $oPage->add_ready_script("$('#dcr_{$this->iId} form').removeAttr('onsubmit');");
+        $oPage->add_ready_script("$('#dcr_{$this->iId} form').bind('submit.uilinksWizard', oACWidget_{$this->iId}.DoSelectObjectClass);");
+	}
+
 	/**
 	 * Get the form to create a new object of the 'target' class
 	 */

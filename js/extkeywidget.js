@@ -18,6 +18,7 @@
 function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper, sAttCode, bSearchMode)
 {
 	this.id = id;
+	this.sOriginalTargetClass = sTargetClass;
 	this.sTargetClass = sTargetClass;
 	this.sFilter = sFilter;
 	this.sTitle = sTitle;
@@ -275,7 +276,31 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#label_'+me.id).focus();
 		me.ajax_request = null;
 	};
-	
+
+	this.SelectObjectClass = function(oWizHelper)
+	{
+        // Resetting target class to its original value
+        // (If not done, closing the dialog and trying to create a object again
+        // will force it be of the same class as the previous call)
+        me.sTargetClass = me.sOriginalTargetClass;
+
+        me.CreateObject(oWizHelper);
+	};
+
+	this.DoSelectObjectClass = function()
+	{
+		// Retrieving selected value
+		var oSelectedClass = $('#ac_create_'+me.id+' select');
+		if(oSelectedClass.length !== 1) return;
+
+		// Setting new target class
+		me.sTargetClass = oSelectedClass.val();
+
+		// Opening real creation form
+        $('#ac_create_'+me.id).dialog('close');
+		me.CreateObject();
+	};
+
 	this.CreateObject = function(oWizHelper)
 	{
 		if($('#'+me.id).attr('disabled')) return; // Disabled, do nothing
@@ -326,7 +351,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	
 	this.CloseCreateObject = function()
 	{
-		$('#ac_create_'+me.id).dialog( "close" );
+		$('#ac_create_'+me.id).dialog( "close" );console.log('closecreateobj')
 	};
 	
 	this.OnCloseCreateObject = function()
@@ -342,7 +367,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#label_'+me.id).focus();
 		$('#ac_create_'+me.id).dialog("destroy");
 		$('#ac_create_'+me.id).remove();
-		$('#ajax_'+me.id).html('');
+		$('#ajax_'+me.id).html('');console.log('onclosecreateobj')
 	};
 	
 	this.DoCreateObject = function()
