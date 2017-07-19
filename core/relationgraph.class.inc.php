@@ -457,6 +457,10 @@ class RelationGraph extends SimpleGraph
 			{
 				// Get the upper neighbours
 				$sQuery = $aQueryInfo['sQueryUp'];
+				if (!$sQuery)
+				{
+					throw new Exception("Redundancy cannot be enabled on the relation $sRelCode/{$aQueryInfo['sDefinedInClass']}/{$aQueryInfo['sNeighbour']}: its direction is \"{$aQueryInfo['sDirection']}\"");
+				}
 				try
 				{
 					$oFlt = static::MakeSearch($sQuery);
