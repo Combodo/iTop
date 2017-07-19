@@ -117,7 +117,7 @@ class UIExtKeyWidget
 		$sAttrFieldPrefix = ($this->bSearchMode) ? '' : 'attr_';
 
 		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey\">";
-		$sFilter = addslashes($oAllowedValues->GetFilter()->ToOQL());
+		$sFilter = addslashes($oAllowedValues->GetFilter()->ToOQL(true));
 		if($this->bSearchMode)
 		{
 			$sWizHelper = 'null';
