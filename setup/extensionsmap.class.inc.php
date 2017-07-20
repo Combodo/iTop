@@ -322,7 +322,8 @@ class iTopExtensionsMap
 				{
 					// rename any class declaration inside the code to prevent a "duplicate class" declaration
 					// and change its parent class as well so that nobody will find it and try to execute it
-					$sModuleFileContents = str_replace($sClassName.' extends '.$aMatches[2][$idx], $sClassName.'_'.($iDummyClassIndex++).' extends DummyHandler', $sModuleFileContents);
+					// Note: don't use the same naming scheme as ModuleDiscovery otherwise you 'll have the duplicate class error again !!
+					$sModuleFileContents = str_replace($sClassName.' extends '.$aMatches[2][$idx], $sClassName.'_Ext_'.($iDummyClassIndex++).' extends DummyHandler', $sModuleFileContents);
 				}
 				$idx++;
 			}
