@@ -88,6 +88,14 @@ class MFCompiler
 	}
 	
 
+	/**
+	 * Compile the data model into PHP files and data structures
+	 * @param string $sTargetDir The target directory where to put the resulting files
+	 * @param Page $oP For some output...
+	 * @param bool $bUseSymbolicLinks
+	 * @throws Exception
+	 * @return void
+	 */
 	public function Compile($sTargetDir, $oP = null, $bUseSymbolicLinks = false)
 	{
 		$sFinalTargetDir = $sTargetDir;
@@ -142,9 +150,19 @@ class MFCompiler
 	}
 	
 
+	/**
+	 * Perform the actual "Compilation" of all modules
+	 * @param string $sTempTargetDir
+	 * @param string $sFinalTargetDir
+	 * @param Page $oP
+	 * @param bool $bUseSymbolicLinks
+	 * @throws Exception
+	 * @return string void
+	 */
 	protected function DoCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks = false)
 	{
 		$aAllClasses = array(); // flat list of classes
+		$aModulesInfo = array(); // Hash array of module_name => array('version' => string, 'root_dir' => string)
 
 		// Determine the target modules for the MENUS
 		//
@@ -204,18 +222,30 @@ class MFCompiler
 			$sModuleVersion = $oModule->GetVersion();
 		
 			$sModuleRootDir = $oModule->GetRootDir();
+			$iStart = strlen(realpath(APPROOT));
 			if ($sModuleRootDir != '')
 			{
 				$sModuleRootDir = realpath($sModuleRootDir);
 				$sRelativeDir = basename($sModuleRootDir);
+				if ($bUseSymbolicLinks)
+				{
+					$sRealRelativeDir = substr(realpath($sModuleRootDir), $iStart);
+				}
+				else
+				{
+					$sRealRelativeDir = substr(realpath($sFinalTargetDir.'/'.$sRelativeDir), $iStart);
+				}
+
 				// Push the other module files
 				SetupUtils::copydir($sModuleRootDir, $sTempTargetDir.'/'.$sRelativeDir, $bUseSymbolicLinks);
 			}
 			else
 			{
 				$sRelativeDir = '';
+				$sRealRelativeDir = '';
 			}
-
+			$aModulesInfo[$sModuleName] = array('root_dir' => $sRealRelativeDir, 'version' => $sModuleVersion);
+				
 			$sCompiledCode = '';
 
 			$oConstants = $this->oFactory->ListConstants($sModuleName);
@@ -550,6 +580,7 @@ EOF
 		$sPHPFileContent .= "\nMetaModel::IncludeModule('".basename($sFinalTargetDir)."/core/main.php');\n";
 		$sPHPFileContent .= implode("\n", $aDataModelFiles);
 		$sPHPFileContent .= implode("\n", $aWebservicesFiles);
+		$sPHPFileContent .= "\nfunction GetModulesInfo()\n{\nreturn ".var_export($aModulesInfo, true).";\n}\n";
 		file_put_contents($sPHPFile, $sPHPFileContent);
 		
 	} // DoCompile()

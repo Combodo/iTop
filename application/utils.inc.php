@@ -1489,4 +1489,102 @@ class utils
 				'}';
 		return $sUUID;
 	}
+
+	/**
+	 * Returns the name of the module containing the file where the call to this function is made
+	 * or an empty string if no such module is found (or not called within a module file)
+	 * @param number $iCallDepth The depth of the module in the callstack. Zero when called directly from within the module
+	 * @return string
+	 */
+	static public function GetCurrentModuleName($iCallDepth = 0)
+	{
+		$sCurrentModuleName = '';
+		$aCallStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+		$sCallerFile = realpath($aCallStack[$iCallDepth]['file']);
+		
+		foreach(GetModulesInfo() as $sModuleName => $aInfo)
+		{
+			if ($aInfo['root_dir'] !== '')
+			{
+				$sRootDir = realpath(APPROOT.$aInfo['root_dir']);
+				
+				if(substr($sCallerFile, 0, strlen($sRootDir)) === $sRootDir)
+				{
+					$sCurrentModuleName = $sModuleName;
+					break;
+				}
+			}
+		}
+		return $sCurrentModuleName;
+	}
+	
+	/**
+	 * Returns the relative (to APPROOT) path of the root directory of the module containing the file where the call to this function is made
+	 * or an empty string if no such module is found (or not called within a module file)
+	 * @param number $iCallDepth The depth of the module in the callstack. Zero when called directly from within the module
+	 * @return string
+	 */
+	static public function GetCurrentModuleDir($iCallDepth)
+	{
+		$sCurrentModuleDir = '';
+		$aCallStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+		$sCallerFile = realpath($aCallStack[$iCallDepth]['file']);
+	
+		foreach(GetModulesInfo() as $sModuleName => $aInfo)
+		{
+			if ($aInfo['root_dir'] !== '')
+			{
+				$sRootDir = realpath(APPROOT.$aInfo['root_dir']);
+	
+				if(substr($sCallerFile, 0, strlen($sRootDir)) === $sRootDir)
+				{
+					$sCurrentModuleDir = basename($sRootDir);
+					break;
+				}
+			}
+		}
+		return $sCurrentModuleDir;
+	}
+	
+	/**
+	 * Returns the base URL for all files in the current module from which this method is called
+	 * or an empty string if no such module is found (or not called within a module file)
+	 * @return string
+	 */
+	static public function GetCurrentModuleUrl()
+	{
+		$sDir = static::GetCurrentModuleDir(1);
+		if ( $sDir !== '')
+		{
+			return static::GetAbsoluteUrlModulesRoot().'/'.$sDir;
+		}
+		return '';
+	}
+	
+	/**
+	 * Get the value of a given setting for the current module
+	 * @param string $sProperty The name of the property to retrieve
+	 * @param mixed $defaultvalue
+	 * @return mixed
+	 */
+	static public function GetCurrentModuleSetting($sProperty, $defaultvalue = null)
+	{
+		$sModuleName = static::GetCurrentModuleName(1);
+		return MetaModel::GetModuleSetting($sModuleName, $sProperty, $defaultvalue);
+	}
+	
+	/**
+	 * Get the compiled version of a given module, as it was seen by the compiler
+	 * @param string $sModuleName
+	 * @return string|NULL
+	 */
+	static public function GetCompiledModuleVersion($sModuleName)
+	{
+		$aModulesInfo = GetModulesInfo();
+		if (array_key_exists($sModuleName, $aModulesInfo))
+		{
+			return $aModulesInfo[$sModuleName]['version'];
+		}
+		return null;
+	}
 }
