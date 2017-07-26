@@ -1179,10 +1179,6 @@ EOF
 		{
 			$aDirsToScan[] = APPROOT.'extensions';
 		}
-		if (is_dir(APPROOT.'data'))
-		{
-			$aDirsToScan[] = APPROOT.'data';
-		}
 		if (is_dir($oWizard->GetParameter('copy_extensions_from')))
 		{
 			$aDirsToScan[] = $oWizard->GetParameter('copy_extensions_from');
