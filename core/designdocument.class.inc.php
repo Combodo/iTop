@@ -192,7 +192,7 @@ class DesignElement extends \DOMElement
 	 * Returns the node directly under the given node
 	 * @param $sTagName
 	 * @param bool|true $bMustExist
-	 * @return null
+	 * @return MFElement
 	 * @throws DOMFormatException
 	 */
 	public function GetUniqueElement($sTagName, $bMustExist = true)
@@ -216,7 +216,7 @@ class DesignElement extends \DOMElement
 	/**
 	 * Returns the node directly under the current node, or null if missing
 	 * @param $sTagName
-	 * @return null
+	 * @return MFElement
 	 * @throws DOMFormatException
 	 */
 	public function GetOptionalElement($sTagName)
