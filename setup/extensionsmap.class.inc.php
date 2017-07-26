@@ -252,6 +252,11 @@ class iTopExtensionsMap
 						// to this extension
 						$sModuleId = $aModuleInfo[1];
 						list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+						if ($sModuleVersion == '')
+						{
+							// Provide a default module version since version is mandatory when recording ExtensionInstallation
+							$sModuleVersion = '0.0.1';
+						}
 						
 						if ($sParentExtensionId !== null)
 						{
