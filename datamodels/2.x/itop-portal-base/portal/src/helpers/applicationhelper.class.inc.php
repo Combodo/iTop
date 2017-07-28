@@ -957,6 +957,7 @@ class ApplicationHelper
                             if ($oModeNode->getAttribute('id') === 'apply_stimulus')
                             {
                                 $oStimuliNode = $oModeNode->GetOptionalElement('stimuli');
+                                // if stimuli are defined, we overwrite the form that could have been set by the generic form
                                 if($oStimuliNode !== null)
                                 {
                                     foreach ($oStimuliNode->GetNodes('stimulus') as $oStimulusNode)
@@ -1083,7 +1084,8 @@ class ApplicationHelper
 
                                 foreach($aChildStimuli as $sFormStimulus)
                                 {
-                                    if(!isset($aForms[$sChildClass][$sMode][$sFormStimulus]))
+                                    // Setting form if not defined OR if it was defined by a parent (abstract) class
+                                    if(!isset($aForms[$sChildClass][$sMode][$sFormStimulus]) || !empty($aFormStimuli))
                                     {
                                         $aForms[$sChildClass][$sMode][$sFormStimulus] = $aFields;
                                         $aForms[$sChildClass][$sMode][$sFormStimulus]['id'] = 'apply_stimulus-'.$sChildClass.'-'.$sFormStimulus;
