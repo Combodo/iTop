@@ -1748,7 +1748,7 @@ abstract class MetaModel
 		{
 			if (is_subclass_of($sPHPClass, 'DBObject'))
 			{
-				$sParent = get_parent_class($sPHPClass);
+				$sParent = self::GetParentPersistentClass($sPHPClass);
 				if (array_key_exists($sParent, self::$m_aIgnoredAttributes))
 				{
 					// Inherit info about attributes to ignore
