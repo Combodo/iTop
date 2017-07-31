@@ -201,6 +201,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Target attribute code (optional)',
 	'BooleanLabel:yes' => 'oui',
 	'BooleanLabel:no' => 'non',
+    'UI:Login:Title' => 'iTop login',
 	'Menu:WelcomeMenu' => 'Bienvenue', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenu+' => 'Bienvenue dans iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage' => 'Bienvenue', // Duplicated into itop-welcome-itil (will be removed from here...)

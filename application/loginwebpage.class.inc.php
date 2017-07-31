@@ -56,8 +56,13 @@ class LoginWebPage extends NiceWebPage
 
 	protected static $m_sLoginFailedMessage = '';
 	
-	public function __construct($sTitle = 'iTop Login')
+	public function __construct($sTitle = null)
 	{
+	    if($sTitle === null)
+        {
+            $sTitle = Dict::S('UI:Login:Title');
+        }
+
 		parent::__construct($sTitle);
 		$this->SetStyleSheet();
 		$this->add_header("Cache-control: no-cache");
