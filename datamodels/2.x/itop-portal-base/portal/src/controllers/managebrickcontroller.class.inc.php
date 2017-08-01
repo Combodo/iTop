@@ -173,7 +173,7 @@ class ManageBrickController extends BrickController
 			{
 				foreach ($aGroupingTabs['groups'] as $aGroup)
 				{
-				    $oConditionQuery = DBSearch::FromOQL($aGroup['condition']);
+				    $oConditionQuery = $oQuery->Intersect( DBSearch::FromOQL($aGroup['condition']) );
                     // - Restricting query to scope
                     $oScopeQuery = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $oConditionQuery->GetClass(), UR_ACTION_READ);
                     if ($oScopeQuery !== null)
