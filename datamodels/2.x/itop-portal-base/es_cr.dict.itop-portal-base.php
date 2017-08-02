@@ -102,6 +102,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Manage:Name' => 'Administrar elementos',
 	'Brick:Portal:Manage:Table:NoData' => 'Sin objeto.',
+    'Brick:Portal:Manage:Table:ItemActions' => 'Actions~~',
 ));
 
 // ObjectBrick brick

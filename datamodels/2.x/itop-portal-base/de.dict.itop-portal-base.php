@@ -98,9 +98,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:Browse:Filter:NoData' => 'Kein Eintrag',
 ));
 
+// ManageBrick brick
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:Manage:Name' => 'Einträge managen',
 	'Brick:Portal:Manage:Table:NoData' => 'Kein Eintrag.',
+    'Brick:Portal:Manage:Table:ItemActions' => 'Actions~~',
 ));
 
 // ObjectBrick brick

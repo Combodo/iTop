@@ -23,7 +23,7 @@
 			{% if bGroupButtons == true %}
 				<li>
 			{% endif %}
-			<a class="{{ sButtonCssClasses }} {{ aButton.css_classes|join(' ') }}" href="{{ aButton.url }}" onclick="{{ aButton.onclick }}">{{ aButton.label }}</a>
+			<a class="{{ sButtonCssClasses }} {{ aButton.css_classes|join(' ') }}" href="{{ aButton.url }}" onclick="{{ aButton.onclick }}">{{ aButton.label|raw }}</a>
 			{% if bGroupButtons == true %}
 				</li>
 			{% endif %}
@@ -37,7 +37,7 @@
             {% if bGroupButtons == true %}
 				<li>
 			{% endif %}
-			<a class="{{ sButtonCssClasses }} {{ aButton.css_classes|join(' ') }}" href="{{ aButton.url }}" target="{{ aButton.target }}">{{ aButton.label }}</a>
+			<a class="{{ sButtonCssClasses }} {{ aButton.css_classes|join(' ') }}" href="{{ aButton.url }}" target="{{ aButton.target }}">{{ aButton.label|raw }}</a>
             {% if bGroupButtons == true %}
 				</li>
             {% endif %}

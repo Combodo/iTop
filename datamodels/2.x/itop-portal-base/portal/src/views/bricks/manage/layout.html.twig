@@ -107,54 +107,130 @@
 			
 			for(key in tableProperties)
 			{
-				columnsDefinition.push({
-					"width": "auto",
-					"searchable": true,
-					"sortable": (sDataLoading === '{{ constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL') }}'),
-					"title": tableProperties[key].title,
-					"defaultContent": "",
-					"type": "html",
-					"data": "attributes."+key+".att_code",
-					"render": function(att_code, type, row){
-						var cellElem;
-						var itemActions;
-						var itemPrimarayAction;
-						
-						// Preparing action on the cell
-						// Note : For now we will use only one action, the secondary actions are therefore not implemented. Only the data structure is done.
-						itemActions = row.attributes[att_code].actions;
-						
-						// Preparing the cell data
-						cellElem = (itemActions.length > 0) ? $('<a></a>') : $('<span></span>');
-						cellElem.html(row.attributes[att_code].value);
-						// Building actions
-						if(itemActions.length > 0)
-						{
-							// - Primary action
-							itemPrimaryAction = itemActions[0];
-							switch(itemPrimaryAction.type)
+			    // Regular attribute columns
+			    if(key !== '_ui_extensions') {
+                    columnsDefinition.push({
+                        "width": "auto",
+                        "searchable": true,
+                        "sortable": (sDataLoading === '{{ constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL') }}'),
+                        "title": tableProperties[key].title,
+                        "defaultContent": "",
+                        "type": "html",
+                        "data": "attributes." + key + ".att_code",
+                        "render": function (att_code, type, row) {
+                            var cellElem;
+                            var itemActions;
+                            var itemPrimarayAction;
+
+                            // Preparing action on the cell
+                            // Note : For now we will use only one action, the secondary actions are therefore not implemented. Only the data structure is done.
+                            itemActions = row.attributes[att_code].actions;
+
+                            // Preparing the cell data
+                            cellElem = (itemActions.length > 0) ? $('<a></a>') : $('<span></span>');
+                            cellElem.html(row.attributes[att_code].value);
+                            // Building actions
+                            if (itemActions.length > 0) {
+                                // - Primary action
+                                itemPrimaryAction = itemActions[0];
+                                switch (itemPrimaryAction.type) {
+                                    case '{{ constant('Combodo\\iTop\\Portal\\Brick\\ManageBrick::ENUM_ACTION_VIEW') }}':
+                                        url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, itemPrimaryAction.class).replace(/-objectId-/, itemPrimaryAction.id);
+                                        break;
+                                    case '{{ constant('Combodo\\iTop\\Portal\\Brick\\ManageBrick::ENUM_ACTION_EDIT') }}':
+                                        url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, itemPrimaryAction.class).replace(/-objectId-/, itemPrimaryAction.id);
+                                        break;
+                                    default:
+                                        url = '#';
+                                        //console.log('Action "'+itemPrimaryAction+'" not implemented');
+                                        break;
+                                }
+                                SetActionUrl(cellElem, url);
+                                SetActionOpeningTarget(cellElem, itemPrimaryAction.opening_target);
+
+                                // - Secondary actions
+                                // Not done for now, only the data structure is ready in case we need it later
+                            }
+
+                            return cellElem.prop('outerHTML');
+                        },
+                    });
+                }
+                // UI extensions buttons
+                else
+				{
+                    columnsDefinition.push({
+                        "width": "auto",
+                        "searchable": false,
+                        "sortable": (sDataLoading === '{{ constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL') }}'),
+                        "title": tableProperties[key].title,
+                        "defaultContent": "",
+                        "type": "html",
+                        "data": "attributes." + key + ".att_code",
+                        "render": function (att_code, type, row) {
+                            var cellElem = $('<div class="group-actions-wrapper"></div>');
+                            var actionsCount = row.actions.length;
+
+                            // Adding menu wrapper in case there are several actions
+                            var actionsElem = $('<div></div>');
+                            actionsElem.appendTo(cellElem);
+                            if(actionsCount > 1) {
+                                actionsElem.addClass('group-actions pull-right');
+
+                                // Adding hamburger icon toggler
+                                actionsElem.append(
+                                    $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-' + row.id + '"></a>')
+                                );
+
+                                // Adding sub menu
+                                var actionsSSMenuElem = $('<div id="item-actions-menu-' + row.id + '" class="item-action-wrapper panel panel-default"></div>')
+                                    .appendTo(actionsElem);
+                                var actionsSSMenuContainerElem = $('<div class="panel-body"></div>')
+                                    .appendTo(actionsSSMenuElem);
+                            }
+
+                            // Adding actions
+							for(var i in row.actions)
 							{
-								case '{{ constant('Combodo\\iTop\\Portal\\Brick\\ManageBrick::ENUM_ACTION_VIEW') }}':
-									url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, itemPrimaryAction.class).replace(/-objectId-/, itemPrimaryAction.id);
-									break;
-								case '{{ constant('Combodo\\iTop\\Portal\\Brick\\ManageBrick::ENUM_ACTION_EDIT') }}':
-									url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, itemPrimaryAction.class).replace(/-objectId-/, itemPrimaryAction.id);
-									break;
-								default:
-								    url = '#';
-									//console.log('Action "'+itemPrimaryAction+'" not implemented');
-									break;
+								var actionDef = row.actions[i];
+								var actionElem = $('<a></a>')
+									.attr('href', actionDef.url)
+									.append( $('<span></span>').html(actionDef.label) );
+
+								// Adding css classes to action
+								for(var j in actionDef.css_classes)
+								{
+									actionElem.addClass(actionDef.css_classes[j]);
+								}
+
+								// Performing specific treatment regarding the action type
+								if(actionDef.type === 'button')
+								{
+									// External files
+									// Note: Not supported yet
+
+									// On click callback
+									actionElem.attr('onclick', actionDef.onclick);
+								}
+								else if(actionDef.type === 'link')
+								{
+									actionElem.attr('target', actionDef.target);
+								}
+
+								if(actionsCount > 1)
+								{
+                                    actionsSSMenuContainerElem.append( $('<p></p>').append(actionElem) );
+								}
+								else
+								{
+                                    actionsElem.append( actionElem );
+								}
 							}
-                            SetActionUrl(cellElem, url);
-                            SetActionOpeningTarget(cellElem, itemPrimaryAction.opening_target);
-							
-							// - Secondary actions
-							// Not done for now, only the data structure is ready in case we need it later
+
+                            return cellElem.prop('outerHTML');
 						}
-						
-						return cellElem.prop('outerHTML');
-					},
-				});
+                    });
+				}
 			}
 			
 			return columnsDefinition;
@@ -275,6 +351,11 @@
 					}
 				});
 			{% endfor %}
+
+            // Auto collapse item actions popup
+            $('body').click(function(){
+                $('table .item-action-wrapper.collapse.in').collapse('hide');
+            });
 		});
 	</script>
 {% endblock %}

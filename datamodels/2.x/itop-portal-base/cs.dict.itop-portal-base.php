@@ -106,6 +106,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Brick:Portal:Manage:Name' => 'Spravovat položky',
     'Brick:Portal:Manage:Table:NoData' => 'Žádná položka',
+    'Brick:Portal:Manage:Table:ItemActions' => 'Actions~~',
 ));
 
 // ObjectBrick brick

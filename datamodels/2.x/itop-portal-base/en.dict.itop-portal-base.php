@@ -102,6 +102,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:Manage:Name' => 'Manage items',
 	'Brick:Portal:Manage:Table:NoData' => 'No item.',
+    'Brick:Portal:Manage:Table:ItemActions' => 'Actions',
 ));
 
 // ObjectBrick brick

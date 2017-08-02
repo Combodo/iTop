@@ -24,6 +24,7 @@
 	{% endblock %}
 	<title>{% block pPageTitle %}{% if sPageTitle is defined and sPageTitle is not null %}{{ sPageTitle }} - {{ constant('ITOP_APPLICATION') }}{% else %}{{ 'Page:DefaultTitle'|dict_s }}{% endif %}{% endblock %}</title>
 	<link rel="shortcut icon" href="{{ app['combodo.absolute_url'] ~ 'images/favicon.ico'|add_itop_version }}" />
+
 	{% block pPageStylesheets %}
 		{# First bootstrap core, lib themes, then bootstrap theme, portal adjustements #}
 		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/bootstrap/css/bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
@@ -47,6 +48,12 @@
 		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.bootstrap|add_itop_version }}" rel="stylesheet" id="css_bootstrap_theme">
 		{# - Portal adjustments for BS theme #}
 		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.portal|add_itop_version }}" rel="stylesheet" id="css_portal">
+		{# UI Extensions CSS, in an undefined order #}
+        {% if app['combodo.portal.instance.conf'].ui_extensions.css_files is defined %}
+            {% for css_file in app['combodo.portal.instance.conf'].ui_extensions.css_files %}
+				<link href="{{ css_file|add_itop_version }}" rel="stylesheet">
+            {% endfor %}
+        {% endif %}
 		{# Custom CSS that is supposed to do adjustments to the portal #}
 		{% if app['combodo.portal.instance.conf'].properties.themes.custom is defined %}
 			<link href="{{ app['combodo.portal.instance.conf'].properties.themes.custom|add_itop_version }}" rel="stylesheet">
@@ -58,6 +65,16 @@
 			{% endfor %}
 		{% endif %}
 	{% endblock %}
+
+	{% block pStyleinline %}
+        {# UI Extensions inline CSS #}
+        {% if app['combodo.portal.instance.conf'].ui_extensions.css_inline is not null %}
+			<style>
+				{{ app['combodo.portal.instance.conf'].ui_extensions.css_inline|raw }}
+			</style>
+        {% endif %}
+	{% endblock %}
+
 	{% block pPageScripts %}
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/jquery/jquery-1.11.3.min.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/jquery-ui/jquery-ui-1.11.4.min.js'|add_itop_version }}"></script>
@@ -100,6 +117,12 @@
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_form_handler.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_form_field.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_form_field_html.js'|add_itop_version }}"></script>
+        {# UI Extensions JS, in an undefined order #}
+        {% if app['combodo.portal.instance.conf'].ui_extensions.js_files is defined %}
+			{% for js_file in app['combodo.portal.instance.conf'].ui_extensions.js_files %}
+				<script type="text/javascript" src="{{ js_file|add_itop_version }}"></script>
+			{% endfor %}
+        {% endif %}
 	{% endblock %}
 </head>
 <body class="{% block pPageBodyClass %}{% endblock %}">
@@ -179,6 +202,12 @@
 								{% endif %}
 							</ul>
 						</div>
+
+                        {% block pPageUIExtensionNavigationMenuTopbar %}
+                            {% if app['combodo.portal.instance.conf'].ui_extensions.html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')] is defined %}
+                                {{ app['combodo.portal.instance.conf'].ui_extensions.html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')]|raw }}
+                            {% endif %}
+                        {% endblock %}
 					</div>
 				</nav>
 			{% endblock %}
@@ -235,6 +264,13 @@
 							</ul>
 						{% endblock %}
 					</div>
+
+                    {% block pPageUIExtensionNavigationMenuSidebar %}
+                        {% if app['combodo.portal.instance.conf'].ui_extensions.html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')] is defined %}
+                            {{ app['combodo.portal.instance.conf'].ui_extensions.html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')]|raw }}
+                        {% endif %}
+                    {% endblock %}
+
 					{% if app['combodo.portal.instance.conf'].properties.logo is not null %}
 						<div class="logo">
 							{% block pNavigationSideMenuLogo %}
@@ -268,6 +304,12 @@
 					</section>
 				</div>
 			</div>
+
+			{% block pPageUIExtensionMainContent %}
+                {% if app['combodo.portal.instance.conf'].ui_extensions.html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_MAIN_CONTENT')] is defined %}
+                    {{ app['combodo.portal.instance.conf'].ui_extensions.html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_MAIN_CONTENT')]|raw }}
+                {% endif %}
+			{% endblock %}
 		</div>
 		{% endblock %}
 		
@@ -312,6 +354,12 @@
 					{% include 'itop-portal-base/portal/src/views/helpers/loader.html.twig' %}
 				</div>
 			</div>
+		{% endblock %}
+
+		{% block pPageUIExtensionBody %}
+			{% if app['combodo.portal.instance.conf'].ui_extensions.html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_BODY')] is defined %}
+				{{ app['combodo.portal.instance.conf'].ui_extensions.html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_BODY')]|raw }}
+			{% endif %}
 		{% endblock %}
 	{% endblock %}
 	
@@ -409,6 +457,15 @@
 				{% endblock %}
 			});
 		</script>
+	{% endblock %}
+
+	{% block pPageExtensionsScripts %}
+        {# UI Extensions inline JS #}
+        {% if app['combodo.portal.instance.conf'].ui_extensions.js_inline is not null %}
+			<script type="text/javascript">
+				{{ app['combodo.portal.instance.conf'].ui_extensions.js_inline|raw }}
+			</script>
+        {% endif %}
 	{% endblock %}
 </body>
 </html>

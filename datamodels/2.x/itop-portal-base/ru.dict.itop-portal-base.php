@@ -84,6 +84,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
     'Brick:Portal:Manage:Name' => 'Управление элементами',
     'Brick:Portal:Manage:Table:NoData' => 'Нет элементов',
+    'Brick:Portal:Manage:Table:ItemActions' => 'Actions~~',
 ));
 
 // ObjectBrick brick

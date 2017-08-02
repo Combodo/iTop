@@ -30,11 +30,13 @@ use \Dict;
 use \utils;
 use \IssueLog;
 use \UserRights;
+use \CMDBSource;
 use \DOMFormatException;
 use \ModuleDesign;
 use \MetaModel;
 use \DBObjectSearch;
 use \DBObjectSet;
+use \iPortalUIExtension;
 use \Combodo\iTop\Portal\Brick\AbstractBrick;
 
 /**
@@ -200,7 +202,7 @@ class ApplicationHelper
 	 */
 	static function RegisterTwigExtensions(Twig_Environment &$oTwigEnv)
 	{
-		// A filter to translate a string via the Dict::S function
+		// Filter to translate a string via the Dict::S function
 		// Usage in twig : {{ 'String:ToTranslate'|dict_s }}
         $oTwigEnv->addFilter(new Twig_SimpleFilter('dict_s', function($sStringCode, $sDefault = null, $bUserLanguageOnly = false)
 		{
@@ -208,7 +210,7 @@ class ApplicationHelper
 		})
 		);
 
-		// A filter to format a string via the Dict::Format function
+		// Filter to format a string via the Dict::Format function
 		// Usage in twig : {{ 'String:ToTranslate'|dict_format() }}
         $oTwigEnv->addFilter(new Twig_SimpleFilter('dict_format', function($sStringCode, $sParam01 = null, $sParam02 = null, $sParam03 = null, $sParam04 = null)
 		{
@@ -216,12 +218,12 @@ class ApplicationHelper
 		})
 		);
 
-		// Filters to enable base64 encode/decode
+		// Filter to enable base64 encode/decode
 		// Usage in twig : {{ 'String to encode'|base64_encode }}
         $oTwigEnv->addFilter(new Twig_SimpleFilter('base64_encode', 'base64_encode'));
         $oTwigEnv->addFilter(new Twig_SimpleFilter('base64_decode', 'base64_decode'));
 
-		// Filters to enable json decode  (encode already exists)
+		// Filter to enable json decode  (encode already exists)
 		// Usage in twig : {{ aSomeArray|json_decode }}
         $oTwigEnv->addFilter(new Twig_SimpleFilter('json_decode', function($sJsonString, $bAssoc = false)
 		{
@@ -243,6 +245,22 @@ class ApplicationHelper
 
 			return $sUrl;
 		}));
+
+        // Filter to add a module's version to an url
+        $oTwigEnv->addFilter(new Twig_SimpleFilter('add_module_version', function($sUrl, $sModuleName){
+            $sModuleVersion = utils::GetCompiledModuleVersion($sModuleName);
+
+            if (strpos($sUrl, '?') === false)
+            {
+                $sUrl = $sUrl . "?moduleversion=" . $sModuleVersion;
+            }
+            else
+            {
+                $sUrl = $sUrl . "&moduleversion=" . $sModuleVersion;
+            }
+
+            return $sUrl;
+        }));
 	}
 
 	/**
@@ -398,8 +416,15 @@ class ApplicationHelper
 				),
 				'portals' => array(),
 				'forms' => array(),
+                'ui_extensions' => array(
+                    'css_files' => array(),
+                    'css_inline' => null,
+                    'js_files' => array(),
+                    'js_inline' => null,
+                    'html' => array(),
+                ),
 				'bricks' => array(),
-				'bricks_total_width' => 0
+				'bricks_total_width' => 0,
 			);
 			// - Global portal properties
 			foreach ($oDesign->GetNodes('/module_design/properties/*') as $oPropertyNode)
@@ -510,6 +535,8 @@ class ApplicationHelper
             static::LoadLifecycleConfiguration($oApp, $oDesign);
 			// - Presentation lists
 			$aPortalConf['lists'] = static::LoadListsConfiguration($oApp, $oDesign);
+			// - UI extensions
+            $aPortalConf['ui_extensions'] = static::LoadUIExtensions($oApp);
 			// - Action rules
 			static::LoadActionRulesConfiguration($oApp, $oDesign);
 			// - Generating CSS files
@@ -1241,5 +1268,69 @@ class ApplicationHelper
 
 		return $aClassesLists;
 	}
+
+    /**
+     * Loads portal UI extensions
+     *
+     * @param \Silex\Application $oApp
+     * @return array
+     */
+	static protected function LoadUIExtensions(Application $oApp)
+    {
+        $aUIExtensions = array(
+            'css_files' => array(),
+            'css_inline' => null,
+            'js_files' => array(),
+            'js_inline' => null,
+            'html' => array(),
+        );
+        $aUIExtensionHooks = array(
+            iPortalUIExtension::ENUM_PORTAL_EXT_UI_BODY,
+            iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU,
+            iPortalUIExtension::ENUM_PORTAL_EXT_UI_MAIN_CONTENT,
+        );
+
+        /** @var iPortalUIExtension $oExtensionInstance */
+        foreach(MetaModel::EnumPlugins('iPortalUIExtension') as $oExtensionInstance)
+        {
+                // Adding CSS files
+                $aUIExtensions['css_files'] = array_merge($aUIExtensions['css_files'], $oExtensionInstance->GetCSSFiles($oApp));
+
+                // Adding CSS inline
+                $sCSSInline = $oExtensionInstance->GetCSSInline($oApp);
+                if($sCSSInline !== null)
+                {
+                    $aUIExtensions['css_inline'] .= "\n\n" . $sCSSInline;
+                }
+
+                // Adding JS files
+                $aUIExtensions['js_files'] = array_merge($aUIExtensions['js_files'], $oExtensionInstance->GetJSFiles($oApp));
+
+                // Adding JS inline
+                $sJSInline = $oExtensionInstance->GetJSInline($oApp);
+                if($sJSInline !== null)
+                {
+                    // Note: Semi-colon is to prevent previous script that would have omitted it.
+                    $aUIExtensions['js_inline'] .= "\n\n;\n" . $sJSInline;
+                }
+
+                // Adding HTML for each hook
+                foreach($aUIExtensionHooks as $sUIExtensionHook)
+                {
+                    $sFunctionName = 'Get'.$sUIExtensionHook.'HTML';
+                    $sHTML = $oExtensionInstance->$sFunctionName($oApp);
+                    if($sHTML !== null)
+                    {
+                        if(!array_key_exists($sUIExtensionHook, $aUIExtensions['html']))
+                        {
+                            $aUIExtensions['html'][$sUIExtensionHook] = '';
+                        }
+                        $aUIExtensions['html'][$sUIExtensionHook] .= "\n\n" . $sHTML;
+                    }
+                }
+        }
+
+        return $aUIExtensions;
+    }
 
 }

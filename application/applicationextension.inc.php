@@ -309,11 +309,17 @@ interface iPopupMenuExtension
 	 */
 	const MENU_USER_ACTIONS = 5;
     /**
+     * Insert an item into the Action menu on an object item in an objects list in the portal
+     *
+     * $param is an array('portal_id' => $sPortalId, 'object' => $oObject) containing the portal id and a DBObject instance (the object on the current line)
+     */
+    const PORTAL_OBJLISTITEM_ACTIONS = 7;
+    /**
      * Insert an item into the Action menu on an object details page in the portal
      *
      * $param is an array('portal_id' => $sPortalId, 'object' => $oObject) containing the portal id and a DBObject instance (the object currently displayed)
      */
-	const PORTAL_OBJDETAILS_ACTIONS = 7;
+	const PORTAL_OBJDETAILS_ACTIONS = 8;
 
     /**
      * Insert an item into the Actions menu of a list in the portal
@@ -330,7 +336,7 @@ interface iPopupMenuExtension
      * $param is the portal id
      * @todo
      */
-    const PORTAL_USER_ACTIONS = 8;
+    const PORTAL_USER_ACTIONS = 9;
     /**
      * Insert an item into the navigation menu of the portal
      * Note: This is not implemented yet !
@@ -338,7 +344,7 @@ interface iPopupMenuExtension
      * $param is the portal id
      * @todo
      */
-    const PORTAL_MENU_ACTIONS = 9;
+    const PORTAL_MENU_ACTIONS = 10;
 
 	/**
 	 * Get the list of items to be added to a menu.
@@ -614,6 +620,128 @@ interface iPageUIExtension
 	 * @return string The HTML content to add into the page
 	 */
 	public function GetBannerHtml(iTopWebPage $oPage);
+}
+
+/**
+ * Implement this interface to add content to any enhanced portal page
+ *
+ * IMPORTANT! Experimental API, may be removed at anytime, we don't recommend to use it just now!
+ *
+ * @package     Extensibility
+ * @api
+ * @since 2.4
+ */
+interface iPortalUIExtension
+{
+    const ENUM_PORTAL_EXT_UI_BODY = 'Body';
+    const ENUM_PORTAL_EXT_UI_NAVIGATION_MENU = 'NavigationMenu';
+    const ENUM_PORTAL_EXT_UI_MAIN_CONTENT = 'MainContent';
+
+    /**
+     * Returns an array of CSS file urls
+     *
+     * @param \Silex\Application $oApp
+     * @return array
+     */
+    public function GetCSSFiles(\Silex\Application $oApp);
+    /**
+     * Returns inline (raw) CSS
+     *
+     * @param \Silex\Application $oApp
+     * @return string
+     */
+    public function GetCSSInline(\Silex\Application $oApp);
+    /**
+     * Returns an array of JS file urls
+     *
+     * @param \Silex\Application $oApp
+     * @return array
+     */
+    public function GetJSFiles(\Silex\Application $oApp);
+    /**
+     * Returns raw JS code
+     *
+     * @param \Silex\Application $oApp
+     * @return string
+     */
+    public function GetJSInline(\Silex\Application $oApp);
+    /**
+     * Returns raw HTML code to put at the end of the <body> tag
+     *
+     * @param \Silex\Application $oApp
+     * @return string
+     */
+    public function GetBodyHTML(\Silex\Application $oApp);
+    /**
+     * Returns raw HTML code to put at the end of the #main-wrapper element
+     *
+     * @param \Silex\Application $oApp
+     * @return string
+     */
+    public function GetMainContentHTML(\Silex\Application $oApp);
+    /**
+     * Returns raw HTML code to put at the end of the #topbar and #sidebar elements
+     *
+     * @param \Silex\Application $oApp
+     * @return string
+     */
+    public function GetNavigationMenuHTML(\Silex\Application $oApp);
+}
+
+/**
+ * IMPORTANT! Experimental API, may be removed at anytime, we don't recommend to use it just now!
+ */
+abstract class AbstractPortalUIExtension implements iPortalUIExtension
+{
+    /**
+     * @inheritDoc
+     */
+    public function GetCSSFiles(\Silex\Application $oApp)
+    {
+        return array();
+    }
+    /**
+     * @inheritDoc
+     */
+    public function GetCSSInline(\Silex\Application $oApp)
+    {
+        return null;
+    }
+    /**
+     * @inheritDoc
+     */
+    public function GetJSFiles(\Silex\Application $oApp)
+    {
+        return array();
+    }
+    /**
+     * @inheritDoc
+     */
+    public function GetJSInline(\Silex\Application $oApp)
+    {
+        return null;
+    }
+    /**
+     * @inheritDoc
+     */
+    public function GetBodyHTML(\Silex\Application $oApp)
+    {
+        return null;
+    }
+    /**
+     * @inheritDoc
+     */
+    public function GetMainContentHTML(\Silex\Application $oApp)
+    {
+        return null;
+    }
+    /**
+     * @inheritDoc
+     */
+    public function GetNavigationMenuHTML(\Silex\Application $oApp)
+    {
+        return null;
+    }
 }
 
 /**

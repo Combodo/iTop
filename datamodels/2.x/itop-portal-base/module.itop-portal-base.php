@@ -17,7 +17,7 @@ SetupWebPage::AddModule(
 		'portal/src/entities/portalbrick.class.inc.php',
 		'portal/src/controllers/abstractcontroller.class.inc.php',
 		'portal/src/controllers/brickcontroller.class.inc.php',
-		'portal/src/routers/abstractrouter.class.inc.php',
+        'portal/src/routers/abstractrouter.class.inc.php',
 	),
 	'webservice' => array(
 	//'webservices.itop-portal-base.php',
@@ -40,4 +40,4 @@ SetupWebPage::AddModule(
 	),
 	)
 );
-?>
+

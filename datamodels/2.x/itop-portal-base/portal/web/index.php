@@ -31,6 +31,7 @@ require_once APPROOT . '/core/moduledesign.class.inc.php';
 require_once APPROOT . '/application/loginwebpage.class.inc.php';
 require_once APPROOT . '/sources/autoload.php';
 // Portal
+// Note: This could be prevented by adding namespaces to composer
 require_once __DIR__ . '/../src/providers/urlgeneratorserviceprovider.class.inc.php';
 require_once __DIR__ . '/../src/helpers/urlgeneratorhelper.class.inc.php';
 require_once __DIR__ . '/../src/providers/contextmanipulatorserviceprovider.class.inc.php';
@@ -109,6 +110,7 @@ $oApp->before(function(Symfony\Component\HttpFoundation\Request $oRequest, Silex
     $oApp['debug'] = $bDebug;
     $oApp['combodo.current_environment'] = utils::GetCurrentEnvironment();
     $oApp['combodo.absolute_url'] = utils::GetAbsoluteUrlAppRoot();
+    $oApp['combodo.modules.absolute_url'] = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment();
     $oApp['combodo.portal.base.absolute_url'] = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/web/';
     $oApp['combodo.portal.base.absolute_path'] = MODULESROOT . '/itop-portal-base/portal/web/';
     $oApp['combodo.portal.instance.absolute_url'] = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/' . PORTAL_MODULE_ID . '/';

@@ -96,6 +96,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Manage:Name' => 'Beheer items',
 	'Brick:Portal:Manage:Table:NoData' => 'Geen gegevens',
+    'Brick:Portal:Manage:Table:ItemActions' => 'Actions~~',
 ));
 
 // ObjectBrick brick

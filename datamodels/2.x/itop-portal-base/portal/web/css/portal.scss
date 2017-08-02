@@ -612,6 +612,11 @@ footer{
 }
 
 /* Secondary actions */
+.list-group-item-actions .group-actions-wrapper,
+.mosaic-group-item-actions .group-actions-wrapper,
+table .group-actions-wrapper{
+	text-align: center;
+}
 table .group-actions{
 	position: relative;
 }

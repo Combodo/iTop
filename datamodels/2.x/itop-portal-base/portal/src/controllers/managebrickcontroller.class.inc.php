@@ -41,6 +41,9 @@ use \VariableExpression;
 use \SQLExpression;
 use \UnaryExpression;
 use \Dict;
+use \iPopupMenuExtension;
+use \URLButtonItem;
+use \JSButtonItem;
 use \Combodo\iTop\Portal\Helper\ApplicationHelper;
 use \Combodo\iTop\Portal\Helper\SecurityHelper;
 use \Combodo\iTop\Portal\Brick\AbstractBrick;
@@ -381,6 +384,7 @@ class ManageBrickController extends BrickController
 
 		// Retrieving and preparing data for rendering
 		$aGroupingAreasData = array();
+        $bHasObjectListItemExtension = false;
 		foreach ($aSets as $sKey => $oSet)
 		{
 			// Set properties
@@ -402,7 +406,6 @@ class ManageBrickController extends BrickController
 
 			// Getting items
 			$aItems = array();
-			$aItemsIds = array();
 			// ... For each item
             /** @var DBObject $oCurrentRow */
 			while ($oCurrentRow = $oSet->Fetch())
@@ -433,12 +436,12 @@ class ManageBrickController extends BrickController
 						// - Then set allowed action
 						if ($sActionType !== null)
 						{
-							$aActions[] = array(
-								'type' => $sActionType,
-								'class' => $sCurrentClass,
-								'id' => $oCurrentRow->GetKey(),
+                            $aActions[] = array(
+                                'type' => $sActionType,
+                                'class' => $sCurrentClass,
+                                'id' => $oCurrentRow->GetKey(),
                                 'opening_target' => $oBrick->GetOpeningTarget(),
-							);
+                            );
 						}
 					}
 
@@ -479,25 +482,50 @@ class ManageBrickController extends BrickController
 						'actions' => $aActions
 					);
 				}
+
+				// ... Checking menu extensions
+                $aItemButtons = array();
+                foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
+                {
+                    foreach($oExtensionInstance->EnumItems(iPopupMenuExtension::PORTAL_OBJLISTITEM_ACTIONS, array('portal_id' => $oApp['combodo.portal.instance.id'], 'object' => $oCurrentRow)) as $oMenuItem)
+                    {
+                        if (is_object($oMenuItem))
+                        {
+                            if($oMenuItem instanceof JSButtonItem)
+                            {
+                                $aItemButtons[] = $oMenuItem->GetMenuItem() + array('js_files' => $oMenuItem->GetLinkedScripts(), 'type' => 'button');
+                            }
+                            elseif($oMenuItem instanceof URLButtonItem)
+                            {
+                                $aItemButtons[] = $oMenuItem->GetMenuItem() + array('type' => 'link');
+                            }
+                        }
+                    }
+                }
 				
 				// ... And item's properties
 				$aItems[] = array(
 					'id' => $oCurrentRow->GetKey(),
 					'class' => $sCurrentClass,
 					'attributes' => $aItemAttrs,
-					'highlight_class' => $oCurrentRow->GetHilightClass()
+					'highlight_class' => $oCurrentRow->GetHilightClass(),
+                    'actions' => $aItemButtons,
 				);
-				$aItemsIds = $oCurrentRow->GetKey();
+
+                if(!empty($aItemButtons))
+                {
+                    $bHasObjectListItemExtension = true;
+                }
 			}
 
-			// Now that we retrieved items, we check which can be edited, which can be view and which cannot be opened
-            //
-            // Note: Now that we do checks here and not through the SecurityHelper while fetching objects, we might bypass datamodel security regarding the object class!
-//            $oScopeQuery = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sCurrentClass, UR_ACTION_MODIFY);
-//			if($oSearchEditableItems !== null)
-//            {
-//                $oSearchEditableItems->A
-//            }
+			// Adding an extra column for object list item extensions
+            if($bHasObjectListItemExtension === true)
+            {
+                $aColumnsDefinition['_ui_extensions'] = array(
+                    'title' => Dict::S('Brick:Portal:Manage:Table:ItemActions'),
+                    'type' => 'html',
+                );
+            }
 
 			$aGroupingAreasData[$sKey] = array(
 				'sId' => $sKey,
