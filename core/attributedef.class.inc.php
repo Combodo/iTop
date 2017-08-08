@@ -3331,6 +3331,11 @@ class AttributeEmailAddress extends AttributeString
 		return $this->GetOptional('validation_pattern', '^'.utils::GetConfig()->Get('email_validation_pattern').'$');
 	}
 
+    static public function GetFormFieldClass()
+    {
+        return '\\Combodo\\iTop\\Form\\Field\\EmailField';
+    }
+
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		if (empty($sValue)) return '';
@@ -5078,19 +5083,15 @@ class AttributeExternalField extends AttributeDefinition
 	{
 		if ($oFormField === null)
 		{
-			$sFormFieldClass = static::GetFormFieldClass();
+		    // ExternalField's FormField are actually based on the FormField from the target attribute.
+            $oRemoteAttDef = $this->GetExtAttDef();
+            $sFormFieldClass = $oRemoteAttDef::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
 		parent::MakeFormField($oObject, $oFormField);
 
-		// Note : As of today, this attribute is -by nature- only supported in readonly mode, not edition
-		$sAttCode = $this->GetCode();
-		$sAttCodeFriendlyname = $sAttCode . '_friendlyname';
-		if ($this->IsExternalKey(EXTKEY_ABSOLUTE) && MetaModel::IsValidAttCode(get_class($oObject), $sAttCodeFriendlyname))
-		{
-			$sAttCode = $sAttCodeFriendlyname;
-		}
-		$oFormField->SetCurrentValue(html_entity_decode($oObject->GetAsHTML($sAttCode), ENT_QUOTES, 'UTF-8'));
+		// Readonly field because we can't update external fields
+		$oFormField->SetReadOnly(true);
 
 		return $oFormField;
 	}

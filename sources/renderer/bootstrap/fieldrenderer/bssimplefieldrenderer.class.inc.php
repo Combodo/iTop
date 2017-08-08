@@ -59,6 +59,7 @@ class BsSimpleFieldRenderer extends FieldRenderer
                 case 'Combodo\\iTop\\Form\\Field\\PasswordField':
                 case 'Combodo\\iTop\\Form\\Field\\StringField':
                 case 'Combodo\\iTop\\Form\\Field\\UrlField':
+                case 'Combodo\\iTop\\Form\\Field\\EmailField':
                 case 'Combodo\\iTop\\Form\\Field\\SelectField':
                 case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
                     // Opening container
@@ -98,6 +99,7 @@ EOF
 
                         case 'Combodo\\iTop\\Form\\Field\\StringField':
                         case 'Combodo\\iTop\\Form\\Field\\UrlField':
+                        case 'Combodo\\iTop\\Form\\Field\\EmailField':
                             $oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" />');
                             break;
 
@@ -226,6 +228,7 @@ EOF
 					case 'Combodo\\iTop\\Form\\Field\\LabelField':
                     case 'Combodo\\iTop\\Form\\Field\\StringField':
                     case 'Combodo\\iTop\\Form\\Field\\UrlField':
+                    case 'Combodo\\iTop\\Form\\Field\\EmailField':
                     case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
                     case 'Combodo\\iTop\\Form\\Field\\DurationField':
                         // Opening container
@@ -243,7 +246,7 @@ EOF
                             $oOutput->AddHtml('</div>');
 
                             // Value
-                            $bEncodeHtmlEntities = ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\UrlField') ? false : true;
+                            $bEncodeHtmlEntities = (in_array($sFieldClass, array('Combodo\\iTop\\Form\\Field\\UrlField', 'Combodo\\iTop\\Form\\Field\\EmailField'))) ? false : true;
                             $oOutput->AddHtml('<div class="form_field_control">');
 							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), $bEncodeHtmlEntities)->AddHtml('</div>');
                             $oOutput->AddHtml('</div>');
@@ -392,6 +395,7 @@ EOF
 			case 'Combodo\\iTop\\Form\\Field\\PasswordField':
             case 'Combodo\\iTop\\Form\\Field\\StringField':
             case 'Combodo\\iTop\\Form\\Field\\UrlField':
+            case 'Combodo\\iTop\\Form\\Field\\EmailField':
 			case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
 			case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
 			case 'Combodo\\iTop\\Form\\Field\\SelectField':
@@ -465,6 +469,7 @@ EOF
 			case 'Combodo\\iTop\\Form\\Field\\PasswordField':
             case 'Combodo\\iTop\\Form\\Field\\StringField':
             case 'Combodo\\iTop\\Form\\Field\\UrlField':
+            case 'Combodo\\iTop\\Form\\Field\\EmailField':
 			case 'Combodo\\iTop\\Form\\Field\\SelectField':
 			case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
 			case 'Combodo\\iTop\\Form\\Field\\HiddenField':
