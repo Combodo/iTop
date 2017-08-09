@@ -1963,6 +1963,9 @@ div.ui-dialog-header {
 	bottom: -20px;
 	top: auto;
 }
+.ui-tooltip .ui-tooltip-content{
+	overflow-x: auto;
+}
 table.export_parameters td {
 	padding-right: 2em;
 }
