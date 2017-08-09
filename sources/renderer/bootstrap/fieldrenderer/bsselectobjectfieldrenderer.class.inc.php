@@ -352,30 +352,6 @@ EOF
 
 			// Closing container
 			$oOutput->AddHtml('</div>');
-
-			// JS FieldChange trigger (:input are not always at the same depth)
-			$oOutput->AddJs(
-<<<EOF
-				$("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
-					var me = this;
-
-					$(this).closest(".field_set").trigger("field_change", {
-						id: $(me).attr("id"),
-						name: $(me).closest(".form_field").attr("data-field-id"),
-						value: $(me).val()
-					});
-				});
-EOF
-			);
-
-			// Attaching JS widget
-			$oOutput->AddJs(
-<<<EOF
-				$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field({
-					'validators': {$this->GetValidatorsAsJson()}
-				});
-EOF
-			);
 		}
 
 		return $oOutput;

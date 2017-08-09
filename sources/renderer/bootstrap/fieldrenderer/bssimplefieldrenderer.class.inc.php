@@ -53,6 +53,7 @@ class BsSimpleFieldRenderer extends FieldRenderer
 		// Rendering field in edition mode
 		if (!$this->oField->GetReadOnly() && !$this->oField->GetHidden())
 		{
+		    // HTML content
 			switch ($sFieldClass)
 			{
                 case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
@@ -211,6 +212,128 @@ EOF
 					$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('"/>');
 					break;
 			}
+
+            // JS FieldChange trigger (:input are not always at the same depth)
+            switch ($sFieldClass)
+            {
+                case 'Combodo\\iTop\\Form\\Field\\PasswordField':
+                case 'Combodo\\iTop\\Form\\Field\\StringField':
+                case 'Combodo\\iTop\\Form\\Field\\UrlField':
+                case 'Combodo\\iTop\\Form\\Field\\EmailField':
+                case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
+                case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
+                case 'Combodo\\iTop\\Form\\Field\\SelectField':
+                case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
+                case 'Combodo\\iTop\\Form\\Field\\HiddenField':
+                    $oOutput->AddJs(
+                        <<<EOF
+                        					$("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
+						var me = this;
+
+						$(this).closest(".field_set").trigger("field_change", {
+							id: $(me).attr("id"),
+							name: $(me).closest(".form_field").attr("data-field-id"),
+							value: $(me).val()
+						});
+					});
+EOF
+                    );
+                    break;
+                case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
+                    // We need the focusout event has the datepicker widget seems to override the change event
+                    $oOutput->AddJs(
+                        <<<EOF
+                        					$("#{$this->oField->GetGlobalId()}").off("change keyup focusout").on("change keyup focusout", function(){
+						var me = this;
+
+						$(this).closest(".field_set").trigger("field_change", {
+							id: $(me).attr("id"),
+							name: $(me).closest(".form_field").attr("data-field-id"),
+							value: $(me).val()
+						});
+					});
+EOF
+                    );
+                    break;
+
+                case 'Combodo\\iTop\\Form\\Field\\RadioField':
+                case 'Combodo\\iTop\\Form\\Field\\CheckboxField':
+                    $oOutput->AddJs(
+                        <<<EOF
+                        					$("#{$this->oField->GetGlobalId()} input").off("change").on("change", function(){
+						var me = this;
+
+						$(this).closest(".field_set").trigger("field_change", {
+							id: $(me).closest("#{$this->oField->GetGlobalId()}").attr("id"),
+							name: $(me).attr("name"),
+							value: $(me).val()
+						});
+					});
+EOF
+                    );
+                    break;
+            }
+
+            // JS Form field widget construct
+            $aValidators = array();
+            foreach ($this->oField->GetValidators() as $oValidator)
+            {
+                $aValidators[$oValidator::GetName()] = array(
+                    'reg_exp' => $oValidator->GetRegExp(),
+                    'message' => Dict::S($oValidator->GetErrorMessage())
+                );
+            }
+
+            $sFormFieldOptions = json_encode(array(
+                'validators' => $aValidators
+            ));
+
+            switch ($sFieldClass)
+            {
+                case 'Combodo\\iTop\\Form\\Field\\PasswordField':
+                case 'Combodo\\iTop\\Form\\Field\\StringField':
+                case 'Combodo\\iTop\\Form\\Field\\UrlField':
+                case 'Combodo\\iTop\\Form\\Field\\EmailField':
+                case 'Combodo\\iTop\\Form\\Field\\SelectField':
+                case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
+                case 'Combodo\\iTop\\Form\\Field\\HiddenField':
+                case 'Combodo\\iTop\\Form\\Field\\RadioField':
+                case 'Combodo\\iTop\\Form\\Field\\CheckboxField':
+                case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
+                    $oOutput->AddJs(
+                        <<<EOF
+    					$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field($sFormFieldOptions);
+EOF
+                    );
+                    break;
+                case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
+                case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
+                    $bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
+                    if($bRichEditor)
+                    {
+                        // Overloading $sFormFieldOptions to include the set_current_value_callback. It would have been nicer to refactor the variable for all field types, but as this is a fix for a maintenance release, we rather be safe.
+                        $sValidators = json_encode($aValidators);
+                        $oOutput->AddJs(
+                            <<<EOF
+                            $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field_html({
+                            validators: $sValidators,
+                            set_current_value_callback: function(me, oEvent, oData){ $(me.element).find('textarea').val(oData); }
+                        });
+EOF
+                        );
+                        // MagnificPopup on images
+                        $oOutput->AddJs(InlineImage::FixImagesWidth());
+                    }
+                    else
+                    {
+                        $oOutput->AddJs(
+                            <<<EOF
+        					$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field($sFormFieldOptions);
+EOF
+                        );
+                    }
+                    break;
+            }
 		}
 		// ... and in read-only mode (or hidden)
 		else
@@ -246,7 +369,7 @@ EOF
                             $oOutput->AddHtml('</div>');
 
                             // Value
-                            $bEncodeHtmlEntities = (in_array($sFieldClass, array('Combodo\\iTop\\Form\\Field\\UrlField', 'Combodo\\iTop\\Form\\Field\\EmailField'))) ? false : true;
+                            $bEncodeHtmlEntities = ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\UrlField') ? false : true;
                             $oOutput->AddHtml('<div class="form_field_control">');
 							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), $bEncodeHtmlEntities)->AddHtml('</div>');
                             $oOutput->AddHtml('</div>');
@@ -387,128 +510,6 @@ EOF
 						break;
 				}
 			}
-		}
-
-		// JS FieldChange trigger (:input are not always at the same depth)
-		switch ($sFieldClass)
-		{
-			case 'Combodo\\iTop\\Form\\Field\\PasswordField':
-            case 'Combodo\\iTop\\Form\\Field\\StringField':
-            case 'Combodo\\iTop\\Form\\Field\\UrlField':
-            case 'Combodo\\iTop\\Form\\Field\\EmailField':
-			case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
-			case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
-			case 'Combodo\\iTop\\Form\\Field\\SelectField':
-			case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
-			case 'Combodo\\iTop\\Form\\Field\\HiddenField':
-				$oOutput->AddJs(
-<<<EOF
-					$("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
-						var me = this;
-
-						$(this).closest(".field_set").trigger("field_change", {
-							id: $(me).attr("id"),
-							name: $(me).closest(".form_field").attr("data-field-id"),
-							value: $(me).val()
-						});
-					});
-EOF
-				);
-				break;
-			case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
-				// We need the focusout event has the datepicker widget seems to override the change event
-				$oOutput->AddJs(
-<<<EOF
-					$("#{$this->oField->GetGlobalId()}").off("change keyup focusout").on("change keyup focusout", function(){
-						var me = this;
-
-						$(this).closest(".field_set").trigger("field_change", {
-							id: $(me).attr("id"),
-							name: $(me).closest(".form_field").attr("data-field-id"),
-							value: $(me).val()
-						});
-					});
-EOF
-				);
-				break;
-
-			case 'Combodo\\iTop\\Form\\Field\\RadioField':
-			case 'Combodo\\iTop\\Form\\Field\\CheckboxField':
-				$oOutput->AddJs(
-<<<EOF
-					$("#{$this->oField->GetGlobalId()} input").off("change").on("change", function(){
-						var me = this;
-
-						$(this).closest(".field_set").trigger("field_change", {
-							id: $(me).closest("#{$this->oField->GetGlobalId()}").attr("id"),
-							name: $(me).attr("name"),
-							value: $(me).val()
-						});
-					});
-EOF
-				);
-				break;
-		}
-
-		// JS Form field widget construct
-		$aValidators = array();
-		foreach ($this->oField->GetValidators() as $oValidator)
-		{
-			$aValidators[$oValidator::GetName()] = array(
-				'reg_exp' => $oValidator->GetRegExp(),
-				'message' => Dict::S($oValidator->GetErrorMessage())
-			);
-		}
-
-		$sFormFieldOptions = json_encode(array(
-			'validators' => $aValidators
-		));
-
-		switch ($sFieldClass)
-		{
-			case 'Combodo\\iTop\\Form\\Field\\PasswordField':
-            case 'Combodo\\iTop\\Form\\Field\\StringField':
-            case 'Combodo\\iTop\\Form\\Field\\UrlField':
-            case 'Combodo\\iTop\\Form\\Field\\EmailField':
-			case 'Combodo\\iTop\\Form\\Field\\SelectField':
-			case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
-			case 'Combodo\\iTop\\Form\\Field\\HiddenField':
-			case 'Combodo\\iTop\\Form\\Field\\RadioField':
-			case 'Combodo\\iTop\\Form\\Field\\CheckboxField':
-			case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
-				$oOutput->AddJs(
-					<<<EOF
-					$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field($sFormFieldOptions);
-EOF
-				);
-				break;
-			case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
-			case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
-                $bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
-			    if($bRichEditor)
-			    {
-                    // Overloading $sFormFieldOptions to include the set_current_value_callback. It would have been nicer to refactor the variable for all field types, but as this is a fix for a maintenance release, we rather be safe.
-                    $sValidators = json_encode($aValidators);
-                    $oOutput->AddJs(
-                        <<<EOF
-                        $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field_html({
-                            validators: $sValidators,
-                            set_current_value_callback: function(me, oEvent, oData){ $(me.element).find('textarea').val(oData); }
-                        });
-EOF
-                    );
-                    // MagnificPopup on images
-                    $oOutput->AddJs(InlineImage::FixImagesWidth());
-                }
-                else
-                {
-                    $oOutput->AddJs(
-                        <<<EOF
-    					$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field($sFormFieldOptions);
-EOF
-                    );
-                }
-				break;
 		}
 
 		return $oOutput;

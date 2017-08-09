@@ -287,11 +287,14 @@ EOF
 EOF
 			);
 
-			// Attaching JS widget
-			$sObjectInformationsUrl = $this->oField->GetInformationEndpoint();
-			$oOutput->AddJs(
+			// Additional features if in edition mode
+			if (!$this->oField->GetReadOnly())
+			{
+                // Attaching JS widget
+                $sObjectInformationsUrl = $this->oField->GetInformationEndpoint();
+                $oOutput->AddJs(
 <<<EOF
-				$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field({
+                $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field({
 					'validators': {$this->GetValidatorsAsJson()},
 					'get_current_value_callback': function(me, oEvent, oData){
 						var value = null;
@@ -386,11 +389,8 @@ EOF
 					}
 				});
 EOF
-			);
+                );
 
-			// Additional features if in edition mode
-			if (!$this->oField->GetReadOnly())
-			{
 				// Rendering table
 				// - Vars
 				$sButtonRemoveId = 'btn_remove_' . $this->oField->GetGlobalId();
