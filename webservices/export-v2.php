@@ -354,6 +354,8 @@ function InteractiveShell($sExpression, $sQueryId, $sFormat, $sFileName, $sMode)
 			autoOpen: true,
 			modal: true,
 			width: '80%',
+			height: 'auto',
+			maxHeight: $(window).height() - 50,
 			title: $sJSTitle,
 			close: function() { $('#export-form').attr('data-state', 'cancelled'); $(this).remove(); },
 			buttons: [

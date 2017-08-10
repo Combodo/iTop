@@ -545,7 +545,7 @@ EOF
 		}
 	});
 	docWidth = $(document).width();
-	$('#ModalDlg').dialog({ autoOpen: false, modal: true, width: 0.8*docWidth }); // JQuery UI dialogs
+	$('#ModalDlg').dialog({ autoOpen: false, modal: true, width: 0.8*docWidth, height: 'auto', maxHeight: $(window).height() - 50 }); // JQuery UI dialogs
 	ShowDebug();
 	$('#logOffBtn>ul').popupmenu();
 	
