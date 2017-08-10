@@ -57,9 +57,9 @@ class BsLinkedSetFieldRenderer extends FieldRenderer
 		$aItemIds = array();
 		$this->PrepareItems($aItems, $aItemIds);
 		$sItemsAsJson = json_encode($aItems);
-		$sItemIdsAsJson = htmlentities(json_encode($aItemIds), ENT_QUOTES, 'UTF-8');
-		
-		if (!$this->oField->GetHidden())
+        $sItemIdsAsJson = htmlentities(json_encode(array('current' => $aItemIds)), ENT_QUOTES, 'UTF-8');
+
+        if (!$this->oField->GetHidden())
 		{
 			// Rendering field
 			$sIsEditable = ($this->oField->GetReadOnly()) ? 'false' : 'true';
@@ -331,10 +331,11 @@ EOF
 									// Updating datatables
 									if(oData.items !== undefined)
 									{
-										for(var i in oData.items)
+									    for(var i in oData.items)
 										{
 											// Adding target item id information
 											oData.items[i].target_id = oData.items[i].id;
+											
 											// Adding item to table only if it's not already there
 											if($('#{$sTableId} tr[role="row"] > td input[data-target-object-id="' + oData.items[i].target_id + '"], #{$sTableId} tr[role="row"] > td input[data-target-object-id="' + (oData.items[i].target_id*-1) + '"]').length === 0)
 											{
@@ -342,22 +343,17 @@ EOF
 												oData.items[i].id = -1 * parseInt(oData.items[i].id);
 												oTable_{$this->oField->GetGlobalId()}.row.add(oData.items[i]);
 											}
+											
+											
 										}
 										oTable_{$this->oField->GetGlobalId()}.draw();
+										
+										// Updating input
+						                updateInputValue_{$this->oField->GetGlobalId()}();
 									}
 								}
 							)
 							.done(function(oData){
-								// Updating hidden field
-								var aData = oTable_{$this->oField->GetGlobalId()}.rows().data().toArray();
-								var aObjectIds = [];
-
-								for(var i in aData)
-								{
-									aObjectIds.push({id: aData[i].id});
-								}
-
-								$('#{$this->oField->GetGlobalId()}').val(JSON.stringify(aObjectIds));
 								// Updating items count
 								updateItemCount_{$this->oField->GetGlobalId()}();
 								// Updating global checkbox
@@ -371,16 +367,8 @@ EOF
 						// We come from a button
 						else
 						{
-							// Updating hidden field
-							var aData = oTable_{$this->oField->GetGlobalId()}.rows().data().toArray();
-							var aObjectIds = [];
-
-							for(var i in aData)
-							{
-								aObjectIds.push({id: aData[i].id});
-							}
-
-							$('#{$this->oField->GetGlobalId()}').val(JSON.stringify(aObjectIds));
+						    // Updating input
+						    updateInputValue_{$this->oField->GetGlobalId()}();
 							// Updating items count
 							updateItemCount_{$this->oField->GetGlobalId()}();
 							// Updating global checkbox
@@ -428,6 +416,38 @@ EOF
 					var updateItemCount_{$this->oField->GetGlobalId()} = function()
 					{
 						$('#{$sCollapseTogglerId} > .text').text( oTable_{$this->oField->GetGlobalId()}.rows().count() );
+					};
+					// - Field input handler
+					var updateInputValue_{$this->oField->GetGlobalId()} = function()
+					{
+					    // Retrieving table rows
+					    var aData = oTable_{$this->oField->GetGlobalId()}.rows().data().toArray();
+					    
+					    // Retrieving input values
+                        var oValues = JSON.parse($('#{$this->oField->GetGlobalId()}').val());
+                        oValues.add = {};
+                        oValues.remove = {};
+                        
+					    // Checking removed objects
+					    for(var i in oValues.current)
+					    {
+					        if($('#{$sTableId} tr[role="row"] input[data-object-id="'+i+'"]').length === 0)
+                            {
+                                oValues.remove[i] = {};
+                            }
+					    }
+					    
+					    // Checking added objects
+					    for(var i in aData)
+					    {
+					        if(oValues.current[aData[i].id] === undefined)
+					        {
+					            oValues.add[aData[i].target_id] = {};
+                            }
+					    }
+					    
+                        // Setting input values
+                        $('#{$this->oField->GetGlobalId()}').val(JSON.stringify(oValues));
 					};
 
 					// Handles items remove/add
@@ -555,7 +575,7 @@ EOF
 			}
 			
 			$aItems[] = $aItemProperties;
-			$aItemIds[] = array('id' => $aItemProperties['id']);
+			$aItemIds[$aItemProperties['id']] = array();
 		}
 	}
 

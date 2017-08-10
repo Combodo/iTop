@@ -1014,6 +1014,7 @@ class ObjectFormManager extends FormManager
 				{
 					if (MetaModel::IsValidAttCode($sObjectClass, $sAttCode))
 					{
+					    /** @var \AttributeDefinition $oAttDef */
 						$oAttDef = MetaModel::GetAttributeDef($sObjectClass, $sAttCode);
 						if ($oAttDef->IsLinkSet())
 						{
@@ -1023,59 +1024,50 @@ class ObjectFormManager extends FormManager
 							// Which was an issue when deleting all objects from linkedset
 							$value = json_decode($value, true);
 
-							// Creating set from objects of the form
-							$sTargetClass = $oAttDef->GetLinkedClass();
-							$oValueSet = DBObjectSet::FromScratch($sTargetClass);
-							foreach ($value as $aValue)
-							{
-								$iTargetId = (int) $aValue['id'];
-								// LinkedSet
-								if (!$oAttDef->IsIndirect())
-								{
-									// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
-									$oLinkedObject = MetaModel::GetObject($sTargetClass, abs($iTargetId), true, true);
-									$oValueSet->AddObject($oLinkedObject);
-								}
-								// LinkedSetIndirect
-								else
-								{
-									// New relation
-									if ($iTargetId < 0)
-									{
-										$oLink = MetaModel::NewObject($sTargetClass);
-										$oLink->Set($oAttDef->GetExtKeyToRemote(), -1 * $iTargetId);
-										$oLink->Set($oAttDef->GetExtKeyToMe(), $this->oObject->GetKey());
-									}
-									// Existing relation
-									else
-									{
-										// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
-										$oLink = MetaModel::GetObject($sTargetClass, $iTargetId, true, true);
-									}
-									$oValueSet->AddObject($oLink);
-								}
-							}
-							// Comparing set from db to set from form if linkedset is DIRECT in order to identify removed objects
-							if (!$oAttDef->IsIndirect())
-							{
-								// Retrieving remote object's extkey definition in order to nullify it or completely remove the object regarding its mandatory status
-								$oExtKeyToMeAttDef = MetaModel::GetAttributeDef($sTargetClass, $oAttDef->GetExtKeyToMe());
-								if ($oExtKeyToMeAttDef->IsNullAllowed())
-								{
-									// Comparing sets
-									$oDBSet = $this->oObject->Get($sAttCode);
-									$oDBSetComparator = new DBObjectSetComparator($oDBSet, $oValueSet);
-									$aDBSetDifferences = $oDBSetComparator->GetDifferences();
-									// Nullifying remote object's ext key
-									foreach ($aDBSetDifferences['removed'] as $oRemovedLinkedObject)
-									{
-										$oRemovedLinkedObject->Set($oExtKeyToMeAttDef->GetCode(), $oExtKeyToMeAttDef->GetNullValue());
-										$oValueSet->AddObject($oRemovedLinkedObject);
-									}
-								}
-							}
+							/** @var \ormLinkSet $oLinkSet */
+                            $oLinkSet = $this->oObject->Get($sAttCode);
+                            $sLinkedClass = $oAttDef->GetLinkedClass();
+
+                            // Checking links to remove
+                            if(isset($value['remove']))
+                            {
+                                foreach($value['remove'] as $iObjKey => $aObjData)
+                                {
+                                    $oLinkSet->RemoveItem($iObjKey);
+                                }
+                            }
+
+							// Checking links to add
+                            if(isset($value['add']))
+                            {
+                                foreach($value['add'] as $iObjKey => $aObjdata)
+                                {
+                                    // Creating link when linkset is indirect...
+                                    if($oAttDef->IsIndirect())
+                                    {
+                                        $oLink = MetaModel::NewObject($sLinkedClass);
+                                        $oLink->Set($oAttDef->GetExtKeyToRemote(), $iObjKey);
+                                        $oLink->Set($oAttDef->GetExtKeyToMe(), $this->oObject->GetKey());
+                                    }
+                                    // ... or adding remote object when linkset id direct
+                                    else
+                                    {
+                                        // Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+                                        $oLink = MetaModel::GetObject($sLinkedClass, $iObjKey, false, true);
+                                    }
+
+                                    if($oLink !== null)
+                                    {
+                                        $oLinkSet->AddItem($oLink);
+                                    }
+                                }
+                            }
+
+                            // Checking links to modify
+                            // TODO: Not implemented yet as we can't change lnk properties in the portal
+
 							// Setting value in the object
-							$this->oObject->Set($sAttCode, $oValueSet);
+							$this->oObject->Set($sAttCode, $oLinkSet);
 						}
 					    else if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
 					    {
