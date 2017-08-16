@@ -369,7 +369,7 @@ EOF
                             $oOutput->AddHtml('</div>');
 
                             // Value
-                            $bEncodeHtmlEntities = ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\UrlField') ? false : true;
+                            $bEncodeHtmlEntities = ( in_array($sFieldClass, array('Combodo\\iTop\\Form\\Field\\UrlField', 'Combodo\\iTop\\Form\\Field\\EmailField')) ) ? false : true;
                             $oOutput->AddHtml('<div class="form_field_control">');
 							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), $bEncodeHtmlEntities)->AddHtml('</div>');
                             $oOutput->AddHtml('</div>');
