@@ -4651,6 +4651,10 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 			$oTmpField = $oFormField;
 			$oFormField->SetOnFinalizeCallback(function() use ($oTmpField, $oTmpAttDef, $oObject)
 			{
+			    /** @var $oTmpField \Combodo\iTop\Form\Field\Field */
+			    /** @var $oTmpAttDef \AttributeDefinition */
+			    /** @var $oObject \DBObject */
+
 				// We set search object only if it has not already been set (overrided)
 				if ($oTmpField->GetSearch() === null)
 				{

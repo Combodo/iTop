@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -116,6 +116,9 @@ class SelectObjectField extends Field
 		return $this;
 	}
 
+    /**
+     * @return \DBSearch
+     */
 	public function GetSearch()
 	{
 		return $this->oSearch;
