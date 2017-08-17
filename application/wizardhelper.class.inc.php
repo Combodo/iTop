@@ -278,12 +278,12 @@ class WizardHelper
 
     public function GetInitialState()
     {
-        return $this->m_aData['m_sInitialState'];
+        return isset($this->m_aData['m_sInitialState']) ? $this->m_aData['m_sInitialState'] : null;
     }
 
     public function GetStimulus()
     {
-        return $this->m_aData['m_sStimulus'];
+        return isset($this->m_aData['m_sStimulus']) ? $this->m_aData['m_sStimulus'] : null;
     }
 	
 	public function GetIdForField($sFieldName)

@@ -578,7 +578,7 @@ try
 			$oObj->Set($sAttCode, $defaultValue);
 		}
 		$sFormPrefix = $oWizardHelper->GetFormPrefix();
-		$aExpectedAttributes = $oObj->GetTransitionAttributes($oWizardHelper->GetStimulus(), $oWizardHelper->GetInitialState());
+		$aExpectedAttributes = ($oWizardHelper->GetStimulus() === null) ? array() : $oObj->GetTransitionAttributes($oWizardHelper->GetStimulus(), $oWizardHelper->GetInitialState());
 		foreach($oWizardHelper->GetFieldsForAllowedValues() as $sAttCode)
 		{
 			$sId = $oWizardHelper->GetIdForField($sAttCode);
