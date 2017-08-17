@@ -470,6 +470,8 @@ class BulkChange
 		{
 			// skip the private key, if any
 			if ($sAttCode == 'id') continue;
+			// skip reconciliation keys
+			if (in_array($sAttCode, $this->m_aReconcilKeys)) continue;
 
 			$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
 			$aReasons = array();

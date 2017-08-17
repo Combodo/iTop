@@ -149,7 +149,8 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 			$sTargetClass = $oAttDef->GetTargetClass();
 			foreach(MetaModel::ListAttributeDefs($sTargetClass) as $sTargetAttCode => $oTargetAttDef)
 			{
-				if (MetaModel::IsReconcKey($sTargetClass, $sTargetAttCode))
+				// Note: Could not use "MetaModel::GetFriendlyNameAttributeCode($sTargetClass) === $sTargetAttCode" as it would return empty because the friendlyname is composite.
+				if (MetaModel::IsReconcKey($sTargetClass, $sTargetAttCode) || ($oTargetAttDef instanceof AttributeFriendlyName))
 				{
 					$bExtKey = $oTargetAttDef->IsExternalKey();
 					$aSignatures = array();
@@ -176,14 +177,17 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 				}
 			}
 		}
-		else if ($oAttDef->IsWritable() && (!$oAttDef->IsLinkset() || ($bAdvancedMode && $oAttDef->IsIndirect())))
+		else if (
+			($oAttDef->IsWritable() && (!$oAttDef->IsLinkset() || ($bAdvancedMode && $oAttDef->IsIndirect())))
+			|| ($oAttDef instanceof AttributeFriendlyName)
+		)
 		{
 			$aChoices[$sAttCode] = MetaModel::GetLabel($sClassName, $sAttCode, true);
 			if ( ($sFieldName == $oAttDef->GetLabel()) || ($sFieldName == $sAttCode))
 			{
 				$sFieldCode = $sAttCode;
 			}
-		}		
+		}
 	}
 	asort($aChoices);
 
@@ -412,10 +416,23 @@ try
 				}
 				$sDefaultKeys = '"'.implode('", "', $aDefaultKeys).'"';
 			}
+
+			// Read only attributes (will be forced to "search")
+			$aReadOnlyKeys = array();
+            foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef)
+            {
+				if(!$oAttDef->IsWritable())
+				{
+					$aReadOnlyKeys[] = $sAttCode;
+				}
+            }
+            $sReadOnlyKeys = '"'.implode('", "', $aReadOnlyKeys).'"';
+
 			$oPage->add_ready_script(
 <<<EOF
 		$('select[name^=field]').change( DoCheckMapping );
 		aDefaultKeys = new Array($sDefaultKeys);
+		aReadOnlyKeys = new Array($sReadOnlyKeys);
 		DoCheckMapping();
 EOF
 );	

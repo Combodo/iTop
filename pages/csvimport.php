@@ -835,6 +835,7 @@ EOF
 		$oPage->add_script(
 <<<EOF
 	var aDefaultKeys = new Array();
+	var aReadOnlyKeys = new Array();
 	
 	function CSVGoBack()
 	{
@@ -1003,6 +1004,12 @@ EOF
 			{
 				// Non-mapped field, uncheck and disabled
 				$('#search_'+index).attr('checked', false);
+				$('#search_'+index).attr('disabled', true);
+			}
+			else if (aReadOnlyKeys.indexOf(sMappingValue) >= 0)
+			{
+				// Read-only attribute forced to reconciliation key
+				$('#search_'+index).attr('checked', true);
 				$('#search_'+index).attr('disabled', true);
 			}
 			else if (index == idSelected)
