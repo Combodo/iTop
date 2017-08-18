@@ -828,8 +828,8 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'UI:iTopVersion:Short' => 'iTop versiyonu %1$s',
-	'UI:iTopVersion:Long' => 'iTop  %3$s tarihli versiyonu %1$s-%2$s',
+	'UI:iTopVersion:Short' => '%1$s versiyonu %2$s',
+	'UI:iTopVersion:Long' => '%1$s  %4$s tarihli versiyonu %2$s-%3$s',
 	'UI:PropertiesTab' => 'Özellikler',
 
 	'UI:OpenDocumentInNewWindow_' => 'Dokümanı yeni pencerede aç: %1$s',

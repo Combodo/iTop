@@ -956,8 +956,8 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	'Menu:UserAccountsMenu+' => 'Gebruikersaccounts',
 	'Menu:UserAccountsMenu:Title' => 'Gebruikersaccounts',	
 
-	'UI:iTopVersion:Short' => 'iTop versie %1$s',
-	'UI:iTopVersion:Long' => 'iTop versie %1$s-%2$s built on %3$s',
+	'UI:iTopVersion:Short' => '%1$s versie %2$s',
+	'UI:iTopVersion:Long' => '%1$s versie %2$s-%3$s built on %4$s',
 	'UI:PropertiesTab' => 'Eigenschappen',
 
 	'UI:OpenDocumentInNewWindow_' => 'Open dit document in een nieuwe window: %1$s',

@@ -948,8 +948,8 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'Menu:UserAccountsMenu+' => 'Cuentas de Usuario', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu:Title' => 'Cuentas de Usuario', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'UI:iTopVersion:Short' => 'iTop versión %1$s',
-	'UI:iTopVersion:Long' => 'iTop versión %1$s-%2$s compilada en %3$s',
+	'UI:iTopVersion:Short' => '%1$s versión %2$s',
+	'UI:iTopVersion:Long' => '%1$s versión %2$s-%3$s compilada en %4$s',
 	'UI:PropertiesTab' => 'Propiedades',
 
 	'UI:OpenDocumentInNewWindow_' => 'Abra este documento en una ventana nueva: %1$s',

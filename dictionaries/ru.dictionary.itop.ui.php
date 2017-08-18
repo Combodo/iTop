@@ -937,8 +937,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:UserAccountsMenu+' => 'Учетные записи пользователей', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu:Title' => 'Учетные записи пользователей', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'UI:iTopVersion:Short' => 'iTop версия %1$s',
-	'UI:iTopVersion:Long' => 'iTop версия %1$s-%2$s основан на %3$s',
+	'UI:iTopVersion:Short' => '%1$s версия %2$s',
+	'UI:iTopVersion:Long' => '%1$s версия %2$s-%3$s основан на %4$s',
 	'UI:PropertiesTab' => 'Свойства',
 
 	'UI:OpenDocumentInNewWindow_' => 'Открыть этот документ в новом окне: %1$s',

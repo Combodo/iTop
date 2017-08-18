@@ -827,8 +827,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:UserAccountsMenu+' => '用户帐户', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu:Title' => '用户帐户',	 // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'UI:iTopVersion:Short' => 'iTop version %1$s',
-	'UI:iTopVersion:Long' => 'iTop version %1$s-%2$s built on %3$s',
+	'UI:iTopVersion:Short' => '%1$s version %2$s',
+	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s built on %4$s',
 	'UI:PropertiesTab' => '属性',
 
 	'UI:OpenDocumentInNewWindow_' => '在新窗口打开文档: %1$s',

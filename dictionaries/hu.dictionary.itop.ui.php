@@ -699,8 +699,8 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'Menu:UserAccountsMenu' => 'Felhasználói fiókok', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu:Title' => 'Felhasználói fiókok', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:iTopVersion:Short' => 'iTop verzió: %1$s',
-	'UI:iTopVersion:Long' => 'iTop verzió: %1$s-%2$s %3$s',
+	'UI:iTopVersion:Short' => '%1$s verzió: %2$s',
+	'UI:iTopVersion:Long' => '%1$s verzió: %2$s-%3$s %4$s',
 	'UI:PropertiesTab' => 'Tulajdonságok',
 	'UI:OpenDocumentInNewWindow_' => 'A követekező dokumentum megnyitása új ablakban: %1$s',
 	'UI:DownloadDocument_' => 'A következő dokuemntum letöltése: %1$s',

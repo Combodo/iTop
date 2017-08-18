@@ -828,8 +828,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Menu:UserAccountsMenu' => 'Comptes Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu+' => 'Comptes Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu:Title' => 'Comptes Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:iTopVersion:Short' => 'iTop version %1$s',
-	'UI:iTopVersion:Long' => 'iTop version %1$s-%2$s du %3$s',
+	'UI:iTopVersion:Short' => '%1$s version %2$s',
+	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s du %4$s',
 	'UI:PropertiesTab' => 'Propriétés',
 	'UI:OpenDocumentInNewWindow_' => 'Ouvrir ce document dans une autre fenêtre: %1$s',
 	'UI:DownloadDocument_' => 'Télécharger ce document: %1$s',

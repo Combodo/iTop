@@ -949,8 +949,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Menu:UserAccountsMenu+' => 'Uživatelské účty',
     'Menu:UserAccountsMenu:Title' => 'Uživatelské účty',
 
-    'UI:iTopVersion:Short' => 'iTop verze %1$s',
-    'UI:iTopVersion:Long' => 'iTop verze %1$s-%2$s ze dne %3$s',
+    'UI:iTopVersion:Short' => '%1$s verze %2$s',
+    'UI:iTopVersion:Long' => '%1$s verze %2$s-%3$s ze dne %4$s',
     'UI:PropertiesTab' => 'Vlastnosti',
 
     'UI:OpenDocumentInNewWindow_' => 'Otevřít tento dokument v novém okně: %1$s',

@@ -1151,7 +1151,7 @@ $("#collapse_support_details").click(function() {
 $('#support_details').toggle();
 EOF
 		);
-		$sVersionString = Dict::Format('UI:iTopVersion:Long', ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
+		$sVersionString = Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
 		$sMySQLVersion = CMDBSource::GetDBVersion();
 		$sPHPVersion = phpversion();
 		$sOSVersion = PHP_OS;

@@ -993,12 +993,12 @@ EOF
 		if (ITOP_REVISION == '$WCREV$')
 		{
 			// This is NOT a version built using the buil system, just display the main version
-			$sVersionString = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
+			$sVersionString = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
 		}
 		else
 		{
 			// This is a build made from SVN, let display the full information
-			$sVersionString = Dict::Format('UI:iTopVersion:Long', ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
+			$sVersionString = Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
 		}
 
 		// Render the text of the global search form

@@ -948,8 +948,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Menu:UserAccountsMenu+' => 'Contas usuários', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu:Title' => 'Contas usuários',	 // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'UI:iTopVersion:Short' => 'Versão %1$s',
-	'UI:iTopVersion:Long' => 'Versão %1$s-%2$s construído %3$s',
+	'UI:iTopVersion:Short' => '%1$s versão %2$s',
+	'UI:iTopVersion:Long' => '%1$s versão %2$s-%3$s construído %4$s',
 	'UI:PropertiesTab' => 'Propriedades',
 
 	'UI:OpenDocumentInNewWindow_' => 'Abrir este documento em uma nova janela: %1$s',

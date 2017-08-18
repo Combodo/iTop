@@ -95,7 +95,7 @@ class LoginWebPage extends NiceWebPage
 			$sLogo = 'itop-logo-external.png';
 			$sBrandingLogo = 'login-logo.png';
 		}
-		$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_VERSION);
+		$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
 		$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
 		$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/'.$sLogo.'?itopversion='.ITOP_VERSION;
 		if (file_exists(MODULESROOT.'branding/'.$sBrandingLogo))
@@ -117,7 +117,7 @@ class LoginWebPage extends NiceWebPage
 			
 			case 'basic':
 			case 'url':
-			$this->add_header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_VERSION));
+			$this->add_header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION));
 			$this->add_header('HTTP/1.0 401 Unauthorized');
 			$this->add_header('Content-type: text/html; charset=iso-8859-1');
 			// Note: displayed when the user will click on Cancel
@@ -602,7 +602,7 @@ EOF
 			}
 			if (($iOnExit == self::EXIT_HTTP_401) || ($sLoginMode == 'basic'))
 			{
-				header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_VERSION));
+				header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION));
 				header('HTTP/1.0 401 Unauthorized');
 				header('Content-type: text/html; charset=iso-8859-1');
 				exit;
@@ -634,7 +634,7 @@ EOF
 				self::ResetSession();
 				if (($iOnExit == self::EXIT_HTTP_401) || ($sLoginMode == 'basic'))
 				{
-					header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_VERSION));
+					header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION));
 					header('HTTP/1.0 401 Unauthorized');
 					header('Content-type: text/html; charset=iso-8859-1');
 					exit;
