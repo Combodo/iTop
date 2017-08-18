@@ -538,6 +538,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	{
 		if (me.bSelectMode)
 		{
+            $('#fstatus_'+me.id).html('');
 		}
 		else
 		{
