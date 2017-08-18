@@ -154,7 +154,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 	protected static $aTagsWhiteList = array(
 		'html' => array(),
 		'body' => array(),
-		'a' => array('href', 'name', 'style', 'target'),
+		'a' => array('href', 'name', 'style', 'target', 'title'),
 		'p' => array('style'),
 		'br' => array(),
 		'span' => array('style'),
@@ -164,7 +164,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		'u' => array(),
 		'em' => array(),
 		'strong' => array(),
-		'img' => array('src','style'),
+		'img' => array('src', 'style', 'alt', 'title'),
 		'ul' => array('style'),
 		'ol' => array('style'),
 		'li' => array('style'),
