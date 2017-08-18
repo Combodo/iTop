@@ -309,8 +309,14 @@ class DBObjectSet implements iDBObjectSetIterator
 		}
 
 		return self::FromArray($sTargetClass, $aTargets);
-	} 
+	}
 
+    /**
+     * Note: After calling this method, the set cursor will be at the end of the set. You might to rewind it.
+     *
+     * @param bool $bWithId
+     * @return array
+     */
 	public function ToArray($bWithId = true)
 	{
 		$aRet = array();
@@ -377,8 +383,15 @@ class DBObjectSet implements iDBObjectSetIterator
 			$iRow++;
 		}
 		return $aRet;
-	} 
+	}
 
+    /**
+     * Note: After calling this method, the set cursor will be at the end of the set. You might to rewind it.
+     *
+     * @param string $sAttCode
+     * @param bool $bWithId
+     * @return array
+     */
 	public function GetColumnAsArray($sAttCode, $bWithId = true)
 	{
 		$aRet = array();
