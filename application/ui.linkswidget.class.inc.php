@@ -101,9 +101,10 @@ class UILinksWidget
 	 * @param array|Hash $aArgs Extra context arguments
 	 * @param $oCurrentObj The object to which all the elements of the linked set refer to
 	 * @param $iUniqueId A unique identifier of new links
+     * @param boolean $bReadOnly Display link as editable or read-only. Default is false (editable)
 	 * @return string The HTML fragment of the one-row form
 	 */
-	protected function GetFormRow(WebPage $oP, DBObject $oLinkedObj, $linkObjOrId, $aArgs, $oCurrentObj, $iUniqueId)
+	protected function GetFormRow(WebPage $oP, DBObject $oLinkedObj, $linkObjOrId, $aArgs, $oCurrentObj, $iUniqueId, $bReadOnly = false)
 	{
 		$sPrefix = "$this->m_sAttCode{$this->m_sNameSuffix}";
 		$aRow = array();
@@ -117,17 +118,31 @@ class UILinksWidget
 			$aArgs['prefix'] = $sPrefix;
 			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}{$key}";
 			$aArgs['this'] = $linkObjOrId;
-			$aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"$key\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$key\">";
-			foreach($this->m_aEditableFields as $sFieldCode)
-			{
-				$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId->GetKey().']';
-				$sSafeId = utils::GetSafeId($sFieldId);
-				$sValue = $linkObjOrId->Get($sFieldCode);
-				$sDisplayValue = $linkObjOrId->GetEditValue($sFieldCode);
-				$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
-				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $sValue, $sDisplayValue, $sSafeId, $sNameSuffix, 0, $aArgs);
-				$aFieldsMap[$sFieldCode] = $sSafeId;
-			}
+
+			if($bReadOnly)
+            {
+                $aRow['form::checkbox'] = "";
+                foreach($this->m_aEditableFields as $sFieldCode)
+                {
+                    $sDisplayValue = $linkObjOrId->GetEditValue($sFieldCode);
+                    $aRow[$sFieldCode] = $sDisplayValue;
+                }
+            }
+            else
+            {
+                $aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"$key\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$key\">";
+                foreach($this->m_aEditableFields as $sFieldCode)
+                {
+                    $sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId->GetKey().']';
+                    $sSafeId = utils::GetSafeId($sFieldId);
+                    $sValue = $linkObjOrId->Get($sFieldCode);
+                    $sDisplayValue = $linkObjOrId->GetEditValue($sFieldCode);
+                    $oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
+                    $aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $sValue, $sDisplayValue, $sSafeId, $sNameSuffix, 0, $aArgs);
+                    $aFieldsMap[$sFieldCode] = $sSafeId;
+                }
+            }
+
 			$sState = $linkObjOrId->GetState();
 		}
 		else
@@ -173,15 +188,18 @@ oWidget{$this->m_iInputId}.OnLinkAdded($iUniqueId, $iRemoteObjKey);
 EOF
 			);
 		}
-		
-		$sExtKeyToMeId = utils::GetSafeId($sPrefix.$this->m_sExtKeyToMe);
-		$aFieldsMap[$this->m_sExtKeyToMe] = $sExtKeyToMeId;
-		$aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToMeId\" value=\"".$oCurrentObj->GetKey()."\">";
 
-		$sExtKeyToRemoteId = utils::GetSafeId($sPrefix.$this->m_sExtKeyToRemote);
-		$aFieldsMap[$this->m_sExtKeyToRemote] = $sExtKeyToRemoteId;
-		$aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToRemoteId\" value=\"$iRemoteObjKey\">";
-		
+		if(!$bReadOnly)
+        {
+            $sExtKeyToMeId = utils::GetSafeId($sPrefix.$this->m_sExtKeyToMe);
+            $aFieldsMap[$this->m_sExtKeyToMe] = $sExtKeyToMeId;
+            $aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToMeId\" value=\"".$oCurrentObj->GetKey()."\">";
+
+            $sExtKeyToRemoteId = utils::GetSafeId($sPrefix.$this->m_sExtKeyToRemote);
+            $aFieldsMap[$this->m_sExtKeyToRemote] = $sExtKeyToRemoteId;
+            $aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToRemoteId\" value=\"$iRemoteObjKey\">";
+        }
+
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);
 		
@@ -280,16 +298,29 @@ EOF
 		$iAddedId = 1; // Unique id for new links
 		while($oCurrentLink = $oValue->Fetch())
 		{
-			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote));
-			if ($oCurrentLink->IsNew())
-			{
-				$key = -($iAddedId++);
-			}
-			else
-			{
-				$key = $oCurrentLink->GetKey();
-			}
-			$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key);
+		    // We try to retrieve the remote object as usual
+			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote), false /* Must not be found */);
+			// If successful, it means that we can edit its link
+			if($oLinkedObj !== null)
+            {
+                $bReadOnly = false;
+            }
+            // Else we retrieve it without restrictions (silos) and will display its link as readonly
+            else
+            {
+                $bReadOnly = true;
+                $oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote), false /* Must not be found */, true);
+            }
+
+            if ($oCurrentLink->IsNew())
+            {
+                $key = -($iAddedId++);
+            }
+            else
+            {
+                $key = $oCurrentLink->GetKey();
+            }
+            $aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly);
 		}
 		$sHtmlValue .= $this->DisplayFormTable($oPage, $this->m_aTableConfig, $aForm);
 		$sDuplicates = ($this->m_bDuplicatesAllowed) ? 'true' : 'false';
@@ -304,7 +335,7 @@ EOF
 		$sHtmlValue .= "<span style=\"clear:both;\"><p>&nbsp;</p></span>\n";
 		$sHtmlValue .= "</div>\n";
 		$oPage->add_at_the_end("<div id=\"dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}\"></div>"); // To prevent adding forms inside the main form
-		return $sHtmlValue;
+        return $sHtmlValue;
 	}
 	         
 	protected static function GetTargetClass($sClass, $sAttCode)
