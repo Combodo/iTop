@@ -5261,20 +5261,26 @@ abstract class MetaModel
 
 	public static function ResetCache($sEnvironmentId = null)
 	{
-		if (!function_exists('apc_delete')) return;
 		if (is_null($sEnvironmentId))
 		{
 			$sEnvironmentId = MetaModel::GetEnvironmentId();
 		}
 
 		$sAppIdentity = 'itop-'.$sEnvironmentId;
+		require_once(APPROOT.'/core/dict.class.inc.php');
 		Dict::ResetCache($sAppIdentity);
 
-		foreach(self::GetCacheEntries($sEnvironmentId) as $sKey => $aAPCInfo)
+		if (function_exists('apc_delete'))
 		{
-			$sAPCKey = $aAPCInfo['info'];
-			apc_delete($sAPCKey);
+			foreach (self::GetCacheEntries($sEnvironmentId) as $sKey => $aAPCInfo)
+			{
+				$sAPCKey = $aAPCInfo['info'];
+				apc_delete($sAPCKey);
+			}
 		}
+
+		require_once(APPROOT.'core/userrights.class.inc.php');
+		UserRights::FlushPrivileges();
 	}
 	
 	/**

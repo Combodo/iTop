@@ -155,7 +155,10 @@ class utils
 		}
 		// Read and record the value for switching the archive mode
 		$iCurrent = self::ReadParam('with-archive', $iDefault);
-		$_SESSION['archive_mode'] = $iCurrent;
+		if (isset($_SESSION))
+		{
+			$_SESSION['archive_mode'] = $iCurrent;
+		}
 		// Read and use the value for the current page (web services)
 		$iCurrent = self::ReadParam('with_archive', $iCurrent, true);
 		self::$bPageMode = ($iCurrent == 1);

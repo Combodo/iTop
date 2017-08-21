@@ -1152,8 +1152,16 @@ class UserRights
 			self::$m_aAdmins = array();
 			self::$m_aPortalUsers = array();
 		}
+		if (!isset($_SESSION))
+		{
+			session_name('itop-'.md5(APPROOT));
+			session_start();
+		}
 		self::_ResetSessionCache();
-		return self::$m_oAddOn->FlushPrivileges();
+		if (self::$m_oAddOn)
+		{
+			self::$m_oAddOn->FlushPrivileges();
+		}
 	}
 
 	static $m_aCacheUsers;

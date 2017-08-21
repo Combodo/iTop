@@ -505,7 +505,6 @@ class RunTimeEnvironment
 			SetupUtils::builddir($sCacheDir);
 			SetupUtils::tidydir($sCacheDir);
 
-			require_once(APPROOT.'/core/dict.class.inc.php');
 			MetaModel::ResetCache(md5(APPROOT).'-'.$this->sTargetEnv);
 		}
 	}
