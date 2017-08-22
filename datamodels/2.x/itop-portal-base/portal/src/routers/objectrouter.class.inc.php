@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -44,17 +44,6 @@ class ObjectRouter extends AbstractRouter
 			'callback' => 'Combodo\\iTop\\Portal\\Controller\\ObjectController::ApplyStimulusAction',
 			'bind' => 'p_object_apply_stimulus'
 		),
-		array('pattern' => '/object/attachment/add',
-			'callback' => 'Combodo\\iTop\\Portal\\Controller\\ObjectController::AttachmentAction',
-			'bind' => 'p_object_attachment_add'
-		),
-		array('pattern' => '/object/attachment/download/{sAttachmentId}',
-			'callback' => 'Combodo\\iTop\\Portal\\Controller\\ObjectController::AttachmentAction',
-			'bind' => 'p_object_attachment_download',
-			'values' => array(
-				'sOperation' => 'download'
-			)
-		),
 		array('pattern' => '/object/search',
 			'callback' => 'Combodo\\iTop\\Portal\\Controller\\ObjectController::SearchRegularAction',
 			'bind' => 'p_object_search_regular'
@@ -96,6 +85,31 @@ class ObjectRouter extends AbstractRouter
 			'callback' => 'Combodo\\iTop\\Portal\\Controller\\ObjectController::GetInformationsAsJsonAction',
 			'bind' => 'p_object_get_informations_json',
 		),
+        array('pattern' => '/object/document/display/{sObjectClass}/{sObjectId}/{sObjectField}',
+            'callback' => 'Combodo\\iTop\\Portal\\Controller\\ObjectController::DocumentAction',
+            'bind' => 'p_object_document_display',
+            'values' => array(
+                'sOperation' => 'display'
+            )
+        ),
+        array('pattern' => '/object/document/download/{sObjectClass}/{sObjectId}/{sObjectField}',
+            'callback' => 'Combodo\\iTop\\Portal\\Controller\\ObjectController::DocumentAction',
+            'bind' => 'p_object_document_download',
+            'values' => array(
+                'sOperation' => 'download'
+            )
+        ),
+        array('pattern' => '/object/attachment/add',
+            'callback' => 'Combodo\\iTop\\Portal\\Controller\\ObjectController::AttachmentAction',
+            'bind' => 'p_object_attachment_add'
+        ),
+        array('pattern' => '/object/attachment/download/{sAttachmentId}',
+            'callback' => 'Combodo\\iTop\\Portal\\Controller\\ObjectController::AttachmentAction',
+            'bind' => 'p_object_attachment_download',
+            'values' => array(
+                'sOperation' => 'download'
+            )
+        ),
 	);
 
 }

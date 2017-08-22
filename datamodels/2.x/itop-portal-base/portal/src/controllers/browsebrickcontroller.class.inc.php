@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -334,12 +334,12 @@ class BrowseBrickController extends BrickController
 			{
 				case BrowseBrick::ENUM_BROWSE_MODE_TREE:
                 case BrowseBrick::ENUM_BROWSE_MODE_MOSAIC:
-					static::AddToTreeItems($aItems, $aCurrentRow, $aLevelsProperties);
+					static::AddToTreeItems($aItems, $aCurrentRow, $aLevelsProperties, null, $oApp);
 					break;
 
 				case BrowseBrick::ENUM_BROWSE_MODE_LIST:
 				default:
-					$aItems[] = static::AddToFlatItems($aCurrentRow, $aLevelsProperties);
+					$aItems[] = static::AddToFlatItems($aCurrentRow, $aLevelsProperties, $oApp);
 					break;
 			}
 		}
@@ -611,7 +611,7 @@ class BrowseBrickController extends BrickController
 	 * @param array $aLevelsProperties
 	 * @return array
 	 */
-	public static function AddToFlatItems(array $aCurrentRow, array &$aLevelsProperties)
+	public static function AddToFlatItems(array $aCurrentRow, array &$aLevelsProperties, Application $oApp)
 	{
 		$aRow = array();
 
@@ -640,7 +640,7 @@ class BrowseBrickController extends BrickController
                     {
                         if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
                         {
-                            $tmpAttValue = $tmpAttValue->GetDisplayURL(get_class($value), $value->GetKey(), $aLevelsProperties[$key][$sOptionalAttribute]);
+                            $tmpAttValue = $oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($value), 'sObjectId' => $value->GetKey(), 'sObjectField' => $aLevelsProperties[$key][$sOptionalAttribute]));
                         }
                         else
                         {
@@ -696,7 +696,7 @@ class BrowseBrickController extends BrickController
 	 * @param array $aCurrentRow
 	 * @param array $aLevelsProperties
 	 */
-	public static function AddToTreeItems(array &$aItems, array $aCurrentRow, array &$aLevelsProperties, $aCurrentRowObjects = null)
+	public static function AddToTreeItems(array &$aItems, array $aCurrentRow, array &$aLevelsProperties, $aCurrentRowObjects = null, Application $oApp = null)
 	{
 		$aCurrentRowKeys = array_keys($aCurrentRow);
 		$aCurrentRowValues = array_values($aCurrentRow);
@@ -732,7 +732,7 @@ class BrowseBrickController extends BrickController
                     {
                         if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
                         {
-                            $tmpAttValue = $tmpAttValue->GetDisplayURL(get_class($aCurrentRowValues[0]), $aCurrentRowValues[0]->GetKey(), $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
+                            $tmpAttValue = $oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($aCurrentRowValues[0]), 'sObjectId' => $aCurrentRowValues[0]->GetKey(), 'sObjectField' => $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]));
                         }
                         else
                         {
@@ -748,7 +748,7 @@ class BrowseBrickController extends BrickController
 		$aCurrentRowSliced = array_slice($aCurrentRow, 1);
 		if (!empty($aCurrentRowSliced))
 		{
-			static::AddToTreeItems($aItems[$sCurrentIndex]['subitems'], $aCurrentRowSliced, $aLevelsProperties, $aCurrentRowObjects);
+			static::AddToTreeItems($aItems[$sCurrentIndex]['subitems'], $aCurrentRowSliced, $aLevelsProperties, $aCurrentRowObjects, $oApp);
 		}
 	}
 

@@ -1356,10 +1356,93 @@ class ObjectController extends AbstractController
 		return $oResponse;
 	}
 
+    /**
+     * Handles ormDocument display / download from an object
+     *
+     * Note: This is inspired from pages/ajax.document.php, but duplicated as there is no secret mecanism for ormDocument yet.
+     *
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param string $sOperation
+     */
+	public function DocumentAction(Request $oRequest, Application $oApp, $sOperation = null)
+    {
+        // Setting default operation
+        if($sOperation === null)
+        {
+            $sOperation = 'display';
+        }
+
+        // Retrieving ormDocument's host object
+        $sObjectClass = $oRequest->get('sObjectClass');
+        $sObjectId = $oRequest->get('sObjectId');
+        $sObjectField = $oRequest->get('sObjectField');
+
+        // When reaching to an Attachment, we have to check security on its host object instead of the Attachment itself
+        if($sObjectClass === 'Attachment')
+        {
+            $oAttachment = MetaModel::GetObject($sObjectClass, $sObjectId, true, true);
+            $sHostClass = $oAttachment->Get('item_class');
+            $sHostId = $oAttachment->Get('item_id');
+        }
+        else
+        {
+            $sHostClass = $sObjectClass;
+            $sHostId = $sObjectId;
+        }
+
+        // Checking security layers
+        if (!SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sHostClass, $sHostId))
+        {
+            IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' not allowed to retrieve document from attribute ' . $sObjectField . ' as it not allowed to read ' . $sHostClass . '::' . $sHostId . ' object.');
+            $oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
+        }
+
+        // Retrieving object
+        $oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* Must not be found */, $oApp['scope_validator']->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sHostClass));
+        if ($oObject === null)
+        {
+            // We should never be there as the secuirty helper makes sure that the object exists, but just in case.
+            IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : Could not load object ' . $sObjectClass . '::' . $sObjectId . '.');
+            $oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
+        }
+
+        // Setting cache timeout
+        // Note: Attachment download should be handle through AttachmentAction()
+        if($sObjectClass === 'Attachment')
+        {
+            // One year ahead: an attachement cannot change
+            $iCacheSec = 31556926;
+        }
+        else
+        {
+            $sCache = $oRequest->get('cache');
+            $iCacheSec = ($sCache !== null) ? (int) $sCache : 0;
+        }
+
+        $aHeaders = array();
+        if($iCacheSec > 0)
+        {
+            $aHeaders['Expires'] = '';
+            $aHeaders['Cache-Control'] = 'no-transform, public,max-age='.$iCacheSec.',s-maxage='.$iCacheSec;
+            // Reset the value set previously
+            $aHeaders['Pragma'] = 'cache';
+            // An arbitrary date in the past is ok
+            $aHeaders['Last-Modified'] = 'Wed, 15 Jun 2015 13:21:15 GMT';
+        }
+
+        /** @var \ormDocument $oDocument */
+        $oDocument = $oObject->Get($sObjectField);
+        $aHeaders['Content-Type'] = $oDocument->GetMimeType();
+        $aHeaders['Content-Disposition'] = (($sOperation === 'display') ? 'inline' : 'attachment') . ';filename="'.$oDocument->GetFileName().'"';
+
+        return new Response($oDocument->GetData(), Response::HTTP_OK, $aHeaders);
+    }
+
 	/**
 	 * Handles attachment add/remove on an object
 	 *
-	 * Note : This is inspired from itop-attachment/ajax.attachment.php
+	 * Note: This is inspired from itop-attachment/ajax.attachment.php
 	 * 
 	 * @param Request $oRequest
 	 * @param Application $oApp
@@ -1419,10 +1502,18 @@ class ObjectController extends AbstractController
 				break;
 
 			case 'download':
-				$sAttachmentId = $oRequest->get('sAttachmentId');
-				$sAttachmentUrl = utils::GetAbsoluteUrlAppRoot() . ATTACHMENT_DOWNLOAD_URL . $sAttachmentId;
+				// Preparing redirection
+                // - Route
+                $aRouteParams = array(
+                    'sObjectClass' => 'Attachment',
+                    'sObjectId' => $oRequest->get('sAttachmentId'),
+                    'sObjectField' => 'contents',
+                );
+                $sRedirectRoute = $oApp['url_generator']->generate('p_object_document_download', $aRouteParams);
+                // - Request
+                $oSubRequest = Request::create($sRedirectRoute, 'GET', $oRequest->query->all(), $oRequest->cookies->all(), array(), $oRequest->server->all());
 
-				$oResponse = new RedirectResponse($sAttachmentUrl);
+                $oResponse = $oApp->handle($oSubRequest, HttpKernelInterface::SUB_REQUEST, true);
 				break;
 
 			default:
