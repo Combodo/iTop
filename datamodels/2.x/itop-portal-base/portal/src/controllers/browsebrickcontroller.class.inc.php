@@ -640,7 +640,7 @@ class BrowseBrickController extends BrickController
                     {
                         if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
                         {
-                            $tmpAttValue = $oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($value), 'sObjectId' => $value->GetKey(), 'sObjectField' => $aLevelsProperties[$key][$sOptionalAttribute]));
+                            $tmpAttValue = $oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($value), 'sObjectId' => $value->GetKey(), 'sObjectField' => $aLevelsProperties[$key][$sOptionalAttribute], 'cache' => 86400));
                         }
                         else
                         {
@@ -732,7 +732,7 @@ class BrowseBrickController extends BrickController
                     {
                         if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
                         {
-                            $tmpAttValue = $oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($aCurrentRowValues[0]), 'sObjectId' => $aCurrentRowValues[0]->GetKey(), 'sObjectField' => $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]));
+                            $tmpAttValue = $oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($aCurrentRowValues[0]), 'sObjectId' => $aCurrentRowValues[0]->GetKey(), 'sObjectField' => $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute], 'cache' => 86400));
                         }
                         else
                         {
