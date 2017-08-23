@@ -5085,14 +5085,30 @@ class AttributeExternalField extends AttributeDefinition
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		if ($oFormField === null)
+	    // Retrieving AttDef from the remote attribute
+        $oRemoteAttDef = $this->GetExtAttDef();
+
+        if ($oFormField === null)
 		{
 		    // ExternalField's FormField are actually based on the FormField from the target attribute.
-            $oRemoteAttDef = $this->GetExtAttDef();
-            $sFormFieldClass = $oRemoteAttDef::GetFormFieldClass();
+            // Except for the AttributeExternalKey because we have no OQL and stuff
+            if($oRemoteAttDef instanceof AttributeExternalKey)
+            {
+                $sFormFieldClass = static::GetFormFieldClass();
+            }
+            else
+            {
+                $sFormFieldClass = $oRemoteAttDef::GetFormFieldClass();
+            }
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
 		parent::MakeFormField($oObject, $oFormField);
+
+        // Manually setting for remote ExternalKey, otherwise, the id would be displayed.
+		if($oRemoteAttDef instanceof AttributeExternalKey)
+        {
+            $oFormField->SetCurrentValue($oObject->Get($this->GetCode().'_friendlyname'));
+        }
 
 		// Readonly field because we can't update external fields
 		$oFormField->SetReadOnly(true);
