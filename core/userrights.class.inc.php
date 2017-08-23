@@ -161,6 +161,7 @@ abstract class UserRightsAddOnAPI
 }
 
 
+require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
 abstract class User extends cmdbAbstractObject
 {
 	public static function Init()
