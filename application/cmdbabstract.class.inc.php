@@ -3248,97 +3248,7 @@ EOF
 		$aValues = array();
 		foreach($aAttList as $sAttCode)
 		{
-			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-			if ($oAttDef->GetEditClass() == 'Document')
-			{
-				$value = array('fcontents' => utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents'));
-			}
-			elseif ($oAttDef->GetEditClass() == 'Image')
-			{
-				$oImage = utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents');
-				$aSize = utils::GetImageSize($oImage->GetData());
-				$oImage = utils::ResizeImageToFit($oImage, $aSize[0], $aSize[1], $oAttDef->Get('storage_max_width'), $oAttDef->Get('storage_max_height'));
-				$aOtherData = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
-				if (is_array($aOtherData))
-				{
-					$value = array('fcontents' => $oImage, 'remove' => $aOtherData['remove']);
-				}
-				else
-				{
-					$value = null;
-				}
-			}
-			elseif ($oAttDef->GetEditClass() == 'RedundancySetting')
-			{
-				$value = $oAttDef->ReadValueFromPostedForm($sFormPrefix);
-			}
-			elseif ($oAttDef->GetEditClass() == 'CustomFields')
-			{
-				$value = $oAttDef->ReadValueFromPostedForm($this, $sFormPrefix);
-			}
-			else if ($oAttDef->GetEditClass() == 'LinkedSet')
-			{
-				$aRawToBeCreated = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbc", '{}', 'raw_data'), true);
-				$aToBeCreated = array();
-				foreach($aRawToBeCreated as $aData)
-				{
-					$sSubFormPrefix = $aData['formPrefix'];
-					$sObjClass = isset($aData['class']) ? $aData['class'] : $oAttDef->GetLinkedClass();
-					$aObjData = array();
-					foreach($aData as $sKey => $value)
-					{
-						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
-						{
-							$aObjData[$aMatches[1]] = $value;
-						}
-					}
-					$aToBeCreated[] = array('class' => $sObjClass, 'data' => $aObjData);
-				}
-
-				$aRawToBeModified = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbm", '{}', 'raw_data'), true);
-				$aToBeModified = array();
-				foreach($aRawToBeModified as $iObjKey => $aData)
-				{
-					$sSubFormPrefix = $aData['formPrefix'];
-					$aObjData = array();
-					foreach($aData as $sKey => $value)
-					{
-						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
-						{
-							$aObjData[$aMatches[1]] = $value;
-						}
-					}
-					$aToBeModified[$iObjKey] = array('data' => $aObjData);
-				}
-
-				$value = array(
-					'to_be_created' => $aToBeCreated,
-					'to_be_modified' => $aToBeModified,
-					'to_be_deleted' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbd", '[]', 'raw_data'), true),
-					'to_be_added' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tba", '[]', 'raw_data'), true),
-					'to_be_removed' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbr", '[]', 'raw_data'), true)
-				);
-			}
-			else if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
-			{
-				$value = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
-				if ($value != null)
-				{
-					$oDate = $oAttDef->GetFormat()->Parse($value);
-					if ($oDate instanceof DateTime)
-					{
-						$value = $oDate->format($oAttDef->GetInternalFormat());
-					}
-					else
-					{
-						$value = null;
-					}
-				}
-			}
-			else
-			{
-				$value = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
-			}
+		    $value = $this->PrepareValueFromPostedForm($sFormPrefix, $sAttCode);
 			if (!is_null($value))
 			{
 				$aValues[$sAttCode] = $value;
@@ -3365,6 +3275,171 @@ EOF
 		
 		return $aErrors;
 	}
+
+    /**
+     * @param string $sFormPrefix
+     * @param string $sAttCode
+     * @param string $sClass Optional parameter, host object's class for the $sAttCode
+     * @param array $aPostedData Optional parameter, used through recursive calls
+     * @return array|null
+     */
+	protected function PrepareValueFromPostedForm($sFormPrefix, $sAttCode, $sClass = null, $aPostedData = null)
+    {
+        if($sClass === null)
+        {
+            $sClass = get_class($this);
+        }
+
+        $value = null;
+
+        $oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+        if ($oAttDef->GetEditClass() == 'Document')
+        {
+            $value = array('fcontents' => utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents'));
+        }
+        elseif ($oAttDef->GetEditClass() == 'Image')
+        {
+            $oImage = utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents');
+            $aSize = utils::GetImageSize($oImage->GetData());
+            $oImage = utils::ResizeImageToFit($oImage, $aSize[0], $aSize[1], $oAttDef->Get('storage_max_width'), $oAttDef->Get('storage_max_height'));
+            $aOtherData = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
+            if (is_array($aOtherData))
+            {
+                $value = array('fcontents' => $oImage, 'remove' => $aOtherData['remove']);
+            }
+            else
+            {
+                $value = null;
+            }
+        }
+        elseif ($oAttDef->GetEditClass() == 'RedundancySetting')
+        {
+            $value = $oAttDef->ReadValueFromPostedForm($sFormPrefix);
+        }
+        elseif ($oAttDef->GetEditClass() == 'CustomFields')
+        {
+            $value = $oAttDef->ReadValueFromPostedForm($this, $sFormPrefix);
+        }
+        else if ($oAttDef->GetEditClass() == 'LinkedSet')
+        {
+            /** @var AttributeLinkedSet $oAttDef */
+            $aRawToBeCreated = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbc", '{}', 'raw_data'), true);
+            $aToBeCreated = array();
+            foreach($aRawToBeCreated as $aData)
+            {
+                $sSubFormPrefix = $aData['formPrefix'];
+                $sObjClass = isset($aData['class']) ? $aData['class'] : $oAttDef->GetLinkedClass();
+                $aObjData = array();
+                foreach($aData as $sKey => $value)
+                {
+                    if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
+                    {
+                        $sLinkClass = $oAttDef->GetLinkedClass();
+                        if($oAttDef->IsIndirect())
+                        {
+                            $oLinkAttDef = MetaModel::GetAttributeDef($sLinkClass, $aMatches[1]);
+                            // Recursing over n:n link datetime attributes
+                            // Note: We might need to do it with other attribute types, like Document or redundancy setting.
+                            if($oLinkAttDef instanceof AttributeDateTime)
+                            {
+                                $aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix, $aMatches[1], $sLinkClass, $aData);
+                            }
+                            else
+                            {
+                                $aObjData[$aMatches[1]] = $value;
+                            }
+                        }
+                        else
+                        {
+                            $aObjData[$aMatches[1]] = $value;
+                        }
+                    }
+                }
+                $aToBeCreated[] = array('class' => $sObjClass, 'data' => $aObjData);
+            }
+
+            $aRawToBeModified = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbm", '{}', 'raw_data'), true);
+            $aToBeModified = array();
+            foreach($aRawToBeModified as $iObjKey => $aData)
+            {
+                $sSubFormPrefix = $aData['formPrefix'];
+                $aObjData = array();
+                foreach($aData as $sKey => $value)
+                {
+                    if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
+                    {
+                        $sLinkClass = $oAttDef->GetLinkedClass();
+                        if($oAttDef->IsIndirect())
+                        {
+                            $oLinkAttDef = MetaModel::GetAttributeDef($sLinkClass, $aMatches[1]);
+                            // Recursing over n:n link datetime attributes
+                            // Note: We might need to do it with other attribute types, like Document or redundancy setting.
+                            if($oLinkAttDef instanceof AttributeDateTime)
+                            {
+                                $aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix, $aMatches[1], $sLinkClass, $aData);
+                            }
+                            else
+                            {
+                                $aObjData[$aMatches[1]] = $value;
+                            }
+                        }
+                        else
+                        {
+                            $aObjData[$aMatches[1]] = $value;
+                        }
+                    }
+                }
+                $aToBeModified[$iObjKey] = array('data' => $aObjData);
+            }
+
+            $value = array(
+                'to_be_created' => $aToBeCreated,
+                'to_be_modified' => $aToBeModified,
+                'to_be_deleted' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbd", '[]', 'raw_data'), true),
+                'to_be_added' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tba", '[]', 'raw_data'), true),
+                'to_be_removed' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbr", '[]', 'raw_data'), true)
+            );
+        }
+        else if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
+        {
+            // Retrieving value from array when present (means what we are in a recursion)
+            if($aPostedData !== null && isset($aPostedData['attr_'.$sFormPrefix.$sAttCode]))
+            {
+                $value = $aPostedData['attr_'.$sFormPrefix.$sAttCode];
+            }
+            else
+            {
+                $value = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
+            }
+
+            if ($value != null)
+            {
+                $oDate = $oAttDef->GetFormat()->Parse($value);
+                if ($oDate instanceof DateTime)
+                {
+                    $value = $oDate->format($oAttDef->GetInternalFormat());
+                }
+                else
+                {
+                    $value = null;
+                }
+            }
+        }
+        else
+        {
+            // Retrieving value from array when present (means what we are in a recursion)
+            if($aPostedData !== null && isset($aPostedData['attr_'.$sFormPrefix.$sAttCode]))
+            {
+                $value = $aPostedData['attr_'.$sFormPrefix.$sAttCode];
+            }
+            else
+            {
+                $value = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
+            }
+        }
+
+        return $value;
+    }
 
 	/**
 	 * Updates the object from a given page argument

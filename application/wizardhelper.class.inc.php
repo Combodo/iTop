@@ -84,6 +84,18 @@ class WizardHelper
 									$oTargetObj = MetaModel::GetObject($sLinkedAttDef->GetTargetClass(), $aLinkedObject[$sLinkedAttCode]);
 									$oLinkedObj->Set($sLinkedAttCode, $oTargetObj);
 								}
+								elseif($sLinkedAttDef instanceof AttributeDateTime)
+                                {
+                                    $sDate = $aLinkedObject[$sLinkedAttCode];
+                                    if($sDate !== null && $sDate !== '')
+                                    {
+                                        $oDateTimeFormat = AttributeDateTime::GetFormat();
+                                        $oDate = $oDateTimeFormat->Parse($sDate);
+                                        $sDate = $oDate->format('Y-m-d H:i:s');
+                                    }
+
+                                    $oLinkedObj->Set($sLinkedAttCode, $sDate);
+                                }
 								else
 								{
 									$oLinkedObj->Set($sLinkedAttCode, $aLinkedObject[$sLinkedAttCode]);
