@@ -127,6 +127,18 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$this->bHasDelta = true;
 	}
 
+    /**
+     * @param DBObject $oObject
+     * @param string $sClassAlias
+     * @deprecated
+     */
+	public function AddObject(DBObject $oObject, $sClassAlias = '')
+    {
+        trigger_error('iTop: ormLinkSet::AddObject() is deprecated use ormLinkSet::AddItem() instead.', E_USER_DEPRECATED);
+
+        $this->AddItem($oObject);
+    }
+
 	/**
 	 * @param $iObjectId
 	 */
@@ -177,7 +189,33 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		}
 	}
 
-	/**
+    /**
+     * Note: After calling this method, the set cursor will be at the end of the set. You might to rewind it.
+     *
+     * @param bool $bWithId
+     * @return array
+     * @deprecated
+     */
+    public function ToArray($bWithId = true)
+    {
+        trigger_error('iTop: ormLinkSet::ToArray() is deprecated use foreach instead.', E_USER_DEPRECATED);
+
+        $aRet = array();
+        foreach($this as $oItem)
+        {
+            if ($bWithId)
+            {
+                $aRet[$oItem->GetKey()] = $oItem;
+            }
+            else
+            {
+                $aRet[] = $oItem;
+            }
+        }
+        return $aRet;
+    }
+
+    /**
 	 * The class of the objects of the collection (at least a common ancestor)
 	 *
 	 * @return string

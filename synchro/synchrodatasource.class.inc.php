@@ -560,7 +560,7 @@ EOF
 			elseif ($oAttribute instanceof SynchroAttLinkSet)
 			{
 			}
-			$oAttributeSet->AddObject($oAttribute);
+			$oAttributeSet->AddItem($oAttribute);
 		}
 		$this->Set('attribute_list', $oAttributeSet);
 	}
@@ -648,12 +648,11 @@ EOF
 
 						if (!is_null($oAttribute))
 						{
-							$oAttribute->Set('sync_source_id', $this->GetKey());
 							$oAttribute->Set('attcode', $sAttCode);
 							$oAttribute->Set('reconcile', MetaModel::IsReconcKey($this->GetTargetClass(), $sAttCode) ? 1 : 0);
 							$oAttribute->Set('update', 1);
 							$oAttribute->Set('update_policy', 'master_locked');
-							$oAttributeSet->AddObject($oAttribute);
+							$oAttributeSet->AddItem($oAttribute);
 						}
 					}
 				}
@@ -677,9 +676,8 @@ EOF
 		if ($this->Get('reconciliation_policy') == 'use_attributes')
 		{
 			$oSet = $this->Get('attribute_list');
-			$oSynchroAttributeList = $oSet->ToArray();
 			$bReconciliationKey = false;
-			foreach($oSynchroAttributeList as $oSynchroAttribute)
+			foreach($oSet as $oSynchroAttribute)
 			{
 				if ($oSynchroAttribute->Get('reconcile') == 1)
 				{
