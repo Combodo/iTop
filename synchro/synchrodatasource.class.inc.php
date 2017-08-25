@@ -2919,9 +2919,3 @@ class SynchroExecution
 		return false;
 	}
 }
-
-if (UserRights::IsAdministrator())
-{
-	$oAdminMenu = new MenuGroup('AdminTools', 80 /* fRank */);
-	new OQLMenuNode('DataSources', 'SELECT SynchroDataSource', $oAdminMenu->GetIndex(), 12 /* fRank */, true);
-}

@@ -57,6 +57,7 @@ class ItopWelcome extends ModuleHandlerAPI
 			new WebPageMenuNode('ExportMenu', utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?interactive=1', $oAdminMenu->GetIndex(), 9 /* fRank */);
 			new WebPageMenuNode('DataModelMenu', utils::GetAbsoluteUrlAppRoot().'pages/schema.php', $oAdminMenu->GetIndex(), 10 /* fRank */);
 			new WebPageMenuNode('UniversalSearchMenu', utils::GetAbsoluteUrlAppRoot().'pages/UniversalSearch.php', $oAdminMenu->GetIndex(), 11 /* fRank */);
+            new OQLMenuNode('DataSources', 'SELECT SynchroDataSource', $oAdminMenu->GetIndex(), 12 /* fRank */, true);
 		}
 	}
 }
