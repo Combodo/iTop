@@ -521,6 +521,7 @@ EOF
 						'target_attr' => $oAttDef->GetExtKeyToMe(),
 						'object_id' => $this->GetKey(),
 						'menu' => MetaModel::GetConfig()->Get('allow_menu_on_linkset'),
+                        //'menu_actions_target' => '_blank',
 						'default' => $aDefaults,
 						'table_id' => $sClass.'_'.$sAttCode,
 					);
@@ -536,6 +537,7 @@ EOF
 							'target_attr' => $oAttDef->GetExtKeyToRemote(),
 							'view_link' => false,
 							'menu' => MetaModel::GetConfig()->Get('allow_menu_on_linkset'),
+                            //'menu_actions_target' => '_blank',
 							'display_limit' => true, // By default limit the list to speed up the initial load & display
 							'table_id' => $sClass.'_'.$sAttCode,
 						);

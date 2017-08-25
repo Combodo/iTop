@@ -158,6 +158,7 @@ class UILinksWidgetDirect
 				'target_attr' => $oLinksetDef->GetExtKeyToMe(),
 				'object_id' => $oCurrentObj ? $oCurrentObj->GetKey() : null,
 				'menu' => $bDisplayMenu,
+                'menu_actions_target' => '_blank',
 				'default' => $aDefaults,
 				'table_id' => $this->sClass.'_'.$this->sAttCode,
 			);
