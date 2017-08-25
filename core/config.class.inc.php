@@ -194,14 +194,22 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'allow_target_creation' => array(
-			'type' => 'bool',
-			'description' => 'Displays the + button on external keys to create target objects',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		),
+        'allow_menu_on_linkset' => array(
+            'type' => 'bool',
+            'description' => 'Display Action menus in view mode on any LinkedSet with edit_mode != none',
+            'default' => false,
+            'value' => false,
+            'source_of_value' => '',
+            'show_in_conf_sample' => false,
+        ),
+        'allow_target_creation' => array(
+            'type' => 'bool',
+            'description' => 'Displays the + button on external keys to create target objects',
+            'default' => true,
+            'value' => true,
+            'source_of_value' => '',
+            'show_in_conf_sample' => false,
+        ),
 		// Levels that trigger a confirmation in the CSV import/synchro wizard
 		'csv_import_min_object_confirmation' => array(
 			'type' => 'integer',
