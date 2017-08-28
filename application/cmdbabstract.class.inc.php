@@ -536,7 +536,7 @@ EOF
 							'object_id' => $this->GetKey(),
 							'target_attr' => $oAttDef->GetExtKeyToRemote(),
 							'view_link' => false,
-							'menu' => MetaModel::GetConfig()->Get('allow_menu_on_linkset'),
+							'menu' => false,
                             //'menu_actions_target' => '_blank',
 							'display_limit' => true, // By default limit the list to speed up the initial load & display
 							'table_id' => $sClass.'_'.$sAttCode,
