@@ -1,5 +1,0 @@
-#
-# The following source is not part of the buid, event though it's a standard file from php-ofc-library
-# but: 1) it is not used by iTop and 2) it causes a security/vulnerability issue by allowing file uploads to anywhere
-#
-ofc_upload_image.php
