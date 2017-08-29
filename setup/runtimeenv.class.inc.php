@@ -40,18 +40,53 @@ define ('DATAMODEL_MODULE', 'datamodel'); // Convention to store the version of 
 
 class RunTimeEnvironment
 {
+	/**
+	 * The name of the environment that the caller wants to build
+	 * @var string sFinalEnv
+	 */
+	protected $sFinalEnv;
+
+	/**
+	 * Environment into which the build will be performed
+	 * @var string sTargetEnv
+	 */
 	protected $sTargetEnv;
-	
+
 	/**
 	 * Extensions map of the source environment
 	 * @var iTopExtensionsMap
 	 */
 	protected $oExtensionsMap;
-	
-	public function __construct($sEnvironment = 'production')
+
+	/**
+	 * Toolset for building a run-time environment
+	 *
+	 * @param string $sEnvironment (e.g. 'test')
+	 * @param bool $bAutoCommit (make the target environment directly, or build a temporary one)
+	 */
+	public function __construct($sEnvironment = 'production', $bAutoCommit = true)
 	{
-		$this->sTargetEnv = $sEnvironment;
+		$this->sFinalEnv = $sEnvironment;
+		if ($bAutoCommit)
+		{
+			// Build directly onto the requested environment
+			$this->sTargetEnv = $sEnvironment;
+		}
+		else
+		{
+			// Build into a temporary target
+			$this->sTargetEnv = $sEnvironment.'-build';
+		}
 		$this->oExtensionsMap = null;
+	}
+
+	/**
+	 * Return the full path to the compiled code (do not use after commit)
+	 * @return string
+	 */
+	public function GetBuildDir()
+	{
+		return APPROOT.'env-'.$this->sTargetEnv;
 	}
 
 	/**
@@ -429,7 +464,7 @@ class RunTimeEnvironment
 			}
 		}
 		while($bModuleAdded);
-		
+
 		$sDeltaFile = APPROOT.'data/'.$this->sTargetEnv.'.delta.xml';
 		if (file_exists($sDeltaFile))
 		{
@@ -495,11 +530,12 @@ class RunTimeEnvironment
 				// No delta was loaded, let's save the datamodel now
 				$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'.xml');
 			}
-			
+
 			$sTargetDir = APPROOT.'env-'.$this->sTargetEnv;
 			self::MakeDirSafe($sTargetDir);
+			$bSkipTempDir = ($this->sFinalEnv != $this->sTargetEnv); // No need for a temporary directory if sTargetEnv is already a temporary directory
 			$oMFCompiler = new MFCompiler($oFactory);
-			$oMFCompiler->Compile($sTargetDir, null, $bUseSymLinks);
+			$oMFCompiler->Compile($sTargetDir, null, $bUseSymLinks, $bSkipTempDir);
 
 			$sCacheDir = APPROOT.'data/cache-'.$this->sTargetEnv;
 			SetupUtils::builddir($sCacheDir);
@@ -653,7 +689,7 @@ class RunTimeEnvironment
 		$oConfig->Set('access_mode', $iPrevAccessMode);
 	}
 	
-	public function RecordInstallation(Config $oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sModulesRelativePath, $sShortComment = null)
+	public function RecordInstallation(Config $oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sShortComment = null)
 	{
 		// Have it work fine even if the DB has been set in read-only mode for the users
 		$iPrevAccessMode = $oConfig->Get('access_mode');
@@ -698,7 +734,7 @@ class RunTimeEnvironment
 		// Record installed modules and extensions
 		//
 		$aAvailableExtensions = array();
-		$aAvailableModules = $this->AnalyzeInstallation($oConfig, APPROOT.$sModulesRelativePath);
+		$aAvailableModules = $this->AnalyzeInstallation($oConfig, $this->GetBuildDir());
 		foreach($aSelectedModuleCodes as $sModuleId)
 		{
 			$aModuleData = $aAvailableModules[$sModuleId];
@@ -869,5 +905,123 @@ class RunTimeEnvironment
 			return '0.0.0';
 		}
 		return $oLatestDM->Get('version');
+	}
+
+	public function Commit()
+	{
+		if ($this->sFinalEnv != $this->sTargetEnv)
+		{
+			$this->CommitFile(
+				APPROOT.'data/'.$this->sTargetEnv.'.delta.xml',
+				APPROOT.'data/'.$this->sFinalEnv.'.delta.xml',
+				false
+			);
+			$this->CommitFile(
+				APPROOT.'data/datamodel-'.$this->sTargetEnv.'.xml',
+				APPROOT.'data/datamodel-'.$this->sFinalEnv.'.xml'
+			);
+			$this->CommitFile(
+				APPROOT.'data/datamodel-'.$this->sTargetEnv.'-with-delta.xml',
+				APPROOT.'data/datamodel-'.$this->sFinalEnv.'-with-delta.xml',
+				false
+			);
+			$this->CommitDir(
+				APPROOT.'data/'.$this->sTargetEnv.'-modules/',
+				APPROOT.'data/'.$this->sFinalEnv.'-modules/',
+				false
+			);
+			$this->CommitDir(
+				APPROOT.'data/cache-'.$this->sTargetEnv,
+				APPROOT.'data/cache-'.$this->sFinalEnv,
+				false
+			);
+			$this->CommitDir(
+				APPROOT.'env-'.$this->sTargetEnv,
+				APPROOT.'env-'.$this->sFinalEnv
+			);
+
+			$sTargetConfig = APPCONF.$this->sTargetEnv.'/config-itop.php';
+			$sFinalConfig = APPCONF.$this->sFinalEnv.'/config-itop.php';
+			@chmod($sFinalConfig, 0770); // In case it exists: RWX for owner and group, nothing for others
+			$this->CommitFile($sTargetConfig, $sFinalConfig);
+			@chmod($sFinalConfig, 0440); // Read-only for owner and group, nothing for others
+		}
+	}
+
+	/**
+	 * Overwrite or create the destination file
+	 *
+	 * @param $sSource
+	 * @param $sDest
+	 * @param bool $bSourceMustExist
+	 * @throws Exception
+	 */
+	protected function CommitFile($sSource, $sDest, $bSourceMustExist = true)
+	{
+		if (file_exists($sSource))
+		{
+			SetupUtils::builddir(dirname($sDest));
+			if (file_exists($sDest))
+			{
+				$bRes = @unlink($sDest);
+				if (!$bRes)
+				{
+					throw new Exception('Commit - Failed to cleanup destination file: '.$sDest);
+				}
+			}
+			rename($sSource, $sDest);
+		}
+		else
+		{
+			// The file does not exist
+			if ($bSourceMustExist)
+			{
+				throw new Exception('Commit - Missing file: '.$sSource);
+			}
+			else
+			{
+				// Align the destination with the source... make sure there is NO file
+				if (file_exists($sDest))
+				{
+					$bRes = @unlink($sDest);
+					if (!$bRes)
+					{
+						throw new Exception('Commit - Failed to cleanup destination file: '.$sDest);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Overwrite or create the destination directory
+	 *
+	 * @param $sSource
+	 * @param $sDest
+	 * @param bool $bSourceMustExist
+	 * @throws Exception
+	 */
+	protected function CommitDir($sSource, $sDest, $bSourceMustExist = true)
+	{
+		if (file_exists($sSource))
+		{
+			SetupUtils::movedir($sSource, $sDest);
+		}
+		else
+		{
+			// The file does not exist
+			if ($bSourceMustExist)
+			{
+				throw new Exception('Commit - Missing directory: '.$sSource);
+			}
+			else
+			{
+				// Align the destination with the source... make sure there is NO file
+				if (file_exists($sDest))
+				{
+					SetupUtils::rrmdir($sDest);
+				}
+			}
+		}
 	}
 } // End of class

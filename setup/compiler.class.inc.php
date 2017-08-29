@@ -93,13 +93,14 @@ class MFCompiler
 	 * @param string $sTargetDir The target directory where to put the resulting files
 	 * @param Page $oP For some output...
 	 * @param bool $bUseSymbolicLinks
+	 * @param bool $bSkipTempDir
 	 * @throws Exception
 	 * @return void
 	 */
-	public function Compile($sTargetDir, $oP = null, $bUseSymbolicLinks = false)
+	public function Compile($sTargetDir, $oP = null, $bUseSymbolicLinks = false, $bSkipTempDir = false)
 	{
 		$sFinalTargetDir = $sTargetDir;
-		if ($bUseSymbolicLinks)
+		if ($bUseSymbolicLinks || $bSkipTempDir)
 		{
 			// Skip the creation of a temporary dictionary, not compatible with symbolic links
 			$sTempTargetDir = $sFinalTargetDir;
@@ -480,16 +481,16 @@ EOF;
 			{
 					$this->Log("Compilation of module $sModuleName in version $sModuleVersion produced not code at all. No file written.");
 			}
-			
+
 			// files to include (PHP datamodels)
 			foreach($oModule->GetFilesToInclude('business') as $sRelFileName)
 			{
-				$aDataModelFiles[] = "MetaModel::IncludeModule('".basename($sFinalTargetDir).'/'.$sRelativeDir.'/'.$sRelFileName."');";
+				$aDataModelFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
 			}
 			// files to include (PHP webservices providers)
 			foreach($oModule->GetFilesToInclude('webservices') as $sRelFileName)
 			{
-				$aWebservicesFiles[] = "MetaModel::IncludeModule('".basename($sFinalTargetDir).'/'.$sRelativeDir.'/'.$sRelFileName."');";
+				$aWebservicesFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
 			}
 		} // foreach module
 		
@@ -577,7 +578,7 @@ EOF;
 EOF
 		;
 		
-		$sPHPFileContent .= "\nMetaModel::IncludeModule('".basename($sFinalTargetDir)."/core/main.php');\n";
+		$sPHPFileContent .= "\nMetaModel::IncludeModule(MODULESROOT.'/core/main.php');\n";
 		$sPHPFileContent .= implode("\n", $aDataModelFiles);
 		$sPHPFileContent .= implode("\n", $aWebservicesFiles);
 		$sPHPFileContent .= "\nfunction GetModulesInfo()\n{\nreturn ".var_export($aModulesInfo, true).";\n}\n";

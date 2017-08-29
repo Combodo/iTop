@@ -3267,8 +3267,8 @@ abstract class MetaModel
 								{
 									if (!method_exists($sClass, $actionHandler))
 									{
-										$aErrors[$sClass][] = "Unknown function '$sActionHandler' in transition [$sStateCode/$sStimulusCode] for state attribute '$sStateAttCode'";
-										$aSugFix[$sClass][] = "Specify a function which prototype is in the form [public function $sActionHandler(\$sStimulusCode){return true;}]";
+										$aErrors[$sClass][] = "Unknown function '$actionHandler' in transition [$sStateCode/$sStimulusCode] for state attribute '$sStateAttCode'";
+										$aSugFix[$sClass][] = "Specify a function which prototype is in the form [public function $actionHandler(\$sStimulusCode){return true;}]";
 									}
 								}
 								else // if(is_array($actionHandler))
@@ -4597,7 +4597,7 @@ abstract class MetaModel
 
 	protected static $m_aExtensionClasses = array();
 
-	protected static function IncludeModule($sToInclude, $sModuleType = null)
+	public static function IncludeModule($sToInclude, $sModuleType = null)
 	{
 		$sFirstChar = substr($sToInclude, 0, 1);
 		$sSecondChar = substr($sToInclude, 1, 1);
