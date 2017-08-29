@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * Data Table to display a set of objects in a tabular manner in HTML
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -31,7 +31,8 @@ class DataTable
 	protected $iNbObjects;		// Total number of objects inthe set
 	protected $bUseCustomSettings;	// Whether or not the current display uses custom settings
 	protected $oDefaultSettings;	// the default settings for displaying such a list
-		
+	protected $bShowObsoleteData;
+
 	/**
 	 * @param $iListId mixed Unique ID for this div/table in the page
 	 * @param $oSet DBObjectSet The set of data to display
@@ -47,6 +48,7 @@ class DataTable
 		$this->iNbObjects = $oSet->Count();
 		$this->bUseCustomSettings = false;
 		$this->oDefaultSettings = null;
+		$this->bShowObsoleteData = $oSet->GetShowObsoleteData();
 	}
 	
 	public function Display(WebPage $oPage, DataTableSettings $oSettings, $bActionsMenu, $sSelectMode, $bViewLink, $aExtraParams)
@@ -145,7 +147,9 @@ class DataTable
 		$sHtml .= "<tr><td class=\"datacontents\">$sDataTable</td></tr>";
 		$sHtml .= "</table>\n";
 		$oPage->add_at_the_end($sConfigDlg);
-		
+
+		$aExtraParams['show_obsolete_data'] = $this->bShowObsoleteData;
+
 		$aOptions = array(
 			'sPersistentId' => '',
 			'sFilter' => $this->oSet->GetFilter()->serialize(),
@@ -486,6 +490,7 @@ EOF;
 		{
 			$aExtraParams['query_params'][$sName] = $sValue;
 		}
+		$aExtraParams['show_obsolete_data'] = $this->bShowObsoleteData;
 
 		$sHtml .= "<tr><td>";
 		$sHtml .= $oPage->GetTable($aAttribs, $aValues);

@@ -97,7 +97,6 @@ try
 		$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
 		$aClassAliases = utils::ReadParam('class_aliases', array());
 		$iListId = utils::ReadParam('list_id', 0);
-		//$aList = cmdbAbstractObject::FlattenZList(MetaModel::GetZListItems($sClassName, 'list'));
 
 		// Filter the list to removed linked set since we are not able to display them here
 		$aOrderBy = array();
@@ -173,6 +172,16 @@ try
 		// Load only the requested columns
 		$oSet = new DBObjectSet($oFilter, $aOrderBy, $aExtraParams, null, $iEnd-$iStart, $iStart);
 		$oSet->OptimizeColumnLoad($aColumnsLoad);
+
+		if (isset($aExtraParams['show_obsolete_data']))
+		{
+			$bShowObsoleteData = $aExtraParams['show_obsolete_data'];
+		}
+		else
+		{
+			$bShowObsoleteData = utils::ShowObsoleteData();
+		}
+		$oSet->SetShowObsoleteData($bShowObsoleteData);
 
 		$oDataTable = new DataTable($iListId, $oSet, $oSet->GetSelectedClasses());
 		if ($operation == 'datatable')
