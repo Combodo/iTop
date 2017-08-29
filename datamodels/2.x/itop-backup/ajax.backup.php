@@ -182,4 +182,3 @@ catch (Exception $e)
 	IssueLog::Error($e->getMessage());
 }
 
-?>

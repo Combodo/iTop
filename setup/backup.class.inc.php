@@ -282,10 +282,10 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		{
 			$this->LogInfo("Creating backup: '$sTargetFile.tar.gz'");
 
-			// Note: PharData::compress strips averything after the first dot found in the name of the tar, then it adds .tar.gz
+			// Note: PharData::compress strips everything after the first dot found in the name of the tar, then it adds .tar.gz
 			//       Hence, we have to create our own file in the target directory, and rename it when the process is complete
-			$sTarFile = str_replace('.', '_', $sTargetFile).'.tar';
-			$this->LogInfo("Tar file: '$sTarFile'");
+            $sTarFile = dirname($sTargetFile) . '/' . str_replace('.', '_', basename($sTargetFile)) . '.tar';
+            $this->LogInfo("Tar file: '$sTarFile'");
 			$oArchive = new PharData($sTarFile);
 
 			// Note: the file is created by tempnam and might not be writeable by another process (Windows/IIS)
