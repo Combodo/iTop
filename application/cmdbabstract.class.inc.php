@@ -1790,6 +1790,7 @@ EOF
 			$iInputId = $oPage->GetUniqueId();
 		}
 
+		$sHTMLValue = '';
 		if (!$oAttDef->IsExternalField())
 		{
 			$bMandatory = 'false';
