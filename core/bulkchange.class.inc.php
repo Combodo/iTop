@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -468,10 +468,12 @@ class BulkChange
 		//
 		foreach ($this->m_aAttList as $sAttCode => $iCol)
 		{
+            $oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+
 			// skip the private key, if any
 			if ($sAttCode == 'id') continue;
 			// skip reconciliation keys
-			if (in_array($sAttCode, $this->m_aReconcilKeys)) continue;
+			if (!$oAttDef->IsWritable() && in_array($sAttCode, $this->m_aReconcilKeys)){ continue; }
 
 			$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
 			$aReasons = array();
@@ -1308,5 +1310,3 @@ EOF
 	}	
 }
 
-
-?>
