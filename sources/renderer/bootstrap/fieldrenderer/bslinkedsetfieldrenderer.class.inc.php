@@ -225,6 +225,7 @@ EOF
 						"displayLength": -1,
 						"scrollY": "300px",
 						"scrollCollapse": true,
+						"retrieve": true,
 						"order": [[iDefaultOrderColumnIndex, "asc"]],
 						"dom": 't',
 						"columns": getColumnsDefinition_{$this->oField->GetGlobalId()}(),
