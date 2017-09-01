@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,12 +16,13 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-/**
- * @author 	David M. Gümbel <david.guembel@itomig.de>
- 
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
- */
+/*
+* @author ITOMIG GmbH <martin.raenker@itomig.de>
+
+* @copyright     Copyright (C) 2017 Combodo SARL
+* @licence	http://opensource.org/licenses/AGPL-3.0
+*		
+*/
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident' => 'Incident',
@@ -214,5 +215,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'Kind-Tickets lösen',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
 	'Tickets:Related:OpenIncidents' => 'Offene Incidents',
-));
+	'Class:Incident/Attribute:related_request_list+' => '',
+	'Class:Incident/Attribute:parent_problem_id' => 'Parent-Problem',
+	));
 ?>

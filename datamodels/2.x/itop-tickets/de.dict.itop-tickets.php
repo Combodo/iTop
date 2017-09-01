@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,13 +16,13 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-/**
- * @author	Stephan Rosenke <stephan.rosenke@itomig.de>
- * @author	David M. Gümbel <david.guembel@itomig.de>
+/*
+* @author ITOMIG GmbH <martin.raenker@itomig.de>
 
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
- */
+* @copyright     Copyright (C) 2017 Combodo SARL
+* @licence	http://opensource.org/licenses/AGPL-3.0
+*		
+*/
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Ticket' => 'Ticket',
@@ -181,16 +181,16 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:cmdbAbstractObject/Method:Copy/Param:1+' => 'Das Feld, das im aktuellen Objekt geschrieben werden soll',
 	'Class:cmdbAbstractObject/Method:Copy/Param:2' => 'Quellfeld',
 	'Class:cmdbAbstractObject/Method:Copy/Param:2+' => 'Das Feld des aktuellen Objekts, aus dem der Wert entnommen werden soll',
-	'Class:cmdbAbstractObject/Method:ApplyStimulus' => 'ApplyStimulus~~',
-	'Class:cmdbAbstractObject/Method:ApplyStimulus+' => 'Apply the specified stimulus to the current object~~',
-	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1' => 'Stimulus code~~',
-	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1+' => 'A valid stimulus code for the current class~~',
+	'Class:cmdbAbstractObject/Method:ApplyStimulus' => 'Stimulus anwenden',
+	'Class:cmdbAbstractObject/Method:ApplyStimulus+' => 'Dem ausgewählten Objekt den ausgewählten Stimulus zuweisen',
+	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1' => 'Stimulus-Code',
+	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1+' => 'Ein valider Stimulus-Code für die aktuelle Klasse',
 	'Class:ResponseTicketTTO/Interface:iMetricComputer' => 'Time To Own',
 	'Class:ResponseTicketTTO/Interface:iMetricComputer' => 'Time To Own (Erstzuweisungszeit)',
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Zielvorgabe (SLT) vom Typ TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve (Erstlösungszeit)',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Zielvorgabe (SLT) vom Typ TTR',
-    'portal:itop-portal' => 'Standard Portal', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
+	'portal:itop-portal' => 'Standard Portal', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
 	'Brick:Portal:UserProfile:Title' => 'Mein Profile',
 	'Brick:Portal:NewRequest:Title' => 'Neue Störung/Anfrage',
 	'Brick:Portal:NewRequest:Title+' => '<p>Hilfe?</p><p>Wählen Sie einen Service aus und senden Sie Ihre Anfrage zum Service Desk.</p>',
@@ -199,5 +199,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Offen',
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Gelöst',
 	'Brick:Portal:ClosedRequests:Title' => 'Geschlossene Störungen/Anfragen',
-));
+	'Class:Ticket/Attribute:operational_status' => 'Status',
+	'Class:Ticket/Attribute:operational_status+' => 'Berechnet nach detailliertem Status',
+	'Class:Ticket/Attribute:operational_status/Value:ongoing' => 'In Bearbeitung',
+	'Class:Ticket/Attribute:operational_status/Value:ongoing+' => 'In Bearbeitung',
+	'Class:Ticket/Attribute:operational_status/Value:resolved' => 'Gelöst',
+	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '',
+	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Geschlossen',
+	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
+	'Page:DefaultTitle' => 'iTop - Benutzer Portal',
+	));
 ?>

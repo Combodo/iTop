@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,13 +16,13 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-/**
- * @author	Stephan Rosenke <stephan.rosenke@itomig.de>
- * @author 	David M. Gümbel <david.guembel@itomig.de>
+/*
+* @author ITOMIG GmbH <martin.raenker@itomig.de>
 
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
- */
+* @copyright     Copyright (C) 2017 Combodo SARL
+* @licence	http://opensource.org/licenses/AGPL-3.0
+*		
+*/
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Organization' => 'Organisation',
@@ -571,7 +571,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '',
 	'Class:Rack' => 'Rack',
 	'Class:Rack+' => '',
-	'Class:Rack/Attribute:nb_u' => 'NB U~~',
+	'Class:Rack/Attribute:nb_u' => 'Höheneinheiten',
 	'Class:Rack/Attribute:nb_u+' => '',
 	'Class:Rack/Attribute:device_list' => 'Devices',
 	'Class:Rack/Attribute:device_list+' => '',
@@ -633,7 +633,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Server/Attribute:logicalvolumes_list+' => '',
 	'Class:StorageSystem' => 'Storage-System',
 	'Class:StorageSystem+' => '',
-	'Class:StorageSystem/Attribute:logicalvolume_list' => ' Logische Volumen',
+	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Logische Volumes',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => '',
 	'Class:SANSwitch' => 'SAN-Switch',
 	'Class:SANSwitch+' => '',
@@ -681,9 +681,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:PDU/Attribute:rack_id+' => '',
 	'Class:PDU/Attribute:rack_name' => 'Rack-Name',
 	'Class:PDU/Attribute:rack_name+' => '',
-	'Class:PDU/Attribute:powerstart_id' => 'Power start~~',
+	'Class:PDU/Attribute:powerstart_id' => 'Eingangs-Stromverbindung',
 	'Class:PDU/Attribute:powerstart_id+' => '',
-	'Class:PDU/Attribute:powerstart_name' => 'Power start name~~',
+	'Class:PDU/Attribute:powerstart_name' => 'Eingangs-Stromverbindung',
 	'Class:PDU/Attribute:powerstart_name+' => '',
 	'Class:Peripheral' => 'Peripheriegerät',
 	'Class:Peripheral+' => '',
@@ -783,7 +783,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:VirtualMachine/Attribute:managementip+' => '',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Netzwerk-Interfaces',
 	'Class:VirtualMachine/Attribute:logicalinterface_list+' => '',
-	'Class:LogicalVolume' => ' Logische Volumen',
+	'Class:LogicalVolume' => 'Logisches Volume',
 	'Class:LogicalVolume+' => '',
 	'Class:LogicalVolume/Attribute:name' => 'Name',
 	'Class:LogicalVolume/Attribute:name+' => '',
@@ -1147,6 +1147,35 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name' => 'Gerätename',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id' => 'VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
+	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_name+' => '',
+	'Class:Person/Attribute:name+' => '',
+	'Class:Person/Attribute:picture' => 'Bild',
+	'Class:Person/Attribute:picture+' => '',
+	'Class:Document/Attribute:version+' => '',
+	'Class:Licence/Attribute:perpetual+' => '',
+	'Class:Subnet/Attribute:subnet_name+' => '',
+	'Class:Subnet/Attribute:vlans_list+' => '',
+	'Class:VLAN+' => '',
+	'Class:VLAN/Attribute:vlan_tag+' => '',
+	'Class:VLAN/Attribute:description+' => '',
+	'Class:VLAN/Attribute:org_id+' => '',
+	'Class:VLAN/Attribute:subnets_list+' => '',
+	'Class:VLAN/Attribute:physicalinterfaces_list+' => '',
+	'Class:lnkSubnetToVLAN+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_ip+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_name+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '',
+	'Class:PhysicalInterface/Attribute:vlans_list+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '',
 	'Menu:OSVersion' => 'OS-Versionen',
 	'Server:power' => 'Stromversorgung',
 	'Class:Subnet/Tab:IPUsage' => 'IP-Nutzung',

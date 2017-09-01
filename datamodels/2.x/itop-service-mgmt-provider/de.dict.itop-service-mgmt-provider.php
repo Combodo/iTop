@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,11 +16,13 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-/**
- * @author	David M. Gümbel <david.guembel@itomig.de>
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
- */
+/*
+* @author ITOMIG GmbH <martin.raenker@itomig.de>
+
+* @copyright     Copyright (C) 2017 Combodo SARL
+* @licence	http://opensource.org/licenses/AGPL-3.0
+*		
+*/
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Organization/Attribute:deliverymodel_id' => 'Delivery-Modell',
@@ -346,5 +348,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
 	'Class:ServiceSubcategory/Attribute:service_provider' => 'Provider-Name',
 	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Provider',
-));
+	'UI:ServiceManagementMenu' => 'Service Management',
+	'UI:ServiceManagementMenu+' => '',
+	'UI:ServiceManagementMenu:Title' => 'Service Management Übersicht',
+	));
 ?>

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,13 +16,13 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-/**
- * @author	Stephan Rosenke <stephan.rosenke@itomig.de>
- * @author 	David M. Gümbel <david.guembel@itomig.de> 
+/*
+* @author ITOMIG GmbH <martin.raenker@itomig.de>
 
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
- */
+* @copyright     Copyright (C) 2017 Combodo SARL
+* @licence	http://opensource.org/licenses/AGPL-3.0
+*		
+*/
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Problem' => 'Problem',
@@ -77,7 +77,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Problem/Attribute:assignment_date+' => '',
 	'Class:Problem/Attribute:resolution_date' => 'Datum der Lösung',
 	'Class:Problem/Attribute:resolution_date+' => '',
-	'Class:Problem/Attribute:knownerrors_list' => 'Known Errors',
+	'Class:Problem/Attribute:knownerrors_list' => 'Bekannte Fehler',
 	'Class:Problem/Attribute:knownerrors_list+' => '',
 	'Class:Problem/Attribute:related_request_list' => 'Verwandte Requests',
 	'Class:Problem/Attribute:related_request_list+' => '',
@@ -118,5 +118,5 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Problem/Attribute:related_change_ref+' => '',
 	'Class:Problem/Attribute:related_incident_list' => 'Verknüpfte Incidents',
 	'Class:Problem/Attribute:related_incident_list+' => 'Alle Incidents, die mit diesem Problem verknüpft sind',
-));
+	));
 ?>

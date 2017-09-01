@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,12 +16,13 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-/**
- * @author	Stephan Rosenke <stephan.rosenke@itomig.de>
+/*
+* @author ITOMIG GmbH <martin.raenker@itomig.de>
 
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
- */
+* @copyright     Copyright (C) 2017 Combodo SARL
+* @licence	http://opensource.org/licenses/AGPL-3.0
+*		
+*/
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:KnownError' => 'Known Error',
@@ -70,7 +71,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Begründung',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-	'Class:lnkDocumentToError' => 'Verknüpfun Dokumente/KnownError',
+	'Class:lnkDocumentToError' => 'Verknüpfung Dokumente/KnownError',
 	'Class:lnkDocumentToError+' => '',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Dokument',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
@@ -128,5 +129,5 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'Oft gestellte Fragen (FAQs)',
 	'Brick:Portal:FAQ:Title+' => '<p>In Eile?</p><p>Sehen Sie sich die meistgestellten Fragen an (FAQs) und finden Sie (eventuell) die Antwort direkt dort.</p>',
-));
+	));
 ?>

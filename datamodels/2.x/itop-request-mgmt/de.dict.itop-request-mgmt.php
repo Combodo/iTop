@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,11 +16,13 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-/**
- * @author	David M. Gümbel <david.guembel@itomig.de>
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
- */
+/*
+* @author ITOMIG GmbH <martin.raenker@itomig.de>
+
+* @copyright     Copyright (C) 2017 Combodo SARL
+* @licence	http://opensource.org/licenses/AGPL-3.0
+*		
+*/
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest' => 'Benutzeranfrage',
@@ -217,7 +219,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:UserRequest:EscalatedRequests+' => '',
 	'Menu:UserRequest:OpenRequests' => 'Alle offenen Benutzeranfragen',
 	'Menu:UserRequest:OpenRequests+' => '',
-	'Menu:UserRequest:OpenProblems' => 'Alle offenen Problems',
+	'Menu:UserRequest:OpenProblems' => 'Alle offenen Probleme',
 	'Menu:UserRequest:OpenProblems+' => '',
 	'UI:WelcomeMenu:MyAssignedCalls' => 'Mir zugewiesene Benutzeranfragen',
 	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Benutzeranfragen der letzten 14  Tage nach Typ',
@@ -272,5 +274,5 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Kann Ticket nicht als eigenes Parent-Ticket verwenden',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Kind-Tickets lösen',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
-));
+	));
 ?>

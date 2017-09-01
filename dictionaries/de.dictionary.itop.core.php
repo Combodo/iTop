@@ -50,7 +50,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ActionEmail/Attribute:importance/Value:low+' => 'niedrig',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'normal',
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'normal',
-	'Class:TriggerOnPortalUpdate' => 'Trigger (beu Update aus dem Portal)',
+	'Class:TriggerOnPortalUpdate' => 'Trigger (bei Update aus dem Portal)',
 	'Class:TriggerOnPortalUpdate+' => '',
 	'Class:TriggerOnStateEnter' => 'Trigger (beim Eintritt eines Status)',
 	'Class:TriggerOnStateEnter+' => 'Trigger bei Eintritt einer Objektstatusänderung',
@@ -607,8 +607,8 @@ Operatoren:<br/>
 	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML (*.html)',
 	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet-Optionen',
 	'Core:BulkExport:OptionNoLocalize' => 'Werte von Aufzählungsfeldern nicht lokalisieren',
-	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
-	'Core:BulkExport:OptionFormattedText' => 'Preserve Textformatierung',
+	'Core:BulkExport:OptionLinkSets' => 'Inkludiere verlinkte Objekte',
+	'Core:BulkExport:OptionFormattedText' => 'Behalte Textformatierung bei',
 	'Core:BulkExport:ScopeDefinition' => 'Definition der zu exportierenden Objekte',
 	'Core:BulkExportLabelOQLExpression' => 'OQL-Abfrage',
 	'Core:BulkExportLabelPhrasebookEntry' => 'Query-Bibliotheks-Eintrag:',
@@ -617,17 +617,17 @@ Operatoren:<br/>
 	'Core:BulkExportQueryPlaceholder' => 'Geben Sie eine OQL-Abfrage ein...',
 	'Core:BulkExportCanRunNonInteractive' => 'Klicken Sie hier, um den Export im nicht-interaktiven Modus auszuführen',
 	'Core:BulkExportLegacyExport' => 'Klicken Sie hier, um auf die Legacy-Version des Exports zuzugreifen',
-	'Core:BulkExport:XLSXOptions' => 'Excel-Optionen~~',
-	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup~~',
+	'Core:BulkExport:XLSXOptions' => 'Excel-Optionen',
+	'Core:BulkExport:TextFormat' => 'Textfelder enthalten HTML-Markup',
 	'Core:AttributeHierarchicalKey' => 'Hierarischer Key',
 	'Core:AttributeHierarchicalKey+' => 'Externer Key oder Foreign Key zum Parent',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Attachments',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filter',
 	'TriggerOnObject:WrongFilterQuery' => 'Fehlerhafter Filter-Query: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'Der Filter muss Objekte vom Typ \"%1$s\" zurückgeben.',
-	'Core:ExplainWTC:ElapsedTime' => 'Abgelaufene Zeit (gespeichert als \"%1$s\")~~',
-	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Zeitaufwand für \"%1$s\"~~',
-	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline für \"%1$s\" um %2$d%%~~',
+	'Core:ExplainWTC:ElapsedTime' => 'Abgelaufene Zeit (gespeichert als \"%1$s\")',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Zeitaufwand für \"%1$s\"',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline für \"%1$s\" um %2$d%%',
 	'Core:DateTime:Placeholder_d' => 'TT', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'T', // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
@@ -642,8 +642,8 @@ Operatoren:<br/>
 	'Core:DateTime:Placeholder_A' => 'AM/PM', // AM/PM (uppercase)
 	'Core:DateTime:Placeholder_i' => 'mm', // minutes, 2 digits: 00..59
 	'Core:DateTime:Placeholder_s' => 'ss', // seconds, 2 digits 00..59
-	'Core:Validator:Default' => 'Wrong format~~',
-	'Core:Validator:Mandatory' => 'Please, fill this field~~',
-	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
-	'Core:Validator:MustSelectOne' => 'Please, select one~~',
+	'Core:Validator:Default' => 'Falsches Format',
+	'Core:Validator:Mandatory' => 'Bitte dieses Feld ausfüllen',
+	'Core:Validator:MustBeInteger' => 'Muss ein Integer sein',
+	'Core:Validator:MustSelectOne' => 'Min. ein Eintrag muss ausgewählt sein',
 ));

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2014 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,11 +16,13 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-/**
- * @author	David M. Gümbel <david.guembel@itomig.de>
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
- */
+/*
+* @author ITOMIG GmbH <martin.raenker@itomig.de>
+
+* @copyright     Copyright (C) 2017 Combodo SARL
+* @licence	http://opensource.org/licenses/AGPL-3.0
+*		
+*/
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest' => 'Benutzeranfrage',
@@ -159,7 +161,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => 'Benutzerzufriedenheit',
 	'Class:UserRequest/Attribute:user_satisfaction+' => '',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:1' => 'Sehr zufriden',
+	'Class:UserRequest/Attribute:user_satisfaction/Value:1' => 'Sehr zufrieden',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:1+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:2' => 'Ziemlich zufrieden',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:2+' => '',
@@ -201,7 +203,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:UserRequest:Provider+' => '',
 	'Menu:UserRequest:Overview' => 'Übersicht',
 	'Menu:UserRequest:Overview+' => '',
-	'Menu:NewUserRequest' => 'Neuer Benutzeranfrage',
+	'Menu:NewUserRequest' => 'Neue Benutzeranfrage',
 	'Menu:NewUserRequest+' => '',
 	'Menu:SearchUserRequests' => 'Nach Benutzeranfrage suchen',
 	'Menu:SearchUserRequests+' => '',
@@ -245,5 +247,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Kann Ticket nicht als eigenes Parent-Ticket verwenden',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Kind-Tickets lösen',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
+	'Class:UserRequest/Attribute:parent_incident_id+' => '',
 	));
 ?>
