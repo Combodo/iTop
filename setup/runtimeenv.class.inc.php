@@ -911,11 +911,21 @@ class RunTimeEnvironment
 	{
 		if ($this->sFinalEnv != $this->sTargetEnv)
 		{
-			$this->CommitFile(
-				APPROOT.'data/'.$this->sTargetEnv.'.delta.xml',
-				APPROOT.'data/'.$this->sFinalEnv.'.delta.xml',
-				false
-			);
+			if (file_exists(APPROOT.'data/'.$this->sTargetEnv.'.delta.xml'))
+			{
+				if (file_exists(APPROOT.'data/'.$this->sFinalEnv.'.delta.xml'))
+				{
+					// Make a "previous" file
+					copy(
+						APPROOT.'data/'.$this->sTargetEnv.'.delta.xml',
+						APPROOT.'data/'.$this->sFinalEnv.'.delta.prev.xml'
+					);
+				}
+				$this->CommitFile(
+					APPROOT.'data/'.$this->sTargetEnv.'.delta.xml',
+					APPROOT.'data/'.$this->sFinalEnv.'.delta.xml'
+				);
+			}
 			$this->CommitFile(
 				APPROOT.'data/datamodel-'.$this->sTargetEnv.'.xml',
 				APPROOT.'data/datamodel-'.$this->sFinalEnv.'.xml'
@@ -940,11 +950,14 @@ class RunTimeEnvironment
 				APPROOT.'env-'.$this->sFinalEnv
 			);
 
+			// Move the config file
+			//
 			$sTargetConfig = APPCONF.$this->sTargetEnv.'/config-itop.php';
 			$sFinalConfig = APPCONF.$this->sFinalEnv.'/config-itop.php';
 			@chmod($sFinalConfig, 0770); // In case it exists: RWX for owner and group, nothing for others
 			$this->CommitFile($sTargetConfig, $sFinalConfig);
 			@chmod($sFinalConfig, 0440); // Read-only for owner and group, nothing for others
+			@rmdir(dirname($sTargetConfig)); // Cleanup the temporary build dir if empty
 		}
 	}
 
