@@ -953,6 +953,21 @@ class ApplicationInstaller
 	
 	    $oDataLoader->EndSession();
 	    SetupPage::log_info("ending data load session");
+
+        // Perform after dbload setup tasks here
+        //
+        foreach($aAvailableModules as $sModuleId => $aModule)
+        {
+            if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules) &&
+                isset($aAvailableModules[$sModuleId]['installer']) )
+            {
+                $sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
+                SetupPage::log_info("Calling Module Handler: $sModuleInstallerClass::AfterDataLoad(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
+                // The validity of the sModuleInstallerClass has been established in BuildConfig()
+                $aCallSpec = array($sModuleInstallerClass, 'AfterDataLoad');
+                call_user_func_array($aCallSpec, array(MetaModel::GetConfig(), $aModule['version_db'], $aModule['version_code']));
+            }
+        }
 	}
 	
 	/**

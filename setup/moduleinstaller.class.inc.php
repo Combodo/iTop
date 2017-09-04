@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -54,15 +54,25 @@ abstract class ModuleInstallerAPI
 	{
 	}
 
-	/**
-	 * Handler called at the end of the setup of the database (profiles and admin accounts created), but before the data load
-	 * @param $oConfiguration Config The new configuration of the application
-	 * @param $sPreviousVersion string PRevious version number of the module (empty string in case of first install)
-	 * @param $sCurrentVersion string Current version number of the module
-	 */
-	public static function AfterDatabaseSetup(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
-	{	
-	}
+    /**
+     * Handler called at the end of the setup of the database (profiles and admin accounts created), but before the data load
+     * @param $oConfiguration Config The new configuration of the application
+     * @param $sPreviousVersion string Previous version number of the module (empty string in case of first install)
+     * @param $sCurrentVersion string Current version number of the module
+     */
+    public static function AfterDatabaseSetup(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
+    {
+    }
+
+    /**
+     * Handler called at the end of the data load
+     * @param $oConfiguration Config The new configuration of the application
+     * @param $sPreviousVersion string Previous version number of the module (empty string in case of first install)
+     * @param $sCurrentVersion string Current version number of the module
+     */
+    public static function AfterDataLoad(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
+    {
+    }
 	
 	/**
 	 * Helper to complete the renaming of a class
@@ -215,4 +225,3 @@ abstract class ModuleInstallerAPI
 	}
 
 }
-?>
