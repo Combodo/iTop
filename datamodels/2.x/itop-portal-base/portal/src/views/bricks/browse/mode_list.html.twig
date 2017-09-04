@@ -224,7 +224,7 @@
 					}
 				},
 				"lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "{{ 'Portal:Datatables:Language:DisplayLength:All'|dict_s }}"]],
-				"displayLength": {{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::DEFAULT_COUNT_PER_PAGE_LIST') }},
+				"displayLength": {{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::DEFAULT_LIST_LENGTH') }},
 				"dom": '<"row"<"col-sm-6"l><"col-sm-6"<f><"visible-xs"p>>>t<"row"<"col-sm-6"i><"col-sm-6"p>>',
 				"columns": getColumnsDefinition(),
 				"order": [],
@@ -250,7 +250,7 @@
 						"url": "{{ app.url_generator.generate('p_browse_brick_mode', {'sBrickId': sBrickId, 'sBrowseMode': constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_BROWSE_MODE_LIST')})|raw }}",
 						"data": function(d){
 							d.iPageNumber = Math.floor(d.start/d.length) + 1;
-							d.iCountPerPage = d.length;
+							d.iListLength = d.length;
 							d.sDataLoading = "{{ constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_LAZY') }}";
 							d.columns = null;
 							d.orders = null;

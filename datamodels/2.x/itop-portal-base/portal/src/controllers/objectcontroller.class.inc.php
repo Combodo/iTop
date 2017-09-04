@@ -61,7 +61,7 @@ class ObjectController extends AbstractController
 	const ENUM_MODE_VIEW = 'view';
 	const ENUM_MODE_EDIT = 'edit';
 	const ENUM_MODE_CREATE = 'create';
-	const DEFAULT_COUNT_PER_PAGE_LIST = 10;
+	const DEFAULT_LIST_LENGTH = 10;
 
 	/**
 	 * Displays an cmdbAbstractObject if the connected user is allowed to.
@@ -783,7 +783,7 @@ class ObjectController extends AbstractController
 		// Note : This limit is also used in the field renderer by typeahead to determine how many suggestions to display
 		if ($oTargetAttDef->GetEditClass() === 'CustomFields')
 		{
-			$oSet->SetLimit(static::DEFAULT_COUNT_PER_PAGE_LIST);
+			$oSet->SetLimit(static::DEFAULT_LIST_LENGTH);
 		}
 		else
 		{
@@ -880,7 +880,7 @@ class ObjectController extends AbstractController
 		
 		// Retrieving request parameters
 		$iPageNumber = ($oRequest->get('iPageNumber') !== null) ? $oRequest->get('iPageNumber') : 1;
-		$iCountPerPage = ($oRequest->get('iCountPerPage') !== null) ? $oRequest->get('iCountPerPage') : static::DEFAULT_COUNT_PER_PAGE_LIST;
+		$iListLength = ($oRequest->get('iListLength') !== null) ? $oRequest->get('iListLength') : static::DEFAULT_LIST_LENGTH;
 		$bInitalPass = ($oRequest->get('draw') === null) ? true : false;
 		$sQuery = $oRequest->get('sSearchValue');
 		$sFormPath = $oRequest->get('sFormPath');
@@ -1036,7 +1036,7 @@ class ObjectController extends AbstractController
 		// - Preparing object set
 		$oSet = new DBObjectSet($oSearch, array(), $aInternalParams);
 		$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => $aAttCodes));
-		$oSet->SetLimit($iCountPerPage, $iCountPerPage * ($iPageNumber - 1));
+		$oSet->SetLimit($iListLength, $iListLength * ($iPageNumber - 1));
 		// - Retrieving columns properties
 		$aColumnProperties = array();
 		foreach ($aAttCodes as $sAttCode)
@@ -1265,7 +1265,7 @@ class ObjectController extends AbstractController
 		// - Preparing object set
 		$oSet = new DBObjectSet($oSearch, array(), $aInternalParams);
 		$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array('friendlyname')));
-//		$oSet->SetLimit($iCountPerPage, $iCountPerPage * ($iPageNumber - 1));
+//		$oSet->SetLimit($iListLength, $iListLength * ($iPageNumber - 1));
 //		// - Retrieving columns properties
 //		$aColumnProperties = array();
 //		foreach ($aAttCodes as $sAttCode)

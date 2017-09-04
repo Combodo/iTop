@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -32,15 +32,16 @@ use MetaModel;
  */
 class ManageBrick extends PortalBrick
 {
+    const ENUM_ACTION_VIEW = 'view';
+    const ENUM_ACTION_EDIT = 'edit';
+
 	const DEFAULT_HOME_ICON_CLASS = 'fa fa-pencil-square';
 	const DEFAULT_NAVIGATION_MENU_ICON_CLASS = 'fa fa-pencil-square fa-2x';
-	const ENUM_ACTION_VIEW = 'view';
-	const ENUM_ACTION_EDIT = 'edit';
 	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/manage/layout.html.twig';
 	const DEFAULT_OQL = '';
 	const DEFAULT_OPENING_MODE = self::ENUM_ACTION_EDIT;
 	const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_LAZY;
-	const DEFAULT_COUNT_PER_PAGE_LIST = 20;
+	const DEFAULT_LIST_LENGTH = 20;
 	const DEFAULT_ZLIST_FIELDS = 'list';
     const DEFAULT_SHOW_TAB_COUNTS = false;
 

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -50,7 +50,7 @@ class BrowseBrick extends PortalBrick
 	const DEFAULT_BROWSE_MODE = self::ENUM_BROWSE_MODE_LIST;
 	const DEFAULT_ACTION = self::ENUM_ACTION_DRILLDOWN;
 	const DEFAULT_ACTION_OPENING_TARGET = self::ENUM_OPENING_TARGET_MODAL;
-	const DEFAULT_COUNT_PER_PAGE_LIST = 20;
+	const DEFAULT_LIST_LENGTH = 20;
 
     static $aBrowseModes = array(self::ENUM_BROWSE_MODE_LIST, self::ENUM_BROWSE_MODE_TREE, self::ENUM_BROWSE_MODE_MOSAIC);
 

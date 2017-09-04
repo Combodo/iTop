@@ -263,7 +263,7 @@
 						}
 					},
 					"lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "{{ 'Portal:Datatables:Language:DisplayLength:All'|dict_s }}"]],
-					"displayLength": {{ constant('Combodo\\iTop\\Portal\\Brick\\ManageBrick::DEFAULT_COUNT_PER_PAGE_LIST') }},
+					"displayLength": {{ constant('Combodo\\iTop\\Portal\\Brick\\ManageBrick::DEFAULT_LIST_LENGTH') }},
 					"dom": '<"row"<"col-sm-6"l><"col-sm-6"<f><"visible-xs"p>>>t<"row"<"col-sm-6"i><"col-sm-6"p>>',
 					"columns": getColumnsDefinition('{{ sAreaId }}'),
 					"order": [[0, "desc"]],
@@ -312,7 +312,7 @@
 							"url": "{{ app.url_generator.generate('p_manage_brick_lazy', {'sBrickId': sBrickId, 'sGroupingTab': sGroupingTab, 'sGroupingArea': sAreaId})|raw }}",
 							"data": function(d){
 								d.iPageNumber = Math.floor(d.start/d.length) + 1;
-								d.iCountPerPage = d.length;
+								d.iListLength = d.length;
 								d.columns = null;
 								d.orders = null;
 

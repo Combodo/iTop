@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -33,19 +33,19 @@ class BrowseBrickRouter extends AbstractRouter
 			'callback' => 'Combodo\\iTop\\Portal\\Controller\\BrowseBrickController::DisplayAction',
 			'bind' => 'p_browse_brick_mode'
 		),
-		array('pattern' => '/browse/{sBrickId}/list/page/{iPageNumber}/show/{iCountPerPage}',
+		array('pattern' => '/browse/{sBrickId}/list/page/{iPageNumber}/show/{iListLength}',
 			'callback' => 'Combodo\\iTop\\Portal\\Controller\\BrowseBrickController::DisplayAction',
 			'bind' => 'p_browse_brick_mode_list',
 			'asserts' => array(
 				'sBrowseMode' => 'list',
 				'iPageNumber' => '\d+',
-				'iCountPerPage' => '\d+'
+				'iListLength' => '\d+'
 			),
 			'values' => array(
 				'sBrowseMode' => 'list',
 				'sDataLoading' => 'lazy',
 				'iPageNumber' => '1',
-				'iCountPerPage' => '20'
+				'iListLength' => '20'
 			)
 		),
 		array('pattern' => '/browse/{sBrickId}/tree/expand/{sLevelAlias}/{sNodeId}',
@@ -63,5 +63,3 @@ class BrowseBrickRouter extends AbstractRouter
 	);
 
 }
-
-?>

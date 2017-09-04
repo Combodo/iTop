@@ -220,7 +220,7 @@ class BrowseBrickController extends BrickController
 				case BrowseBrick::ENUM_BROWSE_MODE_LIST:
 					// Retrieving parameters
 					$iPageNumber = (int) $oRequest->get('iPageNumber', 1);
-					$iCountPerPage = (int) $oRequest->get('iCountPerPage', BrowseBrick::DEFAULT_COUNT_PER_PAGE_LIST);
+					$iListLength = (int) $oRequest->get('iListLength', BrowseBrick::DEFAULT_LIST_LENGTH);
 
 					// Getting total records number
 					$oCountSet = new DBObjectSet($oQuery);
@@ -229,7 +229,7 @@ class BrowseBrickController extends BrickController
 					unset($oCountSet);
 
 					$oSet = new DBObjectSet($oQuery);
-					$oSet->SetLimit($iCountPerPage, $iCountPerPage * ($iPageNumber - 1));
+					$oSet->SetLimit($iListLength, $iListLength * ($iPageNumber - 1));
 
 					break;
 				case BrowseBrick::ENUM_BROWSE_MODE_TREE:

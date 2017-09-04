@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -29,21 +29,19 @@ class ManageBrickRouter extends AbstractRouter
 			'bind' => 'p_manage_brick',
 			'values' => array('sGroupingTab' => null)
 		),
-		array('pattern' => '/manage/{sBrickId}/{sGroupingTab}/{sGroupingArea}/page/{iPageNumber}/show/{iCountPerPage}',
+		array('pattern' => '/manage/{sBrickId}/{sGroupingTab}/{sGroupingArea}/page/{iPageNumber}/show/{iListLength}',
 			'callback' => 'Combodo\\iTop\\Portal\\Controller\\ManageBrickController::DisplayAction',
 			'bind' => 'p_manage_brick_lazy',
 			'asserts' => array(
 				'iPageNumber' => '\d+',
-				'iCountPerPage' => '\d+'
+				'iListLength' => '\d+'
 			),
 			'values' => array(
 				'sDataLoading' => 'lazy',
 				'iPageNumber' => '1',
-				'iCountPerPage' => '20'
+				'iListLength' => '20'
 			)
 		)
 	);
 
 }
-
-?>

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -344,7 +344,7 @@ class ManageBrickController extends BrickController
 				{
 					// Retrieving parameters
 					$iPageNumber = (int) $oRequest->get('iPageNumber', 1);
-					$iCountPerPage = (int) $oRequest->get('iCountPerPage', ManageBrick::DEFAULT_COUNT_PER_PAGE_LIST);
+					$iListLength = (int) $oRequest->get('iListLength', ManageBrick::DEFAULT_LIST_LENGTH);
 
 					// Getting total records number
 					$oCountSet = new DBObjectSet($oQuery);
@@ -354,7 +354,7 @@ class ManageBrickController extends BrickController
 					unset($oCountSet);
 
 					$oSet = new DBObjectSet($oQuery);
-					$oSet->SetLimit($iCountPerPage, $iCountPerPage * ($iPageNumber - 1));
+					$oSet->SetLimit($iListLength, $iListLength * ($iPageNumber - 1));
 				}
 				else
 				{

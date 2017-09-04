@@ -117,7 +117,7 @@
 				}
 			},
 			"lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "{{ 'Portal:Datatables:Language:DisplayLength:All'|dict_s }}"]],
-			"displayLength": {{ constant('Combodo\\iTop\\Portal\\Controller\\ObjectController::DEFAULT_COUNT_PER_PAGE_LIST') }},
+			"displayLength": {{ constant('Combodo\\iTop\\Portal\\Controller\\ObjectController::DEFAULT_LIST_LENGTH') }},
 			"order": [[1, "asc"]],
 			"dom": '<"row"<"col-sm-6"l><"col-sm-6"<f><"visible-xs"p>>>t<"row"<"col-sm-6"i><"col-sm-6"p>>',
 			"columns": getColumnsDefinition(),
@@ -156,7 +156,7 @@
 					d.sFieldId = '{{ aSource.sFieldId }}';
 					d.aObjectIdsToIgnore = {{ aSource.aObjectIdsToIgnore|json_encode()|raw }};
 					d.iPageNumber = Math.floor(d.start/d.length) + 1;
-					d.iCountPerPage = d.length;
+					d.iListLength = d.length;
 					d.columns = null;
 					d.orders = null;
 					if(d.search.value)
