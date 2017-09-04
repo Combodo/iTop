@@ -820,6 +820,8 @@
 										<type id="AttributeExternalField"/>
 										<type id="AttributeLinkedSetIndirect"/>
 										<type id="AttributeLinkedSet"/>
+										<type id="AttributeImage"/>
+										<type id="AttributeBlob"/>
 									</types>
 								</type_restrictions>
 							</argument>
