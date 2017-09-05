@@ -1085,6 +1085,7 @@
 									<!-- Title of the level, will be display in lists and others browse modes -->
 									<title>Class:Service</title>
 									<!-- Optional tag to add attributes to the table by their code, can be specified for each level -->
+									<!-- Note: Fields will only be displayed in "list" mode but will still be used for filter in other modes -->
 									<!-- <fields  /> -->
 									<!-- Can be empty on intermediate levels, default is drilldown -->
 									<actions>
