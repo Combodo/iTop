@@ -1763,8 +1763,22 @@ EOF
 */
 		return $sHtml;
 	}
-	
-	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '', $iFlags = 0, $aArgs = array())
+
+	/**
+	 * @param $oPage
+	 * @param $sClass
+	 * @param $sAttCode
+	 * @param $oAttDef
+	 * @param string $value
+	 * @param string $sDisplayValue
+	 * @param string $iId
+	 * @param string $sNameSuffix
+	 * @param int $iFlags
+	 * @param array $aArgs
+	 * @param bool $bPreserveCurrentValue Preserve the current value even if not allowed
+	 * @return string
+	 */
+	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '', $iFlags = 0, $aArgs = array(), $bPreserveCurrentValue = true)
 	{
 		static $iInputId = 0;
 		$sFieldPrefix = '';
@@ -2026,7 +2040,14 @@ EOF
 					$aEventsList[] ='validate';
 					$aEventsList[] ='change';
 
-					$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '', $value);
+					if ($bPreserveCurrentValue)
+					{
+						$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '', $value);
+					}
+					else
+					{
+						$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs);
+					}
 					$sFieldName = $sFieldPrefix.$sAttCode.$sNameSuffix;
 					$aExtKeyParams = $aArgs;
 					$aExtKeyParams['iFieldSize'] = $oAttDef->GetMaxSize();
