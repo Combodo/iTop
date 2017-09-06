@@ -1937,7 +1937,7 @@ abstract class MetaModel
 					// - an external KEY / FIELD (direct),
 					// - an external field pointing to an external KEY / FIELD
 					// - an external field pointing to an external field pointing to....
-					$sRemoteClass = $oAttDef->GetTargetClass();
+					$sRemoteClass = $oAttDef->GetTargetClass(EXTKEY_ABSOLUTE);
 
 					if ($oAttDef->IsExternalField())
 					{
