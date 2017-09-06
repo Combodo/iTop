@@ -89,8 +89,7 @@ class ModuleDesign extends \Combodo\iTop\DesignDocument
 			}
 			else
 			{
-				var_dump($aFiles);
-				$aAvailable = array();
+			    $aAvailable = array();
 				foreach ($aFiles as $sFile)
 				{
 					$aAvailable[] = "'".basename($sFile, '.xml')."'";
