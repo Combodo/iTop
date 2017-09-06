@@ -148,9 +148,15 @@ class ValueSetObjects extends ValueSetDefinition
 		if ($iAdditionalValue > 0)
 		{
 			$oSearchAdditionalValue = new DBObjectSearch($oFilter->GetClass());
-			$oSearchAdditionalValue->AddCondition('id', $iAdditionalValue);
+			$oSearchAdditionalValue->AddConditionExpression( new BinaryExpression(
+			    new FieldExpression('id', $oSearchAdditionalValue->GetClassAlias()),
+                '=',
+                new VariableExpression('current_extkey_id'))
+            );
 			$oSearchAdditionalValue->AllowAllData();
 			$oSearchAdditionalValue->SetArchiveMode(true);
+			$oSearchAdditionalValue->SetInternalParams( array('current_extkey_id' => $iAdditionalValue) );
+
 			$oFilter = new DBUnionSearch(array($oFilter, $oSearchAdditionalValue));
 		}
 

@@ -117,7 +117,7 @@ class UIExtKeyWidget
 		$sAttrFieldPrefix = ($this->bSearchMode) ? '' : 'attr_';
 
 		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey\">";
-		$sFilter = addslashes($oAllowedValues->GetFilter()->ToOQL(true));
+		$sFilter = addslashes($oAllowedValues->GetFilter()->ToOQL());
 		if($this->bSearchMode)
 		{
 			$sWizHelper = 'null';
@@ -382,7 +382,11 @@ EOF
 			$oFilter->ChangeClass($sRemoteClass);
 		}
 		$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
-		$oBlock = new DisplayBlock($oFilter, 'list', false, array('query_params' => array('this' => $oObj)));
+
+		// Current extkey value, so we can display event if it is not available anymore (eg. archived).
+		$iCurrentExtKeyId = (is_null($oObj)) ? 0 : $oObj->Get($this->sAttCode);
+
+		$oBlock = new DisplayBlock($oFilter, 'list', false, array('query_params' => array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId)));
 		$oBlock->Display($oP, $this->iId.'_results', array('this' => $oObj, 'cssCount'=> '#count_'.$this->iId, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'table_id' => 'select_'.$this->sAttCode)); // Don't display the 'Actions' menu on the results
 	}
 	
@@ -399,9 +403,13 @@ EOF
 		{
 			throw new Exception('Implementation: null value for allowed values definition');
 		}
+
+        // Current extkey value, so we can display event if it is not available anymore (eg. archived).
+        $iCurrentExtKeyId = (is_null($oObj) || $this->sAttCode === '') ? 0 : $oObj->Get($this->sAttCode);
+
 		$oValuesSet = new ValueSetObjects($sFilter, 'friendlyname'); // Bypass GetName() to avoid the encoding by htmlentities
 		$oValuesSet->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
-		$aValues = $oValuesSet->GetValues(array('this' => $oObj), $sContains);
+		$aValues = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains);
 		foreach($aValues as $sKey => $sFriendlyName)
 		{
 			$oP->add(trim($sFriendlyName)."\t".$sKey."\n");
@@ -536,9 +544,9 @@ EOF
 		}
 		try
 		{
-			$oFilter = DBObjectSearch::FromOQL($sFilter);
+		    $oFilter = DBObjectSearch::FromOQL($sFilter);
 			$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
-			$oSet = new DBObjectSet($oFilter, array(), array('this' => $oObj));
+			$oSet = new DBObjectSet($oFilter, array(), array('this' => $oObj, 'current_extkey_id' => $currValue));
 		}
 		catch(MissingQueryArgument $e)
 		{
@@ -653,4 +661,3 @@ EOF
 	}
 
 }
-?>
