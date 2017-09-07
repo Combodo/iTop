@@ -137,6 +137,21 @@ $oApp->before(function(Symfony\Component\HttpFoundation\Request $oRequest, Silex
     $oKPI->ComputeAndReport('Parsing portal configuration');
     // Loading current user
     ApplicationHelper::LoadCurrentUser($oApp);
+
+    // Checking that user is allowed this portal
+    $bAllowed = false;
+    foreach($oApp['combodo.portal.instance.conf']['portals'] as $aAllowedPortal)
+    {
+        if($aAllowedPortal['id'] === PORTAL_ID)
+        {
+            $bAllowed = true;
+            break;
+        }
+    }
+    if(!$bAllowed)
+    {
+        $oApp->abort(404);
+    }
 }, Application::EARLY_EVENT);
 
 // Running application
