@@ -994,6 +994,8 @@
 				<!-- Can be either a fileref or a relative path to the file from /env-xxx (eg. itop-portal-base/mytemplate.html.twig) -->
 				<!-- Available templates are id="layout|home" -->
 				<templates/>
+				<!-- Class used for generating objects view/edit urls (eg. in notifications) -->
+				<urlmaker_class>iTopPortalViewUrlMaker</urlmaker_class>
 				<!-- An OQL query to determine which TriggerOnPortalUpdate to use within THIS instance of the portal. This is mostly needed to enable different triggers on several portal instances -->
 				<!-- Note : ":parent_classes" parameter is a reserved name that will be used for the current object class name (and its ancestors) -->
 				<triggers_query><![CDATA[SELECT TriggerOnPortalUpdate AS t WHERE t.target_class IN (:parent_classes)]]></triggers_query>

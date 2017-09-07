@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -54,12 +54,17 @@ class UrlGenerator extends SymfonyUrlGenerator
 		}
 
 		// Optional parameters
-		$sEnvSwitch = utils::ReadParam('env_switch', '', false, 'string');
-		if ($sEnvSwitch !== '')
-		{
-			$parameters['env_switch'] = $sEnvSwitch;
-		}
-		$sDebug = utils::ReadParam('debug', '', false, 'string');
+        $sPortalId = utils::ReadParam('portal_id', '', false, 'string');
+        if ($sPortalId !== '')
+        {
+            $parameters['portal_id'] = $sPortalId;
+        }
+        $sEnvSwitch = utils::ReadParam('env_switch', '', false, 'string');
+        if ($sEnvSwitch !== '')
+        {
+            $parameters['env_switch'] = $sEnvSwitch;
+        }
+        $sDebug = utils::ReadParam('debug', '', false, 'string');
 		if ($sDebug !== '')
 		{
 			$parameters['debug'] = $sDebug;
@@ -69,5 +74,3 @@ class UrlGenerator extends SymfonyUrlGenerator
 	}
 
 }
-
-?>

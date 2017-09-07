@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2016 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,6 +16,18 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
+/**
+ * Backward Compatibility file for default portal.
+ * Needed when:
+ * - PortalDispatcher uses the old url "pages/exec.php?exec_module=itop-portal&amp;exec_page=index.php"
+ * - Portal xml has no //properties/urlmaker_class tag
+ * - Checks are necessary (eg. UserRequest/Incident class detection)
+ *
+ * NOT needed when:
+ * - PortalDispatcher uses the new url "pages/exec.php?exec_module=itop-portal-base&amp;exec_page=index.php&amp;portal_id=itop-portal"
+ * - Portal xml has a //properties/urlmaker_class tag (or doesn't need to register a UrlMakerClass)
+ */
 
 if (file_exists(__DIR__ . '/../../approot.inc.php'))
 {
@@ -33,9 +45,9 @@ if (!class_exists('UserRequest') && !class_exists('Incident'))
 	die('iTop has neither been installed with User Request nor Incident tickets. Please contact your administrator.');
 }
 
+// Defining portal constants
 $sDir = basename(__DIR__);
 define('PORTAL_MODULE_ID', $sDir);
 define('PORTAL_ID', $sDir);
 
-ApplicationContext::SetUrlMakerClass('iTopPortalViewUrlMaker');
-require_once APPROOT . '/env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/web/index.php';
+require_once APPROOT . '/env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/index.php';

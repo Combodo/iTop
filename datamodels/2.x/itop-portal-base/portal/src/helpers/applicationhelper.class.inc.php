@@ -37,6 +37,7 @@ use \MetaModel;
 use \DBObjectSearch;
 use \DBObjectSet;
 use \iPortalUIExtension;
+use \ApplicationContext;
 use \Combodo\iTop\Portal\Brick\AbstractBrick;
 
 /**
@@ -406,6 +407,7 @@ class ApplicationHelper
 						'layout' => 'itop-portal-base/portal/src/views/layout.html.twig',
 						'home' => 'itop-portal-base/portal/src/views/home/layout.html.twig'
 					),
+					'urlmaker_class' => null,
 					'triggers_query' => null,
 					'attachments' => array(
 						'allow_delete' => true
@@ -433,6 +435,7 @@ class ApplicationHelper
 				switch ($oPropertyNode->nodeName)
 				{
 					case 'name':
+                    case 'urlmaker_class':
 					case 'triggers_query':
 						$aPortalConf['properties'][$oPropertyNode->nodeName] = $oPropertyNode->GetText($aPortalConf['properties'][$oPropertyNode->nodeName]);
 						break;
@@ -539,6 +542,11 @@ class ApplicationHelper
             $aPortalConf['ui_extensions'] = static::LoadUIExtensions($oApp);
 			// - Action rules
 			static::LoadActionRulesConfiguration($oApp, $oDesign);
+			// - Setting UrlMakerClass
+            if($aPortalConf['properties']['urlmaker_class'] !== null)
+            {
+                ApplicationContext::SetUrlMakerClass($aPortalConf['properties']['urlmaker_class']);
+            }
 			// - Generating CSS files
 			$aImportPaths = array($oApp['combodo.portal.base.absolute_path'] . 'css/');
 			foreach ($aPortalConf['properties']['themes'] as $key => $value)
