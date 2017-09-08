@@ -1033,6 +1033,23 @@ EOF
 			$sLogOffMenu .= "<li><span>$sLogonMessage</span></li>\n";
 			$aActions = array();
 
+            $aAllowedPortals = UserRights::GetAllowedPortals();
+            if(count($aAllowedPortals) > 1)
+            {
+                // Adding portals
+                foreach($aAllowedPortals as $aAllowedPortal)
+                {
+                    if($aAllowedPortal['id'] !== 'backoffice')
+                    {
+                        $oPortalMenuItem = new URLPopupMenuItem('portal:'.$aAllowedPortal['id'], Dict::S($aAllowedPortal['label']), $aAllowedPortal['url'], '_blank');
+                        $aActions[$oPortalMenuItem->GetUID()] = $oPortalMenuItem->GetMenuItem();
+                    }
+                }
+                // Adding a separator
+                $oPortalSeparatorMenuItem = new SeparatorPopupMenuItem();
+                $aActions[$oPortalSeparatorMenuItem->GetUID()] = $oPortalSeparatorMenuItem->GetMenuItem();
+            }
+
 			$oPrefs = new URLPopupMenuItem('UI:Preferences', Dict::S('UI:Preferences'), utils::GetAbsoluteUrlAppRoot()."pages/preferences.php?".$oAppContext->GetForLink());
 			$aActions[$oPrefs->GetUID()] = $oPrefs->GetMenuItem();
 
