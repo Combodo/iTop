@@ -191,8 +191,15 @@ class ormCaseLog {
 
 	public function __toString()
 	{
-		return $this->m_sLog;
+        if($this->IsEmpty()) return '';
+
+        return $this->m_sLog;
 	}
+
+	public function IsEmpty()
+    {
+        return ($this->m_sLog === null);
+    }
 	
 	public function ClearModifiedFlag()
 	{
