@@ -193,6 +193,12 @@
 .fc-combodo-icon:before {
   content: "D";
 }
+.fc-itophub-icon:before {
+  content: "E";
+}
+.fc-chameleon-icon:before {
+  content: "F";
+}
 .fc-itop-icon:before {
   content: "I";
 }
