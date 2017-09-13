@@ -51,6 +51,8 @@ class ormDocument
 
 	public function __toString()
 	{
+	    if($this->IsEmpty()) return '';
+
 		return MyHelpers::beautifulstr($this->m_data, 100, true);
 	}
 
