@@ -411,8 +411,8 @@
 			registerFilterListeners();
 			collapseAll();
 
-            // Open first level if only one item
-            if($('#brick_content_tree > .list-group-item').length == 1)
+            // Open first level if only one item and not pre-filtering
+            if( ($('#brick_content_tree > .list-group-item').length == 1) && ($('#brick_search_field').val() === '') )
             {
                 setTimeout(function(){
                     $('#brick_content_tree > .list-group-item > .tree-toggle').trigger('click');
