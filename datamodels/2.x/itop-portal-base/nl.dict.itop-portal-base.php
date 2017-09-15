@@ -25,7 +25,7 @@
 
 // Portal
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Page:DefaultTitle' => 'iTop Gebruikersportaal',
+	'Page:DefaultTitle' => '%1$s Gebruikersportaal',
 	'Page:PleaseWait' => 'Even geduld...',
 	'Page:Home' => 'Welkom',
 	'Page:GoPortalHome' => 'Startpagina',

@@ -113,7 +113,7 @@ class PasswordFormManager extends FormManager
 					if (!UserRights::CanChangePassword())
 					{
 						$aData['valid'] = false;
-						$aData['messages']['error'] += array('_main' => array(Dict::S('Brick:Portal:UserProfile:Password:CantChangeContactAdministrator')));
+						$aData['messages']['error'] += array('_main' => array(Dict::Format('Brick:Portal:UserProfile:Password:CantChangeContactAdministrator', ITOP_APPLICATION_SHORT)));
 					}
 					else if (!UserRights::CheckCredentials($sAuthUser, $sOldPassword))
 					{
@@ -128,7 +128,7 @@ class PasswordFormManager extends FormManager
 					else if (!UserRights::ChangePassword($sOldPassword, $sNewPassword))
 					{
 						$aData['valid'] = false;
-						$aData['messages']['error'] += array('confirm_password' => array(Dict::S('Brick:Portal:UserProfile:Password:CantChangeForUnknownReason')));
+						$aData['messages']['error'] += array('confirm_password' => array(Dict::Format('Brick:Portal:UserProfile:Password:CantChangeForUnknownReason', ITOP_APPLICATION_SHORT)));
 					}
 					else
 					{

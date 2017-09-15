@@ -12,7 +12,7 @@
 
 // Portal
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-    'Page:DefaultTitle' => 'Пользовательский портал iTop',
+    'Page:DefaultTitle' => 'Пользовательский портал %1$s',
     'Page:PleaseWait' => 'Пожалуйста, подождите...',
     'Page:Home' => 'Домашняя страница',
     'Page:GoPortalHome' => 'Домашняя страница',
@@ -28,8 +28,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
     'Error:HTTP:401' => 'Authentication~~',
     'Error:HTTP:404' => 'Страница не найдена',
     'Error:HTTP:500' => 'Упс! Произошла ошибка.',
-    'Error:XHR:Fail' => 'Не удалось загрузить данные. Пожалуйста, свяжитесь с вашим администратором iTop.',
-    'Error:HTTP:GetHelp' => 'Пожалуйста, свяжитесь с вашим администратором iTop, если проблема сохраняется.',
+    'Error:XHR:Fail' => 'Не удалось загрузить данные. Пожалуйста, свяжитесь с вашим администратором %1$s.',
+    'Error:HTTP:GetHelp' => 'Пожалуйста, свяжитесь с вашим администратором %1$s, если проблема сохраняется.',
     'Portal:ErrorUserLoggedOut' => 'You are logged out and need to log in again in order to continue.~~',
     'Portal:Datatables:Language:Processing' => 'Пожалуйста, подождите...',
     'Portal:Datatables:Language:Search' => 'Фильтр :',
@@ -58,8 +58,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
     'Brick:Portal:UserProfile:Password:Title' => 'Пароль',
     'Brick:Portal:UserProfile:Password:ChoosePassword' => 'Введите новый пароль',
     'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Подтвердите новый пароль',
-    'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'Пожалуйста, свяжитесь с вашим администратором iTop для изменения пароля.',
-    'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Не удалось изменить пароль, пожалуйста, свяжитесь с вашим администратором iTop.',
+    'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'Пожалуйста, свяжитесь с вашим администратором %1$s для изменения пароля.',
+    'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Не удалось изменить пароль, пожалуйста, свяжитесь с вашим администратором %1$s.',
     'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Персональная информация',
     'Brick:Portal:UserProfile:Photo:Title' => 'Фотография',
 ));

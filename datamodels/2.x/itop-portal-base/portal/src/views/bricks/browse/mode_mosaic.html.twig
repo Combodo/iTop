@@ -127,7 +127,7 @@
 				registerToggleListeners();
 			})
 			.fail(function() {
-				alert('{{ 'Error:XHR:Fail'|dict_s }}');
+				alert('{{ 'Error:XHR:Fail'|dict_format(constant('ITOP_APPLICATION_SHORT')) }}');
 			})
 			.always(function(){
                 hideMosaicLoader();

@@ -232,7 +232,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
 	'portal:itop-portal' => 'Portal estándar',
-	'Page:DefaultTitle' => 'ITop - Portal de usuarios',
+	'Page:DefaultTitle' => '%1$s - Portal de usuarios',
 	'Brick:Portal:UserProfile:Title' => 'Mi perfil',
 	'Brick:Portal:NewRequest:Title' => 'Nueva solicitud',
 	'Brick:Portal:NewRequest:Title+' => '¿Necesita ayuda? Elija del catálogo de servicios y envíe su solicitud a nuestros equipos de soporte.',

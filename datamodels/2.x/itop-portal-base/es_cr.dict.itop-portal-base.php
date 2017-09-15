@@ -25,7 +25,7 @@
 
 // Portal
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Page:DefaultTitle' => 'iTop User portal',
+	'Page:DefaultTitle' => '%1$s User portal',
 	'Page:PleaseWait' => 'Please wait...',
 	'Page:Home' => 'Bienvenido',
 	'Page:GoPortalHome' => 'Regresar a bienvenida',
@@ -43,8 +43,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
     'Error:HTTP:401' => 'Authentication~~',
     'Error:HTTP:404' => 'Página no encontrada',
 	'Error:HTTP:500' => '¡Vaya! Ha ocurrido un error.',
-	'Error:HTTP:GetHelp' => 'Póngase en contacto con el administrador de iTop si el problema persiste.',
-	'Error:XHR:Fail' => 'No se pudieron cargar datos, póngase en contacto con su administrador de iTop',
+	'Error:HTTP:GetHelp' => 'Póngase en contacto con el administrador de %1$s si el problema persiste.',
+	'Error:XHR:Fail' => 'No se pudieron cargar datos, póngase en contacto con su administrador de %1$s',
     'Portal:ErrorUserLoggedOut' => 'You are logged out and need to log in again in order to continue.~~',
     'Portal:Datatables:Language:Processing' => 'Por favor esperar...',
 	'Portal:Datatables:Language:Search' => 'Filtrar:',
@@ -76,8 +76,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:UserProfile:Password:Title' => 'Contraseña',
 	'Brick:Portal:UserProfile:Password:ChoosePassword' => 'Elegir una contraseña',
 	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Confirmar contraseña',
-	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'Para cambiar su contraseña, póngase en contacto con su administrador de iTop',
-	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'No se puede cambiar la contraseña, póngase en contacto con el administrador de iTop',
+	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'Para cambiar su contraseña, póngase en contacto con su administrador de %1$s',
+	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'No se puede cambiar la contraseña, póngase en contacto con el administrador de %1$s',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Informaciones personales',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Foto',
 ));

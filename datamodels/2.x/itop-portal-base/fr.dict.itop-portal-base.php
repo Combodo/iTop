@@ -25,7 +25,7 @@
 
 // Portal
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Page:DefaultTitle' => 'Portail utilisateur iTop',
+	'Page:DefaultTitle' => 'Portail utilisateur %1$s',
 	'Page:PleaseWait' => 'Veuillez patienter...',
 	'Page:Home' => 'Accueil',
 	'Page:GoPortalHome' => 'Revenir à l\'accueil',
@@ -43,8 +43,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
     'Error:HTTP:401' => 'Authentification',
     'Error:HTTP:404' => 'Page non trouvée',
 	'Error:HTTP:500' => 'Oups ! Une erreur est survenue.',
-	'Error:HTTP:GetHelp' => 'Si le problème persiste, veuillez contacter votre administrateur iTop.',
-	'Error:XHR:Fail' => 'Impossible de charger les données, veuillez contacter votre administrateur iTop si le problème persiste.',
+	'Error:HTTP:GetHelp' => 'Si le problème persiste, veuillez contacter votre administrateur %1$s.',
+	'Error:XHR:Fail' => 'Impossible de charger les données, veuillez contacter votre administrateur %1$s si le problème persiste.',
     'Portal:ErrorUserLoggedOut' => 'Vous êtes déconnecté et devez vous reconnecter pour continuer.',
 	'Portal:Datatables:Language:Processing' => 'Veuillez patienter...',
 	'Portal:Datatables:Language:Search' => 'Filtrer :',
@@ -76,8 +76,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:UserProfile:Password:Title' => 'Mot de passe',
 	'Brick:Portal:UserProfile:Password:ChoosePassword' => 'Choisissez un mot de passe',
 	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Confirmer le mot de passe',
-	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'Veuillez vous adresser à votre administrateur iTop pour changer votre mot de passe',
-	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Impossible de modifier votre mot de passe, veuillez contacter votre administrateur iTop',
+	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'Veuillez vous adresser à votre administrateur %1$s pour changer votre mot de passe',
+	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Impossible de modifier votre mot de passe, veuillez contacter votre administrateur %1$s',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Informations personnelles',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Photo',
 ));

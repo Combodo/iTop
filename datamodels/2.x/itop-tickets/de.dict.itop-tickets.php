@@ -207,6 +207,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '',
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Geschlossen',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
-	'Page:DefaultTitle' => 'iTop - Benutzer Portal',
+	'Page:DefaultTitle' => '%1$s - Benutzer Portal',
 	));
 ?>

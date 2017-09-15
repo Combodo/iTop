@@ -22,7 +22,7 @@
 	{# This block can be used to add your own meta tags by extending the default template #}
 	{% block pPageExtraMetas %}
 	{% endblock %}
-	<title>{% block pPageTitle %}{% if sPageTitle is defined and sPageTitle is not null %}{{ sPageTitle }} - {{ constant('ITOP_APPLICATION') }}{% else %}{{ 'Page:DefaultTitle'|dict_s }}{% endif %}{% endblock %}</title>
+	<title>{% block pPageTitle %}{% if sPageTitle is defined and sPageTitle is not null %}{{ sPageTitle }} - {{ constant('ITOP_APPLICATION_SHORT') }}{% else %}{{ 'Page:DefaultTitle'|dict_format(constant('ITOP_APPLICATION_SHORT')) }}{% endif %}{% endblock %}</title>
 	<link rel="shortcut icon" href="{{ app['combodo.absolute_url'] ~ 'images/favicon.ico'|add_itop_version }}" />
 
 	{% block pPageStylesheets %}
@@ -403,7 +403,7 @@
 					}
 				    if(sBody === undefined)
 					{
-                        sBody = '{{ 'Error:XHR:Fail'|dict_s|escape('js') }}';
+                        sBody = '{{ 'Error:XHR:Fail'|dict_format(constant('ITOP_APPLICATION_SHORT'))|escape('js') }}';
 					}
 					var oModalElem = $('#modal-for-alert');
                     oModalElem.find('.modal-content .modal-header .modal-title').html(sTitle);

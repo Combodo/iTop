@@ -233,7 +233,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
 	'portal:itop-portal' => 'Standaard portaal', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
-	'Page:DefaultTitle' => 'iTop - Gebruikersportaal',
+	'Page:DefaultTitle' => '%1$s - Gebruikersportaal',
 	'Brick:Portal:UserProfile:Title' => 'Mijn profiel',
 	'Brick:Portal:NewRequest:Title' => 'Nieuw verzoek',
 	'Brick:Portal:NewRequest:Title+' => '<p>Hulp nodig?</p><p>Selecteer de categorie uit de dienstencatalogus en verstuur uw verzoek naar onze support teams.</p>',

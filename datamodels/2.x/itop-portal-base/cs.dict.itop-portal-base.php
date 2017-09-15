@@ -29,7 +29,7 @@
 
 // Portal
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-    'Page:DefaultTitle' => 'Uživatelský portál iTop',
+    'Page:DefaultTitle' => 'Uživatelský portál %1$s',
     'Page:PleaseWait' => 'Počkejte prosím',
     'Page:Home' => 'Domů',
     'Page:GoPortalHome' => 'Domů',

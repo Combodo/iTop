@@ -26,7 +26,7 @@
 
 // Portal
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Page:DefaultTitle' => 'iTop - Benutzer Portal',
+	'Page:DefaultTitle' => '%1$s - Benutzer Portal',
 	'Page:PleaseWait' => 'Bitte warten...',
 	'Page:Home' => 'Start',
 	'Page:GoPortalHome' => 'Startseite',
@@ -44,8 +44,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
     'Error:HTTP:401' => 'Authentication~~',
     'Error:HTTP:404' => 'Seite nicht gefunden.',
 	'Error:HTTP:500' => 'Oops! Es ist ein Fehler aufgetreten.',
-	'Error:HTTP:GetHelp' => 'Bitte kontaktieren Sie Ihren iTop administrator falls das Problem öfter auftaucht.',
-	'Error:XHR:Fail' => 'Konnte Daten nicht laden, bitte kontaktieren Sie Ihren iTop administrator',
+	'Error:HTTP:GetHelp' => 'Bitte kontaktieren Sie Ihren %1$s administrator falls das Problem öfter auftaucht.',
+	'Error:XHR:Fail' => 'Konnte Daten nicht laden, bitte kontaktieren Sie Ihren %1$s administrator',
     'Portal:ErrorUserLoggedOut' => 'You are logged out and need to log in again in order to continue.~~',
     'Portal:Datatables:Language:Processing' => 'Bitte warten...',
 	'Portal:Datatables:Language:Search' => 'Filter :',
@@ -76,8 +76,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:UserProfile:Password:Title' => 'Passwort',
 	'Brick:Portal:UserProfile:Password:ChoosePassword' => 'Passwort wählen',
 	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Passwort bestätigen',
-	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'Um das Password zu ändern, kontaktieren Sie bitte Ihren iTop Administrator',
-	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Kann das Passwort nicht ändern - bitte kontaktieren Sie Ihren iTop Administrator',
+	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'Um das Password zu ändern, kontaktieren Sie bitte Ihren %1$s Administrator',
+	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Kann das Passwort nicht ändern - bitte kontaktieren Sie Ihren %1$s Administrator',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Persönliche Informationen',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Foto',
 ));

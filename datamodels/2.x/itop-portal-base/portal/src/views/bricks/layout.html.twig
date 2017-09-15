@@ -5,7 +5,7 @@
 {% block pPageTitle %}
 	{# Overloading the default template's title to show the brick's title #}
 	{% if oBrick is defined and oBrick is not null and oBrick.GetTitle() != '' %}
-		{{ oBrick.GetTitle()|dict_s }} - iTop
+		{{ oBrick.GetTitle()|dict_s }} - {{ constant('ITOP_APPLICATION_SHORT') }}
 	{% else %}
 		{{ parent() }}
 	{% endif %}

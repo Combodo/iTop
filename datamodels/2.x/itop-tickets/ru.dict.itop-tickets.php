@@ -215,7 +215,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
 
 	'portal:itop-portal' => 'Пользовательский портал', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
-	'Page:DefaultTitle' => 'iTop - Пользовательский портал',
+	'Page:DefaultTitle' => '%1$s - Пользовательский портал',
 	'Brick:Portal:UserProfile:Title' => 'Мой профиль',
 	'Brick:Portal:NewRequest:Title' => 'Новый запрос',
 	'Brick:Portal:NewRequest:Title+' => '<p>Нужна помощь?</p><p>Выберите услугу из&nbsp;каталога и&nbsp;отправьте свой запрос команде поддержки.</p>',

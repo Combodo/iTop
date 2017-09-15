@@ -18,6 +18,7 @@
 
 
 define('ITOP_APPLICATION', 'iTop');
+define('ITOP_APPLICATION_SHORT', 'iTop');
 define('ITOP_VERSION', '2.4.x');
 define('ITOP_REVISION', 'svn');
 define('ITOP_BUILD_DATE', '$WCNOW$');

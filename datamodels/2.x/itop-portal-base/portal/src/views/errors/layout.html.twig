@@ -40,7 +40,7 @@
 		<div class="well">
 			<h1><div class="ion ion-alert-circled"></div> {{ error_title }}</h1>
 			<p>{{ error_message }}</p>
-			<p>{{ 'Error:HTTP:GetHelp'|dict_s }}</p>
+			<p>{{ 'Error:HTTP:GetHelp'|dict_format(constant('ITOP_APPLICATION_SHORT')) }}</p>
 			<p>
 				<a class="btn btn-default" href="#" onclick="history.back(); return false;"><span class="fa fa-arrow-left"></span> {{ 'Page:GoPreviousPage'|dict_s }}</a>
 				<a class="btn btn-default" href=""><span class="fa fa-repeat"></span> {{ 'Page:ReloadPage'|dict_s }}</a>
