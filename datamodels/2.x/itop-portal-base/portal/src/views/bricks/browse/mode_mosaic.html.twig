@@ -408,6 +408,7 @@
 			registerFilterListeners();
 
 			// Open first level if only one item
+			// TODO: We must disable opening of first level when pre-filtering when filtering will be implemented
 			if($('#brick_content_mosaic > .mosaic-group[data-level-id="L"] > .mosaic-group-item').length == 1)
 			{
 			    setTimeout(function(){
