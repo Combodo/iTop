@@ -702,7 +702,7 @@ abstract class AttributeDefinition
 				break;
 				
 				default:
-				throw new Exception("Unknown verb '$sVerb' for attribute ".$this->GetCode().' in class '.get_class($oHostObj));
+				throw new Exception("Unknown verb '$sVerb' for attribute ".$this->GetCode().' in class '.get_class($oHostObject));
 			}
 		}
 		return null;
@@ -3966,9 +3966,37 @@ class AttributeDateTime extends AttributeDBField
     /**
      * @inheritdoc
      */
+    public function EnumTemplateVerbs()
+    {
+        return array(
+            '' => 'Formatted representation',
+            'raw' => 'Not formatted representation',
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
     {
-        return static::GetFormat()->format($value);
+        switch ($sVerb)
+        {
+            case '':
+            case 'text':
+                return static::GetFormat()->format($value);
+                break;
+            case 'html':
+                // Note: Not passing formatted value as the method will format it.
+                return $this->GetAsHTML($value);
+                break;
+            case 'raw':
+                return $value;
+                break;
+            default:
+                return parent::GetForTemplate($value, $sVerb, $oHostObject, $bLocalize);
+                break;
+        }
+        return null;
     }
 
 	static public function ListExpectedParams()
