@@ -3963,6 +3963,14 @@ class AttributeDateTime extends AttributeDBField
 		return $oFormField;
 	}
 
+    /**
+     * @inheritdoc
+     */
+    public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
+    {
+        return static::GetFormat()->format($value);
+    }
+
 	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
