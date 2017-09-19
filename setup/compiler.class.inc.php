@@ -234,7 +234,7 @@ class MFCompiler
 				}
 				else
 				{
-					$sRealRelativeDir = substr(realpath($sFinalTargetDir.'/'.$sRelativeDir), $iStart);
+					$sRealRelativeDir = substr(realpath($sFinalTargetDir).'/'.$sRelativeDir, $iStart);
 				}
 
 				// Push the other module files
