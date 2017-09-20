@@ -39,13 +39,16 @@ function TestConfig($sContents, $oP)
 	{
 		ini_set('display_errors', 1);
 		ob_start();
-		eval('?'.'>'.trim($sContents));
-		$sNoise = trim(ob_get_contents());
+        // in PHP < 7.0.0 syntax errors are in output
+        // in PHP >= 7.0.0 syntax errors are thrown as Error
+        $sSafeContent = preg_replace(array('#^\s*<\?php#', '#\?>\s*$#'), '', $sContents);
+        eval('if(0){'.trim($sSafeContent).'}');
+        $sNoise = trim(ob_get_contents());
 		ob_end_clean();
-	}
-	catch (Exception $e)
-	{
-		// well, never reach in case of parsing error :-(
+    }
+    catch (Error $e)
+    {
+        // ParseError only thrown in PHP7
 		throw new Exception('Error in configuration: '.$e->getMessage());
 	}
 	if (strlen($sNoise) > 0)
@@ -62,14 +65,6 @@ function TestConfig($sContents, $oP)
 			for ($i = 0 ; $i < $iLine - 1; $i++) $iStart += strlen($aLines[$i]);
 			$iEnd = $iStart + strlen($aLines[$iLine - 1]);
 			$iTotalLines = count($aLines);
-			$oP->add_ready_script(
-<<<EOF
-setCursorPos($('#new_config')[0], $iStart, $iEnd);
-$('#new_config')[0].focus();
-var iScroll = Math.floor($('#new_config')[0].scrollHeight * ($iLine - 20) / $iTotalLines);
-$('#new_config').scrollTop(iScroll);
-EOF
-			);
 
 			$sMessage = Dict::Format('config-parse-error', $sMessage, $sLine);
 			throw new Exception($sMessage);
@@ -93,7 +88,11 @@ LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be 
 
 $oP = new iTopWebPage(Dict::S('config-edit-title'));
 $oP->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
-
+$oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/ace.js');
+$oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/mode-php.js');
+$oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/theme-eclipse.js');
+$oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/ext-searchbox.js');
+//$oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/ext-textarea.js');
 
 try
 {
@@ -111,133 +110,128 @@ try
 	}
 	else
 	{
-		$oP->add_style(
-<<<EOF
-textarea {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-
-	width: 100%;
-	height: 550px;
-}
-.current_line {
-	display: none;
-	margin-left: 20px;
-}
-EOF
-		);
-	
 		$sConfigFile = APPROOT.'conf/'.utils::GetCurrentEnvironment().'/config-itop.php';
-	
-		if ($sOperation == 'save')
-		{
-			$sConfig = utils::ReadParam('new_config', '', false, 'raw_data');
-			$sTransactionId = utils::ReadParam('transaction_id', '');
-			$sOrginalConfig = utils::ReadParam('prev_config', '', false, 'raw_data');
-			if (!utils::IsTransactionValid($sTransactionId, true))
-			{
-				$oP->add("<div class=\"header_message message_info\">Error: invalid Transaction ID. The configuration was <b>NOT</b> modified.</div>");
-			}
-			else
-			{
-				if ($sConfig == $sOrginalConfig)
-				{
-					$oP->add('<div id="save_result" class="header_message">'.Dict::S('config-no-change').'</div>');
-				}
-				else
-				{
-					try
-					{
-						TestConfig($sConfig, $oP); // throws exceptions
-			
-						@chmod($sConfigFile, 0770); // Allow overwriting the file
-						$sTmpFile = tempnam(SetupUtils::GetTmpDir(), 'itop-cfg-');
-						// Don't write the file as-is since it would allow to inject any kind of PHP code.
-						// Instead write the interpreted version of the file
-						// Note:
-						// The actual raw PHP code will anyhow be interpreted exactly twice: once in TestConfig() above
-						// and a second time during the load of the Config object below.
-						// If you are really concerned about an iTop administrator crafting some malicious
-						// PHP code inside the config file, then turn off the interactive configuration
-						// editor by adding the configuration parameter:
-						// 'itop-config' => array(
-						//     'config_editor' => 'disabled',
-						// )
-						file_put_contents($sTmpFile, $sConfig);
-						$oTempConfig = new Config($sTmpFile, true);
-						$oTempConfig->WriteToFile($sConfigFile);
-						@unlink($sTmpFile);
-						@chmod($sConfigFile, 0444); // Read-only
-			
-						$oP->p('<div id="save_result" class="header_message message_ok">'.Dict::S('Successfully recorded.').'</div>');
-						$sOrginalConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
-					}
-					catch (Exception $e)
-					{
-						$oP->p('<div id="save_result" class="header_message message_error">'.$e->getMessage().'</div>');
-					}
-				}
-			}
-		}
-		else
-		{
-			$sConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
-			$sOrginalConfig = $sConfig;
-		}
-	
+
+        $iEditorTopMargin = 9;
+        $sConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
+        $sOrginalConfig = $sConfig;
+
+        if (!empty($sOperation))
+        {
+            $iEditorTopMargin = 14;
+            $sConfig = utils::ReadParam('new_config', '', false, 'raw_data');
+            $sOrginalConfig = utils::ReadParam('prev_config', '', false, 'raw_data');
+        }
+
+        if ($sOperation == 'revert')
+        {
+            $oP->add('<div id="save_result" class="header_message message_info">'.Dict::S('config-reverted').'</div>');
+        }
+        if ($sOperation == 'save')
+        {
+            $sTransactionId = utils::ReadParam('transaction_id', '');
+            if (!utils::IsTransactionValid($sTransactionId, true))
+            {
+                $oP->add("<div class=\"header_message message_info\">Error: invalid Transaction ID. The configuration was <b>NOT</b> modified.</div>");
+            }
+            else
+            {
+                if ($sConfig == $sOrginalConfig)
+                {
+                    $oP->add('<div id="save_result" class="header_message">'.Dict::S('config-no-change').'</div>');
+                }
+                else
+                {
+                    try
+                    {
+                        TestConfig($sConfig, $oP); // throws exceptions
+
+                        @chmod($sConfigFile, 0770); // Allow overwriting the file
+                        $sTmpFile = tempnam(SetupUtils::GetTmpDir(), 'itop-cfg-');
+                        // Don't write the file as-is since it would allow to inject any kind of PHP code.
+                        // Instead write the interpreted version of the file
+                        // Note:
+                        // The actual raw PHP code will anyhow be interpreted exactly twice: once in TestConfig() above
+                        // and a second time during the load of the Config object below.
+                        // If you are really concerned about an iTop administrator crafting some malicious
+                        // PHP code inside the config file, then turn off the interactive configuration
+                        // editor by adding the configuration parameter:
+                        // 'itop-config' => array(
+                        //     'config_editor' => 'disabled',
+                        // )
+                        file_put_contents($sTmpFile, $sConfig);
+                        $oTempConfig = new Config($sTmpFile, true);
+                        $oTempConfig->WriteToFile($sConfigFile);
+                        @unlink($sTmpFile);
+                        @chmod($sConfigFile, 0444); // Read-only
+
+                        $oP->p('<div id="save_result" class="header_message message_ok">'.Dict::S('config-saved').'</div>');
+                        $sOrginalConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
+                    }
+                    catch (Exception $e)
+                    {
+                        $oP->p('<div id="save_result" class="header_message message_error">'.$e->getMessage().'</div>');
+                    }
+                }
+            }
+        }
+
+
 		$sConfigEscaped = htmlentities($sConfig, ENT_QUOTES, 'UTF-8');
 		$sOriginalConfigEscaped = htmlentities($sOrginalConfig, ENT_QUOTES, 'UTF-8');
 		$oP->p(Dict::S('config-edit-intro'));
 		$oP->add("<form method=\"POST\">");
-		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"save\">");
+        $oP->add("<input id=\"operation\" type=\"hidden\" name=\"operation\" value=\"save\">");
 		$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">");
-		$oP->add("<input type=\"submit\" value=\"".Dict::S('config-apply')."\"><button onclick=\"ResetConfig(); return false;\">".Dict::S('config-cancel')."</button>");
-		$oP->add("<span class=\"current_line\">".Dict::Format('config-current-line', "<span class=\"line_number\"></span>")."</span>");
+        $oP->add("<input id=\"submit_button\" type=\"submit\" value=\"".Dict::S('config-apply')."\"><button id=\"cancel_button\" disabled=\"disabled\" onclick=\"return ResetConfig();\">".Dict::S('config-cancel')."</button>");
 		$oP->add("<input type=\"hidden\" id=\"prev_config\" name=\"prev_config\" value=\"$sOriginalConfigEscaped\">");
-		$oP->add("<textarea id =\"new_config\" name=\"new_config\" onkeyup=\"UpdateLineNumber();\" onmouseup=\"UpdateLineNumber();\">$sConfigEscaped</textarea>");
-		$oP->add("<input type=\"submit\" value=\"".Dict::S('config-apply')."\"><button onclick=\"ResetConfig(); return false;\">".Dict::S('config-cancel')."</button>");
-		$oP->add("<span class=\"current_line\">".Dict::Format('config-current-line', "<span class=\"line_number\"></span>")."</span>");
+        $oP->add("<input type=\"hidden\"  name=\"new_config\" value=\"$sConfigEscaped\">");
+        $oP->add("<div id =\"new_config\" style=\"position: absolute; top: ".$iEditorTopMargin."em; bottom: 0; left: 5px; right: 5px;\"></div>");
 		$oP->add("</form>");
 	
 		$sConfirmCancel = addslashes(Dict::S('config-confirm-cancel'));
+        $oP->add_ready_script(
+            <<<EOF
+var editor = ace.edit("new_config");
+var textarea = $('input[name="new_config"]');
+editor.getSession().setValue(textarea.val());
+editor.getSession().on('change', function()
+{
+  textarea.val(editor.getSession().getValue());
+  UpdateConfigEditorButtonState();
+});
+editor.getSession().on("changeAnnotation", function()
+{
+  UpdateConfigEditorButtonState();
+});
+editor.setTheme("ace/theme/eclipse");
+editor.getSession().setMode("ace/mode/php");
+function UpdateConfigEditorButtonState()
+{
+    var editor = ace.edit("new_config");
+    var isSameContent = editor.getValue() == $('#prev_config').val();
+    var hasNoError = $.isEmptyObject(editor.getSession().getAnnotations());
+    $('#cancel_button').attr('disabled', isSameContent);
+    $('#submit_button').attr('disabled', isSameContent || !hasNoError);
+}
+EOF
+        );
+
 		$oP->add_script(
 <<<EOF
-function UpdateLineNumber()
-{
-	var oTextArea = $('#new_config')[0];
-	$('.line_number').html(oTextArea.value.substr(0, oTextArea.selectionStart).split("\\n").length);
-	$('.current_line').show();
-}
 function ResetConfig()
 {
-	if ($('#new_config').val() != $('#prev_config').val())
+    var editor = ace.edit("new_config");
+	$("#operation").attr('value', 'revert');
+	if (editor.getValue() != $('#prev_config').val())
 	{
 		if (confirm('$sConfirmCancel'))
 		{
-			$('#new_config').val($('#prev_config').val());
+			$('input[name="new_config"]').val($('#prev_config').val());
+			return true;
 		}
 	}
-	$('.current_line').hide();
-	$('#save_result').hide();
 	return false;
-}
-
-function setCursorPos(input, start, end) {
-    if (arguments.length < 3) end = start;
-    if ("selectionStart" in input) {
-        setTimeout(function() {
-            input.selectionStart = start;
-            input.selectionEnd = end;
-        }, 1);
-    }
-    else if (input.createTextRange) {
-        var rng = input.createTextRange();
-        rng.moveStart("character", start);
-        rng.collapse();
-        rng.moveEnd("character", end - start);
-        rng.select();
-    }
 }
 EOF
 		);

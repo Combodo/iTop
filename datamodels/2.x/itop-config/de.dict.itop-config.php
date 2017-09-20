@@ -30,8 +30,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'config-edit-intro' => 'Seien sie bei der Bearbeitung der Konfigurationsdatei sehr vorsichtig.',
 	'config-apply' => 'Anwenden',
 	'config-cancel' => 'Zurücksetzen',
+    'config-saved' => 'Successfully recorded.~~',
 	'config-confirm-cancel' => 'Ihre Änderungen werden nicht gespeichert.',
 	'config-no-change' => 'Keine Änderungen: Die Datei wurde nicht verändert.',
+    'config-reverted' => 'The configuration has been reverted.~~',
 	'config-parse-error' => 'Zeile %2$d: %1$s.<br/>Die Datei wurde nicht aktualisiert.',
 	'config-current-line' => 'Editiere Zeile: %1$s',
 	));
