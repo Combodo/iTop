@@ -5226,21 +5226,12 @@ abstract class MetaModel
 
 	public static function GetCacheEntries($sEnvironment = null)
 	{
-		if (!function_exists('apc_cache_info')) return array();
 		if (is_null($sEnvironment))
 		{
 			$sEnvironment = MetaModel::GetEnvironmentId();
 		}
 		$aEntries = array();
-		if (extension_loaded('apcu'))
-		{
-			// Beware: APCu behaves slightly differently from APC !!
-			$aCacheUserData = @apc_cache_info();
-		}
-		else
-		{
-			$aCacheUserData = @apc_cache_info('user');
-		}
+		$aCacheUserData = apc_cache_info_compat();
 		if (is_array($aCacheUserData) && isset($aCacheUserData['cache_list']))
 		{ 
 			$sPrefix = 'itop-'.$sEnvironment.'-';

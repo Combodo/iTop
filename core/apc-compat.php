@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2016 Combodo SARL
+// Copyright (C) 2016-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -66,4 +66,27 @@ if (!function_exists('apc_store') && function_exists('apcu_store'))
 	{
 		return apcu_store($key, $var, $ttl);
 	}
+}
+
+/**
+ * Returns user cache info... beware of the format of the returned structure that may vary (See usages)
+ * @return array
+ */
+function apc_cache_info_compat()
+{
+	if (!function_exists('apc_cache_info')) return array();
+
+	$oFunction = new ReflectionFunction('apc_cache_info');
+	if ($oFunction->getNumberOfParameters() != 2)
+	{
+		// Beware: APCu behaves slightly differently from APC !!
+		// Worse: the compatibility layer integrated into APC differs from apcu-bc (testing the number of parameters is a must)
+		// In CLI mode (PHP > 7) apc_cache_info returns null and outputs an error message.
+		$aCacheUserData = @apc_cache_info();
+	}
+	else
+	{
+		$aCacheUserData = @apc_cache_info('user');
+	}
+	return $aCacheUserData;
 }
