@@ -58,7 +58,7 @@ class SetupUtils
 	/**
 	 * Check the version of PHP, the needed PHP extension and a number
 	 * of configuration parameters (memory_limit, max_upload_file_size, etc...)
-	 * @param SetupPage $oP The page used only for its 'log' method
+     * @internal SetupPage $oP The page used only for its 'log' method
 	 * @return array An array of CheckResults objects
 	 */
 	static function CheckPHPVersion()
@@ -159,10 +159,7 @@ class SetupUtils
 			}
 			SetupPage::log("Info - php.ini file(s): '$sPhpIniFile'");
 		}
-		else
-		{
-			$sPhpIniFile = 'php.ini';
-		}
+
 		if (!ini_get('file_uploads'))
 		{
 			$aResult[] = new CheckResult(CheckResult::ERROR, "Files upload is not allowed on this server (file_uploads = ".ini_get('file_uploads').").");
@@ -224,14 +221,13 @@ class SetupUtils
 				$aResult[] = new CheckResult(CheckResult::ERROR, "'magic_quotes_gpc' is set to On. Please turn it Off in php.ini before continuing.");
 			}
 		}
-		if (function_exists('magic_quotes_runtime'))
-		{
-			if (@magic_quotes_runtime())
+        if (function_exists('get_magic_quotes_runtime'))
+        {
+            if (@get_magic_quotes_runtime())
 			{
 				$aResult[] = new CheckResult(CheckResult::ERROR, "'magic_quotes_runtime' is set to On. Please turn it Off in php.ini before continuing.");
 			}
 		}
-
 
 		$sMemoryLimit = trim(ini_get('memory_limit'));
 		if (empty($sMemoryLimit))
@@ -337,9 +333,13 @@ class SetupUtils
 		return $aResult;
 	}
 
-	/**
-	 * Check that the selected modules meet their dependencies
-	 */	 	
+    /**
+     * Check that the selected modules meet their dependencies
+     * @param $sSourceDir
+     * @param $sExtensionDir
+     * @param $aSelectedModules
+     * @return array
+     */
 	static function CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules)
 	{
 		$aResult = array();
@@ -364,11 +364,12 @@ class SetupUtils
 		return $aResult;
 	}
 
-	/**
-	 * Check that the backup could be executed
-	 * @param Page $oP The page used only for its 'log' method
-	 * @return array An array of CheckResults objects
-	 */
+    /**
+     * Check that the backup could be executed
+     * @param $sDestDir
+     * @return array An array of CheckResults objects
+     * @internal param Page $oP The page used only for its 'log' method
+     */
 	static function CheckBackupPrerequisites($sDestDir)
 	{
 		$aResult = array();
@@ -438,11 +439,12 @@ class SetupUtils
 		return $aResult;
 	}
 
-	/**
-	 * Check that graphviz can be launched
-	 * @param string $GraphvizPath The path where graphviz' dot program is installed
-	 * @return CheckResult The result of the check
-	 */
+    /**
+     * Check that graphviz can be launched
+     * @param $sGraphvizPath
+     * @return CheckResult The result of the check
+     * @internal param string $GraphvizPath The path where graphviz' dot program is installed
+     */
 	static function CheckGraphviz($sGraphvizPath)
 	{
 		$oResult = null;
@@ -489,7 +491,7 @@ class SetupUtils
 			
 	/**
 	 * Helper function to retrieve the system's temporary directory
-	 * Emulates sys_get_temp_dir if neeed (PHP < 5.2.1)
+     * Emulates sys_get_temp_dir if needed (PHP < 5.2.1)
 	 * @return string Path to the system's temp directory
 	 */
 	static function GetTmpDir()
@@ -530,9 +532,11 @@ class SetupUtils
 		return $sPath;
 	}
 
-	/**
-	 * Helper to recursively remove a directory
-	 */
+    /**
+     * Helper to recursively remove a directory
+     * @param $dir
+     * @throws Exception
+     */
 	public static function rrmdir($dir)
 	{
 		if ((strlen(trim($dir)) == 0) || ($dir == '/') || ($dir == '\\'))
@@ -543,9 +547,11 @@ class SetupUtils
 		rmdir($dir);
 	}
 
-	/**
-	 * Helper to recursively cleanup a directory
-	 */
+    /**
+     * Helper to recursively cleanup a directory
+     * @param $dir
+     * @throws Exception
+     */
 	public static function tidydir($dir)
 	{
 		if ((strlen(trim($dir)) == 0) || ($dir == '/') || ($dir == '\\'))
@@ -581,9 +587,10 @@ class SetupUtils
 		}
 	}
 
-	/**
-	 * Helper to build the full path of a new directory
-	 */
+    /**
+     * Helper to build the full path of a new directory
+     * @param $dir
+     */
 	public static function builddir($dir)
 	{
 		$parent = dirname($dir);
@@ -597,10 +604,15 @@ class SetupUtils
 		}
 	}
 
-	/**
-	 * Helper to copy a directory to a target directory, skipping .SVN files (for developer's comfort!)
-	 * Returns true if successfull
-	 */
+    /**
+     * Helper to copy a directory to a target directory, skipping .SVN files (for developer's comfort!)
+     * Returns true if successful
+     * @param $sSource
+     * @param $sDest
+     * @param bool $bUseSymbolicLinks
+     * @return bool
+     * @throws Exception
+     */
 	public static function copydir($sSource, $sDest, $bUseSymbolicLinks = false)
 	{
 		if (is_dir($sSource))
@@ -679,12 +691,15 @@ class SetupUtils
 		}
 	}
 
-	/**
-	 * Helper to move a directory when the parent directory of the target dir cannot be written
-	 * To be used as alternative to rename()	 	 
-	 * Files/Subdirs of the source directory are moved one by one
-	 * Returns void
-	 */
+    /**
+     * Helper to move a directory when the parent directory of the target dir cannot be written
+     * To be used as alternative to rename()
+     * Files/Subdirs of the source directory are moved one by one
+     * Returns void
+     * @param $sSource
+     * @param $sDest
+     * @throws Exception
+     */
 	public static function movedir($sSource, $sDest)
 	{
 		if (!is_dir($sSource))
@@ -728,9 +743,8 @@ class SetupUtils
 
 	static function GetPreviousInstance($sDir)
 	{
-		$bFound = false;
 		$sSourceDir = '';
-		$sSourceEnvironement = '';
+        $sSourceEnvironment = '';
 		$sConfigFile = '';
 		$aResult = array(
 			'found' => false,
@@ -954,11 +968,14 @@ EOF
 		
 	}
 
-	/**
-	 * Helper function check the connection to the database, verify a few conditions (minimum version, etc...) and (if connected)
-	 * enumerate the existing databases (if possible)
-	 * @return mixed false if the connection failed or array('checks' => Array of CheckResult, 'databases' => Array of database names (as strings) or null if not allowed)
-	 */
+    /**
+     * Helper function check the connection to the database, verify a few conditions (minimum version, etc...) and (if connected)
+     * enumerate the existing databases (if possible)
+     * @param $sDBServer
+     * @param $sDBUser
+     * @param $sDBPwd
+     * @return mixed false if the connection failed or array('checks' => Array of CheckResult, 'databases' => Array of database names (as strings) or null if not allowed)
+     */
 	static function CheckServerConnection($sDBServer, $sDBUser, $sDBPwd)
 	{
 		$aResult = array('checks' => array(), 'databases' => null);
@@ -1083,7 +1100,7 @@ EOF
 					{
 						$sEncodedName = htmlentities($sDatabaseName, ENT_QUOTES, 'UTF-8');
 						$sSelected = ($sDatabaseName == $sDBName) ? ' selected ' : '';
-						$sDBNameInput .= '<option value="'.$sEncodedName.'"'.$sSelected.'>'.$sEncodedName.'</option>';
+                        $sDBNameInput .= '<option value="'.$sEncodedName.'" '.$sSelected.'>'.$sEncodedName.'</option>';
 					}
 				}
 				$sDBNameInput .= '</select>';
@@ -1097,8 +1114,8 @@ EOF
 	
 	/**
 	 * Helper function to get the available languages from the given directory
-	 * @param $sDir Path to the dictionary
-	 * @return an array of language code => description
+     * @param $sDir String Path to the dictionary
+     * @return array of language code => description
 	 */    
 	static public function GetAvailableLanguages($sDir)
 	{
@@ -1120,9 +1137,9 @@ EOF
 				require_once($sFilePath);
 			}
 		}
-	
-		return Dict::GetLanguages();
-	}
+
+        return Dict::GetLanguages();
+    }
 	
 	static public function GetLanguageSelect($sSourceDir, $sInputName, $sDefaultLanguageCode)
 	{
@@ -1131,19 +1148,22 @@ EOF
 		$aLanguages = SetupUtils::GetAvailableLanguages($sSourceDir);
 		foreach($aLanguages as $sCode => $aInfo)
 		{
-			$sSelected = ($sCode == $sDefaultLanguageCode) ? ' selected ' : '';
-			$sHtml .= '<option value="'.$sCode.'"'.$sSelected.'>'.htmlentities($aInfo['description'], ENT_QUOTES, 'UTF-8').' ('.htmlentities($aInfo['localized_description'], ENT_QUOTES, 'UTF-8').')</option>';
+            $sSelected = ($sCode == $sDefaultLanguageCode) ? 'selected ' : '';
+            $sHtml .= '<option value="'.$sCode.'" '.$sSelected.'>'.htmlentities($aInfo['description'], ENT_QUOTES, 'UTF-8').' ('.htmlentities($aInfo['localized_description'], ENT_QUOTES, 'UTF-8').')</option>';
 		}
 		$sHtml .= '</select></td></tr>';
 		
 		return $sHtml;
 	}
-	
-	/**
-	 *	
-	 * @param bool  $bAbortOnMissingDependency ...
-	 * @param array $aModulesToLoad List of modules to search for, defaults to all if ommitted
-	 */	 
+
+    /**
+     *
+     * @param $oWizard
+     * @param bool $bAbortOnMissingDependency ...
+     * @param array $aModulesToLoad List of modules to search for, defaults to all if ommitted
+     * @return hash
+     * @throws Exception
+     */
 	public static function AnalyzeInstallation($oWizard, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
 		require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
@@ -1222,14 +1242,17 @@ EOF
 		$oProductionEnv = new RunTimeEnvironment();
 		return $oProductionEnv->GetApplicationVersion($oConfig);
 	}
-	/**
-	 * Checks if the content of a directory matches the given manifest
-	 * @param string $sBaseDir Path to the root directory of iTop
-	 * @param string $sSourceDir Relative path to the directory to check under $sBaseDir
-	 * @param Array $aDOMManifest Array of array('path' => relative_path 'size'=> iSize, 'md5' => sHexMD5)
-	 * @param Hash $aResult Used for recursion 
-	 * @return hash Hash array ('added' => array(), 'removed' => array(), 'modified' => array()) 
-	 */
+
+    /**
+     * Checks if the content of a directory matches the given manifest
+     * @param string $sBaseDir Path to the root directory of iTop
+     * @param string $sSourceDir Relative path to the directory to check under $sBaseDir
+     * @param $aManifest
+     * @param array $aExcludeNames
+     * @param Hash $aResult Used for recursion
+     * @return hash Hash array ('added' => array(), 'removed' => array(), 'modified' => array())
+     * @internal param array $aDOMManifest Array of array('path' => relative_path 'size'=> iSize, 'md5' => sHexMD5)
+     */
 	public static function CheckDirAgainstManifest($sBaseDir, $sSourceDir, $aManifest, $aExcludeNames = array('.svn', '.git'), $aResult = null)
 	{
 //echo "CheckDirAgainstManifest($sBaseDir, $sSourceDir ...)\n"; 
@@ -1466,19 +1489,35 @@ EOF
 		return false;
 	}
 
-	/**
-	 * Returns an array of xml nodes describing the licences	
-	 */	
-	static public function GetLicenses()
+    /**
+     * Returns an array of xml nodes describing the licences.
+     * @param $sEnv string|null Execution environment. If present loads licenses only for installed modules else loads all licenses available.
+     * @return array Licenses list.
+     */
+    static public function GetLicenses($sEnv = null)
 	{
 		$aLicenses = array();
-		foreach (glob(APPROOT.'setup/licenses/*.xml') as $sFile)
+        $aLicenceFiles = glob(APPROOT.'setup/licenses/*.xml');
+        if (empty($sEnv))
+        {
+            $aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'datamodels/*/*/license.*.xml'));
+            $aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'extensions/*/license.*.xml'));
+            $aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'data/*-modules/*/license.*.xml'));
+        }
+        else
+        {
+            $aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'env-'.$sEnv.'/*/license.*.xml'));
+        }
+        foreach ($aLicenceFiles as $sFile)
 		{
     		$oXml = simplexml_load_file($sFile);
-    		foreach($oXml->license as $oLicense)
-    		{
-    			$aLicenses[] = $oLicense;
-    		}
+            if (!empty($oXml->license))
+            {
+                foreach ($oXml->license as $oLicense)
+                {
+                    $aLicenses[(string)$oLicense->product] = $oLicense;
+                }
+            }
 		}
 		return $aLicenses;
 	}

@@ -238,9 +238,9 @@ class WizStepInstallOrUpgrade extends WizardStep
 		}
 		$oPage->add('<h2>What do you want to do?</h2>');
 		$sChecked = ($sInstallMode == 'install') ? ' checked ' : '';
-		$oPage->p('<input id="radio_install" type="radio" name="install_mode" value="install"'.$sChecked.'/><label for="radio_install">&nbsp;Install a new '.ITOP_APPLICATION.'</label>');
+        $oPage->p('<input id="radio_install" type="radio" name="install_mode" value="install" '.$sChecked.'/><label for="radio_install">&nbsp;Install a new '.ITOP_APPLICATION.'</label>');
 		$sChecked = ($sInstallMode == 'upgrade') ? ' checked ' : '';
-		$oPage->p('<input id="radio_update" type="radio" name="install_mode" value="upgrade"'.$sChecked.'/><label for="radio_update">&nbsp;Upgrade an existing '.ITOP_APPLICATION.' instance</label>');
+        $oPage->p('<input id="radio_update" type="radio" name="install_mode" value="upgrade" '.$sChecked.'/><label for="radio_update">&nbsp;Upgrade an existing '.ITOP_APPLICATION.' instance</label>');
 		//$oPage->add('<fieldset  id="upgrade_info"'.$sUpgradeInfoStyle.'>');
 		//$oPage->add('<legend>Information about the previous instance:</legend>');
 		$oPage->add('<table id="upgrade_info"'.$sUpgradeInfoStyle.'>');
@@ -264,7 +264,7 @@ class WizStepInstallOrUpgrade extends WizardStep
 		}
 		$sChecked = ($bCanBackup && $bDBBackup) ? ' checked ' : '';
 		$sDisabled = $bCanBackup ? '' : ' disabled ';
-		$oPage->add('<tr><td colspan="2"><input id="db_backup" type="checkbox" name="db_backup"'.$sChecked.$sDisabled.' value="1"/><label for="db_backup">&nbsp;Backup the '.ITOP_APPLICATION.' database before upgrading</label></td></tr>');
+        $oPage->add('<tr><td colspan="2"><input id="db_backup" type="checkbox" name="db_backup" '.$sChecked.$sDisabled.' value="1"/><label for="db_backup">&nbsp;Backup the '.ITOP_APPLICATION.' database before upgrading</label></td></tr>');
 		$oPage->add('<tr><td colspan="2">Save the backup to: <input id="db_backup_path" type="text" name="db_backup_path" '.$sDisabled.'value="'.htmlentities($sDBBackupPath, ENT_QUOTES, 'UTF-8').'" size="25"/></td></tr>');
 		$fFreeSpace = SetupUtils::CheckDiskSpace($sDBBackupPath);
 		$sMessage = '';
@@ -527,8 +527,8 @@ EOF
 				$aErrors = SetupUtils::CheckWritableDirs($aWritableDirs);
 				$sChecked = ($this->oWizard->GetParameter('upgrade_type') == 'keep-previous') ? ' checked ' : '';
 				$sDisabled = (count($aErrors) > 0) ? ' disabled ' : '';
-				
-				$oPage->p('<input id="radio_upgrade_keep" type="radio" name="upgrade_type" value="keep-previous"'.$sChecked.$sDisabled.'/><label for="radio_upgrade_keep">&nbsp;Preserve the modifications of the installed version (the dasboards inside '.ITOP_APPLICATION.' may not be editable).</label>');
+
+                $oPage->p('<input id="radio_upgrade_keep" type="radio" name="upgrade_type" value="keep-previous" '.$sChecked.$sDisabled.'/><label for="radio_upgrade_keep">&nbsp;Preserve the modifications of the installed version (the dasboards inside '.ITOP_APPLICATION.' may not be editable).</label>');
 				$oPage->add('<input type="hidden" name="datamodel_previous_version" value="'.htmlentities($sInstalledDataModelVersion, ENT_QUOTES, 'UTF-8').'">');
 				
 				$oPage->add('<input type="hidden" name="relative_source_dir" value="'.htmlentities($sPreviousSourceDir, ENT_QUOTES, 'UTF-8').'">');
@@ -543,8 +543,8 @@ EOF
 				}
 						
 				$sChecked = ($this->oWizard->GetParameter('upgrade_type') == 'use-compatible') ? ' checked ' : '';
-				
-				$oPage->p('<input id="radio_upgrade_convert" type="radio" name="upgrade_type" value="use-compatible"'.$sChecked.'/><label for="radio_upgrade_convert">&nbsp;Discard the modifications, use a standard '.$sUpgradeDMVersion.' data model.</label>');
+
+                $oPage->p('<input id="radio_upgrade_convert" type="radio" name="upgrade_type" value="use-compatible" '.$sChecked.'/><label for="radio_upgrade_convert">&nbsp;Discard the modifications, use a standard '.$sUpgradeDMVersion.' data model.</label>');
 				
 				$oPage->add('<input type="hidden" name="datamodel_path" value="'.htmlentities($sCompatibleDMDir, ENT_QUOTES, 'UTF-8').'">');
 				$oPage->add('<input type="hidden" name="datamodel_version" value="'.htmlentities($sUpgradeDMVersion, ENT_QUOTES, 'UTF-8').'">');
@@ -675,9 +675,12 @@ class WizStepLicense extends WizardStep
 		return array('class' => 'WizStepDBParams', 'state' => '');
 	}
 
-	public function Display(WebPage $oPage)
-	{
-		$aLicenses = SetupUtils::GetLicenses();
+    /**
+     * @param WebPage $oPage
+     */
+    public function Display(WebPage $oPage)
+    {
+        $aLicenses = SetupUtils::GetLicenses();
 
 		$oPage->add('<h2>Licenses agreements for the components of '.ITOP_APPLICATION.'</h2>');
 		$oPage->add_style('div a.no-arrow { background:transparent; padding-left:0;}');
@@ -685,17 +688,19 @@ class WizStepLicense extends WizardStep
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>Components of '.ITOP_APPLICATION.'</legend>');
 		$oPage->add('<ul>');
-		foreach($aLicenses as $index => $oLicense)
+        $index = 0;
+        foreach ($aLicenses as $oLicense)
 		{
 			$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<span class="toggle" id="toggle_'.$index.'">Details</span>)');
 			$oPage->add('<div id="license_'.$index.'" class="license_text" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'</div>');
 			$oPage->add_ready_script('$(".license_text a").attr("target", "_blank").addClass("no-arrow");');
 			$oPage->add_ready_script('$("#toggle_'.$index.'").click( function() { $("#license_'.$index.'").toggle(); } );');
+            $index++;
 		}
 		$oPage->add('</ul>');
 		$oPage->add('</fieldset>');
-		$sChecked = ($this->oWizard->GetParameter('accept_license', 'no') == 'yes') ? ' checked ' : ''; 
-		$oPage->p('<input type="checkbox" name="accept_license" id="accept" value="yes"'.$sChecked.'><label for="accept">&nbsp;I accept the terms of the licenses of the '.count($aLicenses).' components mentioned above.</label>');
+        $sChecked = ($this->oWizard->GetParameter('accept_license', 'no') == 'yes') ? ' checked ' : '';
+        $oPage->p('<input type="checkbox" name="accept_license" id="accept" value="yes" '.$sChecked.'><label for="accept">&nbsp;I accept the terms of the licenses of the '.count($aLicenses).' components mentioned above.</label>');
 		$oPage->add_ready_script('$("#accept").bind("click change", function() { WizardUpdateButtons(); });');
 	}
 	
@@ -707,7 +712,8 @@ class WizStepLicense extends WizardStep
 	{
 		return 'return ($("#accept").attr("checked") === "checked");';
 	}
-	
+
+
 }
 
 /**
@@ -803,7 +809,7 @@ class WizStepDBParams extends WizardStep
 	bRet = ValidateField("db_name", true) && bRet;
 	bRet = ValidateField("db_new_name", true) && bRet;
 	bRet = ValidateField("db_prefix", true) && bRet;
-	
+
 	return bRet;
 EOF
 		;
@@ -956,10 +962,10 @@ class WizStepMiscParams extends WizardStep
 		$oPage->add('</fieldset>');
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>Sample Data</legend>');
-		$sChecked = ($sSampleData == 'yes') ? ' checked ' : '';
-		$oPage->p('<input id="sample_data_yes" name="sample_data" type="radio" value="yes"'.$sChecked.'><label for="sample_data_yes">&nbsp;I am installing a <b>demo or test</b> instance, populate the database with some demo data.');
-		$sChecked = ($sSampleData == 'no') ? ' checked ' : '';
-		$oPage->p('<input id="sample_data_no" name="sample_data" type="radio" value="no"'.$sChecked.'><label for="sample_data_no">&nbsp;I am installing a <b>production</b> instance, create an empty database to start from.');
+        $sChecked = ($sSampleData == 'yes') ? 'checked ' : '';
+        $oPage->p('<input id="sample_data_yes" name="sample_data" type="radio" value="yes" '.$sChecked.'><label for="sample_data_yes">&nbsp;I am installing a <b>demo or test</b> instance, populate the database with some demo data.');
+        $sChecked = ($sSampleData == 'no') ? 'checked ' : '';
+        $oPage->p('<input id="sample_data_no" name="sample_data" type="radio" value="no" '.$sChecked.'><label for="sample_data_no">&nbsp;I am installing a <b>production</b> instance, create an empty database to start from.');
 		$oPage->add('</fieldset>');
 		$oPage->add_ready_script(
 <<<EOF

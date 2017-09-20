@@ -1192,7 +1192,7 @@ EOF
 		$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation(MetaModel::GetConfig(), $aSearchDirs);
 
 		require_once(APPROOT.'setup/setuputils.class.inc.php');
-		$aLicenses = SetupUtils::GetLicenses();
+		$aLicenses = SetupUtils::GetLicenses($sCurrEnv);
 
 		$aItopSettings = array('cron_max_execution_time', 'timezone');
 		$aPHPSettings = array('memory_limit', 'max_execution_time', 'upload_max_filesize', 'post_max_size');
@@ -1238,11 +1238,13 @@ EOF
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>'.Dict::S('UI:About:Licenses').'</legend>');
 		$oPage->add('<ul style="margin: 0; font-size: smaller; max-height: 15em; overflow: auto;">');
-		foreach($aLicenses as $index => $oLicense)
+		$index = 0;
+		foreach($aLicenses as $oLicense)
 		{
 			$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<a id="toggle_'.$index.'" class="CollapsibleLabel" style="cursor:pointer;">Details</a>)');
 			$oPage->add('<div id="license_'.$index.'" class="license_text" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'</div>');
 			$oPage->add_ready_script('$("#toggle_'.$index.'").click( function() { $("#license_'.$index.'").slideToggle("normal"); } );');
+			$index++;
 		}
 		$oPage->add('</ul>');
 		$oPage->add('</fieldset>');
