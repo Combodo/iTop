@@ -958,6 +958,8 @@ class RunTimeEnvironment
 			$this->CommitFile($sTargetConfig, $sFinalConfig);
 			@chmod($sFinalConfig, 0440); // Read-only for owner and group, nothing for others
 			@rmdir(dirname($sTargetConfig)); // Cleanup the temporary build dir if empty
+
+			MetaModel::ResetCache(md5(APPROOT).'-'.$this->sFinalEnv);
 		}
 	}
 
