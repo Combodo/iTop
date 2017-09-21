@@ -20,6 +20,10 @@
         <reconciliation>
           <attributes>
             <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="organization_name"/>
+            <attribute id="location_id"/>
+            <attribute id="location_name"/>
           </attributes>
         </reconciliation>
       </properties>
