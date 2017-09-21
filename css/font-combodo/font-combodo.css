@@ -1,8 +1,8 @@
 @font-face {
     font-family: 'CombodoRegular';
-    src: url('combodo-webfont.woff2?v=1.0') format('woff2'),
-         url('combodo-webfont.woff?v=1.0') format('woff'),
-         url('combodo-webfont.ttf?v=1.0') format('truetype');
+    src: url('combodo-webfont.woff2?v=2.0') format('woff2'),
+         url('combodo-webfont.woff?v=2.0') format('woff'),
+         url('combodo-webfont.ttf?v=2.0') format('truetype');
     font-weight: normal;
     font-style: normal;
 
@@ -201,5 +201,8 @@
 }
 .fc-itop-icon:before {
   content: "I";
+}
+.fc-opensource-icon:before {
+  content: "O";
 }
 
