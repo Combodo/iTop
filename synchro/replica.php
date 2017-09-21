@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2011-2012 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Display and search synchro replicas
  *  
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 require_once('../approot.inc.php');
@@ -71,6 +71,12 @@ try
 		$oBlock = new DisplayBlock($oFilter, 'list', false, array('menu'=>false));
 		$oBlock->Display($oP, 1);
 		break;
+
+		case 'select_for_deletion':
+		// Redirect to the page that implements bulk delete
+		$sDelete = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?'.$_SERVER['QUERY_STRING'];
+		header("Location: $sDelete");
+		break;
 	}
 }
 catch(CoreException $e)
@@ -85,4 +91,3 @@ catch(Exception $e)
 }
 
 $oP->output();
-?>
