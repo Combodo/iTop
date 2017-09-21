@@ -1,0 +1,4 @@
+[bugtraq "Combodo"]
+    url = https://support.combodo.com/pages/UI.php?operation=details&class=Bug&id=%BUGID%
+    loglinkregex = N[°\\.]\\d+
+    logregex = \\d+
