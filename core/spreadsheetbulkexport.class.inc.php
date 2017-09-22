@@ -175,7 +175,8 @@ EOF
 				}
 				elseif ($oAttDef instanceof AttributeCustomFields)
 				{
-					$sRet = $oObj->GetAsHTML($sAttCode);
+					// Stick to the weird implementation made in GetNextChunk
+					$sRet = utils::TextToHtml($oObj->GetEditValue($sAttCode));
 				}
 				else
 				{
@@ -324,6 +325,12 @@ EOF
 								// Convert to plain text
 								$sField = utils::HtmlToText($oObj->GetAsHTML($sAttCode));
 							}
+							$sData .= "<td x:str>$sField</td>";
+						}
+						elseif ($oAttDef instanceof AttributeCustomFields)
+						{
+							// GetAsHTML returns a table that would not fit
+							$sField = utils::TextToHtml($oObj->GetEditValue($sAttCode));
 							$sData .= "<td x:str>$sField</td>";
 						}
 						else if($oAttDef instanceof AttributeString)

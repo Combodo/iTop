@@ -7406,7 +7406,7 @@ class AttributeCustomFields extends AttributeDefinition
 
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
-		return 'GetEditValueNotImplemented for '.get_class($this);
+		return $this->GetForTemplate($sValue, '', $oHostObj, true);
 	}
 
 	/**
