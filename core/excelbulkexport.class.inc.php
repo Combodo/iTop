@@ -188,11 +188,6 @@ EOF
 				$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
 				$sRet = $oAttDef->GetAsCSV($value, '', '', $oObj);
 			}
-			else if ($value instanceOf ormCustomFieldsValue)
-			{
-				$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
-				$sRet = $oAttDef->GetAsCSV($value, "\n", '', $oObj);
-			}
 			else
 			{
 				$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
