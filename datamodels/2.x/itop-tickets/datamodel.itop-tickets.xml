@@ -1082,7 +1082,7 @@
 									<!-- Note: This is not used in "list" mode -->
 									<description_att/>
 									<!-- Attribute code of the above class [from the OQL] used to display a image beside the object's name -->
-									<!-- Note: This is used in "grid" mode only for now -->
+									<!-- Note: This is used in "mosaic" mode only for now -->
 									<!--<image_att/>-->
 									<!-- Title of the level, will be display in lists and others browse modes -->
 									<title>Class:Service</title>
