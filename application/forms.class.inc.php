@@ -360,6 +360,7 @@ EOF
 <<<EOF
 $('#$sDialogId').dialog({
 		height: 'auto',
+		maxHeight: $(window).height() - 8,
 		width: $iDialogWidth,
 		modal: true,
 		autoOpen: $sAutoOpen,
