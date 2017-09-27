@@ -3536,14 +3536,34 @@ EOF
 
 	public function DBUpdate()
 	{
-		$res = parent::DBUpdate();
+        $res = parent::DBUpdate();
 
-		// Invoke extensions after the update (could be before)
-		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
-		{
-			$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
-		}
-		return $res;
+        // Protection against reentrance (e.g. cascading the update of ticket logs)
+        // Note: This is based on the fix made on r 3190 in DBObject::DBUpdate()
+        static $aUpdateReentrance = array();
+        $sKey = get_class($this).'::'.$this->GetKey();
+        if(array_key_exists($sKey, $aUpdateReentrance))
+        {
+            return $res;
+        }
+        $aUpdateReentrance[$sKey] = true;
+
+        try
+        {
+            // Invoke extensions after the update (could be before)
+            foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+            {
+                $oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
+            }
+        }
+        catch(Exception $e)
+        {
+            unset($aUpdateReentrance[$sKey]);
+            throw $e;
+        }
+
+        unset($aUpdateReentrance[$sKey]);
+        return $res;
 	}
 
 	protected static function BulkUpdateTracked_Internal(DBSearch $oFilter, array $aValues)
