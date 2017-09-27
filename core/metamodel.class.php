@@ -1875,7 +1875,7 @@ abstract class MetaModel
 				$oArchiveFlag = new AttributeArchiveFlag('archive_flag');
 				self::AddMagicAttribute($oArchiveFlag, $sClass);
 
-				$oArchiveDate = new AttributeDate('archive_date', array('magic' => true, "allowed_values"=>null, "sql"=>'archive_date', "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array()));
+				$oArchiveDate = new AttributeArchiveDate('archive_date', array('magic' => true, "allowed_values"=>null, "sql"=>'archive_date', "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array()));
 				self::AddMagicAttribute($oArchiveDate, $sClass);
 			}
 			elseif (self::$m_aClassParams[$sClass]["archive"])
@@ -1898,7 +1898,7 @@ abstract class MetaModel
 
 				if (self::$m_aRootClasses[$sClass] == $sClass)
 				{
-					$oObsolescenceDate = new AttributeDate('obsolescence_date', array('magic' => true, "allowed_values" => null, "sql" => 'obsolescence_date', "default_value" => '', "is_null_allowed" => true, "depends_on" => array()));
+					$oObsolescenceDate = new AttributeObsolescenceDate('obsolescence_date', array('magic' => true, "allowed_values" => null, "sql" => 'obsolescence_date', "default_value" => '', "is_null_allowed" => true, "depends_on" => array()));
 					self::AddMagicAttribute($oObsolescenceDate, $sClass);
 				}
 				else
