@@ -449,6 +449,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeObsolescenceFlag/Value:no' => 'Non',
 	'Core:AttributeObsolescenceFlag/Label' => 'Obsolète',
 	'Core:AttributeObsolescenceFlag/Label+' => 'Calculé dynamiquement en fonction d\'autres attributs de l\'objet',
+	'Core:AttributeObsolescenceDate/Label' => 'Date obsolescence',
+	'Core:AttributeObsolescenceDate/Label+' => 'Date approximative du jour où l\'objet est devenu obsolète',
 
 	'Core:AttributeString' => 'Chaîne de caractères',
 	'Core:AttributeString+' => 'Chaîne de caractères (limitée à une ligne)',
@@ -693,7 +695,7 @@ Opérateurs :<br/>
 	'Core:BulkExport:CSVFormat' => 'Fichier CSV (*.csv)',
 	'Core:BulkExport:XLSXFormat' => 'Excel 2007 ou plus récent (*.xlsx)',
 	'Core:BulkExport:PDFFormat' => 'Document PDF (*.pdf)',
-	'Core:BulkExport:DragAndDropHelp' => 'Faîtes glisser les en-têtes des colonnes pour modifier leur ordre. Aperçu de %1$s lignes sur un total de %2$s lignes à exporter.',
+	'Core:BulkExport:DragAndDropHelp' => 'Faites glisser les en-têtes des colonnes pour modifier leur ordre. Aperçu de %1$s lignes sur un total de %2$s lignes à exporter.',
 	'Core:BulkExport:EmptyPreview' => 'Selectionnez les colonnes à exporter dans la liste ci-dessus...',
 	'Core:BulkExport:ColumnsOrder' => 'Ordre des colonnes',
 	'Core:BulkExport:AvailableColumnsFrom_Class' => 'Colonnes de la classe %1$s',

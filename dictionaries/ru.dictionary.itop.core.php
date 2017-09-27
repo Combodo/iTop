@@ -50,6 +50,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:AttributeObsolescenceFlag/Value:no' => 'No~~',
 	'Core:AttributeObsolescenceFlag/Label' => 'Obsolete~~',
 	'Core:AttributeObsolescenceFlag/Label+' => 'Computed dynamically on other attributes~~',
+	'Core:AttributeObsolescenceDate/Label' => 'Obsolescence date~~',
+	'Core:AttributeObsolescenceDate/Label+' => 'Approximative date at which the object has been considered obsolete~~',
 
 	'Core:AttributeString' => 'Строка',
 	'Core:AttributeString+' => 'Alphanumeric string',
