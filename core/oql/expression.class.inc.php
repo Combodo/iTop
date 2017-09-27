@@ -1,9 +1,9 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (c) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,16 +15,9 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+//
 
-
-/**
- * General definition of an expression tree (could be OQL, SQL or whatever) 
- *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- */
-
-class MissingQueryArgument extends CoreException
+lass MissingQueryArgument extends CoreException
 {
 }
 
@@ -89,9 +82,15 @@ abstract class Expression
 	 */
 	static public function FromOQL($sConditionExpr)
 	{
+		static $aCache = array();
+		if (array_key_exists($sConditionExpr, $aCache))
+		{
+			return $aCache[$sConditionExpr];
+		}
 		$oOql = new OqlInterpreter($sConditionExpr);
 		$oExpression = $oOql->ParseExpression();
-		
+		$aCache[$sConditionExpr] = $oExpression;
+
 		return $oExpression;
 	}
 
