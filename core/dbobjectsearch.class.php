@@ -383,7 +383,7 @@ class DBObjectSearch extends DBSearch
 		// Parse search strings if needed and if the filter code corresponds to a valid attcode
 		if($bParseSeachString && MetaModel::IsValidAttCode($this->GetClass(), $sFilterCode))
 		{
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sFilterCode);
+			$oAttDef = MetaModel::GetAttributeDef($this->GetClass(), $sFilterCode);
 			$value = $oAttDef->ParseSearchString($value);
 		}
 
