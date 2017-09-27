@@ -312,7 +312,7 @@ class DBObjectSet implements iDBObjectSetIterator
 	}
 
     /**
-     * Note: After calling this method, the set cursor will be at the end of the set. You might to rewind it.
+     * Note: After calling this method, the set cursor will be at the end of the set. You might want to rewind it.
      *
      * @param bool $bWithId
      * @return array
@@ -386,7 +386,7 @@ class DBObjectSet implements iDBObjectSetIterator
 	}
 
     /**
-     * Note: After calling this method, the set cursor will be at the end of the set. You might to rewind it.
+     * Note: After calling this method, the set cursor will be at the end of the set. You might want to rewind it.
      *
      * @param string $sAttCode
      * @param bool $bWithId
