@@ -5243,75 +5243,34 @@ class AttributeBlob extends AttributeDefinition
 	{
 		return '';
 	}
-
-
-	// Facilitate things: allow administrators to upload a document
-	// from a CSV by specifying its path/URL
+	
+	/**
+	 * Users can provide the document from an URL (including an URL on iTop itself)
+	 * for CSV import. Administrators can even provide the path to a local file
+	 * {@inheritDoc}
+	 * @see AttributeDefinition::MakeRealValue()
+	 */
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
+		if ($proposedValue === null) return null;
+		
 		if (is_object($proposedValue))
 		{
 			$proposedValue = clone $proposedValue;
 		}
 		else
 		{
-			if (file_exists($proposedValue) && UserRights::IsAdministrator())
+			try
 			{
-				$sContent = file_get_contents($proposedValue);
-				$sExtension = strtolower(pathinfo($proposedValue, PATHINFO_EXTENSION));
-				$sMimeType = "application/x-octet-stream";
-				$aKnownExtensions = array(
-						'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-						'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
-						'potx' => 'application/vnd.openxmlformats-officedocument.presentationml.template',
-						'ppsx' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
-						'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-						'sldx' => 'application/vnd.openxmlformats-officedocument.presentationml.slide',
-						'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-						'dotx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
-						'xlam' => 'application/vnd.ms-excel.addin.macroEnabled.12',
-						'xlsb' => 'application/vnd.ms-excel.sheet.binary.macroEnabled.12.xlsx',
-						'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
-						'potx' => 'application/vnd.openxmlformats-officedocument.presentationml.template',
-						'ppsx' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
-						'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-						'sldx' => 'application/vnd.openxmlformats-officedocument.presentationml.slide',
-						'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-						'dotx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
-						'xlam' => 'application/vnd.ms-excel.addin.macroEnabled.12',
-						'xlsb' => 'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
-						'jpg' => 'image/jpeg',
-						'jpeg' => 'image/jpeg',
-						'gif' => 'image/gif',
-						'png' => 'image/png',
-						'pdf' => 'application/pdf',
-						'doc' => 'application/msword',
-						'dot' => 'application/msword',
-						'xls' => 'application/vnd.ms-excel',
-						'ppt' => 'application/vnd.ms-powerpoint',
-						'vsd' => 'application/x-visio',
-						'vdx' => 'application/visio.drawing', 
-						'odt' => 'application/vnd.oasis.opendocument.text',
-						'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-						'odp' => 'application/vnd.oasis.opendocument.presentation',
-						'zip' => 'application/zip',
-						'txt' => 'text/plain',
-						'htm' => 'text/html',
-						'html' => 'text/html', 
-						'exe' => 'application/octet-stream'
-					);
-
-				if (!array_key_exists($sExtension, $aKnownExtensions) && extension_loaded('fileinfo'))
-				{
-					$finfo = new finfo(FILEINFO_MIME);
-					$sMimeType = $finfo->file($proposedValue);
-				}
-				return new ormDocument($sContent, $sMimeType);			
+				// Read the file from iTop, an URL (or the local file system - for admins only)
+				$proposedValue = Utils::FileGetContentsAndMIMEType($proposedValue);
 			}
-			else
+			catch(Exception $e)
 			{
-				return new ormDocument($proposedValue, 'text/plain');
-			}
+				IssueLog::Warning(get_class($this)."::MakeRealValue - ".$e->getMessage());
+				// Not a real document !! store is as text !!! (This was the default behavior before)
+				$proposedValue = new ormDocument($e->getMessage()." \n".$proposedValue, 'text/plain');
+			}	
 		}
 		return $proposedValue;
 	}
@@ -5426,6 +5385,11 @@ class AttributeBlob extends AttributeDefinition
 
 	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
+		$sAttCode = $this->GetCode();
+		if ($sValue instanceof ormDocument)
+		{
+			return $sValue->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $sAttCode);
+		}
 		return ''; // Not exportable in CSV !
 	}
 	
@@ -5529,39 +5493,31 @@ class AttributeImage extends AttributeBlob
 {
 	public function GetEditClass() {return "Image";}
 
-	// Facilitate things: allow administrators to upload a document
-	// from a CSV by specifying its path/URL
+	/**
+	 * {@inheritDoc}
+	 * @see AttributeBlob::MakeRealValue()
+	 */
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (is_object($proposedValue))
-		{
-			$proposedValue = clone $proposedValue;
-		}
-		else
-		{
-			if (file_exists($proposedValue) && UserRights::IsAdministrator())
-			{
-				$sContent = file_get_contents($proposedValue);
-				$sExtension = strtolower(pathinfo($proposedValue, PATHINFO_EXTENSION));
-				$sMimeType = "application/x-octet-stream";
-				$aKnownExtensions = array(
-					'jpg' => 'image/jpeg',
-					'jpeg' => 'image/jpeg',
-					'gif' => 'image/gif',
-					'png' => 'image/png'
-				);
-
-				if (!array_key_exists($sExtension, $aKnownExtensions) && extension_loaded('fileinfo'))
-				{
-					$finfo = new finfo(FILEINFO_MIME);
-					$sMimeType = $finfo->file($proposedValue);
-				}
-				return new ormDocument($sContent, $sMimeType);
-			}
-		}
-		return $proposedValue;
+		$oDoc = parent::MakeRealValue($proposedValue, $oHostObj);
+		// The validation of the MIME Type is done by CheckFormat below
+		return $oDoc;
 	}
-
+	
+	/**
+	 * Check that the supplied ormDocument actually contains an image
+	 * {@inheritDoc}
+	 * @see AttributeDefinition::CheckFormat()
+	 */
+	public function CheckFormat($value)
+	{
+		if ($value instanceof ormDocument)
+		{
+			return ($value->GetMainMimeType() == 'image');
+		}
+		return true;
+	}
+	
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		$iMaxWidthPx = $this->Get('display_max_width');
@@ -5570,7 +5526,16 @@ class AttributeImage extends AttributeBlob
 		$sRet = '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'px; max-height: '.$iMaxHeightPx.'px">';
 		if (is_object($value) && !$value->IsEmpty())
 		{
-			$sUrl = $value->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $this->GetCode());
+			if ($oHostObject->IsNew() || ($oHostObject->IsModified() && (array_key_exists($this->GetCode(), $oHostObject->ListChanges()))))
+			{
+				// If the object is modified (or not yet stored in the database) we must serve the content of the image directly inline
+				// otherwise (if we just give an URL) the browser will be given the wrong content... and may cache it
+				$sUrl = 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
+			}
+			else
+			{
+				$sUrl = $value->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $this->GetCode());
+			}
 			$sRet = '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'px; max-height: '.$iMaxHeightPx.'px">';
 		}
 		return '<div class="view-image" style="width: '.$iMaxWidthPx.'px; height: '.$iMaxHeightPx.'px;"><span class="helper-middle"></span>'.$sRet.'</div>';
