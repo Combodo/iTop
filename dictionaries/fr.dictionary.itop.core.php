@@ -449,7 +449,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeObsolescenceFlag/Value:no' => 'Non',
 	'Core:AttributeObsolescenceFlag/Label' => 'Obsolète',
 	'Core:AttributeObsolescenceFlag/Label+' => 'Calculé dynamiquement en fonction d\'autres attributs de l\'objet',
-	'Core:AttributeObsolescenceDate/Label' => 'Date obsolescence',
+	'Core:AttributeObsolescenceDate/Label' => 'Date d\'obsolescence',
 	'Core:AttributeObsolescenceDate/Label+' => 'Date approximative du jour où l\'objet est devenu obsolète',
 
 	'Core:AttributeString' => 'Chaîne de caractères',
