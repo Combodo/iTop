@@ -26,7 +26,6 @@ class DBObjectSearch extends DBSearch
 	private $m_aSelectedClasses; // selected for the output (alias => class name)
 	private $m_oSearchCondition;
 	private $m_aParams;
-	private $m_aFullText;
 	private $m_aPointingTo;
 	private $m_aReferencedBy;
 
@@ -47,7 +46,6 @@ class DBObjectSearch extends DBSearch
 		$this->m_aClasses = array($sClassAlias => $sClass);
 		$this->m_oSearchCondition = new TrueExpression;
 		$this->m_aParams = array();
-		$this->m_aFullText = array();
 		$this->m_aPointingTo = array();
 		$this->m_aReferencedBy = array();
 	}
@@ -278,7 +276,6 @@ class DBObjectSearch extends DBSearch
 	public function IsAny()
 	{
 		if (!$this->m_oSearchCondition->IsTrue()) return false;
-		if (count($this->m_aFullText) > 0) return false;
 		if (count($this->m_aPointingTo) > 0) return false;
 		if (count($this->m_aReferencedBy) > 0) return false;
 		return true;
@@ -542,9 +539,24 @@ class DBObjectSearch extends DBSearch
 		}
 	}
 
-	public function AddCondition_FullText($sFullText)
+	public function AddCondition_FullText($sNeedle)
 	{
-		$this->m_aFullText[] = $sFullText;
+		// Transform the full text condition into additional condition expression
+		$aFullTextFields = array();
+		foreach (MetaModel::ListAttributeDefs($this->GetClass()) as $sAttCode => $oAttDef)
+		{
+			if (!$oAttDef->IsScalar()) continue;
+			if ($oAttDef->IsExternalKey()) continue;
+			$aFullTextFields[] = new FieldExpression($sAttCode, $this->GetClassAlias());
+		}
+		$oTextFields = new CharConcatWSExpression(' ', $aFullTextFields);
+
+		$sQueryParam = 'needle';
+		$oFlexNeedle = new CharConcatExpression(array(new ScalarExpression('%'), new VariableExpression($sQueryParam), new ScalarExpression('%')));
+
+		$oNewCond = new BinaryExpression($oTextFields, 'LIKE', $oFlexNeedle);
+		$this->AddConditionExpression($oNewCond);
+		$this->m_aParams[$sQueryParam] = $sNeedle;
 	}
 
 	protected function AddToNameSpace(&$aClassAliases, &$aAliasTranslation, $bTranslateMainAlias = true)
@@ -966,8 +978,6 @@ class DBObjectSearch extends DBSearch
 		// Translate search condition into our aliasing scheme
 		$aAliasTranslation[$oFilter->GetClassAlias()]['*'] = $this->GetClassAlias(); 
 
-		$this->m_aFullText = array_merge($this->m_aFullText, $oFilter->m_aFullText);
-
 		foreach($oFilter->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
 		{
 			foreach($aPointingTo as $iOperatorCode => $aFilter)
@@ -994,7 +1004,7 @@ class DBObjectSearch extends DBSearch
 	}
 
 	public function GetCriteria() {return $this->m_oSearchCondition;}
-	public function GetCriteria_FullText() {return $this->m_aFullText;}
+	public function GetCriteria_FullText() {throw new Exception("Removed GetCriteria_FullText");}
 	protected function GetCriteria_PointingTo($sKeyAttCode = "")
 	{
 		if (empty($sKeyAttCode))
@@ -1112,11 +1122,6 @@ class DBObjectSearch extends DBSearch
 		$sRes .= $this->ToOQL_Joins();
 		$sRes .= " WHERE ".$this->m_oSearchCondition->Render($aParams, $bRetrofitParams);
 
-		// Temporary: add more info about other conditions, necessary to avoid strange behaviors with the cache
-		foreach($this->m_aFullText as $sFullText)
-		{
-			$sRes .= " AND MATCHES '$sFullText'";
-		}
 		if ($bWithAllowAllFlag && $this->m_bAllowAllData)
 		{
 			$sRes .= " ALLOW ALL DATA";
@@ -1649,26 +1654,6 @@ class DBObjectSearch extends DBSearch
 					{
 						$oBuild->m_oQBExpressions->AddSelect($sClassAlias.$sAttCode.$sColId, new FieldExpression($sAttCode.$sColId, $sClassAlias));
 					}
-				}
-			}
-
-			// Transform the full text condition into additional condition expression
-			$aFullText = $this->GetCriteria_FullText();
-			if (count($aFullText) > 0)
-			{
-				$aFullTextFields = array();
-				foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-				{
-					if (!$oAttDef->IsScalar()) continue;
-					if ($oAttDef->IsExternalKey()) continue;
-					$aFullTextFields[] = new FieldExpression($sAttCode, $sClassAlias);
-				}
-				$oTextFields = new CharConcatWSExpression(' ', $aFullTextFields);
-				
-				foreach($aFullText as $sFTNeedle)
-				{
-					$oNewCond = new BinaryExpression($oTextFields, 'LIKE', new ScalarExpression("%$sFTNeedle%"));
-					$oBuild->m_oQBExpressions->AddCondition($oNewCond);
 				}
 			}
 		}
