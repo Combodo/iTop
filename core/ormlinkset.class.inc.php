@@ -52,7 +52,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * Object from the original set, minus the removed objects
 	 * @var DBObject[] array of iObjectId => DBObject
 	 */
-	protected $aPreserved;
+	protected $aPreserved = array();
 
 	/**
 	 * @var DBObject[] New items
@@ -172,7 +172,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		{
 			if ($this->oOriginalSet)
 			{
-				$this->aOriginalObjects = $this->oOriginalSet->ToArray();
+				$this->aOriginalObjects = $this->GetArrayOfIndex();
 				$this->aPreserved = $this->aOriginalObjects; // Copy (not effective until aPreserved gets modified)
                 foreach ($this->aRemoved as $iObjectId)
                 {
@@ -181,7 +181,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
                         unset($this->aPreserved[$iObjectId]);
                     }
                 }
-                foreach ($this->aModified as $iObjectId)
+                foreach ($this->aModified as $iObjectId => $oLink)
                 {
                     if (array_key_exists($iObjectId, $this->aPreserved))
                     {
@@ -197,6 +197,22 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 				$this->aPreserved = array();
 			}
 		}
+	}
+
+	/**
+	 * Note: After calling this method, the set cursor will be at the end of the set. You might want to rewind it.
+	 * @return array
+	 */
+	protected function GetArrayOfIndex()
+	{
+		$aRet = array();
+		$this->oOriginalSet->Rewind();
+		$iRow = 0;
+		while ($oObject = $this->oOriginalSet->Fetch())
+		{
+			$aRet[$oObject->GetKey()] = $iRow++;
+		}
+		return $aRet;
 	}
 
     /**
@@ -318,7 +334,9 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$iPreservedCount = count($this->aPreserved);
 		if ($this->iCursor < $iPreservedCount)
 		{
-			$oRet = current($this->aPreserved);
+			$iRet = current($this->aPreserved);
+			$this->oOriginalSet->Seek($iRet);
+			$oRet = $this->oOriginalSet->Fetch();
 		}
 		else
 		{
@@ -397,8 +415,6 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 */
 	public function rewind()
 	{
-		$this->LoadOriginalIds();
-
 		$this->iCursor = 0;
 		reset($this->aPreserved);
         reset($this->aAdded);
@@ -549,12 +565,15 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 
 		// Check for the existing links
 		//
+		/** @var DBObject[] $aExistingLinks */
+		$aExistingLinks = array();
+		/** @var Int[] $aExistingRemote */
+		$aExistingRemote = array();
 		if (count($aCheckLinks) > 0)
 		{
 			$oSearch = new DBObjectSearch($this->sClass);
 			$oSearch->AddCondition('id', $aCheckLinks, 'IN');
 			$oSet = new DBObjectSet($oSearch);
-			/** @var DBObject[] $aExistingLinks */
 			$aExistingLinks = $oSet->ToArray();
 		}
 
@@ -566,7 +585,6 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			$oSearch->AddCondition($sExtKeyToMe, $oHostObject->GetKey(), '=');
 			$oSearch->AddCondition($sExtKeyToRemote, $aCheckRemote, 'IN');
 			$oSet = new DBObjectSet($oSearch);
-			/** @var Int[] $aExistingRemote */
 			$aExistingRemote = $oSet->GetColumnAsArray($sExtKeyToRemote);
 		}
 
