@@ -415,7 +415,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 */
 	public function rewind()
 	{
-		$this->iCursor = 0;
+	    $this->iCursor = 0;
 		reset($this->aPreserved);
         reset($this->aAdded);
         reset($this->aModified);
@@ -490,7 +490,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			$this->aAdded = array();
 			$this->aRemoved = array();
 			$this->aModified = array();
-			$this->aPreserved = $this->aOriginalObjects;
+			$this->aPreserved = ($this->aOriginalObjects === null) ? array() : $this->aOriginalObjects;
 			$this->bHasDelta = false;
 
 			/** @var AttributeLinkedSet $oAttDef */
