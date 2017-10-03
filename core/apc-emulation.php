@@ -67,7 +67,7 @@ function apc_emul_store_unit($sKey, $value, $iTTL)
 		}
 	}
 	$bRes = !(@file_put_contents($sFilename, serialize($value), LOCK_EX) === false);
-	apc_emul_manage_ttl();
+	apc_emul_manage_new_entry($sFilename);
 	return $bRes;
 }
 
@@ -89,6 +89,10 @@ function apc_fetch($key)
 	return apc_emul_fetch_unit($key);
 }
 
+/**
+ * @param $sKey
+ * @return bool|mixed
+ */
 function apc_emul_fetch_unit($sKey)
 {
 	// Try the 'TTLed' version
@@ -175,22 +179,53 @@ function apc_emul_get_cache_filename($sKey)
 }
 
 
-function apc_emul_manage_ttl()
+/** Manage the cache files when a new cache entry is added
+ * @param string $sNewFilename new cache file added
+ */
+function apc_emul_manage_new_entry($sNewFilename)
 {
 	// Check only once per request
-	static $bAlreadyChecked = false;
-	if ($bAlreadyChecked)
+	static $aFilesByTime = null;
+	static $iFileCount = 0;
+	$iMaxFiles = MetaModel::GetConfig()->Get('apc_cache_emulation.max_entries');
+	if (!$aFilesByTime)
 	{
-		return;
+		$sRootCacheDir = apc_emul_get_cache_filename('');
+		$aFilesByTime = apc_emul_list_files_time($sRootCacheDir);
+		$iFileCount = count($aFilesByTime);
+		if ($iMaxFiles !== 0)
+		{
+			asort($aFilesByTime);
+		}
 	}
-	$sRootCacheDir = apc_emul_get_cache_filename('');
-	apc_emul_manage_ttl_dir($sRootCacheDir);
-	$bAlreadyChecked = true;
+	else
+	{
+		$aFilesByTime[$sNewFilename] = time();
+		$iFileCount++;
+	}
+	if (($iMaxFiles !== 0) && ($iFileCount > $iMaxFiles))
+	{
+		$iFileNbToRemove = $iFileCount - $iMaxFiles;
+		foreach($aFilesByTime as $sFileToRemove => $iTime)
+		{
+			@unlink($sFileToRemove);
+			if ($iFileNbToRemove-- === 0)
+			{
+				break;
+			}
+		}
+		$aFilesByTime = array_slice($aFilesByTime, $iFileCount - $iMaxFiles, null, true);
+		$iFileCount = $iMaxFiles;
+	}
 }
 
-function apc_emul_manage_ttl_dir($sCheck)
+/** Get the list of files with their associated access time
+ * @param string $sCheck Directory to scan
+ * @param array $aFilesByTime used by recursion
+ * @return array
+ */
+function apc_emul_list_files_time($sCheck, &$aFilesByTime = array())
 {
-	$iTTL = MetaModel::GetConfig()->Get('apc_cache.query_ttl');
 	// Garbage collection
 	$aFiles = array_diff(@scandir($sCheck), array('.', '..'));
 	foreach($aFiles as $sFile)
@@ -198,24 +233,29 @@ function apc_emul_manage_ttl_dir($sCheck)
 		$sSubFile = $sCheck.'/'.$sFile;
 		if (is_dir($sSubFile))
 		{
-			apc_emul_manage_ttl_dir($sSubFile);
+			apc_emul_list_files_time($sSubFile, $aFilesByTime);
 		}
 		else
 		{
-			apc_emul_check_ttl_file($sSubFile, $iTTL);
+			$iTime = apc_emul_get_file_time($sSubFile);
+			if ($iTime !== false)
+			{
+				$aFilesByTime[$sSubFile] = $iTime;
+			}
 		}
 	}
+	return $aFilesByTime;
 }
 
-function apc_emul_check_ttl_file($sFilename, $iTTL)
+/** Get the file access time if TTL is managed
+ * @param string $sFilename
+ * @return bool|int returns the file atime or false if not relevant
+ */
+function apc_emul_get_file_time($sFilename)
 {
-	$iCurTime = time();
 	if (strpos(basename($sFilename), '-') === 0)
 	{
-		$iLimitTime = @fileatime($sFilename) + $iTTL + rand(-$iTTL / 10, $iTTL / 10);
-		if ($iLimitTime < $iCurTime)
-		{
-			@unlink($sFilename);
-		}
+		return @fileatime($sFilename);
 	}
+	return false;
 }

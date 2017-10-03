@@ -436,6 +436,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'apc_cache_emulation.max_entries' => array(
+			'type' => 'integer',
+			'description' => 'Maximum number of cache entries (0 means no limit)',
+			'default' => 1000,
+			'value' => 1000,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'timezone' => array(
 			'type' => 'string',
 			'description' => 'Timezone (reference: http://php.net/manual/en/timezones.php). If empty, it will be left unchanged and MUST be explicitely configured in PHP',
