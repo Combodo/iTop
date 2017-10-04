@@ -203,14 +203,14 @@ function UpdateConfigEditorButtonState()
 EOF
 		);
         $oP->add_ready_script(
-            <<<EOF
+	        <<<'EOF'
 var editor = ace.edit("new_config");
-var textarea = $('input[name="new_config"]');
-editor.getSession().setValue(textarea.val());
+var $configurationSource = $('input[name="new_config"]');
+editor.getSession().setValue($configurationSource.val());
 
 editor.getSession().on('change', function()
 {
-  textarea.val(editor.getSession().getValue());
+  $configurationSource.val(editor.getSession().getValue());
   UpdateConfigEditorButtonState();
 });
 editor.getSession().on("changeAnnotation", function()
@@ -224,11 +224,12 @@ editor.commands.addCommand({
     name: 'save',
     bindKey: {win: "Ctrl-S", "mac": "Cmd-S"},
     exec: function(editor) {
-        \$editorContainer = \$(editor.container);
-        \$submitButton = $('#submit_button');
+        $editorContainer = $(editor.container);
+        $editorForm = $editorContainer.closest("form");
+        $submitButton = $('#submit_button');
         
-        if (\$submitButton.is(":enabled")) {
-            \$editorContainer.closest("form").submit();
+        if ($submitButton.is(":enabled")) {
+            $editorForm.submit();
         }
     }
 })
