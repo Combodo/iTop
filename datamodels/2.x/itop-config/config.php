@@ -190,11 +190,24 @@ try
 		$oP->add("</form>");
 	
 		$sConfirmCancel = addslashes(Dict::S('config-confirm-cancel'));
+		$oP->add_script(
+			<<<EOF
+function UpdateConfigEditorButtonState()
+{
+    var editor = ace.edit("new_config");
+    var isSameContent = editor.getValue() == $('#prev_config').val();
+    var hasNoError = $.isEmptyObject(editor.getSession().getAnnotations());
+    $('#cancel_button').attr('disabled', isSameContent);
+    $('#submit_button').attr('disabled', isSameContent || !hasNoError);
+}
+EOF
+		);
         $oP->add_ready_script(
             <<<EOF
 var editor = ace.edit("new_config");
 var textarea = $('input[name="new_config"]');
 editor.getSession().setValue(textarea.val());
+
 editor.getSession().on('change', function()
 {
   textarea.val(editor.getSession().getValue());
@@ -204,16 +217,23 @@ editor.getSession().on("changeAnnotation", function()
 {
   UpdateConfigEditorButtonState();
 });
+
 editor.setTheme("ace/theme/eclipse");
 editor.getSession().setMode("ace/mode/php");
-function UpdateConfigEditorButtonState()
-{
-    var editor = ace.edit("new_config");
-    var isSameContent = editor.getValue() == $('#prev_config').val();
-    var hasNoError = $.isEmptyObject(editor.getSession().getAnnotations());
-    $('#cancel_button').attr('disabled', isSameContent);
-    $('#submit_button').attr('disabled', isSameContent || !hasNoError);
-}
+editor.commands.addCommand({
+    name: 'save',
+    bindKey: {win: "Ctrl-S", "mac": "Cmd-S"},
+    exec: function(editor) {
+        \$editorContainer = \$(editor.container);
+        \$submitButton = $('#submit_button');
+        
+        if (\$submitButton.is(":enabled")) {
+            \$editorContainer.closest("form").submit();
+        }
+    }
+})
+
+editor.focus();
 EOF
         );
 
