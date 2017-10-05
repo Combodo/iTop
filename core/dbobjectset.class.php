@@ -195,17 +195,45 @@ class DBObjectSet implements iDBObjectSetIterator
 					{
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad);
 						$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad] = $oAttDef;
-						if ($oAttDef->IsExternalKey())
+						if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
 						{
 							// Add the external key friendly name anytime
 							$oFriendlyNameAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad.'_friendlyname');
 							$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad.'_friendlyname'] = $oFriendlyNameAttDef;
+
+							if (MetaModel::IsArchivable($oAttDef->GetTargetClass(EXTKEY_ABSOLUTE)))
+							{
+								// Add the archive flag if necessary
+								$oArchiveFlagAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad.'_archive_flag');
+								$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad.'_archive_flag'] = $oArchiveFlagAttDef;
+							}
+
+							if (MetaModel::IsObsoletable($oAttDef->GetTargetClass(EXTKEY_ABSOLUTE)))
+							{
+								// Add the obsolescence flag if necessary
+								$oObsoleteFlagAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad.'_obsolescence_flag');
+								$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad.'_obsolescence_flag'] = $oObsoleteFlagAttDef;
+							}
 						}
 					}
 				}
 				// Add the friendly name anytime
 				$oFriendlyNameAttDef = MetaModel::GetAttributeDef($sClass, 'friendlyname');
 				$aAttToLoadWithAttDef[$sClassAlias]['friendlyname'] = $oFriendlyNameAttDef;
+
+				if (MetaModel::IsArchivable($sClass))
+				{
+					// Add the archive flag if necessary
+					$oArchiveFlagAttDef = MetaModel::GetAttributeDef($sClass, 'archive_flag');
+					$aAttToLoadWithAttDef[$sClassAlias]['archive_flag'] = $oArchiveFlagAttDef;
+				}
+
+				if (MetaModel::IsObsoletable($sClass))
+				{
+					// Add the obsolescence flag if necessary
+					$oObsoleteFlagAttDef = MetaModel::GetAttributeDef($sClass, 'obsolescence_flag');
+					$aAttToLoadWithAttDef[$sClassAlias]['obsolescence_flag'] = $oObsoleteFlagAttDef;
+				}
 
 				// Make sure that the final class is requested anytime, whatever the specification (needed for object construction!)
 				if (!MetaModel::IsStandaloneClass($sClass) && !array_key_exists('finalclass', $aAttToLoadWithAttDef[$sClassAlias]))
