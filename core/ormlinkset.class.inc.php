@@ -156,9 +156,14 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	public function ModifyItem(DBObject $oLink)
 	{
 		assert($oLink instanceof $this->sClass);
+
 		$iObjectId = $oLink->GetKey();
-		$this->aModified[$iObjectId] = $oLink;
-		$this->bHasDelta = true;
+        if (array_key_exists($iObjectId, $this->aPreserved))
+        {
+            unset($this->aPreserved[$iObjectId]);
+            $this->aModified[$iObjectId] = $oLink;
+            $this->bHasDelta = true;
+        }
 	}
 
 	protected function LoadOriginalIds()
@@ -169,13 +174,20 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			{
 				$this->aOriginalObjects = $this->oOriginalSet->ToArray();
 				$this->aPreserved = $this->aOriginalObjects; // Copy (not effective until aPreserved gets modified)
-				foreach ($this->aRemoved as $iObjectId)
-				{
-					if (array_key_exists($iObjectId, $this->aPreserved))
-					{
-						unset($this->aPreserved[$iObjectId]);
-					}
-				}
+                foreach ($this->aRemoved as $iObjectId)
+                {
+                    if (array_key_exists($iObjectId, $this->aPreserved))
+                    {
+                        unset($this->aPreserved[$iObjectId]);
+                    }
+                }
+                foreach ($this->aModified as $iObjectId)
+                {
+                    if (array_key_exists($iObjectId, $this->aPreserved))
+                    {
+                        unset($this->aPreserved[$iObjectId]);
+                    }
+                }
 			}
 			else
 			{
@@ -249,7 +261,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	public function Count()
 	{
 		$this->LoadOriginalIds();
-		$iRet = count($this->aPreserved) + count($this->aAdded);
+		$iRet = count($this->aPreserved) + count($this->aAdded) + count($this->aModified);
 		return $iRet;
 	}
 
@@ -310,7 +322,15 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		}
 		else
 		{
-			$oRet = current($this->aAdded);
+		    $iModifiedCount = count($this->aModified);
+		    if($this->iCursor < $iPreservedCount + $iModifiedCount)
+            {
+                $oRet = current($this->aModified);
+            }
+            else
+            {
+                $oRet = current($this->aAdded);
+            }
 		}
 		return $oRet;
 	}
@@ -331,9 +351,17 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		}
 		else
 		{
-			next($this->aAdded);
+		    $iModifiedCount = count($this->aModified);
+		    if($this->iCursor < $iPreservedCount + $iModifiedCount)
+            {
+                next($this->aModified);
+            }
+            else
+            {
+                next($this->aAdded);
+            }
 		}
-		// Increment AFTER moving the internal cursors because when starting aAdded, we must leave it intact
+		// Increment AFTER moving the internal cursors because when starting aModified / aAdded, we must leave it intact
 		$this->iCursor++;
 	}
 
@@ -373,7 +401,8 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 
 		$this->iCursor = 0;
 		reset($this->aPreserved);
-		reset($this->aAdded);
+        reset($this->aAdded);
+        reset($this->aModified);
 	}
 
 	public function HasDelta()
