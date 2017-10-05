@@ -149,16 +149,16 @@ abstract class TestHandler
 		{
 		case E_USER_ERROR:
 		case E_WARNING: //(assertion failed)
-			$this->ReportError("@$errline - $errstr");
+			$this->ReportError("$errfile@$errline - $errstr");
 			break;
 		case E_USER_WARNING:
-			$this->ReportWarning("@$errline - $errstr");
+			$this->ReportWarning("$errfile@$errline - $errstr");
 			break;
 		case E_USER_NOTICE:
-			$this->ReportWarning("@$errline - $errstr");
+			$this->ReportWarning("$errfile@$errline - $errstr");
 			break;
 		default:
-			$this->ReportWarning("@$errline - Unknown error type: [$errno] $errstr");
+			$this->ReportWarning("$errfile@$errline - Unknown error type: [$errno] $errstr");
 			echo "Unknown error type: [$errno] $errstr in $errfile at $errline<br />\n";
 			break;
 		}
