@@ -1866,15 +1866,13 @@ abstract class MetaModel
 			}
 		}
 
-		// Prepare external fields and filters
-		// Add final class to external keys
-		//
+		// Add magic attributes to the classes
 		foreach (self::GetClasses() as $sClass)
 		{
 			$sRootClass = self::$m_aRootClasses[$sClass];
 
 			// Create the friendly name attribute
-			$sFriendlyNameAttCode = 'friendlyname'; 
+			$sFriendlyNameAttCode = 'friendlyname';
 			$oFriendlyName = new AttributeFriendlyName($sFriendlyNameAttCode);
 			self::AddMagicAttribute($oFriendlyName, $sClass);
 
@@ -1884,7 +1882,7 @@ abstract class MetaModel
 				$oArchiveFlag = new AttributeArchiveFlag('archive_flag');
 				self::AddMagicAttribute($oArchiveFlag, $sClass);
 
-				$oArchiveDate = new AttributeArchiveDate('archive_date', array('magic' => true, "allowed_values"=>null, "sql"=>'archive_date', "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array()));
+				$oArchiveDate = new AttributeArchiveDate('archive_date', array('magic' => true, "allowed_values" => null, "sql" => 'archive_date', "default_value" => '', "is_null_allowed" => true, "depends_on" => array()));
 				self::AddMagicAttribute($oArchiveDate, $sClass);
 			}
 			elseif (self::$m_aClassParams[$sClass]["archive"])
@@ -1918,6 +1916,13 @@ abstract class MetaModel
 					self::$m_aAttribOrigins[$sClass]['obsolescence_date'] = $sRootClass;
 				}
 			}
+		}
+
+		// Prepare external fields and filters
+		// Add final class to external keys
+		// Add magic attributes to external keys (finalclass, friendlyname, archive_flag, obsolescence_flag)
+		foreach (self::GetClasses() as $sClass)
+		{
 			foreach (self::$m_aAttribDefs[$sClass] as $sAttCode => $oAttDef)
 			{
 				// Compute the filter codes

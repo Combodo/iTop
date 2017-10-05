@@ -468,10 +468,11 @@ class BulkChange
 		//
 		foreach ($this->m_aAttList as $sAttCode => $iCol)
 		{
-            $oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
-
 			// skip the private key, if any
 			if ($sAttCode == 'id') continue;
+
+			$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+
 			// skip reconciliation keys
 			if (!$oAttDef->IsWritable() && in_array($sAttCode, $this->m_aReconcilKeys)){ continue; }
 
