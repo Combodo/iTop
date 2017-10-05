@@ -90,3 +90,9 @@ function apc_cache_info_compat()
 	}
 	return $aCacheUserData;
 }
+
+// Cache emulation
+if (!function_exists('apc_store'))
+{
+	require_once(APPROOT.'core/apc-emulation.php');
+}
