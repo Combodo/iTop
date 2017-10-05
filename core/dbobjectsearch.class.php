@@ -1,9 +1,9 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (c) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,14 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
-/**
- * Define filters for a given class of objects (formerly named "filter") 
- *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- */
+//
 
 // Dev hack for disabling the some query build optimizations (Folding/Merging)
 define('ENABLE_OPT', true);
@@ -390,7 +383,7 @@ class DBObjectSearch extends DBSearch
 		// Parse search strings if needed and if the filter code corresponds to a valid attcode
 		if($bParseSeachString && MetaModel::IsValidAttCode($this->GetClass(), $sFilterCode))
 		{
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sFilterCode);
+			$oAttDef = MetaModel::GetAttributeDef($this->GetClass(), $sFilterCode);
 			$value = $oAttDef->ParseSearchString($value);
 		}
 
@@ -1623,9 +1616,9 @@ class DBObjectSearch extends DBSearch
 
 		$bIsOnQueriedClass = array_key_exists($sClassAlias, $oBuild->GetRootFilter()->GetSelectedClasses());
 
-		self::DbgTrace("Entering: ".$this->ToOQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY"));
+		//self::DbgTrace("Entering: ".$this->ToOQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY"));
 
-		$sRootClass = MetaModel::GetRootClass($sClass);
+		//$sRootClass = MetaModel::GetRootClass($sClass);
 		$sKeyField = MetaModel::DBGetKey($sClass);
 
 		if ($bIsOnQueriedClass)
@@ -1679,9 +1672,9 @@ class DBObjectSearch extends DBSearch
 				}
 			}
 		}
-//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oBuild->m_oQBExpressions, true)."</pre></p>\n";
+		//echo "<p>oQBExpr ".__LINE__.": <pre>\n".print_r($oBuild->m_oQBExpressions, true)."</pre></p>\n";
 		$aExpectedAtts = array(); // array of (attcode => fieldexpression)
-//echo "<p>".__LINE__.": GetUnresolvedFields($sClassAlias, ...)</p>\n";
+		//echo "<p>".__LINE__.": GetUnresolvedFields($sClassAlias, ...)</p>\n";
 		$oBuild->m_oQBExpressions->GetUnresolvedFields($sClassAlias, $aExpectedAtts);
 
 		// Compute a clear view of required joins (from the current class)
@@ -2159,8 +2152,14 @@ class DBObjectSearch extends DBSearch
 	 *	Get the expression for the class and its subclasses (if finalclass = 'subclass' ...)
 	 *	Simplifies the final expression by grouping classes having the same expression
 	 */
-	static protected function GetPolymorphicExpression($sClass, $sAttCode)
+	static public function GetPolymorphicExpression($sClass, $sAttCode)
 	{
+		$oExpression = ExpressionCache::GetCachedExpression($sClass, $sAttCode);
+		if (!empty($oExpression))
+		{
+			return $oExpression;
+		}
+
 		// 1st step - get all of the required expressions (instantiable classes)
 		//            and group them using their OQL representation
 		//

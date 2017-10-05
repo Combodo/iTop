@@ -1,9 +1,9 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (c) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,6 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+//
 
 require_once(APPROOT.'core/modulehandler.class.inc.php');
 require_once(APPROOT.'core/querybuildercontext.class.inc.php');
@@ -23,6 +24,7 @@ require_once(APPROOT.'core/metamodelmodifier.inc.php');
 require_once(APPROOT.'core/computing.inc.php');
 require_once(APPROOT.'core/relationgraph.class.inc.php');
 require_once(APPROOT.'core/apc-compat.php');
+require_once(APPROOT.'core/expressioncache.class.inc.php');
 
 /**
  * Metamodel
@@ -331,9 +333,16 @@ abstract class MetaModel
 	}
 	final static public function GetObsolescenceExpression($sClass)
 	{
-		self::_check_subclass($sClass);
-		$sOql = self::$m_aClassParams[$sClass]['obsolescence_expression'];
-		$oRet = Expression::FromOQL("COALESCE($sOql, 0)");
+		if (self::IsObsoletable($sClass))
+		{
+			self::_check_subclass($sClass);
+			$sOql = self::$m_aClassParams[$sClass]['obsolescence_expression'];
+			$oRet = Expression::FromOQL("COALESCE($sOql, 0)");
+		}
+		else
+		{
+			$oRet = Expression::FromOQL("0");
+		}
 		return $oRet;
 	}
 	final static public function GetNameSpec($sClass)
@@ -4394,6 +4403,8 @@ abstract class MetaModel
 			echo "Debug<br/>\n";
 			self::static_var_dump();
 		}
+
+		ExpressionCache::Warmup();
 	}
 
 	public static function LoadConfig($oConfiguration, $bAllowCache = false)
