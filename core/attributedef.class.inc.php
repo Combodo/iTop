@@ -1355,7 +1355,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		}
 		else
 		{
-			$bAreEquivalent = $val1->Equals($val2);
+            $bAreEquivalent = ($val2->HasDelta() === false);
 		}
 		return $bAreEquivalent;
 	}
