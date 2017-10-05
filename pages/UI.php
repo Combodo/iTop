@@ -88,7 +88,7 @@ function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction)
 		throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sNextAction, $oObj->GetName(), $oObj->GetStateLabel()));
 	}
 	// Get the list of missing mandatory fields for the target state, considering only the changes from the previous form (i.e don't prompt twice)
-	$aExpectedAttributes = $oObj->GetExpectedAttributes($oObj->GetState(), $sNextAction, true /* $bOnlyNewOnes */);
+	$aExpectedAttributes = $oObj->GetTransitionAttributes($sNextAction);
 	
 	if (count($aExpectedAttributes) == 0)
 	{

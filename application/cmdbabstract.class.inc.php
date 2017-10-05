@@ -3764,7 +3764,15 @@ EOF
 			$oPage->add('</fieldset>');
 		}
 	}
-	
+
+    /**
+     * @param $sCurrentState
+     * @param $sStimulus
+     * @param $bOnlyNewOnes
+     * @return array
+     * @throws ApplicationException
+     * @deprecated Since iTop 2.4, use DBObject::GetTransitionAttributes() instead.
+     */
 	public function GetExpectedAttributes($sCurrentState, $sStimulus, $bOnlyNewOnes)
 	{
 		$aTransitions = $this->EnumTransitions();
