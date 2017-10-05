@@ -415,6 +415,8 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 */
 	public function rewind()
 	{
+	    $this->LoadOriginalIds();
+
 	    $this->iCursor = 0;
 		reset($this->aPreserved);
         reset($this->aAdded);
