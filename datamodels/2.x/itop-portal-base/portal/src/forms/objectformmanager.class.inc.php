@@ -714,15 +714,18 @@ class ObjectFormManager extends FormManager
                         // Note: We can't do this in AttributeExternalKey::MakeFormField() in the Field::SetOnFinalizeCallback() because at this point we have no information about the portal scope and ignore_silos flag, hence it always applies silos.
                         // As a workaround we have to manually check if the field's current value is among the scope
 
-                        /** @var DBObjectSearch $oValuesScope */
-                        $oValuesScope = $oField->GetSearch()->DeepClone();
-                        $oBinaryExp = new BinaryExpression(new FieldExpression('id', $oValuesScope->GetClassAlias()), '=', new ScalarExpression( $oField->GetCurrentValue() ));
-                        $oValuesScope->AddConditionExpression($oBinaryExp);
-                        $oValuesSet = new DBObjectSet($oValuesScope);
-
-                        if( $oValuesSet->Count() === 0 )
+                        if(!$oField->GetReadOnly())
                         {
-                            $oField->SetCurrentValue(null);
+                            /** @var DBObjectSearch $oValuesScope */
+                            $oValuesScope = $oField->GetSearch()->DeepClone();
+                            $oBinaryExp = new BinaryExpression(new FieldExpression('id', $oValuesScope->GetClassAlias()), '=', new ScalarExpression($oField->GetCurrentValue()));
+                            $oValuesScope->AddConditionExpression($oBinaryExp);
+                            $oValuesSet = new DBObjectSet($oValuesScope);
+
+                            if($oValuesSet->Count() === 0)
+                            {
+                                $oField->SetCurrentValue(null);
+                            }
                         }
                     }
 					// - Field that require processing on their subfields
