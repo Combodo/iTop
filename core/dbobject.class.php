@@ -159,18 +159,13 @@ abstract class DBObject implements iDisplay
 
 	public function __toString()
 	{
-		$sRet = '';
-		$sClass = get_class($this);
-		$sRootClass = MetaModel::GetRootClass($sClass);
-		$iPKey = $this->GetKey();
-		$sRet .= "<b title=\"$sRootClass\">$sClass</b>::$iPKey<br/>\n";
-		$sRet .= "<ul class=\"treeview\">\n";
-		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode=>$oAttDef)
-		{
-			$sRet .= "<li>".$oAttDef->GetLabel()." = ".$this->GetAsHtml($sAttCode)."</li>\n";
-		}
-		$sRet .= "</ul>";
-		return $sRet;
+        $sRet = '';
+        $sClass = get_class($this);
+        $sRootClass = MetaModel::GetRootClass($sClass);
+        $iPKey = $this->GetKey();
+        $sFriendlyname = $this->Get('friendlyname');
+        $sRet .= "<b title=\"$sRootClass\">$sClass</b>::$iPKey ($sFriendlyname)<br/>\n";
+        return $sRet;
 	}
 	
 	// Restore initial values... mmmm, to be discussed
