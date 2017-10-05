@@ -130,12 +130,10 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
     /**
      * @param DBObject $oObject
      * @param string $sClassAlias
-     * @deprecated
+     * @deprecated Since iTop 2.4, use ormLinkset->AddItem() instead.
      */
 	public function AddObject(DBObject $oObject, $sClassAlias = '')
     {
-        trigger_error('iTop: ormLinkSet::AddObject() is deprecated use ormLinkSet::AddItem() instead.', E_USER_DEPRECATED);
-
         $this->AddItem($oObject);
     }
 
@@ -190,16 +188,12 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	}
 
     /**
-     * Note: After calling this method, the set cursor will be at the end of the set. You might to rewind it.
-     *
      * @param bool $bWithId
      * @return array
-     * @deprecated
+     * @deprecated Since iTop 2.4, use foreach($this as $oItem){} instead
      */
     public function ToArray($bWithId = true)
     {
-        trigger_error('iTop: ormLinkSet::ToArray() is deprecated use foreach instead.', E_USER_DEPRECATED);
-
         $aRet = array();
         foreach($this as $oItem)
         {
@@ -210,6 +204,28 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
             else
             {
                 $aRet[] = $oItem;
+            }
+        }
+        return $aRet;
+    }
+
+    /**
+     * @param string $sAttCode
+     * @param bool $bWithId
+     * @return array
+     */
+    public function GetColumnAsArray($sAttCode, $bWithId = true)
+    {
+        $aRet = array();
+        foreach($this as $oItem)
+        {
+            if ($bWithId)
+            {
+                $aRet[$oItem->GetKey()] = $oItem->Get($sAttCode);
+            }
+            else
+            {
+                $aRet[] = $oItem->Get($sAttCode);
             }
         }
         return $aRet;
