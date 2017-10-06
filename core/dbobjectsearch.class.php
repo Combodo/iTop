@@ -1466,10 +1466,14 @@ class DBObjectSearch extends DBSearch
 
 		// Create a unique cache id
 		//
+		$aContextData = array();
 		if (self::$m_bQueryCacheEnabled || self::$m_bTraceQueries)
 		{
+			$aContextData['sRequestUri'] = $_SERVER['REQUEST_URI'];
+
 			// Need to identify the query
 			$sOqlQuery = $oSearch->ToOql(false, null, true);
+			$aContextData['sOqlQuery'] = $sOqlQuery;
 
 			if (count($aModifierProperties))
 			{
@@ -1480,12 +1484,14 @@ class DBObjectSearch extends DBSearch
 			{
 				$sModifierProperties = '';
 			}
+			$aContextData['aModifierProperties'] = $aModifierProperties;
 
 			$sRawId = $sOqlQuery.$sModifierProperties;
 			if (!is_null($aAttToLoad))
 			{
 				$sRawId .= json_encode($aAttToLoad);
 			}
+			$aContextData['aAttToLoad'] = $aAttToLoad;
 			if (!is_null($aGroupByExpr))
 			{
 				foreach($aGroupByExpr as $sAlias => $oExpr)
@@ -1493,13 +1499,19 @@ class DBObjectSearch extends DBSearch
 					$sRawId .= 'g:'.$sAlias.'!'.$oExpr->Render();
 				}
 			}
+			$aContextData['aGroupByExpr'] = $aGroupByExpr;
 			$sRawId .= $bGetCount;
 			if (is_array($aSelectedClasses))
 			{
 				$sRawId .= implode(',', $aSelectedClasses); // Unions may alter the list of selected columns
 			}
-			$sRawId .= $oSearch->GetArchiveMode() ? '--arch' : '';
-			$sRawId .= $oSearch->GetShowObsoleteData() ? '--obso' : '';
+			$aContextData['aSelectedClasses'] = $aSelectedClasses;
+			$bIsArchiveMode = $oSearch->GetArchiveMode();
+			$sRawId .= $bIsArchiveMode ? '--arch' : '';
+			$bShowObsoleteData = $oSearch->GetShowObsoleteData();
+			$sRawId .= $bShowObsoleteData ? '--obso' : '';
+			$aContextData['bIsArchiveMode'] = $bIsArchiveMode;
+			$aContextData['bShowObsoleteData'] = $bShowObsoleteData;
 			$sOqlId = md5($sRawId);
 		}
 		else
@@ -1557,6 +1569,7 @@ class DBObjectSearch extends DBSearch
 			{
 				if (self::$m_bUseAPCCache)
 				{
+					$oSQLQuery->m_aContextData = $aContextData;
 					$oKPI = new ExecutionKPI();
 					apc_store($sOqlAPCCacheId, $oSQLQuery, self::$m_iQueryCacheTTL);
 					$oKPI->ComputeStats('Query APC (store)', $sOqlQuery);
@@ -1568,6 +1581,14 @@ class DBObjectSearch extends DBSearch
 		return $oSQLQuery;
 	}
 
+	/**
+	 * @param $aAttToLoad
+	 * @param $bGetCount
+	 * @param $aModifierProperties
+	 * @param null $aGroupByExpr
+	 * @param null $aSelectedClasses
+	 * @return null|SQLObjectQuery
+	 */
 	protected function BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr = null, $aSelectedClasses = null)
 	{
 		$oBuild = new QueryBuilderContext($this, $aModifierProperties, $aGroupByExpr, $aSelectedClasses);
@@ -1612,6 +1633,12 @@ class DBObjectSearch extends DBSearch
 	}
 
 
+	/**
+	 * @param $oBuild
+	 * @param null $aAttToLoad
+	 * @param array $aValues
+	 * @return null|SQLObjectQuery
+	 */
 	protected function MakeSQLObjectQuery(&$oBuild, $aAttToLoad = null, $aValues = array())
 	{
 		// Note: query class might be different than the class of the filter

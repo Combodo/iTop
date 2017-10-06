@@ -36,7 +36,8 @@
 
 class SQLObjectQuery extends SQLQuery
 {
-	private $m_SourceOQL = '';
+	public $m_aContextData = null;
+	public $m_iOriginalTableCount = 0;
 	private $m_sTable = '';
 	private $m_sTableAlias = '';
 	private $m_aFields = array();
@@ -510,6 +511,7 @@ class SQLObjectQuery extends SQLQuery
 
 	public function OptimizeJoins($aUsedTables, $bTopCall = true)
 	{
+		$this->m_iOriginalTableCount = $this->CountTables();
 		if ($bTopCall)
 		{
 			// Top call: complete the list of tables absolutely required to perform the right query
@@ -612,4 +614,5 @@ class SQLObjectQuery extends SQLQuery
 		// None of the tables is in the list of required tables
 		return $bResult;
 	}
+
 }
