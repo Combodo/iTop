@@ -92,7 +92,7 @@ foreach($aEntries as $sKey)
 						$sVal = $oValue;
 					}
 				}
-				echo '"'.$sVal.'"'.';';
+				echo $sVal.';';
 			}
 			echo "\n";
 		}
