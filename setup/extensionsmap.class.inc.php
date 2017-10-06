@@ -206,7 +206,7 @@ class iTopExtensionsMap
 	 * @param string|null $sParentExtensionId Not null if the directory is under a declared extension
 	 * @return boolean
 	 */
-	protected function ReadDir($sSearchDir, $sSource, $sParentExtensionId = null)
+	public function ReadDir($sSearchDir, $sSource, $sParentExtensionId = null)
 	{
 		if (!is_readable($sSearchDir)) return false;
 		$hDir = opendir($sSearchDir);
