@@ -21,6 +21,42 @@
  * Date: 27/09/2017
  */
 
+/**
+ * @param string $cache_type
+ * @param bool $limited
+ * @return array|bool
+ */
+function apc_cache_info($cache_type = '', $limited = false)
+{
+	$aInfo = array();
+	$sRootCacheDir = apc_emul_get_cache_filename('');
+	$aInfo['cache_list'] = apc_emul_get_cache_entries($sRootCacheDir);
+	return $aInfo;
+}
+
+function apc_emul_get_cache_entries($sEntry)
+{
+	$aResult = array();
+	if (is_dir($sEntry))
+	{
+		$aFiles = array_diff(scandir($sEntry), array('.', '..'));
+		foreach($aFiles as $sFile)
+		{
+			$sSubFile = $sEntry.'/'.$sFile;
+			$aResult = array_merge($aResult, apc_emul_get_cache_entries($sSubFile));
+		}
+	}
+	else
+	{
+		$sKey = basename($sEntry);
+		if (strpos($sKey, '-') === 0)
+		{
+			$sKey = substr($sKey, 1);
+		}
+		$aResult[] = array('info' => $sKey);
+	}
+	return $aResult;
+}
 
 /**
  * @param array|string $key
@@ -188,6 +224,10 @@ function apc_emul_manage_new_entry($sNewFilename)
 	static $aFilesByTime = null;
 	static $iFileCount = 0;
 	$iMaxFiles = MetaModel::GetConfig()->Get('apc_cache_emulation.max_entries');
+	if ($iMaxFiles == 0)
+	{
+		return;
+	}
 	if (!$aFilesByTime)
 	{
 		$sRootCacheDir = apc_emul_get_cache_filename('');
@@ -203,7 +243,7 @@ function apc_emul_manage_new_entry($sNewFilename)
 		$aFilesByTime[$sNewFilename] = time();
 		$iFileCount++;
 	}
-	if (($iMaxFiles !== 0) && ($iFileCount > $iMaxFiles))
+	if ($iFileCount > $iMaxFiles)
 	{
 		$iFileNbToRemove = $iFileCount - $iMaxFiles;
 		foreach($aFilesByTime as $sFileToRemove => $iTime)
