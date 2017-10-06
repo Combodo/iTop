@@ -1731,6 +1731,14 @@ abstract class DBObject implements iDisplay
 
 		$this->m_bIsInDB = true;
 		$this->m_bDirty = false;
+		foreach ($this->m_aCurrValues as $sAttCode => $value)
+		{
+			if (is_object($value))
+			{
+				$value = clone $value;
+			}
+			$this->m_aOrigValues[$sAttCode] = $value;
+		}
 
 		$this->AfterInsert();
 
