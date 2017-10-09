@@ -839,16 +839,19 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 		font-size: 40px;
 	}
 
-	/* Layout 7 */
+	/* Layout 5 & 7 */
+	.mosaic-item-layout-5 .mosaic-item-image,
 	.mosaic-item-layout-7 .mosaic-item-image{
 		display: table-cell;
 		width: 105px;
 		padding-left: 5px;
 		padding-right: 18px;
 	}
+	.mosaic-item-layout-5 .mosaic-item-image > img,
 	.mosaic-item-layout-7 .mosaic-item-image > img{
 		max-width: 100%;
 	}
+	.mosaic-item-layout-5 .mosaic-item-name,
 	.mosaic-item-layout-7 .mosaic-item-name{
 		font-size: 12px;
 	}
