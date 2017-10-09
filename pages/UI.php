@@ -520,8 +520,8 @@ try
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
 			}
 			$oP->set_title(Dict::S('UI:SearchResultsPageTitle'));
-			// TO DO: limit the search filter by the user context
 			$oFilter = DBSearch::unserialize($sFilter); // TO DO : check that the filter is valid
+			$oFilter->UpdateContextFromUser();
 			DisplaySearchSet($oP, $oFilter, $bSearchForm, '' /* sBaseClass */, $sFormat);
 		break;
 	
@@ -677,9 +677,10 @@ EOF
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
 		}
-		// TO DO: limit the search filter by the user context
 		$oFilter = DBObjectSearch::unserialize($sFilter); // TO DO : check that the filter is valid
-		$sClass = $oFilter->GetClass();	
+		// Add user filter
+		$oFilter->UpdateContextFromUser();
+		$sClass = $oFilter->GetClass();
 		$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_MODIFY);
 		$oP->add("<h1>".Dict::S('UI:ModifyAllPageTitle')."</h1>\n");			
 		
@@ -692,6 +693,8 @@ EOF
 		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 		$sClass = utils::ReadParam('class', '', false, 'class');
 		$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
+		// Add user filter
+		$oFullSetFilter->UpdateContextFromUser();
 		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
 		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
 		$aContext = array('filter' => $sFilter);
@@ -703,8 +706,9 @@ EOF
 		case 'preview_or_modify_all': // Preview or apply bulk modify
 		$oP->DisableBreadCrumb();
 		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
-		// TO DO: limit the search filter by the user context
 		$oFilter = DBObjectSearch::unserialize($sFilter); // TO DO : check that the filter is valid
+		// Add user filter
+		$oFilter->UpdateContextFromUser();
 		$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_MODIFY);
 
 		$sClass = utils::ReadParam('class', '', false, 'class');
@@ -958,8 +962,8 @@ EOF
 			}
 			$oP->set_title(Dict::S('UI:BulkDeletePageTitle'));
 			$oP->add("<h1>".Dict::S('UI:BulkDeleteTitle')."</h1>\n");
-			// TO DO: limit the search filter by the user context
 			$oFilter = DBSearch::unserialize($sFilter); // TO DO : check that the filter is valid
+			$oFilter->UpdateContextFromUser();
 			$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_DELETE);
 			DisplayMultipleSelectionForm($oP, $oFilter, 'bulk_delete', $oChecker);
 		break;
@@ -999,6 +1003,8 @@ EOF
 				// Several objects
 				$sFilter = utils::ReadPostedParam('filter', '');
 				$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
+				// Add user filter
+				$oFullSetFilter->UpdateContextFromUser();
 				$aSelectObject = utils::ReadMultipleSelection($oFullSetFilter);
 				if ( empty($sClass) || empty($aSelectObject)) // TO DO: check that the class name is valid !
 				{
@@ -1113,7 +1119,8 @@ EOF
 			throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'filter', 'stimulus', 'state'));
 		}
 		$oFilter = DBObjectSearch::unserialize($sFilter);
-		$sClass = $oFilter->GetClass();	
+		$oFilter->UpdateContextFromUser();
+		$sClass = $oFilter->GetClass();
 		$aStimuli = MetaModel::EnumStimuli($sClass);
 		$sActionLabel = $aStimuli[$sStimulus]->GetLabel();
 		$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
@@ -1137,7 +1144,9 @@ EOF
 			throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'filter', 'stimulus', 'state'));
 		}
 		$oFilter = DBObjectSearch::unserialize($sFilter);
-		$sClass = $oFilter->GetClass();	
+		// Add user filter
+		$oFilter->UpdateContextFromUser();
+		$sClass = $oFilter->GetClass();
 		$aSelectObject = utils::ReadMultipleSelection($oFilter);
 		if (count($aSelectObject) == 0)
 		{
@@ -1314,6 +1323,8 @@ EOF
 		{
 			// For archiving the modification
 			$oFilter = DBObjectSearch::unserialize($sFilter);
+			// Add user filter
+			$oFilter->UpdateContextFromUser();
 			$sClass = $oFilter->GetClass();
 			$aObjects = array();
 			foreach($aSelectObject as $iId)
