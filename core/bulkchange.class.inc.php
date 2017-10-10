@@ -320,7 +320,7 @@ class BulkChange
 	// Returns true if the CSV data specifies that the external key must be left undefined
 	protected function IsNullExternalKeySpec($aRowData, $sAttCode)
 	{
-		$oExtKey = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
+		//$oExtKey = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
 		foreach ($this->m_aExtKeys[$sAttCode] as $sForeignAttCode => $iCol)
 		{
 			// The foreign attribute is one of our reconciliation key
@@ -366,7 +366,9 @@ class BulkChange
 			}
 			else
 			{
-				$oReconFilter = new DBObjectSearch($oExtKey->GetTargetClass());
+				// Check for additional rules
+				$oReconFilter = $oExtKey->GetAllowedValuesAsFilter(array('this' => $oTargetObj));
+
 				$aCacheKeys = array();
 				foreach ($aKeyConfig as $sForeignAttCode => $iCol)
 				{
@@ -385,7 +387,6 @@ class BulkChange
 					$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
 				}
 				$sCacheKey = implode('_|_', $aCacheKeys); // Unique key for this query...
-				$iCount = 0;
 				$iForeignKey = null;
 				$sOQL = '';
 				// TODO: check if *too long* keys can lead to collisions... and skip the cache in such a case...
@@ -405,7 +406,7 @@ class BulkChange
 				else
 				{
 					// Cache miss, let's initialize it
-					$oExtObjects = new CMDBObjectSet($oReconFilter);
+					$oExtObjects = new CMDBObjectSet($oReconFilter, array(), array('this' => $oTargetObj));
 					$iCount = $oExtObjects->Count();
 					if ($iCount == 1)
 					{
@@ -533,13 +534,13 @@ class BulkChange
 				{
 					$sCurValue = $oTargetObj->GetAsHTML($sAttCode, $this->m_bLocalizedValues);
 					$sOrigValue = $oTargetObj->GetOriginalAsHTML($sAttCode, $this->m_bLocalizedValues);
-					$sInput = htmlentities($aRowData[$iCol], ENT_QUOTES, 'UTF-8');
+					//$sInput = htmlentities($aRowData[$iCol], ENT_QUOTES, 'UTF-8');
 				}
 				else
 				{
 					$sCurValue = $oTargetObj->GetAsCSV($sAttCode, $this->m_sReportCsvSep, $this->m_sReportCsvDelimiter, $this->m_bLocalizedValues);
 					$sOrigValue = $oTargetObj->GetOriginalAsCSV($sAttCode, $this->m_sReportCsvSep, $this->m_sReportCsvDelimiter, $this->m_bLocalizedValues);
-					$sInput = $aRowData[$iCol];
+					//$sInput = $aRowData[$iCol];
 				}
 				if (isset($aErrors[$sAttCode]))
 				{
@@ -610,10 +611,6 @@ class BulkChange
 				throw new BulkChangeException('Invalid attribute code', array('class' => get_class($oTargetObj), 'attcode' => $sAttCode));
 			}
 			$oTargetObj->Set($sAttCode, $value);
-			if (!array_key_exists($sAttCode, $this->m_aAttList))
-			{
-				// #@# will be out of the reporting... (counted anyway)
-			}
 		}
 	
 		// Reporting on fields
@@ -655,7 +652,7 @@ class BulkChange
 	
 		if (count($aErrors) > 0)
 		{
-			$sErrors = implode(', ', $aErrors);
+			//$sErrors = implode(', ', $aErrors);
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Attribute'));
 			return $oTargetObj;
 		}
@@ -684,7 +681,7 @@ class BulkChange
 		if ($oChange)
 		{
 			$newID = $oTargetObj->DBInsertTrackedNoReload($oChange);
-			$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj($this->m_sClass, $newID);
+			$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj();
 			$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
 			$aResult[$iRow]["id"] = new CellStatus_Void($newID);
 		}
@@ -708,7 +705,7 @@ class BulkChange
 
 		if (count($aErrors) > 0)
 		{
-			$sErrors = implode(', ', $aErrors);
+			//$sErrors = implode(', ', $aErrors);
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Attribute'));
 			return;
 		}
@@ -749,7 +746,7 @@ class BulkChange
 
 		if (count($aErrors) > 0)
 		{
-			$sErrors = implode(', ', $aErrors);
+			//$sErrors = implode(', ', $aErrors);
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Attribute'));
 			return;
 		}
@@ -1176,6 +1173,9 @@ EOF
 
 	/**
 	 * Display the details of an import
+	 * @param iTopWebPage $oPage
+	 * @param $iChange
+	 * @throws Exception
 	 */
 	static function DisplayImportHistoryDetails(iTopWebPage $oPage, $iChange)
 	{

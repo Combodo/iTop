@@ -1207,13 +1207,14 @@ abstract class DBObject implements iDisplay
 				{
 					return "Target object not found ($sTargetClass::$toCheck)";
 				}
-			}
-			if ($oAtt->IsHierarchicalKey())
-			{
-				// This check cannot be deactivated since otherwise the user may break things by a CSV import of a bulk modify
-				if ($toCheck == $this->GetKey())
+				// Check allowed values
+				$aValues = $oAtt->GetAllowedValues($this->ToArgsForQuery());
+				if (count($aValues) > 0)
 				{
-					return "An object can not be its own parent in a hierarchy (".$oAtt->Getlabel()." = $toCheck)";
+					if (!array_key_exists($toCheck, $aValues))
+					{
+						return "Value not allowed [$toCheck]";
+					}
 				}
 			}
 		}

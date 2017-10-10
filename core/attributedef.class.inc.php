@@ -1076,7 +1076,7 @@ class AttributeLinkedSet extends AttributeDefinition
 			return '<ul><li>'.implode("</li><li>", $aNames).'</li></ul>';
 			
 			default:
-			throw new Exception("Unknown verb '$sVerb' for attribute ".$this->GetCode().' in class '.get_class($oHostObj));	
+			throw new Exception("Unknown verb '$sVerb' for attribute ".$this->GetCode().' in class '.get_class($oHostObject));
 		}
 	}
 
@@ -2990,7 +2990,6 @@ class AttributeCaseLog extends AttributeLongText
 	 */
 	public function GetAsPlainText($value, $oHostObj = null)
 	{
-		$value = $oObj->Get($sAttCode);
 		if ($value instanceOf ormCaseLog)
 		{
 
@@ -4604,6 +4603,11 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $oSet;
 	}
 
+	public function GetAllowedValuesAsFilter($aArgs = array(), $sContains = '', $iAdditionalValue = null)
+	{
+		return DBObjectSearch::FromOQL($this->GetValuesDef()->GetFilterExpression());
+	}
+
 	public function GetDeletionPropagationOption()
 	{
 		return $this->Get("on_target_delete");
@@ -4804,18 +4808,12 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
-		if (array_key_exists('this', $aArgs))
+		$oFilter = $this->GetHierachicalFilter($aArgs, $sContains);
+		if ($oFilter)
 		{
-			// Hierarchical keys have one more constraint: the "parent value" cannot be
-			// "under" themselves
-			$iRootId = $aArgs['this']->GetKey();
-			if ($iRootId > 0) // ignore objects that do no exist in the database...
-			{
-				$oValSetDef = $this->GetValuesDef();
-				$sClass = $this->m_sTargetClass;
-				$oFilter = DBObjectSearch::FromOQL("SELECT $sClass AS node JOIN $sClass AS root ON node.".$this->GetCode()." NOT BELOW root.id WHERE root.id = $iRootId");
-				$oValSetDef->AddCondition($oFilter);
-			}
+			$oValSetDef = $this->GetValuesDef();
+			$oValSetDef->AddCondition($oFilter);
+			return $oValSetDef->GetValues($aArgs, $sContains);
 		}
 		else
 		{
@@ -4826,6 +4824,27 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 	public function GetAllowedValuesAsObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
 	{
 		$oValSetDef = $this->GetValuesDef();
+		$oFilter = $this->GetHierachicalFilter($aArgs, $sContains, $iAdditionalValue);
+		if ($oFilter)
+		{
+			$oValSetDef->AddCondition($oFilter);
+		}
+		$oSet = $oValSetDef->ToObjectSet($aArgs, $sContains, $iAdditionalValue);
+		return $oSet;
+	}
+
+	public function GetAllowedValuesAsFilter($aArgs = array(), $sContains = '', $iAdditionalValue = null)
+	{
+		$oFilter = $this->GetHierachicalFilter($aArgs, $sContains, $iAdditionalValue);
+		if ($oFilter)
+		{
+			return $oFilter;
+		}
+		return parent::GetAllowedValuesAsFilter($aArgs, $sContains, $iAdditionalValue);
+	}
+
+	private function GetHierachicalFilter($aArgs = array(), $sContains = '', $iAdditionalValue = null)
+	{
 		if (array_key_exists('this', $aArgs))
 		{
 			// Hierarchical keys have one more constraint: the "parent value" cannot be
@@ -4833,14 +4852,11 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 			$iRootId = $aArgs['this']->GetKey();
 			if ($iRootId > 0) // ignore objects that do no exist in the database...
 			{
-				$aValuesSetDef = $this->GetValuesDef();
 				$sClass = $this->m_sTargetClass;
-				$oFilter = DBObjectSearch::FromOQL("SELECT $sClass AS node JOIN $sClass AS root ON node.".$this->GetCode()." NOT BELOW root.id WHERE root.id = $iRootId");
-				$oValSetDef->AddCondition($oFilter);
+				return DBObjectSearch::FromOQL("SELECT $sClass AS node JOIN $sClass AS root ON node.".$this->GetCode()." NOT BELOW root.id WHERE root.id = $iRootId");
 			}
 		}
-		$oSet = $oValSetDef->ToObjectSet($aArgs, $sContains, $iAdditionalValue);
-		return $oSet;
+		return false;
 	}
 
 	/**
