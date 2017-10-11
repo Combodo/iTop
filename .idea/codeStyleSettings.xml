@@ -10,6 +10,7 @@
           <option name="PHPDOC_WRAP_LONG_LINES" value="true" />
           <option name="LOWER_CASE_BOOLEAN_CONST" value="true" />
           <option name="LOWER_CASE_NULL_CONST" value="true" />
+          <option name="BLANK_LINE_BEFORE_RETURN_STATEMENT" value="true" />
           <option name="KEEP_RPAREN_AND_LBRACE_ON_ONE_LINE" value="true" />
           <option name="PHPDOC_USE_FQCN" value="true" />
         </PHPCodeStyleSettings>
@@ -18,8 +19,9 @@
           <option name="BRACE_STYLE" value="2" />
           <option name="ELSE_ON_NEW_LINE" value="true" />
           <option name="ALIGN_MULTILINE_PARAMETERS" value="false" />
+          <option name="SPACE_BEFORE_FOR_PARENTHESES" value="false" />
           <option name="CALL_PARAMETERS_WRAP" value="1" />
-          <option name="METHOD_PARAMETERS_WRAP" value="5" />
+          <option name="METHOD_PARAMETERS_WRAP" value="1" />
           <option name="METHOD_PARAMETERS_LPAREN_ON_NEXT_LINE" value="true" />
           <option name="METHOD_PARAMETERS_RPAREN_ON_NEXT_LINE" value="true" />
           <option name="ARRAY_INITIALIZER_WRAP" value="5" />
