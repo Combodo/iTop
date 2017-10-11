@@ -4934,6 +4934,16 @@ abstract class MetaModel
 		return $iTotalHits.' ('.implode(', ', $aRes).')';
 	}
 
+	/**
+	 * @param string $sClass
+	 * @param int $iKey
+	 * @param bool $bMustBeFound
+	 * @param bool $bAllowAllData if true then no rights filtering
+	 * @param array $aModifierProperties
+	 *
+	 * @return DBObject|null
+	 * @throws CoreException if no result found and $bMustBeFound=true
+	 */
 	public static function MakeSingleRow($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false, $aModifierProperties = null)
 	{
 		// Build the query cache signature
@@ -5029,6 +5039,23 @@ abstract class MetaModel
 		return new $sClass($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
 	}
 
+	/**
+	 * Search for the specified class and id. <strong>Warning</strong>. If the object is archived then null is
+	 * returned.
+	 *
+	 * @param $sClass
+	 * @param int $iKey id value of the object to retrieve
+	 * @param bool $bMustBeFound
+	 * @param bool $bAllowAllData if true then no rights filtering
+	 * @param null $aModifierProperties
+	 *
+	 * @return DBObject|null
+	 * @throws CoreException if no result found and $bMustBeFound=true
+	 *
+	 * @since 2.4 introduction of the archive functionalities, and creation of this method.
+	 *     {@link MetaModel::GetObjectWithArchive} remains as a default behavior for modules (see N.1108).
+	 * @see MetaModel::GetObjectWithArchive to get also archived object
+	 */
 	public static function GetObject($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false, $aModifierProperties = null)
 	{
 		self::_check_subclass($sClass);
@@ -5040,6 +5067,19 @@ abstract class MetaModel
 		return self::GetObjectByRow($sClass, $aRow);
 	}
 
+	/**
+	 * Search for the specified class and id. If the object is archived it will be returned anyway (this is for pre-2.4
+	 * module compatibility, see N.1108)
+	 *
+	 * @param string $sClass
+	 * @param int $iKey
+	 * @param bool $bMustBeFound
+	 * @param bool $bAllowAllData
+	 * @param array $aModifierProperties
+	 *
+	 * @return DBObject|null
+	 * @see MetaModel::GetObject()
+	 */
 	public static function GetObjectWithArchive($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false, $aModifierProperties = null)
 	{
 		utils::PushArchiveMode(true);
