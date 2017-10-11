@@ -109,11 +109,11 @@ class CellStatus_Modify extends CellChangeSpec
 
 class CellStatus_Issue extends CellStatus_Modify
 {
-	protected $m_sReason;
+	protected $m_sDictEntry;
 
 	public function __construct($proposedValue, $previousValue, $sReason)
 	{
-		$this->m_sReason = $sReason;
+		$this->m_sDictEntry = $sReason;
 		parent::__construct($proposedValue, $previousValue);
 	}
 
@@ -121,9 +121,9 @@ class CellStatus_Issue extends CellStatus_Modify
 	{
 		if (is_null($this->m_proposedValue))
 		{
-			return Dict::Format('UI:CSVReport-Value-SetIssue', $this->m_sReason);
+			return Dict::Format('UI:CSVReport-Value-SetIssue', $this->m_sDictEntry);
 		}
-		return Dict::Format('UI:CSVReport-Value-ChangeIssue', $this->m_proposedValue, $this->m_sReason);
+		return Dict::Format('UI:CSVReport-Value-ChangeIssue', $this->m_proposedValue, $this->m_sDictEntry);
 	}
 }
 
@@ -367,8 +367,8 @@ class BulkChange
 			else
 			{
 				// Check for additional rules
-				$oReconFilter = $oExtKey->GetAllowedValuesAsFilter(array('this' => $oTargetObj));
-				//$oReconFilter = new DBObjectSearch($oExtKey->GetTargetClass());
+				//$oReconFilter = $oExtKey->GetAllowedValuesAsFilter(array('this' => $oTargetObj));
+				$oReconFilter = new DBObjectSearch($oExtKey->GetTargetClass());
 
 				$aCacheKeys = array();
 				foreach ($aKeyConfig as $sForeignAttCode => $iCol)
@@ -414,13 +414,12 @@ class BulkChange
 						$oForeignObj = $oExtObjects->Fetch();
 						$iForeignKey = $oForeignObj->GetKey();
 					}
-					// Cannot cache the entry in this case as the conditions can change...
-					//$this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey] = array(
-					//	'c' => $iCount,
-					//	'k' => $iForeignKey,
-					//	'oql' => $oReconFilter->ToOql(),
-					//	'h' => 0, // number of hits on this cache entry
-					//);
+					$this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey] = array(
+						'c' => $iCount,
+						'k' => $iForeignKey,
+						'oql' => $oReconFilter->ToOql(),
+						'h' => 0, // number of hits on this cache entry
+					);
 				}
 				switch($iCount)
 				{
