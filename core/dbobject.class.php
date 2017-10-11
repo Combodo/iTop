@@ -1199,24 +1199,16 @@ abstract class DBObject implements iDisplay
 		}
 		elseif ($oAtt->IsExternalKey())
 		{
-			if (!MetaModel::SkipCheckExtKeys())
+			// Hierachical keys are always tested because an infinite loop can be created.
+			if (!MetaModel::SkipCheckExtKeys() || $oAtt->IsHierarchicalKey())
 			{
-				$sTargetClass = $oAtt->GetTargetClass();
-				$oTargetObj = MetaModel::GetObject($sTargetClass, $toCheck, false /*must be found*/, true /*allow all data*/);
-				if (is_null($oTargetObj))
-				{
-					return "Target object not found ($sTargetClass::$toCheck)";
-				}
 				// Check allowed values
 				$aValues = $oAtt->GetAllowedValues($this->ToArgsForQuery());
-				if (count($aValues) > 0)
+				if (!array_key_exists($toCheck, $aValues))
 				{
-					if (!array_key_exists($toCheck, $aValues))
-					{
-						return "Value not allowed [$toCheck]";
-					}
+					return "Value not allowed [$toCheck]";
 				}
-			}
+		}
 		}
 		elseif ($oAtt->IsScalar())
 		{

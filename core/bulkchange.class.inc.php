@@ -368,6 +368,7 @@ class BulkChange
 			{
 				// Check for additional rules
 				$oReconFilter = $oExtKey->GetAllowedValuesAsFilter(array('this' => $oTargetObj));
+				//$oReconFilter = new DBObjectSearch($oExtKey->GetTargetClass());
 
 				$aCacheKeys = array();
 				foreach ($aKeyConfig as $sForeignAttCode => $iCol)
@@ -413,12 +414,13 @@ class BulkChange
 						$oForeignObj = $oExtObjects->Fetch();
 						$iForeignKey = $oForeignObj->GetKey();
 					}
-					$this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey] = array(
-						'c' => $iCount,
-						'k' => $iForeignKey,
-						'oql' => $oReconFilter->ToOql(),
-						'h' => 0, // number of hits on this cache entry
-					);
+					// Cannot cache the entry in this case as the conditions can change...
+					//$this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey] = array(
+					//	'c' => $iCount,
+					//	'k' => $iForeignKey,
+					//	'oql' => $oReconFilter->ToOql(),
+					//	'h' => 0, // number of hits on this cache entry
+					//);
 				}
 				switch($iCount)
 				{
@@ -648,6 +650,43 @@ class BulkChange
 	protected function CreateObject(&$aResult, $iRow, $aRowData, CMDBChange $oChange = null)
 	{
 		$oTargetObj = MetaModel::NewObject($this->m_sClass);
+
+
+		// Populate the cache for hierarchical keys (only if in verify mode)
+		if (is_null($oChange))
+		{
+			// 1. determine if a hierarchical key exists
+			foreach($this->m_aExtKeys as $sAttCode => $aKeyConfig)
+			{
+				$oExtKey = MetaModel::GetAttributeDef(get_class($oTargetObj), $sAttCode);
+				if (!$this->IsNullExternalKeySpec($aRowData, $sAttCode) && $oExtKey->IsHierarchicalKey())
+				{
+					// 2. Populate the cache for further checks
+					$aCacheKeys = array();
+					foreach ($aKeyConfig as $sForeignAttCode => $iCol)
+					{
+						// The foreign attribute is one of our reconciliation key
+						if ($sForeignAttCode == 'id')
+						{
+							$value = $aRowData[$iCol];
+						}
+						else
+						{
+							$value = $aRowData[$this->m_aAttList[$sForeignAttCode]];
+						}
+						$aCacheKeys[] = $value;
+					}
+					$sCacheKey = implode('_|_', $aCacheKeys); // Unique key for this query...
+					$this->m_aExtKeysMappingCache[$sAttCode][$sCacheKey] = array(
+						'c' => 1,
+						'k' => -1,
+						'oql' => '',
+						'h' => 0, // number of hits on this cache entry
+					);
+				}
+			}
+		}
+
 		$aResult[$iRow] = $this->PrepareObject($oTargetObj, $aRowData, $aErrors);
 	
 		if (count($aErrors) > 0)
