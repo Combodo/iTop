@@ -1470,13 +1470,17 @@ class DBObjectSearch extends DBSearch
 		$bCanCache = true;
 		if (self::$m_bQueryCacheEnabled || self::$m_bTraceQueries)
 		{
-			if (!empty($_SERVER['REQUEST_URI']))
+			if (isset($_SERVER['REQUEST_URI']))
 			{
 				$aContextData['sRequestUri'] = $_SERVER['REQUEST_URI'];
 			}
-			else
+			else if (isset($_SERVER['SCRIPT_NAME']))
 			{
 				$aContextData['sRequestUri'] = $_SERVER['SCRIPT_NAME'];
+			}
+			else
+			{
+				$aContextData['sRequestUri'] = '';
 			}
 
 			// Need to identify the query
