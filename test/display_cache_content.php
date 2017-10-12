@@ -46,6 +46,7 @@ echo "<pre>";
 
 if (empty($aEntries))
 {
+	echo "No Data";
 	return;
 }
 
