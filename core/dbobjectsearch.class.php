@@ -1469,7 +1469,14 @@ class DBObjectSearch extends DBSearch
 		$aContextData = array();
 		if (self::$m_bQueryCacheEnabled || self::$m_bTraceQueries)
 		{
-			$aContextData['sRequestUri'] = $_SERVER['REQUEST_URI'];
+			if (!empty($_SERVER['REQUEST_URI']))
+			{
+				$aContextData['sRequestUri'] = $_SERVER['REQUEST_URI'];
+			}
+			else
+			{
+				$aContextData['sRequestUri'] = $_SERVER['SCRIPT_NAME'];
+			}
 
 			// Need to identify the query
 			$sOqlQuery = $oSearch->ToOql(false, null, true);
