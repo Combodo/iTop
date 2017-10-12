@@ -835,4 +835,9 @@ abstract class DBSearch
 			CMDBSource::Query($sUpdateQuery);
 		}
 	}
+
+	public function UpdateContextFromUser()
+	{
+		$this->SetShowObsoleteData(utils::ShowObsoleteData());
+	}
 }
