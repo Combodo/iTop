@@ -202,10 +202,13 @@ class ValueSetObjects extends ValueSetDefinition
 			}
 		}
 
-		$oValueExpr = new ScalarExpression('%'.$sContains.'%');
-		$oNameExpr = new FieldExpression('friendlyname', $oFilter->GetClassAlias());
-		$oNewCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
-		$oFilter->AddConditionExpression($oNewCondition);
+		if (!empty($sContains))
+		{
+			$oValueExpr = new ScalarExpression('%'.$sContains.'%');
+			$oNameExpr = new FieldExpression('friendlyname', $oFilter->GetClassAlias());
+			$oNewCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
+			$oFilter->AddConditionExpression($oNewCondition);
+		}
 
 		$oObjects = new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs);
 		while ($oObject = $oObjects->Fetch())
