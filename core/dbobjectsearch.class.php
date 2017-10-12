@@ -1467,6 +1467,7 @@ class DBObjectSearch extends DBSearch
 		// Create a unique cache id
 		//
 		$aContextData = array();
+		$bCanCache = true;
 		if (self::$m_bQueryCacheEnabled || self::$m_bTraceQueries)
 		{
 			if (isset($_SERVER['REQUEST_URI']))
@@ -1484,6 +1485,12 @@ class DBObjectSearch extends DBSearch
 
 			// Need to identify the query
 			$sOqlQuery = $oSearch->ToOql(false, null, true);
+			if ((strpos($sOqlQuery, '`id` IN (') !== false) || (strpos($sOqlQuery, '`id` NOT IN (') !== false))
+			{
+				// Requests containing "id IN" are not worth caching
+				$bCanCache = false;
+			}
+
 			$aContextData['sOqlQuery'] = $sOqlQuery;
 
 			if (count($aModifierProperties))
@@ -1578,7 +1585,7 @@ class DBObjectSearch extends DBSearch
 
 			if (self::$m_bQueryCacheEnabled)
 			{
-				if (self::$m_bUseAPCCache)
+				if ($bCanCache && self::$m_bUseAPCCache)
 				{
 					$oSQLQuery->m_aContextData = $aContextData;
 					$oKPI = new ExecutionKPI();
