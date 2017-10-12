@@ -38,7 +38,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Attribute:status/Value:assigned+' => '',
 	'Class:UserRequest/Attribute:status/Value:escalated_ttr' => 'Escalate ttr',
 	'Class:UserRequest/Attribute:status/Value:escalated_ttr+' => '',
-	'Class:UserRequest/Attribute:status/Value:waiting_for_approval' => 'En attente d`approbation',
+	'Class:UserRequest/Attribute:status/Value:waiting_for_approval' => 'En attente d\'approbation',
 	'Class:UserRequest/Attribute:status/Value:waiting_for_approval+' => '',
 	'Class:UserRequest/Attribute:status/Value:approved' => 'Approuvée',
 	'Class:UserRequest/Attribute:status/Value:approved+' => '',
