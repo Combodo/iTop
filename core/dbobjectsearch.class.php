@@ -1485,7 +1485,7 @@ class DBObjectSearch extends DBSearch
 
 			// Need to identify the query
 			$sOqlQuery = $oSearch->ToOql(false, null, true);
-			if (strpos($sOqlQuery, '`id` IN ('))
+			if ((strpos($sOqlQuery, '`id` IN (') !== false) || (strpos($sOqlQuery, '`id` NOT IN (') !== false))
 			{
 				// Requests containing "id IN" are not worth caching
 				$bCanCache = false;
