@@ -685,7 +685,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '',
 	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Nom Licence logiciel',
 	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '',
-	'Class:SoftwareInstance/Attribute:path' => 'Chemin d`installation',
+	'Class:SoftwareInstance/Attribute:path' => 'Chemin d\'installation',
 	'Class:SoftwareInstance/Attribute:path+' => '',
 	'Class:SoftwareInstance/Attribute:status' => 'Statut',
 	'Class:SoftwareInstance/Attribute:status+' => '',
