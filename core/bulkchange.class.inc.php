@@ -109,11 +109,11 @@ class CellStatus_Modify extends CellChangeSpec
 
 class CellStatus_Issue extends CellStatus_Modify
 {
-	protected $m_sDictEntry;
+	protected $m_sReason;
 
 	public function __construct($proposedValue, $previousValue, $sReason)
 	{
-		$this->m_sDictEntry = $sReason;
+		$this->m_sReason = $sReason;
 		parent::__construct($proposedValue, $previousValue);
 	}
 
@@ -121,9 +121,9 @@ class CellStatus_Issue extends CellStatus_Modify
 	{
 		if (is_null($this->m_proposedValue))
 		{
-			return Dict::Format('UI:CSVReport-Value-SetIssue', $this->m_sDictEntry);
+			return Dict::Format('UI:CSVReport-Value-SetIssue', $this->m_sReason);
 		}
-		return Dict::Format('UI:CSVReport-Value-ChangeIssue', $this->m_proposedValue, $this->m_sDictEntry);
+		return Dict::Format('UI:CSVReport-Value-ChangeIssue', $this->m_proposedValue, $this->m_sReason);
 	}
 }
 
@@ -366,8 +366,6 @@ class BulkChange
 			}
 			else
 			{
-				// Check for additional rules
-				//$oReconFilter = $oExtKey->GetAllowedValuesAsFilter(array('this' => $oTargetObj));
 				$oReconFilter = new DBObjectSearch($oExtKey->GetTargetClass());
 
 				$aCacheKeys = array();
@@ -407,7 +405,7 @@ class BulkChange
 				else
 				{
 					// Cache miss, let's initialize it
-					$oExtObjects = new CMDBObjectSet($oReconFilter, array(), array('this' => $oTargetObj));
+					$oExtObjects = new CMDBObjectSet($oReconFilter);
 					$iCount = $oExtObjects->Count();
 					if ($iCount == 1)
 					{
@@ -478,7 +476,6 @@ class BulkChange
 			// skip reconciliation keys
 			if (!$oAttDef->IsWritable() && in_array($sAttCode, $this->m_aReconcilKeys)){ continue; }
 
-			$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
 			$aReasons = array();
 			$iFlags = $oTargetObj->GetAttributeFlags($sAttCode, $aReasons);
 			if ( (($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY) && ( $oTargetObj->Get($sAttCode) != $aRowData[$iCol]) )
@@ -535,13 +532,11 @@ class BulkChange
 				{
 					$sCurValue = $oTargetObj->GetAsHTML($sAttCode, $this->m_bLocalizedValues);
 					$sOrigValue = $oTargetObj->GetOriginalAsHTML($sAttCode, $this->m_bLocalizedValues);
-					//$sInput = htmlentities($aRowData[$iCol], ENT_QUOTES, 'UTF-8');
 				}
 				else
 				{
 					$sCurValue = $oTargetObj->GetAsCSV($sAttCode, $this->m_sReportCsvSep, $this->m_sReportCsvDelimiter, $this->m_bLocalizedValues);
 					$sOrigValue = $oTargetObj->GetOriginalAsCSV($sAttCode, $this->m_sReportCsvSep, $this->m_sReportCsvDelimiter, $this->m_bLocalizedValues);
-					//$sInput = $aRowData[$iCol];
 				}
 				if (isset($aErrors[$sAttCode]))
 				{
@@ -650,7 +645,6 @@ class BulkChange
 	{
 		$oTargetObj = MetaModel::NewObject($this->m_sClass);
 
-
 		// Populate the cache for hierarchical keys (only if in verify mode)
 		if (is_null($oChange))
 		{
@@ -658,7 +652,7 @@ class BulkChange
 			foreach($this->m_aExtKeys as $sAttCode => $aKeyConfig)
 			{
 				$oExtKey = MetaModel::GetAttributeDef(get_class($oTargetObj), $sAttCode);
-				if (!$this->IsNullExternalKeySpec($aRowData, $sAttCode) && $oExtKey->IsHierarchicalKey())
+				if (!$this->IsNullExternalKeySpec($aRowData, $sAttCode) && MetaModel::IsParentClass(get_class($oTargetObj), $this->m_sClass))
 				{
 					// 2. Populate the cache for further checks
 					$aCacheKeys = array();
@@ -671,6 +665,11 @@ class BulkChange
 						}
 						else
 						{
+							if (!isset($this->m_aAttList[$sForeignAttCode]) || !isset($aRowData[$this->m_aAttList[$sForeignAttCode]]))
+							{
+								// the key is not in the import
+								break 2;
+							}
 							$value = $aRowData[$this->m_aAttList[$sForeignAttCode]];
 						}
 						$aCacheKeys[] = $value;
@@ -690,7 +689,7 @@ class BulkChange
 	
 		if (count($aErrors) > 0)
 		{
-			//$sErrors = implode(', ', $aErrors);
+			$sErrors = implode(', ', $aErrors);
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Attribute'));
 			return $oTargetObj;
 		}
@@ -743,7 +742,7 @@ class BulkChange
 
 		if (count($aErrors) > 0)
 		{
-			//$sErrors = implode(', ', $aErrors);
+			$sErrors = implode(', ', $aErrors);
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Attribute'));
 			return;
 		}
@@ -784,7 +783,7 @@ class BulkChange
 
 		if (count($aErrors) > 0)
 		{
-			//$sErrors = implode(', ', $aErrors);
+			$sErrors = implode(', ', $aErrors);
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-Attribute'));
 			return;
 		}

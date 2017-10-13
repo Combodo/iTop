@@ -1199,17 +1199,24 @@ abstract class DBObject implements iDisplay
 		}
 		elseif ($oAtt->IsExternalKey())
 		{
-			// Hierachical keys are always tested because an infinite loop can be created.
-			if (!MetaModel::SkipCheckExtKeys() || $oAtt->IsHierarchicalKey())
+			if (!MetaModel::SkipCheckExtKeys())
 			{
-				// Check allowed values
+				$sTargetClass = $oAtt->GetTargetClass();
+				$oTargetObj = MetaModel::GetObject($sTargetClass, $toCheck, false /*must be found*/, true /*allow all data*/);
+				if (is_null($oTargetObj))
+				{
+					return "Target object not found ($sTargetClass::$toCheck)";
+				}
+			}
+			if ($oAtt->IsHierarchicalKey())
+			{
+				// This check cannot be deactivated since otherwise the user may break things by a CSV import of a bulk modify
 				$aValues = $oAtt->GetAllowedValues(array('this' => $this));
 				if (!array_key_exists($toCheck, $aValues))
 				{
-					// TODO Better error message
 					return "Value not allowed [$toCheck]";
 				}
-		}
+			}
 		}
 		elseif ($oAtt->IsScalar())
 		{
@@ -1261,8 +1268,7 @@ abstract class DBObject implements iDisplay
 			if ($res !== true)
 			{
 				// $res contains the error description
-				$sAttributeName = Dict::S('Class:'.get_class($this).'/Attribute:'.$sAttCode);
-				$this->m_aCheckIssues[] = "Unexpected value for attribute '$sAttributeName': $res";
+				$this->m_aCheckIssues[] = "Unexpected value for attribute '$sAttCode': $res";
 			}
 		}
 		if (count($this->m_aCheckIssues) > 0)
@@ -1675,8 +1681,7 @@ abstract class DBObject implements iDisplay
 		if (!$bRes)
 		{
 			$sIssues = implode(', ', $aIssues);
-			$sClassName = Dict::S('Class:'.get_class($this));
-			throw new CoreException("Object not following integrity rules", array('<br>issues' => $sIssues, '<br>class' => $sClassName, '<br>id' => $this->GetKey()));
+			throw new CoreException("Object not following integrity rules", array('issues' => $sIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
 		}
 
 		// Stop watches
@@ -1941,8 +1946,7 @@ abstract class DBObject implements iDisplay
 			if (!$bRes)
 			{
 				$sIssues = implode(', ', $aIssues);
-				$sClassName = Dict::S('Class:'.get_class($this));
-				throw new CoreException("Object not following integrity rules", array('<br>issues' => $sIssues, '<br>class' => $sClassName, '<br>id' => $this->GetKey()));
+				throw new CoreException("Object not following integrity rules", array('issues' => $sIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
 			}
 
 			// Save the original values (will be reset to the new values when the object get written to the DB)
