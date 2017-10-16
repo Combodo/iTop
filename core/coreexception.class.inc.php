@@ -112,4 +112,13 @@ class SecurityException extends CoreException
 {
 }
 
+/**
+ * Throwned when querying on an object that exists in the database but is archived
+ *
+ * @see N.1108
+ */
+class ArchivedObjectException extends CoreException
+{
+}
+
 ?>

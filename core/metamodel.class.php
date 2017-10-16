@@ -4941,8 +4941,10 @@ abstract class MetaModel
 	 * @param bool $bAllowAllData if true then no rights filtering
 	 * @param array $aModifierProperties
 	 *
-	 * @return DBObject|null
+	 * @return string[] column name / value array
 	 * @throws CoreException if no result found and $bMustBeFound=true
+	 *
+	 * @see utils::PushArchiveMode() to enable search on archived objects
 	 */
 	public static function MakeSingleRow($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false, $aModifierProperties = null)
 	{
@@ -5000,13 +5002,27 @@ abstract class MetaModel
 
 		$aRow = CMDBSource::FetchArray($res);
 		CMDBSource::FreeResult($res);
+
 		if ($bMustBeFound && empty($aRow))
 		{
 			throw new CoreException("No result for the single row query: '$sSQL'");
 		}
+
 		return $aRow;
 	}
 
+	/**
+	 * Converts a column name / value array to a {@link DBObject}
+	 *
+	 * @param string $sClass
+	 * @param string[] $aRow column name / value array
+	 * @param string $sClassAlias
+	 * @param string[] $aAttToLoad
+	 * @param array $aExtendedDataSpec
+	 *
+	 * @return DBObject
+	 * @throws CoreException if finalClass cannot be found
+	 */
 	public static function GetObjectByRow($sClass, $aRow, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
 	{
 		self::_check_subclass($sClass);
@@ -5040,31 +5056,43 @@ abstract class MetaModel
 	}
 
 	/**
-	 * Search for the specified class and id. <strong>Warning</strong>. If the object is archived then null is
-	 * returned.
+	 * Search for the specified class and id.
 	 *
-	 * @param $sClass
+	 * @param string $sClass
 	 * @param int $iKey id value of the object to retrieve
 	 * @param bool $bMustBeFound
 	 * @param bool $bAllowAllData if true then no rights filtering
 	 * @param null $aModifierProperties
 	 *
-	 * @return DBObject|null
+	 * @return DBObject|null null if : (the object is not found) or (archive mode disabled and object is archived and $bMustBeFound=false)
 	 * @throws CoreException if no result found and $bMustBeFound=true
+	 * @throws ArchivedObjectException if archive mode disabled and result is archived and $bMustBeFound=true
 	 *
-	 * @since 2.4 introduction of the archive functionalities, and creation of this method.
-	 *     {@link MetaModel::GetObjectWithArchive} remains as a default behavior for modules (see N.1108).
-	 * @see MetaModel::GetObjectWithArchive to get also archived object
+	 * @see MetaModel::GetObjectWithArchive to get object even if it's archived
+	 * @see utils::PushArchiveMode() to enable search on archived objects
 	 */
 	public static function GetObject($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false, $aModifierProperties = null)
 	{
-		self::_check_subclass($sClass);
-		$aRow = self::MakeSingleRow($sClass, $iKey, $bMustBeFound, $bAllowAllData, $aModifierProperties);
-		if (empty($aRow))
+		$oObject = self::GetObjectWithArchive($sClass, $iKey, $bMustBeFound, $bAllowAllData, $aModifierProperties);
+
+		if (empty($oObject))
 		{
 			return null;
 		}
-		return self::GetObjectByRow($sClass, $aRow);
+
+		if (!utils::IsArchiveMode() && $oObject->IsArchived())
+		{
+			if ($bMustBeFound)
+			{
+				throw new ArchivedObjectException("The object $sClass::$iKey is archived");
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		return $oObject;
 	}
 
 	/**
@@ -5078,14 +5106,26 @@ abstract class MetaModel
 	 * @param array $aModifierProperties
 	 *
 	 * @return DBObject|null
-	 * @see MetaModel::GetObject()
+	 * @throws CoreException if no result found and $bMustBeFound=true
+	 *
+	 * @since 2.4 introduction of the archive functionalities
+	 *
+	 * @see MetaModel::GetObject() same but returns null or ArchivedObjectFoundException if object exists but is archived
 	 */
 	public static function GetObjectWithArchive($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false, $aModifierProperties = null)
 	{
+		self::_check_subclass($sClass);
+
 		utils::PushArchiveMode(true);
-		$oObject = static::GetObject($sClass, $iKey, $bMustBeFound, $bAllowAllData, $aModifierProperties);
+		$aRow = self::MakeSingleRow($sClass, $iKey, $bMustBeFound, $bAllowAllData, $aModifierProperties);
 		utils::PopArchiveMode();
-		return $oObject;
+
+		if (empty($aRow))
+		{
+			return null;
+		}
+
+		return self::GetObjectByRow($sClass, $aRow); // null should not be returned, this is handled in the callee
 	}
 
 	public static function GetObjectByName($sClass, $sName, $bMustBeFound = true)

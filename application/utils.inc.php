@@ -141,6 +141,9 @@ class utils
 	}
 
 	protected static $bPageMode = null;
+	/**
+	 * @var boolean[]
+	 */
 	protected static $aModes = array();
 
 	public static function InitArchiveMode()
@@ -164,6 +167,10 @@ class utils
 		self::$bPageMode = ($iCurrent == 1);
 	}
 
+	/**
+	 * @param boolean $bMode if true then activate archive mode (archived objects are visible), otherwise archived objects are
+	 *     hidden (archive = "soft deletion")
+	 */
 	public static function PushArchiveMode($bMode)
 	{
 		array_push(self::$aModes, $bMode);
@@ -174,6 +181,9 @@ class utils
 		array_pop(self::$aModes);
 	}
 
+	/**
+	 * @return boolean true if archive mode is enabled
+	 */
 	public static function IsArchiveMode()
 	{
 		if (count(self::$aModes) > 0)
