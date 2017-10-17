@@ -82,7 +82,7 @@ class SetupUtils
 		}
 		
 		// Check the common directories
-		$aWritableDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'conf', 'data'));
+		$aWritableDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'env-production-build', 'conf', 'data'));
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
 		
 		$aMandatoryExtensions = array('mysqli', 'iconv', 'simplexml', 'soap', 'hash', 'json', 'session', 'pcre', 'dom', 'phar', 'zlib', 'zip');
@@ -684,8 +684,12 @@ class SetupUtils
 	 * To be used as alternative to rename()	 	 
 	 * Files/Subdirs of the source directory are moved one by one
 	 * Returns void
+     *
+     * @param string $sSource
+     * @param string $sDest
+     * @param boolean $bRemoveSource If true $sSource will be removed, otherwise $sSource will just be emptied
 	 */
-	public static function movedir($sSource, $sDest)
+	public static function movedir($sSource, $sDest, $bRemoveSource = true)
 	{
 		if (!is_dir($sSource))
 		{
@@ -702,7 +706,10 @@ class SetupUtils
 
 		self::copydir($sSource, $sDest);
 		self::tidydir($sSource);
-		rmdir($sSource);
+		if($bRemoveSource === true)
+        {
+            rmdir($sSource);
+        }
 
 		/**
 		 * We have tried the following implementation (based on a rename/mv)

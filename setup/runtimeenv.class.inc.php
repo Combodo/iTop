@@ -947,7 +947,9 @@ class RunTimeEnvironment
 			);
 			$this->CommitDir(
 				APPROOT.'env-'.$this->sTargetEnv,
-				APPROOT.'env-'.$this->sFinalEnv
+				APPROOT.'env-'.$this->sFinalEnv,
+                true,
+                false
 			);
 
 			// Move the config file
@@ -1013,14 +1015,15 @@ class RunTimeEnvironment
 	 *
 	 * @param $sSource
 	 * @param $sDest
-	 * @param bool $bSourceMustExist
+	 * @param boolean $bSourceMustExist
+     * @param boolean $bRemoveSource If true $sSource will be removed, otherwise $sSource will just be emptied
 	 * @throws Exception
 	 */
-	protected function CommitDir($sSource, $sDest, $bSourceMustExist = true)
+	protected function CommitDir($sSource, $sDest, $bSourceMustExist = true, $bRemoveSource = true)
 	{
 		if (file_exists($sSource))
 		{
-			SetupUtils::movedir($sSource, $sDest);
+			SetupUtils::movedir($sSource, $sDest, $bRemoveSource);
 		}
 		else
 		{
