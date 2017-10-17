@@ -1468,6 +1468,8 @@ class TestQueries extends TestBizModel
 		$sSQL = $oFilter->MakeSelectQuery();
 		$fBuildDuration = MyHelpers::getmicrotime() - $fStart;
 
+		$iJoins = preg_match_all('/JOIN/', $sSQL) + 1;
+
 		$fStart = MyHelpers::getmicrotime();
 		$res = CMDBSource::Query($sSQL);
 		$fQueryDuration = MyHelpers::getmicrotime() - $fStart;
@@ -1484,18 +1486,7 @@ class TestQueries extends TestBizModel
 		$sOql = $oFilter->ToOQL();
 		$fToOqlDuration = MyHelpers::getmicrotime() - $fStart;
 
-      if (false)
-      {
-		echo "<ul style=\"font-size:smaller;\">\n";
-		echo "<li>Parsing: $fParsingDuration</li>\n";
-		echo "<li>Build: $fBuildDuration</li>\n";
-		echo "<li>Query: $fQueryDuration</li>\n";
-		echo "<li>Fetch: $fFetchDuration</li>\n";
-		echo "<li>ToOql: $fToOqlDuration</li>\n";
-		echo "</ul>\n";
-		}
-
-		// Everything but the ToOQL (wich is interesting, anyhow)
+		// Everything but the ToOQL (which is interesting, anyhow)
 		$fTotal = $fParsingDuration + $fBuildDuration + $fQueryDuration + $fFetchDuration;
 
 		if ($fTotal == 0)
@@ -1509,6 +1500,7 @@ class TestQueries extends TestBizModel
 				'fetch (%)' => '?',
 				'to OQL (%)' => '?',
 				'parsing+build (%)' => '?',
+				'joins' => $iJoins,
 			);
 		}
 		else
@@ -1522,6 +1514,7 @@ class TestQueries extends TestBizModel
 				'fetch (%)' => round(100 * $fFetchDuration / $fTotal, 1),
 				'to OQL (%)' => round(100 * $fToOqlDuration / $fTotal, 1),
 				'parsing+build (%)' => round(100 * ($fParsingDuration + $fBuildDuration) / $fTotal, 1),
+				'joins' => $iJoins,
 			);
 		}
 		return $aRet;
@@ -1529,21 +1522,11 @@ class TestQueries extends TestBizModel
 	
 	protected function DoExecute()
 	{
-		$aQueries = array(
-			'SELECT Person AS PP WHERE PP.friendlyname LIKE "%dali"',
-			'SELECT Person AS PP WHERE PP.location_id_friendlyname LIKE "%ce ch%"',
-			'SELECT Organization AS OO JOIN Person AS PP ON PP.org_id = OO.id',
-			'SELECT lnkPersonToTeam AS lnk JOIN Team AS T ON lnk.team_id = T.id',
-			'SELECT lnkPersonToTeam AS lnk JOIN Team AS T ON lnk.team_id = T.id JOIN Person AS p ON lnk.person_id = p.id',
-			'SELECT UserRequest AS ur JOIN Person ON ur.agent_id = Person.id WHERE Person.id = 5',
-			// this one is failing...
-			//'SELECT L, P FROM Person AS P JOIN Location AS L ON P.location_id = L.id',
-		);
+		$aQueries = array();
 		foreach (MetaModel::GetClasses() as $sClass)
 		{
 			$aQueries[] = 'SELECT '.$sClass;
-			$aQueries[] = 'SELECT '.$sClass.' AS zz';
-			$aQueries[] = 'SELECT '.$sClass.' AS zz WHERE id = 1';
+			$aQueries[] = 'SELECT '.$sClass.' WHERE id = 1';
 		}	
 		$aStats  = array();
 		foreach ($aQueries as $sOQL)
