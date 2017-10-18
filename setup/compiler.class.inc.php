@@ -1254,7 +1254,6 @@ EOF
 					}
 					else
 					{
-						// Note: We don't put null as default param value because it would be ignored by the final checks
 						$aParameters['default_image'] = 'null';
 					}
 				}
