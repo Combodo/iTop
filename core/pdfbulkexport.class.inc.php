@@ -226,9 +226,9 @@ EOF
 							$iNewWidth = $iWidth * $fScale;
 							$iNewHeight = $iHeight * $fScale;
 
-							$sUrl = 'data:' . $value->GetMimeType() . ';base64,' . base64_encode($value->GetData());
+							$sUrl = 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
 						}
-						$sRet = '<img src="' . $sUrl . '" style="width: ' . $iNewWidth . 'px; height: ' . $iNewHeight . 'px">';
+						$sRet = ($sUrl !== null) ? '<img src="'.$sUrl.'" style="width: '.$iNewWidth.'px; height: '.$iNewHeight.'px">' : '';
 						$sRet = '<div class="view-image">'.$sRet.'</div>';
 					}
 					else
