@@ -5522,8 +5522,8 @@ class AttributeImage extends AttributeBlob
 	{
 		$iMaxWidthPx = $this->Get('display_max_width');
 		$iMaxHeightPx = $this->Get('display_max_height');
-		$sUrl = $this->GetOptional('default_image', '');
-		$sRet = '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'px; max-height: '.$iMaxHeightPx.'px">';
+		$sUrl = $this->Get('default_image');
+		$sRet = ($sUrl !== null) ? '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'px; max-height: '.$iMaxHeightPx.'px">' : '';
 		if (is_object($value) && !$value->IsEmpty())
 		{
 			if ($oHostObject->IsNew() || ($oHostObject->IsModified() && (array_key_exists($this->GetCode(), $oHostObject->ListChanges()))))

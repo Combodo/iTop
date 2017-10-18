@@ -1252,6 +1252,10 @@ EOF
 					{
 						$aParameters['default_image'] = "utils::GetAbsoluteUrlModulesRoot().'$sModuleRelativeDir/$sDefault'";
 					}
+					else
+					{
+						$aParameters['default_image'] = 'null';
+					}
 				}
 				elseif ($sAttType == 'AttributeStopWatch')
 				{
