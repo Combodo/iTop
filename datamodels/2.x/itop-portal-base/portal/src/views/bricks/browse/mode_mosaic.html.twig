@@ -187,7 +187,7 @@
                 // - Adding stub div
 				var textElem = $('<div></div>').addClass('mosaic-item-text');
                 // - Adding image
-                if( (item.image !== undefined) && (item.image !== '') )
+                if( (item.image !== undefined) && (item.image !== '') && (item.image !== null) )
                 {
                     iItemFlags += 4;
                     aElem.append( $('<div></div>').addClass('mosaic-item-image').append( $('<img />').attr('src', item.image) ) );
