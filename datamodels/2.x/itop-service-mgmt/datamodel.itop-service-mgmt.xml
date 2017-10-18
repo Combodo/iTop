@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4">
   <classes>
     <class id="Organization">
       <fields>
@@ -935,6 +935,14 @@
           <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
+        <field id="icon" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>256</storage_max_width>
+          <storage_max_height>256</storage_max_height>
+          <default_image/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="services_list" xsi:type="AttributeLinkedSet">
           <linked_class>Service</linked_class>
           <ext_key_to_me>servicefamily_id</ext_key_to_me>
@@ -950,6 +958,9 @@
           <items>
             <item id="name">
               <rank>10</rank>
+            </item>
+            <item id="icon">
+              <rank>15</rank>
             </item>
             <item id="services_list">
               <rank>20</rank>
@@ -1054,6 +1065,14 @@
           <is_null_allowed>true</is_null_allowed>
           <display_style>list</display_style>
         </field>
+        <field id="icon" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>256</storage_max_width>
+          <storage_max_height>256</storage_max_height>
+          <default_image/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="customercontracts_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkCustomerContractToService</linked_class>
           <ext_key_to_me>service_id</ext_key_to_me>
@@ -1105,6 +1124,9 @@
             </item>
             <item id="status">
               <rank>50</rank>
+            </item>
+            <item id="icon">
+              <rank>55</rank>
             </item>
             <item id="servicesubcategories_list">
               <rank>60</rank>
