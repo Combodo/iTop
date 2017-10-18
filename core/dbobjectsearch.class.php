@@ -1502,7 +1502,7 @@ class DBObjectSearch extends DBSearch
 			{
 				$sModifierProperties = '';
 			}
-			$aContextData['aModifierProperties'] = $aModifierProperties;
+			$aContextData['sModifierProperties'] = $sModifierProperties;
 
 			$sRawId = $sOqlQuery.$sModifierProperties;
 			if (!is_null($aAttToLoad))
@@ -1519,6 +1519,7 @@ class DBObjectSearch extends DBSearch
 			}
 			$aContextData['aGroupByExpr'] = $aGroupByExpr;
 			$sRawId .= $bGetCount;
+			$aContextData['bGetCount'] = $bGetCount;
 			if (is_array($aSelectedClasses))
 			{
 				$sRawId .= implode(',', $aSelectedClasses); // Unions may alter the list of selected columns
