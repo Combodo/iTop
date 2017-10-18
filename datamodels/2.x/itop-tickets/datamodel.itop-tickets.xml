@@ -1067,6 +1067,7 @@
 					<levels>
 						<level id="1">
 							<class>ServiceFamily</class>
+							<image_att>icon</image_att>
 							<levels>
 								<!-- Level IDs must be numeric -->
 								<level id="1">
@@ -1080,10 +1081,10 @@
 									<tooltip_att>description</tooltip_att>
 									<!-- Attribute code of the above class [from the OQL] used to display a small text beside the object's name -->
 									<!-- Note: This is not used in "list" mode -->
-									<description_att/>
+									<description_att>description</description_att>
 									<!-- Attribute code of the above class [from the OQL] used to display a image beside the object's name -->
 									<!-- Note: This is used in "mosaic" mode only for now -->
-									<!--<image_att/>-->
+									<image_att>icon</image_att>
 									<!-- Title of the level, will be display in lists and others browse modes -->
 									<title>Class:Service</title>
 									<!-- Optional tag to add attributes to the table by their code, can be specified for each level -->
@@ -1100,6 +1101,7 @@
 											<parent_att>service_id</parent_att>
 											<name_att/>
 											<tooltip_att>description</tooltip_att>
+											<description_att>description</description_att>
 											<title>Class:ServiceSubcategory</title>
 											<actions>
 												<action id="create_from_this" xsi:type="create_from_this">
