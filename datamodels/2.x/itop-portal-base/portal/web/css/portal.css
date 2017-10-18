@@ -628,10 +628,19 @@ table .group-actions {
   border-radius: 0px 0px 4px 4px;
   font-size: 1em;
 }
-/****************/
-/* - Mosaic mode  */
-/* Note: Some of the CSS is factorised in the "Tree mode" part */
-/****************/
+/****************************************************************/
+/* - Mosaic mode                                                */
+/*                                                              */
+/* Note: Some of the CSS is factorised in the "Tree mode" part  */
+/*                                                              */
+/* Note: .mosaic-item-layout-x classes are for different        */
+/*   presentation modes. Like in binary, add the values to know */
+/*   which class to use.                                        */
+/*   - 1 is for name                                            */
+/*   - 2 is for description                                     */
+/*   - 4 is for image                                           */
+/*   eg. .mosaic-item-layout-5 when just name and image         */
+/****************************************************************/
 #brick_content_mosaic {
   position: relative;
   padding: 10px 10px 1px 10px;
