@@ -138,7 +138,9 @@ class UILinksWidget
                     $sValue = $linkObjOrId->Get($sFieldCode);
                     $sDisplayValue = $linkObjOrId->GetEditValue($sFieldCode);
                     $oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
-                    $aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $sValue, $sDisplayValue, $sSafeId, $sNameSuffix, 0, $aArgs);
+                    $aRow[$sFieldCode] = '<div class="field_container" style="border:none;"><div class="field_data"><div class="field_value">'.
+                        cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $sValue, $sDisplayValue, $sSafeId, $sNameSuffix, 0, $aArgs).
+	                    '</div></div></div>';
                     $aFieldsMap[$sFieldCode] = $sSafeId;
                 }
             }
@@ -176,7 +178,9 @@ class UILinksWidget
 				$sValue = $oNewLinkObj->Get($sFieldCode);
 				$sDisplayValue = $oNewLinkObj->GetEditValue($sFieldCode);
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
-				$aRow[$sFieldCode] = cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $sValue, $sDisplayValue, $sSafeId /* id */, $sNameSuffix, 0, $aArgs);
+				$aRow[$sFieldCode] = '<div class="field_container" style="border:none;"><div class="field_data"><div class="field_value">'.
+					cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $sValue, $sDisplayValue, $sSafeId /* id */, $sNameSuffix, 0, $aArgs).
+					'</div></div></div>';
 				$aFieldsMap[$sFieldCode] = $sSafeId;
 			}
 			$sState = '';
