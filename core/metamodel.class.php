@@ -4606,6 +4606,14 @@ abstract class MetaModel
 		return self::$m_oConfig;
 	}
 
+	/**
+	 * @return string The environment in which the model has been loaded (e.g. 'production')
+	 */
+	public static function GetEnvironment()
+	{
+		return self::$m_sEnvironment;
+	}
+
 	public static function GetEnvironmentId()
 	{
 		return md5(APPROOT).'-'.self::$m_sEnvironment;
