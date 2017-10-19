@@ -623,6 +623,11 @@ abstract class MetaModel
 		return self::$m_aClassParams[$sClass]["db_finalclass_field"];
 	}
 
+	/**
+	 * @param string $sClass
+	 *
+	 * @return boolean true if the class has no parent and no children
+	 */
 	final static public function IsStandaloneClass($sClass)
 	{
 		self::_check_subclass($sClass);
@@ -2772,6 +2777,11 @@ abstract class MetaModel
 		return $aRes;
 	}
 
+	/**
+	 * @param string $sClass
+	 *
+	 * @return bool
+	 */
 	public static function HasChildrenClasses($sClass)
 	{
 		return (count(self::$m_aChildClasses[$sClass]) > 0);
@@ -2831,6 +2841,11 @@ abstract class MetaModel
 		return true;
 	}
 
+	/**
+	 * @param string $sClass
+	 *
+	 * @return bool
+	 */
 	public static function IsAbstract($sClass)
 	{
 		$oReflection = new ReflectionClass($sClass);
@@ -5021,6 +5036,7 @@ abstract class MetaModel
 	 * @param array $aExtendedDataSpec
 	 *
 	 * @return DBObject
+	 * @throws CoreUnexpectedValue if finalClass attribute wasn't specified but is needed
 	 * @throws CoreException if finalClass cannot be found
 	 */
 	public static function GetObjectByRow($sClass, $aRow, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
@@ -5038,6 +5054,14 @@ abstract class MetaModel
 		{
 			// Either this is a bug (forgot to specify a root class with a finalclass field
 			// Or this is the expected behavior, because the object is not made of several tables
+			if (self::IsAbstract($sClass))
+			{
+				throw new CoreUnexpectedValue("Querying the abstract '$sClass' class without finalClass attribute");
+			}
+			if (self::HasChildrenClasses($sClass))
+			{
+				throw new CoreUnexpectedValue("Querying the '$sClass' class without the finalClass attribute, whereas this class has  children");
+			}
 		}
 		elseif (empty($aRow[$sClassAlias."finalclass"]))
 		{
