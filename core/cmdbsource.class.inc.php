@@ -33,13 +33,15 @@ class MySQLException extends CoreException
 	{
 		if ($oException != null)
 		{
-			$aContext['mysql_error'] = $oException->getCode();
-			$aContext['mysql_errno'] = $oException->getMessage();
+			$aContext['mysql_errno'] = $oException->getCode();
+			$this->code = $oException->getCode();
+			$aContext['mysql_error'] = $oException->getMessage();
 		}
 		else
 		{
-			$aContext['mysql_error'] = CMDBSource::GetError();
 			$aContext['mysql_errno'] = CMDBSource::GetErrNo();
+			$this->code = CMDBSource::GetErrNo();
+			$aContext['mysql_error'] = CMDBSource::GetError();
 		}
 		parent::__construct($sIssue, $aContext);
 	}
