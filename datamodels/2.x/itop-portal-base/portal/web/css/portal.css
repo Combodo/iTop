@@ -694,6 +694,11 @@ table .group-actions {
 .mosaic-item-image > img {
   max-width: 85%;
 }
+.mosaic-item-text {
+  max-width: 1px;
+  /* This is an arbitrary value. It is just here to make .mosaic-item-name wrap when there is a very long word in it. */
+  overflow: hidden;
+}
 .mosaic-group-item > .mosaic-group-item-actions {
   position: absolute;
   top: 5px;
@@ -793,7 +798,8 @@ table .group-actions {
     padding-right: 18px;
   }
   .mosaic-item-layout-5 .mosaic-item-image > img, .mosaic-item-layout-7 .mosaic-item-image > img {
-    max-width: 100%;
+    max-width: 105px;
+    /* Equals parent element width */
   }
   .mosaic-item-layout-5 .mosaic-item-name, .mosaic-item-layout-7 .mosaic-item-name {
     font-size: 12px;
