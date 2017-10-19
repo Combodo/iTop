@@ -663,4 +663,34 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		//
 		$oMtx->Unlock();
 	}
+
+	public function ToDBObjectSet($bShowObsolete = true)
+	{
+		$oAttDef = MetaModel::GetAttributeDef($this->sHostClass, $this->sAttCode);
+		$oLinkSearch = $this->GetFilter();
+		if ($oAttDef->IsIndirect())
+		{
+			$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
+			$oLinkingAttDef = MetaModel::GetAttributeDef($this->sClass, $sExtKeyToRemote);
+			$sTargetClass = $oLinkingAttDef->GetTargetClass();
+			if (!$bShowObsolete && MetaModel::IsObsoletable($sTargetClass))
+			{
+				$oNotObsolete = new BinaryExpression(
+					new FieldExpression('obsolescence_flag', $sTargetClass),
+					'=',
+					new ScalarExpression(0)
+				);
+				$oNotObsoleteRemote = new DBObjectSearch($sTargetClass);
+				$oNotObsoleteRemote->AddConditionExpression($oNotObsolete);
+				$oLinkSearch->AddCondition_PointingTo($oNotObsoleteRemote, $sExtKeyToRemote);
+			}
+		}
+		$oLinkSet = new DBObjectSet($oLinkSearch);
+		$oLinkSet->SetShowObsoleteData($bShowObsolete);
+		if ($this->HasDelta())
+		{
+			$oLinkSet->AddObjectArray($this->aAdded);
+		}
+		return $oLinkSet;
+	}
 }
