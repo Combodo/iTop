@@ -109,4 +109,5 @@ class iTopPortalViewUrlMaker extends iTopPortalEditUrlMaker
 
 // Default portal hyperlink (for notifications) is the edit hyperlink
 DBObject::RegisterURLMakerClass('portal', 'iTopPortalEditUrlMaker');
+DBObject::RegisterURLMakerClass('itop-portal', 'iTopPortalEditUrlMaker');
 
