@@ -69,7 +69,7 @@ class DBObjectSet implements iDBObjectSetIterator
 	 * @var int
 	 */
 	protected $m_iCurrRow;
-	/*
+	/**
 	 * @var DBSearch
 	 */
 	protected $m_oFilter;
@@ -626,14 +626,7 @@ class DBObjectSet implements iDBObjectSetIterator
 		// Note: it is mandatory to set this value now, to protect against reentrance
 		$this->m_bLoaded = true;
 
-		if ($this->m_iLimitCount > 0)
-		{
-			$sSQL = $this->m_oFilter->MakeSelectQuery($this->GetRealSortOrder(), $this->m_aArgs, $this->m_aAttToLoad, $this->m_aExtendedDataSpec, $this->m_iLimitCount, $this->m_iLimitStart);
-		}
-		else
-		{
-			$sSQL = $this->m_oFilter->MakeSelectQuery($this->GetRealSortOrder(), $this->m_aArgs, $this->m_aAttToLoad, $this->m_aExtendedDataSpec);
-		}
+		$sSQL = $this->_makeSelectQuery($this->m_aAttToLoad);
 		
 		if (is_object($this->m_oSQLResult))
 		{
@@ -642,8 +635,36 @@ class DBObjectSet implements iDBObjectSetIterator
 			$this->m_oSQLResult = null;
 		}
 		$this->m_iNumTotalDBRows = null;
-		
-		$this->m_oSQLResult = CMDBSource::Query($sSQL);
+
+		try
+		{
+			$this->m_oSQLResult = CMDBSource::Query($sSQL);
+		} catch (MySQLException $e)
+		{
+			// 1116 = ER_TOO_MANY_TABLES
+			// https://dev.mysql.com/doc/refman/5.7/en/error-messages-server.html#error_er_too_many_tables
+			if ($e->getCode() != 1116)
+			{
+				throw $e;
+			}
+
+			// N.689 Workaround for the 61 max joins in MySQL : full lazy load !
+			$aAttToLoad = array();
+			foreach($this->m_oFilter->GetSelectedClasses() as $sClassAlias => $sClass)
+			{
+				$aAttToLoad[$sClassAlias] = array();
+				$bIsAbstractClass = MetaModel::IsAbstract($sClass);
+				$bIsClassWithChildren = MetaModel::HasChildrenClasses($sClass);
+				if ($bIsAbstractClass || $bIsClassWithChildren)
+				{
+					// we need finalClass field at least to be able to instantiate the real corresponding object !
+					$aAttToLoad[$sClassAlias]['finalclass'] = MetaModel::GetAttributeDef($sClass, 'finalclass');
+				}
+			}
+			$sSQL = $this->_makeSelectQuery($aAttToLoad);
+			$this->m_oSQLResult = CMDBSource::Query($sSQL); // may fail again
+		}
+
 		if ($this->m_oSQLResult === false) return;
 		
 		if (($this->m_iLimitCount == 0) && ($this->m_iLimitStart == 0))
@@ -654,10 +675,33 @@ class DBObjectSet implements iDBObjectSetIterator
 	}
 
 	/**
-	 * The total number of rows in this set. Independently of the SetLimit used for loading the set and taking into account the rows added in-memory.
-	 * 
-	 * May actually perform the SQL query SELECT COUNT... if the set was not previously loaded, or loaded with a SetLimit
-	 * 
+	 * @param string[] $aAttToLoad
+	 *
+	 * @return string SQL query
+	 */
+	private function _makeSelectQuery($aAttToLoad)
+	{
+		if ($this->m_iLimitCount > 0)
+		{
+			$sSQL = $this->m_oFilter->MakeSelectQuery($this->GetRealSortOrder(), $this->m_aArgs, $aAttToLoad,
+				$this->m_aExtendedDataSpec, $this->m_iLimitCount, $this->m_iLimitStart);
+		}
+		else
+		{
+			$sSQL = $this->m_oFilter->MakeSelectQuery($this->GetRealSortOrder(), $this->m_aArgs, $aAttToLoad,
+				$this->m_aExtendedDataSpec);
+		}
+
+		return $sSQL;
+	}
+
+	/**
+	 * The total number of rows in this set. Independently of the SetLimit used for loading the set and taking into
+	 * account the rows added in-memory.
+	 *
+	 * May actually perform the SQL query SELECT COUNT... if the set was not previously loaded, or loaded with a
+	 * SetLimit
+	 *
 	 * @return int The total number of rows for this set.
 	 */
 	public function Count()
@@ -667,11 +711,12 @@ class DBObjectSet implements iDBObjectSetIterator
 			$sSQL = $this->m_oFilter->MakeSelectQuery(array(), $this->m_aArgs, null, null, 0, 0, true);
 			$resQuery = CMDBSource::Query($sSQL);
 			if (!$resQuery) return 0;
-	
+
 			$aRow = CMDBSource::FetchArray($resQuery);
 			CMDBSource::FreeResult($resQuery);
 			$this->m_iNumTotalDBRows = $aRow['COUNT'];
 		}
+
 		return $this->m_iNumTotalDBRows + count($this->m_aAddedObjects); // Does it fix Trac #887 ??
 	}
 	
