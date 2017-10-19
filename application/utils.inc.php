@@ -927,7 +927,7 @@ class utils
 	 */
 	public static function GetCachePath()
 	{
-		return APPROOT.'data/cache-'.self::GetCurrentEnvironment().'/';
+		return APPROOT.'data/cache-'.MetaModel::GetEnvironment().'/';
 	}
 	/**
 	 * Merge standard menu items with plugin provided menus items
