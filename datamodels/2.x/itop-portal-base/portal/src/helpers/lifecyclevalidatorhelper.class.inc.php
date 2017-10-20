@@ -23,12 +23,9 @@ use \Exception;
 use \DOMNodeList;
 use \DOMFormatException;
 use \utils;
-use \UserRights;
 use \ProfilesConfig;
 use \MetaModel;
 use \DBSearch;
-use \DBUnionSearch;
-use \Combodo\iTop\DesignElement;
 
 class LifecycleValidatorHelper
 {
@@ -392,7 +389,7 @@ class $sClassName
 	*/
 	public static function GetProfileStimuli(\$iProfileId, \$sClass)
 	{
-		\$aStimuli = null;
+		\$aStimuli = array();
 
 		\$sLifecycleKey = \$iProfileId.'_'.\$sClass;
 		if (isset(self::\$aPROFILES[\$sLifecycleKey]))
