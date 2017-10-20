@@ -5404,7 +5404,6 @@ class AttributeBlob extends AttributeDefinition
 		$sAttCode = $this->GetCode();
 		if ($sValue instanceof ormDocument && !$sValue->IsEmpty())
 		{
-			IssueLog::Info(print_r($sValue, true));
 			return $sValue->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $sAttCode);
 		}
 		return ''; // Not exportable in CSV !
