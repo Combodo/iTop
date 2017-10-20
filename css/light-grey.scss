@@ -107,6 +107,12 @@ table.listResults td .view-image {
   .view-image {
 	display: inline-block;
 
+    img[src=""],
+	img[src="null"] {
+		// Hiding "broken" image when src is not set
+		visibility: hidden;
+	}
+
 	&.dirty {
 	  // The image will be modified when saving the changes
 
@@ -835,7 +841,7 @@ table.listResults tr.even td.truncated, .wizContainer table.listResults  tr.even
 }
 
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
-table.listResults tr.even td.hover.truncated, , .wizContainer table.listResults  tr.even td.hover.truncated {
+table.listResults tr.even td.hover.truncated, .wizContainer table.listResults  tr.even td.hover.truncated {
 	background: #fdf5d0 url(../images/truncated.png?v=#{$version}) bottom  repeat-x;
 }
 

@@ -85,6 +85,9 @@ table.listResults td .view-image img {
 .edit-image .view-image {
   display: inline-block;
 }
+.edit-image .view-image img[src=""], .edit-image .view-image img[src="null"] {
+  visibility: hidden;
+}
 .edit-image .view-image.dirty.compat {
   background-image: url("ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png");
 }
