@@ -1948,7 +1948,7 @@ EOF
 				$sHidden = '<input type="hidden" name="choice['.$sChoiceName.']" value="'.$sChoiceId.'"/>';
 			}
 			$oPage->add('<div class="choice" '.$sDataId.'><input class="wiz-choice" id="'.$sId.'" name="choice['.$sChoiceName.']" type="radio"'.$sAttributes.' value="'.$sChoiceId.'"'.$sDisabled.'/>'.$sHidden.'&nbsp;');
-			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled);
+			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled && !$bSelected);
 			$oPage->add('</div>');
 			$index++;
 		}
@@ -1961,7 +1961,7 @@ EOF
 		$sId = htmlentities($aChoice['extension_code'], ENT_QUOTES, 'UTF-8');
 		$oPage->add('<label for="'.$sId.'"><b>'.htmlentities($aChoice['title'], ENT_QUOTES, 'UTF-8').'</b>'.$sSourceLabel.'</label> '.$sMoreInfo);
 		$sDescription = isset($aChoice['description']) ? htmlentities($aChoice['description'], ENT_QUOTES, 'UTF-8') : '';
-		$oPage->add('<div class="description">'.$sDescription.'<span id="sub_choices'.$sChoiceId.'">');
+		$oPage->add('<div class="description">'.$sDescription.'<span id="sub_choices'.$sId.'">');
 		if (isset($aChoice['sub_options']))
 		{
 			$this->DisplayOptions($oPage, $aChoice['sub_options'], $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled);
