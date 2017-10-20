@@ -168,7 +168,7 @@ class UILinksWidget
 			$sPrefix .= "[-$iUniqueId][";
 			$sNameSuffix = "]"; // To make a tabular form
 			$aArgs['prefix'] = $sPrefix;
-			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}_".$iUniqueId;
+			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}_".($iUniqueId < 0 ? -$iUniqueId : $iUniqueId);
 			$aArgs['this'] = $oNewLinkObj;
 			$aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"-$iUniqueId\">";
 			foreach($this->m_aEditableFields as $sFieldCode)
@@ -185,12 +185,17 @@ class UILinksWidget
 			}
 			$sState = '';
 
-			$oP->add_script(
-<<<EOF
+			// Rows created with ajax call need OnLinkAdded call.
+			// Rows added before loading the form cannot call OnLinkAdded.
+			if ($iUniqueId > 0)
+			{
+				$oP->add_script(
+					<<<EOF
 PrepareWidgets();
 oWidget{$this->m_iInputId}.OnLinkAdded($iUniqueId, $iRemoteObjKey);
 EOF
-			);
+				);
+			}
 		}
 
 		if(!$bReadOnly)

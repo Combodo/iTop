@@ -409,26 +409,8 @@ EOF
 			$sLinkedClass = $oAttDef->GetLinkedClass();
 
 			// Filter out links pointing to obsolete objects (if relevant)
-			$oLinkSearch = $this->Get($sAttCode)->GetFilter();
-			if ($oAttDef->IsIndirect())
-			{
-				$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
-				$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sExtKeyToRemote);
-				$sTargetClass = $oLinkingAttDef->GetTargetClass();
-				if (!utils::ShowObsoleteData() && MetaModel::IsObsoletable($sTargetClass))
-				{
-					$oNotObsolete = new BinaryExpression(
-						new FieldExpression('obsolescence_flag', $sTargetClass),
-						'=',
-						new ScalarExpression(0)
-					);
-					$oNotObsoleteRemote = new DBObjectSearch($sTargetClass);
-					$oNotObsoleteRemote->AddConditionExpression($oNotObsolete);
-					$oLinkSearch->AddCondition_PointingTo($oNotObsoleteRemote, $sExtKeyToRemote);
-				}
-			}
-			$oLinkSet = new DBObjectSet($oLinkSearch);
-			$oLinkSet->SetShowObsoleteData(utils::ShowObsoleteData());
+			$oOrmLinkSet = $this->Get($sAttCode);
+			$oLinkSet = $oOrmLinkSet->ToDBObjectSet(utils::ShowObsoleteData());
 
 			$iCount = $oLinkSet->Count();
 			$sCount = '';

@@ -27,7 +27,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		});
 
         $('#linkedset_'+me.id+' :input').off('change').on('change', function() {
-			if (!($(this).hasClass('selection'))) {
+			if (!($(this).hasClass('selection')) && !($(this).hasClass('select_all'))) {
 				var oCheckbox = $(this).closest('tr').find('.selection');
 				var iLink = oCheckbox.attr('data-link-id');
 				var iUniqueId = oCheckbox.attr('data-unique-id');
