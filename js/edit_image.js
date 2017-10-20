@@ -28,7 +28,7 @@ $(function()
 			// the constructor
 			_create: function () {
 				var me = this;
-				me.bLoadedEmpty = (me.options.current_image_url == '');
+				me.bLoadedEmpty = (me.options.current_image_url == '' || me.options.current_image_url == null);
 
 				var sMarkup = '';
 				sMarkup += '<input type="hidden" id="do_remove_' + me.options.input_name + '" name="' + me.options.input_name + '[remove]" value="0"/>';

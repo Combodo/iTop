@@ -5386,7 +5386,7 @@ class AttributeBlob extends AttributeDefinition
 	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		$sAttCode = $this->GetCode();
-		if ($sValue instanceof ormDocument)
+		if ($sValue instanceof ormDocument && !$sValue->IsEmpty())
 		{
 			return $sValue->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $sAttCode);
 		}
@@ -5511,7 +5511,7 @@ class AttributeImage extends AttributeBlob
 	 */
 	public function CheckFormat($value)
 	{
-		if ($value instanceof ormDocument)
+		if ($value instanceof ormDocument && !$value->IsEmpty())
 		{
 			return ($value->GetMainMimeType() == 'image');
 		}

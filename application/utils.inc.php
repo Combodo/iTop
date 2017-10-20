@@ -1671,7 +1671,7 @@ class utils
 	 * - an http(s) URL
 	 * - the local file system (but only if you are an administrator)
 	 * @param string $sPath
-	 * @return string[]|NULL[]
+	 * @return ormDocument|null
 	 * @throws Exception
 	 */
 	public static function FileGetContentsAndMIMEType($sPath)
@@ -1679,15 +1679,6 @@ class utils
 		$oUploadedDoc = null;
 		$aKnownExtensions = array(
 				'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-				'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
-				'potx' => 'application/vnd.openxmlformats-officedocument.presentationml.template',
-				'ppsx' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
-				'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-				'sldx' => 'application/vnd.openxmlformats-officedocument.presentationml.slide',
-				'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-				'dotx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
-				'xlam' => 'application/vnd.ms-excel.addin.macroEnabled.12',
-				'xlsb' => 'application/vnd.ms-excel.sheet.binary.macroEnabled.12.xlsx',
 				'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
 				'potx' => 'application/vnd.openxmlformats-officedocument.presentationml.template',
 				'ppsx' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
@@ -1722,8 +1713,13 @@ class utils
 		$sMimeType = 'text/plain'; // Default MIME Type: treat the file as a bunch a characters...
 		$sFileName = 'uploaded-file'; // Default name for downloaded-files
 		$sExtension = '.txt'; // Default file extension in case we don't know the MIME Type
-	
-		if (static::IsURL($sPath))
+
+		if(empty($sPath))
+		{
+			// Empty path (NULL or '') means that there is no input, making an empty document.
+			$oUploadedDoc = new ormDocument('', '', '');
+		}
+		elseif (static::IsURL($sPath))
 		{
 			if ($oUploadedDoc = static::IsSelfURL($sPath))
 			{
