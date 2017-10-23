@@ -1383,6 +1383,7 @@ function CheckChoice(sChoiceId)
 			else
 			{
 				$(this).attr('disabled', 'disabled');
+				$(this).removeAttr('checked');
 			}
 		});
 	});
@@ -1942,7 +1943,7 @@ EOF
 				$sAttributes = ' checked ';
 			}
 			$sHidden = '';
-			if ($bMandatory)
+			if ($bMandatory && $bDisabled)
 			{
 				$sAttributes = ' checked ';
 				$sHidden = '<input type="hidden" name="choice['.$sChoiceName.']" value="'.$sChoiceId.'"/>';
