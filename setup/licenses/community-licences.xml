@@ -750,6 +750,22 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</pre>]]></text>
 	</license>
+    <license>
+        <product>jQuery Hotkeys Plugin</product>
+        <author>John Resig</author>
+        <license_type>MIT or GPL Version 2 licenses</license_type>
+        <text><![CDATA[<pre>
+ jQuery Hotkeys Plugin
+ Copyright 2010, John Resig
+ Dual licensed under the MIT or GPL Version 2 licenses.
+
+ Based upon the plugin by Tzury Bar Yochay:
+ https://github.com/tzuryby/jquery.hotkeys
+
+ Original idea by:
+ Binny V A, http://www.openjs.com/scripts/events/keyboard_shortcuts/
+        </pre>]]></text>
+    </license>
 	<license>
 		<product>Swift Mailer</product>
 		<author>Fabien Potencier</author>
