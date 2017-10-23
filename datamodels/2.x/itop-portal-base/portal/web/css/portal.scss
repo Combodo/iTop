@@ -780,7 +780,7 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	.mosaic-group-item-actions > a{
 		font-size: 20px;
 	}
-	/* All layout */
+	/* All layouts */
 	.mosaic-item-image{
 		width: 55px;
 		padding: 10px;
@@ -790,6 +790,8 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	}
 	.mosaic-item-name{
 		font-size: 14px;
+		max-height: 50px;
+		overflow: hidden;
 	}
 	.mosaic-item-description{
 		display: none;
@@ -809,7 +811,10 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 		display: inline-block;
 		width: 32%;
 		height:	120px;
+		max-height: 120px; /* Must be same as height */
 		margin-right: 1.95%; /* We don't put 2% to keep a margin in case of a bad browser rendering */
+		overflow: hidden;
+		word-break: break-word;
 	}
 	.mosaic-item{
 		padding: 10px;
@@ -820,8 +825,13 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 		box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.20);
 	}
 
-	/* All layout */
+	/* All layouts */
+	/* .mosaic-item-image{
+		vertical-align: inherit; Note: This was introduced to avoid image from going down the tile when .mosaic-item-name was way too long, but the .mosaic-item-image glitched by being a little too high. As a very long .mosaic-item-name is extremely rare, we decided that it was not worth it.
+	}*/
 	.mosaic-item-name{
+		max-height: 100px; /* It's ok if description is pushed down and not visible; but we truncate before it flows out of the tile */
+		overflow: hidden;
 		font-weight: 600;
 		font-size: 12px;
 	}
@@ -852,6 +862,10 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 		font-size: 40px;
 	}
 
+	/* All layouts */
+	.mosaic-item-name{
+		max-height: 100px; /* overflow hidden inherited */
+	}
 	/* Layout 5 & 7 */
 	.mosaic-item-layout-5 .mosaic-item-image,
 	.mosaic-item-layout-7 .mosaic-item-image{
@@ -873,7 +887,13 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	.mosaic-group-item{
 		width: 24%;
 		height: 140px;
+		max-height: 140px; /* Must be same as height */
 		margin-right: 1.3%;
+	}
+
+	/* All layouts */
+	.mosaic-item-name{
+		max-height: 120px; /* overflow hidden inherited */
 	}
 }
 
